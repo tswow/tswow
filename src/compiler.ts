@@ -1,5 +1,6 @@
 import * as ts from 'typescript';
 import * as fs from 'fs-extra';
+import * as path from 'path';
 import { spawn } from 'cross-spawn';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
@@ -55,7 +56,7 @@ export class Run {
 
     public constructor() {
         this.formatHost = <ts.FormatDiagnosticsHost>{
-            getCanonicalFileName: path => path,
+            getCanonicalFileName: _path => _path,
             getCurrentDirectory: ts.sys.getCurrentDirectory,
             getNewLine: () => ts.sys.newLine
         };
@@ -94,7 +95,6 @@ export class Run {
     }
 
     public run(sourcesOrConfigFile: string[] | string, cmdLineOptions: any): void {
-
         if (typeof (sourcesOrConfigFile) === 'string') {
             if (sourcesOrConfigFile.endsWith('.json')) {
                 const configPath = ts.findConfigFile('./', ts.sys.fileExists, sourcesOrConfigFile);
@@ -217,9 +217,11 @@ export class Run {
                 outDir += '/';
             }
 
-            if (!fs.pathExistsSync(outDir)) {
-                fs.mkdirSync(outDir, {recursive: true});
+            if (fs.pathExistsSync(outDir)) {
+                fs.rmdirSync(outDir, {recursive: true});
             }
+
+            fs.mkdirSync(outDir, {recursive: true});
         }
 
         let rootFolder = process.cwd().replace(/\\/g, '/');
@@ -291,7 +293,8 @@ export class Run {
                     + outDir + fileNameCpp
                     + resetEscapeSequence);
             }
-
+            const dir = path.dirname(path.join(outDir, fileNameHeader));
+            fs.mkdirsSync(dir);
             fs.writeFileSync(outDir + fileNameHeader, emitterHeader.writer.getText());
             fs.writeFileSync(outDir + fileNameCpp, emitterSource.writer.getText());
         });

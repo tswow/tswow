@@ -1,4 +1,5 @@
 import * as ts from 'typescript';
+import * as path from 'path';
 import { IdentifierResolver } from './resolvers';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
@@ -17,7 +18,6 @@ export class Emitter {
     public constructor(
         typeChecker: ts.TypeChecker, private options: ts.CompilerOptions,
         private cmdLineOptions: any, private singleModule: boolean, private rootFolder?: string) {
-
         this.writer = new CodeWriter();
         this.resolver = new IdentifierResolver(typeChecker);
         this.preprocessor = new Preprocessor(this.resolver, this);
@@ -457,9 +457,13 @@ export class Emitter {
             sourceFile.statements.filter(s => this.isDeclarationStatement(s) || this.isVariableStatement(s)).forEach(s => {
                 this.processImplementation(s, true);
             });
+
+            const newName = path.relative('./src', this.sourceFileName).split(/ |\\|\/|\./).join('_');
+            this.writer.writeStringNewLine(`const struct ${newName} {${newName}();} _${newName};`);
         }
 
         if (this.isSource()) {
+            console.log('Processing source file internally ', this.sourceFileName);
             // added header
             this.WriteHeader();
 
@@ -495,8 +499,10 @@ export class Emitter {
 
             const rollbackPosition = this.writer.newSection();
 
+            const newName = path.relative('./src', this.sourceFileName).split(/ |\\|\/|\./).join('_');
+
             this.writer.writeStringNewLine('');
-            this.writer.writeStringNewLine('void Main(void)');
+            this.writer.writeStringNewLine(`${newName}::${newName}()`);
             this.writer.BeginBlock();
 
             this.isWritingMain = true;
@@ -514,11 +520,11 @@ export class Emitter {
 
             this.isWritingMain = false;
 
-            if (hasVarsContent || this.writer.hasAnyContent(position, rollbackPosition)) {
+            // TODO: Replace this true check with not writing this in the header either.
+            if (true || hasVarsContent || this.writer.hasAnyContent(position, rollbackPosition)) {
                 this.writer.EndBlock();
 
                 this.writer.writeStringNewLine('');
-                this.writer.writeStringNewLine('MAIN');
             }
         }
 
@@ -531,12 +537,14 @@ export class Emitter {
     private WriteHeader() {
         const filePath = Helpers.getSubPath(Helpers.cleanUpPath(this.sourceFileName), Helpers.cleanUpPath(this.rootFolder));
         if (this.isSource()) {
-            this.writer.writeStringNewLine(`#include "${filePath.replace(/\.ts$/, '.h')}"`);
+            const relative = path.relative(path.dirname(this.sourceFileName), filePath);
+            const includeStr = `#include "${relative.replace(/\.ts$/, '.h')}"`;
+            this.writer.writeStringNewLine(includeStr);
         } else {
             const headerName = filePath.replace(/\.ts$/, '_h').replace(/[\\\/\.]/g, '_').toUpperCase();
             this.writer.writeStringNewLine(`#ifndef ${headerName}`);
             this.writer.writeStringNewLine(`#define ${headerName}`);
-            this.writer.writeStringNewLine(`#include "core.h"`);
+            this.writer.writeStringNewLine(`#include "TSAll.h"`);
         }
     }
 
@@ -1592,11 +1600,17 @@ export class Emitter {
     }
 
     private processImportDeclaration(node: ts.ImportDeclaration): void {
+        // tswow-workaround: Hackaround to not include npm modules (used for GetId/GetIdRange)
+        // tswow-todo: better checking for non-relative modules. should we always ignore them?
+        let text = node.moduleSpecifier.getText();
+        text = text.substring(1, text.length - 1);
+        if (!text.startsWith('.')) {
+            return;
+        }
 
         if (node.moduleSpecifier.kind !== ts.SyntaxKind.StringLiteral) {
             return;
         }
-
         this.writer.writeString('#include \"');
         if (node.moduleSpecifier.kind === ts.SyntaxKind.StringLiteral) {
             const ident = <ts.StringLiteral>node.moduleSpecifier;
@@ -1661,6 +1675,7 @@ export class Emitter {
             this.writer.writeString(' ');
         }
 
+
         const next = { next: false };
         let result = false;
         declarationList.declarations.forEach(d => {
@@ -1721,8 +1736,36 @@ export class Emitter {
     }
 
     private processVariableStatement(node: ts.VariableStatement): void {
+        // tswow-workaround: fix namespaced variable declarations
+        // tswow-todo: very ugly output (why didn't the original place these in the big namespace in the first place?)
+        let namespaceCount = 0;
+        if (node.parent.kind === ts.SyntaxKind.ModuleBlock) {
+            if (this.isHeader()) {
+                return;
+            } else {
+                // tswow-workaround: fix namespaced variable declarations
+                let mod = node.declarationList.parent.parent;
+                let str = ``;
+                while ( mod.kind === ts.SyntaxKind.ModuleBlock) {
+                    str = `namespace ${(mod.parent as ts.ModuleDeclaration).name.text} { ${str}`;
+                    mod = mod.parent.parent;
+                    ++namespaceCount;
+                }
+                this.writer.writeString(str);
+            }
+        }
         const anyVal = this.processVariableDeclarationList(node.declarationList);
         if (anyVal) {
+            if (namespaceCount > 0) {
+                this.writer.writeString(';');
+            } else {
+                this.writer.EndOfStatement();
+            }
+        }
+        for (let i = 0 ; i < namespaceCount ; ++i) {
+            this.writer.writeString('}');
+        }
+        if (namespaceCount > 0) {
             this.writer.EndOfStatement();
         }
     }
@@ -1838,7 +1881,7 @@ export class Emitter {
             case ts.SyntaxKind.TrueKeyword:
             case ts.SyntaxKind.FalseKeyword:
             case ts.SyntaxKind.BooleanKeyword:
-                this.writer.writeString('boolean');
+                this.writer.writeString('bool');
                 break;
             case ts.SyntaxKind.NumericLiteral:
             case ts.SyntaxKind.NumberKeyword:
@@ -1846,7 +1889,7 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.StringLiteral:
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('string');
+                this.writer.writeString('jsstring');
                 break;
             case ts.SyntaxKind.TypeLiteral:
             case ts.SyntaxKind.ObjectLiteralExpression:
@@ -1889,6 +1932,15 @@ export class Emitter {
                 const isEnum = this.isEnum(typeReference);
                 const isArray = this.resolver.isArrayType(typeInfo);
 
+                const isEventsStruct = typeReference.getFullText().split(' ').join('') === 'EventsStruct';
+
+                const primitives = [
+                    'uint8', 'uint16', 'uint32', 'uint64',
+                    'int8', 'int16', 'int32', 'int64', 'float',
+                    'double', 'float64', 'bool'
+                ];
+                const isPrimitive = primitives.includes(typeReference.getText());
+
                 const skipPointerIf =
                     (typeInfo && (<any>typeInfo).symbol && (<any>typeInfo).symbol.name === '__type')
                     || (typeInfo && (<any>typeInfo).primitiveTypesOnly)
@@ -1900,7 +1952,9 @@ export class Emitter {
                     || isEnum
                     || skipPointerInType
                     || isTypeAlias
-                    || isArray;
+                    || isArray
+                    || isEventsStruct
+                    || isPrimitive;
 
                 if (!skipPointerIf) {
                     this.writer.writeString('std::shared_ptr<');
@@ -1962,6 +2016,8 @@ export class Emitter {
 
                 if (!skipPointerIf) {
                     this.writer.writeString('>');
+                } else if (isEventsStruct) {
+                    this.writer.writeString(' * ');
                 }
 
                 break;
@@ -2131,7 +2187,7 @@ export class Emitter {
                 this.writer.writeString('0');
                 break;
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('STR("")');
+                this.writer.writeString('JSTR("")');
                 break;
             case ts.SyntaxKind.ArrayType:
                 this.writer.writeString('{}');
@@ -2178,6 +2234,19 @@ export class Emitter {
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
         implementationMode?: boolean): boolean {
+        if ( this.isHeader() && node.name.getFullText().replace(' ', '') === 'Main') {
+            if ( node.typeParameters && node.typeParameters.length > 0) {
+                throw new Error('"Main" function cannot have type parameters!');
+            }
+
+            if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'EventsStruct') {
+                throw new Error('"Main" function must take a single argument "EventsStruct" (globally defined!)');
+            }
+
+            this.writer.writeStringNewLine('extern "C" { __declspec(dllexport) void Main(EventsStruct*);}');
+
+            return false;
+        }
 
         // skip function declaration as union
         let noBody = false;
@@ -2245,7 +2314,7 @@ export class Emitter {
                     this.writer.writeString('void');
                 } else {
                     if (isClassMember && (<ts.Identifier>node.name).text === 'toString') {
-                        this.writer.writeString('string');
+                        this.writer.writeString('jsstring');
                     } else {
                         this.writer.writeString('any');
                     }
@@ -3013,7 +3082,7 @@ export class Emitter {
         if (text === '') {
             this.writer.writeString(`string_empty`);
         } else {
-            this.writer.writeString(`STR("${text}")`);
+            this.writer.writeString(`JSTR("${text}")`);
         }
     }
 
@@ -3345,6 +3414,8 @@ export class Emitter {
                 switch (identifier.text) {
                     case 'Number':
                     case 'String':
+                        this.writer.writeString('js::jsstring');
+                        break;
                     case 'Boolean':
                         this.writer.writeString('js::');
                         this.writer.writeString(identifier.text.toLocaleLowerCase());
@@ -3375,15 +3446,15 @@ export class Emitter {
         const leftType = this.resolver.getOrResolveTypeOf(node.left);
         const rightType = this.resolver.getOrResolveTypeOf(node.right);
 
-        const isLeftEnum = this.resolver.isTypeFromSymbol(leftType, ts.SyntaxKind.EnumDeclaration)
-        const isRightEnum = this.resolver.isTypeFromSymbol(rightType, ts.SyntaxKind.EnumDeclaration)
+        const isLeftEnum = this.resolver.isTypeFromSymbol(leftType, ts.SyntaxKind.EnumDeclaration);
+        const isRightEnum = this.resolver.isTypeFromSymbol(rightType, ts.SyntaxKind.EnumDeclaration);
 
         const leftSouldBePointer = isLeftEnum &&
             (opCode === ts.SyntaxKind.EqualsToken
             || opCode === ts.SyntaxKind.AmpersandToken
             || opCode === ts.SyntaxKind.BarEqualsToken
             || opCode === ts.SyntaxKind.CaretEqualsToken
-            || opCode === ts.SyntaxKind.PercentEqualsToken)
+            || opCode === ts.SyntaxKind.PercentEqualsToken);
 
         if (wrapIntoRoundBrackets) {
             this.writer.writeString('(');

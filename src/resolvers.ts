@@ -307,7 +307,7 @@ export class IdentifierResolver {
         }
 
         const name = (<ts.Identifier>location).text;
-        let resolvedSymbol = this.resolveNameFromLocals(location);
+        const resolvedSymbol = this.resolveNameFromLocals(location);
 
         if  (this.checkTypeAlias(resolvedSymbol)) {
             return true;
@@ -331,7 +331,7 @@ export class IdentifierResolver {
             return undefined;
         }
 
-        let resolvedSymbol = this.resolveNameFromLocals(location);
+        const resolvedSymbol = this.resolveNameFromLocals(location);
 
         if  (!this.checkTypeAlias(resolvedSymbol) && !this.checkImportSpecifier(resolvedSymbol)) {
             return false;
@@ -364,7 +364,7 @@ export class IdentifierResolver {
             return undefined;
         }
 
-        let resolvedSymbol = this.resolveNameFromLocals(location);
+        const resolvedSymbol = this.resolveNameFromLocals(location);
 
         if (this.checkImportSpecifier(resolvedSymbol)) {
             /* todo: finish it */
