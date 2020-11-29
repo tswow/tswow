@@ -1,0 +1,10 @@
+[submodule "TypeScript2Cxx"]
+	path = TypeScript2Cxx
+	url = https://github.com/tswow/TypeScript2Cxx.git
+    branch = tswow
+[submodule "StormLib"]
+	path = StormLib
+	url = https://github.com/ladislav-zezula/StormLib.git
+[submodule "TrinityCore"]
+	path = TrinityCore
+	url = https://github.com/tswow/TrinityCore.git
