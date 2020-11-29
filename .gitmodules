@@ -8,3 +8,4 @@
 [submodule "TrinityCore"]
 	path = TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
+	branch = tswow
