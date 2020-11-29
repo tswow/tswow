@@ -1,0 +1,31 @@
+client:
+  directory : C:\dev\wow\factions\client\
+  mpq_suffix: z
+
+build:
+  mpq_ignore:
+    - png
+    - blend
+
+#  Database Settings (see "separate_dbs.yaml" if you need separate configurations for each type)
+database_all:
+  host : localhost
+  user: root
+  password: ""
+  port: 3306
+  name: acore_
+
+# Settings for generation
+generation:
+  generate_mmaps: false
+  generate_vmaps: true
+
+# =========================================================================
+#  To use azerothcore configs directly, delete everything below this line 
+# =========================================================================
+
+# Settings for azerothcores "worldserver.conf"
+worldserver:
+  MoveMaps.enable: false
+
+tdb_file: https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.20111/TDB_full_world_335.20111_2020_11_16.7z

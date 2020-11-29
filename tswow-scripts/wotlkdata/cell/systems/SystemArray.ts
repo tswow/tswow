@@ -1,0 +1,59 @@
+/*
+ * This file is part of tswow (https://github.com/tswow)
+ *
+ * Copyright (C) 2020 tswow <https://github.com/tswow/>
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+import { Subsystem } from '../Subsystem';
+
+export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<T> {
+    constructor(owner: T) {
+        super(owner);
+    }
+
+    clear(index: number) {
+        this.get(index).clear();
+    }
+
+    clearAll() {
+        for (let i = 0; i < this.length; ++i) {
+            this.clear(i);
+        }
+    }
+
+    protected getFree(): A {
+        for (let i = 0; i < this.length; ++i) {
+            const cur = this.get(i);
+            if (cur.isClear()) {
+                // Clear non-id fields
+                cur.clear();
+                return cur;
+            }
+        }
+        throw new Error(`Can't add more entries, array is full.`);
+    }
+
+    abstract get length(): number;
+    abstract get(index: number): A;
+}
+
+export abstract class ArrayEntry<T> extends Subsystem<T> {
+    protected readonly index: number;
+    constructor(owner: T, index: number) {
+        super(owner);
+        this.index = index;
+    }
+
+    abstract clear(): T;
+    abstract isClear(): boolean;
+}
