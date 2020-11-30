@@ -239,7 +239,7 @@ export namespace Modules {
 
         wfs.copy(
             mpath('modules',name,'scripts','build','lib','Release',`${name}.dll`),
-            mpath('bin','trinitycore','scripts',`scripts_${name}ts.dll`)
+            mpath('bin','trinitycore','scripts',`scripts_${name}_ts.dll`)
         )
         //TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
