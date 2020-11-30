@@ -426,7 +426,6 @@ export class Emitter {
             });
 
             this.writer.writeStringNewLine('');
-            this.writer.writeStringNewLine('using namespace js;');
             this.writer.writeStringNewLine('');
 
             const position = this.writer.newSection();
@@ -472,7 +471,6 @@ export class Emitter {
             });
 
             this.writer.writeStringNewLine('');
-            this.writer.writeStringNewLine('using namespace js;');
             this.writer.writeStringNewLine('');
 
             sourceFile.statements.filter(s => this.isDeclarationStatement(s)).forEach(s => {
@@ -1956,10 +1954,6 @@ export class Emitter {
                     || isEventsStruct
                     || isPrimitive;
 
-                if (!skipPointerIf) {
-                    this.writer.writeString('std::shared_ptr<');
-                }
-
                 // writing namespace
                 if (this.isWritingMain) {
                     const symbol = (<any>typeReference.typeName).symbol || typeInfo && typeInfo.symbol;
@@ -2015,7 +2009,7 @@ export class Emitter {
                 }
 
                 if (!skipPointerIf) {
-                    this.writer.writeString('>');
+                    this.writer.writeString(' *');
                 } else if (isEventsStruct) {
                     this.writer.writeString(' * ');
                 }
@@ -2239,11 +2233,37 @@ export class Emitter {
                 throw new Error('"Main" function cannot have type parameters!');
             }
 
-            if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'EventsStruct') {
-                throw new Error('"Main" function must take a single argument "EventsStruct" (globally defined!)');
+            if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'TSEventHandlers') {
+                throw new Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
             }
 
-            this.writer.writeStringNewLine('extern "C" { __declspec(dllexport) void Main(EventsStruct*);}');
+            this.writer.writeStringNewLine(`extern "C" `);
+            this.writer.BeginBlock();
+            this.writer.writeStringNewLine(`__declspec(dllexport) void Main(TSEventHandlers*);`);
+            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModuleRevisionHash()`)
+            this.writer.BeginBlock();
+            // TODO: Read from TC file or something
+            this.writer.writeStringNewLine(`return "e105d3bbef";`)
+            this.writer.EndBlock();
+
+            this.writer.writeStringNewLine(`__declspec(dllexport) void AddTSScripts(TSEventHandlers* handlers)`);
+            this.writer.BeginBlock();
+            this.writer.writeStringNewLine(`Main(handlers);`);
+            this.writer.EndBlock();
+
+            this.writer.writeStringNewLine(`__declspec(dllexport) void AddScripts(){}`);
+            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModule()`);
+            this.writer.BeginBlock();
+            // TODO: Read this from commandline arguments
+            this.writer.writeStringNewLine(`return "${Math.random()}";`);
+            this.writer.EndBlock();
+
+            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetBuildDirective()`);
+            this.writer.BeginBlock();
+            this.writer.writeStringNewLine(`return "Release";`);
+            this.writer.EndBlock();
+
+            this.writer.EndBlock();
 
             return false;
         }

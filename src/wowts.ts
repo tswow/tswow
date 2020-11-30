@@ -65,16 +65,17 @@ const itms = findCpp(path.join(modulePath, './scripts/build/cpp'), '');
 
 fs.writeFileSync(path.join(modulePath, 'scripts/build/cpp/CMakeLists.txt'),
 `cmake_minimum_required(VERSION 3.18)
+set(CMAKE_CXX_STANDARD 17)
 project(${buildModule})
 include_directories(../../../../../bin/include)
-add_library(${buildModule} SHARED ${itms.join(' ')})
+
+file (GLOB headers "../../../../../bin/include/*.h")
+file (GLOB libs "../../../../../bin/libraries/*.lib")
+
+add_library(${buildModule} SHARED ${itms.join(' ')} \${libs})
 target_precompile_headers(${buildModule}
     PUBLIC
-        ../../../../../bin/include/TSCore.h
-        ../../../../../bin/include/TSClasses.h
-        ../../../../../bin/include/TSEvents.h
-        ../../../../../bin/include/TSIds.h
-        ../../../../../bin/include/TSAll.h
+        \${headers}
 )`
 );
 
