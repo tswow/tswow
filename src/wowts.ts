@@ -72,7 +72,9 @@ include_directories(../../../../../bin/include)
 file (GLOB headers "../../../../../bin/include/*.h")
 file (GLOB libs "../../../../../bin/libraries/*.lib")
 
-add_library(${buildModule} SHARED ${itms.join(' ')} \${libs})
+add_library(${buildModule} SHARED ${itms.join(' ')})
+target_link_libraries(${buildModule} \${libs})
+
 target_precompile_headers(${buildModule}
     PUBLIC
         \${headers}
