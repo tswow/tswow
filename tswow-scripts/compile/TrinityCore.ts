@@ -121,5 +121,8 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
     }
 
     // Move ts-module header files
-    wfs.copy('./tswow-module/src/public', mpath(bindir, 'include'), true);
+    const headerSrc = mpath('TrinityCore','src','server','game','Tswow',
+        'scripting','Public');
+    const headerDest = mpath(bindir,'include');
+    wfs.copy(headerSrc,headerDest);
 }

@@ -36,9 +36,6 @@ export async function createConfig() {
     wfs.copy('./separate_dbs.default.yaml', install_path('separate_dbs.yaml'));
     wfs.copy('./package.json', install_path('package.json'));
 
-    wfs.copy('./tswow-module/src/public/global.d.ts',
-        install_path('bin', 'scripts', 'global.d.ts.template'));
-
     if (!wfs.exists(install_path('.gitignore'))) {
         wfs.write(install_path('.gitignore'), install_gitignore);
     }
