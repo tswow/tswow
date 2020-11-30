@@ -2404,7 +2404,7 @@ export class Emitter {
                 }
 
                 // lambda or noname function
-                const byReference = (<any>node).__lambda_by_reference ? '&' : '=';
+                const byReference = (<any>node).__lambda_by_reference ? '&' : '';
                 this.writer.writeString(`[${byReference}]`);
             }
         }
@@ -2463,7 +2463,7 @@ export class Emitter {
         });
 
         if (isArrowFunction || isFunctionExpression) {
-            this.writer.writeStringNewLine(') mutable');
+            this.writer.writeStringNewLine(')');
         } else {
             this.writer.writeStringNewLine(')');
         }
