@@ -235,8 +235,13 @@ export namespace Modules {
      */
     export function rebuildModule(name: string) {
         const timer = Timer.start();
-        wsys.exec(`npm run build-module ${name}`, 'inherit');
-        TrinityCore.sendToWorld(`tsreload ${name}.dll`);
+        wsys.exec(`node ./bin/scripts/transpiler/wowts.js ${name}`)
+
+        wfs.copy(
+            mpath('modules',name,'scripts','build','lib','Release',`${name}.dll`),
+            mpath('bin','trinitycore','scripts',`scripts_${name}ts.dll`)
+        )
+        //TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
         term.log(`Rebuilt code for ${name} in ${timer.timeSec()}s`);
     }
