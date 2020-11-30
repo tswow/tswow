@@ -307,6 +307,7 @@ export namespace Modules {
     export function refreshModules(force: boolean = false) {
         wfs.readDir('./modules', true).forEach(xx => {
             const x = mpath('./modules', xx);
+
             const datalib_path = mpath(x, 'datalib');
             const datalib_build_path = mpath(datalib_path, 'build');
             const datalib_package_path = mpath(datalib_build_path, 'package.json');
@@ -343,7 +344,9 @@ export namespace Modules {
 
             const scripts_path = mpath(x, 'scripts');
             const scripts_tsconfig_path = mpath(x, 'scripts' , 'tsconfig.json');
+            const scripts_globaldts_path = mpath(x, 'scripts' , 'global.d.ts');
             if (wfs.exists(scripts_path)) {
+                wfs.copy(mpath('bin','include','global.d.ts'),mpath(scripts_globaldts_path));
                 if (!wfs.exists(scripts_tsconfig_path) || force) {
                     wfs.write(scripts_tsconfig_path, scripts_tsconfig_json);
                 }
