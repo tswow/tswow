@@ -15,6 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
+import { Cell } from '../cell/Cell';
+import { Subsystem } from '../cell/Subsystem';
 
 export type EditType = 'before' | 'after' | 'replace';
 
@@ -31,6 +33,36 @@ export class Edit {
         this.line = line;
         this.text = text;
         this.sortIndex = sortIndex;
+    }
+
+    toCell<T>(owner: T) {
+        return new EditCell(owner, this);
+    }
+}
+
+export class EditCell<T> extends Cell<string,T> {
+    private edit: Edit;
+
+    constructor(owner: T, edit: Edit){
+        super(owner);
+        this.edit = edit;
+    }
+
+    set(value: string): T {
+        this.edit.text = value;
+        return this.owner;
+    }
+
+    get() : string {
+        return this.edit.text;
+    }
+}
+
+export class EditSystem<T> extends Subsystem<T> {
+    protected edit: Edit;
+    constructor(owner: T, edit: Edit) {
+        super(owner);
+        this.edit = edit;
     }
 }
 
