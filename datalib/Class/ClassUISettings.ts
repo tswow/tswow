@@ -15,7 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { LUAXML } from "wotlkdata";
-import { Edit } from "wotlkdata/luaxml/TextFile";
+import { Cell } from "wotlkdata/cell/Cell";
+import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Edit, EditCell, EditSystem } from "wotlkdata/luaxml/TextFile";
 import { Class } from "./Class";
 
 export function classXml(id : number, offsetX = 25, offsetY = 0) {
@@ -40,122 +42,25 @@ function unfloat(str : string) {
         .split(',').map(x=>parseFloat(x.split('=')[1]))
     return (Math.floor(r*255)<<16)+(Math.floor(g*255)<<8)+Math.floor(b*255);
 }
+
+class TCoordSystem extends Subsystem<Class> {
+    private _tCoordsCCEdit: Edit;
+    private _tCoordsEdit: Edit;
+
+    constructor(owner: Class, tcoords: Edit, tcoordsCC: Edit) {
+        super(owner);
+        this._tCoordsCCEdit = tcoordsCC;
+        this._tCoordsEdit = tcoords;
+    }
     
-export class ClassUISettings {
-    private _cls : Class;
-    private _tCoordsCCEdit : Edit;
-    private _classColorEdit : Edit;
-    private _tCoordsEdit : Edit;
-    private _xmlEdit : Edit;
-    // TODO: Use?
-    private _sortOrderEdit : Edit;
-    private _infoRows : Edit[];
-
-    private _maleDescription : Edit;
-    private _femaleDescription : Edit;
-
-    constructor(cls : Class,tCoordsCC : Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
-        this._cls = cls;
-        this._tCoordsCCEdit = tCoordsCC;
-        this._classColorEdit = classColor;
-        this._sortOrderEdit = sortOrder;
-        this._tCoordsEdit = tCoords;
-        this._xmlEdit = xmlEdit;
-        this._infoRows = infoRows;
-        this._maleDescription = maleDescription;
-        this._femaleDescription = femaleDescription;
-        return this;
+    set(x1: number, y1: number, x2: number, y2: number) {
+        const txt = `["${this.owner.Filename}"] = {${[x1,y1,x2,y2].join(', ')}},`
+        this._tCoordsCCEdit.text = txt;
+        this._tCoordsEdit.text = txt;
+        return this.owner;
     }
 
-    private descPayload(desc : string) {
-        return desc.substring(desc.indexOf('"'),desc.length-2);
-    }
-
-    get maleDescription() {
-        return this.descPayload(this._maleDescription.text);
-    }
-
-    set maleDescription(value : string) {
-        this._maleDescription.text = `CLASS_${this.id} = "${value}";`;
-    }
-
-    get femaleDescription() {
-        return this.descPayload(this._femaleDescription.text);
-    }
-
-    set femaleDescription(value : string) {
-        this._femaleDescription.text = `CLASS_${this.id}_FEMALE = "${value}";`
-    }
-
-    setBothGenderDescription(value : string) {
-        this.maleDescription = value;
-        this.femaleDescription = value;
-    }
-
-    infoRowCount() {
-        return this._infoRows.length;
-    }
-
-    private get id() {
-        return this._cls.row.Filename;
-    }
-
-    private makeClassInfoRow(num: number,value : string) {
-        return `CLASS_INFO_${this.id}${num} = "${value}";`
-    }
-
-    getInfoRow(num : number) {
-        return this.descPayload(this._infoRows[num].text);
-    }
-
-    setInfoRow(num : number, value : string) {
-        if(num<this.infoRowCount()) {
-            this._infoRows[num].text = this.makeClassInfoRow(num,value);
-        } else {
-            throw new Error(`Tried to replace non-existing info row ${num}, use "addInfoRow" instead!`);
-        }
-    }
-
-    addInfoRow(value : string) {
-        if(this._infoRows.length===0) {
-            LUAXML.file('Interface/GlueXML/GlueStrings.lua')
-                .after(1,this.makeClassInfoRow(this.infoRowCount(),value));
-        } else {
-            LUAXML.file('Interface/GlueXML/GlueStrings.lua')
-                .after(this._infoRows[this._infoRows.length-1].line,
-                    this.makeClassInfoRow(this.infoRowCount(),value));
-        }
-    }
-
-    /**
-     * Sets the location of the creation button for this class.
-     * @param x 
-     * @param y 
-     */
-    setCreationButtonLocation(x : number, y : number) {
-        this._xmlEdit.text = classXml(this._cls.row.ID.get(),x,y);
-    }
-
-    /**
-     * Sets the color when the name of this class is displayed (red for warriors, yellow for rogues etc.)
-     * @param rgb 
-     */
-    setClassColor(rgb : number) {
-        this._classColorEdit.text = `\t["${this._cls.row.Filename}"] = ${float(rgb)},`;
-    }
-
-    /**
-     * Returns the color when the name of this class is displayed (red for warriors, yellow for rogues etc.)
-     */
-    getClassColor() {
-        return unfloat(this._classColorEdit.text);
-    }
-
-    /**
-     * Returns the tcoords of this class icon. 
-     * @warn Editing the array will NOT work.
-     */
-    getTcoords() {
+    get() : [number,number,number,number] {
         return this._tCoordsEdit.text
             .split('{')[1]
             .split('}')[0]
@@ -163,14 +68,112 @@ export class ClassUISettings {
             .split(',')
             .map(x=>parseFloat(x)) as [number,number,number,number];
     }
+}
 
-    /**
-     * Sets the tcoords of this class icon
-     * @param nums 
-     */
-    setTcoords(nums : [number,number,number,number]) {
-        const txt = `["${this._cls.row.Filename}"] = {${nums.join(', ')}},`
-        this._tCoordsCCEdit.text = txt;
-        this._tCoordsEdit.text = txt;
+class ClassColor extends EditSystem<Class> {
+    set(rgb: number) {
+        this.edit.text = `\t["${this.owner.Filename}"] = ${float(rgb)},`;
+        return this.owner;
+    }
+
+    get() : number {
+        return unfloat(this.edit.text);
+    }
+}
+
+class CreationButton extends EditSystem<Class> {
+    set(x: number, y: number) {
+        this.edit.text = classXml(this.owner.ID,x,y);
+    }
+}
+
+class ClassInfoRows extends Subsystem<Class> {
+    private rows: Edit[];
+
+    constructor(owner: Class, rows: Edit[]) {
+        super(owner);
+        this.rows = rows;
+    }
+
+    private descPayload(desc : string) {
+        return desc.substring(desc.indexOf('"'),desc.length-2);
+    }
+
+    private makeInfo(index: number, value: string) {
+        return `CLASS_INFO_${this.owner.Filename}${index} = "${value}";`
+    }
+
+    get(index: number) {
+        return this.descPayload(this.rows[index].text);
+    }
+
+    set(index: number, value: string) {
+        this.rows[index].text = this.makeInfo(index, value);
+        return this.owner;
+    }
+
+    add(value: string) {
+        this.rows.push(LUAXML.file('Interface/GlueXML/GlueStrings.lua')
+            .after(1, this.makeInfo(this.rows.length, value)))
+        return this.owner;
+    }
+}
+
+// TODO: Not all builtin classes have female text rows, so this needs to be fixed.
+class ClassDescription extends Subsystem<Class> {
+    private male: Edit;
+    private female: Edit;
+
+    constructor(owner: Class, male: Edit, female: Edit) {
+        super(owner);
+        this.male = male;
+        this.female = female;
+    }
+
+    private descPayload(desc : string) {
+        return desc.substring(desc.indexOf('"'),desc.length-2);
+    }
+
+    setMale(text: string) {
+        this.male.text = `CLASS_${this.owner.Filename} = "${text}";`;
+        return this.owner;
+    }
+
+    setFemale(text: string) {
+        this.female.text = `CLASS_${this.owner.Filename} = "${text}";`
+        return this.owner;
+    }
+
+    getMale() {
+        return this.descPayload(this.male.text);
+    }
+
+    getFemale() {
+        return this.descPayload(this.female.text);
+    }
+
+    set(text: string) {
+        this.setMale(text);
+        this.setFemale(text);
+        return this.owner;
+    }
+}
+
+// TODO: Fix sort order
+export class ClassUISettings extends Subsystem<Class> {
+    readonly color: ClassColor;
+    readonly tcoords: TCoordSystem;
+    readonly creationButton: CreationButton;
+    readonly info: ClassInfoRows;
+    readonly description: ClassDescription;
+
+    constructor(cls : Class,tCoordsCC : Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
+        super(cls);
+        this.tcoords = new TCoordSystem(cls, tCoords, tCoordsCC);
+        this.color = new ClassColor(cls, classColor);
+        this.creationButton = new CreationButton(cls, xmlEdit);
+        this.description = new ClassDescription(cls, maleDescription, femaleDescription )
+        this.info = new ClassInfoRows(cls, infoRows);
+        return this;
     }
 }

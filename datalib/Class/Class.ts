@@ -58,6 +58,8 @@ export class Class extends MainEntity<ChrClassesRow> {
                 femaleDescription,infoRows);
     }
 
+    get Filename() { return this.row.Filename.get(); }
+
     get ID() { return this.row.ID.get(); }
 
     get Stats() { return new ClassStats(this); }
