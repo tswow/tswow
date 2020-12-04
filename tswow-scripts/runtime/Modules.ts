@@ -22,7 +22,7 @@ import { mysql } from '../util/MySQL';
 import { cfg } from '../util/Config';
 import { Timer } from '../util/Timer';
 import { TrinityCore } from './TrinityCore';
-import { watchTs } from '../util/TSWatcher';
+import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
 import { Client } from './Client';
 import { isWindows } from '../util/Platform';
 import { Wrap } from '../util/Wrap';
@@ -61,6 +61,7 @@ const data_tsconfig =
       "esModuleInterop": true,
       "declaration": true,
       "skipLibCheck": true,
+      "incremental": true,
       "forceConsistentCasingInFileNames": true,
       "experimentalDecorators": true,
       "sourceMap": true
@@ -123,7 +124,7 @@ build/
  * Contains functions for working with tswow modules.
  */
 export namespace Modules {
-    const listens: {[key: string]: ChildProcessWithoutNullStreams} = {};
+    const listens: {[key: string]: TypeScriptWatcher} = {};
 
     /**
      * Returns names of all installed modules.
@@ -302,7 +303,7 @@ export namespace Modules {
                     listens[data_path] = watchTs(data_path, false);
                 }
 
-                if (!wfs.exists(nodemodule_path) || force) {
+                if (!wfs.exists(nodemodule_path)) {
                     wsys.exec(`npm link ${mpath(x, 'data', 'build')}`);
                 }
             }
@@ -319,26 +320,46 @@ export namespace Modules {
         });
     }
 
-    export function uninstallModule(name: string, force: boolean) {
-        try {
-            wsys.exec(`git submodule deinit ${name}`);
-        } catch (error) {}
-        const listen = listens[name];
+    export async function uninstallModule(name: string, force: boolean) {
+        // Remove listener
+        const listenPath = mpath('modules', name, 'data');
+        const listen = listens[listenPath];
         if (listen) {
             listen.kill();
+            delete listens[listenPath];
         }
 
-        if (wfs.exists(`./modules/${name}`)) {
-            if (force) {
-                try {
-                    wsys.exec(`git rm ./modules/${name} -f`);
-                } catch (err) {}
-            } else {
-                wsys.exec(`git rm ./modules/${name}`);
+        // Remove gitmodule files
+        function cleanModuleFile(fpath: string) {
+            let rows = wfs.read(fpath).split('\n');
+            const index = rows.indexOf(`[submodule "modules/${name}"]`);
+            if (index === -1) {
+                return;
             }
+            let end = index;
+            for (let j = index; j < rows.length; ++j) {
+                if (rows[j].startsWith('[')) {
+                    break;
+                } else {
+                    end = j;
+                }
+            }
+            rows = rows.slice(index, end);
+            wfs.write(fpath, rows.join('\n'));
         }
+        cleanModuleFile('./.gitmodules');
+        cleanModuleFile('./.git/config');
+        wfs.remove(`./.git/modules/${name}`);
 
-        wfs.remove(`./.git/modules/modules/${name}`);
+        // Store a copy of the module in our garbage bin
+        function garbagePath(j: number) {
+            return mpath(ipaths.coreData, 'module_garbage', `${name}_${j}`);
+        }
+        let i = 0;
+        while (wfs.exists(garbagePath(i))) {
+            ++i;
+        }
+        wfs.copy(`./modules/${name}`, garbagePath(i));
         wfs.remove(`./modules/${name}`);
     }
 
@@ -413,7 +434,7 @@ export namespace Modules {
 
         setInterval(() => {
             refreshModules();
-        }, 2000);
+        }, 5000);
         refreshModules(true);
 
         term.success('Modules initialized');

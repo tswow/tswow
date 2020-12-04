@@ -430,6 +430,10 @@ export namespace wfs {
         return path.basename(pathIn);
     }
 
+    export function dirname(pathIn: string) {
+        return path.dirname(pathIn);
+    }
+
     /**
      * Copies a file or folder to a new location. Creates any parent directories necessary at the target.
      * @param source The source folder to copy from
