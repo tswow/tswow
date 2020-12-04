@@ -137,6 +137,7 @@ export class Process {
     async startIn(directory: string, program: string, args: string[] = []) {
         await this.stop();
         const prevDir = process.cwd();
+        // TODO: Why exactly are we doing this?
         process.chdir(directory);
         this.process = wsys.spawn(program, args);
         process.chdir(prevDir);

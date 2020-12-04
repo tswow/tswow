@@ -18,9 +18,7 @@ import { commands } from './Commands';
 import { Process } from '../util/Process';
 import { wfs, mpath } from '../util/FileSystem';
 import { isWindows } from '../util/Platform';
-import { mysql } from '../util/MySQL';
-import { wsys } from '../util/System';
-import { term } from '../util/Terminal';
+import { ipaths } from './RuntimePaths';
 
 /**
  * Contains functions to handle the `worldserver` (main process) of TrinityCore.
@@ -44,25 +42,35 @@ export namespace TrinityCore {
             throw new Error('Something else started the world and auth server!');
         }
 
-        const buildDir = `./bin/trinitycore/${type}`;
+        const buildDir = type === 'debug' ? ipaths.tcDebug : ipaths.tcRelease;
         if (!wfs.exists(buildDir)) {
             throw new Error(`Unable to start TrinityCore in ${type} mode becuase it has not been built`);
         }
 
+        // Copy over dll files
+        if (isWindows()) {
+            wfs.readDir(ipaths.tcRoot, true)
+                .filter(x => x.endsWith('.dll'))
+                .forEach(x => wfs.copy(mpath(ipaths.tcRoot, x), mpath(buildDir, x)));
+        }
 
-        // const movedFiles = isWindows() ?
-        //    ['worldserver.exe', 'authserver.exe'] :
-        //    ['worldserver', 'authserver'];
-        const outPath = isWindows() ? './bin/trinitycore' : './bin/trinitycore/bin';
-        wfs.copy(buildDir, outPath);
+        // Copy over config files
+        wfs.readDir(ipaths.config, true)
+            .filter(x => x.endsWith('.conf'))
+            .map(x => wfs.copy(mpath(ipaths.config, x), mpath(ipaths.coreData, x)));
 
-        const hastable = await mysql.auth.hasTable('account');
+        // Copy dbc files if no patch has been applied
+        if (!wfs.exists(ipaths.dbcBuild)) {
+            wfs.copy(ipaths.dbcSource, ipaths.dbcBuild);
+        }
 
-        worldserver.startIn(outPath, `${isWindows() ? '' : './'}worldserver${isWindows() ? '.exe' : ''}`);
-
-        term.log('Worldserver starting...');
+        // TODO: linux
+        worldserver.startIn(ipaths.coreData,
+            wfs.absPath(mpath(buildDir, 'worldserver.exe')));
         await worldserver.waitFor('(worldserver-daemon) ready...');
-        authserver.startIn(outPath, `${isWindows() ? '' : './'}authserver${isWindows() ? '.exe' : ''}`);
+
+        authserver.startIn(ipaths.coreData,
+            wfs.absPath(mpath(buildDir, 'authserver.exe')));
     }
 
     /**

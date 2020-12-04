@@ -20,6 +20,7 @@ import { TRINITYCORE_BUILD_PATH, TRINITYCORE_SOURCE_PATH, install_path, build_pa
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { args } from '../util/Args';
+import { ipaths } from '../runtime/RuntimePaths';
 
 export async function installTrinityCore(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
     term.log('Compiling TrinityCore');
@@ -70,7 +71,6 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
             : mpath(TRINITYCORE_BUILD_PATH, 'install', 'trinitycore', 'etc');
 
         const binOut = mpath(bindir, 'trinitycore', outName);
-        const confOut = isWindows() ? mpath(bindir, 'trinitycore') : mpath(bindir, 'trinitycore', 'etc');
 
         // All library files we will need
         [`dep/zlib/${inName}/zlib.lib`,
@@ -94,8 +94,8 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
                 .filter(x => x.endsWith('.conf.dist'))
                 .forEach(x => {
                     const inPath = mpath(confIn, x);
-                    const outDist = mpath(confOut, x);
-                    const outConf = mpath(confOut, x.replace('.dist', ''));
+                    const outDist = mpath(ipaths.coreData, x);
+                    const outConf = mpath(ipaths.config, x.replace('.dist', ''));
                     wfs.copy(inPath, outDist);
                     if (!wfs.exists(outConf)) { wfs.copy(inPath, outConf); }
                 });

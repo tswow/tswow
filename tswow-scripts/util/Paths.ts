@@ -41,6 +41,8 @@ export class InstallPaths {
     get bin() { return mpath(this.installBase, 'bin'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
+    get tcRoot() {return mpath(this.bin, 'trinitycore'); }
+
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
     get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
@@ -50,6 +52,7 @@ export class InstallPaths {
 
     /** Misc paths */
     get nodeModules() { return mpath(this.installBase, 'node_modules'); }
+    get config() { return mpath(this.installBase, 'config'); }
 
     /** Module paths */
     get modules() { return mpath(this.installBase, 'modules'); }
