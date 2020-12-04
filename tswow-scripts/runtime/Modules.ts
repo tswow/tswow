@@ -50,7 +50,7 @@ const lib_package_json =
 /**
  * The tsconfig.json that will be used to compile 'datalib' directories
  */
-const datalib_tsconfig =
+const data_tsconfig =
 `{
     "compilerOptions": {
       "target": "es2018",
@@ -65,28 +65,6 @@ const datalib_tsconfig =
       "experimentalDecorators": true,
       "sourceMap": true
     }
-}`;
-
-/**
- * The tsconfig.json that will be used to compile 'data' directories of modules.
- */
-const data_tsconfig =
-`{
-    "compilerOptions": {
-      "target": "es2018",
-      "module": "commonjs",
-      "outDir": "./build",
-      "rootDir": "./",
-      "strict": true,
-      "sourceMap": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "experimentalDecorators": true,
-      "sourceMap": true
-    },
-    "include":["./","../Ids.ts"],
-    "exclude":["../scripts/","../datalib"]
 }`;
 
 const scripts_tsconfig_json =
@@ -173,7 +151,7 @@ export namespace Modules {
      * Creates a new module
      * @param name - Name of the new module
      */
-    export function addModule(name: string, libraryOnly?: string) {
+    export function addModule(name: string) {
         const timer = Timer.start();
         const modpath = modulePath(name);
         if (wfs.exists(modpath)) {
@@ -182,16 +160,11 @@ export namespace Modules {
 
         wfs.mkDirs(modpath);
 
-        if (libraryOnly === 'lib') {
-            wfs.mkDirs(mpath(modpath, 'datalib'));
-        } else {
-            wfs.mkDirs(mpath(modpath, 'data'));
-            wfs.write(mpath(modpath, 'data', 'patch.ts'), patch_example_ts);
-            wfs.mkDirs(mpath(modpath, 'assets'));
-            wfs.mkDirs(mpath(modpath, 'scripts'));
-            wfs.copy('./bin/scripts/global.d.ts.template', mpath(modpath, 'scripts', 'global.d.ts'));
-            // wfs.write(mpath(modpath, 'ids.ts'), ids_ts(name));
-        }
+        wfs.mkDirs(mpath(modpath, 'data'));
+        wfs.write(mpath(modpath, 'data', 'index.ts'), patch_example_ts);
+        wfs.mkDirs(mpath(modpath, 'assets'));
+        wfs.mkDirs(mpath(modpath, 'scripts'));
+        wfs.copy('./bin/scripts/global.d.ts.template', mpath(modpath, 'scripts', 'global.d.ts'));
 
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
@@ -312,37 +285,25 @@ export namespace Modules {
         wfs.readDir('./modules', true).forEach(xx => {
             const x = mpath('./modules', xx);
 
-            const datalib_path = mpath(x, 'datalib');
-            const datalib_build_path = mpath(datalib_path, 'build');
-            const datalib_package_path = mpath(datalib_build_path, 'package.json');
-            const datalib_tsconfig_path = mpath(datalib_path, 'tsconfig.json');
             const data_path = mpath(x, 'data');
+            const data_build_path = mpath(data_path, 'build');
+            const data_package_path = mpath(data_build_path, 'package.json');
             const data_tsconfig_path = mpath(data_path, 'tsconfig.json');
             const nodemodule_path = mpath('node_modules', xx);
-
-            if (wfs.exists(datalib_path)) {
-                if (!wfs.exists(datalib_tsconfig_path) || force) {
-                    wfs.write(datalib_tsconfig_path, datalib_tsconfig);
-                }
-
-                wfs.write(datalib_package_path, lib_package_json(xx));
-
-                if (!listens[datalib_path] || force) {
-                    listens[datalib_path] = watchTs(datalib_path, false);
-                }
-
-                if (!wfs.exists(nodemodule_path) || force) {
-                    wsys.exec(`npm link ${mpath(x, 'datalib', 'build')}`);
-                }
-            }
 
             if (wfs.exists(data_path)) {
                 if (!wfs.exists(data_tsconfig_path) || force) {
                     wfs.write(data_tsconfig_path, data_tsconfig);
                 }
 
+                wfs.write(data_package_path, lib_package_json(xx));
+
                 if (!listens[data_path] || force) {
                     listens[data_path] = watchTs(data_path, false);
+                }
+
+                if (!wfs.exists(nodemodule_path) || force) {
+                    wsys.exec(`npm link ${mpath(x, 'data', 'build')}`);
                 }
             }
 
@@ -407,7 +368,7 @@ export namespace Modules {
 
         moduleC.addCommand('add', 'name', 'Create a new module', (args) => {
             if (args.length < 1) { throw new Error('Please provide a name for the new module'); }
-            addModule(args[0], args[1]);
+            addModule(args[0]);
         });
 
         moduleC.addCommand('install', 'url', 'Installs a module from a git repository', (args) => {
