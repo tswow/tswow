@@ -40,10 +40,10 @@ export class Edit {
     }
 }
 
-export class EditCell<T> extends Cell<string,T> {
+export class EditCell<T> extends Cell<string, T> {
     private edit: Edit;
 
-    constructor(owner: T, edit: Edit){
+    constructor(owner: T, edit: Edit) {
         super(owner);
         this.edit = edit;
     }
@@ -53,7 +53,7 @@ export class EditCell<T> extends Cell<string,T> {
         return this.owner;
     }
 
-    get() : string {
+    get(): string {
         return this.edit.text;
     }
 }

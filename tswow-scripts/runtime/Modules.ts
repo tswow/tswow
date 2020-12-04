@@ -235,13 +235,13 @@ export namespace Modules {
      */
     export function rebuildModule(name: string) {
         const timer = Timer.start();
-        wsys.exec(`node ./bin/scripts/transpiler/wowts.js ${name}`)
+        wsys.exec(`node ./bin/scripts/transpiler/wowts.js ${name}`);
 
         wfs.copy(
-            mpath('modules',name,'scripts','build','lib','Release',`${name}.dll`),
-            mpath('bin','trinitycore','scripts',`scripts_${name}_ts.dll`)
-        )
-        //TrinityCore.sendToWorld(`tsreload ${name}.dll`);
+            mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
+            mpath('bin', 'trinitycore', 'scripts', `scripts_${name}_ts.dll`)
+        );
+        // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
         term.log(`Rebuilt code for ${name} in ${timer.timeSec()}s`);
     }
@@ -346,7 +346,7 @@ export namespace Modules {
             const scripts_tsconfig_path = mpath(x, 'scripts' , 'tsconfig.json');
             const scripts_globaldts_path = mpath(x, 'scripts' , 'global.d.ts');
             if (wfs.exists(scripts_path)) {
-                wfs.copy(mpath('bin','include','global.d.ts'),mpath(scripts_globaldts_path));
+                wfs.copy(mpath('bin', 'include', 'global.d.ts'), mpath(scripts_globaldts_path));
                 if (!wfs.exists(scripts_tsconfig_path) || force) {
                     wfs.write(scripts_tsconfig_path, scripts_tsconfig_json);
                 }
