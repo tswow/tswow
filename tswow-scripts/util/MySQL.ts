@@ -25,8 +25,8 @@ import { TrinityCore } from '../runtime/TrinityCore';
 import { mpath, wfs, wfsa } from './FileSystem';
 import { Timer } from './Timer';
 import { Wrap } from './Wrap';
-import md5 from 'md5';
 import { download } from '../compile/CompileUtils';
+import { ipaths } from '../runtime/RuntimePaths';
 
 /**
  * Helper function to make a mysql query and return a promise.
@@ -187,16 +187,18 @@ export namespace mysql {
     export async function loadWorldBackup(): Promise<Wrap<Promise<void>>> {
         const time = Timer.start();
         await disconnect();
-        wfs.move('./bin/mysql/world_backup', `./bin/mysql/data/${cfg.databaseSettings('world').name}`);
+        wfs.move(ipaths.worldPlain1,
+            mpath(ipaths.mysqlData, cfg.databaseSettings('world').name));
         await startMysql(true);
         term.success(`Loaded MySQL backup in ${time.timeSec(2)}s`);
-        return new Wrap(wfsa.copy('./bin/mysql/world_backup2', './bin/mysql/world_backup'));
+        return new Wrap(wfsa.copy(ipaths.worldPlain2, ipaths.worldPlain1));
     }
 
     async function startMysql(skipBackup = false) {
         if (isWindows()) {
-            if (!wfs.exists('./bin/mysql/data')) {
-                wsys.exec('./bin/mysql/bin/mysqld.exe --initialize');
+            if (!wfs.exists(ipaths.mysqlData)) {
+                wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
+                    wfs.absPath(ipaths.mysqlData)}`);
             }
         }
 
@@ -205,11 +207,12 @@ export namespace mysql {
         const oldAcStatus = TrinityCore.isStarted();
         await disconnect();
         if (isWindows()) {
-            mysqlprocess.start('./bin/mysql/bin/mysqld.exe',
+            mysqlprocess.start(ipaths.mysqldExe,
                 [
                     '--log_syslog=0',
                     // '--console',
-                    `--init-file=${wfs.absPath(startup_file)}`
+                    `--init-file=${wfs.absPath(startup_file)}`,
+                    `--datadir=${wfs.absPath(ipaths.mysqlData)}`
                 ]);
         }
 
@@ -226,14 +229,16 @@ export namespace mysql {
         }
 
         // Create the world backup
-        if (!skipBackup && !wfs.exists('./bin/mysql/world_backup')) {
-            term.log(`Creating world_backup...`);
-            wfs.copy(`./bin/mysql/data/${cfg.databaseSettings('world').name}`, './bin/mysql/world_backup');
+        if (!skipBackup && !wfs.exists(ipaths.worldPlain1)) {
+            term.log(`Creating first world_plain...`);
+            wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
+                ipaths.worldPlain1
+            );
         }
 
-        if (!wfs.exists('./bin/mysql/world_backup2')) {
-            term.log(`Creating second world_backup...`);
-            wfs.copy(`./bin/mysql/world_backup`, './bin/mysql/world_backup2');
+        if (!skipBackup && !wfs.exists(ipaths.worldPlain2)) {
+            term.log(`Creating second world_plain...`);
+            wfs.copy(ipaths.worldPlain1, ipaths.worldPlain2);
         }
 
         // Restart TrinityCore if it was started before this restart
@@ -252,7 +257,7 @@ export namespace mysql {
             if (wfs.exists(local_sql)) {
                 break;
             } else if (wfs.exists(local_7z)) {
-                wsys.exec(`"bin/7zip/7za.exe" e -obin ${local_7z}`);
+                wsys.exec(`"${ipaths.sevenZaExe}" e -obin ${local_7z}`);
                 continue;
             } else {
                 await download(remote_file, local_7z);
@@ -266,7 +271,7 @@ export namespace mysql {
         await promiseQuery(w.con, `DROP DATABASE IF EXISTS \`${w.name()}\`;`);
         w.status = undefined;
         await w.connect();
-        const sqlpath = isWindows() ? `"bin/mysql/bin/mysql.exe"` : `sudo mysql`;
+        const sqlpath = isWindows() ? `"${ipaths.mysqlExe}"` : `sudo mysql`;
         await wsys.execAsync(`${sqlpath} -u root ${w.name()} < ${local_sql}`);
         term.success(`Rebuilt database ${w.name()}`);
     }
@@ -290,7 +295,7 @@ export namespace mysql {
 
         await Promise.all(waits);
 
-        wfs.iterate(mpath('./bin', 'sql'), (file) => {
+        wfs.iterate(ipaths.startupSql, (file) => {
             if (file.endsWith('.sql')) {
                 const contents = wfs.read(file);
                 world_src.query(contents);

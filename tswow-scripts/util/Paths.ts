@@ -29,8 +29,8 @@ export class InstallPaths {
     get mmaps() {return mpath(this.coreData, 'mmaps'); }
     get vmaps() {return mpath(this.coreData, 'vmaps'); }
     get mysqlData() {return mpath(this.coreData, 'mysql'); }
-    get worldPlain1() {return mpath(this.coreData, 'world_plain_1'); }
-    get worldPlain2() {return mpath(this.coreData, 'world_plain_2'); }
+    get worldPlain1() {return mpath(this.coreData, 'mysql', 'world_plain_1'); }
+    get worldPlain2() {return mpath(this.coreData, 'mysql', 'world_plain_2'); }
     get dbcSource() {return mpath(this.coreData, 'dbc_source'); }
     get dbcBuild() {return mpath(this.coreData, 'dbc'); }
     get luaxmlSource() { return mpath(this.coreData, 'luaxml_base'); }
@@ -43,6 +43,10 @@ export class InstallPaths {
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
+    get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
+    get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
+    get sevenZaExe() { return mpath(this.bin, '7zip', '7za.exe'); }
+    get startupSql() { return mpath(this.bin, 'sql'); }
 
     /** Misc paths */
     get nodeModules() { return mpath(this.installBase, 'node_modules'); }
