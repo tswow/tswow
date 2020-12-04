@@ -33,12 +33,16 @@ export class InstallPaths {
     get worldPlain2() {return mpath(this.coreData, 'world_plain_2'); }
     get dbcSource() {return mpath(this.coreData, 'dbc_source'); }
     get dbcBuild() {return mpath(this.coreData, 'dbc'); }
+    get luaxmlSource() { return mpath(this.coreData, 'luaxml_base'); }
+    get luaxmlBuild() { return mpath(this.coreData, 'luaxml'); }
 
     /** Bin paths */
 
     get bin() { return mpath(this.installBase, 'bin'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
+    // TODO: Linux
+    get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
 
     /** Misc paths */
     get nodeModules() { return mpath(this.installBase, 'node_modules'); }

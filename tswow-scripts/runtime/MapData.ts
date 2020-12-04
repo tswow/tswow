@@ -19,10 +19,10 @@ import { wfs, mpath } from '../util/FileSystem';
 import { wsys } from '../util/System';
 import { cfg } from '../util/Config';
 import { term } from '../util/Terminal';
-import { commands } from './Commands';
 import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { Client } from './Client';
+import { ipaths } from './RuntimePaths';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -41,7 +41,7 @@ export namespace MapData {
         const cdir = cfg.client.directory();
 
         // TODO: Let user choose which to use
-        const inDir = wfs.exists('./bin/trinitycore/release') ? './bin/trinitycore/release' : './bin/trinitycore/debug';
+        const inDir = wfs.exists(ipaths.tcRelease) ? ipaths.tcRelease : ipaths.tcDebug;
 
         // Copy over all necessary library files
         for (const file of copiedFiles) {
@@ -58,13 +58,7 @@ export namespace MapData {
         wfs.remove(clientDbc);
         wfs.remove(clientBuildings);
 
-        const acDataDir = isWindows() ? './bin/trinitycore' : './bin/trinitycore/bin';
-        const mapsDataDir = mpath(acDataDir, 'maps');
-        const vmapsDataDir = mpath(acDataDir, 'vmaps');
-        const mmapDataDir = mpath(acDataDir, 'mmaps');
-        const dbcDataDir = mpath(acDataDir, 'dbc');
-
-        if (force || !wfs.exists('./bin/dbc', mapsDataDir, vmapsDataDir, dbcDataDir)) {
+        if (force || !wfs.exists(ipaths.maps, ipaths.vmaps, ipaths.dbcSource)) {
             const timer = Timer.start();
             await wsys.execIn(cdir, `${isWindows() ? '' : './'}mapextractor`);
             await wsys.execIn(cdir, `${isWindows() ? '' : './'}vmap4extractor`);
@@ -73,14 +67,13 @@ export namespace MapData {
             await wsys.execIn(cdir, `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
 
             // Copy to server and clean up
-            wfs.move(clientMaps, mapsDataDir);
-            wfs.move(clientVmaps, vmapsDataDir);
+            wfs.move(clientMaps, ipaths.maps);
+            wfs.move(clientVmaps, ipaths.vmaps);
             wfs.remove(clientBuildings);
 
             // TODO: DBC should not be sourced from this. We should build our own dbc extractor.
-            if (!wfs.exists('./bin/dbc')) {
-                wfs.copy(clientDbc, dbcDataDir);
-                wfs.move(clientDbc, './bin/dbc');
+            if (!wfs.exists(ipaths.dbcSource)) {
+                wfs.copy(clientDbc, ipaths.dbcSource);
             } else {
                 wfs.remove(clientDbc);
             }
@@ -95,7 +88,7 @@ export namespace MapData {
             const timer = Timer.start();
             term.log('Building MMAPS (this will take a very long time)');
             await wsys.execIn(cdir, `${isWindows() ? '' : './'}mmaps_generator`);
-            wfs.move(mpath(cdir, 'mmaps'), mmapDataDir);
+            wfs.move(mpath(cdir, 'mmaps'), ipaths.mmaps);
             term.success(`Rebuilt mmaps in ${timer.timeSec()}s`);
         } else if (!mpq.changed('mmaps')) {
             term.log('MMAPS already built, skipping');
@@ -103,9 +96,9 @@ export namespace MapData {
             term.log('MMAPS disabled, skipping');
         }
 
-        if (force || ! wfs.exists('./bin/luaxml')) {
-            wsys.exec(`"bin/mpqbuilder/luaxmlreader.exe" ${
-                wfs.absPath('./bin/luaxml')} ${
+        if (force || ! wfs.exists(ipaths.luaxmlSource)) {
+            wsys.exec(`"${ipaths.luaxmlExe}" ${
+                wfs.absPath(ipaths.luaxmlSource)} ${
                 mpath(cfg.client.directory(), 'Data')}`, 'inherit');
         }
 
