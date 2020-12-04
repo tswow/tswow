@@ -33,7 +33,7 @@ export class InstallPaths {
     get worldPlain2() {return mpath(this.coreData, 'mysql', 'world_plain_2'); }
     get dbcSource() {return mpath(this.coreData, 'dbc_source'); }
     get dbcBuild() {return mpath(this.coreData, 'dbc'); }
-    get luaxmlSource() { return mpath(this.coreData, 'luaxml_base'); }
+    get luaxmlSource() { return mpath(this.coreData, 'luaxml_source'); }
     get luaxmlBuild() { return mpath(this.coreData, 'luaxml'); }
 
     /** Bin paths */
@@ -42,6 +42,8 @@ export class InstallPaths {
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
+    get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
+    get mpqBuilderExe() { return mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe'); }
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }

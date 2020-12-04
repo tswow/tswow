@@ -29,6 +29,7 @@ import { Wrap } from '../util/Wrap';
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import { Assets } from './Assets';
 import { FileChanges } from '../util/FileChanges';
+import { ipaths } from './RuntimePaths';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -207,7 +208,7 @@ export namespace Modules {
      * to ensure SQL data was copied successfully.
      */
     export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
-        wfs.mkDirs('./bin/dbc_work/DBFilesClient', true);
+        wfs.mkDirs(ipaths.dbcBuild, true);
 
         const indexpath = mpath('./node_modules', 'wotlkdata', 'index');
         const program = `node -r source-map-support/register ${indexpath} db`;
@@ -235,7 +236,7 @@ export namespace Modules {
      */
     export function rebuildModule(name: string) {
         const timer = Timer.start();
-        wsys.exec(`node ./bin/scripts/transpiler/wowts.js ${name}`);
+        wsys.exec(`node ${ipaths.transpilerEntry} ${name}`);
 
         wfs.copy(
             mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
@@ -272,7 +273,7 @@ export namespace Modules {
 
         if (folder) {
             wfs.mkDirs(mpqPath);
-            const allpaths = paths.map(x => `./${x.substring(1, x.length - 1)}`).concat(['bin/dbc_work', 'bin/luaxml_work']);
+            const allpaths = paths.map(x => `./${x.substring(1, x.length - 1)}`).concat([ipaths.dbcBuild, ipaths.luaxmlBuild]);
             const ignored = cfg.build.mpq_ignore();
             FileChanges.startCache();
             allpaths.forEach(x => wfs.iterate(x, path => {
@@ -282,7 +283,10 @@ export namespace Modules {
                     }
                 }
 
-                const rel = wfs.relative(x, path);
+                let rel = wfs.relative(x, path);
+                if (rel.endsWith('.dbc')) {
+                    rel = mpath('DBFilesClient', rel);
+                }
                 const out = mpath(mpqPath, rel);
 
                 if (FileChanges.isChanged(path, 'mpq') || !wfs.exists(out)) {
@@ -292,7 +296,7 @@ export namespace Modules {
             }));
             FileChanges.endCache();
         } else {
-            wsys.exec(`"bin/mpqbuilder/mpqbuilder.exe" "${mpqPath}" "bin/dbc_work" "bin/luaxml_work" ${paths.join(' ')}`, 'inherit');
+            wsys.exec(`"${ipaths.mpqBuilderExe}" "${mpqPath}" "${wfs.removeDot(ipaths.dbcBuild)}" "${wfs.removeDot(ipaths.luaxmlBuild)}" ${paths.join(' ')}`, 'inherit');
         }
 
         term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);

@@ -24,16 +24,12 @@ export function saveDbc() {
     if (Settings.READONLY) { return; }
     for (const file of DBCFiles) {
         const srcpath = path.join(Settings.DBC_SOURCE, file.name + '.dbc');
-        const cpath = path.join(Settings.DBC_CLIENT, file.name + '.dbc');
-        const spath = path.join(Settings.DBC_SERVER, file.name + '.dbc');
+        const spath = path.join(Settings.DBC_OUT, file.name + '.dbc');
         if (file.isLoaded()) {
             const buf = DBCFile.getBuffer(file).write();
-            fs.writeFileSync(cpath, buf);
             fs.writeFileSync(spath, buf);
         } else {
-            if (fs.existsSync(cpath)) { fs.unlinkSync(cpath); }
             if (fs.existsSync(spath)) { fs.unlinkSync(spath); }
-            fs.copyFileSync(srcpath, cpath);
             fs.copyFileSync(srcpath, spath);
         }
     }

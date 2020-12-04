@@ -31,6 +31,9 @@ void writeDir(std::string basePath, std::string curDir) {
 				relative = relative.substr(1,relative.length());
 			}	
 			if(MiniFS::endsWith(relative,".blend")) return;
+			if(MiniFS::endsWith(relative,".dbc")) {
+				relative = "DBFilesClient/"+relative;
+			}
 			SFileAddFile(handle,file.c_str(),relative.c_str(),0);
 		}
 	});

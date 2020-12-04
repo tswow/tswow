@@ -470,6 +470,10 @@ export namespace wfs {
         }
         copyFolder(source, target);
     }
+
+    export function removeDot(pathIn: string) {
+        return pathIn.startsWith('./') ? pathIn.substring(2) : pathIn;
+    }
 }
 
 /**

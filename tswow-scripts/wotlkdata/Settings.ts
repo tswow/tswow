@@ -37,8 +37,8 @@ function getDatabaseName(database: string) {
 }
 
 class SettingsClass {
-    get LUAXML_SOURCE() {return './bin/luaxml'; }
-    get LUAXML_CLIENT() {return './bin/luaxml_work'; }
+    get LUAXML_SOURCE() {return './coredata/luaxml_source'; }
+    get LUAXML_CLIENT() {return './coredata/luaxml'; }
 
     get MYSQL_DATABASE_SOURCE() {return getDatabaseName('world') + '_source'; }
     get MYSQL_PASSWORD_SOURCE() {return getDatabase('source').password; }
@@ -52,13 +52,12 @@ class SettingsClass {
     get MYSQL_HOST_DEST() {return getDatabase('world').host; }
     get MYSQL_PORT_DEST() {return getDatabase('world').port; }
 
-    get DBC_SOURCE() { return './bin/dbc'; }
-    get DBC_CLIENT() {return './bin/dbc_work/DBFilesClient'; }
-    get DBC_SERVER() {return './bin/trinitycore/dbc'; }
+    get DBC_SOURCE() { return './coredata/dbc_source'; }
+    get DBC_OUT() {return './coredata/dbc'; }
     get SQL_WRITE_TO_FILE() {return args.includes('file'); }
     get MYSQL_WRITE_TO_DB() {return args.includes('db'); }
     get SQL_FILE_PATH() {return './bin/sqlout'; }
-    get ID_FILE_PATH() {return './bin/trinitycore/ids'; }
+    get ID_FILE_PATH() {return './config/ids.txt'; }
 
     get READONLY() {return args.includes('readonly'); }
 
