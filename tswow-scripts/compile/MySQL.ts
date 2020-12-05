@@ -15,32 +15,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { build_path, install_path } from './BuildConfig';
-import { term } from '../util/Terminal';
-import { wfs } from '../util/FileSystem';
+import { mpath, wfs } from '../util/FileSystem';
 import { download, unzip } from './CompileUtils';
+import { ipaths } from '../util/Paths';
 
 const MYSQL_DOWNLOAD_URL = 'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip';
 
+const mysqlInstallFiles = [
+    'bin/mysqld.exe',
+    'bin/mysql.exe',
+    'bin/mysqldump.exe'
+]
+
 export async function findMysql() {
-    const mysql_install = install_path('bin', 'mysql');
     const mysql_build = build_path('mysql');
     const mysql_zip = build_path('mysql.zip');
 
-    while (true) {
-        if (wfs.exists(mysql_install)) {
-            return mysql_install;
-        } else if (wfs.exists(mysql_build)) {
-            const subs = wfs.readDir(mysql_build);
-            if (subs.length !== 1) {
-                term.log('Corrupt mysql directory, reinstalling...');
-                wfs.remove(mysql_build);
-            } else {
-                wfs.copy(subs[0], mysql_install);
-            }
-        } else if (wfs.exists(mysql_zip)) {
-            unzip(mysql_zip, mysql_build);
-        } else {
-            await download(MYSQL_DOWNLOAD_URL, mysql_zip);
-        }
+    if(!wfs.exists(mysql_zip)) {
+        await download(MYSQL_DOWNLOAD_URL, mysql_zip);
     }
+
+    if(!wfs.exists(mysql_build)) {
+        unzip(mysql_zip, mysql_build);
+    }
+
+    let finBuilds = wfs.readDir(mysql_build);
+    if(finBuilds.length!==1) {
+        throw new Error(`Corrupt mysql directory in ${mysql_build}, please remove it manually.`);
+    }
+    mysqlInstallFiles.forEach((x)=>{
+        const ip = install_path(ipaths.mysqlBin,x);
+        if(!wfs.exists(ip)) {
+            wfs.copy(mpath(finBuilds[0],x),ip);
+        }
+    });
+    
+    return finBuilds[0];
 }

@@ -19,8 +19,7 @@ import * as jsyaml from 'js-yaml';
 
 import { wfs, mpath } from './FileSystem';
 import { util } from './Util';
-import { isWindows } from './Platform';
-import { ipaths } from '../runtime/RuntimePaths';
+import { ipaths } from '../util/Paths';
 
 /** The config.yaml file, which is read from disk at startup */
 
@@ -118,8 +117,8 @@ export namespace cfg {
          */
         export function updateAcConfigs() {
             wfs.readDir(acConfigDir(), false, 'files')
-                .filter(x => x.endsWith('.conf.dist'))
-                .forEach(x => updateAcConfig(cleanConfigName(path.basename(x))));
+                .filter(x => x.endsWith('.conf'))
+                .forEach(x => updateAcConfig(path.basename(x)));
         }
 
         /**

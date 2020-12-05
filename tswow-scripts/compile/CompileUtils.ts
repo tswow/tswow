@@ -43,6 +43,7 @@ export function download(srcUrl: string, dstFile: string, downloadString= srcUrl
                 term.log(`Downloading ${downloadString}: ${(state.percent * 100).toFixed(2)}%`);
             })
             .on('error', (err: any) => {
+                term.error(err);
                 rej(err);
             }).on('end', () => {
                 term.log(`Finished downloading ${downloadString}`);

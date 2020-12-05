@@ -16,11 +16,12 @@
  */
 import { term } from '../util/Terminal';
 import { wfs, mpath } from '../util/FileSystem';
-import { TRINITYCORE_BUILD_PATH, TRINITYCORE_SOURCE_PATH, install_path, build_path } from './BuildConfig';
+import { TRINITYCORE_BUILD_PATH, TRINITYCORE_SOURCE_PATH, install_path, build_path, build_tdb } from './BuildConfig';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { args } from '../util/Args';
-import { ipaths } from '../runtime/RuntimePaths';
+import { bpaths, ipaths } from '../util/Paths';
+import { download } from './CompileUtils';
 
 export async function installTrinityCore(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
     term.log('Compiling TrinityCore');
@@ -72,6 +73,10 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
 
         const binOut = mpath(bindir, 'trinitycore', outName);
 
+        if(!wfs.exists(binIn)) {
+            return;
+        }
+
         // All library files we will need
         [`dep/zlib/${inName}/zlib.lib`,
             `src/server/shared/${inName}/shared.lib`,
@@ -86,28 +91,24 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
         ].forEach(x => wfs.copy(mpath(build_path('trinitycore', x)),
             install_path('bin', 'libraries', wfs.basename(x))));
 
-        if (wfs.exists(binIn)) {
-            // copy executables
-            wfs.copy(binIn, binOut, args.hasAnyFlag('flushData'));
-            // copy config files
-            wfs.readDir(confIn, true, 'files')
-                .filter(x => x.endsWith('.conf.dist'))
-                .forEach(x => {
-                    const inPath = mpath(confIn, x);
-                    const outDist = mpath(ipaths.coreData, x);
-                    const outConf = mpath(ipaths.config, x.replace('.dist', ''));
-                    wfs.copy(inPath, outDist);
-                    if (!wfs.exists(outConf)) { wfs.copy(inPath, outConf); }
-                });
-        }
+        // copy executables
+        wfs.copy(binIn, binOut, args.hasAnyFlag('flushData'));
+        // copy config files
+        wfs.readDir(confIn, true, 'files')
+            .filter(x => x.endsWith('.conf.dist'))
+            .forEach(x => {
+                const inPath = mpath(confIn, x);
+                const outDist = mpath(ipaths.coreData, x);
+                const outConf = mpath(ipaths.config, x.replace('.dist', ''));
+                wfs.copy(inPath, outDist);
+                if (!wfs.exists(outConf)) { wfs.copy(inPath, outConf); }
+            });
     }
     // Don't create debug directory on linux while we don't support it
     if (isWindows()) {
-        // moveAc('Debug', 'debug');
+        moveAc('Debug', 'debug');
     }
     moveAc('Release', 'release');
-
-    wfs.mkDirs(mpath(bindir, 'trinitycore', 'tsmodules'), true);
 
     // Copy mysql/ssl/cmake libraries
     if (isWindows()) {
@@ -125,4 +126,15 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
         'scripting', 'Public');
     const headerDest = mpath(bindir, 'include');
     wfs.copy(headerSrc, headerDest);
+
+    // Install TDB
+    if(!build_tdb) {
+        throw new Error(`No tdb file configured in build.yaml`);
+    }
+    if(!wfs.exists(ipaths.tdb) || !wfs.exists(bpaths.tdb)) {
+        if(!wfs.exists(bpaths.tdb)) {
+            await download(build_tdb, bpaths.tdb);
+        }
+        wfs.copy(bpaths.tdb,ipaths.tdb);
+    }
 }

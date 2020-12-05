@@ -22,7 +22,7 @@ import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { Client } from './Client';
-import { ipaths } from './RuntimePaths';
+import { ipaths } from '../util/Paths';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -36,8 +36,10 @@ export namespace MapData {
      */
     export async function build(force = false) {
         const copiedFiles = isWindows() ?
-            ['mapextractor.exe', 'mmaps_generator.exe', 'vmap4assembler.exe', 'vmap4extractor.exe']
+            ['mapextractor.exe', 'mmaps_generator.exe', 'vmap4assembler.exe', 'vmap4extractor.exe', 'common.dll']
             : ['mapextractor', 'mmaps_generator', 'vmap4assembler', 'vmap4extractor'];
+
+        const copiedLibraries = isWindows() ? ['libcrypto-1_1-x64.dll','libmysql.dll','libmysqld.dll'] : [];
         const cdir = cfg.client.directory();
 
         // TODO: Let user choose which to use
@@ -46,6 +48,10 @@ export namespace MapData {
         // Copy over all necessary library files
         for (const file of copiedFiles) {
             wfs.copy(mpath(inDir, file), mpath(cdir, file));
+        }
+
+        for(const file of copiedLibraries) {
+            wfs.copy(mpath(ipaths.tcRoot,file),mpath(cfg.client.directory(),file));
         }
 
         const clientMaps = mpath(cdir, 'maps');
@@ -105,6 +111,10 @@ export namespace MapData {
         // Remove all previously copied files
         for (const file of copiedFiles) {
             wfs.remove(mpath(cdir, file));
+        }
+
+        for(const library of copiedLibraries) {
+            wfs.remove(mpath(cdir, library));
         }
     }
 

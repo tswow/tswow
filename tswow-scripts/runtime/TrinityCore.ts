@@ -18,7 +18,7 @@ import { commands } from './Commands';
 import { Process } from '../util/Process';
 import { wfs, mpath } from '../util/FileSystem';
 import { isWindows } from '../util/Platform';
-import { ipaths } from './RuntimePaths';
+import { ipaths } from '../util/Paths';
 
 /**
  * Contains functions to handle the `worldserver` (main process) of TrinityCore.

@@ -16,8 +16,8 @@
  */
 import { wfs } from '../util/FileSystem';
 import { term } from '../util/Terminal';
-import { build_path, install_path } from './BuildConfig';
-import { ipaths } from './CompileTimePaths';
+import { build_path, install_directory, install_path } from './BuildConfig';
+import { ipaths } from '../util/Paths';
 import { stopScriptsBuild } from './Scripts';
 import { stopTranspilerBuild } from './Transpiler';
 
@@ -44,10 +44,9 @@ export function cleanInstall() {
         wfs.copy(ipaths.modules, garbagePath());
         term.log(`Created backups of your modules in ${wfs.absPath(garbagePath())}`);
     }
+    wfs.remove(install_directory);
 
-    wfs.remove(install_path());
-
-    if (wfs.exists(install_path())) {
+    if (wfs.exists(install_directory)) {
         throw new Error(`Failed to remove install directory`);
     }
     term.success('Cleaned install directory');

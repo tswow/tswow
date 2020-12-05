@@ -29,7 +29,7 @@ import { Wrap } from '../util/Wrap';
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import { Assets } from './Assets';
 import { FileChanges } from '../util/FileChanges';
-import { ipaths } from './RuntimePaths';
+import { ipaths } from '../util/Paths';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.

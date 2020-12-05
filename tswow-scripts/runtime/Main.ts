@@ -26,6 +26,9 @@ import { args } from '../util/Args';
 import { Client } from './Client';
 import { Test } from './Test';
 import { Assets } from './Assets';
+import { InstallPaths } from '../util/Paths';
+
+InstallPaths.setInstallBase('./');
 
 async function main() {
     try {
@@ -42,7 +45,7 @@ async function main() {
         Modules.initialize();
 
         // Initialize client
-        Client.initialize();
+        Client.initialize(!args.hasAnyFlag('noac'));
 
         // Initialize Azerothcore
         TrinityCore.initialize();

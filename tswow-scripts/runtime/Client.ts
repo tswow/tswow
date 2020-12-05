@@ -70,7 +70,7 @@ export namespace Client {
 
     export const command = commands.addCommand('client');
 
-    export function initialize() {
+    export function initialize(autostartClient: boolean) {
         const dir = cfg.client.directory();
         const wowexe = mpath(dir, 'wow.exe');
         const data = mpath(dir, 'Data');
@@ -89,6 +89,8 @@ export namespace Client {
         command.addCommand('start', '', 'Starts the World of Warcraft client', async() => start());
         command.addCommand('kill', '', 'Stops the World of Warcraft client', async() => stop());
 
-        start();
+        if(autostartClient) {
+            start();
+        }
     }
 }

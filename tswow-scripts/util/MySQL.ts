@@ -26,7 +26,9 @@ import { mpath, wfs, wfsa } from './FileSystem';
 import { Timer } from './Timer';
 import { Wrap } from './Wrap';
 import { download } from '../compile/CompileUtils';
-import { ipaths } from '../runtime/RuntimePaths';
+import { sleep } from 'deasync';
+import { ipaths } from './Paths';
+import { extract } from './7zip';
 
 /**
  * Helper function to make a mysql query and return a promise.
@@ -195,6 +197,7 @@ export namespace mysql {
     }
 
     async function startMysql(skipBackup = false) {
+        term.log("Starting mysql...");
         if (isWindows()) {
             if (!wfs.exists(ipaths.mysqlData)) {
                 wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
@@ -210,7 +213,6 @@ export namespace mysql {
             mysqlprocess.start(ipaths.mysqldExe,
                 [
                     '--log_syslog=0',
-                    // '--console',
                     `--init-file=${wfs.absPath(startup_file)}`,
                     `--datadir=${wfs.absPath(ipaths.mysqlData)}`
                 ]);
@@ -247,23 +249,7 @@ export namespace mysql {
         }
     }
 
-    async function install_world(w: Connection) {
-        const remote_file = cfg.tdb_file();
-        const split = remote_file.split('/');
-        const local_7z = mpath('bin', split[split.length - 1]);
-        const local_sql = local_7z.substring(0, local_7z.length - 2) + 'sql';
-
-        while (true) {
-            if (wfs.exists(local_sql)) {
-                break;
-            } else if (wfs.exists(local_7z)) {
-                wsys.exec(`"${ipaths.sevenZaExe}" e -obin ${local_7z}`);
-                continue;
-            } else {
-                await download(remote_file, local_7z);
-            }
-        }
-
+    async function install_world(w: Connection, sqlPath: string) {
         term.log(`Beginning to rebuild ${w.name()}`);
 
         await w.status;
@@ -272,7 +258,7 @@ export namespace mysql {
         w.status = undefined;
         await w.connect();
         const sqlpath = isWindows() ? `"${ipaths.mysqlExe}"` : `sudo mysql`;
-        await wsys.execAsync(`${sqlpath} -u root ${w.name()} < ${local_sql}`);
+        await wsys.execAsync(`${sqlpath} -u root ${w.name()} < ${sqlPath}`);
         term.success(`Rebuilt database ${w.name()}`);
     }
 
@@ -285,15 +271,57 @@ export namespace mysql {
 
         // Rebuild world/world_src
         const waits: Promise<void>[] = [];
-        if (!(await world.hasTable('access_requirement'))) {
-            waits.push(install_world(world));
+        let shouldBuild = false;
+        if(!(await world.hasTable('access_requirement'))) {
+            shouldBuild = true;
         }
 
-        if (!(await world_src.hasTable('access_requirement'))) {
-            waits.push(install_world(world_src));
+        if(!(await world_src.hasTable('access_requirement'))) {
+            shouldBuild = true;
         }
 
-        await Promise.all(waits);
+        if(shouldBuild) {
+            function findSql() {
+                let sqls = wfs.readDir(ipaths.bin,false,'files')
+                    .filter(x=>x.endsWith('.sql'));
+
+                if(sqls.length > 1) {
+                    throw new Error(`Failed to install TDB: Multiple SQL files lying in `);
+                }
+
+                return sqls[0];
+            }
+
+            function clearSql() {
+                wfs.readDir(ipaths.bin,false,'files')
+                    .filter(x=>x.endsWith('sql'))
+                    .forEach(x=>wfs.remove(x));
+            }
+
+            let sql = "";
+
+            if(wfs.exists(ipaths.tdb)) {
+                // Always override stray sql files with tdb.7z
+                clearSql();
+                extract(ipaths.tdb);
+                sql = findSql();
+                if(!sql) {
+                    throw new Error(`Failed to extract TDB: No SQL files found after extraction`);
+                }
+            } else {
+                sql = findSql();
+                // Missing tdb.7z is only an error if there also is no sql file in bin
+                if(!sql) {
+                    throw new Error(`Missing TDB: ${ipaths.tdb}, please download a TDB, rename it "tdb.7z" and place it in "bin".`)
+                }
+            }
+            await Promise.all([install_world(world,sql),install_world(world_src,sql)]);
+
+            // Don't leave stray SQL unless tdb.7z is missing
+            if(wfs.exists(ipaths.tdb)) {
+                clearSql();
+            }
+        }
 
         wfs.iterate(ipaths.startupSql, (file) => {
             if (file.endsWith('.sql')) {

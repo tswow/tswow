@@ -27,5 +27,3 @@ generation:
 # Settings for azerothcores "worldserver.conf"
 worldserver:
   MoveMaps.enable: false
-
-tdb_file: https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.20111/TDB_full_world_335.20111_2020_11_16.7z

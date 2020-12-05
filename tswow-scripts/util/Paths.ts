@@ -16,15 +16,17 @@
  */
 import { mpath } from './FileSystem';
 
+let installBase: string = './';
+let buildBase: string = ''
+
 export class InstallPaths {
-    readonly installBase: string;
-    constructor(installBase: string) {
-        this.installBase = installBase;
+    static setInstallBase(ipath: string) {
+        installBase = ipath;
     }
 
     /** Core data paths */
 
-    get coreData() { return mpath(this.installBase, 'coredata'); }
+    get coreData() { return mpath(installBase, 'coredata'); }
     get maps() {return mpath(this.coreData, 'maps'); }
     get mmaps() {return mpath(this.coreData, 'mmaps'); }
     get vmaps() {return mpath(this.coreData, 'vmaps'); }
@@ -38,29 +40,32 @@ export class InstallPaths {
 
     /** Bin paths */
 
-    get bin() { return mpath(this.installBase, 'bin'); }
+    get bin() { return mpath(installBase, 'bin'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
     get mpqBuilderExe() { return mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe'); }
+    get tdb() { return mpath(this.bin, 'tdb.7z'); }
+    get cmakeExe() { return mpath(this.bin, 'cmake','bin','cmake.exe'); }
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
+    get mysqlBin() {return mpath(this.bin, 'mysql')}
     get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
     get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
     get sevenZaExe() { return mpath(this.bin, '7zip', '7za.exe'); }
     get startupSql() { return mpath(this.bin, 'sql'); }
 
     /** Misc paths */
-    get nodeModules() { return mpath(this.installBase, 'node_modules'); }
+    get nodeModules() { return mpath(installBase, 'node_modules'); }
 
     /** Config paths */
-    get config() { return mpath(this.installBase, 'config'); }
+    get config() { return mpath(installBase, 'config'); }
     get tswowConfig() { return mpath(this.config, 'tswow.yaml'); }
 
     /** Module paths */
-    get modules() { return mpath(this.installBase, 'modules'); }
+    get modules() { return mpath(installBase, 'modules'); }
     moduleData(mod: string) {
         return mpath(this.modules, mod, 'data');
     }
@@ -71,3 +76,22 @@ export class InstallPaths {
         return mpath(this.modules, mod, 'scripts');
     }
 }
+
+export const ipaths = new InstallPaths();
+
+export class BuildPaths {
+    static setBuildBase(bpath: string) {
+        buildBase = bpath;
+    }
+
+    get base() {
+        if(buildBase.length===0) {
+            throw new Error(`Tried to access a build path, but no build path is configured`)
+        }
+        return buildBase;
+    }
+
+    get tdb() { return mpath(this.base, 'tdb.7z'); }
+}
+
+export const bpaths = new BuildPaths();

@@ -18,8 +18,9 @@ import { wfs } from '../util/FileSystem';
 import { InstallPaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { build_path, install_path } from './BuildConfig';
-import { ipaths } from './CompileTimePaths';
+import { ipaths } from '../util/Paths';
 import { download, unzip } from './CompileUtils';
+import { makeArchive } from '../util/7zip';
 
 
 /**
@@ -27,8 +28,7 @@ import { download, unzip } from './CompileUtils';
  */
 export async function make7zip(path: string, outPath: string) {
     installSZip();
-    wfs.remove(outPath);
-    wsys.exec(`"${ipaths.sevenZaExe}" a ${outPath} ${wfs.absPath(path)}/* -mx=9 -mmt=on`);
+    makeArchive(path, outPath);
 }
 
 /**

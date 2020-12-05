@@ -19,11 +19,9 @@ import { term } from '../util/Terminal';
 import { build_path, install_path } from './BuildConfig';
 import { commands } from '../runtime/Commands';
 import { isWindows } from '../util/Platform';
-import { dbAssemble } from './Database';
 import { createConfig } from './Config';
 import { createMpqBuilder } from './MPQBuilder';
 import { installTrinityCore } from './TrinityCore';
-import { installBlender, installBlenderWmoAddon } from './Blender';
 import { findCmake } from './Cmake';
 import { findOpenSSL } from './OpenSSL';
 import { findMysql } from './MySQL';
@@ -32,6 +30,10 @@ import { buildScripts } from './Scripts';
 import { installBoost } from './Boost';
 import { installSZip, make7zip } from './7Zip';
 import { cleanBuild, cleanInstall } from './Clean';
+import { BuildPaths, InstallPaths } from '../util/Paths';
+
+InstallPaths.setInstallBase(install_path());
+BuildPaths.setBuildBase(build_path());
 
 let buildingScripts = false;
 
@@ -59,20 +61,19 @@ async function compile(type: string, compileArgs: string[]) {
     const boost = isWindows() ? await installBoost() : 'boost';
     if (isWindows()) { await installSZip(); }
 
-    if (isWindows()) {
-        if (isType('blender')) { await installBlender(); }
-        if (isType('wmo')) { await installBlenderWmoAddon(); }
-    }
-
     if (!isWindows()) {
         // Ubunu only
         wsys.exec('sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev mysql-server libace-6.* libace-dev', 'inherit');
     }
 
-    if (isType('trinitycore-release')) { await installTrinityCore(cmake, openssl, mysql, 'Release', compileArgs); }
-    if (isType('trinitycore-debug') && isWindows()) { await installTrinityCore(cmake, openssl, mysql, 'Debug', compileArgs); }
+    if (types.includes('full') || types.includes('release')) {
+        await installTrinityCore(cmake, openssl, mysql, 'Release', ['dynamic']);
+    } else {
+        if (isType('trinitycore-release')) { await installTrinityCore(cmake, openssl, mysql, 'Release', compileArgs); }
+        if (isType('trinitycore-debug') && isWindows()) { await installTrinityCore(cmake, openssl, mysql, 'Debug', compileArgs); }
+    }
+
     if (isType('mpqbuilder')) { await createMpqBuilder(cmake); }
-    if (isType('database')) { await dbAssemble(); }
 
     if (!buildingScripts && isType('scripts')) {
         buildTranspiler(build_path(), install_path());

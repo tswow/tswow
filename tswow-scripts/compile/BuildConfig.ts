@@ -23,8 +23,9 @@ export const OPENSSL_DOWNLOAD_URL = 'https://slproweb.com/download/Win64OpenSSL-
 export const BLENDER_DOWNLOAD_URL = 'https://download.blender.org/release/Blender2.79/blender-2.79b-windows64.zip';
 
 const yaml: any = jsyaml.safeLoad(wfs.readOr('./build.yaml', ''));
-const build_directory = args.getValue('build_directory') || yaml.build_directory;
-const install_directory = args.getValue('install_directory') || yaml.install_directory;
+export const build_directory = args.getValue('build_directory') || yaml.build_directory;
+export const install_directory = args.getValue('install_directory') || yaml.install_directory;
+export const build_tdb = yaml.build_tdb;
 
 export function build_path (...values: string[]): string {
     if (!wfs.exists(build_directory)) {

@@ -32,7 +32,12 @@ export namespace wsys {
     export async function inDirectory(dir: string, cb: () => any) {
         const old = process.cwd();
         process.chdir(dir);
-        await cb();
+        try{
+            await cb();
+        } catch(err) {
+            process.chdir(old);
+            throw err;
+        }
         process.chdir(old);
     }
 
@@ -45,7 +50,12 @@ export namespace wsys {
     export function inDirectorySync(dir: string, cb: () => any) {
         const old = process.cwd();
         process.chdir(dir);
-        cb();
+        try{
+            cb();
+        } catch(err) {
+            process.chdir(old);
+            throw err;
+        }
         process.chdir(old);
     }
 

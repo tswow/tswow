@@ -18,26 +18,31 @@ import { build_path, CMAKE_DOWNLOAD_URL, install_path } from './BuildConfig';
 import { wfs, mpath } from '../util/FileSystem';
 import { download, unzip } from './CompileUtils';
 import { term } from '../util/Terminal';
+import { ipaths } from '../util/Paths';
 
 export async function findCmake(): Promise<string> {
     const cmake_install = install_path('bin', 'cmake');
     const cmake_build = build_path('cmake');
     const cmake_zip = build_path('cmake.zip');
-    while (true) {
-        if (wfs.exists(cmake_install)) {
-            return mpath(cmake_install, 'bin', 'cmake.exe');
-        } else if (wfs.exists(cmake_build)) {
-            const subs = wfs.readDir(cmake_build);
-            if (subs.length !== 1) {
-                term.log('Corrupt cmake directory, reinstalling...');
-                wfs.remove(cmake_build);
-            } else {
-                wfs.copy(subs[0], cmake_install);
-            }
-        } else if (wfs.exists(cmake_zip)) {
-            unzip(cmake_zip, cmake_build);
-        } else {
-            await download(CMAKE_DOWNLOAD_URL, cmake_zip);
-        }
+
+    if(!wfs.exists(cmake_zip)) {
+        await download(CMAKE_DOWNLOAD_URL, cmake_zip);
     }
+
+    if(!wfs.exists(cmake_build)) {
+        await unzip(cmake_zip, cmake_build);
+    }
+
+    let subs = wfs.readDir(cmake_build,false);
+    if(subs.length!==1) {
+        throw new Error(`Corrupt cmake installation, please remove it manually`);
+    }
+
+    let exe = mpath(subs[0], 'bin','cmake.exe');
+
+    if(!wfs.exists(ipaths.cmakeExe)) {
+        wfs.copy(exe,ipaths.cmakeExe);
+    }
+
+    return exe;
 }
