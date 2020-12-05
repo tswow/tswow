@@ -23,17 +23,18 @@ const install_gitignore =
 `node_modules
 bin
 build
+coredata
 `;
 
 export async function createConfig() {
     term.log('Creating config files');
 
     // Copy configuration/misc files
-    const configDest = install_path('config.yaml');
+    const configDest = install_path('config/tswow.yaml');
     if (!wfs.exists(configDest)) {
-        wfs.copy('./config.default.yaml', configDest);
+        wfs.copy('./tswow.default.yaml', configDest);
     }
-    wfs.copy('./separate_dbs.default.yaml', install_path('separate_dbs.yaml'));
+
     wfs.copy('./package.install.json', install_path('package.json'));
 
     if (!wfs.exists(install_path('.gitignore'))) {

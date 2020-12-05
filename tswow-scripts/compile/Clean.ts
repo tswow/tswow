@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from "../util/FileSystem";
-import { term } from "../util/Terminal";
-import { build_path, install_path } from "./BuildConfig";
-import { ipaths } from "./CompileTimePaths";
-import { stopScriptsBuild } from "./Scripts";
-import { stopTranspilerBuild } from "./Transpiler";
+import { wfs } from '../util/FileSystem';
+import { term } from '../util/Terminal';
+import { build_path, install_path } from './BuildConfig';
+import { ipaths } from './CompileTimePaths';
+import { stopScriptsBuild } from './Scripts';
+import { stopTranspilerBuild } from './Transpiler';
 
 export function cleanBuild() {
     term.log('Cleaning build directory...');
@@ -31,14 +31,14 @@ export function cleanBuild() {
 }
 
 export function cleanInstall() {
-    term.log('Cleaning install directory...')
+    term.log('Cleaning install directory...');
     stopScriptsBuild();
     stopTranspilerBuild();
 
-    if(wfs.readDir(ipaths.modules,true,'both').length>0) {
+    if (wfs.readDir(ipaths.modules, true, 'both').length > 0) {
         let ctr = 0;
-        let garbagePath = ()=>`./install_garbage/${ctr}`;
-        while(wfs.exists(garbagePath())) {
+        const garbagePath = () => `./install_garbage/${ctr}`;
+        while (wfs.exists(garbagePath())) {
             ++ctr;
         }
         wfs.copy(ipaths.modules, garbagePath());
@@ -47,7 +47,7 @@ export function cleanInstall() {
 
     wfs.remove(install_path());
 
-    if(wfs.exists(install_path())) {
+    if (wfs.exists(install_path())) {
         throw new Error(`Failed to remove install directory`);
     }
     term.success('Cleaned install directory');

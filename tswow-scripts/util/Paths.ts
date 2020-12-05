@@ -54,7 +54,10 @@ export class InstallPaths {
 
     /** Misc paths */
     get nodeModules() { return mpath(this.installBase, 'node_modules'); }
+
+    /** Config paths */
     get config() { return mpath(this.installBase, 'config'); }
+    get tswowConfig() { return mpath(this.config, 'tswow.yaml'); }
 
     /** Module paths */
     get modules() { return mpath(this.installBase, 'modules'); }

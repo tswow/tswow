@@ -22,7 +22,7 @@ import { wsys } from '../util/System';
 let watcher: TypeScriptWatcher | undefined;
 
 export async function stopScriptsBuild() {
-    if(watcher!==undefined) {
+    if (watcher !== undefined) {
         watcher.kill();
         watcher = undefined;
     }

@@ -18,10 +18,10 @@ import { mpath, wfs } from '../util/FileSystem';
 import path = require('path');
 import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
 
-let watcher: TypeScriptWatcher | undefined
+let watcher: TypeScriptWatcher | undefined;
 
 export function stopTranspilerBuild() {
-    if(watcher!==undefined) {
+    if (watcher !== undefined) {
         watcher.kill();
         watcher = undefined;
     }

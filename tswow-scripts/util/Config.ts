@@ -20,12 +20,13 @@ import * as jsyaml from 'js-yaml';
 import { wfs, mpath } from './FileSystem';
 import { util } from './Util';
 import { isWindows } from './Platform';
+import { ipaths } from '../runtime/RuntimePaths';
 
 /** The config.yaml file, which is read from disk at startup */
 
 function yaml<T>(defaultValue: T, ...fpath: string[]) {
     return () => {
-        let cur: any = jsyaml.safeLoad(wfs.readOr('./config.yaml', '')) || {};
+        let cur: any = jsyaml.safeLoad(wfs.readOr(ipaths.tswowConfig, '')) || {};
         for (const part of fpath) {
             if (cur[part] === undefined) {
                 return defaultValue;
@@ -51,7 +52,7 @@ export type DatabaseType = 'world' | 'auth' | 'characters' | 'world_source';
 /** Contains functions for managing tswow and TrinityCore settings. */
 export namespace cfg {
     function acConfigDir() {
-        return isWindows() ? './bin/trinitycore/' : './bin/trinitycore/etc';
+        return ipaths.config;
     }
 
     /**
@@ -65,19 +66,11 @@ export namespace cfg {
     /**
      * Finds the configuration file of a specific name in the TrinityCore installation directory.
      *
-     * If configName.conf does not exist, we try to create it by copying configName.conf.dist.
      * @param configName
      */
     function acConfigPath(configName: string) {
         configName = cleanConfigName(configName);
         const configPath = mpath(acConfigDir(), `${configName}.conf`);
-        if (!wfs.exists(configPath)) {
-            const srcPath = configPath.replace('.conf', '.conf.dist');
-            if (!wfs.exists(srcPath)) {
-                return;
-            }
-            wfs.copy(srcPath, configPath);
-        }
         return configPath;
     }
 

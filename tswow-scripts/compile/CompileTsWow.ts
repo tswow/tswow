@@ -42,11 +42,11 @@ async function compile(type: string, compileArgs: string[]) {
         return types.includes('full') || types.includes('release') || types.includes(check);
     }
 
-    if(isType('clean-install')) {
+    if (isType('clean-install')) {
         cleanInstall();
     }
 
-    if(types.includes('clean-build')) {
+    if (types.includes('clean-build')) {
         return cleanBuild();
     }
 
@@ -82,8 +82,8 @@ async function compile(type: string, compileArgs: string[]) {
 
     await createConfig();
 
-    if(types.includes('release')) {
-        make7zip(install_path(),build_path('release.7z'));
+    if (types.includes('release')) {
+        make7zip(install_path(), build_path('release.7z'));
     }
 
     term.log('Installation successful!');
@@ -92,9 +92,9 @@ async function compile(type: string, compileArgs: string[]) {
 async function main() {
     const build = commands.addCommand('build');
 
-    const installedPrograms = 
+    const installedPrograms =
         ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder',
-         'config', 'database', 'full', 'scripts', 'clean-install','clean-build']
+         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build'];
 
     for (const val of installedPrograms) {
         build.addCommand(val, '', `Builds ${val}`, async(args) => await compile(val, args));
