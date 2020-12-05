@@ -30,7 +30,8 @@ import { findMysql } from './MySQL';
 import { buildTranspiler } from './Transpiler';
 import { buildScripts } from './Scripts';
 import { installBoost } from './Boost';
-import { installSZip } from './7Zip';
+import { installSZip, make7zip } from './7Zip';
+import { cleanBuild, cleanInstall } from './Clean';
 
 let buildingScripts = false;
 
@@ -38,8 +39,17 @@ async function compile(type: string, compileArgs: string[]) {
     // Load necessary libraries
     const types = type.split(' ');
     function isType(check: string) {
-        return types.includes('full') || types.includes(check);
+        return types.includes('full') || types.includes('release') || types.includes(check);
     }
+
+    if(isType('clean-install')) {
+        cleanInstall();
+    }
+
+    if(types.includes('clean-build')) {
+        return cleanBuild();
+    }
+
     const cmake = isWindows() ? await findCmake() : 'cmake';
     term.log(`Found cmake at ${cmake}`);
     const openssl = isWindows() ? await findOpenSSL() : 'openssl';
@@ -71,15 +81,20 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     await createConfig();
+
+    if(types.includes('release')) {
+        make7zip(install_path(),build_path('release.7z'));
+    }
+
     term.log('Installation successful!');
 }
 
 async function main() {
     const build = commands.addCommand('build');
 
-    const installedPrograms = isWindows() ?
-        ['blender', 'wmo', 'trinitycore-release', 'trinitycore-debug', 'mpqbuilder', 'config', 'database', 'full', 'scripts'] :
-        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder', 'release', 'config', 'full', 'scripts'];
+    const installedPrograms = 
+        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder',
+         'config', 'database', 'full', 'scripts', 'clean-install','clean-build']
 
     for (const val of installedPrograms) {
         build.addCommand(val, '', `Builds ${val}`, async(args) => await compile(val, args));

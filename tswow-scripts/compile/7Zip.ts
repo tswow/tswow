@@ -15,8 +15,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { wfs } from '../util/FileSystem';
+import { InstallPaths } from '../util/Paths';
+import { wsys } from '../util/System';
 import { build_path, install_path } from './BuildConfig';
+import { ipaths } from './CompileTimePaths';
 import { download, unzip } from './CompileUtils';
+
+
+/**
+ * Use 7zip in the build script
+ */
+export async function make7zip(path: string, outPath: string) {
+    installSZip();
+    wfs.remove(outPath);
+    wsys.exec(`"${ipaths.sevenZaExe}" a ${outPath} ${wfs.absPath(path)}/* -mx=9 -mmt=on`);
+}
 
 /**
  * We need 7zip to unzip TrinityCore TDB database dumps
@@ -32,6 +45,7 @@ export async function installSZip() {
         }
 
         if (wfs.exists(szip_zip)) {
+            wfs.remove(szip_install);
             unzip(szip_zip, szip_install);
             return;
         }

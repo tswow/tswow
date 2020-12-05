@@ -15,12 +15,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { mpath, wfs, rpath } from '../util/FileSystem';
-import { watchTs } from '../util/TSWatcher';
+import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
 import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
-import { symlinkSync } from 'fs';
+
+let watcher: TypeScriptWatcher | undefined;
+
+export async function stopScriptsBuild() {
+    if(watcher!==undefined) {
+        watcher.kill();
+        watcher = undefined;
+    }
+}
 
 export async function buildScripts(buildLine: string, installLine: string) {
+    stopScriptsBuild();
+
     // Scripts config
     const scripts_config_dir = mpath(buildLine, 'scripts-config');
     const scrips_out_dir = rpath(scripts_config_dir,
@@ -45,6 +55,6 @@ export async function buildScripts(buildLine: string, installLine: string) {
         install_path('bin', 'scripts', 'tswow', 'wotlkdata', 'package.json'));
     wfs.write(mpath(buildLine, scripts_config_dir, 'tsconfig.json'),
         JSON.stringify(scripts_tsconfig, null, 4));
-    watchTs(scripts_config_dir);
+    watcher = watchTs(scripts_config_dir);
     wsys.execIn(install_path(), 'npm link bin/scripts/tswow/wotlkdata');
 }
