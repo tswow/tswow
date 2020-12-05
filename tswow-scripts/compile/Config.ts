@@ -34,7 +34,7 @@ export async function createConfig() {
         wfs.copy('./config.default.yaml', configDest);
     }
     wfs.copy('./separate_dbs.default.yaml', install_path('separate_dbs.yaml'));
-    wfs.copy('./package.json', install_path('package.json'));
+    wfs.copy('./package.install.json', install_path('package.json'));
 
     if (!wfs.exists(install_path('.gitignore'))) {
         wfs.write(install_path('.gitignore'), install_gitignore);
