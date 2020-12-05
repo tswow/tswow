@@ -57,4 +57,6 @@ export async function createConfig() {
     if(!wfs.exists(install_path('modules','tswow-stdlib'))) {
         wsys.execIn(install_path(), `git submodule add https://github.com/tswow/tswow-stdlib.git modules/tswow-stdlib`);
     }
+
+    wfs.copy('./start.js',ipaths.startjs);
 }

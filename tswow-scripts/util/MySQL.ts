@@ -25,10 +25,9 @@ import { TrinityCore } from '../runtime/TrinityCore';
 import { mpath, wfs, wfsa } from './FileSystem';
 import { Timer } from './Timer';
 import { Wrap } from './Wrap';
-import { download } from '../compile/CompileUtils';
-import { sleep } from 'deasync';
 import { ipaths } from './Paths';
 import { extract } from './7zip';
+import { FileChanges } from './FileChanges';
 
 /**
  * Helper function to make a mysql query and return a promise.
@@ -251,7 +250,6 @@ export namespace mysql {
 
     async function install_world(w: Connection, sqlPath: string) {
         term.log(`Beginning to rebuild ${w.name()}`);
-
         await w.status;
         await promiseConnect(w);
         await promiseQuery(w.con, `DROP DATABASE IF EXISTS \`${w.name()}\`;`);
@@ -270,8 +268,7 @@ export namespace mysql {
         await Promise.all(all.map(x => x.connect()));
 
         // Rebuild world/world_src
-        const waits: Promise<void>[] = [];
-        let shouldBuild = false;
+        let shouldBuild = FileChanges.isChanged(ipaths.tdb,'tdb');
         if(!(await world.hasTable('access_requirement'))) {
             shouldBuild = true;
         }
@@ -281,46 +278,27 @@ export namespace mysql {
         }
 
         if(shouldBuild) {
-            function findSql() {
-                let sqls = wfs.readDir(ipaths.bin,false,'files')
-                    .filter(x=>x.endsWith('.sql'));
-
-                if(sqls.length > 1) {
-                    throw new Error(`Failed to install TDB: Multiple SQL files lying in `);
-                }
-
-                return sqls[0];
-            }
-
             function clearSql() {
                 wfs.readDir(ipaths.bin,false,'files')
                     .filter(x=>x.endsWith('sql'))
                     .forEach(x=>wfs.remove(x));
             }
-
-            let sql = "";
-
-            if(wfs.exists(ipaths.tdb)) {
-                // Always override stray sql files with tdb.7z
-                clearSql();
-                extract(ipaths.tdb);
-                sql = findSql();
-                if(!sql) {
-                    throw new Error(`Failed to extract TDB: No SQL files found after extraction`);
-                }
-            } else {
-                sql = findSql();
-                // Missing tdb.7z is only an error if there also is no sql file in bin
-                if(!sql) {
-                    throw new Error(`Missing TDB: ${ipaths.tdb}, please download a TDB, rename it "tdb.7z" and place it in "bin".`)
-                }
+            clearSql();
+            if(!wfs.exists(ipaths.tdb)) {
+                throw new Error(`Missing TDB: ${ipaths.tdb}, please download a TDB, rename it "tdb.7z" and place it in "bin".`)
             }
+            extract(ipaths.tdb);
+            let sqls = wfs.readDir(ipaths.bin,false,'files')
+                .filter(x=>x.endsWith('.sql'));
+
+            if(sqls.length > 1) {
+                throw new Error(`Failed to install TDB: Multiple SQL files lying in `);
+            }
+
+            let sql = sqls[0];
             await Promise.all([install_world(world,sql),install_world(world_src,sql)]);
-
-            // Don't leave stray SQL unless tdb.7z is missing
-            if(wfs.exists(ipaths.tdb)) {
-                clearSql();
-            }
+            clearSql();
+            FileChanges.tagChange(ipaths.tdb,'tdb');
         }
 
         wfs.iterate(ipaths.startupSql, (file) => {

@@ -84,6 +84,7 @@ async function compile(type: string, compileArgs: string[]) {
     await createConfig();
 
     if (types.includes('release')) {
+        term.log(`Creating ${build_path('release.7z')}`)
         make7zip(install_path(), build_path('release.7z'));
     }
 
@@ -95,7 +96,7 @@ async function main() {
 
     const installedPrograms =
         ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder',
-         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build'];
+         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build','release'];
 
     for (const val of installedPrograms) {
         build.addCommand(val, '', `Builds ${val}`, async(args) => await compile(val, args));

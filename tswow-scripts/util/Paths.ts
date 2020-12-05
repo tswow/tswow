@@ -37,6 +37,7 @@ export class InstallPaths {
     get dbcBuild() {return mpath(this.coreData, 'dbc'); }
     get luaxmlSource() { return mpath(this.coreData, 'luaxml_source'); }
     get luaxmlBuild() { return mpath(this.coreData, 'luaxml'); }
+    get startjs() {return mpath(this.coreData, 'start.js'); }
 
     /** Bin paths */
 

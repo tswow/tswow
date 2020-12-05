@@ -30,7 +30,7 @@ import { InstallPaths } from '../util/Paths';
 
 InstallPaths.setInstallBase('./');
 
-async function main() {
+export async function main() {
     try {
         term.log('~tswow starting up~');
         const timer = Timer.start();
@@ -65,5 +65,3 @@ async function main() {
     }
     await commands.enterLoop();
 }
-
-main();
