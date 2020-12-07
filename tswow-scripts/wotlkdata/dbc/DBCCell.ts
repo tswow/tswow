@@ -204,7 +204,7 @@ export class DBCPointerCell<T> extends DBCCell<number, T> {
 export class DBCMaskCell<T> extends DBCCell<number, T> {
     get(): number { return this.buffer.readint(this.offset); }
     set(value: number): T {
-        this.buffer.writeint(value, this.offset);
+        this.buffer.writeuint(value, this.offset);
         return this.owner;
     }
 
