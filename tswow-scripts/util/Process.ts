@@ -48,7 +48,7 @@ export class Process {
      * @param useWildcard Whether to use * for wildcards.
      */
     waitFor(match: string, useWildcard: boolean = true) {
-        const matches = useWildcard ? [match] : match.split('*');
+        const matches = !useWildcard ? [match] : match.split('*');
         let id = 0;
         while (this.messageListeners[id]) {
             ++id;
@@ -104,6 +104,8 @@ export class Process {
      * Does nothing if the process is not started.
      */
     async stop() {
+        this.curString = "";
+
         if (this.stopPromise) {
             return this.stopPromise;
         }

@@ -31,8 +31,8 @@ export class InstallPaths {
     get mmaps() {return mpath(this.coreData, 'mmaps'); }
     get vmaps() {return mpath(this.coreData, 'vmaps'); }
     get mysqlData() {return mpath(this.coreData, 'mysql'); }
-    get worldPlain1() {return mpath(this.coreData, 'mysql', 'world_plain_1'); }
-    get worldPlain2() {return mpath(this.coreData, 'mysql', 'world_plain_2'); }
+    get worldPlain1() {return mpath(this.coreData, 'mysql_plain', 'world_plain_1'); }
+    get worldPlain2() {return mpath(this.coreData, 'mysql_plain', 'world_plain_2'); }
     get dbcSource() {return mpath(this.coreData, 'dbc_source'); }
     get dbcBuild() {return mpath(this.coreData, 'dbc'); }
     get luaxmlSource() { return mpath(this.coreData, 'luaxml_source'); }

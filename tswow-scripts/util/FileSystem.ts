@@ -299,12 +299,15 @@ export namespace wfs {
      *             If this path doesn't exist, the function does nothing.
      * @param cb The function to call for the file(s) found at or from `path`
      */
-    export function iterate(iterPath: string, cb: (name: string) => void) {
+    export async function iterate(iterPath: string, cb: (name: string) => any) {
         if (!wfs.exists(iterPath)) { return; }
         if (isFile(iterPath)) {
-            cb(iterPath);
+            await cb(iterPath);
         } else {
-            readDir(iterPath, false).forEach((x) => iterate(x, cb));
+            let files = readDir(iterPath,false);
+            for(let file of files) {
+                await iterate(file, cb);
+            }
         }
     }
 

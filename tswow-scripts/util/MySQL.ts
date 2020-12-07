@@ -105,11 +105,22 @@ class Connection {
     }
 
     disconnect() {
-        if (this.con.state !== 'disconnected') {
-            this.con.end();
+        if(!this.isConnected) {
+            return;
         }
-        this.status = undefined;
-        this.isConnected = false;
+        return new Promise<void>((res,rej)=>{
+            if (this.con.state !== 'disconnected') {
+                this.con.end((err)=>{
+                    if(err) {
+                        rej(err);
+                    } else {
+                        res();
+                    }
+                });
+            }
+            this.status = undefined;
+            this.isConnected = false;
+        });
     }
 
     /**
@@ -174,7 +185,7 @@ export namespace mysql {
     }
 
     export async function disconnect() {
-        all.map(x => x.disconnect());
+        await Promise.all(all.map(async x => await x.disconnect()));
 
         if (TrinityCore.isStarted()) {
             await TrinityCore.stop();
@@ -212,34 +223,28 @@ export namespace mysql {
             mysqlprocess.start(ipaths.mysqldExe,
                 [
                     '--log_syslog=0',
+                    '--console',
                     `--init-file=${wfs.absPath(startup_file)}`,
                     `--datadir=${wfs.absPath(ipaths.mysqlData)}`
                 ]);
+            mysqlprocess.showOutput(false);
+            await mysqlprocess.waitFor('Execution of init_file*ended.', true)
+            //await wsys.sleep(1000);
+            term.success("Mysql process started");
         }
 
-        for (let i = 0; i < 20; ++i) {
-            if (i === 19) {
-                throw new Error('Failed to connect to to MySQL');
-            }
-            try {
-                await connectDatabases();
-                break;
-            } catch (err) {
-                await wsys.sleep(400);
-            }
-        }
+        await connectDatabases();
 
-        // Create the world backup
-        if (!skipBackup && !wfs.exists(ipaths.worldPlain1)) {
-            term.log(`Creating first world_plain...`);
+        if(!skipBackup && (!wfs.exists(ipaths.worldPlain1) || !wfs.exists(ipaths.worldPlain2))) {
+            term.log(`Creating world_plain...`);
+            await disconnect();
             wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
                 ipaths.worldPlain1
             );
-        }
-
-        if (!skipBackup && !wfs.exists(ipaths.worldPlain2)) {
-            term.log(`Creating second world_plain...`);
-            wfs.copy(ipaths.worldPlain1, ipaths.worldPlain2);
+            wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
+                ipaths.worldPlain2
+            );
+            await startMysql(true);
         }
 
         // Restart TrinityCore if it was started before this restart
@@ -253,7 +258,7 @@ export namespace mysql {
         await w.status;
         await promiseConnect(w);
         await promiseQuery(w.con, `DROP DATABASE IF EXISTS \`${w.name()}\`;`);
-        w.status = undefined;
+        await w.disconnect();
         await w.connect();
         const sqlpath = isWindows() ? `"${ipaths.mysqlExe}"` : `sudo mysql`;
         await wsys.execAsync(`${sqlpath} -u root ${w.name()} < ${sqlPath}`);
@@ -301,11 +306,11 @@ export namespace mysql {
             FileChanges.tagChange(ipaths.tdb,'tdb');
         }
 
-        wfs.iterate(ipaths.startupSql, (file) => {
+        await wfs.iterate(ipaths.startupSql, async (file) => {
             if (file.endsWith('.sql')) {
                 const contents = wfs.read(file);
-                world_src.query(contents);
-                world.query(contents);
+                await world_src.query(contents);
+                await world.query(contents);
             }
         });
     }
