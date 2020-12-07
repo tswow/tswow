@@ -89,6 +89,16 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         return this.rowMaker(this, this.buffer, index);
     }
 
+    highest(callback: (row: R)=>number) {
+        return this.filter({} as any)
+            .sort((a,b)=>callback(b)>callback(a) ? 1 : -1)[0];
+    }
+
+    lowest(callback: (row: R)=>number) {
+        return this.filter({} as any)
+            .sort((a,b)=>callback(a)>callback(b) ? 1 : -1)[0];
+    }
+
     protected fastSearch(value: number): R {
         let low = 0;
         let high = this.rowCount - 1;
