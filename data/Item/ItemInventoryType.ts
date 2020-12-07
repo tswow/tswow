@@ -17,6 +17,36 @@
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
 import { ItemBase } from "./Item";
 
+export enum InventoryType {
+    NOT_EQUIPPABLE = 0,
+    HEAD = 1,
+    NECK = 2,
+    SHOULDER = 3,
+    SHIRT = 4,
+    CHEST = 5,
+    WAIST = 6,
+    LEGS = 7,
+    FEET = 8,
+    WRISTS = 9,
+    HANDS = 10,
+    FINGER = 11,
+    TRINKET = 12,
+    WEAPON = 13,
+    SHIELD = 14,
+    RANGED = 15,
+    BACK = 16,
+    TWOHAND = 17,
+    TABARD = 19,
+    ROBE = 20,
+    MAINHAND = 21,
+    OFFHAND = 22,
+    TOME = 23,
+    AMMO = 24,
+    THROWN = 25,
+    WAND_GUN = 26,
+    RELIC = 28
+}
+
 export class ItemInventoryType extends Enum<ItemBase> {
     constructor(owner: ItemBase) {
         super(owner, owner.row.InventoryType);

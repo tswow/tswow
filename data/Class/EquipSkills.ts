@@ -33,15 +33,20 @@ export class EquipSystem extends Subsystem<Class> {
 
     setTrainer() {
         this.row.ClassMask.mark(this.owner.ID-1);
+        this.row.RaceMask.set(0xffffffff);
+        this.rcRow.RaceMask.set(0xffffffff);
         this.row.AcquireMethod.set(1);
         return this.owner;
     }
 
     setAuto() {
         this.row.ClassMask.mark(this.owner.ID-1);
+        this.row.RaceMask.set(0xffffffff);
+        this.rcRow.RaceMask.set(0xffffffff);
         this.row.AcquireMethod.set(1);
         SQL.playercreateinfo_skills.add(0,1<<(this.owner.ID-1),
             this.row.SkillLine.get())
+            
         return this.owner;
     }
 }
@@ -63,7 +68,6 @@ export class EquipSkills extends Subsystem<Class> {
             .clone(Ids.SkillRaceClassInfo.id())
             .ClassMask.set(1<<(this.owner.ID-1))
             : existingRci[0];
-
         return new EquipSystem(this.owner, sla, rci);
     }
 

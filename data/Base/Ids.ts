@@ -66,7 +66,7 @@ export const Ids = {
     /** Start at 789, Highest base value is 788 */
     SkillLine: new IdGenerator('SkillLineAbility',789),
     /** Start at 971, Highest base value is 970 */
-    SkillRaceClassInfo: new AutoIdGenerator(970),
+    SkillRaceClassInfo: new AutoIdGenerator(971),
     /** Start at 27000 , Highest base value is 26034 */
     Quest: new IdGenerator('quest_template',27000),
     /** Start at 178, Highest base value is 177 */

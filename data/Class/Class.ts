@@ -25,11 +25,11 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
-import { GlueStrings } from "../UI/GlueStrings";
 import { BaseClassData } from "./BaseClassData";
+import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
 import { ClassUISettings } from "./ClassUISettings";
-import { EquipSkills, EquipSystem } from "./EquipSkills";
+import { EquipSkills } from "./EquipSkills";
 
 type ClassFinder = number;
 
@@ -64,7 +64,9 @@ export class Class extends MainEntity<ChrClassesRow> {
                 femaleDescription,infoRows);
     }
 
-    get Equips() { return new EquipSkills(this); }
+    get EquipSkills() { return new EquipSkills(this); }
+
+    get StartGear() { return new ClassStartOutfits(this); }
 
     get Filename() { return this.row.Filename.get(); }
 
@@ -158,7 +160,11 @@ export const Classes = {
         const ALL_SKILL_RACE_CLASS_INFO = DBC.SkillRaceClassInfo.filter({});
         const parentRCI = ALL_SKILL_RACE_CLASS_INFO.filter(x=>x.ClassMask.get()&(1<<(rParent.ID.get()-1)));
         parentRCI.forEach(x=>{
-            x.ClassMask.set(x.ClassMask.get() | (1<<(id-1)));
+            let mask = x.ClassMask.get();
+            if(mask!==0xffffffff) {
+                mask = mask | (1<<(id-1));
+            }
+            x.ClassMask.set(mask);
         });
 
         interface GtItem {
