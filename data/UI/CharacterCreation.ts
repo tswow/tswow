@@ -14,26 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Achievements } from "./Achievement/Achievement";
-import { Classes } from "./Class/Class";
-import { Creatures } from "./Creature/Creatures";
-import { Items } from "./Item/Item";
-import { Languages } from "./Languages/Languages";
-import { Loot } from "./Loot/Loot";
-import { Quests } from "./Quest/Quests";
-import { Spells } from "./Spell/Spell";
-import { Titles } from "./Title/Titles";
-import { UI } from "./UI/UI";
+import { LUAXML } from "wotlkdata";
+import { AnchorRow } from "./Components/AnchorRow";
 
-export const std = {
-    Spells : Spells,
-    Languages : Languages,
-    Quests : Quests,
-    Titles: Titles,
-    Achievements: Achievements,
-    Loot: Loot,
-    Items: Items,
-    Creatures: Creatures,
-    Classes: Classes,
-    UI: UI
+const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');
+
+export class CharacterCreationUI {
+    private anchor(index: number) {
+        return new AnchorRow(this, cc.emptyReplace(index));
+    }
+
+    get MaleButton() { return this.anchor(497); }
+    get FemaleButton() { return this.anchor(518); }
+    get ClassName() { return this.anchor(438); }
 }

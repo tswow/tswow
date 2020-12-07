@@ -22,15 +22,21 @@ import { LUAXML } from "wotlkdata/luaxml/LUAXML";
 import { Edit } from "wotlkdata/luaxml/TextFile";
 import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { std } from "..";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
+import { CharacterCreationUI } from "../UI/CharacterCreation";
+import { GlueStrings } from "../UI/GlueStrings";
 import { BaseClassData } from "./BaseClassData";
 import { ClassStats } from "./ClassStats";
-import { ClassUISettings, classXml } from "./ClassUISettings";
+import { ClassUISettings } from "./ClassUISettings";
 
 type ClassFinder = number;
 
 type RaceAdder = number;
+
+let created = false;
+
 
 /**
  * TODO: Combat scaling is broken, classes just do 1 melee damage without a weapon.
@@ -114,6 +120,15 @@ export const Classes = {
     },
 
     create : (mod : string, clsId : string, identifier : string, parent : number) => {
+        // Set up parent buttons
+        if(!created) {
+            created = true;
+            new CharacterCreationUI()
+                .MaleButton.setPos(-20,-360)
+                .FemaleButton.setPos(20,-360)
+                .ClassName.setPos(0,-418)
+        }
+
         // Create class object
         const rParent = clsResolve(parent);
         const id = Ids.Class.id(mod,clsId);
@@ -192,7 +207,13 @@ export const Classes = {
         const classColor = co.after(54,`\t["${identifier}"] = { r = 0.67, g = 0.83, b = 0.45 },`)
         const sortOrder = co.after(71,`\t"${identifier}",`)
         const tCoords = co.after(91,`\t["${identifier}"] = {0,0,0,0},`);
-        const xmlE = LUAXML.file('Interface/GlueXML/CharacterCreate.xml').after(586,classXml(id,-90,-438));
+
+        const ccx = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');
+        ccx.after(586, `<CheckButton name="CharacterCreateClassButton${id-1}" inherits = "CharacterCreateClassButtonTemplate" id="${id-1}">`)
+        ccx.after(586, `<Anchors>`);
+        let xmlE = ccx.after(586, `<Anchor point="TOP" x="-90" y="-420"/>`);
+        ccx.after(586, `</Anchors>`);
+        ccx.after(586,`</CheckButton>`);
         const maleDesc = gs.after(327,`CLASS_${identifier} = "Male Description";`);
         const femaleDesc = gs.after(327,`CLASS_${identifier}_FEMALE = "Female Description";`);
 

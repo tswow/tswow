@@ -15,20 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { LUAXML } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/Cell";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Edit, EditCell, EditSystem } from "wotlkdata/luaxml/TextFile";
+import { Edit, EditSystem } from "wotlkdata/luaxml/TextFile";
+import { AnchorRow } from "../UI/Components/AnchorRow";
 import { Class } from "./Class";
 
-export function classXml(id : number, offsetX = 25, offsetY = 0) {
-    return `\t\t\t\t\t\t\t<CheckButton name="CharacterCreateClassButton${id-1}" inherits="CharacterCreateClassButtonTemplate" id="${id-1}">
-    \t\t\t\t\t\t\t\t<Anchors>
-    \t\t\t\t\t\t\t\t\t<Anchor point="TOP" x="${offsetX}" y="${offsetY}"/>
-    \t\t\t\t\t\t\t\t</Anchors>
-    \t\t\t\t\t\t\t</CheckButton>
-    `
-}
-    
 function float(rgb : number) {
     let str = `{ r = ${(((rgb>>16)&0xff)/255.0).toFixed(2)} , `
     str+= `g = ${(((rgb>>8)&0xff)/255.0).toFixed(2)} , `
@@ -78,12 +69,6 @@ class ClassColor extends EditSystem<Class> {
 
     get() : number {
         return unfloat(this.edit.text);
-    }
-}
-
-class CreationButton extends EditSystem<Class> {
-    set(x: number, y: number) {
-        this.edit.text = classXml(this.owner.ID,x,y);
     }
 }
 
@@ -163,7 +148,7 @@ class ClassDescription extends Subsystem<Class> {
 export class ClassUISettings extends Subsystem<Class> {
     readonly color: ClassColor;
     readonly tcoords: TCoordSystem;
-    readonly creationButton: CreationButton;
+    readonly classButton: AnchorRow<Class>;
     readonly info: ClassInfoRows;
     readonly description: ClassDescription;
 
@@ -171,7 +156,7 @@ export class ClassUISettings extends Subsystem<Class> {
         super(cls);
         this.tcoords = new TCoordSystem(cls, tCoords, tCoordsCC);
         this.color = new ClassColor(cls, classColor);
-        this.creationButton = new CreationButton(cls, xmlEdit);
+        this.classButton = new AnchorRow(cls, xmlEdit);
         this.description = new ClassDescription(cls, maleDescription, femaleDescription )
         this.info = new ClassInfoRows(cls, infoRows);
         return this;
