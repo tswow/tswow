@@ -430,6 +430,12 @@ export namespace Modules {
             await wrap.unwrap();
         });
 
+        commands.addCommand('bdc', '' , 'Builds data to folder (fast) and restarts client', async() => {
+            const wrap = await buildMpq(true, true);
+            await Client.start();
+            await wrap.unwrap();
+        });
+
         commands.addCommand('check', '', '', async() => {
             rebuildPatch(true);
         });
