@@ -229,7 +229,6 @@ export namespace mysql {
                 ]);
             mysqlprocess.showOutput(false);
             await mysqlprocess.waitFor('Execution of init_file*ended.', true)
-            //await wsys.sleep(1000);
             term.success("Mysql process started");
         }
 
