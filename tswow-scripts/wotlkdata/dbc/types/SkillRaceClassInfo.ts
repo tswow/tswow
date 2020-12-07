@@ -17,7 +17,7 @@
 import { DBCRow } from '../DBCRow'
 import { DBCFile } from '../DBCFile'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell} from '../DBCCell'
+import { DBCKeyCell , DBCIntCell, DBCMaskCell} from '../DBCCell'
 import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
@@ -43,17 +43,17 @@ export class SkillRaceClassInfoRow extends DBCRow<SkillRaceClassInfoCreator,Skil
     /**
      * No comment (yet!)
      */
-    get RaceMask() { return new DBCIntCell(this,this.buffer,this.offset+8)}
+    get RaceMask() { return new DBCMaskCell(this,this.buffer,this.offset+8)}
     
     /**
      * No comment (yet!)
      */
-    get ClassMask() { return new DBCIntCell(this,this.buffer,this.offset+12)}
+    get ClassMask() { return new DBCMaskCell(this,this.buffer,this.offset+12)}
     
     /**
      * No comment (yet!)
      */
-    get Flags() { return new DBCIntCell(this,this.buffer,this.offset+16)}
+    get Flags() { return new DBCMaskCell(this,this.buffer,this.offset+16)}
     
     /**
      * No comment (yet!)
