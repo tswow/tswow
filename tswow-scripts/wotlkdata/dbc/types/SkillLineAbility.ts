@@ -17,7 +17,7 @@
 import { DBCRow } from '../DBCRow'
 import { DBCFile } from '../DBCFile'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCUIntCell , DBCUIntArrayCell} from '../DBCCell'
+import { DBCKeyCell , DBCUIntCell , DBCUIntArrayCell, DBCMaskCell} from '../DBCCell'
 import { int , uint} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
@@ -48,22 +48,22 @@ export class SkillLineAbilityRow extends DBCRow<SkillLineAbilityCreator,SkillLin
     /**
      * No comment (yet!)
      */
-    get RaceMask() { return new DBCUIntCell(this,this.buffer,this.offset+12)}
+    get RaceMask() { return new DBCMaskCell(this,this.buffer,this.offset+12)}
     
     /**
      * No comment (yet!)
      */
-    get ClassMask() { return new DBCUIntCell(this,this.buffer,this.offset+16)}
+    get ClassMask() { return new DBCMaskCell(this,this.buffer,this.offset+16)}
     
     /**
      * No comment (yet!)
      */
-    get RaceMaskForbidden() { return new DBCUIntCell(this,this.buffer,this.offset+20)}
+    get RaceMaskForbidden() { return new DBCMaskCell(this,this.buffer,this.offset+20)}
     
     /**
      * No comment (yet!)
      */
-    get ClassMaskForbidden() { return new DBCUIntCell(this,this.buffer,this.offset+24)}
+    get ClassMaskForbidden() { return new DBCMaskCell(this,this.buffer,this.offset+24)}
     
     /**
      * No comment (yet!)
