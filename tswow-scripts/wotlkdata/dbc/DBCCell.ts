@@ -210,14 +210,17 @@ export class DBCMaskCell<T> extends DBCCell<number, T> {
 
     markAll(bits: number[]) {
         bits.forEach((x)=>this.mark(x));
+        return this.owner;
     }
 
     mark(bit: number) {
         this.set(this.get()|1<<bit);
+        return this.owner;
     }
 
     clear(bit: number) {
         this.set(this.get()& ~(1 << bit));
+        return this.owner;
     }
 }
 
