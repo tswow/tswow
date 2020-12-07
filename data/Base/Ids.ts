@@ -62,11 +62,11 @@ export const Ids = {
     /** Starts at 15543, Highest base value is 15542 */
     SpellKit: new AutoIdGenerator(15543),
     /** Start at 21981, Highest base value is 21980 */
-    SkillLineAbility: new IdGenerator('SkillLineAbility',21981),
+    SkillLineAbility: new AutoIdGenerator(21981),
     /** Start at 789, Highest base value is 788 */
     SkillLine: new IdGenerator('SkillLineAbility',789),
     /** Start at 971, Highest base value is 970 */
-    SkillRaceClassInfo: new IdGenerator('SkillRaceClassInfo',970),
+    SkillRaceClassInfo: new AutoIdGenerator(970),
     /** Start at 27000 , Highest base value is 26034 */
     Quest: new IdGenerator('quest_template',27000),
     /** Start at 178, Highest base value is 177 */
@@ -117,4 +117,6 @@ export const Ids = {
     CreatureTemplate: new IdGenerator('creature_template',1000000),
     /** Starts at 401, Highest base value is 400*/
     TalentTab: new IdGenerator('TalentTab',401),
+    /** Starts at 500, Highest base value is ?? */
+    CharStartOutfit: new AutoIdGenerator(400)
 }

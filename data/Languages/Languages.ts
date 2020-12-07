@@ -95,13 +95,13 @@ export const Languages = {
             .DisplayName.read(name)
 
         // Class/race enabling
-        const src = gutterSkillRaceClass.clone(Ids.SkillRaceClassInfo.id(mod,id))
+        const src = gutterSkillRaceClass.clone(Ids.SkillRaceClassInfo.id())
             .SkillID.set(skill.ID.get())
             .ClassMask.set(0xffff)
             .RaceMask.set(0xffff)
 
         // Skill<->Spell Mapping
-        const sla = gutterSkillAbility.clone(Ids.SkillLineAbility.id(mod,id))
+        const sla = gutterSkillAbility.clone(Ids.SkillLineAbility.id())
             .Spell.set(spell.ID.get())
             .SkillLine.set(skill.ID.get())
             .ClassMask.set(0)

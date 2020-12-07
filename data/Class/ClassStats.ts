@@ -31,7 +31,7 @@ class StatFile<D extends GtDBC> extends Subsystem<Class>{
 
     constructor(cls: Class, classId : number,size : number, dbc: DBCFile<any,any,any>) {
         super(cls);
-        let start = classId*size;
+        let start = (classId-1)*size;
         this.dbc = dbc.filter({} as any)
             .sort((a,b)=>a.index>b.index?1:-1)
             .slice(start,start+size);
@@ -42,7 +42,7 @@ class StatFile<D extends GtDBC> extends Subsystem<Class>{
     }
 
     set(callback : (oldValue : number, index : number)=>number) {
-        this.dbc.forEach((x,i) => 
+        this.dbc.forEach((x,i) =>
             x.Data.set(callback(x.Data.get(), i))
         );
         return this.owner;

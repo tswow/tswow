@@ -22,7 +22,6 @@ import { LUAXML } from "wotlkdata/luaxml/LUAXML";
 import { Edit } from "wotlkdata/luaxml/TextFile";
 import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { std } from "..";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
@@ -30,6 +29,7 @@ import { GlueStrings } from "../UI/GlueStrings";
 import { BaseClassData } from "./BaseClassData";
 import { ClassStats } from "./ClassStats";
 import { ClassUISettings } from "./ClassUISettings";
+import { EquipSkills, EquipSystem } from "./EquipSkills";
 
 type ClassFinder = number;
 
@@ -64,6 +64,8 @@ export class Class extends MainEntity<ChrClassesRow> {
                 femaleDescription,infoRows);
     }
 
+    get Equips() { return new EquipSkills(this); }
+
     get Filename() { return this.row.Filename.get(); }
 
     get ID() { return this.row.ID.get(); }
@@ -75,6 +77,8 @@ export class Class extends MainEntity<ChrClassesRow> {
         }
         return this;
     }
+
+    get Name() { return this.wrapLoc(this.row.Name); }
 }
 
 const clsResolve = (f : ClassFinder) => {
@@ -174,6 +178,12 @@ export const Classes = {
             .filter((x,i)=>x.index>=parent*size && x.index<parent*size+size)
         const g = (size: number, dbc: GTFile) => 
             p(size,dbc).forEach((x)=>x.clone().Data.set(x.Data.get()))
+
+        // Copy parent clothes
+        DBC.CharStartOutfit.filter({ClassID:parent}).forEach(x=>{
+            x.clone(Ids.CharStartOutfit.id())
+                .ClassID.set(id)
+        })
         
         g(100,DBC.GtChanceToMeleeCrit)
         g(100,DBC.GtChanceToSpellCrit)
