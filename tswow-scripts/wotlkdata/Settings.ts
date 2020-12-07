@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
 
-const settings = yaml.load(fs.readFileSync('./config.yaml').toString());
+const settings = yaml.load(fs.readFileSync('./config/tswow.yaml').toString());
 const args = process.argv.slice(2);
 
 function getDatabase(database: string) {
