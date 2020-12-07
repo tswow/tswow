@@ -165,7 +165,6 @@ export namespace Modules {
         wfs.write(mpath(modpath, 'data', 'index.ts'), patch_example_ts);
         wfs.mkDirs(mpath(modpath, 'assets'));
         wfs.mkDirs(mpath(modpath, 'scripts'));
-        wfs.copy('./bin/scripts/global.d.ts.template', mpath(modpath, 'scripts', 'global.d.ts'));
 
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
