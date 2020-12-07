@@ -60,7 +60,7 @@ export namespace TrinityCore {
             .map(x => wfs.copy(mpath(ipaths.config, x), mpath(ipaths.coreData, x)));
 
         // Copy dbc files if no patch has been applied or build directory is corrupt
-        if (!wfs.exists(ipaths.dbcBuild) || wfs.readDir(ipaths.dbcBuild).length !== 247) {
+        if (!wfs.exists(ipaths.dbcBuild) || wfs.readDir(ipaths.dbcBuild).length === 0) {
             wfs.copy(ipaths.dbcSource, ipaths.dbcBuild);
         }
 
