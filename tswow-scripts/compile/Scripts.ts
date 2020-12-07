@@ -56,5 +56,4 @@ export async function buildScripts(buildLine: string, installLine: string) {
     wfs.write(mpath(buildLine, scripts_config_dir, 'tsconfig.json'),
         JSON.stringify(scripts_tsconfig, null, 4));
     watcher = watchTs(scripts_config_dir);
-    wsys.execIn(install_path(), 'npm link bin/scripts/tswow/wotlkdata');
 }

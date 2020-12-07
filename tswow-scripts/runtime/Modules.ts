@@ -26,7 +26,6 @@ import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
 import { Client } from './Client';
 import { isWindows } from '../util/Platform';
 import { Wrap } from '../util/Wrap';
-import { ChildProcessWithoutNullStreams } from 'child_process';
 import { Assets } from './Assets';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
@@ -282,6 +281,10 @@ export namespace Modules {
     }
 
     export function refreshModules(force: boolean = false) {
+        if(!wfs.exists('./node_modules/wotlkdata')) {
+            wsys.exec('npm link bin/scripts/tswow/wotlkdata');
+        }
+
         wfs.readDir('./modules', true).forEach(xx => {
             const x = mpath('./modules', xx);
 
