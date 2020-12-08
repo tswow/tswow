@@ -118,5 +118,9 @@ export const Ids = {
     /** Starts at 401, Highest base value is 400*/
     TalentTab: new IdGenerator('TalentTab',401),
     /** Starts at 500, Highest base value is ?? */
-    CharStartOutfit: new AutoIdGenerator(400)
+    CharStartOutfit: new AutoIdGenerator(400),
+
+    /** Starts at 128, Highest base value is 127 */
+    Trainer: new AutoIdGenerator(128),
+
 }

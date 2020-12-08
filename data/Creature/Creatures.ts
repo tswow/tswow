@@ -22,5 +22,14 @@ export const Creatures = {
     createTemplate: (mod: string, id: string, parent: number) => {
         return new CreatureTemplate(SQL.creature_template.find({entry: parent})
             .clone(Ids.CreatureTemplate.id(mod, id)))
+    },
+
+    // TODO: Add gossip options and talent unlearns
+    createTrainer(mod: string, id: string, trainerId: number, parent: number){
+        const creature = Creatures.createTemplate(mod, id, parent)
+        SQL.creature_default_trainer.add(creature.ID)
+            .TrainerId.set(trainerId);
+        creature.row.gossip_menu_id.set(0);
+        return creature;
     }
 }

@@ -17,10 +17,12 @@
 import { Achievements } from "./Achievement/Achievement";
 import { Classes } from "./Class/Class";
 import { Creatures } from "./Creature/Creatures";
+import { Trainers } from "./Creature/Trainer";
 import { Items } from "./Item/Item";
 import { Languages } from "./Languages/Languages";
 import { Loot } from "./Loot/Loot";
 import { Quests } from "./Quest/Quests";
+import { ClassSkills } from "./Skills/ClassSkill";
 import { Spells } from "./Spell/Spell";
 import { Titles } from "./Title/Titles";
 import { UI } from "./UI/UI";
@@ -35,5 +37,7 @@ export const std = {
     Items: Items,
     Creatures: Creatures,
     Classes: Classes,
-    UI: UI
+    UI: UI,
+    ClassSkills: ClassSkills,
+    Trainers: Trainers
 }
