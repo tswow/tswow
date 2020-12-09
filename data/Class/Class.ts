@@ -65,22 +65,23 @@ export class Class extends MainEntity<ChrClassesRow> {
     }
 
     get EquipSkills() { return new EquipSkills(this); }
-
     get StartGear() { return new ClassStartOutfits(this); }
-
     get Filename() { return this.row.Filename.get(); }
-
     get ID() { return this.row.ID.get(); }
-
     get Stats() { return new ClassStats(this); }
+    get Name() { return this.wrapLoc(this.row.Name); }
+    get Flags() { return this.wrap(this.row.Flags); }
+    get CinematicSequence() { return this.wrap(this.row.CinematicSequenceID); }
+    get RequiredExpansion() { return this.wrap(this.row.Required_Expansion); }
+    get DisplayPower() { return this.wrap(this.row.DisplayPower); }
+    get PetNameToken() { return this.wrap(this.row.PetNameToken); }
+
     addRaces(races : RaceAdder[]) {
         for(let race of races) {
             DBC.CharBaseInfo.add(race,this.row.ID.get());
         }
         return this;
     }
-
-    get Name() { return this.wrapLoc(this.row.Name); }
 }
 
 const clsResolve = (f : ClassFinder) => {
