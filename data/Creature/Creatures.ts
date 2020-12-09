@@ -16,20 +16,37 @@
  */
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids"
+import { Position } from "../Misc/Position";
+import { CreatureInstance } from "./CreatureInstance";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
+    Templates: {
+        createTemplate: (mod: string, id: string, parent: number) => {
+            return new CreatureTemplate(SQL.creature_template.find({entry: parent})
+                .clone(Ids.CreatureTemplate.id(mod, id)))
+        },
+
+        // TODO: Add gossip options and talent unlearns
+        createTrainer(mod: string, id: string, trainerId: number, parent: number){
+            const creature = Creatures.Templates.createTemplate(mod, id, parent)
+            SQL.creature_default_trainer.add(creature.ID)
+                .TrainerId.set(trainerId);
+            creature.row.gossip_menu_id.set(0);
+            return creature;
+        }
     },
 
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+    Instances: {
+        create(mod: string, name: string, template: number, position: Position) {
+            return new CreatureInstance(
+                SQL.creature.add(Ids.CreatureInstance.id(mod, name))
+                    .curhealth.set(1)
+                    .curmana.set(0)
+                    .currentwaypoint.set(0)
+                )
+            .Position.set(position)
+            .TemplateID.set(template)
+        }
     }
 }

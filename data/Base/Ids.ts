@@ -114,6 +114,8 @@ export const Ids = {
     Class: new IdGenerator('ChrClasses',12),
     /** Starts at 100000, Highest base value is 43282 */
     CreatureTemplate: new IdGenerator('creature_template',1000000),
+    /** Starts at 1000000, Highest base value is 213824 */
+    CreatureInstance: new IdGenerator('creature',1000000),
     /** Starts at 401, Highest base value is 400*/
     TalentTab: new IdGenerator('TalentTab',401),
     /** Starts at 500, Highest base value is ?? */

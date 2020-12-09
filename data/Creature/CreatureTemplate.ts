@@ -19,6 +19,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { MainEntity } from "../Base/MainEntity";
 import { SQLLoc } from "../Base/SQLLocSystem";
+import { Position } from "../Misc/Position";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
 import { CreatureAI } from "./CreatureAI";
@@ -34,6 +35,7 @@ import { CreatureModels } from "./CreatureModels";
 import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureRank } from "./CreatureRank";
+import { Creatures } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
@@ -115,4 +117,9 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get MovementID() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return this.wrap(this.row.spell_school_immune_mask); }
+
+    spawn(mod: string, id: string, pos: Position) {
+        Creatures.Instances.create(mod, id, this.ID, pos);
+        return this;
+    }
 }
