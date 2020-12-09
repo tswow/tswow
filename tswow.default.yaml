@@ -27,3 +27,5 @@ generation:
 # Settings for azerothcores "worldserver.conf"
 worldserver:
   MoveMaps.enable: false
+  HotSwap.Enabled: 1
+  HotSwap.EnableReCompiler: 0
