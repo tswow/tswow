@@ -48,6 +48,10 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
 }
 
 export abstract class ArrayEntry<T> extends Subsystem<T> {
+    static getIndex(entry: ArrayEntry<any>) {
+        return entry.index;
+    }
+
     protected readonly index: number;
     constructor(owner: T, index: number) {
         super(owner);
