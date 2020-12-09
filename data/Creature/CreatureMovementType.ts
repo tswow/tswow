@@ -28,11 +28,11 @@ export class CreatureMovementType extends EnumBase<CreatureTemplate> {
     }
 
     @EnumField(0) 
-    Idle() { return this.set(0); }
+    setIdle() { return this.set(0); }
 
     @EnumField(1) 
-    RandomMovement() { return this.set(1); }
+    setRandomMovement() { return this.set(1); }
 
     @EnumField(2) 
-    Waypoint() { return this.set(2); }
+    setWaypoint() { return this.set(2); }
 }

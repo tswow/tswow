@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumBase } from "wotlkdata/cell/Systems/Enum";
+import { EnumBase, EnumField } from "wotlkdata/cell/Systems/Enum";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureType extends EnumBase<CreatureTemplate> {
@@ -28,20 +28,51 @@ export class CreatureType extends EnumBase<CreatureTemplate> {
         return this.owner;
     }
 
-    None() { return this.set(0); }
-    Beast() { return this.set(1); }
-    Dragonkin() { return this.set(2); }
-    Demon() { return this.set(3); }
-    Elemental() { return this.set(4); }
-    Giant() { return this.set(5); }
-    Undead() { return this.set(6); }
-    Humanoid() { return this.set(7); }
-    Critter() { return this.set(8); }
-    Mechanical() { return this.set(9); }
-    NotSpecified() { return this.set(10); }
-    Totem() { return this.set(11); }
-    NonCombatPet() { return this.set(12); }
-    GasCloud() { return this.set(13); }
-    WildPet() { return this.set(14); }
-    Aberration() { return this.set(15); }
+    @EnumField(0)
+    setNone() { return this.set(0); }
+
+    @EnumField(1)
+    setBeast() { return this.set(1); }
+
+    @EnumField(2)
+    setDragonkin() { return this.set(2); }
+
+    @EnumField(3)
+    setDemon() { return this.set(3); }
+
+    @EnumField(4)
+    setElemental() { return this.set(4); }
+
+    @EnumField(5)
+    setGiant() { return this.set(5); }
+
+    @EnumField(6)
+    setUndead() { return this.set(6); }
+
+    @EnumField(7)
+    setHumanoid() { return this.set(7); }
+
+    @EnumField(8)
+    setCritter() { return this.set(8); }
+
+    @EnumField(9)
+    setMechanical() { return this.set(9); }
+
+    @EnumField(10)
+    setNotSpecified() { return this.set(10); }
+
+    @EnumField(11)
+    setTotem() { return this.set(11); }
+
+    @EnumField(12)
+    setNonCombatPet() { return this.set(12); }
+
+    @EnumField(13)
+    setGasCloud() { return this.set(13); }
+
+    @EnumField(14)
+    setWildPet() { return this.set(14); }
+
+    @EnumField(15)
+    setAberration() { return this.set(15); }
 }

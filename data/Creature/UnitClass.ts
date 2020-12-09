@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumBase } from "wotlkdata/cell/Systems/Enum";
+import { EnumBase, EnumField } from "wotlkdata/cell/Systems/Enum";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class UnitClass extends EnumBase<CreatureTemplate> {
@@ -27,8 +27,15 @@ export class UnitClass extends EnumBase<CreatureTemplate> {
         return this.owner;
     }
 
+    @EnumField(1)
     setWarrior() { return this.set(1); }
+
+    @EnumField(2)
     setPaladin() { return this.set(2); }
+
+    @EnumField(3)
     setRogue() { return this.set(3); }
+
+    @EnumField(4)
     setMage() { return this.set(4); }
 }

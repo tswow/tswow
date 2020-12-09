@@ -34,4 +34,6 @@ export class CreatureAI extends Subsystem<CreatureTemplate> {
     TotemAI() { return this.set("TotemAI"); }
     EventAI() { return this.set("EventAI"); }
     SmartAI() { return this.set("SmartAI"); }
+
+    objectify() { return this.get(); }
 }

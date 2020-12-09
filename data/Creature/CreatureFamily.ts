@@ -29,122 +29,122 @@ export class CreatureFamily extends EnumBase<CreatureTemplate> {
 
 
     @EnumField(1)
-    Wolf() { return this.set(1); }
+    setWolf() { return this.set(1); }
 
     @EnumField(2)
-    Cat() { return this.set(2); }
+    setCat() { return this.set(2); }
 
     @EnumField(3)
-    Spider() { return this.set(3); }
+    setSpider() { return this.set(3); }
 
     @EnumField(4)
-    Bear() { return this.set(4); }
+    setBear() { return this.set(4); }
 
     @EnumField(5)
-    Boar() { return this.set(5); }
+    setBoar() { return this.set(5); }
 
     @EnumField(6)
-    Crocolisk() { return this.set(6); }
+    setCrocolisk() { return this.set(6); }
 
     @EnumField(7)
-    CarrionBird() { return this.set(7); }
+    setCarrionBird() { return this.set(7); }
 
     @EnumField(8)
-    Crab() { return this.set(8); }
+    setCrab() { return this.set(8); }
 
     @EnumField(9)
-    Gorilla() { return this.set(9); }
+    setGorilla() { return this.set(9); }
 
     @EnumField(10)
-    Raptor() { return this.set(10); }
+    setRaptor() { return this.set(10); }
 
     @EnumField(11)
-    Tallstrider() { return this.set(11); }
+    setTallstrider() { return this.set(11); }
 
     @EnumField(12)
-    Felhunter() { return this.set(12); }
+    setFelhunter() { return this.set(12); }
 
     @EnumField(13)
-    Voidwalker() { return this.set(13); }
+    setVoidwalker() { return this.set(13); }
 
     @EnumField(14)
-    Succubus() { return this.set(14); }
+    setSuccubus() { return this.set(14); }
 
     @EnumField(15)
-    Doomguard() { return this.set(15); }
+    setDoomguard() { return this.set(15); }
 
     @EnumField(16)
-    Scorpid() { return this.set(16); }
+    setScorpid() { return this.set(16); }
 
     @EnumField(17)
-    Turtle() { return this.set(17); }
+    setTurtle() { return this.set(17); }
 
     @EnumField(18)
-    Imp() { return this.set(18); }
+    setImp() { return this.set(18); }
 
     @EnumField(19)
-    Bat() { return this.set(19); }
+    setBat() { return this.set(19); }
 
     @EnumField(20)
-    Hyena() { return this.set(20); }
+    setHyena() { return this.set(20); }
 
     @EnumField(21)
-    Owl() { return this.set(21); }
+    setOwl() { return this.set(21); }
 
     @EnumField(22)
-    WindSerpent() { return this.set(22); }
+    setWindSerpent() { return this.set(22); }
 
     @EnumField(23)
-    RemoteControl() { return this.set(23); }
+    setRemoteControl() { return this.set(23); }
 
     @EnumField(24)
-    Felguard() { return this.set(24); }
+    setFelguard() { return this.set(24); }
 
     @EnumField(25)
-    DragonHawk() { return this.set(25); }
+    setDragonHawk() { return this.set(25); }
 
     @EnumField(26)
-    Ravager() { return this.set(26); }
+    setRavager() { return this.set(26); }
 
     @EnumField(27)
-    WarpStalker() { return this.set(27); }
+    setWarpStalker() { return this.set(27); }
 
     @EnumField(28)
-    Sporebat() { return this.set(28); }
+    setSporebat() { return this.set(28); }
 
     @EnumField(29)
-    NetherRay() { return this.set(29); }
+    setNetherRay() { return this.set(29); }
 
     @EnumField(30)
-    Serpent() { return this.set(30); }
+    setSerpent() { return this.set(30); }
 
     @EnumField(31)
-    Moth() { return this.set(31); }
+    setMoth() { return this.set(31); }
 
     @EnumField(32)
-    Chimaera() { return this.set(32); }
+    setChimaera() { return this.set(32); }
 
     @EnumField(33)
-    Devilsaur() { return this.set(33); }
+    setDevilsaur() { return this.set(33); }
 
     @EnumField(34)
-    Ghoul() { return this.set(34); }
+    setGhoul() { return this.set(34); }
 
     @EnumField(35)
-    Silithid() { return this.set(35); }
+    setSilithid() { return this.set(35); }
 
     @EnumField(36)
-    Worm() { return this.set(36); }
+    setWorm() { return this.set(36); }
 
     @EnumField(37)
-    Rhino() { return this.set(37); }
+    setRhino() { return this.set(37); }
 
     @EnumField(38)
-    Wasp() { return this.set(38); }
+    setWasp() { return this.set(38); }
 
     @EnumField(39)
-    Corehound() { return this.set(39); }
+    setCorehound() { return this.set(39); }
 
     @EnumField(40)
-    SpiritBeast() { return this.set(40); }
+    setSpiritBeast() { return this.set(40); }
 }
