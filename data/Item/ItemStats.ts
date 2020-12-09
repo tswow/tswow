@@ -208,12 +208,18 @@ export class ItemStats extends SystemArray<ItemStat,ItemBase> {
         return new ItemStat(this.owner, index);
     }
 
-
     private add(stat: number, value: number) {
         const free = this.getFree();
         free.Type.set(stat);
         free.Value.set(value);
+        // Needs to be updated with the amount of used stats
+        this.owner.row.StatsCount.set(ArrayEntry.getIndex(free)+1)
         return this.owner;
+    }
+
+    clearAll() {
+        super.clearAll();
+        this.owner.row.StatsCount.set(0);
     }
 
     addMana(value: number) { return this.add(0, value)}

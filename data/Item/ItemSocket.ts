@@ -95,6 +95,8 @@ export class ItemSockets extends SystemArray<ItemSocket, ItemBase> {
         return this.owner;
     }
 
+    get Properties() { return this.ownerWrap(this.owner.row.GemProperties); }
+
     addMeta(amount: number) {return this.add(0,amount)};
     addRed(amount: number) {return this.add(1,amount)};
     addBlue(amount: number) {return this.add(2,amount)};
