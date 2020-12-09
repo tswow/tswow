@@ -77,7 +77,6 @@ export const Ids = {
     AchievementCriteria: new IdGenerator('Achievement_Criteria',20000),
     /** Start at 4376, Highest base value is 4375 */
     SpellIcon: new AutoIdGenerator(4376),
-
     /** Starts at 1000000, Highest base value is 3479*/
     FishingLoot: new AutoIdGenerator(1000000),
     /** Starts at 1000000, Highest base value is 100006 */
@@ -119,8 +118,14 @@ export const Ids = {
     TalentTab: new IdGenerator('TalentTab',401),
     /** Starts at 500, Highest base value is ?? */
     CharStartOutfit: new AutoIdGenerator(400),
-
     /** Starts at 128, Highest base value is 127 */
     Trainer: new AutoIdGenerator(128),
-
+    /** Starts at 16777215, Highest base value is 1000000 (Below highest) */
+    NPCText: new AutoIdGenerator(1000000),
+    /** Starts at 100000, Highest base value is 74294 */
+    GossipMenuOption: new AutoIdGenerator(100000),
+    /** Starts at 100000, highest base value is 57019 */
+    GossipMenu: new AutoIdGenerator(100000),
+    /** Starts at 100000, highest base value is 77865 */
+    BroadcastText: new AutoIdGenerator(100000),
 }
