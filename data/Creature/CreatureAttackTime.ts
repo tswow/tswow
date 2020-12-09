@@ -14,22 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
-
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+export class CreatureAttackTime extends Subsystem<CreatureTemplate> {
+    set(melee: number, ranged: number = melee, meleeVariance=1, rangedVariance=meleeVariance) {
+        this.MeleeBase.set(melee);
+        this.RangedBase.set(ranged);
+        this.MeleeVariance.set(meleeVariance);
+        this.RangedVariance.set(rangedVariance);
+        return this.owner;
     }
+
+    get MeleeBase() { return this.ownerWrap(this.owner.row.BaseVariance); }
+    get RangedBase() { return this.ownerWrap(this.owner.row.RangeAttackTime); }
+    get MeleeVariance() { return this.ownerWrap(this.owner.row.BaseVariance); }
+    get RangedVariance() { return this.ownerWrap(this.owner.row.RangeVariance); }
 }

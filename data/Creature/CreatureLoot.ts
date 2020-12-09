@@ -14,22 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
-
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
-    }
+export class CreatureLoot extends Subsystem<CreatureTemplate> {
+    get Normal() { return this.ownerWrap(this.owner.row.lootid); }
+    get PickPocket() { return this.ownerWrap(this.owner.row.pickpocketloot); }
+    get Skin() { return this.ownerWrap(this.owner.row.skinloot); }
 }

@@ -14,22 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { EnumBase } from "wotlkdata/cell/Systems/Enum";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
-
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+export class UnitClass extends EnumBase<CreatureTemplate> {
+    get(): number {
+        return this.owner.row.unit_class.get();
     }
+
+    set(value: number): CreatureTemplate {
+        this.owner.row.unit_class.set(value);
+        return this.owner;
+    }
+
+    setWarrior() { return this.set(1); }
+    setPaladin() { return this.set(2); }
+    setRogue() { return this.set(3); }
+    setMage() { return this.set(4); }
 }

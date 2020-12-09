@@ -14,22 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
-
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+export class CreatureAI extends Subsystem<CreatureTemplate> {
+    set(value: string) {
+        this.owner.row.AIName.set(value);
     }
+
+    get() { 
+        return this.owner.row.AIName.get();
+    }
+
+    NullAI() { return this.set("NullAI"); }
+    AggressorAI() { return this.set("AggressorAI"); }
+    ReactorAI() { return this.set("ReactorAI"); }
+    GuardAI() { return this.set("GuardAI"); }
+    PetAI() { return this.set("PetAI"); }
+    TotemAI() { return this.set("TotemAI"); }
+    EventAI() { return this.set("EventAI"); }
+    SmartAI() { return this.set("SmartAI"); }
 }

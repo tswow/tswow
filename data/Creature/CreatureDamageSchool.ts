@@ -14,22 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { EnumBase } from "wotlkdata/cell/Systems/Enum";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
-
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+export class CreatureDamageSchool extends EnumBase<CreatureTemplate> {
+    get(): number {
+        return this.owner.row.dmgschool.get();
     }
+
+    objectify() {
+        return [
+            'Normal','Holy','Fire','Nature',
+            'Frost','Shadow','Arcane'][this.get()];
+    }
+
+    set(value: number): CreatureTemplate {
+        this.owner.row.dmgschool.set(value);
+        return this.owner;
+    }
+
+    setNormal() { return this.set(0); }
+    setHoly() { return this.set(1); }
+    setFire() { return this.set(2); }
+    setNature() { return this.set(3); }
+    setFrost() { return this.set(4); }
+    setShadow() { return this.set(5); }
+    setArcane() { return this.set(6); }
 }

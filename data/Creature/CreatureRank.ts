@@ -14,22 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
-
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+export class CreatureRank extends Subsystem<CreatureTemplate> {
+    protected set(value: number) {
+        this.owner.row.rank.set(value);
+        return this.owner;
     }
+
+    setNormal() { return this.set(0); }
+    setElite() { return this.set(1); }
+    setRareElite() { return this.set(2); }
+
+    /**
+     * Note: To display Skull (??) level, set creature TypeFlags to 4.
+     */
+    setBoss() { return this.set(3); }
+    setRare() { return this.set(4); }
+
 }

@@ -14,22 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids"
+import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export const Creatures = {
-    createTemplate: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
-    },
+export class CreatureMovementSpeed extends Subsystem<CreatureTemplate> {
+    set(walk: number, run: number = walk) {
+        this.owner.row.speed_walk.set(walk);
+        this.owner.row.speed_run.set(run);
+        return this.owner;
+    }
 
-    // TODO: Add gossip options and talent unlearns
-    createTrainer(mod: string, id: string, trainerId: number, parent: number){
-        const creature = Creatures.createTemplate(mod, id, parent)
-        SQL.creature_default_trainer.add(creature.ID)
-            .TrainerId.set(trainerId);
-        creature.row.gossip_menu_id.set(0);
-        return creature;
+    getWalk() {
+        return this.owner.row.speed_walk.get();
+    }
+
+    getRun() { 
+        return this.owner.row.speed_run.get();
+    }
+
+    objectify() {
+        return {walk: this.owner.row.speed_walk.get(), run: this.owner.row.speed_run.get()}
     }
 }
