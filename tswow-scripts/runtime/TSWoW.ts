@@ -42,7 +42,7 @@ export async function main() {
         await mysql.initialize();
 
         // Initialize Modules
-        Modules.initialize();
+        await Modules.initialize();
 
         // Initialize client
         Client.initialize(!args.hasAnyFlag('noac'));

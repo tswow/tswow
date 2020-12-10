@@ -123,6 +123,64 @@ build/
 export namespace Modules {
     const listens: {[key: string]: TypeScriptWatcher} = {};
 
+    export async function cleanScripts(logging: boolean) {
+        for(const mod of getModules()) {
+            const srcdir = mpath('modules',mod,'data');
+            const buildDir = mpath(srcdir, 'build');
+            const removes: string[] = [];
+            await wfs.iterate(buildDir, async (name) => {
+                if (!name.endsWith('.map')) {
+                    return;
+                }
+                const obj = JSON.parse(wfs.read(name));
+                if (obj.sources === undefined || obj.sources.length !== 1) {
+                    return;
+                }
+                const sourcefile = mpath(wfs.dirname(name), obj.sources[0]);
+                if (!wfs.exists(sourcefile)) {
+                    const plainfile = name.substring(0, name.length - 7);
+                    const jsfile = plainfile + '.js';
+                    const dtsfile = plainfile + '.d.ts';
+                    if(logging) {
+                        term.log(`Deleting stray script ${sourcefile}`);
+                    }
+                    wfs.remove(name);
+                    wfs.remove(jsfile);
+                    wfs.remove(dtsfile);
+                    const rel = wfs.relative(buildDir,sourcefile);
+                    removes.push(rel);
+                }
+            });
+
+            if(removes.length===0) {
+                continue;
+            }
+
+            const buildFile = mpath(buildDir,'tsconfig.tsbuildinfo');
+            if(!wfs.exists(buildFile)) {
+                continue;
+            }
+
+            let shouldRestart = false;
+            if(listens[srcdir]!==undefined) {
+                listens[srcdir].kill();
+                delete listens[srcdir];
+                shouldRestart = true;
+            }
+
+            const json = JSON.parse(wfs.read(buildFile));
+            for(let remove of removes) {
+                remove = remove.split('\\').join('/');
+                delete json.program.fileInfos[remove];
+                delete json.program.semanticDiagnosticsPerFile[remove];
+            }
+            wfs.write(buildFile,JSON.stringify(json,null,4));
+            if(shouldRestart) {
+                listens[srcdir] = watchTs(srcdir, false);
+            }
+        }
+    }
+
     /**
      * Returns names of all installed modules.
      */
@@ -353,7 +411,7 @@ export namespace Modules {
     /**
      * Initializes all modules and adds module-related commands.
      */
-    export function initialize() {
+    export async function initialize() {
         if (wfs.isFile('./modules')) {
             throw new Error('"modules" is supposed to be a directory, not a file');
         }
@@ -376,6 +434,10 @@ export namespace Modules {
         moduleC.addCommand('script', 'moduleName', 'Build and loads the server scripts of a module', (args) => {
             if (args.length < 1) { throw new Error('Please provide the name of the module to rebuild'); }
             rebuildModule(args[0]);
+        });
+
+        moduleC.addCommand('clean','','Cleans stray JavaScript files in all modules', async ()=>{
+            await cleanScripts(true);
         });
 
         moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', (args) => {
@@ -418,6 +480,7 @@ export namespace Modules {
         setInterval(() => {
             refreshModules();
         }, 5000);
+        await cleanScripts(true);
         refreshModules(true);
 
         term.success('Modules initialized');
