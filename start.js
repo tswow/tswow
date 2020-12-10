@@ -43,4 +43,4 @@ if(fs.existsSync('./update.7z')) {
     fs.rmdirSync('./tmp', {recursive: true});
 }
 
-require('../bin/scripts/tswow/runtime/Main.js').main(rebuild);
+require('../bin/scripts/tswow/runtime/TSWoW.js').main(rebuild);
