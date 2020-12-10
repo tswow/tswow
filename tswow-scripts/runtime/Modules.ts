@@ -182,7 +182,7 @@ export namespace Modules {
     export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
         wfs.mkDirs(ipaths.dbcBuild, true);
 
-        const indexpath = mpath('./node_modules', 'wotlkdata', 'index');
+        const indexpath = mpath('./node_modules', 'wotlkdata', 'wotlkdata');
         const program = `node -r source-map-support/register ${indexpath} db`;
 
         let wrap: Wrap<Promise<void>>;
