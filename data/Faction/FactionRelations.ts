@@ -32,7 +32,7 @@ export class FactionRelations extends Subsystem<Faction> {
         this.row = row;
     }
 
-    addFriendGroups(...groups: FactionGroups[]) {
+    addFriendGroups(groups: FactionGroups[]) {
         for(const group of groups) {
             switch(group) {
                 case 'PLAYERS':
@@ -56,7 +56,7 @@ export class FactionRelations extends Subsystem<Faction> {
         return this.owner;
     }
 
-    addOwnGroup(...groups : FactionGroups[]) {
+    addOwnGroup(groups : FactionGroups[]) {
         for(const group of groups) {
             switch(group) {
                 case 'PLAYERS':
@@ -80,7 +80,7 @@ export class FactionRelations extends Subsystem<Faction> {
         return this.owner;
     }
 
-    addEnemyGroup(...groups : FactionGroups[]){
+    addEnemyGroup(groups : FactionGroups[]){
         for(const group of groups) {
             switch(group) {
                 case 'PLAYERS':

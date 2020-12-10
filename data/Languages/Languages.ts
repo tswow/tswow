@@ -61,7 +61,7 @@ export class Language extends MainEntity<LanguagesRow> {
         }
     }
 
-    addWords(...words : string[]) {
+    addWords(words : string[]) {
         // word ids are never used, so their ids can just be incremented.
         let highest = DBC.LanguageWords.filter({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
         for(const word of words) {
