@@ -55,32 +55,6 @@ export class TypeScriptWatcher {
             || tsconfig.compilerOptions.outDir === undefined) {
                 return;
         }
-        this.cleanLoop(mpath(path, tsconfig.compilerOptions.outDir));
-    }
-
-    private async cleanLoop(outDir: string) {
-        while (true) {
-            wfs.iterate(outDir, (name) => {
-                if (!name.endsWith('.map')) {
-                    return;
-                }
-                const obj = JSON.parse(wfs.read(name));
-                if (obj.sources === undefined || obj.sources.length !== 1) {
-                    return;
-                }
-                const sourcefile = mpath(wfs.dirname(name), obj.sources[0]);
-                if (!wfs.exists(sourcefile)) {
-                    const plainfile = name.substring(0, name.length - 7);
-                    const jsfile = plainfile + '.js';
-                    const dtsfile = plainfile + '.d.ts';
-                    wfs.remove(name);
-                    wfs.remove(jsfile);
-                    wfs.remove(dtsfile);
-                }
-            });
-            await(wsys.sleep(1000));
-            if (this.killed) { break; }
-        }
     }
 
     kill() {
