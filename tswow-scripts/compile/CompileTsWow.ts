@@ -95,6 +95,7 @@ async function compile(type: string, compileArgs: string[]) {
 
 async function main() {
     const build = commands.addCommand('build');
+    compile('scripts',[]);
 
     const installedPrograms =
         ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder','blpconverter',
