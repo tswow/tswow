@@ -15,14 +15,34 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ChildProcessWithoutNullStreams } from 'child_process';
-import { mpath, rpath, wfs } from './FileSystem';
+import { mpath, wfs } from './FileSystem';
 import { wsys } from './System';
 import { term } from './Terminal';
+import * as chokidar from 'chokidar';
 
 function defaultError(err: Error) {
     term.error(`TSC Error: ${err.name} ${err.message}`);
     return false;
 }
+
+let removes : {[key:string]:string[]} = {}
+setInterval(()=>{
+    for(let key in removes) {
+        if(!wfs.exists(key)) {
+            continue;
+        }
+        const json = JSON.parse(wfs.read(key));
+        for(const file of removes[key]) {
+            delete json.program.fileInfos[file];
+            json.program.semanticDiagnosticsPerFile = 
+                json.program.semanticDiagnosticsPerFile.filter((x: string)=>
+                    x !== file
+            );
+        }
+        wfs.write(key,JSON.stringify(json,null,4));
+    }
+    removes = {};
+},200);
 
 /**
  * Wrapper around a "tsc --w" process that also cleans up removed source files
@@ -30,6 +50,7 @@ function defaultError(err: Error) {
 export class TypeScriptWatcher {
     process: ChildProcessWithoutNullStreams;
     private killed = false;
+    private chokidar: chokidar.FSWatcher | undefined;
 
     constructor(path: string, showOutput: boolean = true, onError: (error: Error) => boolean = defaultError) {
         term.log(`TSC Watching ${path}`);
@@ -55,11 +76,39 @@ export class TypeScriptWatcher {
             || tsconfig.compilerOptions.outDir === undefined) {
                 return;
         }
+
+        const outDir = tsconfig.compilerOptions.outDir;
+        const buildinfoPath = mpath(path,outDir,'tsconfig.tsbuildinfo');
+
+        this.chokidar = chokidar.watch(path).on('unlink', (p) => {
+            if(!p.endsWith('.ts')||p.endsWith('.d.ts')) {
+                return;
+            }
+            const relPath = wfs.relative(path, p);
+            console.log(relPath);
+            let baseFilePath = mpath(path, outDir, relPath);
+            baseFilePath = baseFilePath.substring(0,baseFilePath.length-3);
+            wfs.remove(baseFilePath +'.js.map');
+            wfs.remove(baseFilePath +'.js');
+            wfs.remove(baseFilePath + '.d.ts');
+            const relFromBuild = wfs.relative(outDir, relPath).split('\\').join('/');
+            console.log(buildinfoPath);
+            if(wfs.exists(buildinfoPath)) {
+                if(removes[buildinfoPath]===undefined) {
+                    removes[buildinfoPath] = [];
+                }
+                removes[buildinfoPath].push(relFromBuild);
+            }
+        });
     }
 
-    kill() {
+    async kill() {
         this.process.kill();
         this.killed = true;
+
+        if(this.chokidar) {
+            await this.chokidar.close();
+        }
     }
 }
 

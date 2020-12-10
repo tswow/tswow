@@ -23,13 +23,13 @@ let watcher: TypeScriptWatcher | undefined;
 
 export async function stopScriptsBuild() {
     if (watcher !== undefined) {
-        watcher.kill();
+        await watcher.kill();
         watcher = undefined;
     }
 }
 
 export async function buildScripts(buildLine: string, installLine: string) {
-    stopScriptsBuild();
+    await stopScriptsBuild();
 
     // Scripts config
     const scripts_config_dir = mpath(buildLine, 'scripts-config');

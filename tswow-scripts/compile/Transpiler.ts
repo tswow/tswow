@@ -20,15 +20,15 @@ import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
 
 let watcher: TypeScriptWatcher | undefined;
 
-export function stopTranspilerBuild() {
+export async function stopTranspilerBuild() {
     if (watcher !== undefined) {
-        watcher.kill();
+        await watcher.kill();
         watcher = undefined;
     }
 }
 
-export function buildTranspiler(buildLine: string, installLine: string) {
-    stopTranspilerBuild();
+export async function buildTranspiler(buildLine: string, installLine: string) {
+    await stopTranspilerBuild();
     const transpiler_config_dir = path.join(buildLine, 'transpiler-config');
     const transpiler_out_dir = path.relative(transpiler_config_dir, path.join(installLine, 'bin', 'scripts', 'transpiler'));
     const transpiler_root_dir = path.relative(transpiler_config_dir, './TypeScript2Cxx');

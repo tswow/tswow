@@ -78,7 +78,7 @@ async function compile(type: string, compileArgs: string[]) {
     if (isType('blpconverter')) { await installBLPConverter(cmake); }
 
     if (!buildingScripts && isType('scripts')) {
-        buildTranspiler(build_path(), install_path());
+        await buildTranspiler(build_path(), install_path());
         await buildScripts(build_path(), install_path());
         buildingScripts = true;
     }

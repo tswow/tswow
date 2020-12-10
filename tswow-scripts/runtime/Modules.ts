@@ -163,7 +163,7 @@ export namespace Modules {
 
             let shouldRestart = false;
             if(listens[srcdir]!==undefined) {
-                listens[srcdir].kill();
+                await listens[srcdir].kill();
                 delete listens[srcdir];
                 shouldRestart = true;
             }
@@ -382,7 +382,7 @@ export namespace Modules {
         const listenPath = mpath('modules', name, 'data');
         const listen = listens[listenPath];
         if (listen) {
-            listen.kill();
+            await listen.kill();
             delete listens[listenPath];
         }
         // Store a copy of the module in our garbage bin
