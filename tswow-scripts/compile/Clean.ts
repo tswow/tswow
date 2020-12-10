@@ -18,22 +18,19 @@ import { wfs } from '../util/FileSystem';
 import { term } from '../util/Terminal';
 import { build_path, install_directory, install_path } from './BuildConfig';
 import { ipaths } from '../util/Paths';
-import { stopScriptsBuild } from './Scripts';
-import { stopTranspilerBuild } from './Transpiler';
+import { destroyAllWatchers } from '../util/TSWatcher';
 
-export function cleanBuild() {
+export async function cleanBuild() {
+    await destroyAllWatchers();
     term.log('Cleaning build directory...');
-    stopScriptsBuild();
-    stopTranspilerBuild();
     wfs.remove(build_path());
     term.success('Cleaned build directory, please restart this build script');
     process.exit(0);
 }
 
-export function cleanInstall() {
+export async function cleanInstall() {
     term.log('Cleaning install directory...');
-    stopScriptsBuild();
-    stopTranspilerBuild();
+    await destroyAllWatchers();
 
     if (wfs.readDir(ipaths.modules, true, 'both').length > 0) {
         let ctr = 0;

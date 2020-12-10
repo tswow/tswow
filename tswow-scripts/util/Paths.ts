@@ -40,7 +40,6 @@ export class InstallPaths {
     get startjs() {return mpath(this.coreData, 'start.js'); }
 
     /** Bin paths */
-
     get bin() { return mpath(installBase, 'bin'); }
     get blpConverter() { return mpath(this.bin, 'BLPConverter','blpconverter.exe')}
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
@@ -50,6 +49,7 @@ export class InstallPaths {
     get mpqBuilderExe() { return mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe'); }
     get tdb() { return mpath(this.bin, 'tdb.7z'); }
     get cmakeExe() { return mpath(this.bin, 'cmake','bin','cmake.exe'); }
+    get tsc() { return mpath(installBase,'node_modules','typescript','lib','tsc.js')}
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
@@ -71,6 +71,11 @@ export class InstallPaths {
     moduleData(mod: string) {
         return mpath(this.modules, mod, 'data');
     }
+    
+    moduleDataBuild(mod: string) {
+        return mpath(this.modules, mod, 'data', 'build' )
+    }
+
     moduleAssets(mod: string) {
         return mpath(this.modules, mod, 'assets');
     }

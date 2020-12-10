@@ -82,9 +82,9 @@ export namespace wsys {
      * @throws if the child process exits with an error
      * @returns Promise when the child process exits
      */
-    export function execAsync(program: string) {
+    export function execAsync(program: string, cwd?: string) {
         return new Promise<any>((res, rej) => {
-            const proc = child_process.exec(program, (err) => {
+            const proc = child_process.exec(program, {cwd: cwd?cwd:process.cwd()}, (err) => {
                 return err ? rej(err) : res();
             });
         });
@@ -133,11 +133,7 @@ export namespace wsys {
      * @returns Child process handle
      */
     export function spawnIn(dirname: string, program: string, args: string[] = []) {
-        const cwd = process.cwd();
-        process.chdir(dirname);
-        const prog = spawn(program, args);
-        process.chdir(cwd);
-        return prog;
+        return child_process.spawn(program, args, {stdio:'pipe',cwd:dirname});
     }
 
     /**

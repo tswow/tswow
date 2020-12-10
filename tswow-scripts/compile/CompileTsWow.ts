@@ -32,6 +32,7 @@ import { installSZip, make7zip } from './7Zip';
 import { cleanBuild, cleanInstall } from './Clean';
 import { BuildPaths, InstallPaths } from '../util/Paths';
 import { installBLPConverter } from './BLPConverter';
+import { compileAll } from '../util/TSWatcher';
 
 InstallPaths.setInstallBase(install_path());
 BuildPaths.setBuildBase(build_path());
@@ -46,11 +47,11 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (isType('clean-install')) {
-        cleanInstall();
+        await cleanInstall();
     }
 
     if (types.includes('clean-build')) {
-        return cleanBuild();
+        return await cleanBuild();
     }
 
     const cmake = isWindows() ? await findCmake() : 'cmake';
@@ -95,7 +96,7 @@ async function compile(type: string, compileArgs: string[]) {
 
 async function main() {
     const build = commands.addCommand('build');
-    compile('scripts',[]);
+    await compile('scripts',[]);
 
     const installedPrograms =
         ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder','blpconverter',
@@ -106,6 +107,15 @@ async function main() {
     }
 
     build.addCommand('base', '', 'Builds only base dependencies', async(args) => await compile('', args));
+
+    commands.addCommand('errorcheck','','', async ()=>{
+        try {
+            await compileAll();
+            term.success('No errors!');
+        } catch(error) {
+            term.error(error.message);
+        }
+    });
 
     commands.enterLoop();
 }

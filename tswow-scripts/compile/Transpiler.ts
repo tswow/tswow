@@ -16,19 +16,9 @@
  */
 import { mpath, wfs } from '../util/FileSystem';
 import path = require('path');
-import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
-
-let watcher: TypeScriptWatcher | undefined;
-
-export async function stopTranspilerBuild() {
-    if (watcher !== undefined) {
-        await watcher.kill();
-        watcher = undefined;
-    }
-}
+import { getTSWatcher } from '../util/TSWatcher';
 
 export async function buildTranspiler(buildLine: string, installLine: string) {
-    await stopTranspilerBuild();
     const transpiler_config_dir = path.join(buildLine, 'transpiler-config');
     const transpiler_out_dir = path.relative(transpiler_config_dir, path.join(installLine, 'bin', 'scripts', 'transpiler'));
     const transpiler_root_dir = path.relative(transpiler_config_dir, './TypeScript2Cxx');
@@ -58,5 +48,5 @@ export async function buildTranspiler(buildLine: string, installLine: string) {
     };
     wfs.write(mpath(transpiler_config_dir, 'tsconfig.json'),
         JSON.stringify(transpiler_tsconfig, null, 4));
-    watcher = watchTs(mpath(transpiler_config_dir));
+    await (await getTSWatcher(mpath(transpiler_config_dir))).compile();
 }

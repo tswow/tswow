@@ -27,8 +27,9 @@ export class Process {
     private curString = '';
     private color = 'white';
     private outputShown = true;
-    private messageListeners: {[key: string]: (message: string) => void} = {};
+    private waiters: {[key: string]: (message: string) => void} = {};
     private bufferSize = 2048;
+    private listeners: ((message: string)=>void)[] = []
 
     /**
      * Creates a new process instance. Call Process#start or Process#startIn to start it.
@@ -42,6 +43,11 @@ export class Process {
         return this.process !== undefined;
     }
 
+    listenSimple(listener: (message: string)=>void ) {
+        this.listeners.push(listener);
+        return this;
+    }
+
     /**
      * Waits for the process to output a specific message.
      * @param message Message that will be listened for.
@@ -50,16 +56,16 @@ export class Process {
     waitFor(match: string, useWildcard: boolean = true) {
         const matches = !useWildcard ? [match] : match.split('*');
         let id = 0;
-        while (this.messageListeners[id]) {
+        while (this.waiters[id]) {
             ++id;
         }
 
         return new Promise<void>((res) => {
-            this.messageListeners[id] = (message) => {
+            this.waiters[id] = (message) => {
                 for (const matchedString of matches) {
                     if (!message.includes(matchedString)) { return; }
                 }
-                delete this.messageListeners[id];
+                delete this.waiters[id];
                 res();
             };
         });
@@ -139,10 +145,9 @@ export class Process {
     async startIn(directory: string, program: string, args: string[] = []) {
         await this.stop();
         const prevDir = process.cwd();
+
         // TODO: Why exactly are we doing this?
-        process.chdir(directory);
-        this.process = wsys.spawn(program, args);
-        process.chdir(prevDir);
+        this.process = wsys.spawnIn(directory, program, args);
 
         this.process.stdout.on('data', (data) => {
             this.handleOutput(data, false);
@@ -171,7 +176,11 @@ export class Process {
         }
         this.curString = this.curString + strData;
 
-        for (const listener of Object.values(this.messageListeners)) {
+        for(const listener of this.listeners) {
+            listener(strData);
+        }
+
+        for (const listener of Object.values(this.waiters)) {
             listener(this.curString);
         }
     }

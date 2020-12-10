@@ -22,7 +22,7 @@ import { mysql } from '../util/MySQL';
 import { cfg } from '../util/Config';
 import { Timer } from '../util/Timer';
 import { TrinityCore } from './TrinityCore';
-import { TypeScriptWatcher, watchTs } from '../util/TSWatcher';
+import { compileAll, destroyTSWatcher, getTSWatcher, hasWatcher } from '../util/TSWatcher';
 import { Client } from './Client';
 import { isWindows } from '../util/Platform';
 import { Wrap } from '../util/Wrap';
@@ -98,10 +98,10 @@ export namespace ${modname} {
 /**
  * The example patch file that will be written to the 'data' directory of new modules.
  */
-const patch_example_ts = `
+const patch_example_ts = (name: string) => `
 import { SQL, DBC } from "wotlkdata";
 
-console.log("Hello world from data script!");
+console.log("Hello from ${name} data script!");
 `;
 
 const gitignores =
@@ -121,66 +121,6 @@ build/
  * Contains functions for working with tswow modules.
  */
 export namespace Modules {
-    const listens: {[key: string]: TypeScriptWatcher} = {};
-
-    export async function cleanScripts(logging: boolean) {
-        for(const mod of getModules()) {
-            const srcdir = mpath('modules',mod,'data');
-            const buildDir = mpath(srcdir, 'build');
-            const removes: string[] = [];
-            await wfs.iterate(buildDir, async (name) => {
-                if (!name.endsWith('.map')) {
-                    return;
-                }
-                const obj = JSON.parse(wfs.read(name));
-                if (obj.sources === undefined || obj.sources.length !== 1) {
-                    return;
-                }
-                const sourcefile = mpath(wfs.dirname(name), obj.sources[0]);
-                if (!wfs.exists(sourcefile)) {
-                    const plainfile = name.substring(0, name.length - 7);
-                    const jsfile = plainfile + '.js';
-                    const dtsfile = plainfile + '.d.ts';
-                    if(logging) {
-                        term.log(`Deleting stray script ${sourcefile}`);
-                    }
-                    wfs.remove(name);
-                    wfs.remove(jsfile);
-                    wfs.remove(dtsfile);
-                    const rel = wfs.relative(buildDir,sourcefile);
-                    removes.push(rel);
-                }
-            });
-
-            if(removes.length===0) {
-                continue;
-            }
-
-            const buildFile = mpath(buildDir,'tsconfig.tsbuildinfo');
-            if(!wfs.exists(buildFile)) {
-                continue;
-            }
-
-            let shouldRestart = false;
-            if(listens[srcdir]!==undefined) {
-                await listens[srcdir].kill();
-                delete listens[srcdir];
-                shouldRestart = true;
-            }
-
-            const json = JSON.parse(wfs.read(buildFile));
-            for(let remove of removes) {
-                remove = remove.split('\\').join('/');
-                delete json.program.fileInfos[remove];
-                delete json.program.semanticDiagnosticsPerFile[remove];
-            }
-            wfs.write(buildFile,JSON.stringify(json,null,4));
-            if(shouldRestart) {
-                listens[srcdir] = watchTs(srcdir, false);
-            }
-        }
-    }
-
     /**
      * Returns names of all installed modules.
      */
@@ -194,6 +134,26 @@ export namespace Modules {
      */
     function modulePath(module: string) {
         return `./modules/${module}`;
+    }
+
+    export function setEditable(mod: string, editable: boolean) {
+        if(editable) {
+            wfs.remove(mpath('modules',mod,'noedit'));
+        } else {
+            const datadir = mpath('modules',mod,'data');
+            if(wfs.exists(datadir)) {
+                try {
+                    wsys.execIn(datadir, `node ../../../${ipaths.tsc}`);
+                } catch(error) {
+                    term.error(error.message);
+                    term.error(`Can't noedit ${mod}, there are compiler errors in it.`);
+                    return;
+                }
+                destroyTSWatcher(datadir);
+                wfs.write(mpath('modules',mod,'noedit'),'');
+            }
+
+        }
     }
 
     /**
@@ -217,13 +177,14 @@ export namespace Modules {
         wfs.mkDirs(modpath);
 
         wfs.mkDirs(mpath(modpath, 'data'));
-        wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts);
+        wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts(name));
         wfs.mkDirs(mpath(modpath, 'assets'));
         wfs.mkDirs(mpath(modpath, 'scripts'));
 
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
         wsys.execIn(modpath, 'git init');
+        refreshModules(false);
         term.success(`Created module ${name} in ${timer.timeSec()}s`);
     }
 
@@ -235,6 +196,7 @@ export namespace Modules {
      * to ensure SQL data was copied successfully.
      */
     export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
+        await compileAll();
         wfs.mkDirs(ipaths.dbcBuild, true);
 
         const indexpath = mpath('./node_modules', 'wotlkdata', 'wotlkdata');
@@ -335,12 +297,13 @@ export namespace Modules {
         return wrap;
     }
 
-    export function refreshModules(force: boolean = false) {
+    export async function refreshModules(force: boolean = false) {
         if(!wfs.exists('./node_modules/wotlkdata')) {
+            term.log(`Linking wotlkdata...`);
             wsys.exec('npm link bin/scripts/tswow/wotlkdata');
         }
 
-        wfs.readDir('./modules', true).forEach(xx => {
+        for(const xx of wfs.readDir('./modules', true)) {
             const x = mpath('./modules', xx);
 
             const data_path = mpath(x, 'data');
@@ -356,8 +319,8 @@ export namespace Modules {
 
                 wfs.write(data_package_path, lib_package_json(xx));
 
-                if (!listens[data_path] || force) {
-                    listens[data_path] = watchTs(data_path, false);
+                if(!wfs.exists(mpath(x,'noedit'))) {
+                    await getTSWatcher(data_path);
                 }
 
                 if (!wfs.exists(nodemodule_path)) {
@@ -374,17 +337,12 @@ export namespace Modules {
                     wfs.write(scripts_tsconfig_path, scripts_tsconfig_json);
                 }
             }
-        });
+        }
     }
 
     export async function uninstallModule(name: string) {
-        // Remove listener
-        const listenPath = mpath('modules', name, 'data');
-        const listen = listens[listenPath];
-        if (listen) {
-            await listen.kill();
-            delete listens[listenPath];
-        }
+        destroyTSWatcher(mpath('modules',name,'data'));
+
         // Store a copy of the module in our garbage bin
         function garbagePath(j: number) {
             return mpath(ipaths.coreData, 'module_garbage', `${name}_${j}`);
@@ -406,6 +364,7 @@ export namespace Modules {
         }
 
         wsys.exec(`git clone ${url} ./modules/${name}`);
+        setEditable(name,false);
     }
 
     /**
@@ -434,10 +393,6 @@ export namespace Modules {
         moduleC.addCommand('script', 'moduleName', 'Build and loads the server scripts of a module', (args) => {
             if (args.length < 1) { throw new Error('Please provide the name of the module to rebuild'); }
             rebuildModule(args[0]);
-        });
-
-        moduleC.addCommand('clean','','Cleans stray JavaScript files in all modules', async ()=>{
-            await cleanScripts(true);
         });
 
         moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', (args) => {
@@ -473,15 +428,41 @@ export namespace Modules {
             await wrap.unwrap();
         });
 
-        commands.addCommand('check', '', '', async() => {
-            rebuildPatch(true);
+        moduleC.addCommand('editable','module true|false','Sets a data library to not compile its data', async(args) => {
+            switch(args[1]) {
+                case 'true':
+                    return setEditable(args[0], true);
+                case 'false':
+                    return setEditable(args[0], false);
+                default:
+                    term.error('This commands needs to specify true/false');
+            }
         });
 
-        setInterval(() => {
-            refreshModules();
-        }, 5000);
-        await cleanScripts(true);
-        refreshModules(true);
+        moduleC.addCommand('refresh','','Run this is your ts watchers wont start', async()=>{
+            refreshModules(false);
+        });
+
+        moduleC.addCommand('fixremoved', 'module', 'Tries to manually remove unused script files, because sometimes the manual check bugs up', async(args)=> {
+            const p = mpath('modules', args[0], 'data');
+            if(hasWatcher(p)) {
+                await (await getTSWatcher(p)).fixRemoved();
+            }
+        });
+
+        moduleC.addCommand('clear', 'module', 'Clears all built data for a module', async(args)=>{
+            let result = await destroyTSWatcher(ipaths.moduleData(args[0]));
+            wfs.remove(ipaths.moduleDataBuild(args[0]));
+            if(result) {
+                getTSWatcher(ipaths.moduleData(args[0]));
+            }
+        });
+
+        commands.addCommand('check', '', '', async() => {
+            await rebuildPatch(true);
+        });
+
+        await refreshModules(true);
 
         term.success('Modules initialized');
     }
