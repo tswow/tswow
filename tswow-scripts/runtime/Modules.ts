@@ -38,8 +38,8 @@ const lib_package_json =
     'name': name,
     'version': '1.0.0',
     'description': '',
-    'main': 'index.js',
-    'types': 'index.d.ts',
+    'main': `${name}-data.js`,
+    'types': `${name}-data.d.ts`,
     'dependencies': {
     },
     'devDependencies': {},
@@ -99,11 +99,9 @@ export namespace ${modname} {
  * The example patch file that will be written to the 'data' directory of new modules.
  */
 const patch_example_ts = `
-import { SQL, DBC, patch } from "wotlkdata";
+import { SQL, DBC } from "wotlkdata";
 
-patch("test", async()=>{
-    console.log("Hello world from patch!");
-});
+console.log("Hello world from data script!");
 `;
 
 const gitignores =
@@ -161,7 +159,7 @@ export namespace Modules {
         wfs.mkDirs(modpath);
 
         wfs.mkDirs(mpath(modpath, 'data'));
-        wfs.write(mpath(modpath, 'data', 'index.ts'), patch_example_ts);
+        wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts);
         wfs.mkDirs(mpath(modpath, 'assets'));
         wfs.mkDirs(mpath(modpath, 'scripts'));
 
