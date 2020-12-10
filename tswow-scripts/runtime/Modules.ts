@@ -166,7 +166,6 @@ export namespace Modules {
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
         wsys.execIn(modpath, 'git init');
-        wsys.exec(`git submodule add ./modules/${name} ./modules/${name}`);
         term.success(`Created module ${name} in ${timer.timeSec()}s`);
     }
 
@@ -320,7 +319,7 @@ export namespace Modules {
         });
     }
 
-    export async function uninstallModule(name: string, force: boolean) {
+    export async function uninstallModule(name: string) {
         // Remove listener
         const listenPath = mpath('modules', name, 'data');
         const listen = listens[listenPath];
@@ -328,29 +327,6 @@ export namespace Modules {
             listen.kill();
             delete listens[listenPath];
         }
-
-        // Remove gitmodule files
-        function cleanModuleFile(fpath: string) {
-            let rows = wfs.read(fpath).split('\n');
-            const index = rows.indexOf(`[submodule "modules/${name}"]`);
-            if (index === -1) {
-                return;
-            }
-            let end = index;
-            for (let j = index; j < rows.length; ++j) {
-                if (rows[j].startsWith('[')) {
-                    break;
-                } else {
-                    end = j;
-                }
-            }
-            rows = rows.slice(index, end);
-            wfs.write(fpath, rows.join('\n'));
-        }
-        cleanModuleFile('./.gitmodules');
-        cleanModuleFile('./.git/config');
-        wfs.remove(`./.git/modules/${name}`);
-
         // Store a copy of the module in our garbage bin
         function garbagePath(j: number) {
             return mpath(ipaths.coreData, 'module_garbage', `${name}_${j}`);
@@ -370,7 +346,8 @@ export namespace Modules {
         if (name.length < 1) {
             throw new Error(`Tried to install module with invalid name: ${url}`);
         }
-        wsys.exec(`git submodule add ${url} ./modules/${name} --force`);
+
+        wsys.exec(`git clone ${url} ./modules/${name}`);
     }
 
     /**
@@ -402,7 +379,7 @@ export namespace Modules {
         });
 
         moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', (args) => {
-            uninstallModule(args[0], args.includes('force'));
+            uninstallModule(args[0]);
         });
 
         moduleC.addCommand('data', 'folder? readonly? fast?', 'Build server SQL and client DBC/MPQ from all modules',
