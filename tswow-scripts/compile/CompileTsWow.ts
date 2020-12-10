@@ -31,6 +31,7 @@ import { installBoost } from './Boost';
 import { installSZip, make7zip } from './7Zip';
 import { cleanBuild, cleanInstall } from './Clean';
 import { BuildPaths, InstallPaths } from '../util/Paths';
+import { installBLPConverter } from './BLPConverter';
 
 InstallPaths.setInstallBase(install_path());
 BuildPaths.setBuildBase(build_path());
@@ -74,6 +75,7 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (isType('mpqbuilder')) { await createMpqBuilder(cmake); }
+    if (isType('blpconverter')) { await installBLPConverter(cmake); }
 
     if (!buildingScripts && isType('scripts')) {
         buildTranspiler(build_path(), install_path());
@@ -95,7 +97,7 @@ async function main() {
     const build = commands.addCommand('build');
 
     const installedPrograms =
-        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder',
+        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder','blpconverter',
          'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build','release'];
 
     for (const val of installedPrograms) {

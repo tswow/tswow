@@ -42,6 +42,7 @@ export class InstallPaths {
     /** Bin paths */
 
     get bin() { return mpath(installBase, 'bin'); }
+    get blpConverter() { return mpath(this.bin, 'BLPConverter','blpconverter.exe')}
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
