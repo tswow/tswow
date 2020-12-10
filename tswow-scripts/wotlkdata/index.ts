@@ -25,7 +25,13 @@ import { IdPrivate, GetIdRange as _GetIdRange, GetId as _GetId } from './ids/Ids
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { Objects as _Objects } from './cell/ObjectIteration';
 
-const patches: {name: string, cb: () => Promise<void>}[] = [];
+type PatchCollection = {name:string,callback: ()=>Promise<void>}[];
+
+const setups: PatchCollection = [];
+const reads: PatchCollection = [];
+const writes: PatchCollection = [];
+const patches: PatchCollection = [];
+const finishes: PatchCollection = [];
 
 class IdPublic extends IdPrivate {
     static readFile = () => IdPrivate.readFile(Settings.ID_FILE_PATH);
@@ -40,7 +46,10 @@ function patchSubdirs(dir: string) {
     nodes
         .filter(x => x.endsWith('js') && fs.statSync(x).isFile())
         .map(x => path.relative(__dirname, x))
-        .forEach(x => require(x));
+        .forEach(x => {
+            require(x)
+            applyStage(setups);
+        });
 
     const dirs = nodes
         .filter(x =>
@@ -53,6 +62,18 @@ function patchSubdirs(dir: string) {
     for (const subdir of dirs) {
         patchSubdirs(subdir);
     }
+}
+
+async function applyStage(patches: PatchCollection) {
+    for(const {name,callback} of patches) {
+        try {
+            await callback();
+        } catch(error) {
+            console.error(`Error in patch ${name}:`,error);
+            process.exit(-1);
+        }
+    }
+    patches.splice(0,patches.length);
 }
 
 async function main() {
@@ -69,14 +90,10 @@ async function main() {
         }
     }
 
-    for (const {name, cb} of patches) {
-        try {
-            await cb();
-        } catch (error) {
-            console.error(`Error in patch ${name}:`, error);
-            process.exit(-1);
-        }
-    }
+    applyStage(reads);
+    applyStage(writes);
+    applyStage(patches);
+    applyStage(finishes);
 
     await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
         Settings.SQL_WRITE_TO_FILE);
@@ -97,13 +114,87 @@ async function main() {
 }
 
 /**
- * Main entry point for registering patches
- * @param name
- * @param cb
+ * Step 1 of script loading. 
+ * - Runs CONCURRENTLY with global scopes.
+ * - Runs BEFORE read/write/patch/finish
+ * 
+ * This stage should:
+ * - Initialize ALL the modules own public entities
+ * - Modify ONLY the modules own public entities
+ * - NOT read other modules public entities (stateless library functions are fine)
+ * @param name 
+ * @param callback 
  */
-export function patch(name: string, cb: () => any) {
-    patches.push({name, cb});
+export function setup(name: string, callback: ()=>any) {
+    setups.push({name,callback});
 }
+
+/**
+ * Step 2 of script loading.
+ * - Runs AFTER setup and global scope.
+ * - Runs BEFORE write/patch/finish
+ * 
+ * This stage should:
+ * - Read entities from other modules
+ * - NOT modify any public entities.
+ * @param name 
+ * @param callback 
+ */
+export function read(name: string, callback: ()=>any) {
+    reads.push({name,callback});
+}
+
+/**
+ * Step 3 of script loading.
+ * - Runs AFTER global scope, setup and read.
+ * - Runs BEFORE patch/finish
+ * 
+ * This stage should:
+ * - NOT read other modules public entities (stateless library functions are fine)
+ * - Modify ONLY the modules own public entities.
+ * @param name 
+ * @param callback 
+ */
+export function write(name: string, callback: ()=>any) {
+    reads.push({name, callback});
+}
+
+
+/**
+ * Step 4 of script loading
+ * - Runs AFTER global scope, setup, read and write.
+ * - Runs BEFORE finish
+ * 
+ * This stage should:
+ * - Be called at most once by a single module.
+ * - Never be called from a library module.
+ * - Read or modify any public entities.
+ * @param name 
+ * @param callback 
+ */
+export function patch(name: string, callback: ()=>any) {
+    if(patches.length>0) {
+        throw new Error(`Multiple patches: ${name} and ${patches[0].name}. Only ONE patch should ever run.`);
+    }
+    patches.push({name,callback});
+}
+
+/**
+ * Step 5 of script loading (final step)
+ * - Runs AFTER global scope, setup, read, write and patch.
+ * 
+ * This stage should:
+ * - Not access any public entities in other modules.
+ * - NOT modify any public entities at all
+ * - Serialize entity builders
+ * - Find and report any conflicts in entity builders.
+ * @param name 
+ * @param callback 
+ */
+export function finish(name: string, callback: ()=>any) {
+    finishes.push({name, callback});
+}
+
 
 /**
  * Contains references to all DBC files
