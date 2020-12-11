@@ -90,13 +90,13 @@ export const Factions = {
 
     createHorde(mod: string, id: string) {
         return Factions.create(mod,id)
-            .relation.addFriendGroups('HORDE')
-            .relation.addEnemyGroup('ALLIANCE')
+            .relation.addFriendGroups(['HORDE'])
+            .relation.addEnemyGroup(['ALLIANCE'])
     },
 
     createAlliance(mod: string, id: string) {
         return Factions.create(mod,id)
-            .relation.addFriendGroups('ALLIANCE')
-            .relation.addEnemyGroup('HORDE')
+            .relation.addFriendGroups(['ALLIANCE'])
+            .relation.addEnemyGroup(['HORDE'])
     }
 }
