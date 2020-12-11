@@ -316,7 +316,7 @@ export namespace Modules {
             const data_tsconfig_path = mpath(data_path, 'tsconfig.json');
             const nodemodule_path = mpath('node_modules', xx);
 
-            if (wfs.exists(data_path)) {
+            if (wfs.isDirectory(data_path)) {
                 if (!wfs.exists(data_tsconfig_path) || force) {
                     wfs.write(data_tsconfig_path, data_tsconfig);
                 }
