@@ -256,7 +256,7 @@ export class DBCLocCell<T> extends LocSystem<T> {
     }
 
     get mask() {
-        return new DBCUIntCell(this.owner, this.buffer, this.offset + 60);
+        return new DBCUIntCell(this.owner, this.buffer, this.offset + 64);
     }
 
     read(con: loc_constructor) {
@@ -264,6 +264,15 @@ export class DBCLocCell<T> extends LocSystem<T> {
             this.lang(lang).set(value);
         });
         return this.owner;
+    }
+
+    objectify() {
+        // enGB optimization
+        if(this.mask.get()===16712190) {
+            return {enGB: this.enGB.get(), mask: 16712190};
+        } else {
+            return super.objectify();
+        }
     }
 
     constructor(owner: T, buffer: DBCBuffer, offset: number) {

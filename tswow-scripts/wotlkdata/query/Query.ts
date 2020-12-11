@@ -90,6 +90,11 @@ export function inMemory(query: Query|AnyQuery|AllQuery, obj: any): boolean {
                 if (ov && typeof(ov) === 'object' && ov.isCell) {
                     ov = ov.get();
                 }
+
+                if(ov.objectify) {
+                    ov = ov.objectify();
+                }
+
                 if (qv === undefined) { if (ov !== undefined) { return false; } else { continue; } }
                 if (qv === null) { if (ov !== null) { return false; } else { continue; } }
                 if (!inMemoryRelation(ov, qv)) { return false; }

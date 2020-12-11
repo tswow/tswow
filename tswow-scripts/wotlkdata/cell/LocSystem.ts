@@ -20,7 +20,6 @@ import { PendingCell } from './PendingCell';
 import { Subsystem } from './Subsystem';
 import { Cell } from './Cell';
 
-
 export abstract class LocSystem<T> extends Subsystem<T> {
     abstract lang(lang: Language): Cell<string, T> & PendingCell;
     abstract get mask(): Cell<number, T>;
