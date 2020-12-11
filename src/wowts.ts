@@ -23,10 +23,10 @@ const CONFIG = {
 const startTime = Date.now();
 
 const buildModule = process.argv[2];
-const modulePath = `./modules/${buildModule}`;
 if (buildModule === undefined) {
     throw new Error('No build module provided!');
 }
+const modulePath = `./modules/${buildModule}`;
 
 if (!fs.existsSync(modulePath)) {
     throw new Error(`No module named ${buildModule}`);
@@ -34,6 +34,10 @@ if (!fs.existsSync(modulePath)) {
 
 if (!fs.lstatSync(modulePath).isDirectory()) {
     throw new Error(`Module ${buildModule} is not a directory`);
+}
+
+if(!fs.lstatSync(path.join(modulePath,'scripts')).isDirectory()) {
+    throw new Error(`"scripts" in ${buildModule} is not a directory`);
 }
 
 const olddir = process.cwd();
