@@ -266,6 +266,10 @@ export namespace Modules {
             const ignored = cfg.build.mpq_ignore();
             FileChanges.startCache();
             allpaths.forEach(x => wfs.iterate(x, path => {
+                if(!wfs.isDirectory(path)) {
+                    return;
+                }
+
                 for (const ig of ignored) {
                     if (path.endsWith(ig))  {
                         return;
@@ -331,7 +335,7 @@ export namespace Modules {
             const scripts_path = mpath(x, 'scripts');
             const scripts_tsconfig_path = mpath(x, 'scripts' , 'tsconfig.json');
             const scripts_globaldts_path = mpath(x, 'scripts' , 'global.d.ts');
-            if (wfs.exists(scripts_path)) {
+            if (wfs.isDirectory(scripts_path)) {
                 wfs.copy(mpath('bin', 'include', 'global.d.ts'), mpath(scripts_globaldts_path));
                 if (!wfs.exists(scripts_tsconfig_path) || force) {
                     wfs.write(scripts_tsconfig_path, scripts_tsconfig_json);
