@@ -23,7 +23,6 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
-import { SQLCell } from "wotlkdata/sql/SQLCell";
 import { Quest } from "./Quest";
 import { addonRow } from "./QuestAddonRow";
 
@@ -204,8 +203,8 @@ export class QuestObjective extends Subsystem<Quest> {
         super(quest);
     }
 
-    get scripted() { return new Scripted(this.owner); }
-    get playerKills() { return this.wrap(this.owner.row.RequiredPlayerKills); }
+    get Scripted() { return new Scripted(this.owner); }
+    get PlayerKills() { return this.wrap(this.owner.row.RequiredPlayerKills); }
     get Entity() { return new NpcGoObjectives(this.owner); }
     get Reputation() { return new ReputationObjectives(this.owner); }
     get Item() { return new ItemObjectives(this.owner); }

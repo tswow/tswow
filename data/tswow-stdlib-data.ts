@@ -16,14 +16,14 @@
  */
 import { Achievements } from "./Achievement/Achievement";
 import { Classes } from "./Class/Class";
-import { Creatures } from "./Creature/Creatures";
-import { Trainers } from "./Creature/Trainer";
+import { CreatureInstances, CreatureTemplates } from "./Creature/Creatures";
 import { Items } from "./Item/Item";
 import { Languages } from "./Languages/Languages";
 import { Loot } from "./Loot/Loot";
 import { Quests } from "./Quest/Quests";
+import { SkillLines } from "./SkillLines/SkillLines";
 import { ClassSkills } from "./Skills/ClassSkill";
-import { Spells } from "./Spell/Spell";
+import { Spells } from "./Spell/Spells";
 import { Titles } from "./Title/Titles";
 import { UI } from "./UI/UI";
 
@@ -35,9 +35,11 @@ export const std = {
     Achievements: Achievements,
     Loot: Loot,
     Items: Items,
-    Creatures: Creatures,
+    Creatures: CreatureInstances,
     Classes: Classes,
     UI: UI,
     ClassSkills: ClassSkills,
-    Trainers: Trainers
+    SkillLines: SkillLines,
+    CreatureTemplates: CreatureTemplates,
+    CreatureInstances: CreatureInstances,
 }

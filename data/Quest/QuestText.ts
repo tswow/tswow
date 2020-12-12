@@ -165,11 +165,11 @@ export class SubDescription extends SQLLocSystem<Quest> {
 }
 
 export class QuestText extends Subsystem<Quest> {
-    reward : Reward;
-    incomplete : RequestItems;
-    title : LogTitle;
-    objective: ObjectiveDescription;
-    description : Description;
+    Reward : Reward;
+    Incomplete : RequestItems;
+    Title : LogTitle;
+    Objective: ObjectiveDescription;
+    Description : Description;
 
     get ID() {
         return this.owner.ID;
@@ -177,10 +177,10 @@ export class QuestText extends Subsystem<Quest> {
 
     constructor(owner : Quest) {
         super(owner);
-        this.reward = new Reward(this.owner);
-        this.incomplete = new RequestItems(this.owner);
-        this.title = new LogTitle(this.owner);
-        this.objective= new ObjectiveDescription(this.owner);
-        this.description = new Description(this.owner);
+        this.Reward = new Reward(this.owner);
+        this.Incomplete = new RequestItems(this.owner);
+        this.Title = new LogTitle(this.owner);
+        this.Objective= new ObjectiveDescription(this.owner);
+        this.Description = new Description(this.owner);
     }
 }

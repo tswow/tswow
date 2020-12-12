@@ -35,13 +35,15 @@ import { CreatureModels } from "./CreatureModels";
 import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureRank } from "./CreatureRank";
-import { Creatures } from "./Creatures";
+import { CreatureInstances } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
+import { Trainer } from "./Trainer";
 import { UnitClass } from "./UnitClass";
+import { Vendor } from "./Vendor";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -117,9 +119,11 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get MovementID() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return this.wrap(this.row.spell_school_immune_mask); }
+    get Trainer() { return new Trainer(this); }
+    get Vendor() { return new Vendor(this); }
 
     spawn(mod: string, id: string, pos: Position) {
-        Creatures.Instances.create(mod, id, this.ID, pos);
+        CreatureInstances.create(mod, id, this.ID, pos);
         return this;
     }
 }

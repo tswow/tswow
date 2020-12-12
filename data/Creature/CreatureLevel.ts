@@ -24,6 +24,6 @@ export class CreatureLevel extends Subsystem<CreatureTemplate> {
         return this.owner;
     }
 
-    get Min() { return this.ownerWrap(this.owner.row.mingold); }
-    get Max() { return this.ownerWrap(this.owner.row.maxgold); }
+    get Min() { return this.ownerWrap(this.owner.row.minlevel); }
+    get Max() { return this.ownerWrap(this.owner.row.maxlevel); }
 }

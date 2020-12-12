@@ -17,16 +17,17 @@
 import { Cell } from "wotlkdata/cell/Cell";
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
 import { Spell } from "./Spell";
+import { SpellEffect } from "./SpellEffect";
 
-export class SpellEffectMechanics extends Enum<Spell> {
+export class SpellEffectMechanics extends Enum<SpellEffect> {
     protected index: number;
-    constructor(owner: Spell, index: number) {
-        super(owner, Cell.wrapIndex(owner.row.EffectMechanic,index));
+    constructor(owner: SpellEffect, index: number) {
+        super(owner, Cell.wrapIndex(SpellEffect.owner(owner).row.EffectMechanic,index));
         this.index = index;
     }
 
     set(value: number) {
-        this.owner.row.EffectMechanic.setIndex(this.index,value);
+        SpellEffect.owner(this.owner).row.EffectMechanic.setIndex(this.index,value);
         return this.owner;
     }
 

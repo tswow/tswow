@@ -41,6 +41,8 @@ export class LootSet {
 
     get rows() { return this.table.filter({Entry:this.id})}
 
+    get ID() { return this.id; }
+
     addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
         this.table.add(this.id,item)
             .Chance.set(chance)

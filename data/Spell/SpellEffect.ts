@@ -19,6 +19,7 @@ import { CellArray } from "wotlkdata/cell/CellArray";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
+import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanics } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 
@@ -28,11 +29,6 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     }
 
     get length() {
-        for(let i=0;i<3;++i) {
-            if(this.owner.row.Effect.getIndex(i)===0) {
-                return i;
-            }
-        }
         return 3;
     }
 
@@ -46,6 +42,10 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
 }
 
 export class SpellEffect extends ArrayEntry<Spell> {
+    static owner(effect: SpellEffect) {
+        return effect.owner;
+    }
+
     isClear(): boolean {
         return this.EffectType.get() === 0;
     }
@@ -70,35 +70,56 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return this.owner;
     }
 
-    private get r() { return this.owner.row;}
     private w<T extends CPrim>(arr: CellArray<T,any>) {
         return this.wrapIndex(arr, this.index);
     }
 
     protected get row() { return this.owner.row; }
 
-    get AuraType() { return new AuraType(this.owner, this.index); }
-    get EffectType() { return new SpellEffectType(this.owner, this.index); }
-    get Mechanic() { return new SpellEffectMechanics(this.owner, this.index); }
-    get BasePoints() { return this.w(this.r.EffectBasePoints)};
-    get DieSides() { return this.w(this.r.EffectDieSides); }
-    get PointsPerLevel() { return this.w(this.r.EffectRealPointsPerLevel); }
-    get PointsPerCombo() { return this.w(this.r.EffectPointsPerCombo); }
-    get ImplicitTargetA() { return this.w(this.r.ImplicitTargetA); }
-    get ImplicitTargetB() { return this.w(this.r.ImplicitTargetB); }
-    get AuraPeriod() { return this.w(this.r.EffectAuraPeriod); }
-    get MultipleValue() { return this.w(this.r.EffectMultipleValue); }
-    get ChainTarget() { return this.w(this.r.EffectChainTargets); }
-    get MiscValueA() { return this.w(this.r.EffectMiscValue); }
-    get MiscValueB() { return this.w(this.r.EffectMiscValueB); }
-    get TriggerSpell() { return this.w(this.r.EffectTriggerSpell); }
-    get ChainAmplitude() { return this.w(this.r.EffectChainAmplitude); }
+    get AuraType() { return new AuraType(this, this.index); }
+    get EffectType() { return new SpellEffectType(this, this.index); }
+    get Mechanic() { return new SpellEffectMechanics(this, this.index); }
+    get BasePoints() { return this.w(this.row.EffectBasePoints)};
+    get DieSides() { return this.w(this.row.EffectDieSides); }
+    get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
+    get PointsPerCombo() { return this.w(this.row.EffectPointsPerCombo); }
+    get ImplicitTargetA() { return this.w(this.row.ImplicitTargetA); }
+    get ImplicitTargetB() { return this.w(this.row.ImplicitTargetB); }
+    get AuraPeriod() { return this.w(this.row.EffectAuraPeriod); }
+    get MultipleValue() { return this.w(this.row.EffectMultipleValue); }
+    get ChainTarget() { return this.w(this.row.EffectChainTargets); }
+    get MiscValueA() { return this.w(this.row.EffectMiscValue); }
+    get MiscValueB() { return this.w(this.row.EffectMiscValueB); }
+    get TriggerSpell() { return this.w(this.row.EffectTriggerSpell); }
+    get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
+
+    get ClassMask() { return new EffectClassSet(this); }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
         this.BasePoints.set(base);
         this.DieSides.set(dieSides);
         this.PointsPerLevel.set(pointsPerLevel);
         this.PointsPerCombo.set(pointsPerCombo);
+        return this.owner;
+    }
+
+    copyFrom(source: SpellEffect) {
+        this.AuraType.set(source.AuraType.get());
+        this.EffectType.set(source.EffectType.get());
+        this.Mechanic.set(source.EffectType.get());
+        this.BasePoints.set(source.BasePoints.get());
+        this.DieSides.set(source.DieSides.get());
+        this.PointsPerLevel.set(source.PointsPerLevel.get());
+        this.PointsPerCombo.set(source.PointsPerCombo.get());
+        this.ImplicitTargetA.set(source.ImplicitTargetA.get());
+        this.ImplicitTargetB.set(source.ImplicitTargetB.get());
+        this.AuraPeriod.set(source.AuraPeriod.get());
+        this.MultipleValue.set(source.MultipleValue.get());
+        this.ChainTarget.set(source.ChainTarget.get());
+        this.MiscValueA.set(source.MiscValueB.get());
+        this.TriggerSpell.set(source.TriggerSpell.get());
+        this.ChainAmplitude.set(source.ChainAmplitude.get());
+        this.ClassMask.copyFrom(source.ClassMask);
         return this.owner;
     }
 }

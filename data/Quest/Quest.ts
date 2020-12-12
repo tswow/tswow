@@ -23,10 +23,10 @@ import { QuestText } from "./QuestText";
 
 export class Quest extends MainEntity<quest_templateRow> {
     get ID() { return this.row.ID.get(); }
-    get questgiver() { return new QuestNPC(this); }
-    get rewards() { return new QuestReward(this); }
-    get objectives() { return new QuestObjective(this); }
-    get text() { return new QuestText(this); }
+    get Questgiver() { return new QuestNPC(this); }
+    get Rewards() { return new QuestReward(this); }
+    get Objectives() { return new QuestObjective(this); }
+    get Text() { return new QuestText(this); }
     get SortID() { return this.wrap(this.row.QuestSortID); }
     get MinLevel() { return this.wrap(this.row.MinLevel); }
     get QuestLevel() { return this.wrap(this.row.QuestLevel); }

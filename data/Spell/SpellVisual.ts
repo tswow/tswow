@@ -21,6 +21,7 @@ import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
 import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 import { Vector3 } from "wotlkdata/cell/systems/Vector3"
+import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 
 function addKitRow(id: number) {
     return DBC.SpellVisualKit.add(id,{
@@ -61,6 +62,31 @@ export class SpellVisualKit extends Subsystem<Spell> {
         this.name = name;
     }
 
+    get ID() { return this.ptr.get(); }
+
+    get BaseEffect() { return this.wrap(this.row.BaseEffect); }
+    get BreathEffect() { return this.wrap(this.row.BreathEffect); }
+    get CharParamOne() { return this.wrapArray(this.row.CharParamOne); }
+    get CharParamTwo() { return this.wrapArray(this.row.CharParamTwo); }
+    get CharParamThree() { return this.wrapArray(this.row.CharParamThree); }
+    get CharParamFour() { return this.wrapArray(this.row.CharParamZero); }
+
+    get Flags() { return this.wrap(this.row.Flags); }
+    get ShakeID() { return this.wrap(this.row.ShakeID); }
+    get SoundID() { return this.wrap(this.row.SoundID); }
+    get StartAnimID() { return this.wrap(this.row.StartAnimID); }
+    get WorldEffect() { return this.wrap(this.row.WorldEffect); }
+    get AnimID() { return this.wrap(this.row.AnimID); }
+
+    get CharProc() { return this.wrapArray(this.row.CharProc)}
+
+    get ChestEffect() { return this.wrap(this.row.ChestEffect)}
+    get HeadEffect() { return this.wrap(this.row.HeadEffect)}
+    get LeftHandEffect() { return this.wrap(this.row.LeftHandEffect)}
+    get RightHandEffect() { return this.wrap(this.row.RightHandEffect)}
+    get RightWeaponEffect() { return this.wrap(this.row.RightWeaponEffect)}
+    get SpecialEffect() { return this.wrapArray(this.row.SpecialEffect)}
+
     get row() {
         if(this.ptr.get()!==0) {
             return DBC.SpellVisualKit.find({ID:this.ptr.get()});
@@ -73,6 +99,17 @@ export class SpellVisualKit extends Subsystem<Spell> {
 
     get exists() {
         return this.ptr.get() != 0;
+    }
+
+    cloneFrom(kit: SpellVisualKit | SpellVisualKitRow) {
+        let row : SpellVisualKitRow;
+        if((kit as SpellVisualKit).exists !== undefined) {
+            row = (kit as SpellVisualKit).row;
+        } else {
+            row = (kit as SpellVisualKitRow);
+        }
+        this.ptr.set(row.clone(Ids.SpellKit.id()).ID.get());
+        return this;
     }
 }
 
@@ -130,6 +167,14 @@ export class SpellVisual extends Subsystem<Spell> {
         super(spell);
     }
 
+    objectify() {
+        if(this.row===undefined) {
+            return {}
+        } else {
+            return super.objectify();
+        }
+    }
+
     get Kits() { return new SpellVisualKits(this.owner); }
 
     get MissileModel() { return this.ownerWrap(this.row.MissileModel); }
@@ -161,14 +206,25 @@ export class SpellVisual extends Subsystem<Spell> {
      * without affecting other spells that share it.
      */
     makeUnique() {
+        if(this.owner.row.SpellVisualID.getIndex(0)===0) {
+            return;
+        }
         let row = this.row.clone(Ids.SpellVisual.id());
         this.owner.row.SpellVisualID.setIndex(0,row.ID.get())
         this.Kits.all.filter(x=>x.exists)
             .forEach(x=>{
                 const kitId = Ids.SpellKit.id();
-                addKitRow(kitId);
+                x.row.clone(kitId);
                 SpellVisualKit.ptr(x).set(kitId);
             });
         return this.owner;
+    }
+
+    cloneFrom(spellId: number, makeUnique: boolean = true) {
+        this.owner.row.SpellVisualID.setIndex(0,
+            DBC.Spell.findById(spellId).SpellVisualID.getIndex(0));
+        if(makeUnique) {
+            this.makeUnique();
+        }
     }
 }

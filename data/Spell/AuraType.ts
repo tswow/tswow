@@ -17,961 +17,962 @@
 import { Cell } from "wotlkdata/cell/Cell";
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
 import { Spell } from "./Spell";
+import { SpellEffect } from "./SpellEffect";
 
-export class AuraType extends Enum<Spell> {
-    constructor(owner: Spell, effectIndex: number) {
-        super(owner, Cell.wrapIndex(owner.row.EffectAura,effectIndex));
+export class AuraType extends Enum<SpellEffect> {
+    constructor(owner: SpellEffect, effectIndex: number) {
+        super(owner, Cell.wrapIndex(SpellEffect.owner(owner).row.EffectAura,effectIndex));
     }
 
     /** */
     @EnumField(0)
-    None() { return this.set(0);  };
+    setNone() { return this.set(0);  };
     /** */
     @EnumField(1)
-    BindSight() { return this.set(1);  };
+    setBindSight() { return this.set(1);  };
     /** */
     @EnumField(2)
-    ModPossess() { return this.set(2);  };
+    setModPossess() { return this.set(2);  };
     /** */
     @EnumField(3)
-    PeriodicDamage() { return this.set(3);  };
+    setPeriodicDamage() { return this.set(3);  };
     /** */
     @EnumField(4)
-    Dummy() { return this.set(4);  };
+    setDummy() { return this.set(4);  };
     /** */
     @EnumField(5)
-    ModConfuse() { return this.set(5);  };
+    setModConfuse() { return this.set(5);  };
     /** */
     @EnumField(6)
-    ModCharm() { return this.set(6);  };
+    setModCharm() { return this.set(6);  };
     /** */
     @EnumField(7)
-    ModFear() { return this.set(7);  };
+    setModFear() { return this.set(7);  };
     /** */
     @EnumField(8)
-    PeriodicHeal() { return this.set(8);  };
+    setPeriodicHeal() { return this.set(8);  };
     /** */
     @EnumField(9)
-    ModAttackspeed() { return this.set(9);  };
+    setModAttackspeed() { return this.set(9);  };
     /** */
     @EnumField(10)
-    ModThreat() { return this.set(10);  };
+    setModThreat() { return this.set(10);  };
     /** */
     @EnumField(11)
-    ModTaunt() { return this.set(11);  };
+    setModTaunt() { return this.set(11);  };
     /** */
     @EnumField(12)
-    ModStun() { return this.set(12);  };
+    setModStun() { return this.set(12);  };
     /** */
     @EnumField(13)
-    ModDamageDone() { return this.set(13);  };
+    setModDamageDone() { return this.set(13);  };
     /** */
     @EnumField(14)
-    ModDamageTaken() { return this.set(14);  };
+    setModDamageTaken() { return this.set(14);  };
     /** */
     @EnumField(15)
-    DamageShield() { return this.set(15);  };
+    setDamageShield() { return this.set(15);  };
     /** */
     @EnumField(16)
-    ModStealth() { return this.set(16);  };
+    setModStealth() { return this.set(16);  };
     /** */
     @EnumField(17)
-    ModDetect() { return this.set(17);  };
+    setModDetect() { return this.set(17);  };
     /** */
     @EnumField(18)
-    ModInvisibility() { return this.set(18);  };
+    setModInvisibility() { return this.set(18);  };
     /** */
     @EnumField(19)
-    ModInvisibilityDetection() { return this.set(19);  };
+    setModInvisibilityDetection() { return this.set(19);  };
     /** */
     @EnumField(20)
-    ObsModHealth() { return this.set(20);  };
+    setObsModHealth() { return this.set(20);  };
     /** */
     @EnumField(21)
-    ObsModPower() { return this.set(21);  };
+    setObsModPower() { return this.set(21);  };
     /** */
     @EnumField(22)
-    ModResistance() { return this.set(22);  };
+    setModResistance() { return this.set(22);  };
     /** */
     @EnumField(23)
-    PeriodicTriggerSpell() { return this.set(23);  };
+    setPeriodicTriggerSpell() { return this.set(23);  };
     /** */
     @EnumField(24)
-    PeriodicEnergize() { return this.set(24);  };
+    setPeriodicEnergize() { return this.set(24);  };
     /** */
     @EnumField(25)
-    ModPacify() { return this.set(25);  };
+    setModPacify() { return this.set(25);  };
     /** */
     @EnumField(26)
-    ModRoot() { return this.set(26);  };
+    setModRoot() { return this.set(26);  };
     /** */
     @EnumField(27)
-    ModSilence() { return this.set(27);  };
+    setModSilence() { return this.set(27);  };
     /** */
     @EnumField(28)
-    ReflectSpells() { return this.set(28);  };
+    setReflectSpells() { return this.set(28);  };
     /** */
     @EnumField(29)
-    ModStat() { return this.set(29);  };
+    setModStat() { return this.set(29);  };
     /** */
     @EnumField(30)
-    ModSkill() { return this.set(30);  };
+    setModSkill() { return this.set(30);  };
     /** */
     @EnumField(31)
-    ModIncreaseSpeed() { return this.set(31);  };
+    setModIncreaseSpeed() { return this.set(31);  };
     /** */
     @EnumField(32)
-    ModIncreaseMountedSpeed() { return this.set(32);  };
+    setModIncreaseMountedSpeed() { return this.set(32);  };
     /** */
     @EnumField(33)
-    ModDecreaseSpeed() { return this.set(33);  };
+    setModDecreaseSpeed() { return this.set(33);  };
     /** */
     @EnumField(34)
-    ModIncreaseHealth() { return this.set(34);  };
+    setModIncreaseHealth() { return this.set(34);  };
     /** */
     @EnumField(35)
-    ModIncreaseEnergy() { return this.set(35);  };
+    setModIncreaseEnergy() { return this.set(35);  };
     /** */
     @EnumField(36)
-    ModShapeshift() { return this.set(36);  };
+    setModShapeshift() { return this.set(36);  };
     /** */
     @EnumField(37)
-    EffectImmunity() { return this.set(37);  };
+    setEffectImmunity() { return this.set(37);  };
     /** */
-    @EnumField(0)
-    StateImmunity() { return this.set(38);  };
+    @EnumField(38)
+    setStateImmunity() { return this.set(38);  };
     /** */
-    @EnumField(0)
-    SchoolImmunity() { return this.set(39);  };
+    @EnumField(39)
+    setSchoolImmunity() { return this.set(39);  };
     /** */
-    @EnumField(0)
-    DamageImmunity() { return this.set(40);  };
+    @EnumField(40)
+    setDamageImmunity() { return this.set(40);  };
     /** */
-    @EnumField(0)
-    DispelImmunity() { return this.set(41);  };
+    @EnumField(41)
+    setDispelImmunity() { return this.set(41);  };
     /** */
-    @EnumField(0)
-    ProcTriggerSpell() { return this.set(42);  };
+    @EnumField(42)
+    setProcTriggerSpell() { return this.set(42);  };
     /** */
-    @EnumField(0)
-    ProcTriggerDamage() { return this.set(43);  };
+    @EnumField(43)
+    setProcTriggerDamage() { return this.set(43);  };
     /** */
-    @EnumField(0)
-    TrackCreatures() { return this.set(44);  };
+    @EnumField(44)
+    setTrackCreatures() { return this.set(44);  };
     /** */
-    @EnumField(0)
-    TrackResources() { return this.set(45);  };
+    @EnumField(45)
+    setTrackResources() { return this.set(45);  };
     /** */
-    @EnumField(0)
-    SpellAura46() { return this.set(46);  };
+    @EnumField(46)
+    setSpellAura46() { return this.set(46);  };
     /** */
-    @EnumField(0)
-    ModParryPercent() { return this.set(47);  };
+    @EnumField(47)
+    setModParryPercent() { return this.set(47);  };
     /** */
-    @EnumField(0)
-    SpellAura48() { return this.set(48);  };
+    @EnumField(48)
+    setSpellAura48() { return this.set(48);  };
     /** */
-    @EnumField(0)
-    ModDodgePercent() { return this.set(49);  };
+    @EnumField(49)
+    setModDodgePercent() { return this.set(49);  };
     /** */
-    @EnumField(0)
-    ModCriticalHealingAmount() { return this.set(50);  };
+    @EnumField(50)
+    setModCriticalHealingAmount() { return this.set(50);  };
     /** */
-    @EnumField(0)
-    ModBlockPercent() { return this.set(51);  };
+    @EnumField(51)
+    setModBlockPercent() { return this.set(51);  };
     /** */
-    @EnumField(0)
-    ModWeaponCritPercent() { return this.set(52);  };
+    @EnumField(52)
+    setModWeaponCritPercent() { return this.set(52);  };
     /** */
-    @EnumField(0)
-    PeriodicLeech() { return this.set(53);  };
+    @EnumField(53)
+    setPeriodicLeech() { return this.set(53);  };
     /** */
-    @EnumField(0)
-    ModHitChance() { return this.set(54);  };
+    @EnumField(54)
+    setModHitChance() { return this.set(54);  };
     /** */
-    @EnumField(0)
-    ModSpellHitChance() { return this.set(55);  };
+    @EnumField(55)
+    setModSpellHitChance() { return this.set(55);  };
     /** */
-    @EnumField(0)
-    Transform() { return this.set(56);  };
+    @EnumField(56)
+    setTransform() { return this.set(56);  };
     /** */
-    @EnumField(0)
-    ModSpellCritChance() { return this.set(57);  };
+    @EnumField(57)
+    setModSpellCritChance() { return this.set(57);  };
     /** */
-    @EnumField(0)
-    ModIncreaseSwimSpeed() { return this.set(58);  };
+    @EnumField(58)
+    setModIncreaseSwimSpeed() { return this.set(58);  };
     /** */
-    @EnumField(0)
-    ModDamageDoneCreature() { return this.set(59);  };
+    @EnumField(59)
+    setModDamageDoneCreature() { return this.set(59);  };
     /** */
-    @EnumField(0)
-    ModPacifySilence() { return this.set(60);  };
+    @EnumField(60)
+    setModPacifySilence() { return this.set(60);  };
     /** */
-    @EnumField(0)
-    ModScale() { return this.set(61);  };
+    @EnumField(61)
+    setModScale() { return this.set(61);  };
     /** */
-    @EnumField(0)
-    PeriodicHealthFunnel() { return this.set(62);  };
+    @EnumField(62)
+    setPeriodicHealthFunnel() { return this.set(62);  };
     /** */
-    @EnumField(0)
-    SpellAura63() { return this.set(63);  };
+    @EnumField(63)
+    setSpellAura63() { return this.set(63);  };
     /** */
-    @EnumField(0)
-    PeriodicManaLeech() { return this.set(64);  };
+    @EnumField(64)
+    setPeriodicManaLeech() { return this.set(64);  };
     /** */
-    @EnumField(0)
-    ModCastingSpeedNotStack() { return this.set(65);  };
+    @EnumField(65)
+    setModCastingSpeedNotStack() { return this.set(65);  };
     /** */
-    @EnumField(0)
-    FeignDeath() { return this.set(66);  };
+    @EnumField(66)
+    setFeignDeath() { return this.set(66);  };
     /** */
-    @EnumField(0)
-    ModDisarm() { return this.set(67);  };
+    @EnumField(67)
+    setModDisarm() { return this.set(67);  };
     /** */
-    @EnumField(0)
-    ModStalked() { return this.set(68);  };
+    @EnumField(68)
+    setModStalked() { return this.set(68);  };
     /** */
-    @EnumField(0)
-    SchoolAbsorb() { return this.set(69);  };
+    @EnumField(69)
+    setSchoolAbsorb() { return this.set(69);  };
     /** */
-    @EnumField(0)
-    ExtraAttacks() { return this.set(70);  };
+    @EnumField(70)
+    setExtraAttacks() { return this.set(70);  };
     /** */
-    @EnumField(0)
-    ModSpellCritChanceSchool() { return this.set(71);  };
+    @EnumField(71)
+    setModSpellCritChanceSchool() { return this.set(71);  };
     /** */
-    @EnumField(0)
-    ModPowerCostSchoolPct() { return this.set(72);  };
+    @EnumField(72)
+    setModPowerCostSchoolPct() { return this.set(72);  };
     /** */
-    @EnumField(0)
-    ModPowerCostSchool() { return this.set(73);  };
+    @EnumField(73)
+    setModPowerCostSchool() { return this.set(73);  };
     /** */
-    @EnumField(0)
-    ReflectSpellsSchool() { return this.set(74);  };
+    @EnumField(74)
+    setReflectSpellsSchool() { return this.set(74);  };
     /** */
-    @EnumField(0)
-    ModLanguage() { return this.set(75);  };
+    @EnumField(75)
+    setModLanguage() { return this.set(75);  };
     /** */
-    @EnumField(0)
-    FarSight() { return this.set(76);  };
+    @EnumField(76)
+    setFarSight() { return this.set(76);  };
     /** */
-    @EnumField(0)
-    MechanicImmunity() { return this.set(77);  };
+    @EnumField(77)
+    setMechanicImmunity() { return this.set(77);  };
     /** */
-    @EnumField(0)
-    Mounted() { return this.set(78);  };
+    @EnumField(78)
+    setMounted() { return this.set(78);  };
     /** */
-    @EnumField(0)
-    ModDamagePercentDone() { return this.set(79);  };
+    @EnumField(79)
+    setModDamagePercentDone() { return this.set(79);  };
     /** */
-    @EnumField(0)
-    ModPercentStat() { return this.set(80);  };
+    @EnumField(80)
+    setModPercentStat() { return this.set(80);  };
     /** */
-    @EnumField(0)
-    SplitDamagePct() { return this.set(81);  };
+    @EnumField(81)
+    setSplitDamagePct() { return this.set(81);  };
     /** */
-    @EnumField(0)
-    WaterBreathing() { return this.set(82);  };
+    @EnumField(82)
+    setWaterBreathing() { return this.set(82);  };
     /** */
-    @EnumField(0)
-    ModBaseResistance() { return this.set(83);  };
+    @EnumField(83)
+    setModBaseResistance() { return this.set(83);  };
     /** */
-    @EnumField(0)
-    ModRegen() { return this.set(84);  };
+    @EnumField(84)
+    setModRegen() { return this.set(84);  };
     /** */
-    @EnumField(0)
-    ModPowerRegen() { return this.set(85);  };
+    @EnumField(85)
+    setModPowerRegen() { return this.set(85);  };
     /** */
-    @EnumField(0)
-    ChannelDeathItem() { return this.set(86);  };
+    @EnumField(86)
+    setChannelDeathItem() { return this.set(86);  };
     /** */
-    @EnumField(0)
-    ModDamagePercentTaken() { return this.set(87);  };
+    @EnumField(87)
+    setModDamagePercentTaken() { return this.set(87);  };
     /** */
-    @EnumField(0)
-    ModHealthRegenPercent() { return this.set(88);  };
+    @EnumField(88)
+    setModHealthRegenPercent() { return this.set(88);  };
     /** */
-    @EnumField(0)
-    PeriodicDamagePercent() { return this.set(89);  };
+    @EnumField(89)
+    setPeriodicDamagePercent() { return this.set(89);  };
     /** */
-    @EnumField(0)
-    SpellAura90() { return this.set(90);  };
+    @EnumField(90)
+    setSpellAura90() { return this.set(90);  };
     /** */
-    @EnumField(0)
-    ModDetectRange() { return this.set(91);  };
+    @EnumField(91)
+    setModDetectRange() { return this.set(91);  };
     /** */
-    @EnumField(0)
-    PreventsFleeing() { return this.set(92);  };
+    @EnumField(92)
+    setPreventsFleeing() { return this.set(92);  };
     /** */
-    @EnumField(0)
-    ModUnattackable() { return this.set(93);  };
+    @EnumField(93)
+    setModUnattackable() { return this.set(93);  };
     /** */
-    @EnumField(0)
-    InterruptRegen() { return this.set(94);  };
+    @EnumField(94)
+    setInterruptRegen() { return this.set(94);  };
     /** */
-    @EnumField(0)
-    Ghost() { return this.set(95);  };
+    @EnumField(95)
+    setGhost() { return this.set(95);  };
     /** */
-    @EnumField(0)
-    SpellMagnet() { return this.set(96);  };
+    @EnumField(96)
+    setSpellMagnet() { return this.set(96);  };
     /** */
-    @EnumField(0)
-    ManaShield() { return this.set(97);  };
+    @EnumField(97)
+    setManaShield() { return this.set(97);  };
     /** */
-    @EnumField(0)
-    ModSkillTalent() { return this.set(98);  };
+    @EnumField(98)
+    setModSkillTalent() { return this.set(98);  };
     /** */
-    @EnumField(0)
-    ModAttackPower() { return this.set(99);  };
+    @EnumField(99)
+    setModAttackPower() { return this.set(99);  };
     /** */
-    @EnumField(0)
-    AurasVisible() { return this.set(100);  };
+    @EnumField(100)
+    setAurasVisible() { return this.set(100);  };
     /** */
-    @EnumField(0)
-    ModResistancePct() { return this.set(101);  };
+    @EnumField(101)
+    setModResistancePct() { return this.set(101);  };
     /** */
-    @EnumField(0)
-    ModMeleeAttackPowerVersus() { return this.set(102);  };
+    @EnumField(102)
+    setModMeleeAttackPowerVersus() { return this.set(102);  };
     /** */
-    @EnumField(0)
-    ModTotalThreat() { return this.set(103);  };
+    @EnumField(103)
+    setModTotalThreat() { return this.set(103);  };
     /** */
-    @EnumField(0)
-    WaterWalk() { return this.set(104);  };
+    @EnumField(104)
+    setWaterWalk() { return this.set(104);  };
     /** */
-    @EnumField(0)
-    FeatherFall() { return this.set(105);  };
+    @EnumField(105)
+    setFeatherFall() { return this.set(105);  };
     /** */
-    @EnumField(0)
-    Hover() { return this.set(106);  };
+    @EnumField(106)
+    setHover() { return this.set(106);  };
     /** */
-    @EnumField(0)
-    AddFlatModifier() { return this.set(107);  };
+    @EnumField(107)
+    setAddFlatModifier() { return this.set(107);  };
     /** */
-    @EnumField(0)
-    AddPctModifier() { return this.set(108);  };
+    @EnumField(108)
+    setAddPctModifier() { return this.set(108);  };
     /** */
-    @EnumField(0)
-    AddTargetTrigger() { return this.set(109);  };
+    @EnumField(109)
+    setAddTargetTrigger() { return this.set(109);  };
     /** */
-    @EnumField(0)
-    ModPowerRegenPercent() { return this.set(110);  };
+    @EnumField(110)
+    setModPowerRegenPercent() { return this.set(110);  };
     /** */
-    @EnumField(0)
-    AddCasterHitTrigger() { return this.set(111);  };
+    @EnumField(111)
+    setAddCasterHitTrigger() { return this.set(111);  };
     /** */
-    @EnumField(0)
-    OverrideClassScripts() { return this.set(112);  };
+    @EnumField(112)
+    setOverrideClassScripts() { return this.set(112);  };
     /** */
-    @EnumField(0)
-    ModRangedDamageTaken() { return this.set(113);  };
+    @EnumField(113)
+    setModRangedDamageTaken() { return this.set(113);  };
     /** */
-    @EnumField(0)
-    ModRangedDamageTakenPct() { return this.set(114);  };
+    @EnumField(114)
+    setModRangedDamageTakenPct() { return this.set(114);  };
     /** */
-    @EnumField(0)
-    ModHealing() { return this.set(115);  };
+    @EnumField(115)
+    setModHealing() { return this.set(115);  };
     /** */
-    @EnumField(0)
-    ModRegenDuringCombat() { return this.set(116);  };
+    @EnumField(116)
+    setModRegenDuringCombat() { return this.set(116);  };
     /** */
-    @EnumField(0)
-    ModMechanicResistance() { return this.set(117);  };
+    @EnumField(117)
+    setModMechanicResistance() { return this.set(117);  };
     /** */
-    @EnumField(0)
-    ModHealingPct() { return this.set(118);  };
+    @EnumField(118)
+    setModHealingPct() { return this.set(118);  };
     /** */
-    @EnumField(0)
-    SpellAura119() { return this.set(119);  };
+    @EnumField(119)
+    setSpellAura119() { return this.set(119);  };
     /** */
-    @EnumField(0)
-    Untrackable() { return this.set(120);  };
+    @EnumField(120)
+    setUntrackable() { return this.set(120);  };
     /** */
-    @EnumField(0)
-    Empathy() { return this.set(121);  };
+    @EnumField(121)
+    setEmpathy() { return this.set(121);  };
     /** */
-    @EnumField(0)
-    ModOffhandDamagePct() { return this.set(122);  };
+    @EnumField(122)
+    setModOffhandDamagePct() { return this.set(122);  };
     /** */
-    @EnumField(0)
-    ModTargetResistance() { return this.set(123);  };
+    @EnumField(123)
+    setModTargetResistance() { return this.set(123);  };
     /** */
-    @EnumField(0)
-    ModRangedAttackPower() { return this.set(124);  };
+    @EnumField(124)
+    setModRangedAttackPower() { return this.set(124);  };
     /** */
-    @EnumField(0)
-    ModMeleeDamageTaken() { return this.set(125);  };
+    @EnumField(125)
+    setModMeleeDamageTaken() { return this.set(125);  };
     /** */
-    @EnumField(0)
-    ModMeleeDamageTakenPct() { return this.set(126);  };
+    @EnumField(126)
+    setModMeleeDamageTakenPct() { return this.set(126);  };
     /** */
-    @EnumField(0)
-    RangedAttackPowerAttackerBonus() { return this.set(127);  };
+    @EnumField(127)
+    setRangedAttackPowerAttackerBonus() { return this.set(127);  };
     /** */
-    @EnumField(0)
-    ModPossessPet() { return this.set(128);  };
+    @EnumField(128)
+    setModPossessPet() { return this.set(128);  };
     /** */
-    @EnumField(0)
-    ModSpeedAlways() { return this.set(129);  };
+    @EnumField(129)
+    setModSpeedAlways() { return this.set(129);  };
     /** */
-    @EnumField(0)
-    ModMountedSpeedAlways() { return this.set(130);  };
+    @EnumField(130)
+    setModMountedSpeedAlways() { return this.set(130);  };
     /** */
-    @EnumField(0)
-    ModRangedAttackPowerVersus() { return this.set(131);  };
+    @EnumField(131)
+    setModRangedAttackPowerVersus() { return this.set(131);  };
     /** */
-    @EnumField(0)
-    ModIncreaseEnergyPercent() { return this.set(132);  };
+    @EnumField(132)
+    setModIncreaseEnergyPercent() { return this.set(132);  };
     /** */
-    @EnumField(0)
-    ModIncreaseHealthPercent() { return this.set(133);  };
+    @EnumField(133)
+    setModIncreaseHealthPercent() { return this.set(133);  };
     /** */
-    @EnumField(0)
-    ModManaRegenInterrupt() { return this.set(134);  };
+    @EnumField(134)
+    setModManaRegenInterrupt() { return this.set(134);  };
     /** */
-    @EnumField(0)
-    ModHealingDone() { return this.set(135);  };
+    @EnumField(135)
+    setModHealingDone() { return this.set(135);  };
     /** */
-    @EnumField(0)
-    ModHealingDonePercent() { return this.set(136);  };
+    @EnumField(136)
+    setModHealingDonePercent() { return this.set(136);  };
     /** */
-    @EnumField(0)
-    ModTotalStatPercentage() { return this.set(137);  };
+    @EnumField(137)
+    setModTotalStatPercentage() { return this.set(137);  };
     /** */
-    @EnumField(0)
-    ModMeleeHaste() { return this.set(138);  };
+    @EnumField(138)
+    setModMeleeHaste() { return this.set(138);  };
     /** */
-    @EnumField(0)
-    ForceReaction() { return this.set(139);  };
+    @EnumField(139)
+    setForceReaction() { return this.set(139);  };
     /** */
-    @EnumField(0)
-    ModRangedHaste() { return this.set(140);  };
+    @EnumField(140)
+    setModRangedHaste() { return this.set(140);  };
     /** */
-    @EnumField(0)
-    ModRangedAmmoHaste() { return this.set(141);  };
+    @EnumField(141)
+    setModRangedAmmoHaste() { return this.set(141);  };
     /** */
-    @EnumField(0)
-    ModBaseResistancePct() { return this.set(142);  };
+    @EnumField(142)
+    setModBaseResistancePct() { return this.set(142);  };
     /** */
-    @EnumField(0)
-    ModResistanceExclusive() { return this.set(143);  };
+    @EnumField(143)
+    setModResistanceExclusive() { return this.set(143);  };
     /** */
-    @EnumField(0)
-    SafeFall() { return this.set(144);  };
+    @EnumField(144)
+    setSafeFall() { return this.set(144);  };
     /** */
-    @EnumField(0)
-    ModPetTalentPoints() { return this.set(145);  };
+    @EnumField(145)
+    setModPetTalentPoints() { return this.set(145);  };
     /** */
-    @EnumField(0)
-    AllowTamePetType() { return this.set(146);  };
+    @EnumField(146)
+    setAllowTamePetType() { return this.set(146);  };
     /** */
-    @EnumField(0)
-    MechanicImmunityMask() { return this.set(147);  };
+    @EnumField(147)
+    setMechanicImmunityMask() { return this.set(147);  };
     /** */
-    @EnumField(0)
-    RetainComboPoints() { return this.set(148);  };
+    @EnumField(148)
+    setRetainComboPoints() { return this.set(148);  };
     /** */
-    @EnumField(0)
-    ReducePushback() { return this.set(149);  };
+    @EnumField(149)
+    setReducePushback() { return this.set(149);  };
     /** */
-    @EnumField(0)
-    ModShieldBlockvaluePct() { return this.set(150);  };
+    @EnumField(150)
+    setModShieldBlockvaluePct() { return this.set(150);  };
     /** */
-    @EnumField(0)
-    TrackStealthed() { return this.set(151);  };
+    @EnumField(151)
+    setTrackStealthed() { return this.set(151);  };
     /** */
-    @EnumField(0)
-    ModDetectedRange() { return this.set(152);  };
+    @EnumField(152)
+    setModDetectedRange() { return this.set(152);  };
     /** */
-    @EnumField(0)
-    SplitDamageFlat() { return this.set(153);  };
+    @EnumField(153)
+    setSplitDamageFlat() { return this.set(153);  };
     /** */
-    @EnumField(0)
-    ModStealthLevel() { return this.set(154);  };
+    @EnumField(154)
+    setModStealthLevel() { return this.set(154);  };
     /** */
-    @EnumField(0)
-    ModWaterBreathing() { return this.set(155);  };
+    @EnumField(155)
+    setModWaterBreathing() { return this.set(155);  };
     /** */
-    @EnumField(0)
-    ModReputationGain() { return this.set(156);  };
+    @EnumField(156)
+    setModReputationGain() { return this.set(156);  };
     /** */
-    @EnumField(0)
-    PetDamageMulti() { return this.set(157);  };
+    @EnumField(157)
+    setPetDamageMulti() { return this.set(157);  };
     /** */
-    @EnumField(0)
-    ModShieldBlockvalue() { return this.set(158);  };
+    @EnumField(158)
+    setModShieldBlockvalue() { return this.set(158);  };
     /** */
-    @EnumField(0)
-    NoPvpCredit() { return this.set(159);  };
+    @EnumField(159)
+    setNoPvpCredit() { return this.set(159);  };
     /** */
-    @EnumField(0)
-    ModAoeAvoidance() { return this.set(160);  };
+    @EnumField(160)
+    setModAoeAvoidance() { return this.set(160);  };
     /** */
-    @EnumField(0)
-    ModHealthRegenInCombat() { return this.set(161);  };
+    @EnumField(161)
+    setModHealthRegenInCombat() { return this.set(161);  };
     /** */
-    @EnumField(0)
-    PowerBurn() { return this.set(162);  };
+    @EnumField(162)
+    setPowerBurn() { return this.set(162);  };
     /** */
-    @EnumField(0)
-    ModCritDamageBonus() { return this.set(163);  };
+    @EnumField(163)
+    setModCritDamageBonus() { return this.set(163);  };
     /** */
-    @EnumField(0)
-    SpellAura164() { return this.set(164);  };
+    @EnumField(164)
+    setSpellAura164() { return this.set(164);  };
     /** */
-    @EnumField(0)
-    MeleeAttackPowerAttackerBonus() { return this.set(165);  };
+    @EnumField(165)
+    setMeleeAttackPowerAttackerBonus() { return this.set(165);  };
     /** */
-    @EnumField(0)
-    ModAttackPowerPct() { return this.set(166);  };
+    @EnumField(166)
+    setModAttackPowerPct() { return this.set(166);  };
     /** */
-    @EnumField(0)
-    ModRangedAttackPowerPct() { return this.set(167);  };
+    @EnumField(167)
+    setModRangedAttackPowerPct() { return this.set(167);  };
     /** */
-    @EnumField(0)
-    ModDamageDoneVersus() { return this.set(168);  };
+    @EnumField(168)
+    setModDamageDoneVersus() { return this.set(168);  };
     /** */
-    @EnumField(0)
-    ModCritPercentVersus() { return this.set(169);  };
+    @EnumField(169)
+    setModCritPercentVersus() { return this.set(169);  };
     /** */
-    @EnumField(0)
-    DetectAmore() { return this.set(170);  };
+    @EnumField(170)
+    setDetectAmore() { return this.set(170);  };
     /** */
-    @EnumField(0)
-    ModSpeedNotStack() { return this.set(171);  };
+    @EnumField(171)
+    setModSpeedNotStack() { return this.set(171);  };
     /** */
-    @EnumField(0)
-    ModMountedSpeedNotStack() { return this.set(172);  };
+    @EnumField(172)
+    setModMountedSpeedNotStack() { return this.set(172);  };
     /** */
-    @EnumField(0)
-    SpellAura173() { return this.set(173);  };
+    @EnumField(173)
+    setSpellAura173() { return this.set(173);  };
     /** */
-    @EnumField(0)
-    ModSpellDamageOfStatPercent() { return this.set(174);  };
+    @EnumField(174)
+    setModSpellDamageOfStatPercent() { return this.set(174);  };
     /** */
-    @EnumField(0)
-    ModSpellHealingOfStatPercent() { return this.set(175);  };
+    @EnumField(175)
+    setModSpellHealingOfStatPercent() { return this.set(175);  };
     /** */
-    @EnumField(0)
-    SpiritOfRedemption() { return this.set(176);  };
+    @EnumField(176)
+    setSpiritOfRedemption() { return this.set(176);  };
     /** */
-    @EnumField(0)
-    AoeCharm() { return this.set(177);  };
+    @EnumField(177)
+    setAoeCharm() { return this.set(177);  };
     /** */
-    @EnumField(0)
-    ModDebuffResistance() { return this.set(178);  };
+    @EnumField(178)
+    setModDebuffResistance() { return this.set(178);  };
     /** */
-    @EnumField(0)
-    ModAttackerSpellCritChance() { return this.set(179);  };
+    @EnumField(179)
+    setModAttackerSpellCritChance() { return this.set(179);  };
     /** */
-    @EnumField(0)
-    ModFlatSpellDamageVersus() { return this.set(180);  };
+    @EnumField(180)
+    setModFlatSpellDamageVersus() { return this.set(180);  };
     /** */
-    @EnumField(0)
-    SpellAura181() { return this.set(181);  };
+    @EnumField(181)
+    setSpellAura181() { return this.set(181);  };
     /** */
-    @EnumField(0)
-    ModResistanceOfStatPercent() { return this.set(182);  };
+    @EnumField(182)
+    setModResistanceOfStatPercent() { return this.set(182);  };
     /** */
-    @EnumField(0)
-    ModCriticalThreat() { return this.set(183);  };
+    @EnumField(183)
+    setModCriticalThreat() { return this.set(183);  };
     /** */
-    @EnumField(0)
-    ModAttackerMeleeHitChance() { return this.set(184);  };
+    @EnumField(184)
+    setModAttackerMeleeHitChance() { return this.set(184);  };
     /** */
-    @EnumField(0)
-    ModAttackerRangedHitChance() { return this.set(185);  };
+    @EnumField(185)
+    setModAttackerRangedHitChance() { return this.set(185);  };
     /** */
-    @EnumField(0)
-    ModAttackerSpellHitChance() { return this.set(186);  };
+    @EnumField(186)
+    setModAttackerSpellHitChance() { return this.set(186);  };
     /** */
-    @EnumField(0)
-    ModAttackerMeleeCritChance() { return this.set(187);  };
+    @EnumField(187)
+    setModAttackerMeleeCritChance() { return this.set(187);  };
     /** */
-    @EnumField(0)
-    ModAttackerRangedCritChance() { return this.set(188);  };
+    @EnumField(188)
+    setModAttackerRangedCritChance() { return this.set(188);  };
     /** */
-    @EnumField(0)
-    ModRating() { return this.set(189);  };
+    @EnumField(189)
+    setModRating() { return this.set(189);  };
     /** */
-    @EnumField(0)
-    ModFactionReputationGain() { return this.set(190);  };
+    @EnumField(190)
+    setModFactionReputationGain() { return this.set(190);  };
     /** */
-    @EnumField(0)
-    UseNormalMovementSpeed() { return this.set(191);  };
+    @EnumField(191)
+    setUseNormalMovementSpeed() { return this.set(191);  };
     /** */
-    @EnumField(0)
-    ModMeleeRangedHaste() { return this.set(192);  };
+    @EnumField(192)
+    setModMeleeRangedHaste() { return this.set(192);  };
     /** */
-    @EnumField(0)
-    MeleeSlow() { return this.set(193);  };
+    @EnumField(193)
+    setMeleeSlow() { return this.set(193);  };
     /** */
-    @EnumField(0)
-    ModTargetAbsorbSchool() { return this.set(194);  };
+    @EnumField(194)
+    setModTargetAbsorbSchool() { return this.set(194);  };
     /** */
-    @EnumField(0)
-    ModTargetAbilityAbsorbSchool() { return this.set(195);  };
+    @EnumField(195)
+    setModTargetAbilityAbsorbSchool() { return this.set(195);  };
     /** */
-    @EnumField(0)
-    ModCooldown() { return this.set(196);  };
+    @EnumField(196)
+    setModCooldown() { return this.set(196);  };
     /** */
-    @EnumField(0)
-    ModAttackerSpellAndWeaponCritChance() { return this.set(197);  };
+    @EnumField(197)
+    setModAttackerSpellAndWeaponCritChance() { return this.set(197);  };
     /** */
-    @EnumField(0)
-    SpellAura198() { return this.set(198);  };
+    @EnumField(198)
+    setSpellAura198() { return this.set(198);  };
     /** */
-    @EnumField(0)
-    ModIncreasesSpellPctToHit() { return this.set(199);  };
+    @EnumField(199)
+    setModIncreasesSpellPctToHit() { return this.set(199);  };
     /** */
-    @EnumField(0)
-    ModXpPct() { return this.set(200);  };
+    @EnumField(200)
+    setModXpPct() { return this.set(200);  };
     /** */
-    @EnumField(0)
-    Fly() { return this.set(201);  };
+    @EnumField(201)
+    setFly() { return this.set(201);  };
     /** */
-    @EnumField(0)
-    CannotBeDodged() { return this.set(202);  };
+    @EnumField(202)
+    setCannotBeDodged() { return this.set(202);  };
     /** */
-    @EnumField(0)
-    ModAttackerMeleeCritDamage() { return this.set(203);  };
+    @EnumField(203)
+    setModAttackerMeleeCritDamage() { return this.set(203);  };
     /** */
-    @EnumField(0)
-    ModAttackerRangedCritDamage() { return this.set(204);  };
+    @EnumField(204)
+    setModAttackerRangedCritDamage() { return this.set(204);  };
     /** */
-    @EnumField(0)
-    ModSchoolCritDmgTaken() { return this.set(205);  };
+    @EnumField(205)
+    setModSchoolCritDmgTaken() { return this.set(205);  };
     /** */
-    @EnumField(0)
-    ModIncreaseVehicleFlightSpeed() { return this.set(206);  };
+    @EnumField(206)
+    setModIncreaseVehicleFlightSpeed() { return this.set(206);  };
     /** */
-    @EnumField(0)
-    ModIncreaseMountedFlightSpeed() { return this.set(207);  };
+    @EnumField(207)
+    setModIncreaseMountedFlightSpeed() { return this.set(207);  };
     /** */
-    @EnumField(0)
-    ModIncreaseFlightSpeed() { return this.set(208);  };
+    @EnumField(208)
+    setModIncreaseFlightSpeed() { return this.set(208);  };
     /** */
-    @EnumField(0)
-    ModMountedFlightSpeedAlways() { return this.set(209);  };
+    @EnumField(209)
+    setModMountedFlightSpeedAlways() { return this.set(209);  };
     /** */
-    @EnumField(0)
-    ModVehicleSpeedAlways() { return this.set(210);  };
+    @EnumField(210)
+    setModVehicleSpeedAlways() { return this.set(210);  };
     /** */
-    @EnumField(0)
-    ModFlightSpeedNotStack() { return this.set(211);  };
+    @EnumField(211)
+    setModFlightSpeedNotStack() { return this.set(211);  };
     /** */
-    @EnumField(0)
-    ModRangedAttackPowerOfStatPercent() { return this.set(212);  };
+    @EnumField(212)
+    setModRangedAttackPowerOfStatPercent() { return this.set(212);  };
     /** */
-    @EnumField(0)
-    ModRageFromDamageDealt() { return this.set(213);  };
+    @EnumField(213)
+    setModRageFromDamageDealt() { return this.set(213);  };
     /** */
-    @EnumField(0)
-    Tamed() { return this.set(214);  };
+    @EnumField(214)
+    setTamed() { return this.set(214);  };
     /** */
-    @EnumField(0)
-    ArenaPreparation() { return this.set(215);  };
+    @EnumField(215)
+    setArenaPreparation() { return this.set(215);  };
     /** */
-    @EnumField(0)
-    HasteSpells() { return this.set(216);  };
+    @EnumField(216)
+    setHasteSpells() { return this.set(216);  };
     /** */
-    @EnumField(0)
-    SpellAura217() { return this.set(217);  };
+    @EnumField(217)
+    setSpellAura217() { return this.set(217);  };
     /** */
-    @EnumField(0)
-    HasteRanged() { return this.set(218);  };
+    @EnumField(218)
+    setHasteRanged() { return this.set(218);  };
     /** */
-    @EnumField(0)
-    ModManaRegenFromStat() { return this.set(219);  };
+    @EnumField(219)
+    setModManaRegenFromStat() { return this.set(219);  };
     /** */
-    @EnumField(0)
-    ModRatingFromStat() { return this.set(220);  };
+    @EnumField(220)
+    setModRatingFromStat() { return this.set(220);  };
     /** */
-    @EnumField(0)
-    ModDetaunt() { return this.set(221);  };
+    @EnumField(221)
+    setModDetaunt() { return this.set(221);  };
     /** */
-    @EnumField(0)
-    SpellAura222() { return this.set(222);  };
+    @EnumField(222)
+    setSpellAura222() { return this.set(222);  };
     /** */
-    @EnumField(0)
-    RaidProcFromCharge() { return this.set(223);  };
+    @EnumField(223)
+    setRaidProcFromCharge() { return this.set(223);  };
     /** */
-    @EnumField(0)
-    SpellAura224() { return this.set(224);  };
+    @EnumField(224)
+    setSpellAura224() { return this.set(224);  };
     /** */
-    @EnumField(0)
-    RaidProcFromChargeWithValue() { return this.set(225);  };
+    @EnumField(225)
+    setRaidProcFromChargeWithValue() { return this.set(225);  };
     /** */
-    @EnumField(0)
-    PeriodicDummy() { return this.set(226);  };
+    @EnumField(226)
+    setPeriodicDummy() { return this.set(226);  };
     /** */
-    @EnumField(0)
-    PeriodicTriggerSpellWithValue() { return this.set(227);  };
+    @EnumField(227)
+    setPeriodicTriggerSpellWithValue() { return this.set(227);  };
     /** */
-    @EnumField(0)
-    DetectStealth() { return this.set(228);  };
+    @EnumField(228)
+    setDetectStealth() { return this.set(228);  };
     /** */
-    @EnumField(0)
-    ModAoeDamageAvoidance() { return this.set(229);  };
+    @EnumField(229)
+    setModAoeDamageAvoidance() { return this.set(229);  };
     /** */
-    @EnumField(0)
-    ModIncreaseHealth2() { return this.set(230);  };
+    @EnumField(230)
+    setModIncreaseHealth2() { return this.set(230);  };
     /** */
-    @EnumField(0)
-    ProcTriggerSpellWithValue() { return this.set(231);  };
+    @EnumField(231)
+    setProcTriggerSpellWithValue() { return this.set(231);  };
     /** */
-    @EnumField(0)
-    MechanicDurationMod() { return this.set(232);  };
+    @EnumField(232)
+    setMechanicDurationMod() { return this.set(232);  };
     /** */
-    @EnumField(0)
-    SpellAura233() { return this.set(233);  };
+    @EnumField(233)
+    setSpellAura233() { return this.set(233);  };
     /** */
-    @EnumField(0)
-    MechanicDurationModNotStack() { return this.set(234);  };
+    @EnumField(234)
+    setMechanicDurationModNotStack() { return this.set(234);  };
     /** */
-    @EnumField(0)
-    ModDispelResist() { return this.set(235);  };
+    @EnumField(235)
+    setModDispelResist() { return this.set(235);  };
     /** */
-    @EnumField(0)
-    ControlVehicle() { return this.set(236);  };
+    @EnumField(236)
+    setControlVehicle() { return this.set(236);  };
     /** */
-    @EnumField(0)
-    ModSpellDamageOfAttackPower() { return this.set(237);  };
+    @EnumField(237)
+    setModSpellDamageOfAttackPower() { return this.set(237);  };
     /** */
-    @EnumField(0)
-    ModSpellHealingOfAttackPower() { return this.set(238);  };
+    @EnumField(238)
+    setModSpellHealingOfAttackPower() { return this.set(238);  };
     /** */
-    @EnumField(0)
-    ModScale2() { return this.set(239);  };
+    @EnumField(239)
+    setModScale2() { return this.set(239);  };
     /** */
-    @EnumField(0)
-    ModExpertise() { return this.set(240);  };
+    @EnumField(240)
+    setModExpertise() { return this.set(240);  };
     /** */
-    @EnumField(0)
-    ForceMoveForward() { return this.set(241);  };
+    @EnumField(241)
+    setForceMoveForward() { return this.set(241);  };
     /** */
-    @EnumField(0)
-    ModSpellDamageFromHealing() { return this.set(242);  };
+    @EnumField(242)
+    setModSpellDamageFromHealing() { return this.set(242);  };
     /** */
-    @EnumField(0)
-    ModFaction() { return this.set(243);  };
+    @EnumField(243)
+    setModFaction() { return this.set(243);  };
     /** */
-    @EnumField(0)
-    ComprehendLanguage() { return this.set(244);  };
+    @EnumField(244)
+    setComprehendLanguage() { return this.set(244);  };
     /** */
-    @EnumField(0)
-    ModAuraDurationByDispel() { return this.set(245);  };
+    @EnumField(245)
+    setModAuraDurationByDispel() { return this.set(245);  };
     /** */
-    @EnumField(0)
-    ModAuraDurationByDispelNotStack() { return this.set(246);  };
+    @EnumField(246)
+    setModAuraDurationByDispelNotStack() { return this.set(246);  };
     /** */
-    @EnumField(0)
-    CloneCaster() { return this.set(247);  };
+    @EnumField(247)
+    setCloneCaster() { return this.set(247);  };
     /** */
-    @EnumField(0)
-    ModCombatResultChance() { return this.set(248);  };
+    @EnumField(248)
+    setModCombatResultChance() { return this.set(248);  };
     /** */
-    @EnumField(0)
-    ConvertRune() { return this.set(249);  };
+    @EnumField(249)
+    setConvertRune() { return this.set(249);  };
     /** */
-    @EnumField(0)
-    ModIncreaseHealth3() { return this.set(250);  };
+    @EnumField(250)
+    setModIncreaseHealth3() { return this.set(250);  };
     /** */
-    @EnumField(0)
-    ModEnemyDodge() { return this.set(251);  };
+    @EnumField(251)
+    setModEnemyDodge() { return this.set(251);  };
     /** */
-    @EnumField(0)
-    SpellAura252() { return this.set(252);  };
+    @EnumField(252)
+    setSpellAura252() { return this.set(252);  };
     /** */
-    @EnumField(0)
-    ModBlockCritChance() { return this.set(253);  };
+    @EnumField(253)
+    setModBlockCritChance() { return this.set(253);  };
     /** */
-    @EnumField(0)
-    ModDisarmOffhand() { return this.set(254);  };
+    @EnumField(254)
+    setModDisarmOffhand() { return this.set(254);  };
     /** */
-    @EnumField(0)
-    ModMechanicDamageTakenPercent() { return this.set(255);  };
+    @EnumField(255)
+    setModMechanicDamageTakenPercent() { return this.set(255);  };
     /** */
-    @EnumField(0)
-    NoReagentUse() { return this.set(256);  };
+    @EnumField(256)
+    setNoReagentUse() { return this.set(256);  };
     /** */
-    @EnumField(0)
-    ModTargetResistBySpellClass() { return this.set(257);  };
+    @EnumField(257)
+    setModTargetResistBySpellClass() { return this.set(257);  };
     /** */
-    @EnumField(0)
-    ModSpellVisual() { return this.set(258);  };
+    @EnumField(258)
+    setModSpellVisual() { return this.set(258);  };
     /** */
-    @EnumField(0)
-    ModHotPct() { return this.set(259);  };
+    @EnumField(259)
+    setModHotPct() { return this.set(259);  };
     /** */
-    @EnumField(0)
-    ScreenEffect() { return this.set(260);  };
+    @EnumField(260)
+    setScreenEffect() { return this.set(260);  };
     /** */
-    @EnumField(0)
-    Phase() { return this.set(261);  };
+    @EnumField(261)
+    setPhase() { return this.set(261);  };
     /** */
-    @EnumField(0)
-    AbilityIgnoreAurastate() { return this.set(262);  };
+    @EnumField(262)
+    setAbilityIgnoreAurastate() { return this.set(262);  };
     /** */
-    @EnumField(0)
-    AllowOnlyAbility() { return this.set(263);  };
+    @EnumField(263)
+    setAllowOnlyAbility() { return this.set(263);  };
     /** */
-    @EnumField(0)
-    SpellAura264() { return this.set(264);  };
+    @EnumField(264)
+    setSpellAura264() { return this.set(264);  };
     /** */
-    @EnumField(0)
-    SpellAura265() { return this.set(265);  };
+    @EnumField(265)
+    setSpellAura265() { return this.set(265);  };
     /** */
-    @EnumField(0)
-    SpellAura266() { return this.set(266);  };
+    @EnumField(266)
+    setSpellAura266() { return this.set(266);  };
     /** */
-    @EnumField(0)
-    ModImmuneAuraApplySchool() { return this.set(267);  };
+    @EnumField(267)
+    setModImmuneAuraApplySchool() { return this.set(267);  };
     /** */
-    @EnumField(0)
-    ModAttackPowerOfStatPercent() { return this.set(268);  };
+    @EnumField(268)
+    setModAttackPowerOfStatPercent() { return this.set(268);  };
     /** */
-    @EnumField(0)
-    ModIgnoreTargetResist() { return this.set(269);  };
+    @EnumField(269)
+    setModIgnoreTargetResist() { return this.set(269);  };
     /** */
-    @EnumField(0)
-    ModAbilityIgnoreTargetResist() { return this.set(270);  };
+    @EnumField(270)
+    setModAbilityIgnoreTargetResist() { return this.set(270);  };
     /** */
-    @EnumField(0)
-    ModDamageFromCaster() { return this.set(271);  };
+    @EnumField(271)
+    setModDamageFromCaster() { return this.set(271);  };
     /** */
-    @EnumField(0)
-    IgnoreMeleeReset() { return this.set(272);  };
+    @EnumField(272)
+    setIgnoreMeleeReset() { return this.set(272);  };
     /** */
-    @EnumField(0)
-    SpellAura273() { return this.set(273);  };
+    @EnumField(273)
+    setSpellAura273() { return this.set(273);  };
     /** */
-    @EnumField(0)
-    ConsumeNoAmmo() { return this.set(274);  };
+    @EnumField(274)
+    setConsumeNoAmmo() { return this.set(274);  };
     /** */
-    @EnumField(0)
-    ModIgnoreShapeshift() { return this.set(275);  };
+    @EnumField(275)
+    setModIgnoreShapeshift() { return this.set(275);  };
     /** */
-    @EnumField(0)
-    SpellAura276() { return this.set(276);  };
+    @EnumField(276)
+    setSpellAura276() { return this.set(276);  };
     /** */
-    @EnumField(0)
-    ModAbilityAffectedTargets() { return this.set(277);  };
+    @EnumField(277)
+    setModAbilityAffectedTargets() { return this.set(277);  };
     /** */
-    @EnumField(0)
-    ModDisarmRanged() { return this.set(278);  };
+    @EnumField(278)
+    setModDisarmRanged() { return this.set(278);  };
     /** */
-    @EnumField(0)
-    InitializeImages() { return this.set(279);  };
+    @EnumField(279)
+    setInitializeImages() { return this.set(279);  };
     /** */
-    @EnumField(0)
-    ModTargetArmorPct() { return this.set(280);  };
+    @EnumField(280)
+    setModTargetArmorPct() { return this.set(280);  };
     /** */
-    @EnumField(0)
-    ModHonorGainPct() { return this.set(281);  };
+    @EnumField(281)
+    setModHonorGainPct() { return this.set(281);  };
     /** */
-    @EnumField(0)
-    IncreaseBaseHealthPercent() { return this.set(282);  };
+    @EnumField(282)
+    setIncreaseBaseHealthPercent() { return this.set(282);  };
     /** */
-    @EnumField(0)
-    ModHealingReceived() { return this.set(283);  };
+    @EnumField(283)
+    setModHealingReceived() { return this.set(283);  };
     /** */
-    @EnumField(0)
-    Linked() { return this.set(284);  };
+    @EnumField(284)
+    setLinked() { return this.set(284);  };
     /** */
-    @EnumField(0)
-    ModAttackPowerOfArmor() { return this.set(285);  };
+    @EnumField(285)
+    setModAttackPowerOfArmor() { return this.set(285);  };
     /** */
-    @EnumField(0)
-    AbilityPeriodicCrit() { return this.set(286);  };
+    @EnumField(286)
+    setAbilityPeriodicCrit() { return this.set(286);  };
     /** */
-    @EnumField(0)
-    DeflectSpells() { return this.set(287);  };
+    @EnumField(287)
+    setDeflectSpells() { return this.set(287);  };
     /** */
-    @EnumField(0)
-    IgnoreHitDirection() { return this.set(288);  };
+    @EnumField(288)
+    setIgnoreHitDirection() { return this.set(288);  };
     /** */
-    @EnumField(0)
-    SpellAura289() { return this.set(289);  };
+    @EnumField(289)
+    setSpellAura289() { return this.set(289);  };
     /** */
-    @EnumField(0)
-    ModCritPct() { return this.set(290);  };
+    @EnumField(290)
+    setModCritPct() { return this.set(290);  };
     /** */
-    @EnumField(0)
-    ModXpQuestPct() { return this.set(291);  };
+    @EnumField(291)
+    setModXpQuestPct() { return this.set(291);  };
     /** */
-    @EnumField(0)
-    OpenStable() { return this.set(292);  };
+    @EnumField(292)
+    setOpenStable() { return this.set(292);  };
     /** */
-    @EnumField(0)
-    SpellAura293() { return this.set(293);  };
+    @EnumField(293)
+    setSpellAura293() { return this.set(293);  };
     /** */
-    @EnumField(0)
-    PreventRegeneratePower() { return this.set(294);  };
+    @EnumField(294)
+    setPreventRegeneratePower() { return this.set(294);  };
     /** */
-    @EnumField(0)
-    SpellAura295() { return this.set(295);  };
+    @EnumField(295)
+    setSpellAura295() { return this.set(295);  };
     /** */
-    @EnumField(0)
-    SetVehicleId() { return this.set(296);  };
+    @EnumField(296)
+    setSetVehicleId() { return this.set(296);  };
     /** */
-    @EnumField(0)
-    SpellAura297() { return this.set(297);  };
+    @EnumField(297)
+    setSpellAura297() { return this.set(297);  };
     /** */
-    @EnumField(0)
-    SpellAura298() { return this.set(298);  };
+    @EnumField(298)
+    setSpellAura298() { return this.set(298);  };
     /** */
-    @EnumField(0)
-    SpellAura299() { return this.set(299);  };
+    @EnumField(299)
+    setSpellAura299() { return this.set(299);  };
     /** */
-    @EnumField(0)
-    ShareDamagePct() { return this.set(300);  };
+    @EnumField(300)
+    setShareDamagePct() { return this.set(300);  };
     /** */
-    @EnumField(0)
-    SchoolHealAbsorb() { return this.set(301);  };
+    @EnumField(301)
+    setSchoolHealAbsorb() { return this.set(301);  };
     /** */
-    @EnumField(0)
-    SpellAura302() { return this.set(302);  };
+    @EnumField(302)
+    setSpellAura302() { return this.set(302);  };
     /** */
-    @EnumField(0)
-    ModDamageDoneVersusAurastate() { return this.set(303);  };
+    @EnumField(303)
+    setModDamageDoneVersusAurastate() { return this.set(303);  };
     /** */
-    @EnumField(0)
-    ModDrunk() { return this.set(304);  };
+    @EnumField(304)
+    setModDrunk() { return this.set(304);  };
     /** */
-    @EnumField(0)
-    ModMinimumSpeed() { return this.set(305);  };
+    @EnumField(305)
+    setModMinimumSpeed() { return this.set(305);  };
     /** */
-    @EnumField(0)
-    SpellAura306() { return this.set(306);  };
+    @EnumField(306)
+    setSpellAura306() { return this.set(306);  };
     /** */
-    @EnumField(0)
-    SpellAura307() { return this.set(307);  };
+    @EnumField(307)
+    setSpellAura307() { return this.set(307);  };
     /** */
-    @EnumField(0)
-    SpellAura308() { return this.set(308);  };
+    @EnumField(308)
+    setSpellAura308() { return this.set(308);  };
     /** */
-    @EnumField(0)
-    SpellAura309() { return this.set(309);  };
+    @EnumField(309)
+    setSpellAura309() { return this.set(309);  };
     /** */
-    @EnumField(0)
-    ModCreatureAoeDamageAvoidance() { return this.set(310);  };
+    @EnumField(310)
+    setModCreatureAoeDamageAvoidance() { return this.set(310);  };
     /** */
-    @EnumField(0)
-    SpellAura311() { return this.set(311);  };
+    @EnumField(311)
+    setSpellAura311() { return this.set(311);  };
     /** */
-    @EnumField(0)
-    SpellAura312() { return this.set(312);  };
+    @EnumField(312)
+    setSpellAura312() { return this.set(312);  };
     /** */
-    @EnumField(0)
-    SpellAura313() { return this.set(313);  };
+    @EnumField(313)
+    setSpellAura313() { return this.set(313);  };
     /** */
-    @EnumField(0)
-    PreventResurrection() { return this.set(314);  };
+    @EnumField(314)
+    setPreventResurrection() { return this.set(314);  };
     /** */
-    @EnumField(0)
-    UnderwaterWalking() { return this.set(315);  };
+    @EnumField(315)
+    setUnderwaterWalking() { return this.set(315);  };
     /** */
-    @EnumField(0)
-    PeriodicHaste() { return this.set(316);  };
+    @EnumField(316)
+    setPeriodicHaste() { return this.set(316);  };
 }

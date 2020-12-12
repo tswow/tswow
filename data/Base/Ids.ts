@@ -130,4 +130,14 @@ export const Ids = {
     GossipMenu: new AutoIdGenerator(100000),
     /** Starts at 100000, highest base value is 77865 */
     BroadcastText: new AutoIdGenerator(100000),
+    /** Starts at 210, highest base value is 209 */
+    SpellCastTimes: new AutoIdGenerator(210),
+    /** Starts at 2600, highest base value is 2513*/
+    SpellRuneCost: new AutoIdGenerator(2600),
+    /** Starts at 3000, highest base value is 2935*/
+    SummonProperties: new AutoIdGenerator(3000),
+    /** Starts at 191, highest base value is 190 */
+    TotemCategory: new AutoIdGenerator(191),
+    /** Starts at 3000, highest base value is 2997 */
+    ItemExtendedCost: new AutoIdGenerator(3000),
 }

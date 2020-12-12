@@ -16,9 +16,11 @@
  */
 import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { SpellRow } from "wotlkdata/dbc/types/Spell";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
+import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { Class } from "./Class";
 
@@ -26,17 +28,20 @@ export class ClassTalents extends Subsystem<Class> {
     get() {
         return DBC.TalentTab
             .filter({})
-            .filter((x)=>x.ClassMask.get()&~(1<<this.owner.ID-1))
+            .filter((x)=>x.ClassMask.get()&(1<<(this.owner.ID-1)))
             .map(x=>new ClassTalent(this.owner, x))
     }
 
-    add(mod: string, name: string) {
-        let index = this.get().sort((a,b)=>
+    addTree(mod: string, name: string) {
+        const rows = this.get().sort((a,b)=>
             b.row.OrderIndex.get()>
-            a.row.OrderIndex.get() ? 1 : -1)[0]
-            .row.OrderIndex.get()+1
-        return new ClassTalent(this.owner, DBC.TalentTab.add(Ids.TalentTab.id(mod,name),{
-            ClassMask: 1<<this.owner.ID,
+            a.row.OrderIndex.get() ? 1 : -1);
+            
+        const index = rows.length === 0 ? 0 : rows[0].row.OrderIndex.get()+1;
+
+        return new ClassTalent(this.owner, 
+            DBC.TalentTab.add(Ids.TalentTab.id(mod,name),{
+            ClassMask: 1<<(this.owner.ID-1),
             OrderIndex: index,
         }))
     }
@@ -57,7 +62,7 @@ export class ClassTalent extends MainEntity<TalentTabRow> {
         return this.owner;
     }
 
-    addTalent() {
+    addTalent(mod: string, id: string, spellIds: number[] | Spell[] | SpellRow[]) {
         return this;
     }
 }
