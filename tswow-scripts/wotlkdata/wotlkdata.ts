@@ -82,10 +82,14 @@ async function main() {
 
     // Find all patch subdirectories
     for (const dir of Settings.PATCH_DIRECTORY) {
+        if(!fs.lstatSync(dir).isDirectory()) {
+            continue;
+        }
+
         try {
             patchSubdirs(dir);
         } catch (error) {
-            console.error(`Error loading patch directory ${dir}`);
+            console.error(`Error in patch ${dir}:`,error);
             process.exit(-1);
         }
     }

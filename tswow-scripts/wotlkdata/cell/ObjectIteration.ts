@@ -48,6 +48,7 @@ export const Objects = {
                 if (typeof(val) !== 'object') {
                     return;
                 }
+
                 if (!val.objectify || typeof(val.objectify) !== 'function') {
                     return;
                 }

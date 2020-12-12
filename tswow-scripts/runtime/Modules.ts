@@ -266,10 +266,6 @@ export namespace Modules {
             const ignored = cfg.build.mpq_ignore();
             FileChanges.startCache();
             allpaths.forEach(x => wfs.iterate(x, path => {
-                if(!wfs.isDirectory(path)) {
-                    return;
-                }
-
                 for (const ig of ignored) {
                     if (path.endsWith(ig))  {
                         return;

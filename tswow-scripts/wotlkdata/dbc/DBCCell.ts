@@ -100,7 +100,9 @@ export class DBCFloatArrayCell<T> extends DBCArrayCell<number, T> {
 }
 
 export class DBCIntCell<T> extends DBCCell<number, T> {
-    get(): number { return this.buffer.readint(this.offset); }
+    get(): number { 
+        return this.buffer.readint(this.offset); 
+    }
     set(value: number): T {
         this.buffer.writeint(value, this.offset);
         return this.owner;
@@ -116,7 +118,9 @@ export class DBCKeyCell<T> extends CellReadOnly<number, T> {
         this.buffer = buffer;
         this.offset = offset;
     }
-    get(): number { return this.buffer.readint(this.offset); }
+    get(): number { 
+        return this.buffer.readint(this.offset);
+    }
 
     protected set(value: number): T {
         this.buffer.writeint(value, this.offset);
@@ -126,7 +130,9 @@ export class DBCKeyCell<T> extends CellReadOnly<number, T> {
 
 
 export class DBCUIntCell<T> extends DBCCell<number, T> {
-    get(): number { return this.buffer.readuint(this.offset); }
+    get(): number { 
+        return this.buffer.readuint(this.offset); 
+    }
     set(value: number): T {
         this.buffer.writeuint(value, this.offset);
         return this.owner;

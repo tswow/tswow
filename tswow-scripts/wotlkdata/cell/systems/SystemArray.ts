@@ -45,6 +45,18 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
 
     abstract get length(): number;
     abstract get(index: number): A;
+
+    objectify() {
+        const values : any[] = [];
+        for(let i=0;i<this.length;++i) {
+            const v = this.get(i);
+            if(v.isClear()) {
+                break;
+            }
+            values.push(v.objectify());
+        }
+        return values;
+    }
 }
 
 export abstract class ArrayEntry<T> extends Subsystem<T> {
@@ -52,7 +64,7 @@ export abstract class ArrayEntry<T> extends Subsystem<T> {
         return entry.index;
     }
 
-    protected readonly index: number;
+    readonly index: number;
     constructor(owner: T, index: number) {
         super(owner);
         this.index = index;

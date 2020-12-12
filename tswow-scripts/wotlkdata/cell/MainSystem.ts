@@ -20,6 +20,7 @@ import { CPrim, Cell, CellIndexWrapper } from './Cell';
 import { WrappedLoc } from './WrappedLoc';
 import { LocSystem } from './LocSystem';
 import { Objects } from './ObjectIteration';
+import { CellArrayWrapper } from './CellArrayWrapper';
 
 export class MainSystem {
 
@@ -51,8 +52,13 @@ export class MainSystem {
             }
         });
     }
+
     protected wrap<T extends CPrim>(cell: Cell<T, any>) {
         return new CellWrapper(this, cell);
+    }
+
+    protected wrapArray<W extends CPrim>(cell: CellArray<W,any>) {
+        return new CellArrayWrapper(this, cell);
     }
 
     protected wrapLoc(loc: LocSystem<any>) {

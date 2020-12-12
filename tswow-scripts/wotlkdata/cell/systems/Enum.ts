@@ -17,17 +17,17 @@
 import { Cell } from '../Cell';
 import { Subsystem } from '../Subsystem';
 
-export abstract class EnumBase<T> extends Subsystem<T> {
-    abstract get(): number;
-    abstract set(value: number): T;
-}
-
 function getEnumFieldName(name: string) {
     if (name.startsWith('set') && name.length > 3) {
         return name.substring(3);
     } else {
         return name;
     }
+}
+
+export abstract class EnumBase<T> extends Subsystem<T> {
+    abstract get(): number;
+    abstract set(value: number): T;
 }
 
 export class Enum<T> extends EnumBase<T> {

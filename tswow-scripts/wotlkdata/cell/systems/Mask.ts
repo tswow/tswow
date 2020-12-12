@@ -86,5 +86,14 @@ export class MaskCell<T> extends MaskBase<T> {
         return (this.cell.get() & (1 << no)) !== 0;
     }
 
+    get() : number {
+        return this.cell.get();
+    }
+
+    set(value: number) {
+        this.cell.set(value);
+        return this.owner;
+    }
+
     protected bit(no: number): MaskBit2<T> { return new MaskBit2(this, no); }
 }
