@@ -36,8 +36,8 @@ export class WrappedLoc<T> extends LocSystem<any> {
     get mask(): Cell<number, this> {
         return this.wrap(this.wrapped.mask);
     }
-    read(con: loc_constructor): T {
-        this.wrapped.read(con);
+    set(con: loc_constructor): T {
+        this.wrapped.set(con);
         return this.owner;
     }
 

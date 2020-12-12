@@ -23,7 +23,7 @@ import { Cell } from './Cell';
 export abstract class LocSystem<T> extends Subsystem<T> {
     abstract lang(lang: Language): Cell<string, T> & PendingCell;
     abstract get mask(): Cell<number, T>;
-    abstract read(con: loc_constructor): T;
+    abstract set(con: loc_constructor): T;
 
     get enGB() { return this.lang('enGB'); }
     get koKR() { return this.lang('koKR'); }

@@ -265,7 +265,7 @@ export class DBCLocCell<T> extends LocSystem<T> {
         return new DBCUIntCell(this.owner, this.buffer, this.offset + 64);
     }
 
-    read(con: loc_constructor) {
+    set(con: loc_constructor) {
         iterLocConstructor(con, (lang, value) => {
             this.lang(lang).set(value);
         });
