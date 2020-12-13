@@ -18,7 +18,7 @@ export class TalentTree extends MainEntity<TalentTabRow> {
      * @param row 
      * @param spellIds 
      */
-    addTalent(mod: string, id: string, column: number, row: number, spellIds: number[]) {
+    addTalent(mod: string, id: string, row: number, column: number, spellIds: number[]) {
         const talent = DBC.Talent.add(Ids.Talent.id(mod,id))
             .TabID.set(this.ID)
             .ColumnIndex.set(column)
