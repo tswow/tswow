@@ -22,6 +22,7 @@ import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanics } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
+import { SpellRadius } from "./SpellRadius";
 
 export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     constructor(owner: Spell) {
@@ -74,8 +75,10 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return this.wrapIndex(arr, this.index);
     }
 
-    protected get row() { return this.owner.row; }
+    get row() { return this.owner.row; }
 
+    get Radius() { return new SpellRadius(this); }
+    get ItemType() { return this.w(this.row.EffectItemType); }
     get AuraType() { return new AuraType(this, this.index); }
     get EffectType() { return new SpellEffectType(this, this.index); }
     get Mechanic() { return new SpellEffectMechanics(this, this.index); }

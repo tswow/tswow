@@ -134,4 +134,16 @@ export const Ids = {
     Waypoints: new AutoIdGenerator(10000000),
     /** Starts at 3000, highest base value is 2285*/
     Talent: new IdGenerator('Talent',3000),
+    /** Starts at 603, highest base value is 602*/
+    SpellDuration: new AutoIdGenerator(603),
+    /** Starts at 200, highest base value is 187*/
+    SpellRange: new AutoIdGenerator(200),
+    /** Starts at 66, highest base value is 65*/
+    SpellRadius: new AutoIdGenerator(66),
+    /** Starts at 3000, highest base value is 2706 */
+    SpellMissile: new AutoIdGenerator(3000),
+    /** Starts at 182, highest base value is 181*/
+    SpellDescriptionVariable: new AutoIdGenerator(182),
+    /** Starts at 2500, highest base value is 2401 */
+    SpellDifficulty: new AutoIdGenerator(2500),
 }

@@ -1,3 +1,19 @@
+/*
+ * This file is part of tswow (https://github.com/tswow)
+ *
+ * Copyright (C) 2020 tswow <https://github.com/tswow/>
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
@@ -51,11 +67,12 @@ export class SpellPower extends Subsystem<Spell> {
      * @param runicPower How much runic power to use
      */
     setRunes(blood: number, unholy: number, frost: number, runicPower: number) {
-        DBC.SpellRuneCost.add(Ids.SpellRuneCost.id())
+        const row = DBC.SpellRuneCost.add(Ids.SpellRuneCost.id())
             .Blood.set(blood)
             .Unholy.set(unholy)
             .Frost.set(frost)
             .RunicPower.set(runicPower)
+        this.owner.row.RuneCostID.set(row.ID.get())
         return this.owner;
     }
 }
