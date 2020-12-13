@@ -15,9 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
-import { Class } from "../Class/Class";
 import { TalentTree } from "./TalentTree";
 
 export const TalentTrees = {
