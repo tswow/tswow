@@ -20,6 +20,8 @@ import { SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Ids } from "../Base/Ids";
 import { IncludeExclude, IncludeExcludeMask } from "../Base/IncludeExclude";
 import { MainEntity } from "../Base/MainEntity";
+import { AuraInterruptFlags } from "./AuraInterruptFlags";
+import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
 import { SpellCastTime } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
@@ -136,9 +138,8 @@ export class Spell extends MainEntity<SpellRow> {
     get SpellDescriptionVariable() { return new SpellDescriptionVariable(this); }
     get Difficulty() { return new SpellDifficulty(this); }
     get ChannelInterruptFlags() { return new MaskCell(this, this.row.ChannelInterruptFlags); }
-    get AuraInterruptFlags() { return new MaskCell(this, this.row.AuraInterruptFlags); }
-    get InterruptFlags() { return new MaskCell(this, this.row.InterruptFlags); }
-
+    get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
+    get InterruptFlags() { return new InterruptFlags(this); }
 
     /**
      * Creates a separate clone of this spell
