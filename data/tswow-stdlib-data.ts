@@ -24,6 +24,7 @@ import { Quests } from "./Quest/Quests";
 import { SkillLines } from "./SkillLines/SkillLines";
 import { ClassSkills } from "./Skills/ClassSkill";
 import { Spells } from "./Spell/Spells";
+import { TalentTrees } from "./Talents/Talents";
 import { Titles } from "./Title/Titles";
 import { UI } from "./UI/UI";
 
@@ -42,4 +43,5 @@ export const std = {
     SkillLines: SkillLines,
     CreatureTemplates: CreatureTemplates,
     CreatureInstances: CreatureInstances,
+    TalentTrees: TalentTrees
 }

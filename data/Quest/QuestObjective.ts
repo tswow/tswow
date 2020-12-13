@@ -185,7 +185,7 @@ export class Scripted extends LocSystem<Quest> {
         return new DummyCell(this.owner, 0);
     }
 
-    read(con: loc_constructor): Quest {
+    set(con: loc_constructor): Quest {
         addonRow(this.owner.ID).SpecialFlags.set(2);
         iterLocConstructor(con, (lang, value) => {
             if(lang === 'enGB') {

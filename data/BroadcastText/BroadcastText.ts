@@ -82,8 +82,8 @@ export class BroadcastText<T> extends Subsystem<T> {
     get Flags() { return this.wrap(this.row.Flags); }
 
     set(maleText: loc_constructor, femaleText: loc_constructor, emote: number, emoteDelay: number) {
-        this.MaleText.read(maleText);
-        this.FemaleText.read(femaleText);
+        this.MaleText.set(maleText);
+        this.FemaleText.set(femaleText);
         this.Emote1.set(emote);
         this.EmoteDelay1.set(emoteDelay);
         return this.owner;

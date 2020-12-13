@@ -38,12 +38,16 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
         this.owner = owner;
     }
 
-    get up() { return this.owner; }
+    static owner<T>(script: SmartScript<T>) : T {
+        return script.owner;
+    }
 
-    get chance() { return this.wrap(this.row.event_chance); }
-    get action() { return new ActionType<T>(this, this.row); }
-    get target() { return new TargetType<T>(this, this.row); }
-    get event() { return new EventType<T>(this, this.row); }
+    get Chance() { return this.wrap(this.row.event_chance); }
+    get Action() { return new ActionType<T>(this, this.row); }
+    get Target() { return new TargetType<T>(this, this.row); }
+    get Event() { return new EventType<T>(this, this.row); }
+
+    up() { return this.owner; }
 
     get then() {
         let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
@@ -64,9 +68,9 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
 
     objectify() {
         return {
-            action: this.action.objectify(),
-            target: this.target.objectify(),
-            event: this.event.objectify(),
+            action: this.Action.objectify(),
+            target: this.Target.objectify(),
+            event: this.Event.objectify(),
         }
     }
 }
@@ -137,7 +141,7 @@ export const SmartScripts = {
             console.log(`Creature has no script rots!`);
             return;
         }
-        const roots = rows.filter(x=>x.event.getType()!=='Link');
+        const roots = rows.filter(x=>x.Event.getType()!=='Link');
 
         if(roots.length===0) {
             console.log(`Creature has no root rows!`);
@@ -159,13 +163,13 @@ export const SmartScripts = {
             }
 
             console.log(``)
-            console.log(`${root.event.getType()}(${JSON.stringify(root.event.getArguments())})`)
-            console.log(`    target:${root.target.getType()}(${JSON.stringify(root.target.getArguments())})`)
-            console.log(`    action:${root.action.getType()}(${JSON.stringify(root.action.getArguments())})`)
+            console.log(`${root.Event.getType()}(${JSON.stringify(root.Event.getArguments())})`)
+            console.log(`    target:${root.Target.getType()}(${JSON.stringify(root.Target.getArguments())})`)
+            console.log(`    action:${root.Action.getType()}(${JSON.stringify(root.Action.getArguments())})`)
             chain.forEach((x)=>{
                 console.log(`then`);
-                console.log(`    target:${x.target.getType()}(${JSON.stringify(x.target.getArguments())})`)
-                console.log(`    action:${x.action.getType()}(${JSON.stringify(x.action.getArguments())})`)
+                console.log(`    target:${x.Target.getType()}(${JSON.stringify(x.Target.getArguments())})`)
+                console.log(`    action:${x.Action.getType()}(${JSON.stringify(x.Action.getArguments())})`)
             });
         }
 

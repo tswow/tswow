@@ -87,12 +87,12 @@ export const Languages = {
 
         // Spell definition
         const spell = gutterSpell.clone(Ids.Spell.id(mod,id))
-            .Name.read(name)
+            .Name.set(name)
             .EffectMiscValue.set([langRow.ID.get(),0,0])
 
         // Skill definition
         const skill = gutterSkill.clone(Ids.SkillLine.id(mod,id))
-            .DisplayName.read(name)
+            .DisplayName.set(name)
 
         // Class/race enabling
         const src = gutterSkillRaceClass.clone(Ids.SkillRaceClassInfo.id())

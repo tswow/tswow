@@ -78,7 +78,7 @@ export class GossipOptions<T> extends Subsystem<Gossip<T>> {
     addSubmenu(icon: GossipIcons, optionText: loc_constructor) {
         const opt = this.add();
         const gossip = Gossips.create(this.owner);
-        opt.Text.MaleText.read(optionText);
+        opt.Text.MaleText.set(optionText);
         opt.Icon.set(icon);
         opt.Type.setGossip();
         opt.MenuID.set(gossip.MenuID);

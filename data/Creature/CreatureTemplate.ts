@@ -18,7 +18,6 @@ import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { MainEntity } from "../Base/MainEntity";
-import { SQLLoc } from "../Base/SQLLocSystem";
 import { Position } from "../Misc/Position";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
@@ -29,11 +28,13 @@ import { CreatureFamily } from "./CreatureFamily";
 import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
 import { CreatureLevel } from "./CreatureLevel";
+import { CreatureName, CreatureSubname } from "./CreatureLoc";
 import { CreatureLoot } from "./CreatureLoot";
 import { MechanicImmunity } from "./CreatureMechanicImmunity";
 import { CreatureModels } from "./CreatureModels";
 import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
+import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
 import { CreatureInstances } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
@@ -55,13 +56,8 @@ function creatureLoc(id: number, lang: Language) {
 
 export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
-    get Name() { return new SQLLoc(this,
-        ()=>this.row.name,
-        (lang)=>creatureLoc(this.ID,lang).Name) 
-    }
-    get Title() { return new SQLLoc(this,()=>this.row.subname,
-        (lang)=>creatureLoc(this.ID,lang).Title
-    )}
+    get Name() { return new CreatureName(this); }
+    get Title() { return new CreatureSubname(this); }
 
     get Scripts() { 
         return new AttachedScript(()=>{
@@ -85,7 +81,8 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
      * - 1 = regenerates health 
      */
     get RegenHealth() { return this.wrap(this.row.RegenHealth); }
-    
+
+    get Questgiver() { return new CreatureQuestgiver(this);}
     get NPCFlags() { return new NPCFlags(this, this.row.npcflag); }
     get Type() { return new CreatureType(this); }
     get TypeFlags() { return new CreatureTypeFlags(this, this.row.type_flags); }

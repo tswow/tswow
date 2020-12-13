@@ -34,7 +34,7 @@ export abstract class SQLLocSystem<T> extends LocSystem<T> {
         return new DummyCell(this.owner, 0);
     }
 
-    read(con: loc_constructor): T {
+    set(con: loc_constructor): T {
         iterLocConstructor(con, (lang, value) => {
             if(lang=='enGB') {
                 this.getMain().set(value);
@@ -43,15 +43,5 @@ export abstract class SQLLocSystem<T> extends LocSystem<T> {
             }
         });
         return this.owner;
-    }
-}
-
-export class SQLLoc<T> extends SQLLocSystem<T> {
-    protected getMain: ()=>Cell<string,any>
-    protected getLoc: (loc: Language) => Cell<string,any>;
-    constructor(owner: T, main: ()=>Cell<string,any>, loc: (loc: Language) => Cell<string,any>) {
-        super(owner);
-        this.getMain = main;
-        this.getLoc = loc;
     }
 }

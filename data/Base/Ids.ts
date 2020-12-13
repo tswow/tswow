@@ -26,12 +26,8 @@ class IdGenerator {
         this.startId = startId;
     }
 
-    range(name : string,mod: string, range : number) {
-        return GetIdRange(this.table,name,mod,this.startId)
-    }
-
-    id(name : string, mod : string) {
-        return GetId(this.table,name,mod,this.startId);
+    id(mod: string, name: string) {
+        return GetId(this.table,mod,name,this.startId);
     }
 }
 
@@ -43,12 +39,6 @@ class AutoIdGenerator {
 
     id() {
         return this.curid++;
-    }
-
-    range(range: number) {
-        const id = this.curid;
-        this.curid+=range;
-        return id;
     }
 }
 
@@ -140,4 +130,8 @@ export const Ids = {
     TotemCategory: new AutoIdGenerator(191),
     /** Starts at 3000, highest base value is 2997 */
     ItemExtendedCost: new AutoIdGenerator(3000),
+    /** Starts at 10000000, highest base value is 9541001 */
+    Waypoints: new AutoIdGenerator(10000000),
+    /** Starts at 3000, highest base value is 2285*/
+    Talent: new IdGenerator('Talent',3000),
 }

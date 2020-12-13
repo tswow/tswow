@@ -28,7 +28,6 @@ import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
 import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
-import { ClassTalents } from "./ClassTalents";
 import { ClassUISettings } from "./ClassUISettings";
 import { EquipSkills } from "./EquipSkills";
 
@@ -76,8 +75,6 @@ export class Class extends MainEntity<ChrClassesRow> {
     get RequiredExpansion() { return this.wrap(this.row.Required_Expansion); }
     get DisplayPower() { return this.wrap(this.row.DisplayPower); }
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
-
-    get Talents() { return new ClassTalents(this); }
 
     addRaces(races : RaceAdder[]) {
         for(let race of races) {

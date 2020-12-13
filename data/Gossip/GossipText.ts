@@ -211,8 +211,8 @@ export class GossipTextArray<T> extends SystemArray<GossipTextEntry<T>,Gossip<T>
 
     addGendered(male: loc_constructor, female: loc_constructor, lang: number, emote = 0, emoteDelay = 0) {
         const entry = this.getFree();
-        entry.MaleText.read(male);
-        entry.FemaleText.read(female);
+        entry.MaleText.set(male);
+        entry.FemaleText.set(female);
         entry.Lang.set(lang);
         entry.Emote.set(emote);
         entry.EmoteDelay.set(emoteDelay);

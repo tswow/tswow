@@ -16,7 +16,7 @@ export const Spells = {
             .AttributesExE.set(0)
             .AttributesExF.set(0)
             .AttributesExG.set(0)
-            .AuraDescription.read({enGB:"Placeholder"})
+            .AuraDescription.set({enGB:"Placeholder"})
             .AuraInterruptFlags.set(0)
             .BaseLevel.set(0)
             .CasterAuraSpell.set(0)
@@ -27,7 +27,7 @@ export const Spells = {
             .ChannelInterruptFlags.set(0)
             .CumulativeAura.set(0)
             .DefenseType.set(0)
-            .Description.read({enGB:"Placeholder"})
+            .Description.set({enGB:"Placeholder"})
             .DispelType.set(0)
             .DurationIndex.set(0)
             .Effect.set([0,0,0])
@@ -73,8 +73,8 @@ export const Spells = {
             .MinFactionID.set(0)
             .MinReputation.set(0)
             .ModalNextSpell.set(0)
-            .Name.read({enGB:"Placeholder"})
-            .NameSubtext.read({enGB:"Placeholder"})
+            .Name.set({enGB:"Placeholder"})
+            .NameSubtext.set({enGB:"Placeholder"})
             .PowerDisplayID.set(0)
             .PowerType.set(0)
             .PreventionType.set(0)
@@ -123,7 +123,7 @@ export const Spells = {
         const spells : Spell[] = [];
         for(let i=0;i<ranks; ++i) {
             const spell = Spells.create(mod, id+i, parent);
-            spell.row.NameSubtext.read({enGB: `Rank ${i+1}`});
+            spell.row.NameSubtext.set({enGB: `Rank ${i+1}`});
             spells.push(spell);
         }
         return spells;

@@ -32,7 +32,7 @@ export class AttachedScript<T> {
      */
     onUpdateIc(InitialMin : number, InitialMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setUpdateIc(InitialMin,InitialMax,RepeatMin,RepeatMax)
+        row.Event.setUpdateIc(InitialMin,InitialMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -45,7 +45,7 @@ export class AttachedScript<T> {
      */
     onUpdateOoc(InitialMin : number, InitialMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setUpdateOoc(InitialMin,InitialMax,RepeatMin,RepeatMax)
+        row.Event.setUpdateOoc(InitialMin,InitialMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -58,7 +58,7 @@ export class AttachedScript<T> {
      */
     onHealthPct(HPMin : number, HPMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setHealthPct(HPMin,HPMax,RepeatMin,RepeatMax)
+        row.Event.setHealthPct(HPMin,HPMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -71,7 +71,7 @@ export class AttachedScript<T> {
      */
     onManaPct(ManaMin : number, ManaMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setManaPct(ManaMin,ManaMax,RepeatMin,RepeatMax)
+        row.Event.setManaPct(ManaMin,ManaMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -80,7 +80,7 @@ export class AttachedScript<T> {
      */
     onAggro() {
         const row = this.create();
-        row.event.setAggro()
+        row.Event.setAggro()
         return row as SmartScript<T>;
     }
 
@@ -93,7 +93,7 @@ export class AttachedScript<T> {
      */
     onKill(CooldownMin : number, CooldownMax : number, Player : number, Creature : number) {
         const row = this.create();
-        row.event.setKill(CooldownMin,CooldownMax,Player,Creature)
+        row.Event.setKill(CooldownMin,CooldownMax,Player,Creature)
         return row as SmartScript<T>;
     }
 
@@ -102,7 +102,7 @@ export class AttachedScript<T> {
      */
     onDeath() {
         const row = this.create();
-        row.event.setDeath()
+        row.Event.setDeath()
         return row as SmartScript<T>;
     }
 
@@ -111,7 +111,7 @@ export class AttachedScript<T> {
      */
     onEvade() {
         const row = this.create();
-        row.event.setEvade()
+        row.Event.setEvade()
         return row as SmartScript<T>;
     }
 
@@ -124,7 +124,7 @@ export class AttachedScript<T> {
      */
     onSpellhit(SpellID : number, School : number, CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setSpellhit(SpellID,School,CooldownMin,CooldownMax)
+        row.Event.setSpellhit(SpellID,School,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -137,7 +137,7 @@ export class AttachedScript<T> {
      */
     onRange(MinDist : number, MaxDist : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setRange(MinDist,MaxDist,RepeatMin,RepeatMax)
+        row.Event.setRange(MinDist,MaxDist,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -151,7 +151,7 @@ export class AttachedScript<T> {
      */
     onOocLos(NoHostile : number, MaxRange : number, CooldownMin : number, CooldownMax : number, zo : number) {
         const row = this.create();
-        row.event.setOocLos(NoHostile,MaxRange,CooldownMin,CooldownMax,zo)
+        row.Event.setOocLos(NoHostile,MaxRange,CooldownMin,CooldownMax,zo)
         return row as SmartScript<T>;
     }
 
@@ -163,7 +163,7 @@ export class AttachedScript<T> {
      */
     onRespawn(type : number, MapId : number, ZoneId : number) {
         const row = this.create();
-        row.event.setRespawn(type,MapId,ZoneId)
+        row.Event.setRespawn(type,MapId,ZoneId)
         return row as SmartScript<T>;
     }
 
@@ -176,7 +176,7 @@ export class AttachedScript<T> {
      */
     onTargetHealthPct(HPMin : number, HPMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setTargetHealthPct(HPMin,HPMax,RepeatMin,RepeatMax)
+        row.Event.setTargetHealthPct(HPMin,HPMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -188,7 +188,7 @@ export class AttachedScript<T> {
      */
     onVictimCasting(RepeatMin : number, RepeatMax : number, Spell : number) {
         const row = this.create();
-        row.event.setVictimCasting(RepeatMin,RepeatMax,Spell)
+        row.Event.setVictimCasting(RepeatMin,RepeatMax,Spell)
         return row as SmartScript<T>;
     }
 
@@ -201,7 +201,7 @@ export class AttachedScript<T> {
      */
     onFriendlyHealth(HPDeficit : number, Radius : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setFriendlyHealth(HPDeficit,Radius,RepeatMin,RepeatMax)
+        row.Event.setFriendlyHealth(HPDeficit,Radius,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -213,7 +213,7 @@ export class AttachedScript<T> {
      */
     onFriendlyIsCc(Radius : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setFriendlyIsCc(Radius,RepeatMin,RepeatMax)
+        row.Event.setFriendlyIsCc(Radius,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -226,7 +226,7 @@ export class AttachedScript<T> {
      */
     onFriendlyMissingBuff(SpellId : number, Radius : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setFriendlyMissingBuff(SpellId,Radius,RepeatMin,RepeatMax)
+        row.Event.setFriendlyMissingBuff(SpellId,Radius,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -238,7 +238,7 @@ export class AttachedScript<T> {
      */
     onSummonedUnit(CretureId : number, CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setSummonedUnit(CretureId,CooldownMin,CooldownMax)
+        row.Event.setSummonedUnit(CretureId,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -251,7 +251,7 @@ export class AttachedScript<T> {
      */
     onTargetManaPct(ManaMin : number, ManaMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setTargetManaPct(ManaMin,ManaMax,RepeatMin,RepeatMax)
+        row.Event.setTargetManaPct(ManaMin,ManaMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -263,7 +263,7 @@ export class AttachedScript<T> {
      */
     onAcceptedQuest(QuestID : number) {
         const row = this.create();
-        row.event.setAcceptedQuest(QuestID)
+        row.Event.setAcceptedQuest(QuestID)
         return row as SmartScript<T>;
     }
 
@@ -275,7 +275,7 @@ export class AttachedScript<T> {
      */
     onRewardQuest(QuestID : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setRewardQuest(QuestID,RepeatMin,RepeatMax)
+        row.Event.setRewardQuest(QuestID,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -284,7 +284,7 @@ export class AttachedScript<T> {
      */
     onReachedHome() {
         const row = this.create();
-        row.event.setReachedHome()
+        row.Event.setReachedHome()
         return row as SmartScript<T>;
     }
 
@@ -296,7 +296,7 @@ export class AttachedScript<T> {
      */
     onReceiveEmote(EmoteId : number, CooldownMin : number = 0, CooldownMax : number = 0) {
         const row = this.create();
-        row.event.setReceiveEmote(EmoteId,CooldownMin,CooldownMax)
+        row.Event.setReceiveEmote(EmoteId,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -309,7 +309,7 @@ export class AttachedScript<T> {
      */
     onHasAura(SpellID : number, Stacks : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setHasAura(SpellID,Stacks,RepeatMin,RepeatMax)
+        row.Event.setHasAura(SpellID,Stacks,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -322,7 +322,7 @@ export class AttachedScript<T> {
      */
     onTargetBuffed(SpellID : number, Stacks : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setTargetBuffed(SpellID,Stacks,RepeatMin,RepeatMax)
+        row.Event.setTargetBuffed(SpellID,Stacks,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -331,7 +331,7 @@ export class AttachedScript<T> {
      */
     onReset() {
         const row = this.create();
-        row.event.setReset()
+        row.Event.setReset()
         return row as SmartScript<T>;
     }
 
@@ -345,7 +345,7 @@ export class AttachedScript<T> {
      */
     onIcLos(NoHostile : number, MaxRange : number, CooldownMin : number, CooldownMax : number, zo : number) {
         const row = this.create();
-        row.event.setIcLos(NoHostile,MaxRange,CooldownMin,CooldownMax,zo)
+        row.Event.setIcLos(NoHostile,MaxRange,CooldownMin,CooldownMax,zo)
         return row as SmartScript<T>;
     }
 
@@ -356,7 +356,7 @@ export class AttachedScript<T> {
      */
     onPassengerBoarded(CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setPassengerBoarded(CooldownMin,CooldownMax)
+        row.Event.setPassengerBoarded(CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -367,7 +367,7 @@ export class AttachedScript<T> {
      */
     onPassengerRemoved(CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setPassengerRemoved(CooldownMin,CooldownMax)
+        row.Event.setPassengerRemoved(CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -377,7 +377,7 @@ export class AttachedScript<T> {
      */
     onCharmed(ZERO : number) {
         const row = this.create();
-        row.event.setCharmed(ZERO)
+        row.Event.setCharmed(ZERO)
         return row as SmartScript<T>;
     }
 
@@ -386,7 +386,7 @@ export class AttachedScript<T> {
      */
     onCharmedTarget() {
         const row = this.create();
-        row.event.setCharmedTarget()
+        row.Event.setCharmedTarget()
         return row as SmartScript<T>;
     }
 
@@ -399,7 +399,7 @@ export class AttachedScript<T> {
      */
     onSpellhitTarget(SpellId : number, School : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setSpellhitTarget(SpellId,School,RepeatMin,RepeatMax)
+        row.Event.setSpellhitTarget(SpellId,School,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -412,7 +412,7 @@ export class AttachedScript<T> {
      */
     onDamaged(MinDmg : number, MaxDmg : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setDamaged(MinDmg,MaxDmg,RepeatMin,RepeatMax)
+        row.Event.setDamaged(MinDmg,MaxDmg,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -425,7 +425,7 @@ export class AttachedScript<T> {
      */
     onDamagedTarget(MinDmg : number, MaxDmg : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setDamagedTarget(MinDmg,MaxDmg,RepeatMin,RepeatMax)
+        row.Event.setDamagedTarget(MinDmg,MaxDmg,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -436,7 +436,7 @@ export class AttachedScript<T> {
      */
     onMovementinform(MovementType : number, PointID : number) {
         const row = this.create();
-        row.event.setMovementinform(MovementType,PointID)
+        row.Event.setMovementinform(MovementType,PointID)
         return row as SmartScript<T>;
     }
 
@@ -448,7 +448,7 @@ export class AttachedScript<T> {
      */
     onSummonDespawned(Entry : number, CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setSummonDespawned(Entry,CooldownMin,CooldownMax)
+        row.Event.setSummonDespawned(Entry,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -457,7 +457,7 @@ export class AttachedScript<T> {
      */
     onCorpseRemoved() {
         const row = this.create();
-        row.event.setCorpseRemoved()
+        row.Event.setCorpseRemoved()
         return row as SmartScript<T>;
     }
 
@@ -466,7 +466,7 @@ export class AttachedScript<T> {
      */
     onAiInit() {
         const row = this.create();
-        row.event.setAiInit()
+        row.Event.setAiInit()
         return row as SmartScript<T>;
     }
 
@@ -479,7 +479,7 @@ export class AttachedScript<T> {
      */
     onDataSet(Field : number, Value : number, CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setDataSet(Field,Value,CooldownMin,CooldownMax)
+        row.Event.setDataSet(Field,Value,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -490,7 +490,7 @@ export class AttachedScript<T> {
      */
     onWaypointStart(PointId : number, pathId : number) {
         const row = this.create();
-        row.event.setWaypointStart(PointId,pathId)
+        row.Event.setWaypointStart(PointId,pathId)
         return row as SmartScript<T>;
     }
 
@@ -501,7 +501,7 @@ export class AttachedScript<T> {
      */
     onWaypointReached(PointId : number, pathId : number) {
         const row = this.create();
-        row.event.setWaypointReached(PointId,pathId)
+        row.Event.setWaypointReached(PointId,pathId)
         return row as SmartScript<T>;
     }
 
@@ -510,7 +510,7 @@ export class AttachedScript<T> {
      */
     onTransportAddplayer() {
         const row = this.create();
-        row.event.setTransportAddplayer()
+        row.Event.setTransportAddplayer()
         return row as SmartScript<T>;
     }
 
@@ -520,7 +520,7 @@ export class AttachedScript<T> {
      */
     onTransportAddcreature(Entry : number) {
         const row = this.create();
-        row.event.setTransportAddcreature(Entry)
+        row.Event.setTransportAddcreature(Entry)
         return row as SmartScript<T>;
     }
 
@@ -529,7 +529,7 @@ export class AttachedScript<T> {
      */
     onTransportRemovePlayer() {
         const row = this.create();
-        row.event.setTransportRemovePlayer()
+        row.Event.setTransportRemovePlayer()
         return row as SmartScript<T>;
     }
 
@@ -539,7 +539,7 @@ export class AttachedScript<T> {
      */
     onTransportRelocate(PointId : number) {
         const row = this.create();
-        row.event.setTransportRelocate(PointId)
+        row.Event.setTransportRelocate(PointId)
         return row as SmartScript<T>;
     }
 
@@ -551,7 +551,7 @@ export class AttachedScript<T> {
      */
     onInstancePlayerEnter(Team : number, CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setInstancePlayerEnter(Team,CooldownMin,CooldownMax)
+        row.Event.setInstancePlayerEnter(Team,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -561,7 +561,7 @@ export class AttachedScript<T> {
      */
     onAreatriggerOntrigger(TriggerId : number) {
         const row = this.create();
-        row.event.setAreatriggerOntrigger(TriggerId)
+        row.Event.setAreatriggerOntrigger(TriggerId)
         return row as SmartScript<T>;
     }
 
@@ -570,7 +570,7 @@ export class AttachedScript<T> {
      */
     onQuestObjCompletion() {
         const row = this.create();
-        row.event.setQuestObjCompletion()
+        row.Event.setQuestObjCompletion()
         return row as SmartScript<T>;
     }
 
@@ -579,7 +579,7 @@ export class AttachedScript<T> {
      */
     onQuestCompletion() {
         const row = this.create();
-        row.event.setQuestCompletion()
+        row.Event.setQuestCompletion()
         return row as SmartScript<T>;
     }
 
@@ -588,7 +588,7 @@ export class AttachedScript<T> {
      */
     onQuestRewarded() {
         const row = this.create();
-        row.event.setQuestRewarded()
+        row.Event.setQuestRewarded()
         return row as SmartScript<T>;
     }
 
@@ -597,7 +597,7 @@ export class AttachedScript<T> {
      */
     onQuestFail() {
         const row = this.create();
-        row.event.setQuestFail()
+        row.Event.setQuestFail()
         return row as SmartScript<T>;
     }
 
@@ -608,7 +608,7 @@ export class AttachedScript<T> {
      */
     onTextOver(GroupId : number, CreatureId : number) {
         const row = this.create();
-        row.event.setTextOver(GroupId,CreatureId)
+        row.Event.setTextOver(GroupId,CreatureId)
         return row as SmartScript<T>;
     }
 
@@ -621,7 +621,7 @@ export class AttachedScript<T> {
      */
     onReceiveHeal(MinHeal : number, MaxHeal : number, CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setReceiveHeal(MinHeal,MaxHeal,CooldownMin,CooldownMax)
+        row.Event.setReceiveHeal(MinHeal,MaxHeal,CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -630,7 +630,7 @@ export class AttachedScript<T> {
      */
     onJustSummoned() {
         const row = this.create();
-        row.event.setJustSummoned()
+        row.Event.setJustSummoned()
         return row as SmartScript<T>;
     }
 
@@ -641,7 +641,7 @@ export class AttachedScript<T> {
      */
     onWaypointPaused(PointId : number, pathID : number) {
         const row = this.create();
-        row.event.setWaypointPaused(PointId,pathID)
+        row.Event.setWaypointPaused(PointId,pathID)
         return row as SmartScript<T>;
     }
 
@@ -652,7 +652,7 @@ export class AttachedScript<T> {
      */
     onWaypointResumed(PointId : number, pathID : number) {
         const row = this.create();
-        row.event.setWaypointResumed(PointId,pathID)
+        row.Event.setWaypointResumed(PointId,pathID)
         return row as SmartScript<T>;
     }
 
@@ -663,7 +663,7 @@ export class AttachedScript<T> {
      */
     onWaypointStopped(PointId : number, pathID : number) {
         const row = this.create();
-        row.event.setWaypointStopped(PointId,pathID)
+        row.Event.setWaypointStopped(PointId,pathID)
         return row as SmartScript<T>;
     }
 
@@ -674,7 +674,7 @@ export class AttachedScript<T> {
      */
     onWaypointEnded(PointId : number, pathID : number) {
         const row = this.create();
-        row.event.setWaypointEnded(PointId,pathID)
+        row.Event.setWaypointEnded(PointId,pathID)
         return row as SmartScript<T>;
     }
 
@@ -684,7 +684,7 @@ export class AttachedScript<T> {
      */
     onTimedEventTriggered(Id : number) {
         const row = this.create();
-        row.event.setTimedEventTriggered(Id)
+        row.Event.setTimedEventTriggered(Id)
         return row as SmartScript<T>;
     }
 
@@ -697,7 +697,7 @@ export class AttachedScript<T> {
      */
     onUpdate(InitialMin : number, InitialMax : number, RepeatMin : number, RepeatMax : number) {
         const row = this.create();
-        row.event.setUpdate(InitialMin,InitialMax,RepeatMin,RepeatMax)
+        row.Event.setUpdate(InitialMin,InitialMax,RepeatMin,RepeatMax)
         return row as SmartScript<T>;
     }
 
@@ -706,7 +706,7 @@ export class AttachedScript<T> {
      */
     onLink() {
         const row = this.create();
-        row.event.setLink()
+        row.Event.setLink()
         return row as SmartScript<T>;
     }
 
@@ -717,7 +717,7 @@ export class AttachedScript<T> {
      */
     onGossipSelect(menu_id : number, id : number) {
         const row = this.create();
-        row.event.setGossipSelect(menu_id,id)
+        row.Event.setGossipSelect(menu_id,id)
         return row as SmartScript<T>;
     }
 
@@ -726,7 +726,7 @@ export class AttachedScript<T> {
      */
     onJustCreated() {
         const row = this.create();
-        row.event.setJustCreated()
+        row.Event.setJustCreated()
         return row as SmartScript<T>;
     }
 
@@ -736,7 +736,7 @@ export class AttachedScript<T> {
      */
     onGossipHello(zo : number) {
         const row = this.create();
-        row.event.setGossipHello(zo)
+        row.Event.setGossipHello(zo)
         return row as SmartScript<T>;
     }
 
@@ -745,7 +745,7 @@ export class AttachedScript<T> {
      */
     onFollowCompleted() {
         const row = this.create();
-        row.event.setFollowCompleted()
+        row.Event.setFollowCompleted()
         return row as SmartScript<T>;
     }
 
@@ -755,7 +755,7 @@ export class AttachedScript<T> {
      */
     onEventPhaseChange(event : number) {
         const row = this.create();
-        row.event.setEventPhaseChange(event)
+        row.Event.setEventPhaseChange(event)
         return row as SmartScript<T>;
     }
 
@@ -766,7 +766,7 @@ export class AttachedScript<T> {
      */
     onIsBehindTarget(CooldownMin : number, CooldownMax : number) {
         const row = this.create();
-        row.event.setIsBehindTarget(CooldownMin,CooldownMax)
+        row.Event.setIsBehindTarget(CooldownMin,CooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -776,7 +776,7 @@ export class AttachedScript<T> {
      */
     onGameEventStart(game_eventeventEntry : number) {
         const row = this.create();
-        row.event.setGameEventStart(game_eventeventEntry)
+        row.Event.setGameEventStart(game_eventeventEntry)
         return row as SmartScript<T>;
     }
 
@@ -786,7 +786,7 @@ export class AttachedScript<T> {
      */
     onGameEventEnd(game_eventeventEntry : number) {
         const row = this.create();
-        row.event.setGameEventEnd(game_eventeventEntry)
+        row.Event.setGameEventEnd(game_eventeventEntry)
         return row as SmartScript<T>;
     }
 
@@ -796,7 +796,7 @@ export class AttachedScript<T> {
      */
     onGoLootStateChanged(State : number) {
         const row = this.create();
-        row.event.setGoLootStateChanged(State)
+        row.Event.setGoLootStateChanged(State)
         return row as SmartScript<T>;
     }
 
@@ -806,7 +806,7 @@ export class AttachedScript<T> {
      */
     onGoEventInform(EventId : number) {
         const row = this.create();
-        row.event.setGoEventInform(EventId)
+        row.Event.setGoEventInform(EventId)
         return row as SmartScript<T>;
     }
 
@@ -816,7 +816,7 @@ export class AttachedScript<T> {
      */
     onActionDone(EventId : number) {
         const row = this.create();
-        row.event.setActionDone(EventId)
+        row.Event.setActionDone(EventId)
         return row as SmartScript<T>;
     }
 
@@ -825,7 +825,7 @@ export class AttachedScript<T> {
      */
     onOnSpellclick() {
         const row = this.create();
-        row.event.setOnSpellclick()
+        row.Event.setOnSpellclick()
         return row as SmartScript<T>;
     }
 
@@ -838,7 +838,7 @@ export class AttachedScript<T> {
      */
     onFriendlyHealthPct(minHpPct : number, maxHpPct : number, repeatMin : number, repeatMax : number) {
         const row = this.create();
-        row.event.setFriendlyHealthPct(minHpPct,maxHpPct,repeatMin,repeatMax)
+        row.Event.setFriendlyHealthPct(minHpPct,maxHpPct,repeatMin,repeatMax)
         return row as SmartScript<T>;
     }
 
@@ -851,7 +851,7 @@ export class AttachedScript<T> {
      */
     onDistanceCreature(database : number, database2 : number, distance : number, repeat : number) {
         const row = this.create();
-        row.event.setDistanceCreature(database,database2,distance,repeat)
+        row.Event.setDistanceCreature(database,database2,distance,repeat)
         return row as SmartScript<T>;
     }
 
@@ -864,7 +864,7 @@ export class AttachedScript<T> {
      */
     onDistanceGameobject(database : number, database2 : number, distance : number, repeat : number) {
         const row = this.create();
-        row.event.setDistanceGameobject(database,database2,distance,repeat)
+        row.Event.setDistanceGameobject(database,database2,distance,repeat)
         return row as SmartScript<T>;
     }
 
@@ -877,7 +877,7 @@ export class AttachedScript<T> {
      */
     onCounterSet(counterID : number, value : number, cooldownMin : number, cooldownMax : number) {
         const row = this.create();
-        row.event.setCounterSet(counterID,value,cooldownMin,cooldownMax)
+        row.Event.setCounterSet(counterID,value,cooldownMin,cooldownMax)
         return row as SmartScript<T>;
     }
 
@@ -886,7 +886,7 @@ export class AttachedScript<T> {
      */
     onSceneStart() {
         const row = this.create();
-        row.event.setSceneStart()
+        row.Event.setSceneStart()
         return row as SmartScript<T>;
     }
 
@@ -896,7 +896,7 @@ export class AttachedScript<T> {
      */
     onSceneTrigger(param_string : number) {
         const row = this.create();
-        row.event.setSceneTrigger(param_string)
+        row.Event.setSceneTrigger(param_string)
         return row as SmartScript<T>;
     }
 
@@ -905,7 +905,7 @@ export class AttachedScript<T> {
      */
     onSceneCancel() {
         const row = this.create();
-        row.event.setSceneCancel()
+        row.Event.setSceneCancel()
         return row as SmartScript<T>;
     }
 
@@ -914,7 +914,7 @@ export class AttachedScript<T> {
      */
     onSceneComplete() {
         const row = this.create();
-        row.event.setSceneComplete()
+        row.Event.setSceneComplete()
         return row as SmartScript<T>;
     }
 
@@ -923,7 +923,7 @@ export class AttachedScript<T> {
      */
     onSummonedUnitDies() {
         const row = this.create();
-        row.event.setSummonedUnitDies()
+        row.Event.setSummonedUnitDies()
         return row as SmartScript<T>;
     }
 }

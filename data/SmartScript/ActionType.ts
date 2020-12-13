@@ -17,6 +17,7 @@
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
 import { SQL } from "wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
+import { Position } from "../Misc/Position"
 import { SmartScript } from "./SmartScript"
 
 export enum SummonType {
@@ -986,10 +987,27 @@ export class ActionType<T> {
      *  @param despawntime
      *  @param reactState
      */
-    setWpStart(walkOrRun : number, waypointsentry : number, canRepeat : boolean, quest_templateid : number, despawntime : number, reactState : number) {
+    setWpStart(walkOrRun : number, point: Position, canRepeat : boolean, quest_templateid : number, despawntime : number, reactState : number) {
+        const owner = SmartScript.owner(this.main) as any;
+        const id = owner.ID;
+        if(typeof(id)!=='number') {
+            throw new Error(`Tried to create a waypoint for a non-creature: No ID field`);
+        }
+        const wps = SQL.waypoints.filter({entry: id});
+        let wpid = 1;
+        if(wps.length>0) {
+            wps.sort((a,b)=>b.pointid>a.pointid ? 1 : -1)
+            wpid = wps[0].pointid.get() + 1;
+        }
+        SQL.waypoints.add(id, wpid)
+            .position_x.set(point.x)
+            .position_y.set(point.y)
+            .position_z.set(point.z)
+            .orientation.set(point.o);
+
         this.row.action_type.set(53)
         this.row.action_param1.set(walkOrRun)
-        this.row.action_param2.set(waypointsentry)
+        this.row.action_param2.set(wpid)
         this.row.action_param3.set(canRepeat ? 1 : 0)
         this.row.action_param4.set(quest_templateid)
         this.row.action_param5.set(despawntime)
