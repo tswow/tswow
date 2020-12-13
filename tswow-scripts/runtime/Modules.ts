@@ -156,6 +156,43 @@ export namespace Modules {
         }
     }
 
+    export function isEditable(mod: string) {
+        return !wfs.exists(ipaths.moduleNoEdit(mod));
+    }
+
+    export function update(mod: string) {
+        if(mod==='all') {
+            term.log(`Updating all modules...`);
+            return getModules().forEach(update);
+        }
+        if(!wfs.exists(ipaths.moduleGit(mod))) {
+            return;
+        }
+
+        try{
+            const msg = wsys.execIn(ipaths.moduleRoot(mod),'git pull','pipe');
+            term.log(`${mod}: ${msg}`);
+            if(msg.includes('Already up to date.')) {
+                // Don't run tsc if we didn't update.
+                return;
+            }
+        } catch(err) {
+            const msg = err.message as string;
+            if(!msg.includes('There is no tracking information for the current branch')) {
+                term.error(`Error updating: ${err.message}`)
+            } else {
+                // "no tracking information" is not an error for us
+                term.log(`${mod}: No remotes, skipping.`);
+            }
+            // In either case, we shouldn't run tsc after this.
+            return;
+        }
+
+        if(!isEditable(mod)) {
+            wsys.execIn(ipaths.moduleData(mod),`node ../../../${ipaths.tsc}`);
+        }
+    }
+
     /**
      * Returns the name of the 'data' directory in modules.
      */
@@ -175,7 +212,6 @@ export namespace Modules {
         }
 
         wfs.mkDirs(modpath);
-
         wfs.mkDirs(mpath(modpath, 'data'));
         wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts(name));
         wfs.mkDirs(mpath(modpath, 'assets'));
@@ -456,6 +492,13 @@ export namespace Modules {
             if(result) {
                 getTSWatcher(ipaths.moduleData(args[0]));
             }
+        });
+
+        moduleC.addCommand('update','module|all','Updates any or all modules from their tracking git repositories', async(args)=>{
+            if(args.length===0) {
+                throw new Error(`update requires at least one argument (module OR "all")`)
+            }
+            update(args[0]);
         });
 
         commands.addCommand('check', '', '', async() => {

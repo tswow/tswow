@@ -72,15 +72,25 @@ export class InstallPaths {
         return mpath(this.modules, mod, 'data');
     }
     
+    moduleRoot(mod: string) {
+        return mpath(this.modules, mod);
+    }
+
+    moduleGit(mod: string) {
+        return mpath(this.modules, mod, '.git')
+    }
+
     moduleDataBuild(mod: string) {
         return mpath(this.modules, mod, 'data', 'build' )
     }
-
     moduleAssets(mod: string) {
         return mpath(this.modules, mod, 'assets');
     }
     moduleScripts(mod: string) {
         return mpath(this.modules, mod, 'scripts');
+    }
+    moduleNoEdit(mod: string) {
+        return mpath(this.modules, mod, 'noedit');
     }
 }
 
