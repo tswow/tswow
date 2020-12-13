@@ -55,6 +55,45 @@ export abstract class MaskBase<T> extends Subsystem<T> {
     }
 }
 
+export class MaskLongCell<T> extends MaskBase<T> {
+
+    protected cell: Cell<bigint, any>;
+    constructor(owner: T, cell: Cell<bigint, any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    set(value: bigint) {
+        this.cell.set(value);
+    }
+
+    get() { return this.cell.get(); }
+
+    mark(no: number): T {
+        this.cell.set(this.cell.get() | (BigInt(1) << BigInt(no)))
+        return this.owner;
+    }
+
+    clear(no: number): T {
+        this.cell.set(this.cell.get() & (~((BigInt(1)<<BigInt(no)))));
+        this.cell.set(BigInt(0));
+        return this.owner;
+    }
+
+    check(no: number): boolean {
+        return (this.cell.get() & ((BigInt(1) << BigInt(no)))) !== BigInt(0);
+    }
+
+    clearAll(): T {
+        this.cell.set(BigInt(0));
+        return this.owner;
+    }
+
+    toString(): string {
+        return this.cell.get().toString(2)
+    }
+}
+
 export class MaskCell<T> extends MaskBase<T> {
     protected cell: Cell<number, any>;
 

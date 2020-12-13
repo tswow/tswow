@@ -43,6 +43,10 @@ export class Subsystem<T> {
         return new CellArrayWrapper(this, cell);
     }
 
+    protected ownerWrapArray<W extends CPrim>(cell: CellArray<W,any>) {
+        return new CellArrayWrapper(this.owner, cell);
+    }
+
     protected ownerWrap<G extends CPrim>(cell: Cell<G, any>) {
         return new CellWrapper<G, T>(this.owner, cell);
     }
@@ -51,8 +55,8 @@ export class Subsystem<T> {
         return new CellWrapperExists<G, T>(this.owner, cell);
     }
 
-    protected ownerWrapLoc<G extends CPrim>(cell: Cell<G, any>) {
-        return new CellWrapperExists<G, T>(this.owner, cell);
+    protected ownerWrapLoc(loc: LocSystem<any>) {
+        return new WrappedLoc(this.owner, loc);
     }
 
     protected wrapLoc(loc: LocSystem<any>) {
