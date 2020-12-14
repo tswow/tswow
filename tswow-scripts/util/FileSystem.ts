@@ -358,6 +358,10 @@ export namespace wfs {
         fs.writeFileSync(file, data);
     }
 
+    export function writeStream(file: string) {
+        return fs.createWriteStream(file, {flags: 'a'})
+    }
+
     /**
      * Read a text file from the file system
      * @param filePath Path to the file to read

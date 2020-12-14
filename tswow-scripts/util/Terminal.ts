@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import termkit = require('terminal-kit');
+import { wfs } from './FileSystem';
 
 const t = termkit.terminal;
 t.on('key', (name: string, data: any) => {
@@ -28,6 +29,10 @@ const FgYellow = 'yellow';
 const FgMagenta = 'magenta';
 const FgCyan = 'cyan';
 const FgWhite = 'white';
+
+// Overwrite old log
+wfs.write('./log.txt','');
+const logStream = wfs.writeStream('./log.txt');
 
 /**
  * Contains functions for handling console output
@@ -79,6 +84,12 @@ export namespace term {
         let text = texts.join(' ');
         text = text.split('\r').join('');
         if (!text.endsWith('\n')) { text = text + '\n'; }
+
+        if(!text.toLowerCase().includes('account create')) {
+            logStream.write(text);
+        } else {
+            logStream.write('<removed>\n')
+        }
         if (!enabled) {
             t.color(color, text);
         } else {
