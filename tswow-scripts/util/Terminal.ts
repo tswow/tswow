@@ -85,11 +85,25 @@ export namespace term {
         text = text.split('\r').join('');
         if (!text.endsWith('\n')) { text = text + '\n'; }
 
-        if(!text.toLowerCase().includes('account create')) {
-            logStream.write(text);
-        } else {
-            logStream.write('<removed>\n')
-        }
+        text.split('\n').forEach((x)=>{
+            let filterText = x.toLowerCase();
+            let isForbidden = false;
+            ['account create','password','2fa'].forEach(x=>{
+                if(filterText.includes(x)) {
+                    isForbidden = true;
+                }
+            });
+        
+            // remove paths
+            x = x.split(/(?:[A-Z]:|)(?:\/|\\).+(?:\/|\\)/).join('/path/');
+
+            if(!isForbidden) {
+                logStream.write(x+'\n');
+            } else {
+                logStream.write('<removed>\n')
+            }
+        })
+
         if (!enabled) {
             t.color(color, text);
         } else {
