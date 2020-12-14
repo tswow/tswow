@@ -16,6 +16,7 @@
  */
 import { DBC } from "wotlkdata";
 import { Ids } from "../Base/Ids";
+import { resolveTotemType, TotemType } from "../Totem/TotemType";
 import { Spell } from "./Spell";
 import { Spells } from "./Spells"
 
@@ -47,8 +48,8 @@ export class CreatureControllers {
 }
 
 export const TotemCreatures = {
-    createSummon(mod: string, id: string, totemCategory: number, creature: number){
-        const cat = DBC.TotemCategory.findById(totemCategory);
+    createSummon(mod: string, id: string, totem: TotemType, creature: number){
+        const cat = DBC.TotemCategory.findById(resolveTotemType(totem));
         let slot = 0;
         const mask = cat.TotemCategoryMask.get();
         switch(mask) {
@@ -83,7 +84,7 @@ export const TotemCreatures = {
                 .MiscValueA.set(creature)
                 .MiscValueB.set(created[slot])
                 .up()
-            .RequiredTotems.setIndex(0,totemCategory)
+            .RequiredTotems.setIndex(0,resolveTotemType(totem))
         return spell;
     },
 

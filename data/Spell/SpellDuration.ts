@@ -45,7 +45,7 @@ export class SpellDuration extends Subsystem<Spell> {
 
     get ID() { return this.row.ID.get(); }
     get Duration() { return this.ownerWrap(this.row.Duration); }
-    get DurationPerLevel() { return this.ownerWrap(this.row.Duration); }
+    get DurationPerLevel() { return this.ownerWrap(this.row.DurationPerLevel); }
     get MaxDuration() { return this.ownerWrap(this.row.MaxDuration); }
 
     set(duration: number, durationPerLevel: number, maxDuration: number) {
