@@ -36,9 +36,15 @@ export namespace Client {
             clearCache();
             const localepath = mpath(localePath());
             const realmlistPath = mpath(localepath, 'realmlist.wtf');
-            const backupPath = mpath(localepath, 'realmlist.wtf.tsbackup');
-            if (!wfs.exists(backupPath)) {
-                wfs.copy(realmlistPath, backupPath);
+
+            const realmlist = wfs.read(realmlistPath);
+            if(realmlist!=='set realmlist localhost' && realmlist !=='set realmlist 127.0.0.1') {
+                let backupPath = (i: number)=> mpath(localepath, `realmlist.wtf.backup${i}`);
+                let i=0;
+                while(wfs.exists(backupPath(i))) {
+                    ++i;
+                }
+                wfs.copy(realmlistPath, backupPath(i));
             }
             wfs.write(realmlistPath, 'set realmlist localhost');
             wowprocess.start(wowpath);
