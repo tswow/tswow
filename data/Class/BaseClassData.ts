@@ -1,3 +1,5 @@
+import { Enum } from "../Base/Enum";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *

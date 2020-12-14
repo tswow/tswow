@@ -24,10 +24,12 @@ import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
+import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
 import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
+import { ClassType, resolveClassType } from "./ClassType";
 import { ClassUISettings } from "./ClassUISettings";
 import { EquipSkills } from "./EquipSkills";
 
@@ -46,7 +48,7 @@ let created = false;
  * TODO: Allow changing the character creation model.
  */
 export class Class extends MainEntity<ChrClassesRow> {
-    readonly ui : ClassUISettings;
+    readonly UI : ClassUISettings;
 
     constructor(row : ChrClassesRow, 
         tCoordsCCEdit : Edit, 
@@ -58,7 +60,7 @@ export class Class extends MainEntity<ChrClassesRow> {
         femaleDescription : Edit, 
         infoRows : Edit[]) {
             super(row);
-            this.ui = new ClassUISettings(this,
+            this.UI = new ClassUISettings(this,
                 tCoordsCCEdit,classColorEdit,sortOrderEdit,
                 tCoordsEdit,xmlEdit,maleDescription,
                 femaleDescription,infoRows);
@@ -76,9 +78,9 @@ export class Class extends MainEntity<ChrClassesRow> {
     get DisplayPower() { return this.wrap(this.row.DisplayPower); }
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
 
-    addRaces(races : RaceAdder[]) {
+    addRaces(races : RaceType[]) {
         for(let race of races) {
-            DBC.CharBaseInfo.add(race,this.row.ID.get());
+            DBC.CharBaseInfo.add(resolveRaceType(race),this.row.ID.get());
         }
         return this;
     }
@@ -126,7 +128,9 @@ export const Classes = {
         );
     },
 
-    create : (mod : string, clsId : string, identifier : string, parent : number) => {
+    create : (mod : string, clsId : string, identifier : string, parentClass: ClassType) => {
+        const parent = resolveClassType(parentClass);
+
         // Set up parent buttons
         if(!created) {
             created = true;
