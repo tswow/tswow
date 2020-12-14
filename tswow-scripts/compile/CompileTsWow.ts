@@ -32,7 +32,7 @@ import { installSZip, make7zip } from './7Zip';
 import { cleanBuild, cleanInstall } from './Clean';
 import { BuildPaths, InstallPaths } from '../util/Paths';
 import { installBLPConverter } from './BLPConverter';
-import { compileAll } from '../util/TSWatcher';
+import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
 
 InstallPaths.setInstallBase(install_path());
 BuildPaths.setBuildBase(build_path());
@@ -77,6 +77,11 @@ async function compile(type: string, compileArgs: string[]) {
 
     if (isType('mpqbuilder')) { await createMpqBuilder(cmake); }
     if (isType('blpconverter')) { await installBLPConverter(cmake); }
+
+    if(types.includes('release')) {
+        await destroyAllWatchers();
+        buildingScripts = false;
+    }
 
     if (!buildingScripts && isType('scripts')) {
         await buildTranspiler(build_path(), install_path());
