@@ -121,8 +121,14 @@ export namespace wsys {
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
     export function execIn(dirname: string, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
-        return child_process.execSync(program,{cwd: dirname,stdio:stdio})
-            .toString();
+        let str = "";
+        inDirectorySync(dirname, ()=>{
+            const data = child_process.execSync(program, {stdio:stdio});
+            if(stdio==='pipe' && data!==null && data!==undefined) {
+                str = data.toString();
+            }
+        })
+        return str;
     }
 
     /**
