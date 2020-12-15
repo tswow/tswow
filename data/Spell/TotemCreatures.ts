@@ -75,7 +75,7 @@ export const TotemCreatures = {
                 .Control.set(1)
                 .Faction.set(0)
                 .Title.set(4)
-                .Slot.set(2+slot)
+                .Slot.set(1+slot)
                 .Flags.set(512)
         }
 
@@ -83,6 +83,7 @@ export const TotemCreatures = {
             .Effects.get(0)
                 .MiscValueA.set(creature)
                 .MiscValueB.set(created[slot])
+                .ImplicitTargetA.set(41+slot)
                 .up()
             .RequiredTotems.setIndex(0,resolveTotemType(totem))
         return spell;
