@@ -37,3 +37,9 @@ export function resolveRaceType(type: RaceType) {
             default: throw new Error(`Invalid race type ${type}`);
     }
 }
+
+export function makeRacemask(races: RaceType[]) {
+    return races
+        .map(x=>resolveRaceType(x))
+        .reduce((p,c)=>p|(1<<(c-1)),0);
+}

@@ -18,6 +18,8 @@ import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { Ids } from "../Base/Ids";
+import { ClassType, makeClassmask } from "../Class/ClassType";
+import { makeRacemask, RaceType } from "../Race/RaceType";
 import { Spell } from "./Spell";
 
 export class TrivialSkillLineRank extends Subsystem<SpellSkillLineAbility> {
@@ -66,11 +68,11 @@ export class SpellSkillLineAbilites extends Subsystem<Spell> {
         }
     }
 
-    add(skillLine: number, raceMask = 0, classMask = 0) {
+    add(skillLine: number, classes: ClassType[] = [], races: RaceType[] = []) {
         return new SpellSkillLineAbility(this.owner, DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
             .SkillLine.set(skillLine)
-            .RaceMask.set(raceMask)
-            .ClassMask.set(classMask)
+            .ClassMask.set(makeClassmask(classes))
+            .RaceMask.set(makeRacemask(races))
             .Spell.set(this.owner.ID));
     }
 

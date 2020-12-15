@@ -15,8 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
+import { SpellRanks } from "./SpellRanks";
 import { TotemCreatures } from "./TotemCreatures";
 
 export const Spells = {
@@ -142,7 +144,13 @@ export const Spells = {
             spell.row.NameSubtext.set({enGB: `Rank ${i+1}`});
             spells.push(spell);
         }
-        return spells;
+
+        let fst = spells[0];
+        spells.forEach((x,i)=>{
+            SQL.spell_ranks.add(fst.ID,i+1).spell_id.set(x.ID);
+        });
+
+        return new SpellRanks(spells);
     },
 
     load(id: number = 0) {

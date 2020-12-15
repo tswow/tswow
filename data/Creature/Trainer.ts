@@ -20,6 +20,8 @@ import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
+import { SpellRanks } from "../Spell/SpellRanks";
+import { Spells } from "../Spell/Spells";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class TrainerLoc extends SQLLocSystem<CreatureTemplate> {
@@ -59,16 +61,22 @@ export class Trainer extends Subsystem<CreatureTemplate> {
     get Class() { return this.ownerWrap(this.row.Requirement); }
     get Type() { return this.ownerWrap(this.row.Type); }
 
-    addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbility1 = 0, reqAbility2 = 0, reqAbility3 = 0) {
+    addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillRank = 0, reqAbilities: number[] = [], reqSkillLine: number = 0) {
+        if(reqSkillLine===0) {
+            const sla = Spells.load(spellId).SkillLines.getIndex(0);
+            if(sla!==undefined) {
+                reqSkillLine = sla.SkillLine.get();
+            }
+        }
         SQL.trainer_spell.add(this.ID, spellId)
             .MoneyCost.set(cost)
             .ReqLevel.set(reqLevel)
             .ReqSkillLine.set(reqSkillLine)
             .ReqSkillRank.set(reqSkillRank)
             .ReqLevel.set(reqLevel)
-            .ReqAbility1.set(reqAbility1)
-            .ReqAbility2.set(reqAbility2)
-            .ReqAbility3.set(reqAbility3);
+            .ReqAbility1.set(reqAbilities[0]||0)
+            .ReqAbility2.set(reqAbilities[1]||0)
+            .ReqAbility3.set(reqAbilities[2]||0);
         return this.owner;
     }
 }

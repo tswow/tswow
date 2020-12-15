@@ -38,3 +38,9 @@ export function resolveClassType(type: ClassType) {
         default: throw new Error(`Invalid class type: ${type}`)
     }
 }
+
+export function makeClassmask(races: ClassType[]) {
+    return races
+        .map(x=>resolveClassType(x))
+        .reduce((p,c)=>p|(1<<(c-1)),0);
+}
