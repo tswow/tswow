@@ -228,8 +228,8 @@ export namespace wfsa {
      * @param cb The function to call for the file(s) found at or from `path`
      */
     export async function iterate(iterPath: string, cb: (name: string) => any) {
-        if (!wfs.exists(iterPath)) { return; }
-        if (isFile(iterPath)) {
+        if (! (await exists(iterPath))) { return; }
+        if (await isFile(iterPath)) {
             await cb(iterPath);
         } else {
             const files = await readDir(iterPath, false);
