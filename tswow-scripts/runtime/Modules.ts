@@ -106,7 +106,7 @@ console.log("Hello from ${name} data script!");
 `;
 
 const livescript_example =
-`export const Main(events: TSEventHandlers) {
+`export function Main(events: TSEventHandlers) {
     // Register your events here!
 }`;
 
