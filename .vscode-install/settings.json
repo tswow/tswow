@@ -1,0 +1,12 @@
+{
+    "files.exclude": {
+        "**/modules/**/**/build": true,
+        "**/modules/**/**/global.d.ts": true,
+        "**/modules/**/**/tsconfig.json": true,
+        "bin": true,
+        "coredata": true,
+        "node_modules": true,
+        "package-lock.json": true,
+        "package.json": true
+    }
+}

@@ -61,6 +61,7 @@ export class InstallPaths {
 
     /** Misc paths */
     get nodeModules() { return mpath(installBase, 'node_modules'); }
+    get vscodeWorkspace() { return mpath(installBase, '.vscode'); }
 
     /** Config paths */
     get config() { return mpath(installBase, 'config'); }

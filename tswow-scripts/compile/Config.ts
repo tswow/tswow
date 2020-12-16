@@ -20,13 +20,6 @@ import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
 import { ipaths } from '../util/Paths';
 
-const install_gitignore =
-`node_modules
-bin
-build
-coredata
-`;
-
 export async function createConfig() {
     term.log('Creating config files');
 
@@ -40,23 +33,21 @@ export async function createConfig() {
 
     wsys.execIn(install_path(),'npm i');
 
-    if (!wfs.exists(install_path('.gitignore'))) {
-        wfs.write(install_path('.gitignore'), install_gitignore);
-    }
-
-    if (!wfs.exists(install_path('.git'))) {
-        wsys.execIn(install_path(), 'git init');
-    }
-
     if(!wfs.exists(ipaths.coreData)) {
         wfs.mkDirs(ipaths.coreData);
     }
 
     wfs.copy(mpath('./tswow-scripts', 'sql'), install_path('bin', 'sql'));
 
+    if(!wfs.exists(ipaths.modules)) {
+        wfs.mkDirs(ipaths.modules);
+    }
+
     if(!wfs.exists(install_path('modules','tswow-stdlib'))) {
-        wsys.execIn(install_path(), `git submodule add https://github.com/tswow/tswow-stdlib.git modules/tswow-stdlib`);
+        wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
     }
 
     wfs.copy('./start.js',ipaths.startjs);
+
+    wfs.copy('./.vscode-install',ipaths.vscodeWorkspace)
 }
