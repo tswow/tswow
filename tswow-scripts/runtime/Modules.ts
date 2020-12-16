@@ -417,7 +417,7 @@ export namespace Modules {
 
         const moduleC = commands.addCommand('module');
 
-        moduleC.addCommand('add', 'name', 'Create a new module', (args) => {
+        moduleC.addCommand('create', 'name', 'Create a new module', (args) => {
             if (args.length < 1) { throw new Error('Please provide a name for the new module'); }
             addModule(args[0]);
         });
@@ -444,23 +444,17 @@ export namespace Modules {
             }
         });
 
-        commands.addCommand('bd', '' , 'Builds data to folder (fast) and restarts client/server', async() => {
-            const wrap = await buildMpq(true);
+        const buildC = commands.addCommand('build');
+        buildC.addCommand('data', 'clientonly? rebuild? package?',
+            'Builds data patches and then restarts the affected processes', async(args) => {
+            if (args.includes('clientonly') && args.includes('rebuild')) {
+                throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
+            }
+            const wrap = await buildMpq(!args.includes('package'), !args.includes('rebuild'));
             await Client.start();
-            await TrinityCore.start();
-            await wrap.unwrap();
-        });
-
-        commands.addCommand('bdf', '' , 'Builds data to folder (fast) and restarts client/server', async() => {
-            const wrap = await buildMpq(true, true);
-            await Client.start();
-            await TrinityCore.start();
-            await wrap.unwrap();
-        });
-
-        commands.addCommand('bdc', '' , 'Builds data to folder (fast) and restarts client', async() => {
-            const wrap = await buildMpq(true, true);
-            await Client.start();
+            if (!args.includes('clientonly')) {
+                await TrinityCore.start();
+            }
             await wrap.unwrap();
         });
 
