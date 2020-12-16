@@ -43,12 +43,15 @@ export class InstallPaths {
     get bin() { return mpath(installBase, 'bin'); }
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
+    get tcReleaseScripts() { return mpath(this.tcRelease, 'scripts'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
+    get tcDebugScripts() { return mpath(this.tcDebug, 'scripts'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
     get mpqBuilderExe() { return mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe'); }
     get tdb() { return mpath(this.bin, 'tdb.7z'); }
     get cmakeExe() { return mpath(this.bin, 'cmake', 'bin', 'cmake.exe'); }
+    get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
     get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
 
     // TODO: Linux

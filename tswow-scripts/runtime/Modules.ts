@@ -29,6 +29,7 @@ import { Wrap } from '../util/Wrap';
 import { Assets } from './Assets';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
+import { reputation_reward_rateRow } from '../wotlkdata/sql/types/reputation_reward_rate';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -103,6 +104,11 @@ import { SQL, DBC } from "wotlkdata";
 
 console.log("Hello from ${name} data script!");
 `;
+
+const livescript_example =
+`export const Main(events: TSEventHandlers) {
+    // Register your events here!
+}`;
 
 const gitignores =
 `*.blp
@@ -219,6 +225,8 @@ export namespace Modules {
 
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
+        wfs.write(mpath(modpath, 'scripts', `${name}scripts.ts`), livescript_example);
+
         wsys.execIn(modpath, 'git init');
         refreshModules(false);
         term.success(`Created module ${name} in ${timer.timeSec()}s`);
@@ -259,7 +267,17 @@ export namespace Modules {
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export function rebuildModule(name: string) {
+    export function rebuildScripts(name: string) {
+        const scriptsDir = ipaths.moduleScripts(name);
+
+        const files = wfs.readDir(scriptsDir, true, 'both');
+
+        // Don't build if the entry point doesn't exist or its livescript is just the template.
+        if (!files.includes(`${name}scripts.ts`)) { return; }
+        if (wfs.read(mpath(scriptsDir, `${name}scripts.ts`)) === livescript_example) {
+            return false;
+        }
+
         const timer = Timer.start();
         wsys.exec(`node ${ipaths.transpilerEntry} ${name}`);
 
@@ -270,6 +288,7 @@ export namespace Modules {
         // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
         term.log(`Rebuilt code for ${name} in ${timer.timeSec()}s`);
+        return true;
     }
 
     /**
@@ -379,6 +398,15 @@ export namespace Modules {
     export async function uninstallModule(name: string) {
         destroyTSWatcher(mpath('modules', name, 'data'));
 
+        // Delete all built libraries
+        for (const p of [ipaths.tcReleaseScripts, ipaths.tcDebugScripts]) {
+            wfs.readDir(p, true).forEach((x) => {
+                if (x.startsWith(`scripts_${name}_ts`)) {
+                    wfs.remove(mpath(p, x));
+                }
+            });
+        }
+
         // Store a copy of the module in our garbage bin
         function garbagePath(j: number) {
             return mpath(ipaths.coreData, 'module_garbage', `${name}_${j}`);
@@ -388,6 +416,7 @@ export namespace Modules {
             ++i;
         }
         wfs.copy(`./modules/${name}`, garbagePath(i));
+
         wfs.remove(`./modules/${name}`);
     }
 
@@ -426,10 +455,6 @@ export namespace Modules {
             installModule(args.join(' '));
         });
 
-        moduleC.addCommand('script', 'moduleName', 'Build and loads the server scripts of a module', (args) => {
-            if (args.length < 1) { throw new Error('Please provide the name of the module to rebuild'); }
-            rebuildModule(args[0]);
-        });
 
         moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', (args) => {
             uninstallModule(args[0]);
@@ -456,6 +481,23 @@ export namespace Modules {
                 await TrinityCore.start();
             }
             await wrap.unwrap();
+        });
+
+        buildC.addCommand('scripts', 'module', 'Build and loads the server scripts of a module', (args) => {
+            const count = 0;
+            let modules = args;
+            if (modules.length === 0) {
+                modules = getModules();
+            }
+
+            let ctr = 0;
+            for (const mod of modules) {
+                if (rebuildScripts(mod)) {
+                    ++ctr;
+                }
+            }
+
+            term.success(`Built ${ctr} scripts`);
         });
 
         moduleC.addCommand('editable', 'module true|false', 'Sets a data library to not compile its data', async(args) => {

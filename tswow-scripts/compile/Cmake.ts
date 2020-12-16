@@ -39,9 +39,14 @@ export async function findCmake(): Promise<string> {
     }
 
     const exe = mpath(subs[0], 'bin', 'cmake.exe');
+    const share = mpath(subs[0], 'share');
 
     if (!wfs.exists(ipaths.cmakeExe)) {
         wfs.copy(exe, ipaths.cmakeExe);
+    }
+
+    if (!wfs.exists(ipaths.cmakeShare)) {
+        wfs.copy(share, ipaths.cmakeShare);
     }
 
     return exe;
