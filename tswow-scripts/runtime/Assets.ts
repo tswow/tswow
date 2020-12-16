@@ -25,7 +25,7 @@ import { Modules } from './Modules';
  * Contains functions for MPQ building
  */
 export namespace Assets {
-    const blpconverter = '"bin/blpconverter.exe"';
+    const blpconverter = '"bin/BLPConverter/blpconverter.exe"';
 
     function iter(directory: string|undefined, callback: (file: string) => any) {
         if (directory) {
