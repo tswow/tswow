@@ -16,6 +16,7 @@
  */
 import * as child_process from 'child_process';
 import * as readline from 'readline';
+import { wfs } from './FileSystem';
 
 /**
  * Contains functions for running external programs and managing processes and working directories.
@@ -73,7 +74,7 @@ export namespace wsys {
         if (cmd === '' || proc === '') {
             return false;
         }
-        return execOut(cmd).toLowerCase().indexOf(proc.toLowerCase()) > -1;
+        return exec(cmd, 'pipe').toLowerCase().indexOf(proc.toLowerCase()) > -1;
     }
 
     /**
@@ -83,9 +84,9 @@ export namespace wsys {
      * @returns Promise when the child process exits
      */
     export function execAsync(program: string, cwd?: string) {
-        return new Promise<any>((res, rej) => {
-            const proc = child_process.exec(program, {cwd: cwd ? cwd : process.cwd()}, (err) => {
-                return err ? rej(err) : res();
+        return new Promise<string>((res, rej) => {
+            child_process.exec(program, {cwd: cwd ? cwd : process.cwd()}, (err, stdout, stderr) => {
+                return err ? rej(err) : res(stdout);
             });
         });
     }
@@ -99,16 +100,12 @@ export namespace wsys {
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
     export function exec(program: string, stdio: 'ignore'|'inherit'|'pipe' = 'pipe') {
-        return child_process.execSync(program, {stdio: stdio});
-    }
-
-    /**
-     * Executes a child process to an output string.
-     * @param program Command to execute
-     * @returns Command output of the child process.
-     */
-    export function execOut(program: string) {
-        return child_process.execSync(program, {stdio: 'pipe'}).toString();
+        let str = '';
+        const data = child_process.execSync(program, {stdio: stdio});
+        if( data !== undefined && data !== null ) {
+            str = data.toString();
+        }
+        return str;
     }
 
     /**
@@ -122,12 +119,11 @@ export namespace wsys {
      */
     export function execIn(dirname: string, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
         let str = '';
-        inDirectorySync(dirname, () => {
-            const data = child_process.execSync(program, {stdio: stdio});
-            if (stdio === 'pipe' && data !== null && data !== undefined) {
-                str = data.toString();
-            }
-        });
+        const data = child_process.execSync(program, 
+            {stdio: stdio, cwd: wfs.absPath(dirname)});
+        if(stdio==='pipe' && data !== null && data !== undefined) {
+            str = data.toString();
+        }
         return str;
     }
 
@@ -163,12 +159,6 @@ export namespace wsys {
             setTimeout(() => {
                 res();
             }, timeout);
-        });
-    }
-
-    export function detached(program: string, args: string[] = []) {
-        child_process.spawn(program, args, {detached: true}).on('error', (data) => {
-            console.log(data.name, data.message);
         });
     }
 
