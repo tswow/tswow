@@ -20,13 +20,15 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
 import { LUAXML } from "wotlkdata/luaxml/LUAXML";
 import { Edit } from "wotlkdata/luaxml/TextFile";
-import { includes } from "wotlkdata/query/Relations";
+import { includes, neq } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
+import { getDefaultClass, getDefaultRace } from "./ClassDefaultRaces";
+import { ClassStartInventory } from "./ClassStartInventory";
 import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
 import { ClassType, resolveClassType } from "./ClassType";
@@ -35,22 +37,15 @@ import { EquipSkills } from "./EquipSkills";
 
 type ClassFinder = number;
 
-type RaceAdder = number;
-
 let created = false;
 
+export type LevelStats = { str: number, agi: number, sta: number, inte: number, spi: number};
 
-/**
- * TODO: Combat scaling is broken, classes just do 1 melee damage without a weapon.
- * 
- * TODO: Icon locations seem to bug out sometimes.
- * 
- * TODO: Allow changing the character creation model.
- */
 export class Class extends MainEntity<ChrClassesRow> {
     readonly UI : ClassUISettings;
+    readonly BaseClass: number;
 
-    constructor(row : ChrClassesRow, 
+    constructor(baseClass: number, row : ChrClassesRow, 
         tCoordsCCEdit : Edit, 
         classColorEdit : Edit, 
         sortOrderEdit : Edit, 
@@ -64,8 +59,10 @@ export class Class extends MainEntity<ChrClassesRow> {
                 tCoordsCCEdit,classColorEdit,sortOrderEdit,
                 tCoordsEdit,xmlEdit,maleDescription,
                 femaleDescription,infoRows);
+            this.BaseClass = baseClass;
     }
 
+    get Inventory() { return new ClassStartInventory(this); }
     get EquipSkills() { return new EquipSkills(this); }
     get StartGear() { return new ClassStartOutfits(this); }
     get Filename() { return this.row.Filename.get(); }
@@ -79,8 +76,41 @@ export class Class extends MainEntity<ChrClassesRow> {
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
 
     addRaces(races : RaceType[]) {
-        for(let race of races) {
-            DBC.CharBaseInfo.add(resolveRaceType(race),this.row.ID.get());
+        const rci = DBC.SkillRaceClassInfo.filter({})
+            .filter((x)=>x.RaceMask.get()!==4294967295 && x.ClassMask.get()&(1<<(this.BaseClass-1)));
+
+        for(let raceType of races) {
+            const raceid = resolveRaceType(raceType);
+            const {race: oldRace,cls} = getDefaultRace(raceid,this.BaseClass);
+
+            SQL.player_levelstats
+                .filter({class: cls, race: oldRace})
+                .forEach(x=>x.clone(raceid,this.ID,x.level.get()));
+
+            // Copy all RCI's from the parent class/race pair (or class/default race)
+            rci.filter(x=>x.RaceMask.get()&(1<<(oldRace)))
+                .forEach(x=>{
+                    if(x.ClassMask.get()!==0xffffffff) {
+                        x.ClassMask.mark(this.ID-1);
+                    }
+
+                    if(x.RaceMask.get()!==0xffffffff) {
+                        x.RaceMask.mark(raceid-1);
+                    }
+                })
+
+            DBC.CharStartOutfit
+                .filter({ClassID: cls, RaceID: oldRace})
+                .forEach(x=>x.clone(Ids.CharStartOutfit.id())
+                    .ClassID.set(this.ID)
+                    .RaceID.set(raceid))
+
+            // By default, the classes should come from here.
+            const defaultClass = getDefaultClass(raceid);
+            SQL.playercreateinfo.find({race: raceid, class: defaultClass})
+                .clone(raceid, this.ID)
+
+            DBC.CharBaseInfo.add(raceid,this.row.ID.get());
         }
         return this;
     }
@@ -92,8 +122,9 @@ const clsResolve = (f : ClassFinder) => {
 
 export const Classes = {
 
-    load : (finder: ClassFinder) => {
-        const row = clsResolve(finder);
+    load : (finder: ClassType) => {
+        const finderId = resolveClassType(finder);
+        const row = clsResolve(finderId);
 
         const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.lua');
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
@@ -116,6 +147,7 @@ export const Classes = {
             infoRows.push(gs.emptyReplace(i));
         }
         return new Class(
+            finderId,
             row,
             tcoordscc,
             classColor,
@@ -153,17 +185,10 @@ export const Classes = {
                 x.classMask.get()|1<<(id-1),
                 x.skill.get()))
 
-        // Copy skill-lines
-        let ALL_SKILL_LINES = DBC.SkillLineAbility.filter({});
-        ALL_SKILL_LINES = ALL_SKILL_LINES.filter(x=>(x.ClassMask.get()&(1<<(rParent.ID.get()-1))))
-
-        // Give stave (example)
-        //DBC.SkillLineAbility.find({ID:700}).clone(1007688,{ClassMask:(1<<(rParent.ID-1))})
-
         // Setup RaceClassInfos
         DBC.SkillRaceClassInfo.find({});
-        const ALL_SKILL_RACE_CLASS_INFO = DBC.SkillRaceClassInfo.filter({});
-        const parentRCI = ALL_SKILL_RACE_CLASS_INFO.filter(x=>x.ClassMask.get()&(1<<(rParent.ID.get()-1)));
+        const parentRCI = DBC.SkillRaceClassInfo.filter({})
+            .filter(x=>x.RaceMask.get() !== 4294967295 && x.ClassMask.get()&(1<<(parent-1)));
         parentRCI.forEach(x=>{
             let mask = x.ClassMask.get();
             if(mask!==0xffffffff) {
@@ -189,12 +214,6 @@ export const Classes = {
             .filter((x,i)=>x.index>=parent*size && x.index<parent*size+size)
         const g = (size: number, dbc: GTFile) => 
             p(size,dbc).forEach((x)=>x.clone().Data.set(x.Data.get()))
-
-        // Copy parent clothes
-        DBC.CharStartOutfit.filter({ClassID:parent}).forEach(x=>{
-            x.clone(Ids.CharStartOutfit.id())
-                .ClassID.set(id)
-        })
         
         g(100,DBC.GtChanceToMeleeCrit)
         g(100,DBC.GtChanceToSpellCrit)
@@ -213,12 +232,6 @@ export const Classes = {
 
         SQL.player_classlevelstats
             .filter({class:rParent.ID.get()}).map(x=>x.clone(id,x.level.get()));
-        SQL.player_levelstats
-            .filter({class:rParent.ID.get()})
-            .map(x=>x.clone(x.race.get(),id,x.level.get()));
-        SQL.playercreateinfo
-            .filter({class:rParent.ID.get()})
-            .map(x=>x.clone(x.race.get(),id));
 
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
         const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.lua');
@@ -241,6 +254,7 @@ export const Classes = {
         gs.after(552,`${identifier}_DISABLED = "${identifier}\\nYou must choose a difference race to be this class.";`);
 
         return new Class(
+            parent,
             rParent.clone(id,{Filename:identifier}),
             tCoordsCC,
             classColor,

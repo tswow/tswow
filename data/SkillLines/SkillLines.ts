@@ -19,6 +19,7 @@ export const SkillLines = {
             .CanLink.set(0)
             .RaceClassInfos.add()
                 .RaceMask.set(4294967295)
+                .ClassMask.clearAll()
                 .ClassMask.mark(cls-1)
                 .Flags.set(1040)
                 .up()

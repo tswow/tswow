@@ -1,5 +1,6 @@
 import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
 import { MainEntity } from "../Base/MainEntity";
+import { SpellIconCell } from "../Spell/SpellIcon";
 import { SkillRaceClassInfos } from "./SkillRaceClassInfo";
 
 export class SkillLine extends MainEntity<SkillLineRow> {
@@ -10,6 +11,6 @@ export class SkillLine extends MainEntity<SkillLineRow> {
     get Name() { return this.wrapLoc(this.row.DisplayName); }
     get ID() { return this.row.ID.get(); }
     get SkillCosts() { return this.wrap(this.row.SkillCostsID); }
-    get SpellIcon() { return this.wrap(this.row.SpellIconID); }
+    get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get RaceClassInfos() { return new SkillRaceClassInfos(this); }
 }

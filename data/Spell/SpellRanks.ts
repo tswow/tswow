@@ -41,9 +41,9 @@ export class SpellRanks {
         return this.spells[index];
     }
 
-    setSkillLine(skillLine: number, classes: ClassType[] = [], races: RaceType[] = []) {
+    setSkillLine(skillLine: number) {
         this.spells.forEach((x,i)=>{
-            x.SkillLines.add(skillLine, classes, races).MinSkillRank.set(1);
+            x.SkillLines.add(skillLine).MinSkillRank.set(1);
         });
         return this;
     }

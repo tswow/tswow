@@ -59,6 +59,10 @@ class TCoordSystem extends Subsystem<Class> {
             .split(',')
             .map(x=>parseFloat(x)) as [number,number,number,number];
     }
+
+    objectify() {
+        return this.get();
+    }
 }
 
 class ClassColor extends EditSystem<Class> {

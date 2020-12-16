@@ -17,6 +17,7 @@
 import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { ClassType, makeClassmask } from "../Class/ClassType";
 import { makeRacemask, RaceType } from "../Race/RaceType";
@@ -51,6 +52,14 @@ export class SpellSkillLineAbility extends Subsystem<Spell> {
     get TrivialRank() { return new TrivialSkillLineRank(this); }
     get SkillLine() { return this.wrap(this.row.SkillLine); }
     get CharacterPoints() { return this.wrapArray(this.row.CharacterPoints); }
+
+    setAutolearn() {
+        this.AcquireMethod.set(1);
+        SQL.playercreateinfo_spell_custom
+            .add(this.RaceMask.get(), this.ClassMask.get(), this.owner.ID)
+            .Note.set('TSWoW')
+        return this;
+    }
 }
 
 export class SpellSkillLineAbilites extends Subsystem<Spell> {
@@ -68,11 +77,22 @@ export class SpellSkillLineAbilites extends Subsystem<Spell> {
         }
     }
 
-    add(skillLine: number, classes: ClassType[] = [], races: RaceType[] = []) {
+    add(skillLine: number) {
+        const rci = DBC.SkillRaceClassInfo.find({SkillID: skillLine});
+        let racemask = rci.RaceMask.get();
+        let classmask = rci.ClassMask.get();
+        if(racemask===4294967295) {
+            racemask = 0;
+        }
+
+        if(classmask===4294967295) {
+            classmask = 0;
+        }
+
         return new SpellSkillLineAbility(this.owner, DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
             .SkillLine.set(skillLine)
-            .ClassMask.set(makeClassmask(classes))
-            .RaceMask.set(makeRacemask(races))
+            .ClassMask.set(classmask)
+            .RaceMask.set(racemask)
             .Spell.set(this.owner.ID));
     }
 
