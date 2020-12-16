@@ -305,7 +305,7 @@ export namespace mysql {
             FileChanges.tagChange(ipaths.tdb, 'tdb');
         }
 
-        await wfs.iterate(ipaths.startupSql, async (file) => {
+        await wfsa.iterate(ipaths.startupSql, async (file) => {
             if (file.endsWith('.sql')) {
                 const contents = wfs.read(file);
                 await world_src.query(contents);

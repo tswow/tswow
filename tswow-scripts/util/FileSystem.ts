@@ -219,6 +219,25 @@ export namespace wfsa {
             });
         });
     }
+
+    /**
+     * Calls a callback for a file, or recursively all files in a directory and its subdirectories.
+     * @param iterPath The path to start iterating. If this is a file, calls `cb` just for the file.
+     *             If this is a directory, calls `cb` for all items in it and its subfolders.
+     *             If this path doesn't exist, the function does nothing.
+     * @param cb The function to call for the file(s) found at or from `path`
+     */
+    export async function iterate(iterPath: string, cb: (name: string) => any) {
+        if (!wfs.exists(iterPath)) { return; }
+        if (isFile(iterPath)) {
+            await cb(iterPath);
+        } else {
+            const files = await readDir(iterPath, false);
+            for (const file of files) {
+                await iterate(file, cb);
+            }
+        }
+    }
 }
 
 /**
@@ -299,14 +318,14 @@ export namespace wfs {
      *             If this path doesn't exist, the function does nothing.
      * @param cb The function to call for the file(s) found at or from `path`
      */
-    export async function iterate(iterPath: string, cb: (name: string) => any) {
+    export function iterate(iterPath: string, cb: (name: string) => any) {
         if (!wfs.exists(iterPath)) { return; }
         if (isFile(iterPath)) {
-            await cb(iterPath);
+            cb(iterPath);
         } else {
             const files = readDir(iterPath, false);
             for (const file of files) {
-                await iterate(file, cb);
+                iterate(file, cb);
             }
         }
     }
