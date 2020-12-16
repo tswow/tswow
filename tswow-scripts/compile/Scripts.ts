@@ -18,10 +18,10 @@ import { mpath, wfs, rpath } from '../util/FileSystem';
 import { getTSWatcher } from '../util/TSWatcher';
 import { install_path } from './BuildConfig';
 
-const config_dir : string|undefined = undefined;
+const config_dir: string|undefined = undefined;
 function stopScriptsBuild() {
-    if(config_dir!==undefined) {
-        
+    if (config_dir !== undefined) {
+
     }
 }
 

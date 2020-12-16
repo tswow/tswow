@@ -32,9 +32,9 @@ export namespace wsys {
     export async function inDirectory(dir: string, cb: () => any) {
         const old = process.cwd();
         process.chdir(dir);
-        try{
+        try {
             await cb();
-        } catch(err) {
+        } catch (err) {
             process.chdir(old);
             throw err;
         }
@@ -50,9 +50,9 @@ export namespace wsys {
     export function inDirectorySync(dir: string, cb: () => any) {
         const old = process.cwd();
         process.chdir(dir);
-        try{
+        try {
             cb();
-        } catch(err) {
+        } catch (err) {
             process.chdir(old);
             throw err;
         }
@@ -84,7 +84,7 @@ export namespace wsys {
      */
     export function execAsync(program: string, cwd?: string) {
         return new Promise<any>((res, rej) => {
-            const proc = child_process.exec(program, {cwd: cwd?cwd:process.cwd()}, (err) => {
+            const proc = child_process.exec(program, {cwd: cwd ? cwd : process.cwd()}, (err) => {
                 return err ? rej(err) : res();
             });
         });
@@ -121,13 +121,13 @@ export namespace wsys {
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
     export function execIn(dirname: string, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
-        let str = "";
-        inDirectorySync(dirname, ()=>{
-            const data = child_process.execSync(program, {stdio:stdio});
-            if(stdio==='pipe' && data!==null && data!==undefined) {
+        let str = '';
+        inDirectorySync(dirname, () => {
+            const data = child_process.execSync(program, {stdio: stdio});
+            if (stdio === 'pipe' && data !== null && data !== undefined) {
                 str = data.toString();
             }
-        })
+        });
         return str;
     }
 
@@ -140,7 +140,7 @@ export namespace wsys {
      * @returns Child process handle
      */
     export function spawnIn(dirname: string, program: string, args: string[] = []) {
-        return child_process.spawn(program, args, {stdio:'pipe',cwd:dirname});
+        return child_process.spawn(program, args, {stdio: 'pipe', cwd: dirname});
     }
 
     /**

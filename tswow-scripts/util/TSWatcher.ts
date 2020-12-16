@@ -25,12 +25,31 @@ import { term } from './Terminal';
  * and doesn't start listening until asked to compile.
  */
 export class TypeScriptWatcher {
+
+    /** The tsconfig path */
+    get tsconfig() { return mpath(this.path, 'tsconfig.json'); }
+
+    constructor(path: string) {
+        this.path = path;
+        this.tscProcess = new Process()
+            .showOutput(false);
+    }
     protected tscProcess: Process;
     protected chokidar: chokidar.FSWatcher | undefined;
-    protected isWaiting: boolean = false;
+    protected isWaiting = false;
     protected errors: string[] = [];
 
-    getErrors() { 
+    /** The base path */
+    protected path: string;
+    protected isDirty = false;
+
+    /** The current output/build directory */
+    protected outDir = '';
+
+    /** The current .buildinfo file */
+    protected buildInfo = '';
+
+    getErrors() {
         return this.errors.slice();
     }
 
@@ -38,80 +57,61 @@ export class TypeScriptWatcher {
         return this.isWaiting;
     }
 
-    /** The base path */
-    protected path: string;
-    protected isDirty: boolean = false;
-
-    /** The tsconfig path */
-    get tsconfig() { return mpath(this.path,"tsconfig.json"); }
-
-    /** The current output/build directory */
-    protected outDir: string = "";
-
-    /** The current .buildinfo file */
-    protected buildInfo: string = "";
-
-    constructor(path: string) {
-        this.path = path;
-        this.tscProcess = new Process()
-            .showOutput(false);
-    }
-
     /**
      * Removes lines from the build info file
      */
     protected async removeBuildInfo(paths: string[]) {
-        if(paths.length === 0) {
+        if (paths.length === 0) {
             return;
         }
-        if(!wfs.exists(this.buildInfo)) {
+        if (!wfs.exists(this.buildInfo)) {
             return;
         }
-        let wasRunning = this.tscProcess.isRunning();
+        const wasRunning = this.tscProcess.isRunning();
         await this.tscProcess.stop();
         const json = JSON.parse(wfs.read(this.buildInfo));
-        for(let remove of paths) {
-            remove = wfs.relative(this.outDir,remove);
-            term.log('Removing ',remove);
+        for (let remove of paths) {
+            remove = wfs.relative(this.outDir, remove);
+            term.log('Removing ', remove);
             remove = remove.split('\\').join('/');
             delete json.program.fileInfos[remove];
-            json.program.semanticDiagnosticsPerFile = 
+            json.program.semanticDiagnosticsPerFile =
                 json.program.semanticDiagnosticsPerFile
-                    .filter((x: string)=>x!==remove);
+                    .filter((x: string) => x !== remove);
         }
-        wfs.write(this.buildInfo,JSON.stringify(json,null,4));
-        if(wasRunning) {
+        wfs.write(this.buildInfo, JSON.stringify(json, null, 4));
+        if (wasRunning) {
             await this.startTSCWatch();
         }
     }
 
     protected tscPath() {
-        return wfs.absPath(mpath('node_modules','typescript','lib','tsc.js'))
+        return wfs.absPath(mpath('node_modules', 'typescript', 'lib', 'tsc.js'));
     }
 
     protected startTSCWatch() {
         this.isDirty = true;
         this.isWaiting = true;
         return this.tscProcess
-            .startIn(this.path, 'node', [this.tscPath(),'--w']);
+            .startIn(this.path, 'node', [this.tscPath(), '--w']);
     }
 
     protected async unlinkReverse(root: string) {
         const removes: string[] = [];
         const unlinkReverseInner = (p: string) => {
-            if(wfs.isDirectory(p)) {
-                wfs.readDir(p,false).forEach(unlinkReverseInner);
+            if (wfs.isDirectory(p)) {
+                wfs.readDir(p, false).forEach(unlinkReverseInner);
             } else {
-                if(!p.endsWith('.js.map')) {
+                if (!p.endsWith('.js.map')) {
                     return;
                 }
                 const obj = JSON.parse(wfs.read(p));
-                if(obj.sources === undefined || obj.sources.length === 0) {
+                if (obj.sources === undefined || obj.sources.length === 0) {
                     return;
                 }
                 const sourcefile = mpath(wfs.dirname(p), obj.sources[0]);
                 // Only remove if the source file is missing
-                if(wfs.exists(sourcefile)) {
+                if (wfs.exists(sourcefile)) {
                     return;
                 }
 
@@ -124,21 +124,21 @@ export class TypeScriptWatcher {
 
                 removes.push(sourcefile);
             }
-        }
-        unlinkReverseInner(root)
+        };
+        unlinkReverseInner(root);
         await this.removeBuildInfo(removes);
     }
 
     protected async unlinkTs(p: string) {
-        if(!p.endsWith('.ts')||p.endsWith('.d.ts')) {
+        if (!p.endsWith('.ts') || p.endsWith('.d.ts')) {
             return;
         }
-        term.log(`Uncaching file ${p}`)
+        term.log(`Uncaching file ${p}`);
         const relPath = wfs.relative(this.path, p);
         let baseFilePath = mpath(this.outDir, relPath);
-        baseFilePath = baseFilePath.substring(0,baseFilePath.length-3);
-        wfs.remove(baseFilePath +'.js.map');
-        wfs.remove(baseFilePath +'.js');
+        baseFilePath = baseFilePath.substring(0, baseFilePath.length - 3);
+        wfs.remove(baseFilePath + '.js.map');
+        wfs.remove(baseFilePath + '.js');
         wfs.remove(baseFilePath + '.d.ts');
         this.removeBuildInfo([p]);
     }
@@ -147,24 +147,24 @@ export class TypeScriptWatcher {
         term.log(`Setting up TSWatcher at ${this.path}`);
         this.tscProcess = new Process()
             .showOutput(false)
-            .listenSimple((x)=>{
-                x = x.split('\r').join('')
-                if(x.includes('File change detected')) {
+            .listenSimple((x) => {
+                x = x.split('\r').join('');
+                if (x.includes('File change detected')) {
                     this.isWaiting = true;
                 }
-                if(x.includes('Found 0 errors.')) {
+                if (x.includes('Found 0 errors.')) {
                     this.isWaiting = false;
-                    if(this.errors.length>0) {
+                    if (this.errors.length > 0) {
                         term.success(`No more errors in ${this.path}`);
-                        if(checkErrors().length===0) {
+                        if (checkErrors().length === 0) {
                             term.success(`No more errors at all!`);
                         }
                     }
-                    if(checkReady()) {
+                    if (checkReady()) {
                         term.success(`All modules finished compiling!`);
                     }
                     this.errors = [];
-                } else if(x.includes('error') && !x.includes('. Watching for file changes.')) {
+                } else if (x.includes('error') && !x.includes('. Watching for file changes.')) {
                     this.errors.push(x);
                     term.error(x);
                     return;
@@ -176,14 +176,14 @@ export class TypeScriptWatcher {
                 return this;
         }
 
-        this.outDir = mpath(this.path,tsconfig.compilerOptions.outDir);
-        this.buildInfo = mpath(this.outDir,'tsconfig.tsbuildinfo');
+        this.outDir = mpath(this.path, tsconfig.compilerOptions.outDir);
+        this.buildInfo = mpath(this.outDir, 'tsconfig.tsbuildinfo');
         await this.fixRemoved();
         await this.startTSCWatch();
 
-        const old : {[key:string]:boolean}= {};
-        wfs.iterate(this.path,(thing)=>{
-            if(thing.endsWith('ts')&&!thing.endsWith('d.ts')) {
+        const old: {[key: string]: boolean} = {};
+        wfs.iterate(this.path, (thing) => {
+            if (thing.endsWith('ts') && !thing.endsWith('d.ts')) {
                 old[thing] = true;
             }
         });
@@ -192,7 +192,7 @@ export class TypeScriptWatcher {
             .on('unlink', (p) => {
                 this.unlinkTs(p);
             })
-            .on('unlinkDir', (p)=>{
+            .on('unlinkDir', (p) => {
                 this.unlinkReverse(p);
             });
         return this;
@@ -203,28 +203,28 @@ export class TypeScriptWatcher {
     }
 
     async compile() {
-        let throwError = () => {
-            if(this.errors.length>0) {
+        const throwError = () => {
+            if (this.errors.length > 0) {
                 throw new Error(this.errors.join('\n'));
             }
-        }
-        
+        };
+
         throwError();
 
         // Don't log if we're not watching
-        if(!this.isWaiting) {
+        if (!this.isWaiting) {
             return this;
         }
 
         term.log(`Waiting for script to compile: ${this.path}`);
-        while(this.isWaiting) {
+        while (this.isWaiting) {
             throwError();
             await wsys.sleep(100);
             throwError();
         }
 
-        term.success(`Finished compiling: ${this.path}`)
-    
+        term.success(`Finished compiling: ${this.path}`);
+
         return this;
     }
 
@@ -235,59 +235,59 @@ export class TypeScriptWatcher {
 
     async kill() {
         await this.pause();
-        if(this.chokidar) {
+        if (this.chokidar) {
             await this.chokidar.close();
         }
         delete watchers[this.path];
     }
 }
 
-const watchers: {[key:string]: TypeScriptWatcher} = {}
+const watchers: {[key: string]: TypeScriptWatcher} = {};
 
 export async function compileAll() {
-    const errors : string[] = [];
+    const errors: string[] = [];
 
-    await Promise.all(Object.values(watchers).map(async (x)=>{
-        try{
+    await Promise.all(Object.values(watchers).map(async (x) => {
+        try {
             await x.compile();
-        } catch(error) {
+        } catch (error) {
             errors.push(error.message);
         }
     }));
 
-    if(errors.length>0) {
-        throw new Error(errors.join('\n')+'\n\nYou have TypeScript compiler errors, fix them.');
+    if (errors.length > 0) {
+        throw new Error(errors.join('\n') + '\n\nYou have TypeScript compiler errors, fix them.');
     }
 }
 
 export function checkReady() {
-    for(const watcher of Object.values(watchers)) {
-        if(watcher.getIsWaiting()) return false;
+    for (const watcher of Object.values(watchers)) {
+        if (watcher.getIsWaiting()) { return false; }
     }
     return true;
 }
 
 export function checkErrors() {
-    let errors : string[] = [];
-        for(const watcher of Object.values(watchers)) {
+    let errors: string[] = [];
+        for (const watcher of Object.values(watchers)) {
         errors = errors.concat(watcher.getErrors());
     }
     return errors;
 }
 
 export async function hasWatcher(path: string) {
-    return watchers[path]!==undefined;
+    return watchers[path] !== undefined;
 }
 
 export async function getTSWatcher(path: string) {
-    if(watchers[path]!==undefined) return watchers[path];
+    if (watchers[path] !== undefined) { return watchers[path]; }
     const w = await new TypeScriptWatcher(path).setup();
     watchers[path] = w;
     return w;
 }
 
 export async function destroyTSWatcher(path: string) {
-    if(watchers[path]!==undefined) {
+    if (watchers[path] !== undefined) {
         await watchers[path].kill();
         return true;
     }
@@ -295,7 +295,7 @@ export async function destroyTSWatcher(path: string) {
 }
 
 export async function destroyAllWatchers() {
-    for(const value of Object.values(watchers)) {
+    for (const value of Object.values(watchers)) {
         await value.kill();
     }
 }

@@ -78,7 +78,7 @@ async function compile(type: string, compileArgs: string[]) {
     if (isType('mpqbuilder')) { await createMpqBuilder(cmake); }
     if (isType('blpconverter')) { await installBLPConverter(cmake); }
 
-    if(types.includes('release')) {
+    if (types.includes('release')) {
         await destroyAllWatchers();
         buildingScripts = false;
     }
@@ -92,7 +92,7 @@ async function compile(type: string, compileArgs: string[]) {
     await createConfig();
 
     if (types.includes('release')) {
-        term.log(`Creating ${build_path('release.7z')}`)
+        term.log(`Creating ${build_path('release.7z')}`);
         make7zip(install_path(), build_path('release.7z'));
     }
 
@@ -101,11 +101,11 @@ async function compile(type: string, compileArgs: string[]) {
 
 async function main() {
     const build = commands.addCommand('build');
-    await compile('scripts',[]);
+    await compile('scripts', []);
 
     const installedPrograms =
-        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder','blpconverter',
-         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build','release'];
+        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',
+         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build', 'release'];
 
     for (const val of installedPrograms) {
         build.addCommand(val, '', `Builds ${val}`, async(args) => await compile(val, args));
@@ -113,11 +113,11 @@ async function main() {
 
     build.addCommand('base', '', 'Builds only base dependencies', async(args) => await compile('', args));
 
-    commands.addCommand('errorcheck','','', async ()=>{
+    commands.addCommand('errorcheck', '', '', async () => {
         try {
             await compileAll();
             term.success('No errors!');
-        } catch(error) {
+        } catch (error) {
             term.error(error.message);
         }
     });

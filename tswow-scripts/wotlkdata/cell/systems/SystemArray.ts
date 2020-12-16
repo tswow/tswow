@@ -47,10 +47,10 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
     abstract get(index: number): A;
 
     objectify() {
-        const values : any[] = [];
-        for(let i=0;i<this.length;++i) {
+        const values: any[] = [];
+        for (let i = 0; i < this.length; ++i) {
             const v = this.get(i);
-            if(v.isClear()) {
+            if (v.isClear()) {
                 break;
             }
             values.push(v.objectify());
@@ -60,14 +60,14 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
 }
 
 export abstract class ArrayEntry<T> extends Subsystem<T> {
-    static getIndex(entry: ArrayEntry<any>) {
-        return entry.index;
-    }
-
-    readonly index: number;
     constructor(owner: T, index: number) {
         super(owner);
         this.index = index;
+    }
+
+    readonly index: number;
+    static getIndex(entry: ArrayEntry<any>) {
+        return entry.index;
     }
 
     abstract clear(): T;

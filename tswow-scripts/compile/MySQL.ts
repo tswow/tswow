@@ -25,30 +25,30 @@ const mysqlInstallFiles = [
     'bin/mysqld.exe',
     'bin/mysql.exe',
     'bin/mysqldump.exe'
-]
+];
 
 export async function findMysql() {
     const mysql_build = build_path('mysql');
     const mysql_zip = build_path('mysql.zip');
 
-    if(!wfs.exists(mysql_zip)) {
+    if (!wfs.exists(mysql_zip)) {
         await download(MYSQL_DOWNLOAD_URL, mysql_zip);
     }
 
-    if(!wfs.exists(mysql_build)) {
+    if (!wfs.exists(mysql_build)) {
         unzip(mysql_zip, mysql_build);
     }
 
-    let finBuilds = wfs.readDir(mysql_build);
-    if(finBuilds.length!==1) {
+    const finBuilds = wfs.readDir(mysql_build);
+    if (finBuilds.length !== 1) {
         throw new Error(`Corrupt mysql directory in ${mysql_build}, please remove it manually.`);
     }
-    mysqlInstallFiles.forEach((x)=>{
-        const ip = install_path(ipaths.mysqlBin,x);
-        if(!wfs.exists(ip)) {
-            wfs.copy(mpath(finBuilds[0],x),ip);
+    mysqlInstallFiles.forEach((x) => {
+        const ip = install_path(ipaths.mysqlBin, x);
+        if (!wfs.exists(ip)) {
+            wfs.copy(mpath(finBuilds[0], x), ip);
         }
     });
-    
+
     return finBuilds[0];
 }

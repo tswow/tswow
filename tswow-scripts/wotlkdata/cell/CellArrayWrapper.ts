@@ -21,7 +21,7 @@ export class CellArrayWrapper<D extends CPrim, T> extends CellArray<D, T> {
     protected cell: CellArray<D, any>;
 
     constructor(owner: T, cell: CellArray<D, any>) {
-        super(owner,cell.length);
+        super(owner, cell.length);
         this.cell = cell;
     }
 

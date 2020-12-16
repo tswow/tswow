@@ -38,13 +38,13 @@ export namespace Client {
             const realmlistPath = mpath(localepath, 'realmlist.wtf');
 
             const realmlist = wfs.read(realmlistPath);
-            if(realmlist!=='set realmlist localhost' && realmlist !=='set realmlist 127.0.0.1') {
-                let backupPath = (i: number)=> mpath(localepath, `realmlist.wtf.backup${i}`);
-                let i=0;
-                while(wfs.exists(backupPath(i))) {
-                    ++i;
+            if (realmlist !== 'set realmlist localhost' && realmlist !== 'set realmlist 127.0.0.1') {
+                const backupPath = (i: number) => mpath(localepath, `realmlist.wtf.backup${i}`);
+                let curI = 0;
+                while (wfs.exists(backupPath(curI))) {
+                    ++curI;
                 }
-                wfs.copy(realmlistPath, backupPath(i));
+                wfs.copy(realmlistPath, backupPath(curI));
             }
             wfs.write(realmlistPath, 'set realmlist localhost');
             wowprocess.start(wowpath);
@@ -95,7 +95,7 @@ export namespace Client {
         command.addCommand('start', '', 'Starts the World of Warcraft client', async() => start());
         command.addCommand('kill', '', 'Stops the World of Warcraft client', async() => stop());
 
-        if(autostartClient) {
+        if (autostartClient) {
             start();
         }
     }

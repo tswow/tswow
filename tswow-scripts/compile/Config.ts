@@ -31,23 +31,23 @@ export async function createConfig() {
 
     wfs.copy('./package.install.json', install_path('package.json'));
 
-    wsys.execIn(install_path(),'npm i');
+    wsys.execIn(install_path(), 'npm i');
 
-    if(!wfs.exists(ipaths.coreData)) {
+    if (!wfs.exists(ipaths.coreData)) {
         wfs.mkDirs(ipaths.coreData);
     }
 
     wfs.copy(mpath('./tswow-scripts', 'sql'), install_path('bin', 'sql'));
 
-    if(!wfs.exists(ipaths.modules)) {
+    if (!wfs.exists(ipaths.modules)) {
         wfs.mkDirs(ipaths.modules);
     }
 
-    if(!wfs.exists(install_path('modules','tswow-stdlib'))) {
+    if (!wfs.exists(install_path('modules', 'tswow-stdlib'))) {
         wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
     }
 
-    wfs.copy('./start.js',ipaths.startjs);
+    wfs.copy('./start.js', ipaths.startjs);
 
-    wfs.copy('./.vscode-install',ipaths.vscodeWorkspace)
+    wfs.copy('./.vscode-install', ipaths.vscodeWorkspace);
 }

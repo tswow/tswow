@@ -57,7 +57,7 @@ export class MainSystem {
         return new CellWrapper(this, cell);
     }
 
-    protected wrapArray<W extends CPrim>(cell: CellArray<W,any>) {
+    protected wrapArray<W extends CPrim>(cell: CellArray<W, any>) {
         return new CellArrayWrapper(this, cell);
     }
 

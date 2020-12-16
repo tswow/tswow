@@ -91,7 +91,7 @@ export function inMemory(query: Query|AnyQuery|AllQuery, obj: any): boolean {
                     ov = ov.get();
                 }
 
-                if(ov.objectify) {
+                if (ov.objectify) {
                     ov = ov.objectify();
                 }
 

@@ -100,8 +100,8 @@ export class DBCFloatArrayCell<T> extends DBCArrayCell<number, T> {
 }
 
 export class DBCIntCell<T> extends DBCCell<number, T> {
-    get(): number { 
-        return this.buffer.readint(this.offset); 
+    get(): number {
+        return this.buffer.readint(this.offset);
     }
     set(value: number): T {
         this.buffer.writeint(value, this.offset);
@@ -118,7 +118,7 @@ export class DBCKeyCell<T> extends CellReadOnly<number, T> {
         this.buffer = buffer;
         this.offset = offset;
     }
-    get(): number { 
+    get(): number {
         return this.buffer.readint(this.offset);
     }
 
@@ -130,8 +130,8 @@ export class DBCKeyCell<T> extends CellReadOnly<number, T> {
 
 
 export class DBCUIntCell<T> extends DBCCell<number, T> {
-    get(): number { 
-        return this.buffer.readuint(this.offset); 
+    get(): number {
+        return this.buffer.readuint(this.offset);
     }
     set(value: number): T {
         this.buffer.writeuint(value, this.offset);
@@ -215,17 +215,17 @@ export class DBCMaskCell<T> extends DBCCell<number, T> {
     }
 
     markAll(bits: number[]) {
-        bits.forEach((x)=>this.mark(x));
+        bits.forEach((x) => this.mark(x));
         return this.owner;
     }
 
     mark(bit: number) {
-        this.set(this.get()|1<<bit);
+        this.set(this.get() | 1 << bit);
         return this.owner;
     }
 
     clear(bit: number) {
-        this.set(this.get()& ~(1 << bit));
+        this.set(this.get() & ~(1 << bit));
         return this.owner;
     }
 }
@@ -274,7 +274,7 @@ export class DBCLocCell<T> extends LocSystem<T> {
 
     objectify() {
         // enGB optimization
-        if(this.mask.get()===16712190) {
+        if (this.mask.get() === 16712190) {
             return {enGB: this.enGB.get(), mask: 16712190};
         } else {
             return super.objectify();

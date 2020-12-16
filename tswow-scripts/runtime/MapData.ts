@@ -39,7 +39,7 @@ export namespace MapData {
             ['mapextractor.exe', 'mmaps_generator.exe', 'vmap4assembler.exe', 'vmap4extractor.exe', 'common.dll']
             : ['mapextractor', 'mmaps_generator', 'vmap4assembler', 'vmap4extractor'];
 
-        const copiedLibraries = isWindows() ? ['libcrypto-1_1-x64.dll','libmysql.dll','libmysqld.dll'] : [];
+        const copiedLibraries = isWindows() ? ['libcrypto-1_1-x64.dll', 'libmysql.dll', 'libmysqld.dll'] : [];
         const cdir = cfg.client.directory();
 
         // TODO: Let user choose which to use
@@ -50,8 +50,8 @@ export namespace MapData {
             wfs.copy(mpath(inDir, file), mpath(cdir, file));
         }
 
-        for(const file of copiedLibraries) {
-            wfs.copy(mpath(ipaths.tcRoot,file),mpath(cfg.client.directory(),file));
+        for (const file of copiedLibraries) {
+            wfs.copy(mpath(ipaths.tcRoot, file), mpath(cfg.client.directory(), file));
         }
 
         const clientMaps = mpath(cdir, 'maps');
@@ -113,7 +113,7 @@ export namespace MapData {
             wfs.remove(mpath(cdir, file));
         }
 
-        for(const library of copiedLibraries) {
+        for (const library of copiedLibraries) {
             wfs.remove(mpath(cdir, library));
         }
     }

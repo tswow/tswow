@@ -70,12 +70,12 @@ export class MaskLongCell<T> extends MaskBase<T> {
     get() { return this.cell.get(); }
 
     mark(no: number): T {
-        this.cell.set(this.cell.get() | (BigInt(1) << BigInt(no)))
+        this.cell.set(this.cell.get() | (BigInt(1) << BigInt(no)));
         return this.owner;
     }
 
     clear(no: number): T {
-        this.cell.set(this.cell.get() & (~((BigInt(1)<<BigInt(no)))));
+        this.cell.set(this.cell.get() & (~((BigInt(1) << BigInt(no)))));
         this.cell.set(BigInt(0));
         return this.owner;
     }
@@ -90,7 +90,7 @@ export class MaskLongCell<T> extends MaskBase<T> {
     }
 
     toString(): string {
-        return this.cell.get().toString(2)
+        return this.cell.get().toString(2);
     }
 }
 
@@ -125,7 +125,7 @@ export class MaskCell<T> extends MaskBase<T> {
         return (this.cell.get() & (1 << no)) !== 0;
     }
 
-    get() : number {
+    get(): number {
         return this.cell.get();
     }
 

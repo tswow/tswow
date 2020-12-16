@@ -105,13 +105,13 @@ class Connection {
     }
 
     disconnect() {
-        if(!this.isConnected) {
+        if (!this.isConnected) {
             return;
         }
-        return new Promise<void>((res,rej)=>{
+        return new Promise<void>((res, rej) => {
             if (this.con.state !== 'disconnected') {
-                this.con.end((err)=>{
-                    if(err) {
+                this.con.end((err) => {
+                    if (err) {
                         rej(err);
                     } else {
                         res();
@@ -207,7 +207,7 @@ export namespace mysql {
     }
 
     async function startMysql(skipBackup = false) {
-        term.log("Starting mysql...");
+        term.log('Starting mysql...');
         if (isWindows()) {
             if (!wfs.exists(ipaths.mysqlData)) {
                 wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
@@ -228,13 +228,13 @@ export namespace mysql {
                     `--datadir=${wfs.absPath(ipaths.mysqlData)}`
                 ]);
             mysqlprocess.showOutput(false);
-            await mysqlprocess.waitFor('Execution of init_file*ended.', true)
-            term.success("Mysql process started");
+            await mysqlprocess.waitFor('Execution of init_file*ended.', true);
+            term.success('Mysql process started');
         }
 
         await connectDatabases();
 
-        if(!skipBackup && (!wfs.exists(ipaths.worldPlain1) || !wfs.exists(ipaths.worldPlain2))) {
+        if (!skipBackup && (!wfs.exists(ipaths.worldPlain1) || !wfs.exists(ipaths.worldPlain2))) {
             term.log(`Creating world_plain...`);
             await disconnect();
             wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
@@ -272,37 +272,37 @@ export namespace mysql {
         await Promise.all(all.map(x => x.connect()));
 
         // Rebuild world/world_src
-        let shouldBuild = FileChanges.isChanged(ipaths.tdb,'tdb');
-        if(!(await world.hasTable('access_requirement'))) {
+        let shouldBuild = FileChanges.isChanged(ipaths.tdb, 'tdb');
+        if (!(await world.hasTable('access_requirement'))) {
             shouldBuild = true;
         }
 
-        if(!(await world_src.hasTable('access_requirement'))) {
+        if (!(await world_src.hasTable('access_requirement'))) {
             shouldBuild = true;
         }
 
-        if(shouldBuild) {
+        if (shouldBuild) {
             function clearSql() {
-                wfs.readDir(ipaths.bin,false,'files')
-                    .filter(x=>x.endsWith('sql'))
-                    .forEach(x=>wfs.remove(x));
+                wfs.readDir(ipaths.bin, false, 'files')
+                    .filter(x => x.endsWith('sql'))
+                    .forEach(x => wfs.remove(x));
             }
             clearSql();
-            if(!wfs.exists(ipaths.tdb)) {
-                throw new Error(`Missing TDB: ${ipaths.tdb}, please download a TDB, rename it "tdb.7z" and place it in "bin".`)
+            if (!wfs.exists(ipaths.tdb)) {
+                throw new Error(`Missing TDB: ${ipaths.tdb}, please download a TDB, rename it "tdb.7z" and place it in "bin".`);
             }
             extract(ipaths.tdb);
-            let sqls = wfs.readDir(ipaths.bin,false,'files')
-                .filter(x=>x.endsWith('.sql'));
+            const sqls = wfs.readDir(ipaths.bin, false, 'files')
+                .filter(x => x.endsWith('.sql'));
 
-            if(sqls.length > 1) {
+            if (sqls.length > 1) {
                 throw new Error(`Failed to install TDB: Multiple SQL files lying in `);
             }
 
-            let sql = sqls[0];
-            await Promise.all([install_world(world,sql),install_world(world_src,sql)]);
+            const sql = sqls[0];
+            await Promise.all([install_world(world, sql), install_world(world_src, sql)]);
             clearSql();
-            FileChanges.tagChange(ipaths.tdb,'tdb');
+            FileChanges.tagChange(ipaths.tdb, 'tdb');
         }
 
         await wfs.iterate(ipaths.startupSql, async (file) => {

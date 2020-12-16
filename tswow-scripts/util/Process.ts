@@ -29,7 +29,7 @@ export class Process {
     private outputShown = true;
     private waiters: {[key: string]: (message: string) => void} = {};
     private bufferSize = 2048;
-    private listeners: ((message: string)=>void)[] = []
+    private listeners: ((message: string) => void)[] = [];
 
     /**
      * Creates a new process instance. Call Process#start or Process#startIn to start it.
@@ -43,7 +43,7 @@ export class Process {
         return this.process !== undefined;
     }
 
-    listenSimple(listener: (message: string)=>void ) {
+    listenSimple(listener: (message: string) => void ) {
         this.listeners.push(listener);
         return this;
     }
@@ -110,7 +110,7 @@ export class Process {
      * Does nothing if the process is not started.
      */
     async stop() {
-        this.curString = "";
+        this.curString = '';
 
         if (this.stopPromise) {
             return this.stopPromise;
@@ -176,7 +176,7 @@ export class Process {
         }
         this.curString = this.curString + strData;
 
-        for(const listener of this.listeners) {
+        for (const listener of this.listeners) {
             listener(strData);
         }
 

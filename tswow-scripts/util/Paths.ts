@@ -16,8 +16,8 @@
  */
 import { mpath } from './FileSystem';
 
-let installBase: string = './';
-let buildBase: string = ''
+let installBase = './';
+let buildBase = '';
 
 export class InstallPaths {
     static setInstallBase(ipath: string) {
@@ -41,19 +41,19 @@ export class InstallPaths {
 
     /** Bin paths */
     get bin() { return mpath(installBase, 'bin'); }
-    get blpConverter() { return mpath(this.bin, 'BLPConverter','blpconverter.exe')}
+    get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
     get mpqBuilderExe() { return mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe'); }
     get tdb() { return mpath(this.bin, 'tdb.7z'); }
-    get cmakeExe() { return mpath(this.bin, 'cmake','bin','cmake.exe'); }
-    get tsc() { return mpath(installBase,'node_modules','typescript','lib','tsc.js')}
+    get cmakeExe() { return mpath(this.bin, 'cmake', 'bin', 'cmake.exe'); }
+    get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
-    get mysqlBin() {return mpath(this.bin, 'mysql')}
+    get mysqlBin() {return mpath(this.bin, 'mysql'); }
     get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
     get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
     get sevenZaExe() { return mpath(this.bin, '7zip', '7za.exe'); }
@@ -72,17 +72,17 @@ export class InstallPaths {
     moduleData(mod: string) {
         return mpath(this.modules, mod, 'data');
     }
-    
+
     moduleRoot(mod: string) {
         return mpath(this.modules, mod);
     }
 
     moduleGit(mod: string) {
-        return mpath(this.modules, mod, '.git')
+        return mpath(this.modules, mod, '.git');
     }
 
     moduleDataBuild(mod: string) {
-        return mpath(this.modules, mod, 'data', 'build' )
+        return mpath(this.modules, mod, 'data', 'build' );
     }
     moduleAssets(mod: string) {
         return mpath(this.modules, mod, 'assets');
@@ -103,8 +103,8 @@ export class BuildPaths {
     }
 
     get base() {
-        if(buildBase.length===0) {
-            throw new Error(`Tried to access a build path, but no build path is configured`)
+        if (buildBase.length === 0) {
+            throw new Error(`Tried to access a build path, but no build path is configured`);
         }
         return buildBase;
     }

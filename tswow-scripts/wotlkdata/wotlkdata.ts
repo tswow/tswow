@@ -25,7 +25,7 @@ import { IdPrivate, GetIdRange as _GetIdRange, GetId as _GetId } from './ids/Ids
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { Objects as _Objects } from './cell/ObjectIteration';
 
-type PatchCollection = {name:string,callback: ()=>Promise<void>}[];
+type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
 const setups: PatchCollection = [];
 const reads: PatchCollection = [];
@@ -47,7 +47,7 @@ function patchSubdirs(dir: string) {
         .filter(x => x.endsWith('js') && fs.statSync(x).isFile())
         .map(x => path.relative(__dirname, x))
         .forEach(x => {
-            require(x)
+            require(x);
             applyStage(setups);
         });
 
@@ -64,16 +64,16 @@ function patchSubdirs(dir: string) {
     }
 }
 
-async function applyStage(patches: PatchCollection) {
-    for(const {name,callback} of patches) {
+async function applyStage(collection: PatchCollection) {
+    for (const {name, callback} of collection) {
         try {
             await callback();
-        } catch(error) {
-            console.error(`Error in patch ${name}:`,error);
+        } catch (error) {
+            console.error(`Error in patch ${name}:`, error);
             process.exit(-1);
         }
     }
-    patches.splice(0,patches.length);
+    collection.splice(0, collection.length);
 }
 
 async function main() {
@@ -82,14 +82,14 @@ async function main() {
 
     // Find all patch subdirectories
     for (const dir of Settings.PATCH_DIRECTORY) {
-        if(!fs.lstatSync(dir).isDirectory()) {
+        if (!fs.lstatSync(dir).isDirectory()) {
             continue;
         }
 
         try {
             patchSubdirs(dir);
         } catch (error) {
-            console.error(`Error in patch ${dir}:`,error);
+            console.error(`Error in patch ${dir}:`, error);
             process.exit(-1);
         }
     }
@@ -118,48 +118,48 @@ async function main() {
 }
 
 /**
- * Step 1 of script loading. 
+ * Step 1 of script loading.
  * - Runs CONCURRENTLY with global scopes.
  * - Runs BEFORE read/write/patch/finish
- * 
+ *
  * This stage should:
  * - Initialize ALL the modules own public entities
  * - Modify ONLY the modules own public entities
  * - NOT read other modules public entities (stateless library functions are fine)
- * @param name 
- * @param callback 
+ * @param name
+ * @param callback
  */
-export function setup(name: string, callback: ()=>any) {
-    setups.push({name,callback});
+export function setup(name: string, callback: () => any) {
+    setups.push({name, callback});
 }
 
 /**
  * Step 2 of script loading.
  * - Runs AFTER setup and global scope.
  * - Runs BEFORE write/patch/finish
- * 
+ *
  * This stage should:
  * - Read entities from other modules
  * - NOT modify any public entities.
- * @param name 
- * @param callback 
+ * @param name
+ * @param callback
  */
-export function read(name: string, callback: ()=>any) {
-    reads.push({name,callback});
+export function read(name: string, callback: () => any) {
+    reads.push({name, callback});
 }
 
 /**
  * Step 3 of script loading.
  * - Runs AFTER global scope, setup and read.
  * - Runs BEFORE patch/finish
- * 
+ *
  * This stage should:
  * - NOT read other modules public entities (stateless library functions are fine)
  * - Modify ONLY the modules own public entities.
- * @param name 
- * @param callback 
+ * @param name
+ * @param callback
  */
-export function write(name: string, callback: ()=>any) {
+export function write(name: string, callback: () => any) {
     reads.push({name, callback});
 }
 
@@ -168,34 +168,34 @@ export function write(name: string, callback: ()=>any) {
  * Step 4 of script loading
  * - Runs AFTER global scope, setup, read and write.
  * - Runs BEFORE finish
- * 
+ *
  * This stage should:
  * - Be called at most once by a single module.
  * - Never be called from a library module.
  * - Read or modify any public entities.
- * @param name 
- * @param callback 
+ * @param name
+ * @param callback
  */
-export function patch(name: string, callback: ()=>any) {
-    if(patches.length>0) {
+export function patch(name: string, callback: () => any) {
+    if (patches.length > 0) {
         throw new Error(`Multiple patches: ${name} and ${patches[0].name}. Only ONE patch should ever run.`);
     }
-    patches.push({name,callback});
+    patches.push({name, callback});
 }
 
 /**
  * Step 5 of script loading (final step)
  * - Runs AFTER global scope, setup, read, write and patch.
- * 
+ *
  * This stage should:
  * - Not access any public entities in other modules.
  * - NOT modify any public entities at all
  * - Serialize entity builders
  * - Find and report any conflicts in entity builders.
- * @param name 
- * @param callback 
+ * @param name
+ * @param callback
  */
-export function finish(name: string, callback: ()=>any) {
+export function finish(name: string, callback: () => any) {
     finishes.push({name, callback});
 }
 

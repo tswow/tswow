@@ -137,20 +137,20 @@ export namespace Modules {
     }
 
     export function setEditable(mod: string, editable: boolean) {
-        if(editable) {
-            wfs.remove(mpath('modules',mod,'noedit'));
+        if (editable) {
+            wfs.remove(mpath('modules', mod, 'noedit'));
         } else {
-            const datadir = mpath('modules',mod,'data');
-            if(wfs.exists(datadir)) {
+            const datadir = mpath('modules', mod, 'data');
+            if (wfs.exists(datadir)) {
                 try {
                     wsys.execIn(datadir, `node ../../../${ipaths.tsc}`);
-                } catch(error) {
+                } catch (error) {
                     term.error(error.message);
                     term.error(`Can't noedit ${mod}, there are compiler errors in it.`);
                     return;
                 }
                 destroyTSWatcher(datadir);
-                wfs.write(mpath('modules',mod,'noedit'),'');
+                wfs.write(mpath('modules', mod, 'noedit'), '');
             }
 
         }
@@ -161,25 +161,25 @@ export namespace Modules {
     }
 
     export function update(mod: string) {
-        if(mod==='all') {
+        if (mod === 'all') {
             term.log(`Updating all modules...`);
             return getModules().forEach(update);
         }
-        if(!wfs.exists(ipaths.moduleGit(mod))) {
+        if (!wfs.exists(ipaths.moduleGit(mod))) {
             return;
         }
 
-        try{
-            const msg = wsys.execIn(ipaths.moduleRoot(mod),'git pull','pipe');
+        try {
+            const msg = wsys.execIn(ipaths.moduleRoot(mod), 'git pull', 'pipe');
             term.log(`${mod}: ${msg}`);
-            if(msg.includes('Already up to date.')) {
+            if (msg.includes('Already up to date.')) {
                 // Don't run tsc if we didn't update.
                 return;
             }
-        } catch(err) {
+        } catch (err) {
             const msg = err.message as string;
-            if(!msg.includes('There is no tracking information for the current branch')) {
-                term.error(`Error updating: ${err.message}`)
+            if (!msg.includes('There is no tracking information for the current branch')) {
+                term.error(`Error updating: ${err.message}`);
             } else {
                 // "no tracking information" is not an error for us
                 term.log(`${mod}: No remotes, skipping.`);
@@ -188,8 +188,8 @@ export namespace Modules {
             return;
         }
 
-        if(!isEditable(mod)) {
-            wsys.execIn(ipaths.moduleData(mod),`node ../../../${ipaths.tsc}`);
+        if (!isEditable(mod)) {
+            wsys.execIn(ipaths.moduleData(mod), `node ../../../${ipaths.tsc}`);
         }
     }
 
@@ -265,7 +265,7 @@ export namespace Modules {
 
         wfs.copy(
             mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
-            mpath('bin', 'trinitycore','release', 'scripts', `scripts_${name}_ts.dll`)
+            mpath('bin', 'trinitycore', 'release', 'scripts', `scripts_${name}_ts.dll`)
         );
         // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
@@ -334,12 +334,12 @@ export namespace Modules {
     }
 
     export async function refreshModules(force: boolean = false) {
-        if(!wfs.exists('./node_modules/wotlkdata')) {
+        if (!wfs.exists('./node_modules/wotlkdata')) {
             term.log(`Linking wotlkdata...`);
             wsys.exec('npm link bin/scripts/tswow/wotlkdata');
         }
 
-        for(const xx of wfs.readDir('./modules', true)) {
+        for (const xx of wfs.readDir('./modules', true)) {
             const x = mpath('./modules', xx);
 
             const data_path = mpath(x, 'data');
@@ -355,7 +355,7 @@ export namespace Modules {
 
                 wfs.write(data_package_path, lib_package_json(xx));
 
-                if(!wfs.exists(mpath(x,'noedit'))) {
+                if (!wfs.exists(mpath(x, 'noedit'))) {
                     await getTSWatcher(data_path);
                 }
 
@@ -377,7 +377,7 @@ export namespace Modules {
     }
 
     export async function uninstallModule(name: string) {
-        destroyTSWatcher(mpath('modules',name,'data'));
+        destroyTSWatcher(mpath('modules', name, 'data'));
 
         // Store a copy of the module in our garbage bin
         function garbagePath(j: number) {
@@ -400,7 +400,7 @@ export namespace Modules {
         }
 
         wsys.exec(`git clone ${url} ./modules/${name}`);
-        setEditable(name,false);
+        setEditable(name, false);
     }
 
     /**
@@ -464,8 +464,8 @@ export namespace Modules {
             await wrap.unwrap();
         });
 
-        moduleC.addCommand('editable','module true|false','Sets a data library to not compile its data', async(args) => {
-            switch(args[1]) {
+        moduleC.addCommand('editable', 'module true|false', 'Sets a data library to not compile its data', async(args) => {
+            switch (args[1]) {
                 case 'true':
                     return setEditable(args[0], true);
                 case 'false':
@@ -475,28 +475,28 @@ export namespace Modules {
             }
         });
 
-        moduleC.addCommand('refresh','','Run this is your ts watchers wont start', async()=>{
+        moduleC.addCommand('refresh', '', 'Run this is your ts watchers wont start', async() => {
             refreshModules(false);
         });
 
-        moduleC.addCommand('fixremoved', 'module', 'Tries to manually remove unused script files, because sometimes the manual check bugs up', async(args)=> {
+        moduleC.addCommand('fixremoved', 'module', 'Tries to manually remove unused script files, because sometimes the manual check bugs up', async(args) => {
             const p = mpath('modules', args[0], 'data');
-            if(hasWatcher(p)) {
+            if (hasWatcher(p)) {
                 await (await getTSWatcher(p)).fixRemoved();
             }
         });
 
-        moduleC.addCommand('clear', 'module', 'Clears all built data for a module', async(args)=>{
-            let result = await destroyTSWatcher(ipaths.moduleData(args[0]));
+        moduleC.addCommand('clear', 'module', 'Clears all built data for a module', async(args) => {
+            const result = await destroyTSWatcher(ipaths.moduleData(args[0]));
             wfs.remove(ipaths.moduleDataBuild(args[0]));
-            if(result) {
+            if (result) {
                 getTSWatcher(ipaths.moduleData(args[0]));
             }
         });
 
-        moduleC.addCommand('update','module|all','Updates any or all modules from their tracking git repositories', async(args)=>{
-            if(args.length===0) {
-                throw new Error(`update requires at least one argument (module OR "all")`)
+        moduleC.addCommand('update', 'module|all', 'Updates any or all modules from their tracking git repositories', async(args) => {
+            if (args.length === 0) {
+                throw new Error(`update requires at least one argument (module OR "all")`);
             }
             update(args[0]);
         });

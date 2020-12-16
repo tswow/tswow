@@ -304,8 +304,8 @@ export namespace wfs {
         if (isFile(iterPath)) {
             await cb(iterPath);
         } else {
-            let files = readDir(iterPath,false);
-            for(let file of files) {
+            const files = readDir(iterPath, false);
+            for (const file of files) {
                 await iterate(file, cb);
             }
         }
@@ -359,7 +359,7 @@ export namespace wfs {
     }
 
     export function writeStream(file: string) {
-        return fs.createWriteStream(file, {flags: 'a'})
+        return fs.createWriteStream(file, {flags: 'a'});
     }
 
     /**

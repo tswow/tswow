@@ -39,11 +39,11 @@ export class Subsystem<T> {
         return new CellWrapper(this, cell);
     }
 
-    protected wrapArray<W extends CPrim>(cell: CellArray<W,any>) {
+    protected wrapArray<W extends CPrim>(cell: CellArray<W, any>) {
         return new CellArrayWrapper(this, cell);
     }
 
-    protected ownerWrapArray<W extends CPrim>(cell: CellArray<W,any>) {
+    protected ownerWrapArray<W extends CPrim>(cell: CellArray<W, any>) {
         return new CellArrayWrapper(this.owner, cell);
     }
 

@@ -290,7 +290,7 @@ describe('Relations', function() {
 
     describe('Cells', function() {
         it('doesnt freeze', function() {
-            DBC.AuctionHouse.find({Name:includes("stormwind")});
+            DBC.AuctionHouse.find({Name: includes('stormwind')});
         });
     });
 });

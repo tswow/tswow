@@ -25,23 +25,23 @@ export async function findCmake(): Promise<string> {
     const cmake_build = build_path('cmake');
     const cmake_zip = build_path('cmake.zip');
 
-    if(!wfs.exists(cmake_zip)) {
+    if (!wfs.exists(cmake_zip)) {
         await download(CMAKE_DOWNLOAD_URL, cmake_zip);
     }
 
-    if(!wfs.exists(cmake_build)) {
+    if (!wfs.exists(cmake_build)) {
         await unzip(cmake_zip, cmake_build);
     }
 
-    let subs = wfs.readDir(cmake_build,false);
-    if(subs.length!==1) {
+    const subs = wfs.readDir(cmake_build, false);
+    if (subs.length !== 1) {
         throw new Error(`Corrupt cmake installation, please remove it manually`);
     }
 
-    let exe = mpath(subs[0], 'bin','cmake.exe');
+    const exe = mpath(subs[0], 'bin', 'cmake.exe');
 
-    if(!wfs.exists(ipaths.cmakeExe)) {
-        wfs.copy(exe,ipaths.cmakeExe);
+    if (!wfs.exists(ipaths.cmakeExe)) {
+        wfs.copy(exe, ipaths.cmakeExe);
     }
 
     return exe;

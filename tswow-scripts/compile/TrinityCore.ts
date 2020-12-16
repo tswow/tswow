@@ -73,7 +73,7 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
 
         const binOut = mpath(bindir, 'trinitycore', outName);
 
-        if(!wfs.exists(binIn)) {
+        if (!wfs.exists(binIn)) {
             return;
         }
 
@@ -128,13 +128,13 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
     wfs.copy(headerSrc, headerDest);
 
     // Install TDB
-    if(!build_tdb) {
+    if (!build_tdb) {
         throw new Error(`No tdb file configured in build.yaml`);
     }
-    if(!wfs.exists(ipaths.tdb) || !wfs.exists(bpaths.tdb)) {
-        if(!wfs.exists(bpaths.tdb)) {
+    if (!wfs.exists(ipaths.tdb) || !wfs.exists(bpaths.tdb)) {
+        if (!wfs.exists(bpaths.tdb)) {
             await download(build_tdb, bpaths.tdb);
         }
-        wfs.copy(bpaths.tdb,ipaths.tdb);
+        wfs.copy(bpaths.tdb, ipaths.tdb);
     }
 }
