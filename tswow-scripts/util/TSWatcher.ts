@@ -219,8 +219,11 @@ export class TypeScriptWatcher {
         term.log(`Waiting for script to compile: ${this.path}`);
         while (this.isWaiting) {
             throwError();
+            // Ignore paths with no files.
+            if(!wfs.exists(this.path) || wfs.readDir(this.path).length==0) {
+                break;
+            }
             await wsys.sleep(100);
-            throwError();
         }
 
         term.success(`Finished compiling: ${this.path}`);
