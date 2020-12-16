@@ -17,12 +17,12 @@ _TSWoW is **not** a new server emulator, we have a standard C++ emulator forked 
 
 - Modding Veterans - TSWoW is primarily aimed at making modding more efficient and powerful. You will very fast realize the power of improving your workflow using programming instead of GUIs.
 
-TSWoW is a **programming environment**, and the language we use is _TypeScript_. This is among the easier languages to learn, and is very similar to Java, C#, JavaScript, Python etc and you can probably learn TSWoW by just following the crash course. However, if any of the following is foreign to you then you might want to review them before you get started: 
+TSWoW is a **programming environment**, and the language we use is _TypeScript_. This is among the easier languages to learn, and is very similar to Java, C#, JavaScript, Python etc. If you know any of those, you can probably learn TSWoW by just following the crash course. However, if any of the following is foreign to you then you might want to review them before you get started: 
 
 - Integrated development environment (IDE)
 - JSON
 - Functions, objects, classes, methods
-- Callback functions
+- Callback functions / Delegates
 - Command-line interface
 
 ## Links for getting started
