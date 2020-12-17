@@ -23,7 +23,7 @@ import { CreatureTemplate } from "./CreatureTemplate";
 export const CreatureTemplates = {
     create: (mod: string, id: string, parent: number) => {
         return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id)))
+            .clone(Ids.CreatureTemplate.id(mod, id))).GossipID.set(0)
     },
 
     load(id: number) {
