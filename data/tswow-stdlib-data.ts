@@ -27,6 +27,10 @@ import { Spells } from "./Spell/Spells";
 import { TalentTrees } from "./Talents/Talents";
 import { Titles } from "./Title/Titles";
 import { UI } from "./UI/UI";
+import { finish } from "wotlkdata";
+import { iterateIds } from "wotlkdata/ids/Ids";
+import * as fs from 'fs';
+import * as path from 'path';
 
 export const std = {
     Spells : Spells,
@@ -45,3 +49,29 @@ export const std = {
     CreatureInstances: CreatureInstances,
     TalentTrees: TalentTrees
 }
+
+// Patch ID files
+finish('build-idfiles',()=>{
+    let modulemap : {[key:string]: string}= {};
+    
+    iterateIds((r)=>{
+        if(!modulemap[r.mod]) {
+            modulemap[r.mod] = `export namespace ID {\n`;
+        }
+        const uMod = r.mod.toUpperCase();
+        const uName = r.name.toUpperCase();
+        if(r.size==1) {
+            modulemap[r.mod]+= `    export const ${uMod}_${uName} = GetID("${r.table}","${r.mod}","${r.name}");\n`
+        } else {
+            modulemap[r.mod]+= `    export const ${uMod}_${uName} = GetIDRange("${r.table}", "${r.mod}", "${r.name}");\n`
+        }
+    });
+
+    for(const mod in modulemap) {
+        modulemap[mod]+=`};`;
+        const scriptDir = path.join('./modules',mod,'scripts');
+        if(fs.existsSync(scriptDir)) {
+            fs.writeFileSync(path.join(scriptDir,'ID.ts'), modulemap[mod]);
+        }
+    }
+});
