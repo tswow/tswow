@@ -38,6 +38,7 @@ export class InstallPaths {
     get luaxmlSource() { return mpath(this.coreData, 'luaxml_source'); }
     get luaxmlBuild() { return mpath(this.coreData, 'luaxml'); }
     get startjs() {return mpath(this.coreData, 'start.js'); }
+    get coreIds() { return mpath(this.coreData, 'ids.txt'); }
 
     /** Bin paths */
     get bin() { return mpath(installBase, 'bin'); }
@@ -69,6 +70,7 @@ export class InstallPaths {
     /** Config paths */
     get config() { return mpath(installBase, 'config'); }
     get tswowConfig() { return mpath(this.config, 'tswow.yaml'); }
+    get configIds() { return mpath(this.config, 'ids.txt'); }
 
     /** Module paths */
     get modules() { return mpath(installBase, 'modules'); }

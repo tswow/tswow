@@ -71,6 +71,14 @@ function fullName(mod: string, name: string) {
     return `${mod}:${name}`;
 }
 
+export function iterateIds(callback: (range: IdRange) => any) {
+    for(const table of Object.values(mappings)) {
+        for(const entry of Object.values(table.entries)) {
+            callback(entry);
+        }
+    }
+}
+
 export class IdPrivate {
     protected static flushMemory() {
         mappings = {};

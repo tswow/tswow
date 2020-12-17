@@ -54,6 +54,9 @@ export namespace TrinityCore {
                 .forEach(x => wfs.copy(mpath(ipaths.tcRoot, x), mpath(buildDir, x)));
         }
 
+        // Copy over ID files
+        wfs.copy(ipaths.configIds, ipaths.coreIds);
+
         // Copy over config files
         wfs.readDir(ipaths.config, true)
             .filter(x => x.endsWith('.conf'))
