@@ -151,6 +151,7 @@ export namespace Modules {
             const datadir = mpath('modules', mod, 'data');
             if (wfs.exists(datadir)) {
                 try {
+                    wfs.write(mpath(datadir,'tsconfig.json'),data_tsconfig);
                     wsys.execIn(datadir, `node ../../../${ipaths.tsc}`);
                 } catch (error) {
                     term.error(error.message);
