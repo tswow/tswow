@@ -1,7 +1,6 @@
 {
     "files.exclude": {
         "**/modules/**/**/build": true,
-        "**/modules/**/**/global.d.ts": true,
         "**/modules/**/**/tsconfig.json": true,
         "bin": true,
         "coredata": true,
