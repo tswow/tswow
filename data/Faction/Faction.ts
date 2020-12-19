@@ -19,6 +19,7 @@ import { FactionRow } from "wotlkdata/dbc/types/Faction";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { FactionRelations } from "./FactionRelations";
+import { FactionReputation, FactionReputations } from "./FactionReputation";
 
 function emptyTemplate(id: number, factionId: number) {
     return DBC.FactionTemplate.add(id)
@@ -47,7 +48,6 @@ export class Faction extends MainEntity<FactionRow> {
         }
     }
 
-
     /**
      * This is the ID used for creatures
      */
@@ -63,12 +63,7 @@ export class Faction extends MainEntity<FactionRow> {
         return this.relationSets.slice(1);
     }
 
-    enableReputation(mod: string, id: string) {
-        if(this.row.ReputationIndex.get()==-1) {
-            this.row.ReputationIndex.set(Ids.ReputationIndex.id(mod, id));
-        }
-        return this;
-    }
+    get Reputation() { return new FactionReputations(this); }
 
     get Name() { return this.wrapLoc(this.row.Name); }
     get Description() { return this.wrapLoc(this.row.Description); }

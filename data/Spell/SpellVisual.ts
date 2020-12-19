@@ -109,7 +109,7 @@ export class SpellVisualKit extends Subsystem<Spell> {
             row = (kit as SpellVisualKitRow);
         }
         this.ptr.set(row.clone(Ids.SpellKit.id()).ID.get());
-        return this;
+        return this.owner;
     }
 }
 

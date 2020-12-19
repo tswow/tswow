@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { SqlRow } from "wotlkdata/sql/SQLRow";
 import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts";
 import { MainEntity } from "../Base/MainEntity";
 import { ActionType } from "./ActionType";
@@ -51,9 +53,10 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
 
     get then() {
         let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
-        // @ts-ignore - Don't change name 'link'
-        this.row._link = id;
+        SQLCellReadOnly.set(this.row.link,id);
         let sc = new SmartScript(this.owner, SQL.smart_scripts.add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT));
+        console.log("rowid:",sc.row.id.get())
+        sc.row.comment.set('tswow');
         sc.row.event_type.set(61);
         return sc;
     }
@@ -137,6 +140,7 @@ export const SmartScripts = {
 
     printCreature(creature: number) {
         const rows = SmartScripts.loadCreature(creature);
+        console.log(rows.map(x=>"ID"+x.row.id.get()+" "+x.row.link.get()))
         if(rows.length===0) {
             console.log(`Creature has no script rots!`);
             return;
@@ -152,10 +156,11 @@ export const SmartScripts = {
         for(const root of roots) {
             let cur : SmartScript<any> = root;
             let chain = []
+            let isBroken = false;
             while(cur.row.link.get() > 0) {
-                const nxt = rows.find(x=>x.row.id === cur.row.link);
+                const nxt = rows.find(x=>x.row.id.get() === cur.row.link.get());
                 if(!nxt) {
-                    console.log(`Broken link!`);
+                    isBroken = true;
                     break;
                 }
                 chain.push(nxt);
@@ -171,6 +176,9 @@ export const SmartScripts = {
                 console.log(`    target:${x.Target.getType()}(${JSON.stringify(x.Target.getArguments())})`)
                 console.log(`    action:${x.Action.getType()}(${JSON.stringify(x.Action.getArguments())})`)
             });
+            if(isBroken) {
+                console.log(`MISSING LINK: ${cur.row.link.get()}`);
+            }
         }
 
         return "";

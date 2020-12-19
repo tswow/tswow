@@ -93,7 +93,7 @@ export const TotemCreatures = {
         controllers: CreatureControlType[] = ControllerValues) {
             let bitmask = 0;
             slots.forEach((x)=>{
-                bitmask |= (1<<(x+2))
+                bitmask |= (1<<(x+1))
             });
 
             const controlOut = new CreatureControllers();

@@ -21,8 +21,14 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { any } from "wotlkdata/query/Relations";
 import { MainEntity } from "../Base/MainEntity";
 import { Ids } from "../Base/Ids";
+import { std } from "../tswow-stdlib-data";
+import { makeRacemask, RaceType } from "../Race/RaceType";
+import { ClassType, makeClassmask } from "../Class/ClassType";
+import { SQL } from "wotlkdata";
 
 const LANGUAGE_CATEGORY_ID = 10;
+const GUTTERSPEAK_SKILL = 673;
+const GUTTERSPEAK_SPELL = 17737;
 
 /**
  * Creates and handles languages in World of Warcraft,
@@ -59,7 +65,11 @@ export class Language extends MainEntity<LanguagesRow> {
         if(skill===undefined) {
             throw new Error('No skill for language '+this.row.Name.enGB.get());
         }
+
+        return spells[0];
     }
+
+    get Name() { return this.wrapLoc(this.row.Name); }
 
     addWords(words : string[]) {
         // word ids are never used, so their ids can just be incremented.
@@ -74,11 +84,8 @@ export class Language extends MainEntity<LanguagesRow> {
 }
 
 export const Languages = {
-    create : (mod : string, id : string, name : loc_constructor) => {
+    create : (mod : string, id : string, name: loc_constructor, autolearnRaces: RaceType[] = [], autolearnClasses: ClassType[] = []) => {
         const langRow = DBC.Languages.add(Ids.Language.id(mod,id),{Name:name});
-    
-        const GUTTERSPEAK_SKILL = 673;
-        const GUTTERSPEAK_SPELL = 17737;
 
         let gutterSpell = DBC.Spell.findById(GUTTERSPEAK_SPELL)
         let gutterSkill = DBC.SkillLine.findById(GUTTERSPEAK_SKILL)
@@ -86,12 +93,12 @@ export const Languages = {
         let gutterSkillAbility = DBC.SkillLineAbility.find({SkillLine:GUTTERSPEAK_SKILL});
 
         // Spell definition
-        const spell = gutterSpell.clone(Ids.Spell.id(mod,id))
+        const spell = gutterSpell.clone(Ids.Spell.id(mod,id+'_spell'))
             .Name.set(name)
             .EffectMiscValue.set([langRow.ID.get(),0,0])
 
         // Skill definition
-        const skill = gutterSkill.clone(Ids.SkillLine.id(mod,id))
+        const skill = gutterSkill.clone(Ids.SkillLine.id(mod,id+'_skill'))
             .DisplayName.set(name)
 
         // Class/race enabling
@@ -99,6 +106,20 @@ export const Languages = {
             .SkillID.set(skill.ID.get())
             .ClassMask.set(0xffff)
             .RaceMask.set(0xffff)
+
+        const cmask = makeClassmask(autolearnClasses);
+        const rmask = makeRacemask(autolearnRaces);
+        if(cmask!==0 || rmask!==0) {
+            // TODO: Doesn't work currently. Don't know why.
+            gutterSkillAbility.clone(Ids.SkillLineAbility.id())
+                .Spell.set(spell.ID.get())
+                .ClassMask.set(cmask)
+                .RaceMask.set(0)
+                .AcquireMethod.set(1)
+            SQL.playercreateinfo_spell_custom
+                .add(rmask, cmask, spell.ID.get())
+                .Note.set('TSWoW') 
+        }
 
         // Skill<->Spell Mapping
         const sla = gutterSkillAbility.clone(Ids.SkillLineAbility.id())

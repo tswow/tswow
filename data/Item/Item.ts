@@ -1,19 +1,19 @@
 /*
- * This file is part of tswow (https://github.com/tswow)
- *
- * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+* This file is part of tswow (https://github.com/tswow)
+*
+* Copyright (C) 2020 tswow <https://github.com/tswow/>
+* This program is free software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, version 3.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 import { DBC, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/Cell";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
@@ -50,14 +50,14 @@ export class ItemBase extends MainEntity<item_templateRow> {
     sqlRow : item_templateRow;
     dbcRow : ItemRow;
     displayRow : ItemDisplayInfoRow;
-
+    
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
     get StartQuest() { return this.wrap(this.row.startquest); }
     get LockID() { return this.wrap(this.row.lockid); }
     get RandomProperty() { return this.wrap(this.row.RandomProperty); }
     get RandomSuffix() { return this.wrap(this.row.RandomSuffix); }
-
+    
     /** Only applicable if item is a shield */
     get BlockChance() { return this.wrap(this.row.block); }
     get ItemSet() { return this.wrap(this.row.itemset); }
@@ -106,23 +106,19 @@ export class ItemBase extends MainEntity<item_templateRow> {
     get FoodType() { return new ItemFoodType(this); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
-
+    
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
-
-    get Icon() {
-        return Cell.make(this,
-            ()=>this.displayRow.InventoryIcon.getIndex(0), 
-            (value)=>this.displayRow.InventoryIcon.setIndex(0,value)
-        )
-    }
+    
+    get Icon() { return this.wrapIndex(this.displayRow.InventoryIcon,0); }
+    
     constructor(srow : item_templateRow, crow : ItemRow, display : ItemDisplayInfoRow) {
         super(srow);
         this.sqlRow = srow;
         this.dbcRow = crow;
         this.displayRow = display;
     }
-
+    
     get ID() {
         return this.sqlRow.entry.get();
     }
@@ -141,10 +137,12 @@ export const Items = {
         const [sqlParent,dbcParent,disParent] = getRows(parent);
         const sqlRow = sqlParent.clone(numid)
         const dbcRow = dbcParent.clone(numid);
-        const disRow = disParent.clone(numid);
+        const disRow = disParent.clone(Ids.ItemDisplayInfo.id());
+        dbcRow.DisplayInfoID.set(disRow.ID.get());
+        sqlRow.displayid.set(disRow.ID.get());
         return new ItemBase(sqlRow, dbcRow, disRow);
     },
-
+    
     load(item: number) {
         const [sql,dbc,dis] = getRows(item);
         return new ItemBase(sql, dbc, dis);

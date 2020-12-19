@@ -146,4 +146,12 @@ export const Ids = {
     SpellDescriptionVariable: new AutoIdGenerator(182),
     /** Starts at 2500, highest base value is 2401 */
     SpellDifficulty: new AutoIdGenerator(2500),
+    /** Starts at 33, highest base value is 32 */
+    SpellShapeshiftForm: new AutoIdGenerator(33),
+    /** Starts at 33000, highest base value is 32754 */
+    CreatureDisplayInfo: new AutoIdGenerator(33000),
+    /** Starts at 70000, highest base value is 68742 */
+    ItemDisplayInfo: new AutoIdGenerator(70000),
+    /** Starts at 8000, highest base value is 7087 */
+    SpellVisualEffectName: new AutoIdGenerator(8000),
 }

@@ -31,6 +31,8 @@ import { finish } from "wotlkdata";
 import { iterateIds } from "wotlkdata/ids/Ids";
 import * as fs from 'fs';
 import * as path from 'path';
+import { Factions } from "./Faction/Faction";
+import { SmartScripts } from "./SmartScript/SmartScript";
 
 export const std = {
     Spells : Spells,
@@ -47,7 +49,9 @@ export const std = {
     SkillLines: SkillLines,
     CreatureTemplates: CreatureTemplates,
     CreatureInstances: CreatureInstances,
-    TalentTrees: TalentTrees
+    TalentTrees: TalentTrees,
+    Factions: Factions,
+    Scripts: SmartScripts
 }
 
 // Patch ID files
@@ -58,12 +62,12 @@ finish('build-idfiles',()=>{
         if(!modulemap[r.mod]) {
             modulemap[r.mod] = `export namespace ID {\n`;
         }
-        const uMod = r.mod.toUpperCase();
-        const uName = r.name.toUpperCase();
+        const uMod = r.mod.toUpperCase().split('-').join('_').split(' ').join('_');
+        const uName = r.name.toUpperCase().split('-').join('_').split(' ').join('_');
         if(r.size==1) {
-            modulemap[r.mod]+= `    export const ${uMod}_${uName} = GetID("${r.table}","${r.mod}","${r.name}");\n`
+            modulemap[r.mod]+= `    export const ${uMod}_${uName} : uint32 = GetID("${r.table}","${r.mod}","${r.name}");\n`
         } else {
-            modulemap[r.mod]+= `    export const ${uMod}_${uName} = GetIDRange("${r.table}", "${r.mod}", "${r.name}");\n`
+            modulemap[r.mod]+= `    export const ${uMod}_${uName} : IDRange = GetIDRange("${r.table}", "${r.mod}", "${r.name}");\n`
         }
     });
 

@@ -40,6 +40,7 @@ import { CreatureInstances } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
+import { CreatureWaypoints } from "./CreatureWaypoints";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
 import { Trainer } from "./Trainer";
@@ -118,6 +119,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get SpellSchoolImmunity() { return this.wrap(this.row.spell_school_immune_mask); }
     get Trainer() { return new Trainer(this); }
     get Vendor() { return new Vendor(this); }
+    get Waypoints() { return new CreatureWaypoints(this); }
 
     spawn(mod: string, id: string, pos: Position) {
         CreatureInstances.create(mod, id, this.ID, pos);

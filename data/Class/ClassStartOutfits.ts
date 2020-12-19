@@ -178,5 +178,6 @@ export class ClassStartOutfits extends Subsystem<Class> {
                 }
             }
         }
+        return this.owner;
     }
 };

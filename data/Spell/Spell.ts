@@ -105,7 +105,7 @@ export class Spell extends MainEntity<SpellRow> {
     get ItemEquips() { return new SpellItemEquips(this); }
     get Proc() { return new SpellProc(this); }
     get Priority() { return this.wrap(this.row.SpellPriority); }
-    get Recovery() { return new SpellRecovery(this); }
+    get Cooldown() { return new SpellRecovery(this); }
     get MaxTargetLevel() { return this.wrap(this.row.MaxTargetLevel); }
     get MaxTargets() { return this.wrap(this.row.MaxTargets); }
     get DefenseType() { return this.wrap(this.row.DefenseType); }

@@ -38,5 +38,6 @@ export class SpellCastTime extends Subsystem<Spell> {
         this.Base.set(base);
         this.PerLevel.set(perLevel);
         this.Minimum.set(minimum)
+        return this.owner;
     }
 }

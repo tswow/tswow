@@ -220,6 +220,7 @@ export class ItemStats extends SystemArray<ItemStat,ItemBase> {
     clearAll() {
         super.clearAll();
         this.owner.row.StatsCount.set(0);
+        return this.owner;
     }
 
     addMana(value: number) { return this.add(0, value)}
