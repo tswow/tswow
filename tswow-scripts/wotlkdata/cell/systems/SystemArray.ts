@@ -23,12 +23,14 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
 
     clear(index: number) {
         this.get(index).clear();
+        return this.owner;
     }
 
     clearAll() {
         for (let i = 0; i < this.length; ++i) {
             this.clear(i);
         }
+        return this.owner;
     }
 
     protected getFree(): A {

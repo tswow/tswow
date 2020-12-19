@@ -41,11 +41,19 @@ export async function main() {
 
         await mysql.initialize();
 
-        // Initialize Modules
-        await Modules.initialize();
+        if(!process.argv.includes('minimal')) {
+            // Initialize Modules
+            await Modules.initialize();
 
-        // Initialize client
-        Client.initialize(!args.hasAnyFlag('noac'));
+            // Initialize client
+            Client.initialize(!args.hasAnyFlag('noac'));
+
+            // Initialize MPQ
+            Assets.initialize();
+
+            // Initialize tests
+            Test.initialize();
+        }
 
         // Initialize Azerothcore
         TrinityCore.initialize();
@@ -53,15 +61,12 @@ export async function main() {
             await TrinityCore.start();
         }
 
-        // Initialize MPQ
-        Assets.initialize();
-
-        // Initialize tests
-        Test.initialize();
-
         term.success(`Initialized tswow in ${timer.timeSec()}s`);
     } catch (error) {
         console.error('Failed to start tswow:', error);
     }
-    await commands.enterLoop();
+
+    if(!process.argv.includes('minimal')) {
+        await commands.enterLoop();
+    }
 }

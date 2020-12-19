@@ -121,6 +121,8 @@ const gitignores =
 *.bone
 *.skel
 build/
+tsconfig.json
+global.d.ts
 `;
 
 /**
@@ -212,12 +214,27 @@ export namespace Modules {
      */
     export function addModule(name: string) {
         const timer = Timer.start();
+
+        let url : string|undefined;
+        if(name.endsWith('.git')) {
+            url = name;
+            let split = name.split('/');
+            name = split[split.length-1].split('.git').join('');
+        }
+
         const modpath = modulePath(name);
         if (wfs.exists(modpath)) {
             throw new Error('Module already exists:' + name);
         }
 
-        wfs.mkDirs(modpath);
+        // It's a git repository
+        if(url) {
+            wsys.execIn(ipaths.modules,`git clone ${url}`);
+        } else {
+            wfs.mkDirs(modpath);
+            wsys.execIn(modpath, 'git init');
+        }
+
         wfs.mkDirs(mpath(modpath, 'data'));
         wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts(name));
         wfs.mkDirs(mpath(modpath, 'assets'));
@@ -225,11 +242,23 @@ export namespace Modules {
 
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
-        wfs.write(mpath(modpath, 'scripts', `${name}scripts.ts`), livescript_example);
+        wfs.write(mpath(modpath, 'scripts', getMainScriptName(name)), livescript_example);
 
-        wsys.execIn(modpath, 'git init');
         refreshModules(false);
         term.success(`Created module ${name} in ${timer.timeSec()}s`);
+    }
+
+    export function getMainScriptName(mod: string) {
+        return `${mod.split('-').join('_')}_scripts.ts`;
+    }
+
+    export function getBuiltLibraryName(mod: string) {
+        mod = `scripts_${mod.split(' ').join('_').split('-').join('_')}_ts`;
+        if(isWindows()) {
+            return `${mod}.dll`;
+        } else {
+            return `${mod}.so`;
+        }
     }
 
     /**
@@ -273,8 +302,9 @@ export namespace Modules {
         const files = wfs.readDir(scriptsDir, true, 'both');
 
         // Don't build if the entry point doesn't exist or its livescript is just the template.
-        if (!files.includes(`${name}scripts.ts`)) { return; }
-        if (wfs.read(mpath(scriptsDir, `${name}scripts.ts`)) === livescript_example) {
+        const mainScript = getMainScriptName(name);
+        if (!files.includes(mainScript)) { return false; }
+        if (wfs.read(mpath(scriptsDir, mainScript)) === livescript_example) {
             return false;
         }
 
@@ -283,7 +313,7 @@ export namespace Modules {
 
         wfs.copy(
             mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
-            mpath('bin', 'trinitycore', 'release', 'scripts', `scripts_${name}_ts.dll`)
+            mpath('bin', 'trinitycore', 'release', 'scripts', getBuiltLibraryName(name))
         );
         // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
@@ -401,8 +431,9 @@ export namespace Modules {
         // Delete all built libraries
         for (const p of [ipaths.tcReleaseScripts, ipaths.tcDebugScripts]) {
             wfs.readDir(p, true).forEach((x) => {
-                if (x.startsWith(`scripts_${name}_ts`)) {
-                    wfs.remove(mpath(p, x));
+                const lname = getBuiltLibraryName(name);
+                if(x===lname) {
+                    wfs.remove(mpath(p,lname));
                 }
             });
         }
@@ -446,7 +477,7 @@ export namespace Modules {
 
         const moduleC = commands.addCommand('module');
 
-        moduleC.addCommand('create', 'name', 'Create a new module', (args) => {
+        moduleC.addCommand('create', 'name', 'Create a new module from a name or git repository', (args) => {
             if (args.length < 1) { throw new Error('Please provide a name for the new module'); }
             addModule(args[0]);
         });

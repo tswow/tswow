@@ -53,6 +53,10 @@ export class SQLCellReadOnly<D extends CPrim, T extends SqlRow<any, any>> extend
         return this.owner;
     }
 
+    static set<D extends CPrim>(cell: SQLCellReadOnly<D,any>, v: D) {
+        cell.set(v);
+    }
+
     get(): D {
         return SqlRow.getRowObj(this.owner)[this.name];
     }

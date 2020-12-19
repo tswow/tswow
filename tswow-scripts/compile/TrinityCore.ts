@@ -92,7 +92,7 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
             install_path('bin', 'libraries', wfs.basename(x))));
 
         // copy executables
-        wfs.copy(binIn, binOut, args.hasAnyFlag('flushData'));
+        wfs.copy(binIn, binOut, true);
         // copy config files
         wfs.readDir(confIn, true, 'files')
             .filter(x => x.endsWith('.conf.dist'))
