@@ -19,6 +19,7 @@ import { Process } from '../util/Process';
 import { wfs, mpath } from '../util/FileSystem';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
+import { term } from '../util/Terminal';
 
 /**
  * Contains functions to handle the `worldserver` (main process) of TrinityCore.
@@ -55,7 +56,9 @@ export namespace TrinityCore {
         }
 
         // Copy over ID files
-        wfs.copy(ipaths.configIds, ipaths.coreIds);
+        if(wfs.exists(ipaths.configIds)) {
+            wfs.copy(ipaths.configIds, ipaths.coreIds);
+        }
 
         // Copy over config files
         wfs.readDir(ipaths.config, true)
@@ -66,6 +69,8 @@ export namespace TrinityCore {
         if (!wfs.exists(ipaths.dbcBuild) || wfs.readDir(ipaths.dbcBuild).length === 0) {
             wfs.copy(ipaths.dbcSource, ipaths.dbcBuild);
         }
+
+        term.log('Worldserver starting... (Output is a little delayed, hold on)')
 
         // TODO: linux
         worldserver.startIn(ipaths.coreData,
