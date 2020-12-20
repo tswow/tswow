@@ -121,14 +121,13 @@ export class Process {
         }
 
         return this.stopPromise = new Promise<void>((res) => {
-            // Cast is ok because only we should be allowed to set process to null
-            (<ChildProcessWithoutNullStreams>this.process).on('exit', () => {
-                this.process = undefined;
-                this.stopPromise = undefined;
-                res();
-            });
-
             if (this.process !== undefined) {
+                (<ChildProcessWithoutNullStreams>this.process).on('exit', () => {
+                    this.process = undefined;
+                    this.stopPromise = undefined;
+                    res();
+                });
+
                 this.process.kill();
             } else {
                 res();
