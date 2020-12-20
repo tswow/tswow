@@ -146,6 +146,8 @@ export class Command {
 export namespace commands {
     const rootCommand = new Command('', '', '');
 
+    let trace = false;
+
     export async function sendCommand(input: string) {
         const cmd = rootCommand.findCommand(input.split(' ').filter(x => x.length > 0));
         if (cmd === undefined) {
@@ -164,7 +166,7 @@ export namespace commands {
                 await rootCommand.handle(args);
             } catch (error) {
                 if (error && error.message) {
-                    if (cfg.display.print_stacktrace()) {
+                    if (trace||cfg.display.print_stacktrace()) {
                         term.error(error, error.stack);
                     } else {
                         term.error(error);
@@ -203,6 +205,19 @@ export namespace commands {
     // Print command
     addCommand('print', 'messages', 'Prints out messages to the screen', (args) => {
         term.log(args.join(' '));
+    });
+
+    addCommand('trace','true|false','Enables or disables stack tracing',(arg)=>{
+        switch(arg[0]){
+            case 'true':
+                trace = true
+                break;
+            case 'false':
+                trace = false;
+                break;
+            default:
+                throw new Error(`This command needs true|false`);
+        }
     });
 
     // Custom commands
