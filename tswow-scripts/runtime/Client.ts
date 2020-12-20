@@ -23,14 +23,38 @@ import { Process } from '../util/Process';
 export namespace Client {
     const wowpath = mpath(cfg.client.directory(), 'wow.exe');
     const wowprocess = new Process();
+
     wowprocess.showOutput(false);
 
     export function isRunning() {
         return wowprocess.isRunning();
     }
 
+    /**
+     * Writes the bytes 0xb803000ebedc3 to 0x415b5f in the wow.exe binary to enable interface patches.
+     * 
+     * This fixes the client crash: "Your login interface files are corrupt. Please reinstall the game"
+     * 
+     * @param clientPath 
+     */
+    export function fixClientBinary(clientPath: string) {
+        const BIN_FIX_OFFSET = 0x415b5F;
+        // 0xb803000ebedc3
+        const BIN_FIX_VALUE = BigInt("14118198792108901304")
+
+        const wowbin = wfs.readBin(clientPath);
+        if(wowbin.readBigUInt64LE(BIN_FIX_OFFSET)!==BIN_FIX_VALUE) {
+            wfs.makeBackup(clientPath, `${clientPath}.backup`);
+        }
+
+        wowbin.writeBigUInt64LE(BIN_FIX_VALUE, BIN_FIX_OFFSET)
+        wfs.writeBin(clientPath, wowbin);
+    }
+
     export async function start() {
         await wowprocess.stop();
+
+        fixClientBinary(wowpath);
 
         if (isWindows()) {
             clearCache();

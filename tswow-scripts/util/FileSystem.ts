@@ -377,6 +377,17 @@ export namespace wfs {
         fs.writeFileSync(file, data);
     }
 
+    /**
+     * Write a binary file to the file system.
+     * @param file Path to the file to write
+     * @param data Buffer to write
+     * @throws if `file` points at an existing directory.
+     */
+    export function writeBin(file: string, data: Buffer) {
+        mkDirs(path.dirname(file));
+        fs.writeFileSync(file, data);
+    }
+
     export function writeStream(file: string) {
         return fs.createWriteStream(file, {flags: 'a'});
     }
@@ -389,6 +400,29 @@ export namespace wfs {
      */
     export function read(filePath: string) {
         return fs.readFileSync(filePath).toString();
+    }
+
+    /**
+     * Creates a numbered backup of a file, checking for previous backups
+     * so they are not overwritten.
+     * @param filePath 
+     * @param backupBase 
+     */
+    export function makeBackup(filePath: string, backupBase: string) {
+        let i = 1;
+        while(wfs.exists(`${backupBase}_${i}`)) {
+            ++i;
+        }
+        wfs.copy(filePath,`${backupBase}_${i}`);
+    }
+
+    /**
+     * Reads a binary file from the file system
+     * @throws if `path` doesn't point at a file
+     * @returns Buffer containing the file at `path`
+     */
+    export function readBin(filePath: string) {
+        return fs.readFileSync(filePath);
     }
 
     /**
