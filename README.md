@@ -1,10 +1,8 @@
 # TSWoW
 
-## (Not quite released yet!)
-
 _Please note: TSWoW is in early development stage. While we have a lot of features implemented, there are still many things left to add and the editor environment has a few stability issues._
 
-TSWoW (TypeScript WoW) is a **free** modding framework, mod loader and integrated development environment for the World of Warcraft: Wrath of the Lich King (WotLK) expansion. Our aim is to create the most powerful and accessible modding framework ever made for this game.
+TSWoW (TypeScript WoW) is a **free** modding framework, mod loader and integrated development environment for the World of Warcraft: Wrath of the Lich King (WotLK) expansion. 
 
 With TSWoW, you use the TypeScript programming language and the VSCodium editor with its incredible autocompletion and IntelliSense to easily modify the World of Warcraft game data and to script the behavior of the server. 
 
