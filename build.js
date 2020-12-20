@@ -49,18 +49,19 @@ function do_in(dir, callback) {
 
 // Create build/install directories
 const buildLine = findLine('build_directory');
-const installLine = findLine('install_directory');
 if(!fs.existsSync(buildLine)) {
     fs.mkdirSync(buildLine,{recursive:true});
 }
-if(!fs.existsSync(installLine)) {
-    fs.mkdirSync(installLine,{recursive:true});
-}
 
 // Scripts config
-const scripts_config_dir = path.join(buildLine,'scripts_config');
-const scrips_out_dir = path.relative(scripts_config_dir,path.join(installLine,'bin','scripts','tswow'));
+const scripts_config_dir = path.join(buildLine,'bootstrap_config');
+const scripts_out_dir = path.relative(scripts_config_dir,path.join(buildLine,'bootstrap'));
 const scripts_root_dir = path.relative(scripts_config_dir,'./tswow-scripts');
+
+const bootstrap_root = path.resolve(path.join(buildLine,'bootstrap'));
+if(!fs.existsSync(bootstrap_root)) {
+    fs.mkdirSync(bootstrap_root);
+}
 
 // Compiler config
 const compile_config_dir = path.join(buildLine, 'compiler_config');
@@ -69,7 +70,7 @@ const compile_tsconfig =
     "compilerOptions": {
       "target": "es2018",
       "module": "commonjs",
-      "outDir": ${JSON.stringify(path.join(scrips_out_dir,'compile'))},
+      "outDir": ${JSON.stringify(path.join(scripts_out_dir,'compile'))},
       "strict": true,
       "esModuleInterop": true,
       "sourceMap": true,
@@ -88,10 +89,10 @@ try { child_process.execSync('tsc --help'); }
 catch(err) { child_process.execSync('npm i --g typescript'); }
 
 // Compile build scripts
-fs.copyFileSync('./package.json',path.join(installLine,'package.json'));
-do_in(installLine,()=>child_process.execSync('npm i',{stdio:'inherit'}))
+fs.copyFileSync('./package.json',path.join(bootstrap_root,'package.json'));
+do_in(bootstrap_root,()=>child_process.execSync('npm i',{stdio:'inherit'}))
 do_in(compile_config_dir,()=>child_process.execSync('tsc',{stdio:'inherit'}));
 
 // Start main build loop
-const mainBuildPath = path.join(installLine,'bin','scripts','tswow','compile','compile','CompileTsWow.js');
+const mainBuildPath = path.join(bootstrap_root,'compile','compile','CompileTsWow.js');
 child_process.execSync(`node -r source-map-support/register ${mainBuildPath} ${process.argv.slice(2).join(' ')}`,{stdio:'inherit'});
