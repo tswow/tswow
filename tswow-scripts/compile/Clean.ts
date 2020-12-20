@@ -41,10 +41,11 @@ export async function cleanInstall() {
         wfs.copy(ipaths.modules, garbagePath());
         term.log(`Created backups of your modules in ${wfs.absPath(garbagePath())}`);
     }
-    wfs.remove(install_directory);
 
-    if (wfs.exists(install_directory)) {
-        throw new Error(`Failed to remove install directory`);
+    wfs.clearDir(install_directory);
+    if(wfs.readDir(install_directory).length>0) {
+        throw new Error(`Failed to clear install directory`);
     }
+
     term.success('Cleaned install directory');
 }
