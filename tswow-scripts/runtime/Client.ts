@@ -19,6 +19,7 @@ import { mpath, wfs } from '../util/FileSystem';
 import { cfg } from '../util/Config';
 import { commands } from './Commands';
 import { Process } from '../util/Process';
+import { ipaths } from '../util/Paths';
 
 export namespace Client {
     const wowpath = mpath(cfg.client.directory(), 'wow.exe');
@@ -28,6 +29,25 @@ export namespace Client {
 
     export function isRunning() {
         return wowprocess.isRunning();
+    }
+
+    /**
+     * Verifies that the client exists
+     * @throws if some client file can't be found
+     */
+    export function verify() {
+        const cpath = cfg.client.directory();
+        if(!wfs.exists(cpath)) {
+            throw new Error(`Missing client directory.`);
+        }
+
+        if(!wfs.exists(mpath(cpath, 'wow.exe'))) {
+            throw new Error(`Missing wow.exe`);
+        }
+
+        if(!wfs.exists(mpath(cpath,'Data'))) {
+            throw new Error(`Missing data directory`);
+        }
     }
 
     /**

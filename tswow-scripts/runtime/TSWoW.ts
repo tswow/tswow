@@ -27,6 +27,7 @@ import { Client } from './Client';
 import { Test } from './Test';
 import { Assets } from './Assets';
 import { InstallPaths } from '../util/Paths';
+import { wfs } from '../util/FileSystem';
 
 InstallPaths.setInstallBase('./');
 
@@ -34,6 +35,18 @@ export async function main() {
     try {
         term.log('~tswow starting up~');
         const timer = Timer.start();
+
+
+        try{
+            Client.verify();
+        } catch(error) {
+            term.error(
+                `${error.message}: ` +
+                `Check your settings in ` +
+                `config/tswow.yaml.`
+            );
+            process.exit(0);
+        }
 
         // Setup Config and data files
         cfg.trinitycore.updateAcConfigs();
