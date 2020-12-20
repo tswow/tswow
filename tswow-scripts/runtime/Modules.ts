@@ -147,6 +147,7 @@ export namespace Modules {
     export function setEditable(mod: string, editable: boolean) {
         if (editable) {
             wfs.remove(mpath('modules', mod, 'noedit'));
+            getTSWatcher(mpath('modules',mod,'data'))
         } else {
             const datadir = mpath('modules', mod, 'data');
             if (wfs.exists(datadir)) {
@@ -375,9 +376,6 @@ export namespace Modules {
         }
 
         term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);
-        if (oldStarted) {
-            Client.start();
-        }
 
         // Finally, we wait for the SQL files to copy if we moved them.
         return wrap;
