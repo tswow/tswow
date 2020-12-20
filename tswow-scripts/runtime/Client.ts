@@ -38,16 +38,42 @@ export namespace Client {
      * @param clientPath 
      */
     export function fixClientBinary(clientPath: string) {
-        const BIN_FIX_OFFSET = 0x415b5F;
-        // 0xb803000ebedc3
-        const BIN_FIX_VALUE = BigInt("14118198792108901304")
-
         const wowbin = wfs.readBin(clientPath);
-        if(wowbin.readBigUInt64LE(BIN_FIX_OFFSET)!==BIN_FIX_VALUE) {
-            wfs.makeBackup(clientPath, `${clientPath}.backup`);
+
+        const byteOffsets = [
+            {offset: 0x126, value: 0x23},
+            {offset: 0x1f41bf, value: 0xeb},
+            {offset: 0x415a25, value: 0xeb},
+            {offset: 0x415a3f, value: 0x3},
+            {offset: 0x415a95, value: 0x3},
+            {offset: 0x415b46, value: 0xeb},
+            {offset: 0x415b5f, value: 0xb8},
+            {offset: 0x415b60, value: 0x03},
+            {offset: 0x415b61, value: 0},
+            {offset: 0x415b62, value: 0},
+            {offset: 0x415b63, value: 0},
+            {offset: 0x415b64, value: 0xeb},
+            {offset: 0x415b65, value: 0xed},
+        ]
+
+        let found = false;
+        for(const {offset,value} of byteOffsets) {
+            if(wowbin.readUInt8(offset)!==value) {
+                found = true;
+                break;
+            }
         }
 
-        wowbin.writeBigUInt64LE(BIN_FIX_VALUE, BIN_FIX_OFFSET)
+        if(!found) {
+            return;
+        }
+        
+        wfs.makeBackup(clientPath, `${clientPath}.backup`);
+
+        for(const {offset,value} of byteOffsets) {
+            wowbin.writeUInt8(value, offset);
+        }
+
         wfs.writeBin(clientPath, wowbin);
     }
 
