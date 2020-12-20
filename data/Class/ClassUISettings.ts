@@ -19,6 +19,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Edit, EditSystem } from "wotlkdata/luaxml/TextFile";
 import { AnchorRow } from "../UI/Components/AnchorRow";
 import { Class } from "./Class";
+import { Cell, CellSimple } from "wotlkdata/cell/Cell";
 
 function float(rgb : number) {
     let str = `{ r = ${(((rgb>>16)&0xff)/255.0).toFixed(2)} , `
@@ -119,50 +120,44 @@ class ClassDescription extends Subsystem<Class> {
         this.female = female;
     }
 
+    get Male() {
+        return new CellSimple(this,
+            ()=>this.descPayload(this.male.text),
+            (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${value}";`)
+    }
+
+    get Female() {
+        return new CellSimple(this,
+            ()=>this.descPayload(this.female.text),
+            (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${value}";`)
+    }
+
     private descPayload(desc : string) {
         return desc.substring(desc.indexOf('"'),desc.length-2);
     }
 
-    setMale(text: string) {
-        this.male.text = `CLASS_${this.owner.Filename} = "${text}";`;
-        return this.owner;
-    }
-
-    setFemale(text: string) {
-        this.female.text = `CLASS_${this.owner.Filename} = "${text}";`
-        return this.owner;
-    }
-
-    getMale() {
-        return this.descPayload(this.male.text);
-    }
-
-    getFemale() {
-        return this.descPayload(this.female.text);
-    }
-
     set(text: string) {
-        this.setMale(text);
-        this.setFemale(text);
+        this.Male.set(text);
+        this.Female.set(text);
         return this.owner;
     }
 }
 
 // TODO: Fix sort order
 export class ClassUISettings extends Subsystem<Class> {
-    readonly color: ClassColor;
-    readonly tcoords: TCoordSystem;
-    readonly classButton: AnchorRow<Class>;
-    readonly info: ClassInfoRows;
-    readonly description: ClassDescription;
+    readonly Color: ClassColor;
+    readonly TCoords: TCoordSystem;
+    readonly ClassButton: AnchorRow<Class>;
+    readonly Info: ClassInfoRows;
+    readonly Description: ClassDescription;
 
     constructor(cls : Class,tCoordsCC : Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
         super(cls);
-        this.tcoords = new TCoordSystem(cls, tCoords, tCoordsCC);
-        this.color = new ClassColor(cls, classColor);
-        this.classButton = new AnchorRow(cls, xmlEdit);
-        this.description = new ClassDescription(cls, maleDescription, femaleDescription )
-        this.info = new ClassInfoRows(cls, infoRows);
+        this.TCoords = new TCoordSystem(cls, tCoords, tCoordsCC);
+        this.Color = new ClassColor(cls, classColor);
+        this.ClassButton = new AnchorRow(cls, xmlEdit);
+        this.Description = new ClassDescription(cls, maleDescription, femaleDescription )
+        this.Info = new ClassInfoRows(cls, infoRows);
         return this;
     }
 }
