@@ -73,8 +73,12 @@ class Connection {
      */
     constructor(type: DatabaseType) {
         this.cfg = cfg.databaseSettings(type);
-        this.con = mysql_lib.createConnection(this.cfg);
+        this.con = mysql_lib.createConnection(this.config());
         this.type = type;
+    }
+
+    private config() {
+        return Object.assign(this.cfg, {multipleStatements: true});
     }
 
     /**
@@ -130,7 +134,7 @@ class Connection {
      */
     connect() {
         if (this.status !== undefined) { return this.status; }
-        this.con = mysql_lib.createConnection(this.cfg);
+        this.con = mysql_lib.createConnection(this.config());
         return this.status = new Promise<void>(async (res, rej) => {
             try {
                 await promiseConnect(this);
@@ -305,13 +309,28 @@ export namespace mysql {
             FileChanges.tagChange(ipaths.tdb, 'tdb');
         }
 
-        await wfsa.iterate(ipaths.startupSql, async (file) => {
-            if (file.endsWith('.sql')) {
-                const contents = wfs.read(file);
-                await world_src.query(contents);
-                await world.query(contents);
-            }
-        });
+        // Special hack to get the characters tables in, because some scripts depend on it
+        let rowCount = await characters.query('SHOW TABLES; SELECT FOUND_ROWS()');
+        if(rowCount[1][0]['FOUND_ROWS()']===0) {
+            await characters.query(wfs.read(ipaths.createCharactersSql));
+        }
+
+        for(const db of ['world','auth','characters']) {
+            await wfsa.iterate(mpath(ipaths.startupSql,db), async (file) => {
+                if (file.endsWith('.sql')) {
+                    const contents = wfs.read(file);
+                    try {
+                        await getDatabase(db).query(contents);
+                        if(db==='world') {
+                            await world_src.query(contents);
+                        }
+                    } catch(err) {
+                        term.error(`Error on file ${file}`)
+                        term.error(err.message);
+                    }
+                }
+            });
+        }
     }
 
     export async function initialize() {

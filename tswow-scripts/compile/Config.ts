@@ -37,7 +37,7 @@ export async function createConfig() {
         wfs.mkDirs(ipaths.coreData);
     }
 
-    wfs.copy(mpath('./tswow-scripts', 'sql'), install_path('bin', 'sql'));
+    wfs.copy(mpath('./tswow-scripts', 'sql'), install_path('bin', 'sql'), true);
 
     if (!wfs.exists(ipaths.modules)) {
         wfs.mkDirs(ipaths.modules);

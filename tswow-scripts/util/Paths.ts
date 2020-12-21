@@ -61,11 +61,13 @@ export class InstallPaths {
     get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
     get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
     get sevenZaExe() { return mpath(this.bin, '7zip', '7za.exe'); }
+
     get startupSql() { return mpath(this.bin, 'sql'); }
 
     /** Misc paths */
     get nodeModules() { return mpath(installBase, 'node_modules'); }
     get vscodeWorkspace() { return mpath(installBase, '.vscode'); }
+    get createCharactersSql() { return mpath(this.bin, 'sql', 'characters_create.sql')}
 
     /** Config paths */
     get config() { return mpath(installBase, 'config'); }

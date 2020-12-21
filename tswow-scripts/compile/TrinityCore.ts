@@ -19,7 +19,6 @@ import { wfs, mpath } from '../util/FileSystem';
 import { TRINITYCORE_BUILD_PATH, TRINITYCORE_SOURCE_PATH, install_path, build_path, build_tdb } from './BuildConfig';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
-import { args } from '../util/Args';
 import { bpaths, ipaths } from '../util/Paths';
 import { download } from './CompileUtils';
 
@@ -28,7 +27,8 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
 
     wfs.mkDirs(TRINITYCORE_BUILD_PATH);
 
-    const compileType = args1.includes('dynamic') ? 'dynamic' : 'static';
+    // We no longer make non-dynamic builds.
+    const compileType = 'dynamic';
     const scripts = args1.includes('minimal') ?
         `minimal-${compileType}` :
             args1.includes('noscripts') ? 'none' : compileType;
@@ -101,7 +101,7 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
                 const outDist = mpath(ipaths.coreData, x);
                 const outConf = mpath(ipaths.config, x.replace('.dist', ''));
                 wfs.copy(inPath, outDist);
-                if (!wfs.exists(outConf)) { wfs.copy(inPath, outConf); }
+                wfs.copy(inPath, outConf);
             });
     }
     // Don't create debug directory on linux while we don't support it
