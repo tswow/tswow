@@ -33,6 +33,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Factions } from "./Faction/Faction";
 import { SmartScripts } from "./SmartScript/SmartScript";
+import { Gossips } from "./Gossip/Gossips";
 
 export const std = {
     Spells : Spells,
@@ -51,7 +52,8 @@ export const std = {
     CreatureInstances: CreatureInstances,
     TalentTrees: TalentTrees,
     Factions: Factions,
-    Scripts: SmartScripts
+    Scripts: SmartScripts,
+    Gossip: Gossips
 }
 
 // Patch ID files

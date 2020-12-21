@@ -20,6 +20,7 @@ import { WrappedLoc } from "wotlkdata/cell/WrappedLoc";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { GOCreature } from "../Base/GOorCreature";
 import { Ids } from "../Base/Ids";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
 import { Gossip } from "./Gossip";
@@ -28,6 +29,14 @@ function getNpcText(id: number) {
     let text = SQL.npc_text.find({ID: id});
     if(text===undefined) {
         text = SQL.npc_text.add(Ids.NPCText.id())
+            .BroadcastTextID0.set(0)
+            .BroadcastTextID1.set(0)
+            .BroadcastTextID2.set(0)
+            .BroadcastTextID3.set(0)
+            .BroadcastTextID4.set(0)
+            .BroadcastTextID5.set(0)
+            .BroadcastTextID6.set(0)
+            .BroadcastTextID7.set(0)
     }
     return text;
 }
@@ -160,11 +169,11 @@ function emoteDelay(id: number, index: number) {
     }
 }
 
-export class GossipText<T> extends SQLLocSystem<GossipTextEntry<T>> {
+export class GossipText<G,T extends GOCreature<G>> extends SQLLocSystem<GossipTextEntry<G,T>> {
     protected index: number;
     protected isFemale: boolean;
     protected id: number;
-    constructor(owner: GossipTextEntry<T>, id: number, index: number, isFemale: boolean) {
+    constructor(owner: GossipTextEntry<G,T>, id: number, index: number, isFemale: boolean) {
         super(owner);
         this.index = index;
         this.isFemale = isFemale;
@@ -180,8 +189,8 @@ export class GossipText<T> extends SQLLocSystem<GossipTextEntry<T>> {
     }
 }
 
-export class GossipTextEntry<T> extends ArrayEntry<Gossip<T>> {
-    clear(): Gossip<T> {
+export class GossipTextEntry<G,T extends GOCreature<G>> extends ArrayEntry<Gossip<G,T>> {
+    clear(): Gossip<G,T> {
         this.Probability.set(0);
         return this.owner;
     }
@@ -200,12 +209,12 @@ export class GossipTextEntry<T> extends ArrayEntry<Gossip<T>> {
     get EmoteDelay() { return this.wrap(emoteDelay(this.ID, this.index)); }
 }
 
-export class GossipTextArray<T> extends SystemArray<GossipTextEntry<T>,Gossip<T>> {
+export class GossipTextArray<G,T extends GOCreature<G>> extends SystemArray<GossipTextEntry<G,T>,Gossip<G,T>> {
     get length(): number {
         return 8;
     }
 
-    get(index: number): GossipTextEntry<T> {
+    get(index: number): GossipTextEntry<G,T> {
         return new GossipTextEntry(this.owner, index);
     }
 
@@ -216,6 +225,7 @@ export class GossipTextArray<T> extends SystemArray<GossipTextEntry<T>,Gossip<T>
         entry.Lang.set(lang);
         entry.Emote.set(emote);
         entry.EmoteDelay.set(emoteDelay);
+        entry.Probability.set(1);
         return this.owner;
     }
 

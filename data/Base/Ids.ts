@@ -116,8 +116,8 @@ export const Ids = {
     NPCText: new AutoIdGenerator(1000000),
     /** Starts at 100000, Highest base value is 74294 */
     GossipMenuOption: new AutoIdGenerator(100000),
-    /** Starts at 100000, highest base value is 57019 */
-    GossipMenu: new AutoIdGenerator(100000),
+    /** Starts at 58000, highest base value is 57019 */
+    GossipMenu: new AutoIdGenerator(58000),
     /** Starts at 100000, highest base value is 77865 */
     BroadcastText: new AutoIdGenerator(100000),
     /** Starts at 210, highest base value is 209 */
@@ -154,4 +154,14 @@ export const Ids = {
     ItemDisplayInfo: new AutoIdGenerator(70000),
     /** Starts at 8000, highest base value is 7087 */
     SpellVisualEffectName: new AutoIdGenerator(8000),
+    /** 
+     * Starts at 5000000, highest base value is CreatureTemplate which grows up from 1000000.
+     * Will collide if using more than 4000000 creature templates.
+     */
+    Vendor: new AutoIdGenerator(4000000),
+    /** 
+     * Starts at 8000000, highest base value is Vendor which grows up from 4000000.
+     * Will collide if using more than 4000000 Vendors.
+     */
+    TrainerCreature: new AutoIdGenerator(8000000)
 }

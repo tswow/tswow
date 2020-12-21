@@ -16,27 +16,28 @@
  */
 import { SQL } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { loc_constructor } from "wotlkdata/primitives";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
+import { GOCreature } from "../Base/GOorCreature";
 import { Ids } from "../Base/Ids";
 import { BroadcastText } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
 import { Gossip } from "./Gossip";
-import { GossipIconCell, GossipIcons } from "./GossipIcon";
-import { GossipOptionType } from "./GossipOptionType";
-import { Gossips } from "./Gossips";
+import { GossipIconCell } from "./GossipIcon";
+import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
-export class GossipOption<T> extends Subsystem<Gossip<T>> {
-    readonly Condition = new Condition(this,0,0,0,0,0);
+export class GossipOption<G,T extends GOCreature<G>> extends Subsystem<Gossip<G,T>> {
+    readonly Condition: Condition<this>;
+    //readonly Condition = new Condition(this,15,this.up().ID,this.row.OptionID.get(),0,0);
     readonly row: gossip_menu_optionRow;
 
-    constructor(owner: Gossip<T>, row: gossip_menu_optionRow) {
+    constructor(owner: Gossip<G,T>, row: gossip_menu_optionRow) {
         super(owner);
         this.row = row;
+        this.Condition = new Condition(this, 15, this.up().ID,this.row.OptionID.get(),0);
     }
 
-    get Icon(){return new GossipIconCell<T>(this); }
-    get Type(){return new GossipOptionType<T>(this); }
+    get Icon(){return new GossipIconCell<G,T>(this); }
+    get Action(){return new GossipOptionAction<G,T>(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get MenuID() { return this.wrap(this.row.ActionMenuID); }
         
@@ -53,35 +54,27 @@ export class GossipOption<T> extends Subsystem<Gossip<T>> {
     }
 }
 
-export class GossipOptions<T> extends Subsystem<Gossip<T>> {
+export class GossipOptions<G,T extends GOCreature<G>> extends Subsystem<Gossip<G,T>> {
     get length() {
         return SQL.gossip_menu_option
-            .filter({MenuID:this.owner.MenuID}).length;
+            .filter({MenuID:this.owner.ID}).length;
     }
 
-    getIndex(index: number) : GossipOption<T> {
+    getIndex(index: number) : GossipOption<G,T> {
         return new GossipOption(this.owner, SQL.gossip_menu_option
-            .find({MenuID: this.owner.MenuID, OptionID: index}));
+            .find({MenuID: this.owner.ID, OptionID: index}));
     }
 
-    forEach(callback: (option: GossipOption<T>)=>any) {
-        SQL.gossip_menu_option.filter({MenuID: this.owner.MenuID})
+    forEach(callback: (option: GossipOption<G,T>)=>any) {
+        SQL.gossip_menu_option.filter({MenuID: this.owner.ID})
             .forEach(x=>callback(new GossipOption(this.owner, x)));
     }
 
-    add() {
-        let id = this.length+1;
+    add() : GossipOption<G,T> {
         return new GossipOption(this.owner, 
-            SQL.gossip_menu_option.add(this.owner.MenuID, id))
-    }
-
-    addSubmenu(icon: GossipIcons, optionText: loc_constructor) {
-        const opt = this.add();
-        const gossip = Gossips.create(this.owner);
-        opt.Text.MaleText.set(optionText);
-        opt.Icon.set(icon);
-        opt.Type.setGossip();
-        opt.MenuID.set(gossip.MenuID);
-        return gossip;
+            SQL.gossip_menu_option.add(this.owner.ID, this.length)
+                .OptionType.set(1)
+                .OptionNpcFlag.set(1)
+            )
     }
 }

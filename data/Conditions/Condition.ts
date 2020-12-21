@@ -7,16 +7,15 @@ import { RaceType, resolveRaceType } from "../Race/RaceType";
 export type ReputationRanks =
     'HATED' | 'HOSTILE' | 'UNFRIENDLY' | 'NEUTRAL' | 'FRIENDLY' | 'HONORED' | 'REVERED' | 'EXALTED'
 
-
 /**
  * TODO: Unfinished, finish this
  */
 export class Condition<T> extends Subsystem<T> {
     protected state: conditionsCreator = {};
 
-    private addRow(type: number, value1: number = 0, value2: number = 0, value3: number = 0) {
+    private addRow(type: number, group: number, value1: number = 0, value2: number = 0, value3: number = 0) {
         SQL.conditions.add(this.sourceType, this.sourceGroup, 
-            this.sourceEntry, this.sourceId, this.elseGroup,
+            this.sourceEntry, this.sourceId, group,
             type, 0, value1, value2, value3)
         return this.owner;
     }
@@ -25,34 +24,32 @@ export class Condition<T> extends Subsystem<T> {
     private sourceGroup: number;
     private sourceEntry: number;
     private sourceId: number;
-    private elseGroup: number;
 
-    constructor(owner: T, sourceType: number, sourceGroup: number, sourceEntry: number, sourceId: number, elseGroup: number) {
+    constructor(owner: T, sourceType: number, sourceGroup: number, sourceEntry: number, sourceId: number) {
         super(owner);
         this.sourceType = sourceType;
         this.sourceGroup = sourceGroup;
         this.sourceEntry = sourceEntry;
         this.sourceId = sourceId;
-        this.elseGroup = elseGroup;
     }
 
-    addHasAura(spelLId: number, effectIndex: number) {
-        return this.addRow(1,spelLId,effectIndex);
+    addHasAura(spelLId: number, effectIndex: number, group = 0) {
+        return this.addRow(1,group,spelLId,effectIndex);
     }
 
-    addHasItem(item: number, count: number, inBank: boolean = false) {
-        return this.addRow(2,item,count,inBank ? 1 : 0);
+    addHasItem(item: number, count: number, inBank: boolean = false, group = 0) {
+        return this.addRow(2,group,item,count,inBank ? 1 : 0);
     }
 
-    addHasItemEquipped(item: number) {
-        return this.addRow(3,item);
+    addHasItemEquipped(item: number, group = 0) {
+        return this.addRow(3,group,item);
     }
 
-    addZoneId(zone: number) {
-        return this.addRow(4,zone);
+    addZoneId(zone: number, group = 0) {
+        return this.addRow(4,group,zone);
     }
 
-    addReputationRank(factionTemplate: number, ranks: ReputationRanks[]) {
+    addReputationRank(factionTemplate: number, ranks: ReputationRanks[], group = 0) {
         let num = 0;
         for(let rank of ranks) {
             switch(rank) {
@@ -82,92 +79,85 @@ export class Condition<T> extends Subsystem<T> {
                     break;
             }
         }
-        return this.addRow(5, factionTemplate, num);
+        return this.addRow(5, group, factionTemplate, num);
     }
 
-    addIsTeam(team: 'HORDE'|'ALLIANCE') {
-        return this.addRow(6, team === 'HORDE' ? 67 : 469);
+    addIsTeam(team: 'HORDE'|'ALLIANCE', group = 0) {
+        return this.addRow(6, group, team === 'HORDE' ? 67 : 469);
     }
 
     /**
      * @param skillLine DBC.SkillLine#ID
      * @param rankValue 1-450
      */
-    addSkill(skillLine: number, rankValue: number) {
-        this.addRow(7, skillLine, rankValue);
+    addSkill(skillLine: number, rankValue: number, group = 0) {
+        this.addRow(7, group, skillLine, rankValue);
     }
 
-    addFinishedQuest(questId: number) {
-        return this.addRow(8, questId);
+    addFinishedQuest(questId: number, group = 0) {
+        return this.addRow(8, group, questId);
     }
 
-    addStartedQuest(questId: number) {
-        return this.addRow(9, questId);
+    addStartedQuest(questId: number, group = 0) {
+        return this.addRow(9, group, questId);
     }
 
-    addIsDrunk(state : 'SOBER'|'TIPSY'|'DRUNK'|'SMASHED') {
+    addIsDrunk(state : 'SOBER'|'TIPSY'|'DRUNK'|'SMASHED', group = 0) {
         switch(state) {
-            case 'SOBER': return this.addRow(10,0);
-            case 'TIPSY': return this.addRow(10,1);
-            case 'DRUNK': return this.addRow(10,2);
-            case 'SMASHED': return this.addRow(10,3);
+            case 'SOBER': return this.addRow(10,group,0);
+            case 'TIPSY': return this.addRow(10,group,1);
+            case 'DRUNK': return this.addRow(10,group,2);
+            case 'SMASHED': return this.addRow(10,group,3);
             default: throw new Error(`Invalid drunk state ${state}`);
         }
     }
 
-    addWorldState(index: number, value: number) {
-        return this.addRow(11,index, value);
+    addWorldState(index: number, value: number, group = 0) {
+        return this.addRow(11, group,index, value);
     }
 
     /**
      * @param entry SQL.game_event#entry
      */
-    addActiveEvent(entry: number) {
-        return this.addRow(12,entry);
+    addActiveEvent(entry: number, group = 0) {
+        return this.addRow(12, group,entry);
     }
 
-    addInstanceInfo(entry: number, data: number) {
-        return this.addRow(13, entry, data);
+    addInstanceInfo(entry: number, data: number, group = 0) {
+        return this.addRow(13, group, entry, data);
     }
 
-    addQuestNone(quest: number) {
-        return this.addRow(14, quest);
+    addQuestNone(quest: number, group = 0) {
+        return this.addRow(14, group, quest);
     }
 
-    addIsClass(cls: ClassType) {
-        return this.addRow(15, resolveClassType(cls));
+    addIsClass(cls: ClassType, group = 0) {
+        return this.addRow(15, group, resolveClassType(cls));
     }
 
-    addIsRace(race: RaceType) {
-        return this.addRow(16, resolveRaceType(race));
+    addIsRace(race: RaceType, group = 0) {
+        return this.addRow(16, group, resolveRaceType(race));
     }
 
     /**
      * @param id DBC.Achievement#ID
      */
-    addHasAchievement(id: number) {
-        return this.addRow(17, id);
+    addHasAchievement(id: number, group = 0) {
+        return this.addRow(17, group, id);
     }
 
     /**
      * @param id DBC.CharTitles#ID
      */
-    addHasTitle(id: number) {
-        return this.addRow(18, id);
+    addHasTitle(id: number, group = 0) {
+        return this.addRow(18, group, id);
     }
 
-    /**
-     * @param mask Creature#spawnMask | Gameobject#spawnMask
-     */
-    addSpawnMask(mask: number) {
-        return this.addRow(19);
-    }
-
-    addGender(gender: 'MALE'|'FEMALE'|'NONE') {
+    addGender(gender: 'MALE'|'FEMALE'|'NONE', group = 0) {
         switch(gender) {
-            case 'MALE': return this.addRow(20, 0);
-            case 'FEMALE': return this.addRow(20, 1);
-            case 'NONE': return this.addRow(20, 2);
+            case 'MALE': return this.addRow(20, group, 0);
+            case 'FEMALE': return this.addRow(20, group, 1);
+            case 'NONE': return this.addRow(20, group, 2);
             default: throw new Error(`Invalid gender: ${gender}`)
         }
     }
@@ -175,47 +165,47 @@ export class Condition<T> extends Subsystem<T> {
     /**
      * @param state enum from Unit.h
      */
-    addUnitState(state: number) {
-        return this.addRow(21, state);
+    addUnitState(state: number, group = 0) {
+        return this.addRow(21, group, state);
     }
 
-    addMapId(mapid: number) {
-        return this.addRow(22, mapid);
+    addMapId(mapid: number, group = 0) {
+        return this.addRow(22, group, mapid);
     }
 
-    addAreaId(areaId: number) {
-        return this.addRow(23, areaId);
+    addAreaId(areaId: number, group = 0) {
+        return this.addRow(23, group, areaId);
     }
 
-    addCreatureType(type: number) {
-        return this.addRow(24, type);
+    addCreatureType(type: number, group = 0) {
+        return this.addRow(24, group, type);
     }
 
-    addHasSpell(id: number) {
-        return this.addRow(25, id);
+    addHasSpell(id: number, group = 0) {
+        return this.addRow(25, group, id);
     }
 
-    addInPhase(phasemask: number) {
-        return this.addRow(26, phasemask);
+    addInPhase(phasemask: number, group = 0) {
+        return this.addRow(26, group, phasemask);
     }
 
-    addLevel(level: number) {
-        return this.addRow(27, level);
+    addLevel(level: number, group = 0) {
+        return this.addRow(27, group, level);
     }
 
-    addQuestComplete(questId: number) {
-        return this.addRow(28, questId);
+    addQuestComplete(questId: number, group = 0) {
+        return this.addRow(28, group, questId);
     }
 
-    addNearCreature(creatureId: number) {
-        return this.addRow(29, creatureId);
+    addNearCreature(creatureId: number, group = 0) {
+        return this.addRow(29, group, creatureId);
     }
 
-    addNearGameObject(creatureId: number) {
-        return this.addRow(30, creatureId);
+    addNearGameObject(creatureId: number, group = 0) {
+        return this.addRow(30, group, creatureId);
     }
 
-    addObjectEntry(typeId: number, id: number) {
-        return this.addRow(31, typeId, id);
+    addObjectEntry(typeId: number, id: number, group = 0) {
+        return this.addRow(31, group, typeId, id);
     }
 }

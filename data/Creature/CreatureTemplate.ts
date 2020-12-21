@@ -43,9 +43,13 @@ import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { CreatureWaypoints } from "./CreatureWaypoints";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
-import { Trainer } from "./Trainer";
+import { Trainer } from "../Trainer/Trainer";
 import { UnitClass } from "./UnitClass";
-import { Vendor } from "./Vendor";
+import { CreatureVendor } from "./CreatureVendor";
+import { GOCreature } from "../Base/GOorCreature";
+import { trainerRow } from "wotlkdata/sql/types/trainer";
+import { Ids } from "../Base/Ids";
+import { Gossips } from "../Gossip/Gossips";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -55,7 +59,7 @@ function creatureLoc(id: number, lang: Language) {
     return SQL.creature_template_locale.add(id, lang);
 }
 
-export class CreatureTemplate extends MainEntity<creature_templateRow> {
+export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
     get Title() { return new CreatureSubname(this); }
@@ -97,6 +101,16 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get RaidHeroic25ID() { return this.wrap(this.row.difficulty_entry_3); }
     get Models() { return new CreatureModels(this); }
     get Icon() { return new CreatureIconNames(this); }
+    get Gossip() { 
+        this.NPCFlags.Gossip.mark();
+        if(this.row.gossip_menu_id.get()>0) {
+            return Gossips.load(this.row.gossip_menu_id.get(), this);
+        } else {
+            const gossip = Gossips.create(this);
+            this.row.gossip_menu_id.set(gossip.ID);
+            return gossip;
+        }
+    }
     get GossipID() { return this.wrap(this.row.gossip_menu_id); }
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
@@ -117,12 +131,31 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get MovementID() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return this.wrap(this.row.spell_school_immune_mask); }
-    get Trainer() { return new Trainer(this); }
-    get Vendor() { return new Vendor(this); }
+    get Trainer() { 
+        let ctrow = SQL.creature_default_trainer.find({CreatureId:this.ID});
+        let trainerRow : trainerRow;
+        if(ctrow === undefined) {
+            trainerRow = SQL.trainer.add(Ids.Trainer.id())
+            ctrow = SQL.creature_default_trainer.add(this.ID)
+                .TrainerId.set(trainerRow.Id.get());
+        } else {
+            trainerRow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
+        }
+        return new Trainer(this,trainerRow, ctrow); 
+    }
+    get Vendor() { return new CreatureVendor(this); }
     get Waypoints() { return new CreatureWaypoints(this); }
 
     spawn(mod: string, id: string, pos: Position) {
         CreatureInstances.create(mod, id, this.ID, pos);
         return this;
+    }
+
+    protected isCreature(): boolean {
+        return true;
+    }
+
+    protected isGameObject(): boolean {
+        return false;
     }
 }

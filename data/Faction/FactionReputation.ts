@@ -1,5 +1,4 @@
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
-import { FactionRow } from "wotlkdata/dbc/types/Faction";
 import { Ids } from "../Base/Ids";
 import { ClassType, makeClassmask } from "../Class/ClassType";
 import { makeRacemask, RaceType } from "../Race/RaceType";

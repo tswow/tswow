@@ -17,10 +17,11 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
 import { npc_textRow } from "wotlkdata/sql/types/npc_text";
+import { GOCreature } from "../Base/GOorCreature";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
 
-export class Gossip<T> extends Subsystem<T> {
+export class Gossip<G,T extends GOCreature<G>> extends Subsystem<T> {
     readonly menuRow: gossip_menuRow;
     readonly textRow: npc_textRow;
 
@@ -30,15 +31,15 @@ export class Gossip<T> extends Subsystem<T> {
         this.textRow = text;
     }
 
-    get Text() : GossipTextArray<T> { 
+    get Text() : GossipTextArray<G,T> { 
         return new GossipTextArray(this); 
     }
 
-    get Options() : GossipOptions<T> {
+    get Options() : GossipOptions<G,T> {
         return new GossipOptions(this);
     }
 
-    get MenuID() {
+    get ID() {
         return this.menuRow.MenuID.get();
     }
 

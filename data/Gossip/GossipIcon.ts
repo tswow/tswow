@@ -16,6 +16,7 @@
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Enum } from "../Base/Enum";
+import { GOCreature } from "../Base/GOorCreature";
 import { GossipOption } from "./GossipOption";
 
 export const GOSSIP_ICONS = new Enum({
@@ -33,12 +34,12 @@ export const GOSSIP_ICONS = new Enum({
 });
 export type GossipIcons = keyof typeof GOSSIP_ICONS.values;
 
-export class GossipIconCell<T> extends Subsystem<GossipOption<T>> {
+export class GossipIconCell<G,T extends GOCreature<G>> extends Subsystem<GossipOption<G,T>> {
     protected get icon() { return this.owner.row.OptionIcon; }
     get() : GossipIcons {
         return GOSSIP_ICONS.reverse<GossipIcons>(this.icon.get());
     }
-    set(icon: GossipIcons) : GossipOption<T> {
+    set(icon: GossipIcons) : GossipOption<G,T> {
         this.icon.set(GOSSIP_ICONS.get(icon));
         return this.owner;
     }

@@ -18,48 +18,41 @@ import { Cell } from "wotlkdata/cell/Cell";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids";
+import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_default_trainer";
+import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
-import { SpellRanks } from "../Spell/SpellRanks";
 import { Spells } from "../Spell/Spells";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class TrainerLoc extends SQLLocSystem<CreatureTemplate> {
+export class TrainerLoc<T> extends SQLLocSystem<Trainer<T>> {
     protected getMain(): Cell<string, any> {
-        return this.owner.Trainer.row.Greeting;
+        return this.owner.trainerRow.Greeting;
     }
     protected getLoc(loc: Language): Cell<string, any> {
-        const old = SQL.trainer_locale.find({Id: this.owner.Trainer.ID, locale: loc})
+        const old = SQL.trainer_locale.find({Id: this.owner.ID, locale: loc})
         if(old!==undefined) {
             return old.Greeting_lang;
         }
-        return SQL.trainer_locale.add(this.owner.Trainer.ID, loc).Greeting_lang;
+        return SQL.trainer_locale.add(this.owner.ID, loc).Greeting_lang;
     }
 }
 
-export class Trainer extends Subsystem<CreatureTemplate> {
+export class Trainer<T> extends Subsystem<T> {
     get ID() {
-        return this.row.Id.get();
-    }
-    get row() { 
-        const trainer = SQL.creature_default_trainer.find({CreatureId: this.owner.ID});
-        if(trainer===undefined) {
-            const trainerRow = SQL.trainer.add(Ids.Trainer.id())
-                .Requirement.set(0)
-            SQL.creature_default_trainer.add(this.owner.ID)
-                .TrainerId.set(trainerRow.Id.get())
-            return trainerRow;
-        }
-        return SQL.trainer.find({Id:trainer.TrainerId.get()});
+        return this.trainerRow.Id.get();
     }
 
-    constructor(owner: CreatureTemplate) {
+    readonly trainerRow: trainerRow;
+    readonly creatureRow: creature_default_trainerRow;
+
+    constructor(owner: T, trainerRow: trainerRow, creatureRow: creature_default_trainerRow) {
         super(owner);
+        this.trainerRow = trainerRow;
+        this.creatureRow = creatureRow;
     }
 
-    get Greeting() { return new TrainerLoc(this.owner); }
-    get Class() { return this.ownerWrap(this.row.Requirement); }
-    get Type() { return this.ownerWrap(this.row.Type); }
+    get Greeting() { return new TrainerLoc<T>(this); }
+    get Class() { return this.wrap(this.trainerRow.Requirement); }
+    get Type() { return this.wrap(this.trainerRow.Type); }
 
     addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillRank = 0, reqAbilities: number[] = [], reqSkillLine: number = 0) {
         if(reqSkillLine===0) {
@@ -77,6 +70,6 @@ export class Trainer extends Subsystem<CreatureTemplate> {
             .ReqAbility1.set(reqAbilities[0]||0)
             .ReqAbility2.set(reqAbilities[1]||0)
             .ReqAbility3.set(reqAbilities[2]||0);
-        return this.owner;
+        return this;
     }
 }
