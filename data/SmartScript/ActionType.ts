@@ -1021,6 +1021,19 @@ export class ActionType<T> {
     }
 
     /**
+     * Fails a quest walk started with "setQuestWalk"
+     * @param questId 
+     */
+    setFailQuestWalk(questId: number) {
+        return this.main
+            .Action.setFailQuest(questId)
+            .Target.setStored(0)
+            .then
+            .Action.setFailQuest(questId)
+            .Target.setStored(1)
+    }
+
+    /**
      * Completes a quest walk started with "setQuestWalk", 
      * which rewards the group that started it
      * @param questId 
