@@ -29,9 +29,7 @@ export class Subsystem<T> {
         this.owner = owner;
     }
 
-    up() {
-        return this.owner;
-    }
+    get end() { return this.owner; }
 
     protected get isSubsystem() { return true; }
 
