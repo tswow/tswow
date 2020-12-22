@@ -104,9 +104,9 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get Gossip() { 
         this.NPCFlags.Gossip.mark();
         if(this.row.gossip_menu_id.get()>0) {
-            return Gossips.load(this.row.gossip_menu_id.get(), this);
+            return Gossips.load(this.row.gossip_menu_id.get(), this, this);
         } else {
-            const gossip = Gossips.create(this);
+            const gossip = Gossips.create(this,this);
             this.row.gossip_menu_id.set(gossip.ID);
             return gossip;
         }

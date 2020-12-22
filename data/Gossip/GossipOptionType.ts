@@ -28,7 +28,7 @@ import { Vendor } from "../Vendor/Vendor";
 import { GossipOption } from "./GossipOption";
 import { Gossips } from "./Gossips";
 
-export class GossipOptionType<G,T extends GOCreature<G>> extends Subsystem<GossipOption<G,T>> {
+export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<GossipOption<S,G,T>> {
     protected set(value: number, npcValue: number, action = 0) {
         this.owner.row.OptionType.set(value);
         this.owner.row.OptionNpcFlag.set(npcValue);
@@ -37,7 +37,7 @@ export class GossipOptionType<G,T extends GOCreature<G>> extends Subsystem<Gossi
     }
 
     protected topOwner() {
-        return this.up().up().up();
+        return this.up().up().topOwner;
     }
 
     protected onCreature(callback: (c: CreatureTemplate)=>any) {
@@ -54,17 +54,17 @@ export class GossipOptionType<G,T extends GOCreature<G>> extends Subsystem<Gossi
         }
     }
 
-    setOwnVendor() : Vendor<GossipOption<G,T>> { 
+    setOwnVendor() : Vendor<GossipOption<S,G,T>> { 
         this.set(3,128);
         this.owner.row.ActionMenuID.set(0);
         this.onCreature((x)=>{
             x.NPCFlags.Vendor.mark()
         });
         // TODO: onGameObject
-        return new Vendor(this.owner, this.up().up().up().ID);
+        return new Vendor(this.owner, this.up().up().topOwner.ID);
     }
 
-    setMultivendor(vendorId: number = -1) : Vendor<GossipOption<G,T>> {
+    setMultivendor(vendorId: number = -1) : Vendor<GossipOption<S,G,T>> {
         if(vendorId===-1) {
             vendorId = Ids.Vendor.id();
         }
@@ -84,19 +84,19 @@ export class GossipOptionType<G,T extends GOCreature<G>> extends Subsystem<Gossi
     }
 
     setNewGossip() {
-        const gossip = Gossips.create(this.up().up().up());
+        const gossip = Gossips.create(this.owner, this.up().up().topOwner);
         this.set(1,1,gossip.ID);
         return gossip;
     }
 
     setOwnTrainer() {
         this.set(5,16,0);
-        let trainer : Trainer<GossipOption<G,T>>|undefined = undefined;
-        const x = this.up().up().up();
+        let trainer : Trainer<GossipOption<S,G,T>>|undefined = undefined;
+        const x = this.up().up().topOwner
         if(GOCreature.isCreature(x)) {
             x.NPCFlags.Trainer.mark();
             const ctrainer = x.Trainer;
-            trainer = new Trainer<GossipOption<G,T>>
+            trainer = new Trainer<GossipOption<S,G,T>>
                 (this.owner, ctrainer.trainerRow, ctrainer.creatureRow);
         }
 

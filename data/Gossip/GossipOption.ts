@@ -25,19 +25,19 @@ import { Gossip } from "./Gossip";
 import { GossipIconCell } from "./GossipIcon";
 import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
-export class GossipOption<G,T extends GOCreature<G>> extends Subsystem<Gossip<G,T>> {
+export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<S,G,T>> {
     readonly Condition: Condition<this>;
     //readonly Condition = new Condition(this,15,this.up().ID,this.row.OptionID.get(),0,0);
     readonly row: gossip_menu_optionRow;
 
-    constructor(owner: Gossip<G,T>, row: gossip_menu_optionRow) {
+    constructor(owner: Gossip<S,G,T>, row: gossip_menu_optionRow) {
         super(owner);
         this.row = row;
         this.Condition = new Condition(this, 15, this.up().ID,this.row.OptionID.get(),0);
     }
 
-    get Icon(){return new GossipIconCell<G,T>(this); }
-    get Action(){return new GossipOptionAction<G,T>(this); }
+    get Icon(){return new GossipIconCell<S,G,T>(this); }
+    get Action(){return new GossipOptionAction<S,G,T>(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get MenuID() { return this.wrap(this.row.ActionMenuID); }
         
@@ -54,23 +54,23 @@ export class GossipOption<G,T extends GOCreature<G>> extends Subsystem<Gossip<G,
     }
 }
 
-export class GossipOptions<G,T extends GOCreature<G>> extends Subsystem<Gossip<G,T>> {
+export class GossipOptions<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<S,G,T>> {
     get length() {
         return SQL.gossip_menu_option
             .filter({MenuID:this.owner.ID}).length;
     }
 
-    getIndex(index: number) : GossipOption<G,T> {
+    getIndex(index: number) : GossipOption<S,G,T> {
         return new GossipOption(this.owner, SQL.gossip_menu_option
             .find({MenuID: this.owner.ID, OptionID: index}));
     }
 
-    forEach(callback: (option: GossipOption<G,T>)=>any) {
+    forEach(callback: (option: GossipOption<S,G,T>)=>any) {
         SQL.gossip_menu_option.filter({MenuID: this.owner.ID})
             .forEach(x=>callback(new GossipOption(this.owner, x)));
     }
 
-    add() : GossipOption<G,T> {
+    add() : GossipOption<S,G,T> {
         return new GossipOption(this.owner, 
             SQL.gossip_menu_option.add(this.owner.ID, this.length)
                 .OptionType.set(1)

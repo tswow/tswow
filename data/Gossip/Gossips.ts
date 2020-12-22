@@ -20,7 +20,7 @@ import { Ids } from "../Base/Ids"
 import { Gossip } from "./Gossip";
 
 export const Gossips = {
-    create<G,T extends GOCreature<G>>(owner?: T){
+    create<S,G,T extends GOCreature<G>>(directOwner?: S, topOwner?: T){
         const id = Ids.GossipMenu.id();
         const text = Ids.NPCText.id();
         const gossipRow = SQL.gossip_menu.add(id, text)
@@ -35,12 +35,12 @@ export const Gossips = {
             .BroadcastTextID6.set(0)
             .BroadcastTextID7.set(0)
             .VerifiedBuild.set(17688)
-        return new Gossip<G,T>(owner as T,gossipRow,textRow);
+        return new Gossip<S,G,T>(directOwner as S, topOwner as T,gossipRow,textRow);
     },
 
-    load<G,T extends GOCreature<G>>(id: number, owner?: T) {
+    load<S,G,T extends GOCreature<G>>(id: number, directOwner?: S, topOwner?: T) {
         const gossip = SQL.gossip_menu.find({MenuID:id});
         const text = SQL.npc_text.find({ID:gossip.TextID.get()});
-        return new Gossip<G,T>(owner as T, gossip, text);
+        return new Gossip<S,G,T>(directOwner as S, topOwner as T, gossip, text);
     }
 }

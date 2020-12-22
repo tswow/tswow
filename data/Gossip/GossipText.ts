@@ -169,11 +169,11 @@ function emoteDelay(id: number, index: number) {
     }
 }
 
-export class GossipText<G,T extends GOCreature<G>> extends SQLLocSystem<GossipTextEntry<G,T>> {
+export class GossipText<S,G,T extends GOCreature<G>> extends SQLLocSystem<GossipTextEntry<S,G,T>> {
     protected index: number;
     protected isFemale: boolean;
     protected id: number;
-    constructor(owner: GossipTextEntry<G,T>, id: number, index: number, isFemale: boolean) {
+    constructor(owner: GossipTextEntry<S,G,T>, id: number, index: number, isFemale: boolean) {
         super(owner);
         this.index = index;
         this.isFemale = isFemale;
@@ -189,8 +189,8 @@ export class GossipText<G,T extends GOCreature<G>> extends SQLLocSystem<GossipTe
     }
 }
 
-export class GossipTextEntry<G,T extends GOCreature<G>> extends ArrayEntry<Gossip<G,T>> {
-    clear(): Gossip<G,T> {
+export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gossip<S,G,T>> {
+    clear(): Gossip<S,G,T> {
         this.Probability.set(0);
         return this.owner;
     }
@@ -209,12 +209,12 @@ export class GossipTextEntry<G,T extends GOCreature<G>> extends ArrayEntry<Gossi
     get EmoteDelay() { return this.wrap(emoteDelay(this.ID, this.index)); }
 }
 
-export class GossipTextArray<G,T extends GOCreature<G>> extends SystemArray<GossipTextEntry<G,T>,Gossip<G,T>> {
+export class GossipTextArray<S,G,T extends GOCreature<G>> extends SystemArray<GossipTextEntry<S,G,T>,Gossip<S,G,T>> {
     get length(): number {
         return 8;
     }
 
-    get(index: number): GossipTextEntry<G,T> {
+    get(index: number): GossipTextEntry<S,G,T> {
         return new GossipTextEntry(this.owner, index);
     }
 
@@ -229,7 +229,7 @@ export class GossipTextArray<G,T extends GOCreature<G>> extends SystemArray<Goss
         return this.owner;
     }
 
-    addUnisex(text: loc_constructor, lang: number, emote: number, emoteDelay: number) {
+    add(text: loc_constructor, lang: number, emote: number, emoteDelay: number) {
         return this.addGendered(text,text,lang,emote,emoteDelay);
     }
 }

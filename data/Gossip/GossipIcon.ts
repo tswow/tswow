@@ -34,12 +34,12 @@ export const GOSSIP_ICONS = new Enum({
 });
 export type GossipIcons = keyof typeof GOSSIP_ICONS.values;
 
-export class GossipIconCell<G,T extends GOCreature<G>> extends Subsystem<GossipOption<G,T>> {
+export class GossipIconCell<S,G,T extends GOCreature<G>> extends Subsystem<GossipOption<S,G,T>> {
     protected get icon() { return this.owner.row.OptionIcon; }
     get() : GossipIcons {
         return GOSSIP_ICONS.reverse<GossipIcons>(this.icon.get());
     }
-    set(icon: GossipIcons) : GossipOption<G,T> {
+    set(icon: GossipIcons) : GossipOption<S,G,T> {
         this.icon.set(GOSSIP_ICONS.get(icon));
         return this.owner;
     }

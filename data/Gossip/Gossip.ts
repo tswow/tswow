@@ -21,21 +21,23 @@ import { GOCreature } from "../Base/GOorCreature";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
 
-export class Gossip<G,T extends GOCreature<G>> extends Subsystem<T> {
+export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
     readonly menuRow: gossip_menuRow;
     readonly textRow: npc_textRow;
+    readonly topOwner: T;
 
-    constructor(owner: T, menu: gossip_menuRow, text: npc_textRow) {
-        super(owner);
+    constructor(curOwner: S, topOwner: T, menu: gossip_menuRow, text: npc_textRow) {
+        super(curOwner);
         this.menuRow = menu;
         this.textRow = text;
+        this.topOwner = topOwner;
     }
 
-    get Text() : GossipTextArray<G,T> { 
+    get Text() : GossipTextArray<S,G,T> { 
         return new GossipTextArray(this); 
     }
 
-    get Options() : GossipOptions<G,T> {
+    get Options() : GossipOptions<S,G,T> {
         return new GossipOptions(this);
     }
 
