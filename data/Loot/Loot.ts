@@ -51,6 +51,7 @@ export class LootSet {
             .QuestRequired.set(quest ? 1 : 0)
             .GroupId.set(groupId)
             .LootMode.set(lootMode)
+            
         return this;
     }
 
@@ -61,6 +62,7 @@ export class LootSet {
             .MaxCount.set(1)
             .QuestRequired.set(0)
             .GroupId.set(0)
+            .Comment.set('tswow')
             .LootMode.set(lootMode)
         return this;
     }

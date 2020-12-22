@@ -54,8 +54,9 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
     get then() {
         let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
         SQLCellReadOnly.set(this.row.link,id);
-        let sc = new SmartScript(this.owner, SQL.smart_scripts.add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT));
-        console.log("rowid:",sc.row.id.get())
+        let sc = new SmartScript(this.owner, SQL.smart_scripts
+            .add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT)
+            .comment.set('tswow'));
         sc.row.comment.set('tswow');
         sc.row.event_type.set(61);
         return sc;
@@ -64,7 +65,8 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
     get free() : AttachedScript<T> {
         return new AttachedScript(()=>{
             let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
-            let sc = new SmartScript(this.owner, SQL.smart_scripts.add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT));
+            let sc = new SmartScript(this.owner, SQL.smart_scripts
+                .add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT).comment.set('tswow'));
             return sc;
         })
     }
@@ -110,28 +112,28 @@ const EMPTY_SCRIPT : smart_scriptsCreator = {
 export const SmartScripts = {
     creature<T>(entry: number, owner?: T) {
         let id = findId(0,entry);
-        let sc = new SmartScript(owner, SQL.smart_scripts.add(entry,0,id,0,EMPTY_SCRIPT));
+        let sc = new SmartScript(owner, SQL.smart_scripts.add(entry,0,id,0,EMPTY_SCRIPT).comment.set('tswow'));
         return sc as SmartScript<T>;
     },
 
     uniqueCreature(guid: number, isChain: boolean = false) {
         let id = findId(0,-guid);
-        return new SmartScript(undefined, SQL.smart_scripts.add(-guid,0,id,isChain ? id + 1 : 0,EMPTY_SCRIPT))
+        return new SmartScript(undefined, SQL.smart_scripts.add(-guid,0,id,isChain ? id + 1 : 0,EMPTY_SCRIPT).comment.set('tswow'))
     },
 
     gameObject(entry: number, link: number = 0) {
         let id = findId(1,entry);
-        return new SmartScript(undefined, SQL.smart_scripts.add(entry,1,id,link,EMPTY_SCRIPT));
+        return new SmartScript(undefined, SQL.smart_scripts.add(entry,1,id,link,EMPTY_SCRIPT).comment.set('tswow'));
     },
 
     uniqueGameObject(guid: number, link: number = 0) {
         let id = findId(1,-guid);
-        return new SmartScript(undefined, SQL.smart_scripts.add(-guid,1,id,link,EMPTY_SCRIPT))
+        return new SmartScript(undefined, SQL.smart_scripts.add(-guid,1,id,link,EMPTY_SCRIPT).comment.set('tswow'))
     },
 
     area(entry: number, link: number = 0) {
         let id = findId(2,entry);
-        return new SmartScript(undefined, SQL.smart_scripts.add(entry,2,id,link,EMPTY_SCRIPT));
+        return new SmartScript(undefined, SQL.smart_scripts.add(entry,2,id,link,EMPTY_SCRIPT).comment.set('tswow'));
     },
 
     loadCreature(creature: number) {

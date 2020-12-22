@@ -24,6 +24,7 @@ export const Gossips = {
         const id = Ids.GossipMenu.id();
         const text = Ids.NPCText.id();
         const gossipRow = SQL.gossip_menu.add(id, text)
+            .VerifiedBuild.set(17688)
         const textRow = SQL.npc_text.add(text)
             .BroadcastTextID0.set(0)
             .BroadcastTextID1.set(0)
@@ -33,6 +34,7 @@ export const Gossips = {
             .BroadcastTextID5.set(0)
             .BroadcastTextID6.set(0)
             .BroadcastTextID7.set(0)
+            .VerifiedBuild.set(17688)
         return new Gossip<G,T>(owner as T,gossipRow,textRow);
     },
 

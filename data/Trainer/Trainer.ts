@@ -69,7 +69,8 @@ export class Trainer<T> extends Subsystem<T> {
             .ReqLevel.set(reqLevel)
             .ReqAbility1.set(reqAbilities[0]||0)
             .ReqAbility2.set(reqAbilities[1]||0)
-            .ReqAbility3.set(reqAbilities[2]||0);
+            .ReqAbility3.set(reqAbilities[2]||0)
+            .VerifiedBuild.set(17688);
         return this;
     }
 }

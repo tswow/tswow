@@ -17,7 +17,8 @@ export class CreatureWaypoints extends Subsystem<CreatureTemplate> {
             .position_x.set(point.x)
             .position_y.set(point.y)
             .position_z.set(point.z)
-            .orientation.set(point.o);
+            .orientation.set(point.o)
+            .point_comment.set('tswow');
         return this.owner;
     }
 }

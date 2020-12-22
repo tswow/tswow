@@ -75,6 +75,7 @@ export class GossipOptions<G,T extends GOCreature<G>> extends Subsystem<Gossip<G
             SQL.gossip_menu_option.add(this.owner.ID, this.length)
                 .OptionType.set(1)
                 .OptionNpcFlag.set(1)
+                .VerifiedBuild.set(17688)
             )
     }
 }
