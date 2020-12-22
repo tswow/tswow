@@ -27,13 +27,12 @@ import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
 export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<S,G,T>> {
     readonly Condition: Condition<this>;
-    //readonly Condition = new Condition(this,15,this.up().ID,this.row.OptionID.get(),0,0);
     readonly row: gossip_menu_optionRow;
 
     constructor(owner: Gossip<S,G,T>, row: gossip_menu_optionRow) {
         super(owner);
         this.row = row;
-        this.Condition = new Condition(this, 15, this.up().ID,this.row.OptionID.get(),0);
+        this.Condition = new Condition(this, 15, this.end.ID,this.row.OptionID.get(),0);
     }
 
     get Icon(){return new GossipIconCell<S,G,T>(this); }

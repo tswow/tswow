@@ -37,7 +37,7 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<Gos
     }
 
     protected topOwner() {
-        return this.up().up().topOwner;
+        return this.end.end.topOwner;
     }
 
     protected onCreature(callback: (c: CreatureTemplate)=>any) {
@@ -61,7 +61,7 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<Gos
             x.NPCFlags.Vendor.mark()
         });
         // TODO: onGameObject
-        return new Vendor(this.owner, this.up().up().topOwner.ID);
+        return new Vendor(this.owner, this.end.end.topOwner.ID);
     }
 
     setMultivendor(vendorId: number = -1) : Vendor<GossipOption<S,G,T>> {
@@ -84,7 +84,7 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<Gos
     }
 
     setNewGossip() {
-        const gossip = Gossips.create(this.owner, this.up().up().topOwner);
+        const gossip = Gossips.create(this.owner, this.end.end.topOwner);
         this.set(1,1,gossip.ID);
         return gossip;
     }
@@ -92,7 +92,7 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<Gos
     setOwnTrainer() {
         this.set(5,16,0);
         let trainer : Trainer<GossipOption<S,G,T>>|undefined = undefined;
-        const x = this.up().up().topOwner
+        const x = this.end.end.topOwner
         if(GOCreature.isCreature(x)) {
             x.NPCFlags.Trainer.mark();
             const ctrainer = x.Trainer;

@@ -25,7 +25,7 @@ export class QuestNPC extends Subsystem<Quest> {
      */
     addStarter(npcId : number) {
         SQL.creature_queststarter.add(npcId,this.owner.ID);
-        return this.up();
+        return this.end;
     }
 
     /**
@@ -34,7 +34,7 @@ export class QuestNPC extends Subsystem<Quest> {
      */
     addEnder(npcId : number) {
         SQL.creature_questender.add(npcId,this.owner.ID)
-        return this.up();
+        return this.end;
     }
 
     /**
@@ -44,6 +44,6 @@ export class QuestNPC extends Subsystem<Quest> {
     addBoth(npcId: number) {
         this.addStarter(npcId);
         this.addEnder(npcId);
-        return this.up();
+        return this.end;
     }
 }

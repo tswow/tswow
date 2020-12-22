@@ -84,7 +84,7 @@ export const TotemCreatures = {
                 .MiscValueA.set(creature)
                 .MiscValueB.set(created[slot])
                 .ImplicitTargetA.set(41+slot)
-                .up()
+                .end
             .RequiredTotems.setIndex(0,resolveTotemType(totem))
         return spell;
     },
@@ -102,37 +102,37 @@ export const TotemCreatures = {
                 const spell = Spells.create(mod, id+'_'+controller.toLowerCase())
                     .Effects.add()
                     .EffectType.setControlTotemCreature()
-                    .MiscValueA.set(bitmask).up()
+                    .MiscValueA.set(bitmask).end
 
                 switch(controller) {
                     case 'Aggressive':
                         controlOut.Aggressive = 
-                            spell.Effects.get(0).MiscValueB.set(2).up()
+                            spell.Effects.get(0).MiscValueB.set(2).end
                             .Icon.set('Interface\\Icons\\Ability_Racial_BloodRage.blp')
                         break
                     case 'Attack':
                         controlOut.Attack = 
-                            spell.Effects.get(0).MiscValueB.set(5).up()
+                            spell.Effects.get(0).MiscValueB.set(5).end
                             .Icon.set('Interface\\Icons\\Ability_GhoulFrenzy.blp')
                         break
                     case 'Defensive':
                         controlOut.Defensive = 
-                            spell.Effects.get(0).MiscValueB.set(1).up()
+                            spell.Effects.get(0).MiscValueB.set(1).end
                             .Icon.set('Interface\\Icons\\Ability_Defend.blp')
                         break
                     case 'Follow':
                         controlOut.Follow = 
-                            spell.Effects.get(0).MiscValueB.set(4).up()
+                            spell.Effects.get(0).MiscValueB.set(4).end
                             .Icon.set('Interface\\Icons\\Ability_Tracking.blp')
                         break
                     case 'Passive':
                         controlOut.Passive = 
-                            spell.Effects.get(0).MiscValueB.set(0).up()
+                            spell.Effects.get(0).MiscValueB.set(0).end
                             .Icon.set('Interface\\Icons\\AbilitySeal.blp')
                         break
                     case 'Stay':
                         controlOut.Stay = 
-                            spell.Effects.get(0).MiscValueB.set(3).up()
+                            spell.Effects.get(0).MiscValueB.set(3).end
                             .Icon.set('Interface\\Icons\\Spell_Nature_TimeStop.blp')
                         break
                 }

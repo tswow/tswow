@@ -49,7 +49,7 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
     get Target() { return new TargetType<T>(this, this.row); }
     get Event() { return new EventType<T>(this, this.row); }
 
-    up() { return this.owner; }
+    get end() { return this.owner; }
 
     get then() {
         let id = findId(this.row.source_type.get(),this.row.entryorguid.get());

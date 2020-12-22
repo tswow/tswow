@@ -22,7 +22,7 @@ export const SkillLines = {
                 .ClassMask.clearAll()
                 .ClassMask.mark(cls-1)
                 .Flags.set(1040)
-                .up()
+                .end
         SQL.playercreateinfo_skills.add(0, 1<<(cls-1),sl.ID).comment.set(`${cls} - ${id}`);
         return sl;
     }
