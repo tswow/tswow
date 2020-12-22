@@ -46,6 +46,7 @@ export class CreatureVendor extends Subsystem<CreatureTemplate> {
                 this.owner.ID,x.item.get(),x.ExtendedCost.get()
             ).maxcount.set(x.maxcount.get())
             .incrtime.set(x.incrtime.get())
+            .VerifiedBuild.set(17688)
         });
         return this.owner;
     }

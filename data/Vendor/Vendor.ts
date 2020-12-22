@@ -29,6 +29,7 @@ export class Vendor<T> extends Subsystem<T> {
         SQL.npc_vendor.add(this.ID, item, extendedCostId)
             .maxcount.set(maxcount)
             .incrtime.set(incrTime)
+            .VerifiedBuild.set(17688)
         return this;
     }
 }
