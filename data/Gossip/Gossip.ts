@@ -18,6 +18,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
 import { npc_textRow } from "wotlkdata/sql/types/npc_text";
 import { GOCreature } from "../Base/GOorCreature";
+import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
 
@@ -32,6 +33,12 @@ export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
         this.textRow = text;
         this.topOwner = topOwner;
     }
+
+    addLabel(mod: string, label: string) {
+        addGossipLabel(mod, label, this);
+        return this;
+    }
+
 
     get Text() : GossipTextArray<S,G,T> { 
         return new GossipTextArray(this); 

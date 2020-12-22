@@ -25,6 +25,7 @@ import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { GameObjectTemplate } from "../GameObject/GameObjectTemplate";
 import { Trainer } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
+import { getGossipLabel } from "./GossipLabels";
 import { GossipOption } from "./GossipOption";
 import { Gossips } from "./Gossips";
 
@@ -77,7 +78,16 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<Gos
         return new Vendor(this.owner, vendorId)
     }
 
-    setGossipLink(id: number) {
+    setGossipLinkLabel(mod: string, label: string) {
+        let labeledGossip = getGossipLabel(mod, label);
+        if(labeledGossip===undefined) {
+            throw new Error(`Missing gossip label: ${mod}:${label}`)
+        }
+        this.set(1,1,labeledGossip.ID);
+        return this.owner;
+    }
+
+    setGossipLinkID(id: number) {
         this.set(1,1);
         this.owner.row.ActionMenuID.set(id);
         return this.owner;

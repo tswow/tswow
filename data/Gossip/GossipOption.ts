@@ -15,7 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
+import { CellSimple } from "wotlkdata/cell/Cell";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { SqlRow } from "wotlkdata/sql/SQLRow";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
 import { GOCreature } from "../Base/GOorCreature";
 import { Ids } from "../Base/Ids";
@@ -28,6 +30,7 @@ import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<S,G,T>> {
     readonly Condition: Condition<this>;
     readonly row: gossip_menu_optionRow;
+    protected _label: string = "";
 
     constructor(owner: Gossip<S,G,T>, row: gossip_menu_optionRow) {
         super(owner);
@@ -39,7 +42,7 @@ export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<
     get Action(){return new GossipOptionAction<S,G,T>(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get MenuID() { return this.wrap(this.row.ActionMenuID); }
-        
+
     get Text(){
         const id = this.row.OptionBroadcastTextID;
         if(id.get()>0) {
