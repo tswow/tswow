@@ -17,6 +17,7 @@
 
 import { creatureRow } from "wotlkdata/sql/types/creature";
 import { MainEntity } from "../Base/MainEntity";
+import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
 
@@ -33,4 +34,6 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     /** Respawn time in seconds */
     get SpawnTime() { return this.wrap(this.row.spawntimesecs); }
     get WanderDistance() { return this.wrap(this.row.wander_distance)}
+
+    get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
 }

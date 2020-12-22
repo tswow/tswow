@@ -124,7 +124,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get VehicleID() { return this.wrap(this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }
     get AIName() { return new CreatureAI(this); }
-    get MovementType() { return new CreatureMovementType(this); }
+    get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
     get HoverHeight() { return this.wrap(this.row.HoverHeight); }
     get Stats() { return new CreatureStats(this); }
     get RacialLeader() { return this.wrap(this.row.RacialLeader); }
@@ -147,8 +147,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get Waypoints() { return new CreatureWaypoints(this); }
 
     spawn(mod: string, id: string, pos: Position) {
-        CreatureInstances.create(mod, id, this.ID, pos);
-        return this;
+        return CreatureInstances.create(mod, id, this.ID, pos);
     }
 
     protected isCreature(): boolean {
