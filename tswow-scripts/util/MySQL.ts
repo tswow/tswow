@@ -228,6 +228,7 @@ export namespace mysql {
                 [
                     '--log_syslog=0',
                     '--console',
+                    '--wait-timeout=2147483',
                     `--init-file=${wfs.absPath(startup_file)}`,
                     `--datadir=${wfs.absPath(ipaths.mysqlData)}`
                 ]);
