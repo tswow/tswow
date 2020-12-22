@@ -50,4 +50,6 @@ export async function createConfig() {
     wfs.copy('./start.js', ipaths.startjs);
 
     wfs.copy('./.vscode-install', ipaths.vscodeWorkspace);
+
+    wfs.copy('./addons',ipaths.addons)
 }

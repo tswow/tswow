@@ -50,6 +50,17 @@ export namespace Client {
         }
     }
 
+    export function installAddons() {
+        for(const addon of wfs.readDir(ipaths.addons, true)) {
+            const clientAddons = mpath(cfg.client.directory(),'Interface','Addons')
+            const dst = mpath(clientAddons,addon);
+            const src = mpath(ipaths.addons,addon);
+            if(!wfs.exists(dst)) {
+                wfs.copy(src,dst);
+            }
+        }
+    }
+
     /**
      * Writes the bytes 0xb803000ebedc3 to 0x415b5f in the wow.exe binary to enable interface patches.
      * 
@@ -101,6 +112,7 @@ export namespace Client {
         await wowprocess.stop();
 
         fixClientBinary(wowpath);
+        installAddons();
 
         if (isWindows()) {
             clearCache();

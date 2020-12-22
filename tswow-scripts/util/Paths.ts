@@ -54,6 +54,7 @@ export class InstallPaths {
     get cmakeExe() { return mpath(this.bin, 'cmake', 'bin', 'cmake.exe'); }
     get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
     get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
+    get addons() { return mpath(this.bin, 'addons')}
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
