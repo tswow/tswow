@@ -24,6 +24,7 @@ import { SQL as _SQL } from './sql/SQLFiles';
 import { IdPrivate, GetIdRange as _GetIdRange, GetId as _GetId } from './ids/Ids';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { Objects as _Objects } from './cell/ObjectIteration';
+import { cleanSQL } from './sql/SQLClean';
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
@@ -79,6 +80,13 @@ async function applyStage(collection: PatchCollection) {
 async function main() {
     await IdPublic.readFile();
     SqlConnection.connect();
+
+    try{
+        await cleanSQL();
+    } catch(err) {
+        console.error(err.stack);
+        process.exit(0);
+    }
 
     // Find all patch subdirectories
     for (const dir of Settings.PATCH_DIRECTORY) {
