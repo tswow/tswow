@@ -100,7 +100,7 @@ export namespace ${modname} {
  * The example patch file that will be written to the 'data' directory of new modules.
  */
 const patch_example_ts = (name: string) => `
-import { SQL, DBC } from "wotlkdata";
+import { std } from "tswow-stdlib";
 
 console.log("Hello from ${name} data script!");
 `;
@@ -198,9 +198,13 @@ export namespace Modules {
             return;
         }
 
+
         if (!isEditable(mod)) {
             wsys.execIn(ipaths.moduleData(mod), `node ../../../${ipaths.tsc}`);
         }
+
+        wfs.remove(mpath(ipaths.nodeModules,mod));
+        refreshModules(false);
     }
 
     /**
