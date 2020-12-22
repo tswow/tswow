@@ -999,6 +999,42 @@ export class ActionType<T> {
     }
 
     /**
+     * 
+     * Creature stores invoker party and starts walking. Use together with 'finishQuestWalk'.
+     * @param walkOrRun 
+     * @param id 
+     * @param canRepeat 
+     * @param quest_template 
+     * @param despawnTime 
+     * @param reactState 
+     */
+    setQuestWalk(walkOrRun: number, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: number) {
+        return this.main
+            .Target.setInvokerParty()
+            .Action.setStoreTargetList(0)
+            .then
+            .Target.setActionInvoker()
+            .Action.setStoreTargetList(1)
+            .then
+            .Target.setSelf()
+            .Action.setWpStart(walkOrRun,id,canRepeat,quest_template,despawnTime,reactState);
+    }
+
+    /**
+     * Completes a quest walk started with "setQuestWalk", 
+     * which rewards the group that started it
+     * @param questId 
+     */
+    setFinishQuestWalk(questId: number) {
+        return this.main
+            .Action.setFinishQuestScript(questId)
+            .Target.setStored(0)
+            .then
+            .Action.setFinishQuestScript(questId)
+            .Target.setStored(1);
+    }
+
+    /**
      *  Creature pauses its Waypoint Movement for given time.
      *  @param time (in ms)
      */
