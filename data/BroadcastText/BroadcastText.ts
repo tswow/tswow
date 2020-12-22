@@ -81,7 +81,7 @@ export class BroadcastText<T> extends Subsystem<T> {
     get SoundEntry() { return this.wrap(this.row.SoundEntriesID); }
     get Flags() { return this.wrap(this.row.Flags); }
 
-    set(maleText: loc_constructor, femaleText: loc_constructor, emote: number, emoteDelay: number) {
+    setGendered(maleText: loc_constructor, femaleText: loc_constructor, emote: number, emoteDelay: number) {
         this.MaleText.set(maleText);
         this.FemaleText.set(femaleText);
         this.Emote1.set(emote);
@@ -89,7 +89,7 @@ export class BroadcastText<T> extends Subsystem<T> {
         return this.owner;
     }
 
-    setUnisex(text: loc_constructor, emote: number, emoteDelay: number) {
-        return this.set(text,text,emote,emoteDelay);
+    set(text: loc_constructor, emote = 0, emoteDelay = 0) {
+        return this.setGendered(text,text,emote,emoteDelay);
     }
 }

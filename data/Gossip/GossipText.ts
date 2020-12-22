@@ -229,7 +229,7 @@ export class GossipTextArray<S,G,T extends GOCreature<G>> extends SystemArray<Go
         return this.owner;
     }
 
-    add(text: loc_constructor, lang: number, emote: number, emoteDelay: number) {
+    add(text: loc_constructor, lang = 0, emote = 0,  emoteDelay = 0) {
         return this.addGendered(text,text,lang,emote,emoteDelay);
     }
 }
