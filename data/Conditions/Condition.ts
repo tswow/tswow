@@ -16,7 +16,7 @@ export class Condition<T> extends Subsystem<T> {
     private addRow(type: number, group: number, value1: number = 0, value2: number = 0, value3: number = 0) {
         SQL.conditions.add(this.sourceType, this.sourceGroup, 
             this.sourceEntry, this.sourceId, group,
-            type, 0, value1, value2, value3)
+            type, 0, value1, value2, value3).Comment.set('tswow')
         return this.owner;
     }
 
