@@ -11,6 +11,7 @@ export function cleanSQL() {
     q('DELETE FROM trainer_spell WHERE VerifiedBuild = 17688;')
     q('DELETE FROM waypoints WHERE point_comment = "tswow";')
     q('DELETE FROM npc_vendor WHERE VerifiedBuild = 17688;')
+    q('DELETE FROM conditions WHERE Comment = "tswow";')
 
     q('DELETE FROM mail_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM creature_loot_template WHERE Comment = "tswow";')
