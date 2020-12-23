@@ -16,9 +16,9 @@
  */
 import { SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { SqlRow } from "wotlkdata/sql/SQLRow";
 import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts";
 import { MainEntity } from "../Base/MainEntity";
+import { Condition } from "../Conditions/Condition";
 import { ActionType } from "./ActionType";
 import { AttachedScript } from "./AttachedScript";
 import { EventType } from "./EventType";
@@ -43,6 +43,27 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
     static owner<T>(script: SmartScript<T>) : T {
         return script.owner;
     }
+
+    get ConditionSelf() {
+        return new Condition(this, 
+            22, 
+            this.row.id.get()+1, 
+            this.row.entryorguid.get(), 
+            this.row.source_type.get(), 
+            1
+        )
+    }
+
+    get ConditionInvoker() {
+        return new Condition(this,
+            22,
+            this.row.id.get()+1,
+            this.row.entryorguid.get(),
+            this.row.source_type.get(),
+            0
+        )
+    }
+
 
     get Chance() { return this.wrap(this.row.event_chance); }
     get Action() { return new ActionType<T>(this, this.row); }
