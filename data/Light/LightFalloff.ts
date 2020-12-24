@@ -14,22 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export class Position {
-    readonly map: number;
-    readonly x: number;
-    readonly y: number;
-    readonly z: number;
-    readonly o: number;
+import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Light } from "./Light";
 
-    constructor(map: number, x: number, y: number, z: number, o: number) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.o = o;
-        this.map = map;
+export class LightFalloff extends Subsystem<Light> {
+    get Start() { return this.ownerWrap(this.owner.row.FalloffStart); }
+    get End() { return this.ownerWrap(this.owner.row.FalloffEnd); }
+
+    set(start: number, end: number) {
+        this.Start.set(start);
+        this.End.set(end);
+        return this.owner;
     }
-}
-
-export function Pos(map: number, x: number, y: number, z: number, o: number) {
-    return new Position(map,x,y,z,o);
 }
