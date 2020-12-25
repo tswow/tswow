@@ -64,7 +64,6 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
         )
     }
 
-
     get Chance() { return this.wrap(this.row.event_chance); }
     get Action() { return new ActionType<T>(this, this.row); }
     get Target() { return new TargetType<T>(this, this.row); }
@@ -72,7 +71,7 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
 
     get end() { return this.owner; }
 
-    get then() {
+    then() {
         let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
         SQLCellReadOnly.set(this.row.link,id);
         let sc = new SmartScript(this.owner, SQL.smart_scripts
