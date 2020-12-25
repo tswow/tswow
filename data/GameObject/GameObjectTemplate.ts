@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
+import { SQL } from "wotlkdata";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { GOCreature } from "../Base/GOorCreature";
+import { GameObjectName } from "./GameObjectName";
 
-export class GameObjectTemplate extends GOCreature<gameobjectRow> {
+export class GameObjectTemplate extends GOCreature<gameobject_templateRow> {
     protected isCreature(): boolean {
         return false;
     }
@@ -26,5 +28,28 @@ export class GameObjectTemplate extends GOCreature<gameobjectRow> {
         return true;
     }
 
-    get ID() { return this.row.id.get(); }
+    get row2() {
+        let row = SQL.gameobject_template_addon.find({entry: this.ID});
+
+        if(row===undefined) {
+            row = SQL.gameobject_template_addon.add(this.ID)
+                .artkit0.set(0)
+                .artkit1.set(0)
+                .artkit2.set(0)
+                .artkit3.set(0)
+                .faction.set(0)
+                .flags.set(0)
+                .maxgold.set(0)
+                .mingold.set(0)
+        }
+        return row;
+    }
+
+    get ID() { return this.row.entry.get(); }
+    get Type() { return this.row.type.get(); }
+    get DisplayID() { return this.wrap(this.row.displayId); }
+    get Name() { return new GameObjectName(this); }
+    get Icon() { return this.wrap(this.row.IconName); }
+    get CastBarCaption() { return this.wrap(this.row.castBarCaption); }
+    get Size() { return this.wrap(this.row.size); }
 }

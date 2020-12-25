@@ -20,6 +20,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
+import { Ids } from "../Base/Ids";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
 
 function getLocRow(id: number, lang: Language) {
@@ -92,4 +93,17 @@ export class BroadcastText<T> extends Subsystem<T> {
     set(text: loc_constructor, emote = 0, emoteDelay = 0) {
         return this.setGendered(text,text,emote,emoteDelay);
     }
+}
+
+export function getBroadcast<T>(owner: T, cell: Cell<number,any>) {
+    let row: broadcast_textRow;
+    if(cell.get()<=0) {
+        cell.set(Ids.BroadcastText.id());
+        row = SQL.broadcast_text.add(cell.get());
+    } else {
+        row = SQL.broadcast_text.find({ID: cell.get()});
+    }
+
+    return new BroadcastText(owner, row);
+    
 }
