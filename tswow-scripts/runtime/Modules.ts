@@ -275,7 +275,9 @@ export namespace Modules {
      * to ensure SQL data was copied successfully.
      */
     export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
+        const ct = Date.now();
         await compileAll();
+        console.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
         wfs.mkDirs(ipaths.dbcBuild, true);
 
         const indexpath = mpath('./node_modules', 'wotlkdata', 'wotlkdata');
@@ -335,17 +337,21 @@ export namespace Modules {
     export async function buildMpq(folder: boolean = false, fast: boolean = false) {
         const timer = Timer.start();
 
+
         // Build output dbc
         const wrap = await rebuildPatch(fast);
-        Assets.check();
 
+        const sectionTimer = Timer.start();
+        const time = (str: string) => 
+            console.log(`${str} in ${(sectionTimer.timeRestart()/1000).toFixed(2)}`)
         const mpqPath = mpath(cfg.client.directory(), 'data', `patch-${cfg.client.mpq_suffix()}.MPQ`);
         const paths = getModules()
-            .map(x => mpath('./modules', x, 'assets'))
+            .filter(x => !wfs.exists(ipaths.moduleSymlink(x)))
+            .map(x => mpath('./modules',x, 'assets'))
             .filter(x => wfs.exists(x))
             .map(x => `"${x}"`);
-        const oldStarted = Client.isRunning();
         await Client.kill();
+        time(`Killed client`);
 
         if (folder !== wfs.isDirectory(mpqPath)) {
             wfs.remove(mpqPath);
@@ -378,6 +384,8 @@ export namespace Modules {
         } else {
             wsys.exec(`"${ipaths.mpqBuilderExe}" "${mpqPath}" "${wfs.removeDot(ipaths.dbcBuild)}" "${wfs.removeDot(ipaths.luaxmlBuild)}" ${paths.join(' ')}`, 'inherit');
         }
+
+        time(`Wrote file changes`);
 
         term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);
 
@@ -426,6 +434,23 @@ export namespace Modules {
                 }
             }
         }
+    }
+
+    export function unlinkModule(mod?: string) {
+        if(mod===undefined) {
+            getModules().forEach((x)=>unlinkModule(x));
+            return;
+        }
+
+        const sm = ipaths.moduleSymlink(mod);
+        if(!wfs.exists(sm)) {
+            return;
+        }
+
+        const dpath = mpath(cfg.client.directory(),'Data',`patch-${wfs.read(sm)}.MPQ`);
+        wfs.remove(sm);
+        wfs.remove(dpath);
+        term.log(`Unlinked ${mod} from ${dpath}`)
     }
 
     export async function uninstallModule(name: string) {
@@ -489,9 +514,12 @@ export namespace Modules {
             installModule(args.join(' '));
         });
 
-
         moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', (args) => {
             uninstallModule(args[0]);
+        });
+
+        moduleC.addCommand('unlink','module?','Unlinks one or all modules from the clients MPQ', (args)=>{
+            unlinkModule(args[0]);
         });
 
         moduleC.addCommand('data', 'folder? readonly? fast?', 'Build server SQL and client DBC/MPQ from all modules',

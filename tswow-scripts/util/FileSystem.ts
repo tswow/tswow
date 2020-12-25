@@ -538,6 +538,10 @@ export namespace wfs {
     export function removeDot(pathIn: string) {
         return pathIn.startsWith('./') ? pathIn.substring(2) : pathIn;
     }
+
+    export function symlink(pathFrom: string, pathTo: string) {
+        fs.symlinkSync(absPath(pathFrom), absPath(pathTo), wfs.isDirectory(pathFrom) ? 'dir':'file');
+    }
 }
 
 /**

@@ -76,4 +76,10 @@ export class Timer {
         }
         throw new Error(`Tried to time a non-existent lap with tag ${tag}`);
     }
+
+    timeRestart() {
+        let t = this.time();
+        this.startTime = Date.now();
+        return t;
+    }
 }

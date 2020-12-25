@@ -77,7 +77,15 @@ async function applyStage(collection: PatchCollection) {
     collection.splice(0, collection.length);
 }
 
+let ctime: number = 0;
+function time(msg: string) {
+    let diff = Date.now()-ctime;
+    console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
+    ctime = Date.now();
+}
+
 async function main() {
+    ctime = Date.now();
     await IdPublic.readFile();
     SqlConnection.connect();
 
@@ -87,6 +95,8 @@ async function main() {
         console.error(err.stack);
         process.exit(0);
     }
+    time(`Loaded/Cleaned SQL`);
+
 
     // Find all patch subdirectories
     for (const dir of Settings.PATCH_DIRECTORY) {
@@ -107,9 +117,14 @@ async function main() {
     applyStage(patches);
     applyStage(finishes);
 
+    time(`Executed scripts`);
+
     await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
         Settings.SQL_WRITE_TO_FILE);
+
+    time(`Wrote SQL`);
     saveDbc();
+    time(`Wrote DBC`);
 
     await IdPublic.writeFile();
 
@@ -123,6 +138,8 @@ async function main() {
 
         _writeLUAXML(Settings.LUAXML_SOURCE, Settings.LUAXML_CLIENT);
     }
+
+    time(`Wrote LUAXML`);
 }
 
 /**

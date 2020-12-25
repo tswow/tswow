@@ -85,6 +85,7 @@ export namespace Assets {
 
     /**
      * Checks for duplicate and raw xml/lua files.
+     * @deprecated
      */
     export function check() {
         const filemap: {[key: string]: string} = {};

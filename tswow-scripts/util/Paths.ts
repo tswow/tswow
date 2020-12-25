@@ -55,6 +55,7 @@ export class InstallPaths {
     get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
     get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
     get addons() { return mpath(this.bin, 'addons')}
+    get symlinkMaker() { return mpath(this.bin, 'symlinkmaker.js')}
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
@@ -100,6 +101,10 @@ export class InstallPaths {
     }
     moduleNoEdit(mod: string) {
         return mpath(this.modules, mod, 'noedit');
+    }
+
+    moduleSymlink(mod: string) {
+        return mpath(this.modules, mod, 'symlinked');
     }
 }
 

@@ -175,7 +175,7 @@ export namespace Client {
         }
 
         command.addCommand('start', '', 'Starts the World of Warcraft client', async() => start());
-        command.addCommand('kill', '', 'Stops the World of Warcraft client', async() => stop());
+        command.addCommand('kill', '', 'Stops the World of Warcraft client', async() => kill());
 
         if (autostartClient) {
             start();

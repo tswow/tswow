@@ -12,6 +12,7 @@ export function cleanSQL() {
     q('DELETE FROM waypoints WHERE point_comment = "tswow";')
     q('DELETE FROM npc_vendor WHERE VerifiedBuild = 17688;')
     q('DELETE FROM conditions WHERE Comment = "tswow";')
+    q('DELETE FROM creature WHERE VerifiedBuild = 17688;')
 
     q('DELETE FROM mail_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM creature_loot_template WHERE Comment = "tswow";')
@@ -24,6 +25,7 @@ export function cleanSQL() {
     q('DELETE FROM reference_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM skinning_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM spell_loot_template WHERE Comment = "tswow";')
+    q('DELETE FROM creature_text WHERE comment = "tswow";')
 
     return Promise.all(waits);
 }

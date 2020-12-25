@@ -41,7 +41,8 @@
   "scripts": {
     "start": "node -r source-map-support/register coredata/start.js",
     "test": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test",
-    "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep "
+    "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep ",
+    "symlink": "node bin/symlinkmaker.js"
   },
   "repository": {
     "type": "git",

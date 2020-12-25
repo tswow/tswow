@@ -52,4 +52,6 @@ export async function createConfig() {
     wfs.copy('./.vscode-install', ipaths.vscodeWorkspace);
 
     wfs.copy('./addons',ipaths.addons)
+
+    wfs.copy('./tswow-scripts/symlinkmaker.js', ipaths.symlinkMaker)
 }
