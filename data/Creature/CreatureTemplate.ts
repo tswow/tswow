@@ -144,7 +144,6 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
         return new Trainer(this,trainerRow, ctrow); 
     }
     get Vendor() { return new CreatureVendor(this); }
-    get Waypoints() { return new CreatureWaypoints(this); }
 
     spawn(mod: string, id: string, pos: Position) {
         return CreatureInstances.create(mod, id, this.ID, pos);

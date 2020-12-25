@@ -15,13 +15,34 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
 import { MainEntity } from "../Base/MainEntity";
 import { CreatureMovementType } from "./CreatureMovementType";
+import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
 
 export class CreatureInstance extends MainEntity<creatureRow> {
+
+    constructor(row: creatureRow) {
+        super(row);
+    }
+
+    get addonRow() {
+        let row = SQL.creature_addon.find({guid: this.row.guid.get()});
+        if(row===undefined) {
+            row = SQL.creature_addon.add(this.GUID)
+                .auras.set('')
+                .bytes1.set(0)
+                .bytes2.set(0)
+                .emote.set(0)
+                .mount.set(0)
+                .path_id.set(0)
+        }
+        return row;
+    }
+
     get GUID() { return this.row.guid.get(); }
     get TemplateID() { return this.wrap(this.row.id); }
     get Map() { return this.wrap(this.row.map); }
@@ -36,4 +57,6 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get WanderDistance() { return this.wrap(this.row.wander_distance)}
 
     get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
+
+    get PatrolPath() { return new CreaturePatrolPath(this); }
 }

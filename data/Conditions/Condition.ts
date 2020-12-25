@@ -50,7 +50,14 @@ export class Condition<T> extends Subsystem<T> {
     protected sourceId?: number;
     protected sourceTarget?: number;
 
-    constructor(owner: T, sourceType: number, sourceGroup?: number, sourceEntry?: number, sourceId?: number, sourceTarget?: number) {
+    constructor(
+        owner: T, 
+        sourceType: number, 
+        sourceGroup?: number, 
+        sourceEntry?: number, 
+        sourceId?: number, 
+        sourceTarget?: number) {
+
         super(owner);
         this.sourceType = sourceType;
         this.sourceGroup = sourceGroup;
@@ -218,7 +225,7 @@ export class Condition<T> extends Subsystem<T> {
 
     @ConditionType(15,["ClassMask"])
     addIsClass(cls: ClassType, group = 0) {
-        return this.addRow(15, group, resolveClassType(cls));
+        return this.addRow(15, group, 1<<(resolveClassType(cls)-1));
     }
 
     @ConditionType(16,["RaceMask"])

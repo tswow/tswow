@@ -35,6 +35,7 @@ import { Factions } from "./Faction/Faction";
 import { SmartScripts } from "./SmartScript/SmartScript";
 import { Gossips } from "./Gossip/Gossips";
 import { Lights } from "./Light/Lights";
+import { ScriptPaths } from "./Waypoints/ScriptPaths";
 
 export const std = {
     Spells : Spells,
@@ -55,7 +56,8 @@ export const std = {
     Factions: Factions,
     Scripts: SmartScripts,
     Gossip: Gossips,
-    Lights: Lights
+    Lights: Lights,
+    ScriptPaths: ScriptPaths
 }
 
 // Patch ID files

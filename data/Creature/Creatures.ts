@@ -42,6 +42,7 @@ export const CreatureInstances = {
                 .modelid.set(0)
                 .npcflag.set(0)
                 .wander_distance.set(0)
+                .VerifiedBuild.set(17688)
             )
         .Position.set(position)
         .TemplateID.set(template)

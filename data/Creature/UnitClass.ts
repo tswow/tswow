@@ -33,9 +33,9 @@ export class UnitClass extends EnumBase<CreatureTemplate> {
     @EnumField(2)
     setPaladin() { return this.set(2); }
 
-    @EnumField(3)
-    setRogue() { return this.set(3); }
-
     @EnumField(4)
-    setMage() { return this.set(4); }
+    setRogue() { return this.set(4); }
+
+    @EnumField(8)
+    setMage() { return this.set(8); }
 }

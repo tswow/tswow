@@ -167,5 +167,10 @@ export const Ids = {
     /** Starts at 2539, highest base value is 2538 */
     Light: new AutoIdGenerator(2539),
     /** Starts at 918, highest base value is 917*/
-    LightParam: new AutoIdGenerator(918)
+    LightParam: new AutoIdGenerator(918),
+    /** Starts at 4988, highest base value is 4987*/
+    Area: new IdGenerator('AreaTable',4988),
+    /** Starts at 3618, highest base value is 3617 */
+    // @ts-ignore
+    AreaBit: new IdGenerator('AreaTableExplore',3618),
 }

@@ -16,14 +16,20 @@
  */
 import { SQL } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { std } from "../tswow-stdlib-data";
 import { Quest } from "./Quest";
 
 export class QuestNPC extends Subsystem<Quest> {
+    private mark(id: number) {
+        std.CreatureTemplates.load(id).NPCFlags.QuestGiver.mark();
+    }
+
     /**
      * Add a quest starter
      * @param npcId 
      */
     addStarter(npcId : number) {
+        this.mark(npcId);
         SQL.creature_queststarter.add(npcId,this.owner.ID);
         return this.end;
     }
@@ -33,6 +39,7 @@ export class QuestNPC extends Subsystem<Quest> {
      * @param npcId 
      */
     addEnder(npcId : number) {
+        this.mark(npcId);
         SQL.creature_questender.add(npcId,this.owner.ID)
         return this.end;
     }

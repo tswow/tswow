@@ -74,63 +74,123 @@ export class LootSet {
 }
 
 export const Loot = {
-    addFish() { 
-        return new LootSet(Ids.FishingLoot.id(),
-        SQL.fishing_loot_template)
+    Fishing: {
+        create() {
+            return new LootSet(Ids.CreatureLoot.id(),SQL.fishing_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.fishing_loot_template)
+        }
     },
 
-    addCreature() { 
-        return new LootSet(Ids.CreatureLoot.id(),
-        SQL.creature_loot_template)
+    Creature: {
+        create() {
+            return new LootSet(Ids.CreatureLoot.id(),SQL.creature_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.creature_loot_template)
+        }
     },
 
-    addGameObject() { 
-        return new LootSet(Ids.GameObjectLoot.id(),
-        SQL.gameobject_loot_template)
+    GameObject: {
+        create() {
+            return new LootSet(Ids.GameObjectLoot.id(),SQL.gameobject_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.gameobject_loot_template)
+        } 
     },
 
-    addItem() { 
-        return new LootSet(Ids.ItemLoot.id(),
-        SQL.item_loot_template)
+    Item: {
+        create() {
+            return new LootSet(Ids.ItemLoot.id(),SQL.item_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.item_loot_template)
+        } 
+    },
+    
+    Disenchant: {
+        create() {
+            return new LootSet(Ids.DisenchantLoot.id(),SQL.disenchant_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.disenchant_loot_template)
+        } 
+    },
+        
+    Prospecting: {
+        create() {
+            return new LootSet(Ids.ProspectingLoot.id(),SQL.prospecting_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.prospecting_loot_template)
+        } 
     },
 
-    addDisenchant() { 
-        return new LootSet(Ids.DisenchantLoot.id(),
-        SQL.disenchant_loot_template)
+    Milling: {
+        create() {
+            return new LootSet(Ids.MillingLoot.id(),SQL.milling_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.milling_loot_template)
+        } 
     },
 
-    addProspecting() { 
-        return new LootSet(Ids.ProspectingLoot.id(),
-        SQL.prospecting_loot_template)
+    Pickpocket: {
+        create() {
+            return new LootSet(Ids.PickPocketLoot.id(),SQL.pickpocketing_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.pickpocketing_loot_template)
+        } 
     },
 
-    addMilling() { 
-        return new LootSet(Ids.MillingLoot.id(),
-        SQL.milling_loot_template)
+    Skinning: {
+        create() {
+            return new LootSet(Ids.SkinningLoot.id(),SQL.skinning_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.skinning_loot_template)
+        } 
     },
 
-    addPickpocket() { 
-        return new LootSet(Ids.PickPocketLoot.id(),
-        SQL.pickpocketing_loot_template)
+    Mail: {
+        create() {
+            return new LootSet(Ids.MailLoot.id(),SQL.mail_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.mail_loot_template)
+        } 
     },
 
-    addSkinning() { 
-        return new LootSet(Ids.SkinningLoot.id(),
-        SQL.skinning_loot_template)
+    Reference: {
+        create() {
+            return new LootSet(Ids.ReferenceLoot.id(),SQL.reference_loot_template);
+        },
+
+        load(id: number) {
+            return new LootSet(id, SQL.reference_loot_template)
+        } 
     },
 
-    addMail() { 
-        return new LootSet(Ids.MailLoot.id(),
-        SQL.mail_loot_template)
-    },
+    Spell: {
+        create() {
+            return new LootSet(Ids.SpellLoot.id(),SQL.spell_loot_template);
+        },
 
-    addReference() { 
-        return new LootSet(Ids.ReferenceLoot.id(),
-        SQL.reference_loot_template)
-    },
-
-    addSpell() { 
-        return new LootSet(Ids.SpellLoot.id(),
-        SQL.spell_loot_template)
+        load(id: number) {
+            return new LootSet(id, SQL.spell_loot_template)
+        } 
     },
 }

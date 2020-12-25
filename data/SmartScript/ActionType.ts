@@ -18,7 +18,7 @@ import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
 import { SQL } from "wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
 import { Position } from "../Misc/Position"
-import { SmartScript } from "./SmartScript"
+import { SmartScript, SmartScripts } from "./SmartScript"
 
 export enum SummonType {
     /** Despawns after a specified time OR the creatures corpse disappears */
@@ -371,7 +371,7 @@ export class ActionType<T> {
     setTalk(texts : loc_constructor|loc_constructor[], Duration : number, unk : number = 0) {
         const rows = SQL.creature_text.filter({CreatureID:this.row.entryorguid.get()})
         const id = rows.length===0 ? 0 : 
-            rows.sort((a,b)=>b.ID>a.ID?1:-1)[0].ID.get()+1
+            rows.sort((a,b)=>b.GroupID>a.GroupID?1:-1)[0].GroupID.get()+1
 
         if(!Array.isArray(texts)) {
             texts = [texts]
@@ -380,14 +380,15 @@ export class ActionType<T> {
         for(let i=0;i<texts.length;++i) {
             iterLocConstructor(texts[i],(lang, value) => {
                 if(lang === 'enGB' || lang === 'enCN' || lang === 'enTW') {
-                    SQL.creature_text.add(this.row.entryorguid.get(),i,id,
+                    SQL.creature_text.add(this.row.entryorguid.get(),id,i,
                         {
                             Duration:Duration,
                             Text: value,
                             BroadcastTextId: 0,
+                            comment: 'tswow'
                         })
                 } else {
-                    SQL.creature_text_locale.add(this.row.entryorguid.get(),i,id,lang,{
+                    SQL.creature_text_locale.add(this.row.entryorguid.get(),id,i,lang,{
                         Text: value,
                     })
                 }
@@ -1009,15 +1010,23 @@ export class ActionType<T> {
      * @param reactState 
      */
     setQuestWalk(walkOrRun: number, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: number) {
+        this.main.free.onRespawn(0,0,0)
+            .Action.setAddNpcFlag(2)
+            .Target.setSelf()
+
         return this.main
             .Target.setInvokerParty()
             .Action.setStoreTargetList(0)
-            .then
+            .then()
             .Target.setActionInvoker()
             .Action.setStoreTargetList(1)
-            .then
+            .then()
             .Target.setSelf()
-            .Action.setWpStart(walkOrRun,id,canRepeat,quest_template,despawnTime,reactState);
+            .Action.setWpStart(walkOrRun,id,canRepeat,quest_template,despawnTime,reactState)
+            .then()
+            .Target.setSelf()
+            .Action.setRemoveNpcFlag(2)
+            
     }
 
     /**
@@ -1028,7 +1037,7 @@ export class ActionType<T> {
         return this.main
             .Action.setFailQuest(questId)
             .Target.setStored(0)
-            .then
+            .then()
             .Action.setFailQuest(questId)
             .Target.setStored(1)
     }
@@ -1042,9 +1051,12 @@ export class ActionType<T> {
         return this.main
             .Action.setFinishQuestScript(questId)
             .Target.setStored(0)
-            .then
+            .then()
             .Action.setFinishQuestScript(questId)
-            .Target.setStored(1);
+            .Target.setStored(1)
+            .then()
+            .Action.setAddNpcFlag(2)
+            .Target.setSelf()
     }
 
     /**
