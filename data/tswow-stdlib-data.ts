@@ -37,6 +37,8 @@ import { Gossips } from "./Gossip/Gossips";
 import { Lights } from "./Light/Lights";
 import { ScriptPaths } from "./Waypoints/ScriptPaths";
 import { Areas } from "./Area/Areas";
+import { Maps } from "./Map/Maps";
+import { LoadingScreens } from "./Map/LoadingScreen";
 
 export const std = {
     Spells : Spells,
@@ -60,6 +62,8 @@ export const std = {
     Lights: Lights,
     ScriptPaths: ScriptPaths,
     Areas: Areas,
+    Maps: Maps,
+    LoadingScreens: LoadingScreens,
 }
 
 // Patch ID files

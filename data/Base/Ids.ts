@@ -173,4 +173,8 @@ export const Ids = {
     /** Starts at 3618, highest base value is 3617 */
     // @ts-ignore
     AreaBit: new IdGenerator('AreaTableExplore',3618),
+    /** Starts at 255, highest base value is 254 */
+    LoadingScreens: new AutoIdGenerator(255),
+    /** Starts at 725, highest base value is 724 */
+    Map: new IdGenerator('Map', 725)
 }
