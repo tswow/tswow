@@ -36,6 +36,7 @@ import { SmartScripts } from "./SmartScript/SmartScript";
 import { Gossips } from "./Gossip/Gossips";
 import { Lights } from "./Light/Lights";
 import { ScriptPaths } from "./Waypoints/ScriptPaths";
+import { Areas } from "./Area/Areas";
 
 export const std = {
     Spells : Spells,
@@ -57,7 +58,8 @@ export const std = {
     Scripts: SmartScripts,
     Gossip: Gossips,
     Lights: Lights,
-    ScriptPaths: ScriptPaths
+    ScriptPaths: ScriptPaths,
+    Areas: Areas,
 }
 
 // Patch ID files
