@@ -329,4 +329,17 @@ describe('DBC', function() {
             assert.strictEqual(Math.abs((DBC.GtOCTClassCombatRatingScalar.find({ID: 2000}).Data.get() - 1.25)) < 0.00001, true);
         });
     });
+
+    describe('Row#copyTo', function() {
+        it('copies rows in DBC files', function() {
+            const src = DBC.Resistances.find({ID: 4})
+            const dst = DBC.Resistances.find({ID: 5})
+            src.copyTo(dst);
+            const nxt = DBC.Resistances.find({ID: 6});
+            assert.strictEqual(src.ID.get(),4);
+            assert.strictEqual(src.Name.mask.get(),16712190);
+            assert.strictEqual(dst.ID.get(),5);
+            assert.strictEqual(nxt.ID.get(),6);
+            assert.strictEqual(dst.FizzleSoundID.get(),1425); });
+    });
 });

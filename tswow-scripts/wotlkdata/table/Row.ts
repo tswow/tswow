@@ -45,4 +45,10 @@ export abstract class Row<C, Q> extends MainSystem {
     protected primaryKeys(): any[] {
         return Row.primaryKeyFields(this).map((x: any) => (this as any)[x].get());
     }
+
+    copyTo(targetRow: this) {
+        const pks = targetRow.primaryKeys();
+        MainSystem.cloneFrom(targetRow, this);
+        targetRow.writePrimaryKeys(pks);
+    }
 }

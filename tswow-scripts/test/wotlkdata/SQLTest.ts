@@ -78,4 +78,18 @@ describe('SQL', function() {
             assert.strictEqual(q.RewardMoney.get(), 0);
         });
     });
+
+    describe('Row#copyTo', function() {
+        it('copies rows in SQL tables', function() {
+            const r1 = SQL.item_template.add(1007688);
+            r1.delay.set(10);
+            const r2 = SQL.item_template.add(1007689);
+            r2.delay.set(20);
+            r1.copyTo(r2);
+            assert.strictEqual(r1.entry.get(), 1007688);
+            assert.strictEqual(r2.entry.get(), 1007689);
+            assert.strictEqual(r1.delay.get(), 10);
+            assert.strictEqual(r2.delay.get(), 10);
+        });
+    });
 });
