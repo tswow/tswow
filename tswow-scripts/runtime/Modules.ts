@@ -123,6 +123,7 @@ const gitignores =
 build/
 tsconfig.json
 global.d.ts
+symlinked
 `;
 
 /**
@@ -455,6 +456,7 @@ export namespace Modules {
 
     export async function uninstallModule(name: string) {
         destroyTSWatcher(mpath('modules', name, 'data'));
+        unlinkModule(name);
 
         // Delete all built libraries
         for (const p of [ipaths.tcReleaseScripts, ipaths.tcDebugScripts]) {
