@@ -72,10 +72,27 @@ export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
     get end() { return this.owner; }
 
     then() {
-        let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
-        SQLCellReadOnly.set(this.row.link,id);
+        // Find the last part of the existing chain and append to it
+        let cur = this.row;
+        while(cur.link.get()!==0) {
+            cur = SQL.smart_scripts.find({
+                entryorguid: this.row.entryorguid.get(), 
+                source_type: this.row.source_type.get(),
+                id: cur.link.get()
+            });
+
+            if(cur===undefined) {
+                throw new Error(`Broken SmartScript link from (` + 
+                    `entryorguid=${this.row.entryorguid.get()}, ` + 
+                    `source_type=${this.row.source_type.get()}, ` + 
+                    `id=${this.row.id.get()})`)
+            }
+        }
+
+        let id = findId(cur.source_type.get(),cur.entryorguid.get());
+        SQLCellReadOnly.set(cur.link,id);
         let sc = new SmartScript(this.owner, SQL.smart_scripts
-            .add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT)
+            .add(cur.entryorguid.get(),cur.source_type.get(),id,0,EMPTY_SCRIPT)
             .comment.set('tswow'));
         sc.row.comment.set('tswow');
         sc.row.event_type.set(61);
