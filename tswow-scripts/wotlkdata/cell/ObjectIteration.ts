@@ -16,6 +16,8 @@
  */
 export type TypeOfTypes = 'string' | 'null' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function';
 
+let visitStack : any[] = [];
+
 export const Objects = {
     // https://stackoverflow.com/questions/8024149/is-it-possible-to-get-the-non-enumerable-inherited-property-names-of-an-object
     getAllPropertyNames(obj: any) {
@@ -33,15 +35,16 @@ export const Objects = {
         return result;
     },
 
-    objectifyObj(thiz: any, checkedObjs: any[] = []) {
+    objectifyObj(thiz: any) {
         const obj: {[key: string]: any} = {};
-        checkedObjs.push(thiz);
+
+        visitStack.push(thiz);
 
         Objects.getAllPropertyNames(thiz).forEach((key: any) => {
-            if (key === 'row' || key === 'owner') { return; }
+            if (key === 'row' || key === 'owner' || key === 'end') { return; }
             if (thiz[key] !== undefined && thiz[key] !== null) {
                 const val = thiz[key];
-                if (checkedObjs.findIndex((x) => x === val) !== -1) {
+                if (visitStack.findIndex((x) => x === val) !== -1) {
                     return;
                 }
 
@@ -56,9 +59,12 @@ export const Objects = {
                 if (typeof(val.exists) === 'function' && !val.exists()) {
                     return;
                 }
+
                 obj[key] = val.objectify();
             }
         });
+
+        visitStack.pop();
         return obj;
     },
 
