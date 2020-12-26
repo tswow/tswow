@@ -17,6 +17,7 @@
 import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
+import { std } from "../tswow-stdlib-data";
 import { ItemTemplate } from "./ItemTemplate";
 import { ItemVisualModels } from "./ItemVisualModels";
 
@@ -35,8 +36,8 @@ export class ItemVisual extends Subsystem<ItemTemplate> {
     get Texture() { return this.ownerWrapArray(this.row.Texture); }
     get Icon() { return this.ownerWrapArray(this.row.InventoryIcon); }
 
-    copyFrom(item: ItemTemplate) {
-        item.Visual.row.copyTo(this.row);
+    copyFrom(templateId: number) {
+        std.Items.load(templateId).Visual.row.copyTo(this.row);
         return this.owner;
     }
 
