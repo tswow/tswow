@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemMoneyLoot extends Subsystem<ItemBase> {
+export class ItemMoneyLoot extends Subsystem<ItemTemplate> {
     get Min() { return this.ownerWrap(this.owner.row.minMoneyLoot); }
     get Max() { return this.ownerWrap(this.owner.row.maxMoneyLoot); }
 

@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
 export enum InventoryType {
     NOT_EQUIPPABLE = 0,
@@ -47,8 +47,8 @@ export enum InventoryType {
     RELIC = 28
 }
 
-export class ItemInventoryType extends Enum<ItemBase> {
-    constructor(owner: ItemBase) {
+export class ItemInventoryType extends Enum<ItemTemplate> {
+    constructor(owner: ItemTemplate) {
         super(owner, owner.row.InventoryType);
     }
 
@@ -56,7 +56,7 @@ export class ItemInventoryType extends Enum<ItemBase> {
         return this.owner.row.InventoryType.get()
     }
 
-    set(value: number): ItemBase {
+    set(value: number): ItemTemplate {
         this.owner.row.InventoryType.set(value);
         return this.owner;
     }

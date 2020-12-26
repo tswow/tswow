@@ -17,7 +17,7 @@
 import { Achievements } from "./Achievement/Achievement";
 import { Classes } from "./Class/Class";
 import { CreatureInstances, CreatureTemplates } from "./Creature/Creatures";
-import { Items } from "./Item/Item";
+import { Items } from "./Item/ItemTemplate";
 import { Languages } from "./Languages/Languages";
 import { Loot } from "./Loot/Loot";
 import { Quests } from "./Quest/Quests";

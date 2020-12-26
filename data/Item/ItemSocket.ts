@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQLCell } from "wotlkdata/sql/SQLCell";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 import { SystemArray, ArrayEntry } from 'wotlkdata/cell/Systems/SystemArray'
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum"
 
-function colors(owner: ItemBase) {
+function colors(owner: ItemTemplate) {
     return [
         owner.row.socketColor_1,
         owner.row.socketColor_2,
@@ -27,7 +27,7 @@ function colors(owner: ItemBase) {
     ]
 }
 
-function contents(owner: ItemBase) {
+function contents(owner: ItemTemplate) {
     return [
         owner.row.socketContent_1,
         owner.row.socketContent_2,
@@ -36,7 +36,7 @@ function contents(owner: ItemBase) {
 }
 
 
-export class ItemColor extends Enum<ItemBase> {
+export class ItemColor extends Enum<ItemTemplate> {
     @EnumField(0)
     setMeta() {return this.set(0)};
 
@@ -59,7 +59,7 @@ export class ItemColor extends Enum<ItemBase> {
     setYellow() {return this.set(6)};    
 }
 
-export class ItemSocket extends ArrayEntry<ItemBase>{
+export class ItemSocket extends ArrayEntry<ItemTemplate>{
     get color() { return new ItemColor(this.owner, colors(this.owner)[this.index]); }
     get content() { return contents(this.owner)[this.index]; }
 
@@ -74,8 +74,8 @@ export class ItemSocket extends ArrayEntry<ItemBase>{
     }
 }
 
-export class ItemSockets extends SystemArray<ItemSocket, ItemBase> {
-    constructor(owner: ItemBase) {
+export class ItemSockets extends SystemArray<ItemSocket, ItemTemplate> {
+    constructor(owner: ItemTemplate) {
         super(owner);
     }
 

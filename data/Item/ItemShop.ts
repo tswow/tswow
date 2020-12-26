@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemShop extends Subsystem<ItemBase> {
+export class ItemShop extends Subsystem<ItemTemplate> {
     private row() { return this.owner.sqlRow; }
 
     set(buycount: number, buyprice: number, sellprice: number) {

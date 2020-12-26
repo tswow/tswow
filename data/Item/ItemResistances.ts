@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemResistance extends Subsystem<ItemBase> {
+export class ItemResistance extends Subsystem<ItemTemplate> {
     protected get row() { return this.owner.sqlRow; }
     get holy() { return this.ownerWrap(this.owner.sqlRow.holy_res); }
     get fire() { return this.ownerWrap(this.row.fire_res); }

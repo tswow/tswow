@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlagsExtra extends MaskCell<ItemBase> {
+export class ItemFlagsExtra extends MaskCell<ItemTemplate> {
     get HordeOnly() { return this.bit(0); }
     get AllianceOnly() { return this.bit(0); }
     /** "When item uses ExtendedCost in npc_vendor, gold is also required"(?) */

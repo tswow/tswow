@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-function IdRows(owner: ItemBase) {
+function IdRows(owner: ItemTemplate) {
     return [
         owner.row.spellid_1,
         owner.row.spellid_2,
@@ -27,7 +27,7 @@ function IdRows(owner: ItemBase) {
     ] 
 }
 
-function CatRows(owner: ItemBase) {
+function CatRows(owner: ItemTemplate) {
     return [
         owner.row.spellcategory_1,
         owner.row.spellcategory_2,
@@ -37,7 +37,7 @@ function CatRows(owner: ItemBase) {
     ] 
 }
 
-function TriggerRows(owner: ItemBase) {
+function TriggerRows(owner: ItemTemplate) {
     return [
         owner.row.spelltrigger_1,
         owner.row.spelltrigger_2,
@@ -47,7 +47,7 @@ function TriggerRows(owner: ItemBase) {
     ] 
 }
 
-function ChargeRows(owner: ItemBase) {
+function ChargeRows(owner: ItemTemplate) {
     return [
         owner.row.spellcharges_1,
         owner.row.spellcharges_2,
@@ -57,7 +57,7 @@ function ChargeRows(owner: ItemBase) {
     ] 
 }
 
-function PPMRows(owner: ItemBase) {
+function PPMRows(owner: ItemTemplate) {
     return [
         owner.row.spellppmRate_1,
         owner.row.spellppmRate_2,
@@ -67,7 +67,7 @@ function PPMRows(owner: ItemBase) {
     ] 
 }
 
-function CooldownRows(owner: ItemBase) {
+function CooldownRows(owner: ItemTemplate) {
     return [
         owner.row.spellcooldown_1,
         owner.row.spellcooldown_2,
@@ -77,7 +77,7 @@ function CooldownRows(owner: ItemBase) {
     ] 
 }
 
-function CCooldownRows(owner: ItemBase) {
+function CCooldownRows(owner: ItemTemplate) {
     return [
         owner.row.spellcategorycooldown_1,
         owner.row.spellcategorycooldown_2,
@@ -87,8 +87,8 @@ function CCooldownRows(owner: ItemBase) {
     ] 
 }
 
-export class ItemSpell extends ArrayEntry<ItemBase> {
-    clear(): ItemBase {
+export class ItemSpell extends ArrayEntry<ItemTemplate> {
+    clear(): ItemTemplate {
         this.ID.set(0);
         this.Category.set(0);
         this.Trigger.set(0);
@@ -111,7 +111,7 @@ export class ItemSpell extends ArrayEntry<ItemBase> {
     get CategoryCooldown() { return CCooldownRows(this.owner)[this.index]; }
 }
 
-export class ItemSpells extends SystemArray<ItemSpell, ItemBase> {
+export class ItemSpells extends SystemArray<ItemSpell, ItemTemplate> {
     get(index: number): ItemSpell {
         return new ItemSpell(this.owner, index);
     }

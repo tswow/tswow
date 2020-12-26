@@ -15,7 +15,6 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC, SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/Cell";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
 import { item_templateRow } from "wotlkdata/sql/types/item_template";
@@ -44,12 +43,11 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
+import { ItemVisual } from "./ItemVisual";
 
-
-export class ItemBase extends MainEntity<item_templateRow> {
+export class ItemTemplate extends MainEntity<item_templateRow> {
     sqlRow : item_templateRow;
     dbcRow : ItemRow;
-    displayRow : ItemDisplayInfoRow;
     
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
@@ -71,6 +69,7 @@ export class ItemBase extends MainEntity<item_templateRow> {
     get Sheath() { return new ItemSheath(this); }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
+    /** Delay in MILLISECONDS */
     get Delay() { return this.wrap(this.row.delay); }
     get RangeMod() { return this.wrap(this.row.RangedModRange); }
     get Description() { return new ItemDescription(this); }
@@ -106,17 +105,15 @@ export class ItemBase extends MainEntity<item_templateRow> {
     get FoodType() { return new ItemFoodType(this); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
+    get Visual() { return new ItemVisual(this); }
     
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
-    
-    get Icon() { return this.wrapIndex(this.displayRow.InventoryIcon,0); }
     
     constructor(srow : item_templateRow, crow : ItemRow, display : ItemDisplayInfoRow) {
         super(srow);
         this.sqlRow = srow;
         this.dbcRow = crow;
-        this.displayRow = display;
     }
     
     get ID() {
@@ -140,11 +137,11 @@ export const Items = {
         const disRow = disParent.clone(Ids.ItemDisplayInfo.id());
         dbcRow.DisplayInfoID.set(disRow.ID.get());
         sqlRow.displayid.set(disRow.ID.get());
-        return new ItemBase(sqlRow, dbcRow, disRow);
+        return new ItemTemplate(sqlRow, dbcRow, disRow);
     },
     
     load(item: number) {
         const [sql,dbc,dis] = getRows(item);
-        return new ItemBase(sql, dbc, dis);
+        return new ItemTemplate(sql, dbc, dis);
     },
 }

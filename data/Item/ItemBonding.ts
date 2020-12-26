@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemBonding extends Enum<ItemBase> {
-    constructor(owner: ItemBase) {
+export class ItemBonding extends Enum<ItemTemplate> {
+    constructor(owner: ItemTemplate) {
         super(owner, owner.row.bonding);
     }
 

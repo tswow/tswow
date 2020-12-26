@@ -16,9 +16,9 @@
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ReputationRank extends Enum<ItemBase> {
+export class ReputationRank extends Enum<ItemTemplate> {
     @EnumField(0)
     Hated() {return this.set(0); }
 
@@ -44,7 +44,7 @@ export class ReputationRank extends Enum<ItemBase> {
     Exalted() {return this.set(7); }
 }
 
-export class ItemRequiredFaction extends Subsystem<ItemBase> {
+export class ItemRequiredFaction extends Subsystem<ItemTemplate> {
     get Faction() { return this.ownerWrap(this.owner.row.RequiredReputationFaction); }
     get Rank() { return new ReputationRank(this.owner, this.owner.row.RequiredReputationRank); }
 

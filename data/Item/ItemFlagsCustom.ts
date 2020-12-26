@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlagsCustom extends MaskCell<ItemBase> {
+export class ItemFlagsCustom extends MaskCell<ItemTemplate> {
     /** Item duration will tick even if player is offline */
     get RealtimeDuration() { return this.bit(0) ;}
 

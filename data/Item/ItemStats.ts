@@ -17,9 +17,9 @@
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
 import { SQLCell } from "wotlkdata/sql/SQLCell";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-function a(owner: ItemBase) {
+function a(owner: ItemTemplate) {
     return [
         owner.row.stat_type1,
         owner.row.stat_type2,
@@ -34,7 +34,7 @@ function a(owner: ItemBase) {
     ]
 }
 
-function b(owner: ItemBase) {
+function b(owner: ItemTemplate) {
     return [
         owner.row.stat_value1,
         owner.row.stat_value2,
@@ -49,7 +49,7 @@ function b(owner: ItemBase) {
     ]
 }
 
-export class Stat extends Enum<ItemBase> {
+export class Stat extends Enum<ItemTemplate> {
     @EnumField(0)
     setMana() { return this.set(0)}
     
@@ -183,11 +183,11 @@ export class Stat extends Enum<ItemBase> {
     setBlockValue() { return this.set(43)}    
 }
 
-export class ItemStat extends ArrayEntry<ItemBase> {
+export class ItemStat extends ArrayEntry<ItemTemplate> {
     get Type() { return new Stat(this.owner, a(this.owner)[this.index])}
     get Value() { return b(this.owner)[this.index]; }
 
-    clear(): ItemBase {
+    clear(): ItemTemplate {
         this.Type.set(0);
         this.Value.set(0);
         return this.owner;
@@ -199,7 +199,7 @@ export class ItemStat extends ArrayEntry<ItemBase> {
 
 }
 
-export class ItemStats extends SystemArray<ItemStat,ItemBase> {
+export class ItemStats extends SystemArray<ItemStat,ItemTemplate> {
     get length(): number {
         return a.length;
     }

@@ -16,23 +16,23 @@
  */
 import { Enum } from "wotlkdata/cell/Systems/Enum";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-function schools(owner: ItemBase) {
+function schools(owner: ItemTemplate) {
     return [
         owner.row.dmg_type1,
         owner.row.dmg_type2
     ]
 }
 
-function dmgMin(owner: ItemBase) {
+function dmgMin(owner: ItemTemplate) {
     return [
         owner.row.dmg_min1,
         owner.row.dmg_min2,
     ]
 }
 
-function dmgMax(owner: ItemBase) {
+function dmgMax(owner: ItemTemplate) {
     return [
         owner.row.dmg_max1,
         owner.row.dmg_max2,
@@ -49,12 +49,12 @@ export class DamageSchool<T> extends Enum<T> {
     setArcane() { return this.set(6); }
 }
 
-export class ItemDamage extends ArrayEntry<ItemBase> {
+export class ItemDamage extends ArrayEntry<ItemTemplate> {
     get school() { return schools(this.owner)[this.index]; }
     get min() { return dmgMin(this.owner)[this.index]; }
     get max() { return dmgMax(this.owner)[this.index]; }
 
-    clear(): ItemBase {
+    clear(): ItemTemplate {
         this.school.set(0);
         this.min.set(0);
         this.max.set(0);
@@ -62,11 +62,11 @@ export class ItemDamage extends ArrayEntry<ItemBase> {
     }
 
     isClear(): boolean {
-        return this.school.get() === 0;
+        return this.school.get() === 0 && this.min.get() === 0 && this.max.get() === 0;
     }
 }
 
-export class ItemDamages extends SystemArray<ItemDamage, ItemBase> {
+export class ItemDamages extends SystemArray<ItemDamage, ItemTemplate> {
     get length(): number {
         return 2;
     }

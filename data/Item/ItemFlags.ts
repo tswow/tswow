@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlags extends MaskCell<ItemBase> {
+export class ItemFlags extends MaskCell<ItemTemplate> {
     
     get NoPickup() { return this.bit(0); }
     get Conjured() { return this.bit(1); }

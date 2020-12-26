@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { EnumBase, EnumField } from "wotlkdata/cell/Systems/Enum";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFoodType extends EnumBase<ItemBase> {
+export class ItemFoodType extends EnumBase<ItemTemplate> {
     get(): number {
         return this.owner.row.FoodType.get();
     }
-    set(value: number): ItemBase {
+    set(value: number): ItemTemplate {
         this.owner.row.FoodType.set(value);
         return this.owner;
     }

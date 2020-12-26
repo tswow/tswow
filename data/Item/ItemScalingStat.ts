@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemScalingStat extends Subsystem<ItemBase> {
+export class ItemScalingStat extends Subsystem<ItemTemplate> {
     get Distribution() { return this.owner.row.ScalingStatDistribution; }
     get Value() { return this.owner.row.ScalingStatValue; }
 

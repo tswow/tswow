@@ -18,7 +18,7 @@ import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/Cell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
 function getLocale(id: number, lang: Language) {
     const old = SQL.item_template_locale.find({ID:id});
@@ -26,7 +26,7 @@ function getLocale(id: number, lang: Language) {
     return SQL.item_template_locale.add(id,lang);
 }
 
-export class ItemName extends SQLLocSystem<ItemBase> {
+export class ItemName extends SQLLocSystem<ItemTemplate> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.name;
     }
@@ -36,7 +36,7 @@ export class ItemName extends SQLLocSystem<ItemBase> {
     }
 }
 
-export class ItemDescription extends SQLLocSystem<ItemBase> {
+export class ItemDescription extends SQLLocSystem<ItemTemplate> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.description;
     }

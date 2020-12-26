@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemSkillRequirement extends Subsystem<ItemBase> {
+export class ItemSkillRequirement extends Subsystem<ItemTemplate> {
     get Skill() { return this.ownerWrap(this.owner.row.RequiredSkill); }
     get Rank() { return this.ownerWrap(this.owner.row.RequiredSkillRank); }
 

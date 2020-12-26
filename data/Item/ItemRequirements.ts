@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item"
+import { ItemTemplate } from "./ItemTemplate"
 
-export class ReputationRequirement extends Subsystem<ItemBase> {
+export class ReputationRequirement extends Subsystem<ItemTemplate> {
     get Faction() { 
         return this.owner.row.RequiredReputationRank;
     };
@@ -25,7 +25,7 @@ export class ReputationRequirement extends Subsystem<ItemBase> {
         return this.owner.row.RequiredReputationRank;
     }
 
-    constructor(owner: ItemBase) {
+    constructor(owner: ItemTemplate) {
         super(owner);
     }
 
@@ -35,7 +35,7 @@ export class ReputationRequirement extends Subsystem<ItemBase> {
     }
 }
 
-export class SkillRequirement extends Subsystem<ItemBase> {
+export class SkillRequirement extends Subsystem<ItemTemplate> {
     get Skill() {
         return this.owner.row.RequiredSkill;
     }
@@ -45,7 +45,7 @@ export class SkillRequirement extends Subsystem<ItemBase> {
     }
 
 
-    constructor(owner: ItemBase) {
+    constructor(owner: ItemTemplate) {
         super(owner);
     }
 
@@ -56,7 +56,7 @@ export class SkillRequirement extends Subsystem<ItemBase> {
 }
 
 
-export class ItemRequirements extends Subsystem<ItemBase> {
+export class ItemRequirements extends Subsystem<ItemTemplate> {
     protected row() { return this.owner.sqlRow; }
 
     get Level() { return this.ownerWrap(this.row().RequiredLevel); }

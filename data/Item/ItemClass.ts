@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ItemBase } from "./Item";
+import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemClass extends Subsystem<ItemBase> {
+export class ItemClass extends Subsystem<ItemTemplate> {
 
     getClass(): number {
         return this.owner.row.class.get();
@@ -27,7 +27,7 @@ export class ItemClass extends Subsystem<ItemBase> {
         return this.owner.row.subclass.get();
     }
 
-    set(cls: number, subclass: number): ItemBase {
+    set(cls: number, subclass: number): ItemTemplate {
         this.owner.row.class.set(cls);
         this.owner.row.subclass.set(subclass);
         return this.owner;
