@@ -17,6 +17,7 @@
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
 import { SQL } from "wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
+import { ReactState, resolveReactState } from "../Base/ReactState"
 import { Position } from "../Misc/Position"
 import { SmartScript, SmartScripts } from "./SmartScript"
 
@@ -474,9 +475,9 @@ export class ActionType<T> {
      *  React State. Can be Passive (0), Defensive (1), Aggressive (2), Assist (3).
      *  @param State
      */
-    setSetReactState(State : number) {
+    setSetReactState(State : ReactState) {
         this.row.action_type.set(8)
-        this.row.action_param1.set(State)
+        this.row.action_param1.set(resolveReactState(State))
         return this.main
     }
 
@@ -988,19 +989,18 @@ export class ActionType<T> {
      *  @param despawntime
      *  @param reactState
      */
-    setWpStart(walkOrRun : number, id: number, canRepeat : boolean, quest_templateid : number, despawntime : number, reactState : number) {
+    setWpStart(walkOrRun : number, id: number, canRepeat : boolean, quest_templateid : number, despawntime : number, reactState : ReactState) {
         this.row.action_type.set(53)
         this.row.action_param1.set(walkOrRun)
         this.row.action_param2.set(id)
         this.row.action_param3.set(canRepeat ? 1 : 0)
         this.row.action_param4.set(quest_templateid)
         this.row.action_param5.set(despawntime)
-        this.row.action_param6.set(reactState)
+        this.row.action_param6.set(resolveReactState(reactState))
         return this.main
     }
 
     /**
-     * 
      * Creature stores invoker party and starts walking. Use together with 'finishQuestWalk'.
      * @param walkOrRun 
      * @param id 
@@ -1009,7 +1009,7 @@ export class ActionType<T> {
      * @param despawnTime 
      * @param reactState 
      */
-    setQuestWalk(walkOrRun: number, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: number) {
+    setQuestWalk(walkOrRun: number, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: ReactState) {
         this.main.free.onRespawn(0,0,0)
             .Action.setAddNpcFlag(2)
             .Target.setSelf()
@@ -1026,7 +1026,6 @@ export class ActionType<T> {
             .then()
             .Target.setSelf()
             .Action.setRemoveNpcFlag(2)
-            
     }
 
     /**
@@ -1040,6 +1039,12 @@ export class ActionType<T> {
             .then()
             .Action.setFailQuest(questId)
             .Target.setStored(1)
+            .then()
+            .Action.setStoreTargetList(0)
+            .Target.setNone()
+            .then()
+            .Action.setStoreTargetList(1)
+            .Target.setNone()
     }
 
     /**
@@ -1057,6 +1062,12 @@ export class ActionType<T> {
             .then()
             .Action.setAddNpcFlag(2)
             .Target.setSelf()
+            .then()
+            .Action.setStoreTargetList(0)
+            .Target.setNone()
+            .then()
+            .Action.setStoreTargetList(1)
+            .Target.setNone()
     }
 
     /**
