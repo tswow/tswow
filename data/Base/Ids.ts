@@ -31,7 +31,7 @@ class IdGenerator {
     }
 }
 
-class AutoIdGenerator {
+export class AutoIdGenerator {
     curid: number;
     constructor(startId: number) {
         this.curid = startId;

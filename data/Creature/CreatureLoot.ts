@@ -15,10 +15,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { SQL } from "wotlkdata/sql/SQLFiles";
+import { Ids } from "../Base/Ids";
+import { AttachedLootSet } from "../Loot/Loot";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureLoot extends Subsystem<CreatureTemplate> {
-    get Normal() { return this.ownerWrap(this.owner.row.lootid); }
-    get PickPocket() { return this.ownerWrap(this.owner.row.pickpocketloot); }
-    get Skin() { return this.ownerWrap(this.owner.row.skinloot); }
+    get Normal() { return new AttachedLootSet(this, 
+        this.owner.row.lootid, 
+        Ids.CreatureLoot, 
+        SQL.creature_loot_template)
+    }
+
+    get Pickpocket() { return new AttachedLootSet(this, 
+        this.owner.row.pickpocketloot, 
+        Ids.PickPocketLoot, 
+        SQL.pickpocketing_loot_template)
+    }
+
+    get Skinning() { return new AttachedLootSet(this, 
+        this.owner.row.skinloot, 
+        Ids.SkinningLoot, 
+        SQL.skinning_loot_template)
+    }
 }

@@ -17,7 +17,6 @@
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
-import { MainEntity } from "../Base/MainEntity";
 import { Position } from "../Misc/Position";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
@@ -40,7 +39,6 @@ import { CreatureInstances } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
-import { CreatureWaypoints } from "./CreatureWaypoints";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
 import { Trainer } from "../Trainer/Trainer";
