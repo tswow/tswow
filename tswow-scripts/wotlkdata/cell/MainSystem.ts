@@ -69,10 +69,13 @@ export class MainSystem {
         return new CellIndexWrapper<T, this>(this, cell, index);
     }
 
+    protected transientFields() : string[] {
+        return [];
+    }
+
     objectify(): any {
         return Objects.objectifyObj(this);
     }
-
 
     /**
      * Clones this system from another system

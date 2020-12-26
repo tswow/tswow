@@ -40,8 +40,15 @@ export const Objects = {
 
         visitStack.push(thiz);
 
+        let transient = thiz.transientFields === undefined 
+            || typeof(thiz.transientFields)!=='function' ? [] 
+                : thiz.transientFields();
+        if(!Array.isArray(transient)) {
+            transient = [];
+        }
+
         Objects.getAllPropertyNames(thiz).forEach((key: any) => {
-            if (key === 'row' || key === 'owner' || key === 'end') { return; }
+            if(transient.includes(key)) { return; }
             if (thiz[key] !== undefined && thiz[key] !== null) {
                 const val = thiz[key];
                 if (visitStack.findIndex((x) => x === val) !== -1) {

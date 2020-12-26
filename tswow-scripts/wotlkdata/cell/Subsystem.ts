@@ -31,6 +31,10 @@ export class Subsystem<T> {
 
     get end() { return this.owner; }
 
+    protected transientFields() {
+        return ['end','owner'];
+    }
+
     protected get isSubsystem() { return true; }
 
     protected wrap<W extends CPrim>(cell: Cell<W, any>) {
