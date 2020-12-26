@@ -22,4 +22,9 @@ export class MainEntity<T> extends MainSystem {
         super();
         this.row = row;
     }
+
+    protected transientFields() {
+        return super.transientFields()
+            .concat(['row']);
+    }
 }

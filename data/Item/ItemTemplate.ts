@@ -48,6 +48,10 @@ import { ItemVisual } from "./ItemVisual";
 export class ItemTemplate extends MainEntity<item_templateRow> {
     sqlRow : item_templateRow;
     dbcRow : ItemRow;
+
+    protected transientFields() {
+        return super.transientFields().concat(['sqlRow','dbcRow']);
+    }
     
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
