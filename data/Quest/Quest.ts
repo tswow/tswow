@@ -16,6 +16,7 @@
  */
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { MainEntity } from "../Base/MainEntity";
+import { QuestFlags } from "./QuestFlags";
 import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";
 import { QuestReward } from "./QuestReward";
@@ -31,4 +32,5 @@ export class Quest extends MainEntity<quest_templateRow> {
     get MinLevel() { return this.wrap(this.row.MinLevel); }
     get QuestLevel() { return this.wrap(this.row.QuestLevel); }
     get StartItem() { return this.wrap(this.row.StartItem); }
+    get Flags() { return new QuestFlags(this, this.row.Flags); }
 }

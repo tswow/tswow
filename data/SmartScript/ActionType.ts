@@ -18,27 +18,9 @@ import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
 import { SQL } from "wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
 import { ReactState, resolveReactState } from "../Base/ReactState"
-import { Position } from "../Misc/Position"
-import { SmartScript, SmartScripts } from "./SmartScript"
-
-export enum SummonType {
-    /** Despawns after a specified time OR the creatures corpse disappears */
-    TIME_OR_DISAPPEAR = 1,
-    /** Despawns after a specified time OR the creature dies */
-    TIME_OR_DEATH = 2,
-    /** Despawns after a specified time */
-    TIME = 3,
-    /** Despawns after specified time out of combat */
-    TIME_OUT_COMBAT = 4,
-    /** Despawns instantly after death */
-    DEATH = 5,
-    /** Despawns specified time after death */
-    TIME_DEAD = 6,
-    /** Despawns when the creatures corpse disappears */
-    DISAPPEAR = 7,
-    /** The creature must be manually despawned*/
-    MANUAL = 8
-}
+import { b2i } from "../Misc/BasicConversion"
+import { SmartScript } from "./SmartScript"
+import { resolveSummonType, SummonType } from "./SummonType"
 
 export const ACTION_TYPES : {[key:string]:string} = {
     '0': 'None',
@@ -534,7 +516,7 @@ export class ActionType<T> {
     setSummonCreature(creature_templateentry : number, summonType : SummonType, duration : number, attackInvoker : number) {
         this.row.action_type.set(12)
         this.row.action_param1.set(creature_templateentry)
-        this.row.action_param2.set(summonType)
+        this.row.action_param2.set(resolveSummonType(summonType))
         this.row.action_param3.set(duration)
         this.row.action_param4.set(attackInvoker)
         return this.main
@@ -989,9 +971,9 @@ export class ActionType<T> {
      *  @param despawntime
      *  @param reactState
      */
-    setWpStart(walkOrRun : number, id: number, canRepeat : boolean, quest_templateid : number, despawntime : number, reactState : ReactState) {
+    setWpStart(shouldRun: boolean, id: number, canRepeat : boolean, quest_templateid : number, despawntime : number, reactState : ReactState) {
         this.row.action_type.set(53)
-        this.row.action_param1.set(walkOrRun)
+        this.row.action_param1.set(b2i(shouldRun))
         this.row.action_param2.set(id)
         this.row.action_param3.set(canRepeat ? 1 : 0)
         this.row.action_param4.set(quest_templateid)
@@ -1009,7 +991,7 @@ export class ActionType<T> {
      * @param despawnTime 
      * @param reactState 
      */
-    setQuestWalk(walkOrRun: number, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: ReactState) {
+    setQuestWalk(shouldRun: boolean, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: ReactState) {
         this.main.free.onRespawn(0,0,0)
             .Action.setAddNpcFlag(2)
             .Target.setSelf()
@@ -1022,7 +1004,7 @@ export class ActionType<T> {
             .Action.setStoreTargetList(1)
             .then()
             .Target.setSelf()
-            .Action.setWpStart(walkOrRun,id,canRepeat,quest_template,despawnTime,reactState)
+            .Action.setWpStart(shouldRun,id,canRepeat,quest_template,despawnTime,reactState)
             .then()
             .Target.setSelf()
             .Action.setRemoveNpcFlag(2)

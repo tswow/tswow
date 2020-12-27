@@ -48,6 +48,7 @@ import { GOCreature } from "../Base/GOorCreature";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { Ids } from "../Base/Ids";
 import { Gossips } from "../Gossip/Gossips";
+import { UnitFlags } from "./UnitFlags";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -90,6 +91,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get Type() { return new CreatureType(this); }
     get TypeFlags() { return new CreatureTypeFlags(this, this.row.type_flags); }
     get DynFlags() { return new DynFlags(this, this.row.dynamicflags); }
+    get UnitFlags() { return new UnitFlags(this); }
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
     get UnitClass() { return new UnitClass(this); }
     get DynamicFlags() { return this.wrap(this.row.dynamicflags); }

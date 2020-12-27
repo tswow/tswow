@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
+import { Position } from "../Misc/Position"
 import { SmartScript } from "./SmartScript"
 
 const TARGET_TYPES : {[key:string]:string} = {
@@ -187,12 +188,12 @@ export class TargetType<T> {
      *  @param z
      *  @param o
      */
-    setPosition(x : number, y : number, z : number, o : number) {
+    setPosition(pos: Position) {
         this.row.target_type.set(8)
-        this.row.target_x.set(x)
-        this.row.target_y.set(y)
-        this.row.target_z.set(z)
-        this.row.target_o.set(o)
+        this.row.target_x.set(pos.x)
+        this.row.target_y.set(pos.y)
+        this.row.target_z.set(pos.z)
+        this.row.target_o.set(pos.o)
         return this.main
     }
 
