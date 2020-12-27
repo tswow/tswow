@@ -311,9 +311,14 @@ export namespace mysql {
         }
 
         // Special hack to get the characters tables in, because some scripts depend on it
-        let rowCount = await characters.query('SHOW TABLES; SELECT FOUND_ROWS()');
-        if(rowCount[1][0]['FOUND_ROWS()']===0) {
+        let charRowCount = await characters.query('SHOW TABLES; SELECT FOUND_ROWS()');
+        if(charRowCount[1][0]['FOUND_ROWS()']===0) {
             await characters.query(wfs.read(ipaths.createCharactersSql));
+        }
+
+        let authRowCount = await auth.query('SHOW TABLES; SELECT FOUND_ROWS()');
+        if(authRowCount[1][0]['FOUND_ROWS()']===0) {
+            await auth.query(wfs.read(ipaths.createAuthSql));
         }
 
         for(const db of ['world','auth','characters']) {

@@ -70,6 +70,7 @@ export class InstallPaths {
     get nodeModules() { return mpath(installBase, 'node_modules'); }
     get vscodeWorkspace() { return mpath(installBase, '.vscode'); }
     get createCharactersSql() { return mpath(this.bin, 'sql', 'characters_create.sql')}
+    get createAuthSql() { return mpath(this.bin, 'sql', 'auth_create.sql')}
 
     /** Config paths */
     get config() { return mpath(installBase, 'config'); }

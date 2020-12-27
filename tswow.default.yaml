@@ -20,12 +20,20 @@ generation:
   generate_mmaps: false
   generate_vmaps: true
 
-# =========================================================================
-#  To use azerothcore configs directly, delete everything below this line 
-# =========================================================================
-
 # Settings for azerothcores "worldserver.conf"
 worldserver:
   MoveMaps.enable: false
+
+  # == Do not edit ==
   HotSwap.Enabled: 1
   HotSwap.EnableReCompiler: 0
+  MySQLExecutable: "../bin/mysql/bin/mysqld.exe"
+  Updates.EnableDatabases: 0
+  Updates.AutoSetup : 0
+  Updates.Redundancy: 0
+  # == End of do not edit ==
+
+authserver:
+  # == Do not edit ==
+  MySQLExecutable: "../bin/mysql/bin/mysqld.exe"
+  # == End of do not edit ==
