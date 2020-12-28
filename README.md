@@ -4,12 +4,11 @@ _Please note: TSWoW is in early development stage. While we have a lot of featur
 
 TSWoW (TypeScript WoW) is a **free** modding framework, mod loader and integrated development environment for the World of Warcraft: Wrath of the Lich King (WotLK) expansion. 
 
-With TSWoW, you use the TypeScript programming language and the VSCodium editor with its incredible autocompletion and IntelliSense to easily modify the World of Warcraft game data and to script the behavior of the server. 
+With TSWoW, you use the TypeScript programming language and the VSCodium editor to easily modify the World of Warcraft game data and to script the behavior of the server. 
 
 _TSWoW is **not** a new server emulator, we have a standard C++ emulator forked off modern [TrinityCore](https://github.com/tswow/TrinityCore/tree/tswow) and stay close to this upstream. We use a highly effective TypeScript->C++ transpiler for server scripts._
 
 ## Who is TSWoW for?
-
 
 - Modding Beginners - We have [crash course](https://github.com/tswow/tswow-wiki/blob/main/Introduction/README.md) aimed just at getting new people started!
 
