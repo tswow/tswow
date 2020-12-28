@@ -28,4 +28,4 @@ TSWoW is a **programming environment**, and the language we use is _TypeScript_.
 
 [Issues](https://github.com/tswow/tswow/issues)
 
-Discord
+[Discord](https://discord.gg/M89n6TZh9x)
