@@ -167,6 +167,10 @@ export namespace mysql {
 
     const mysqlprocess: Process = new Process();
 
+    export function showMysqlLog(show: boolean) {
+        mysqlprocess.showOutput(show);
+    }
+
     /**
      * Returns the database for a specific type.
      * @param type Database type to return
@@ -219,6 +223,8 @@ export namespace mysql {
             }
         }
 
+        cfg.databaseSettings('world').port;
+
         const startup_file = './bin/mysql_startup.txt';
         wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '';`);
         const oldAcStatus = TrinityCore.isStarted();
@@ -226,13 +232,15 @@ export namespace mysql {
         if (isWindows()) {
             mysqlprocess.start(ipaths.mysqldExe,
                 [
+                    // assume that if we start mysql, database_all is being used.
+                    `--port=${cfg.databaseSettings('world').port}`,
                     '--log_syslog=0',
                     '--console',
                     '--wait-timeout=2147483',
                     `--init-file=${wfs.absPath(startup_file)}`,
                     `--datadir=${wfs.absPath(ipaths.mysqlData)}`
                 ]);
-            mysqlprocess.showOutput(false);
+            mysqlprocess.showOutput(process.argv.includes('logmysql'));
             await mysqlprocess.waitFor('Execution of init_file*ended.', true);
             term.success('Mysql process started');
         }
@@ -358,6 +366,10 @@ export namespace mysql {
 
         mysqlC.addCommand('start', '', 'Starts/Restarts the MySQL process and all connections', async() => {
             await startMysql();
+        });
+
+        mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {
+            showMysqlLog(args[0]==='true');
         });
 
         term.success('MySQL initialized');
