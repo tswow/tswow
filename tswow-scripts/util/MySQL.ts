@@ -266,6 +266,7 @@ export namespace mysql {
     }
 
     async function install_world(w: Connection, sqlPath: string) {
+        const port = cfg.databaseSettings('world').port;
         term.log(`Beginning to rebuild ${w.name()}`);
         await w.status;
         await promiseConnect(w);
@@ -273,7 +274,7 @@ export namespace mysql {
         await w.disconnect();
         await w.connect();
         const sqlpath = isWindows() ? `"${ipaths.mysqlExe}"` : `sudo mysql`;
-        await wsys.execAsync(`${sqlpath} -u root ${w.name()} < ${sqlPath}`);
+        await wsys.execAsync(`${sqlpath} --port ${port} -u root ${w.name()} < ${sqlPath}`);
         term.success(`Rebuilt database ${w.name()}`);
     }
 
