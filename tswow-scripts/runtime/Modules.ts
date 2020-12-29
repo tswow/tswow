@@ -123,7 +123,6 @@ const gitignores =
 *.skel
 build/
 tsconfig.json
-global.d.ts
 symlinked
 `;
 
@@ -277,6 +276,7 @@ export namespace Modules {
      * to ensure SQL data was copied successfully.
      */
     export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
+        await refreshModules();
         const ct = Date.now();
         await compileAll();
         console.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
@@ -306,7 +306,8 @@ export namespace Modules {
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export function rebuildScripts(name: string) {
+    export async function rebuildScripts(name: string) {
+        await refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 
         const files = wfs.readDir(scriptsDir, true, 'both');
@@ -325,6 +326,7 @@ export namespace Modules {
             mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
             mpath('bin', 'trinitycore', 'release', 'scripts', getBuiltLibraryName(name))
         );
+
         // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
         term.log(`Rebuilt code for ${name} in ${timer.timeSec()}s`);
@@ -381,8 +383,7 @@ export namespace Modules {
                     wfs.copy(path, out);
                 }
                 FileChanges.tagChange(path, 'mpq');
-            }));
-            FileChanges.endCache();
+            })); FileChanges.endCache();
         } else {
             wsys.exec(`"${ipaths.mpqBuilderExe}" "${mpqPath}" "${wfs.removeDot(ipaths.dbcBuild)}" "${wfs.removeDot(ipaths.luaxmlBuild)}" ${paths.join(' ')}`, 'inherit');
         }
@@ -547,7 +548,7 @@ export namespace Modules {
             await wrap.unwrap();
         });
 
-        BuildCommand.addCommand('scripts', 'module', 'Build and loads the server scripts of a module', (args) => {
+        BuildCommand.addCommand('scripts', 'module', 'Build and loads the server scripts of a module', async (args) => {
             const count = 0;
             let modules = args;
             if (modules.length === 0) {
@@ -556,7 +557,7 @@ export namespace Modules {
 
             let ctr = 0;
             for (const mod of modules) {
-                if (rebuildScripts(mod)) {
+                if (await rebuildScripts(mod)) {
                     ++ctr;
                 }
             }
@@ -583,6 +584,13 @@ export namespace Modules {
             const p = mpath('modules', args[0], 'data');
             if (hasWatcher(p)) {
                 await (await getTSWatcher(p)).fixRemoved();
+            }
+        });
+
+        moduleC.addCommand('list','','Lists the available modules', async()=>{
+            term.log(`Listing all installed modules:`);
+            for(const mod of getModules()) {
+                term.log(mod);
             }
         });
 
