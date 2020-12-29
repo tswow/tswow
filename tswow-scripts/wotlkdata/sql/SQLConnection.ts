@@ -40,7 +40,8 @@ export class SqlConnection {
             host: Settings.MYSQL_HOST_SOURCE,
             user: Settings.MYSQL_USER_SOURCE,
             password: Settings.MYSQL_PASSWORD_SOURCE,
-            database: Settings.MYSQL_DATABASE_SOURCE
+            database: Settings.MYSQL_DATABASE_SOURCE,
+            port: Settings.MYSQL_PORT_SOURCE
         });
 
         this.sourceQuery = deasync(this.sourceConnection.query
@@ -50,7 +51,8 @@ export class SqlConnection {
             host: Settings.MYSQL_HOST_DEST,
             user: Settings.MYSQL_USER_DEST,
             password: Settings.MYSQL_PASSWORD_DEST,
-            database: Settings.MYSQL_DATABASE_DEST
+            database: Settings.MYSQL_DATABASE_DEST,
+            port: Settings.MYSQL_PORT_DEST
         });
         this.destConnection.connect();
     }
