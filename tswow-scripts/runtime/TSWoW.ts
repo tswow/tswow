@@ -36,7 +36,6 @@ export async function main() {
         term.log('~tswow starting up~');
         const timer = Timer.start();
 
-
         try{
             Client.verify();
         } catch(error) {

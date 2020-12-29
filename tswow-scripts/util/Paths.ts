@@ -30,6 +30,7 @@ export class InstallPaths {
     get maps() {return mpath(this.coreData, 'maps'); }
     get mmaps() {return mpath(this.coreData, 'mmaps'); }
     get vmaps() {return mpath(this.coreData, 'vmaps'); }
+    get buildings() {return mpath(this.coreData, 'Buildings'); }
     get mysqlData() {return mpath(this.coreData, 'mysql'); }
     get worldPlain1() {return mpath(this.coreData, 'mysql_plain', 'world_plain_1'); }
     get worldPlain2() {return mpath(this.coreData, 'mysql_plain', 'world_plain_2'); }

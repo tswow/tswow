@@ -30,6 +30,7 @@ import { Assets } from './Assets';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
 import { reputation_reward_rateRow } from '../wotlkdata/sql/types/reputation_reward_rate';
+import { BuildCommand } from './BuildCommand';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -318,7 +319,7 @@ export namespace Modules {
         }
 
         const timer = Timer.start();
-        wsys.exec(`node ${ipaths.transpilerEntry} ${name}`);
+        wsys.exec(`node ${ipaths.transpilerEntry} ${name}`,'inherit');
 
         wfs.copy(
             mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
@@ -533,8 +534,7 @@ export namespace Modules {
             }
         });
 
-        const buildC = commands.addCommand('build');
-        buildC.addCommand('data', 'clientonly? rebuild? package?',
+        BuildCommand.addCommand('data', 'clientonly? rebuild? package?',
             'Builds data patches and then restarts the affected processes', async(args) => {
             if (args.includes('clientonly') && args.includes('rebuild')) {
                 throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
@@ -547,7 +547,7 @@ export namespace Modules {
             await wrap.unwrap();
         });
 
-        buildC.addCommand('scripts', 'module', 'Build and loads the server scripts of a module', (args) => {
+        BuildCommand.addCommand('scripts', 'module', 'Build and loads the server scripts of a module', (args) => {
             const count = 0;
             let modules = args;
             if (modules.length === 0) {
