@@ -20,9 +20,9 @@ generation:
   generate_mmaps: false
   generate_vmaps: true
 
-# Settings for azerothcores "worldserver.conf"
+# Settings for TrinityCores "worldserver.conf"
 worldserver:
-  MoveMaps.enable: false
+  mmap.enablePathFinding: false
 
   # == Do not edit ==
   HotSwap.Enabled: 1
@@ -33,6 +33,7 @@ worldserver:
   Updates.Redundancy: 0
   # == End of do not edit ==
 
+# Settings for TrinityCores "authserver.conf"
 authserver:
   # == Do not edit ==
   MySQLExecutable: "../bin/mysql/bin/mysqld.exe"
