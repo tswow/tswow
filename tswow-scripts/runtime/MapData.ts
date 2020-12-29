@@ -105,6 +105,14 @@ export namespace MapData {
      * Prepares the module for startup.
      */
     export async function initialize() {
+        if(process.argv.includes('clean_clientdata')) {
+            wfs.remove(ipaths.maps);
+            wfs.remove(ipaths.vmaps);
+            wfs.remove(ipaths.dbcSource);
+            wfs.remove(ipaths.mmaps);
+            wfs.remove(ipaths.luaxmlSource);
+        }
+
         if(!wfs.exists(ipaths.maps)) {
             await buildMaps();
         }
