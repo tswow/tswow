@@ -504,7 +504,6 @@ export namespace Modules {
         }
 
         wsys.exec(`git clone ${url} ./modules/${name}`);
-        setEditable(name, false);
     }
 
     /**
