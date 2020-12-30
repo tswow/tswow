@@ -40,7 +40,7 @@ export class InstallPaths {
     get luaxmlSource() { return mpath(this.coreData, 'luaxml_source'); }
     get luaxmlBuild() { return mpath(this.coreData, 'luaxml'); }
     get startjsCore() {return mpath(this.coreData, 'start.js'); }
-    get startjsBin() {return mpath(this.coreData, 'start.js'); }
+    get startjsBin() {return mpath(this.bin, 'start.js'); }
     get coreIds() { return mpath(this.coreData, 'ids.txt'); }
 
     /** Bin paths */
