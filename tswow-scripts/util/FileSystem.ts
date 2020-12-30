@@ -408,7 +408,7 @@ export namespace wfs {
      * @param filePath 
      * @param backupBase 
      */
-    export function makeBackup(filePath: string, backupBase: string) {
+    export function makeBackup(filePath: string, backupBase = filePath+'.backup') {
         let i = 1;
         while(wfs.exists(`${backupBase}_${i}`)) {
             ++i;

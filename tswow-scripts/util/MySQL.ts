@@ -209,12 +209,12 @@ export namespace mysql {
         await disconnect();
         wfs.move(ipaths.worldPlain1,
             mpath(ipaths.mysqlData, cfg.databaseSettings('world').name));
-        await startMysql(true);
+        await start(true);
         term.success(`Loaded MySQL backup in ${time.timeSec(2)}s`);
         return new Wrap(wfsa.copy(ipaths.worldPlain2, ipaths.worldPlain1));
     }
 
-    async function startMysql(skipBackup = false) {
+    export async function start(skipBackup = false) {
         term.log('Starting mysql...');
         if (isWindows()) {
             if (!wfs.exists(ipaths.mysqlData)) {
@@ -256,7 +256,7 @@ export namespace mysql {
             wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
                 ipaths.worldPlain2
             );
-            await startMysql(true);
+            await start(true);
         }
 
         // Restart TrinityCore if it was started before this restart
@@ -349,7 +349,7 @@ export namespace mysql {
     }
 
     export async function initialize() {
-        await startMysql();
+        await start();
         const mysqlC = commands.addCommand('mysql');
 
         mysqlC.addCommand('query', 'world|auth|characters sql', 'Queries a database', async(args: string[]) => {
@@ -366,7 +366,7 @@ export namespace mysql {
         });
 
         mysqlC.addCommand('start', '', 'Starts/Restarts the MySQL process and all connections', async() => {
-            await startMysql();
+            await start();
         });
 
         mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {

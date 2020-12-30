@@ -28,6 +28,7 @@ import { Test } from './Test';
 import { Assets } from './Assets';
 import { InstallPaths } from '../util/Paths';
 import { wfs } from '../util/FileSystem';
+import { Clean } from './Clean';
 
 InstallPaths.setInstallBase('./');
 
@@ -77,6 +78,8 @@ export async function main() {
     } catch (error) {
         console.error('Failed to start tswow:', error);
     }
+
+    Clean.initialize();
 
     if(!process.argv.includes('minimal')) {
         await commands.enterLoop();

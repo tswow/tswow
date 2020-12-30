@@ -101,11 +101,8 @@ export namespace MapData {
             mpath(cfg.client.directory(), 'Data')}`, 'inherit');
     }
 
-    /**
-     * Prepares the module for startup.
-     */
-    export async function initialize() {
-        if(process.argv.includes('clean_clientdata')) {
+    export async function rebuild(clean?: boolean) {
+        if(clean) {
             wfs.remove(ipaths.maps);
             wfs.remove(ipaths.vmaps);
             wfs.remove(ipaths.dbcSource);
@@ -128,6 +125,14 @@ export namespace MapData {
         if (!wfs.exists(ipaths.luaxmlSource)) {
             await buildLuaXML();
         }
+
+    }
+
+    /**
+     * Prepares the module for startup.
+     */
+    export async function initialize() {
+        await rebuild(process.argv.includes('clean_clientdata'));
 
         BuildCommand.addCommand('clientdata', 'maps? vmaps? mmaps? luaxml?','Rebuilds client data', async (args)=>{
             if(args.includes('maps')) {

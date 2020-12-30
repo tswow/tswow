@@ -166,7 +166,7 @@ export namespace wsys {
      * Accept user input in the terminal.
      * @param query Text to display before the input
      */
-    export function userInput(query: string) {
+    export function userInput(query: string) : Promise<string> {
         const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout,

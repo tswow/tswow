@@ -32,6 +32,7 @@ export class InstallPaths {
     get vmaps() {return mpath(this.coreData, 'vmaps'); }
     get buildings() {return mpath(this.coreData, 'Buildings'); }
     get mysqlData() {return mpath(this.coreData, 'mysql'); }
+    get mysqlPlain() {return mpath(this.coreData, 'mysql_plain'); }
     get worldPlain1() {return mpath(this.coreData, 'mysql_plain', 'world_plain_1'); }
     get worldPlain2() {return mpath(this.coreData, 'mysql_plain', 'world_plain_2'); }
     get dbcSource() {return mpath(this.coreData, 'dbc_source'); }
@@ -100,6 +101,9 @@ export class InstallPaths {
     }
     moduleScripts(mod: string) {
         return mpath(this.modules, mod, 'scripts');
+    }
+    moduleScriptsBuild(mod: string) {
+        return mpath(this.moduleScripts(mod),'build');
     }
     moduleNoEdit(mod: string) {
         return mpath(this.modules, mod, 'noedit');
