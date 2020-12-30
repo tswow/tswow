@@ -504,6 +504,7 @@ export namespace Modules {
         }
 
         wsys.exec(`git clone ${url} ./modules/${name}`);
+        refreshModules();
     }
 
     /**
