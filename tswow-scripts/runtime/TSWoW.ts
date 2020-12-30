@@ -70,7 +70,7 @@ export async function main() {
         // Initialize Azerothcore
         TrinityCore.initialize();
         if (!args.hasAnyFlag('noac')) {
-            await TrinityCore.start();
+            await TrinityCore.start(process.argv.includes('debug')?'debug':'release');
         }
 
         term.success(`Initialized tswow in ${timer.timeSec()}s`);

@@ -61,7 +61,7 @@ export class MainSystem {
         return new CellArrayWrapper(this, cell);
     }
 
-    protected wrapLoc(loc: LocSystem<any>) {
+    protected wrapLoc(loc: LocSystem<any>) : LocSystem<this> {
         return new WrappedLoc(this, loc);
     }
 

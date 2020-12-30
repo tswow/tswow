@@ -306,7 +306,7 @@ export namespace Modules {
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export async function rebuildScripts(name: string) {
+    export async function rebuildScripts(name: string, type: string) {
         await refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 
@@ -320,12 +320,21 @@ export namespace Modules {
         }
 
         const timer = Timer.start();
-        wsys.exec(`node ${ipaths.transpilerEntry} ${name}`,'inherit');
+        wsys.exec(`node ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
 
-        wfs.copy(
-            mpath('modules', name, 'scripts', 'build', 'lib', 'Release', `${name}.dll`),
-            mpath('bin', 'trinitycore', 'release', 'scripts', getBuiltLibraryName(name))
-        );
+        const pathIn = mpath('modules',name,'scripts','build','lib',type,`${name}`);
+        const slIn = `${pathIn}${isWindows() ? '.dll':'.so'}`
+        const pdbIn = `${pathIn}.pdb`;
+
+        const pathOut = mpath('bin', 'trinitycore', type, 'scripts')
+        const slOut = mpath(pathOut,getBuiltLibraryName(name));
+        let pdbOut = mpath(pathOut,getBuiltLibraryName(name));
+        pdbOut = `${pdbOut.substring(0,pdbOut.length-3)}pdb`;
+
+        wfs.copy(slIn,slOut)
+        if(wfs.exists(pdbIn)) {
+            wfs.copy(pdbIn,pdbOut);
+        }
 
         // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
         // TODO We need to wait for output from trinitycore to continue here
@@ -543,21 +552,22 @@ export namespace Modules {
             const wrap = await buildMpq(!args.includes('package'), !args.includes('rebuild'));
             await Client.start();
             if (!args.includes('clientonly')) {
-                await TrinityCore.start();
+                await TrinityCore.start(args.includes('debug')?'debug':'release');
             }
             await wrap.unwrap();
         });
 
-        BuildCommand.addCommand('scripts', 'module', 'Build and loads the server scripts of a module', async (args) => {
+        BuildCommand.addCommand('scripts', 'module? debug?', 'Build and loads the server scripts of a module', async (args) => {
             const count = 0;
-            let modules = args;
+            let isDebug = args.indexOf('debug')!==-1;
+            let modules = args.filter(x=>x!=='debug');
             if (modules.length === 0) {
                 modules = getModules();
             }
 
             let ctr = 0;
             for (const mod of modules) {
-                if (await rebuildScripts(mod)) {
+                if (await rebuildScripts(mod, isDebug? 'Debug': 'Release')) {
                     ++ctr;
                 }
             }

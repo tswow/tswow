@@ -46,7 +46,7 @@ export class InstallPaths {
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcReleaseScripts() { return mpath(this.tcRelease, 'scripts'); }
-    get tcDebug() {return mpath(this.bin, 'trinitycore', 'release'); }
+    get tcDebug() {return mpath(this.bin, 'trinitycore', 'debug'); }
     get tcDebugScripts() { return mpath(this.tcDebug, 'scripts'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }

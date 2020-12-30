@@ -94,7 +94,7 @@ export namespace TrinityCore {
     export function initialize() {
         const ws = commands.addCommand('ws', 'subcommand,[args]?', 'Pipes a command to the worldserver',
             async(args) => worldserver.send(args.join(' ')));
-        ws.addCommand('start', '', 'Start or restarts the worldserver', async() => await start());
+        ws.addCommand('start', 'release|debug', 'Start or restarts the worldserver', async(args) => await start(args[0] as 'debug'|'release'));
         ws.addCommand('stop', '', 'Stop the worldserver', async() => await stop());
         ws.addCommand('hide', '', 'Hides worldserver output', async() => worldserver.showOutput(false));
         ws.addCommand('show', '', 'Hides worldserver output', async() => worldserver.showOutput(true));

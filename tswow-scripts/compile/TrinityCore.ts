@@ -89,7 +89,7 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
             `src/common/${inName}/common.lib`,
             `dep/argon2/${inName}/argon2.lib`
         ].forEach(x => wfs.copy(mpath(build_path('trinitycore', x)),
-            install_path('bin', 'libraries', wfs.basename(x))));
+            install_path('bin', 'libraries', inName, wfs.basename(x))));
 
         // copy executables
         wfs.copy(binIn, binOut, true);

@@ -20,22 +20,22 @@ import { LocSystem } from './LocSystem';
 import { PendingCell } from './PendingCell';
 import { Cell } from './Cell';
 
+export class WrappedLoc<T> extends LocSystem<T> {
+    private wrapped: LocSystem<T>;
 
-export class WrappedLoc<T> extends LocSystem<any> {
-    private wrapped: LocSystem<any>;
-
-    constructor(owner: T, wrapped: LocSystem<any>) {
+    constructor(owner: T, wrapped: LocSystem<T>) {
         super(owner);
         this.wrapped = wrapped;
     }
 
-    lang(lang: Language): Cell<string, this> & PendingCell {
-        return this.wrapExists(this.wrapped.lang(lang));
+    lang(lang: Language): Cell<string, T> & PendingCell {
+        return this.ownerWrapExists(this.wrapped.lang(lang));
     }
 
-    get mask(): Cell<number, this> {
-        return this.wrap(this.wrapped.mask);
+    get mask(): Cell<number, T> {
+        return this.ownerWrap(this.wrapped.mask);
     }
+
     set(con: loc_constructor): T {
         this.wrapped.set(con);
         return this.owner;
