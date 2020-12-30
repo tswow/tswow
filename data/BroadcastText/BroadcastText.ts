@@ -56,7 +56,7 @@ export class BroadcastTextContent<T> extends SQLLocSystem<T> {
 }
 
 export class BroadcastText<T> extends Subsystem<T> {
-    readonly row;
+    readonly row: broadcast_textRow;
 
     constructor(owner: T, row: broadcast_textRow) {
         super(owner);
