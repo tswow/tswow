@@ -1930,7 +1930,7 @@ export class Emitter {
                 const isEnum = this.isEnum(typeReference);
                 const isArray = this.resolver.isArrayType(typeInfo);
 
-                const isEventsStruct = typeReference.getFullText().split(' ').join('') === 'EventsStruct';
+                const isEventsStruct = typeReference.getFullText().split(' ').join('') === 'TSEventHandlers';
 
                 const primitives = [
                     'uint8', 'uint16', 'uint32', 'uint64',
@@ -2008,12 +2008,9 @@ export class Emitter {
                     this.writer.writeString('>');
                 }
 
-                if (!skipPointerIf) {
-                    this.writer.writeString(' *');
-                } else if (isEventsStruct) {
+                if(isEventsStruct) {
                     this.writer.writeString(' * ');
                 }
-
                 break;
             case ts.SyntaxKind.TypeParameter:
                 const typeParameter = <ts.TypeParameterDeclaration>type;
