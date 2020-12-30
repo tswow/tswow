@@ -28,6 +28,11 @@ if (buildModule === undefined) {
 }
 const modulePath = `./modules/${buildModule}`;
 
+const buildType = process.argv[3];
+if(buildType === undefined) {
+    throw new Error('No build type provided!');
+}
+
 if (!fs.existsSync(modulePath)) {
     throw new Error(`No module named ${buildModule}`);
 }
@@ -74,7 +79,7 @@ project(${buildModule})
 include_directories(../../../../../bin/include)
 
 file (GLOB headers "../../../../../bin/include/*.h")
-file (GLOB libs "../../../../../bin/libraries/*.lib")
+file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")
 
 add_library(${buildModule} SHARED ${itms.join(' ')})
 target_link_libraries(${buildModule} \${libs})
@@ -87,20 +92,8 @@ target_precompile_headers(${buildModule}
 
 const cmake_generate = `"bin/cmake/bin/cmake.exe" -S modules/${buildModule}/scripts/build/cpp -B modules/${buildModule}/scripts/build/lib`;
 child_process.execSync(cmake_generate, {stdio: 'inherit'});
-const cmake_build = `"bin/cmake/bin/cmake.exe" --build modules/${buildModule}/scripts/build/lib --config Release`;
+const cmake_build = `"bin/cmake/bin/cmake.exe" --build modules/${buildModule}/scripts/build/lib --config ${buildType}`;
 child_process.execSync(cmake_build, {stdio: 'inherit'});
-
-const tsmodulesSubdir = './bin/azerothcore/tsmodules';
-if (!fs.existsSync(tsmodulesSubdir)) {
-    fs.mkdirSync(tsmodulesSubdir, {recursive: true});
-}
-
-const goalDll = path.join(tsmodulesSubdir, `${buildModule}.dll`);
-if (fs.existsSync(goalDll)) {
-    fs.unlinkSync(goalDll);
-}
-
-fs.copyFileSync(`./modules/${buildModule}/scripts/build/lib/Release/${buildModule}.dll`, goalDll);
 
 const finTime = Date.now() - startTime;
 console.log(`Finished compilation in ${(finTime / 1000).toFixed(1)} seconds.`);
