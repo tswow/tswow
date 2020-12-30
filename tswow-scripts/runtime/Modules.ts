@@ -547,6 +547,36 @@ export namespace Modules {
             }
         });
 
+        BuildCommand.addCommand('all','rebuild? package? module?','Rebuilds both data and live scripts', async (args)=>{
+            if (args.includes('clientonly') && args.includes('rebuild')) {
+                throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
+            }
+            const wrap = await buildMpq(!args.includes('package'), !args.includes('rebuild'));
+
+            let clientWait = Client.start();
+            let serverWait = undefined;
+            if (!args.includes('clientonly')) {
+                serverWait = TrinityCore.start(args.includes('debug')?'debug':'release');
+            }
+
+            let isDebug = args.indexOf('debug')!==-1;
+            let modules = args.filter(x=>x!=='debug' && x!=='rebuild' && x!=='package' && x!=='module');
+            if (modules.length === 0) {
+                modules = getModules();
+            }
+
+            let ctr = 0;
+            for (const mod of modules) {
+                if (await rebuildScripts(mod, isDebug? 'Debug': 'Release')) {
+                    ++ctr;
+                }
+            }
+
+            term.success(`Built ${ctr} scripts`);
+
+            await Promise.all([clientWait,serverWait,wrap.unwrap()])
+        });
+
         BuildCommand.addCommand('data', 'clientonly? rebuild? package?',
             'Builds data patches and then restarts the affected processes', async(args) => {
             if (args.includes('clientonly') && args.includes('rebuild')) {
