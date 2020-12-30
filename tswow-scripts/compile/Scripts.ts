@@ -51,5 +51,5 @@ export async function buildScripts(buildLine: string, installLine: string) {
     wfs.write(mpath(buildLine, scripts_config_dir, 'tsconfig.json'),
         JSON.stringify(scripts_tsconfig, null, 4));
 
-    await (await getTSWatcher(scripts_config_dir)).compile();
+    await (await getTSWatcher(scripts_config_dir)).compile(-1);
 }

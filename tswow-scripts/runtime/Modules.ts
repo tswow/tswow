@@ -22,7 +22,7 @@ import { mysql } from '../util/MySQL';
 import { cfg } from '../util/Config';
 import { Timer } from '../util/Timer';
 import { TrinityCore } from './TrinityCore';
-import { compileAll, destroyTSWatcher, getTSWatcher, hasWatcher } from '../util/TSWatcher';
+import { compileAll, destroyAllWatchers, destroyTSWatcher, getTSWatcher, hasWatcher } from '../util/TSWatcher';
 import { Client } from './Client';
 import { isWindows } from '../util/Platform';
 import { Wrap } from '../util/Wrap';
@@ -278,7 +278,7 @@ export namespace Modules {
     export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
         await refreshModules();
         const ct = Date.now();
-        await compileAll();
+        await compileAll(8000);
         console.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
         wfs.mkDirs(ipaths.dbcBuild, true);
 
@@ -405,35 +405,38 @@ export namespace Modules {
         return wrap;
     }
 
+    export function linkModule(mod: string) {
+        if(!wfs.exists(ipaths.moduleDataLink(mod))) {
+            wsys.exec(`npm link ${ipaths.moduleDataBuild(mod)}`);
+        }
+        wfs.write(ipaths.moduleDataPackagePath(mod), lib_package_json(mod));
+    }
+
     export async function refreshModules(force: boolean = false) {
         if (!wfs.exists('./node_modules/wotlkdata')) {
             term.log(`Linking wotlkdata...`);
             wsys.exec('npm link bin/scripts/tswow/wotlkdata');
         }
 
-        for (const xx of wfs.readDir('./modules', true)) {
-            const x = mpath('./modules', xx);
+        for (const mod of wfs.readDir('./modules', true)) {
+            const x = mpath('./modules', mod);
 
             const data_path = mpath(x, 'data');
             const data_build_path = mpath(data_path, 'build');
-            const data_package_path = mpath(data_build_path, 'package.json');
             const data_tsconfig_path = mpath(data_path, 'tsconfig.json');
-            const nodemodule_path = mpath('node_modules', xx);
+            const nodemodule_path = mpath('node_modules', mod);
 
             if (wfs.isDirectory(data_path)) {
                 if (!wfs.exists(data_tsconfig_path) || force) {
                     wfs.write(data_tsconfig_path, data_tsconfig);
                 }
 
-                wfs.write(data_package_path, lib_package_json(xx));
 
                 if (!wfs.exists(mpath(x, 'noedit'))) {
                     await getTSWatcher(data_path);
                 }
 
-                if (!wfs.exists(nodemodule_path)) {
-                    wsys.exec(`npm link ${mpath(x, 'data', 'build')}`);
-                }
+                linkModule(mod);
             }
 
             const scripts_path = mpath(x, 'scripts');

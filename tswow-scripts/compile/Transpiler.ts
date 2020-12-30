@@ -48,5 +48,5 @@ export async function buildTranspiler(buildLine: string, installLine: string) {
     };
     wfs.write(mpath(transpiler_config_dir, 'tsconfig.json'),
         JSON.stringify(transpiler_tsconfig, null, 4));
-    await (await getTSWatcher(mpath(transpiler_config_dir))).compile();
+    await (await getTSWatcher(mpath(transpiler_config_dir))).compile(-1);
 }

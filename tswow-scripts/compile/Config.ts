@@ -47,7 +47,8 @@ export async function createConfig() {
         wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
     }
 
-    wfs.copy('./start.js', ipaths.startjs);
+    wfs.copy('./start.js', ipaths.startjsCore);
+    wfs.copy('./start.js', ipaths.startjsBin);
 
     wfs.copy('./.vscode-install', ipaths.vscodeWorkspace);
 

@@ -39,7 +39,8 @@ export class InstallPaths {
     get dbcBuild() {return mpath(this.coreData, 'dbc'); }
     get luaxmlSource() { return mpath(this.coreData, 'luaxml_source'); }
     get luaxmlBuild() { return mpath(this.coreData, 'luaxml'); }
-    get startjs() {return mpath(this.coreData, 'start.js'); }
+    get startjsCore() {return mpath(this.coreData, 'start.js'); }
+    get startjsBin() {return mpath(this.coreData, 'start.js'); }
     get coreIds() { return mpath(this.coreData, 'ids.txt'); }
 
     /** Bin paths */
@@ -107,6 +108,14 @@ export class InstallPaths {
     }
     moduleNoEdit(mod: string) {
         return mpath(this.modules, mod, 'noedit');
+    }
+
+    moduleDataLink(mod: string) {
+        return mpath(installBase,'node_modules',mod);
+    }
+
+    moduleDataPackagePath(mod: string) {
+        return mpath(this.moduleDataBuild(mod),'package.json');
     }
 
     moduleSymlink(mod: string) {

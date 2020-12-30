@@ -202,7 +202,7 @@ export class TypeScriptWatcher {
         await this.unlinkReverse(this.outDir);
     }
 
-    async compile() {
+    async compile(timeout: number) {
         const throwError = () => {
             if (this.errors.length > 0) {
                 throw new Error(this.errors.join('\n'));
@@ -216,14 +216,20 @@ export class TypeScriptWatcher {
             return this;
         }
 
+        let timer = 0;
+
         term.log(`Waiting for script to compile: ${this.path}`);
         while (this.isWaiting) {
+            if(timer>timeout && timeout > 0) {
+                throw new Error(`Took too long to compile: Check your dependency chain`);
+            }
             throwError();
             // Ignore paths with no files.
             if(!wfs.exists(this.path) || wfs.readDir(this.path).length==0) {
                 break;
             }
             await wsys.sleep(100);
+            timer+=100;
         }
 
         term.success(`Finished compiling: ${this.path}`);
@@ -247,12 +253,12 @@ export class TypeScriptWatcher {
 
 const watchers: {[key: string]: TypeScriptWatcher} = {};
 
-export async function compileAll() {
+export async function compileAll(timeout: number) {
     const errors: string[] = [];
 
     await Promise.all(Object.values(watchers).map(async (x) => {
         try {
-            await x.compile();
+            await x.compile(timeout);
         } catch (error) {
             errors.push(error.message);
         }

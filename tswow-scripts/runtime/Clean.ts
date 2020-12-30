@@ -14,10 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { sleep } from "deasync";
 import { mpath, wfs } from "../util/FileSystem";
 import { mysql } from "../util/MySQL";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
+import { term } from "../util/Terminal";
+import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
 import { MapData } from "./MapData";
 import { Modules } from "./Modules";
@@ -55,19 +58,62 @@ export namespace Clean {
     }
 
     export async function cleanDataBuild(mod?: string) {
+        await destroyAllWatchers();
         if(!mod) {
-            Modules.getModules().forEach(cleanDataBuild);
-            return;
+            Modules.getModules().forEach((x)=>{
+                wfs.remove(ipaths.moduleDataBuild(x));
+                wfs.remove(ipaths.moduleNoEdit(x));        
+            });
+        } else {
+            wfs.remove(ipaths.moduleDataBuild(mod));
+            wfs.remove(ipaths.moduleNoEdit(mod));
         }
-        wfs.remove(ipaths.moduleDataBuild(mod));
-        wfs.remove(ipaths.moduleNoEdit(mod));
-        await Modules.refreshModules()
+        await cleanTypescript();
     }
 
     export async function cleanIds() {
         wfs.makeBackup(ipaths.configIds);
         wfs.remove(ipaths.coreIds);
         wfs.remove(ipaths.configIds);
+    }
+
+    export async function cleanTypescript() {
+        await destroyAllWatchers();
+        const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x)))
+
+        let clean : string[] = [];
+        let lastErrors = 0;
+        let errors = 0;
+        let pass = 0;
+        while(true) {
+            term.log(`TypeScript Cleaning Pass ${pass++} (Expect error messages about not finding modules)`);
+            errors = 0;
+            for(const mod of modules) {
+                if(clean.includes(mod))  {
+                    continue;
+                }
+                try {
+                    wsys.execIn(ipaths.moduleData(mod),'tsc','inherit');
+                    Modules.linkModule(mod);
+                    clean.push(mod);
+                    term.log(`Successfully compiled ${mod}`)
+                } catch(error) {
+                    errors++;
+                    term.log(`Failed to compile ${mod}: ${error.message}`)
+                }
+            }
+
+            if(errors===0) {
+                break;
+            }
+
+            if(errors===lastErrors) {
+                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x))}]`);
+            }
+            lastErrors = errors;
+        }
+
+        await Modules.refreshModules();
     }
 
     export async function initialize() {
@@ -77,7 +123,7 @@ export namespace Clean {
             await cleanScriptBin(args[0]);
         });
 
-        cleanC.addCommand('buildscripts','module?','Removes data script build files', async (args)=>{
+        cleanC.addCommand('datascripts','module?','Removes data script build files', async (args)=>{
             await cleanDataBuild(args[0]);
         });
 
@@ -94,11 +140,16 @@ export namespace Clean {
             await MapData.rebuild(true);
         });
 
+        cleanC.addCommand('typescript', '','Cleans all TypeScript data', async(args)=>{
+            await cleanTypescript();
+        });
+
         cleanC.addCommand('all','keepClient?','Attempts to clean all intermediate data', async(args)=>{
             await cleanScriptBin();
             await cleanDataBuild();
             await cleanIds();
             if(!args.includes('keepClient')) {
+                await TrinityCore.stop();
                 await MapData.rebuild(true);
             }
             await cleanMysql();

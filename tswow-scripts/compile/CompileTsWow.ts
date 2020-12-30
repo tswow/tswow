@@ -115,7 +115,7 @@ async function main() {
 
     commands.addCommand('errorcheck', '', '', async () => {
         try {
-            await compileAll();
+            await compileAll(-1);
             term.success('No errors!');
         } catch (error) {
             term.error(error.message);

@@ -26,13 +26,14 @@ import { args } from '../util/Args';
 import { Client } from './Client';
 import { Test } from './Test';
 import { Assets } from './Assets';
-import { InstallPaths } from '../util/Paths';
+import { InstallPaths, ipaths } from '../util/Paths';
 import { wfs } from '../util/FileSystem';
 import { Clean } from './Clean';
 
 InstallPaths.setInstallBase('./');
 
 export async function main() {
+    wfs.copy(ipaths.startjsBin,ipaths.startjsCore);
     try {
         term.log('~tswow starting up~');
         const timer = Timer.start();
