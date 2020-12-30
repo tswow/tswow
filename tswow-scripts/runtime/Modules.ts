@@ -406,10 +406,10 @@ export namespace Modules {
     }
 
     export function linkModule(mod: string) {
+        wfs.write(ipaths.moduleDataPackagePath(mod), lib_package_json(mod));
         if(!wfs.exists(ipaths.moduleDataLink(mod))) {
             wsys.exec(`npm link ${ipaths.moduleDataBuild(mod)}`);
         }
-        wfs.write(ipaths.moduleDataPackagePath(mod), lib_package_json(mod));
     }
 
     export async function refreshModules(force: boolean = false) {
