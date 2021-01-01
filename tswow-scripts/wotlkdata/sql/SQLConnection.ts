@@ -35,6 +35,17 @@ export class SqlConnection {
     private static destConnection: mysql.Connection;
     private static sourceQuery: any;
 
+    private static priorityQueries: string[] = [];
+    private static normalQueries: string[] = [];
+
+    static addWriteQuery(query: string) {
+        this.normalQueries.push(query);
+    }
+
+    static addPriorityWriteQuery(query: string) {
+        this.priorityQueries.push(query);
+    }
+
     static connect() {
         this.sourceConnection = mysql.createConnection({
             host: Settings.MYSQL_HOST_SOURCE,
@@ -88,16 +99,20 @@ export class SqlConnection {
 
     static async write(writeDb: boolean = true, writeFile: boolean = true): Promise<any> {
         let sqlfile = ``;
-        if (writeFile) {
+
+        // @TODO fix writeToFile. Disabled for now.
+        if (writeFile && false) {
             sqlfile = SQLTables
-                // @ts-ignore TODO fix writeToFile
+                // @ts-ignore
                 .reduce((file, table) => table.writeToFile(file), sqlfile);
             fs.writeFileSync(Settings.SQL_FILE_PATH, sqlfile);
         }
 
         if (writeDb) {
+            await Promise.all(this.priorityQueries.map(x=>this.queryDest(x)));
             // @ts-ignore TODO fix writeToDatabase
             await Promise.all(SQLTables.map(x => x.writeToDatabase()));
+            await Promise.all(this.normalQueries.map(x=>this.queryDest(x)));
         }
     }
 
