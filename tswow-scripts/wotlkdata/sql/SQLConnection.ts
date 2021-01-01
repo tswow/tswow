@@ -17,11 +17,102 @@
 import * as mysql from 'mysql';
 import * as fs from 'fs';
 import { SqlRow } from './SQLRow';
-import { Settings } from '../Settings';
+import { getDatabase, getDatabaseName, Settings } from '../Settings';
 import { SqlTable } from './SQLTable';
 import { queryToSql } from '../query/Query';
 import { SQLTables } from './SQLFiles';
 import deasync = require('deasync');
+
+export class Connection {
+    static end(connection: Connection) {
+        if(connection.sync !== undefined)  {
+            connection.sync.end();
+            connection.sync = undefined;
+        }
+
+        if(connection.async !== undefined) {
+            connection.async.end();
+            connection.async = undefined;
+        }
+    }
+
+    static connect(connection: Connection) {
+        this.end(connection);
+        connection.async = mysql.createConnection(connection.settings);
+        connection.sync = mysql.createConnection(connection.settings);
+        connection.syncQuery = deasync(connection.sync.query
+            .bind(connection.sync));
+
+        connection.async.connect();
+        connection.sync.connect();
+    }
+
+    protected settings: mysql.ConnectionConfig;
+    protected async: mysql.Connection | undefined;
+    protected sync: mysql.Connection | undefined;
+    protected syncQuery: any;
+
+    constructor(obj: mysql.ConnectionConfig) {
+        this.settings = obj;
+    }
+
+    protected early: string[] = [];
+    protected normal: string[] = [];
+    protected late: string[] = [];
+
+    read(query: string) {
+        if(this.sync===undefined) {
+            throw new Error(`Tried to read from a disconnected adapter`);
+        }
+        return this.syncQuery(query);
+    }
+
+    write(query: string) {
+        this.normal.push(query);
+    }
+
+    writeEarly(query: string) {
+        this.early.push(query);
+    }
+
+    writeLate(query: string) {
+        this.late.push(query);
+    }
+
+    async apply() {
+        const doPriority = (priority: string[]) => {
+            return Promise.all(priority.map((x)=>new Promise((res,rej)=>{
+                if(this.async===undefined) {
+                    return rej(`Tried to apply while async adapter was disconnected`);
+                }
+
+                this.async.query(x,(err)=>{
+                    if(err){
+                        return rej(err);
+                    } else {
+                        return res();
+                }})
+            })))
+        }
+
+        await doPriority(this.early);
+        await doPriority(this.normal);
+        await doPriority(this.late);
+        this.early = [];
+        this.normal = [];
+        this.late = [];
+    }
+}
+
+function getDefaultSettings(dbType: string) {
+    return {
+        database: getDatabaseName(dbType),
+        host: getDatabase(dbType).host,
+        user: getDatabase(dbType).user,
+        password: getDatabase(dbType).password,
+        port: getDatabase(dbType).port
+    }
+}
 
 /**
  * Represents the global SQL connection.
@@ -31,41 +122,32 @@ import deasync = require('deasync');
  * data structures. Can always change if we want to support paralellism later.
  */
 export class SqlConnection {
-    private static sourceConnection: mysql.Connection;
-    private static destConnection: mysql.Connection;
-    private static sourceQuery: any;
+    static additional: Connection[] = [];
 
-    private static priorityQueries: string[] = [];
-    private static normalQueries: string[] = [];
+    static auth = new Connection(getDefaultSettings('auth'));
+    static characters = new Connection(getDefaultSettings('characters'));
+    static world_dst = new Connection(getDefaultSettings('world'));
+    static world_src = new Connection({
+        host: getDatabase('source').host,
+        user: getDatabase('source').user,
+        password: getDatabase('source').password,
+        port: getDatabase('source').port,
+        database: getDatabaseName('world')+'_source'
+    });
 
-    static addWriteQuery(query: string) {
-        this.normalQueries.push(query);
-    }
-
-    static addPriorityWriteQuery(query: string) {
-        this.priorityQueries.push(query);
+    protected static endConnection() {
+        Connection.end(this.auth);
+        Connection.end(this.characters);
+        Connection.end(this.world_src);
+        Connection.end(this.world_dst);
+        this.additional.forEach(x=>Connection.end(x));
+        this.additional = [];
     }
 
     static connect() {
-        this.sourceConnection = mysql.createConnection({
-            host: Settings.MYSQL_HOST_SOURCE,
-            user: Settings.MYSQL_USER_SOURCE,
-            password: Settings.MYSQL_PASSWORD_SOURCE,
-            database: Settings.MYSQL_DATABASE_SOURCE,
-            port: Settings.MYSQL_PORT_SOURCE
-        });
-
-        this.sourceQuery = deasync(this.sourceConnection.query
-            .bind(this.sourceConnection));
-
-        this.destConnection = mysql.createConnection({
-            host: Settings.MYSQL_HOST_DEST,
-            user: Settings.MYSQL_USER_DEST,
-            password: Settings.MYSQL_PASSWORD_DEST,
-            database: Settings.MYSQL_DATABASE_DEST,
-            port: Settings.MYSQL_PORT_DEST
-        });
-        this.destConnection.connect();
+        this.endConnection();
+        [this.auth,this.characters,this.world_dst,this.world_src]
+            .forEach((x)=>Connection.connect(x));
     }
 
     static getRows<C, Q, T extends SqlRow<C, Q>>(table: SqlTable<C, Q, T>, where: Q, first: boolean) {
@@ -80,21 +162,12 @@ export class SqlConnection {
         return rowsOut;
     }
 
-    static queryDest(sql: string): Promise<any> {
-        const promise = new Promise<any>((acc, rej) => {
-            this.destConnection.query(sql, (err, res) => {
-                if (err) {
-                    rej(err);
-                } else {
-                    acc(res);
-                }
-            });
-        });
-        return promise;
+    static querySource(sql: string): any {
+        return this.world_src.read(sql);
     }
 
-    static querySource(sql: string): any {
-        return this.sourceQuery(sql);
+    static allDbs() {
+        return this.additional.concat([this.world_src,this.world_dst,this.auth,this.characters]);
     }
 
     static async write(writeDb: boolean = true, writeFile: boolean = true): Promise<any> {
@@ -109,10 +182,8 @@ export class SqlConnection {
         }
 
         if (writeDb) {
-            await Promise.all(this.priorityQueries.map(x=>this.queryDest(x)));
-            // @ts-ignore TODO fix writeToDatabase
-            await Promise.all(SQLTables.map(x => x.writeToDatabase()));
-            await Promise.all(this.normalQueries.map(x=>this.queryDest(x)));
+            SQLTables.map(x=>SqlTable.writeSQL(x));
+            await Promise.all(this.allDbs().map(x=>x.apply()));
         }
     }
 
@@ -122,8 +193,7 @@ export class SqlConnection {
         } catch (err) {
             console.error(`Error on write: ${err.message} ${err.stack}`);
         }
-        this.destConnection.end();
-        this.sourceConnection.end();
-        return;
+
+        this.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
     }
 }

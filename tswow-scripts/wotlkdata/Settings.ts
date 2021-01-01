@@ -21,14 +21,14 @@ import * as yaml from 'js-yaml';
 const settings = yaml.load(fs.readFileSync('./config/tswow.yaml').toString());
 const args = process.argv.slice(2);
 
-function getDatabase(database: string) {
+export function getDatabase(database: string) {
     if (settings.database_all) {
         return settings.database_all;
     }
     return settings[database];
 }
 
-function getDatabaseName(database: string) {
+export function getDatabaseName(database: string) {
     if (settings.database_all) {
         return settings.database_all.name + database;
     } else {

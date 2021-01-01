@@ -86,11 +86,9 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
         return sqlfile + `--${this.name}\n` + dirtyRows.map(x => SqlRow.getSql(x)).join('\n') + '\n';
     }
 
-    // TODO/sqltable
-    protected async writeToDatabase(): Promise<any> {
-        const dirtyRows = this.cachedValues.filter(SqlRow.isDirty);
-        await Promise.all(dirtyRows
-            .map(x => SqlConnection.queryDest(SqlRow.getSql(x))));
-        this.cachedRows = {};
+    static writeSQL(table: SqlTable<any,any,any>) {
+        table.cachedValues.filter(SqlRow.isDirty)
+            .forEach(x=>SqlConnection.world_dst.write(SqlRow.getSql(x)));
+        table.cachedRows = {};
     }
 }

@@ -1,9 +1,8 @@
 import { SqlConnection } from "./SQLConnection";
 
 export function cleanSQL() {
-    const waits : Promise<any>[] = [];
     function q(sql: string) {
-        waits.push(SqlConnection.queryDest(sql));
+        SqlConnection.world_dst.writeEarly(sql);
     }
 
     q('DELETE FROM smart_scripts WHERE comment = "tswow";');
@@ -26,6 +25,4 @@ export function cleanSQL() {
     q('DELETE FROM skinning_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM spell_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM creature_text WHERE comment = "tswow";')
-
-    return Promise.all(waits);
 }

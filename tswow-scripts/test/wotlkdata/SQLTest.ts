@@ -19,7 +19,6 @@ import { gte } from '../../wotlkdata/query/Relations';
 import { SqlConnection } from '../../wotlkdata/sql/SQLConnection';
 import * as assert from 'assert';
 import { Random } from './Random';
-import { Cell } from '../../wotlkdata/cell/Cell';
 
 describe('SQL', function() {
     this.beforeAll(function() {
@@ -37,7 +36,7 @@ describe('SQL', function() {
         const g = things.clone(1007688, 1);
         g.item.set(num);
         await SqlConnection.write();
-        const dest: any[] = await SqlConnection.queryDest('SELECT * from access_requirement WHERE mapId = 1007688');
+        const dest: any[] = SqlConnection.world_dst.read('SELECT * from access_requirement WHERE mapId = 1007688');
         assert.strictEqual(dest.length, 1);
         assert.strictEqual(dest[0].item, num);
     });
@@ -53,7 +52,7 @@ describe('SQL', function() {
             const g = SQL.access_requirement.add(12345, 1);
             g.item.set(num);
             await SqlConnection.write();
-            const dest: any[] = await SqlConnection.queryDest('SELECT * from access_requirement WHERE mapId = 12345');
+            const dest: any[] = SqlConnection.world_dst.read('SELECT * from access_requirement WHERE mapId = 12345');
             assert.strictEqual(dest.length, 1);
             assert.strictEqual(dest[0].item, num);
         });
