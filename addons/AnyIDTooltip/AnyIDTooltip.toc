@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: AnyIDTooltip
+## Version: 1.0
+## Notes: all the IDs
+## Author: Tester
+core.lua
