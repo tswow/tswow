@@ -219,7 +219,7 @@ export const SQL = {
      * Writes a query to the destination database, will always execute before all other queries
      * @param query 
      */
-    PriorityWrite: function(query: string) {
+    WritePriority: function(query: string) {
         SqlConnection.addPriorityWriteQuery(query);
     },
 
