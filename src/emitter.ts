@@ -35,7 +35,7 @@ export class Emitter {
         this.opsMap[ts.SyntaxKind.LessThanLessThanToken] = '__bitwise::lshift';
         this.opsMap[ts.SyntaxKind.GreaterThanGreaterThanToken] = '__bitwise::rshift';
         this.opsMap[ts.SyntaxKind.GreaterThanGreaterThanGreaterThanToken] = '__bitwise::rshift_nosign';
-        this.opsMap[ts.SyntaxKind.EqualsEqualsToken] = '__equals';
+        this.opsMap[ts.SyntaxKind.EqualsEqualsToken] = '==';
         this.opsMap[ts.SyntaxKind.EqualsEqualsEqualsToken] = '==';
         this.opsMap[ts.SyntaxKind.LessThanToken] = '<';
         this.opsMap[ts.SyntaxKind.LessThanEqualsToken] = '<=';
@@ -63,8 +63,8 @@ export class Emitter {
         this.opsMap[ts.SyntaxKind.MinusMinusToken] = '--';
         this.opsMap[ts.SyntaxKind.InKeyword] = '__in';
 
-        this.opsMap[ts.SyntaxKind.AmpersandAmpersandToken] = '__AND';
-        this.opsMap[ts.SyntaxKind.BarBarToken] = '__OR';
+        this.opsMap[ts.SyntaxKind.AmpersandAmpersandToken] = '&&';
+        this.opsMap[ts.SyntaxKind.BarBarToken] = '||';
 
         this.opsMap[ts.SyntaxKind.CommaToken] = ',';
 
@@ -1310,7 +1310,7 @@ export class Emitter {
                 });
             });
         } else {
-            this.writer.writeString(' : public object');
+            this.writer.writeString(' : public TSClass');
         }
 
         this.writer.writeString(', public std::enable_shared_from_this<');
@@ -1883,11 +1883,11 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.NumericLiteral:
             case ts.SyntaxKind.NumberKeyword:
-                this.writer.writeString('js::number');
+                this.writer.writeString('float');
                 break;
             case ts.SyntaxKind.StringLiteral:
             case ts.SyntaxKind.StringKeyword:
-                this.writer.writeString('jsstring');
+                this.writer.writeString('TSString');
                 break;
             case ts.SyntaxKind.TypeLiteral:
             case ts.SyntaxKind.ObjectLiteralExpression:
@@ -1895,7 +1895,7 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.ArrayType:
                 const arrayType = <ts.ArrayTypeNode>type;
-                this.writer.writeString('array<');
+                this.writer.writeString('TSArray<');
                 if (arrayType.elementType && arrayType.elementType.kind !== ts.SyntaxKind.UndefinedKeyword) {
                     this.processType(arrayType.elementType, false);
                 } else {
@@ -1930,7 +1930,8 @@ export class Emitter {
                 const isEnum = this.isEnum(typeReference);
                 const isArray = this.resolver.isArrayType(typeInfo);
 
-                const isEventsStruct = typeReference.getFullText().split(' ').join('') === 'TSEventHandlers';
+                const typeText = typeReference.getFullText().split(' ').join('');
+                const isEventsStruct = typeText === 'TSEventHandlers';
 
                 const primitives = [
                     'uint8', 'uint16', 'uint32', 'uint64',
@@ -1952,7 +1953,12 @@ export class Emitter {
                     || isTypeAlias
                     || isArray
                     || isEventsStruct
-                    || isPrimitive;
+                    || isPrimitive
+                    || typeText.startsWith('TS')
+
+                if(!skipPointerIf) {
+                    this.writer.writeString('std::shared_ptr<');
+                }
 
                 // writing namespace
                 if (this.isWritingMain) {
@@ -1987,7 +1993,7 @@ export class Emitter {
                 }
 
                 if (isArray) {
-                    this.writer.writeString('array');
+                    this.writer.writeString('TSArray');
                 } else {
                     this.writeTypeName(typeReference);
                 }
@@ -2010,6 +2016,8 @@ export class Emitter {
 
                 if(isEventsStruct) {
                     this.writer.writeString(' * ');
+                } else if(!skipPointerIf) {
+                    this.writer.writeString('>')
                 }
                 break;
             case ts.SyntaxKind.TypeParameter:
@@ -2331,7 +2339,7 @@ export class Emitter {
                     this.writer.writeString('void');
                 } else {
                     if (isClassMember && (<ts.Identifier>node.name).text === 'toString') {
-                        this.writer.writeString('jsstring');
+                        this.writer.writeString('TSString');
                     } else {
                         this.writer.writeString('any');
                     }
@@ -3141,7 +3149,7 @@ export class Emitter {
             this.writer.writeString('utils::assign(');
         }
 
-        this.writer.writeString('object');
+        this.writer.writeString('');
         if (node.properties.length !== 0) {
             this.writer.BeginBlock();
             node.properties.forEach(element => {
@@ -3152,11 +3160,11 @@ export class Emitter {
                 if (element.kind === ts.SyntaxKind.PropertyAssignment) {
                     const property = <ts.PropertyAssignment>element;
 
-                    this.writer.writeString('object::pair{');
+                    this.writer.writeString('std::pair{');
 
                     if (property.name
                         && (property.name.kind === ts.SyntaxKind.Identifier
-                            || property.name.kind === ts.SyntaxKind.NumericLiteral)) {
+                            /*|| property.name.kind === ts.SyntaxKind.NumericLiteral*/)) {
                         this.processExpression(ts.createStringLiteral(property.name.text));
                     } else {
                         this.processExpression(<ts.Expression>property.name);
@@ -3168,7 +3176,7 @@ export class Emitter {
                 } else if (element.kind === ts.SyntaxKind.ShorthandPropertyAssignment) {
                     const property = <ts.ShorthandPropertyAssignment>element;
 
-                    this.writer.writeString('object::pair{');
+                    this.writer.writeString('std::pair{');
 
                     if (property.name
                         && (property.name.kind === ts.SyntaxKind.Identifier
@@ -3255,7 +3263,7 @@ export class Emitter {
         }
 
         if (!isTuple) {
-            this.writer.writeString('array<');
+            this.writer.writeString('TSArray<');
             if (elementsType) {
                 this.processType(elementsType, false);
             } else {
@@ -3322,7 +3330,7 @@ export class Emitter {
                 && (<any>symbolInfo.valueDeclaration).initializer
                 && (<any>symbolInfo.valueDeclaration).initializer.kind !== ts.SyntaxKind.ObjectLiteralExpression;
             if (dereference) {
-                this.writer.writeString('(*');
+                this.writer.writeString('(');
             }
 
             if (!isWriting) {
@@ -3373,7 +3381,7 @@ export class Emitter {
         }
 
         if (isEnum) {
-            this.writer.writeString('js::number(');
+            this.writer.writeString('float(');
         }
 
         this.processExpression(node.operand);
@@ -3431,7 +3439,7 @@ export class Emitter {
                 switch (identifier.text) {
                     case 'Number':
                     case 'String':
-                        this.writer.writeString('js::jsstring');
+                        this.writer.writeString('TSString');
                         break;
                     case 'Boolean':
                         this.writer.writeString('js::');
@@ -3565,7 +3573,7 @@ export class Emitter {
         }
 
         if (isArray) {
-            this.writer.writeString('array');
+            this.writer.writeString('TSArray');
         } else {
 
             this.processExpression(node.expression);
