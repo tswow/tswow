@@ -195,7 +195,7 @@ import { SQL_class_stat_formulas } from './types/class_stat_formulas'
 import { Connection, SqlConnection } from './SQLConnection'
 import * as mysql from 'mysql';
 
-class Databases {
+export class Databases {
     private isDatabase = true;
     get world_source() { return SqlConnection.world_src; } 
     get world_dest() { return SqlConnection.world_dst; }
