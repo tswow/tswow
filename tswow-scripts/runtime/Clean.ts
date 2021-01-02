@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { sleep } from "deasync";
 import { mpath, wfs } from "../util/FileSystem";
 import { mysql } from "../util/MySQL";
 import { ipaths } from "../util/Paths";
