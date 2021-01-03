@@ -59,6 +59,7 @@ export class InstallPaths {
     get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
     get addons() { return mpath(this.bin, 'addons')}
     get symlinkMaker() { return mpath(this.bin, 'symlinkmaker.js')}
+    get binglobaldts() { return mpath(this.bin, 'include','global.d.ts')}
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }

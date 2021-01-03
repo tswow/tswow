@@ -47,6 +47,11 @@ export async function createConfig() {
         wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
     }
 
+    const globaldts = mpath('TrinityCore', 'src', 'server', 'game', 'Tswow',
+    'scripting', 'Public','global.d.ts');
+
+    wfs.copy(globaldts,ipaths.binglobaldts);
+
     wfs.copy('./start.js', ipaths.startjsCore);
     wfs.copy('./start.js', ipaths.startjsBin);
 
