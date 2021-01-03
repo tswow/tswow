@@ -3105,7 +3105,7 @@ export class Emitter {
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
         const text = node.text.replace(/\n/g, '\\\n');
         if (text === '') {
-            this.writer.writeString(`""`);
+            this.writer.writeString(`JSTR("")`);
         } else {
             this.writer.writeString(`JSTR("${text}")`);
         }
