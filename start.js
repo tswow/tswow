@@ -39,19 +39,11 @@ if(fs.existsSync('./update.7z')) {
         fs.rmdirSync('./bin', {recursive: true});
     }
 
-    if(fs.existsSync('./node_modules')) {
-        fs.rmdirSync('./node_modules', {recursive: true});
-    }
-
-    if(fs.existsSync('./modules/tswow-stdlib')) {
-        fs.rmdirSync('./modules/tswow-stdlib',{recursive: true});
-    }
-
     fs.renameSync('./tmp/bin','./bin')
-    fs.renameSync('./tmp/node_modules','./node_modules');
-    fs.renameSync('./tmp/modules/tswow-stdlib','./modules/tswow-stdlib');
 
     fs.rmdirSync('./tmp', {recursive: true});
+
+    child_process.execSync('npm i');
 }
 
 require('../bin/scripts/tswow/runtime/TSWoW.js').main(rebuild);
