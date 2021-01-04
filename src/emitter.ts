@@ -5,6 +5,7 @@ import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
 import { CodeWriter } from './codewriter';
 import { handleClass } from './tswow-orm';
+import { generateStringify } from './tswow-stringify';
 
 export class Emitter {
     public writer: CodeWriter;
@@ -1367,9 +1368,12 @@ export class Emitter {
         this.writer.cancelNewLine();
         this.writer.cancelNewLine();
 
+        // @tswow-begin
         if(node.kind === ts.SyntaxKind.ClassDeclaration) {
             handleClass(node,this.writer);
+            generateStringify(node, this.writer);
         }
+        // @tswow-end
 
         this.writer.EndBlock();
         this.writer.EndOfStatement();
