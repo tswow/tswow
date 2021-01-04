@@ -250,7 +250,6 @@ export function writeTableCreationFile(outDir: string) {
 
         entry.fields.forEach((field,index,arr)=>{
             const getSQLType = ()=>{
-                console.log(field.type);
                 switch(field.type) {
                     case 'int': return 'INT NOT NULL'
                     case 'int8': return 'TINYINT NOT NULL'
