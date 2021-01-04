@@ -4,6 +4,7 @@ import * as path from 'path';
 import { spawn } from 'cross-spawn';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
+import { writeTableCreationFile } from './tswow-orm';
 
 export enum ForegroundColorEscapeSequences {
     Grey = '\u001b[90m',
@@ -302,6 +303,10 @@ export class Run {
         if (!cmdLineOptions.suppressOutput) {
             console.log(ForegroundColorEscapeSequences.Pink + 'Binary files have been generated...' + resetEscapeSequence);
         }
+
+        // @tswow-begin
+        writeTableCreationFile(outDir);
+        // @tswow-end
     }
 
     public test(sources: string[], cmdLineOptions?: any, header?: string, footer?: string): string {

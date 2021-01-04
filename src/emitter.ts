@@ -4,6 +4,7 @@ import { IdentifierResolver } from './resolvers';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
 import { CodeWriter } from './codewriter';
+import { handleClass } from './tswow-orm';
 
 export class Emitter {
     public writer: CodeWriter;
@@ -1299,8 +1300,14 @@ export class Emitter {
                         }
 
                         this.writer.writeString('public ');
-                        this.writer.writeString(identifier.text);
-                        this.processTemplateArguments(type, true);
+                        // @tswow-begin
+                        if(identifier.text==='DBTable') {
+                            this.writer.writeString('TSClass');
+                        } else {
+                            this.writer.writeString(identifier.text);
+                            this.processTemplateArguments(type, true);
+                        }
+                        // @tswow-end
 
                         next = true;
                     } else {
@@ -1359,6 +1366,10 @@ export class Emitter {
 
         this.writer.cancelNewLine();
         this.writer.cancelNewLine();
+
+        if(node.kind === ts.SyntaxKind.ClassDeclaration) {
+            handleClass(node,this.writer);
+        }
 
         this.writer.EndBlock();
         this.writer.EndOfStatement();
@@ -2242,6 +2253,9 @@ export class Emitter {
                 throw new Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
             }
 
+            // @tswow-begin
+            this.writer.writeStringNewLine('#include "TableCreator.h"');
+
             this.writer.writeStringNewLine(`extern "C" `);
             this.writer.BeginBlock();
             this.writer.writeStringNewLine(`__declspec(dllexport) void Main(TSEventHandlers*);`);
@@ -2253,6 +2267,7 @@ export class Emitter {
 
             this.writer.writeStringNewLine(`__declspec(dllexport) void AddTSScripts(TSEventHandlers* handlers)`);
             this.writer.BeginBlock();
+            this.writer.writeStringNewLine(`WriteTables();`);
             this.writer.writeStringNewLine(`Main(handlers);`);
             this.writer.EndBlock();
 
@@ -2269,6 +2284,7 @@ export class Emitter {
             this.writer.EndBlock();
 
             this.writer.EndBlock();
+            // @tswow-end
 
             return false;
         }
