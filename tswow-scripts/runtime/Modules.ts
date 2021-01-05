@@ -22,14 +22,12 @@ import { mysql } from '../util/MySQL';
 import { cfg } from '../util/Config';
 import { Timer } from '../util/Timer';
 import { TrinityCore } from './TrinityCore';
-import { compileAll, destroyAllWatchers, destroyTSWatcher, getTSWatcher, hasWatcher } from '../util/TSWatcher';
+import { compileAll, destroyTSWatcher, getTSWatcher, hasWatcher } from '../util/TSWatcher';
 import { Client } from './Client';
 import { isWindows } from '../util/Platform';
 import { Wrap } from '../util/Wrap';
-import { Assets } from './Assets';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
-import { reputation_reward_rateRow } from '../wotlkdata/sql/types/reputation_reward_rate';
 import { BuildCommand } from './BuildCommand';
 
 /**
@@ -480,6 +478,10 @@ export namespace Modules {
                     wfs.remove(mpath(p,lname));
                 }
             });
+        }
+
+        if(!wfs.exists(ipaths.moduleRoot(name))) {
+            return;
         }
 
         // Store a copy of the module in our garbage bin
