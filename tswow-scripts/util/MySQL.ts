@@ -226,7 +226,7 @@ export namespace mysql {
         cfg.databaseSettings('world').port;
 
         const startup_file = './bin/mysql_startup.txt';
-        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '';`);
+        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '${cfg.databaseSettings('world').password}';`);
         const oldAcStatus = TrinityCore.isStarted();
         await disconnect();
         if (isWindows()) {
