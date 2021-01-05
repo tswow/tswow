@@ -1674,8 +1674,9 @@ export class Emitter {
             if (!forceCaptureRequired) {
                 this.processType(effectiveType, useAuto);
             } else {
-                if (useAuto) {
-                    this.writer.writeString('shared');
+                // TODO: Not sure if something needs to be done here
+                if (useAuto||true) {
+                    this.writer.writeString('auto');
                 } else {
                     this.writer.writeString('shared<');
                     this.processType(effectiveType, useAuto);
