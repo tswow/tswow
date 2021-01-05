@@ -1427,7 +1427,6 @@ export class Emitter {
 
     private processMethodDeclaration(node: ts.MethodDeclaration | ts.MethodSignature | ts.ConstructorDeclaration,
         implementationMode?: boolean): void {
-            console.log("Hello world");
         const skip = this.processFunctionDeclaration(<ts.FunctionDeclaration><any>node, implementationMode);
         if (implementationMode) {
             if (!skip) {
