@@ -4,7 +4,7 @@ import { IdentifierResolver } from './resolvers';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
 import { CodeWriter } from './codewriter';
-import { handleClass } from './tswow-orm';
+import { handleClass, setBaseClass } from './tswow-orm';
 import { generateStringify } from './tswow-stringify';
 
 export class Emitter {
@@ -1301,13 +1301,9 @@ export class Emitter {
                         }
 
                         this.writer.writeString('public ');
-                        // @tswow-begin
-                        if(identifier.text==='DBTable') {
-                            this.writer.writeString('TSClass');
-                        } else {
-                            this.writer.writeString(identifier.text);
-                            this.processTemplateArguments(type, true);
-                        }
+                        setBaseClass(node, identifier.text);
+                        this.writer.writeString(identifier.text);
+                        this.processTemplateArguments(type, true);
                         // @tswow-end
 
                         next = true;
@@ -1318,6 +1314,7 @@ export class Emitter {
                 });
             });
         } else {
+            setBaseClass(node, 'TSClass');
             this.writer.writeString(' : public TSClass');
         }
 
@@ -1430,6 +1427,7 @@ export class Emitter {
 
     private processMethodDeclaration(node: ts.MethodDeclaration | ts.MethodSignature | ts.ConstructorDeclaration,
         implementationMode?: boolean): void {
+            console.log("Hello world");
         const skip = this.processFunctionDeclaration(<ts.FunctionDeclaration><any>node, implementationMode);
         if (implementationMode) {
             if (!skip) {
@@ -2248,7 +2246,7 @@ export class Emitter {
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
         implementationMode?: boolean): boolean {
-        if ( this.isHeader() && node.name.getFullText().replace(' ', '') === 'Main') {
+        if ( this.isHeader() && node.name && node.name.getFullText().replace(' ', '') === 'Main') {
             if ( node.typeParameters && node.typeParameters.length > 0) {
                 throw new Error('"Main" function cannot have type parameters!');
             }
@@ -3123,11 +3121,11 @@ export class Emitter {
 
     private processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
-        const text = node.text.replace(/\n/g, '\\\n');
+        let text = node.text.replace(/\n/g, '\\\n');
         if (text === '') {
             this.writer.writeString(`JSTR("")`);
         } else {
-            this.writer.writeString(`JSTR("${text}")`);
+            this.writer.writeString(`JSTR("${text.split('"').join('\\"')}")`);
         }
     }
 

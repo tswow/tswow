@@ -2,6 +2,7 @@ import ts = require("typescript");
 import { CodeWriter } from "./codewriter";
 import * as fs from 'fs';
 import * as path from 'path';
+import { InterfaceDeclaration } from "typescript";
 
 type DBType = 'world'|'auth'|'characters'
 
@@ -49,6 +50,7 @@ class Entry {
 }
 
 let entries: Entry[] = [];
+let baseClassMap: {[key:string]:string} = {}
 
 export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     if(!node.decorators) {
@@ -134,7 +136,6 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeString('TSString loadQuery()');
     writer.BeginBlock();
     writer.writeString(`return JSTR("SELECT * FROM \`${entry.className}\` WHERE `);
-
     writer.writeString(
         pks.map(x=>`\`${x.name}\` = ")+this->${x.name}+JSTR("`)
             .join(' AND '));
@@ -179,27 +180,35 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     writer.writeString('\n');
 
-    writer.writeString('    void save() {QueryWorld(saveQuery());}\n\n');
-
-    writer.writeString('    bool load()');
+    writer.writeString('    TSString removeQuery() ');
     writer.BeginBlock();
-    switch(entry.databaseType) {
-        case 'world':
-            writer.writeStringNewLine('auto res = QueryWorld(loadQuery());');
-            break;
-        case 'auth':
-            writer.writeStringNewLine('auto res = QueryAuth(loadQuery());');
-            break;
-        case 'characters':
-            writer.writeStringNewLine('auto res = QueryCharacters(loadQuery());');
-            break;
-    }
+    writer.writeString(`return JSTR("DELETE FROM \`${entry.className}\` WHERE `);
+    writer.writeString(
+        pks.map(x=>`\`${x.name}\` = ")+this->${x.name}+JSTR("`)
+            .join(' AND '));
+    writer.writeString(';");');
+    writer.EndBlock();
 
-    writer.writeStringNewLine('if(!res->IsValid()) return false;');
-    writer.writeStringNewLine('if(!res->GetRow()) return false;');
-    entry.fields.forEach((x,i)=>{
+    const queryType = entry.databaseType == 'world' ? 'QueryWorld' : 
+        entry.databaseType == 'auth' ? 'QueryAuth' : 'QueryCharacters';
+    writer.writeString(`void save() {${queryType}(saveQuery());}\n\n`);
+    writer.writeString(`    void remove() {${queryType}(removeQuery());}\n\n`)
+
+    writer.writeString(`    static TSString LoadQuery(TSString query)`)
+    writer.BeginBlock();
+    writer.writeStringNewLine(`return JSTR("SELECT * from ${entry.className} WHERE ") + query + JSTR(";");`)
+    writer.EndBlock();
+
+    writer.writeString(`\n    static TSArray<std::shared_ptr<${entry.className}>> Load(TSString query)`);
+    writer.BeginBlock();
+    writer.writeStringNewLine(`auto arr = TSArray<std::shared_ptr<${entry.className}>>{};`);
+    writer.writeStringNewLine(`auto res = ${queryType}(LoadQuery(query));`)
+    writer.writeStringNewLine(`while(res->GetRow())`)
+    writer.BeginBlock();
+    writer.writeStringNewLine(`auto obj = std::make_shared<${entry.className}>();`);
+    entry.fields.forEach((v,i)=>{
         const resolveType = ()=> {
-            switch(x.type) {
+            switch(v.type) {
                 case 'double': return 'GetDouble';
                 case 'float': return 'GetFloat';
                 case 'int8': return 'GetInt8';
@@ -214,11 +223,31 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
                 case 'string': return 'GetString';
             }
         }
-        writer.writeStringNewLine(`this->${x.name} = res->${resolveType()}(${i});`);
-    })
-    writer.writeStringNewLine('return true;');
+        writer.writeStringNewLine(`obj->${v.name} = res->${resolveType()}(${i});`)
+    });
 
+    writer.writeStringNewLine(`arr.push(obj);`);
     writer.EndBlock();
+    writer.writeStringNewLine(`return arr;`);
+    writer.EndBlock();
+
+    const constructor = node.members.find((x)=>x.kind==ts.SyntaxKind.Constructor) as ts.ConstructorDeclaration;
+    if(constructor!==undefined) {
+        // add a default constructor if there is none already
+        if(constructor.parameters.length>0) {
+            const name = baseClassMap[entry.className];
+            writer.writeStringNewLine(`${entry.className}() : ${name}() {}`)
+        }
+    }
+}
+
+export function setBaseClass(node: ts.ClassDeclaration | InterfaceDeclaration, cls: string) {
+    if(!node.name) {
+        return;
+    }
+    const nodename = node.name.getText(node.getSourceFile());
+
+    baseClassMap[nodename] = cls;
 }
 
 export function writeIncludeTableCreator(writer: CodeWriter) {
