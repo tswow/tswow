@@ -77,6 +77,10 @@ class ClassColor extends EditSystem<Class> {
     }
 }
 
+function cleanNewline(str: string) {
+    return str.split('\n').join('\\n');
+}
+
 class ClassInfoRows extends Subsystem<Class> {
     private rows: Edit[];
 
@@ -90,7 +94,7 @@ class ClassInfoRows extends Subsystem<Class> {
     }
 
     private makeInfo(index: number, value: string) {
-        return `CLASS_INFO_${this.owner.Filename}${index} = "${value}";`
+        return `CLASS_INFO_${this.owner.Filename}${index} = "${cleanNewline(value)}";`
     }
 
     get(index: number) {
@@ -98,13 +102,13 @@ class ClassInfoRows extends Subsystem<Class> {
     }
 
     set(index: number, value: string) {
-        this.rows[index].text = this.makeInfo(index, value);
+        this.rows[index].text = this.makeInfo(index, cleanNewline(value));
         return this.owner;
     }
 
     add(value: string) {
         this.rows.push(LUAXML.file('Interface/GlueXML/GlueStrings.lua')
-            .after(1, this.makeInfo(this.rows.length, value)))
+            .after(1, this.makeInfo(this.rows.length, cleanNewline(value))))
         return this.owner;
     }
 }
@@ -123,13 +127,13 @@ class ClassDescription extends Subsystem<Class> {
     get Male() {
         return new CellSimple(this,
             ()=>this.descPayload(this.male.text),
-            (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${value}";`)
+            (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${cleanNewline(value)}";`)
     }
 
     get Female() {
         return new CellSimple(this,
             ()=>this.descPayload(this.female.text),
-            (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${value}";`)
+            (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${cleanNewline(value)}";`)
     }
 
     private descPayload(desc : string) {
@@ -137,8 +141,8 @@ class ClassDescription extends Subsystem<Class> {
     }
 
     set(text: string) {
-        this.Male.set(text);
-        this.Female.set(text);
+        this.Male.set(cleanNewline(text));
+        this.Female.set(cleanNewline(text));
         return this.owner;
     }
 }
