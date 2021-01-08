@@ -84,7 +84,7 @@ export const BaseClassData = {
         "ROGUE" : 78,
         "MAGE" : 79,
         "WARLOCK" : 80,
-        "HUNGER" : 81
+        "HUNTER" : 81
     },
 
     /** Remale rows are row+1 */
@@ -97,7 +97,8 @@ export const BaseClassData = {
         "ROGUE" : 320,
         "SHAMAN" : 322,
         "WARLOCK" : 324,
-        "WARRIOR" : 326
+        "WARRIOR" : 326,
+        "HUNTER" : 256
     },
 
     /** No gendered difference, second number is row count */
