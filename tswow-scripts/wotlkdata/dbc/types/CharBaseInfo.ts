@@ -17,7 +17,7 @@
 import { DBCRow } from '../DBCRow'
 import { DBCFile } from '../DBCFile'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell} from '../DBCCell'
+import { DBCByteCell, DBCKeyCell} from '../DBCCell'
 import { byte} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
@@ -33,7 +33,7 @@ export class CharBaseInfoRow extends DBCRow<CharBaseInfoCreator,CharBaseInfoQuer
      * No comment (yet!)
      */
     @PrimaryKey()
-    get RaceID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
+    get RaceID() { return new DBCByteCell(this,this.buffer,this.offset+0)}
     
     /**
      * Primary Key
@@ -41,7 +41,7 @@ export class CharBaseInfoRow extends DBCRow<CharBaseInfoCreator,CharBaseInfoQuer
      * No comment (yet!)
      */
     @PrimaryKey()
-    get ClassID() { return new DBCKeyCell(this,this.buffer,this.offset+1)}
+    get ClassID() { return new DBCByteCell(this,this.buffer,this.offset+1)}
     
     /**
      * Creates a clone of this row with new primary keys.
