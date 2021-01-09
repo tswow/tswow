@@ -43,15 +43,26 @@ export abstract class MaskBase<T> extends Subsystem<T> {
     abstract clearAll(): T;
     abstract toString(): string;
 
+    get length() { return 32; }
+
     objectify() {
-        return Object.keys(Objects.mapObject(this, ['object'],
+        let usedIndices : number[] = []
+        let thing = Object.keys(Objects.mapObject(this, ['object'],
             (k, v) => {
+                usedIndices.push(v.bit);
                 return v.isBit && v.check();
             },
             (k, v) => {
                 return k;
             }
         ));
+
+        for(let i=0;i<this.length;++i) {
+            if(this.bit(i).check() && ! usedIndices.includes(i)) {
+                thing.push(`Bit${i}`);
+            }
+        }
+        return thing;
     }
 }
 
@@ -66,6 +77,8 @@ export class MaskLongCell<T> extends MaskBase<T> {
     set(value: bigint) {
         this.cell.set(value);
     }
+
+    get length() { return 64; }
 
     get() { return this.cell.get(); }
 
