@@ -19,7 +19,7 @@ import { GameObjectGuardPost } from "./Types/GameObjectGuardPost";
 import { GameObjectGuildBank } from "./Types/GameObjectGuildBank";
 import { GameObjectMailbox } from "./Types/GameObjectMailbox";
 import { GameObjectMeetingStone } from "./Types/GameObjectMeetingStone";
-import { GameObjectMinigame } from "./Types/GameObjectMiniGame";
+import { GameObjectMinigame } from "./Types/GameObjectMinigame";
 import { GameObjectMoTransport } from "./Types/GameObjectMoTransport";
 import { GameObjectQuestGiver } from "./Types/GameObjectQuestGiver";
 import { GameObjectSpellCaster } from "./Types/GameObjectSpellCaster";
