@@ -58,12 +58,4 @@ export class GameObjectDoor extends GameObjectTemplate {
      * Unknown
      */
     get Condition1() { return getBroadcast(this, this.row.Data7); }
-
-    /**
-     * Whether the door is opaque (TODO: what checks this?)
-     */
-    get IsOpaque() { return getBroadcast(this, this.row.Data8); }
-
-    get GiganticAOI() { return getBroadcast(this, this.row.Data9); }
-    get InfiniteAOI() { return getBroadcast(this, this.row.Data10); }
 }

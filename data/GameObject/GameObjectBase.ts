@@ -1,0 +1,64 @@
+import { GameObjectTemplate } from "./GameObjectTemplate";
+import { GameObjectAreaDamage } from "./Types/GameObjectAreaDamage";
+import { GameObjectAuraGenerator } from "./Types/GameObjectAuraGenerator";
+import { GameObjectBarberChair } from "./Types/GameObjectBarberChair";
+import { GameObjectButton } from "./Types/GameObjectButton";
+import { GameObjectCamera } from "./Types/GameObjectCamera";
+import { GameObjectCapturePoint } from "./Types/GameObjectCapturePoint";
+import { GameObjectChair } from "./Types/GameObjectChair";
+import { GameObjectChest } from "./Types/GameObjectChest";
+import { GameObjectDestructibleBuilding } from "./Types/GameObjectDestructibleBuilding";
+import { GameObjectDoor } from "./Types/GameObjectDoor";
+import { GameObjectDungeonDifficulty } from "./Types/GameObjectDungeonDifficulty";
+import { GameObjectFishingHole } from "./Types/GameObjectFishingHole";
+import { GameObjectFlagDrop } from "./Types/GameObjectFlagDrop";
+import { GameObjectFlagStand } from "./Types/GameObjectFlagStand";
+import { GameObjectGeneric } from "./Types/GameObjectGeneric";
+import { GameObjectGoober } from "./Types/GameObjectGoober";
+import { GameObjectGuardPost } from "./Types/GameObjectGuardPost";
+import { GameObjectGuildBank } from "./Types/GameObjectGuildBank";
+import { GameObjectMailbox } from "./Types/GameObjectMailbox";
+import { GameObjectMeetingStone } from "./Types/GameObjectMeetingStone";
+import { GameObjectMinigame } from "./Types/GameObjectMiniGame";
+import { GameObjectMoTransport } from "./Types/GameObjectMoTransport";
+import { GameObjectQuestGiver } from "./Types/GameObjectQuestGiver";
+import { GameObjectSpellCaster } from "./Types/GameObjectSpellCaster";
+import { GameObjectSpellFocus } from "./Types/GameObjectSpellFocus";
+import { GameObjectSummoningRitual } from "./Types/GameObjectSummoningRitual";
+import { GameObjectText } from "./Types/GameObjectText";
+import { GameObjectTransport } from "./Types/GameObjectTransport";
+import { GameObjectTrap } from "./Types/GameObjectTrap";
+import { GameObjectTrapdoor } from "./Types/GameObjectTrapdoor";
+
+export class GameObjectBase extends GameObjectTemplate {
+    AsTrapdoor() { return new GameObjectTrapdoor(this.row); }
+    AsTrap() { return new GameObjectTrap(this.row); }
+    AsTransport() { return new GameObjectTransport(this.row); }
+    AsText() { return new GameObjectText(this.row); }
+    AsSummoningRitual() { return new GameObjectSummoningRitual(this.row); }
+    AsSpellFocus() { return new GameObjectSpellFocus(this.row); }
+    AsSpellCaster() { return new GameObjectSpellCaster(this.row); }
+    AsQuestGiver() { return new GameObjectQuestGiver(this.row); }
+    AsMoTransport() { return new GameObjectMoTransport(this.row); }
+    AsMinigame() { return new GameObjectMinigame(this.row); }
+    AsMeetingStone() { return new GameObjectMeetingStone(this.row); }
+    AsMailbox() { return new GameObjectMailbox(this.row); }
+    AsGuildbank() { return new GameObjectGuildBank(this.row); }
+    AsGuardPost() { return new GameObjectGuardPost(this.row); }
+    AsGoober() { return new GameObjectGoober(this.row); }
+    AsGeneric() { return new GameObjectGeneric(this.row); }
+    AsFlagStand() { return new GameObjectFlagStand(this.row); }
+    AsFlagDrop() { return new GameObjectFlagDrop(this.row); }
+    AsFishingHole() { return new GameObjectFishingHole(this.row); }
+    AsDungeonDifficulty() { return new GameObjectDungeonDifficulty(this.row); }
+    AsDoor() { return new GameObjectDoor(this.row); }
+    AsDestructibleBuilding() { return new GameObjectDestructibleBuilding(this.row); }
+    AsChest() { return new GameObjectChest(this.row); }
+    AsChair() { return new GameObjectChair(this.row); }
+    AsCapturePoint() { return new GameObjectCapturePoint(this.row); }
+    AsCamera() { return new GameObjectCamera(this.row); }
+    AsButton() { return new GameObjectButton(this.row); }
+    AsBarberChair() { return new GameObjectBarberChair(this.row); }
+    AsAuraGenerator() { return new GameObjectAuraGenerator(this.row); }
+    AsAreaDamage() { return new GameObjectAreaDamage(this.row); }
+}

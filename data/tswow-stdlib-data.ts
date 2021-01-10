@@ -39,6 +39,7 @@ import { ScriptPaths } from "./Waypoints/ScriptPaths";
 import { Areas } from "./Area/Areas";
 import { Maps } from "./Map/Maps";
 import { LoadingScreens } from "./Map/LoadingScreen";
+import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
 
 export const std = {
     Spells : Spells,
@@ -53,7 +54,9 @@ export const std = {
     UI: UI,
     ClassSkills: ClassSkills,
     SkillLines: SkillLines,
+    /** Templates used by one or multiple creature instances */
     CreatureTemplates: CreatureTemplates,
+    /** Individual creatures placed in the world */
     CreatureInstances: CreatureInstances,
     TalentTrees: TalentTrees,
     Factions: Factions,
@@ -64,6 +67,12 @@ export const std = {
     Areas: Areas,
     Maps: Maps,
     LoadingScreens: LoadingScreens,
+    /** Templates used by one or multiple game object instances */
+    GameObjectTemplates: GameObjectTemplates,
+    /** Individual Game Objects placed in the world */
+    GameObjectInstances: GameObjectInstances,
+    /** Model, sound and bounding box data for GameObjects */
+    GameObjectDisplays: GameObjectDisplays
 }
 
 // Patch ID files

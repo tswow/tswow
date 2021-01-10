@@ -77,7 +77,7 @@ export class SpellSkillLineAbilites extends Subsystem<Spell> {
         }
     }
 
-    add(skillLine: number) {
+    add(skillLine: number, parentAbility: number = -1) {
         const rci = DBC.SkillRaceClassInfo.find({SkillID: skillLine});
         let racemask = rci.RaceMask.get();
         let classmask = rci.ClassMask.get();
@@ -89,7 +89,10 @@ export class SpellSkillLineAbilites extends Subsystem<Spell> {
             classmask = 0;
         }
 
-        return new SpellSkillLineAbility(this.owner, DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
+        let row = parentAbility == -1 ? DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
+            : DBC.SkillLineAbility.find({ID:parentAbility}).clone(Ids.SkillLineAbility.id())
+
+        return new SpellSkillLineAbility(this.owner, row
             .SkillLine.set(skillLine)
             .ClassMask.set(classmask)
             .RaceMask.set(racemask)

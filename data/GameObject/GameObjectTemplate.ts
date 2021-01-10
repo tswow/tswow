@@ -17,7 +17,11 @@
 import { SQL } from "wotlkdata";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { GOCreature } from "../Base/GOorCreature";
+import { Ids } from "../Base/Ids";
+import { Position } from "../Misc/Position";
+import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
+import { GameObjectGeneric } from "./Types/GameObjectGeneric";
 
 export class GameObjectTemplate extends GOCreature<gameobject_templateRow> {
     protected isCreature(): boolean {
@@ -52,4 +56,13 @@ export class GameObjectTemplate extends GOCreature<gameobject_templateRow> {
     get Icon() { return this.wrap(this.row.IconName); }
     get CastBarCaption() { return this.wrap(this.row.castBarCaption); }
     get Size() { return this.wrap(this.row.size); }
+
+    ToGeneric() { return new GameObjectGeneric(this.row); }
+
+    spawn(mod: string, id: string, position: Position) {
+        return new GameObjectInstance(
+            SQL.gameobject.add(Ids.GameObjectInstance.id(mod,id))
+                .VerifiedBuild.set(17688)
+        ).Position.set(position)
+    }
 }

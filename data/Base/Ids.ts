@@ -176,5 +176,11 @@ export const Ids = {
     /** Starts at 255, highest base value is 254 */
     LoadingScreens: new AutoIdGenerator(255),
     /** Starts at 725, highest base value is 724 */
-    Map: new IdGenerator('Map', 725)
+    Map: new IdGenerator('Map', 725),
+    /** Starts at 250000, highest base value is 244605 */
+    GameObjectTemplate: new IdGenerator('gameobject_template',250000),
+    /** Starts at 300000, highest base value is 165990 */
+    GameObjectInstance: new IdGenerator('gameobject', 300000),
+    /** Starts at  10000, highest base value is 9624 */
+    GameObjectDisplay: new AutoIdGenerator(10000),
 }

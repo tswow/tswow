@@ -1,3 +1,11 @@
+import { DBC, SQL } from "wotlkdata"
+import { Ids } from "../Base/Ids"
+import { BoundingBox } from "../Misc/BoundingBox"
+import { Position } from "../Misc/Position"
+import { GameObjectBase } from "./GameObjectBase"
+import { GameObjectDisplay } from "./GameObjectDisplay"
+import { GameObjectInstance } from "./GameObjectInstance"
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -15,8 +23,40 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 export const GameObjectTemplates = {
+    create(mod: string, id: string, parent: number = -1) {
+        const entry = Ids.GameObjectTemplate.id(mod,id)
+        const row = parent == -1 ? SQL.gameobject_template
+            .find({entry:parent}).clone(entry)
+            : SQL.gameobject_template.add(entry)
+        return new GameObjectBase(row);
+    },
+
+    load(id: number) {
+        return new GameObjectBase(SQL.gameobject_template.find({entry:id}));
+    },
 }
 
 export const GameObjectInstances = {
+    create(mod: string, id: string, pos: Position) {
+        return new GameObjectInstance(
+            SQL.gameobject.add(Ids.GameObjectInstance.id(mod,id))
+                .VerifiedBuild.set(17688)
+        ).Position.set(pos)
+    },
 
+    load(guid: number) {
+        return new GameObjectInstance(SQL.gameobject.find({id: guid}));
+    }
+}
+
+export const GameObjectDisplays = {
+    create(modelPath: string, boundingBox: BoundingBox = new BoundingBox(-1,-1,-1,1,1,1)) {
+        const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplay.id());
+        row.ModelName.set(modelPath);
+        return new GameObjectDisplay(row).GeoBox.set(boundingBox);
+    },
+
+    load(id: number) {
+        return new GameObjectDisplay(DBC.GameObjectDisplayInfo.findById(id));
+    },
 }
