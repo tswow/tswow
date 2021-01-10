@@ -18,8 +18,8 @@ import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
 
 export class GameObjectChest extends GameObjectTemplate {
-    LockID() { return this.wrap(this.row.Data0); }
-    LootID() { return this.wrap(this.row.Data1); }
+    get LockID() { return this.wrap(this.row.Data0); }
+    get LootID() { return this.wrap(this.row.Data1); }
     /**
      * Restock time in seconds
      */
