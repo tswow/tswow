@@ -60,6 +60,7 @@ export class InstallPaths {
     get addons() { return mpath(this.bin, 'addons')}
     get symlinkMaker() { return mpath(this.bin, 'symlinkmaker.js')}
     get binglobaldts() { return mpath(this.bin, 'include','global.d.ts')}
+    get wotlkdata() { return mpath(this.bin, 'scripts','tswow','wotlkdata')}
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }

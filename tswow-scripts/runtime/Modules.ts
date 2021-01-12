@@ -407,6 +407,7 @@ export namespace Modules {
         wfs.write(ipaths.moduleDataPackagePath(mod), lib_package_json(mod));
         if(!wfs.exists(ipaths.moduleDataLink(mod))) {
             wsys.exec(`npm link ${ipaths.moduleDataBuild(mod)}`);
+            wsys.exec(`npm i -S ${ipaths.moduleDataBuild(mod)}`);
         }
     }
 
@@ -414,6 +415,7 @@ export namespace Modules {
         if (!wfs.exists('./node_modules/wotlkdata')) {
             term.log(`Linking wotlkdata...`);
             wsys.exec('npm link bin/scripts/tswow/wotlkdata');
+            wsys.exec(`npm i -S ${ipaths.wotlkdata}`);
         }
 
         for (const mod of wfs.readDir('./modules', true)) {
@@ -467,7 +469,13 @@ export namespace Modules {
     }
 
     export async function uninstallModule(name: string) {
-        destroyTSWatcher(mpath('modules', name, 'data'));
+        await destroyTSWatcher(mpath('modules', name, 'data'));
+
+        term.log(`Uninstalling module ${name}`)
+        wsys.exec(`npm uninstall ${ipaths.moduleDataBuild(name)}`);
+        term.log(`Unlinking ${name} from node_modules`)
+        wsys.exec(`npm unlink ${ipaths.moduleDataBuild(name)}`);
+
         unlinkModule(name);
 
         // Delete all built libraries
@@ -494,7 +502,19 @@ export namespace Modules {
         }
         wfs.copy(`./modules/${name}`, garbagePath(i));
 
-        wfs.remove(`./modules/${name}`);
+        // hackfix but this seems to be long enough for vscode to stop fucking around
+        term.log(`Removing module directory`);
+        for(let i=0;i<3;++i) {
+            wfs.remove(ipaths.moduleRoot(name));
+            await wsys.sleep(500);
+            if(!wfs.exists(ipaths.moduleRoot(name))) {
+                break;
+            }
+        }
+
+        if(wfs.exists(ipaths.moduleRoot(name))) {
+            throw new Error(`Failed to remove module directory for ${name}. Please shut down TSWoW and/or VSCodium and remove it manually`);
+        }
     }
 
     export function installModule(url: string) {
@@ -532,8 +552,8 @@ export namespace Modules {
             installModule(args.join(' '));
         });
 
-        moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', (args) => {
-            uninstallModule(args[0]);
+        moduleC.addCommand('uninstall', 'name force?', 'Uninstalls a module', async (args) => {
+            await uninstallModule(args[0]);
         });
 
         moduleC.addCommand('unlink','module?','Unlinks one or all modules from the clients MPQ', (args)=>{
