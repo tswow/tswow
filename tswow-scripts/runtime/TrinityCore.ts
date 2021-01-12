@@ -75,7 +75,6 @@ export namespace TrinityCore {
         // TODO: linux
         worldserver.startIn(ipaths.coreData,
             wfs.absPath(mpath(buildDir, 'worldserver.exe')));
-        await worldserver.waitFor('(worldserver-daemon) ready...');
 
         authserver.startIn(ipaths.coreData,
             wfs.absPath(mpath(buildDir, 'authserver.exe')));
