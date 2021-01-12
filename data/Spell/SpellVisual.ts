@@ -62,6 +62,11 @@ export class SpellVisualKit extends Subsystem<Spell> {
         this.name = name;
     }
 
+    clear() {
+        this.ptr.set(0);
+        return this;
+    }
+
     get ID() { return this.ptr.get(); }
 
     get BaseEffect() { return this.wrap(this.row.BaseEffect); }
@@ -144,6 +149,11 @@ export class SpellVisualKits extends Subsystem<Spell> {
     get PersistentArea() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
     get MissileTargeting() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); } 
 
+    clearAll() {
+        this.all.forEach(x=>x.clear());
+        return this.owner;
+    }
+
     get all() {
         return [
             this.Cast,
@@ -194,7 +204,7 @@ export class SpellVisual extends Subsystem<Spell> {
             this.row.MissileImpactOffsetZ)
     }
 
-    protected get row() {
+    get row() {
         return DBC.SpellVisual.find({
             ID:this.owner.row.SpellVisualID.getIndex(0)
         });
