@@ -8,6 +8,12 @@ const child_process = require('child_process')
 let rebuild = false;
 if(fs.existsSync('./update.7z')) {
     console.log('Applying update...');
+
+    console.log('Unlinking wotlkdata')
+    try{ child_process.execSync('npm uninstall ./bin/scripts/tswow/wotlkdata')} catch(err) {}
+    try{ child_process.execSync('npm unlink ./bin/scripts/tswow/wotlkdata')} catch(err) {}
+    console.log('Unlinked wotlkdata')
+
     rebuild = true;
     if(fs.existsSync('./tmp')) {
         fs.rmdirSync('./tmp',{recursive:true});
@@ -27,11 +33,6 @@ if(fs.existsSync('./update.7z')) {
     process.chdir('../');
     if(!fs.existsSync('./tmp/bin')) {
         console.error(`Unable to patch: The patch did not contain any "bin" directory`);
-        process.exit(-1);
-    }
-
-    if(!fs.existsSync('./tmp/node_modules')) {
-        console.error(`Unable to patch: The patch did not contain any "node_modules" directory`);
         process.exit(-1);
     }
 
