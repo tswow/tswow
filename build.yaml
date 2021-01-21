@@ -1,4 +1,2 @@
 build_directory : "../tswow-build"
 install_directory : "../tswow-install"
-
-build_tdb : "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.20111/TDB_full_world_335.20111_2020_11_16.7z"
