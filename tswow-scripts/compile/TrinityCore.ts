@@ -20,7 +20,6 @@ import { TRINITYCORE_BUILD_PATH, TRINITYCORE_SOURCE_PATH, install_path, build_pa
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { bpaths, ipaths } from '../util/Paths';
-import { download } from './CompileUtils';
 
 export async function installTrinityCore(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
     term.log('Compiling TrinityCore');
@@ -128,13 +127,9 @@ export async function installTrinityCore(cmake: string, openssl: string, mysql: 
     wfs.copy(headerSrc, headerDest);
 
     // Install TDB
-    if (!build_tdb) {
-        throw new Error(`No tdb file configured in build.yaml`);
+    while(!wfs.exists(bpaths.tdb)) {
+        await wsys.userInput(`TDB not found. \n\t1. Download a TDB from here: https://github.com/TrinityCore/TrinityCore/releases\n\t2. Place the .7z file at "${build_path('tdb.7z')}"\n\t3. Press enter in this prompt`); 
     }
-    if (!wfs.exists(ipaths.tdb) || !wfs.exists(bpaths.tdb)) {
-        if (!wfs.exists(bpaths.tdb)) {
-            await download(build_tdb, bpaths.tdb);
-        }
-        wfs.copy(bpaths.tdb, ipaths.tdb);
-    }
+
+    wfs.copy(bpaths.tdb,ipaths.tdb);
 }
