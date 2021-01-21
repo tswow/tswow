@@ -19,23 +19,18 @@ import { wfs, mpath } from '../util/FileSystem';
 import { download, unzip } from './CompileUtils';
 import { term } from '../util/Terminal';
 import { ipaths } from '../util/Paths';
+import { wsys } from '../util/System';
 
 export async function findCmake(): Promise<string> {
-    const cmake_install = install_path('bin', 'cmake');
     const cmake_build = build_path('cmake');
-    const cmake_zip = build_path('cmake.zip');
 
-    if (!wfs.exists(cmake_zip)) {
-        await download(CMAKE_DOWNLOAD_URL, cmake_zip);
-    }
-
-    if (!wfs.exists(cmake_build)) {
-        await unzip(cmake_zip, cmake_build);
+    while(!wfs.exists(cmake_build)) {
+        await wsys.userInput(`CMake not found. \n\t1. Download the .zip from here: https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t2. Extract is to the "${cmake_build}" directory (${cmake_build}/cmake-3.18.3-win64-x64 should exist)\n\t3. Press enter in this command prompt`);
     }
 
     const subs = wfs.readDir(cmake_build, false);
-    if (subs.length !== 1) {
-        throw new Error(`Corrupt cmake installation, please remove it manually`);
+    while(subs.length!==1) {
+        await wsys.userInput(`CMake is corrupt, please reinstall it: \n\t1. Download the .zip from here: https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t2. Extract is to the "${cmake_build}" directory (${mpath(cmake_build,"cmake-3.18.3-win64-x64")} should exist)\n\t3. Press enter in this prompt`);
     }
 
     const exe = mpath(subs[0], 'bin', 'cmake.exe');

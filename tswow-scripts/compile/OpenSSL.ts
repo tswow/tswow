@@ -15,24 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
-import { build_path, OPENSSL_DOWNLOAD_URL } from './BuildConfig';
-import { download } from './CompileUtils';
+import { build_path } from './BuildConfig';
 import { wsys } from '../util/System';
 
 export async function findOpenSSL() {
-    const exepath = build_path('openssl.exe');
     const dirpath = build_path('openssl');
 
-    if (fs.existsSync(dirpath)) {
-        return dirpath;
-    }
-
-    if (!fs.existsSync(exepath)) {
-        await download(OPENSSL_DOWNLOAD_URL, exepath);
-    }
-
     while (!fs.existsSync(dirpath)) {
-        await wsys.userInput(`OpenSSL not found. Please run the file ${exepath}, and install to the "${dirpath}" directory, then press enter in this command prompt`);
+        await wsys.userInput(`OpenSSL not found. \n\t1. Download the .exe installer from here: https://slproweb.com/products/Win32OpenSSL.html\n\t2. Run and install to the "${dirpath}" directory\n\t3. Set it to copy OpenSSL binaries to "The OpenSSL binaries (/bin) directory" \n\t4. Press enter in this command prompt`);
     }
 
     return dirpath;

@@ -46,7 +46,7 @@ async function compile(type: string, compileArgs: string[]) {
         return types.includes('full') || types.includes('release') || types.includes(check);
     }
 
-    if (isType('clean-install')) {
+    if (type == 'clean-install') {
         await cleanInstall();
     }
 

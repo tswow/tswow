@@ -14,12 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from '../util/FileSystem';
-import { InstallPaths } from '../util/Paths';
+import { mpath, wfs } from '../util/FileSystem';
 import { wsys } from '../util/System';
 import { build_path, install_path } from './BuildConfig';
-import { ipaths } from '../util/Paths';
-import { download, unzip } from './CompileUtils';
 import { makeArchive } from '../util/7zip';
 
 
@@ -35,21 +32,15 @@ export async function make7zip(path: string, outPath: string) {
  * We need 7zip to unzip TrinityCore TDB database dumps
  */
 export async function installSZip() {
-    const szip_url = 'https://www.7-zip.org/a/7za920.zip';
     const szip_install = install_path('bin', '7zip');
-    const szip_zip = build_path('7zip.zip');
 
-    while (true) {
-        if (wfs.exists(szip_install)) {
-            return;
-        }
+    const szip_build = build_path('7zip');
 
-        if (wfs.exists(szip_zip)) {
-            wfs.remove(szip_install);
-            unzip(szip_zip, szip_install);
-            return;
-        }
+    while(!wfs.exists(szip_build)) {
+        await wsys.userInput(`7zip is not installed:\n\t1. Download https://www.7-zip.org/a/7za920.zip\n\t2.Extract it to ${szip_build} (${mpath(szip_build,'7za.exe')} should exist)\n\t3.Press enter in this prompt`);
+    }
 
-        await download(szip_url, szip_zip);
+    if(!wfs.exists(szip_install)) {
+        wfs.copy(szip_build,szip_install);
     }
 }

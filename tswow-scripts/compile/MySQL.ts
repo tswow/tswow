@@ -16,10 +16,8 @@
  */
 import { build_path, install_path } from './BuildConfig';
 import { mpath, wfs } from '../util/FileSystem';
-import { download, unzip } from './CompileUtils';
 import { ipaths } from '../util/Paths';
-
-const MYSQL_DOWNLOAD_URL = 'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip';
+import { wsys } from '../util/System';
 
 const mysqlInstallFiles = [
     'bin/mysqld.exe',
@@ -29,20 +27,15 @@ const mysqlInstallFiles = [
 
 export async function findMysql() {
     const mysql_build = build_path('mysql');
-    const mysql_zip = build_path('mysql.zip');
-
-    if (!wfs.exists(mysql_zip)) {
-        await download(MYSQL_DOWNLOAD_URL, mysql_zip);
-    }
-
-    if (!wfs.exists(mysql_build)) {
-        unzip(mysql_zip, mysql_build);
+    while(!wfs.exists(mysql_build)) {
+        await wsys.userInput(`MySQL not found. \n\t1. Download the .zip from here: https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip\n\t2. Extract is to "${mysql_build}" (${mpath(mysql_build,"mysql-5.7.32-winx64")} should exist)\n\t3. Press enter in this prompt`);
     }
 
     const finBuilds = wfs.readDir(mysql_build);
-    if (finBuilds.length !== 1) {
-        throw new Error(`Corrupt mysql directory in ${mysql_build}, please remove it manually.`);
+    while (finBuilds.length !== 1) {
+        await wsys.userInput(`MySQL is corrupt, please reinstall it: \n\t1. Download the .zip from here: https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip\n\t2. Extract is to the "${mysql_build}" directory (${mysql_build}/mysql-5.7.32-winx64) should exist\n\t3. Press enter in this command prompt`);
     }
+
     mysqlInstallFiles.forEach((x) => {
         const ip = install_path(ipaths.mysqlBin, x);
         if (!wfs.exists(ip)) {
