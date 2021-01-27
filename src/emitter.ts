@@ -423,6 +423,8 @@ export class Emitter {
                 this.writer.writeStringNewLine('.h\"');
             });
 
+            this.writer.writeStringNewLine('#include "'+path.relative(path.dirname(sourceFile.fileName),'scripts/ModID.h').split('\\').join('/')+'"');
+
             sourceFile.statements.filter(s => this.isImportStatement(s)).forEach(s => {
                 this.processInclude(s);
             });
@@ -2264,8 +2266,6 @@ export class Emitter {
 
             // @tswow-begin
             this.writer.writeStringNewLine('#include "TableCreator.h"');
-            // TODO: Should be in all files
-            this.writer.writeStringNewLine('#include "ModID.h"');
 
             this.writer.writeStringNewLine(`extern "C" `);
             this.writer.BeginBlock();
