@@ -1935,6 +1935,12 @@ export class Emitter {
                 break;
             case ts.SyntaxKind.TypeReference:
                 const typeReference = <ts.TypeReferenceNode>type;
+
+                // Check for "GetObject"
+                const start = Math.max(0,typeReference.getStart(typeReference.getSourceFile())-10);
+                const end = Math.max(0,typeReference.getStart(typeReference.getSourceFile())-1);
+                const preText = typeReference.getSourceFile().text.substring(start,end);
+
                 const typeInfo = this.resolver.getOrResolveTypeOf(type);
                 const isTypeAlias = ((typeInfo && this.resolver.checkTypeAlias(typeInfo.aliasSymbol))
                     || this.resolver.isTypeAlias((<any>type).typeName)) && !this.resolver.isThisType(typeInfo);
@@ -1967,6 +1973,7 @@ export class Emitter {
                     || isArray
                     || isEventsStruct
                     || isPrimitive
+                    || preText == 'GetObject'
                     || typeText.startsWith('TS')
 
                 if(!skipPointerIf) {
@@ -2257,6 +2264,8 @@ export class Emitter {
 
             // @tswow-begin
             this.writer.writeStringNewLine('#include "TableCreator.h"');
+            // TODO: Should be in all files
+            this.writer.writeStringNewLine('#include "ModID.h"');
 
             this.writer.writeStringNewLine(`extern "C" `);
             this.writer.BeginBlock();
@@ -2270,6 +2279,7 @@ export class Emitter {
             this.writer.writeStringNewLine(`__declspec(dllexport) void AddTSScripts(TSEventHandlers* handlers)`);
             this.writer.BeginBlock();
             this.writer.writeStringNewLine(`WriteTables();`);
+            this.writer.writeStringNewLine(`SetID(handlers->modid);`)
             this.writer.writeStringNewLine(`Main(handlers);`);
             this.writer.EndBlock();
 

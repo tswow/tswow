@@ -5,6 +5,7 @@ import { spawn } from 'cross-spawn';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
 import { writeTableCreationFile } from './tswow-orm';
+import { writeIdFile } from './tswow-idfile';
 
 export enum ForegroundColorEscapeSequences {
     Grey = '\u001b[90m',
@@ -306,6 +307,7 @@ export class Run {
 
         // @tswow-begin
         writeTableCreationFile(outDir);
+        writeIdFile(outDir);
         // @tswow-end
     }
 
