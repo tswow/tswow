@@ -2301,6 +2301,15 @@ export class Emitter {
             return false;
         }
 
+        // @tswow-begin
+        const start = node.getFullStart();
+        let cur = start;
+        const filetext = node.getSourceFile().text;
+        while(cur >= 0 && filetext[cur] != '.') --cur;
+        const func = filetext.substring(cur,start);
+        let isEvent = func.startsWith('.On') || func.startsWith('.UnitModifySpellDamage') || func.startsWith('.AddTimer') || func.startsWith('.Add');
+        // @tswow-end
+
         // skip function declaration as union
         let noBody = false;
         if (!node.body
@@ -2437,7 +2446,9 @@ export class Emitter {
                 }
 
                 // lambda or noname function
-                const byReference = (<any>node).__lambda_by_reference ? '&' : '';
+                // @tswow-begin
+                const byReference = isEvent  ? '' : '&';
+                // @tswow-begin
                 this.writer.writeString(`[${byReference}]`);
             }
         }
@@ -2495,8 +2506,10 @@ export class Emitter {
             next = true;
         });
 
-        if (isArrowFunction || isFunctionExpression) {
-            this.writer.writeStringNewLine(')');
+        // @tswow-begin
+        if (!isEvent && (isArrowFunction || isFunctionExpression)) {
+        // @tswow-end
+            this.writer.writeStringNewLine(') mutable');
         } else {
             this.writer.writeStringNewLine(')');
         }
