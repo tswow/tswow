@@ -43,8 +43,8 @@ function ChoiceItemQuantities(owner: Quest) {
 }
 
 export class ItemChoiceReward extends ArrayEntry<Quest> {
-    get ItemId() { return ChoiceItemIds(this.owner)[this.index]}
-    get Quantity() { return ChoiceItemQuantities(this.owner)[this.index]}
+    get ItemId() { return this.wrap(ChoiceItemIds(this.owner)[this.index])}
+    get Quantity() { return this.wrap(ChoiceItemQuantities(this.owner)[this.index])}
 
     clear(): Quest {
         this.ItemId.set(0);
@@ -69,6 +69,55 @@ export class ItemChoiceRewards extends SystemArray<ItemChoiceReward,Quest> {
         const free = this.getFree();
         free.ItemId.set(item);
         free.Quantity.set(quantity);
+    }
+}
+
+function ItemIds(owner: Quest) {
+    return [
+        owner.row.RewardItem1,
+        owner.row.RewardItem2,
+        owner.row.RewardItem3,
+        owner.row.RewardItem4,
+    ]
+}
+
+function ItemQuantities(owner: Quest) {
+    return [
+        owner.row.RewardAmount1,
+        owner.row.RewardAmount2,
+        owner.row.RewardAmount3,
+        owner.row.RewardAmount4,
+    ]
+}
+
+export class ItemReward extends ArrayEntry<Quest> {
+    get Item() { return this.wrap(ItemIds(this.owner)[this.index])}
+    get Quantity() { return this.wrap(ItemQuantities(this.owner)[this.index])}
+
+    clear(): Quest {
+        this.Item.set(0);
+        this.Quantity.set(0);
+        return this.owner;
+    }
+
+    isClear(): boolean {
+        return this.Item.get()==0;
+    }
+}
+
+export class ItemRewards extends SystemArray<ItemReward,Quest> {
+    get length(): number {
+        return 4;
+    }
+
+    get(index: number): ItemReward {
+        return new ItemReward(this.owner,index);
+    }
+
+    add(item: number, quantity: number) {
+        return this.getFree()
+            .Item.set(item)
+            .Quantity.set(quantity);
     }
 }
 
@@ -125,24 +174,26 @@ export class ReputationRewards extends SystemArray<ReputationReward,Quest> {
 
 
 export class QuestReward extends Subsystem<Quest> {
+    /** Reward player with items (no choice) */
+    get Item() { return new ItemRewards(this.owner); }
     /** Let player choose one of multiple items (Maximum 6) */
-    get choiceItem() { return new ItemChoiceRewards(this.owner); }
+    get ChoiceItem() { return new ItemChoiceRewards(this.owner); }
     /** Reward player with reputation to a faction */
-    get reputation() { return new ReputationRewards(this.owner); }
+    get Reputation() { return new ReputationRewards(this.owner); }
     /** Money earned by completing this quest (becomes requirement if negative) */
-    get money() { return this.wrap(this.owner.row.RewardMoney) }
+    get Money() { return this.wrap(this.owner.row.RewardMoney) }
     /** Bonus money at level 80 */
-    get moneyBonus() { return this.wrap(this.owner.row.RewardBonusMoney) }
+    get MoneyBonus() { return this.wrap(this.owner.row.RewardBonusMoney) }
     /** Display a spell when the player completes the quest */
-    get displaySpell() { return this.wrap(this.owner.row.RewardDisplaySpell) }
+    get DisplaySpell() { return this.wrap(this.owner.row.RewardDisplaySpell) }
     /** Reward player with honor points */
-    get honor() { return this.wrap(this.owner.row.RewardHonor)}
+    get Honor() { return this.wrap(this.owner.row.RewardHonor)}
     /** Reward player with talent points, as in the Death Knight starting area. */
-    get talents() { return this.wrap(this.owner.row.RewardTalents)}
+    get Talents() { return this.wrap(this.owner.row.RewardTalents)}
     /** Reward player with a Title, such as <Grunt> */
-    get title() { return this.wrap(this.owner.row.RewardTitle )}
+    get Title() { return this.wrap(this.owner.row.RewardTitle )}
     /** Increased XP reward for difficult quests, a value between 0-8 */
-    get difficulty() { return this.wrap(this.owner.row.RewardXPDifficulty)}
+    get Difficulty() { return this.wrap(this.owner.row.RewardXPDifficulty)}
     /** Reward player with arena points */
-    get arenaPoints() { return this.wrap(this.owner.row.RewardArenaPoints)}
+    get ArenaPoints() { return this.wrap(this.owner.row.RewardArenaPoints)}
 }
