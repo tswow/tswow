@@ -48,6 +48,12 @@ export class SpellRadius extends Subsystem<SpellEffect> {
         }
     }
 
+    copyFrom(radius: SpellRadius) {
+        this.Radius.set(radius.Radius.get());
+        this.RadiusPerLevel.set(radius.RadiusPerLevel.get());
+        this.RadiusMax.set(radius.RadiusMax.get());
+    }
+
     makeUnique() {
         if(this.icell.get()===0) {
             return;

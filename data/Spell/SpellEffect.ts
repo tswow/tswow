@@ -95,7 +95,6 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get MiscValueB() { return this.w(this.row.EffectMiscValueB); }
     get TriggerSpell() { return this.w(this.row.EffectTriggerSpell); }
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
-
     get ClassMask() { return new EffectClassSet(this); }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
@@ -107,9 +106,11 @@ export class SpellEffect extends ArrayEntry<Spell> {
     }
 
     copyFrom(source: SpellEffect) {
+        this.Radius.copyFrom(source.Radius);
+        this.ItemType.set(source.ItemType.get());
         this.AuraType.set(source.AuraType.get());
         this.EffectType.set(source.EffectType.get());
-        this.Mechanic.set(source.EffectType.get());
+        this.Mechanic.set(source.Mechanic.get());
         this.BasePoints.set(source.BasePoints.get());
         this.DieSides.set(source.DieSides.get());
         this.PointsPerLevel.set(source.PointsPerLevel.get());
@@ -119,7 +120,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
         this.AuraPeriod.set(source.AuraPeriod.get());
         this.MultipleValue.set(source.MultipleValue.get());
         this.ChainTarget.set(source.ChainTarget.get());
-        this.MiscValueA.set(source.MiscValueB.get());
+        this.MiscValueA.set(source.MiscValueA.get());
+        this.MiscValueB.set(source.MiscValueB.get());
         this.TriggerSpell.set(source.TriggerSpell.get());
         this.ChainAmplitude.set(source.ChainAmplitude.get());
         this.ClassMask.copyFrom(source.ClassMask);
