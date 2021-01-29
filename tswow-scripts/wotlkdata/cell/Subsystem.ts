@@ -32,7 +32,7 @@ export class Subsystem<T> {
     get end() { return this.owner; }
 
     protected transientFields() {
-        return ['end','owner'];
+        return ['end','owner','row'];
     }
 
     protected get isSubsystem() { return true; }
@@ -57,12 +57,12 @@ export class Subsystem<T> {
         return new CellWrapperExists<G, T>(this.owner, cell);
     }
 
-    protected ownerWrapLoc(loc: LocSystem<any>) {
-        return new WrappedLoc(this.owner, loc);
+    protected ownerWrapLoc(loc: LocSystem<any>) : WrappedLoc<T> {
+        return new WrappedLoc<T>(this.owner, loc);
     }
 
-    protected wrapLoc(loc: LocSystem<any>) {
-        return new WrappedLoc(this, loc);
+    protected wrapLoc(loc: LocSystem<any>) : WrappedLoc<this> {
+        return new WrappedLoc<this>(this, loc);
     }
 
     protected wrapIndex<W extends CPrim>(cell: CellArray<W, any>, index: number) {
