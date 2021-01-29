@@ -30,6 +30,10 @@ export class SpellRadius extends Subsystem<SpellEffect> {
         return this.wrapIndex(this.owner.row.EffectRadiusIndex, this.owner.index);
     }
 
+    transientFields() {
+        return super.transientFields().concat(['icell']);
+    }
+
     set(radius: number, radiusPerLevel: number, radiusMax: number) {
         const row = this.row;
         row.Radius.set(radius);

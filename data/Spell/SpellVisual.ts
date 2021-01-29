@@ -51,6 +51,10 @@ function addKitRow(id: number) {
 export class SpellVisualKit extends Subsystem<Spell> {
     protected ptr: DBCIntCell<SpellVisualRow>
     readonly name: string;
+
+    transientFields() {
+        return super.transientFields().concat(['ptr']);
+    }
     
     static ptr(kit: SpellVisualKit) {
         return kit.ptr;
