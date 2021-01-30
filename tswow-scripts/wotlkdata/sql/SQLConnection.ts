@@ -38,18 +38,15 @@ export class Connection {
 
     static connect(connection: Connection) {
         this.end(connection);
-        connection.async = mysql.createConnection(connection.settings);
-        connection.sync = mysql.createConnection(connection.settings);
+        connection.async = mysql.createPool(connection.settings);
+        connection.sync = mysql.createPool(connection.settings);
         connection.syncQuery = deasync(connection.sync.query
             .bind(connection.sync));
-
-        connection.async.connect();
-        connection.sync.connect();
     }
 
     protected settings: mysql.ConnectionConfig;
-    protected async: mysql.Connection | undefined;
-    protected sync: mysql.Connection | undefined;
+    protected async: mysql.Pool | undefined;
+    protected sync: mysql.Pool | undefined;
     protected syncQuery: any;
 
     constructor(obj: mysql.ConnectionConfig) {
