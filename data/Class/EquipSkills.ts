@@ -86,6 +86,7 @@ export class EquipSkills extends Subsystem<Class> {
     get Staves() { return this.getRow(227); }
     get Thrown() { return this.getRow(2567); }
     get Wand() { return this.getRow(5009); }
+    get Shield() { return this.getRow(9116); }
 
     get Cloth() { return this.getRow(9078); }
     get Leather() { return this.getRow(9077); }
