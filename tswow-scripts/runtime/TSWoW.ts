@@ -29,6 +29,7 @@ import { Assets } from './Assets';
 import { InstallPaths, ipaths } from '../util/Paths';
 import { wfs } from '../util/FileSystem';
 import { Clean } from './Clean';
+import { Addon } from './Addon';
 
 InstallPaths.setInstallBase('./');
 
@@ -54,6 +55,8 @@ export async function main() {
         await MapData.initialize();
 
         await mysql.initialize();
+
+        await Addon.initialize();
 
         if(!process.argv.includes('minimal')) {
             // Initialize Modules

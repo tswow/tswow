@@ -41,7 +41,8 @@ export async function buildScripts(buildLine: string, installLine: string) {
             declaration: true,
             sourceMap: true,
             skipLibCheck: true,
-            experimentalDecorators: true
+            experimentalDecorators: true,
+            allowJs: true,
         },
         include: [scripts_root_dir]
     };

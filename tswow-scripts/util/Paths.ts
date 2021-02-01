@@ -123,6 +123,34 @@ export class InstallPaths {
     moduleSymlink(mod: string) {
         return mpath(this.modules, mod, 'symlinked');
     }
+
+    moduleAddons(mod: string) {
+        return mpath(this.modules,mod,'addons');
+    }
+
+    addonToc(mod: string) {
+        return mpath(this.moduleAddons(mod),`${mod}.toc`);
+    }
+
+    addonBuild(mod: string) {
+        return mpath(this.moduleAddons(mod),'build')
+    }
+
+    addonBuildToc(mod: string) {
+        return mpath(this.addonBuild(mod),`${mod}.toc`);
+    }
+
+    addonRequireStub(mod: string) {
+        return mpath(this.addonBuild(mod),'RequireStub.lua');
+    }
+
+    addonIndex(mod: string) {
+        return mpath(this.moduleAddons(mod),`${mod}-addon.ts`);
+    }
+
+    addonTsConfig(mod: string) {
+        return mpath(this.moduleAddons(mod),`tsconfig.json`);
+    }
 }
 
 export const ipaths = new InstallPaths();
