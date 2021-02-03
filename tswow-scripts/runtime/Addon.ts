@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { EventsTS } from "../addons/events";
+import { LualibBundle } from "../addons/lualib_bundle";
 import { RequireStub } from "../addons/RequireStub";
 import { cfg } from "../util/Config";
 import { mpath, wfs } from "../util/FileSystem";
@@ -50,7 +52,8 @@ const defaultTsConfig = {
       "luaTarget": "5.1",
       "luaPlugins": [ 
         {"name": "../../../bin/scripts/tswow/addons/RequirePreload.js",'import':'RequirePreload'},
-      ]
+      ],
+      "noImplicitSelf": true,
     }
   }
 
@@ -64,33 +67,45 @@ export namespace Addon {
             wfs.write(ipaths.addonIndex(mod),'console.log("Hello world!");');
         }
 
-        if(!wfs.exists(ipaths.addonToc(mod))) {
-            wfs.write(ipaths.addonToc(mod),defaultToc(mod));
-        }
+        wfs.write(ipaths.addonEventsDest(mod),EventsTS);
+        wfs.write(ipaths.addonToc(mod),defaultToc(mod));
+        wfs.write(ipaths.addonRequireStub(mod),RequireStub);
+        wfs.copy(ipaths.addonSourceGlobal,ipaths.addonDestGlobal(mod));
 
-        if(!wfs.exists(ipaths.addonRequireStub(mod))) {
-            wfs.write(ipaths.addonRequireStub(mod),RequireStub);
-        }
-
-        wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig));
+        wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig,null,4));
     }
 
     export function build(mod: string) {
+        if(!wfs.exists(ipaths.moduleAddons(mod))) {
+            throw new Error(`${mod} does not have an addon directory`);
+        }
+
+        wfs.remove(ipaths.addonBuild(mod));
+
         initializeModule(mod);
         wsys.execIn(ipaths.moduleAddons(mod),`tstl.cmd`);
 
-        let generatedSources = ['RequireStub.lua'];
+        let generatedSources : string[] = ['lualib_bundle.lua','RequireStub.lua'];
+        let xmlSources : string[] = []
         wfs.iterate(ipaths.moduleAddons(mod),(name)=>{
             name = wfs.relative(ipaths.moduleAddons(mod),name);
-            if(name.endsWith('.ts') && !name.endsWith('-addon.ts')) {
+            if((name.endsWith('.ts') || name.endsWith('.tsx')) && !name.endsWith('-addon.ts')) {
                 generatedSources.push(name.substring(0,name.length-2)+'lua');
             }
+
+            if(name.endsWith('.xml')) {
+                xmlSources.push(name);
+                wfs.copy(mpath(ipaths.moduleAddons(mod),name),mpath(ipaths.addonBuild(mod),name));
+            }
         });
+
+        wfs.write(ipaths.lualibDest(mod),LualibBundle);
 
         wfs.copy(ipaths.addonToc(mod),ipaths.addonBuildToc(mod));
         let text = wfs.read(ipaths.addonBuildToc(mod));
         text+='\n'+generatedSources.join('\n');
-        text+=`\n${mod}-addon.lua`
+        text+=`\n${mod}-addon.lua`;
+        text+=`\n${xmlSources.join('\n')}`
         wfs.write(ipaths.addonBuildToc(mod),text);
 
         wfs.copy(ipaths.addonBuild(mod),

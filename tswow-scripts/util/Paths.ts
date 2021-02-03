@@ -61,6 +61,7 @@ export class InstallPaths {
     get symlinkMaker() { return mpath(this.bin, 'symlinkmaker.js')}
     get binglobaldts() { return mpath(this.bin, 'include','global.d.ts')}
     get wotlkdata() { return mpath(this.bin, 'scripts','tswow','wotlkdata')}
+    get addonSourceGlobal() { return mpath(this.bin,'scripts','tswow','addons','_global.d.ts')}
 
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
@@ -150,6 +151,18 @@ export class InstallPaths {
 
     addonTsConfig(mod: string) {
         return mpath(this.moduleAddons(mod),`tsconfig.json`);
+    }
+
+    addonDestGlobal(mod: string) {
+        return mpath(this.moduleAddons(mod),'global.d.ts');
+    }
+
+    addonEventsDest(mod: string) {
+        return mpath(this.moduleAddons(mod),'events.ts');
+    }
+
+    lualibDest(mod: string) {
+        return mpath(this.addonBuild(mod),'lualib_bundle.lua');
     }
 }
 
