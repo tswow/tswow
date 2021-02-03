@@ -38,7 +38,7 @@ const defaultTsConfig = {
       "target": "esnext",
       "lib": ["esnext", "dom"],
       "moduleResolution": "node",
-      "rootDir": "./",
+      "rootDir": "../",
       "outDir": "./build",
       "typeRoots": [
         "node_modules/@wartoshika/wow-declarations",
@@ -48,6 +48,8 @@ const defaultTsConfig = {
       "skipLibCheck": true,
       "types": []
     },
+    "include":['./','../shared'],
+    "exclude":['../scripts','../assets','../data'],
     "tstl": {
       "luaTarget": "5.1",
       "luaPlugins": [ 
@@ -85,26 +87,39 @@ export namespace Addon {
         initializeModule(mod);
         wsys.execIn(ipaths.moduleAddons(mod),`tstl.cmd`);
 
+        let generatedShared: string[] = [];
+        wfs.iterate(ipaths.moduleShared(mod),(name)=>{
+            name = wfs.relative(ipaths.moduleShared(mod),name);
+            if((name.endsWith('.ts'))) {
+                generatedShared.push(`shared\\`+name.substring(0,name.length-2)+'lua');
+            }
+        });
+
         let generatedSources : string[] = ['lualib_bundle.lua','RequireStub.lua'];
         let xmlSources : string[] = []
         wfs.iterate(ipaths.moduleAddons(mod),(name)=>{
             name = wfs.relative(ipaths.moduleAddons(mod),name);
             if((name.endsWith('.ts') || name.endsWith('.tsx')) && !name.endsWith('-addon.ts')) {
-                generatedSources.push(name.substring(0,name.length-2)+'lua');
+                generatedSources.push(`addons\\`+name.substring(0,name.length-2)+'lua');
             }
 
             if(name.endsWith('.xml')) {
-                xmlSources.push(name);
-                wfs.copy(mpath(ipaths.moduleAddons(mod),name),mpath(ipaths.addonBuild(mod),name));
+                xmlSources.push("addons\\"+name);
+                wfs.copy(mpath(ipaths.moduleAddons(mod),name),mpath(ipaths.addonBuild(mod),'addons',name));
             }
         });
+
+        generatedSources = generatedSources.map(x=>x.split('/').join('\\'));
+        xmlSources = xmlSources.map(x=>x.split('/').join('\\'));
+        generatedShared = generatedShared.map(x=>x.split('/').join('\\'));
 
         wfs.write(ipaths.lualibDest(mod),LualibBundle);
 
         wfs.copy(ipaths.addonToc(mod),ipaths.addonBuildToc(mod));
         let text = wfs.read(ipaths.addonBuildToc(mod));
         text+='\n'+generatedSources.join('\n');
-        text+=`\n${mod}-addon.lua`;
+        text+='\n'+generatedShared.join('\n');
+        text+=`\naddons\\${mod}-addon.lua`;
         text+=`\n${xmlSources.join('\n')}`
         wfs.write(ipaths.addonBuildToc(mod),text);
 

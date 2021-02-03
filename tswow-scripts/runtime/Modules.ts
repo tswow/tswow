@@ -67,6 +67,10 @@ const data_tsconfig =
     }
 }`;
 
+/**
+ * This is just used for VSCodium, not compiling.
+ * See "TypeScript2Cxx/src/wowts.ts" for the tsconfig actually used for compiling.
+ */
 const scripts_tsconfig_json =
 `{
     "compilerOptions": {
@@ -80,8 +84,8 @@ const scripts_tsconfig_json =
       "experimentalDecorators": true,
       "forceConsistentCasingInFileNames": true
     },
-    "include":["./","../Ids.ts"],
-    "exclude":["../data"]
+    "include":["./","../Ids.ts","../shared"],
+    "exclude":["../data","../addons"]
 }`;
 
 const ids_ts = (modname: string) =>

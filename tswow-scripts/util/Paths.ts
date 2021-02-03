@@ -125,6 +125,10 @@ export class InstallPaths {
         return mpath(this.modules, mod, 'symlinked');
     }
 
+    moduleShared(mod: string) {
+        return mpath(this.modules, mod, 'shared');
+    }
+
     moduleAddons(mod: string) {
         return mpath(this.modules,mod,'addons');
     }

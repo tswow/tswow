@@ -50,6 +50,12 @@ export const RequirePreload: Plugin = {
         );
 
         let moduleName = context.sourceFile.fileName.split("addons")[1];
+        if(moduleName===undefined) {
+          moduleName = 'shared'+context.sourceFile.fileName.split("shared")[1];
+        } else {
+          moduleName = 'addons'+moduleName;
+        }
+
         if (moduleName.startsWith("/")) moduleName = moduleName.substring(1);
         if (moduleName.endsWith(".tsx")) moduleName = moduleName.substring(0, moduleName.length - 4);
         if (moduleName.endsWith(".ts")) moduleName = moduleName.substring(0, moduleName.length - 3);
