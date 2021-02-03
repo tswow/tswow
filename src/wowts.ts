@@ -17,7 +17,7 @@ const CONFIG = {
     'forceConsistentCasingInFileNames': true
 },
 'include': ['./'],
-'exclude': ['./data', './data_lib']
+'exclude': ['./data', './data_lib','./addons']
 };
 
 const startTime = Date.now();
