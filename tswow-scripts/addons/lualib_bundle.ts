@@ -496,28 +496,19 @@ function __TS__ClassExtends(target, base)
     end
 end
 
+-- @tswow-begin: disable decorators
 function __TS__Decorate(decorators, target, key, desc)
-    local result = target
-    do
-        local i = #decorators
-        while i >= 0 do
-            local decorator = decorators[i + 1]
-            if decorator then
-                local oldResult = result
-                if key == nil then
-                    result = decorator(_G, result)
-                elseif desc ~= nil then
-                    result = decorator(_G, target, key, result)
-                else
-                    result = decorator(_G, target, key)
-                end
-                result = result or oldResult
-            end
-            i = i - 1
-        end
-    end
-    return result
+    return target
 end
+
+function Message(v) end
+function MsgPrimitive(v) end
+function MsgPrimitiveArray(v) end
+function MsgString(v) end
+function MsgStringArray(v) end
+function MsgClass(v) end
+function MsgClassArray(v) end
+-- @tswow-end
 
 function ____descriptorIndex(self, key)
     local value = rawget(self, key)

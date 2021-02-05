@@ -45,6 +45,7 @@ const defaultTsConfig = {
         "node_modules/lua-types/5.1",
         "node_modules/@types"
       ],
+      "experimentalDecorators":true,
       "skipLibCheck": true,
       "types": []
     },
@@ -54,6 +55,7 @@ const defaultTsConfig = {
       "luaTarget": "5.1",
       "luaPlugins": [ 
         {"name": "../../../bin/scripts/tswow/addons/RequirePreload.js",'import':'RequirePreload'},
+        {"name": "../../../bin/scripts/tswow/addons/MessagePlugin.js",'import':'MessagePlugin'},
       ],
       "noImplicitSelf": true,
     }
@@ -78,6 +80,22 @@ export namespace Addon {
     }
 
     export function build(mod: string) {
+        const msgPath = mpath(ipaths.moduleAddons(mod),'classes.json');
+
+        wfs.remove(msgPath);
+
+        // need to bypass the normal checks for decorators, 
+        // so we inject a patch instead of cloning and building the entire repository
+        let decoText = wfs.read(ipaths.tstlDecorators);
+        let diagnosticsIndex = decoText.indexOf('context.diagnostics.push(');
+        if(diagnosticsIndex==-1) {
+            throw new Error(`Unable to find the "context.diagnostics" part`);
+        }
+        if(decoText[diagnosticsIndex-1]!='/') {
+            decoText = decoText.substring(0,diagnosticsIndex)+'//'+decoText.substring(diagnosticsIndex,decoText.length);
+            wfs.write(ipaths.tstlDecorators,decoText);
+        }
+
         if(!wfs.exists(ipaths.moduleAddons(mod))) {
             throw new Error(`${mod} does not have an addon directory`);
         }
@@ -85,7 +103,8 @@ export namespace Addon {
         wfs.remove(ipaths.addonBuild(mod));
 
         initializeModule(mod);
-        wsys.execIn(ipaths.moduleAddons(mod),`tstl.cmd`);
+
+        wsys.execIn(ipaths.moduleAddons(mod),`node ../../../node_modules/typescript-to-lua/dist/tstl.js`);
 
         let generatedShared: string[] = [];
         wfs.iterate(ipaths.moduleShared(mod),(name)=>{
@@ -125,6 +144,32 @@ export namespace Addon {
 
         wfs.copy(ipaths.addonBuild(mod),
             mpath(cfg.client.directory(),'Interface','Addons',mod));
+
+
+        if(wfs.exists(msgPath)) {
+            const messages = JSON.parse(wfs.read(msgPath));
+            for(let path in messages) {
+                let message= messages[path];
+                
+                let luapath = wfs.relative(ipaths.moduleRoot(mod),path);
+                luapath = luapath.substring(0,luapath.length-2)+'lua'
+                luapath = mpath(ipaths.addonBuild(mod),luapath);
+                let luatext = wfs.read(luapath).split('\n');
+
+                for(let cname in message) {
+                    let cls = message[cname];
+                    let line = luatext.findIndex(
+                        x=>x.includes(`function ${cname}.prototype.____constructor`))
+                    luatext[line] = cls+'\n'+luatext[line];
+                    if(line === -1) {
+                        throw new Error(`Cannot find constructor for message class ${cname}`);
+                    }
+                }
+                wfs.write(luapath,luatext.join('\n'));
+            }
+        }
+
+        wfs.remove(msgPath);
     }
 
     export function initialize() {

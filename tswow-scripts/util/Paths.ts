@@ -63,6 +63,9 @@ export class InstallPaths {
     get wotlkdata() { return mpath(this.bin, 'scripts','tswow','wotlkdata')}
     get addonSourceGlobal() { return mpath(this.bin,'scripts','tswow','addons','_global.d.ts')}
 
+    /** node_modules paths */
+    get tstlDecorators() { return mpath(`./node_modules/typescript-to-lua/dist/transformation/visitors/class/decorators.js`)}
+
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
     get mysqlBin() {return mpath(this.bin, 'mysql'); }
