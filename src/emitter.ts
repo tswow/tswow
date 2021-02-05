@@ -6,6 +6,7 @@ import { Preprocessor } from './preprocessor';
 import { CodeWriter } from './codewriter';
 import { handleClass, setBaseClass } from './tswow-orm';
 import { generateStringify } from './tswow-stringify';
+import { handlePacketClass } from './tswow-packet';
 
 export class Emitter {
     public writer: CodeWriter;
@@ -1370,6 +1371,7 @@ export class Emitter {
         // @tswow-begin
         if(node.kind === ts.SyntaxKind.ClassDeclaration) {
             handleClass(node,this.writer);
+            handlePacketClass(node, this.writer);
             generateStringify(node, this.writer);
         }
         // @tswow-end
