@@ -65,4 +65,11 @@ export class CreatureModels extends SystemArray<CreatureModel,CreatureTemplate> 
         }
         return this.owner;
     }
+
+    copyFrom(models: CreatureModels) {
+        this.owner.row.modelid1.set(models.owner.row.modelid1.get());
+        this.owner.row.modelid2.set(models.owner.row.modelid2.get());
+        this.owner.row.modelid3.set(models.owner.row.modelid3.get());
+        this.owner.row.modelid4.set(models.owner.row.modelid4.get());
+    }
 }
