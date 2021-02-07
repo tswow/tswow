@@ -34,19 +34,19 @@ export class UnitFlags extends MaskBase<CreatureTemplate> {
 
     mark(no: number): CreatureTemplate {
         const cell = this.cell(no);
-        cell.set(cell.get()|1<<this.bitno(no));
+        cell.set((cell.get()|1<<this.bitno(no))>>>0);
         return this.owner;
     }
 
     clear(no: number): CreatureTemplate {
         const cell = this.cell(no);
-        cell.set(cell.get()&~1<<this.bitno(no));
+        cell.set((cell.get()&~1<<this.bitno(no))>>>0);
         return this.owner;
     }
 
     check(no: number): boolean {
         const cell = this.cell(no);
-        return (cell.get()&1<<this.bitno(no)) !== 0;
+        return ((cell.get()&1<<this.bitno(no))>>>0) !== 0;
     }
 
     clearAll(): CreatureTemplate {
