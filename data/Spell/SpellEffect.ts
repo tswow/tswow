@@ -95,6 +95,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get MiscValueB() { return this.w(this.row.EffectMiscValueB); }
     get TriggerSpell() { return this.w(this.row.EffectTriggerSpell); }
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
+    get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
     get ClassMask() { return new EffectClassSet(this); }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
