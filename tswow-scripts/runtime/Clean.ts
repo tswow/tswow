@@ -71,7 +71,9 @@ export namespace Clean {
     }
 
     export async function cleanIds() {
-        wfs.makeBackup(ipaths.configIds);
+        if(wfs.exists(ipaths.configIds)) {
+            wfs.makeBackup(ipaths.configIds);
+        }
         wfs.remove(ipaths.coreIds);
         wfs.remove(ipaths.configIds);
     }
