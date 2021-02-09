@@ -539,21 +539,11 @@ export class SpellRow extends DBCRow<SpellCreator,SpellQuery> {
      * No comment (yet!)
      */
     get PowerDisplayID() { return new DBCIntCell(this,this.buffer,this.offset+912)}
-    
+
     /**
      * No comment (yet!)
      */
-    get Field227() { return new DBCFloatCell(this,this.buffer,this.offset+916)}
-    
-    /**
-     * No comment (yet!)
-     */
-    get Field228() { return new DBCFloatCell(this,this.buffer,this.offset+920)}
-    
-    /**
-     * No comment (yet!)
-     */
-    get Field229() { return new DBCFloatCell(this,this.buffer,this.offset+924)}
+    get EffectBonusMultiplier() { return new DBCFloatArrayCell(this, 3, this.buffer, this.offset + 916); }
     
     /**
      * No comment (yet!)

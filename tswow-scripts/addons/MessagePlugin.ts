@@ -16,7 +16,7 @@
  */
 import ts from "typescript";
 import { Plugin } from "typescript-to-lua";
-import { GetId } from "../wotlkdata/ids/Ids";
+import { GetId, IdPrivate } from "../wotlkdata/ids/Ids";
 import { registerMessage } from "./tswow-data-def";
 import * as path from 'path';
 import * as fs from 'fs'
@@ -55,6 +55,11 @@ function primReadName(type: string) {
     return `Read${primName(type)}`;
 }
 
+class IdPublic extends IdPrivate {
+    static writeFile(filename: string) { return super.writeFile(filename); }
+    static readFile(filename: string) { return super.readFile(filename); }
+}
+
 function handle(node: ts.ClassDeclaration) {
     const messages = registerMessage(node);
     if(!messages) {
@@ -64,6 +69,17 @@ function handle(node: ts.ClassDeclaration) {
     let str = `\n`;
     const w = (s: string) => str+=s;
     const wnl = (s: string) => str+=s+'\n';
+
+    let modname = path.basename(path.resolve(`../`))
+
+    IdPublic.readFile('../../../config/ids.txt');
+    // @ts-ignore
+    const opcode = GetId('Messages',modname,messages.className,1);
+    IdPublic.writeFile('../../../config/ids.txt');
+
+    wnl(`function ${messages.className}.GetID() return ${opcode} end`)
+    wnl(`function ${messages.className}.prototype.GetID() return ${opcode} end`)
+    wnl(`function ${messages.className}.prototype.GetSize() return ${messages.size} end`)
 
     wnl(`function ${messages.className}.prototype.Read(self,r,o)`);
     let ctr = 0;
@@ -83,16 +99,16 @@ function handle(node: ts.ClassDeclaration) {
                 break;
             case 'MsgClassArray':
                 w(`    r:ReadClassArray(`)
-                w(`${field.capacity},this.${field.name},${field.indSize},${field.capacity},`)
-                wnl(`function() return __TS__New(${field.innerType} end );`)
+                w(`o+${ctr},self.${field.name},${field.indSize},${field.capacity},`)
+                wnl(`function() return __TS__New(${field.innerType}) end);`)
                 break;
             case 'MsgString':
-                w(`    this.${field.name} = `)
+                w(`    self.${field.name} = `)
                 wnl(`r:ReadString(o+${ctr},${field.indSize});`)
                 break;
             case 'MsgStringArray':
                 w(`    r:ReadStringArray(`)
-                wnl(`o+${ctr},this.${field.name},${field.indSize},${field.capacity});`)
+                wnl(`o+${ctr},self.${field.name},${field.indSize-1},${field.capacity});`)
                 break;
         }
         ctr+=field.size;
@@ -110,7 +126,7 @@ function handle(node: ts.ClassDeclaration) {
             case 'MsgPrimitiveArray':
                 w(`    r:WriteArray(`) 
                 w(`${ctr}+o,self.${field.name},${field.indSize},${field.capacity},`)
-                wnl(`function return r:${primWriteName(field.innerType)}() end);`)
+                wnl(`function(oo,v) return r:${primWriteName(field.innerType)}(oo,v) end);`)
                 break;
             case 'MsgString':
                 w(`    r:WriteString(`)
@@ -118,7 +134,7 @@ function handle(node: ts.ClassDeclaration) {
                 break;
             case 'MsgStringArray':
                 w(`    r:WriteStringArray(`)
-                wnl(`${ctr}+o,self.${field.name},${field.indSize},${field.capacity});`)
+                wnl(`${ctr}+o,self.${field.name},${field.indSize-1},${field.capacity});`)
                 break;
             case 'MsgClass':
                 w(`    r:WriteClass(`)
@@ -132,6 +148,8 @@ function handle(node: ts.ClassDeclaration) {
         ctr+=field.size;
     }
     wnl('end\n')
+
+    wnl(`require('addons.events').addConstructor(${messages.className});`);
 
     let fn = node.getSourceFile().fileName
     let lst = getList();

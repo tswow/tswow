@@ -125,17 +125,17 @@ export class MaskCell<T> extends MaskBase<T> {
     }
 
     mark(no: number): T {
-        this.cell.set(this.cell.get() | 1 << no);
+        this.cell.set((this.cell.get() | 1 << no)>>>0);
         return this.owner;
     }
 
     clear(no: number): T {
-        this.cell.set(this.cell.get() & ~(1 << no));
+        this.cell.set((this.cell.get() & ~(1 << no))>>>0);
         return this.owner;
     }
 
     check(no: number): boolean {
-        return (this.cell.get() & (1 << no)) !== 0;
+        return ((this.cell.get()) & ((1 << no))>>>0) !== 0;
     }
 
     get(): number {

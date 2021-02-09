@@ -19,29 +19,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-declare function encodeDouble(double: number): string;
-declare function decodeDouble(str: string): number;
-
-function bitoper(a: number, b: number, oper: number) {
-    let r = 0;
-    let m = 2^31;
-    let s = m;
-    do {
-        s = a+b+m;
-        a = a%m;
-        b = b%m;
-        r = m*oper%(s-a-b)
-        m = m/2;
-    } while(m>=1)
-    return r;
-}
-
-function or(a: number, b: number) {
-    return bitoper(a,b,1);
+export const BinReader = 
+`function or(a: number, b: number) {
+    let p = 1;
+    let c = 0;
+    while(a+b>0) {
+        let ra = a%2;
+        let rb = b%2;
+        if(ra+rb>0) c+=p;
+        a = (a-ra)/2;
+        b = (b-rb)/2;
+        p = p*2;
+    }
+    return c;
 }
 
 function and(a: number, b: number) {
-    return bitoper(a,b,4);
+    let p = 1;
+    let c = 0;
+    while(a+b>0) {
+        let ra = a%2;
+        let rb = b%2;
+        if(ra+rb>1) c+=p;
+        a = (a-ra)/2;
+        b = (b-rb)/2;
+        p = p*2;
+    }
+    return c;
 }
 
 export class BinReader {
@@ -49,7 +53,7 @@ export class BinReader {
 
     constructor(size: number)  {
         for(let i=0;i<size;++i) {
-            this.str+=String.fromCharCode(0);
+            this.str+=String.fromCharCode(1);
         }
     }
 
@@ -66,8 +70,8 @@ export class BinReader {
     }
 
     WriteU16(offset: number, val: number) {
-        let v1 = Math.floor(val/256);
-        let v2 = and(val,255);
+        let v2 = Math.floor(val/256);
+        let v1 = and(val,255);
         this.insert(offset,String.fromCharCode(v1,v2));
     }
 
@@ -76,10 +80,10 @@ export class BinReader {
     }
 
     WriteU32(offset: number, val: number) {
-        let v1 = Math.floor(and(val,4278190080)/16777216);
-        let v2 = Math.floor(and(val,16711680)/65536);
-        let v3 = Math.floor(and(val,65280)/256);
-        let v4 = and(val,255);
+        let v4 = Math.floor(and(val,4278190080)/16777216);
+        let v3 = Math.floor(and(val,16711680)/65536);
+        let v2 = Math.floor(and(val,65280)/256);
+        let v1 = and(val,255);
         this.insert(offset,String.fromCharCode(v1,v2,v3,v4));
     }
 
@@ -97,8 +101,8 @@ export class BinReader {
     }
 
     ReadU16(offset: number) {
-        let v1 = this.str.charCodeAt(offset);
-        let v2 = this.str.charCodeAt(offset+1);
+        let v2 = this.str.charCodeAt(offset);
+        let v1 = this.str.charCodeAt(offset+1);
         let vout = (v1*256);
         vout = or(vout,v2);
         return vout;
@@ -110,10 +114,10 @@ export class BinReader {
     }
 
     ReadU32(offset: number) {
-        let v1 = this.str.charCodeAt(offset);
-        let v2 = this.str.charCodeAt(offset+1);
-        let v3 = this.str.charCodeAt(offset+2);
-        let v4 = this.str.charCodeAt(offset+3);
+        let v4 = this.str.charCodeAt(offset);
+        let v3 = this.str.charCodeAt(offset+1);
+        let v2 = this.str.charCodeAt(offset+2);
+        let v1 = this.str.charCodeAt(offset+3);
         let vout = (v1*16777216);
         vout = or(vout,v2*65536);
         vout = or(vout,v3*256);
@@ -127,15 +131,21 @@ export class BinReader {
     }
 
     WriteDouble(offset: number, value: number) {
-        this.insert(offset,encodeDouble(value));
+        let disc = Math.floor(value);
+        let frac = Math.round((value-disc)*100000);
+        this.WriteI32(offset,disc);
+        this.WriteI32(offset+4,frac)
     }
 
     ReadDouble(offset: number) {
-        return decodeDouble(this.str.substring(offset,offset+4))
+        let disc = this.ReadI32(offset);
+        let frac = (this.ReadI32(offset+4)/100000);
+        return disc+frac;
     }
 
     WriteArray(offset: number, value: number[],ind_size: number,max: number, func: (offset: number, value: number)=>void) {
         const len = Math.min(value.length,max);
+        this.WriteU8(offset,len);
         for(let i=0;i<len;++i) {
             func(offset+1+i*ind_size,value[i]);
         }
@@ -146,6 +156,7 @@ export class BinReader {
         for(let i=0;i<len;++i) {
             value[i] = func(offset+1+i*ind_size);
         }
+        value[len] = null;
     }
 
     WriteString(offset: number, str: string, max: number) {
@@ -156,22 +167,23 @@ export class BinReader {
 
     ReadString(offset: number, max: number) {
         let len = Math.min(max,this.ReadU8(offset));
-        return this.str.substring(offset,offset+len);
+        return this.str.substring(offset+1,offset+len+1);
     }
 
     WriteStringArray(offset: number, strs: string[], ind_size: number, max: number) {
         let len = Math.min(strs.length,max);
         this.WriteU8(offset,len);
         for(let i=0;i<len;++i) {
-            this.WriteString(offset+1+i*ind_size,strs[i],ind_size);
+            this.WriteString(offset+1+i*(ind_size+1),strs[i],ind_size);
         }
     }
 
     ReadStringArray(offset: number, strs: string[], ind_size: number, max: number) {
         let len = Math.min(max,this.ReadU8(offset));
         for(let i=0;i<len;++i) {
-            strs[i] = this.ReadString(offset+1+i*ind_size,ind_size);
+            strs[i] = this.ReadString(offset+1+i*(ind_size+1),ind_size);
         }
+        strs[len] = null;
     }
 
     ReadClass(offset: number, fun: ()=>any) {
@@ -187,8 +199,9 @@ export class BinReader {
     ReadClassArray(offset: number, cls: any[], ind_size: number, max: number, fun: ()=>any) {
         let len = Math.min(this.ReadU8(offset),max);
         for(let i=0;i<len;++i) {
-            cls[i] = this.ReadClass(offset+1+i*ind_size,fun());
+            cls[i] = this.ReadClass(offset+1+i*ind_size,fun);
         }
+        cls[len] = null;
     }
 
     WriteClassArray(offset: number, cls: any[], ind_size: number, max: number) {
@@ -198,4 +211,4 @@ export class BinReader {
             this.WriteClass(offset+1+i*ind_size,cls[i]);
         }
     }
-}
+}`

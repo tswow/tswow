@@ -36,6 +36,7 @@ type float = number;
 type bool = boolean;
 type double = number;
 type TSArray<T> = T[];
+type TSString = string;
 
 declare function Message(classTarget: any): any
 declare function MsgClass(classTarget: any, name: string): any
@@ -45,7 +46,14 @@ declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>v
 declare function MsgString(size: number): (field: any, name: any)=>void
 declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void
 
+declare function __TS__StringLen(str: string): number
+
 declare function __TS__Unpack(args: any[]): any;
+
+declare function __TS__New(target: any): any;
+
+declare function base64_decode(str: string): string;
+declare function base64_encode(str: string): string;
 
 /**
  * Returns the highest expansion id the current account has been flagged for.

@@ -116,7 +116,7 @@ export function registerMessage(node: ts.ClassDeclaration) {
             else if(decoText.startsWith('@MsgClassArray')) {
                 field.vartype = 'MsgClassArray';
                 field.capacity = parseInt(decoText.split('(')[1].split(')')[0]);
-                field.indSize = messages[field.type].size;
+                field.indSize = messages[field.innerType].size;
                 field.padding = 1
             }
             else if(decoText.startsWith('@MsgClass')) {

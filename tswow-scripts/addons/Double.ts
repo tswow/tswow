@@ -1,7 +1,9 @@
 /**
  * From https://stackoverflow.com/a/57443984
+ * 
+ * Edited by TSWoW (char -> string.char, byte -> string.byte)
  */
-const Double = 
+export const DoubleFile = 
 `--Define some commonly used constants here so we don't have to do this at runtime
 --ln(2), used for change of base down the line
 local log2 = math.log(2)
@@ -58,7 +60,7 @@ function encodeDouble(number)
 
 
     --Combine the values into 8 bytes and return the result
-    return char(
+    return string.char(
             128*sign + math.floor(expOut/16),                       --Byte 0: Sign and then shift exponent down by 4 bit
             (expOut%16)*16 + math.floor(fractionOut/f48),           --Byte 1: Shift fraction up by 4 to give most significant bits, and fraction down by 48
             math.floor(fractionOut/f40)%256,                        --Byte 2: Shift fraction down 40 bit
@@ -72,14 +74,14 @@ end
 
 function decodeDouble(str)
     --Get bytes from the string
-    local byte0 = byte(substr(str,1,1))
-    local byte1 = byte(substr(str,2,2))
-    local byte2 = byte(substr(str,3,3))
-    local byte3 = byte(substr(str,4,4))
-    local byte4 = byte(substr(str,5,5))
-    local byte5 = byte(substr(str,6,6))
-    local byte6 = byte(substr(str,7,7))
-    local byte7 = byte(substr(str,8,8))
+    local byte0 = string.byte(substr(str,1,1))
+    local byte1 = string.byte(substr(str,2,2))
+    local byte2 = string.byte(substr(str,3,3))
+    local byte3 = string.byte(substr(str,4,4))
+    local byte4 = string.byte(substr(str,5,5))
+    local byte5 = string.byte(substr(str,6,6))
+    local byte6 = string.byte(substr(str,7,7))
+    local byte7 = string.byte(substr(str,8,8))
 
     --Separate out the values
     local sign = byte0 >= 128 and 1 or 0

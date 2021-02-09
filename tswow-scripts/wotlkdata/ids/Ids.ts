@@ -16,8 +16,6 @@
  */
 import * as fs from 'fs';
 import { Allocator } from './Allocator';
-import { DBCNames } from '../dbc/DBCFiles';
-import { SQLNames } from '../sql/SQLFiles';
 
 export class IdRange {
     readonly low: number;
@@ -146,11 +144,11 @@ export class IdPrivate {
     }
 }
 
-export function GetId(table: DBCNames | SQLNames, mod: string, name: string, startid: number = 100000) {
+export function GetId(table: string, mod: string, name: string, startid: number = 100000) {
     return GetIdRange(table, mod, name, 1, startid).low;
 }
 
-export function GetIdRange(table: DBCNames | SQLNames, mod: string, name: string, size: number, startid: number = 10000) {
+export function GetIdRange(table: string, mod: string, name: string, size: number, startid: number = 10000) {
     let forward = mappings[table];
     if (!forward) { forward = mappings[table] = new Table(); }
     const fullname = mod + ':' + name;

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { BinReader } from "../addons/BinReader";
 import { EventsTS } from "../addons/events";
 import { LualibBundle } from "../addons/lualib_bundle";
 import { RequireStub } from "../addons/RequireStub";
@@ -25,6 +26,8 @@ import { BuildCommand } from "./BuildCommand";
 import { Client } from "./Client";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
+import { DoubleFile } from "../addons/Double";
+import { Base64 } from "../addons/base64";
 
 const defaultToc = (name: string) => 
 `## Interface: 30300
@@ -71,6 +74,7 @@ export namespace Addon {
             wfs.write(ipaths.addonIndex(mod),'console.log("Hello world!");');
         }
 
+        wfs.write(ipaths.addonBinReader(mod),BinReader);
         wfs.write(ipaths.addonEventsDest(mod),EventsTS);
         wfs.write(ipaths.addonToc(mod),defaultToc(mod));
         wfs.write(ipaths.addonRequireStub(mod),RequireStub);
@@ -106,6 +110,8 @@ export namespace Addon {
 
         wsys.execIn(ipaths.moduleAddons(mod),`node ../../../node_modules/typescript-to-lua/dist/tstl.js`);
 
+        wfs.write(ipaths.addonDouble(mod),DoubleFile);
+
         let generatedShared: string[] = [];
         wfs.iterate(ipaths.moduleShared(mod),(name)=>{
             name = wfs.relative(ipaths.moduleShared(mod),name);
@@ -114,7 +120,7 @@ export namespace Addon {
             }
         });
 
-        let generatedSources : string[] = ['lualib_bundle.lua','RequireStub.lua'];
+        let generatedSources : string[] = ['base64.lua','Double.lua','lualib_bundle.lua','RequireStub.lua'];
         let xmlSources : string[] = []
         wfs.iterate(ipaths.moduleAddons(mod),(name)=>{
             name = wfs.relative(ipaths.moduleAddons(mod),name);
@@ -133,6 +139,7 @@ export namespace Addon {
         generatedShared = generatedShared.map(x=>x.split('/').join('\\'));
 
         wfs.write(ipaths.lualibDest(mod),LualibBundle);
+        wfs.write(ipaths.addonBase64Dest(mod),Base64);
 
         wfs.copy(ipaths.addonToc(mod),ipaths.addonBuildToc(mod));
         let text = wfs.read(ipaths.addonBuildToc(mod));
@@ -142,15 +149,10 @@ export namespace Addon {
         text+=`\n${xmlSources.join('\n')}`
         wfs.write(ipaths.addonBuildToc(mod),text);
 
-        wfs.copy(ipaths.addonBuild(mod),
-            mpath(cfg.client.directory(),'Interface','Addons',mod));
-
-
         if(wfs.exists(msgPath)) {
             const messages = JSON.parse(wfs.read(msgPath));
             for(let path in messages) {
                 let message= messages[path];
-                
                 let luapath = wfs.relative(ipaths.moduleRoot(mod),path);
                 luapath = luapath.substring(0,luapath.length-2)+'lua'
                 luapath = mpath(ipaths.addonBuild(mod),luapath);
@@ -168,6 +170,9 @@ export namespace Addon {
                 wfs.write(luapath,luatext.join('\n'));
             }
         }
+
+        wfs.copy(ipaths.addonBuild(mod),
+            mpath(cfg.client.directory(),'Interface','Addons',mod));
 
         wfs.remove(msgPath);
     }

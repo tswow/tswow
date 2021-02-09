@@ -52,6 +52,8 @@ class SettingsClass {
     get MYSQL_HOST_DEST() {return getDatabase('world').host; }
     get MYSQL_PORT_DEST() {return getDatabase('world').port; }
 
+    get USE_POOLING() { return settings.use_pooling || false; }
+
     get DBC_SOURCE() { return './coredata/dbc_source'; }
     get DBC_OUT() {return './coredata/dbc'; }
     get SQL_WRITE_TO_FILE() {return args.includes('file'); }

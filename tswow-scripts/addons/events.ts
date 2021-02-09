@@ -1,3 +1,4 @@
+
 /*
  * MIT License
  * Copyright (c) 2021 TSWoW
@@ -19,8 +20,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export const EventsTS = `class EventHolder {
+
+export const EventsTS = 
+`import { BinReader } from "./BinReader";
+
+class EventHolder {
     events: {[key: string]: ((...args: any[])=>void)[]} = {}
+    messageEvents: {[key: number]: ((...args: any[])=>void)[]} = {}
 
     constructor() {
     }
@@ -28,8 +34,13 @@ export const EventsTS = `class EventHolder {
 
 const eventHolders : {[key:string]:EventHolder}= {}
 
+const messageHolders: {[id: number]:new ()=> any} = {};
+
+export function addConstructor(con: any) {
+    messageHolders[con.GetID()] = con;
+}
+
 export function addEvent(frame: any, name: string, callback: (...args: any[])=>void) {
-    console.log("Adding event");
     if(eventHolders[frame.GetName()]===undefined) {
         let holder = eventHolders[frame.GetName()] = new EventHolder();
         frame.SetScript('OnEvent',(frameInner: any,eventName: any,...args: any[])=>{
@@ -45,6 +56,26 @@ export function addEvent(frame: any, name: string, callback: (...args: any[])=>v
     }
     frame.RegisterEvent(name);
     holder.events[name].push(callback);
+}
+
+function buildMessage(value: any) {
+    let bin = new BinReader(value.GetSize()+6);
+    bin.WriteU32(0,1007688);
+    bin.WriteU16(4,value.GetID());
+    value.Write(bin,6);
+    return base64_encode(bin.str)
+}
+
+export function SendToPlayer(player: string, value: any) {
+    SendAddonMessage('',buildMessage(value),'WHISPER',player);
+}
+
+export function SendToChannel(channel: "PARTY"|"RAID"|"GUILD"|"BATTLEGROUND", value: any) {
+    SendAddonMessage('',buildMessage(value),channel);
+}
+
+export function SendToServer(value: any) {
+    SendAddonMessage('',buildMessage(value),'WHISPER',GetUnitName('player',false));
 }
 
 export const Events = {
@@ -193,6 +224,49 @@ export const Events = {
         OnUpdateMultiCastActionbar(frame: WoWAPI.Frame, callback: (args: any[])=>void) { addEvent(frame,'UPDATE_MULTI_CAST_ACTIONBAR',callback)},
     },
     AddOns: {
+        OnMessage<T>(frame: any, cls: new () => T, handler: (msg: T)=>any) {
+            if(
+                eventHolders[frame.GetName()]===undefined || 
+                eventHolders[frame.GetName()].events['CHAT_MSG_ADDON']===undefined) {
+                addEvent(frame,'CHAT_MSG_ADDON',(prefix,msg,type,player)=>{
+                    if(player!==GetUnitName('player',false)) {
+                        return;
+                    }
+
+                    msg = base64_decode(msg)
+
+                    let bin = new BinReader(0);
+                    bin.str = msg;
+
+                    if(__TS__StringLen(msg)<6) { return; }
+
+                    if(bin.ReadU32(0)!=17688)  {
+                        return;
+                    }
+
+                    let opcode = bin.ReadU16(4);
+                    let cls = messageHolders[opcode]
+                    if(cls===undefined) {
+                        return;
+                    }
+
+                    let item = __TS__New(messageHolders[opcode]);
+                    item.Read(bin,6);
+
+                    eventHolders[frame.GetName()]
+                        .messageEvents[opcode].forEach(x=>{
+                            x(item);
+                    });
+                });
+            }
+
+            let holder = eventHolders[frame.GetName()];
+            if(!holder.messageEvents[(cls as any).GetID()]) {
+                holder.messageEvents[(cls as any).GetID()] = []
+            }
+            holder.messageEvents[(cls as any).GetID()].push(handler);
+        },
+
         /**
          *
          * Patch added: ?
@@ -5841,5 +5915,4 @@ export const Events = {
          */
         OnTrialCapReachedLevel(frame: WoWAPI.Frame, callback: (args: any[])=>void) { addEvent(frame,'TRIAL_CAP_REACHED_LEVEL',callback)},
     },
-}
-`
+}`

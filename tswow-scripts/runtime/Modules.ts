@@ -29,6 +29,7 @@ import { Wrap } from '../util/Wrap';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
 import { BuildCommand } from './BuildCommand';
+import { GlobalShared } from '../addons/global_shared';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -248,6 +249,8 @@ export namespace Modules {
         wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts(name));
         wfs.mkDirs(mpath(modpath, 'assets'));
         wfs.mkDirs(mpath(modpath, 'scripts'));
+        wfs.mkDirs(ipaths.moduleShared(name));
+
 
         // Initialize git repositories
         wfs.write(mpath(modpath, '.gitignore'), gitignores);
@@ -277,7 +280,7 @@ export namespace Modules {
      * The inner promise need to be waited separately waited for if fast = false
      * to ensure SQL data was copied successfully.
      */
-    export async function rebuildPatch(fast: boolean = false): Promise<Wrap<Promise<void>>> {
+    export async function rebuildPatch(fast: boolean = false, args: string[]): Promise<Wrap<Promise<void>>> {
         await refreshModules();
         const ct = Date.now();
         await compileAll(8000);
@@ -285,7 +288,7 @@ export namespace Modules {
         wfs.mkDirs(ipaths.dbcBuild, true);
 
         const indexpath = mpath('./node_modules', 'wotlkdata', 'wotlkdata');
-        const program = `node -r source-map-support/register ${indexpath} db`;
+        const program = `node -r source-map-support/register ${indexpath} db ${args.join(' ')}`;
 
         let wrap: Wrap<Promise<void>>;
         if (!fast && isWindows()) {
@@ -349,12 +352,12 @@ export namespace Modules {
      *
      * @warn - **OVERWRITES** any previously named mpq file at the configured location.
      */
-    export async function buildMpq(folder: boolean = false, fast: boolean = false) {
+    export async function buildMpq(folder: boolean = false, fast: boolean = false, args: string[] = []) {
         const timer = Timer.start();
 
 
         // Build output dbc
-        const wrap = await rebuildPatch(fast);
+        const wrap = await rebuildPatch(fast, args);
 
         const sectionTimer = Timer.start();
         const time = (str: string) => 
@@ -446,6 +449,11 @@ export namespace Modules {
             const scripts_path = mpath(x, 'scripts');
             const scripts_tsconfig_path = mpath(x, 'scripts' , 'tsconfig.json');
             const scripts_globaldts_path = mpath(x, 'scripts' , 'global.d.ts');
+
+            if(wfs.isDirectory(ipaths.moduleShared(mod))) {
+                wfs.write(ipaths.sharedGlobal(mod),GlobalShared);
+            }
+
             if (wfs.isDirectory(scripts_path)) {
                 wfs.copy(mpath('bin', 'include', 'global.d.ts'), mpath(scripts_globaldts_path));
                 if (!wfs.exists(scripts_tsconfig_path) || force) {
@@ -567,9 +575,9 @@ export namespace Modules {
         moduleC.addCommand('data', 'folder? readonly? fast?', 'Build server SQL and client DBC/MPQ from all modules',
             async(args: string[]) => {
             if (args.includes('readonly')) {
-                await (await rebuildPatch(args.includes('fast'))).unwrap();
+                await (await rebuildPatch(args.includes('fast'),args)).unwrap();
             } else {
-                await buildMpq(args.includes('folder'), args.includes('fast'));
+                await buildMpq(args.includes('folder'), args.includes('fast'),args);
             }
         });
 
@@ -678,8 +686,8 @@ export namespace Modules {
             update(args[0]);
         });
 
-        commands.addCommand('check', '', '', async() => {
-            await rebuildPatch(true);
+        commands.addCommand('check', '', '', async(args) => {
+            await rebuildPatch(true,args);
         });
 
         await refreshModules(true);

@@ -38,15 +38,24 @@ export class Connection {
 
     static connect(connection: Connection) {
         this.end(connection);
-        connection.async = mysql.createPool(connection.settings);
-        connection.sync = mysql.createPool(connection.settings);
+
+        if(Settings.USE_POOLING) {
+            connection.async = mysql.createPool(connection.settings);
+            connection.sync = mysql.createPool(connection.settings);
+        } else {
+            connection.async = mysql.createConnection(connection.settings);
+            connection.sync = mysql.createConnection(connection.settings);
+            connection.async.connect();
+            connection.sync.connect();
+        }
+
         connection.syncQuery = deasync(connection.sync.query
             .bind(connection.sync));
     }
 
     protected settings: mysql.ConnectionConfig;
-    protected async: mysql.Pool | undefined;
-    protected sync: mysql.Pool | undefined;
+    protected async: mysql.Pool | mysql.Connection | undefined;
+    protected sync: mysql.Pool | mysql.Connection | undefined;
     protected syncQuery: any;
 
     constructor(obj: mysql.ConnectionConfig) {
@@ -84,8 +93,9 @@ export class Connection {
                 }
 
                 this.async.query(x,(err)=>{
-                    if(err){
-                        return rej(err);
+                        if(err){
+                            err.message = `(For SQL "${x}")`+err.message;
+                            return rej(err);
                     } else {
                         return res();
                 }})

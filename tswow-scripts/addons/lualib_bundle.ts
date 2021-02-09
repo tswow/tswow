@@ -447,6 +447,10 @@ function __TS__ArrayFlatMap(array, callback)
     return result
 end
 
+function __TS__StringLen(str)
+    return string.len(str)
+end
+
 function __TS__ArraySetLength(arr, length)
     if (((length < 0) or (length ~= length)) or (length == math.huge)) or (math.floor(length) ~= length) then
         error(

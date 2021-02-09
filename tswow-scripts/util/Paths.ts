@@ -132,6 +132,10 @@ export class InstallPaths {
         return mpath(this.modules, mod, 'shared');
     }
 
+    sharedGlobal(mod: string) {
+        return mpath(this.moduleShared(mod),'global.d.ts');
+    }
+
     moduleAddons(mod: string) {
         return mpath(this.modules,mod,'addons');
     }
@@ -170,6 +174,18 @@ export class InstallPaths {
 
     lualibDest(mod: string) {
         return mpath(this.addonBuild(mod),'lualib_bundle.lua');
+    }
+
+    addonBase64Dest(mod: string) {
+        return mpath(this.addonBuild(mod),'base64.lua')
+    }
+
+    addonBinReader(mod: string) {
+        return mpath(mpath(this.moduleAddons(mod),'BinReader.ts'));
+    }
+    
+    addonDouble(mod: string) {
+        return mpath(this.addonBuild(mod),'Double.lua');
     }
 }
 
