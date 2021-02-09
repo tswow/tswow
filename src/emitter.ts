@@ -2326,7 +2326,12 @@ export class Emitter {
             }
         }
         const func = filetext.substring(cur,start);
-        let isEvent = func.startsWith('.On') || func.startsWith('.UnitModifySpellDamage') || func.startsWith('.AddTimer') || func.startsWith('.Add');
+        let isEvent = func.startsWith('.On') || 
+            func.startsWith('.UnitModifySpellDamage') || 
+            func.startsWith('.AddTimer') || 
+            func.startsWith('.Add') ||
+            func.startsWith('.Modify')
+
         // @tswow-end
 
         // skip function declaration as union
