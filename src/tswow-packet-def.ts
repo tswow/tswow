@@ -122,6 +122,10 @@ export function registerMessage(node: ts.ClassDeclaration) {
 
     const className = node.name.getText(node.getSourceFile());
     messages[className] = message;
+
+    if(message.size>180) {
+        throw new Error(`Message ${className} is ${message.size} bytes long (maximum is 180)`)
+    }
     
     return message;
 }
