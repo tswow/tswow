@@ -6,6 +6,7 @@ import { Emitter } from './emitter';
 import { Helpers } from './helpers';
 import { writeTableCreationFile } from './tswow-orm';
 import { writeIdFile } from './tswow-idfile';
+import { writePacketCreationFile } from './tswow-packet';
 
 export enum ForegroundColorEscapeSequences {
     Grey = '\u001b[90m',
@@ -307,6 +308,7 @@ export class Run {
 
         // @tswow-begin
         writeTableCreationFile(outDir);
+        writePacketCreationFile(outDir);
         writeIdFile(outDir);
         // @tswow-end
     }

@@ -1941,9 +1941,9 @@ export class Emitter {
                 const typeReference = <ts.TypeReferenceNode>type;
 
                 // Check for "GetObject"
-                const start = Math.max(0,typeReference.getStart(typeReference.getSourceFile())-10);
-                const end = Math.max(0,typeReference.getStart(typeReference.getSourceFile())-1);
-                const preText = typeReference.getSourceFile().text.substring(start,end);
+                let start = Math.max(0,typeReference.getStart(typeReference.getSourceFile()));
+                const getObjectPre = typeReference.getSourceFile().text.substring(start-10,start-1);
+                const onMessageIdPre = typeReference.getSourceFile().text.substring(start-12,start-1);
 
                 const typeInfo = this.resolver.getOrResolveTypeOf(type);
                 const isTypeAlias = ((typeInfo && this.resolver.checkTypeAlias(typeInfo.aliasSymbol))
@@ -1977,7 +1977,8 @@ export class Emitter {
                     || isArray
                     || isEventsStruct
                     || isPrimitive
-                    || preText == 'GetObject'
+                    || getObjectPre == 'GetObject'
+                    || onMessageIdPre == 'OnMessageID'
                     || typeText.startsWith('TS')
 
                 if(!skipPointerIf) {
@@ -2267,47 +2268,63 @@ export class Emitter {
             }
 
             // @tswow-begin
-            this.writer.writeStringNewLine('#include "TableCreator.h"');
+            this.writer.writeStringNewLine(`void WritePackets();`);
+            this.writer.writeStringNewLine(`void WriteTables();`);
 
             this.writer.writeStringNewLine(`extern "C" `);
             this.writer.BeginBlock();
             this.writer.writeStringNewLine(`__declspec(dllexport) void Main(TSEventHandlers*);`);
-            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModuleRevisionHash()`)
-            this.writer.BeginBlock();
-            // TODO: Read from TC file or something
-            this.writer.writeStringNewLine(`return "e105d3bbef";`)
-            this.writer.EndBlock();
-
-            this.writer.writeStringNewLine(`__declspec(dllexport) void AddTSScripts(TSEventHandlers* handlers)`);
-            this.writer.BeginBlock();
-            this.writer.writeStringNewLine(`WriteTables();`);
-            this.writer.writeStringNewLine(`SetID(handlers->modid);`)
-            this.writer.writeStringNewLine(`Main(handlers);`);
-            this.writer.EndBlock();
-
-            this.writer.writeStringNewLine(`__declspec(dllexport) void AddScripts(){}`);
-            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModule()`);
-            this.writer.BeginBlock();
-            // TODO: Read this from commandline arguments
-            this.writer.writeStringNewLine(`return "${Math.random()}";`);
-            this.writer.EndBlock();
-
-            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetBuildDirective()`);
-            this.writer.BeginBlock();
-            this.writer.writeStringNewLine(`return "Release";`);
-            this.writer.EndBlock();
-
+            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModuleRevisionHash();`)
+            this.writer.writeStringNewLine(`__declspec(dllexport) void AddTSScripts(TSEventHandlers* handlers);`);
+            this.writer.writeStringNewLine(`__declspec(dllexport) void AddScripts();`);
+            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModule();`);
+            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetBuildDirective();`);
             this.writer.EndBlock();
             // @tswow-end
 
             return false;
         }
 
+        if (!this.isHeader() && node.name && node.name.getFullText().replace(' ','') === 'Main') {
+            this.writer.writeStringNewLine(`char const* GetScriptModuleRevisionHash()`)
+            this.writer.BeginBlock();
+            // TODO: Read from TC file or something
+            this.writer.writeStringNewLine(`return "e105d3bbef";`)
+            this.writer.EndBlock();
+        
+            this.writer.writeStringNewLine(`void AddTSScripts(TSEventHandlers* handlers)`);
+            this.writer.BeginBlock();
+            this.writer.writeStringNewLine(`WriteTables();`);
+            this.writer.writeStringNewLine(`SetID(handlers->modid);`)
+            this.writer.writeStringNewLine(`WritePackets();`);
+            this.writer.writeStringNewLine(`Main(handlers);`);
+            this.writer.EndBlock();
+        
+            this.writer.writeStringNewLine(`void AddScripts(){}`);
+            this.writer.writeStringNewLine(`char const* GetScriptModule()`);
+            this.writer.BeginBlock();
+            // TODO: Read from commandline arguments
+            this.writer.writeStringNewLine(`return "${Math.random()}";`);
+            this.writer.EndBlock();
+        
+            this.writer.writeStringNewLine(`char const* GetBuildDirective()`);
+            this.writer.BeginBlock();
+            this.writer.writeStringNewLine(`return "Release";`);
+            this.writer.EndBlock(); 
+        }
+
         // @tswow-begin
         const start = node.getFullStart();
         let cur = start;
         const filetext = node.getSourceFile().text;
-        while(cur >= 0 && filetext[cur] != '.') --cur;
+        let passed = false
+
+        while(cur >= 0 && (filetext[cur] != '.' || !passed)) {
+            --cur;
+            if(filetext[cur]==='(') {
+                passed = true;
+            }
+        }
         const func = filetext.substring(cur,start);
         let isEvent = func.startsWith('.On') || func.startsWith('.UnitModifySpellDamage') || func.startsWith('.AddTimer') || func.startsWith('.Add');
         // @tswow-end

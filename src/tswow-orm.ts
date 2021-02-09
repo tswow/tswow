@@ -309,6 +309,6 @@ export function writeTableCreationFile(outDir: string) {
 
     writer.EndBlock();
 
-    const tableFile = path.join(outDir,'scripts','TableCreator.h');
+    const tableFile = path.join(outDir,'scripts','TableCreator.cpp');
     fs.writeFileSync(tableFile,writer.getText());
 }
