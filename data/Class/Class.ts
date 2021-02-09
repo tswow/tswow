@@ -22,6 +22,7 @@ import { LUAXML } from "wotlkdata/luaxml/LUAXML";
 import { Edit } from "wotlkdata/luaxml/TextFile";
 import { includes, neq } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
@@ -40,6 +41,8 @@ type ClassFinder = number;
 let created = false;
 
 export type LevelStats = { str: number, agi: number, sta: number, inte: number, spi: number};
+
+let languages : playercreateinfo_skillsRow[] = []
 
 export class Class extends MainEntity<ChrClassesRow> {
     readonly UI : ClassUISettings;
@@ -99,11 +102,9 @@ export class Class extends MainEntity<ChrClassesRow> {
 
             const {race: oldRace,cls} = getDefaultRace(raceid,this.BaseClass);
 
-
             SQL.player_levelstats
                 .filter({class: cls, race: oldRace})
                 .forEach(x=>x.clone(raceid,this.ID,x.level.get()));
-
 
             // Copy all RCI's from the parent class/race pair (or class/default race)
             rci.filter(x=>x.RaceMask.get()&(1<<(oldRace)))
@@ -180,6 +181,9 @@ export const Classes = {
     },
 
     create : (mod : string, clsId : string, identifier : string, parentClass: ClassType) => {
+        if(identifier.toUpperCase()!=identifier) {
+            throw new Error(`"${identifier}" is not a valid class identifier: must be all uppercase`);
+        }
         const parent = resolveClassType(parentClass);
 
         // Set up parent buttons
@@ -197,21 +201,19 @@ export const Classes = {
         const classIndex = DBC.ChrClasses.rowCount;
 
         // Copy all languages
-        SQL.playercreateinfo_skills
-            .filter({comment:includes("Language")})
-            .forEach((x)=>x.clone(
-                x.raceMask.get(),
-                x.classMask.get()|1<<(id-1),
-                x.skill.get()))
+        if(languages.length == 0) {
+            languages = SQL.playercreateinfo_skills.filter({comment:includes("Language")})
+        }
+        languages.forEach(x=>x.clone(x.raceMask.get(),(x.classMask.get()|1<<(id-1)>>>0),x.skill.get()));
 
         // Setup RaceClassInfos
         DBC.SkillRaceClassInfo.find({});
         const parentRCI = DBC.SkillRaceClassInfo.filter({})
-            .filter(x=>x.RaceMask.get() !== 4294967295 && x.ClassMask.get()&(1<<(parent-1)));
+            .filter(x=>x.RaceMask.get() !== 4294967295 && x.ClassMask.get()&((1<<(parent-1))>>>0));
         parentRCI.forEach(x=>{
             let mask = x.ClassMask.get();
             if(mask!==0xffffffff) {
-                mask = mask | (1<<(id-1));
+                mask = (mask | (1<<(id-1)))>>>0;
             }
             x.ClassMask.set(mask);
         });
