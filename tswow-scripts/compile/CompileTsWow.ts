@@ -70,6 +70,7 @@ async function compile(type: string, compileArgs: string[]) {
 
     if (types.includes('full') || types.includes('release')) {
         await installTrinityCore(cmake, openssl, mysql, 'Release', ['dynamic']);
+        await installTrinityCore(cmake, openssl, mysql, 'Debug', ['dynamic']);
     } else {
         if (isType('trinitycore-release')) { await installTrinityCore(cmake, openssl, mysql, 'Release', compileArgs); }
         if (isType('trinitycore-debug') && isWindows()) { await installTrinityCore(cmake, openssl, mysql, 'Debug', compileArgs); }
