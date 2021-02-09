@@ -76,6 +76,16 @@ export namespace Clean {
         wfs.remove(ipaths.configIds);
     }
 
+    export async function cleanAddonBuild(mod?: string) {
+        if(!mod) {
+            Modules.getModules().forEach((x)=>{
+                cleanAddonBuild(x);
+            });
+        } else {
+            wfs.remove(ipaths.addonBuild(mod));
+        }
+    }
+
     export async function cleanTypescript() {
         await destroyAllWatchers();
         const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x)))
@@ -147,11 +157,16 @@ export namespace Clean {
             await cleanScriptBin();
             await cleanDataBuild();
             await cleanIds();
+            await cleanAddonBuild();
             if(!args.includes('keepClient')) {
                 await TrinityCore.stop();
                 await MapData.rebuild(true);
             }
             await cleanMysql();
+        });
+
+        cleanC.addCommand('addon','mod?','Cleans addon build data',async (x)=>{
+            cleanAddonBuild(x[0]);
         });
     }
 }
