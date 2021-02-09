@@ -20,6 +20,7 @@ import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
 import { item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
+import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
 import { ItemDamages } from "./ItemDamage";
@@ -110,6 +111,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
     get Visual() { return new ItemVisual(this); }
+    get AmmoType() { return new ItemAmmoTypes(this); }
     
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
