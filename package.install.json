@@ -14,6 +14,7 @@
     "@types/request": "^2.48.5",
     "@types/terminal-kit": "^1.28.2",
     "@types/xml2js": "^0.4.5",
+    "canvas":"^2.6.1",
     "chokidar": "^3.4.3",
     "adm-zip": "^0.4.16",
     "cross-spawn": "^7.0.3",
