@@ -12202,14 +12202,6 @@ declare namespace WoWAPI {
         SetInventoryItem(unit: UnitId, slot: number, nameOnly?: Unknown): [boolean, boolean, number];
 
         /**
-         * Shows an ItemKey in a tooltip.
-         * @param itemID
-         * @param itemLevel
-         * @param itemSuffix
-         */
-        SetItemKey(itemID: number, itemLevel: number, itemSuffix: number): void;
-
-        /**
          * Sets the GameTooltip to show a loot item
          * @param lootIndex The index of the loot item to show (from 1 to GetNumLootItems())
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_SetLootItem
