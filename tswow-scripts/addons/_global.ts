@@ -13355,6 +13355,7 @@ declare function CreateFrame(frameType: "Frame", frameName?: string, parentFrame
 declare function CreateFrame(frameType: "Slider", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Slider;
 declare function CreateFrame(frameType: "EditBox", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.EditBox;
 declare function CreateFrame(frameType: "Button", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Button;
+declare function CreateFrame(frameType: "GameTooltip", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.GameTooltip;
 
 /**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.
