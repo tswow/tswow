@@ -221,6 +221,33 @@ export class SpellVisual extends Subsystem<Spell> {
      */
     makeUnique() {
         if(this.owner.row.SpellVisualID.getIndex(0)===0) {
+            let newRow = DBC.SpellVisual.add(Ids.SpellVisual.id())
+            this.owner.row.SpellVisualID.setIndex(0,newRow.ID.get());
+            newRow.ImpactAreaKit.set(0)
+                .ImpactKit.set(0)
+                .InstantAreaKit.set(0)
+                .MissileAttachment.set(0)
+                .MissileCastOffsetX.set(0)
+                .MissileCastOffsetY.set(0)
+                .MissileCastOffsetZ.set(0)
+                .MissileDestinationAttachment.set(0)
+                .MissileFollowGroundApproach.set(0)
+                .MissileFollowGroundDropSpeed.set(0)
+                .MissileFollowGroundFlags.set(0)
+                .MissileFollowGroundHeight.set(0)
+                .MissileImpactOffsetX.set(0)
+                .MissileImpactOffsetY.set(0)
+                .MissileImpactOffsetZ.set(0)
+                .MissileModel.set(0)
+                .MissileMotion.set(0)
+                .MissilePathType.set(0)
+                .MissileSound.set(0)
+                .MissileTargetingKit.set(0)
+                .PersistentAreaKit.set(0)
+                .PrecastKit.set(0)
+                .StateDoneKit.set(0)
+                .StateKit.set(0)
+                .TargetImpactKit.set(0)
             return;
         }
         let row = this.row.clone(Ids.SpellVisual.id());
