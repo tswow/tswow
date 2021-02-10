@@ -85,6 +85,10 @@ export namespace Client {
             {offset: 0x415b63, value: 0},
             {offset: 0x415b64, value: 0xeb},
             {offset: 0x415b65, value: 0xed},
+            {offset: 0xe0355, value: 0x78},
+            {offset: 0xe038e, value: 0x88},
+            {offset: 0xe03A3, value: 0x88},
+            {offset: 0xe03C3, value: 0x88},
         ]
 
         let found = false;
