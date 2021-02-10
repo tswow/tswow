@@ -22,6 +22,7 @@ import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanics } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
+import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { SpellRadius } from "./SpellRadius";
 
 export class SpellEffects extends SystemArray<SpellEffect,Spell> {
@@ -86,8 +87,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get DieSides() { return this.w(this.row.EffectDieSides); }
     get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
     get PointsPerCombo() { return this.w(this.row.EffectPointsPerCombo); }
-    get ImplicitTargetA() { return this.w(this.row.ImplicitTargetA); }
-    get ImplicitTargetB() { return this.w(this.row.ImplicitTargetB); }
+    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
+    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
     get AuraPeriod() { return this.w(this.row.EffectAuraPeriod); }
     get MultipleValue() { return this.w(this.row.EffectMultipleValue); }
     get ChainTarget() { return this.w(this.row.EffectChainTargets); }
