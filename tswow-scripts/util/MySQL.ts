@@ -346,18 +346,24 @@ export namespace mysql {
                 }
             });
 
-            await wfsa.iterate(mpath(ipaths.sqlUpdates,db), async (filepath)=>{
+            let files : string[] = []
+            wfs.iterate(mpath(ipaths.sqlUpdates,db),(fp)=>{
+                files.push(fp)
+            });
+            files.sort()
+
+            for(const filepath of files) {
                 let dbs = db === 'world' ? [db,'world_source'] : [db];
                 const filename = wfs.basename(filepath);
-                console.log(`Applying update ${filename}`);
                 for(const updateDb of dbs) {
                     let applied = await getDatabase(updateDb).query('SELECT * from `updates` WHERE `name` = "'+filename+'"');
                     if(applied.length === 0) {
+                        console.log(`Applying update ${filename}`);
                         await getDatabase(updateDb).query(wfs.read(filepath));
                         await getDatabase(updateDb).query(`INSERT INTO updates (name,hash,speed) VALUES ("${filename}", "tswow",0);`)
                     }
                 }
-            });
+            }
         }
     }
 
