@@ -49,6 +49,7 @@ import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { Ids } from "../Base/Ids";
 import { Gossips } from "../Gossip/Gossips";
 import { UnitFlags } from "./UnitFlags";
+import { SchoolMask } from "../Misc/SchoolMask";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -130,7 +131,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get RacialLeader() { return this.wrap(this.row.RacialLeader); }
     get MovementID() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
-    get SpellSchoolImmunity() { return this.wrap(this.row.spell_school_immune_mask); }
+    get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
     get Trainer() { 
         let ctrow = SQL.creature_default_trainer.find({CreatureId:this.ID});
         let trainerRow : trainerRow;
