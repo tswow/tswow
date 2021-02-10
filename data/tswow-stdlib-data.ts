@@ -40,6 +40,7 @@ import { Areas } from "./Area/Areas";
 import { Maps } from "./Map/Maps";
 import { LoadingScreens } from "./Map/LoadingScreen";
 import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
+import { TSImages } from "./Images/Image";
 
 export const std = {
     Spells : Spells,
@@ -72,7 +73,9 @@ export const std = {
     /** Individual Game Objects placed in the world */
     GameObjectInstances: GameObjectInstances,
     /** Model, sound and bounding box data for GameObjects */
-    GameObjectDisplays: GameObjectDisplays
+    GameObjectDisplays: GameObjectDisplays,
+    /** Allows manipulating images programmatically */
+    Image: TSImages
 }
 
 // Patch ID files
