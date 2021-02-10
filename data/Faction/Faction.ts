@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { FactionRow } from "wotlkdata/dbc/types/Faction";
+import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { FactionRelations } from "./FactionRelations";
-import { FactionReputation, FactionReputations } from "./FactionReputation";
+import { FactionReputations } from "./FactionReputation";
 
 function emptyTemplate(id: number, factionId: number) {
     return DBC.FactionTemplate.add(id)
@@ -81,6 +81,14 @@ export const Factions = {
             .ReputationIndex.set(-1)
             .ReputationRaceMask.set([0,0,0,0])
         return new Faction(facrow);
+    },
+
+    load(id: number) {
+        return new Faction(DBC.Faction.findById(id));
+    },
+
+    filter(query: FactionQuery) {
+        return DBC.Faction.filter(query).map(x=>new Faction(x));
     },
 
     createHorde(mod: string, id: string) {

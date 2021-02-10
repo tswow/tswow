@@ -16,7 +16,7 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LanguageWordsRow } from "wotlkdata/dbc/types/LanguageWords";
-import { LanguagesRow } from "wotlkdata/dbc/types/Languages";
+import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { loc_constructor } from "wotlkdata/primitives";
 import { any } from "wotlkdata/query/Relations";
 import { MainEntity } from "../Base/MainEntity";
@@ -134,4 +134,8 @@ export const Languages = {
     load : (id : number) => {
         return new Language(DBC.Languages.find({ID:id}));
     },
+
+    filter(query: LanguagesQuery) {
+        return DBC.Languages.filter(query).map(x=>new Language(x));
+    }
 }

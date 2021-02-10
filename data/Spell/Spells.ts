@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { SpellQuery } from "wotlkdata/dbc/types/Spell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
@@ -153,6 +154,10 @@ export const Spells = {
 
     load(id: number = 0) {
         return new Spell(DBC.Spell.findById(id))
+    },
+
+    filter(query: SpellQuery) {
+        return DBC.Spell.filter(query).map(x=>new Spell(x));
     },
 
     TotemCreatures: TotemCreatures

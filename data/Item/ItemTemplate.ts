@@ -17,7 +17,7 @@
 import { DBC, SQL } from "wotlkdata";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
-import { item_templateRow } from "wotlkdata/sql/types/item_template";
+import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
@@ -150,4 +150,9 @@ export const Items = {
         const [sql,dbc,dis] = getRows(item);
         return new ItemTemplate(sql, dbc, dis);
     },
+
+    filter(query: item_templateQuery) {
+        // TODO: Can be more efficient
+        return SQL.item_template.filter(query).map(x=>Items.load(x.entry.get()));
+    }
 }

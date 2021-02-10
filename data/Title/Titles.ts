@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
+import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
 import { loc_constructor } from "wotlkdata/primitives";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
@@ -36,5 +36,9 @@ export const Titles = {
 
     load : (id : number) => {
         return new Title(DBC.CharTitles.findById(id));
+    },
+
+    filter (query: CharTitlesQuery) {
+        return DBC.CharTitles.filter(query).map(x=>new Title(x));
     }
 }

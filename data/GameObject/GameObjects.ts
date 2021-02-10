@@ -1,4 +1,7 @@
 import { DBC, SQL } from "wotlkdata"
+import { GameObjectDisplayInfoQuery } from "wotlkdata/dbc/types/GameObjectDisplayInfo"
+import { gameobjectQuery } from "wotlkdata/sql/types/gameobject"
+import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template"
 import { Ids } from "../Base/Ids"
 import { BoundingBox } from "../Misc/BoundingBox"
 import { Position } from "../Misc/Position"
@@ -34,6 +37,10 @@ export const GameObjectTemplates = {
     load(id: number) {
         return new GameObjectBase(SQL.gameobject_template.find({entry:id}));
     },
+
+    filter(query: gameobject_templateQuery) {
+        return SQL.gameobject_template.filter(query).map(x=>new GameObjectBase(x));
+    },
 }
 
 export const GameObjectInstances = {
@@ -46,7 +53,11 @@ export const GameObjectInstances = {
 
     load(guid: number) {
         return new GameObjectInstance(SQL.gameobject.find({id: guid}));
-    }
+    },
+
+    filter(query: gameobjectQuery) {
+        return SQL.gameobject.filter(query).map(x=>new GameObjectInstance(x));
+    },
 }
 
 export const GameObjectDisplays = {
@@ -58,5 +69,9 @@ export const GameObjectDisplays = {
 
     load(id: number) {
         return new GameObjectDisplay(DBC.GameObjectDisplayInfo.findById(id));
+    },
+
+    filter(query: GameObjectDisplayInfoQuery) {
+        return DBC.GameObjectDisplayInfo.filter(query).map(x=>new GameObjectDisplay(x));
     },
 }

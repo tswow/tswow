@@ -1,6 +1,6 @@
 import { Cell } from "wotlkdata/cell/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { AchievementRow } from "wotlkdata/dbc/types/Achievement";
+import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
@@ -30,6 +30,14 @@ export const Achievements = {
     create : (mod : string, achievementId : string) => {     
         return new Achievement(
             DBC.Achievement.add(Ids.Achievement.id(mod,achievementId)))
+    },
+
+    filter : (query: AchievementQuery) => {
+        return DBC.Achievement.filter(query).map(x=>new Achievement(x));
+    },
+
+    find: (query: AchievementQuery) => {
+        return Achievements.filter(query)[0];
     },
     
     load : (id : number) => {

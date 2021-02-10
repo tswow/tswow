@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { TalentTabQuery } from "wotlkdata/dbc/types/TalentTab";
 import { Ids } from "../Base/Ids";
 import { TalentTree } from "./TalentTree";
 
@@ -40,6 +41,10 @@ export const TalentTrees = {
         }
 
         return talents;
+    },
+
+    filter(query: TalentTabQuery) {
+        return DBC.TalentTab.filter(query).map(x=>new TalentTree(x));
     },
 
     findAll(classId: number, tabIndex: number) {

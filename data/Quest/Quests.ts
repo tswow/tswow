@@ -14,7 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { load } from "js-yaml";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { quest_templateQuery } from "wotlkdata/sql/types/quest_template";
 import { Ids } from "../Base/Ids";
 import { Quest } from "./Quest";
 
@@ -128,5 +130,13 @@ export const Quests = {
             VerifiedBuild: 101,
         });
         return new Quest(row);
-    }
+    },
+
+    load(id: number) {
+        return new Quest(SQL.quest_template.find({ID:id}))
+    },
+
+    filter(query: quest_templateQuery) {
+        return SQL.quest_template.filter(query).map(x=>new Quest(x));
+    },
 }

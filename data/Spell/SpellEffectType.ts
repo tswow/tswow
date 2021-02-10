@@ -16,7 +16,6 @@
  */
 import { Cell } from "wotlkdata/cell/Cell";
 import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
-import { Spell } from "./Spell";
 import { SpellEffect } from "./SpellEffect";
 
 export class SpellEffectType extends Enum<SpellEffect> {

@@ -15,6 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { creatureQuery } from "wotlkdata/sql/types/creature";
+import { creature_templateQuery } from "wotlkdata/sql/types/creature_template";
 import { Ids } from "../Base/Ids"
 import { Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
@@ -28,6 +30,10 @@ export const CreatureTemplates = {
 
     load(id: number) {
         return new CreatureTemplate(SQL.creature_template.find({entry:id}));
+    },
+
+    filter(query: creature_templateQuery) {
+        return SQL.creature_template.filter(query).map(x=>new CreatureTemplate(x));
     }
 }
 
@@ -46,6 +52,10 @@ export const CreatureInstances = {
             )
         .Position.set(position)
         .TemplateID.set(template)
+    },
+
+    filter(query: creatureQuery) {
+        return SQL.creature.filter(query).map(x=>new CreatureInstance(x));
     },
 
     load(id: number) {

@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata"
+import { LightQuery } from "wotlkdata/dbc/types/Light";
 import { Ids } from "../Base/Ids";
 import { Light } from "./Light"
 import { FLOAT_BAND_COUNT, getFloatBandIndex, getIntBandIndex, INT_BAND_COUNT } from "./LightIndex";
@@ -24,6 +25,10 @@ import { LightWeather, LIGHT_WEATHER } from "./LightWeather";
 export const Lights = {
     load(id: number) {
         return new Light(DBC.Light.findById(id));
+    },
+
+    filter(query: LightQuery) {
+        return DBC.Light.filter(query).map(x=>new Light(x));
     },
 
     create(pos: LightPosition, parent: number) {

@@ -1,4 +1,5 @@
 import { DBC } from "wotlkdata"
+import { SkillLineQuery } from "wotlkdata/dbc/types/SkillLine";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { SkillLine } from "./SkillLine"
@@ -6,6 +7,10 @@ import { SkillLine } from "./SkillLine"
 export const SkillLines = {
     load(id: number) {
         return new SkillLine(DBC.SkillLine.findById(id));
+    },
+
+    filter(query: SkillLineQuery) {
+        return DBC.SkillLine.filter(query).map(x=>new SkillLine(x));
     },
 
     create(mod: string, id: string) {

@@ -1,4 +1,5 @@
 import { DBC } from "wotlkdata"
+import { AreaTableQuery } from "wotlkdata/dbc/types/AreaTable"
 import { Ids } from "../Base/Ids"
 import { std } from "../tswow-stdlib-data"
 import { Area } from "./Area"
@@ -28,5 +29,13 @@ export const Areas = {
         return new Area(DBC.AreaTable
             .add(Ids.Area.id(mod,name))
                 .ExploreFlag.set(Ids.AreaBit.id(mod,name+'_areabit')))
-    }
+    },
+
+    filter(query: AreaTableQuery) {
+        return DBC.AreaTable.filter(query).map(x=>new Area(x));
+    },
+
+    find(query: AreaTableQuery) {
+        return Areas.filter(query);
+    },
 }
