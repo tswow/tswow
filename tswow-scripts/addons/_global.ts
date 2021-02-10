@@ -11995,6 +11995,11 @@ declare namespace WoWAPI {
         AddDoubleLine(textLeft: string, textRight: string, textLeftRed: number, textLeftGreen: number, textLeftBlue: number, textRightRed: number, textRightGreen: number, textRightBlue: number): void;
 
         /**
+         * Hides this tooltip
+         */
+        Hide(): void;
+
+        /**
          * Dynamically expands the size of a tooltip
          * @param leftString unknown
          * @param rightString unknown
