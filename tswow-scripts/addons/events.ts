@@ -228,9 +228,30 @@ export const Events = {
             if(
                 eventHolders[frame.GetName()]===undefined || 
                 eventHolders[frame.GetName()].events['CHAT_MSG_ADDON']===undefined) {
-                addEvent(frame,'CHAT_MSG_ADDON',(prefix,msg,type,player)=>{
+                addEvent(frame,'CHAT_MSG_ADDON',(prefix,msg: string,type,player)=>{
                     if(player!==GetUnitName('player',false)) {
                         return;
+                    }
+
+                    // Check if it's a valid base64 string
+                    if(msg.length<6) {
+                        return;
+                    }
+
+                    for(let i=0;i<msg.length;++i) {
+                        let byte = msg.charCodeAt(i);
+                        if(
+                            // numbers
+                            (byte>=48&&byte<=57) ||
+                            // uppercase
+                            (byte>=65&&byte<=90) ||
+                            // lowercase
+                            (byte>=97&&byte<=122) ||
+                            // +, / and =
+                            byte == 43 || byte == 47 || byte == 61 ) {
+                            } else {
+                                return;
+                            }
                     }
 
                     msg = base64_decode(msg)
