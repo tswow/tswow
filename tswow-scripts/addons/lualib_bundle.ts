@@ -43,6 +43,48 @@ function __TS__ArrayConcat(arr1, ...)
     return out
 end
 
+__TS__parseInt_base_pattern = "0123456789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTvVwWxXyYzZ"
+function __TS__ParseInt(numberString, base)
+    if base == nil then
+        base = 10
+        local hexMatch = string.match(numberString, "^%s*-?0[xX]")
+        if hexMatch then
+            base = 16
+            numberString = ((string.match(hexMatch, "-") and (function() return "-" .. tostring(
+                __TS__StringSubstr(numberString, #hexMatch)
+            ) end)) or (function() return __TS__StringSubstr(numberString, #hexMatch) end))()
+        end
+    end
+    if (base < 2) or (base > 36) then
+        return 0 / 0
+    end
+    local allowedDigits = (((base <= 10) and (function() return __TS__StringSubstring(__TS__parseInt_base_pattern, 0, base) end)) or (function() return __TS__StringSubstr(__TS__parseInt_base_pattern, 0, 10 + (2 * (base - 10))) end))()
+    local pattern = ("^%s*(-?[" .. allowedDigits) .. "]*)"
+    local number = tonumber(
+        string.match(numberString, pattern),
+        base
+    )
+    if number == nil then
+        return 0 / 0
+    end
+    if number >= 0 then
+        return math.floor(number)
+    else
+        return math.ceil(number)
+    end
+end
+
+function __TS__ParseFloat(numberString)
+    local infinityMatch = string.match(numberString, "^%s*(-?Infinity)")
+    if infinityMatch then
+        return (((__TS__StringAccess(infinityMatch, 0) == "-") and (function() return -math.huge end)) or (function() return math.huge end))()
+    end
+    local number = tonumber(
+        string.match(numberString, "^%s*(-?%d+%.?%d*)")
+    )
+    return number or (0 / 0)
+end
+
 function __TS__ArrayEvery(arr, callbackfn)
     do
         local i = 0
