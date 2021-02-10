@@ -45,6 +45,7 @@ export class InstallPaths {
 
     /** Bin paths */
     get bin() { return mpath(installBase, 'bin'); }
+    get sqlUpdates() { return mpath(this.bin, 'sql','updates');}
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRelease() {return mpath(this.bin, 'trinitycore', 'release'); }
     get tcReleaseScripts() { return mpath(this.tcRelease, 'scripts'); }

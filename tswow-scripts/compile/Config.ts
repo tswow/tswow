@@ -60,4 +60,6 @@ export async function createConfig() {
     wfs.copy('./addons',ipaths.addons)
 
     wfs.copy('./tswow-scripts/symlinkmaker.js', ipaths.symlinkMaker)
+
+    wfs.copy('./TrinityCore/sql/updates',ipaths.sqlUpdates);
 }
