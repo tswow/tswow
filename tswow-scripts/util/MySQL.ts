@@ -23,8 +23,6 @@ import { isWindows } from './Platform';
 import { Process } from './Process';
 import { TrinityCore } from '../runtime/TrinityCore';
 import { mpath, wfs, wfsa } from './FileSystem';
-import { Timer } from './Timer';
-import { Wrap } from './Wrap';
 import { ipaths } from './Paths';
 import { extract } from './7zip';
 import { FileChanges } from './FileChanges';
@@ -166,8 +164,41 @@ export namespace mysql {
     export const all = [world_src, world, auth, characters];
 
     const mysqlprocess: Process = new Process();
+    async function startProcess() {
+        term.log('Starting mysql...');
+        if (!wfs.exists(ipaths.mysqlData)) {
+            wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
+                wfs.absPath(ipaths.mysqlData)}`);
+        } 
+        const startup_file = `./bin/mysql_startup.txt`;
+        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '${cfg.databaseSettings('world').password}';`);
+        const oldTcStatus = TrinityCore.isStarted();
+        await disconnect();
+        mysqlprocess.start(ipaths.mysqldExe,
+            [
+                // assume that if we start mysql, database_all is being used.
+                `--port=${cfg.databaseSettings('world').port}`,
+                '--log_syslog=0',
+                '--console',
+                '--wait-timeout=2147483',
+                `--init-file=${wfs.absPath(startup_file)}`,
+                `--datadir=${wfs.absPath(ipaths.mysqlData)}`
+            ]);
+        mysqlprocess.showOutput(process.argv.includes('logmysql'));
+        await mysqlprocess.waitFor('Execution of init_file*ended.', true);
+        term.success('Mysql process started');
 
-    export function showMysqlLog(show: boolean) {
+        if(oldTcStatus)
+        {
+            TrinityCore.start();
+        }
+    }
+
+    export function hasOwnProcess() {
+        return isWindows() && (process.argv.includes('own-mysql') || cfg.mysql_executable() === undefined);
+    }
+
+    export function showOutput(show: boolean) {
         mysqlprocess.showOutput(show);
     }
 
@@ -199,70 +230,16 @@ export namespace mysql {
             await TrinityCore.stop();
         }
 
-        if (isWindows() && mysqlprocess.isRunning()) {
-            await mysqlprocess.stop();
+        if(mysqlprocess.isRunning()) {
+            mysqlprocess.stop();
         }
     }
 
-    export async function loadWorldBackup(): Promise<Wrap<Promise<void>>> {
-        const time = Timer.start();
-        await disconnect();
-        wfs.move(ipaths.worldPlain1,
-            mpath(ipaths.mysqlData, cfg.databaseSettings('world').name));
-        await start(true);
-        term.success(`Loaded MySQL backup in ${time.timeSec(2)}s`);
-        return new Wrap(wfsa.copy(ipaths.worldPlain2, ipaths.worldPlain1));
-    }
-
-    export async function start(skipBackup = false) {
-        term.log('Starting mysql...');
-        if (isWindows()) {
-            if (!wfs.exists(ipaths.mysqlData)) {
-                wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
-                    wfs.absPath(ipaths.mysqlData)}`);
-            }
+    export async function start() {
+        if(hasOwnProcess()) {
+            await startProcess();
         }
-
-        cfg.databaseSettings('world').port;
-
-        const startup_file = './bin/mysql_startup.txt';
-        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '${cfg.databaseSettings('world').password}';`);
-        const oldAcStatus = TrinityCore.isStarted();
-        await disconnect();
-        if (isWindows()) {
-            mysqlprocess.start(ipaths.mysqldExe,
-                [
-                    // assume that if we start mysql, database_all is being used.
-                    `--port=${cfg.databaseSettings('world').port}`,
-                    '--log_syslog=0',
-                    '--console',
-                    '--wait-timeout=2147483',
-                    `--init-file=${wfs.absPath(startup_file)}`,
-                    `--datadir=${wfs.absPath(ipaths.mysqlData)}`
-                ]);
-            mysqlprocess.showOutput(process.argv.includes('logmysql'));
-            await mysqlprocess.waitFor('Execution of init_file*ended.', true);
-            term.success('Mysql process started');
-        }
-
         await connectDatabases();
-
-        if (!skipBackup && (!wfs.exists(ipaths.worldPlain1) || !wfs.exists(ipaths.worldPlain2))) {
-            term.log(`Creating world_plain...`);
-            await disconnect();
-            wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
-                ipaths.worldPlain1
-            );
-            wfs.copy(mpath(ipaths.mysqlData, cfg.databaseSettings('world').name),
-                ipaths.worldPlain2
-            );
-            await start(true);
-        }
-
-        // Restart TrinityCore if it was started before this restart
-        if (oldAcStatus) {
-            TrinityCore.start();
-        }
     }
 
     async function install_world(w: Connection, sqlPath: string) {
@@ -273,7 +250,8 @@ export namespace mysql {
         await promiseQuery(w.con, `DROP DATABASE IF EXISTS \`${w.name()}\`;`);
         await w.disconnect();
         await w.connect();
-        const sqlpath = isWindows() ? `"${ipaths.mysqlExe}"` : `sudo mysql`;
+
+        const sqlpath = hasOwnProcess() ? `"${ipaths.mysqlExe}"` : cfg.mysql_executable() != undefined ? cfg.mysql_executable() : `sudo mysql`;
         await wsys.execAsync(`${sqlpath} --port ${port} -u root ${w.name()} < ${sqlPath}`);
         term.success(`Rebuilt database ${w.name()}`);
     }
@@ -314,7 +292,9 @@ export namespace mysql {
             }
 
             const sql = sqls[0];
-            await Promise.all([install_world(world, sql), install_world(world_src, sql)]);
+            await Promise.all([
+                install_world(world, sql), 
+                install_world(world_src, sql)]);
             clearSql();
             FileChanges.tagChange(ipaths.tdb, 'tdb');
         }
@@ -389,7 +369,7 @@ export namespace mysql {
         });
 
         mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {
-            showMysqlLog(args[0]==='true');
+            showOutput(args[0]==='true');
         });
 
         term.success('MySQL initialized');

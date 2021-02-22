@@ -290,12 +290,9 @@ export namespace Modules {
         const indexpath = mpath('./node_modules', 'wotlkdata', 'wotlkdata');
         const program = `node -r source-map-support/register ${indexpath} db ${args.join(' ')}`;
 
+        // TODO: Remove this wrap completely, we don't use it anymore.
         let wrap: Wrap<Promise<void>>;
-        if (!fast && isWindows()) {
-            wrap = await mysql.loadWorldBackup();
-        } else {
-            wrap = new Wrap(new Promise((res) => res()));
-        }
+        wrap = new Wrap(new Promise((res) => res()));
 
         // More helpful error message
         try {

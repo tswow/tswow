@@ -222,4 +222,6 @@ export namespace cfg {
     };
 
     export const tdb_file = yaml<string>('unused', 'tdb_file');
+
+    export const mysql_executable = yaml<string|undefined>(undefined,'mysql_executable');
 }

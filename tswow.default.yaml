@@ -15,6 +15,9 @@ database_all:
   port: 3306
   name: acore_
 
+# Used to have an external mysql server
+# mysql_executable: ''
+
 # Settings for generation
 generation:
   generate_mmaps: false
