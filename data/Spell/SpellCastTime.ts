@@ -24,9 +24,15 @@ export class SpellCastTime extends Subsystem<Spell> {
     readonly row: SpellCastTimesRow;
     constructor(owner: Spell) {
         super(owner);
-        this.row = DBC.SpellCastTimes
-            .findById(this.owner.row.CastingTimeIndex.get())
-            .clone(Ids.SpellCastTimes.id())
+        if(owner.row.CastingTimeIndex.get()===0)  {
+            this.row = DBC.SpellCastTimes.add(Ids.SpellCastTimes.id());
+        } else {
+            // TODO: This is dumb, it creates a new object every time
+            // you access it.
+            this.row = DBC.SpellCastTimes
+                .findById(this.owner.row.CastingTimeIndex.get())
+                .clone(Ids.SpellCastTimes.id())
+        }
         this.owner.row.CastingTimeIndex.set(this.row.ID.get());
     }
 
