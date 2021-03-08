@@ -13275,7 +13275,7 @@ declare namespace WoWAPI {
          * @param startPos 
          * @param endPos 
          */
-        HighlightText(startPos: number, endPos: number);
+        HighlightText(startPos: number, endPos: number): void;
     
         /**
          * Returns value of autoFocus attribute, in 1/nil format
@@ -13299,49 +13299,64 @@ declare namespace WoWAPI {
     
         SetAutoFocus(state: boolean): void;
     
-        SetAltArrowKeyMode();
+        SetAltArrowKeyMode(): void;
     
         SetBlinkSpeed(speed: number): void;
     
-        SetFocus();
+        SetFocus(): void;
     
         /**
          * Sets the number of history lines to remember
          * @param lines 
          */
-        SetHistoryLines(lines: number);
+        SetHistoryLines(lines: number): void;
     
         /**
          * Sets the maximum byte size for entered text
          * @param bytes 
          */
-        SetMaxBytes(bytes: number);
+        SetMaxBytes(bytes: number): void;
     
         /**
          * Sets the maximum number of letters for entered text
          * @param letters 
          */
-        SetMaxLetters(letters: number);
+        SetMaxLetters(letters: number): void;
     
-        SetNumber(num: number);
+        SetNumber(num: number): void;
     
-        SetNumeric();
+        SetNumeric(): void;
     
-        SetPassword();
+        SetPassword(): void;
     
         /**
          * Sets the spacing between multiple lines
          * @param spacing 
          */
-        SetSpacing(spacing: number);
+        SetSpacing(spacing: number): void;
     
-        ToggleInputLanguage();
+        ToggleInputLanguage(): void;
     
         SetMultiLine(state: boolean): void;
     
         SetFontObject(fontObject: string): void;
     
-        SetTextInsets(l: any, r: any, t: any, b: any);
+        SetTextInsets(l: any, r: any, t: any, b: any): void;
+
+        SetScript(event: "OnCursorChanged", handler: (frame: EditBox, x: number, y: number, w: number, h: number) => void): void;
+        SetScript(event: "OnArrowPressed", handler: (frame: EditBox, key: string) => void): void;
+        SetScript(event: "OnEditFocusGain", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnEditFocusLost", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnEnterPressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnEscapePressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnHyperlinkClick", handler: (frame: EditBox, link: string, text: string, button: any) => void): void;
+        SetScript(event: "OnHyperlinkEnter", handler: (frame: EditBox, link: string, text: string) => void): void;
+        SetScript(event: "OnHyperlinkLeave", handler: (frame: EditBox, link: string, text: string) => void): void;
+        SetScript(event: "OnInputLanguageChanged", handler: (frame: EditBox, language: string) => void): void;
+        SetScript(event: "OnSpacePressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnTabPressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnTextChanged", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnTextSet", handler: (frame: EditBox) => void): void;
     }
     
 
