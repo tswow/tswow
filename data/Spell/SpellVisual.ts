@@ -261,6 +261,13 @@ export class SpellVisual extends Subsystem<Spell> {
         return this.owner;
     }
 
+    cloneFromVisual(visualId: number, makeUnique: boolean = true) {
+        this.owner.row.SpellVisualID.setIndex(0,visualId)
+        if(makeUnique) {
+            this.makeUnique();
+        } 
+    }
+
     cloneFrom(spellId: number, makeUnique: boolean = true) {
         this.owner.row.SpellVisualID.setIndex(0,
             DBC.Spell.findById(spellId).SpellVisualID.getIndex(0));
