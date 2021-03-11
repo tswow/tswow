@@ -25,7 +25,7 @@ import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
 import { BuildCommand } from './BuildCommand';
 import { NodeConfig } from './NodeConfig';
-import { Realms } from './Realms';
+import { Realm } from './Realm';
 import { Datasets } from './Dataset';
 
 /**
@@ -327,7 +327,7 @@ export namespace Modules {
 
         // Build output dbc
         await rebuildPatch(dataset, args);
-        const modules = Realms.getRealm(dataset).config.modules;
+        const modules = Realm.getRealm(dataset).config.modules;
 
         const sectionTimer = Timer.start();
         const time = (str: string) => 

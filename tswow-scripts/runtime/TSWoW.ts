@@ -27,7 +27,7 @@ import { Test } from './Test';
 import { Assets } from './Assets';
 import { Clean } from './Clean';
 import { Addon } from './Addon';
-import { Realms } from './Realms';
+import { Realm } from './Realm';
 import { AuthServer } from './AuthServer';
 import { Datasets } from './Dataset';
 
@@ -58,7 +58,7 @@ export async function main() {
         }
 
         await Datasets.initialize();
-        await Realms.initialize();
+        await Realm.initialize();
         await AuthServer.initialize();
 
         term.success(`Initialized tswow in ${timer.timeSec()}s`);

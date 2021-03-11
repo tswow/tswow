@@ -7,7 +7,7 @@ import { bool } from "../wotlkdata/primitives";
 import { commands } from "./Commands";
 import { Client } from "./Client";
 import { NodeConfig } from "./NodeConfig";
-import { Realms } from "./Realms";
+import { Realm } from "./Realm";
 
 function defaultYaml(id: string) {
     return `# ${id} dataset configuration
@@ -27,7 +27,13 @@ ignore_assets:
 `
 }
 
+/**
+ * Contains functions for managing TSWoW datasets
+ */
 export namespace Datasets {
+    /**
+     * Represents the configuration file of a single dataset
+     */
     export class DatasetConfig extends YamlFile {
         private set: Dataset;
 
@@ -44,11 +50,16 @@ export namespace Datasets {
         get mpq_path() { return mpath(ipaths.clientData(this.set.id),`patch-${this.mpq_suffix}.MPQ`)}
     }
 
+    /**
+     * Represents a single TSWoW dataset.
+     * 
+     * These objects are unique for each dataset in memory.
+     */
     export class Dataset {
         readonly id: string;
         readonly worldSource: Connection;
         readonly worldDest: Connection;
-        readonly client: Client;
+        readonly client: Client.Client;
         config: DatasetConfig;
 
         private database_settings(database: DatabaseType) {
@@ -60,7 +71,7 @@ export namespace Datasets {
             this.config = new DatasetConfig(this);
             this.worldSource = new Connection(this.database_settings('world_source'),'world_source')
             this.worldDest = new Connection(this.database_settings('world'),'world');
-            this.client = new Client(this);
+            this.client = new Client.Client(this);
         }
 
         installServerData() {
@@ -119,7 +130,7 @@ export namespace Datasets {
 
         if(!wfs.exists(ipaths.datasetRoot(dataset))) {
             try {
-                return Realms.getRealm(dataset).set;
+                return Realm.getRealm(dataset).set;
             } catch(err) {
                 throw new Error(`No such dataset or realm: ${dataset}`)
             }

@@ -22,20 +22,20 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { commands } from '../runtime/Commands';
 import { isWindows } from '../util/Platform';
-import { createConfig } from './Config';
-import { createMpqBuilder } from './MPQBuilder';
-import { installTrinityCore } from './TrinityCore';
-import { findCmake } from './Cmake';
-import { findOpenSSL } from './OpenSSL';
-import { findMysql } from './MySQL';
-import { buildTranspiler } from './Transpiler';
-import { buildScripts } from './Scripts';
-import { installBoost } from './Boost';
-import { installSZip, make7zip } from './7Zip';
-import { cleanBuild, cleanInstall } from './Clean';
-import { installBLPConverter } from './BLPConverter';
+import { Config } from './Config';
+import { MPQBuilder } from './MPQBuilder';
+import { TrinityCore } from './TrinityCore';
+import { CMake } from './Cmake';
+import { OpenSSL } from './OpenSSL';
+import { MySQL } from './MySQL';
+import { Transpiler } from './Transpiler';
+import { Scripts } from './Scripts';
+import { Boost } from './Boost';
+import { Clean } from './Clean';
+import { BLPConverter } from './BLPConverter';
 import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
 import { wfs } from '../util/FileSystem';
+import { SevenZip } from './7Zip';
 
 let buildingScripts = false;
 
@@ -47,21 +47,21 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (type == 'clean-install') {
-        await cleanInstall();
+        await Clean.cleanInstall();
     }
 
     if (types.includes('clean-build')) {
-        return await cleanBuild();
+        return await Clean.cleanBuild();
     }
 
-    const cmake = isWindows() ? await findCmake() : 'cmake';
+    const cmake = isWindows() ? await CMake.find() : 'cmake';
     term.log(`Found cmake at ${cmake}`);
-    const openssl = isWindows() ? await findOpenSSL() : 'openssl';
+    const openssl = isWindows() ? await OpenSSL.find() : 'openssl';
     term.log(`Found OpenSSL at ${openssl}`);
-    const mysql = isWindows() ? await findMysql() : 'mysql';
+    const mysql = isWindows() ? await MySQL.find() : 'mysql';
     term.log(`Found MySQL at ${mysql}`);
-    const boost = isWindows() ? await installBoost() : 'boost';
-    if (isWindows()) { await installSZip(); }
+    const boost = isWindows() ? await Boost.install() : 'boost';
+    if (isWindows()) { await SevenZip.install(); }
 
     if (!isWindows()) {
         // Ubunu only
@@ -69,15 +69,15 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (types.includes('full') || types.includes('release')) {
-        await installTrinityCore(cmake, openssl, mysql, 'Release', ['dynamic']);
-        await installTrinityCore(cmake, openssl, mysql, 'Debug', ['dynamic']);
+        await TrinityCore.install(cmake, openssl, mysql, 'Release', ['dynamic']);
+        await TrinityCore.install(cmake, openssl, mysql, 'Debug', ['dynamic']);
     } else {
-        if (isType('trinitycore-release')) { await installTrinityCore(cmake, openssl, mysql, 'Release', compileArgs); }
-        if (isType('trinitycore-debug') && isWindows()) { await installTrinityCore(cmake, openssl, mysql, 'Debug', compileArgs); }
+        if (isType('trinitycore-release')) { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
+        if (isType('trinitycore-debug') && isWindows()) { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
     }
 
-    if (isType('mpqbuilder')) { await createMpqBuilder(cmake); }
-    if (isType('blpconverter')) { await installBLPConverter(cmake); }
+    if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
+    if (isType('blpconverter')) { await BLPConverter.install(cmake); }
 
     if (types.includes('release')) {
         await destroyAllWatchers();
@@ -88,16 +88,16 @@ async function compile(type: string, compileArgs: string[]) {
         if(!wfs.exists(ipaths.tsc)) {
             wsys.execIn(ipaths.base, `npm i typescript`);
         }
-        await buildTranspiler(build_path(), install_path());
-        await buildScripts(build_path(), install_path());
+        await Transpiler.buildTranspiler(build_path(), install_path());
+        await Scripts.build(build_path(), install_path());
         buildingScripts = true;
     }
 
-    await createConfig();
+    await Config.create();
 
     if (types.includes('release')) {
         term.log(`Creating ${build_path('release.7z')}`);
-        make7zip(install_path(), build_path('release.7z'));
+        SevenZip.makeArchive(install_path(), build_path('release.7z'));
     }
 
     term.log('Installation successful!');

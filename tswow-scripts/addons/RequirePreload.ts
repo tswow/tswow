@@ -21,8 +21,12 @@
  */
 
 /*
-* Modified by TSWoW
-*/
+ * Modified by TSWoW
+ * 
+ * This file contains a plugin for typescript-to-lua
+ * to enable CommonJS-style calls to "require"
+ */
+
 /* eslint-disable @typescript-eslint/no-object-literal-type-assertion */
 import * as ts from "typescript";
 import {

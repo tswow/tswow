@@ -19,18 +19,20 @@ import { ipaths, bpaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 
-export async function installBLPConverter(cmake: string) {
-    while (!wfs.exists(bpaths.blpConverterBuilt) && !(wfs.exists(bpaths.blpConverterDownload))) {
-        term.error(`blpconverter.exe not found`);
-        term.error(`Built from source (BLPConverter/BLPConverter.sln)`);
-        term.error(`OR download: https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe`);
-        term.error(`Then place it here: ${wfs.absPath(bpaths.blpConverterDownload)}`);
-        await wsys.userInput(`Press any key to try again:`);
-    }
+export namespace BLPConverter {
+    export async function install(cmake: string) {
+        while (!wfs.exists(bpaths.blpConverterBuilt) && !(wfs.exists(bpaths.blpConverterDownload))) {
+            term.error(`blpconverter.exe not found`);
+            term.error(`Built from source (BLPConverter/BLPConverter.sln)`);
+            term.error(`OR download: https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe`);
+            term.error(`Then place it here: ${wfs.absPath(bpaths.blpConverterDownload)}`);
+            await wsys.userInput(`Press any key to try again:`);
+        }
 
-    if (wfs.exists(bpaths.blpConverterBuilt)) {
-        wfs.copy(bpaths.blpConverterBuilt, ipaths.blpConverter);
-    } else {
-        wfs.copy(bpaths.blpConverterDownload, ipaths.blpConverter);
+        if (wfs.exists(bpaths.blpConverterBuilt)) {
+            wfs.copy(bpaths.blpConverterBuilt, ipaths.blpConverter);
+        } else {
+            wfs.copy(bpaths.blpConverterDownload, ipaths.blpConverter);
+        }
     }
 }

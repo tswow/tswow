@@ -57,6 +57,9 @@ const defaultTsConfig = {
     }
   }
 
+/**
+ * Contains functions for managing addon development in TSWoW modules.
+ */
 export namespace Addon {
     export function getAddons(mod: string) {
         return wfs.readDir(ipaths.moduleAddons(mod),true,'directories');

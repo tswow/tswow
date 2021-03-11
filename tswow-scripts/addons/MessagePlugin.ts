@@ -21,6 +21,11 @@ import { registerMessage } from "./tswow-data-def";
 import * as path from 'path';
 import * as fs from 'fs'
 
+/**
+ *  This file contains a plugin for typescript-to-lua 
+ *  to generate messages
+ */
+
 function getList() {
     if(!fs.existsSync('./classes.json')) {
         return {}

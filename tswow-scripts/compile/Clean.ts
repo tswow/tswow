@@ -20,32 +20,34 @@ import { build_path, install_directory } from './BuildConfig';
 import { ipaths } from '../util/Paths';
 import { destroyAllWatchers } from '../util/TSWatcher';
 
-export async function cleanBuild() {
-    await destroyAllWatchers();
-    term.log('Cleaning build directory...');
-    wfs.remove(build_path());
-    term.success('Cleaned build directory, please restart this build script');
-    process.exit(0);
-}
+export namespace Clean {
+    export async function cleanBuild() {
+        await destroyAllWatchers();
+        term.log('Cleaning build directory...');
+        wfs.remove(build_path());
+        term.success('Cleaned build directory, please restart this build script');
+        process.exit(0);
+    }
 
-export async function cleanInstall() {
-    term.log('Cleaning install directory...');
-    await destroyAllWatchers();
+    export async function cleanInstall() {
+        term.log('Cleaning install directory...');
+        await destroyAllWatchers();
 
-    if (wfs.readDir(ipaths.modules, true, 'both').length > 0) {
-        let ctr = 0;
-        const garbagePath = () => `./install_garbage/${ctr}`;
-        while (wfs.exists(garbagePath())) {
-            ++ctr;
+        if (wfs.readDir(ipaths.modules, true, 'both').length > 0) {
+            let ctr = 0;
+            const garbagePath = () => `./install_garbage/${ctr}`;
+            while (wfs.exists(garbagePath())) {
+                ++ctr;
+            }
+            wfs.copy(ipaths.modules, garbagePath());
+            term.log(`Created backups of your modules in ${wfs.absPath(garbagePath())}`);
         }
-        wfs.copy(ipaths.modules, garbagePath());
-        term.log(`Created backups of your modules in ${wfs.absPath(garbagePath())}`);
-    }
 
-    wfs.clearDir(install_directory);
-    if(wfs.readDir(install_directory).length>0) {
-        throw new Error(`Failed to clear install directory`);
-    }
+        wfs.clearDir(install_directory);
+        if(wfs.readDir(install_directory).length>0) {
+            throw new Error(`Failed to clear install directory`);
+        }
 
-    term.success('Cleaned install directory');
+        term.success('Cleaned install directory');
+    }
 }

@@ -18,35 +18,37 @@ import { mpath, wfs } from '../util/FileSystem';
 import path = require('path');
 import { getTSWatcher } from '../util/TSWatcher';
 
-export async function buildTranspiler(buildLine: string, installLine: string) {
-    const transpiler_config_dir = path.join(buildLine, 'transpiler-config');
-    const transpiler_out_dir = path.relative(transpiler_config_dir, path.join(installLine, 'bin', 'scripts', 'transpiler'));
-    const transpiler_root_dir = path.relative(transpiler_config_dir, './TypeScript2Cxx');
-    const transpiler_type_roots = path.join(transpiler_root_dir, 'node_modules/@types');
-    const transpiler_src_dir = path.join(transpiler_root_dir, 'src');
-    const transpiler_tsconfig = {
-        compileOnSave: false,
-        compilerOptions: {
-            module: 'commonjs',
-            target: 'es2018',
-            outDir: (transpiler_out_dir),
-            sourceMap: true,
-            declaration: false,
-            moduleResolution: 'node',
-            emitDecoratorMetadata: true,
-            experimentalDecorators: true,
-            alwaysStrict: true,
-            typeRoots: [
-                transpiler_type_roots
-            ],
-            lib: [
-                'es2018',
-                'dom'
-            ]
-        },
-        include: [(transpiler_src_dir)]
-    };
-    wfs.write(mpath(transpiler_config_dir, 'tsconfig.json'),
-        JSON.stringify(transpiler_tsconfig, null, 4));
-    await (await getTSWatcher(mpath(transpiler_config_dir))).compile(-1);
+export namespace Transpiler {
+    export async function buildTranspiler(buildLine: string, installLine: string) {
+        const transpiler_config_dir = path.join(buildLine, 'transpiler-config');
+        const transpiler_out_dir = path.relative(transpiler_config_dir, path.join(installLine, 'bin', 'scripts', 'transpiler'));
+        const transpiler_root_dir = path.relative(transpiler_config_dir, './TypeScript2Cxx');
+        const transpiler_type_roots = path.join(transpiler_root_dir, 'node_modules/@types');
+        const transpiler_src_dir = path.join(transpiler_root_dir, 'src');
+        const transpiler_tsconfig = {
+            compileOnSave: false,
+            compilerOptions: {
+                module: 'commonjs',
+                target: 'es2018',
+                outDir: (transpiler_out_dir),
+                sourceMap: true,
+                declaration: false,
+                moduleResolution: 'node',
+                emitDecoratorMetadata: true,
+                experimentalDecorators: true,
+                alwaysStrict: true,
+                typeRoots: [
+                    transpiler_type_roots
+                ],
+                lib: [
+                    'es2018',
+                    'dom'
+                ]
+            },
+            include: [(transpiler_src_dir)]
+        };
+        wfs.write(mpath(transpiler_config_dir, 'tsconfig.json'),
+            JSON.stringify(transpiler_tsconfig, null, 4));
+        await (await getTSWatcher(mpath(transpiler_config_dir))).compile(-1);
+    }
 }
