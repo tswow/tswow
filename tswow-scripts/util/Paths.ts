@@ -162,11 +162,11 @@ export class InstallPaths {
     }
 
     get addonIncludeLualib() {
-        return mpath(this.addonInclude, 'LualibBundle.ts');
+        return mpath(this.addonInclude, 'LualibBundle.lua');
     }
 
     get addonIncludeRequireStub() {
-        return mpath(this.addonInclude,'RequireStub')
+        return mpath(this.addonInclude,'RequireStub.lua')
     }
 
     tc(type: 'Release'|'Debug') {
@@ -294,7 +294,7 @@ export class InstallPaths {
     clientAddon(dataset: string, name: string) { return mpath(this.clientAddons(dataset), name)}
 
     clientAddonBuild(dataset: string, addon: string){
-        return mpath(Datasets.get(dataset).config.mpq_path,'Interface','Addons', addon);
+        return mpath(this.client(dataset),'Interface','Addons', addon);
     }
 
     clientLocale(dataset: string) {
@@ -492,7 +492,7 @@ export class InstallPaths {
     }
 
     addonEventsDest(mod: string) {
-        return mpath(this.moduleAddons(mod),'events.ts');
+        return mpath(this.moduleAddons(mod),'lib','Events.ts');
     }
 
     lualibDest(mod: string) {
@@ -504,7 +504,7 @@ export class InstallPaths {
     }
 
     addonBinReader(mod: string) {
-        return mpath(mpath(this.moduleAddons(mod),'BinReader.ts'));
+        return mpath(mpath(this.moduleAddons(mod),'lib','BinReader.ts'));
     }
     
     addonDouble(mod: string) {

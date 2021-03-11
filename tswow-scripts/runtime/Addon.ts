@@ -71,7 +71,7 @@ export namespace Addon {
         }
 
         wfs.copy(ipaths.addonIncludeBinReader,ipaths.addonBinReader(mod));
-        wfs.copy(ipaths.addonInclude,ipaths.addonEventsDest(mod));
+        wfs.copy(ipaths.addonIncludeEventsTs,ipaths.addonEventsDest(mod));
         wfs.write(ipaths.addonToc(mod),defaultToc(mod));
         wfs.copy(ipaths.addonIncludeRequireStub,ipaths.addonRequireStub(mod));
         wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(mod));
@@ -107,16 +107,20 @@ export namespace Addon {
         let generatedShared: string[] = [];
         wfs.iterate(ipaths.moduleShared(mod),(name)=>{
             name = wfs.relative(ipaths.moduleShared(mod),name);
-            if((name.endsWith('.ts'))) {
+            if((name.endsWith('.ts'))&&!name.endsWith('d.ts')) {
                 generatedShared.push(`shared\\`+name.substring(0,name.length-2)+'lua');
             }
         });
 
-        let generatedSources : string[] = ['base64.lua','Double.lua','lualib_bundle.lua','RequireStub.lua'];
+        let generatedSources : string[] = ['base64.lua','lualib_bundle.lua','RequireStub.lua'];
         let xmlSources : string[] = []
         wfs.iterate(ipaths.moduleAddons(mod),(name)=>{
             name = wfs.relative(ipaths.moduleAddons(mod),name);
-            if((name.endsWith('.ts') || name.endsWith('.tsx')) && !name.endsWith('-addon.ts')) {
+            if((
+                name.endsWith('.ts') 
+                || name.endsWith('.tsx')) 
+                && !name.endsWith('-addon.ts')
+                && !name.endsWith('d.ts')) {
                 generatedSources.push(`addons\\`+name.substring(0,name.length-2)+'lua');
             }
 
