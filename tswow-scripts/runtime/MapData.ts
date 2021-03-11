@@ -16,12 +16,10 @@
  */
 import { wfs, mpath } from '../util/FileSystem';
 import { wsys } from '../util/System';
-import { cfg } from '../util/Config';
 import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
-import { BuildCommand } from './BuildCommand';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -29,129 +27,68 @@ import { BuildCommand } from './BuildCommand';
  * runs `mapextractor`, `vmap4extractor`, `vmap4assembler` etc. and installs the results to TrinityCore.
  */
 export namespace MapData {
-    const cdir = cfg.client.directory();
-
-    const clientMaps = mpath(cdir, 'maps');
-    const clientVmaps = mpath(cdir, 'vmaps');
-    const clientDbc = mpath(cdir, 'dbc');
-    const clientBuildings = mpath(cdir, 'Buildings');
-    const clientMmaps = mpath(cdir, 'mmaps');
-
-    function prepareBuild() {
+    function prepareBuild(dataset: string) {
         const copiedFiles = isWindows() ?
             ['mapextractor.exe', 'mmaps_generator.exe', 'vmap4assembler.exe', 'vmap4extractor.exe', 'common.dll']
             : ['mapextractor', 'mmaps_generator', 'vmap4assembler', 'vmap4extractor'];
 
+        // TODO: move to Paths.ts
         const copiedLibraries = isWindows() ? ['libcrypto-1_1-x64.dll', 'libmysql.dll', 'libmysqld.dll'] : [];
 
         // TODO: Let user choose which to use
-        const inDir = wfs.exists(ipaths.tcRelease) ? ipaths.tcRelease : ipaths.tcDebug;
+        const inDir = wfs.exists(ipaths.tc('Release')) ? ipaths.tc('Release'): ipaths.tc('Debug');
 
         // Copy over all necessary library files
         for (const file of copiedFiles) {
-            wfs.copy(mpath(inDir, file), mpath(cdir, file));
+            wfs.copy(mpath(inDir, file), mpath(ipaths.client(dataset), file));
         }
 
         for (const file of copiedLibraries) {
-            wfs.copy(mpath(ipaths.tcRoot, file), mpath(cfg.client.directory(), file));
+            wfs.copy(mpath(inDir,file), mpath(ipaths.client(dataset), file));
         }
     }
 
-    export async function buildMaps() {
-        prepareBuild();
-        wfs.remove(clientMaps);
-        await wsys.execIn(cdir, `${isWindows() ? '' : './'}mapextractor`);
-        wfs.copy(clientMaps,ipaths.maps, true);
-        wfs.copy(clientDbc, ipaths.dbcSource, true);
+    export async function buildMaps(dataset: string = 'default') {
+        prepareBuild(dataset);
+        wfs.remove(ipaths.clientMaps(dataset));
+        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mapextractor`);
+        wfs.copy(ipaths.clientMaps(dataset),ipaths.datasetMaps(dataset), true);
+        wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBC(), true);
     }
 
-    export async function buildVmaps() {
-        // we need it back now
-        if(!wfs.exists(clientMaps)) {
-            wfs.copy(ipaths.maps, clientMaps);
-        }
-        wfs.remove(clientVmaps);
-        wfs.remove(clientBuildings);
-        await wsys.execIn(cdir, `${isWindows() ? '' : './'}vmap4extractor`);
-        wfs.mkDirs(mpath(cdir, 'vmaps'));
-        await wsys.execIn(cdir, `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
-        wfs.copy(clientVmaps, ipaths.vmaps, true);
+    export async function buildVmaps(dataset: string = 'default') {
+        wfs.remove(ipaths.clientVmaps(dataset));
+        wfs.remove(ipaths.clientBuildings(dataset));
+        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4extractor`);
+        wfs.mkDirs(ipaths.clientVmaps(dataset));
+        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
+        wfs.copy(ipaths.clientVmaps(dataset), ipaths.datasetVmaps(dataset), true);
     }
 
-    export async function buildMMaps() {
+    export async function buildMMaps(dataset: string = 'default') {
         term.log('Building MMAPS (this will take a very long time)');
         const timer = Timer.start();
-        if(!wfs.exists(clientMaps)) {
-            wfs.copy(ipaths.maps,clientMaps);
+        if(!wfs.exists(ipaths.clientMaps(dataset))) {
+            buildMaps(dataset);
         }
 
-        if(!wfs.exists(clientVmaps)) {
-            wfs.copy(ipaths.vmaps, clientVmaps);
+        if(!wfs.exists(ipaths.clientVmaps(dataset))) {
+            buildVmaps(ipaths.clientVmaps(dataset));
         }
 
-        wfs.remove(clientMmaps);
-        await wsys.execIn(cdir, `${isWindows() ? '' : './'}mmaps_generator`);
-        wfs.copy(clientMmaps, ipaths.mmaps);
+        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mmaps_generator`);
+        wfs.copy(ipaths.clientMmaps(dataset), ipaths.datasetMmaps(dataset));
         term.success(`Rebuilt mmaps in ${timer.timeSec()}s`);
     }
 
-    export async function buildLuaXML() {
-        wsys.exec(`"${ipaths.luaxmlExe}" ${
-            wfs.absPath(ipaths.luaxmlSource)} ${
-            mpath(cfg.client.directory(), 'Data')}`, 'inherit');
-    }
-
-    export async function rebuild(clean?: boolean) {
-        if(clean) {
-            wfs.remove(ipaths.maps);
-            wfs.remove(ipaths.vmaps);
-            wfs.remove(ipaths.dbcSource);
-            wfs.remove(ipaths.mmaps);
-            wfs.remove(ipaths.luaxmlSource);
-        }
-
-        if(!wfs.exists(ipaths.maps)) {
-            await buildMaps();
-        }
-
-        if(!wfs.exists(ipaths.vmaps)) {
-            await buildVmaps();
-        }
-
-        if(cfg.generation.generate_mmaps() && !wfs.exists(ipaths.mmaps)) {
-            await buildMMaps();
-        }
-
-        if (!wfs.exists(ipaths.luaxmlSource)) {
-            await buildLuaXML();
-        }
-
+    export async function buildLuaXML(dataset: string = 'default') {
+        wsys.exec(`"${ipaths.luaxmlExe}" ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset))} ${ipaths.clientData(dataset)}`, 'inherit');
     }
 
     /**
      * Prepares the module for startup.
      */
     export async function initialize() {
-        await rebuild(process.argv.includes('clean_clientdata'));
-
-        BuildCommand.addCommand('clientdata', 'maps? vmaps? mmaps? luaxml?','Rebuilds client data', async (args)=>{
-            if(args.includes('maps')) {
-                await buildMaps();
-            }
-
-            if(args.includes('vmaps')) {
-                await buildVmaps();
-            }
-
-            if(args.includes('mmaps')) {
-                await buildMMaps();
-            }
-
-            if(args.includes('luaxml')) {
-                await buildLuaXML();
-            }
-        });
-
         term.success('Initialized Game Data');
     }
 }

@@ -1,3 +1,4 @@
+[[--
 /*
  * MIT License
  * Copyright (c) 2020 Brusalk, Tim Stirrat
@@ -23,7 +24,8 @@
  /*
   * Modified by TSWoW 
   */
-export const RequireStub = `local preloadFns = {}
+--]]
+local preloadFns = {}
 local modules = {}
 local function ends_with(str, ending)
   return ending == "" or str:sub(-#ending) == ending
@@ -55,4 +57,3 @@ tstl_register_module(
     return {}
   end
 )
-`

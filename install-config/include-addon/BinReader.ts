@@ -19,8 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export const BinReader = 
-`function or(a: number, b: number) {
+function or(a: number, b: number) {
     let p = 1;
     let c = 0;
     while(a+b>0) {
@@ -156,6 +155,7 @@ export class BinReader {
         for(let i=0;i<len;++i) {
             value[i] = func(offset+1+i*ind_size);
         }
+        // @ts-ignore allowed in lua
         value[len] = null;
     }
 
@@ -183,6 +183,7 @@ export class BinReader {
         for(let i=0;i<len;++i) {
             strs[i] = this.ReadString(offset+1+i*(ind_size+1),ind_size);
         }
+        // @ts-ignore allowed in lua
         strs[len] = null;
     }
 
@@ -211,4 +212,4 @@ export class BinReader {
             this.WriteClass(offset+1+i*ind_size,cls[i]);
         }
     }
-}`
+}

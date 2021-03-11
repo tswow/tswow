@@ -18,7 +18,7 @@ import { mpath, wfs } from '../util/FileSystem';
 import { wsys } from '../util/System';
 import { build_path, install_path } from './BuildConfig';
 import { makeArchive } from '../util/7zip';
-
+import { ipaths, bpaths } from '../util/Paths';
 
 /**
  * Use 7zip in the build script
@@ -32,15 +32,15 @@ export async function make7zip(path: string, outPath: string) {
  * We need 7zip to unzip TrinityCore TDB database dumps
  */
 export async function installSZip() {
-    const szip_install = install_path('bin', '7zip');
-
-    const szip_build = build_path('7zip');
-
-    while(!wfs.exists(szip_build)) {
-        await wsys.userInput(`7zip is not installed:\n\t1. Download https://www.7-zip.org/a/7za920.zip\n\t2.Extract it to ${szip_build} (${mpath(szip_build,'7za.exe')} should exist)\n\t3.Press enter in this prompt`);
+    while(!wfs.exists(bpaths.sevenZip)) {
+        await wsys.userInput(`7zip is not installed:\n\t`
+         + `1. Download https://www.7-zip.org/a/7za920.zip\n\t`
+         + `2.Extract it to ${bpaths.sevenZip} `
+         + `(${mpath(bpaths.sevenZip,'7za.exe')} should exist)\n\t`
+         + `3.Press enter in this prompt`);
     }
 
-    if(!wfs.exists(szip_install)) {
-        wfs.copy(szip_build,szip_install);
+    if(!wfs.exists(ipaths.sevenZaExe)) {
+        wfs.copy(bpaths.sevenZip,ipaths.sevenZip);
     }
 }

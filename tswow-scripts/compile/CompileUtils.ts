@@ -20,7 +20,6 @@ import AdmZip = require('adm-zip');
 import { term } from '../util/Terminal';
 import * as fs from 'fs';
 
-
 /**
  * Unzips a zip-file to a destination folder
  * @param zipfile

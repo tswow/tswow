@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs, mpath } from './FileSystem';
+import { wfs } from './FileSystem';
 import { FileChanges } from './FileChanges';
-import { cfg } from './Config';
+import { ipaths } from './Paths';
 
 /**
  * Contains functions for finding and handling MPQ files.
@@ -28,19 +28,18 @@ export namespace mpq {
      *         since we don't know which one is the real Data/lang directory.
      * @returns All MPQ files in the clients Data and Data/lang directories
      */
-    export function getMPQFiles() {
-        const dataPath = mpath(cfg.client.directory(), 'Data');
-        const dataMpqs = wfs.readDir(dataPath, false, 'files')
+    export function getMPQFiles(dataset: string) {
+        const dataMpqs = wfs.readDir(ipaths.clientData(dataset), false, 'files')
             .filter(x => x.toLowerCase().endsWith('.mpq'));
-        const langDir = wfs.readDir(dataPath, false, 'directories')
+        const langDir = wfs.readDir(ipaths.clientData(dataset), false, 'directories')
             .filter(x => !x.toLowerCase().endsWith('.mpq'));
 
         if (langDir.length === 0) {
-            throw new Error('Can\'t find any language directory in ' + dataPath);
+            throw new Error('Can\'t find any language directory in ' + ipaths.clientData);
         }
 
         if (langDir.length > 1) {
-            throw new Error('Multiple language directory candidates in ' + dataPath);
+            throw new Error('Multiple language directory candidates in ' + ipaths.clientData);
         }
 
         const langmpqs = wfs.readDir(langDir[0], false, 'files').filter(x => x.toLowerCase().endsWith('.mpq'));
@@ -52,16 +51,16 @@ export namespace mpq {
      * Check if the mpq files have changed.
      * @param tag The changefile tag to check for
      */
-    export function changed(tag: string) {
-        return getMPQFiles().filter(x => FileChanges.isChanged(x, tag)).length > 0;
+    export function changed(dataset: string, tag: string) {
+        return getMPQFiles(dataset).filter(x => FileChanges.isChanged(x, tag)).length > 0;
     }
 
     /**
      * Writes new changes of the mpq files.
      * @param tag The changefile tag to check for
      */
-    export function tagChanges(tag: string) {
-        getMPQFiles().forEach((x) => FileChanges.tagChange(x, tag));
+    export function tagChanges(dataset: string, tag: string) {
+        getMPQFiles(dataset).forEach((x) => FileChanges.tagChange(x, tag));
     }
 
     /**

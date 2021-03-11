@@ -15,21 +15,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { term } from '../util/Terminal';
-import { mpath, wfs } from '../util/FileSystem';
+import { wfs } from '../util/FileSystem';
 import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
-import { ipaths } from '../util/Paths';
+import { ipaths, spaths } from '../util/Paths';
 
 export async function createConfig() {
     term.log('Creating config files');
 
     // Copy configuration/misc files
-    const configDest = install_path('config/tswow.yaml');
-    if (!wfs.exists(configDest)) {
-        wfs.copy('./tswow.default.yaml', configDest);
+    if (!wfs.exists(ipaths.nodeYaml)) {
+        wfs.copy(spaths.installNodeYaml,ipaths.nodeYaml);
     }
 
-    wfs.copy('./package.install.json', install_path('package.json'));
+    wfs.copy(spaths.installPackageJson,ipaths.packageJson)
 
     wsys.execIn(install_path(), 'npm i');
 
@@ -37,29 +36,21 @@ export async function createConfig() {
         wfs.mkDirs(ipaths.coreData);
     }
 
-    wfs.copy(mpath('./tswow-scripts', 'sql'), install_path('bin', 'sql'), true);
+    wfs.copy(spaths.scriptsSql, ipaths.binSql, true)
 
     if (!wfs.exists(ipaths.modules)) {
         wfs.mkDirs(ipaths.modules);
     }
 
-    if (!wfs.exists(install_path('modules', 'tswow-stdlib'))) {
+    if(!wfs.exists(ipaths.moduleRoot('tswow-stdlib'))) {
         wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
     }
 
-    const globaldts = mpath('TrinityCore', 'src', 'server', 'game', 'Tswow',
-    'scripting', 'Public','global.d.ts');
-
-    wfs.copy(globaldts,ipaths.binglobaldts);
-
-    wfs.copy('./start.js', ipaths.startjsCore);
-    wfs.copy('./start.js', ipaths.startjsBin);
-
-    wfs.copy('./.vscode-install', ipaths.vscodeWorkspace);
-
-    wfs.copy('./addons',ipaths.addons)
-
-    wfs.copy('./tswow-scripts/symlinkmaker.js', ipaths.symlinkMaker)
-
-    wfs.copy('./TrinityCore/sql/updates',ipaths.sqlUpdates);
+    wfs.copy(spaths.tcGlobaldts,ipaths.binglobaldts);
+    wfs.copy(spaths.startJs, ipaths.startjs);
+    wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
+    wfs.copy(spaths.installAddons, ipaths.addons);
+    wfs.copy(spaths.installSymlinkMaker, ipaths.symlinkMaker);
+    wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
+    wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
 }

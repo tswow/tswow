@@ -14,20 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { BinReader } from "../addons/BinReader";
-import { EventsTS } from "../addons/events";
-import { LualibBundle } from "../addons/lualib_bundle";
-import { RequireStub } from "../addons/RequireStub";
-import { cfg } from "../util/Config";
 import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { BuildCommand } from "./BuildCommand";
-import { Client } from "./Client";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
-import { DoubleFile } from "../addons/Double";
-import { Base64 } from "../addons/base64";
+import { Datasets } from "./Dataset";
 
 const defaultToc = (name: string) => 
 `## Interface: 30300
@@ -74,19 +67,17 @@ export namespace Addon {
             wfs.write(ipaths.addonIndex(mod),'console.log("Hello world!");');
         }
 
-        wfs.write(ipaths.addonBinReader(mod),BinReader);
-        wfs.write(ipaths.addonEventsDest(mod),EventsTS);
+        wfs.copy(ipaths.addonIncludeBinReader,ipaths.addonBinReader(mod));
+        wfs.copy(ipaths.addonInclude,ipaths.addonEventsDest(mod));
         wfs.write(ipaths.addonToc(mod),defaultToc(mod));
-        wfs.write(ipaths.addonRequireStub(mod),RequireStub);
-        wfs.copy(ipaths.addonSourceGlobal,ipaths.addonDestGlobal(mod));
+        wfs.copy(ipaths.addonIncludeRequireStub,ipaths.addonRequireStub(mod));
+        wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(mod));
 
         wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig,null,4));
     }
 
-    export function build(mod: string) {
-        const msgPath = mpath(ipaths.moduleAddons(mod),'classes.json');
-
-        wfs.remove(msgPath);
+    export function build(mod: string, dataset: string = 'default') {
+        wfs.remove(ipaths.moduleAddonClasses(mod));
 
         // need to bypass the normal checks for decorators, 
         // so we inject a patch instead of cloning and building the entire repository
@@ -110,8 +101,6 @@ export namespace Addon {
 
         wsys.execIn(ipaths.moduleAddons(mod),`node ../../../node_modules/typescript-to-lua/dist/tstl.js`);
 
-        wfs.write(ipaths.addonDouble(mod),DoubleFile);
-
         let generatedShared: string[] = [];
         wfs.iterate(ipaths.moduleShared(mod),(name)=>{
             name = wfs.relative(ipaths.moduleShared(mod),name);
@@ -130,7 +119,7 @@ export namespace Addon {
 
             if(name.endsWith('.xml')) {
                 xmlSources.push("addons\\"+name);
-                wfs.copy(mpath(ipaths.moduleAddons(mod),name),mpath(ipaths.addonBuild(mod),'addons',name));
+                wfs.copy(ipaths.moduleAddonSourceFile(mod,name), ipaths.moduleAddonDestFile(mod,name));
             }
         });
 
@@ -138,8 +127,8 @@ export namespace Addon {
         xmlSources = xmlSources.map(x=>x.split('/').join('\\'));
         generatedShared = generatedShared.map(x=>x.split('/').join('\\'));
 
-        wfs.write(ipaths.lualibDest(mod),LualibBundle);
-        wfs.write(ipaths.addonBase64Dest(mod),Base64);
+        wfs.copy(ipaths.addonIncludeLualib,ipaths.lualibDest(mod));
+        wfs.copy(ipaths.addonIncludeBase64,ipaths.addonBase64Dest(mod));
 
         wfs.copy(ipaths.addonToc(mod),ipaths.addonBuildToc(mod));
         let text = wfs.read(ipaths.addonBuildToc(mod));
@@ -149,8 +138,8 @@ export namespace Addon {
         text+=`\n${xmlSources.join('\n')}`
         wfs.write(ipaths.addonBuildToc(mod),text);
 
-        if(wfs.exists(msgPath)) {
-            const messages = JSON.parse(wfs.read(msgPath));
+        if(wfs.exists(ipaths.moduleAddonClasses(mod))) {
+            const messages = JSON.parse(wfs.read(ipaths.moduleAddonClasses(mod)));
             for(let path in messages) {
                 let message= messages[path];
                 let luapath = wfs.relative(ipaths.moduleRoot(mod),path);
@@ -172,9 +161,9 @@ export namespace Addon {
         }
 
         wfs.copy(ipaths.addonBuild(mod),
-            mpath(cfg.client.directory(),'Interface','Addons',mod));
+            mpath(ipaths.clientAddonBuild(dataset,mod)));
 
-        wfs.remove(msgPath);
+        wfs.remove(ipaths.moduleAddonClasses(mod));
     }
 
     export function initialize() {
@@ -187,13 +176,21 @@ export namespace Addon {
             initializeModule(args[0]);
         }));
 
-        BuildCommand.addCommand('addon','...modules','Builds addons for one, multiple or all moduels',((args)=>{
-            Client.kill();
+        BuildCommand.addCommand('addon','dataset ...modules','Builds addons for one, multiple or all moduels against a single dataset',((args)=>{
+            if(args.length==0) {
+                throw new Error(`Must provide at least what dataset to build addons for`);
+            }
+        
+            Datasets.get(args[0]).client.kill();
+            
+            args = args.slice(1);
+
             (args.length != 0 ? args : 
                     Modules.getModules()
                         .filter(x=>wfs.exists(ipaths.moduleAddons(x))))
                 .forEach(x=>build(x));
-            Client.start();
+
+            Datasets.get(args[0]).client.start();
         }));
     }
 }

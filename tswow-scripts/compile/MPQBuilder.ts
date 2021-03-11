@@ -18,23 +18,32 @@ import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { build_path, install_path } from './BuildConfig';
 import { wfs, mpath } from '../util/FileSystem';
+import { bpaths, spaths, ipaths } from '../util/Paths';
 
 export async function createMpqBuilder(cmake: string) {
     if (isWindows()) {
-        wsys.exec(`${cmake} DCMAKE_INSTALL_PREFIX="${build_path('StormLibInstall')}" -S "StormLib" -B "${build_path('StormLibBuild')}"`, 'inherit');
-        wsys.exec(`${cmake} --build "${build_path('StormLibBuild')}" --config Release`, 'inherit');
-        wfs.copy('./StormLib/src/StormLib.h', build_path('StormLibBuild/Release/StormLib.h'));
-        wfs.copy('./StormLib/src/StormPort.h', build_path('StormLibBuild/Release/StormPort.h'));
-        wsys.exec(`${cmake} -DSTORM_INCLUDE_DIR="${build_path('StormLibBuild/Release')}" -D_storm_release_lib="${build_path('StormLibBuild/Release/storm.lib')}" -S "mpqbuilder" -B "${build_path('mpqbuilder')}"`, 'inherit');
-        wsys.exec(`${cmake} --build "${build_path('mpqbuilder')}" --config Release`, 'inherit');
-        wfs.copy(build_path('mpqbuilder/Release/mpqbuilder.exe'), install_path('bin/mpqbuilder/mpqbuilder.exe'));
-        wfs.copy(build_path('mpqbuilder/Release/luaxmlreader.exe'), install_path('bin/mpqbuilder/luaxmlreader.exe'));
+        wsys.exec(`${cmake} DCMAKE_INSTALL_PREFIX="${bpaths.stormlibInstall}" -S "StormLib" -B "${bpaths.stormlibBuild}"`, 'inherit');
+        wsys.exec(`${cmake} --build "${bpaths.stormlibBuild}" --config Release`, 'inherit');
+        wfs.copy(spaths.stormLibMainHeader,bpaths.stormLibMainHeader)
+        wfs.copy(spaths.stormLibPortHeader,bpaths.stormLibPortHeader)
+
+        wsys.exec(`${cmake} `
+          +`-DSTORM_INCLUDE_DIR="${bpaths.stormLibBuildRelease}" `
+          +`-D_storm_release_lib="${bpaths.stormLibLibraryFile}" `
+          +`-S "mpqbuilder" `
+          +`-B "${bpaths.mpqBuilder}"`, 'inherit');
+        wsys.exec(`${cmake} `
+        +`--build "${bpaths.mpqBuilder}" `
+        +`--config Release`, 'inherit');
+
+        wfs.copy(bpaths.mpqBuilderBinary,ipaths.mpqBuilderExe)
+        wfs.copy(bpaths.luaxmlBinary,ipaths.luaxmlExe)
     } else {
         const stormBuildDir = build_path('StormLibBuild');
         const stormInstallDir = build_path('StormLibInstall');
         wfs.mkDirs(stormBuildDir);
         wfs.mkDirs(stormInstallDir);
-        const relativeInstall = wfs.relative(stormBuildDir, build_path('StormLibInstall'));
+        const relativeInstall = wfs.relative(stormBuildDir, bpaths.stormlibInstall);
         const relativeSource = wfs.relative(stormBuildDir, './StormLib');
         await wsys.inDirectory(stormBuildDir, () => {
             wsys.exec(`${cmake} "${relativeSource}" -DCMAKE_INSTALL_PREFIX="${relativeInstall}"`, 'inherit');

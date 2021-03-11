@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath, wfs } from "../util/FileSystem";
+import { wfs } from "../util/FileSystem";
 import { mysql } from "../util/MySQL";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
-import { MapData } from "./MapData";
 import { Modules } from "./Modules";
-import { TrinityCore } from "./TrinityCore";
+import { Datasets } from "./Dataset";
 
 /**
  * Module for cleaning intermediate data.
@@ -36,12 +35,10 @@ export namespace Clean {
         }
 
         wfs.remove(ipaths.moduleScriptsBuild(mod));
-
-        for(const dir of [ipaths.tcReleaseScripts,ipaths.tcDebugScripts]) {
-                const scriptFile = mpath(dir,Modules.getBuiltLibraryName(mod));
-            wfs.remove(scriptFile);
-            wfs.remove(scriptFile.substring(0,scriptFile.length-3)+'pdb');
-        }
+        ipaths.tcTypes.forEach(x=>{
+            wfs.remove(ipaths.tcModuleScript(x,mod));
+            wfs.remove(ipaths.tcModulePdb(x,mod));
+        });
     }
 
     export async function cleanMysql() {
@@ -51,9 +48,8 @@ export namespace Clean {
         }
 
         await mysql.disconnect();
-        wfs.remove(ipaths.mysqlData);
-        wfs.remove(ipaths.mysqlPlain);
-        await mysql.start();
+        wfs.remove(ipaths.databaseDir);
+        await mysql.startProcess();
     }
 
     export async function cleanDataBuild(mod?: string) {
@@ -70,11 +66,11 @@ export namespace Clean {
         await cleanTypescript();
     }
 
-    export async function cleanIds() {
+    export async function cleanIds(dataset: string = "default") {
         if(wfs.exists(ipaths.configIds)) {
             wfs.makeBackup(ipaths.configIds);
         }
-        wfs.remove(ipaths.coreIds);
+        wfs.remove(ipaths.datasetIds(dataset));
         wfs.remove(ipaths.configIds);
     }
 
@@ -127,6 +123,22 @@ export namespace Clean {
         await Modules.refreshModules();
     }
 
+    export function cleanClientData(dataset: string = 'default') {
+        wfs.remove(ipaths.clientDbc(dataset));
+        wfs.remove(ipaths.clientMaps(dataset));
+        wfs.remove(ipaths.clientVmaps(dataset));
+        wfs.remove(ipaths.clientBuildings(dataset));
+        wfs.remove(ipaths.clientMmaps(dataset));
+        
+        wfs.remove(ipaths.datasetDBCSource(dataset));
+        wfs.remove(ipaths.datasetDBC(dataset));
+        wfs.remove(ipaths.datasetMaps(dataset));
+        wfs.remove(ipaths.datasetVmaps(dataset));
+        wfs.remove(ipaths.datasetMmaps(dataset));
+        
+        Datasets.get(dataset).installServerData();
+    }
+
     export async function initialize() {
         const cleanC = commands.addCommand('clean')
 
@@ -138,7 +150,7 @@ export namespace Clean {
             await cleanDataBuild(args[0]);
         });
 
-        cleanC.addCommand('ids','module?','Removes all id mappings', async(args)=>{
+        cleanC.addCommand('ids','dataset = "default"','Removes all id mappings for a dataset', async(args)=>{
             await cleanIds();
         });
 
@@ -146,25 +158,21 @@ export namespace Clean {
             await cleanMysql();
         });
 
-        cleanC.addCommand('clientdata','','Cleans all client data', async(args)=>{
-            await TrinityCore.stop();
-            await MapData.rebuild(true);
+        cleanC.addCommand('clientdata','dataset','Cleans all client data for a single dataset', async(args)=>{
+            await cleanClientData(args[0]);
         });
 
         cleanC.addCommand('typescript', '','Cleans all TypeScript data', async(args)=>{
             await cleanTypescript();
         });
 
-        cleanC.addCommand('all','keepClient?','Attempts to clean all intermediate data', async(args)=>{
+        cleanC.addCommand('all','dataset?','Attempts to clean all intermediate data', async(args)=>{
             await cleanScriptBin();
             await cleanDataBuild();
             await cleanIds();
             await cleanAddonBuild();
-            if(!args.includes('keepClient')) {
-                await TrinityCore.stop();
-                await MapData.rebuild(true);
-            }
             await cleanMysql();
+            await cleanClientData(args[0]);
         });
 
         cleanC.addCommand('addon','mod?','Cleans addon build data',async (x)=>{

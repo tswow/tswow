@@ -16,7 +16,7 @@
  */
 import { wfs } from '../util/FileSystem';
 import { term } from '../util/Terminal';
-import { build_path, install_directory, install_path } from './BuildConfig';
+import { build_path, install_directory } from './BuildConfig';
 import { ipaths } from '../util/Paths';
 import { destroyAllWatchers } from '../util/TSWatcher';
 

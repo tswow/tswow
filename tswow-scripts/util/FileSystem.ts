@@ -17,6 +17,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * Async file system access using promises
+ */
 export namespace wfsa {
     export function exists(fpath: string) {
         return new Promise<boolean>((res, rej) => {

@@ -16,21 +16,14 @@
  */
 import { mpath, wfs, rpath } from '../util/FileSystem';
 import { getTSWatcher } from '../util/TSWatcher';
-import { install_path } from './BuildConfig';
-
-const config_dir: string|undefined = undefined;
-function stopScriptsBuild() {
-    if (config_dir !== undefined) {
-
-    }
-}
+import { spaths, ipaths } from '../util/Paths';
 
 export async function buildScripts(buildLine: string, installLine: string) {
     // Scripts config
     const scripts_config_dir = mpath(buildLine, 'scripts-config');
     const scrips_out_dir = rpath(scripts_config_dir,
         mpath(installLine, 'bin', 'scripts', 'tswow'));
-    const scripts_root_dir = rpath(scripts_config_dir, './tswow-scripts');
+    const scripts_root_dir = rpath(scripts_config_dir, spaths.scripts);
     const scripts_tsconfig = {
         compilerOptions: {
             target: 'es2018',
@@ -47,8 +40,8 @@ export async function buildScripts(buildLine: string, installLine: string) {
         include: [scripts_root_dir]
     };
 
-    wfs.copy(mpath('tswow-scripts', 'wotlkdata', 'package.json'),
-        install_path('bin', 'scripts', 'tswow', 'wotlkdata', 'package.json'));
+    wfs.copy(spaths.wotlkdataPackageJson,
+        ipaths.wotlkdataPackageJson);
     wfs.write(mpath(buildLine, scripts_config_dir, 'tsconfig.json'),
         JSON.stringify(scripts_tsconfig, null, 4));
 

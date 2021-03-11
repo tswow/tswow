@@ -17,7 +17,7 @@
 import { wfs } from '../util/FileSystem';
 import { term } from '../util/Terminal';
 import yaml = require('js-yaml');
-import { cfg } from '../util/Config';
+import { ipaths } from '../util/Paths';
 
 // TODO: Handle other types of quotes
 function splitArgs(command: string) {
@@ -166,7 +166,7 @@ export namespace commands {
                 await rootCommand.handle(args);
             } catch (error) {
                 if (error && error.message) {
-                    if (trace||cfg.display.print_stacktrace()) {
+                    if (trace) {
                         term.error(error, error.stack);
                     } else {
                         term.error(error);
@@ -221,23 +221,24 @@ export namespace commands {
     });
 
     // Custom commands
-    const commandfile = './config/commands.yaml';
     let customCommands: {[key: string]: string} = {};
     export function addCustomCommand(name: string, args: string[]) {
         customCommands[name] = args.join(' ');
-        wfs.write(commandfile,
+        wfs.write(ipaths.commandFile,
             yaml.dump(customCommands));
         rootCommand.removeCommand(name);
         rootCommand.addCommand(name, '', '', async (runArgs) => {
             await sendCommand(args.concat(runArgs).join(' '));
         });
     }
+    
     addCommand('command', 'alias command', 'Creates a command alias', (args) => {
         addCustomCommand(args[0], args.slice(1));
     });
-    if (wfs.exists(commandfile)) {
+
+    if (wfs.exists(ipaths.commandFile)) {
         customCommands = yaml.load(
-            wfs.read(commandfile));
+            wfs.read(ipaths.commandFile));
         for (const key in customCommands) {
             if (customCommands[key] !== undefined) {
                 addCustomCommand(key, customCommands[key].split(' '));

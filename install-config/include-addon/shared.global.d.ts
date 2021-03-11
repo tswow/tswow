@@ -1,5 +1,4 @@
-export const GlobalShared = 
-`type uint8 = number;
+type uint8 = number;
 type uint16 = number;
 type uint32 = number;
 type uint64 = number;
@@ -19,4 +18,4 @@ declare function MsgClassArray(size: number): (field: any, name: any)=>void
 declare function MsgPrimitive(classTarget: any, name: string): any
 declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>void;
 declare function MsgString(size: number): (field: any, name: any)=>void
-declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void`
+declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void

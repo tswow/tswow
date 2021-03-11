@@ -15,50 +15,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as mysql_lib from 'mysql';
-import { cfg, DatabaseType, DatabaseSettings } from './Config';
 import { wsys } from './System';
 import { term } from './Terminal';
 import { commands } from '../runtime/Commands';
 import { isWindows } from './Platform';
 import { Process } from './Process';
-import { TrinityCore } from '../runtime/TrinityCore';
-import { mpath, wfs, wfsa } from './FileSystem';
+import { wfs, wfsa } from './FileSystem';
 import { ipaths } from './Paths';
+import { databaseSettings, DatabaseSettings, DatabaseType } from './Yaml';
+import { NodeConfig } from '../runtime/NodeConfig';
 import { extract } from './7zip';
-import { FileChanges } from './FileChanges';
-
-/**
- * Helper function to make a mysql query and return a promise.
- * @param con The connection to query on
- * @param query The query
- */
-function promiseQuery(con: mysql_lib.Connection, query: string) {
-    return new Promise<any>((res, rej) => {
-        con.query(query, (err, data) => {
-            return err ? rej(err) : res(data);
-        });
-    });
-}
-
-/**
- * Helper function to connect to a mysql server and return a promise.
- * @param con The connection to connect
- */
-function promiseConnect(con: Connection) {
-    if (con.isConnected) {
-        return;
-    }
-    return new Promise<void>((res, rej) =>
-        con.con.connect((err) => err ? rej(err) : (con.isConnected = true) && res())
-    );
-}
+import { start } from 'repl';
 
 /**
  * Represents a single connection to a mysql server.
- *
- * Typically, tswow will manage 3 Connection instances for the three TrinityCore database types `world`, `character` and `auth`.
  */
-class Connection {
+export class Connection {
     con: mysql_lib.Connection;
     cfg: DatabaseSettings;
     status?: Promise<void>;
@@ -69,8 +41,8 @@ class Connection {
      * Creates a new connection for a specific database type.
      * @param type
      */
-    constructor(type: DatabaseType) {
-        this.cfg = cfg.databaseSettings(type);
+    constructor(cfg: DatabaseSettings, type: DatabaseType) {
+        this.cfg = cfg;
         this.con = mysql_lib.createConnection(this.config());
         this.type = type;
     }
@@ -95,7 +67,34 @@ class Connection {
      */
     async query(query: string) {
         await this.connect();
-        return promiseQuery(this.con, query);
+        return this.promiseQuery(query);
+    }
+
+
+    /**
+     * Helper function to make a mysql query and return a promise.
+     * @param con The connection to query on
+     * @param query The query
+     */
+    async promiseQuery(query: string) {
+        return new Promise<any>((res, rej) => {
+            this.con.query(query, (err, data) => {
+                return err ? rej(err) : res(data);
+            });
+        });
+    }
+
+    /**
+     * Helper function to connect to a mysql server and return a promise.
+     * @param con The connection to connect
+     */
+    promiseConnect() {
+        if (this.isConnected) {
+            return;
+        }
+        return new Promise<void>((res, rej) =>
+            this.con.connect((err) => err ? rej(err) : (this.isConnected = true) && res())
+        );
     }
 
     /**
@@ -135,9 +134,9 @@ class Connection {
         this.con = mysql_lib.createConnection(this.config());
         return this.status = new Promise<void>(async (res, rej) => {
             try {
-                await promiseConnect(this);
-                await promiseQuery(this.con, `CREATE DATABASE IF NOT EXISTS \`${this.cfg.name}\`;`);
-                await promiseQuery(this.con, `USE \`${this.cfg.name}\`;`);
+                await this.promiseConnect();
+                await this.promiseQuery(`CREATE DATABASE IF NOT EXISTS \`${this.cfg.name}\`;`);
+                await this.promiseQuery(`USE \`${this.cfg.name}\`;`);
             } catch (error) {
                 this.status = undefined;
                 rej(error);
@@ -151,227 +150,192 @@ class Connection {
  * Contains functions and fields for managing the mysql server that tswow handles.
  */
 export namespace mysql {
-    export const world_src = new Connection('world_source');
-    /** Connection to the TrinityCore world server */
-    export const world = new Connection('world');
-    /** Connection to the TrinityCore auth server */
-    export const auth = new Connection('auth');
-    /** Connection to the TrinityCore characters server */
-    export const characters = new Connection('characters');
-    /** Connections to all the TrinityCore databases */
-    export const all_live = [world, auth, characters];
-    /** Connections to all handled databases (TrinityCore+world_source) */
-    export const all = [world_src, world, auth, characters];
-
     const mysqlprocess: Process = new Process();
-    async function startProcess() {
+
+    export async function startProcess() {
         term.log('Starting mysql...');
-        if (!wfs.exists(ipaths.mysqlData)) {
+        if (!wfs.exists(ipaths.databaseDir)) {
+            term.log("No mysql database found, creating it...");
             wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
-                wfs.absPath(ipaths.mysqlData)}`);
+                wfs.absPath(ipaths.databaseDir)}`);
+            term.success('Created mysql database');
         } 
         const startup_file = `./bin/mysql_startup.txt`;
-        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '${cfg.databaseSettings('world').password}';`);
-        const oldTcStatus = TrinityCore.isStarted();
+        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '${databaseSettings('world').password}';`);
         await disconnect();
         mysqlprocess.start(ipaths.mysqldExe,
             [
                 // assume that if we start mysql, database_all is being used.
-                `--port=${cfg.databaseSettings('world').port}`,
+                `--port=${databaseSettings('world').port}`,
                 '--log_syslog=0',
                 '--console',
                 '--wait-timeout=2147483',
                 `--init-file=${wfs.absPath(startup_file)}`,
-                `--datadir=${wfs.absPath(ipaths.mysqlData)}`
+                `--datadir=${wfs.absPath(ipaths.databaseDir)}`
             ]);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
         await mysqlprocess.waitFor('Execution of init_file*ended.', true);
         term.success('Mysql process started');
-
-        if(oldTcStatus)
-        {
-            TrinityCore.start();
-        }
     }
 
+    /**
+     * Returns whether this instance of TSWoW should manage its own MySQL process.
+     */
     export function hasOwnProcess() {
-        return isWindows() && (process.argv.includes('own-mysql') || cfg.mysql_executable() === undefined);
+        return isWindows() && (process.argv.includes('own-mysql') || NodeConfig.mysql_executable === undefined);
     }
 
-    export function showOutput(show: boolean) {
+    /**
+     * Sets whether the MySQL process should display output in the console
+     * (very messy, only use when you need to debug)
+     * @param show 
+     */
+    export function showProcessOutput(show: boolean) {
         mysqlprocess.showOutput(show);
     }
 
     /**
-     * Returns the database for a specific type.
-     * @param type Database type to return
-     * @throws if `type` is not a valid database type ('world'|'auth'|'characters')
-     * @returns Connection for database specified by `type`
+     * Checks if world databases are installed on multiple connections
+     * @param worldConnections 
      */
-    function getDatabase(type: string) {
-        switch (type) {
-            case 'world_source':
-                return world_src;
-            case 'world':
-                return world;
-            case 'auth':
-                return auth;
-            case 'characters':
-                return characters;
-            default:
-                throw new Error(`Incorrect database type: ${type}`);
+    export async function isWorldInstalled(worldConnections: Connection[]) {
+        for(const con of worldConnections) {
+            if(!await con.hasTable('access_requirement')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Extracts the TDB file in bin and returns the filepath
+     */
+    export async function extractTdb() {
+        const search = ()=> wfs.readDir(ipaths.bin,false,'files').filter(x=>x.endsWith('.sql'));
+        const search1 = search();
+        if(search1.length==1) {
+            return search1[0];
+        }
+
+        if(search1.length>1) {
+            throw new Error(`Multiple SQL files in the bin directory, please remove them manually`);
+        }
+
+        extract(ipaths.tdb);
+        const search2 = search();
+        if(search2.length>1) {
+            throw new Error(`TDB archive seems to contain multiple SQL files, it's probably corrupt.`);
+        }
+
+        if(search2.length==0) {
+            throw new Error(`Found no SQL files after extracting TDB archive, either the extraction failed or the archive was empty.`);
+        }
+
+        return search2[0];
+    }
+
+    /**
+     * Rebuilds a database from an sql file
+     * @param con 
+     * @param sqlFilePath 
+     */
+    export async function rebuildDatabase(con: Connection, sqlFilePath: string) {
+        const port = con.cfg.port;
+        term.log(`Beginning to rebuild ${con.name()}`);
+        await con.status;
+        await con.promiseConnect();
+        await con.promiseQuery(`DROP DATABASE IF EXISTS \`${con.name()}\`;`);
+
+        // Need this since we dropped the db
+        await con.disconnect();
+        await con.connect();
+
+        const mysqlCommand = mysql.hasOwnProcess() ? 
+            `"${ipaths.mysqlExe}"` : 
+                NodeConfig.mysql_executable != undefined ? 
+            NodeConfig.mysql_executable : 
+                `sudo mysql`;
+
+        await wsys.execAsync(`${mysqlCommand} --port ${port} -u root ${con.name()} < ${sqlFilePath}`);
+        term.success(`Rebuilt database ${con.name()}`);
+    }
+
+    export async function applySQLFiles(cons: Connection, type: 'world'|'auth'|'characters') {
+        // Apply 'startup' files (TODO: these should be made into updates)
+        await wfsa.iterate(ipaths.startupSqlDir(type), async (file) => {
+            if (file.endsWith('.sql')) {
+                const contents = wfs.read(file);
+                try {
+                    await cons.query(contents);
+                } catch(err) {
+                    term.error(`SQL error from file ${file}`);
+                    term.error(err.message);
+                    // TODO: what do here?
+                }
+            }
+        });
+
+        let files : string[] = [];
+        wfs.iterate(ipaths.sqlUpdateDir(type),(fp)=>{
+            files.push(fp);
+        });
+        files.sort();
+
+        for(const filepath of files) {
+            const filename = wfs.basename(filepath);
+            const applied = await cons.query('SELECT * from `updates` WHERE `name` = "'+filename+'"');
+            if(applied.length===0) {
+                term.log(`Applying sql update ${filepath}`)
+                await cons.query(wfs.read(filepath));
+                await cons.query(`INSERT INTO updates (name,hash,speed) VALUES ("${filename}", "tswow",0);`) 
+            }
         }
     }
 
     export async function disconnect() {
-        await Promise.all(all.map(async x => await x.disconnect()));
-
-        if (TrinityCore.isStarted()) {
-            await TrinityCore.stop();
-        }
-
         if(mysqlprocess.isRunning()) {
             mysqlprocess.stop();
         }
     }
 
-    export async function start() {
-        if(hasOwnProcess()) {
-            await startProcess();
-        }
-        await connectDatabases();
-    }
-
-    async function install_world(w: Connection, sqlPath: string) {
-        const port = cfg.databaseSettings('world').port;
-        term.log(`Beginning to rebuild ${w.name()}`);
-        await w.status;
-        await promiseConnect(w);
-        await promiseQuery(w.con, `DROP DATABASE IF EXISTS \`${w.name()}\`;`);
-        await w.disconnect();
-        await w.connect();
-
-        const sqlpath = hasOwnProcess() ? `"${ipaths.mysqlExe}"` : cfg.mysql_executable() != undefined ? cfg.mysql_executable() : `sudo mysql`;
-        await wsys.execAsync(`${sqlpath} --port ${port} -u root ${w.name()} < ${sqlPath}`);
-        term.success(`Rebuilt database ${w.name()}`);
-    }
-
-    /**
-     * Check if we need to build any databases to start TrinityCore, and registers mysql commands to tswow.
-     */
-    async function connectDatabases() {
-        // Connect to all databases
-        await Promise.all(all.map(x => x.connect()));
-
-        // Rebuild world/world_src
-        let shouldBuild = FileChanges.isChanged(ipaths.tdb, 'tdb');
-        if (!(await world.hasTable('access_requirement'))) {
-            shouldBuild = true;
-        }
-
-        if (!(await world_src.hasTable('access_requirement'))) {
-            shouldBuild = true;
-        }
-
-        if (shouldBuild) {
-            function clearSql() {
-                wfs.readDir(ipaths.bin, false, 'files')
-                    .filter(x => x.endsWith('sql'))
-                    .forEach(x => wfs.remove(x));
-            }
-            clearSql();
-            if (!wfs.exists(ipaths.tdb)) {
-                throw new Error(`Missing TDB: ${ipaths.tdb}, please download a TDB, rename it "tdb.7z" and place it in "bin".`);
-            }
-            extract(ipaths.tdb);
-            const sqls = wfs.readDir(ipaths.bin, false, 'files')
-                .filter(x => x.endsWith('.sql'));
-
-            if (sqls.length > 1) {
-                throw new Error(`Failed to install TDB: Multiple SQL files lying in `);
-            }
-
-            const sql = sqls[0];
-            await Promise.all([
-                install_world(world, sql), 
-                install_world(world_src, sql)]);
-            clearSql();
-            FileChanges.tagChange(ipaths.tdb, 'tdb');
-        }
-
+    export async function installCharacters(connection: Connection) {
         // Special hack to get the characters tables in, because some scripts depend on it
-        let charRowCount = await characters.query('SHOW TABLES; SELECT FOUND_ROWS()');
+        let charRowCount = await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(charRowCount[1][0]['FOUND_ROWS()']===0) {
-            await characters.query(wfs.read(ipaths.createCharactersSql));
+            term.log(`No character tables found for ${connection.cfg.name}, creating them...`);
+            await connection.query(wfs.read(ipaths.createCharactersSql));
         }
+        await applySQLFiles(connection,'characters');
+    }
 
-        let authRowCount = await auth.query('SHOW TABLES; SELECT FOUND_ROWS()');
+    export async function installAuth(connection: Connection) {
+        let authRowCount = await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(authRowCount[1][0]['FOUND_ROWS()']===0) {
-            await auth.query(wfs.read(ipaths.createAuthSql));
+            term.log(`No auth tables found for ${connection.cfg.name}, creating them...`);
+            await connection.query(wfs.read(ipaths.createAuthSql));
         }
-
-        for(const db of ['world','auth','characters']) {
-            await wfsa.iterate(mpath(ipaths.startupSql,db), async (file) => {
-                if (file.endsWith('.sql')) {
-                    const contents = wfs.read(file);
-                    try {
-                        await getDatabase(db).query(contents);
-                        if(db==='world') {
-                            await world_src.query(contents);
-                        }
-                    } catch(err) {
-                        term.error(`Error on file ${file}`)
-                        term.error(err.message);
-                    }
-                }
-            });
-
-            let files : string[] = []
-            wfs.iterate(mpath(ipaths.sqlUpdates,db),(fp)=>{
-                files.push(fp)
-            });
-            files.sort()
-
-            for(const filepath of files) {
-                let dbs = db === 'world' ? [db,'world_source'] : [db];
-                const filename = wfs.basename(filepath);
-                for(const updateDb of dbs) {
-                    let applied = await getDatabase(updateDb).query('SELECT * from `updates` WHERE `name` = "'+filename+'"');
-                    if(applied.length === 0) {
-                        console.log(`Applying update ${filename}`);
-                        await getDatabase(updateDb).query(wfs.read(filepath));
-                        await getDatabase(updateDb).query(`INSERT INTO updates (name,hash,speed) VALUES ("${filename}", "tswow",0);`)
-                    }
-                }
-            }
-        }
+        await applySQLFiles(connection,'auth');
     }
 
     export async function initialize() {
-        await start();
-        const mysqlC = commands.addCommand('mysql');
+        if(hasOwnProcess()) {
+            await startProcess();
 
-        mysqlC.addCommand('query', 'world|auth|characters sql', 'Queries a database', async(args: string[]) => {
-            if (args.length < 2) {
-                throw new Error('Incorrect syntax: mysql query world|auth|characters sql"');
-            }
-            const db = getDatabase(args[0]);
-            const sql = args.slice(1).join(' ');
-            term.log(JSON.stringify(await db.query(sql)));
-        });
+            const mysqlC = commands.addCommand('mysql');
 
-        mysqlC.addCommand('end', '', 'Stops the MySQL process and disconnects all connections', async() => {
-            await disconnect();
-        });
+            mysqlC.addCommand('end', '', 'Stops the MySQL process and disconnects all connections', async() => {
+                await disconnect();
+            });
 
-        mysqlC.addCommand('start', '', 'Starts/Restarts the MySQL process and all connections', async() => {
-            await start();
-        });
+            mysqlC.addCommand('start', '', 'Starts/Restarts the MySQL process and all connections', async() => {
+                await start();
+            });
 
-        mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {
-            showOutput(args[0]==='true');
-        });
+            mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {
+                showProcessOutput(args[0]==='true');
+            });
 
-        term.success('MySQL initialized');
+            term.success('MySQL initialized');
+        }
     }
 }

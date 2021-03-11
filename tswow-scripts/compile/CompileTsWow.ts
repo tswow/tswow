@@ -14,9 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { BuildPaths, InstallPaths, ipaths } from '../util/Paths';
+import { build_path, install_path } from './BuildConfig';
+InstallPaths.setInstallBase(install_path());
+BuildPaths.setBuildBase(build_path());
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
-import { build_path, install_path } from './BuildConfig';
 import { commands } from '../runtime/Commands';
 import { isWindows } from '../util/Platform';
 import { createConfig } from './Config';
@@ -30,12 +33,9 @@ import { buildScripts } from './Scripts';
 import { installBoost } from './Boost';
 import { installSZip, make7zip } from './7Zip';
 import { cleanBuild, cleanInstall } from './Clean';
-import { BuildPaths, InstallPaths } from '../util/Paths';
 import { installBLPConverter } from './BLPConverter';
 import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
-
-InstallPaths.setInstallBase(install_path());
-BuildPaths.setBuildBase(build_path());
+import { wfs } from '../util/FileSystem';
 
 let buildingScripts = false;
 
@@ -85,6 +85,9 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (!buildingScripts && isType('scripts')) {
+        if(!wfs.exists(ipaths.tsc)) {
+            wsys.execIn(ipaths.base, `npm i typescript`);
+        }
         await buildTranspiler(build_path(), install_path());
         await buildScripts(build_path(), install_path());
         buildingScripts = true;

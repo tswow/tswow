@@ -20,6 +20,7 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { commands } from './Commands';
 import { Modules } from './Modules';
+import { ipaths } from '../util/Paths';
 
 /**
  * Contains functions for MPQ building
@@ -29,13 +30,10 @@ export namespace Assets {
 
     function iter(directory: string|undefined, callback: (file: string) => any) {
         if (directory) {
-            wfs.iterate(mpath('./modules', directory, 'assets'), callback);
+            wfs.iterate(ipaths.moduleAssets(directory), callback)
         } else {
             Modules.getModules().forEach((x) => {
-                const p = mpath('./modules', x, 'assets');
-                if (wfs.exists(p)) {
-                    wfs.iterate(p, callback);
-                }
+                wfs.iterate(ipaths.moduleAssets(x), callback);
             });
         }
     }
@@ -92,9 +90,8 @@ export namespace Assets {
         // Check and warn for duplicate entries
         Modules.getModules().forEach(modname => {
             Assets.prepare(modname);
-            const rpath = mpath('./modules', modname, 'assets');
-            wfs.iterate(rpath, (fname) => {
-                const mpqname = wfs.relative(rpath, fname);
+            wfs.iterate(ipaths.moduleAssets(modname), (fname) => {
+                const mpqname = wfs.relative(ipaths.moduleAssets(modname), fname);
                 const old = filemap[mpqname];
                 if (mpqname.endsWith('xml') || mpqname.endsWith('lua')) {
                     term.warn(`Mod ${modname} has XML/LUA files as an asset, consider using LUAXML instead (${mpqname})`);

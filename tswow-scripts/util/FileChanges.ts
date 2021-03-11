@@ -16,11 +16,27 @@
  */
 import { wfs } from './FileSystem';
 import * as fs from 'fs';
+import { ipaths } from './Paths';
 
 /** Contains functions for tracking changes on the file system. */
 export namespace FileChanges {
-    /** The file used for tracking changes */
-    let changedFile = './bin/tmp/file_changes.txt';
+    /** 
+     * The file used for tracking changes 
+     * 
+     * This would be a direct reference, but for some reason
+     * there's a test that can actually change this.
+     * 
+     * (That should never happen in production)
+     */
+    let changedFile = ipaths.changeFile;
+
+    /**
+     * Do not use this function
+     */
+    export function setLogFile(file: string) {
+        changedFile = file;
+    }
+
     let curData: any;
 
     export function startCache() {
@@ -36,9 +52,6 @@ export namespace FileChanges {
         curData = undefined;
     }
 
-    export function setLogFile(file: string) {
-        changedFile = file;
-    }
 
     /**
      * Writes the contents of the changed file to disk.

@@ -30,6 +30,7 @@ export class Process {
     private waiters: {[key: string]: (message: string) => void} = {};
     private bufferSize = 2048;
     private listeners: ((message: string) => void)[] = [];
+    private onFail: ((err: Error)=>void)|undefined = undefined;
 
     /**
      * Creates a new process instance. Call Process#start or Process#startIn to start it.
@@ -41,6 +42,10 @@ export class Process {
 
     isRunning() {
         return this.process !== undefined;
+    }
+
+    setOnFail(onFail: (message: Error)=>void){
+        this.onFail = onFail;
     }
 
     listenSimple(listener: (message: string) => void ) {
@@ -153,6 +158,13 @@ export class Process {
         });
         this.process.stderr.on('data', (data) => {
             this.handleOutput(data, true);
+        });
+
+        this.process.on('error', (message)=>{
+            this.process = undefined;
+            if(this.onFail!==undefined) {
+                this.onFail(message);
+            }
         });
 
         this.process.on('exit', () => {

@@ -16,62 +16,57 @@
  */
 import { isWindows } from '../util/Platform';
 import { mpath, wfs } from '../util/FileSystem';
-import { cfg } from '../util/Config';
-import { commands } from './Commands';
 import { Process } from '../util/Process';
 import { ipaths } from '../util/Paths';
+import { Datasets } from './Dataset';
+import { commands } from './Commands';
+import { term } from '../util/Terminal';
 
-export namespace Client {
-    const wowpath = mpath(cfg.client.directory(), 'wow.exe');
-    const wowprocess = new Process();
+export class Client {
+    wowprocess = new Process();
+    set: Datasets.Dataset;
 
-    wowprocess.showOutput(false);
-
-    export function isRunning() {
-        return wowprocess.isRunning();
+    constructor(dataset: Datasets.Dataset) {
+        this.set = dataset;
     }
 
-    /**
-     * Verifies that the client exists
-     * @throws if some client file can't be found
-     */
-    export function verify() {
-        const cpath = cfg.client.directory();
-        if(!wfs.exists(cpath)) {
+    isRunning() {
+        return this.wowprocess.isRunning();
+    }
+
+    verify() {
+        if(!wfs.exists(ipaths.client(this.set.id))) {
             throw new Error(`Missing client directory.`);
         }
 
-        if(!wfs.exists(mpath(cpath, 'wow.exe'))) {
+        if(!wfs.exists(ipaths.clientExe(this.set.id))) {
             throw new Error(`Missing wow.exe`);
         }
 
-        if(!wfs.exists(mpath(cpath,'Data'))) {
+        if(!wfs.exists(ipaths.clientData(this.set.id))) {
             throw new Error(`Missing data directory`);
         }
     }
 
-    export function installAddons() {
+    installAddons() {
         for(const addon of wfs.readDir(ipaths.addons, true)) {
-            const clientAddons = mpath(cfg.client.directory(),'Interface','Addons')
-            const dst = mpath(clientAddons,addon);
-            const src = mpath(ipaths.addons,addon);
-            if(!wfs.exists(dst)) {
-                wfs.copy(src,dst);
+            if(!wfs.exists(ipaths.clientAddon(this.set.id,addon))) {
+                wfs.copy(mpath(ipaths.addons,addon),ipaths.clientAddon(this.set.id,addon));
             }
         }
     }
 
     /**
-     * Writes the bytes 0xb803000ebedc3 to 0x415b5f in the wow.exe binary to enable interface patches.
-     * 
-     * This fixes the client crash: "Your login interface files are corrupt. Please reinstall the game"
-     * 
+     * Writes the following binary edits in the wow.exe:
+     * - 0x415b5f: writes 0xb803000ebedc3 to enable login interface patches.
+     * - 0xe0355: writes 0x78888888 to enable more than 10 classes per race.
      * @param clientPath 
      */
-    export function fixClientBinary(clientPath: string) {
-        const wowbin = wfs.readBin(clientPath);
+    patchBinary() {
+        const wowbin = wfs.readBin(ipaths.clientExe(this.set.id));
 
         const byteOffsets = [
+            // Custom interface patch
             {offset: 0x126, value: 0x23},
             {offset: 0x1f41bf, value: 0xeb},
             {offset: 0x415a25, value: 0xeb},
@@ -85,6 +80,8 @@ export namespace Client {
             {offset: 0x415b63, value: 0},
             {offset: 0x415b64, value: 0xeb},
             {offset: 0x415b65, value: 0xed},
+
+            // Unlimited race/class pairs patch
             {offset: 0xe0355, value: 0x78},
             {offset: 0xe038e, value: 0x88},
             {offset: 0xe03A3, value: 0x88},
@@ -103,86 +100,48 @@ export namespace Client {
             return;
         }
         
-        wfs.makeBackup(clientPath, `${clientPath}.backup`);
+        wfs.makeBackup(ipaths.clientExe(this.set.id), `${ipaths.clientExe}.backup`);
 
         for(const {offset,value} of byteOffsets) {
             wowbin.writeUInt8(value, offset);
         }
 
-        wfs.writeBin(clientPath, wowbin);
+        wfs.writeBin(ipaths.clientExe(this.set.id), wowbin);
     }
 
-    export async function start() {
-        await wowprocess.stop();
+    async start() {
+        term.log(`Starting client for dataset ${this.set.id}`)
+        await this.wowprocess.stop();
 
-        fixClientBinary(wowpath);
-        installAddons();
+        this.patchBinary()
+        this.installAddons();
 
         if (isWindows()) {
-            clearCache();
-            const localepath = mpath(localePath());
-            const realmlistPath = mpath(localepath, 'realmlist.wtf');
-
-            const realmlist = wfs.read(realmlistPath);
-            if (realmlist !== 'set realmlist localhost' && realmlist !== 'set realmlist 127.0.0.1') {
-                const backupPath = (i: number) => mpath(localepath, `realmlist.wtf.backup${i}`);
-                let curI = 0;
-                while (wfs.exists(backupPath(curI))) {
-                    ++curI;
-                }
-                wfs.copy(realmlistPath, backupPath(curI));
+            this.clearCache();
+            const realmlist = wfs.read(ipaths.clientRealmlist(this.set.id));
+            if(realmlist !== 'set realmlist localhost') {
+                wfs.makeBackup(ipaths.clientRealmlist(this.set.id));
             }
-            wfs.write(realmlistPath, 'set realmlist localhost');
-            wowprocess.start(wowpath);
+            wfs.write(ipaths.clientRealmlist(this.set.id), 'set realmlist localhost');
+            this.wowprocess.start(ipaths.clientExe(this.set.id));
         }
     }
 
-    export function kill() {
-        return wowprocess.stop();
+    clearCache() {
+        wfs.remove(ipaths.clientCache(this.set.id));
     }
 
-    export function clearCache() {
-        wfs.remove(mpath(cfg.client.directory(), 'Cache'));
+    kill() {
+        return this.wowprocess.stop();
     }
+}
 
-    export function localePath() {
-        const dirs = wfs.readDir(mpath(cfg.client.directory(), 'Data') , false, 'directories')
-            .filter(x => !x.toLowerCase().endsWith('mpq'));
-
-        if (dirs.length === 0) {
-            throw new Error('Error reading client locale path: No locale directory');
-        }
-
-        if (dirs.length > 1) {
-            throw new Error('Error reading client locale path: Multiple non-mpq directories in Data folder');
-        }
-
-        return dirs[0];
-    }
-
+export namespace Client {
     export const command = commands.addCommand('client');
-
-    export function initialize(autostartClient: boolean) {
-        const dir = cfg.client.directory();
-        const wowexe = mpath(dir, 'wow.exe');
-        const data = mpath(dir, 'Data');
-        if (!wfs.exists(cfg.client.directory())) {
-            throw new Error(`No client at ${dir}`);
-        }
-
-        if (!wfs.exists(wowexe)) {
-            throw new Error(`No wow.exe in ${dir} (Check client.directory in config.yaml)`);
-        }
-
-        if (!wfs.exists(data)) {
-            throw new Error(`No data directory in ${dir}, but wow.exe exists (broken installation?)`);
-        }
-
-        command.addCommand('start', '', 'Starts the World of Warcraft client', async() => start());
-        command.addCommand('kill', '', 'Stops the World of Warcraft client', async() => kill());
-
-        if (autostartClient) {
-            start();
-        }
+    export function initialize() {
+        command.addCommand('start', 'dataset = default', 'Starts the World of Warcraft client for a particular dataset',
+            async(args) => await Datasets.get(args[0]||'default').client.start());
+        command.addCommand('kill', 'dataset = default', 'Stops the World of Warcraft client for a particular dataset', 
+            async(args) => await Datasets.get(args[0]||'default').client.kill());
     }
 }

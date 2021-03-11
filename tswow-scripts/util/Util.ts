@@ -52,6 +52,16 @@ export namespace util {
     }
 
     /**
+     * Transform a string to snake case
+     * @param str 
+     */
+    export function toDashCase(str: string) {
+        return str.split(' ').join('-').split('').map(c=>
+            c == c.toUpperCase() ? `-${c.toLowerCase()}` : c
+        ).join('');
+    }
+
+    /**
      * Converts a json hierarchy ({"a":{"b":{"c":"data"}}}) to flat keys ({"a.b.c":"data"})
      * from https://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
      * @param data Object to convert

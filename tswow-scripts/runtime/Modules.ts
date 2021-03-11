@@ -18,18 +18,15 @@ import { wfs, mpath } from '../util/FileSystem';
 import { term } from '../util/Terminal';
 import { commands } from './Commands';
 import { wsys } from '../util/System';
-import { mysql } from '../util/MySQL';
-import { cfg } from '../util/Config';
 import { Timer } from '../util/Timer';
-import { TrinityCore } from './TrinityCore';
-import { compileAll, destroyTSWatcher, getTSWatcher, hasWatcher } from '../util/TSWatcher';
-import { Client } from './Client';
+import { compileAll, destroyTSWatcher, getTSWatcher } from '../util/TSWatcher';
 import { isWindows } from '../util/Platform';
-import { Wrap } from '../util/Wrap';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
 import { BuildCommand } from './BuildCommand';
-import { GlobalShared } from '../addons/global_shared';
+import { NodeConfig } from './NodeConfig';
+import { Realms } from './Realms';
+import { Datasets } from './Dataset';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -137,36 +134,26 @@ export namespace Modules {
      * Returns names of all installed modules.
      */
     export function getModules() {
-        return wfs.readDir('./modules', true, 'directories');
-    }
-
-    /**
-     * Returns the path to a module, relative to the tswow installation folder.
-     * @param module - Name of module
-     */
-    function modulePath(module: string) {
-        return `./modules/${module}`;
+        return wfs.readDir(ipaths.modules, true, 'directories');
     }
 
     export function setEditable(mod: string, editable: boolean) {
         if (editable) {
-            wfs.remove(mpath('modules', mod, 'noedit'));
-            getTSWatcher(mpath('modules',mod,'data'))
+            wfs.remove(ipaths.moduleNoEdit(mod));
+            wfs.remove(ipaths.moduleData(mod));
         } else {
-            const datadir = mpath('modules', mod, 'data');
-            if (wfs.exists(datadir)) {
+            if (wfs.exists(ipaths.moduleData(mod))) {
                 try {
-                    wfs.write(mpath(datadir,'tsconfig.json'),data_tsconfig);
-                    wsys.execIn(datadir, `node ../../../${ipaths.tsc}`);
+                    wfs.write(ipaths.moduleDataTsConfig(mod), data_tsconfig);
+                    wsys.execIn(ipaths.moduleData(mod), `node ../../../${ipaths.tsc}`);
                 } catch (error) {
                     term.error(error.message);
                     term.error(`Can't noedit ${mod}, there are compiler errors in it.`);
                     return;
                 }
-                destroyTSWatcher(datadir);
-                wfs.write(mpath('modules', mod, 'noedit'), '');
+                destroyTSWatcher(ipaths.moduleData(mod));
+                wfs.write(ipaths.moduleNoEdit(mod), '');
             }
-
         }
     }
 
@@ -202,20 +189,11 @@ export namespace Modules {
             return;
         }
 
-
         if (!isEditable(mod)) {
             wsys.execIn(ipaths.moduleData(mod), `node ../../../${ipaths.tsc}`);
         }
-
-        wfs.remove(mpath(ipaths.nodeModules,mod));
+        wfs.remove(ipaths.moduleNodeModule(mod));
         refreshModules(false);
-    }
-
-    /**
-     * Returns the name of the 'data' directory in modules.
-     */
-    export function dataDir() {
-        return 'data';
     }
 
     /**
@@ -232,8 +210,7 @@ export namespace Modules {
             name = split[split.length-1].split('.git').join('');
         }
 
-        const modpath = modulePath(name);
-        if (wfs.exists(modpath)) {
+        if (wfs.exists(ipaths.moduleRoot(name))) {
             throw new Error('Module already exists:' + name);
         }
 
@@ -241,27 +218,24 @@ export namespace Modules {
         if(url) {
             wsys.execIn(ipaths.modules,`git clone ${url}`);
         } else {
-            wfs.mkDirs(modpath);
-            wsys.execIn(modpath, 'git init');
+            wfs.mkDirs(ipaths.moduleRoot(name));
+            wsys.execIn(ipaths.moduleRoot(name), 'git init');
         }
 
-        wfs.mkDirs(mpath(modpath, 'data'));
-        wfs.write(mpath(modpath, 'data', `${name}-data.ts`), patch_example_ts(name));
-        wfs.mkDirs(mpath(modpath, 'assets'));
-        wfs.mkDirs(mpath(modpath, 'scripts'));
+        wfs.mkDirs(ipaths.moduleData(name));
+        wfs.mkDirs(ipaths.moduleData(name));
+        wfs.write(ipaths.moduleDataMain(name), patch_example_ts(name));
+        wfs.mkDirs(ipaths.moduleAssets(name));
+        wfs.mkDirs(ipaths.moduleScripts(name));
         wfs.mkDirs(ipaths.moduleShared(name));
 
-
         // Initialize git repositories
-        wfs.write(mpath(modpath, '.gitignore'), gitignores);
-        wfs.write(mpath(modpath, 'scripts', getMainScriptName(name)), livescript_example);
+
+        wfs.write(ipaths.moduleGitignore(name), gitignores);
+        wfs.write(ipaths.moduleMainScript(name),livescript_example);
 
         refreshModules(false);
         term.success(`Created module ${name} in ${timer.timeSec()}s`);
-    }
-
-    export function getMainScriptName(mod: string) {
-        return `${mod.split('-').join('_')}_scripts.ts`;
     }
 
     export function getBuiltLibraryName(mod: string) {
@@ -275,67 +249,65 @@ export namespace Modules {
 
     /**
      * Builds dbc and sql data for all modules.
-     * @param fast  - if false and on windows, SQL tables are completely flushed.
-     * @returns Double wrapped promise.
-     * The inner promise need to be waited separately waited for if fast = false
-     * to ensure SQL data was copied successfully.
      */
-    export async function rebuildPatch(fast: boolean = false, args: string[]): Promise<Wrap<Promise<void>>> {
+    export async function rebuildPatch(dataset: string = 'default', args: string[]) {
         await refreshModules();
         const ct = Date.now();
         await compileAll(8000);
-        console.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
-        wfs.mkDirs(ipaths.dbcBuild, true);
+        term.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
+        wfs.mkDirs(ipaths.datasetDBC(dataset), true);
 
-        const indexpath = mpath('./node_modules', 'wotlkdata', 'wotlkdata');
-        const program = `node -r source-map-support/register ${indexpath} db ${args.join(' ')}`;
+        const set = Datasets.get(dataset);
 
-        // TODO: Remove this wrap completely, we don't use it anymore.
-        let wrap: Wrap<Promise<void>>;
-        wrap = new Wrap(new Promise((res) => res()));
+        set.installServerData();
 
-        // More helpful error message
+        const settings = {
+            auth : NodeConfig.database_settings('auth'),
+            world : NodeConfig.database_settings('world',dataset),
+            world_source : NodeConfig.database_settings('world_source',dataset),
+            use_pooling : NodeConfig.use_pooling,
+            dbc_source : ipaths.datasetDBCSource(dataset),
+            dbc_out : ipaths.datasetDBC(dataset),
+            luaxml_source : ipaths.datasetLuaxmlSource(dataset),
+            luaxml_out : ipaths.datasetLuaXML(dataset),
+            modules: set.config.modules,
+            id_path: ipaths.datasetIds(dataset),
+            readonly: args.includes('readonly'),
+        }
+        const program = `node -r source-map-support/register ${ipaths.wotlkdataIndex} `
+            + `${JSON.stringify(settings).split('\"').join('\'')}`
         try {
             wsys.exec(program, 'inherit');
         } catch (error) {
-            throw new Error(`Failed to rebuild patches`);
+            throw new Error(`Failed to rebuild patches: ${error.message}`);
         }
-
-        return wrap;
     }
 
     /**
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export async function rebuildScripts(name: string, type: string) {
+    export async function rebuildScripts(name: string, type: 'Release'|'Debug') {
         await refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 
         const files = wfs.readDir(scriptsDir, true, 'both');
 
         // Don't build if the entry point doesn't exist or its livescript is just the template.
-        const mainScript = getMainScriptName(name);
+        const mainScript = ipaths.moduleMainScriptName(name);
         if (!files.includes(mainScript)) { return false; }
-        if (wfs.read(mpath(scriptsDir, mainScript)) === livescript_example) {
+
+        // TODO: terrible check
+        if(wfs.read(ipaths.moduleMainScript(name)) === livescript_example) {
             return false;
         }
 
         const timer = Timer.start();
         wsys.exec(`node ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
 
-        const pathIn = mpath('modules',name,'scripts','build','lib',type,`${name}`);
-        const slIn = `${pathIn}${isWindows() ? '.dll':'.so'}`
-        const pdbIn = `${pathIn}.pdb`;
-
-        const pathOut = mpath('bin', 'trinitycore', type, 'scripts')
-        const slOut = mpath(pathOut,getBuiltLibraryName(name));
-        let pdbOut = mpath(pathOut,getBuiltLibraryName(name));
-        pdbOut = `${pdbOut.substring(0,pdbOut.length-3)}pdb`;
-
-        wfs.copy(slIn,slOut)
-        if(wfs.exists(pdbIn)) {
-            wfs.copy(pdbIn,pdbOut);
+        wfs.copy(ipaths.moduleScriptsBuiltLibrary(name,type),ipaths.tcModuleScript(type,name))
+        if(wfs.exists(ipaths.moduleScriptsBuiltPdb(name,type))) {
+            wfs.copy(ipaths.moduleScriptsBuiltPdb(name,type),ipaths.tcModulePdb(type,name));
         }
 
         // TrinityCore.sendToWorld(`tsreload ${name}.dll`);
@@ -349,33 +321,39 @@ export namespace Modules {
      *
      * @warn - **OVERWRITES** any previously named mpq file at the configured location.
      */
-    export async function buildMpq(folder: boolean = false, fast: boolean = false, args: string[] = []) {
+    export async function buildMpq(dataset: string, folder: boolean = false, args: string[] = []) {
         const timer = Timer.start();
-
+        const ds = Datasets.get(dataset);
 
         // Build output dbc
-        const wrap = await rebuildPatch(fast, args);
+        await rebuildPatch(dataset, args);
+        const modules = Realms.getRealm(dataset).config.modules;
 
         const sectionTimer = Timer.start();
         const time = (str: string) => 
             console.log(`${str} in ${(sectionTimer.timeRestart()/1000).toFixed(2)}`)
-        const mpqPath = mpath(cfg.client.directory(), 'data', `patch-${cfg.client.mpq_suffix()}.MPQ`);
+
         const paths = getModules()
-            .filter(x => !wfs.exists(ipaths.moduleSymlink(x)))
-            .map(x => mpath('./modules',x, 'assets'))
+            .filter(x => !wfs.exists(ipaths.moduleSymlink(x)) && modules.includes(x))
+            .map(x => ipaths.moduleAssets(x))
             .filter(x => wfs.exists(x))
             .map(x => `"${x}"`);
-        await Client.kill();
+        
+        await ds.client.kill();
         time(`Killed client`);
 
-        if (folder !== wfs.isDirectory(mpqPath)) {
-            wfs.remove(mpqPath);
+        if (folder !== wfs.isDirectory(ds.config.mpq_path)) {
+            wfs.remove(ds.config.mpq_path);
         }
 
         if (folder) {
-            wfs.mkDirs(mpqPath);
-            const allpaths = paths.map(x => `./${x.substring(1, x.length - 1)}`).concat([ipaths.dbcBuild, ipaths.luaxmlBuild]);
-            const ignored = cfg.build.mpq_ignore();
+            wfs.mkDirs(ds.config.mpq_path);
+            const allpaths = paths.map(x => `./${x.substring(1, x.length - 1)}`)
+                .concat([
+                    ipaths.datasetDBC(dataset), 
+                    ipaths.datasetLuaXML(dataset)
+                ]);
+            const ignored = ds.config.ignore_assets;
             FileChanges.startCache();
             allpaths.forEach(x => wfs.iterate(x, path => {
                 for (const ig of ignored) {
@@ -388,23 +366,31 @@ export namespace Modules {
                 if (rel.endsWith('.dbc')) {
                     rel = mpath('DBFilesClient', rel);
                 }
-                const out = mpath(mpqPath, rel);
+                const out = mpath(ds.config.mpq_path, rel);
 
-                if (FileChanges.isChanged(path, 'mpq') || !wfs.exists(out)) {
-                    wfs.copy(path, out);
+                if (
+                    FileChanges.isChanged(path, 'mpq') 
+                    || !wfs.exists(out) 
+                    || rel.endsWith('.dbc')
+                    || rel.endsWith('.lua')
+                    || rel.endsWith('.xml')
+                    ) {
+                        wfs.copy(path, out);
                 }
                 FileChanges.tagChange(path, 'mpq');
-            })); FileChanges.endCache();
+            })); 
+            FileChanges.endCache();
         } else {
-            wsys.exec(`"${ipaths.mpqBuilderExe}" "${mpqPath}" "${wfs.removeDot(ipaths.dbcBuild)}" "${wfs.removeDot(ipaths.luaxmlBuild)}" ${paths.join(' ')}`, 'inherit');
+            wsys.exec(`"${ipaths.mpqBuilderExe}"`
+            +` "${ds.config.mpq_path}"`
+            +` "${wfs.removeDot(ipaths.datasetDBC(ds.id))}"`
+            +` "${wfs.removeDot(ipaths.datasetLuaxml(ds.id))}"`
+            +` "${paths.join(' ')}`, 'inherit');
         }
 
         time(`Wrote file changes`);
 
         term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);
-
-        // Finally, we wait for the SQL files to copy if we moved them.
-        return wrap;
     }
 
     export function linkModule(mod: string) {
@@ -416,79 +402,46 @@ export namespace Modules {
     }
 
     export async function refreshModules(force: boolean = false) {
-        if (!wfs.exists('./node_modules/wotlkdata')) {
+        if (!wfs.exists(ipaths.nodeModulesWotlkdata)) {
             term.log(`Linking wotlkdata...`);
-            wsys.exec('npm link bin/scripts/tswow/wotlkdata');
+            wsys.exec(`npm link ${ipaths.wotlkdata}`)
             wsys.exec(`npm i -S ${ipaths.wotlkdata}`);
         }
 
-        for (const mod of wfs.readDir('./modules', true)) {
-            const x = mpath('./modules', mod);
-
-            const data_path = mpath(x, 'data');
-            const data_build_path = mpath(data_path, 'build');
-            const data_tsconfig_path = mpath(data_path, 'tsconfig.json');
-            const nodemodule_path = mpath('node_modules', mod);
-
-            if (wfs.isDirectory(data_path)) {
-                if (!wfs.exists(data_tsconfig_path) || force) {
-                    wfs.write(data_tsconfig_path, data_tsconfig);
+        for (const mod of wfs.readDir(ipaths.modules, true)) {
+            if (wfs.isDirectory(ipaths.moduleData(mod))) {
+                if (!wfs.exists(ipaths.moduleDataTsConfig(mod)) || force) {
+                    wfs.write(ipaths.moduleDataTsConfig(mod), data_tsconfig);
                 }
 
-
-                if (!wfs.exists(mpath(x, 'noedit'))) {
-                    await getTSWatcher(data_path);
+                if (!wfs.exists(ipaths.moduleNoEdit(mod))) {
+                    await getTSWatcher(ipaths.moduleData(mod));
                 }
-
                 linkModule(mod);
             }
 
-            const scripts_path = mpath(x, 'scripts');
-            const scripts_tsconfig_path = mpath(x, 'scripts' , 'tsconfig.json');
-            const scripts_globaldts_path = mpath(x, 'scripts' , 'global.d.ts');
-
             if(wfs.isDirectory(ipaths.moduleShared(mod))) {
-                wfs.write(ipaths.sharedGlobal(mod),GlobalShared);
+                wfs.copy(ipaths.addonIncludeSharedGlobal,ipaths.sharedGlobal(mod));
             }
 
-            if (wfs.isDirectory(scripts_path)) {
-                wfs.copy(mpath('bin', 'include', 'global.d.ts'), mpath(scripts_globaldts_path));
-                if (!wfs.exists(scripts_tsconfig_path) || force) {
-                    wfs.write(scripts_tsconfig_path, scripts_tsconfig_json);
+            if (wfs.isDirectory(ipaths.moduleScripts(mod))) {
+                wfs.copy(ipaths.binglobaldts, ipaths.moduleScriptsGlobaldts(mod));
+                if (!wfs.exists(ipaths.moduleScritpsTsConfig(mod)) || force) {
+                    wfs.write(ipaths.moduleScritpsTsConfig(mod), scripts_tsconfig_json);
                 }
             }
         }
     }
 
-    export function unlinkModule(mod?: string) {
-        if(mod===undefined) {
-            getModules().forEach((x)=>unlinkModule(x));
-            return;
-        }
-
-        const sm = ipaths.moduleSymlink(mod);
-        if(!wfs.exists(sm)) {
-            return;
-        }
-
-        const dpath = mpath(cfg.client.directory(),'Data',`patch-${wfs.read(sm)}.MPQ`);
-        wfs.remove(sm);
-        wfs.remove(dpath);
-        term.log(`Unlinked ${mod} from ${dpath}`)
-    }
 
     export async function uninstallModule(name: string) {
-        await destroyTSWatcher(mpath('modules', name, 'data'));
-
+        await destroyTSWatcher(ipaths.moduleData(name));
         term.log(`Uninstalling module ${name}`)
         wsys.exec(`npm uninstall ${ipaths.moduleDataBuild(name)}`);
         term.log(`Unlinking ${name} from node_modules`)
         wsys.exec(`npm unlink ${ipaths.moduleDataBuild(name)}`);
-
-        unlinkModule(name);
-
         // Delete all built libraries
-        for (const p of [ipaths.tcReleaseScripts, ipaths.tcDebugScripts]) {
+        for (const p of [ipaths.tcScripts('Release'), ipaths.tcScripts('Debug')]) {
             wfs.readDir(p, true).forEach((x) => {
                 const lname = getBuiltLibraryName(name);
                 if(x===lname) {
@@ -500,16 +453,8 @@ export namespace Modules {
         if(!wfs.exists(ipaths.moduleRoot(name))) {
             return;
         }
-
-        // Store a copy of the module in our garbage bin
-        function garbagePath(j: number) {
-            return mpath(ipaths.coreData, 'module_garbage', `${name}_${j}`);
-        }
-        let i = 0;
-        while (wfs.exists(garbagePath(i))) {
-            ++i;
-        }
-        wfs.copy(`./modules/${name}`, garbagePath(i));
+        
+        wfs.copy(ipaths.moduleRoot(name), ipaths.moduleFreeGarbage(name));
 
         // hackfix but this seems to be long enough for vscode to stop fucking around
         term.log(`Removing module directory`);
@@ -565,64 +510,18 @@ export namespace Modules {
             await uninstallModule(args[0]);
         });
 
-        moduleC.addCommand('unlink','module?','Unlinks one or all modules from the clients MPQ', (args)=>{
-            unlinkModule(args[0]);
-        });
-
-        moduleC.addCommand('data', 'folder? readonly? fast?', 'Build server SQL and client DBC/MPQ from all modules',
-            async(args: string[]) => {
-            if (args.includes('readonly')) {
-                await (await rebuildPatch(args.includes('fast'),args)).unwrap();
-            } else {
-                await buildMpq(args.includes('folder'), args.includes('fast'),args);
-            }
-        });
-
-        BuildCommand.addCommand('all','rebuild? package? module?','Rebuilds both data and live scripts', async (args)=>{
-            if (args.includes('clientonly') && args.includes('rebuild')) {
-                throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
-            }
-            const wrap = await buildMpq(!args.includes('package'), !args.includes('rebuild'));
-
-            let clientWait = Client.start();
-            let serverWait = undefined;
-            if (!args.includes('clientonly')) {
-                serverWait = TrinityCore.start(args.includes('debug')?'debug':'release');
-            }
-
-            let isDebug = args.indexOf('debug')!==-1;
-            let modules = args.filter(x=>x!=='debug' && x!=='rebuild' && x!=='package' && x!=='module');
-            if (modules.length === 0) {
-                modules = getModules();
-            }
-
-            let ctr = 0;
-            for (const mod of modules) {
-                if (await rebuildScripts(mod, isDebug? 'Debug': 'Release')) {
-                    ++ctr;
-                }
-            }
-
-            term.success(`Built ${ctr} scripts`);
-
-            await Promise.all([clientWait,serverWait,wrap.unwrap()])
-        });
-
         BuildCommand.addCommand('data', 'clientonly? rebuild? package?',
             'Builds data patches and then restarts the affected processes', async(args) => {
             if (args.includes('clientonly') && args.includes('rebuild')) {
                 throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
             }
-            const wrap = await buildMpq(!args.includes('package'), !args.includes('rebuild'));
-            await Client.start();
-            if (!args.includes('clientonly')) {
-                await TrinityCore.start(args.includes('debug')?'debug':'release');
-            }
-            await wrap.unwrap();
+            let datasets = args.filter(x=>x!='clientonly'&&x!='rebuild');
+            let dataset = datasets.length === 0 ? 'default': datasets[0];
+            await buildMpq(dataset, true, args);
+            Datasets.get(dataset).client.start();
         });
 
         BuildCommand.addCommand('scripts', 'module? debug?', 'Build and loads the server scripts of a module', async (args) => {
-            const count = 0;
             let isDebug = args.indexOf('debug')!==-1;
             let modules = args.filter(x=>x!=='debug');
             if (modules.length === 0) {
@@ -654,13 +553,6 @@ export namespace Modules {
             refreshModules(false);
         });
 
-        moduleC.addCommand('fixremoved', 'module', 'Tries to manually remove unused script files, because sometimes the manual check bugs up', async(args) => {
-            const p = mpath('modules', args[0], 'data');
-            if (hasWatcher(p)) {
-                await (await getTSWatcher(p)).fixRemoved();
-            }
-        });
-
         moduleC.addCommand('list','','Lists the available modules', async()=>{
             term.log(`Listing all installed modules:`);
             for(const mod of getModules()) {
@@ -684,7 +576,7 @@ export namespace Modules {
         });
 
         commands.addCommand('check', '', '', async(args) => {
-            await rebuildPatch(true,args);
+            await rebuildPatch(args[0],args.slice(1));
         });
 
         await refreshModules(true);

@@ -15,17 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { mpath, wfs } from './FileSystem';
-import * as chokidar from 'chokidar';
 import { Process } from './Process';
 import { wsys } from './System';
 import { term } from './Terminal';
+import { ipaths } from './Paths';
 
 /**
- * Wrapper around a "tsc --w" process that also cleans up removed source files
- * and doesn't start listening until asked to compile.
+ * Wrapper around a "tsc --w" process
  */
 export class TypeScriptWatcher {
-
     /** The tsconfig path */
     get tsconfig() { return mpath(this.path, 'tsconfig.json'); }
 
@@ -35,13 +33,11 @@ export class TypeScriptWatcher {
             .showOutput(false);
     }
     protected tscProcess: Process;
-    protected chokidar: chokidar.FSWatcher | undefined;
     protected isWaiting = false;
     protected errors: string[] = [];
 
     /** The base path */
     protected path: string;
-    protected isDirty = false;
 
     /** The current output/build directory */
     protected outDir = '';
@@ -86,61 +82,16 @@ export class TypeScriptWatcher {
     }
 
     protected tscPath() {
-        return wfs.absPath(mpath('node_modules', 'typescript', 'lib', 'tsc.js'));
+        return wfs.absPath(ipaths.tsc)
     }
 
     protected startTSCWatch() {
-        this.isDirty = true;
         this.isWaiting = true;
+        if(process.argv.includes('--log-tsc')) {
+            this.tscProcess.showOutput(true);
+        }
         return this.tscProcess
             .startIn(this.path, 'node', [this.tscPath(), '--w']);
-    }
-
-    protected async unlinkReverse(root: string) {
-        const removes: string[] = [];
-        const unlinkReverseInner = (p: string) => {
-            if (wfs.isDirectory(p)) {
-                wfs.readDir(p, false).forEach(unlinkReverseInner);
-            } else {
-                if (!p.endsWith('.js.map')) {
-                    return;
-                }
-                const obj = JSON.parse(wfs.read(p));
-                if (obj.sources === undefined || obj.sources.length === 0) {
-                    return;
-                }
-                const sourcefile = mpath(wfs.dirname(p), obj.sources[0]);
-                // Only remove if the source file is missing
-                if (wfs.exists(sourcefile)) {
-                    return;
-                }
-
-                const plainfile = p.substring(0, p.length - 7);
-                const jsfile = plainfile + '.js';
-                const dtsfile = plainfile + '.d.ts';
-                wfs.remove(p);
-                wfs.remove(jsfile);
-                wfs.remove(dtsfile);
-
-                removes.push(sourcefile);
-            }
-        };
-        unlinkReverseInner(root);
-        await this.removeBuildInfo(removes);
-    }
-
-    protected async unlinkTs(p: string) {
-        if (!p.endsWith('.ts') || p.endsWith('.d.ts')) {
-            return;
-        }
-        term.log(`Uncaching file ${p}`);
-        const relPath = wfs.relative(this.path, p);
-        let baseFilePath = mpath(this.outDir, relPath);
-        baseFilePath = baseFilePath.substring(0, baseFilePath.length - 3);
-        wfs.remove(baseFilePath + '.js.map');
-        wfs.remove(baseFilePath + '.js');
-        wfs.remove(baseFilePath + '.d.ts');
-        this.removeBuildInfo([p]);
     }
 
     async setup() {
@@ -178,7 +129,6 @@ export class TypeScriptWatcher {
 
         this.outDir = mpath(this.path, tsconfig.compilerOptions.outDir);
         this.buildInfo = mpath(this.outDir, 'tsconfig.tsbuildinfo');
-        await this.fixRemoved();
         await this.startTSCWatch();
 
         const old: {[key: string]: boolean} = {};
@@ -188,18 +138,7 @@ export class TypeScriptWatcher {
             }
         });
 
-        this.chokidar = chokidar.watch(this.path)
-            .on('unlink', (p) => {
-                this.unlinkTs(p);
-            })
-            .on('unlinkDir', (p) => {
-                this.unlinkReverse(p);
-            });
         return this;
-    }
-
-    async fixRemoved() {
-        await this.unlinkReverse(this.outDir);
     }
 
     async compile(timeout: number) {
@@ -244,9 +183,6 @@ export class TypeScriptWatcher {
 
     async kill() {
         await this.pause();
-        if (this.chokidar) {
-            await this.chokidar.close();
-        }
         delete watchers[this.path];
     }
 }
