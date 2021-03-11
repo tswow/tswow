@@ -21,6 +21,8 @@ import { BuildCommand } from "./BuildCommand";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
 import { Datasets } from "./Dataset";
+import { Identifiers } from "./Identifiers";
+import { term } from "../util/Terminal";
 
 const defaultToc = (name: string) => 
 `## Interface: 30300
@@ -79,7 +81,8 @@ export namespace Addon {
         wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig,null,4));
     }
 
-    export function build(mod: string, dataset: string = 'default') {
+    export function build(mod: string, dataset: string) {
+        term.log(`Building addon ${mod} for dataset ${dataset}`);
         wfs.remove(ipaths.moduleAddonClasses(mod));
 
         // need to bypass the normal checks for decorators, 
@@ -183,21 +186,13 @@ export namespace Addon {
             initializeModule(args[0]);
         }));
 
-        BuildCommand.addCommand('addon','dataset ...modules','Builds addons for one, multiple or all moduels against a single dataset',((args)=>{
-            if(args.length==0) {
-                throw new Error(`Must provide at least what dataset to build addons for`);
-            }
-        
-            Datasets.get(args[0]).client.kill();
-            
-            args = args.slice(1);
-
-            (args.length != 0 ? args : 
-                    Modules.getModules()
-                        .filter(x=>wfs.exists(ipaths.moduleAddons(x))))
-                .forEach(x=>build(x));
-
-            Datasets.get(args[0]).client.start();
+        BuildCommand.addCommand('addon','dataset | modules','Builds addons for one, multiple or all moduels against multiple or a single dataset',((args)=>{
+            let ds = Datasets.getDatasetsOrDefault(args);
+            let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x)));
+            let runningClients = ds.filter(x=>x.client.isRunning());
+            runningClients.forEach(x=>x.client.kill());
+            ds.forEach(x=>modules.forEach(y=>build(y,x.id)));
+            runningClients.forEach(x=>x.client.start());
         }));
     }
 }

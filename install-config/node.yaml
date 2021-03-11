@@ -1,23 +1,27 @@
-# Settings for this tswow network node
-
-# Whether to automatically start an authserver on this node
+# Whether to automatically start an auth server on this node
 autostart_authserver: true
 
 # Realms that should be automatically started on this node
 autostart_realms:
+  tswow
+
+# The realm to assume in commands if none are provided
+default_realm:
+  tswow
+
+# The dataset to assume in commands if none are provided
+default_dataset:
+  default
 
 # - Specify what database this node should use to connect
-# (replace with database_auth, database_characters, database_world if you need separate configurations)
+# (replace with database_auth, database_characters, database_world 
+#  if you need separate configurations)
 database_all:
-  host : localhost
+  host: localhost
   user: root
   password: ""
   port: 3306
-  name: tswow_
+  prefix: tswow
 
 # - Use this if you want to run your own mysql server on windows
 # mysql_executable: ''
-
-# Whether to use pooling when building datascripts.
-# This is more unstable, but may be necessary to avoid timeouts on lower-end hardware.
-use_pooling: false

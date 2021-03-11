@@ -2,13 +2,13 @@ import { mpath, wfs } from "../util/FileSystem";
 import { Connection, mysql } from "../util/MySQL";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
-import { wsys } from "../util/System";
 import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
 import { term } from "../util/Terminal";
 import { yaml } from "../util/Yaml";
 import { commands } from "./Commands";
 import { Datasets } from "./Dataset";
 import { NodeConfig } from "./NodeConfig";
+import { Identifiers } from "./Identifiers";
 
 function defaultRealmConfig(name: string) {
 return `# TSWoW Realm Configuration
@@ -56,12 +56,6 @@ export namespace Realm {
         protected realm: Realm;
         protected ryaml<T>(path: string, defValue: T) { 
             return yaml(ipaths.realmYaml(this.realm.identifier), defValue,path); 
-        }
-
-        get dataset_name() { 
-            return this.dataset === 'default' ? 'default'
-                : this.dataset === 'define' ? this.realm.identifier 
-                : this.dataset;
         }
 
         get dataset() { return this.ryaml('dataset','default')}
@@ -132,6 +126,7 @@ export namespace Realm {
         }
 
         async startWorldserver(type: 'Release'|'Debug') {
+            term.log(`Starting worlserver for realm ${this.config.realm_name}...`)
             this.lastBuildType = type;
             await this.connect();
             copyLibraryFiles(type);
@@ -247,6 +242,7 @@ export namespace Realm {
     }
 
     export function createRealm(name: string) {
+        Identifiers.assertUnused(name);
         wfs.write(ipaths.realmYaml(name),defaultRealmConfig(name));
     }
 
@@ -254,27 +250,19 @@ export namespace Realm {
         return wfs.exists(ipaths.realmDir(identifier));
     }
 
+    /**
+     * Returns the candidates that are existing realm names, 
+     * or the default realm configured in node.yaml
+     * 
+     * @param candidates 
+     */
+    export function getRealmsOrDefault(candidates: string[]) {
+        let realms = Identifiers.getTypes('realm',candidates);
+        return realms.length > 0 ? realms : [NodeConfig.default_realm];
+    }
+
     export async function initialize() {
         const realm = commands.addCommand('realm');
-
-        function matchRealms(args: any[]) {
-            if(args.length===0) {
-                throw new Error(`Must provide at least one realm name, or "all"`);
-            }
-
-            let realms: Realm[];
-            if(args.includes('all')) {
-                realms = getRealms();
-            } else {
-                realms = getRealms().filter(x=>args.includes(x.identifier));
-            }
-
-            if(realms.length==0) {
-                throw new Error(`One of the following is not a valid realm: ${args.join(', ')}`);
-            }
-
-            return realms;
-        }
 
         realm.addCommand('send','command','Sends a command to the realms worldserver', async(args)=>{
             if(args.length === 0) {
@@ -286,12 +274,13 @@ export namespace Realm {
 
         realm.addCommand('start','debug|release?, realmnames[] | all','Starts one, multiple or all realms',async (args)=>{
             let type : 'Release'|'Debug' = args.includes('debug') ? 'Debug' : 'Release';
-            let realms = matchRealms(args.filter(x=>x!=='debug'&&x!=='release'));
-            await Promise.all(realms.map(x=>x.startWorldserver(type)));
+            let realms = getRealmsOrDefault(args);
+            await Promise.all(realms.map(x=>getRealm(x).startWorldserver(type)));
         });
 
         realm.addCommand('stop','realmnames[]|all','Stops one, multiple or all realms',async(args)=>{
-            let realms = matchRealms(args);
+            let realms = Identifiers.assertType('realm',args)
+                .map(x=>getRealm(x));
             await Promise.all(realms.map(x=>x.stopWorldserver())); 
         });
 
@@ -308,11 +297,6 @@ export namespace Realm {
 
         if(!wfs.exists(ipaths.realms)) {
             wfs.mkDirs(ipaths.realms);
-        }
-
-        if(getRealms().length==0) {
-            let name = await wsys.userInput('Please provide a name for the first realm:');
-            createRealm(name);
         }
     }
 }

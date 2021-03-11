@@ -8,6 +8,7 @@ import { commands } from "./Commands";
 import { Client } from "./Client";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
+import { Identifiers } from "./Identifiers";
 
 function defaultYaml(id: string) {
     return `# ${id} dataset configuration
@@ -130,10 +131,19 @@ export namespace Datasets {
         if(dataset != undefined) {
             return dataset;
         }
-        return "default";
+        return getDefault();
     }
 
-    export function get(dataset: string = 'default') {
+    export function getDefault() {
+        return NodeConfig.default_dataset;
+    }
+
+    export function getDatasetsOrDefault(candidates: string[]) {
+        let res = Identifiers.getTypes('dataset',candidates);
+        return (res.length > 0 ? res : [getDefault()]).map(x=>get(x));
+    }
+
+    export function get(dataset: string) {
         if(datasets[dataset] !== undefined) {
             return datasets[dataset];
         }
@@ -150,12 +160,12 @@ export namespace Datasets {
     }
 
     export function create(name: string) {
+        Identifiers.assertUnused(name);
         wfs.write(ipaths.datasetYaml(name),defaultYaml(name));
     }
 
     export function initialize() {
         const dsCommand = commands.addCommand('dataset');
-
         if(
             !wfs.exists(ipaths.datasets) 
             || wfs.readDir(ipaths.datasets,false,'directories').length == 0) 

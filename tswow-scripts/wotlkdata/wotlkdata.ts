@@ -97,9 +97,11 @@ async function applyStage(collection: PatchCollection) {
 
 let ctime: number = 0;
 function time(msg: string) {
-    let diff = Date.now()-ctime;
-    console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
-    ctime = Date.now();
+    if(Settings.USE_TIMER) {
+        let diff = Date.now()-ctime;
+        console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
+        ctime = Date.now();
+    }
 }
 
 async function main() {
@@ -113,6 +115,7 @@ async function main() {
         console.error(err.stack);
         process.exit(0);
     }
+
     time(`Loaded/Cleaned SQL`);
 
     // Find all patch subdirectories
@@ -140,6 +143,7 @@ async function main() {
     await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
         Settings.SQL_WRITE_TO_FILE);
 
+    
     time(`Wrote SQL`);
     saveDbc();
     time(`Wrote DBC`);

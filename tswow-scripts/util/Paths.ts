@@ -80,45 +80,49 @@ export class InstallPaths {
         return mpath('datasets', dataset); 
     }
 
-    datasetMaps(dataset: string = 'default') {
+    get defaultDataset() {
+        return mpath(this.datasets, 'default-set');
+    }
+
+    datasetMaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'maps');
     }
 
-    datasetVmaps(dataset: string = 'default') {
+    datasetVmaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'vmaps')
     }
 
-    datasetMmaps(dataset: string = 'default') {
+    datasetMmaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'mmaps');
     }
 
-    datasetLuaxmlSource(dataset: string = 'default') {
+    datasetLuaxmlSource(dataset: string) {
         return mpath(this.datasetDir(dataset),'luaxml_source');
     }
 
-    datasetLuaxml(dataset: string = 'default') {
+    datasetLuaxml(dataset: string) {
         return mpath(this.datasetDir(dataset),'luaxml');
     }
 
-    datasetDBCSource(dataset: string = 'default') {
+    datasetDBCSource(dataset: string) {
         return mpath(this.datasetDir(dataset),'dbc_source');
     }
 
-    datasetDBC(dataset: string = 'default') {
+    datasetDBC(dataset: string) {
         return mpath(this.datasetDir(dataset),'dbc');
     }
 
-    datasetLuaXML(dataset: string = 'default') {
+    datasetLuaXML(dataset: string) {
         return mpath(this.datasetDir(dataset),'luaxml');
     }
 
     /** Dataset paths */
     get datasets() { return mpath(installBase, 'datasets'); }
-    datasetRoot(dataset: string = 'default') { 
+    datasetRoot(dataset: string) { 
         return mpath(this.datasets,dataset); 
     }
 
-    datasetYaml(dataset: string = 'default') {
+    datasetYaml(dataset: string) {
         return mpath(this.datasetRoot(dataset),`${dataset}.dataset.yaml`);
     }
 
@@ -263,7 +267,7 @@ export class InstallPaths {
         return mpath(installBase, 'realms');
     }
 
-    datasetIds(dataset: string = 'default') {
+    datasetIds(dataset: string) {
         return mpath(this.datasetDir(dataset),'ids.txt');
     }
 

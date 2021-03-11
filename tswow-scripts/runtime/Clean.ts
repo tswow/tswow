@@ -23,6 +23,7 @@ import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
 import { Datasets } from "./Dataset";
+import { Identifiers } from "./Identifiers";
 
 /**
  * Module for cleaning intermediate data.
@@ -66,7 +67,7 @@ export namespace Clean {
         await cleanTypescript();
     }
 
-    export async function cleanIds(dataset: string = "default") {
+    export async function cleanIds(dataset: string) {
         if(wfs.exists(ipaths.configIds)) {
             wfs.makeBackup(ipaths.configIds);
         }
@@ -123,7 +124,7 @@ export namespace Clean {
         await Modules.refreshModules();
     }
 
-    export function cleanClientData(dataset: string = 'default') {
+    export function cleanClientData(dataset: string) {
         wfs.remove(ipaths.clientDbc(dataset));
         wfs.remove(ipaths.clientMaps(dataset));
         wfs.remove(ipaths.clientVmaps(dataset));
@@ -151,7 +152,8 @@ export namespace Clean {
         });
 
         cleanC.addCommand('ids','dataset = "default"','Removes all id mappings for a dataset', async(args)=>{
-            await cleanIds();
+            await Promise.all([Identifiers.assertType('dataset',args)
+                .map(x=>cleanIds(x))]);
         });
 
         cleanC.addCommand('mysql','','Cleans all MySQL data files', async(args)=>{
@@ -167,9 +169,10 @@ export namespace Clean {
         });
 
         cleanC.addCommand('all','dataset?','Attempts to clean all intermediate data', async(args)=>{
+            let datasets = Identifiers.assertType('dataset',args);
             await cleanScriptBin();
             await cleanDataBuild();
-            await cleanIds();
+            await cleanIds(args[0]);
             await cleanAddonBuild();
             await cleanMysql();
             await cleanClientData(args[0]);

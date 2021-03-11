@@ -6,6 +6,14 @@ export class NodeConfiguration extends YamlFile {
         super(ipaths.nodeYaml)
     }
 
+    get default_realm() {
+        return this.get('default_realm','tswow');
+    }
+
+    get default_dataset() {
+        return this.get('default_dataset','default');
+    }
+
     get use_pooling() {
         return this.get('use_pooling',false);
     }

@@ -27,6 +27,8 @@ import { BuildCommand } from './BuildCommand';
 import { NodeConfig } from './NodeConfig';
 import { Realm } from './Realm';
 import { Datasets } from './Dataset';
+import { Identifiers } from './Identifiers';
+import { promises } from 'fs';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -162,10 +164,6 @@ export namespace Modules {
     }
 
     export function update(mod: string) {
-        if (mod === 'all') {
-            term.log(`Updating all modules...`);
-            return getModules().forEach(update);
-        }
         if (!wfs.exists(ipaths.moduleGit(mod))) {
             return;
         }
@@ -210,9 +208,7 @@ export namespace Modules {
             name = split[split.length-1].split('.git').join('');
         }
 
-        if (wfs.exists(ipaths.moduleRoot(name))) {
-            throw new Error('Module already exists:' + name);
-        }
+        Identifiers.assertUnused(name);
 
         // It's a git repository
         if(url) {
@@ -247,14 +243,26 @@ export namespace Modules {
         }
     }
 
+    export function getModulesOrAll(candidates: string[]) {
+        let cands = Identifiers.getTypes('module',candidates);
+        if(cands.length===0) {
+            cands = getModules();
+        }
+        return cands;
+    }
+
     /**
      * Builds dbc and sql data for all modules.
      */
-    export async function rebuildPatch(dataset: string = 'default', args: string[]) {
+    export async function rebuildPatch(dataset: string, readonly: boolean, useTimer: boolean) {
         await refreshModules();
         const ct = Date.now();
         await compileAll(8000);
-        term.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
+
+        if(useTimer) {
+            term.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
+        }
+
         wfs.mkDirs(ipaths.datasetDBC(dataset), true);
 
         const set = Datasets.get(dataset);
@@ -272,7 +280,8 @@ export namespace Modules {
             luaxml_out : ipaths.datasetLuaXML(dataset),
             modules: set.config.modules,
             id_path: ipaths.datasetIds(dataset),
-            readonly: args.includes('readonly'),
+            readonly: readonly,
+            use_timer: useTimer
         }
         const program = `node -r source-map-support/register ${ipaths.wotlkdataIndex} `
             + `${JSON.stringify(settings).split('\"').join('\'')}`
@@ -321,14 +330,14 @@ export namespace Modules {
      *
      * @warn - **OVERWRITES** any previously named mpq file at the configured location.
      */
-    export async function buildMpq(dataset: string, folder: boolean = false, args: string[] = []) {
+    export async function buildMpq(dataset: string, folder: boolean, readonly: boolean, useTimer: boolean) {
         const timer = Timer.start();
         const ds = Datasets.get(dataset);
 
         const realms = await ds.shutdownRealms();
 
         // Build output dbc
-        await rebuildPatch(dataset, args);
+        await rebuildPatch(dataset, readonly, useTimer);
 
         const modules = Datasets.get(dataset).config.modules;
 
@@ -343,7 +352,6 @@ export namespace Modules {
             .map(x => `"${x}"`);
         
         await ds.client.kill();
-        time(`Killed client`);
 
         if (folder !== wfs.isDirectory(ds.config.mpq_path)) {
             wfs.remove(ds.config.mpq_path);
@@ -391,9 +399,9 @@ export namespace Modules {
             +` "${paths.join(' ')}`, 'inherit');
         }
 
-        time(`Wrote file changes`);
-
-        term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);
+        if(useTimer) {
+            term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);
+        }
         realms.forEach(x=>x.startWorldserver(x.lastBuildType));
     }
 
@@ -519,27 +527,18 @@ export namespace Modules {
             if (args.includes('clientonly') && args.includes('rebuild')) {
                 throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
             }
-            let datasets = args.filter(x=>x!='clientonly'&&x!='rebuild');
-            let dataset = datasets.length === 0 ? 'default': datasets[0];
-            await buildMpq(dataset, true, args);
-            Datasets.get(dataset).client.start();
+            let dsets = Datasets.getDatasetsOrDefault(args);
+            let clients = dsets.filter(x=>x.client.isRunning());
+            clients.forEach(x=>x.client.kill());
+            await Promise.all(dsets.map(x=>buildMpq(x.id, true, args.includes('--readonly'),args.includes('--timers'))));
+            clients.forEach(x=>x.client.start());
         });
 
         BuildCommand.addCommand('scripts', 'module? debug?', 'Build and loads the server scripts of a module', async (args) => {
             let isDebug = args.indexOf('debug')!==-1;
-            let modules = args.filter(x=>x!=='debug');
-            if (modules.length === 0) {
-                modules = getModules();
-            }
-
-            let ctr = 0;
-            for (const mod of modules) {
-                if (await rebuildScripts(mod, isDebug? 'Debug': 'Release')) {
-                    ++ctr;
-                }
-            }
-
-            term.success(`Built ${ctr} scripts`);
+            let modules = getModulesOrAll(args);
+            await Promise.all(modules.map(x=>rebuildScripts(x, isDebug ? 'Debug' : 'Release')))
+            term.success(`Built scripts`);
         });
 
         moduleC.addCommand('editable', 'module true|false', 'Sets a data library to not compile its data', async(args) => {
@@ -573,14 +572,13 @@ export namespace Modules {
         });
 
         moduleC.addCommand('update', 'module|all', 'Updates any or all modules from their tracking git repositories', async(args) => {
-            if (args.length === 0) {
-                throw new Error(`update requires at least one argument (module OR "all")`);
-            }
-            update(args[0]);
+            let modules = Modules.getModulesOrAll(args);
+            modules.forEach(x=>update(x));
         });
 
         commands.addCommand('check', '', '', async(args) => {
-            await rebuildPatch(args[0],args.slice(1));
+            let ds = Datasets.getDatasetsOrDefault(args);
+            await rebuildPatch(ds[0].id,true,args.includes('--use-timer'));
         });
 
         await refreshModules(true);

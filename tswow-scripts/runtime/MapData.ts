@@ -20,6 +20,7 @@ import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
+import { Datasets } from './Dataset';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -48,15 +49,15 @@ export namespace MapData {
         }
     }
 
-    export async function buildMaps(dataset: string = 'default') {
+    export async function buildMaps(dataset: string) {
         prepareBuild(dataset);
         wfs.remove(ipaths.clientMaps(dataset));
         await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mapextractor`);
         wfs.copy(ipaths.clientMaps(dataset),ipaths.datasetMaps(dataset), true);
-        wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBC(), true);
+        wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBC(dataset), true);
     }
 
-    export async function buildVmaps(dataset: string = 'default') {
+    export async function buildVmaps(dataset: string) {
         wfs.remove(ipaths.clientVmaps(dataset));
         wfs.remove(ipaths.clientBuildings(dataset));
         await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4extractor`);
@@ -65,7 +66,7 @@ export namespace MapData {
         wfs.copy(ipaths.clientVmaps(dataset), ipaths.datasetVmaps(dataset), true);
     }
 
-    export async function buildMMaps(dataset: string = 'default') {
+    export async function buildMMaps(dataset: string) {
         term.log('Building MMAPS (this will take a very long time)');
         const timer = Timer.start();
         if(!wfs.exists(ipaths.clientMaps(dataset))) {
@@ -81,7 +82,7 @@ export namespace MapData {
         term.success(`Rebuilt mmaps in ${timer.timeSec()}s`);
     }
 
-    export async function buildLuaXML(dataset: string = 'default') {
+    export async function buildLuaXML(dataset: string) {
         wsys.exec(`"${ipaths.luaxmlExe}" ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset))} ${ipaths.clientData(dataset)}`, 'inherit');
     }
 

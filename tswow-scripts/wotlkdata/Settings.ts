@@ -46,6 +46,8 @@ class SettingsClass {
 
     get USE_POOLING() { return settings.use_pooling || false; }
 
+    get USE_TIMER() { return settings.use_timer; }
+
     get DBC_SOURCE() { return settings.dbc_source; }
     get DBC_OUT() {return settings.dbc_out; }
     // TODO: Fix this
