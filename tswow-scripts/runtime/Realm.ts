@@ -92,6 +92,7 @@ export namespace Realm {
         worldserver: Process;
         config: RealmConfig;
         set: Datasets.Dataset;
+        lastBuildType: 'Release'|'Debug' = 'Release';
 
         constructor(name: string) {
             this.identifier = name;
@@ -131,6 +132,7 @@ export namespace Realm {
         }
 
         async startWorldserver(type: 'Release'|'Debug') {
+            this.lastBuildType = type;
             await this.connect();
             copyLibraryFiles(type);
             await this.set.installDatabase();

@@ -325,9 +325,12 @@ export namespace Modules {
         const timer = Timer.start();
         const ds = Datasets.get(dataset);
 
+        const realms = await ds.shutdownRealms();
+
         // Build output dbc
         await rebuildPatch(dataset, args);
-        const modules = Realm.getRealm(dataset).config.modules;
+
+        const modules = Datasets.get(dataset).config.modules;
 
         const sectionTimer = Timer.start();
         const time = (str: string) => 
@@ -391,6 +394,7 @@ export namespace Modules {
         time(`Wrote file changes`);
 
         term.success(`Built SQL/DBC/MPQ data in ${timer.timeSec()}s`);
+        realms.forEach(x=>x.startWorldserver(x.lastBuildType));
     }
 
     export function linkModule(mod: string) {

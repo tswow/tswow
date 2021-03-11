@@ -74,6 +74,16 @@ export namespace Datasets {
             this.client = new Client.Client(this);
         }
 
+        realms() {
+            return Realm.getRealms().filter(x=>x.set === this);
+        }
+
+        async shutdownRealms() {
+            let realms = this.realms().filter(x=>x.isWorldserverRunning());
+            await Promise.all(realms.map(x=>x.stopWorldserver()));
+            return realms;
+        }
+
         installServerData() {
             if(!wfs.exists(ipaths.datasetMaps(this.id)) || !wfs.exists(ipaths.datasetDBC(this.id))) {
                 MapData.buildMaps(this.id);
