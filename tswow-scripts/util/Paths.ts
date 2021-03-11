@@ -186,7 +186,7 @@ export class InstallPaths {
     }
 
     tcModuleScript(type: 'Release'|'Debug', mod: string) {
-        return mpath(this.tcScripts(type),`${mod}.${isWindows() ? 'dll':'so'}`);
+        return mpath(this.tcScripts(type),`scripts_tswow_${mod}.${isWindows() ? 'dll':'so'}`);
     }
 
     tcModulePdb(type: 'Release'|'Debug',mod: string) {
