@@ -44,10 +44,28 @@ function patchSubdirs(dir: string) {
 
     const nodes = fs.readdirSync(dir).map(x => path.join(dir, x));
 
-    nodes
-        .filter(x => x.endsWith('js') && fs.statSync(x).isFile())
+    nodes.filter(x => {
+            if(!x.endsWith('js') || !fs.statSync(x).isFile()) {
+                return false;
+            }
+
+            // Check that the corresponding .ts file isn't deleted.
+            let p = x.split(path.sep);
+            let dindex = p.indexOf('build');
+            // not in a build directory, or build is somehow the root
+            if(dindex <= 0 || dindex == p.length-1) {
+                return;
+            }
+            let relpath = p.slice(dindex+1);
+            let tspath = p.slice(0,dindex)
+                .concat(relpath)
+                .join(path.sep)
+            tspath = tspath.substring(0,tspath.length-2)+'ts';
+            return fs.existsSync(tspath);
+        })
         .map(x => path.relative(__dirname, x))
         .forEach(x => {
+
             require(x);
             applyStage(setups);
         });
@@ -97,9 +115,9 @@ async function main() {
     }
     time(`Loaded/Cleaned SQL`);
 
-
     // Find all patch subdirectories
-    for (const dir of Settings.PATCH_DIRECTORY) {
+    for (let dir of Settings.PATCH_DIRECTORY) {
+        dir = path.join('./modules',dir,'data');
         if (!fs.lstatSync(dir).isDirectory()) {
             continue;
         }

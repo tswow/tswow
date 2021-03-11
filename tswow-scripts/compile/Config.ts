@@ -48,7 +48,6 @@ export namespace Config {
         }
 
         wfs.copy(spaths.tcGlobaldts,ipaths.binglobaldts);
-        wfs.copy(spaths.startJs, ipaths.startjs);
         wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
         wfs.copy(spaths.installAddons, ipaths.addons);
         wfs.copy(spaths.installSymlinkMaker, ipaths.symlinkMaker);

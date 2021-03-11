@@ -54,12 +54,21 @@ class SettingsClass {
     get SQL_FILE_PATH() {return './bin/sqlout'; }
     get ID_FILE_PATH() {return settings.id_path }
     get READONLY() {return settings.readonly; }
-    get PATCH_DIRECTORY() {
-        return fs.readdirSync('./modules')
-            .filter(x=>settings.modules.includes(x))
-            .map(x => path.join('./modules', x, 'data'))
-            // ?
-            .filter(x => fs.existsSync(x));
+    get PATCH_DIRECTORY() { 
+        if(typeof(settings.modules)=='string') {
+            settings.modules = [settings.modules];
+        }
+
+        if(settings.modules.includes('all')) {
+            settings.modules = [];
+            fs.readdirSync('./modules').forEach(x=>{
+                if(fs.existsSync(path.join('./modules',x,'data'))){
+                    settings.modules.push(x);
+                }
+            });
+        }
+
+        return settings.modules 
     }
 }
 
