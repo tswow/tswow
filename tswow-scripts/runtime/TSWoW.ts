@@ -16,11 +16,10 @@
  */
 import { InstallPaths } from '../util/Paths';
 InstallPaths.setInstallBase('./');
-import { mysql } from '../util/MySQL';
+import { mysql } from './MySQL';
 import { term } from '../util/Terminal';
 import { Modules } from './Modules';
 import { commands } from './Commands';
-import { MapData } from './MapData';
 import { Timer } from '../util/Timer';
 import { Client } from './Client';
 import { Test } from './Test';
@@ -30,43 +29,38 @@ import { Addon } from './Addon';
 import { Realm } from './Realm';
 import { AuthServer } from './AuthServer';
 import { Datasets } from './Dataset';
+import { Livescripts } from './Livescripts';
+import { Datascripts } from './Datascripts';
+import { Build } from './Build';
 
 export async function main() {
     try {
         term.log('~tswow starting up~');
         const timer = Timer.start();
 
-        // Setup Config and data files
-        await MapData.initialize();
-
         await mysql.initialize();
-
         await Addon.initialize();
 
         if(!process.argv.includes('minimal')) {
-            // Initialize Modules
             await Modules.initialize();
-
-            // Initialize client
-            Client.initialize();
-
-            // Initialize MPQ
-            Assets.initialize();
-
-            // Initialize tests
-            Test.initialize();
+            await Livescripts.initialize();
+            await Datascripts.initialize();
+            await Build.initialize();
+            await Client.initialize();
+            await Assets.initialize();
+            await Test.initialize();
         }
 
         await Datasets.initialize();
         await Realm.initialize();
         await AuthServer.initialize();
 
+        await Clean.initialize();
+
         term.success(`Initialized tswow in ${timer.timeSec()}s`);
     } catch (error) {
         console.error('Failed to start tswow:', error);
     }
-
-    Clean.initialize();
 
     if(!process.argv.includes('minimal')) {
         await commands.enterLoop();

@@ -17,12 +17,11 @@
 import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
-import { BuildCommand } from "./BuildCommand";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
 import { Datasets } from "./Dataset";
-import { Identifiers } from "./Identifiers";
 import { term } from "../util/Terminal";
+import { Build } from "./Build";
 
 const defaultToc = (name: string) => 
 `## Interface: 30300
@@ -186,7 +185,7 @@ export namespace Addon {
             initializeModule(args[0]);
         }));
 
-        BuildCommand.addCommand('addon','dataset | modules','Builds addons for one, multiple or all moduels against multiple or a single dataset',((args)=>{
+        Build.command.addCommand('addon','dataset | modules','Builds addons for one, multiple or all moduels against multiple or a single dataset',((args)=>{
             let ds = Datasets.getDatasetsOrDefault(args);
             let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x)));
             let runningClients = ds.filter(x=>x.client.isRunning());

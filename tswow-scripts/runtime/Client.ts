@@ -144,6 +144,7 @@ export namespace Client {
     }
 
     export const command = commands.addCommand('client');
+
     export function initialize() {
         command.addCommand('start', 'dataset = default', 'Starts the World of Warcraft client for a particular dataset',
             async(args) => await Datasets.get(args[0]||'default').client.start());

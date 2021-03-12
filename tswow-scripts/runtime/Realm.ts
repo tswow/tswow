@@ -1,5 +1,5 @@
 import { mpath, wfs } from "../util/FileSystem";
-import { Connection, mysql } from "../util/MySQL";
+import { Connection, mysql } from "./MySQL";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";

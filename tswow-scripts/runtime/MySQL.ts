@@ -15,16 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as mysql_lib from 'mysql';
-import { wsys } from './System';
-import { term } from './Terminal';
-import { commands } from '../runtime/Commands';
-import { isWindows } from './Platform';
-import { Process } from './Process';
-import { wfs, wfsa } from './FileSystem';
-import { ipaths } from './Paths';
-import { databaseSettings, DatabaseSettings, DatabaseType } from './Yaml';
-import { NodeConfig } from '../runtime/NodeConfig';
-import { extract } from './7zip';
+import { wsys } from '../util/System';
+import { term } from '../util/Terminal';
+import { commands } from './Commands';
+import { isWindows } from '../util/Platform';
+import { Process } from '../util/Process';
+import { wfs, wfsa } from '../util/FileSystem';
+import { ipaths } from '../util/Paths';
+import { databaseSettings, DatabaseSettings, DatabaseType } from '../util/Yaml';
+import { NodeConfig } from './NodeConfig';
+import { extract } from '../util/7zip';
 import { start } from 'repl';
 
 /**
@@ -334,8 +334,6 @@ export namespace mysql {
             mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {
                 showProcessOutput(args[0]==='true');
             });
-
-            term.success('MySQL initialized');
         }
     }
 }

@@ -124,7 +124,5 @@ export namespace Assets {
         command.addCommand('blp', 'mod?', 'Converts png files back to blp', (args) => {
             pngToBlp(true, args[0]);
         });
-
-        command.addCommand('check', '', '');
     }
 }

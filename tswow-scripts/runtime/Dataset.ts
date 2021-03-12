@@ -1,7 +1,7 @@
 import { YamlFile, DatabaseType } from "../util/Yaml";
 import { ipaths } from "../util/Paths";
 import { wfs, mpath } from "../util/FileSystem";
-import { Connection, mysql } from "../util/MySQL";
+import { Connection, mysql } from "./MySQL";
 import { MapData } from "./MapData";
 import { bool } from "../wotlkdata/primitives";
 import { commands } from "./Commands";
@@ -9,6 +9,7 @@ import { Client } from "./Client";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 import { Identifiers } from "./Identifiers";
+import { term } from "../util/Terminal";
 
 function defaultYaml(id: string) {
     return `# ${id} dataset configuration
@@ -164,8 +165,9 @@ export namespace Datasets {
         wfs.write(ipaths.datasetYaml(name),defaultYaml(name));
     }
 
+    export const command = commands.addCommand('dataset');
+
     export function initialize() {
-        const dsCommand = commands.addCommand('dataset');
         if(
             !wfs.exists(ipaths.datasets) 
             || wfs.readDir(ipaths.datasets,false,'directories').length == 0) 
@@ -173,7 +175,7 @@ export namespace Datasets {
             create('default');
         }
 
-        dsCommand.addCommand('create','name','Creates a new dataset with the provided id',(args: any[])=>{
+        command.addCommand('create','name','Creates a new dataset with the provided id',(args: any[])=>{
             if(args.length<1) {
                 throw new Error(`Must provide an id for the created dataset`);
             }

@@ -1,5 +1,5 @@
 import { mpath, wfs } from "../util/FileSystem";
-import { Connection, mysql } from "../util/MySQL";
+import { Connection, mysql } from "./MySQL";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
@@ -49,8 +49,9 @@ export namespace AuthServer {
             wfs.absPath(ipaths.tcAuthServer(type)));
     }
 
+    export const command = commands.addCommand('auth');
+
     export async function initialize() {
-        const auth = commands.addCommand('auth');
         connection = new Connection(NodeConfig.database_settings('auth'),'auth');
         await mysql.installAuth(connection);
 
@@ -58,11 +59,11 @@ export namespace AuthServer {
             await start(process.argv.includes('debug')?'Debug':'Release');
         }
 
-        auth.addCommand('stop','','Stops the local authserver',async (args)=>{
+        AuthServer.command.addCommand('stop','','Stops the local authserver',async (args)=>{
             await stop();
         });
 
-        auth.addCommand('start','debug|release?','Starts the local authserver',async (args)=>{
+        AuthServer.command.addCommand('start','debug|release?','Starts the local authserver',async (args)=>{
             await start(args[0]=='debug'?'Debug':'Release');
         });
     }

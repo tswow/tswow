@@ -16,6 +16,7 @@
  */
 import { wsys } from '../util/System';
 import { commands } from './Commands';
+import { term } from '../util/Terminal';
 
 export namespace Test {
     export function initialize() {

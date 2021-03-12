@@ -20,7 +20,6 @@ import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
-import { Datasets } from './Dataset';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -84,12 +83,5 @@ export namespace MapData {
 
     export async function buildLuaXML(dataset: string) {
         wsys.exec(`"${ipaths.luaxmlExe}" ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset))} ${ipaths.clientData(dataset)}`, 'inherit');
-    }
-
-    /**
-     * Prepares the module for startup.
-     */
-    export async function initialize() {
-        term.success('Initialized Game Data');
     }
 }
