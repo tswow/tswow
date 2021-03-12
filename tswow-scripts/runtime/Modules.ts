@@ -23,7 +23,7 @@ import { destroyTSWatcher, getTSWatcher } from '../util/TSWatcher';
 import { isWindows } from '../util/Platform';
 import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
-import { Build } from './Build';
+import { MPQ } from './MPQ';
 import { Datasets } from './Dataset';
 import { Identifiers } from './Identifiers';
 import { Livescripts } from './Livescripts';

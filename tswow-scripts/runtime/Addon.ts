@@ -18,10 +18,7 @@ import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { commands } from "./Commands";
-import { Modules } from "./Modules";
-import { Datasets } from "./Dataset";
 import { term } from "../util/Terminal";
-import { Build } from "./Build";
 
 const defaultToc = (name: string) => 
 `## Interface: 30300
@@ -175,23 +172,14 @@ export namespace Addon {
         wfs.remove(ipaths.moduleAddonClasses(mod));
     }
 
-    export function initialize() {
-        const addonCommand = commands.addCommand('addon');
+    export const command = commands.addCommand('addon');
 
-        addonCommand.addCommand('create','module','Creates addon data in a module',((args)=>{
+    export function initialize() {
+        Addon.command.addCommand('create','module','Creates addon data in a module',((args)=>{
             if(!wfs.exists(ipaths.moduleRoot(args[0]))) {
                 throw new Error(`"${args[0]}" is not an existing module.`);
             }
             initializeModule(args[0]);
-        }));
-
-        Build.command.addCommand('addon','dataset | modules','Builds addons for one, multiple or all moduels against multiple or a single dataset',((args)=>{
-            let ds = Datasets.getDatasetsOrDefault(args);
-            let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x)));
-            let runningClients = ds.filter(x=>x.client.isRunning());
-            runningClients.forEach(x=>x.client.kill());
-            ds.forEach(x=>modules.forEach(y=>build(y,x.id)));
-            runningClients.forEach(x=>x.client.start());
         }));
     }
 }

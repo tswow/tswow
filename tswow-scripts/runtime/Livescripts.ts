@@ -6,7 +6,7 @@ import { Timer } from "../util/Timer";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { commands } from "./Commands";
-import { Build } from "./Build";
+import { MPQ } from "./MPQ";
 import { Datasets } from "./Dataset";
 
 export namespace Livescripts {
@@ -57,19 +57,5 @@ export namespace Livescripts {
         wfs.write(
             ipaths.datasetModuleList(dataset.id),
             dataset.config.modules.join('\n'));
-    }
-
-    export const command = commands.addCommand('livescripts');
-
-    export function initialize() {
-        Build.command.addCommand('scripts', 'module? debug?', 'Build and loads the server scripts of a module', async (args) => {
-            let isDebug = args.indexOf('debug')!==-1;
-            let modules = Modules.getModulesOrAll(args);
-            await Promise.all(modules.map(x=>Livescripts.build(x, isDebug ? 'Debug' : 'Release')))
-            Datasets.getAll().forEach(x=>{
-                writeModuleText(x);
-            });
-            term.success(`Built scripts`);
-        });
     }
 }

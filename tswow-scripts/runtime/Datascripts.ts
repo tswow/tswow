@@ -50,11 +50,4 @@ export namespace Datascripts {
 
         term.success(`Finished building DataScripts for dataset ${dataset.id}`);
     }
-
-    export function initialize() {
-        commands.addCommand('check', '', '', async(args) => {
-            let ds = Datasets.getDatasetsOrDefault(args);
-            await Datascripts.build(ds[0],true,args.includes('--use-timer'));
-        });
-    }
 }

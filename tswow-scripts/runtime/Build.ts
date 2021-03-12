@@ -1,100 +1,17 @@
+import { MPQ } from "./MPQ";
+import { Datasets } from "./Dataset";
+import { Datascripts } from "./Datascripts";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
-import { term } from "../util/Terminal";
-import { wfs, mpath } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
-import { Datasets } from "./Dataset";
-import { wsys } from "../util/System";
-import { FileChanges } from "../util/FileChanges";
-import { Datascripts } from "./Datascripts";
+import { wfs } from "../util/FileSystem";
+import { Addon } from "./Addon";
+import { Livescripts } from "./Livescripts";
+import { term } from "../util/Terminal";
 
 export namespace Build {
+
     export const command = commands.addCommand('build');
-    /**
-     * Operations necessary for both folder and archive builds
-     * @param dataset 
-     * @param useTimer 
-     */
-    async function prepareBuild(dataset: Datasets.Dataset, useTimer: boolean) {
-        // Build output dbc
-        await Datascripts.build(dataset, false, useTimer);
-        const modules = dataset.config.modules;
-        return Modules.getModules()
-            .filter(x => !wfs.exists(ipaths.moduleSymlink(x)) && modules.includes(x))
-            .map(x => ipaths.moduleAssets(x))
-            .filter(x => wfs.exists(x))
-            .map(x => `"${x}"`)
-            .map(x => `./${x.substring(1, x.length - 1)}`)
-                .concat([
-                    ipaths.datasetDBC(dataset.id), 
-                    ipaths.datasetLuaXML(dataset.id)
-                ]);
-    }
-
-    export async function buildMpqFolder(dataset: Datasets.Dataset, destination: string, useTimer: boolean) {
-        let folders = await prepareBuild(dataset, useTimer);
-        term.log(`Building MPQ folder at ${destination} for dataset ${dataset.id}`);
-        if(wfs.exists(destination) && !wfs.isDirectory(destination)) {
-            throw new Error(`Target MPQ folder is a file: ${destination}`);
-        }
-
-        wfs.mkDirs(destination);
-        const ignored = dataset.config.ignore_assets;
-        FileChanges.startCache();
-        folders.forEach(x => wfs.iterate(x, path => {
-            for (const ig of ignored) {
-                if (path.endsWith(ig))  {
-                    return;
-                }
-            }
-
-            let rel = wfs.relative(x, path);
-            if (rel.endsWith('.dbc')) {
-                rel = mpath('DBFilesClient', rel);
-            }
-            const out = mpath(destination, rel);
-            if (
-                FileChanges.isChanged(path, 'mpq') 
-                || !wfs.exists(out) 
-                || rel.endsWith('.dbc')
-                || rel.endsWith('.lua')
-                || rel.endsWith('.xml')) {
-                    wfs.copy(path, out);
-                }
-            FileChanges.tagChange(path, 'mpq');
-        })); 
-        FileChanges.endCache();
-        term.success(`Finished building MPQ folder for dataset ${dataset.id}`);
-    }
-
-    export async function buildMPQArchive(dataset: Datasets.Dataset, destination: string, useTimer: boolean) {
-        let folders = await prepareBuild(dataset, useTimer);
-        term.log(`Building MPQ archive at ${destination} for dataset ${dataset}`);
-        if(wfs.exists(destination) && wfs.isDirectory(destination)) {
-            throw new Error(`Target MPQ file is a directory: ${destination}`);
-        }
-
-        wsys.exec(`"${ipaths.mpqBuilderExe}"`
-        +` "${destination}"`
-        +` "${wfs.removeDot(ipaths.datasetDBC(dataset.id))}"`
-        +` "${wfs.removeDot(ipaths.datasetLuaxml(dataset.id))}"`
-        +` "${folders.join(' ')}`, 'inherit');
-        term.success(`Finished building MPQ archive for dataset ${dataset.id}`);
-    }
-
-    export async function buildDevMPQ(dataset: Datasets.Dataset, useTimer: boolean) {
-        let clientWasStarted = dataset.client.isRunning();
-        let realms = await dataset.shutdownRealms();
-        if(clientWasStarted) {
-            dataset.client.kill();
-        }
-        await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer);
-        if(clientWasStarted) {
-            dataset.client.start();
-        }
-
-        realms.forEach(x=>x.startWorldserver(x.lastBuildType));
-    }
 
     export function initialize() {
         Build.command.addCommand('data', 'clientonly? rebuild? package?',
@@ -103,8 +20,32 @@ export namespace Build {
                 throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
             }
             await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>
-                buildDevMPQ(x,args.includes('--use-timer'))
+                MPQ.buildDevMPQ(x,args.includes('--use-timer'))
             ));
+        });
+
+        Build.command.addCommand('check', '', '', async(args) => {
+            let ds = Datasets.getDatasetsOrDefault(args);
+            await Datascripts.build(ds[0],true,args.includes('--use-timer'));
+        });
+
+        Build.command.addCommand('addon','dataset | modules','Builds addons for one, multiple or all moduels against multiple or a single dataset',((args)=>{
+            let ds = Datasets.getDatasetsOrDefault(args);
+            let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x)));
+            let runningClients = ds.filter(x=>x.client.isRunning());
+            runningClients.forEach(x=>x.client.kill());
+            ds.forEach(x=>modules.forEach(y=>Addon.build(y,x.id)));
+            runningClients.forEach(x=>x.client.start());
+        }));
+
+        Build.command.addCommand('scripts', 'module? debug?', 'Build and loads the server scripts of a module', async (args) => {
+            let isDebug = args.indexOf('debug')!==-1;
+            let modules = Modules.getModulesOrAll(args);
+            await Promise.all(modules.map(x=>Livescripts.build(x, isDebug ? 'Debug' : 'Release')))
+            Datasets.getAll().forEach(x=>{
+                Livescripts.writeModuleText(x);
+            });
+            term.success(`Built scripts`);
         });
     }
 }

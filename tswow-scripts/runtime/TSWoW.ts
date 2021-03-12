@@ -29,8 +29,6 @@ import { Addon } from './Addon';
 import { Realm } from './Realm';
 import { AuthServer } from './AuthServer';
 import { Datasets } from './Dataset';
-import { Livescripts } from './Livescripts';
-import { Datascripts } from './Datascripts';
 import { Build } from './Build';
 
 export async function main() {
@@ -43,8 +41,6 @@ export async function main() {
 
         if(!process.argv.includes('minimal')) {
             await Modules.initialize();
-            await Livescripts.initialize();
-            await Datascripts.initialize();
             await Build.initialize();
             await Client.initialize();
             await Assets.initialize();
