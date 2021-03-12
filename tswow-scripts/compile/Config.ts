@@ -33,10 +33,6 @@ export namespace Config {
 
         wsys.execIn(install_path(), 'npm i');
 
-        if (!wfs.exists(ipaths.coreData)) {
-            wfs.mkDirs(ipaths.coreData);
-        }
-
         wfs.copy(spaths.scriptsSql, ipaths.binSql, true)
 
         if (!wfs.exists(ipaths.modules)) {

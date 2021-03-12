@@ -55,7 +55,6 @@ export class InstallPaths {
 
     /** Core data paths */
 
-    get coreData() { return mpath(installBase, 'coredata'); }
     get garbage() { return mpath(this.coreData, 'module_garbage'); }
 
     moduleFreeGarbage(mod: string) { 
