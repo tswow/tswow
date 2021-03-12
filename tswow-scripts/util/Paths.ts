@@ -55,10 +55,8 @@ export class InstallPaths {
 
     /** Core data paths */
 
-    get garbage() { return mpath(this.coreData, 'module_garbage'); }
-
     moduleFreeGarbage(mod: string) { 
-        return this.freeBackupPath(mpath(this.garbage,mod));
+        return this.freeBackupPath(mpath('garbage',mod));
     }
 
     get databaseDir() {return mpath('database'); }
