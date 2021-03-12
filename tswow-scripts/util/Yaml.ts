@@ -81,6 +81,11 @@ export class YamlFile {
         return yaml(this.filepath, defValue,path); 
     }
 
+    protected getArray<T>(path: string, defValue: T): T {
+        let v = this.get<any>(path,defValue);
+        return (Array.isArray(v) ? v : [v]) as any as T;
+    }
+
     constructor(filepath: string) {
         this.filepath = filepath;
     }

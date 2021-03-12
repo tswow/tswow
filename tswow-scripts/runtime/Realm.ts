@@ -149,6 +149,7 @@ export namespace Realm {
 
                 writeYamlToConf(ipaths.realmYaml(this.identifier),targetConf,
                     {
+                        'RealmID': this.realm_id,
                         'DataDir':wfs.absPath(ipaths.datasetDir(this.config.dataset)),
                         'HotSwap.Enabled': 1,
                         'HotSwap.EnableReCompiler': 0,

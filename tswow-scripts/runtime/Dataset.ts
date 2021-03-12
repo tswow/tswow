@@ -9,7 +9,6 @@ import { Client } from "./Client";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 import { Identifiers } from "./Identifiers";
-import { term } from "../util/Terminal";
 
 function defaultYaml(id: string) {
     return `# ${id} dataset configuration
@@ -44,7 +43,14 @@ export namespace Datasets {
             this.set = set;
         }
 
-        get modules() { return this.get<string[]>('modules',[]) }
+        get modules() {
+            let mods = this.getArray<string[]>('modules',[]);
+            if(mods.includes('all')) {
+                return wfs.readDir(ipaths.modules,true,'directories');
+            } else {
+                return mods;
+            }
+        }
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
         get client_path() { return this.get<string>('client_path',''); }
         get mpq_suffix() { return this.get<string>('mpq_suffix','')}
@@ -133,6 +139,11 @@ export namespace Datasets {
             return dataset;
         }
         return getDefault();
+    }
+
+    export function getAll() {
+        return wfs.readDir(ipaths.datasets,true,'directories')
+            .map(x=>get(x));
     }
 
     export function getDefault() {

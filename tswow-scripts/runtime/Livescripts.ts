@@ -7,6 +7,7 @@ import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { commands } from "./Commands";
 import { Build } from "./Build";
+import { Datasets } from "./Dataset";
 
 export namespace Livescripts {
     export function getLibrary(mod: string) {
@@ -52,6 +53,12 @@ export namespace Livescripts {
         return true;
     }
 
+    export function writeModuleText(dataset: Datasets.Dataset) {
+        wfs.write(
+            ipaths.datasetModuleList(dataset.id),
+            dataset.config.modules.join('\n'));
+    }
+
     export const command = commands.addCommand('livescripts');
 
     export function initialize() {
@@ -59,8 +66,10 @@ export namespace Livescripts {
             let isDebug = args.indexOf('debug')!==-1;
             let modules = Modules.getModulesOrAll(args);
             await Promise.all(modules.map(x=>Livescripts.build(x, isDebug ? 'Debug' : 'Release')))
+            Datasets.getAll().forEach(x=>{
+                writeModuleText(x);
+            });
             term.success(`Built scripts`);
         });
-
     }
 }

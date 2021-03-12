@@ -108,6 +108,10 @@ export class InstallPaths {
         return mpath(this.datasetDir(dataset),'dbc_source');
     }
 
+    datasetModuleList(dataset: string) {
+        return mpath(this.datasetDir(dataset),'modules.txt');
+    }
+
     datasetDBC(dataset: string) {
         return mpath(this.datasetDir(dataset),'dbc');
     }
