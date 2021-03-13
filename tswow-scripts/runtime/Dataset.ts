@@ -9,6 +9,7 @@ import { Client } from "./Client";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 import { Identifiers } from "./Identifiers";
+import { term } from "../util/Terminal";
 
 function defaultYaml(id: string) {
     return `# ${id} dataset configuration
@@ -104,6 +105,14 @@ export namespace Datasets {
             if(this.config.use_mmaps && !wfs.exists(ipaths.datasetMmaps(this.id))) {
                 MapData.buildMMaps(this.id);
             }
+        }
+
+        async dumpReleaseDatabase() {
+                term.log(`Dumping release database ${this.worldDest.cfg.name} to ${ipaths.datasetSqlDump}...`)
+                await mysql.rebuildDatabase(
+                this.worldDest,
+                await mysql.extractTdb());
+            await mysql.dump(this.worldDest, ipaths.datasetSqlDump(this.id));
         }
 
         async installDatabase() {

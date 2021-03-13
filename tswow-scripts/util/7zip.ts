@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from './FileSystem';
 import { ipaths } from './Paths';
 import { wsys } from './System';
 
@@ -22,7 +21,6 @@ export function extract(archive: string) {
     wsys.exec(`"${ipaths.sevenZaExe}" e -obin ${archive}`);
 }
 
-export function makeArchive(directoryIn: string, zipPath: string) {
-    wfs.remove(zipPath);
-    wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${wfs.absPath(directoryIn)}/* -mx=9 -mmt=on`);
+export function makeArchive(zipPath: string, directoryIn: string[]) {
+    wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`);
 }

@@ -152,6 +152,14 @@ export class Connection {
 export namespace mysql {
     const mysqlprocess: Process = new Process();
 
+    export function dump(connection: Connection, outputFile: string) {
+        wsys.exec(
+            `"${ipaths.mysqlDumpExe}"`
+            + ` --port ${connection.cfg.port}`
+            + ` -u root ${connection.cfg.name}`
+            + ` > ${wfs.absPath(outputFile)}`)
+    }
+
     export async function startProcess() {
         term.log('Starting mysql...');
         if (!wfs.exists(ipaths.databaseDir)) {

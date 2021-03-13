@@ -6,7 +6,6 @@ import { ipaths } from "../util/Paths";
 import { Datasets } from "./Dataset";
 import { NodeConfig } from "./NodeConfig";
 import { wsys } from "../util/System";
-import { commands } from "./Commands";
 
 export namespace Datascripts {
     /**

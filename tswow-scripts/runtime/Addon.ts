@@ -19,6 +19,7 @@ import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { commands } from "./Commands";
 import { term } from "../util/Terminal";
+import { Datasets } from "./Dataset";
 
 const defaultToc = (name: string) => 
 `## Interface: 30300
@@ -27,13 +28,14 @@ const defaultToc = (name: string) =>
 ## Notes: Something
 ## Author: Someone`
 
-const defaultTsConfig = {
+function defaultTsConfig(mod: string) {
+return {
     "compilerOptions": {
       "target": "esnext",
       "lib": ["esnext", "dom"],
       "moduleResolution": "node",
       "rootDir": "../",
-      "outDir": "./build",
+      "outDir": `./build/Interface/AddOns/${mod}`,
       "typeRoots": [
         "node_modules/@wartoshika/wow-declarations",
         "node_modules/lua-types/5.1",
@@ -54,6 +56,7 @@ const defaultTsConfig = {
       "noImplicitSelf": true,
     }
   }
+}
 
 /**
  * Contains functions for managing addon development in TSWoW modules.
@@ -74,7 +77,18 @@ export namespace Addon {
         wfs.copy(ipaths.addonIncludeRequireStub,ipaths.addonRequireStub(mod));
         wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(mod));
 
-        wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig,null,4));
+        wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig(mod),null,4));
+    }
+
+    export function buildAll(dataset: Datasets.Dataset) {
+        let str: string[] = [];
+        dataset.config.modules.forEach(x=>{
+            if(wfs.exists(ipaths.moduleAddons(x))) {
+                build(x,dataset.id);
+                str.push(ipaths.addonBuild(x));
+            }
+        });
+        return str;
     }
 
     export function build(mod: string, dataset: string) {
@@ -82,7 +96,7 @@ export namespace Addon {
         wfs.remove(ipaths.moduleAddonClasses(mod));
 
         // need to bypass the normal checks for decorators, 
-        // so we inject a patch instead of cloning and building the entire repository
+        // so we inject a patch into tstl instead of maintaining a fork of their repository
         let decoText = wfs.read(ipaths.tstlDecorators);
         let diagnosticsIndex = decoText.indexOf('context.diagnostics.push(');
         if(diagnosticsIndex==-1) {

@@ -20,14 +20,9 @@ import { commands } from './Commands';
 import { wsys } from '../util/System';
 import { Timer } from '../util/Timer';
 import { destroyTSWatcher, getTSWatcher } from '../util/TSWatcher';
-import { isWindows } from '../util/Platform';
-import { FileChanges } from '../util/FileChanges';
 import { ipaths } from '../util/Paths';
-import { MPQ } from './MPQ';
-import { Datasets } from './Dataset';
 import { Identifiers } from './Identifiers';
 import { Livescripts } from './Livescripts';
-import { Module } from 'module';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -125,6 +120,22 @@ export namespace Modules {
      */
     export function getModules() {
         return wfs.readDir(ipaths.modules, true, 'directories');
+    }
+
+    export function getSourceFiles(mod: string, types: ('data'|'scripts'|'shared'|'addons')[]) {
+        let files: string[] = [];
+        types.forEach(x=>{
+            let rootdir = mpath(ipaths.moduleRoot(mod),x);
+            wfs.iterate(rootdir,(file)=>{
+                const rel = wfs.relative(rootdir,file);
+                if(rel.startsWith('build')) {
+                    return;
+                } else {
+                    files.push(file)
+                }
+            })
+        });
+        return files;
     }
 
     export function setEditable(mod: string, editable: boolean) {

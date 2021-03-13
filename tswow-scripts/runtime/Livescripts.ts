@@ -5,8 +5,6 @@ import { wfs } from "../util/FileSystem";
 import { Timer } from "../util/Timer";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { commands } from "./Commands";
-import { MPQ } from "./MPQ";
 import { Datasets } from "./Dataset";
 
 export namespace Livescripts {

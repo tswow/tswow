@@ -53,6 +53,27 @@ export class InstallPaths {
         return installBase;
     }
 
+    /** Publish paths */
+    get publish() {
+        return mpath(installBase,'publish');
+    }
+
+    publishSet(dataset: string) {
+        return mpath(this.publish,dataset);
+    }
+
+    get publishServerZip() {
+        return mpath(this.publish, 'server.7z');
+    }
+
+    publishMpq(dataset: string) {
+        return mpath(this.publishSet(dataset), 'patch-LETTER.MPQ');
+    }
+
+    datasetSqlDump(dataset: string) {
+        return mpath(this.datasetRoot(dataset),'world_dump.sql');
+    }
+
     /** Core data paths */
 
     moduleFreeGarbage(mod: string) { 
@@ -242,6 +263,7 @@ export class InstallPaths {
     get mysqlBin() {return mpath(this.bin, 'mysql'); }
     get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
     get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
+    get mysqlDumpExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqldump.exe'); }
     get sevenZip() { return mpath(this.bin, '7zip'); }
     get sevenZaExe() { return mpath(this.sevenZip, '7za.exe'); }
 
@@ -299,7 +321,7 @@ export class InstallPaths {
     clientAddon(dataset: string, name: string) { return mpath(this.clientAddons(dataset), name)}
 
     clientAddonBuild(dataset: string, addon: string){
-        return mpath(this.client(dataset),'Interface','Addons', addon);
+        return mpath(this.client(dataset),addon);
     }
 
     clientLocale(dataset: string) {

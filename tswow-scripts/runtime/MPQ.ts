@@ -1,4 +1,3 @@
-import { commands } from "./Commands";
 import { Modules } from "./Modules";
 import { term } from "../util/Terminal";
 import { wfs, mpath } from "../util/FileSystem";
@@ -7,6 +6,8 @@ import { Datasets } from "./Dataset";
 import { wsys } from "../util/System";
 import { FileChanges } from "../util/FileChanges";
 import { Datascripts } from "./Datascripts";
+import { Addon } from "./Addon";
+import { BannedAddOnsDBCFile } from "../wotlkdata/dbc/types/BannedAddOns";
 
 export namespace MPQ {
     /**
@@ -25,7 +26,7 @@ export namespace MPQ {
             .map(x => `"${x}"`)
             .map(x => `./${x.substring(1, x.length - 1)}`)
                 .concat([
-                    ipaths.datasetDBC(dataset.id), 
+                    ipaths.datasetDBC(dataset.id),
                     ipaths.datasetLuaXML(dataset.id)
                 ]);
     }
@@ -68,6 +69,8 @@ export namespace MPQ {
 
     export async function buildMPQArchive(dataset: Datasets.Dataset, destination: string, useTimer: boolean) {
         let folders = await prepareBuild(dataset, useTimer);
+        let addons = await Addon.buildAll(dataset);
+        folders = folders.concat(addons);
         term.log(`Building MPQ archive at ${destination} for dataset ${dataset.id}`);
         if(wfs.exists(destination) && wfs.isDirectory(destination)) {
             throw new Error(`Target MPQ file is a directory: ${destination}`);
