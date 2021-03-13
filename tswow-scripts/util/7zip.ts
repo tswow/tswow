@@ -17,10 +17,12 @@
 import { ipaths } from './Paths';
 import { wsys } from './System';
 
-export function extract(archive: string) {
-    wsys.exec(`"${ipaths.sevenZaExe}" e -obin ${archive}`);
-}
+export namespace SevenZip {
+    export function extract(archive: string) {
+        wsys.exec(`"${ipaths.sevenZaExe}" e -obin ${archive}`);
+    }
 
-export function makeArchive(zipPath: string, directoryIn: string[]) {
-    wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`);
+    export function makeArchive(zipPath: string, directoryIn: string[]) {
+        wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`);
+    }
 }

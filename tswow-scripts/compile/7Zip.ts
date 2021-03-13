@@ -17,14 +17,15 @@
 import { mpath, wfs } from '../util/FileSystem';
 import { wsys } from '../util/System';
 import { ipaths, bpaths } from '../util/Paths';
+import { SevenZip } from '../util/7zip';
 
-export namespace SevenZip {
+export namespace SevenZipInstall {
     /**
      * Use 7zip in the build script
      */
     export async function makeArchive(path: string, outPath: string) {
         install();
-        makeArchive(path, outPath);
+        SevenZip.makeArchive(path, [outPath]);
     }
 
     /**

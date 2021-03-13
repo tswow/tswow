@@ -24,8 +24,8 @@ import { wfs, wfsa } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { databaseSettings, DatabaseSettings, DatabaseType } from '../util/Yaml';
 import { NodeConfig } from './NodeConfig';
-import { extract } from '../util/7zip';
 import { start } from 'repl';
+import { SevenZip } from '../util/7zip';
 
 /**
  * Represents a single connection to a mysql server.
@@ -229,7 +229,7 @@ export namespace mysql {
             throw new Error(`Multiple SQL files in the bin directory, please remove them manually`);
         }
 
-        extract(ipaths.tdb);
+        SevenZip.extract(ipaths.tdb);
         const search2 = search();
         if(search2.length>1) {
             throw new Error(`TDB archive seems to contain multiple SQL files, it's probably corrupt.`);

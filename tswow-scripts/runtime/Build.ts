@@ -8,7 +8,7 @@ import { wfs } from "../util/FileSystem";
 import { Addon } from "./Addon";
 import { Livescripts } from "./Livescripts";
 import { term } from "../util/Terminal";
-import { makeArchive } from "../util/7zip";
+import { SevenZip } from "../util/7zip";
 
 export namespace Build {
     export const command = commands.addCommand('build');
@@ -76,7 +76,7 @@ export namespace Build {
 
             term.log(`Creating server release package ${ipaths.publishServerZip}...`);
             archiveFiles.forEach(x=>{
-                makeArchive(ipaths.publishServerZip,[x]);
+                SevenZip.makeArchive(ipaths.publishServerZip,[x]);
             });
     }
 

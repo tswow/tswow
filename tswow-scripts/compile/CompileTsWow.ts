@@ -35,7 +35,7 @@ import { Clean } from './Clean';
 import { BLPConverter } from './BLPConverter';
 import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
 import { wfs } from '../util/FileSystem';
-import { SevenZip } from './7Zip';
+import { SevenZipInstall } from './7Zip';
 
 let buildingScripts = false;
 
@@ -61,7 +61,7 @@ async function compile(type: string, compileArgs: string[]) {
     const mysql = isWindows() ? await MySQL.find() : 'mysql';
     term.log(`Found MySQL at ${mysql}`);
     const boost = isWindows() ? await Boost.install() : 'boost';
-    if (isWindows()) { await SevenZip.install(); }
+    if (isWindows()) { await SevenZipInstall.install(); }
 
     if (!isWindows()) {
         // Ubunu only
@@ -97,7 +97,7 @@ async function compile(type: string, compileArgs: string[]) {
 
     if (types.includes('release')) {
         term.log(`Creating ${build_path('release.7z')}`);
-        SevenZip.makeArchive(install_path(), build_path('release.7z'));
+        SevenZipInstall.makeArchive(install_path(), build_path('release.7z'));
     }
 
     term.log('Installation successful!');
