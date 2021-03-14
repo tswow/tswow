@@ -37,19 +37,32 @@ export namespace TrinityCore {
         let setupCommand: string;
         let buildCommand: string;
         if (isWindows()) {
-            setupCommand = `${cmake} -DTOOLS=${tools} -DSCRIPTS=${scripts} -DMYSQL_INCLUDE_DIR="${mysql}/include"  -DMYSQL_LIBRARY="${
-                mysql}/lib/libmysql.lib" -DOPENSSL_INCLUDE_DIR="${
-                openssl}/include" -DOPENSSL_ROOT_DIR="${
-            openssl}" -S "${spaths.trinityCore}" -B "${bpaths.trinitycore}"`;
+            setupCommand = `${cmake} -DTOOLS=${tools}`
+            +` -DSCRIPTS=${scripts}`
+            +` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
+            +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
+            +` -DOPENSSL_INCLUDE_DIR="${openssl}/include"`
+            +` -DOPENSSL_ROOT_DIR="${openssl}"`
+            +` -S "${spaths.trinityCore}"`
+            +` -B "${bpaths.trinitycore}"`;
             buildCommand = `${cmake} --build ${bpaths.trinitycore} --config ${type}`;
             wsys.exec(setupCommand, 'inherit');
             wsys.exec(buildCommand, 'inherit');
         } else {
             wfs.mkDirs(bpaths.trinitycore);
-            const relativeSourcePath = wfs.relative(bpaths.trinitycore, spaths.trinityCore);
-            const relativeInstallPath = wfs.relative(bpaths.trinitycore, mpath(bpaths.trinitycore, 'install/trinitycore'));
+            const relativeSourcePath = wfs.relative(
+                bpaths.trinitycore,
+                spaths.trinityCore);
+            const relativeInstallPath = wfs.relative(
+                bpaths.trinitycore,
+                mpath(bpaths.trinitycore, 'install/trinitycore'));
             // TODO: Set up optimization flags for o0 as debug and o3 as release
-            setupCommand = `cmake ${relativeSourcePath} -DCMAKE_INSTALL_PREFIX=${relativeInstallPath} -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DWITH_WARNINGS=1 -DTOOLS=${tools} -DSCRIPTS=static`;
+            setupCommand = `cmake ${relativeSourcePath}`
+            +` -DCMAKE_INSTALL_PREFIX=${relativeInstallPath}`
+            +` -DCMAKE_C_COMPILER=/usr/bin/clang`
+            +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+            +` -DWITH_WARNINGS=1`
+            +` -DSCRIPTS=${scripts}`;
             buildCommand = 'make -j 4';
             wsys.inDirectory(bpaths.trinitycore, () => {
                 wsys.exec(setupCommand, 'inherit');
