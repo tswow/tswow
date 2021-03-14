@@ -195,6 +195,18 @@ export namespace Datasets {
             create('default');
         }
 
+        command.addCommand('install','name --skip-data --skip-database','Installs server data for a dataset', async (args: any[])=>{
+            await Promise.all(getDatasetsOrDefault(args).map(x=>{
+                if(!args.includes('--skip-data')) {
+                    x.installServerData();
+                }
+
+                if(!args.includes('--skip-database')) {
+                    return x.installDatabase();
+                }
+            }));
+        });
+
         command.addCommand('create','name','Creates a new dataset with the provided id',(args: any[])=>{
             if(args.length<1) {
                 throw new Error(`Must provide an id for the created dataset`);

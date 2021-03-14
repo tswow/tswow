@@ -162,7 +162,8 @@ export namespace Realm {
             });
 
             this.worldserver.startIn(ipaths.wsWorkingDir(this.identifier),
-                wfs.absPath(ipaths.tcWorldserver(type))); 
+                wfs.absPath(ipaths.tcWorldserver(type)),
+                    [`-c${wfs.absPath(ipaths.realmWorldserverConf(this.identifier))}`]);
         }
 
         get realm_id() {

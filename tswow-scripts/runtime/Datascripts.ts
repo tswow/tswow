@@ -25,7 +25,7 @@ export namespace Datascripts {
 
         dataset.installServerData();
 
-        const settings = {
+        const settings : any = {
             auth : NodeConfig.database_settings('auth'),
             world : NodeConfig.database_settings('world',dataset.id),
             world_source : NodeConfig.database_settings('world_source',dataset.id),
@@ -39,10 +39,12 @@ export namespace Datascripts {
             readonly: readonly,
             use_timer: useTimer
         }
-        const program = `node -r source-map-support/register ${ipaths.wotlkdataIndex} `
-            + `${JSON.stringify(settings).split('\"').join('\'')}`
+
         try {
-            wsys.exec(program, 'inherit');
+            wsys.exec(
+                `node -r source-map-support/register ${ipaths.wotlkdataIndex}` 
+                +` ${Buffer.from(JSON.stringify(settings)).toString('base64')}`
+                , 'inherit');
         } catch (error) {
             throw new Error(`Failed to rebuild patches: ${error.message}`);
         }

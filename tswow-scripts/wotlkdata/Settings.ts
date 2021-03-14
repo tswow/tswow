@@ -17,9 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const settings = JSON.parse(
-    process.argv.slice(2).join(' ').split('\'').join('"')
-);
+const settings = JSON.parse(Buffer.from(process.argv[2],'base64').toString())
 
 export function getDatabase(database: string) {
     if (settings.database_all) {

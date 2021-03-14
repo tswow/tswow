@@ -83,6 +83,11 @@ export namespace TrinityCore {
         // copy executables
         wfs.copy(bpaths.trinitycoreBin(type), ipaths.tc(type), true);
 
+        // copy conf files
+        if(!isWindows()) {
+            wfs.copy(bpaths.trinitycoreConf(type),ipaths.tc(type),false)
+        }
+
         // Copy mysql/ssl/cmake libraries
         if (isWindows()) {
             bpaths.mysqlLibs(mysql)

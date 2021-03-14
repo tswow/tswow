@@ -46,7 +46,7 @@ export namespace AuthServer {
         copyLibraryFiles(type);
 
         authserver.startIn(ipaths.authRoot,
-            wfs.absPath(ipaths.tcAuthServer(type)));
+            wfs.absPath(ipaths.tcAuthServer(type)),[`-c${wfs.absPath(ipaths.authConfig)}`]);
     }
 
     export const command = commands.addCommand('auth');
@@ -55,7 +55,7 @@ export namespace AuthServer {
         connection = new Connection(NodeConfig.database_settings('auth'),'auth');
         await mysql.installAuth(connection);
 
-        if(!process.argv.includes('noac')) {
+        if(NodeConfig.autostart_authserver) {
             await start(process.argv.includes('debug')?'Debug':'Release');
         }
 

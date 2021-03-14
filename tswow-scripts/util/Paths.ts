@@ -204,11 +204,15 @@ export class InstallPaths {
     }
 
     tcWorldserver(type: 'Release'|'Debug') {
-        return mpath(this.tc(type),'worldserver.exe');
+        return isWindows()
+            ? mpath(this.tc(type),'worldserver.exe')
+            : mpath(this.tc(type),'worldserver')
     }
 
     tcAuthServer(type: 'Release'|'Debug') {
-        return mpath(this.tc(type),'authserver.exe');
+        return isWindows()
+            ? mpath(this.tc(type),'authserver.exe')
+            : mpath(this.tc(type), 'authserver');
     }
 
     tcModuleScript(type: 'Release'|'Debug', mod: string) {
@@ -261,9 +265,20 @@ export class InstallPaths {
     // TODO: Linux
     get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
     get mysqlBin() {return mpath(this.bin, 'mysql'); }
-    get mysqlExe() {return mpath(this.bin, 'mysql', 'bin', 'mysql.exe'); }
+    get mysqlExe() {
+        return isWindows()
+            ? mpath(this.bin, 'mysql', 'bin', 'mysql.exe')
+            : 'mysql';
+    }
+
     get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
-    get mysqlDumpExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqldump.exe'); }
+
+    get mysqlDumpExe() {
+        return isWindows()
+            ? mpath(this.bin, 'mysql', 'bin', 'mysqldump.exe')
+            : 'mysqldump';
+    }
+
     get sevenZip() { return mpath(this.bin, '7zip'); }
 
     get sevenZaExe() {
@@ -299,6 +314,10 @@ export class InstallPaths {
 
     realmDir(realm: string) {
         return mpath(this.realms,realm);
+    }
+
+    realmWorldserverConf(realm: string) {
+        return mpath(this.realmDir(realm),'worldserver.conf');
     }
 
     realmYaml(realm: string) {
