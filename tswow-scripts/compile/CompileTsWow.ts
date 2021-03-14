@@ -92,7 +92,7 @@ async function compile(type: string, compileArgs: string[]) {
 
     if (types.includes('release')) {
         term.log(`Creating ${build_path('release.7z')}`);
-        SevenZipInstall.makeArchive(install_path(), build_path('release.7z'));
+        SevenZipInstall.makeArchive(build_path('release.7z'), install_path());
     }
 
     term.log('Installation successful!');

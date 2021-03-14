@@ -18,6 +18,7 @@ import { mpath, wfs } from '../util/FileSystem';
 import { wsys } from '../util/System';
 import { ipaths, bpaths } from '../util/Paths';
 import { SevenZip } from '../util/7zip';
+import { isWindows } from '../util/Platform';
 
 export namespace SevenZipInstall {
     /**
@@ -32,6 +33,10 @@ export namespace SevenZipInstall {
      * We need 7zip to unzip TrinityCore TDB database dumps
      */
     export async function install() {
+        if(!isWindows()) {
+            return;
+        }
+
         while(!wfs.exists(bpaths.sevenZip)) {
             await wsys.userInput(`7zip is not installed:\n\t`
             + `1. Download https://www.7-zip.org/a/7za920.zip\n\t`

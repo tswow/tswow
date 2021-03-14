@@ -265,7 +265,10 @@ export class InstallPaths {
     get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
     get mysqlDumpExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqldump.exe'); }
     get sevenZip() { return mpath(this.bin, '7zip'); }
-    get sevenZaExe() { return mpath(this.sevenZip, '7za.exe'); }
+
+    get sevenZaExe() {
+        return isWindows() ? mpath(this.sevenZip, '7za.exe') : '7z';
+    }
 
     get startupSql() { return mpath(this.bin, 'sql'); }
 
