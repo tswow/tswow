@@ -543,7 +543,7 @@ export const ipaths = new InstallPaths();
 
 export class BuildPaths {
     static setBuildBase(bpath: string) {
-        buildBase = bpath;
+        buildBase = wfs.absPath(bpath);
     }
 
     get base() {
@@ -569,8 +569,15 @@ export class BuildPaths {
         return mpath(this.stormlibBuild,'Release');
     }
 
+    get stormLibInclude() {
+        return mpath(this.stormlibInstall, 'include');
+    }
+
     get stormLibLibraryFile() {
-        return mpath(this.stormLibBuildRelease,'storm.lib');
+        return mpath(this.stormlibInstall,
+            isWindows() 
+                ? mpath('Release','storm.lib') 
+                : mpath('lib','libstorm.a'));
     }
 
     get mpqBuilder() {

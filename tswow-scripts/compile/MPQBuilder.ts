@@ -16,8 +16,8 @@
  */
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
-import { build_path, install_path } from './BuildConfig';
-import { wfs, mpath } from '../util/FileSystem';
+import { build_path } from './BuildConfig';
+import { wfs } from '../util/FileSystem';
 import { bpaths, spaths, ipaths } from '../util/Paths';
 
 export namespace MPQBuilder {
@@ -29,8 +29,8 @@ export namespace MPQBuilder {
             wfs.copy(spaths.stormLibPortHeader,bpaths.stormLibPortHeader)
 
             wsys.exec(`${cmake} `
-            +`-DSTORM_INCLUDE_DIR="${bpaths.stormLibBuildRelease}" `
-            +`-D_storm_release_lib="${bpaths.stormLibLibraryFile}" `
+            +`-DSTORM_INCLUDE="${bpaths.stormLibBuildRelease}" `
+            +`-DSTORM_LIB="${bpaths.stormLibLibraryFile}" `
             +`-S "mpqbuilder" `
             +`-B "${bpaths.mpqBuilder}"`, 'inherit');
             wsys.exec(`${cmake} `
@@ -53,10 +53,16 @@ export namespace MPQBuilder {
             });
             const mpqBuildDir = build_path('mpqbuilder');
             wfs.mkDirs(mpqBuildDir);
-            // This is just easier than cmake so I won't bother
-            wsys.exec(`g++ -o ${mpath(mpqBuildDir, 'mpqbuilder')} mpqbuilder/mpqbuilder.cpp -lstorm -I${mpath(stormInstallDir, 'include')} -L${mpath(stormInstallDir, 'lib')} -lz -lbz2`, 'inherit');
-            wfs.copy(build_path('mpqbuilder/mpqbuilder'), install_path('bin/mpqbuilder/mpqbuilder'));
-            wfs.copy(build_path('mpqbuilder/luaxmlreader'), install_path('bin/mpqbuilder/luaxmlreader'));
+
+            const relativeMpqSource = wfs.relative(mpqBuildDir,'./mpqbuilder');
+            await wsys.inDirectory(mpqBuildDir, () => {
+                wsys.exec(
+                    `${cmake} "${relativeMpqSource}"`
+                    +` -DSTORM_INCLUDE="${wfs.absPath(bpaths.stormLibInclude)}"`
+                    +` -DSTORM_LIB="${wfs.absPath(bpaths.stormLibLibraryFile)}"`
+                    ,  'inherit');
+                wsys.exec(`make`,'inherit');
+            });
         }
     }
 }
