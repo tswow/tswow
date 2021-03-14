@@ -63,11 +63,6 @@ async function compile(type: string, compileArgs: string[]) {
     const boost = isWindows() ? await Boost.install() : 'boost';
     if (isWindows()) { await SevenZipInstall.install(); }
 
-    if (!isWindows()) {
-        // Ubunu only
-        wsys.exec('sudo apt-get update && sudo apt-get install -y git cmake make gcc g++ clang libmysqlclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev mysql-server libace-6.* libace-dev', 'inherit');
-    }
-
     if (types.includes('full') || types.includes('release')) {
         await TrinityCore.install(cmake, openssl, mysql, 'Release', ['dynamic']);
         await TrinityCore.install(cmake, openssl, mysql, 'Debug', ['dynamic']);

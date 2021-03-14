@@ -10,7 +10,7 @@
     "@types/md5": "^2.2.0",
     "@types/mocha": "^8.0.3",
     "@types/mysql": "^2.15.15",
-    "@types/node": "^14.11.2",
+    "@types/node": "^14.14.34",
     "@types/node-sql-parser": "^1.1.0",
     "@types/request": "^2.48.5",
     "@types/terminal-kit": "^1.28.2",
@@ -39,7 +39,6 @@
     "typescript-to-lua": "^0.37.1",
     "xml2js": "^0.4.23"
   },
-  "devDependencies": {},
   "scripts": {
     "build": "node -r source-map-support/register build.js",
     "start": "node -r source-map-support/register bin/scripts/tswow/runtime/Main.js",

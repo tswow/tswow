@@ -648,11 +648,11 @@ export class SourcePaths {
     }
 
     get trinityCore() {
-        return 'trinitycore';
+        return './TrinityCore';
     }
 
     get liveScriptHeaders() {
-        return mpath(this.trinityCore,'src','server','game','Tswow','scripting','Public');
+        return mpath(this.trinityCore,'src','server','game','Tswow','Scripting','Public');
     }
 
     get buildYaml() {
@@ -684,7 +684,7 @@ export class SourcePaths {
     }
 
     get sqlUpdates() {
-        return mpath('./TrinityCore','sql','updates');
+        return mpath(this.trinityCore,'sql','updates');
     }
 
     get scripts() {
@@ -696,8 +696,7 @@ export class SourcePaths {
     }
 
     get tcGlobaldts() {
-        return mpath('TrinityCore', 'src', 'server', 'game', 'Tswow',
-        'scripting', 'Public','global.d.ts');
+        return mpath(this.liveScriptHeaders, 'global.d.ts');
     }
 
     get wotlkdataPackageJson() {
@@ -708,12 +707,16 @@ export class SourcePaths {
         return mpath(this.installConfig,'start.js');
     }
 
+    get stormLib() {
+        return './StormLib';
+    }
+
     get stormLibMainHeader() {
-        return mpath('./StormLib','src','StormLib.h');
+        return mpath(this.stormLib,'src','StormLib.h');
     }
 
     get stormLibPortHeader() {
-        return mpath('./StormLib','src','StormPort.h')
+        return mpath(this.stormLib,'src','StormPort.h')
     }
 }
 
