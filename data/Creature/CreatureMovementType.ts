@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/Cell";
-import { EnumBase, EnumField } from "wotlkdata/cell/Systems/Enum";
+import { EnumBase, EnumField } from "wotlkdata/cell/systems/Enum";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureMovementType<T> extends EnumBase<T> {

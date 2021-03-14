@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/Cell";
-import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
+import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { DBCUIntArrayCell } from "wotlkdata/dbc/DBCCell";
 import { SpellEffect } from "./SpellEffect";
 

@@ -14,7 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemVisualModel extends ArrayEntry<ItemTemplate> {

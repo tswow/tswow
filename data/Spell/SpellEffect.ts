@@ -16,7 +16,7 @@
  */
 import { CPrim } from "wotlkdata/cell/Cell";
 import { CellArray } from "wotlkdata/cell/CellArray";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";

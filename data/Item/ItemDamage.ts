@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum } from "wotlkdata/cell/Systems/Enum";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { Enum } from "wotlkdata/cell/systems/Enum";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { ItemTemplate } from "./ItemTemplate";
 
 function schools(owner: ItemTemplate) {

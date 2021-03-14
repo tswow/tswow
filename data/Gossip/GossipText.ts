@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/Cell";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { WrappedLoc } from "wotlkdata/cell/WrappedLoc";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";

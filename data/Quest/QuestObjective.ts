@@ -20,7 +20,7 @@ import { DummyCell } from "wotlkdata/cell/DummyCell";
 import { LocSystem } from "wotlkdata/cell/LocSystem";
 import { PendingCell } from "wotlkdata/cell/PendingCell";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { Quest } from "./Quest";

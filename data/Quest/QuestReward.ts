@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Quest } from "./Quest";

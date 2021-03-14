@@ -16,8 +16,8 @@
  */
 import { SQLCell } from "wotlkdata/sql/SQLCell";
 import { ItemTemplate } from "./ItemTemplate";
-import { SystemArray, ArrayEntry } from 'wotlkdata/cell/Systems/SystemArray'
-import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum"
+import { SystemArray, ArrayEntry } from 'wotlkdata/cell/systems/SystemArray'
+import { Enum, EnumField } from "wotlkdata/cell/systems/Enum"
 
 function colors(owner: ItemTemplate) {
     return [

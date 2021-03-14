@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Enum, EnumField } from "wotlkdata/cell/Systems/Enum";
+import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ReputationRank extends Enum<ItemTemplate> {

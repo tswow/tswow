@@ -1,5 +1,5 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/Systems/SystemArray";
+import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
 import { Ids } from "../Base/Ids";
 import { MainEntity } from "../Base/MainEntity";

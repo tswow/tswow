@@ -16,7 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { EnumField } from "wotlkdata/cell/Systems/Enum";
+import { EnumField } from "wotlkdata/cell/systems/Enum";
 import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_default_trainer";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { GOCreature } from "../Base/GOorCreature";

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumBase, EnumField } from "wotlkdata/cell/Systems/Enum";
+import { EnumBase, EnumField } from "wotlkdata/cell/systems/Enum";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemSheath extends EnumBase<ItemTemplate> {

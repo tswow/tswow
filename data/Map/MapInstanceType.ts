@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum } from "wotlkdata/cell/Systems/Enum";
+import { Enum } from "wotlkdata/cell/systems/Enum";
 import { Map } from "./Map";
 
 export class MapInstanceType extends Enum<Map>{
