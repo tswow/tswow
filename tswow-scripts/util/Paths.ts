@@ -625,17 +625,21 @@ export class BuildPaths {
     }
 
     tcStaticLibraries(type: string) {
-        return [`dep/zlib/${type}/zlib.lib`,
-            `src/server/shared/${type}/shared.lib`,
-            `dep/SFMT/${type}/sfmt.lib`,
-            `dep/g3dlite/${type}/g3dlib.lib`,
-            `dep/fmt/${type}/fmt.lib`,
-            `dep/recastnavigation/Detour/${type}/detour.lib`,
-            `src/server/database/${type}/database.lib`,
-            `src/server/game/${type}/game.lib`,
-            `src/common/${type}/common.lib`,
-            `dep/argon2/${type}/argon2.lib`]
-        .map(x=>mpath(this.trinitycore,x))
+        if(isWindows()) {
+            return [`dep/zlib/${type}/zlib.lib`,
+                `src/server/shared/${type}/shared.lib`,
+                `dep/SFMT/${type}/sfmt.lib`,
+                `dep/g3dlite/${type}/g3dlib.lib`,
+                `dep/fmt/${type}/fmt.lib`,
+                `dep/recastnavigation/Detour/${type}/detour.lib`,
+                `src/server/database/${type}/database.lib`,
+                `src/server/game/${type}/game.lib`,
+                `src/common/${type}/common.lib`,
+                `dep/argon2/${type}/argon2.lib`]
+            .map(x=>mpath(this.trinitycore,x))
+        } else {
+            return [];
+        }
     }
 
     get stormLibMainHeader() {

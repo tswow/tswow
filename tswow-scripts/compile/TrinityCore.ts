@@ -64,7 +64,7 @@ export namespace TrinityCore {
             +` -DWITH_WARNINGS=1`
             +` -DSCRIPTS=${scripts}`;
             buildCommand = 'make -j 4';
-            wsys.inDirectory(bpaths.trinitycore, () => {
+            await wsys.inDirectory(bpaths.trinitycore, () => {
                 wsys.exec(setupCommand, 'inherit');
                 wsys.exec(buildCommand, 'inherit');
                 wsys.exec('make install', 'inherit');
