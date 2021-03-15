@@ -79,6 +79,10 @@ const itms = findCpp(path.join(modulePath, './scripts/build/cpp'), '');
 fs.writeFileSync(path.join(modulePath, 'scripts/build/cpp/CMakeLists.txt'),
 `cmake_minimum_required(VERSION 3.16)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 ${isWindows()?'set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")':''}
 
 project(${buildModule})

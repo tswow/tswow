@@ -540,8 +540,10 @@ export class Emitter {
     private WriteHeader() {
         const filePath = Helpers.getSubPath(Helpers.cleanUpPath(this.sourceFileName), Helpers.cleanUpPath(this.rootFolder));
         if (this.isSource()) {
-            const relative = path.relative(path.dirname(this.sourceFileName), filePath);
-            const includeStr = `#include "${relative.replace(/\.ts$/, '.h')}"`;
+            // @tswow-begin
+            const hfile = path.basename(this.sourceFileName);
+            const includeStr = `#include "${hfile.replace(/\.ts$/, '.h')}"`;
+            // @tswow-end
             this.writer.writeStringNewLine(includeStr);
         } else {
             const headerName = filePath.replace(/\.ts$/, '_h').replace(/[\\\/\.]/g, '_').toUpperCase();
@@ -3783,7 +3785,14 @@ export class Emitter {
             this.writer.writeString('_');
         }
 
-        this.writer.writeString(node.text);
+        // @tswow-begin
+        if(node.text === 'GetObject') {
+            // todo: hack, we must support this for other calls too.
+            this.writer.writeString('template GetObject');
+        } else {
+            this.writer.writeString(node.text);
+        }
+        // @tswow-end
     }
 
     private processPropertyAccessExpression(node: ts.PropertyAccessExpression): void {

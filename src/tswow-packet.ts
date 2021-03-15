@@ -38,11 +38,11 @@ export function handlePacketClass(node: ts.ClassDeclaration, writer: CodeWriter)
 
     wsnl('\n');
 
-    IdPublic.readFile('../../config/ids.txt');
+    IdPublic.readFile('../../ids.txt');
     let modname = path.basename(path.resolve('./'))
     let opcode = GetId('Messages',modname,node.name.text,1);
     writer.writeString(`static uint32_t GetID() { return ${opcode};}`)
-    IdPublic.writeFile('../../config/ids.txt');
+    IdPublic.writeFile('../../ids.txt');
 
 
     let fn = node.getSourceFile().fileName
