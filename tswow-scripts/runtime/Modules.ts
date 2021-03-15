@@ -245,7 +245,6 @@ export namespace Modules {
     export function linkModule(mod: string) {
         wfs.write(ipaths.moduleDataPackagePath(mod), lib_package_json(mod));
         if(!wfs.exists(ipaths.moduleDataLink(mod))) {
-            wsys.exec(`npm link ${ipaths.moduleDataBuild(mod)}`);
             wsys.exec(`npm i -S ${ipaths.moduleDataBuild(mod)}`);
         }
     }
@@ -253,7 +252,6 @@ export namespace Modules {
     export async function refreshModules(force: boolean = false) {
         if (!wfs.exists(ipaths.nodeModulesWotlkdata)) {
             term.log(`Linking wotlkdata...`);
-            wsys.exec(`npm link ${ipaths.wotlkdata}`)
             wsys.exec(`npm i -S ${ipaths.wotlkdata}`);
         }
 

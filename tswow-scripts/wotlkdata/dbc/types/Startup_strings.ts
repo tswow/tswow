@@ -93,5 +93,5 @@ export class Startup_stringsDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_Startup_strings = new Startup_stringsDBCFile(
-    'Startup_strings',
+    'Startup_Strings',
     (table,buffer,offset)=>new Startup_stringsRow(table,buffer,offset))

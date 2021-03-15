@@ -36,9 +36,6 @@ export namespace MPQBuilder {
             wsys.exec(`${cmake} `
             +`--build "${bpaths.mpqBuilder}" `
             +`--config Release`, 'inherit');
-
-            wfs.copy(bpaths.mpqBuilderBinary,ipaths.mpqBuilderExe)
-            wfs.copy(bpaths.luaxmlBinary,ipaths.luaxmlExe)
         } else {
             const stormBuildDir = build_path('StormLibBuild');
             const stormInstallDir = build_path('StormLibInstall');
@@ -64,5 +61,7 @@ export namespace MPQBuilder {
                 wsys.exec(`make`,'inherit');
             });
         }
+        wfs.copy(bpaths.mpqBuilderBinary,ipaths.mpqBuilderExe)
+        wfs.copy(bpaths.luaxmlBinary,ipaths.luaxmlExe)
     }
 }

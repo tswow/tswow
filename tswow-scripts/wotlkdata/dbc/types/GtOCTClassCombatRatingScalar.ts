@@ -81,5 +81,5 @@ export class GtOCTClassCombatRatingScalarDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtOCTClassCombatRatingScalar = new GtOCTClassCombatRatingScalarDBCFile(
-    'GtOCTClassCombatRatingScalar',
+    'gtOCTClassCombatRatingScalar',
     (table,buffer,offset)=>new GtOCTClassCombatRatingScalarRow(table,buffer,offset))

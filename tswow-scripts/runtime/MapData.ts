@@ -48,24 +48,25 @@ export namespace MapData {
         }
     }
 
-    export async function buildMaps(dataset: string) {
+    export function buildMaps(dataset: string) {
         prepareBuild(dataset);
         wfs.remove(ipaths.clientMaps(dataset));
-        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mapextractor`);
+        wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mapextractor`);
         wfs.copy(ipaths.clientMaps(dataset),ipaths.datasetMaps(dataset), true);
         wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBC(dataset), true);
+        wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBCSource(dataset), true);
     }
 
-    export async function buildVmaps(dataset: string) {
+    export function buildVmaps(dataset: string) {
         wfs.remove(ipaths.clientVmaps(dataset));
         wfs.remove(ipaths.clientBuildings(dataset));
-        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4extractor`);
+        wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4extractor`);
         wfs.mkDirs(ipaths.clientVmaps(dataset));
-        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
+        wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
         wfs.copy(ipaths.clientVmaps(dataset), ipaths.datasetVmaps(dataset), true);
     }
 
-    export async function buildMMaps(dataset: string) {
+    export function buildMMaps(dataset: string) {
         term.log('Building MMAPS (this will take a very long time)');
         const timer = Timer.start();
         if(!wfs.exists(ipaths.clientMaps(dataset))) {
@@ -76,12 +77,12 @@ export namespace MapData {
             buildVmaps(ipaths.clientVmaps(dataset));
         }
 
-        await wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mmaps_generator`);
+        wsys.execIn(ipaths.client(dataset), `${isWindows() ? '' : './'}mmaps_generator`);
         wfs.copy(ipaths.clientMmaps(dataset), ipaths.datasetMmaps(dataset));
         term.success(`Rebuilt mmaps in ${timer.timeSec()}s`);
     }
 
-    export async function buildLuaXML(dataset: string) {
+    export function buildLuaXML(dataset: string) {
         wsys.exec(`"${ipaths.luaxmlExe}" ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset))} ${ipaths.clientData(dataset)}`, 'inherit');
     }
 }

@@ -244,7 +244,11 @@ export class InstallPaths {
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
-    get mpqBuilderExe() { return mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe'); }
+    get mpqBuilderExe() { 
+        return isWindows() 
+            ? mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe')
+            : mpath(this.bin, 'mpqbuilder', 'mpqbuilder');
+    }
     get tdb() { return mpath(this.bin, 'tdb.7z'); }
     get cmakeExe() { return mpath(this.bin, 'cmake', 'bin', 'cmake.exe'); }
     get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
@@ -263,7 +267,12 @@ export class InstallPaths {
     get nodeModulesWotlkdata() { return mpath(this.nodeModules, 'wotlkdata'); }
 
     // TODO: Linux
-    get luaxmlExe() {return mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe'); }
+    get luaxmlExe() {
+        return isWindows()
+            ? mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe')
+            : mpath(this.bin, 'mpqbuilder', 'luaxmlreader')
+    }
+
     get mysqlBin() {return mpath(this.bin, 'mysql'); }
     get mysqlExe() {
         return isWindows()
@@ -607,11 +616,17 @@ export class BuildPaths {
     }
 
     get mpqBuilderBinary() {
-        return mpath(this.mpqBuilder,'Release','mpqbuilder.exe');
+        return isWindows() 
+            ? mpath(this.mpqBuilder,'Release','mpqbuilder.exe')
+            : mpath(this.mpqBuilder,'mpqbuilder')
+
     }
 
     get luaxmlBinary() {
-        return mpath(this.mpqBuilder,'Release','luaxmlreader.exe');
+        return isWindows() 
+            ? mpath(this.mpqBuilder,'Release','luaxmlreader.exe')
+            : mpath(this.mpqBuilder,'luaxmlreader')
+
     }
 
     get trinitycore() { return mpath(this.base,'trinitycore'); }

@@ -74,5 +74,5 @@ export class GtBarberShopCostBaseDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtBarberShopCostBase = new GtBarberShopCostBaseDBCFile(
-    'GtBarberShopCostBase',
+    'gtBarberShopCostBase',
     (table,buffer,offset)=>new GtBarberShopCostBaseRow(table,buffer,offset))

@@ -114,5 +114,5 @@ export class WorldSafelocsDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_WorldSafelocs = new WorldSafelocsDBCFile(
-    'WorldSafelocs',
+    'WorldSafeLocs',
     (table,buffer,offset)=>new WorldSafelocsRow(table,buffer,offset))

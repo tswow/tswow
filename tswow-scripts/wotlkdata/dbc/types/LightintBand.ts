@@ -100,5 +100,5 @@ export class LightintBandDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_LightintBand = new LightintBandDBCFile(
-    'LightintBand',
+    'LightIntBand',
     (table,buffer,offset)=>new LightintBandRow(table,buffer,offset))

@@ -88,7 +88,9 @@ async function compile(type: string, compileArgs: string[]) {
         buildingScripts = true;
     }
 
-    await Config.create();
+    if(isType('config')) {
+        await Config.create();
+    }
 
     if (types.includes('release')) {
         term.log(`Creating ${build_path('release.7z')}`);

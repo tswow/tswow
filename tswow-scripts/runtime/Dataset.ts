@@ -94,16 +94,34 @@ export namespace Datasets {
         }
 
         installServerData() {
-            if(!wfs.exists(ipaths.datasetMaps(this.id)) || !wfs.exists(ipaths.datasetDBC(this.id))) {
+            let anyChange: boolean = false;
+            if(!wfs.exists(ipaths.datasetLuaxmlSource(this.id))) {
+                MapData.buildLuaXML(this.id);
+                anyChange = true;
+            }
+
+            if(!wfs.exists(ipaths.datasetMaps(this.id)) || !wfs.exists(ipaths.datasetDBCSource(this.id))) {
                 MapData.buildMaps(this.id);
+                anyChange = true;
+            }
+
+            if(!wfs.exists(ipaths.datasetDBC(this.id))) {
+                wfs.copy(ipaths.datasetDBCSource(this.id),ipaths.datasetDBC(this.id));
+                anyChange = true;
             }
 
             if(!wfs.exists(ipaths.datasetVmaps(this.id))) {
                 MapData.buildVmaps(this.id);
+                anyChange = true;
             }
 
             if(this.config.use_mmaps && !wfs.exists(ipaths.datasetMmaps(this.id))) {
                 MapData.buildMMaps(this.id);
+                anyChange = true;
+            }
+
+            if(anyChange) {
+                term.success('Finished installing server data');
             }
         }
 
