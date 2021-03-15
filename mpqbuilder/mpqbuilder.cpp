@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (!SFileCreateArchive(outputFile.c_str(), 0, 1024, &handle))
+	if (!SFileCreateArchive(outputFile.string().c_str(), 0, 1024, &handle))
 	{
 		std::cout << "Failed to create output mpq file " << outputFile << "\n";
 		return -1;

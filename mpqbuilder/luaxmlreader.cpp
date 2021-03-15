@@ -40,7 +40,10 @@ fs::path findClientLang(fs::path directory) {
 
 int counter = 0;
 void handleFile(HANDLE hMpq, std::string const& file,std::string const& outputDir) {
-	if(boost::algorithm::ends_with(file,".xml")||boost::algorithm::ends_with(file,".lua"))
+	if(
+		   boost::algorithm::ends_with(file,".xml")
+		|| boost::algorithm::ends_with(file,".lua")
+		|| boost::algorithm::ends_with(file,".toc"))
 	{
 		auto f = file;
 		std::replace(f.begin(),f.end(),'\\','/');
@@ -85,13 +88,13 @@ int main(int argc, char **argv) {
 	});
 
 	HANDLE mpq = NULL;
-	if (!SFileOpenArchive(mainfile.c_str(), 0, STREAM_FLAG_READ_ONLY, &mpq)) {
+	if (!SFileOpenArchive(mainfile.string().c_str(), 0, STREAM_FLAG_READ_ONLY, &mpq)) {
 		std::cout << "Failed to open main MPQ file with error " << GetLastError() << "\n";
 		return GetLastError();
 	}
 
 	for (auto& patch : patches) {
-		if (!SFileOpenPatchArchive(mpq, patch.c_str(), NULL, 0)) {
+		if (!SFileOpenPatchArchive(mpq, patch.string().c_str(), NULL, 0)) {
 			std::cout << "Failed to apply patch " << patch << " with error " << GetLastError() << "\n";
 			return GetLastError();
 		}
