@@ -216,7 +216,9 @@ export class InstallPaths {
     }
 
     tcModuleScript(type: 'Release'|'Debug', mod: string) {
-        return mpath(this.tcScripts(type),`scripts_tswow_${mod}.${isWindows() ? 'dll':'so'}`);
+        return isWindows()
+            ? mpath(this.tcScripts(type),`scripts_tswow_${mod}.dll`)
+            : mpath(this.tcScripts(type),`libscripts_tswow_${mod}.so`);
     }
 
     tcModulePdb(type: 'Release'|'Debug',mod: string) {
@@ -250,7 +252,11 @@ export class InstallPaths {
             : mpath(this.bin, 'mpqbuilder', 'mpqbuilder');
     }
     get tdb() { return mpath(this.bin, 'tdb.7z'); }
-    get cmakeExe() { return mpath(this.bin, 'cmake', 'bin', 'cmake.exe'); }
+    get cmakeExe() {
+        return isWindows()
+            ? mpath(this.bin, 'cmake', 'bin', 'cmake.exe')
+            : mpath('cmake');
+    }
     get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
     get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
     get addons() { return mpath(this.bin, 'addons')}
@@ -449,7 +455,9 @@ export class InstallPaths {
     }
 
     moduleScriptsLib(mod: string, type: 'Release'|'Debug') {
-        return mpath(this.moduleScriptsBuild(mod), 'lib',type);
+        return isWindows()
+            ? mpath(this.moduleScriptsBuild(mod), 'lib',type)
+            : mpath(this.moduleScriptsBuild(mod), 'lib')
     }
 
     /**
@@ -458,7 +466,9 @@ export class InstallPaths {
      * @param type 
      */
     moduleScriptsBuiltLibrary(mod: string, type: 'Release'|'Debug') {
-        return mpath(this.moduleScriptsLib(mod,type),`${mod}.${isWindows() ? 'dll':'so'}`);
+        return isWindows()
+            ? mpath(this.moduleScriptsLib(mod,type),`${mod}.dll`)
+            : mpath(this.moduleScriptsLib(mod,type),`lib${mod}.so`)
     }
 
     /**
@@ -675,7 +685,12 @@ export class BuildPaths {
                 `dep/argon2/${type}/argon2.lib`]
             .map(x=>mpath(this.trinitycore,x))
         } else {
-            return [];
+            return [
+                `install/trinitycore/lib/libcommon.so`,
+                `install/trinitycore/lib/libdatabase.so`,
+                `install/trinitycore/lib/libgame.so`,
+                `install/trinitycore/lib/libshared.so`,
+            ].map(x=>mpath(this.trinitycore,x));
         }
     }
 

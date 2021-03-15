@@ -64,8 +64,8 @@ async function compile(type: string, compileArgs: string[]) {
     if (isWindows()) { await SevenZipInstall.install(); }
 
     if (types.includes('full') || types.includes('release')) {
-        await TrinityCore.install(cmake, openssl, mysql, 'Release', ['dynamic']);
-        await TrinityCore.install(cmake, openssl, mysql, 'Debug', ['dynamic']);
+        await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs.concat(['dynamic']));
+        await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs.concat(['dynamic']));
     } else {
         if (isType('trinitycore-release')) { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
         if (isType('trinitycore-debug') && isWindows()) { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }

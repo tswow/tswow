@@ -18,7 +18,7 @@ import { term } from '../util/Terminal';
 import { wfs } from '../util/FileSystem';
 import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
-import { ipaths, spaths } from '../util/Paths';
+import { bpaths, ipaths, spaths } from '../util/Paths';
 
 export namespace Config {
     export async function create() {
@@ -49,5 +49,6 @@ export namespace Config {
         wfs.copy(spaths.installSymlinkMaker, ipaths.symlinkMaker);
         wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
+        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
     }
 }
