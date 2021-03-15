@@ -2,6 +2,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as child_process from 'child_process';
 
+function isWindows() {
+    return process.platform === 'win32';
+}
+
 // The main file to compile wowts.
 // process.chdir fucked up if I did it inside the transpiler so I just start it from here instead.
 
@@ -73,13 +77,16 @@ function findCpp(rootDir: string, dir: string) {
 const itms = findCpp(path.join(modulePath, './scripts/build/cpp'), '');
 
 fs.writeFileSync(path.join(modulePath, 'scripts/build/cpp/CMakeLists.txt'),
-`cmake_minimum_required(VERSION 3.18)
-set(CMAKE_CXX_STANDARD 17)
+`cmake_minimum_required(VERSION 3.16)
+
+${isWindows()?'set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")':''}
+
 project(${buildModule})
 include_directories(../../../../../bin/include)
 
 file (GLOB headers "../../../../../bin/include/*.h")
 file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")
+file (GLOB libs "../../../../../bin/libraries/${buildType}/*.so")
 
 add_library(${buildModule} SHARED ${itms.join(' ')})
 target_link_libraries(${buildModule} \${libs})
@@ -90,9 +97,19 @@ target_precompile_headers(${buildModule}
 )`
 );
 
-const cmake_generate = `"bin/cmake/bin/cmake.exe" -S modules/${buildModule}/scripts/build/cpp -B modules/${buildModule}/scripts/build/lib`;
+const cmake_generate =
+    (isWindows()
+        ? `"bin/cmake/bin/cmake.exe"`
+        : 'cmake')
+    +` -S modules/${buildModule}/scripts/build/cpp`
+    +` -B modules/${buildModule}/scripts/build/lib`;
 child_process.execSync(cmake_generate, {stdio: 'inherit'});
-const cmake_build = `"bin/cmake/bin/cmake.exe" --build modules/${buildModule}/scripts/build/lib --config ${buildType}`;
+const cmake_build =
+    (isWindows()
+        ? `"bin/cmake/bin/cmake.exe"`
+        : `cmake`)
+    +` --build modules/${buildModule}/scripts/build/lib`
+    +` --config ${buildType}`;
 child_process.execSync(cmake_build, {stdio: 'inherit'});
 
 const finTime = Date.now() - startTime;

@@ -2273,12 +2273,13 @@ export class Emitter {
 
             this.writer.writeStringNewLine(`extern "C" `);
             this.writer.BeginBlock();
-            this.writer.writeStringNewLine(`__declspec(dllexport) void Main(TSEventHandlers*);`);
-            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModuleRevisionHash();`)
-            this.writer.writeStringNewLine(`__declspec(dllexport) void AddTSScripts(TSEventHandlers* handlers);`);
-            this.writer.writeStringNewLine(`__declspec(dllexport) void AddScripts();`);
-            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetScriptModule();`);
-            this.writer.writeStringNewLine(`__declspec(dllexport) char const* GetBuildDirective();`);
+            let exp = process.platform === 'win32' ? '__declspec(dllexport)' : '__attribute__((visibility("default")))'
+            this.writer.writeStringNewLine(`${exp} void Main(TSEventHandlers*);`);
+            this.writer.writeStringNewLine(`${exp} char const* GetScriptModuleRevisionHash();`);
+            this.writer.writeStringNewLine(`${exp} void AddTSScripts(TSEventHandlers* handlers);`);
+            this.writer.writeStringNewLine(`${exp} void AddScripts();`);
+            this.writer.writeStringNewLine(`${exp} char const* GetScriptModule();`);
+            this.writer.writeStringNewLine(`${exp} char const* GetBuildDirective();`);
             this.writer.EndBlock();
             // @tswow-end
 
