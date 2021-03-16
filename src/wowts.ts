@@ -83,14 +83,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-${isWindows()?'set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")':''}
+${!isWindows()?'set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")':''}
 
 project(${buildModule})
 include_directories(../../../../../bin/include)
 
 file (GLOB headers "../../../../../bin/include/*.h")
-file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")
-file (GLOB libs "../../../../../bin/libraries/${buildType}/*.so")
+
+${isWindows()
+    ?`file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")`
+    :`file (GLOB libs "../../../../../bin/libraries/${buildType}/*.so")`
+}
 
 add_library(${buildModule} SHARED ${itms.join(' ')})
 target_link_libraries(${buildModule} \${libs})
