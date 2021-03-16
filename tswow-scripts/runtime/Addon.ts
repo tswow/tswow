@@ -155,7 +155,8 @@ export namespace Addon {
             if(wfs.basename(name)!=`${mod}-addon.lua`) {
                 names.unshift(
                       `TSAddons\\${mod}\\`
-                    + `${wfs.relative(ipaths.addonBuild(mod),name)}`);
+                    + `${wfs.relative(ipaths.addonBuild(mod),name)
+                            .split('/').join('\\')}`);
             }
         });
 
