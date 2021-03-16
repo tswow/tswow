@@ -105,7 +105,12 @@ export namespace Build {
             let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x)));
             let runningClients = ds.filter(x=>x.client.isRunning());
             runningClients.forEach(x=>x.client.kill());
-            ds.forEach(x=>modules.forEach(y=>Addon.build(y,x.id)));
+            ds.forEach(x=>{
+                modules.forEach(y=>Addon.build(y,x.id))
+                wfs.copy(ipaths.datasetLuaXML(x.id)
+                    , ipaths.datasetMpq(x.id));
+            });
+
             runningClients.forEach(x=>x.client.start());
         }));
 

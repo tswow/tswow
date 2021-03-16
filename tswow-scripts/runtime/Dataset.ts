@@ -100,6 +100,10 @@ export namespace Datasets {
                 anyChange = true;
             }
 
+            if(!wfs.exists(ipaths.datasetLuaxml(this.id))) {
+                wfs.copy(ipaths.datasetLuaxmlSource(this.id),ipaths.datasetLuaxml(this.id));
+            }
+
             if(!wfs.exists(ipaths.datasetMaps(this.id)) || !wfs.exists(ipaths.datasetDBCSource(this.id))) {
                 MapData.buildMaps(this.id);
                 anyChange = true;

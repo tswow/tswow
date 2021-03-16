@@ -406,6 +406,28 @@ export namespace wfs {
     }
 
     /**
+     * Reads a text file from the file system
+     * @param filepath 
+     * @throws if `path` doesn't point at a file
+     * @returns Text contents of the file at `path` split by lines
+     */
+    export function readLines(filepath: string) {
+        return read(filepath)
+            .split('\r')
+            .join('')
+            .split('\n');
+    }
+
+    /**
+     * Writes a text file to the file system
+     * @param filepath 
+     * @param lines 
+     */
+    export function writeLines(filepath: string, lines: string[]) {
+        write(filepath, lines.join('\n'));
+    }
+
+    /**
      * Creates a numbered backup of a file, checking for previous backups
      * so they are not overwritten.
      * @param filePath 

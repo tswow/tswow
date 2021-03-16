@@ -77,10 +77,10 @@ function handle(node: ts.ClassDeclaration) {
 
     let modname = path.basename(path.resolve(`../`))
 
-    IdPublic.readFile('../../../config/ids.txt');
+    IdPublic.readFile('../../../ids.txt');
     // @ts-ignore
     const opcode = GetId('Messages',modname,messages.className,1);
-    IdPublic.writeFile('../../../config/ids.txt');
+    IdPublic.writeFile('../../../ids.txt');
 
     wnl(`function ${messages.className}.GetID() return ${opcode} end`)
     wnl(`function ${messages.className}.prototype.GetID() return ${opcode} end`)
@@ -154,7 +154,7 @@ function handle(node: ts.ClassDeclaration) {
     }
     wnl('end\n')
 
-    wnl(`require('addons.events').addConstructor(${messages.className});`);
+    wnl(`require('Events').addConstructor(${messages.className});`);
 
     let fn = node.getSourceFile().fileName
     let lst = getList();

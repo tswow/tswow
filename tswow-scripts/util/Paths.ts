@@ -42,6 +42,21 @@ export class InstallPaths {
         return wfs.relative(installBase,path);
     }
 
+    addonBuildLib(mod: string) {
+        return mpath(
+            this.addonBuild(mod)
+            , 'addons'
+            , 'lib'
+        )
+    }
+
+    addonLualibGarbage(mod: string) {
+        return mpath(
+            this.addonBuild(mod)
+            , 'lualib_bundle.lua'
+        )
+    }
+
     /**
      * Root data paths
      */
@@ -102,6 +117,10 @@ export class InstallPaths {
         return mpath(this.datasets, 'default-set');
     }
 
+    datasetMpq(dataset: string) {
+        return Datasets.get(dataset).config.mpq_path;
+    }
+
     datasetMaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'maps');
     }
@@ -120,6 +139,23 @@ export class InstallPaths {
 
     datasetLuaxml(dataset: string) {
         return mpath(this.datasetDir(dataset),'luaxml');
+    }
+
+    clientLuaxmlToc(dataset: string) {
+        return mpath(
+            Datasets.get(dataset).config.mpq_path
+            ,'Interface'
+            ,'FrameXML'
+            ,'FrameXML.toc'
+        )
+    }
+
+    datasetLuaxmlToc(dataset: string) {
+        return mpath(
+            this.datasetLuaxml(dataset)
+            ,'Interface'
+            ,'FrameXML'
+            ,'FrameXML.toc');
     }
 
     datasetDBCSource(dataset: string) {
@@ -353,12 +389,33 @@ export class InstallPaths {
     client(dataset: string) { return Datasets.get(dataset).config.client_path; }
     clientExe(dataset: string) { return mpath(this.client(dataset),'wow.exe'); }
     clientData(dataset: string) { return mpath(this.client(dataset), 'Data'); }
-    clientAddons(dataset: string) { return mpath(this.client(dataset), 'Interface', 'Addons');}
+
+    clientAddons(dataset: string) { 
+        return mpath(
+            this.client(dataset)
+            , 'AddOns');}
+
     clientCache(dataset: string) { return mpath(this.client(dataset), 'Cache'); }
     clientAddon(dataset: string, name: string) { return mpath(this.clientAddons(dataset), name)}
 
-    clientAddonBuild(dataset: string, addon: string){
-        return mpath(this.client(dataset),addon);
+    luaxmlFrameXML(dataset: string) {
+        return mpath(
+            this.datasetLuaXML(dataset)
+            , 'Interface'
+            , 'FrameXML'
+        )
+    }
+
+    luaxmlAddons(dataset: string){
+        return mpath(
+            this.datasetLuaxml(dataset)
+            ,'Interface'
+            ,'FrameXML'
+            ,'TSAddons');
+    }
+
+    luaxmlAddon(dataset: string, addon:string) {
+        return mpath(this.luaxmlAddons(dataset),addon);
     }
 
     clientLocale(dataset: string) {
@@ -535,16 +592,22 @@ export class InstallPaths {
         return mpath(this.moduleAddons(mod),`${mod}.toc`);
     }
 
+    /*
+    addonBuildTS(mod: string) {
+        return mpath(this.addonBuild(mod),'ts');
+    }
+
+    addonBuildTSOut(mod: string) {
+        return mpath(
+            this.addonBuildTS(mod)
+            ,'Interface'
+            ,'FrameXML'
+            ,'TSAddons',mod)
+    }
+    */
+
     addonBuild(mod: string) {
-        return mpath(this.moduleAddons(mod),'build')
-    }
-
-    addonBuildToc(mod: string) {
-        return mpath(this.addonBuild(mod),`${mod}.toc`);
-    }
-
-    addonRequireStub(mod: string) {
-        return mpath(this.addonBuild(mod),'RequireStub.lua');
+        return mpath(this.moduleAddons(mod),'build');
     }
 
     addonIndex(mod: string) {
@@ -561,14 +624,6 @@ export class InstallPaths {
 
     addonEventsDest(mod: string) {
         return mpath(this.moduleAddons(mod),'lib','Events.ts');
-    }
-
-    lualibDest(mod: string) {
-        return mpath(this.addonBuild(mod),'lualib_bundle.lua');
-    }
-
-    addonBase64Dest(mod: string) {
-        return mpath(this.addonBuild(mod),'base64.lua')
     }
 
     addonBinReader(mod: string) {
@@ -611,14 +666,35 @@ export class BuildPaths {
     }
 
     get stormLibInclude() {
-        return mpath(this.stormlibInstall, 'include');
+        return isWindows() 
+            ? mpath(this.stormLibBuildRelease)
+            : mpath(this.stormlibInstall, 'include')
+    }
+
+    // windows-only
+    get zlibLibrary() {
+        return mpath(this.base,'zlib','lib','zlib.lib');
+    }
+
+    // windows-only
+    get zlibInclude() {
+        return mpath(this.base,'zlib','include');
+    }
+
+    // windows-only
+    get bzip2Library() {
+        return mpath(this.base,'bzip2','lib','bzip2.lib');
+    }
+
+    // windows-only
+    get bzip2Include() {
+        return mpath(this.base,'bzip2','include');
     }
 
     get stormLibLibraryFile() {
-        return mpath(this.stormlibInstall,
-            isWindows() 
-                ? mpath('Release','storm.lib') 
-                : mpath('lib','libstorm.a'));
+        return isWindows() 
+            ? mpath(this.stormlibBuild, 'Release','storm.lib') 
+            : mpath(this.stormlibInstall,'lib','libstorm.a');
     }
 
     get mpqBuilder() {
@@ -673,7 +749,8 @@ export class BuildPaths {
 
     tcStaticLibraries(type: string) {
         if(isWindows()) {
-            return [`dep/zlib/${type}/zlib.lib`,
+            return [
+                `dep/zlib/${type}/zlib.lib`,
                 `src/server/shared/${type}/shared.lib`,
                 `dep/SFMT/${type}/sfmt.lib`,
                 `dep/g3dlite/${type}/g3dlib.lib`,
