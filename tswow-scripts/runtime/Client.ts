@@ -123,14 +123,17 @@ export namespace Client {
             this.patchBinary()
             this.installAddons();
 
-            if (isWindows()) {
-                this.clearCache();
-                const realmlist = wfs.read(ipaths.clientRealmlist(this.set.id));
-                if(realmlist !== 'set realmlist localhost') {
-                    wfs.makeBackup(ipaths.clientRealmlist(this.set.id));
-                }
-                wfs.write(ipaths.clientRealmlist(this.set.id), 'set realmlist localhost');
+            this.clearCache();
+            const realmlist = wfs.read(ipaths.clientRealmlist(this.set.id));
+            if(realmlist !== 'set realmlist localhost') {
+                wfs.makeBackup(ipaths.clientRealmlist(this.set.id));
+            }
+            wfs.write(ipaths.clientRealmlist(this.set.id), 'set realmlist localhost');
+
+            if(isWindows()) {
                 this.wowprocess.start(ipaths.clientExe(this.set.id));
+            } else {
+                this.wowprocess.start('wine',[ipaths.clientExe(this.set.id)]);
             }
         }
 
