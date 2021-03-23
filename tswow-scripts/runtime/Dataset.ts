@@ -53,7 +53,18 @@ export namespace Datasets {
             }
         }
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
-        get client_path() { return this.get<string>('client_path',''); }
+        get client_path() { 
+            let val = this.get<string>('client_path',''); 
+            // don't use ipaths here, they will recurse
+            // don't use wow.exe for validation, it's sometimes named Wow.exe and sometimes wow.exe
+            if(!wfs.exists(mpath(val,'Data'))) {
+                throw new Error(
+                      `No valid client at: ${val}` 
+                    + `\n(check your client_path settings in`
+                    + ` ${ipaths.datasetYaml(this.set.id)})`);
+            }
+            return val;
+        }
         get mpq_suffix() { return this.get<string>('mpq_suffix','')}
         get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
         get mpq_path() { return mpath(ipaths.clientData(this.set.id),`patch-${this.mpq_suffix}.MPQ`)}
