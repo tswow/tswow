@@ -245,8 +245,6 @@ export namespace Addon {
             }
         }
 
-        wfs.copy(ipaths.addonBuild(mod),
-            mpath(Datasets.get(dataset).config.mpq_path));
         wfs.remove(ipaths.moduleAddonClasses(mod));
         wfs.remove(ipaths.addonLualibGarbage(mod));
         wfs.remove(ipaths.addonBuildLib(mod));
