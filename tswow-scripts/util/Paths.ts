@@ -858,6 +858,10 @@ export class SourcePaths {
     get stormLibPortHeader() {
         return mpath(this.stormLib,'src','StormPort.h')
     }
+
+    get typeScript2Cxx() {
+        return mpath('./TypeScript2Cxx');
+    }
 }
 
 export const spaths = new SourcePaths();

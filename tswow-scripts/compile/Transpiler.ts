@@ -17,6 +17,8 @@
 import { mpath, wfs } from '../util/FileSystem';
 import path = require('path');
 import { getTSWatcher } from '../util/TSWatcher';
+import { wsys } from '../util/System';
+import { spaths } from '../util/Paths';
 
 export namespace Transpiler {
     export async function buildTranspiler(buildLine: string, installLine: string) {
@@ -49,6 +51,8 @@ export namespace Transpiler {
         };
         wfs.write(mpath(transpiler_config_dir, 'tsconfig.json'),
             JSON.stringify(transpiler_tsconfig, null, 4));
+
+        wsys.execIn(spaths.typeScript2Cxx,'npm i','inherit');
         await (await getTSWatcher(mpath(transpiler_config_dir))).compile(-1);
     }
 }
