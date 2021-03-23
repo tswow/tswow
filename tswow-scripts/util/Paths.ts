@@ -70,7 +70,7 @@ export class InstallPaths {
 
     /** Publish paths */
     get publish() {
-        return mpath(installBase,'publish');
+        return mpath(this.coredata,'publish');
     }
 
     publishSet(dataset: string) {
@@ -92,12 +92,12 @@ export class InstallPaths {
     /** Core data paths */
 
     moduleFreeGarbage(mod: string) { 
-        return this.freeBackupPath(mpath('garbage',mod));
+        return this.freeBackupPath(mpath(this.coredata, 'garbage',mod));
     }
 
-    get databaseDir() {return mpath('database'); }
+    get databaseDir() {return mpath(this.coredata, 'database'); }
 
-    get authRoot() { return mpath(installBase, 'authserver');}
+    get authRoot() { return mpath(this.coredata, 'authserver');}
     get authConfig() { return mpath(this.authRoot, 'authserver.conf'); }
     get startjs() {return mpath('start.js'); }
 
@@ -106,11 +106,15 @@ export class InstallPaths {
     }
 
     wsWorkingDir(realm: string) { 
-        return mpath('realms',realm);
+        return mpath(this.realms,realm);
+    }
+
+    get coredata() {
+        return mpath(installBase,'coredata');
     }
 
     datasetDir(dataset: string) { 
-        return mpath('datasets', dataset); 
+        return mpath(this.datasets, dataset);
     }
 
     get defaultDataset() {
@@ -175,7 +179,7 @@ export class InstallPaths {
     }
 
     /** Dataset paths */
-    get datasets() { return mpath(installBase, 'datasets'); }
+    get datasets() { return mpath(this.coredata, 'datasets'); }
     datasetRoot(dataset: string) { 
         return mpath(this.datasets,dataset); 
     }
@@ -356,7 +360,7 @@ export class InstallPaths {
 
     /** Realm paths */
     get realms() {
-        return mpath(installBase, 'realms');
+        return mpath(this.coredata, 'realms');
     }
 
     datasetIds(dataset: string) {
