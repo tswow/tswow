@@ -260,6 +260,9 @@ export namespace Realm {
      */
     export function getRealmsOrDefault(candidates: string[]) {
         let realms = Identifiers.getTypes('realm',candidates);
+        if(wfs.readDir(ipaths.realms,true,'directories').length === 0) {
+            createRealm(NodeConfig.default_realm);
+        }
         return realms.length > 0 ? realms : [NodeConfig.default_realm];
     }
 
