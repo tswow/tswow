@@ -15,6 +15,7 @@ export namespace Build {
 
     export function packageClient(dataset: Datasets.Dataset, useTimer: boolean) {
         MPQ.buildMPQArchive(dataset,ipaths.packageMpq(dataset.id),useTimer);
+        term.success('Finished creating client release package');
     }
 
     export async function packageServer(
@@ -78,6 +79,7 @@ export namespace Build {
             archiveFiles.forEach(x=>{
                 SevenZip.makeArchive(ipaths.packageServerZip,[x]);
             });
+            term.success('Finished creating server release package');
     }
 
     export function initialize() {
