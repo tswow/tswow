@@ -69,20 +69,20 @@ export class InstallPaths {
     }
 
     /** Publish paths */
-    get publish() {
-        return mpath(this.coredata,'publish');
+    get package() {
+        return mpath(installBase, 'package');
     }
 
-    publishSet(dataset: string) {
-        return mpath(this.publish,dataset);
+    packageSet(dataset: string) {
+        return mpath(this.package,dataset);
     }
 
-    get publishServerZip() {
-        return mpath(this.publish, 'server.7z');
+    get packageServerZip() {
+        return mpath(this.package, 'server.7z');
     }
 
-    publishMpq(dataset: string) {
-        return mpath(this.publishSet(dataset), 'patch-LETTER.MPQ');
+    packageMpq(dataset: string) {
+        return mpath(this.packageSet(dataset), 'patch-LETTER.MPQ');
     }
 
     datasetSqlDump(dataset: string) {

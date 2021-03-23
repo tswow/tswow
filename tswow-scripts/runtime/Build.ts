@@ -14,7 +14,7 @@ export namespace Build {
     export const command = commands.addCommand('build');
 
     export function packageClient(dataset: Datasets.Dataset, useTimer: boolean) {
-        MPQ.buildMPQArchive(dataset,ipaths.publishMpq(dataset.id),useTimer);
+        MPQ.buildMPQArchive(dataset,ipaths.packageMpq(dataset.id),useTimer);
     }
 
     export async function packageServer(
@@ -72,11 +72,11 @@ export namespace Build {
                 }));
             }
 
-            wfs.remove(ipaths.publishServerZip);
+            wfs.remove(ipaths.packageServerZip);
 
-            term.log(`Creating server release package ${ipaths.publishServerZip}...`);
+            term.log(`Creating server release package ${ipaths.packageServerZip}...`);
             archiveFiles.forEach(x=>{
-                SevenZip.makeArchive(ipaths.publishServerZip,[x]);
+                SevenZip.makeArchive(ipaths.packageServerZip,[x]);
             });
     }
 
