@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	}
 
 	auto outputFile = fs::path(argv[1]);
-	if (!fs::exists((outputFile)))
+	if (fs::exists((outputFile)))
 	{
 		if (!fs::remove((outputFile)))
 		{
