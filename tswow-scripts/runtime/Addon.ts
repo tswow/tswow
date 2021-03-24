@@ -68,6 +68,7 @@ export namespace Addon {
         wfs.copy(ipaths.addonIncludeEventsTs,ipaths.addonEventsDest(mod));
         wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(mod));
         wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig(mod),null,4));
+        wfs.mkDirs(ipaths.moduleShared(mod));
     }
 
     export function updateAddons(dataset: string) {

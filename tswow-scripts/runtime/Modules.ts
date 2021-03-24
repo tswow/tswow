@@ -23,6 +23,7 @@ import { destroyTSWatcher, getTSWatcher } from '../util/TSWatcher';
 import { ipaths } from '../util/Paths';
 import { Identifiers } from './Identifiers';
 import { Livescripts } from './Livescripts';
+import { Addon } from './Addon';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -138,6 +139,25 @@ export namespace Modules {
         return files;
     }
 
+    export function createDataDir(mod: string) {
+        wfs.mkDirs(ipaths.moduleData(mod));
+        wfs.write(ipaths.moduleDataMain(mod), patch_example_ts(mod));
+    }
+
+    export function createAssets(mod: string) {
+        wfs.mkDirs(ipaths.moduleAssets(mod));
+    }
+
+    export function createLivescripts(mod: string) {
+        wfs.mkDirs(ipaths.moduleScripts(mod));
+        wfs.mkDirs(ipaths.moduleShared(mod));
+        wfs.write(ipaths.moduleMainScript(mod),livescript_example);
+    }
+
+    export function createAddon(mod: string) {
+        Addon.initializeModule(mod);
+    }
+
     export function setEditable(mod: string, editable: boolean) {
         if (editable) {
             wfs.remove(ipaths.moduleNoEdit(mod));
@@ -197,7 +217,12 @@ export namespace Modules {
      * Creates a new module
      * @param name - Name of the new module
      */
-    export function addModule(name: string) {
+    export function addModule(name: string
+                             , addData: boolean
+                             , addLive: boolean
+                             , addAssets: boolean
+                             , addAddon: boolean
+                             ) {
         const timer = Timer.start();
 
         let url : string|undefined;
@@ -217,17 +242,25 @@ export namespace Modules {
             wsys.execIn(ipaths.moduleRoot(name), 'git init');
         }
 
-        wfs.mkDirs(ipaths.moduleData(name));
-        wfs.mkDirs(ipaths.moduleData(name));
-        wfs.write(ipaths.moduleDataMain(name), patch_example_ts(name));
-        wfs.mkDirs(ipaths.moduleAssets(name));
-        wfs.mkDirs(ipaths.moduleScripts(name));
-        wfs.mkDirs(ipaths.moduleShared(name));
+        if(addData) {
+            createDataDir(name);
+        }
+
+        if(addAssets) {
+            createAssets(name);
+        }
+
+        if(addLive) {
+            createLivescripts(name);
+        }
+
+        if(addAddon) {
+            createAddon(name);
+        }
 
         // Initialize git repositories
 
         wfs.write(ipaths.moduleGitignore(name), gitignores);
-        wfs.write(ipaths.moduleMainScript(name),livescript_example);
 
         refreshModules(false);
         term.success(`Created module ${name} in ${timer.timeSec()}s`);
@@ -343,9 +376,18 @@ export namespace Modules {
             wfs.mkDirs(ipaths.modules);
         }
 
-        Modules.command.addCommand('create', 'name', 'Create a new module from a name or git repository', (args) => {
+        Modules.command.addCommand('create', 'name --datascripts --livescripts --addon --assets --all', 'Create a new module from a name or git repository', (args) => {
             if (args.length < 1) { throw new Error('Please provide a name for the new module'); }
-            addModule(args[0]);
+            if(args.includes(('--all'))) {
+                addModule(args[0],true,true,true,true);
+            } else {
+                addModule( args[0]
+                         , args.includes('--datascripts')
+                         , args.includes('--livescripts')
+                         , args.includes('--assets')
+                         , args.includes('--addon')
+                        );
+            }
         });
 
         Modules.command.addCommand('install', 'url', 'Installs a module from a git repository', (args) => {
@@ -384,6 +426,18 @@ export namespace Modules {
             if (result) {
                 getTSWatcher(ipaths.moduleData(args[0]));
             }
+        });
+
+        Modules.command.addCommand('add-feature'
+            ,'module --livescripts --datascripts --addon --assets'
+            ,'Adds a new feature to a module'
+            , async(args)=>{
+                Identifiers.getTypes('module',args).forEach(x=>{
+                    if(args.includes('--livescripts')) createLivescripts(x);
+                    if(args.includes('--datascripts')) createDataDir(x);
+                    if(args.includes('--addon')) createAddon(x);
+                    if(args.includes('--assets')) createAssets(x);
+                });
         });
 
         Modules.command.addCommand('update', 'module|all', 'Updates any or all modules from their tracking git repositories', async(args) => {

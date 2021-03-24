@@ -33,11 +33,6 @@ export namespace Livescripts {
         const mainScript = ipaths.moduleMainScriptName(name);
         if (!files.includes(mainScript)) { return false; }
 
-        // TODO: terrible check
-        if(wfs.read(ipaths.moduleMainScript(name)) === Modules.livescript_example) {
-            return false;
-        }
-
         const timer = Timer.start();
         wsys.exec(`node ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
 
