@@ -289,6 +289,16 @@ export namespace Realm {
             await Promise.all(realms.map(x=>x.stopWorldserver())); 
         });
 
+        realm.addCommand('check','realmnames...','Checks if the provided realms are online',async(args)=>{
+            getRealmsOrDefault(args).forEach(x=>{
+                if(getRealm(x).worldserver.isRunning()) {
+                    term.success(`Realm ${x} is running`);
+                } else {
+                    term.error(`Realm ${x} is not running`);
+                }
+            });
+        });
+
         realm.addCommand('create','name','Creates a new realm',async(args)=>{
             if(args.length==0 || args[0].length===0) {
                 throw new Error(`Must provide a valid realm name`);
