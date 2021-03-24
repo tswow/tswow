@@ -55,6 +55,15 @@ export namespace Datasets {
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
         get client_path() { 
             let val = this.get<string>('client_path',''); 
+
+            if(val.includes(' ')) {
+                throw new Error(
+                     `The client path for dataset ${this.set.id}`
+                    +` contains spaces somewhere in its pathname`
+                    +`, please move it somewhere without spaces.`
+                )
+            }
+
             // don't use ipaths here, they will recurse
             // don't use wow.exe for validation, it's sometimes named Wow.exe and sometimes wow.exe
             if(!wfs.exists(mpath(val,'Data'))) {
@@ -65,7 +74,17 @@ export namespace Datasets {
             }
             return val;
         }
-        get mpq_suffix() { return this.get<string>('mpq_suffix','')}
+        get mpq_suffix() { 
+            let val = this.get<string>('mpq_suffix','')
+            if(val.length!==1 || val.charCodeAt(0)<97 || val.charCodeAt(0)>122)  {
+                let type = val.length===0 ? 'an empty' : 'an invalid';
+                throw new Error(
+                      `Dataset ${this.set.id} has ${type} mpq_suffix set`
+                    + `, please set a valid mpq_suffix (single lowercase ascii letter)`
+                    + ` in ${ipaths.datasetYaml(this.set.id)}`)
+            }
+            return val;
+        }
         get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
         get mpq_path() { return mpath(ipaths.clientData(this.set.id),`patch-${this.mpq_suffix}.MPQ`)}
     }

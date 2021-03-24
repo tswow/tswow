@@ -12,6 +12,15 @@ export namespace Identifiers {
 
     export function assertUnused(identifier: string) {
         let prev = getType(identifier);
+
+        if(identifier.includes(' ')) {
+            throw new Error(
+                  `The identifier "${identifier}" contains spaces`
+                + `, please use a name without spaces.`
+            )
+        }
+
+
         if(prev!='none') {
             throw new Error(`${identifier} already refers to a ${prev}`);
         }

@@ -22,6 +22,11 @@ let buildBase = '';
 
 export class InstallPaths {
     static setInstallBase(ipath: string) {
+        if(ipath.includes(' ')) {
+            throw new Error(
+                  `Your TSWoW installation directory contains spaces somewhere in its path,`
+                + `please move it to a directory without spaces.`)
+        }
         installBase = ipath;
     }
 
@@ -644,6 +649,11 @@ export const ipaths = new InstallPaths();
 export class BuildPaths {
     static setBuildBase(bpath: string) {
         buildBase = wfs.absPath(bpath);
+        if(buildBase.includes(' ')) {
+            throw new Error(
+                  `Your build directory contains spaces somewhere in its path,`
+                + `please move it to a directory without spaces.`)
+        }
     }
 
     get base() {

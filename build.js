@@ -6,6 +6,13 @@ const fs = require('fs');
 const path = require('path');
 const yaml = fs.readFileSync('build.yaml').toString();
 
+if(path.resolve(process.cwd()).includes(' ')) {
+    throw new Error(
+          `The current directory contains spaces somewhere in its path, `
+        + `please move it to a directory without spaces.`
+    )
+}
+
 // Do manual yaml parsing because we want to use 0 dependencies
 const lines = yaml.split('\r').join('').split('\n').map(x=>x.split(':')).filter(x=>x.length==2);
 
