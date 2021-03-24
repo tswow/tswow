@@ -31,7 +31,7 @@ import { Identifiers } from "./Identifiers";
 export namespace Clean {
     export function cleanScriptBin(mod?: string) {
         if(!mod) {
-            Modules.getModules().forEach(cleanScriptBin);
+            Modules.getModules().forEach(x=>cleanScriptBin(x.id));
             return;
         }
 
@@ -57,8 +57,8 @@ export namespace Clean {
         await destroyAllWatchers();
         if(!mod) {
             Modules.getModules().forEach((x)=>{
-                wfs.remove(ipaths.moduleDataBuild(x));
-                wfs.remove(ipaths.moduleNoEdit(x));        
+                wfs.remove(ipaths.moduleDataBuild(x.id));
+                wfs.remove(ipaths.moduleNoEdit(x.id));        
             });
         } else {
             wfs.remove(ipaths.moduleDataBuild(mod));
@@ -78,7 +78,7 @@ export namespace Clean {
     export async function cleanAddonBuild(mod?: string) {
         if(!mod) {
             Modules.getModules().forEach((x)=>{
-                cleanAddonBuild(x);
+                cleanAddonBuild(x.id);
             });
         } else {
             wfs.remove(ipaths.addonBuild(mod));
@@ -87,7 +87,7 @@ export namespace Clean {
 
     export async function cleanTypescript() {
         await destroyAllWatchers();
-        const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x)))
+        const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x.id)))
 
         let clean : string[] = [];
         let lastErrors = 0;
@@ -97,17 +97,17 @@ export namespace Clean {
             term.log(`TypeScript Cleaning Pass ${pass++} (Expect error messages about not finding modules)`);
             errors = 0;
             for(const mod of modules) {
-                if(clean.includes(mod))  {
+                if(clean.includes(mod.id))  {
                     continue;
                 }
                 try {
-                    wsys.execIn(ipaths.moduleData(mod),'tsc','inherit');
-                    Modules.linkModule(mod);
-                    clean.push(mod);
-                    term.log(`Successfully compiled ${mod}`)
+                    wsys.execIn(ipaths.moduleData(mod.id),'tsc','inherit');
+                    mod.linkModule();
+                    clean.push(mod.id);
+                    term.log(`Successfully compiled ${mod.id}`)
                 } catch(error) {
                     errors++;
-                    term.log(`Failed to compile ${mod}: ${error.message}`)
+                    term.log(`Failed to compile ${mod.id}: ${error.message}`)
                 }
             }
 
@@ -116,7 +116,7 @@ export namespace Clean {
             }
 
             if(errors===lastErrors) {
-                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x))}]`);
+                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x.id))}]`);
             }
             lastErrors = errors;
         }

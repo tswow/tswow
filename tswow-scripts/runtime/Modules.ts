@@ -116,102 +116,122 @@ export namespace Modules {
     // Register your events here!
 }`;
 
+    export class Module {
+        id: string;
+
+        constructor(id: string) {
+            this.id = id;
+        }
+
+        getSourceFiles(types: ('data'|'scripts'|'shared'|'addons')[]) {
+            let files: string[] = [];
+            types.forEach(x=>{
+                let rootdir = mpath(ipaths.moduleRoot(this.id),x);
+                wfs.iterate(rootdir,(file)=>{
+                    const rel = wfs.relative(rootdir,file);
+                    if(rel.startsWith('build')) {
+                        return;
+                    } else {
+                        files.push(file)
+                    }
+                })
+            });
+            return files;
+        }
+
+        createDataDir() {
+            wfs.mkDirs(ipaths.moduleData(this.id));
+            wfs.write(ipaths.moduleDataMain(this.id), patch_example_ts(this.id));
+        }
+
+        createAssets() {
+            wfs.mkDirs(ipaths.moduleAssets(this.id));
+        }
+
+        createLivescripts() {
+            wfs.mkDirs(ipaths.moduleScripts(this.id));
+            wfs.mkDirs(ipaths.moduleShared(this.id));
+            wfs.write(ipaths.moduleMainScript(this.id),livescript_example);
+        }
+
+        createAddon() {
+            Addon.initializeModule(this.id);
+        }
+
+        setEditable(editable: boolean) {
+            if (editable) {
+                wfs.remove(ipaths.moduleNoEdit(this.id));
+                wfs.remove(ipaths.moduleData(this.id));
+            } else {
+                if (wfs.exists(ipaths.moduleData(this.id))) {
+                    try {
+                        wfs.write(ipaths.moduleDataTsConfig(this.id), data_tsconfig);
+                        wsys.execIn(ipaths.moduleData(this.id), `node ../../../${ipaths.tsc}`);
+                    } catch (error) {
+                        term.error(error.message);
+                        term.error(`Can't noedit ${this.id}, there are compiler errors in it.`);
+                        return;
+                    }
+                    destroyTSWatcher(ipaths.moduleData(this.id));
+                    wfs.write(ipaths.moduleNoEdit(this.id), '');
+                }
+            }
+        }
+
+        isEditable() {
+            return !wfs.exists(ipaths.moduleNoEdit(this.id));
+        }
+
+        async update() {
+            if (!wfs.exists(ipaths.moduleGit(this.id))) {
+                return;
+            }
+
+            try {
+                const msg = wsys.execIn(ipaths.moduleRoot(this.id), 'git pull', 'pipe');
+                term.log(`${this.id}: ${msg}`);
+                if (msg.includes('Already up to date.')) {
+                    // Don't run tsc if we didn't update.
+                    return;
+                }
+            } catch (err) {
+                const msg = err.message as string;
+                if (!msg.includes('There is no tracking information for the current branch')) {
+                    term.error(`Error updating: ${err.message}`);
+                } else {
+                    // "no tracking information" is not an error for us
+                    term.log(`${this.id}: No remotes, skipping.`);
+                }
+                // In either case, we shouldn't run tsc after this.
+                return;
+            }
+
+            if (!this.isEditable()) {
+                wsys.execIn(ipaths.moduleData(this.id), `node ../../../${ipaths.tsc}`);
+            }
+            wfs.remove(ipaths.moduleNodeModule(this.id));
+            await refreshModules(false);
+        }
+        
+        linkModule() {
+            wfs.write(ipaths.moduleDataPackagePath(this.id), lib_package_json(this.id));
+            if(!wfs.exists(ipaths.moduleDataLink(this.id))) {
+                wsys.exec(`npm i -S ${ipaths.moduleDataBuild(this.id)}`);
+            }
+        }
+    }
+
     /**
      * Returns names of all installed modules.
      */
     export function getModules() {
-        return wfs.readDir(ipaths.modules, true, 'directories');
+        return wfs.readDir(ipaths.modules, true, 'directories').map(x=>new Module(x));
     }
 
-    export function getSourceFiles(mod: string, types: ('data'|'scripts'|'shared'|'addons')[]) {
-        let files: string[] = [];
-        types.forEach(x=>{
-            let rootdir = mpath(ipaths.moduleRoot(mod),x);
-            wfs.iterate(rootdir,(file)=>{
-                const rel = wfs.relative(rootdir,file);
-                if(rel.startsWith('build')) {
-                    return;
-                } else {
-                    files.push(file)
-                }
-            })
-        });
-        return files;
+    export function getModule(mod: string) {
+        return new Module(mod);
     }
 
-    export function createDataDir(mod: string) {
-        wfs.mkDirs(ipaths.moduleData(mod));
-        wfs.write(ipaths.moduleDataMain(mod), patch_example_ts(mod));
-    }
-
-    export function createAssets(mod: string) {
-        wfs.mkDirs(ipaths.moduleAssets(mod));
-    }
-
-    export function createLivescripts(mod: string) {
-        wfs.mkDirs(ipaths.moduleScripts(mod));
-        wfs.mkDirs(ipaths.moduleShared(mod));
-        wfs.write(ipaths.moduleMainScript(mod),livescript_example);
-    }
-
-    export function createAddon(mod: string) {
-        Addon.initializeModule(mod);
-    }
-
-    export function setEditable(mod: string, editable: boolean) {
-        if (editable) {
-            wfs.remove(ipaths.moduleNoEdit(mod));
-            wfs.remove(ipaths.moduleData(mod));
-        } else {
-            if (wfs.exists(ipaths.moduleData(mod))) {
-                try {
-                    wfs.write(ipaths.moduleDataTsConfig(mod), data_tsconfig);
-                    wsys.execIn(ipaths.moduleData(mod), `node ../../../${ipaths.tsc}`);
-                } catch (error) {
-                    term.error(error.message);
-                    term.error(`Can't noedit ${mod}, there are compiler errors in it.`);
-                    return;
-                }
-                destroyTSWatcher(ipaths.moduleData(mod));
-                wfs.write(ipaths.moduleNoEdit(mod), '');
-            }
-        }
-    }
-
-    export function isEditable(mod: string) {
-        return !wfs.exists(ipaths.moduleNoEdit(mod));
-    }
-
-    export function update(mod: string) {
-        if (!wfs.exists(ipaths.moduleGit(mod))) {
-            return;
-        }
-
-        try {
-            const msg = wsys.execIn(ipaths.moduleRoot(mod), 'git pull', 'pipe');
-            term.log(`${mod}: ${msg}`);
-            if (msg.includes('Already up to date.')) {
-                // Don't run tsc if we didn't update.
-                return;
-            }
-        } catch (err) {
-            const msg = err.message as string;
-            if (!msg.includes('There is no tracking information for the current branch')) {
-                term.error(`Error updating: ${err.message}`);
-            } else {
-                // "no tracking information" is not an error for us
-                term.log(`${mod}: No remotes, skipping.`);
-            }
-            // In either case, we shouldn't run tsc after this.
-            return;
-        }
-
-        if (!isEditable(mod)) {
-            wsys.execIn(ipaths.moduleData(mod), `node ../../../${ipaths.tsc}`);
-        }
-        wfs.remove(ipaths.moduleNodeModule(mod));
-        refreshModules(false);
-    }
 
     /**
      * Creates a new module
@@ -242,20 +262,22 @@ export namespace Modules {
             wsys.execIn(ipaths.moduleRoot(name), 'git init');
         }
 
+        let mod = getModule(name);
+
         if(addData) {
-            createDataDir(name);
+            mod.createDataDir();
         }
 
         if(addAssets) {
-            createAssets(name);
+            mod.createAssets();
         }
 
         if(addLive) {
-            createLivescripts(name);
+            mod.createLivescripts();
         }
 
         if(addAddon) {
-            createAddon(name);
+            mod.createAddon();
         }
 
         // Initialize git repositories
@@ -267,19 +289,8 @@ export namespace Modules {
     }
 
     export function getModulesOrAll(candidates: string[]) {
-        let cands = Identifiers.getTypes('module',candidates);
-        if(cands.length===0) {
-            cands = getModules();
-        }
-        return cands;
-    }
-
-
-    export function linkModule(mod: string) {
-        wfs.write(ipaths.moduleDataPackagePath(mod), lib_package_json(mod));
-        if(!wfs.exists(ipaths.moduleDataLink(mod))) {
-            wsys.exec(`npm i -S ${ipaths.moduleDataBuild(mod)}`);
-        }
+        let names = Identifiers.getTypes('module',candidates);
+        return names.length===0 ? getModules() : names.map(x=>getModule(x));
     }
 
     export async function refreshModules(force: boolean = false) {
@@ -297,7 +308,7 @@ export namespace Modules {
                 if (!wfs.exists(ipaths.moduleNoEdit(mod))) {
                     await getTSWatcher(ipaths.moduleData(mod));
                 }
-                linkModule(mod);
+                getModule(mod).linkModule();
             }
 
             if(wfs.isDirectory(ipaths.moduleShared(mod))) {
@@ -401,9 +412,9 @@ export namespace Modules {
         Modules.command.addCommand('editable', 'module true|false', 'Sets a data library to not compile its data', async(args) => {
             switch (args[1]) {
                 case 'true':
-                    return setEditable(args[0], true);
+                    return getModule(args[0]).setEditable(true);
                 case 'false':
-                    return setEditable(args[0], false);
+                    return getModule(args[0]).setEditable(false);
                 default:
                     term.error('This commands needs to specify true/false');
             }
@@ -416,7 +427,7 @@ export namespace Modules {
         Modules.command.addCommand('list','','Lists the available modules', async()=>{
             term.log(`Listing all installed modules:`);
             for(const mod of getModules()) {
-                term.log(mod);
+                term.log(mod.id);
             }
         });
 
@@ -433,16 +444,18 @@ export namespace Modules {
             ,'Adds a new feature to a module'
             , async(args)=>{
                 Identifiers.getTypes('module',args).forEach(x=>{
-                    if(args.includes('--livescripts')) createLivescripts(x);
-                    if(args.includes('--datascripts')) createDataDir(x);
-                    if(args.includes('--addon')) createAddon(x);
-                    if(args.includes('--assets')) createAssets(x);
+                    let mod = getModule(x);
+                    if(args.includes('--livescripts')) mod.createLivescripts();
+                    if(args.includes('--datascripts')) mod.createDataDir();
+                    if(args.includes('--addon')) mod.createAddon();
+                    if(args.includes('--assets')) mod.createAssets();
                 });
         });
 
         Modules.command.addCommand('update', 'module|all', 'Updates any or all modules from their tracking git repositories', async(args) => {
-            let modules = Modules.getModulesOrAll(args);
-            modules.forEach(x=>update(x));
+            await Promise.all(Modules.getModulesOrAll(args).map(x=>{
+                return x.update();
+            }))
         });
 
         await refreshModules(true);

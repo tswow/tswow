@@ -33,7 +33,7 @@ export namespace Assets {
             wfs.iterate(ipaths.moduleAssets(directory), callback)
         } else {
             Modules.getModules().forEach((x) => {
-                wfs.iterate(ipaths.moduleAssets(x), callback);
+                wfs.iterate(ipaths.moduleAssets(x.id), callback);
             });
         }
     }
@@ -88,19 +88,19 @@ export namespace Assets {
     export function check() {
         const filemap: {[key: string]: string} = {};
         // Check and warn for duplicate entries
-        Modules.getModules().forEach(modname => {
-            Assets.prepare(modname);
-            wfs.iterate(ipaths.moduleAssets(modname), (fname) => {
-                const mpqname = wfs.relative(ipaths.moduleAssets(modname), fname);
+        Modules.getModules().forEach(mod => {
+            Assets.prepare(mod.id);
+            wfs.iterate(ipaths.moduleAssets(mod.id), (fname) => {
+                const mpqname = wfs.relative(ipaths.moduleAssets(mod.id), fname);
                 const old = filemap[mpqname];
                 if (mpqname.endsWith('xml') || mpqname.endsWith('lua')) {
-                    term.warn(`Mod ${modname} has XML/LUA files as an asset, consider using LUAXML instead (${mpqname})`);
+                    term.warn(`Mod ${mod} has XML/LUA files as an asset, consider using LUAXML instead (${mpqname})`);
                 }
 
                 if (old !== undefined) {
-                    term.warn(`Duplicate MPQ entry '${mpqname}', exists in both modules '${old}' and '${modname}'`);
+                    term.warn(`Duplicate MPQ entry '${mpqname}', exists in both modules '${old}' and '${mod}'`);
                 } else {
-                    filemap[mpqname] = modname;
+                    filemap[mpqname] = mod.id;
                 }
             });
         });

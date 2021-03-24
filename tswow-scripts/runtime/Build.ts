@@ -9,6 +9,7 @@ import { Addon } from "./Addon";
 import { Livescripts } from "./Livescripts";
 import { term } from "../util/Terminal";
 import { SevenZip } from "../util/7zip";
+import { game_event_model_equipTable } from "../wotlkdata/sql/types/game_event_model_equip";
 
 export namespace Build {
     export const command = commands.addCommand('build');
@@ -42,8 +43,9 @@ export namespace Build {
                 }));
             } else {
                 allModules.forEach(x=>{
-                    archiveFiles = archiveFiles.concat(Modules.getSourceFiles(x,
-                        ['addons','scripts','shared']));
+                    archiveFiles = archiveFiles
+                        .concat(Modules.getModule(x)
+                            .getSourceFiles(['addons','scripts','shared']))
                 });
             }
 
@@ -58,7 +60,8 @@ export namespace Build {
                 // We do this for ALL modules,
                 // because we want libraries to be included.
                 Modules.getModules().forEach(x=>{
-                    archiveFiles = archiveFiles.concat(Modules.getSourceFiles(x,['data']));
+                    archiveFiles = archiveFiles
+                        .concat(x.getSourceFiles(['addons','scripts','shared']))
                 });
             }
 
@@ -104,11 +107,11 @@ export namespace Build {
             ,'Builds addons for one, multiple or all moduels against multiple or a single dataset'
             ,((args)=>{
             let ds = Datasets.getDatasetsOrDefault(args);
-            let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x)));
+            let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x.id)));
             let runningClients = ds.filter(x=>x.client.isRunning());
             runningClients.forEach(x=>x.client.kill());
             ds.forEach(x=>{
-                modules.forEach(y=>Addon.build(y,x.id))
+                modules.forEach(y=>Addon.build(y.id,x.id))
                 wfs.copy(ipaths.datasetLuaXML(x.id)
                     , ipaths.datasetMpq(x.id));
             });
@@ -123,7 +126,7 @@ export namespace Build {
             , async (args) => {
             let isDebug = args.indexOf('debug')!==-1;
             let modules = Modules.getModulesOrAll(args);
-            await Promise.all(modules.map(x=>Livescripts.build(x, isDebug ? 'Debug' : 'Release')))
+            await Promise.all(modules.map(x=>Livescripts.build(x.id, isDebug ? 'Debug' : 'Release')))
             Datasets.getAll().forEach(x=>{
                 Livescripts.writeModuleText(x);
             });

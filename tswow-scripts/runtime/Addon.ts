@@ -74,11 +74,11 @@ export namespace Addon {
     export function updateAddons(dataset: string) {
         let tocfile = wfs.readLines(ipaths.datasetLuaxmlToc(dataset));
         Modules.getModules()
-            .filter(x=>wfs.exists(ipaths.addonBuild(x)))
+            .filter(x=>wfs.exists(ipaths.addonBuild(x.id)))
             .forEach(x=>{
-                addFilelistToToc(x,tocfile);
-                wfs.remove(ipaths.luaxmlAddon(dataset,x));
-                wfs.copy(ipaths.addonBuild(x),ipaths.luaxmlAddon(dataset,x));
+                addFilelistToToc(x.id,tocfile);
+                wfs.remove(ipaths.luaxmlAddon(dataset,x.id));
+                wfs.copy(ipaths.addonBuild(x.id),ipaths.luaxmlAddon(dataset,x.id));
             });
         wfs.writeLines(ipaths.datasetLuaxmlToc(dataset),tocfile);
         wsys.execIn(ipaths.addonInclude,'tstl','inherit');

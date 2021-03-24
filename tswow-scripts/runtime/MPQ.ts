@@ -20,8 +20,8 @@ export namespace MPQ {
         await Datascripts.build(dataset, false, useTimer);
         const modules = dataset.config.modules;
         return Modules.getModules()
-            .filter(x => !wfs.exists(ipaths.moduleSymlink(x)) && modules.includes(x))
-            .map(x => ipaths.moduleAssets(x))
+            .filter(x => !wfs.exists(ipaths.moduleSymlink(x.id)) && modules.includes(x.id))
+            .map(x => ipaths.moduleAssets(x.id))
             .filter(x => wfs.exists(x))
             .map(x => `"${x}"`)
             .map(x => `./${x.substring(1, x.length - 1)}`)
