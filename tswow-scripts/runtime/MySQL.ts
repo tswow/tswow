@@ -169,12 +169,10 @@ export namespace mysql {
             term.success('Created mysql database');
         } 
 
-        const startup_file = `./bin/mysql_startup.txt`;
-
         const user = databaseSettings('world').user;
         const pass = databaseSettings('world').password;
 
-        wfs.write(startup_file,
+        wfs.write(ipaths.mysqlStartup,
               `CREATE USER IF NOT EXISTS`
             + ` '${user}'@'localhost'`
             + ` IDENTIFIED BY '${pass}';`
@@ -188,12 +186,12 @@ export namespace mysql {
                 '--log_syslog=0',
                 '--console',
                 '--wait-timeout=2147483',
-                `--init-file=${wfs.absPath(startup_file)}`,
+                `--init-file=${wfs.absPath(ipaths.mysqlStartup)}`,
                 `--datadir=${wfs.absPath(ipaths.databaseDir)}`
             ]);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
         await mysqlprocess.waitFor('Execution of init_file*ended.', true);
-        wfs.remove(startup_file);
+        wfs.remove(ipaths.mysqlStartup);
         term.success('Mysql process started');
     }
 

@@ -198,6 +198,7 @@ export class InstallPaths {
 
     get binInclude() { return mpath(this.bin, 'include'); }
 
+    get mysqlStartup() { return mpath(this.bin, 'mysql_startup.txt');}
     binLibraries(type: string) { return mpath(this.bin, 'libraries', type); }
 
     get changeFile() {
