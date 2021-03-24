@@ -248,7 +248,6 @@ export namespace mysql {
      * @param sqlFilePath 
      */
     export async function rebuildDatabase(con: Connection, sqlFilePath: string) {
-        const port = con.cfg.port;
         term.log(`Beginning to rebuild ${con.name()}`);
         await con.status;
         await con.promiseConnect();
@@ -264,7 +263,12 @@ export namespace mysql {
             NodeConfig.mysql_executable : 
                 `sudo mysql`;
 
-        await wsys.execAsync(`${mysqlCommand} --port ${port} -u root ${con.name()} < ${sqlFilePath}`);
+        await wsys.execAsync(
+              `${mysqlCommand}`
+            + ` --port ${con.cfg.port}`
+            + ` -u root`
+            + ` -p${con.cfg.password}`
+            + ` ${con.name()} < ${sqlFilePath}`);
         term.success(`Rebuilt database ${con.name()}`);
     }
 
