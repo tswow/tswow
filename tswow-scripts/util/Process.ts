@@ -17,6 +17,7 @@
 import { wsys } from './System';
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import { term } from './Terminal';
+import { isWindows } from './Platform';
 
 const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
 function cleanup() {
@@ -24,12 +25,17 @@ function cleanup() {
         proc.kill('SIGTERM');
     }
 }
-process.on('exit', cleanup);
-process.on('SIGINT', cleanup);
-process.on('SIGUSR1', cleanup);
-process.on('SIGUSR2', cleanup);
-process.on('uncaughtException', cleanup);
-process.on('SIGINT', cleanup)
+
+// causes major terminal glitching
+if(!isWindows())
+{
+    process.on('exit', cleanup);
+    process.on('SIGINT', cleanup);
+    process.on('SIGUSR1', cleanup);
+    process.on('SIGUSR2', cleanup);
+    process.on('uncaughtException', cleanup);
+    process.on('SIGINT', cleanup)
+}
 
 /**
  * Represents a concurrently running child process.
