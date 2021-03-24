@@ -175,7 +175,9 @@ export namespace Realm {
             let id = parseInt(wfs.read(rif));
 
             if(isNaN(id)) {
-                throw new Error(`Realm ${this.identifier} has an invalid realm id, please fix your the file ${rif}.`)
+                throw new Error(
+                      `Realm ${this.identifier} has an invalid realm id,`
+                    + ` please fix your the file ${rif}.`)
             }
             return id;
         }
@@ -287,9 +289,11 @@ export namespace Realm {
             , 'debug|release?, realmnames[] | all'
             , 'Starts one, multiple or all realms'
             , async (args)=>{
-            let type : 'Release'|'Debug' = args.includes('debug') ? 'Debug' : 'Release';
+            let type : 'Release'|'Debug' 
+                = args.includes('debug') ? 'Debug' : 'Release';
             let realms = getRealmsOrDefault(args);
-            await Promise.all(realms.map(x=>getRealm(x).startWorldserver(type)));
+            await Promise.all(
+                realms.map(x=>getRealm(x).startWorldserver(type)));
         });
 
         realm.addCommand(

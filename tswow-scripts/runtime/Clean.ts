@@ -202,7 +202,6 @@ export namespace Clean {
             , 'dataset?'
             , 'Attempts to clean all intermediate data'
             ,  async(args)=>{
-            let datasets = Identifiers.assertType('dataset',args);
             await cleanScriptBin();
             await cleanDataBuild();
             await cleanIds(args[0]);

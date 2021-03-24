@@ -80,7 +80,8 @@ export namespace Datasets {
                 let type = val.length===0 ? 'an empty' : 'an invalid';
                 throw new Error(
                       `Dataset ${this.set.id} has ${type} mpq_suffix set`
-                    + `, please set a valid mpq_suffix (single lowercase ascii letter)`
+                    + `, please set a valid mpq_suffix`
+                    +` (single lowercase ascii letter)`
                     + ` in ${ipaths.datasetYaml(this.set.id)}`)
             }
             return val;
@@ -108,8 +109,10 @@ export namespace Datasets {
         constructor(id: string) {
             this.id = id;
             this.config = new DatasetConfig(this);
-            this.worldSource = new Connection(this.database_settings('world_source'),'world_source')
-            this.worldDest = new Connection(this.database_settings('world'),'world');
+            this.worldSource = new Connection(
+                this.database_settings('world_source'),'world_source')
+            this.worldDest = new Connection(
+                this.database_settings('world'),'world');
             this.client = new Client.Client(this);
         }
 
@@ -131,16 +134,24 @@ export namespace Datasets {
             }
 
             if(!wfs.exists(ipaths.datasetLuaxml(this.id))) {
-                wfs.copy(ipaths.datasetLuaxmlSource(this.id),ipaths.datasetLuaxml(this.id));
+                wfs.copy(
+                      ipaths.datasetLuaxmlSource(this.id)
+                    , ipaths.datasetLuaxml(this.id));
             }
 
-            if(!wfs.exists(ipaths.datasetMaps(this.id)) || !wfs.exists(ipaths.datasetDBCSource(this.id))) {
+            if(
+                   ! wfs.exists(ipaths.datasetMaps(this.id)) 
+                || ! wfs.exists(ipaths.datasetDBCSource(this.id))
+              ) {
+
                 MapData.buildMaps(this.id);
                 anyChange = true;
             }
 
             if(!wfs.exists(ipaths.datasetDBC(this.id))) {
-                wfs.copy(ipaths.datasetDBCSource(this.id),ipaths.datasetDBC(this.id));
+                wfs.copy(
+                      ipaths.datasetDBCSource(this.id)
+                    , ipaths.datasetDBC(this.id));
                 anyChange = true;
             }
 
@@ -149,7 +160,11 @@ export namespace Datasets {
                 anyChange = true;
             }
 
-            if(this.config.use_mmaps && !wfs.exists(ipaths.datasetMmaps(this.id))) {
+            if(
+                   this.config.use_mmaps 
+                && !wfs.exists(ipaths.datasetMmaps(this.id))
+              ) {
+
                 MapData.buildMMaps(this.id);
                 anyChange = true;
             }
@@ -160,17 +175,27 @@ export namespace Datasets {
         }
 
         async dumpReleaseDatabase() {
-                term.log(`Dumping release database ${this.worldDest.cfg.name} to ${ipaths.datasetSqlDump}...`)
+                term.log(`Dumping release database`
+                +` ${this.worldDest.cfg.name}`
+                +` to ${ipaths.datasetSqlDump}...`)
+
                 await mysql.rebuildDatabase(
-                this.worldDest,
-                await mysql.extractTdb());
-            await mysql.dump(this.worldDest, ipaths.datasetSqlDump(this.id));
+                      this.worldDest
+                    , await mysql.extractTdb());
+
+            await mysql.dump(
+                  this.worldDest
+                , ipaths.datasetSqlDump(this.id));
         }
 
         async installDatabase(force: boolean) {
             await this.connect();
             // Rebuild both world databases if one of them is missing
-            if(force || !await mysql.isWorldInstalled([this.worldSource,this.worldDest])) {
+            if(
+                    force 
+                || !await mysql.isWorldInstalled([this.worldSource,this.worldDest])
+               ) {
+
                 const tdb = await mysql.extractTdb();
                 await Promise.all([
                     await mysql.rebuildDatabase(this.worldSource,tdb),

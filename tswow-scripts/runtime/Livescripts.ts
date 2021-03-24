@@ -36,9 +36,13 @@ export namespace Livescripts {
         const timer = Timer.start();
         wsys.exec(`node ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
 
-        wfs.copy(ipaths.moduleScriptsBuiltLibrary(name,type),ipaths.tcModuleScript(type,name))
+        wfs.copy(
+              ipaths.moduleScriptsBuiltLibrary(name,type)
+            , ipaths.tcModuleScript(type,name))
         if(wfs.exists(ipaths.moduleScriptsBuiltPdb(name,type))) {
-            wfs.copy(ipaths.moduleScriptsBuiltPdb(name,type),ipaths.tcModulePdb(type,name));
+            wfs.copy(
+                  ipaths.moduleScriptsBuiltPdb(name,type)
+                , ipaths.tcModulePdb(type,name));
         }
 
         // TODO We need to wait for output from trinitycore to continue here

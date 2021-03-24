@@ -15,7 +15,10 @@ export namespace MPQ {
      * @param dataset 
      * @param useTimer 
      */
-    async function prepareBuild(dataset: Datasets.Dataset, useTimer: boolean) {
+    async function prepareBuild(
+          dataset: Datasets.Dataset
+        , useTimer: boolean) {
+
         // Build output dbc
         await Datascripts.build(dataset, false, useTimer);
         const modules = dataset.config.modules;
@@ -31,7 +34,11 @@ export namespace MPQ {
                 ]);
     }
 
-    export async function buildMpqFolder(dataset: Datasets.Dataset, destination: string, useTimer: boolean) {
+    export async function buildMpqFolder(
+          dataset: Datasets.Dataset
+        , destination: string
+        , useTimer: boolean) {
+
         let folders = await prepareBuild(dataset, useTimer);
         term.log(`Building MPQ folder at ${destination} for dataset ${dataset.id}`);
         if(wfs.exists(destination) && !wfs.isDirectory(destination)) {
@@ -64,14 +71,21 @@ export namespace MPQ {
             FileChanges.tagChange(path, 'mpq');
         })); 
         FileChanges.endCache();
-        term.success(`Finished building MPQ folder for dataset ${dataset.id}`);
+        term.success(
+              `Finished building MPQ folder`
+            + ` for dataset ${dataset.id}`);
     }
 
-    export async function buildMPQArchive(dataset: Datasets.Dataset, destination: string, useTimer: boolean) {
+    export async function buildMPQArchive(
+          dataset: Datasets.Dataset
+        , destination: string, useTimer: boolean) {
+
         let folders = await prepareBuild(dataset, useTimer);
         let addons = await Addon.buildAll(dataset);
         folders = folders.concat(addons);
-        term.log(`Building MPQ archive at ${destination} for dataset ${dataset.id}`);
+        term.log(
+              ` Building MPQ archive at ${destination}`
+            + ` for dataset ${dataset.id}`);
         if(wfs.exists(destination) && wfs.isDirectory(destination)) {
             throw new Error(`Target MPQ file is a directory: ${destination}`);
         }
@@ -86,7 +100,10 @@ export namespace MPQ {
         term.success(`Finished building MPQ archive for dataset ${dataset.id}`);
     }
 
-    export async function buildDevMPQ(dataset: Datasets.Dataset, useTimer: boolean) {
+    export async function buildDevMPQ(
+          dataset: Datasets.Dataset
+        , useTimer: boolean) {
+
         let clientWasStarted = dataset.client.isRunning();
         let realms = await dataset.shutdownRealms();
         if(clientWasStarted) {

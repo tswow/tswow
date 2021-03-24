@@ -11,7 +11,11 @@ export namespace Datascripts {
     /**
      * Builds dbc and sql data for all modules.
      */
-    export async function build(dataset: Datasets.Dataset, readonly: boolean, useTimer: boolean) {
+    export async function build(
+          dataset: Datasets.Dataset
+        , readonly: boolean
+        , useTimer: boolean) {
+
         term.log(`Building DataScripts for dataset ${dataset.id}`);
         await Modules.refreshModules();
         const ct = Date.now();

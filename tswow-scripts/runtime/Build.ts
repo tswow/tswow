@@ -14,7 +14,11 @@ import { game_event_model_equipTable } from "../wotlkdata/sql/types/game_event_m
 export namespace Build {
     export const command = commands.addCommand('build');
 
-    export function packageClient(dataset: Datasets.Dataset, useTimer: boolean) {
+    export function packageClient(
+          dataset: Datasets.Dataset
+        , useTimer: boolean
+        ) {
+
         MPQ.buildMPQArchive(dataset,ipaths.packageMpq(dataset.id),useTimer);
         term.success('Finished creating client release package');
     }

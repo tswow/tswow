@@ -199,7 +199,12 @@ export namespace commands {
     *     addCommand('printHi','','Prints string "hello world"',async()=>console.log('Hello world!'))
     *     addCommand('printArgs','args[]','Prints arguments to console',async(args)=>conosle.log(args.join(' ')))
     */
-    export function addCommand(name: string, argDesc?: string, help?:  string, callback?: (args: string[]) => any) {
+    export function addCommand(
+          name: string
+        , argDesc?: string
+        , help?: string
+        , callback?: (args: string[]) => any) {
+
         return rootCommand.addCommand(name, argDesc, help, callback);
     }
 

@@ -93,7 +93,9 @@ export class Connection {
             return;
         }
         return new Promise<void>((res, rej) =>
-            this.con.connect((err) => err ? rej(err) : (this.isConnected = true) && res())
+            this.con.connect((err) => err 
+                ? rej(err) 
+                : (this.isConnected = true) && res())
         );
     }
 
@@ -102,7 +104,10 @@ export class Connection {
      * @param tableName Name of the table to check for
      */
     async hasTable(tableName: string) {
-        return (await this.query(`SELECT * FROM information_schema.tables WHERE table_schema='${this.cfg.name}' AND TABLE_NAME = '${tableName}';`)).length > 0;
+        return (await this.query(
+              ` SELECT * FROM information_schema.tables WHERE`
+            + ` table_schema='${this.cfg.name}'`
+            + ` AND TABLE_NAME = '${tableName}';`)).length > 0;
     }
 
     disconnect() {
@@ -135,7 +140,8 @@ export class Connection {
         return this.status = new Promise<void>(async (res, rej) => {
             try {
                 await this.promiseConnect();
-                await this.promiseQuery(`CREATE DATABASE IF NOT EXISTS \`${this.cfg.name}\`;`);
+                await this.promiseQuery(
+                    `CREATE DATABASE IF NOT EXISTS \`${this.cfg.name}\`;`);
                 await this.promiseQuery(`USE \`${this.cfg.name}\`;`);
             } catch (error) {
                 this.status = undefined;
@@ -164,8 +170,11 @@ export namespace mysql {
         term.log('Starting mysql...');
         if (!wfs.exists(ipaths.databaseDir)) {
             term.log("No mysql database found, creating it...");
-            wsys.exec(`${ipaths.mysqldExe} --initialize --log_syslog=0 --datadir=${
-                wfs.absPath(ipaths.databaseDir)}`);
+            wsys.exec(
+                  `${ipaths.mysqldExe}`
+                + ` --initialize`
+                + ` --log_syslog=0`
+                + ` --datadir=${wfs.absPath(ipaths.databaseDir)}`);
             term.success('Created mysql database');
         } 
 
@@ -199,7 +208,9 @@ export namespace mysql {
      * Returns whether this instance of TSWoW should manage its own MySQL process.
      */
     export function hasOwnProcess() {
-        return isWindows() && (process.argv.includes('own-mysql') || NodeConfig.mysql_executable === undefined);
+        return isWindows() 
+            && (process.argv.includes('own-mysql') 
+            || NodeConfig.mysql_executable === undefined);
     }
 
     /**
@@ -228,24 +239,31 @@ export namespace mysql {
      * Extracts the TDB file in bin and returns the filepath
      */
     export async function extractTdb() {
-        const search = ()=> wfs.readDir(ipaths.bin,false,'files').filter(x=>x.endsWith('.sql'));
+        const search = ()=> wfs.readDir(ipaths.bin,false,'files')
+            .filter(x=>x.endsWith('.sql'));
         const search1 = search();
         if(search1.length==1) {
             return search1[0];
         }
 
         if(search1.length>1) {
-            throw new Error(`Multiple SQL files in the bin directory, please remove them manually`);
+            throw new Error(
+                  `Multiple SQL files in the bin directory,`
+                + ` please remove them manually`);
         }
 
         SevenZip.extract(ipaths.tdb);
         const search2 = search();
         if(search2.length>1) {
-            throw new Error(`TDB archive seems to contain multiple SQL files, it's probably corrupt.`);
+            throw new Error(
+                  `TDB archive seems to contain multiple SQL files,`
+                + ` it's probably corrupt.`);
         }
 
         if(search2.length==0) {
-            throw new Error(`Found no SQL files after extracting TDB archive, either the extraction failed or the archive was empty.`);
+            throw new Error(
+                  `Found no SQL files after extracting TDB archive,`
+                + ` either the extraction failed or the archive was empty.`);
         }
 
         return search2[0];
@@ -256,7 +274,11 @@ export namespace mysql {
      * @param con 
      * @param sqlFilePath 
      */
-    export async function rebuildDatabase(con: Connection, sqlFilePath: string) {
+    export async function rebuildDatabase(
+          con: Connection
+        , sqlFilePath: string) 
+        {
+
         term.log(`Beginning to rebuild ${con.name()}`);
         await con.status;
         await con.promiseConnect();
@@ -281,7 +303,10 @@ export namespace mysql {
         term.success(`Rebuilt database ${con.name()}`);
     }
 
-    export async function applySQLFiles(cons: Connection, type: 'world'|'auth'|'characters') {
+    export async function applySQLFiles(
+          cons: Connection
+        , type: 'world'|'auth'|'characters') {
+
         // Apply 'startup' files (TODO: these should be made into updates)
         await wfsa.iterate(ipaths.startupSqlDir(type), async (file) => {
             if (file.endsWith('.sql')) {
@@ -304,11 +329,14 @@ export namespace mysql {
 
         for(const filepath of files) {
             const filename = wfs.basename(filepath);
-            const applied = await cons.query('SELECT * from `updates` WHERE `name` = "'+filename+'"');
+            const applied = await cons.query(
+                'SELECT * from `updates` WHERE `name` = "'+filename+'"');
             if(applied.length===0) {
                 term.log(`Applying sql update ${filepath}`)
                 await cons.query(wfs.read(filepath));
-                await cons.query(`INSERT INTO updates (name,hash,speed) VALUES ("${filename}", "tswow",0);`) 
+                await cons.query(
+                      `INSERT INTO updates (name,hash,speed)`
+                    + ` VALUES ("${filename}", "tswow",0);`) 
             }
         }
     }
@@ -321,18 +349,25 @@ export namespace mysql {
 
     export async function installCharacters(connection: Connection) {
         // Special hack to get the characters tables in, because some scripts depend on it
-        let charRowCount = await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
+        let charRowCount = 
+            await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(charRowCount[1][0]['FOUND_ROWS()']===0) {
-            term.log(`No character tables found for ${connection.cfg.name}, creating them...`);
+            term.log(
+                 `No character tables found for ${connection.cfg.name},`
+               + ` creating them...`);
             await connection.query(wfs.read(ipaths.createCharactersSql));
         }
         await applySQLFiles(connection,'characters');
     }
 
     export async function installAuth(connection: Connection) {
-        let authRowCount = await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
+        let authRowCount = 
+            await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(authRowCount[1][0]['FOUND_ROWS()']===0) {
-            term.log(`No auth tables found for ${connection.cfg.name}, creating them...`);
+            term.log(
+              `No auth tables found for ${connection.cfg.name},`
+            + ` creating them...`);
+
             await connection.query(wfs.read(ipaths.createAuthSql));
         }
         await applySQLFiles(connection,'auth');

@@ -141,7 +141,9 @@ export namespace Modules {
 
         createDataDir() {
             wfs.mkDirs(ipaths.moduleData(this.id));
-            wfs.write(ipaths.moduleDataMain(this.id), patch_example_ts(this.id));
+            wfs.write(
+                  ipaths.moduleDataMain(this.id)
+                , patch_example_ts(this.id));
         }
 
         createAssets() {
@@ -165,11 +167,17 @@ export namespace Modules {
             } else {
                 if (wfs.exists(ipaths.moduleData(this.id))) {
                     try {
-                        wfs.write(ipaths.moduleDataTsConfig(this.id), data_tsconfig);
-                        wsys.execIn(ipaths.moduleData(this.id), `node ../../../${ipaths.tsc}`);
+                        wfs.write(
+                              ipaths.moduleDataTsConfig(this.id)
+                            , data_tsconfig);
+                        wsys.execIn(
+                              ipaths.moduleData(this.id)
+                            , `node ../../../${ipaths.tsc}`);
                     } catch (error) {
                         term.error(error.message);
-                        term.error(`Can't noedit ${this.id}, there are compiler errors in it.`);
+                        term.error(
+                              `Can't noedit ${this.id}`
+                            + `, there are compiler errors in it.`);
                         return;
                     }
                     destroyTSWatcher(ipaths.moduleData(this.id));
@@ -188,7 +196,8 @@ export namespace Modules {
             }
 
             try {
-                const msg = wsys.execIn(ipaths.moduleRoot(this.id), 'git pull', 'pipe');
+                const msg = wsys.execIn(
+                    ipaths.moduleRoot(this.id), 'git pull', 'pipe');
                 term.log(`${this.id}: ${msg}`);
                 if (msg.includes('Already up to date.')) {
                     // Don't run tsc if we didn't update.
@@ -196,7 +205,8 @@ export namespace Modules {
                 }
             } catch (err) {
                 const msg = err.message as string;
-                if (!msg.includes('There is no tracking information for the current branch')) {
+                if (!msg.includes(
+                    'There is no tracking information for the current branch')) {
                     term.error(`Error updating: ${err.message}`);
                 } else {
                     // "no tracking information" is not an error for us
@@ -207,14 +217,18 @@ export namespace Modules {
             }
 
             if (!this.isEditable()) {
-                wsys.execIn(ipaths.moduleData(this.id), `node ../../../${ipaths.tsc}`);
+                wsys.execIn(
+                      ipaths.moduleData(this.id)
+                    , `node ../../../${ipaths.tsc}`);
             }
             wfs.remove(ipaths.moduleNodeModule(this.id));
             await refreshModules(false);
         }
         
         linkModule() {
-            wfs.write(ipaths.moduleDataPackagePath(this.id), lib_package_json(this.id));
+            wfs.write(
+                  ipaths.moduleDataPackagePath(this.id)
+                , lib_package_json(this.id));
             if(!wfs.exists(ipaths.moduleDataLink(this.id))) {
                 wsys.exec(`npm i -S ${ipaths.moduleDataBuild(this.id)}`);
             }
@@ -225,7 +239,8 @@ export namespace Modules {
      * Returns names of all installed modules.
      */
     export function getModules() {
-        return wfs.readDir(ipaths.modules, true, 'directories').map(x=>new Module(x));
+        return wfs.readDir(ipaths.modules, true, 'directories')
+            .map(x=>new Module(x));
     }
 
     export function getModule(mod: string) {
@@ -357,7 +372,9 @@ export namespace Modules {
         }
 
         if(wfs.exists(ipaths.moduleRoot(name))) {
-            throw new Error(`Failed to remove module directory for ${name}. Please shut down TSWoW and/or VSCodium and remove it manually`);
+            throw new Error(
+                 `Failed to remove module directory for ${name}.`
+               + ` Please shut down TSWoW and/or VSCodium and remove it manually`);
         }
     }
 
