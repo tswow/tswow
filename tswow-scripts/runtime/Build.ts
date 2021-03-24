@@ -86,8 +86,12 @@ export namespace Build {
     }
 
     export function initialize() {
-        Build.command.addCommand('data', 'clientonly? rebuild? package?',
-            'Builds data patches and then restarts the affected processes', async(args) => {
+        Build.command.addCommand(
+              'data'
+            , 'clientonly? rebuild? package?'
+            , 'Builds data patches and then restarts the affected processes'
+            , async(args) => {
+
             if (args.includes('clientonly') && args.includes('rebuild')) {
                 throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
             }
@@ -96,16 +100,21 @@ export namespace Build {
             ));
         });
 
-        Build.command.addCommand('check', '', '', async(args) => {
+        Build.command.addCommand(
+              'check'
+            , ''
+            , ''
+            , async(args) => {
+
             let ds = Datasets.getDatasetsOrDefault(args);
             await Datascripts.build(ds[0],true,args.includes('--use-timer'));
         });
 
         Build.command.addCommand(
-            'addon'
-            ,'dataset | modules'
-            ,'Builds addons for one, multiple or all moduels against multiple or a single dataset'
-            ,((args)=>{
+              'addon'
+            , 'dataset | modules'
+            , 'Builds addons for one, multiple or all moduels against multiple or a single dataset'
+            , ((args)=>{
             let ds = Datasets.getDatasetsOrDefault(args);
             let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x.id)));
             let runningClients = ds.filter(x=>x.client.isRunning());
@@ -120,7 +129,7 @@ export namespace Build {
         }));
 
         Build.command.addCommand(
-            'scripts'
+              'scripts'
             , 'module? debug?'
             , 'Build and loads the server scripts of a module'
             , async (args) => {
@@ -136,18 +145,19 @@ export namespace Build {
         const pkg = commands.addCommand('package');
 
         pkg.addCommand(
-            'client'
-            ,'...datasets'
-            ,'Creates publish packages for clients'
-            , async(args)=>{
+              'client'
+            , '...datasets'
+            , 'Creates publish packages for clients'
+            ,  async(args)=>{
+
             await Promise.all(Datasets.getDatasetsOrDefault(args)
                 .map(x=>packageClient(x,args.includes('--use-timer'))));
         });
 
         pkg.addCommand(
-            'server'
-            ,'...datasets (--build-data, --build-scripts, --include-maps, --use-timer)'
-            ,'Creates publish packages for servers'
+              'server'
+            , '...datasets (--build-data, --build-scripts, --include-maps, --use-timer)'
+            , 'Creates publish packages for servers'
             , async(args)=>{
             packageServer(
                 Datasets.getDatasetsOrDefault(args),

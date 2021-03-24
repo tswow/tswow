@@ -203,12 +203,21 @@ export namespace commands {
         return rootCommand.addCommand(name, argDesc, help, callback);
     }
 
-    // Print command
-    addCommand('print', 'messages', 'Prints out messages to the screen', (args) => {
+    addCommand(
+          'print'
+        , 'messages'
+        , 'Prints out messages to the screen'
+        , (args) => {
+
         term.log(args.join(' '));
     });
 
-    addCommand('trace','true|false','Enables or disables stack tracing',(arg)=>{
+    addCommand(
+          'trace'
+        , 'true|false'
+        , 'Enables or disables stack traces in command error'
+        , (arg)=>{
+
         switch(arg[0]){
             case 'true':
                 trace = true
@@ -233,7 +242,12 @@ export namespace commands {
         });
     }
     
-    addCommand('command', 'alias command', 'Creates a command alias', (args) => {
+    addCommand(
+          'command'
+        , 'alias command'
+        , 'Creates a command alias'
+        , (args) => {
+
         addCustomCommand(args[0], args.slice(1));
     });
 
@@ -248,7 +262,12 @@ export namespace commands {
     }
 
     // Help command
-    addCommand('help', 'command, [args]?', 'Prints this help message', async(args) => {
+    addCommand(
+          'help'
+        , 'command, [args]?'
+        , 'Prints this help message'
+        , async(args) => {
+
         let cur = rootCommand;
         for (const arg of args) {
             const cpd = cur;

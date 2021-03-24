@@ -240,14 +240,20 @@ export namespace Datasets {
     export const command = commands.addCommand('dataset');
 
     export function initialize() {
-        if(
-            !wfs.exists(ipaths.datasets) 
-            || wfs.readDir(ipaths.datasets,false,'directories').length == 0) 
+        if (
+            ! wfs.exists(ipaths.datasets) 
+            || wfs.readDir(ipaths.datasets,false,'directories').length == 0
+           ) 
         {
             create('default');
         }
 
-        command.addCommand('install','name --skip-data --skip-database','Installs missing server data for a dataset', async (args: any[])=>{
+        command.addCommand(
+              'install'
+            , 'name --skip-data --skip-database'
+            , 'Installs missing server data for a dataset'
+            , async (args: any[])=>{
+
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
                 if(!args.includes('--skip-data')) {
                     x.installServerData();
@@ -259,19 +265,34 @@ export namespace Datasets {
             }));
         });
 
-        command.addCommand('luaxml','...dataset','Rebuilds luaxml data', async(args: any[])=>{
+        command.addCommand(
+              'luaxml'
+            , '...dataset'
+            , 'Rebuilds luaxml data'
+            , async(args: any[])=>{
+
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
                 return MapData.buildLuaXML(x.id);
             }));
         });
 
-        command.addCommand('database','...dataset','Rebuilds databases', async(args: any[])=>{
+        command.addCommand(
+              'database'
+            , '...dataset'
+            , 'Rebuilds databases'
+            , async(args: any[])=>{
+
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
                 return x.installDatabase(true);
             }));
         });
 
-        command.addCommand('create','name','Creates a new dataset with the provided id',(args: any[])=>{
+        command.addCommand(
+              'create'
+            , 'name'
+            , 'Creates a new dataset with the provided id'
+            , (args: any[])=>{
+
             if(args.length<1) {
                 throw new Error(`Must provide an id for the created dataset`);
             }

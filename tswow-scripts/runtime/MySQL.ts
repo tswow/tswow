@@ -344,15 +344,30 @@ export namespace mysql {
 
             const mysqlC = commands.addCommand('mysql');
 
-            mysqlC.addCommand('end', '', 'Stops the MySQL process and disconnects all connections', async() => {
+            mysqlC.addCommand(
+                  'end'
+                , ''
+                , 'Stops the MySQL process and disconnects all connections'
+                , async() => {
+
                 await disconnect();
             });
 
-            mysqlC.addCommand('start', '', 'Starts/Restarts the MySQL process and all connections', async() => {
+            mysqlC.addCommand(
+                  'start'
+                , ''
+                , 'Starts/Restarts the MySQL process and all connections'
+                , async() => {
+
                 await start();
             });
 
-            mysqlC.addCommand('log','true|false?','Shows or hides the MySQL log', async(args) => {
+            mysqlC.addCommand(
+                  'log'
+                , 'true|false?'
+                , 'Shows or hides the MySQL log'
+                , async(args) => {
+
                 showProcessOutput(args[0]==='true');
             });
         }

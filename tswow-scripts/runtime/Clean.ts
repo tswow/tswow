@@ -143,32 +143,65 @@ export namespace Clean {
     export const command = commands.addCommand('clean')
 
     export async function initialize() {
-        Clean.command.addCommand('livescripts','module?','Removes live script build and binary files', async (args)=>{
+        Clean.command.addCommand(
+              'livescripts'
+            , 'module?'
+            , 'Removes live script build and binary files'
+            , async (args)=>{
+
             await cleanScriptBin(args[0]);
         });
 
-        Clean.command.addCommand('datascripts','module?','Removes data script build files', async (args)=>{
+        Clean.command.addCommand(
+              'datascripts'
+            , 'module?'
+            , 'Removes data script build files'
+            , async (args)=>{
+
             await cleanDataBuild(args[0]);
         });
 
-        Clean.command.addCommand('ids','dataset = "default"','Removes all id mappings for a dataset', async(args)=>{
+        Clean.command.addCommand(
+              'ids'
+            , 'dataset = "default"'
+            , 'Removes all id mappings for a dataset'
+            , async(args)=>{
+
             await Promise.all([Identifiers.assertType('dataset',args)
                 .map(x=>cleanIds(x))]);
         });
 
-        Clean.command.addCommand('mysql','','Cleans all MySQL data files', async(args)=>{
+        Clean.command.addCommand(
+              'mysql'
+            , ''
+            , 'Cleans all MySQL data files'
+            , async(args)=>{
+
             await cleanMysql();
         });
 
-        Clean.command.addCommand('clientdata','dataset','Cleans all client data for a single dataset', async(args)=>{
+        Clean.command.addCommand(
+              'clientdata'
+            , 'dataset'
+            , 'Cleans all client data for a single dataset'
+            , async(args)=>{
             await cleanClientData(args[0]);
         });
 
-        Clean.command.addCommand('typescript', '','Cleans all TypeScript data', async(args)=>{
+        Clean.command.addCommand(
+              'typescript'
+            , ''
+            , 'Cleans all TypeScript data'
+            , async(args)=>{
+
             await cleanTypescript();
         });
 
-        Clean.command.addCommand('all','dataset?','Attempts to clean all intermediate data', async(args)=>{
+        Clean.command.addCommand(
+              'all'
+            , 'dataset?'
+            , 'Attempts to clean all intermediate data'
+            ,  async(args)=>{
             let datasets = Identifiers.assertType('dataset',args);
             await cleanScriptBin();
             await cleanDataBuild();
@@ -178,7 +211,11 @@ export namespace Clean {
             await cleanClientData(args[0]);
         });
 
-        Clean.command.addCommand('addon','mod?','Cleans addon build data',async (x)=>{
+        Clean.command.addCommand(
+              'addon'
+            , 'mod?'
+            , 'Cleans addon build data'
+            , async (x)=>{
             cleanAddonBuild(x[0]);
         });
     }

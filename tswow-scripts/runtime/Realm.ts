@@ -269,7 +269,12 @@ export namespace Realm {
     export async function initialize() {
         const realm = commands.addCommand('realm');
 
-        realm.addCommand('send','command','Sends a command to the realms worldserver', async(args)=>{
+        realm.addCommand(
+              'send'
+            , 'command'
+            , 'Sends a command to the realms worldserver'
+            , async(args)=>{
+
             if(args.length === 0) {
                 throw new Error(`Must provide a realm name`);
             }
@@ -277,19 +282,33 @@ export namespace Realm {
             getRealm(args[0]).sendWorldserverCommand(cmd,true);
         });
 
-        realm.addCommand('start','debug|release?, realmnames[] | all','Starts one, multiple or all realms',async (args)=>{
+        realm.addCommand(
+              'start'
+            , 'debug|release?, realmnames[] | all'
+            , 'Starts one, multiple or all realms'
+            , async (args)=>{
             let type : 'Release'|'Debug' = args.includes('debug') ? 'Debug' : 'Release';
             let realms = getRealmsOrDefault(args);
             await Promise.all(realms.map(x=>getRealm(x).startWorldserver(type)));
         });
 
-        realm.addCommand('stop','realmnames[]|all','Stops one, multiple or all realms',async(args)=>{
+        realm.addCommand(
+              'stop'
+            , 'realmnames[]|all'
+            , 'Stops one, multiple or all realms'
+            , async(args)=>{
+
             let realms = Identifiers.assertType('realm',args)
                 .map(x=>getRealm(x));
             await Promise.all(realms.map(x=>x.stopWorldserver())); 
         });
 
-        realm.addCommand('check','realmnames...','Checks if the provided realms are online',async(args)=>{
+        realm.addCommand(
+              'check'
+            , 'realmnames...'
+            , 'Checks if the provided realms are online'
+            , async(args)=>{
+
             getRealmsOrDefault(args).forEach(x=>{
                 if(getRealm(x).worldserver.isRunning()) {
                     term.success(`Realm ${x} is running`);
@@ -299,14 +318,24 @@ export namespace Realm {
             });
         });
 
-        realm.addCommand('create','name','Creates a new realm',async(args)=>{
+        realm.addCommand(
+              'create'
+            , 'name'
+            , 'Creates a new realm'
+            , async(args)=>{
+
             if(args.length==0 || args[0].length===0) {
                 throw new Error(`Must provide a valid realm name`);
             }
             createRealm(args[0]);
         });
 
-        realm.addCommand('remove','name...','Removes one or multiple existing realms',async(args)=>{
+        realm.addCommand(
+              'remove'
+            , 'name...'
+            , 'Removes one or multiple existing realms'
+            , async(args)=>{
+
             await Promise.all(args.map(x=>removeRealm(x)));
         });
 

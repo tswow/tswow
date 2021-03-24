@@ -117,11 +117,21 @@ export namespace Assets {
     export const command = commands.addCommand('assets');
 
     export function initialize() {
-        command.addCommand('png', 'mod?', 'Create missing pngs from blp files', (args) => {
+        command.addCommand(
+              'png'
+            , 'mod?'
+            , 'Create missing pngs from blp files'
+            , (args) => {
+
             blpToPng(args[0]);
         });
 
-        command.addCommand('blp', 'mod?', 'Converts png files back to blp', (args) => {
+        command.addCommand(
+              'blp'
+            , 'mod?'
+            , 'Converts png files back to blp'
+            , (args) => {
+
             pngToBlp(true, args[0]);
         });
     }

@@ -387,29 +387,49 @@ export namespace Modules {
             wfs.mkDirs(ipaths.modules);
         }
 
-        Modules.command.addCommand('create', 'name --datascripts --livescripts --addon --assets --all', 'Create a new module from a name or git repository', (args) => {
-            if (args.length < 1) { throw new Error('Please provide a name for the new module'); }
+        Modules.command.addCommand(
+              'create'
+            , 'name --datascripts --livescripts --addon --assets --all'
+            , 'Create a new module from a name or git repository'
+            , (args) => {
+            if (args.length < 1) { 
+                throw new Error('Please provide a name for the new module'); 
+            }
             if(args.includes(('--all'))) {
                 addModule(args[0],true,true,true,true);
             } else {
                 addModule( args[0]
-                         , args.includes('--datascripts')
-                         , args.includes('--livescripts')
-                         , args.includes('--assets')
-                         , args.includes('--addon')
+                        , args.includes('--datascripts')
+                        , args.includes('--livescripts')
+                        , args.includes('--assets')
+                        , args.includes('--addon')
                         );
             }
         });
 
-        Modules.command.addCommand('install', 'url', 'Installs a module from a git repository', (args) => {
+        Modules.command.addCommand(
+              'install'
+            , 'url'
+            , 'Installs a module from a git repository'
+            , (args) => {
             installModule(args.join(' '));
         });
 
-        Modules.command.addCommand('uninstall', 'name force?', 'Uninstalls a module', async (args) => {
+        Modules.command.addCommand(
+              'uninstall'
+            , 'name force?'
+            , 'Uninstalls a module'
+            , async (args) => {
+
             await uninstallModule(args[0]);
         });
 
-        Modules.command.addCommand('editable', 'module true|false', 'Sets a data library to not compile its data', async(args) => {
+        Modules.command.addCommand(
+              'editable'
+            , 'module true|false'
+            , 'Sets a data library to not compile its data'
+            , async(args) => {
+
             switch (args[1]) {
                 case 'true':
                     return getModule(args[0]).setEditable(true);
@@ -420,18 +440,33 @@ export namespace Modules {
             }
         });
 
-        Modules.command.addCommand('refresh', '', 'Run this is your ts watchers wont start', async() => {
+        Modules.command.addCommand(
+              'refresh'
+            , ''
+            , 'Run this is your ts watchers wont start'
+            , async() => {
+
             refreshModules(false);
         });
 
-        Modules.command.addCommand('list','','Lists the available modules', async()=>{
+        Modules.command.addCommand(
+              'list'
+            , ''
+            , 'Lists the available modules'
+            ,  async()=>{
+
             term.log(`Listing all installed modules:`);
             for(const mod of getModules()) {
                 term.log(mod.id);
             }
         });
 
-        Modules.command.addCommand('clear', 'module', 'Clears all built data for a module', async(args) => {
+        Modules.command.addCommand(
+              'clear'
+            , 'module'
+            , 'Clears all built data for a module'
+            , async(args) => {
+
             const result = await destroyTSWatcher(ipaths.moduleData(args[0]));
             wfs.remove(ipaths.moduleDataBuild(args[0]));
             if (result) {
@@ -439,10 +474,12 @@ export namespace Modules {
             }
         });
 
-        Modules.command.addCommand('add-feature'
-            ,'module --livescripts --datascripts --addon --assets'
-            ,'Adds a new feature to a module'
+        Modules.command.addCommand(
+              'add-feature'
+            , 'module --livescripts --datascripts --addon --assets'
+            , 'Adds a new feature to a module'
             , async(args)=>{
+
                 Identifiers.getTypes('module',args).forEach(x=>{
                     let mod = getModule(x);
                     if(args.includes('--livescripts')) mod.createLivescripts();
@@ -452,7 +489,12 @@ export namespace Modules {
                 });
         });
 
-        Modules.command.addCommand('update', 'module|all', 'Updates any or all modules from their tracking git repositories', async(args) => {
+        Modules.command.addCommand(
+              'update'
+            , 'module|all'
+            , 'Updates any or all modules from their tracking git repositories'
+            , async(args) => {
+
             await Promise.all(Modules.getModulesOrAll(args).map(x=>{
                 return x.update();
             }))

@@ -59,11 +59,21 @@ export namespace AuthServer {
             await start(process.argv.includes('debug')?'Debug':'Release');
         }
 
-        AuthServer.command.addCommand('stop','','Stops the local authserver',async (args)=>{
+        AuthServer.command.addCommand(
+             'stop'
+            , ''
+            , 'Stops the local authserver'
+            , async (args)=>{
+
             await stop();
         });
 
-        AuthServer.command.addCommand('start','debug|release?','Starts the local authserver',async (args)=>{
+        AuthServer.command.addCommand(
+             'start'
+            ,'debug|release?'
+            ,'Starts the local authserver'
+            ,async (args)=>{
+
             await start(args[0]=='debug'?'Debug':'Release');
         });
     }

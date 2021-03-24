@@ -255,7 +255,12 @@ export namespace Addon {
     export const command = commands.addCommand('addon');
 
     export function initialize() {
-        Addon.command.addCommand('create','module','Creates addon data in a module',((args)=>{
+        Addon.command.addCommand(
+             'create'
+            ,'module'
+            ,'Creates addon data in a module'
+            ,((args)=>{
+
             if(!wfs.exists(ipaths.moduleRoot(args[0]))) {
                 throw new Error(`"${args[0]}" is not an existing module.`);
             }
