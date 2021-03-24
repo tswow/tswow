@@ -167,10 +167,10 @@ export namespace Datasets {
             await mysql.dump(this.worldDest, ipaths.datasetSqlDump(this.id));
         }
 
-        async installDatabase() {
+        async installDatabase(force: boolean) {
             await this.connect();
             // Rebuild both world databases if one of them is missing
-            if(!await mysql.isWorldInstalled([this.worldSource,this.worldDest])) {
+            if(force || !await mysql.isWorldInstalled([this.worldSource,this.worldDest])) {
                 const tdb = await mysql.extractTdb();
                 await Promise.all([
                     await mysql.rebuildDatabase(this.worldSource,tdb),
@@ -247,15 +247,27 @@ export namespace Datasets {
             create('default');
         }
 
-        command.addCommand('install','name --skip-data --skip-database','Installs server data for a dataset', async (args: any[])=>{
+        command.addCommand('install','name --skip-data --skip-database','Installs missing server data for a dataset', async (args: any[])=>{
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
                 if(!args.includes('--skip-data')) {
                     x.installServerData();
                 }
 
                 if(!args.includes('--skip-database')) {
-                    return x.installDatabase();
+                    return x.installDatabase(false);
                 }
+            }));
+        });
+
+        command.addCommand('luaxml','...dataset','Rebuilds luaxml data', async(args: any[])=>{
+            await Promise.all(getDatasetsOrDefault(args).map(x=>{
+                return MapData.buildLuaXML(x.id);
+            }));
+        });
+
+        command.addCommand('database','...dataset','Rebuilds databases', async(args: any[])=>{
+            await Promise.all(getDatasetsOrDefault(args).map(x=>{
+                return x.installDatabase(true);
             }));
         });
 
