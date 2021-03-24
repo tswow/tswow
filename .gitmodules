@@ -6,6 +6,3 @@
 	path = TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
-[submodule "BLPConverter"]
-	path = BLPConverter
-	url = https://github.com/tswow/BLPConverter.git
