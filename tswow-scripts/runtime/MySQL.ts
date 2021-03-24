@@ -168,8 +168,18 @@ export namespace mysql {
                 wfs.absPath(ipaths.databaseDir)}`);
             term.success('Created mysql database');
         } 
+
         const startup_file = `./bin/mysql_startup.txt`;
-        wfs.write(startup_file, `ALTER USER 'root'@'localhost' IDENTIFIED BY '${databaseSettings('world').password}';`);
+
+        const user = databaseSettings('world').user;
+        const pass = databaseSettings('world').password;
+
+        wfs.write(startup_file,
+              `CREATE USER IF NOT EXISTS`
+            + ` '${user}'@'localhost'`
+            + ` IDENTIFIED BY '${pass}';`
+            + `\nGRANT ALL ON *.* TO '${user}'@'localhost';`
+            + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`);
         await disconnect();
         mysqlprocess.start(ipaths.mysqldExe,
             [
@@ -183,6 +193,7 @@ export namespace mysql {
             ]);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
         await mysqlprocess.waitFor('Execution of init_file*ended.', true);
+        wfs.remove(startup_file);
         term.success('Mysql process started');
     }
 
