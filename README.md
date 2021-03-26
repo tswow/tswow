@@ -10,7 +10,7 @@ _TSWoW is **not** a new server emulator, we have a standard C++ emulator forked 
 
 ## Who is TSWoW for?
 
-- Modding Beginners - We have [crash course](https://github.com/tswow/tswow-wiki/blob/main/Introduction/README.md) aimed just at getting new people started!
+- Modding Beginners - We have [crash course](https://tswow.github.io/tswow-wiki/home/) aimed just at getting new people started!
 
 - Modding Veterans - TSWoW is primarily aimed at making modding more efficient and powerful. You will very fast realize the power of improving your workflow using programming instead of GUIs.
 
@@ -24,7 +24,7 @@ TSWoW is a **programming environment**, and the language we use is _TypeScript_.
 
 ## Links for getting started
 
-[Introduction & Installation](https://github.com/tswow/tswow-wiki/blob/main/Introduction/README.md)
+[Introduction & Installation](https://tswow.github.io/tswow-wiki/home/)
 
 [Issues](https://github.com/tswow/tswow/issues)
 
