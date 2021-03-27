@@ -154,6 +154,7 @@ export namespace Modules {
             wfs.mkDirs(ipaths.moduleScripts(this.id));
             wfs.mkDirs(ipaths.moduleShared(this.id));
             wfs.write(ipaths.moduleMainScript(this.id),livescript_example);
+            wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(this.id));
         }
 
         createAddon() {
