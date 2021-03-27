@@ -296,9 +296,11 @@ export namespace mysql {
 
         await wsys.execAsync(
               `${mysqlCommand}`
+            + ` -u ${con.cfg.user}`
+            + (con.cfg.password.length > 0
+                ? ` -p${con.cfg.password}`
+                : '')
             + ` --port ${con.cfg.port}`
-            + ` -u root`
-            + ` -p${con.cfg.password}`
             + ` ${con.name()} < ${sqlFilePath}`);
         term.success(`Rebuilt database ${con.name()}`);
     }
