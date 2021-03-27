@@ -24,11 +24,35 @@ import { commands } from "./Commands";
 import { Modules } from "./Modules";
 import { Datasets } from "./Dataset";
 import { Identifiers } from "./Identifiers";
+import { isWindows } from "../util/Platform";
 
 /**
  * Module for cleaning intermediate data.
  */
 export namespace Clean {
+
+    export function removeOldLivescripts() {
+        ipaths.tcTypes.forEach(x=>{
+            const scripts_dir = ipaths.tcScripts(x);
+            wfs.iterate(ipaths.tcScripts(x),(filename)=>{
+                const p = wfs.relative(scripts_dir,filename);
+                let start = 'scripts_tswow_';
+                if(!isWindows()) {
+                    start = 'libscripts_tswow_';
+                }
+
+                if(!p.startsWith(start)) {
+                    return;
+                }
+
+                const nom = p.substring(start.length).split('.')[0];
+                if(!Modules.exists(nom)) {
+                    wfs.remove(filename);
+                }
+            });
+        });
+    }
+
     export function cleanScriptBin(mod?: string) {
         if(!mod) {
             Modules.getModules().forEach(x=>cleanScriptBin(x.id));
@@ -148,8 +172,8 @@ export namespace Clean {
             , 'module?'
             , 'Removes live script build and binary files'
             , async (args)=>{
-
             await cleanScriptBin(args[0]);
+            await removeOldLivescripts();
         });
 
         Clean.command.addCommand(

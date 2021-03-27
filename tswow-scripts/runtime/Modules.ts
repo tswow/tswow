@@ -339,6 +339,10 @@ export namespace Modules {
         }
     }
 
+    export function exists(name: string) {
+        return wfs.exists(ipaths.moduleRoot(name));
+    }
+
     export async function uninstallModule(name: string) {
         await destroyTSWatcher(ipaths.moduleData(name));
         term.log(`Uninstalling module ${name}`)
