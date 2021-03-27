@@ -50,7 +50,7 @@ export class InstallPaths {
     addonBuildLib(mod: string) {
         return mpath(
             this.addonBuild(mod)
-            , 'addons'
+            , 'addon'
             , 'lib'
         )
     }
@@ -579,7 +579,7 @@ export class InstallPaths {
     }
 
     moduleAddons(mod: string) {
-        return mpath(this.modules,mod,'addons');
+        return mpath(this.modules,mod,'addon');
     }
 
     moduleAddonSourceFile(mod: string, file: string) {
@@ -587,7 +587,7 @@ export class InstallPaths {
     }
 
     moduleAddonDestFile(mod: string, file: string) {
-        return mpath(this.addonBuild(mod), 'addons', file);
+        return mpath(this.addonBuild(mod), 'addon', file);
     }
 
     /**
