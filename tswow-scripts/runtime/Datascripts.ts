@@ -6,6 +6,7 @@ import { ipaths } from "../util/Paths";
 import { Datasets } from "./Dataset";
 import { NodeConfig } from "./NodeConfig";
 import { wsys } from "../util/System";
+import { commands } from "./Commands";
 
 export namespace Datascripts {
     /**
@@ -54,5 +55,13 @@ export namespace Datascripts {
         }
 
         term.success(`Finished building DataScripts for dataset ${dataset.id}`);
+    }
+
+    export function initialize() {
+        commands.addCommand('check','dataset','',async (args: any[])=>{
+            await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>{
+                return build(x,true,args.includes('--use-timer'));
+            }));
+        });
     }
 }

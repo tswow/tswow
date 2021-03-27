@@ -30,6 +30,7 @@ import { Realm } from './Realm';
 import { AuthServer } from './AuthServer';
 import { Datasets } from './Dataset';
 import { Build } from './Build';
+import { Datascripts } from './Datascripts';
 
 export async function main() {
     try {
@@ -47,6 +48,7 @@ export async function main() {
             await Test.initialize();
         }
 
+        await Datascripts.initialize();
         await Datasets.initialize();
         await Realm.initialize();
         await AuthServer.initialize();
