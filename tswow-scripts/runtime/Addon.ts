@@ -151,7 +151,7 @@ export namespace Addon {
             }
         }
 
-        let names: string[] = [`TSAddons\\${mod}\\addons\\${mod}-addon.lua`];
+        let names: string[] = [`TSAddons\\${mod}\\addon\\${mod}-addon.lua`];
         wfs.iterate(ipaths.addonBuild(mod),(name)=>{
             if(wfs.basename(name)!=`${mod}-addon.lua`) {
                 names.unshift(

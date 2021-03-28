@@ -60,11 +60,11 @@ export const RequirePreload: Plugin = {
         if(libName!==undefined) {
           moduleName = libName;
         } else {
-          let splitAddon = fullName.split('addons');
+          let splitAddon = fullName.split('addon');
           if(splitAddon.length>1) {
             let modName = path.basename(splitAddon[0]);
-            let addonName = splitAddon[1];
-            moduleName = `TSAddons/${modName}/addons${addonName}`
+            let addonName = splitAddon.slice(1).join('addon');
+            moduleName = `TSAddons/${modName}/addon${addonName}`
           } else {
             let splitShared =fullName.split('shared');
             let modName = path.basename(splitShared[0]);
