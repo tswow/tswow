@@ -160,13 +160,16 @@ export namespace Datasets {
                 anyChange = true;
             }
 
-            if(
-                   this.config.use_mmaps 
-                && !wfs.exists(ipaths.datasetMmaps(this.id))
-              ) {
+            if(this.config.use_mmaps 
+                && !wfs.exists(ipaths.datasetMmaps(this.id))) {
 
                 MapData.buildMMaps(this.id);
                 anyChange = true;
+            }
+
+            if(wfs.exists(ipaths.datasetMmaps(this.id)) 
+                && ! this.config.use_mmaps) {
+                term.warn(`Dataset ${this.id} has mmap data, but is not configured to use it (use_mmaps: false)`);
             }
 
             if(anyChange) {
