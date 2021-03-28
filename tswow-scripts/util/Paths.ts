@@ -78,16 +78,12 @@ export class InstallPaths {
         return mpath(installBase, 'package');
     }
 
-    packageSet(dataset: string) {
-        return mpath(this.package,dataset);
-    }
-
     get packageServerZip() {
         return mpath(this.package, 'server.7z');
     }
 
     packageMpq(dataset: string) {
-        return mpath(this.packageSet(dataset), 'patch-LETTER.MPQ');
+        return mpath(this.package, `patch-${dataset}.MPQ`);
     }
 
     datasetSqlDump(dataset: string) {
