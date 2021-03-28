@@ -4,12 +4,11 @@ import { Datascripts } from "./Datascripts";
 import { commands } from "./Commands";
 import { Modules } from "./Modules";
 import { ipaths } from "../util/Paths";
-import { wfs } from "../util/FileSystem";
+import { wfs, mpath } from "../util/FileSystem";
 import { Addon } from "./Addon";
 import { Livescripts } from "./Livescripts";
 import { term } from "../util/Terminal";
 import { SevenZip } from "../util/7zip";
-import { game_event_model_equipTable } from "../wotlkdata/sql/types/game_event_model_equip";
 
 export namespace Build {
     export const command = commands.addCommand('build');
@@ -28,7 +27,8 @@ export namespace Build {
         , buildData: boolean
         , buildScripts: boolean
         , includeMaps: boolean
-        , useTimer: boolean) {
+        , useTimer: boolean
+        , outname: string) {
             term.log(`Creating server release package for datasets ${datasets.map(x=>x.id)}...`);
             let archiveFiles: string[] = [];
             let allModules: string[] = []
@@ -71,6 +71,7 @@ export namespace Build {
             }
 
             if(includeMaps) {
+                term.log("Packaging map data (this takes a long time)");
                 await Promise.all(datasets.map(async x=>{
                     await x.installServerData();
                     archiveFiles.push(ipaths.datasetMaps(x.id));
@@ -81,10 +82,10 @@ export namespace Build {
                 }));
             }
 
-            wfs.remove(ipaths.packageServerZip);
-
+            const mpqpath = mpath(ipaths.package,outname);
+            wfs.remove(mpqpath);
             archiveFiles.forEach(x=>{
-                SevenZip.makeArchive(ipaths.packageServerZip,[x]);
+                SevenZip.makeArchive(mpqpath,[x]);
             });
             term.success('Finished creating server release package');
     }
@@ -160,15 +161,20 @@ export namespace Build {
 
         pkg.addCommand(
               'server'
-            , '...datasets (--build-data, --build-scripts, --include-maps, --use-timer)'
+            , '...datasets (--build-data, --build-scripts, --include-maps, --use-timer --outname=..)'
             , 'Creates publish packages for servers'
             , async(args)=>{
+                let outname = args.find(x=>x.startsWith('--outname='))
+                if(outname) outname = outname.substring('--outname='.length);
+                else outname = 'server.7z';
+
             packageServer(
-                Datasets.getDatasetsOrDefault(args),
-                args.includes('--build-data'),
-                args.includes('--build-scripts'),
-                args.includes('--include-maps'),
-                args.includes('--use-timer'));
+                  Datasets.getDatasetsOrDefault(args)
+                , args.includes('--build-data')
+                , args.includes('--build-scripts')
+                , args.includes('--include-maps')
+                , args.includes('--use-timer')
+                , outname);
         });
     }
 }
