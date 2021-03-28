@@ -20,6 +20,8 @@ import { DBCFile } from "wotlkdata/dbc/DBCFile";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Class } from "./Class";
+import { player_classlevelstatsRow } from "wotlkdata/sql/types/player_classlevelstats";
+import { player_levelstatsRow } from "wotlkdata/sql/types/player_levelstats";
 
 interface GtDBC {
     Data : Cell<number,any>;
@@ -46,6 +48,35 @@ class StatFile<D extends GtDBC> extends Subsystem<Class>{
             x.Data.set(callback(x.Data.get(), i))
         );
         return this.owner;
+    }
+}
+
+export class ClassAttribute extends Subsystem<Class>{
+    protected field: "agi"|"inte"|"str"|"spi";
+
+    constructor(cls: Class, field: "agi"|"inte"|"str"|"spi") {
+        super(cls);
+        this.field = field;
+    }
+
+    set(callback: (old: number, race: number, level: number)=>number) {
+        SQL.player_levelstats.filter({class:this.owner.ID})
+            .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.race.get(),x.level.get())));
+    }
+}
+
+export class BaseHpMana extends Subsystem<Class> {
+    field: "basehp"|"basemana"
+
+    constructor(cls: Class,field: "basehp"|"basemana") {
+        super(cls);
+        this.field = field;
+    }
+
+
+    set(callback: (old: number, level: number)=>number) {
+        SQL.player_classlevelstats.filter({class:this.owner.ID})
+            .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.level.get())));
     }
 }
 
@@ -83,6 +114,13 @@ export class ClassStats extends Subsystem<Class> {
     private f(size: number, file : DBCFile<any, any, any>) {
         return new StatFile(this.owner, this.owner.row.ID.get(), size, file);
     }
+
+    get Strength() { return new ClassAttribute(this.owner,"str"); }
+    get Agility() { return new ClassAttribute(this.owner,"agi"); }
+    get Intellect() { return new ClassAttribute(this.owner,"inte"); }
+    get Spirit() { return new ClassAttribute(this.owner,"spi"); }
+    get BaseHP() { return new BaseHpMana(this.owner, "basehp"); }
+    get BaseMana() { return new BaseHpMana(this.owner, "basemana"); }
 
     get MeleeAttackPower() { return new ClassFormula(this.owner, 1); }
     get RangedAttackPower() { return new ClassFormula(this.owner, 2); }
