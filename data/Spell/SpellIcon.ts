@@ -43,8 +43,24 @@ export class SpellIconCell<T> extends Cell<string, T> {
         return iconToPath(this.id.get()).get();
     }
 
-    set(value: string): T {
+    /**
+     * Sets this spell icon to a full provided path, which may or may not be located under Interface\Icons.
+     * @param value
+     */
+    setFullPath(value: string): T {
         this.id.set(pathToIcon(value).ID.get());
         return this.owner;
+    }
+
+    /**
+     * Sets this spell icon to the provided path under the default location Interface\Icons.
+     *
+     * @param value
+     */
+    set(value: string): T {
+        if(!value.startsWith(`Interface\\Icons\\`)) {
+            value = `Interface\\Icons\\${value}`;
+        }
+        return this.setFullPath(value);
     }
 }
