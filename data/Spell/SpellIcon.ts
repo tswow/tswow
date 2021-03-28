@@ -58,6 +58,9 @@ export class SpellIconCell<T> extends Cell<string, T> {
      * @param value
      */
     set(value: string): T {
+        if(value.endsWith('.blp')) {
+            value = value.substring(0,value.length-4);
+        }
         if(!value.startsWith(`Interface\\Icons\\`)) {
             value = `Interface\\Icons\\${value}`;
         }
