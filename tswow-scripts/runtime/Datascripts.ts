@@ -51,7 +51,7 @@ export namespace Datascripts {
                 +` ${Buffer.from(JSON.stringify(settings)).toString('base64')}`
                 , 'inherit');
         } catch (error) {
-            throw new Error(`Failed to rebuild patches: ${error.message}`);
+            throw new Error(`Failed to rebuild patches`);
         }
 
         term.success(`Finished building DataScripts for dataset ${dataset.id}`);
