@@ -20,6 +20,7 @@ import { Ids } from "../Base/Ids";
 import { std } from "../tswow-stdlib-data";
 import { ItemTemplate } from "./ItemTemplate";
 import { ItemVisualModels } from "./ItemVisualModels";
+import { ItemIcon } from "./ItemIcon";
 
 export class ItemVisual extends Subsystem<ItemTemplate> {
     get row() {
@@ -34,7 +35,7 @@ export class ItemVisual extends Subsystem<ItemTemplate> {
     get ParticleColorID() { return this.ownerWrap(this.row.ParticleColorID); }
     get SpellVisualID() { return this.ownerWrap(this.row.SpellVisualID); }
     get Texture() { return this.ownerWrapArray(this.row.Texture); }
-    get Icon() { return this.ownerWrapArray(this.row.InventoryIcon); }
+    get Icon() { return new ItemIcon(this); }
 
     copyFrom(templateId: number) {
         std.Items.load(templateId).Visual.row.copyTo(this.row);
