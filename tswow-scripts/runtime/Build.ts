@@ -29,6 +29,7 @@ export namespace Build {
         , buildScripts: boolean
         , includeMaps: boolean
         , useTimer: boolean) {
+            term.log(`Creating server release package for datasets ${datasets.map(x=>x.id)}...`);
             let archiveFiles: string[] = [];
             let allModules: string[] = []
             datasets.forEach(x=>{
@@ -82,7 +83,6 @@ export namespace Build {
 
             wfs.remove(ipaths.packageServerZip);
 
-            term.log(`Creating server release package ${ipaths.packageServerZip}...`);
             archiveFiles.forEach(x=>{
                 SevenZip.makeArchive(ipaths.packageServerZip,[x]);
             });
