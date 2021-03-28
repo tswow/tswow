@@ -378,7 +378,7 @@ export class InstallPaths {
     }
 
     realmYaml(realm: string) {
-        return mpath(this.realmDir(realm),'realm.yaml');
+        return mpath(this.realmDir(realm),`${realm}.realm.yaml`);
     }
 
     realmId(realm: string) {
