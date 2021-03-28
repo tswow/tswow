@@ -1,4 +1,5 @@
 import { createCanvas, loadImage, Image, Canvas, CanvasRenderingContext2D } from 'canvas';
+import { Settings } from 'wotlkdata/Settings';
 import * as fs from 'fs';
 import deasync from 'deasync';
 import path from 'path';
@@ -147,7 +148,7 @@ export class TSImage {
      * @param pathIn 
      */
     save(pathIn: string) {
-        this.save(path.join('coredata','luaxml',pathIn));
+        this.save(path.join(Settings.LUAXML_CLIENT,pathIn));
     }
 }
 
