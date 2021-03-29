@@ -6,6 +6,7 @@ import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
 import { commands } from "./Commands";
 import { Realm } from "./Realm";
 import { NodeConfig } from "./NodeConfig";
+import { Datasets } from "./Dataset";
 
 export namespace AuthServer {
     const authserver = new Process().showOutput(true);
@@ -43,6 +44,7 @@ export namespace AuthServer {
 
         await query('DELETE FROM realmlist;');
         await Promise.all(Realm.getRealms().map(x=>query(x.realmListSql())));
+        await Promise.all(Datasets.getAll().map(x=>query(x.gamebuildSql())));
         copyLibraryFiles(type);
 
         authserver.startIn(ipaths.authRoot,

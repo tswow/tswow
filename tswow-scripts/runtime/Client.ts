@@ -93,6 +93,10 @@ export namespace Client {
                 {offset: 0xe038e, value: 0x88},
                 {offset: 0xe03A3, value: 0x88},
                 {offset: 0xe03C3, value: 0x88},
+
+                // Gamebuild
+                {offset: 0x4c99f0, value: this.set.config.game_build&0xff},
+                {offset: 0x4c99f1, value: (this.set.config.game_build>>8)&0xff},
             ]
 
             let found = false;

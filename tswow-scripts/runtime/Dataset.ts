@@ -74,6 +74,11 @@ export namespace Datasets {
             }
             return val;
         }
+
+        get game_build() {
+            return this.get<number>('game_build',12340);
+        }
+
         get mpq_suffix() { 
             let val = this.get<string>('mpq_suffix','')
             if(val.length!==1 || val.charCodeAt(0)<97 || val.charCodeAt(0)>122)  {
@@ -124,6 +129,21 @@ export namespace Datasets {
             let realms = this.realms().filter(x=>x.isWorldserverRunning());
             await Promise.all(realms.map(x=>x.stopWorldserver()));
             return realms;
+        }
+
+        gamebuildSql() {
+            return `INSERT INTO build_info VALUES`
+                +` (${this.config.game_build}, 3, 3, 5,"a",NULL,NULL,NULL,`
+                +` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
+                +` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
+                +` ON DUPLICATE KEY UPDATE`
+                +` majorVersion=3,`
+                +` minorVersion=3,`
+                +` bugfixVersion=5,`
+                +` hotfixVersion="a",`
+                +` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
+                +` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
+                +`;`
         }
 
         installServerData() {
