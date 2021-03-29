@@ -68,7 +68,6 @@ export namespace Realm {
         get flag() { return this.ryaml("flag",0); }
         get security_level() { return this.ryaml("security_level",0); }
         get timezone() { return this.ryaml("timezone",1); }
-        get game_build() { return 12340; }
         get modules(): string[] { 
             if(this.dataset=='default') {
                 return wfs.readDir(ipaths.modules);
@@ -195,7 +194,7 @@ export namespace Realm {
                 ['timezone', this.config.timezone],
                 ['allowedSecurityLevel', this.config.security_level],
                 ['population', 0],
-                ['game_build', 12340]
+                ['game_build', this.set.config.game_build ]
             ]
 
             return (
