@@ -153,6 +153,6 @@ export function writePacketCreationFile(outDir: string) {
     }
     writer.EndBlock();
 
-    const tableFile = path.join(outDir,'scripts','PacketCreator.cpp');
+    const tableFile = path.join(outDir,'livescripts','PacketCreator.cpp');
     fs.writeFileSync(tableFile,writer.getText());
 }

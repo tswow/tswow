@@ -424,7 +424,7 @@ export class Emitter {
                 this.writer.writeStringNewLine('.h\"');
             });
 
-            this.writer.writeStringNewLine('#include "'+path.relative(path.dirname(sourceFile.fileName),'scripts/ModID.h').split('\\').join('/')+'"');
+            this.writer.writeStringNewLine('#include "'+path.relative(path.dirname(sourceFile.fileName),'livescripts/ModID.h').split('\\').join('/')+'"');
 
             sourceFile.statements.filter(s => this.isImportStatement(s)).forEach(s => {
                 this.processInclude(s);

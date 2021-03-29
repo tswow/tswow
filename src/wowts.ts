@@ -13,14 +13,14 @@ const CONFIG = {
     'compilerOptions': {
     'target': 'es5',
     'module': 'commonjs',
-    'outDir': './scripts/build/cpp',
-    'rootDir': './scripts',
+    'outDir': './livescripts/build/cpp',
+    'rootDir': './livescripts',
     'strict': true,
     'esModuleInterop': true,
     'skipLibCheck': true,
     'forceConsistentCasingInFileNames': true
 },
-'include': ['./shared','./scripts']
+'include': ['./shared','./livescripts']
 };
 
 const startTime = Date.now();
@@ -44,8 +44,8 @@ if (!fs.lstatSync(modulePath).isDirectory()) {
     throw new Error(`Module ${buildModule} is not a directory`);
 }
 
-if(!fs.lstatSync(path.join(modulePath,'scripts')).isDirectory()) {
-    throw new Error(`"scripts" in ${buildModule} is not a directory`);
+if(!fs.lstatSync(path.join(modulePath,'livescripts')).isDirectory()) {
+    throw new Error(`"livescripts" in ${buildModule} is not a directory`);
 }
 
 const olddir = process.cwd();
@@ -73,9 +73,9 @@ function findCpp(rootDir: string, dir: string) {
     return cpps;
 }
 
-const itms = findCpp(path.join(modulePath, './scripts/build/cpp'), '');
+const itms = findCpp(path.join(modulePath, './livescripts/build/cpp'), '');
 
-fs.writeFileSync(path.join(modulePath, 'scripts/build/cpp/CMakeLists.txt'),
+fs.writeFileSync(path.join(modulePath, 'livescripts/build/cpp/CMakeLists.txt'),
 `cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -107,14 +107,14 @@ const cmake_generate =
     (isWindows()
         ? `"bin/cmake/bin/cmake.exe"`
         : 'cmake')
-    +` -S modules/${buildModule}/scripts/build/cpp`
-    +` -B modules/${buildModule}/scripts/build/lib`;
+    +` -S modules/${buildModule}/livescripts/build/cpp`
+    +` -B modules/${buildModule}/livescripts/build/lib`;
 child_process.execSync(cmake_generate, {stdio: 'inherit'});
 const cmake_build =
     (isWindows()
         ? `"bin/cmake/bin/cmake.exe"`
         : `cmake`)
-    +` --build modules/${buildModule}/scripts/build/lib`
+    +` --build modules/${buildModule}/livescripts/build/lib`
     +` --config ${buildType}`;
 child_process.execSync(cmake_build, {stdio: 'inherit'});
 
