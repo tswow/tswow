@@ -72,6 +72,13 @@ export namespace Addon {
     }
 
     export function updateAddons(dataset: string) {
+        wsys.execIn(ipaths.addonInclude,'tstl','inherit');
+        wfs.iterate(ipaths.addonInclude,(fpath)=>{
+            if(!fpath.endsWith('.lua')) return;
+            const fname = wfs.basename(fpath);
+            if(fname==='lualib_bundle.lua') return;
+            wfs.copy(fpath,mpath(ipaths.luaxmlFrameXML(dataset),fname));
+        });
         let tocfile = wfs.readLines(ipaths.datasetLuaxmlToc(dataset));
         Modules.getModules()
             .filter(x=>wfs.exists(ipaths.addonBuild(x.id)))
@@ -81,13 +88,6 @@ export namespace Addon {
                 wfs.copy(ipaths.addonBuild(x.id),ipaths.luaxmlAddon(dataset,x.id));
             });
         wfs.writeLines(ipaths.datasetLuaxmlToc(dataset),tocfile);
-        wsys.execIn(ipaths.addonInclude,'tstl','inherit');
-        wfs.iterate(ipaths.addonInclude,(fpath)=>{
-            if(!fpath.endsWith('.lua')) return;
-            const fname = wfs.basename(fpath);
-            if(fname==='lualib_bundle.lua') return;
-            wfs.copy(fpath,mpath(ipaths.luaxmlFrameXML(dataset),fname));
-        });
     }
 
     export function addFilelistToToc(mod: string, tocFile: string[]) {
