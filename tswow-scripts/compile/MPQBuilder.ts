@@ -44,28 +44,12 @@ export namespace MPQBuilder {
                 + ` --build "${bpaths.mpqBuilder}"`
                 + ` --config Release`, 'inherit');
         } else {
-            const stormBuildDir = build_path('StormLibBuild');
-            const stormInstallDir = build_path('StormLibInstall');
-            wfs.mkDirs(stormBuildDir);
-            wfs.mkDirs(stormInstallDir);
-            const relativeInstall = wfs.relative(stormBuildDir, bpaths.stormlibInstall);
-            const relativeSource = wfs.relative(stormBuildDir, './StormLib');
-            await wsys.inDirectory(stormBuildDir, () => {
-                wsys.exec(`${cmake} "${relativeSource}"`
-                + ` -DCMAKE_INSTALL_PREFIX="${relativeInstall}"`
-                , 'inherit');
-                wsys.exec(`make`, 'inherit');
-                wsys.exec(`make install`, 'inherit');
-            });
             const mpqBuildDir = build_path('mpqbuilder');
             wfs.mkDirs(mpqBuildDir);
-
             const relativeMpqSource = wfs.relative(mpqBuildDir,'./mpqbuilder');
             await wsys.inDirectory(mpqBuildDir, () => {
                 wsys.exec(
                     `${cmake} "${relativeMpqSource}"`
-                    + ` -DSTORM_INCLUDE="${wfs.absPath(bpaths.stormLibInclude)}"`
-                    + ` -DSTORM_LIB="${wfs.absPath(bpaths.stormLibLibraryFile)}"`
                     ,  'inherit');
                 wsys.exec(`make`,'inherit');
             });
