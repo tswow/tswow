@@ -62,7 +62,7 @@ class SettingsClass {
         if(settings.modules.includes('all')) {
             settings.modules = [];
             fs.readdirSync('./modules').forEach(x=>{
-                if(fs.existsSync(path.join('./modules',x,'data'))){
+                if(fs.existsSync(path.join('./modules',x,'datascripts'))){
                     settings.modules.push(x);
                 }
             });

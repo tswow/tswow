@@ -458,7 +458,7 @@ export class InstallPaths {
     /** Module paths */
     get modules() { return mpath(installBase, 'modules'); }
     moduleData(mod: string) {
-        return mpath(this.modules, mod, 'data');
+        return mpath(this.modules, mod, 'datascripts');
     }
 
     /**
@@ -483,7 +483,7 @@ export class InstallPaths {
     }
 
     moduleDataBuild(mod: string) {
-        return mpath(this.modules, mod, 'data', 'build' );
+        return mpath(this.modules, mod, 'datascripts', 'build' );
     }
 
     moduleDataTsConfig(mod: string) {
@@ -494,7 +494,7 @@ export class InstallPaths {
         return mpath(this.modules, mod, 'assets');
     }
     moduleScripts(mod: string) {
-        return mpath(this.modules, mod, 'scripts');
+        return mpath(this.modules, mod, 'livescripts');
     }
 
     moduleScriptsGlobaldts(mod: string) {

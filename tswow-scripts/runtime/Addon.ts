@@ -212,8 +212,8 @@ export namespace Addon {
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
                     let p = m[1];
-                    if(p.startsWith('addons.lib')) {
-                        p = `${p.substring('addons.lib.'.length)}`;
+                    if(p.startsWith('addon.lib')) {
+                        p = `${p.substring('addon.lib.'.length)}`;
                     } else {
                         p = `TSAddons.${mod}.${p}`;
                     }

@@ -120,8 +120,8 @@ async function main() {
 
     // Find all patch subdirectories
     for (let dir of Settings.PATCH_DIRECTORY) {
-        dir = path.join('./modules',dir,'data');
-        if (!fs.lstatSync(dir).isDirectory()) {
+        dir = path.join('./modules',dir,'datascripts');
+        if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
             continue;
         }
 
