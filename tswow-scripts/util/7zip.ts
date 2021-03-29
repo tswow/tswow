@@ -18,8 +18,8 @@ import { ipaths } from './Paths';
 import { wsys } from './System';
 
 export namespace SevenZip {
-    export function extract(archive: string) {
-        wsys.exec(`"${ipaths.sevenZaExe}" e -obin ${archive}`);
+    export function extract(archive: string, out: string) {
+        wsys.exec(`"${ipaths.sevenZaExe}" e -o${out} ${archive}`);
     }
 
     export function makeArchive(zipPath: string, directoryIn: string[]) {

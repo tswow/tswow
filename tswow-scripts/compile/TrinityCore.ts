@@ -18,7 +18,11 @@ import { term } from '../util/Terminal';
 import { wfs, mpath } from '../util/FileSystem';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
-import { bpaths, ipaths, spaths } from '../util/Paths';
+import { bpaths, ipaths, spaths, TDB_URL } from '../util/Paths';
+import * as fs from 'fs';
+import request from 'request';
+import progress from 'request-progress';
+import { SevenZip } from '../util/7zip';
 
 export namespace TrinityCore {
     export async function install(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
@@ -102,15 +106,38 @@ export namespace TrinityCore {
         // Move ts-module header files
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
 
-        // Install TDB
-        while(!wfs.exists(bpaths.tdb)) {
-            await wsys.userInput(`TDB not found. `
-            + `\n\t1. Download a TDB from here: `
-            + `https://github.com/TrinityCore/TrinityCore/releases\n\t`
-            + `2. Place the .7z file at "${bpaths.tdb}"\n\t`
-            + `3. Press enter in this prompt`);
+        if(wfs.exists(ipaths.tdb)) {
+            return;
         }
 
-        wfs.copy(bpaths.tdb,ipaths.tdb);
+        if(!wfs.exists(bpaths.tdbSql)) {
+            if(!wfs.exists(bpaths.tdb7z)) {
+                const file = fs.createWriteStream(bpaths.tdb7z);
+                term.log(`Downloading tdb from ${TDB_URL}...`);
+                await new Promise<void>((res,rej)=>{
+                progress(request(TDB_URL))
+                    .on('progress',function(data: any){
+                        term.log(`Download progress: ${data.percent}`);
+                    })
+
+                    .on('error', function(err: any){
+                        rej(err);
+                    })
+
+                    .on('end', function() {
+                        res();
+                    })
+                    .pipe(fs.createWriteStream(bpaths.tdb7z));
+                });
+            }
+            term.log("Extracting tdb");
+            SevenZip.extract(bpaths.tdb7z,bpaths.base);
+            if(!wfs.exists(bpaths.tdbSql)) {
+                throw new Error(`Failed to extract tdb from 7z`);
+            }
+        }
+
+        term.log("Copying tdb");
+        wfs.copy(bpaths.tdbSql,ipaths.tdb);
     }
 }

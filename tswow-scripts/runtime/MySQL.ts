@@ -252,21 +252,11 @@ export namespace mysql {
                 + ` please remove them manually`);
         }
 
-        SevenZip.extract(ipaths.tdb);
-        const search2 = search();
-        if(search2.length>1) {
-            throw new Error(
-                  `TDB archive seems to contain multiple SQL files,`
-                + ` it's probably corrupt.`);
+        if(search1.length==0) {
+            throw new Error(`No tdb.sql in the bin directory, please reinstall TSWoW`);
         }
 
-        if(search2.length==0) {
-            throw new Error(
-                  `Found no SQL files after extracting TDB archive,`
-                + ` either the extraction failed or the archive was empty.`);
-        }
-
-        return search2[0];
+        return search1[0];
     }
 
     /**

@@ -17,6 +17,14 @@
 import { mpath, wfs } from './FileSystem';
 import { isWindows } from './Platform';
 
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21021/TDB_full_world_335.21021_2021_02_15.7z";
+
+export function tdbFilename() {
+    let split = TDB_URL.split('/')
+    let joined = split[split.length-1];
+    return joined.substring(0,joined.length-3);
+}
+
 let installBase = './';
 let buildBase = '';
 
@@ -293,7 +301,7 @@ export class InstallPaths {
             ? mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe')
             : mpath(this.bin, 'mpqbuilder', 'mpqbuilder');
     }
-    get tdb() { return mpath(this.bin, 'tdb.7z'); }
+    get tdb() { return mpath(this.bin, tdbFilename()+'.sql'); }
     get cmakeExe() {
         return isWindows()
             ? mpath(this.bin, 'cmake', 'bin', 'cmake.exe')
@@ -745,7 +753,8 @@ export class BuildPaths {
     get blpConverterBuilt() { return mpath(this.base, 'BLPConverter','Release','BLPConverter.exe'); }
     get blpConverterDownload() { return mpath(this.base, 'BLPConverter.exe'); }
 
-    get tdb() { return mpath(this.base, 'tdb.7z'); }
+    get tdb7z() { return mpath(this.base, tdbFilename()+'.7z'); }
+    get tdbSql() { return mpath(this.base, tdbFilename()+'.sql'); }
 
     get sevenZip() {return mpath(this.base, '7zip')}
 
