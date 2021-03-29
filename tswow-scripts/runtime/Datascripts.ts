@@ -29,6 +29,7 @@ export namespace Datascripts {
         wfs.mkDirs(ipaths.datasetDBC(dataset.id), true);
 
         dataset.installServerData();
+        await dataset.installDatabase(false);
 
         const settings : any = {
             auth : NodeConfig.database_settings('auth'),
