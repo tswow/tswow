@@ -13173,60 +13173,192 @@ declare namespace WoWAPI {
         SetOrientation(orientation: Align): void;
     }
 
-    /**
-     * a textbox like object
-     */
     interface EditBox extends Frame, FontInstance {
-
         /**
          * Clears the input text focus out of the EditBox. After this call EditBox will no longer receive input from keyboard.
          */
         ClearFocus(): void;
-
+    
         /**
          * Returns the position of the editbox cursor.
          */
         GetCursorPosition(): number;
-
+    
         /**
          * This function reads text entered into the editBox, tries to convert it into a number, and returns corresponding numerical value,
          * or 0 if text didn't look like a number.
          */
         GetNumber(): number;
-
+    
         /**
          * Returns the String that is currently entered in the EditBox.
          */
         GetText(): string;
-
+    
         /**
          * Inserts text at the current cursor position.
          *
          * @param text text to insert at the current cursor position.
          */
         Insert(text: string): void;
-
+    
         /**
          * Sets the position of the cursor in the edit box.
          *
          * @param position New editing cursor position; the cursor is set after position'th character of the string
          */
         SetCursorPosition(position: number): void;
-
+    
         /**
          * Sets editBox's text to the specified string
          *
          * @param text the string you want to appear in the EditBox
          */
         SetText(text: string): void;
-
+    
         /**
          * Sets whether the cursor should automatically focus on the EditBox when it is shown
          *
          * @param state Whether autofocus should be enabled
          */
+
+        AddHistoryLine(text: string): void;
+
+        /**
+         * Returns value of ignoreArrows attribute, 1/nil format
+         */
+        GetAltArrowKeyMode(): number;
+
+        /**
+         * Returns value of blinkSpeed attribute
+         */
+        GetBlinkSpeed(): number;
+    
+        /**
+         * Get the number of history lines for this edit box
+         */
+        GetHistoryLines(): number;
+    
+        /**
+         * Get the input language (the locale, not the in-game language)
+         */
+        GetInputLanguage(): string;
+    
+        /**
+         * Returns the value of bytes attribute
+         */
+        GetMaxBytes(): number;
+    
+        /**
+         * GetsReturns the value of letters attribute
+         */
+        GetMaxLetters(): number;
+    
+        /**
+         * Gets the number of letters in the box
+         */
+        GetNumLetters(): number;
+    
+        /**
+         * Returns list of left, right, top, bottom text insets
+         * @returns ?
+         */
+        GetTextInsets(): any[];
+    
+        /**
+         * Returns true if the edit box has the focus
+         */
+        HasFocus(): boolean;
+    
+        /**
+         * Set the highlight to all or some of the edit box text
+         * @param startPos 
+         * @param endPos 
+         */
+        HighlightText(startPos: number, endPos: number): void;
+    
+        /**
+         * Returns value of autoFocus attribute, in 1/nil format
+         */
+        IsAutoFocus(): number;
+    
+        /**
+         * Returns value of multiline attribute, in 1/nil format
+         */
+        IsMultiLine(): number;
+    
+        /**
+         * Returns value of numeric attribute, in 1/nil format.
+         */
+        IsNumeric(): number;
+    
+        /**
+         * Returns value of password attribute, in 1/nil format.
+         */
+        IsPassword(): number;
+    
         SetAutoFocus(state: boolean): void;
+    
+        SetAltArrowKeyMode(): void;
+    
+        SetBlinkSpeed(speed: number): void;
+    
+        SetFocus(): void;
+    
+        /**
+         * Sets the number of history lines to remember
+         * @param lines 
+         */
+        SetHistoryLines(lines: number): void;
+    
+        /**
+         * Sets the maximum byte size for entered text
+         * @param bytes 
+         */
+        SetMaxBytes(bytes: number): void;
+    
+        /**
+         * Sets the maximum number of letters for entered text
+         * @param letters 
+         */
+        SetMaxLetters(letters: number): void;
+    
+        SetNumber(num: number): void;
+    
+        SetNumeric(): void;
+    
+        SetPassword(): void;
+    
+        /**
+         * Sets the spacing between multiple lines
+         * @param spacing 
+         */
+        SetSpacing(spacing: number): void;
+    
+        ToggleInputLanguage(): void;
+    
+        SetMultiLine(state: boolean): void;
+    
+        SetFontObject(fontObject: string): void;
+    
+        SetTextInsets(l: any, r: any, t: any, b: any): void;
+
+        SetScript(event: "OnCursorChanged", handler: (frame: EditBox, x: number, y: number, w: number, h: number) => void): void;
+        SetScript(event: "OnArrowPressed", handler: (frame: EditBox, key: string) => void): void;
+        SetScript(event: "OnEditFocusGain", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnEditFocusLost", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnEnterPressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnEscapePressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnHyperlinkClick", handler: (frame: EditBox, link: string, text: string, button: any) => void): void;
+        SetScript(event: "OnHyperlinkEnter", handler: (frame: EditBox, link: string, text: string) => void): void;
+        SetScript(event: "OnHyperlinkLeave", handler: (frame: EditBox, link: string, text: string) => void): void;
+        SetScript(event: "OnInputLanguageChanged", handler: (frame: EditBox, language: string) => void): void;
+        SetScript(event: "OnSpacePressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnTabPressed", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnTextChanged", handler: (frame: EditBox) => void): void;
+        SetScript(event: "OnTextSet", handler: (frame: EditBox) => void): void;
     }
+    
 
     /**
      * a wow button
