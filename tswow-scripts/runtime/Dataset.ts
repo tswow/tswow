@@ -80,7 +80,7 @@ export namespace Datasets {
         }
 
         get mpq_suffix() { 
-            let val = this.get<string>('mpq_suffix','')
+            let val = this.get<string>('mpq_suffix','a')
             if(val.length!==1 || val.charCodeAt(0)<97 || val.charCodeAt(0)>122)  {
                 let type = val.length===0 ? 'an empty' : 'an invalid';
                 throw new Error(
