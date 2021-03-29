@@ -41,7 +41,7 @@
   },
   "scripts": {
     "build": "node -r source-map-support/register build.js",
-    "start": "node -r source-map-support/register bin/scripts/tswow/runtime/Main.js",
+    "build-interactive": "node -r source-map-support/register build.js --interactive",
     "test": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test",
     "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep "
   },

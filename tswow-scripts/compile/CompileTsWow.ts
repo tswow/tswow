@@ -126,4 +126,11 @@ async function main() {
     commands.enterLoop();
 }
 
-main();
+if(process.argv.includes("--interactive")) {
+    main();
+} else {
+    (async function(){
+        await compile('full',[]);
+        process.exit(0);
+    }());
+}
