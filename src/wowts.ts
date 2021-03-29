@@ -20,8 +20,7 @@ const CONFIG = {
     'skipLibCheck': true,
     'forceConsistentCasingInFileNames': true
 },
-'include': ['./'],
-'exclude': ['./data', './data_lib','./addons']
+'include': ['./shared','./scripts']
 };
 
 const startTime = Date.now();
