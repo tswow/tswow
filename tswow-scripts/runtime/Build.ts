@@ -92,7 +92,7 @@ export namespace Build {
 
     export function initialize() {
         Build.command.addCommand(
-              'data'
+              'datascripts'
             , 'clientonly? rebuild? package?'
             , 'Builds data patches and then restarts the affected processes'
             , async(args) => {
@@ -116,7 +116,7 @@ export namespace Build {
         });
 
         Build.command.addCommand(
-              'addon'
+              'addons'
             , 'dataset | modules'
             , 'Builds addons for one, multiple or all moduels against multiple or a single dataset'
             , ((args)=>{
@@ -134,7 +134,7 @@ export namespace Build {
         }));
 
         Build.command.addCommand(
-              'scripts'
+              'livescripts'
             , 'module? debug?'
             , 'Build and loads the server scripts of a module'
             , async (args) => {
