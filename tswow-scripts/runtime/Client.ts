@@ -60,7 +60,7 @@ export namespace Client {
 
         get localePath() {
             const dirs = wfs.readDir(this.dataPath, false, 'directories')
-                .filter(x => util.getLocales().includes(x))
+                .filter(x => util.getLocales().includes(wfs.basename(x)))
 
             if (dirs.length === 0) {
                 throw new Error('Error reading client locale path: No locale directory');
