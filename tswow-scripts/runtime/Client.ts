@@ -21,6 +21,7 @@ import { ipaths } from '../util/Paths';
 import { Datasets } from './Dataset';
 import { commands } from './Commands';
 import { term } from '../util/Terminal';
+import { util } from '../util/Util';
 
 /**
  * Contains functions for managing World of Warcraft clients
@@ -41,24 +42,61 @@ export namespace Client {
             return this.wowprocess.isRunning();
         }
 
+        get path() {
+            return this.set.config.client_path;
+        }
+
+        get addonPath() {
+            return mpath(this.path,'addons');
+        }
+
+        get dataPath() {
+            return mpath(this.path,'Data');
+        }
+
+        get realmlist() {
+            return mpath(this.localePath,'realmlist.wtf');
+        }
+
+        get localePath() {
+            const dirs = wfs.readDir(this.dataPath, false, 'directories')
+                .filter(x => util.getLocales().includes(x))
+
+            if (dirs.length === 0) {
+                throw new Error('Error reading client locale path: No locale directory');
+            }
+            if (dirs.length > 1) {
+                throw new Error('Error reading client locale path: Multiple locale directories in Data folder');
+            }
+            return dirs[0];
+        }
+
+        get exePath() {
+            if(wfs.exists(mpath(this.path,'Wow.exe'))) {
+                return mpath(this.path,'Wow.exe');
+            } else {
+                return mpath(this.path,'wow.exe');
+            }
+        }
+
+        get cachePath() {
+            return mpath(this.path,'Cache');
+        }
+
         verify() {
-            if(!wfs.exists(ipaths.client(this.set.id))) {
+            if(!wfs.exists(this.path)) {
                 throw new Error(`Missing client directory.`);
             }
 
-            if(!wfs.exists(ipaths.clientExe(this.set.id))) {
-                throw new Error(`Missing wow.exe`);
-            }
-
-            if(!wfs.exists(ipaths.clientData(this.set.id))) {
+            if(!wfs.exists(mpath(this.path,'Data'))) {
                 throw new Error(`Missing data directory`);
             }
         }
 
         installAddons() {
             for(const addon of wfs.readDir(ipaths.addons, true)) {
-                if(!wfs.exists(ipaths.clientAddon(this.set.id,addon))) {
-                    wfs.copy(mpath(ipaths.addons,addon),ipaths.clientAddon(this.set.id,addon));
+                if(!wfs.exists(this.addonPath)) {
+                    wfs.copy(mpath(ipaths.addons,addon),this.addonPath);
                 }
             }
         }
@@ -70,7 +108,7 @@ export namespace Client {
          * @param clientPath 
          */
         patchBinary() {
-            const wowbin = wfs.readBin(ipaths.clientExe(this.set.id));
+            const wowbin = wfs.readBin(this.exePath);
 
             const byteOffsets = [
                 // Custom interface patch
@@ -111,13 +149,13 @@ export namespace Client {
                 return;
             }
             
-            wfs.makeBackup(ipaths.clientExe(this.set.id), `${ipaths.clientExe}.backup`);
+            wfs.makeBackup(this.exePath);
 
             for(const {offset,value} of byteOffsets) {
                 wowbin.writeUInt8(value, offset);
             }
 
-            wfs.writeBin(ipaths.clientExe(this.set.id), wowbin);
+            wfs.writeBin(this.exePath, wowbin);
         }
 
         async start() {
@@ -128,21 +166,21 @@ export namespace Client {
             this.installAddons();
 
             this.clearCache();
-            const realmlist = wfs.read(ipaths.clientRealmlist(this.set.id));
+            const realmlist = wfs.read(this.realmlist);
             if(realmlist !== 'set realmlist localhost') {
-                wfs.makeBackup(ipaths.clientRealmlist(this.set.id));
+                wfs.makeBackup(this.realmlist);
             }
-            wfs.write(ipaths.clientRealmlist(this.set.id), 'set realmlist localhost');
+            wfs.write(this.realmlist, 'set realmlist localhost');
 
             if(isWindows()) {
-                this.wowprocess.start(ipaths.clientExe(this.set.id));
+                this.wowprocess.start(this.exePath);
             } else {
-                this.wowprocess.start('wine',[ipaths.clientExe(this.set.id)]);
+                this.wowprocess.start('wine',[this.exePath]);
             }
         }
 
         clearCache() {
-            wfs.remove(ipaths.clientCache(this.set.id));
+            wfs.remove(this.cachePath);
         }
 
         kill() {

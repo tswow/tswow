@@ -98,4 +98,20 @@ export namespace util {
         recurse(data, '');
         return result;
     }
+
+    export function getLocales() {
+        return [
+              'frFR'
+            , 'deDE'
+            , 'enGB'
+            , 'enUS'
+            , 'itIT'
+            , 'koKR'
+            , 'zhCN'
+            , 'zhTW'
+            , 'ruRU'
+            , 'esES'
+            , 'esMX'
+            , 'ptBR']
+    }
 }

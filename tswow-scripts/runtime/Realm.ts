@@ -260,11 +260,24 @@ export namespace Realm {
      * @param candidates 
      */
     export function getRealmsOrDefault(candidates: string[]) {
+        if(candidates.includes('all')) {
+            return getRealms();
+        }
         let realms = Identifiers.getTypes('realm',candidates);
         if(wfs.readDir(ipaths.realms,true,'directories').length === 0) {
             createRealm(NodeConfig.default_realm);
         }
-        return realms.length > 0 ? realms : [NodeConfig.default_realm];
+        return (realms.length > 0 ? realms : [NodeConfig.default_realm])
+            .map(x=>getRealm(x));
+    }
+
+    export function getRealmsOrAll(candidates: string[]) {
+        let realms = Identifiers.getTypes('realm',candidates);
+        if(realms.length === 0) {
+            return getRealms();
+        } else {
+            return realms.map(x=>getRealm(x));
+        }
     }
 
     export async function initialize() {
@@ -272,14 +285,13 @@ export namespace Realm {
 
         realm.addCommand(
               'send'
-            , 'command'
+            , 'realm? command'
             , 'Sends a command to the realms worldserver'
             , async(args)=>{
 
-            if(args.length === 0) {
-                throw new Error(`Must provide a realm name`);
-            }
-            let cmd = args.slice(1).join(' ');
+            let realms = getRealmsOrDefault(args);
+            args = args.filter(x=>realms.find(y=>y.identifier==x));
+            let cmd = args.join(' ')
             getRealm(args[0]).sendWorldserverCommand(cmd,true);
         });
 
@@ -292,7 +304,7 @@ export namespace Realm {
                 = args.includes('debug') ? 'Debug' : 'Release';
             let realms = getRealmsOrDefault(args);
             await Promise.all(
-                realms.map(x=>getRealm(x).startWorldserver(type)));
+                realms.map(x=>x.startWorldserver(type)));
         });
 
         realm.addCommand(
@@ -307,16 +319,16 @@ export namespace Realm {
         });
 
         realm.addCommand(
-              'check'
+              'status'
             , 'realmnames...'
             , 'Checks if the provided realms are online'
             , async(args)=>{
 
             getRealmsOrDefault(args).forEach(x=>{
-                if(getRealm(x).worldserver.isRunning()) {
-                    term.success(`Realm ${x} is running`);
+                if(x.worldserver.isRunning()) {
+                    term.success(`Realm ${x.identifier} is running`);
                 } else {
-                    term.error(`Realm ${x} is not running`);
+                    term.error(`Realm ${x.identifier} is not running`);
                 }
             });
         });

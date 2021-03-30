@@ -10,6 +10,7 @@ import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 import { Identifiers } from "./Identifiers";
 import { term } from "../util/Terminal";
+import { Build } from "./Build";
 
 function defaultYaml(id: string) {
     return `# ${id} dataset configuration
@@ -92,7 +93,7 @@ export namespace Datasets {
             return val;
         }
         get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
-        get mpq_path() { return mpath(ipaths.clientData(this.set.id),`patch-${this.mpq_suffix}.MPQ`)}
+        get mpq_path() { return mpath(this.set.client.dataPath,`patch-${this.mpq_suffix}.MPQ`)}
     }
 
     /**
@@ -149,7 +150,7 @@ export namespace Datasets {
         installServerData() {
             let anyChange: boolean = false;
             if(!wfs.exists(ipaths.datasetLuaxmlSource(this.id))) {
-                MapData.buildLuaXML(this.id);
+                MapData.buildLuaXML(this);
                 anyChange = true;
             }
 
@@ -164,7 +165,7 @@ export namespace Datasets {
                 || ! wfs.exists(ipaths.datasetDBCSource(this.id))
               ) {
 
-                MapData.buildMaps(this.id);
+                MapData.buildMaps(this);
                 anyChange = true;
             }
 
@@ -176,14 +177,14 @@ export namespace Datasets {
             }
 
             if(!wfs.exists(ipaths.datasetVmaps(this.id))) {
-                MapData.buildVmaps(this.id);
+                MapData.buildVmaps(this);
                 anyChange = true;
             }
 
             if(this.config.use_mmaps 
                 && !wfs.exists(ipaths.datasetMmaps(this.id))) {
 
-                MapData.buildMMaps(this.id);
+                MapData.buildMMaps(this);
                 anyChange = true;
             }
 
@@ -313,18 +314,18 @@ export namespace Datasets {
             }));
         });
 
-        command.addCommand(
+        Build.command.addCommand(
               'luaxml'
             , '...dataset'
             , 'Rebuilds luaxml data'
             , async(args: any[])=>{
 
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
-                return MapData.buildLuaXML(x.id);
+                return MapData.buildLuaXML(x);
             }));
         });
 
-        command.addCommand(
+        Build.command.addCommand(
               'database'
             , '...dataset'
             , 'Rebuilds databases'

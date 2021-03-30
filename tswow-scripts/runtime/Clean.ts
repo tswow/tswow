@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from "../util/FileSystem";
+import { wfs, mpath } from "../util/FileSystem";
 import { mysql } from "./MySQL";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
@@ -155,11 +155,12 @@ export namespace Clean {
     }
 
     export function cleanClientData(dataset: string) {
-        wfs.remove(ipaths.clientDbc(dataset));
-        wfs.remove(ipaths.clientMaps(dataset));
-        wfs.remove(ipaths.clientVmaps(dataset));
-        wfs.remove(ipaths.clientBuildings(dataset));
-        wfs.remove(ipaths.clientMmaps(dataset));
+        const ds = Datasets.get(dataset);
+        wfs.remove(mpath(ds.client.path,'dbc'));
+        wfs.remove(mpath(ds.client.path,'maps'));
+        wfs.remove(mpath(ds.client.path,'vmaps'));
+        wfs.remove(mpath(ds.client.path,'buildings'));
+        wfs.remove(mpath(ds.client.path,'mmaps'));
         
         wfs.remove(ipaths.datasetDBCSource(dataset));
         wfs.remove(ipaths.datasetDBC(dataset));

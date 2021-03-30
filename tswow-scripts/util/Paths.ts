@@ -142,10 +142,6 @@ export class InstallPaths {
         return mpath(this.datasets, 'default-set');
     }
 
-    datasetMpq(dataset: string) {
-        return Datasets.get(dataset).config.mpq_path;
-    }
-
     datasetMaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'maps');
     }
@@ -164,15 +160,6 @@ export class InstallPaths {
 
     datasetLuaxml(dataset: string) {
         return mpath(this.datasetDir(dataset),'luaxml');
-    }
-
-    clientLuaxmlToc(dataset: string) {
-        return mpath(
-            Datasets.get(dataset).config.mpq_path
-            ,'Interface'
-            ,'FrameXML'
-            ,'FrameXML.toc'
-        )
     }
 
     datasetLuaxmlToc(dataset: string) {
@@ -412,17 +399,6 @@ export class InstallPaths {
     }
 
     /** Client paths */
-    client(dataset: string) { return Datasets.get(dataset).config.client_path; }
-    clientExe(dataset: string) { return mpath(this.client(dataset),'wow.exe'); }
-    clientData(dataset: string) { return mpath(this.client(dataset), 'Data'); }
-
-    clientAddons(dataset: string) { 
-        return mpath(
-            this.client(dataset)
-            , 'AddOns');}
-
-    clientCache(dataset: string) { return mpath(this.client(dataset), 'Cache'); }
-    clientAddon(dataset: string, name: string) { return mpath(this.clientAddons(dataset), name)}
 
     luaxmlFrameXML(dataset: string) {
         return mpath(
@@ -442,37 +418,6 @@ export class InstallPaths {
 
     luaxmlAddon(dataset: string, addon:string) {
         return mpath(this.luaxmlAddons(dataset),addon);
-    }
-
-    clientLocale(dataset: string) {
-        const dirs = wfs.readDir(this.clientData(dataset) , false, 'directories')
-            .filter(x => !x.toLowerCase().endsWith('mpq'));
-        if (dirs.length === 0) {
-            throw new Error('Error reading client locale path: No locale directory');
-        }
-        if (dirs.length > 1) {
-            throw new Error('Error reading client locale path: Multiple non-mpq directories in Data folder');
-        }
-        return dirs[0];
-    }
-
-    clientRealmlist(dataset: string) {
-        return mpath(this.clientLocale(dataset), 'realmlist.wtf');
-    }
-
-    clientMaps(dataset: string) { return mpath(this.client(dataset), 'maps'); }
-    clientVmaps(dataset: string) { return mpath(this.client(dataset), 'vmaps'); }
-    clientDbc(dataset: string) { return mpath(this.client(dataset), 'dbc'); }
-    clientBuildings(dataset: string) { return mpath(this.client(dataset), 'buildings'); }
-    clientMmaps(dataset: string) { return mpath(this.client(dataset), 'mmaps'); }
-
-    clientModuleSymlink(dataset: string, mod: string) {
-        const letter = wfs.read(ipaths.moduleSymlink(mod));
-        return mpath(this.clientData(dataset),`patch-${letter}.MPQ`);
-    }
-
-    clientTSWoWPatch(dataset: string) {
-        return mpath(this.clientData(dataset), `patch-${Datasets.get(dataset).config.mpq_suffix}.MPQ`);
     }
 
     /** Module paths */

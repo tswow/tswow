@@ -149,6 +149,10 @@ export namespace commands {
 
     let trace = false;
 
+    export function getRootCommand() {
+        return rootCommand;
+    }
+
     export async function sendCommand(input: string) {
         const cmd = rootCommand.findCommand(input.split(' ').filter(x => x.length > 0));
         if (cmd === undefined) {

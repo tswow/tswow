@@ -20,6 +20,7 @@ import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
+import { Datasets } from './Dataset';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -27,7 +28,7 @@ import { ipaths } from '../util/Paths';
  * runs `mapextractor`, `vmap4extractor`, `vmap4assembler` etc. and installs the results to TrinityCore.
  */
 export namespace MapData {
-    function prepareBuild(dataset: string) {
+    function prepareBuild(dataset: Datasets.Dataset) {
         const copiedFiles = isWindows()
             ? [
                   'mapextractor.exe'
@@ -62,60 +63,69 @@ export namespace MapData {
 
         // Copy over all necessary library files
         for (const file of copiedFiles) {
-            wfs.copy(mpath(inDir, file), mpath(ipaths.client(dataset), file));
+            wfs.copy(mpath(inDir, file), mpath(dataset.client.path, file));
         }
 
         for (const file of copiedLibraries) {
-            wfs.copy(mpath(inDir,file), mpath(ipaths.client(dataset), file));
+            wfs.copy(mpath(inDir,file), mpath(dataset.client.path, file));
         }
     }
 
-    export function buildMaps(dataset: string) {
+    export function buildMaps(dataset: Datasets.Dataset) {
         prepareBuild(dataset);
-        wfs.remove(ipaths.clientMaps(dataset));
+        wfs.remove(mpath(dataset.client.path,'maps'))
         wsys.execIn(
-              ipaths.client(dataset)
+              dataset.client.path
             , `${isWindows() ? '' : './'}mapextractor`);
-        wfs.copy(ipaths.clientMaps(dataset),ipaths.datasetMaps(dataset), true);
-        wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBC(dataset), true);
-        wfs.copy(ipaths.clientDbc(dataset), ipaths.datasetDBCSource(dataset), true);
+        wfs.copy(
+            mpath(dataset.client.path,'maps')
+          , ipaths.datasetMaps(dataset.id), true);
+        wfs.copy(
+            mpath(dataset.client.path,'dbc')
+          , ipaths.datasetDBC(dataset.id), true);
+
+        wfs.copy(
+            mpath(dataset.client.path,'dbc')
+          , ipaths.datasetDBCSource(dataset.id), true);
     }
 
-    export function buildVmaps(dataset: string) {
-        wfs.remove(ipaths.clientVmaps(dataset));
-        wfs.remove(ipaths.clientBuildings(dataset));
+    export function buildVmaps(dataset: Datasets.Dataset) {
+        wfs.remove(mpath(dataset.client.path,'vmaps'));
+        wfs.remove(mpath(dataset.client.path,'Buildings'));
         wsys.execIn(
-              ipaths.client(dataset)
+              dataset.client.path
             , `${isWindows() ? '' : './'}vmap4extractor`);
-        wfs.mkDirs(ipaths.clientVmaps(dataset));
+        wfs.mkDirs(mpath(dataset.client.path,'vmaps'));
         wsys.execIn(
-              ipaths.client(dataset)
+              dataset.client.path
             , `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
-        wfs.copy(ipaths.clientVmaps(dataset), ipaths.datasetVmaps(dataset), true);
+        wfs.copy(mpath(dataset.client.path,'vmaps'), ipaths.datasetVmaps(dataset.id), true);
     }
 
-    export function buildMMaps(dataset: string) {
+    export function buildMMaps(dataset: Datasets.Dataset) {
         term.log('Building MMAPS (this will take a very long time)');
         const timer = Timer.start();
-        if(!wfs.exists(ipaths.clientMaps(dataset))) {
+        if(!wfs.exists(mpath(dataset.client.path,'maps'))) {
             buildMaps(dataset);
         }
 
-        if(!wfs.exists(ipaths.clientVmaps(dataset))) {
-            buildVmaps(ipaths.clientVmaps(dataset));
+        if(!wfs.exists(mpath(dataset.client.path,'vmaps'))) {
+            buildVmaps(dataset);
         }
 
         wsys.execIn(
-              ipaths.client(dataset)
+              dataset.client.path
             , `${isWindows() ? '' : './'}mmaps_generator`);
-        wfs.copy(ipaths.clientMmaps(dataset), ipaths.datasetMmaps(dataset));
+        wfs.copy(
+            mpath(dataset.client.path,'mmaps')
+          , ipaths.datasetMmaps(dataset.id));
         term.success(`Rebuilt mmaps in ${timer.timeSec()}s`);
     }
 
-    export function buildLuaXML(dataset: string) {
+    export function buildLuaXML(dataset: Datasets.Dataset) {
         wsys.exec(
               `"${ipaths.luaxmlExe}"`
-            + ` ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset))}`
-            + ` ${ipaths.clientData(dataset)}`, 'inherit');
+            + ` ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset.id))}`
+            + ` ${dataset.client.dataPath}`, 'inherit');
     }
 }
