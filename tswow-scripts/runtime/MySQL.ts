@@ -372,7 +372,7 @@ export namespace mysql {
             const mysqlC = commands.addCommand('mysql');
 
             mysqlC.addCommand(
-                  'end'
+                  'stop'
                 , ''
                 , 'Stops the MySQL process and disconnects all connections'
                 , async() => {

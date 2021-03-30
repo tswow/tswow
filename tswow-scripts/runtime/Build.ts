@@ -93,15 +93,12 @@ export namespace Build {
     export function initialize() {
         Build.command.addCommand(
               'datascripts'
-            , 'clientonly? rebuild? package?'
+            , '--client-only'
             , 'Builds data patches and then restarts the affected processes'
             , async(args) => {
 
-            if (args.includes('clientonly') && args.includes('rebuild')) {
-                throw new Error(`Can't both rebuild and restart only the client, rebuilding requires restarting the server.`);
-            }
             await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>
-                MPQ.buildDevMPQ(x,args.includes('--use-timer'))
+                MPQ.buildDevMPQ(x,args.includes('--use-timer'),args.includes('--client-only'))
             ));
         });
 
@@ -135,12 +132,11 @@ export namespace Build {
 
         Build.command.addCommand(
               'livescripts'
-            , 'module? debug?'
+            , 'module? --debug'
             , 'Build and loads the server scripts of a module'
             , async (args) => {
-            let isDebug = args.indexOf('debug')!==-1;
             let modules = Modules.getModulesOrAll(args);
-            await Promise.all(modules.map(x=>Livescripts.build(x.id, isDebug ? 'Debug' : 'Release')))
+            await Promise.all(modules.map(x=>Livescripts.build(x.id, args.includes('debug') ? 'Debug' : 'Release')))
             Datasets.getAll().forEach(x=>{
                 Livescripts.writeModuleText(x);
             });
@@ -161,7 +157,7 @@ export namespace Build {
 
         pkg.addCommand(
               'server'
-            , '...datasets (--build-data, --build-scripts, --include-maps, --use-timer --outname=..)'
+            , '...datasets --build-data, --build-scripts, --include-maps, --use-timer --outname='
             , 'Creates publish packages for servers'
             , async(args)=>{
                 let outname = args.find(x=>x.startsWith('--outname='))

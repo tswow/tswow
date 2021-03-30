@@ -193,14 +193,14 @@ export namespace Client {
     export function initialize() {
         command.addCommand(
               'start'
-            , 'dataset = default'
+            , 'dataset'
             , 'Starts the World of Warcraft client for a particular dataset'
             , async(args) => {
                 await Datasets.get(args[0]||'default').client.start();
             });
         command.addCommand(
               'kill'
-            , 'dataset = default'
+            , 'dataset'
             , 'Stops the World of Warcraft client for a particular dataset'
             ,  async(args) => {
                 await Datasets.get(args[0]||'default').client.kill();

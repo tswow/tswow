@@ -102,10 +102,12 @@ export namespace MPQ {
 
     export async function buildDevMPQ(
           dataset: Datasets.Dataset
-        , useTimer: boolean) {
+        , useTimer: boolean
+        , clientOnly: boolean) {
 
         let clientWasStarted = dataset.client.isRunning();
-        let realms = await dataset.shutdownRealms();
+
+        let realms = clientOnly ? [] : await dataset.shutdownRealms();
         if(clientWasStarted) {
             dataset.client.kill();
         }
