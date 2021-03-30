@@ -23,20 +23,6 @@ import { bpaths, spaths, ipaths } from '../util/Paths';
 export namespace MPQBuilder {
     export async function create(cmake: string) {
         if (isWindows()) {
-            wsys.exec(`${cmake}`
-                + ` DCMAKE_INSTALL_PREFIX="${bpaths.stormlibInstall}"`
-                +` -S "StormLib"`
-                +` -B "${bpaths.stormlibBuild}"`
-                , 'inherit');
-            wsys.exec(`${cmake} --build`
-                +` "${bpaths.stormlibBuild}"`
-                +` --config Release`
-                , 'inherit');
-            wfs.copy(spaths.stormLibMainHeader
-                ,bpaths.stormLibMainHeader)
-            wfs.copy(spaths.stormLibPortHeader
-                ,bpaths.stormLibPortHeader)
-
             wsys.exec(`${cmake} `
                 + ` -S "mpqbuilder" `
                 + ` -B "${bpaths.mpqBuilder}"`, 'inherit');
