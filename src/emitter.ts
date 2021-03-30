@@ -1,5 +1,6 @@
 import * as ts from 'typescript';
 import * as path from 'path';
+import * as fs from 'fs';
 import { IdentifierResolver } from './resolvers';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
@@ -2291,8 +2292,9 @@ export class Emitter {
         if (!this.isHeader() && node.name && node.name.getFullText().replace(' ','') === 'Main') {
             this.writer.writeStringNewLine(`char const* GetScriptModuleRevisionHash()`)
             this.writer.BeginBlock();
-            // TODO: Read from TC file or something
-            this.writer.writeStringNewLine(`return "e105d3bbef";`)
+            this.writer.writeStringNewLine(
+                  `return `
+                + `"${fs.readFileSync('../../bin/revision/trinitycore')}";`)
             this.writer.EndBlock();
         
             this.writer.writeStringNewLine(`void AddTSScripts(TSEventHandlers* handlers)`);
