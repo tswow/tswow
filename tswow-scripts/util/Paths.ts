@@ -378,7 +378,7 @@ export class InstallPaths {
     /** Config paths */
     get config() { return mpath(installBase, 'config'); }
     get nodeYaml() { return mpath(installBase, 'node.yaml'); }
-    get configIds() { return mpath(this.config, 'ids.txt'); }
+    get messageIds() { return mpath('ids.txt'); }
 
     /** Realm paths */
     get realms() {

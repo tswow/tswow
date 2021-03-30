@@ -91,12 +91,18 @@ export namespace Clean {
         await cleanTypescript();
     }
 
-    export async function cleanIds(dataset: string) {
-        if(wfs.exists(ipaths.configIds)) {
-            wfs.makeBackup(ipaths.configIds);
+    export async function cleanIds(dataset: string, useBackups: boolean) {
+        term.log(`Cleaning ids for dataset ${dataset} (useBackups=${useBackups})`);
+        if(useBackups && wfs.exists(ipaths.messageIds)) {
+            wfs.makeBackup(ipaths.messageIds);
         }
+        wfs.remove(ipaths.messageIds);
+
+        if(useBackups && wfs.exists(ipaths.datasetIds(dataset))) {
+            wfs.makeBackup(ipaths.datasetIds(dataset));
+        }
+
         wfs.remove(ipaths.datasetIds(dataset));
-        wfs.remove(ipaths.configIds);
     }
 
     export async function cleanAddonBuild(mod?: string) {
@@ -187,12 +193,11 @@ export namespace Clean {
 
         Clean.command.addCommand(
               'ids'
-            , 'dataset = "default"'
+            , 'dataset = "default" --no-backups'
             , 'Removes all id mappings for a dataset'
             , async(args)=>{
-
-            await Promise.all([Identifiers.assertType('dataset',args)
-                .map(x=>cleanIds(x))]);
+            await Promise.all([Identifiers.getTypes('dataset',args)
+                .map(x=>cleanIds(x,!args.includes('--no-backups')))]);
         });
 
         Clean.command.addCommand(
@@ -228,7 +233,7 @@ export namespace Clean {
             ,  async(args)=>{
             await cleanScriptBin();
             await cleanDataBuild();
-            await cleanIds(args[0]);
+            await cleanIds(args[0],!args.includes('--no-backups'));
             await cleanAddonBuild();
             await cleanMysql();
             await cleanClientData(args[0]);
