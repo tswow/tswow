@@ -218,6 +218,17 @@ export namespace commands {
     });
 
     addCommand(
+          'revision'
+        , ''
+        , 'Prints out revision data for tswow and TrinityCore'
+        , (args) => {
+
+        term.log('Revisions:')
+        term.log('TSWoW: '+wfs.read(ipaths.tswowRevision))
+        term.log('TrinityCore: '+wfs.read(ipaths.tcRevision))
+    });
+
+    addCommand(
           'trace'
         , 'true|false'
         , 'Enables or disables stack traces in command error'

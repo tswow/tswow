@@ -50,5 +50,13 @@ export namespace Config {
         wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+
+        let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
+
+        let h = wsys.exec('git status --porcelain')
+            .split(' ').join('')
+            .split('\n').join('')
+            .split('\r').join('');
+        wfs.write(ipaths.tswowRevision,commit+(h.length>0?'+':''));
     }
 }

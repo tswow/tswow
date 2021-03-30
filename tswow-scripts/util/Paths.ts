@@ -38,6 +38,18 @@ export class InstallPaths {
         installBase = ipath;
     }
 
+    get revisions() {
+        return mpath(this.bin,'revision');
+    }
+
+    get tcRevision() {
+        return mpath(this.revisions,'trinitycore');
+    }
+
+    get tswowRevision() {
+        return mpath(this.revisions,'tswow');
+    }
+
     freeBackupPath(base: string) {
         let backup_no = 0;
         const fmt = ()=>`${base}.backup_${backup_no}`;

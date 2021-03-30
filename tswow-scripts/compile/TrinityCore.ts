@@ -106,6 +106,9 @@ export namespace TrinityCore {
         // Move ts-module header files
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
 
+        const rev = wsys.execIn(spaths.trinityCore,'git rev-parse HEAD','pipe').split('\n').join('');
+        wfs.write(ipaths.tcRevision,rev);
+
         if(wfs.exists(ipaths.tdb)) {
             return;
         }
