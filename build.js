@@ -81,10 +81,12 @@ const compile_tsconfig =
       "strict": true,
       "esModuleInterop": true,
       "sourceMap": true,
+      "experimentalDecorators": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true
     },
-    "include":[${JSON.stringify(path.join(scripts_root_dir,'compile'))},${JSON.stringify(path.join(scripts_root_dir,'util'))}]
+    "include":[${JSON.stringify(path.join(scripts_root_dir,'compile'))},${JSON.stringify(path.join(scripts_root_dir,'util'))}],
+    "exclude":[${JSON.stringify(path.join(scripts_root_dir,'runtime'))},${JSON.stringify(path.join(scripts_root_dir,'wotlkdata'))}]
 }`
 
 // Create build config directories
