@@ -23,6 +23,6 @@ export namespace SevenZip {
     }
 
     export function makeArchive(zipPath: string, directoryIn: string[]) {
-        wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`);
+        wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`,'inherit');
     }
 }
