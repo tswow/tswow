@@ -8,7 +8,11 @@ import { ipaths } from "../util/Paths";
  * - datasets
  */
 export namespace Identifiers {
-    export type Identifier = 'dataset'|'module'|'realm'|'none'
+    export type Identifier = 'dataset'|'module'|'realm'|'keyword'|'none'
+
+    const keywords = [
+        'all'
+    ]
 
     export function assertUnused(identifier: string) {
         let prev = getType(identifier);
@@ -45,10 +49,15 @@ export namespace Identifiers {
             all.push(cur);
         }
 
+        if(keywords.includes(identifier)) {
+            cur = 'keyword';
+            all.push(cur);
+        }
+
         if(all.length>1) {
             throw new Error(
                 `Identifier ${identifier} can refer to a `
-                +`${all.join('or a')}. Please rename your folders manually.`);
+                +`${all.join(' or a ')}. Please rename your folders manually.`);
         }
 
         return cur;
