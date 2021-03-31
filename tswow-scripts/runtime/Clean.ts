@@ -21,7 +21,7 @@ import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
-import { Modules } from "./Modules";
+import { data_tsconfig, Modules } from "./Modules";
 import { Datasets } from "./Dataset";
 import { Identifiers } from "./Identifiers";
 import { isWindows } from "../util/Platform";
@@ -127,6 +127,7 @@ export namespace Clean {
             term.log(`TypeScript Cleaning Pass ${pass++} (Expect error messages about not finding modules)`);
             errors = 0;
             for(const mod of modules) {
+                wfs.write(ipaths.moduleDataTsConfig(mod.id),data_tsconfig);
                 if(clean.includes(mod.id))  {
                     continue;
                 }

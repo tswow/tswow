@@ -44,7 +44,7 @@ const lib_package_json =
 /**
  * The tsconfig.json that will be used to compile 'datalib' directories
  */
-const data_tsconfig =
+export const data_tsconfig =
 `{
     "compilerOptions": {
       "target": "es2018",
