@@ -4,6 +4,11 @@
 const child_process = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+if(!fs.existsSync('build.yaml')) {
+    fs.copyFileSync('build.default.yaml','build.yaml');
+}
+
 const yaml = fs.readFileSync('build.yaml').toString();
 
 if(path.resolve(process.cwd()).includes(' ')) {
