@@ -35,7 +35,10 @@ export namespace AuthServer {
         }
 
         wfs.copy(ipaths.tcAuthserverDist(type),ipaths.authConfig+'.dist');
-        wfs.copy(ipaths.tcAuthserverDist(type),ipaths.authConfig);
+
+        if(!wfs.exists(ipaths.authConfig)) {
+            wfs.copy(ipaths.tcAuthserverDist(type),ipaths.authConfig);
+        }
 
         writeYamlToConf(ipaths.nodeYaml,ipaths.authConfig,{
             // authserver executes in coredata, so we need the .. prefix

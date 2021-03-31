@@ -131,7 +131,10 @@ export namespace Realm {
                 const targetConf = targetDist.replace('.conf.dist','.conf');
 
                 wfs.copy(x,targetDist);
-                wfs.copy(x,targetConf);
+                if(!wfs.exists(targetConf)) {
+                    wfs.copy(x,targetConf);
+                }
+
 
                 writeYamlToConf(ipaths.realmYaml(this.identifier),targetConf,
                     {
