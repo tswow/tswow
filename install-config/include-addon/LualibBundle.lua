@@ -1,3 +1,4 @@
+--[[
 /*
  * MIT License
  *
@@ -21,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export const LualibBundle = `
+--]]
 function __TS__ArrayConcat(arr1, ...)
     local args = {...}
     local out = {}
@@ -1653,4 +1654,4 @@ function __TS__TypeOf(value)
     else
         return luaType
     end
-end`
+end

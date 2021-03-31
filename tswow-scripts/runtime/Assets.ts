@@ -20,6 +20,7 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { commands } from './Commands';
 import { Modules } from './Modules';
+import { ipaths } from '../util/Paths';
 
 /**
  * Contains functions for MPQ building
@@ -29,13 +30,10 @@ export namespace Assets {
 
     function iter(directory: string|undefined, callback: (file: string) => any) {
         if (directory) {
-            wfs.iterate(mpath('./modules', directory, 'assets'), callback);
+            wfs.iterate(ipaths.moduleAssets(directory), callback)
         } else {
             Modules.getModules().forEach((x) => {
-                const p = mpath('./modules', x, 'assets');
-                if (wfs.exists(p)) {
-                    wfs.iterate(p, callback);
-                }
+                wfs.iterate(ipaths.moduleAssets(x.id), callback);
             });
         }
     }
@@ -90,20 +88,19 @@ export namespace Assets {
     export function check() {
         const filemap: {[key: string]: string} = {};
         // Check and warn for duplicate entries
-        Modules.getModules().forEach(modname => {
-            Assets.prepare(modname);
-            const rpath = mpath('./modules', modname, 'assets');
-            wfs.iterate(rpath, (fname) => {
-                const mpqname = wfs.relative(rpath, fname);
+        Modules.getModules().forEach(mod => {
+            Assets.prepare(mod.id);
+            wfs.iterate(ipaths.moduleAssets(mod.id), (fname) => {
+                const mpqname = wfs.relative(ipaths.moduleAssets(mod.id), fname);
                 const old = filemap[mpqname];
                 if (mpqname.endsWith('xml') || mpqname.endsWith('lua')) {
-                    term.warn(`Mod ${modname} has XML/LUA files as an asset, consider using LUAXML instead (${mpqname})`);
+                    term.warn(`Mod ${mod} has XML/LUA files as an asset, consider using LUAXML instead (${mpqname})`);
                 }
 
                 if (old !== undefined) {
-                    term.warn(`Duplicate MPQ entry '${mpqname}', exists in both modules '${old}' and '${modname}'`);
+                    term.warn(`Duplicate MPQ entry '${mpqname}', exists in both modules '${old}' and '${mod}'`);
                 } else {
-                    filemap[mpqname] = modname;
+                    filemap[mpqname] = mod.id;
                 }
             });
         });
@@ -120,14 +117,22 @@ export namespace Assets {
     export const command = commands.addCommand('assets');
 
     export function initialize() {
-        command.addCommand('png', 'mod?', 'Create missing pngs from blp files', (args) => {
+        command.addCommand(
+              'png'
+            , 'mod?'
+            , 'Create missing pngs from blp files'
+            , (args) => {
+
             blpToPng(args[0]);
         });
 
-        command.addCommand('blp', 'mod?', 'Converts png files back to blp', (args) => {
+        command.addCommand(
+              'blp'
+            , 'mod?'
+            , 'Converts png files back to blp'
+            , (args) => {
+
             pngToBlp(true, args[0]);
         });
-
-        command.addCommand('check', '', '');
     }
 }

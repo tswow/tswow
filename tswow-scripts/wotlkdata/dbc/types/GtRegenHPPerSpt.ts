@@ -74,5 +74,5 @@ export class GtRegenHPPerSptDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtRegenHPPerSpt = new GtRegenHPPerSptDBCFile(
-    'GtRegenHPPerSpt',
+    'gtRegenHPPerSpt',
     (table,buffer,offset)=>new GtRegenHPPerSptRow(table,buffer,offset))

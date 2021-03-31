@@ -74,5 +74,5 @@ export class GtChanceToSpellCritDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtChanceToSpellCrit = new GtChanceToSpellCritDBCFile(
-    'GtChanceToSpellCrit',
+    'gtChanceToSpellCrit',
     (table,buffer,offset)=>new GtChanceToSpellCritRow(table,buffer,offset))

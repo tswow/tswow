@@ -74,5 +74,5 @@ export class GtNPCManaCostScalerDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtNPCManaCostScaler = new GtNPCManaCostScalerDBCFile(
-    'GtNPCManaCostScaler',
+    'gtNPCManaCostScaler',
     (table,buffer,offset)=>new GtNPCManaCostScalerRow(table,buffer,offset))

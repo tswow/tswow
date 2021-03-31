@@ -74,5 +74,5 @@ export class GtOCTRegenMPDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtOCTRegenMP = new GtOCTRegenMPDBCFile(
-    'GtOCTRegenMP',
+    'gtOCTRegenMP',
     (table,buffer,offset)=>new GtOCTRegenMPRow(table,buffer,offset))

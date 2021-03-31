@@ -100,5 +100,5 @@ export class LightfloatBandDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_LightfloatBand = new LightfloatBandDBCFile(
-    'LightfloatBand',
+    'LightFloatBand',
     (table,buffer,offset)=>new LightfloatBandRow(table,buffer,offset))

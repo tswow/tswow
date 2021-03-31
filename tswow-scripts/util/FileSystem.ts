@@ -17,6 +17,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+/**
+ * Async file system access using promises
+ */
 export namespace wfsa {
     export function exists(fpath: string) {
         return new Promise<boolean>((res, rej) => {
@@ -400,6 +403,28 @@ export namespace wfs {
      */
     export function read(filePath: string) {
         return fs.readFileSync(filePath).toString();
+    }
+
+    /**
+     * Reads a text file from the file system
+     * @param filepath 
+     * @throws if `path` doesn't point at a file
+     * @returns Text contents of the file at `path` split by lines
+     */
+    export function readLines(filepath: string) {
+        return read(filepath)
+            .split('\r')
+            .join('')
+            .split('\n');
+    }
+
+    /**
+     * Writes a text file to the file system
+     * @param filepath 
+     * @param lines 
+     */
+    export function writeLines(filepath: string, lines: string[]) {
+        write(filepath, lines.join('\n'));
     }
 
     /**

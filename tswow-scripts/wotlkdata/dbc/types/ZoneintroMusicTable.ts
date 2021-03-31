@@ -107,5 +107,5 @@ export class ZoneintroMusicTableDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_ZoneintroMusicTable = new ZoneintroMusicTableDBCFile(
-    'ZoneintroMusicTable',
+    'ZoneIntroMusicTable',
     (table,buffer,offset)=>new ZoneintroMusicTableRow(table,buffer,offset))

@@ -21,12 +21,11 @@
  * SOFTWARE.
  */
 
-export const EventsTS = 
-`import { BinReader } from "./BinReader";
+import { BinReader } from "./BinReader";
 
 class EventHolder {
-    events: {[key: string]: ((......args: any[])=>void)[]} = {}
-    messageEvents: {[key: number]: ((......args: any[])=>void)[]} = {}
+    events: {[key: string]: ((...args: any[])=>void)[]} = {}
+    messageEvents: {[key: number]: ((...args: any[])=>void)[]} = {}
 
     constructor() {
     }
@@ -40,7 +39,7 @@ export function addConstructor(con: any) {
     messageHolders[con.GetID()] = con;
 }
 
-export function addEvent(frame: any, name: string, callback: (......args: any[])=>void) {
+export function addEvent(frame: any, name: string, callback: (...args: any[])=>void) {
     if(eventHolders[frame.GetName()]===undefined) {
         let holder = eventHolders[frame.GetName()] = new EventHolder();
         frame.SetScript('OnEvent',(frameInner: any,eventName: any,...args: any[])=>{
@@ -5936,4 +5935,4 @@ export const Events = {
          */
         OnTrialCapReachedLevel(frame: WoWAPI.Frame, callback: (...args: any[])=>void) { addEvent(frame,'TRIAL_CAP_REACHED_LEVEL',callback)},
     },
-}`
+}

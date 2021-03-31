@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "node",
+    "typeRoots": [
+      "node_modules/@wartoshika/wow-declarations",
+      "node_modules/lua-types/5.1",
+      "node_modules/@types"
+    ],
+    "experimentalDecorators":true,
+    "skipLibCheck": true,
+    "types": []
+  },
+  "tstl": {
+    "luaTarget": "5.1",
+    "luaPlugins": [ 
+      {"name": "../scripts/tswow/addons/RequirePreload.js","import":"RequirePreload"},
+      {"name": "../scripts/tswow/addons/MessagePlugin.js","import":"MessagePlugin"},
+    ],
+    "noImplicitSelf": true,
+  }
+}

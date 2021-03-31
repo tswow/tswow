@@ -104,5 +104,5 @@ export class LfgDungeonGroupDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_LfgDungeonGroup = new LfgDungeonGroupDBCFile(
-    'LfgDungeonGroup',
+    'LFGDungeonGroup',
     (table,buffer,offset)=>new LfgDungeonGroupRow(table,buffer,offset))

@@ -16,10 +16,8 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import * as yaml from 'js-yaml';
 
-const settings = yaml.load(fs.readFileSync('./config/tswow.yaml').toString());
-const args = process.argv.slice(2);
+const settings = JSON.parse(Buffer.from(process.argv[2],'base64').toString())
 
 export function getDatabase(database: string) {
     if (settings.database_all) {
@@ -28,25 +26,17 @@ export function getDatabase(database: string) {
     return settings[database];
 }
 
-export function getDatabaseName(database: string) {
-    if (settings.database_all) {
-        return settings.database_all.name + database;
-    } else {
-        return settings[database].name;
-    }
-}
-
 class SettingsClass {
-    get LUAXML_SOURCE() {return './coredata/luaxml_source'; }
-    get LUAXML_CLIENT() {return './coredata/luaxml'; }
+    get LUAXML_SOURCE() {return settings.luaxml_source; }
+    get LUAXML_CLIENT() {return settings.luaxml_out; }
 
-    get MYSQL_DATABASE_SOURCE() {return getDatabaseName('world') + '_source'; }
-    get MYSQL_PASSWORD_SOURCE() {return getDatabase('source').password; }
-    get MYSQL_USER_SOURCE() {return getDatabase('source').user; }
-    get MYSQL_HOST_SOURCE() {return getDatabase('source').host; }
-    get MYSQL_PORT_SOURCE() {return getDatabase('source').port; }
+    get MYSQL_DATABASE_SOURCE() {return getDatabase('world_source').name; }
+    get MYSQL_PASSWORD_SOURCE() {return getDatabase('world_source').password; }
+    get MYSQL_USER_SOURCE() {return getDatabase('world_source').user; }
+    get MYSQL_HOST_SOURCE() {return getDatabase('world_source').host; }
+    get MYSQL_PORT_SOURCE() {return getDatabase('world_source').port; }
 
-    get MYSQL_DATABASE_DEST() {return getDatabaseName('world'); }
+    get MYSQL_DATABASE_DEST() {return getDatabase('world').name; }
     get MYSQL_PASSWORD_DEST() {return getDatabase('world').password; }
     get MYSQL_USER_DEST() {return getDatabase('world').user; }
     get MYSQL_HOST_DEST() {return getDatabase('world').host; }
@@ -54,19 +44,31 @@ class SettingsClass {
 
     get USE_POOLING() { return settings.use_pooling || false; }
 
-    get DBC_SOURCE() { return './coredata/dbc_source'; }
-    get DBC_OUT() {return './coredata/dbc'; }
-    get SQL_WRITE_TO_FILE() {return args.includes('file'); }
-    get MYSQL_WRITE_TO_DB() {return args.includes('db'); }
+    get USE_TIMER() { return settings.use_timer; }
+
+    get DBC_SOURCE() { return settings.dbc_source; }
+    get DBC_OUT() {return settings.dbc_out; }
+    // TODO: Fix this
+    get SQL_WRITE_TO_FILE() {return false; }
+    get MYSQL_WRITE_TO_DB() {return true; }
     get SQL_FILE_PATH() {return './bin/sqlout'; }
-    get ID_FILE_PATH() {return './config/ids.txt'; }
+    get ID_FILE_PATH() {return settings.id_path }
+    get READONLY() {return settings.readonly; }
+    get PATCH_DIRECTORY() { 
+        if(typeof(settings.modules)=='string') {
+            settings.modules = [settings.modules];
+        }
 
-    get READONLY() {return args.includes('readonly'); }
+        if(settings.modules.includes('all')) {
+            settings.modules = [];
+            fs.readdirSync('./modules').forEach(x=>{
+                if(fs.existsSync(path.join('./modules',x,'datascripts'))){
+                    settings.modules.push(x);
+                }
+            });
+        }
 
-    get PATCH_DIRECTORY() {
-        return fs.readdirSync('./modules')
-            .map(x => path.join('./modules', x, 'data'))
-            .filter(x => fs.existsSync(x));
+        return settings.modules 
     }
 }
 

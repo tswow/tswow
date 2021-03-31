@@ -15,51 +15,57 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { term } from '../util/Terminal';
-import { mpath, wfs } from '../util/FileSystem';
+import { wfs } from '../util/FileSystem';
 import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
-import { ipaths } from '../util/Paths';
+import { bpaths, ipaths, spaths } from '../util/Paths';
+import { datasetYaml } from '../util/ConfigFiles';
 
-export async function createConfig() {
-    term.log('Creating config files');
+export namespace Config {
+    export async function create() {
+        term.log('Creating config files');
 
-    // Copy configuration/misc files
-    const configDest = install_path('config/tswow.yaml');
-    if (!wfs.exists(configDest)) {
-        wfs.copy('./tswow.default.yaml', configDest);
+        // Copy configuration/misc files
+        if (!wfs.exists(ipaths.nodeYaml)) {
+            wfs.copy(spaths.installNodeYaml,ipaths.nodeYaml);
+        }
+
+        wfs.copy(spaths.installPackageJson,ipaths.packageJson)
+
+        wsys.execIn(install_path(), 'npm i');
+
+        wfs.copy(spaths.scriptsSql, ipaths.binSql, true)
+
+        if (!wfs.exists(ipaths.modules)) {
+            wfs.mkDirs(ipaths.modules);
+        }
+
+        if(!wfs.exists(ipaths.moduleRoot('tswow-stdlib'))) {
+            wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
+        }
+
+        wfs.copy(spaths.tcGlobaldts,ipaths.binglobaldts);
+        wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
+        wfs.copy(spaths.installAddons, ipaths.addons);
+        wfs.copy(spaths.installSymlinkMaker, ipaths.symlinkMaker);
+        wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
+        wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
+        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+
+        let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
+
+        let h = wsys.exec('git status --porcelain')
+            .split(' ').join('')
+            .split('\n').join('')
+            .split('\r').join('');
+        wfs.write(ipaths.tswowRevision,commit+(h.length>0?'+':''));
+
+        if(!wfs.exists(ipaths.datasetYaml('default'))) {
+            wfs.write(ipaths.datasetYaml('default'),datasetYaml('default'));
+        }
+
+        if(!wfs.exists(ipaths.realmYaml('tswow'))) {
+            wfs.write(ipaths.realmYaml('tswow'),datasetYaml('tswow'));
+        }
     }
-
-    wfs.copy('./package.install.json', install_path('package.json'));
-
-    wsys.execIn(install_path(), 'npm i');
-
-    if (!wfs.exists(ipaths.coreData)) {
-        wfs.mkDirs(ipaths.coreData);
-    }
-
-    wfs.copy(mpath('./tswow-scripts', 'sql'), install_path('bin', 'sql'), true);
-
-    if (!wfs.exists(ipaths.modules)) {
-        wfs.mkDirs(ipaths.modules);
-    }
-
-    if (!wfs.exists(install_path('modules', 'tswow-stdlib'))) {
-        wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
-    }
-
-    const globaldts = mpath('TrinityCore', 'src', 'server', 'game', 'Tswow',
-    'scripting', 'Public','global.d.ts');
-
-    wfs.copy(globaldts,ipaths.binglobaldts);
-
-    wfs.copy('./start.js', ipaths.startjsCore);
-    wfs.copy('./start.js', ipaths.startjsBin);
-
-    wfs.copy('./.vscode-install', ipaths.vscodeWorkspace);
-
-    wfs.copy('./addons',ipaths.addons)
-
-    wfs.copy('./tswow-scripts/symlinkmaker.js', ipaths.symlinkMaker)
-
-    wfs.copy('./TrinityCore/sql/updates',ipaths.sqlUpdates);
 }

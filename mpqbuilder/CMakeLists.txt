@@ -1,17 +1,27 @@
 cmake_minimum_required(VERSION 3.3)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(mpqbuilder)
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
-FIND_PACKAGE( StormLib REQUIRED )
-
+set( Boost_USE_STATIC_LIBS ON )
+FIND_PACKAGE( Boost 1.60 COMPONENTS filesystem REQUIRED )
 add_executable(mpqbuilder mpqbuilder.cpp)
 add_executable(luaxmlreader luaxmlreader.cpp)
 
-TARGET_LINK_LIBRARIES (mpqbuilder
-  StormLib
+include (FetchContent)
+FetchContent_Declare (storm
+  GIT_REPOSITORY https://github.com/ladislav-zezula/StormLib.git
+  GIT_TAG 60c2dd0fa16d3506722e25fee9b6fa4082b0c1e5
 )
-
-TARGET_LINK_LIBRARIES (luaxmlreader
-  StormLib
+FetchContent_GetProperties (storm)
+if (NOT storm_POPULATED)
+  message (STATUS "Installing StormLib...")
+  FetchContent_Populate (storm)
+endif()
+add_subdirectory (${storm_SOURCE_DIR} ${storm_BINARY_DIR} EXCLUDE_FROM_ALL)
+set (storm_warning_disable_flags "")
+TARGET_LINK_LIBRARIES(mpqbuilder
+  Boost::filesystem
+  storm
+)
+TARGET_LINK_LIBRARIES(luaxmlreader
+  Boost::filesystem
+  storm
 )

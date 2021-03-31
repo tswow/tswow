@@ -4,7 +4,19 @@
 const child_process = require('child_process');
 const fs = require('fs');
 const path = require('path');
+
+if(!fs.existsSync('build.yaml')) {
+    fs.copyFileSync('build.default.yaml','build.yaml');
+}
+
 const yaml = fs.readFileSync('build.yaml').toString();
+
+if(path.resolve(process.cwd()).includes(' ')) {
+    throw new Error(
+          `The current directory contains spaces somewhere in its path, `
+        + `please move it to a directory without spaces.`
+    )
+}
 
 // Do manual yaml parsing because we want to use 0 dependencies
 const lines = yaml.split('\r').join('').split('\n').map(x=>x.split(':')).filter(x=>x.length==2);
@@ -74,10 +86,12 @@ const compile_tsconfig =
       "strict": true,
       "esModuleInterop": true,
       "sourceMap": true,
+      "experimentalDecorators": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true
     },
-    "include":[${JSON.stringify(path.join(scripts_root_dir,'compile'))},${JSON.stringify(path.join(scripts_root_dir,'util'))}]
+    "include":[${JSON.stringify(path.join(scripts_root_dir,'compile'))},${JSON.stringify(path.join(scripts_root_dir,'util'))}],
+    "exclude":[${JSON.stringify(path.join(scripts_root_dir,'runtime'))},${JSON.stringify(path.join(scripts_root_dir,'wotlkdata'))}]
 }`
 
 // Create build config directories

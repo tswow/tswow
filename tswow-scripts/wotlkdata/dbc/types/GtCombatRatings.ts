@@ -74,5 +74,5 @@ export class GtCombatRatingsDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtCombatRatings = new GtCombatRatingsDBCFile(
-    'GtCombatRatings',
+    'gtCombatRatings',
     (table,buffer,offset)=>new GtCombatRatingsRow(table,buffer,offset))

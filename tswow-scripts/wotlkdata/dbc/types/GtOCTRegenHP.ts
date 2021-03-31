@@ -74,5 +74,5 @@ export class GtOCTRegenHPDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtOCTRegenHP = new GtOCTRegenHPDBCFile(
-    'GtOCTRegenHP',
+    'gtOCTRegenHP',
     (table,buffer,offset)=>new GtOCTRegenHPRow(table,buffer,offset))

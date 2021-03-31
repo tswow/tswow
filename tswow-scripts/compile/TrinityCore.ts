@@ -16,120 +16,130 @@
  */
 import { term } from '../util/Terminal';
 import { wfs, mpath } from '../util/FileSystem';
-import { TRINITYCORE_BUILD_PATH, TRINITYCORE_SOURCE_PATH, install_path, build_path, build_tdb } from './BuildConfig';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
-import { bpaths, ipaths } from '../util/Paths';
+import { bpaths, ipaths, spaths, TDB_URL } from '../util/Paths';
+import * as fs from 'fs';
+import request from 'request';
+import progress from 'request-progress';
+import { SevenZip } from '../util/7zip';
 
-export async function installTrinityCore(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
-    term.log('Compiling TrinityCore');
+export namespace TrinityCore {
+    export async function install(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
+        term.log('Compiling TrinityCore');
 
-    wfs.mkDirs(TRINITYCORE_BUILD_PATH);
+        wfs.mkDirs(bpaths.trinitycore);
 
-    // We no longer make non-dynamic builds.
-    const compileType = 'dynamic';
-    const scripts = args1.includes('minimal') ?
-        `minimal-${compileType}` :
-            args1.includes('noscripts') ? 'none' : compileType;
+        // We no longer make non-dynamic builds.
+        const compileType = 'dynamic';
+        const scripts = args1.includes('minimal') ?
+            `minimal-${compileType}` :
+                args1.includes('noscripts') ? 'none' : compileType;
 
-    const tools = args1.includes('notools') ? '0' : '1';
+        const tools = args1.includes('notools') ? '0' : '1';
 
-    let setupCommand: string;
-    let buildCommand: string;
-    if (isWindows()) {
-        setupCommand = `${cmake} -DTOOLS=${tools} -DSCRIPTS=${scripts} -DMYSQL_INCLUDE_DIR="${mysql}/include"  -DMYSQL_LIBRARY="${
-            mysql}/lib/libmysql.lib" -DOPENSSL_INCLUDE_DIR="${
-            openssl}/include" -DOPENSSL_ROOT_DIR="${
-           openssl}" -S "${TRINITYCORE_SOURCE_PATH}" -B "${TRINITYCORE_BUILD_PATH}"`;
-        buildCommand = `${cmake} --build ${TRINITYCORE_BUILD_PATH} --config ${type}`;
-        wsys.exec(setupCommand, 'inherit');
-        wsys.exec(buildCommand, 'inherit');
-    } else {
-        wfs.mkDirs(TRINITYCORE_BUILD_PATH);
-        const relativeSourcePath = wfs.relative(TRINITYCORE_BUILD_PATH, './' + TRINITYCORE_SOURCE_PATH);
-        const relativeInstallPath = wfs.relative(TRINITYCORE_BUILD_PATH, mpath(TRINITYCORE_BUILD_PATH, 'install/trinitycore'));
-        // TODO: Set up optimization flags for o0 as debug and o3 as release
-        setupCommand = `cmake ${relativeSourcePath} -DCMAKE_INSTALL_PREFIX=${relativeInstallPath} -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++ -DWITH_WARNINGS=1 -DTOOLS=${tools} -DSCRIPTS=static`;
-        buildCommand = 'make -j 4';
-        wsys.inDirectory(TRINITYCORE_BUILD_PATH, () => {
-            wsys.exec(setupCommand, 'inherit');
-            wsys.exec(buildCommand, 'inherit');
-            wsys.exec('make install', 'inherit');
-        });
-    }
+        let setupCommand: string;
+        let buildCommand: string;
 
-    // TODO: linux
-    const bindir = install_path('bin');
-    const ac_out = mpath(bindir, 'trinitycore');
+        if(!args1.includes('--no-build')) {
+            if (isWindows()) {
+                setupCommand = `${cmake} -DTOOLS=${tools}`
+                +` -DSCRIPTS=${scripts}`
+                +` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
+                +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
+                +` -DOPENSSL_INCLUDE_DIR="${openssl}/include"`
+                +` -DOPENSSL_ROOT_DIR="${openssl}"`
+                +` -S "${spaths.trinityCore}"`
+                +` -B "${bpaths.trinitycore}"`;
+                buildCommand = `${cmake} --build ${bpaths.trinitycore} --config ${type}`;
+                wsys.exec(setupCommand, 'inherit');
+                wsys.exec(buildCommand, 'inherit');
+            } else {
+                wfs.mkDirs(bpaths.trinitycore);
+                const relativeSourcePath = wfs.relative(
+                    bpaths.trinitycore,
+                    spaths.trinityCore);
+                const relativeInstallPath = wfs.relative(
+                    bpaths.trinitycore,
+                    mpath(bpaths.trinitycore, 'install/trinitycore'));
+                // TODO: Set up optimization flags for o0 as debug and o3 as release
+                setupCommand = `cmake ${relativeSourcePath}`
+                +` -DCMAKE_INSTALL_PREFIX=${relativeInstallPath}`
+                +` -DCMAKE_C_COMPILER=/usr/bin/clang`
+                +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
+                +` -DWITH_WARNINGS=1`
+                +` -DSCRIPTS=${scripts}`;
+                buildCommand = 'make -j 4';
+                await wsys.inDirectory(bpaths.trinitycore, () => {
+                    wsys.exec(setupCommand, 'inherit');
+                    wsys.exec(buildCommand, 'inherit');
+                    wsys.exec('make install', 'inherit');
+                });
+            }
+        }
 
-    // Copy TrinityCore Binaries
-    function moveAc(inName: string, outName: string) {
-        const binIn = isWindows() ? mpath(build_path('trinitycore'), 'Bin', inName)
-            : mpath(TRINITYCORE_BUILD_PATH, 'install', 'trinitycore', 'bin');
-
-        const confIn = isWindows() ? binIn
-            : mpath(TRINITYCORE_BUILD_PATH, 'install', 'trinitycore', 'etc');
-
-        const binOut = mpath(bindir, 'trinitycore', outName);
-
-        if (!wfs.exists(binIn)) {
+        // Copy TrinityCore Binaries
+        if (!wfs.exists(bpaths.trinitycoreBin(type))) {
             return;
         }
 
-        // All library files we will need
-        [`dep/zlib/${inName}/zlib.lib`,
-            `src/server/shared/${inName}/shared.lib`,
-            `dep/SFMT/${inName}/sfmt.lib`,
-            `dep/g3dlite/${inName}/g3dlib.lib`,
-            `dep/fmt/${inName}/fmt.lib`,
-            `dep/recastnavigation/Detour/${inName}/detour.lib`,
-            `src/server/database/${inName}/database.lib`,
-            `src/server/game/${inName}/game.lib`,
-            `src/common/${inName}/common.lib`,
-            `dep/argon2/${inName}/argon2.lib`
-        ].forEach(x => wfs.copy(mpath(build_path('trinitycore', x)),
-            install_path('bin', 'libraries', inName, wfs.basename(x))));
+        // copy static libraries
+        bpaths.tcStaticLibraries(type)
+            .forEach(x => wfs.copy(x,mpath(ipaths.binLibraries(type),wfs.basename(x))));
 
         // copy executables
-        wfs.copy(binIn, binOut, true);
-        // copy config files
-        wfs.readDir(confIn, true, 'files')
-            .filter(x => x.endsWith('.conf.dist'))
-            .forEach(x => {
-                const inPath = mpath(confIn, x);
-                const outDist = mpath(ipaths.coreData, x);
-                const outConf = mpath(ipaths.config, x.replace('.dist', ''));
-                wfs.copy(inPath, outDist);
-                wfs.copy(inPath, outConf);
-            });
-    }
-    // Don't create debug directory on linux while we don't support it
-    if (isWindows()) {
-        moveAc('Debug', 'debug');
-    }
-    moveAc('Release', 'release');
+        wfs.copy(bpaths.trinitycoreBin(type), ipaths.tc(type), true);
 
-    // Copy mysql/ssl/cmake libraries
-    if (isWindows()) {
-        for (const lib of ['libmysql', 'libmysqld']) {
-            wfs.copy(mpath(mysql, `/lib/${lib}.dll`), `${ac_out}/${lib}.dll`);
+        // copy conf files
+        if(!isWindows()) {
+            wfs.copy(bpaths.trinitycoreConf(type),ipaths.tc(type),false)
         }
 
-        const libcrypto = 'libcrypto-1_1-x64.dll';
-        wfs.copy(mpath(openssl, libcrypto), mpath(ac_out, libcrypto));
+        // Copy mysql/ssl/cmake libraries
+        if (isWindows()) {
+            bpaths.mysqlLibs(mysql)
+                .forEach(x=>wfs.copy(x,mpath(ipaths.tc(type),wfs.basename(x))))
+            wfs.copy(bpaths.libcrypto(openssl), 
+                mpath(ipaths.tc(type),wfs.basename(bpaths.libcrypto(openssl))))
+        }
 
+        // Move ts-module header files
+        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+
+        const rev = wsys.execIn(spaths.trinityCore,'git rev-parse HEAD','pipe').split('\n').join('');
+        wfs.write(ipaths.tcRevision,rev);
+
+        if(wfs.exists(ipaths.tdb)) {
+            return;
+        }
+
+        if(!wfs.exists(bpaths.tdbSql)) {
+            if(!wfs.exists(bpaths.tdb7z)) {
+                term.log(`Downloading tdb from ${TDB_URL}...`);
+                await new Promise<void>((res,rej)=>{
+                progress(request(TDB_URL))
+                    .on('progress',function(data: any){
+                        term.log(`Download progress: ${data.percent}`);
+                    })
+
+                    .on('error', function(err: any){
+                        rej(err);
+                    })
+
+                    .on('end', function() {
+                        res();
+                    })
+                    .pipe(fs.createWriteStream(bpaths.tdb7z));
+                });
+            }
+            term.log("Extracting tdb");
+            SevenZip.extract(bpaths.tdb7z,bpaths.base);
+            if(!wfs.exists(bpaths.tdbSql)) {
+                throw new Error(`Failed to extract tdb from 7z`);
+            }
+        }
+
+        term.log("Copying tdb");
+        wfs.copy(bpaths.tdbSql,ipaths.tdb);
     }
-
-    // Move ts-module header files
-    const headerSrc = mpath('TrinityCore', 'src', 'server', 'game', 'Tswow',
-        'scripting', 'Public');
-    const headerDest = mpath(bindir, 'include');
-    wfs.copy(headerSrc, headerDest);
-
-    // Install TDB
-    while(!wfs.exists(bpaths.tdb)) {
-        await wsys.userInput(`TDB not found. \n\t1. Download a TDB from here: https://github.com/TrinityCore/TrinityCore/releases\n\t2. Place the .7z file at "${build_path('tdb.7z')}"\n\t3. Press enter in this prompt`); 
-    }
-
-    wfs.copy(bpaths.tdb,ipaths.tdb);
 }

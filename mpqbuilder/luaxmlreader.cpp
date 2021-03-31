@@ -14,30 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <iostream>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <StormLib.h>
+#include <stdexcept>
+#include <iostream>
 #include <functional>
-#include "MiniFS.h"
 #include <algorithm>
 
 HANDLE handle = NULL;
 
-std::string findClientLang(std::string directory) {
-	std::vector<std::string> files = MiniFS::getFiles(directory);
-	for (auto& k : files) {
-		if (MiniFS::isDirectory(k)) {
-			return k;
+namespace fs = boost::filesystem;
+
+fs::path findClientLang(fs::path directory) {
+	fs::directory_iterator end;
+	for(fs::directory_iterator itr(directory); itr != end; ++itr)
+	{
+		if(fs::is_directory(itr->path()))
+		{
+			return itr->path();
 		}
 	}
-	return "";
+	throw std::runtime_error("No lang directory found in "+directory.string());
 }
 
 int counter = 0;
-void handleFile(HANDLE hMpq, std::string file,std::string outputDir) {
-	if(MiniFS::endsWith(file,".xml")||MiniFS::endsWith(file,".lua")) {
-		std::string outfile = outputDir+"\\"+file;
-		SFileExtractFile(hMpq,file.c_str(),outfile.c_str(),0);
-		MiniFS::mkdir(MiniFS::dirname(outfile.c_str()));
+void handleFile(HANDLE hMpq, std::string const& file,std::string const& outputDir) {
+	if(
+		   boost::algorithm::ends_with(file,".xml")
+		|| boost::algorithm::ends_with(file,".lua")
+		|| boost::algorithm::ends_with(file,".toc"))
+	{
+		auto f = file;
+		std::replace(f.begin(),f.end(),'\\','/');
+		fs::path outfile = outputDir / fs::path(f);
+		fs::create_directories(outfile.parent_path());
+		SFileExtractFile(hMpq,file.c_str(),outfile.string().c_str(),0);
 		++counter;
 	}
 }
@@ -49,41 +61,40 @@ int main(int argc, char **argv) {
 	}
 
 	std::string outputDir = argv[1];
-	std::string langdir = findClientLang(argv[2]);
+	fs::path langdir = findClientLang(fs::path(argv[2]));
+	fs::path mainfile;
+	std::vector<fs::path> patches;
 
-	auto files = MiniFS::getFiles(langdir,true);
-	std::string mainfile;
+	fs::directory_iterator end;
 
-	std::vector<std::string> patches;
-	for (auto &str : files) {
-		if (str.find("locale-", 0) == 0) {
-			mainfile = langdir+pathsep+str;
+	for(fs::directory_iterator itr(langdir); itr != end; ++itr)
+	{
+		if (itr->path().filename().string().find("locale-", 0) == 0) {
+			mainfile = itr->path();
 		}
 
-		if (str.find("patch") == 0) {
-			auto fullstr = langdir + pathsep + str;
-			if (!MiniFS::isDirectory(fullstr)) {
+		else if (itr->path().filename().string().find("patch") == 0) {
+			auto fullstr = itr->path();
+			if(!fs::is_directory(fullstr))
+			{
 				patches.push_back(fullstr);
 			}
 		}
 	}
 
-	std::sort(patches.begin(), patches.end(), [](std::string a, std::string b) {
-		if (b.length() != a.length()) return b.length() > a.length();
-		return b > a;
+	std::sort(patches.begin(), patches.end(), [](fs::path const& a, fs::path const& b) {
+		if (b.string().length() != a.string().length()) return b.string().length() > a.string().length();
+		return b.string() > a.string();
 	});
 
-	std::cout << "Reading main " << mainfile << "\n";
-
 	HANDLE mpq = NULL;
-	if (!SFileOpenArchive(mainfile.c_str(), 0, STREAM_FLAG_READ_ONLY, &mpq)) {
+	if (!SFileOpenArchive(mainfile.string().c_str(), 0, STREAM_FLAG_READ_ONLY, &mpq)) {
 		std::cout << "Failed to open main MPQ file with error " << GetLastError() << "\n";
 		return GetLastError();
 	}
 
 	for (auto& patch : patches) {
-		std::cout << "Loading patch " << patch << "\n";
-		if (!SFileOpenPatchArchive(mpq, patch.c_str(), NULL, 0)) {
+		if (!SFileOpenPatchArchive(mpq, patch.string().c_str(), NULL, 0)) {
 			std::cout << "Failed to apply patch " << patch << " with error " << GetLastError() << "\n";
 			return GetLastError();
 		}

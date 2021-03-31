@@ -200,7 +200,6 @@ export class Databases {
     get world_source() { return SqlConnection.world_src; } 
     get world_dest() { return SqlConnection.world_dst; }
     get auth() { return SqlConnection.auth; }
-    get characters() { return  SqlConnection.characters; }
 
     connect(config: mysql.ConnectionConfig) {
         let con = new Connection(config);

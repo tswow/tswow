@@ -16,6 +16,12 @@
  */
 import ts = require("typescript");
 
+/**
+ * This file contains the definitions for MessagePlugin.ts,
+ * that should ensure the lua-side output is equivalent to the 
+ * C++ transpiler.
+ */
+
 const PrimitiveSizes = {
     'uint8': 1,
     'uint16': 2,

@@ -21,10 +21,15 @@
  */
 
 /*
-* Modified by TSWoW
-*/
+ * Modified by TSWoW
+ * 
+ * This file contains a plugin for typescript-to-lua
+ * to enable CommonJS-style calls to "require"
+ */
+
 /* eslint-disable @typescript-eslint/no-object-literal-type-assertion */
 import * as ts from "typescript";
+import * as path from "path";
 import {
   Block,
   createBlock,
@@ -49,11 +54,23 @@ export const RequirePreload: Plugin = {
           undefined
         );
 
-        let moduleName = context.sourceFile.fileName.split("addons")[1];
-        if(moduleName===undefined) {
-          moduleName = 'shared'+context.sourceFile.fileName.split("shared")[1];
+        let moduleName: string = "";
+        let fullName = context.sourceFile.fileName.split('\\').join('/');
+        let libName = fullName.split('/include-addon/')[1]
+        if(libName!==undefined) {
+          moduleName = libName;
         } else {
-          moduleName = 'addons'+moduleName;
+          let splitAddon = fullName.split('addon');
+          if(splitAddon.length>1) {
+            let modName = path.basename(splitAddon[0]);
+            let addonName = splitAddon.slice(1).join('addon');
+            moduleName = `TSAddons/${modName}/addon${addonName}`
+          } else {
+            let splitShared =fullName.split('shared');
+            let modName = path.basename(splitShared[0]);
+            let sharedName = splitShared[1];
+            moduleName = `TSAddons/${modName}/shared${sharedName}`
+          }
         }
 
         if (moduleName.startsWith("/")) moduleName = moduleName.substring(1);

@@ -19,7 +19,12 @@ import { commands } from './Commands';
 
 export namespace Test {
     export function initialize() {
-        commands.addCommand('test', 'regex?', 'Runs unit tests', (args) => {
+        commands.addCommand(
+              'test'
+            , 'regex?'
+            , 'Runs unit tests'
+            , (args) => {
+
             if (args.length > 0) {
                 wsys.exec(`npm run otest ${args.join(' ')}`, 'inherit');
             } else {

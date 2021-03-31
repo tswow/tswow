@@ -17,7 +17,7 @@
 import * as mysql from 'mysql';
 import * as fs from 'fs';
 import { SqlRow } from './SQLRow';
-import { getDatabase, getDatabaseName, Settings } from '../Settings';
+import { getDatabase, Settings } from '../Settings';
 import { SqlTable } from './SQLTable';
 import { queryToSql } from '../query/Query';
 import { SQLTables } from './SQLFiles';
@@ -38,15 +38,22 @@ export class Connection {
 
     static connect(connection: Connection) {
         this.end(connection);
-
         if(Settings.USE_POOLING) {
             connection.async = mysql.createPool(connection.settings);
             connection.sync = mysql.createPool(connection.settings);
         } else {
             connection.async = mysql.createConnection(connection.settings);
             connection.sync = mysql.createConnection(connection.settings);
-            connection.async.connect();
-            connection.sync.connect();
+            connection.async.connect((err)=>{
+                if(!err) return;
+                console.error(`Failed to connect with settings`,connection.settings,err)
+                process.exit(-1);
+            });
+            connection.sync.connect((err)=>{
+                if(!err) return;
+                console.error(`Failed to connect with settings`,connection.settings,err)
+                process.exit(-1);
+            });
         }
 
         connection.syncQuery = deasync(connection.sync.query
@@ -87,7 +94,7 @@ export class Connection {
 
     async apply() {
         const doPriority = (priority: string[]) => {
-            return Promise.all(priority.map((x)=>new Promise((res,rej)=>{
+            return Promise.all(priority.map((x)=>new Promise<void>((res,rej)=>{
                 if(this.async===undefined) {
                     return rej(`Tried to apply while async adapter was disconnected`);
                 }
@@ -111,9 +118,9 @@ export class Connection {
     }
 }
 
-function getDefaultSettings(dbType: string) {
+    function getDefaultSettings(dbType: string) {
     return {
-        database: getDatabaseName(dbType),
+        database: getDatabase(dbType).name,
         host: getDatabase(dbType).host,
         user: getDatabase(dbType).user,
         password: getDatabase(dbType).password,
@@ -132,19 +139,13 @@ export class SqlConnection {
     static additional: Connection[] = [];
 
     static auth = new Connection(getDefaultSettings('auth'));
-    static characters = new Connection(getDefaultSettings('characters'));
+    //static characters = new Connection(getDefaultSettings('characters'));
     static world_dst = new Connection(getDefaultSettings('world'));
-    static world_src = new Connection({
-        host: getDatabase('source').host,
-        user: getDatabase('source').user,
-        password: getDatabase('source').password,
-        port: getDatabase('source').port,
-        database: getDatabaseName('world')+'_source'
-    });
+    static world_src = new Connection(getDefaultSettings('world_source'))
 
     protected static endConnection() {
         Connection.end(this.auth);
-        Connection.end(this.characters);
+        //Connection.end(this.characters);
         Connection.end(this.world_src);
         Connection.end(this.world_dst);
         this.additional.forEach(x=>Connection.end(x));
@@ -153,7 +154,7 @@ export class SqlConnection {
 
     static connect() {
         this.endConnection();
-        [this.auth,this.characters,this.world_dst,this.world_src]
+        [this.auth,this.world_dst,this.world_src]
             .forEach((x)=>Connection.connect(x));
     }
 
@@ -174,7 +175,7 @@ export class SqlConnection {
     }
 
     static allDbs() {
-        return this.additional.concat([this.world_src,this.world_dst,this.auth,this.characters]);
+        return this.additional.concat([this.world_src,this.world_dst,this.auth]);
     }
 
     static async write(writeDb: boolean = true, writeFile: boolean = true): Promise<any> {

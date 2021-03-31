@@ -44,10 +44,28 @@ function patchSubdirs(dir: string) {
 
     const nodes = fs.readdirSync(dir).map(x => path.join(dir, x));
 
-    nodes
-        .filter(x => x.endsWith('js') && fs.statSync(x).isFile())
+    nodes.filter(x => {
+            if(!x.endsWith('js') || !fs.statSync(x).isFile()) {
+                return false;
+            }
+
+            // Check that the corresponding .ts file isn't deleted.
+            let p = x.split(path.sep);
+            let dindex = p.indexOf('build');
+            // not in a build directory, or build is somehow the root
+            if(dindex <= 0 || dindex == p.length-1) {
+                return;
+            }
+            let relpath = p.slice(dindex+1);
+            let tspath = p.slice(0,dindex)
+                .concat(relpath)
+                .join(path.sep)
+            tspath = tspath.substring(0,tspath.length-2)+'ts';
+            return fs.existsSync(tspath);
+        })
         .map(x => path.relative(__dirname, x))
         .forEach(x => {
+
             require(x);
             applyStage(setups);
         });
@@ -79,9 +97,11 @@ async function applyStage(collection: PatchCollection) {
 
 let ctime: number = 0;
 function time(msg: string) {
-    let diff = Date.now()-ctime;
-    console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
-    ctime = Date.now();
+    if(Settings.USE_TIMER) {
+        let diff = Date.now()-ctime;
+        console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
+        ctime = Date.now();
+    }
 }
 
 async function main() {
@@ -95,12 +115,13 @@ async function main() {
         console.error(err.stack);
         process.exit(0);
     }
+
     time(`Loaded/Cleaned SQL`);
 
-
     // Find all patch subdirectories
-    for (const dir of Settings.PATCH_DIRECTORY) {
-        if (!fs.lstatSync(dir).isDirectory()) {
+    for (let dir of Settings.PATCH_DIRECTORY) {
+        dir = path.join('./modules',dir,'datascripts');
+        if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
             continue;
         }
 
@@ -122,6 +143,7 @@ async function main() {
     await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
         Settings.SQL_WRITE_TO_FILE);
 
+    
     time(`Wrote SQL`);
     saveDbc();
     time(`Wrote DBC`);

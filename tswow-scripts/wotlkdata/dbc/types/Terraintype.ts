@@ -111,5 +111,5 @@ export class TerraintypeDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_Terraintype = new TerraintypeDBCFile(
-    'Terraintype',
+    'TerrainType',
     (table,buffer,offset)=>new TerraintypeRow(table,buffer,offset))

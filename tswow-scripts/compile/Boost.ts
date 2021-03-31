@@ -21,17 +21,19 @@ const BOOST_URL = 'https://sourceforge.net/projects/boost/files/boost-binaries/1
 const BOOST_PATH = `C:\\local\\boost_1_72_0`;
 const BOOST_VARIABLE = `C:/local/boost_1_72_0`;
 
-export async function installBoost() {
-    while (!wfs.exists(BOOST_PATH)) {
-        const str =
-            `Boost not found. Please install if from the link below.\n` +
-            `You may also have to type the command:` +
-            `"setx BOOST_ROOT ${BOOST_VARIABLE}" /M ` +
-            `in an elevated command prompt.\n` +
-            `${BOOST_URL}\n` +
-            `Once done, press enter in this menu.`;
-        await wsys.userInput(str);
+export namespace Boost {
+    export async function install() {
+        while (!wfs.exists(BOOST_PATH)) {
+            const str =
+                `Boost not found. Please install if from the link below.\n`
+                + `You may also have to type the command:`
+                + `"setx BOOST_ROOT ${BOOST_VARIABLE}" /M `
+                + `in an elevated command prompt.\n`
+                + `${BOOST_URL}\n`
+                + `Once done, press enter in this menu.`;
+            await wsys.userInput(str);
+        }
+        wsys.exec(`setx BOOST_ROOT ${BOOST_VARIABLE}`);
+        return BOOST_PATH;
     }
-    wsys.exec(`setx BOOST_ROOT ${BOOST_VARIABLE}`);
-    return BOOST_PATH;
 }

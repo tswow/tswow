@@ -1,0 +1,27 @@
+# Whether to automatically start an auth server on this node
+autostart_authserver: true
+
+# Realms that should be automatically started on this node
+autostart_realms:
+  tswow
+
+# The realm to assume in commands if none are provided
+default_realm:
+  tswow
+
+# The dataset to assume in commands if none are provided
+default_dataset:
+  default
+
+# - Specify what database this node should use to connect
+# (replace with database_auth, database_characters, database_world 
+#  if you need separate configurations)
+database_all:
+  host: localhost
+  user: root
+  password: ""
+  port: 3306
+  prefix: tswow
+
+# - Use this if you want to run your own mysql server on windows
+# mysql_executable: ''

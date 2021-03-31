@@ -79,5 +79,5 @@ export class TerraintypeSoundsDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_TerraintypeSounds = new TerraintypeSoundsDBCFile(
-    'TerraintypeSounds',
+    'TerrainTypeSounds',
     (table,buffer,offset)=>new TerraintypeSoundsRow(table,buffer,offset))

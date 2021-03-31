@@ -74,5 +74,5 @@ export class GtChanceToMeleeCritDBCFile extends DBCFile<
  * - Add file comments to DBCFiles.ts
  */
 export const DBC_GtChanceToMeleeCrit = new GtChanceToMeleeCritDBCFile(
-    'GtChanceToMeleeCrit',
+    'gtChanceToMeleeCrit',
     (table,buffer,offset)=>new GtChanceToMeleeCritRow(table,buffer,offset))

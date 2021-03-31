@@ -17,6 +17,25 @@
 import { wsys } from './System';
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import { term } from './Terminal';
+import { isWindows } from './Platform';
+
+const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
+function cleanup() {
+    for(const proc of Object.values(processes)) {
+        proc.kill('SIGTERM');
+    }
+}
+
+// causes major terminal glitching
+if(!isWindows())
+{
+    process.on('exit', cleanup);
+    process.on('SIGINT', cleanup);
+    process.on('SIGUSR1', cleanup);
+    process.on('SIGUSR2', cleanup);
+    process.on('uncaughtException', cleanup);
+    process.on('SIGINT', cleanup)
+}
 
 /**
  * Represents a concurrently running child process.
@@ -30,6 +49,7 @@ export class Process {
     private waiters: {[key: string]: (message: string) => void} = {};
     private bufferSize = 2048;
     private listeners: ((message: string) => void)[] = [];
+    private onFail: ((err: Error)=>void)|undefined = undefined;
 
     /**
      * Creates a new process instance. Call Process#start or Process#startIn to start it.
@@ -41,6 +61,10 @@ export class Process {
 
     isRunning() {
         return this.process !== undefined;
+    }
+
+    setOnFail(onFail: (message: Error)=>void){
+        this.onFail = onFail;
     }
 
     listenSimple(listener: (message: string) => void ) {
@@ -143,10 +167,9 @@ export class Process {
      */
     async startIn(directory: string, program: string, args: string[] = []) {
         await this.stop();
-        const prevDir = process.cwd();
-
-        // TODO: Why exactly are we doing this?
-        this.process = wsys.spawnIn(directory, program, args);
+        let proc = wsys.spawnIn(directory, program, args);
+        this.process = proc;
+        processes[proc.pid] = proc;
 
         this.process.stdout.on('data', (data) => {
             this.handleOutput(data, false);
@@ -155,8 +178,27 @@ export class Process {
             this.handleOutput(data, true);
         });
 
+        this.process.on('close',(code)=>{
+            delete processes[proc.pid];
+        });
+
+        const nullProcess = ()=>{
+            if(this.process!==undefined
+                && proc.pid === this.process.pid) {
+                    this.process = undefined;
+            }
+        }
+
+        this.process.on('error', (message)=>{
+            delete processes[proc.pid];
+            if(this.onFail!==undefined) {
+                this.onFail(message);
+            }
+            nullProcess();
+        });
         this.process.on('exit', () => {
-            this.process = undefined;
+            delete processes[proc.pid];
+            nullProcess();
         });
     }
 

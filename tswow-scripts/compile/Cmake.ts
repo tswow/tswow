@@ -14,35 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { build_path, CMAKE_DOWNLOAD_URL, install_path } from './BuildConfig';
 import { wfs, mpath } from '../util/FileSystem';
-import { download, unzip } from './CompileUtils';
-import { term } from '../util/Terminal';
-import { ipaths } from '../util/Paths';
+import { ipaths, bpaths } from '../util/Paths';
 import { wsys } from '../util/System';
 
-export async function findCmake(): Promise<string> {
-    const cmake_build = build_path('cmake');
-
-    while(!wfs.exists(cmake_build)) {
-        await wsys.userInput(`CMake not found. \n\t1. Download the .zip from here: https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t2. Extract is to the "${cmake_build}" directory (${cmake_build}/cmake-3.18.3-win64-x64 should exist)\n\t3. Press enter in this command prompt`);
+export namespace CMake {
+    function query(reason: string) {
+        return wsys.userInput(
+            `${reason}\n\t`
+            +`1. Download the .zip from here: `
+            +`https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t`
+            +`2. Extract is to the "${bpaths.cmake}" directory `
+            +`(${bpaths.cmake}/cmake-3.18.3-win64-x64 should exist)\n\t`
+            +`3. Press enter in this command prompt\n`);
     }
 
-    const subs = wfs.readDir(cmake_build, false);
-    while(subs.length!==1) {
-        await wsys.userInput(`CMake is corrupt, please reinstall it: \n\t1. Download the .zip from here: https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t2. Extract is to the "${cmake_build}" directory (${mpath(cmake_build,"cmake-3.18.3-win64-x64")} should exist)\n\t3. Press enter in this prompt`);
+    export async function find(): Promise<string> {
+        while(!wfs.exists(bpaths.cmake)) {
+            await query('CMake not found');
+        }
+
+        const subs = wfs.readDir(bpaths.cmake, false);
+        while(subs.length!==1) {
+            await query('CMake is corrupt, please reinstall it');
+        }
+
+        const exe = mpath(subs[0], 'bin', 'cmake.exe');
+        const share = mpath(subs[0], 'share');
+
+        if (!wfs.exists(ipaths.cmakeExe)) {
+            wfs.copy(exe, ipaths.cmakeExe);
+        }
+
+        if (!wfs.exists(ipaths.cmakeShare)) {
+            wfs.copy(share, ipaths.cmakeShare);
+        }
+
+        return exe;
     }
-
-    const exe = mpath(subs[0], 'bin', 'cmake.exe');
-    const share = mpath(subs[0], 'share');
-
-    if (!wfs.exists(ipaths.cmakeExe)) {
-        wfs.copy(exe, ipaths.cmakeExe);
-    }
-
-    if (!wfs.exists(ipaths.cmakeShare)) {
-        wfs.copy(share, ipaths.cmakeShare);
-    }
-
-    return exe;
 }

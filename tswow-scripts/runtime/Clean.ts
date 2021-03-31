@@ -14,34 +14,56 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath, wfs } from "../util/FileSystem";
-import { mysql } from "../util/MySQL";
+import { wfs, mpath } from "../util/FileSystem";
+import { mysql } from "./MySQL";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
-import { MapData } from "./MapData";
-import { Modules } from "./Modules";
-import { TrinityCore } from "./TrinityCore";
+import { data_tsconfig, Modules } from "./Modules";
+import { Datasets } from "./Dataset";
+import { Identifiers } from "./Identifiers";
+import { isWindows } from "../util/Platform";
 
 /**
  * Module for cleaning intermediate data.
  */
 export namespace Clean {
+
+    export function removeOldLivescripts() {
+        ipaths.tcTypes.forEach(x=>{
+            const scripts_dir = ipaths.tcScripts(x);
+            wfs.iterate(ipaths.tcScripts(x),(filename)=>{
+                const p = wfs.relative(scripts_dir,filename);
+                let start = 'scripts_tswow_';
+                if(!isWindows()) {
+                    start = 'libscripts_tswow_';
+                }
+
+                if(!p.startsWith(start)) {
+                    return;
+                }
+
+                const nom = p.substring(start.length).split('.')[0];
+                if(!Modules.exists(nom)) {
+                    wfs.remove(filename);
+                }
+            });
+        });
+    }
+
     export function cleanScriptBin(mod?: string) {
         if(!mod) {
-            Modules.getModules().forEach(cleanScriptBin);
+            Modules.getModules().forEach(x=>cleanScriptBin(x.id));
             return;
         }
 
         wfs.remove(ipaths.moduleScriptsBuild(mod));
-
-        for(const dir of [ipaths.tcReleaseScripts,ipaths.tcDebugScripts]) {
-                const scriptFile = mpath(dir,Modules.getBuiltLibraryName(mod));
-            wfs.remove(scriptFile);
-            wfs.remove(scriptFile.substring(0,scriptFile.length-3)+'pdb');
-        }
+        ipaths.tcTypes.forEach(x=>{
+            wfs.remove(ipaths.tcModuleScript(x,mod));
+            wfs.remove(ipaths.tcModulePdb(x,mod));
+        });
     }
 
     export async function cleanMysql() {
@@ -51,17 +73,16 @@ export namespace Clean {
         }
 
         await mysql.disconnect();
-        wfs.remove(ipaths.mysqlData);
-        wfs.remove(ipaths.mysqlPlain);
-        await mysql.start();
+        wfs.remove(ipaths.databaseDir);
+        await mysql.startProcess();
     }
 
     export async function cleanDataBuild(mod?: string) {
         await destroyAllWatchers();
         if(!mod) {
             Modules.getModules().forEach((x)=>{
-                wfs.remove(ipaths.moduleDataBuild(x));
-                wfs.remove(ipaths.moduleNoEdit(x));        
+                wfs.remove(ipaths.moduleDataBuild(x.id));
+                wfs.remove(ipaths.moduleNoEdit(x.id));        
             });
         } else {
             wfs.remove(ipaths.moduleDataBuild(mod));
@@ -70,18 +91,24 @@ export namespace Clean {
         await cleanTypescript();
     }
 
-    export async function cleanIds() {
-        if(wfs.exists(ipaths.configIds)) {
-            wfs.makeBackup(ipaths.configIds);
+    export async function cleanIds(dataset: string, useBackups: boolean) {
+        term.log(`Cleaning ids for dataset ${dataset} (useBackups=${useBackups})`);
+        if(useBackups && wfs.exists(ipaths.messageIds)) {
+            wfs.makeBackup(ipaths.messageIds);
         }
-        wfs.remove(ipaths.coreIds);
-        wfs.remove(ipaths.configIds);
+        wfs.remove(ipaths.messageIds);
+
+        if(useBackups && wfs.exists(ipaths.datasetIds(dataset))) {
+            wfs.makeBackup(ipaths.datasetIds(dataset));
+        }
+
+        wfs.remove(ipaths.datasetIds(dataset));
     }
 
     export async function cleanAddonBuild(mod?: string) {
         if(!mod) {
             Modules.getModules().forEach((x)=>{
-                cleanAddonBuild(x);
+                cleanAddonBuild(x.id);
             });
         } else {
             wfs.remove(ipaths.addonBuild(mod));
@@ -90,7 +117,7 @@ export namespace Clean {
 
     export async function cleanTypescript() {
         await destroyAllWatchers();
-        const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x)))
+        const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x.id)))
 
         let clean : string[] = [];
         let lastErrors = 0;
@@ -100,17 +127,18 @@ export namespace Clean {
             term.log(`TypeScript Cleaning Pass ${pass++} (Expect error messages about not finding modules)`);
             errors = 0;
             for(const mod of modules) {
-                if(clean.includes(mod))  {
+                wfs.write(ipaths.moduleDataTsConfig(mod.id),data_tsconfig);
+                if(clean.includes(mod.id))  {
                     continue;
                 }
                 try {
-                    wsys.execIn(ipaths.moduleData(mod),'tsc','inherit');
-                    Modules.linkModule(mod);
-                    clean.push(mod);
-                    term.log(`Successfully compiled ${mod}`)
+                    wsys.execIn(ipaths.moduleData(mod.id),'tsc','inherit');
+                    mod.linkModule();
+                    clean.push(mod.id);
+                    term.log(`Successfully compiled ${mod.id}`)
                 } catch(error) {
                     errors++;
-                    term.log(`Failed to compile ${mod}: ${error.message}`)
+                    term.log(`Failed to compile ${mod.id}: ${error.message}`)
                 }
             }
 
@@ -119,7 +147,7 @@ export namespace Clean {
             }
 
             if(errors===lastErrors) {
-                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x))}]`);
+                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x.id))}]`);
             }
             lastErrors = errors;
         }
@@ -127,47 +155,97 @@ export namespace Clean {
         await Modules.refreshModules();
     }
 
-    export async function initialize() {
-        const cleanC = commands.addCommand('clean')
+    export function cleanClientData(dataset: string) {
+        const ds = Datasets.get(dataset);
+        wfs.remove(mpath(ds.client.path,'dbc'));
+        wfs.remove(mpath(ds.client.path,'maps'));
+        wfs.remove(mpath(ds.client.path,'vmaps'));
+        wfs.remove(mpath(ds.client.path,'buildings'));
+        wfs.remove(mpath(ds.client.path,'mmaps'));
+        
+        wfs.remove(ipaths.datasetDBCSource(dataset));
+        wfs.remove(ipaths.datasetDBC(dataset));
+        wfs.remove(ipaths.datasetMaps(dataset));
+        wfs.remove(ipaths.datasetVmaps(dataset));
+        wfs.remove(ipaths.datasetMmaps(dataset));
+        
+        Datasets.get(dataset).installServerData();
+    }
 
-        cleanC.addCommand('livescripts','module?','Removes live script build and binary files', async (args)=>{
+    export const command = commands.addCommand('clean')
+
+    export async function initialize() {
+        Clean.command.addCommand(
+              'livescripts'
+            , 'module?'
+            , 'Removes live script build and binary files'
+            , async (args)=>{
             await cleanScriptBin(args[0]);
+            await removeOldLivescripts();
         });
 
-        cleanC.addCommand('datascripts','module?','Removes data script build files', async (args)=>{
+        Clean.command.addCommand(
+              'datascripts'
+            , 'module?'
+            , 'Removes data script build files'
+            , async (args)=>{
+
             await cleanDataBuild(args[0]);
         });
 
-        cleanC.addCommand('ids','module?','Removes all id mappings', async(args)=>{
-            await cleanIds();
+        Clean.command.addCommand(
+              'ids'
+            , 'dataset = "default" --no-backups'
+            , 'Removes all id mappings for a dataset'
+            , async(args)=>{
+            await Promise.all([Identifiers.getTypes('dataset',args)
+                .map(x=>cleanIds(x,!args.includes('--no-backups')))]);
         });
 
-        cleanC.addCommand('mysql','','Cleans all MySQL data files', async(args)=>{
+        Clean.command.addCommand(
+              'mysql'
+            , ''
+            , 'Cleans all MySQL data files'
+            , async(args)=>{
+
             await cleanMysql();
         });
 
-        cleanC.addCommand('clientdata','','Cleans all client data', async(args)=>{
-            await TrinityCore.stop();
-            await MapData.rebuild(true);
+        Clean.command.addCommand(
+              'clientdata'
+            , 'dataset'
+            , 'Cleans all client data for a single dataset'
+            , async(args)=>{
+            await cleanClientData(args[0]);
         });
 
-        cleanC.addCommand('typescript', '','Cleans all TypeScript data', async(args)=>{
+        Clean.command.addCommand(
+              'typescript'
+            , ''
+            , 'Cleans all TypeScript data'
+            , async(args)=>{
+
             await cleanTypescript();
         });
 
-        cleanC.addCommand('all','keepClient?','Attempts to clean all intermediate data', async(args)=>{
+        Clean.command.addCommand(
+              'all'
+            , 'dataset?'
+            , 'Attempts to clean all intermediate data'
+            ,  async(args)=>{
             await cleanScriptBin();
             await cleanDataBuild();
-            await cleanIds();
+            await cleanIds(args[0],!args.includes('--no-backups'));
             await cleanAddonBuild();
-            if(!args.includes('keepClient')) {
-                await TrinityCore.stop();
-                await MapData.rebuild(true);
-            }
             await cleanMysql();
+            await cleanClientData(args[0]);
         });
 
-        cleanC.addCommand('addon','mod?','Cleans addon build data',async (x)=>{
+        Clean.command.addCommand(
+              'addon'
+            , 'mod?'
+            , 'Cleans addon build data'
+            , async (x)=>{
             cleanAddonBuild(x[0]);
         });
     }

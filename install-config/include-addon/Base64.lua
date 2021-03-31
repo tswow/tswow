@@ -1,5 +1,4 @@
-export const Base64 = 
-`base64 = {}
+base64 = {}
 
 local extract = _G.bit32 and _G.bit32.extract -- Lua 5.2/Lua 5.3 in compatibility mode
 if not extract then
@@ -131,4 +130,4 @@ function base64_decode( b64, decoder, usecaching )
 		t[k] = char( extract(v,16,8))
 	end
 	return concat( t )
-end`
+end
