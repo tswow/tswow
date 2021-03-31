@@ -463,7 +463,7 @@ export class Emitter {
                 this.processImplementation(s, true);
             });
 
-            const newName = path.relative('./src', this.sourceFileName).split(/ |\\|\/|\./).join('_');
+            const newName = path.relative('./src', this.sourceFileName).split(/ |\\|\/|\.|\-/).join('_');
             this.writer.writeStringNewLine(`const struct ${newName} {${newName}();} _${newName};`);
         }
 
@@ -503,7 +503,7 @@ export class Emitter {
 
             const rollbackPosition = this.writer.newSection();
 
-            const newName = path.relative('./src', this.sourceFileName).split(/ |\\|\/|\./).join('_');
+            const newName = path.relative('./src', this.sourceFileName).split(/ |\\|\/|\.|\-/).join('_');
 
             this.writer.writeStringNewLine('');
             this.writer.writeStringNewLine(`${newName}::${newName}()`);
@@ -547,7 +547,7 @@ export class Emitter {
             // @tswow-end
             this.writer.writeStringNewLine(includeStr);
         } else {
-            const headerName = filePath.replace(/\.ts$/, '_h').replace(/[\\\/\.]/g, '_').toUpperCase();
+            const headerName = filePath.replace(/\.ts$/, '_h').replace(/[\\\/\.\-]/g, '_').toUpperCase();
             this.writer.writeStringNewLine(`#ifndef ${headerName}`);
             this.writer.writeStringNewLine(`#define ${headerName}`);
             this.writer.writeStringNewLine(`#include "TSAll.h"`);
