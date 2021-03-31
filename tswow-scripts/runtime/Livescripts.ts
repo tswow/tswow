@@ -22,16 +22,22 @@ export namespace Livescripts {
      * @param name - Name of the module to rebuild.
      */
     export async function build(name: string, type: 'Release'|'Debug') {
-        term.log(`Building LiveScripts for ${name} (${type} mode)`);
-
         await Modules.refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 
+        if(!wfs.exists(scriptsDir)) {
+            return false;
+        }
+
         const files = wfs.readDir(scriptsDir, true, 'both');
 
-        // Don't build if the entry point doesn't exist or its livescript is just the template.
+        // Don't build if the entry point doesn't exist.
         const mainScript = ipaths.moduleMainScriptName(name);
-        if (!files.includes(mainScript)) { return false; }
+        if (!files.includes(mainScript)) { 
+            term.warn(`Module ${name} has a livescripts directory, but no valid entrypoint`);
+            return false; 
+        }
+        term.log(`Building LiveScripts for ${name} (${type} mode)`);
 
         const timer = Timer.start();
         wsys.exec(`node ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
