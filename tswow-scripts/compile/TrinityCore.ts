@@ -115,7 +115,6 @@ export namespace TrinityCore {
 
         if(!wfs.exists(bpaths.tdbSql)) {
             if(!wfs.exists(bpaths.tdb7z)) {
-                const file = fs.createWriteStream(bpaths.tdb7z);
                 term.log(`Downloading tdb from ${TDB_URL}...`);
                 await new Promise<void>((res,rej)=>{
                 progress(request(TDB_URL))
