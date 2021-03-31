@@ -475,7 +475,7 @@ export class InstallPaths {
     }
 
     moduleMainScriptName(mod: string) {
-        return `${mod.split('-').join('_')}_scripts.ts`;
+        return `${mod}-scripts.ts`;
     }
 
     moduleScriptsBuild(mod: string) {
