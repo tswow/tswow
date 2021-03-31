@@ -100,7 +100,8 @@ export namespace Build {
             await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>
                 MPQ.buildDevMPQ(x,args.includes('--use-timer'),args.includes('--client-only'))
             ));
-        });
+        })
+        .addAlias('data');
 
         Build.command.addCommand(
               'check'
@@ -128,7 +129,8 @@ export namespace Build {
             });
 
             runningClients.forEach(x=>x.client.start());
-        }));
+        }))
+        .addAlias('addon');
 
         Build.command.addCommand(
               'livescripts'
@@ -141,7 +143,9 @@ export namespace Build {
                 Livescripts.writeModuleText(x);
             });
             term.success(`Built scripts`);
-        });
+        })
+        .addAlias('scripts')
+        .addAlias('script');
 
         Build.command.addCommand(
               'all'

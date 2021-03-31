@@ -59,6 +59,7 @@ export namespace commands {
         readonly description?: string;
         readonly argDesc?: string;
         readonly name: string;
+        readonly aliases: string[] = [];
         readonly parent?: Command;
 
         constructor(name: string, argDesc?: string, description?: string, onCommand?: (args: string[]) => void, parent?: Command) {
@@ -104,6 +105,11 @@ export namespace commands {
             }
         }
 
+        addAlias(alias: string) {
+            this.aliases.push(alias);
+            return this;
+        }
+
         /**
         * Finds a command from an input chain
         * @param input
@@ -112,6 +118,11 @@ export namespace commands {
             if (input.length === 0) { return this; }
             const child = this.children[input[0]];
             if (child === undefined) {
+                for(const ac of Object.values(this.children)) {
+                    if(ac.aliases.includes(input[0])) {
+                        return ac.findCommand(input.slice(1));
+                    }
+                }
                 return this;
             } else {
                 return child.findCommand(input.slice(1));
@@ -133,10 +144,20 @@ export namespace commands {
         */
         async handle(args: string[]): Promise<void> {
             const fa = args[0];
-            const fc = this.children[fa];
+            let fc = this.children[fa];
+            if(fc===undefined) {
+                for(let child of Object.values(this.children)) {
+                    if(child.aliases.includes(args[0])) {
+                        fc = child;
+                        break;
+                    }
+                }
+            }
+
             if (fc !== undefined) {
                 await fc.handle(args.slice(1));
             } else {
+
                 if (this.handler === undefined) {
                     throw new Error(`No command ${this.parent !== undefined ? `${this.fullname} ` : ''}${args[0]}`);
                 }
@@ -267,7 +288,6 @@ export namespace commands {
         , 'alias command'
         , 'Creates a command alias'
         , (args) => {
-
         addCustomCommand(args[0], args.slice(1));
     });
 
@@ -290,11 +310,22 @@ export namespace commands {
 
         let cur = rootCommand;
         for (const arg of args) {
-            const cpd = cur;
+            let cpd = cur;
             if (cpd.children[arg] === undefined) {
-                return term.warn(`${cpd.fullname} has no child command ${arg}`);
+                let found = false;
+                for(const child of Object.values(cpd.children)) {
+                    if(child.aliases.includes(arg)) {
+                        cur = child;
+                        found = true;
+                    }
+                }
+
+                if(!found) {
+                    return term.warn(`${cpd.fullname} has no child command ${arg}`);
+                }
+            } else {
+                cur = cpd.children[arg];
             }
-            cur = cpd.children[arg];
         }
 
         let spaces = 0;
