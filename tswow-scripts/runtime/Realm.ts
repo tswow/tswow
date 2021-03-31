@@ -9,21 +9,8 @@ import { commands } from "./Commands";
 import { Datasets } from "./Dataset";
 import { NodeConfig } from "./NodeConfig";
 import { Identifiers } from "./Identifiers";
+import { realmYaml } from "../util/ConfigFiles";
 
-function defaultRealmConfig(name: string) {
-return `# TSWoW Realm Configuration
-
-dataset: default
-realm_name: ${name}
-address: 127.0.0.1
-local_address: 127.0.0.1
-local_subnet_mask: 255.255.255.0
-port: 8085
-type: 0
-flag: 0
-security_level: 0
-timezone: 1`
-}
 
 export namespace Realm {
 
@@ -246,7 +233,7 @@ export namespace Realm {
 
     export function createRealm(name: string) {
         Identifiers.assertUnused(name);
-        wfs.write(ipaths.realmYaml(name),defaultRealmConfig(name));
+        wfs.write(ipaths.realmYaml(name),realmYaml(name));
     }
 
     export function exists(identifier: string) {

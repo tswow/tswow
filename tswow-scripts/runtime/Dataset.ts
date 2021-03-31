@@ -11,24 +11,7 @@ import { Realm } from "./Realm";
 import { Identifiers } from "./Identifiers";
 import { term } from "../util/Terminal";
 import { Build } from "./Build";
-
-function defaultYaml(id: string) {
-    return `# ${id} dataset configuration
-# Whether this dataset should build and enable mmaps
-use_mmaps: false
-
-# The client directory to use for development with this dataset
-client_path: ""
-
-# What modules this dataset uses
-modules: all
-
-# What extensions to ignore when building assets
-ignore_assets:
-    .png
-    .blend
-`
-}
+import { datasetYaml } from "../util/ConfigFiles";
 
 /**
  * Contains functions for managing TSWoW datasets
@@ -283,7 +266,7 @@ export namespace Datasets {
 
     export function create(name: string) {
         Identifiers.assertUnused(name);
-        wfs.write(ipaths.datasetYaml(name),defaultYaml(name));
+        wfs.write(ipaths.datasetYaml(name),datasetYaml(name));
     }
 
     export const command = commands.addCommand('dataset');
