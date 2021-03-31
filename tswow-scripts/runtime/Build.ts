@@ -143,6 +143,18 @@ export namespace Build {
             term.success(`Built scripts`);
         });
 
+        Build.command.addCommand(
+              'all'
+            , 'datasets modules --debug'
+            , 'Builds and loads all module and dataset scripts'
+            , async (args) => {
+                const a = args.join(' ');
+                await commands.sendCommand(`build datascripts ${a}`)
+                await commands.sendCommand(`build livescripts ${a}`)
+                await commands.sendCommand(`build addons ${a}`)
+            }
+        )
+
         const pkg = commands.addCommand('package');
 
         pkg.addCommand(
