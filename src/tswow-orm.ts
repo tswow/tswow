@@ -30,6 +30,10 @@ class Field {
     initialization: string;
     isPrimaryKey: boolean;
 
+    sqlInitialization() {
+        return this.type == 'string' ? `\\${this.initialization.slice(0,this.initialization.length-1)}\\"` : this.initialization
+    }
+
     constructor(name: string, type: FieldType, isPrimaryKey: boolean, initialization: string) {
         this.name = name;
         this.type = type;
@@ -258,45 +262,196 @@ export function writeTableCreationCall(writer: CodeWriter) {
     writer.writeStringNewLine('    WriteTables();');
 }
 
+const getSQLType = (field: Field)=>{
+    switch(field.type) {
+        case 'int': return 'INT'
+        case 'int8': return 'TINYINT'
+        case 'int16': return 'SMALLINT'
+        case 'int32': return 'INT'
+        case 'int64': return 'BIGINT'
+        case 'uint8': return 'TINYINT UNSIGNED'
+        case 'uint16': return 'SMALLINT UNSIGNED'
+        case 'uint32': return 'INT UNSIGNED'
+        case 'uint64': return 'BIGINT UNSIGNED'
+        case 'float': return 'FLOAT'
+        case 'double': return 'DOUBLE'
+        case 'string': return 'TEXT'
+    }
+}
+
+const getFullSQLType = (field: Field)=>{
+    switch(field.type) {
+        case 'int': return 'INT'
+        case 'int8': return 'TINYINT'
+        case 'int16': return 'SMALLINT'
+        case 'int32': return 'INT'
+        case 'int64': return 'BIGINT'
+        case 'uint8': return 'TINYINT UNSIGNED'
+        case 'uint16': return 'SMALLINT UNSIGNED'
+        case 'uint32': return 'INT UNSIGNED'
+        case 'uint64': return 'BIGINT UNSIGNED'
+        case 'float': return 'FLOAT'
+        case 'double': return 'DOUBLE'
+        case 'string': return 'TEXT'
+    }
+}
+
 export function writeTableCreationFile(outDir: string) {
     const writer = new CodeWriter();
+
+    writer.writeStringNewLine('#include "TSDatabase.h"')
+    writer.writeStringNewLine('#include <fstream>')
+    writer.writeStringNewLine('#include <iostream>')
+    writer.writeStringNewLine('#include <algorithm>')
+    writer.writeStringNewLine('#include <string>')
+    writer.writeStringNewLine('#include <cstdlib>')
+    writer.writeStringNewLine(`#define COLUMN_NAME_INDEX 3`)
+    writer.writeStringNewLine(`#define COLUMN_TYPE_INDEX 7`)
+
+    writer.writeStringNewLine('');
+    writer.writeString(`void ask(std::string msg)`)
+    writer.BeginBlock();
+    // TODO: Implement this function, it should ask if
+    // the user wants to do destructive database operation,
+    // and only proceed if they type out "understand"
+    writer.EndBlock();
     writer.writeString('void WriteTables()')
     writer.BeginBlock();
     entries.forEach((entry)=>{
-        switch(entry.databaseType) {
-            case 'world':
-                writer.writeString('QueryWorld(JSTR("');
-                break;
-            case 'auth':
-                writer.writeString('QueryAuth(JSTR("');
-                break;
-            case 'characters':
-                writer.writeString('QueryCharacters(JSTR("');
-                break;
-        }
+        writer.BeginBlock();
+        writer.writeStringNewLine(`// ${entry.className}`)
+        let dbid = entry.databaseType
+              .slice(0,1).toUpperCase()
+            + entry.databaseType.slice(1)
 
-        writer.writeString(`CREATE TABLE IF NOT EXISTS \`${entry.className}\` (`);
+        writer.writeStringNewLine(`bool should_create = true;`)
 
-        entry.fields.forEach((field,index,arr)=>{
-            const getSQLType = ()=>{
-                switch(field.type) {
-                    case 'int': return 'INT NOT NULL'
-                    case 'int8': return 'TINYINT NOT NULL'
-                    case 'int16': return 'SMALLINT NOT NULL'
-                    case 'int32': return 'INT NOT NULL'
-                    case 'int64': return 'BIGINT NOT NULL'
-                    case 'uint8': return 'TINYINT UNSIGNED NOT NULL'
-                    case 'uint16': return 'SMALLINT UNSIGNED NOT NULL'
-                    case 'uint32': return 'INT UNSIGNED NOT NULL'
-                    case 'uint64': return 'BIGINT UNSIGNED NOT NULL'
-                    case 'float': return 'FLOAT NOT NULL'
-                    case 'double': return 'DOUBLE NOT NULL'
-                    case 'string': return 'TEXT'
-                }
-            }
-            writer.writeString(`\`${field.name}\` ${getSQLType()}, `);
+        writer.writeStringNewLine(
+            `auto db = ${dbid}DatabaseInfo()->Database().std_str();`)
+        writer.writeString(
+            `auto rows = QueryWorld(JSTR(`)
+        writer.writeStringNewLine(
+              `"SELECT * from \`information_schema\`.\`COLUMNS\``
+            + ` WHERE \`TABLE_SCHEMA\`= \\""+ db + "\\"`
+            + ` AND \`TABLE_NAME\` = \\"${entry.className}\\";"));`)
+
+        writer.writeString(
+            `if(rows->GetRow())`)
+        writer.BeginBlock();
+        writer.writeStringNewLine(`should_create = false;`);
+        entry.fields.forEach((x,i)=>{
+            writer.writeStringNewLine(`bool found_${x.name} = false;`);
         });
 
+        writer.writeString('do ');
+        writer.BeginBlock();
+        writer.writeStringNewLine(
+            `auto column = rows->GetString(COLUMN_NAME_INDEX).std_str();`)
+
+        writer.writeStringNewLine(
+              `auto was_pk = QueryWorld(JSTR(`
+            + ` "SELECT * from \`information_schema\`.\`KEY_COLUMN_USAGE\``
+            + ` WHERE \`CONSTRAINT_SCHEMA\` = \\"\"+db+\"\\"`
+            + ` and \`TABLE_NAME\` = \\"${entry.className}\\"`
+            + ` and \`COLUMN_NAME\` = \\"\"+column+\"\\"`
+            + ` ;"))->GetRow();`);
+
+        entry.fields.forEach((x,i)=>{
+            if(i==0) writer.writeString(`if `)
+            else writer.writeString(` else if `)
+
+            writer.writeString(
+                `(column == "${x.name}")`)
+            writer.BeginBlock();
+
+            writer.writeStringNewLine(
+                `found_${x.name} = true;`);
+
+            writer.writeStringNewLine(
+                `auto type = rows->GetString(COLUMN_TYPE_INDEX).std_str();`);
+
+            writer.writeStringNewLine(
+                `std::transform(type.begin(), type.end(), type.begin(), std::toupper);`
+            );
+
+            writer.writeString(
+                `if (type != "${getSQLType(x)}")`)
+            writer.BeginBlock();
+            // mismatch + we're a string = we have to remove and add again
+            if(x.type=='string') {
+                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
+                writer.writeStringNewLine(
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`\"+column+\"\`;"));`)
+                writer.writeStringNewLine(
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`\"+column+\"\` TEXT;"));`)
+            } else {
+                writer.writeStringNewLine(`if (type == "TEXT")`)
+                writer.BeginBlock();
+                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
+                writer.writeStringNewLine(
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`\"+column+\"\`;"));`)
+                writer.writeStringNewLine(
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`\"+column+\"\` ${getFullSQLType(x)};"));`)
+                writer.EndBlock(false);
+                writer.writeString(` else `);
+                writer.BeginBlock();
+
+                writer.writeString(`if (was_pk) `)
+                writer.BeginBlock();
+                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type} and was a primary key (whole db will be destroyed)");`);
+                writer.writeStringNewLine(`should_create = true;`);
+                writer.writeStringNewLine(`break;`)
+                writer.EndBlock();
+                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
+                writer.writeStringNewLine(
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\``
+                    + ` MODIFY \`${x.name}\` ${getSQLType(x)}`
+                    + `;"));`);
+                writer.EndBlock();
+            }
+
+            writer.EndBlock();
+            writer.EndBlock(true);
+        });
+
+        writer.writeString(
+            ' else ')
+        writer.BeginBlock();
+        writer.writeStringNewLine(`ask("${entry.className}:"+column+" was removed");`);
+        writer.writeStringNewLine(
+            `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`"+rows->GetString(COLUMN_NAME_INDEX)+"\`;"));`)
+        writer.EndBlock();
+
+
+        writer.EndBlock(true);
+        writer.writeStringNewLine(
+            ' while(rows->GetRow());')
+        entry.fields.forEach((x,i)=>{
+            writer.writeString(
+                `if( !should_create && !found_${x.name} )`);
+            writer.BeginBlock();
+            if(x.isPrimaryKey) {
+                writer.writeStringNewLine(`ask("${entry.className}: new primary key ${x.name} missing, need to rebuild database.");`);
+                writer.writeStringNewLine(`should_create = true;`);
+            } else {
+                writer.writeStringNewLine(
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`${x.name}\` ${getFullSQLType(x)};"));`)
+            }
+            writer.EndBlock();
+        });
+
+        writer.EndBlock();
+        writer.writeString(
+            `if (should_create)`
+        )
+        writer.BeginBlock();
+        writer.writeStringNewLine(`Query${dbid}(JSTR("DROP TABLE IF EXISTS \`${entry.className}\`;"));`)
+        writer.writeString(
+            `Query${dbid}(JSTR("CREATE TABLE \`${entry.className}\` (`);
+        entry.fields.forEach((field,index,arr)=>{
+            writer.writeString(
+                `\`${field.name}\` ${getFullSQLType(field)}, `);
+        });
         writer.writeString('PRIMARY KEY (')
         entry.fields.filter(x=>x.isPrimaryKey).forEach((field,i,arr)=>{
             writer.writeString(`${field.name}`)
@@ -304,7 +459,13 @@ export function writeTableCreationFile(outDir: string) {
                 writer.writeString(',');
             }
         });
-        writer.writeString('));"));');
+        writer.writeStringNewLine('));"));');
+        writer.EndBlock();
+        entry.fields.filter(x=>!x.isPrimaryKey).forEach(x=>{
+            writer.writeStringNewLine(
+                `Query${dbid}(JSTR("UPDATE \`${entry.className}\` SET ${x.name} = ${x.sqlInitialization()} WHERE ${x.name} IS NULL;"));`)
+        });
+        writer.EndBlock();
     });
 
     writer.EndBlock();
