@@ -8,23 +8,26 @@ import { CodeWriter } from './codewriter';
 import { handleClass, setBaseClass } from './tswow-orm';
 import { generateStringify } from './tswow-stringify';
 import { handlePacketClass } from './tswow-packet';
+import { handleTSWoWOverride } from './tswow-override';
 
 export class Emitter {
     public writer: CodeWriter;
-    private resolver: IdentifierResolver;
-    private preprocessor: Preprocessor;
-    private sourceFileName: string;
-    private scope: Array<ts.Node> = new Array<ts.Node>();
-    private opsMap: Map<number, string> = new Map<number, string>();
-    private embeddedCPPTypes: Array<string>;
-    private isWritingMain = false;
+    preprocessor: Preprocessor;
+    resolver: IdentifierResolver;
+    typeChecker: ts.TypeChecker;
+    sourceFileName: string;
+    scope: Array<ts.Node> = new Array<ts.Node>();
+    opsMap: Map<number, string> = new Map<number, string>();
+    embeddedCPPTypes: Array<string>;
+    isWritingMain = false;
 
     public constructor(
         typeChecker: ts.TypeChecker, private options: ts.CompilerOptions,
-        private cmdLineOptions: any, private singleModule: boolean, private rootFolder?: string) {
+        cmdLineOptions: any, private singleModule: boolean, private rootFolder?: string) {
         this.writer = new CodeWriter();
         this.resolver = new IdentifierResolver(typeChecker);
         this.preprocessor = new Preprocessor(this.resolver, this);
+        this.typeChecker = typeChecker;
 
         this.opsMap[ts.SyntaxKind.EqualsToken] = '=';
         this.opsMap[ts.SyntaxKind.PlusToken] = '+';
@@ -190,7 +193,7 @@ export class Emitter {
         }
     }
 
-    private isImportStatement(f: ts.Statement | ts.Declaration): boolean {
+    isImportStatement(f: ts.Statement | ts.Declaration): boolean {
         if (f.kind === ts.SyntaxKind.ImportDeclaration
             || f.kind === ts.SyntaxKind.ImportEqualsDeclaration) {
             return true;
@@ -199,7 +202,7 @@ export class Emitter {
         return false;
     }
 
-    private isDeclarationStatement(f: ts.Statement | ts.Declaration): boolean {
+    isDeclarationStatement(f: ts.Statement | ts.Declaration): boolean {
         if (f.kind === ts.SyntaxKind.FunctionDeclaration
             || f.kind === ts.SyntaxKind.EnumDeclaration
             || f.kind === ts.SyntaxKind.ClassDeclaration
@@ -213,7 +216,7 @@ export class Emitter {
         return false;
     }
 
-    private isVariableStatement(f: ts.Node): boolean {
+    isVariableStatement(f: ts.Node): boolean {
         if (f.kind === ts.SyntaxKind.VariableStatement) {
             return true;
         }
@@ -221,7 +224,7 @@ export class Emitter {
         return false;
     }
 
-    private isNamespaceStatement(f: ts.Node): boolean {
+    isNamespaceStatement(f: ts.Node): boolean {
         if (f.kind === ts.SyntaxKind.ModuleDeclaration
             || f.kind === ts.SyntaxKind.NamespaceExportDeclaration) {
             return true;
@@ -230,7 +233,7 @@ export class Emitter {
         return false;
     }
 
-    private childrenVisitorNoScope(location: ts.Node, visit: (node: ts.Node) => boolean) {
+    childrenVisitorNoScope(location: ts.Node, visit: (node: ts.Node) => boolean) {
         function checkChild(node: ts.Node): any {
             if (!visit(node)) {
                 ts.forEachChild(node, checkChild);
@@ -240,7 +243,7 @@ export class Emitter {
         ts.forEachChild(location, checkChild);
     }
 
-    private childrenVisitor(location: ts.Node, visit: (node: ts.Node) => boolean) {
+    childrenVisitor(location: ts.Node, visit: (node: ts.Node) => boolean) {
         let root = true;
         function checkChild(node: ts.Node): any {
             if (root) {
@@ -265,7 +268,7 @@ export class Emitter {
         ts.forEachChild(location, checkChild);
     }
 
-    private hasReturn(location: ts.Node): boolean {
+    hasReturn(location: ts.Node): boolean {
         let hasReturnResult = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.ReturnStatement) {
@@ -279,7 +282,7 @@ export class Emitter {
         return hasReturnResult;
     }
 
-    private hasReturnWithValue(location: ts.Node): boolean {
+    hasReturnWithValue(location: ts.Node): boolean {
         let hasReturnResult = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.ReturnStatement) {
@@ -296,7 +299,7 @@ export class Emitter {
         return hasReturnResult;
     }
 
-    private hasPropertyAccess(location: ts.Node, property: string): boolean {
+    hasPropertyAccess(location: ts.Node, property: string): boolean {
         let hasPropertyAccessResult = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.Identifier && node.parent.kind === ts.SyntaxKind.PropertyAccessExpression) {
@@ -313,7 +316,7 @@ export class Emitter {
         return hasPropertyAccessResult;
     }
 
-    private hasArguments(location: ts.Node): boolean {
+    hasArguments(location: ts.Node): boolean {
         let hasArgumentsResult = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.Identifier && node.parent.kind !== ts.SyntaxKind.PropertyAccessExpression) {
@@ -330,7 +333,7 @@ export class Emitter {
         return hasArgumentsResult;
     }
 
-    private requireCapture(location: ts.Node): boolean {
+    requireCapture(location: ts.Node): boolean {
         let requireCaptureResult = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.Identifier
@@ -354,7 +357,7 @@ export class Emitter {
         return requireCaptureResult;
     }
 
-    private markRequiredCapture(location: ts.Node): void {
+    markRequiredCapture(location: ts.Node): void {
         this.childrenVisitorNoScope(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.Identifier
                 && node.parent.kind !== ts.SyntaxKind.FunctionDeclaration
@@ -375,7 +378,7 @@ export class Emitter {
         });
     }
 
-    private hasThis(location: ts.Node): boolean {
+    hasThis(location: ts.Node): boolean {
         let createThis = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.ThisKeyword) {
@@ -389,7 +392,7 @@ export class Emitter {
         return createThis;
     }
 
-    private hasThisAsShared(location: ts.Node): boolean {
+    hasThisAsShared(location: ts.Node): boolean {
         let createThis = false;
         this.childrenVisitor(location, (node: ts.Node) => {
             if (node.kind === ts.SyntaxKind.ThisKeyword && node.parent.kind !== ts.SyntaxKind.PropertyAccessExpression) {
@@ -403,13 +406,13 @@ export class Emitter {
         return createThis;
     }
 
-    private processFile(sourceFile: ts.SourceFile): void {
+    processFile(sourceFile: ts.SourceFile): void {
         this.scope.push(sourceFile);
         this.processFileInternal(sourceFile);
         this.scope.pop();
     }
 
-    private processFileInternal(sourceFile: ts.SourceFile): void {
+    processFileInternal(sourceFile: ts.SourceFile): void {
         this.fixupParentReferences(sourceFile);
 
         this.sourceFileName = sourceFile.fileName;
@@ -538,7 +541,7 @@ export class Emitter {
         }
     }
 
-    private WriteHeader() {
+    WriteHeader() {
         const filePath = Helpers.getSubPath(Helpers.cleanUpPath(this.sourceFileName), Helpers.cleanUpPath(this.rootFolder));
         if (this.isSource()) {
             // @tswow-begin
@@ -554,19 +557,19 @@ export class Emitter {
         }
     }
 
-    private processBundle(bundle: ts.Bundle): void {
+    processBundle(bundle: ts.Bundle): void {
         throw new Error('Method not implemented.');
     }
 
-    private processUnparsedSource(unparsedSource: ts.UnparsedSource): void {
+    processUnparsedSource(unparsedSource: ts.UnparsedSource): void {
         throw new Error('Method not implemented.');
     }
 
-    private processStatement(node: ts.Statement | ts.Declaration): void {
+    processStatement(node: ts.Statement | ts.Declaration): void {
         this.processStatementInternal(node);
     }
 
-    private processStatementInternal(nodeIn: ts.Statement | ts.Declaration, enableTypeAliases = false): void {
+    processStatementInternal(nodeIn: ts.Statement | ts.Declaration, enableTypeAliases = false): void {
         const node = this.preprocessor.preprocessStatement(nodeIn);
 
         switch (node.kind) {
@@ -613,7 +616,7 @@ export class Emitter {
         throw new Error('Method not implemented.');
     }
 
-    private processExpression(nodeIn: ts.Expression): void {
+    processExpression(nodeIn: ts.Expression): void {
         const node = this.preprocessor.preprocessExpression(nodeIn);
         if (!node) {
             return;
@@ -664,7 +667,7 @@ export class Emitter {
         throw new Error('Method not implemented.');
     }
 
-    private processDeclaration(node: ts.Declaration): void {
+    processDeclaration(node: ts.Declaration): void {
         switch (node.kind) {
             case ts.SyntaxKind.PropertySignature: this.processPropertyDeclaration(<ts.PropertySignature>node); return;
             case ts.SyntaxKind.PropertyDeclaration: this.processPropertyDeclaration(<ts.PropertyDeclaration>node); return;
@@ -684,7 +687,7 @@ export class Emitter {
         throw new Error('Method not implemented.');
     }
 
-    private processInclude(nodeIn: ts.Declaration | ts.Statement): void {
+    processInclude(nodeIn: ts.Declaration | ts.Statement): void {
 
         const node = this.preprocessor.preprocessStatement(<ts.Statement>nodeIn);
 
@@ -696,7 +699,7 @@ export class Emitter {
         }
     }
 
-    private processForwardDeclaration(nodeIn: ts.Declaration | ts.Statement): void {
+    processForwardDeclaration(nodeIn: ts.Declaration | ts.Statement): void {
 
         const node = this.preprocessor.preprocessStatement(<ts.Statement>nodeIn);
 
@@ -735,7 +738,7 @@ export class Emitter {
         return false;
     }
 
-    private isTemplateType(effectiveType: any): boolean {
+    isTemplateType(effectiveType: any): boolean {
         if (!effectiveType) {
             return false;
         }
@@ -764,7 +767,7 @@ export class Emitter {
         }
     }
 
-    private isMethodParamsTemplate(declaration: ts.MethodDeclaration | any): boolean {
+    isMethodParamsTemplate(declaration: ts.MethodDeclaration | any): boolean {
         if (!declaration) {
             return false;
         }
@@ -786,7 +789,7 @@ export class Emitter {
         }
     }
 
-    private processImplementation(nodeIn: ts.Declaration | ts.Statement, template?: boolean): void {
+    processImplementation(nodeIn: ts.Declaration | ts.Statement, template?: boolean): void {
 
         const node = this.preprocessor.preprocessStatement(nodeIn);
 
@@ -821,13 +824,13 @@ export class Emitter {
         }
     }
 
-    private processModuleImplementation(node: ts.ModuleDeclaration, template?: boolean) {
+    processModuleImplementation(node: ts.ModuleDeclaration, template?: boolean) {
         this.scope.push(node);
         this.processModuleImplementationInternal(node, template);
         this.scope.pop();
     }
 
-    private processModuleImplementationInternal(node: ts.ModuleDeclaration, template?: boolean) {
+    processModuleImplementationInternal(node: ts.ModuleDeclaration, template?: boolean) {
         this.writer.writeString('namespace ');
         this.writer.writeString(node.name.text);
         this.writer.writeString(' ');
@@ -847,24 +850,24 @@ export class Emitter {
         this.writer.EndBlock();
     }
 
-    private processClassImplementation(node: ts.ClassDeclaration, template?: boolean) {
+    processClassImplementation(node: ts.ClassDeclaration, template?: boolean) {
         this.scope.push(node);
         this.processClassImplementationInternal(node, template);
         this.scope.pop();
     }
 
-    private processClassImplementationInternal(node: ts.ClassDeclaration, template?: boolean) {
+    processClassImplementationInternal(node: ts.ClassDeclaration, template?: boolean) {
         for (const member of node.members) {
             this.processImplementation(member, template);
         }
     }
 
-    private processExpressionStatement(node: ts.ExpressionStatement): void {
+    processExpressionStatement(node: ts.ExpressionStatement): void {
         this.processExpression(node.expression);
         this.writer.EndOfStatement();
     }
 
-    private fixupParentReferences<T extends ts.Node>(rootNode: T, setParent?: ts.Node): T {
+    fixupParentReferences<T extends ts.Node>(rootNode: T, setParent?: ts.Node): T {
         let parent: ts.Node = rootNode;
         if (setParent) {
             rootNode.parent = setParent;
@@ -890,11 +893,11 @@ export class Emitter {
         }
     }
 
-    private transpileTSNode(node: ts.Node, transformText?: (string) => string) {
+    transpileTSNode(node: ts.Node, transformText?: (string) => string) {
         return this.transpileTSCode(node.getFullText(), transformText);
     }
 
-    private transpileTSCode(code: string, transformText?: (string) => string) {
+    transpileTSCode(code: string, transformText?: (string) => string) {
 
         const opts = {
             module: ts.ModuleKind.CommonJS,
@@ -914,7 +917,7 @@ export class Emitter {
         return this.parseJSCode(jsText);
     }
 
-    private parseTSCode(jsText: string) {
+    parseTSCode(jsText: string) {
 
         const opts = {
             module: ts.ModuleKind.CommonJS,
@@ -931,7 +934,7 @@ export class Emitter {
         return sourceFile.statements;
     }
 
-    private bind(node: ts.Statement) {
+    bind(node: ts.Statement) {
 
         const opts = {
             module: ts.ModuleKind.CommonJS,
@@ -951,7 +954,7 @@ export class Emitter {
         return sourceFile.statements[0];
     }
 
-    private parseJSCode(jsText: string) {
+    parseJSCode(jsText: string) {
 
         const opts = {
             module: ts.ModuleKind.CommonJS,
@@ -968,7 +971,7 @@ export class Emitter {
         return sourceFile.statements;
     }
 
-    private processTSNode(node: ts.Node, transformText?: (string) => string) {
+    processTSNode(node: ts.Node, transformText?: (string) => string) {
         const statements = this.transpileTSNode(node, transformText);
 
         if (statements && statements.length === 1 && (<any>statements[0]).expression) {
@@ -981,27 +984,27 @@ export class Emitter {
         });
     }
 
-    private processTSCode(code: string, parse?: any) {
+    processTSCode(code: string, parse?: any) {
         const statements = (!parse) ? this.transpileTSCode(code) : this.parseTSCode(code);
         statements.forEach(s => {
             this.processStatementInternal(s);
         });
     }
 
-    private processJSCode(code: string) {
+    processJSCode(code: string) {
         const statements = this.parseJSCode(code);
         statements.forEach(s => {
             this.processStatementInternal(s);
         });
     }
 
-    private processLabeledStatement(node: ts.LabeledStatement): void {
+    processLabeledStatement(node: ts.LabeledStatement): void {
         this.processExpression(node.label);
         this.writer.writeStringNewLine(':');
         this.processStatement(node.statement);
     }
 
-    private processTryStatement(node: ts.TryStatement): void {
+    processTryStatement(node: ts.TryStatement): void {
         let anyCase = false;
 
         if (node.finallyBlock) {
@@ -1073,7 +1076,7 @@ export class Emitter {
         }
     }
 
-    private processThrowStatement(node: ts.ThrowStatement): void {
+    processThrowStatement(node: ts.ThrowStatement): void {
         this.writer.writeString('throw');
         if (node.expression) {
             this.writer.writeString(' any(');
@@ -1084,23 +1087,23 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    private processTypeOfExpression(node: ts.TypeOfExpression): void {
+    processTypeOfExpression(node: ts.TypeOfExpression): void {
         this.writer.writeString('type_of(');
         this.processExpression(node.expression);
         this.writer.writeString(')');
     }
 
-    private processDebuggerStatement(node: ts.DebuggerStatement): void {
+    processDebuggerStatement(node: ts.DebuggerStatement): void {
         this.writer.writeString('__asm { int 3 }');
     }
 
-    private processEnumForwardDeclaration(node: ts.EnumDeclaration): void {
+    processEnumForwardDeclaration(node: ts.EnumDeclaration): void {
         this.scope.push(node);
         this.processEnumForwardDeclarationInternal(node);
         this.scope.pop();
     }
 
-    private processEnumForwardDeclarationInternal(node: ts.EnumDeclaration): void {
+    processEnumForwardDeclarationInternal(node: ts.EnumDeclaration): void {
 
         if (!this.isHeader()) {
             return;
@@ -1111,13 +1114,13 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    private processEnumDeclaration(node: ts.EnumDeclaration): void {
+    processEnumDeclaration(node: ts.EnumDeclaration): void {
         this.scope.push(node);
         this.processEnumDeclarationInternal(node);
         this.scope.pop();
     }
 
-    private processEnumDeclarationInternal(node: ts.EnumDeclaration): void {
+    processEnumDeclarationInternal(node: ts.EnumDeclaration): void {
 
         if (!this.isHeader()) {
             return;
@@ -1187,7 +1190,7 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    private hasAccessModifier(modifiers: ts.ModifiersArray) {
+    hasAccessModifier(modifiers: ts.ModifiersArray) {
         if (!modifiers) {
             return false;
         }
@@ -1198,13 +1201,13 @@ export class Emitter {
                 || m.kind === ts.SyntaxKind.PublicKeyword);
     }
 
-    private processVariablesForwardDeclaration(node: ts.VariableStatement) {
+    processVariablesForwardDeclaration(node: ts.VariableStatement) {
         this.processVariableDeclarationList(node.declarationList, true);
 
         this.writer.EndOfStatement();
     }
 
-    private processClassForwardDeclaration(node: ts.ClassDeclaration) {
+    processClassForwardDeclaration(node: ts.ClassDeclaration) {
         this.scope.push(node);
         this.processClassForwardDeclarationInternal(node);
         this.scope.pop();
@@ -1212,7 +1215,7 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    private processClassForwardDeclarationInternal(node: ts.ClassDeclaration | ts.InterfaceDeclaration) {
+    processClassForwardDeclarationInternal(node: ts.ClassDeclaration | ts.InterfaceDeclaration) {
         let next = false;
         if (node.typeParameters) {
             this.writer.writeString('template <');
@@ -1229,13 +1232,13 @@ export class Emitter {
         this.processIdentifier(node.name);
     }
 
-    private processModuleForwardDeclaration(node: ts.ModuleDeclaration, template?: boolean) {
+    processModuleForwardDeclaration(node: ts.ModuleDeclaration, template?: boolean) {
         this.scope.push(node);
         this.processModuleForwardDeclarationInternal(node, template);
         this.scope.pop();
     }
 
-    private processModuleForwardDeclarationInternal(node: ts.ModuleDeclaration, template?: boolean) {
+    processModuleForwardDeclarationInternal(node: ts.ModuleDeclaration, template?: boolean) {
         this.writer.writeString('namespace ');
         this.writer.writeString(node.name.text);
         this.writer.writeString(' ');
@@ -1255,7 +1258,7 @@ export class Emitter {
         this.writer.EndBlock();
     }
 
-    private isInBaseClass(baseClass: ts.TypeNode, identifier: ts.Identifier): boolean {
+    isInBaseClass(baseClass: ts.TypeNode, identifier: ts.Identifier): boolean {
 
         const effectiveSymbol = (<any>baseClass).symbol || ((<any>baseClass).exprName).symbol;
 
@@ -1271,13 +1274,13 @@ export class Emitter {
         return hasInBase;
     }
 
-    private processClassDeclaration(node: ts.ClassDeclaration | ts.InterfaceDeclaration) {
+    processClassDeclaration(node: ts.ClassDeclaration | ts.InterfaceDeclaration) {
         this.scope.push(node);
         this.processClassDeclarationInternal(node);
         this.scope.pop();
     }
 
-    private processClassDeclarationInternal(node: ts.ClassDeclaration | ts.InterfaceDeclaration): void {
+    processClassDeclarationInternal(node: ts.ClassDeclaration | ts.InterfaceDeclaration): void {
         if (!this.isHeader()) {
             return;
         }
@@ -1392,7 +1395,7 @@ export class Emitter {
         }
     }
 
-    private processPropertyDeclaration(node: ts.PropertyDeclaration | ts.PropertySignature | ts.ParameterDeclaration,
+    processPropertyDeclaration(node: ts.PropertyDeclaration | ts.PropertySignature | ts.ParameterDeclaration,
         implementationMode?: boolean): void {
         if (!implementationMode) {
             this.processModifiers(node.modifiers);
@@ -1432,7 +1435,7 @@ export class Emitter {
         this.writer.writeStringNewLine();
     }
 
-    private processMethodDeclaration(node: ts.MethodDeclaration | ts.MethodSignature | ts.ConstructorDeclaration,
+    processMethodDeclaration(node: ts.MethodDeclaration | ts.MethodSignature | ts.ConstructorDeclaration,
         implementationMode?: boolean): void {
         const skip = this.processFunctionDeclaration(<ts.FunctionDeclaration><any>node, implementationMode);
         if (implementationMode) {
@@ -1444,7 +1447,7 @@ export class Emitter {
         }
     }
 
-    private processModifiers(modifiers: ts.NodeArray<ts.Modifier>) {
+    processModifiers(modifiers: ts.NodeArray<ts.Modifier>) {
         if (!modifiers) {
             return;
         }
@@ -1458,7 +1461,7 @@ export class Emitter {
         });
     }
 
-    private processTypeAliasDeclaration(node: ts.TypeAliasDeclaration): void {
+    processTypeAliasDeclaration(node: ts.TypeAliasDeclaration): void {
 
         if (node.type.kind === ts.SyntaxKind.ImportType) {
             const typeLiteral = <ts.ImportTypeNode>node.type;
@@ -1518,7 +1521,7 @@ export class Emitter {
         this.writer.writeStringNewLine();
     }
 
-    private processModuleDeclaration(node: ts.ModuleDeclaration): void {
+    processModuleDeclaration(node: ts.ModuleDeclaration): void {
         this.writer.writeString('namespace ');
         this.processExpression(node.name);
         this.writer.writeString(' ');
@@ -1543,11 +1546,11 @@ export class Emitter {
         this.writer.EndBlock();
     }
 
-    private processNamespaceDeclaration(node: ts.NamespaceDeclaration): void {
+    processNamespaceDeclaration(node: ts.NamespaceDeclaration): void {
         this.processModuleDeclaration(node);
     }
 
-    private processModuleImplementationInMain(node: ts.ModuleDeclaration | ts.NamespaceDeclaration): void {
+    processModuleImplementationInMain(node: ts.ModuleDeclaration | ts.NamespaceDeclaration): void {
         if (node.body.kind === ts.SyntaxKind.ModuleBlock) {
             const block = <ts.ModuleBlock>node.body;
             block.statements.forEach(s => {
@@ -1564,7 +1567,7 @@ export class Emitter {
         }
     }
 
-    private processModuleVariableStatements(node: ts.ModuleDeclaration | ts.NamespaceDeclaration): void {
+    processModuleVariableStatements(node: ts.ModuleDeclaration | ts.NamespaceDeclaration): void {
         if (node.body.kind === ts.SyntaxKind.ModuleBlock) {
             const block = <ts.ModuleBlock>node.body;
             block.statements.forEach(s => {
@@ -1581,7 +1584,7 @@ export class Emitter {
         }
     }
 
-    private processImportEqualsDeclaration(node: ts.ImportEqualsDeclaration): void {
+    processImportEqualsDeclaration(node: ts.ImportEqualsDeclaration): void {
 
         const typeOfExpr = this.resolver.getOrResolveTypeOf(node.moduleReference);
         if (typeOfExpr && typeOfExpr.symbol &&
@@ -1598,7 +1601,7 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    private processModuleReferenceOrEntityName(node: ts.ModuleReference | ts.EntityName) {
+    processModuleReferenceOrEntityName(node: ts.ModuleReference | ts.EntityName) {
         switch (node.kind) {
             case ts.SyntaxKind.Identifier: this.processIdentifier(node); break;
             case ts.SyntaxKind.QualifiedName: this.processQualifiedName(node); break;
@@ -1606,17 +1609,17 @@ export class Emitter {
         }
     }
 
-    private processQualifiedName(node: ts.QualifiedName) {
+    processQualifiedName(node: ts.QualifiedName) {
         this.processModuleReferenceOrEntityName(node.left);
         this.writer.writeString('::');
         this.processExpression(node.right);
     }
 
-    private processExportDeclaration(node: ts.ExportDeclaration): void {
+    processExportDeclaration(node: ts.ExportDeclaration): void {
         /* TODO: */
     }
 
-    private processImportDeclaration(node: ts.ImportDeclaration): void {
+    processImportDeclaration(node: ts.ImportDeclaration): void {
         // tswow-workaround: Hackaround to not include npm modules (used for GetId/GetIdRange)
         // tswow-todo: better checking for non-relative modules. should we always ignore them?
         let text = node.moduleSpecifier.getText();
@@ -1657,7 +1660,7 @@ export class Emitter {
         }
     }
 
-    private processVariableDeclarationList(declarationList: ts.VariableDeclarationList, forwardDeclaration?: boolean): boolean {
+    processVariableDeclarationList(declarationList: ts.VariableDeclarationList, forwardDeclaration?: boolean): boolean {
         const scopeItem = this.scope[this.scope.length - 1];
         const autoAllowed =
             scopeItem.kind !== ts.SyntaxKind.SourceFile
@@ -1706,7 +1709,7 @@ export class Emitter {
         return result;
     }
 
-    private processVariableDeclarationOne(
+    processVariableDeclarationOne(
         name: ts.BindingName,
         initializer: ts.Expression,
         type: ts.TypeNode,
@@ -1753,7 +1756,7 @@ export class Emitter {
         return true;
     }
 
-    private processVariableStatement(node: ts.VariableStatement): void {
+    processVariableStatement(node: ts.VariableStatement): void {
         // tswow-workaround: fix namespaced variable declarations
         // tswow-todo: very ugly output (why didn't the original place these in the big namespace in the first place?)
         let namespaceCount = 0;
@@ -1788,7 +1791,7 @@ export class Emitter {
         }
     }
 
-    private processPredefineType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
+    processPredefineType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
         auto: boolean = false): void {
 
         if (auto) {
@@ -1864,13 +1867,13 @@ export class Emitter {
         }
     }
 
-    private compareTypes(t1: ts.TypeNode, t2: ts.TypeNode): boolean {
+    compareTypes(t1: ts.TypeNode, t2: ts.TypeNode): boolean {
         const kind1 = t1.kind === ts.SyntaxKind.LiteralType ? (<ts.LiteralTypeNode>t1).literal.kind : t1.kind;
         const kind2 = t2.kind === ts.SyntaxKind.LiteralType ? (<ts.LiteralTypeNode>t2).literal.kind : t2.kind;
         return kind1 === kind2;
     }
 
-    private typesAreNotSame(unionTypes: ts.TypeNode[]): boolean {
+    typesAreNotSame(unionTypes: ts.TypeNode[]): boolean {
         if (unionTypes.length <= 1) {
             return false;
         }
@@ -1880,7 +1883,7 @@ export class Emitter {
         return !same;
     }
 
-    private processType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
+    processType(typeIn: ts.TypeNode | ts.ParameterDeclaration | ts.TypeParameterDeclaration | ts.Expression,
         auto: boolean = false, skipPointerInType: boolean = false, noTypeName: boolean = false,
         implementingUnionType: boolean = false): void {
 
@@ -2173,7 +2176,7 @@ export class Emitter {
         }
     }
 
-    private writeTypeName(typeReference: ts.TypeReferenceNode) {
+    writeTypeName(typeReference: ts.TypeReferenceNode) {
         const entityProcess = (entity: ts.EntityName) => {
             if (entity.kind === ts.SyntaxKind.Identifier) {
                 this.writer.writeString(entity.text);
@@ -2191,7 +2194,7 @@ export class Emitter {
         entityProcess(typeReference.typeName);
     }
 
-    private isEnum(typeReference: ts.TypeReferenceNode) {
+    isEnum(typeReference: ts.TypeReferenceNode) {
         let isEnum = false;
         const entityProcessCheck = (entity: ts.EntityName) => {
             if (entity.kind === ts.SyntaxKind.QualifiedName) {
@@ -2205,7 +2208,7 @@ export class Emitter {
         return isEnum;
     }
 
-    private processDefaultValue(type: ts.TypeNode): void {
+    processDefaultValue(type: ts.TypeNode): void {
         switch (type.kind) {
             case ts.SyntaxKind.BooleanKeyword:
                 this.writer.writeString('false');
@@ -2245,7 +2248,7 @@ export class Emitter {
         }
     }
 
-    private processFunctionExpression(
+    processFunctionExpression(
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
         implementationMode?: boolean): boolean {
@@ -2257,7 +2260,7 @@ export class Emitter {
         return result;
     }
 
-    private processFunctionExpressionInternal(
+    processFunctionExpressionInternal(
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
         implementationMode?: boolean): boolean {
@@ -2640,7 +2643,7 @@ export class Emitter {
         }
     }
 
-    private writeClassName() {
+    writeClassName() {
         const classNode = this.scope[this.scope.length - 2];
         if (classNode && classNode.kind === ts.SyntaxKind.ClassDeclaration) {
             this.processExpression((<ts.ClassDeclaration>classNode).name);
@@ -2649,7 +2652,7 @@ export class Emitter {
         }
     }
 
-    private processTemplateParams(node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
+    processTemplateParams(node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
         | ts.MethodSignature | ts.ConstructorDeclaration | ts.TypeAliasDeclaration | ts.GetAccessorDeclaration
         | ts.SetAccessorDeclaration) {
 
@@ -2710,7 +2713,7 @@ export class Emitter {
         return next;
     }
 
-    private processTemplateParameters(node: ts.ClassDeclaration) {
+    processTemplateParameters(node: ts.ClassDeclaration) {
         let next = false;
         if (node.typeParameters) {
             this.writer.writeString('<');
@@ -2727,7 +2730,7 @@ export class Emitter {
         return next;
     }
 
-    private processTemplateArguments(node: ts.ExpressionWithTypeArguments | ts.CallExpression | ts.NewExpression,
+    processTemplateArguments(node: ts.ExpressionWithTypeArguments | ts.CallExpression | ts.NewExpression,
         skipPointerInType?: boolean) {
         let next = false;
         if (node.typeArguments) {
@@ -2756,7 +2759,7 @@ export class Emitter {
         }
     }
 
-    private processArrowFunction(node: ts.ArrowFunction): void {
+    processArrowFunction(node: ts.ArrowFunction): void {
         if (node.body.kind !== ts.SyntaxKind.Block) {
             // create body
             node.body = ts.createBlock([ts.createReturn(<ts.Expression>node.body)]);
@@ -2765,7 +2768,7 @@ export class Emitter {
         this.processFunctionExpression(<any>node);
     }
 
-    private isClassMemberDeclaration(node: ts.Node) {
+    isClassMemberDeclaration(node: ts.Node) {
         if (!node) {
             return false;
         }
@@ -2777,7 +2780,7 @@ export class Emitter {
             || node.kind === ts.SyntaxKind.SetAccessor;
     }
 
-    private isClassMemberSignature(node: ts.Node) {
+    isClassMemberSignature(node: ts.Node) {
         if (!node) {
             return false;
         }
@@ -2786,15 +2789,15 @@ export class Emitter {
             || node.kind === ts.SyntaxKind.PropertySignature;
     }
 
-    private isStatic(node: ts.Node) {
+    isStatic(node: ts.Node) {
         return node.modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.StaticKeyword);
     }
 
-    private isAbstract(node: ts.Node) {
+    isAbstract(node: ts.Node) {
         return node.modifiers && node.modifiers.some(m => m.kind === ts.SyntaxKind.AbstractKeyword);
     }
 
-    private processFunctionDeclaration(node: ts.FunctionDeclaration | ts.MethodDeclaration, implementationMode?: boolean): boolean {
+    processFunctionDeclaration(node: ts.FunctionDeclaration | ts.MethodDeclaration, implementationMode?: boolean): boolean {
 
         if (!implementationMode) {
             this.processPredefineType(node.type);
@@ -2814,7 +2817,7 @@ export class Emitter {
         return skip;
     }
 
-    private processReturnStatement(node: ts.ReturnStatement): void {
+    processReturnStatement(node: ts.ReturnStatement): void {
         const typeReturn = this.resolver.getOrResolveTypeOfAsTypeNode(node.expression);
         const functionDeclaration = (<ts.FunctionDeclaration>(this.scope[this.scope.length - 1]));
         let functionReturn = functionDeclaration.type || this.resolver.getOrResolveTypeOfAsTypeNode(functionDeclaration);
@@ -2870,7 +2873,7 @@ export class Emitter {
         this.writer.EndOfStatement();
     }
 
-    private processIfStatement(node: ts.IfStatement): void {
+    processIfStatement(node: ts.IfStatement): void {
         this.writer.writeString('if (');
         this.processExpression(node.expression);
         this.writer.writeString(') ');
@@ -2884,7 +2887,7 @@ export class Emitter {
         }
     }
 
-    private processDoStatement(node: ts.DoStatement): void {
+    processDoStatement(node: ts.DoStatement): void {
         this.writer.writeStringNewLine('do');
         this.processStatement(node.statement);
         this.writer.writeString('while (');
@@ -2892,14 +2895,14 @@ export class Emitter {
         this.writer.writeStringNewLine(');');
     }
 
-    private processWhileStatement(node: ts.WhileStatement): void {
+    processWhileStatement(node: ts.WhileStatement): void {
         this.writer.writeString('while (');
         this.processExpression(node.expression);
         this.writer.writeStringNewLine(')');
         this.processStatement(node.statement);
     }
 
-    private processForStatement(node: ts.ForStatement): void {
+    processForStatement(node: ts.ForStatement): void {
         this.writer.writeString('for (');
         const initVar = <any>node.initializer;
         this.processExpression(initVar);
@@ -2911,11 +2914,11 @@ export class Emitter {
         this.processStatement(node.statement);
     }
 
-    private processForInStatement(node: ts.ForInStatement): void {
+    processForInStatement(node: ts.ForInStatement): void {
         this.processForInStatementNoScope(node);
     }
 
-    private processForInStatementNoScope(node: ts.ForInStatement): void {
+    processForInStatementNoScope(node: ts.ForInStatement): void {
         this.writer.writeString('for (auto& ');
         const initVar = <any>node.initializer;
         initVar.__ignore_type = true;
@@ -2926,7 +2929,7 @@ export class Emitter {
         this.processStatement(node.statement);
     }
 
-    private processForOfStatement(node: ts.ForOfStatement): void {
+    processForOfStatement(node: ts.ForOfStatement): void {
 
         // if has Length access use iteration
         const hasLengthAccess = this.hasPropertyAccess(node.statement, 'length');
@@ -2963,15 +2966,15 @@ export class Emitter {
         }
     }
 
-    private processBreakStatement(node: ts.BreakStatement) {
+    processBreakStatement(node: ts.BreakStatement) {
         this.writer.writeStringNewLine('break;');
     }
 
-    private processContinueStatement(node: ts.ContinueStatement) {
+    processContinueStatement(node: ts.ContinueStatement) {
         this.writer.writeStringNewLine('continue;');
     }
 
-    private processSwitchStatement(node: ts.SwitchStatement) {
+    processSwitchStatement(node: ts.SwitchStatement) {
         const caseExpressions = node.caseBlock.clauses
             .filter(c => c.kind === ts.SyntaxKind.CaseClause)
             .map(element => (<ts.CaseClause>element).expression);
@@ -3002,7 +3005,7 @@ export class Emitter {
         this.processSwitchStatementForAnyInternal(node);
     }
 
-    private processSwitchStatementForBasicTypesInternal(node: ts.SwitchStatement) {
+    processSwitchStatementForBasicTypesInternal(node: ts.SwitchStatement) {
         const caseExpressions = node.caseBlock.clauses
             .filter(c => c.kind === ts.SyntaxKind.CaseClause)
             .map(element => (<ts.CaseClause>element).expression);
@@ -3048,7 +3051,7 @@ export class Emitter {
         this.writer.EndBlock();
     }
 
-    private processSwitchStatementForAnyInternal(node: ts.SwitchStatement) {
+    processSwitchStatementForAnyInternal(node: ts.SwitchStatement) {
 
         const switchName = `__switch${node.getFullStart()}_${node.getEnd()}`;
         const isAllStatic = node.caseBlock.clauses
@@ -3110,7 +3113,7 @@ export class Emitter {
         this.writer.EndBlock();
     }
 
-    private processBlock(node: ts.Block): void {
+    processBlock(node: ts.Block): void {
         this.writer.BeginBlock();
 
         node.statements.forEach(element => {
@@ -3120,28 +3123,28 @@ export class Emitter {
         this.writer.EndBlock();
     }
 
-    private processModuleBlock(node: ts.ModuleBlock): void {
+    processModuleBlock(node: ts.ModuleBlock): void {
         node.statements.forEach(s => {
             this.processStatement(s);
         });
     }
 
-    private processBooleanLiteral(node: ts.BooleanLiteral): void {
+    processBooleanLiteral(node: ts.BooleanLiteral): void {
         // find if you need to box value
         const boxing = (<any>node).__boxing;
         this.writer.writeString(`${node.kind === ts.SyntaxKind.TrueKeyword ? ('true' + (boxing ? '_t' : '')) : ('false' + (boxing ? '_t' : ''))}`);
     }
 
-    private processNullLiteral(node: ts.NullLiteral): void {
+    processNullLiteral(node: ts.NullLiteral): void {
         this.writer.writeString(node && node.parent.kind === ts.SyntaxKind.TypeAssertionExpression ? 'nullptr' : 'null');
     }
 
-    private isInt(valAsString: string) {
+    isInt(valAsString: string) {
         const val = parseInt(valAsString, 10);
         return val.toString() === valAsString;
     }
 
-    private processNumericLiteral(node: ts.NumericLiteral): void {
+    processNumericLiteral(node: ts.NumericLiteral): void {
         const boxing = (<any>node).__boxing;
         const val = parseInt(node.text, 10);
         const isInt = val.toString() === node.text;
@@ -3171,7 +3174,7 @@ export class Emitter {
         }
     }
 
-    private processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
+    processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
         let text = node.text.replace(/\n/g, '\\\n');
         if (text === '') {
@@ -3181,11 +3184,11 @@ export class Emitter {
         }
     }
 
-    private processNoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral): void {
+    processNoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral): void {
         this.processStringLiteral(<ts.StringLiteral><any>node);
     }
 
-    private processTemplateExpression(node: ts.TemplateExpression): void {
+    processTemplateExpression(node: ts.TemplateExpression): void {
         this.processStringLiteral(node.head);
         node.templateSpans.forEach(element => {
             this.writer.writeString(' + ');
@@ -3204,13 +3207,13 @@ export class Emitter {
         });
     }
 
-    private processRegularExpressionLiteral(node: ts.RegularExpressionLiteral): void {
+    processRegularExpressionLiteral(node: ts.RegularExpressionLiteral): void {
         this.writer.writeString('(new RegExp(');
         this.processStringLiteral(<ts.LiteralLikeNode>{ text: node.text.substring(1, node.text.length - 2) });
         this.writer.writeString('))');
     }
 
-    private processObjectLiteralExpression(node: ts.ObjectLiteralExpression): void {
+    processObjectLiteralExpression(node: ts.ObjectLiteralExpression): void {
         let next = false;
 
         const hasSpreadAssignment = node.properties.some(e => e.kind === ts.SyntaxKind.SpreadAssignment);
@@ -3288,11 +3291,11 @@ export class Emitter {
         }
     }
 
-    private processComputedPropertyName(node: ts.ComputedPropertyName): void {
+    processComputedPropertyName(node: ts.ComputedPropertyName): void {
         this.processExpression(node.expression);
     }
 
-    private processArrayLiteralExpression(node: ts.ArrayLiteralExpression): void {
+    processArrayLiteralExpression(node: ts.ArrayLiteralExpression): void {
         let next = false;
 
         const isDeconstruct = node.parent && node.parent.kind === ts.SyntaxKind.BinaryExpression
@@ -3363,7 +3366,7 @@ export class Emitter {
         }
     }
 
-    private processElementAccessExpression(node: ts.ElementAccessExpression): void {
+    processElementAccessExpression(node: ts.ElementAccessExpression): void {
 
         const symbolInfo = this.resolver.getSymbolAtLocation(node.expression);
         const type = this.resolver.typeToTypeNode(this.resolver.getOrResolveTypeOf(node.expression));
@@ -3423,13 +3426,13 @@ export class Emitter {
         }
     }
 
-    private processParenthesizedExpression(node: ts.ParenthesizedExpression) {
+    processParenthesizedExpression(node: ts.ParenthesizedExpression) {
         this.writer.writeString('(');
         this.processExpression(node.expression);
         this.writer.writeString(')');
     }
 
-    private processTypeAssertionExpression(node: ts.TypeAssertion) {
+    processTypeAssertionExpression(node: ts.TypeAssertion) {
         this.writer.writeString('static_cast<');
         this.processType(node.type);
         this.writer.writeString('>(');
@@ -3437,7 +3440,7 @@ export class Emitter {
         this.writer.writeString(')');
     }
 
-    private processPrefixUnaryExpression(node: ts.PrefixUnaryExpression): void {
+    processPrefixUnaryExpression(node: ts.PrefixUnaryExpression): void {
 
         const typeInfo = this.resolver.getOrResolveTypeOf(node.operand);
         const isEnum = this.resolver.isTypeFromSymbol(typeInfo, ts.SyntaxKind.EnumDeclaration);
@@ -3465,12 +3468,12 @@ export class Emitter {
         }
     }
 
-    private processPostfixUnaryExpression(node: ts.PostfixUnaryExpression): void {
+    processPostfixUnaryExpression(node: ts.PostfixUnaryExpression): void {
         this.processExpression(node.operand);
         this.writer.writeString(this.opsMap[node.operator]);
     }
 
-    private processConditionalExpression(node: ts.ConditionalExpression): void {
+    processConditionalExpression(node: ts.ConditionalExpression): void {
 
         const whenTrueType = this.resolver.getOrResolveTypeOfAsTypeNode(node.whenTrue);
         const whenFalseType = this.resolver.getOrResolveTypeOfAsTypeNode(node.whenFalse);
@@ -3499,7 +3502,7 @@ export class Emitter {
         }
     }
 
-    private processBinaryExpression(node: ts.BinaryExpression): void {
+    processBinaryExpression(node: ts.BinaryExpression): void {
         const opCode = node.operatorToken.kind;
         if (opCode === ts.SyntaxKind.InstanceOfKeyword) {
             this.writer.writeString('is<');
@@ -3602,7 +3605,7 @@ export class Emitter {
         }
     }
 
-    private processDeleteExpression(node: ts.DeleteExpression): void {
+    processDeleteExpression(node: ts.DeleteExpression): void {
         if (node.expression.kind === ts.SyntaxKind.PropertyAccessExpression) {
             const propertyAccess = <ts.PropertyAccessExpression>node.expression;
             this.processExpression(propertyAccess.expression);
@@ -3620,7 +3623,7 @@ export class Emitter {
         }
     }
 
-    private processNewExpression(node: ts.NewExpression): void {
+    processNewExpression(node: ts.NewExpression): void {
         if (node.parent.kind === ts.SyntaxKind.PropertyAccessExpression) {
             this.writer.writeString('(');
         }
@@ -3632,8 +3635,36 @@ export class Emitter {
         }
     }
 
-    private processCallExpression(node: ts.CallExpression | ts.NewExpression): void {
+    // @tswow-begin
+    processGetData(node: ts.CallExpression) {
+        let type = this.typeChecker.typeToString(
+            this.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
+        this.processExpression(node.expression);
+        this.writer.writeString(`<${type}>(ModID(),`);
+        // field
+        this.processExpression(node.arguments[0]);
+        // db field
+        this.writer.writeString(`,[](){ return `)
+        this.processExpression(node.arguments[1]);
+        this.writer.writeString(`;})`);
+    }
+    // @swow-end
 
+    processCallExpression(node: ts.CallExpression | ts.NewExpression): void {
+        // @tswow-begin
+        if(handleTSWoWOverride(this, node)) {
+            return;
+        }
+        if(node.getChildCount()>0) {
+            let fsChild = node.getChildAt(0);
+            if(fsChild.getChildCount()>0) {
+                let lsGrandchild = fsChild.getChildAt(fsChild.getChildCount()-1);
+                if(lsGrandchild.getText()=="GetObject") {
+                    return this.processGetData(node as ts.CallExpression);
+                }
+            }
+        }
+        
         const isNew = node.kind === ts.SyntaxKind.NewExpression;
         const typeOfExpression = isNew && this.resolver.getOrResolveTypeOf(node.expression);
         const isArray = isNew && typeOfExpression && typeOfExpression.symbol && typeOfExpression.symbol.name === 'ArrayConstructor';
@@ -3672,7 +3703,7 @@ export class Emitter {
         this.writer.writeString(')');
     }
 
-    private processThisExpression(node: ts.ThisExpression): void {
+    processThisExpression(node: ts.ThisExpression): void {
 
         const method = this.scope[this.scope.length - 1];
         if (method
@@ -3695,7 +3726,7 @@ export class Emitter {
         }
     }
 
-    private processSuperExpression(node: ts.SuperExpression): void {
+    processSuperExpression(node: ts.SuperExpression): void {
         if (node.parent.kind === ts.SyntaxKind.CallExpression) {
             const classNode = <ts.ClassDeclaration>this.scope[this.scope.length - 2];
             if (classNode) {
@@ -3714,17 +3745,17 @@ export class Emitter {
         this.writer.writeString('__super');
     }
 
-    private processVoidExpression(node: ts.VoidExpression): void {
+    processVoidExpression(node: ts.VoidExpression): void {
         this.writer.writeString('Void(');
         this.processExpression(node.expression);
         this.writer.writeString(')');
     }
 
-    private processNonNullExpression(node: ts.NonNullExpression): void {
+    processNonNullExpression(node: ts.NonNullExpression): void {
         this.processExpression(node.expression);
     }
 
-    private processAsExpression(node: ts.AsExpression): void {
+    processAsExpression(node: ts.AsExpression): void {
         this.writer.writeString('as<');
         this.processType(node.type);
         this.writer.writeString('>(');
@@ -3732,7 +3763,7 @@ export class Emitter {
         this.writer.writeString(')');
     }
 
-    private processSpreadElement(node: ts.SpreadElement): void {
+    processSpreadElement(node: ts.SpreadElement): void {
         if (node.parent && node.parent.kind === ts.SyntaxKind.CallExpression) {
             const info = this.resolver.getSymbolAtLocation((<ts.CallExpression>node.parent).expression);
             const parameters = (<ts.FunctionDeclaration>info.valueDeclaration).parameters;
@@ -3753,13 +3784,13 @@ export class Emitter {
         }
     }
 
-    private processAwaitExpression(node: ts.AwaitExpression): void {
+    processAwaitExpression(node: ts.AwaitExpression): void {
         this.writer.writeString('std::async([=]() { ');
         this.processExpression(node.expression);
         this.writer.writeString('; })');
     }
 
-    private processIdentifier(node: ts.Identifier): void {
+    processIdentifier(node: ts.Identifier): void {
 
         if (this.isWritingMain) {
             const isRightPartOfPropertyAccess = node.parent.kind === ts.SyntaxKind.QualifiedName
@@ -3797,7 +3828,7 @@ export class Emitter {
         // @tswow-end
     }
 
-    private processPropertyAccessExpression(node: ts.PropertyAccessExpression): void {
+    processPropertyAccessExpression(node: ts.PropertyAccessExpression): void {
 
         const typeInfo = this.resolver.getOrResolveTypeOf(node.expression);
         const symbolInfo = this.resolver.getSymbolAtLocation(node.name);
