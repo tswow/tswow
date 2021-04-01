@@ -280,9 +280,9 @@ export namespace Realm {
             , async(args)=>{
 
             let realms = getRealmsOrDefault(args);
-            args = args.filter(x=>realms.find(y=>y.identifier==x));
+            args = args.filter(x=>!realms.find(y=>y.identifier==x));
             let cmd = args.join(' ')
-            getRealm(args[0]).sendWorldserverCommand(cmd,true);
+            realms.forEach(x=>x.sendWorldserverCommand(cmd,true));
         });
 
         realm.addCommand(
