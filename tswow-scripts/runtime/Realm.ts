@@ -279,8 +279,10 @@ export namespace Realm {
             , 'Sends a command to the realms worldserver'
             , async(args)=>{
 
-            let realms = getRealmsOrDefault(args);
-            args = args.filter(x=>!realms.find(y=>y.identifier==x));
+            let realms : Realm[] = [];
+            while(getRealms().find(x=>x.identifier==args[0])) {
+                realms.push(getRealm(args.shift() as string));
+            }
             let cmd = args.join(' ')
             realms.forEach(x=>x.sendWorldserverCommand(cmd,true));
         });
