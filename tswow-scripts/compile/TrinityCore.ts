@@ -41,7 +41,7 @@ export namespace TrinityCore {
         let setupCommand: string;
         let buildCommand: string;
 
-        if(!args1.includes('--no-build')) {
+        if(!args1.includes('--no-compile')) {
             if (isWindows()) {
                 setupCommand = `${cmake} -DTOOLS=${tools}`
                 +` -DSCRIPTS=${scripts}`
