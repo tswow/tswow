@@ -125,7 +125,7 @@ export namespace Build {
             ds.forEach(x=>{
                 modules.forEach(y=>Addon.build(y.id,x.id))
                 wfs.copy(ipaths.datasetLuaXML(x.id)
-                    , x.config.mpq_path, true);
+                    , x.config.mpq_path);
             });
 
             runningClients.forEach(x=>x.client.start());
