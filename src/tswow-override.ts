@@ -23,9 +23,31 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         // key
         emt.processExpression(node.arguments[0]);
         // default value, wrapped in callback so we don't create it every time
-        emt.writer.writeString(`,[](){ return `)
+        emt.writer.writeString(`,[&](){ return `)
         emt.processExpression(node.arguments[1]);
         emt.writer.writeString(`;})`);
+    },
+
+    "GetDBObject": (emt,node)=>{
+        let type = emt.typeChecker.typeToString(
+            emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
+        emt.processExpression(node.expression);
+        emt.writer.writeString(`<${type}>(ModID(),`);
+        // argument
+        emt.processExpression(node.arguments[0]);
+
+        emt.writer.writeString(`,[&]()`);
+        emt.writer.BeginBlock();
+        emt.writer.writeString(`auto dbobj = LoadRows(`);
+        emt.writer.writeString(`${type},`);
+        emt.processExpression(node.arguments[1]);
+        emt.writer.writeStringNewLine(`);`);
+        emt.writer.writeString(`if(dbobj.get_length() == 0) return `);
+        emt.processExpression(node.arguments[2]);
+        emt.writer.writeStringNewLine(`;`);
+        emt.writer.writeStringNewLine(`return dbobj[0];`);
+        emt.writer.EndBlock(true);
+        emt.writer.writeStringNewLine(`);`);
     },
 
     "SetObject": (emt,node)=>{

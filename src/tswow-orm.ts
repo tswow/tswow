@@ -150,7 +150,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeString('\n    ');
     writer.writeString('TSString saveQuery()');
     writer.BeginBlock();
-    writer.writeString(`return JSTR("INSERT INTO \`${entry.className}\` VALUES ( `);
+    writer.writeString(`return JSTR("INSERT INTO \`${entry.className.toLowerCase()}\` VALUES ( `);
     writer.writeString(
         entry.fields.map(x=>{
             let str = "";
@@ -186,7 +186,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     writer.writeString('    TSString removeQuery() ');
     writer.BeginBlock();
-    writer.writeString(`return JSTR("DELETE FROM \`${entry.className}\` WHERE `);
+    writer.writeString(`return JSTR("DELETE FROM \`${entry.className.toLowerCase()}\` WHERE `);
     writer.writeString(
         pks.map(x=>`\`${x.name}\` = ")+this->${x.name}+JSTR("`)
             .join(' AND '));
@@ -200,7 +200,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     writer.writeString(`    static TSString LoadQuery(TSString query)`)
     writer.BeginBlock();
-    writer.writeStringNewLine(`return JSTR("SELECT * from ${entry.className} WHERE ") + query + JSTR(";");`)
+    writer.writeStringNewLine(`return JSTR("SELECT * from ${entry.className.toLowerCase()} WHERE ") + query + JSTR(";");`)
     writer.EndBlock();
 
     writer.writeString(`\n    static TSArray<std::shared_ptr<${entry.className}>> Load(TSString query)`);
@@ -262,24 +262,24 @@ export function writeTableCreationCall(writer: CodeWriter) {
     writer.writeStringNewLine('    WriteTables();');
 }
 
-const getSQLType = (field: Field)=>{
+const getReadSQLType = (field: Field)=>{
     switch(field.type) {
-        case 'int': return 'INT'
-        case 'int8': return 'TINYINT'
-        case 'int16': return 'SMALLINT'
-        case 'int32': return 'INT'
-        case 'int64': return 'BIGINT'
-        case 'uint8': return 'TINYINT UNSIGNED'
-        case 'uint16': return 'SMALLINT UNSIGNED'
-        case 'uint32': return 'INT UNSIGNED'
-        case 'uint64': return 'BIGINT UNSIGNED'
+        case 'int': return 'INT(11)'
+        case 'int8': return 'TINYINT(4)'
+        case 'int16': return 'SMALLINT(6)'
+        case 'int32': return 'INT(11)'
+        case 'int64': return 'BIGINT(20)'
+        case 'uint8': return 'TINYINT(3) UNSIGNED'
+        case 'uint16': return 'SMALLINT(5) UNSIGNED'
+        case 'uint32': return 'INT(10) UNSIGNED'
+        case 'uint64': return 'BIGINT(20) UNSIGNED'
         case 'float': return 'FLOAT'
         case 'double': return 'DOUBLE'
         case 'string': return 'TEXT'
     }
 }
 
-const getFullSQLType = (field: Field)=>{
+const getWriteSQLType = (field: Field)=>{
     switch(field.type) {
         case 'int': return 'INT'
         case 'int8': return 'TINYINT'
@@ -306,14 +306,12 @@ export function writeTableCreationFile(outDir: string) {
     writer.writeStringNewLine('#include <string>')
     writer.writeStringNewLine('#include <cstdlib>')
     writer.writeStringNewLine(`#define COLUMN_NAME_INDEX 3`)
-    writer.writeStringNewLine(`#define COLUMN_TYPE_INDEX 7`)
+    writer.writeStringNewLine(`#define COLUMN_TYPE_INDEX 15`)
 
     writer.writeStringNewLine('');
     writer.writeString(`void ask(std::string msg)`)
     writer.BeginBlock();
-    // TODO: Implement this function, it should ask if
-    // the user wants to do destructive database operation,
-    // and only proceed if they type out "understand"
+    writer.writeStringNewLine(`std::cout << msg << ", this is a destructive operation.\\n";`);
     writer.EndBlock();
     writer.writeString('void WriteTables()')
     writer.BeginBlock();
@@ -375,7 +373,7 @@ export function writeTableCreationFile(outDir: string) {
             );
 
             writer.writeString(
-                `if (type != "${getSQLType(x)}")`)
+                `if (type != "${getReadSQLType(x)}")`)
             writer.BeginBlock();
             // mismatch + we're a string = we have to remove and add again
             if(x.type=='string') {
@@ -391,7 +389,7 @@ export function writeTableCreationFile(outDir: string) {
                 writer.writeStringNewLine(
                     `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`\"+column+\"\`;"));`)
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`\"+column+\"\` ${getFullSQLType(x)};"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`\"+column+\"\` ${getWriteSQLType(x)};"));`)
                 writer.EndBlock(false);
                 writer.writeString(` else `);
                 writer.BeginBlock();
@@ -405,7 +403,7 @@ export function writeTableCreationFile(outDir: string) {
                 writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
                 writer.writeStringNewLine(
                     `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\``
-                    + ` MODIFY \`${x.name}\` ${getSQLType(x)}`
+                    + ` MODIFY \`${x.name}\` ${getWriteSQLType(x)}`
                     + `;"));`);
                 writer.EndBlock();
             }
@@ -435,7 +433,7 @@ export function writeTableCreationFile(outDir: string) {
                 writer.writeStringNewLine(`should_create = true;`);
             } else {
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`${x.name}\` ${getFullSQLType(x)};"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`${x.name}\` ${getWriteSQLType(x)};"));`)
             }
             writer.EndBlock();
         });
@@ -450,7 +448,7 @@ export function writeTableCreationFile(outDir: string) {
             `Query${dbid}(JSTR("CREATE TABLE \`${entry.className}\` (`);
         entry.fields.forEach((field,index,arr)=>{
             writer.writeString(
-                `\`${field.name}\` ${getFullSQLType(field)}, `);
+                `\`${field.name}\` ${getWriteSQLType(field)}, `);
         });
         writer.writeString('PRIMARY KEY (')
         entry.fields.filter(x=>x.isPrimaryKey).forEach((field,i,arr)=>{
