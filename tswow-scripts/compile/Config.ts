@@ -45,6 +45,15 @@ export namespace Config {
         }
 
         wfs.copy(spaths.tcGlobaldts,ipaths.binglobaldts);
+        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
+            if(wfs.exists(ipaths.moduleScripts(x))) {
+                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
+            }
+            if(wfs.exists(ipaths.moduleAddons(x))) {
+                wfs.copy(ipaths.addonSourceGlobal,ipaths.addonDestGlobal(x));
+            }
+        });
+
         wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
         wfs.copy(spaths.installAddons, ipaths.addons);
         wfs.copy(spaths.installSymlinkMaker, ipaths.symlinkMaker);
