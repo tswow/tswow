@@ -26,7 +26,7 @@ export namespace Datascripts {
             term.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
         }
 
-        wfs.mkDirs(ipaths.datasetDBC(dataset.id), true);
+        wfs.mkDirs(ipaths.datasetDBC(dataset.id), false);
 
         dataset.installServerData();
         await dataset.installDatabase(false);
