@@ -124,11 +124,11 @@ export class ItemSpells extends SystemArray<ItemSpell, ItemTemplate> {
         let free = this.getFree();
         free.ID.set(id);
         if(category!==undefined) free.Category.set(category);
-        if(trigger!==undefined) free.Category.set(trigger);
-        if(charges!==undefined) free.Category.set(charges);
-        if(procsPerMinute!==undefined) free.Category.set(procsPerMinute);
-        if(cooldown!==undefined) free.Category.set(cooldown);
-        if(categoryCooldown!==undefined) free.Category.set(categoryCooldown);
+        if(trigger!==undefined) free.Trigger.set(trigger);
+        if(charges!==undefined) free.Charges.set(charges);
+        if(procsPerMinute!==undefined) free.ProcsPerMinute.set(procsPerMinute);
+        if(cooldown!==undefined) free.Cooldown.set(cooldown);
+        if(categoryCooldown!==undefined) free.CategoryCooldown.set(categoryCooldown);
         return free;
     }
 }
