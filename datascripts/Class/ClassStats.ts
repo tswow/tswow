@@ -20,8 +20,6 @@ import { DBCFile } from "wotlkdata/dbc/DBCFile";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Class } from "./Class";
-import { player_classlevelstatsRow } from "wotlkdata/sql/types/player_classlevelstats";
-import { player_levelstatsRow } from "wotlkdata/sql/types/player_levelstats";
 
 interface GtDBC {
     Data : Cell<number,any>;
@@ -52,9 +50,9 @@ class StatFile<D extends GtDBC> extends Subsystem<Class>{
 }
 
 export class ClassAttribute extends Subsystem<Class>{
-    protected field: "agi"|"inte"|"str"|"spi";
+    protected field: "agi"|"inte"|"str"|"spi"|"sta";
 
-    constructor(cls: Class, field: "agi"|"inte"|"str"|"spi") {
+    constructor(cls: Class, field: "agi"|"inte"|"str"|"spi"|"sta") {
         super(cls);
         this.field = field;
     }
@@ -115,6 +113,7 @@ export class ClassStats extends Subsystem<Class> {
         return new StatFile(this.owner, this.owner.row.ID.get(), size, file);
     }
 
+    get Stamina() { return new ClassAttribute(this.owner, 'sta'); }
     get Strength() { return new ClassAttribute(this.owner,"str"); }
     get Agility() { return new ClassAttribute(this.owner,"agi"); }
     get Intellect() { return new ClassAttribute(this.owner,"inte"); }

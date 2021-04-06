@@ -201,7 +201,7 @@ export class ItemStat extends ArrayEntry<ItemTemplate> {
 
 export class ItemStats extends SystemArray<ItemStat,ItemTemplate> {
     get length(): number {
-        return a.length;
+        return 10;
     }
 
     get(index: number) {
@@ -227,87 +227,87 @@ export class ItemStats extends SystemArray<ItemStat,ItemTemplate> {
 
     addHealth(value: number) { return this.add(1, value)}
 
-    addAgility(value: number) { return this.add(2, value)}
+    addAgility(value: number) { return this.add(3, value)}
 
-    addStrength(value: number) { return this.add(3, value)}
+    addStrength(value: number) { return this.add(4, value)}
 
-    addIntellect(value: number) { return this.add(4, value)}
+    addIntellect(value: number) { return this.add(5, value)}
 
-    addSpirit(value: number) { return this.add(5, value)}
+    addSpirit(value: number) { return this.add(6, value)}
 
-    addStamina(value: number) { return this.add(6, value)}
+    addStamina(value: number) { return this.add(7, value)}
 
-    addDefenseSkillRating(value: number) { return this.add(7, value)}
+    addDefenseSkillRating(value: number) { return this.add(12, value)}
 
-    addDodgeRating(value: number) { return this.add(8, value)}
+    addDodgeRating(value: number) { return this.add(13, value)}
 
-    addParryRating(value: number) { return this.add(9, value)}
+    addParryRating(value: number) { return this.add(14, value)}
 
-    addBlockRating(value: number) { return this.add(10, value)}
+    addBlockRating(value: number) { return this.add(15, value)}
 
-    addHitMeleeRating(value: number) { return this.add(11, value)}
+    addHitMeleeRating(value: number) { return this.add(16, value)}
 
-    addHitRangedRating(value: number) { return this.add(12, value)}
+    addHitRangedRating(value: number) { return this.add(17, value)}
 
-    addHitSpellRating(value: number) { return this.add(13, value)}
+    addHitSpellRating(value: number) { return this.add(18, value)}
 
-    addCritMeleeRating(value: number) { return this.add(14, value)}
+    addCritMeleeRating(value: number) { return this.add(19, value)}
 
-    addCritRangedRating(value: number) { return this.add(15, value)}
+    addCritRangedRating(value: number) { return this.add(20, value)}
 
-    addCritSpellRating(value: number) { return this.add(16, value)}
+    addCritSpellRating(value: number) { return this.add(21, value)}
 
-    addHitTakenMeleeRating(value: number) { return this.add(17, value)}
+    addHitTakenMeleeRating(value: number) { return this.add(22, value)}
 
-    addHitTakenRangedRating(value: number) { return this.add(18, value)}
+    addHitTakenRangedRating(value: number) { return this.add(23, value)}
 
-    addHitTakenSpellRating(value: number) { return this.add(19, value)}
+    addHitTakenSpellRating(value: number) { return this.add(24, value)}
 
-    addCritTakenMeleeRating(value: number) { return this.add(20, value)}
+    addCritTakenMeleeRating(value: number) { return this.add(25, value)}
 
-    addCritTakenRangedRating(value: number) { return this.add(21, value)}        
+    addCritTakenRangedRating(value: number) { return this.add(26, value)}        
 
-    addCritTakenSpellRating(value: number) { return this.add(22, value)}
+    addCritTakenSpellRating(value: number) { return this.add(27, value)}
 
-    addHasteMeleeRating(value: number) { return this.add(23, value)}
+    addHasteMeleeRating(value: number) { return this.add(28, value)}
 
-    addHasteRangedRating(value: number) { return this.add(24, value)}
+    addHasteRangedRating(value: number) { return this.add(29, value)}
 
-    addHasteSpellRating(value: number) { return this.add(25, value)}
+    addHasteSpellRating(value: number) { return this.add(30, value)}
 
-    addHitRating(value: number) { return this.add(26, value)}
+    addHitRating(value: number) { return this.add(31, value)}
 
-    addCritRating(value: number) { return this.add(27, value)}
+    addCritRating(value: number) { return this.add(32, value)}
 
-    addHitTakenRating(value: number) { return this.add(28, value)}
+    addHitTakenRating(value: number) { return this.add(33, value)}
 
-    addCritTakenRating(value: number) { return this.add(29, value)}
+    addCritTakenRating(value: number) { return this.add(34, value)}
 
-    addResilienceRating(value: number) { return this.add(30, value)}
+    addResilienceRating(value: number) { return this.add(35, value)}
 
-    addHasteRating(value: number) { return this.add(31, value)}
+    addHasteRating(value: number) { return this.add(36, value)}
 
-    addExpertiseRating(value: number) { return this.add(32, value)}
+    addExpertiseRating(value: number) { return this.add(37, value)}
 
-    addAttackPower(value: number) { return this.add(33, value)}
+    addAttackPower(value: number) { return this.add(38, value)}
 
-    addRangedAttackPower(value: number) { return this.add(34, value)}
+    addRangedAttackPower(value: number) { return this.add(39, value)}
 
-    addFeralAttackPower(value: number) { return this.add(35, value)}
+    addFeralAttackPower(value: number) { return this.add(40, value)}
 
-    addSpellHealingDone(value: number) { return this.add(36, value)}
+    addSpellHealingDone(value: number) { return this.add(41, value)}
 
-    addSpellDamageDone(value: number) { return this.add(37, value)}
+    addSpellDamageDone(value: number) { return this.add(42, value)}
 
-    addManaRegeneration(value: number) { return this.add(38, value)}
+    addManaRegeneration(value: number) { return this.add(43, value)}
 
-    addArmorPenetrationRating(value: number) { return this.add(39, value)}       
+    addArmorPenetrationRating(value: number) { return this.add(44, value)}       
 
-    addSpellPower(value: number) { return this.add(40, value)}
+    addSpellPower(value: number) { return this.add(45, value)}
 
-    addHealthRegen(value: number) { return this.add(41, value)}
+    addHealthRegen(value: number) { return this.add(46, value)}
 
-    addSpellPenetration(value: number) { return this.add(42, value)}
+    addSpellPenetration(value: number) { return this.add(47, value)}
 
-    addBlockValue(value: number) { return this.add(43, value)}
+    addBlockValue(value: number) { return this.add(48, value)}
 }

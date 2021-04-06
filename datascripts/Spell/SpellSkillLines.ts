@@ -77,6 +77,10 @@ export class SpellSkillLineAbilites extends Subsystem<Spell> {
         }
     }
 
+    addAutolearn(skillLine: number, parentAbility: number = -1) {
+        return this.add(skillLine).setAutolearn();
+    }
+
     add(skillLine: number, parentAbility: number = -1) {
         const rci = DBC.SkillRaceClassInfo.find({SkillID: skillLine});
         let racemask = rci.RaceMask.get();
