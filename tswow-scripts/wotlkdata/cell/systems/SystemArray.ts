@@ -54,8 +54,9 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
             const v = this.get(i);
             if (v.isClear()) {
                 values.push('<empty>')
+            } else {
+                values.push(v.objectify());
             }
-            values.push(v.objectify());
         }
         return values;
     }
