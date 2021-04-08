@@ -24,6 +24,7 @@ import { SpellEffectMechanics } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { SpellRadius } from "./SpellRadius";
+import { std } from "../tswow-stdlib-data";
 
 export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     constructor(owner: Spell) {
@@ -41,6 +42,33 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     add() {
         return this.getFree();
     }
+
+    addLearnSpells(mod: string, id: string, ...spells: number[]) {
+        let nuSpellsNeeded = Math.ceil(spells.length/2);
+
+        let nuSpells: Spell[] = [];
+        for(let i=0;i<nuSpellsNeeded;++i) {
+            nuSpells.push(std.Spells.create(mod,`${id}_${i}`));
+        }
+
+        this.add()
+            .EffectType.setTriggerSpell()
+            .TriggerSpell.set(nuSpells[0].ID)
+
+
+        for(let i=0;i<spells.length;++i) {
+            let spellIndex = Math.floor(i/2);
+            nuSpells[spellIndex].Effects.add()
+                .EffectType.setLearnSpell()
+                .TriggerSpell.set(spells[i])
+        }
+
+        for(let i=0;i<nuSpells.length-1;++i) {
+            nuSpells[i].Effects.add()
+                .EffectType.setTriggerSpell()
+                .TriggerSpell.set(nuSpells[i+1].ID)
+        }
+    }
 }
 
 export class SpellEffect extends ArrayEntry<Spell> {
@@ -51,6 +79,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     isClear(): boolean {
         return this.EffectType.get() === 0;
     }
+
     clear(): Spell {
         this.BasePoints.set(0);
         this.ChainAmplitude.set(0);

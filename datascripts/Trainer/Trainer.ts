@@ -22,6 +22,7 @@ import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_defaul
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
+import { isTradeskillSpell } from "../Profession/ProfessionType";
 
 export class TrainerLoc<T> extends SQLLocSystem<Trainer<T>> {
     protected getMain(): Cell<string, any> {

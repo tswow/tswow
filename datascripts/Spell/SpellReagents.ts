@@ -17,11 +17,17 @@
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { Spell } from "./Spell";
 
-export class SpellReagentEntry extends ArrayEntry<Spell> {
-    get Reagent() { return this.wrapIndex(this.owner.row.Reagent,this.index); }
-    get ReagentCount() { return this.wrapIndex(this.owner.row.ReagentCount,this.index); }
+export class SpellReagentEntry<T> extends ArrayEntry<T> {
+    protected spell: Spell;
+    get Reagent() { return this.wrapIndex(this.spell.row.Reagent,this.index); }
+    get ReagentCount() { return this.wrapIndex(this.spell.row.ReagentCount,this.index); }
 
-    clear(): Spell {
+    constructor(owner: T, index: number, spell: Spell) {
+        super(owner,index);
+        this.spell = spell;
+    }
+
+    clear(): T {
         this.Reagent.set(0);
         this.ReagentCount.set(0);
         return this.owner;
@@ -37,13 +43,20 @@ export class SpellReagentEntry extends ArrayEntry<Spell> {
     }
 }
 
-export class SpellReagents extends SystemArray<SpellReagentEntry, Spell> {
+export class SpellReagents<T> extends SystemArray<SpellReagentEntry<T>, T> {
+    protected spell: Spell;
+
+    constructor(owner: T, spell: Spell) {
+        super(owner);
+        this.spell = spell;
+    }
+
     get length(): number {
         return 8;
     }
 
-    get(index: number): SpellReagentEntry {
-        return new SpellReagentEntry(this.owner, index);
+    get(index: number): SpellReagentEntry<T> {
+        return new SpellReagentEntry(this.owner, index, this.spell);
     }
 
     add(reagent: number, count: number) {

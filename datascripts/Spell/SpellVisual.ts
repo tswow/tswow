@@ -22,6 +22,7 @@ import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 import { Vector3 } from "wotlkdata/cell/systems/Vector3"
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
+import { SpellAnimation } from "./SpellAnimation";
 
 function addKitRow(id: number) {
     return DBC.SpellVisualKit.add(id,{
@@ -85,7 +86,7 @@ export class SpellVisualKit extends Subsystem<Spell> {
     get SoundID() { return this.wrap(this.row.SoundID); }
     get StartAnimID() { return this.wrap(this.row.StartAnimID); }
     get WorldEffect() { return this.wrap(this.row.WorldEffect); }
-    get AnimID() { return this.wrap(this.row.AnimID); }
+    get AnimID() { return new SpellAnimation(this, this.row.AnimID); }
 
     get CharProc() { return this.wrapArray(this.row.CharProc)}
 

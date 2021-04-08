@@ -44,6 +44,7 @@ import { SpellSkillLineAbilites } from "./SpellSkillLines";
 import { SpellVisual } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
+import { SingleArraySystem, SingleArrayEntry } from "../Base/SingleArraySystem";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
@@ -61,8 +62,8 @@ export class Spell extends MainEntity<SpellRow> {
     get TargetType() { return new SpellTargetType(this); }
     get CreatureTargets() { return new SpellCreatureTarget(this); }
 
-    get Totems() { return this.wrapArray(this.row.Totem); }
-    get Reagents() { return new SpellReagents(this); }
+    get Totems() { return new SingleArraySystem(this,this.row.Totem,0); }
+    get Reagents() { return new SpellReagents(this,this); }
 
     get RequiresSpellFocus() { return this.wrap(this.row.RequiresSpellFocus); }
     get FacingCasterFlags() { return new MaskCell(this, this.row.FacingCasterFlags); }
@@ -111,11 +112,11 @@ export class Spell extends MainEntity<SpellRow> {
     get DefenseType() { return this.wrap(this.row.DefenseType); }
     get PreventionType() { return this.wrap(this.row.PreventionType); }
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
-    get CastTime() { return new SpellCastTime(this); }
+    get CastTime() { return new SpellCastTime(this,this); }
     get Category() { return this.wrap(this.row.Category); }
 
     /** Points to a TotemCategory */
-    get RequiredTotems() { return this.wrapArray(this.row.RequiredTotemCategoryID); }
+    get RequiredTotems() { return new SingleArraySystem(this,this.row.RequiredTotemCategoryID,0); }
     get Faction() { return new SpellReputation(this); }
     get RequiredAuraVision() { return this.wrap(this.row.RequiredAuraVision); }
 

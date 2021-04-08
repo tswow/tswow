@@ -20,20 +20,23 @@ import { SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
 import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 
-export class SpellCastTime extends Subsystem<Spell> {
+export class SpellCastTime<T> extends Subsystem<T> {
     readonly row: SpellCastTimesRow;
-    constructor(owner: Spell) {
+    protected spell: Spell;
+
+    constructor(owner: T, spell: Spell) {
         super(owner);
-        if(owner.row.CastingTimeIndex.get()===0)  {
+        this.spell = spell;
+        if(spell.row.CastingTimeIndex.get()===0)  {
             this.row = DBC.SpellCastTimes.add(Ids.SpellCastTimes.id());
         } else {
             // TODO: This is dumb, it creates a new object every time
             // you access it.
             this.row = DBC.SpellCastTimes
-                .findById(this.owner.row.CastingTimeIndex.get())
+                .findById(this.spell.row.CastingTimeIndex.get())
                 .clone(Ids.SpellCastTimes.id())
         }
-        this.owner.row.CastingTimeIndex.set(this.row.ID.get());
+        this.spell.row.CastingTimeIndex.set(this.row.ID.get());
     }
 
     get Base() { return this.wrap(this.row.Base); }
