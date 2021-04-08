@@ -98,7 +98,7 @@ export namespace Build {
             , async(args) => {
 
             await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>
-                MPQ.buildDevMPQ(x,args.includes('--use-timer'),args.includes('--client-only'))
+                MPQ.buildDevMPQ(x,args.includes('--use-timer'),args.includes('--client-only'),args)
             ));
         })
         .addAlias('data');

@@ -15,7 +15,8 @@ export namespace Datascripts {
     export async function build(
           dataset: Datasets.Dataset
         , readonly: boolean
-        , useTimer: boolean) {
+        , useTimer: boolean
+        , args?: string[]) {
 
         term.log(`Building DataScripts for dataset ${dataset.id}`);
         await Modules.refreshModules();
@@ -50,6 +51,7 @@ export namespace Datascripts {
             wsys.exec(
                 `node -r source-map-support/register ${ipaths.wotlkdataIndex}` 
                 +` ${Buffer.from(JSON.stringify(settings)).toString('base64')}`
+                + ` ${(args ? args.join(' '):'')}`
                 , 'inherit');
         } catch (error) {
             throw new Error(`Failed to rebuild patches`);
@@ -61,7 +63,7 @@ export namespace Datascripts {
     export function initialize() {
         commands.addCommand('check','dataset','',async (args: any[])=>{
             await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>{
-                return build(x,true,args.includes('--use-timer'));
+                return build(x,true,args.includes('--use-timer'),args);
             }));
         });
     }

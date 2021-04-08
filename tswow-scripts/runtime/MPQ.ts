@@ -17,10 +17,11 @@ export namespace MPQ {
      */
     async function prepareBuild(
           dataset: Datasets.Dataset
-        , useTimer: boolean) {
+        , useTimer: boolean
+        , args?: string[]) {
 
         // Build output dbc
-        await Datascripts.build(dataset, false, useTimer);
+        await Datascripts.build(dataset, false, useTimer, args);
         const modules = dataset.config.modules;
         return Modules.getModules()
             .filter(x => !wfs.exists(ipaths.moduleSymlink(x.id)) && modules.includes(x.id))
@@ -37,9 +38,10 @@ export namespace MPQ {
     export async function buildMpqFolder(
           dataset: Datasets.Dataset
         , destination: string
-        , useTimer: boolean) {
+        , useTimer: boolean
+        , args?: string[]) {
 
-        let folders = await prepareBuild(dataset, useTimer);
+        let folders = await prepareBuild(dataset, useTimer, args);
         term.log(`Building MPQ folder at ${destination} for dataset ${dataset.id}`);
         if(wfs.exists(destination) && !wfs.isDirectory(destination)) {
             throw new Error(`Target MPQ folder is a file: ${destination}`);
@@ -103,7 +105,8 @@ export namespace MPQ {
     export async function buildDevMPQ(
           dataset: Datasets.Dataset
         , useTimer: boolean
-        , clientOnly: boolean) {
+        , clientOnly: boolean
+        , args?: string[]) {
 
         let clientWasStarted = dataset.client.isRunning();
 
@@ -111,7 +114,7 @@ export namespace MPQ {
         if(clientWasStarted) {
             dataset.client.kill();
         }
-        await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer);
+        await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer,args);
         if(clientWasStarted) {
             dataset.client.start();
         }
