@@ -28,7 +28,7 @@ import { GameObjectInstance } from "./GameObjectInstance"
 export const GameObjectTemplates = {
     create(mod: string, id: string, parent: number = -1) {
         const entry = Ids.GameObjectTemplate.id(mod,id)
-        const row = parent == -1 ? SQL.gameobject_template
+        const row = parent != -1 ? SQL.gameobject_template
             .find({entry:parent}).clone(entry)
             : SQL.gameobject_template.add(entry)
         return new GameObjectBase(row);
