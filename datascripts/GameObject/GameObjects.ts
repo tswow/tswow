@@ -69,7 +69,7 @@ export const GameObjectTemplates = {
     },
 
     load(id: number) {
-        return new GameObjectBase(SQL.gameobject_template.find({entry:id}));
+        return new GameObjectBase(SQL.gameobject_template.findAssert(`gameobject_template(${id})`,{entry:id}));
     },
 
     filter(query: gameobject_templateQuery) {
