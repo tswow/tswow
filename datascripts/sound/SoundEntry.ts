@@ -99,9 +99,10 @@ export class SoundEntry<T> extends Subsystem<T>{
     get OuterRadius2D() { return this.wrap(this.advanced_row.OuterRadius2D); }
 
     makeUnique() {
-        this.id.set(Ids.SoundEntries.id());
+        let id = Ids.SoundEntries.id();
         if(this.row.SoundEntriesAdvancedID.get()!=0) {
-            this.advanced_row.SoundEntryID.set(this.id.get());
+            this.advanced_row.SoundEntryID.set(id);
         }
+        this.id.set(Ids.SoundEntries.id());
     }
 }

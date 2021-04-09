@@ -223,4 +223,19 @@ export const Ids = {
      * Starts at 20000, highest base value is 18019
      */
     SoundEntries: new AutoIdGenerator(20000),
+
+    /**
+     * Starts at 187, highest base value is 186
+     */
+    ItemVisuals: new AutoIdGenerator(187),
+
+    /**
+     * Starts at 216, highest base value is 215
+     */
+    ItemVisualEffects: new AutoIdGenerator(216),
+
+    /**
+     * Starts at 600, highest base value is 586
+     */
+    ParticleColors: new AutoIdGenerator(600)
 }

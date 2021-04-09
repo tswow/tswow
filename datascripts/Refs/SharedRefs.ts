@@ -18,6 +18,10 @@ import { GameObjectDisplay, cleanGameObjectDisplayRow } from "../GameObject/Game
 import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { CreatureVisual, CreatureModel } from "../Creature/CreatureVisual";
 import { SoundEntry } from "../sound/SoundEntry";
+import { ItemVisual } from "../Item/ItemVisual";
+import { ItemTemplate } from "../Item/ItemTemplate";
+import { ItemEffects } from "../Item/ItemVisualEffect";
+import { ParticleColor } from "../Misc/ParticleColor";
 
 function shouldClone(gen: AutoIdGenerator, holder: BaseSystem, cell: Cell<number,any>) {
     return !AutoIdGenerator.isCustom(gen, cell.get()) && BaseSystem.getUniqueRefs(holder);
@@ -60,19 +64,19 @@ export const SharedRefs = {
         return set;
     },
 
-    getOrCreateSpellVisual(spell: Spell) {
-        if(spell.row.SpellVisualID.getIndex(0)===0) {
+    getOrCreateSpellVisual<T extends BaseSystem>(owner: T, cell: Cell<number,any>) {
+        if(cell.get()===0) {
             let spellVisual = DBC.SpellVisual.add(Ids.SpellVisual.id())
             emptySpellVisualRow(spellVisual);
-            spell.row.SpellVisualID.setIndex(0,spellVisual.ID.get());
-            return new SpellVisual<Spell>(spell, spellVisual);
+            cell.set(spellVisual.ID.get());
+            return new SpellVisual<T>(owner, spellVisual);
         }
 
-        let vis = new SpellVisual<Spell>(spell
-            , DBC.SpellVisual.findById(spell.row.SpellVisualID.getIndex(0))
-            , spell);
+        let vis = new SpellVisual<T>(owner
+            , DBC.SpellVisual.findById(cell.get())
+            , cell);
 
-        if(shouldCloneArray(Ids.SpellVisual,spell,spell.row.SpellVisualID,0)) {
+        if(shouldClone(Ids.SpellVisual,owner,cell)) {
             vis.makeUnique();
         }
         return vis;
@@ -248,5 +252,60 @@ export const SharedRefs = {
                 .Volumefloat.set(1)
             return new SoundEntry(owner, cell);
         }
+    },
+
+    getOrCreateItemDisplayInfo(owner: ItemTemplate, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.ItemDisplayInfo.id());
+            DBC.ItemDisplayInfo.add(cell.get())
+                .InventoryIcon.set(["",""])
+                .ItemVisual.set(0)
+                .ModelName.set(["",""])
+                .ModelTexture.set(["",""])
+                .GeosetGroup.set([0,0,0])
+                .Flags.set(0)
+                .SpellVisualID.set(0)
+                .GroupSoundIndex.set(0)
+                .HelmetGeosetVis.set([0,0])
+                .ParticleColorID.set(0)
+            return new ItemVisual(owner);
+        }
+
+        let visual = new ItemVisual(owner);
+        if(shouldClone(Ids.ItemDisplayInfo,visual,cell)) {
+            visual.makeUnique();
+        }
+        return visual;
+    },
+
+    getOrCreateItemVisuals(owner: ItemVisual, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.ItemVisualEffects.id());
+            DBC.ItemVisuals.add(cell.get()).Slot.set([0,0,0,0,0])
+            return new ItemEffects(owner, cell);
+        }
+
+        let eff = new ItemEffects(owner, cell);
+        if(shouldClone(Ids.ItemVisuals,owner, cell)) {
+            eff.makeUnique();
+        }
+        return eff;
+    },
+
+    getOrCreateParticleColor<T extends BaseSystem>(owner: T, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.ParticleColors.id());
+            DBC.ParticleColor.add(cell.get())
+                .Start.set([0,0,0])
+                .Mid.set([0,0,0])
+                .End.set([0,0,0])
+            return new ParticleColor(owner, cell);
+        }
+
+        let color = new ParticleColor(owner, cell);
+        if(shouldClone(Ids.ParticleColors, owner, cell)) {
+            color.makeUnique();
+        }
+        return color;
     }
 }

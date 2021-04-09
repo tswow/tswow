@@ -27,6 +27,7 @@ import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKit
 import { Attachment } from "../Base/Attachment";
 import { Vec3 } from "../Base/Vec3";
 import { SpellVisualEffect } from "./SpellVisualEffect";
+import { Cell } from "wotlkdata/cell/Cell";
 
 function addKitRow(id: number) {
     return DBC.SpellVisualKit.add(id,{
@@ -239,12 +240,12 @@ export class SpellVisualKits<T> extends Subsystem<SpellVisual<T>> {
 }
 
 export class SpellVisual<T> extends Subsystem<T> {
-    spell?: Spell;
+    cell?: Cell<number,any>
     protected _row: SpellVisualRow;
 
-    constructor(owner: T, row: SpellVisualRow, spell?: Spell) {
+    constructor(owner: T, row: SpellVisualRow, cell?: Cell<number,any>) {
         super(owner);
-        this.spell = spell;
+        this.cell = cell;
         this._row = row;
     }
 
@@ -284,8 +285,8 @@ export class SpellVisual<T> extends Subsystem<T> {
      */
     makeUnique() {
         let row = this.row.clone(Ids.SpellVisual.id());
-        if(this.spell!==undefined) {
-            this.spell.row.SpellVisualID.setIndex(0,row.ID.get())
+        if(this.cell) {
+            this.cell.set(row.ID.get());
         }
         this.Kits.all.filter(x=>x.exists).forEach(x=>x.makeUnique())
         return this.owner;
@@ -293,8 +294,8 @@ export class SpellVisual<T> extends Subsystem<T> {
 
     cloneFromVisual(visualId: number) {
         this._row = DBC.SpellVisual.findById(visualId).clone(Ids.SpellVisual.id());
-        if(this.spell!==undefined) {
-            this.spell.row.SpellVisualID.setIndex(0,visualId);
+        if(this.cell) {
+            this.cell.set(visualId);
         }
         this.Kits.all.filter(x=>x.exists).forEach(x=>x.makeUnique());
     }

@@ -44,7 +44,7 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
-import { ItemVisual } from "./ItemVisual";
+import { SharedRefs } from "../Refs/SharedRefs";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     sqlRow : item_templateRow;
@@ -110,13 +110,13 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get FoodType() { return new ItemFoodType(this); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
-    get Visual() { return new ItemVisual(this); }
+    get Visual() { return SharedRefs.getOrCreateItemDisplayInfo(this,this.row.displayid); }
     get AmmoType() { return new ItemAmmoTypes(this); }
     
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
     
-    constructor(srow : item_templateRow, crow : ItemRow, display : ItemDisplayInfoRow) {
+    constructor(srow : item_templateRow, crow : ItemRow) {
         super(srow);
         this.sqlRow = srow;
         this.dbcRow = crow;
@@ -127,28 +127,24 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     }
 }
 
-function getRows(id: number) : [item_templateRow, ItemRow, ItemDisplayInfoRow] {
+function getRows(id: number) : [item_templateRow, ItemRow] {
     const sqlParent = SQL.item_template.find({entry:id});
     const dbcParent = DBC.Item.find({ID:id});
-    const disParent = DBC.ItemDisplayInfo.find({ID:sqlParent.displayid.get()});
-    return [sqlParent,dbcParent,disParent];
+    return [sqlParent,dbcParent];
 }
 
 export const Items = {
     create(mod: string, id: string, parent: number) {
         const numid = Ids.Item.id(mod,id);
-        const [sqlParent,dbcParent,disParent] = getRows(parent);
+        const [sqlParent,dbcParent] = getRows(parent);
         const sqlRow = sqlParent.clone(numid)
         const dbcRow = dbcParent.clone(numid);
-        const disRow = disParent.clone(Ids.ItemDisplayInfo.id());
-        dbcRow.DisplayInfoID.set(disRow.ID.get());
-        sqlRow.displayid.set(disRow.ID.get());
-        return new ItemTemplate(sqlRow, dbcRow, disRow);
+        return new ItemTemplate(sqlRow, dbcRow);
     },
     
     load(item: number) {
-        const [sql,dbc,dis] = getRows(item);
-        return new ItemTemplate(sql, dbc, dis);
+        const [sql,dbc] = getRows(item);
+        return new ItemTemplate(sql, dbc);
     },
 
     filter(query: item_templateQuery) {

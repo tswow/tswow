@@ -21,22 +21,23 @@ import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 
 export class SpellCastTime<T> extends Subsystem<T> {
-    readonly row: SpellCastTimesRow;
     protected spell: Spell;
 
     constructor(owner: T, spell: Spell) {
         super(owner);
         this.spell = spell;
-        this.row = DBC.SpellCastTimes.findById(spell.row.CastingTimeIndex.get());
     }
+
+    get row() { return DBC.SpellCastTimes.findById(this.spell.row.CastingTimeIndex.get())}
 
     get Base() { return this.wrap(this.row.Base); }
     get PerLevel() { return this.wrap(this.row.PerLevel); }
     get Minimum() { return this.wrap(this.row.Minimum); }
 
     makeUnique() {
-        let row = this.row.clone(Ids.SpellCastTimes.id());
-        this.spell.row.CastingTimeIndex.set(row.ID.get());
+        let id = Ids.SpellCastTimes.id();
+        this.row.clone(id);
+        this.spell.row.CastingTimeIndex.set(id);
         return this.owner;
     }
 

@@ -42,10 +42,12 @@ import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
 import { SingleArraySystem } from "../Base/SingleArraySystem";
 import { SharedRefs } from "../Refs/SharedRefs";
+import { CellIndexWrapper } from "wotlkdata/cell/Cell";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
-    get Visual() { return SharedRefs.getOrCreateSpellVisual(this); }
+    get Visual() { return SharedRefs.getOrCreateSpellVisual(this, 
+        new CellIndexWrapper(undefined,this.row.SpellVisualID,0)); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get ActiveIcon() { return new SpellIconCell(this, this.row.ActiveIconID); }
     get Name() { return this.wrapLoc(this.row.Name); }

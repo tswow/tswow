@@ -21,6 +21,7 @@ import { std } from "../tswow-stdlib-data";
 import { ItemTemplate } from "./ItemTemplate";
 import { ItemVisualModels } from "./ItemVisualModels";
 import { ItemIcon } from "./ItemIcon";
+import { SharedRefs } from "../Refs/SharedRefs";
 
 export class ItemVisual extends Subsystem<ItemTemplate> {
     get row() {
@@ -30,10 +31,13 @@ export class ItemVisual extends Subsystem<ItemTemplate> {
     get Flags() { return this.ownerWrap(this.row.Flags); }
     get GeosetGroup() { return this.ownerWrapArray(this.row.GeosetGroup); }
     get HelmGeosetVis() { return this.ownerWrapArray(this.row.HelmetGeosetVis); }
-    get VisualSlots() { return this.ownerWrap(this.row.ItemVisual); }
+    get Effects() { return SharedRefs.getOrCreateItemVisuals(this, this.row.ItemVisual); }
+    get EffectsID() { return this.wrap(this.row.ItemVisual); }
     get Models() { return new ItemVisualModels(this.owner); }
     get ParticleColorID() { return this.ownerWrap(this.row.ParticleColorID); }
+    get ParticleColor() { return SharedRefs.getOrCreateParticleColor(this, this.ParticleColorID); }
     get SpellVisualID() { return this.ownerWrap(this.row.SpellVisualID); }
+    get SpellVisual() { return SharedRefs.getOrCreateSpellVisual(this, this.row.SpellVisualID); }
     get Texture() { return this.ownerWrapArray(this.row.Texture); }
     get Icon() { return new ItemIcon(this); }
 
