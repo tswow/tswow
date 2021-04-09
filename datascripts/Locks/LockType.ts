@@ -16,6 +16,22 @@ export class LockTypeCursor extends Subsystem<LockType> {
         this.owner.row.CursorName.set(type);
         return this.owner;
     }
+
+    setFishing() {
+        return this.set('FishingCursor');
+    }
+
+    setPicklock() {
+        return this.set('PickLock');
+    }
+
+    setGatherHerbs() {
+        return this.set('GatherHerbs')
+    }
+
+    setMine() {
+        return this.set('Mine');
+    }
 }
 
 export class LockType extends MainSystem {
@@ -25,6 +41,7 @@ export class LockType extends MainSystem {
         this.row = row;
     }
 
+    get ID() { return this.row.ID.get(); }
     get Name() { return this.wrapLoc(this.row.Name); }
     get ResourceName() { return this.wrapLoc(this.row.ResourceName); }
     get Verb() { return this.wrapLoc(this.row.Verb); }

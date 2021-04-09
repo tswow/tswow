@@ -16,10 +16,32 @@
  */
 import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { SharedRefs } from "../../Refs/SharedRefs";
+import { SQL } from "wotlkdata";
+import { Ids } from "../../Base/Ids";
+import { AttachedLootSet } from "../../Loot/Loot";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
+import { SimpleLock } from "../../Locks/SimpleLock";
 
-export class GameObjectChest extends GameObjectTemplate {
-    get LockID() { return this.wrap(this.row.Data0); }
-    get LootID() { return this.wrap(this.row.Data1); }
+export class GameObjectChest extends GameObjectTemplate<GameObjectChest> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setChest();
+    }
+
+    get Lock() {
+        return new SimpleLock(SharedRefs.getOrCreateLock(this,this.row.Data0));
+    }
+
+    get Loot() {
+        return SharedRefs.getOrCreateLoot(this, new AttachedLootSet(
+                  this
+                , this.row.Data1
+                , Ids.GameObjectLoot
+                , SQL.gameobject_loot_template
+                ));
+    }
+
     /**
      * Restock time in seconds
      */

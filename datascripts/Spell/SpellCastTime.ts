@@ -27,21 +27,18 @@ export class SpellCastTime<T> extends Subsystem<T> {
     constructor(owner: T, spell: Spell) {
         super(owner);
         this.spell = spell;
-        if(spell.row.CastingTimeIndex.get()===0)  {
-            this.row = DBC.SpellCastTimes.add(Ids.SpellCastTimes.id());
-        } else {
-            // TODO: This is dumb, it creates a new object every time
-            // you access it.
-            this.row = DBC.SpellCastTimes
-                .findById(this.spell.row.CastingTimeIndex.get())
-                .clone(Ids.SpellCastTimes.id())
-        }
-        this.spell.row.CastingTimeIndex.set(this.row.ID.get());
+        this.row = DBC.SpellCastTimes.findById(spell.row.CastingTimeIndex.get());
     }
 
     get Base() { return this.wrap(this.row.Base); }
     get PerLevel() { return this.wrap(this.row.PerLevel); }
     get Minimum() { return this.wrap(this.row.Minimum); }
+
+    makeUnique() {
+        let row = this.row.clone(Ids.SpellCastTimes.id());
+        this.spell.row.CastingTimeIndex.set(row.ID.get());
+        return this.owner;
+    }
 
     set(base: number, perLevel: number, minimum: number) {
         this.Base.set(base);

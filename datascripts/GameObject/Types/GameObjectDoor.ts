@@ -16,8 +16,13 @@
  */
 import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectDoor extends GameObjectTemplate {
+export class GameObjectDoor extends GameObjectTemplate<GameObjectDoor> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setDoor();
+    }
     /**
      * Whether or not the door starts open (0=closed, 1=open)
      */

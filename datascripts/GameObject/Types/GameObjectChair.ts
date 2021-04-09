@@ -15,8 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectChair extends GameObjectTemplate {
+export class GameObjectChair extends GameObjectTemplate<GameObjectChair> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setChair();
+    }
+
     get Slots() { return this.wrap(this.row.Data0); }
     get Height() { return this.wrap(this.row.Data1); }
     get OnlyCreatorUse() { return this.wrap(this.row.Data2); }

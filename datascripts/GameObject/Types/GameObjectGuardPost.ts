@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectGuardPost extends GameObjectTemplate {
+export class GameObjectGuardPost extends GameObjectTemplate<GameObjectGuardPost> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setGuardpost();
+    }
     get CreatureID() { return this.wrap(this.row.Data0); }
     get Charges() { return this.wrap(this.row.Data1); }
 }

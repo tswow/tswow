@@ -85,12 +85,19 @@ export class LootSet<T> extends LootSetBase<T> {
         super(owner, table);
         this._id = id;
     }
-    
 }
 
 export class AttachedLootSet<T> extends LootSetBase<T> {
     get ID(): number {
         return this._cell.get();
+    }
+
+    static cell(set: AttachedLootSet<any>) {
+        return set._cell;
+    }
+
+    static idgen(set: AttachedLootSet<any>) {
+        return set._idgen;
     }
     
     protected _cell: Cell<number,any>;

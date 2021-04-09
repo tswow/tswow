@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { CreatureTemplate } from "./CreatureTemplate";
+import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CreatureVisual } from "./CreatureVisual";
+import { SharedRefs } from "../Refs/SharedRefs";
 
 function getModel(template: CreatureTemplate, index: number) {
     switch(index) {
@@ -27,42 +29,38 @@ function getModel(template: CreatureTemplate, index: number) {
     }
 }
 
-export class CreatureModel extends ArrayEntry<CreatureTemplate> {
-    clear(): CreatureTemplate {
-        getModel(this.owner, this.index).set(0);
-        return this.owner;
-    }
-
-    isClear(): boolean {
-        return getModel(this.owner, this.index).get() === 0;
-    }
-
-    get() { return getModel(this.owner, this.index).get(); }
-
-    set(model: number) { 
-        getModel(this.owner, this.index).set(model); 
-        return this.owner;
-    }
-}
-
-export class CreatureModels extends SystemArray<CreatureModel,CreatureTemplate> {
+export class CreatureModels extends Subsystem<CreatureTemplate> {
     get length(): number {
         return 4;
     }
 
-    get(index: number): CreatureModel {
-        return new CreatureModel(this.owner, index);
+    getId(index: number): number {
+        return getModel(this.owner, index).get();
     }
 
-    set(modelIds: number[]) {
-        this.clearAll();
-        return this.add(modelIds);
+    setId(index: number, value: number) {
+        getModel(this.owner, index).set(value);
     }
 
-    add(modelIds: number[]) {
-        for(const model of modelIds) {
-            this.getFree().set(model);
+    get(index: number): CreatureVisual<CreatureTemplate> {
+        return SharedRefs.getOrCreateCreatureVisual(this.owner,index);
+    }
+
+    addIds(...modelIds: number[]) {
+        for(let i=0;i<this.length && modelIds.length>0;++i) {
+            let model = getModel(this.owner,i)
+            if(model.get()===0) {
+                model.set(modelIds[0]);
+                modelIds.shift();
+            }
         }
+
+        if(modelIds.length>0) {
+            throw new Error(
+                `Not enough space for more CreatureDisplayInfo ids ` +
+                `in creature_template ${this.owner.ID}`);
+        }
+
         return this.owner;
     }
 

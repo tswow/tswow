@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectFlagStand extends GameObjectTemplate {
+export class GameObjectFlagStand extends GameObjectTemplate<GameObjectFlagStand> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setFlagstand();
+    }
     get LockID() { return this.wrap(this.row.Data0); }
     get PickupSpell() { return this.wrap(this.row.Data1); }
     get Radius() { return this.wrap(this.row.Data2); }

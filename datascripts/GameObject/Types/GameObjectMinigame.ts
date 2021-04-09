@@ -15,7 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectMinigame extends GameObjectTemplate {
+export class GameObjectMinigame extends GameObjectTemplate<GameObjectMinigame> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setMiniGame();
+    }
     get GameType() { return this.wrap(this.row.Data0); }
 }

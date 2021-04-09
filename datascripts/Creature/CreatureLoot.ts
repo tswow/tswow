@@ -19,23 +19,27 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Base/Ids";
 import { AttachedLootSet } from "../Loot/Loot";
 import { CreatureTemplate } from "./CreatureTemplate";
+import { SharedRefs } from "../Refs/SharedRefs";
 
 export class CreatureLoot extends Subsystem<CreatureTemplate> {
-    get Normal() { return new AttachedLootSet(this.owner, 
-        this.owner.row.lootid, 
-        Ids.CreatureLoot, 
-        SQL.creature_loot_template)
+    get Normal() { return SharedRefs.getOrCreateLoot(this.owner, 
+        new AttachedLootSet(this.owner, 
+            this.owner.row.lootid, 
+            Ids.CreatureLoot, 
+            SQL.creature_loot_template))
     }
 
-    get Pickpocket() { return new AttachedLootSet(this.owner, 
-        this.owner.row.pickpocketloot, 
-        Ids.PickPocketLoot, 
-        SQL.pickpocketing_loot_template)
+    get Pickpocket() { return SharedRefs.getOrCreateLoot(this.owner,
+        new AttachedLootSet(this.owner, 
+            this.owner.row.pickpocketloot, 
+            Ids.PickPocketLoot, 
+            SQL.pickpocketing_loot_template))
     }
 
-    get Skinning() { return new AttachedLootSet(this.owner, 
-        this.owner.row.skinloot, 
-        Ids.SkinningLoot, 
-        SQL.skinning_loot_template)
+    get Skinning() { return SharedRefs.getOrCreateLoot(this.owner,
+        new AttachedLootSet(this.owner, 
+            this.owner.row.skinloot, 
+            Ids.SkinningLoot, 
+            SQL.skinning_loot_template))
     }
 }

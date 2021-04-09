@@ -23,6 +23,10 @@ import { Spell } from "./Spell";
 import { Vector3 } from "wotlkdata/cell/systems/Vector3"
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { SpellAnimation } from "./SpellAnimation";
+import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKitModelAttach";
+import { Attachment } from "../Base/Attachment";
+import { Vec3 } from "../Base/Vec3";
+import { SpellVisualEffect } from "./SpellVisualEffect";
 
 function addKitRow(id: number) {
     return DBC.SpellVisualKit.add(id,{
@@ -49,7 +53,57 @@ function addKitRow(id: number) {
     });
 }
 
-export class SpellVisualKit extends Subsystem<Spell> {
+export class SpellVisualKitModelAttach<T> extends Subsystem<SpellVisual<T>> {
+    readonly row: SpellVisualKitModelAttachRow;
+
+    constructor(owner: SpellVisual<T>, row: SpellVisualKitModelAttachRow) {
+        super(owner);
+        this.row = row;
+    }
+    
+    get Attachment() { return new Attachment(this, this.row.AttachmentID); }
+    get Offset() { return new Vec3(this,this.row.OffsetX,this.row.OffsetY,this.row.OffsetZ);}
+    get Yaw() { return this.wrap(this.row.Yaw); }
+    get Pitch() { return this.wrap(this.row.Pitch); }
+    get Roll() { return this.wrap(this.row.Roll); }
+    get Effect() { return new SpellVisualEffect(this, 
+        DBC.SpellVisualEffectName.findById(
+            this.row.SpellVisualEffectNameID.get()));
+        }
+
+    makeUnique(newOwner: number) {
+        this.row.clone(newOwner);
+        let id = Ids.SpellVisualEffectName.id();
+        this.Effect.row.clone(id);
+        this.row.SpellVisualEffectNameID.set(id);
+    }
+}
+
+export class SpellVisualKitModels<T> extends Subsystem<SpellVisual<T>> {
+    protected kit: SpellVisualKit<T>;
+
+    constructor(owner: SpellVisual<T>, kit: SpellVisualKit<T>) {
+        super(owner);
+        this.kit = kit;
+    }
+
+    add() : SpellVisualKitModelAttach<T> {
+        let row = DBC.SpellVisualKitModelAttach.add(Ids.SpellVisualKitModelAttach.id())
+        row.ParentSpellVisualKitID.set(this.kit.ID);
+        return new SpellVisualKitModelAttach(this.owner,row);
+    }
+
+    get() {
+        return DBC.SpellVisualKitModelAttach.filter({ParentSpellVisualKitID: this.kit.ID})
+            .map(x=>new SpellVisualKitModelAttach(this.owner, x));
+    }
+
+    forEach(callback: (value: SpellVisualKitModelAttach<T>)=>void) {
+        this.get().forEach(callback);
+    }
+}
+
+export class SpellVisualKit<T> extends Subsystem<SpellVisual<T>> {
     protected ptr: DBCIntCell<SpellVisualRow>
     readonly name: string;
 
@@ -57,11 +111,11 @@ export class SpellVisualKit extends Subsystem<Spell> {
         return super.transientFields().concat(['ptr']);
     }
     
-    static ptr(kit: SpellVisualKit) {
+    static ptr(kit: SpellVisualKit<any>) {
         return kit.ptr;
     }
 
-    constructor(owner: Spell, name: string, ptr: DBCIntCell<SpellVisualRow>) {
+    constructor(owner: SpellVisual<T>, name: string, ptr: DBCIntCell<SpellVisualRow>) {
         super(owner);
         this.ptr = ptr;
         this.name = name;
@@ -111,10 +165,19 @@ export class SpellVisualKit extends Subsystem<Spell> {
         return this.ptr.get() != 0;
     }
 
-    cloneFrom(kit: SpellVisualKit | SpellVisualKitRow) {
+    get Models(): SpellVisualKitModels<T> { return new SpellVisualKitModels(this.owner, this); }
+
+    makeUnique() {
+        let id = Ids.SpellKit.id();
+        this.row.clone(id);
+        this.ptr.set(id);
+        this.Models.forEach(x=>x.makeUnique(id));
+    }
+
+    cloneFrom(kit: SpellVisualKit<any> | SpellVisualKitRow) {
         let row : SpellVisualKitRow;
-        if((kit as SpellVisualKit).exists !== undefined) {
-            row = (kit as SpellVisualKit).row;
+        if((kit as SpellVisualKit<any>).exists !== undefined) {
+            row = (kit as SpellVisualKit<any>).row;
         } else {
             row = (kit as SpellVisualKitRow);
         }
@@ -123,22 +186,20 @@ export class SpellVisualKit extends Subsystem<Spell> {
     }
 }
 
-export class SpellVisualKits extends Subsystem<Spell> {
-    private kit(name: string, kit: DBCIntCell<SpellVisualRow>) {
+export class SpellVisualKits<T> extends Subsystem<SpellVisual<T>> {
+    private kit(name: string, kit: DBCIntCell<SpellVisualRow>): SpellVisualKit<T> {
         return new SpellVisualKit(this.owner ,name ,kit);
     }
 
     protected get row() {
-        return DBC.SpellVisual.find({
-            ID:this.owner.row.SpellVisualID.getIndex(0)
-        });
+        return this.owner.row;
     }
 
     objectify() {
         return this.all
             .filter(x=>x.exists)
             .reduce((p,c)=>{p[c.name] = c.objectify(); return p},
-                {} as {[key:string]:SpellVisualKit})
+                {} as {[key:string]:SpellVisualKit<T>})
     }
 
     get Cast() { return this.kit("Cast", this.row.CastKit); }
@@ -177,9 +238,14 @@ export class SpellVisualKits extends Subsystem<Spell> {
     }
 }
 
-export class SpellVisual extends Subsystem<Spell> {
-    constructor(spell: Spell) {
-        super(spell);
+export class SpellVisual<T> extends Subsystem<T> {
+    spell?: Spell;
+    protected _row: SpellVisualRow;
+
+    constructor(owner: T, row: SpellVisualRow, spell?: Spell) {
+        super(owner);
+        this.spell = spell;
+        this._row = row;
     }
 
     objectify() {
@@ -190,7 +256,9 @@ export class SpellVisual extends Subsystem<Spell> {
         }
     }
 
-    get Kits() { return new SpellVisualKits(this.owner); }
+    get row() { return this._row; }
+
+    get Kits(): SpellVisualKits<T> { return new SpellVisualKits(this); }
 
     get MissileModel() { return this.ownerWrap(this.row.MissileModel); }
     get MissileAttachment() { return this.ownerWrap(this.row.MissileAttachment); }
@@ -209,72 +277,59 @@ export class SpellVisual extends Subsystem<Spell> {
             this.row.MissileImpactOffsetZ)
     }
 
-    get row() {
-        return DBC.SpellVisual.find({
-            ID:this.owner.row.SpellVisualID.getIndex(0)
-        });
-    }
-
     /**
      * Makes a copy of all the spell visual data for this spell,
      * allowing you to make separate modifications to it
      * without affecting other spells that share it.
      */
     makeUnique() {
-        if(this.owner.row.SpellVisualID.getIndex(0)===0) {
-            let newRow = DBC.SpellVisual.add(Ids.SpellVisual.id())
-            this.owner.row.SpellVisualID.setIndex(0,newRow.ID.get());
-            newRow.ImpactAreaKit.set(0)
-                .ImpactKit.set(0)
-                .InstantAreaKit.set(0)
-                .MissileAttachment.set(0)
-                .MissileCastOffsetX.set(0)
-                .MissileCastOffsetY.set(0)
-                .MissileCastOffsetZ.set(0)
-                .MissileDestinationAttachment.set(0)
-                .MissileFollowGroundApproach.set(0)
-                .MissileFollowGroundDropSpeed.set(0)
-                .MissileFollowGroundFlags.set(0)
-                .MissileFollowGroundHeight.set(0)
-                .MissileImpactOffsetX.set(0)
-                .MissileImpactOffsetY.set(0)
-                .MissileImpactOffsetZ.set(0)
-                .MissileModel.set(0)
-                .MissileMotion.set(0)
-                .MissilePathType.set(0)
-                .MissileSound.set(0)
-                .MissileTargetingKit.set(0)
-                .PersistentAreaKit.set(0)
-                .PrecastKit.set(0)
-                .StateDoneKit.set(0)
-                .StateKit.set(0)
-                .CastKit.set(0)
-                .TargetImpactKit.set(0)
-            return this.owner;
-        }
         let row = this.row.clone(Ids.SpellVisual.id());
-        this.owner.row.SpellVisualID.setIndex(0,row.ID.get())
-        this.Kits.all.filter(x=>x.exists)
-            .forEach(x=>{
-                const kitId = Ids.SpellKit.id();
-                x.row.clone(kitId);
-                SpellVisualKit.ptr(x).set(kitId);
-            });
+        if(this.spell!==undefined) {
+            this.spell.row.SpellVisualID.setIndex(0,row.ID.get())
+        }
+        this.Kits.all.filter(x=>x.exists).forEach(x=>x.makeUnique())
         return this.owner;
     }
 
-    cloneFromVisual(visualId: number, makeUnique: boolean = true) {
-        this.owner.row.SpellVisualID.setIndex(0,visualId)
-        if(makeUnique) {
-            this.makeUnique();
-        } 
+    cloneFromVisual(visualId: number) {
+        this._row = DBC.SpellVisual.findById(visualId).clone(Ids.SpellVisual.id());
+        if(this.spell!==undefined) {
+            this.spell.row.SpellVisualID.setIndex(0,visualId);
+        }
+        this.Kits.all.filter(x=>x.exists).forEach(x=>x.makeUnique());
     }
 
-    cloneFrom(spellId: number, makeUnique: boolean = true) {
-        this.owner.row.SpellVisualID.setIndex(0,
-            DBC.Spell.findById(spellId).SpellVisualID.getIndex(0));
-        if(makeUnique) {
-            this.makeUnique();
-        }
+    cloneFromSpell(spellId: number) {
+        return this.cloneFromVisual(DBC.Spell.findById(spellId).SpellVisualID.getIndex(0));
     }
+}
+
+export function emptySpellVisualRow(row: SpellVisualRow) {
+    row
+        .ImpactAreaKit.set(0)
+        .ImpactKit.set(0)
+        .InstantAreaKit.set(0)
+        .MissileAttachment.set(0)
+        .MissileCastOffsetX.set(0)
+        .MissileCastOffsetY.set(0)
+        .MissileCastOffsetZ.set(0)
+        .MissileDestinationAttachment.set(0)
+        .MissileFollowGroundApproach.set(0)
+        .MissileFollowGroundDropSpeed.set(0)
+        .MissileFollowGroundFlags.set(0)
+        .MissileFollowGroundHeight.set(0)
+        .MissileImpactOffsetX.set(0)
+        .MissileImpactOffsetY.set(0)
+        .MissileImpactOffsetZ.set(0)
+        .MissileModel.set(0)
+        .MissileMotion.set(0)
+        .MissilePathType.set(0)
+        .MissileSound.set(0)
+        .MissileTargetingKit.set(0)
+        .PersistentAreaKit.set(0)
+        .PrecastKit.set(0)
+        .StateDoneKit.set(0)
+        .StateKit.set(0)
+        .CastKit.set(0)
+        .TargetImpactKit.set(0)
 }

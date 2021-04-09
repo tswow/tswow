@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectCamera extends GameObjectTemplate {
+export class GameObjectCamera extends GameObjectTemplate<GameObjectCamera> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setCamera();
+    }
     get LockID() { return this.wrap(this.row.Data0); }
     get CinematicID() { return this.wrap(this.row.Data1); }
     get EventID() { return this.wrap(this.row.Data2); }

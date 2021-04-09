@@ -16,8 +16,13 @@
  */
 import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectButton extends GameObjectTemplate {
+export class GameObjectButton extends GameObjectTemplate<GameObjectButton> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setButton();
+    }
     /**
      * Whether this button starts pressed
      */

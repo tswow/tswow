@@ -33,8 +33,14 @@ class IdGenerator {
 
 export class AutoIdGenerator {
     curid: number;
+    startId: number;
     constructor(startId: number) {
         this.curid = startId;
+        this.startId = startId;
+    }
+
+    static isCustom(gen: AutoIdGenerator, id: number) {
+        return id>=gen.startId;
     }
 
     id() {
@@ -196,5 +202,25 @@ export const Ids = {
     /**
      * Starts at 2000, highest base value is 1860
      */
-    Lock: new AutoIdGenerator(2000)
+    Lock: new AutoIdGenerator(2000),
+
+    /**
+     * Starts at 5000, highest base value is 5000
+     */
+    SpellVisualKitModelAttach: new AutoIdGenerator(5000),
+
+    /**
+     * Starts at 4000, highest base value is 3440
+     */
+    CreatureModel: new AutoIdGenerator(4000),
+
+    /**
+     * Starts at 4000, highest base value is 3627
+     */
+    SoundEntriesAdvanced: new AutoIdGenerator(4000),
+
+    /**
+     * Starts at 20000, highest base value is 18019
+     */
+    SoundEntries: new AutoIdGenerator(20000),
 }

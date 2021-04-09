@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectTrap extends GameObjectTemplate {
+export class GameObjectTrap extends GameObjectTemplate<GameObjectTrap> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setTrap();
+    }
     get LockID() { return this.wrap(this.row.Data0); }
     get Level() { return this.wrap(this.row.Data1); }
     get Diameter() { return this.wrap(this.row.Data2); }

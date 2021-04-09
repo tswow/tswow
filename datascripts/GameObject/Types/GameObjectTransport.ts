@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectTransport extends GameObjectTemplate {
+export class GameObjectTransport extends GameObjectTemplate<GameObjectTransport> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setTransport();
+    }
     get Pause() { return this.wrap(this.row.Data0); }
     get StartOpen() { return this.wrap(this.row.Data1); }
     get AutoCloseTime() { return this.wrap(this.row.Data2); }

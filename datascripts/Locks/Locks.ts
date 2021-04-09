@@ -15,6 +15,17 @@ function makeLock() {
 }
 
 export const Locks = {
+
+    
+
+    loadLock(id: number) {
+        return new SimpleLock(DBC.Lock.findById(id));
+    },
+
+    loadType(id: number) {
+        return new LockType(DBC.LockType.findById(id));
+    },
+
     createType() {
         return new LockType(DBC.LockType.add(Ids.LockType.id()))
     },
@@ -23,6 +34,10 @@ export const Locks = {
         return new SimpleLock(makeLock())
             .Type.setItem()
             .Index.set(item)
+    },
+
+    createEmpty() {
+        return new SimpleLock(makeLock())
     },
     
     createTypeInstance(type: number, skill: number = 0) {

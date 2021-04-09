@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectFishingHole extends GameObjectTemplate {
+export class GameObjectFishingHole extends GameObjectTemplate<GameObjectFishingHole> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setFishinghole();
+    }
     /**
      * How close bobber must be
      */

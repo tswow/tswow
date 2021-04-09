@@ -1,6 +1,8 @@
 import { MainSystem } from "wotlkdata/cell/MainSystem";
 import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
 export class LockType extends Enum<SimpleLock> {
     @EnumField(0)

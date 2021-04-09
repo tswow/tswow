@@ -30,7 +30,7 @@ import { GameObjectTransport } from "./Types/GameObjectTransport";
 import { GameObjectTrap } from "./Types/GameObjectTrap";
 import { GameObjectTrapdoor } from "./Types/GameObjectTrapdoor";
 
-export class GameObjectBase extends GameObjectTemplate {
+export class GameObjectBase extends GameObjectTemplate<GameObjectBase> {
     AsTrapdoor() { return new GameObjectTrapdoor(this.row); }
     AsTrap() { return new GameObjectTrap(this.row); }
     AsTransport() { return new GameObjectTransport(this.row); }

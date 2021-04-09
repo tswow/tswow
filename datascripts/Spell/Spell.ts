@@ -22,11 +22,9 @@ import { MainEntity } from "../Base/MainEntity";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
-import { SpellCastTime } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
 import { SpellDescriptionVariable } from "./SpellDescriptionVariable";
 import { SpellDifficulty } from "./SpellDifficulty";
-import { SpellDuration } from "./SpellDuration";
 import { SpellEffects } from "./SpellEffect";
 import { SpellIconCell } from "./SpellIcon";
 import { SpellItemEquips } from "./SpellItemEquips";
@@ -40,14 +38,14 @@ import { SpellReagents } from "./SpellReagents";
 import { SpellRecovery } from "./SpellRecovery";
 import { SpellReputation } from "./SpellReputation";
 import { SpellSkillLineAbilites } from "./SpellSkillLines";
-import { SpellVisual } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
-import { SingleArraySystem, SingleArrayEntry } from "../Base/SingleArraySystem";
+import { SingleArraySystem } from "../Base/SingleArraySystem";
+import { SharedRefs } from "../Refs/SharedRefs";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
-    get Visual() { return new SpellVisual(this); }
+    get Visual() { return SharedRefs.getOrCreateSpellVisual(this); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get ActiveIcon() { return new SpellIconCell(this, this.row.ActiveIconID); }
     get Name() { return this.wrapLoc(this.row.Name); }
@@ -97,7 +95,7 @@ export class Spell extends MainEntity<SpellRow> {
 
     get ModalNextSpell() { return this.wrap(this.row.ModalNextSpell); }
     get Effects() { return new SpellEffects(this); }
-    get Duration() { return new SpellDuration(this); }
+    get Duration() { return SharedRefs.getOrCreateSpellDuration(this); }
     get Range() { return new SpellRange(this); }
     get Speed() { return this.wrap(this.row.Speed); }
     get ClassMask() { return new BaseClassSet(this); }
@@ -111,7 +109,7 @@ export class Spell extends MainEntity<SpellRow> {
     get DefenseType() { return this.wrap(this.row.DefenseType); }
     get PreventionType() { return this.wrap(this.row.PreventionType); }
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
-    get CastTime() { return new SpellCastTime(this,this); }
+    get CastTime() { return SharedRefs.getOrCreateCastTime(this,this); }
     get Category() { return this.wrap(this.row.Category); }
 
     /** Points to a TotemCategory */
@@ -157,6 +155,7 @@ export class Spell extends MainEntity<SpellRow> {
         for(let i=0;i<spell.Effects.length; ++i) {
             spell.Effects.get(i).Radius.makeUnique();
         }
+        spell.CastTime.makeUnique();
         return spell;
     }
 }

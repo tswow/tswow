@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectGeneric extends GameObjectTemplate {
+export class GameObjectGeneric extends GameObjectTemplate<GameObjectGeneric> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setGeneric();
+    }
     get TooltipID() { return this.wrap(this.row.Data0); }
     get Highlight() { return this.wrap(this.row.Data1); }
     get ServerOnly() { return this.wrap(this.row.Data2); }

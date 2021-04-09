@@ -15,8 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectDestructibleBuilding extends GameObjectTemplate {
+export class GameObjectDestructibleBuilding extends GameObjectTemplate<GameObjectDestructibleBuilding> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setDestructibleBuilding();
+    }
     get InteractNumHits() { return this.wrap(this.row.Data0); }
     get CreditProxyCreature() { return this.wrap(this.row.Data1); }
     get Empty1() { return this.wrap(this.row.Data2); }

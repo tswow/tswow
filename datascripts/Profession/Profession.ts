@@ -8,6 +8,8 @@ import { ProfessionNameSystem } from "./ProfessionName";
 import { ProfessionRecipe } from "./ProfessionRecipe";
 import { GatheringSpell } from "./GatheringSpell";
 import { Locks } from "../Locks/Locks";
+import { LockType } from "../Locks/LockType";
+import { GameObjectTemplates } from "../GameObject/GameObjects";
 
 let BS_SPELLS = [
     2018,
@@ -23,6 +25,7 @@ export class Profession {
 
     private _ApprenticeSpell: Spell|undefined;
     private _ApprenticeLearnSpell: Spell|undefined;
+    private _LockType: LockType|undefined;
 
     private getSpells() {
         return DBC.SkillLineAbility.filter({SkillLine:this.skillLine.ID})
@@ -82,6 +85,15 @@ export class Profession {
         this.skillLine.CanLink.set(1);
     }
 
+    get LockType() {
+        if(this._LockType!==undefined) {
+            return this._LockType;
+        }
+        this._LockType = Locks.createType()
+            .Name.enGB.set(this.Name.enGB.get())
+        return this._LockType;
+    }
+
     addRecipe(mod: string, id: string) {
         return new ProfessionRecipe(this,std.Spells.create(mod,id,3492)
                 .SkillLines.add(this.ID).end)
@@ -90,7 +102,16 @@ export class Profession {
             .Totems.clearAll()
     }
 
-    
+    addGatheringNode(mod: string, name: string, levelNeeded: number) {
+        let chest = GameObjectTemplates.create(mod,name).AsChest();
+        chest.IsConsumable.set(1)
+        chest.Lock
+            .Index.set(this.LockType.ID)
+            .Type.setLockType()
+            .Skill.set(levelNeeded)
+            .Action.set(0)
+        return chest;
+    }
 
     addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
         let rnk = resolveProfessionTier(rank);
@@ -101,7 +122,7 @@ export class Profession {
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
                 .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                .Visual.Kits.clearAll()
+                .Visual.Kits.clearAll().end
                 .SkillLines.add(this.skillLine.ID)
                     .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                     .ClassMaskForbidden.set(0)
@@ -124,7 +145,7 @@ export class Profession {
                 let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
                     .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                    .Visual.Kits.clearAll()
+                    .Visual.Kits.clearAll().end
                     .SkillLines.add(this.skillLine.ID)
                         .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                         .ClassMaskForbidden.set(0)

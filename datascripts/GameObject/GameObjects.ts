@@ -1,14 +1,3 @@
-import { DBC, SQL } from "wotlkdata"
-import { GameObjectDisplayInfoQuery } from "wotlkdata/dbc/types/GameObjectDisplayInfo"
-import { gameobjectQuery } from "wotlkdata/sql/types/gameobject"
-import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template"
-import { Ids } from "../Base/Ids"
-import { BoundingBox } from "../Misc/BoundingBox"
-import { Position } from "../Misc/Position"
-import { GameObjectBase } from "./GameObjectBase"
-import { GameObjectDisplay } from "./GameObjectDisplay"
-import { GameObjectInstance } from "./GameObjectInstance"
-
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -25,12 +14,57 @@ import { GameObjectInstance } from "./GameObjectInstance"
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { DBC, SQL } from "wotlkdata"
+import { GameObjectDisplayInfoQuery } from "wotlkdata/dbc/types/GameObjectDisplayInfo"
+import { gameobjectQuery } from "wotlkdata/sql/types/gameobject"
+import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template"
+import { Ids } from "../Base/Ids"
+import { BoundingBox } from "../Misc/BoundingBox"
+import { Position } from "../Misc/Position"
+import { GameObjectBase } from "./GameObjectBase"
+import { GameObjectDisplay } from "./GameObjectDisplay"
+import { GameObjectInstance } from "./GameObjectInstance"
+
 export const GameObjectTemplates = {
     create(mod: string, id: string, parent: number = -1) {
         const entry = Ids.GameObjectTemplate.id(mod,id)
         const row = parent != -1 ? SQL.gameobject_template
             .find({entry:parent}).clone(entry)
-            : SQL.gameobject_template.add(entry)
+            : (SQL.gameobject_template.add(entry)
+                .AIName.set("")
+                .Data0.set(0)
+                .Data1.set(0)
+                .Data10.set(0)
+                .Data11.set(0)
+                .Data12.set(0)
+                .Data13.set(0)
+                .Data14.set(0)
+                .Data15.set(0)
+                .Data16.set(0)
+                .Data17.set(0)
+                .Data18.set(0)
+                .Data19.set(0)
+                .Data2.set(0)
+                .Data20.set(0)
+                .Data21.set(0)
+                .Data22.set(0)
+                .Data23.set(0)
+                .Data3.set(0)
+                .Data4.set(0)
+                .Data5.set(0)
+                .Data6.set(0)
+                .Data7.set(0)
+                .Data8.set(0)
+                .Data9.set(0)
+                .IconName.set("")
+                .ScriptName.set("")
+                .castBarCaption.set("")
+                .displayId.set(0)
+                .name.set("")
+                .size.set(0)
+                .type.set(0)
+                .unk1.set("")
+            )
         return new GameObjectBase(row);
     },
 
@@ -64,14 +98,14 @@ export const GameObjectDisplays = {
     create(modelPath: string, boundingBox: BoundingBox = new BoundingBox(-1,-1,-1,1,1,1)) {
         const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplay.id());
         row.ModelName.set(modelPath);
-        return new GameObjectDisplay(row).GeoBox.set(boundingBox);
+        return new GameObjectDisplay(undefined,row).GeoBox.set(boundingBox);
     },
 
     load(id: number) {
-        return new GameObjectDisplay(DBC.GameObjectDisplayInfo.findById(id));
+        return new GameObjectDisplay(undefined,DBC.GameObjectDisplayInfo.findById(id));
     },
 
     filter(query: GameObjectDisplayInfoQuery) {
-        return DBC.GameObjectDisplayInfo.filter(query).map(x=>new GameObjectDisplay(x));
+        return DBC.GameObjectDisplayInfo.filter(query).map(x=>new GameObjectDisplay(undefined,x));
     },
 }

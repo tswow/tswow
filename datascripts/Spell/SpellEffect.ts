@@ -26,6 +26,7 @@ import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { SpellRadius } from "./SpellRadius";
 import { std } from "../tswow-stdlib-data";
 import { Spells } from "./Spells";
+import { SharedRefs } from "../Refs/SharedRefs";
 
 export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     constructor(owner: Spell) {
@@ -181,7 +182,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
 
     get row() { return this.owner.row; }
 
-    get Radius() { return new SpellRadius(this); }
+    get Radius() { return SharedRefs.getOrCreateSpellRadius(this); }
     get ItemType() { return this.w(this.row.EffectItemType); }
     get AuraType() { return new AuraType(this, this.index); }
     get EffectType() { return new SpellEffectType(this, this.index); }

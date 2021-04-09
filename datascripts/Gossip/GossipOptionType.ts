@@ -48,7 +48,7 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<Gos
         }
     }
 
-    protected onGameObject(callback: (c: GameObjectTemplate)=>any) {
+    protected onGameObject(callback: (c: GameObjectTemplate<any>)=>any) {
         const owner = this.topOwner();
         if(GOCreature.isGameObject(owner)) {
             callback(owner);

@@ -16,8 +16,13 @@
  */
 import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 
-export class GameObjectQuestGiver extends GameObjectTemplate {
+export class GameObjectQuestGiver extends GameObjectTemplate<GameObjectQuestGiver> {
+    constructor(row: gameobject_templateRow) {
+        super(row);
+        this.Type.setQuestgiver();
+    }
     get LockID() { return this.wrap(this.row.Data0); }
     get QuestList() { return this.wrap(this.row.Data1); }
     get PageMaterial() { return this.wrap(this.row.Data2); }

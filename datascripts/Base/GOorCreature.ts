@@ -27,7 +27,7 @@ export abstract class GOCreature<T> extends MainEntity<T> {
         return creature.isCreature();
     }
 
-    static isGameObject(go: GOCreature<any>) : go is GameObjectTemplate {
+    static isGameObject<T extends GameObjectTemplate<T>>(go: GOCreature<any>) : go is GameObjectTemplate<T> {
         return go.isGameObject();
     }
 }

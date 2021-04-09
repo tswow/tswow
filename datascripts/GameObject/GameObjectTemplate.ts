@@ -21,8 +21,11 @@ import { Ids } from "../Base/Ids";
 import { Position } from "../Misc/Position";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
+import { GameObjectType } from "./GameObjectType";
+import { SharedRefs } from "../Refs/SharedRefs";
+import { GameObjectDisplay } from "./GameObjectDisplay";
 
-export class GameObjectTemplate extends GOCreature<gameobject_templateRow> {
+export class GameObjectTemplate<T extends GameObjectTemplate<T>> extends GOCreature<gameobject_templateRow> {
     protected isCreature(): boolean {
         return false;
     }
@@ -48,13 +51,14 @@ export class GameObjectTemplate extends GOCreature<gameobject_templateRow> {
         return row;
     }
 
-    get ID() { return this.row.entry.get(); }
-    get Type() { return this.row.type.get(); }
-    get DisplayID() { return this.wrap(this.row.displayId); }
-    get Name() { return new GameObjectName(this); }
-    get Icon() { return this.wrap(this.row.IconName); }
-    get CastBarCaption() { return this.wrap(this.row.castBarCaption); }
-    get Size() { return this.wrap(this.row.size); }
+    protected get Type(): GameObjectType<T> { return new GameObjectType<T>(this, this.row.type); }
+    get ID() { return (this as any as T).row.entry.get(); }
+    get DisplayID() { return (this as any as T).wrap(this.row.displayId); }
+    get Display(): GameObjectDisplay<T> { return SharedRefs.getOrCreateGameObjectDisplay(this) as any; }
+    get Name(): GameObjectName<T> { return new GameObjectName<T>(this as any as T); }
+    get Icon() { return (this as any as T).wrap(this.row.IconName); }
+    get CastBarCaption() { return (this as any as T).wrap(this.row.castBarCaption); }
+    get Size() { return (this as any as T).wrap(this.row.size); }
 
     spawn(mod: string, id: string, position: Position) {
         return new GameObjectInstance(
