@@ -53,7 +53,8 @@ export class SingleArraySystem<D extends CPrim, T> extends SystemArray<SingleArr
     }
 
     setIndex(index: number, value: D) {
-        return this.get(index).set(value);
+        this.get(index).set(value);
+        return this.owner;
     }
 
     get(index: number): SingleArrayEntry<D,T> {

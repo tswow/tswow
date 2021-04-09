@@ -42,6 +42,7 @@ import { LoadingScreens } from "./Map/LoadingScreen";
 import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
 import { TSImages } from "./Images/Image";
 import { Professions } from "./Profession/Professions";
+import { Locks } from "./Locks/Locks";
 
 export const std = {
     Spells : Spells,
@@ -77,7 +78,8 @@ export const std = {
     GameObjectDisplays: GameObjectDisplays,
     /** Allows manipulating images programmatically */
     Image: TSImages,
-    Professions: Professions
+    Professions: Professions,
+    Locks: Locks
 }
 
 // Patch ID files

@@ -6,6 +6,8 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { ProfessionTier, resolveProfessionTier, isTradeskillSpell } from "./ProfessionType";
 import { ProfessionNameSystem } from "./ProfessionName";
 import { ProfessionRecipe } from "./ProfessionRecipe";
+import { GatheringSpell } from "./GatheringSpell";
+import { Locks } from "../Locks/Locks";
 
 let BS_SPELLS = [
     2018,
@@ -60,16 +62,16 @@ export class Profession {
                 ef.Attributes.unk41.mark();
                 ef.Attributes.isHiddenInSpellbook.mark();
             }
+
             for(let j=0;j<3;++j) {
                 if(ef.Effects.get(j).EffectType.get() == 47) {
                     if(!value) {
                         ef.Effects.get(j).EffectType.set(0);
+                        break;
+                    } else {
                         continue loop1;
                     }
                 }
-            }
-            if(value) {
-                ef.Effects.add().EffectType.setTradeSkill()
             }
         }
         return this;
@@ -87,6 +89,8 @@ export class Profession {
             .Reagents.clearAll()
             .Totems.clearAll()
     }
+
+    
 
     addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
         let rnk = resolveProfessionTier(rank);
@@ -140,12 +144,56 @@ export class Profession {
         return this;
     }
 
+    AddGatheringSpell(mod: string, id: string, lockType: number, speed: number = 0, maxRange: number = 5, totem: number = 0) {
+        let spl = std.Spells.create(mod,id)
+            .Attributes.isHiddenInSpellbook.mark()
+            .Attributes.isHiddenFromLog.mark()
+            .Attributes.unk41.mark()
+            .Range.set(0,maxRange,0,maxRange)
+            .SkillLines.add(this.ID).end
+            .CastTime.set(speed,0,speed)
+            .RequiredTotems.setIndex(0,totem)
+            .Effects.add()
+                .EffectType.setOpenLock()
+                .ImplicitTargetA.setGameobjectTarget()
+                .MiscValueA.set(lockType)
+                .BasePoints.set(-1)
+                .PointsPerLevel.set(5)
+                .Radius.set(2,0,2)
+                .ChainAmplitude.set(1)
+            .end
+            .Effects.add()
+                .EffectType.setSkill()
+                .MiscValueA.set(this.ID)
+                .DieSides.set(1)
+                .ChainAmplitude.set(1)
+                .BonusMultiplier.set(1)
+            .end
+            .SchoolMask.mark(0)
+            .InterruptFlags.OnMovement.mark()
+            .InterruptFlags.OnPushback.mark()
+            .InterruptFlags.OnInterruptCast.mark()
+            .InterruptFlags.mark(3)
+            .InterruptFlags.mark(4)
+            .Visual.makeUnique()
+            
+        this.ApprenticeLearnSpell.Effects.addLearnSpells(spl.ID)
+        return new GatheringSpell(spl);
+    }
+
     GetHighestRank() {
         for(let i=1;i<=6;++i) {
             try { this.getSkillRank(i); }
             catch(err) { return i-1; }
         }
         return 6;
+    }
+
+    SetCastTime(base: number, perLevel: number = 0, minimum: number = base) {
+        for(let i=1;i<this.GetHighestRank();++i) {
+            this.getSkillRank(i).CastTime.set(base,perLevel,minimum);
+        }
+        return this;
     }
 
     get Name() { return new ProfessionNameSystem(this); }

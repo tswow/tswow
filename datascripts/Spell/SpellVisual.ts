@@ -33,7 +33,7 @@ function addKitRow(id: number) {
         CharParamThree: 0,
         CharParamTwo: 0,
         CharParamZero: 0,
-        CharProc: 0,
+        CharProc: -1,
         ChestEffect: 0,
         Flags: 0,
         HeadEffect: 0,
@@ -44,7 +44,7 @@ function addKitRow(id: number) {
         ShakeID: 0,
         SoundID: 0,
         SpecialEffect: 0,
-        StartAnimID: 0,
+        StartAnimID: -1,
         WorldEffect: 0,
     });
 }
@@ -248,8 +248,9 @@ export class SpellVisual extends Subsystem<Spell> {
                 .PrecastKit.set(0)
                 .StateDoneKit.set(0)
                 .StateKit.set(0)
+                .CastKit.set(0)
                 .TargetImpactKit.set(0)
-            return;
+            return this.owner;
         }
         let row = this.row.clone(Ids.SpellVisual.id());
         this.owner.row.SpellVisualID.setIndex(0,row.ID.get())

@@ -45,8 +45,12 @@ export class AutoIdGenerator {
 export const Ids = {
     /** Starts at 39 , Highest base value is 38 */
     Language: new IdGenerator('Languages',39),
-    /** Start at 200000, Highest base value is 80864 */
+    /** Start at 200000, Highest base value is 80864, capped at 1999999 */
     Spell: new IdGenerator('Spell',200000),
+
+    /** Starts at 20000 */
+    SpellAuto: new AutoIdGenerator(2000000),
+
     /** Starts at 16680, Highest base value is 16679*/
     SpellVisual: new AutoIdGenerator(16680),
     /** Starts at 15543, Highest base value is 15542 */
@@ -183,4 +187,14 @@ export const Ids = {
     GameObjectInstance: new IdGenerator('gameobject', 300000),
     /** Starts at  10000, highest base value is 9624 */
     GameObjectDisplay: new AutoIdGenerator(10000),
+    /** 
+     * Starts at 1000, highest base value is 21 
+     * (but some Spells use higher values, so 1000 is for safety) 
+     */
+    LockType: new AutoIdGenerator(1000),
+
+    /**
+     * Starts at 2000, highest base value is 1860
+     */
+    Lock: new AutoIdGenerator(2000)
 }
