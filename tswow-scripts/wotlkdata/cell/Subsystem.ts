@@ -22,10 +22,12 @@ import { WrappedLoc } from './WrappedLoc';
 import { LocSystem } from './LocSystem';
 import { Objects } from './ObjectIteration';
 import { CellArrayWrapper } from './CellArrayWrapper';
+import { BaseSystem } from './BaseSystem';
 
-export class Subsystem<T> {
+export class Subsystem<T> extends BaseSystem {
     protected owner: T;
     constructor(owner: T) {
+        super();
         this.owner = owner;
     }
 

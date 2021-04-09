@@ -21,9 +21,9 @@ import { WrappedLoc } from './WrappedLoc';
 import { LocSystem } from './LocSystem';
 import { Objects } from './ObjectIteration';
 import { CellArrayWrapper } from './CellArrayWrapper';
+import { BaseSystem } from './BaseSystem';
 
-export class MainSystem {
-
+export class MainSystem extends BaseSystem {
     protected get isSystem() { return true; }
 
     static cloneFrom(tar: any, src: any) {
