@@ -48,6 +48,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
     get Visual() { return SharedRefs.getOrCreateSpellVisual(this, 
         new CellIndexWrapper(undefined,this.row.SpellVisualID,0)); }
+    get VisualID() { return this.wrapIndex(this.row.SpellVisualID,0); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get ActiveIcon() { return new SpellIconCell(this, this.row.ActiveIconID); }
     get Name() { return this.wrapLoc(this.row.Name); }
