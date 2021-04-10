@@ -174,7 +174,7 @@ export class Profession {
             .SkillLines.add(this.ID).end
             .CastTime.set(speed,0,speed)
             .RequiredTotems.setIndex(0,totem)
-            .Effects.add()
+            .Effects.addGeneric()
                 .EffectType.setOpenLock()
                 .TargetA.setGameobjectTarget()
                 .LockType.set(lockType)
@@ -184,7 +184,7 @@ export class Profession {
                 .Radius.set(2,0,2)
                 .ChainAmplitude.set(1)
             .end
-            .Effects.add()
+            .Effects.addGeneric()
                 .EffectType.setSkill().effect
                 .MiscValueA.set(this.ID)
                 .DieSides.set(1)

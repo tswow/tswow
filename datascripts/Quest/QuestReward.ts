@@ -16,8 +16,6 @@
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Quest } from "./Quest";
 
 function ChoiceItemIds(owner: Quest) {
@@ -69,6 +67,7 @@ export class ItemChoiceRewards extends SystemArray<ItemChoiceReward,Quest> {
         const free = this.getFree();
         free.ItemId.set(item);
         free.Quantity.set(quantity);
+        return this.owner;
     }
 }
 
@@ -168,6 +167,7 @@ export class ReputationRewards extends SystemArray<ReputationReward,Quest> {
         const free = this.getFree();
         free.FactionId.set(faction);
         free.Reputation.set(reputation);
+        return this.owner;
     }
 }
 
@@ -181,19 +181,19 @@ export class QuestReward extends Subsystem<Quest> {
     /** Reward player with reputation to a faction */
     get Reputation() { return new ReputationRewards(this.owner); }
     /** Money earned by completing this quest (becomes requirement if negative) */
-    get Money() { return this.wrap(this.owner.row.RewardMoney) }
+    get Money() { return this.ownerWrap(this.owner.row.RewardMoney) }
     /** Bonus money at level 80 */
-    get MoneyBonus() { return this.wrap(this.owner.row.RewardBonusMoney) }
+    get MoneyBonus() { return this.ownerWrap(this.owner.row.RewardBonusMoney) }
     /** Display a spell when the player completes the quest */
-    get DisplaySpell() { return this.wrap(this.owner.row.RewardDisplaySpell) }
+    get DisplaySpell() { return this.ownerWrap(this.owner.row.RewardDisplaySpell) }
     /** Reward player with honor points */
-    get Honor() { return this.wrap(this.owner.row.RewardHonor)}
+    get Honor() { return this.ownerWrap(this.owner.row.RewardHonor)}
     /** Reward player with talent points, as in the Death Knight starting area. */
-    get Talents() { return this.wrap(this.owner.row.RewardTalents)}
+    get Talents() { return this.ownerWrap(this.owner.row.RewardTalents)}
     /** Reward player with a Title, such as <Grunt> */
-    get Title() { return this.wrap(this.owner.row.RewardTitle )}
+    get Title() { return this.ownerWrap(this.owner.row.RewardTitle )}
     /** Increased XP reward for difficult quests, a value between 0-8 */
-    get Difficulty() { return this.wrap(this.owner.row.RewardXPDifficulty)}
+    get Difficulty() { return this.ownerWrap(this.owner.row.RewardXPDifficulty)}
     /** Reward player with arena points */
-    get ArenaPoints() { return this.wrap(this.owner.row.RewardArenaPoints)}
+    get ArenaPoints() { return this.ownerWrap(this.owner.row.RewardArenaPoints)}
 }

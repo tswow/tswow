@@ -204,7 +204,7 @@ export class QuestObjective extends Subsystem<Quest> {
     }
 
     get Scripted() { return new Scripted(this.owner); }
-    get PlayerKills() { return this.wrap(this.owner.row.RequiredPlayerKills); }
+    get PlayerKills() { return this.ownerWrap(this.owner.row.RequiredPlayerKills); }
     get Entity() { return new NpcGoObjectives(this.owner); }
     get Reputation() { return new ReputationObjectives(this.owner); }
     get Item() { return new ItemObjectives(this.owner); }

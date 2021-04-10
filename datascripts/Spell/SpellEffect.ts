@@ -95,8 +95,12 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
         return new SpellEffect(this.owner, index);
     }
 
-    add() {
+    addGeneric() {
         return this.getFree();
+    }
+
+    add() {
+        return this.getFree().EffectType;
     }
 
     addLearnSpells(...spells: number[]) {
@@ -130,7 +134,7 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
             }
             nex = std.Spells.createAuto()
                 .Icon.setFullPath(SPELL_CHAIN_TOKEN)
-            spell.Effects.add()
+            spell.Effects.addGeneric()
                 .EffectType.setTriggerSpell()
                 .TriggerSpell.set(nex.ID);
             return nex;

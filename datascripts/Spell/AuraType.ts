@@ -17,6 +17,7 @@
 import { Cell } from "wotlkdata/cell/Cell";
 import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { SpellEffect } from "./SpellEffect";
+import { PeriodicDamage } from "./AuraTemplates/AuraTemplates";
 
 export class AuraType extends Enum<SpellEffect> {
     constructor(owner: SpellEffect, effectIndex: number) {
@@ -34,7 +35,7 @@ export class AuraType extends Enum<SpellEffect> {
     setModPossess() { return this.set(2);  };
     /** */
     @EnumField(3)
-    setPeriodicDamage() { return this.set(3);  };
+    setPeriodicDamage() { return new PeriodicDamage(this.end.end, this.set(3));  };
     /** */
     @EnumField(4)
     setDummy() { return this.set(4);  };
