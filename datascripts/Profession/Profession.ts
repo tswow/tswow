@@ -176,15 +176,16 @@ export class Profession {
             .RequiredTotems.setIndex(0,totem)
             .Effects.add()
                 .EffectType.setOpenLock()
-                .ImplicitTargetA.setGameobjectTarget()
-                .MiscValueA.set(lockType)
+                .TargetA.setGameobjectTarget()
+                .LockType.set(lockType)
+                .effect
                 .BasePoints.set(-1)
                 .PointsPerLevel.set(5)
                 .Radius.set(2,0,2)
                 .ChainAmplitude.set(1)
             .end
             .Effects.add()
-                .EffectType.setSkill()
+                .EffectType.setSkill().effect
                 .MiscValueA.set(this.ID)
                 .DieSides.set(1)
                 .ChainAmplitude.set(1)

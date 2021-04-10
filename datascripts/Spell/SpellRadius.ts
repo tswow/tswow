@@ -19,7 +19,15 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
 import { SpellEffect } from "./SpellEffect";
 
-export class SpellRadius extends Subsystem<SpellEffect> {
+export class SpellRadius<T> extends Subsystem<T> {
+
+    constructor(owner: T, effect: SpellEffect) {
+        super(owner);
+        this.effect = effect;
+    }
+
+    protected effect: SpellEffect; 
+
     get ID() { return this.row.ID.get(); }
 
     get Radius() { return this.ownerWrap(this.row.Radius); }
@@ -27,7 +35,7 @@ export class SpellRadius extends Subsystem<SpellEffect> {
     get RadiusMax() { return this.ownerWrap(this.row.RadiusMax); }
 
     protected get icell() {
-        return this.wrapIndex(this.owner.row.EffectRadiusIndex, this.owner.index);
+        return this.wrapIndex(this.effect.row.EffectRadiusIndex, this.effect.index);
     }
 
     transientFields() {
@@ -52,7 +60,7 @@ export class SpellRadius extends Subsystem<SpellEffect> {
         }
     }
 
-    copyFrom(radius: SpellRadius) {
+    copyFrom(radius: SpellRadius<any>) {
         this.Radius.set(radius.Radius.get());
         this.RadiusPerLevel.set(radius.RadiusPerLevel.get());
         this.RadiusMax.set(radius.RadiusMax.get());

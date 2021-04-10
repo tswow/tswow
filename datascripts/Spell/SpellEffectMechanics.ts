@@ -14,23 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
 import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
-import { Spell } from "./Spell";
-import { SpellEffect } from "./SpellEffect";
+import { MaskCell } from "wotlkdata/cell/systems/Mask";
 
-export class SpellEffectMechanics extends Enum<SpellEffect> {
-    protected index: number;
-    constructor(owner: SpellEffect, index: number) {
-        super(owner, Cell.wrapIndex(SpellEffect.owner(owner).row.EffectMechanic,index));
-        this.index = index;
-    }
-
-    set(value: number) {
-        SpellEffect.owner(this.owner).row.EffectMechanic.setIndex(this.index,value);
-        return this.owner;
-    }
-
+export class SpellEffectMechanicEnum<T> extends Enum<T> {
     /** 
      * No comment (yet!) 
      */
@@ -225,4 +212,39 @@ export class SpellEffectMechanics extends Enum<SpellEffect> {
      */
     @EnumField(31)
     setEnraged() { return this.set(31);}
+}
+
+export class SpellEffectMechanicMask<T> extends MaskCell<T> {
+    get None() { return this.bit(0);}
+    get Charmed() { return this.bit(1); }
+    get Disoriented() { return this.bit(2); }
+    get Disarmed() { return this.bit(3); }
+    get Distracted() { return this.bit(4); }
+    get Fleeing() { return this.bit(5); }
+    get Gripped() { return this.bit(6); }
+    get Rooted() { return this.bit(7); }
+    get Slowed() { return this.bit(8); }
+    get Silenced() { return this.bit(9); }
+    get Asleep() { return this.bit(10); }
+    get Snared() { return this.bit(11); }
+    get Stunned() { return this.bit(12); }
+    get Frozen() { return this.bit(13); }
+    get Incapacitated() { return this.bit(14); }
+    get Bleeding() { return this.bit(15); }
+    get Healing() { return this.bit(16); }
+    get Polymorphed() { return this.bit(17); }
+    get Banished() { return this.bit(18); }
+    get Shielded() { return this.bit(19); }
+    get Shackled() { return this.bit(20); }
+    get Mounted() { return this.bit(21); }
+    get Infected() { return this.bit(22); }
+    get Turned() { return this.bit(23); }
+    get Horrified() { return this.bit(24); }
+    get Invulnerable() { return this.bit(25); }
+    get Interrupted() { return this.bit(26); }
+    get Dazed() { return this.bit(27); }
+    get Discovery() { return this.bit(28); }
+    get Invulnerable2() { return this.bit(29); }
+    get Sapped() { return this.bit(30); }
+    get Enraged() { return this.bit(31);}
 }

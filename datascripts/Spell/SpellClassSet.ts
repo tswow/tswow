@@ -70,18 +70,24 @@ export class BaseClassSet extends ClassSet<Spell> {
     }
 }
 
-export class EffectClassSet extends ClassSet<SpellEffect> {
-    get A(): Cell<number, SpellEffect> {
-        return this.ownerWrapIndex(SpellEffect.owner(this.owner).row.EffectSpellClassMaskA,this.owner.index);
-    }
-    get B(): Cell<number, SpellEffect> {
-        return this.ownerWrapIndex(SpellEffect.owner(this.owner).row.EffectSpellClassMaskB,this.owner.index);
-    }
-    get C(): Cell<number, SpellEffect> {
-        return this.ownerWrapIndex(SpellEffect.owner(this.owner).row.EffectSpellClassMaskC,this.owner.index);
+export class EffectClassSet<T> extends ClassSet<T> {
+    protected effect: SpellEffect;
+    constructor(owner: T, effect: SpellEffect) {
+        super(owner);
+        this.effect = effect;
     }
 
-    copyFrom(set: EffectClassSet) {
+    get A(): Cell<number, T> {
+        return this.ownerWrapIndex(SpellEffect.owner(this.effect).row.EffectSpellClassMaskA,this.effect.index);
+    }
+    get B(): Cell<number, T> {
+        return this.ownerWrapIndex(SpellEffect.owner(this.effect).row.EffectSpellClassMaskB,this.effect.index);
+    }
+    get C(): Cell<number, T> {
+        return this.ownerWrapIndex(SpellEffect.owner(this.effect).row.EffectSpellClassMaskC,this.effect.index);
+    }
+
+    copyFrom(set: EffectClassSet<any>) {
         this.A.set(set.A.get());
         this.B.set(set.B.get());
         this.C.set(set.C.get());

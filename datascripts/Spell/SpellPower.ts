@@ -19,7 +19,12 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 
-export class SpellPower extends Subsystem<Spell> {
+export class SpellPower<T> extends Subsystem<T> {
+    spell: Spell;
+    constructor(owner: T, spell: Spell) {
+        super(owner);
+        this.spell = spell;
+    }
 
     /**
      * Sets this spell to use mana
@@ -30,12 +35,12 @@ export class SpellPower extends Subsystem<Spell> {
      * @param perSecondPerLevel 
      */
     setMana(baseCost: number, costPct = 0, perLevel = 0, perSecondBase = 0, perSecondPerLevel = 0) {
-        this.owner.row.PowerType.set(0);
-        this.owner.row.ManaCost.set(baseCost);
-        this.owner.row.ManaCostPct.set(costPct);
-        this.owner.row.ManaCostPerLevel.set(perLevel);
-        this.owner.row.ManaPerSecond.set(perSecondBase);
-        this.owner.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
+        this.spell.row.PowerType.set(0);
+        this.spell.row.ManaCost.set(baseCost);
+        this.spell.row.ManaCostPct.set(costPct);
+        this.spell.row.ManaCostPerLevel.set(perLevel);
+        this.spell.row.ManaPerSecond.set(perSecondBase);
+        this.spell.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
         return this.owner;
     }
 
@@ -44,8 +49,8 @@ export class SpellPower extends Subsystem<Spell> {
      * @param energy 
      */
     setEnergy(energy: number) {
-        this.owner.row.PowerType.set(3);
-        this.owner.row.ManaCost.set(energy);
+        this.spell.row.PowerType.set(3);
+        this.spell.row.ManaCost.set(energy);
         return this.owner;
     }
 
@@ -54,8 +59,8 @@ export class SpellPower extends Subsystem<Spell> {
      * @param rage
      */
     setRage(rage: number) {
-        this.owner.row.PowerType.set(1);
-        this.owner.row.ManaCost.set(rage*10);
+        this.spell.row.PowerType.set(1);
+        this.spell.row.ManaCost.set(rage*10);
         return this.owner;
     }
 
@@ -72,7 +77,7 @@ export class SpellPower extends Subsystem<Spell> {
             .Unholy.set(unholy)
             .Frost.set(frost)
             .RunicPower.set(runicPower)
-        this.owner.row.RuneCostID.set(row.ID.get())
+        this.spell.row.RuneCostID.set(row.ID.get())
         return this.owner;
     }
 }

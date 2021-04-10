@@ -17,12 +17,19 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Spell } from "./Spell";
 
-export class SpellRecovery extends Subsystem<Spell> {
-    get Time() { return this.ownerWrap(this.owner.row.RecoveryTime); }
-    get CategoryTime() { return this.ownerWrap(this.owner.row.CategoryRecoveryTime); }
+export class SpellRecovery<T> extends Subsystem<T> {
+    protected spell :Spell; 
+    
+    constructor(owner: T, spell: Spell) {
+        super(owner);
+        this.spell = spell;
+    }
 
-    get StartTime() { return this.ownerWrap(this.owner.row.StartRecoveryTime); }
-    get StartCategory() { return this.ownerWrap(this.owner.row.StartRecoveryCategory); }
+    get Time() { return this.ownerWrap(this.spell.row.RecoveryTime); }
+    get CategoryTime() { return this.ownerWrap(this.spell.row.CategoryRecoveryTime); }
+
+    get StartTime() { return this.ownerWrap(this.spell.row.StartRecoveryTime); }
+    get StartCategory() { return this.ownerWrap(this.spell.row.StartRecoveryCategory); }
 
     set(time: number, categoryTime: number, startTime: number, startCategory: number) {
         this.Time.set(time);

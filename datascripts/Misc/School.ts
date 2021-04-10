@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 
 export class SchoolMask<T> extends MaskCell<T> {
     get Physical() {return this.bit(0); }
@@ -24,4 +25,27 @@ export class SchoolMask<T> extends MaskCell<T> {
     get Frost() {return this.bit(4); }
     get Shadow() {return this.bit(5); }
     get Arcane() {return this.bit(6); }
+}
+
+export class SchoolEnum<T> extends Enum<T> {
+    @EnumField(0)
+    setPhysical() {return this.set(0); }
+
+    @EnumField(1)
+    setHoly() {return this.set(1); }
+
+    @EnumField(2)
+    setFire() {return this.set(2); }
+
+    @EnumField(3)
+    setNature() {return this.set(3); }
+
+    @EnumField(4)
+    setFrost() {return this.set(4); }
+
+    @EnumField(5)
+    setShadow() {return this.set(5); }
+
+    @EnumField(6)
+    setArcane() {return this.set(6); }
 }

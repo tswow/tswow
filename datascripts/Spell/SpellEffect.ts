@@ -20,10 +20,9 @@ import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
-import { SpellEffectMechanics } from "./SpellEffectMechanics";
+import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
-import { SpellRadius } from "./SpellRadius";
 import { std } from "../tswow-stdlib-data";
 import { Spells } from "./Spells";
 import { SharedRefs } from "../Refs/SharedRefs";
@@ -84,6 +83,14 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
         e2.ClassMask.C.set(cmc1);
     }
 
+    filterAura(type: number) {
+        return [this.get(0),this.get(1),this.get(2)].filter(x=>x.AuraType.get()===type);
+    }
+
+    filterType(type: number) {
+        return [this.get(0),this.get(1),this.get(2)].filter(x=>x.EffectType.get()===type);
+    }
+
     get(index: number) {
         return new SpellEffect(this.owner, index);
     }
@@ -96,7 +103,7 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
         for(const spell of spells) {
             this.addFreeEffect()
                 .EffectType.setLearnSpell()
-                .TriggerSpell.set(spell)
+                .LearntSpell.set(spell)
         }
         return this.owner;
     }
@@ -182,11 +189,11 @@ export class SpellEffect extends ArrayEntry<Spell> {
 
     get row() { return this.owner.row; }
 
-    get Radius() { return SharedRefs.getOrCreateSpellRadius(this); }
+    get Radius() { return SharedRefs.getOrCreateSpellRadius(this, this); }
     get ItemType() { return this.w(this.row.EffectItemType); }
     get AuraType() { return new AuraType(this, this.index); }
     get EffectType() { return new SpellEffectType(this, this.index); }
-    get Mechanic() { return new SpellEffectMechanics(this, this.index); }
+    get Mechanic() { return new SpellEffectMechanicEnum(this, this.w(this.row.EffectMechanic)); }
     get BasePoints() { return this.w(this.row.EffectBasePoints)};
     get DieSides() { return this.w(this.row.EffectDieSides); }
     get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
@@ -201,7 +208,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get TriggerSpell() { return this.w(this.row.EffectTriggerSpell); }
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
-    get ClassMask() { return new EffectClassSet(this); }
+    get ClassMask() { return new EffectClassSet(this, this); }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
         this.BasePoints.set(base);

@@ -14,20 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumBase, EnumField } from "wotlkdata/cell/systems/Enum";
-import { CreatureTemplate } from "./CreatureTemplate";
+import { EnumField, Enum } from "wotlkdata/cell/systems/Enum";
+import { MaskCell } from "wotlkdata/cell/systems/Mask";
 
-export class CreatureType extends EnumBase<CreatureTemplate> {
-
-    get(): number {
-        return this.owner.row.type.get();
-    }
-
-    set(value: number): CreatureTemplate {
-        this.owner.row.type.set(value);
-        return this.owner;
-    }
-
+export class CreatureTypeEnum<T> extends Enum<T> {
     @EnumField(0)
     setNone() { return this.set(0); }
 
@@ -75,4 +65,23 @@ export class CreatureType extends EnumBase<CreatureTemplate> {
 
     @EnumField(15)
     setAberration() { return this.set(15); }
+}
+
+export class CreatureTypeMask<T> extends MaskCell<T> {
+    get None() { return this.bit(0); }
+    get Beast() { return this.bit(1); }
+    get Dragonkin() { return this.bit(2); }
+    get Demon() { return this.bit(3); }
+    get Elemental() { return this.bit(4); }
+    get Giant() { return this.bit(5); }
+    get Undead() { return this.bit(6); }
+    get Humanoid() { return this.bit(7); }
+    get Critter() { return this.bit(8); }
+    get Mechanical() { return this.bit(9); }
+    get NotSpecified() { return this.bit(10); }
+    get Totem() { return this.bit(11); }
+    get NonCombatPet() { return this.bit(12); }
+    get GasCloud() { return this.bit(13); }
+    get WildPet() { return this.bit(14); }
+    get Aberration() { return this.bit(15); }
 }

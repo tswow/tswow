@@ -19,8 +19,8 @@ import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { DBCUIntArrayCell } from "wotlkdata/dbc/DBCCell";
 import { SpellEffect } from "./SpellEffect";
 
-export class SpellImplicitTarget extends Enum<SpellEffect> {
-    constructor(owner: SpellEffect, cell: DBCUIntArrayCell<any>, index: number) {
+export class SpellImplicitTarget<T> extends Enum<T> {
+    constructor(owner: T, cell: DBCUIntArrayCell<any>, index: number) {
         super(owner, Cell.wrapIndex(cell, index));
     }
 

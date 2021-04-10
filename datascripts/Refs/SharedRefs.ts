@@ -98,18 +98,18 @@ export const SharedRefs = {
         return ctime;
     },
 
-    getOrCreateSpellRadius(effect: SpellEffect) {
+    getOrCreateSpellRadius<T extends BaseSystem>(owner: T, effect: SpellEffect) {
         if(effect.row.EffectRadiusIndex.getIndex(effect.index)===0) {
             let radiusRow = DBC.SpellRadius.add(Ids.SpellRadius.id())
                 .Radius.set(0)
                 .RadiusMax.set(0)
                 .RadiusPerLevel.set(0)
             effect.row.EffectRadiusIndex.setIndex(effect.index,radiusRow.ID.get());
-            return new SpellRadius(effect);
+            return new SpellRadius(owner, effect);
         }
 
-        let rad = new SpellRadius(effect);
-        if(shouldCloneArray(Ids.SpellRadius,effect,effect.row.EffectRadiusIndex,effect.index)) {
+        let rad = new SpellRadius(owner, effect);
+        if(shouldCloneArray(Ids.SpellRadius,owner,effect.row.EffectRadiusIndex,effect.index)) {
             rad.makeUnique();
         }
         return rad;
