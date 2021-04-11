@@ -39,7 +39,7 @@ export class SpellRadius<T> extends Subsystem<T> {
     }
 
     transientFields() {
-        return super.transientFields().concat(['icell']);
+        return super.transientFields().concat(['icell','effect']);
     }
 
     set(radius: number, radiusPerLevel: number, radiusMax: number) {

@@ -73,4 +73,8 @@ export class SpellRange extends Subsystem<Spell> {
         }
         this.icell.set(this.row.clone(Ids.SpellRange.id()).ID.get());
     }
+
+    transientFields() {
+        return ['icell']
+    }
 }

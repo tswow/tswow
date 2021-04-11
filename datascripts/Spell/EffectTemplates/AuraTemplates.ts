@@ -7,9 +7,10 @@ import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffect
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
 import { SpellPowerType } from "../SpellPowerType";
 
+export const all_auras : any = {}
 export function AuraID(id: number) {
     return function(target: any) {
-
+        all_auras[id] = target;
     }
 }
 
@@ -22,7 +23,6 @@ export class ModPossess<T> extends ChanceBase<T> {}
 // 3
 @AuraID(3)
 export class PeriodicDamage<T> extends DamageBase<T> {
-    get School() { return new SchoolEnum(this, this.effect.MiscValueA); }
     get DamagePeriod() { return this.wrap(this.effect.AuraPeriod); }
 }
 // 4

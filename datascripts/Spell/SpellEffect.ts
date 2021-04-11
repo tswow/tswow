@@ -26,6 +26,8 @@ import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { std } from "../tswow-stdlib-data";
 import { Spells } from "./Spells";
 import { SharedRefs } from "../Refs/SharedRefs";
+import { all_auras } from "./EffectTemplates/AuraTemplates";
+import { all_effects } from "./EffectTemplates/EffectTemplate";
 
 export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     constructor(owner: Spell) {
@@ -213,6 +215,19 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
     get ClassMask() { return new EffectClassSet(this, this); }
+
+    objectify() {
+        if(all_auras[this.AuraType.get()]) {
+            return Object.assign({
+                AuraType:this.AuraType.objectify(),
+                EffectType:this.EffectType.objectify()
+            },new all_auras[this.AuraType.get()](this,this).objectify())
+        } else if(all_effects[this.EffectType.get()]){
+            return Object.assign({
+                EffectType:this.EffectType.objectify()
+            },new all_effects[this.EffectType.get()](this,this).objectify())
+        }
+    }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
         this.BasePoints.set(base);

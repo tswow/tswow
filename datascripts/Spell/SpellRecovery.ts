@@ -38,4 +38,8 @@ export class SpellRecovery<T> extends Subsystem<T> {
         this.StartCategory.set(startCategory);
         return this.owner;
     }
+
+    transientFields() {
+        return ['spell'];
+    }
 }
