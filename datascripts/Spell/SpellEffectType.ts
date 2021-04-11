@@ -207,7 +207,9 @@ export class SpellEffectType extends Enum<SpellEffect> {
     @EnumField(44)
     setSkillStep() { return new SkillStep(this.end.end,this.set(44));  };
 
-    /** */
+    /** 
+     * Comment test
+     */
     @EnumField(45)
     setAddHonor() { return new AddHonor(this.end.end,this.set(45));  };
 

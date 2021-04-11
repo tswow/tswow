@@ -1,1 +1,0 @@
-import { EffectTemplate } from "../EffectTemplates/EffectTemplate";
