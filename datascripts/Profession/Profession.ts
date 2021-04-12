@@ -122,7 +122,7 @@ export class Profession {
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
                 .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                .Visual.zeroFill().end
+                .Visual.clear().end
                 .SkillLines.add(this.skillLine.ID)
                     .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                     .ClassMaskForbidden.set(0)
@@ -146,7 +146,7 @@ export class Profession {
                 let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
                     .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                    .Visual.zeroFill().end
+                    .Visual.clear().end
                     .SkillLines.add(this.skillLine.ID)
                         .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                         .ClassMaskForbidden.set(0)

@@ -28,7 +28,7 @@ export class SpellDescriptionVariable<T extends BaseSystem> extends SharedRef<T,
         return Ids.SpellDescriptionVariable;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.set("");
         return this;
     }

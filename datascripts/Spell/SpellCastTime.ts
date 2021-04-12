@@ -29,7 +29,7 @@ export class SpellCastTime<T extends BaseSystem> extends SharedRef<T, SpellCastT
         return Ids.SpellCastTimes;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.Base.set(0)
         this.PerLevel.set(0)
         this.Minimum.set(0)

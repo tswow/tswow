@@ -31,7 +31,7 @@ export class SoundEntry<T extends BaseSystem> extends SharedRef<T, SoundEntriesR
         return Ids.SoundEntries;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.EAXDef.set(0)
             .Files.clearAll()
             .InnerRadius.set(0)

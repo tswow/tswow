@@ -66,7 +66,7 @@ export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> ext
 
     abstract table(): SharedRefTable<R>
     abstract ids(): AutoIdGenerator;
-    abstract zeroFill(): this;
+    abstract clear(): this;
 
     @Transient
     get row() {
@@ -74,7 +74,7 @@ export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> ext
             let id = this.ids().id();
             this.table().add(id);
             this.cell.set(id);
-            this.zeroFill();
+            this.clear();
         } else if(shouldClone(this.ids(),this.owner,this.cell)) {
             this.makeUnique()
         }

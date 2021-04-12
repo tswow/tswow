@@ -29,7 +29,7 @@ export class SpellDuration<T extends BaseSystem> extends SharedRef<T, SpellDurat
         return Ids.SpellDuration;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.set(0,0,0);
         return this;
     }

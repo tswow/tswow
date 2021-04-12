@@ -29,7 +29,7 @@ export class SpellRadius<T extends BaseSystem> extends SharedRef<T, SpellRadiusR
         return Ids.SpellRadius;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.set(0,0,0);
         return this;
     }

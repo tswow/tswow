@@ -112,7 +112,7 @@ export class GameObjectDisplay<T extends BaseSystem> extends SharedRef<T, GameOb
     ids(): AutoIdGenerator {
         return Ids.GameObjectDisplay;
     }
-    zeroFill(): this {
+    clear(): this {
         this.ModelName.set("")
             .Sound.clearAll()
             .ObjectEffectPackageID.set(0)

@@ -78,7 +78,7 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
         return Ids.SpellKit;
     }
     
-    zeroFill(): this {
+    clear(): this {
         this.AnimID.set(0)
             .BaseEffect.set(0)
             .BreathEffect.set(0)
@@ -156,7 +156,7 @@ export class SpellVisual<T extends BaseSystem> extends SharedRef<T, SpellVisualR
     ids(): AutoIdGenerator {
         return Ids.SpellVisual;
     }
-    zeroFill(): this {
+    clear(): this {
         this.row
             .ImpactAreaKit.set(0)
             .ImpactKit.set(0)

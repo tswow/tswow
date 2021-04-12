@@ -29,7 +29,7 @@ export class SpellRange<T extends BaseSystem> extends SharedRef<T,SpellRangeRow>
         return Ids.SpellRange;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.Name.set({})
         this.NameShort.set({})
         this.Flags.set(0)

@@ -56,10 +56,12 @@ export class ItemEffects<T extends BaseSystem> extends SharedRef<T,ItemVisualsRo
     ids(): AutoIdGenerator {
         return Ids.ItemVisuals;
     }
-    zeroFill(): this {
+
+    clear(): this {
         this.clearAll();
         return this;
     }
+
     readonly id: Cell<number,any>
 
     constructor(owner: T, id: Cell<number,any>) {
@@ -80,14 +82,14 @@ export class ItemEffects<T extends BaseSystem> extends SharedRef<T,ItemVisualsRo
             new CellIndexWrapper(undefined,this.row.Slot,index));
     }
 
-    clear(index: number) {
+    clearIndex(index: number) {
         this.get(index).clear();
         return this.owner;
     }
 
     clearAll() {
         for (let i = 0; i < this.length; ++i) {
-            this.clear(i);
+            this.clearIndex(i);
         }
         return this.owner;
     }

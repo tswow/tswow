@@ -29,7 +29,7 @@ export class SpellDifficulty<T extends BaseSystem> extends SharedRef<T, SpellDif
     ids(): AutoIdGenerator {
         return Ids.SpellDifficulty;
     }
-    zeroFill(): this {
+    clear(): this {
         this.set(0,0,0,0);
         return this;
     }

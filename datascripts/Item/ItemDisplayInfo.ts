@@ -36,7 +36,7 @@ export class ItemDisplayInfo<T extends BaseSystem> extends SharedRef<T, ItemDisp
         return Ids.ItemDisplayInfo;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this
             .Flags.set(0)
             .GeosetGroup.set([0,0,0])

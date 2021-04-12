@@ -28,7 +28,7 @@ export class SpellMissile<T extends BaseSystem> extends SharedRef<T,SpellMissile
     ids(): AutoIdGenerator {
         return Ids.SpellMissile;
     }
-    zeroFill(): this {
+    clear(): this {
         this.CollisionRadius.set(0)
             .DefaultPitchMax.set(0)
             .DefaultSpeedMax.set(0)

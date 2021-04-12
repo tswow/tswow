@@ -23,7 +23,7 @@ export class SimpleLock<T extends BaseSystem> extends SharedRef<T,LockRow>{
     ids(): AutoIdGenerator {
         return Ids.Lock;
     }
-    zeroFill(): this {
+    clear(): this {
         this.Type.set(0)
         
         return this;

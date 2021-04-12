@@ -11,7 +11,7 @@ export class ParticleColor<T extends BaseSystem> extends SharedRef<T, ParticleCo
     ids(): AutoIdGenerator {
         return Ids.ParticleColors;
     }
-    zeroFill(): this {
+    clear(): this {
         this.set(0,0,0,0,0,0,0,0,0);
         return this;
     }

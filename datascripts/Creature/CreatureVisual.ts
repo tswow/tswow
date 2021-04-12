@@ -15,7 +15,7 @@ export class CreatureModel<T extends BaseSystem> extends SharedRef<T,CreatureMod
     ids(): AutoIdGenerator {
         return Ids.CreatureModel;
     }
-    zeroFill(): this {
+    clear(): this {
         this.ModelName.set("")
         this.SizeClass.set(0)
         this.ModelScale.set(0)
@@ -98,7 +98,7 @@ export class CreatureVisual<T extends BaseSystem> extends SharedRef<T,CreatureDi
     get CreatureGeosetData() { return this.wrap(this.row.CreatureGeosetData); }
     get ObjectEffectPackageID() { return this.wrap(this.row.ObjectEffectPackageID); }
 
-    zeroFill(): this {
+    clear(): this {
         this.BoundingRadius.set(0)
             .CombatReach.set(0)
             .ExtendedDisplayID.set(0)

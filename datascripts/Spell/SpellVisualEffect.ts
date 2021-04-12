@@ -34,7 +34,7 @@ export class SpellVisualEffect<T extends BaseSystem> extends SharedRef<T, SpellV
         return Ids.SpellVisualEffectName;
     }
 
-    zeroFill(): this {
+    clear(): this {
         this.Name.set("")
             .Filename.set("")
             .AreaSize.set(0)
