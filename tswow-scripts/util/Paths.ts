@@ -458,6 +458,19 @@ export class InstallPaths {
     moduleAssets(mod: string) {
         return mpath(this.modules, mod, 'assets');
     }
+
+    moduleSnippets(mod: string) {
+        return mpath(this.modules,mod,'snippets')
+    }
+
+    get generatedSnippetsOut() {
+        return mpath('.vscode','tswow-generated.json.code-snippets');
+    }
+
+    get snippetExampleBin() {
+        return mpath(this.bin,'scripts','snippets-example.ts')
+    }
+
     moduleScripts(mod: string) {
         return mpath(this.modules, mod, 'livescripts');
     }
@@ -838,6 +851,10 @@ export class SourcePaths {
 
     get typeScript2Cxx() {
         return mpath('./TypeScript2Cxx');
+    }
+
+    get snippetExample() {
+        return mpath(this.installConfig, 'snippet-example.ts');
     }
 }
 

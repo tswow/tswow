@@ -157,6 +157,14 @@ export namespace Modules {
             wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(this.id));
         }
 
+        createSnippets() {
+            wfs.mkDirs(ipaths.moduleSnippets(this.id));
+            let mainPath = mpath(ipaths.moduleSnippets(this.id),'snippet.ts');
+            if(wfs.readDir(ipaths.moduleSnippets(this.id)).length === 0) {
+                wfs.copy(ipaths.snippetExampleBin,mainPath);
+            }
+        }
+
         createAddon() {
             Addon.initializeModule(this.id);
         }
@@ -258,6 +266,7 @@ export namespace Modules {
                              , addLive: boolean
                              , addAssets: boolean
                              , addAddon: boolean
+                             , addSnippets: boolean
                              ) {
         const timer = Timer.start();
 
@@ -294,6 +303,10 @@ export namespace Modules {
 
         if(addAddon) {
             mod.createAddon();
+        }
+
+        if(addSnippets) {
+            mod.createSnippets();
         }
 
         // Initialize git repositories
@@ -418,13 +431,14 @@ export namespace Modules {
                 throw new Error('Please provide a name for the new module'); 
             }
             if(args.includes(('--all'))) {
-                addModule(args[0],true,true,true,true);
+                addModule(args[0],true,true,true,true,true);
             } else {
                 addModule( args[0]
                         , args.includes('--datascripts')
                         , args.includes('--livescripts')
                         , args.includes('--assets')
                         , args.includes('--addon')
+                        , args.includes('--snippets')
                         );
             }
         });
@@ -504,6 +518,7 @@ export namespace Modules {
 
                 Identifiers.getTypes('module',args).forEach(x=>{
                     let mod = getModule(x);
+                    if(args.includes('--snippets')) mod.createSnippets();
                     if(args.includes('--livescripts')) mod.createLivescripts();
                     if(args.includes('--datascripts')) mod.createDataDir();
                     if(args.includes('--addon')) mod.createAddon();

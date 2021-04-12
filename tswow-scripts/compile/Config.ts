@@ -60,6 +60,7 @@ export namespace Config {
         wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+        wfs.copy(spaths.snippetExample,ipaths.snippetExampleBin);
 
         let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
 
