@@ -98,12 +98,16 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
         return new SpellEffect(this.owner, index);
     }
 
-    addGeneric() {
-        return this.getFree();
+    getTemplate(index: number) {
+        return this.get(index).EffectType;
+    }
+
+    addTemplate() {
+        return this.getFree().EffectType;
     }
 
     add() {
-        return this.getFree().EffectType;
+        return this.getFree();
     }
 
     addLearnSpells(...spells: number[]) {
@@ -137,7 +141,7 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
             }
             nex = std.Spells.createAuto()
                 .Icon.setFullPath(SPELL_CHAIN_TOKEN)
-            spell.Effects.addGeneric()
+            spell.Effects.add()
                 .EffectType.setTriggerSpell()
                 .TriggerSpell.set(nex.ID);
             return nex;

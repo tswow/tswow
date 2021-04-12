@@ -45,6 +45,7 @@ import { SpellDifficulty } from "./SpellDifficulty";
 import { SpellVisual } from "./SpellVisual";
 import { SpellDuration } from "./SpellDuration";
 import { SpellRange } from "./SpellRange";
+import { SchoolMask } from "../Misc/School";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
@@ -123,7 +124,7 @@ export class Spell extends MainEntity<SpellRow> {
 
     /** Points to a WorldMapArea */
     get RequiredAreaID() { return this.wrap(this.row.RequiredAreasID); }
-    get SchoolMask() { return new MaskCell(this, this.row.SchoolMask); }
+    get SchoolMask() { return new SchoolMask(this, this.row.SchoolMask); }
     get DispelType() { return this.wrap(this.row.DispelType); }
     get Mechanic() { return this.wrap(this.row.Mechanic); }
 
