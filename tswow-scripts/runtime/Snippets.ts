@@ -237,7 +237,7 @@ export namespace Snippets {
 
     export function initialize() {
         if(!wfs.exists(ipaths.generatedSnippetsOut)) {
-            generateSnippets(Modules.getModules(),false);
+            generateSnippets(Modules.getModules(),false,false);
         }
 
         Build.command.addCommand('snippets','--remove-comments --indent=x --no-empty-trail modules','Builds all snippets for specified or all modules',(args)=>{
