@@ -69,10 +69,6 @@ export class MainSystem extends BaseSystem {
         return new CellIndexWrapper<T, this>(this, cell, index);
     }
 
-    protected transientFields() : string[] {
-        return [];
-    }
-
     objectify(): any {
         return Objects.objectifyObj(this);
     }

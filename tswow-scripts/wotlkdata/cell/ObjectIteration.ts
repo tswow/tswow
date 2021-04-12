@@ -1,3 +1,5 @@
+import { getTransient } from "./Transient";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -22,36 +24,29 @@ export const Objects = {
     // https://stackoverflow.com/questions/8024149/is-it-possible-to-get-the-non-enumerable-inherited-property-names-of-an-object
     getAllPropertyNames(obj: any) {
         const result = new Set();
+        const transient = getTransient(obj);
         while (obj) {
             Object.getOwnPropertyNames(obj).forEach(p => {
                 // proto is a bad property
-                if (p === '__proto__') {
+                if (p === '__proto__' || transient.includes(p)) {
                     return;
                 }
                 result.add(p);
             });
             obj = Object.getPrototypeOf(obj);
         }
+
         return result;
     },
 
     objectifyObj(thiz: any) {
         const obj: {[key: string]: any} = {};
-
         visitStack.push(thiz);
 
-        let transient = thiz.transientFields === undefined 
-            || typeof(thiz.transientFields)!=='function' ? [] 
-                : thiz.transientFields();
-        if(!Array.isArray(transient)) {
-            transient = [];
-        }
-
         Objects.getAllPropertyNames(thiz).forEach((key: any) => {
-            if(transient.includes(key)) { return; }
             if (thiz[key] !== undefined && thiz[key] !== null) {
                 const val = thiz[key];
-                if (visitStack.findIndex((x) => x === val) !== -1) {
+                if (visitStack.findIndex((x) => x === val) >= 0) {
                     return;
                 }
 

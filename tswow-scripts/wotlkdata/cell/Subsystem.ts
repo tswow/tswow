@@ -23,20 +23,20 @@ import { LocSystem } from './LocSystem';
 import { Objects } from './ObjectIteration';
 import { CellArrayWrapper } from './CellArrayWrapper';
 import { BaseSystem } from './BaseSystem';
+import { Transient } from './Transient';
 
 export class Subsystem<T> extends BaseSystem {
+    @Transient
     protected owner: T;
     constructor(owner: T) {
         super();
         this.owner = owner;
     }
 
+    @Transient
     get end() { return this.owner; }
 
-    protected transientFields() {
-        return ['end','owner','row'];
-    }
-
+    @Transient
     protected get isSubsystem() { return true; }
 
     protected wrap<W extends CPrim>(cell: Cell<W, any>) {
