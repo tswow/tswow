@@ -8,7 +8,6 @@ import { AttachedLootSet } from "../Loot/Loot";
 import { SpellVisual, emptySpellVisualRow } from "../Spell/SpellVisual";
 import { Spell } from "../Spell/Spell";
 import { CellArray } from "wotlkdata/cell/CellArray";
-import { SpellRow } from "wotlkdata/dbc/types/Spell";
 import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SpellRadius } from "../Spell/SpellRadius";
 import { SpellEffect } from "../Spell/SpellEffect";
@@ -22,6 +21,10 @@ import { ItemVisual } from "../Item/ItemVisual";
 import { ItemTemplate } from "../Item/ItemTemplate";
 import { ItemEffects } from "../Item/ItemVisualEffect";
 import { ParticleColor } from "../Misc/ParticleColor";
+import { SpellDescriptionVariable } from "../Spell/SpellDescriptionVariable";
+import { SpellDifficulty } from "../Spell/SpellDifficulty";
+import { SpellMissile } from "../Spell/SpellMissile";
+import { SpellRange } from "../Spell/SpellRange";
 
 function shouldClone(gen: AutoIdGenerator, holder: BaseSystem, cell: Cell<number,any>) {
     return !AutoIdGenerator.isCustom(gen, cell.get()) && BaseSystem.getUniqueRefs(holder);
@@ -307,5 +310,80 @@ export const SharedRefs = {
             color.makeUnique();
         }
         return color;
-    }
+    },
+    
+    getOrCreateSpellDescriptionVariable<T extends BaseSystem>(owner: T, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.SpellDescriptionVariable.id());
+            DBC.SpellDescriptionVariables.add(cell.get())
+                .Variables.set("")
+            return new SpellDescriptionVariable(owner, cell);
+        }
+        const svar = new SpellDescriptionVariable(owner, cell);
+        if(shouldClone(Ids.SpellDescriptionVariable,owner,cell)) {
+            svar.makeUnique();
+        }
+        return svar;
+    },
+
+    getOrCreateSpellDifficulty<T extends BaseSystem>(owner: T, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.SpellDifficulty.id());
+            DBC.SpellDifficulty.add(cell.get())
+                .DifficultySpellID.set([0,0,0,0])
+            return new SpellDifficulty(owner, cell);
+        }
+        const svar = new SpellDifficulty(owner, cell);
+        if(shouldClone(Ids.SpellDifficulty,owner,cell)) {
+            svar.makeUnique();
+        }
+        return svar;
+    },
+
+    getOrCreateSpellMissile<T extends BaseSystem>(owner: T, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.SpellMissile.id());
+            DBC.SpellMissile.add(cell.get())
+                .MaxDuration.set(0)
+                .RandomizeFacingMax.set(0)
+                .RandomizeFacingMin.set(0)
+                .RandomizePitchMax.set(0)
+                .RandomizePitchMin.set(0)
+                .RandomizeSpeedMax.set(0)
+                .RandomizeSpeedMin.set(0)
+                .CollisionRadius.set(0)
+                .DefaultPitchMax.set(0)
+                .DefaultPitchMin.set(0)
+                .DefaultSpeedMax.set(0)
+                .DefaultSpeedMin.set(0)
+                .Flags.set(0)
+                .Gravity.set(0)
+                
+            return new SpellMissile(owner, cell);
+        }
+        const svar = new SpellDifficulty(owner, cell);
+        if(shouldClone(Ids.SpellMissile,owner,cell)) {
+            svar.makeUnique();
+        }
+        return svar;
+    },
+
+    getOrCreateSpellRange<T extends BaseSystem>(owner: T, cell: Cell<number,any>) {
+        if(cell.get()===0) {
+            cell.set(Ids.SpellRange.id());
+            DBC.SpellRange.add(cell.get())
+                .DisplayName.set({})
+                .DisplayNameShort.set({})
+                .Flags.set(0)
+                .RangeMax.set([0,0])
+                .RangeMin.set([0,0])
+                
+            return new SpellRange(owner, cell);
+        }
+        const srange = new SpellRange(owner, cell);
+        if(shouldClone(Ids.SpellRange,owner,cell)) {
+            srange.makeUnique();
+        }
+        return srange;
+    },
 }

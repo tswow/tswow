@@ -18,15 +18,23 @@ import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
+import { Cell } from "wotlkdata/cell/Cell";
 
-export class SpellMissile extends Subsystem<Spell> {
+export class SpellMissile<T> extends Subsystem<T> {
+    
+    protected cell: Cell<number,any>
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    protected transientFields() {
+        return super.transientFields().concat(['cell']);
+    }
+
     get row() { 
-        if(this.owner.row.SpellMissileID.get()===0) {
-            const row = DBC.SpellMissile.add(Ids.SpellMissile.id())
-            this.owner.row.SpellMissileID.set(row.ID.get());
-            return row;
-        }
-        return DBC.SpellMissile.find({ID: this.owner.row.SpellMissileID.get()})
+        return DBC.SpellMissile.find({ID: this.cell.get()})
     }
 
     get CollisionRaduis() { return this.wrap(this.row.CollisionRadius); }
@@ -44,12 +52,9 @@ export class SpellMissile extends Subsystem<Spell> {
     get RandomizeSpeedMin() { return this.wrap(this.row.RandomizeSpeedMin); }
 
     makeUnique() {
-        if(this.owner.row.SpellMissileID.get()===0) {
-            return;
-        }
-        const row = DBC.SpellMissile.findById(this.owner.row.SpellMissileID.get())
+        const row = DBC.SpellMissile.findById(this.cell.get())
             .clone(Ids.SpellMissile.id())
-        this.owner.row.SpellMissileID.set(row.ID.get());
+        this.cell.set(row.ID.get());
         return this.owner;
     }
 }

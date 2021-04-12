@@ -18,9 +18,16 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { loc_constructor } from "wotlkdata/primitives";
 import { Ids } from "../Base/Ids";
-import { Spell } from "./Spell";
+import { Cell } from "wotlkdata/cell/Cell";
 
-export class SpellRange extends Subsystem<Spell> {
+export class SpellRange<T> extends Subsystem<T> {
+    protected cell: Cell<number,any>
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
     get Name() { return this.ownerWrapLoc(this.row.DisplayName); }
     get NameShort() { return this.ownerWrapLoc(this.row.DisplayNameShort); }
     get Flags() { return this.ownerWrap(this.row.Flags); }
@@ -33,18 +40,8 @@ export class SpellRange extends Subsystem<Spell> {
 
     get ID() { return this.row.ID.get(); }
 
-    protected get icell() {
-        return this.owner.row.RangeIndex;
-    }
-
     get row() { 
-        if(this.icell.get()===0) {
-            const row = DBC.SpellRange.add(Ids.SpellRange.id());
-            this.icell.set(row.ID.get());
-            return row;
-        } else {
-            return DBC.SpellRange.findById(this.icell.get());
-        }
+        return DBC.SpellRange.findById(this.cell.get());
     }
 
     set(hostileMin: number, hostileMax: number, friendMin: number, friendMax: number, name?: loc_constructor, nameShort?: loc_constructor, flags?: number) {
@@ -68,13 +65,10 @@ export class SpellRange extends Subsystem<Spell> {
     }
 
     makeUnique() {
-        if(this.icell.get()===0) {
-            return;
-        }
-        this.icell.set(this.row.clone(Ids.SpellRange.id()).ID.get());
+        this.cell.set(this.row.clone(Ids.SpellRange.id()).ID.get());
     }
 
     transientFields() {
-        return ['icell']
+        return ['cell']
     }
 }

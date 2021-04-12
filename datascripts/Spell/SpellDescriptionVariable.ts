@@ -17,25 +17,36 @@
 import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Ids } from "../Base/Ids";
-import { Spell } from "./Spell";
+import { Cell } from "wotlkdata/cell/Cell";
 
-export class SpellDescriptionVariable extends Subsystem<Spell> {
+export class SpellDescriptionVariable<T> extends Subsystem<T> {
+    protected cell: Cell<number,any>;
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    transientFields() {
+        return ['cell'];
+    }
+
     get row() { 
-        if(this.owner.row.SpellDescriptionVariableID.get()===0) {
+        if(this.cell.get()===0) {
             const row = DBC.SpellDescriptionVariables.add(Ids.SpellDescriptionVariable.id())
-            this.owner.row.SpellDescriptionVariableID.set(row.ID.get());
+            this.cell.set(row.ID.get());
             return row;
         }
-        return DBC.SpellDescriptionVariables.find({ID: this.owner.row.SpellDescriptionVariableID.get()})
+        return DBC.SpellDescriptionVariables.find({ID: this.cell.get()})
     }
 
     makeUnique() {
-        if(this.owner.row.SpellDescriptionVariableID.get()===0) {
+        if(this.cell.get()===0) {
             return;
         }
-        const row = DBC.SpellDescriptionVariables.findById(this.owner.row.SpellDescriptionVariableID.get())
+        const row = DBC.SpellDescriptionVariables.findById(this.cell.get())
             .clone(Ids.SpellDescriptionVariable.id())
-        this.owner.row.SpellDescriptionVariableID.set(row.ID.get());
+        this.cell.set(row.ID.get());
         return this.owner;
     }
 
