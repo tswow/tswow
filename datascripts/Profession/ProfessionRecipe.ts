@@ -6,6 +6,7 @@ import { std } from "../tswow-stdlib-data";
 import { SingleArraySystem } from "../Base/SingleArraySystem";
 import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SpellAnimation } from "../Spell/SpellAnimation";
+import { SoundEntry } from "../sound/SoundEntry";
 
 export class RecipeRank extends Subsystem<ProfessionRecipe> {
     protected readonly spell: Spell;
@@ -58,5 +59,5 @@ export class ProfessionRecipe extends Subsystem<Profession> {
     get CastTime() { return new SpellCastTime(this, [this.spell.row.CastingTimeIndex]); }
 
     get Animation() { return new SpellAnimation(this, this.spell.Visual.Precast.row.AnimID); }
-    get Sound() { return this.wrap(this.spell.Visual.Precast.SoundID); }
+    get Sound() { return new SoundEntry(this,this.spell.Visual.Precast.row.SoundID); }
 }

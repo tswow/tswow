@@ -30,6 +30,7 @@ import { Cell } from "wotlkdata/cell/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SingleArraySystem } from "../Base/SingleArraySystem";
+import { SoundEntry } from "../sound/SoundEntry";
 
 export class SpellVisualKitModelAttach<T> extends Subsystem<T> {
 
@@ -79,25 +80,27 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
     }
     
     clear(): this {
-        this.AnimID.set(0)
-            .BaseEffect.set(0)
-            .BreathEffect.set(0)
+        this.Animation.set(0)
+            .BaseEffect.setID(0).end
+            .BreathEffect.setID(0).end
             .CharParamFour.clearAll()
             .CharParamOne.clearAll()
             .CharParamThree.clearAll()
             .CharParamTwo.clearAll()
             .CharProc.clearAll()
-            .ChestEffect.set(0)
+            .ChestEffect.setID(0).end
             .Flags.set(0)
-            .HeadEffect.set(0)
-            .LeftHandEffect.set(0)
-            .RightHandEffect.set(0)
-            .RightWeaponEffect.set(0)
+            .HeadEffect.setID(0).end
+            .LeftHandEffect.setID(0).end
+            .RightHandEffect.setID(0).end
+            .RightWeaponEffect.setID(0).end
             .ShakeID.set(0)
-            .SoundID.set(0)
-            .SpecialEffect.clearAll()
-            .StartAnimID.set(-1)
-            .WorldEffect.set(0)
+            .Sound.setID(0).end
+            .SpecialEffectA.setID(0).end
+            .SpecialEffectB.setID(0).end
+            .SpecialEffectC.setID(0).end
+            .StartAnimation.set(-1)
+            .WorldEffect.setID(0).end
             // TODO: Actually remove the rows
             .Models.forEach(x=>x.row.ParentSpellVisualKitID.set(0))
         return this;
@@ -114,8 +117,8 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
         this.name = name;
     }
 
-    get BaseEffect() { return this.wrap(this.row.BaseEffect); }
-    get BreathEffect() { return this.wrap(this.row.BreathEffect); }
+    get BaseEffect() { return new SpellVisualEffect(this, this.row.BaseEffect); }
+    get BreathEffect() { return new SpellVisualEffect(this, this.row.BreathEffect); }
     get CharParamOne() { return new SingleArraySystem(this, this.row.CharParamOne, 0); }
     get CharParamTwo() { return new SingleArraySystem(this, this.row.CharParamTwo, 0); }
     get CharParamThree() { return new SingleArraySystem(this, this.row.CharParamThree, 0); }
@@ -123,18 +126,21 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
 
     get Flags() { return this.wrap(this.row.Flags); }
     get ShakeID() { return this.wrap(this.row.ShakeID); }
-    get SoundID() { return this.wrap(this.row.SoundID); }
-    get StartAnimID() { return this.wrap(this.row.StartAnimID); }
-    get WorldEffect() { return this.wrap(this.row.WorldEffect); }
-    get AnimID() { return new SpellAnimation(this, this.row.AnimID); }
+    get Sound() { return new SoundEntry(this, this.row.SoundID); }
+    get StartAnimation() { return new SpellAnimation(this, this.row.StartAnimID); }
+    get WorldEffect() { return new SpellVisualEffect(this, this.row.WorldEffect); }
+    get Animation() { return new SpellAnimation(this, this.row.AnimID); }
     get CharProc() { return new SingleArraySystem(this, this.row.CharProc, 0)}
 
-    get ChestEffect() { return this.wrap(this.row.ChestEffect)}
-    get HeadEffect() { return this.wrap(this.row.HeadEffect)}
-    get LeftHandEffect() { return this.wrap(this.row.LeftHandEffect)}
-    get RightHandEffect() { return this.wrap(this.row.RightHandEffect)}
-    get RightWeaponEffect() { return this.wrap(this.row.RightWeaponEffect)}
-    get SpecialEffect() { return new SingleArraySystem(this, this.row.SpecialEffect, 0)}
+    get ChestEffect() { return new SpellVisualEffect(this, this.row.ChestEffect)}
+    get HeadEffect() { return new SpellVisualEffect(this, this.row.HeadEffect)}
+    get LeftHandEffect() { return new SpellVisualEffect(this, this.row.LeftHandEffect)}
+    get RightHandEffect() { return new SpellVisualEffect(this, this.row.RightHandEffect)}
+    get RightWeaponEffect() { return new SpellVisualEffect(this, this.row.RightWeaponEffect)}
+
+    get SpecialEffectA() { return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect,0))}
+    get SpecialEffectB() { return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect,1))}
+    get SpecialEffectC() { return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect,2))}
 
     get Models(): SpellVisualKitModels<T> { return new SpellVisualKitModels(this); }
 
@@ -223,7 +229,7 @@ export class SpellVisual<T extends BaseSystem> extends SharedRef<T, SpellVisualR
     get PersistentArea() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
     get MissileTargeting() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); } 
 
-    get MissileModel() { return this.ownerWrap(this.row.MissileModel); }
+    get MissileModel() { return new SpellVisualEffect(this, this.row.MissileModel); }
     get MissileAttachment() { return this.ownerWrap(this.row.MissileAttachment); }
 
     get MissileCastOffset() { 

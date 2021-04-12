@@ -5,6 +5,7 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { DBCKeyCell } from "wotlkdata/dbc/DBCCell";
 import { MulticastCell } from "../Base/MulticastCell";
 import { Transient } from "wotlkdata/cell/Transient";
+import { ArrayEntry } from "wotlkdata/cell/systems/SystemArray";
 
 export interface SharedRefRow {
     ID: DBCKeyCell<any>;
@@ -42,8 +43,11 @@ export class TopCell extends Cell<number,undefined> {
 }
 
 export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> extends Subsystem<T> {
-    constructor(owner: T, cells: Cell<number,any>[]) {
+    constructor(owner: T, cells: Cell<number,any>[] | Cell<number,any>) {
         super(owner);
+        if(!Array.isArray(cells)) {
+            cells = [cells];
+        }
         this.cell = new MulticastCell(this, cells);
     }
 
