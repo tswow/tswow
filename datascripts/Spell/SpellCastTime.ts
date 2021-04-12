@@ -15,31 +15,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
-import { Ids } from "../Base/Ids";
-import { Spell } from "./Spell";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
-export class SpellCastTime<T> extends Subsystem<T> {
-    protected spell: Spell;
-
-    constructor(owner: T, spell: Spell) {
-        super(owner);
-        this.spell = spell;
+export class SpellCastTime<T extends BaseSystem> extends SharedRef<T, SpellCastTimesRow> {
+    table(): SharedRefTable<SpellCastTimesRow> {
+        return DBC.SpellCastTimes;
     }
 
-    get row() { return DBC.SpellCastTimes.findById(this.spell.row.CastingTimeIndex.get())}
+    ids(): AutoIdGenerator {
+        return Ids.SpellCastTimes;
+    }
+
+    zeroFill(): this {
+        this.Base.set(0)
+        this.PerLevel.set(0)
+        this.Minimum.set(0)
+        return this;
+    }
 
     get Base() { return this.wrap(this.row.Base); }
     get PerLevel() { return this.wrap(this.row.PerLevel); }
     get Minimum() { return this.wrap(this.row.Minimum); }
-
-    makeUnique() {
-        let id = Ids.SpellCastTimes.id();
-        this.row.clone(id);
-        this.spell.row.CastingTimeIndex.set(id);
-        return this.owner;
-    }
 
     set(base: number, perLevel: number, minimum: number) {
         this.Base.set(base);

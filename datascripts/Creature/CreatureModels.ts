@@ -34,6 +34,14 @@ export class CreatureModels extends Subsystem<CreatureTemplate> {
         return 4;
     }
 
+    private rows() {
+        return [this.owner.row.modelid1,this.owner.row.modelid2,this.owner.row.modelid3,this.owner.row.modelid4]
+    }
+
+    objectify() {
+        return this.rows().filter(x=>x.get()!=0).map(x=>new CreatureVisual(this.owner,x).objectify());
+    }
+
     getId(index: number): number {
         return getModel(this.owner, index).get();
     }
@@ -43,7 +51,8 @@ export class CreatureModels extends Subsystem<CreatureTemplate> {
     }
 
     get(index: number): CreatureVisual<CreatureTemplate> {
-        return SharedRefs.getOrCreateCreatureVisual(this.owner,index);
+        return new CreatureVisual(this.owner, 
+            this.rows()[index])
     }
 
     addIds(...modelIds: number[]) {

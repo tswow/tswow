@@ -16,12 +16,14 @@
 */
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { ItemTemplate } from "./ItemTemplate";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { ItemDisplayInfo } from "./ItemDisplayInfo";
 
-export class ItemVisualModel extends ArrayEntry<ItemTemplate> {
-    get Model() { return this.wrapIndex(this.owner.Visual.row.ModelName, this.index); }
-    get ModelTexture() { return this.wrapIndex(this.owner.Visual.row.ModelTexture, this.index); }
+export class ItemVisualModel<T extends BaseSystem> extends ArrayEntry<ItemDisplayInfo<T>> {
+    get Model() { return this.wrapIndex(this.owner.row.ModelName, this.index); }
+    get ModelTexture() { return this.wrapIndex(this.owner.row.ModelTexture, this.index); }
 
-    clear(): ItemTemplate {
+    clear(): ItemDisplayInfo<T> {
         this.Model.set("")
         this.ModelTexture.set("");
         return this.owner;
@@ -32,12 +34,12 @@ export class ItemVisualModel extends ArrayEntry<ItemTemplate> {
     }
 }
 
-export class ItemVisualModels extends SystemArray<ItemVisualModel,ItemTemplate> {
+export class ItemVisualModels<T extends BaseSystem> extends SystemArray<ItemVisualModel<T>,ItemDisplayInfo<T>> {
     get length(): number {
         return 2;
     }
 
-    get(index: number): ItemVisualModel {
+    get(index: number): ItemVisualModel<T> {
         return new ItemVisualModel(this.owner, index);
     }
 

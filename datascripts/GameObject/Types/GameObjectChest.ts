@@ -30,7 +30,7 @@ export class GameObjectChest extends GameObjectTemplate<GameObjectChest> {
     }
 
     get Lock() {
-        return new SimpleLock(SharedRefs.getOrCreateLock(this,this.row.Data0));
+        return new SimpleLock(this,[this.row.Data0]);
     }
 
     get Loot() {

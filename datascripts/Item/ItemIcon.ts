@@ -14,10 +14,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { ItemVisual } from "./ItemVisual";
+import { ItemDisplayInfo } from "./ItemDisplayInfo";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class ItemIcon extends Subsystem<ItemVisual> {
+export class ItemIcon<T extends BaseSystem> extends Subsystem<ItemDisplayInfo<T>> {
     set(value: string) {
         if(value.includes('\\')) {
             if(!value.startsWith('Interface\\Icons\\')) {
@@ -28,6 +29,7 @@ export class ItemIcon extends Subsystem<ItemVisual> {
             value = value.replace('Interface\\Icons\\','');
         }
         this.owner.row.InventoryIcon.setIndex(0,value);
+        return this.owner;
     }
 
     get() {

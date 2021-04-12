@@ -1,11 +1,14 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
-import { Ids } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
 import { BoundingBox } from "../Misc/BoundingBox";
-import { SharedRefs } from "../Refs/SharedRefs";
 import { CellIndexWrapper } from "wotlkdata/cell/Cell";
+import { SoundEntry } from "../sound/SoundEntry";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { DBC } from "wotlkdata";
 
-export class GameObjectSounds<T> extends Subsystem<GameObjectDisplay<T>> {
+export class GameObjectSounds<T extends BaseSystem> extends Subsystem<GameObjectDisplay<T>> {
     get length(): number { return 10; }
 
     getId(index: number) {
@@ -34,17 +37,22 @@ export class GameObjectSounds<T> extends Subsystem<GameObjectDisplay<T>> {
     }
 
     get(index: number) {
-        return SharedRefs.getOrCreateSoundEntry(
-            this.owner,
-            new CellIndexWrapper(this.owner,this.owner.row.Sound,index));
+        return new SoundEntry(this.owner, new CellIndexWrapper(this.owner, this.owner.row.Sound, index));
     }
 
     add() {
         return this.get(this.freeIndex());
     }
+
+    clearAll() {
+        for(let i=0;i<this.length;++i) {
+            this.owner.row.Sound.setIndex(i,0);
+        }
+        return this.owner;
+    }
 }
 
-export class GameObjectGeoBox<T> extends Subsystem<GameObjectDisplay<T>> {
+export class GameObjectGeoBox<T extends BaseSystem> extends Subsystem<GameObjectDisplay<T>> {
     get MinX() { return this.ownerWrap(this.owner.row.GeoBoxMinX); }
     get MaxX() { return this.ownerWrap(this.owner.row.GeoBoxMaxX); }
     get MinY() { return this.ownerWrap(this.owner.row.GeoBoxMinY); }
@@ -97,21 +105,32 @@ export function cleanGameObjectDisplayRow(row: GameObjectDisplayInfoRow) {
         .Sound.set([0,0,0,0,0,0,0,0,0,0])
 }
 
-export class GameObjectDisplay<T> extends Subsystem<T> {
-    row: GameObjectDisplayInfoRow; 
+export class GameObjectDisplay<T extends BaseSystem> extends SharedRef<T, GameObjectDisplayInfoRow> {
+    table(): SharedRefTable<GameObjectDisplayInfoRow> {
+        return DBC.GameObjectDisplayInfo;
+    }
+    ids(): AutoIdGenerator {
+        return Ids.GameObjectDisplay;
+    }
+    zeroFill(): this {
+        this.ModelName.set("")
+            .Sound.clearAll()
+            .ObjectEffectPackageID.set(0)
+            .GeoBox.set(new BoundingBox(0,0,0,0,0,0))
 
-    constructor(owner: T, row: GameObjectDisplayInfoRow) {
-        super(owner);
-        this.row = row;
+        return this;
     }
 
     get ID() { return this.row.ID.get(); }
     get ModelName() { return this.wrap(this.row.ModelName); }
+    get SoundID() { return this.wrapArray(this.row.Sound); }
     get Sound(): GameObjectSounds<T> { return new GameObjectSounds(this); }
     get ObjectEffectPackageID() { return this.wrap(this.row.ObjectEffectPackageID); }
     get GeoBox(): GameObjectGeoBox<GameObjectDisplay<T>> { return new GameObjectGeoBox<GameObjectDisplay<T>>(this as any); }
 
     clone() {
-        return new GameObjectDisplay(this.owner, this.row.clone(Ids.GameObjectDisplay.id()));
+        let id = this.row.clone(Ids.GameObjectDisplay.id()).ID.get();
+        this.cell.set(id);
+        return new GameObjectDisplay(this.owner, [this.cell]);
     }
 }

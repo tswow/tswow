@@ -24,6 +24,7 @@ import { Position } from "../Misc/Position"
 import { GameObjectBase } from "./GameObjectBase"
 import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
+import { TopSystem, TopCell } from "../Refs/SharedRef"
 
 export const GameObjectTemplates = {
     create(mod: string, id: string, parent: number = -1) {
@@ -98,14 +99,14 @@ export const GameObjectDisplays = {
     create(modelPath: string, boundingBox: BoundingBox = new BoundingBox(-1,-1,-1,1,1,1)) {
         const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplay.id());
         row.ModelName.set(modelPath);
-        return new GameObjectDisplay(undefined,row).GeoBox.set(boundingBox);
+        return new GameObjectDisplay(new TopSystem(),[new TopCell(row.ID.get())]).GeoBox.set(boundingBox);
     },
 
     load(id: number) {
-        return new GameObjectDisplay(undefined,DBC.GameObjectDisplayInfo.findById(id));
+        return new GameObjectDisplay(new TopSystem(),[new TopCell(id)]);
     },
 
     filter(query: GameObjectDisplayInfoQuery) {
-        return DBC.GameObjectDisplayInfo.filter(query).map(x=>new GameObjectDisplay(undefined,x));
+        return DBC.GameObjectDisplayInfo.filter(query).map(x=>new GameObjectDisplay(new TopSystem(),[new TopCell(x.ID.get())]));
     },
 }

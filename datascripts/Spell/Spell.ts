@@ -30,7 +30,6 @@ import { SpellLevels } from "./SpellLevels";
 import { SpellPower } from "./SpellPower";
 import { SpellPowerDisplay } from "./SpellPowerDisplay";
 import { SpellProc } from "./SpellProc";
-import { SpellRange } from "./SpellRange";
 import { SpellReagents } from "./SpellReagents";
 import { SpellRecovery } from "./SpellRecovery";
 import { SpellReputation } from "./SpellReputation";
@@ -38,14 +37,19 @@ import { SpellSkillLineAbilites } from "./SpellSkillLines";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
 import { SingleArraySystem } from "../Base/SingleArraySystem";
-import { SharedRefs } from "../Refs/SharedRefs";
 import { CellIndexWrapper } from "wotlkdata/cell/Cell";
+import { SpellCastTime } from "./SpellCastTime";
+import { SpellMissile } from "./SpellMissile";
+import { SpellDescriptionVariable } from "./SpellDescriptionVariable";
+import { SpellDifficulty } from "./SpellDifficulty";
+import { SpellVisual } from "./SpellVisual";
+import { SpellDuration } from "./SpellDuration";
+import { SpellRange } from "./SpellRange";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
-    get Visual() { return SharedRefs.getOrCreateSpellVisual(this, 
-        new CellIndexWrapper(undefined,this.row.SpellVisualID,0)); }
-    get VisualID() { return this.wrapIndex(this.row.SpellVisualID,0); }
+    get Visual() { return new SpellVisual(this, 
+        [new CellIndexWrapper(undefined,this.row.SpellVisualID,0)]); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get ActiveIcon() { return new SpellIconCell(this, this.row.ActiveIconID); }
     get Name() { return this.wrapLoc(this.row.Name); }
@@ -95,8 +99,8 @@ export class Spell extends MainEntity<SpellRow> {
 
     get ModalNextSpell() { return this.wrap(this.row.ModalNextSpell); }
     get Effects() { return new SpellEffects(this); }
-    get Duration() { return SharedRefs.getOrCreateSpellDuration(this); }
-    get Range() { return SharedRefs.getOrCreateSpellRange(this, this.row.RangeIndex); }
+    get Duration() { return new SpellDuration(this, [this.row.DurationIndex]); }
+    get Range() { return new SpellRange(this, [this.row.RangeIndex]); }
     get Speed() { return this.wrap(this.row.Speed); }
     get ClassMask() { return new BaseClassSet(this); }
     get Power() { return new SpellPower(this,this); }
@@ -109,7 +113,7 @@ export class Spell extends MainEntity<SpellRow> {
     get DefenseType() { return this.wrap(this.row.DefenseType); }
     get PreventionType() { return this.wrap(this.row.PreventionType); }
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
-    get CastTime() { return SharedRefs.getOrCreateCastTime(this,this); }
+    get CastTime() { return new SpellCastTime(this,[this.row.CastingTimeIndex]); }
     get Category() { return this.wrap(this.row.Category); }
 
     /** Points to a TotemCategory */
@@ -120,12 +124,10 @@ export class Spell extends MainEntity<SpellRow> {
     /** Points to a WorldMapArea */
     get RequiredAreaID() { return this.wrap(this.row.RequiredAreasID); }
     get SchoolMask() { return new MaskCell(this, this.row.SchoolMask); }
-    get MissileID() { return this.wrap(this.row.SpellMissileID); }
-    get DifficultyID() { return this.wrap(this.row.SpellDifficultyID); }
     get DispelType() { return this.wrap(this.row.DispelType); }
     get Mechanic() { return this.wrap(this.row.Mechanic); }
 
-    get Missile() { return SharedRefs.getOrCreateSpellMissile(this, this.row.SpellMissileID) }
+    get Missile() { return new SpellMissile(this, [this.row.SpellMissileID]) }
 
     get ShapeshiftMask() { return new IncludeExcludeMask(this, 
         new MaskLongCell(this,this.row.ShapeshiftMask),
@@ -133,9 +135,8 @@ export class Spell extends MainEntity<SpellRow> {
     )}
 
     get Levels() { return new SpellLevels(this); }
-    get SpellDescriptionVariableID() { return this.wrap(this.row.SpellDescriptionVariableID); }
-    get SpellDescriptionVariable() { return SharedRefs.getOrCreateSpellDescriptionVariable(this, this.row.SpellDescriptionVariableID) }
-    get Difficulty() { return SharedRefs.getOrCreateSpellDifficulty(this, this.row.SpellDifficultyID); }
+    get SpellDescriptionVariable() { return new SpellDescriptionVariable(this, [this.row.SpellDescriptionVariableID]) }
+    get Difficulty() { return new SpellDifficulty(this, [this.row.SpellDifficultyID]); }
     get ChannelInterruptFlags() { return new MaskCell(this, this.row.ChannelInterruptFlags); }
     get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
     get InterruptFlags() { return new InterruptFlags(this); }

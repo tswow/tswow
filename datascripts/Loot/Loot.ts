@@ -18,7 +18,6 @@ import { Cell } from "wotlkdata/cell/Cell";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { spell_loot_templateQuery } from "wotlkdata/sql/types/spell_loot_template";
 import { AutoIdGenerator, Ids } from "../Base/Ids";
 
 export interface LootRowBase {

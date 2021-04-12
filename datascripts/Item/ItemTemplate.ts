@@ -43,16 +43,15 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
-import { SharedRefs } from "../Refs/SharedRefs";
+import { ItemDisplayInfo } from "./ItemDisplayInfo";
+import { Transient } from "wotlkdata/cell/Transient";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
+    @Transient
     sqlRow : item_templateRow;
+    @Transient
     dbcRow : ItemRow;
 
-    protected transientFields() {
-        return super.transientFields().concat(['sqlRow','dbcRow']);
-    }
-    
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
     get StartQuest() { return this.wrap(this.row.startquest); }
@@ -109,7 +108,9 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get FoodType() { return new ItemFoodType(this); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
-    get Visual() { return SharedRefs.getOrCreateItemDisplayInfo(this,this.row.displayid); }
+
+    get DisplayInfo() { return new ItemDisplayInfo(this,[this.row.displayid]); }
+
     get AmmoType() { return new ItemAmmoTypes(this); }
     
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */

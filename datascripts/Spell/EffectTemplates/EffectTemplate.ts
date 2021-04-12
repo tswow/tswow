@@ -1,5 +1,8 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SpellEffect } from "../SpellEffect";
+import { Transient } from "wotlkdata/cell/Transient";
+import { CPrim } from "wotlkdata/cell/Cell";
+import { CellArray } from "wotlkdata/cell/CellArray";
 
 export const all_effects : any = {}
 export function EffectID(id: number) {
@@ -9,17 +12,21 @@ export function EffectID(id: number) {
 }
 
 export class EffectTemplate<T> extends Subsystem<T> {
+    protected w<T extends CPrim>(arr: CellArray<T,any>) {
+        return this.wrapIndex(arr, this.index);
+    }
+
+    @Transient
     readonly effect: SpellEffect;
     
+    @Transient
     protected get row() { return this.effect.row; }
+
+    @Transient
     get index() { return this.effect.index; }
 
     constructor(owner: T, effect: SpellEffect) {
         super(owner);
         this.effect = effect;
-    }
-
-    transientFields() { 
-        return super.transientFields().concat(['effect','owner','index','row']);
     }
 }

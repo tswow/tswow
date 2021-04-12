@@ -55,8 +55,8 @@ export class ProfessionRecipe extends Subsystem<Profession> {
     get Ranks() { return new RecipeRank(this, this.spell); }
     get Reagents() { return new SpellReagents(this, this.spell); }
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
-    get CastTime() { return new SpellCastTime(this, this.spell); }
+    get CastTime() { return new SpellCastTime(this, [this.spell.row.CastingTimeIndex]); }
 
-    get Animation() { return new SpellAnimation(this, this.spell.Visual.Kits.Precast.row.AnimID); }
-    get Sound() { return this.wrap(this.spell.Visual.Kits.Precast.SoundID); }
+    get Animation() { return new SpellAnimation(this, this.spell.Visual.Precast.row.AnimID); }
+    get Sound() { return this.wrap(this.spell.Visual.Precast.SoundID); }
 }

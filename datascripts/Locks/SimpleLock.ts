@@ -1,10 +1,11 @@
-import { MainSystem } from "wotlkdata/cell/MainSystem";
 import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class LockType extends Enum<SimpleLock> {
+export class LockType<T extends BaseSystem> extends Enum<SimpleLock<T>> {
     @EnumField(0)
     setNone() { return this.set(0); }
 
@@ -15,16 +16,20 @@ export class LockType extends Enum<SimpleLock> {
     setLockType() { return this.set(2); }
 }
 
-export class SimpleLock extends MainSystem {
-    readonly row: LockRow;
-
-    constructor(row: LockRow) {
-        super();
-        this.row = row;
+export class SimpleLock<T extends BaseSystem> extends SharedRef<T,LockRow>{
+    table(): SharedRefTable<LockRow> {
+        return DBC.Lock
     }
-
+    ids(): AutoIdGenerator {
+        return Ids.Lock;
+    }
+    zeroFill(): this {
+        this.Type.set(0)
+        
+        return this;
+    }
     get ID() { return this.row.ID.get(); }
-    get Type() { return new LockType(this, this.wrapIndex(this.row.Type,0)); }
+    get Type(): LockType<T> { return new LockType(this, this.wrapIndex(this.row.Type,0)); }
     get Skill() { return this.wrapIndex(this.row.Skill,0); }
     get Action() { return this.wrapIndex(this.row.Action,0); }
     get Index() { return this.wrapIndex(this.row.Index,0); }

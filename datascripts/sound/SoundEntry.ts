@@ -2,10 +2,13 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Cell } from "wotlkdata/cell/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SoundType } from "./SoundType";
-import { Ids } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 
-export class SoundEntryName<T> extends Subsystem<SoundEntry<T>> {
+export class SoundEntryName<T extends BaseSystem> extends Subsystem<SoundEntry<T>> {
     get() {
         return this.owner.row.Name.get();
     }
@@ -19,15 +22,48 @@ export class SoundEntryName<T> extends Subsystem<SoundEntry<T>> {
     }
 }
 
-export class SoundEntry<T> extends Subsystem<T>{
-    protected id: Cell<number,any>;
-    get row() { return DBC.SoundEntries.findById(this.id.get()); }
+export class SoundEntry<T extends BaseSystem> extends SharedRef<T, SoundEntriesRow>{
+    table(): SharedRefTable<SoundEntriesRow> {
+        return DBC.SoundEntries;
+    }
+
+    ids(): AutoIdGenerator {
+        return Ids.SoundEntries;
+    }
+
+    zeroFill(): this {
+        this.EAXDef.set(0)
+            .Files.clearAll()
+            .InnerRadius.set(0)
+            .InnerRadius2D.set(0)
+            .InsideAngle.set(0)
+            .MinDistance.set(0)
+            .Name.set("")
+            .OuterRadius.set(0)
+            .OuterRadius2D.set(0)
+            .OutsideAngle.set(0)
+            .OutsideVolume.set(0)
+            .RandomOffsetRange.set(0)
+            .SoundType.set(0)
+            .TimeA.set(0)
+            .TimeB.set(0)
+            .TimeC.set(0)
+            .TimeD.set(0)
+            .TimeIntervalMax.set(0)
+            .TimeIntervalMin.set(0)
+            .TimeToDuck.set(0)
+            .TimeToUnduck.set(0)
+            .Usage.set(0)
+            .Volume.set(0)
+            .VolumeSliderCategory.set(0)
+        return this;
+    }
 
     get advanced_row() { 
         if(this.row.SoundEntriesAdvancedID.get()===0) {
             this.row.SoundEntriesAdvancedID.set(Ids.SoundEntriesAdvanced.id());
             DBC.SoundEntriesAdvanced.add(this.row.SoundEntriesAdvancedID.get())
-                .SoundEntryID.set(this.id.get())
+                .SoundEntryID.set(this.ID)
                 .TimeA.set(0)
                 .TimeB.set(0)
                 .TimeC.set(0)
@@ -58,11 +94,9 @@ export class SoundEntry<T> extends Subsystem<T>{
 
 
     constructor(owner: T, id: Cell<number,any>) {
-        super(owner);
-        this.id = id;
+        super(owner,[id]);
     }
 
-    get ID() { return this.id.get(); }
     get SoundType() { return new SoundType(this, this.row.SoundType); }
 
     get Name(): SoundEntryName<T> { return new SoundEntryName(this); }
@@ -98,11 +132,12 @@ export class SoundEntry<T> extends Subsystem<T>{
     get OutsideVolume() { return this.wrap(this.advanced_row.OutsideVolume); }
     get OuterRadius2D() { return this.wrap(this.advanced_row.OuterRadius2D); }
 
-    makeUnique() {
-        let id = Ids.SoundEntries.id();
+    makeUnique() : this {
+        super.makeUnique();
         if(this.row.SoundEntriesAdvancedID.get()!=0) {
-            this.advanced_row.SoundEntryID.set(id);
+            let id = this.advanced_row.clone(Ids.SoundEntriesAdvanced.id()).ID.get();
+            this.row.SoundEntriesAdvancedID.set(id);
         }
-        this.id.set(Ids.SoundEntries.id());
+        return this;
     }
 }

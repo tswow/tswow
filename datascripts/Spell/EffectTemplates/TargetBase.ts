@@ -1,6 +1,6 @@
 import { EffectTemplate } from "./EffectTemplate";
-import { SharedRefs } from "../../Refs/SharedRefs";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
+import { SpellRadius } from "../SpellRadius";
 
 export class TargetBase<T> extends EffectTemplate<T> {
     /**
@@ -16,7 +16,7 @@ export class TargetBase<T> extends EffectTemplate<T> {
     /**
      * Generic radius. Value depends on TargetA/TargetB
      */
-    get Radius() { return SharedRefs.getOrCreateSpellRadius(this, this.effect); }
+    get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); }
 
     /**
      * How many units can be chained by this spell

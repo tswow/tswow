@@ -2,6 +2,7 @@ import { LockType } from "./LockType"
 import { DBC } from "wotlkdata"
 import { Ids } from "../Base/Ids"
 import { SimpleLock } from "./SimpleLock"
+import { TopCell } from "../Refs/SharedRef";
 
 function makeLock() {
     let lock = DBC.Lock.add(Ids.Lock.id());
@@ -19,7 +20,7 @@ export const Locks = {
     
 
     loadLock(id: number) {
-        return new SimpleLock(DBC.Lock.findById(id));
+        return new SimpleLock(DBC.Lock.findById(id),[new TopCell(id)]);
     },
 
     loadType(id: number) {
@@ -31,17 +32,20 @@ export const Locks = {
     },
 
     createItem(item: number) {
-        return new SimpleLock(makeLock())
+        let lock = makeLock();
+        return new SimpleLock(lock,[new TopCell(lock.ID.get())])
             .Type.setItem()
             .Index.set(item)
     },
 
     createEmpty() {
-        return new SimpleLock(makeLock())
+        let lock = makeLock();
+        return new SimpleLock(lock,[new TopCell(lock.ID.get())])
     },
     
     createTypeInstance(type: number, skill: number = 0) {
-        return new SimpleLock(makeLock())
+        let lock = makeLock();
+        return new SimpleLock(lock,[new TopCell(lock.ID.get())])
             .Type.setLockType()
             .Index.set(type)
             .Skill.set(skill)

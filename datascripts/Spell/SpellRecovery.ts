@@ -16,8 +16,10 @@
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Spell } from "./Spell";
+import { Transient } from "wotlkdata/cell/Transient";
 
 export class SpellRecovery<T> extends Subsystem<T> {
+    @Transient
     protected spell :Spell; 
     
     constructor(owner: T, spell: Spell) {
@@ -37,9 +39,5 @@ export class SpellRecovery<T> extends Subsystem<T> {
         this.StartTime.set(startTime);
         this.StartCategory.set(startCategory);
         return this.owner;
-    }
-
-    transientFields() {
-        return ['spell'];
     }
 }

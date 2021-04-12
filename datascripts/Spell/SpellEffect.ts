@@ -28,6 +28,7 @@ import { Spells } from "./Spells";
 import { SharedRefs } from "../Refs/SharedRefs";
 import { all_auras } from "./EffectTemplates/AuraTemplates";
 import { all_effects } from "./EffectTemplates/EffectTemplate";
+import { SpellRadius } from "./SpellRadius";
 
 export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     constructor(owner: Spell) {
@@ -195,7 +196,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
 
     get row() { return this.owner.row; }
 
-    get Radius() { return SharedRefs.getOrCreateSpellRadius(this, this); }
+    get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); }
     get ItemType() { return this.w(this.row.EffectItemType); }
     get AuraType() { return new AuraType(this, this.index); }
     get EffectType() { return new SpellEffectType(this, this.index); }

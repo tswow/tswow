@@ -15,29 +15,37 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Ids } from "../Base/Ids";
-import { Spell } from "./Spell";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
 import { Cell } from "wotlkdata/cell/Cell";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
 
-export class SpellMissile<T> extends Subsystem<T> {
-    
-    protected cell: Cell<number,any>
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
+export class SpellMissile<T extends BaseSystem> extends SharedRef<T,SpellMissileRow> {
+    table(): SharedRefTable<SpellMissileRow> {
+        return DBC.SpellMissile;
+    }
+    ids(): AutoIdGenerator {
+        return Ids.SpellMissile;
+    }
+    zeroFill(): this {
+        this.CollisionRadius.set(0)
+            .DefaultPitchMax.set(0)
+            .DefaultSpeedMax.set(0)
+            .DefaultSpeedMin.set(0)
+            .Flags.set(0)
+            .Gravity.set(0)
+            .MaxDuration.set(0)
+            .RandomizeFacingMax.set(0)
+            .RandomizeFacingMin.set(0)
+            .RandomizePitchMin.set(0)
+            .RandomizePitchmax.set(0)
+            .RandomizeSpeedMax.set(0)
+            .RandomizeSpeedMin.set(0)
+        return this;
     }
 
-    protected transientFields() {
-        return super.transientFields().concat(['cell']);
-    }
-
-    get row() { 
-        return DBC.SpellMissile.find({ID: this.cell.get()})
-    }
-
-    get CollisionRaduis() { return this.wrap(this.row.CollisionRadius); }
+    get CollisionRadius() { return this.wrap(this.row.CollisionRadius); }
     get DefaultPitchMax() { return this.wrap(this.row.DefaultPitchMax); }
     get DefaultSpeedMax() { return this.wrap(this.row.DefaultSpeedMax); }
     get DefaultSpeedMin() { return this.wrap(this.row.DefaultSpeedMin); }
@@ -50,11 +58,4 @@ export class SpellMissile<T> extends Subsystem<T> {
     get RandomizePitchMin() { return this.wrap(this.row.RandomizePitchMin); }
     get RandomizeSpeedMax() { return this.wrap(this.row.RandomizeSpeedMax); }
     get RandomizeSpeedMin() { return this.wrap(this.row.RandomizeSpeedMin); }
-
-    makeUnique() {
-        const row = DBC.SpellMissile.findById(this.cell.get())
-            .clone(Ids.SpellMissile.id())
-        this.cell.set(row.ID.get());
-        return this.owner;
-    }
 }

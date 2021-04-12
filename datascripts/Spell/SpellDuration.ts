@@ -14,33 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids } from "../Base/Ids";
-import { Spell } from "./Spell";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { DBC } from "wotlkdata";
+import { AutoIdGenerator, Ids } from "../Base/Ids";
 
-export class SpellDuration extends Subsystem<Spell> {
-    constructor(owner: Spell) {
-        super(owner);
+export class SpellDuration<T extends BaseSystem> extends SharedRef<T, SpellDurationRow> {
+    table(): SharedRefTable<SpellDurationRow> {
+        return DBC.SpellDuration;
     }
 
-    get row() { 
-        if(this.owner.row.DurationIndex.get()===0) {
-            const row = DBC.SpellDuration.add(Ids.SpellDuration.id())
-            this.owner.row.DurationIndex.set(row.ID.get());
-            return row;
-        }
-        return DBC.SpellDuration.find({ID: this.owner.row.DurationIndex.get()})
+    ids(): AutoIdGenerator {
+        return Ids.SpellDuration;
     }
 
-    makeUnique() {
-        if(this.owner.row.DurationIndex.get()===0) {
-            return;
-        }
-        const row = DBC.SpellDuration.findById(this.owner.row.DurationIndex.get())
-            .clone(Ids.SpellDuration.id())
-        this.owner.row.DurationIndex.set(row.ID.get());
-        return this.owner;
+    zeroFill(): this {
+        this.set(0,0,0);
+        return this;
     }
 
     get ID() { return this.row.ID.get(); }

@@ -15,32 +15,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Ids } from "../Base/Ids";
-import { SpellEffect } from "./SpellEffect";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
-export class SpellRadius<T> extends Subsystem<T> {
-
-    constructor(owner: T, effect: SpellEffect) {
-        super(owner);
-        this.effect = effect;
+export class SpellRadius<T extends BaseSystem> extends SharedRef<T, SpellRadiusRow> {
+    table(): SharedRefTable<SpellRadiusRow> {
+        return DBC.SpellRadius;
     }
 
-    protected effect: SpellEffect; 
+    ids(): AutoIdGenerator {
+        return Ids.SpellRadius;
+    }
+
+    zeroFill(): this {
+        this.set(0,0,0);
+        return this;
+    }
 
     get ID() { return this.row.ID.get(); }
 
     get Radius() { return this.ownerWrap(this.row.Radius); }
     get RadiusPerLevel() { return this.ownerWrap(this.row.RadiusPerLevel); }
     get RadiusMax() { return this.ownerWrap(this.row.RadiusMax); }
-
-    protected get icell() {
-        return this.wrapIndex(this.effect.row.EffectRadiusIndex, this.effect.index);
-    }
-
-    transientFields() {
-        return super.transientFields().concat(['icell','effect']);
-    }
 
     set(radius: number, radiusPerLevel: number, radiusMax: number) {
         const row = this.row;
@@ -50,27 +48,9 @@ export class SpellRadius<T> extends Subsystem<T> {
         return this.owner;
     }
 
-    get row() { 
-        if(this.icell.get()===0) {
-            const row = DBC.SpellRadius.add(Ids.SpellRange.id());
-            this.icell.set(row.ID.get());
-            return row;
-        } else {
-            return DBC.SpellRadius.findById(this.icell.get());
-        }
-    }
-
     copyFrom(radius: SpellRadius<any>) {
         this.Radius.set(radius.Radius.get());
         this.RadiusPerLevel.set(radius.RadiusPerLevel.get());
         this.RadiusMax.set(radius.RadiusMax.get());
-    }
-
-    makeUnique() {
-        if(this.icell.get()===0) {
-            return;
-        }
-        this.icell.set(this.row.clone(Ids.SpellRadius.id()).ID.get());
-        return this.owner;
     }
 }

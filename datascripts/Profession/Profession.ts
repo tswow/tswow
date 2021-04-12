@@ -103,14 +103,14 @@ export class Profession {
     }
 
     addGatheringNode(mod: string, name: string, levelNeeded: number) {
-        let chest = GameObjectTemplates.create(mod,name).AsChest();
-        chest.IsConsumable.set(1)
-        chest.Lock
-            .Index.set(this.LockType.ID)
-            .Type.setLockType()
-            .Skill.set(levelNeeded)
-            .Action.set(0)
-        return chest;
+        return GameObjectTemplates.create(mod,name).setChest()
+            .IsConsumable.set(1)
+            .Lock
+                .Index.set(this.LockType.ID)
+                .Type.setLockType()
+                .Skill.set(levelNeeded)
+                .Action.set(0)
+            .end
     }
 
     addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
@@ -122,7 +122,7 @@ export class Profession {
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
                 .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                .Visual.Kits.clearAll().end
+                .Visual.zeroFill().end
                 .SkillLines.add(this.skillLine.ID)
                     .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                     .ClassMaskForbidden.set(0)
@@ -133,10 +133,11 @@ export class Profession {
             this._ApprenticeLearnSpell = std.Spells.create(modid,`${id}_learn_spell`,2020)
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.get(0).TriggerSpell.set(this._ApprenticeSpell.ID).end
+                .Effects.get(0).TriggerSpell.set((this._ApprenticeSpell as Spell).ID).end
                 .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
 
-            SQL.spell_ranks.add(this._ApprenticeSpell.ID,1,{spell_id: this._ApprenticeSpell.ID})
+            SQL.spell_ranks.add((this._ApprenticeSpell as Spell).ID,1,
+                {spell_id: (this._ApprenticeSpell as Spell).ID})
         }
 
         for(let i=2;i<rnk;++i) {
@@ -145,7 +146,7 @@ export class Profession {
                 let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
                     .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                    .Visual.Kits.clearAll().end
+                    .Visual.zeroFill().end
                     .SkillLines.add(this.skillLine.ID)
                         .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                         .ClassMaskForbidden.set(0)
@@ -197,7 +198,7 @@ export class Profession {
             .InterruptFlags.OnInterruptCast.mark()
             .InterruptFlags.mark(3)
             .InterruptFlags.mark(4)
-            .Visual.makeUnique()
+            .Visual.makeUnique().end
             
         this.ApprenticeLearnSpell.Effects.addLearnSpells(spl.ID)
         return new GatheringSpell(spl);

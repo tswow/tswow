@@ -15,37 +15,25 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Ids } from "../Base/Ids";
-import { Spell } from "./Spell";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
 import { Cell } from "wotlkdata/cell/Cell";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
 
-export class SpellDifficulty<T> extends Subsystem<T> {
-    protected cell: Cell<number,any>;
+export class SpellDifficulty<T extends BaseSystem> extends SharedRef<T, SpellDifficultyRow> {
 
-    protected transientFields() {
-        return super.transientFields().concat(['cell']);
+    table(): SharedRefTable<SpellDifficultyRow> {
+        return DBC.SpellDifficulty;
     }
-    
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
+    ids(): AutoIdGenerator {
+        return Ids.SpellDifficulty;
     }
-    
-    makeUnique() {
-        if(this.cell.get()===0) {
-            return;
-        }
-        const row = DBC.SpellDifficulty.findById(this.cell.get())
-        .clone(Ids.SpellDifficulty.id())
-        this.cell.set(row.ID.get());
-        return this.owner;
+    zeroFill(): this {
+        this.set(0,0,0,0);
+        return this;
     }
-    
-    get row() { 
-        return DBC.SpellDifficulty.find({ID: this.cell.get()})
-    } 
-    
+
     get Normal10Man() { return this.row.DifficultySpellID.getIndex(0); }
     get Normal25Man() { return this.row.DifficultySpellID.getIndex(1); }
     get Heroic10Man() { return this.row.DifficultySpellID.getIndex(2); }

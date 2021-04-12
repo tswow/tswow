@@ -15,39 +15,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Ids } from "../Base/Ids";
-import { Cell } from "wotlkdata/cell/Cell";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
-export class SpellDescriptionVariable<T> extends Subsystem<T> {
-    protected cell: Cell<number,any>;
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
+export class SpellDescriptionVariable<T extends BaseSystem> extends SharedRef<T, SpellDescriptionVariablesRow> {
+    table(): SharedRefTable<SpellDescriptionVariablesRow> {
+        return DBC.SpellDescriptionVariables;
+    }
+    ids(): AutoIdGenerator {
+        return Ids.SpellDescriptionVariable;
     }
 
-    transientFields() {
-        return ['cell'];
-    }
-
-    get row() { 
-        if(this.cell.get()===0) {
-            const row = DBC.SpellDescriptionVariables.add(Ids.SpellDescriptionVariable.id())
-            this.cell.set(row.ID.get());
-            return row;
-        }
-        return DBC.SpellDescriptionVariables.find({ID: this.cell.get()})
-    }
-
-    makeUnique() {
-        if(this.cell.get()===0) {
-            return;
-        }
-        const row = DBC.SpellDescriptionVariables.findById(this.cell.get())
-            .clone(Ids.SpellDescriptionVariable.id())
-        this.cell.set(row.ID.get());
-        return this.owner;
+    zeroFill(): this {
+        this.set("");
+        return this;
     }
 
     objectify() { 

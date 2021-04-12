@@ -14,18 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { loc_constructor } from "wotlkdata/primitives";
-import { Ids } from "../Base/Ids";
-import { Cell } from "wotlkdata/cell/Cell";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class SpellRange<T> extends Subsystem<T> {
-    protected cell: Cell<number,any>
+export class SpellRange<T extends BaseSystem> extends SharedRef<T,SpellRangeRow> {
+    table(): SharedRefTable<SpellRangeRow> {
+        return DBC.SpellRange;
+    }
+    ids(): AutoIdGenerator {
+        return Ids.SpellRange;
+    }
 
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
+    zeroFill(): this {
+        this.Name.set({})
+        this.NameShort.set({})
+        this.Flags.set(0)
+        this.HostileMin.set(0)
+        this.HostileMax.set(0)
+        this.FriendMin.set(0)
+        this.FriendMax.set(0)
+        return this;
     }
 
     get Name() { return this.ownerWrapLoc(this.row.DisplayName); }
@@ -62,13 +74,5 @@ export class SpellRange<T> extends Subsystem<T> {
         }
         
         return this.owner;
-    }
-
-    makeUnique() {
-        this.cell.set(this.row.clone(Ids.SpellRange.id()).ID.get());
-    }
-
-    transientFields() {
-        return ['cell']
     }
 }

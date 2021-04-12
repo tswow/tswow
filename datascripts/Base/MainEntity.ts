@@ -15,16 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MainSystem } from "wotlkdata/cell/MainSystem";
+import { Transient } from "wotlkdata/cell/Transient";
 
 export class MainEntity<T> extends MainSystem {
+    @Transient
     row: T;
+
     constructor(row: T) {
         super();
         this.row = row;
-    }
-
-    protected transientFields() {
-        return super.transientFields()
-            .concat(['row']);
     }
 }

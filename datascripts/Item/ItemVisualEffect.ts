@@ -1,9 +1,13 @@
 import { DBC } from "wotlkdata";
-import { Ids } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
 import { DummyCell } from "wotlkdata/cell/DummyCell";
 import { Cell, CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { pathToIcon } from "../Spell/SpellIcon";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { ItemVisualEffectsRow } from "wotlkdata/dbc/types/ItemVisualEffects";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');
@@ -45,11 +49,21 @@ export class ItemEffectCell<T> extends ArrayEntry<T> {
     }
 }
 
-export class ItemEffects<T> extends SystemArray<ItemEffectCell<T>,T> {
+export class ItemEffects<T extends BaseSystem> extends SharedRef<T,ItemVisualsRow> {
+    table(): SharedRefTable<ItemVisualsRow> {
+        return DBC.ItemVisuals;
+    }
+    ids(): AutoIdGenerator {
+        return Ids.ItemVisuals;
+    }
+    zeroFill(): this {
+        this.clearAll();
+        return this;
+    }
     readonly id: Cell<number,any>
 
     constructor(owner: T, id: Cell<number,any>) {
-        super(owner);
+        super(owner,[id]);
         this.id = id;
     }
 
@@ -66,9 +80,40 @@ export class ItemEffects<T> extends SystemArray<ItemEffectCell<T>,T> {
             new CellIndexWrapper(undefined,this.row.Slot,index));
     }
 
-    makeUnique() {
-        let id = Ids.ItemVisuals.id();
-        this.row.clone(id);
-        this.id.set(id)
+    clear(index: number) {
+        this.get(index).clear();
+        return this.owner;
+    }
+
+    clearAll() {
+        for (let i = 0; i < this.length; ++i) {
+            this.clear(i);
+        }
+        return this.owner;
+    }
+
+    protected getFree(): ItemEffectCell<T> {
+        for (let i = 0; i < this.length; ++i) {
+            const cur = this.get(i);
+            if (cur.isClear()) {
+                // Clear non-id fields
+                cur.clear();
+                return cur;
+            }
+        }
+        throw new Error(`Can't add more entries, array is full.`);
+    }
+
+    objectify() {
+        const values: any[] = [];
+        for (let i = 0; i < this.length; ++i) {
+            const v = this.get(i);
+            if (v.isClear()) {
+                values.push('<empty>')
+            } else {
+                values.push(v.objectify());
+            }
+        }
+        return values;
     }
 }

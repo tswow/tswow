@@ -1,21 +1,19 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Cell } from "wotlkdata/cell/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
+import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class ParticleColor<T> extends Subsystem<T> {
-    id: Cell<number,any>
-    
-    constructor(owner: T, id: Cell<number,any>) {
-        super(owner);
-        this.id = id;
+export class ParticleColor<T extends BaseSystem> extends SharedRef<T, ParticleColorRow> {
+    table(): SharedRefTable<ParticleColorRow> {
+        return DBC.ParticleColor;
     }
-
-    get row() { 
-        if(this.id.get()===0) {
-            this.id.set(Ids.ParticleColors.id());
-        }
-        return DBC.ParticleColor.findById(this.id.get()); 
+    ids(): AutoIdGenerator {
+        return Ids.ParticleColors;
+    }
+    zeroFill(): this {
+        this.set(0,0,0,0,0,0,0,0,0);
+        return this;
     }
 
     get Start() { return this.wrapArray(this.row.Start);}
@@ -48,11 +46,5 @@ export class ParticleColor<T> extends Subsystem<T> {
         this.End.setIndex(1,end2);
         this.End.setIndex(2,end3);
         return this.owner;
-    }
-
-    makeUnique() {
-        let id = Ids.ParticleColors.id();
-        this.row.clone(id);
-        this.id.set(id);
     }
 }
