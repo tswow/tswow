@@ -24,6 +24,12 @@ export namespace Identifiers {
             )
         }
 
+        if(identifier.includes('--')) {
+            throw new Error(
+                `The identifier "${identifier}" contains double dashes (--)`
+              + `, please use a name without double dashes.`
+          )
+        }
 
         if(prev!='none') {
             throw new Error(`${identifier} already refers to a ${prev}`);
