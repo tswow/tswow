@@ -25,7 +25,7 @@ import { SpellAnimation } from "./SpellAnimation";
 import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKitModelAttach";
 import { Attachment } from "../Base/Attachment";
 import { Vec3 } from "../Base/Vec3";
-import { SpellVisualEffect } from "./SpellVisualEffect";
+import { SpellVisualEffect, SpellVisualEffects } from "./SpellVisualEffect";
 import { Cell } from "wotlkdata/cell/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
@@ -93,9 +93,7 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
             .RightWeaponEffect.setID(0).end
             .CameraShake.setID(0).end
             .Sound.setID(0).end
-            .SpecialEffectA.setID(0).end
-            .SpecialEffectB.setID(0).end
-            .SpecialEffectC.setID(0).end
+            .SpellEffects.clearAll()
             .StartAnimation.set(-1)
             .WorldEffect.setID(0).end
             // TODO: Actually remove the rows
@@ -128,9 +126,7 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
     get LeftHandEffect() { return new SpellVisualEffect(this, this.row.LeftHandEffect)}
     get RightHandEffect() { return new SpellVisualEffect(this, this.row.RightHandEffect)}
     get RightWeaponEffect() { return new SpellVisualEffect(this, this.row.RightWeaponEffect)}
-    get SpecialEffectA() { return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect,0))}
-    get SpecialEffectB() { return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect,1))}
-    get SpecialEffectC() { return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect,2))}
+    get SpellEffects() { return new SpellVisualEffects(this, this.row); }
     get Models(): SpellVisualKitModels<T> { return new SpellVisualKitModels(this); }
 
     cloneFrom(kit: SpellVisualKit<any>) {

@@ -4,6 +4,8 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { Transient } from "wotlkdata/cell/Transient";
+import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 
 export class VisualScale<T> extends Subsystem<T> {
     protected row: SpellVisualEffectNameRow;
@@ -52,5 +54,41 @@ export class SpellVisualEffect<T extends BaseSystem> extends SharedRef<T, SpellV
         this.AreaSize.set(areaSize);
         this.Scale.set(scale,scaleMin,scaleMax);
         return this.owner;
+    }
+}
+
+export class SpellVisualEffects<T extends BaseSystem> extends Subsystem<T> {
+    @Transient
+    protected row: SpellVisualKitRow; 
+
+    constructor(owner: T, row: SpellVisualKitRow) {
+        super(owner);
+        this.row = row;
+    }
+
+    get length() { return 3; }
+
+    clearAll() {
+        for(let i=0;i<this.length;++i) {
+            this.row.SpecialEffect.setIndex(0,0);
+        }
+        return this.owner;
+    }
+
+    clear(index: number) {
+        this.row.SpecialEffect.setIndex(index,0);
+    }
+
+    get(index: number) {
+        return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect, index));
+    }
+
+    add() {
+        for(let i=0;i<this.length;++i) {
+            if(this.row.SpecialEffect.getIndex(i)===0) {
+                return this.get(i);
+            }
+        }
+        throw new Error(`Can't add more entries, array is full.`);
     }
 }
