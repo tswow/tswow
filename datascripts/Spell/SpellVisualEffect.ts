@@ -45,4 +45,12 @@ export class SpellVisualEffect<T extends BaseSystem> extends SharedRef<T, SpellV
     get Filename() { return this.wrap(this.row.FileName); }
     get AreaSize() { return this.wrap(this.row.AreaEffectSize); }
     get Scale() { return new VisualScale(this, this.row); }
+
+    set(filename: string, areaSize: number, scale: number
+        , scaleMin: number = scale, scaleMax: number = scale) {
+        this.Filename.set(filename);
+        this.AreaSize.set(areaSize);
+        this.Scale.set(scale,scaleMin,scaleMax);
+        return this.owner;
+    }
 }

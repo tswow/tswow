@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { GetIdRange, GetId } from "wotlkdata/ids/Ids"
+import { GetId } from "wotlkdata/ids/Ids"
 import { SQLNames } from "wotlkdata/sql/SQLFiles"
 import { DBCNames } from "wotlkdata/dbc/DBCFiles"
 
@@ -237,5 +237,15 @@ export const Ids = {
     /**
      * Starts at 600, highest base value is 586
      */
-    ParticleColors: new AutoIdGenerator(600)
+    ParticleColors: new AutoIdGenerator(600),
+
+    /**
+     * Starts at 200, highest base value is 146
+     */
+    CameraShakes: new AutoIdGenerator(200),
+
+    /** 
+     * Starts at 100, highest base value is 92
+     */
+    SpellEffectCameraShakes: new AutoIdGenerator(100)
 }

@@ -1,17 +1,37 @@
 import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { AutoIdGenerator } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
+
+export class CameraShakeType<T> extends Enum<T> {
+    @EnumField(0)
+    setSine() { return this.set(0); }
+
+    @EnumField(1)
+    setDecayedSine() { return this.set(1); }
+}
 
 export class CameraShakes<T extends BaseSystem> extends SharedRef<T,CameraShakesRow> {
+
     table(): SharedRefTable<CameraShakesRow> {
-        throw new Error("Method not implemented.");
+        return DBC.CameraShakes;
     }
+
     ids(): AutoIdGenerator {
-        throw new Error("Method not implemented.");
+        return Ids.CameraShakes;
     }
+
     clear(): this {
-        throw new Error("Method not implemented.");
+        this.ShakeType.set(0);
+        this.Direction.set(0);
+        this.Ampitude.set(0);
+        this.Frequency.set(0);
+        this.Duration.set(0);
+        this.Phase.set(0);
+        this.Coefficient.set(0);
+        return this;
     }
 
     get ShakeType() { return this.wrap(this.row.ShakeType); }

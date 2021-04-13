@@ -25,7 +25,6 @@ import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { std } from "../tswow-stdlib-data";
 import { Spells } from "./Spells";
-import { SharedRefs } from "../Refs/SharedRefs";
 import { all_auras } from "./EffectTemplates/AuraTemplates";
 import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { SpellRadius } from "./SpellRadius";
