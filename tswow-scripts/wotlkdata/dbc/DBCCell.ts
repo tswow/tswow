@@ -22,6 +22,7 @@ import { LocSystem } from '../cell/LocSystem';
 import { PendingCell } from '../cell/PendingCell';
 import { CellArray } from '../cell/CellArray';
 import { CellReadOnly } from '../cell/CellReadOnly';
+import { Transient } from '../cell/Transient';
 
 export abstract class DBCCell<D extends CPrim, T> extends Cell<D, T> {
     protected buffer: DBCBuffer;
@@ -95,6 +96,85 @@ export class DBCFloatArrayCell<T> extends DBCArrayCell<number, T> {
 
     setIndex(index: number, value: number) {
         this.buffer.writefloat(value, this.offset + index * 4);
+        return this.owner;
+    }
+}
+
+export class DBCMultiArrayCell<T> extends DBCArrayCell<number, T> {
+    setIndex(index: number, value: number): T {
+        this.buffer.writefloat(value, this.offset + index * 4);
+        return this.owner;
+    }
+    getIndex(index: number): number {
+        return this.buffer.readfloat(this.offset + index * 4);
+    }
+
+    setIndexFloat(index: number, value: number)  {
+        this.buffer.writefloat(value, this.offset + index * 4);
+        return this.owner;
+    }
+
+    getIndexFloat(index: number): number {
+        return this.buffer.readfloat(this.offset + index * 4);
+    }
+
+    setIndexUInt32(index: number, value: number)  {
+        this.buffer.writeuint(value, this.offset + index * 4);
+        return this.owner;
+    }
+
+    getIndexUInt32(index: number): number {
+        return this.buffer.readuint(this.offset + index * 4);
+    }
+
+    setIndexInt32(index: number, value: number)  {
+        this.buffer.writeint(value, this.offset + index * 4);
+        return this.owner;
+    }
+
+    getIndexInt32(index: number): number {
+        return this.buffer.readint(this.offset + index * 4);
+    }
+}
+
+export abstract class MultiWrapper<T> extends Cell<number,T> {
+    @Transient
+    protected multi: DBCMultiArrayCell<any>;
+    @Transient
+    protected index: number;
+    constructor(owner: T, multi: DBCMultiArrayCell<any>, index: number){
+        super(owner)
+        this.multi = multi;
+        this.index = index;
+    }
+}
+
+export class MultiFloatWrapper<T> extends MultiWrapper<T> {
+    get(): number {
+        return this.multi.getIndexFloat(this.index);
+    }
+    set(value: number): T {
+        this.multi.setIndexFloat(this.index, value);
+        return this.owner;
+    }
+}
+
+export class MultiUIntWrapper<T> extends MultiWrapper<T> {
+    get(): number {
+        return this.multi.getIndexUInt32(this.index);
+    }
+    set(value: number): T {
+        this.multi.setIndexUInt32(this.index, value);
+        return this.owner;
+    }
+}
+
+export class MultiIntWrapper<T> extends MultiWrapper<T> {
+    get(): number {
+        return this.multi.getIndexInt32(this.index);
+    }
+    set(value: number): T {
+        this.multi.setIndexInt32(this.index, value);
         return this.owner;
     }
 }

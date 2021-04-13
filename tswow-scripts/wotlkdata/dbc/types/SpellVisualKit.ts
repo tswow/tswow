@@ -17,7 +17,7 @@
 import { DBCRow } from '../DBCRow'
 import { DBCFile } from '../DBCFile'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCIntArrayCell , DBCFloatArrayCell , DBCUIntCell} from '../DBCCell'
+import { DBCKeyCell , DBCIntCell , DBCIntArrayCell , DBCFloatArrayCell , DBCUIntCell, DBCMultiArrayCell} from '../DBCCell'
 import { int , float , uint} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
@@ -113,22 +113,22 @@ export class SpellVisualKitRow extends DBCRow<SpellVisualKitCreator,SpellVisualK
     /**
      * No comment (yet!)
      */
-    get CharParamZero() { return new DBCFloatArrayCell(this,4,this.buffer,this.offset+84)}
+    get CharParamZero() { return new DBCMultiArrayCell(this,4,this.buffer,this.offset+84)}
     
     /**
      * No comment (yet!)
      */
-    get CharParamOne() { return new DBCFloatArrayCell(this,4,this.buffer,this.offset+100)}
+    get CharParamOne() { return new DBCMultiArrayCell(this,4,this.buffer,this.offset+100)}
     
     /**
      * No comment (yet!)
      */
-    get CharParamTwo() { return new DBCFloatArrayCell(this,4,this.buffer,this.offset+116)}
+    get CharParamTwo() { return new DBCMultiArrayCell(this,4,this.buffer,this.offset+116)}
     
     /**
      * No comment (yet!)
      */
-    get CharParamThree() { return new DBCFloatArrayCell(this,4,this.buffer,this.offset+132)}
+    get CharParamThree() { return new DBCMultiArrayCell(this,4,this.buffer,this.offset+132)}
     
     /**
      * No comment (yet!)
