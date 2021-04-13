@@ -52,10 +52,6 @@ export class SpellRange<T extends BaseSystem> extends SharedRef<T,SpellRangeRow>
 
     get ID() { return this.row.ID.get(); }
 
-    get row() { 
-        return DBC.SpellRange.findById(this.cell.get());
-    }
-
     set(hostileMin: number, hostileMax: number, friendMin: number, friendMax: number, name?: loc_constructor, nameShort?: loc_constructor, flags?: number) {
         this.HostileMin.set(hostileMin);
         this.HostileMax.set(hostileMax);

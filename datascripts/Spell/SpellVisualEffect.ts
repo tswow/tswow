@@ -8,6 +8,7 @@ import { Transient } from "wotlkdata/cell/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 
 export class VisualScale<T> extends Subsystem<T> {
+    @Transient
     protected row: SpellVisualEffectNameRow;
 
     constructor(owner: T, row: SpellVisualEffectNameRow) {
