@@ -205,18 +205,18 @@ export class SpellVisual<T extends BaseSystem> extends SharedRef<T, SpellVisualR
         }).map(([row,name])=>new SpellVisualKit(this, row, name));
     }
 
-    get Cast() { return this.kit("Cast", this.row.CastKit); }
-    get State() { return this.kit("State", this.row.StateKit); }
-    get Impact() { return this.kit("Impact", this.row.ImpactKit); }
-    get Channel() { return this.kit("Channel", this.row.ChannelKit); }
-    get Precast() { return this.kit("Precast", this.row.PrecastKit); }
-    get StateDone() { return this.kit("StateDone", this.row.StateDoneKit); }
-    get ImpactArea() { return this.kit("ImpactArea", this.row.ImpactAreaKit); }
-    get InstantArea() { return this.kit("InstantArea", this.row.InstantAreaKit); }
-    get CasterImpact() { return this.kit("CasterImpact", this.row.CasterImpactKit); }
-    get TargetImpact() { return this.kit("TargetImpact", this.row.TargetImpactKit); }
-    get PersistentArea() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
-    get MissileTargeting() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); } 
+    get CastKit() { return this.kit("Cast", this.row.CastKit); }
+    get StateKit() { return this.kit("State", this.row.StateKit); }
+    get ImpactKit() { return this.kit("Impact", this.row.ImpactKit); }
+    get ChannelKit() { return this.kit("Channel", this.row.ChannelKit); }
+    get PrecastKit() { return this.kit("Precast", this.row.PrecastKit); }
+    get StateDoneKit() { return this.kit("StateDone", this.row.StateDoneKit); }
+    get ImpactAreaKit() { return this.kit("ImpactArea", this.row.ImpactAreaKit); }
+    get InstantAreaKit() { return this.kit("InstantArea", this.row.InstantAreaKit); }
+    get CasterImpactKit() { return this.kit("CasterImpact", this.row.CasterImpactKit); }
+    get TargetImpactKit() { return this.kit("TargetImpact", this.row.TargetImpactKit); }
+    get PersistentAreaKit() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
+    get MissileTargetingKit() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); }
 
     get MissileModel() { return new SpellVisualEffect(this, this.row.MissileModel); }
     get MissileAttachment() { return this.ownerWrap(this.row.MissileAttachment); }

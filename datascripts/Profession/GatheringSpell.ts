@@ -15,6 +15,6 @@ export class GatheringSpell extends MainSystem {
 
     get CastTime() { return new SpellCastTime(this, [this.spell.row.CastingTimeIndex]); }
     get RequiredTotems() { return new SingleArraySystem(this, this.spell.row.RequiredTotemCategoryID,0); }
-    get Animation() { return new SpellAnimation(this, this.spell.Visual.Precast.row.AnimID); }
-    get Sound() { return new SoundEntry(this, this.spell.Visual.Precast.row.SoundID); }
+    get Animation() { return new SpellAnimation(this, this.spell.Visual.PrecastKit.row.AnimID); }
+    get Sound() { return new SoundEntry(this, this.spell.Visual.PrecastKit.row.SoundID); }
 }
