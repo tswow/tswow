@@ -17,7 +17,7 @@ export class EffectTemplate<T> extends Subsystem<T> {
     }
 
     @Transient
-    readonly effect: SpellEffect;
+    readonly effect: SpellEffect<any>;
     
     @Transient
     protected get row() { return this.effect.row; }
@@ -25,7 +25,7 @@ export class EffectTemplate<T> extends Subsystem<T> {
     @Transient
     get index() { return this.effect.index; }
 
-    constructor(owner: T, effect: SpellEffect) {
+    constructor(owner: T, effect: SpellEffect<any>) {
         super(owner);
         this.effect = effect;
     }

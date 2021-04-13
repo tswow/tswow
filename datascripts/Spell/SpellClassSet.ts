@@ -55,7 +55,7 @@ export class BaseClassSet extends ClassSet<Spell> {
      * Sets this spells ClassSets to match this spell effect
      * @param effect 
      */
-    match(effect: SpellEffect, matches: ('A'|'B'|'C')[] = ['A','B','C']) {
+    match(effect: SpellEffect<any>, matches: ('A'|'B'|'C')[] = ['A','B','C']) {
         if(matches.includes('A')) {
             this.A.set(effect.ClassMask.A.get())
         }
@@ -65,26 +65,26 @@ export class BaseClassSet extends ClassSet<Spell> {
         if(matches.includes('C')) {
             this.C.set(effect.ClassMask.C.get())
         }
-        this.Set.set(SpellEffect.owner(effect).ClassMask.Set.get());
+        this.Set.set(effect.row.SpellClassSet.get());
         return this.owner;
     }
 }
 
 export class EffectClassSet<T> extends ClassSet<T> {
-    protected effect: SpellEffect;
-    constructor(owner: T, effect: SpellEffect) {
+    protected effect: SpellEffect<any>;
+    constructor(owner: T, effect: SpellEffect<any>) {
         super(owner);
         this.effect = effect;
     }
 
     get A(): Cell<number, T> {
-        return this.ownerWrapIndex(SpellEffect.owner(this.effect).row.EffectSpellClassMaskA,this.effect.index);
+        return this.ownerWrapIndex(this.effect.row.EffectSpellClassMaskA,this.effect.index);
     }
     get B(): Cell<number, T> {
-        return this.ownerWrapIndex(SpellEffect.owner(this.effect).row.EffectSpellClassMaskB,this.effect.index);
+        return this.ownerWrapIndex(this.effect.row.EffectSpellClassMaskB,this.effect.index);
     }
     get C(): Cell<number, T> {
-        return this.ownerWrapIndex(SpellEffect.owner(this.effect).row.EffectSpellClassMaskC,this.effect.index);
+        return this.ownerWrapIndex(this.effect.row.EffectSpellClassMaskC,this.effect.index);
     }
 
     copyFrom(set: EffectClassSet<any>) {

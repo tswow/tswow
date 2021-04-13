@@ -29,9 +29,11 @@ import { all_auras } from "./EffectTemplates/AuraTemplates";
 import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { SpellRadius } from "./SpellRadius";
 
-export class SpellEffects extends SystemArray<SpellEffect,Spell> {
-    constructor(owner: Spell) {
+export class SpellEffects<T> extends SystemArray<SpellEffect<T>,T> {
+    protected spell: Spell;
+    constructor(owner: T, spell: Spell) {
         super(owner);
+        this.spell = spell;
     }
 
     get length() {
@@ -94,7 +96,7 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     }
 
     get(index: number) {
-        return new SpellEffect(this.owner, index);
+        return new SpellEffect(this.owner, index, this.spell);
     }
 
     getTemplate(index: number) {
@@ -146,7 +148,7 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
             return nex;
         }
 
-        let curSpell = getOrCreateNextSpell(this.owner);
+        let curSpell = getOrCreateNextSpell(this.spell);
         while(true) {
             let free = getNextSpell(curSpell)!==undefined;
             for(let i=0;i<3;++i ){
@@ -163,16 +165,19 @@ export class SpellEffects extends SystemArray<SpellEffect,Spell> {
     }
 }
 
-export class SpellEffect extends ArrayEntry<Spell> {
-    static owner(effect: SpellEffect) {
-        return effect.owner;
+export class SpellEffect<T> extends ArrayEntry<T> {
+    protected spell: Spell;
+
+    constructor(owner: T, index: number, spell: Spell) {
+        super(owner, index);
+        this.spell = spell;
     }
 
     isClear(): boolean {
         return this.EffectType.get() === 0;
     }
 
-    clear(): Spell {
+    clear(): T {
         this.BasePoints.set(0);
         this.ChainAmplitude.set(0);
         this.ChainTarget.set(0);
@@ -197,12 +202,12 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return this.wrapIndex(arr, this.index);
     }
 
-    get row() { return this.owner.row; }
+    get row() { return this.spell.row; }
 
     get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); }
     get ItemType() { return this.w(this.row.EffectItemType); }
-    get AuraType() { return new AuraType(this, this.index); }
-    get EffectType() { return new SpellEffectType(this, this.index); }
+    get AuraType(): AuraType { return new AuraType(this, this.index); }
+    get EffectType(): SpellEffectType { return new SpellEffectType(this, this.index); }
     get Mechanic() { return new SpellEffectMechanicEnum(this, this.w(this.row.EffectMechanic)); }
     get BasePoints() { return this.w(this.row.EffectBasePoints)};
     get DieSides() { return this.w(this.row.EffectDieSides); }
@@ -218,7 +223,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get TriggerSpell() { return this.w(this.row.EffectTriggerSpell); }
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
-    get ClassMask() { return new EffectClassSet(this, this); }
+    get ClassMask(): EffectClassSet<this> { return new EffectClassSet(this, this); }
 
     objectify() {
         if(all_auras[this.AuraType.get()]) {
@@ -241,7 +246,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return this.owner;
     }
 
-    copyFrom(source: SpellEffect) {
+    copyFrom(source: SpellEffect<any>) {
         this.Radius.copyFrom(source.Radius);
         this.ItemType.set(source.ItemType.get());
         this.AuraType.set(source.AuraType.get());

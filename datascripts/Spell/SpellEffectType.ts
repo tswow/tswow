@@ -20,9 +20,9 @@ import { SpellEffect } from "./SpellEffect";
 import { SchoolDamage, TeleportUnits, EnvironmentalDamage, PowerDrain, HealthLeech, Heal, BindHome, TotemCreatureCommand, CommandTotemCreature, CompleteQuest, WeaponDamageNoSchool, Resurrect, ExtraAttacks, CreateItem, Weapon, Summon, Leap, Energize, WeaponPercentDamage, TriggerMissile, OpenLock, LearnSpell, Dispel, Language, Jump, JumpDest, TeleportUnitFaceCaster, SkillStep, AddHonor, TradeSkill, TransDoor, EnchantItem, EnchantItemTemp, SummonPet, LearnPetSpell, WeaponDamage, CreateRandomItem, SendEvent, PowerBurn, Threat, TriggerSpell, CreateManaGem, HealMaxHealth, InterruptCast, Pickpocket, AddFarsight, ApplyGlyph, HealMechanical, SummonObjectWild, ScriptEffect, Sanctuary, AddComboPoints, ActivateObject, GameObjectDamage, GameObjectRepair, SetGameObjectDestructibleState, KillCredit, EnchantHeldItem, ResurrectSelf, Charge, CastButtons, Knockback, MakeDrunk, Reputation, SummonObjectSlot1, SummonObjectSlot2, SummonObjectSlot3, SummonObjectSlot4, DispelMechanic, DestroyAllTotems, DurabilityDamage, DurabilityDamagePercent, Skill, SendTaxi, PullTowards, ModifyThreatPercent, StealBeneficialBuff, RedirectThreat, PlaySound, PlayMusic, HealPercent, EnergizePercent, LeapBack, ClearQuest, ForceCast, ForceCastWithValue, TriggerSpellWithValue, KnockbackDest, PullTowardsDest, ActivateRune, FailQuest, TriggerMissileWithValue, ChargeDest, StartQuest, CanTitanGrip, EnchantPrismaticItem, RemoveAura } from "./EffectTemplates/EffectTemplates";
 import { AuraType } from "./AuraType";
 
-export class SpellEffectType extends Enum<SpellEffect> {
-    constructor(owner: SpellEffect, index: number) {
-        super(owner, Cell.wrapIndex(SpellEffect.owner(owner).row.Effect, index));
+export class SpellEffectType extends Enum<SpellEffect<any>> {
+    constructor(owner: SpellEffect<any>, index: number) {
+        super(owner, Cell.wrapIndex(owner.row.Effect, index));
     }
 
     /** */

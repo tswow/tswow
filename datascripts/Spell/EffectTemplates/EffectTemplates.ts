@@ -28,7 +28,7 @@ export class TeleportUnits<T> extends EffectTemplate<T> {
 // 7
 @EffectID(7)
 export class EnvironmentalDamage<T> extends EffectTemplate<T> {
-    constructor(owner :T, effect: SpellEffect) {
+    constructor(owner :T, effect: SpellEffect<any>) {
         super(owner, effect);
     }
 

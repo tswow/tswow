@@ -99,7 +99,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Stacks() { return this.wrap(this.row.CumulativeAura); }
 
     get ModalNextSpell() { return this.wrap(this.row.ModalNextSpell); }
-    get Effects() { return new SpellEffects(this); }
+    get Effects() { return new SpellEffects(this, this); }
     get Duration() { return new SpellDuration(this, [this.row.DurationIndex]); }
     get Range() { return new SpellRange(this, [this.row.RangeIndex]); }
     get Speed() { return this.wrap(this.row.Speed); }
