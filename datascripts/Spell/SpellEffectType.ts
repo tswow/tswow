@@ -49,31 +49,31 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(5)
-    setTeleportUnits() { return new TeleportUnits(this.end.end, this.set(5));  };
+    setTeleportUnits(): TeleportUnits<T> { return new TeleportUnits(this.end.end, this.set(5));  };
 
     /** */
     @EnumField(6)
-    setApplyAura() { return new AuraType(this.set(6),this.owner.index);  };
+    setApplyAura(): AuraType<T> { return new AuraType(this.set(6),this.owner.index);  };
 
     /** */
     @EnumField(7)
-    setEnvironmentalDamage() { return new EnvironmentalDamage(this.end.end,this.set(7));  };
+    setEnvironmentalDamage(): EnvironmentalDamage<T> { return new EnvironmentalDamage(this.end.end,this.set(7));  };
 
     /** */
     @EnumField(8)
-    setPowerDrain() { return new PowerDrain(this.end.end,this.set(8));  };
+    setPowerDrain(): PowerDrain<T> { return new PowerDrain(this.end.end,this.set(8));  };
 
     /** */
     @EnumField(9)
-    setHealthLeech() { return new HealthLeech(this.end.end,this.set(9));  };
+    setHealthLeech(): HealthLeech<T> { return new HealthLeech(this.end.end,this.set(9));  };
 
     /** */
     @EnumField(10)
-    setHeal() { return new Heal(this.end.end,this.set(10));  };
+    setHeal(): Heal<T> { return new Heal(this.end.end,this.set(10));  };
 
     /** */
     @EnumField(11)
-    setBind() { return new BindHome(this.end.end,this.set(11));  };
+    setBind(): BindHome<T> { return new BindHome(this.end.end,this.set(11));  };
 
     /** */
     @EnumField(12)
@@ -93,15 +93,15 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(16)
-    setQuestComplete() { return new CompleteQuest(this.end.end, this.set(16));  };
+    setQuestComplete(): CompleteQuest<T> { return new CompleteQuest(this.end.end, this.set(16));  };
 
     /** */
     @EnumField(17)
-    setWeaponDamageNoschool() { return new WeaponDamageNoSchool(this.end.end,this.set(17));  };
+    setWeaponDamageNoschool(): WeaponDamageNoSchool<T> { return new WeaponDamageNoSchool(this.end.end,this.set(17));  };
 
     /** */
     @EnumField(18)
-    setResurrect() { return new Resurrect(this.end.end,this.set(18));  };
+    setResurrect(): Resurrect<T> { return new Resurrect(this.end.end,this.set(18));  };
 
     /** */
     @EnumField(19)
@@ -109,7 +109,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(20)
-    setDodge () { return new ExtraAttacks(this.end.end,this.set(20));  };
+    setDodge (): ExtraAttacks<T> { return new ExtraAttacks(this.end.end,this.set(20));  };
 
     /** */
     @EnumField(21)
@@ -125,11 +125,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(24)
-    setCreateItem() { return new CreateItem(this.end.end,this.set(24));  };
+    setCreateItem(): CreateItem<T> { return new CreateItem(this.end.end,this.set(24));  };
 
     /** */
     @EnumField(25)
-    setWeapon() { return new Weapon(this.end.end,this.set(25));  };
+    setWeapon(): Weapon<T> { return new Weapon(this.end.end,this.set(25));  };
 
     /** */
     @EnumField(26)
@@ -137,27 +137,27 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(27)
-    setPersistentAreaAura() { return new AuraType(this.set(27), this.owner.index);  };
+    setPersistentAreaAura(): AuraType<T> { return new AuraType(this.set(27), this.owner.index);  };
 
     /** */
     @EnumField(28)
-    setSummon() { return new Summon(this.end.end, this.set(28));  };
+    setSummon(): Summon<T> { return new Summon(this.end.end, this.set(28));  };
 
     /** */
     @EnumField(29)
-    setLeap() { return new Leap(this.end.end,this.set(29));  };
+    setLeap(): Leap<T> { return new Leap(this.end.end,this.set(29));  };
 
     /** */
     @EnumField(30)
-    setEnergize() { return new Energize(this.end.end,this.set(30));  };
+    setEnergize(): Energize<T> { return new Energize(this.end.end,this.set(30));  };
 
     /** */
     @EnumField(31)
-    setWeaponPercentDamage() { return new WeaponPercentDamage(this.end.end,this.set(31));  };
+    setWeaponPercentDamage(): WeaponPercentDamage<T> { return new WeaponPercentDamage(this.end.end,this.set(31));  };
 
     /** */
     @EnumField(32)
-    setTriggerMissile() { return new TriggerMissile(this.end.end,this.set(32));  };
+    setTriggerMissile(): TriggerMissile<T> { return new TriggerMissile(this.end.end,this.set(32));  };
 
     /** */
     @EnumField(33)
@@ -169,11 +169,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(35)
-    setApplyAreaAuraParty() { return new AuraType(this.set(35), this.owner.index);  };
+    setApplyAreaAuraParty(): AuraType<T> { return new AuraType(this.set(35), this.owner.index);  };
 
     /** */
     @EnumField(36)
-    setLearnSpell() { return new LearnSpell(this.end.end, this.set(36));  };
+    setLearnSpell(): LearnSpell<T> { return new LearnSpell(this.end.end, this.set(36));  };
 
     /** */
     @EnumField(37)
@@ -181,11 +181,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(38)
-    setDispel() { return new Dispel(this.end.end, this.set(38));  };
+    setDispel(): Dispel<T> { return new Dispel(this.end.end, this.set(38));  };
 
     /** */
     @EnumField(39)
-    setLanguage() { return new Language(this.end.end,this.set(39));  };
+    setLanguage(): Language<T> { return new Language(this.end.end,this.set(39));  };
 
     /** */
     @EnumField(40)
@@ -193,25 +193,25 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(41)
-    setJump() { return new Jump(this.end.end,this.set(41));  };
+    setJump(): Jump<T> { return new Jump(this.end.end,this.set(41));  };
 
     /** */
     @EnumField(42)
-    setJumpDest() { return new JumpDest(this.end.end,this.set(42));  };
+    setJumpDest(): JumpDest<T> { return new JumpDest(this.end.end,this.set(42));  };
 
     /** */
     @EnumField(43)
-    setTeleportUnitsFaceCaster() { return new TeleportUnitFaceCaster(this.end.end,this.set(43));  };
+    setTeleportUnitsFaceCaster(): TeleportUnitFaceCaster<T> { return new TeleportUnitFaceCaster(this.end.end,this.set(43));  };
 
     /** */
     @EnumField(44)
-    setSkillStep() { return new SkillStep(this.end.end,this.set(44));  };
+    setSkillStep(): SkillStep<T> { return new SkillStep(this.end.end,this.set(44));  };
 
     /** 
      * Comment test
      */
     @EnumField(45)
-    setAddHonor() { return new AddHonor(this.end.end,this.set(45));  };
+    setAddHonor(): AddHonor<T> { return new AddHonor(this.end.end,this.set(45));  };
 
     /** */
     @EnumField(46)
@@ -219,7 +219,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(47)
-    setTradeSkill() { return new TradeSkill(this.end.end,this.set(47));  };
+    setTradeSkill(): TradeSkill<T> { return new TradeSkill(this.end.end,this.set(47));  };
 
     /** Singleton */
     @EnumField(48)
@@ -231,7 +231,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(50)
-    setTransDoor() { return new TransDoor(this.end.end,this.set(50));  };
+    setTransDoor(): TransDoor<T> { return new TransDoor(this.end.end,this.set(50));  };
 
     /** Unused */
     @EnumField(51)
@@ -243,11 +243,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(53)
-    setEnchantItem() { return new EnchantItem(this.end.end,this.set(53));  };
+    setEnchantItem(): EnchantItem<T> { return new EnchantItem(this.end.end,this.set(53));  };
 
     /** */
     @EnumField(54)
-    setEnchantItemTemporary() { return new EnchantItemTemp(this.end.end,this.set(54));  };
+    setEnchantItemTemporary(): EnchantItemTemp<T> { return new EnchantItemTemp(this.end.end,this.set(54));  };
 
     /** Singleton */
     @EnumField(55)
@@ -259,15 +259,15 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(57)
-    setLearnPetSpell() { return new LearnPetSpell(this.end.end,this.set(57));  };
+    setLearnPetSpell(): LearnPetSpell<T> { return new LearnPetSpell(this.end.end,this.set(57));  };
 
     /** */
     @EnumField(58)
-    setWeaponDamage() { return new WeaponDamage(this.end.end,this.set(58));  };
+    setWeaponDamage(): WeaponDamage<T> { return new WeaponDamage(this.end.end,this.set(58));  };
 
     /** */
     @EnumField(59)
-    setCreateRandomItem () { return new CreateRandomItem(this.end.end,this.set(59));  };
+    setCreateRandomItem (): CreateRandomItem<T> { return new CreateRandomItem(this.end.end,this.set(59));  };
 
     /** Weapon skills, no arguments */
     @EnumField(60)
@@ -275,35 +275,35 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(61)
-    setSendEvent() { return new SendEvent(this.end.end,this.set(61));  };
+    setSendEvent(): SendEvent<T> { return new SendEvent(this.end.end,this.set(61));  };
 
     /** */
     @EnumField(62)
-    setPowerBurn() { return new PowerBurn(this.end.end,this.set(62));  };
+    setPowerBurn(): PowerBurn<T> { return new PowerBurn(this.end.end,this.set(62));  };
 
     /** */
     @EnumField(63)
-    setThreat() { return new Threat(this.end.end,this.set(63));  };
+    setThreat(): Threat<T> { return new Threat(this.end.end,this.set(63));  };
 
     /** */
     @EnumField(64)
-    setTriggerSpell() { return new TriggerSpell(this.end.end,this.set(64));  };
+    setTriggerSpell(): TriggerSpell<T> { return new TriggerSpell(this.end.end,this.set(64));  };
 
     /** */
     @EnumField(65)
-    setApplyAreaAuraRaid() { return new AuraType(this.set(65), this.owner.index);  };
+    setApplyAreaAuraRaid(): AuraType<T> { return new AuraType(this.set(65), this.owner.index);  };
 
     /** */
     @EnumField(66)
-    setCreateManaGem () { return new CreateManaGem(this.end.end, this.set(66));  };
+    setCreateManaGem (): CreateManaGem<T> { return new CreateManaGem(this.end.end, this.set(66));  };
 
     /** */
     @EnumField(67)
-    setHealMaxHealth() { return new HealMaxHealth(this.end.end,this.set(67));  };
+    setHealMaxHealth(): HealMaxHealth<T> { return new HealMaxHealth(this.end.end,this.set(67));  };
 
     /** Has no arguments, see spells SchoolMask instead */
     @EnumField(68)
-    setInterruptCast() { return new InterruptCast(this.end.end,this.set(68));  };
+    setInterruptCast(): InterruptCast<T> { return new InterruptCast(this.end.end,this.set(68));  };
 
     /** */
     @EnumField(69)
@@ -315,11 +315,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(71)
-    setPickpocket() { return new Pickpocket(this.end.end,this.set(71));  };
+    setPickpocket(): Pickpocket<T> { return new Pickpocket(this.end.end,this.set(71));  };
 
     /** */
     @EnumField(72)
-    setAddFarsight() { return new AddFarsight(this.end.end,this.set(72));  };
+    setAddFarsight(): AddFarsight<T> { return new AddFarsight(this.end.end,this.set(72));  };
 
     /** Singleton */
     @EnumField(73)
@@ -327,19 +327,19 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(74)
-    setApplyGlyph() { return new ApplyGlyph(this.end.end,this.set(74));  };
+    setApplyGlyph(): ApplyGlyph<T> { return new ApplyGlyph(this.end.end,this.set(74));  };
 
     /** */
     @EnumField(75)
-    setHealMechanical () { return new HealMechanical(this.end.end,this.set(75));  };
+    setHealMechanical (): HealMechanical<T> { return new HealMechanical(this.end.end,this.set(75));  };
 
     /** */
     @EnumField(76)
-    setSummonObjectWild() { return new SummonObjectWild(this.end.end,this.set(76));  };
+    setSummonObjectWild(): SummonObjectWild<T> { return new SummonObjectWild(this.end.end,this.set(76));  };
 
     /** */
     @EnumField(77)
-    setScriptEffect() { return new ScriptEffect(this.end.end,this.set(77));  };
+    setScriptEffect(): ScriptEffect<T> { return new ScriptEffect(this.end.end,this.set(77));  };
 
     /** Singleton */
     @EnumField(78)
@@ -347,11 +347,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(79)
-    setSanctuary() { return new Sanctuary(this.end.end,this.set(79));  };
+    setSanctuary(): Sanctuary<T> { return new Sanctuary(this.end.end,this.set(79));  };
 
     /** */
     @EnumField(80)
-    setAddComboPoints() { return new AddComboPoints(this.end.end,this.set(80));  };
+    setAddComboPoints(): AddComboPoints<T> { return new AddComboPoints(this.end.end,this.set(80));  };
 
     /** Singleton */
     @EnumField(81)
@@ -375,23 +375,23 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(86)
-    setActivateObject() { return new ActivateObject(this.end.end,this.set(86));  };
+    setActivateObject(): ActivateObject<T> { return new ActivateObject(this.end.end,this.set(86));  };
 
     /** */
     @EnumField(87)
-    setGameobjectDamage() { return new GameObjectDamage(this.end.end,this.set(87));  };
+    setGameobjectDamage(): GameObjectDamage<T> { return new GameObjectDamage(this.end.end,this.set(87));  };
 
     /** */
     @EnumField(88)
-    setGameobjectRepair() { return new GameObjectRepair(this.end.end,this.set(88));  };
+    setGameobjectRepair(): GameObjectRepair<T> { return new GameObjectRepair(this.end.end,this.set(88));  };
 
     /** */
     @EnumField(89)
-    setGameobjectSetDestructionState() { return new SetGameObjectDestructibleState(this.end.end,this.set(89));  };
+    setGameobjectSetDestructionState(): SetGameObjectDestructibleState<T> { return new SetGameObjectDestructibleState(this.end.end,this.set(89));  };
 
     /** */
     @EnumField(90)
-    setKillCredit () { return new KillCredit(this.end.end,this.set(90));  };
+    setKillCredit (): KillCredit<T> { return new KillCredit(this.end.end,this.set(90));  };
 
     /** Unused */
     @EnumField(91)
@@ -399,7 +399,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(92)
-    setEnchantHeldItem() { return new EnchantHeldItem(this.end.end,this.set(92));  };
+    setEnchantHeldItem(): EnchantHeldItem<T> { return new EnchantHeldItem(this.end.end,this.set(92));  };
 
     /** no parameters, target is always null or caster */
     @EnumField(93)
@@ -407,7 +407,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(94)
-    setSelfResurrect() { return new ResurrectSelf(this.end.end,this.set(94));  };
+    setSelfResurrect(): ResurrectSelf<T> { return new ResurrectSelf(this.end.end,this.set(94));  };
 
     /** ? */
     @EnumField(95)
@@ -415,15 +415,15 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(96)
-    setCharge() { return new Charge(this.end.end,this.set(96));  };
+    setCharge(): Charge<T> { return new Charge(this.end.end,this.set(96));  };
 
     /** */
     @EnumField(97)
-    setCastButton () { return new CastButtons(this.end.end,this.set(97));  };
+    setCastButton (): CastButtons<T> { return new CastButtons(this.end.end,this.set(97));  };
 
     /** */
     @EnumField(98)
-    setKnockBack() { return new Knockback(this.end.end,this.set(98));  };
+    setKnockBack(): Knockback<T> { return new Knockback(this.end.end,this.set(98));  };
 
     /** singleton */
     @EnumField(99)
@@ -431,7 +431,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(100)
-    setInebriate() { return new MakeDrunk(this.end.end,this.set(100));  };
+    setInebriate(): MakeDrunk<T> { return new MakeDrunk(this.end.end,this.set(100));  };
 
     /** singleton */
     @EnumField(101)
@@ -443,27 +443,27 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(103)
-    setReputation() { return new Reputation(this.end.end,this.set(103));  };
+    setReputation(): Reputation<T> { return new Reputation(this.end.end,this.set(103));  };
 
     /** */
     @EnumField(104)
-    setSummonObjectSlot1() { return new SummonObjectSlot1(this.end.end,this.set(104));  };
+    setSummonObjectSlot1(): SummonObjectSlot1<T> { return new SummonObjectSlot1(this.end.end,this.set(104));  };
 
     /** */
     @EnumField(105)
-    setSummonObjectSlot2() { return new SummonObjectSlot2(this.end.end,this.set(105));  };
+    setSummonObjectSlot2(): SummonObjectSlot2<T> { return new SummonObjectSlot2(this.end.end,this.set(105));  };
 
     /** */
     @EnumField(106)
-    setSummonObjectSlot3() { return new SummonObjectSlot3(this.end.end, this.set(106));  };
+    setSummonObjectSlot3(): SummonObjectSlot3<T> { return new SummonObjectSlot3(this.end.end, this.set(106));  };
 
     /** */
     @EnumField(107)
-    setSummonObjectSlot4() { return new SummonObjectSlot4(this.end.end, this.set(107));  };
+    setSummonObjectSlot4(): SummonObjectSlot4<T> { return new SummonObjectSlot4(this.end.end, this.set(107));  };
 
     /** */
     @EnumField(108)
-    setDispelMechanic() { return new DispelMechanic(this.end.end,this.set(108));  };
+    setDispelMechanic(): DispelMechanic<T> { return new DispelMechanic(this.end.end,this.set(108));  };
 
     /** singleton */
     @EnumField(109)
@@ -471,11 +471,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(110)
-    setDestroyAllTotems() { return new DestroyAllTotems(this.end.end,this.set(110));  };
+    setDestroyAllTotems(): DestroyAllTotems<T> { return new DestroyAllTotems(this.end.end,this.set(110));  };
 
     /** */
     @EnumField(111)
-    setDurabilityDamage() { return new DurabilityDamage(this.end.end,this.set(111));  };
+    setDurabilityDamage(): DurabilityDamage<T> { return new DurabilityDamage(this.end.end,this.set(111));  };
 
     /** */
     @EnumField(112)
@@ -491,7 +491,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(115)
-    setDurabilityDamagePct() { return new DurabilityDamagePercent(this.end.end,this.set(115));  };
+    setDurabilityDamagePct(): DurabilityDamagePercent<T> { return new DurabilityDamagePercent(this.end.end,this.set(115));  };
 
     /** singleton */
     @EnumField(116)
@@ -503,11 +503,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(118)
-    setSkill () { return new Skill(this.end.end,this.set(118));  };
+    setSkill (): Skill<T> { return new Skill(this.end.end,this.set(118));  };
 
     /** */
     @EnumField(119)
-    setApplyAreaAuraPet() { return new AuraType(this.set(119), this.owner.index);  };
+    setApplyAreaAuraPet(): AuraType<T> { return new AuraType(this.set(119), this.owner.index);  };
 
     /** singleton */
     @EnumField(120)
@@ -523,19 +523,19 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(123)
-    setSendTaxi () { return new SendTaxi(this.end.end,this.set(123));  };
+    setSendTaxi (): SendTaxi<T> { return new SendTaxi(this.end.end,this.set(123));  };
 
     /** */
     @EnumField(124)
-    setPullTowards() { return new PullTowards(this.end.end,this.set(124));  };
+    setPullTowards(): PullTowards<T> { return new PullTowards(this.end.end,this.set(124));  };
 
     /** */
     @EnumField(125)
-    setModifyThreatPercent() { return new ModifyThreatPercent(this.end.end,this.set(125));  };
+    setModifyThreatPercent(): ModifyThreatPercent<T> { return new ModifyThreatPercent(this.end.end,this.set(125));  };
 
     /** */
     @EnumField(126)
-    setStealBeneficialBuff () { return new StealBeneficialBuff(this.end.end,this.set(126));  };
+    setStealBeneficialBuff (): StealBeneficialBuff<T> { return new StealBeneficialBuff(this.end.end,this.set(126));  };
 
     /** singleton */
     @EnumField(127)
@@ -543,23 +543,23 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(128)
-    setApplyAreaAuraFriend() { return new AuraType(this.set(128), this.owner.index) ;  };
+    setApplyAreaAuraFriend(): AuraType<T> { return new AuraType(this.set(128), this.owner.index) ;  };
 
     /** */
     @EnumField(129)
-    setApplyAreaAuraEnemy() { return new AuraType(this.set(129), this.owner.index);  };
+    setApplyAreaAuraEnemy(): AuraType<T> { return new AuraType(this.set(129), this.owner.index);  };
 
     /** */
     @EnumField(130)
-    setRedirectThreat() { return new RedirectThreat(this.end.end,this.set(130));  };
+    setRedirectThreat(): RedirectThreat<T> { return new RedirectThreat(this.end.end,this.set(130));  };
 
     /** */
     @EnumField(131)
-    setPlayerNotification () { return new PlaySound(this.end.end,this.set(131));  };
+    setPlayerNotification (): PlaySound<T> { return new PlaySound(this.end.end,this.set(131));  };
 
     /** */
     @EnumField(132)
-    setPlayMusic () { return new PlayMusic(this.end.end,this.set(132));  };
+    setPlayMusic (): PlayMusic<T> { return new PlayMusic(this.end.end,this.set(132));  };
 
     /** don't use this */
     @EnumField(133)
@@ -575,63 +575,63 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(136)
-    setHealPct() { return new HealPercent(this.end.end,this.set(136));  };
+    setHealPct(): HealPercent<T> { return new HealPercent(this.end.end,this.set(136));  };
 
     /** */
     @EnumField(137)
-    setEnergizePct() { return new EnergizePercent(this.end.end,this.set(137));  };
+    setEnergizePct(): EnergizePercent<T> { return new EnergizePercent(this.end.end,this.set(137));  };
 
     /** */
     @EnumField(138)
-    setLeapBack () { return new LeapBack(this.end.end,this.set(138));  };
+    setLeapBack (): LeapBack<T> { return new LeapBack(this.end.end,this.set(138));  };
 
     /** */
     @EnumField(139)
-    setClearQuest () { return new ClearQuest(this.end.end,this.set(139));  };
+    setClearQuest (): ClearQuest<T> { return new ClearQuest(this.end.end,this.set(139));  };
 
     /** */
     @EnumField(140)
-    setForceCast() { return new ForceCast(this.end.end,this.set(140));  };
+    setForceCast(): ForceCast<T> { return new ForceCast(this.end.end,this.set(140));  };
 
     /** */
     @EnumField(141)
-    setForceCastWithValue() { return new ForceCastWithValue(this.end.end,this.set(141));  };
+    setForceCastWithValue(): ForceCastWithValue<T> { return new ForceCastWithValue(this.end.end,this.set(141));  };
 
     /** */
     @EnumField(142)
-    setTriggerSpellWithValue() { return new TriggerSpellWithValue(this.end.end,this.set(142));  };
+    setTriggerSpellWithValue(): TriggerSpellWithValue<T> { return new TriggerSpellWithValue(this.end.end,this.set(142));  };
 
     /** */
     @EnumField(143)
-    setApplyAreaAuraOwner() { return new AuraType(this.set(143), this.owner.index);  };
+    setApplyAreaAuraOwner(): AuraType<T> { return new AuraType(this.set(143), this.owner.index);  };
 
     /** */
     @EnumField(144)
-    setKnockBackDest() { return new KnockbackDest(this.end.end,this.set(144));  };
+    setKnockBackDest(): KnockbackDest<T> { return new KnockbackDest(this.end.end,this.set(144));  };
 
     /** */
     @EnumField(145)
-    setPullTowardsDest () { return new PullTowardsDest(this.end.end,this.set(145));  };
+    setPullTowardsDest (): PullTowardsDest<T> { return new PullTowardsDest(this.end.end,this.set(145));  };
 
     /** */
     @EnumField(146)
-    setActivateRune() { return new ActivateRune(this.end.end,this.set(146));  };
+    setActivateRune(): ActivateRune<T> { return new ActivateRune(this.end.end,this.set(146));  };
 
     /** */
     @EnumField(147)
-    setQuestFail () { return new FailQuest(this.end.end,this.set(147));  };
+    setQuestFail (): FailQuest<T> { return new FailQuest(this.end.end,this.set(147));  };
 
     /** */
     @EnumField(148)
-    setTriggerMissileSpellWithValue() { return new TriggerMissileWithValue(this.end.end,this.set(148));  };
+    setTriggerMissileSpellWithValue(): TriggerMissileWithValue<T> { return new TriggerMissileWithValue(this.end.end,this.set(148));  };
 
     /** */
     @EnumField(149)
-    setChargeDest() { return new ChargeDest(this.end.end,this.set(149));  };
+    setChargeDest(): ChargeDest<T> { return new ChargeDest(this.end.end,this.set(149));  };
 
     /** */
     @EnumField(150)
-    setQuestStart() { return new StartQuest(this.end.end,this.set(150));  };
+    setQuestStart(): StartQuest<T> { return new StartQuest(this.end.end,this.set(150));  };
 
     /** */
     @EnumField(151)
@@ -651,11 +651,11 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(155)
-    setTitanGrip () { return new CanTitanGrip(this.end.end,this.set(155));  };
+    setTitanGrip (): CanTitanGrip<T> { return new CanTitanGrip(this.end.end,this.set(155));  };
 
     /** */
     @EnumField(156)
-    setEnchantItemPrismatic() { return new EnchantPrismaticItem(this.end.end,this.set(156));  };
+    setEnchantItemPrismatic(): EnchantPrismaticItem<T> { return new EnchantPrismaticItem(this.end.end,this.set(156));  };
 
     /** duplicate */
     @EnumField(157)
@@ -687,5 +687,5 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(164)
-    setRemoveAura() { return new RemoveAura(this.end.end,this.set(164));  };
+    setRemoveAura(): RemoveAura<T> { return new RemoveAura(this.end.end,this.set(164));  };
 }
