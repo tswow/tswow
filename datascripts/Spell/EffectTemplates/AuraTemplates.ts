@@ -125,7 +125,7 @@ export class ObsModPower<T> extends PowerBasePct<T> {
 // 22
 @AuraID(22)
 export class ModResistance<T> extends PointsBase<T> {
-    get Resistance() { return new SchoolMask(this.owner, this.effect.MiscValueA); }
+    get Resistance() { return new SchoolMask(this, this.effect.MiscValueA); }
 }
 // 23
 // 24
