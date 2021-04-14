@@ -253,4 +253,9 @@ export const Ids = {
      * Starts at 2000, highest base value is 1178 
      */
     SpellChainEffects: new AutoIdGenerator(2000),
+
+    /**
+     * Starts at 100000, highest base value is 68529
+     */
+    SpellGroups: new AutoIdGenerator(100000)
 }

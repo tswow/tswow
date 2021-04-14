@@ -77,7 +77,7 @@ export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
 
     /** */
     @EnumField(12)
-    setControlTotemCreature() { return new CommandTotemCreature(this.end.end,this.set(12)); };
+    setControlTotemCreature(): CommandTotemCreature<T> { return new CommandTotemCreature(this.end.end,this.set(12)); };
 
     /** */
     @EnumField(13)

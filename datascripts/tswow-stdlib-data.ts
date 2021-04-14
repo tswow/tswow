@@ -23,7 +23,7 @@ import { Loot } from "./Loot/Loot";
 import { Quests } from "./Quest/Quests";
 import { SkillLines } from "./SkillLines/SkillLines";
 import { ClassSkills } from "./Skills/ClassSkill";
-import { Spells } from "./Spell/Spells";
+import { Spells, SpellGroups } from "./Spell/Spells";
 import { TalentTrees } from "./Talents/Talents";
 import { Titles } from "./Title/Titles";
 import { UI } from "./UI/UI";
@@ -46,6 +46,7 @@ import { Locks } from "./Locks/Locks";
 
 export const std = {
     Spells : Spells,
+    SpellGroups : SpellGroups,
     Languages : Languages,
     Quests : Quests,
     Titles: Titles,

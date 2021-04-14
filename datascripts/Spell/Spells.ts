@@ -22,6 +22,7 @@ import { Spell } from "./Spell";
 import { SpellRanks } from "./SpellRanks";
 import { TotemCreatures } from "./TotemCreatures";
 import { SpellPresets } from "./SpellTemplates/SpellPresets";
+import { SpellGroup } from "./SpellGroup";
 
 function createSpell(id: number, parent: number = 0) {
     if(parent===0) {
@@ -134,6 +135,19 @@ function createSpell(id: number, parent: number = 0) {
         return spell;
     }
 }
+
+export const SpellGroups = {
+    load(id: number) {
+        return new SpellGroup(id);
+    },
+
+    create() {
+        let id = Ids.SpellGroups.id();
+        SQL.spell_group_stack_rules.add(id,{stack_rule: 0});
+        return id;
+    }
+}
+
 export const Spells = {
     Presets: SpellPresets,
 

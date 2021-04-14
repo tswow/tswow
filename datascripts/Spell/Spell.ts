@@ -51,6 +51,7 @@ import { Vector3 } from "wotlkdata/cell/systems/Vector3";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
 import { Transient } from "wotlkdata/cell/Transient";
+import { SpellGroups } from "./SpellGroup";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
@@ -202,6 +203,8 @@ export class Spell extends MainEntity<SpellRow> {
             return row.get()!=0;
         }).map(([row,name])=>new SpellVisualKit(this, row, name));
     }
+
+    get Groups() { return new SpellGroups(this, this.ID); }
 
     /**
      * Creates a separate clone of this spell
