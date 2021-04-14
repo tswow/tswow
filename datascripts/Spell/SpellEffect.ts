@@ -206,8 +206,8 @@ export class SpellEffect<T> extends ArrayEntry<T> {
 
     get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); }
     get ItemType() { return this.w(this.row.EffectItemType); }
-    get AuraType(): AuraType { return new AuraType(this, this.index); }
-    get EffectType(): SpellEffectType { return new SpellEffectType(this, this.index); }
+    get AuraType(): AuraType<T> { return new AuraType(this, this.index); }
+    get EffectType(): SpellEffectType<T> { return new SpellEffectType(this, this.index); }
     get Mechanic() { return new SpellEffectMechanicEnum(this, this.w(this.row.EffectMechanic)); }
     get BasePoints() { return this.w(this.row.EffectBasePoints)};
     get DieSides() { return this.w(this.row.EffectDieSides); }

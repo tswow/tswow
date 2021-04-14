@@ -17,11 +17,7 @@
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
 import { Spell } from "./Spell";
 
-export class SpellTargetType extends MaskCell<Spell> {
-    constructor(owner: Spell) {
-        super(owner, owner.row.Targets);
-    }
-
+export class SpellTargetType<T> extends MaskCell<T> {
     /**
      * No comment (yet!)
      */

@@ -247,5 +247,10 @@ export const Ids = {
     /** 
      * Starts at 100, highest base value is 92
      */
-    SpellEffectCameraShakes: new AutoIdGenerator(100)
+    SpellEffectCameraShakes: new AutoIdGenerator(100),
+
+    /** 
+     * Starts at 2000, highest base value is 1178 
+     */
+    SpellChainEffects: new AutoIdGenerator(2000),
 }

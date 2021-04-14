@@ -71,7 +71,7 @@ export class SpellVisualKitModels<T extends BaseSystem> extends Subsystem<SpellV
     }
 }
 
-export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<T>,SpellVisualKitRow> {
+export class SpellVisualKit<T extends BaseSystem> extends SharedRef<T,SpellVisualKitRow> {
     table(): SharedRefTable<SpellVisualKitRow> {
         return DBC.SpellVisualKit;
     }
@@ -107,7 +107,7 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<SpellVisual<
         return kit.cell;
     }
 
-    constructor(owner: SpellVisual<T>, ptr: Cell<number,any>, name: string) {
+    constructor(owner: T, ptr: Cell<number,any>, name: string) {
         super(owner, [ptr]);
         this.name = name;
     }
@@ -178,7 +178,7 @@ export class SpellVisual<T extends BaseSystem> extends SharedRef<T, SpellVisualR
         return this;
     }
 
-    private kit(name: string, kit: DBCIntCell<SpellVisualRow>): SpellVisualKit<T> {
+    private kit(name: string, kit: DBCIntCell<SpellVisualRow>): SpellVisualKit<SpellVisual<T>> {
         return new SpellVisualKit(this,kit, name);
     }
 

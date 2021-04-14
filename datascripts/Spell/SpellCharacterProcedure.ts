@@ -2,6 +2,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Transient } from "wotlkdata/cell/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MultiUIntWrapper, MultiFloatWrapper, MultiIntWrapper } from "wotlkdata/dbc/DBCCell";
+import { SpellChainEffect } from "./SpellChainEffect";
 
 export class SpellCharacterProcedure<T> extends Subsystem<T> {
     @Transient
@@ -19,6 +20,31 @@ export class SpellCharacterProcedure<T> extends Subsystem<T> {
         }
     }
 
+    As(id: number): SpellCharacterProcedure<T> {
+        switch(id) {
+            case 0:
+                return this.AsChain()
+            case 1:
+                return this.AsColor()
+            case 2:
+                return this.AsScale()
+            case 4:
+                return this.AsEmissive()
+            case 6:
+                return this.AsEclipse()
+            case 7:
+                return this.AsAnimation()
+            case 8:
+                return this.AsWeaponTrail()
+            case 9:
+                return this.AsBlizzard()
+            case 10:
+                return this.AsFishingLIne()
+            default:
+                return this;
+        }
+    }
+
     AsChain() { return new ChainProcedure(this.owner,this.row,this.index,0) }
     AsColor() { return new ColorProcedure(this.owner,this.row,this.index,1) }
     AsScale() { return new ScaleProcedure(this.owner,this.row,this.index,2) }
@@ -31,7 +57,7 @@ export class SpellCharacterProcedure<T> extends Subsystem<T> {
 }
 
 export class ChainProcedure<T> extends SpellCharacterProcedure<T> {
-    get ChainEffect() { return new MultiUIntWrapper(this, this.row.CharParamZero, this.index)}
+    get ChainEffect() { return new SpellChainEffect(this, new MultiFloatWrapper(this, this.row.CharParamZero, this.index))}
     get TargetCount() { return new MultiFloatWrapper(this, this.row.CharParamOne, this.index)}
     get Forever() { return new MultiFloatWrapper(this, this.row.CharParamTwo, this.index)}
 }
@@ -79,6 +105,12 @@ export class SpellCharacterProcedures<T> extends Subsystem<T> {
 
     get(index: number) {
         return new SpellCharacterProcedure(this.owner, this.row, index);
+    }
+
+    objectify() {
+        return this.row.CharProc.get()
+            .filter((x)=>x>=0)
+            .map((x,i)=> this.get(i).As(x).objectify())
     }
 
     get length() { return 4; }

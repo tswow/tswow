@@ -21,6 +21,7 @@ import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 import { SpellRanks } from "./SpellRanks";
 import { TotemCreatures } from "./TotemCreatures";
+import { SpellPresets } from "./SpellTemplates/SpellPresets";
 
 function createSpell(id: number, parent: number = 0) {
     if(parent===0) {
@@ -134,6 +135,8 @@ function createSpell(id: number, parent: number = 0) {
     }
 }
 export const Spells = {
+    Presets: SpellPresets,
+
     /**
      * @warn Do NOT use this function if you don't know what you're doing.
      * You should almost always just use "create". The purpose of this

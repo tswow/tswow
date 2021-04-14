@@ -42,13 +42,20 @@ import { SpellCastTime } from "./SpellCastTime";
 import { SpellMissile } from "./SpellMissile";
 import { SpellDescriptionVariable } from "./SpellDescriptionVariable";
 import { SpellDifficulty } from "./SpellDifficulty";
-import { SpellVisual } from "./SpellVisual";
+import { SpellVisual, SpellVisualKit } from "./SpellVisual";
 import { SpellDuration } from "./SpellDuration";
 import { SpellRange } from "./SpellRange";
 import { SchoolMask } from "../Misc/School";
+import { SpellVisualEffect } from "./SpellVisualEffect";
+import { Vector3 } from "wotlkdata/cell/systems/Vector3";
+import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
+import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
+import { Transient } from "wotlkdata/cell/Transient";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
+
+    @Transient
     get Visual() { return new SpellVisual(this, 
         [new CellIndexWrapper(undefined,this.row.SpellVisualID,0)]); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
@@ -61,7 +68,7 @@ export class Spell extends MainEntity<SpellRow> {
 
     get ID() { return this.row.ID.get(); }
 
-    get TargetType() { return new SpellTargetType(this); }
+    get TargetType() { return new SpellTargetType(this, this.row.Targets); }
     get CreatureTargets() { return new SpellCreatureTarget(this); }
 
     get Totems() { return new SingleArraySystem(this,this.row.Totem,0); }
@@ -141,6 +148,60 @@ export class Spell extends MainEntity<SpellRow> {
     get ChannelInterruptFlags() { return new MaskCell(this, this.row.ChannelInterruptFlags); }
     get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
     get InterruptFlags() { return new InterruptFlags(this); }
+
+    get MissileModel() { return new SpellVisualEffect(this, this.Visual.row.MissileModel); }
+    get MissileAttachment() { return this.wrap(this.Visual.row.MissileAttachment); }
+    get MissileCastOffset() { return new Vector3(
+          this
+        , this.Visual.row.MissileCastOffsetX
+        , this.Visual.row.MissileCastOffsetY
+        , this.Visual.row.MissileCastOffsetZ
+        )}
+
+    get MissileImpactOffset() { 
+        return new Vector3(
+              this
+            , this.Visual.row.MissileImpactOffsetX
+            , this.Visual.row.MissileImpactOffsetY
+            , this.Visual.row.MissileImpactOffsetZ
+        )
+    } 
+
+    private kit(name: string, kit: DBCIntCell<SpellVisualRow>): SpellVisualKit<Spell> {
+        return new SpellVisualKit(this,kit, name);
+    }
+
+    get CastKit() { return this.kit("Cast", this.Visual.row.CastKit); }
+    get StateKit() { return this.kit("State", this.Visual.row.StateKit); }
+    get ImpactKit() { return this.kit("Impact", this.Visual.row.ImpactKit); }
+    get ChannelKit() { return this.kit("Channel", this.Visual.row.ChannelKit); }
+    get PrecastKit() { return this.kit("Precast", this.Visual.row.PrecastKit); }
+    get StateDoneKit() { return this.kit("StateDone", this.Visual.row.StateDoneKit); }
+    get ImpactAreaKit() { return this.kit("ImpactArea", this.Visual.row.ImpactAreaKit); }
+    get InstantAreaKit() { return this.kit("InstantArea", this.Visual.row.InstantAreaKit); }
+    get CasterImpactKit() { return this.kit("CasterImpact", this.Visual.row.CasterImpactKit); }
+    get TargetImpactKit() { return this.kit("TargetImpact", this.Visual.row.TargetImpactKit); }
+    get PersistentAreaKit() { return this.kit("PersistentArea", this.Visual.row.PersistentAreaKit); }
+    get MissileTargetingKit() { return this.kit("MissileTargeting", this.Visual.row.MissileTargetingKit); }
+
+    AllKits() {
+        return ([
+            [this.Visual.row.CastKit,"Cast"],
+            [this.Visual.row.StateKit,"State"],
+            [this.Visual.row.ImpactKit,"Impact"],
+            [this.Visual.row.ChannelKit,"Channel"],
+            [this.Visual.row.PrecastKit,"Precast"],
+            [this.Visual.row.StateDoneKit,"StateDone"],
+            [this.Visual.row.ImpactAreaKit,"ImpactArea"],
+            [this.Visual.row.InstantAreaKit,"InstantArea"],
+            [this.Visual.row.CasterImpactKit,"Impact"],
+            [this.Visual.row.TargetImpactKit,"TargetImpact"],
+            [this.Visual.row.PersistentAreaKit,"PersistentArea"],
+            [this.Visual.row.MissileTargetingKit,"MissileTargeting"]
+        ] as [DBCIntCell<any>,string][]).filter(([row])=>{
+            return row.get()!=0;
+        }).map(([row,name])=>new SpellVisualKit(this, row, name));
+    }
 
     /**
      * Creates a separate clone of this spell
