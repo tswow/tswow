@@ -52,6 +52,8 @@ import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
 import { Transient } from "wotlkdata/cell/Transient";
 import { SpellGroups } from "./SpellGroup";
+import { SQL } from "wotlkdata/sql/SQLFiles";
+import { SpellRank } from "./SpellRank";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this); }
@@ -184,6 +186,7 @@ export class Spell extends MainEntity<SpellRow> {
     get TargetImpactKit() { return this.kit("TargetImpact", this.Visual.row.TargetImpactKit); }
     get PersistentAreaKit() { return this.kit("PersistentArea", this.Visual.row.PersistentAreaKit); }
     get MissileTargetingKit() { return this.kit("MissileTargeting", this.Visual.row.MissileTargetingKit); }
+    get Rank() { return new SpellRank(this, this.ID); }
 
     AllKits() {
         return ([
