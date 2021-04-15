@@ -45,14 +45,6 @@ export namespace Config {
         }
 
         wfs.copy(spaths.tcGlobaldts,ipaths.binglobaldts);
-        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
-            if(wfs.exists(ipaths.moduleScripts(x))) {
-                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
-            }
-            if(wfs.exists(ipaths.moduleAddons(x))) {
-                wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x));
-            }
-        });
 
         wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
         wfs.copy(spaths.installAddons, ipaths.addons);
@@ -61,6 +53,15 @@ export namespace Config {
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
         wfs.copy(spaths.snippetExample,ipaths.snippetExampleBin);
+
+        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
+            if(wfs.exists(ipaths.moduleScripts(x))) {
+                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
+            }
+            if(wfs.exists(ipaths.moduleAddons(x))) {
+                wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x));
+            }
+        });
 
         let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
 
