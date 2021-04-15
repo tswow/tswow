@@ -18,7 +18,7 @@ import { term } from '../util/Terminal';
 import { wfs } from '../util/FileSystem';
 import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
-import { bpaths, ipaths, spaths } from '../util/Paths';
+import { ipaths, spaths } from '../util/Paths';
 import { datasetYaml } from '../util/ConfigFiles';
 
 export namespace Config {
@@ -50,7 +50,7 @@ export namespace Config {
                 wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
             }
             if(wfs.exists(ipaths.moduleAddons(x))) {
-                wfs.copy(ipaths.addonSourceGlobal,ipaths.addonDestGlobal(x));
+                wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x));
             }
         });
 

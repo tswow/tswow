@@ -315,7 +315,6 @@ export class InstallPaths {
     get wotlkdataPackageJson() { return mpath(this.wotlkdata, 'package.json')}
 
     get wotlkdataIndex() { return mpath(this.wotlkdata, 'wotlkdata'); }
-    get addonSourceGlobal() { return mpath(this.bin,'scripts','tswow','addons','_global.d.ts')}
 
     /** node_modules paths */
     get tstlDecorators() { return mpath(`./node_modules/typescript-to-lua/dist/transformation/visitors/class/decorators.js`)}
