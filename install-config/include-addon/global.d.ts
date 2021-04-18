@@ -12413,7 +12413,6 @@ declare namespace WoWAPI {
     type FilterMode = "LINEAR" | "BILINEAR" | "TRILINEAR" | "NEAREST";
     type MouseWheelDelta = 1 | -1;
     type Align = "HORIZONTAL" | "VERTICAL";
-	type FillStyleTypes = "STANDARD" | "STANDARD_NO_RANGE_FILL" | "CENTER" | "REVERSE" | "STANDARD";
 
     namespace Event {
         type OnEvent = "OnEvent";
@@ -12429,6 +12428,8 @@ declare namespace WoWAPI {
         type OnMouseWheel = "OnMouseWheel";
         type OnValueChanged = "OnValueChanged";
         type OnTextChanged = "OnTextChanged";
+		type OnDragStart = "OnDragStart";
+        type OnDragStop = "OnDragStop"
 
         type PlayerLogin = "PLAYER_LOGIN";
         type PlayerLogout = "PLAYER_LOGOUT";
@@ -12446,7 +12447,7 @@ declare namespace WoWAPI {
 
         type OnAny = OnEvent | OnLoad | OnUpdate | OnClick | OnEnter |
             OnLeave | OnHide | OnShow | OnMouseDown | OnMouseUp | OnMouseWheel |
-            OnValueChanged | OnTextChanged;
+            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop;
     }
 
     type UIDropdownInfo = {
@@ -12557,6 +12558,8 @@ declare namespace WoWAPI {
          * @param a alpha (opacity)
          */
         SetTextColor(r: number, g: number, b: number, a?: number): void;
+		
+		SetShadowOffset(x: number, y: number): void;
     }
 
     /**
@@ -12843,6 +12846,8 @@ declare namespace WoWAPI {
         HookScript(event: "OnUpdate", handler: (frame: T, elapsed: number) => void): void;
         HookScript(event: "OnValueChanged", handler: (frame: T, changed: any) => void): void;
         HookScript(event: "OnTextChanged", handler: (frame: T, text: string) => void): void;
+		HookScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
+        HookScript(event: "OnDragStop", handler: (frame: T) => void): void;
         HookScript(event: Event.OnAny, handler?: (frame: T, ...args: any[]) => void): void;
     }
 
@@ -12867,6 +12872,8 @@ declare namespace WoWAPI {
         SetScript(event: "OnUpdate", handler: (frame: T, elapsed: number) => void): void;
         SetScript(event: "OnValueChanged", handler: (frame: T, changed: any) => void): void;
         SetScript(event: "OnTextChanged", handler: (frame: T, isUserInput: boolean) => void): void;
+		SetScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
+        SetScript(event: "OnDragStop", handler: (frame: T) => void): void;
         SetScript(event: Event.OnAny, handler?: (frame: T, ...args: any[]) => void): void;
     }
 
@@ -13063,6 +13070,8 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
+		
+		RegisterForDrag(button: WoWAPI.MouseButton): void;
     }
 
     /**
@@ -13449,43 +13458,16 @@ declare namespace WoWAPI {
         Undress(): void;
     }
 	
-	interface ScrollFrame extends Frame {
-		GetHorizontalScroll(): number;
-		GetHorizontalScrollRange(): number;
-		GetScrollChild(): frame;
-		GetVerticalScroll(): number;
-		GetVerticalScrollRange(): number;
-		SetHorizontalScroll(offset:number): void;
-		SetScrollChild(frame:frame):void;
-		SetVerticalScroll(offset:number): void;
-	}
-	
-	interface SimpleHTML extends Frame,FontInstance {
-		GetContentHeight():number;
-		GetHyperlinkFormat(): string;
-		GetTextData(): string;
-		SetHyperlinkFormat(format:string): void;
-		SetText(text:string): void;
-	}
-	
-	interface StatusBar extends Frame {
-		GetFillStyle(): FillStyleTypes;
-		GetMinMaxValues(): [number, number];
-		GetOrientation(): number;
-		GetReverseFill(): boolean;
-		GetRotatesTexture(): string;
-		GetStatusBarAtlas(): string;
-		GetStatusBarColor(): [number,number,number,number];
-		GetStatusBarTexture():string;
+	interface StatusBar extends Frame, UIObject, Region {
+		GetMinMaxValues(): [number,number];
+		GetOrientation: Align;
+		GetStatusBarColor: number;
+		GetStatusBarTexture(): Texture;
 		GetValue(): number;
-		SetFillStyle(style:FillStyleTypes) : void;
 		SetMinMaxValues(min:number, max:number): void;
-		SetOrientation(orientation:Align): void;
-		SetReverseFill(state:boolean): void;
-		SetRotatesTexture(): void;
-		SetStatusBarAtlas(atlasName:string): void;
+		SetOrientation(orientation: Align): void;
 		SetStatusBarColor(r:number, g:number, b:number, alpha:number): void;
-		SetStatusBarTexture(texture:string, layer:string, subLayer:string): void;
+		SetStatusBarTexture(file:string): void;
 		SetValue(value:number): void;
 	}
 }
@@ -13569,9 +13551,8 @@ declare function CreateFrame(frameType: "GameTooltip", frameName?: string, paren
 declare function CreateFrame(frameType: "Model", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Model;
 declare function CreateFrame(frameType: "PlayerModel", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.PlayerModel;
 declare function CreateFrame(frameType: "DressUpModel", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.DressUpModel;
-declare function CreateFrame(frameType: "ScrollFrame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ScrollFrame;
-declare function CreateFrame(frameType: "SimpleHTML", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.SimpleHTML;
 declare function CreateFrame(frameType: "StatusBar", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.StatusBar;
+
 /**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.
  * The optional position argument (number) allows addons to insert top-level panels at arbitrary positions in the category list.
