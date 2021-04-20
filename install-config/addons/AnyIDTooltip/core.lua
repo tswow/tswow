@@ -18,6 +18,38 @@ local kinds = {
 
 local isClassicWow = select(4,GetBuildInfo()) < 20000
 
+local is_gm = false
+local itemExtra = {}
+local creatureExtra = {}
+local QueryFrame = CreateFrame("frame")
+QueryFrame:RegisterEvent("CHAT_MSG_ADDON")
+QueryFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+-- https://stackoverflow.com/a/22831842
+function string.starts(String,Start)
+  return string.sub(String,1,string.len(Start))==Start
+end
+
+-- https://stackoverflow.com/a/1579673
+function split(pString, pPattern)
+  local Table = {}  -- NOTE: use {n = 0} in Lua-5.0
+  local fpat = "(.-)" .. pPattern
+  local last_end = 1
+  local s, e, cap = pString:find(fpat, 1)
+  while s do
+     if s ~= 1 or cap ~= "" then
+    table.insert(Table,cap)
+     end
+     last_end = e+1
+     s, e, cap = pString:find(fpat, last_end)
+  end
+  if last_end <= #pString then
+     cap = pString:sub(last_end)
+     table.insert(Table, cap)
+  end
+  return Table
+end
+
 local function contains(table, element)
   for _, value in pairs(table) do
     if value == element then return true end
@@ -49,6 +81,60 @@ local function addLine(tooltip, id, kind)
   tooltip:AddDoubleLine(left, right)
   tooltip:Show()
 end
+
+local curItemTooltip = nil
+QueryFrame:SetScript("OnEvent", function(_,evt,_,wht,_,sender)
+  -- don't accidentally spam other servers
+  if evt == 'PLAYER_ENTERING_WORLD' then
+    SendAddonMessage('','tswow_am_i_gm','WHISPER',UnitName('PLAYER'))
+    return
+  end
+
+  -- don't allow other players to send these messages
+  if sender ~= UnitName('PLAYER') then 
+    return 
+  end
+
+  if wht == 'tswow_you_are_gm' then
+    is_gm = true
+  end
+
+  local o = split(wht,":")
+  if o[1] == "tswow_creature_response" then
+    local id = tonumber(o[2])
+    local faction = tonumber(o[3])
+    local displayId = tonumber(o[4])
+
+    if creatureExtra[id] == nil then
+      local unit = select(2, GameTooltip:GetUnit())
+      if unit then
+        local sel_id = tonumber(string.sub(UnitGUID("mouseover") or 0, 6, 12), 16)
+        if sel_id == id then
+          addLine(GameTooltip,displayId,"DisplayID")
+          addLine(GameTooltip,faction,"Faction")
+        end
+      end
+    end
+    creatureExtra[id] = {faction = faction, displayid = displayId}
+  end
+
+  if o[1] == "tswow_item_response" then
+    local id = tonumber(o[2])
+    local displayid = tonumber(o[3])
+
+    if curItemTooltip ~= nil and itemExtra[id] == nil then
+      local link = select(2, curItemTooltip:GetItem())
+      if link then
+        local link_id = string.match(link, "item:(%d*)") 
+        if link_id and tonumber(link_id) == id then
+          addLine(curItemTooltip, displayid, "DisplayID") 
+        end
+      end
+    end
+
+    itemExtra[id] = {displayid = displayid}
+  end
+end)
 
 local function addLineByKind(self, id, kind)
   if not kind or not id then return end
@@ -111,15 +197,29 @@ end)
 -- NPCs
 GameTooltip:HookScript("OnTooltipSetUnit", function(self)
   local unit = select(2, self:GetUnit())
+
   if unit then
     local guid = UnitGUID(unit) or ""
     local id = tonumber(string.sub(UnitGUID("mouseover") or 0, 6, 12), 16)
+    
     if id ~= 0 and guid:match("%a+") ~= "Player" then addLine(GameTooltip, id, kinds.unit) end
+
+    if id ~= nil then
+      if creatureExtra[id] == nil then
+        if is_gm then
+          SendAddonMessage('','tswow_creature:'..id,"WHISPER",UnitName("PLAYER"))
+        end
+      else
+        addLine(GameTooltip,creatureExtra[id].displayid,"DisplayID")
+        addLine(GameTooltip,creatureExtra[id].faction,"Faction")
+      end
+    end
   end
 end)
 
 -- Items
 local function attachItemTooltip(self)
+  curItemTooltip = self
   local link = select(2, self:GetItem())
   if not link then return end
   local itemString = string.match(link, "item:([%-?%d:]+)")
@@ -167,6 +267,14 @@ local function attachItemTooltip(self)
     end
 	
     if #gems ~= 0 then addLine(self, gems, kinds.gem) end
+
+    if(itemExtra[tonumber(id)] == nil) then
+      if is_gm then
+        SendAddonMessage('','tswow_item:'..id,"WHISPER",UnitName("PLAYER"))
+      end
+    else
+      addLine(self, itemExtra[tonumber(id)].displayid, "DisplayID")
+    end
   end
 end
 
