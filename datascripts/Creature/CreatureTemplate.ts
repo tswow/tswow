@@ -50,6 +50,7 @@ import { Ids } from "../Base/Ids";
 import { Gossips } from "../Gossip/Gossips";
 import { UnitFlags } from "./UnitFlags";
 import { SchoolMask } from "../Misc/School";
+import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -79,7 +80,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     /** 
      * ID of the Faction template this creature belongs to
      */
-    get FactionTemplate() { return this.wrap(this.row.faction); }
+    get FactionTemplate() { return new CreatureFactionTemplate(this, this.row.faction); }
 
     /** 
      * - 0 = does not regenerate health

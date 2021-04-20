@@ -23,4 +23,13 @@ export class CreatureStats extends Subsystem<CreatureTemplate> {
     get ArmorMod() { return this.ownerWrap(this.owner.row.ArmorModifier); }
     get DamageMod() { return this.ownerWrap(this.owner.row.DamageModifier); }
     get ExperienceMod() { return this.ownerWrap(this.owner.row.ExperienceModifier); }
+
+    set(health: number, mana: number, armor: number, damage: number, experience: number) {
+        this.HealthMod.set(health);
+        this.ManaMod.set(mana);
+        this.ArmorMod.set(armor);
+        this.DamageMod.set(damage);
+        this.ExperienceMod.set(experience);
+        return this.owner;
+    }
 }

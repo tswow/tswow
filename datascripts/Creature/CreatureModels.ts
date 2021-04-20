@@ -42,6 +42,13 @@ export class CreatureModels extends Subsystem<CreatureTemplate> {
         return this.rows().filter(x=>x.get()!=0).map(x=>new CreatureVisual(this.owner,x).objectify());
     }
 
+    clearAll() {
+        for(let i=0;i<this.length;++i) {
+            this.setId(i,0);
+        }
+        return this.owner;
+    }
+
     getId(index: number): number {
         return getModel(this.owner, index).get();
     }
