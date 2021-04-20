@@ -103,19 +103,29 @@ QueryFrame:SetScript("OnEvent", function(_,evt,_,wht,_,sender)
   if o[1] == "tswow_creature_response" then
     local id = tonumber(o[2])
     local faction = tonumber(o[3])
-    local displayId = tonumber(o[4])
+
+
+    local displayIds = {}
+    for i=4,7 do
+      local id = tonumber(o[i])
+      if id ~= 0 then
+        table.insert(displayIds,id)
+      end
+    end
 
     if creatureExtra[id] == nil then
       local unit = select(2, GameTooltip:GetUnit())
       if unit then
         local sel_id = tonumber(string.sub(UnitGUID("mouseover") or 0, 6, 12), 16)
         if sel_id == id then
-          addLine(GameTooltip,displayId,"DisplayID")
+          for k,v in ipairs(displayIds) do
+            addLine(GameTooltip,v,"DisplayID "..k)
+          end
           addLine(GameTooltip,faction,"Faction")
         end
       end
     end
-    creatureExtra[id] = {faction = faction, displayid = displayId}
+    creatureExtra[id] = {faction = faction, displayids = displayIds}
   end
 
   if o[1] == "tswow_item_response" then
@@ -210,7 +220,9 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self)
           SendAddonMessage('','tswow_creature:'..id,"WHISPER",UnitName("PLAYER"))
         end
       else
-        addLine(GameTooltip,creatureExtra[id].displayid,"DisplayID")
+        for k,v in ipairs(creatureExtra[id].displayids) do
+          addLine(GameTooltip,v,"DisplayID "..k)
+        end
         addLine(GameTooltip,creatureExtra[id].faction,"Faction")
       end
     end
