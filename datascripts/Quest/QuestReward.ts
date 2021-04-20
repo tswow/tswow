@@ -17,6 +17,7 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { Quest } from "./Quest";
+import { QuestDifficultyIndex } from "./QuestDifficultyIndex";
 
 function ChoiceItemIds(owner: Quest) {
     return [
@@ -193,7 +194,7 @@ export class QuestReward extends Subsystem<Quest> {
     /** Reward player with a Title, such as <Grunt> */
     get Title() { return this.ownerWrap(this.owner.row.RewardTitle )}
     /** Increased XP reward for difficult quests, a value between 0-8 */
-    get Difficulty() { return this.ownerWrap(this.owner.row.RewardXPDifficulty)}
+    get Difficulty() { return new QuestDifficultyIndex(this.owner, this.owner.row.RewardXPDifficulty); }
     /** Reward player with arena points */
     get ArenaPoints() { return this.ownerWrap(this.owner.row.RewardArenaPoints)}
 }
