@@ -23,9 +23,50 @@ import { CreatureInstance } from "./CreatureInstance";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export const CreatureTemplates = {
-    create: (mod: string, id: string, parent: number) => {
-        return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-            .clone(Ids.CreatureTemplate.id(mod, id))).GossipID.set(0)
+    create: (mod: string, id: string, parent: number = -1) => {
+        let nid = Ids.CreatureTemplate.id(mod,id);
+        if(parent<0) {
+            return new CreatureTemplate(SQL.creature_template.add(nid))
+                .Icon.setAttack()
+                .Level.set(1,1)
+                .MechanicImmunity.clearAll()
+                .Models.clearAll()
+                .MovementID.set(0)
+                .MovementSpeed.set(1,1.14)
+                .MovementType.setIdle()
+                .NPCFlags.clearAll()
+                .PetSpells.set(0)
+                .RacialLeader.set(0)
+                .RaidHeroic10ID.set(0)
+                .RaidHeroic25ID.set(0)
+                .RaidNormal25ID.set(0)
+                .Rank.setNormal()
+                .RegenHealth.set(1)
+                .Scale.set(1)
+                .SpellSchoolImmunity.clearAll()
+                .Stats.set(1,1,1,1,1)
+                .Title.enGB.set('')
+                .Type.setHumanoid()
+                .TypeFlags.clearAll()
+                .UnitClass.setWarrior()
+                .UnitFlags.clearAll()
+                .VehicleID.set(0)
+                .AIName.ReactorAI()
+                .AttackTime.set(1,1,1,1)
+                .DamageSchool.setNormal()
+                .DungeonHeroicID.set(0)
+                .DynFlags.clearAll()
+                .DynamicFlags.set(0)
+                .FactionTemplate.set(0)
+                .Family.set(0)
+                .FlagsExtra.set(0)
+                .Gold.set(0)
+                .HealthExpansion.set(0)
+                .HoverHeight.set(0)
+        } else {
+            return new CreatureTemplate(SQL.creature_template.find({entry: parent})
+                .clone(Ids.CreatureTemplate.id(mod, id))).GossipID.set(0)
+        }
     },
 
     load(id: number) {
