@@ -38,7 +38,7 @@ export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<
         this.Condition = new Condition(this, 15, this.end.ID,this.row.OptionID.get(),0);
     }
 
-    get Icon(){return new GossipIconCell<S,G,T>(this); }
+    get Icon(){return new GossipIconCell<S,G,T>(this, this.row.OptionIcon); }
     get Action(){return new GossipOptionAction<S,G,T>(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get MenuID() { return this.wrap(this.row.ActionMenuID); }

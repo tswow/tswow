@@ -14,33 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Enum } from "../Base/Enum";
 import { GOCreature } from "../Base/GOorCreature";
 import { GossipOption } from "./GossipOption";
+import { Enum } from "wotlkdata/cell/systems/Enum";
 
-export const GOSSIP_ICONS = new Enum({
-    CHAT: 0,
-    VENDOR: 1,
-    TAXI: 2,
-    TRAINER: 3,
-    COGWHEEL: 4,
-    COGWHEEL_2: 5,
-    MONEY_BAG: 6,
-    TALK_BUBBLE: 7,
-    TABARD: 8,
-    CROSSED_SWORDS: 9,
-    YELLOW_DOT: 10
-});
-export type GossipIcons = keyof typeof GOSSIP_ICONS.values;
-
-export class GossipIconCell<S,G,T extends GOCreature<G>> extends Subsystem<GossipOption<S,G,T>> {
-    protected get icon() { return this.owner.row.OptionIcon; }
-    get() : GossipIcons {
-        return GOSSIP_ICONS.reverse<GossipIcons>(this.icon.get());
-    }
-    set(icon: GossipIcons) : GossipOption<S,G,T> {
-        this.icon.set(GOSSIP_ICONS.get(icon));
-        return this.owner;
-    }
+export class GossipIconCell<S,G,T extends GOCreature<G>> extends Enum<GossipOption<S,G,T>> {
+    setChat() { return this.set(0); }
+    setVendor() { return this.set(1); }
+    setTaxi() { return this.set(2); }
+    setTrainer() { return this.set(3); }
+    setCogwheel() { return this.set(4); }
+    setCogwheel2() { return this.set(5); }
+    setMoneyBag() { return this.set(6); }
+    setTalkBubble() { return this.set(7); }
+    setTabard() { return this.set(8); }
+    setCrossedSwords() { return this.set(9); }
+    setYellowDot() { return this.set(10); }
 }
