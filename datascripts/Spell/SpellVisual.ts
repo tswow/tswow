@@ -82,20 +82,20 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<T,SpellVisua
     
     clear(): this {
         this.Animation.set(0)
-            .BaseEffect.setID(0).end
-            .BreathEffect.setID(0).end
+            .BaseEffect.setID(0)
+            .BreathEffect.setID(0)
             .CharProcedures.clearAll()
-            .ChestEffect.setID(0).end
+            .ChestEffect.setID(0)
             .Flags.set(0)
-            .HeadEffect.setID(0).end
-            .LeftHandEffect.setID(0).end
-            .RightHandEffect.setID(0).end
-            .RightWeaponEffect.setID(0).end
-            .CameraShake.setID(0).end
-            .Sound.setID(0).end
+            .HeadEffect.setID(0)
+            .LeftHandEffect.setID(0)
+            .RightHandEffect.setID(0)
+            .RightWeaponEffect.setID(0)
+            .CameraShake.setID(0)
+            .Sound.setID(0)
             .SpellEffects.clearAll()
             .StartAnimation.set(-1)
-            .WorldEffect.setID(0).end
+            .WorldEffect.setID(0)
             // TODO: Actually remove the rows
             .Models.forEach(x=>x.row.ParentSpellVisualKitID.set(0))
         return this;

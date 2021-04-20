@@ -59,7 +59,7 @@ export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> ext
 
     setID(pos: number) {
         this.cell.set(pos);
-        return this;
+        return this.owner;
     }
 
     @Transient
