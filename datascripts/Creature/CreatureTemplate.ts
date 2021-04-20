@@ -28,7 +28,6 @@ import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
 import { CreatureLevel } from "./CreatureLevel";
 import { CreatureName, CreatureSubname } from "./CreatureLoc";
-import { CreatureLoot } from "./CreatureLoot";
 import { MechanicImmunity } from "./CreatureMechanicImmunity";
 import { CreatureModels } from "./CreatureModels";
 import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
@@ -51,6 +50,8 @@ import { Gossips } from "../Gossip/Gossips";
 import { UnitFlags } from "./UnitFlags";
 import { SchoolMask } from "../Misc/School";
 import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
+import { SharedRefs } from "../Refs/SharedRefs";
+import { AttachedLootSet } from "../Loot/Loot";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -121,7 +122,6 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get DamageSchool() { return new CreatureDamageSchool(this); }
     get AttackTime() { return new CreatureAttackTime(this); }
     get Family() { return new CreatureFamily(this); }
-    get Loot() { return new CreatureLoot(this); }
     get PetSpells() { return this.wrap(this.row.PetSpellDataId); }
     get VehicleID() { return this.wrap(this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }
@@ -146,6 +146,27 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
         return new Trainer(this,trainerRow, ctrow); 
     }
     get Vendor() { return new CreatureVendor(this); }
+
+    get NormalLoot() { return SharedRefs.getOrCreateLoot(this, 
+        new AttachedLootSet(this, 
+            this.row.lootid, 
+            Ids.CreatureLoot, 
+            SQL.creature_loot_template))
+    }
+
+    get PickpocketLoot() { return SharedRefs.getOrCreateLoot(this,
+        new AttachedLootSet(this,
+            this.row.pickpocketloot,
+            Ids.PickPocketLoot,
+            SQL.pickpocketing_loot_template))
+    }
+
+    get SkinningLoot() { return SharedRefs.getOrCreateLoot(this,
+        new AttachedLootSet(this, 
+            this.row.skinloot, 
+            Ids.SkinningLoot, 
+            SQL.skinning_loot_template))
+    }
 
     spawn(mod: string, id: string, pos: Position) {
         return CreatureInstances.create(mod, id, this.ID, pos);

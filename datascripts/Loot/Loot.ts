@@ -44,7 +44,7 @@ export abstract class LootSetBase<T> extends Subsystem<T> {
     
     abstract get ID() : number
     
-    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
+    protected _addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
         this.table.add(this.ID,item)
         .Chance.set(chance)
         .MinCount.set(minCount)
@@ -52,11 +52,10 @@ export abstract class LootSetBase<T> extends Subsystem<T> {
         .QuestRequired.set(quest ? 1 : 0)
         .GroupId.set(groupId)
         .LootMode.set(lootMode)
-        
         return this;
     }
     
-    addReference(table: number, chance: number, lootMode: number = 1) {
+    protected _addReference(table: number, chance: number, lootMode: number = 1) {
         this.table.add(this.ID,table)
         .Chance.set(chance)
         .MinCount.set(1)
@@ -83,6 +82,16 @@ export class LootSet<T> extends LootSetBase<T> {
     constructor(owner: T, id: number, table: LootTable) {
         super(owner, table);
         this._id = id;
+    }
+
+    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
+        this._addItem(item,chance,minCount,maxCount,quest,groupId,lootMode);
+        return this;
+    }
+
+    addReference(table: number, chance: number, lootMode: number = 1) {
+        this._addReference(table,chance,lootMode);
+        return this;
     }
 }
 
@@ -119,6 +128,16 @@ export class AttachedLootSet<T> extends LootSetBase<T> {
 
     copyFrom(id: number) {
         this.table.filter({Entry: id}).forEach(x=>x.clone(this._cell.get(), x.Item.get()));
+    }
+
+    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
+        this._addItem(item,chance,minCount,maxCount,quest,groupId,lootMode);
+        return this.owner;
+    }
+
+    addReference(table: number, chance: number, lootMode: number = 1) {
+        this._addReference(table,chance,lootMode);
+        return this.owner;
     }
 }
 
