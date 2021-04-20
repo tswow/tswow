@@ -57,7 +57,7 @@ export const CreatureTemplates = {
                 .DungeonHeroicID.set(0)
                 .DynFlags.clearAll()
                 .DynamicFlags.set(0)
-                .FactionTemplate.set(0)
+                .FactionTemplate.setNeutralPassive()
                 .Family.set(0)
                 .FlagsExtra.set(0)
                 .Gold.set(0)
