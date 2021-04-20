@@ -59,11 +59,15 @@ export namespace Datasets {
             return val;
         }
 
+        get client_patch_path() {
+            return this.get<string>('client_patch_path',mpath(this.client_path,'Data'));
+        }
+
         get game_build() {
             return this.get<number>('game_build',12340);
         }
 
-        get mpq_suffix() { 
+        get mpq_suffix() {
             let val = this.get<string>('mpq_suffix','a')
             if(val.length!==1 || val.charCodeAt(0)<97 || val.charCodeAt(0)>122)  {
                 let type = val.length===0 ? 'an empty' : 'an invalid';
@@ -76,7 +80,7 @@ export namespace Datasets {
             return val;
         }
         get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
-        get mpq_path() { return mpath(this.set.client.dataPath,`patch-${this.mpq_suffix}.MPQ`)}
+        get mpq_path() { return mpath(this.client_patch_path,`patch-${this.mpq_suffix}.MPQ`)}
     }
 
     /**
