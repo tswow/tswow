@@ -27,7 +27,7 @@ export const CreatureTemplates = {
         let nid = Ids.CreatureTemplate.id(mod,id);
         if(parent<0) {
             return new CreatureTemplate(SQL.creature_template.add(nid))
-                .Icon.setAttack()
+                .Icon.setNone()
                 .Level.set(1,1)
                 .MechanicImmunity.clearAll()
                 .Models.clearAll()

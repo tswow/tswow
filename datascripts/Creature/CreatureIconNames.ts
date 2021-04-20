@@ -18,9 +18,14 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureIconNames extends Subsystem<CreatureTemplate> {
-    protected set(value: string) {
+    set(value: string) {
         this.owner.row.IconName.set(value);
         return this.owner;
+    }
+
+    /** Used by most creatures */
+    setNone() {
+        return this.set('');
     }
 
     /** Used for Guards and Teleporter NPC's  */
