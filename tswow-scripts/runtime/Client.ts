@@ -47,7 +47,7 @@ export namespace Client {
         }
 
         get addonPath() {
-            return mpath(this.path,'addons');
+            return mpath(this.path,'interface','addons');
         }
 
         get dataPath() {
@@ -95,9 +95,7 @@ export namespace Client {
 
         installAddons() {
             for(const addon of wfs.readDir(ipaths.addons, true)) {
-                if(!wfs.exists(this.addonPath)) {
-                    wfs.copy(mpath(ipaths.addons,addon),this.addonPath);
-                }
+                wfs.copy(mpath(ipaths.addons,addon),mpath(this.addonPath,addon),true);
             }
         }
 
