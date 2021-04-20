@@ -60,5 +60,14 @@ export class SingleArraySystem<D extends CPrim, T> extends SystemArray<SingleArr
     get(index: number): SingleArrayEntry<D,T> {
         return new SingleArrayEntry(this.owner,index,this.array, this.clearValue);
     }
-    
+
+    add(value: D) {
+        for(let i=0;i<this.length;++i) {
+            if(this.getIndex(i)===this.clearValue) {
+                this.setIndex(i,value);
+                return this.owner;
+            }
+        }
+        throw new Error(`Can't add more entries, array is full.`);
+    }
 }
