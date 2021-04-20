@@ -19,10 +19,25 @@ import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemResistance extends Subsystem<ItemTemplate> {
     protected get row() { return this.owner.sqlRow; }
-    get holy() { return this.ownerWrap(this.owner.sqlRow.holy_res); }
-    get fire() { return this.ownerWrap(this.row.fire_res); }
-    get nature() { return this.ownerWrap(this.row.nature_res); }
-    get frost() { return this.ownerWrap(this.row.frost_res); }
-    get shadow() { return this.ownerWrap(this.row.shadow_res); }
-    get arcane() { return this.ownerWrap(this.row.arcane_res); }
+    get Holy() { return this.ownerWrap(this.owner.sqlRow.holy_res); }
+    get Fire() { return this.ownerWrap(this.row.fire_res); }
+    get Nature() { return this.ownerWrap(this.row.nature_res); }
+    get Frost() { return this.ownerWrap(this.row.frost_res); }
+    get Shadow() { return this.ownerWrap(this.row.shadow_res); }
+    get Arcane() { return this.ownerWrap(this.row.arcane_res); }
+
+    set(holy: number, fire: number, nature: number, frost: number, shadow: number, arcane: number) {
+        this.Holy.set(holy)
+        this.Fire.set(fire)
+        this.Nature.set(nature)
+        this.Frost.set(frost)
+        this.Shadow.set(shadow)
+        this.Arcane.set(arcane)
+        return this.owner;
+    }
+
+    clearAll() {
+        this.set(0,0,0,0,0,0);
+        return this.owner;
+    }
 }
