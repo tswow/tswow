@@ -21,8 +21,8 @@ import { Ids } from "../Base/Ids";
 import { Spell } from "./Spell";
 import { SpellRanks } from "./SpellRanks";
 import { TotemCreatures } from "./TotemCreatures";
-import { SpellPresets } from "./SpellTemplates/SpellPresets";
 import { SpellGroup } from "./SpellGroup";
+import { SpellPresets } from "./SpellPresets/SpellPresets";
 
 function createSpell(id: number, parent: number = 0) {
     if(parent===0) {
