@@ -63,7 +63,7 @@ std.Spells.Presets.CreateChain(/*@1*/'mod'/**/,/*@2*/'id'/**/)
  * Snippet: Spell::Paladin Aura
  * - Basic paladin-like aura based on Devotion Aura
  */
-let aura = std.Spells.Presets.CreatePaladinAura(/*@1*/'mod'/**/,/*@2*/'id'/**/)
+std.Spells.Presets.CreatePaladinAura(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Name.enGB.set('Paladin Aura')
     .Description.enGB.set('Paladin-like aura')
 
