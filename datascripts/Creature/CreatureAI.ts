@@ -20,6 +20,7 @@ import { CreatureTemplate } from "./CreatureTemplate";
 export class CreatureAI extends Subsystem<CreatureTemplate> {
     set(value: string) {
         this.owner.row.AIName.set(value);
+        return this.owner;
     }
 
     get() { 
