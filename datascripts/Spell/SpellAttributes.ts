@@ -16,18 +16,27 @@
  */
 import { MaskBase } from "wotlkdata/cell/systems/Mask";
 import { Spell } from "./Spell";
+import { Transient } from "wotlkdata/cell/Transient";
 
-export class SpellAttributes extends MaskBase<Spell> {
+export class SpellAttributes<T> extends MaskBase<T> {
+    @Transient
+    protected spell: Spell;
+
+    constructor(owner: T, spell: Spell) {
+        super(owner);
+        this.spell = spell;
+    }
+
     protected cells() {
         return [
-            this.owner.row.Attributes,
-            this.owner.row.AttributesEx,
-            this.owner.row.AttributesExB,
-            this.owner.row.AttributesExC,
-            this.owner.row.AttributesExD,
-            this.owner.row.AttributesExE,
-            this.owner.row.AttributesExF,
-            this.owner.row.AttributesExG,
+            this.spell.row.Attributes,
+            this.spell.row.AttributesEx,
+            this.spell.row.AttributesExB,
+            this.spell.row.AttributesExC,
+            this.spell.row.AttributesExD,
+            this.spell.row.AttributesExE,
+            this.spell.row.AttributesExF,
+            this.spell.row.AttributesExG,
         ]
     }
 
@@ -42,7 +51,7 @@ export class SpellAttributes extends MaskBase<Spell> {
         return this.owner;
     }
 
-    mark(no: number): Spell {
+    mark(no: number): T {
         const cell = this.cell(no);
         cell.set(cell.get()|1<<this.bitno(no));
         return this.owner;
@@ -52,7 +61,7 @@ export class SpellAttributes extends MaskBase<Spell> {
         return this.cells().reduce((p,c)=>p+c.get().toString(2),"");
     }
 
-    clear(no: number): Spell {
+    clear(no: number): T {
         const cell = this.cell(no);
         cell.set((cell.get()&~1<<this.bitno(no))>>>0);
         return this.owner;

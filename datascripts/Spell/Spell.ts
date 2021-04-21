@@ -52,11 +52,10 @@ import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
 import { Transient } from "wotlkdata/cell/Transient";
 import { SpellGroups } from "./SpellGroup";
-import { SQL } from "wotlkdata/sql/SQLFiles";
 import { SpellRank } from "./SpellRank";
 
 export class Spell extends MainEntity<SpellRow> {
-    get Attributes() { return new SpellAttributes(this); }
+    get Attributes() { return new SpellAttributes(this, this); }
 
     @Transient
     get Visual() { return new SpellVisual(this, 
