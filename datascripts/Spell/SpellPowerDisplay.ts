@@ -15,9 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
-import { Spell } from "./Spell";
 
-export class SpellPowerDisplay extends Enum<Spell> {
+export class SpellPowerDisplay<T> extends Enum<T> {
     @EnumField(0)
     setNone() { return this.set(0); }
 
