@@ -16,6 +16,8 @@
  */
 import { MainSystem } from "wotlkdata/cell/MainSystem";
 import { Transient } from "wotlkdata/cell/Transient";
+import { CPrim, Cell } from "wotlkdata/cell/Cell";
+import { MulticastCell } from "./MulticastCell";
 
 export class MainEntity<T> extends MainSystem {
     @Transient
@@ -24,5 +26,9 @@ export class MainEntity<T> extends MainSystem {
     constructor(row: T) {
         super();
         this.row = row;
+    }
+
+    wrapMulticast<D extends CPrim>(cells: Cell<D,any>[]) {
+        return this.wrap(new MulticastCell(this,cells));
     }
 }

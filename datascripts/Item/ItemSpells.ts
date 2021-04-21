@@ -94,8 +94,8 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
         this.Trigger.set(0);
         this.Charges.set(0);
         this.ProcsPerMinute.set(0);
-        this.Cooldown.set(0);
-        this.CategoryCooldown.set(0);
+        this.Cooldown.set(-1);
+        this.CategoryCooldown.set(-1);
         return this.owner;
     }
     isClear(): boolean {

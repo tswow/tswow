@@ -16,8 +16,10 @@
  */
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { ItemTemplate } from "./ItemTemplate";
+import { Transient } from "wotlkdata/cell/Transient";
 
 export class ItemResistance extends Subsystem<ItemTemplate> {
+    @Transient
     protected get row() { return this.owner.sqlRow; }
     get Holy() { return this.ownerWrap(this.owner.sqlRow.holy_res); }
     get Fire() { return this.ownerWrap(this.row.fire_res); }

@@ -62,7 +62,6 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     /** Only applicable if item is a shield */
     get BlockChance() { return this.wrap(this.row.block); }
     get ItemSet() { return this.wrap(this.row.itemset); }
-    get DisplayID() { return this.wrap(this.row.displayid); }
     get Resistances() { return new ItemResistance(this); }
     get Stats() { return new ItemStats(this); }
     get Area() { return this.wrap(this.row.area); }
@@ -109,9 +108,9 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
 
-    get DisplayInfo() { return new ItemDisplayInfo(this,[this.row.displayid]); }
+    get DisplayInfo() { return new ItemDisplayInfo(this,[this.row.displayid, this.dbcRow.DisplayInfoID]); }
 
-    get AmmoType() { return new ItemAmmoTypes(this); }
+    get AmmoType() { return new ItemAmmoTypes(this, this.row.ammo_type); }
     
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
@@ -129,13 +128,76 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
 
 function getRows(id: number) : [item_templateRow, ItemRow] {
     const sqlParent = SQL.item_template.find({entry:id});
-    const dbcParent = DBC.Item.find({ID:id});
+    const dbcParent = DBC.Item.findById(id);
     return [sqlParent,dbcParent];
 }
 
 export const Items = {
-    create(mod: string, id: string, parent: number) {
+    create(mod: string, id: string, parent: number = -1) {
         const numid = Ids.Item.id(mod,id);
+
+        if(parent < 0) {
+            const sqlRow = SQL.item_template.add(numid)
+            const dbcRow = DBC.Item.add(numid)
+            let item = new ItemTemplate(sqlRow,dbcRow)
+                .AmmoType.setNone()
+                .Area.set(0)
+                .Armor.set(0)
+                .BagFamily.set(0)
+                .BlockChance.set(0)
+                .Bonding.setNoBounds()
+                .Class.set(0,0)
+                .ClassMask.set(-1)
+                .RaceMask.set(-1)
+                .ContainerSlots.set(0)
+                .Damage.clearAll()
+                .Delay.set(0)
+                .DisenchantID.set(0)
+                .DisplayInfo.setID(0)
+                .Durability.set(0)
+                .Duration.set(0)
+                .Flags.set(0)
+                .FlagsCustom.set(0)
+                .FlagsExtra.set(0)
+                .FoodType.set(0)
+                .HolidayID.set(0)
+                .InventoryType.setNonEquippable()
+                .ItemLevel.set(0)
+                .ItemSet.set(0)
+                .LockID.set(0)
+                .Map.set(0)
+                .Material.set(0)
+                .MaxCount.set(0)
+                .MaxStack.set(0)
+                .MoneyLoot.set(0,0)
+                .Name.enGB.set('Plain Item')
+                .Price.set(0,0,0)
+                .Quality.set(0)
+                .RandomProperty.set(0)
+                .RandomSuffix.set(0)
+                .RangeMod.set(0)
+                .RequiredDisenchantSkill.set(0)
+                .RequiredFaction.set(0,0)
+                .RequiredHonorRank.set(0)
+                .RequiredLevel.set(0)
+                .RequiredSpell.set(0)
+                .Requirements.clearAll()
+                .Resistances.clearAll()
+                .ScalingStats.set(0,0)
+                .ScriptName.set('')
+                .Sheath.set(0)
+                .SkillRequirement.set(0,0)
+                .Socket.clearAll()
+                .SoundOverride.set(-1)
+                .Spells.clearAll()
+                .StartQuest.set(0)
+                .Stats.clearAll()
+                .TotemCategory.set(0)
+
+            item.sqlRow.LanguageID.set(0)
+            return item;
+        }
+
         const [sqlParent,dbcParent] = getRows(parent);
         const sqlRow = sqlParent.clone(numid)
         const dbcRow = dbcParent.clone(numid);

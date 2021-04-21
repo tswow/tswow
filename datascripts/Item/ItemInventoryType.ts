@@ -58,6 +58,7 @@ export class ItemInventoryType extends Enum<ItemTemplate> {
 
     set(value: number): ItemTemplate {
         this.owner.row.InventoryType.set(value);
+        this.owner.dbcRow.InventoryType.set(value);
         return this.owner;
     }
 
