@@ -28,5 +28,7 @@ export class CreaturePatrolPath<T> extends Subsystem<CreatureInstance<T>> {
                 .delay.set(x.delay)
                 .move_type.set(movementNum)
         )
+
+        return this.owner;
     }
 }
