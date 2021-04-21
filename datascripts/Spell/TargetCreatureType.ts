@@ -17,10 +17,7 @@
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
 import { Spell } from "./Spell";
 
-export class SpellCreatureTarget extends MaskCell<Spell> {
-    constructor(owner: Spell) {
-        super(owner, owner.row.TargetCreatureType);
-    }
+export class SpellCreatureTarget<T> extends MaskCell<T> {
 
     get Beast() { return this.bit(0); }
     get Dragonkin() { return this.bit(1); }

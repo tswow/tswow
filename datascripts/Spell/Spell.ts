@@ -71,7 +71,7 @@ export class Spell extends MainEntity<SpellRow> {
     get ID() { return this.row.ID.get(); }
 
     get TargetType() { return new SpellTargetType(this, this.row.Targets); }
-    get CreatureTargets() { return new SpellCreatureTarget(this); }
+    get CreatureTargets() { return new SpellCreatureTarget(this, this.row.TargetCreatureType); }
 
     get Totems() { return new SingleArraySystem(this,this.row.Totem,0); }
     get Reagents() { return new SpellReagents(this,this); }
