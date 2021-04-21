@@ -17,7 +17,7 @@
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
 import { CreatureInstance } from "./CreatureInstance";
 
-export class CreatureSpawnMask extends MaskCell<CreatureInstance> {
+export class CreatureSpawnMask<T> extends MaskCell<CreatureInstance<T>> {
     get Normal10Man() { return this.bit(0); }
     get Normal25Man() { return this.bit(1); }
     get Heroic10Man() { return this.bit(2); }

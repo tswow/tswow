@@ -17,16 +17,21 @@
 
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
-import { MainEntity } from "../Base/MainEntity";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
+import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Transient } from "wotlkdata/cell/Transient";
 
-export class CreatureInstance extends MainEntity<creatureRow> {
+export class CreatureInstance<T> extends Subsystem<T> {
 
-    constructor(row: creatureRow) {
-        super(row);
+    @Transient
+    readonly row: creatureRow;
+
+    constructor(owner: T, row: creatureRow) {
+        super(owner);
+        this.row = row;
     }
 
     get addonRow() {
@@ -46,11 +51,15 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get GUID() { return this.row.guid.get(); }
     get TemplateID() { return this.wrap(this.row.id); }
     get Map() { return this.wrap(this.row.map); }
-    get SpawnMask() { return new CreatureSpawnMask(this, this.row.spawnMask); }
+    get SpawnMask(): CreatureSpawnMask<T> {
+        return new CreatureSpawnMask(this, this.row.spawnMask);
+    }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     /** If 0, use a random model from CreatureTemplate#Models */
     get ModelID() { return this.wrap(this.row.modelid); }
-    get Position() { return new CreaturePosition(this); }
+    get Position(): CreaturePosition<T> {
+        return new CreaturePosition(this);
+    }
 
     /** Respawn time in seconds */
     get SpawnTime() { return this.wrap(this.row.spawntimesecs); }
@@ -58,5 +67,7 @@ export class CreatureInstance extends MainEntity<creatureRow> {
 
     get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
 
-    get PatrolPath() { return new CreaturePatrolPath(this); }
+    get PatrolPath(): CreaturePatrolPath<T> {
+        return new CreaturePatrolPath(this);
+    }
 }

@@ -18,7 +18,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Pos, Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 
-export class CreaturePosition extends Subsystem<CreatureInstance> {
+export class CreaturePosition<T> extends Subsystem<CreatureInstance<T>> {
     get Map() { return this.ownerWrap(this.owner.row.map); }
     get X() { return this.ownerWrap(this.owner.row.position_x); }
     get Y() { return this.ownerWrap(this.owner.row.position_y); }
@@ -36,5 +36,6 @@ export class CreaturePosition extends Subsystem<CreatureInstance> {
 
     setSplit(map: number, x: number, y: number, z: number, o: number) {
         this.set(Pos(map,x,y,z,o));
+        return this.owner;
     }
 }

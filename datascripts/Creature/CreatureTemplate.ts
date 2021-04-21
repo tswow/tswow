@@ -52,6 +52,7 @@ import { SchoolMask } from "../Misc/School";
 import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 import { SharedRefs } from "../Refs/SharedRefs";
 import { AttachedLootSet } from "../Loot/Loot";
+import { CreatureInstance } from "./CreatureInstance";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -169,7 +170,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     }
 
     spawn(mod: string, id: string, pos: Position) {
-        return CreatureInstances.create(mod, id, this.ID, pos);
+        return new CreatureInstance(this, CreatureInstances.create(mod, id, this.ID, pos).row);
     }
 
     protected isCreature(): boolean {
