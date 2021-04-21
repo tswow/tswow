@@ -45,7 +45,7 @@ export const CreatureTemplates = {
                 .Scale.set(1)
                 .SpellSchoolImmunity.clearAll()
                 .Stats.set(1,1,1,1,1)
-                .Title.enGB.set('')
+                .Subname.enGB.set('')
                 .Type.setHumanoid()
                 .TypeFlags.clearAll()
                 .UnitClass.setWarrior()

@@ -65,7 +65,7 @@ function creatureLoc(id: number, lang: Language) {
 export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
-    get Title() { return new CreatureSubname(this); }
+    get Subname() { return new CreatureSubname(this); }
 
     get Scripts() { 
         return new AttachedScript(()=>{
