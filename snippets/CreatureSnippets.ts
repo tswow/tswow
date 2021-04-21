@@ -1,4 +1,5 @@
 import { std } from "../datascripts/tswow-stdlib-data";
+import { Pos } from "../datascripts/Misc/Position";
 
 /**
  * Snippet: Creature::Aggressive Mob
@@ -123,4 +124,24 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
     .NPCFlags.QuestGiver.mark()
+/** end-snippet */
+
+/**
+ * Snippet: Creature::Patrol
+ * - Basic patrol npc
+ */
+std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
+    .Name.enGB.set('Patrol NPC')
+    .Title.enGB.set('Patroller')
+    .Models.addIds(29419)
+    .FactionTemplate.setNeutralPassive()
+    .NPCFlags.QuestGiver.mark()
+    .spawn(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spawn',
+        Pos(0,0,0,0,0)
+    )
+    .PatrolPath.add('WALK',
+        [
+            /*@3*/Pos(0,0,0,0,0)/**/
+        ])
+    .end
 /** end-snippet */
