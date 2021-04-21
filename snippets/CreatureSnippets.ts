@@ -110,3 +110,15 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
         .end
     .end
 /** end-snippet */
+
+/**
+ * Snippet: Creature::QuestGiver
+ * - Basic questgiver npc
+ */
+std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
+    .Name.enGB.set('Questgiver NPC')
+    .Title.enGB.set('Questgiver')
+    .Models.addIds(29419)
+    .FactionTemplate.setNeutralPassive()
+    .NPCFlags.QuestGiver.mark()
+/** end-snippet */
