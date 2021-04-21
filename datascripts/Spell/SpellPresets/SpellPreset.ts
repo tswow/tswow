@@ -18,6 +18,7 @@ export class SpellPreset extends MainSystem {
 
     get Name() { return this.wrapLoc(this.spell.Name); }
     get Description() { return this.wrapLoc(this.spell.Description); }
+    get AuraDescription() { return this.wrapLoc(this.spell.AuraDescription); }
 
     get Effects(): SpellEffects<this> { return new SpellEffects(this, this.spell); }
     get ID() { return this.spell.ID; }

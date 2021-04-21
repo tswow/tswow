@@ -6,6 +6,8 @@ import { SpellChainEffect } from "../SpellChainEffect";
 import { SoundEntry } from "../../sound/SoundEntry";
 import { SoundEntrySimple } from "../../sound/SoundEntrySimple";
 import { SpellAnimation } from "../SpellAnimation";
+import { SpellCastTime } from "../SpellCastTime";
+import { SpellRecovery } from "../SpellRecovery";
 
 export class ChainSpell extends SpellPreset {
     static create(mod: string, id: string) {
@@ -24,6 +26,9 @@ export class ChainSpell extends SpellPreset {
         this.spell.CastKit.LeftHandEffect.Filename,
         this.spell.CastKit.LeftHandEffect.Filename,
     ])}
+
+    get CastTime() { return new SpellCastTime(this, this.spell.row.CastingTimeIndex); }
+    get Cooldown() { return new SpellRecovery(this, this.spell); }
 
     get PrecastSound() { return new SoundEntrySimple(this, this.spell.PrecastKit.row.SoundID); }
     get CastSound() { return new SoundEntrySimple(this, this.spell.CastKit.row.SoundID); }

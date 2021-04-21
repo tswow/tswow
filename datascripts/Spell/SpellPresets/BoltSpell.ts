@@ -3,6 +3,7 @@ import { SchoolMask } from "../../Misc/School";
 import { MulticastCell } from "../../Base/MulticastCell";
 import { SpellPreset } from "./SpellPreset";
 import { SpellCastTime } from "../SpellCastTime";
+import { SpellRecovery } from "../SpellRecovery";
 
 export class BoltSpell extends SpellPreset {
     static create(mod: string, id: string) {
@@ -23,6 +24,7 @@ export class BoltSpell extends SpellPreset {
     ])}
 
     get CastTime() { return new SpellCastTime(this, this.spell.row.CastingTimeIndex); }
+    get Cooldown() { return new SpellRecovery(this, this.spell); }
     get ImpactChest() { return this.wrap(this.spell.ImpactKit.ChestEffect.Filename) }
     get MissilePath() { return this.wrap(this.spell.MissileModel.Filename); }
 }
