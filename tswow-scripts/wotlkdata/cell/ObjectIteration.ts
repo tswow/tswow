@@ -44,25 +44,29 @@ export const Objects = {
         visitStack.push(thiz);
 
         Objects.getAllPropertyNames(thiz).forEach((key: any) => {
-            if (thiz[key] !== undefined && thiz[key] !== null) {
-                const val = thiz[key];
-                if (visitStack.findIndex((x) => x === val) >= 0) {
-                    return;
-                }
+            try {
+                if (thiz[key] !== undefined && thiz[key] !== null) {
+                    const val = thiz[key];
+                    if (visitStack.findIndex((x) => x === val) >= 0) {
+                        return;
+                    }
 
-                if (typeof(val) !== 'object') {
-                    return;
-                }
+                    if (typeof(val) !== 'object') {
+                        return;
+                    }
 
-                if (!val.objectify || typeof(val.objectify) !== 'function') {
-                    return;
-                }
+                    if (!val.objectify || typeof(val.objectify) !== 'function') {
+                        return;
+                    }
 
-                if (typeof(val.exists) === 'function' && !val.exists()) {
-                    return;
-                }
+                    if (typeof(val.exists) === 'function' && !val.exists()) {
+                        return;
+                    }
 
-                obj[key] = val.objectify();
+                    obj[key] = val.objectify();
+                }
+            } catch(err) {
+                obj[key] = "ERROR";
             }
         });
 
