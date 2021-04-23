@@ -53,6 +53,7 @@ import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 import { SharedRefs } from "../Refs/SharedRefs";
 import { AttachedLootSet } from "../Loot/Loot";
 import { CreatureInstance } from "./CreatureInstance";
+import { Gossip } from "../Gossip/Gossip";
 
 function creatureLoc(id: number, lang: Language) {
     const old = SQL.creature_template_locale.find({entry:id, locale:lang});
@@ -106,16 +107,8 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get Models() { return new CreatureModels(this); }
     get Icon() { return new CreatureIconNames(this); }
     get Gossip() { 
-        this.NPCFlags.Gossip.mark();
-        if(this.row.gossip_menu_id.get()>0) {
-            return Gossips.load(this.row.gossip_menu_id.get(), this, this);
-        } else {
-            const gossip = Gossips.create(this,this);
-            this.row.gossip_menu_id.set(gossip.ID);
-            return gossip;
-        }
+        return new Gossip(this, this, this.row.gossip_menu_id);
     }
-    get GossipID() { return this.wrap(this.row.gossip_menu_id); }
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
     get Scale() { return this.wrap(this.row.scale); }

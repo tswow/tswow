@@ -17,21 +17,59 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
 import { npc_textRow } from "wotlkdata/sql/types/npc_text";
-import { GOCreature } from "../Base/GOorCreature";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
+import { Cell } from "wotlkdata/cell/Cell";
+import { Transient } from "wotlkdata/cell/Transient";
+import { SQL } from "wotlkdata";
+import { GOCreature } from "../Base/GOorCreature";
+import { Ids } from "../Base/Ids";
 
 export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
-    readonly menuRow: gossip_menuRow;
-    readonly textRow: npc_textRow;
+    @Transient
+    protected _menuRow: gossip_menuRow|undefined;
+    @Transient
+    protected _textRow: npc_textRow|undefined;
+    @Transient
     readonly topOwner: T;
+    @Transient
+    protected cell: Cell<number,any>;
 
-    constructor(curOwner: S, topOwner: T, menu: gossip_menuRow, text: npc_textRow) {
+    @Transient
+    get textRow() {
+        // this ensures the text row is created
+        let menuTextId = this.menuRow.TextID.get();
+        if(menuTextId !== this._textRow?.ID.get()) {
+            this._textRow = SQL.npc_text.find({ID:menuTextId})
+        }
+        return this._textRow as npc_textRow;
+    }
+
+    @Transient
+    get menuRow() {
+        if(this.cell.get() === 0) {
+            this.createFromNull()
+        } else if (this._menuRow === undefined || this.cell.get() != this._menuRow.MenuID.get()) {
+            this._menuRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
+            this._textRow = SQL.npc_text.find({ID:this._menuRow.TextID.get()});
+            this.cell.set(this._menuRow.MenuID.get());
+        }
+
+        return this._menuRow as gossip_menuRow;
+    }
+
+    protected createFromNull() {
+        this._menuRow = SQL.gossip_menu.add(Ids.GossipMenu.id(),Ids.NPCText.id());
+        this._textRow = SQL.npc_text.add(this._menuRow.TextID.get());
+        this.cell.set(this._menuRow.MenuID.get());
+        this.Text.clearAll();
+    }
+
+    constructor(curOwner: S, topOwner: T, cell: Cell<number,any>) {
         super(curOwner);
-        this.menuRow = menu;
-        this.textRow = text;
         this.topOwner = topOwner;
+        this.cell = cell;
     }
 
     addLabel(mod: string, label: string) {
@@ -39,6 +77,10 @@ export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
         return this;
     }
 
+    setID(id: number) {
+        this.cell.set(id);
+        return this.owner;
+    }
 
     get Text() : GossipTextArray<S,G,T> { 
         return new GossipTextArray(this); 

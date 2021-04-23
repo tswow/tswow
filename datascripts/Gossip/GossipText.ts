@@ -24,6 +24,7 @@ import { GOCreature } from "../Base/GOorCreature";
 import { Ids } from "../Base/Ids";
 import { SQLLocSystem } from "../Base/SQLLocSystem";
 import { Gossip } from "./Gossip";
+import { Transient } from "wotlkdata/cell/Transient";
 
 function getNpcText(id: number) {
     let text = SQL.npc_text.find({ID: id});
@@ -139,6 +140,21 @@ function probability(id: number, index: number) {
     }
 }
 
+function broadcastID(id: number, index: number) {
+    const text = getNpcText(id);
+    switch(index) {
+        case 0: return text.BroadcastTextID0;
+        case 1: return text.BroadcastTextID1;
+        case 2: return text.BroadcastTextID2;
+        case 3: return text.BroadcastTextID3;
+        case 4: return text.BroadcastTextID4;
+        case 5: return text.BroadcastTextID5;
+        case 6: return text.BroadcastTextID6;
+        case 7: return text.BroadcastTextID7;
+        default: throw new Error(`Internal error: Invalid emote index: ${index} (max is 7)`)
+    }
+}
+
 function emote(id: number, index: number) {
     const text = getNpcText(id);
     switch(index) {
@@ -192,6 +208,12 @@ export class GossipText<S,G,T extends GOCreature<G>> extends SQLLocSystem<Gossip
 export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gossip<S,G,T>> {
     clear(): Gossip<S,G,T> {
         this.Probability.set(0);
+        this.MaleText.clear();
+        this.FemaleText.clear();
+        this.Emote.set(0);
+        this.EmoteDelay.set(0);
+        this.Probability.set(0);
+        this.BroadcastID.set(0);
         return this.owner;
     }
     isClear(): boolean {
@@ -207,6 +229,9 @@ export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gos
     get Probability() { return this.wrap(probability(this.ID, this.index)); }
     get Emote() { return this.wrap(emote(this.ID, this.index)); }
     get EmoteDelay() { return this.wrap(emoteDelay(this.ID, this.index)); }
+
+    @Transient
+    protected get BroadcastID() { return this.wrap(broadcastID(this.ID, this.index))}
 }
 
 export class GossipTextArray<S,G,T extends GOCreature<G>> extends SystemArray<GossipTextEntry<S,G,T>,Gossip<S,G,T>> {

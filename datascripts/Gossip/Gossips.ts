@@ -18,6 +18,7 @@ import { SQL } from "wotlkdata";
 import { GOCreature } from "../Base/GOorCreature";
 import { Ids } from "../Base/Ids"
 import { Gossip } from "./Gossip";
+import { TopCell } from "../Refs/SharedRef";
 
 export const Gossips = {
     create<S,G,T extends GOCreature<G>>(directOwner?: S, topOwner?: T){
@@ -25,7 +26,7 @@ export const Gossips = {
         const text = Ids.NPCText.id();
         const gossipRow = SQL.gossip_menu.add(id, text)
             .VerifiedBuild.set(17688)
-        const textRow = SQL.npc_text.add(text)
+        SQL.npc_text.add(text)
             .BroadcastTextID0.set(0)
             .BroadcastTextID1.set(0)
             .BroadcastTextID2.set(0)
@@ -35,12 +36,10 @@ export const Gossips = {
             .BroadcastTextID6.set(0)
             .BroadcastTextID7.set(0)
             .VerifiedBuild.set(17688)
-        return new Gossip<S,G,T>(directOwner as S, topOwner as T,gossipRow,textRow);
+        return new Gossip<S,G,T>(directOwner as S, topOwner as T,new TopCell(gossipRow.MenuID.get()));
     },
 
     load<S,G,T extends GOCreature<G>>(id: number, directOwner?: S, topOwner?: T) {
-        const gossip = SQL.gossip_menu.find({MenuID:id});
-        const text = SQL.npc_text.find({ID:gossip.TextID.get()});
-        return new Gossip<S,G,T>(directOwner as S, topOwner as T, gossip, text);
+        return new Gossip<S,G,T>(directOwner as S, topOwner as T, new TopCell(id));
     }
 }

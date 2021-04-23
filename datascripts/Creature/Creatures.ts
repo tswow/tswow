@@ -65,7 +65,7 @@ export const CreatureTemplates = {
                 .HoverHeight.set(0)
         } else {
             return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-                .clone(Ids.CreatureTemplate.id(mod, id))).GossipID.set(0)
+                .clone(Ids.CreatureTemplate.id(mod, id))).Gossip.setID(0)
         }
     },
 
