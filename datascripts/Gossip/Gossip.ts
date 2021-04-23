@@ -23,8 +23,8 @@ import { GossipTextArray } from "./GossipText";
 import { Cell } from "wotlkdata/cell/Cell";
 import { Transient } from "wotlkdata/cell/Transient";
 import { SQL } from "wotlkdata";
-import { GOCreature } from "../Base/GOorCreature";
-import { Ids } from "../Base/Ids";
+import { GOCreature } from "../Misc/GOorCreature";
+import { Ids } from "../Misc/Ids";
 
 export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
     @Transient

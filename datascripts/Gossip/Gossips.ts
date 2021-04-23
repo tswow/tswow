@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { GOCreature } from "../Base/GOorCreature";
-import { Ids } from "../Base/Ids"
+import { GOCreature } from "../Misc/GOorCreature";
+import { Ids } from "../Misc/Ids"
 import { Gossip } from "./Gossip";
 import { TopCell } from "../Refs/SharedRef";
 

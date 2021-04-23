@@ -20,9 +20,9 @@ import { WrappedLoc } from "wotlkdata/cell/WrappedLoc";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { GOCreature } from "../Base/GOorCreature";
-import { Ids } from "../Base/Ids";
-import { SQLLocSystem } from "../Base/SQLLocSystem";
+import { GOCreature } from "../Misc/GOorCreature";
+import { Ids } from "../Misc/Ids";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Gossip } from "./Gossip";
 import { Transient } from "wotlkdata/cell/Transient";
 

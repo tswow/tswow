@@ -18,13 +18,13 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { Vector3 } from "wotlkdata/cell/systems/Vector3"
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { SpellAnimation } from "./SpellAnimation";
 import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKitModelAttach";
-import { Attachment } from "../Base/Attachment";
-import { Vec3 } from "../Base/Vec3";
+import { Attachment } from "../Misc/Attachment";
+import { Vec3 } from "../Misc/Vec3";
 import { SpellVisualEffect, SpellVisualEffects } from "./SpellVisualEffect";
 import { Cell } from "wotlkdata/cell/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";

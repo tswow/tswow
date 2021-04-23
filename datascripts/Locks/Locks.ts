@@ -1,6 +1,6 @@
 import { LockType } from "./LockType"
 import { DBC } from "wotlkdata"
-import { Ids } from "../Base/Ids"
+import { Ids } from "../Misc/Ids"
 import { SimpleLock } from "./SimpleLock"
 import { TopCell } from "../Refs/SharedRef";
 

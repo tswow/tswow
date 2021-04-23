@@ -2,7 +2,7 @@ import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { MaskCell } from "wotlkdata/cell/systems/Mask";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { SkillLine } from "./SkillLine";
 
 export class SkillRaceClassFlags extends MaskCell<SkillRaceClassInfo> {

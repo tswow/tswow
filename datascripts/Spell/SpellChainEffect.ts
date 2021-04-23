@@ -1,6 +1,6 @@
 import { SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { Cell } from "wotlkdata/cell/Cell";

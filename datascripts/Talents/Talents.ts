@@ -16,7 +16,7 @@
  */
 import { DBC } from "wotlkdata";
 import { TalentTabQuery } from "wotlkdata/dbc/types/TalentTab";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { TalentTree } from "./TalentTree";
 
 export const TalentTrees = {

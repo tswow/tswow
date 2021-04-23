@@ -1,6 +1,6 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
-import { MainEntity } from "../Base/MainEntity";
+import { MainEntity } from "../Misc/MainEntity";
 import { Position } from "../Misc/Position";
 
 export class GameObjectPosition extends Subsystem<GameObjectInstance> {

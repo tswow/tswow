@@ -3,7 +3,7 @@ import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info"
 import { DBC, SQL } from "wotlkdata";
 import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
 import { Cell } from "wotlkdata/cell/Cell";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SoundEntry } from "../sound/SoundEntry";

@@ -1,8 +1,8 @@
 import { Cell } from "wotlkdata/cell/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
-import { Ids } from "../Base/Ids";
-import { MainEntity } from "../Base/MainEntity";
+import { Ids } from "../Misc/Ids";
+import { MainEntity } from "../Misc/MainEntity";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 

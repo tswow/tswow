@@ -16,7 +16,7 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { loc_constructor } from "wotlkdata/primitives";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";

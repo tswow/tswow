@@ -17,7 +17,7 @@
 import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/Cell";
 import { Language } from "wotlkdata/dbc/Localization";
-import { SQLLocSystem } from "../Base/SQLLocSystem";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function getLocale(id: number, lang: Language) {

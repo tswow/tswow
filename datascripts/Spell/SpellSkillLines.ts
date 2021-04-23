@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { ClassType, makeClassmask } from "../Class/ClassType";
 import { makeRacemask, RaceType } from "../Race/RaceType";
 import { Spell } from "./Spell";

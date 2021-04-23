@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
-import { MainEntity } from "../Base/MainEntity";
+import { MainEntity } from "../Misc/MainEntity";
 
 export class Area extends MainEntity<AreaTableRow> {
     get ExploreBit() { return this.row.ExploreFlag.get(); }

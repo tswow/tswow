@@ -16,8 +16,8 @@
  */
 import { DBC } from "wotlkdata";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
-import { Ids } from "../Base/Ids";
-import { MainEntity } from "../Base/MainEntity";
+import { Ids } from "../Misc/Ids";
+import { MainEntity } from "../Misc/MainEntity";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { Talent } from "./Talent";
 

@@ -1,5 +1,5 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "./Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";

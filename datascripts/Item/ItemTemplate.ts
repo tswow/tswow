@@ -17,8 +17,8 @@
 import { DBC, SQL } from "wotlkdata";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
-import { Ids } from "../Base/Ids";
-import { MainEntity } from "../Base/MainEntity";
+import { Ids } from "../Misc/Ids";
+import { MainEntity } from "../Misc/MainEntity";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";

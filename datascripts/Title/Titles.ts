@@ -17,8 +17,8 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
 import { loc_constructor } from "wotlkdata/primitives";
-import { Ids } from "../Base/Ids";
-import { MainEntity } from "../Base/MainEntity";
+import { Ids } from "../Misc/Ids";
+import { MainEntity } from "../Misc/MainEntity";
 
 export class Title extends MainEntity<CharTitlesRow>{
     get Id() {

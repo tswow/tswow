@@ -1,5 +1,5 @@
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { DummyCell } from "wotlkdata/cell/DummyCell";
 import { Cell, CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { pathToIcon } from "../Spell/SpellIcon";

@@ -20,8 +20,8 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
-import { Ids } from "../Base/Ids";
-import { SQLLocSystem } from "../Base/SQLLocSystem";
+import { Ids } from "../Misc/Ids";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
 
 function getLocRow(id: number, lang: Language) {
     const row = SQL.broadcast_text_locale.find({ID: id});

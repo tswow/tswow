@@ -1,4 +1,4 @@
-import { AutoIdGenerator } from "../Base/Ids";
+import { AutoIdGenerator } from "../Misc/Ids";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { Cell } from "wotlkdata/cell/Cell";
 import { AttachedLootSet } from "../Loot/Loot";

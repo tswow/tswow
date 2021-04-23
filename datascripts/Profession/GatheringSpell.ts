@@ -1,6 +1,6 @@
 import { Spell } from "../Spell/Spell";
 import { MainSystem } from "wotlkdata/cell/MainSystem";
-import { SingleArraySystem } from "../Base/SingleArraySystem";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SoundEntry } from "../sound/SoundEntry";

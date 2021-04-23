@@ -1,6 +1,6 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { SoundEntry } from "../sound/SoundEntry";

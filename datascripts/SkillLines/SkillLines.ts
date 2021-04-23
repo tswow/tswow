@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata"
 import { SkillLineQuery } from "wotlkdata/dbc/types/SkillLine";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { SkillLine } from "./SkillLine"
 
 export const SkillLines = {

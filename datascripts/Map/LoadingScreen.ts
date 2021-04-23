@@ -16,8 +16,8 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LoadingScreensRow } from "wotlkdata/dbc/types/LoadingScreens";
-import { Ids } from "../Base/Ids";
-import { MainEntity } from "../Base/MainEntity";
+import { Ids } from "../Misc/Ids";
+import { MainEntity } from "../Misc/MainEntity";
 
 export class LoadingScreen extends MainEntity<LoadingScreensRow> {
     get ID() { return this.row.ID.get(); }

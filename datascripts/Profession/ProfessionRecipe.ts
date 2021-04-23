@@ -3,7 +3,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Profession } from "./Profession";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { std } from "../tswow-stdlib-data";
-import { SingleArraySystem } from "../Base/SingleArraySystem";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 import { SoundEntry } from "../sound/SoundEntry";

@@ -20,7 +20,7 @@ import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_default_trainer";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
-import { SQLLocSystem } from "../Base/SQLLocSystem";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
 import { isTradeskillSpell } from "../Profession/ProfessionType";
 

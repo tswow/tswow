@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { GOCreature } from "../Base/GOorCreature";
+import { GOCreature } from "../Misc/GOorCreature";
 import { GossipOption } from "./GossipOption";
 import { Enum } from "wotlkdata/cell/systems/Enum";
 

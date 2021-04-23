@@ -16,9 +16,9 @@
  */
 import { MaskCell, MaskLongCell } from "wotlkdata/cell/systems/Mask";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
-import { Ids } from "../Base/Ids";
-import { IncludeExclude, IncludeExcludeMask } from "../Base/IncludeExclude";
-import { MainEntity } from "../Base/MainEntity";
+import { Ids } from "../Misc/Ids";
+import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
+import { MainEntity } from "../Misc/MainEntity";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
@@ -36,7 +36,7 @@ import { SpellReputation } from "./SpellReputation";
 import { SpellSkillLineAbilites } from "./SpellSkillLines";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
-import { SingleArraySystem } from "../Base/SingleArraySystem";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { SpellCastTime } from "./SpellCastTime";
 import { SpellMissile } from "./SpellMissile";

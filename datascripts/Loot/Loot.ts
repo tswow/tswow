@@ -18,7 +18,7 @@ import { Cell } from "wotlkdata/cell/Cell";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Misc/Ids";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;

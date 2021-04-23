@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { CharStartOutfitRow } from "wotlkdata/dbc/types/CharStartOutfit";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { InventoryType } from "../Item/ItemInventoryType";
 import { Class } from "./Class";
 

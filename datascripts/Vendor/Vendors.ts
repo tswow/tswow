@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { Vendor } from "./Vendor"
 
 export const Vendors = {

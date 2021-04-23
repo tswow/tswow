@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MapRow } from "wotlkdata/dbc/types/Map";
-import { MainEntity } from "../Base/MainEntity";
+import { MainEntity } from "../Misc/MainEntity";
 import { XYCell } from "../Misc/XYCell";
 import { MapInstanceType } from "./MapInstanceType";
 

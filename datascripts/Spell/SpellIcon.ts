@@ -17,7 +17,7 @@
 import { Cell } from "wotlkdata/cell/Cell";
 import { DummyCell } from "wotlkdata/cell/DummyCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 
 export function pathToIcon(path: string) {
     let old = DBC.SpellIcon.find({TextureFilename:path})

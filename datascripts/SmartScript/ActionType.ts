@@ -17,7 +17,7 @@
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
 import { SQL } from "wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
-import { ReactState, resolveReactState } from "../Base/ReactState"
+import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { b2i } from "../Misc/BasicConversion"
 import { SmartScript } from "./SmartScript"
 import { resolveSummonType, SummonType } from "./SummonType"

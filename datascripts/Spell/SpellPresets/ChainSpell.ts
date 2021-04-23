@@ -1,7 +1,7 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { SchoolMask } from "../../Misc/School";
-import { MulticastCell } from "../../Base/MulticastCell";
+import { MulticastCell } from "../../Misc/MulticastCell";
 import { SpellChainEffect } from "../SpellChainEffect";
 import { SoundEntry } from "../../sound/SoundEntry";
 import { SoundEntrySimple } from "../../sound/SoundEntrySimple";

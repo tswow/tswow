@@ -15,7 +15,7 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { Cell } from "wotlkdata/cell/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";

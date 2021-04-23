@@ -1,4 +1,4 @@
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { ScriptPath } from "./ScriptPath"
 
 export const ScriptPaths = {

@@ -15,7 +15,7 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { std } from "../tswow-stdlib-data";
 import { ItemVisualModels } from "./ItemVisualModels";
 import { ItemIcon } from "./ItemIcon";

@@ -2,7 +2,7 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Cell } from "wotlkdata/cell/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SoundType } from "./SoundType";
-import { Ids, AutoIdGenerator } from "../Base/Ids";
+import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";

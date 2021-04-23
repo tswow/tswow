@@ -1,7 +1,7 @@
 import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Misc/Ids";
 import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 

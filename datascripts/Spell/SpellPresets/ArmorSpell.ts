@@ -1,7 +1,7 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { SpellAnimation } from "../SpellAnimation";
-import { MulticastCell } from "../../Base/MulticastCell";
+import { MulticastCell } from "../../Misc/MulticastCell";
 import { SoundEntrySimple } from "../../sound/SoundEntrySimple";
 
 export class ArmorSpell extends SpellPreset {

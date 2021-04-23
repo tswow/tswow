@@ -1,7 +1,7 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/dbc/types/Achievement_Criteria";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { Achievement } from "./Achievement";
 
 export class AchievementCriteria extends Subsystem<Achievement> {

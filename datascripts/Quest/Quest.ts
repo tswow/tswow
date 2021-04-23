@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
-import { MainEntity } from "../Base/MainEntity";
+import { MainEntity } from "../Misc/MainEntity";
 import { QuestFlags } from "./QuestFlags";
 import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";

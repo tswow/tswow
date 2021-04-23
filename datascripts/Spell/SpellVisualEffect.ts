@@ -3,7 +3,7 @@ import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectN
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Misc/Ids";
 import { Transient } from "wotlkdata/cell/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 

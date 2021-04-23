@@ -6,7 +6,7 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { PendingCell } from "wotlkdata/cell/PendingCell";
 import { Spell } from "../Spell/Spell";
 import { SkillLine } from "../SkillLines/SkillLine";
-import { MulticastCell } from "../Base/MulticastCell";
+import { MulticastCell } from "../Misc/MulticastCell";
 
 export abstract class ProfessionLocSystem extends LocSystem<Profession> {
     protected abstract forSpell(spell: Spell): LocSystem<any>

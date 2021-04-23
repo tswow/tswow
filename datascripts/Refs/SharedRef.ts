@@ -1,9 +1,9 @@
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { AutoIdGenerator } from "../Base/Ids";
+import { AutoIdGenerator } from "../Misc/Ids";
 import { Cell } from "wotlkdata/cell/Cell";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { DBCKeyCell } from "wotlkdata/dbc/DBCCell";
-import { MulticastCell } from "../Base/MulticastCell";
+import { MulticastCell } from "../Misc/MulticastCell";
 import { Transient } from "wotlkdata/cell/Transient";
 
 export interface SharedRefRow {

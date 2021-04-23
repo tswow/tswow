@@ -20,7 +20,7 @@ import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_offer_rewardRow } from "wotlkdata/sql/types/quest_offer_reward";
 import { quest_request_itemsRow } from "wotlkdata/sql/types/quest_request_items";
-import { SQLLocSystem } from "../Base/SQLLocSystem";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Quest } from "./Quest";
 
 interface QuestEmote {

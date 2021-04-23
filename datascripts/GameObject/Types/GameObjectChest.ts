@@ -18,7 +18,7 @@ import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
 import { SharedRefs } from "../../Refs/SharedRefs";
 import { SQL } from "wotlkdata";
-import { Ids } from "../../Base/Ids";
+import { Ids } from "../../Misc/Ids";
 import { AttachedLootSet } from "../../Loot/Loot";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { SimpleLock } from "../../Locks/SimpleLock";

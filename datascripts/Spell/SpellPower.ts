@@ -16,7 +16,7 @@
  */
 import { DBC } from "wotlkdata";
 import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
 
 export class SpellPower<T> extends Subsystem<T> {

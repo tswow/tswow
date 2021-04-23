@@ -1,6 +1,6 @@
 import { Spells } from "../Spells";
 import { SchoolMask } from "../../Misc/School";
-import { MulticastCell } from "../../Base/MulticastCell";
+import { MulticastCell } from "../../Misc/MulticastCell";
 import { SpellPreset } from "./SpellPreset";
 import { SpellCastTime } from "../SpellCastTime";
 import { SpellRecovery } from "../SpellRecovery";

@@ -18,7 +18,7 @@ import { DBC, SQL } from "wotlkdata"
 import { Subsystem } from "wotlkdata/cell/Subsystem"
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility"
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo"
-import { Ids } from "../Base/Ids"
+import { Ids } from "../Misc/Ids"
 import { Class } from "./Class"
 
 export class EquipSystem extends Subsystem<Class> {

@@ -17,7 +17,7 @@
 import { load } from "js-yaml";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateQuery } from "wotlkdata/sql/types/quest_template";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { Quest } from "./Quest";
 
 export const Quests = {

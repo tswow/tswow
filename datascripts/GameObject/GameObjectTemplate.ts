@@ -16,8 +16,8 @@
  */
 import { SQL } from "wotlkdata";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
-import { GOCreature } from "../Base/GOorCreature";
-import { Ids } from "../Base/Ids";
+import { GOCreature } from "../Misc/GOorCreature";
+import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";

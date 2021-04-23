@@ -17,7 +17,7 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery } from "wotlkdata/dbc/types/Spell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Base/Ids";
+import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
 import { SpellRanks } from "./SpellRanks";
 import { TotemCreatures } from "./TotemCreatures";

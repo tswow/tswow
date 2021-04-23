@@ -1,7 +1,7 @@
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
-import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata";
 import { SoundEntry } from "./SoundEntry";
 

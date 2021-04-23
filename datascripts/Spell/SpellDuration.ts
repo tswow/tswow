@@ -18,7 +18,7 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";
-import { AutoIdGenerator, Ids } from "../Base/Ids";
+import { AutoIdGenerator, Ids } from "../Misc/Ids";
 
 export class SpellDuration<T> extends SharedRef<T, SpellDurationRow> {
     table(): SharedRefTable<SpellDurationRow> {

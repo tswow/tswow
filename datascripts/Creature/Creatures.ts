@@ -17,7 +17,7 @@
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureQuery } from "wotlkdata/sql/types/creature";
 import { creature_templateQuery } from "wotlkdata/sql/types/creature_template";
-import { Ids } from "../Base/Ids"
+import { Ids } from "../Misc/Ids"
 import { Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 import { CreatureTemplate } from "./CreatureTemplate";

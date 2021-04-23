@@ -1,5 +1,5 @@
 import { Spells } from "../Spells";
-import { MulticastCell } from "../../Base/MulticastCell";
+import { MulticastCell } from "../../Misc/MulticastCell";
 import { SpellPreset } from "./SpellPreset";
 import { SpellAnimation } from "../SpellAnimation";
 
