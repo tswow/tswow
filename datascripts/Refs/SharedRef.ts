@@ -5,7 +5,6 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { DBCKeyCell } from "wotlkdata/dbc/DBCCell";
 import { MulticastCell } from "../Base/MulticastCell";
 import { Transient } from "wotlkdata/cell/Transient";
-import { ArrayEntry } from "wotlkdata/cell/systems/SystemArray";
 
 export interface SharedRefRow {
     ID: DBCKeyCell<any>;
@@ -57,8 +56,8 @@ export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> ext
 
     get ID() { return this.cell.get(); }
 
-    setID(pos: number) {
-        this.cell.set(pos);
+    setID(id: number) {
+        this.cell.set(id);
         return this.owner;
     }
 
@@ -95,9 +94,13 @@ export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> ext
 
     makeUnique(): this {
         let id = this.ids().id();
-        this._row = this.getRow().clone(id)
+        if(this.cell.get() === 0) {
+            this._row = this.table().add(id)
+            this.clear()
+        } else {
+            this._row = this.getRow().clone(id)
+        }
         this.cell.set(id);
         return this;
     }
-
 }
