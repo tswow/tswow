@@ -50,7 +50,7 @@ export class SpellVisualKitModelAttach<T> extends Subsystem<T> {
     get Effect() { return new SpellVisualEffect(this, [this.row.SpellVisualEffectNameID]) }
 }
 
-export class SpellVisualKitModels<T extends BaseSystem> extends Subsystem<SpellVisualKit<T>> {
+export class SpellVisualKitModels<T> extends Subsystem<SpellVisualKit<T>> {
     constructor(owner: SpellVisualKit<T>) {
         super(owner);
     }
@@ -71,7 +71,7 @@ export class SpellVisualKitModels<T extends BaseSystem> extends Subsystem<SpellV
     }
 }
 
-export class SpellVisualKit<T extends BaseSystem> extends SharedRef<T,SpellVisualKitRow> {
+export class SpellVisualKit<T> extends SharedRef<T,SpellVisualKitRow> {
     table(): SharedRefTable<SpellVisualKitRow> {
         return DBC.SpellVisualKit;
     }
@@ -136,7 +136,7 @@ export class SpellVisualKit<T extends BaseSystem> extends SharedRef<T,SpellVisua
     }
 }
 
-export class SpellVisual<T extends BaseSystem> extends SharedRef<T, SpellVisualRow> {
+export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
     constructor(owner: T, ptrs: Cell<number,any>[]) {
         super(owner,ptrs);
     }

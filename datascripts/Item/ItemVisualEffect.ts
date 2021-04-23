@@ -49,7 +49,7 @@ export class ItemEffectCell<T> extends ArrayEntry<T> {
     }
 }
 
-export class ItemEffects<T extends BaseSystem> extends SharedRef<T,ItemVisualsRow> {
+export class ItemEffects<T> extends SharedRef<T,ItemVisualsRow> {
     table(): SharedRefTable<ItemVisualsRow> {
         return DBC.ItemVisuals;
     }

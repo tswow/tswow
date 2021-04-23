@@ -28,7 +28,7 @@ export class VisualScale<T> extends Subsystem<T> {
     }
 }
 
-export class SpellVisualEffect<T extends BaseSystem> extends SharedRef<T, SpellVisualEffectNameRow> {
+export class SpellVisualEffect<T> extends SharedRef<T, SpellVisualEffectNameRow> {
     table(): SharedRefTable<SpellVisualEffectNameRow> {
         return DBC.SpellVisualEffectName;
     }
@@ -58,7 +58,7 @@ export class SpellVisualEffect<T extends BaseSystem> extends SharedRef<T, SpellV
     }
 }
 
-export class SpellVisualEffects<T extends BaseSystem> extends Subsystem<T> {
+export class SpellVisualEffects<T> extends Subsystem<T> {
     @Transient
     protected row: SpellVisualKitRow; 
 

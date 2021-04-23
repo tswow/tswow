@@ -13,7 +13,7 @@ export class CameraShakeType<T> extends Enum<T> {
     setDecayedSine() { return this.set(1); }
 }
 
-export class CameraShakes<T extends BaseSystem> extends SharedRef<T,CameraShakesRow> {
+export class CameraShakes<T> extends SharedRef<T,CameraShakesRow> {
 
     table(): SharedRefTable<CameraShakesRow> {
         return DBC.CameraShakes;

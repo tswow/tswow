@@ -9,7 +9,7 @@ import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { Transient, TransientOn } from "wotlkdata/cell/Transient";
 
-export class SoundEntryName<T extends BaseSystem> extends Subsystem<SoundEntry<T>> {
+export class SoundEntryName<T> extends Subsystem<SoundEntry<T>> {
     get() {
         return this.owner.row.Name.get();
     }
@@ -23,7 +23,7 @@ export class SoundEntryName<T extends BaseSystem> extends Subsystem<SoundEntry<T
     }
 }
 
-export class SoundEntry<T extends BaseSystem> extends SharedRef<T, SoundEntriesRow>{
+export class SoundEntry<T> extends SharedRef<T, SoundEntriesRow>{
     table(): SharedRefTable<SoundEntriesRow> {
         return DBC.SoundEntries;
     }

@@ -8,7 +8,7 @@ import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SoundEntry } from "../sound/SoundEntry";
 
-export class CreatureModel<T extends BaseSystem> extends SharedRef<T,CreatureModelDataRow> {
+export class CreatureModel<T> extends SharedRef<T,CreatureModelDataRow> {
     table(): SharedRefTable<CreatureModelDataRow> {
         return DBC.CreatureModelData;
     }
@@ -59,7 +59,7 @@ export class CreatureModel<T extends BaseSystem> extends SharedRef<T,CreatureMod
     get MissileCollisionRaise() { return this.wrap(this.row.MissileCollisionRaise); }
 }
 
-export class CreatureVisual<T extends BaseSystem> extends SharedRef<T,CreatureDisplayInfoRow> {
+export class CreatureVisual<T> extends SharedRef<T,CreatureDisplayInfoRow> {
     table(): SharedRefTable<CreatureDisplayInfoRow> {
         return DBC.CreatureDisplayInfo
     }

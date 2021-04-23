@@ -5,7 +5,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { Cell } from "wotlkdata/cell/Cell";
 
-export class SpellChainEffect<T extends BaseSystem> extends SharedRef<T, SpellChainEffectsRow>  {
+export class SpellChainEffect<T> extends SharedRef<T, SpellChainEffectsRow>  {
     table(): SharedRefTable<SpellChainEffectsRow> {
         return DBC.SpellChainEffects;
     }

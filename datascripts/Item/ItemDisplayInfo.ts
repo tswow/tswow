@@ -26,7 +26,7 @@ import { ItemEffects } from "./ItemVisualEffect";
 import { SpellVisual } from "../Spell/SpellVisual";
 import { ParticleColor } from "../Misc/ParticleColor";
 
-export class ItemDisplayInfo<T extends BaseSystem> extends SharedRef<T, ItemDisplayInfoRow> {
+export class ItemDisplayInfo<T> extends SharedRef<T, ItemDisplayInfoRow> {
 
     table(): SharedRefTable<ItemDisplayInfoRow> {
         return DBC.ItemDisplayInfo

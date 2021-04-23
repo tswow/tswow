@@ -16,11 +16,11 @@ export interface SharedRefTable<T extends SharedRefRow> {
     findById(id: number): T;
 }
 
-function shouldClone(gen: AutoIdGenerator, holder: BaseSystem, cell: Cell<number,any>) {
+function shouldClone(gen: AutoIdGenerator, holder: any, cell: Cell<number,any>) {
     return !AutoIdGenerator.isCustom(gen, cell.get()) && BaseSystem.getUniqueRefs(holder);
 }
 
-export class TopSystem extends BaseSystem {
+export class TopSystem {
     
 }
 
@@ -41,7 +41,7 @@ export class TopCell extends Cell<number,undefined> {
     }
 }
 
-export abstract class SharedRef<T extends BaseSystem,R extends SharedRefRow> extends Subsystem<T> {
+export abstract class SharedRef<T,R extends SharedRefRow> extends Subsystem<T> {
     constructor(owner: T, cells: Cell<number,any>[] | Cell<number,any>) {
         super(owner);
         if(!Array.isArray(cells)) {

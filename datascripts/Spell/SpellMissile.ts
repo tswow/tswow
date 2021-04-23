@@ -21,7 +21,7 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
 
-export class SpellMissile<T extends BaseSystem> extends SharedRef<T,SpellMissileRow> {
+export class SpellMissile<T> extends SharedRef<T,SpellMissileRow> {
     table(): SharedRefTable<SpellMissileRow> {
         return DBC.SpellMissile;
     }

@@ -21,7 +21,7 @@ import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class SpellRange<T extends BaseSystem> extends SharedRef<T,SpellRangeRow> {
+export class SpellRange<T> extends SharedRef<T,SpellRangeRow> {
     table(): SharedRefTable<SpellRangeRow> {
         return DBC.SpellRange;
     }

@@ -3,12 +3,12 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { Cell } from "wotlkdata/cell/Cell";
 import { AttachedLootSet } from "../Loot/Loot";
 
-function shouldClone(gen: AutoIdGenerator, holder: BaseSystem, cell: Cell<number,any>) {
+function shouldClone(gen: AutoIdGenerator, holder: any, cell: Cell<number,any>) {
     return !AutoIdGenerator.isCustom(gen, cell.get()) && BaseSystem.getUniqueRefs(holder);
 }
 
 export const SharedRefs = {
-    getOrCreateLoot<T>(holder: BaseSystem, set: AttachedLootSet<T>) {
+    getOrCreateLoot<T>(holder: any, set: AttachedLootSet<T>) {
         let cell = AttachedLootSet.cell(set);
         let idgen = AttachedLootSet.idgen(set);
 

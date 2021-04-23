@@ -20,7 +20,7 @@ import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
-export class SpellDescriptionVariable<T extends BaseSystem> extends SharedRef<T, SpellDescriptionVariablesRow> {
+export class SpellDescriptionVariable<T> extends SharedRef<T, SpellDescriptionVariablesRow> {
     table(): SharedRefTable<SpellDescriptionVariablesRow> {
         return DBC.SpellDescriptionVariables;
     }

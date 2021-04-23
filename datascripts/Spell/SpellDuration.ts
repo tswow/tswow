@@ -20,7 +20,7 @@ import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";
 import { AutoIdGenerator, Ids } from "../Base/Ids";
 
-export class SpellDuration<T extends BaseSystem> extends SharedRef<T, SpellDurationRow> {
+export class SpellDuration<T> extends SharedRef<T, SpellDurationRow> {
     table(): SharedRefTable<SpellDurationRow> {
         return DBC.SpellDuration;
     }

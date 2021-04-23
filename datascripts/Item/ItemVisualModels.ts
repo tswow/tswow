@@ -19,7 +19,7 @@ import { ItemTemplate } from "./ItemTemplate";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
 
-export class ItemVisualModel<T extends BaseSystem> extends ArrayEntry<ItemDisplayInfo<T>> {
+export class ItemVisualModel<T> extends ArrayEntry<ItemDisplayInfo<T>> {
     get Model() { return this.wrapIndex(this.owner.row.ModelName, this.index); }
     get ModelTexture() { return this.wrapIndex(this.owner.row.ModelTexture, this.index); }
 
@@ -34,7 +34,7 @@ export class ItemVisualModel<T extends BaseSystem> extends ArrayEntry<ItemDispla
     }
 }
 
-export class ItemVisualModels<T extends BaseSystem> extends SystemArray<ItemVisualModel<T>,ItemDisplayInfo<T>> {
+export class ItemVisualModels<T> extends SystemArray<ItemVisualModel<T>,ItemDisplayInfo<T>> {
     get length(): number {
         return 2;
     }

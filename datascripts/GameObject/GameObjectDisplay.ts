@@ -4,11 +4,10 @@ import { Ids, AutoIdGenerator } from "../Base/Ids";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { SoundEntry } from "../sound/SoundEntry";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";
 
-export class GameObjectSounds<T extends BaseSystem> extends Subsystem<GameObjectDisplay<T>> {
+export class GameObjectSounds<T> extends Subsystem<GameObjectDisplay<T>> {
     get length(): number { return 10; }
 
     getId(index: number) {
@@ -52,7 +51,7 @@ export class GameObjectSounds<T extends BaseSystem> extends Subsystem<GameObject
     }
 }
 
-export class GameObjectGeoBox<T extends BaseSystem> extends Subsystem<GameObjectDisplay<T>> {
+export class GameObjectGeoBox<T> extends Subsystem<GameObjectDisplay<T>> {
     get MinX() { return this.ownerWrap(this.owner.row.GeoBoxMinX); }
     get MaxX() { return this.ownerWrap(this.owner.row.GeoBoxMaxX); }
     get MinY() { return this.ownerWrap(this.owner.row.GeoBoxMinY); }
@@ -105,7 +104,7 @@ export function cleanGameObjectDisplayRow(row: GameObjectDisplayInfoRow) {
         .Sound.set([0,0,0,0,0,0,0,0,0,0])
 }
 
-export class GameObjectDisplay<T extends BaseSystem> extends SharedRef<T, GameObjectDisplayInfoRow> {
+export class GameObjectDisplay<T> extends SharedRef<T, GameObjectDisplayInfoRow> {
     table(): SharedRefTable<GameObjectDisplayInfoRow> {
         return DBC.GameObjectDisplayInfo;
     }

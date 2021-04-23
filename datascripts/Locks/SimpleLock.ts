@@ -5,7 +5,7 @@ import { AutoIdGenerator, Ids } from "../Base/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class LockType<T extends BaseSystem> extends Enum<SimpleLock<T>> {
+export class LockType<T> extends Enum<SimpleLock<T>> {
     @EnumField(0)
     setNone() { return this.set(0); }
 
@@ -16,7 +16,7 @@ export class LockType<T extends BaseSystem> extends Enum<SimpleLock<T>> {
     setLockType() { return this.set(2); }
 }
 
-export class SimpleLock<T extends BaseSystem> extends SharedRef<T,LockRow>{
+export class SimpleLock<T> extends SharedRef<T,LockRow>{
     table(): SharedRefTable<LockRow> {
         return DBC.Lock
     }

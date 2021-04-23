@@ -5,7 +5,7 @@ import { AutoIdGenerator, Ids } from "../Base/Ids";
 import { DBC } from "wotlkdata";
 import { SoundEntry } from "./SoundEntry";
 
-export class SoundEntrySimple<T extends BaseSystem> extends SharedRef<T, SoundEntriesRow>{
+export class SoundEntrySimple<T> extends SharedRef<T, SoundEntriesRow>{
     table(): SharedRefTable<SoundEntriesRow> {
         return DBC.SoundEntries;
     }

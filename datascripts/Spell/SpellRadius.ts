@@ -20,7 +20,7 @@ import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
-export class SpellRadius<T extends BaseSystem> extends SharedRef<T, SpellRadiusRow> {
+export class SpellRadius<T> extends SharedRef<T, SpellRadiusRow> {
     table(): SharedRefTable<SpellRadiusRow> {
         return DBC.SpellRadius;
     }

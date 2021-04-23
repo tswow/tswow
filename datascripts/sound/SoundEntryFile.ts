@@ -2,7 +2,7 @@ import { SoundEntry } from "./SoundEntry";
 import { SystemArray, ArrayEntry } from "wotlkdata/cell/systems/SystemArray";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
-export class SoundEntryFile<T extends BaseSystem> extends ArrayEntry<SoundEntry<T>> {
+export class SoundEntryFile<T> extends ArrayEntry<SoundEntry<T>> {
     clear(): SoundEntry<T> {
         this.owner.row.File.setIndex(this.index,"");
         this.owner.row.Freq.setIndex(this.index,0);
@@ -23,7 +23,7 @@ export class SoundEntryFile<T extends BaseSystem> extends ArrayEntry<SoundEntry<
     }
 }
 
-export class SoundEntryFiles<T extends BaseSystem> extends SystemArray<SoundEntryFile<T>, SoundEntry<T>> {
+export class SoundEntryFiles<T> extends SystemArray<SoundEntryFile<T>, SoundEntry<T>> {
     get length(): number {
         return 10;
     }

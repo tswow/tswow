@@ -5,7 +5,7 @@ import { AutoIdGenerator, Ids } from "../Base/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CameraShakes } from "./CameraShakes";
 
-export class SpellEffectCameraShakes<T extends BaseSystem> extends SharedRef<T, SpellEffectCameraShakesRow> {
+export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraShakesRow> {
     table(): SharedRefTable<SpellEffectCameraShakesRow> {
         return DBC.SpellEffectCameraShakes;
     }
