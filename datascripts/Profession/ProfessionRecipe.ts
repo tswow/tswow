@@ -6,7 +6,7 @@ import { std } from "../tswow-stdlib-data";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SpellAnimation } from "../Spell/SpellAnimation";
-import { SoundEntry } from "../sound/SoundEntry";
+import { SoundEntry } from "../Sound/SoundEntry";
 
 export class RecipeRank extends Subsystem<ProfessionRecipe> {
     protected readonly spell: Spell;

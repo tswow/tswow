@@ -3,7 +3,7 @@ import { MainSystem } from "wotlkdata/cell/MainSystem";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 import { SpellCastTime } from "../Spell/SpellCastTime";
-import { SoundEntry } from "../sound/SoundEntry";
+import { SoundEntry } from "../Sound/SoundEntry";
 
 export class GatheringSpell extends MainSystem {
     readonly Raw: Spell

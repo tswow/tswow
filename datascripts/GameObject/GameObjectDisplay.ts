@@ -3,7 +3,7 @@ import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayI
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { CellIndexWrapper } from "wotlkdata/cell/Cell";
-import { SoundEntry } from "../sound/SoundEntry";
+import { SoundEntry } from "../Sound/SoundEntry";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";
 

@@ -2,7 +2,7 @@ import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { Spell } from "../Spell";
 import { MulticastCell } from "../../Misc/MulticastCell";
-import { SoundEntrySimple } from "../../sound/SoundEntrySimple";
+import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 import { SpellAnimation } from "../SpellAnimation";
 
 export class SummonSpell extends SpellPreset {

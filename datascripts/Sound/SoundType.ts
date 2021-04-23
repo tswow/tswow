@@ -1,4 +1,4 @@
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { Enum, EnumField } from "./node_modules/wotlkdata/cell/systems/Enum";
 
 export class SoundType<T> extends Enum<T> {
     @EnumField(0)

@@ -1,7 +1,7 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { MulticastCell } from "../../Misc/MulticastCell";
-import { SoundEntrySimple } from "../../sound/SoundEntrySimple";
+import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 import { Ids } from "../../Misc/Ids";
 import { DBC } from "wotlkdata";
 import { Spell } from "../Spell";

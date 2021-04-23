@@ -6,7 +6,7 @@ import { Cell } from "wotlkdata/cell/Cell";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
-import { SoundEntry } from "../sound/SoundEntry";
+import { SoundEntry } from "../Sound/SoundEntry";
 
 export class CreatureModel<T> extends SharedRef<T,CreatureModelDataRow> {
     table(): SharedRefTable<CreatureModelDataRow> {

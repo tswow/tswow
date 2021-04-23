@@ -1,6 +1,6 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
-import { SoundEntrySimple } from "../../sound/SoundEntrySimple";
+import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 import { SpellAnimation } from "../SpellAnimation";
 
 export class PaladinAura extends SpellPreset {

@@ -2,7 +2,7 @@ import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { SpellAnimation } from "../SpellAnimation";
 import { MulticastCell } from "../../Misc/MulticastCell";
-import { SoundEntrySimple } from "../../sound/SoundEntrySimple";
+import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 
 export class ArmorSpell extends SpellPreset {
     static create(mod: string, id: string) {

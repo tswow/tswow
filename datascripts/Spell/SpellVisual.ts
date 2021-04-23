@@ -29,7 +29,7 @@ import { SpellVisualEffect, SpellVisualEffects } from "./SpellVisualEffect";
 import { Cell } from "wotlkdata/cell/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { BaseSystem } from "wotlkdata/cell/BaseSystem";
-import { SoundEntry } from "../sound/SoundEntry";
+import { SoundEntry } from "../Sound/SoundEntry";
 import { SpellEffectCameraShakes } from "./SpellEffectCameraShakes";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 

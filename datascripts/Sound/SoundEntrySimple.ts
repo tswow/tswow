@@ -1,8 +1,8 @@
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { BaseSystem } from "./node_modules/wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
+import { SoundEntriesRow } from "./node_modules/wotlkdata/dbc/types/SoundEntries";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { DBC } from "wotlkdata";
+import { DBC } from "./node_modules/wotlkdata";
 import { SoundEntry } from "./SoundEntry";
 
 export class SoundEntrySimple<T> extends SharedRef<T, SoundEntriesRow>{
