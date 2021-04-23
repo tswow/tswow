@@ -1,5 +1,6 @@
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
+import { BUILD_TYPES } from "../util/BuildType";
 
 /**
  * Used to track what type an identifier refers to
@@ -12,7 +13,7 @@ export namespace Identifiers {
 
     const keywords = [
         'all'
-    ]
+    ].concat(BUILD_TYPES)
 
     export function assertUnused(identifier: string) {
         let prev = getType(identifier);

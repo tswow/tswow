@@ -7,6 +7,7 @@ import { commands } from "./Commands";
 import { Realm } from "./Realm";
 import { NodeConfig } from "./NodeConfig";
 import { Datasets } from "./Dataset";
+import { BuildType, findBuildType } from "../util/BuildType";
 
 export namespace AuthServer {
     const authserver = new Process().showOutput(true);
@@ -28,7 +29,7 @@ export namespace AuthServer {
         return authserver.stop();
     }
 
-    export async function start(type: 'Release'|'Debug' = 'Release') {
+    export async function start(type: BuildType = NodeConfig.default_build_type) {
         await stop();
         if(authserver.isRunning()) {
             throw new Error(`Something else started the auth server while it was stopping`);
@@ -61,7 +62,7 @@ export namespace AuthServer {
         await mysql.installAuth(connection);
 
         if(NodeConfig.autostart_authserver) {
-            await start(process.argv.includes('debug')?'Debug':'Release');
+            await start(NodeConfig.default_build_type);
         }
 
         AuthServer.command.addCommand(
@@ -79,7 +80,7 @@ export namespace AuthServer {
             ,'Starts the local authserver'
             ,async (args)=>{
 
-            await start(args[0]=='debug'?'Debug':'Release');
+            await start(findBuildType(args));
         });
     }
 }

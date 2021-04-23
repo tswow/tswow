@@ -10,6 +10,7 @@ import { Datasets } from "./Dataset";
 import { NodeConfig } from "./NodeConfig";
 import { Identifiers } from "./Identifiers";
 import { realmYaml } from "../util/ConfigFiles";
+import { BuildType, DEFAULT_BUILD_TYPE, findBuildType } from "../util/BuildType";
 
 
 export namespace Realm {
@@ -72,7 +73,7 @@ export namespace Realm {
         worldserver: Process;
         config: RealmConfig;
         set: Datasets.Dataset;
-        lastBuildType: 'Release'|'Debug' = 'Release';
+        lastBuildType: BuildType = DEFAULT_BUILD_TYPE;
 
         constructor(name: string) {
             this.identifier = name;
@@ -111,7 +112,7 @@ export namespace Realm {
             return this.worldserver.stop();
         }
 
-        async startWorldserver(type: 'Release'|'Debug') {
+        async startWorldserver(type: BuildType) {
             term.log(`Starting worlserver for realm ${this.config.realm_name}...`)
             this.lastBuildType = type;
             await this.connect();
@@ -289,11 +290,12 @@ export namespace Realm {
 
         realm.addCommand(
               'start'
-            , 'debug|release?, realmnames[] | all'
+            , 'debug|release|relwithdebinfo?, realmnames[] | all'
             , 'Starts one, multiple or all realms'
             , async (args)=>{
-            let type : 'Release'|'Debug' 
-                = args.includes('debug') ? 'Debug' : 'Release';
+
+            let type = findBuildType(args,NodeConfig.default_build_type);
+
             let realms = getRealmsOrDefault(args);
             await Promise.all(
                 realms.map(x=>x.startWorldserver(type)));
@@ -318,7 +320,7 @@ export namespace Realm {
 
             getRealmsOrDefault(args).forEach(x=>{
                 if(x.worldserver.isRunning()) {
-                    term.success(`Realm ${x.identifier} is running`);
+                    term.success(`Realm ${x.identifier} is running (${x.lastBuildType})`);
                 } else {
                     term.error(`Realm ${x.identifier} is not running`);
                 }
@@ -350,6 +352,6 @@ export namespace Realm {
             wfs.mkDirs(ipaths.realms);
         }
 
-        NodeConfig.autostart_realms.forEach(x=>x.startWorldserver('Release'));
+        NodeConfig.autostart_realms.forEach(x=>x.startWorldserver(NodeConfig.default_build_type));
     }
 }

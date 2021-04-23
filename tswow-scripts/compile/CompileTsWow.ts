@@ -66,8 +66,10 @@ async function compile(type: string, compileArgs: string[]) {
     if (types.includes('full') || types.includes('release')) {
         await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs.concat(['dynamic']));
         await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs.concat(['dynamic']));
+        await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs.concat(['dynamic']));
     } else {
         if (isType('trinitycore-release')) { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
+        if (isType('trinitycore') || isType('trinitycore-relwithdebinfo')) { await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
         if (isType('trinitycore-debug') && isWindows()) { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
     }
 
@@ -105,7 +107,7 @@ async function main() {
     await compile('scripts', []);
 
     const installedPrograms =
-        ['trinitycore-release', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',
+        ['trinitycore','trinitycore-release', 'trinitycore-relwithdebinfo', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',
          'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build', 'release'];
 
     for (const val of installedPrograms) {

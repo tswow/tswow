@@ -248,45 +248,46 @@ export class InstallPaths {
         return mpath(this.addonInclude,'RequireStub.lua')
     }
 
-    tc(type: 'Release'|'Debug') {
+    tc(type: BuildType) {
         return mpath(this.bin, 'trinitycore', type);
     }
 
-    tcScripts(type: 'Release'|'Debug') {
+    tcScripts(type: BuildType) {
         return mpath(this.tc(type), 'scripts');
     }
 
-    tcWorldserver(type: 'Release'|'Debug') {
+    tcWorldserver(type: BuildType) {
         return isWindows()
             ? mpath(this.tc(type),'worldserver.exe')
             : mpath(this.tc(type),'worldserver')
     }
 
-    tcAuthServer(type: 'Release'|'Debug') {
+    tcAuthServer(type: BuildType) {
         return isWindows()
             ? mpath(this.tc(type),'authserver.exe')
             : mpath(this.tc(type), 'authserver');
     }
 
-    tcModuleScript(type: 'Release'|'Debug', mod: string) {
+    tcModuleScript(type: BuildType, mod: string) {
         return isWindows()
             ? mpath(this.tcScripts(type),`scripts_tswow_${mod}.dll`)
             : mpath(this.tcScripts(type),`libscripts_tswow_${mod}.so`);
     }
 
-    tcModulePdb(type: 'Release'|'Debug',mod: string) {
-        return mpath(this.tcScripts(type), `${mod}.pdb`);
+    tcModulePdb(type: BuildType,mod: string) {
+        return mpath(this.tcScripts(type), `scripts_tswow_${mod}.pdb`);
     }
 
-    get tcTypes(): ('Release'|'Debug')[] {
-        return ['Release','Debug'];
+    // TODO: remove
+    get tcTypes(): (BuildType)[] {
+        return BUILD_TYPES;
     }
 
-    tcAuthserverDist(type: 'Release'|'Debug') {
+    tcAuthserverDist(type: BuildType) {
         return mpath(this.tc(type),'authserver.conf.dist')
     }
 
-    tcWorldserverDist(type: 'Release'|'Debug') {
+    tcWorldserverDist(type: BuildType) {
         return mpath(this.tc(type),'worldserver.conf.dist');
     }
 
@@ -498,7 +499,7 @@ export class InstallPaths {
         return mpath(this.moduleScripts(mod),'build');
     }
 
-    moduleScriptsLib(mod: string, type: 'Release'|'Debug') {
+    moduleScriptsLib(mod: string, type: BuildType) {
         return isWindows()
             ? mpath(this.moduleScriptsBuild(mod), 'lib',type)
             : mpath(this.moduleScriptsBuild(mod), 'lib')
@@ -509,7 +510,7 @@ export class InstallPaths {
      * @param mod 
      * @param type 
      */
-    moduleScriptsBuiltLibrary(mod: string, type: 'Release'|'Debug') {
+    moduleScriptsBuiltLibrary(mod: string, type: BuildType) {
         return isWindows()
             ? mpath(this.moduleScriptsLib(mod,type),`${mod}.dll`)
             : mpath(this.moduleScriptsLib(mod,type),`lib${mod}.so`)
@@ -520,7 +521,7 @@ export class InstallPaths {
      * @param type 
      * @note windows only
      */
-    moduleScriptsBuiltPdb(mod: string, type: 'Release'|'Debug') {
+    moduleScriptsBuiltPdb(mod: string, type: BuildType) {
         return mpath(this.moduleScriptsLib(mod,type), `${mod}.pdb`);
     }
 
@@ -864,3 +865,4 @@ export class SourcePaths {
 export const spaths = new SourcePaths();
 
 import { Datasets } from '../runtime/Dataset';
+import { BuildType, BUILD_TYPES } from './BuildType';

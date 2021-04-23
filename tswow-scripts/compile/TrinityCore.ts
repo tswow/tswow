@@ -23,9 +23,10 @@ import * as fs from 'fs';
 import request from 'request';
 import progress from 'request-progress';
 import { SevenZip } from '../util/7zip';
+import { BuildType } from '../util/BuildType';
 
 export namespace TrinityCore {
-    export async function install(cmake: string, openssl: string, mysql: string, type: 'Release' | 'Debug', args1: string[]) {
+    export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
         term.log('Compiling TrinityCore');
 
         wfs.mkDirs(bpaths.trinitycore);

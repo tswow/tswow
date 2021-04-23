@@ -1,6 +1,7 @@
 import { ipaths } from "../util/Paths";
 import { YamlFile, DatabaseType, databaseSettings } from "../util/Yaml";
 import { Realm } from "./Realm";
+import { DEFAULT_BUILD_TYPE } from "../util/BuildType";
 
 export class NodeConfiguration extends YamlFile {
     constructor() {
@@ -17,6 +18,10 @@ export class NodeConfiguration extends YamlFile {
 
     get use_pooling() {
         return this.get('use_pooling',false);
+    }
+
+    get default_build_type() { 
+        return this.get('default_build_type',DEFAULT_BUILD_TYPE);
     }
 
     get mysql_executable() {

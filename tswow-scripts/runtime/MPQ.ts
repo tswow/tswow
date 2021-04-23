@@ -123,12 +123,12 @@ export namespace MPQ {
         }
 
         if(realms.length>0)  {
-            realms.forEach(x=>x.startWorldserver('Release'));
+            realms.forEach(x=>x.startWorldserver(x.lastBuildType));
         }
         else {
             NodeConfig.autostart_realms
                 .filter(x=>x.set === dataset)
-                .forEach(x=>x.startWorldserver('Release'))
+                .forEach(x=>x.startWorldserver(NodeConfig.default_build_type))
         }
     }
 }

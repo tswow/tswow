@@ -21,6 +21,7 @@ import { ipaths } from "./Paths";
 import { isWindows } from "./Platform";
 import { util } from "./Util";
 import { databaseSettings, yaml } from "./Yaml";
+import { BuildType } from "./BuildType";
 
 /** Settings for connecting to an TrinityCore database. */
 export interface DatabaseSettings {
@@ -144,7 +145,7 @@ export function writeRealmYamlToConf(realm: string) {
  * Copies all library files
  * @param type 
  */
-export function copyLibraryFiles(type: 'Release'|'Debug') {
+export function copyLibraryFiles(type: BuildType) {
     if (isWindows()) {
         wfs.readDir(ipaths.tcRoot, true)
             .filter(x => x.endsWith('.dll'))

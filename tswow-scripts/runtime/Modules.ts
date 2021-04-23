@@ -24,6 +24,7 @@ import { ipaths } from '../util/Paths';
 import { Identifiers } from './Identifiers';
 import { Livescripts } from './Livescripts';
 import { Addon } from './Addon';
+import { BUILD_TYPES } from '../util/BuildType';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -364,7 +365,7 @@ export namespace Modules {
         term.log(`Unlinking ${name} from node_modules`)
         wsys.exec(`npm unlink ${ipaths.moduleDataBuild(name)}`);
         // Delete all built libraries
-        for (const p of [ipaths.tcScripts('Release'), ipaths.tcScripts('Debug')]) {
+        for (const p of BUILD_TYPES.map(x=>ipaths.tcScripts(x))) {
             wfs.readDir(p, true).forEach((x) => {
                 const lname = Livescripts.getLibrary(name);
                 if(x===lname) {

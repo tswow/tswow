@@ -6,6 +6,7 @@ import { Timer } from "../util/Timer";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { Datasets } from "./Dataset";
+import { BuildType } from "../util/BuildType";
 
 export namespace Livescripts {
     export function getLibrary(mod: string) {
@@ -21,7 +22,7 @@ export namespace Livescripts {
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export async function build(name: string, type: 'Release'|'Debug') {
+    export async function build(name: string, type: BuildType) {
         await Modules.refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 

@@ -21,6 +21,7 @@ import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
 import { Datasets } from './Dataset';
+import { DEFAULT_BUILD_TYPE } from '../util/BuildType';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -57,9 +58,7 @@ export namespace MapData {
               ];
 
         // TODO: Let user choose which to use
-        const inDir = wfs.exists(ipaths.tc('Release')) 
-            ? ipaths.tc('Release')
-            : ipaths.tc('Debug');
+        const inDir =  ipaths.tc(DEFAULT_BUILD_TYPE)
 
         // Copy over all necessary library files
         for (const file of copiedFiles) {

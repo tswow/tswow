@@ -9,6 +9,8 @@ import { Addon } from "./Addon";
 import { Livescripts } from "./Livescripts";
 import { term } from "../util/Terminal";
 import { SevenZip } from "../util/7zip";
+import { findBuildType, BuildType } from "../util/BuildType";
+import { NodeConfig } from "./NodeConfig";
 
 export namespace Build {
     export const command = commands.addCommand('build');
@@ -26,6 +28,7 @@ export namespace Build {
           datasets: Datasets.Dataset[]
         , buildData: boolean
         , buildScripts: boolean
+        , buildType: BuildType
         , includeMaps: boolean
         , useTimer: boolean
         , outname: string) {
@@ -42,8 +45,12 @@ export namespace Build {
 
             if(buildScripts) {
                 await Promise.all(allModules.map(async x=>{
-                    if(await Livescripts.build(x,'Release')) {
-                        archiveFiles.push(ipaths.tcModuleScript('Release',x));
+                    if(await Livescripts.build(x,buildType)) {
+                        archiveFiles.push(ipaths.tcModuleScript(buildType,x));
+                        let pdb = ipaths.tcModulePdb(buildType,x);
+                        if(wfs.exists(pdb)) {
+                            archiveFiles.push(pdb);
+                        }
                     }
                 }));
             } else {
@@ -138,7 +145,7 @@ export namespace Build {
             , 'Build and loads the server scripts of a module'
             , async (args) => {
             let modules = Modules.getModulesOrAll(args);
-            await Promise.all(modules.map(x=>Livescripts.build(x.id, args.includes('debug') ? 'Debug' : 'Release')))
+            await Promise.all(modules.map(x=>Livescripts.build(x.id, findBuildType(args))))
             Datasets.getAll().forEach(x=>{
                 Livescripts.writeModuleText(x);
             });
@@ -184,6 +191,7 @@ export namespace Build {
                   Datasets.getDatasetsOrDefault(args)
                 , args.includes('--build-data')
                 , args.includes('--build-scripts')
+                , findBuildType(args, NodeConfig.default_build_type)
                 , args.includes('--include-maps')
                 , args.includes('--use-timer')
                 , outname);
