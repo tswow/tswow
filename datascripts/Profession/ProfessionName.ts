@@ -6,30 +6,7 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { PendingCell } from "wotlkdata/cell/PendingCell";
 import { Spell } from "../Spell/Spell";
 import { SkillLine } from "../SkillLines/SkillLine";
-
-export class MulticastCell<D extends CPrim,T> extends Cell<D,T> implements PendingCell {
-    protected cells: Cell<D,any>[];
-    
-    constructor(owner: T, cells: Cell<D,any>[]) {
-        super(owner);
-        this.cells = cells;
-    }
-
-    exists(): boolean {
-        return true;
-    }
-
-    get(): D {
-        return this.cells[0].get();
-    }
-    
-    set(value: D ): T {
-        for(const cell of this.cells) {
-            cell.set(value);
-        }
-        return this.owner;
-    }
-}
+import { MulticastCell } from "../Base/MulticastCell";
 
 export abstract class ProfessionLocSystem extends LocSystem<Profession> {
     protected abstract forSpell(spell: Spell): LocSystem<any>

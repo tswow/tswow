@@ -8,6 +8,8 @@ export class MulticastCell<D extends CPrim,T> extends Cell<D,T> {
         this.set(this.get());
     }
 
+    exists() { return true; }
+
     protected cells: Cell<D,any>[];
 
     get(): D {
