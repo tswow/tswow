@@ -36,7 +36,7 @@ export type DatabaseType = 'world' | 'auth' | 'characters' | 'world_source';
  * @param defaultValue 
  * @param fpath 
  */
-export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): T{
+export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): T {
     if(!Array.isArray(fpath)) {
         fpath = [fpath];
     }
@@ -47,6 +47,11 @@ export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): 
         }
         cur = cur[part];
     }
+
+    if(defaultValue !== undefined && typeof cur != typeof defaultValue) {
+        throw new Error(`Invalid type in yaml: Got ${typeof(cur)} but expected ${typeof(defaultValue)}`)
+    }
+
     return cur as T;
 }
 
