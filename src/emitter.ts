@@ -2311,8 +2311,7 @@ export class Emitter {
             this.writer.writeStringNewLine(`void AddScripts(){}`);
             this.writer.writeStringNewLine(`char const* GetScriptModule()`);
             this.writer.BeginBlock();
-            // TODO: Read from commandline arguments
-            this.writer.writeStringNewLine(`return "${Math.random()}";`);
+            this.writer.writeStringNewLine(`return "${path.basename(process.cwd())}";`);
             this.writer.EndBlock();
         
             this.writer.writeStringNewLine(`char const* GetBuildDirective()`);
