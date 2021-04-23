@@ -50,6 +50,10 @@ export class InstallPaths {
         return mpath(this.revisions,'tswow');
     }
 
+    get positionsFile() {
+        return mpath(this.coredata,'positions.txt')
+    }
+
     freeBackupPath(base: string) {
         let backup_no = 0;
         const fmt = ()=>`${base}.backup_${backup_no}`;

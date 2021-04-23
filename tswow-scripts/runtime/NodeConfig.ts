@@ -30,6 +30,10 @@ export class NodeConfiguration extends YamlFile {
         return this.get('autostart_authserver',true);
     }
 
+    get write_pos_to_clipboard() {
+        return this.get('write_pos_to_clipboard',true)
+    }
+
     database_settings(database: DatabaseType, nameOverride?: string) {
         return databaseSettings(database,nameOverride);
     }

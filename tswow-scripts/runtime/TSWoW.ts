@@ -32,6 +32,7 @@ import { Datasets } from './Dataset';
 import { Build } from './Build';
 import { Datascripts } from './Datascripts';
 import { Snippets } from './Snippets';
+import { PositionsFile } from './PositionsFile';
 
 export async function main() {
     try {
@@ -57,6 +58,7 @@ export async function main() {
         await Clean.initialize();
 
         await Snippets.initialize();
+        await PositionsFile.initialize();
 
         term.success(`Initialized tswow in ${timer.timeSec()}s`);
     } catch (error) {

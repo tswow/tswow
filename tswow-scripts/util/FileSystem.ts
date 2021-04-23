@@ -567,6 +567,10 @@ export namespace wfs {
     export function symlink(pathFrom: string, pathTo: string) {
         fs.symlinkSync(absPath(pathFrom), absPath(pathTo), wfs.isDirectory(pathFrom) ? 'dir':'file');
     }
+
+    export function watch(file: string, callback: (event: any,filename: string)=>void) {
+        fs.watch(file,callback);
+    }
 }
 
 /**
