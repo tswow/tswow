@@ -131,7 +131,9 @@ function createSpell(id: number, parent: number = 0) {
         .Totem.set([0,0]))
     } else {
         const spell = new Spell(DBC.Spell.findById(parent).clone(id))
-        spell.Visual.makeUnique();
+        if(spell.Visual.ID>0) {
+            spell.Visual.makeUnique();
+        }
         return spell;
     }
 }
