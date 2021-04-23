@@ -23,7 +23,7 @@ import { Objects } from './ObjectIteration';
 import { CellArrayWrapper } from './CellArrayWrapper';
 import { BaseSystem } from './BaseSystem';
 
-export class MainSystem extends BaseSystem {
+export class MainSystem {
     protected get isSystem() { return true; }
 
     static cloneFrom(tar: any, src: any) {
