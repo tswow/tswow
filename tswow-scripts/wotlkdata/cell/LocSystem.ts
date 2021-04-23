@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Language } from '../dbc/Localization';
+import { Language, Languages } from '../dbc/Localization';
 import { loc_constructor } from '../primitives';
 import { PendingCell } from './PendingCell';
 import { Subsystem } from './Subsystem';
@@ -40,4 +40,13 @@ export abstract class LocSystem<T> extends Subsystem<T> {
     get ptBR() { return this.lang('ptBR'); }
     get itIT() { return this.lang('itIT'); }
     get Unk() { return this.lang('Unk'); }
+
+    clear() {
+        Languages.forEach(x=>{
+            let c = this.lang(x);
+            if(c && c.get() && c.get().length>0) {
+                c.set('')
+            }
+        });
+    }
 }
