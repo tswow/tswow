@@ -1,13 +1,12 @@
-import { Subsystem } from "./node_modules/wotlkdata/cell/Subsystem";
-import { Cell } from "./node_modules/wotlkdata/cell/Cell";
-import { DBC } from "./node_modules/wotlkdata/dbc/DBCFiles";
+import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/Cell";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SoundType } from "./SoundType";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
-import { BaseSystem } from "./node_modules/wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { SoundEntriesRow } from "./node_modules/wotlkdata/dbc/types/SoundEntries";
-import { Transient, TransientOn } from "./node_modules/wotlkdata/cell/Transient";
+import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
+import { Transient, TransientOn } from "wotlkdata/cell/Transient";
 
 export class SoundEntryName<T> extends Subsystem<SoundEntry<T>> {
     get() {

@@ -1,6 +1,5 @@
 import { SoundEntry } from "./SoundEntry";
-import { SystemArray, ArrayEntry } from "./node_modules/wotlkdata/cell/systems/SystemArray";
-import { BaseSystem } from "./node_modules/wotlkdata/cell/BaseSystem";
+import { SystemArray, ArrayEntry } from "wotlkdata/cell/systems/SystemArray";
 
 export class SoundEntryFile<T> extends ArrayEntry<SoundEntry<T>> {
     clear(): SoundEntry<T> {
