@@ -1,5 +1,3 @@
-import { Enum } from "../Base/Enum"
-
 const HUMAN = 1;
 const ORC = 2;
 const DWARF = 3;
