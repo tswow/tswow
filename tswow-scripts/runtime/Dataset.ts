@@ -334,5 +334,11 @@ export namespace Datasets {
             }
             create(args[0]);
         });
+
+        if(NodeConfig.autostart_client) {
+            let datasets : {[key: string]: Dataset} = {}
+            NodeConfig.autostart_realms.forEach(x=>datasets[x.set.id] = x.set)
+            Object.values(datasets).forEach(x=>x.client.start())
+        }
     }
 }

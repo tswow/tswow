@@ -8,6 +8,8 @@ import { FileChanges } from "../util/FileChanges";
 import { Datascripts } from "./Datascripts";
 import { Addon } from "./Addon";
 import { BannedAddOnsDBCFile } from "../wotlkdata/dbc/types/BannedAddOns";
+import { NodeConfig } from "./NodeConfig";
+import { Realm } from "./Realm";
 
 export namespace MPQ {
     /**
@@ -115,10 +117,18 @@ export namespace MPQ {
             dataset.client.kill();
         }
         await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer,args);
-        if(clientWasStarted) {
+
+        if(clientWasStarted || NodeConfig.autostart_client) {
             dataset.client.start();
         }
 
-        realms.forEach(x=>x.startWorldserver(x.lastBuildType));
+        if(realms.length>0)  {
+            realms.forEach(x=>x.startWorldserver('Release'));
+        }
+        else {
+            NodeConfig.autostart_realms
+                .filter(x=>x.set === dataset)
+                .forEach(x=>x.startWorldserver('Release'))
+        }
     }
 }

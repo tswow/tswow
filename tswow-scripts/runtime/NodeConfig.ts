@@ -1,5 +1,6 @@
 import { ipaths } from "../util/Paths";
 import { YamlFile, DatabaseType, databaseSettings } from "../util/Yaml";
+import { Realm } from "./Realm";
 
 export class NodeConfiguration extends YamlFile {
     constructor() {
@@ -22,8 +23,13 @@ export class NodeConfiguration extends YamlFile {
         return this.get<string|undefined>('mysql_executable',undefined);
     }
 
+    get autostart_client() {
+        return this.get<boolean>('autostart_client',true);
+    }
+
     get autostart_realms() {
-        return this.get<string[]>('autostart_realms',[]);
+        return this.get<string[]>('autostart_realms',[])
+            .map(x=>Realm.getRealm(x));
     }
 
     get autostart_authserver() {

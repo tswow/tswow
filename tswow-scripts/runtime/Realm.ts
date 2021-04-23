@@ -349,5 +349,7 @@ export namespace Realm {
         if(!wfs.exists(ipaths.realms)) {
             wfs.mkDirs(ipaths.realms);
         }
+
+        NodeConfig.autostart_realms.forEach(x=>x.startWorldserver('Release'));
     }
 }

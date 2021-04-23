@@ -1,9 +1,13 @@
 # Whether to automatically start an auth server on this node
 autostart_authserver: true
 
+# Whether to automatically start clients on startup and when
+# building patches (even if no client was running before)
+autostart_client: true
+
 # Realms that should be automatically started on this node
 autostart_realms:
-  tswow
+  - tswow
 
 # The realm to assume in commands if none are provided
 default_realm:
