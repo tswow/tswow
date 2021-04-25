@@ -22,7 +22,6 @@ import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_defaul
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
-import { isTradeskillSpell } from "../Profession/ProfessionType";
 
 export class TrainerLoc<T> extends SQLLocSystem<Trainer<T>> {
     protected getMain(): Cell<string, any> {
@@ -55,7 +54,7 @@ export class Trainer<T> extends Subsystem<T> {
     get Class() { return this.wrap(this.trainerRow.Requirement); }
     get Type() { return this.wrap(this.trainerRow.Type); }
 
-    addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillRank = 0, reqAbilities: number[] = [], reqSkillLine: number = 0) {
+    addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
         if(reqSkillLine===0) {
             const sla = Spells.load(spellId).SkillLines.getIndex(0);
             if(sla!==undefined) {
