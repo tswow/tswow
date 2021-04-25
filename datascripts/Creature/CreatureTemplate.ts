@@ -40,7 +40,7 @@ import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
-import { Trainer } from "../Trainer/Trainer";
+import { Trainer, TrainerLoc } from "../Trainer/Trainer";
 import { UnitClass } from "./UnitClass";
 import { CreatureVendor } from "./CreatureVendor";
 import { GOCreature } from "../Misc/GOorCreature";
@@ -161,6 +161,22 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
             Ids.SkinningLoot, 
             SQL.skinning_loot_template))
     }
+
+    addVendorItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
+        this.NPCFlags.Vendor.mark();
+        this.Vendor.addItem(item,maxcount,incrTime,extendedCostId);
+        return this;
+    }
+
+    addTrainerSpell(spellId: number, cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
+        this.NPCFlags.Trainer.mark();
+        this.Trainer.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities);
+        return this;
+    }
+
+    get TrainerClass() { return this.wrap(this.Trainer.trainerRow.Requirement); }
+    get TrainerType() { return this.wrap(this.Trainer.trainerRow.Type); }
+    get TrainerGreeting() { return new TrainerLoc<this>(this, this.Trainer); }
 
     spawn(mod: string, id: string, pos: Position) {
         return new CreatureInstance(this, CreatureInstances.create(mod, id, this.ID, pos).row);

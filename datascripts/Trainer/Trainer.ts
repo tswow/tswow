@@ -22,17 +22,26 @@ import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_defaul
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
+import { Transient } from "wotlkdata/cell/Transient";
 
-export class TrainerLoc<T> extends SQLLocSystem<Trainer<T>> {
+export class TrainerLoc<T> extends SQLLocSystem<T> {
+    @Transient
+    protected trainer: Trainer<any>;
+    
+    constructor(owner: T, trainer: Trainer<any>) {
+        super(owner);
+        this.trainer = trainer;
+    }
+
     protected getMain(): Cell<string, any> {
-        return this.owner.trainerRow.Greeting;
+        return this.trainer.trainerRow.Greeting;
     }
     protected getLoc(loc: Language): Cell<string, any> {
-        const old = SQL.trainer_locale.find({Id: this.owner.ID, locale: loc})
+        const old = SQL.trainer_locale.find({Id: this.trainer.ID, locale: loc})
         if(old!==undefined) {
             return old.Greeting_lang;
         }
-        return SQL.trainer_locale.add(this.owner.ID, loc).Greeting_lang;
+        return SQL.trainer_locale.add(this.trainer.ID, loc).Greeting_lang;
     }
 }
 
@@ -50,7 +59,7 @@ export class Trainer<T> extends Subsystem<T> {
         this.creatureRow = creatureRow;
     }
 
-    get Greeting() { return new TrainerLoc<T>(this); }
+    get Greeting(): TrainerLoc<this> { return new TrainerLoc<this>(this, this); }
     get Class() { return this.wrap(this.trainerRow.Requirement); }
     get Type() { return this.wrap(this.trainerRow.Type); }
 
