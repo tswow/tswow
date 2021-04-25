@@ -87,8 +87,8 @@ const scripts_tsconfig_json =
 /**
  * The example patch file that will be written to the 'datascripts' directory of new modules.
  */
-const patch_example_ts = (name: string) => `
-import { std } from "tswow-stdlib";
+const patch_example_ts = (name: string) =>
+`import { std } from "tswow-stdlib";
 
 console.log("Hello from ${name} data script!");
 `;
