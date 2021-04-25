@@ -85,26 +85,30 @@ export const std = {
 
 // Patch ID files
 finish('build-idfiles',()=>{
+    if(process.argv.includes('--no-id-defs')) {
+        return;
+    }
+
     let modulemap : {[key:string]: string}= {};
     
     iterateIds((r)=>{
-        if(!modulemap[r.mod]) {
-            modulemap[r.mod] = `export namespace ID {\n`;
-        }
         const uMod = r.mod.toUpperCase().split('-').join('_').split(' ').join('_');
         const uName = r.name.toUpperCase().split('-').join('_').split(' ').join('_');
+
+        if(!modulemap[r.mod]) modulemap[r.mod] = ""
+
         if(r.size==1) {
-            modulemap[r.mod]+= `    export const ${uMod}_${uName} : uint32 = GetID("${r.table}","${r.mod}","${r.name}");\n`
+            modulemap[r.mod]+= `export const ${uMod}_${uName} : uint32 = GetID("${r.table}","${r.mod}","${r.name}");\n`
         } else {
-            modulemap[r.mod]+= `    export const ${uMod}_${uName} : IDRange = GetIDRange("${r.table}", "${r.mod}", "${r.name}");\n`
+            modulemap[r.mod]+= `export const ${uMod}_${uName} : IDRange = GetIDRange("${r.table}", "${r.mod}", "${r.name}");\n`
         }
     });
 
+    let allOut = "// @ts-nocheck\n"
+    allOut+=`// To use these IDs in your live scripts\n`
+    allOut+=`// simply copy the line into your script.\n`
     for(const mod in modulemap) {
-        modulemap[mod]+=`};`;
-        const scriptDir = path.join('./modules',mod,'scripts');
-        if(fs.existsSync(scriptDir)) {
-            fs.writeFileSync(path.join(scriptDir,'ID.ts'), modulemap[mod]);
-        }
+        allOut += modulemap[mod]
     }
+    fs.writeFileSync('coredata/IDs.ts',allOut);
 });
