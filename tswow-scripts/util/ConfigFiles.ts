@@ -12,8 +12,8 @@ modules:
 
 # What extensions to ignore when building assets
 ignore_assets:
-    .png
-    .blend
+  - .png
+  - .blend
 `
 }
 
