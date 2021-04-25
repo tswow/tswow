@@ -12,6 +12,11 @@ export namespace PositionsFile {
         }
 
         oldContent = wfs.readOr(ipaths.positionsFile,'')
+
+        if(!wfs.exists(ipaths.positionsFile)) {
+            wfs.write(ipaths.positionsFile,'');
+        }
+
         wfs.watch(ipaths.positionsFile,(evt,filename)=>{
             let value = wfs.readOr(ipaths.positionsFile,'');
             if(value.length>oldContent.length) {
