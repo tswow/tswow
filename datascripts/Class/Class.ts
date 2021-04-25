@@ -180,10 +180,8 @@ export const Classes = {
         );
     },
 
-    create : (mod : string, clsId : string, identifier : string, parentClass: ClassType) => {
-        if(identifier.toUpperCase()!=identifier) {
-            throw new Error(`"${identifier}" is not a valid class identifier: must be all uppercase`);
-        }
+    create : (mod : string, clsId : string, parentClass: ClassType) => {
+        let identifier = clsId.toUpperCase();
         const parent = resolveClassType(parentClass);
 
         // Set up parent buttons
