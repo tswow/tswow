@@ -19,7 +19,7 @@ import { wfs } from '../util/FileSystem';
 import { install_path } from './BuildConfig';
 import { wsys } from '../util/System';
 import { ipaths, spaths } from '../util/Paths';
-import { datasetYaml } from '../util/ConfigFiles';
+import { datasetYaml, realmYaml } from '../util/ConfigFiles';
 
 export namespace Config {
     export async function create() {
@@ -76,7 +76,7 @@ export namespace Config {
         }
 
         if(!wfs.exists(ipaths.realmYaml('tswow'))) {
-            wfs.write(ipaths.realmYaml('tswow'),datasetYaml('tswow'));
+            wfs.write(ipaths.realmYaml('tswow'),realmYaml('tswow'));
         }
     }
 }
