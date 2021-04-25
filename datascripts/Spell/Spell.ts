@@ -103,7 +103,7 @@ export class Spell extends MainEntity<SpellRow> {
         this.wrap(this.row.ExcludeTargetAuraSpell)
     )}
 
-    get SkillLines() { return new SpellSkillLineAbilites(this); }
+    get SkillLines() { return new SpellSkillLineAbilites(this, this); }
     /** How many stacks of this spell can be present on the target */
     get Stacks() { return this.wrap(this.row.CumulativeAura); }
 

@@ -19,11 +19,10 @@ import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
-import { ClassType, makeClassmask } from "../Class/ClassType";
-import { makeRacemask, RaceType } from "../Race/RaceType";
 import { Spell } from "./Spell";
+import { Transient } from "wotlkdata/cell/Transient";
 
-export class TrivialSkillLineRank extends Subsystem<SpellSkillLineAbility> {
+export class TrivialSkillLineRank<T> extends Subsystem<SpellSkillLineAbility<T>> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }
     get Low() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankLow); }
     set(low: number, high: number) {
@@ -33,11 +32,15 @@ export class TrivialSkillLineRank extends Subsystem<SpellSkillLineAbility> {
     }
 }
 
-export class SpellSkillLineAbility extends Subsystem<Spell> {
+export class SpellSkillLineAbility<T> extends Subsystem<T> {
+    @Transient
     readonly row: SkillLineAbilityRow;
+    @Transient
+    protected spell: Spell;
 
-    constructor(owner: Spell, row: SkillLineAbilityRow) {
+    constructor(owner: T, spell: Spell, row: SkillLineAbilityRow) {
         super(owner);
+        this.spell = spell;
         this.row = row;
     }
 
@@ -49,31 +52,39 @@ export class SpellSkillLineAbility extends Subsystem<Spell> {
     /** The spell this spell is superceded by */
     get SupercededBy() { return this.wrap(this.row.SupercededBySpell); }
     get AcquireMethod() { return this.wrap(this.row.AcquireMethod); }
-    get TrivialRank() { return new TrivialSkillLineRank(this); }
+    get TrivialRank(): TrivialSkillLineRank<T> { return new TrivialSkillLineRank<T>(this); }
     get SkillLine() { return this.wrap(this.row.SkillLine); }
     get CharacterPoints() { return this.wrapArray(this.row.CharacterPoints); }
 
     setAutolearn() {
         this.AcquireMethod.set(1);
         SQL.playercreateinfo_spell_custom
-            .add(this.RaceMask.get(), this.ClassMask.get(), this.owner.ID)
+            .add(this.RaceMask.get(), this.ClassMask.get(), this.spell.ID)
             .Note.set('TSWoW')
         return this;
     }
 }
 
-export class SpellSkillLineAbilites extends Subsystem<Spell> {
+export class SpellSkillLineAbilites<T> extends Subsystem<T> {
+    @Transient
+    protected spell: Spell;
+
+    constructor(owner: T, spell: Spell) {
+        super(owner);
+        this.spell = spell;
+    }
+
     protected values() {
-        return DBC.SkillLineAbility.filter({Spell: this.owner.ID})
+        return DBC.SkillLineAbility.filter({Spell: this.spell.ID})
     }
 
     get length() { return this.values().length; }
     getIndex(index: number) { return this.values()[index]; }
 
-    forEach(callback: (sla: SpellSkillLineAbility, index: number) => any) {
+    forEach(callback: (sla: SpellSkillLineAbility<T>, index: number) => any) {
         const values = this.values();
         for(let i=0;i<values.length;++i) {
-            callback(new SpellSkillLineAbility(this.owner,values[i]),i);
+            callback(new SpellSkillLineAbility(this.owner, this.spell,values[i]),i);
         }
     }
 
@@ -96,11 +107,11 @@ export class SpellSkillLineAbilites extends Subsystem<Spell> {
         let row = parentAbility == -1 ? DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
             : DBC.SkillLineAbility.find({ID:parentAbility}).clone(Ids.SkillLineAbility.id())
 
-        return new SpellSkillLineAbility(this.owner, row
+        return new SpellSkillLineAbility(this.owner, this.spell, row
             .SkillLine.set(skillLine)
             .ClassMask.set(classmask)
             .RaceMask.set(racemask)
-            .Spell.set(this.owner.ID));
+            .Spell.set(this.spell.ID));
     }
 
     objectify() { 

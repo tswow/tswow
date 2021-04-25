@@ -3,6 +3,7 @@ import { Spell } from "../Spell";
 import { SpellEffects } from "../SpellEffect";
 import { Transient } from "wotlkdata/cell/Transient";
 import { SpellRank } from "../SpellRank";
+import { SpellSkillLineAbilites } from "../SpellSkillLines";
 
 export class SpellPreset extends MainSystem {
     @Transient
@@ -21,7 +22,7 @@ export class SpellPreset extends MainSystem {
     get AuraDescription() { return this.wrapLoc(this.spell.AuraDescription); }
 
     get Effects(): SpellEffects<this> { return new SpellEffects(this, this.spell); }
-    get ID() { return this.spell.ID; }
-
     get Rank() { return new SpellRank(this, this.ID); }
+    get SkillLines() { return new SpellSkillLineAbilites(this, this.spell); }
+    get ID() { return this.spell.ID; }
 }
