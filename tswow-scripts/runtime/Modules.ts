@@ -516,7 +516,6 @@ export namespace Modules {
             , 'module --livescripts --datascripts --addon --assets'
             , 'Adds a new feature to a module'
             , async(args)=>{
-
                 Identifiers.getTypes('module',args).forEach(x=>{
                     let mod = getModule(x);
                     if(args.includes('--snippets')) mod.createSnippets();
@@ -525,6 +524,7 @@ export namespace Modules {
                     if(args.includes('--addon')) mod.createAddon();
                     if(args.includes('--assets')) mod.createAssets();
                 });
+                await refreshModules();
         });
 
         Modules.command.addCommand(
