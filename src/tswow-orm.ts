@@ -369,7 +369,7 @@ export function writeTableCreationFile(outDir: string) {
                 `auto type = rows->GetString(COLUMN_TYPE_INDEX).std_str();`);
 
             writer.writeStringNewLine(
-                `std::transform(type.begin(), type.end(), type.begin(), std::toupper);`
+                `for(auto & c: type) c = toupper((unsigned char)c);`
             );
 
             writer.writeString(
