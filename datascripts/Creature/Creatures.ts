@@ -21,8 +21,11 @@ import { Ids } from "../Misc/Ids"
 import { Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 import { CreatureTemplate } from "./CreatureTemplate";
+import { CreaturePresets } from "./CreaturePresets/CreaturePresets";
 
 export const CreatureTemplates = {
+    Presets: CreaturePresets,
+
     create: (mod: string, id: string, parent: number = -1) => {
         let nid = Ids.CreatureTemplate.id(mod,id);
         if(parent<0) {
