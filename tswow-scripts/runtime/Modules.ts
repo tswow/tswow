@@ -145,6 +145,11 @@ export namespace Modules {
             wfs.write(
                   ipaths.moduleDataMain(this.id)
                 , patch_example_ts(this.id));
+
+            wfs.write(
+                  ipaths.moduleDataTsConfig(this.id)
+                , data_tsconfig
+            )
         }
 
         createAssets() {
@@ -156,6 +161,7 @@ export namespace Modules {
             wfs.mkDirs(ipaths.moduleShared(this.id));
             wfs.write(ipaths.moduleMainScript(this.id),livescript_example);
             wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(this.id));
+            wfs.write(ipaths.moduleScritpsTsConfig(this.id),scripts_tsconfig_json);
         }
 
         createSnippets() {
