@@ -53,7 +53,10 @@ export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
         } else if (this._menuRow === undefined || this.cell.get() != this._menuRow.MenuID.get()) {
             this._menuRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
             this._textRow = SQL.npc_text.find({ID:this._menuRow.TextID.get()});
-            this.cell.set(this._menuRow.MenuID.get());
+            if(this.cell.get() != this._menuRow.MenuID.get())
+            {
+                this.cell.set(this._menuRow.MenuID.get());
+            }
         }
 
         return this._menuRow as gossip_menuRow;
