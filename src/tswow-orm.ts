@@ -51,6 +51,8 @@ class Entry {
         this.className = className;
         this.databaseType = databaseType;
     }
+
+    get tableName() { return this.className.toLowerCase()}
 }
 
 let entries: Entry[] = [];
@@ -139,7 +141,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeString('\n\n    ');
     writer.writeString('TSString loadQuery()');
     writer.BeginBlock();
-    writer.writeString(`return JSTR("SELECT * FROM \`${entry.className}\` WHERE `);
+    writer.writeString(`return JSTR("SELECT * FROM \`${entry.tableName}\` WHERE `);
     writer.writeString(
         pks.map(x=>`\`${x.name}\` = ")+this->${x.name}+JSTR("`)
             .join(' AND '));
@@ -150,7 +152,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeString('\n    ');
     writer.writeString('TSString saveQuery()');
     writer.BeginBlock();
-    writer.writeString(`return JSTR("INSERT INTO \`${entry.className.toLowerCase()}\` VALUES ( `);
+    writer.writeString(`return JSTR("INSERT INTO \`${entry.tableName}\` VALUES ( `);
     writer.writeString(
         entry.fields.map(x=>{
             let str = "";
@@ -186,7 +188,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     writer.writeString('    TSString removeQuery() ');
     writer.BeginBlock();
-    writer.writeString(`return JSTR("DELETE FROM \`${entry.className.toLowerCase()}\` WHERE `);
+    writer.writeString(`return JSTR("DELETE FROM \`${entry.tableName}\` WHERE `);
     writer.writeString(
         pks.map(x=>`\`${x.name}\` = ")+this->${x.name}+JSTR("`)
             .join(' AND '));
@@ -200,7 +202,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
 
     writer.writeString(`    static TSString LoadQuery(TSString query)`)
     writer.BeginBlock();
-    writer.writeStringNewLine(`return JSTR("SELECT * from ${entry.className.toLowerCase()} WHERE ") + query + JSTR(";");`)
+    writer.writeStringNewLine(`return JSTR("SELECT * from ${entry.tableName} WHERE ") + query + JSTR(";");`)
     writer.EndBlock();
 
     writer.writeString(`\n    static TSArray<std::shared_ptr<${entry.className}>> Load(TSString query)`);
@@ -331,7 +333,7 @@ export function writeTableCreationFile(outDir: string) {
         writer.writeStringNewLine(
               `"SELECT * from \`information_schema\`.\`COLUMNS\``
             + ` WHERE \`TABLE_SCHEMA\`= \\""+ db + "\\"`
-            + ` AND \`TABLE_NAME\` = \\"${entry.className}\\";"));`)
+            + ` AND \`TABLE_NAME\` = \\"${entry.tableName}\\";"));`)
 
         writer.writeString(
             `if(rows->GetRow())`)
@@ -350,7 +352,7 @@ export function writeTableCreationFile(outDir: string) {
               `auto was_pk = QueryWorld(JSTR(`
             + ` "SELECT * from \`information_schema\`.\`KEY_COLUMN_USAGE\``
             + ` WHERE \`CONSTRAINT_SCHEMA\` = \\"\"+db+\"\\"`
-            + ` and \`TABLE_NAME\` = \\"${entry.className}\\"`
+            + ` and \`TABLE_NAME\` = \\"${entry.tableName}\\"`
             + ` and \`COLUMN_NAME\` = \\"\"+column+\"\\"`
             + ` ;"))->GetRow();`);
 
@@ -377,32 +379,32 @@ export function writeTableCreationFile(outDir: string) {
             writer.BeginBlock();
             // mismatch + we're a string = we have to remove and add again
             if(x.type=='string') {
-                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
+                writer.writeStringNewLine(`ask("${entry.tableName}:"+column+" changed type from "+type+" to ${x.type}");`);
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`\"+column+\"\`;"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\` DROP \`\"+column+\"\`;"));`)
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`\"+column+\"\` TEXT;"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\` ADD \`\"+column+\"\` TEXT;"));`)
             } else {
                 writer.writeStringNewLine(`if (type == "TEXT")`)
                 writer.BeginBlock();
-                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
+                writer.writeStringNewLine(`ask("${entry.tableName}:"+column+" changed type from "+type+" to ${x.type}");`);
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`\"+column+\"\`;"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\` DROP \`\"+column+\"\`;"));`)
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`\"+column+\"\` ${getWriteSQLType(x)};"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\` ADD \`\"+column+\"\` ${getWriteSQLType(x)};"));`)
                 writer.EndBlock(false);
                 writer.writeString(` else `);
                 writer.BeginBlock();
 
                 writer.writeString(`if (was_pk) `)
                 writer.BeginBlock();
-                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type} and was a primary key (whole db will be destroyed)");`);
+                writer.writeStringNewLine(`ask("${entry.tableName}:"+column+" changed type from "+type+" to ${x.type} and was a primary key (whole db will be destroyed)");`);
                 writer.writeStringNewLine(`should_create = true;`);
                 writer.writeStringNewLine(`break;`)
                 writer.EndBlock();
-                writer.writeStringNewLine(`ask("${entry.className}:"+column+" changed type from "+type+" to ${x.type}");`);
+                writer.writeStringNewLine(`ask("${entry.tableName}:"+column+" changed type from "+type+" to ${x.type}");`);
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\``
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\``
                     + ` MODIFY \`${x.name}\` ${getWriteSQLType(x)}`
                     + `;"));`);
                 writer.EndBlock();
@@ -415,9 +417,9 @@ export function writeTableCreationFile(outDir: string) {
         writer.writeString(
             ' else ')
         writer.BeginBlock();
-        writer.writeStringNewLine(`ask("${entry.className}:"+column+" was removed");`);
+        writer.writeStringNewLine(`ask("${entry.tableName}:"+column+" was removed");`);
         writer.writeStringNewLine(
-            `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` DROP \`"+rows->GetString(COLUMN_NAME_INDEX)+"\`;"));`)
+            `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\` DROP \`"+rows->GetString(COLUMN_NAME_INDEX)+"\`;"));`)
         writer.EndBlock();
 
 
@@ -429,11 +431,11 @@ export function writeTableCreationFile(outDir: string) {
                 `if( !should_create && !found_${x.name} )`);
             writer.BeginBlock();
             if(x.isPrimaryKey) {
-                writer.writeStringNewLine(`ask("${entry.className}: new primary key ${x.name} missing, need to rebuild database.");`);
+                writer.writeStringNewLine(`ask("${entry.tableName}: new primary key ${x.name} missing, need to rebuild database.");`);
                 writer.writeStringNewLine(`should_create = true;`);
             } else {
                 writer.writeStringNewLine(
-                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.className}\` ADD \`${x.name}\` ${getWriteSQLType(x)};"));`)
+                    `Query${dbid}(JSTR("ALTER TABLE \`${entry.tableName}\` ADD \`${x.name}\` ${getWriteSQLType(x)};"));`)
             }
             writer.EndBlock();
         });
@@ -443,9 +445,9 @@ export function writeTableCreationFile(outDir: string) {
             `if (should_create)`
         )
         writer.BeginBlock();
-        writer.writeStringNewLine(`Query${dbid}(JSTR("DROP TABLE IF EXISTS \`${entry.className}\`;"));`)
+        writer.writeStringNewLine(`Query${dbid}(JSTR("DROP TABLE IF EXISTS \`${entry.tableName}\`;"));`)
         writer.writeString(
-            `Query${dbid}(JSTR("CREATE TABLE \`${entry.className}\` (`);
+            `Query${dbid}(JSTR("CREATE TABLE \`${entry.tableName}\` (`);
         entry.fields.forEach((field,index,arr)=>{
             writer.writeString(
                 `\`${field.name}\` ${getWriteSQLType(field)}, `);
@@ -461,7 +463,7 @@ export function writeTableCreationFile(outDir: string) {
         writer.EndBlock();
         entry.fields.filter(x=>!x.isPrimaryKey).forEach(x=>{
             writer.writeStringNewLine(
-                `Query${dbid}(JSTR("UPDATE \`${entry.className}\` SET ${x.name} = ${x.sqlInitialization()} WHERE ${x.name} IS NULL;"));`)
+                `Query${dbid}(JSTR("UPDATE \`${entry.tableName}\` SET ${x.name} = ${x.sqlInitialization()} WHERE ${x.name} IS NULL;"));`)
         });
         writer.EndBlock();
     });
