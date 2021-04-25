@@ -60,6 +60,7 @@ export class ClassAttribute extends Subsystem<Class>{
     set(callback: (old: number, race: number, level: number)=>number) {
         SQL.player_levelstats.filter({class:this.owner.ID})
             .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.race.get(),x.level.get())));
+        return this.owner;
     }
 }
 
@@ -75,6 +76,7 @@ export class BaseHpMana extends Subsystem<Class> {
     set(callback: (old: number, level: number)=>number) {
         SQL.player_classlevelstats.filter({class:this.owner.ID})
             .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.level.get())));
+        return this.owner;
     }
 }
 
