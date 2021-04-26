@@ -352,6 +352,7 @@ export namespace Realm {
             wfs.mkDirs(ipaths.realms);
         }
 
-        NodeConfig.autostart_realms.forEach(x=>x.startWorldserver(NodeConfig.default_build_type));
+        await Promise.all(NodeConfig.autostart_realms
+            .map(x=>x.startWorldserver(NodeConfig.default_build_type)))
     }
 }
