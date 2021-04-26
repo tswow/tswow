@@ -147,7 +147,7 @@ export namespace Clean {
             }
 
             if(errors===lastErrors) {
-                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x.id))}]`);
+                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x.id)).map(x=>x.id)}]`);
             }
             lastErrors = errors;
         }
