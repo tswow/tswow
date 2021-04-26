@@ -9,15 +9,6 @@ import { Datasets } from "./Dataset";
 import { BuildType } from "../util/BuildType";
 
 export namespace Livescripts {
-    export function getLibrary(mod: string) {
-        mod = `scripts_${mod.split(' ').join('_').split('-').join('_')}_ts`;
-        if(isWindows()) {
-            return `${mod}.dll`;
-        } else {
-            return `${mod}.so`;
-        }
-    }
-
     /**
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.

@@ -365,20 +365,17 @@ export namespace Modules {
     }
 
     export async function uninstallModule(name: string) {
+        // Delete all built libraries
+        BUILD_TYPES.forEach(x=>{
+            wfs.remove(ipaths.tcModuleScript(x,name));
+            wfs.remove(ipaths.tcModulePdb(x,name));
+        })
+
         await destroyTSWatcher(ipaths.moduleData(name));
         term.log(`Uninstalling module ${name}`)
         wsys.exec(`npm uninstall ${ipaths.moduleDataBuild(name)}`);
         term.log(`Unlinking ${name} from node_modules`)
         wsys.exec(`npm unlink ${ipaths.moduleDataBuild(name)}`);
-        // Delete all built libraries
-        for (const p of BUILD_TYPES.map(x=>ipaths.tcScripts(x))) {
-            wfs.readDir(p, true).forEach((x) => {
-                const lname = Livescripts.getLibrary(name);
-                if(x===lname) {
-                    wfs.remove(mpath(p,lname));
-                }
-            });
-        }
 
         if(!wfs.exists(ipaths.moduleRoot(name))) {
             return;
