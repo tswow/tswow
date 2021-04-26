@@ -52,8 +52,8 @@ export async function main() {
 
         await Datascripts.initialize();
         await Datasets.initialize();
-        await Realm.initialize();
         await AuthServer.initialize();
+        await Realm.initialize();
 
         await Clean.initialize();
 
