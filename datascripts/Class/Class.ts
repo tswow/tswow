@@ -181,7 +181,16 @@ export const Classes = {
     },
 
     create : (mod : string, clsId : string, parentClass: ClassType) => {
+        for(let i=0;i<clsId.length;++i) {
+            let cc = clsId.charCodeAt(i);
+            if(cc<97|| cc > 122) throw new Error(
+                `Non ascii character in class id ${clsId}`
+                + ` at pos ${i}`
+                + ` (${clsId.charAt(i)})`);
+        }
+
         let identifier = clsId.toUpperCase();
+
         const parent = resolveClassType(parentClass);
 
         // Set up parent buttons
