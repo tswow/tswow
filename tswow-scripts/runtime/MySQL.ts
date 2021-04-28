@@ -25,7 +25,6 @@ import { ipaths } from '../util/Paths';
 import { databaseSettings, DatabaseSettings, DatabaseType } from '../util/Yaml';
 import { NodeConfig } from './NodeConfig';
 import { start } from 'repl';
-import { SevenZip } from '../util/7zip';
 
 /**
  * Represents a single connection to a mysql server.
@@ -287,6 +286,7 @@ export namespace mysql {
         await wsys.execAsync(
               `${mysqlCommand}`
             + ` -u ${con.cfg.user}`
+            + ` --default-character-set=utf8`
             + (con.cfg.password.length > 0
                 ? ` -p${con.cfg.password}`
                 : '')
