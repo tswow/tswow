@@ -280,7 +280,7 @@ export namespace mysql {
         const mysqlCommand = mysql.hasOwnProcess() ? 
             `"${ipaths.mysqlExe}"` : 
                 NodeConfig.mysql_executable != undefined ? 
-            NodeConfig.mysql_executable : 
+            `"${NodeConfig.mysql_executable}"`:
                 `sudo mysql`;
 
         await wsys.execAsync(
