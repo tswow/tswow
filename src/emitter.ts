@@ -3557,19 +3557,7 @@ export class Emitter {
             this.writer.writeString('(');
         }
 
-        if (isLeftEnum) {
-            if (leftSouldBePointer) {
-                this.writer.writeString('*reinterpret_cast<long*>(&');
-            } else {
-                this.writer.writeString('static_cast<long>(');
-            }
-        }
-
         this.processExpression(node.left);
-
-        if (isLeftEnum) {
-            this.writer.writeString(')');
-        }
 
         if (wrapIntoRoundBrackets) {
             this.writer.writeString(')');
@@ -3585,15 +3573,7 @@ export class Emitter {
             this.writer.writeString('(');
         }
 
-        if (isRightEnum) {
-            this.writer.writeString('static_cast<long>(');
-        }
-
         this.processExpression(node.right);
-
-        if (isRightEnum) {
-            this.writer.writeString(')');
-        }
 
         if (wrapIntoRoundBrackets) {
             this.writer.writeString(')');
