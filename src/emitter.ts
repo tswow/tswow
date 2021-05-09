@@ -46,7 +46,7 @@ export class Emitter {
         this.opsMap[ts.SyntaxKind.EqualsEqualsEqualsToken] = '==';
         this.opsMap[ts.SyntaxKind.LessThanToken] = '<';
         this.opsMap[ts.SyntaxKind.LessThanEqualsToken] = '<=';
-        this.opsMap[ts.SyntaxKind.ExclamationEqualsToken] = '__not_equals';
+        this.opsMap[ts.SyntaxKind.ExclamationEqualsToken] = '!=';
         this.opsMap[ts.SyntaxKind.ExclamationEqualsEqualsToken] = '!=';
         this.opsMap[ts.SyntaxKind.GreaterThanToken] = '>';
         this.opsMap[ts.SyntaxKind.GreaterThanEqualsToken] = '>=';
