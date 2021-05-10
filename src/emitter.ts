@@ -1947,9 +1947,9 @@ export class Emitter {
                 const typeReference = <ts.TypeReferenceNode>type;
 
                 // Check for "GetObject"
-                let start = Math.max(0,typeReference.getStart(typeReference.getSourceFile()));
-                const getObjectPre = typeReference.getSourceFile().text.substring(start-10,start-1);
-                const onMessageIdPre = typeReference.getSourceFile().text.substring(start-12,start-1);
+                let start = type.pos == -1 ? 0 : Math.max(0,typeReference.getStart(typeReference.getSourceFile()));
+                const getObjectPre = type.pos == -1 ? "" : typeReference.getSourceFile().text.substring(start-10,start-1);
+                const onMessageIdPre = type.pos == -1 ? "" : typeReference.getSourceFile().text.substring(start-12,start-1);
 
                 const typeInfo = this.resolver.getOrResolveTypeOf(type);
                 const isTypeAlias = ((typeInfo && this.resolver.checkTypeAlias(typeInfo.aliasSymbol))
@@ -1959,7 +1959,7 @@ export class Emitter {
                 const isEnum = this.isEnum(typeReference);
                 const isArray = this.resolver.isArrayType(typeInfo);
 
-                const typeText = typeReference.getFullText().split(' ').join('');
+                const typeText = type.pos == -1 ? (type as any).typeName.escapedText : typeReference.getText();
                 const isEventsStruct = typeText === 'TSEventHandlers';
 
                 const primitives = [
@@ -1967,7 +1967,7 @@ export class Emitter {
                     'int8', 'int16', 'int32', 'int64', 'float',
                     'double', 'float64', 'bool'
                 ];
-                const isPrimitive = primitives.includes(typeReference.getText());
+                const isPrimitive = primitives.includes(typeText);
 
                 const skipPointerIf =
                     (typeInfo && (<any>typeInfo).symbol && (<any>typeInfo).symbol.name === '__type')
