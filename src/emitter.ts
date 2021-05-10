@@ -3191,15 +3191,11 @@ export class Emitter {
         this.processStringLiteral(node.head);
         node.templateSpans.forEach(element => {
             this.writer.writeString(' + ');
-            if (element.expression.kind === ts.SyntaxKind.BinaryExpression) {
-                this.writer.writeString('(');
-            }
+            this.writer.writeString(' ToStr(');
 
             this.processExpression(element.expression);
 
-            if (element.expression.kind === ts.SyntaxKind.BinaryExpression) {
-                this.writer.writeString(')');
-            }
+            this.writer.writeString(')');
 
             this.writer.writeString(' + ');
             this.processStringLiteral(element.literal);
