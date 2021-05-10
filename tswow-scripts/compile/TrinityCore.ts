@@ -148,5 +148,6 @@ export namespace TrinityCore {
 
         term.log("Copying tdb");
         wfs.copy(bpaths.tdbSql,ipaths.tdb);
+        wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
     }
 }
