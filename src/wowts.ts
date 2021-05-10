@@ -52,7 +52,7 @@ const olddir = process.cwd();
 process.chdir(path.join(modulePath));
 fs.writeFileSync('./tsconfig.json', JSON.stringify(CONFIG));
 
-child_process.execSync('node ../../bin/scripts/transpiler/main.js tsconfig.json', {stdio: 'inherit'});
+child_process.execSync('node -r source-map-support/register ../../bin/scripts/transpiler/main.js tsconfig.json', {stdio: 'inherit'});
 fs.unlinkSync('./tsconfig.json');
 process.chdir(olddir);
 
