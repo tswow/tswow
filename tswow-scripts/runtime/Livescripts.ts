@@ -32,7 +32,7 @@ export namespace Livescripts {
         term.log(`Building LiveScripts for ${name} (${type} mode)`);
 
         const timer = Timer.start();
-        wsys.exec(`node ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
+        wsys.exec(`node -r source-map-support/register ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
 
         wfs.copy(
               ipaths.moduleScriptsBuiltLibrary(name,type)
