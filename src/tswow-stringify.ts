@@ -28,9 +28,9 @@ export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter)
         }
 
         if(type=='string') {
-            writer.writeString(`") +spaces(indention+1) + JSTR("${name}:\\"")+::stringify(this->${name},indention+1)+JSTR("\\"\\n`)
+            writer.writeString(`") +spaces(indention+1) + JSTR("${name}:\\"")+::ToStr(this->${name},indention+1)+JSTR("\\"\\n`)
         } else if (isNormal) {
-            writer.writeString(`") +spaces(indention+1) + JSTR("${name}:")+::stringify(this->${name},indention+1)+JSTR("\\n`)
+            writer.writeString(`") +spaces(indention+1) + JSTR("${name}:")+::ToStr(this->${name},indention+1)+JSTR("\\n`)
         } else {
             writer.writeString(`") +spaces(indention+1) + JSTR("${name}:")+(this->${name}->stringify(indention+1))+JSTR("\\n`)
         }
