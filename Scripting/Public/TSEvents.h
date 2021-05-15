@@ -319,6 +319,7 @@ EVENT_TYPE(ItemOnQuestAccept,TSItem,TSPlayer,TSQuest)
 EVENT_TYPE(ItemOnGossipHello,TSItem,TSPlayer,TSMutable<bool>)
 EVENT_TYPE(ItemOnGossipSelect,TSItem,TSPlayer,uint32,uint32,TSMutable<bool>)
 EVENT_TYPE(ItemOnGossipSelectCode,TSItem,TSPlayer,uint32,uint32,TSString,TSMutable<bool>)
+EVENT_TYPE(ItemOnCanChangeEquipState,TSItemTemplate,TSMutable<bool>)
 
 struct TSItemEvents {
      EVENT(ItemOnUse)
@@ -331,6 +332,7 @@ struct TSItemEvents {
      EVENT(ItemOnGossipHello)
      EVENT(ItemOnGossipSelect)
      EVENT(ItemOnGossipSelectCode)
+     EVENT(ItemOnCanChangeEquipState)
 };
 
 class TSItemMap : public TSEventMap<TSItemEvents>
@@ -467,6 +469,7 @@ struct TSEvents
     EVENT(ItemOnGossipHello)
     EVENT(ItemOnGossipSelect)
     EVENT(ItemOnGossipSelectCode)
+    EVENT(ItemOnCanChangeEquipState)
 
     // UnitScript
     EVENT(FormulaOnHeal);
@@ -1027,6 +1030,7 @@ public:
          EVENT_HANDLE(Item,OnGossipHello)
          EVENT_HANDLE(Item,OnGossipSelect)
          EVENT_HANDLE(Item,OnGossipSelectCode)
+         EVENT_HANDLE(Item,OnCanChangeEquipState)
      } Items;
 
     struct ItemIDEvents: public MappedEventHandler<TSItemMap> {
@@ -1041,6 +1045,7 @@ public:
          MAP_EVENT_HANDLE(Item,OnGossipHello)
          MAP_EVENT_HANDLE(Item,OnGossipSelect)
          MAP_EVENT_HANDLE(Item,OnGossipSelectCode)
+         MAP_EVENT_HANDLE(Item,OnCanChangeEquipState)
     } ItemID;
 
     struct AddonEvents: public EventHandler {
