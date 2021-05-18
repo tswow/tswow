@@ -102,6 +102,26 @@ static struct MathClass {
     float abs(float arg) { return ::abs(arg); }
     double abs(double arg) { return ::abs(arg); }
 
+    template<typename T>
+    T min(T fst) { return fst; }
+
+    template<typename T, typename...Ts>
+    T min(T fst, Ts... args)
+    {
+        T min_args = min(args...);
+        return fst < min_args ? fst : min_args;
+    }
+
+    template<typename T>
+    T max(T fst) { return fst; }
+
+    template<typename T, typename...Ts>
+    T max(T fst, Ts... args)
+    {
+        T max_args = max(args...);
+        return fst > max_args ? fst : max_args;
+    }
+
     int32_t abs(int32_t arg) { return ::abs(arg); }
     int64_t abs(int64_t arg) { return ::abs(arg); }
 
