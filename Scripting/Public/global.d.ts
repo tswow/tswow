@@ -6565,6 +6565,7 @@ declare namespace _hidden {
         OnLogin(callback: (player : TSPlayer,firstLogin : bool)=>void);
         OnLogout(callback: (player : TSPlayer)=>void);
         OnCreate(callback: (player : TSPlayer)=>void);
+        OnCreateEarly(callback: (player : TSPlayer)=>void);
         OnDelete(callback: (guid : uint64,accountId : uint32)=>void);
         OnFailedDelete(callback: (guid : uint64,accountId : uint32)=>void);
         OnSave(callback: (player : TSPlayer)=>void);
