@@ -1,7 +1,9 @@
+#pragma once
+
 #include "TSString.h"
 #include "TSArray.h"
 
-TSArray<TSString> TSString::split(TSString delim)
+inline TSArray<TSString> TSString::split(TSString delim)
 {
   TSArray<TSString> arr;
   auto start = 0U;

@@ -56,3 +56,4 @@
 #include "TSStringConvert.h"
 #include "TSDBDict.h"
 #include "TSCreatureTemplate.h"
+#include "TSSplit.h"
