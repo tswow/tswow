@@ -6485,6 +6485,7 @@ declare namespace _hidden {
         OnMaxHealth(callback: (player: TSPlayer,health: TSMutable<float>)=>void);
         OnMaxPower(callback: (player: TSPlayer,power:uint32,bonus: float, value: TSMutable<float>)=>void);
         OnManaRegen(callback: (player: TSPlayer,power_regen: TSMutable<float>,power_regen_mp5: TSMutable<float>,manaRegenInterrupt: TSMutable<int32>)=>void); 
+        OnSkillGainChance(callback: (player: TSPlayer, skillId: uint32, value: uint32, grayLevel: uint32, greenLevel: uint32, yellowLevel: uint32, chance: TSMutable<float>)=>void)
 
         OnAddThreatEarly(callback: (
               owner: TSUnit
