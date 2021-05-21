@@ -31,6 +31,7 @@ type TSArray<T> = T[];
 type TSString = string;
 
 declare class TSMutable<T> {
+    constructor(field: T);
     get() : T;
     set(value: T) : void;
 }
@@ -71,6 +72,8 @@ declare class TSChatChannel {
 
 declare class TSPlayer extends TSUnit {
     SendData(data: any)
+    SetBankBagSlotCount(count: uint8)
+    AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32)
 
     IsNull() : bool
 
@@ -6733,18 +6736,33 @@ declare namespace _hidden {
         OnGossipHello(callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
         OnGossipSelect(callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, cancel: TSMutable<boolean>)=>void)
         OnGossipSelectCode(callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, text: string, cancel: TSMutable<boolean>)=>void)
+
         OnCanChangeEquipState(callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
+        OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
+        OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnEquipEarly(callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnEquipLate(callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnLFGRollEarly(callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
+        OnDestroyEarly(callback: (item: TSItem, player: TSPlayer, result: TSMutable<boolean>)=>void);
     }
 
     export class ItemID {
-        OnUse(callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
-        OnExpire(callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnRemove(callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnCastSpell(callback: (item: TSItem, player: TSPlayer, unit: TSUnit, spell: TSSpellInfo, cancel: TSMutable<boolean>)=>void)
-        OnQuestAccept(callback: (item: TSItem, player: TSPlayer, quest: TSQuest)=>void)
-        OnGossipHello(callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnGossipSelect(callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, cancel: TSMutable<boolean>)=>void)
-        OnGossipSelectCode(callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, text: string, cancel: TSMutable<boolean>)=>void)
+        OnUse(item: uint32, callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
+        OnExpire(item: uint32, callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnRemove(item: uint32, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnCastSpell(item: uint32, callback: (item: TSItem, player: TSPlayer, unit: TSUnit, spell: TSSpellInfo, cancel: TSMutable<boolean>)=>void)
+        OnQuestAccept(item: uint32, callback: (item: TSItem, player: TSPlayer, quest: TSQuest)=>void)
+        OnGossipHello(item: uint32, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnGossipSelect(item: uint32, callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, cancel: TSMutable<boolean>)=>void)
+        OnGossipSelectCode(item: uint32, callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, text: string, cancel: TSMutable<boolean>)=>void)
+
+        OnCanChangeEquipState(item: uint32, callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
+        OnUnequip(item: uint32, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
+        OnBank(item: uint32, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnEquipEarly(item: uint32, callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnEquipLate(item: uint32, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnLFGRollEarly(item: uint32, callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
+        OnDestroyEarly(item: uint32, callback: (item: TSItem, looter: TSPlayer, result: TSMutable<boolean>)=>void);
     }
 
     export class GameObjects {

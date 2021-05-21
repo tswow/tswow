@@ -121,6 +121,7 @@ public:
 	TSItem  GetEquippedItemBySlot(uint8 slot);
 	float GetRestBonus();
 	uint8 GetChatTag();
+	void SetBankBagSlotCount(uint8 count);
 	TSItem GetItemByPos(uint8 bag, uint8 slot);
 	TSItem GetItemByGUID(uint64 guid);
 	TSItem GetItemByEntry(uint32 entry);
@@ -230,6 +231,7 @@ public:
 	bool Teleport(uint32 mapId, float x, float y, float z, float o);
 	void AddLifetimeKills(uint32 val);
 	TSItem AddItem(uint32 itemId, uint32 itemCount);
+	void AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count);
 	void RemoveItem(TSItem item, uint32 itemCount, uint32 itemId);
 	void RemoveLifetimeKills(uint32 val);
 	void ResetSpellCooldown(uint32 spellId, bool update);

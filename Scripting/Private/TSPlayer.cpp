@@ -3671,6 +3671,19 @@ void TSPlayer::RemoveMail(uint32 id)
     player->RemoveMail(id);
 }
 
+void TSPlayer::SetBankBagSlotCount(uint8 count)
+{
+    player->SetBankBagSlotCount(count);
+}
+
+void TSPlayer::AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count)
+{
+    ItemPosCountVec dest;
+    dest.push_back(ItemPosCount(bag<<8|slot,count));
+    Item* item = player->StoreNewItem(dest, itemId, true, GenerateItemRandomPropertyId(itemId));
+    if (item) player->SendNewItem(item, count, true, false);
+}
+
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
 player->BindToInstance();

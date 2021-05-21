@@ -324,6 +324,13 @@ EVENT_TYPE(ItemOnGossipSelect,TSItem,TSPlayer,uint32,uint32,TSMutable<bool>)
 EVENT_TYPE(ItemOnGossipSelectCode,TSItem,TSPlayer,uint32,uint32,TSString,TSMutable<bool>)
 EVENT_TYPE(ItemOnCanChangeEquipState,TSItemTemplate,TSMutable<bool>)
 
+EVENT_TYPE(ItemOnUnequip,TSItem,TSPlayer,bool,TSMutable<uint32> /*result*/)
+EVENT_TYPE(ItemOnBank,TSItem,TSPlayer,uint8/*bag*/,uint8/*slot*/,bool/*swap*/,TSMutable<uint32> /*result*/)
+EVENT_TYPE(ItemOnEquipEarly,TSItem,TSPlayer,uint8/*slot*/,bool/*swap*/,TSMutable<uint32> /*result*/)
+EVENT_TYPE(ItemOnUseLate,TSItem,TSPlayer,TSMutable<uint32> /*result*/)
+EVENT_TYPE(ItemOnLFGRollEarly,TSItemTemplate,TSWorldObject /*looted*/,TSPlayer/*looter*/,TSMutable<int32> /*result*/)
+EVENT_TYPE(ItemOnDestroyEarly,TSItem,TSPlayer,TSMutable<bool>)
+
 struct TSItemEvents {
      EVENT(ItemOnUse)
      EVENT(ItemOnExpire)
@@ -336,6 +343,13 @@ struct TSItemEvents {
      EVENT(ItemOnGossipSelect)
      EVENT(ItemOnGossipSelectCode)
      EVENT(ItemOnCanChangeEquipState)
+
+     EVENT(ItemOnUnequip)
+     EVENT(ItemOnBank)
+     EVENT(ItemOnEquipEarly)
+     EVENT(ItemOnUseLate)
+     EVENT(ItemOnLFGRollEarly)
+     EVENT(ItemOnDestroyEarly)
 };
 
 class TSItemMap : public TSEventMap<TSItemEvents>
@@ -473,6 +487,13 @@ struct TSEvents
     EVENT(ItemOnGossipSelect)
     EVENT(ItemOnGossipSelectCode)
     EVENT(ItemOnCanChangeEquipState)
+
+    EVENT(ItemOnUnequip)
+    EVENT(ItemOnBank)
+    EVENT(ItemOnEquipEarly)
+    EVENT(ItemOnUseLate)
+    EVENT(ItemOnLFGRollEarly)
+    EVENT(ItemOnDestroyEarly)
 
     // UnitScript
     EVENT(FormulaOnHeal);
@@ -1040,6 +1061,12 @@ public:
          EVENT_HANDLE(Item,OnGossipSelect)
          EVENT_HANDLE(Item,OnGossipSelectCode)
          EVENT_HANDLE(Item,OnCanChangeEquipState)
+         EVENT_HANDLE(Item,OnUnequip)
+         EVENT_HANDLE(Item,OnBank)
+         EVENT_HANDLE(Item,OnEquipEarly)
+         EVENT_HANDLE(Item,OnUseLate)
+         EVENT_HANDLE(Item,OnLFGRollEarly)
+         EVENT_HANDLE(Item,OnDestroyEarly)
      } Items;
 
     struct ItemIDEvents: public MappedEventHandler<TSItemMap> {
@@ -1055,6 +1082,13 @@ public:
          MAP_EVENT_HANDLE(Item,OnGossipSelect)
          MAP_EVENT_HANDLE(Item,OnGossipSelectCode)
          MAP_EVENT_HANDLE(Item,OnCanChangeEquipState)
+
+         MAP_EVENT_HANDLE(Item,OnUnequip)
+         MAP_EVENT_HANDLE(Item,OnBank)
+         MAP_EVENT_HANDLE(Item,OnEquipEarly)
+         MAP_EVENT_HANDLE(Item,OnUseLate)
+         MAP_EVENT_HANDLE(Item,OnLFGRollEarly)
+         MAP_EVENT_HANDLE(Item,OnDestroyEarly)
     } ItemID;
 
     struct AddonEvents: public EventHandler {
