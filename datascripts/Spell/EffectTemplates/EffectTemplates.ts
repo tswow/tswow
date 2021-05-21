@@ -115,6 +115,11 @@ export class ExtraAttacks<T> extends DamageBase<T> {}
 @EffectID(24)
 export class CreateItem<T> extends TargetBase<T> {
     get ItemTemplate() { return this.wrap(this.effect.ItemType); }
+
+    /**
+     * Set to desired item count -1 (i.e. set to 199 for 200)
+     */
+    get ItemCount() { return this.wrap(this.effect.BasePoints); }
 }
 // 25
 @EffectID(25)

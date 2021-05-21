@@ -52,6 +52,11 @@ export class ProfessionRecipe extends Subsystem<Profession> {
 
     get SpellFocus() { return this.wrap(this.spell.RequiresSpellFocus); }
     get ID() { return this.spell.ID; }
+
+    /**
+     * Set to desired item count -1 (i.e. set to 199 for 200, or 0 for 1)
+     */
+    get OutputCount() { return this.wrap(this.spell.Effects.get(0).BasePoints); }
     get OutputItem() { return new RecipeOutputItem(this); }
     get Ranks() { return new RecipeRank(this, this.spell); }
     get Reagents() { return new SpellReagents(this, this.spell); }
