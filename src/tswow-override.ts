@@ -65,11 +65,27 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
 
     "AddTimer": simpleModid,
     "AddCollision": simpleModid,
+
+    "TSMutable": (emt,node)=>{
+        emt.writer.writeString(`TSMutable<${node.typeArguments[0].getText()}>(&`)
+        emt.processExpression(node.arguments[0]);
+        emt.writer.writeString(')');
+    }
 }
 
 export function handleTSWoWOverride(emitter: Emitter, node: ts.CallExpression|ts.NewExpression) {
     if(node.getChildCount()>0) {
         let fsChild = node.getChildAt(0);
+
+        if(fsChild.getText() == 'new') {
+            fsChild = node.getChildAt(1);
+            let text = fsChild.getText();
+            if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined) {
+                TSWOW_OVERRIDE_FUNCTIONS[text](emitter, node);
+                return true;
+            }
+        }
+
         if(fsChild.getChildCount()>0) {
             const lsGrandchild = fsChild.getChildAt(fsChild.getChildCount()-1);
             const text = lsGrandchild.getText();
