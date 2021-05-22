@@ -12,7 +12,9 @@ export function cleanSQL() {
     q('DELETE FROM npc_vendor WHERE VerifiedBuild = 17688;')
     q('DELETE FROM conditions WHERE Comment = "tswow";')
     q('DELETE FROM creature WHERE VerifiedBuild = 17688;')
-
+    q('DELETE FROM playercreateinfo_cast_spell WHERE note = "tswow";')
+    q('DELETE FROM playercreateinfo_skills WHERE comment = "tswow";')
+    q('DELETE FROM playercreateinfo_spell_custom WHERE Note = "tswow";')
     q('DELETE FROM mail_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM creature_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM disenchant_loot_template WHERE Comment = "tswow";')
