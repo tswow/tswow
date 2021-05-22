@@ -1846,7 +1846,7 @@ declare class TSCorpse extends TSWorldObject {
 declare class StorageClass {
     GetData(): TSStorage;
     SetObject<T>(key: string, obj: T): T;
-    HasObject(modid: uint32, key: string): boolean;
+    HasObject(key: string): boolean;
     GetObject<T>(key: string, value: T): T;
     GetDBObject<T>(key: string, sql: string, value: T): T;
 
@@ -4307,7 +4307,7 @@ declare class TSWorldObject extends TSObject {
     GetCollision(id: string): TSCollisionEntry
 
     SetObject<T>(key: string, obj: T): T;
-    HasObject(modid: uint32, key: string): boolean;
+    HasObject(key: string): boolean;
     GetObject<T>(key: string, value: T): T;
     GetDBObject<T>(key: string, sql: string, value: T): T;
 

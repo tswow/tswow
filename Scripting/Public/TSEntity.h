@@ -7,7 +7,7 @@
 
 // Could be a base class, but would have to track the pointer
 
-#define TS_ENTITY_DATA_DECL(CLS)                                                                                                 \
+#define TS_ENTITY_DATA_DECL(CLS)                                                                                           \
     template <typename T>                                                                                                  \
     std::shared_ptr<T> SetObject(uint32_t modid, TSString key, std::shared_ptr<T> item)                                    \
     {                                                                                                                      \
@@ -18,6 +18,11 @@
     std::shared_ptr<T> GetObject(uint32_t modid, TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr) \
     {                                                                                                                      \
         return GetData()->GetObject(modid, key, defaultValue);                                                             \
+    }                                                                                                                      \
+                                                                                                                           \
+    bool HasObject(uint32_t modid, TSString key)                                                                           \
+    {                                                                                                                      \
+        return GetData()->HasObject(modid,key);                                                                            \
     }                                                                                                                      \
                                                                                                                            \
     int32_t SetInt(TSString key, int32_t value);                                                                           \
