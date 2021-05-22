@@ -20,6 +20,7 @@
 #include "Item.h"
 #include "Player.h"
 #include "World.h"
+#include "Timer.h"
 
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
@@ -44,4 +45,9 @@ void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSStri
 void SendWorldMessage(TSString string)
 {
     sWorld->SendServerMessage(SERVER_MSG_STRING, string);
+}
+
+uint32 GetCurrTime()
+{
+    return getMSTime();
 }
