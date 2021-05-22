@@ -28,6 +28,14 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         emt.writer.writeString(`;})`);
     },
 
+    "HasObject": (emt,node)=>{
+        emt.processExpression(node.expression);
+        emt.writer.writeString(`(ModID(),`);
+        // key
+        emt.processExpression(node.arguments[0]);
+        emt.writer.writeString(`)`);
+    },
+
     "GetDBObject": (emt,node)=>{
         let type = emt.typeChecker.typeToString(
             emt.resolver.getTypeOf(node.arguments[node.arguments.length-1]));
