@@ -154,6 +154,7 @@ EVENT_TYPE(PlayerOnEmote,TSPlayer,uint32)
 EVENT_TYPE(PlayerOnTextEmote,TSPlayer,uint32,uint32,uint64)
 EVENT_TYPE(PlayerOnSpellCast,TSPlayer,TSSpell,bool)
 EVENT_TYPE(PlayerOnLogin,TSPlayer,bool)
+EVENT_TYPE(PlayerOnReload,TSPlayer,bool)
 EVENT_TYPE(PlayerOnLogout,TSPlayer)
 EVENT_TYPE(PlayerOnCreateEarly,TSPlayer)
 EVENT_TYPE(PlayerOnCreate,TSPlayer)
@@ -252,6 +253,7 @@ EVENT_TYPE(CreatureOnSpellClick,TSCreature,TSUnit,bool)
 EVENT_TYPE(CreatureOnUpdateAI,TSCreature,uint32)
 EVENT_TYPE(CreatureOnGenerateLoot,TSCreature,TSPlayer)
 EVENT_TYPE(CreatureOnCreate,TSCreature,TSMutable<bool>)
+EVENT_TYPE(CreatureOnReload,TSCreature)
 EVENT_TYPE(CreatureOnRemove,TSCreature)
 
 EVENT_TYPE(CreatureOnGossipHello,TSCreature,TSPlayer,TSMutable<bool>)
@@ -292,6 +294,7 @@ struct TSCreatureEvents {
      EVENT(CreatureOnUpdateAI)
      EVENT(CreatureOnGenerateLoot)
      EVENT(CreatureOnCreate)
+     EVENT(CreatureOnReload)
      EVENT(CreatureOnRemove)
 
      EVENT(CreatureOnGossipHello)
@@ -371,6 +374,7 @@ EVENT_TYPE(GameObjectOnGossipSelect,TSGameObject,TSPlayer,uint32,uint32,TSMutabl
 EVENT_TYPE(GameObjectOnGossipSelectCode,TSGameObject,TSPlayer,uint32,uint32,TSString,TSMutable<bool>)
 
 EVENT_TYPE(GameObjectOnCreate,TSGameObject,TSMutable<bool>)
+EVENT_TYPE(GameObjectOnReload,TSGameObject)
 EVENT_TYPE(GameObjectOnRemove,TSGameObject)
 EVENT_TYPE(GameObjectOnUse,TSGameObject,TSUnit,TSMutable<bool>)
 EVENT_TYPE(GameObjectOnQuestAccept,TSGameObject,TSPlayer,TSQuest)
@@ -391,6 +395,7 @@ struct TSGameObjectEvents {
      EVENT(GameObjectOnGossipSelectCode)
 
      EVENT(GameObjectOnCreate)
+     EVENT(GameObjectOnReload)
      EVENT(GameObjectOnRemove)
      EVENT(GameObjectOnUse)
      EVENT(GameObjectOnQuestAccept)
@@ -406,6 +411,7 @@ class TSGameObjectMap : public TSEventMap<TSGameObjectEvents>
 };
 
 EVENT_TYPE(MapOnCreate,TSMap)
+EVENT_TYPE(MapOnReload,TSMap)
 EVENT_TYPE(MapOnUpdate,TSMap,uint32)
 EVENT_TYPE(MapOnPlayerEnter,TSMap,TSPlayer)
 EVENT_TYPE(MapOnPlayerLeave,TSMap,TSPlayer)
@@ -417,6 +423,7 @@ EVENT_TYPE(MapOnCheckEncounter,TSMap,TSPlayer)
 
 struct TSMapEvents {
      EVENT(MapOnCreate)
+     EVENT(MapOnReload)
      EVENT(MapOnUpdate)
      EVENT(MapOnPlayerEnter)
      EVENT(MapOnPlayerLeave)
@@ -555,6 +562,7 @@ struct TSEvents
     EVENT(PlayerOnTextEmote)
     EVENT(PlayerOnSpellCast)
     EVENT(PlayerOnLogin)
+    EVENT(PlayerOnReload)
     EVENT(PlayerOnLogout)
     EVENT(PlayerOnCreate)
     EVENT(PlayerOnCreateEarly)
@@ -629,6 +637,7 @@ struct TSEvents
     EVENT(CreatureOnUpdateAI)
     EVENT(CreatureOnGenerateLoot)
     EVENT(CreatureOnCreate)
+    EVENT(CreatureOnReload)
     EVENT(CreatureOnRemove)
 
     EVENT(CreatureOnGossipHello)
@@ -660,6 +669,7 @@ struct TSEvents
     EVENT(GameObjectOnGossipSelectCode)
 
     EVENT(GameObjectOnCreate)
+    EVENT(GameObjectOnReload)
     EVENT(GameObjectOnRemove)
     EVENT(GameObjectOnUse)
     EVENT(GameObjectOnQuestAccept)
@@ -669,6 +679,7 @@ struct TSEvents
 
     // Maps
     EVENT(MapOnCreate)
+    EVENT(MapOnReload)
     EVENT(MapOnUpdate)
     EVENT(MapOnPlayerEnter)
     EVENT(MapOnPlayerLeave)
@@ -684,6 +695,11 @@ struct TSEvents
     TSMapMap Maps;
     TSItemMap Items;
 };
+
+TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
+TC_GAME_API void ReloadPlayer(PlayerOnReloadType fn, uint32 id);
+TC_GAME_API void ReloadCreature(CreatureOnReloadType fn, uint32 id);
+TC_GAME_API void ReloadMap(MapOnReloadType fn, uint32 id);
 
 class TSEventHandlers
 {
@@ -815,6 +831,7 @@ public:
          EVENT_HANDLE(Player,OnTextEmote)
          EVENT_HANDLE(Player,OnSpellCast)
          EVENT_HANDLE(Player,OnLogin)
+         EVENT_HANDLE_FN(Player,OnReload,ReloadPlayer)
          EVENT_HANDLE(Player,OnLogout)
          EVENT_HANDLE(Player,OnCreate)
          EVENT_HANDLE(Player,OnCreateEarly)
@@ -921,6 +938,7 @@ public:
           EVENT_HANDLE(Creature,OnUpdateAI)
           EVENT_HANDLE(Creature,OnGenerateLoot)
           EVENT_HANDLE(Creature,OnCreate)
+          EVENT_HANDLE_FN(Creature,OnReload,ReloadCreature)
           EVENT_HANDLE(Creature,OnRemove)
 
           EVENT_HANDLE(Creature,OnCanGeneratePickPocketLoot)
@@ -964,6 +982,7 @@ public:
           MAP_EVENT_HANDLE(Creature,OnUpdateAI)
           MAP_EVENT_HANDLE(Creature,OnGenerateLoot)
           MAP_EVENT_HANDLE(Creature,OnCreate)
+          MAP_EVENT_HANDLE_FN(Creature,OnReload,ReloadCreature)
           MAP_EVENT_HANDLE(Creature,OnRemove)
 
           MAP_EVENT_HANDLE(Creature,OnCanGeneratePickPocketLoot)
@@ -991,6 +1010,7 @@ public:
           EVENT_HANDLE(GameObject,OnGossipSelectCode)
 
           EVENT_HANDLE(GameObject,OnCreate)
+          EVENT_HANDLE_FN(GameObject,OnReload,ReloadGameObject)
           EVENT_HANDLE(GameObject,OnRemove)
           EVENT_HANDLE(GameObject,OnUse)
           EVENT_HANDLE(GameObject,OnQuestAccept)
@@ -1013,6 +1033,7 @@ public:
           MAP_EVENT_HANDLE(GameObject,OnGossipSelectCode)
 
           MAP_EVENT_HANDLE(GameObject,OnCreate)
+          MAP_EVENT_HANDLE_FN(GameObject,OnReload,ReloadGameObject)
           MAP_EVENT_HANDLE(GameObject,OnRemove)
           MAP_EVENT_HANDLE(GameObject,OnUse)
           MAP_EVENT_HANDLE(GameObject,OnQuestAccept)
@@ -1023,7 +1044,9 @@ public:
 
     struct MapEvents: public EventHandler {
           MapEvents* operator->(){return this;}
+
           EVENT_HANDLE(Map,OnCreate)
+          EVENT_HANDLE_FN(Map,OnReload,ReloadMap)
           EVENT_HANDLE(Map,OnUpdate)
           EVENT_HANDLE(Map,OnPlayerEnter)
           EVENT_HANDLE(Map,OnPlayerLeave)
@@ -1038,6 +1061,7 @@ public:
     {
           MapIDEvents* operator->(){return this;}
           MAP_EVENT_HANDLE(Map,OnCreate)
+          MAP_EVENT_HANDLE_FN(Map,OnReload,ReloadMap)
           MAP_EVENT_HANDLE(Map,OnUpdate)
           MAP_EVENT_HANDLE(Map,OnPlayerEnter)
           MAP_EVENT_HANDLE(Map,OnPlayerLeave)

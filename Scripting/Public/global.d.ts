@@ -6567,6 +6567,7 @@ declare namespace _hidden {
         OnTextEmote(callback: (player : TSPlayer,textEmote : uint32,emoteNum : uint32,guid : uint64)=>void);
         OnSpellCast(callback: (player : TSPlayer,spell : TSSpell,skipCheck : bool)=>void);
         OnLogin(callback: (player : TSPlayer,firstLogin : bool)=>void);
+        OnReload(callback: (player : TSPlayer,firstLogin : bool)=>void);
         OnLogout(callback: (player : TSPlayer)=>void);
         OnCreate(callback: (player : TSPlayer)=>void);
         OnCreateEarly(callback: (player : TSPlayer)=>void);
@@ -6653,6 +6654,7 @@ declare namespace _hidden {
         OnCorpseRemoved(creature: uint32, callback: (creature: TSCreature, delay: uint32)=>void);
 
         OnCreate(creature: uint32, callback: (creature: TSCreature, cancel: TSMutable<boolean>)=>void)
+        OnReload(creature: uint32, callback: (creature: TSCreature)=>void)
         OnRemove(creature: uint32, callback: (creature: TSCreature)=>void)
 
         OnWaypointStarted(creature: uint32, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
@@ -6700,7 +6702,8 @@ declare namespace _hidden {
         OnOwnerAttacked(callback: (creature: TSCreature, attacker: TSUnit)=>void);
         OnOwnerAttacks(callback: (creature: TSCreature, target: TSUnit)=>void);
         OnCorpseRemoved(callback: (creature: TSCreature, delay: uint32)=>void);
-
+        OnCreate(callback: (creature: TSCreature, cancel: TSMutable<bool>)=>void);
+        OnReload(callback: (creature: TSCreature)=>void)
         OnWaypointStarted(callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
         OnWaypointReached(callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
         OnWaypointPathEnded(callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
@@ -6776,6 +6779,7 @@ declare namespace _hidden {
         OnGossipSelect(callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, cancel: TSMutable<boolean>)=>void)
         OnGossipSelectCode(callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, text: string, cancel: TSMutable<boolean>)=>void)
         OnCreate(callback: (obj: TSGameObject, cancel: TSMutable<boolean>)=>void)
+        OnReload(callback: (obj: TSGameObject)=>void)
         OnRemove(callback: (obj: TSGameObject)=>void)
         OnUse(callback: (obj: TSGameObject, user: TSUnit, cancel: TSMutable<boolean>)=>void)
         OnQuestAccept(callback: (obj: TSGameObject, player: TSPlayer, quest: TSQuest)=>void)
@@ -6783,7 +6787,7 @@ declare namespace _hidden {
         OnGenerateFishLoot(callback: (obj: TSGameObject, player: TSPlayer, loot: TSLoot, isJunk: bool)=>void)
     }
 
-    export class GameObejctID {
+    export class GameObjectID {
         OnUpdate(obj: uint32, callback: (obj: TSGameObject, diff: uint32)=>void)
         OnDialogStatus(obj: uint32, callback: (obj: TSGameObject, player: TSPlayer)=>void)
         OnDestroyed(obj: uint32, callback: (obj: TSGameObject, destroyer: TSWorldObject)=>void)
@@ -6801,12 +6805,12 @@ declare namespace _hidden {
 
     export class Maps {
         OnCreate(callback: (map: TSMap)=>void)
+        OnReload(callback: (map: TSMap)=>void)
         OnUpdate(callback: (map: TSMap, diff: uint32)=>void)
         OnPlayerEnter(callback: (map: TSMap, player: TSPlayer)=>void)
         OnPlayerLeave(callback: (map: TSMap, player: TSPlayer)=>void)
         OnCreatureCreate(callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void)
         OnCreatureRemove(callback: (map: TSMap, creature: TSCreature)=>void)
-
         OnGameObjectCreate(callback: (map: TSMap, obj: TSGameObject, cancel: TSMutable<bool>)=>void)
         OnGameObjectRemove(callback: (map: TSMap, obj: TSGameObject)=>void)
         OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void)
@@ -7012,6 +7016,7 @@ declare class TSMailDraft {
 
 // Global.h
 declare function GetCurrTime(): uint32;
+declare function GetUnixTime(): uint64;
 declare function SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>);
 declare function SendWorldMessage(message: string);
 // end of Global.h

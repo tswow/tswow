@@ -25,3 +25,5 @@ void TC_GAME_API SendMail(uint8 senderType, uint64 from, uint64 to, TSString sub
 void TC_GAME_API SendWorldMessage(TSString string);
 
 uint32 TC_GAME_API GetCurrTime();
+
+uint64 TC_GAME_API GetUnixTime();

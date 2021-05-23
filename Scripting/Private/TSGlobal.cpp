@@ -51,3 +51,9 @@ uint32 GetCurrTime()
 {
     return getMSTime();
 }
+
+uint64 GetUnixTime()
+{
+    using namespace std::chrono;
+    return uint64(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+}

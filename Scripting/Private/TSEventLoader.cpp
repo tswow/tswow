@@ -26,6 +26,7 @@
 #include "TSUnit.h"
 #include "TSSpell.h"
 #include "TSCreature.h"
+#include "TSGameObject.h"
 #include "TSQuest.h"
 #include "TSItem.h"
 #include "QuestDef.h"
@@ -49,6 +50,7 @@
 
 #include <fstream>
 #include <map>
+#include <limits>
 
 TSTasks<void*> globalTasks;
 TSTasks<void*> GetTasks()
@@ -206,6 +208,85 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
         RemoveData(p.second);
     }
 }
+
+struct ReloadGameObjectWorker {
+    GameObjectOnReloadType _fn;
+    uint32 _gobj_id;
+
+    ReloadGameObjectWorker( GameObjectOnReloadType fn
+                          , uint32 gobj_id
+                          )
+                          : _fn(fn)
+                          , _gobj_id(gobj_id)
+                          {}
+
+    void Visit(std::unordered_map<ObjectGuid, GameObject*>& gameObjectMap)
+    {
+        for(auto const& p : gameObjectMap)
+            if(_gobj_id == std::numeric_limits<uint32_t>::max() || p.second->GetGOInfo()->entry == _gobj_id)
+                _fn(TSGameObject(p.second));
+    }
+
+    template<class T>
+    void Visit(std::unordered_map<ObjectGuid, T*>&) { }
+};
+void ReloadGameObject(GameObjectOnReloadType fn, uint32 id)
+{
+    sMapMgr->DoForAllMaps([&](auto map){
+        ReloadGameObjectWorker worker(fn,id);
+        TypeContainerVisitor<ReloadGameObjectWorker, MapStoredObjectTypesContainer> visitor(worker);
+        visitor.Visit(map->GetObjectsStore());
+    });
+}
+
+void ReloadPlayer(PlayerOnReloadType fn, uint32 id)
+{
+    for(auto &p : ObjectAccessor::GetPlayers())
+    {
+        fn(TSPlayer(p.second), false);
+    }
+}
+
+struct ReloadCreatureWorker {
+    CreatureOnReloadType _fn;
+    uint32 _creature_id;
+
+    ReloadCreatureWorker( CreatureOnReloadType fn
+                          , uint32 creature_id
+                          )
+                          : _fn(fn)
+                          , _creature_id(creature_id)
+                          {}
+
+    void Visit(std::unordered_map<ObjectGuid, Creature*>& creatureMap)
+    {
+        for(auto const& p : creatureMap)
+            if(_creature_id == std::numeric_limits<uint32_t>::max() || _creature_id == p.second->GetCreatureTemplate()->Entry)
+                _fn(TSCreature(p.second));
+    }
+
+    template<class T>
+    void Visit(std::unordered_map<ObjectGuid, T*>&) { }
+};
+void ReloadCreature(CreatureOnReloadType fn, uint32 id)
+{
+    sMapMgr->DoForAllMaps([&](auto map){
+        ReloadCreatureWorker worker(fn,id);
+        TypeContainerVisitor<ReloadCreatureWorker, MapStoredObjectTypesContainer> visitor(worker);
+        visitor.Visit(map->GetObjectsStore());
+    });
+}
+
+void ReloadMap(MapOnReloadType fn, uint32 id)
+{
+    sMapMgr->DoForAllMaps([&](auto map){
+        if(id==std::numeric_limits<uint32_t>::max() || id == map->GetId())
+        {
+            fn(TSMap(map));
+        }
+    });
+}
+
 
 static std::map<uint32_t, TSMapDataExtra*> mapData;
 TSMapDataExtra* GetMapDataExtra(uint32_t id)
