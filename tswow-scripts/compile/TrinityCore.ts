@@ -26,6 +26,15 @@ import { SevenZip } from '../util/7zip';
 import { BuildType } from '../util/BuildType';
 
 export namespace TrinityCore {
+    export function headers() {
+        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
+            if(wfs.exists(ipaths.moduleScripts(x))) {
+                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
+            }
+        });
+    }
+
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
         term.log('Compiling TrinityCore');
 
@@ -105,13 +114,7 @@ export namespace TrinityCore {
         }
 
         // Move ts-module header files
-        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
-
-        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
-            if(wfs.exists(ipaths.moduleScripts(x))) {
-                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
-            }
-        });
+        headers();
 
         const rev = wsys.execIn(spaths.trinityCore,'git rev-parse HEAD','pipe').split('\n').join('');
         wfs.write(ipaths.tcRevision,rev);

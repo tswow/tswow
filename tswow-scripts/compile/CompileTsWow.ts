@@ -125,6 +125,10 @@ async function main() {
         }
     });
 
+    commands.addCommand('headers','','',async()=>{
+        TrinityCore.headers();
+    });
+
     commands.enterLoop();
 }
 
