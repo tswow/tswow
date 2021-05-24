@@ -7,13 +7,14 @@ import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { Datasets } from "./Dataset";
 import { BuildType } from "../util/BuildType";
+import { commands } from "./Commands";
 
 export namespace Livescripts {
     /**
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export async function build(name: string, type: BuildType) {
+    export async function build(name: string, type: BuildType, trace?: boolean, allowGlobals?: boolean) {
         await Modules.refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 
@@ -32,7 +33,17 @@ export namespace Livescripts {
         term.log(`Building LiveScripts for ${name} (${type} mode)`);
 
         const timer = Timer.start();
-        wsys.exec(`node -r source-map-support/register ${ipaths.transpilerEntry} ${name} ${type}`,'inherit');
+
+        try {
+            wsys.exec(
+                `node -r source-map-support/register`
+                + ` ${ipaths.transpilerEntry} ${name} ${type}`
+                + ` ${(trace||commands.trace)?'--trace':''}`
+                + ` ${(allowGlobals)?'--allow-globals':''}`
+                ,'inherit');
+        } catch(err) {
+            throw new Error(`Failed to compile LiveScripts`)
+        }
 
         wfs.copy(
               ipaths.moduleScriptsBuiltLibrary(name,type)

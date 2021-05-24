@@ -168,7 +168,7 @@ export namespace commands {
 
     const rootCommand = new Command('', '', '');
 
-    let trace = false;
+    export let trace = false;
 
     export function getRootCommand() {
         return rootCommand;

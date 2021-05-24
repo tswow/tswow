@@ -141,11 +141,16 @@ export namespace Build {
 
         Build.command.addCommand(
               'livescripts'
-            , 'module? --debug'
+            , 'module? --debug|release|relwithdebinfo --trace'
             , 'Build and loads the server scripts of a module'
             , async (args) => {
             let modules = Modules.getModulesOrAll(args);
-            await Promise.all(modules.map(x=>Livescripts.build(x.id, findBuildType(args))))
+            await Promise.all(modules.map(x=>Livescripts.build(
+                  x.id
+                , findBuildType(args)
+                , args.includes('--trace')
+                , args.includes('--allow-globals')
+                )))
             Datasets.getAll().forEach(x=>{
                 Livescripts.writeModuleText(x);
             });
