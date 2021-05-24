@@ -2333,6 +2333,7 @@ export class Emitter {
             }
         }
         const func = filetext.substring(cur,start);
+        // TODO: massive hack
         let isEvent = func.startsWith('.On') || 
             func.startsWith('.UnitModifySpellDamage') || 
             func.startsWith('.AddTimer') || 
@@ -2415,6 +2416,7 @@ export class Emitter {
             }
         };
 
+        let extraArgs = 0;
         if (writeAsLambdaCFunction) {
             if (isFunctionOrMethodDeclaration) {
                 // type declaration
@@ -2464,6 +2466,28 @@ export class Emitter {
                     this.writeClassName();
                 }
             } else if (isArrowFunction || isFunctionExpression) {
+                // Prepare extra arguments
+                try { // doing try/catch here because "kind" seems to completely bug out when accessing parent elements
+                    let argsLength = (node as ts.ArrowFunction).parameters.length;
+                    let index = -1;
+                    (node.parent as ts.CallExpression).arguments.forEach((x,i)=>{
+                        if(x === node) {
+                            index = i;
+                        }
+                    });
+                    if(index != -1) {
+                        let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
+                        let callDecl = this.resolver.getFirstDeclaration(type);
+                        // I think this isn't necessarily always CallSignatureDeclaration, 
+                        // but at least they all seem to have the same "parameters" property
+                        let tt = this.resolver.getTypeAtLocation((callDecl as any as ts.CallSignatureDeclaration).parameters[index]);
+                        let decl = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
+                        let paramLength = decl.parameters.length;
+                        if(paramLength > argsLength) extraArgs = paramLength - argsLength;
+                    }
+                } catch(error) {
+                    extraArgs = 0;
+                }
 
                 if (isNestedFunction) {
                     this.writer.writeString('auto ');
@@ -2536,6 +2560,17 @@ export class Emitter {
 
             next = true;
         });
+
+        // add extra arguments
+        if(extraArgs > 0) {
+            if(node.parameters.length > 0) {
+                this.writer.writeString(',');
+            }
+
+            for(let i=0;i<extraArgs;++i) {
+                this.writer.writeString(`auto __tswow_extra_args${i}${i<extraArgs-1?',':''}`)
+            }
+        }
 
         // @tswow-begin
         if (!isEvent && (isArrowFunction || isFunctionExpression)) {
