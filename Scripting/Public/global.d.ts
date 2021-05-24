@@ -36,6 +36,12 @@ declare class TSMutable<T> {
     set(value: T) : void;
 }
 
+declare class TSMutex {
+    lock();
+    unlock();
+    try_lock(): bool;
+}
+
 declare class TSPosition {
     x: float;
     y: float;

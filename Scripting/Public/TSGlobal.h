@@ -27,3 +27,4 @@ void TC_GAME_API SendWorldMessage(TSString string);
 uint32 TC_GAME_API GetCurrTime();
 
 uint64 TC_GAME_API GetUnixTime();
+

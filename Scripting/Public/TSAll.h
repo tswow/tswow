@@ -57,3 +57,4 @@
 #include "TSDBDict.h"
 #include "TSCreatureTemplate.h"
 #include "TSSplit.h"
+#include "TSMutex.h"
