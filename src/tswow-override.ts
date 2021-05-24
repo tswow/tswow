@@ -78,6 +78,10 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         emt.writer.writeString(`TSMutable<${node.typeArguments[0].getText()}>(&`)
         emt.processExpression(node.arguments[0]);
         emt.writer.writeString(')');
+    },
+
+    "TSMutex": (emt,node)=>{
+        emt.writer.writeString(`TSMutex();`);
     }
 }
 
