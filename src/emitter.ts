@@ -471,7 +471,6 @@ export class Emitter {
         }
 
         if (this.isSource()) {
-            console.log('Processing source file internally ', this.sourceFileName);
             // added header
             this.WriteHeader();
 
@@ -1660,6 +1659,14 @@ export class Emitter {
         }
     }
 
+    error(message: string, node: ts.Node) {
+        const file = node.getSourceFile().fileName;
+        const { line, character} = node
+            .getSourceFile()
+            .getLineAndCharacterOfPosition(node.pos);
+        throw new Error(`TypeScript Error: ${message}\n    (in source file ${file}:${line}:${character})`);
+    }
+
     processVariableDeclarationList(declarationList: ts.VariableDeclarationList, forwardDeclaration?: boolean): boolean {
         const scopeItem = this.scope[this.scope.length - 1];
         const autoAllowed =
@@ -1677,6 +1684,23 @@ export class Emitter {
 
             const firstType = declarationList.declarations.filter(d => d.type)[0]?.type;
             const firstInitializer = declarationList.declarations.filter(d => d.initializer)[0]?.initializer;
+
+            // @tswow-begin: don't allow non-const non-literals outside of functions
+            const type = this.resolver.getTypeAtLocation(firstInitializer);
+            if(    !autoAllowed 
+                && !declarationList.getText().startsWith('const')
+                && !process.argv.includes('--allow-globals')
+              ) {
+                this.error(`Non-const variable outside of function -> ${declarationList.getText()}`,declarationList);
+            }
+            if(    !autoAllowed 
+                && !type.isLiteral()
+                && !process.argv.includes('--allow-globals')
+              ) {
+                this.error(`Non-literal variable outside of function -> ${declarationList.getText()}`,declarationList);
+            }
+            // @tswow-end
+
             const effectiveType = firstType || this.resolver.getOrResolveTypeOfAsTypeNode(firstInitializer);
             const useAuto = autoAllowed && !!(firstInitializer);
             this.processPredefineType(effectiveType);

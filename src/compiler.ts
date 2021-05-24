@@ -68,7 +68,8 @@ export class Run {
     public static processOptions(cmdLineArgs: string[]): any {
         const options = {};
         for (let i = 2; i < cmdLineArgs.length; i++) {
-            const item = cmdLineArgs[i];
+            let item = cmdLineArgs[i];
+            if(item.startsWith('--')) item = item.substring(1);
             if (!item || item[0] !== '-') {
                 continue;
             }
@@ -207,7 +208,7 @@ export class Run {
     private generateBinary(
         program: ts.Program, sources: string[], options: ts.CompilerOptions, cmdLineOptions: any) {
 
-        if (!cmdLineOptions.suppressOutput) {
+        if (cmdLineOptions.trace) {
             console.log(ForegroundColorEscapeSequences.Pink + 'Generating binary files...' + resetEscapeSequence);
         }
 
@@ -241,7 +242,7 @@ export class Run {
             if (fileVersion) {
                 const latestVersion = this.versions[s.fileName];
                 if (latestVersion && parseInt(latestVersion, 10) >= parseInt(fileVersion, 10)) {
-                    if (!cmdLineOptions.suppressOutput) {
+                    if (cmdLineOptions.trace) {
                         console.log(
                             'File: '
                             + ForegroundColorEscapeSequences.White
@@ -262,7 +263,7 @@ export class Run {
                 this.versions[s.fileName] = fileVersion;
             }
 
-            if (!cmdLineOptions.suppressOutput) {
+            if (cmdLineOptions.trace) {
                 console.log(
                     ForegroundColorEscapeSequences.Cyan
                     + 'Processing File: '
@@ -287,7 +288,7 @@ export class Run {
             const fileNameHeader = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'h'));
             const fileNameCpp = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'cpp'));
 
-            if (!cmdLineOptions.suppressOutput) {
+            if (cmdLineOptions.trace) {
                 console.log(
                     ForegroundColorEscapeSequences.Cyan
                     + 'Writing to file: '
@@ -302,7 +303,7 @@ export class Run {
             fs.writeFileSync(outDir + fileNameCpp, emitterSource.writer.getText());
         });
 
-        if (!cmdLineOptions.suppressOutput) {
+        if (cmdLineOptions.trace) {
             console.log(ForegroundColorEscapeSequences.Pink + 'Binary files have been generated...' + resetEscapeSequence);
         }
 

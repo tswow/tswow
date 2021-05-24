@@ -1,15 +1,22 @@
 import { Run } from './compiler';
+import { terminal } from './terminal';
 
 declare var process: any;
 
 try {
-    new Run().run(Run.processFiles(process.argv), Run.processOptions(process.argv));
+    let args = process.argv.filter(x=>!x.startsWith('--'));
+    new Run().run(Run.processFiles(args), Run.processOptions(process.argv));
 } catch (e) {
     if (e.message.indexOf(`Could not find a valid 'tsconfig.json'`) !== -1) {
         print();
     } else {
-        console.error(e.stack);
+        if(process.argv.includes('--trace')) {
+            terminal.error(e.stack);
+        } else {
+            terminal.error(e.message);
+        }
     }
+    process.exit(-1);
 }
 
 function print() {

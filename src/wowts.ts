@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as child_process from 'child_process';
+import { terminal } from './terminal';
 
 function isWindows() {
     return process.platform === 'win32';
@@ -51,8 +52,20 @@ if(!fs.lstatSync(path.join(modulePath,'livescripts')).isDirectory()) {
 const olddir = process.cwd();
 process.chdir(path.join(modulePath));
 fs.writeFileSync('./tsconfig.json', JSON.stringify(CONFIG));
+try {
+    terminal.cyan(`Transpiling TypeScript->C++...`)
+    child_process.execSync(
+        `node -r source-map-support/register`
+        + ` ../../bin/scripts/transpiler/main.js tsconfig.json`
+        + (process.argv.includes('--trace')?' --trace':'')
+        + (process.argv.includes('--allow-globals')?' --allow-globals':'')
+        , {stdio: 'inherit'}
+    );
+} catch(error) {
+    terminal.error('Transpilation failure, please check the errors above');
+    process.exit(-1);
+}
 
-child_process.execSync('node -r source-map-support/register ../../bin/scripts/transpiler/main.js tsconfig.json', {stdio: 'inherit'});
 fs.unlinkSync('./tsconfig.json');
 process.chdir(olddir);
 
@@ -90,8 +103,8 @@ include_directories(../../../../../bin/include)
 file (GLOB headers "../../../../../bin/include/*.h")
 
 ${isWindows()
-    ?`file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")`
-    :`file (GLOB libs "../../../../../bin/libraries/${buildType}/*.so")`
+    ? `file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")`
+    : `file (GLOB libs "../../../../../bin/libraries/${buildType}/*.so")`
 }
 
 add_library(${buildModule} SHARED ${itms.join(' ')})
@@ -107,16 +120,30 @@ const cmake_generate =
     (isWindows()
         ? `"bin/cmake/bin/cmake.exe"`
         : 'cmake')
-    +` -S modules/${buildModule}/livescripts/build/cpp`
-    +` -B modules/${buildModule}/livescripts/build/lib`;
-child_process.execSync(cmake_generate, {stdio: 'inherit'});
+    + ` -S modules/${buildModule}/livescripts/build/cpp`
+    + ` -B modules/${buildModule}/livescripts/build/lib`;
+try {
+    terminal.cyan(`Generating CMake project...`)
+    child_process.execSync(cmake_generate, {stdio: process.argv.includes('--trace')?'inherit':'ignore'});
+} catch(err) {
+    terminal.error(`Failed to generate CMake files, please run the command with --trace and report this error`);
+}
 const cmake_build =
     (isWindows()
         ? `"bin/cmake/bin/cmake.exe"`
         : `cmake`)
-    +` --build modules/${buildModule}/livescripts/build/lib`
-    +` --config ${buildType}`;
-child_process.execSync(cmake_build, {stdio: 'inherit'});
+    + ` --build modules/${buildModule}/livescripts/build/lib`
+    + ` --config ${buildType}`;
+
+try {
+    terminal.cyan(`Compiling C++ binary...`)
+    child_process.execSync(cmake_build, 
+        {
+            stdio: process.argv.includes('--trace') ? 'inherit' : 'ignore'
+        });
+} catch (error) {
+    terminal.error(`Failed to compile library, please run the command with --trace and report this error`);
+}
 
 const finTime = Date.now() - startTime;
 console.log(`Finished compilation in ${(finTime / 1000).toFixed(1)} seconds.`);
