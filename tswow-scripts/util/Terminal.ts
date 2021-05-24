@@ -94,9 +94,6 @@ export namespace term {
                 }
             });
 
-            // remove paths
-            x = x.split(/(?:[A-Z]:|)(?:\/|\\).+(?:\/|\\)/).join('/path/');
-
             if (!isForbidden) {
                 logStream.write(x + '\n');
             } else {
