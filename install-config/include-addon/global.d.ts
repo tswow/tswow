@@ -1987,6 +1987,11 @@ declare function CanJoinBattlefieldAsGroup(): boolean;
 declare function GetAreaSpiritHealerTime(): number;
 
 /**
+ * Returns the unix time
+ */
+declare function time(): number
+
+/**
  * Get estimated wait time for a Battlefield's availability
  * @returns Milliseconds until Battlefield opening is available (estimated)
  * @see https://wow.gamepedia.com/API_GetBattlefieldEstimatedWaitTime
