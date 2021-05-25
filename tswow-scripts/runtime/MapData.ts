@@ -21,7 +21,10 @@ import { Timer } from '../util/Timer';
 import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
 import { Datasets } from './Dataset';
-import { DEFAULT_BUILD_TYPE } from '../util/BuildType';
+import { BuildType, findBuildType } from '../util/BuildType';
+import { NodeConfig } from './NodeConfig';
+import { commands } from './Commands';
+import { util } from '../util/Util';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.
@@ -29,63 +32,20 @@ import { DEFAULT_BUILD_TYPE } from '../util/BuildType';
  * runs `mapextractor`, `vmap4extractor`, `vmap4assembler` etc. and installs the results to TrinityCore.
  */
 export namespace MapData {
-    function prepareBuild(dataset: Datasets.Dataset) {
-        const copiedFiles = isWindows()
-            ? [
-                  'mapextractor.exe'
-                , 'mmaps_generator.exe'
-                , 'vmap4assembler.exe'
-                , 'vmap4extractor.exe'
-                , 'common.dll'
-              ]
-            : [
-                  'mapextractor'
-                , 'mmaps_generator'
-                , 'vmap4assembler'
-                , 'vmap4extractor'
-              ];
+    export function buildMaps(
+          dataset: Datasets.Dataset
+        , type: BuildType = NodeConfig.default_build_type
+        , maps: number[] = []
+        , tiles: [number,number][] = []
+        ) {
+        
+        let prog = `${ipaths.tcMapExtractor(type)}`
+          + ` -o ${ipaths.datasetDir(dataset.id)}`
+          + ` -i ${dataset.client.path}`
+          + (maps.length>0?` -m ${maps.join(',')}`:'')
+          + (tiles.length>0?` -t ${tiles.map(([x,y])=>`${x}.${y}`).join(',')}`:'')
 
-        // TODO: move to Paths.ts
-        const copiedLibraries = isWindows() 
-            ? [
-                  'libcrypto-1_1-x64.dll'
-                , 'libmysql.dll'
-                , 'libmysqld.dll'
-              ] 
-
-            : [
-
-              ];
-
-        // TODO: Let user choose which to use
-        const inDir =  ipaths.tc(DEFAULT_BUILD_TYPE)
-
-        // Copy over all necessary library files
-        for (const file of copiedFiles) {
-            wfs.copy(mpath(inDir, file), mpath(dataset.client.path, file));
-        }
-
-        for (const file of copiedLibraries) {
-            wfs.copy(mpath(inDir,file), mpath(dataset.client.path, file));
-        }
-    }
-
-    export function buildMaps(dataset: Datasets.Dataset) {
-        prepareBuild(dataset);
-        wfs.remove(mpath(dataset.client.path,'maps'))
-        wsys.execIn(
-              dataset.client.path
-            , `${isWindows() ? '' : './'}mapextractor`);
-        wfs.copy(
-            mpath(dataset.client.path,'maps')
-          , ipaths.datasetMaps(dataset.id), true);
-        wfs.copy(
-            mpath(dataset.client.path,'dbc')
-          , ipaths.datasetDBC(dataset.id), true);
-
-        wfs.copy(
-            mpath(dataset.client.path,'dbc')
-          , ipaths.datasetDBCSource(dataset.id), true);
+        wsys.exec(prog,'inherit')
     }
 
     export function buildVmaps(dataset: Datasets.Dataset) {
@@ -105,7 +65,7 @@ export namespace MapData {
         term.log('Building MMAPS (this will take a very long time)');
         const timer = Timer.start();
         if(!wfs.exists(mpath(dataset.client.path,'maps'))) {
-            buildMaps(dataset);
+            buildMaps(dataset)
         }
 
         if(!wfs.exists(mpath(dataset.client.path,'vmaps'))) {
@@ -126,5 +86,21 @@ export namespace MapData {
               `"${ipaths.luaxmlExe}"`
             + ` ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset.id))}`
             + ` ${dataset.client.dataPath}`, 'inherit');
+    }
+
+    export function initialize() {
+        const extractors = commands.addCommand('extract');
+
+        extractors.addCommand('map','','',(args)=>{
+          let maps = util.intListArgument('--maps=',args);
+          let tiles = util.intPairListArgument('--tiles=',args);
+          Datasets.getDatasetsOrDefault(args).forEach(x=>{
+            buildMaps(
+                x
+              , findBuildType(args)
+              , maps
+              , tiles)
+          });
+        });
     }
 }

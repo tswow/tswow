@@ -19,6 +19,22 @@
   * Contains utility functions that don't fit anywhere else.
   */
 export namespace util {
+    export function intListArgument(prefix: string, args: string[]): number[] {
+        let match = args.find((x)=>x.startsWith(prefix));
+        if(!match) return [];
+        match = match.substring(prefix.length);
+        return match.split(',').map(x=>parseInt(x))
+    }
+
+    export function intPairListArgument(prefix: string, args: string[]): [number,number][] {
+        let match = args.find(x=>x.startsWith(prefix));
+        if(!match) return [];
+        match = match.substring(prefix.length);
+        return match.split(',')
+            .map(x=>x.split('.'))
+            .map(([x,y])=>[parseInt(x),parseInt(y)])
+    }
+
     /**
      * Converts a json with flat keys ({"a.b.c":"data"}) to a hierarchy ({"a":{"b":{"c":"data"}}})
      * from https://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects

@@ -352,7 +352,10 @@ export namespace Realm {
             wfs.mkDirs(ipaths.realms);
         }
 
-        await Promise.all(NodeConfig.autostart_realms
-            .map(x=>x.startWorldserver(NodeConfig.default_build_type)))
+        if(!process.argv.includes('noac')) {
+            await Promise.all(NodeConfig.autostart_realms
+                .map(x=>x.startWorldserver(NodeConfig.default_build_type)))
+        }
+
     }
 }

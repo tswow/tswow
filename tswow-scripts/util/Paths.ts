@@ -262,6 +262,32 @@ export class InstallPaths {
             : mpath(this.tc(type),'worldserver')
     }
 
+    tcMapExtractor(type: BuildType) {
+        return isWindows()
+            ? mpath(this.tc(type),'mapextractor.exe')
+            : mpath(this.tc(type),'mapextractor')
+    }
+
+    tcMMapsGenerator(type: BuildType) {
+        return isWindows()
+            ? mpath(this.tc(type),'mmaps_generator.exe')
+            : mpath(this.tc(type),'mmaps_generator')
+    }
+
+    tcVmap4Assembler(type: BuildType) {
+        return isWindows()
+            ? mpath(this.tc(type),'vmap4assembler.exe')
+            : mpath(this.tc(type),'vmap4assembler')
+    }
+
+    tcVmap4extractor(type: BuildType) {
+        return isWindows()
+            ? mpath(this.tc(type),'vmap4extractor.exe')
+            : mpath(this.tc(type),'vmap4extractor')
+    }
+
+
+
     tcAuthServer(type: BuildType) {
         return isWindows()
             ? mpath(this.tc(type),'authserver.exe')

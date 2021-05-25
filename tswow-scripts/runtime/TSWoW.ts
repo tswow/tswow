@@ -33,6 +33,7 @@ import { Build } from './Build';
 import { Datascripts } from './Datascripts';
 import { Snippets } from './Snippets';
 import { PositionsFile } from './PositionsFile';
+import { MapData } from './MapData';
 
 export async function main() {
     try {
@@ -59,6 +60,7 @@ export async function main() {
 
         await Snippets.initialize();
         await PositionsFile.initialize();
+        await MapData.initialize();
 
         term.success(`Initialized tswow in ${timer.timeSec()}s`);
     } catch (error) {
