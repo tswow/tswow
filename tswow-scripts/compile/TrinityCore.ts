@@ -28,9 +28,16 @@ import { BuildType } from '../util/BuildType';
 export namespace TrinityCore {
     export function headers() {
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+        wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
         wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
             if(wfs.exists(ipaths.moduleScripts(x))) {
-                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
+                wfs.copy(ipaths.addonIncludeGlobal,ipaths.moduleScriptsGlobaldts(x));
+            }
+        });
+
+        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
+            if(wfs.exists(ipaths.moduleAddons(x))) {
+                wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x))
             }
         });
     }
