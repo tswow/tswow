@@ -127,6 +127,8 @@ export namespace Build {
             , ((args)=>{
             let ds = Datasets.getDatasetsOrDefault(args);
             let modules = Modules.getModulesOrAll(args).filter(x=>wfs.exists(ipaths.moduleAddons(x.id)));
+
+            let allClients = ds.filter(x=>x.client.isRunning()||NodeConfig.autostart_client);
             let runningClients = ds.filter(x=>x.client.isRunning());
             runningClients.forEach(x=>x.client.kill());
             ds.forEach(x=>{
@@ -134,8 +136,7 @@ export namespace Build {
                 wfs.copy(ipaths.datasetLuaXML(x.id)
                     , x.config.mpq_path);
             });
-
-            runningClients.forEach(x=>x.client.start());
+            allClients.forEach(x=>x.client.start());
         }))
         .addAlias('addon');
 
