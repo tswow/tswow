@@ -137,7 +137,7 @@ export namespace Datasets {
         installServerData() {
             let anyChange: boolean = false;
             if(!wfs.exists(ipaths.datasetLuaxmlSource(this.id))) {
-                MapData.buildLuaXML(this);
+                MapData.luaxml(this);
                 anyChange = true;
             }
 
@@ -147,12 +147,12 @@ export namespace Datasets {
                     , ipaths.datasetLuaxml(this.id));
             }
 
-            if(
-                   ! wfs.exists(ipaths.datasetMaps(this.id)) 
-                || ! wfs.exists(ipaths.datasetDBCSource(this.id))
-              ) {
+            if(!wfs.exists(ipaths.datasetDBCSource(this.id))) {
+                MapData.dbc(this);
+            }
 
-                MapData.buildMaps(this);
+            if(! wfs.exists(ipaths.datasetMaps(this.id))) {
+                MapData.map(this);
                 anyChange = true;
             }
 
@@ -164,14 +164,14 @@ export namespace Datasets {
             }
 
             if(!wfs.exists(ipaths.datasetVmaps(this.id))) {
-                MapData.buildVmaps(this);
+                MapData.vmap_extract(this);
+                MapData.vmap_assemble(this);
                 anyChange = true;
             }
 
             if(this.config.use_mmaps 
                 && !wfs.exists(ipaths.datasetMmaps(this.id))) {
-
-                MapData.buildMMaps(this);
+                MapData.mmaps(this);
                 anyChange = true;
             }
 
@@ -308,7 +308,7 @@ export namespace Datasets {
             , async(args: any[])=>{
 
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
-                return MapData.buildLuaXML(x);
+                return MapData.luaxml(x);
             }));
         });
 

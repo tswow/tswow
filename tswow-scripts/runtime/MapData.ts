@@ -32,7 +32,31 @@ import { util } from '../util/Util';
  * runs `mapextractor`, `vmap4extractor`, `vmap4assembler` etc. and installs the results to TrinityCore.
  */
 export namespace MapData {
-    export function buildMaps(
+    export function dbc (
+        dataset: Datasets.Dataset
+      , type: BuildType = NodeConfig.default_build_type
+    ) {
+      let tempDbc = ipaths.datasetTempDBC(dataset.id);
+      let tmp = ipaths.datasetTemp(dataset.id);
+
+      wfs.mkDirs(tmp);
+
+      let clientPath = dataset.client.path;
+      if(clientPath.endsWith('\\') || clientPath.endsWith('/')) {
+        clientPath = clientPath.substring(0,clientPath.length-1);
+      }
+      let prog = `${ipaths.tcMapExtractor(type)}`
+        + ` -e 2`
+        + ` -o ${tmp}`
+        + ` -i ${clientPath}`
+
+      wsys.exec(prog,'inherit')
+      wfs.copy(tempDbc,ipaths.datasetDBC(dataset.id),true);
+      wfs.copy(tempDbc,ipaths.datasetDBCSource(dataset.id),true);
+      wfs.remove(tempDbc);
+    }
+
+    export function map (
           dataset: Datasets.Dataset
         , type: BuildType = NodeConfig.default_build_type
         , maps: number[] = []
@@ -40,6 +64,7 @@ export namespace MapData {
         ) {
         
         let prog = `${ipaths.tcMapExtractor(type)}`
+          + ` -e 1`
           + ` -o ${ipaths.datasetDir(dataset.id)}`
           + ` -i ${dataset.client.path}`
           + (maps.length>0?` -m ${maps.join(',')}`:'')
@@ -48,40 +73,51 @@ export namespace MapData {
         wsys.exec(prog,'inherit')
     }
 
-    export function buildVmaps(dataset: Datasets.Dataset) {
-        wfs.remove(mpath(dataset.client.path,'vmaps'));
-        wfs.remove(mpath(dataset.client.path,'Buildings'));
-        wsys.execIn(
-              dataset.client.path
-            , `${isWindows() ? '' : './'}vmap4extractor`);
-        wfs.mkDirs(mpath(dataset.client.path,'vmaps'));
-        wsys.execIn(
-              dataset.client.path
-            , `${isWindows() ? '' : './'}vmap4assembler Buildings vmaps`);
-        wfs.copy(mpath(dataset.client.path,'vmaps'), ipaths.datasetVmaps(dataset.id), true);
+    export function vmap_extract(
+      dataset: Datasets.Dataset
+      , type: BuildType = NodeConfig.default_build_type
+      , models: string[] = []
+      , maps: number[] = []
+      , tiles: [number,number][] = []
+    ) {
+      let prog = `${ipaths.tcVmap4extractor(type)}`
+        + ` -o ${wfs.absPath(mpath(ipaths.datasetDir(dataset.id),'Buildings'))}`
+        + ` -i ${dataset.client.dataPath}`
+        + (maps.length>0?` -m ${maps.join(',')}`:'')
+        + (tiles.length>0?` -t ${tiles.map(([x,y])=>`${x}.${y}`).join(',')}`:'')
+        + (models.length>0?` -d ${models.join(',')}`:'')
+      wsys.exec(prog,'inherit')
     }
 
-    export function buildMMaps(dataset: Datasets.Dataset) {
-        term.log('Building MMAPS (this will take a very long time)');
-        const timer = Timer.start();
-        if(!wfs.exists(mpath(dataset.client.path,'maps'))) {
-            buildMaps(dataset)
-        }
-
-        if(!wfs.exists(mpath(dataset.client.path,'vmaps'))) {
-            buildVmaps(dataset);
-        }
-
-        wsys.execIn(
-              dataset.client.path
-            , `${isWindows() ? '' : './'}mmaps_generator`);
-        wfs.copy(
-            mpath(dataset.client.path,'mmaps')
-          , ipaths.datasetMmaps(dataset.id));
-        term.success(`Rebuilt mmaps in ${timer.timeSec()}s`);
+    export function vmap_assemble(
+        dataset: Datasets.Dataset
+      , type: BuildType = NodeConfig.default_build_type
+      ) {
+        let prog = `${ipaths.tcVmap4Assembler(type)}`
+          + ` ${ipaths.datasetBuildings(dataset.id)} ${ipaths.datasetVmaps(dataset.id)} >> out.txt`
+        wsys.exec(prog,'inherit');
     }
 
-    export function buildLuaXML(dataset: Datasets.Dataset) {
+    export function mmaps(
+        dataset: Datasets.Dataset
+      , type: BuildType = NodeConfig.default_build_type
+      , map: number = -1
+      , tile?: [number,number]
+    ) {
+      let prog = `${wfs.absPath(ipaths.tcMMapsGenerator(type))}`
+        + (map > 0 ? ` ${map}` : '') 
+        + (tile ? ` --tile ${tile[0]},${tile[1]}`:'')
+
+      console.log(prog);
+    
+      wsys.execIn(
+          ipaths.datasetDir(dataset.id)
+        , prog
+        , 'inherit'
+        );
+    }
+
+    export function luaxml(dataset: Datasets.Dataset) {
         wsys.exec(
               `"${ipaths.luaxmlExe}"`
             + ` ${wfs.absPath(ipaths.datasetLuaxmlSource(dataset.id))}`
@@ -91,15 +127,56 @@ export namespace MapData {
     export function initialize() {
         const extractors = commands.addCommand('extract');
 
-        extractors.addCommand('map','','',(args)=>{
+        extractors.addCommand('dbc','','',(args)=>{
+          Datasets.getDatasetsOrDefault(args).forEach(x=>{
+            dbc(
+                x 
+              , findBuildType(args)
+            );
+          });
+        });
+
+        extractors.addCommand('maps','','',(args)=>{
           let maps = util.intListArgument('--maps=',args);
           let tiles = util.intPairListArgument('--tiles=',args);
           Datasets.getDatasetsOrDefault(args).forEach(x=>{
-            buildMaps(
+            map(
                 x
               , findBuildType(args)
               , maps
               , tiles)
+          });
+        });
+
+        extractors.addCommand('vmaps','','',(args)=>{
+          Datasets.getDatasetsOrDefault(args).forEach(x=>{
+            if(!args.includes('--assemble-only'))
+              vmap_extract(
+                  x
+                , findBuildType(args)
+                , []
+                , []
+                , []
+              )
+
+            if(!args.includes('--extract-only'))
+              vmap_assemble(
+                  x
+                , findBuildType(args)
+              )
+          });
+        });
+
+        extractors.addCommand('mmaps','','',(args)=>{
+          let maps = util.intListArgument('--maps',args);
+          let tiles = util.intPairListArgument('--tiles',args);
+          Datasets.getDatasetsOrDefault(args).forEach(x=>{
+            mmaps(
+                x
+              , findBuildType(args)
+              , maps.length > 0 ? maps[0] : -1
+              , tiles.length > 0 ? tiles[0] : undefined
+            )
           });
         });
     }

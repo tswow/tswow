@@ -150,6 +150,10 @@ export class InstallPaths {
         return mpath(this.datasetDir(dataset),'maps');
     }
 
+    datasetBuildings(dataset: string) {
+        return mpath(this.datasetDir(dataset), 'Buildings')
+    }
+
     datasetVmaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'vmaps')
     }
@@ -172,6 +176,14 @@ export class InstallPaths {
             ,'Interface'
             ,'FrameXML'
             ,'FrameXML.toc');
+    }
+
+    datasetTemp(dataset: string) {
+        return mpath(this.datasetDir(dataset),'tmp');
+    }
+
+    datasetTempDBC(dataset: string) {
+        return mpath(this.datasetTemp(dataset),'dbc');
     }
 
     datasetDBCSource(dataset: string) {

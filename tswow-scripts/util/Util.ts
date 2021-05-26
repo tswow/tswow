@@ -22,17 +22,26 @@ export namespace util {
     export function intListArgument(prefix: string, args: string[]): number[] {
         let match = args.find((x)=>x.startsWith(prefix));
         if(!match) return [];
-        match = match.substring(prefix.length);
+        match.trimLeft();
+        match = match.substring(prefix.length + 1);
         return match.split(',').map(x=>parseInt(x))
     }
 
     export function intPairListArgument(prefix: string, args: string[]): [number,number][] {
         let match = args.find(x=>x.startsWith(prefix));
         if(!match) return [];
-        match = match.substring(prefix.length);
+        match.trimLeft()
+        match = match.substring(prefix.length + 1);
         return match.split(',')
             .map(x=>x.split('.'))
             .map(([x,y])=>[parseInt(x),parseInt(y)])
+    }
+
+    export function stringListArgument(prefix: string, args: string[]): string[] {
+        let match = args.find(x=>x.startsWith(prefix));
+        if(!match) return []
+        match = match.substring(prefix.length);
+        return match.split(',');
     }
 
     /**
