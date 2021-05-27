@@ -338,6 +338,15 @@ export class InstallPaths {
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
+    
+    get adtCreatorDir() {
+        return mpath(this.bin,'adt-creator');
+    }
+
+    get adtCreatorExe() {
+        return mpath(this.adtCreatorDir,'adt-creator.exe');
+    }
+
     get mpqBuilderExe() { 
         return isWindows() 
             ? mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe')
@@ -730,6 +739,16 @@ export class BuildPaths {
 
     get mpqBuilder() {
         return mpath(this.base, 'mpqbuilder');
+    }
+
+    get adtCreator() {
+        return mpath(this.base, 'adt-creator');
+    }
+
+    get adtCreatorExe() {
+        return isWindows () 
+            ? mpath(this.adtCreator, 'Release','adt-creator.exe')
+            : mpath(this.adtCreator, 'Release','adt-creator');
     }
 
     get mpqBuilderBinary() {
