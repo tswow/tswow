@@ -52,6 +52,7 @@ class SettingsClass {
     get SQL_WRITE_TO_FILE() {return false; }
     get MYSQL_WRITE_TO_DB() {return true; }
     get SQL_FILE_PATH() {return './bin/sqlout'; }
+    get CLIENT_PATH() { return settings.client_path }
     get ID_FILE_PATH() {return settings.id_path }
     get READONLY() {return settings.readonly; }
     get PATCH_DIRECTORY() { 

@@ -75,7 +75,7 @@ export namespace Datasets {
                       `Dataset ${this.set.id} has ${type} mpq_suffix set`
                     + `, please set a valid mpq_suffix`
                     +` (single lowercase ascii letter)`
-                    + ` in ${ipaths.datasetYaml(this.set.id)}`)
+                        + ` in ${ipaths.datasetYaml(this.set.id)}`)
             }
             return val;
         }
@@ -121,17 +121,17 @@ export namespace Datasets {
 
         gamebuildSql() {
             return `INSERT INTO build_info VALUES`
-                +` (${this.config.game_build}, 3, 3, 5,"a",NULL,NULL,NULL,`
-                +` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-                +` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
-                +` ON DUPLICATE KEY UPDATE`
-                +` majorVersion=3,`
-                +` minorVersion=3,`
-                +` bugfixVersion=5,`
-                +` hotfixVersion="a",`
-                +` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-                +` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
-                +`;`
+                +  ` (${this.config.game_build}, 3, 3, 5,"a",NULL,NULL,NULL,`
+                +  ` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
+                +  ` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
+                +  ` ON DUPLICATE KEY UPDATE`
+                +  ` majorVersion=3,`
+                +  ` minorVersion=3,`
+                +  ` bugfixVersion=5,`
+                +  ` hotfixVersion="a",`
+                +  ` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
+                +  ` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
+                +  `;`
         }
 
         installServerData() {

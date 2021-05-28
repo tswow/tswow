@@ -31,7 +31,7 @@ export namespace util {
         let match = args.find(x=>x.startsWith(prefix));
         if(!match) return [];
         match.trimLeft()
-        match = match.substring(prefix.length + 1);
+        match = match.substring(prefix.length);
         return match.split(',')
             .map(x=>x.split('.'))
             .map(([x,y])=>[parseInt(x),parseInt(y)])
@@ -42,6 +42,13 @@ export namespace util {
         if(!match) return []
         match = match.substring(prefix.length);
         return match.split(',');
+    }
+
+    export function stringArgument(prefix: string, def: string, args: string[]): string {
+        let match = args.find(x=>x.startsWith(prefix));
+        if(!match) return def;
+        match = match.substring(prefix.length);
+        return match;
     }
 
     /**

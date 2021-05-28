@@ -33,6 +33,7 @@ export namespace Datascripts {
         await dataset.installDatabase(false);
 
         const settings : any = {
+            client_path : dataset.config.client_path,
             auth : NodeConfig.database_settings('auth'),
             world : NodeConfig.database_settings('world',dataset.id),
             world_source : NodeConfig.database_settings('world_source',dataset.id),

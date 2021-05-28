@@ -36,6 +36,7 @@ import { BLPConverter } from './BLPConverter';
 import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
 import { wfs } from '../util/FileSystem';
 import { SevenZipInstall } from './7Zip';
+import { ADTCreator } from './ADTCreator';
 
 let buildingScripts = false;
 
@@ -75,6 +76,7 @@ async function compile(type: string, compileArgs: string[]) {
 
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
+    if (isType('adtcreator')) { await ADTCreator.create(cmake); }
 
     if (types.includes('release')) {
         await destroyAllWatchers();
@@ -108,7 +110,7 @@ async function main() {
 
     const installedPrograms =
         ['trinitycore','trinitycore-release', 'trinitycore-relwithdebinfo', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',
-         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build', 'release'];
+         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build', 'release', 'adtcreator'];
 
     for (const val of installedPrograms) {
         build.addCommand(val, '', `Builds ${val}`, async(args) => await compile(val, args));

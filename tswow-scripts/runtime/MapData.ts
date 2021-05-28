@@ -16,9 +16,6 @@
  */
 import { wfs, mpath } from '../util/FileSystem';
 import { wsys } from '../util/System';
-import { term } from '../util/Terminal';
-import { Timer } from '../util/Timer';
-import { isWindows } from '../util/Platform';
 import { ipaths } from '../util/Paths';
 import { Datasets } from './Dataset';
 import { BuildType, findBuildType } from '../util/BuildType';
@@ -67,8 +64,8 @@ export namespace MapData {
           + ` -e 1`
           + ` -o ${ipaths.datasetDir(dataset.id)}`
           + ` -i ${dataset.client.path}`
-          + (maps.length>0?` -m ${maps.join(',')}`:'')
-          + (tiles.length>0?` -t ${tiles.map(([x,y])=>`${x}.${y}`).join(',')}`:'')
+          + (maps.length>0?` --maps=${maps.join(',')}`:'')
+          + (tiles.length>0?` --tiles=${tiles.map(([x,y])=>`${x},${y}`).join(',')}`:'')
 
         wsys.exec(prog,'inherit')
     }
@@ -82,10 +79,10 @@ export namespace MapData {
     ) {
       let prog = `${ipaths.tcVmap4extractor(type)}`
         + ` -o ${wfs.absPath(mpath(ipaths.datasetDir(dataset.id),'Buildings'))}`
-        + ` -i ${dataset.client.dataPath}`
-        + (maps.length>0?` -m ${maps.join(',')}`:'')
-        + (tiles.length>0?` -t ${tiles.map(([x,y])=>`${x}.${y}`).join(',')}`:'')
-        + (models.length>0?` -d ${models.join(',')}`:'')
+        + ` -i ${dataset.client.dataPath}/`
+        + (maps.length>0?` --maps=${maps.join(',')}`:'')
+        + (tiles.length>0?` --tiles=${tiles.map(([x,y])=>`${x}.${y}`).join(',')}`:'')
+        //+ (models.length>0?` -d=${models.join(',')}`:'')
       wsys.exec(prog,'inherit')
     }
 
@@ -94,7 +91,7 @@ export namespace MapData {
       , type: BuildType = NodeConfig.default_build_type
       ) {
         let prog = `${ipaths.tcVmap4Assembler(type)}`
-          + ` ${ipaths.datasetBuildings(dataset.id)} ${ipaths.datasetVmaps(dataset.id)} >> out.txt`
+          + ` ${ipaths.datasetBuildings(dataset.id)} ${ipaths.datasetVmaps(dataset.id)}`
         wsys.exec(prog,'inherit');
     }
 
@@ -107,8 +104,6 @@ export namespace MapData {
       let prog = `${wfs.absPath(ipaths.tcMMapsGenerator(type))}`
         + (map > 0 ? ` ${map}` : '') 
         + (tile ? ` --tile ${tile[0]},${tile[1]}`:'')
-
-      console.log(prog);
     
       wsys.execIn(
           ipaths.datasetDir(dataset.id)

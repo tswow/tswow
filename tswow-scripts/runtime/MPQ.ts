@@ -7,9 +7,7 @@ import { wsys } from "../util/System";
 import { FileChanges } from "../util/FileChanges";
 import { Datascripts } from "./Datascripts";
 import { Addon } from "./Addon";
-import { BannedAddOnsDBCFile } from "../wotlkdata/dbc/types/BannedAddOns";
 import { NodeConfig } from "./NodeConfig";
-import { Realm } from "./Realm";
 
 export namespace MPQ {
     /**
