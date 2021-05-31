@@ -1873,6 +1873,15 @@ declare class StorageClass {
     GetString(key: string, def?: string): string;    
 }
 
+declare class TSGameObjectTemplate extends StorageClass {
+    GetEntry(): uint32
+    GetType(): uint32;
+    GetDisplayID(): uint32;
+    GetName(): string;
+    GetIconName(): string;
+    GetCastBarCaption(): string;
+}
+
 declare class TSCreatureTemplate extends StorageClass {
     GetEntry(): uint32;
     GetDifficultyEntryA(): uint32;
@@ -6870,7 +6879,7 @@ declare class TSEventHandlers {
     Items: _hidden.Items;
     ItemID: _hidden.ItemID;
     GameObjects: _hidden.GameObjects;
-    GameObjectID: _hidden.GameObejctID;
+    GameObjectID: _hidden.GameObjectID;
 }
 
 declare class TSDictionary<K,V> {
@@ -7197,3 +7206,4 @@ declare function LoadRows<T extends DBTable>(cls: {new (...args: any[]): T}, que
 declare function GetSpellInfo(entry: uint32): TSSpellInfo
 declare function GetItemTemplate(entry: uint32): TSItemTemplate
 declare function GetCreatureTemplate(entry: uint32): TSCreatureTemplate
+declare function GetGameObjectTemplate(entry: uint32): TSGameObjectTemplate
