@@ -209,6 +209,7 @@ EVENT_TYPE(SpellOnDispel,TSSpell,uint32)
 EVENT_TYPE(SpellOnHit,TSSpell)
 EVENT_TYPE(SpellOnTick,TSAuraEffect)
 EVENT_TYPE(SpellOnRemove,TSAuraEffect,TSAuraApplication, uint32)
+EVENT_TYPE(SpellOnApply,TSAuraEffect,TSAuraApplication, uint32)
 
 struct TSSpellEvents {
      EVENT(SpellOnCast)
@@ -216,6 +217,7 @@ struct TSSpellEvents {
      EVENT(SpellOnHit)
      EVENT(SpellOnTick)
      EVENT(SpellOnRemove)
+     EVENT(SpellOnApply)
 };
 
 class TSSpellMap : public TSEventMap<TSSpellEvents> 
@@ -655,6 +657,7 @@ struct TSEvents
     EVENT(SpellOnHit)
     EVENT(SpellOnTick)
     EVENT(SpellOnRemove)
+    EVENT(SpellOnApply)
 
     // GameObjects
     EVENT(GameObjectOnUpdate)
@@ -896,6 +899,7 @@ public:
           EVENT_HANDLE(Spell,OnHit)
           EVENT_HANDLE(Spell,OnTick)
           EVENT_HANDLE(Spell,OnRemove)
+          EVENT_HANDLE(Spell,OnApply)
     } Spells;
 
     struct SpellIDEvents : public MappedEventHandler<TSSpellMap>
@@ -906,6 +910,7 @@ public:
           MAP_EVENT_HANDLE(Spell,OnHit)
           MAP_EVENT_HANDLE(Spell,OnTick)
           MAP_EVENT_HANDLE(Spell,OnRemove)
+          MAP_EVENT_HANDLE(Spell,OnApply)
     } SpellID;
 
      struct CreatureEvents: public EventHandler

@@ -6645,6 +6645,7 @@ declare namespace _hidden {
         OnHit(callback: (spell: TSSpell)=>void);
         OnTick(callback: (effect: TSAuraEffect)=>void);
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+        OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
     }
 
     export class CreatureID {
