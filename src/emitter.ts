@@ -3060,6 +3060,10 @@ export class Emitter {
             return;
         }
 
+        if(!this.resolver.isStringType(firstType)) {
+            throw new Error(`Invalid type for switch: ${firstExpression.getText()}`);
+        }
+
         this.processSwitchStatementForAnyInternal(node);
     }
 
@@ -3074,15 +3078,7 @@ export class Emitter {
 
         this.writer.writeString(`switch (`);
 
-        if (isInteger && isNumeric) {
-            this.writer.writeString(`static_cast<size_t>(`);
-        }
-
         this.processExpression(node.expression);
-
-        if (isInteger && isNumeric) {
-            this.writer.writeString(`)`);
-        }
 
         this.writer.writeStringNewLine(')');
 
@@ -3110,7 +3106,6 @@ export class Emitter {
     }
 
     processSwitchStatementForAnyInternal(node: ts.SwitchStatement) {
-
         const switchName = `__switch${node.getFullStart()}_${node.getEnd()}`;
         const isAllStatic = node.caseBlock.clauses
             .filter(c => c.kind === ts.SyntaxKind.CaseClause)
@@ -3124,7 +3119,8 @@ export class Emitter {
             this.writer.writeString('static ');
         }
 
-        this.writer.writeString(`switch_type ${switchName} = `);
+        this.writer.writeString(`TSDictionary<TSString,uint32>`
+            +` ${switchName} = MakeDictionary<TSString,uint32>(`);
         this.writer.BeginBlock();
 
         let caseNumber = 0;
@@ -3134,7 +3130,7 @@ export class Emitter {
             }
 
             this.writer.BeginBlockNoIntent();
-            this.writer.writeString('any(');
+            this.writer.writeString('(');
             this.processExpression((<ts.CaseClause>element).expression);
             this.writer.writeString('), ');
             this.writer.writeString((++caseNumber).toString());
@@ -3142,6 +3138,7 @@ export class Emitter {
         });
 
         this.writer.EndBlock();
+        this.writer.writeString(`)`);
         this.writer.EndOfStatement();
 
 
