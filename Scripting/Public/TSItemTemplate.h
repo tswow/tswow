@@ -129,3 +129,5 @@ public:
     TSStorage * GetData();
     TS_ENTITY_DATA_DECL(TSItemTemplate);
 };
+
+TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);
