@@ -69,14 +69,6 @@ export namespace Datasets {
 
         get mpq_suffix() {
             let val = this.get<string>('mpq_suffix','a')
-            if(val.length!==1 || val.charCodeAt(0)<97 || val.charCodeAt(0)>122)  {
-                let type = val.length===0 ? 'an empty' : 'an invalid';
-                throw new Error(
-                      `Dataset ${this.set.id} has ${type} mpq_suffix set`
-                    + `, please set a valid mpq_suffix`
-                    +` (single lowercase ascii letter)`
-                        + ` in ${ipaths.datasetYaml(this.set.id)}`)
-            }
             return val;
         }
         get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
