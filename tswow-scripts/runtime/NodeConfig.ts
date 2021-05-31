@@ -45,6 +45,10 @@ export class NodeConfiguration extends YamlFile {
         return this.get('write_pos_to_clipboard',true)
     }
 
+    get terminal_history() {
+        return this.get('terminal_history',100);
+    }
+
     database_settings(database: DatabaseType, nameOverride?: string) {
         return databaseSettings(database,nameOverride);
     }

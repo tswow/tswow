@@ -15,7 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import termkit = require('terminal-kit');
+import { NodeConfig } from '../runtime/NodeConfig';
 import { wfs } from './FileSystem';
+import { ipaths } from './Paths';
 
 const t = termkit.terminal;
 t.on('key', (name: string, data: any) => {
@@ -149,6 +151,9 @@ export namespace term {
                 if (enabled) {
                     t.color(inputColor, '>');
                 }
+
+                history.splice(0,Math.max(0,history.length - NodeConfig.terminal_history))
+                wfs.write(ipaths.terminal_history,history.join('\n'));
                 break;
             case 'BACKSPACE':
                 if (inputBuffer.length === 0 || xpos === 0) {
@@ -331,5 +336,12 @@ export namespace term {
 
     export function setInputCallback(callbackIn: (args: string) => any) {
         callback = callbackIn;
+    }
+
+    export function Initialize() {
+        // load history file
+        history = wfs.readOr(ipaths.terminal_history,'')
+            .split('\n')
+            .filter(x=>x.length>0)
     }
 }

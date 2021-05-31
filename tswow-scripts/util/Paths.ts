@@ -146,6 +146,10 @@ export class InstallPaths {
         return mpath(this.datasets, 'default-set');
     }
 
+    get terminal_history() {
+        return mpath(this.coredata,'terminal-history.txt');
+    }
+
     datasetMaps(dataset: string) {
         return mpath(this.datasetDir(dataset),'maps');
     }

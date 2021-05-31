@@ -63,6 +63,7 @@ export async function main() {
         await PositionsFile.initialize();
         await MapData.initialize();
         await MapCreator.Initialize();
+        await term.Initialize();
 
         term.success(`Initialized tswow in ${timer.timeSec()}s`);
     } catch (error) {
