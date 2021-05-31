@@ -23,7 +23,7 @@ export namespace util {
         let match = args.find((x)=>x.startsWith(prefix));
         if(!match) return [];
         match.trimLeft();
-        match = match.substring(prefix.length + 1);
+        match = match.substring(prefix.length);
         return match.split(',').map(x=>parseInt(x))
     }
 

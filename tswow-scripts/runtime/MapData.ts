@@ -44,6 +44,7 @@ export namespace MapData {
       }
       let prog = `${ipaths.tcMapExtractor(type)}`
         + ` -e 2`
+        + ` -d 0`
         + ` -o ${tmp}`
         + ` -i ${clientPath}`
 
@@ -57,16 +58,16 @@ export namespace MapData {
           dataset: Datasets.Dataset
         , type: BuildType = NodeConfig.default_build_type
         , maps: number[] = []
-        , tiles: [number,number][] = []
+        , tiles: number[] = []
         ) {
-        
+
         let prog = `${ipaths.tcMapExtractor(type)}`
           + ` -e 1`
           + ` -o ${ipaths.datasetDir(dataset.id)}`
           + ` -i ${dataset.client.path}`
           + (maps.length>0?` --maps=${maps.join(',')}`:'')
-          + (tiles.length>0?` --tiles=${tiles.map(([x,y])=>`${x},${y}`).join(',')}`:'')
-
+          + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
+          
         wsys.exec(prog,'inherit')
     }
 
@@ -75,14 +76,11 @@ export namespace MapData {
       , type: BuildType = NodeConfig.default_build_type
       , models: string[] = []
       , maps: number[] = []
-      , tiles: [number,number][] = []
+      , tiles: number[] = []
     ) {
       let prog = `${ipaths.tcVmap4extractor(type)}`
         + ` -o ${wfs.absPath(mpath(ipaths.datasetDir(dataset.id),'Buildings'))}`
         + ` -i ${dataset.client.dataPath}/`
-        + (maps.length>0?` --maps=${maps.join(',')}`:'')
-        + (tiles.length>0?` --tiles=${tiles.map(([x,y])=>`${x}.${y}`).join(',')}`:'')
-        //+ (models.length>0?` -d=${models.join(',')}`:'')
       wsys.exec(prog,'inherit')
     }
 
@@ -98,12 +96,12 @@ export namespace MapData {
     export function mmaps(
         dataset: Datasets.Dataset
       , type: BuildType = NodeConfig.default_build_type
-      , map: number = -1
-      , tile?: [number,number]
+      , maps: number[] = []
+      , tiles: number[] = []
     ) {
       let prog = `${wfs.absPath(ipaths.tcMMapsGenerator(type))}`
-        + (map > 0 ? ` ${map}` : '') 
-        + (tile ? ` --tile ${tile[0]},${tile[1]}`:'')
+      + (maps.length>0?` --maps=${maps.join(',')}`:'')
+      + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
     
       wsys.execIn(
           ipaths.datasetDir(dataset.id)
@@ -122,7 +120,11 @@ export namespace MapData {
     export function initialize() {
         const extractors = commands.addCommand('extract');
 
-        extractors.addCommand('dbc','','',(args)=>{
+        extractors.addCommand(
+            'dbc'
+          , ''
+          , 'Extracts dbc files for the selected dataset.'
+          , (args)=>{
           Datasets.getDatasetsOrDefault(args).forEach(x=>{
             dbc(
                 x 
@@ -131,9 +133,13 @@ export namespace MapData {
           });
         });
 
-        extractors.addCommand('maps','','',(args)=>{
+        extractors.addCommand(
+            'maps'
+          , '--maps=map1,map2.. --tiles=tile1x,tile1y,tile2x,tile2y..'
+          , 'Extracts map files for the selected dataset'
+          ,(args)=>{
           let maps = util.intListArgument('--maps=',args);
-          let tiles = util.intPairListArgument('--tiles=',args);
+          let tiles = util.intListArgument('--tiles=',args);
           Datasets.getDatasetsOrDefault(args).forEach(x=>{
             map(
                 x
@@ -143,7 +149,7 @@ export namespace MapData {
           });
         });
 
-        extractors.addCommand('vmaps','','',(args)=>{
+        extractors.addCommand('vmaps','','Extracts and assembles vmaps into the selected datasets',(args)=>{
           Datasets.getDatasetsOrDefault(args).forEach(x=>{
             if(!args.includes('--assemble-only'))
               vmap_extract(
@@ -162,15 +168,19 @@ export namespace MapData {
           });
         });
 
-        extractors.addCommand('mmaps','','',(args)=>{
-          let maps = util.intListArgument('--maps',args);
-          let tiles = util.intPairListArgument('--tiles',args);
+        extractors.addCommand(
+            'mmaps'
+          , '--maps=map1,map2.. --tiles=tile1x,tile1y,tile2x,tile2y..'
+          , 'Extracts mmaps into the selected dataset'
+          , (args)=>{
+          let maps = util.intListArgument('--maps=',args);
+          let tiles = util.intListArgument('--tiles=',args);
           Datasets.getDatasetsOrDefault(args).forEach(x=>{
             mmaps(
                 x
               , findBuildType(args)
-              , maps.length > 0 ? maps[0] : -1
-              , tiles.length > 0 ? tiles[0] : undefined
+              , maps
+              , tiles
             )
           });
         });
