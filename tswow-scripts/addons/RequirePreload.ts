@@ -79,7 +79,10 @@ export const RequirePreload: Plugin = {
         moduleName = moduleName.split("/").join(".");
         moduleName = moduleName.replace(".index", "");
         // Skip init.lua so it can be the entry-point
-        if (moduleName.endsWith('-addon')) return fileContent;
+        let tswowModuleName = path.basename(path.dirname(process.cwd()))
+        if (moduleName.endsWith(tswowModuleName+'-addon')) {
+          return fileContent;
+        }
 
         // Generates:
         // tstl_register_module("module/name", function() ... end)
