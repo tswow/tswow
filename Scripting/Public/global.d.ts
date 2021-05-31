@@ -6777,6 +6777,7 @@ declare namespace _hidden {
         OnEquipLate(callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnLFGRollEarly(callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
         OnDestroyEarly(callback: (item: TSItem, player: TSPlayer, result: TSMutable<boolean>)=>void);
+        OnTakenAsLoot(callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
     }
 
     export class ItemID {
@@ -6796,6 +6797,7 @@ declare namespace _hidden {
         OnEquipLate(item: uint32, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnLFGRollEarly(item: uint32, callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
         OnDestroyEarly(item: uint32, callback: (item: TSItem, looter: TSPlayer, result: TSMutable<boolean>)=>void);
+        OnTakenAsLoot(item: uint32, callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
     }
 
     export class GameObjects {

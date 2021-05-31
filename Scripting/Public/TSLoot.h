@@ -39,7 +39,7 @@ struct TC_GAME_API TSLootItem {
 class Loot;
 class TC_GAME_API TSLoot {
     public:
-        Loot *loot;
+        Loot * loot;
         TSLoot(Loot *loot);
         TSLoot();
         TSLoot* operator->() {return this;}

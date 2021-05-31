@@ -335,6 +335,7 @@ EVENT_TYPE(ItemOnEquipEarly,TSItem,TSPlayer,uint8/*slot*/,bool/*swap*/,TSMutable
 EVENT_TYPE(ItemOnUseLate,TSItem,TSPlayer,TSMutable<uint32> /*result*/)
 EVENT_TYPE(ItemOnLFGRollEarly,TSItemTemplate,TSWorldObject /*looted*/,TSPlayer/*looter*/,TSMutable<int32> /*result*/)
 EVENT_TYPE(ItemOnDestroyEarly,TSItem,TSPlayer,TSMutable<bool>)
+EVENT_TYPE(ItemOnTakenAsLoot,TSItem,TSLootItem,TSLoot,TSPlayer)
 
 struct TSItemEvents {
      EVENT(ItemOnUse)
@@ -355,6 +356,7 @@ struct TSItemEvents {
      EVENT(ItemOnUseLate)
      EVENT(ItemOnLFGRollEarly)
      EVENT(ItemOnDestroyEarly)
+     EVENT(ItemOnTakenAsLoot)
 };
 
 class TSItemMap : public TSEventMap<TSItemEvents>
@@ -503,6 +505,7 @@ struct TSEvents
     EVENT(ItemOnUseLate)
     EVENT(ItemOnLFGRollEarly)
     EVENT(ItemOnDestroyEarly)
+    EVENT(ItemOnTakenAsLoot)
 
     // UnitScript
     EVENT(FormulaOnHeal);
@@ -1096,6 +1099,7 @@ public:
          EVENT_HANDLE(Item,OnUseLate)
          EVENT_HANDLE(Item,OnLFGRollEarly)
          EVENT_HANDLE(Item,OnDestroyEarly)
+         EVENT_HANDLE(Item,OnTakenAsLoot)
      } Items;
 
     struct ItemIDEvents: public MappedEventHandler<TSItemMap> {
@@ -1118,6 +1122,7 @@ public:
          MAP_EVENT_HANDLE(Item,OnUseLate)
          MAP_EVENT_HANDLE(Item,OnLFGRollEarly)
          MAP_EVENT_HANDLE(Item,OnDestroyEarly)
+         MAP_EVENT_HANDLE(Item,OnTakenAsLoot)
     } ItemID;
 
     struct AddonEvents: public EventHandler {
