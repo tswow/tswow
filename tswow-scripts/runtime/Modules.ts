@@ -142,9 +142,11 @@ export namespace Modules {
 
         createDataDir() {
             wfs.mkDirs(ipaths.moduleData(this.id));
-            wfs.write(
-                  ipaths.moduleDataMain(this.id)
-                , patch_example_ts(this.id));
+            if(!wfs.exists(ipaths.moduleDataMain(this.id))) {
+                wfs.write(
+                    ipaths.moduleDataMain(this.id)
+                    , patch_example_ts(this.id));
+            }
 
             wfs.write(
                   ipaths.moduleDataTsConfig(this.id)
@@ -159,7 +161,9 @@ export namespace Modules {
         createLivescripts() {
             wfs.mkDirs(ipaths.moduleScripts(this.id));
             wfs.mkDirs(ipaths.moduleShared(this.id));
-            wfs.write(ipaths.moduleMainScript(this.id),livescript_example);
+            if(!wfs.exists(ipaths.moduleMainScript(this.id))) {
+                wfs.write(ipaths.moduleMainScript(this.id),livescript_example);
+            }
             wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(this.id));
             wfs.write(ipaths.moduleScritpsTsConfig(this.id),scripts_tsconfig_json);
         }
