@@ -2357,12 +2357,18 @@ export class Emitter {
             }
         }
         const func = filetext.substring(cur,start);
-        // TODO: massive hack
-        let isEvent = func.startsWith('.On') || 
-            func.startsWith('.UnitModifySpellDamage') || 
-            func.startsWith('.AddTimer') || 
-            func.startsWith('.Add') ||
-            func.startsWith('.Modify')
+
+        // TODO: same garbage with "kind" not working
+        let isEvent = false;
+        try {
+            let pare = node.parent as ts.ExpressionStatement;
+            let fsChild = pare.expression.getChildAt(0).getChildAt(0);
+            let type = this.resolver.getTypeAtLocation(fsChild);
+            let callDecl = this.resolver.getFirstDeclaration(type) as ts.ClassDeclaration;
+            if(callDecl.name && callDecl.name.getText() === 'TSEventHandlers') {
+                isEvent = true;
+            }
+        } catch(err) {}
 
         // @tswow-end
 
