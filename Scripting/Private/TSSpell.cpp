@@ -157,6 +157,7 @@ TSObject  TSSpell::GetTarget()
     else if (Unit* target = spell->m_targets.getUnitTarget())
          return TSObject(target);
 #endif
+    return TSObject(nullptr);
 }
 
 TSSpellInfo TSSpell::GetSpellInfo()
