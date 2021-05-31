@@ -101,7 +101,7 @@ export class Connection {
 
                 this.async.query(x,(err)=>{
                         if(err){
-                            err.message = `(For SQL "${x}")`+err.message;
+                            err.message = `(For SQL "${x}")\n`+err.message;
                             return rej(err);
                     } else {
                         return res();
@@ -196,12 +196,7 @@ export class SqlConnection {
     }
 
     static async finish(writeDb: boolean = true, writeFile: boolean = true): Promise<any> {
-        try {
-            await this.write(writeDb, writeFile);
-        } catch (err) {
-            console.error(`Error on write: ${err.message} ${err.stack}`);
-        }
-
+        await this.write(writeDb, writeFile);
         this.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
     }
 }

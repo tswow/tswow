@@ -89,7 +89,7 @@ async function applyStage(collection: PatchCollection) {
             await callback();
         } catch (error) {
             console.error(`Error in patch ${name}:`, error);
-            process.exit(-1);
+            process.exit(4);
         }
     }
     collection.splice(0, collection.length);
@@ -104,6 +104,15 @@ function time(msg: string) {
     }
 }
 
+async function mainWrap() {
+    try {
+        await main();
+    } catch(error) {
+        console.error(error.message+error.stack);
+        process.exit(1);
+    }
+}
+
 async function main() {
     ctime = Date.now();
     await IdPublic.readFile();
@@ -113,7 +122,7 @@ async function main() {
         await cleanSQL();
     } catch(err) {
         console.error(err.stack);
-        process.exit(0);
+        process.exit(2);
     }
 
     time(`Loaded/Cleaned SQL`);
@@ -129,7 +138,7 @@ async function main() {
             patchSubdirs(dir);
         } catch (error) {
             console.error(`Error in patch ${dir}:`, error);
-            process.exit(-1);
+            process.exit(3);
         }
     }
 
@@ -283,4 +292,4 @@ export type uint32 = number;
  */
 export const Objects = _Objects;
 
-main();
+mainWrap();
