@@ -12433,8 +12433,10 @@ declare namespace WoWAPI {
         type OnMouseWheel = "OnMouseWheel";
         type OnValueChanged = "OnValueChanged";
         type OnTextChanged = "OnTextChanged";
-		type OnDragStart = "OnDragStart";
-        type OnDragStop = "OnDragStop"
+        type OnDragStart = "OnDragStart";
+        type OnDragStop = "OnDragStop";
+        type OnKeyDown = "OnKeyDown";
+        type OnKeyUp = "OnKeyUp";
 
         type PlayerLogin = "PLAYER_LOGIN";
         type PlayerLogout = "PLAYER_LOGOUT";
@@ -12452,7 +12454,7 @@ declare namespace WoWAPI {
 
         type OnAny = OnEvent | OnLoad | OnUpdate | OnClick | OnEnter |
             OnLeave | OnHide | OnShow | OnMouseDown | OnMouseUp | OnMouseWheel |
-            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop;
+            OnValueChanged | OnTextChanged | OnDragStart | OnDragStop | OnKeyDown | OnKeyUp;
     }
 
     type UIDropdownInfo = {
@@ -12563,8 +12565,8 @@ declare namespace WoWAPI {
          * @param a alpha (opacity)
          */
         SetTextColor(r: number, g: number, b: number, a?: number): void;
-		
-		SetShadowOffset(x: number, y: number): void;
+    
+        SetShadowOffset(x: number, y: number): void;
     }
 
     /**
@@ -12851,8 +12853,10 @@ declare namespace WoWAPI {
         HookScript(event: "OnUpdate", handler: (frame: T, elapsed: number) => void): void;
         HookScript(event: "OnValueChanged", handler: (frame: T, changed: any) => void): void;
         HookScript(event: "OnTextChanged", handler: (frame: T, text: string) => void): void;
-		HookScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
+        HookScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
         HookScript(event: "OnDragStop", handler: (frame: T) => void): void;
+        HookScript(event: "OnKeyDown", handler: (frame: T, key: string) => void): void;
+        HookScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
         HookScript(event: Event.OnAny, handler?: (frame: T, ...args: any[]) => void): void;
     }
 
@@ -12877,8 +12881,10 @@ declare namespace WoWAPI {
         SetScript(event: "OnUpdate", handler: (frame: T, elapsed: number) => void): void;
         SetScript(event: "OnValueChanged", handler: (frame: T, changed: any) => void): void;
         SetScript(event: "OnTextChanged", handler: (frame: T, isUserInput: boolean) => void): void;
-		SetScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
+        SetScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
         SetScript(event: "OnDragStop", handler: (frame: T) => void): void;
+        SetScript(event: "OnKeyDown", handler: (frame: T, key: string) => void): void;
+        SetScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
         SetScript(event: Event.OnAny, handler?: (frame: T, ...args: any[]) => void): void;
     }
 
@@ -13075,8 +13081,8 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
-		
-		RegisterForDrag(button: WoWAPI.MouseButton): void;
+    
+        RegisterForDrag(button: WoWAPI.MouseButton): void;
     }
 
     /**
@@ -13422,33 +13428,33 @@ declare namespace WoWAPI {
          */
         SetText(text: string): void;
     }
-	
-	interface Model extends Frame {
-		AdvanceTime(): void;	
-		ClearFog(): void;
-		ClearModel(): void;
-		GetFacing(): number;
-		GetFogColor():[number, number, number, number]
-		GetFogFar(): number;
-		GetFogNear(): number;
-		GetLight():[boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
-		GetModel(): string;
-		GetModelScale(): number;
-		GetPosition(): number;
-		ReplaceIconTexture(texture: string): void;
-		SetCamera(index: number): void;
-		SetFacing(facing: number): void;
-		SetFogColor(r:number, g:number, b:number,a:number): void;
-		SetFogFar(value:number): void;
-		SetFogNear(value:number): void;
-		//SetGlow(..): void;
-		SetLight(enabled:boolean, omni:boolean, dirX:number, dirY:number, dirZ:number, ambIntensity:number, ambR:number, ambG:number, ambB:number, dirIntensity:number, dirR:number, dirG:number, dirB:number): void;
-		SetModel(file:string): void;
-		SetModelScale(scale:number): void;
-		SetPosition(x:number, y:number, z:number) : void;
-		SetSequence(sequence:number): void;
-		SetSequenceTime(sequence:number, time:number): void;
-	}
+  
+    interface Model extends Frame {
+        AdvanceTime(): void;  
+        ClearFog(): void;
+        ClearModel(): void;
+        GetFacing(): number;
+        GetFogColor():[number, number, number, number]
+        GetFogFar(): number;
+        GetFogNear(): number;
+        GetLight():[boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
+        GetModel(): string;
+        GetModelScale(): number;
+        GetPosition(): number;
+        ReplaceIconTexture(texture: string): void;
+        SetCamera(index: number): void;
+        SetFacing(facing: number): void;
+        SetFogColor(r:number, g:number, b:number,a:number): void;
+        SetFogFar(value:number): void;
+        SetFogNear(value:number): void;
+        //SetGlow(..): void;
+        SetLight(enabled:boolean, omni:boolean, dirX:number, dirY:number, dirZ:number, ambIntensity:number, ambR:number, ambG:number, ambB:number, dirIntensity:number, dirR:number, dirG:number, dirB:number): void;
+        SetModel(file:string): void;
+        SetModelScale(scale:number): void;
+        SetPosition(x:number, y:number, z:number) : void;
+        SetSequence(sequence:number): void;
+        SetSequenceTime(sequence:number, time:number): void;
+    }
 
     interface PlayerModel extends Model {
         RefreshUnit(): void;
@@ -13462,19 +13468,19 @@ declare namespace WoWAPI {
         TryOn(item:string): void;
         Undress(): void;
     }
-	
-	interface StatusBar extends Frame, UIObject, Region {
-		GetMinMaxValues(): [number,number];
-		GetOrientation: Align;
-		GetStatusBarColor: number;
-		GetStatusBarTexture(): Texture;
-		GetValue(): number;
-		SetMinMaxValues(min:number, max:number): void;
-		SetOrientation(orientation: Align): void;
-		SetStatusBarColor(r:number, g:number, b:number, alpha:number): void;
-		SetStatusBarTexture(file:string): void;
-		SetValue(value:number): void;
-	}
+  
+    interface StatusBar extends Frame, UIObject, Region {
+        GetMinMaxValues(): [number,number];
+        GetOrientation: Align;
+        GetStatusBarColor: number;
+        GetStatusBarTexture(): Texture;
+        GetValue(): number;
+        SetMinMaxValues(min:number, max:number): void;
+        SetOrientation(orientation: Align): void;
+        SetStatusBarColor(r:number, g:number, b:number, alpha:number): void;
+        SetStatusBarTexture(file:string): void;
+        SetValue(value:number): void;
+    }
 }
 
 /**
