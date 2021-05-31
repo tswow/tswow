@@ -2030,7 +2030,27 @@ void TSPlayer::SendTaxiMenu(TSCreature _creature)
     
     player->GetSession()->SendTaxiMenu(creature);
 }
-    
+
+void TSPlayer::SendCreatureQueryPacket(uint32 entry)
+{
+    if (CreatureTemplate const* ci = sObjectMgr->GetCreatureTemplate(entry))
+    {
+        WorldSession* curSes = player->GetSession();
+        WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
+        curSes->SendPacket(&response);
+    }
+}
+
+void TSPlayer::SendGameObjectQueryPacket(uint32 entry)
+{
+    if (GameObjectTemplate const* ci = sObjectMgr->GetGameObjectTemplate(entry))
+    {
+        WorldSession* curSes = player->GetSession();
+        WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
+        curSes->SendPacket(&response);
+    }
+}
+
 /**
  * Sends a spirit resurrection request to the [Player]
  */
