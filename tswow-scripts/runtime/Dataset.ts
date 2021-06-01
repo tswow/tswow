@@ -329,7 +329,9 @@ export namespace Datasets {
 
         if(NodeConfig.autostart_client) {
             let datasets : {[key: string]: Dataset} = {}
-            NodeConfig.autostart_realms.forEach(x=>datasets[x.set.id] = x.set)
+            NodeConfig.autostart_realms
+                .map(x=>Realm.getRealm(x))
+                .forEach(x=>datasets[x.set.id] = x.set)
             Object.values(datasets).forEach(x=>x.client.start())
         }
     }

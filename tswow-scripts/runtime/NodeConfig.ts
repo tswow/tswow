@@ -1,6 +1,5 @@
 import { ipaths } from "../util/Paths";
 import { YamlFile, DatabaseType, databaseSettings } from "../util/Yaml";
-import { Realm } from "./Realm";
 import { DEFAULT_BUILD_TYPE } from "../util/BuildType";
 
 export class NodeConfiguration extends YamlFile {
@@ -33,8 +32,7 @@ export class NodeConfiguration extends YamlFile {
     }
 
     get autostart_realms() {
-        return this.get<string[]>('autostart_realms',[])
-            .map(x=>Realm.getRealm(x));
+        return this.get<string[]>('autostart_realms',[]);
     }
 
     get autostart_authserver() {

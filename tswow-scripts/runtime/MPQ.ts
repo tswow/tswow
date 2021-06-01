@@ -8,6 +8,7 @@ import { FileChanges } from "../util/FileChanges";
 import { Datascripts } from "./Datascripts";
 import { Addon } from "./Addon";
 import { NodeConfig } from "./NodeConfig";
+import { Realm } from "./Realm";
 
 export namespace MPQ {
     /**
@@ -125,6 +126,7 @@ export namespace MPQ {
         }
         else {
             NodeConfig.autostart_realms
+                .map(x=>Realm.getRealm(x))
                 .filter(x=>x.set === dataset)
                 .forEach(x=>x.startWorldserver(NodeConfig.default_build_type))
         }

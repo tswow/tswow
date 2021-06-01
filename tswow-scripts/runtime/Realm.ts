@@ -354,6 +354,7 @@ export namespace Realm {
 
         if(!process.argv.includes('noac')) {
             await Promise.all(NodeConfig.autostart_realms
+                .map(x=>getRealm(x))
                 .map(x=>x.startWorldserver(NodeConfig.default_build_type)))
         }
 
