@@ -18,7 +18,7 @@ import { DBCBuffer } from './DBCBuffer';
 import { loc_constructor, iterLocConstructor } from '../primitives';
 import { Language } from './Localization';
 import { Cell, CPrim } from '../cell/cells/Cell';
-import { LocSystem } from '../cell/systems/LocSystem';
+import { LocSystem } from '../cell/systems/CellSystem';
 import { PendingCell } from '../cell/cells/PendingCell';
 import { CellArray } from '../cell/cells/CellArray';
 import { CellReadOnly } from '../cell/cells/CellReadOnly';

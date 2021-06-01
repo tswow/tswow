@@ -1,3 +1,5 @@
+import { Transient } from "../misc/Transient";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -27,4 +29,9 @@ export abstract class CellRoot<T> {
     }
 
     protected abstract objectify(): any;
+
+    @Transient
+    get end() {
+        return this.owner;
+    }
 }

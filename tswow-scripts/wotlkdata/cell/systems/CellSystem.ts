@@ -16,10 +16,12 @@
  */
 import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
 import { CPrim, Cell, CellWrapper } from '../cells/Cell';
-import { LocSystem, WrappedLoc } from './LocSystem';
-import { CellWrapperExists } from '../cells/PendingCell';
+import { CellWrapperExists, PendingCell } from '../cells/PendingCell';
 import { Objects } from '../misc/ObjectIteration';
 import { Transient } from '../misc/Transient';
+import { MulticastCell } from '../cells/MulticastCell';
+import { loc_constructor } from '../../primitives';
+import { Language, Languages } from '../../dbc/Localization';
 
 export class CellSystem<T> {
     static cloneFrom(tar: any, src: any) {
@@ -106,18 +108,74 @@ export class CellSystem<T> {
         return new CellWrapperExists<D, this>(this, cell);
     }
 
-    objectify(): any {
-        return Objects.objectifyObj(this);
+    protected wrapMulticast<D extends CPrim>(cells: Cell<D,any>[]) {
+        return this.wrap(new MulticastCell(this,cells));
     }
 
-    protected cloneFrom(obj: CellSystem<any> | any) {
-        CellSystem.cloneFrom(this, obj);
-        return this;
+    objectify(): any {
+        return Objects.objectifyObj(this);
     }
 }
 
 export class CellSystemTop extends CellSystem<undefined> {
     constructor() {
         super(undefined);
+    }
+}
+
+export abstract class LocSystem<T> extends CellSystem<T> {
+    abstract lang(lang: Language): Cell<string, T> & PendingCell;
+    abstract get mask(): Cell<number, T>;
+    abstract set(con: loc_constructor): T;
+
+    get enGB() { return this.lang('enGB'); }
+    get koKR() { return this.lang('koKR'); }
+    get frFR() { return this.lang('frFR'); }
+    get deDE() { return this.lang('deDE'); }
+    get enCN() { return this.lang('enCN'); }
+    get zhCN() { return this.lang('zhCN'); }
+    get enTW() { return this.lang('enTW'); }
+    get zhTW() { return this.lang('zhTW'); }
+    get esES() { return this.lang('esES'); }
+    get esMX() { return this.lang('esMX'); }
+    get ruRU() { return this.lang('ruRU'); }
+    get ptPT() { return this.lang('ptPT'); }
+    get ptBR() { return this.lang('ptBR'); }
+    get itIT() { return this.lang('itIT'); }
+    get Unk() { return this.lang('Unk'); }
+
+    clear() {
+        Languages.forEach(x=>{
+            let c = this.lang(x);
+            if(c && c.get() && c.get().length>0) {
+                c.set('')
+            }
+        });
+    }
+}
+
+export class WrappedLoc<T> extends LocSystem<T> {
+    private wrapped: LocSystem<T>;
+
+    constructor(owner: T, wrapped: LocSystem<T>) {
+        super(owner);
+        this.wrapped = wrapped;
+    }
+
+    lang(lang: Language): Cell<string, T> & PendingCell {
+        return this.ownerWrapExists(this.wrapped.lang(lang));
+    }
+
+    get mask(): Cell<number, T> {
+        return this.ownerWrap(this.wrapped.mask);
+    }
+
+    set(con: loc_constructor): T {
+        this.wrapped.set(con);
+        return this.owner;
+    }
+
+    objectify() {
+        return this.wrapped.objectify();
     }
 }

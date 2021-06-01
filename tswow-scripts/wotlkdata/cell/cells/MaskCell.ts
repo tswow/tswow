@@ -1,8 +1,9 @@
 import { Objects } from "../misc/ObjectIteration";
 import { Transient } from "../misc/Transient";
-import { Cell, CPrim } from "./Cell";
+import { Cell } from "./Cell";
+import { CellRoot } from "./CellRoot";
 
-export class MaskBit<T,D extends MaskCell<any,T>> {
+export class MaskBit<T,D extends MaskCell<T>> {
     protected owner: D;
     protected bit: number;
 
@@ -18,7 +19,7 @@ export class MaskBit<T,D extends MaskCell<any,T>> {
     clear() { return this.owner.clear(this.bit); }
 }
 
-export abstract class MaskCell<D extends CPrim, T> extends Cell<D,T> {
+export abstract class MaskCell<T> extends CellRoot<T> {
     protected bit(no: number): MaskBit<T,this> {
         return new MaskBit(this, no);
     }
@@ -51,7 +52,7 @@ export abstract class MaskCell<D extends CPrim, T> extends Cell<D,T> {
     }
 }
 
-export class MaskCell32<T> extends MaskCell<number,T> {
+export class MaskCell32<T> extends MaskCell<T> {
     @Transient
     protected cell: Cell<number, any>;
 
@@ -95,7 +96,7 @@ export class MaskCell32<T> extends MaskCell<number,T> {
     protected bit(no: number): MaskBit<T,this> { return new MaskBit(this, no); }
 }
 
-export class MaskCell64<T> extends MaskCell<bigint,T> {
+export class MaskCell64<T> extends MaskCell<T> {
     @Transient
     protected cell: Cell<bigint, any>;
 

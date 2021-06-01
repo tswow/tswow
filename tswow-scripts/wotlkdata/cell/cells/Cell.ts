@@ -47,3 +47,22 @@ export class CellWrapper<D extends CPrim, T> extends Cell<D, T> {
         return this.cell.get();
     }
 }
+
+export class FunctionalCell<D extends CPrim,T> extends Cell<D,T> {
+    protected setter: (value: D)=>any;
+    protected getter: ()=>D;
+
+    constructor(owner: T, getter: ()=>D, setter: (value: D)=>any) {
+        super(owner);
+        this.getter = getter;
+        this.setter = setter;
+    }
+    get(): D {
+        return this.getter();
+    }
+
+    set(value: D): T {
+        this.setter(value);
+        return this.owner;
+    }
+}
