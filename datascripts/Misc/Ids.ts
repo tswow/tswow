@@ -257,5 +257,10 @@ export const Ids = {
     /**
      * Starts at 100000, highest base value is 68529
      */
-    SpellGroups: new AutoIdGenerator(100000)
+    SpellGroups: new AutoIdGenerator(100000),
+
+    /**
+     * Starts at 1000000, highest base value is ~1000
+     */
+    GameTele: new AutoIdGenerator(1000000),
 }

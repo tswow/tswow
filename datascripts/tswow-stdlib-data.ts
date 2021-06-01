@@ -27,10 +27,6 @@ import { Spells, SpellGroups } from "./Spell/Spells";
 import { TalentTrees } from "./Talents/Talents";
 import { Titles } from "./Title/Titles";
 import { UI } from "./UI/UI";
-import { finish } from "wotlkdata";
-import { iterateIds } from "wotlkdata/ids/Ids";
-import * as fs from 'fs';
-import * as path from 'path';
 import { Factions } from "./Faction/Faction";
 import { SmartScripts } from "./SmartScript/SmartScript";
 import { Gossips } from "./Gossip/Gossips";
@@ -43,6 +39,12 @@ import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./
 import { TSImages } from "./Images/Image";
 import { Professions } from "./Profession/Professions";
 import { Locks } from "./Locks/Locks";
+import { Settings } from "wotlkdata/Settings";
+import { settings } from "node:cluster";
+import { MapCreator } from "wotlkdata/dbc/types/Map";
+import { Ids } from "./Misc/Ids";
+import { Z_ASCII } from "node:zlib";
+import { filterOutCallback } from "nextgen-events";
 
 export const std = {
     Spells : Spells,
@@ -82,33 +84,3 @@ export const std = {
     Professions: Professions,
     Locks: Locks
 }
-
-// Patch ID files
-finish('build-idfiles',()=>{
-    if(process.argv.includes('--no-id-defs')) {
-        return;
-    }
-
-    let modulemap : {[key:string]: string}= {};
-    
-    iterateIds((r)=>{
-        const uMod = r.mod.toUpperCase().split('-').join('_').split(' ').join('_');
-        const uName = r.name.toUpperCase().split('-').join('_').split(' ').join('_');
-
-        if(!modulemap[r.mod]) modulemap[r.mod] = ""
-
-        if(r.size==1) {
-            modulemap[r.mod]+= `export const ${uMod}_${uName} : uint32 = GetID("${r.table}","${r.mod}","${r.name}");\n`
-        } else {
-            modulemap[r.mod]+= `export const ${uMod}_${uName} : IDRange = GetIDRange("${r.table}", "${r.mod}", "${r.name}");\n`
-        }
-    });
-
-    let allOut = "// @ts-nocheck\n"
-    allOut+=`// To use these IDs in your live scripts\n`
-    allOut+=`// simply copy the line into your script.\n`
-    for(const mod in modulemap) {
-        allOut += modulemap[mod]
-    }
-    fs.writeFileSync('coredata/IDs.ts',allOut);
-});

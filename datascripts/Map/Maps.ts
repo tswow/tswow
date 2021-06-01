@@ -1,5 +1,6 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles"
 import { MapQuery } from "wotlkdata/dbc/types/Map";
+import { Ids } from "../Misc/Ids";
 import { Map } from "./Map"
 
 export const Maps = {
@@ -8,7 +9,7 @@ export const Maps = {
     },
 
     create(mod: string, id: string) {
-        // TODO: Not finished!
+        return new Map(DBC.Map.add(Ids.Map.id(mod,id)));
     },
 
     filter(query: MapQuery) {
