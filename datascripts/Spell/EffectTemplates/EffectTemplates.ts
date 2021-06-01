@@ -1,16 +1,15 @@
 import { EffectID, EffectTemplate } from "./EffectTemplate";
 import { TargetBase } from "./TargetBase";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { CountBase, PowerBase, PowerBasePct, DamageBase, PointsRoot, HealBasePct, HealBase, PointsBase, DamageBasePct } from "./PointsBase";
 import { SpellPowerType } from "../SpellPowerType";
-import { SharedRefs } from "../../Refs/SharedRefs";
 import { SpellEffect } from "../SpellEffect";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SchoolMask } from "../../Misc/School";
 import { EffectClassSet } from "../SpellClassSet";
 import { SpellRadius } from "../SpellRadius";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 // 1
 // 2
@@ -39,7 +38,8 @@ export class EnvironmentalDamage<T> extends EffectTemplate<T> {
     get DamagePerLevel() {return this.wrap(this.effect.PointsPerLevel); }
     get DamagePerCombo() { return this.wrap(this.effect.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.effect.BonusMultiplier); }
-    get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); } 
+    get Radius() { 
+        return new SpellRadius(this, [this.wrapIndex(this.row.EffectRadiusIndex, this.index)]); } 
 }
 // 8
 @EffectID(8)
@@ -57,15 +57,14 @@ export class BindHome<T> extends EffectTemplate<T> {
     get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
 // 12
-export class TotemCreatureTargetMask<T> extends MaskCell<T> {
+export class TotemCreatureTargetMask<T> extends MaskCell32<T> {
     get Summon1() { return this.bit(0); }
     get Summon2() { return this.bit(1); }
     get Summon3() { return this.bit(2); }
     get Summon4() { return this.bit(3); }
 }
 
-export class TotemCreatureCommand<T> extends Enum<T> {
-    
+export class TotemCreatureCommand<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setReactPassive() { return this.set(0); }
 
@@ -374,7 +373,7 @@ export class AddComboPoints<T> extends CountBase<T> {}
 // 85
 
 // 86
-export class GameObjectActions<T> extends Enum<T> {
+export class GameObjectActions<T> extends EnumCellWrapper<T> {
     setNone() { return this.set(0); }
     setAnimCustom0() { return this.set(1); }
     setAnimCustom1() { return this.set(2); }
@@ -418,7 +417,7 @@ export class GameObjectRepair<T> extends PointsRoot<T> {
 }
 // 89
 @EffectID(89)
-export class GameObjectDestructibleState<T> extends Enum<T> {
+export class GameObjectDestructibleState<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setIntact() { return this.set(0); }
 
@@ -642,7 +641,7 @@ export class PullTowardsDest<T> extends TargetBase<T>{
     get SpeedZ() { return this.wrap(this.effect.MiscValueA); }
 }
 // 146
-export class RuneType<T> extends Enum<T> {
+export class RuneType<T> extends EnumCellWrapper<T> {
     setBlood() { return this.set(0); }
     setUnholy() { return this.set(1); }
     setFrost() { return this.set(2); }

@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CPrim } from "wotlkdata/cell/Cell";
-import { CellArray } from "wotlkdata/cell/CellArray";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
@@ -28,9 +26,14 @@ import { Spells } from "./Spells";
 import { all_auras } from "./EffectTemplates/AuraTemplates";
 import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { SpellRadius } from "./SpellRadius";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+import { CellArray } from "wotlkdata/cell/cells/CellArray";
 
-export class SpellEffects<T> extends SystemArray<SpellEffect<T>,T> {
+export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {
+    @Transient
     protected spell: Spell;
+
     constructor(owner: T, spell: Spell) {
         super(owner);
         this.spell = spell;

@@ -1,14 +1,14 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Cell } from "wotlkdata/cell/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SoundType } from "./SoundType";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
-import { Transient, TransientOn } from "wotlkdata/cell/Transient";
+import { Transient, TransientOn } from "wotlkdata/cell/misc/Transient";
 
-export class SoundEntryName<T> extends Subsystem<SoundEntry<T>> {
+export class SoundEntryName<T> extends CellSystem<SoundEntry<T>> {
     get() {
         return this.owner.row.Name.get();
     }

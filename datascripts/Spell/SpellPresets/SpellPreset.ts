@@ -1,11 +1,11 @@
-import { MainSystem } from "wotlkdata/cell/MainSystem";
 import { Spell } from "../Spell";
 import { SpellEffects } from "../SpellEffect";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { SpellRank } from "../SpellRank";
 import { SpellSkillLineAbilites } from "../SpellSkillLines";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
-export class SpellPreset extends MainSystem {
+export class SpellPreset extends CellSystemTop {
     @Transient
     protected spell: Spell;
 

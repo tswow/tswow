@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureAI extends Subsystem<CreatureTemplate> {
+export class CreatureAI extends CellSystem<CreatureTemplate> {
     set(value: string) {
         this.owner.row.AIName.set(value);
         return this.owner;

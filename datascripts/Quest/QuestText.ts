@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_offer_rewardRow } from "wotlkdata/sql/types/quest_offer_reward";
@@ -164,7 +164,7 @@ export class SubDescription extends SQLLocSystem<Quest> {
     }
 }
 
-export class QuestText extends Subsystem<Quest> {
+export class QuestText extends CellSystem<Quest> {
     Reward : Reward;
     Incomplete : RequestItems;
     Title : LogTitle;

@@ -1,7 +1,6 @@
 import { DBC } from "wotlkdata"
 import { AreaTableQuery } from "wotlkdata/dbc/types/AreaTable"
 import { Ids } from "../Misc/Ids"
-import { std } from "../tswow-stdlib-data"
 import { Area } from "./Area"
 
 /*

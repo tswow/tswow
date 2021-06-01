@@ -1,10 +1,10 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Transient } from "wotlkdata/cell/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MultiUIntWrapper, MultiFloatWrapper, MultiIntWrapper } from "wotlkdata/dbc/DBCCell";
 import { SpellChainEffect } from "./SpellChainEffect";
 
-export class SpellCharacterProcedure<T> extends Subsystem<T> {
+export class SpellCharacterProcedure<T> extends CellSystem<T> {
     @Transient
     row: SpellVisualKitRow;
 
@@ -99,7 +99,7 @@ export class Blizzard<T> extends SpellCharacterProcedure<T> {
     get EmissionRate() { return new MultiFloatWrapper(this, this.row.CharParamOne, 1); }
 }
 
-export class SpellCharacterProcedures<T> extends Subsystem<T> {
+export class SpellCharacterProcedures<T> extends CellSystem<T> {
     @Transient
     protected row: SpellVisualKitRow;
 

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureAttackTime extends Subsystem<CreatureTemplate> {
+export class CreatureAttackTime extends CellSystem<CreatureTemplate> {
     set(melee: number, ranged: number = melee, meleeVariance=1, rangedVariance=meleeVariance) {
         this.MeleeBase.set(melee);
         this.RangedBase.set(ranged);

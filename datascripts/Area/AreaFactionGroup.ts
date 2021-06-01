@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { Area } from "./Area";
 
-export class AreaFaction extends Enum<Area> {
+export class AreaFaction extends EnumCellWrapper<Area> {
     @EnumField(0)
     setContested() { return this.set(0); }
 

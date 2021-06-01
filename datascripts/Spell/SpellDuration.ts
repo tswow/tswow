@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { conditionsRow } from "wotlkdata/sql/types/conditions";
 import { getTemplate } from "./ConditionType";
 
-export class ConditionRow<T> extends Subsystem<T> {
+export class ConditionRow<T> extends CellSystem<T> {
     row: conditionsRow;
 
     constructor(owner: T, row: conditionsRow) {

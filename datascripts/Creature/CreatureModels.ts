@@ -15,9 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CreatureTemplate } from "./CreatureTemplate";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureVisual } from "./CreatureVisual";
-import { SharedRefs } from "../Refs/SharedRefs";
 
 function getModel(template: CreatureTemplate, index: number) {
     switch(index) {
@@ -29,7 +28,7 @@ function getModel(template: CreatureTemplate, index: number) {
     }
 }
 
-export class CreatureModels extends Subsystem<CreatureTemplate> {
+export class CreatureModels extends CellSystem<CreatureTemplate> {
     get length(): number {
         return 4;
     }

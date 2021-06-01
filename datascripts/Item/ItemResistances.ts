@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
-export class ItemResistance extends Subsystem<ItemTemplate> {
+export class ItemResistance extends CellSystem<ItemTemplate> {
     @Transient
     protected get row() { return this.owner.sqlRow; }
     get Holy() { return this.ownerWrap(this.owner.sqlRow.holy_res); }

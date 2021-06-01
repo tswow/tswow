@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
-import { WrappedLoc } from "wotlkdata/cell/WrappedLoc";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
@@ -24,7 +22,9 @@ import { GOCreature } from "../Misc/GOorCreature";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Gossip } from "./Gossip";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { WrappedLoc } from "wotlkdata/cell/systems/CellSystem";
 
 function getNpcText(id: number) {
     let text = SQL.npc_text.find({ID: id});
@@ -234,7 +234,7 @@ export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gos
     protected get BroadcastID() { return this.wrap(broadcastID(this.ID, this.index))}
 }
 
-export class GossipTextArray<S,G,T extends GOCreature<G>> extends SystemArray<GossipTextEntry<S,G,T>,Gossip<S,G,T>> {
+export class GossipTextArray<S,G,T extends GOCreature<G>> extends ArraySystem<GossipTextEntry<S,G,T>,Gossip<S,G,T>> {
     get length(): number {
         return 8;
     }

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class SpellEffectMechanicEnum<T> extends Enum<T> {
+export class SpellEffectMechanicEnum<T> extends EnumCellWrapper<T> {
     /** 
      * No comment (yet!) 
      */
@@ -214,7 +214,7 @@ export class SpellEffectMechanicEnum<T> extends Enum<T> {
     setEnraged() { return this.set(31);}
 }
 
-export class SpellEffectMechanicMask<T> extends MaskCell<T> {
+export class SpellEffectMechanicMask<T> extends MaskCell32<T> {
     get None() { return this.bit(0);}
     get Charmed() { return this.bit(1); }
     get Disoriented() { return this.bit(2); }

@@ -1,10 +1,10 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/dbc/types/Achievement_Criteria";
 import { Ids } from "../Misc/Ids";
 import { Achievement } from "./Achievement";
 
-export class AchievementCriteria extends Subsystem<Achievement> {
+export class AchievementCriteria extends CellSystem<Achievement> {
     protected criteria: Achievement_CriteriaRow[] = [];
 
     protected addCriteria(mod : string,criteriaId: string, c?: Achievement_CriteriaCreator) {

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SmartScript } from "./SmartScript";
 
-export class EventFlags<T> extends MaskCell<SmartScript<T>> {
+export class EventFlags<T> extends MaskCell32<SmartScript<T>> {
     get NonRepeatable() {return this.bit(0)};
     get NormalDungeon(){return this.bit(1)};
     get HeroicDungeon(){return this.bit(2)};

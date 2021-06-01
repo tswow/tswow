@@ -14,9 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
-import { ItemTemplate } from "./ItemTemplate";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
 
 export class ItemVisualModel<T> extends ArrayEntry<ItemDisplayInfo<T>> {
@@ -34,7 +32,7 @@ export class ItemVisualModel<T> extends ArrayEntry<ItemDisplayInfo<T>> {
     }
 }
 
-export class ItemVisualModels<T> extends SystemArray<ItemVisualModel<T>,ItemDisplayInfo<T>> {
+export class ItemVisualModels<T> extends ArraySystem<ItemVisualModel<T>,ItemDisplayInfo<T>> {
     get length(): number {
         return 2;
     }

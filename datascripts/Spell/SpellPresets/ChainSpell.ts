@@ -1,13 +1,12 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { SchoolMask } from "../../Misc/School";
-import { MulticastCell } from "../../Misc/MulticastCell";
 import { SpellChainEffect } from "../SpellChainEffect";
-import { SoundEntry } from "../../Sound/SoundEntry";
 import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 import { SpellAnimation } from "../SpellAnimation";
 import { SpellCastTime } from "../SpellCastTime";
 import { SpellRecovery } from "../SpellRecovery";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class ChainSpell extends SpellPreset {
     static create(mod: string, id: string) {

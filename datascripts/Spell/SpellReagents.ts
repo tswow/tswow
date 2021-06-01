@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Spell } from "./Spell";
-
 export class SpellReagentEntry<T> extends ArrayEntry<T> {
     protected spell: Spell;
     get Reagent() { return this.wrapIndex(this.spell.row.Reagent,this.index); }
@@ -43,7 +42,7 @@ export class SpellReagentEntry<T> extends ArrayEntry<T> {
     }
 }
 
-export class SpellReagents<T> extends SystemArray<SpellReagentEntry<T>, T> {
+export class SpellReagents<T> extends ArraySystem<SpellReagentEntry<T>, T> {
     protected spell: Spell;
 
     constructor(owner: T, spell: Spell) {

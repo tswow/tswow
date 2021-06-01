@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Quest } from "./Quest";
 import { QuestDifficultyIndex } from "./QuestDifficultyIndex";
 
@@ -55,7 +55,7 @@ export class ItemChoiceReward extends ArrayEntry<Quest> {
     }
 }
 
-export class ItemChoiceRewards extends SystemArray<ItemChoiceReward,Quest> {
+export class ItemChoiceRewards extends ArraySystem<ItemChoiceReward,Quest> {
     get length(): number {
         return 6;
     }
@@ -105,7 +105,7 @@ export class ItemReward extends ArrayEntry<Quest> {
     }
 }
 
-export class ItemRewards extends SystemArray<ItemReward,Quest> {
+export class ItemRewards extends ArraySystem<ItemReward,Quest> {
     get length(): number {
         return 4;
     }
@@ -155,7 +155,7 @@ export class ReputationReward extends ArrayEntry<Quest> {
     }
 }
 
-export class ReputationRewards extends SystemArray<ReputationReward,Quest> {
+export class ReputationRewards extends ArraySystem<ReputationReward,Quest> {
     get length(): number {
         return 6;
     }
@@ -174,7 +174,7 @@ export class ReputationRewards extends SystemArray<ReputationReward,Quest> {
 
 
 
-export class QuestReward extends Subsystem<Quest> {
+export class QuestReward extends CellSystem<Quest> {
     /** Reward player with items (no choice) */
     get Item() { return new ItemRewards(this.owner); }
     /** Let player choose one of multiple items (Maximum 6) */

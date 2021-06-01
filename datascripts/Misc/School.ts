@@ -1,3 +1,6 @@
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -14,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
-
-export class SchoolMask<T> extends MaskCell<T> {
+export class SchoolMask<T> extends MaskCell32<T> {
     get Physical() {return this.bit(0); }
     get Holy() {return this.bit(1); }
     get Fire() {return this.bit(2); }
@@ -27,7 +27,7 @@ export class SchoolMask<T> extends MaskCell<T> {
     get Arcane() {return this.bit(6); }
 }
 
-export class SchoolEnum<T> extends Enum<T> {
+export class SchoolEnum<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setPhysical() {return this.set(0); }
 

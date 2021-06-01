@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_default_trainer";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
 export class TrainerLoc<T> extends SQLLocSystem<T> {
     @Transient
@@ -45,7 +45,7 @@ export class TrainerLoc<T> extends SQLLocSystem<T> {
     }
 }
 
-export class Trainer<T> extends Subsystem<T> {
+export class Trainer<T> extends CellSystem<T> {
     get ID() {
         return this.trainerRow.Id.get();
     }

@@ -1,3 +1,5 @@
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -14,9 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
-
-export class SpellPowerDisplay<T> extends Enum<T> {
+export class SpellPowerDisplay<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setNone() { return this.set(0); }
 

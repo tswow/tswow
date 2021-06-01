@@ -1,6 +1,6 @@
-import { Enum } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
 
-export class CreatureFactionTemplate<T> extends Enum<T> {
+export class CreatureFactionTemplate<T> extends EnumCellWrapper<T> {
     setNeutralHostile() { return this.set(21); }
     setNeutralPassive() { return this.set(35); }
     setNeutralNonAggressive() { return this.set(7); }

@@ -1,9 +1,9 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
 import { MainEntity } from "../Misc/MainEntity";
 import { Position } from "../Misc/Position";
 
-export class GameObjectPosition extends Subsystem<GameObjectInstance> {
+export class GameObjectPosition extends CellSystem<GameObjectInstance> {
     get Map() { return  this.ownerWrap(this.owner.row.map); }
     get X() { return  this.ownerWrap(this.owner.row.position_x); }
     get Y() { return  this.ownerWrap(this.owner.row.position_y); }

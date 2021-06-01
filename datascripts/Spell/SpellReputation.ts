@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Spell } from "./Spell";
 
-export class SpellReputation extends Subsystem<Spell>  {
+export class SpellReputation extends CellSystem<Spell>  {
     get Faction() { return this.ownerWrap(this.owner.row.MinFactionID); }
     get MinReputation() { return this.ownerWrap(this.owner.row.MinReputation); }
 

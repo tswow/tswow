@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell, MaskLongCell } from "wotlkdata/cell/systems/Mask";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Ids } from "../Misc/Ids";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
@@ -37,7 +36,6 @@ import { SpellSkillLineAbilites } from "./SpellSkillLines";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { SpellCastTime } from "./SpellCastTime";
 import { SpellMissile } from "./SpellMissile";
 import { SpellDescriptionVariable } from "./SpellDescriptionVariable";
@@ -47,12 +45,14 @@ import { SpellDuration } from "./SpellDuration";
 import { SpellRange } from "./SpellRange";
 import { SchoolMask } from "../Misc/School";
 import { SpellVisualEffect } from "./SpellVisualEffect";
-import { Vector3 } from "wotlkdata/cell/systems/Vector3";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { SpellGroups } from "./SpellGroup";
 import { SpellRank } from "./SpellRank";
+import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
+import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
+import { Vec3 } from "../Misc/Vec3";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -77,7 +77,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Reagents() { return new SpellReagents(this,this); }
 
     get RequiresSpellFocus() { return this.wrap(this.row.RequiresSpellFocus); }
-    get FacingCasterFlags() { return new MaskCell(this, this.row.FacingCasterFlags); }
+    get FacingCasterFlags() { return new MaskCell32(this, this.row.FacingCasterFlags); }
     
     get CasterAuraState() : IncludeExclude<number, this> { 
         return new IncludeExclude(this, 
@@ -140,20 +140,20 @@ export class Spell extends MainEntity<SpellRow> {
     get Missile() { return new SpellMissile(this, [this.row.SpellMissileID]) }
 
     get ShapeshiftMask() { return new IncludeExcludeMask(this, 
-        new MaskLongCell(this,this.row.ShapeshiftMask),
-        new MaskLongCell(this,this.row.ShapeshiftMask),
+        new MaskCell64(this,this.row.ShapeshiftMask),
+        new MaskCell64(this,this.row.ShapeshiftMask),
     )}
 
     get Levels() { return new SpellLevels(this); }
     get SpellDescriptionVariable() { return new SpellDescriptionVariable(this, [this.row.SpellDescriptionVariableID]) }
     get Difficulty() { return new SpellDifficulty(this, [this.row.SpellDifficultyID]); }
-    get ChannelInterruptFlags() { return new MaskCell(this, this.row.ChannelInterruptFlags); }
+    get ChannelInterruptFlags() { return new MaskCell32(this, this.row.ChannelInterruptFlags); }
     get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
     get InterruptFlags() { return new InterruptFlags(this); }
 
     get MissileModel() { return new SpellVisualEffect(this, this.Visual.row.MissileModel); }
     get MissileAttachment() { return this.wrap(this.Visual.row.MissileAttachment); }
-    get MissileCastOffset() { return new Vector3(
+    get MissileCastOffset() { return new Vec3(
           this
         , this.Visual.row.MissileCastOffsetX
         , this.Visual.row.MissileCastOffsetY
@@ -161,7 +161,7 @@ export class Spell extends MainEntity<SpellRow> {
         )}
 
     get MissileImpactOffset() { 
-        return new Vector3(
+        return new Vec3(
               this
             , this.Visual.row.MissileImpactOffsetX
             , this.Visual.row.MissileImpactOffsetY

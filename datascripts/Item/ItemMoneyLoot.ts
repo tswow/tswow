@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemMoneyLoot extends Subsystem<ItemTemplate> {
+export class ItemMoneyLoot extends CellSystem<ItemTemplate> {
     get Min() { return this.ownerWrap(this.owner.row.minMoneyLoot); }
     get Max() { return this.ownerWrap(this.owner.row.maxMoneyLoot); }
 

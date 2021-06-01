@@ -16,9 +16,7 @@
 */
 import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { Cell } from "wotlkdata/cell/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
 
 export class SpellDifficulty<T> extends SharedRef<T, SpellDifficultyRow> {

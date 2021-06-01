@@ -14,19 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumBase, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemTotemCategory extends EnumBase<ItemTemplate> {
-    get(): number {
-        return this.owner.row.TotemCategory.get();
-    }
-
-    set(value: number): ItemTemplate {
-        this.owner.row.TotemCategory.set(value);
-        return this.owner;
-    }
-
+export class ItemTotemCategory extends EnumCellWrapper<ItemTemplate> {
     @EnumField(1)
     setSkinningKnife() { return this.set(1); }
 

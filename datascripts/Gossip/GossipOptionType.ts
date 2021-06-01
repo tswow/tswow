@@ -15,8 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { EnumField } from "wotlkdata/cell/systems/Enum";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_default_trainer";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { GOCreature } from "../Misc/GOorCreature";
@@ -29,7 +28,7 @@ import { getGossipLabel } from "./GossipLabels";
 import { GossipOption } from "./GossipOption";
 import { Gossips } from "./Gossips";
 
-export class GossipOptionType<S,G,T extends GOCreature<G>> extends Subsystem<GossipOption<S,G,T>> {
+export class GossipOptionType<S,G,T extends GOCreature<G>> extends CellSystem<GossipOption<S,G,T>> {
     protected set(value: number, npcValue: number, action = 0) {
         this.owner.row.OptionType.set(value);
         this.owner.row.OptionNpcFlag.set(npcValue);

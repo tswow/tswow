@@ -1,9 +1,9 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { Spell } from "../Spell";
-import { MulticastCell } from "../../Misc/MulticastCell";
 import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 import { SpellAnimation } from "../SpellAnimation";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class SummonSpell extends SpellPreset {
     static create(mod: string, id: string) {

@@ -1,6 +1,6 @@
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class ShapeshiftFlags<T> extends MaskCell<T> {
+export class ShapeshiftFlags<T> extends MaskCell32<T> {
     get IsShapeshift() { return this.bit(0); }
     get PreventCancel() { return this.bit(1); }
     get AllowInteraction() { return this.bit(3); }

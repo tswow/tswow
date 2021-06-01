@@ -1,6 +1,6 @@
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell"
 
-export class SpellAnimation<T> extends Enum<T> {
+export class SpellAnimation<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setStand() { return this.set(0) }
     

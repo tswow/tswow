@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Talent } from "./Talent";
 
 export class TalentRankWrap extends Cell<number, Talent> {
@@ -58,7 +58,7 @@ export class TalentRequirement extends ArrayEntry<Talent> {
     }
 }
 
-export class TalentRequirements extends SystemArray<TalentRequirement, Talent> {
+export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
     get length(): number {
         return 3;
     }

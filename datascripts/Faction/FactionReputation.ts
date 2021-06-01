@@ -1,4 +1,4 @@
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Ids } from "../Misc/Ids";
 import { ClassType, makeClassmask } from "../Class/ClassType";
 import { makeRacemask, RaceType } from "../Race/RaceType";
@@ -20,7 +20,7 @@ export class FactionReputation extends ArrayEntry<Faction> {
     }
 }
 
-export class FactionReputations extends SystemArray<FactionReputation,Faction>{
+export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
     get length(): number {
         return 4;
     }

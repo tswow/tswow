@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { SpellEffect } from "./SpellEffect";
-import { SchoolDamage, TeleportUnits, EnvironmentalDamage, PowerDrain, HealthLeech, Heal, BindHome, TotemCreatureCommand, CommandTotemCreature, CompleteQuest, WeaponDamageNoSchool, Resurrect, ExtraAttacks, CreateItem, Weapon, Summon, Leap, Energize, WeaponPercentDamage, TriggerMissile, OpenLock, LearnSpell, Dispel, Language, Jump, JumpDest, TeleportUnitFaceCaster, SkillStep, AddHonor, TradeSkill, TransDoor, EnchantItem, EnchantItemTemp, SummonPet, LearnPetSpell, WeaponDamage, CreateRandomItem, SendEvent, PowerBurn, Threat, TriggerSpell, CreateManaGem, HealMaxHealth, InterruptCast, Pickpocket, AddFarsight, ApplyGlyph, HealMechanical, SummonObjectWild, ScriptEffect, Sanctuary, AddComboPoints, ActivateObject, GameObjectDamage, GameObjectRepair, SetGameObjectDestructibleState, KillCredit, EnchantHeldItem, ResurrectSelf, Charge, CastButtons, Knockback, MakeDrunk, Reputation, SummonObjectSlot1, SummonObjectSlot2, SummonObjectSlot3, SummonObjectSlot4, DispelMechanic, DestroyAllTotems, DurabilityDamage, DurabilityDamagePercent, Skill, SendTaxi, PullTowards, ModifyThreatPercent, StealBeneficialBuff, RedirectThreat, PlaySound, PlayMusic, HealPercent, EnergizePercent, LeapBack, ClearQuest, ForceCast, ForceCastWithValue, TriggerSpellWithValue, KnockbackDest, PullTowardsDest, ActivateRune, FailQuest, TriggerMissileWithValue, ChargeDest, StartQuest, CanTitanGrip, EnchantPrismaticItem, RemoveAura } from "./EffectTemplates/EffectTemplates";
+import { SchoolDamage, TeleportUnits, EnvironmentalDamage, PowerDrain, HealthLeech, Heal, BindHome, CommandTotemCreature, CompleteQuest, WeaponDamageNoSchool, Resurrect, ExtraAttacks, CreateItem, Weapon, Summon, Leap, Energize, WeaponPercentDamage, TriggerMissile, OpenLock, LearnSpell, Dispel, Language, Jump, JumpDest, TeleportUnitFaceCaster, SkillStep, AddHonor, TradeSkill, TransDoor, EnchantItem, EnchantItemTemp, SummonPet, LearnPetSpell, WeaponDamage, CreateRandomItem, SendEvent, PowerBurn, Threat, TriggerSpell, CreateManaGem, HealMaxHealth, InterruptCast, Pickpocket, AddFarsight, ApplyGlyph, HealMechanical, SummonObjectWild, ScriptEffect, Sanctuary, AddComboPoints, ActivateObject, GameObjectDamage, GameObjectRepair, SetGameObjectDestructibleState, KillCredit, EnchantHeldItem, ResurrectSelf, Charge, CastButtons, Knockback, MakeDrunk, Reputation, SummonObjectSlot1, SummonObjectSlot2, SummonObjectSlot3, SummonObjectSlot4, DispelMechanic, DestroyAllTotems, DurabilityDamage, DurabilityDamagePercent, Skill, SendTaxi, PullTowards, ModifyThreatPercent, StealBeneficialBuff, RedirectThreat, PlaySound, PlayMusic, HealPercent, EnergizePercent, LeapBack, ClearQuest, ForceCast, ForceCastWithValue, TriggerSpellWithValue, KnockbackDest, PullTowardsDest, ActivateRune, FailQuest, TriggerMissileWithValue, ChargeDest, StartQuest, CanTitanGrip, EnchantPrismaticItem, RemoveAura } from "./EffectTemplates/EffectTemplates";
 import { AuraType } from "./AuraType";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 
-export class SpellEffectType<T> extends Enum<SpellEffect<T>> {
+export class SpellEffectType<T> extends EnumCellWrapper<SpellEffect<T>> {
     constructor(owner: SpellEffect<T>, index: number) {
-        super(owner, Cell.wrapIndex(owner.row.Effect, index));
+        super(owner, new CellIndexWrapper(undefined, owner.row.Effect, index));
     }
 
     /** */

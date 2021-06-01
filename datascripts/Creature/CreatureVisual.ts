@@ -2,10 +2,9 @@ import { CreatureDisplayInfoRow } from "wotlkdata/dbc/types/CreatureDisplayInfo"
 import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info";
 import { DBC, SQL } from "wotlkdata";
 import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
-import { Cell } from "wotlkdata/cell/Cell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SoundEntry } from "../Sound/SoundEntry";
 
 export class CreatureModel<T> extends SharedRef<T,CreatureModelDataRow> {

@@ -23,6 +23,8 @@ import { ActionType } from "./ActionType";
 import { AttachedScript } from "./AttachedScript";
 import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 function findId(type: number, entry: number) {
     let oldest = SQL.smart_scripts.filter(
@@ -32,12 +34,13 @@ function findId(type: number, entry: number) {
     return oldest.id.get()+1;
 }
 
-export class SmartScript<T> extends MainEntity<smart_scriptsRow> {
-    protected owner: T
+export class SmartScript<T> extends CellSystem<T> {
+    @Transient
+    row: smart_scriptsRow
 
     constructor(owner: T, row: smart_scriptsRow) {
-        super(row);
-        this.owner = owner;
+        super(owner);
+        this.row = row;
     }
 
     static owner<T>(script: SmartScript<T>) : T {

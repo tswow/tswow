@@ -17,7 +17,6 @@
 import { DBC } from "wotlkdata";
 import { SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
 export class SpellCastTime<T> extends SharedRef<T, SpellCastTimesRow> {

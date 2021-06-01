@@ -1,3 +1,6 @@
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -14,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-
-export class XYCell<T> extends Subsystem<T> {
+export class XYCell<T> extends CellSystem<T> {
     protected _x : Cell<number,any>;
     protected _y : Cell<number,any>;
 

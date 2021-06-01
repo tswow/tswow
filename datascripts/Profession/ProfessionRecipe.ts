@@ -1,5 +1,5 @@
 import { Spell } from "../Spell/Spell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Profession } from "./Profession";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { std } from "../tswow-stdlib-data";
@@ -8,7 +8,7 @@ import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 import { SoundEntry } from "../Sound/SoundEntry";
 
-export class RecipeRank extends Subsystem<ProfessionRecipe> {
+export class RecipeRank extends CellSystem<ProfessionRecipe> {
     protected readonly spell: Spell;
 
     constructor(owner: ProfessionRecipe, spell: Spell) {
@@ -26,7 +26,7 @@ export class RecipeRank extends Subsystem<ProfessionRecipe> {
     }
 }
 
-export class RecipeOutputItem extends Subsystem<ProfessionRecipe> {
+export class RecipeOutputItem extends CellSystem<ProfessionRecipe> {
     constructor(owner: ProfessionRecipe) {
         super(owner);
     }
@@ -42,7 +42,7 @@ export class RecipeOutputItem extends Subsystem<ProfessionRecipe> {
     }
 }
 
-export class ProfessionRecipe extends Subsystem<Profession> {
+export class ProfessionRecipe extends CellSystem<Profession> {
     readonly spell: Spell;
 
     constructor(owner: Profession, spell: Spell) {

@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class Vendor<T> extends Subsystem<T> {
+export class Vendor<T> extends CellSystem<T> {
     readonly ID: number;
 
     constructor(owner: T, id: number) {

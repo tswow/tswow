@@ -1,9 +1,8 @@
 import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
-import { MainSystem } from "wotlkdata/cell/MainSystem";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
 export type LockTypeCursorType = "FishingCursor"|"PickLock"|"GatherHerbs"|"Mine"|string
-export class LockTypeCursor extends Subsystem<LockType> {
+export class LockTypeCursor extends CellSystem<LockType> {
     constructor(owner: LockType) {
         super(owner);
     }
@@ -34,7 +33,7 @@ export class LockTypeCursor extends Subsystem<LockType> {
     }
 }
 
-export class LockType extends MainSystem {
+export class LockType extends CellSystemTop {
     readonly row: LockTypeRow;
     constructor(row: LockTypeRow) {
         super();

@@ -1,11 +1,11 @@
 import { Spell } from "../Spell/Spell";
-import { MainSystem } from "wotlkdata/cell/MainSystem";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 import { SpellCastTime } from "../Spell/SpellCastTime";
 import { SoundEntry } from "../Sound/SoundEntry";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
-export class GatheringSpell extends MainSystem {
+export class GatheringSpell extends CellSystemTop {
     readonly Raw: Spell
 
     constructor(spell: Spell) {

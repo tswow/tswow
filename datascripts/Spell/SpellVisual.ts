@@ -14,26 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { Vector3 } from "wotlkdata/cell/systems/Vector3"
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { SpellAnimation } from "./SpellAnimation";
 import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKitModelAttach";
 import { Attachment } from "../Misc/Attachment";
 import { Vec3 } from "../Misc/Vec3";
 import { SpellVisualEffect, SpellVisualEffects } from "./SpellVisualEffect";
-import { Cell } from "wotlkdata/cell/Cell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SoundEntry } from "../Sound/SoundEntry";
 import { SpellEffectCameraShakes } from "./SpellEffectCameraShakes";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 
-export class SpellVisualKitModelAttach<T> extends Subsystem<T> {
+export class SpellVisualKitModelAttach<T> extends CellSystem<T> {
 
     readonly row: SpellVisualKitModelAttachRow;
 
@@ -50,7 +48,7 @@ export class SpellVisualKitModelAttach<T> extends Subsystem<T> {
     get Effect() { return new SpellVisualEffect(this, [this.row.SpellVisualEffectNameID]) }
 }
 
-export class SpellVisualKitModels<T> extends Subsystem<SpellVisualKit<T>> {
+export class SpellVisualKitModels<T> extends CellSystem<SpellVisualKit<T>> {
     constructor(owner: SpellVisualKit<T>) {
         super(owner);
     }
@@ -218,14 +216,14 @@ export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
     get MissileAttachment() { return this.ownerWrap(this.row.MissileAttachment); }
 
     get MissileCastOffset() { 
-        return new Vector3(this.owner,
+        return new Vec3(this.owner,
             this.row.MissileCastOffsetX,
             this.row.MissileCastOffsetY,
             this.row.MissileCastOffsetZ)
     }
 
     get MissileImpactOffset() { 
-        return new Vector3(this.owner,
+        return new Vec3(this.owner,
             this.row.MissileImpactOffsetX,
             this.row.MissileImpactOffsetY,
             this.row.MissileImpactOffsetZ)

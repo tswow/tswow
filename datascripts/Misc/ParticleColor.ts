@@ -2,7 +2,6 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Ids, AutoIdGenerator } from "./Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
 export class ParticleColor<T> extends SharedRef<T, ParticleColorRow> {
     table(): SharedRefTable<ParticleColorRow> {

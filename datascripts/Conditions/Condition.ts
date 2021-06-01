@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { conditionsCreator, conditionsQuery} from "wotlkdata/sql/types/conditions";
 import { ClassType, resolveClassType } from "../Class/ClassType";
 import { getRanks, ReputationRanks, reputationRanksToMask } from "../Faction/ReputationRanks";
@@ -34,7 +34,7 @@ import { getStandState, resolveStandState, StandState } from "./StandState";
 /**
  * TODO: Add missing type transforms
  */
-export class Condition<T> extends Subsystem<T> {
+export class Condition<T> extends CellSystem<T> {
     protected state: conditionsCreator = {};
 
     protected addRow(type: number, group: number, value1: number = 0, value2: number = 0, value3: number = 0) {

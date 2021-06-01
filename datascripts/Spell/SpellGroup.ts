@@ -1,9 +1,9 @@
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Enum } from "wotlkdata/cell/systems/Enum";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
 
-export class SpellGroupType<T> extends Enum<T> {
+export class SpellGroupType<T> extends EnumCellWrapper<T> {
     setDefault() { return this.set(0); }
     setExclusive() { return this.set(1); }
     setExclusiveSameCaster() { return this.set(2); }
@@ -23,7 +23,7 @@ export class SpellGroup {
     get StackRule() { return new SpellGroupType(this, SQL.spell_group_stack_rules.find({group_id: this.ID}).stack_rule)}
 }
 
-export class SpellGroups<T> extends Subsystem<T> {
+export class SpellGroups<T> extends CellSystem<T> {
     @Transient
     protected spellId: number;
 

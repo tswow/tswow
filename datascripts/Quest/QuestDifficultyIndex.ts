@@ -1,6 +1,6 @@
-import { Enum } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
 
-export class QuestDifficultyIndex<T> extends Enum<T> {
+export class QuestDifficultyIndex<T> extends EnumCellWrapper<T> {
     set1() { return this.set(1); }
     set2() { return this.set(2); }
     set3() { return this.set(3); }

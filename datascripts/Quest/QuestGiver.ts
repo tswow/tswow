@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { std } from "../tswow-stdlib-data";
 import { Quest } from "./Quest";
 
-export class QuestNPC extends Subsystem<Quest> {
+export class QuestNPC extends CellSystem<Quest> {
     private mark(id: number) {
         std.CreatureTemplates.load(id).NPCFlags.QuestGiver.mark();
     }

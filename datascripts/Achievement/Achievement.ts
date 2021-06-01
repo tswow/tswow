@@ -1,4 +1,4 @@
-import { Cell } from "wotlkdata/cell/Cell";
+import { Cell, FunctionalCell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { Ids } from "../Misc/Ids";
@@ -16,10 +16,12 @@ export class Achievement extends MainEntity<AchievementRow> {
 
     get Category() { return this.wrap(this.row.Category); }
     get Description() { return this.wrapLoc(this.row.Description); }
-    get Icon() { return Cell.make(this,
-        ()=>iconToPath(this.row.IconID.get()).get(),
-        (str: string)=>{pathToIcon(str); return this}
-    )}
+    get Icon() {
+        return new FunctionalCell<string,this>(
+              this
+            , ()=>iconToPath(this.row.IconID.get()).get()
+            , (value: string)=>this.row.IconID.set(pathToIcon(value).ID.get()))
+    }
     get Map() { return this.wrap(this.row.Map); }
     get Points() { return this.wrap(this.row.Points); }
     get Name() { return this.wrapLoc(this.row.Title); }

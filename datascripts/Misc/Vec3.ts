@@ -1,7 +1,7 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Cell } from "wotlkdata/cell/Cell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class Vec3<T> extends Subsystem<T> {
+export class Vec3<T> extends CellSystem<T> {
     protected x: Cell<number,any>;
     protected y: Cell<number,any>;
     protected z: Cell<number,any>;

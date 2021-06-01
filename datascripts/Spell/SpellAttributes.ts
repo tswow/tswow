@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskBase } from "wotlkdata/cell/systems/Mask";
 import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+import { MaskCell } from "wotlkdata/cell/cells/MaskCell";
 
-export class SpellAttributes<T> extends MaskBase<T> {
+export class SpellAttributes<T> extends MaskCell<T> {
     @Transient
     protected spell: Spell;
 

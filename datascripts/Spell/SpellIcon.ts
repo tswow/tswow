@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { DummyCell } from "wotlkdata/cell/DummyCell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Ids } from "../Misc/Ids";
 
@@ -27,7 +27,7 @@ export function pathToIcon(path: string) {
     return old;
 }
 
-export function iconToPath(index: number) {
+export function iconToPath(index: number): Cell<string,any> {
     if(index===0) return new DummyCell(undefined, ""); 
     return DBC.SpellIcon.findById(index).TextureFilename;
 }

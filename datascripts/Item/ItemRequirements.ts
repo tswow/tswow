@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate"
 
-export class ReputationRequirement extends Subsystem<ItemTemplate> {
+export class ReputationRequirement extends CellSystem<ItemTemplate> {
     get Faction() { 
         return this.owner.row.RequiredReputationRank;
     };
@@ -35,7 +35,7 @@ export class ReputationRequirement extends Subsystem<ItemTemplate> {
     }
 }
 
-export class SkillRequirement extends Subsystem<ItemTemplate> {
+export class SkillRequirement extends CellSystem<ItemTemplate> {
     get Skill() {
         return this.owner.row.RequiredSkill;
     }
@@ -56,7 +56,7 @@ export class SkillRequirement extends Subsystem<ItemTemplate> {
 }
 
 
-export class ItemRequirements extends Subsystem<ItemTemplate> {
+export class ItemRequirements extends CellSystem<ItemTemplate> {
     protected row() { return this.owner.sqlRow; }
 
     get Level() { return this.ownerWrap(this.row().RequiredLevel); }

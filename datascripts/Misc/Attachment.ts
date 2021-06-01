@@ -1,6 +1,6 @@
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell"
 
-export class Attachment<T> extends Enum<T> {
+export class Attachment<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setShield() { return this.set(0); }
 

@@ -1,11 +1,11 @@
 import { DamageBase, ChanceBase, HealBase, PercentBase, DamageBasePct, PointsBase, HealBasePct, PowerBasePct, PowerBase, ManaBase, CountBase } from "./PointsBase";
 import { TargetBase } from "./TargetBase";
 import { SchoolMask, SchoolEnum } from "../../Misc/School";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { CreatureTypeEnum, CreatureTypeMask } from "../../Creature/CreatureType";
 import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffectMechanics";
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
 import { SpellPowerType } from "../SpellPowerType";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
 export const all_auras : any = {}
 export function AuraID(id: number) {
@@ -71,7 +71,7 @@ export class DamageShield<T> extends DamageBasePct<T> {
     get School() { return new SchoolEnum(this, this.effect.MiscValueA); }
 }
 // 16
-export class StealthType<T> extends Enum<T> {
+export class StealthType<T> extends EnumCellWrapper<T> {
     setNormal() { return this.set(0); }
     setTrap() { return this.set(1); }
 }
@@ -87,7 +87,7 @@ export class ModDetect<T> extends PointsBase<T> {
 }
 // 18
 
-export class InvisibilityType<T> extends Enum<T>
+export class InvisibilityType<T> extends EnumCellWrapper<T>
 {
     setGeneral() { return this.set(0); }
     setUnk1() { return this.set(1); }
@@ -146,7 +146,7 @@ export class ModSilence<T> extends TargetBase<T> {}
 @AuraID(28)
 export class ReflectSpells<T> extends PercentBase<T> {}
 // 29
-export class StatMod<T> extends Enum<T> {
+export class StatMod<T> extends EnumCellWrapper<T> {
     setAll() { return this.set(-1); }
     setStrength() { return this.set(0); }
     setAgility() { return this.set(1); }
@@ -451,7 +451,7 @@ export class FeatherFall<T> extends TargetBase<T> {}
 export class Hover<T> extends TargetBase<T> {}
 // 107
 
-export class SpellModOp<T> extends Enum<T> {
+export class SpellModOp<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setDamage(){return this.set(0)}
     @EnumField(1)
@@ -829,7 +829,7 @@ export class ModAttackerMeleeCritChance<T> extends PercentBase<T> {}
 @AuraID(188)
 export class ModAttackerRangedCritChance<T> extends PercentBase<T> {}
 // 189
-export class CombatRating<T> extends Enum<T> {
+export class CombatRating<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setWeaponSkill() { return this.set(0); }
     @EnumField(1)
@@ -1085,7 +1085,7 @@ export class ModCombatResultChance<T> extends TargetBase<T> {
     get Rating() { return new CombatRating(this, this.effect.MiscValueA); }
 }
 // 249
-export class RuneType<T> extends Enum<T> {
+export class RuneType<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setBlood() { return this.set(0); }
 
@@ -1141,7 +1141,7 @@ export class ScreenEffect<T> extends PointsBase<T> {
 // 261
 @AuraID(261)
 export class Phase<T> extends TargetBase<T> {
-    get PhaseMask() { return new MaskCell(this, this.effect.MiscValueA); }
+    get PhaseMask() { return new MaskCell32(this, this.effect.MiscValueA); }
 }
 // 262
 // 263

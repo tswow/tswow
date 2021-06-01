@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumBase, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureDamageSchool extends EnumBase<CreatureTemplate> {
+export class CreatureDamageSchool extends EnumCellWrapper<CreatureTemplate> {
     get(): number {
         return this.owner.row.dmgschool.get();
     }

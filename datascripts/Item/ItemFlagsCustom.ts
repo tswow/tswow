@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlagsCustom extends MaskCell<ItemTemplate> {
+export class ItemFlagsCustom extends MaskCell32<ItemTemplate> {
     /** Item duration will tick even if player is offline */
     get RealtimeDuration() { return this.bit(0) ;}
 

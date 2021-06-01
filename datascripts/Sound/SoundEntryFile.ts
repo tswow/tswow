@@ -1,5 +1,5 @@
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { SoundEntry } from "./SoundEntry";
-import { SystemArray, ArrayEntry } from "wotlkdata/cell/systems/SystemArray";
 
 export class SoundEntryFile<T> extends ArrayEntry<SoundEntry<T>> {
     clear(): SoundEntry<T> {
@@ -22,7 +22,7 @@ export class SoundEntryFile<T> extends ArrayEntry<SoundEntry<T>> {
     }
 }
 
-export class SoundEntryFiles<T> extends SystemArray<SoundEntryFile<T>, SoundEntry<T>> {
+export class SoundEntryFiles<T> extends ArraySystem<SoundEntryFile<T>, SoundEntry<T>> {
     get length(): number {
         return 10;
     }

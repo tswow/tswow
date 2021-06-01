@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Pos, Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 
-export class CreaturePosition<T> extends Subsystem<CreatureInstance<T>> {
+export class CreaturePosition<T> extends CellSystem<CreatureInstance<T>> {
     get Map() { return this.ownerWrap(this.owner.row.map); }
     get X() { return this.ownerWrap(this.owner.row.position_x); }
     get Y() { return this.ownerWrap(this.owner.row.position_y); }

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
 import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class SpellRecovery<T> extends Subsystem<T> {
+export class SpellRecovery<T> extends CellSystem<T> {
     @Transient
     protected spell :Spell; 
     

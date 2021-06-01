@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureStats extends Subsystem<CreatureTemplate> {
+export class CreatureStats extends CellSystem<CreatureTemplate> {
     get HealthMod() { return this.ownerWrap(this.owner.row.HealthModifier); }
     get ManaMod() { return this.ownerWrap(this.owner.row.ManaModifier); }
     get ArmorMod() { return this.ownerWrap(this.owner.row.ArmorModifier); }

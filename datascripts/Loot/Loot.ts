@@ -14,8 +14,8 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
@@ -38,7 +38,7 @@ export interface LootTable {
     add(id: number, item: number) : LootRowBase;
 }
 
-export abstract class LootSetBase<T> extends Subsystem<T> {
+export abstract class LootSetBase<T> extends CellSystem<T> {
     protected table: LootTable;
     get rows() { return this.table.filter({Entry:this.ID})}
     

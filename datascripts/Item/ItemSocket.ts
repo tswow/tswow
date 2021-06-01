@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQLCell } from "wotlkdata/sql/SQLCell";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
-import { SystemArray, ArrayEntry } from 'wotlkdata/cell/systems/SystemArray'
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum"
 
 function colors(owner: ItemTemplate) {
     return [
@@ -36,7 +35,7 @@ function contents(owner: ItemTemplate) {
 }
 
 
-export class ItemColor extends Enum<ItemTemplate> {
+export class ItemColor extends EnumCellWrapper<ItemTemplate> {
     @EnumField(0)
     setMeta() {return this.set(0)};
 
@@ -74,7 +73,7 @@ export class ItemSocket extends ArrayEntry<ItemTemplate>{
     }
 }
 
-export class ItemSockets extends SystemArray<ItemSocket, ItemTemplate> {
+export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
     constructor(owner: ItemTemplate) {
         super(owner);
     }

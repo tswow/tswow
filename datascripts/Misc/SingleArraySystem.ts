@@ -1,6 +1,6 @@
-import { SystemArray, ArrayEntry } from "wotlkdata/cell/systems/SystemArray";
+import { ArraySystem, ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
 import { DBCArrayCell } from "wotlkdata/dbc/DBCCell";
-import { CPrim } from "wotlkdata/cell/Cell";
+import { CPrim } from "wotlkdata/cell/cells/Cell";
 
 export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
     protected array: DBCArrayCell<D,any>;
@@ -34,7 +34,7 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
     }
 }
 
-export class SingleArraySystem<D extends CPrim, T> extends SystemArray<SingleArrayEntry<D,T>,T> {
+export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArrayEntry<D,T>,T> {
     protected array: DBCArrayCell<D,any>;
     protected clearValue: D;
 
@@ -45,7 +45,7 @@ export class SingleArraySystem<D extends CPrim, T> extends SystemArray<SingleArr
     }
 
     get length(): number {
-        return this.array.length;
+        return this.array.length();
     }
 
     getIndex(index: number) {

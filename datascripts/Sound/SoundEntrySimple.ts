@@ -1,4 +1,3 @@
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";

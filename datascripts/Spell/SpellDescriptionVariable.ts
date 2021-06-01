@@ -16,7 +16,6 @@
  */
 import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 

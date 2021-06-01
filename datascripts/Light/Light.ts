@@ -104,7 +104,7 @@ export class Light extends MainEntity<LightRow> {
         this.row.FalloffEnd.set(row.FalloffEnd.get());
         this.row.FalloffStart.set(row.FalloffStart.get());
 
-        for(let i=0;i<row.LightParamsID.length;++i) {
+        for(let i=0;i<row.LightParamsID.length();++i) {
             const srcParamId = row.LightParamsID.getIndex(i);
             if(srcParamId===0) {
                 continue;

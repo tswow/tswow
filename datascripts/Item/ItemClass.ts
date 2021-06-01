@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 let itemClassFields : {[key: string]: string} = {}
@@ -29,7 +29,7 @@ function ItemClassField(indexA: number, indexB: number) {
     }
 }
 
-export class ItemClass extends Subsystem<ItemTemplate> {
+export class ItemClass extends CellSystem<ItemTemplate> {
     objectify() {
         let field = itemClassFields[indexKey(this.getClass(),this.getSubclass())]
         if(field!==undefined) {

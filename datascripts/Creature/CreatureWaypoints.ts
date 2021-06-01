@@ -1,9 +1,9 @@
 import { SQL } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Position } from "../Misc/Position";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureWaypoints extends Subsystem<CreatureTemplate> {
+export class CreatureWaypoints extends CellSystem<CreatureTemplate> {
 
     get(){
         return SQL.waypoints.filter({entry: this.owner.ID})

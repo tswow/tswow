@@ -1,7 +1,7 @@
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { GameObjectTemplate } from "./GameObjectTemplate";
 
-export class GameObjectType<T extends GameObjectTemplate<T>> extends Enum<GameObjectTemplate<T>> {
+export class GameObjectType<T extends GameObjectTemplate<T>> extends EnumCellWrapper<GameObjectTemplate<T>> {
     @EnumField(0)
     setDoor() { return this.set(0) }
     

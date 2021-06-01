@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumField, Enum } from "wotlkdata/cell/systems/Enum";
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class CreatureTypeEnum<T> extends Enum<T> {
+export class CreatureTypeEnum<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setNone() { return this.set(0); }
 
@@ -67,7 +67,7 @@ export class CreatureTypeEnum<T> extends Enum<T> {
     setAberration() { return this.set(15); }
 }
 
-export class CreatureTypeMask<T> extends MaskCell<T> {
+export class CreatureTypeMask<T> extends MaskCell32<T> {
     get None() { return this.bit(0); }
     get Beast() { return this.bit(1); }
     get Dragonkin() { return this.bit(2); }

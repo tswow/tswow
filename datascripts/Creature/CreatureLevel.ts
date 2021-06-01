@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureLevel extends Subsystem<CreatureTemplate> {
+export class CreatureLevel extends CellSystem<CreatureTemplate> {
     set(min: number, max: number = min) {
         this.Min.set(min);
         this.Max.set(max);

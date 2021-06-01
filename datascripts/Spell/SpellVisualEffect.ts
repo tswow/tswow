@@ -1,13 +1,12 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectName";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 
-export class VisualScale<T> extends Subsystem<T> {
+export class VisualScale<T> extends CellSystem<T> {
     @Transient
     protected row: SpellVisualEffectNameRow;
 
@@ -58,7 +57,7 @@ export class SpellVisualEffect<T> extends SharedRef<T, SpellVisualEffectNameRow>
     }
 }
 
-export class SpellVisualEffects<T> extends Subsystem<T> {
+export class SpellVisualEffects<T> extends CellSystem<T> {
     @Transient
     protected row: SpellVisualKitRow; 
 

@@ -1,11 +1,10 @@
 import { LockRow } from "wotlkdata/dbc/types/Lock";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
-export class LockType<T> extends Enum<SimpleLock<T>> {
+export class LockType<T> extends EnumCellWrapper<SimpleLock<T>> {
     @EnumField(0)
     setNone() { return this.set(0); }
 

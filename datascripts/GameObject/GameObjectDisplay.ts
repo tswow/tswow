@@ -1,13 +1,13 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { BoundingBox } from "../Misc/BoundingBox";
-import { CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { SoundEntry } from "../Sound/SoundEntry";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";
+import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 
-export class GameObjectSounds<T> extends Subsystem<GameObjectDisplay<T>> {
+export class GameObjectSounds<T> extends CellSystem<GameObjectDisplay<T>> {
     get length(): number { return 10; }
 
     getId(index: number) {
@@ -51,7 +51,7 @@ export class GameObjectSounds<T> extends Subsystem<GameObjectDisplay<T>> {
     }
 }
 
-export class GameObjectGeoBox<T> extends Subsystem<GameObjectDisplay<T>> {
+export class GameObjectGeoBox<T> extends CellSystem<GameObjectDisplay<T>> {
     get MinX() { return this.ownerWrap(this.owner.row.GeoBoxMinX); }
     get MaxX() { return this.ownerWrap(this.owner.row.GeoBoxMaxX); }
     get MinY() { return this.ownerWrap(this.owner.row.GeoBoxMinY); }

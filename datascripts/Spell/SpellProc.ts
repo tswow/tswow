@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Spell } from "./Spell";
 
-export class SpellProc extends Subsystem<Spell> {
-
-    get TypeMask() { return new MaskCell(this.owner, this.owner.row.ProcTypeMask); }
+export class SpellProc extends CellSystem<Spell> {
+    get TypeMask() { return new MaskCell32(this.owner, this.owner.row.ProcTypeMask); }
     get Chance() { return this.ownerWrap(this.owner.row.ProcChance); }
     get Charges() { return this.ownerWrap(this.owner.row.ProcCharges); }
 

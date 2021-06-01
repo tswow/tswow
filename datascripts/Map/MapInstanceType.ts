@@ -14,15 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { Map } from "./Map";
 
-export class MapInstanceType extends Enum<Map>{
-    
+export class MapInstanceType extends EnumCellWrapper<Map>{
+    @EnumField(0)
     setNone() { return this.set(0); }
 
+    @EnumField(1)
     setParty() { return this.set(1); }
+
+    @EnumField(2)
     setRaid() { return this.set(2); }
+
+    @EnumField(3)
     setPVP() { return this.set(3); }
+
+    @EnumField(4)
     setArena() { return this.set(4); }
 }

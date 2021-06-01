@@ -1,8 +1,8 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellEffect } from "../SpellEffect";
-import { Transient } from "wotlkdata/cell/Transient";
-import { CPrim } from "wotlkdata/cell/Cell";
-import { CellArray } from "wotlkdata/cell/CellArray";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+import { CPrim } from "wotlkdata/cell/cells/Cell";
+import { CellArray, CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 
 export const all_effects : any = {}
 export function EffectID(id: number) {
@@ -11,8 +11,8 @@ export function EffectID(id: number) {
     }
 }
 
-export class EffectTemplate<T> extends Subsystem<T> {
-    protected w<T extends CPrim>(arr: CellArray<T,any>) {
+export class EffectTemplate<T> extends CellSystem<T> {
+    protected w<T extends CPrim>(arr: CellArray<T,any>): CellIndexWrapper<T,this> {
         return this.wrapIndex(arr, this.index);
     }
 

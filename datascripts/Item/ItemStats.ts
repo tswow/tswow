@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
-import { SQLCell } from "wotlkdata/sql/SQLCell";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function a(owner: ItemTemplate) {
@@ -49,7 +48,7 @@ function b(owner: ItemTemplate) {
     ]
 }
 
-export class Stat extends Enum<ItemTemplate> {
+export class Stat extends EnumCellWrapper<ItemTemplate> {
     @EnumField(0)
     setMana() { return this.set(0)}
     
@@ -199,7 +198,7 @@ export class ItemStat extends ArrayEntry<ItemTemplate> {
 
 }
 
-export class ItemStats extends SystemArray<ItemStat,ItemTemplate> {
+export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
     get length(): number {
         return 10;
     }

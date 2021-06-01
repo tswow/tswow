@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { uint32 } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Light } from "./Light";
 import { getIntBandIndex } from "./LightIndex";
 import { LightWeather, LIGHT_WEATHER } from "./LightWeather";
 
-export class LightIntBand extends Subsystem<Light>{
+export class LightIntBand extends CellSystem<Light>{
     protected rowIndex: number;
 
     constructor(owner: Light, rowIndex: number) {
@@ -30,7 +30,7 @@ export class LightIntBand extends Subsystem<Light>{
     }
 
     set(callback: (weather: LightWeather, time: number, oldValue: number, index: number) => uint32) {
-        for(let i=0;i<this.owner.row.LightParamsID.length;++i) {
+        for(let i=0;i<this.owner.row.LightParamsID.length();++i) {
             const param = this.owner.row.LightParamsID.getIndex(i);
             if(param===0) {
                 continue;
@@ -41,7 +41,7 @@ export class LightIntBand extends Subsystem<Light>{
             const weather = Object.keys(LIGHT_WEATHER)
                 .find(x=>LIGHT_WEATHER[x as LightWeather]==i) as LightWeather;
 
-            for(let i=0;i<bandRow.Time.length;++i) {
+            for(let i=0;i<bandRow.Time.length();++i) {
                 const time = bandRow.Time.getIndex(i);
                 const data = bandRow.Data.getIndex(i);
                 bandRow.Data.setIndex(i,Math.floor(callback(weather,time,data,i)));

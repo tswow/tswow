@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ReputationRank extends Enum<ItemTemplate> {
+export class ReputationRank extends EnumCellWrapper<ItemTemplate> {
     @EnumField(0)
     Hated() {return this.set(0); }
 
@@ -44,7 +44,7 @@ export class ReputationRank extends Enum<ItemTemplate> {
     Exalted() {return this.set(7); }
 }
 
-export class ItemRequiredFaction extends Subsystem<ItemTemplate> {
+export class ItemRequiredFaction extends CellSystem<ItemTemplate> {
     get Faction() { return this.ownerWrap(this.owner.row.RequiredReputationFaction); }
     get Rank() { return new ReputationRank(this.owner, this.owner.row.RequiredReputationRank); }
 

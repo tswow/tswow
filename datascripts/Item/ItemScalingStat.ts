@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemScalingStat extends Subsystem<ItemTemplate> {
+export class ItemScalingStat extends CellSystem<ItemTemplate> {
     get Distribution() { return this.owner.row.ScalingStatDistribution; }
     get Value() { return this.owner.row.ScalingStatValue; }
 

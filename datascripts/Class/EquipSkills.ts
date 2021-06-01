@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC, SQL } from "wotlkdata"
-import { Subsystem } from "wotlkdata/cell/Subsystem"
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility"
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo"
 import { Ids } from "../Misc/Ids"
 import { Class } from "./Class"
 
-export class EquipSystem extends Subsystem<Class> {
+export class EquipSystem extends CellSystem<Class> {
     protected row: SkillLineAbilityRow;
     protected rcRow: SkillRaceClassInfoRow;
 
@@ -51,7 +51,7 @@ export class EquipSystem extends Subsystem<Class> {
     }
 }
 
-export class EquipSkills extends Subsystem<Class> {
+export class EquipSkills extends CellSystem<Class> {
     protected getRow(spellId: number) {
         const slas = DBC.SkillLineAbility.filter({Spell: spellId});
         const existingSla = slas

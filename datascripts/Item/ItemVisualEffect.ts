@@ -1,13 +1,12 @@
 import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { DummyCell } from "wotlkdata/cell/DummyCell";
-import { Cell, CellIndexWrapper } from "wotlkdata/cell/Cell";
 import { pathToIcon } from "../Spell/SpellIcon";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { ItemVisualEffectsRow } from "wotlkdata/dbc/types/ItemVisualEffects";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
+import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
+import { ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');

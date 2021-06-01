@@ -1,10 +1,9 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 
-export class CreaturePatrolPath<T> extends Subsystem<CreatureInstance<T>> {
-    
+export class CreaturePatrolPath<T> extends CellSystem<CreatureInstance<T>> {
     add(movementType: 'WALK'|'RUN'|'FLY', pos: Position | Position[]) {
         if(!Array.isArray(pos)) {
             pos = [pos];

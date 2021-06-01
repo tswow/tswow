@@ -1,8 +1,8 @@
 import { SQL } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Transient } from "wotlkdata/cell/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
-export class SpellRank<T> extends Subsystem<T>{
+export class SpellRank<T> extends CellSystem<T>{
     @Transient
     spellId: number;
 

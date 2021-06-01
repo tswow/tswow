@@ -15,9 +15,9 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class ItemIcon<T> extends Subsystem<ItemDisplayInfo<T>> {
+export class ItemIcon<T> extends CellSystem<ItemDisplayInfo<T>> {
     set(value: string) {
         if(value.includes('\\')) {
             if(!value.startsWith('Interface\\Icons\\')) {

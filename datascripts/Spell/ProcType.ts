@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Spell } from "./Spell";
-import { MaskCell } from "wotlkdata/cell/systems/Mask"
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell"
 
-export class ProcType extends MaskCell<Spell> {
+export class ProcType extends MaskCell32<Spell> {
     constructor(owner: Spell) {
         super(owner, owner.row.ProcTypeMask);
     }

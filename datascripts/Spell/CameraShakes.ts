@@ -1,11 +1,10 @@
 import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
-export class CameraShakeType<T> extends Enum<T> {
+export class CameraShakeType<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setSine() { return this.set(0); }
 

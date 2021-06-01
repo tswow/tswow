@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class DynFlags extends MaskCell<CreatureTemplate> {
+export class DynFlags extends MaskCell32<CreatureTemplate> {
     get None() { return this.bit(0); }
     get Lootable() { return this.bit(1); }
     get TrackUnit() { return this.bit(2); }

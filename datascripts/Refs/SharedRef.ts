@@ -1,10 +1,9 @@
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { AutoIdGenerator } from "../Misc/Ids";
-import { Cell } from "wotlkdata/cell/Cell";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCKeyCell } from "wotlkdata/dbc/DBCCell";
-import { MulticastCell } from "../Misc/MulticastCell";
-import { Transient } from "wotlkdata/cell/Transient";
+import { AutoIdGenerator } from "../Misc/Ids";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
 export interface SharedRefRow {
     ID: DBCKeyCell<any>;
@@ -17,7 +16,7 @@ export interface SharedRefTable<T extends SharedRefRow> {
 }
 
 function shouldClone(gen: AutoIdGenerator, holder: any, cell: Cell<number,any>) {
-    return !AutoIdGenerator.isCustom(gen, cell.get()) && BaseSystem.getUniqueRefs(holder);
+    return !AutoIdGenerator.isCustom(gen, cell.get()) && holder.uniqueRefs;
 }
 
 export class TopSystem {
@@ -41,7 +40,7 @@ export class TopCell extends Cell<number,undefined> {
     }
 }
 
-export abstract class SharedRef<T,R extends SharedRefRow> extends Subsystem<T> {
+export abstract class SharedRef<T,R extends SharedRefRow> extends CellSystem<T> {
     constructor(owner: T, cells: Cell<number,any>[] | Cell<number,any>) {
         super(owner);
         if(!Array.isArray(cells)) {

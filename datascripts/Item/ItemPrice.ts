@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 /**
  * The getters in this class are intentional, we DO NOT want people to get confused with 
  * what price they're actually setting, so we should always 
  */
-export class ItemPrice extends Subsystem<ItemTemplate> {
+export class ItemPrice extends CellSystem<ItemTemplate> {
     get PlayerBuyPrice() { return Number(this.owner.row.BuyPrice.get()); }
     get PlayerSellPrice() { return this.owner.row.SellPrice.get(); }
     get BuyCount() { return this.owner.row.BuyCount.get(); }

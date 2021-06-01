@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Cell } from "wotlkdata/cell/Cell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
 import { LUAXML } from "wotlkdata/luaxml/LUAXML";
 import { Edit } from "wotlkdata/luaxml/TextFile";
-import { includes, neq } from "wotlkdata/query/Relations";
+import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
 import { Ids } from "../Misc/Ids";

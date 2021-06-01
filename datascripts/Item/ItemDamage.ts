@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum } from "wotlkdata/cell/systems/Enum";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function schools(owner: ItemTemplate) {
@@ -39,7 +39,7 @@ function dmgMax(owner: ItemTemplate) {
     ]
 }
 
-export class DamageSchool<T> extends Enum<T> {
+export class DamageSchool<T> extends EnumCellWrapper<T> {
     setPhysical() { return this.set(0); }
     setHoly() { return this.set(1); }
     fetFire() { return this.set(2); }
@@ -66,7 +66,7 @@ export class ItemDamage extends ArrayEntry<ItemTemplate> {
     }
 }
 
-export class ItemDamages extends SystemArray<ItemDamage, ItemTemplate> {
+export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
     get length(): number {
         return 2;
     }

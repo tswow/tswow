@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
 
-export class SpellPower<T> extends Subsystem<T> {
+export class SpellPower<T> extends CellSystem<T> {
     spell: Spell;
     constructor(owner: T, spell: Spell) {
         super(owner);

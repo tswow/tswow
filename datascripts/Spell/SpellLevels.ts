@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Spell } from "./Spell";
 
-export class SpellLevels extends Subsystem<Spell> {
+export class SpellLevels extends CellSystem<Spell> {
     get Spell() { return this.ownerWrap(this.owner.row.SpellLevel); }
     get Base() { return this.ownerWrap(this.owner.row.BaseLevel); }
     get Max() { return this.ownerWrap(this.owner.row.MaxLevel); }

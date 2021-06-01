@@ -20,7 +20,6 @@ import { std } from "../tswow-stdlib-data";
 import { ItemVisualModels } from "./ItemVisualModels";
 import { ItemIcon } from "./ItemIcon";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
 import { ItemEffects } from "./ItemVisualEffect";
 import { SpellVisual } from "../Spell/SpellVisual";

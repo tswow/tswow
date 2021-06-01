@@ -1,16 +1,16 @@
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { Ids } from "../Misc/Ids";
 import { SkillLine } from "./SkillLine";
 
-export class SkillRaceClassFlags extends MaskCell<SkillRaceClassInfo> {
+export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
     get IsProfession() { return this.bit(5); }
     get IsClassLine() { return this.bit(7); }
 }
 
-export class SkillRaceClassInfo extends Subsystem<SkillLine> {
+export class SkillRaceClassInfo extends CellSystem<SkillLine> {
     readonly row: SkillRaceClassInfoRow;
 
     constructor(owner: SkillLine, row: SkillRaceClassInfoRow) {
@@ -18,9 +18,9 @@ export class SkillRaceClassInfo extends Subsystem<SkillLine> {
         this.row = row;
     }
 
-    get ClassMask() { return new MaskCell(this, this.row.ClassMask); }
+    get ClassMask() { return new MaskCell32(this, this.row.ClassMask); }
     get Flags() { return new SkillRaceClassFlags(this, this.row.Flags); }
-    get RaceMask() { return new MaskCell(this, this.row.RaceMask); }
+    get RaceMask() { return new MaskCell32(this, this.row.RaceMask); }
 
     get SkillCostIndex() { return this.wrap(this.row.SkillCostIndex); }
     get SkillID() { return this.wrap(this.row.SkillID); }
@@ -28,7 +28,7 @@ export class SkillRaceClassInfo extends Subsystem<SkillLine> {
     get ID() { return this.row.ID.get() }
 }
 
-export class SkillRaceClassInfos extends Subsystem<SkillLine> {
+export class SkillRaceClassInfos extends CellSystem<SkillLine> {
     protected rows() { 
         return DBC.SkillRaceClassInfo.filter({SkillID: this.owner.ID})
     }

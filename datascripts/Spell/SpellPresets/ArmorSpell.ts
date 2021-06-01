@@ -1,8 +1,8 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
 import { SpellAnimation } from "../SpellAnimation";
-import { MulticastCell } from "../../Misc/MulticastCell";
 import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class ArmorSpell extends SpellPreset {
     static create(mod: string, id: string) {

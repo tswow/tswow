@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureMovementSpeed extends Subsystem<CreatureTemplate> {
+export class CreatureMovementSpeed extends CellSystem<CreatureTemplate> {
     set(walk: number, run: number = walk) {
         this.owner.row.speed_walk.set(walk);
         this.owner.row.speed_run.set(run);

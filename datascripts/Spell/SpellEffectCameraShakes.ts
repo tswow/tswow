@@ -1,6 +1,5 @@
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CameraShakes } from "./CameraShakes";

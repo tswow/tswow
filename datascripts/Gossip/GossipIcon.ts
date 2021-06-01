@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
 import { GOCreature } from "../Misc/GOorCreature";
 import { GossipOption } from "./GossipOption";
-import { Enum } from "wotlkdata/cell/systems/Enum";
 
-export class GossipIconCell<S,G,T extends GOCreature<G>> extends Enum<GossipOption<S,G,T>> {
+export class GossipIconCell<S,G,T extends GOCreature<G>> extends EnumCellWrapper<GossipOption<S,G,T>> {
     setChat() { return this.set(0); }
     setVendor() { return this.set(1); }
     setTaxi() { return this.set(2); }

@@ -14,21 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MainSystem } from "wotlkdata/cell/MainSystem";
-import { Transient } from "wotlkdata/cell/Transient";
-import { CPrim, Cell } from "wotlkdata/cell/Cell";
-import { MulticastCell } from "./MulticastCell";
 
-export class MainEntity<T> extends MainSystem {
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { Transient } from "wotlkdata/cell/misc/Transient";
+
+export class MainEntity<T> extends CellSystemTop {
     @Transient
     row: T;
 
     constructor(row: T) {
         super();
         this.row = row;
-    }
-
-    wrapMulticast<D extends CPrim>(cells: Cell<D,any>[]) {
-        return this.wrap(new MulticastCell(this,cells));
     }
 }

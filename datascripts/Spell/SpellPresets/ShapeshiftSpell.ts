@@ -1,14 +1,13 @@
 import { SpellPreset } from "./SpellPreset";
 import { Spells } from "../Spells";
-import { MulticastCell } from "../../Misc/MulticastCell";
 import { SoundEntrySimple } from "../../Sound/SoundEntrySimple";
 import { Ids } from "../../Misc/Ids";
 import { DBC } from "wotlkdata";
-import { Spell } from "../Spell";
 import { CreatureTypeEnum } from "../../Creature/CreatureType";
 import { SpellIconCell } from "../SpellIcon";
 import { SingleArraySystem } from "../../Misc/SingleArraySystem";
 import { ShapeshiftFlags } from "../ShapeshiftFlags";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class ShapeshiftSpell extends SpellPreset {
     static create(mod: string, id: string) {

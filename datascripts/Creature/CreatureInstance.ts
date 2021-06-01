@@ -21,10 +21,10 @@ import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { Transient } from "wotlkdata/cell/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
-export class CreatureInstance<T> extends Subsystem<T> {
+export class CreatureInstance<T> extends CellSystem<T> {
 
     @Transient
     readonly row: creatureRow;

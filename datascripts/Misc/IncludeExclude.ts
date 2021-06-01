@@ -1,8 +1,8 @@
-import { Cell, CPrim } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { MaskBase } from "wotlkdata/cell/systems/Mask";
+import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
+import { MaskCell } from "wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class IncludeExcludeMask<T,M extends MaskBase<T>> extends Subsystem<T> {
+export class IncludeExcludeMask<T,M extends MaskCell<T>> extends CellSystem<T> {
     readonly Include: M;
     readonly Exclude: M;
 
@@ -13,7 +13,7 @@ export class IncludeExcludeMask<T,M extends MaskBase<T>> extends Subsystem<T> {
     }
 }
 
-export class IncludeExclude<V extends CPrim,T> extends Subsystem<T> {
+export class IncludeExclude<V extends CPrim,T> extends CellSystem<T> {
     readonly Include: Cell<V, T>;
     readonly Exclude: Cell<V, T>;
 

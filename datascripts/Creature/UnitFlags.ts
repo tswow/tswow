@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskBase } from "wotlkdata/cell/systems/Mask";
+import { MaskCell } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class UnitFlags extends MaskBase<CreatureTemplate> {
+export class UnitFlags extends MaskCell<CreatureTemplate> {
     protected cells() {
         return [
             this.owner.row.unit_flags,

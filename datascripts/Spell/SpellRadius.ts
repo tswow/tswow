@@ -17,7 +17,6 @@
 import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 
 export class SpellRadius<T> extends SharedRef<T, SpellRadiusRow> {

@@ -1,12 +1,12 @@
 import { Profession } from "./Profession";
-import { LocSystem } from "wotlkdata/cell/LocSystem";
 import { Language } from "wotlkdata/dbc/Localization";
-import { Cell, CPrim } from "wotlkdata/cell/Cell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { loc_constructor } from "wotlkdata/primitives";
-import { PendingCell } from "wotlkdata/cell/PendingCell";
 import { Spell } from "../Spell/Spell";
 import { SkillLine } from "../SkillLines/SkillLine";
-import { MulticastCell } from "../Misc/MulticastCell";
+import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
+import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export abstract class ProfessionLocSystem extends LocSystem<Profession> {
     protected abstract forSpell(spell: Spell): LocSystem<any>

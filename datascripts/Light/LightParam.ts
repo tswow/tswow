@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell, CPrim } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Light } from "./Light";
 import { LightWeather, LIGHT_WEATHER } from "./LightWeather";
 
-export class LightParam<T extends CPrim> extends Subsystem<Light> {
+export class LightParam<T extends CPrim> extends CellSystem<Light> {
     protected cellGetter: (weather: number) => Cell<T,any>;
 
     constructor(owner: Light, cellGetter: (weather: number) => Cell<T,any>) {

@@ -14,27 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { EnumBase, EnumField } from "wotlkdata/cell/systems/Enum";
-import { CreatureTemplate } from "./CreatureTemplate";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
-export class CreatureMovementType<T> extends EnumBase<T> {
-    get(): number {
-        return this.cell.get();
-    }
-
-    set(value: number): T {
-        this.cell.set(value);
-        return this.owner;
-    }
-
-    protected cell: Cell<number,any>;
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
-    }
-
+export class CreatureMovementType<T> extends EnumCellWrapper<T> {
     @EnumField(0) 
     setIdle() { return this.set(0); }
 

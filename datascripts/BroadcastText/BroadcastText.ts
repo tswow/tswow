@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
@@ -55,7 +55,7 @@ export class BroadcastTextContent<T> extends SQLLocSystem<T> {
 
 }
 
-export class BroadcastText<T> extends Subsystem<T> {
+export class BroadcastText<T> extends CellSystem<T> {
     readonly row: broadcast_textRow;
 
     constructor(owner: T, row: broadcast_textRow) {
@@ -105,5 +105,4 @@ export function getBroadcast<T>(owner: T, cell: Cell<number,any>) {
     }
 
     return new BroadcastText(owner, row);
-    
 }

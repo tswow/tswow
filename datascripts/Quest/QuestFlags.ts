@@ -1,11 +1,11 @@
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { Quest } from "./Quest";
 
 /**
  * Note that some flags may not be supported by the core
  * TODO: I read these from my phone screen, so they might be inaccurate.
  */
-export class QuestFlags extends MaskCell<Quest> {
+export class QuestFlags extends MaskCell32<Quest> {
     get StayAlive() { return this.bit(0); }
     get PartyAccept() { return this.bit(1); }
     get Exploration() { return this.bit(2); }

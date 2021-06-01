@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
 export enum InventoryType {
@@ -47,7 +47,7 @@ export enum InventoryType {
     RELIC = 28
 }
 
-export class ItemInventoryType extends Enum<ItemTemplate> {
+export class ItemInventoryType extends EnumCellWrapper<ItemTemplate> {
     constructor(owner: ItemTemplate) {
         super(owner, owner.row.InventoryType);
     }

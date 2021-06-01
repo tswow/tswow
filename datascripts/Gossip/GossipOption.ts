@@ -15,9 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { CellSimple } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { SqlRow } from "wotlkdata/sql/SQLRow";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
 import { GOCreature } from "../Misc/GOorCreature";
 import { Ids } from "../Misc/Ids";
@@ -27,7 +25,7 @@ import { Gossip } from "./Gossip";
 import { GossipIconCell } from "./GossipIcon";
 import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
-export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<S,G,T>> {
+export class GossipOption<S,G,T extends GOCreature<G>> extends CellSystem<Gossip<S,G,T>> {
     readonly Condition: Condition<this>;
     readonly row: gossip_menu_optionRow;
     protected _label: string = "";
@@ -56,7 +54,7 @@ export class GossipOption<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<
     }
 }
 
-export class GossipOptions<S,G,T extends GOCreature<G>> extends Subsystem<Gossip<S,G,T>> {
+export class GossipOptions<S,G,T extends GOCreature<G>> extends CellSystem<Gossip<S,G,T>> {
     get length() {
         return SQL.gossip_menu_option
             .filter({MenuID:this.owner.ID}).length;

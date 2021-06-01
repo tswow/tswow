@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { npc_vendorRow } from "wotlkdata/sql/types/npc_vendor";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureVendor extends Subsystem<CreatureTemplate> {
+export class CreatureVendor extends CellSystem<CreatureTemplate> {
     protected rows() {
         return SQL.npc_vendor.filter({entry: this.owner.ID});
     }

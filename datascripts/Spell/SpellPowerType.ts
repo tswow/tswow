@@ -1,7 +1,6 @@
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
-export class SpellPowerType<T> extends Enum<T> {
-
+export class SpellPowerType<T> extends EnumCellWrapper<T> {
     @EnumField(-2)
     setHealth() { return this.set(-2); }
 

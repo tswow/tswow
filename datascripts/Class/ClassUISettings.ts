@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { LUAXML } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Edit, EditSystem } from "wotlkdata/luaxml/TextFile";
 import { AnchorRow } from "../UI/Components/AnchorRow";
 import { Class } from "./Class";
-import { Cell, CellSimple } from "wotlkdata/cell/Cell";
+import { Cell, FunctionalCell } from "wotlkdata/cell/cells/Cell";
 
 function float(rgb : number) {
     let str = `{ r = ${(((rgb>>16)&0xff)/255.0).toFixed(2)} , `
@@ -35,7 +35,7 @@ function unfloat(str : string) {
     return (Math.floor(r*255)<<16)+(Math.floor(g*255)<<8)+Math.floor(b*255);
 }
 
-class TCoordSystem extends Subsystem<Class> {
+class TCoordSystem extends CellSystem<Class> {
     private _tCoordsCCEdit: Edit;
     private _tCoordsEdit: Edit;
 
@@ -81,7 +81,7 @@ function cleanNewline(str: string) {
     return str.split('\n').join('\\n');
 }
 
-class ClassInfoRows extends Subsystem<Class> {
+class ClassInfoRows extends CellSystem<Class> {
     private rows: Edit[];
 
     constructor(owner: Class, rows: Edit[]) {
@@ -114,7 +114,7 @@ class ClassInfoRows extends Subsystem<Class> {
 }
 
 // TODO: Not all builtin classes have female text rows, so this needs to be fixed.
-class ClassDescription extends Subsystem<Class> {
+class ClassDescription extends CellSystem<Class> {
     private male: Edit;
     private female: Edit;
 
@@ -125,15 +125,17 @@ class ClassDescription extends Subsystem<Class> {
     }
 
     get Male() {
-        return new CellSimple(this,
-            ()=>this.descPayload(this.male.text),
-            (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${cleanNewline(value)}";`)
+        return new FunctionalCell(
+              this
+            , ()=>this.descPayload(this.male.text)
+            , (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${cleanNewline(value)}";`)
     }
 
     get Female() {
-        return new CellSimple(this,
-            ()=>this.descPayload(this.female.text),
-            (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${cleanNewline(value)}";`)
+        return new FunctionalCell(
+              this
+            , ()=>this.descPayload(this.female.text)
+            , (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${cleanNewline(value)}";`)
     }
 
     private descPayload(desc : string) {
@@ -148,7 +150,7 @@ class ClassDescription extends Subsystem<Class> {
 }
 
 // TODO: Fix sort order
-export class ClassUISettings extends Subsystem<Class> {
+export class ClassUISettings extends CellSystem<Class> {
     readonly Color: ClassColor;
     readonly TCoords: TCoordSystem;
     readonly ClassButton: AnchorRow<Class>;

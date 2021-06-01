@@ -16,8 +16,6 @@
  */
 import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { Cell } from "wotlkdata/cell/Cell";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
 

@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/Cell";
-import { DummyCell } from "wotlkdata/cell/DummyCell";
-import { LocSystem } from "wotlkdata/cell/LocSystem";
-import { PendingCell } from "wotlkdata/cell/PendingCell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
-import { ArrayEntry, SystemArray } from "wotlkdata/cell/systems/SystemArray";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
+import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { Quest } from "./Quest";
@@ -62,7 +62,7 @@ export class ItemObjective extends ArrayEntry<Quest> {
     }
 }
 
-export class ItemObjectives extends SystemArray<ItemObjective, Quest> {
+export class ItemObjectives extends ArraySystem<ItemObjective, Quest> {
     get length(): number {
         return 6;
     }
@@ -110,7 +110,7 @@ export class NpcGoObjective extends ArrayEntry<Quest> {
     }
 }
 
-export class NpcGoObjectives extends SystemArray<NpcGoObjective,Quest> {
+export class NpcGoObjectives extends ArraySystem<NpcGoObjective,Quest> {
     get length(): number {
         return 4;
     }
@@ -157,7 +157,7 @@ export class ReputationObjective extends ArrayEntry<Quest> {
     }
 }
 
-export class ReputationObjectives extends SystemArray<ReputationObjective,Quest> {
+export class ReputationObjectives extends ArraySystem<ReputationObjective,Quest> {
     get length(): number {
         return 2;
     }
@@ -208,7 +208,7 @@ export class Scripted extends LocSystem<Quest> {
     }
 }
 
-export class QuestObjective extends Subsystem<Quest> {
+export class QuestObjective extends CellSystem<Quest> {
     constructor(quest : Quest) {
         super(quest);
     }

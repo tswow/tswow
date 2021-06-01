@@ -98,7 +98,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get DynFlags() { return new DynFlags(this, this.row.dynamicflags); }
     get UnitFlags() { return new UnitFlags(this); }
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
-    get UnitClass() { return new UnitClass(this); }
+    get UnitClass() { return new UnitClass(this, this.row.unit_class); }
     get DynamicFlags() { return this.wrap(this.row.dynamicflags); }
     get DungeonHeroicID() { return this.wrap(this.row.difficulty_entry_1); }
     get RaidNormal25ID() { return this.wrap(this.row.difficulty_entry_1); }
@@ -113,9 +113,9 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
     get Scale() { return this.wrap(this.row.scale); }
     get Rank() { return new CreatureRank(this); }
-    get DamageSchool() { return new CreatureDamageSchool(this); }
+    get DamageSchool() { return new CreatureDamageSchool(this, this.row.dmgschool); }
     get AttackTime() { return new CreatureAttackTime(this); }
-    get Family() { return new CreatureFamily(this); }
+    get Family() { return new CreatureFamily(this, this.row.family); }
     get PetSpells() { return this.wrap(this.row.PetSpellDataId); }
     get VehicleID() { return this.wrap(this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }

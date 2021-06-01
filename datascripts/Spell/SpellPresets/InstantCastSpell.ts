@@ -1,7 +1,7 @@
 import { Spells } from "../Spells";
-import { MulticastCell } from "../../Misc/MulticastCell";
 import { SpellPreset } from "./SpellPreset";
 import { SpellAnimation } from "../SpellAnimation";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class InstantCastSpell extends SpellPreset {
     static create(mod: string, id: string) {

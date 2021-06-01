@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell } from "wotlkdata/cell/systems/Mask";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { Spell } from "./Spell";
 
-export class SpellCreatureTarget<T> extends MaskCell<T> {
+export class SpellCreatureTarget<T> extends MaskCell32<T> {
 
     get Beast() { return this.bit(0); }
     get Dragonkin() { return this.bit(1); }

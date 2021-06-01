@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Edit } from "wotlkdata/luaxml/TextFile";
 import * as xml from 'xml2js';
 
@@ -22,7 +22,7 @@ let builder = new xml.Builder({headless: true});
 export type Points = 'TOP' | 'LEFT' | 'BOTTOM' | 'RIGHT'
 export type RelativePoint = Points | 'TOPLEFT' | 'TOPRIGHT' | 'BOTTOMLEFT' | 'BOTTOMRIGHT'
 
-export class AnchorRow<T> extends Subsystem<T> {
+export class AnchorRow<T> extends CellSystem<T> {
     protected edit: Edit;
 
     protected getXml() : any {

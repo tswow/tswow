@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { DBCUIntArrayCell } from "wotlkdata/dbc/DBCCell";
-import { SpellEffect } from "./SpellEffect";
 
-export class SpellImplicitTarget<T> extends Enum<T> {
+export class SpellImplicitTarget<T> extends EnumCellWrapper<T> {
     constructor(owner: T, cell: DBCUIntArrayCell<any>, index: number) {
-        super(owner, Cell.wrapIndex(cell, index));
+        super(owner, new CellIndexWrapper(undefined, cell, index));
     }
 
     /** No Comment (yet!) */

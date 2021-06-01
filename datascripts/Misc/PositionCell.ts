@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Position } from "./Position";
 
-export class PositionXYZCell<T> extends Subsystem<T> {
+export class PositionXYZCell<T> extends CellSystem<T> {
     readonly _map: Cell<number,any>;
     readonly _x: Cell<number,any>;
     readonly _y: Cell<number,any>;

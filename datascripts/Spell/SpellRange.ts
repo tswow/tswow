@@ -19,7 +19,6 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
-import { BaseSystem } from "wotlkdata/cell/BaseSystem";
 
 export class SpellRange<T> extends SharedRef<T,SpellRangeRow> {
     table(): SharedRefTable<SpellRangeRow> {

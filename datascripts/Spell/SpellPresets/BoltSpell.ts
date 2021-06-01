@@ -1,9 +1,9 @@
 import { Spells } from "../Spells";
 import { SchoolMask } from "../../Misc/School";
-import { MulticastCell } from "../../Misc/MulticastCell";
 import { SpellPreset } from "./SpellPreset";
 import { SpellCastTime } from "../SpellCastTime";
 import { SpellRecovery } from "../SpellRecovery";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class BoltSpell extends SpellPreset {
     static create(mod: string, id: string) {

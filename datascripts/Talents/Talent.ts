@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { TalentRow } from "wotlkdata/dbc/types/Talent";
 import { TalentRequirements } from "./TalentRequirements";
 import { TalentTree } from "./TalentTree";
 
-export class Talent extends Subsystem<TalentTree> {
+export class Talent extends CellSystem<TalentTree> {
     readonly row: TalentRow;
     constructor(owner: TalentTree, row: TalentRow) {
         super(owner);

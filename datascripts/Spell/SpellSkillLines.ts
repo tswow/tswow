@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
-export class TrivialSkillLineRank<T> extends Subsystem<SpellSkillLineAbility<T>> {
+export class TrivialSkillLineRank<T> extends CellSystem<SpellSkillLineAbility<T>> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }
     get Low() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankLow); }
     set(low: number, high: number) {
@@ -32,7 +32,7 @@ export class TrivialSkillLineRank<T> extends Subsystem<SpellSkillLineAbility<T>>
     }
 }
 
-export class SpellSkillLineAbility<T> extends Subsystem<T> {
+export class SpellSkillLineAbility<T> extends CellSystem<T> {
     @Transient
     readonly row: SkillLineAbilityRow;
     @Transient
@@ -65,7 +65,7 @@ export class SpellSkillLineAbility<T> extends Subsystem<T> {
     }
 }
 
-export class SpellSkillLineAbilites<T> extends Subsystem<T> {
+export class SpellSkillLineAbilites<T> extends CellSystem<T> {
     @Transient
     protected spell: Spell;
 

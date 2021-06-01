@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { FactionTemplateRow } from "wotlkdata/dbc/types/FactionTemplate";
 import { Faction } from "./Faction";
 
@@ -24,7 +24,7 @@ export type FactionGroups =
     'ALLIANCE' | 
     'MONSTERS'
 
-export class FactionRelations extends Subsystem<Faction> {
+export class FactionRelations extends CellSystem<Faction> {
     row: FactionTemplateRow;
 
     constructor(owner: Faction, row: FactionTemplateRow) {

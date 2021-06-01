@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CharStartOutfitRow } from "wotlkdata/dbc/types/CharStartOutfit";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
@@ -24,7 +24,7 @@ import { Class } from "./Class";
 
 export type Gender = 'Male'|'Female';
 
-export class OutfitPart extends Subsystem<Class> {
+export class OutfitPart extends CellSystem<Class> {
     types: number[];
 
     constructor(owner: Class, types: number[]) {
@@ -71,7 +71,7 @@ export class OutfitPart extends Subsystem<Class> {
     }
 
     protected findIndex(row: CharStartOutfitRow) {
-        for(let i=0;i<row.InventoryType.length;++i) {
+        for(let i=0;i<row.InventoryType.length();++i) {
             for(const type of this.types) {
                 if(row.InventoryType.getIndex(i) === type) {
                     return i;
@@ -79,7 +79,7 @@ export class OutfitPart extends Subsystem<Class> {
             }
         }
 
-        for(let i=0;i<row.InventoryType.length;++i) {
+        for(let i=0;i<row.InventoryType.length();++i) {
             if(row.InventoryType.getIndex(i)===-1) {
                 return i;
             }
@@ -124,7 +124,7 @@ export class OutfitPart extends Subsystem<Class> {
         for(const gender of genders) {
             for(const race of races) {
                 const row = this.getRow(gender, race, true);
-                for(let i=0;i<row.InventoryType.length;++i) {
+                for(let i=0;i<row.InventoryType.length();++i) {
                     for(const type of this.types) {
                         if(row.InventoryType.getIndex(i) === type) {
                             row.InventoryType.setIndex(i, -1);
@@ -141,7 +141,7 @@ export class OutfitPart extends Subsystem<Class> {
 
 const it = InventoryType;
 
-export class ClassStartOutfits extends Subsystem<Class> {
+export class ClassStartOutfits extends CellSystem<Class> {
     private op(nums: number[]) {
         return new OutfitPart(this.owner, nums);
     };
@@ -171,7 +171,7 @@ export class ClassStartOutfits extends Subsystem<Class> {
             for(const race of races) {
                 const row = DBC.CharStartOutfit.find({
                     ClassID:this.owner.ID, SexID: gender==='Male'?0:1, RaceID: race})
-                for(let i=0; i<row.InventoryType.length; ++i ){
+                for(let i=0; i<row.InventoryType.length(); ++i ){
                     row.InventoryType.setIndex(i,-1);
                     row.ItemID.setIndex(i,-1);
                     row.DisplayItemID.setIndex(i,-1);

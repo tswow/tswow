@@ -14,19 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
 import { npc_textRow } from "wotlkdata/sql/types/npc_text";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
-import { Cell } from "wotlkdata/cell/Cell";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { SQL } from "wotlkdata";
 import { GOCreature } from "../Misc/GOorCreature";
 import { Ids } from "../Misc/Ids";
 
-export class Gossip<S,G,T extends GOCreature<G>> extends Subsystem<S> {
+export class Gossip<S,G,T extends GOCreature<G>> extends CellSystem<S> {
     @Transient
     protected _menuRow: gossip_menuRow|undefined;
     @Transient

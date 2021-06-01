@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/Cell";
-import { Subsystem } from "wotlkdata/cell/Subsystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCFile } from "wotlkdata/dbc/DBCFile";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/sql/SQLFiles";
@@ -26,7 +26,7 @@ interface GtDBC {
     index : number;
 }
 
-class StatFile<D extends GtDBC> extends Subsystem<Class>{
+class StatFile<D extends GtDBC> extends CellSystem<Class>{
     protected dbc : D[];
 
     constructor(cls: Class, classId : number,size : number, dbc: DBCFile<any,any,any>) {
@@ -49,7 +49,7 @@ class StatFile<D extends GtDBC> extends Subsystem<Class>{
     }
 }
 
-export class ClassAttribute extends Subsystem<Class>{
+export class ClassAttribute extends CellSystem<Class>{
     protected field: "agi"|"inte"|"str"|"spi"|"sta";
 
     constructor(cls: Class, field: "agi"|"inte"|"str"|"spi"|"sta") {
@@ -64,7 +64,7 @@ export class ClassAttribute extends Subsystem<Class>{
     }
 }
 
-export class BaseHpMana extends Subsystem<Class> {
+export class BaseHpMana extends CellSystem<Class> {
     field: "basehp"|"basemana"
 
     constructor(cls: Class,field: "basehp"|"basemana") {
@@ -106,7 +106,7 @@ export class ClassFormula extends Cell<string,Class> {
     }
 }
 
-export class ClassStats extends Subsystem<Class> {
+export class ClassStats extends CellSystem<Class> {
     constructor(owner: Class) {
         super(owner);
     }

@@ -1,6 +1,6 @@
-import { Enum, EnumField } from "wotlkdata/cell/systems/Enum";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell"
 
-export class SoundType<T> extends Enum<T> {
+export class SoundType<T> extends EnumCellWrapper<T> {
     @EnumField(0)
     setUnusedmiscellaneous() { return this.set(0) }
     

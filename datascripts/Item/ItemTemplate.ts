@@ -44,7 +44,7 @@ import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
-import { Transient } from "wotlkdata/cell/Transient";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
@@ -67,8 +67,8 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Area() { return this.wrap(this.row.area); }
     get Map() { return this.wrap(this.row.Map); }
     get BagFamily() { return this.wrap(this.row.BagFamily); }
-    get TotemCategory() { return new ItemTotemCategory(this); }
-    get Sheath() { return new ItemSheath(this); }
+    get TotemCategory() { return new ItemTotemCategory(this, this.row.TotemCategory); }
+    get Sheath() { return new ItemSheath(this, this.row.sheath); }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
     /** Delay in MILLISECONDS */
@@ -104,7 +104,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get HolidayID() { return this.wrap(this.row.HolidayId); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get DisenchantID() { return this.wrap(this.row.DisenchantID); }
-    get FoodType() { return new ItemFoodType(this); }
+    get FoodType() { return new ItemFoodType(this, this.row.FoodType); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
 
