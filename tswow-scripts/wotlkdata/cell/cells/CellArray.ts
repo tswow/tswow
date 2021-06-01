@@ -14,25 +14,56 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellArray } from './CellArray';
 import { CellRoot } from './CellRoot';
+import { Cell, CPrim } from './Cell';
 
-export type CPrim = number | string | boolean | bigint;
-
-export abstract class Cell<D extends CPrim, T> extends CellRoot<T, D> {
-    static make<D extends CPrim, T>(owner: T, getter: () => D, setter: (value: D) => any) {
-        return new CellSimple<D, T>(owner, getter, setter);
+export abstract class CellArray<D extends CPrim, T> extends CellRoot<T> {
+    get(): D[] {
+        const array: D[] = [];
+        for (let i = 0; i < this.length(); ++i) {
+            array.push(this.getIndex(i));
+        }
+        return array;
+    }
+    set(value: D[]): T {
+        for (let i = 0; i < this.length(); ++i) {
+            this.setIndex(i, value[i]);
+        }
+        return this.owner;
     }
 
-    static wrapIndex<D extends CPrim>(cell: CellArray<D, any>, index: number) {
-        return new CellIndexWrapper(undefined, cell, index);
-    }
-
-    abstract get(): D;
-    abstract set(value: D): T;
+    abstract setIndex(index: number, value: D): T;
+    abstract getIndex(index: number): D;
+    abstract length(): number;
 
     protected objectify(): any {
         return this.get();
+    }
+}
+
+export class CellArrayWrapper<D extends CPrim, T> extends CellArray<D, T> {
+    protected cell: CellArray<D, any>;
+
+    constructor(owner: T, cell: CellArray<D, any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    length() {
+        return this.cell.length();
+    }
+
+    setIndex(index: number, value: D): T {
+        this.cell.setIndex(index, value);
+        return this.owner;
+    }
+
+    getIndex(index: number): D {
+        return this.cell.getIndex(index);
+    }
+
+    protected objectify(): any {
+        return this.cell.get();
     }
 }
 
@@ -55,19 +86,3 @@ export class CellIndexWrapper<D extends CPrim, T> extends Cell<D, T> {
         return this.owner;
     }
 }
-
-export class CellSimple<D extends CPrim, T> extends Cell<D, T> {
-    private setter: (value: D) => any;
-    get: () => D;
-
-    set(value: D) {
-        this.setter(value);
-        return this.owner;
-    }
-    constructor(owner: T, getter: () => D, setter: (value: D) => any) {
-        super(owner);
-        this.get = getter;
-        this.setter = setter;
-    }
-}
-

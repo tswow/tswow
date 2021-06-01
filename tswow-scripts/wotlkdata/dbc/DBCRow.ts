@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { CellSystem } from '../cell/systems/CellSystem';
 import { Row } from '../table/Row';
 import { Table } from '../table/Table';
 import { DBCBuffer } from './DBCBuffer';
 import { DBCFile } from './DBCFile';
-import { deepAssign } from '../table/DeepAssign';
-import { MainSystem } from '../cell/MainSystem';
 
 /**
  * Represents a DBC row either in or outside of a DBC file.
@@ -60,7 +59,7 @@ export abstract class DBCRow<C, Q> extends Row<C, Q> {
         const index = this.buffer.addRow(this.index);
         const row = DBCFile.createRow(this.table as DBCFile<any, any, any>, index);
         if (c) {
-            MainSystem.cloneFrom(row, c);
+            CellSystem.cloneFrom(row, c);
         }
         row.writePrimaryKeys(keys);
         return row;

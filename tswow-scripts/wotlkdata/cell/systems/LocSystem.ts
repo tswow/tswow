@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Language, Languages } from '../dbc/Localization';
-import { loc_constructor } from '../primitives';
-import { PendingCell } from './PendingCell';
-import { Subsystem } from './Subsystem';
-import { Cell } from './Cell';
+import { Language, Languages } from '../../dbc/Localization';
+import { loc_constructor } from '../../primitives';
+import { PendingCell } from '../cells/PendingCell';
+import { CellSystem } from './CellSystem';
+import { Cell } from '../cells/Cell';
 
-export abstract class LocSystem<T> extends Subsystem<T> {
+export abstract class LocSystem<T> extends CellSystem<T> {
     abstract lang(lang: Language): Cell<string, T> & PendingCell;
     abstract get mask(): Cell<number, T>;
     abstract set(con: loc_constructor): T;
@@ -48,5 +48,31 @@ export abstract class LocSystem<T> extends Subsystem<T> {
                 c.set('')
             }
         });
+    }
+}
+
+export class WrappedLoc<T> extends LocSystem<T> {
+    private wrapped: LocSystem<T>;
+
+    constructor(owner: T, wrapped: LocSystem<T>) {
+        super(owner);
+        this.wrapped = wrapped;
+    }
+
+    lang(lang: Language): Cell<string, T> & PendingCell {
+        return this.ownerWrapExists(this.wrapped.lang(lang));
+    }
+
+    get mask(): Cell<number, T> {
+        return this.ownerWrap(this.wrapped.mask);
+    }
+
+    set(con: loc_constructor): T {
+        this.wrapped.set(con);
+        return this.owner;
+    }
+
+    objectify() {
+        return this.wrapped.objectify();
     }
 }

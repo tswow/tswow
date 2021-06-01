@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell, CPrim } from '../cell/Cell';
-import { CellReadOnly } from '../cell/CellReadOnly';
+import { Cell, CPrim } from '../cell/cells/Cell';
+import { CellReadOnly } from '../cell/cells/CellReadOnly';
 import { SqlRow } from './SQLRow';
 
 export class SQLCell<D extends CPrim, T extends SqlRow<any, any>> extends Cell<D, T> {

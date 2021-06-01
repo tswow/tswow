@@ -14,19 +14,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellArray } from './CellArray';
-import { CellWrapper } from './CellWrapper';
-import { CellWrapperExists } from './CellWrapperExists';
-import { CPrim, Cell, CellIndexWrapper } from './Cell';
-import { WrappedLoc } from './WrappedLoc';
-import { LocSystem } from './LocSystem';
-import { Objects } from './ObjectIteration';
-import { CellArrayWrapper } from './CellArrayWrapper';
-import { Transient } from './Transient';
+import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
+import { CPrim, Cell, CellWrapper } from '../cells/Cell';
+import { LocSystem, WrappedLoc } from './LocSystem';
+import { CellWrapperExists } from '../cells/PendingCell';
+import { Objects } from '../misc/ObjectIteration';
+import { Transient } from '../misc/Transient';
 
-export class Subsystem<T> {
+export class CellSystem<T> {
+    static cloneFrom(tar: any, src: any) {
+        if (src === undefined) {
+            return;
+        }
+
+        Objects.getAllPropertyNames(src).forEach((key: any) => {
+            if (src[key] !== undefined && src[key] !== null) {
+                const srcVal = src[key];
+                const tarVal = tar[key];
+                if (!tarVal || typeof (tarVal) !== 'object') {
+                    return;
+                }
+
+                if (tarVal.isSubsystem) {
+                    CellSystem.cloneFrom(tarVal, srcVal);
+                } else if (tarVal.isCell) {
+                    // TODO: Separate check for arrays for performance?
+                    if (typeof (srcVal) === 'object' && srcVal.isCell) {
+                        tarVal.set(srcVal.get());
+                    } else {
+                        tarVal.set(srcVal);
+                    }
+                }
+            }
+        });
+    }
+
+
     @Transient
     protected owner: T;
+
+    @Transient
+    protected uniqueRefs: boolean = true;
+
     constructor(owner: T) {
         this.owner = owner;
     }
@@ -79,5 +108,16 @@ export class Subsystem<T> {
 
     objectify(): any {
         return Objects.objectifyObj(this);
+    }
+
+    protected cloneFrom(obj: CellSystem<any> | any) {
+        CellSystem.cloneFrom(this, obj);
+        return this;
+    }
+}
+
+export class CellSystemTop extends CellSystem<undefined> {
+    constructor() {
+        super(undefined);
     }
 }

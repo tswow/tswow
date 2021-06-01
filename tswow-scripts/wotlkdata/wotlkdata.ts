@@ -23,7 +23,7 @@ import { DBC as _DBC } from './dbc/DBCFiles';
 import { SQL as _SQL } from './sql/SQLFiles';
 import { IdPrivate, GetIdRange as _GetIdRange, GetId as _GetId } from './ids/Ids';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
-import { Objects as _Objects } from './cell/ObjectIteration';
+import { Objects as _Objects } from './cell/misc/ObjectIteration';
 import { cleanSQL } from './sql/SQLClean';
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];

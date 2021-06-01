@@ -14,12 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQLCell } from '../../wotlkdata/sql/SQLCell';
 import * as assert from 'assert';
-import { Cell, CPrim } from '../../wotlkdata/cell/Cell';
-import { MainSystem } from '../../wotlkdata/cell/MainSystem';
-import { Subsystem } from '../../wotlkdata/cell/Subsystem';
-import { SqlRow } from '../../wotlkdata/sql/SQLRow';
+import { Cell, CPrim } from '../../wotlkdata/cell/cells/Cell';
+import { CellSystem, CellSystemTop } from '../../wotlkdata/cell/systems/CellSystem';
 
 class BasicCell<T extends CPrim, G> extends Cell<T, G> {
     field: string;
@@ -38,7 +35,7 @@ class BasicCell<T extends CPrim, G> extends Cell<T, G> {
     }
 }
 
-class ShallowStruct extends MainSystem {
+class ShallowStruct extends CellSystemTop {
     private _g1 = 'initial';
     private _g2 = 2;
     private _g3 = true;
@@ -52,7 +49,7 @@ class DeepStruct extends ShallowStruct {
     readonly sub = new DeepSubsystem(this);
 }
 
-class DeepSubsystem extends Subsystem<DeepStruct> {
+class DeepSubsystem extends CellSystem<DeepStruct> {
     private _d1 = 'deepvalue';
     d1 = new BasicCell<string, DeepSubsystem>(this, 'd1');
 }
@@ -77,7 +74,7 @@ describe('Cell', function() {
             g1.g1.set('clonedvalue');
             g1.g2.set(1007688);
             g1.g3.set(false);
-            MainSystem.cloneFrom(g2, g1);
+            CellSystem.cloneFrom(g2, g1);
             assert.strictEqual(g2.g1.get(), 'clonedvalue');
             assert.strictEqual(g2.g2.get(), 1007688);
             assert.strictEqual(g2.g3.get(), false);
@@ -90,7 +87,7 @@ describe('Cell', function() {
             g1.g2.set(1007688);
             g1.g3.set(false);
             g1.sub.d1.set('changed_deep');
-            MainSystem.cloneFrom(g2, g1);
+            CellSystem.cloneFrom(g2, g1);
             assert.strictEqual(g2.g1.get(), 'clonedvalue');
             assert.strictEqual(g2.g2.get(), 1007688);
             assert.strictEqual(g2.g3.get(), false);

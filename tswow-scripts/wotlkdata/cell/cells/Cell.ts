@@ -15,30 +15,35 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellRoot } from './CellRoot';
-import { CPrim } from './Cell';
 
-export abstract class CellReadOnly<D extends CPrim, T> extends CellRoot<T, D> {
-    static make<D extends CPrim, T>(owner: T, getter: () => D, setter: (value: D) => T) {
-        return new CellSimpleReadOnly<D, T>(owner, getter, setter);
-    }
+export type CPrim = number | string | boolean | bigint;
 
+export abstract class Cell<D extends CPrim, T> extends CellRoot<T> {
     abstract get(): D;
-    protected abstract set(value: D): T;
+    abstract set(value: D): T;
 
     protected objectify(): any {
         return this.get();
     }
-
-    get isReadOnly() { return true; }
 }
 
-export class CellSimpleReadOnly<D extends CPrim, T> extends CellReadOnly<D, T> {
-    get: () => D;
-    protected set: (value: D) => T;
-    constructor(owner: T, getter: () => D, setter: (value: D) => T) {
+export class CellWrapper<D extends CPrim, T> extends Cell<D, T> {
+    constructor(owner: T, cell: Cell<D, any>) {
         super(owner);
-        this.get = getter;
-        this.set = setter;
+        this.cell = cell;
+    }
+
+    protected cell: Cell<D, any>;
+    get(): D {
+        return this.cell.get();
+    }
+
+    set(value: D): T {
+        this.cell.set(value);
+        return this.owner;
+    }
+
+    protected objectify(): any {
+        return this.cell.get();
     }
 }
-

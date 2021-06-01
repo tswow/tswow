@@ -14,17 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellWrapper } from './CellWrapper';
-import { CPrim } from './Cell';
-import { PendingCell } from './PendingCell';
+import { CPrim, Cell } from './Cell';
 
+export class DummyCell<D extends CPrim, T> extends Cell<D, T> {
+    protected value: D;
+    constructor(owner: T, value: D) {
+        super(owner);
+        this.value = value;
+    }
 
-export class CellWrapperExists<D extends CPrim, T> extends CellWrapper<D, T> implements PendingCell {
-    exists() {
-        const cell = this.cell as any;
-        if (cell.exists && typeof (cell.exists) === 'function') {
-            return cell.exists();
-        }
-        return false;
+    get(): D {
+        return this.value;
+    }
+
+    set(value: D): T {
+        this.value = value;
+        return this.owner;
     }
 }

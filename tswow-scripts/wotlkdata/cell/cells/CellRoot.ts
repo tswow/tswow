@@ -14,27 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CPrim } from './Cell';
-import { CellArray } from './CellArray';
-
-export class CellArrayWrapper<D extends CPrim, T> extends CellArray<D, T> {
-    protected cell: CellArray<D, any>;
-
-    constructor(owner: T, cell: CellArray<D, any>) {
-        super(owner, cell.length);
-        this.cell = cell;
+export abstract class CellRoot<T> {
+    constructor(owner: T) {
+        this.owner = owner;
     }
 
-    setIndex(index: number, value: D): T {
-        this.cell.setIndex(index, value);
-        return this.owner;
+    protected get isCell() { return true; }
+    protected owner: T;
+
+    static owner<T>(cell: CellRoot<T>) {
+        return cell.owner;
     }
 
-    getIndex(index: number): D {
-        return this.cell.getIndex(index);
-    }
-
-    protected objectify(): any {
-        return this.cell.get();
-    }
+    protected abstract objectify(): any;
 }

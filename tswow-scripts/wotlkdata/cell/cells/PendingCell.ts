@@ -1,3 +1,5 @@
+import { CellWrapper, CPrim } from "./Cell";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -16,4 +18,14 @@
  */
 export interface PendingCell {
     exists(): boolean;
+}
+
+export class CellWrapperExists<D extends CPrim, T> extends CellWrapper<D, T> implements PendingCell {
+    exists() {
+        const cell = this.cell as any;
+        if (cell.exists && typeof (cell.exists) === 'function') {
+            return cell.exists();
+        }
+        return false;
+    }
 }

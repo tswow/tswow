@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Subsystem } from '../Subsystem';
+import { CellSystem } from './CellSystem';
 
-export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<T> {
+export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem<T> {
     constructor(owner: T) {
         super(owner);
     }
@@ -62,7 +62,7 @@ export abstract class SystemArray<A extends ArrayEntry<T>, T> extends Subsystem<
     }
 }
 
-export abstract class ArrayEntry<T> extends Subsystem<T> {
+export abstract class ArrayEntry<T> extends CellSystem<T> {
     constructor(owner: T, index: number) {
         super(owner);
         this.index = index;

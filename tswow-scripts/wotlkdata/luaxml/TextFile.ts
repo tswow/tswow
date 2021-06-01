@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
-import { Cell } from '../cell/Cell';
-import { Subsystem } from '../cell/Subsystem';
+import { Cell } from '../cell/cells/Cell';
+import { CellSystem } from '../cell/systems/CellSystem';
 
 export type EditType = 'before' | 'after' | 'replace';
 
@@ -58,7 +58,7 @@ export class EditCell<T> extends Cell<string, T> {
     }
 }
 
-export class EditSystem<T> extends Subsystem<T> {
+export class EditSystem<T> extends CellSystem<T> {
     protected edit: Edit;
     constructor(owner: T, edit: Edit) {
         super(owner);

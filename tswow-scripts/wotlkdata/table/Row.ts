@@ -15,11 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Table } from './Table';
-import { deepAssign } from './DeepAssign';
-import { MainSystem } from '../cell/MainSystem';
 import { PKFIELDS_FIELD } from './PrimaryKey';
+import { CellSystem, CellSystemTop } from '../cell/systems/CellSystem';
 
-export abstract class Row<C, Q> extends MainSystem {
+export abstract class Row<C, Q> extends CellSystemTop {
     constructor(table: Table<C, Q, Row<C, Q>>) {
         super();
         this.table = table;
@@ -48,7 +47,7 @@ export abstract class Row<C, Q> extends MainSystem {
 
     copyTo(targetRow: this) {
         const pks = targetRow.primaryKeys();
-        MainSystem.cloneFrom(targetRow, this);
+        CellSystem.cloneFrom(targetRow, this);
         targetRow.writePrimaryKeys(pks);
     }
 }

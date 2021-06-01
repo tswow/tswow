@@ -16,7 +16,7 @@
  */
 import { SqlTable } from './SQLTable';
 import { Row } from '../table/Row';
-import { MainSystem } from '../cell/MainSystem';
+import { CellSystem } from '../cell/systems/CellSystem';
 
 /**
  * Represents a single row in the SQL table. If this row was loaded directly from the db,
@@ -79,9 +79,9 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
 
     protected cloneInternal(keys: any[], c?: C) {
         const row = SqlTable.createRow(this.table as SqlTable<any, any, any>, {});
-        MainSystem.cloneFrom(row, this);
+        CellSystem.cloneFrom(row, this);
         if (c) {
-            MainSystem.cloneFrom(row, c);
+            CellSystem.cloneFrom(row, c);
         }
         row.writePrimaryKeys(keys);
         SqlTable.addRow(this.table as SqlTable<any, any, any>, row);

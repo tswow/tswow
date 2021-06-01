@@ -17,12 +17,11 @@
 import { DBCBuffer } from './DBCBuffer';
 import { loc_constructor, iterLocConstructor } from '../primitives';
 import { Language } from './Localization';
-import { Cell, CPrim } from '../cell/Cell';
-import { LocSystem } from '../cell/LocSystem';
-import { PendingCell } from '../cell/PendingCell';
-import { CellArray } from '../cell/CellArray';
-import { CellReadOnly } from '../cell/CellReadOnly';
-import { Transient } from '../cell/Transient';
+import { Cell, CPrim } from '../cell/cells/Cell';
+import { LocSystem } from '../cell/systems/LocSystem';
+import { PendingCell } from '../cell/cells/PendingCell';
+import { CellArray } from '../cell/cells/CellArray';
+import { CellReadOnly } from '../cell/cells/CellReadOnly';
 
 export abstract class DBCCell<D extends CPrim, T> extends Cell<D, T> {
     protected buffer: DBCBuffer;
@@ -37,10 +36,17 @@ export abstract class DBCCell<D extends CPrim, T> extends Cell<D, T> {
 export abstract class DBCArrayCell<D extends CPrim, T> extends CellArray<D, T> {
     protected buffer: DBCBuffer;
     protected offset: number;
+    protected size: number;
+
     constructor(owner: T, size: number, buffer: DBCBuffer, offset: number) {
-        super(owner, size);
+        super(owner);
         this.buffer = buffer;
         this.offset = offset;
+        this.size = size;
+    }
+
+    length() {
+        return this.size;
     }
 }
 
@@ -138,9 +144,7 @@ export class DBCMultiArrayCell<T> extends DBCArrayCell<number, T> {
 }
 
 export abstract class MultiWrapper<T> extends Cell<number,T> {
-    @Transient
     protected multi: DBCMultiArrayCell<any>;
-    @Transient
     protected index: number;
     constructor(owner: T, multi: DBCMultiArrayCell<any>, index: number){
         super(owner)
