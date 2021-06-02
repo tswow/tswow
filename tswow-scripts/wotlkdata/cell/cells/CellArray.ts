@@ -32,6 +32,10 @@ export abstract class CellArray<D extends CPrim, T> extends CellRoot<T> {
         return this.owner;
     }
 
+    protected deserialize(value: any) {
+        this.set(value);
+    }
+
     abstract setIndex(index: number, value: D): T;
     abstract getIndex(index: number): D;
     abstract length(): number;

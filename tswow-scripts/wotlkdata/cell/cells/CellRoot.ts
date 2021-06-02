@@ -1,4 +1,4 @@
-import { Transient } from "../misc/Transient";
+import { Transient } from "../serialization/Transient";
 
 /*
  * This file is part of tswow (https://github.com/tswow)
@@ -28,7 +28,17 @@ export abstract class CellRoot<T> {
         return cell.owner;
     }
 
+    static isCell(candidate: any) {
+        if(!candidate || typeof(candidate)!='object') return false;
+        return (candidate as CellRoot<any>).isCell || undefined;
+    }
+
     protected abstract objectify(): any;
+    protected abstract deserialize(value: any): void;
+
+    protected serialize(obj: any, key: string) {
+        obj[key] = this.objectify();
+    }
 
     @Transient
     get end() {

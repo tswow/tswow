@@ -17,11 +17,12 @@
 import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
 import { CPrim, Cell, CellWrapper } from '../cells/Cell';
 import { CellWrapperExists, PendingCell } from '../cells/PendingCell';
-import { Objects } from '../misc/ObjectIteration';
-import { Transient } from '../misc/Transient';
+import { Objects } from '../serialization/ObjectIteration';
+import { Transient } from '../serialization/Transient';
 import { MulticastCell } from '../cells/MulticastCell';
 import { loc_constructor } from '../../primitives';
 import { Language, Languages } from '../../dbc/Localization';
+import { CommonStruct } from '../serialization/CommonStruct';
 
 export class CellSystem<T> {
     static cloneFrom(tar: any, src: any) {
@@ -68,6 +69,11 @@ export class CellSystem<T> {
     @Transient
     protected get isSubsystem() { return true; }
 
+    static isSystem(candidate: any) {
+        if(!candidate ||  typeof(candidate) != 'object') return false;
+        return (candidate as CellSystem<any>).isSubsystem || false;
+    }
+
     protected wrap<W extends CPrim>(cell: Cell<W, any>) {
         return new CellWrapper(this, cell);
     }
@@ -112,6 +118,21 @@ export class CellSystem<T> {
         return this.wrap(new MulticastCell(this,cells));
     }
 
+    protected deserialize(json: any) {
+        let _this = this as any;
+        for(let key in json) {
+            let v = _this[key];
+            if(!v) {
+                throw new Error(`Invalid field deserialized: ${key}`);
+            }
+            v.deserialize(json[key]);
+        }
+    }
+
+    protected serialize(obj: any, key: string) {
+        obj[key] = this.objectify();
+    }
+
     objectify(): any {
         return Objects.objectifyObj(this);
     }
@@ -123,10 +144,13 @@ export class CellSystemTop extends CellSystem<undefined> {
     }
 }
 
+@CommonStruct('localization')
 export abstract class LocSystem<T> extends CellSystem<T> {
     abstract lang(lang: Language): Cell<string, T> & PendingCell;
     abstract get mask(): Cell<number, T>;
     abstract set(con: loc_constructor): T;
+
+    get isLocalization() { return true; }
 
     get enGB() { return this.lang('enGB'); }
     get koKR() { return this.lang('koKR'); }
@@ -155,6 +179,7 @@ export abstract class LocSystem<T> extends CellSystem<T> {
 }
 
 export class WrappedLoc<T> extends LocSystem<T> {
+    @Transient
     private wrapped: LocSystem<T>;
 
     constructor(owner: T, wrapped: LocSystem<T>) {

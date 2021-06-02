@@ -21,9 +21,12 @@ export type CPrim = number | string | boolean | bigint;
 export abstract class Cell<D extends CPrim, T> extends CellRoot<T> {
     abstract get(): D;
     abstract set(value: D): T;
-
     protected objectify(): any {
         return this.get();
+    }
+
+    protected deserialize(value: any) {
+        this.set(value);
     }
 }
 

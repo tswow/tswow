@@ -30,6 +30,12 @@ export abstract class CellReadOnly<D extends CPrim, T> extends CellRoot<T> {
     }
 
     get isReadOnly() { return true; }
+
+    protected deserialize(value: any) {
+        throw new Error(`Attempting to deserialize read-only property`);
+    }
+
+    protected serialize() {}
 }
 
 export class CellSimpleReadOnly<D extends CPrim, T> extends CellReadOnly<D, T> {

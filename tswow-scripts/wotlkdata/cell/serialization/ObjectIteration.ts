@@ -1,3 +1,4 @@
+import { CPrim } from "../cells/Cell";
 import { getTransient } from "./Transient";
 
 /*
@@ -18,12 +19,77 @@ import { getTransient } from "./Transient";
  */
 export type TypeOfTypes = 'string' | 'null' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function';
 
+export type EntryType = 'primitive' | 'cell' | 'system' | 'struct' | 'entity'
+
+export type Entry = CPrim | {ref:'struct'|'entity', name: string};
+export type Schema = {__schema_type: 'entity'|'struct', [key: string]: Schema|Entry}
+
 let visitStack : any[] = [];
+export let structSchemas : {[key: string]: Schema} = {}
 
 export const Objects = {
+    getEntryType(entry: any): EntryType {
+        if(!entry || typeof(entry)!='object') return 'primitive';
+        if(entry.__entity_id) return 'entity'
+        if(entry.__struct_id) return 'struct';
+        if(entry.isCell) return 'cell';
+        if(entry.isSubsystem) return 'system';
+        return 'primitive';
+    },
+
+    generateSchema(entry: any, objIn: Schema = {__schema_type:'entity'}): Schema {
+        let type = this.getEntryType(entry);
+        if(type != 'system' && type != 'struct' && type != 'entity') {
+            throw new Error(`Tried generating schema from non-system: ${type}`);
+        }
+
+        if(type=='entity') {
+            objIn.__schema_type = 'entity'
+        }
+
+        if(type=='struct') {
+            objIn.__schema_type = 'struct'
+        }
+
+        this.getAllPropertyNames(entry).forEach(x=>{
+            let val = entry[x]
+            if(typeof(val) !== 'object') return;
+    
+            if(val.storeClassName && typeof(val.storeClassName) === 'string') {
+                objIn[x] = val.storeClassName;
+                return;
+            }
+
+            switch(this.getEntryType(entry[x])) {
+                case 'primitive': return;
+                case 'entity': {
+                    objIn[x] = {ref:'entity',name:val.__entity_id};
+                    break;
+                }
+                case 'struct': {
+                    let structId = val.__struct_id;
+                    if(!structSchemas[structId]) {
+                        structSchemas[structId] = this.generateSchema(val)
+                    }
+                    objIn[x] = {ref:'struct',name:structId};
+                    break;
+                }
+                case 'cell': {
+                    objIn[x] = (typeof(entry[x].get()) as CPrim)
+                    break;
+                }
+                case 'system': {
+                    objIn[x] = this.generateSchema(entry[x],{__schema_type:'entity'})
+                    break;
+                }
+            }
+        });
+        return objIn;
+    },
+
     // https://stackoverflow.com/questions/8024149/is-it-possible-to-get-the-non-enumerable-inherited-property-names-of-an-object
     getAllPropertyNames(obj: any) {
-        const result = new Set();
+        const result = new Set<string>();
         const transient = getTransient(obj);
         while (obj) {
             Object.getOwnPropertyNames(obj).forEach(p => {

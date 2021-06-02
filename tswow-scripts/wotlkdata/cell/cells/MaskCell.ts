@@ -1,5 +1,5 @@
-import { Objects } from "../misc/ObjectIteration";
-import { Transient } from "../misc/Transient";
+import { Objects } from "../serialization/ObjectIteration";
+import { Transient } from "../serialization/Transient";
 import { Cell } from "./Cell";
 import { CellRoot } from "./CellRoot";
 
@@ -93,6 +93,10 @@ export class MaskCell32<T> extends MaskCell<T> {
         return this.owner;
     }
 
+    protected deserialize(value: any) {
+        this.set(value);
+    }
+
     protected bit(no: number): MaskBit<T,this> { return new MaskBit(this, no); }
 }
 
@@ -136,5 +140,9 @@ export class MaskCell64<T> extends MaskCell<T> {
 
     toString(): string {
         return this.cell.get().toString(2);
+    }
+
+    protected deserialize(value: any) {
+        this.set(value);
     }
 }
