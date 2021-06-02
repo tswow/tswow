@@ -22,6 +22,10 @@ export class SpellAttributes<T> extends MaskCell<T> {
     @Transient
     protected spell: Spell;
 
+    protected deserialize(value: any) {
+        throw new Error(`Deserialize not implemented for SpellAttributes`);
+    }
+
     constructor(owner: T, spell: Spell) {
         super(owner);
         this.spell = spell;

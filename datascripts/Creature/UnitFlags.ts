@@ -25,6 +25,10 @@ export class UnitFlags extends MaskCell<CreatureTemplate> {
         ]
     }
 
+    protected deserialize(value: any) {
+        throw new Error(`Deserialize not implemented for UnitFlags`);
+    }
+
     protected cell(no: number) {
         return this.cells()[Math.floor(no/32)]
     }

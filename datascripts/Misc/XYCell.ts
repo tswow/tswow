@@ -1,5 +1,7 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Transient } from "wotlkdata/cell/misc/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CommonStruct } from "wotlkdata/cell/stores/CommonStruct"
 
 /*
  * This file is part of tswow (https://github.com/tswow)
@@ -17,8 +19,13 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+
+@CommonStruct("XYCell")
 export class XYCell<T> extends CellSystem<T> {
+    @Transient
     protected _x : Cell<number,any>;
+
+    @Transient
     protected _y : Cell<number,any>;
 
     constructor(owner: T, x: Cell<number,any>, y: Cell<number,any>)  {

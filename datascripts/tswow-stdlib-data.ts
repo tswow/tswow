@@ -71,7 +71,7 @@ export const std = {
     Lights: Lights,
     ScriptPaths: ScriptPaths,
     Areas: Areas,
-    Maps: Maps,
+    Maps: new Maps(),
     LoadingScreens: LoadingScreens,
     /** Templates used by one or multiple game object instances */
     GameObjectTemplates: GameObjectTemplates,
