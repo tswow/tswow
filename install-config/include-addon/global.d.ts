@@ -13440,7 +13440,8 @@ declare namespace WoWAPI {
         GetLight():[boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
         GetModel(): string;
         GetModelScale(): number;
-        GetPosition(): number;
+        /** @tupleReturn */
+        GetPosition(): [number,number,number];
         ReplaceIconTexture(texture: string): void;
         SetCamera(index: number): void;
         SetFacing(facing: number): void;
