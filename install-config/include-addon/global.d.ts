@@ -13673,6 +13673,7 @@ declare function CreateFrame(frameType: "Minimap", frameName?: string, parentFra
 declare function CreateFrame(frameType: "MessageFrame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.MessageFrame;
 declare function CreateFrame(frameType: "Cooldown", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Cooldown;
 declare function CreateFrame(frameType: "ColorSelect", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ColorSelect;
+declare function CreateFrame(frameType: "SimpleHTML", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.SimpleHTML;
 
 /**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.
