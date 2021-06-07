@@ -39,12 +39,6 @@ import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./
 import { TSImages } from "./Images/Image";
 import { Professions } from "./Profession/Professions";
 import { Locks } from "./Locks/Locks";
-import { Settings } from "wotlkdata/Settings";
-import { settings } from "node:cluster";
-import { MapCreator } from "wotlkdata/dbc/types/Map";
-import { Ids } from "./Misc/Ids";
-import { Z_ASCII } from "node:zlib";
-import { filterOutCallback } from "nextgen-events";
 
 export const std = {
     Spells : Spells,
