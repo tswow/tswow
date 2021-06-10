@@ -12433,10 +12433,10 @@ declare namespace WoWAPI {
         type OnMouseWheel = "OnMouseWheel";
         type OnValueChanged = "OnValueChanged";
         type OnTextChanged = "OnTextChanged";
-        type OnDragStart = "OnDragStart";
+		type OnDragStart = "OnDragStart";
         type OnDragStop = "OnDragStop";
-        type OnKeyDown = "OnKeyDown";
-        type OnKeyUp = "OnKeyUp";
+		type OnKeyDown = "OnKeyDown";
+		type OnKeyUp = "OnKeyUp";
 
         type PlayerLogin = "PLAYER_LOGIN";
         type PlayerLogout = "PLAYER_LOGOUT";
@@ -12504,6 +12504,92 @@ declare namespace WoWAPI {
          */
         IsForbidden(): boolean;
     }
+	
+	interface AnimationGroup extends UIObject {
+		Play(): void;
+		Pause(): void;
+		Stop(): void;
+		Finish(): void;
+		GetProgress(): number;
+		IsDone(): boolean;
+		IsPlaying(): boolean;
+		IsPaused(): boolean;
+		GetDuration(): number;
+		SetLooping(loopType:LoopType):void;
+		GetLooping():LoopType;
+		GetLoopState():loopState;
+        CreateAnimation(frameType: "Alpha", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Alpha;
+		CreateAnimation(frameType: "Path", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Path;
+        CreateAnimation(frameType: "Rotation", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Rotation;
+        CreateAnimation(frameType: "Scale", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Scale;
+        CreateAnimation(frameType: "Translation", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Translation;
+	}
+	
+	interface Animation extends UIObject {
+		Play(): void;
+		Pause(): void;
+		Stop(): void;
+		IsDone(): boolean;
+		IsPlaying(): boolean;
+		IsPaused(): boolean;
+		IsStopped(): boolean;
+		IsDelaying(): boolean;
+		GetElapsed(): number;
+		SetStartDelay(delaySec: number): boolean;
+		GetStartDelay():number;
+		SetEndDelay(delaySec:number): void;
+		GetEndDelay():number;
+		SetDuration(durationSec: number): void;
+		GetDuration(): number;
+		GetProgress(): number;
+		GetSmoothProgress(): number;
+		GetProgressWithDelay(): number;
+		SetMaxFramerate(framerate: number): void;
+		GetMaxFramerate(): number;
+		SetOrder(order: number): void;
+		GetOrder(): number;
+		SetSmoothing(smoothType:SmoothType)
+		GetSmoothing(): SmoothType;
+		SetParent(animGroup:AnimationGroup):void;
+		GetRegionParent():Region;
+	}
+	
+	interface Alpha extends UIObject, Animation {
+		SetChange(change: number): void;
+		GetChange(): number;
+	}
+	
+	interface Path extends UIObject, Animation {
+		CreateControlPoint(name?: string, template?: string, order?:number):void;
+		GetCurve():CurveType;
+		GetMaxOrder(): number;
+		SetCurve(curveType:CurveType): void;
+	}
+	
+	interface Rotation extends UIObject, Animation {
+		SetDegrees(degrees): void;
+		GetDegrees(): number;
+		SetRadians(radians: number): void;
+		GetRadians(): number;
+		SetOrigin(point:Point, offsetX:number, offsetY:number): void;
+		/** @tupleReturn */
+		GetOrigin():[Point,number,number]
+	}
+	
+	interface Scale extends UIObject, Animation {
+		SetScale(x:number, y:number)
+		/** @tupleReturn */
+		GetScale():[number,number]
+		SetOrigin(point:Point, offsetX:number, offsetY:number): void;
+		/** @tupleReturn */
+		GetOrigin():[Point,number,number]
+	}
+	
+	interface Translation extends UIObject, Animation {
+		SetOffset(x:number, y:number)
+		/** @tupleReturn */
+		GetOffset():[number,number]
+	}
 
     /**
      * This is another abstract object type that groups together a number of font related methods that are used by multiple other widget types.
@@ -12565,8 +12651,8 @@ declare namespace WoWAPI {
          * @param a alpha (opacity)
          */
         SetTextColor(r: number, g: number, b: number, a?: number): void;
-    
-        SetShadowOffset(x: number, y: number): void;
+		
+		SetShadowOffset(x: number, y: number): void;
     }
 
     /**
@@ -12721,6 +12807,15 @@ declare namespace WoWAPI {
          * Get whether the object is visible on screen (logically (IsShown() and GetParent():IsVisible()));
          */
         IsVisible(): boolean;
+		
+		CreateAnimationGroup(name?:string, inheritsFrom?:string): AnimationGroup;
+		
+		/**
+		*this 1 probably isn't done right...idk how this 1 works.
+		*/
+		GetAnimationGroups(): AnimationGroup;
+		
+		StopAnimating(): void;
     }
 
     /**
@@ -12853,10 +12948,10 @@ declare namespace WoWAPI {
         HookScript(event: "OnUpdate", handler: (frame: T, elapsed: number) => void): void;
         HookScript(event: "OnValueChanged", handler: (frame: T, changed: any) => void): void;
         HookScript(event: "OnTextChanged", handler: (frame: T, text: string) => void): void;
-        HookScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
+		HookScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
         HookScript(event: "OnDragStop", handler: (frame: T) => void): void;
-        HookScript(event: "OnKeyDown", handler: (frame: T, key: string) => void): void;
-        HookScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
+		HookScript(event: "OnKeyDown", handler: (frame: T, key: string) => void): void;
+		HookScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
         HookScript(event: Event.OnAny, handler?: (frame: T, ...args: any[]) => void): void;
     }
 
@@ -12881,10 +12976,10 @@ declare namespace WoWAPI {
         SetScript(event: "OnUpdate", handler: (frame: T, elapsed: number) => void): void;
         SetScript(event: "OnValueChanged", handler: (frame: T, changed: any) => void): void;
         SetScript(event: "OnTextChanged", handler: (frame: T, isUserInput: boolean) => void): void;
-        SetScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
+		SetScript(event: "OnDragStart", handler: (frame: T, button: MouseButton) => void): void;
         SetScript(event: "OnDragStop", handler: (frame: T) => void): void;
-        SetScript(event: "OnKeyDown", handler: (frame: T, key: string) => void): void;
-        SetScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
+		SetScript(event: "OnKeyDown", handler: (frame: T, key: string) => void): void;
+		SetScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
         SetScript(event: Event.OnAny, handler?: (frame: T, ...args: any[]) => void): void;
     }
 
@@ -13081,8 +13176,8 @@ declare namespace WoWAPI {
          * @see https://wow.gamepedia.com/API_Frame_SetFrameLevel
          */
         SetFrameLevel(level: number): void;
-    
-        RegisterForDrag(button: WoWAPI.MouseButton): void;
+		
+		RegisterForDrag(button: WoWAPI.MouseButton): void;
     }
 
     /**
@@ -13428,34 +13523,34 @@ declare namespace WoWAPI {
          */
         SetText(text: string): void;
     }
-  
-    interface Model extends Frame {
-        AdvanceTime(): void;  
-        ClearFog(): void;
-        ClearModel(): void;
-        GetFacing(): number;
-        GetFogColor():[number, number, number, number]
-        GetFogFar(): number;
-        GetFogNear(): number;
-        GetLight():[boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
-        GetModel(): string;
-        GetModelScale(): number;
-        /** @tupleReturn */
-        GetPosition(): [number,number,number];
-        ReplaceIconTexture(texture: string): void;
-        SetCamera(index: number): void;
-        SetFacing(facing: number): void;
-        SetFogColor(r:number, g:number, b:number,a:number): void;
-        SetFogFar(value:number): void;
-        SetFogNear(value:number): void;
-        //SetGlow(..): void;
-        SetLight(enabled:boolean, omni:boolean, dirX:number, dirY:number, dirZ:number, ambIntensity:number, ambR:number, ambG:number, ambB:number, dirIntensity:number, dirR:number, dirG:number, dirB:number): void;
-        SetModel(file:string): void;
-        SetModelScale(scale:number): void;
-        SetPosition(x:number, y:number, z:number) : void;
-        SetSequence(sequence:number): void;
-        SetSequenceTime(sequence:number, time:number): void;
-    }
+	
+	interface Model extends Frame {
+		AdvanceTime(): void;	
+		ClearFog(): void;
+		ClearModel(): void;
+		GetFacing(): number;
+		GetFogColor():[number, number, number, number]
+		GetFogFar(): number;
+		GetFogNear(): number;
+		GetLight():[boolean, boolean, number, number, number, number, number, number, number, number, number, number, number];
+		GetModel(): string;
+		GetModelScale(): number;
+		/** @tupleReturn */
+		GetPosition(): [number,number,number];
+		ReplaceIconTexture(texture: string): void;
+		SetCamera(index: number): void;
+		SetFacing(facing: number): void;
+		SetFogColor(r:number, g:number, b:number,a:number): void;
+		SetFogFar(value:number): void;
+		SetFogNear(value:number): void;
+		//SetGlow(..): void;
+		SetLight(enabled:boolean, omni:boolean, dirX:number, dirY:number, dirZ:number, ambIntensity:number, ambR:number, ambG:number, ambB:number, dirIntensity:number, dirR:number, dirG:number, dirB:number): void;
+		SetModel(file:string): void;
+		SetModelScale(scale:number): void;
+		SetPosition(x:number, y:number, z:number) : void;
+		SetSequence(sequence:number): void;
+		SetSequenceTime(sequence:number, time:number): void;
+	}
 
     interface PlayerModel extends Model {
         RefreshUnit(): void;
@@ -13469,19 +13564,122 @@ declare namespace WoWAPI {
         TryOn(item:string): void;
         Undress(): void;
     }
-  
-    interface StatusBar extends Frame, UIObject, Region {
-        GetMinMaxValues(): [number,number];
-        GetOrientation: Align;
-        GetStatusBarColor: number;
-        GetStatusBarTexture(): Texture;
-        GetValue(): number;
-        SetMinMaxValues(min:number, max:number): void;
-        SetOrientation(orientation: Align): void;
-        SetStatusBarColor(r:number, g:number, b:number, alpha:number): void;
-        SetStatusBarTexture(file:string): void;
-        SetValue(value:number): void;
-    }
+	
+	interface StatusBar extends Frame, UIObject, Region {
+		GetMinMaxValues(): [number,number];
+		GetOrientation: Align;
+		GetStatusBarColor: number;
+		GetStatusBarTexture(): Texture;
+		GetValue(): number;
+		SetMinMaxValues(min:number, max:number): void;
+		SetOrientation(orientation: Align): void;
+		SetStatusBarColor(r:number, g:number, b:number, alpha:number): void;
+		SetStatusBarTexture(file:string): void;
+		SetValue(value:number): void;
+	}
+	
+	interface ScrollFrame extends Frame {
+		GetHorizontalScroll(): number;
+		GetHorizontalScrollRange(): number;
+		GetScrollChild(): frame;
+		GetVerticalScroll(): number;
+		GetVerticalScrollRange(): number;
+		SetHorizontalScroll(offset:number): void;
+		SetScrollChild(frame:frame):void;
+		SetVerticalScroll(offset:number): void;
+	}
+	
+	interface MessageFrame extends FontInstance {
+		AddMessage(text:string, r:number, g:number, b:number, id:number, addToStart:boolean)
+		Clear():void;
+		GetFadeDuration():number;
+		GetFading():boolean;
+		GetInsertMode():string;
+		GetTimeVisible():number;
+		SetFadeDuration(seconds:number):void;
+		SetFading(isEnabled:boolean):void;
+		SetInsertMode(mode:string):void;
+		SetTimeVisible(seconds:number):void;
+	}
+	interface ScrollingMessageFrame extends FontInstance {
+		AddMessage(text:string, r:number, g:number, b:number, id:number, addToStart:boolean)
+		AtBottom():boolean;
+		AtTop():boolean;
+		Clear():void;
+		GetCurrentLine():number;
+		GetCurrentScroll():number;
+		GetFadeDuration():number;
+		GetFading():boolean;
+		GetHyperlinksEnabled():boolean;
+		GetInsertMode():string;
+		GetMaxLines():number;
+		GetNumLinesDisplayed():number;
+		GetNumMessages():number;
+		GetScrollOffset():number;
+		GetTimeVisible():number;
+		PageDown():void;
+		PageUp():void;
+		ScrollDown():void;
+		ScrollToBottom():void;
+		ScrollToTop():void;
+		ScrollUp():void;
+		SetFadeDuration(seconds:number):void;
+		SetFading(isEnabled:boolean):void;
+		SetHyperlinksEnabled(enableFlag:boolean):void;
+		SetInsertMode(mode:string):void;
+		SetMaxLines(lines:number):void;
+		SetScrollOffset(offset:number):void;
+		SetTimeVisible(seconds:number):void;
+		UpdateColorByID(id:number, r:number, g:number, b:number):void;
+	}
+
+	interface Cooldown {
+		GetReverse():boolean
+		SetCooldown(Start:number, Duration:number)
+		SetReverse(bool:boolean)
+	}
+	
+	interface Minimap{
+		GetPingPosition():number;
+		GetZoom():number;
+		GetZoomLevels():number;
+		PingLocation(x:number, y:number):void;
+		SetArrowModel(file:string):void;
+		SetBlipTexture(file:string):void;
+		SetIconTexture(file:string):void;
+		SetMaskTexture(file:string):void;
+		SetPlayerModel(file:string):void;
+		SetZoom(level):void;
+	}
+	
+	interface ColorSelect {
+		/** @tupleReturn */
+		GetColorHSV():[number,number,number]
+		/** @tupleReturn */
+		GetColorRGB():[number,number,number]
+		GetColorValueTexture():WoWAPI.Texture
+		GetColorValueThumbTexture():WoWAPI.Texture
+		GetColorWheelTexture():WoWAPI.Texture
+		GetColorWheelThumbTexture():WoWAPI.Texture
+		SetColorHSV(h:number, s:number, v:number)
+		SetColorRGB(r:number, g:number, b:number)
+		SetColorValueTexture(texture:string)
+		SetColorValueThumbTexture(texture:string)
+		SetColorWheelTexture(ttexture:string)
+		SetColorWheelThumbTexture(texture:string)
+		SetColorValueTexture(texture:WoWAPI.Texture)
+		SetColorValueThumbTexture(texture:WoWAPI.Texture)
+		SetColorWheelTexture(ttexture:WoWAPI.Texture)
+		SetColorWheelThumbTexture(texture:WoWAPI.Texture)
+	}
+	
+	interface SimpleHTML extends Frame,FontInstance {
+		GetContentHeight():number;
+		GetHyperlinkFormat(): string;
+		GetTextData(): string;
+		SetHyperlinkFormat(format:string): void;
+		SetText(text:string): void;
+	}
 }
 
 /**
@@ -13539,6 +13737,10 @@ declare function UIDropDownMenu_AddButton(info: WoWAPI.UIDropdownInfo): void;
  * comma separated list of enabled flags
  */
 declare type FontInstanceFlags = "OUTLINE" | "MONOCHROME" | "THICKOUTLINE";
+declare type LoopType = "NONE"|"REPEAT"|"BOUNCE";
+declare type LoopState = "NONE" | "FORWARD" | "REVERSE";
+declare type SmoothType = "IN" | "OUT" | "IN_OUT" | "OUT_IN";
+declare type CurveType = "SMOOTH" | "NONE";
 
 /**
  * Creates a new UI frame.
@@ -13552,9 +13754,7 @@ declare type FontInstanceFlags = "OUTLINE" | "MONOCHROME" | "THICKOUTLINE";
  * they must be created using XML with virtual="true" in the tag.
  * @param id ID to assign to the frame. See API Frame SetID
  */
-declare function CreateFrame(
-  frameType: WoWAPI.FrameType, frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number,
-): WoWAPI.UIObject;
+declare function CreateFrame(frameType: WoWAPI.FrameType, frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number,): WoWAPI.UIObject;
 declare function CreateFrame(frameType: "Frame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Frame;
 declare function CreateFrame(frameType: "Slider", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Slider;
 declare function CreateFrame(frameType: "EditBox", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.EditBox;
@@ -13564,6 +13764,12 @@ declare function CreateFrame(frameType: "Model", frameName?: string, parentFrame
 declare function CreateFrame(frameType: "PlayerModel", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.PlayerModel;
 declare function CreateFrame(frameType: "DressUpModel", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.DressUpModel;
 declare function CreateFrame(frameType: "StatusBar", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.StatusBar;
+declare function CreateFrame(frameType: "ScrollFrame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ScrollFrame;
+declare function CreateFrame(frameType: "ScrollingMessageFrame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ScrollingMessageFrame;
+declare function CreateFrame(frameType: "Minimap", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Minimap;
+declare function CreateFrame(frameType: "MessageFrame", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.MessageFrame;
+declare function CreateFrame(frameType: "Cooldown", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.Cooldown;
+declare function CreateFrame(frameType: "ColorSelect", frameName?: string, parentFrame?: WoWAPI.UIObject, inheritsFrame?: string, id?: number): WoWAPI.ColorSelect;
 
 /**
  * Adds a configuration panel (with the fields described in #Panel fields below set) to the category list.
