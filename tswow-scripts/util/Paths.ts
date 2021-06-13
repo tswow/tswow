@@ -475,6 +475,17 @@ export class InstallPaths {
         return mpath(this.luaxmlAddons(dataset),addon);
     }
 
+    private get symlinkedFilename() {
+        return '__symlinked_check';
+    }
+    mpqSymlinkFile(mpqPath: string) {
+        return mpath(mpqPath,this.symlinkedFilename);
+    }
+
+    moduleSymlinkFile(module: string) {
+        return mpath(this.moduleAssets(module),this.symlinkedFilename);
+    }
+
     /** Module paths */
     get modules() { return mpath(installBase, 'modules'); }
     moduleData(mod: string) {
@@ -586,10 +597,6 @@ export class InstallPaths {
 
     moduleDataPackagePath(mod: string) {
         return mpath(this.moduleDataBuild(mod),'package.json');
-    }
-
-    moduleSymlink(mod: string) {
-        return mpath(this.modules, mod, 'symlinked');
     }
 
     /**

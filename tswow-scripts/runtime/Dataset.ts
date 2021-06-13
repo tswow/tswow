@@ -327,7 +327,7 @@ export namespace Datasets {
             create(args[0]);
         });
 
-        if(NodeConfig.autostart_client) {
+        if(NodeConfig.autostart_client && ! process.argv.includes('noclient')) {
             let datasets : {[key: string]: Dataset} = {}
             NodeConfig.autostart_realms
                 .map(x=>Realm.getRealm(x))

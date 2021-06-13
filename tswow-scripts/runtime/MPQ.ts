@@ -19,17 +19,25 @@ export namespace MPQ {
     async function prepareBuild(
           dataset: Datasets.Dataset
         , useTimer: boolean
+        , isPackage: boolean
         , args?: string[]) {
 
         // Build output dbc
         await Datascripts.build(dataset, false, useTimer, args);
-        const modules = dataset.config.modules;
-        return Modules.getModules()
-            .filter(x => !wfs.exists(ipaths.moduleSymlink(x.id)) && modules.includes(x.id))
+
+        let mods = dataset.config.modules.map(x=>Modules.getModule(x));
+        if(!isPackage) {
+            Modules.checkSymlinks(
+                  dataset
+                , args!=undefined && args.includes('--trace')
+                , ...mods);
+            mods = mods
+                .filter(x=>x.getSymlinks(dataset).length===0);
+        }
+
+        return mods
             .map(x => ipaths.moduleAssets(x.id))
             .filter(x => wfs.exists(x))
-            .map(x => `"${x}"`)
-            .map(x => `./${x.substring(1, x.length - 1)}`)
                 .concat([
                     ipaths.datasetDBC(dataset.id),
                     ipaths.datasetLuaXML(dataset.id)
@@ -40,9 +48,11 @@ export namespace MPQ {
           dataset: Datasets.Dataset
         , destination: string
         , useTimer: boolean
+        , isDev: boolean
         , args?: string[]) {
 
-        let folders = await prepareBuild(dataset, useTimer, args);
+        let folders = await prepareBuild(dataset, useTimer, !isDev, args);
+
         term.log(`Building MPQ folder at ${destination} for dataset ${dataset.id}`);
         if(wfs.exists(destination) && !wfs.isDirectory(destination)) {
             throw new Error(`Target MPQ folder is a file: ${destination}`);
@@ -82,7 +92,7 @@ export namespace MPQ {
     export async function buildMPQArchive(
           dataset: Datasets.Dataset
         , destination: string, useTimer: boolean) {
-        let folders = await prepareBuild(dataset, useTimer);
+        let folders = await prepareBuild(dataset, useTimer, true);
         await Addon.buildAll(dataset);
         term.log(
               ` Building MPQ archive at ${destination}`
@@ -113,7 +123,7 @@ export namespace MPQ {
         if(clientWasStarted) {
             dataset.client.kill();
         }
-        await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer,args);
+        await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer, true,args);
 
         if(clientWasStarted || NodeConfig.autostart_client) {
             dataset.client.start();

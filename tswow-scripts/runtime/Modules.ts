@@ -25,6 +25,8 @@ import { Identifiers } from './Identifiers';
 import { Livescripts } from './Livescripts';
 import { Addon } from './Addon';
 import { BUILD_TYPES } from '../util/BuildType';
+import { Datasets } from './Dataset';
+import { Client } from './Client';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
@@ -104,9 +106,7 @@ const gitignores =
 *.bone
 *.skel
 build/
-tsconfig.json
-symlinked
-`;
+tsconfig.json`;
 
 /**
  * Contains functions for working with tswow modules.
@@ -152,6 +152,29 @@ export namespace Modules {
                   ipaths.moduleDataTsConfig(this.id)
                 , data_tsconfig
             )
+        }
+
+        /**
+         * Returns all symlinks between this module and the target datasets client
+         */
+        getSymlinks(dataset: Datasets.Dataset) {
+            if(!wfs.exists(ipaths.moduleAssets(this.id))) {
+                return []
+            }
+            wfs.remove(ipaths.moduleSymlinkFile(this.id));
+            const doDir = (dir: string) => {
+                let mpqDirs = wfs.readDir(dir,false)
+                    .filter(x=>!wfs.isFile(x) && x.toUpperCase().endsWith('.MPQ'))
+                mpqDirs.forEach(x=>wfs.remove(ipaths.mpqSymlinkFile(x)));
+                let num = `${Math.random()}`;
+                wfs.write(ipaths.moduleSymlinkFile(this.id),num);
+                let dirs = mpqDirs.filter(x=>wfs.readOr(ipaths.mpqSymlinkFile(x),'')==num);
+                mpqDirs.forEach(x=>wfs.remove(ipaths.mpqSymlinkFile(x)));
+                wfs.remove(ipaths.moduleSymlinkFile(this.id));
+                return dirs;
+            }
+            return doDir(dataset.client.dataPath)
+                .concat(doDir(dataset.client.localePath))
         }
 
         createAssets() {
@@ -416,6 +439,73 @@ export namespace Modules {
         refreshModules();
     }
 
+    export function checkSymlinks(dataset: Datasets.Dataset, trace: boolean, ...modules: Module[]) {
+        const data = modules
+            .filter(x=>wfs.exists(ipaths.moduleAssets(x.id)))
+            .map(x=>{return {module:x,symlinks:x.getSymlinks(dataset)}})
+
+        const nonSymlinked = data.filter(({symlinks})=>symlinks.length==0)
+        const excess = data.filter(({symlinks})=>symlinks.length>1);
+        let symlinkLetters: string[] = [dataset.config.mpq_suffix]
+        let helpString: string[] = []
+
+        // clean these first so we have as many free modules as possible
+        if (excess.length>0) {
+            excess.forEach(({module,symlinks})=>{
+                const removed = symlinks.slice(1);
+                term.warn(
+                      `Module ${module.id} had multiple symlinks to client ${dataset.client.dataPath}. `
+                    + `Removing the following directories: ${removed.join(',')}...`
+                );
+                removed.forEach(x=>{
+                    wfs.remove(x);
+                });
+            });
+        } 
+
+        for(const {module} of nonSymlinked) {
+            try {
+                const letter = dataset.client.freePatchLetter(symlinkLetters);
+                symlinkLetters.push(letter);
+                helpString.push(
+                        `mklink /J `
+                    + `"${mpath(dataset.client.dataPath,`patch-${letter}.MPQ`)}" `
+                    + `"${wfs.absPath(ipaths.moduleAssets(module.id))}" `
+                    )
+            } catch(err) {
+                term.error(
+                        `You have too many patches in client ${dataset.client.dataPath} `
+                    + `to create symlinks for all your modules. Please look over them manually.`)
+                return;
+            }
+        }
+
+        if(helpString.length > 0) {
+            term.warn(
+                    `You have asset modules that are not symlinked to client ${dataset.client.dataPath}\n`
+                + `Since this requires elevated (admin) permissions, we ask you to create these manually for security.\n\n`
+                + `To set up symlinks, run the following command from an elevated (admin) command prompt: \n\n`
+                + helpString.join(' && ')
+            )
+        } else if(data.length == 0 && trace) {
+            term.warn(`You don't have any asset modules to symlink`);
+        } else if(trace) {
+            term.success(`All your asset modules are correctly symlinked to client ${dataset.client.dataPath}`);
+        }
+
+        // this should print as success even if we had errors
+        if(trace) {
+            // this can include excess symlinks, since the first element will still be valid after cleaning
+            let correct = data.filter(({symlinks})=>symlinks.length!=0);
+            if(correct.length>0) {
+                term.success(`Existing symlinks:`)
+            }
+            correct.forEach(({module,symlinks})=>{
+                term.success(`    ${module.id} -> ${wfs.basename(symlinks[0])}`)
+            });
+        }
+    }
+
     export const command = commands.addCommand('module');
 
     /**
@@ -545,8 +635,20 @@ export namespace Modules {
             }))
         });
 
-        await refreshModules(true);
+        Modules.command.addCommand(
+              'symlink'
+            , 'module|all dataset|default'
+            , 'Checks symlink status on provided modules against a dataset, and cleans duplicate links'
+            , async(args)=>{
+                let modules = Modules.getModulesOrAll(args);
+                let datasets = Datasets.getDatasetsOrDefault(args);
+                datasets.forEach(dataset=>{
+                    checkSymlinks(dataset,true,...modules);
+                });
+            }
+        ).addAlias('symlinks')
 
+        await refreshModules(true);
         term.success('Modules initialized');
     }
 }

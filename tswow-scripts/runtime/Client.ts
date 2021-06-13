@@ -79,6 +79,20 @@ export namespace Client {
             }
         }
 
+        freePatchLetter(except: string[]) {
+            let exceptNum = except.map(x=>x.charCodeAt(0));
+            const CHARCODE_A = 'a'.charCodeAt(0);
+            const CHARCODE_Z = 'z'.charCodeAt(0);
+            for(let i = CHARCODE_A; i <= CHARCODE_Z; ++i) {
+                if(exceptNum.includes(i)) continue;
+                let dir = mpath(this.dataPath,`patch-${String.fromCharCode(i)}.MPQ`);
+                if(!wfs.exists(dir)) {
+                    return String.fromCharCode(i);
+                }
+            }
+            throw new Error(`No free patch path in client ${this.dataPath}`);
+        }
+
         get cachePath() {
             return mpath(this.path,'Cache');
         }

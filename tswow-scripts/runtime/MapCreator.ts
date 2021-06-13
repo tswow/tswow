@@ -55,7 +55,7 @@ export namespace MapCreator {
             let highY = parseInt(args[4]);
             createMap(sourceAdt,dest,mapName,lowX,lowY,highX,highY);
             term.success('Created map successfully, now running datascripts to generate dbc...');
-            await MPQ.buildMpqFolder(dataset,dataset.config.mpq_path,false,args);
+            await MPQ.buildMpqFolder(dataset,dataset.config.mpq_path,false,true,args);
             term.success(`MPQ patches executed, you can now teleport to your map with the command ".tele map:${mapName}"`)
         });
     }

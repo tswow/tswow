@@ -45,8 +45,7 @@
   "scripts": {
     "start": "node -r source-map-support/register ./bin/scripts/tswow/runtime/TSWoW.js",
     "test": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test",
-    "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep ",
-    "symlink": "node bin/symlinkmaker.js"
+    "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep "
   },
   "repository": {
     "type": "git",
