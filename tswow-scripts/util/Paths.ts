@@ -17,7 +17,7 @@
 import { mpath, wfs } from './FileSystem';
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21041/TDB_full_world_335.21041_2021_04_16.7z";
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21051/TDB_full_world_335.21051_2021_05_14.7z"
 
 export function tdbFilename() {
     let split = TDB_URL.split('/')
