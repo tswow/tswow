@@ -23,6 +23,7 @@
 #include <sstream>
 #include <fstream>
 #include <map>
+#include <iostream>
 
 static std::map<TSString, IDRange> tables;
 IDRange GetIDRange(TSString table, TSString mod, TSString name)
@@ -33,7 +34,10 @@ IDRange GetIDRange(TSString table, TSString mod, TSString name)
     {
         return it->second;
     }
-    return IDRange(0,0);
+
+    TC_LOG_ERROR("tswow.ids", "ID field not found in ids.txt: %s", fn.c_str());
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+    std::abort();
 }
 
 uint32 GetID(TSString table, TSString mod, TSString name)
