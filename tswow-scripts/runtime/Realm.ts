@@ -117,7 +117,7 @@ export namespace Realm {
             this.lastBuildType = type;
             await this.connect();
             copyLibraryFiles(type);
-            await this.set.installDatabase(false);
+            await this.set.installBoth(false);
             this.set.installServerData();
         
             // Generate .conf files

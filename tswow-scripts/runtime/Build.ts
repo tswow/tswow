@@ -99,13 +99,17 @@ export namespace Build {
     export function initialize() {
         Build.command.addCommand(
               'datascripts'
-            , '--client-only'
+            , '--client-only --rebuild'
             , 'Builds data patches and then restarts the affected processes'
             , async(args) => {
 
-            await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>
-                MPQ.buildDevMPQ(x,args.includes('--use-timer'),args.includes('--client-only'),args)
-            ));
+            await Promise.all(Datasets.getDatasetsOrDefault(args).map(async x=>{
+                // can do this individually, since the world dbs are unique per dataset
+                if(args.includes('--rebuild')) {
+                    await x.installDest(true);
+                }
+                return MPQ.buildDevMPQ(x,args.includes('--use-timer'),args.includes('--client-only'),args)
+            }));
         })
         .addAlias('data');
 

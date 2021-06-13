@@ -191,26 +191,28 @@ export namespace Datasets {
                 , ipaths.datasetSqlDump(this.id));
         }
 
-        async installDatabase(force: boolean) {
+        protected async installDb(db: Connection, force: boolean) {
             await this.connect();
-            // Rebuild both world databases if one of them is missing
-            if(
-                    force 
-                || !await mysql.isWorldInstalled([this.worldSource,this.worldDest])
-               ) {
-
+            if(force || !await mysql.isWorldInstalled([db])) {
                 const tdb = await mysql.extractTdb();
-                await Promise.all([
-                    await mysql.rebuildDatabase(this.worldSource,tdb),
-                    await mysql.rebuildDatabase(this.worldDest,tdb)
-                ])
+                await mysql.rebuildDatabase(db,tdb);
+                await mysql.applySQLFiles(db,'world');
             }
-            
-            // Apply all SQL files and updates
-            await Promise.all([
-                await mysql.applySQLFiles(this.worldSource,'world'),
-                await mysql.applySQLFiles(this.worldDest,'world')
-            ]);
+        }
+
+        async installSource(force: boolean) {
+            return this.installDb(this.worldSource,force);
+        }
+
+        async installDest(force: boolean) {
+            return this.installDb(this.worldDest,force);
+        }
+
+
+
+        async installBoth(force: boolean) {
+            await this.installSource(force);
+            await this.installDest(force);
         }
 
         connect() {
@@ -288,7 +290,7 @@ export namespace Datasets {
                 }
 
                 if(!args.includes('--skip-database')) {
-                    return x.installDatabase(false);
+                    return x.installBoth(false);
                 }
             }));
         });
@@ -311,7 +313,7 @@ export namespace Datasets {
             , async(args: any[])=>{
 
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
-                return x.installDatabase(true);
+                return x.installBoth(true);
             }));
         });
 

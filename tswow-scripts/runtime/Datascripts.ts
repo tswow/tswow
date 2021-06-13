@@ -30,7 +30,7 @@ export namespace Datascripts {
         wfs.mkDirs(ipaths.datasetDBC(dataset.id), false);
 
         dataset.installServerData();
-        await dataset.installDatabase(false);
+        await dataset.installBoth(false);
 
         const settings : any = {
             client_path : dataset.config.client_path,
