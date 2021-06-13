@@ -15,12 +15,11 @@ import { NodeConfig } from "./NodeConfig";
 export namespace Build {
     export const command = commands.addCommand('build');
 
-    export function packageClient(
+    export async function packageClient(
           dataset: Datasets.Dataset
         , useTimer: boolean
         ) {
-
-        MPQ.buildMPQArchive(dataset,ipaths.packageMpq(dataset.id),useTimer);
+        await MPQ.buildMPQArchive(dataset,ipaths.packageMpq(dataset.id),useTimer);
         term.success('Finished creating client release package');
     }
 

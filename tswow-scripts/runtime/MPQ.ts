@@ -82,10 +82,8 @@ export namespace MPQ {
     export async function buildMPQArchive(
           dataset: Datasets.Dataset
         , destination: string, useTimer: boolean) {
-
         let folders = await prepareBuild(dataset, useTimer);
-        let addons = await Addon.buildAll(dataset);
-        folders = folders.concat(addons);
+        await Addon.buildAll(dataset);
         term.log(
               ` Building MPQ archive at ${destination}`
             + ` for dataset ${dataset.id}`);
