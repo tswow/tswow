@@ -27,8 +27,8 @@ import { BuildType } from '../util/BuildType';
 
 export namespace TrinityCore {
     export function headers() {
-        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
-        wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
+        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude, true);
+        wfs.copy(spaths.installAddonInclude, ipaths.addonInclude, true);
         wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
             if(wfs.exists(ipaths.moduleScripts(x))) {
                 wfs.copy(ipaths.addonIncludeGlobal,ipaths.moduleScriptsGlobaldts(x));
