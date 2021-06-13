@@ -199,12 +199,12 @@ public:
     (*vec)[index] = value;
   }
 
-  TSArray<T> filter(std::function<bool(T, size_t)> p)
+  TSArray<T> filter(std::function<bool(T, size_t, TSArray<T> &)> p)
   {
     std::vector<T> result;
     for (int i = 0; i < get_length(); ++i)
     {
-      if (p((*vec)[i], i))
+      if (p((*vec)[i], i, *this))
       {
         result.push_back((*vec)[i]);
       }
@@ -233,10 +233,10 @@ public:
     return cur;
   }
 
-  void forEach(std::function<void(T, size_t)> p)
+  void forEach(std::function<void(T, size_t,TSArray<T>&)> p)
   {
     for (int i = 0; i < vec->size(); ++i) {
-      p((*vec)[i], i);
+      p((*vec)[i], i, *this);
     }
   }
 
