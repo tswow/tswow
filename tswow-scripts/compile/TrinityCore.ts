@@ -137,7 +137,7 @@ export namespace TrinityCore {
                 await new Promise<void>((res,rej)=>{
                 progress(request(TDB_URL))
                     .on('progress',function(data: any){
-                        term.log(`Download progress: ${data.percent}`);
+                        term.log(`Download progress: ${(data.percent*100).toFixed(2)}%`);
                     })
 
                     .on('error', function(err: any){
@@ -145,7 +145,11 @@ export namespace TrinityCore {
                     })
 
                     .on('end', function() {
-                        res();
+                        // TODO: workaround because the download doesn't release the file handle in time
+                        term.success('Finished download, sleeping for 2 seconds to fix file handles (workaround)')
+                        setTimeout((x)=>{
+                            res();
+                        },2000);
                     })
                     .pipe(fs.createWriteStream(bpaths.tdb7z));
                 });
