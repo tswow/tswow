@@ -142,10 +142,10 @@ async function main() {
         }
     }
 
-    applyStage(reads);
-    applyStage(writes);
-    applyStage(patches);
-    applyStage(finishes);
+    await applyStage(reads);
+    await applyStage(writes);
+    await applyStage(patches);
+    await applyStage(finishes);
 
     time(`Executed scripts`);
 
