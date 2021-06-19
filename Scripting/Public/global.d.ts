@@ -6465,6 +6465,7 @@ declare namespace _hidden {
         OnSpellDamageEarly(callback: (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<int32>)=>void);
         OnSpellDamageLate(callback: (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<uint32>)=>void);
         OnPeriodicDamage(callback: (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void);
+        OnHeal(callback: (healer : TSUnit,reciever : TSUnit,gain : TSMutable<uint32>)=>void);
 
         /**
          * critChance should be between 0 and 1
@@ -6549,10 +6550,6 @@ declare namespace _hidden {
         OnExpire(callback: (player : TSPlayer,proto : TSItemTemplate)=>void);
         OnRemove(callback: (player : TSPlayer,item : TSItem)=>void);
         OnCastItemCombatSpell(callback: (player : TSPlayer,victim : TSUnit,spellInfo : TSSpellInfo,item : TSItem)=>void);
-    }
-
-    export class Unit {
-        OnHeal(callback: (healer : TSUnit,reciever : TSUnit,gain : TSMutable<uint32>)=>void);
     }
 
     export class AreaTrigger {
