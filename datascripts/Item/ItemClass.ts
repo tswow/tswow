@@ -126,20 +126,20 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     @ItemClassField(2,13)
     setFistWeapon() { return this.set(2,13)}
     /** Blacksmith Hammer, Mining pick etc. */
+    @ItemClassField(2,14)
+    setMiscWeapon() { return this.set(2,14)}
     @ItemClassField(2,15)
-    setMiscWeapon() { return this.set(2,15)}
+    setDagger() { return this.set(2,15)}
     @ItemClassField(2,16)
-    setDagger() { return this.set(2,16)}
+    setThrown() { return this.set(2,16)}
     @ItemClassField(2,17)
-    setThrown() { return this.set(2,17)}
+    setSpear() { return this.set(2,17)}
     @ItemClassField(2,18)
-    setSpear() { return this.set(2,18)}
+    setCrossbow() { return this.set(2,18)}
     @ItemClassField(2,19)
-    setCrossbow() { return this.set(2,19)}
+    setWand() { return this.set(2,19)}
     @ItemClassField(2,20)
-    setWand() { return this.set(2,20)}
-    @ItemClassField(2,21)
-    setFishingPole() { return this.set(2,21)}
+    setFishingPole() { return this.set(2,20)}
 
     // Gem
     @ItemClassField(3,0)
