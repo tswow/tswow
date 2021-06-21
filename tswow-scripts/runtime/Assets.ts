@@ -55,7 +55,7 @@ export namespace Assets {
 
             // Remove so we can check if it's actually written
             wfs.remove(blp);
-            wsys.exec(`${blpconverter} ${png}`);
+            wsys.exec(`${blpconverter} "${png}"`);
             if (!wfs.exists(blp)) {
                 throw new Error(`Failed to create blp file ${blp}`);
             }
@@ -72,7 +72,7 @@ export namespace Assets {
                 return;
             }
 
-            wsys.exec(`${blpconverter} ${blp}`);
+            wsys.exec(`${blpconverter} "${blp}"`);
             term.success(`Generated png file ${png}`);
             if (wfs.exists(png)) {
             } else {
