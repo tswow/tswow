@@ -136,7 +136,11 @@ target_link_libraries(${buildModule} \${libs})
 target_precompile_headers(${buildModule}
     PUBLIC
         \${headers}
-)`
+)
+
+include({CMAKE_CURRENT_SOURCE_DIR}/../../../CMakeLists.txt OPTIONAL)
+
+`
 );
 
 const cmake_generate =
