@@ -263,4 +263,19 @@ export const Ids = {
      * Starts at 1000000, highest base value is ~1000
      */
     GameTele: new AutoIdGenerator(1000000),
+
+    /**
+     * Starts at 22000, highest base value is 21381
+     */
+    CreatureDisplayInfoExtra: new AutoIdGenerator(22000),
+
+    /**
+     * Starts at 10000, highest base value is 7050
+     */
+    CreatureModelData: new AutoIdGenerator(10000),
+
+    /**
+     * Starts at 2147483648, highest base value is 2147483647 (shared with CreatureDisplayInfo/creature_model_info)
+     */
+    CreatureTemplateOutfits: new AutoIdGenerator(2147483648)
 }
