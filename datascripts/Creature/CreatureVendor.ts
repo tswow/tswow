@@ -32,6 +32,7 @@ export class CreatureVendor extends CellSystem<CreatureTemplate> {
         SQL.npc_vendor.add(this.owner.ID, item, extendedCostId)
             .maxcount.set(maxcount)
             .incrtime.set(incrTime)
+            .VerifiedBuild.set(17688)
         return this.owner;
     }
 
