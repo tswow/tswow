@@ -100,6 +100,11 @@ EVENT_TYPE(FormulaOnMaxPower,TSPlayer,uint32,float,TSMutable<float>);
 EVENT_TYPE(FormulaOnManaRegen,TSPlayer,TSMutable<float>,TSMutable<float>,TSMutable<int32>);
 EVENT_TYPE(FormulaOnSkillGainChance,TSPlayer,int,int,int,int,int,TSMutable<int>)
 
+EVENT_TYPE(FormulaOnQuestXP
+     , TSPlayer
+     , TSQuest
+     , TSMutable<uint32>)
+
 // UnitScript
 //EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
 
@@ -515,6 +520,7 @@ struct TSEvents
     EVENT(FormulaOnMaxPower);
     EVENT(FormulaOnManaRegen);
     EVENT(FormulaOnSkillGainChance);
+    EVENT(FormulaOnQuestXP);
     //EVENT(UnitModifyVehiclePassengerExitPos)
 
     // AreaTriggerScript
@@ -760,6 +766,7 @@ public:
          EVENT_HANDLE(Formula,OnMaxPower);
          EVENT_HANDLE(Formula,OnManaRegen);
          EVENT_HANDLE(Formula,OnSkillGainChance);
+         EVENT_HANDLE(Formula,OnQuestXP);
     } Formula;
 
     struct UnitEvents: public EventHandler
