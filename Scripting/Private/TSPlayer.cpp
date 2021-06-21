@@ -37,6 +37,9 @@
 #include "Chat.h"
 #include "GossipDef.h"
 #include "Mail.h"
+#include "ObjectMgr.h"
+#include "Trainer.h"
+#include "DBCStructure.h"
 
 #include "TSUnit.h"
 #include "TSItem.h"
@@ -3702,6 +3705,50 @@ void TSPlayer::AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 cou
     dest.push_back(ItemPosCount(bag<<8|slot,count));
     Item* item = player->StoreNewItem(dest, itemId, true, GenerateItemRandomPropertyId(itemId));
     if (item) player->SendNewItem(item, count, true, false);
+}
+
+void TSPlayer::LearnClassSpells(bool trainer, bool quests)
+{
+    ChrClassesEntry const* classEntry = sChrClassesStore.LookupEntry(player->GetClass());
+    if (!classEntry)
+        return;
+
+    if(trainer)
+    {
+        std::vector<Trainer::Trainer const*> const& trainers = sObjectMgr->GetClassTrainers(player->GetClass());
+
+        bool hadNew;
+        do
+        {
+            hadNew = false;
+            for (Trainer::Trainer const* trainer : trainers)
+            {
+                if (!trainer->IsTrainerValidForPlayer(player))
+                    continue;
+                for (Trainer::Spell const& trainerSpell : trainer->GetSpells())
+                {
+                    if (!trainer->CanTeachSpell(player, &trainerSpell))
+                        continue;
+
+                    if (trainerSpell.IsCastable())
+                        player->CastSpell(player, trainerSpell.SpellId, true);
+                    else
+                        player->LearnSpell(trainerSpell.SpellId, false);
+
+                    hadNew = true;
+                }
+            }
+        } while (hadNew);
+    }
+
+    if(quests)
+    {
+        for (auto const& [id, quest] : sObjectMgr->GetQuestTemplates())
+        {
+            if (quest.GetRequiredClasses() && player->SatisfyQuestClass(&quest, false))
+                player->LearnQuestRewardedSpells(&quest);
+        }
+    }
 }
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
