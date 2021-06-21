@@ -317,6 +317,11 @@ export namespace mysql {
         wfs.iterate(ipaths.sqlUpdateDir(type),(fp)=>{
             files.push(fp);
         });
+
+        wfs.iterate(ipaths.sqlCustomUpdateDir(type),(fp)=>{
+            files.push(fp);
+        })
+
         files.sort();
 
         for(const filepath of files) {

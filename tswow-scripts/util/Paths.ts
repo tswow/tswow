@@ -334,9 +334,14 @@ export class InstallPaths {
     }
 
     get sqlUpdates() { return mpath(this.bin, 'sql','updates');}
+    get sqlCustom() { return mpath(this.bin, 'sql', 'custom'); }
 
     sqlUpdateDir(type: 'world'|'auth'|'characters') {
         return mpath(this.sqlUpdates, type);
+    }
+
+    sqlCustomUpdateDir(type: 'world'|'auth'|'characters') {
+        return mpath(this.sqlCustom, type);
     }
 
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
@@ -887,6 +892,10 @@ export class SourcePaths {
 
     get sqlUpdates() {
         return mpath(this.trinityCore,'sql','updates');
+    }
+
+    get sqlCustom() {
+        return mpath(this.trinityCore, 'sql', 'custom');
     }
 
     get scripts() {
