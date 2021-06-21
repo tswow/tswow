@@ -24,6 +24,7 @@ inline TSString ToStr(uint64 val, int indent = 0) { return TSString(std::to_stri
 inline TSString ToStr(int64 val, int indent = 0) { return TSString(std::to_string(val)); }
 inline TSString ToStr(float val, int indent = 0) { return TSString(std::to_string(val)); }
 inline TSString ToStr(double val, int indent = 0) { return TSString(std::to_string(val)); }
+inline TSString ToStr(bool val, int indent = 0) { return TSString(std::to_string(val)); }
 inline TSString ToStr(std::string val, int indent = 0) { return TSString(val); }
 inline TSString ToStr(TSString val, int indent = 0) { return val; }
 template <typename T>
