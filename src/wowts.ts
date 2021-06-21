@@ -81,7 +81,9 @@ function findSourceCpp(curDir: string) {
             || x.endsWith('.h') 
             || x.endsWith('.c')
         ) {
-            fs.copyFileSync(full,path.join(livescriptsDir,'build','cpp','livescripts',path.relative(livescriptsDir, full)));
+            let target = path.join(livescriptsDir,'build','cpp','livescripts',path.relative(livescriptsDir, full));
+            fs.mkdirSync(path.dirname(target),{recursive:true});
+            fs.copyFileSync(full,target);
         }
     });
 }
