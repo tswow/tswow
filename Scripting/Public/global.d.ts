@@ -77,6 +77,7 @@ declare class TSChatChannel {
 }
 
 declare class TSPlayer extends TSUnit {
+    LearnClassSpells(trainer: boolean, quests: boolean);
     SendData(data: any)
     SetBankBagSlotCount(count: uint8)
     AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32)
