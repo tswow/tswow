@@ -22,6 +22,7 @@ import { Datasets } from './Dataset';
 import { commands } from './Commands';
 import { term } from '../util/Terminal';
 import { util } from '../util/Util';
+import { NodeConfig } from './NodeConfig';
 
 /**
  * Contains functions for managing World of Warcraft clients
@@ -178,11 +179,14 @@ export namespace Client {
             this.installAddons();
 
             this.clearCache();
-            const realmlist = wfs.read(this.realmlist);
-            if(realmlist !== 'set realmlist localhost') {
-                wfs.makeBackup(this.realmlist);
+
+            if(NodeConfig.write_dev_realmlist) {
+                const realmlist = wfs.read(this.realmlist);
+                if(realmlist !== 'set realmlist localhost') {
+                    wfs.makeBackup(this.realmlist);
+                }
+                wfs.write(this.realmlist, 'set realmlist localhost');
             }
-            wfs.write(this.realmlist, 'set realmlist localhost');
 
             if(isWindows()) {
                 this.wowprocess.start(this.exePath);

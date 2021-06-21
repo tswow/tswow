@@ -47,6 +47,10 @@ export class NodeConfiguration extends YamlFile {
         return this.get('terminal_history',100);
     }
 
+    get write_dev_realmlist() {
+        return this.get('write_dev_realmlist', true);
+    }
+
     database_settings(database: DatabaseType, nameOverride?: string) {
         return databaseSettings(database,nameOverride);
     }
