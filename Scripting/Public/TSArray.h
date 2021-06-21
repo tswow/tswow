@@ -217,7 +217,7 @@ public:
   {
     auto cur = this[0];
     for (int i = 0; i < get_length(); ++i) {
-      cur = p(cur, get(i), i);
+      cur = p(cur, get(i), i, *this);
     }
     return cur;
   }
@@ -228,7 +228,7 @@ public:
     I cur = initial;
     for (int i = 0; i < this->vec->size(); ++i)
     {
-      cur = p(cur, get(i), i);
+      cur = p(cur, get(i), i, *this);
     }
     return cur;
   }
