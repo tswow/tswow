@@ -62,6 +62,7 @@ public:
     float GetAttackDistance(TSUnit _target);
     uint32 GetRespawnDelay();
     float GetWanderRadius();
+    void UpdateLevelDependantStats();
     uint32 GetWaypointPath();
     uint32 GetCurrentWaypointId();
     uint32 GetDefaultMovementType();

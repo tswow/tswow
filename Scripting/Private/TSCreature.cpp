@@ -1298,3 +1298,8 @@ TSCreatureTemplate TSCreature::GetTemplate()
 {
     return TSCreatureTemplate(const_cast<CreatureTemplate*>(creature->GetCreatureTemplate()));
 }
+
+void TSCreature::UpdateLevelDependantStats()
+{
+    creature->UpdateLevelDependantStats();
+}

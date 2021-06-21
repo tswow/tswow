@@ -2614,6 +2614,11 @@ declare class TSCreature extends TSUnit {
      * @return [CreatureFamily] creatureFamily
      */
     GetCreatureFamily() : uint32    
+
+    /**
+     * Updates max hp, hp, and stats
+     */
+    UpdateLevelDependantStats(): void;
 }
 
 declare class TSAura {
