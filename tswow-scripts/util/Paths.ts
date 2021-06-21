@@ -382,7 +382,6 @@ export class InstallPaths {
     get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
     get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
     get addons() { return mpath(this.bin, 'addons')}
-    get symlinkMaker() { return mpath(this.bin, 'symlinkmaker.js')}
     get binglobaldts() { return mpath(this.bin, 'include','global.d.ts')}
     get wotlkdata() { return mpath(this.bin, 'scripts','tswow','wotlkdata')}
     get wotlkdataPackageJson() { return mpath(this.wotlkdata, 'package.json')}

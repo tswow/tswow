@@ -48,7 +48,6 @@ export namespace Config {
 
         wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
         wfs.copy(spaths.installAddons, ipaths.addons);
-        wfs.copy(spaths.installSymlinkMaker, ipaths.symlinkMaker);
         wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
