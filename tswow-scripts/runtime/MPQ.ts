@@ -129,6 +129,10 @@ export namespace MPQ {
             dataset.client.start();
         }
 
+        if(clientOnly) {
+            return;
+        }
+
         if(realms.length>0)  {
             realms.forEach(x=>x.startWorldserver(x.lastBuildType));
         }
