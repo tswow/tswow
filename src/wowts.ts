@@ -66,6 +66,27 @@ try {
     process.exit(-1);
 }
 
+
+let livescriptsDir = path.join(process.cwd(),'livescripts');
+function findSourceCpp(curDir: string) {
+    let items = fs.readdirSync(curDir);
+    items.forEach(x=>{
+        let full = path.join(curDir,x);
+        let stat = fs.statSync(full);
+        if(stat.isDirectory() && x != 'build') {
+            findSourceCpp(full);
+        }
+        if(    x.endsWith('.cpp') 
+            || x.endsWith('.hpp') 
+            || x.endsWith('.h') 
+            || x.endsWith('.c')
+        ) {
+            fs.copyFileSync(full,path.join(livescriptsDir,'build','cpp','livescripts',path.relative(livescriptsDir, full)));
+        }
+    });
+}
+findSourceCpp(livescriptsDir);
+
 fs.unlinkSync('./tsconfig.json');
 process.chdir(olddir);
 
