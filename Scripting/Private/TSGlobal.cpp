@@ -22,6 +22,8 @@
 #include "World.h"
 #include "Timer.h"
 
+#include "HTTPRequest.h"
+
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
     auto player = ObjectAccessor::FindPlayer(ObjectGuid(to));
@@ -56,4 +58,11 @@ uint64 GetUnixTime()
 {
     using namespace std::chrono;
     return uint64(duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count());
+}
+
+TSString SyncHttpGet(TSString url)
+{
+    http::Request request{url.std_str()};
+    const auto response = request.send("GET");
+    return TSString(std::string{response.body.begin(), response.body.end()});
 }

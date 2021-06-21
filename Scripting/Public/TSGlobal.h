@@ -28,3 +28,4 @@ uint32 TC_GAME_API GetCurrTime();
 
 uint64 TC_GAME_API GetUnixTime();
 
+TSString TC_GAME_API SyncHttpGet(TSString url);
