@@ -151,8 +151,32 @@ export namespace Addon {
             }
         }
 
-        let names: string[] = [`TSAddons\\${mod}\\addon\\${mod}-addon.lua`];
+        const readToc = (tocPath: string) => {
+            if(!wfs.exists(tocPath)) return []
+            return wfs.read(tocPath).split('/').join('\\').split('\n');
+        }
+
+        let beforelib = readToc(ipaths.addonBeforeLibToc(mod));
+        let before = readToc(ipaths.addonBeforeToc(mod));
+        let after = readToc(ipaths.addonAfterToc(mod));
+        const all = beforelib.concat(before.concat(after));
+
+        const fixToc = (toc: string[]) => {
+            return toc.map(x=>`TSAddons\\${mod}\\addon\\${x}`);
+        }
+
+        beforelib = fixToc(beforelib);
+        before = fixToc(before);
+        after = fixToc(after);
+
+        let names: string[] = before.concat([`TSAddons\\${mod}\\addon\\${mod}-addon.lua`]);
         wfs.iterate(ipaths.addonBuild(mod),(name)=>{
+            let relative = wfs.relative(mpath(ipaths.addonBuild(mod),'addon'),name)
+            relative = relative.split('/').join('\\');
+            if(all.includes(relative)) {
+                return;
+            }
+
             if(wfs.basename(name)!=`${mod}-addon.lua`) {
                 names.unshift(
                       `TSAddons\\${mod}\\`
@@ -161,6 +185,7 @@ export namespace Addon {
             }
         });
 
+        names = beforelib.concat(names.concat(after));
         names.unshift(`## tsaddon-begin: ${mod}`);
         names.push(`## tsaddon-end: ${mod}`);
         tocFile.splice(begin,0,...names);
@@ -205,8 +230,38 @@ export namespace Addon {
         wsys.execIn(ipaths.moduleAddons(mod),
             `node ../../../node_modules/typescript-to-lua/dist/tstl.js`);
 
-        // HACK: workaround to properly write require paths
+        wfs.iterate(ipaths.moduleAddons(mod),(name)=>{
+            if(!name.endsWith('.lua')) return;
+            let relative = wfs.relative(ipaths.moduleAddons(mod),name);
+            let relativeCheck = relative.split('.').join('').split('\\').join('').split('/').join('')
+            if(relativeCheck.startsWith('build') || relativeCheck.startsWith('lib')) {
+                return;
+            }
+            wfs.copy(name,mpath(ipaths.moduleAddons(mod),'build','addon',relative));
+        });
+
         wfs.iterate(ipaths.addonBuild(mod),(name)=>{
+            let relative = wfs.relative(ipaths.addonBuild(mod),name);
+            if(relative.startsWith('addon') && relative.endsWith('.lua')) {
+                // doesn't matter if it's forward slash
+                relative = relative.substring('addon\\'.length);
+                let sourceLua = mpath(ipaths.moduleAddons(mod),relative);
+                let sourceTs = sourceLua.substring(0,sourceLua.length-3)+'ts'
+
+                if(wfs.exists(sourceLua) && wfs.exists(sourceTs)) {
+                    throw new Error(
+                          `These files collide:\n\n`
+                        + `${sourceTs}\n${sourceLua}\n\n`
+                        + `TSWoW doesn't know which one to use, please remove one of them.`)
+                }
+
+                if(wfs.exists(sourceLua)) {
+                    // it's a lua file, do not change that
+                    return;
+                }
+            }
+
+            // HACK: workaround to properly write require paths
             let rows = wfs.readLines(name);
             rows = rows.map(x=>{
                 let m = x.match(/local .+? = require\("(.+?)"\)/)

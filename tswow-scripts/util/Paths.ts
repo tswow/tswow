@@ -71,6 +71,18 @@ export class InstallPaths {
         return wfs.relative(installBase,path);
     }
 
+    addonBeforeLibToc(mod: string) {
+        return mpath(this.moduleAddons(mod),'beforelib.toc');
+    }
+
+    addonBeforeToc(mod: string) {
+        return mpath(this.moduleAddons(mod),'before.toc');
+    }
+
+    addonAfterToc(mod: string) {
+        return mpath(this.moduleAddons(mod),'after.toc');
+    }
+
     addonBuildLib(mod: string) {
         return mpath(
             this.addonBuild(mod)
