@@ -20,7 +20,7 @@ import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class TrivialSkillLineRank<T> extends CellSystem<SpellSkillLineAbility<T>> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }

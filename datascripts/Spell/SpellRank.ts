@@ -1,6 +1,6 @@
 import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class SpellRank<T> extends CellSystem<T>{
     @Transient

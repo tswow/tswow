@@ -1,5 +1,5 @@
 import { write } from "wotlkdata";
-import { SystemStore } from "wotlkdata/cell/stores/SystemStore";
+import { SystemStore } from "wotlkdata/cell/serialization/SystemStore";
 import * as path from 'path'
 import * as fs from 'fs'
 

@@ -21,7 +21,7 @@ import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata";
 import { GOCreature } from "../Misc/GOorCreature";
 import { Ids } from "../Misc/Ids";

@@ -3,7 +3,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCKeyCell } from "wotlkdata/dbc/DBCCell";
 import { AutoIdGenerator } from "../Misc/Ids";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export interface SharedRefRow {
     ID: DBCKeyCell<any>;

@@ -22,7 +22,7 @@ import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class CreatureInstance<T> extends CellSystem<T> {
 

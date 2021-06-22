@@ -1,5 +1,5 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MultiUIntWrapper, MultiFloatWrapper, MultiIntWrapper } from "wotlkdata/dbc/DBCCell";
 import { SpellChainEffect } from "./SpellChainEffect";

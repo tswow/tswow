@@ -16,7 +16,7 @@
  */
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class ItemResistance extends CellSystem<ItemTemplate> {
     @Transient

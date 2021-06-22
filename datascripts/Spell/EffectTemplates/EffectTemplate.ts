@@ -1,6 +1,6 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellEffect } from "../SpellEffect";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { CellArray, CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 

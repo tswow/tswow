@@ -23,7 +23,7 @@ import { ActionType } from "./ActionType";
 import { AttachedScript } from "./AttachedScript";
 import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 function findId(type: number, entry: number) {

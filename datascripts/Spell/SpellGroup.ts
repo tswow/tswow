@@ -1,4 +1,4 @@
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";

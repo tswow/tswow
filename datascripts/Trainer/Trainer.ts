@@ -22,7 +22,7 @@ import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_defaul
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class TrainerLoc<T> extends SQLLocSystem<T> {
     @Transient

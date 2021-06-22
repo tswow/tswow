@@ -16,7 +16,7 @@
  */
 
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class MainEntity<T> extends CellSystemTop {
     @Transient

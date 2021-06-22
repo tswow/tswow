@@ -27,7 +27,7 @@ import { all_auras } from "./EffectTemplates/AuraTemplates";
 import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { SpellRadius } from "./SpellRadius";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
 
 export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {

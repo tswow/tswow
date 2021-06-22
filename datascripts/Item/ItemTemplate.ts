@@ -44,7 +44,7 @@ import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient

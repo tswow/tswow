@@ -47,7 +47,7 @@ import { SchoolMask } from "../Misc/School";
 import { SpellVisualEffect } from "./SpellVisualEffect";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellGroups } from "./SpellGroup";
 import { SpellRank } from "./SpellRank";
 import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";

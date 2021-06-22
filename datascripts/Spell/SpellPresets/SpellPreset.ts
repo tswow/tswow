@@ -1,6 +1,6 @@
 import { Spell } from "../Spell";
 import { SpellEffects } from "../SpellEffect";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRank } from "../SpellRank";
 import { SpellSkillLineAbilites } from "../SpellSkillLines";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";

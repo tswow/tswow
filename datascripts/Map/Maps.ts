@@ -1,5 +1,5 @@
 import { Map } from "./Map"
-import { SystemStoreTop, CreateArgument } from "wotlkdata/cell/stores/SystemStore";
+import { SystemStoreTop, CreateArgument } from "wotlkdata/cell/serialization/SystemStore";
 import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { MapQuery } from "wotlkdata/dbc/types/Map";

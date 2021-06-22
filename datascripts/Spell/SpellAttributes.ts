@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { MaskCell } from "wotlkdata/cell/cells/MaskCell";
 
 export class SpellAttributes<T> extends MaskCell<T> {

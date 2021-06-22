@@ -3,7 +3,7 @@ import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectN
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { Transient } from "wotlkdata/cell/misc/Transient";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 
 export class VisualScale<T> extends CellSystem<T> {

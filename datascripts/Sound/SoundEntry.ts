@@ -6,7 +6,7 @@ import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
-import { Transient, TransientOn } from "wotlkdata/cell/misc/Transient";
+import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
 
 export class SoundEntryName<T> extends CellSystem<SoundEntry<T>> {
     get() {
