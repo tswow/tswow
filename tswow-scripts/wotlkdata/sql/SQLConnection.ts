@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as mysql from 'mysql';
+import * as mysql from 'mysql2';
 import * as fs from 'fs';
 import { SqlRow } from './SQLRow';
 import { getDatabase, Settings } from '../Settings';
@@ -60,12 +60,12 @@ export class Connection {
             .bind(connection.sync));
     }
 
-    protected settings: mysql.ConnectionConfig;
+    protected settings: any;
     protected async: mysql.Pool | mysql.Connection | undefined;
     protected sync: mysql.Pool | mysql.Connection | undefined;
     protected syncQuery: any;
 
-    constructor(obj: mysql.ConnectionConfig) {
+    constructor(obj: any) {
         this.settings = obj;
     }
 
@@ -120,7 +120,7 @@ export class Connection {
 
     function getDefaultSettings(dbType: string) {
     return {
-        database: getDatabase(dbType).name,
+        database: getDatabase(dbType).database,
         host: getDatabase(dbType).host,
         user: getDatabase(dbType).user,
         password: getDatabase(dbType).password,

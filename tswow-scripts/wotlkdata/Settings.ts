@@ -30,13 +30,13 @@ class SettingsClass {
     get LUAXML_SOURCE() {return settings.luaxml_source; }
     get LUAXML_CLIENT() {return settings.luaxml_out; }
 
-    get MYSQL_DATABASE_SOURCE() {return getDatabase('world_source').name; }
+    get MYSQL_DATABASE_SOURCE() {return getDatabase('world_source').database; }
     get MYSQL_PASSWORD_SOURCE() {return getDatabase('world_source').password; }
     get MYSQL_USER_SOURCE() {return getDatabase('world_source').user; }
     get MYSQL_HOST_SOURCE() {return getDatabase('world_source').host; }
     get MYSQL_PORT_SOURCE() {return getDatabase('world_source').port; }
 
-    get MYSQL_DATABASE_DEST() {return getDatabase('world').name; }
+    get MYSQL_DATABASE_DEST() {return getDatabase('world').database; }
     get MYSQL_PASSWORD_DEST() {return getDatabase('world').password; }
     get MYSQL_USER_DEST() {return getDatabase('world').user; }
     get MYSQL_HOST_DEST() {return getDatabase('world').host; }

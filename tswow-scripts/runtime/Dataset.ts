@@ -208,8 +208,6 @@ export namespace Datasets {
             return this.installDb(this.worldDest,force);
         }
 
-
-
         async installBoth(force: boolean) {
             await this.installSource(force);
             await this.installDest(force);

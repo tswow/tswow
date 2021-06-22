@@ -193,7 +193,7 @@ import { SQL_waypoint_scripts } from './types/waypoint_scripts'
 import { SQL_waypoints } from './types/waypoints'
 import { SQL_class_stat_formulas } from './types/class_stat_formulas'
 import { Connection, SqlConnection } from './SQLConnection'
-import * as mysql from 'mysql';
+import * as mysql from 'mysql2';
 
 export class Databases {
     private isDatabase = true;
@@ -201,7 +201,7 @@ export class Databases {
     get world_dest() { return SqlConnection.world_dst; }
     get auth() { return SqlConnection.auth; }
 
-    connect(config: mysql.ConnectionConfig) {
+    connect(config: any) {
         let con = new Connection(config);
         SqlConnection.additional.push(con);
         Connection.connect(con);
