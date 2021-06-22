@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as mysql_lib from 'mysql';
+import * as mysql_lib from 'mysql2';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { commands } from './Commands';
@@ -30,7 +30,7 @@ import { start } from 'repl';
  * Represents a single connection to a mysql server.
  */
 export class Connection {
-    con: mysql_lib.Connection;
+    con?: mysql_lib.Connection;
     cfg: DatabaseSettings;
     status?: Promise<void>;
     isConnected = false;
@@ -42,19 +42,25 @@ export class Connection {
      */
     constructor(cfg: DatabaseSettings, type: DatabaseType) {
         this.cfg = cfg;
-        this.con = mysql_lib.createConnection(this.config());
+        this.connect();
         this.type = type;
     }
 
+    private configWithoutDb() {
+        let c = this.config() as any;
+        delete c.database;
+        return c;
+    }
+
     private config() {
-        return Object.assign(this.cfg, {multipleStatements: true});
+        return Object.assign({}, this.cfg, {multipleStatements: true});
     }
 
     /**
      * Return the database name configured for this connection.
      */
     name() {
-        return this.cfg.name;
+        return this.cfg.database;
     }
 
     /**
@@ -66,36 +72,15 @@ export class Connection {
      */
     async query(query: string) {
         await this.connect();
-        return this.promiseQuery(query);
-    }
-
-
-    /**
-     * Helper function to make a mysql query and return a promise.
-     * @param con The connection to query on
-     * @param query The query
-     */
-    async promiseQuery(query: string) {
-        return new Promise<any>((res, rej) => {
-            this.con.query(query, (err, data) => {
-                return err ? rej(err) : res(data);
+        return (await new Promise<any>((res,rej)=>{
+            (this.con as mysql_lib.Connection).query(query,(err,value)=>{
+                if(err) {
+                    rej(err);
+                } else {
+                    res(value);
+                }
             });
-        });
-    }
-
-    /**
-     * Helper function to connect to a mysql server and return a promise.
-     * @param con The connection to connect
-     */
-    promiseConnect() {
-        if (this.isConnected) {
-            return;
-        }
-        return new Promise<void>((res, rej) =>
-            this.con.connect((err) => err 
-                ? rej(err) 
-                : (this.isConnected = true) && res())
-        );
+        }));
     }
 
     /**
@@ -105,27 +90,8 @@ export class Connection {
     async hasTable(tableName: string) {
         return (await this.query(
               ` SELECT * FROM information_schema.tables WHERE`
-            + ` table_schema='${this.cfg.name}'`
+            + ` table_schema='${this.cfg.database}'`
             + ` AND TABLE_NAME = '${tableName}';`)).length > 0;
-    }
-
-    disconnect() {
-        if (!this.isConnected) {
-            return;
-        }
-        return new Promise<void>((res, rej) => {
-            if (this.con.state !== 'disconnected') {
-                this.con.end((err) => {
-                    if (err) {
-                        rej(err);
-                    } else {
-                        res();
-                    }
-                });
-            }
-            this.status = undefined;
-            this.isConnected = false;
-        });
     }
 
     /**
@@ -134,20 +100,60 @@ export class Connection {
      * @returns Promise that resolves when the connection has been established.
      */
     connect() {
-        if (this.status !== undefined) { return this.status; }
-        this.con = mysql_lib.createConnection(this.config());
-        return this.status = new Promise<void>(async (res, rej) => {
-            try {
-                await this.promiseConnect();
-                await this.promiseQuery(
-                    `CREATE DATABASE IF NOT EXISTS \`${this.cfg.name}\`;`);
-                await this.promiseQuery(`USE \`${this.cfg.name}\`;`);
-            } catch (error) {
-                this.status = undefined;
-                rej(error);
-            }
-            res();
+        if(this.con !== undefined) {
+            return undefined;
+        }
+        if (this.status !== undefined) {
+            return this.status;
+        }
+    
+        const creator = mysql_lib.createConnection(this.configWithoutDb());
+
+        return this.status = new Promise<void>(async (res,rej)=>{
+            creator.query(
+                  `CREATE DATABASE IF NOT EXISTS \`${this.cfg.database}\`;`
+                , (createErr)=>{
+                    if(createErr) {
+                        return rej(createErr);
+                    }
+                    creator.end((endErr)=>{
+                        if(endErr) {
+                            return rej(endErr);
+                        }
+                        this.con = mysql_lib.createConnection(this.config());
+                        this.status = undefined;
+                        res();
+                    });
+            });
         });
+    }
+
+    async disconnect() {
+        return new Promise<void>((res,rej)=>{
+            this.con?.end((err)=>{
+                this.con = undefined;
+                if(err) {
+                    rej(err);
+                } else {
+                    res();
+                }
+            });
+        });
+    }
+
+    async clean() {
+        await this.disconnect();
+        await new Promise<void>((res,rej)=>{
+            let con = mysql_lib.createConnection(this.configWithoutDb());
+            con.query(`DROP DATABASE IF EXISTS ${this.config().database};`,(err)=>{
+                if(err) {
+                    rej(err);
+                } else {
+                    res();
+                }
+            });
+        });
+        await this.connect();
     }
 }
 
@@ -161,7 +167,7 @@ export namespace mysql {
         wsys.exec(
             `"${ipaths.mysqlDumpExe}"`
             + ` --port ${connection.cfg.port}`
-            + ` -u root ${connection.cfg.name}`
+            + ` -u root ${connection.cfg.database}`
             + ` > ${wfs.absPath(outputFile)}`)
     }
 
@@ -269,13 +275,7 @@ export namespace mysql {
         {
 
         term.log(`Beginning to rebuild ${con.name()}`);
-        await con.status;
-        await con.promiseConnect();
-        await con.promiseQuery(`DROP DATABASE IF EXISTS \`${con.name()}\`;`);
-
-        // Need this since we dropped the db
-        await con.disconnect();
-        await con.connect();
+        await con.clean();
 
         const mysqlCommand = mysql.hasOwnProcess() ? 
             `"${ipaths.mysqlExe}"` : 
@@ -350,7 +350,7 @@ export namespace mysql {
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(charRowCount[1][0]['FOUND_ROWS()']===0) {
             term.log(
-                 `No character tables found for ${connection.cfg.name},`
+                 `No character tables found for ${connection.cfg.database},`
                + ` creating them...`);
             await connection.query(wfs.read(ipaths.createCharactersSql));
         }
@@ -362,7 +362,7 @@ export namespace mysql {
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(authRowCount[1][0]['FOUND_ROWS()']===0) {
             term.log(
-              `No auth tables found for ${connection.cfg.name},`
+              `No auth tables found for ${connection.cfg.database},`
             + ` creating them...`);
 
             await connection.query(wfs.read(ipaths.createAuthSql));

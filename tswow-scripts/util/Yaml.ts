@@ -24,7 +24,7 @@ export interface DatabaseSettings {
     port: number;
     user: string;
     password: string;
-    name: string;
+    database: string;
 }
 
 /** The three types of databases in TrinityCore. */
@@ -76,7 +76,7 @@ export function databaseSettings(database: DatabaseType, nameSuffix?: string): D
      ,  user
      , password
      , port: typeof(port) === 'number' ? port : parseInt(port, 10)
-     , name: `${prefix}_${database}${nameSuffix?`_${nameSuffix}`:''}`};
+     , database: `${prefix}_${database}${nameSuffix?`_${nameSuffix}`:''}`};
 }
 
 export class YamlFile {

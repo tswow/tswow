@@ -179,7 +179,7 @@ export namespace Datasets {
 
         async dumpReleaseDatabase() {
                 term.log(`Dumping release database`
-                +` ${this.worldDest.cfg.name}`
+                +` ${this.worldDest.cfg.database}`
                 +` to ${ipaths.datasetSqlDump}...`)
 
                 await mysql.rebuildDatabase(
@@ -311,7 +311,6 @@ export namespace Datasets {
             , '...dataset'
             , 'Rebuilds databases'
             , async(args: any[])=>{
-
             await Promise.all(getDatasetsOrDefault(args).map(x=>{
                 return x.installBoth(true);
             }));

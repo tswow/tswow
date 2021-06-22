@@ -29,7 +29,7 @@ export interface DatabaseSettings {
     port: number;
     user: string;
     password: string;
-    name: string;
+    database: string;
 }
 
 function cleanConfigName(configName: string) {
@@ -97,7 +97,7 @@ export function writeYamlToConf(yamlPath: string, configPath: string, extraValue
 
     const configName = path.basename(configPath).replace('.conf','');
 
-    const acs = (dbs: DatabaseSettings) => `"${dbs.host};${dbs.port};${dbs.user};${dbs.password};${dbs.name}"`;
+    const acs = (dbs: DatabaseSettings) => `"${dbs.host};${dbs.port};${dbs.user};${dbs.password};${dbs.database}"`;
     if (configName === 'worldserver') {
         file[settings['logindatabaseinfo'].line] 
             = `LoginDatabaseInfo = ${acs(databaseSettings('auth',database_prefixes['auth']))}`;
