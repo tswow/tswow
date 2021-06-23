@@ -315,10 +315,12 @@ export namespace mysql {
 
         let files : string[] = [];
         wfs.iterate(ipaths.sqlUpdateDir(type),(fp)=>{
+            if(!fp.endsWith('.sql')) return;
             files.push(fp);
         });
 
         wfs.iterate(ipaths.sqlCustomUpdateDir(type),(fp)=>{
+            if(!fp.endsWith('.sql')) return;
             files.push(fp);
         })
 

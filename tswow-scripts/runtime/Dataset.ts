@@ -196,8 +196,8 @@ export namespace Datasets {
             if(force || !await mysql.isWorldInstalled([db])) {
                 const tdb = await mysql.extractTdb();
                 await mysql.rebuildDatabase(db,tdb);
-                await mysql.applySQLFiles(db,'world');
             }
+            await mysql.applySQLFiles(db,'world');
         }
 
         async installSource(force: boolean) {
