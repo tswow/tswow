@@ -106,18 +106,6 @@ export class Class extends MainEntity<ChrClassesRow> {
                 .filter({class: cls, race: oldRace})
                 .forEach(x=>x.clone(raceid,this.ID,x.level.get()));
 
-            // Copy all RCI's from the parent class/race pair (or class/default race)
-            rci.filter(x=>x.RaceMask.get()&(1<<(oldRace)))
-                .forEach(x=>{
-                    if(x.ClassMask.get()!==0xffffffff) {
-                        x.ClassMask.mark(this.ID-1);
-                    }
-
-                    if(x.RaceMask.get()!==0xffffffff) {
-                        x.RaceMask.mark(raceid-1);
-                    }
-                })
-
             DBC.CharStartOutfit
                 .filter({ClassID: cls, RaceID: oldRace})
                 .forEach(x=>x.clone(Ids.CharStartOutfit.id())
