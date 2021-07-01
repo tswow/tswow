@@ -57,8 +57,8 @@ try {
     child_process.execSync(
         `node -r source-map-support/register`
         + ` ../../bin/scripts/transpiler/main.js tsconfig.json`
-        + (process.argv.includes('--trace')?' --trace':'')
-        + (process.argv.includes('--allow-globals')?' --allow-globals':'')
+        + (process.argv.includes('--silent')?' --silent':'')
+        + (process.argv.includes('--no-globals')?' --no-globals':'')
         , {stdio: 'inherit'}
     );
 } catch(error) {
@@ -151,9 +151,9 @@ const cmake_generate =
     + ` -B modules/${buildModule}/livescripts/build/lib`;
 try {
     terminal.cyan(`Generating CMake project...`)
-    child_process.execSync(cmake_generate, {stdio: process.argv.includes('--trace')?'inherit':'ignore'});
+    child_process.execSync(cmake_generate, {stdio: !process.argv.includes('--silent')?'inherit':'ignore'});
 } catch(err) {
-    terminal.error(`Failed to generate CMake files, please run the command with --trace and report this error`);
+    terminal.error(`Failed to generate CMake files, please report this error`);
 }
 const cmake_build =
     (isWindows()
@@ -166,10 +166,10 @@ try {
     terminal.cyan(`Compiling C++ binary...`)
     child_process.execSync(cmake_build, 
         {
-            stdio: process.argv.includes('--trace') ? 'inherit' : 'ignore'
+            stdio: !process.argv.includes('--silent') ? 'inherit' : 'ignore'
         });
 } catch (error) {
-    terminal.error(`Failed to compile library, please run the command with --trace and report this error`);
+    terminal.error(`Failed to compile library, please report this error`);
 }
 
 const finTime = Date.now() - startTime;

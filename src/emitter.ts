@@ -1689,13 +1689,13 @@ export class Emitter {
             const type = this.resolver.getTypeAtLocation(firstInitializer);
             if(    !autoAllowed 
                 && !declarationList.getText().startsWith('const')
-                && !process.argv.includes('--allow-globals')
+                && process.argv.includes('--no-globals')
               ) {
                 this.error(`Non-const variable outside of function -> ${declarationList.getText()}`,declarationList);
             }
             if(    !autoAllowed 
                 && !type.isLiteral()
-                && !process.argv.includes('--allow-globals')
+                && process.argv.includes('--no-globals')
               ) {
                 this.error(`Non-literal variable outside of function -> ${declarationList.getText()}`,declarationList);
             }

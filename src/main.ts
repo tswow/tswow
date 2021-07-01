@@ -10,7 +10,7 @@ try {
     if (e.message.indexOf(`Could not find a valid 'tsconfig.json'`) !== -1) {
         print();
     } else {
-        if(process.argv.includes('--trace')) {
+        if(!process.argv.includes('--silent')) {
             terminal.error(e.stack);
         } else {
             terminal.error(e.message);
