@@ -69,9 +69,9 @@ async function compile(type: string, compileArgs: string[]) {
         await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs.concat(['dynamic']));
         await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs.concat(['dynamic']));
     } else {
-        if (isType('trinitycore-release')) { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
+        if (type == 'trinitycore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
         if (isType('trinitycore') || isType('trinitycore-relwithdebinfo')) { await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
-        if (isType('trinitycore-debug') && isWindows()) { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
+        if (type == 'trinitycore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
     }
 
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
