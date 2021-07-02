@@ -10,6 +10,7 @@ import { generateStringify } from './tswow-stringify';
 import { handlePacketClass } from './tswow-packet';
 import { handleTSWoWOverride } from './tswow-override';
 
+let mainFile: string = undefined;
 export class Emitter {
     public writer: CodeWriter;
     preprocessor: Preprocessor;
@@ -2288,7 +2289,14 @@ export class Emitter {
         node: ts.FunctionExpression | ts.ArrowFunction | ts.FunctionDeclaration | ts.MethodDeclaration
             | ts.ConstructorDeclaration | ts.GetAccessorDeclaration | ts.SetAccessorDeclaration,
         implementationMode?: boolean): boolean {
-        if ( this.isHeader() && node.name && node.name.getFullText().replace(' ', '') === 'Main') {
+        if ( this.isHeader() && node.name && node.name.getText() === 'Main') {
+            // we're checking if we're somehow trying to write main into two header files.
+            let filename = node.getSourceFile().fileName;
+            if(mainFile !== undefined) {
+                throw new Error(`"Main" function found in both ${mainFile} and ${filename}, you can only have one function called "Main"`);
+            }
+            mainFile = filename;
+
             if ( node.typeParameters && node.typeParameters.length > 0) {
                 throw new Error('"Main" function cannot have type parameters!');
             }
