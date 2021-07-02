@@ -112,7 +112,7 @@ function findCpp(rootDir: string, dir: string) {
 const itms = findCpp(path.join(modulePath, './livescripts/build/cpp'), '');
 
 fs.writeFileSync(path.join(modulePath, 'livescripts/build/cpp/CMakeLists.txt'),
-`cmake_minimum_required(VERSION 3.16)
+`cmake_minimum_required(VERSION 3.12)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
