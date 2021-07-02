@@ -168,7 +168,7 @@ export namespace commands {
 
     const rootCommand = new Command('', '', '');
 
-    export let trace = false;
+    export let trace = process.argv.includes('trace');
 
     export function getRootCommand() {
         return rootCommand;
