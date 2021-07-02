@@ -2,6 +2,7 @@
 
 #include <string>
 #include <algorithm>
+#include <iostream>
 
 #define JSTR(quote) TSString(quote)
 
