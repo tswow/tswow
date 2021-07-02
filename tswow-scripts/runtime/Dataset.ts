@@ -38,11 +38,14 @@ export namespace Datasets {
         }
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
         get client_path() { 
-            let val = this.get<string>('client_path',''); 
-            // use the one in node.yaml if this one is empty
-            if(val.length === 0) {
+            let val: string;
+            try {
+                val = this.get<string>('client_path','');
+                if(val.length === 0) { throw ""; }
+            } catch(err) {
                 val = NodeConfig.client_path;
             }
+            // use the one in node.yaml if this one is empty
 
             if(val.includes(' ')) {
                 throw new Error(
