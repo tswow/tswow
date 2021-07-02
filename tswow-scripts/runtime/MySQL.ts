@@ -204,7 +204,23 @@ export namespace mysql {
                 `--datadir=${wfs.absPath(ipaths.databaseDir)}`
             ]);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
-        await mysqlprocess.waitFor('Execution of init_file*ended.', true);
+        let val = await Promise.race([
+            mysqlprocess.waitFor('Execution of init_file*ended.', true),
+            mysqlprocess.waitFor('Can\'t start server', true),
+        ]);
+        if(val.includes('Can\'t start server')) {
+            if(val.includes('Bind on TCP/IP')) {
+                term.error(
+                      `Failed to start MySQL: You already have an instance of MySQL running on this port.\n`
+                    + `Try changing your port setting under database_all in node.yaml\n`
+                    + `or shut down your existing MySQL instance.\n`
+                    )
+            } else {
+                term.error(`Failed to start MySQL with the following error (see log ): ${val}`)
+            }
+            // easier for newbies to not get the spam output
+            process.exit(0);
+        }
         wfs.remove(ipaths.mysqlStartup);
         term.success('Mysql process started');
     }

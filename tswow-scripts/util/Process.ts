@@ -84,13 +84,13 @@ export class Process {
             ++id;
         }
 
-        return new Promise<void>((res) => {
+        return new Promise<string>((res) => {
             this.waiters[id] = (message) => {
                 for (const matchedString of matches) {
                     if (!message.includes(matchedString)) { return; }
                 }
                 delete this.waiters[id];
-                res();
+                res(message);
             };
         });
     }
