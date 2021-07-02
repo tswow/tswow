@@ -4,7 +4,7 @@ export function datasetYaml(id: string) {
 use_mmaps: false
 
 # The client directory to use for development with this dataset
-client_path: ""
+client_path: c:\\path\\to\\my\\client
 
 # What modules this dataset uses
 modules: 

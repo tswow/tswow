@@ -11,6 +11,10 @@ export class NodeConfiguration extends YamlFile {
         return this.get('default_realm','tswow');
     }
 
+    get client_path() {
+        return this.get('client_path','');
+    }
+
     get default_dataset() {
         return this.get('default_dataset','default');
     }

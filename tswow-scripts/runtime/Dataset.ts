@@ -39,12 +39,16 @@ export namespace Datasets {
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
         get client_path() { 
             let val = this.get<string>('client_path',''); 
+            // use the one in node.yaml if this one is empty
+            if(val.length === 0) {
+                val = NodeConfig.client_path;
+            }
 
             if(val.includes(' ')) {
                 throw new Error(
-                     `The client path for dataset ${this.set.id}`
-                    +` contains spaces somewhere in its pathname`
-                    +`, please move it somewhere without spaces.`
+                      `The client path for dataset ${this.set.id}`
+                    + ` contains spaces somewhere in its pathname`
+                    + `, please move it somewhere without spaces.`
                 )
             }
 

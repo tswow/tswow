@@ -40,19 +40,35 @@ export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): 
     if(!Array.isArray(fpath)) {
         fpath = [fpath];
     }
-    let cur: any = jsyaml.safeLoad(wfs.readOr(path, '')) || {};
-    for (const part of fpath) {
-        if (cur[part] === undefined) {
-            return defaultValue;
+
+    try {
+        let cur: any = jsyaml.safeLoad(wfs.readOr(path, '')) || {};
+        for (const part of fpath) {
+            if (cur[part] === undefined) {
+                return defaultValue;
+            }
+            cur = cur[part];
         }
-        cur = cur[part];
-    }
 
-    if(defaultValue !== undefined && typeof cur != typeof defaultValue) {
-        throw new Error(`Invalid type in yaml: Got ${typeof(cur)} but expected ${typeof(defaultValue)}`)
-    }
+        if(defaultValue !== undefined && typeof cur != typeof defaultValue) {
+            throw new Error(`Invalid type in yaml: Got ${typeof(cur)} but expected ${typeof(defaultValue)}`)
+        }
 
-    return cur as T;
+        return cur as T;
+    } catch(err) {
+        if(err.message.includes("unknown escape sequence")) {
+            throw new Error(
+                  `Yaml file ${path} is broken, `
+                + `you've likely used a setting with double quotes and single backslashes: \n\n`
+                + `Example:\n`
+                + `client_path = a\\b\\c\\d      <-- valid\n`
+                + `client_path = "a\\\\b\\\\c\\\\d" <-- valid\n`
+                + `client_path = "a\\b\\c\\d"    <-- INVALID\n` 
+                )
+        } else {
+            throw err;
+        }
+    }
 }
 
 /**

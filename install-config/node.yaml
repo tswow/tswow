@@ -17,6 +17,9 @@ default_realm:
 default_dataset:
   default
 
+# The path to your client (use datasets instead if you need multiple client targets)
+client_path: c:\path\to\my\client
+
 # - Specify what database this node should use to connect
 # (replace with database_auth, database_characters, database_world 
 #  if you need separate configurations)
