@@ -63,7 +63,7 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
         return this.cachedFirst;
     }
 
-    filter(where: Q) {
+    filter(where: Q): R[] {
         return this.filterInt(where, false);
     }
 
