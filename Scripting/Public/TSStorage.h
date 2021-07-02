@@ -21,6 +21,7 @@
 #include <memory>
 #include <cstdint>
 #include <functional>
+#include <set>
 #include "TSString.h"
 
 #define GetDBObject GetObject
@@ -41,14 +42,39 @@ struct TC_GAME_API TSStorageContainer {
     }
 };
 
+class TSWorldObject;
+struct TC_GAME_API TSObjectGroup {
+    std::set<TSWorldObject> entries;
+
+    ~TSObjectGroup();
+    TSObjectGroup * operator->() { return this; }
+
+    void add(TSWorldObject obj);
+    void remove(TSWorldObject obj);
+    void RemovedByObject(TSWorldObject obj);
+    void clear();
+
+    std::set<TSWorldObject>::iterator begin();
+    std::set<TSWorldObject>::iterator end();
+    uint32 size();
+
+    void forEach(std::function<void(TSWorldObject)> callback);
+    void filterInPlace(std::function<bool(TSWorldObject)> callback);
+};
+
 struct TC_GAME_API TSStorage {
     std::map<std::string, TSStorageContainer> map;
     std::map<std::string, int32_t> ints;
     std::map<std::string, uint32_t> uints;
     std::map<std::string, std::string> strings;
     std::map<std::string, double> floats;
+    std::map<std::string, TSObjectGroup> groups;
 
     TSStorage* operator->(){return this;}
+
+    TSObjectGroup* GetGroup(TSString key);
+    void RemoveGroup(TSString key);
+    void ClearGroups();
 
     template <typename T>
     std::shared_ptr<T> SetObject(uint32_t modid, TSString key, std::shared_ptr<T> item)

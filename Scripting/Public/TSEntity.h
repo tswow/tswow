@@ -40,6 +40,8 @@
     double SetFloat(TSString key, double value);                                                                           \
     bool HasFloat(TSString key);                                                                                           \
     double GetFloat(TSString key, double def = 0);                                                                         \
+    TSObjectGroup * GetObjectGroup(TSString key);                                                                                \
+    void RemoveObjectGroup(TSString key);                                                                                        \
 
 #define TS_ENTITY_TIMER_DECL(CLS) \
     void RemoveTimer(TSString name);                                                                                       \
@@ -61,6 +63,8 @@
     double CLS::SetFloat(TSString key, double value) { return GetData()->SetFloat(key, value); };                                                                                          \
     bool CLS::HasFloat(TSString key) { return GetData()->HasFloat(key); };                                                                                                                 \
     double CLS::GetFloat(TSString key, double def) { return GetData()->GetFloat(key, def); };                                                                                              \
+    TSObjectGroup * CLS::GetObjectGroup(TSString key) { return GetData()->GetGroup(key); };                                                                                                      \
+    void CLS::RemoveObjectGroup(TSString key) { return GetData()->RemoveGroup(key); };                                                                                                           \
 
 #define TS_ENTITY_TIMER_IMPL(CLS) \
     void CLS::AddTimer(uint32_t modid, TSString name, uint32_t time, uint32_t repeats, TimerCallback(CLS) callback) { return GetTasks()->AddTimer(modid, name, time, repeats, callback); } \

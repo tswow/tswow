@@ -1886,6 +1886,18 @@ declare class StorageClass {
     SetString(key: string, value: string): string;
     HasString(key: string): boolean;
     GetString(key: string, def?: string): string;    
+
+    GetObjectGroup(key: string): TSObjectGroup;
+    RemoveObjectGroup(key: string): void;
+}
+
+declare class TSObjectGroup {
+    add(obj: TSWorldObject): void;
+    remove(obj: TSWorldObject): void;
+    clear();
+    size(): uint32
+    forEach(callback: (obj: TSWorldObject)=>void): void;
+    filterInPlace(callback: (obj: TSWorldObject)=>bool): void;
 }
 
 declare class TSGameObjectTemplate extends StorageClass {
@@ -3349,6 +3361,21 @@ declare class TSMap extends StorageClass {
     AddTimer(name: string, time: uint32, repeats: uint32, callback: TimerCallback<TSMap>)
     RemoveTimer(name: string);
 
+    GetUnits(): TSArray<TSWorldObject>
+    /**
+     * @param entry only return gameobjects of this entry. 
+     * Leave out to select all gameobjects.
+     */
+    GetGameObjects(entry?: uint32): TSArray<TSGameObject>
+
+    /**
+     * @param entry only return creatures of this entry. 
+     * Leave out to select all creatures.
+     */
+    GetCreatures(entry?: uint32): TSArray<TSCreature>
+    GetCreatureByDBGUID(dbguid: uint32): TSCreature;
+    GetGameObjectByDBGUID(dbguid: uint32): TSGameObject;
+
     /**
      * Returns `true` if the [Map] is an arena [BattleGround], `false` otherwise.
      *
@@ -4363,6 +4390,8 @@ declare class TSWorldObject extends TSObject {
     GetString(key: string, def?: string): string;
 
     GetData(): TSStorage;
+    GetObjectGroup(key: string): TSObjectGroup
+    RemoveObjectGroup(key: string): void;
 
     GetTasks(): TSTasks<TSWorldObject>
 
@@ -6880,7 +6909,6 @@ declare namespace _hidden {
 declare class TSEventHandlers {
     World: _hidden.World;
     Formula: _hidden.Formula;
-    Unit: _hidden.Unit;
     Addon: _hidden.Addon;
     //AreaTrigger: _hidden.AreaTrigger;
     //Vehicle: _hidden.Vehicle;

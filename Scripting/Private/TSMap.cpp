@@ -27,6 +27,9 @@
 #include "TSMap.h"
 #include "TSPlayer.h"
 #include "TSWorldObject.h"
+#include "TSGameObject.h"
+#include "TSUnit.h"
+#include "TSCreature.h"
 
 TSMap::TSMap(Map *map)
 {
@@ -295,6 +298,7 @@ TSArray<TSPlayer> TSMap::GetPlayers(uint32 team)
     TSArray<TSPlayer> tbl;
     
     Map::PlayerList const& players = map->GetPlayers();
+    tbl.vec->reserve(players.getSize());
     for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
     {
 #if defined TRINITY || AZEROTHCORE
@@ -324,4 +328,65 @@ TSTasks<TSMap> TSMap::GetTasks()
 TSStorage * TSMap::GetData()
 {
     return &map->storage;
+}
+
+TSArray<TSUnit> TSMap::GetUnits()
+{
+    TSArray<TSUnit> units;
+    auto const& players = map->GetPlayers();
+    auto const& creatures = map->GetCreatureBySpawnIdStore();
+    units.vec->reserve(players.getSize() + creatures.size());
+    for (auto& player : players)
+    {
+        units.push(TSUnit(player.GetSource()));
+    }
+    for (auto& creature : creatures)
+    {
+        units.push(TSUnit(creature.second));
+    }
+    return units;
+}
+
+TSArray<TSGameObject> TSMap::GetGameObjects(uint32 entry)
+{
+    TSArray<TSGameObject> gameobjects;
+    if (entry == 0)
+    {
+        gameobjects.vec->reserve(map->GetGameObjectBySpawnIdStore().size());
+    }
+    for (auto& val : map->GetGameObjectBySpawnIdStore())
+    {
+        if (entry == 0 || val.second->GetEntry() == entry)
+        {
+            gameobjects.push(TSGameObject(val.second));
+        }
+    }
+    return gameobjects;
+}
+
+TSArray<TSCreature> TSMap::GetCreatures(uint32 entry)
+{
+    TSArray<TSCreature> creatures;
+    if (entry == 0)
+    {
+        creatures.vec->reserve(map->GetCreatureBySpawnIdStore().size());
+    }
+    for (auto& val : map->GetCreatureBySpawnIdStore())
+    {
+        if (entry == 0 || val.second->GetEntry() == entry)
+        {
+            creatures.push(TSCreature(val.second));
+        }
+    }
+    return creatures;
+}
+
+TSCreature TSMap::GetCreatureByDBGUID(uint32 dbGuid)
+{
+    return TSCreature(map->GetCreatureBySpawnId(dbGuid));
+}
+
+TSGameObject TSMap::GetGameObjectByDBGUID(uint32 dbGuid)
+{
+    return TSGameObject(map->GetGameObjectBySpawnId(dbGuid));
 }

@@ -43,7 +43,13 @@ public:
     uint32 GetInstanceId();
     uint32 GetPlayerCount();
     uint32 GetMapId();
-    TSArray<TSPlayer> GetPlayers(uint32 team);
+    TSArray<TSPlayer> GetPlayers(uint32 team = 2);
+    TSArray<TSUnit> GetUnits();
+    TSArray<TSGameObject> GetGameObjects(uint32 entry = 0);
+    TSArray<TSCreature> GetCreatures(uint32 entry = 0);
+    TSCreature GetCreatureByDBGUID(uint32 dbguid);
+    TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
+
     uint32 GetAreaId(float x, float y, float z, float phasemask);
     TSWorldObject  GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);

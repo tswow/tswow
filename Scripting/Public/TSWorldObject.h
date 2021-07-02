@@ -30,6 +30,7 @@
 
 struct TSCollisions;
 struct TSCollisionEntry;
+struct TSStorage;
 
 #define CollisionCallback std::function<void(TSCollisionEntry*,TSWorldObject,TSWorldObject,TSMutable<uint32_t>)>
 
@@ -39,6 +40,7 @@ public:
     TSWorldObject();
     TSWorldObject(WorldObject* obj);
     bool IsNull() { return obj == nullptr; };
+    bool operator< (const TSWorldObject&) const;
     TSWorldObject* operator->() { return this;}
     TSArray<TSCreature> GetCreaturesInRange(float range, uint32 entry, uint32 hostile, uint32 dead);
     TSArray<TSPlayer> GetPlayersInRange(float range, uint32 hostile, uint32 dead);
@@ -108,6 +110,9 @@ public:
     TSCollisionEntry * GetCollision(TSString id);
 
     TSCollisions* GetCollisions();
+
+    void AddedByGroup(TSObjectGroup* group);
+    void RemovedByGroup(TSObjectGroup* group);
 };
 
 class TC_GAME_API TSCollisionEntry {

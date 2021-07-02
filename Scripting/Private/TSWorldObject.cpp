@@ -34,6 +34,7 @@
 #include "GridNotifiersImpl.h"
 #include "ObjectGuid.h"
 #include "TSCorpse.h"
+#include "TSStorage.h"
 
 TSWorldObject::TSWorldObject(WorldObject *obj) : TSObject(obj)
 {
@@ -854,6 +855,16 @@ TSStorage* TSWorldObject::GetData()
     return &obj->storage;
 }
 
+void TSWorldObject::RemovedByGroup(TSObjectGroup * group)
+{
+    obj->groups.erase(group);
+}
+
+void TSWorldObject::AddedByGroup(TSObjectGroup* group)
+{
+    obj->groups.insert(group);
+}
+
 TSCollisions* TSWorldObject::GetCollisions()
 {
     return &obj->collisions;
@@ -995,4 +1006,8 @@ void TSCollisions::Tick(TSWorldObject obj)
             ++iter;
         }
     }
+}
+
+bool TSWorldObject::operator< (const TSWorldObject& e) const {
+    return obj < e.obj;
 }
