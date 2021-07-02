@@ -4292,19 +4292,19 @@ declare class TSStorage {
 
     SetInt(key: string, value: int32): int32;
     HasInt(key: string): boolean;
-    GetInt(key: string): int32;
+    GetInt(key: string, def?: int32): int32;
 
     SetUInt(key: string, value: uint32): uint32;
     HasUInt(key: string): boolean;
-    GetUInt(key: string): uint32;
+    GetUInt(key: string, def?: uint32): uint32;
 
     SetFloat(key: string, value: double): double;
     HasFloat(key: string): boolean;
-    GetFloat(key: string): double;
+    GetFloat(key: string, def?: float): double;
 
     SetString(key: string, value: string): string;
     HasString(key: string): boolean;
-    GetString(key: string): string;
+    GetString(key: string, def?: string): string;
 }
 
 declare class TSCollisionEntry {
@@ -4348,19 +4348,19 @@ declare class TSWorldObject extends TSObject {
 
     SetInt(key: string, value: int32): int32;
     HasInt(key: string): boolean;
-    GetInt(key: string): int32;
+    GetInt(key: string, def?: int32): int32;
 
     SetUInt(key: string, value: uint32): uint32;
     HasUInt(key: string): boolean;
-    GetUInt(key: string): uint32;
+    GetUInt(key: string, def?: uint32): uint32;
 
     SetFloat(key: string, value: double): double;
     HasFloat(key: string): boolean;
-    GetFloat(key: string): double;
+    GetFloat(key: string, def?: float): double;
 
     SetString(key: string, value: string): string;
     HasString(key: string): boolean;
-    GetString(key: string): string;
+    GetString(key: string, def?: string): string;
 
     GetData(): TSStorage;
 
