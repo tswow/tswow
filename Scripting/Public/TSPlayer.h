@@ -180,6 +180,7 @@ public:
 	void SendTaxiMenu(TSCreature creature);
 	void SendCreatureQueryPacket(uint32 entry);
 	void SendGameObjectQueryPacket(uint32 entry);
+	void SendItemQueryPacket(uint32 entry);
 	void SendSpiritResurrect();
 	void SendTabardVendorActivate(TSWorldObject obj);
 	void SendShowBank(TSWorldObject obj);
