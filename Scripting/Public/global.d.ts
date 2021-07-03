@@ -1180,12 +1180,19 @@ declare class TSPlayer extends TSUnit {
      */
     SendCreatureQueryPacket(entry : number) : void
 	
-	    /**
+    /**
      * Sends a [GameObject] cache packet to the [Player] from the [GameObject] entry specified
      *
      * @param [Number] entry
      */
     SendGameObjectQueryPacket(entry : number) : void
+    
+    /**
+     * Sends a [Item] cache packet to the [Player] from the [Item] entry specified
+     *
+     * @param [Number] entry
+     */
+    SendItemQueryPacket(entry : number) : void
     
     /**
      * Sends a spirit resurrection request to the [Player]
