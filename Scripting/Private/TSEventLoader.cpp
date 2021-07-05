@@ -329,12 +329,12 @@ MessageHandle<void>* GetMessage(uint16_t opcode)
 const std::string TSWOW_ITEM_PREFIX = "tswow_item:";
 const std::string TSWOW_CREATURE_PREFIX = "tswow_creature:";
 
-bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msg)
+bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msgIn)
 {
-    if(msg.size()<2) return false;
-    msg = msg.substr(1);
+    if(msgIn.size()<2) return false;
+    std::string msg = msgIn.substr(1);
 
-    if(player != receiver || !player->IsGameMaster()) {
+    if(player != receiver || !player->CanBeGameMaster()) {
         return false;
     }
 
