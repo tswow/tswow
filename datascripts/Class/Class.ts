@@ -171,10 +171,12 @@ export const Classes = {
     create : (mod : string, clsId : string, parentClass: ClassType) => {
         for(let i=0;i<clsId.length;++i) {
             let cc = clsId.charCodeAt(i);
-            if(cc<97|| cc > 122) throw new Error(
-                `Non ascii character in class id ${clsId}`
-                + ` at pos ${i}`
-                + ` (${clsId.charAt(i)})`);
+            if(!(cc>=97&&cc<=122) && !(cc>=48 && cc<=57) && !(cc>=65&&cc<=90)) {
+                throw new Error(
+                    `Non ascii character in class id ${clsId}`
+                    + ` at pos ${i}`
+                    + ` (${clsId.charAt(i)})`);
+            }
         }
 
         let identifier = clsId.toUpperCase();
@@ -269,7 +271,7 @@ export const Classes = {
 
         gs.after(552,`${identifier}_DISABLED = "${identifier}\\nYou must choose a difference race to be this class.";`);
 
-        return new Class(
+        let cls = new Class(
             parent,
             rParent.clone(id,{Filename:identifier}),
             tCoordsCC,
@@ -281,5 +283,13 @@ export const Classes = {
             femaleDesc,
             []
         );
+
+        // Set up first classes automatically
+        if(cls.ID == 13) cls.UI.ClassButton.setPos(-46,-420)
+        if(cls.ID == 14) cls.UI.ClassButton.setPos(-0,-420)
+        if(cls.ID == 15) cls.UI.ClassButton.setPos(42,-420)
+        if(cls.ID == 16) cls.UI.ClassButton.setPos(85,-420)
+
+        return cls;
     }
 }
