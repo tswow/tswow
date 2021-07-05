@@ -24,6 +24,8 @@
 #include "TSUnit.h"
 #include "base64.h"
 
+class TSJsonObject;
+class TSJsonArray;
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit {
 public:
@@ -282,6 +284,8 @@ public:
 		std::string outstr((char*)b85arr,b85len);
 		SendAddonMessage(JSTR(""),TSString(outstr),7,*this);
 	}
+
+	void SendLongAddonMessage(unsigned short channel, TSString str);
 
 	TSArray<TSMail> GetMails();
 	void RemoveMail(uint32 id);

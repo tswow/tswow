@@ -41,6 +41,7 @@
 #include "Trainer.h"
 #include "DBCStructure.h"
 
+#include "TSJson.h"
 #include "TSUnit.h"
 #include "TSItem.h"
 #include "TSGroup.h"
@@ -3749,6 +3750,11 @@ void TSPlayer::LearnClassSpells(bool trainer, bool quests)
                 player->LearnQuestRewardedSpells(&quest);
         }
     }
+}
+
+void TSPlayer::SendLongAddonMessage(unsigned short channel, TSString str)
+{
+    player->m_message_buffer.sendMessage(channel, str);
 }
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)

@@ -47,6 +47,7 @@
 #include "MapManager.h"
 #include "base64.h"
 #include "Config.h"
+#include "TSMessageBuffer.h"
 
 #include <fstream>
 #include <map>
@@ -383,8 +384,12 @@ bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msg)
 bool handleAddonNetworkMessage(Player* player,uint32 type,uint32 lang,std::string& msg,Player* receiver)
 {
     if(player!=receiver) {
-        TC_LOG_DEBUG("tswow.addonmessage","AddOnMessage: Sender is not the receiver");
         return false;
+    }
+
+    if(player->m_message_buffer.receiveFragment(msg.size(),msg.c_str()))
+    {
+        return true;
     }
 
     char * carr = const_cast<char*>(msg.c_str());
@@ -396,14 +401,12 @@ bool handleAddonNetworkMessage(Player* player,uint32 type,uint32 lang,std::strin
     }
 
     if((msg.size()-offset)<=4) {
-        TC_LOG_DEBUG("tswow.addonmessage","AddOnMessage: Message is too small");
         return false;
     }
 
     auto preDecodeHeader = ((uint32_t*)(carr+offset))[0];
     if(preDecodeHeader != 0x50414753)
     {
-        TC_LOG_DEBUG("tswow.addonmessage","AddOnMessage: Incorrect header (before decode) %x (expected 0x50414753)",preDecodeHeader);
         return false;
     }
 
@@ -451,4 +454,5 @@ void TSInitializeEvents()
     new TSWorldUpdater();
     TSLoadEvents();
     LoadIDs();
+    InitializeMessages();
 };

@@ -28,10 +28,13 @@
 #include "TSAuction.h"
 #include "TSDamageInfo.h"
 #include "BinReader.h"
+#include "TSJson.h"
 #include <cstdint>
 
 // Addon
 EVENT_TYPE(AddonOnMessage,BinReader<uint8>)
+EVENT_TYPE(AddonOnLongMessage,TSPlayer,uint16,TSString)
+EVENT_TYPE(AddonOnLongMessageError,TSPlayer,uint8)
 
 // WorldScript
 EVENT_TYPE(WorldOnOpenStateChange,bool)
@@ -458,6 +461,8 @@ struct TSEvents
 {
     // AddonScript
     EVENT(AddonOnMessage)
+    EVENT(AddonOnLongMessage)
+    EVENT(AddonOnLongMessageError)
 
     // WorldScript
     EVENT(WorldOnOpenStateChange)
@@ -1135,6 +1140,8 @@ public:
     struct AddonEvents: public EventHandler {
          AddonEvents* operator->(){return this;}
          EVENT_HANDLE(Addon,OnMessage)
+         EVENT_HANDLE(Addon,OnLongMessage)
+         EVENT_HANDLE(Addon,OnLongMessageError)
 
          template <typename T>
          void _OnMessageID(uint16_t opcode, void (*func)(TSPlayer,std::shared_ptr<T>))

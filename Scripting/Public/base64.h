@@ -43,8 +43,8 @@ extern "C" {
     void cbase64_init_encodestate(cbase64_encodestate* state_in);
     void cbase64_init_decodestate(cbase64_decodestate* state_in);
 
-    unsigned int cbase64_calc_encoded_length(unsigned int length_in);
-    unsigned int cbase64_calc_decoded_length(const char* code_in, unsigned int length_in);
+    TC_GAME_API unsigned int cbase64_calc_encoded_length(unsigned int length_in);
+    TC_GAME_API unsigned int cbase64_calc_decoded_length(const char* code_in, unsigned int length_in);
 
     unsigned int cbase64_encode_block(const unsigned char* data_in, unsigned int length_in,
         char* code_out, cbase64_encodestate* state_in);
@@ -54,9 +54,9 @@ extern "C" {
 
     unsigned int cbase64_encode_blockend(char* code_out, cbase64_encodestate* state_in);
 
-    TC_GAME_API uint8_t encodeBase64(uint8_t* in, uint8_t in_length, uint8_t* out);
+    TC_GAME_API unsigned encodeBase64(uint8_t* in, unsigned in_length, uint8_t* out);
 
-    TC_GAME_API uint8_t decodeBase64(uint8_t* in, uint8_t in_length, uint8_t* out);
+    TC_GAME_API unsigned decodeBase64(uint8_t* in, unsigned in_length, uint8_t* out);
 
 #ifdef __cplusplus
 }
@@ -66,9 +66,9 @@ extern "C" {
 
 #ifdef CBASE64_IMPLEMENTATION
 
-uint8_t encodeBase64(uint8_t* in, uint8_t in_length, uint8_t* out)
+unsigned encodeBase64(uint8_t* in, unsigned in_length, uint8_t* out)
 {
-    uint8_t out_length = cbase64_calc_encoded_length(in_length);
+    unsigned out_length = cbase64_calc_encoded_length(in_length);
     cbase64_encodestate encodeState;
     cbase64_init_encodestate(&encodeState);
     uint8_t* outEnd = out;
@@ -77,9 +77,9 @@ uint8_t encodeBase64(uint8_t* in, uint8_t in_length, uint8_t* out)
     return outEnd - out;
 }
 
-uint8_t decodeBase64(uint8_t* in, uint8_t in_length, uint8_t* out)
+unsigned decodeBase64(uint8_t* in, unsigned in_length, uint8_t* out)
 {
-    uint8_t out_length = cbase64_calc_decoded_length((const char*)in,in_length);
+    unsigned out_length = cbase64_calc_decoded_length((const char*)in,in_length);
     cbase64_decodestate decodeState;
     cbase64_init_decodestate(&decodeState);
     uint8_t* outEnd = out;
