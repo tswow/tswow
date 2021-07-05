@@ -21,6 +21,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { InventoryType } from "../Item/ItemInventoryType";
 import { Class } from "./Class";
+import { ALL_RACES, RaceType, resolveRaceType } from "../Race/RaceType";
 
 export type Gender = 'Male'|'Female';
 
@@ -120,10 +121,10 @@ export class OutfitPart extends CellSystem<Class> {
         return this.owner;
     }
 
-    clear(genders: Gender[] = ['Male','Female'], races: number[] = []) {
+    clear(genders: Gender[] = ['Male','Female'], races: RaceType[] = ALL_RACES) {
         for(const gender of genders) {
             for(const race of races) {
-                const row = this.getRow(gender, race, true);
+                const row = this.getRow(gender, resolveRaceType(race), true);
                 for(let i=0;i<row.InventoryType.length();++i) {
                     for(const type of this.types) {
                         if(row.InventoryType.getIndex(i) === type) {
@@ -159,7 +160,7 @@ export class ClassStartOutfits extends CellSystem<Class> {
     get Trinket() { return this.op([it.TRINKET])}
     get Back() { return this.op([it.BACK])}
     get Tabard() { return this.op([it.TABARD])}
-    get Mainhand() { return this.op([it.MAINHAND,it.TWOHAND])}
+    get Mainhand() { return this.op([it.MAINHAND,it.TWOHAND,it.WEAPON])}
     get Offhand() { return this.op([it.OFFHAND,it.TWOHAND, it.SHIELD])}
     get Ranged() { return this.op([it.RANGED])}
     get Thrown() { return this.op([it.THROWN, it.RANGED, it.WAND_GUN])}
