@@ -80,9 +80,17 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
         emt.writer.writeString(')');
     },
 
+    "TSJsonObject": (emt,node)=>{
+        emt.writer.writeString(`TSJsonObject()`);
+    },
+
+    "TSJsonArray": (emt,node)=>{
+        emt.writer.writeString(`TSJsonArray()`);
+    },
+
     "TSMutex": (emt,node)=>{
         emt.writer.writeString(`TSMutex();`);
-    }
+    },
 }
 
 export function handleTSWoWOverride(emitter: Emitter, node: ts.CallExpression|ts.NewExpression) {
@@ -101,7 +109,7 @@ export function handleTSWoWOverride(emitter: Emitter, node: ts.CallExpression|ts
         if(fsChild.getChildCount()>0) {
             const lsGrandchild = fsChild.getChildAt(fsChild.getChildCount()-1);
             const text = lsGrandchild.getText();
-            if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined) {
+            if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined && text !== 'toString') {
                 TSWOW_OVERRIDE_FUNCTIONS[text](emitter, node);
                 return true;
             }
