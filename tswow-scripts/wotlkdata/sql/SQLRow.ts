@@ -70,6 +70,11 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
     protected generateSql() {
         // @CACHE
         const obj = this.objectify();
+        for(let key in obj) {
+            if(typeof(obj[key]) == 'string') {
+                obj[key] = obj[key].split('\\').join('\\\\').split('"').join('\\"')
+            }
+        }
         return `INSERT INTO ${this.table.name} ` +
         `(${Object.keys(obj).join(',')}) ` +
         `VALUES (${Object.values(obj).map(x => x === null ? 'null' : typeof(x) === 'string' ? `"${x}"` : x)}) ` +
