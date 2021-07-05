@@ -64,8 +64,12 @@ export namespace Addon {
         if(!wfs.exists(ipaths.addonIndex(mod))) {
             wfs.write(ipaths.addonIndex(mod),'console.log("Hello world!");');
         }
-        wfs.copy(ipaths.addonIncludeBinReader,ipaths.addonBinReader(mod));
-        wfs.copy(ipaths.addonIncludeEventsTs,ipaths.addonEventsDest(mod));
+
+        wfs.readDir(ipaths.addonInclude,false)
+            .filter(x=>x.endsWith('.ts') && ! x.endsWith('.d.ts'))
+            .forEach(x=>{
+                wfs.copy(x,mpath(ipaths.addonLib(mod),wfs.basename(x)))
+            });
         wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(mod));
         wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig(mod),null,4));
         wfs.mkDirs(ipaths.moduleShared(mod));

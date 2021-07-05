@@ -691,6 +691,10 @@ export class InstallPaths {
     addonBinReader(mod: string) {
         return mpath(mpath(this.moduleAddons(mod),'lib','BinReader.ts'));
     }
+
+    addonLib(mod: string) {
+        return mpath(this.moduleAddons(mod),'lib');
+    }
     
     addonDouble(mod: string) {
         return mpath(this.addonBuild(mod),'Double.lua');

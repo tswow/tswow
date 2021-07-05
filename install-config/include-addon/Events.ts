@@ -21,11 +21,15 @@
  * SOFTWARE.
  */
 
+import { Messages } from "./AddonMessage";
 import { BinReader } from "./BinReader";
 
 class EventHolder {
     events: {[key: string]: ((...args: any[])=>void)[]} = {}
     messageEvents: {[key: number]: ((...args: any[])=>void)[]} = {}
+
+    registeredAddonMessage = false;
+    registeredBufferedMessage = false;
 
     constructor() {
     }
@@ -55,26 +59,6 @@ export function addEvent(frame: any, name: string, callback: (...args: any[])=>v
     }
     frame.RegisterEvent(name);
     holder.events[name].push(callback);
-}
-
-function buildMessage(value: any) {
-    let bin = new BinReader(value.GetSize()+6);
-    bin.WriteU32(0,1007688);
-    bin.WriteU16(4,value.GetID());
-    value.Write(bin,6);
-    return base64_encode(bin.str)
-}
-
-export function SendToPlayer(player: string, value: any) {
-    SendAddonMessage('',buildMessage(value),'WHISPER',player);
-}
-
-export function SendToChannel(channel: "PARTY"|"RAID"|"GUILD"|"BATTLEGROUND", value: any) {
-    SendAddonMessage('',buildMessage(value),channel);
-}
-
-export function SendToServer(value: any) {
-    SendAddonMessage('',buildMessage(value),'WHISPER',GetUnitName('player',false));
 }
 
 export const Events = {
@@ -223,10 +207,20 @@ export const Events = {
         OnUpdateMultiCastActionbar(frame: WoWAPI.Frame, callback: (...args: any[])=>void) { addEvent(frame,'UPDATE_MULTI_CAST_ACTIONBAR',callback)},
     },
     AddOns: {
+        OnLongMessage(frame: any, listener: (channel: number, msg: string)=>void) {
+            Messages.RegisterListener(listener);
+            if(eventHolders[frame.GetName()] == undefined || !eventHolders[frame.GetName()].registeredBufferedMessage) {
+                addEvent(frame,'CHAT_MSG_ADDON',(prefix,msg: string,type,player)=>{
+                    Messages.receiveFragment(msg);
+                });
+                eventHolders[frame.GetName()].registeredBufferedMessage = true;
+            }
+        },
+
         OnMessage<T>(frame: any, cls: new () => T, handler: (msg: T)=>any) {
             if(
                 eventHolders[frame.GetName()]===undefined || 
-                eventHolders[frame.GetName()].events['CHAT_MSG_ADDON']===undefined) {
+                !eventHolders[frame.GetName()].registeredAddonMessage) {
                 addEvent(frame,'CHAT_MSG_ADDON',(prefix,msg: string,type,player)=>{
                     if(player!==GetUnitName('player',false)) {
                         return;
@@ -284,6 +278,7 @@ export const Events = {
             if(!holder.messageEvents[(cls as any).GetID()]) {
                 holder.messageEvents[(cls as any).GetID()] = []
             }
+            holder.registeredAddonMessage = true;
             holder.messageEvents[(cls as any).GetID()].push(handler);
         },
 

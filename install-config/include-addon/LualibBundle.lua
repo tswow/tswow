@@ -543,6 +543,12 @@ function __TS__ClassExtends(target, base)
     end
 end
 
+-- @tswow-begin missing __TS__Delete
+function __TS__Delete(target, key)
+    table.remove(target,key)
+end
+-- @tswow-end
+
 -- @tswow-begin: disable decorators
 function __TS__Decorate(decorators, target, key, desc)
     return target

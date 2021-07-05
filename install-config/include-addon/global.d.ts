@@ -13883,3 +13883,81 @@ declare function UnitHealthMax(unitId: WoWAPI.UnitId): number;
  * @see https://wow.gamepedia.com/API_UnitInParty
  */
 declare function UnitInParty(unitId: WoWAPI.UnitId): boolean;
+
+// Json
+declare class TSJsonObject {
+    setBool(key: string, value: boolean): this;
+    getBool(key: string, def?: boolean): boolean;
+    hasBool(key: string): boolean;
+
+    setNumber(key: string, value: double): this;
+    getNumber(key: string, def?: double): double;
+    hasNumber(key: string): boolean;
+
+    setString(key: string, value: string): this;
+    getString(key: string, def?: string): string;
+    hasString(key: string): boolean;
+
+    setObject(key: string, value: TSJsonObject): this;
+    getObject(key: string, def?: TSJsonObject): TSJsonObject;
+    hasObject(key: string): boolean;
+
+    setArray(key: string, value: TSJsonArray): this;
+    getArray(key: string, def?: TSJsonArray): TSJsonArray;
+    hasArray(key: string): boolean;
+
+    setNull(key: string): this;
+    hasNull(key: string): bool
+
+    remove(key: string): this;
+    toString(): string;
+    isValid(): boolean
+    get length(): uint32
+}
+
+declare class TSJsonArray {
+    setBool(index: uint32, value: bool): this;
+    getBool(index: uint32, def?: bool): bool;
+    hasBool(index: uint32): bool;
+    insertBool(index: uint32, value: bool): this;
+    pushBool(value: bool): this;
+
+    setNumber(index: uint32, value: double): this;
+    getNumber(index: uint32, def?: double): double;
+    hasNumber(index: uint32): bool;
+    insertNumber(index: uint32, value: double): this;
+    pushNumber(value: double): this;
+
+    setString(index: uint32, value: string): this;
+    getString(index: uint32, def?: string): string;
+    hasString(index: uint32): bool;
+    insertString(index: uint32, value: string): this;
+    pushString(value: string): this;
+
+    setObject(index: uint32, value: TSJsonObject): this;
+    getObject(index: uint32, def?: TSJsonObject): TSJsonObject;
+    hasObject(index: uint32): bool;
+    insertObject(index: uint32, value: TSJsonObject): this;
+    pushObject(value: TSJsonObject): this;
+
+    setArray(index: uint32, value: TSJsonArray): this;
+    getArray(index: uint32, def?: TSJsonArray): TSJsonArray;
+    hasArray(index: uint32): bool;
+    insertArray(index: uint32, value: TSJsonArray): this;
+    pushArray(value: TSJsonArray): this;
+
+    setNull(index: uint32): this;
+    hasNull(index: uint32): bool
+    insertNull(index: uint32): this
+    pushNull(index: uint32): this
+
+    remove(index: uint32): this;
+    toString(): string;
+    isValid(): boolean
+    get length(): uint32;
+}
+
+declare const TSJSON: {
+    parseObject(str: string): TSJsonObject,
+    parseArray(str: string): TSJsonArray,
+}

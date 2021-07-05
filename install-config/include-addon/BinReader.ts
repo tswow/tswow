@@ -48,11 +48,16 @@ function and(a: number, b: number) {
 }
 
 export class BinReader {
-    str: string = "";
+    str: string;
 
-    constructor(size: number)  {
-        for(let i=0;i<size;++i) {
-            this.str+=String.fromCharCode(1);
+    constructor(size: number|string)  {
+        if(typeof(size) == 'string') {
+            this.str = size;
+        } else {
+            this.str = '';
+            for(let i=0;i<size;++i) {
+                this.str+=String.fromCharCode(1);
+            }
         }
     }
 
