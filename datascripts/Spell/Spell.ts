@@ -113,7 +113,16 @@ export class Spell extends MainEntity<SpellRow> {
     get Range() { return new SpellRange(this, [this.row.RangeIndex]); }
     get Speed() { return this.wrap(this.row.Speed); }
     get ClassMask() { return new BaseClassSet(this); }
+
     get Power() { return new SpellPower(this,this); }
+
+    /**
+     * Note: This field is just an alias for "Power"
+     */
+    @Transient
+    get Mana() { return new SpellPower(this,this);}
+
+
     get ItemEquips() { return new SpellItemEquips(this); }
     get Proc() { return new SpellProc(this); }
     get Priority() { return this.wrap(this.row.SpellPriority); }
