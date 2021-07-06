@@ -17,12 +17,11 @@
 #pragma once
 
 #include "TSClasses.h"
-#include "TSStorage.h"
 #include "TSEntity.h"
 
 class ItemTemplate;
 
-class TC_GAME_API TSItemTemplate {
+class TC_GAME_API TSItemTemplate : public TSEntityProvider {
 private:
     ItemTemplate * info;
 public:
@@ -126,8 +125,7 @@ public:
     bool IsConjuredConsumable();
     bool HasSignature();
 
-    TSStorage * GetData();
-    TS_ENTITY_DATA_DECL(TSItemTemplate);
+    TSEntity * GetData();
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);

@@ -34,6 +34,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSEntity.h"
 
 class TSPlayer;
 class TSUnit;
@@ -42,7 +43,7 @@ class TSWorldObject;
 class TSCreature;
 class TSCorpse;
 
-class TC_GAME_API TSObject {
+class TC_GAME_API TSObject: public TSEntityProvider {
 public:
     Object* obj;
     TSObject(Object* obj);

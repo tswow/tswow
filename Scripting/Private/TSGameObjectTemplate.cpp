@@ -2,10 +2,10 @@
 #include "GameObjectData.h"
 #include "ObjectMgr.h"
 
-TSGameObjectTemplate::TSGameObjectTemplate(GameObjectTemplate * gt)
-{
-    this->gt = gt;
-}
+TSGameObjectTemplate::TSGameObjectTemplate(GameObjectTemplate * gtIn)
+    : TSEntityProvider(&gtIn->m_tsEntity)
+    , gt(gtIn)
+{}
 
 uint32 TSGameObjectTemplate::GetEntry()
 {
@@ -37,9 +37,9 @@ TSString TSGameObjectTemplate::GetCastBarCaption()
     return gt->castBarCaption;
 }
 
-TSStorage * TSGameObjectTemplate::GetData()
+TSEntity * TSGameObjectTemplate::GetData()
 {
-    return &gt->storage;
+    return &gt->m_tsEntity;
 }
 
 TSGameObjectTemplate GetGameObjectTemplate(uint32 id)

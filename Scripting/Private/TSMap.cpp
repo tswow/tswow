@@ -31,11 +31,12 @@
 #include "TSUnit.h"
 #include "TSCreature.h"
 
-TSMap::TSMap(Map *map)
+TSMap::TSMap(Map *mapIn)
+    : TSEntityProvider(&mapIn->m_tsEntity)
+    , TSWorldEntityProvider(&mapIn->m_tsWorldEntity)
+    , map(mapIn)
 {
-    this->map = map;
 }
-
     
 #ifndef CLASSIC
 /**
@@ -317,17 +318,9 @@ TSArray<TSPlayer> TSMap::GetPlayers(uint32 team)
     return tbl;
 }
 
-TS_ENTITY_DATA_IMPL(TSMap)
-TS_ENTITY_TIMER_IMPL(TSMap)
-
-TSTasks<TSMap> TSMap::GetTasks()
+TSEntity * TSMap::GetData()
 {
-    return map->tasks;
-}
-
-TSStorage * TSMap::GetData()
-{
-    return &map->storage;
+    return &map->m_tsEntity;
 }
 
 TSArray<TSUnit> TSMap::GetUnits()

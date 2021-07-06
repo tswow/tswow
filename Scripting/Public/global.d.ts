@@ -76,7 +76,7 @@ declare class TSChatChannel {
     Say(guid: uint64, what: string, lang: uint32): void;
 }
 
-declare class TSPlayer extends TSUnit {
+declare interface TSPlayer extends TSUnit {
     LearnClassSpells(trainer: boolean, quests: boolean);
     SendData(data: any)
     SetBankBagSlotCount(count: uint8)
@@ -1831,7 +1831,7 @@ declare class TSPlayer extends TSUnit {
     SendLongAddonMessage(channel: uint8, message: string): void;
 }
 
-declare class TSCorpse extends TSWorldObject {
+declare interface TSCorpse extends TSWorldObject {
     IsNull() : bool
 
     GetLoot(): TSLoot;
@@ -1876,8 +1876,7 @@ declare class TSCorpse extends TSWorldObject {
     SaveToDB() : void    
 }
 
-declare class StorageClass {
-    GetData(): TSStorage;
+declare class TSEntityProvider {
     SetObject<T>(key: string, obj: T): T;
     HasObject(key: string): boolean;
     GetObject<T>(key: string, value: T): T;
@@ -1886,33 +1885,55 @@ declare class StorageClass {
     SetInt(key: string, value: int32): int32;
     HasInt(key: string): boolean;
     GetInt(key: string, def?: int32): int32;
-
     SetUInt(key: string, value: uint32): uint32;
     HasUInt(key: string): boolean;
     GetUInt(key: string, def?: uint32): uint32;
-
     SetFloat(key: string, value: double): double;
     HasFloat(key: string): boolean;
     GetFloat(key: string, def?: float): double;
-
     SetString(key: string, value: string): string;
     HasString(key: string): boolean;
     GetString(key: string, def?: string): string;    
 
-    GetObjectGroup(key: string): TSObjectGroup;
-    RemoveObjectGroup(key: string): void;
+    SetNumber(key: string, value: double): void;
+    GetNumber(key: string, def?: double): double;
+    HasNumber(key: string): boolean;
+
+    SetBool(key: string, value: boolean): void;
+    GetBool(key: string, def?: boolean): boolean;
+    HasBool(key: string): boolean;
+
+    SetJsonObject(key: string, value: TSJsonObject): void;
+    GetJsonObject(key: string, def?: TSJsonObject): TSJsonObject;
+    HasJsonObject(key: string): boolean;
+
+    SetJsonArray(key: string, value: TSJsonArray): void;
+    GetJsonArray(key: string, def?: TSJsonArray): TSJsonArray;
+    HasJsonArray(key: string): boolean;
+}
+
+
+declare type TimerCallback<T> = (timer: TSTimer,owner: T, delay: uint32, cancel: TSMutable<bool>)=>void
+declare type JsonMessageCallback<T> = (channel: uint8, obj: TSJsonObject, owner: T)=>void
+declare class TSWorldEntityProvider<T> {
+    AddTimer(name: string, time: uint32, repeats: uint32, callback: TimerCallback<T>);
+    RemoveTimer(name: string);
+    GetGroup(name: string);
+    RemoveGroup(name: string);
+    ClearGroups(name: string);
+    QueueMessage(channel: uint8, json: TSJsonObject, callback: JsonMessageCallback<T>)
 }
 
 declare class TSObjectGroup {
-    add(obj: TSWorldObject): void;
-    remove(obj: TSWorldObject): void;
-    clear();
-    size(): uint32
+    Add(obj: TSWorldObject): void;
+    Remove(obj: TSWorldObject): void;
+    Clear();
+    get length(): uint32
     forEach(callback: (obj: TSWorldObject)=>void): void;
     filterInPlace(callback: (obj: TSWorldObject)=>bool): void;
 }
 
-declare class TSGameObjectTemplate extends StorageClass {
+declare class TSGameObjectTemplate extends TSEntityProvider {
     GetEntry(): uint32
     GetType(): uint32;
     GetDisplayID(): uint32;
@@ -1921,7 +1942,7 @@ declare class TSGameObjectTemplate extends StorageClass {
     GetCastBarCaption(): string;
 }
 
-declare class TSCreatureTemplate extends StorageClass {
+declare class TSCreatureTemplate extends TSEntityProvider {
     GetEntry(): uint32;
     GetDifficultyEntryA(): uint32;
     GetDifficultyEntryB(): uint32;
@@ -2020,7 +2041,7 @@ declare class TSCreatureTemplate extends StorageClass {
     GetIsRooted(): bool; 
 }
 
-declare class TSCreature extends TSUnit {
+declare interface TSCreature extends TSUnit {
     GetLoot(): TSLoot;
     GetTemplate(): TSCreatureTemplate;
 
@@ -3366,12 +3387,8 @@ declare class TSQuest {
     GetType() : uint32    
 }
 
-declare class TSMap extends StorageClass {
+declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsNull() : bool
-
-    GetTasks(): TSTasks<TSMap>;
-    AddTimer(name: string, time: uint32, repeats: uint32, callback: TimerCallback<TSMap>)
-    RemoveTimer(name: string);
 
     GetUnits(): TSArray<TSWorldObject>
     /**
@@ -4007,7 +4024,7 @@ declare class TSBattleground {
     GetStatus() : uint32    
 }
 
-declare class TSGameObject extends TSWorldObject {
+declare interface TSGameObject extends TSWorldObject {
     IsNull() : bool
 
     GetLoot(): TSLoot;
@@ -4323,29 +4340,6 @@ declare class TSVehicle {
     RemovePassenger(passenger : TSUnit) : void    
 }
 
-declare class TSStorage {
-    SetObject<T>(key: string, obj: T): T;
-    HasObject(key: string): boolean;
-    GetObject<T>(key: string, creator: T): T;
-    GetDBObject<T>(key: string, sql: string, creator: T): T;
-
-    SetInt(key: string, value: int32): int32;
-    HasInt(key: string): boolean;
-    GetInt(key: string, def?: int32): int32;
-
-    SetUInt(key: string, value: uint32): uint32;
-    HasUInt(key: string): boolean;
-    GetUInt(key: string, def?: uint32): uint32;
-
-    SetFloat(key: string, value: double): double;
-    HasFloat(key: string): boolean;
-    GetFloat(key: string, def?: float): double;
-
-    SetString(key: string, value: string): string;
-    HasString(key: string): boolean;
-    GetString(key: string, def?: string): string;
-}
-
 declare class TSCollisionEntry {
     readonly name: string;
     maxHits: uint32;
@@ -4363,9 +4357,7 @@ declare class TSCollisions {
     Get(id: string): TSCollisionEntry;
 }
 
-declare type TimerCallback<T> = (timer: TSTimer,owner: T, delay: uint32, cancel: TSMutable<bool>)=>void
-
-declare class TSWorldObject extends TSObject {
+declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldObject> {
     GetCollisions(): TSCollisions;
     IsNull() : bool
     GetCreaturesInRange(range : float,entry : uint32,hostile : uint32,dead : uint32) : TSArray<TSCreature>
@@ -4373,39 +4365,9 @@ declare class TSWorldObject extends TSObject {
     GetPlayersInRange(range : float,hostile : uint32,dead : uint32) : TSArray<TSPlayer>
     GetGameObjectsInRange(range : float,entry : uint32,hostile : uint32) : TSArray<TSGameObject>
 
-    AddTimer(name: string, time: uint32, repeats: uint32, cb: TimerCallback<TSWorldObject>)
-    RemoveTimer(name: string);
-
     HasCollision(id: string);
     AddCollision(id: string, range: float, minDelay: uint32, maxHits: uint32, cb: TSCollisionCallback)
     GetCollision(id: string): TSCollisionEntry
-
-    SetObject<T>(key: string, obj: T): T;
-    HasObject(key: string): boolean;
-    GetObject<T>(key: string, value: T): T;
-    GetDBObject<T>(key: string, sql: string, value: T): T;
-
-    SetInt(key: string, value: int32): int32;
-    HasInt(key: string): boolean;
-    GetInt(key: string, def?: int32): int32;
-
-    SetUInt(key: string, value: uint32): uint32;
-    HasUInt(key: string): boolean;
-    GetUInt(key: string, def?: uint32): uint32;
-
-    SetFloat(key: string, value: double): double;
-    HasFloat(key: string): boolean;
-    GetFloat(key: string, def?: float): double;
-
-    SetString(key: string, value: string): string;
-    HasString(key: string): boolean;
-    GetString(key: string, def?: string): string;
-
-    GetData(): TSStorage;
-    GetObjectGroup(key: string): TSObjectGroup
-    RemoveObjectGroup(key: string): void;
-
-    GetTasks(): TSTasks<TSWorldObject>
 
     /**
      * Returns the name of the [WorldObject]
@@ -4765,7 +4727,7 @@ declare class TSWorldObject extends TSObject {
     GetPlayer(guid: uint64): TSPlayer
 }
 
-declare class TSObject {
+declare class TSObject extends TSEntityProvider {
     IsNull() : bool
     IsUnit() : bool
     IsCreature() : bool
@@ -5007,7 +4969,7 @@ declare class TSObject {
     ToPlayer() : TSPlayer    
 }
 
-declare class TSUnit extends TSWorldObject {
+declare interface TSUnit extends TSWorldObject {
     IsNull() : bool
     GetResistance(school: uint32): uint32;
     GetArmor(): uint32;
@@ -6321,7 +6283,7 @@ declare class TSUnit extends TSWorldObject {
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
 }
 
-declare class TSItemTemplate extends StorageClass {
+declare class TSItemTemplate extends TSEntityProvider {
     IsNull() : bool
     ID() : uint32;
     DamageMinA(): float;
@@ -6417,7 +6379,7 @@ declare class TSItemTemplate extends StorageClass {
     HasSignature(): bool;
 }
 
-declare class TSSpellInfo extends StorageClass {
+declare class TSSpellInfo extends TSEntityProvider {
 	IsNull() : bool
     ID() : uint32
 	School() : uint32
@@ -7188,11 +7150,6 @@ declare class TSTimer {
     readonly name: string;
 }
 
-declare class TSTasks<T> {
-    AddTimer(name: string, time: uint32, repeats: uint32, cb: TimerCallback<T>)
-    RemoveTimer(name: string);
-}
-
 declare class BinReader<L extends number> {
     Read<T extends number>(offset: L) : T;
     Write<T extends number>(offset: L, value: T)
@@ -7340,7 +7297,6 @@ declare function ToInt64(val: string): int64;
 declare function ToDouble(val: string): double;
 declare function ToFloat(val: string): float;
 
-declare function GetTimers() : TSTasks<void>
 declare function ModID(): uint32;
 declare function LoadRows<T extends DBTable>(cls: {new (...args: any[]): T}, query: string): TSArray<T>
 

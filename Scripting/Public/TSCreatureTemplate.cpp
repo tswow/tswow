@@ -18,10 +18,10 @@
 #include "ObjectMgr.h"
 #include "CreatureData.h"
 
-TSCreatureTemplate::TSCreatureTemplate(CreatureTemplate * ct)
-{
-    this->ct = ct;
-}
+TSCreatureTemplate::TSCreatureTemplate(CreatureTemplate * ctIn)
+    : TSEntityProvider(&ctIn->m_tsEntity)
+    , ct(ctIn)
+{}
 
 uint32 TSCreatureTemplate::GetEntry()
 {
@@ -340,9 +340,9 @@ uint32 TSCreatureTemplate::GetFirstVisibleModel() const
 {
     return ct->GetFirstVisibleModel();
 }
-TSStorage * TSCreatureTemplate::GetData()
+TSEntity * TSCreatureTemplate::GetData()
 {
-    return &ct->storage;
+    return &ct->m_tsEntity;
 }
 uint32 TSCreatureTemplate::GetRequiredLootSkill() const
 {
@@ -409,5 +409,3 @@ TSCreatureTemplate GetCreatureTemplate(uint32 entry)
     return TSCreatureTemplate(
         const_cast<CreatureTemplate*>(sObjectMgr->GetCreatureTemplate(entry)));
 }
-
-TS_ENTITY_DATA_IMPL(TSCreatureTemplate)

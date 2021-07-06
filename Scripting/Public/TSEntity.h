@@ -1,71 +1,132 @@
+/*
+ * This file is part of tswow (https://github.com/tswow/).
+ * Copyright (C) 2020 tswow <https://github.com/tswow/>
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 #pragma once
 
-#include <memory>
-
 #include "TSString.h"
-#include "TSBase.h"
+#include "TSJson.h"
+#include <map>
+#include <string>
+#include <memory>
+#include <cstdint>
+#include <functional>
+#include <set>
+#include <mutex>
 
-// Could be a base class, but would have to track the pointer
+#define GetDBObject GetObject
 
-#define TS_ENTITY_DATA_DECL(CLS)                                                                                           \
-    template <typename T>                                                                                                  \
-    std::shared_ptr<T> SetObject(uint32_t modid, TSString key, std::shared_ptr<T> item)                                    \
-    {                                                                                                                      \
-        return GetData()->SetObject(modid, key, item);                                                                     \
-    }                                                                                                                      \
-                                                                                                                           \
-    template <typename T>                                                                                                  \
-    std::shared_ptr<T> GetObject(uint32_t modid, TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr) \
-    {                                                                                                                      \
-        return GetData()->GetObject(modid, key, defaultValue);                                                             \
-    }                                                                                                                      \
-                                                                                                                           \
-    bool HasObject(uint32_t modid, TSString key)                                                                           \
-    {                                                                                                                      \
-        return GetData()->HasObject(modid,key);                                                                            \
-    }                                                                                                                      \
-                                                                                                                           \
-    int32_t SetInt(TSString key, int32_t value);                                                                           \
-    bool HasInt(TSString key);                                                                                             \
-    int32 GetInt(TSString key, int32_t def = 0);                                                                           \
-                                                                                                                           \
-    uint32_t SetUInt(TSString key, uint32_t value);                                                                        \
-    bool HasUInt(TSString key);                                                                                            \
-    uint32 GetUInt(TSString key, uint32_t def = 0);                                                                        \
-                                                                                                                           \
-    TSString SetString(TSString key, TSString value);                                                                      \
-    bool HasString(TSString key);                                                                                          \
-    TSString GetString(TSString key, TSString def = JSTR(""));                                                             \
-                                                                                                                           \
-    double SetFloat(TSString key, double value);                                                                           \
-    bool HasFloat(TSString key);                                                                                           \
-    double GetFloat(TSString key, double def = 0);                                                                         \
-    TSObjectGroup * GetObjectGroup(TSString key);                                                                                \
-    void RemoveObjectGroup(TSString key);                                                                                        \
+struct TC_GAME_API TSCompiledClass {
+    uint32_t modid;
+    std::shared_ptr<void> ptr;
+    TSCompiledClass(uint32_t modid, std::shared_ptr<void> ptr);
+    TSCompiledClass();
+};
 
-#define TS_ENTITY_TIMER_DECL(CLS) \
-    void RemoveTimer(TSString name);                                                                                       \
-    void AddTimer(uint32_t modid, TSString name, uint32_t time, uint32_t repeats, TimerCallback(CLS) callback);
+class TC_GAME_API TSCompiledClasses {
+    std::map<std::string, TSCompiledClass> m_map;
+public:
+    bool HasObject(uint32_t modid, TSString key);
+    void clear();
 
-#define TS_ENTITY_DATA_IMPL(CLS)                                                                                                                                                                 \
-    int32_t CLS::SetInt(TSString key, int32_t value) { return GetData()->SetInt(key, value); }                                                                                             \
-    bool CLS::HasInt(TSString key) { return GetData()->HasInt(key); }                                                                                                                      \
-    int32 CLS::GetInt(TSString key, int32 def) { return GetData()->GetInt(key, def); };                                                                                                    \
-                                                                                                                                                                                           \
-    uint32_t CLS::SetUInt(TSString key, uint32_t value) { return GetData()->SetUInt(key, value); }                                                                                         \
-    bool CLS::HasUInt(TSString key) { return GetData()->HasUInt(key); }                                                                                                                    \
-    uint32 CLS::GetUInt(TSString key, uint32 def) { return GetData()->GetUInt(key, def); };                                                                                                \
-                                                                                                                                                                                           \
-    TSString CLS::SetString(TSString key, TSString value) { return GetData()->SetString(key, value); };                                                                                    \
-    bool CLS::HasString(TSString key) { return GetData()->HasString(key); };                                                                                                               \
-    TSString CLS::GetString(TSString key, TSString def) { return GetData()->GetString(key, def); };                                                                                        \
-                                                                                                                                                                                           \
-    double CLS::SetFloat(TSString key, double value) { return GetData()->SetFloat(key, value); };                                                                                          \
-    bool CLS::HasFloat(TSString key) { return GetData()->HasFloat(key); };                                                                                                                 \
-    double CLS::GetFloat(TSString key, double def) { return GetData()->GetFloat(key, def); };                                                                                              \
-    TSObjectGroup * CLS::GetObjectGroup(TSString key) { return GetData()->GetGroup(key); };                                                                                                      \
-    void CLS::RemoveObjectGroup(TSString key) { return GetData()->RemoveGroup(key); };                                                                                                           \
+    template <typename T>
+    std::shared_ptr<T> SetObject(uint32_t modid, TSString key, std::shared_ptr<T> item)
+    {
+        m_map[key.std_str()] = TSCompiledClass(modid, std::static_pointer_cast<void>(item));
+        return item;
+    }
 
-#define TS_ENTITY_TIMER_IMPL(CLS) \
-    void CLS::AddTimer(uint32_t modid, TSString name, uint32_t time, uint32_t repeats, TimerCallback(CLS) callback) { return GetTasks()->AddTimer(modid, name, time, repeats, callback); } \
-    void CLS::RemoveTimer(TSString name) { return GetTasks()->RemoveTimer(name); }
+    template <typename T>
+    std::shared_ptr<T> GetObject(uint32_t modid, TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
+    {
+        auto itr = m_map.find(key);
+        if(itr == m_map.end())
+        {
+            return SetObject(modid,key,defaultValue());
+        }
+        else
+        {
+            return std::static_pointer_cast<T>(itr->second.ptr);
+        }
+    }
+};
+
+// The class stored on core entities (Object/Map)
+class TC_GAME_API TSEntity {
+public:
+    TSCompiledClasses m_compiledClasses;
+    TSJsonObject m_json;
+    TSEntity * operator->(){return this;}
+};
+
+// The class extended by TSObject/TSMap
+class TSEntityProvider {
+    TSEntity * m_entity;
+    TSEntity * getData() { return m_entity; }
+public:
+    TSEntityProvider(TSEntity * entity)
+        : m_entity(entity)
+    {}
+
+    template <typename T>
+    std::shared_ptr<T> SetObject(uint32_t modid, TSString key, std::shared_ptr<T> item)
+    {
+        return getData()->m_compiledClasses.SetObject(modid, key, item);
+    }
+
+    template <typename T>
+    std::shared_ptr<T> GetObject(uint32_t modid, TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
+    {
+        return getData()->m_compiledClasses.GetObject();
+    }
+
+    bool HasObject(uint32_t modid, TSString key)
+    {
+        return getData()->m_compiledClasses.HasObject(modid, key);
+    }
+
+    void SetNumber(TSString key, double value) { getData()->m_json.setNumber(key, value); }
+    bool HasNumber(TSString key) { return getData()->m_json.hasNumber(key); }
+    double GetNumber(TSString key, double def = 0) { return getData()->m_json.getNumber(key, def); }
+
+    void SetBool(TSString key, bool value) { getData()->m_json.setBool(key, value); }
+    bool HasBool(TSString key) { return getData()->m_json.hasBool(key); }
+    bool GetBool(TSString key, bool def = false) { return getData()->m_json.getBool(key, def); }
+
+    void SetString(TSString key, TSString value) { getData()->m_json.setString(key, value); }
+    bool HasString(TSString key) { return getData()->m_json.hasString(key); }
+    TSString GetString(TSString key, TSString def = JSTR("")) { return getData()->m_json.getString(key, def); }
+
+    void SetJsonObject(TSString key, TSJsonObject value) { getData()->m_json.setObject(key, value); }
+    bool HasJsonObject(TSString key) { return getData()->m_json.hasObject(key); }
+    TSJsonObject GetJsonObject(TSString key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.getObject(key, def); }
+
+    void SetJsonArray(TSString key, TSJsonArray value) { getData()->m_json.setArray(key, value); }
+    bool HasJsonArray(TSString key) { return getData()->m_json.hasArray(key); }
+    TSJsonArray GetJsonArray(TSString key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.getArray(key, def); }
+
+    // backwards compatibility
+    void SetUInt(TSString key, uint32_t value) { getData()->m_json.setNumber(key, value); }
+    bool HasUInt(TSString key) { return getData()->m_json.hasNumber(key); }
+    uint32_t GetUInt(TSString key, uint32_t def = 0) { return uint32_t(getData()->m_json.getNumber(key, def)); }
+
+    void SetInt(TSString key, int32_t value) { getData()->m_json.setNumber(key, value); }
+    bool HasInt(TSString key) { return getData()->m_json.hasNumber(key); }
+    int32_t GetInt(TSString key, int32_t def = 0) { return int32_t(getData()->m_json.getNumber(key, def)); }
+
+    void SetFloat(TSString key, float value) { getData()->m_json.setNumber(key, value); }
+    bool HasFloat(TSString key) { return getData()->m_json.hasNumber(key); }
+    float GetFloat(TSString key, float def = 0) { return float(getData()->m_json.getNumber(key, def)); }
+};

@@ -18,13 +18,12 @@
 
 #include "TSBase.h"
 #include "TSMain.h"
-#include "TSStorage.h"
 #include "TSEntity.h"
 #include "TSString.h"
 
 struct CreatureTemplate;
 
-class TC_GAME_API TSCreatureTemplate
+class TC_GAME_API TSCreatureTemplate : public TSEntityProvider
 {
 public:
     CreatureTemplate * ct;
@@ -111,11 +110,10 @@ public:
     uint32      GetFirstValidModelID() const;
     uint32      GetFirstInvisibleModel() const;
     uint32      GetFirstVisibleModel() const;
-    TSStorage * GetData();
+    TSEntity * GetData();
     uint32      GetRequiredLootSkill() const;
     bool        GetIsExotic() const;
     bool        GetIsTameable(bool canTameExotic) const;
-    TS_ENTITY_DATA_DECL(TSCreatureTemplate)
 
     // CreatureMovementData
     uint32    GetGroundMovement();

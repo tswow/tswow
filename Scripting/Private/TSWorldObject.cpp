@@ -34,16 +34,20 @@
 #include "GridNotifiersImpl.h"
 #include "ObjectGuid.h"
 #include "TSCorpse.h"
-#include "TSStorage.h"
+#include "TSEntity.h"
 
-TSWorldObject::TSWorldObject(WorldObject *obj) : TSObject(obj)
+TSWorldObject::TSWorldObject(WorldObject *objIn)
+    : TSObject(objIn)
+    , TSWorldEntityProvider(&objIn->m_tsWorldEntity)
+    , obj(objIn)
 {
-    this->obj = obj;
 }
 
-TSWorldObject::TSWorldObject() : TSObject()
+TSWorldObject::TSWorldObject()
+    : TSObject()
+    , TSWorldEntityProvider(nullptr)
+    , obj(nullptr)
 {
-    this->obj = nullptr;
 }
 
 /**
@@ -407,7 +411,6 @@ bool TSWorldObject::IsWithinLoS(TSWorldObject _target,float x,float y,float z)
     {
         return obj->IsWithinLOS(x, y, z);
     }
-    
 }
     
 /**
@@ -845,47 +848,34 @@ TSPosition TSWorldObject::GetPosition()
     return TSPosition(GetMap()->GetMapId(),GetX(),GetY(),GetZ(),GetO());
 }
 
-TSTasks<TSWorldObject>* TSWorldObject::GetTasks()
+void TSWorldObject::RemovedByGroup(TSWorldObjectGroup * group)
 {
-    return &obj->tasks;
+    obj->m_tsGroups.erase(group);
 }
 
-TSStorage* TSWorldObject::GetData()
+void TSWorldObject::AddedByGroup(TSWorldObjectGroup * group)
 {
-    return &obj->storage;
-}
-
-void TSWorldObject::RemovedByGroup(TSObjectGroup * group)
-{
-    obj->groups.erase(group);
-}
-
-void TSWorldObject::AddedByGroup(TSObjectGroup* group)
-{
-    obj->groups.insert(group);
+    obj->m_tsGroups.insert(group);
 }
 
 TSCollisions* TSWorldObject::GetCollisions()
 {
-    return &obj->collisions;
+    return &obj->m_tsCollisions;
 }
-
-TS_ENTITY_DATA_IMPL(TSWorldObject)
-TS_ENTITY_TIMER_IMPL(TSWorldObject)
 
 bool TSWorldObject::HasCollision(TSString id)
 {
-    return this->GetCollisions()->Contains(id);
+    return GetCollisions()->Contains(id);
 }
 
 void TSWorldObject::AddCollision(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback)
 {
-    this->GetCollisions()->Add(modid,id,range,minDelay,maxHits,callback);
+    GetCollisions()->Add(modid,id,range,minDelay,maxHits,callback);
 }
 
 TSCollisionEntry * TSWorldObject::GetCollision(TSString id)
 {
-    return this->GetCollisions()->Get(id);
+    return GetCollisions()->Get(id);
 }
 
 TSCollisionEntry* TSCollisions::Get(TSString id)

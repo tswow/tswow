@@ -42,7 +42,7 @@
 #include "SpellInfo.h"
 #include "TSIDs.h"
 #include "TSChannel.h"
-#include "TSTask.h"
+#include "TSWorldEntity.h"
 #include "DBCStores.h"
 #include "MapManager.h"
 #include "base64.h"
@@ -52,21 +52,6 @@
 #include <fstream>
 #include <map>
 #include <limits>
-
-TSTasks<void*> globalTasks;
-TSTasks<void*> GetTasks()
-{
-    return globalTasks;
-}
-
-class TSWorldUpdater : public WorldScript {
-public:
-    TSWorldUpdater() : WorldScript("TSWorldUpdater"){}
-    void OnUpdate(uint32 diff)
-    {
-        globalTasks.Tick(nullptr);
-    }
-};
 
 TSEvents tsEvents;
 std::map<std::string,TSEventHandlers> eventHandlers;
@@ -144,9 +129,9 @@ TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& name)
 
 static void RemoveData(WorldObject* obj)
 {
-    obj->storage.map.clear();
-    obj->tasks.timers.vec->clear();
-    obj->collisions.callbacks.clear();
+    obj->m_tsEntity.m_compiledClasses.clear();
+    obj->m_tsWorldEntity.clear();
+    obj->m_tsCollisions.callbacks.clear();
 }
 
 struct RemoveWorker {
@@ -196,8 +181,8 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
 
     // Clean up timers and storage for creatures and gameobjects
     sMapMgr->DoForAllMaps([](auto map){
-        map->tasks.timers.vec->clear();
-        map->storage.map.clear();
+        map->m_tsWorldEntity.clear();
+        map->m_tsEntity.m_compiledClasses.clear();
         RemoveWorker worker;
         TypeContainerVisitor<RemoveWorker, MapStoredObjectTypesContainer> visitor(worker);
         visitor.Visit(map->GetObjectsStore());
@@ -451,7 +436,6 @@ void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer,std::shared_ptr<vo
 
 void TSInitializeEvents()
 {
-    new TSWorldUpdater();
     TSLoadEvents();
     LoadIDs();
     InitializeMessages();

@@ -21,20 +21,19 @@
 #include "TSClasses.h"
 #include "TSObject.h"
 #include "TSPosition.h"
-#include "TSTask.h"
-#include "TSStorage.h"
 #include "TSEntity.h"
 #include "TSDictionary.h"
+#include "TSWorldEntity.h"
 #include <chrono>
 #include <vector>
 
 struct TSCollisions;
 struct TSCollisionEntry;
-struct TSStorage;
+struct TSEntity;
 
 #define CollisionCallback std::function<void(TSCollisionEntry*,TSWorldObject,TSWorldObject,TSMutable<uint32_t>)>
 
-class TC_GAME_API TSWorldObject : public TSObject {
+class TC_GAME_API TSWorldObject : public TSObject, public TSWorldEntityProvider<TSWorldObject> {
 public:
     WorldObject* obj;
     TSWorldObject();
@@ -99,20 +98,13 @@ public:
     TSCreature GetCreature(uint64 guid);
     TSPlayer GetPlayer(uint64 guid);
 
-    TSTasks<TSWorldObject> * GetTasks();
-    TSStorage * GetData();
-
-    TS_ENTITY_DATA_DECL(TSWorldObject)
-    TS_ENTITY_TIMER_DECL(TSWorldObject)
-
     bool HasCollision(TSString id) ;
     void AddCollision(uint32_t modid, TSString id, float range, uint32_t minDelay, uint32_t maxHits, CollisionCallback callback);
     TSCollisionEntry * GetCollision(TSString id);
-
     TSCollisions* GetCollisions();
 
-    void AddedByGroup(TSObjectGroup* group);
-    void RemovedByGroup(TSObjectGroup* group);
+    void AddedByGroup(TSWorldObjectGroup* group);
+    void RemovedByGroup(TSWorldObjectGroup* group);
 };
 
 class TC_GAME_API TSCollisionEntry {

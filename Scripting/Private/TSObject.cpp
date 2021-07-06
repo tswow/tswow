@@ -31,12 +31,14 @@
 #include "Unit.h"
 #include "Corpse.h"
 
-TSObject::TSObject(Object *obj)
+TSObject::TSObject(Object *objIn)
+    : TSEntityProvider(&objIn->m_tsEntity)
+    , obj(objIn)
 {
-    this->obj = obj;
 }
 
 TSObject::TSObject()
+    : TSEntityProvider(nullptr)
 {
 }
 

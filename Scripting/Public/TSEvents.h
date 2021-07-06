@@ -432,6 +432,7 @@ EVENT_TYPE(MapOnCreatureRemove,TSMap,TSCreature)
 EVENT_TYPE(MapOnGameObjectCreate,TSMap,TSGameObject,TSMutable<bool>)
 EVENT_TYPE(MapOnGameObjectRemove,TSMap,TSGameObject)
 EVENT_TYPE(MapOnCheckEncounter,TSMap,TSPlayer)
+EVENT_TYPE(MapOnMessage,TSMap,unsigned char channel,TSJsonObject)
 
 struct TSMapEvents {
      EVENT(MapOnCreate)
@@ -444,6 +445,7 @@ struct TSMapEvents {
      EVENT(MapOnGameObjectCreate)
      EVENT(MapOnGameObjectRemove)
      EVENT(MapOnCheckEncounter)
+     EVENT(MapOnMessage)
 };
 
 class TSMapMap : public TSEventMap<TSMapEvents>
@@ -705,6 +707,7 @@ struct TSEvents
     EVENT(MapOnGameObjectCreate)
     EVENT(MapOnGameObjectRemove)
     EVENT(MapOnCheckEncounter)
+    EVENT(MapOnMessage)
 
     TSSpellMap Spells;
     TSCreatureMap Creatures;
@@ -1075,6 +1078,7 @@ public:
           EVENT_HANDLE(Map,OnGameObjectCreate)
           EVENT_HANDLE(Map,OnGameObjectRemove)
           EVENT_HANDLE(Map,OnCheckEncounter) 
+          EVENT_HANDLE(Map,OnMessage) 
     } Maps;
 
     struct MapIDEvents: public MappedEventHandler<TSMapMap>
@@ -1090,6 +1094,7 @@ public:
           MAP_EVENT_HANDLE(Map,OnGameObjectCreate)
           MAP_EVENT_HANDLE(Map,OnGameObjectRemove)
           MAP_EVENT_HANDLE(Map,OnCheckEncounter) 
+          MAP_EVENT_HANDLE(Map,OnMessage) 
     } MapID;
 
      struct ItemEvents: public EventHandler {
@@ -1211,7 +1216,6 @@ public:
 
 #define OnMessageID(type,func) _OnMessageID<type>(type::GetID(),func)
 
-TC_GAME_API TSTasks<void*> GetTimers();
 TC_GAME_API TSEvents* GetTSEvents();
 
 void TSLoadEvents();

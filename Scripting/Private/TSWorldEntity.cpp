@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2021 tswow <https://github.com/tswow/>
+ * This file is part of tswow (https://github.com/tswow/).
+ * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * 
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License as 
@@ -13,11 +14,17 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-
-#include "TSStorage.h"
+#include "TSWorldEntity.h"
 #include "TSWorldObject.h"
 
-TSObjectGroup::~TSObjectGroup()
+uint64_t now()
+{
+    return std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
+}
+
+
+TSWorldObjectGroup::~TSWorldObjectGroup()
 {
     for (auto entry : entries)
     {
@@ -25,39 +32,39 @@ TSObjectGroup::~TSObjectGroup()
     }
 }
 
-void TSObjectGroup::add(TSWorldObject obj)
+void TSWorldObjectGroup::Add(TSWorldObject obj)
 {
     entries.insert(obj);
     obj.AddedByGroup(this);
 }
 
-void TSObjectGroup::remove(TSWorldObject obj)
+void TSWorldObjectGroup::Remove(TSWorldObject obj)
 {
     entries.erase(obj);
     obj.RemovedByGroup(this);
 }
 
-void TSObjectGroup::RemovedByObject(TSWorldObject obj)
+void TSWorldObjectGroup::RemovedByObject(TSWorldObject obj)
 {
     entries.erase(obj);
 }
 
-std::set<TSWorldObject>::iterator TSObjectGroup::begin()
+std::set<TSWorldObject>::iterator TSWorldObjectGroup::begin()
 {
     return entries.begin();
 }
 
-std::set<TSWorldObject>::iterator TSObjectGroup::end()
+std::set<TSWorldObject>::iterator TSWorldObjectGroup::end()
 {
     return entries.end();
 }
 
-uint32 TSObjectGroup::size()
+uint32 TSWorldObjectGroup::get_length()
 {
     return entries.size();
 }
 
-void TSObjectGroup::forEach(std::function<void(TSWorldObject)> callback)
+void TSWorldObjectGroup::forEach(std::function<void(TSWorldObject)> callback)
 {
     for (auto& entry : entries)
     {
@@ -65,7 +72,7 @@ void TSObjectGroup::forEach(std::function<void(TSWorldObject)> callback)
     }
 }
 
-void TSObjectGroup::filterInPlace(std::function<bool(TSWorldObject)> callback)
+void TSWorldObjectGroup::filterInPlace(std::function<bool(TSWorldObject)> callback)
 {
     std::set<TSWorldObject>::iterator it = entries.begin();
     while (it != entries.end())
@@ -81,7 +88,7 @@ void TSObjectGroup::filterInPlace(std::function<bool(TSWorldObject)> callback)
     }
 }
 
-void TSObjectGroup::clear()
+void TSWorldObjectGroup::Clear()
 {
     for(auto entry: entries)
     {
@@ -90,30 +97,40 @@ void TSObjectGroup::clear()
     entries.clear();
 }
 
-TSObjectGroup* TSStorage::GetGroup(TSString key)
+TSWorldObjectGroup* TSWorldObjectGroups::GetGroup(TSString key)
 {
     if (groups.find(key.std_str()) == groups.end())
     {
-        groups[key.std_str()] = TSObjectGroup();
+        groups[key.std_str()] = TSWorldObjectGroup();
     }
     return &groups[key.std_str()];
 }
 
-void TSStorage::RemoveGroup(TSString key)
+void TSWorldObjectGroups::RemoveGroup(TSString key)
 {
     if(groups.find(key.std_str()) == groups.end())
     {
         return;
     }
-    groups[key.std_str()].clear();
+    groups[key.std_str()].Clear();
     groups.erase(key.std_str());
 }
 
-void TSStorage::ClearGroups()
+void TSWorldObjectGroups::ClearGroups()
 {
     for(auto & group: groups)
     {
-        group.second.clear();
+        group.second.Clear();
     }
     groups.clear();
+}
+
+TSBinaryMessage::TSBinaryMessage(uint32_t size)
+{
+    bytes = new uint8_t[size];
+}
+
+TSBinaryMessage::~TSBinaryMessage()
+{
+    delete[] bytes;
 }

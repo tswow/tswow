@@ -21,14 +21,14 @@
 #include <memory.h>
 
 TSItemTemplate::TSItemTemplate(ItemTemplate const* info)
-{
-    this->info = const_cast<ItemTemplate*>(info);
-}
+    : TSEntityProvider(&(const_cast<ItemTemplate*>(info)->m_tsEntity))
+    , info(const_cast<ItemTemplate*>(info))
+{}
 
 TSItemTemplate::TSItemTemplate()
-{
-    this->info = nullptr;
-}
+    : TSEntityProvider(nullptr)
+    , info(nullptr)
+{}
 
 uint32 TSItemTemplate::ID()  {
     return info->ItemId;
@@ -149,12 +149,10 @@ uint32 TSItemTemplate::DamageTypeB()
     return info->Damage[1].DamageType;
 }
 
-TSStorage * TSItemTemplate::GetData()
+TSEntity * TSItemTemplate::GetData()
 {
-    return const_cast<TSStorage*>(&info->storage);
+    return const_cast<TSEntity*>(&info->m_tsEntity);
 }
-
-TS_ENTITY_DATA_IMPL(TSItemTemplate);
 
 TSItemTemplate GetItemTemplate(uint32 entry)
 {

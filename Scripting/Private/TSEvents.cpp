@@ -41,7 +41,6 @@
 #include "SpellInfo.h"
 #include "TSIDs.h"
 #include "TSChannel.h"
-#include "TSTask.h"
 #include "DBCStores.h"
 #include "MapManager.h"
 #include "base64.h"

@@ -2,13 +2,12 @@
 
 #include "TSBase.h"
 #include "TSMain.h"
-#include "TSStorage.h"
 #include "TSEntity.h"
 #include "TSString.h"
 
 struct GameObjectTemplate;
 
-class TC_GAME_API TSGameObjectTemplate {
+class TC_GAME_API TSGameObjectTemplate : public TSEntityProvider {
 public:
     GameObjectTemplate * gt;
     TSGameObjectTemplate(GameObjectTemplate * gt);
@@ -22,8 +21,7 @@ public:
     TSString GetIconName();
     TSString GetCastBarCaption();
 
-    TSStorage * GetData();
-    TS_ENTITY_DATA_DECL(TSGameObjectTemplate)
+    TSEntity * GetData();
 };
 
 TSGameObjectTemplate TC_GAME_API GetGameObjectTemplate(uint32 id);

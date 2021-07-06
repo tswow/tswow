@@ -21,15 +21,15 @@
 #include "SpellInfo.h"
 #include "SpellMgr.h"
 
-TSSpellInfo::TSSpellInfo(SpellInfo const* info)
-{
-    this->info = const_cast<SpellInfo*>(info);
-}
+TSSpellInfo::TSSpellInfo(SpellInfo const* infoIn)
+    : TSEntityProvider(&(const_cast<SpellInfo*>(infoIn)->m_tsEntity))
+    , info(const_cast<SpellInfo*>(infoIn))
+{}
 
 TSSpellInfo::TSSpellInfo()
-{
-    this->info = nullptr;
-}
+    : TSEntityProvider(nullptr)
+    , info(nullptr)
+{}
 
 uint32 TSSpellInfo::ID()  {
     return info->Id;
@@ -349,12 +349,10 @@ uint32 TSSpellInfo::Targets()
     return info->Targets;
 }
 
-TSStorage * TSSpellInfo::GetData()
+TSEntity * TSSpellInfo::GetData()
 {
-    return const_cast<TSStorage*>(&info->storage);
+    return const_cast<TSEntity*>(&info->m_tsEntity);
 }
-
-TS_ENTITY_DATA_IMPL(TSSpellInfo);
 
 TSSpellInfo GetSpellInfo(uint32 entry)
 {

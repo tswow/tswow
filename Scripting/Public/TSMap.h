@@ -20,11 +20,10 @@
 #include "TSString.h"
 #include "TSArray.h"
 #include "TSClasses.h"
-#include "TSTask.h"
-#include "TSStorage.h"
 #include "TSEntity.h"
+#include "TSWorldEntity.h"
 
-class TC_GAME_API TSMap {
+class TC_GAME_API TSMap: public TSEntityProvider, public TSWorldEntityProvider<TSMap> {
 public:
     Map *map;
     TSMap(Map *map);
@@ -51,11 +50,7 @@ public:
     TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
 
     uint32 GetAreaId(float x, float y, float z, float phasemask);
-    TSWorldObject  GetWorldObject(uint64 guid);
+    TSWorldObject GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
-    TSTasks<TSMap> GetTasks();
-    TSStorage * GetData();
-
-    TS_ENTITY_DATA_DECL(TSMap)
-    TS_ENTITY_TIMER_DECL(TSMap)
+    TSEntity * GetData();
 };
