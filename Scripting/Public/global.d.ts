@@ -30,18 +30,20 @@ type bool = boolean;
 type TSArray<T> = T[];
 type TSString = string;
 
-declare class TSMutable<T> {
+declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
     set(value: T) : void;
 }
 
-declare class TSMutex {
+declare interface TSMutex {
     lock();
     unlock();
     try_lock(): bool;
 }
 
+// should not be interface, 
+// will make it look like {x:0,y:0,z:0,o:0,map:0} is legal
 declare class TSPosition {
     x: float;
     y: float;
@@ -55,9 +57,9 @@ interface Array<T> {
     set(index: number, value: T);
 }
 
-declare class TSMutableString extends TSMutable<string>{}
+declare interface TSMutableString extends TSMutable<string>{}
 
-declare class TSChatChannel {
+declare interface TSChatChannel {
     GetName(locale?: uint32) : string;
     GetID() : uint32;
     IsConstant(): bool;
@@ -1876,7 +1878,7 @@ declare interface TSCorpse extends TSWorldObject {
     SaveToDB() : void    
 }
 
-declare class TSEntityProvider {
+declare interface TSEntityProvider {
     SetObject<T>(key: string, obj: T): T;
     HasObject(key: string): boolean;
     GetObject<T>(key: string, value: T): T;
@@ -1915,7 +1917,7 @@ declare class TSEntityProvider {
 
 declare type TimerCallback<T> = (timer: TSTimer,owner: T, delay: uint32, cancel: TSMutable<bool>)=>void
 declare type JsonMessageCallback<T> = (channel: uint8, obj: TSJsonObject, owner: T)=>void
-declare class TSWorldEntityProvider<T> {
+declare interface TSWorldEntityProvider<T> {
     AddTimer(name: string, time: uint32, repeats: uint32, callback: TimerCallback<T>);
     RemoveTimer(name: string);
     GetGroup(name: string);
@@ -1933,7 +1935,7 @@ declare class TSObjectGroup {
     filterInPlace(callback: (obj: TSWorldObject)=>bool): void;
 }
 
-declare class TSGameObjectTemplate extends TSEntityProvider {
+declare interface TSGameObjectTemplate extends TSEntityProvider {
     GetEntry(): uint32
     GetType(): uint32;
     GetDisplayID(): uint32;
@@ -1942,7 +1944,7 @@ declare class TSGameObjectTemplate extends TSEntityProvider {
     GetCastBarCaption(): string;
 }
 
-declare class TSCreatureTemplate extends TSEntityProvider {
+declare interface TSCreatureTemplate extends TSEntityProvider {
     GetEntry(): uint32;
     GetDifficultyEntryA(): uint32;
     GetDifficultyEntryB(): uint32;
@@ -2667,7 +2669,7 @@ declare interface TSCreature extends TSUnit {
     UpdateLevelDependantStats(): void;
 }
 
-declare class TSAura {
+declare interface TSAura {
     IsNull() : bool
 
     /**
@@ -2771,7 +2773,7 @@ declare class TSAura {
     Remove() : void    
 }
 
-declare class TSAuraEffect {
+declare interface TSAuraEffect {
     GetCaster(): TSUnit;
     GetCasterGUID(): uint64;
     GetAura(): TSAura;
@@ -2794,7 +2796,7 @@ declare class TSAuraEffect {
     IsPeriodic(): boolean;
 }
 
-declare class TSAuraApplication {
+declare interface TSAuraApplication {
     GetTarget(): TSUnit;
     GetAura(): TSAura;
     GetSlot(): uint8;
@@ -2805,7 +2807,7 @@ declare class TSAuraApplication {
     IsSelfCast(): bool;
 }
 
-declare class TSGuild {
+declare interface TSGuild {
     IsNull() : bool
 
     /**
@@ -2928,7 +2930,7 @@ declare class TSGuild {
     SetMemberRank(player : TSPlayer,newRank : uint8) : void    
 }
 
-declare class TSGroup {
+declare interface TSGroup {
     IsNull() : bool
 
     /**
@@ -3108,7 +3110,7 @@ declare class TSGroup {
     SetTargetIcon(icon : uint8,target : uint64,setter : uint64) : void    
 }
 
-declare class TSWorldPacket {
+declare interface TSWorldPacket {
     constructor(opcode: uint32, size: uint16);
 
     IsNull() : bool
@@ -3275,7 +3277,7 @@ declare class TSWorldPacket {
     WriteDouble(_val : double) : void    
 }
 
-declare class TSQuest {
+declare interface TSQuest {
     IsNull() : bool
 
     /**
@@ -3546,7 +3548,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     SetWeather(zoneId : uint32,weatherType : uint32,grade : float) : void
 }
 
-declare class TSItem extends TSObject {
+declare interface TSItem extends TSObject {
     IsNull() : bool
 
     /**
@@ -3898,7 +3900,7 @@ declare class TSItem extends TSObject {
     SaveToDB() : void    
 }
 
-declare class TSBattleground {
+declare interface TSBattleground {
     IsNull() : bool
 
     /**
@@ -4195,7 +4197,7 @@ declare interface TSGameObject extends TSWorldObject {
     SetRespawnTime(respawn : int32) : void    
 }
 
-declare class TSSpell {
+declare interface TSSpell {
 	//soonTM
 	GetSpellInfo() : TSSpellInfo
 	
@@ -4291,7 +4293,7 @@ declare class TSSpell {
     Finish() : void    
 }
 
-declare class TSVehicle {
+declare interface TSVehicle {
     IsNull() : bool
 
     /**
@@ -4340,7 +4342,7 @@ declare class TSVehicle {
     RemovePassenger(passenger : TSUnit) : void    
 }
 
-declare class TSCollisionEntry {
+declare interface TSCollisionEntry {
     readonly name: string;
     maxHits: uint32;
     range: float;
@@ -4351,7 +4353,7 @@ declare class TSCollisionEntry {
 
 declare type TSCollisionCallback = (entry: TSCollisionEntry, self: TSWorldObject, collided: TSWorldObject, cancel: TSMutable<uint32>)=>void
 
-declare class TSCollisions {
+declare interface TSCollisions {
     Add(modid: uint32, id: string, range: float, minDelay: uint32, maxHits: uint32, callback: TSCollisionCallback)
     Contains(id: string): bool;
     Get(id: string): TSCollisionEntry;
@@ -4727,7 +4729,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetPlayer(guid: uint64): TSPlayer
 }
 
-declare class TSObject extends TSEntityProvider {
+declare interface TSObject extends TSEntityProvider {
     IsNull() : bool
     IsUnit() : bool
     IsCreature() : bool
@@ -6283,7 +6285,7 @@ declare interface TSUnit extends TSWorldObject {
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
 }
 
-declare class TSItemTemplate extends TSEntityProvider {
+declare interface TSItemTemplate extends TSEntityProvider {
     IsNull() : bool
     ID() : uint32;
     DamageMinA(): float;
@@ -6379,7 +6381,7 @@ declare class TSItemTemplate extends TSEntityProvider {
     HasSignature(): bool;
 }
 
-declare class TSSpellInfo extends TSEntityProvider {
+declare interface TSSpellInfo extends TSEntityProvider {
 	IsNull() : bool
     ID() : uint32
 	School() : uint32
@@ -6447,7 +6449,7 @@ declare class TSSpellInfo extends TSEntityProvider {
 	Targets() : uint32;
 }
 
-declare class TSSpellCastTargets {
+declare interface TSSpellCastTargets {
     IsNull() : bool
     GetUnit() : TSUnit;
 }
@@ -6929,7 +6931,7 @@ declare class TSDBDict<K,V> {
 
 declare function MakeDBDict<K,V>(): TSDBDict<K,V>;
 
-declare class TSLootItem {
+declare interface TSLootItem {
     GetItemID(): uint32;
     GetRandomSuffix(): uint32;
     GetRandomPropertyID(): uint32;
@@ -6939,7 +6941,7 @@ declare class TSLootItem {
     SetCount(count: uint8);
 }
 
-declare class TSLoot {
+declare interface TSLoot {
     IsNull(): bool;
     Clear(): void;
     IsLooted(): bool;
@@ -6962,7 +6964,7 @@ declare class TSLoot {
     SetGeneratesNormally(normal: bool);
 }
 
-declare class TSAuctionEntry {
+declare interface TSAuctionEntry {
     GetID(): uint32;
     GetHouseID(): uint8;
     /**
@@ -6998,7 +7000,7 @@ declare class TSAuctionEntry {
     SetFlags(flags: uint32);
 }
 
-declare class TSAuctionHouseObject {
+declare interface TSAuctionHouseObject {
     GetKeys() : TSArray<uint32>
     GetEntry(key: uint32): TSAuctionEntry
     RemoveAuction(key: uint32|TSAuctionEntry): bool
@@ -7006,12 +7008,12 @@ declare class TSAuctionHouseObject {
     AddAuction(entry: TSAuctionEntry);
 }
 
-declare class TSMailItemInfo {
+declare interface TSMailItemInfo {
     GetGUID(): uint64;
     GetItemTemplate(): uint32;
 }
 
-declare class TSMail {
+declare interface TSMail {
     GetID(): uint32;
     GetType(): uint8;
     GetTemplateID(): uint16;
@@ -7037,7 +7039,7 @@ declare class TSMail {
     SetState(state: uint8)
 }
 
-declare class TSMailDraft {
+declare interface TSMailDraft {
     GetTemplateID(): uint16
     GetSubject(): string
     GetBody(): string;
