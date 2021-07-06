@@ -356,6 +356,10 @@ export namespace Modules {
         return names.length===0 ? getModules() : names.map(x=>getModule(x));
     }
 
+    export function isModule(id: string) {
+        return wfs.exists(ipaths.moduleRoot(id));
+    }
+
     export async function refreshModules(force: boolean = false) {
         if (!wfs.exists(ipaths.nodeModulesWotlkdata)) {
             term.log(`Linking wotlkdata...`);

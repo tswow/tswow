@@ -25,6 +25,7 @@ import { data_tsconfig, Modules } from "./Modules";
 import { Datasets } from "./Dataset";
 import { Identifiers } from "./Identifiers";
 import { isWindows } from "../util/Platform";
+import { NodeConfig } from "./NodeConfig";
 
 /**
  * Module for cleaning intermediate data.
@@ -105,14 +106,27 @@ export namespace Clean {
         wfs.remove(ipaths.datasetIds(dataset));
     }
 
-    export async function cleanAddonBuild(mod?: string) {
-        if(!mod) {
-            Modules.getModules().forEach((x)=>{
-                cleanAddonBuild(x.id);
+    export async function cleanAddonBuild(dataset: Datasets.Dataset[], mods: Modules.Module[]) {
+        mods.forEach(x=>{
+            wfs.remove(ipaths.addonBuild(x.id))
+        });
+
+        let allClients = dataset.filter(x=>x.client.isRunning()||NodeConfig.autostart_client);
+        let runningClients = dataset.filter(x=>x.client.isRunning());
+        runningClients.forEach(x=>x.client.kill());
+        dataset.forEach(ds=>{
+            let addonPath = mpath(ds.config.mpq_path,'Interface','FrameXML','TSAddons');
+            wfs.readDir(addonPath,true,'directories').forEach(x=>{
+                if(!Modules.isModule(x)) {
+                    wfs.remove(mpath(addonPath,x))
+                }
             });
-        } else {
-            wfs.remove(ipaths.addonBuild(mod));
-        }
+
+            // it's ok to not clean out the .toc file here,
+            // as missing files are just ignored.
+            mods.forEach(y=> wfs.remove(mpath(addonPath,y.id)));
+        });
+        allClients.forEach(x=>x.client.start());
     }
 
     export async function cleanTypescript() {
@@ -236,7 +250,7 @@ export namespace Clean {
             await cleanScriptBin();
             await cleanDataBuild();
             await cleanIds(args[0],!args.includes('--no-backups'));
-            await cleanAddonBuild();
+            await cleanAddonBuild(Datasets.getDatasetsOrDefault(args),Modules.getModulesOrAll(args));
             await cleanMysql();
             await cleanClientData(args[0]);
         });
@@ -246,7 +260,7 @@ export namespace Clean {
             , 'mod?'
             , 'Cleans addon build data'
             , async (x)=>{
-            cleanAddonBuild(x[0]);
+            cleanAddonBuild(Datasets.getDatasetsOrDefault(x),Modules.getModulesOrAll(x));
         });
     }
 }
