@@ -24,7 +24,7 @@ export class CreaturePatrolPath<T> extends CellSystem<CreatureInstance<T>> {
                 .position_y.set(x.y)
                 .position_z.set(x.z)
                 .action_chance.set(100)
-                .delay.set(x.delay)
+                .delay.set(x.delay||0)
                 .move_type.set(movementNum)
         )
 

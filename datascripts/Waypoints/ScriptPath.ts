@@ -27,7 +27,7 @@ export class ScriptPath {
                 .position_y.set(x.y)
                 .position_z.set(x.z)
                 .orientation.set(x.o)
-                .delay.set(x.delay)
+                .delay.set(x.delay||0)
                 .point_comment.set('tswow')
             )
         return this;
