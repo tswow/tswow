@@ -1043,7 +1043,10 @@ export class Emitter {
             if (node.catchClause.variableDeclaration.type) {
                 this.processType(node.catchClause.variableDeclaration.type);
             } else {
-                this.writer.writeString('any');
+                this.error(
+                      `Unable to resolve type of catch value, `
+                    + `try writing it out explicitly`
+                    , node)
             }
 
             this.writer.writeString('& ');
@@ -1947,7 +1950,10 @@ export class Emitter {
                 if (arrayType.elementType && arrayType.elementType.kind !== ts.SyntaxKind.UndefinedKeyword) {
                     this.processType(arrayType.elementType, false);
                 } else {
-                    this.writer.writeString('any');
+                    this.error(
+                        `Cannot resolve TSArray type parameter, `
+                      + `try writing it out explicitly`
+                    ,type);
                 }
                 this.writer.writeString('>');
                 break;
@@ -2123,7 +2129,9 @@ export class Emitter {
                 this.writer.writeString('void');
                 break;
             case ts.SyntaxKind.AnyKeyword:
-                this.writer.writeString('any');
+                this.error(
+                      `'any' keyword is not permitted in C++`
+                    , type);
                 break;
             case ts.SyntaxKind.NullKeyword:
                 this.writer.writeString('std::nullptr_t');
@@ -2169,7 +2177,14 @@ export class Emitter {
                     this.processType(unionTypes[0]);
                 }
                 */
-                this.writer.writeString(auto ? 'auto' : 'any');
+
+                if(!auto) {
+                    this.error(
+                        `Failed to write union type `
+                      + `because 'auto' keyword is forbidden here.`
+                    , type); 
+                }
+                this.writer.writeString('auto');
 
                 break;
             case ts.SyntaxKind.ModuleDeclaration:
@@ -2196,7 +2211,12 @@ export class Emitter {
                 this.writer.writeString(exprName.text);
                 break;
             default:
-                this.writer.writeString(auto ? 'auto' : 'any');
+                if(!auto) {
+                    this.error(
+                        `Failed to write union type `
+                      + `because 'auto' keyword is forbidden here.`
+                    , type); 
+                }
                 break;
         }
     }
@@ -2268,7 +2288,10 @@ export class Emitter {
                 this.writer.writeString('{}');
                 break;
             default:
-                this.writer.writeString('any');
+                this.error(
+                      `Cannot resolve type of default value, `
+                    + `try writing it out explicitly.`
+                , type); 
                 break;
         }
     }
@@ -2448,7 +2471,10 @@ export class Emitter {
                     if (isClassMember && (<ts.Identifier>node.name).text === 'toString') {
                         this.writer.writeString('TSString');
                     } else {
-                        this.writer.writeString('any');
+                        // todo: possible to deduce from return statements?
+                        this.error(
+                              `Unable to resolve return type of function `
+                            + `${node.name.getText()}, try writing it out explicitly`, node)
                     }
                 }
             }
@@ -3405,7 +3431,10 @@ export class Emitter {
             if (elementsType) {
                 this.processType(elementsType, false);
             } else {
-                this.writer.writeString('any');
+                this.error(
+                      `Cannot resolve TSArray type parameter, `
+                    + `try writing it out explicitly`
+                ,node);
             }
 
             this.writer.writeString('>');
@@ -3547,24 +3576,12 @@ export class Emitter {
         this.writer.writeString('(');
         this.processExpression(node.condition);
         this.writer.writeString(') ? ');
-        if (!equals) {
-            this.writer.writeString('any(');
-        }
 
         this.processExpression(node.whenTrue);
-        if (!equals) {
-            this.writer.writeString(')');
-        }
 
         this.writer.writeString(' : ');
-        if (!equals) {
-            this.writer.writeString('any(');
-        }
 
         this.processExpression(node.whenFalse);
-        if (!equals) {
-            this.writer.writeString(')');
-        }
     }
 
     processBinaryExpression(node: ts.BinaryExpression): void {
