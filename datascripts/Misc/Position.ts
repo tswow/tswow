@@ -15,24 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-export class Position {
-    readonly map: number;
-    readonly x: number;
-    readonly y: number;
-    readonly z: number;
-    readonly o: number;
-    readonly delay: number;
-
-    constructor(map: number, x: number, y: number, z: number, o: number, delay?: number) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.o = o;
-        this.map = map;
-        this.delay = delay || 0;
-    }
+export interface Position {
+    map: number;
+    x: number;
+    y: number;
+    z: number;
+    o: number;
+    delay?: number;
 }
 
 export function Pos(map: number, x: number, y: number, z: number, o: number) {
-    return new Position(map,x,y,z,o);
+    return {map,x,y,z,o,delay:0}
 }
