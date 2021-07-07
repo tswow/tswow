@@ -15,7 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { wsys } from '../util/System';
+import { ChildProcessSettings } from './ChildProcessSettings';
 import { commands } from './Commands';
+import { Datasets } from './Dataset';
 
 export namespace Test {
     export function initialize() {
@@ -24,11 +26,17 @@ export namespace Test {
             , 'regex?'
             , 'Runs unit tests'
             , (args) => {
+                let settings = ChildProcessSettings(
+                    Datasets.get(Datasets.getDefault())
+                  , args.includes('--readonly')
+                  , args.includes('--useTimer'))
+
+            args = args.filter(x=>!x.startsWith('--'));
 
             if (args.length > 0) {
-                wsys.exec(`npm run otest ${args.join(' ')}`, 'inherit');
+                wsys.exec(`npm --settings=${settings} run otest ${args}`, 'inherit');
             } else {
-                wsys.exec(`npm run test`, 'inherit');
+                wsys.exec(`npm --settings=${settings} run test`, 'inherit');
             }
         });
     }

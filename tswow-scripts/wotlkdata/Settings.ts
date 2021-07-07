@@ -17,7 +17,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const settings = JSON.parse(Buffer.from(process.argv[2],'base64').toString())
+let settings: any = {}
+let env = process.env as any;
+if(env.npm_config_settings) {
+    settings = JSON.parse(Buffer.from(env.npm_config_settings,'base64').toString())
+} else {
+    settings = JSON.parse(Buffer.from(process.argv[2],'base64').toString())
+}
 
 export function getDatabase(database: string) {
     if (settings.database_all) {
