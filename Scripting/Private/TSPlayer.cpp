@@ -3766,6 +3766,55 @@ void TSPlayer::SendLongAddonMessage(unsigned short channel, TSString str)
     player->m_message_buffer.sendMessage(channel, str);
 }
 
+uint8 TSPlayer::GetHairStyle()
+{
+    return player->GetHairStyleId();
+}
+
+void TSPlayer::SetHairStyle(uint8 style)
+{
+    player->SetHairStyleId(style);
+}
+
+uint8 TSPlayer::GetHairColor()
+{
+    return player->GetHairColorId();
+}
+void TSPlayer::SetHairColor(uint8 color)
+{
+    player->SetHairColorId(color);
+}
+
+uint8 TSPlayer::GetFacialStyle()
+{
+    return player->GetFacialStyle();
+}
+
+void TSPlayer::SetFacialStyle(uint8 style)
+{
+    player->SetFacialStyle(style);
+}
+
+uint8 TSPlayer::GetSkinColor()
+{
+    return player->GetSkinId();
+}
+
+void TSPlayer::SetSkinColor(uint8 color)
+{
+    player->SetSkinId(color);
+}
+
+uint8 TSPlayer::GetFace()
+{
+    return player->GetFaceId();
+}
+
+void TSPlayer::SetFace(uint8 face)
+{
+    player->SetFaceId(face);
+}
+
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
 player->BindToInstance();

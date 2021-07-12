@@ -59,3 +59,4 @@
 #include "TSSplit.h"
 #include "TSMutex.h"
 #include "TSJson.h"
+#include "TSOutfit.h"

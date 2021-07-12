@@ -26,6 +26,8 @@
 #include "TSPosition.h"
 #include "TSCreatureTemplate.h"
 
+class TSOutfit;
+
 class TC_GAME_API TSCreature : public TSUnit {
 public:
     Creature *creature;
@@ -115,4 +117,5 @@ public:
     uint32 GetCreatureFamily();
     TSLoot GetLoot();
     TSCreatureTemplate GetTemplate();
+    void SetOutfit(TSOutfit const& outfit);
 };

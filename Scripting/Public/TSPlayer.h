@@ -270,6 +270,21 @@ public:
 	void SendMovieStart(uint32 MovieId);
 	void SendMail(uint8 senderType, uint64 from, TSString subject, TSString body, uint32 money = 0, uint32 cod = 0, uint32 delay = 0, TSArray<TSItem> items = TSArray<TSItem>());
 
+    uint8 GetHairStyle();
+    void SetHairStyle(uint8 style);
+
+    uint8 GetHairColor();
+    void SetHairColor(uint8 color);
+
+    uint8 GetFacialStyle();
+    void SetFacialStyle(uint8 style);
+
+    uint8 GetSkinColor();
+    void SetSkinColor(uint8 color);
+
+    uint8 GetFace();
+    void SetFace(uint8 face);
+
 	template <typename T>
 	void SendData(std::shared_ptr<T> value)
 	{

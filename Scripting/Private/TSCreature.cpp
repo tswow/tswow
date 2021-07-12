@@ -31,6 +31,8 @@
 #include "MotionMaster.h"
 #include "Player.h"
 #include "TSMap.h"
+#include "TSOutfit.h"
+#include "CreatureOutfit.h"
 
 TSCreature::TSCreature(Creature *creature) : TSUnit(creature)
 {
@@ -1302,4 +1304,9 @@ TSCreatureTemplate TSCreature::GetTemplate()
 void TSCreature::UpdateLevelDependantStats()
 {
     creature->UpdateLevelDependantStats();
+}
+
+void TSCreature::SetOutfit(TSOutfit const& outfit)
+{
+    creature->SetOutfit(outfit.m_outfit);
 }

@@ -67,6 +67,19 @@ declare const enum SpellSchoolMask /**@realType:uint32 */ {
     SPELL_SCHOOL_MASK_ARCANE  = 64,
 }
 declare const enum GossipOptionIcon {} /** GossipDef.h:GossipOptionIcon */
+declare const enum OutfitSlots /**@realType:uint8*/{
+    EQUIPMENT_SLOT_HEAD = 0,
+    EQUIPMENT_SLOT_SHOULDERS = 2,
+    EQUIPMENT_SLOT_BODY = 3,
+    EQUIPMENT_SLOT_CHEST = 4,
+    EQUIPMENT_SLOT_WAIST = 5,
+    EQUIPMENT_SLOT_LEGS = 6,
+    EQUIPMENT_SLOT_FEET = 7,
+    EQUIPMENT_SLOT_WRISTS = 8,
+    EQUIPMENT_SLOT_HANDS = 9,
+    EQUIPMENT_SLOT_BACK = 14,
+    EQUIPMENT_SLOT_TABARD = 18
+}
 
 declare interface TSMutable<T> {
     constructor(field: T);
@@ -1877,6 +1890,21 @@ declare interface TSPlayer extends TSUnit {
      * @param message 
      */
     SendLongAddonMessage(channel: uint8, message: string): void;
+
+    GetHairStyle(): uint8;
+    SetHairStyle(style: uint8);
+
+    GetHairColor(): uint8;
+    SetHairColor(color: uint8);
+
+    GetFacialStyle(): uint8;
+    SetFacialStyle(style: uint8);
+
+    GetSkinColor(): uint8;
+    SetSkinColor(color: uint8);
+
+    GetFace(): uint8;
+    SetFace(face: uint8);
 }
 
 declare interface TSCorpse extends TSWorldObject {
@@ -2087,6 +2115,37 @@ declare interface TSCreatureTemplate extends TSEntityProvider {
     GetIsSwimAllowed(): bool;
     GetIsFlightAllowed(): bool;
     GetIsRooted(): bool; 
+}
+
+declare interface TSOutfit {
+    SetClass(Class: uint8): void;
+    GetClass(): uint8;
+
+    SetFace(face: uint8);
+    GetFace(): uint8;
+
+    SetSkin(face: uint8);
+    GetSkin(): uint8;
+
+    SetHair(hair: uint8);
+    GetHair(): uint8;
+
+    SetHairColor(color: uint8);
+    GetHairColor(): uint8;
+
+    SetSoundID(soundId: uint32);
+    GetSoundID(): uint32;
+
+    SetGuild(guild: uint64);
+    GetGuild(): uint64;
+
+    GetGender(): uint8;
+    GetRace(): uint8;
+    GetDisplayID(): uint32;
+
+    SetItemByEntry(slot: OutfitSlots, entry: uint32);
+    SetItemByDisplayID(slot: OutfitSlots, displayId: uint32);
+    GetDisplayID(slot: OutfitSlots): uint32;
 }
 
 declare interface TSCreature extends TSUnit {

@@ -236,8 +236,15 @@ public:
 
 void TSSpellMap::OnAdd(uint32_t key, TSSpellEvents* events)
 {
-    const_cast<SpellInfo*>(sSpellMgr->GetSpellInfo(key))->
-        events = events;
+    auto spellInfo = sSpellMgr->GetSpellInfo(key);
+    if (spellInfo == nullptr) {
+        throw std::runtime_error(
+              "Tried registering event for invalid Spell entry: "
+            + std::to_string(key)
+            + "(did you remember to build your datascripts?)"
+        );
+    }
+    const_cast<SpellInfo*>(spellInfo)->events = events;
 }
 
 void TSSpellMap::OnRemove(uint32_t key)
@@ -247,7 +254,16 @@ void TSSpellMap::OnRemove(uint32_t key)
 
 void TSCreatureMap::OnAdd(uint32_t key, TSCreatureEvents* events)
 {
-    const_cast<CreatureTemplate*>(sObjectMgr->GetCreatureTemplate(key))->events = events;
+    auto creatureTemplate = sObjectMgr->GetCreatureTemplate(key);
+    if (creatureTemplate == nullptr)
+    {
+        throw std::runtime_error(
+              "Tried registering event for invalid Creature entry: "
+            + std::to_string(key)
+            + "(did you remember to build your datascripts?)"
+        );
+    }
+    const_cast<CreatureTemplate*>(creatureTemplate)->events = events;
 }
 
 void TSCreatureMap::OnRemove(uint32_t key)
@@ -257,6 +273,15 @@ void TSCreatureMap::OnRemove(uint32_t key)
 
 void TSGameObjectMap::OnAdd(uint32_t key, TSGameObjectEvents* events)
 {
+    auto gobjTemplate = sObjectMgr->GetGameObjectTemplate(key);
+    if (gobjTemplate == nullptr)
+    {
+        throw std::runtime_error(
+            "Tried registering event for invalid GameObject entry: "
+            + std::to_string(key)
+            + "(did you remember to build your datascripts?)"
+        );
+    }
     const_cast<GameObjectTemplate*>(sObjectMgr->GetGameObjectTemplate(key))->events = events;
 }
 
@@ -267,7 +292,16 @@ void TSGameObjectMap::OnRemove(uint32_t key)
 
 void TSItemMap::OnAdd(uint32_t key, TSItemEvents* events)
 {
-    const_cast<ItemTemplate*>(sObjectMgr->GetItemTemplate(key))->events = events;
+    auto itemTemplate = sObjectMgr->GetItemTemplate(key);
+    if (itemTemplate == nullptr)
+    {
+        throw std::runtime_error(
+            "Tried registering event for invalid Item entry: "
+            + std::to_string(key)
+            + "(did you remember to build your datascripts?)"
+        );
+    }
+    const_cast<ItemTemplate*>(itemTemplate)->events = events;
 }
 
 void TSItemMap::OnRemove(uint32_t key)
@@ -276,6 +310,7 @@ void TSItemMap::OnRemove(uint32_t key)
 
 void TSMapMap::OnAdd(uint32_t key, TSMapEvents* events)
 {
+    // TODO: should check if this is a valid map, will now allow to store this on any id.
     GetMapDataExtra(key)->events = events;
 }
 
