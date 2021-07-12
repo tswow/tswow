@@ -48,6 +48,7 @@ import { SQL_creature_template } from './types/creature_template'
 import { SQL_creature_template_addon } from './types/creature_template_addon'
 import { SQL_creature_template_locale } from './types/creature_template_locale'
 import { SQL_creature_template_movement } from './types/creature_template_movement'
+import { SQL_creature_template_outfits } from './types/creature_template_outfits'
 import { SQL_creature_template_resistance } from './types/creature_template_resistance'
 import { SQL_creature_template_spell } from './types/creature_template_spell'
 import { SQL_creature_text } from './types/creature_text'
@@ -378,6 +379,11 @@ export const SQL = {
      * No comment (yet!)
      */
     creature_template_movement : SQL_creature_template_movement,
+
+    /**
+     * No comment (yet!)
+     */
+    creature_template_outfits: SQL_creature_template_outfits,
     
     /**
      * No comment (yet!)
