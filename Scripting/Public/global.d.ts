@@ -1372,8 +1372,9 @@ declare interface TSPlayer extends TSUnit {
 
     /**
      * Kills the [Player]
+     * durability: whether to lose durability (false by default)
      */
-    KillPlayer() : void
+    KillPlayer(durability?: boolean) : void
 
     /**
      * Forces the [Player] to leave a [Group]

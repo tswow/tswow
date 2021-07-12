@@ -2348,9 +2348,9 @@ void TSPlayer::DurabilityLossAll(double percent,bool inventory)
 /**
  * Kills the [Player]
  */
-void TSPlayer::KillPlayer() 
+void TSPlayer::KillPlayer(bool durability) 
 {
-    player->KillPlayer();
+    player->Kill(player, player, durability);
 }
     
 /**

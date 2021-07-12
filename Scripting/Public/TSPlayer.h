@@ -201,7 +201,7 @@ public:
 	void DurabilityPointsLoss(TSItem item, int32 points);
 	void DurabilityLoss(TSItem item, double percent);
 	void DurabilityLossAll(double percent, bool inventory);
-	void KillPlayer();
+	void KillPlayer(bool durability = false);
 	void RemoveFromGroup();
 	uint32 ResetTalentsCost();
 	void ResetTalents(bool no_cost);
