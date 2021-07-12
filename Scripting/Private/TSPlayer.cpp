@@ -2055,6 +2055,15 @@ void TSPlayer::SendGameObjectQueryPacket(uint32 entry)
     }
 }
 
+void TSPlayer::SendItemQueryPacket(uint32 entry)
+{
+    if (ItemTemplate const* ci = sObjectMgr->GetItemTemplate(entry))
+    {
+        WorldSession* curSes = player->GetSession();
+        WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
+        curSes->SendPacket(&response);
+    }
+}
 /**
  * Sends a spirit resurrection request to the [Player]
  */
