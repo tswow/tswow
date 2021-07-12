@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { setContext } from '../util/TSWoWContext';
+setContext('build');
 import { BuildPaths, InstallPaths, ipaths } from '../util/Paths';
 import { build_path, install_path } from './BuildConfig';
 InstallPaths.setInstallBase(install_path());
@@ -105,6 +107,7 @@ async function compile(type: string, compileArgs: string[]) {
 }
 
 async function main() {
+    term.Initialize();
     const build = commands.addCommand('build');
     await compile('scripts', []);
 

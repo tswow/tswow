@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { setContext } from '../util/TSWoWContext';
+setContext('install');
 import { InstallPaths } from '../util/Paths';
 InstallPaths.setInstallBase('./');
 import { mysql } from './MySQL';

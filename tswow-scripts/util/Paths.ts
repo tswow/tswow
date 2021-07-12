@@ -158,7 +158,7 @@ export class InstallPaths {
         return mpath(this.datasets, 'default-set');
     }
 
-    get terminal_history() {
+    get terminalHistory() {
         return mpath(this.coredata,'terminal-history.txt');
     }
 
@@ -711,6 +711,10 @@ export class BuildPaths {
                   `Your build directory contains spaces somewhere in its path,`
                 + `please move it to a directory without spaces.`)
         }
+    }
+
+    get terminalHistory() {
+        return mpath(this.base, 'terminal-history.txt');
     }
 
     get base() {

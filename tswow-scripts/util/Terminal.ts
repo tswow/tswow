@@ -17,7 +17,12 @@
 import termkit = require('terminal-kit');
 import { NodeConfig } from '../runtime/NodeConfig';
 import { wfs } from './FileSystem';
-import { ipaths } from './Paths';
+import { bpaths, ipaths } from './Paths';
+import { getContext } from './TSWoWContext';
+
+function historyPath() {
+    return getContext() == 'build' ? bpaths.terminalHistory : ipaths.terminalHistory;
+}
 
 const t = termkit.terminal;
 t.on('key', (name: string, data: any) => {
@@ -153,7 +158,7 @@ export namespace term {
                 }
 
                 history.splice(0,Math.max(0,history.length - NodeConfig.terminal_history))
-                wfs.write(ipaths.terminal_history,history.join('\n'));
+                wfs.write(historyPath(),history.join('\n'));
                 break;
             case 'BACKSPACE':
                 if (inputBuffer.length === 0 || xpos === 0) {
@@ -340,7 +345,7 @@ export namespace term {
 
     export function Initialize() {
         // load history file
-        history = wfs.readOr(ipaths.terminal_history,'')
+        history = wfs.readOr(historyPath(),'')
             .split('\n')
             .filter(x=>x.length>0)
     }
