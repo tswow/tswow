@@ -3891,12 +3891,16 @@ export class Emitter {
     }
 
     processPropertyAccessExpression(node: ts.PropertyAccessExpression): void {
-        // write constants directly
-        const constValue = this.typeChecker.getConstantValue(node);
-        if(constValue!==undefined) {
-            this.writer.writeString(`${constValue}`);
-            return;
-        }
+        // write constants directly (allows phantom const enums in declarations)
+        try { // not sure if this can break, wrapping in try to be sure
+            // resolve symbol fix: https://github.com/microsoft/TypeScript/issues/33203#issuecomment-527674536
+            let symbol = this.typeChecker.getSymbolAtLocation(node);
+            const constValue = this.typeChecker.getConstantValue(symbol.valueDeclaration as any);
+            if(constValue!==undefined) {
+                this.writer.writeString(`${constValue}`);
+                return;
+            }
+        } catch(err) {}
         const typeInfo = this.resolver.getOrResolveTypeOf(node.expression);
         const symbolInfo = this.resolver.getSymbolAtLocation(node.name);
         const methodAccess = symbolInfo
