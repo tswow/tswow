@@ -31,6 +31,41 @@ type TSArray<T> = T[];
 type TSString = string;
 
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
+declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
+declare const enum InventorySlots /**@realType:uint32*/{
+    INVENTORY_SLOT_BAG_1 = 19,
+    INVENTORY_SLOT_BAG_2 = 20,
+    INVENTORY_SLOT_BAG_3 = 21,
+    INVENTORY_SLOT_BAG_4 = 22
+}
+declare const enum CorpseType {} /** Corpse.h:CorpseType */
+declare const enum CreatureFamily {} /** SharedDefines.h:CreatureFamily */
+declare const enum RemoveMethod {} /** SharedDefines.h:RemoveMethod */
+declare const enum QuestFlags {} /** QuestDef.h:QuestFlags */
+declare const enum TeamId {} /** SharedDefines.h:TeamId */
+declare const enum WeatherType {} /** SharedDefines.h:WeatherType */
+declare const enum GOState {} /** SharedDefines.h:GOState */
+declare const enum LootState {} /** GameObject.h:LootState */
+declare const enum TempSummonType {} /** ObjectDefines.h:TempSummonType */
+declare const enum TypeID {} /** ObjectGuid.h:TypeID */
+declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
+declare const enum Powers {} /** SharedDefines.h:Powers */
+declare const enum CreatureType {} /** SharedDefines.h:CreatureType */
+declare const enum LocaleConstant {} /** Common.h:LocaleConstant */
+declare const enum UnitMoveType {} /** Unit.h:UnitMoveType */
+declare const enum MovementGeneratorType {} /** MovementDefines.h:MovementGeneratorType */
+declare const enum SheathState {} /** UnitDefines.h:SheathState */
+declare const enum SpellSchools {} /** SharedDefines.h:SpellSchools */
+declare const enum SpellSchoolMask {
+    SPELL_SCHOOL_MASK_NONE    = 0,
+    SPELL_SCHOOL_MASK_NORMAL  = 1,
+    SPELL_SCHOOL_MASK_HOLY    = 2,
+    SPELL_SCHOOL_MASK_FIRE    = 4,
+    SPELL_SCHOOL_MASK_NATURE  = 8,
+    SPELL_SCHOOL_MASK_FROST   = 16,
+    SPELL_SCHOOL_MASK_SHADOW  = 32,
+    SPELL_SCHOOL_MASK_ARCANE  = 64,
+}
 
 declare interface TSMutable<T> {
     constructor(field: T);
@@ -1531,7 +1566,7 @@ declare interface TSPlayer extends TSUnit {
      * @param uint32 slot : equipment slot to equip the item to The slot can be [EquipmentSlots] or [InventorySlots]
      * @return [Item] equippedItem : item or nil if equipping failed
      */
-    EquipItem(item : TSItem,slot : uint32,entry : uint32) : TSItem
+    EquipItem(item : TSItem,slot : EquipmentSlots|InventorySlots,entry : uint32) : TSItem
 
     /**
      * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.
@@ -1869,10 +1904,10 @@ declare interface TSCorpse extends TSWorldObject {
      *         CORPSE_BONES             = 0,
      *         CORPSE_RESURRECTABLE_PVE = 1,
      *         CORPSE_RESURRECTABLE_PVP = 2
-     *
+     *     }
      * @return [CorpseType] corpseType
      */
-    GetType() : uint32
+    GetType() : CorpseType
 
     /**
      * Sets the "ghost time" to the current time.
@@ -2670,7 +2705,7 @@ declare interface TSCreature extends TSUnit {
      *     }
      * @return [CreatureFamily] creatureFamily
      */
-    GetCreatureFamily() : uint32    
+    GetCreatureFamily() : CreatureFamily
 
     /**
      * Updates max hp, hp, and stats
@@ -3087,7 +3122,7 @@ declare interface TSGroup {
      * @param [RemoveMethod] method : method used to remove the player
      * @return bool removed
      */
-    RemoveMember(guid : uint64,method : uint32) : bool
+    RemoveMember(guid : uint64,method : RemoveMethod) : bool
 
     /**
      * Disbands this [Group]
@@ -3323,7 +3358,7 @@ declare interface TSQuest {
      * @param [QuestFlags] flag : all available flags can be seen above
      * @return bool hasFlag
      */
-    HasFlag(flag : uint32) : bool
+    HasFlag(flag : QuestFlags) : bool
 
     /**
      * Returns 'true' if the [Quest] is a daily quest, false otherwise.
@@ -3515,10 +3550,10 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     *         TEAM_HORDE = 1,
     *         TEAM_NEUTRAL = 2
     *
-    * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral (All)
+    * @param [TeamId] team : optional check team of the [Player], Alliance, Horde or Neutral/All (default)
     * @return table mapPlayers
     */
-    GetPlayers(team : uint32) : TSArray<TSPlayer>
+    GetPlayers(team? : TeamId) : TSArray<TSPlayer>
 
     /**
      * Returns the area ID of the [Map] at the specified X, Y, and Z coordinates.
@@ -3554,7 +3589,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @param [WeatherType] type : the [WeatherType], see above available weather types
      * @param float grade : the intensity/grade of the [Weather], ranges from 0 to 1
      */
-    SetWeather(zoneId : uint32,weatherType : uint32,grade : float) : void
+    SetWeather(zoneId : uint32,weatherType : WeatherType,grade : float) : void
 }
 
 declare interface TSItem extends TSObject {
@@ -4089,7 +4124,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @return [GOState] goState
      */
-    GetGoState() : uint32
+    GetGoState() : GOState
 
     /**
      * Returns the [LootState] of a [GameObject]
@@ -4105,7 +4140,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @return [LootState] lootState
      */
-    GetLootState() : uint32
+    GetLootState() : LootState
 
     /**
      * Returns the [Player] that can loot the [GameObject]
@@ -4144,7 +4179,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @param [GOState] state : all available go states can be seen above
      */
-    SetGoState(state : uint32) : void
+    SetGoState(state : GOState) : void
 
     /**
      * Sets the [LootState] of a [GameObject]
@@ -4160,7 +4195,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @param [LootState] state : all available loot states can be seen above
      */
-    SetLootState(state : uint32) : void
+    SetLootState(state : LootState) : void
 
     /**
      * Saves [GameObject] to the database
@@ -4559,7 +4594,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 despawnTimer = 0 : despawn time in milliseconds
      * @return [Creature] spawnedCreature
      */
-    SpawnCreature(entry : uint32,x : float,y : float,z : float,o : float,spawnType : uint32,despawnTimer : uint32) : TSCreature
+    SpawnCreature(entry : uint32,x : float,y : float,z : float,o : float,spawnType : TempSummonType,despawnTimer : uint32) : TSCreature
 
     /**
      * Returns true if the given [WorldObject] or coordinates are in the [WorldObject]'s line of sight
@@ -4870,7 +4905,7 @@ declare interface TSObject extends TSEntityProvider {
      *
      * @return uint8 typeID
      */
-    GetTypeId() : uint8
+    GetTypeId() : TypeID
 
     /**
      * Returns the data at the specified index, casted to an unsigned 64-bit integer.
@@ -5368,7 +5403,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [CurrentSpellTypes] spellType
      * @return [Spell] castedSpell
      */
-    GetCurrentSpell(type : uint32) : TSSpell
+    GetCurrentSpell(type : CurrentSpellTypes) : TSSpell
 
     /**
      * Returns the [Unit]'s current stand state.
@@ -5425,7 +5460,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @return uint32 powerAmount
      */
-    GetPower(type : int) : uint32
+    GetPower(type : Powers|-1) : uint32
 
     /**
      * Returns the [Unit]'s max power amount for given power type.
@@ -5446,7 +5481,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @return uint32 maxPowerAmount
      */
-    GetMaxPower(type : int) : uint32
+    GetMaxPower(type : Powers|-1) : uint32
 
     /**
      * Returns the [Unit]'s power percent for given power type.
@@ -5467,7 +5502,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @return float powerPct
      */
-    GetPowerPct(type : int) : float
+    GetPowerPct(type : Powers|-1) : float
 
     /**
      * Returns the [Unit]'s current power type.
@@ -5487,7 +5522,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return [Powers] powerType
      */
-    GetPowerType() : uint32
+    GetPowerType() : Powers
 
     /**
      * Returns the [Unit]'s max health.
@@ -5560,7 +5595,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return [CreatureType] creatureType
      */
-    GetCreatureType() : uint32
+    GetCreatureType() : CreatureType
 
     /**
      * Returns the [Unit]'s class' name in given or default locale or nil.
@@ -5581,7 +5616,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [LocaleConstant] locale = DEFAULT_LOCALE
      * @return string className : class name or nil
      */
-    GetClassAsString(locale : uint8) : string
+    GetClassAsString(locale : LocaleConstant) : string
 
     /**
      * Returns the [Unit]'s race's name in given or default locale or nil.
@@ -5601,7 +5636,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [LocaleConstant] locale = DEFAULT_LOCALE : locale to return the race name in
      * @return string raceName : race name or nil
      */
-    GetRaceAsString(locale : uint8) : string
+    GetRaceAsString(locale : LocaleConstant) : string
 
     /**
      * Returns the [Unit]'s faction ID.
@@ -5652,7 +5687,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [UnitMoveType] type
      * @return float speed
      */
-    GetSpeed(type : uint32) : float
+    GetSpeed(type : UnitMoveType) : float
 
     /**
      * Returns the current movement type for this [Unit].
@@ -5684,7 +5719,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return [MovementGeneratorType] movementType
      */
-    GetMovementType() : uint32
+    GetMovementType() : MovementGeneratorType
 
     /**
      * Sets the [Unit]'s owner GUID to given GUID.
@@ -5711,7 +5746,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param [SheathState] sheathState : valid SheathState
      */
-    SetSheath(sheathed : uint32) : void
+    SetSheath(sheathed : SheathState) : void
 
     /**
      * Sets the [Unit]'s name internally.
@@ -5740,7 +5775,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param float rate
      * @param bool forced = false
      */
-    SetSpeed(type : uint32,rate : float,forced : bool) : void
+    SetSpeed(type : UnitMoveType,rate : float,forced : bool) : void
 
     /**
      * Sets the [Unit]'s faction.
@@ -5789,7 +5824,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param uint32 amount : new power amount
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      */
-    SetPower(amt : uint32,type : int) : void
+    SetPower(amt : uint32,type : Powers|-1) : void
 
     /**
      * modifies the [Unit]'s power amount for the given power type.
@@ -5810,7 +5845,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param int32 amount : amount to modify
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      */
-    ModifyPower(amt : int32,type : int) : void
+    ModifyPower(amt : int32,type : Powers|-1) : void
 
     /**
      * Sets the [Unit]'s max power amount for the given power type.
@@ -5831,7 +5866,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
      * @param uint32 maxPower : new max power amount
      */
-    SetMaxPower(type : int,amt : uint32) : void
+    SetMaxPower(type : Powers|-1,amt : uint32) : void
 
     /**
      * Sets the [Unit]'s power type.
@@ -5851,7 +5886,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param [Powers] type : a valid power type
      */
-    SetPowerType(type : uint32) : void
+    SetPowerType(type : Powers) : void
 
     /**
      * Sets the [Unit]'s modelID.
@@ -6250,7 +6285,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [SpellSchools] school = MAX_SPELL_SCHOOL : school the damage is done in or MAX_SPELL_SCHOOL for direct damage
      * @param uint32 spell = 0 : spell that inflicts the damage
      */
-    DealDamage(target : TSUnit,damage : uint32,durabilityloss : bool,school : uint32,spell : uint32) : void
+    DealDamage(target : TSUnit,damage : uint32,durabilityloss : bool,school : SpellSchools,spell : uint32) : void
 
     /**
      * Makes the [Unit] heal the target [Unit] with given spell
@@ -6290,7 +6325,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
      * @param uint32 spell = 0 : spell entry used for threat
      */
-    AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : uint32, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
+    AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : SpellSchoolMask, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
 }
 
