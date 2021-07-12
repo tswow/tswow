@@ -254,9 +254,9 @@ public:
 	void LearnTalent(uint32 id, uint32 rank);
 	void LearnClassSpells(bool trainer, bool quests);
 	void ResurrectPlayer(float percent, bool sickness);
-	void GossipMenuAddItem(uint32 _icon, TSString msg, uint32 _sender, uint32 _intid, bool _code, TSString _promptMsg, uint32 _money);
+	void GossipMenuAddItem(uint32 _icon, TSString msg, uint32 _sender = 0, uint32 _intid = 0, bool _code = false, TSString _promptMsg = JSTR(""), uint32 _money = 0);
 	void GossipComplete();
-	void GossipSendMenu(uint32 npc_text, TSObject sender, uint32 menu_id);
+	void GossipSendMenu(uint32 npc_text, TSObject sender, uint32 menu_id = 0);
 	void GossipClearMenu();
 	void StartTaxi(uint32 pathId);
 	void GossipSendPOI(float x, float y, uint32 icon, uint32 flags, uint32 data, TSString iconText);

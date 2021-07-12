@@ -66,6 +66,7 @@ declare const enum SpellSchoolMask /**@realType:uint32 */ {
     SPELL_SCHOOL_MASK_SHADOW  = 32,
     SPELL_SCHOOL_MASK_ARCANE  = 64,
 }
+declare const enum GossipOptionIcon {} /** GossipDef.h:GossipOptionIcon */
 
 declare interface TSMutable<T> {
     constructor(field: T);
@@ -1753,7 +1754,7 @@ declare interface TSPlayer extends TSUnit {
      * @param string popup = nil : if non empty string, a popup with given text shown on click
      * @param uint32 money = 0 : required money in copper
      */
-    GossipMenuAddItem(_icon : uint32,msg : string,_sender : uint32,_intid : uint32,_code : bool,_promptMsg : string,_money : uint32) : void
+    GossipMenuAddItem(icon : GossipOptionIcon,msg : string,sender : uint32,id : uint32,code : bool,promptMsg : string,moneyRequired : uint32) : void
 
     /**
      * Closes the [Player]s currently open Gossip Menu.
