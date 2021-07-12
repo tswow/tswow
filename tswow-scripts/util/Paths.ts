@@ -877,6 +877,10 @@ export class SourcePaths {
         return './TrinityCore';
     }
 
+    get trinityCoreSources() {
+        return mpath(this.trinityCore,'src');
+    }
+
     get liveScriptHeaders() {
         return mpath(this.trinityCore,'src','server','game','Tswow','Scripting','Public');
     }

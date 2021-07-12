@@ -28,6 +28,53 @@ import { BuildType } from '../util/BuildType';
 export namespace TrinityCore {
     export function headers() {
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude, true);
+
+        // write enums
+        let gdts = wfs.read(spaths.tcGlobaldts)
+        let tcFiles: string[] = []
+        wfs.iterate(spaths.trinityCoreSources,(name)=>{
+            tcFiles.push(name);
+        });
+
+        let readFiles: {[key: string]: string} = {}
+        gdts = gdts.split('\n').map(x=>{
+            let match = x.match(/declare +const +enum +([a-zA-Z_][a-zA-Z_0-9]*) +{.*?} +\/\*\* +(.+?):([a-zA-Z_][a-zA-Z_0-9]*).*/)
+            if(match) {
+                let declName = match[1]
+                let filename = match[2];
+                let realname = match[3];
+        
+                let typeStr = "/**@realType:uint32*/";
+                let content = "{}";
+                let found = false;
+
+                tcFiles.filter(x=>x.endsWith(filename))
+                    .forEach(x=>{
+                        let file = readFiles[x] === undefined ? (readFiles[x] = wfs.read(x)) : readFiles[x]
+                        // TODO: will break on comments containing "{", "}" or anything between ":" and a type specifier
+                        let match = file.match(new RegExp(`enum +${realname} *((?:.|[\r\n])*?){((?:.|[\r\n])*?)};`))
+                        if(match) {
+                            if(found) {
+                                throw new Error(`Multiple definitions of ${realname}, specified to search in filenames ${filename}`)
+                            }
+                            found = true;
+                            let typeHeader = match[1];
+                            if(typeHeader.startsWith(':')) {
+                                let typeMatch = typeHeader.match(/\: *([a-zA-Z_][a-zA-Z_0-9]*)/);
+                                if(typeMatch) {
+                                    let type = typeMatch[1];
+                                    typeStr = `/**@realType:${type}*/`;
+                                }
+                            }
+                            content = `${match[2]}`;
+                        }
+                    });
+                return x.replace(match[0],`declare const enum ${declName} ${typeStr} {${content}}`);
+            }
+            return x;
+        }).join('\n');
+        wfs.write(ipaths.binglobaldts,gdts);
+
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude, true);
 
         wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
