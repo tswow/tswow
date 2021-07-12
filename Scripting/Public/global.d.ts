@@ -6454,6 +6454,50 @@ declare interface TSSpellCastTargets {
     GetUnit() : TSUnit;
 }
 
+declare interface TSAssert {
+    isTrue(expression: boolean, reason?: string): void;
+    isFalse(expression: boolean, reason?: string): void;
+    hasSpell(player: TSPlayer, spell: uint32, reason?: string): void;
+    hasItem(player: TSPlayer, item: uint32, count?: uint32, checkBank?: boolean, reason?: string): void;
+    equals<T>(a: T, b: T, reason?: string): void;
+}
+
+declare interface TSManualStepBuilder {
+    /**
+     * Sets the displayed description of this step
+     * @param description 
+     */
+    description(description: string): TSManualStepBuilder;
+
+    /**
+     * Sets a function to call when the player starts this step
+     * @param callback 
+     */
+    setup(callback: (player: TSPlayer)=>void);
+
+    /**
+     * Sets a function to call when the player attempts to finish this step
+     * @param callback 
+     */
+    verify(callback: (player: TSPlayer, assert: TSAssert)=>void);
+}
+
+declare interface TSManualTestBuilder {
+    /**
+     * Adds a new simple step with a description
+     * @param name 
+     * @param description 
+     */
+    step(name: string, description: string): TSManualTestBuilder
+
+    /**
+     * Adds a new step that you can customize through the callback argument, see TSManualStepBuilder
+     * @param name 
+     * @param callback 
+     */
+    step(name: string, callback: (builder: TSManualStepBuilder)=>void): TSManualTestBuilder
+}
+
 declare namespace _hidden {
     export class World {
         OnOpenStateChange(callback: (open : bool)=>void);
@@ -6881,6 +6925,11 @@ declare namespace _hidden {
         OnMessageID<T>(cls: new()=>T, callback: (player: TSPlayer,message: T)=>void);
         OnLongMessage(callback: (player: TSPlayer, channel: uint16, message: string)=>void)
     }
+
+    export class Tests {
+        ManualTest(name: string): TSManualTestBuilder
+        AutomaticTest(name: string, callback: (player: TSPlayer, assert: TSAssert)=>void)
+    }
 }
 
 declare class TSEventHandlers {
@@ -6905,6 +6954,7 @@ declare class TSEventHandlers {
     ItemID: _hidden.ItemID;
     GameObjects: _hidden.GameObjects;
     GameObjectID: _hidden.GameObjectID;
+    Tests: _hidden.Tests;
 }
 
 declare class TSDictionary<K,V> {

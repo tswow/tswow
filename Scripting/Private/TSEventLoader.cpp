@@ -107,13 +107,13 @@ bool TSShouldLoadEventHandler(boost::filesystem::path const& name)
     return false;
 }
 
-TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& name)
+TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName)
 {
-    std::string sname = name.string();
+    std::string spath = modulePath.string();
     uint32_t modid = 0;
-    if(modIds.find(sname) != modIds.end())
+    if(modIds.find(spath) != modIds.end())
     {
-        modid = modIds[sname];
+        modid = modIds[spath];
     }
     else
     {
@@ -121,8 +121,7 @@ TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& name)
         reloads.push_back(0);
     }
 
-    auto handler = &(eventHandlers[sname] = TSEventHandlers());
-    handler->modid = modid;
+    auto handler = &(eventHandlers[spath] = TSEventHandlers(modid,moduleName));
     handler->LoadEvents(&tsEvents);
     return handler;
 }
@@ -175,7 +174,7 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
     if(iter!=eventHandlers.end())
     {
         iter->second.Unload();
-        reloads[iter->second.modid]++;
+        reloads[iter->second.m_modid]++;
         eventHandlers.erase(sname);
     }
 
@@ -434,9 +433,11 @@ void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer,std::shared_ptr<vo
     (&messageMap[opcode])->listeners.push_back(func);
 }
 
+void AddSC_tswow_commandscript();
 void TSInitializeEvents()
 {
     TSLoadEvents();
     LoadIDs();
     InitializeMessages();
+    AddSC_tswow_commandscript();
 };

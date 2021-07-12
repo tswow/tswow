@@ -29,6 +29,7 @@
 #include "TSDamageInfo.h"
 #include "BinReader.h"
 #include "TSJson.h"
+#include "TSTests.h"
 #include <cstdint>
 
 // Addon
@@ -724,7 +725,17 @@ TC_GAME_API void ReloadMap(MapOnReloadType fn, uint32 id);
 class TSEventHandlers
 {
 public:
-     uint32_t modid;
+     uint32_t m_modid;
+     std::string m_modName;
+
+     TSEventHandlers(uint32_t modid, std::string const& modName)
+         : m_modid(modid)
+         , m_modName(modName)
+         , Tests(modid,modName)
+     {
+     }
+
+     TSEventHandlers() = default;
 
     struct ServerEvents: public EventHandler
     {
@@ -1155,6 +1166,32 @@ public:
          }
     } Addon;
 
+    struct TestEvents {
+        uint32_t m_modid;
+        std::string m_modName;
+        TestEvents(uint32_t modid, std::string const& modName)
+            : m_modid(modid)
+            , m_modName(modName)
+        {}
+        TestEvents() = default;
+        TestEvents* operator->() { return this; }
+
+        std::shared_ptr<TSManualTestBuilder> ManualTest(TSString name)
+        {
+            return RegisterManualTest(m_modid, m_modName, name);
+        }
+
+        void AutomaticTest(TSString name, TSTestCallback callback)
+        {
+            return RegisterAutomaticTest(m_modid, m_modName, name, callback);
+        }
+
+        void Unload()
+        {
+            UnloadTestModule(m_modid);
+        }
+    } Tests;
+
     void LoadEvents(TSEvents* events)
     {
         Addon.LoadEvents(events);
@@ -1211,6 +1248,7 @@ public:
          ItemID.Unload();
          Maps.Unload();
          MapID.Unload();
+         Tests.Unload();
     }
 };
 

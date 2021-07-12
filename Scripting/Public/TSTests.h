@@ -1,0 +1,153 @@
+/*
+ * This file is part of tswow (https://github.com/tswow/).
+ * Copyright (C) 2021 tswow <https://github.com/tswow/>
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+#pragma once
+
+#include <cstdint>
+#include <functional>
+#include <string>
+#include <stdexcept>
+#include <vector>
+#include <regex>
+#include <memory>
+#include "TSMain.h"
+#include "TSString.h"
+
+class TSPlayer;
+class Player;
+
+class TC_GAME_API TSTestException : public std::runtime_error {
+public:
+    TSTestException(std::string const& what);
+};
+
+class TC_GAME_API TSAssert {
+public:
+    TSAssert * operator->() { return this; }
+    void isTrue(bool expression, TSString message = JSTR(""));
+    void isFalse(bool expression, TSString message = JSTR(""));
+    void hasSpell(TSPlayer player, uint32_t spellId, TSString message = JSTR(""));
+    void hasItem(TSPlayer player, uint32_t itemId, uint32_t count = 1, bool checkBank = false, TSString message = JSTR(""));
+    template <typename T>
+    void equals(T a, T b, TSString message = JSTR(""))
+    {
+        if (a != b)
+        {
+            throw TSTestException(message.std_str());
+        }
+    }
+};
+
+class TC_GAME_API TSTestBase {
+    virtual std::string searchName() const = 0;
+public:
+    TSTestBase(
+          uint32_t modid
+        , std::string const& modName
+        , std::string const& testName
+    );
+    const uint32_t m_modid;
+    const std::string m_modName;
+    const std::string m_testName;
+    virtual const char* testPrefix() const = 0;
+    bool matchRegex(std::regex const& regex) const;
+};
+
+typedef std::function<void(TSPlayer,TSAssert)> TSTestCallback;
+class TC_GAME_API TSAutomaticTest : public TSTestBase {
+    const TSTestCallback m_callback;
+    virtual std::string searchName() const;
+public:
+    TSAutomaticTest(
+          uint32_t modid
+        , std::string modName
+        , std::string testName
+        , TSTestCallback callback
+    );
+    TSAutomaticTest * operator->() { return this; }
+    virtual const char* testPrefix() const;
+    std::pair<bool,std::string> run(Player * player) const;
+    bool operator < (TSAutomaticTest const& step) const;
+};
+
+typedef std::function<void(TSPlayer)> TSStepSetup;
+class TC_GAME_API TSManualStep : public TSTestBase {
+    const uint32_t m_stepIndex;
+    virtual std::string searchName() const;
+public:
+    TSManualStep(
+          uint32_t modid
+        , std::string const& modName
+        , std::string const& testName
+        , std::string const& stepName
+        , uint32_t stepIndex
+    );
+    TSManualStep * operator->() { return this; }
+    std::string m_description;
+    TSStepSetup m_setup;
+    TSTestCallback m_verify;
+    const std::string m_stepName;
+    virtual const char* testPrefix() const;
+    void start(Player * player) const;
+    void instruct(Player * player) const;
+    void fail(Player * player, std::string const& sessionName, std::string const& reason) const;
+    bool verify(Player * player, std::string const& sessionName) const;
+    bool operator < (TSManualStep const& step) const;
+};
+
+class TC_GAME_API TSManualStepBuilder {
+    TSManualStep* m_step;
+public:
+    TSManualStepBuilder(
+          uint32_t modid
+        , std::string const& modName
+        , std::string const& testName
+        , std::string const& stepName
+        , uint32_t stepIndex
+    );
+    TSManualStepBuilder * operator->() { return this; }
+    TSManualStepBuilder * description(TSString description);
+    TSManualStepBuilder * setup(TSStepSetup setup);
+    TSManualStepBuilder * verify(TSTestCallback verify);
+};
+
+typedef std::function<void(TSManualStepBuilder*)> TSStepBuilderCallback;
+class TC_GAME_API TSManualTestBuilder {
+    uint32_t m_modid;
+    std::string m_modName;
+    std::string m_testName;
+    std::vector<TSManualStepBuilder> m_steps;
+    uint32_t m_stepCtr;
+public:
+    TSManualTestBuilder(
+          uint32_t modid
+        , std::string const& modName
+        , std::string const& testName
+    );
+    TSManualTestBuilder * operator->() { return this; }
+    TSManualTestBuilder * step(TSString name, TSString description);
+    TSManualTestBuilder * step(TSString name, TSStepBuilderCallback callback);
+};
+
+void TC_GAME_API ClearTest(std::string name);
+void TC_GAME_API ClearTests();
+void TC_GAME_API UnloadTestModule(uint32_t modid);
+void TC_GAME_API StartTestSession(Player * player, std::string const& sessionName, std::string const& filter);
+void TC_GAME_API NextTestStep(Player * player, std::string const& sessionName, bool isFail, std::string const& failMessage);
+void TC_GAME_API RegisterAutomaticTest(uint32_t modid, std::string const& modName,std::string const& name, TSTestCallback callback);
+void TC_GAME_API PrintSessionStatus(Player* player, std::string const& sessionName);
+
+std::shared_ptr<TSManualTestBuilder> TC_GAME_API RegisterManualTest(uint32_t modid, std::string const& modName, std::string const& name);
