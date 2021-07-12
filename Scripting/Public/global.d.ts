@@ -56,7 +56,7 @@ declare const enum UnitMoveType {} /** Unit.h:UnitMoveType */
 declare const enum MovementGeneratorType {} /** MovementDefines.h:MovementGeneratorType */
 declare const enum SheathState {} /** UnitDefines.h:SheathState */
 declare const enum SpellSchools {} /** SharedDefines.h:SpellSchools */
-declare const enum SpellSchoolMask {
+declare const enum SpellSchoolMask /**@realType:uint32 */ {
     SPELL_SCHOOL_MASK_NONE    = 0,
     SPELL_SCHOOL_MASK_NORMAL  = 1,
     SPELL_SCHOOL_MASK_HOLY    = 2,
@@ -6325,7 +6325,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [SpellSchoolMask] schoolMask = 0 : [SpellSchoolMask] of the threat causer
      * @param uint32 spell = 0 : spell entry used for threat
      */
-    AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : SpellSchoolMask, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
+    AddThreat(victim : TSUnit,threat : float,spell? : uint32,schoolMask? : SpellSchoolMask | uint32, ignoreModifiers?: boolean, ignoreRedirects?: boolean, raw?: boolean) : void
     ScaleThreat(victim: TSUnit, scale: float, raw?: boolean)
 }
 
