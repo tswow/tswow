@@ -21,10 +21,19 @@ export class Emitter {
     opsMap: Map<number, string> = new Map<number, string>();
     embeddedCPPTypes: Array<string>;
     isWritingMain = false;
+    // @tswow-begin: hack: const enums
+    enumTypes: {[key:string]: string}
+    // @tswow-end
 
     public constructor(
         typeChecker: ts.TypeChecker, private options: ts.CompilerOptions,
-        cmdLineOptions: any, private singleModule: boolean, private rootFolder?: string) {
+        cmdLineOptions: any, private singleModule: boolean,
+        // @tswow-begin: hack: const enums
+        enumTypes: {[key: string]: string},
+        private rootFolder?: string,
+        ) {
+        this.enumTypes = enumTypes;
+        // @tswow-end
         this.writer = new CodeWriter();
         this.resolver = new IdentifierResolver(typeChecker);
         this.preprocessor = new Preprocessor(this.resolver, this);
@@ -2224,7 +2233,14 @@ export class Emitter {
     writeTypeName(typeReference: ts.TypeReferenceNode) {
         const entityProcess = (entity: ts.EntityName) => {
             if (entity.kind === ts.SyntaxKind.Identifier) {
-                this.writer.writeString(entity.text);
+                // @tswow-begin: hack: const enums
+                let val = this.enumTypes[entity.text];
+                if(val !== undefined) {
+                    this.writer.writeString(val);
+                } else {
+                    this.writer.writeString(entity.text);
+                }
+                // @tswow-end
             } else if (entity.kind === ts.SyntaxKind.QualifiedName) {
                 entityProcess(entity.left);
                 if (!this.resolver.isTypeFromSymbol(entity.left, ts.SyntaxKind.EnumDeclaration)) {

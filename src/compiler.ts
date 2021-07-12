@@ -208,6 +208,18 @@ export class Run {
     private generateBinary(
         program: ts.Program, sources: string[], options: ts.CompilerOptions, cmdLineOptions: any) {
 
+        // @tswow-begin: hack: const enums
+        let enumTypes: {[key: string]: string} = {}
+        sources.filter(file=>file.endsWith('global.d.ts'))
+            .forEach(file=>{
+            fs.readFileSync(file,'utf-8').split('\n').forEach(line=>{
+                let m = line.match(/declare +const +enum +([a-zA-Z_][a-zA-Z0-9_]*) *\/\*\* *@realType *: *([a-zA-Z_][a-zA-Z0-9_]*)/)
+                if(m) {
+                    enumTypes[m[1]] = m[2];
+                }
+            });
+        });
+        // @tswow-end
         if (cmdLineOptions.trace) {
             console.log(ForegroundColorEscapeSequences.Pink + 'Generating binary files...' + resetEscapeSequence);
         }
@@ -273,10 +285,12 @@ export class Run {
                     + resetEscapeSequence);
             }
 
-            const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, program.getCurrentDirectory());
+            // @tswow-begin: hack: const enums
+            const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
             emitterHeader.HeaderMode = true;
             emitterHeader.processNode(s);
-            const emitterSource = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, program.getCurrentDirectory());
+            const emitterSource = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
+            // @tswow-end
             emitterSource.SourceMode = true;
             emitterSource.processNode(s);
 
