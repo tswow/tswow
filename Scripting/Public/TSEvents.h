@@ -214,6 +214,7 @@ EVENT_TYPE(GroupOnDisband,TSGroup)
 
 // SpellScript
 EVENT_TYPE(SpellOnCast,TSSpell)
+EVENT_TYPE(SpellOnCheckCast,TSSpell, TSMutable<uint8>)
 EVENT_TYPE(SpellOnDispel,TSSpell,uint32)
 EVENT_TYPE(SpellOnHit,TSSpell)
 EVENT_TYPE(SpellOnTick,TSAuraEffect)
@@ -222,6 +223,7 @@ EVENT_TYPE(SpellOnApply,TSAuraEffect,TSAuraApplication, uint32)
 
 struct TSSpellEvents {
      EVENT(SpellOnCast)
+     EVENT(SpellOnCheckCast)
      EVENT(SpellOnDispel)
      EVENT(SpellOnHit)
      EVENT(SpellOnTick)
@@ -670,6 +672,7 @@ struct TSEvents
 
     // SpellScript
     EVENT(SpellOnCast)
+    EVENT(SpellOnCheckCast)
     EVENT(SpellOnDispel)
     EVENT(SpellOnHit)
     EVENT(SpellOnTick)
@@ -924,6 +927,7 @@ public:
     {
           SpellEvents* operator->(){return this;}
           EVENT_HANDLE(Spell,OnCast)
+          EVENT_HANDLE(Spell,OnCheckCast)
           EVENT_HANDLE(Spell,OnDispel)
           EVENT_HANDLE(Spell,OnHit)
           EVENT_HANDLE(Spell,OnTick)
@@ -935,6 +939,7 @@ public:
     {
           SpellIDEvents* operator->(){return this;}
           MAP_EVENT_HANDLE(Spell,OnCast)
+          MAP_EVENT_HANDLE(Spell,OnCheckCast)
           MAP_EVENT_HANDLE(Spell,OnDispel)
           MAP_EVENT_HANDLE(Spell,OnHit)
           MAP_EVENT_HANDLE(Spell,OnTick)
