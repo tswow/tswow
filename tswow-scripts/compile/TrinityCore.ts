@@ -37,6 +37,7 @@ export namespace TrinityCore {
         });
 
         let readFiles: {[key: string]: string} = {}
+        let missingEnums: string[] = []
         gdts = gdts.split('\n').map(x=>{
             let match = x.match(/declare +const +enum +([a-zA-Z_][a-zA-Z_0-9]*) +{.*?} +\/\*\* +(.+?):([a-zA-Z_][a-zA-Z_0-9]*).*/)
             if(match) {
@@ -69,10 +70,16 @@ export namespace TrinityCore {
                             content = `${match[2]}`;
                         }
                     });
+                if(!found) {
+                    missingEnums.push(declName);
+                }
                 return x.replace(match[0],`declare const enum ${declName} ${typeStr} {${content}}`);
             }
             return x;
         }).join('\n');
+        if(missingEnums.length>0) {
+            throw new Error(`Missing enum declarations: ${missingEnums.join(',')}`)
+        }
         wfs.write(ipaths.binglobaldts,gdts);
 
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude, true);
