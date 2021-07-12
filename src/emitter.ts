@@ -2358,7 +2358,7 @@ export class Emitter {
             this.writer.writeStringNewLine(`void AddTSScripts(TSEventHandlers* handlers)`);
             this.writer.BeginBlock();
             this.writer.writeStringNewLine(`WriteTables();`);
-            this.writer.writeStringNewLine(`SetID(handlers->modid);`)
+            this.writer.writeStringNewLine(`SetID(handlers->m_modid);`)
             this.writer.writeStringNewLine(`WritePackets();`);
             this.writer.writeStringNewLine(`Main(handlers);`);
             this.writer.EndBlock();
