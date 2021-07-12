@@ -3891,7 +3891,12 @@ export class Emitter {
     }
 
     processPropertyAccessExpression(node: ts.PropertyAccessExpression): void {
-
+        // write constants directly
+        const constValue = this.typeChecker.getConstantValue(node);
+        if(constValue!==undefined) {
+            this.writer.writeString(`${constValue}`);
+            return;
+        }
         const typeInfo = this.resolver.getOrResolveTypeOf(node.expression);
         const symbolInfo = this.resolver.getSymbolAtLocation(node.name);
         const methodAccess = symbolInfo
