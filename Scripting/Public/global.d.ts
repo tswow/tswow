@@ -3504,6 +3504,9 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     GetGameObjects(entry?: uint32): TSArray<TSGameObject>
 
+    SpawnCreature(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSCreature
+    SpawnGameObject(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSGameObject
+
     /**
      * @param entry only return creatures of this entry. 
      * Leave out to select all creatures.

@@ -14,22 +14,27 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-#include <memory.h>
-#include "Object.h"
 #include "TSIncludes.h"
 #include "TSMap.h"
-#include "Map.h"
-#include "Weather.h"
-#include "Corpse.h"
-#include "DynamicObject.h"
-#include "Pet.h"
-
 #include "TSMap.h"
 #include "TSPlayer.h"
 #include "TSWorldObject.h"
 #include "TSGameObject.h"
 #include "TSUnit.h"
 #include "TSCreature.h"
+
+#include "ObjectMgr.h"
+#include "CreatureData.h"
+#include "ObjectGuid.h"
+#include "TemporarySummon.h"
+#include "Object.h"
+#include "Map.h"
+#include "Weather.h"
+#include "Corpse.h"
+#include "DynamicObject.h"
+#include "Pet.h"
+
+#include <memory.h>
 
 TSMap::TSMap(Map *mapIn)
     : TSEntityProvider(&mapIn->m_tsEntity)
@@ -382,4 +387,26 @@ TSCreature TSMap::GetCreatureByDBGUID(uint32 dbGuid)
 TSGameObject TSMap::GetGameObjectByDBGUID(uint32 dbGuid)
 {
     return TSGameObject(map->GetGameObjectBySpawnId(dbGuid));
+}
+
+TSCreature TSMap::SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer, uint32 phase)
+{
+    return TSCreature(map->SummonCreature(entry, Position(x, y, z, o), nullptr, despawnTimer));
+}
+
+TSGameObject TSMap::SpawnGameObject(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer, uint32 phase)
+{
+    const GameObjectTemplate* objectInfo = eObjectMgr->GetGameObjectTemplate(entry);
+    GameObject* object = new GameObject;
+    uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
+    QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
+    if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+    {
+        delete object;
+        return TSGameObject(nullptr);
+    }
+    if (despawnTimer)
+        object->SetRespawnTime(despawnTimer);
+    map->AddToMap(object);
+    return TSGameObject(object);
 }

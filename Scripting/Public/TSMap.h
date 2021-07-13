@@ -48,7 +48,8 @@ public:
     TSArray<TSCreature> GetCreatures(uint32 entry = 0);
     TSCreature GetCreatureByDBGUID(uint32 dbguid);
     TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
-
+    TSCreature SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
+    TSGameObject SpawnGameObject(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
     uint32 GetAreaId(float x, float y, float z, float phasemask);
     TSWorldObject GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
