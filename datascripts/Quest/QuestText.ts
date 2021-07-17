@@ -119,7 +119,7 @@ export class LogTitle extends SQLLocSystem<Quest> {
 
 export class ObjectiveDescription extends SQLLocSystem<Quest> {
     protected getMain(): Cell<string, any> {
-        return this.owner.row.QuestDescription;
+        return this.owner.row.LogDescription;
     }
     protected getLoc(loc: Language): Cell<string, any> {
         return localeRow(this.owner.ID,loc).Objectives;
@@ -128,7 +128,7 @@ export class ObjectiveDescription extends SQLLocSystem<Quest> {
 
 export class Description extends SQLLocSystem<Quest> {
     protected getMain(): Cell<string, any> {
-        return this.owner.row.LogDescription;
+        return this.owner.row.QuestDescription;
     }
 
     protected getLoc(loc: Language): Cell<string, any> {
