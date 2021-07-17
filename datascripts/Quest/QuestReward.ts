@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Quest } from "./Quest";
@@ -133,17 +134,25 @@ function FactionIds(owner: Quest) {
 
 function Reputation(owner: Quest) {
     return [
-        owner.row.RewardFactionValue1,
-        owner.row.RewardFactionValue2,
-        owner.row.RewardFactionValue3,
-        owner.row.RewardFactionValue4,
-        owner.row.RewardFactionValue5
-    ]
+        owner.row.RewardFactionOverride1,
+        owner.row.RewardFactionOverride2,
+        owner.row.RewardFactionOverride3,
+        owner.row.RewardFactionOverride4,
+        owner.row.RewardFactionOverride5
+    ].map(x=>new class extends Cell<number,Quest> {
+        get(): number {
+            return x.get()/100;
+        }
+        set(value: number): Quest {
+            x.set(value*100);
+            return owner;
+        }
+    }(owner))
 }
 
 export class ReputationReward extends ArrayEntry<Quest> {
-    get FactionId() { return FactionIds(this.owner)[this.index]}
-    get Reputation() { return Reputation(this.owner)[this.index]}
+    get FactionId() { return this.wrap(FactionIds(this.owner)[this.index])}
+    get Reputation() { return this.wrap(Reputation(this.owner)[this.index])}
 
     clear(): Quest {
         this.FactionId.set(0);
@@ -157,7 +166,7 @@ export class ReputationReward extends ArrayEntry<Quest> {
 
 export class ReputationRewards extends ArraySystem<ReputationReward,Quest> {
     get length(): number {
-        return 6;
+        return 5;
     }
 
     get(index: number): ReputationReward{
