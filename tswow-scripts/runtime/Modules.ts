@@ -62,7 +62,8 @@ export const data_tsconfig =
       "forceConsistentCasingInFileNames": true,
       "experimentalDecorators": true,
       "sourceMap": true
-    }
+    },
+    "exclude":["**/build/**","**/tswow/wotlkdata/**"]
 }`;
 
 /**
@@ -368,9 +369,7 @@ export namespace Modules {
 
         for (const mod of wfs.readDir(ipaths.modules, true)) {
             if (wfs.isDirectory(ipaths.moduleData(mod))) {
-                if (!wfs.exists(ipaths.moduleDataTsConfig(mod)) || force) {
-                    wfs.write(ipaths.moduleDataTsConfig(mod), data_tsconfig);
-                }
+                wfs.write(ipaths.moduleDataTsConfig(mod), data_tsconfig);
 
                 if (!wfs.exists(ipaths.moduleNoEdit(mod))) {
                     await getTSWatcher(ipaths.moduleData(mod));
