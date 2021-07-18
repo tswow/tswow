@@ -6737,6 +6737,7 @@ declare namespace _hidden {
         OnCreatureKill(callback: (killer : TSPlayer,killed : TSCreature)=>void);
         OnPlayerKilledByCreature(callback: (killer : TSCreature,killed : TSPlayer)=>void);
         OnLevelChanged(callback: (player : TSPlayer,oldLevel : uint8)=>void);
+        OnLearnTalent(callback: (player: TSPlayer, tabId: uint32, talentId: uint32, spellId: uint32, cancel: TSMutable<bool>)=>void)
         OnFreeTalentPointsChanged(callback: (player : TSPlayer,points : uint32)=>void);
         OnTalentsReset(callback: (player : TSPlayer,noCost : bool)=>void);
         OnMoneyChanged(callback: (player : TSPlayer,amount : TSMutable<int32>)=>void);

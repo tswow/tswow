@@ -181,6 +181,7 @@ EVENT_TYPE(PlayerOnSendMail,TSPlayer,TSMailDraft,TSMutable<uint32>)
 
 EVENT_TYPE(PlayerOnGenerateItemLoot,TSPlayer,TSItem,TSLoot,uint32)
 EVENT_TYPE(PlayerOnLootCorpse,TSPlayer,TSCorpse)
+EVENT_TYPE(PlayerOnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uint32_t talentRank, uint32_t spellId, TSMutable<bool>)
 
 EVENT_TYPE(PlayerOnGossipSelect,TSPlayer,TSPlayer,uint32_t,uint32_t,TSMutable<bool>)
 EVENT_TYPE(PlayerOnGossipSelectCode,TSPlayer,TSPlayer,uint32_t,uint32_t,TSString,TSMutable<bool>)
@@ -602,6 +603,7 @@ struct TSEvents
     EVENT(PlayerOnGossipSelectCode)
     EVENT(PlayerOnGenerateItemLoot)
     EVENT(PlayerOnLootCorpse)
+    EVENT(PlayerOnLearnTalent)
 
     // AccountScript
     EVENT(AccountOnAccountLogin)
@@ -884,6 +886,7 @@ public:
          EVENT_HANDLE(Player,OnGossipSelect)
          EVENT_HANDLE(Player,OnGossipSelectCode)
          EVENT_HANDLE(Player,OnGenerateItemLoot)
+         EVENT_HANDLE(Player, OnLearnTalent)
          EVENT_HANDLE(Player,OnLootCorpse)
     } Player;
 
