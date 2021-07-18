@@ -63,6 +63,17 @@ export class GameObjectTemplate<T extends GameObjectTemplate<T>> extends GOCreat
     spawn(mod: string, id: string, position: Position) {
         return new GameObjectInstance(
             SQL.gameobject.add(Ids.GameObjectInstance.id(mod,id))
+                .spawnMask.set(1)
+                .spawntimesecs.set(1)
+                .state.set(1)
+                .ScriptName.set('')
+                .rotation0.set(0)
+                .rotation1.set(0)
+                .rotation2.set(0)
+                .rotation3.set(0)
+                .zoneId.set(0)
+                .areaId.set(0)
+                .id.set(this.ID)
                 .VerifiedBuild.set(17688)
         ).Position.set(position)
     }
