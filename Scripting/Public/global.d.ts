@@ -133,7 +133,7 @@ declare interface TSPlayer extends TSUnit {
     LearnClassSpells(trainer: boolean, quests: boolean);
     SendData(data: any)
     SetBankBagSlotCount(count: uint8)
-    AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32)
+    AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32, propertyId?: int32)
 
     IsNull() : bool
 
@@ -1641,7 +1641,7 @@ declare interface TSPlayer extends TSUnit {
      * @param uint32 itemCount = 1 : amount of the item to add
      * @return [Item] item : the item that was added or nil
      */
-    AddItem(itemId : uint32,itemCount : uint32) : TSItem
+    AddItem(itemId : uint32,itemCount : uint32, propertyId?: int32) : TSItem
 
     /**
      * Removes the given amount of the specified [Item] from the player.

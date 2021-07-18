@@ -235,8 +235,8 @@ public:
 	void AdvanceSkill(uint32 _skillId, uint32 _step);
 	bool Teleport(uint32 mapId, float x, float y, float z, float o);
 	void AddLifetimeKills(uint32 val);
-	TSItem AddItem(uint32 itemId, uint32 itemCount);
-	void AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count);
+	TSItem AddItem(uint32 itemId, uint32 itemCount, int32 propertyId = -1);
+	void AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count, int32 propertyId = -1);
 	void RemoveItem(TSItem item, uint32 itemCount, uint32 itemId);
 	void RemoveLifetimeKills(uint32 val);
 	void ResetSpellCooldown(uint32 spellId, bool update);

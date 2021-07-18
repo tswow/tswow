@@ -3088,7 +3088,7 @@ void TSPlayer::AddLifetimeKills(uint32 val)
  * @param uint32 itemCount = 1 : amount of the item to add
  * @return [Item] item : the item that was added or nil
  */
-TSItem  TSPlayer::AddItem(uint32 itemId,uint32 itemCount) 
+TSItem  TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId) 
 {
     
 #if defined TRINITY || AZEROTHCORE
@@ -3099,7 +3099,7 @@ TSItem  TSPlayer::AddItem(uint32 itemId,uint32 itemCount)
         itemCount -= noSpaceForCount;
     
 #ifndef AZEROTHCORE
-    Item* item = player->StoreNewItem(dest, itemId, true, GenerateItemRandomPropertyId(itemId));
+    Item* item = player->StoreNewItem(dest, itemId, true, propertyId >= 0 ? propertyId : GenerateItemRandomPropertyId(itemId));
 #else
     Item* item = player->StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
 #endif
@@ -3709,11 +3709,11 @@ void TSPlayer::SetBankBagSlotCount(uint8 count)
     player->SetBankBagSlotCount(count);
 }
 
-void TSPlayer::AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count)
+void TSPlayer::AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count, int32 propertyId)
 {
     ItemPosCountVec dest;
     dest.push_back(ItemPosCount(bag<<8|slot,count));
-    Item* item = player->StoreNewItem(dest, itemId, true, GenerateItemRandomPropertyId(itemId));
+    Item* item = player->StoreNewItem(dest, itemId, true, propertyId >= 0 ? propertyId : GenerateItemRandomPropertyId(itemId));
     if (item) player->SendNewItem(item, count, true, false);
 }
 
