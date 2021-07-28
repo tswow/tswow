@@ -63,7 +63,7 @@ export function iterLocConstructor(con: loc_constructor, callback: (lang: Langua
         }
 
         const val = (con as any)[key];
-        if (val && typeof(val) === 'string' && val.length > 0) {
+        if (val !== undefined && typeof(val) === 'string') {
             callback(key as Language, val);
         }
     }
