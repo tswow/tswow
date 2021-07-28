@@ -190,14 +190,6 @@ export class SoundEntry<T> extends SharedRef<T, SoundEntriesRow>{
 }
 
 export class SoundEntryPointer<T> extends Pointer<T,SoundEntry<void>> {
-    @Transient
-    private cell: Cell<number,any>;
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
-    }
-
     setNewSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
         let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
         this.set(soundEntry.ID);
@@ -219,10 +211,6 @@ export class SoundEntryPointer<T> extends Pointer<T,SoundEntry<void>> {
             .clone(Ids.SoundEntries.id());
         this.cell.set(row.ID.get());
         return new SoundEntry(undefined, new DummyCell(undefined,this.cell.get()));
-    }
-
-    protected field(): IntCell {
-        return this.cell;
     }
 
     protected id(v: SoundEntry<void>): number {

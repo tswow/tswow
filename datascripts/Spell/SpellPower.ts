@@ -19,7 +19,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { IntCell, Pointer } from "../Refs/Pointer";
+import { Pointer } from "../Refs/Pointer";
 import { SpellRuneCostRow } from "wotlkdata/dbc/types/SpellRuneCost";
 
 export const PowerTypeMap = {
@@ -66,7 +66,7 @@ export class Power<T> extends CellSystem<T> {
 
 export class SpellRuneCostPointer extends Pointer<Spell,SpellRuneCostRow> {
     protected exists(): boolean {
-        return this.field().get() != 0;
+        return this.cell.get() != 0;
     }
 
     protected id(v: SpellRuneCostRow) { 
@@ -83,10 +83,6 @@ export class SpellRuneCostPointer extends Pointer<Spell,SpellRuneCostRow> {
 
     protected clone(): SpellRuneCostRow {
         return this.resolve().clone(Ids.SpellRuneCost.id());
-    }
-
-    protected field(): IntCell {
-        return this.owner.row.RuneCostID;
     }
 
     protected resolve(): SpellRuneCostRow {
@@ -108,7 +104,7 @@ export class SpellPower<T> extends CellSystem<T> {
     get PowerCostPerLevel() { return this.ownerWrap(this.spell.row.ManaCostPerLevel);}
     get PowerPerSecond() { return this.ownerWrap(this.spell.row.ManaPerSecond);}
     get PowerPerSecondPerLevel() { return this.ownerWrap(this.spell.row.ManaPerSecondPerLevel);}
-    get RuneCost() { return new SpellRuneCostPointer(this.spell); }
+    get RuneCost() { return new SpellRuneCostPointer(this.spell, this.spell.row.RuneCostID); }
 
     /**
      * Sets this spell to use mana

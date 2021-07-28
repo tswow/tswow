@@ -18,6 +18,7 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Quest } from "./Quest";
+import { QuestRewardMail } from "./QuestAddon";
 import { QuestDifficultyIndex } from "./QuestDifficultyIndex";
 
 function ChoiceItemIds(owner: Quest) {
@@ -206,4 +207,10 @@ export class QuestReward extends CellSystem<Quest> {
     get Difficulty() { return new QuestDifficultyIndex(this.owner, this.owner.row.RewardXPDifficulty); }
     /** Reward player with arena points */
     get ArenaPoints() { return this.ownerWrap(this.owner.row.RewardArenaPoints)}
+    /** The mail received upon */
+    get Mail() {
+        return new QuestRewardMail(this.owner
+            , this.owner.addonRow.RewardMailTemplateID
+            , this.owner.addonRow.RewardMailDelay)
+    }
 }

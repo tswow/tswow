@@ -41,6 +41,7 @@ import { Professions } from "./Profession/Professions";
 import { Locks } from "./Locks/Locks";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
 import { SoundEntryRegistry } from "./Sound/SoundEntry";
+import { MailTemplateRegistry } from "./Mail/MailTemplate";
 
 export const std = {
     Spells : Spells,
@@ -80,5 +81,6 @@ export const std = {
     Professions: Professions,
     Locks: Locks,
     ZoneMusic: ZoneMusicRegistry,
-    SoundEntries: SoundEntryRegistry
+    SoundEntries: SoundEntryRegistry,
+    MailTemplates: MailTemplateRegistry
 }

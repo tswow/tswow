@@ -1,3 +1,5 @@
+import { Cell } from "wotlkdata/cell/cells/Cell";
+
 export interface IntCell {
     get(): number;
     set(value: number): any;
@@ -9,13 +11,15 @@ export interface CanObjectify {
 
 export abstract class Pointer<T,V extends CanObjectify> {
     protected owner: T;
+    protected cell: Cell<number,any>
 
-    constructor(owner: T) {
+    constructor(owner: T, cell: Cell<number,any>) {
         this.owner = owner;
+        this.cell = cell;
     }
 
     get() {
-        return this.field().get();
+        return this.cell.get();
     }
 
     set(value: number) {
@@ -24,7 +28,7 @@ export abstract class Pointer<T,V extends CanObjectify> {
     }
 
     repoint(newPointer: number) {
-        this.field().set(newPointer);
+        this.cell.set(newPointer);
         return this.owner;
     }
 
@@ -63,7 +67,6 @@ export abstract class Pointer<T,V extends CanObjectify> {
     protected abstract exists(): boolean;
     protected abstract create(): V;
     protected abstract clone(): V;
-    protected abstract field(): IntCell;
     protected abstract id(v: V): number;
     protected abstract resolve(): V;
 }

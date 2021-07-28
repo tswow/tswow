@@ -101,8 +101,6 @@ export const Ids = {
     PickPocketLoot: new AutoIdGenerator('pickpocketing_loot_template',1000000),
     /** Starts at 1000000, Highest base value is 100014 */
     SkinningLoot: new AutoIdGenerator('skinning_loot_template',1000000),
-    /** Starts at 1000000, Highest base value is 287 */
-    MailLoot: new AutoIdGenerator('mail_loot_template',1000000),
     /** Starts at 1000000, Highest base value is 526760 */
     ReferenceLoot: new AutoIdGenerator('reference_loot_template',1000000),
     /** Starts at 1000000, Highest base value is 69412 */
@@ -289,4 +287,9 @@ export const Ids = {
      * Starts at 600, highest base value is 575
      */
     ZoneMusic: new AutoIdGenerator('ZoneMusic',600),
+
+    /**
+     * Starts at 300, highest base value is 291
+     */
+    MailTemplate: new AutoIdGenerator('MailTemplate', 300),
 }

@@ -233,10 +233,6 @@ export const Loot = {
     },
     
     Mail: {
-        create() {
-            return new LootSet(undefined, Ids.MailLoot.id(),SQL.mail_loot_template);
-        },
-        
         load(id: number) {
             return new LootSet(undefined, id, SQL.mail_loot_template)
         } 

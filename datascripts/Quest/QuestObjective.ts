@@ -24,7 +24,6 @@ import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { Quest } from "./Quest";
-import { addonRow } from "./QuestAddonRow";
 
 function ItemIds(owner: Quest) {
     return [
@@ -187,12 +186,12 @@ export class Scripted extends LocSystem<Quest> {
 
     constructor(owner: Quest) {
         super(owner);
-        addonRow(this.owner.ID).SpecialFlags.set(2);
+        this.owner.SpecialFlags.mark(1);
     }
 
     clear() {
         this.owner.row.AreaDescription.set("");
-        addonRow(this.owner.ID).SpecialFlags.set(0);
+        this.owner.SpecialFlags.clear(1);
         return this.owner;
     }
 

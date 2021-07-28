@@ -28,13 +28,6 @@ export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
 }
 
 export class ZoneMusicPointer<T> extends Pointer<T,ZoneMusic> {
-    private cell: Cell<number,any>;
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
-    }
-
     protected exists(): boolean {
         return this.cell.get() > 0;
     }
@@ -47,9 +40,6 @@ export class ZoneMusicPointer<T> extends Pointer<T,ZoneMusic> {
         return new ZoneMusic(this.resolve().row.clone(Ids.ZoneMusic.id()));
     }
 
-    protected field(): IntCell {
-        return this.cell;
-    }
     protected id(v: ZoneMusic): number {
         return v.ID;
     }
