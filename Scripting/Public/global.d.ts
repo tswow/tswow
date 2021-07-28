@@ -80,6 +80,7 @@ declare const enum OutfitSlots /**@realType:uint8*/{
     EQUIPMENT_SLOT_BACK = 14,
     EQUIPMENT_SLOT_TABARD = 18
 }
+declare const enum ProgressType {} /** AchievementMgr.h:ProgressType */
 
 declare interface TSMutable<T> {
     constructor(field: T);
@@ -127,6 +128,36 @@ declare interface TSChatChannel {
     SetInvisible(player: TSPlayer, on: bool): void;
     SetOwner(guid: uint64, exclaim?: bool): void;
     Say(guid: uint64, what: string, lang: uint32): void;
+}
+
+declare interface TSAchievementEntry
+{
+    GetEntry(): uint32;
+    GetFaction(): int32;
+    GetInstanceID(): int32;
+    GetTitles(): TSArray<TSString>;
+    GetCategory(): uint32;
+    GetPoints(): uint32;
+    GetFlags(): uint32;
+    GetMinimumCriteria(): uint32;
+    GetSharesCriteria(): uint32;
+}
+
+declare interface TSAchievementCriteriaEntry
+{
+    GetEntry(): uint32;
+    GetAchievementEntry(): uint32;
+    GetType(): uint32;
+    GetAssetID(): uint32;
+    GetQuantity(): uint32;
+    GetAdditionalType1(): uint32;
+    GetAdditionalAsset1(): uint32;
+    GetAdditionalType2(): uint32;
+    GetAdditionalAsset2(): uint32;
+    GetFlags(): uint32;
+    GetStartEvent(): uint32;
+    GetStartAsset(): uint32;
+    GetStartTimer(): uint32;
 }
 
 declare interface TSPlayer extends TSUnit {
@@ -6607,6 +6638,30 @@ declare interface TSManualTestBuilder {
 }
 
 declare namespace _hidden {
+
+    export class AchievementID {
+        OnUpdate(entry: number, callback: (
+              player: TSPlayer
+            , achievement: TSAchievementEntry
+            , criteria: TSAchievementCriteriaEntry
+            , progressType: ProgressType
+            , timeElapsed: uint32
+            , timeCompleted: boolean
+            )=>void)
+        OnComplete(entry: number, callback: (player: TSPlayer, entry: TSAchievementEntry)=>void)
+    }
+    export class Achievements {
+        OnUpdate(callback: (
+              player: TSPlayer
+            , achievement: TSAchievementEntry
+            , criteria: TSAchievementCriteriaEntry
+            , progressType: ProgressType
+            , timeElapsed: uint32
+            , timeCompleted: boolean
+            )=>void)
+        OnComplete(callback: (player: TSPlayer, entry: TSAchievementEntry)=>void)
+    }
+
     export class World {
         OnOpenStateChange(callback: (open : bool)=>void);
         OnConfigLoad(callback: (reload : bool)=>void);
@@ -6726,10 +6781,6 @@ declare namespace _hidden {
         OnInstallAccessory(callback: (veh : TSVehicle,accessory : TSCreature)=>void);
         OnAddPassenger(callback: (veh : TSVehicle,passenger : TSUnit,seatId : int8)=>void);
         OnRemovePassenger(callback: (veh : TSVehicle,passenger : TSUnit)=>void);
-    }
-
-    export class AchievementCriteria {
-        OnCheck(callback: (source : TSPlayer,target : TSUnit)=>void);
     }
 
     export class Player {
@@ -7049,7 +7100,8 @@ declare class TSEventHandlers {
     Addon: _hidden.Addon;
     //AreaTrigger: _hidden.AreaTrigger;
     //Vehicle: _hidden.Vehicle;
-    //AchievementCriteria: _hidden.AchievementCriteria;
+    Achievements: _hidden.Achievements;
+    AchievementID: _hidden.AchievementID;
     Player: _hidden.Player;
     Account: _hidden.Account;
     Guild: _hidden.Guild;

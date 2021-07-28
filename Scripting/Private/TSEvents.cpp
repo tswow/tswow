@@ -319,6 +319,15 @@ void TSMapMap::OnRemove(uint32_t key)
     
 }
 
+void TSAchievementMap::OnAdd(uint32_t key, TSAchievementEvents* events)
+{
+    InitializeAchievementEvent(key, events);
+}
+
+void TSAchievementMap::OnRemove(uint32_t key)
+{
+}
+
 void TSLoadEvents()
 {
     new TSServerScript();

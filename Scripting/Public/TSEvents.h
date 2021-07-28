@@ -30,6 +30,7 @@
 #include "BinReader.h"
 #include "TSJson.h"
 #include "TSTests.h"
+#include "TSAchievementTemplate.h"
 #include <cstdint>
 
 // Addon
@@ -102,42 +103,61 @@ EVENT_TYPE(FormulaOnIntellectManaBonus,TSPlayer,float,float,TSMutable<float>);
 EVENT_TYPE(FormulaOnMaxHealth,TSPlayer,TSMutable<float>);
 EVENT_TYPE(FormulaOnMaxPower,TSPlayer,uint32,float,TSMutable<float>);
 EVENT_TYPE(FormulaOnManaRegen,TSPlayer,TSMutable<float>,TSMutable<float>,TSMutable<int32>);
-EVENT_TYPE(FormulaOnSkillGainChance,TSPlayer,int,int,int,int,int,TSMutable<int>)
+EVENT_TYPE(FormulaOnSkillGainChance, TSPlayer, int, int, int, int, int, TSMutable<int>)
 
 EVENT_TYPE(FormulaOnQuestXP
-     , TSPlayer
-     , TSQuest
-     , TSMutable<uint32>)
+    , TSPlayer
+    , TSQuest
+    , TSMutable<uint32>)
 
-// UnitScript
-//EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
+    // UnitScript
+    //EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
 
 
-// AreaTriggerScript
-//EVENT_TYPE(AreaTriggerOnTrigger,TSPlayer,const*, TSMutable<bool>)
+    // AreaTriggerScript
+    //EVENT_TYPE(AreaTriggerOnTrigger,TSPlayer,const*, TSMutable<bool>)
 
-// WeatherScript
-//EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
+    // WeatherScript
+    //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
 
-// AuctionHouseScript
-EVENT_TYPE(AuctionHouseOnAuctionAdd,TSAuctionHouseObject,TSAuctionEntry)
-EVENT_TYPE(AuctionHouseOnAuctionRemove,TSAuctionHouseObject,TSAuctionEntry)
-EVENT_TYPE(AuctionHouseOnAuctionSuccessful,TSAuctionHouseObject,TSAuctionEntry)
-EVENT_TYPE(AuctionHouseOnAuctionExpire,TSAuctionHouseObject,TSAuctionEntry)
+    // AuctionHouseScript
+    EVENT_TYPE(AuctionHouseOnAuctionAdd, TSAuctionHouseObject, TSAuctionEntry)
+    EVENT_TYPE(AuctionHouseOnAuctionRemove, TSAuctionHouseObject, TSAuctionEntry)
+    EVENT_TYPE(AuctionHouseOnAuctionSuccessful, TSAuctionHouseObject, TSAuctionEntry)
+    EVENT_TYPE(AuctionHouseOnAuctionExpire, TSAuctionHouseObject, TSAuctionEntry)
 
-// ConditionScript
-//EVENT_TYPE(ConditionOnConditionCheck,const*,TSMutable<ConditionSourceInfo>, TSMutable<bool>)
+    // ConditionScript
+    //EVENT_TYPE(ConditionOnConditionCheck,const*,TSMutable<ConditionSourceInfo>, TSMutable<bool>)
 
-// VehicleScript
-EVENT_TYPE(VehicleOnInstall,TSVehicle)
-EVENT_TYPE(VehicleOnUninstall,TSVehicle)
-EVENT_TYPE(VehicleOnReset,TSVehicle)
-EVENT_TYPE(VehicleOnInstallAccessory,TSVehicle,TSCreature)
-EVENT_TYPE(VehicleOnAddPassenger,TSVehicle,TSUnit,int8)
-EVENT_TYPE(VehicleOnRemovePassenger,TSVehicle,TSUnit)
+    // VehicleScript
+    EVENT_TYPE(VehicleOnInstall, TSVehicle)
+    EVENT_TYPE(VehicleOnUninstall, TSVehicle)
+    EVENT_TYPE(VehicleOnReset, TSVehicle)
+    EVENT_TYPE(VehicleOnInstallAccessory, TSVehicle, TSCreature)
+    EVENT_TYPE(VehicleOnAddPassenger, TSVehicle, TSUnit, int8)
+    EVENT_TYPE(VehicleOnRemovePassenger, TSVehicle, TSUnit)
 
-// AchievementCriteriaScript
-//EVENT_TYPE(AchievementCriteriaOnCheck,TSPlayer,TSUnit, TSMutable<bool>)
+// AchievementScript
+EVENT_TYPE(
+    AchievementOnUpdate
+    , TSPlayer
+    , TSAchievementEntry
+    , TSAchievementCriteriaEntry
+    , uint32 /*progressType*/
+    , uint32 /*timeElapsed*/
+    , bool /*timedCompleted*/
+)
+EVENT_TYPE(AchievementOnComplete, TSPlayer, TSAchievementEntry)
+struct TSAchievementEvents {
+    EVENT(AchievementOnComplete)
+    EVENT(AchievementOnUpdate)
+};
+
+class TSAchievementMap : public TSEventMap<TSAchievementEvents>
+{
+    void OnAdd(uint32_t, TSAchievementEvents*);
+    void OnRemove(uint32_t);
+};
 
 // PlayerScript
 EVENT_TYPE(PlayerOnPVPKill,TSPlayer,TSPlayer)
@@ -715,6 +735,10 @@ struct TSEvents
     EVENT(MapOnCheckEncounter)
     EVENT(MapOnMessage)
 
+    EVENT(AchievementOnUpdate)
+    EVENT(AchievementOnComplete)
+
+    TSAchievementMap Achievements;
     TSSpellMap Spells;
     TSCreatureMap Creatures;
     TSGameObjectMap GameObjects;
@@ -836,11 +860,20 @@ public:
          EVENT_HANDLE(Vehicle,OnRemovePassenger)
     } Vehicle;
 
-    struct AchievementEvents: public EventHandler
+    struct AchievementEvents : public EventHandler
     {
-         AchievementEvents* operator->() { return this;}
-         //EVENT_HANDLE(AchievementCriteria,OnCheck)
-    } AchievementCriteria;
+        AchievementEvents* operator->() { return this; }
+        EVENT_HANDLE(Achievement, OnComplete)
+        EVENT_HANDLE(Achievement, OnUpdate)
+    } Achievements;
+
+    struct AchievementIDEvents : public MappedEventHandler<TSAchievementMap>
+    {
+        AchievementIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(Achievement, OnComplete)
+        MAP_EVENT_HANDLE(Achievement, OnUpdate)
+    } AchievementID;
+
 
     struct PlayerEvents : public EventHandler
     {
@@ -1212,7 +1245,6 @@ public:
         AuctionHouse.LoadEvents(events);
         Condition.LoadEvents(events);
         Vehicle.LoadEvents(events);
-        AchievementCriteria.LoadEvents(events);
         Player.LoadEvents(events);
         Account.LoadEvents(events);
         Guild.LoadEvents(events);
@@ -1227,6 +1259,8 @@ public:
         ItemID.LoadEvents(&events->Items);
         Maps.LoadEvents(events);
         MapID.LoadEvents(&events->Maps);
+        Achievements.LoadEvents(events);
+        AchievementID.LoadEvents(&events->Achievements);
     }
 
     void Unload()
@@ -1241,7 +1275,8 @@ public:
          AuctionHouse.Unload();
          Condition.Unload();
          Vehicle.Unload();
-         AchievementCriteria.Unload();
+         Achievements.Unload();
+         AchievementID.Unload();
          Player.Unload();
          Account.Unload();
          Guild.Unload();
