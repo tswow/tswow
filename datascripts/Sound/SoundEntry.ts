@@ -7,6 +7,8 @@ import { SoundEntryFiles } from "./SoundEntryFile";
 import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
+import { IntCell, Pointer } from "../Refs/Pointer";
+import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 
 export class SoundEntryName<T> extends CellSystem<SoundEntry<T>> {
     get() {
@@ -34,28 +36,30 @@ export class SoundEntry<T> extends SharedRef<T, SoundEntriesRow>{
     clear(): this {
         this.EAXDef.set(0)
             .Files.clearAll()
-            .InnerRadius.set(0)
-            .InnerRadius2D.set(0)
-            .InsideAngle.set(0)
             .MinDistance.set(0)
             .Name.set("")
-            .OuterRadius.set(0)
-            .OuterRadius2D.set(0)
-            .OutsideAngle.set(0)
-            .OutsideVolume.set(0)
-            .RandomOffsetRange.set(0)
             .SoundType.set(0)
-            .TimeA.set(0)
-            .TimeB.set(0)
-            .TimeC.set(0)
-            .TimeD.set(0)
-            .TimeIntervalMax.set(0)
-            .TimeIntervalMin.set(0)
-            .TimeToDuck.set(0)
-            .TimeToUnduck.set(0)
-            .Usage.set(0)
             .Volume.set(0)
-            .VolumeSliderCategory.set(0)
+
+        if(this.row.SoundEntriesAdvancedID.get() > 0) {
+            this.RandomOffsetRange.set(0)
+                .OuterRadius.set(0)
+                .OuterRadius2D.set(0)
+                .OutsideAngle.set(0)
+                .OutsideVolume.set(0)
+                .InsideAngle.set(0)
+                .InnerRadius.set(0)
+                .TimeA.set(0)
+                .TimeB.set(0)
+                .TimeC.set(0)
+                .TimeD.set(0)
+                .TimeIntervalMax.set(0)
+                .TimeIntervalMin.set(0)
+                .TimeToDuck.set(0)
+                .TimeToUnduck.set(0)
+                .Usage.set(0)
+                .VolumeSliderCategory.set(0)
+        }
         return this;
     }
 
@@ -105,6 +109,7 @@ export class SoundEntry<T> extends SharedRef<T, SoundEntriesRow>{
 
     get Name(): SoundEntryName<T> { return new SoundEntryName(this); }
     get Files(): SoundEntryFiles<T> { return new SoundEntryFiles(this); }
+    get DirectoryBase() { return this.wrap(this.row.DirectoryBase); }
 
     get Volume() { return this.wrap(this.row.Volumefloat); }
     get MinDistance() { return this.wrap(this.row.MinDistance); }
@@ -181,5 +186,72 @@ export class SoundEntry<T> extends SharedRef<T, SoundEntriesRow>{
             this.row.SoundEntriesAdvancedID.set(id);
         }
         return this;
+    }
+}
+
+export class SoundEntryPointer<T> extends Pointer<T,SoundEntry<void>> {
+    @Transient
+    private cell: Cell<number,any>;
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    setNewSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
+        let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
+        this.set(soundEntry.ID);
+        return this.owner;
+    }
+
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+
+    protected create(): SoundEntry<void> {
+        let row = DBC.SoundEntries.add(Ids.SoundEntries.id());
+        this.cell.set(row.ID.get());
+        return new SoundEntry(undefined,new DummyCell(undefined,this.cell.get()));
+    }
+
+    protected clone(): SoundEntry<void> {
+        let row = DBC.SoundEntries.findById(this.cell.get())
+            .clone(Ids.SoundEntries.id());
+        this.cell.set(row.ID.get());
+        return new SoundEntry(undefined, new DummyCell(undefined,this.cell.get()));
+    }
+
+    protected field(): IntCell {
+        return this.cell;
+    }
+
+    protected id(v: SoundEntry<void>): number {
+        return v.ID;
+    }
+
+    protected resolve(): SoundEntry<void> {
+        return new SoundEntry(undefined,this.cell);
+    }
+}
+
+export const SoundEntryRegistry = {
+    create() {
+        let row = DBC.SoundEntries.add(Ids.SoundEntries.id());
+        return new SoundEntry(
+                  undefined
+                , new DummyCell(undefined,row.ID.get()))
+            .clear()
+    },
+
+    createSimple(directoryBase: string, sounds: string[], volume: number = 1, frequency: number = 1) {
+        let sound = this.create()
+        sound
+            .Name.set(`SoundEntry${sound.ID}`)
+            .DirectoryBase.set(directoryBase)
+            .Volume.set(volume);
+        sounds.forEach(x=>{
+            sound.Files.add(x,frequency)
+        });
+        return sound;
     }
 }

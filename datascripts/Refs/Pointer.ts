@@ -14,6 +14,15 @@ export abstract class Pointer<T,V extends CanObjectify> {
         this.owner = owner;
     }
 
+    get() {
+        return this.field().get();
+    }
+
+    set(value: number) {
+        this.repoint(value);
+        return this.owner;
+    }
+
     repoint(newPointer: number) {
         this.field().set(newPointer);
         return this.owner;

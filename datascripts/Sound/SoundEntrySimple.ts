@@ -22,4 +22,5 @@ export class SoundEntrySimple<T> extends SharedRef<T, SoundEntriesRow>{
     get Volume() { return this.ownerWrap(this.row.Volumefloat); }
     get MinDistance() { return this.ownerWrap(this.row.MinDistance); }
     get DistanceCutoff() { return this.ownerWrap(this.row.DistanceCutoff); }
+    get DirectoryBase() { return this.ownerWrap(this.row.DirectoryBase); }
 }

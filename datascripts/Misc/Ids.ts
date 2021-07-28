@@ -284,4 +284,9 @@ export const Ids = {
      * Starts at 2147483648, highest base value is 2147483647 (shared with CreatureDisplayInfo/creature_model_info)
      */
     CreatureTemplateOutfits: new AutoIdGenerator('creature_template_outfits',2147483648),
+
+    /**
+     * Starts at 600, highest base value is 575
+     */
+    ZoneMusic: new AutoIdGenerator('ZoneMusic',600),
 }

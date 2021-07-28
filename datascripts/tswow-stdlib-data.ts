@@ -39,6 +39,8 @@ import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./
 import { TSImages } from "./Images/Image";
 import { Professions } from "./Profession/Professions";
 import { Locks } from "./Locks/Locks";
+import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
+import { SoundEntryRegistry } from "./Sound/SoundEntry";
 
 export const std = {
     Spells : Spells,
@@ -76,5 +78,7 @@ export const std = {
     /** Allows manipulating images programmatically */
     Image: TSImages,
     Professions: Professions,
-    Locks: Locks
+    Locks: Locks,
+    ZoneMusic: ZoneMusicRegistry,
+    SoundEntries: SoundEntryRegistry
 }
