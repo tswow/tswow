@@ -30,7 +30,7 @@ import { start } from 'repl';
  * Represents a single connection to a mysql server.
  */
 export class Connection {
-    con?: mysql_lib.Connection;
+    con?: mysql_lib.Pool;
     cfg: DatabaseSettings;
     status?: Promise<void>;
     isConnected = false;
@@ -73,7 +73,7 @@ export class Connection {
     async query(query: string) {
         await this.connect();
         return (await new Promise<any>((res,rej)=>{
-            (this.con as mysql_lib.Connection).query(query,(err,value)=>{
+            (this.con as mysql_lib.Pool).query(query,(err,value)=>{
                 if(err) {
                     rej(err);
                 } else {
@@ -120,7 +120,7 @@ export class Connection {
                         if(endErr) {
                             return rej(endErr);
                         }
-                        this.con = mysql_lib.createConnection(this.config());
+                        this.con = mysql_lib.createPool(this.config());
                         this.status = undefined;
                         res();
                     });
