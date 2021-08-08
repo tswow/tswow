@@ -49,6 +49,20 @@ export abstract class DBCRow<C, Q> extends Row<C, Q> {
         return row.offset;
     }
 
+    delete() {
+        this.buffer.delete(this._index);
+        return this;
+    }
+
+    isDeleted() {
+        return this.buffer.isDeleted(this._index);
+    }
+
+    undelete() {
+        this.buffer.undelete(this._index);
+        return this;
+    }
+
     protected writePrimaryKeys(keys: any[]) {
         Row.primaryKeyFields(this).forEach((x: any, i: number) => {
             (this as any)[x].set(keys[i]);

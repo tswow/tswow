@@ -21,6 +21,7 @@ export class DBCBuffer {
     private strings:  Buffer = Buffer.alloc(0);
     private bufPtr: number = this.rows.length;
     private strPtr: number = this.strings.length;
+    private deletedIndices: number[] = [];
     private _rowSize = 0;
     private _rowCount = 0;
     private _baseRowCount = 0;
@@ -34,6 +35,35 @@ export class DBCBuffer {
     get baseRowCount() {return this._baseRowCount; }
     get rowSize() { return this._rowSize; }
 
+    protected deleteIndex(search: number) {
+        let index = 0,high = this.deletedIndices.length;
+        while (index < high) {
+            var mid = (index + high) >>> 1;
+            if (this.deletedIndices[mid] < search) index = mid + 1;
+            else high = mid;
+        }
+        return index;
+    }
+
+    isDeleted(rowNo: number) {
+        let index = this.deleteIndex(rowNo);
+        return this.deletedIndices[index] === rowNo;
+    }
+
+    undelete(rowNo: number) {
+        let index = this.deleteIndex(rowNo);
+        if(this.deletedIndices[index] == rowNo) {
+            this.deletedIndices.splice(index,1);
+        }
+    }
+
+    delete(rowNo: number) {
+        let insertIndex = this.deleteIndex(rowNo);
+        if(this.deletedIndices[insertIndex] != rowNo) {
+            this.deletedIndices.splice(insertIndex,0,rowNo);
+        }
+    }
+
     initialize(rowSize: number) {
         this._rowSize = rowSize;
         this.rows = Buffer.alloc(rowSize);
@@ -44,14 +74,27 @@ export class DBCBuffer {
     }
 
     write() {
-        const totAlloc = 20 + this._rowSize * this.rowCount + this.strPtr;
+        const rowCountOut = this.rowCount - this.deletedIndices.length;
+        const totAlloc = 20 + this._rowSize * rowCountOut + this.strPtr;
         const outBuf = Buffer.allocUnsafe(totAlloc);
+
         outBuf.writeUInt32LE(1128416343, 0);
-        outBuf.writeUInt32LE(this.rowCount, 4);
+        outBuf.writeUInt32LE(rowCountOut, 4);
         outBuf.writeUInt32LE(this._fieldCount, 8);
         outBuf.writeUInt32LE(this._rowSize, 12);
         outBuf.writeUInt32LE(this.strPtr, 16);
-        const rowEnd = this._rowSize * this.rowCount;
+
+        for(let i=this.deletedIndices.length-1;i>=0;--i) {
+            let end = this.deletedIndices[i];
+            let start = end;
+            while(i>0 && this.deletedIndices[i-1] == start-1) {
+                start--;
+                i--;
+            }
+            this.rows.copyWithin(start*this.rowSize,(end+1)*this.rowSize);
+        }
+
+        const rowEnd = this._rowSize * rowCountOut
         this.rows.copy(outBuf, 20, 0, rowEnd);
         this.strings.copy(outBuf, rowEnd + 20, 0, this.strPtr);
         return outBuf;

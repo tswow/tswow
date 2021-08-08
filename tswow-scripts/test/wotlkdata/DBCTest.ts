@@ -72,6 +72,45 @@ describe('DBC', function() {
         });
     });
 
+    describe('delete', function() {
+        it('deletes existing rows after rewrite', function() {
+            let ed = DBC.EnvironmentalDamage;
+
+            const ADDED_IDS = [8,10]
+            const REMOVED_IDS = [4,1,3,8];
+            const KEPT_IDS = [2,5,10];
+            const RESTORED_IDS = [6];
+
+            ADDED_IDS.forEach(x=>{
+                ed.add(x).EnumID.set(1007688).VisualkitID.set(1007688);
+            });
+
+            REMOVED_IDS.concat(RESTORED_IDS).concat(KEPT_IDS).forEach(x=>{
+                assert.notStrictEqual(ed.findById(x),undefined
+                    , `invalid source dbc (EnvironmentalDamage.dbc missing ID=${x}), cant run tests`);
+            });
+
+            REMOVED_IDS.concat(RESTORED_IDS).forEach(x=>
+                assert.strictEqual(ed.findById(x).delete().isDeleted(),true,`${x} is not deleted`));
+
+            KEPT_IDS.concat(RESTORED_IDS).forEach(x=>
+                assert.strictEqual(ed.findById(x).undelete().isDeleted(),false,`${x} is deleted`));
+
+            ed.write(TEMP_DBC);
+            ed.read(TEMP_DBC);
+
+            KEPT_IDS.concat(RESTORED_IDS).forEach(x=>{
+                assert.notStrictEqual(ed.findById(x),undefined
+                    , `deletion corrupt or removed wrong row (can't find id=${x})`);
+            });
+
+            REMOVED_IDS.forEach(x=>{
+                assert.strictEqual(ed.findById(x),undefined
+                    , `deletion corrupt or failed to remove id = ${x}`);
+            });
+        });
+    });
+
     it('writes loc_constructors', function() {
         const ipf = DBC.ItemPetFood;
         const myitem = ipf.find({}).clone(1007688, {Name: {enGB: 'testname'}});
