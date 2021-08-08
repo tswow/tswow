@@ -67,6 +67,102 @@ describe('SQL', function() {
         });
     });
 
+    describe('delete', function() {
+        it('deletes rows with a single id', async function() {
+            const TEST_ID = 1007688;
+            const readDest = ()=> SqlConnection.world_dst.read(`SELECT * from achievement_dbc where ID=${TEST_ID};`)
+            assert.strictEqual(readDest().length,0
+                , `test error: row ${TEST_ID} already exists in achievement_dbc `
+                + `(delete it manually if a previous test created it)`);
+            SQL.achievement_dbc.add(TEST_ID)
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,1,`test error: failed to create row`);
+            SQL.achievement_dbc.add(TEST_ID).delete();
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,0,`failed to delete created row`);
+        });
+
+        it('deletes rows with multiple ids', async function() {
+            const TEST_MENU_ID = 17688;
+            const TEST_TEXT_ID = 17689;
+            const readDest = ()=> SqlConnection.world_dst
+                .read(`SELECT * from gossip_menu where MenuID=${TEST_MENU_ID} and TextID=${TEST_TEXT_ID} ;`)
+            assert.strictEqual(readDest().length,0
+                , `test error: row ${TEST_MENU_ID}/${TEST_TEXT_ID} already exists in gossip_menu`
+                + `( delete it manually if a previous test created it)`);
+            SQL.gossip_menu.add(TEST_MENU_ID,TEST_TEXT_ID);
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,1,`test error: failed to create row`);
+            SQL.gossip_menu.add(TEST_MENU_ID,TEST_TEXT_ID).delete();
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,0,`failed to delete created row`);
+        });
+
+    });
+
+    describe('undelete', function() {
+        it('stops a deletion on new rows', async function() {
+            const TEST_ID = 1007688;
+            const readDest = ()=> SqlConnection.world_dst.read(`SELECT * from achievement_dbc where ID=${TEST_ID};`)
+            assert.strictEqual(readDest().length,0
+                , `test error: row ${TEST_ID} already exists in achievement_dbc `
+                + `(delete it manually if a previous test created it)`);
+            SQL.achievement_dbc.add(TEST_ID)
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,1,`test error: failed to create row`);
+            SQL.achievement_dbc.add(TEST_ID).delete().undelete();
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,1,`row was still deleted`);
+            // delete it for real
+            SQL.achievement_dbc.add(TEST_ID).delete();
+            await SqlConnection.write();
+        });
+
+        it('restores existing SQL rows', async function() {
+            const TEST_CREATURE_TEMPLATE = 25;
+            const TEST_SQL = `SELECT * from creature_template where entry=${TEST_CREATURE_TEMPLATE};`
+
+            const readDest = ()=> SqlConnection.world_dst
+                .read(TEST_SQL)
+
+            const sourceValues = SqlConnection.world_src.read(TEST_SQL);
+            const initialValues = readDest();
+
+            assert.strictEqual(sourceValues.length,1
+                , `test error: ${TEST_CREATURE_TEMPLATE} does not exist in source db`);
+            assert.strictEqual(initialValues.length,1
+                , `test error: ${TEST_CREATURE_TEMPLATE} does not exist in destination db`);
+
+            for(let key in sourceValues[0]) {
+                let sourceValue = sourceValues[0][key];
+                let initialValue = initialValues[0][key];
+                assert.strictEqual(
+                      sourceValue,initialValue
+                    , `test error: refusing to run test because row ${TEST_CREATURE_TEMPLATE} is dirty `
+                    + `(${key} has values source=${sourceValue} dest=${initialValue})`
+                    )
+            }
+
+            SQL.creature_template.find({entry:25}).delete();
+            await SqlConnection.write();
+            assert.strictEqual(readDest().length,0,`test error: failed to delete row ${TEST_CREATURE_TEMPLATE}`);
+            SQL.creature_template.find({entry:25}).undelete();
+            await SqlConnection.write();
+
+            let restoredValues = readDest();
+            assert.strictEqual(restoredValues.length,1,`test error: failed to undelete row ${TEST_CREATURE_TEMPLATE}`);
+            for(let key in sourceValues[0]) {
+                let sourceValue = sourceValues[0][key];
+                let restoredValue = restoredValues[0][key];
+                assert.strictEqual(
+                    sourceValue,restoredValue
+                  , `failed to restore ${TEST_CREATURE_TEMPLATE}`
+                  + `(${key} values differ: source=${sourceValue} restored=${restoredValue})`
+                  ) 
+            }
+        });
+    });
+
     describe('Constructors', function() {
         it('includes zero and non-zero attributes', function() {
             const q = SQL.quest_template.add(1007688, {

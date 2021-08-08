@@ -33,10 +33,34 @@ import { CellSystem } from '../cell/systems/CellSystem';
 export abstract class SqlRow<C, Q> extends Row<C, Q> {
     protected obj: {[key: string]: any};
     protected _dirty = false;
+    protected _isDeleted = false;
 
     constructor(table: SqlTable<C, Q, SqlRow<C, Q>>, obj: {[key: string]: any}) {
         super(table);
         this.obj = obj;
+    }
+
+    /**
+     * @warning Deleted base SQL rows (from the core) are not automatically restored when
+     * building datascripts without the --rebuild flag. For example,
+     * deleting creature_template entry=25 and later removing the deletion statement 
+     * will keep entry=25 deleted until it is explicitly undeleted by a script,
+     * or datascripts are built with --rebuild 
+     */
+    delete() {
+        this._isDeleted = true;
+        this._dirty = true;
+        return this;
+    }
+
+    undelete() {
+        this._isDeleted = false;
+        this._dirty = true;
+        return this;
+    }
+
+    isDeleted() {
+        return this._isDeleted;
     }
 
     static markDirty(row: SqlRow<any, any>) {
@@ -68,13 +92,22 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
     }
 
     protected generateSql() {
-        // @CACHE
         const obj = this.objectify();
         for(let key in obj) {
             if(typeof(obj[key]) == 'string') {
                 obj[key] = obj[key].split('\\').join('\\\\').split('"').join('\\"')
             }
         }
+        if(this.isDeleted()) {
+            const pkFields: string[] = Row.primaryKeyFields(this);
+            const text = `DELETE FROM ${this.table.name} WHERE `
+            + `${pkFields.map((x)=>{
+                const value = obj[x];
+                return `${x} = ${typeof(value)=='string'?`"${value}"`:value}`
+            }).join(' AND ')};`
+            return text;
+        }
+
         return `INSERT INTO ${this.table.name} ` +
         `(${Object.keys(obj).join(',')}) ` +
         `VALUES (${Object.values(obj).map(x => x === null ? 'null' : typeof(x) === 'string' ? `"${x}"` : x)}) ` +
