@@ -44,8 +44,9 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
      * @warning Deleted base SQL rows (from the core) are not automatically restored when
      * building datascripts without the --rebuild flag. For example,
      * deleting creature_template entry=25 and later removing the deletion statement 
-     * will keep entry=25 deleted until it is explicitly undeleted by a script,
-     * or datascripts are built with --rebuild 
+     * will keep entry=25 deleted until it is explicitly undeleted
+     * (OR MODIFIED IN ANY WAY) by a script,
+     * OR datascripts are built with the --rebuild flag
      */
     delete() {
         this._isDeleted = true;
