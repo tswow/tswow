@@ -49,7 +49,16 @@ declare const enum LootState {} /** GameObject.h:LootState */
 declare const enum TempSummonType {} /** ObjectDefines.h:TempSummonType */
 declare const enum TypeID {} /** ObjectGuid.h:TypeID */
 declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
-declare const enum Powers {} /** SharedDefines.h:Powers */
+declare const enum Powers /**@realType:int8 */ {
+    POWER_HEALTH                        = -2,
+    POWER_MANA                          = 0,
+    POWER_RAGE                          = 1,
+    POWER_FOCUS                         = 2,
+    POWER_ENERGY                        = 3,
+    POWER_HAPPINESS                     = 4,
+    POWER_RUNE                          = 5,
+    POWER_RUNIC_POWER                   = 6,
+} /**@realType:int8 */
 declare const enum CreatureType {} /** SharedDefines.h:CreatureType */
 declare const enum LocaleConstant {} /** Common.h:LocaleConstant */
 declare const enum UnitMoveType {} /** Unit.h:UnitMoveType */
@@ -5548,8 +5557,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
@@ -5569,8 +5576,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
@@ -5590,8 +5595,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
@@ -5611,8 +5614,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @return [Powers] powerType
@@ -5912,8 +5913,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param uint32 amount : new power amount
@@ -5933,8 +5932,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param int32 amount : amount to modify
@@ -5954,8 +5951,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
@@ -5975,8 +5970,6 @@ declare interface TSUnit extends TSWorldObject {
      *         POWER_HAPPINESS   = 4,
      *         POWER_RUNE        = 5,
      *         POWER_RUNIC_POWER = 6,
-     *         MAX_POWERS        = 7,
-     *         POWER_ALL         = 127,         // default for class?
      *         POWER_HEALTH      = 0xFFFFFFFE   // (-2 as signed value)
      *
      * @param [Powers] type : a valid power type
