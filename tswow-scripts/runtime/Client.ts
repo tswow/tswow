@@ -124,6 +124,16 @@ export namespace Client {
             const wowbin = wfs.readBin(this.exePath);
 
             const byteOffsets = [
+                // Combo points fix
+                {offset: 0x210B12, value: 0x90},
+                {offset: 0x210B13, value: 0x90},
+                {offset: 0x210B14, value: 0x90},
+                {offset: 0x210B15, value: 0x90},
+                {offset: 0x210B16, value: 0x90},
+                {offset: 0x210B17, value: 0x90},
+                {offset: 0x210B18, value: 0x90},
+                {offset: 0x210B19, value: 0x90},
+
                 // Custom interface patch
                 {offset: 0x126, value: 0x23},
                 {offset: 0x1f41bf, value: 0xeb},
