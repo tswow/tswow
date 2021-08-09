@@ -55,17 +55,7 @@ EVENT_TYPE(FormulaOnGainCalculation,TSMutable<uint32>,TSPlayer,TSUnit)
 EVENT_TYPE(FormulaOnGroupRateCalculation,TSMutable<float>,uint32,bool)
 EVENT_TYPE(FormulaOnMeleeDamageEarly,TSMeleeDamageInfo,uint32,uint32,TSMutable<uint32>)
 EVENT_TYPE(FormulaOnMeleeDamageLate,TSMeleeDamageInfo,uint32,uint32,TSMutable<uint32>)
-EVENT_TYPE(FormulaOnSpellDamageEarly,TSSpellDamageInfo,TSSpell,uint32,bool,TSMutable<int32>)
-EVENT_TYPE(FormulaOnSpellDamageLate,TSSpellDamageInfo,TSSpell,uint32,bool,TSMutable<uint32>)
-EVENT_TYPE(FormulaOnPeriodicDamage,TSAuraEffect,TSMutable<uint32>)
-EVENT_TYPE(FormulaOnSpellCrit,TSSpell,TSMutable<float>)
-EVENT_TYPE(FormulaOnSpellAuraCrit,TSAuraEffect,TSMutable<float>)
 EVENT_TYPE(FormulaOnMeleeCrit,TSUnit,TSUnit,uint32,TSMutable<float>)
-EVENT_TYPE(FormulaOnSpellReflect,TSWorldObject,TSUnit,TSSpellInfo,TSMutable<int32>)
-EVENT_TYPE(FormulaOnSpellHit,TSWorldObject,TSUnit,TSSpellInfo,TSMutable<int32>)
-EVENT_TYPE(FormulaOnSpellResist,TSWorldObject,TSUnit,TSSpellInfo,TSMutable<int32>)
-EVENT_TYPE(FormulaOnSpellDeflect,TSWorldObject,TSUnit,TSSpellInfo,TSMutable<int32>)
-EVENT_TYPE(FormulaOnHeal,TSUnit,TSUnit,TSMutable<uint32>)
 EVENT_TYPE(FormulaOnMeleeOutcome
      , TSUnit
      , TSUnit
@@ -98,6 +88,7 @@ EVENT_TYPE(FormulaOnScaleThreat
      , TSMutable<float>
      );
 
+EVENT_TYPE(FormulaOnHeal,TSUnit,TSUnit,TSMutable<uint32>)
 EVENT_TYPE(FormulaOnStaminaHealthBonus,TSPlayer,float,float,TSMutable<float>);
 EVENT_TYPE(FormulaOnIntellectManaBonus,TSPlayer,float,float,TSMutable<float>);
 EVENT_TYPE(FormulaOnMaxHealth,TSPlayer,TSMutable<float>);
@@ -242,6 +233,15 @@ EVENT_TYPE(SpellOnTick,TSAuraEffect)
 EVENT_TYPE(SpellOnRemove,TSAuraEffect,TSAuraApplication, uint32)
 EVENT_TYPE(SpellOnApply,TSAuraEffect,TSAuraApplication, uint32)
 
+EVENT_TYPE(SpellOnDamageEarly, TSSpellDamageInfo, TSSpell, uint32, bool, TSMutable<int32>)
+EVENT_TYPE(SpellOnDamageLate, TSSpellDamageInfo, TSSpell, uint32, bool, TSMutable<uint32>)
+EVENT_TYPE(SpellOnPeriodicDamage, TSAuraEffect, TSMutable<uint32>)
+EVENT_TYPE(SpellOnCritFormula, TSSpell, TSMutable<float>)
+EVENT_TYPE(SpellOnAuraCritFormula, TSAuraEffect, TSMutable<float>)
+EVENT_TYPE(SpellOnReflectFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
+EVENT_TYPE(SpellOnHitFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
+EVENT_TYPE(SpellOnResistFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
+
 struct TSSpellEvents {
      EVENT(SpellOnCast)
      EVENT(SpellOnCheckCast)
@@ -250,6 +250,15 @@ struct TSSpellEvents {
      EVENT(SpellOnTick)
      EVENT(SpellOnRemove)
      EVENT(SpellOnApply)
+
+     EVENT(SpellOnDamageEarly)
+     EVENT(SpellOnDamageLate)
+     EVENT(SpellOnPeriodicDamage)
+     EVENT(SpellOnCritFormula)
+     EVENT(SpellOnAuraCritFormula)
+     EVENT(SpellOnReflectFormula)
+     EVENT(SpellOnHitFormula)
+     EVENT(SpellOnResistFormula)
 };
 
 class TSSpellMap : public TSEventMap<TSSpellEvents> 
@@ -507,16 +516,7 @@ struct TSEvents
     EVENT(FormulaOnGroupRateCalculation)
     EVENT(FormulaOnMeleeDamageEarly)
     EVENT(FormulaOnMeleeDamageLate)
-    EVENT(FormulaOnSpellDamageEarly)
-    EVENT(FormulaOnSpellDamageLate)
-    EVENT(FormulaOnPeriodicDamage)
-    EVENT(FormulaOnSpellCrit)
-    EVENT(FormulaOnSpellAuraCrit)
     EVENT(FormulaOnMeleeCrit)
-    EVENT(FormulaOnSpellHit)
-    EVENT(FormulaOnSpellResist)
-    EVENT(FormulaOnSpellReflect)
-    EVENT(FormulaOnSpellDeflect)
     EVENT(FormulaOnMeleeOutcome)
     EVENT(FormulaOnAddThreatEarly)
     EVENT(FormulaOnAddThreatLate)
@@ -701,6 +701,15 @@ struct TSEvents
     EVENT(SpellOnRemove)
     EVENT(SpellOnApply)
 
+    EVENT(SpellOnDamageEarly)
+    EVENT(SpellOnDamageLate)
+    EVENT(SpellOnPeriodicDamage)
+    EVENT(SpellOnCritFormula)
+    EVENT(SpellOnAuraCritFormula)
+    EVENT(SpellOnReflectFormula)
+    EVENT(SpellOnHitFormula)
+    EVENT(SpellOnResistFormula)
+
     // GameObjects
     EVENT(GameObjectOnUpdate)
     EVENT(GameObjectOnDialogStatus)
@@ -793,16 +802,7 @@ public:
          EVENT_HANDLE(Formula,OnGroupRateCalculation)
          EVENT_HANDLE(Formula,OnMeleeDamageEarly)
          EVENT_HANDLE(Formula,OnMeleeDamageLate)
-         EVENT_HANDLE(Formula,OnSpellDamageEarly)
-         EVENT_HANDLE(Formula,OnSpellDamageLate)
-         EVENT_HANDLE(Formula,OnPeriodicDamage)
-         EVENT_HANDLE(Formula,OnSpellCrit)
-         EVENT_HANDLE(Formula,OnSpellAuraCrit)
          EVENT_HANDLE(Formula,OnMeleeCrit)
-         EVENT_HANDLE(Formula,OnSpellReflect)
-         EVENT_HANDLE(Formula,OnSpellHit)
-         EVENT_HANDLE(Formula,OnSpellResist)
-         EVENT_HANDLE(Formula,OnSpellDeflect)
          EVENT_HANDLE(Formula,OnMeleeOutcome)
          EVENT_HANDLE(Formula,OnAddThreatEarly)
          EVENT_HANDLE(Formula,OnAddThreatLate)
@@ -969,6 +969,15 @@ public:
           EVENT_HANDLE(Spell,OnTick)
           EVENT_HANDLE(Spell,OnRemove)
           EVENT_HANDLE(Spell,OnApply)
+
+          EVENT_HANDLE(Spell,OnDamageEarly)
+          EVENT_HANDLE(Spell,OnDamageLate)
+          EVENT_HANDLE(Spell,OnPeriodicDamage)
+          EVENT_HANDLE(Spell,OnCritFormula)
+          EVENT_HANDLE(Spell,OnAuraCritFormula)
+          EVENT_HANDLE(Spell,OnReflectFormula)
+          EVENT_HANDLE(Spell,OnHitFormula)
+          EVENT_HANDLE(Spell,OnResistFormula)
     } Spells;
 
     struct SpellIDEvents : public MappedEventHandler<TSSpellMap>
@@ -981,6 +990,15 @@ public:
           MAP_EVENT_HANDLE(Spell,OnTick)
           MAP_EVENT_HANDLE(Spell,OnRemove)
           MAP_EVENT_HANDLE(Spell,OnApply)
+
+          MAP_EVENT_HANDLE(Spell, OnDamageEarly)
+          MAP_EVENT_HANDLE(Spell, OnDamageLate)
+          MAP_EVENT_HANDLE(Spell, OnPeriodicDamage)
+          MAP_EVENT_HANDLE(Spell, OnCritFormula)
+          MAP_EVENT_HANDLE(Spell, OnAuraCritFormula)
+          MAP_EVENT_HANDLE(Spell, OnReflectFormula)
+          MAP_EVENT_HANDLE(Spell, OnHitFormula)
+          MAP_EVENT_HANDLE(Spell, OnResistFormula)
     } SpellID;
 
      struct CreatureEvents: public EventHandler

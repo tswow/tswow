@@ -6686,35 +6686,6 @@ declare namespace _hidden {
         OnHeal(callback: (healer : TSUnit,reciever : TSUnit,gain : TSMutable<uint32>)=>void);
 
         /**
-         * critChance should be between 0 and 1
-         */
-        OnSpellCrit(callback: (spell: TSSpell, critChance: TSMutable<float>)=>void);
-        /**
-         * critChance should be between 0 and 1
-         */
-        OnSpellAuraCrit(callback: (spell: TSAuraEffect, critChance: TSMutable<float>)=>void);
-
-        /**
-         * reflectChance should be an integer between 0 and 10000
-         */
-        OnSpellReflect(callback: (attacker: TSWorldObject, victim: TSUnit, info: TSSpellInfo, reflectChance: TSMutable<int32>)=>void)
-
-        /**
-         * hitChance should be an integer between 0 and 10000
-         */
-        OnSpellHit(callback: (attacker: TSWorldObject, victim: TSUnit, info: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
-
-        /**
-         * resistChance should be an integer between 0 and 10000
-         */
-        OnSpellResist(callback: (attacker: TSWorldObject, victim: TSUnit, info: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
-
-        /**
-         * deflectChance should be an integer between 0 and 10000
-         */
-        OnSpellDeflect(callback: (attacker: TSWorldObject, victim: TSUnit, info: TSSpellInfo, deflectChance: TSMutable<int32>)=>void)
-
-        /**
          * - missChance should be between 0 and 1
          * - critChance should be between 0 and 100
          * - dodgeChance should be between 0 and 100
@@ -6864,6 +6835,20 @@ declare namespace _hidden {
         OnHit(spell: uint32, callback: (spell: TSSpell)=>void);
         OnTick(spell: uint32, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+
+        OnDamageEarly(spell: uint32, callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<int32>)=>void)
+        OnDamageLate(spell: uint32, callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<uint32>)=>void)
+        OnPeriodicDamage(spell: uint32, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        /** critChance should be between 0 and 1 */
+        OnCritFormula(spell: uint32, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
+        /** critChance should be between 0 and 1 */
+        OnAuraCritFormula(spell: uint32, callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
+        /** reflectCHance should be an integer between 0 and 10000 */
+        OnReflectFormula(spell: uint32, callback : (attacker: TSWorldObject, victim: TSUnit, spell: TSSpellInfo, reflectChance: TSMutable<int32>)=>void)
+        /** hitChance should be an integer between 0 and 10000 */
+        OnHitFormula(spell: uint32, callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
+        /** resistChance should be an integer between 0 and 10000 */
+        OnResistFormula(spell: uint32, callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
     }
 
     export class Spells {
@@ -6874,6 +6859,20 @@ declare namespace _hidden {
         OnTick(callback: (effect: TSAuraEffect)=>void);
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
         OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+
+        OnDamageEarly(callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<int32>)=>void)
+        OnDamageLate(callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<uint32>)=>void)
+        OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        /** critChance should be between 0 and 1 */
+        OnCritFormula(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
+        /** critChance should be between 0 and 1 */
+        OnAuraCritFormula(callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
+        /** reflectCHance should be an integer between 0 and 10000 */
+        OnReflectFormula(callback : (attacker: TSWorldObject, victim: TSUnit, spell: TSSpellInfo, reflectChance: TSMutable<int32>)=>void)
+        /** hitChance should be an integer between 0 and 10000 */
+        OnHitFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
+        /** resistChance should be an integer between 0 and 10000 */
+        OnResistFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
     }
 
     export class CreatureID {
