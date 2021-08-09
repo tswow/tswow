@@ -1673,11 +1673,23 @@ export class Emitter {
     }
 
     error(message: string, node: ts.Node) {
-        const file = node.getSourceFile().fileName;
-        const { line, character} = node
-            .getSourceFile()
-            .getLineAndCharacterOfPosition(node.pos);
-        throw new Error(`TypeScript Error: ${message}\n    (in source file ${file}:${line}:${character})`);
+        let fileStr = "<unknown>";
+        let lineStr = "<unknown>";
+        let charStr = "<unknown>";
+
+        try {
+            const file = node.getSourceFile().fileName;
+            fileStr = file;
+            const { line, character} = node
+                .getSourceFile()
+                .getLineAndCharacterOfPosition(node.pos);
+            lineStr = `${line}`;
+            charStr = `${character}`;
+        } catch( err ) {}
+        throw new Error(
+              `TypeScript Error:`
+            + ` ${message}\n    `
+            + `(in source file ${fileStr}:${lineStr}:${charStr})`);
     }
 
     processVariableDeclarationList(declarationList: ts.VariableDeclarationList, forwardDeclaration?: boolean): boolean {
