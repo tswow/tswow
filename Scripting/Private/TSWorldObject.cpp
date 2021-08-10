@@ -174,54 +174,45 @@ float TSWorldObject::GetO()
 }
 
 /**
- * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 3d space.
+ * Returns the distance from this [WorldObject] to another [WorldObject]
  *
  * The function takes into account the given object sizes. See also [WorldObject:GetExactDistance], [WorldObject:GetDistance2d]
  *
  * @proto dist = (obj)
- * @proto dist = (x, y, z)
  *
  * @param [WorldObject] obj
- * @param float x : the X-coordinate of the point
- * @param float y : the Y-coordinate of the point
- * @param float z : the Z-coordinate of the point
  *
  * @return float dist : the distance in yards
  */
-float TSWorldObject::GetDistance(TSWorldObject _target,float X,float Y,float Z)
+float TSWorldObject::GetDistance(TSWorldObject _target)
 {
-    auto target = _target.obj;
-    if (target)
-        return obj->GetDistance(target);
-    else
-    {
-        return obj->GetDistance(X, Y, Z);
-    }
+    return obj->GetDistance(_target.obj);
+}
+
+float TSWorldObject::GetDistanceToPoint(float X, float Y, float Z)
+{
+    return obj->GetDistance(X, Y, Z);
 }
     
 /**
- * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 2d space.
+ * Returns the distance from this [WorldObject] to another [WorldObject]
  *
  * The function takes into account the given object sizes. See also [WorldObject:GetDistance], [WorldObject:GetExactDistance2d]
  *
  * @proto dist = (obj)
- * @proto dist = (x, y)
  *
  * @param [WorldObject] obj
- * @param float x : the X-coordinate of the point
- * @param float y : the Y-coordinate of the point
  *
  * @return float dist : the distance in yards
  */
-float TSWorldObject::GetDistance2d(TSWorldObject _target,float X,float Y)
+float TSWorldObject::GetDistance2d(TSWorldObject _target)
 {
-    auto target = _target.obj;
-    if (target)
-        return obj->GetDistance2d(target);
-    else
-    {
-        return obj->GetDistance2d(X, Y);
-    }
+    return obj->GetDistance2d(_target.obj);
+}
+
+float TSWorldObject::GetDistanceToPoint2d(float X, float Y)
+{
+    return obj->GetDistance2d(X,Y);
 }
 
 /**

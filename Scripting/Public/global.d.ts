@@ -4609,38 +4609,34 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetNearestCreature(range : float,entry : uint32,hostile : uint32,dead : uint32) : TSCreature
 
     /**
-     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 3d space.
+     * Returns the distance from this [WorldObject] to another [WorldObject]
      *
      * The function takes into account the given object sizes. See also [WorldObject:GetExactDistance], [WorldObject:GetDistance2d]
      *
      * @proto dist = (obj)
-     * @proto dist = (x, y, z)
      *
      * @param [WorldObject] obj
-     * @param float x : the X-coordinate of the point
-     * @param float y : the Y-coordinate of the point
-     * @param float z : the Z-coordinate of the point
      *
      * @return float dist : the distance in yards
      */
-    GetDistance(target : TSWorldObject,X : float,Y : float,Z : float) : float
+    GetDistance(target : TSWorldObject) : float
+
+    GetDistanceToPoint(x: float, y: float, z: float): float
 
     /**
-     * Returns the distance from this [WorldObject] to another [WorldObject], or from this [WorldObject] to a point in 2d space.
+     * Returns the distance from this [WorldObject] to another [WorldObject]
      *
      * The function takes into account the given object sizes. See also [WorldObject:GetDistance], [WorldObject:GetExactDistance2d]
      *
      * @proto dist = (obj)
-     * @proto dist = (x, y)
      *
      * @param [WorldObject] obj
-     * @param float x : the X-coordinate of the point
-     * @param float y : the Y-coordinate of the point
      *
      * @return float dist : the distance in yards
      */
-    GetDistance2d(target : TSWorldObject,X : float,Y : float) : float
+    GetDistance2d(target : TSWorldObject) : float
 
+    GetDistanceToPoint2d(X : float,Y : float) : float
     /**
      * Returns the x, y and z of a point dist away from the [WorldObject].
      *
