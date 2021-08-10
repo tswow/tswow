@@ -4603,7 +4603,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @return float orientation / facing
      */
     GetO() : float
-    GetLocation() : TSPosition
+    GetPosition() : TSPosition
     GetNearestPlayer(range : float,hostile : uint32,dead : uint32) : TSPlayer
     GetNearestGameObject(range : float,entry : uint32,hostile : uint32) : TSGameObject
     GetNearestCreature(range : float,entry : uint32,hostile : uint32,dead : uint32) : TSCreature
