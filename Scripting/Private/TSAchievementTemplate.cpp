@@ -31,7 +31,7 @@ int32 TSAchievementEntry::GetInstanceID()
 TSArray<TSString> TSAchievementEntry::GetTitles()
 {
     TSArray<TSString> arr;
-    for (auto& const title : m_achievement->Title)
+    for (const char* title : m_achievement->Title)
     {
         arr.push(TSString(title));
     }

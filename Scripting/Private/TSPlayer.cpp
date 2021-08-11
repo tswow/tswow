@@ -174,8 +174,7 @@ bool TSPlayer::HasQuestForGO(int32 entry)
 bool TSPlayer::HasTitle(uint32 id) 
 {
     CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(id);
-    if (titleInfo)
-        return player->HasTitle(titleInfo);
+    return titleInfo && player->HasTitle(titleInfo);
 }
 #endif
 
@@ -1419,11 +1418,11 @@ TSString TSPlayer::GetAccountName()
 {
     std::string accName;
 #ifndef AZEROTHCORE
-    if (eAccountMgr->GetName(player->GetSession()->GetAccountId(), accName))
+    (eAccountMgr->GetName(player->GetSession()->GetAccountId(), accName));
 #else
-    if (AccountMgr::GetName(player->GetSession()->GetAccountId(), accName))
+    (AccountMgr::GetName(player->GetSession()->GetAccountId(), accName));
 #endif
-         return TSString(accName);
+    return TSString(accName);
 }
     
 /**

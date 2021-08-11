@@ -27,9 +27,9 @@
 #include <chrono>
 #include <vector>
 
-struct TSCollisions;
-struct TSCollisionEntry;
-struct TSEntity;
+class TSCollisions;
+class TSCollisionEntry;
+class TSEntity;
 
 #define CollisionCallback std::function<void(TSCollisionEntry*,TSWorldObject,TSWorldObject,TSMutable<uint32_t>)>
 

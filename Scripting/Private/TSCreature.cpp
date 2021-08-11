@@ -1282,12 +1282,10 @@ uint32 TSCreature::GetCreatureFamily()
     
 #if defined TRINITY || AZEROTHCORE
     CreatureTemplate const* cInfo = sObjectMgr->GetCreatureTemplate(entry);
-    if (cInfo)
-        return cInfo->family;
+    return cInfo->family;
 #else
     CreatureInfo const* cInfo = ObjectMgr::GetCreatureTemplate(entry);
-    if (cInfo)
-        return cInfo->Family;
+    return cInfo->Family;
 #endif
 }
 

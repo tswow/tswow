@@ -16,7 +16,7 @@
  */
 #pragma once
 
-#ifdef _MSC_VER
+#if defined _MSC_VAR && !defined _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 

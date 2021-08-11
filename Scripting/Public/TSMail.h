@@ -67,7 +67,7 @@ struct TC_GAME_API TSMail {
     void SetState(uint8 state);
 };
 
-struct MailDraft;
+class MailDraft;
 struct TC_GAME_API TSMailDraft {
     MailDraft* draft;
     TSMailDraft() { draft = nullptr; }

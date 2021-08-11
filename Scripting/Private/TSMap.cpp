@@ -133,12 +133,10 @@ TSString TSMap::GetName()
 float TSMap::GetHeight(float x,float y,uint32 phasemask) 
 {
 #if (defined(TBC) || defined(CLASSIC))
-    float z = map->GetHeight(x, y, MAX_HEIGHT);
+    return map->GetHeight(x, y, MAX_HEIGHT);
 #else
-    float z = map->GetHeight(phasemask, x, y, MAX_HEIGHT);
+    return map->GetHeight(phasemask, x, y, MAX_HEIGHT);
 #endif
-    if (z != INVALID_HEIGHT)
-        return z;
 }
     
 /**
@@ -244,6 +242,7 @@ TSWorldObject  TSMap::GetWorldObject(uint64 guid)
              return TSWorldObject(map->GetCorpse(ObjectGuid(guid)));
             break;
         default:
+            return TSWorldObject(nullptr);
             break;
     }
 #else

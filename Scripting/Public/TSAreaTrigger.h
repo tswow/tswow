@@ -20,7 +20,7 @@
 #include "TSBase.h"
 
 struct AreaTriggerEntry;
-class TSAreaTriggerEvents;
+struct TSAreaTriggerEvents;
 
 class TC_GAME_API TSAreaTriggerEntry {
     AreaTriggerEntry* m_entry;

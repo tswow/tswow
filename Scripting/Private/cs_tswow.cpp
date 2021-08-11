@@ -119,7 +119,9 @@ public:
             CreatureTemplate const* cInfo = target->GetCreatureTemplate();
             ChatHandler(player->GetSession())
                 .SendSysMessage(cInfo->Name+" "+std::to_string(cInfo->Entry));
+            return true;
         }
+        return false;
     }
 
     static bool ClearAt(ChatHandler* handler, char const* args)

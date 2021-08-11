@@ -19,7 +19,7 @@
 #include "TSClasses.h"
 #include "TSEntity.h"
 
-class ItemTemplate;
+struct ItemTemplate;
 
 class TC_GAME_API TSItemTemplate : public TSEntityProvider {
 private:
