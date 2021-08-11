@@ -30,6 +30,7 @@
 #include "BinReader.h"
 #include "TSJson.h"
 #include "TSTests.h"
+#include "TSAreaTrigger.h"
 #include "TSAchievementTemplate.h"
 #include <cstdint>
 
@@ -101,32 +102,28 @@ EVENT_TYPE(FormulaOnQuestXP
     , TSQuest
     , TSMutable<uint32>)
 
-    // UnitScript
-    //EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
+// UnitScript
+//EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
 
+// WeatherScript
+//EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
 
-    // AreaTriggerScript
-    //EVENT_TYPE(AreaTriggerOnTrigger,TSPlayer,const*, TSMutable<bool>)
+// AuctionHouseScript
+EVENT_TYPE(AuctionHouseOnAuctionAdd, TSAuctionHouseObject, TSAuctionEntry)
+EVENT_TYPE(AuctionHouseOnAuctionRemove, TSAuctionHouseObject, TSAuctionEntry)
+EVENT_TYPE(AuctionHouseOnAuctionSuccessful, TSAuctionHouseObject, TSAuctionEntry)
+EVENT_TYPE(AuctionHouseOnAuctionExpire, TSAuctionHouseObject, TSAuctionEntry)
 
-    // WeatherScript
-    //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
+// ConditionScript
+//EVENT_TYPE(ConditionOnConditionCheck,const*,TSMutable<ConditionSourceInfo>, TSMutable<bool>)
 
-    // AuctionHouseScript
-    EVENT_TYPE(AuctionHouseOnAuctionAdd, TSAuctionHouseObject, TSAuctionEntry)
-    EVENT_TYPE(AuctionHouseOnAuctionRemove, TSAuctionHouseObject, TSAuctionEntry)
-    EVENT_TYPE(AuctionHouseOnAuctionSuccessful, TSAuctionHouseObject, TSAuctionEntry)
-    EVENT_TYPE(AuctionHouseOnAuctionExpire, TSAuctionHouseObject, TSAuctionEntry)
-
-    // ConditionScript
-    //EVENT_TYPE(ConditionOnConditionCheck,const*,TSMutable<ConditionSourceInfo>, TSMutable<bool>)
-
-    // VehicleScript
-    EVENT_TYPE(VehicleOnInstall, TSVehicle)
-    EVENT_TYPE(VehicleOnUninstall, TSVehicle)
-    EVENT_TYPE(VehicleOnReset, TSVehicle)
-    EVENT_TYPE(VehicleOnInstallAccessory, TSVehicle, TSCreature)
-    EVENT_TYPE(VehicleOnAddPassenger, TSVehicle, TSUnit, int8)
-    EVENT_TYPE(VehicleOnRemovePassenger, TSVehicle, TSUnit)
+// VehicleScript
+EVENT_TYPE(VehicleOnInstall, TSVehicle)
+EVENT_TYPE(VehicleOnUninstall, TSVehicle)
+EVENT_TYPE(VehicleOnReset, TSVehicle)
+EVENT_TYPE(VehicleOnInstallAccessory, TSVehicle, TSCreature)
+EVENT_TYPE(VehicleOnAddPassenger, TSVehicle, TSUnit, int8)
+EVENT_TYPE(VehicleOnRemovePassenger, TSVehicle, TSUnit)
 
 // AchievementScript
 EVENT_TYPE(
@@ -151,51 +148,51 @@ class TSAchievementMap : public TSEventMap<TSAchievementEvents>
 };
 
 // PlayerScript
-EVENT_TYPE(PlayerOnPVPKill,TSPlayer,TSPlayer)
-EVENT_TYPE(PlayerOnCreatureKill,TSPlayer,TSCreature)
-EVENT_TYPE(PlayerOnPlayerKilledByCreature,TSCreature,TSPlayer)
-EVENT_TYPE(PlayerOnLevelChanged,TSPlayer,uint8)
-EVENT_TYPE(PlayerOnFreeTalentPointsChanged,TSPlayer,uint32)
-EVENT_TYPE(PlayerOnTalentsReset,TSPlayer,bool)
-EVENT_TYPE(PlayerOnMoneyChanged,TSPlayer,TSMutable<int32>)
-EVENT_TYPE(PlayerOnMoneyLimit,TSPlayer,int32)
-EVENT_TYPE(PlayerOnGiveXP,TSPlayer,TSMutable<uint32>,TSUnit)
-EVENT_TYPE(PlayerOnReputationChange,TSPlayer,uint32,TSMutable<int32>,bool)
-EVENT_TYPE(PlayerOnDuelRequest,TSPlayer,TSPlayer)
-EVENT_TYPE(PlayerOnDuelStart,TSPlayer,TSPlayer)
-EVENT_TYPE(PlayerOnDuelEnd,TSPlayer,TSPlayer,uint32)
-EVENT_TYPE(PlayerOnSay,TSPlayer,uint32,uint32,TSMutableString)
-EVENT_TYPE(PlayerOnWhisper,TSPlayer,uint32,uint32,TSMutableString,TSPlayer)
-EVENT_TYPE(PlayerOnChatGroup,TSPlayer,uint32,uint32,TSMutableString,TSGroup)
-EVENT_TYPE(PlayerOnChatGuild,TSPlayer,uint32,uint32,TSMutableString,TSGuild)
-EVENT_TYPE(PlayerOnChat,TSPlayer,uint32,uint32,TSMutableString,TSChannel)
-EVENT_TYPE(PlayerOnCommand,TSPlayer,TSMutableString,TSMutable<bool>)
-EVENT_TYPE(PlayerOnEmote,TSPlayer,uint32)
-EVENT_TYPE(PlayerOnTextEmote,TSPlayer,uint32,uint32,uint64)
-EVENT_TYPE(PlayerOnSpellCast,TSPlayer,TSSpell,bool)
-EVENT_TYPE(PlayerOnLogin,TSPlayer,bool)
-EVENT_TYPE(PlayerOnReload,TSPlayer,bool)
-EVENT_TYPE(PlayerOnLogout,TSPlayer)
-EVENT_TYPE(PlayerOnCreateEarly,TSPlayer)
-EVENT_TYPE(PlayerOnCreate,TSPlayer)
-EVENT_TYPE(PlayerOnDelete,uint64,uint32)
-EVENT_TYPE(PlayerOnFailedDelete,uint64,uint32)
-EVENT_TYPE(PlayerOnSave,TSPlayer)
-EVENT_TYPE(PlayerOnBindToInstance,TSPlayer,uint32,uint32,bool,uint8)
-EVENT_TYPE(PlayerOnUpdateZone,TSPlayer,uint32,uint32)
-EVENT_TYPE(PlayerOnMapChanged,TSPlayer)
-EVENT_TYPE(PlayerOnQuestObjectiveProgress,TSPlayer,TSQuest,uint32,uint16)
-EVENT_TYPE(PlayerOnQuestStatusChange,TSPlayer,uint32)
-EVENT_TYPE(PlayerOnMovieComplete,TSPlayer,uint32)
-EVENT_TYPE(PlayerOnPlayerRepop,TSPlayer)
-EVENT_TYPE(PlayerOnSendMail,TSPlayer,TSMailDraft,TSMutable<uint32>)
+EVENT_TYPE(PlayerOnPVPKill, TSPlayer, TSPlayer)
+EVENT_TYPE(PlayerOnCreatureKill, TSPlayer, TSCreature)
+EVENT_TYPE(PlayerOnPlayerKilledByCreature, TSCreature, TSPlayer)
+EVENT_TYPE(PlayerOnLevelChanged, TSPlayer, uint8)
+EVENT_TYPE(PlayerOnFreeTalentPointsChanged, TSPlayer, uint32)
+EVENT_TYPE(PlayerOnTalentsReset, TSPlayer, bool)
+EVENT_TYPE(PlayerOnMoneyChanged, TSPlayer, TSMutable<int32>)
+EVENT_TYPE(PlayerOnMoneyLimit, TSPlayer, int32)
+EVENT_TYPE(PlayerOnGiveXP, TSPlayer, TSMutable<uint32>, TSUnit)
+EVENT_TYPE(PlayerOnReputationChange, TSPlayer, uint32, TSMutable<int32>, bool)
+EVENT_TYPE(PlayerOnDuelRequest, TSPlayer, TSPlayer)
+EVENT_TYPE(PlayerOnDuelStart, TSPlayer, TSPlayer)
+EVENT_TYPE(PlayerOnDuelEnd, TSPlayer, TSPlayer, uint32)
+EVENT_TYPE(PlayerOnSay, TSPlayer, uint32, uint32, TSMutableString)
+EVENT_TYPE(PlayerOnWhisper, TSPlayer, uint32, uint32, TSMutableString, TSPlayer)
+EVENT_TYPE(PlayerOnChatGroup, TSPlayer, uint32, uint32, TSMutableString, TSGroup)
+EVENT_TYPE(PlayerOnChatGuild, TSPlayer, uint32, uint32, TSMutableString, TSGuild)
+EVENT_TYPE(PlayerOnChat, TSPlayer, uint32, uint32, TSMutableString, TSChannel)
+EVENT_TYPE(PlayerOnCommand, TSPlayer, TSMutableString, TSMutable<bool>)
+EVENT_TYPE(PlayerOnEmote, TSPlayer, uint32)
+EVENT_TYPE(PlayerOnTextEmote, TSPlayer, uint32, uint32, uint64)
+EVENT_TYPE(PlayerOnSpellCast, TSPlayer, TSSpell, bool)
+EVENT_TYPE(PlayerOnLogin, TSPlayer, bool)
+EVENT_TYPE(PlayerOnReload, TSPlayer, bool)
+EVENT_TYPE(PlayerOnLogout, TSPlayer)
+EVENT_TYPE(PlayerOnCreateEarly, TSPlayer)
+EVENT_TYPE(PlayerOnCreate, TSPlayer)
+EVENT_TYPE(PlayerOnDelete, uint64, uint32)
+EVENT_TYPE(PlayerOnFailedDelete, uint64, uint32)
+EVENT_TYPE(PlayerOnSave, TSPlayer)
+EVENT_TYPE(PlayerOnBindToInstance, TSPlayer, uint32, uint32, bool, uint8)
+EVENT_TYPE(PlayerOnUpdateZone, TSPlayer, uint32, uint32)
+EVENT_TYPE(PlayerOnMapChanged, TSPlayer)
+EVENT_TYPE(PlayerOnQuestObjectiveProgress, TSPlayer, TSQuest, uint32, uint16)
+EVENT_TYPE(PlayerOnQuestStatusChange, TSPlayer, uint32)
+EVENT_TYPE(PlayerOnMovieComplete, TSPlayer, uint32)
+EVENT_TYPE(PlayerOnPlayerRepop, TSPlayer)
+EVENT_TYPE(PlayerOnSendMail, TSPlayer, TSMailDraft, TSMutable<uint32>)
 
-EVENT_TYPE(PlayerOnGenerateItemLoot,TSPlayer,TSItem,TSLoot,uint32)
-EVENT_TYPE(PlayerOnLootCorpse,TSPlayer,TSCorpse)
+EVENT_TYPE(PlayerOnGenerateItemLoot, TSPlayer, TSItem, TSLoot, uint32)
+EVENT_TYPE(PlayerOnLootCorpse, TSPlayer, TSCorpse)
 EVENT_TYPE(PlayerOnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uint32_t talentRank, uint32_t spellId, TSMutable<bool>)
 
-EVENT_TYPE(PlayerOnGossipSelect,TSPlayer,TSPlayer,uint32_t,uint32_t,TSMutable<bool>)
-EVENT_TYPE(PlayerOnGossipSelectCode,TSPlayer,TSPlayer,uint32_t,uint32_t,TSString,TSMutable<bool>)
+EVENT_TYPE(PlayerOnGossipSelect, TSPlayer, TSPlayer, uint32_t, uint32_t, TSMutable<bool>)
+EVENT_TYPE(PlayerOnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, TSString, TSMutable<bool>)
 
 // AccountScript
 EVENT_TYPE(AccountOnAccountLogin,uint32)
@@ -223,6 +220,17 @@ EVENT_TYPE(GroupOnInviteMember,TSGroup,uint64)
 EVENT_TYPE(GroupOnRemoveMember,TSGroup,uint64,uint32,uint64,TSString)
 EVENT_TYPE(GroupOnChangeLeader,TSGroup,uint64,uint64)
 EVENT_TYPE(GroupOnDisband,TSGroup)
+
+// AreaTrigger
+EVENT_TYPE(AreaTriggerOnTrigger,TSAreaTriggerEntry,TSPlayer,TSMutable<bool>)
+struct TSAreaTriggerEvents {
+    EVENT(AreaTriggerOnTrigger)
+};
+class TSAreaTriggerMap: public TSEventMap<TSAreaTriggerEvents>
+{
+    void OnAdd(uint32_t, TSAreaTriggerEvents*);
+    void OnRemove(uint32_t);
+};
 
 // SpellScript
 EVENT_TYPE(SpellOnCast,TSSpell)
@@ -554,9 +562,6 @@ struct TSEvents
     EVENT(FormulaOnQuestXP);
     //EVENT(UnitModifyVehiclePassengerExitPos)
 
-    // AreaTriggerScript
-    //EVENT(AreaTriggerOnTrigger)
-
     // WeatherScript
     //EVENT(WeatherOnChange)
 
@@ -692,6 +697,9 @@ struct TSEvents
     EVENT(CreatureOnGeneratePickPocketLoot)
     EVENT(CreatureOnGenerateSkinningLoot)
 
+    // AreaTrigger
+    EVENT(AreaTriggerOnTrigger)
+
     // SpellScript
     EVENT(SpellOnCast)
     EVENT(SpellOnCheckCast)
@@ -753,6 +761,7 @@ struct TSEvents
     TSGameObjectMap GameObjects;
     TSMapMap Maps;
     TSItemMap Items;
+    TSAreaTriggerMap AreaTriggers;
 };
 
 TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
@@ -821,12 +830,6 @@ public:
     {
          UnitEvents* operator->() { return this;}
     } Unit;
-
-    struct AreaTriggerEvents: public EventHandler
-    {
-         AreaTriggerEvents* operator->() { return this;}
-         //EVENT_HANDLE(Area,TriggerOnTrigger)
-    } AreaTrigger;
 
     struct WeatherEvents: public EventHandler
     {
@@ -919,7 +922,7 @@ public:
          EVENT_HANDLE(Player,OnGossipSelect)
          EVENT_HANDLE(Player,OnGossipSelectCode)
          EVENT_HANDLE(Player,OnGenerateItemLoot)
-         EVENT_HANDLE(Player, OnLearnTalent)
+         EVENT_HANDLE(Player,OnLearnTalent)
          EVENT_HANDLE(Player,OnLootCorpse)
     } Player;
 
@@ -1212,6 +1215,16 @@ public:
          MAP_EVENT_HANDLE(Item,OnTakenAsLoot)
     } ItemID;
 
+    struct AreaTriggerEvents : public EventHandler {
+        AreaTriggerEvents* operator->() { return this; }
+        EVENT_HANDLE(AreaTrigger,OnTrigger)
+    } AreaTriggers;
+
+    struct AreaTriggerIDEvents : public MappedEventHandler<TSAreaTriggerMap> {
+        AreaTriggerIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(AreaTrigger,OnTrigger)
+    } AreaTriggerID;
+
     struct AddonEvents: public EventHandler {
          AddonEvents* operator->(){return this;}
          EVENT_HANDLE(Addon,OnMessage)
@@ -1258,7 +1271,7 @@ public:
         World.LoadEvents(events);
         Formula.LoadEvents(events);
         Unit.LoadEvents(events);
-        AreaTrigger.LoadEvents(events);
+        AreaTriggers.LoadEvents(events);
         Weather.LoadEvents(events);
         AuctionHouse.LoadEvents(events);
         Condition.LoadEvents(events);
@@ -1275,6 +1288,8 @@ public:
         GameObjectID.LoadEvents(&events->GameObjects);
         Items.LoadEvents(events);
         ItemID.LoadEvents(&events->Items);
+        AreaTriggers.LoadEvents(events);
+        AreaTriggerID.LoadEvents(&events->AreaTriggers);
         Maps.LoadEvents(events);
         MapID.LoadEvents(&events->Maps);
         Achievements.LoadEvents(events);
@@ -1288,7 +1303,7 @@ public:
          World.Unload();
          Formula.Unload();
          Unit.Unload();
-         AreaTrigger.Unload();
+         AreaTriggers.Unload();
          Weather.Unload();
          AuctionHouse.Unload();
          Condition.Unload();
@@ -1307,6 +1322,8 @@ public:
          GameObjectID.Unload();
          Items.Unload();
          ItemID.Unload();
+         AreaTriggers.Unload();
+         AreaTriggerID.Unload();
          Maps.Unload();
          MapID.Unload();
          Tests.Unload();

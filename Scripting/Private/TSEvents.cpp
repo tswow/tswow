@@ -335,6 +335,16 @@ void TSAchievementMap::OnRemove(uint32_t key)
 {
 }
 
+void TSAreaTriggerMap::OnAdd(uint32_t key, TSAreaTriggerEvents* events)
+{
+    InitializeAreaTriggerEvents(key, events);
+}
+
+void TSAreaTriggerMap::OnRemove(uint32_t key)
+{
+
+}
+
 void TSLoadEvents()
 {
     new TSServerScript();

@@ -6731,7 +6731,11 @@ declare namespace _hidden {
     }
 
     export class AreaTrigger {
-        OnTrigger(callback: (player : TSPlayer,id: uint32)=>void);
+        OnTrigger(callback: (trigge: TSAreaTriggerEntry, player : TSPlayer, cancel: TSMutable<boolean>)=>void);
+    }
+
+    export class AreaTriggerID {
+        OnTrigger(areaTrigger: uint32, callback: (trigge: TSAreaTriggerEntry, player : TSPlayer, cancel: TSMutable<boolean>)=>void);
     }
 
     export class Vehicle {
@@ -7086,7 +7090,8 @@ declare class TSEventHandlers {
     World: _hidden.World;
     Formula: _hidden.Formula;
     Addon: _hidden.Addon;
-    //AreaTrigger: _hidden.AreaTrigger;
+    AreaTriggers: _hidden.AreaTrigger;
+    AreaTriggerID: _hidden.AreaTrigger;
     //Vehicle: _hidden.Vehicle;
     Achievements: _hidden.Achievements;
     AchievementID: _hidden.AchievementID;
@@ -7253,6 +7258,19 @@ declare interface TSMailDraft {
     SetBody(body: string);
     AddItem(enry: uint32, count: uint8, player?: TSPlayer);
     FilterItems(predicate: (item: TSItem)=>boolean);
+}
+
+declare interface TSAreaTriggerEntry {
+    GetEntry(): uint32;
+    GetContinentID(): uint32;
+    GetX(): float;
+    GetY(): float;
+    GetZ(): float;
+    GetRadius(): float;
+    GetBoxLength(): float;
+    GetBoxWidth(): float;
+    GetBoxHeight(): float;
+    GetBoxYaw(): float;
 }
 
 // Json
