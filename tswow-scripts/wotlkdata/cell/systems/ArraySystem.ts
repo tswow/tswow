@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from './CellSystem';
+import { CellSystem, CellSystemTop } from './CellSystem';
 
 export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem<T> {
     constructor(owner: T) {
@@ -46,7 +46,11 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
     }
 
     abstract get length(): number;
-    abstract get(index: number): A;
+    modify(index: number, callback: (value: A)=>void): T {
+        callback(this.get(index));
+        return this.owner;
+    }
+    protected abstract get(index: number): A;
 
     objectify() {
         const values: any[] = [];
@@ -60,11 +64,18 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
         }
         return values;
     }
+
+    static get<T,A extends ArrayEntry<T>>(system: ArraySystem<A,T>, index: number): A {
+        return system.get(index);
+    }
 }
 
-export abstract class ArrayEntry<T> extends CellSystem<T> {
+export abstract class ArrayEntry<T> extends CellSystemTop {
+    protected container: T;
+
     constructor(owner: T, index: number) {
-        super(owner);
+        super();
+        this.container = owner;
         this.index = index;
     }
 
@@ -72,7 +83,6 @@ export abstract class ArrayEntry<T> extends CellSystem<T> {
     static getIndex(entry: ArrayEntry<any>) {
         return entry.index;
     }
-
-    abstract clear(): T;
+    abstract clear(): this;
     abstract isClear(): boolean;
 }
