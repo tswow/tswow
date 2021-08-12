@@ -29,10 +29,11 @@ export class TSImage {
     }
 
     drawImage(image: TSImage, x: number, y: number, width = image.width, height = image.height, xIn = 0, yIn = 0, widthIn = width, heightIn = height) {
-        this.context.drawImage(image.bitmap,0,0,image.width,image.height,
+        this.context.drawImage(image.bitmap,
             xIn,yIn,widthIn,heightIn,
-            x, y, width, height
+            x, y, width, height,
         )
+        return this;
     }
 
     addFilter(callback: (color: number, x: number, y: number)=>number) {
@@ -40,6 +41,7 @@ export class TSImage {
             let out = callback(r<<24|g<<16|b<<8|a,x,y);
             return [out>>24&0xff,(out>>16)&0xff,(out>>8)&0xff,(out&0xff)]
         });
+        return this;
     }
 
     addFilterSplit(callback: (r: number, g: number, b: number, a: number, x: number, y: number)=>[number,number,number,number]){
@@ -59,11 +61,12 @@ export class TSImage {
             }
         }
         this.context.putImageData(id,0,0);
+        return this;
     }
 
     write(pathIn: string, keepPng: boolean = false) {
         let pathRaw = pathIn;
-        if(pathIn.endsWith('.blp') || pathIn.endsWith('.png')) {
+        if(pathIn.toLowerCase().endsWith('.blp') || pathIn.toLowerCase().endsWith('.png')) {
             pathRaw = pathIn.substring(0,pathIn.length-4);
         }
         const dir = path.dirname(pathRaw);
@@ -93,6 +96,12 @@ export class TSImage {
     }
 
     static read(str: string) {
+        if(str.toLowerCase().endsWith('.blp')) {
+            child_process.execSync(
+                `"bin/BLPConverter/blpconverter.exe" ${str}`)
+            str = str.substring(0,str.length-4)+'.png'
+        }
+
         let pngIn = PNG.sync.read(fs.readFileSync(str));
         const bitmap = pureimage.make(pngIn.width,pngIn.height);
         for(let i=0;i<bitmap.data.length;++i) {
