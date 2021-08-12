@@ -15,19 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
+import { Ids } from "../Misc/Ids";
+import { Pointer } from "../Refs/Pointer";
+import { MainEntity } from "../Misc/Entity";
 
-export class SpellDuration<T> extends SharedRef<T, SpellDurationRow> {
-    table(): SharedRefTable<SpellDurationRow> {
-        return DBC.SpellDuration;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellDuration;
-    }
-
+export class SpellDuration extends MainEntity<SpellDurationRow> {
     clear(): this {
         this.set(0,0,0);
         return this;
@@ -43,5 +36,23 @@ export class SpellDuration<T> extends SharedRef<T, SpellDurationRow> {
         this.DurationPerLevel.set(durationPerLevel);
         this.MaxDuration.set(maxDuration);
         return this.owner;
+    }
+}
+
+export class SpellDurationPointer<T> extends Pointer<T,SpellDuration> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellDuration {
+        return new SpellDuration(DBC.SpellDuration.add(Ids.SpellDuration.id()));
+    }
+    protected clone(): SpellDuration {
+        return new SpellDuration(this.resolve().row.clone(Ids.SpellDuration.id()));
+    }
+    protected id(v: SpellDuration): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): SpellDuration {
+        return new SpellDuration(DBC.SpellDuration.findById(this.cell.get()));
     }
 }

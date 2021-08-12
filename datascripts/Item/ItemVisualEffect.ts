@@ -1,12 +1,9 @@
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { pathToIcon } from "../Spell/SpellIcon";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { Ids } from "../Misc/Ids";
 import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');
@@ -15,6 +12,8 @@ export function pathToEffect(effectPath: string) {
         return DBC.ItemVisualEffects.add(
             Ids.ItemVisualEffects.id(),
             {Model:effectPath});
+    } else {
+        return old;
     }
 }
 
@@ -23,83 +22,42 @@ export function effectToPath(effect: number) {
     return DBC.ItemVisualEffects.findById(effect).Model;
 }
 
-export class ItemEffectCell<T> extends ArrayEntry<T> {
-    clear(): T {
-        this.id.set(0);
-        return this.owner;
-    }
-    isClear(): boolean {
-        return this.id.get()===0;
-    }
-    protected id: Cell<number,any>
-
-    constructor(owner: T, index: number, id: Cell<number,any>) {
-        super(owner,index);
-        this.id = id;
-    }
-
-    get(): string {
-        return effectToPath(this.id.get()).get();
-    }
-
-    set(value: string): T {
-        this.id.set(pathToIcon(value).ID.get());
-        return this.owner;
-    }
-}
-
-export class ItemEffects<T> extends SharedRef<T,ItemVisualsRow> {
-    table(): SharedRefTable<ItemVisualsRow> {
-        return DBC.ItemVisuals;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.ItemVisuals;
-    }
-
-    clear(): this {
-        this.clearAll();
-        return this;
-    }
-
-    readonly id: Cell<number,any>
-
-    constructor(owner: T, id: Cell<number,any>) {
-        super(owner,[id]);
-        this.id = id;
-    }
-
+export class ItemEffects extends MainEntity<ItemVisualsRow> {
     get length(): number {
         return 5;
     }
 
-    get row() { 
-        return DBC.ItemVisuals.findById(this.id.get());
+    set(index: number, path: string) {
+        this.row.Slot.setIndex(index,pathToEffect(path).ID.get());
+        return this;
     }
 
-    get(index: number): ItemEffectCell<T> {
-        return new ItemEffectCell(this.owner, index, 
-            new CellIndexWrapper(undefined,this.row.Slot,index));
+    add(path: string) {
+        this.set(this.getFree(),path);
+        return this;
+    }
+
+    get(index: number) {
+        return effectToPath(this.row.Slot.getIndex(index)); 
     }
 
     clearIndex(index: number) {
-        this.get(index).clear();
-        return this.owner;
+        this.row.Slot.setIndex(index,0);
+        return this;
     }
 
     clearAll() {
         for (let i = 0; i < this.length; ++i) {
             this.clearIndex(i);
         }
-        return this.owner;
+        return this;
     }
 
-    protected getFree(): ItemEffectCell<T> {
+    protected getFree() {
         for (let i = 0; i < this.length; ++i) {
-            const cur = this.get(i);
-            if (cur.isClear()) {
-                // Clear non-id fields
-                cur.clear();
-                return cur;
+            const cur = this.row.Slot.getIndex(i);
+            if(cur == 0) {
+                return i;
             }
         }
         throw new Error(`Can't add more entries, array is full.`);
@@ -108,13 +66,30 @@ export class ItemEffects<T> extends SharedRef<T,ItemVisualsRow> {
     objectify() {
         const values: any[] = [];
         for (let i = 0; i < this.length; ++i) {
-            const v = this.get(i);
-            if (v.isClear()) {
+            if(this.row.Slot.getIndex(i) == 0) {
                 values.push('<empty>')
             } else {
-                values.push(v.objectify());
+                values.push(this.get(i));
             }
         }
         return values;
+    }
+}
+
+export class ItemEffectsPointer<T> extends Pointer<T,ItemEffects> {
+    protected exists(): boolean {
+        return this.cell.get() == 0;
+    }
+    protected create(): ItemEffects {
+        return new ItemEffects(DBC.ItemVisuals.add(Ids.ItemVisuals.id()))
+    }
+    protected clone(): ItemEffects {
+        return new ItemEffects(this.resolve().row.clone(Ids.ItemVisuals.id()));
+    }
+    protected id(v: ItemEffects): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): ItemEffects {
+        return new ItemEffects(DBC.ItemVisuals.findById(this.cell.get()));
     }
 }

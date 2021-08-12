@@ -17,7 +17,7 @@
 import { DBC } from "wotlkdata";
 import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
 import { Ids } from "../Misc/Ids";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { FactionRelations } from "./FactionRelations";
 import { FactionReputations } from "./FactionReputation";
 

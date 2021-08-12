@@ -17,7 +17,7 @@
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class ItemIcon<T> extends CellSystem<ItemDisplayInfo<T>> {
+export class ItemIcon extends CellSystem<ItemDisplayInfo> {
     set(value: string) {
         if(value.includes('\\')) {
             if(!value.startsWith('Interface\\Icons\\')) {

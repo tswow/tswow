@@ -15,18 +15,12 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { Ids } from "../Misc/Ids";
 import { SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
-export class SpellDifficulty<T> extends SharedRef<T, SpellDifficultyRow> {
-
-    table(): SharedRefTable<SpellDifficultyRow> {
-        return DBC.SpellDifficulty;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellDifficulty;
-    }
+export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     clear(): this {
         this.set(0,0,0,0);
         return this;
@@ -45,5 +39,22 @@ export class SpellDifficulty<T> extends SharedRef<T, SpellDifficultyRow> {
         row.DifficultySpellID.setIndex(3, heroic25Man);
         return this.owner;
     }
-    
+}
+
+export class SpellDifficultyPointer<T> extends Pointer<T,SpellDifficulty> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellDifficulty {
+        return new SpellDifficulty(DBC.SpellDifficulty.add(Ids.SpellDifficulty.id()));
+    }
+    protected clone(): SpellDifficulty {
+        return new SpellDifficulty(this.resolve().row.clone(Ids.SpellDifficulty.id()));
+    }
+    protected id(v: SpellDifficulty): number {
+        return v.row.ID.get();
+    }
+    protected resolve(): SpellDifficulty {
+        return new SpellDifficulty(DBC.SpellDifficulty.findById(this.cell.get()))
+    }
 }

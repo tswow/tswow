@@ -16,7 +16,7 @@
  */
 import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { GameObjectTemplate } from "../GameObject/GameObjectTemplate";
-import { MainEntity } from "./MainEntity";
+import { MainEntity } from "./Entity";
 
 export abstract class GOCreature<T> extends MainEntity<T> {
     protected abstract isCreature() : boolean;

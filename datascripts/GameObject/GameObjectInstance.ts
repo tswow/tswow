@@ -1,6 +1,6 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
 
 export class GameObjectPosition extends CellSystem<GameObjectInstance> {

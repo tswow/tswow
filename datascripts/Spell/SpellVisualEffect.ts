@@ -1,10 +1,11 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectName";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
+import { Ids } from "../Misc/Ids";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
 export class VisualScale<T> extends CellSystem<T> {
     @Transient
@@ -27,15 +28,7 @@ export class VisualScale<T> extends CellSystem<T> {
     }
 }
 
-export class SpellVisualEffect<T> extends SharedRef<T, SpellVisualEffectNameRow> {
-    table(): SharedRefTable<SpellVisualEffectNameRow> {
-        return DBC.SpellVisualEffectName;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellVisualEffectName;
-    }
-
+export class SpellVisualEffect extends MainEntity<SpellVisualEffectNameRow> {
     clear(): this {
         this.Name.set("")
             .Filename.set("")
@@ -54,6 +47,24 @@ export class SpellVisualEffect<T> extends SharedRef<T, SpellVisualEffectNameRow>
         this.AreaSize.set(areaSize);
         this.Scale.set(scale,scaleMin,scaleMax);
         return this.owner;
+    }
+}
+
+export class SpellVisualEffectPointer<T> extends Pointer<T,SpellVisualEffect> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellVisualEffect {
+        return new SpellVisualEffect(DBC.SpellVisualEffectName.add(Ids.SpellVisualEffectName.id()))
+    }
+    protected clone(): SpellVisualEffect {
+        return new SpellVisualEffect(this.resolve().row.clone(Ids.SpellVisualEffectName.id()));
+    }
+    protected id(v: SpellVisualEffect): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): SpellVisualEffect {
+        return new SpellVisualEffect(DBC.SpellVisualEffectName.findById(this.cell.get()));
     }
 }
 
@@ -80,7 +91,7 @@ export class SpellVisualEffects<T> extends CellSystem<T> {
     }
 
     get(index: number) {
-        return new SpellVisualEffect(this, this.wrapIndex(this.row.SpecialEffect, index));
+        return new SpellVisualEffectPointer(this, this.wrapIndex(this.row.SpecialEffect, index));
     }
 
     add() {

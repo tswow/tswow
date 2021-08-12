@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class MainEntity<T> extends CellSystemTop {
@@ -26,4 +26,9 @@ export class MainEntity<T> extends CellSystemTop {
         super();
         this.row = row;
     }
+}
+
+export class ChildEntity<R,T extends MainEntity<R>> extends CellSystem<T> {
+    @Transient
+    get row() { return this.owner.row; }
 }

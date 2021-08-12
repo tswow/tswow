@@ -68,7 +68,7 @@ export const CreatureTemplates = {
                 .HoverHeight.set(0)
         } else {
             return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-                .clone(Ids.CreatureTemplate.id(mod, id))).Gossip.setID(0)
+                .clone(Ids.CreatureTemplate.id(mod, id)));
         }
     },
 
@@ -93,6 +93,7 @@ export const CreatureInstances = {
                 .modelid.set(0)
                 .npcflag.set(0)
                 .wander_distance.set(0)
+                .spawnMask.set(1)
                 .VerifiedBuild.set(17688)
             )
         .Position.set(position)

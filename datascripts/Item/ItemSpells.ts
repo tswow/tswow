@@ -88,7 +88,7 @@ function CCooldownRows(owner: ItemTemplate) {
 }
 
 export class ItemSpell extends ArrayEntry<ItemTemplate> {
-    clear(): ItemTemplate {
+    clear() {
         this.ID.set(0);
         this.Category.set(0);
         this.Trigger.set(0);
@@ -96,23 +96,23 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
         this.ProcsPerMinute.set(0);
         this.Cooldown.set(-1);
         this.CategoryCooldown.set(-1);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.ID.get() === 0;
     }
 
-    get ID() { return IdRows(this.owner)[this.index]; }
-    get Category() { return CatRows(this.owner)[this.index]; }
-    get Trigger() { return TriggerRows(this.owner)[this.index]; }
-    get Charges() { return ChargeRows(this.owner)[this.index]; }
-    get ProcsPerMinute() { return PPMRows(this.owner)[this.index]; }
-    get Cooldown () { return CooldownRows(this.owner)[this.index]; }
-    get CategoryCooldown() { return CCooldownRows(this.owner)[this.index]; }
+    get ID() { return this.wrap(IdRows(this.container)[this.index]); }
+    get Category() { return this.wrap(CatRows(this.container)[this.index]); }
+    get Trigger() { return this.wrap(TriggerRows(this.container)[this.index]); }
+    get Charges() { return this.wrap(ChargeRows(this.container)[this.index]); }
+    get ProcsPerMinute() { return this.wrap(PPMRows(this.container)[this.index]); }
+    get Cooldown () { return this.wrap(CooldownRows(this.container)[this.index]); }
+    get CategoryCooldown() { return this.wrap(CCooldownRows(this.container)[this.index]); }
 }
 
 export class ItemSpells extends ArraySystem<ItemSpell, ItemTemplate> {
-    get(index: number): ItemSpell {
+    protected get(index: number): ItemSpell {
         return new ItemSpell(this.owner, index);
     }
 

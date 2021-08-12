@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { load } from "js-yaml";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateQuery } from "wotlkdata/sql/types/quest_template";
 import { Ids } from "../Misc/Ids";

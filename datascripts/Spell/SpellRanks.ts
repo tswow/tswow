@@ -41,7 +41,7 @@ export class SpellRanks {
 
     setSkillLine(skillLine: number) {
         this.spells.forEach((x,i)=>{
-            x.SkillLines.add(skillLine).MinSkillRank.set(1);
+            x.SkillLines.add(skillLine,-1,(x)=>x.MinSkillRank.set(1));
         });
         return this;
     }

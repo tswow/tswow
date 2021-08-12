@@ -15,13 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { GOCreature } from "../Misc/GOorCreature";
 import { Ids } from "../Misc/Ids"
 import { Gossip } from "./Gossip";
-import { TopCell } from "../Refs/SharedRef";
 
 export const Gossips = {
-    create<S,G,T extends GOCreature<G>>(directOwner?: S, topOwner?: T){
+    create(){
         const id = Ids.GossipMenu.id();
         const text = Ids.NPCText.id();
         const gossipRow = SQL.gossip_menu.add(id, text)
@@ -36,10 +34,10 @@ export const Gossips = {
             .BroadcastTextID6.set(0)
             .BroadcastTextID7.set(0)
             .VerifiedBuild.set(17688)
-        return new Gossip<S,G,T>(directOwner as S, topOwner as T,new TopCell(gossipRow.MenuID.get()));
+        return new Gossip(gossipRow);
     },
 
-    load<S,G,T extends GOCreature<G>>(id: number, directOwner?: S, topOwner?: T) {
-        return new Gossip<S,G,T>(directOwner as S, topOwner as T, new TopCell(id));
+    load(id: number) {
+        return new Gossip(SQL.gossip_menu.find({MenuID:id}));
     }
 }

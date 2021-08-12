@@ -18,7 +18,7 @@ import { DBC, SQL } from "wotlkdata";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Ids } from "../Misc/Ids";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
@@ -43,9 +43,10 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
-import { ItemDisplayInfo } from "./ItemDisplayInfo";
+import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
@@ -109,7 +110,10 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
 
-    get DisplayInfo() { return new ItemDisplayInfo(this,[this.row.displayid, this.dbcRow.DisplayInfoID]); }
+    get DisplayInfo() { 
+        return new ItemDisplayInfoPointer(this
+            , new MulticastCell(this, [this.row.displayid, this.dbcRow.DisplayInfoID]))
+    }
 
     get AmmoType() { return new ItemAmmoTypes(this, this.row.ammo_type); }
     
@@ -154,7 +158,7 @@ export const Items = {
                 .Damage.clearAll()
                 .Delay.set(0)
                 .DisenchantID.set(0)
-                .DisplayInfo.setID(0)
+                .DisplayInfo.set(0)
                 .Durability.set(0)
                 .Duration.set(0)
                 .Flags.set(0)

@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { ZoneMusicPointer } from "../Sound/ZoneMusic";
 
 export class Area extends MainEntity<AreaTableRow> {

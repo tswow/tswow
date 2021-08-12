@@ -35,7 +35,7 @@ function contents(owner: ItemTemplate) {
 }
 
 
-export class ItemColor extends EnumCellWrapper<ItemTemplate> {
+export class ItemColor extends EnumCellWrapper<ItemSocket> {
     @EnumField(0)
     setMeta() {return this.set(0)};
 
@@ -59,13 +59,13 @@ export class ItemColor extends EnumCellWrapper<ItemTemplate> {
 }
 
 export class ItemSocket extends ArrayEntry<ItemTemplate>{
-    get color() { return new ItemColor(this.owner, colors(this.owner)[this.index]); }
-    get content() { return contents(this.owner)[this.index]; }
+    get color() { return new ItemColor(this, colors(this.container)[this.index]); }
+    get content() { return this.wrap(contents(this.container)[this.index]); }
 
     clear() {
         this.color.set(0);
         this.content.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear() {
@@ -83,11 +83,11 @@ export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
         return 3;
     }
 
-    get(index: number): ItemSocket {
+    protected get(index: number): ItemSocket {
         return new ItemSocket(this.owner, index);
     }
 
-    add(col: number, amt: number) {
+    protected add(col: number, amt: number) {
         const free = this.getFree();
         free.color.set(col);
         free.content.set(amt);

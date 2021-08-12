@@ -1,8 +1,8 @@
 import { EffectTemplate } from "./EffectTemplate";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
-import { SpellRadius } from "../SpellRadius";
+import { SpellRadiusPointer } from "../SpellRadius";
 
-export class TargetBase<T> extends EffectTemplate<T> {
+export class TargetBase extends EffectTemplate {
     /**
      * Generic Target type. 
      */
@@ -16,12 +16,12 @@ export class TargetBase<T> extends EffectTemplate<T> {
     /**
      * Generic radius. Value depends on TargetA/TargetB
      */
-    get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); }
+    get Radius() { return new SpellRadiusPointer(this, this.w(this.row.EffectRadiusIndex)); }
 
     /**
      * How many units can be chained by this spell
      */
-    get ChainTargets() { return this.wrap(this.effect.ChainTarget); }
+    get ChainTargets() { return this.wrap(this.owner.ChainTarget); }
 
-    get ChainAmplitude() { return this.wrap(this.effect.ChainAmplitude); }
+    get ChainAmplitude() { return this.wrap(this.owner.ChainAmplitude); }
 }

@@ -40,28 +40,18 @@ import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
-import { Trainer, TrainerLoc } from "../Trainer/Trainer";
+import { TrainerPointer } from "../Trainer/Trainer";
 import { UnitClass } from "./UnitClass";
 import { CreatureVendor } from "./CreatureVendor";
 import { GOCreature } from "../Misc/GOorCreature";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { Ids } from "../Misc/Ids";
-import { Gossips } from "../Gossip/Gossips";
 import { UnitFlags } from "./UnitFlags";
 import { SchoolMask } from "../Misc/School";
 import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
-import { SharedRefs } from "../Refs/SharedRefs";
-import { AttachedLootSet } from "../Loot/Loot";
 import { CreatureInstance } from "./CreatureInstance";
-import { Gossip } from "../Gossip/Gossip";
-
-function creatureLoc(id: number, lang: Language) {
-    const old = SQL.creature_template_locale.find({entry:id, locale:lang});
-    if(old) {
-        return old;
-    }
-    return SQL.creature_template_locale.add(id, lang);
-}
+import { Gossip, GossipPointer } from "../Gossip/Gossip";
+import { LootSetPointer } from "../Loot/Loot";
 
 export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
@@ -107,7 +97,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get Models() { return new CreatureModels(this); }
     get Icon() { return new CreatureIconNames(this); }
     get Gossip() { 
-        return new Gossip(this, this, this.row.gossip_menu_id);
+        return new GossipPointer(this, this.row.gossip_menu_id);
     }
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
@@ -137,29 +127,35 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
         } else {
             trainerRow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
         }
-        return new Trainer(this,trainerRow, ctrow); 
+        return new TrainerPointer(this,ctrow.TrainerId); 
     }
     get Vendor() { return new CreatureVendor(this); }
 
-    get NormalLoot() { return SharedRefs.getOrCreateLoot(this, 
-        new AttachedLootSet(this, 
-            this.row.lootid, 
-            Ids.CreatureLoot, 
-            SQL.creature_loot_template))
+    get NormalLoot() { 
+        return new LootSetPointer(
+              this
+            , this.row.lootid
+            , SQL.creature_loot_template
+            , Ids.CreatureLoot
+            )
     }
 
-    get PickpocketLoot() { return SharedRefs.getOrCreateLoot(this,
-        new AttachedLootSet(this,
-            this.row.pickpocketloot,
-            Ids.PickPocketLoot,
-            SQL.pickpocketing_loot_template))
+    get PickpocketLoot() { 
+        return new LootSetPointer(
+            this
+          , this.row.pickpocketloot
+          , SQL.pickpocketing_loot_template
+          , Ids.PickPocketLoot
+          )
     }
 
-    get SkinningLoot() { return SharedRefs.getOrCreateLoot(this,
-        new AttachedLootSet(this, 
-            this.row.skinloot, 
-            Ids.SkinningLoot, 
-            SQL.skinning_loot_template))
+    get SkinningLoot() { 
+        return new LootSetPointer(
+            this
+          , this.row.skinloot
+          , SQL.skinning_loot_template
+          , Ids.SkinningLoot
+          )
     }
 
     addVendorItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
@@ -170,13 +166,9 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
 
     addTrainerSpell(spellId: number, cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
         this.NPCFlags.Trainer.mark();
-        this.Trainer.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities);
+        this.Trainer.modify((t=>t.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities)));
         return this;
     }
-
-    get TrainerClass() { return this.wrap(this.Trainer.trainerRow.Requirement); }
-    get TrainerType() { return this.wrap(this.Trainer.trainerRow.Type); }
-    get TrainerGreeting() { return new TrainerLoc<this>(this, this.Trainer); }
 
     spawn(mod: string, id: string, pos: Position) {
         return new CreatureInstance(this, CreatureInstances.create(mod, id, this.ID, pos).row);

@@ -19,7 +19,7 @@ import { LanguageWordsRow } from "wotlkdata/dbc/types/LanguageWords";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { loc_constructor } from "wotlkdata/primitives";
 import { any } from "wotlkdata/query/Relations";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { std } from "../tswow-stdlib-data";
 import { makeRacemask, RaceType } from "../Race/RaceType";

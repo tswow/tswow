@@ -16,12 +16,11 @@
  */
 import { getBroadcast } from "../../BroadcastText/BroadcastText";
 import { GameObjectTemplate } from "../GameObjectTemplate";
-import { SharedRefs } from "../../Refs/SharedRefs";
 import { SQL } from "wotlkdata";
 import { Ids } from "../../Misc/Ids";
-import { AttachedLootSet } from "../../Loot/Loot";
+import { LootSetPointer } from "../../Loot/Loot";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
-import { SimpleLock } from "../../Locks/SimpleLock";
+import { SimpleLockPointer } from "../../Locks/SimpleLock";
 
 export class GameObjectChest extends GameObjectTemplate<GameObjectChest> {
     constructor(row: gameobject_templateRow) {
@@ -30,16 +29,16 @@ export class GameObjectChest extends GameObjectTemplate<GameObjectChest> {
     }
 
     get Lock() {
-        return new SimpleLock(this,[this.row.Data0]);
+        return new SimpleLockPointer(this,this.row.Data0);
     }
 
     get Loot() {
-        return SharedRefs.getOrCreateLoot(this, new AttachedLootSet(
-                  this
-                , this.row.Data1
-                , Ids.GameObjectLoot
-                , SQL.gameobject_loot_template
-                ));
+        return new LootSetPointer(
+              this
+            , this.row.Data1
+            , SQL.gameobject_loot_template
+            , Ids.GameObjectLoot
+            );
     }
 
     /**
@@ -47,12 +46,14 @@ export class GameObjectChest extends GameObjectTemplate<GameObjectChest> {
      */
     get RestockTime() { return this.wrap(this.row.Data2); }
     get IsConsumable() { return this.wrap(this.row.Data3); }
+    get MinRestock() { return this.wrap(this.row.Data4); }
+    get MaxRestock() { return this.wrap(this.row.Data5); }
     /**
      * EventID from event_scripts
      */
     get LootedEvent() { return this.wrap(this.row.Data6); }
     get LinkedTrap() { return this.wrap(this.row.Data7); }
-    //get QuestID() { return this.wrap(this.row.Data8); }
+    get QuestID() { return this.wrap(this.row.Data8); }
     get Level() { return this.wrap(this.row.Data9); }
     get LosOK() { return this.wrap(this.row.Data10); }
     get LeaveLoot() { return this.wrap(this.row.Data11); }

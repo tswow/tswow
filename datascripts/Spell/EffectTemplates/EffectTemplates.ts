@@ -8,51 +8,47 @@ import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SchoolMask } from "../../Misc/School";
 import { EffectClassSet } from "../SpellClassSet";
-import { SpellRadius } from "../SpellRadius";
+import { SpellRadius, SpellRadiusPointer } from "../SpellRadius";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 // 1
 // 2
 @EffectID(2)
-export class SchoolDamage<T> extends DamageBase<T> {}
+export class SchoolDamage extends DamageBase {}
 // 3
 // 4
 // 5
 @EffectID(5)
-export class TeleportUnits<T> extends EffectTemplate<T> {
+export class TeleportUnits extends EffectTemplate {
     get TeleportedUnit() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
     get TeleportTarget() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
 // 6
 // 7
 @EffectID(7)
-export class EnvironmentalDamage<T> extends EffectTemplate<T> {
-    constructor(owner :T, effect: SpellEffect<any>) {
-        super(owner, effect);
-    }
-
+export class EnvironmentalDamage extends EffectTemplate {
     get Source() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
     get AreaType() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
-    get BaseDamage() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
-    get DamagePerLevel() {return this.wrap(this.effect.PointsPerLevel); }
-    get DamagePerCombo() { return this.wrap(this.effect.PointsPerCombo); }
-    get BonusMultiplier() { return this.wrap(this.effect.BonusMultiplier); }
+    get BaseDamage() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
+    get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
+    get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
     get Radius() { 
-        return new SpellRadius(this, [this.wrapIndex(this.row.EffectRadiusIndex, this.index)]); } 
+        return new SpellRadiusPointer(this, this.wrapIndex(this.row.EffectRadiusIndex, this.index)); } 
 }
 // 8
 @EffectID(8)
-export class PowerDrain<T> extends PowerBase<T> {}
+export class PowerDrain extends PowerBase {}
 // 9
 @EffectID(9)
-export class HealthLeech<T> extends DamageBase<T> {}
+export class HealthLeech extends DamageBase {}
 // 10
 @EffectID(10)
-export class Heal<T> extends HealBase<T> {}
+export class Heal extends HealBase {}
 // 11
 @EffectID(11)
-export class BindHome<T> extends EffectTemplate<T> {
+export class BindHome extends EffectTemplate {
     get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
     get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
@@ -85,75 +81,75 @@ export class TotemCreatureCommand<T> extends EnumCellWrapper<T> {
 }
 
 @EffectID(12)
-export class CommandTotemCreature<T> extends EffectTemplate<T> {
-    get Target() { return this.wrap(this.effect.MiscValueA); }
-    get Command() { return this.wrap(this.effect.MiscValueB); }
+export class CommandTotemCreature extends EffectTemplate {
+    get Target() { return this.wrap(this.owner.MiscValueA); }
+    get Command() { return this.wrap(this.owner.MiscValueB); }
 }
 // 13
 // 14
 // 15
 // 16
 @EffectID(16)
-export class CompleteQuest<T> extends TargetBase<T> {
-    get QuestID() { return this.wrap(this.effect.MiscValueA); }
+export class CompleteQuest extends TargetBase {
+    get QuestID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 17
 @EffectID(17)
-export class WeaponDamageNoSchool<T> extends DamageBase<T> {}
+export class WeaponDamageNoSchool extends DamageBase {}
 // 18
 @EffectID(18)
-export class Resurrect<T> extends HealBase<T> {}
+export class Resurrect extends HealBase {}
 // 19
 @EffectID(19)
-export class ExtraAttacks<T> extends DamageBase<T> {}
+export class ExtraAttacks extends DamageBase {}
 // 20
 // 21
 // 22
 // 23
 // 24
 @EffectID(24)
-export class CreateItem<T> extends TargetBase<T> {
-    get ItemTemplate() { return this.wrap(this.effect.ItemType); }
+export class CreateItem extends TargetBase {
+    get ItemTemplate() { return this.wrap(this.owner.ItemType); }
 
     /**
      * Set to desired item count -1 (i.e. set to 199 for 200)
      */
-    get ItemCount() { return this.wrap(this.effect.BasePoints); }
+    get ItemCount() { return this.wrap(this.owner.BasePoints); }
 }
 // 25
 @EffectID(25)
-export class Weapon<T> extends EffectTemplate<T> {}
+export class Weapon extends EffectTemplate {}
 // 26
 // 27
 // 28
 @EffectID(28)
-export class Summon<T> extends TargetBase<T> {
+export class Summon extends TargetBase {
     /**
      * Entry in creature_templates
      */
-    get SummonedCreature() { return this.wrap(this.effect.MiscValueA); }
+    get SummonedCreature() { return this.wrap(this.owner.MiscValueA); }
 
     /**
      * Entry in SummonProperties.dbc
      */
-    get SummonProperties() { return this.wrap(this.effect.MiscValueB); }
+    get SummonProperties() { return this.wrap(this.owner.MiscValueB); }
 }
 // 29
 @EffectID(29)
-export class Leap<T> extends TargetBase<T> {}
+export class Leap extends TargetBase {}
 // 30
 @EffectID(30)
-export class Energize<T> extends PowerBase<T> {
-    get PowerType() { return new SpellPowerType(this, this.effect.MiscValueA); }
+export class Energize extends PowerBase {
+    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueA); }
 }
 // 31
 @EffectID(31)
-export class WeaponPercentDamage<T> extends DamageBasePct<T> {
+export class WeaponPercentDamage extends DamageBasePct {
     
     /**
      * Percentage (in whole percentage, i.e. value of "200" = 200%)
      */
-    get Percentage() { return this.wrap(this.effect.BasePoints); }
+    get Percentage() { return this.wrap(this.owner.BasePoints); }
 
     setSingleTarget() { 
         this.TargetA.setUnitTargetEnemy();
@@ -163,20 +159,20 @@ export class WeaponPercentDamage<T> extends DamageBasePct<T> {
 
     setAoE(radius: number, radiusPerLevel: number, radiusMax: number) {
         this.TargetA.setSrcCaster();
-        this.Radius.set(radius,radiusPerLevel,radiusMax);
+        this.Radius.cloneModify(x=>x.set(radius,radiusPerLevel,radiusMax));
         return this.owner;
     }
 }
 // 32
 @EffectID(32)
-export class TriggerMissile<T> extends TargetBase<T> {
-    get MissileSpell() { return this.wrap(this.effect.TriggerSpell); }
+export class TriggerMissile extends TargetBase {
+    get MissileSpell() { return this.wrap(this.owner.TriggerSpell); }
 }
 // 33
 @EffectID(33)
-export class OpenLock<T> extends EffectTemplate<T> {
-    get LockType() { return this.wrap(this.effect.MiscValueA); }
-    get SkillValue() { return this.wrap(this.effect.PointsPerLevel); }
+export class OpenLock extends EffectTemplate {
+    get LockType() { return this.wrap(this.owner.MiscValueA); }
+    get SkillValue() { return this.wrap(this.owner.PointsPerLevel); }
 
     /**
      * Generic Target type. 
@@ -199,173 +195,173 @@ export class OpenLock<T> extends EffectTemplate<T> {
 // 35
 // 36
 @EffectID(36)
-export class LearnSpell<T> extends TargetBase<T> {
-    get LearntSpell() { return this.effect.TriggerSpell; }
+export class LearnSpell extends TargetBase {
+    get LearntSpell() { return this.owner.TriggerSpell; }
 }
 // 37
 // 38
 @EffectID(38)
-export class Dispel<T> extends TargetBase<T> {
-    get SchoolMask() { return new SchoolMask(this, this.effect.MiscValueA); }
+export class Dispel extends TargetBase {
+    get SchoolMask() { return new SchoolMask(this, this.owner.MiscValueA); }
 }
 // 39
 @EffectID(39)
-export class Language<T> extends TargetBase<T> {
+export class Language extends TargetBase {
     /**
      * Reference to Languages.dbc
      */
-    get LanguageID() { return this.wrap(this.effect.MiscValueA); }
+    get LanguageID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 40
 // 41
 @EffectID(41)
-export class Jump<T> extends TargetBase<T> {
-    get MinHeight() { return this.wrap(this.effect.MiscValueA); }
-    get MaxHeight() { return this.wrap(this.effect.MiscValueB); }
+export class Jump extends TargetBase {
+    get MinHeight() { return this.wrap(this.owner.MiscValueA); }
+    get MaxHeight() { return this.wrap(this.owner.MiscValueB); }
 }
 // 42
 @EffectID(42)
-export class JumpDest<T> extends TargetBase<T> {
-    get MinHeight() { return this.wrap(this.effect.MiscValueA); }
-    get MaxHeight() { return this.wrap(this.effect.MiscValueB); }
+export class JumpDest extends TargetBase {
+    get MinHeight() { return this.wrap(this.owner.MiscValueA); }
+    get MaxHeight() { return this.wrap(this.owner.MiscValueB); }
 }
 // 43
 @EffectID(43)
-export class TeleportUnitFaceCaster<T> extends EffectTemplate<T> {
+export class TeleportUnitFaceCaster extends EffectTemplate {
     get TeleportedUnit() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
     get TeleportTarget() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
 // 44
 @EffectID(44)
-export class SkillStep<T> extends TargetBase<T> {
-    get Tier() { return this.wrap(this.effect.BasePoints); }
-    get Skill() { return this.wrap(this.effect.MiscValueA); }
+export class SkillStep extends TargetBase {
+    get Tier() { return this.wrap(this.owner.BasePoints); }
+    get Skill() { return this.wrap(this.owner.MiscValueA); }
 }
 // 45
 @EffectID(45)
-export class AddHonor<T> extends CountBase<T> {}
+export class AddHonor extends CountBase {}
 // 46
 // 47
 @EffectID(47)
-export class TradeSkill<T> extends EffectTemplate<T> {
+export class TradeSkill extends EffectTemplate {
 }
 // 48
 // 49
 // 50
 @EffectID(50)
-export class TransDoor<T> extends TargetBase<T> {
-    get GameObjectTemplate() { return this.wrap(this.effect.MiscValueA); }
+export class TransDoor extends TargetBase {
+    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 51
 // 52
 // 53
 @EffectID(53)
-export class EnchantItem<T> extends EffectTemplate<T> {
-    get EnchantingItem() { return this.wrap(this.effect.ItemType); }
-    get Enchant() { return this.wrap(this.effect.MiscValueA); }
+export class EnchantItem extends EffectTemplate {
+    get EnchantingItem() { return this.wrap(this.owner.ItemType); }
+    get Enchant() { return this.wrap(this.owner.MiscValueA); }
 }
 // 54
 @EffectID(54)
-export class EnchantItemTemp<T> extends EffectTemplate<T> {
-    get EnchantingItem() { return this.wrap(this.effect.ItemType); }
-    get EnchantID() { return this.wrap(this.effect.MiscValueA); }
+export class EnchantItemTemp extends EffectTemplate {
+    get EnchantingItem() { return this.wrap(this.owner.ItemType); }
+    get EnchantID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 55
 // 56
 @EffectID(56)
-export class SummonPet<T> extends EffectTemplate<T> {
+export class SummonPet extends EffectTemplate {
     get SummonedCreature() {
-        return this.wrap(this.effect.MiscValueA); 
+        return this.wrap(this.owner.MiscValueA); 
     }
 }
 // 57
 @EffectID(57)
-export class LearnPetSpell<T> extends TargetBase<T> {
-    get LearntSpell() { return this.effect.TriggerSpell; }
+export class LearnPetSpell extends TargetBase {
+    get LearntSpell() { return this.owner.TriggerSpell; }
 }
 // 58
 @EffectID(58)
-export class WeaponDamage<T> extends DamageBase<T> {}
+export class WeaponDamage extends DamageBase {}
 // 59
 @EffectID(59)
-export class CreateRandomItem<T> extends TargetBase<T> {
+export class CreateRandomItem extends TargetBase {
     /**
      * Reference to spell_loot_template
      */
-    get LootTemplate() { return this.wrap(this.effect.MiscValueA); }
+    get LootTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 60
 // 61
 @EffectID(61)
-export class SendEvent<T> extends EffectTemplate<T> {
-    get EventID() { return this.wrap(this.effect.MiscValueA); }
+export class SendEvent extends EffectTemplate {
+    get EventID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 62
 @EffectID(62)
-export class PowerBurn<T> extends PowerBase<T> {}
+export class PowerBurn extends PowerBase {}
 // 63
 @EffectID(63)
-export class Threat<T> extends TargetBase<T> {
+export class Threat extends TargetBase {
     
-    get ThreatAmount() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
+    get ThreatAmount() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 64
 @EffectID(64)
-export class TriggerSpell<T> extends EffectTemplate<T> {
-    get TriggerSpell() { return this.wrap(this.effect.TriggerSpell); }
+export class TriggerSpell extends EffectTemplate {
+    get TriggerSpell() { return this.wrap(this.owner.TriggerSpell); }
 }
 // 65
 // 66
 @EffectID(66)
-export class CreateManaGem<T> extends TargetBase<T> {
-    get ItemType() { return this.wrap(this.effect.ItemType); }
+export class CreateManaGem extends TargetBase {
+    get ItemType() { return this.wrap(this.owner.ItemType); }
 }
 // 67
 @EffectID(67)
-export class HealMaxHealth<T> extends TargetBase<T> {}
+export class HealMaxHealth extends TargetBase {}
 // 68
 @EffectID(68)
-export class InterruptCast<T> extends TargetBase<T> {
+export class InterruptCast extends TargetBase {
     get Mechanic() { return new SpellEffectMechanicEnum(this, this.wrapIndex(this.row.EffectMechanic,this.index))}
 }
 // 69
 // 70
 // 71
 @EffectID(71)
-export class Pickpocket<T> extends EffectTemplate<T> {
+export class Pickpocket extends EffectTemplate {
     get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
     get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
 // 72
 @EffectID(72)
-export class AddFarsight<T> extends TargetBase<T> {}
+export class AddFarsight extends TargetBase {}
 // 73
 // 74
 @EffectID(74)
-export class ApplyGlyph<T> extends EffectTemplate<T> {
-    get Glyph() { return this.wrap(this.effect.MiscValueA); }
-    get ClassMask() { return new EffectClassSet(this, this.effect); }
+export class ApplyGlyph extends EffectTemplate {
+    get Glyph() { return this.wrap(this.owner.MiscValueA); }
+    get ClassMask() { return new EffectClassSet(this, this.owner); }
 }
 // 75
 @EffectID(75)
-export class HealMechanical<T> extends HealBase<T> {}
+export class HealMechanical extends HealBase {}
 // 76
 @EffectID(76)
-export class SummonObjectWild<T> extends TargetBase<T> {
-    get GameObjectTemplate() { return this.wrap(this.effect.MiscValueA); }
+export class SummonObjectWild extends TargetBase {
+    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 77
 @EffectID(77)
-export class ScriptEffect<T> extends TargetBase<T> {
+export class ScriptEffect extends TargetBase {
 }
 // 78
 // 79
 @EffectID(79)
-export class Sanctuary<T> extends TargetBase<T> {}
+export class Sanctuary extends TargetBase {}
 // 80
 @EffectID(80)
-export class AddComboPoints<T> extends CountBase<T> {}
+export class AddComboPoints extends CountBase {}
 // 81
 // 82
 // 83
@@ -401,19 +397,19 @@ export class GameObjectActions<T> extends EnumCellWrapper<T> {
 }
 
 @EffectID(86)
-export class ActivateObject<T> extends TargetBase<T> {
-    get Action() { return new GameObjectActions(this, this.effect.MiscValueA); }
+export class ActivateObject extends TargetBase {
+    get Action() { return new GameObjectActions(this, this.owner.MiscValueA); }
 }
 // 87
 @EffectID(87)
-export class GameObjectDamage<T> extends DamageBase<T> {}
+export class GameObjectDamage extends DamageBase {}
 // 88
 @EffectID(88)
-export class GameObjectRepair<T> extends PointsRoot<T> {
-    get BaseRepair() { return this.wrap(this.effect.BasePoints); }
-    get RandomRepair() { return this.wrap(this.effect.DieSides); }
-    get RepairPerLevel() { return this.wrap(this.effect.PointsPerLevel); }
-    get RepairPerCombo() { return this.wrap(this.effect.PointsPerLevel); }
+export class GameObjectRepair extends PointsRoot {
+    get BaseRepair() { return this.wrap(this.owner.BasePoints); }
+    get RandomRepair() { return this.wrap(this.owner.DieSides); }
+    get RepairPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
+    get RepairPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
 }
 // 89
 @EffectID(89)
@@ -431,120 +427,120 @@ export class GameObjectDestructibleState<T> extends EnumCellWrapper<T> {
     setRebuilding() { return this.set(3); }
 }
 @EffectID(89)
-export class SetGameObjectDestructibleState<T> extends DamageBase<T> {
-    get State() { return new GameObjectDestructibleState(this, this.effect.MiscValueA); }
+export class SetGameObjectDestructibleState extends DamageBase {
+    get State() { return new GameObjectDestructibleState(this, this.owner.MiscValueA); }
 }
 // 90
 @EffectID(90)
-export class KillCredit<T> extends TargetBase<T> {
-    get CreatureID() { return this.wrap(this.effect.MiscValueA); }
+export class KillCredit extends TargetBase {
+    get CreatureID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 91
 // 92
 @EffectID(92)
-export class EnchantHeldItem<T> extends EffectTemplate<T> {
-    get EnchantID() { return this.wrap(this.effect.MiscValueA); }
+export class EnchantHeldItem extends EffectTemplate {
+    get EnchantID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 93
 // 94
 @EffectID(94)
-export class ResurrectSelf<T> extends EffectTemplate<T> {
-    get BaseHealth() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
-    get HealthPerLevel() {return this.wrap(this.effect.PointsPerLevel); }
-    get HealthPerCombo() { return this.wrap(this.effect.PointsPerCombo); }
-    get BonusMultiplier() { return this.wrap(this.effect.BonusMultiplier); }
-    get MultipleValue() { return this.wrap(this.effect.MultipleValue); } 
-    get Mana() { return this.wrap(this.effect.MiscValueA); }
+export class ResurrectSelf extends EffectTemplate {
+    get BaseHealth() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get HealthPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
+    get HealthPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
+    get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
+    get MultipleValue() { return this.wrap(this.owner.MultipleValue); } 
+    get Mana() { return this.wrap(this.owner.MiscValueA); }
 }
 // 95
 // 96
 @EffectID(96)
-export class Charge<T> extends TargetBase<T> {}
+export class Charge extends TargetBase {}
 // 97
 @EffectID(97)
-export class CastButtons<T> extends EffectTemplate<T> {
+export class CastButtons extends EffectTemplate {
     /**
      * Actual ButtonID is this value + 132
      */
-    get ButtonID() { return this.wrap(this.effect.MiscValueA); }
+    get ButtonID() { return this.wrap(this.owner.MiscValueA); }
 
-    get ButtonCount() { return this.wrap(this.effect.MiscValueB); }
+    get ButtonCount() { return this.wrap(this.owner.MiscValueB); }
 }
 // 98
 @EffectID(98)
-export class Knockback<T> extends TargetBase<T> {
-    get Height() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
-    get HeightPerLevel() { return this.wrap(this.effect.PointsPerLevel); }
-    get KnockbackAmount() { return this.wrap(this.effect.MiscValueA); }
+export class Knockback extends TargetBase {
+    get Height() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get HeightPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
+    get KnockbackAmount() { return this.wrap(this.owner.MiscValueA); }
 }
 // 99
 // 100
 @EffectID(100)
-export class MakeDrunk<T> extends PointsRoot<T> {
-    get BaseDrunkness() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
-    get DrunknessPerLevel() { return this.wrap(this.effect.PointsPerLevel); }
-    get DrunknessPerCombo() { return this.wrap(this.effect.PointsPerLevel); }
+export class MakeDrunk extends PointsRoot {
+    get BaseDrunkness() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get DrunknessPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
+    get DrunknessPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
 }
 // 101
 // 102
 // 103
 @EffectID(103)
-export class Reputation<T> extends PointsBase<T> {
-    get Faction() { return this.wrap(this.effect.MiscValueA); }
+export class Reputation extends PointsBase {
+    get Faction() { return this.wrap(this.owner.MiscValueA); }
 }
 // 104
 @EffectID(104)
-export class SummonObjectSlot1<T> extends TargetBase<T> {
-    get GameObjectTemplate() { return this.wrap(this.effect.MiscValueA); }
+export class SummonObjectSlot1 extends TargetBase {
+    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 105
 @EffectID(105)
-export class SummonObjectSlot2<T> extends TargetBase<T> {
-    get GameObjectTemplate() { return this.wrap(this.effect.MiscValueA); }
+export class SummonObjectSlot2 extends TargetBase {
+    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 106
 @EffectID(106)
-export class SummonObjectSlot3<T> extends TargetBase<T> {
-    get GameObjectTemplate() { return this.wrap(this.effect.MiscValueA); }
+export class SummonObjectSlot3 extends TargetBase {
+    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 107
 @EffectID(107)
-export class SummonObjectSlot4<T> extends TargetBase<T> {
-    get GameObjectTemplate() { return this.wrap(this.effect.MiscValueA); }
+export class SummonObjectSlot4 extends TargetBase {
+    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 108
 @EffectID(108)
-export class DispelMechanic<T> extends TargetBase<T> {
-    get SchoolMask() { return new SchoolMask(this, this.effect.MiscValueA); }
+export class DispelMechanic extends TargetBase {
+    get SchoolMask() { return new SchoolMask(this, this.owner.MiscValueA); }
 }
 // 109
 // 110
 @EffectID(110)
-export class DestroyAllTotems<T> extends EffectTemplate<T> {
-    get ClassMask() { return new EffectClassSet(this, this.effect); }
+export class DestroyAllTotems extends EffectTemplate {
+    get ClassMask() { return new EffectClassSet(this, this.owner); }
 }
 // 111
 @EffectID(111)
-export class DurabilityDamage<T> extends DamageBase<T> {
-    get Slot() { return this.wrap(this.effect.MiscValueA); }
+export class DurabilityDamage extends DamageBase {
+    get Slot() { return this.wrap(this.owner.MiscValueA); }
 }
 // 112
 // 113
 // 114
 // 115
 @EffectID(115)
-export class DurabilityDamagePercent<T> extends DamageBasePct<T> {
-    get Slot() { return this.wrap(this.effect.MiscValueA); }
+export class DurabilityDamagePercent extends DamageBasePct {
+    get Slot() { return this.wrap(this.owner.MiscValueA); }
 }
 // 116
 // 117
 // 118
 @EffectID(118)
-export class Skill<T> extends TargetBase<T> {
-    SkillID() { return this.wrap(this.effect.MiscValueA); }
+export class Skill extends TargetBase {
+    SkillID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 119
 // 120
@@ -552,93 +548,93 @@ export class Skill<T> extends TargetBase<T> {
 // 122
 // 123
 @EffectID(123)
-export class SendTaxi<T> extends TargetBase<T> {
-    TaxiID() { return this.wrap(this.effect.MiscValueA); }
+export class SendTaxi extends TargetBase {
+    TaxiID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 124
 @EffectID(124)
-export class PullTowards<T> extends TargetBase<T>{
-    get SpeedZ() { return this.wrap(this.effect.MiscValueA); }
+export class PullTowards extends TargetBase{
+    get SpeedZ() { return this.wrap(this.owner.MiscValueA); }
 }
 // 125
 @EffectID(125)
-export class ModifyThreatPercent<T> extends TargetBase<T> {
-    get ThreatPercentAmount() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
+export class ModifyThreatPercent extends TargetBase {
+    get ThreatPercentAmount() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 126
 @EffectID(126)
-export class StealBeneficialBuff<T> extends CountBase<T> {
-    get DispelMask() { return new SchoolMask(this, this.effect.MiscValueA); }
+export class StealBeneficialBuff extends CountBase {
+    get DispelMask() { return new SchoolMask(this, this.owner.MiscValueA); }
 }
 // 127
 // 128
 // 129
 // 130
 @EffectID(130)
-export class RedirectThreat<T> extends TargetBase<T> {
-    get ThreatAmount() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
+export class RedirectThreat extends TargetBase {
+    get ThreatAmount() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 131
 @EffectID(131)
-export class PlaySound<T> extends TargetBase<T> {
-    get SoundID() { return this.wrap(this.effect.MiscValueA); }
+export class PlaySound extends TargetBase {
+    get SoundID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 132
 @EffectID(132)
-export class PlayMusic<T> extends TargetBase<T> {
-    get SoundID() { return this.wrap(this.effect.MiscValueA); }
+export class PlayMusic extends TargetBase {
+    get SoundID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 133
 // 134
 // 135
 // 136
 @EffectID(136)
-export class HealPercent<T> extends HealBasePct<T> {}
+export class HealPercent extends HealBasePct {}
 // 137
 @EffectID(137)
-export class EnergizePercent<T> extends PowerBasePct<T> {
-    get PowerType() { return new SpellPowerType(this, this.effect.MiscValueA); }
+export class EnergizePercent extends PowerBasePct {
+    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueA); }
 }
 // 138
 @EffectID(138)
-export class LeapBack<T> extends TargetBase<T> {}
+export class LeapBack extends TargetBase {}
 // 139
 @EffectID(139)
-export class ClearQuest<T> extends TargetBase<T> {
-    get QuestID() { return this.wrap(this.effect.MiscValueA); }
+export class ClearQuest extends TargetBase {
+    get QuestID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 140
 @EffectID(140)
-export class ForceCast<T> extends EffectTemplate<T> {
-    get TriggerSpell() { return this.wrap(this.effect.TriggerSpell); }
+export class ForceCast extends EffectTemplate {
+    get TriggerSpell() { return this.wrap(this.owner.TriggerSpell); }
     get Mechanic() { return new SpellEffectMechanicEnum(this, this.wrapIndex(this.row.EffectMechanic,this.index)); }
 }
 // 141
 @EffectID(141)
-export class ForceCastWithValue<T> extends PointsBase<T> {
-    get TriggerSpell() { return this.wrap(this.effect.TriggerSpell); }
+export class ForceCastWithValue extends PointsBase {
+    get TriggerSpell() { return this.wrap(this.owner.TriggerSpell); }
     get Mechanic() { return new SpellEffectMechanicEnum(this, this.wrapIndex(this.row.EffectMechanic,this.index)); }
 }
 // 142
 @EffectID(142)
-export class TriggerSpellWithValue<T> extends PointsBase<T> {
-    get TriggerSpell() { return this.wrap(this.effect.TriggerSpell); }
+export class TriggerSpellWithValue extends PointsBase {
+    get TriggerSpell() { return this.wrap(this.owner.TriggerSpell); }
 }
 // 143
 // 144
 @EffectID(144)
-export class KnockbackDest<T> extends TargetBase<T> {
-    get Height() { return this.wrap(this.effect.BasePoints); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
-    get HeightPerLevel() { return this.wrap(this.effect.PointsPerLevel); }
-    get KnockbackAmount() { return this.wrap(this.effect.MiscValueA); }
+export class KnockbackDest extends TargetBase {
+    get Height() { return this.wrap(this.owner.BasePoints); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get HeightPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
+    get KnockbackAmount() { return this.wrap(this.owner.MiscValueA); }
 }
 // 145
 @EffectID(145)
-export class PullTowardsDest<T> extends TargetBase<T>{
-    get SpeedZ() { return this.wrap(this.effect.MiscValueA); }
+export class PullTowardsDest extends TargetBase{
+    get SpeedZ() { return this.wrap(this.owner.MiscValueA); }
 }
 // 146
 export class RuneType<T> extends EnumCellWrapper<T> {
@@ -649,30 +645,30 @@ export class RuneType<T> extends EnumCellWrapper<T> {
 }
 
 @EffectID(146)
-export class ActivateRune<T> extends CountBase<T> {
-    get RuneType() { return new RuneType(this, this.effect.MiscValueA); }
+export class ActivateRune extends CountBase {
+    get RuneType() { return new RuneType(this, this.owner.MiscValueA); }
 }
 // 147
 @EffectID(147)
-export class FailQuest<T> extends TargetBase<T> {
-    get QuestID() { return this.wrap(this.effect.MiscValueA); }
+export class FailQuest extends TargetBase {
+    get QuestID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 148
 @EffectID(148)
-export class TriggerMissileWithValue<T> extends TargetBase<T> {
-    get MissileSpell() { return this.wrap(this.effect.TriggerSpell); }
-    get BasePoints() { return this.wrap(this.effect.BasePoints); }
-    get PointsPerLevel() { return this.wrap(this.effect.PointsPerLevel); }
-    get PointsPerCombo() { return this.wrap(this.effect.PointsPerCombo); }
-    get DieSides() { return this.wrap(this.effect.DieSides); }
+export class TriggerMissileWithValue extends TargetBase {
+    get MissileSpell() { return this.wrap(this.owner.TriggerSpell); }
+    get BasePoints() { return this.wrap(this.owner.BasePoints); }
+    get PointsPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
+    get PointsPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
+    get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 149
 @EffectID(149)
-export class ChargeDest<T> extends TargetBase<T> {}
+export class ChargeDest extends TargetBase {}
 // 150
 @EffectID(150)
-export class StartQuest<T> extends TargetBase<T> {
-    get QuestID() { return this.wrap(this.effect.MiscValueA); }
+export class StartQuest extends TargetBase {
+    get QuestID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 151
 // 152
@@ -680,13 +676,13 @@ export class StartQuest<T> extends TargetBase<T> {
 // 154
 // 155
 @EffectID(155)
-export class CanTitanGrip<T> extends TargetBase<T> {
-    get PenaltySpellID() { return this.wrap(this.effect.MiscValueA); }
+export class CanTitanGrip extends TargetBase {
+    get PenaltySpellID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 156
 @EffectID(156)
-export class EnchantPrismaticItem<T> extends EffectTemplate<T> {
-    get EnchantID() { return this.wrap(this.effect.MiscValueA); }
+export class EnchantPrismaticItem extends EffectTemplate {
+    get EnchantID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 157
 // 158
@@ -697,8 +693,8 @@ export class EnchantPrismaticItem<T> extends EffectTemplate<T> {
 // 163
 // 164
 @EffectID(164)
-export class RemoveAura<T> extends TargetBase<T> {
-    get RemovedSpell() { return this.wrap(this.effect.TriggerSpell); }
+export class RemoveAura extends TargetBase {
+    get RemovedSpell() { return this.wrap(this.owner.TriggerSpell); }
 }
 // 165
 // 166

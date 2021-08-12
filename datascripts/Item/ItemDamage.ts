@@ -50,15 +50,15 @@ export class DamageSchool<T> extends EnumCellWrapper<T> {
 }
 
 export class ItemDamage extends ArrayEntry<ItemTemplate> {
-    get school() { return schools(this.owner)[this.index]; }
-    get min() { return dmgMin(this.owner)[this.index]; }
-    get max() { return dmgMax(this.owner)[this.index]; }
+    get school() { return schools(this.container)[this.index]; }
+    get min() { return dmgMin(this.container)[this.index]; }
+    get max() { return dmgMax(this.container)[this.index]; }
 
-    clear(): ItemTemplate {
+    clear() {
         this.school.set(0);
         this.min.set(0);
         this.max.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -70,7 +70,7 @@ export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
     get length(): number {
         return 2;
     }
-    get(index: number): ItemDamage {
+    protected get(index: number): ItemDamage {
         return new ItemDamage(this.owner, index);
     }
 

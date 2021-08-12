@@ -274,11 +274,6 @@ export const Ids = {
     CreatureDisplayInfoExtra: new AutoIdGenerator('CreatureDisplayInfoExtra',22000),
 
     /**
-     * Starts at 10000, highest base value is 7050
-     */
-    CreatureModelData: new AutoIdGenerator('CreatureModelData',10000),
-
-    /**
      * Starts at 2147483648, highest base value is 2147483647 (shared with CreatureDisplayInfo/creature_model_info)
      */
     CreatureTemplateOutfits: new AutoIdGenerator('creature_template_outfits',2147483648),

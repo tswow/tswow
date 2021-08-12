@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Ids } from "../Misc/Ids";
 import { resolveTotemType, TotemType } from "../Totem/TotemType";
 import { Spell } from "./Spell";
@@ -80,11 +81,11 @@ export const TotemCreatures = {
         }
 
         const spell = Spells.create(mod, id, 2484)
-            .Effects.get(0)
-                .MiscValueA.set(creature)
-                .MiscValueB.set(created[slot])
-                .ImplicitTargetA.set(41+slot)
-                .end
+            .Effects.modify(0,eff=>{
+                eff.MiscValueA.set(creature)
+                   .MiscValueB.set(created[slot])
+                   .ImplicitTargetA.set(41+slot)
+            })
             .RequiredTotems.setIndex(0,resolveTotemType(totem))
         return spell;
     },
@@ -100,40 +101,41 @@ export const TotemCreatures = {
 
             for(const controller of controllers) {
                 const spell = Spells.create(mod, id+'_'+controller.toLowerCase())
-                    .Effects.add()
-                    .EffectType.setControlTotemCreature().effect
-                    .MiscValueA.set(bitmask).end
-
+                    .Effects.add(eff=>
+                        eff.EffectType.setControlTotemCreature()
+                            .AsRawEffect()
+                            .MiscValueA.set(bitmask
+                    ))
                 switch(controller) {
                     case 'Aggressive':
+                        ArraySystem.get(spell.Effects,0).MiscValueB.set(2)
                         controlOut.Aggressive = 
-                            spell.Effects.get(0).MiscValueB.set(2).end
-                            .Icon.set('Interface\\Icons\\Ability_Racial_BloodRage.blp')
+                            spell.Icon.set('Interface\\Icons\\Ability_Racial_BloodRage.blp')
                         break
                     case 'Attack':
+                        ArraySystem.get(spell.Effects,0).MiscValueB.set(5)
                         controlOut.Attack = 
-                            spell.Effects.get(0).MiscValueB.set(5).end
-                            .Icon.set('Interface\\Icons\\Ability_GhoulFrenzy.blp')
+                            spell.Icon.set('Interface\\Icons\\Ability_GhoulFrenzy.blp')
                         break
                     case 'Defensive':
+                        ArraySystem.get(spell.Effects,0).MiscValueB.set(1)
                         controlOut.Defensive = 
-                            spell.Effects.get(0).MiscValueB.set(1).end
-                            .Icon.set('Interface\\Icons\\Ability_Defend.blp')
+                            spell.Icon.set('Interface\\Icons\\Ability_Defend.blp')
                         break
                     case 'Follow':
+                        ArraySystem.get(spell.Effects,0).MiscValueB.set(4)
                         controlOut.Follow = 
-                            spell.Effects.get(0).MiscValueB.set(4).end
-                            .Icon.set('Interface\\Icons\\Ability_Tracking.blp')
+                            spell.Icon.set('Interface\\Icons\\Ability_Tracking.blp')
                         break
                     case 'Passive':
+                        ArraySystem.get(spell.Effects,0).MiscValueB.set(0)
                         controlOut.Passive = 
-                            spell.Effects.get(0).MiscValueB.set(0).end
-                            .Icon.set('Interface\\Icons\\AbilitySeal.blp')
+                            spell.Icon.set('Interface\\Icons\\AbilitySeal.blp')
                         break
                     case 'Stay':
+                        ArraySystem.get(spell.Effects,0).MiscValueB.set(0)
                         controlOut.Stay = 
-                            spell.Effects.get(0).MiscValueB.set(3).end
-                            .Icon.set('Interface\\Icons\\Spell_Nature_TimeStop.blp')
+                            spell.Icon.set('Interface\\Icons\\Spell_Nature_TimeStop.blp')
                         break
                 }
             }

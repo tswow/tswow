@@ -6,7 +6,6 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { ProfessionTier, resolveProfessionTier, isTradeskillSpell } from "./ProfessionType";
 import { ProfessionNameSystem } from "./ProfessionName";
 import { ProfessionRecipe } from "./ProfessionRecipe";
-import { GatheringSpell } from "./GatheringSpell";
 import { Locks } from "../Locks/Locks";
 import { LockType } from "../Locks/LockType";
 import { GameObjectTemplates } from "../GameObject/GameObjects";
@@ -67,9 +66,9 @@ export class Profession {
             }
 
             for(let j=0;j<3;++j) {
-                if(ef.Effects.get(j).EffectType.get() == 47) {
+                if(ef.Effects.isEffectType(j,47)) {
                     if(!value) {
-                        ef.Effects.get(j).EffectType.set(0);
+                        ef.Effects.modify(j,e=>e.EffectType.set(0))
                         break;
                     } else {
                         continue loop1;
@@ -95,8 +94,10 @@ export class Profession {
     }
 
     addRecipe(mod: string, id: string) {
-        return new ProfessionRecipe(this,std.Spells.create(mod,id,3492)
-                .SkillLines.add(this.ID).end)
+        return new ProfessionRecipe(
+            this,std.Spells.create(mod,id,3492)
+                .SkillLines.add(this.ID)
+                )
             .SpellFocus.set(0)
             .Reagents.clearAll()
             .Totems.clearAll()
@@ -105,12 +106,12 @@ export class Profession {
     addGatheringNode(mod: string, name: string, levelNeeded: number) {
         return GameObjectTemplates.create(mod,name).setChest()
             .IsConsumable.set(1)
-            .Lock
-                .Index.set(this.LockType.ID)
-                .Type.setLockType()
-                .Skill.set(levelNeeded)
-                .Action.set(0)
-            .end
+            .Lock.cloneModify((value)=>{
+                value.Index.set(this.LockType.ID)
+                    .Type.setLockType()
+                    .Skill.set(levelNeeded)
+                    .Action.set(0)
+            })
     }
 
     addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
@@ -121,20 +122,20 @@ export class Profession {
             this._ApprenticeSpell = std.Spells.create(modid,`${id}_spell_1`,BS_SPELLS[0])
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                .Visual.clear().end
-                .SkillLines.add(this.skillLine.ID)
-                    .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
-                    .ClassMaskForbidden.set(0)
-                    .MinSkillRank.set(1)
-                    .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
-                .end
+                .Effects.modify(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
+                .Visual.set(0)
+                .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
+                    sla.RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
+                       .ClassMaskForbidden.set(0)
+                       .MinSkillRank.set(1)
+                       .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
+                })
 
             this._ApprenticeLearnSpell = std.Spells.create(modid,`${id}_learn_spell`,2020)
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.get(0).TriggerSpell.set((this._ApprenticeSpell as Spell).ID).end
-                .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
+                .Effects.modify(0,(eff)=>eff.TriggerSpell.set((this._ApprenticeSpell as Spell).ID))
+                .Effects.modify(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
 
             SQL.spell_ranks.add((this._ApprenticeSpell as Spell).ID,1,
                 {spell_id: (this._ApprenticeSpell as Spell).ID})
@@ -145,14 +146,15 @@ export class Profession {
             catch(err) {
                 let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
-                    .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                    .Visual.clear().end
-                    .SkillLines.add(this.skillLine.ID)
-                        .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
-                        .ClassMaskForbidden.set(0)
-                        .MinSkillRank.set(1)
-                        .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
-                    .end
+                    .Effects.modify(1,e=>e.MiscValueA.set(this.skillLine.ID))
+                    .Visual.set(0)
+                    .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
+                        sla
+                            .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
+                            .ClassMaskForbidden.set(0)
+                            .MinSkillRank.set(1)
+                            .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
+                    })
                 SQL.spell_ranks.add(this.ApprenticeSpell.ID,i,{spell_id:spl.ID})
             }
         }
@@ -167,41 +169,47 @@ export class Profession {
     }
 
     AddGatheringSpell(mod: string, id: string, lockType: number, speed: number = 0, maxRange: number = 5, totem: number = 0) {
+        let spli = std.Spells.create(mod,id)
+            .Attributes.isHiddenFromLog.mark()
+            .Attributes.isHiddenFromLog.mark()
+            .Attributes.unk41.mark()
+            .Range.cloneModify((range)=>{
+                range.set(0,maxRange,0,maxRange)
+            })
         let spl = std.Spells.create(mod,id)
             .Attributes.isHiddenInSpellbook.mark()
             .Attributes.isHiddenFromLog.mark()
             .Attributes.unk41.mark()
-            .Range.set(0,maxRange,0,maxRange)
-            .SkillLines.add(this.ID).end
-            .CastTime.set(speed,0,speed)
+            .Range.cloneModify((x)=>x.set(0,maxRange,0,maxRange))
+            .SkillLines.add(this.ID)
+            .CastTime.cloneModify((x)=>x.set(speed,0,speed))
             .RequiredTotems.setIndex(0,totem)
-            .Effects.add()
-                .EffectType.setOpenLock()
+            .Effects.add((eff)=>{
+                eff.EffectType.setOpenLock()
                 .TargetA.setGameobjectTarget()
                 .LockType.set(lockType)
-                .effect
+                .AsRawEffect()
                 .BasePoints.set(-1)
                 .PointsPerLevel.set(5)
-                .Radius.set(2,0,2)
+                .Radius.cloneModify(x=>x.set(2,0,2))
                 .ChainAmplitude.set(1)
-            .end
-            .Effects.add()
-                .EffectType.setSkill().effect
+            })
+            .Effects.add((eff)=>{
+                eff.EffectType.setSkill()
+                .AsRawEffect()
                 .MiscValueA.set(this.ID)
                 .DieSides.set(1)
                 .ChainAmplitude.set(1)
                 .BonusMultiplier.set(1)
-            .end
+            })
             .SchoolMask.mark(0)
             .InterruptFlags.OnMovement.mark()
             .InterruptFlags.OnPushback.mark()
             .InterruptFlags.OnInterruptCast.mark()
             .InterruptFlags.mark(3)
             .InterruptFlags.mark(4)
-            .Visual.makeUnique().end
-            
         this.ApprenticeLearnSpell.Effects.addLearnSpells(spl.ID)
-        return new GatheringSpell(spl);
+        return spl;
     }
 
     GetHighestRank() {
@@ -214,7 +222,7 @@ export class Profession {
 
     SetCastTime(base: number, perLevel: number = 0, minimum: number = base) {
         for(let i=1;i<this.GetHighestRank();++i) {
-            this.getSkillRank(i).CastTime.set(base,perLevel,minimum);
+            this.getSkillRank(i).CastTime.cloneModify(x=>x.set(base,perLevel,minimum));
         }
         return this;
     }

@@ -22,7 +22,7 @@ import { Position } from "../Misc/Position";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
 import { GameObjectType } from "./GameObjectType";
-import { GameObjectDisplay } from "./GameObjectDisplay";
+import { GameObjectDisplay, GameObjectDisplayPointer } from "./GameObjectDisplay";
 
 export class GameObjectTemplate<T extends GameObjectTemplate<T>> extends GOCreature<gameobject_templateRow> {
     protected isCreature(): boolean {
@@ -51,9 +51,11 @@ export class GameObjectTemplate<T extends GameObjectTemplate<T>> extends GOCreat
     }
 
     protected get Type(): GameObjectType<T> { return new GameObjectType<T>(this, this.row.type); }
-    get ID() { return (this as any as T).row.entry.get(); }
+    get ID() { return this.row.entry.get(); }
 
-    get Display(): GameObjectDisplay<T> { return new GameObjectDisplay(this, [this.row.displayId]) as any; }
+    get Display(): GameObjectDisplayPointer<T> { 
+        return new GameObjectDisplayPointer(this as any as T, this.row.displayId); 
+    }
 
     get Name(): GameObjectName<T> { return new GameObjectName<T>(this as any as T); }
     get Icon() { return (this as any as T).wrap(this.row.IconName); }

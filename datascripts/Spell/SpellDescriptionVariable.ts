@@ -15,18 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
+import { Ids } from "../Misc/Ids";
 import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
-export class SpellDescriptionVariable<T> extends SharedRef<T, SpellDescriptionVariablesRow> {
-    table(): SharedRefTable<SpellDescriptionVariablesRow> {
-        return DBC.SpellDescriptionVariables;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellDescriptionVariable;
-    }
-
+export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariablesRow> {
     clear(): this {
         this.set("");
         return this;
@@ -43,5 +37,27 @@ export class SpellDescriptionVariable<T> extends SharedRef<T, SpellDescriptionVa
     set(value: string) {
         this.row.Variables.set(value);
         return this.owner;
+    }
+
+    get ID() {
+        return this.row.ID.get();
+    }
+}
+
+export class SpellDescriptionVariablePointer<T> extends Pointer<T,SpellDescriptionVariable> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellDescriptionVariable {
+        return new SpellDescriptionVariable(DBC.SpellDescriptionVariables.add(Ids.SpellDescriptionVariable.id()));
+    }
+    protected clone(): SpellDescriptionVariable {
+        return new SpellDescriptionVariable(this.resolve().row.clone(Ids.SpellDescriptionVariable.id()))
+    }
+    protected id(v: SpellDescriptionVariable): number {
+        return v.ID;
+    }
+    protected resolve(): SpellDescriptionVariable {
+        return new SpellDescriptionVariable(DBC.SpellDescriptionVariables.findById(this.cell.get()));
     }
 }

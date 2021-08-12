@@ -17,7 +17,7 @@
 import { SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { Condition } from "../Conditions/Condition";
 import { ActionType } from "./ActionType";
 import { AttachedScript } from "./AttachedScript";

@@ -1,3 +1,4 @@
+import { ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Spell } from "../Spell/Spell";
 
 export type DefaultProfession = 
@@ -71,9 +72,9 @@ export function resolveProfessionTier(tier: ProfessionTier|number) {
 
 export function isTradeskillSpell(spell: Spell) {
     const types = [
-        spell.Effects.get(0).EffectType.objectify(),
-        spell.Effects.get(1).EffectType.objectify(),
-        spell.Effects.get(2).EffectType.objectify(),
+        ArraySystem.get(spell.Effects,0).EffectType.objectify(),
+        ArraySystem.get(spell.Effects,1).EffectType.objectify(),
+        ArraySystem.get(spell.Effects,2).EffectType.objectify(),
     ]
     return types.includes('Skill');
 }

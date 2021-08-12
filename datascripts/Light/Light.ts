@@ -16,7 +16,7 @@
  */
 import { DBC } from "wotlkdata";
 import { LightRow } from "wotlkdata/dbc/types/Light";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { PositionXYZCell } from "../Misc/PositionCell";
 import { LightFalloff } from "./LightFalloff";
 import { LightFloatBand } from "./LightFloatBand";

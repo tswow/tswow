@@ -15,17 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { Ids } from "../Misc/Ids";
 import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
+import { Pointer } from "../Refs/Pointer";
+import { MainEntity } from "../Misc/Entity";
 
-export class SpellMissile<T> extends SharedRef<T,SpellMissileRow> {
-    table(): SharedRefTable<SpellMissileRow> {
-        return DBC.SpellMissile;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellMissile;
-    }
+export class SpellMissile extends MainEntity<SpellMissileRow> {
     clear(): this {
         this.CollisionRadius.set(0)
             .DefaultPitchMax.set(0)
@@ -56,4 +51,22 @@ export class SpellMissile<T> extends SharedRef<T,SpellMissileRow> {
     get RandomizePitchMin() { return this.wrap(this.row.RandomizePitchMin); }
     get RandomizeSpeedMax() { return this.wrap(this.row.RandomizeSpeedMax); }
     get RandomizeSpeedMin() { return this.wrap(this.row.RandomizeSpeedMin); }
+}
+
+export class SpellMissilePointer<T> extends Pointer<T, SpellMissile> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellMissile {
+        return new SpellMissile(DBC.SpellMissile.add(Ids.SpellMissile.id()))
+    }
+    protected clone(): SpellMissile {
+        return new SpellMissile(this.resolve().row.clone(Ids.SpellMissile.id()));
+    }
+    protected id(v: SpellMissile): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): SpellMissile {
+        return new SpellMissile(DBC.SpellMissile.findById(this.cell.get()));
+    }
 }

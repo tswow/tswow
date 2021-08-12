@@ -16,18 +16,11 @@
  */
 import { DBC } from "wotlkdata";
 import { SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { Ids } from "../Misc/Ids";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
-export class SpellCastTime<T> extends SharedRef<T, SpellCastTimesRow> {
-    table(): SharedRefTable<SpellCastTimesRow> {
-        return DBC.SpellCastTimes;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellCastTimes;
-    }
-
+export class SpellCastTime extends MainEntity<SpellCastTimesRow> {
     clear(): this {
         this.Base.set(0)
         this.PerLevel.set(0)
@@ -44,5 +37,25 @@ export class SpellCastTime<T> extends SharedRef<T, SpellCastTimesRow> {
         this.PerLevel.set(perLevel);
         this.Minimum.set(minimum)
         return this.owner;
+    }
+
+    get ID() { return this.row.ID.get(); }
+}
+
+export class SpellCastTimePointer<T> extends Pointer<T, SpellCastTime> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellCastTime {
+        return new SpellCastTime(DBC.SpellCastTimes.add(Ids.SpellCastTimes.id()));
+    }
+    protected clone(): SpellCastTime {
+        return new SpellCastTime(this.resolve().row.clone(Ids.SpellCastTimes.id()));
+    }
+    protected id(v: SpellCastTime): number {
+        return v.ID;
+    }
+    protected resolve(): SpellCastTime {
+        return new SpellCastTime(DBC.SpellCastTimes.findById(this.cell.get()));
     }
 }

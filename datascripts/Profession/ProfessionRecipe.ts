@@ -4,9 +4,8 @@ import { Profession } from "./Profession";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { std } from "../tswow-stdlib-data";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { SpellCastTime } from "../Spell/SpellCastTime";
-import { SpellAnimation } from "../Spell/SpellAnimation";
-import { SoundEntry } from "../Sound/SoundEntry";
+import { SpellCastTimePointer } from "../Spell/SpellCastTime";
+import { ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 
 export class RecipeRank extends CellSystem<ProfessionRecipe> {
     protected readonly spell: Spell;
@@ -32,13 +31,13 @@ export class RecipeOutputItem extends CellSystem<ProfessionRecipe> {
     }
 
     set(item: number) {
-        this.owner.spell.Effects.get(0).ItemType.set(item);
+        this.owner.spell.Effects.modify(0,eff=>eff.ItemType.set(item))
         this.owner.spell.Name.enGB.set(std.Items.load(item).Name.enGB.get());
         return this.owner;
     }
 
     get() {
-        return this.owner.spell.Effects.get(0).ItemType.get();
+        return ArraySystem.get(this.owner.spell.Effects,0).ItemType.get();
     }
 }
 
@@ -56,13 +55,10 @@ export class ProfessionRecipe extends CellSystem<Profession> {
     /**
      * Set to desired item count -1 (i.e. set to 199 for 200, or 0 for 1)
      */
-    get OutputCount() { return this.wrap(this.spell.Effects.get(0).BasePoints); }
+    get OutputCount() { return this.wrap(ArraySystem.get(this.spell.Effects,0).BasePoints); }
     get OutputItem() { return new RecipeOutputItem(this); }
     get Ranks() { return new RecipeRank(this, this.spell); }
     get Reagents() { return new SpellReagents(this, this.spell); }
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
-    get CastTime() { return new SpellCastTime(this, [this.spell.row.CastingTimeIndex]); }
-
-    get Animation() { return new SpellAnimation(this, this.spell.PrecastKit.row.AnimID); }
-    get Sound() { return new SoundEntry(this,this.spell.PrecastKit.row.SoundID); }
+    get CastTime() { return new SpellCastTimePointer(this, this.spell.row.CastingTimeIndex); }
 }

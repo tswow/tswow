@@ -17,24 +17,16 @@
 import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
-export class SpellRadius<T> extends SharedRef<T, SpellRadiusRow> {
-    table(): SharedRefTable<SpellRadiusRow> {
-        return DBC.SpellRadius;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellRadius;
-    }
-
+export class SpellRadius extends MainEntity<SpellRadiusRow> {
     clear(): this {
         this.set(0,0,0);
         return this;
     }
 
     get ID() { return this.row.ID.get(); }
-
     get Radius() { return this.ownerWrap(this.row.Radius); }
     get RadiusPerLevel() { return this.ownerWrap(this.row.RadiusPerLevel); }
     get RadiusMax() { return this.ownerWrap(this.row.RadiusMax); }
@@ -47,9 +39,31 @@ export class SpellRadius<T> extends SharedRef<T, SpellRadiusRow> {
         return this.owner;
     }
 
-    copyFrom(radius: SpellRadius<any>) {
+    copyFrom(radius: SpellRadius) {
         this.Radius.set(radius.Radius.get());
         this.RadiusPerLevel.set(radius.RadiusPerLevel.get());
         this.RadiusMax.set(radius.RadiusMax.get());
+    }
+}
+
+export class SpellRadiusPointer<T> extends Pointer<T,SpellRadius> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+
+    protected create(): SpellRadius {
+        return new SpellRadius(DBC.SpellRadius.add(Ids.SpellRadius.id()));
+    }
+
+    protected clone(): SpellRadius {
+        return new SpellRadius(this.resolve().row.clone(Ids.SpellRadius.id()));
+    }
+
+    protected id(v: SpellRadius): number {
+        return v.ID;
+    }
+
+    protected resolve(): SpellRadius {
+        return new SpellRadius(DBC.SpellRadius.findById(this.cell.get()));
     }
 }

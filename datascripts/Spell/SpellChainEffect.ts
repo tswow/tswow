@@ -1,17 +1,10 @@
 import { SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
+import { Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
-export class SpellChainEffect<T> extends SharedRef<T, SpellChainEffectsRow>  {
-    table(): SharedRefTable<SpellChainEffectsRow> {
-        return DBC.SpellChainEffects;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellChainEffects
-    }
-
+export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     clear(): this {
         // TODO: Implement!!
         return this;
@@ -66,4 +59,24 @@ export class SpellChainEffect<T> extends SharedRef<T, SpellChainEffectsRow>  {
 
     get TextureLength() { return this.wrap(this.row.TextureLength)}
     get WavePhase() { return this.wrap(this.row.WavePhase)}
+
+    get ID() { return this.row.ID.get(); }
+}
+
+export class SpellChainEffectPointer<T> extends Pointer<T,SpellChainEffect> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellChainEffect {
+        return new SpellChainEffect(DBC.SpellChainEffects.add(Ids.SpellChainEffects.id()))
+    }
+    protected clone(): SpellChainEffect {
+        return new SpellChainEffect(this.resolve().row.clone(Ids.SpellChainEffects.id()))
+    }
+    protected id(v: SpellChainEffect): number {
+        return v.ID;
+    }
+    protected resolve(): SpellChainEffect {
+        return new SpellChainEffect(DBC.SpellChainEffects.findById(this.cell.get()));
+    }
 }

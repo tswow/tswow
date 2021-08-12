@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
+import { ChildEntity } from "../Misc/Entity";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureStats extends CellSystem<CreatureTemplate> {
-    get HealthMod() { return this.ownerWrap(this.owner.row.HealthModifier); }
-    get ManaMod() { return this.ownerWrap(this.owner.row.ManaModifier); }
-    get ArmorMod() { return this.ownerWrap(this.owner.row.ArmorModifier); }
-    get DamageMod() { return this.ownerWrap(this.owner.row.DamageModifier); }
-    get ExperienceMod() { return this.ownerWrap(this.owner.row.ExperienceModifier); }
+export class CreatureStats extends ChildEntity<creature_templateRow,CreatureTemplate> {
+    get HealthMod() { return this.ownerWrap(this.row.HealthModifier); }
+    get ManaMod() { return this.ownerWrap(this.row.ManaModifier); }
+    get ArmorMod() { return this.ownerWrap(this.row.ArmorModifier); }
+    get DamageMod() { return this.ownerWrap(this.row.DamageModifier); }
+    get ExperienceMod() { return this.ownerWrap(this.row.ExperienceModifier); }
 
     set(health: number, mana: number, armor: number, damage: number, experience: number) {
         this.HealthMod.set(health);

@@ -17,14 +17,14 @@
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
 
-export class ItemVisualModel<T> extends ArrayEntry<ItemDisplayInfo<T>> {
-    get Model() { return this.wrapIndex(this.owner.row.ModelName, this.index); }
-    get ModelTexture() { return this.wrapIndex(this.owner.row.ModelTexture, this.index); }
+export class ItemVisualModel<T> extends ArrayEntry<ItemDisplayInfo> {
+    get Model() { return this.wrapIndex(this.container.row.ModelName, this.index); }
+    get ModelTexture() { return this.wrapIndex(this.container.row.ModelTexture, this.index); }
 
-    clear(): ItemDisplayInfo<T> {
+    clear() {
         this.Model.set("")
         this.ModelTexture.set("");
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -32,7 +32,7 @@ export class ItemVisualModel<T> extends ArrayEntry<ItemDisplayInfo<T>> {
     }
 }
 
-export class ItemVisualModels<T> extends ArraySystem<ItemVisualModel<T>,ItemDisplayInfo<T>> {
+export class ItemVisualModels<T> extends ArraySystem<ItemVisualModel<T>,ItemDisplayInfo> {
     get length(): number {
         return 2;
     }

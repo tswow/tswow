@@ -38,23 +38,23 @@ export class TalentRankWrap extends Cell<number, Talent> {
 
 export class TalentRequirement extends ArrayEntry<Talent> {
 
-    clear(): Talent {
-        this.owner.row.PrereqTalent.setIndex(this.index, 0);
-        this.owner.row.PrereqRank.setIndex(this.index, 0);
-        return this.owner;
+    clear() {
+        this.container.row.PrereqTalent.setIndex(this.index, 0);
+        this.container.row.PrereqRank.setIndex(this.index, 0);
+        return this;
     }
 
     isClear(): boolean {
-        return this.owner.row.PrereqTalent.getIndex(this.index) === 0;
+        return this.container.row.PrereqTalent.getIndex(this.index) === 0;
     }
 
-    get Talent() { return this.ownerWrapIndex(this.owner.row.PrereqTalent, this.index); }
-    get Rank() { return new TalentRankWrap(this.owner, this.index); }
+    get Talent() { return this.wrapIndex(this.container.row.PrereqTalent, this.index); }
+    get Rank() { return this.wrap(new TalentRankWrap(this.container, this.index)); }
 
     set(talent: number, rank: number) {
         this.Talent.set(talent);
         this.Rank.set(rank);
-        return this.owner;
+        return this;
     }
 }
 
@@ -63,7 +63,7 @@ export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
         return 3;
     }
 
-    get(index: number): TalentRequirement {
+    protected get(index: number): TalentRequirement {
         return new TalentRequirement(this.owner, index);
     }
 

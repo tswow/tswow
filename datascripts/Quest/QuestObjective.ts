@@ -48,14 +48,15 @@ function RequiredItemCounts(owner: Quest) {
 }
 
 export class ItemObjective extends ArrayEntry<Quest> {
-    get ItemID() { return ItemIds(this.owner)[this.index]}
-    get Count() { return RequiredItemCounts(this.owner)[this.index]; }
+    get ItemID() { return this.wrap(ItemIds(this.container)[this.index])}
+    get Count() { return this.wrap(RequiredItemCounts(this.container)[this.index]); }
 
-    clear(): Quest {
+    clear() {
         this.ItemID.set(0);
         this.Count.set(0);
-        return this.owner;
+        return this;
     }
+
     isClear(): boolean {
         return this.ItemID.get() === 0;
     }
@@ -66,7 +67,7 @@ export class ItemObjectives extends ArraySystem<ItemObjective, Quest> {
         return 6;
     }
 
-    get(index: number): ItemObjective {
+    protected get(index: number): ItemObjective {
         return new ItemObjective(this.owner, index);
     }
 
@@ -97,12 +98,12 @@ function NPCGOCounts(owner: Quest) {
 }
 
 export class NpcGoObjective extends ArrayEntry<Quest> {
-    get ID() { return NPCGOIds(this.owner)[this.index]}
-    get Count() { return NPCGOCounts(this.owner)[this.index]}
-    clear(): Quest {
+    get ID() { return this.wrap(NPCGOIds(this.container)[this.index])}
+    get Count() { return this.wrap(NPCGOCounts(this.container)[this.index])}
+    clear() {
         this.ID.set(0);
         this.Count.set(0);
-        return this.owner
+        return this
     }
     isClear(): boolean {
         return this.ID.get() === 0;
@@ -114,7 +115,7 @@ export class NpcGoObjectives extends ArraySystem<NpcGoObjective,Quest> {
         return 4;
     }
 
-    get(index: number): NpcGoObjective {
+    protected get(index: number): NpcGoObjective {
         return new NpcGoObjective(this.owner, index);
     }
 
@@ -142,13 +143,13 @@ function Reputation(owner: Quest) {
 }
 
 export class ReputationObjective extends ArrayEntry<Quest> {
-    get Faction() { return FactionIds(this.owner)[this.index]; }
-    get Reputation() { return Reputation(this.owner)[this.index]; }
+    get Faction() { return this.wrap(FactionIds(this.container)[this.index]); }
+    get Reputation() { return this.wrap(Reputation(this.container)[this.index]); }
 
-    clear(): Quest {
+    clear() {
         this.Faction.set(0);
         this.Reputation.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -161,8 +162,15 @@ export class ReputationObjectives extends ArraySystem<ReputationObjective,Quest>
         return 2;
     }
 
-    get(index: number): ReputationObjective {
+    protected get(index: number): ReputationObjective {
         return new ReputationObjective(this.owner, index);
+    }
+
+    add(faction: number, reputation: number) {
+        this.getFree()
+            .Faction.set(faction)
+            .Reputation.set(reputation);
+        return this.owner;
     }
 }
 

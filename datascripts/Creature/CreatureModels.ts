@@ -16,7 +16,7 @@
  */
 import { CreatureTemplate } from "./CreatureTemplate";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { CreatureVisual } from "./CreatureVisual";
+import { CreatureVisualPointer } from "./CreatureVisual";
 
 function getModel(template: CreatureTemplate, index: number) {
     switch(index) {
@@ -34,30 +34,27 @@ export class CreatureModels extends CellSystem<CreatureTemplate> {
     }
 
     private rows() {
-        return [this.owner.row.modelid1,this.owner.row.modelid2,this.owner.row.modelid3,this.owner.row.modelid4]
+        return [
+              this.owner.row.modelid1
+            , this.owner.row.modelid2
+            , this.owner.row.modelid3
+            , this.owner.row.modelid4
+        ]
     }
 
     objectify() {
-        return this.rows().filter(x=>x.get()!=0).map(x=>new CreatureVisual(this.owner,x).objectify());
+        return this.rows().filter(x=>x.get()!=0).map(x=>new CreatureVisualPointer(this.owner,x).objectify());
     }
 
     clearAll() {
         for(let i=0;i<this.length;++i) {
-            this.setId(i,0);
+            this.get(i).set(0);
         }
         return this.owner;
     }
 
-    getId(index: number): number {
-        return getModel(this.owner, index).get();
-    }
-
-    setId(index: number, value: number) {
-        getModel(this.owner, index).set(value);
-    }
-
-    get(index: number): CreatureVisual<CreatureTemplate> {
-        return new CreatureVisual(this.owner, 
+    get(index: number): CreatureVisualPointer<CreatureTemplate> {
+        return new CreatureVisualPointer(this.owner, 
             this.rows()[index])
     }
 

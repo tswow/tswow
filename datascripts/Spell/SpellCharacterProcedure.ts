@@ -2,7 +2,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MultiUIntWrapper, MultiFloatWrapper, MultiIntWrapper } from "wotlkdata/dbc/DBCCell";
-import { SpellChainEffect } from "./SpellChainEffect";
+import { SpellChainEffect, SpellChainEffectPointer } from "./SpellChainEffect";
 
 export class SpellCharacterProcedure<T> extends CellSystem<T> {
     @Transient
@@ -57,7 +57,7 @@ export class SpellCharacterProcedure<T> extends CellSystem<T> {
 }
 
 export class ChainProcedure<T> extends SpellCharacterProcedure<T> {
-    get ChainEffect() { return new SpellChainEffect(this, new MultiFloatWrapper(this, this.row.CharParamZero, this.index))}
+    get ChainEffect() { return new SpellChainEffectPointer(this, new MultiFloatWrapper(this, this.row.CharParamZero, this.index))}
     get TargetCount() { return new MultiFloatWrapper(this, this.row.CharParamOne, this.index)}
     get Forever() { return new MultiFloatWrapper(this, this.row.CharParamTwo, this.index)}
 }

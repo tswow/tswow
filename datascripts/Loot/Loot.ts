@@ -15,10 +15,11 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
+import { Pointer } from "../Refs/Pointer";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;
@@ -38,223 +39,186 @@ export interface LootTable {
     add(id: number, item: number) : LootRowBase;
 }
 
-export abstract class LootSetBase<T> extends CellSystem<T> {
+export class LootSet extends CellSystemTop {
     protected table: LootTable;
-    get rows() { return this.table.filter({Entry:this.ID})}
+    protected id: number;
+
+    get ID() { return this.id; }
+    get rows() { return this.table.filter({Entry:this.id})}
     
-    abstract get ID() : number
-    
-    protected _addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this.table.add(this.ID,item)
-        .Chance.set(chance)
-        .MinCount.set(minCount)
-        .MaxCount.set(maxCount)
-        .QuestRequired.set(quest ? 1 : 0)
-        .GroupId.set(groupId)
-        .LootMode.set(lootMode)
+    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
+        this.table.add(this.id,item)
+            .Chance.set(chance)
+            .MinCount.set(minCount)
+            .MaxCount.set(maxCount)
+            .QuestRequired.set(quest ? 1 : 0)
+            .GroupId.set(groupId)
+            .Comment.set("tswow")
+            .LootMode.set(lootMode)
         return this;
     }
     
-    protected _addReference(table: number, chance: number, lootMode: number = 1) {
-        this.table.add(this.ID,table)
-        .Chance.set(chance)
-        .MinCount.set(1)
-        .MaxCount.set(1)
-        .QuestRequired.set(0)
-        .GroupId.set(0)
-        .Comment.set('tswow')
-        .LootMode.set(lootMode)
+    addReference(table: number, chance: number, lootMode: number = 1) {
+        this.table.add(this.id,table)
+            .Chance.set(chance)
+            .MinCount.set(1)
+            .MaxCount.set(1)
+            .QuestRequired.set(0)
+            .GroupId.set(0)
+            .Comment.set('tswow')
+            .LootMode.set(lootMode)
         return this;
     }
     
-    constructor(owner: T, table: LootTable) {
-        super(owner);
+    constructor(id: number, table: LootTable) {
+        super();
+        this.id = id;
         this.table = table;
     }
 }
 
-export class LootSet<T> extends LootSetBase<T> {
-    protected _id: number;
-    get ID(): number {
-        return this._id;
-    }
-    
-    constructor(owner: T, id: number, table: LootTable) {
-        super(owner, table);
-        this._id = id;
+export class LootSetPointer<T> extends Pointer<T,LootSet>{
+    protected table: LootTable;
+    protected gen: AutoIdGenerator;
+    constructor(owner: T, cell: Cell<number,any>, table: LootTable, gen: AutoIdGenerator) {
+        super(owner, cell);
+        this.table = table;
+        this.gen = gen;
     }
 
-    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this._addItem(item,chance,minCount,maxCount,quest,groupId,lootMode);
-        return this;
+    protected exists(): boolean {
+        return this.cell.get() > 0;
     }
-
-    addReference(table: number, chance: number, lootMode: number = 1) {
-        this._addReference(table,chance,lootMode);
-        return this;
+    protected create(): LootSet {
+        return new LootSet(this.gen.id(), this.table);
     }
-}
-
-export class AttachedLootSet<T> extends LootSetBase<T> {
-    get ID(): number {
-        return this._cell.get();
+    protected clone(): LootSet {
+        let newId = this.gen.id();
+        this.resolve().rows.forEach(x=>x.clone(newId,x.Item.get()))
+        return new LootSet(newId, this.table);
     }
-
-    static cell(set: AttachedLootSet<any>) {
-        return set._cell;
+    protected id(v: LootSet): number {
+        return v.ID;
     }
-
-    static idgen(set: AttachedLootSet<any>) {
-        return set._idgen;
-    }
-    
-    protected _cell: Cell<number,any>;
-    protected _idgen: AutoIdGenerator;
-    constructor(owner: T, cell: Cell<number,any>, idGen: AutoIdGenerator, table: LootTable) {
-        super(owner,table);
-        this._cell = cell;
-        this._idgen = idGen;
-    }
-    
-    makeUnique(keepRows: boolean = false) {
-        let oldid = this._cell.get();
-        let nuid = this._idgen.id();
-        this._cell.set(nuid);
-        if(keepRows) {
-            this.copyFrom(oldid);
-        }
-        return this.owner;
-    }
-
-    copyFrom(id: number) {
-        this.table.filter({Entry: id}).forEach(x=>x.clone(this._cell.get(), x.Item.get()));
-    }
-
-    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this._addItem(item,chance,minCount,maxCount,quest,groupId,lootMode);
-        return this.owner;
-    }
-
-    addReference(table: number, chance: number, lootMode: number = 1) {
-        this._addReference(table,chance,lootMode);
-        return this.owner;
+    protected resolve(): LootSet {
+        return new LootSet(this.cell.get(), this.table);
     }
 }
 
 export const Loot = {
     Fishing: {
         create() {
-            return new LootSet(undefined, Ids.CreatureLoot.id(),SQL.fishing_loot_template);
+            return new LootSet(Ids.FishingLoot.id(),SQL.fishing_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.fishing_loot_template)
+            return new LootSet(id, SQL.fishing_loot_template);
         }
     },
     
     Creature: {
         create() {
-            return new LootSet(undefined, Ids.CreatureLoot.id(),SQL.creature_loot_template);
+            return new LootSet(Ids.CreatureLoot.id(),SQL.creature_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.creature_loot_template)
+            return new LootSet(id, SQL.creature_loot_template)
         }
     },
     
     GameObject: {
         create() {
-            return new LootSet(undefined, Ids.GameObjectLoot.id(),SQL.gameobject_loot_template);
+            return new LootSet(Ids.GameObjectLoot.id(),SQL.gameobject_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.gameobject_loot_template)
+            return new LootSet(id, SQL.gameobject_loot_template)
         } 
     },
     
     Item: {
         create() {
-            return new LootSet(undefined, Ids.ItemLoot.id(),SQL.item_loot_template);
+            return new LootSet(Ids.ItemLoot.id(),SQL.item_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.item_loot_template)
+            return new LootSet(id, SQL.item_loot_template)
         } 
     },
     
     Disenchant: {
         create() {
-            return new LootSet(undefined, Ids.DisenchantLoot.id(),SQL.disenchant_loot_template);
+            return new LootSet(Ids.DisenchantLoot.id(),SQL.disenchant_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.disenchant_loot_template)
+            return new LootSet(id, SQL.disenchant_loot_template)
         } 
     },
     
     Prospecting: {
         create() {
-            return new LootSet(undefined, Ids.ProspectingLoot.id(),SQL.prospecting_loot_template);
+            return new LootSet(Ids.ProspectingLoot.id(),SQL.prospecting_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.prospecting_loot_template)
+            return new LootSet(id, SQL.prospecting_loot_template)
         } 
     },
     
     Milling: {
         create() {
-            return new LootSet(undefined, Ids.MillingLoot.id(),SQL.milling_loot_template);
+            return new LootSet(Ids.MillingLoot.id(),SQL.milling_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.milling_loot_template)
+            return new LootSet(id, SQL.milling_loot_template)
         } 
     },
     
     Pickpocket: {
         create() {
-            return new LootSet(undefined, Ids.PickPocketLoot.id(),SQL.pickpocketing_loot_template);
+            return new LootSet(Ids.PickPocketLoot.id(),SQL.pickpocketing_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.pickpocketing_loot_template)
+            return new LootSet(id, SQL.pickpocketing_loot_template)
         } 
     },
     
     Skinning: {
         create() {
-            return new LootSet(undefined, Ids.SkinningLoot.id(),SQL.skinning_loot_template);
+            return new LootSet(Ids.SkinningLoot.id(),SQL.skinning_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.skinning_loot_template)
+            return new LootSet(id, SQL.skinning_loot_template)
         } 
     },
     
     Mail: {
         load(id: number) {
-            return new LootSet(undefined, id, SQL.mail_loot_template)
+            return new LootSet(id, SQL.mail_loot_template)
         } 
     },
     
     Reference: {
         create() {
-            return new LootSet(undefined, Ids.ReferenceLoot.id(),SQL.reference_loot_template);
+            return new LootSet(Ids.ReferenceLoot.id(),SQL.reference_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.reference_loot_template)
+            return new LootSet(id, SQL.reference_loot_template)
         } 
     },
     
     Spell: {
         create() {
-            return new LootSet(undefined, Ids.SpellLoot.id(),SQL.spell_loot_template);
+            return new LootSet(Ids.SpellLoot.id(),SQL.spell_loot_template);
         },
         
         load(id: number) {
-            return new LootSet(undefined, id, SQL.spell_loot_template)
+            return new LootSet(id, SQL.spell_loot_template)
         },
     },
 }

@@ -14,33 +14,24 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { std } from "../tswow-stdlib-data";
 import { ItemVisualModels } from "./ItemVisualModels";
 import { ItemIcon } from "./ItemIcon";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
-import { ItemEffects } from "./ItemVisualEffect";
-import { SpellVisual } from "../Spell/SpellVisual";
-import { ParticleColor } from "../Misc/ParticleColor";
+import { ItemEffectsPointer } from "./ItemVisualEffect";
+import { SpellVisualPointer } from "../Spell/SpellVisual";
+import { ParticleColorPointer } from "../Misc/ParticleColor";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
+import { DBC,SQL } from "wotlkdata/wotlkdata";
+import { Ids } from "../Misc/Ids";
 
-export class ItemDisplayInfo<T> extends SharedRef<T, ItemDisplayInfoRow> {
-
-    table(): SharedRefTable<ItemDisplayInfoRow> {
-        return DBC.ItemDisplayInfo
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.ItemDisplayInfo;
-    }
-
+export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     clear(): this {
         this
             .Flags.set(0)
             .GeosetGroup.set([0,0,0])
             .HelmGeosetVis.set([0,0])
-            .EffectsID.set(0)
+            .Effects.set(0)
             .Models.clearAll()
             .Texture.set(["","","","","","","",""])
             .Icon.set("")
@@ -52,16 +43,43 @@ export class ItemDisplayInfo<T> extends SharedRef<T, ItemDisplayInfoRow> {
     get Flags() { return this.wrap(this.row.Flags); }
     get GeosetGroup() { return this.wrapArray(this.row.GeosetGroup); }
     get HelmGeosetVis() { return this.wrapArray(this.row.HelmetGeosetVis); }
-    get Effects() { return new ItemEffects(this, this.row.ItemVisual); }
-    get EffectsID() { return this.wrap(this.row.ItemVisual); }
-    get Models(): ItemVisualModels<T> { return new ItemVisualModels(this); }
-    get ParticleColor() { return new ParticleColor(this, [this.row.ParticleColorID]); }
-    get SpellVisual() { return new SpellVisual(this, [this.row.SpellVisualID]); }
+    get Effects() { return new ItemEffectsPointer(this, this.row.ItemVisual); }
+    get Models() { return new ItemVisualModels(this); }
+    get ParticleColor() { return new ParticleColorPointer(this, this.row.ParticleColorID); }
+    get SpellVisual() { return new SpellVisualPointer(this, this.row.SpellVisualID); }
     get Texture() { return this.wrapArray(this.row.Texture); }
-    get Icon(): ItemIcon<T> { return new ItemIcon(this); }
+    get Icon() { return new ItemIcon(this); }
 
-    copyFrom(templateId: number) {
-        std.Items.load(templateId).DisplayInfo.row.copyTo(this.row);
-        return this.owner;
+    copyFromDisplay(displayId: number) {
+        DBC.ItemDisplayInfo
+            .findById(displayId)
+            .clone(Ids.ItemDisplayInfo.id())
+        return this;
+    }
+
+    copyFromTemplate(templateId: number) {
+        this.copyFromDisplay(
+            SQL.item_template.find({entry:templateId}).displayid.get())
+        return this;
+    }
+}
+
+export class ItemDisplayInfoPointer<T> extends Pointer<T,ItemDisplayInfo> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): ItemDisplayInfo {
+        return new ItemDisplayInfo(
+            DBC.ItemDisplayInfo.add(Ids.ItemDisplayInfo.id()))
+    }
+    protected clone(): ItemDisplayInfo {
+        return new ItemDisplayInfo(
+            this.resolve().row.clone(Ids.ItemDisplayInfo.id()))
+    }
+    protected id(v: ItemDisplayInfo): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): ItemDisplayInfo {
+        return new ItemDisplayInfo(DBC.ItemDisplayInfo.findById(this.cell.get()));
     }
 }

@@ -55,7 +55,7 @@ export class BaseClassSet extends ClassSet<Spell> {
      * Sets this spells ClassSets to match this spell effect
      * @param effect 
      */
-    match(effect: SpellEffect<any>, matches: ('A'|'B'|'C')[] = ['A','B','C']) {
+    match(effect: SpellEffect, matches: ('A'|'B'|'C')[] = ['A','B','C']) {
         if(matches.includes('A')) {
             this.A.set(effect.ClassMask.A.get())
         }
@@ -71,8 +71,8 @@ export class BaseClassSet extends ClassSet<Spell> {
 }
 
 export class EffectClassSet<T> extends ClassSet<T> {
-    protected effect: SpellEffect<any>;
-    constructor(owner: T, effect: SpellEffect<any>) {
+    protected effect: SpellEffect;
+    constructor(owner: T, effect: SpellEffect) {
         super(owner);
         this.effect = effect;
     }

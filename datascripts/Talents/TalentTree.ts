@@ -17,7 +17,7 @@
 import { DBC } from "wotlkdata";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
 import { Ids } from "../Misc/Ids";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { Talent } from "./Talent";
 
@@ -27,7 +27,7 @@ export class TalentTree extends MainEntity<TalentTabRow> {
     get BackgroundImage() { return this.wrap(this.row.BackgroundFile); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
 
-    addTalent(mod: string, id: string, row: number, column: number, spellIds: number[]) {
+    addTalent(mod: string, id: string, row: number, column: number, spellIds: number[], callback?: (talent: Talent)=>void) {
         const talent = DBC.Talent.add(Ids.Talent.id(mod,id))
             .TabID.set(this.ID)
             .ColumnIndex.set(column)
@@ -41,7 +41,7 @@ export class TalentTree extends MainEntity<TalentTabRow> {
         for(let i=0;i<spellIds.length;++i) {
             talent.SpellRank.setIndex(i, spellIds[i]);
         }
-
-        return new Talent(this, talent);
+        if(callback) callback(new Talent(talent));
+        return this;
     }
 }

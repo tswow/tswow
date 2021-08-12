@@ -18,7 +18,6 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { GOCreature } from "../Misc/GOorCreature";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Gossip } from "./Gossip";
@@ -185,11 +184,11 @@ function emoteDelay(id: number, index: number) {
     }
 }
 
-export class GossipText<S,G,T extends GOCreature<G>> extends SQLLocSystem<GossipTextEntry<S,G,T>> {
+export class GossipText extends SQLLocSystem<GossipTextEntry> {
     protected index: number;
     protected isFemale: boolean;
     protected id: number;
-    constructor(owner: GossipTextEntry<S,G,T>, id: number, index: number, isFemale: boolean) {
+    constructor(owner: GossipTextEntry, id: number, index: number, isFemale: boolean) {
         super(owner);
         this.index = index;
         this.isFemale = isFemale;
@@ -205,8 +204,8 @@ export class GossipText<S,G,T extends GOCreature<G>> extends SQLLocSystem<Gossip
     }
 }
 
-export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gossip<S,G,T>> {
-    clear(): Gossip<S,G,T> {
+export class GossipTextEntry extends ArrayEntry<Gossip> {
+    clear() {
         this.Probability.set(0);
         this.MaleText.clear();
         this.FemaleText.clear();
@@ -214,17 +213,16 @@ export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gos
         this.EmoteDelay.set(0);
         this.Probability.set(0);
         this.BroadcastID.set(0);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.Probability.get() === 0;
     }
 
-    protected get ID() { return this.owner.menuRow.TextID.get(); }
+    protected get ID() { return this.container.row.TextID.get(); }
 
     get MaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.ID, this.index, false)); }
     get FemaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.ID, this.index, true)); }
-
     get Lang() { return this.wrap(lang(this.ID, this.index)); }
     get Probability() { return this.wrap(probability(this.ID, this.index)); }
     get Emote() { return this.wrap(emote(this.ID, this.index)); }
@@ -234,12 +232,12 @@ export class GossipTextEntry<S,G,T extends GOCreature<G>> extends ArrayEntry<Gos
     protected get BroadcastID() { return this.wrap(broadcastID(this.ID, this.index))}
 }
 
-export class GossipTextArray<S,G,T extends GOCreature<G>> extends ArraySystem<GossipTextEntry<S,G,T>,Gossip<S,G,T>> {
+export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {
     get length(): number {
         return 8;
     }
 
-    get(index: number): GossipTextEntry<S,G,T> {
+    get(index: number): GossipTextEntry {
         return new GossipTextEntry(this.owner, index);
     }
 

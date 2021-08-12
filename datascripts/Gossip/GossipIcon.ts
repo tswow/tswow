@@ -15,10 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
-import { GOCreature } from "../Misc/GOorCreature";
 import { GossipOption } from "./GossipOption";
 
-export class GossipIconCell<S,G,T extends GOCreature<G>> extends EnumCellWrapper<GossipOption<S,G,T>> {
+export class GossipIconCell extends EnumCellWrapper<GossipOption> {
     setChat() { return this.set(0); }
     setVendor() { return this.set(1); }
     setTaxi() { return this.set(2); }

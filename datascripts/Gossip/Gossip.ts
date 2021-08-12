@@ -14,90 +14,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
-import { npc_textRow } from "wotlkdata/sql/types/npc_text";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { SQL } from "wotlkdata";
-import { GOCreature } from "../Misc/GOorCreature";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 
-export class Gossip<S,G,T extends GOCreature<G>> extends CellSystem<S> {
-    @Transient
-    protected _menuRow: gossip_menuRow|undefined;
-    @Transient
-    protected _textRow: npc_textRow|undefined;
-    @Transient
-    readonly topOwner: T;
-    @Transient
-    protected cell: Cell<number,any>;
-
-    @Transient
-    get textRow() {
-        // this ensures the text row is created
-        let menuTextId = this.menuRow.TextID.get();
-        if(menuTextId !== this._textRow?.ID.get()) {
-            this._textRow = SQL.npc_text.find({ID:menuTextId})
-        }
-        return this._textRow as npc_textRow;
-    }
-
-    @Transient
-    get menuRow() {
-        if(this.cell.get() === 0) {
-            this.createFromNull()
-        } else if (this._menuRow === undefined || this.cell.get() != this._menuRow.MenuID.get()) {
-            this._menuRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
-            this._textRow = SQL.npc_text.find({ID:this._menuRow.TextID.get()});
-            if(this.cell.get() != this._menuRow.MenuID.get())
-            {
-                this.cell.set(this._menuRow.MenuID.get());
-            }
-        }
-
-        return this._menuRow as gossip_menuRow;
-    }
-
-    protected createFromNull() {
-        this._menuRow = SQL.gossip_menu.add(Ids.GossipMenu.id(),Ids.NPCText.id());
-        this._textRow = SQL.npc_text.add(this._menuRow.TextID.get());
-        this.cell.set(this._menuRow.MenuID.get());
-        this.Text.clearAll();
-    }
-
-    constructor(curOwner: S, topOwner: T, cell: Cell<number,any>) {
-        super(curOwner);
-        this.topOwner = topOwner;
-        this.cell = cell;
-    }
-
+export class Gossip extends MainEntity<gossip_menuRow> {
     addLabel(mod: string, label: string) {
         addGossipLabel(mod, label, this);
         return this;
     }
 
-    setID(id: number) {
-        this.cell.set(id);
-        return this.owner;
-    }
-
-    get Text() : GossipTextArray<S,G,T> { 
+    get Text() : GossipTextArray { 
         return new GossipTextArray(this); 
     }
 
-    get Options() : GossipOptions<S,G,T> {
+    get Options() : GossipOptions {
         return new GossipOptions(this);
     }
 
     get ID() {
-        return this.menuRow.MenuID.get();
+        return this.row.MenuID.get();
     }
 
     get TextID() {
-        return this.menuRow.TextID.get();
+        return this.row.TextID.get();
+    }
+}
+
+export class GossipPointer<T> extends Pointer<T, Gossip> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): Gossip {
+        return new Gossip(SQL.gossip_menu.add(Ids.GossipMenu.id(),Ids.NPCText.id()))
+    }
+    protected clone(): Gossip {
+        throw new Error(`Gossip cloning is not yet implemented`);
+    }
+    protected id(v: Gossip): number {
+        return v.ID;
+    }
+    protected resolve(): Gossip {
+        return new Gossip(SQL.gossip_menu.find({MenuID:this.cell.get()}));
     }
 }

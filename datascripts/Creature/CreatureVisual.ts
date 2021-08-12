@@ -1,19 +1,15 @@
 import { CreatureDisplayInfoRow } from "wotlkdata/dbc/types/CreatureDisplayInfo";
 import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info";
-import { DBC, SQL } from "wotlkdata";
+import { SQL } from "wotlkdata";
 import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { SoundEntry } from "../Sound/SoundEntry";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { Pointer } from "../Refs/Pointer";
+import { MainEntity } from "../Misc/Entity";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { DBC } from "wotlkdata";
+import { Ids } from "../Misc/Ids";
 
-export class CreatureModel<T> extends SharedRef<T,CreatureModelDataRow> {
-    table(): SharedRefTable<CreatureModelDataRow> {
-        return DBC.CreatureModelData;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.CreatureModel;
-    }
+export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     clear(): this {
         this.ModelName.set("")
         this.SizeClass.set(0)
@@ -47,7 +43,7 @@ export class CreatureModel<T> extends SharedRef<T,CreatureModelDataRow> {
     get FoleyMaterialID() { return this.wrap(this.row.FoleyMaterialID); }
     get FootstepShakeSize() { return this.wrap(this.row.FootstepShakeSize); }
     get DeathThudShake() { return this.wrap(this.row.DeathThudShakeSize); }
-    get Sound() { return new SoundEntry(this, this.row.SoundID); }
+    get Sound() { return new SoundEntryPointer(this, this.row.SoundID); }
     get CollisionWidth() { return this.wrap(this.row.CollisionWidth); }
     get CollisionHeight() { return this.wrap(this.row.CollisionHeight);}
     get MountHeight() { return this.wrap(this.row.MountHeight); }
@@ -58,49 +54,46 @@ export class CreatureModel<T> extends SharedRef<T,CreatureModelDataRow> {
     get MissileCollisionRaise() { return this.wrap(this.row.MissileCollisionRaise); }
 }
 
-export class CreatureVisual<T> extends SharedRef<T,CreatureDisplayInfoRow> {
-    table(): SharedRefTable<CreatureDisplayInfoRow> {
-        return DBC.CreatureDisplayInfo
-    }
-    ids(): AutoIdGenerator {
-        return Ids.CreatureDisplayInfo;
-    }
-    protected _sql_row: creature_model_infoRow;
-    get sql_row() { 
-        if(this._sql_row===undefined||this._sql_row.DisplayID.get()!==this.cell.get()) {
-            this._sql_row = SQL.creature_model_info.find({DisplayID: this.cell.get()});
-        }
-        return this._sql_row; 
-    }
-
-    get Model(): CreatureModel<CreatureVisual<T>> { 
-        return new CreatureModel(this, [this.row.ModelID]);
+export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
+    @Transient
+    protected _sql_row: creature_model_infoRow|undefined;
+    get sql_row() {
+        return this._sql_row = this._sql_row
+            || SQL.creature_model_info.find({DisplayID:this.row.ID.get()})
+            || (SQL.creature_model_info.add(this.row.ID.get())
+                .BoundingRadius.set(0)
+                .CombatReach.set(0)
+                .DisplayID_Other_Gender.set(0)
+                .Gender.set(0)
+            )
     }
 
-    constructor(owner: T, id: Cell<number,any>) {
-        super(owner,[id]);
-        this._sql_row = SQL.creature_model_info.find({DisplayID: id.get()});
+    hasSql() {
+        if(this._sql_row) return true;
+        return this.sql_row || SQL.creature_model_info.find({DisplayID:this.row.ID.get()});
+    }
+
+    get Model(): CreatureModelPointer<this> { 
+        return new CreatureModelPointer(this, this.row.ModelID);
     }
 
     get BoundingRadius() { return this.wrap(this.sql_row.BoundingRadius); }
     get CombatReach() { return this.wrap(this.sql_row.CombatReach); }
 
-    get Sound() { return new SoundEntry(this,this.row.SoundID); }
+    get Sound() { return new SoundEntryPointer(this,this.row.SoundID); }
     get ExtendedDisplayID() { return this.wrap(this.row.ExtendedDisplayInfoID); }
     get CreatureModelScale() { return this.wrap(this.row.CreatureModelScale); }
     get CreatureModelAlpha() { return this.wrap(this.row.CreatureModelAlpha); }
     get TextureVariation() { return this.wrapArray(this.row.TextureVariation); }
     get BloodLevel() { return this.wrap(this.row.BloodLevel); }
     get BloodID() { return this.wrap(this.row.BloodID); }
-    get NPCSound() { return new SoundEntry(this,this.row.NPCSoundID); }
+    get NPCSound() { return new SoundEntryPointer(this,this.row.NPCSoundID); }
     get ParticleColorID() { return this.wrap(this.row.ParticleColorID); }
     get CreatureGeosetData() { return this.wrap(this.row.CreatureGeosetData); }
     get ObjectEffectPackageID() { return this.wrap(this.row.ObjectEffectPackageID); }
 
     clear(): this {
-        this.BoundingRadius.set(0)
-            .CombatReach.set(0)
-            .ExtendedDisplayID.set(0)
+        this.ExtendedDisplayID.set(0)
             .CreatureModelScale.set(0)
             .CreatureModelAlpha.set(0)
             .TextureVariation.set(["","",""])
@@ -110,7 +103,53 @@ export class CreatureVisual<T> extends SharedRef<T,CreatureDisplayInfoRow> {
             .CreatureGeosetData.set(0)
             .ObjectEffectPackageID.set(0)
             .row.SoundID.set(0)
-                .NPCSoundID.set(0)
+            .NPCSoundID.set(0)
+
+        if(this.hasSql()) {
+            this.sql_row
+                .BoundingRadius.set(0)
+                .CombatReach.set(0)
+                .DisplayID_Other_Gender.set(0)
+                .Gender.set(0)
+        }
         return this;
+    }
+}
+
+export class CreatureVisualPointer<T> extends Pointer<T,CreatureVisual> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): CreatureVisual {
+        return new CreatureVisual(DBC.CreatureDisplayInfo.add(Ids.CreatureDisplayInfo.id()))
+    }
+    protected clone(): CreatureVisual {
+        return new CreatureVisual(
+            this.resolve().row.clone(Ids.CreatureDisplayInfo.id())
+        )
+    }
+    protected id(v: CreatureVisual): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): CreatureVisual {
+        return new CreatureVisual(DBC.CreatureDisplayInfo.findById(this.cell.get()));
+    }
+}
+
+export class CreatureModelPointer<T> extends Pointer<T,CreatureModel> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): CreatureModel {
+        return new CreatureModel(DBC.CreatureModelData.add(Ids.CreatureModel.id()))
+    }
+    protected clone(): CreatureModel {
+        return new CreatureModel(this.resolve().row.clone(Ids.CreatureModel.id()))
+    }
+    protected id(v: CreatureModel): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): CreatureModel {
+        return new CreatureModel(DBC.CreatureModelData.findById(this.cell.get()));
     }
 }

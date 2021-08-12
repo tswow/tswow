@@ -1,15 +1,10 @@
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids, AutoIdGenerator } from "./Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
+import { DBC } from "wotlkdata";
+import { Pointer } from "../Refs/Pointer";
+import { MainEntity } from "./Entity";
+import { Ids } from "./Ids";
 
-export class ParticleColor<T> extends SharedRef<T, ParticleColorRow> {
-    table(): SharedRefTable<ParticleColorRow> {
-        return DBC.ParticleColor;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.ParticleColors;
-    }
+export class ParticleColor extends MainEntity<ParticleColorRow> {
     clear(): this {
         this.set(0,0,0,0,0,0,0,0,0);
         return this;
@@ -45,5 +40,32 @@ export class ParticleColor<T> extends SharedRef<T, ParticleColorRow> {
         this.End.setIndex(1,end2);
         this.End.setIndex(2,end3);
         return this.owner;
+    }
+}
+
+export class ParticleColorPointer<T> extends Pointer<T,ParticleColor> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+
+    protected create(): ParticleColor {
+        return new ParticleColor(DBC.ParticleColor
+            .add(Ids.ParticleColors.id()))
+    }
+
+    protected clone(): ParticleColor {
+        return new ParticleColor(
+            this.resolve().row
+                .clone(Ids.ParticleColors.id()))
+    }
+
+    protected id(v: ParticleColor): number {
+        return v.row.ID.get()
+    }
+
+    protected resolve(): ParticleColor {
+        return new ParticleColor(
+            DBC.ParticleColor
+               .findById(this.cell.get()))
     }
 }

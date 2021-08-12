@@ -18,18 +18,19 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
+import { Ids } from "../Misc/Ids";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { SpellAnimation } from "./SpellAnimation";
 import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKitModelAttach";
 import { Attachment } from "../Misc/Attachment";
 import { Vec3 } from "../Misc/Vec3";
-import { SpellVisualEffect, SpellVisualEffects } from "./SpellVisualEffect";
+import { SpellVisualEffectPointer, SpellVisualEffects } from "./SpellVisualEffect";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { SoundEntry } from "../Sound/SoundEntry";
-import { SpellEffectCameraShakes } from "./SpellEffectCameraShakes";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SpellEffectCameraShakePointer } from "./SpellEffectCameraShakes";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
 
 export class SpellVisualKitModelAttach<T> extends CellSystem<T> {
 
@@ -45,55 +46,47 @@ export class SpellVisualKitModelAttach<T> extends CellSystem<T> {
     get Yaw() { return this.wrap(this.row.Yaw); }
     get Pitch() { return this.wrap(this.row.Pitch); }
     get Roll() { return this.wrap(this.row.Roll); }
-    get Effect() { return new SpellVisualEffect(this, [this.row.SpellVisualEffectNameID]) }
+    get Effect() { return new SpellVisualEffectPointer(this, this.row.SpellVisualEffectNameID) }
 }
 
-export class SpellVisualKitModels<T> extends CellSystem<SpellVisualKit<T>> {
-    constructor(owner: SpellVisualKit<T>) {
+export class SpellVisualKitModels extends CellSystem<SpellVisualKit> {
+    constructor(owner: SpellVisualKit) {
         super(owner);
     }
 
-    add() : SpellVisualKitModelAttach<SpellVisualKit<T>> {
+    add() : SpellVisualKitModelAttach<SpellVisualKit> {
         let row = DBC.SpellVisualKitModelAttach.add(Ids.SpellVisualKitModelAttach.id())
-        row.ParentSpellVisualKitID.set(this.owner.ID);
+        row.ParentSpellVisualKitID.set(this.owner.row.ID.get());
         return new SpellVisualKitModelAttach(this.owner,row);
     }
 
     get() {
-        return DBC.SpellVisualKitModelAttach.filter({ParentSpellVisualKitID: this.owner.ID})
+        return DBC.SpellVisualKitModelAttach.filter({ParentSpellVisualKitID: this.owner.row.ID.get()})
             .map(x=>new SpellVisualKitModelAttach(this.owner, x));
     }
 
-    forEach(callback: (value: SpellVisualKitModelAttach<SpellVisualKit<T>>)=>void) {
+    forEach(callback: (value: SpellVisualKitModelAttach<SpellVisualKit>)=>void) {
         this.get().forEach(callback);
     }
 }
 
-export class SpellVisualKit<T> extends SharedRef<T,SpellVisualKitRow> {
-    table(): SharedRefTable<SpellVisualKitRow> {
-        return DBC.SpellVisualKit;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellKit;
-    }
-    
+export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     clear(): this {
         this.Animation.set(0)
-            .BaseEffect.setID(0)
-            .BreathEffect.setID(0)
+            .BaseEffect.set(0)
+            .BreathEffect.set(0)
             .CharProcedures.clearAll()
-            .ChestEffect.setID(0)
+            .ChestEffect.set(0)
             .Flags.set(0)
-            .HeadEffect.setID(0)
-            .LeftHandEffect.setID(0)
-            .RightHandEffect.setID(0)
-            .RightWeaponEffect.setID(0)
-            .CameraShake.setID(0)
-            .Sound.setID(0)
+            .HeadEffect.set(0)
+            .LeftHandEffect.set(0)
+            .RightHandEffect.set(0)
+            .RightWeaponEffect.set(0)
+            .CameraShake.set(0)
+            .Sound.set(0)
             .SpellEffects.clearAll()
             .StartAnimation.set(-1)
-            .WorldEffect.setID(0)
+            .WorldEffect.set(0)
             // TODO: Actually remove the rows
             .Models.forEach(x=>x.row.ParentSpellVisualKitID.set(0))
         return this;
@@ -101,50 +94,55 @@ export class SpellVisualKit<T> extends SharedRef<T,SpellVisualKitRow> {
 
     readonly name: string;
 
-    static ptr(kit: SpellVisualKit<any>) {
-        return kit.cell;
-    }
-
-    constructor(owner: T, ptr: Cell<number,any>, name: string) {
-        super(owner, [ptr]);
+    constructor(row: SpellVisualKitRow, name: string) {
+        super(row);
         this.name = name;
     }
 
-    get BaseEffect() { return new SpellVisualEffect(this, this.row.BaseEffect); }
-    get BreathEffect() { return new SpellVisualEffect(this, this.row.BreathEffect); }
+    get BaseEffect() { return new SpellVisualEffectPointer(this, this.row.BaseEffect); }
+    get BreathEffect() { return new SpellVisualEffectPointer(this, this.row.BreathEffect); }
     get CharProcedures() { return new SpellCharacterProcedures(this, this.row); }
     get Flags() { return this.wrap(this.row.Flags); }
-    get CameraShake() { return new SpellEffectCameraShakes(this, this.row.ShakeID); }
-    get Sound() { return new SoundEntry(this, this.row.SoundID); }
+    get CameraShake() { return new SpellEffectCameraShakePointer(this, this.row.ShakeID); }
+    get Sound() { return new SoundEntryPointer(this, this.row.SoundID); }
     get StartAnimation() { return new SpellAnimation(this, this.row.StartAnimID); }
-    get WorldEffect() { return new SpellVisualEffect(this, this.row.WorldEffect); }
+    get WorldEffect() { return new SpellVisualEffectPointer(this, this.row.WorldEffect); }
     get Animation() { return new SpellAnimation(this, this.row.AnimID); }
-    get ChestEffect() { return new SpellVisualEffect(this, this.row.ChestEffect)}
-    get HeadEffect() { return new SpellVisualEffect(this, this.row.HeadEffect)}
-    get LeftHandEffect() { return new SpellVisualEffect(this, this.row.LeftHandEffect)}
-    get RightHandEffect() { return new SpellVisualEffect(this, this.row.RightHandEffect)}
-    get RightWeaponEffect() { return new SpellVisualEffect(this, this.row.RightWeaponEffect)}
+    get ChestEffect() { return new SpellVisualEffectPointer(this, this.row.ChestEffect)}
+    get HeadEffect() { return new SpellVisualEffectPointer(this, this.row.HeadEffect)}
+    get LeftHandEffect() { return new SpellVisualEffectPointer(this, this.row.LeftHandEffect)}
+    get RightHandEffect() { return new SpellVisualEffectPointer(this, this.row.RightHandEffect)}
+    get RightWeaponEffect() { return new SpellVisualEffectPointer(this, this.row.RightWeaponEffect)}
     get SpellEffects() { return new SpellVisualEffects(this, this.row); }
-    get Models(): SpellVisualKitModels<T> { return new SpellVisualKitModels(this); }
+    get Models(): SpellVisualKitModels { return new SpellVisualKitModels(this); }
+}
 
-    cloneFrom(kit: SpellVisualKit<any>) {
-        let id = kit.row.clone(Ids.SpellKit.id()).ID.get();
-        this.cell.set(id);
-        return this.owner;
+export class SpellVisualKitPointer<T> extends Pointer<T,SpellVisualKit> {
+    private name: string;
+
+    constructor(owner: T, cell: Cell<number,any>, name: string) {
+        super(owner, cell);
+        this.name = name;
+    }
+
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellVisualKit {
+        return new SpellVisualKit(DBC.SpellVisualKit.findById(this.cell.get()),this.name);
+    }
+    protected clone(): SpellVisualKit {
+        return new SpellVisualKit(this.resolve().row.clone(Ids.SpellKit.id()),this.name);
+    }
+    protected id(v: SpellVisualKit): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): SpellVisualKit {
+        return new SpellVisualKit(DBC.SpellVisualKit.findById(this.cell.get()),this.name);
     }
 }
 
-export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
-    constructor(owner: T, ptrs: Cell<number,any>[]) {
-        super(owner,ptrs);
-    }
-
-    table(): SharedRefTable<SpellVisualRow> {
-        return DBC.SpellVisual;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellVisual;
-    }
+export class SpellVisual extends MainEntity<SpellVisualRow> {
     clear(): this {
         this.row
             .ImpactAreaKit.set(0)
@@ -176,8 +174,8 @@ export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
         return this;
     }
 
-    private kit(name: string, kit: DBCIntCell<SpellVisualRow>): SpellVisualKit<SpellVisual<T>> {
-        return new SpellVisualKit(this,kit, name);
+    private kit(name: string, kit: DBCIntCell<SpellVisualRow>): SpellVisualKitPointer<this> {
+        return new SpellVisualKitPointer(this, kit, name);
     }
 
     AllKits() {
@@ -196,7 +194,7 @@ export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
             [this.row.MissileTargetingKit,"MissileTargeting"]
         ] as [DBCIntCell<any>,string][]).filter(([row])=>{
             return row.get()!=0;
-        }).map(([row,name])=>new SpellVisualKit(this, row, name));
+        }).map(([row,name])=>new SpellVisualKitPointer(this, row, name));
     }
 
     get CastKit() { return this.kit("Cast", this.row.CastKit); }
@@ -211,8 +209,7 @@ export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
     get TargetImpactKit() { return this.kit("TargetImpact", this.row.TargetImpactKit); }
     get PersistentAreaKit() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
     get MissileTargetingKit() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); }
-
-    get MissileModel() { return new SpellVisualEffect(this, this.row.MissileModel); }
+    get MissileModel() { return new SpellVisualEffectPointer(this, this.row.MissileModel); }
     get MissileAttachment() { return this.ownerWrap(this.row.MissileAttachment); }
 
     get MissileCastOffset() { 
@@ -231,11 +228,29 @@ export class SpellVisual<T> extends SharedRef<T, SpellVisualRow> {
 
     cloneFromVisual(visualId: number) {
         let row = DBC.SpellVisual.findById(visualId).clone(Ids.SpellVisual.id());
-        this.cell.set(row.ID.get());
+        row.copyTo(this.row);
         return this.owner;
     }
 
     cloneFromSpell(spellId: number) {
         return this.cloneFromVisual(DBC.Spell.findById(spellId).SpellVisualID.getIndex(0));
+    }
+}
+
+export class SpellVisualPointer<T> extends Pointer<T,SpellVisual> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellVisual {
+        return new SpellVisual(DBC.SpellVisual.add(Ids.SpellVisual.id()))
+    }
+    protected clone(): SpellVisual {
+        return new SpellVisual(this.resolve().row.clone(Ids.SpellVisual.id()))
+    }
+    protected id(v: SpellVisual): number {
+        return v.row.ID.get()
+    }
+    protected resolve(): SpellVisual {
+        return new SpellVisual(DBC.SpellVisual.findById(this.cell.get()));
     }
 }

@@ -14,18 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { TalentRow } from "wotlkdata/dbc/types/Talent";
+import { MainEntity } from "../Misc/Entity";
 import { TalentRequirements } from "./TalentRequirements";
-import { TalentTree } from "./TalentTree";
 
-export class Talent extends CellSystem<TalentTree> {
-    readonly row: TalentRow;
-    constructor(owner: TalentTree, row: TalentRow) {
-        super(owner);
-        this.row = row;
-    }
-
+export class Talent extends MainEntity<TalentRow> {
     get ID() { return this.row.ID.get() }
     get Column() { return this.wrap(this.row.ColumnIndex); }
     get Requirements() { return new TalentRequirements(this); }

@@ -48,7 +48,7 @@ function b(owner: ItemTemplate) {
     ]
 }
 
-export class Stat extends EnumCellWrapper<ItemTemplate> {
+export class Stat extends EnumCellWrapper<ItemStat> {
     @EnumField(0)
     setMana() { return this.set(0)}
     
@@ -183,13 +183,13 @@ export class Stat extends EnumCellWrapper<ItemTemplate> {
 }
 
 export class ItemStat extends ArrayEntry<ItemTemplate> {
-    get Type() { return new Stat(this.owner, a(this.owner)[this.index])}
-    get Value() { return b(this.owner)[this.index]; }
+    get Type() { return new Stat(this, a(this.container)[this.index])}
+    get Value() { return b(this.container)[this.index]; }
 
-    clear(): ItemTemplate {
+    clear() {
         this.Type.set(0);
         this.Value.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -203,7 +203,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
         return 10;
     }
 
-    get(index: number) {
+    protected get(index: number) {
         return new ItemStat(this.owner, index);
     }
 

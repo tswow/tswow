@@ -16,7 +16,8 @@
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { ChildEntity } from "../Misc/Entity";
 import { Quest } from "./Quest";
 import { QuestRewardMail } from "./QuestAddon";
 import { QuestDifficultyIndex } from "./QuestDifficultyIndex";
@@ -44,13 +45,13 @@ function ChoiceItemQuantities(owner: Quest) {
 }
 
 export class ItemChoiceReward extends ArrayEntry<Quest> {
-    get ItemId() { return this.wrap(ChoiceItemIds(this.owner)[this.index])}
-    get Quantity() { return this.wrap(ChoiceItemQuantities(this.owner)[this.index])}
+    get ItemId() { return this.wrap(ChoiceItemIds(this.container)[this.index])}
+    get Quantity() { return this.wrap(ChoiceItemQuantities(this.container)[this.index])}
 
-    clear(): Quest {
+    clear() {
         this.ItemId.set(0);
         this.Quantity.set(0);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.ItemId.get() === 0;
@@ -62,7 +63,7 @@ export class ItemChoiceRewards extends ArraySystem<ItemChoiceReward,Quest> {
         return 6;
     }
 
-    get(index: number): ItemChoiceReward {
+    protected get(index: number): ItemChoiceReward {
         return new ItemChoiceReward(this.owner, index);
     }
 
@@ -93,13 +94,13 @@ function ItemQuantities(owner: Quest) {
 }
 
 export class ItemReward extends ArrayEntry<Quest> {
-    get Item() { return this.wrap(ItemIds(this.owner)[this.index])}
-    get Quantity() { return this.wrap(ItemQuantities(this.owner)[this.index])}
+    get Item() { return this.wrap(ItemIds(this.container)[this.index])}
+    get Quantity() { return this.wrap(ItemQuantities(this.container)[this.index])}
 
-    clear(): Quest {
+    clear() {
         this.Item.set(0);
         this.Quantity.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -112,14 +113,15 @@ export class ItemRewards extends ArraySystem<ItemReward,Quest> {
         return 4;
     }
 
-    get(index: number): ItemReward {
+    protected get(index: number): ItemReward {
         return new ItemReward(this.owner,index);
     }
 
     add(item: number, quantity: number) {
-        return this.getFree()
+        this.getFree()
             .Item.set(item)
             .Quantity.set(quantity);
+        return this.owner;
     }
 }
 
@@ -152,13 +154,12 @@ function Reputation(owner: Quest) {
 }
 
 export class ReputationReward extends ArrayEntry<Quest> {
-    get FactionId() { return this.wrap(FactionIds(this.owner)[this.index])}
-    get Reputation() { return this.wrap(Reputation(this.owner)[this.index])}
-
-    clear(): Quest {
+    get FactionId() { return this.wrap(FactionIds(this.container)[this.index])}
+    get Reputation() { return this.wrap(Reputation(this.container)[this.index])}
+    clear() {
         this.FactionId.set(0);
         this.Reputation.set(0);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.FactionId.get() === 0;
@@ -170,7 +171,7 @@ export class ReputationRewards extends ArraySystem<ReputationReward,Quest> {
         return 5;
     }
 
-    get(index: number): ReputationReward{
+    protected get(index: number): ReputationReward{
         return new ReputationReward(this.owner, index);
     }
 
@@ -184,7 +185,7 @@ export class ReputationRewards extends ArraySystem<ReputationReward,Quest> {
 
 
 
-export class QuestReward extends CellSystem<Quest> {
+export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     /** Reward player with items (no choice) */
     get Item() { return new ItemRewards(this.owner); }
     /** Let player choose one of multiple items (Maximum 6) */
@@ -192,21 +193,21 @@ export class QuestReward extends CellSystem<Quest> {
     /** Reward player with reputation to a faction */
     get Reputation() { return new ReputationRewards(this.owner); }
     /** Money earned by completing this quest (becomes requirement if negative) */
-    get Money() { return this.ownerWrap(this.owner.row.RewardMoney) }
+    get Money() { return this.ownerWrap(this.row.RewardMoney) }
     /** Bonus money at level 80 */
-    get MoneyBonus() { return this.ownerWrap(this.owner.row.RewardBonusMoney) }
+    get MoneyBonus() { return this.ownerWrap(this.row.RewardBonusMoney) }
     /** Display a spell when the player completes the quest */
-    get DisplaySpell() { return this.ownerWrap(this.owner.row.RewardDisplaySpell) }
+    get DisplaySpell() { return this.ownerWrap(this.row.RewardDisplaySpell) }
     /** Reward player with honor points */
-    get Honor() { return this.ownerWrap(this.owner.row.RewardHonor)}
+    get Honor() { return this.ownerWrap(this.row.RewardHonor)}
     /** Reward player with talent points, as in the Death Knight starting area. */
-    get Talents() { return this.ownerWrap(this.owner.row.RewardTalents)}
+    get Talents() { return this.ownerWrap(this.row.RewardTalents)}
     /** Reward player with a Title, such as <Grunt> */
-    get Title() { return this.ownerWrap(this.owner.row.RewardTitle )}
+    get Title() { return this.ownerWrap(this.row.RewardTitle )}
     /** Increased XP reward for difficult quests, a value between 0-8 */
-    get Difficulty() { return new QuestDifficultyIndex(this.owner, this.owner.row.RewardXPDifficulty); }
+    get Difficulty() { return new QuestDifficultyIndex(this.owner, this.row.RewardXPDifficulty); }
     /** Reward player with arena points */
-    get ArenaPoints() { return this.ownerWrap(this.owner.row.RewardArenaPoints)}
+    get ArenaPoints() { return this.ownerWrap(this.row.RewardArenaPoints)}
     /** The mail received upon */
     get Mail() {
         return new QuestRewardMail(this.owner

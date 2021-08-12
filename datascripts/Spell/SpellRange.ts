@@ -14,20 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { loc_constructor } from "wotlkdata/primitives";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
+import { Pointer } from "../Refs/Pointer";
+import { MainEntity } from "../Misc/Entity";
+import { DBC } from "../../../../bin/scripts/tswow/wotlkdata/dbc/DBCFiles";
+import { Ids } from "../Misc/Ids";
 
-export class SpellRange<T> extends SharedRef<T,SpellRangeRow> {
-    table(): SharedRefTable<SpellRangeRow> {
-        return DBC.SpellRange;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellRange;
-    }
-
+export class SpellRange extends MainEntity<SpellRangeRow> {
     clear(): this {
         this.Name.set({})
         this.NameShort.set({})
@@ -39,15 +33,15 @@ export class SpellRange<T> extends SharedRef<T,SpellRangeRow> {
         return this;
     }
 
-    get Name() { return this.ownerWrapLoc(this.row.DisplayName); }
-    get NameShort() { return this.ownerWrapLoc(this.row.DisplayNameShort); }
-    get Flags() { return this.ownerWrap(this.row.Flags); }
+    get Name() { return this.wrapLoc(this.row.DisplayName); }
+    get NameShort() { return this.wrapLoc(this.row.DisplayNameShort); }
+    get Flags() { return this.wrap(this.row.Flags); }
     
-    get HostileMin() { return this.ownerWrapIndex(this.row.RangeMin, 0)}
-    get FriendMin() { return this.ownerWrapIndex(this.row.RangeMin, 1)}
+    get HostileMin() { return this.wrapIndex(this.row.RangeMin, 0)}
+    get FriendMin() { return this.wrapIndex(this.row.RangeMin, 1)}
 
-    get HostileMax() { return this.ownerWrapIndex(this.row.RangeMax, 0)}
-    get FriendMax() { return this.ownerWrapIndex(this.row.RangeMax, 1)}
+    get HostileMax() { return this.wrapIndex(this.row.RangeMax, 0)}
+    get FriendMax() { return this.wrapIndex(this.row.RangeMax, 1)}
 
     get ID() { return this.row.ID.get(); }
 
@@ -68,6 +62,25 @@ export class SpellRange<T> extends SharedRef<T,SpellRangeRow> {
             this.Flags.set(flags);
         }
         
-        return this.owner;
+        return this;
+    }
+}
+
+export class SpellRangePointer<T> extends Pointer<T,SpellRange> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellRange {
+        return new SpellRange(DBC.SpellRange.add(Ids.SpellRange.id()))
+            .clear();
+    }
+    protected clone(): SpellRange {
+        return new SpellRange(this.resolve().row.clone(Ids.SpellRange.id()))
+    }
+    protected id(v: SpellRange): number {
+        return v.ID;
+    }
+    protected resolve(): SpellRange {
+        return new SpellRange(DBC.SpellRange.findById(this.cell.get()));
     }
 }

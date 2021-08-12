@@ -1,5 +1,5 @@
 import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
-import { MainEntity } from "../Misc/MainEntity";
+import { MainEntity } from "../Misc/Entity";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SkillRaceClassInfos } from "./SkillRaceClassInfo";
 

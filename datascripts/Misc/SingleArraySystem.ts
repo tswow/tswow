@@ -12,9 +12,9 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
         this.clearValue = clearValue;
     }
 
-    clear(): T {
+    clear() {
         this.array.setIndex(this.index, this.clearValue);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -57,7 +57,7 @@ export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArr
         return this.owner;
     }
 
-    get(index: number): SingleArrayEntry<D,T> {
+    protected get(index: number): SingleArrayEntry<D,T> {
         return new SingleArrayEntry(this.owner,index,this.array, this.clearValue);
     }
 

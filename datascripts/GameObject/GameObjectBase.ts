@@ -31,6 +31,7 @@ import { GameObjectTrap } from "./Types/GameObjectTrap";
 import { GameObjectTrapdoor } from "./Types/GameObjectTrapdoor";
 
 export class GameObjectBase extends GameObjectTemplate<GameObjectBase> {
+    setMapObject() { this.Type.setMapObject(); return this; }
     setTrapdoor() { return new GameObjectTrapdoor(this.row); }
     setTrap() { return new GameObjectTrap(this.row); }
     setTransport() { return new GameObjectTransport(this.row); }

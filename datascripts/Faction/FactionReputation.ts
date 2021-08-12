@@ -5,15 +5,15 @@ import { makeRacemask, RaceType } from "../Race/RaceType";
 import { Faction } from "./Faction";
 
 export class FactionReputation extends ArrayEntry<Faction> {
-    get RaceMask() { return this.wrapIndex(this.owner.row.ReputationRaceMask, this.index); }
-    get ClassMask() { return this.wrapIndex(this.owner.row.ReputationClassMask, this.index); }
-    get BaseValue() { return this.wrapIndex(this.owner.row.ReputationBase, this.index); }
+    get RaceMask() { return this.wrapIndex(this.container.row.ReputationRaceMask, this.index); }
+    get ClassMask() { return this.wrapIndex(this.container.row.ReputationClassMask, this.index); }
+    get BaseValue() { return this.wrapIndex(this.container.row.ReputationBase, this.index); }
 
-    clear(): Faction {
+    clear() {
         this.RaceMask.set(0);
         this.ClassMask.set(0);
         this.BaseValue.set(0);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.RaceMask.get()===0 && this.ClassMask.get()===0 && this.BaseValue.get()===0
@@ -25,7 +25,7 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         return 4;
     }
 
-    get(index: number): FactionReputation {
+    protected get(index: number): FactionReputation {
         return new FactionReputation(this.owner, index);
     }
 

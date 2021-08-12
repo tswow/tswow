@@ -1,17 +1,11 @@
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
 import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CameraShakes } from "./CameraShakes";
+import { CameraShakePointer } from "./CameraShakes";
+import { MainEntity } from "../Misc/Entity";
+import { Pointer } from "../Refs/Pointer";
+import { DBC } from "wotlkdata";
+import { Ids } from "../Misc/Ids";
 
-export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraShakesRow> {
-    table(): SharedRefTable<SpellEffectCameraShakesRow> {
-        return DBC.SpellEffectCameraShakes;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellEffectCameraShakes;
-    }
-
+export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesRow> {
     clear(): this {
         this.row.CameraShake.setIndex(0,0);
         this.row.CameraShake.setIndex(1,0);
@@ -20,11 +14,11 @@ export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraSh
     }
 
     clearIndex(index: number) {
-        this.row.CameraShake.setIndex(0,0);
+        this.row.CameraShake.setIndex(index,0);
     }
 
     get(index: number) {
-        return new CameraShakes(this.owner, this.wrapIndex(this.row.CameraShake,index));
+        return new CameraShakePointer(this.owner, this.wrapIndex(this.row.CameraShake,index));
     }
 
     add() {
@@ -38,7 +32,6 @@ export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraSh
         throw new Error(`Can't add more entries, array is full`);
     }
 
-
     get length() { return 3; }
 
     objectify() {
@@ -51,5 +44,25 @@ export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraSh
             }
         }
         return values;
+    }
+
+    get ID() { return this.row.ID.get(); }
+}
+
+export class SpellEffectCameraShakePointer<T> extends Pointer<T,SpellEffectCameraShakes> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected create(): SpellEffectCameraShakes {
+        return new SpellEffectCameraShakes(DBC.SpellEffectCameraShakes.add(Ids.SpellEffectCameraShakes.id()))
+    }
+    protected clone(): SpellEffectCameraShakes {
+        return new SpellEffectCameraShakes(this.resolve().row.clone(Ids.SpellEffectCameraShakes.id()))
+    }
+    protected id(v: SpellEffectCameraShakes): number {
+        return v.ID;
+    }
+    protected resolve(): SpellEffectCameraShakes {
+        return new SpellEffectCameraShakes(DBC.SpellEffectCameraShakes.findById(this.cell.get()))
     }
 }

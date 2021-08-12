@@ -26,10 +26,10 @@ export class SpellReagentEntry<T> extends ArrayEntry<T> {
         this.spell = spell;
     }
 
-    clear(): T {
+    clear() {
         this.Reagent.set(0);
         this.ReagentCount.set(0);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.Reagent.get()===0;

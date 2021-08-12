@@ -4,8 +4,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SoundEntryPointer, SoundEntryRegistry } from "./SoundEntry";
 import { DBC } from "wotlkdata"
 import { Ids } from "../Misc/Ids";
-import { IntCell, Pointer } from "../Refs/Pointer";
-import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Pointer } from "../Refs/Pointer";
 
 export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
     @Transient
@@ -77,8 +76,8 @@ export const ZoneMusicRegistry = {
             .SoundDay.SilenceIntervalMax.set(silenceIntervalMax)
             .SoundNight.SilenceIntervalMin.set(silenceIntervalMin)
             .SoundNight.SilenceIntervalMax.set(silenceIntervalMax)
-            .SoundDay.Sound.set(sound.ID)
-            .SoundNight.Sound.set(sound.ID);
+            .SoundDay.Sound.set(sound.row.ID.get())
+            .SoundNight.Sound.set(sound.row.ID.get());
     },
 
     load(id: number) {

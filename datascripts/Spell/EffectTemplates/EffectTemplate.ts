@@ -11,22 +11,18 @@ export function EffectID(id: number) {
     }
 }
 
-export class EffectTemplate<T> extends CellSystem<T> {
+export class EffectTemplate extends CellSystem<SpellEffect> {
     protected w<T extends CPrim>(arr: CellArray<T,any>): CellIndexWrapper<T,this> {
         return this.wrapIndex(arr, this.index);
     }
 
     @Transient
-    readonly effect: SpellEffect<any>;
-    
-    @Transient
-    protected get row() { return this.effect.row; }
+    protected get row() { return this.owner.row; }
 
     @Transient
-    get index() { return this.effect.index; }
+    get index() { return this.owner.index; }
 
-    constructor(owner: T, effect: SpellEffect<any>) {
-        super(owner);
-        this.effect = effect;
+    AsRawEffect() {
+        return this.owner;
     }
 }
