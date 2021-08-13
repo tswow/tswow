@@ -36,7 +36,7 @@ struct TC_GAME_API TSLootItem {
     void SetCount(uint8 count);
 };
 
-class Loot;
+struct Loot;
 class TC_GAME_API TSLoot {
     public:
         Loot * loot;

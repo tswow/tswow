@@ -317,6 +317,13 @@ EVENT_TYPE(CreatureOnCanGeneratePickPocketLoot,TSCreature,TSPlayer,TSMutable<boo
 EVENT_TYPE(CreatureOnGeneratePickPocketLoot,TSCreature,TSPlayer,TSLoot)
 EVENT_TYPE(CreatureOnGenerateSkinningLoot,TSCreature,TSPlayer,TSLoot)
 
+EVENT_TYPE(CreatureOnMaxHealth, TSCreature, float /*rankHealthMod*/, uint32 /*basehp*/, TSMutable<uint32> /*maxHealth*/)
+// extension: add "ForceMana" mutable after maxMana for ignoring creature class (not sure it works well)
+EVENT_TYPE(CreatureOnMaxMana, TSCreature, float /*baseMana*/, TSMutable<uint32> /*maxMana*/) 
+EVENT_TYPE(CreatureOnBaseDamage, TSCreature, float /*baseDamageIn*/, TSMutable<float> /*baseMinDamage*/, TSMutable<float> /*baseMaxDamage*/)
+EVENT_TYPE(CreatureOnArmor, TSCreature, float /*baseArmor*/, TSMutable<float> /*armorOut*/)
+EVENT_TYPE(CreatureOnAttackPower, TSCreature, TSMutable<uint32> /*attackPower*/, TSMutable<uint32> /*rangedAttackPower*/)
+
 struct TSCreatureEvents {
      EVENT(CreatureOnMoveInLOS)
      EVENT(CreatureOnJustEnteredCombat)
@@ -357,6 +364,12 @@ struct TSCreatureEvents {
      EVENT(CreatureOnCanGeneratePickPocketLoot)
      EVENT(CreatureOnGeneratePickPocketLoot)
      EVENT(CreatureOnGenerateSkinningLoot)
+
+     EVENT(CreatureOnMaxHealth)
+     EVENT(CreatureOnMaxMana)
+     EVENT(CreatureOnBaseDamage)
+     EVENT(CreatureOnArmor)
+     EVENT(CreatureOnAttackPower)
 };
 
 class TSCreatureMap : public TSEventMap<TSCreatureEvents>
@@ -696,6 +709,12 @@ struct TSEvents
     EVENT(CreatureOnCanGeneratePickPocketLoot)
     EVENT(CreatureOnGeneratePickPocketLoot)
     EVENT(CreatureOnGenerateSkinningLoot)
+
+    EVENT(CreatureOnMaxHealth)
+    EVENT(CreatureOnMaxMana)
+    EVENT(CreatureOnBaseDamage)
+    EVENT(CreatureOnArmor)
+    EVENT(CreatureOnAttackPower)
 
     // AreaTrigger
     EVENT(AreaTriggerOnTrigger)
@@ -1041,6 +1060,12 @@ public:
           EVENT_HANDLE(Creature,OnGeneratePickPocketLoot)
           EVENT_HANDLE(Creature,OnGenerateSkinningLoot)
 
+          EVENT_HANDLE(Creature,OnMaxHealth)
+          EVENT_HANDLE(Creature,OnMaxMana)
+          EVENT_HANDLE(Creature,OnBaseDamage)
+          EVENT_HANDLE(Creature,OnArmor)
+          EVENT_HANDLE(Creature,OnAttackPower)
+
           EVENT_HANDLE(Creature,OnGossipHello)
           EVENT_HANDLE(Creature,OnGossipSelect)
           EVENT_HANDLE(Creature,OnGossipSelectCode)
@@ -1084,6 +1109,12 @@ public:
           MAP_EVENT_HANDLE(Creature,OnCanGeneratePickPocketLoot)
           MAP_EVENT_HANDLE(Creature,OnGeneratePickPocketLoot)
           MAP_EVENT_HANDLE(Creature,OnGenerateSkinningLoot)
+
+          MAP_EVENT_HANDLE(Creature,OnMaxHealth)
+          MAP_EVENT_HANDLE(Creature,OnMaxMana)
+          MAP_EVENT_HANDLE(Creature,OnBaseDamage)
+          MAP_EVENT_HANDLE(Creature,OnArmor)
+          MAP_EVENT_HANDLE(Creature,OnAttackPower)
 
           MAP_EVENT_HANDLE(Creature,OnGossipHello)
           MAP_EVENT_HANDLE(Creature,OnGossipSelect)
