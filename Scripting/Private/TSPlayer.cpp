@@ -3119,18 +3119,14 @@ TSItem  TSPlayer::AddItem(uint32 itemId,uint32 itemCount, int32 propertyId)
  * @param uint32 entry : entry of the item to remove
  * @param uint32 itemCount = 1 : amount of the item to remove
  */
-void TSPlayer::RemoveItem(TSItem _item,uint32 itemCount,uint32 itemId)
+void TSPlayer::RemoveItem(TSItem item,uint32 itemCount)
 {
-    auto item = _item.item;
-    if (!item)
-    {
-        player->DestroyItemCount(itemId, itemCount, true);
-    }
-    else
-    {
-        bool all = itemCount >= item->GetCount();
-        player->DestroyItemCount(item, itemCount, true);
-    }
+    player->DestroyItemCount(item.item, itemCount, true);
+}
+
+void TSPlayer::RemoveItemByEntry(uint32 entry, uint32 count)
+{
+    player->DestroyItemCount(entry, count, true);
 }
     
 /**

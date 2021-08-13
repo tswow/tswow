@@ -1686,13 +1686,18 @@ declare interface TSPlayer extends TSUnit {
     /**
      * Removes the given amount of the specified [Item] from the player.
      *
-     * @proto (item, itemCount)
-     * @proto (entry, itemCount)
      * @param [Item] item : item to remove
-     * @param uint32 entry : entry of the item to remove
      * @param uint32 itemCount = 1 : amount of the item to remove
      */
-    RemoveItem(item : TSItem,itemCount : uint32,itemId : uint32) : void
+    RemoveItem(item : TSItem,itemCount? : uint32) : void
+
+    /**
+     * Removes the given amount of the specified item template from the player.
+     *
+     * @param [Item] item : item to remove
+     * @param uint32 itemCount = 1 : amount of the item to remove
+     */
+    RemoveItemByEntry(entry: uint32,itemCount? : uint32) : void
 
     /**
      * Removes specified amount of lifetime kills
