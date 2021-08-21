@@ -7,6 +7,7 @@ import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
 import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
+import { SoundEntryAdvancedPointer } from "./SoundEntryAdvanced";
 
 export class SoundEntryName extends CellSystem<SoundEntry> {
     get() {
@@ -30,121 +31,23 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
             .Name.set("")
             .SoundType.set(0)
             .Volume.set(0)
-
-        this.row.SoundEntriesAdvancedID.set(0);
+            .Advanced.setRefID(0)
         return this;
     }
 
-    @Transient
-    get advanced_row() { 
-        if(this.row.SoundEntriesAdvancedID.get()===0) {
-            this.row.SoundEntriesAdvancedID.set(Ids.SoundEntriesAdvanced.id());
-            DBC.SoundEntriesAdvanced.add(this.row.SoundEntriesAdvancedID.get())
-                .SoundEntryID.set(this.row.ID.get())
-                .TimeA.set(0)
-                .TimeB.set(0)
-                .TimeC.set(0)
-                .TimeD.set(0)
-                .TimeToDuck.set(0)
-                .TimeToUnduck.set(0)
-                .TimeintervalMax.set(0)
-                .TimeintervalMin.set(0)
-                .Usage.set(0)
-                .VolumeSliderCategory.set(0)
-                .DuckToAmbience.set(0)
-                .DuckToMusic.set(0)
-                .DuckToSFX.set(0)
-                .InnerRadius2D.set(0)
-                .InnerRadiusOfInfluence.set(0)
-                .InsideAngle.set(0)
-                .Name.set(this.Name.get())
-                .OuterRadius2D.set(0)
-                .OuterRadiusOfInfluence.set(0)
-                .OutsideAngle.set(0)
-                .OutsideVolume.set(0)
-                .RandomOffsetRange.set(0)
-        }
-        let dbc = DBC.SoundEntriesAdvanced.findById(this.row.SoundEntriesAdvancedID.get());
-        dbc.Name.set(this.Name.get());
-        return dbc;
+    get Advanced() { 
+        return new SoundEntryAdvancedPointer(
+            this, this.row.SoundEntriesAdvancedID); 
     }
 
-    @Transient
-    protected advanced_id() { return this.row.SoundEntriesAdvancedID; }
-
     get SoundType() { return new SoundType(this, this.row.SoundType); }
-
     get Name(): SoundEntryName { return new SoundEntryName(this); }
     get Files(): SoundEntryFiles { return new SoundEntryFiles(this); }
     get DirectoryBase() { return this.wrap(this.row.DirectoryBase); }
-
     get Volume() { return this.wrap(this.row.Volumefloat); }
     get MinDistance() { return this.wrap(this.row.MinDistance); }
     get DistanceCutoff() { return this.wrap(this.row.DistanceCutoff); }
     get EAXDef() { return this.wrap(this.row.EAXDef); }
-
-    @TransientOn('advanced_id',0)
-    get InnerRadius2D() { return this.wrap(this.advanced_row.InnerRadius2D); }
-
-    @TransientOn('advanced_id',0)
-    get TimeA() { return this.wrap(this.advanced_row.TimeA); }
-
-    @TransientOn('advanced_id',0)
-    get TimeB() { return this.wrap(this.advanced_row.TimeB); }
-
-    @TransientOn('advanced_id',0)
-    get TimeC() { return this.wrap(this.advanced_row.TimeC); }
-
-    @TransientOn('advanced_id',0)
-    get TimeD() { return this.wrap(this.advanced_row.TimeD); }
-
-    @TransientOn('advanced_id',0)
-    get RandomOffsetRange() { return this.wrap(this.advanced_row.RandomOffsetRange); }
-
-    @TransientOn('advanced_id',0)
-    get Usage() { return this.wrap(this.advanced_row.Usage); }
-
-    @TransientOn('advanced_id',0)
-    get TimeIntervalMin() { return this.wrap(this.advanced_row.TimeintervalMin); }
-
-    @TransientOn('advanced_id',0)
-    get TimeIntervalMax() { return this.wrap(this.advanced_row.TimeintervalMax); }
-
-    @TransientOn('advanced_id',0)
-    get VolumeSliderCategory() { return this.wrap(this.advanced_row.VolumeSliderCategory); }
-
-    @TransientOn('advanced_id',0)
-    get DuckToSFX() { return this.wrap(this.advanced_row.DuckToSFX); }
-
-    @TransientOn('advanced_id',0)
-    get DuckToMusic() { return this.wrap(this.advanced_row.DuckToMusic); }
-
-    @TransientOn('advanced_id',0)
-    get DuckToAmbience() { return this.wrap(this.advanced_row.DuckToAmbience); }
-
-    @TransientOn('advanced_id',0)
-    get InnerRadius() { return this.wrap(this.advanced_row.InnerRadiusOfInfluence); }
-
-    @TransientOn('advanced_id',0)
-    get OuterRadius() { return this.wrap(this.advanced_row.OuterRadiusOfInfluence); }
-
-    @TransientOn('advanced_id',0)
-    get TimeToDuck() { return this.wrap(this.advanced_row.TimeToDuck); }
-
-    @TransientOn('advanced_id',0)
-    get TimeToUnduck() { return this.wrap(this.advanced_row.TimeToUnduck); }
-
-    @TransientOn('advanced_id',0)
-    get InsideAngle() { return this.wrap(this.advanced_row.InsideAngle); }
-
-    @TransientOn('advanced_id',0)
-    get OutsideAngle() { return this.wrap(this.advanced_row.OutsideAngle); }
-
-    @TransientOn('advanced_id',0)
-    get OutsideVolume() { return this.wrap(this.advanced_row.OutsideVolume); }
-
-    @TransientOn('advanced_id',0)
-    get OuterRadius2D() { return this.wrap(this.advanced_row.OuterRadius2D); }
 }
 
 export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
