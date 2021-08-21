@@ -25,16 +25,17 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
 import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
-import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
-import { DefaultClassRaces, getDefaultClass, getDefaultRace } from "./ClassDefaultRaces";
 import { ClassStartInventory } from "./ClassStartInventory";
 import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
 import { ClassType, resolveClassType } from "./ClassType";
 import { ClassUISettings } from "./ClassUISettings";
 import { EquipSkills } from "./EquipSkills";
+import { ClassRaces } from "./ClassRaces";
+import { ClassSkillLines } from "./ClassSkillLines";
+import { StartButtons } from "./StartButtons";
 
 type ClassFinder = number;
 
@@ -58,6 +59,7 @@ export class Class extends MainEntity<ChrClassesRow> {
         femaleDescription : Edit, 
         infoRows : Edit[]) {
             super(row);
+            loadedClasses[this.ID] = this;
             this.UI = new ClassUISettings(this,
                 tCoordsCCEdit,classColorEdit,sortOrderEdit,
                 tCoordsEdit,xmlEdit,maleDescription,
@@ -77,63 +79,28 @@ export class Class extends MainEntity<ChrClassesRow> {
     get RequiredExpansion() { return this.wrap(this.row.Required_Expansion); }
     get DisplayPower() { return this.wrap(this.row.DisplayPower); }
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
-
-    addRaces(races : RaceType[]) {
-        // Is base class
-
-        const rci = DBC.SkillRaceClassInfo.filter({})
-            .filter((x)=>x.RaceMask.get()!==4294967295 && x.ClassMask.get()&(1<<(this.BaseClass-1)));
-
-        for(let raceType of races) {
-            const raceid = resolveRaceType(raceType);
-
-            if(this.ID <= 11) {
-                let found = false;
-                for(const {race,cls} of Object.values(DefaultClassRaces)) {
-                    if(race==raceid && cls == this.ID) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(found) {
-                    continue;
-                }
-            }
-
-            const {race: oldRace,cls} = getDefaultRace(raceid,this.BaseClass);
-
-            SQL.player_levelstats
-                .filter({class: cls, race: oldRace})
-                .forEach(x=>x.clone(raceid,this.ID,x.level.get()));
-
-            DBC.CharStartOutfit
-                .filter({ClassID: cls, RaceID: oldRace})
-                .forEach(x=>x.clone(Ids.CharStartOutfit.id())
-                    .ClassID.set(this.ID)
-                    .RaceID.set(raceid))
-
-
-            // By default, the classes should come from here.
-            const defaultClass = getDefaultClass(raceid);
-            SQL.playercreateinfo.find({race: raceid, class: defaultClass})
-                .clone(raceid, this.ID)
-
-            DBC.CharBaseInfo.add(raceid,this.row.ID.get());
-        }
-        return this;
-    }
+    get Races() { return new ClassRaces(this); }
+    get SkillLines() { return new ClassSkillLines(this); }
+    get StartButtons() { return new StartButtons(this); }
 }
 
 const clsResolve = (f : ClassFinder) => {
     return DBC.ChrClasses.find({ID:f});
 }
 
+// TODO: temporary fix for 'Classes.load' for custom classes
+const loadedClasses: {[key: number]: Class} = {}
+
 export const Classes = {
 
     load : (finder: ClassType) => {
         const finderId = resolveClassType(finder);
-        const row = clsResolve(finderId);
+        let loaded = loadedClasses[finderId];
+        if(loaded) {
+            return loaded;
+        }
 
+        const row = clsResolve(finderId);
         const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.lua');
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
         const xm = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');

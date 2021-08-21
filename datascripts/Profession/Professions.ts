@@ -10,14 +10,14 @@ export const Professions = {
     create(mod: string, id: string, hasCrafting: boolean, type: ProfessionType|number, highestRank: ProfessionTier) {
         return new Profession(SkillLines.create(mod,id)
             .CanLink.set(1)
-            .Category.set(11)
-            .RaceClassInfos.add()
-                .ClassMask.set(0)
-                .RaceMask.set(0)
-                .Flags.clearAll()
-                .Flags.IsProfession.mark()
-                .Flags.IsClassLine.mark()
-            .end)
+            .Category.set(typeof(type)=='number'?type: type == 'PROFESSION' ? 11 : 9)
+            .RaceClassInfos.modNew(rci=>{
+                rci.ClassMask.set(0)
+                   .RaceMask.set(0)
+                   .Flags.clearAll()
+                   .Flags.IsProfession.mark()
+                   .Flags.IsClassLine.mark()
+            }))
             .addSkillsTo(mod,id,highestRank)
             .setHasCrafting(hasCrafting)
     }

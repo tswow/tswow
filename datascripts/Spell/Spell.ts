@@ -48,6 +48,8 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellGroups } from "./SpellGroup";
 import { SpellRank } from "./SpellRank";
 import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
+import { RaceType } from "../Race/RaceType";
+import { Classes } from "../Class/Class";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -154,6 +156,11 @@ export class Spell extends MainEntity<SpellRow> {
     get InterruptFlags() { return new InterruptFlags(this); }
     get Rank() { return new SpellRank(this, this.ID); }
     get Groups() { return new SpellGroups(this, this.ID); }
+
+    addStartButton(clazz: number, button: number, races?: RaceType[]) {
+        Classes.load(clazz).StartButtons.addSpell(button, this.ID, races);
+        return this;
+    }
 
     /**
      * Creates a separate clone of this spell

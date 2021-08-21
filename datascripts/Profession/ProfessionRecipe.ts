@@ -15,8 +15,8 @@ export class RecipeRank extends CellSystem<ProfessionRecipe> {
         this.spell = spell;
     }
 
-    get Green() { return this.spell.SkillLines.getIndex(0).TrivialSkillLineRankLow; }
-    get Gray() { return this.spell.SkillLines.getIndex(0).TrivialSkillLineRankHigh; }
+    get Green() { return this.spell.SkillLines.get()[0].TrivialRank.Low; }
+    get Gray() { return this.spell.SkillLines.get()[0].TrivialRank.High; }
 
     set(green: number, gray: number) {
         this.Green.set(green);

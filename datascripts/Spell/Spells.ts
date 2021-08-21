@@ -191,5 +191,10 @@ export const Spells = {
         return DBC.Spell.filter(query).map(x=>new Spell(x));
     },
 
+    find(query: SpellQuery): Spell {
+        let v = DBC.Spell.find(query);
+        return v ? new Spell(v) : undefined as any as Spell;
+    },
+
     TotemCreatures: TotemCreatures
 }

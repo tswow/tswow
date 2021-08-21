@@ -21,6 +21,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
 import { MainEntity } from "../Misc/Entity";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 
 export class TrivialSkillLineRank extends CellSystem<SpellSkillLineAbility> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }
@@ -56,42 +57,34 @@ export class SpellSkillLineAbility extends MainEntity<SkillLineAbilityRow> {
     }
 }
 
-export class SpellSkillLineAbilites extends CellSystem<Spell> {
+export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility,Spell> {
+    protected getAllRows(): SpellSkillLineAbility[] {
+        return DBC.SkillLineAbility
+            .filter({Spell: this.owner.ID})
+            .map(x=>new SpellSkillLineAbility(x));
+    }
+
+    protected isDeleted(value: SpellSkillLineAbility): boolean {
+        return value.row.isDeleted()
+    }
+
     constructor(owner: Spell) {
         super(owner);
     }
 
-    protected values() {
-        return DBC.SkillLineAbility.filter({Spell: this.owner.ID})
-    }
-
-    get length() { return this.values().length; }
-    getIndex(index: number) { return this.values()[index]; }
-
-    forEach(callback: (sla: SpellSkillLineAbility, index: number) => any) {
-        const values = this.values();
-        for(let i=0;i<values.length;++i) {
-            callback(new SpellSkillLineAbility(values[i]),i);
-        }
+    modAdd(
+        skillLine: number
+      , autolearn: boolean = false
+      , callback: (sla: SpellSkillLineAbility)=>void = ()=>{}
+      ) 
+      {
+        callback(this.getAdd(skillLine,autolearn));
         return this.owner;
-    }
+      }
 
-    addAutolearn(
+    getAdd(
           skillLine: number
-        , parentAbility: number = -1
-        , callback: (sla: SpellSkillLineAbility)=>void = ()=>{}
-    ) {
-        return this.add(
-              skillLine
-            , parentAbility
-            , (x)=>callback(x.setAutolearn())
-            );
-    }
-
-    add(
-          skillLine: number
-        , parentAbility: number = -1
-        , callback: (sla: SpellSkillLineAbility)=>void = ()=>{}
+        , autolearn: boolean = false
         ) {
         const rci = DBC.SkillRaceClassInfo.find({SkillID: skillLine});
         let racemask = rci.RaceMask.get();
@@ -104,18 +97,16 @@ export class SpellSkillLineAbilites extends CellSystem<Spell> {
             classmask = 0;
         }
 
-        let row = parentAbility == -1 ? DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
-            : DBC.SkillLineAbility.find({ID:parentAbility}).clone(Ids.SkillLineAbility.id())
+        let row = DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
 
-        callback(new SpellSkillLineAbility(row
+        let sla = new SpellSkillLineAbility(row
             .SkillLine.set(skillLine)
             .ClassMask.set(classmask)
             .RaceMask.set(racemask)
-            .Spell.set(this.owner.ID)));
-        return this.owner;
-    }
-
-    objectify() { 
-        return this.values().map(x=>x.objectify());
+            .Spell.set(this.owner.ID));
+        if(autolearn) {
+            sla.setAutolearn();
+        }
+        return sla;
     }
 }

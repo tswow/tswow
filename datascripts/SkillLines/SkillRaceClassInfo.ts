@@ -1,20 +1,21 @@
 import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { Ids } from "../Misc/Ids";
 import { SkillLine } from "./SkillLine";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 
 export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
     get IsProfession() { return this.bit(5); }
     get IsClassLine() { return this.bit(7); }
 }
 
-export class SkillRaceClassInfo extends CellSystem<SkillLine> {
+export class SkillRaceClassInfo extends CellSystemTop {
     readonly row: SkillRaceClassInfoRow;
 
-    constructor(owner: SkillLine, row: SkillRaceClassInfoRow) {
-        super(owner);
+    constructor(row: SkillRaceClassInfoRow) {
+        super();
         this.row = row;
     }
 
@@ -28,28 +29,23 @@ export class SkillRaceClassInfo extends CellSystem<SkillLine> {
     get ID() { return this.row.ID.get() }
 }
 
-export class SkillRaceClassInfos extends CellSystem<SkillLine> {
-    protected rows() { 
-        return DBC.SkillRaceClassInfo.filter({SkillID: this.owner.ID})
+export class SkillRaceClassInfos extends MultiRowSystem<SkillRaceClassInfo,SkillLine> {
+    protected getAllRows(): SkillRaceClassInfo[] {
+        return DBC.SkillRaceClassInfo.filter({SkillID: this.owner.ID}).map(x=>new SkillRaceClassInfo(x))
+    }
+    protected isDeleted(a: SkillRaceClassInfo): boolean {
+        return a.row.isDeleted();
     }
 
-    get length() { return this.rows().length; }
-
-    forEach(callback: (srci: SkillRaceClassInfo, index: number) => any) {
-        const rows = this.rows();
-        for(let i=0;i<rows.length; ++i) {
-            callback(new SkillRaceClassInfo(this.owner, rows[i]),i);
-        }
-    }
-
-    add() {
+    getNew() {
         const id = Ids.SkillRaceClassInfo.id();
         const row = DBC.SkillRaceClassInfo.add(id);
         row.SkillID.set(this.owner.ID);
-        return new SkillRaceClassInfo(this.owner, row);
+        return new SkillRaceClassInfo(row);
     }
 
-    getIndex(index: number) {
-        return this.rows()[index];
+    modNew(callback: (srci: SkillRaceClassInfo)=>void) {
+        callback(this.getNew());
+        return this.owner;
     }
 }

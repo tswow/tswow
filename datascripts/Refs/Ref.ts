@@ -43,7 +43,8 @@ export abstract class Ref<T,V extends CanObjectify> {
     }
 
     getRefCopy() {
-        return this.clone();
+        this.setRefID(this.id(this.clone()))
+        return this.resolve();
     }
 
     modRefCopy(callback: (value: V)=>void) {

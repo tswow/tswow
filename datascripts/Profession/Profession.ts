@@ -86,8 +86,8 @@ export class Profession {
     addRecipe(mod: string, id: string) {
         return new ProfessionRecipe(
             this,std.Spells.create(mod,id,3492)
-                .SkillLines.add(this.ID)
-                )
+                .SkillLines.modAdd(this.ID)
+            )
             .SpellFocus.set(0)
             .Reagents.clearAll()
             .Totems.clearAll()
@@ -111,11 +111,11 @@ export class Profession {
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
                 .Effects.mod(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
                 .Visual.setRefID(0)
-                .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
-                    sla.RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
+                .SkillLines.modAdd(this.skillLine.ID,false,(sla)=>{
+                    sla.RaceMask.set(this.skillLine.RaceClassInfos.get()[0].RaceMask.get())
                        .ClassMaskForbidden.set(0)
                        .MinSkillRank.set(1)
-                       .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
+                       .ClassMask.set(this.skillLine.RaceClassInfos.get()[0].ClassMask.get())
                 })
 
             this._ApprenticeLearnSpell = std.Spells.create(modid,`${id}_learn_spell`,2020)
@@ -135,12 +135,12 @@ export class Profession {
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
                     .Effects.mod(1,e=>e.MiscValueA.set(this.skillLine.ID))
                     .Visual.setRefID(0)
-                    .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
+                    .SkillLines.modAdd(this.skillLine.ID,false,(sla)=>{
                         sla
-                            .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
+                            .RaceMask.set(this.skillLine.RaceClassInfos.get()[0].RaceMask.get())
                             .ClassMaskForbidden.set(0)
                             .MinSkillRank.set(1)
-                            .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
+                            .ClassMask.set(this.skillLine.RaceClassInfos.get()[0].ClassMask.get())
                     })
                 SQL.spell_ranks.add(this.ApprenticeSpell.ID,i,{spell_id:spl.ID})
             }
@@ -148,8 +148,8 @@ export class Profession {
 
         for(let i=1;i<rnk-1;++i) {
             this.getSkillRank(i)
-                .SkillLines.getIndex(0)
-                .SupercededBySpell.set(this.getSkillRank(i+1).ID)
+                .SkillLines.get()[0]
+                .SupercededBy.set(this.getSkillRank(i+1).ID)
         }
 
         return this;
@@ -168,7 +168,7 @@ export class Profession {
             .Attributes.isHiddenFromLog.mark()
             .Attributes.unk41.mark()
             .Range.modRefCopy((x)=>x.set(0,maxRange,0,maxRange))
-            .SkillLines.add(this.ID)
+            .SkillLines.modAdd(this.ID)
             .CastTime.modRefCopy((x)=>x.set(speed,0,speed))
             .RequiredTotems.setIndex(0,totem)
             .Effects.modFree((eff)=>{

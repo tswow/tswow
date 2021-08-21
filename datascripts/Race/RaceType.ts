@@ -23,6 +23,22 @@ export const ALL_RACES: RaceType[] = [
     , 'TAUREN','GNOME','TROLL','BLOODELF','DRAENEI'
 ]
 
+export function getRaceType(v: number): RaceType {
+    switch(v) {
+        case 1: return 'HUMAN'
+        case 2: return 'ORC'
+        case 3: return 'DWARF'
+        case 4: return 'NIGHTELF'
+        case 5: return 'UNDEAD'
+        case 6: return 'TAUREN'
+        case 7: return 'GNOME'
+        case 8: return 'TROLL'
+        case 10: return 'BLOODELF'
+        case 11: return 'DRAENEI'
+        default: return v;
+    }
+}
+
 export function resolveRaceType(type: RaceType) {
     if(typeof(type)==='number') {
         return type;

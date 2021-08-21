@@ -22,13 +22,14 @@ export const SkillLines = {
             .Category.set(7)
             .SkillCosts.set(0)
             .CanLink.set(0)
-            .RaceClassInfos.add()
-                .RaceMask.set(4294967295)
-                .ClassMask.clearAll()
-                .ClassMask.mark(cls-1)
-                .Flags.set(1040)
-                .end
-        SQL.playercreateinfo_skills.add(0, 1<<(cls-1),sl.ID).comment.set(`${cls} - ${id}`);
+            .RaceClassInfos.modNew(rci=>{
+                rci.RaceMask.set(4294967295)
+                   .ClassMask.clearAll()
+                   .ClassMask.mark(cls-1)
+                   .Flags.set(1040)
+            })
+        SQL.playercreateinfo_skills
+            .add(0, 1<<(cls-1),sl.ID).comment.set(`${cls} - ${id}`);
         return sl;
     }
 }
