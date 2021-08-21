@@ -4,7 +4,6 @@ import { SoundType } from "./SoundType";
 import { Ids } from "../Misc/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
-import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
 import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 import { SoundEntryAdvancedPointer } from "./SoundEntryAdvanced";
