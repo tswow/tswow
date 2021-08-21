@@ -18,7 +18,7 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
 import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
-import { DBC } from "../../../../bin/scripts/tswow/wotlkdata/dbc/DBCFiles";
+import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 
 export class SpellRange extends MainEntity<SpellRangeRow> {
