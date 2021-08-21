@@ -45,6 +45,19 @@ export class ZoneMusicPointer<T> extends Ref<T,ZoneMusic> {
     protected resolve(): ZoneMusic {
         return ZoneMusicRegistry.load(this.cell.get());
     }
+
+    createSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
+        this.setRefID(
+            ZoneMusicRegistry.createSimple(
+                  directoryBase
+                , songs
+                , silenceIntervalMin
+                , silenceIntervalMax
+                , volume
+                , frequency
+                ).ID);
+        return this.owner;
+    }
 }
 
 export class ZoneMusic extends CellSystemTop {
