@@ -5,7 +5,7 @@ import { Ids } from "../Misc/Ids";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 
 export class SoundEntryName extends CellSystem<SoundEntry> {
@@ -165,10 +165,10 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
     get OuterRadius2D() { return this.wrap(this.advanced_row.OuterRadius2D); }
 }
 
-export class SoundEntryPointer<T> extends Pointer<T,SoundEntry> {
+export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
     setNewSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
         let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
-        this.set(soundEntry.row.ID.get());
+        this.setRefID(soundEntry.row.ID.get());
         return this.owner;
     }
 

@@ -1,6 +1,6 @@
 import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
 import { DBC } from "wotlkdata";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { MainEntity } from "./Entity";
 import { Ids } from "./Ids";
 
@@ -43,7 +43,7 @@ export class ParticleColor extends MainEntity<ParticleColorRow> {
     }
 }
 
-export class ParticleColorPointer<T> extends Pointer<T,ParticleColor> {
+export class ParticleColorPointer<T> extends Ref<T,ParticleColor> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

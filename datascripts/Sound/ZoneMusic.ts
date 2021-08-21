@@ -4,7 +4,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SoundEntryPointer, SoundEntryRegistry } from "./SoundEntry";
 import { DBC } from "wotlkdata"
 import { Ids } from "../Misc/Ids";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
     @Transient
@@ -26,7 +26,7 @@ export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
     }
 }
 
-export class ZoneMusicPointer<T> extends Pointer<T,ZoneMusic> {
+export class ZoneMusicPointer<T> extends Ref<T,ZoneMusic> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }
@@ -76,8 +76,8 @@ export const ZoneMusicRegistry = {
             .SoundDay.SilenceIntervalMax.set(silenceIntervalMax)
             .SoundNight.SilenceIntervalMin.set(silenceIntervalMin)
             .SoundNight.SilenceIntervalMax.set(silenceIntervalMax)
-            .SoundDay.Sound.set(sound.row.ID.get())
-            .SoundNight.Sound.set(sound.row.ID.get());
+            .SoundDay.Sound.setRefID(sound.row.ID.get())
+            .SoundNight.Sound.setRefID(sound.row.ID.get());
     },
 
     load(id: number) {

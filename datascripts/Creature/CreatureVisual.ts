@@ -3,7 +3,7 @@ import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info"
 import { SQL } from "wotlkdata";
 import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { DBC } from "wotlkdata";
@@ -116,7 +116,7 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
     }
 }
 
-export class CreatureVisualPointer<T> extends Pointer<T,CreatureVisual> {
+export class CreatureVisualPointer<T> extends Ref<T,CreatureVisual> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }
@@ -136,7 +136,7 @@ export class CreatureVisualPointer<T> extends Pointer<T,CreatureVisual> {
     }
 }
 
-export class CreatureModelPointer<T> extends Pointer<T,CreatureModel> {
+export class CreatureModelPointer<T> extends Ref<T,CreatureModel> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

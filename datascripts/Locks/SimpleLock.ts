@@ -1,7 +1,7 @@
 import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Ids } from "../Misc/Ids";
 
@@ -28,7 +28,7 @@ export class SimpleLock extends MainEntity<LockRow>{
     get Index() { return this.wrapIndex(this.row.Index,0); }
 }
 
-export class SimpleLockPointer<T> extends Pointer<T,SimpleLock> {
+export class SimpleLockPointer<T> extends Ref<T,SimpleLock> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

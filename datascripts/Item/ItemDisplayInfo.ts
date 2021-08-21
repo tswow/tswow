@@ -21,7 +21,7 @@ import { ItemEffectsPointer } from "./ItemVisualEffect";
 import { SpellVisualPointer } from "../Spell/SpellVisual";
 import { ParticleColorPointer } from "../Misc/ParticleColor";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { DBC,SQL } from "wotlkdata/wotlkdata";
 import { Ids } from "../Misc/Ids";
 
@@ -31,7 +31,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
             .Flags.set(0)
             .GeosetGroup.set([0,0,0])
             .HelmGeosetVis.set([0,0])
-            .Effects.set(0)
+            .Effects.setRefID(0)
             .Models.clearAll()
             .Texture.set(["","","","","","","",""])
             .Icon.set("")
@@ -64,7 +64,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     }
 }
 
-export class ItemDisplayInfoPointer<T> extends Pointer<T,ItemDisplayInfo> {
+export class ItemDisplayInfoPointer<T> extends Ref<T,ItemDisplayInfo> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

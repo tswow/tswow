@@ -9,7 +9,7 @@ export interface CanObjectify {
     objectify(): any
 }
 
-export abstract class Pointer<T,V extends CanObjectify> {
+export abstract class Ref<T,V extends CanObjectify> {
     protected owner: T;
     protected cell: Cell<number,any>
 
@@ -18,21 +18,16 @@ export abstract class Pointer<T,V extends CanObjectify> {
         this.cell = cell;
     }
 
-    get() {
+    getRefID() {
         return this.cell.get();
     }
 
-    set(value: number) {
-        this.repoint(value);
-        return this.owner;
-    }
-
-    repoint(newPointer: number) {
+    setRefID(newPointer: number) {
         this.cell.set(newPointer);
         return this.owner;
     }
 
-    modify(callback: (value: V)=>void) {
+    modRef(callback: (value: V)=>void) {
         let v: V;
         if(!this.exists()) {
             v = this.create();
@@ -43,14 +38,22 @@ export abstract class Pointer<T,V extends CanObjectify> {
         return this.owner;
     }
 
-    cloneModify(callback: (value: V)=>void) {
+    getRef() {
+        return this.resolve();
+    }
+
+    getRefCopy() {
+        return this.clone();
+    }
+
+    modRefCopy(callback: (value: V)=>void) {
         let v: V;
         if(!this.exists()) {
             v = this.create();
-            this.repoint(this.id(v));
+            this.setRefID(this.id(v));
         } else {
             v = this.clone();
-            this.repoint(this.id(v));
+            this.setRefID(this.id(v));
         }
         callback(v);
         return this.owner;

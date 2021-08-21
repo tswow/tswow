@@ -1,7 +1,7 @@
 import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
 import { CameraShakePointer } from "./CameraShakes";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 
@@ -49,7 +49,7 @@ export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesR
     get ID() { return this.row.ID.get(); }
 }
 
-export class SpellEffectCameraShakePointer<T> extends Pointer<T,SpellEffectCameraShakes> {
+export class SpellEffectCameraShakePointer<T> extends Ref<T,SpellEffectCameraShakes> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

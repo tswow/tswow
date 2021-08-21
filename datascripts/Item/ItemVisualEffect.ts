@@ -3,7 +3,7 @@ import { Ids } from "../Misc/Ids";
 import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');
@@ -76,7 +76,7 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
     }
 }
 
-export class ItemEffectsPointer<T> extends Pointer<T,ItemEffects> {
+export class ItemEffectsPointer<T> extends Ref<T,ItemEffects> {
     protected exists(): boolean {
         return this.cell.get() == 0;
     }

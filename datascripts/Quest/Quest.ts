@@ -26,7 +26,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
 import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { Quests } from "./Quests";
 
 export class Quest extends MainEntity<quest_templateRow> {

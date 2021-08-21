@@ -2,13 +2,12 @@ import { EffectID, EffectTemplate } from "./EffectTemplate";
 import { TargetBase } from "./TargetBase";
 import { CountBase, PowerBase, PowerBasePct, DamageBase, PointsRoot, HealBasePct, HealBase, PointsBase, DamageBasePct } from "./PointsBase";
 import { SpellPowerType } from "../SpellPowerType";
-import { SpellEffect } from "../SpellEffect";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SchoolMask } from "../../Misc/School";
 import { EffectClassSet } from "../SpellClassSet";
-import { SpellRadius, SpellRadiusPointer } from "../SpellRadius";
+import { SpellRadiusPointer } from "../SpellRadius";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 // 1
@@ -159,7 +158,7 @@ export class WeaponPercentDamage extends DamageBasePct {
 
     setAoE(radius: number, radiusPerLevel: number, radiusMax: number) {
         this.TargetA.setSrcCaster();
-        this.Radius.cloneModify(x=>x.set(radius,radiusPerLevel,radiusMax));
+        this.Radius.modRefCopy(x=>x.set(radius,radiusPerLevel,radiusMax));
         return this.owner;
     }
 }

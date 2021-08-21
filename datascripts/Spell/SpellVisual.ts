@@ -30,7 +30,7 @@ import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { SpellEffectCameraShakePointer } from "./SpellEffectCameraShakes";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class SpellVisualKitModelAttach<T> extends CellSystem<T> {
 
@@ -73,20 +73,20 @@ export class SpellVisualKitModels extends CellSystem<SpellVisualKit> {
 export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     clear(): this {
         this.Animation.set(0)
-            .BaseEffect.set(0)
-            .BreathEffect.set(0)
+            .BaseEffect.setRefID(0)
+            .BreathEffect.setRefID(0)
             .CharProcedures.clearAll()
-            .ChestEffect.set(0)
+            .ChestEffect.setRefID(0)
             .Flags.set(0)
-            .HeadEffect.set(0)
-            .LeftHandEffect.set(0)
-            .RightHandEffect.set(0)
-            .RightWeaponEffect.set(0)
-            .CameraShake.set(0)
-            .Sound.set(0)
+            .HeadEffect.setRefID(0)
+            .LeftHandEffect.setRefID(0)
+            .RightHandEffect.setRefID(0)
+            .RightWeaponEffect.setRefID(0)
+            .CameraShake.setRefID(0)
+            .Sound.setRefID(0)
             .SpellEffects.clearAll()
             .StartAnimation.set(-1)
-            .WorldEffect.set(0)
+            .WorldEffect.setRefID(0)
             // TODO: Actually remove the rows
             .Models.forEach(x=>x.row.ParentSpellVisualKitID.set(0))
         return this;
@@ -117,7 +117,7 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     get Models(): SpellVisualKitModels { return new SpellVisualKitModels(this); }
 }
 
-export class SpellVisualKitPointer<T> extends Pointer<T,SpellVisualKit> {
+export class SpellVisualKitPointer<T> extends Ref<T,SpellVisualKit> {
     private name: string;
 
     constructor(owner: T, cell: Cell<number,any>, name: string) {
@@ -237,7 +237,7 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
     }
 }
 
-export class SpellVisualPointer<T> extends Pointer<T,SpellVisual> {
+export class SpellVisualPointer<T> extends Ref<T,SpellVisual> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

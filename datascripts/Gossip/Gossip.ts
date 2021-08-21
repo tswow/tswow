@@ -19,7 +19,7 @@ import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 
@@ -46,7 +46,7 @@ export class Gossip extends MainEntity<gossip_menuRow> {
     }
 }
 
-export class GossipPointer<T> extends Pointer<T, Gossip> {
+export class GossipPointer<T> extends Ref<T, Gossip> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

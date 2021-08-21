@@ -2,7 +2,7 @@ import { SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
 import { Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     clear(): this {
@@ -63,7 +63,7 @@ export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     get ID() { return this.row.ID.get(); }
 }
 
-export class SpellChainEffectPointer<T> extends Pointer<T,SpellChainEffect> {
+export class SpellChainEffectPointer<T> extends Ref<T,SpellChainEffect> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

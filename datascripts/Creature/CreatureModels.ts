@@ -48,7 +48,7 @@ export class CreatureModels extends CellSystem<CreatureTemplate> {
 
     clearAll() {
         for(let i=0;i<this.length;++i) {
-            this.get(i).set(0);
+            this.get(i).setRefID(0);
         }
         return this.owner;
     }

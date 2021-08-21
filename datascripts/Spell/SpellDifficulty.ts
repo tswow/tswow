@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     clear(): this {
@@ -41,7 +41,7 @@ export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     }
 }
 
-export class SpellDifficultyPointer<T> extends Pointer<T,SpellDifficulty> {
+export class SpellDifficultyPointer<T> extends Ref<T,SpellDifficulty> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

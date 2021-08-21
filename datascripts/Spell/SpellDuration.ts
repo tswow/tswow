@@ -17,7 +17,7 @@
 import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
 import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 
 export class SpellDuration extends MainEntity<SpellDurationRow> {
@@ -39,7 +39,7 @@ export class SpellDuration extends MainEntity<SpellDurationRow> {
     }
 }
 
-export class SpellDurationPointer<T> extends Pointer<T,SpellDuration> {
+export class SpellDurationPointer<T> extends Ref<T,SpellDuration> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

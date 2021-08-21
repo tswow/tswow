@@ -17,7 +17,7 @@
 import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 
 export class SpellMissile extends MainEntity<SpellMissileRow> {
@@ -53,7 +53,7 @@ export class SpellMissile extends MainEntity<SpellMissileRow> {
     get RandomizeSpeedMin() { return this.wrap(this.row.RandomizeSpeedMin); }
 }
 
-export class SpellMissilePointer<T> extends Pointer<T, SpellMissile> {
+export class SpellMissilePointer<T> extends Ref<T, SpellMissile> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

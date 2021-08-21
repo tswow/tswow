@@ -4,7 +4,7 @@ import { BoundingBox } from "../Misc/BoundingBox";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { DBC } from "wotlkdata/wotlkdata";
 import { Ids } from "../Misc/Ids";
 
@@ -126,7 +126,7 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
     }
 }
 
-export class GameObjectDisplayPointer<T> extends Pointer<T,GameObjectDisplay> {
+export class GameObjectDisplayPointer<T> extends Ref<T,GameObjectDisplay> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

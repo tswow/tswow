@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { Ids, AutoIdGenerator } from "../Misc/Ids";
 import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class SpellRadius extends MainEntity<SpellRadiusRow> {
     clear(): this {
@@ -46,7 +46,7 @@ export class SpellRadius extends MainEntity<SpellRadiusRow> {
     }
 }
 
-export class SpellRadiusPointer<T> extends Pointer<T,SpellRadius> {
+export class SpellRadiusPointer<T> extends Ref<T,SpellRadius> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

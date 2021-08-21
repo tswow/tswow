@@ -98,7 +98,7 @@ export class Profession {
         return GameObjectTemplates.create(mod,name)
             .setChest()
             .IsConsumable.set(1)
-            .Lock.repoint(lock.ID)
+            .Lock.setRefID(lock.ID)
     }
 
     addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
@@ -110,7 +110,7 @@ export class Profession {
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
                 .Effects.mod(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
-                .Visual.set(0)
+                .Visual.setRefID(0)
                 .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
                     sla.RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
                        .ClassMaskForbidden.set(0)
@@ -134,7 +134,7 @@ export class Profession {
                 let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
                     .Effects.mod(1,e=>e.MiscValueA.set(this.skillLine.ID))
-                    .Visual.set(0)
+                    .Visual.setRefID(0)
                     .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
                         sla
                             .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
@@ -160,16 +160,16 @@ export class Profession {
             .Attributes.isHiddenFromLog.mark()
             .Attributes.isHiddenFromLog.mark()
             .Attributes.unk41.mark()
-            .Range.cloneModify((range)=>{
+            .Range.modRefCopy((range)=>{
                 range.set(0,maxRange,0,maxRange)
             })
         let spl = std.Spells.create(mod,id)
             .Attributes.isHiddenInSpellbook.mark()
             .Attributes.isHiddenFromLog.mark()
             .Attributes.unk41.mark()
-            .Range.cloneModify((x)=>x.set(0,maxRange,0,maxRange))
+            .Range.modRefCopy((x)=>x.set(0,maxRange,0,maxRange))
             .SkillLines.add(this.ID)
-            .CastTime.cloneModify((x)=>x.set(speed,0,speed))
+            .CastTime.modRefCopy((x)=>x.set(speed,0,speed))
             .RequiredTotems.setIndex(0,totem)
             .Effects.modFree((eff)=>{
                 eff.EffectType.setOpenLock()
@@ -178,7 +178,7 @@ export class Profession {
                 .AsRawEffect()
                 .BasePoints.set(-1)
                 .PointsPerLevel.set(5)
-                .Radius.cloneModify(x=>x.set(2,0,2))
+                .Radius.modRefCopy(x=>x.set(2,0,2))
                 .ChainAmplitude.set(1)
             })
             .Effects.modFree((eff)=>{
@@ -209,7 +209,7 @@ export class Profession {
 
     SetCastTime(base: number, perLevel: number = 0, minimum: number = base) {
         for(let i=1;i<this.GetHighestRank();++i) {
-            this.getSkillRank(i).CastTime.cloneModify(x=>x.set(base,perLevel,minimum));
+            this.getSkillRank(i).CastTime.modRefCopy(x=>x.set(base,perLevel,minimum));
         }
         return this;
     }

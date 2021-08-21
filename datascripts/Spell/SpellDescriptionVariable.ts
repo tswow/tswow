@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariablesRow> {
     clear(): this {
@@ -44,7 +44,7 @@ export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariabl
     }
 }
 
-export class SpellDescriptionVariablePointer<T> extends Pointer<T,SpellDescriptionVariable> {
+export class SpellDescriptionVariablePointer<T> extends Ref<T,SpellDescriptionVariable> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

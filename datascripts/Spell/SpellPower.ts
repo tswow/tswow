@@ -19,7 +19,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { SpellRuneCostRow } from "wotlkdata/dbc/types/SpellRuneCost";
 
 export const PowerTypeMap = {
@@ -64,7 +64,7 @@ export class Power<T> extends CellSystem<T> {
     }
 }
 
-export class SpellRuneCostPointer extends Pointer<Spell,SpellRuneCostRow> {
+export class SpellRuneCostPointer extends Ref<Spell,SpellRuneCostRow> {
     protected exists(): boolean {
         return this.cell.get() != 0;
     }

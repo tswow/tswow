@@ -3,7 +3,7 @@ import { Ids } from "../Misc/Ids";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class CameraShakeType<T> extends EnumCellWrapper<T> {
     @EnumField(0)
@@ -35,7 +35,7 @@ export class CameraShakes extends MainEntity<CameraShakesRow> {
     get ID() { return this.row.ID.get(); }
 }
 
-export class CameraShakePointer<T> extends Pointer<T,CameraShakes> {
+export class CameraShakePointer<T> extends Ref<T,CameraShakes> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

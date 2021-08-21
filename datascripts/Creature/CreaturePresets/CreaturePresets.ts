@@ -8,15 +8,14 @@ export const CreaturePresets = {
         return CreatureTemplates.create(mod,id)
             .Name.enGB.set(trainerName)
             .Subname.enGB.set(trainerName)
-            .Gossip.set(0)
+            .Gossip.setRefID(0)
             .NPCFlags.Trainer.mark()
-            .Trainer.cloneModify((trainer)=>{
+            .Trainer.modRefCopy((trainer)=>{
                 trainer
                     .Greeting.enGB.set(
                         `Ready for some training, ${cls.Name.enGB.get()}?`
                     )
                     .Class.set(classId)
             })
-            .end
     }
 }

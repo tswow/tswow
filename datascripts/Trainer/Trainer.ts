@@ -21,7 +21,7 @@ import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Spells } from "../Spell/Spells";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { Ids } from "../Misc/Ids";
 
 export class TrainerLoc extends SQLLocSystem<Trainer> {
@@ -68,7 +68,7 @@ export class Trainer extends MainEntity<trainerRow> {
     }
 }
 
-export class TrainerPointer<T> extends Pointer<T,Trainer> {
+export class TrainerPointer<T> extends Ref<T,Trainer> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

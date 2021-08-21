@@ -5,7 +5,7 @@ import { Ids } from "../Misc/Ids";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class VisualScale<T> extends CellSystem<T> {
     @Transient
@@ -50,7 +50,7 @@ export class SpellVisualEffect extends MainEntity<SpellVisualEffectNameRow> {
     }
 }
 
-export class SpellVisualEffectPointer<T> extends Pointer<T,SpellVisualEffect> {
+export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

@@ -3,7 +3,7 @@ import { DBC } from "wotlkdata";
 import { Loot } from "../Loot/Loot";
 import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export class MailTemplate extends MainEntity<MailTemplateRow> {
     get Body() { return this.wrapLoc(this.row.Body); }
@@ -12,7 +12,7 @@ export class MailTemplate extends MainEntity<MailTemplateRow> {
     get Loot() { return Loot.Mail.load(this.ID)}
 }
 
-export class MailTemplatePointer<T> extends Pointer<T,MailTemplate> {
+export class MailTemplatePointer<T> extends Ref<T,MailTemplate> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

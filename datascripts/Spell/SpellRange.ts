@@ -16,7 +16,7 @@
  */
 import { loc_constructor } from "wotlkdata/primitives";
 import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 import { DBC } from "../../../../bin/scripts/tswow/wotlkdata/dbc/DBCFiles";
 import { Ids } from "../Misc/Ids";
@@ -66,7 +66,7 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
     }
 }
 
-export class SpellRangePointer<T> extends Pointer<T,SpellRange> {
+export class SpellRangePointer<T> extends Ref<T,SpellRange> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

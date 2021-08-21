@@ -166,7 +166,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
 
     addTrainerSpell(spellId: number, cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
         this.NPCFlags.Trainer.mark();
-        this.Trainer.modify((t=>t.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities)));
+        this.Trainer.modRef((t=>t.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities)));
         return this;
     }
 

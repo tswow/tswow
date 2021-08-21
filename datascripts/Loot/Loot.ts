@@ -19,7 +19,7 @@ import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { Pointer } from "../Refs/Pointer";
+import { Ref } from "../Refs/Ref";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;
@@ -77,7 +77,7 @@ export class LootSet extends CellSystemTop {
     }
 }
 
-export class LootSetPointer<T> extends Pointer<T,LootSet>{
+export class LootSetPointer<T> extends Ref<T,LootSet>{
     protected table: LootTable;
     protected gen: AutoIdGenerator;
     constructor(owner: T, cell: Cell<number,any>, table: LootTable, gen: AutoIdGenerator) {
