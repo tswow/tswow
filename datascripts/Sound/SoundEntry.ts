@@ -31,25 +31,7 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
             .SoundType.set(0)
             .Volume.set(0)
 
-        if(this.row.SoundEntriesAdvancedID.get() > 0) {
-            this.RandomOffsetRange.set(0)
-                .OuterRadius.set(0)
-                .OuterRadius2D.set(0)
-                .OutsideAngle.set(0)
-                .OutsideVolume.set(0)
-                .InsideAngle.set(0)
-                .InnerRadius.set(0)
-                .TimeA.set(0)
-                .TimeB.set(0)
-                .TimeC.set(0)
-                .TimeD.set(0)
-                .TimeIntervalMax.set(0)
-                .TimeIntervalMin.set(0)
-                .TimeToDuck.set(0)
-                .TimeToUnduck.set(0)
-                .Usage.set(0)
-                .VolumeSliderCategory.set(0)
-        }
+        this.row.SoundEntriesAdvancedID.set(0);
         return this;
     }
 
@@ -205,6 +187,8 @@ export const SoundEntryRegistry = {
         sound
             .Name.set(`SoundEntry${sound.row.ID.get()}`)
             .DirectoryBase.set(directoryBase)
+            .MinDistance.set(8)
+            .DistanceCutoff.set(45)
             .Volume.set(volume);
         sounds.forEach(x=>{
             sound.Files.add(x,frequency)
