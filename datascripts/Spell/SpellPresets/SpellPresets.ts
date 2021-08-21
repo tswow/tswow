@@ -23,9 +23,10 @@ export const SpellPresets = {
             .Name.enGB.set('Summon Spell')
             .Description.enGB.set('Summons a <?> to do your bidding.')
             .Effects
-                .modifyTemplate(0,
-                    eff=>eff.setSummonPet().SummonedCreature.set(summonedCreature))
-            .end
+                .mod(0,
+                    eff=>eff.EffectType.setSummonPet()
+                            .SummonedCreature.set(summonedCreature)
+                    )
     },
     CreateChain(mod: string, id: string) { 
         return Spells.create(mod,id,421)
@@ -56,6 +57,6 @@ export const SpellPresets = {
             .Name.enGB.set('Shapeshift Spell')
             .Description.enGB.set('A druid-like shapeshifting spell')
             .Effects.clear(1)
-            .Effects.modify(0,eff=>eff.MiscValueA.set(shapeshiftId))
+            .Effects.mod(0,eff=>eff.MiscValueA.set(shapeshiftId))
     },
 }

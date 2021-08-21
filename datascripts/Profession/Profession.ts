@@ -67,7 +67,7 @@ export class Profession {
             for(let j=0;j<3;++j) {
                 if(ef.Effects.isEffectType(j,47)) {
                     if(!value) {
-                        ef.Effects.modify(j,e=>e.EffectType.set(0))
+                        ef.Effects.mod(j,e=>e.EffectType.set(0))
                         break;
                     } else {
                         continue loop1;
@@ -109,7 +109,7 @@ export class Profession {
             this._ApprenticeSpell = std.Spells.create(modid,`${id}_spell_1`,BS_SPELLS[0])
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.modify(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
+                .Effects.mod(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
                 .Visual.set(0)
                 .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
                     sla.RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
@@ -121,8 +121,8 @@ export class Profession {
             this._ApprenticeLearnSpell = std.Spells.create(modid,`${id}_learn_spell`,2020)
                 .Name.enGB.set(this.skillLine.Name.enGB.get())
                 .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.modify(0,(eff)=>eff.TriggerSpell.set((this._ApprenticeSpell as Spell).ID))
-                .Effects.modify(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
+                .Effects.mod(0,(eff)=>eff.TriggerSpell.set((this._ApprenticeSpell as Spell).ID))
+                .Effects.mod(1,(eff)=>eff.MiscValueA.set(this.skillLine.ID))
 
             SQL.spell_ranks.add((this._ApprenticeSpell as Spell).ID,1,
                 {spell_id: (this._ApprenticeSpell as Spell).ID})
@@ -133,7 +133,7 @@ export class Profession {
             catch(err) {
                 let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
                     .Name.enGB.set(this.skillLine.Name.enGB.get())
-                    .Effects.modify(1,e=>e.MiscValueA.set(this.skillLine.ID))
+                    .Effects.mod(1,e=>e.MiscValueA.set(this.skillLine.ID))
                     .Visual.set(0)
                     .SkillLines.add(this.skillLine.ID,-1,(sla)=>{
                         sla
@@ -171,7 +171,7 @@ export class Profession {
             .SkillLines.add(this.ID)
             .CastTime.cloneModify((x)=>x.set(speed,0,speed))
             .RequiredTotems.setIndex(0,totem)
-            .Effects.add((eff)=>{
+            .Effects.modFree((eff)=>{
                 eff.EffectType.setOpenLock()
                 .TargetA.setGameobjectTarget()
                 .LockType.set(lockType)
@@ -181,7 +181,7 @@ export class Profession {
                 .Radius.cloneModify(x=>x.set(2,0,2))
                 .ChainAmplitude.set(1)
             })
-            .Effects.add((eff)=>{
+            .Effects.modFree((eff)=>{
                 eff.EffectType.setSkill()
                 .AsRawEffect()
                 .MiscValueA.set(this.ID)

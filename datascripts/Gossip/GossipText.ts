@@ -242,13 +242,13 @@ export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {
     }
 
     addGendered(male: loc_constructor, female: loc_constructor, lang: number, emote = 0, emoteDelay = 0) {
-        const entry = this.getFree();
-        entry.MaleText.set(male);
-        entry.FemaleText.set(female);
-        entry.Lang.set(lang);
-        entry.Emote.set(emote);
-        entry.EmoteDelay.set(emoteDelay);
-        entry.Probability.set(1);
+        this.getFree()
+            .MaleText.set(male)
+            .FemaleText.set(female)
+            .Lang.set(lang)
+            .Emote.set(emote)
+            .EmoteDelay.set(emoteDelay)
+            .Probability.set(1)
         return this.owner;
     }
 

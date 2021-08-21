@@ -81,7 +81,7 @@ export const TotemCreatures = {
         }
 
         const spell = Spells.create(mod, id, 2484)
-            .Effects.modify(0,eff=>{
+            .Effects.mod(0,eff=>{
                 eff.MiscValueA.set(creature)
                    .MiscValueB.set(created[slot])
                    .ImplicitTargetA.set(41+slot)
@@ -101,7 +101,7 @@ export const TotemCreatures = {
 
             for(const controller of controllers) {
                 const spell = Spells.create(mod, id+'_'+controller.toLowerCase())
-                    .Effects.add(eff=>
+                    .Effects.modFree(eff=>
                         eff.EffectType.setControlTotemCreature()
                             .AsRawEffect()
                             .MiscValueA.set(bitmask

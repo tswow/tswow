@@ -31,7 +31,7 @@ export class RecipeOutputItem extends CellSystem<ProfessionRecipe> {
     }
 
     set(item: number) {
-        this.owner.spell.Effects.modify(0,eff=>eff.ItemType.set(item))
+        this.owner.spell.Effects.mod(0,eff=>eff.ItemType.set(item))
         this.owner.spell.Name.enGB.set(std.Items.load(item).Name.enGB.get());
         return this.owner;
     }
