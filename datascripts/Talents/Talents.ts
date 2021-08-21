@@ -20,7 +20,7 @@ import { Ids } from "../Misc/Ids";
 import { TalentTree } from "./TalentTree";
 
 export const TalentTrees = {
-    create(mod: string, name: string, tabIndex: 0|1|2|3, classes: number[]) {
+    create(mod: string, name: string, tabIndex: number, classes: number[]) {
         return new TalentTree(DBC.TalentTab.add(Ids.TalentTab.id(mod, name))
             .OrderIndex.set(tabIndex)
             .ClassMask.set(classes.reduce((p,c)=>p|(1<<(c-1)),0)))
