@@ -32,6 +32,7 @@ export class SoundEntryFiles extends ArraySystem<SoundEntryFile, SoundEntry> {
     }
 
     add(filename: string, frequency: number = 1) {
-        return this.getFree().set(filename,frequency);
+        this.getFree().set(filename,frequency);
+        return this.owner;
     }
 }

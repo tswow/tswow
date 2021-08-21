@@ -15,9 +15,6 @@ export class SoundEntryName extends CellSystem<SoundEntry> {
 
     set(value: string) {
         this.owner.row.Name.set(value);
-        if(this.owner.row.SoundEntriesAdvancedID.get()!=0) {
-            this.owner.advanced_row.Name.set(value);
-        }
         return this.owner;
     }
 }
@@ -40,7 +37,7 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
     }
 
     get SoundType() { return new SoundType(this, this.row.SoundType); }
-    get Name(): SoundEntryName { return new SoundEntryName(this); }
+    get Name() { return this.wrap(this.row.Name); }
     get Files(): SoundEntryFiles { return new SoundEntryFiles(this); }
     get DirectoryBase() { return this.wrap(this.row.DirectoryBase); }
     get Volume() { return this.wrap(this.row.Volumefloat); }
