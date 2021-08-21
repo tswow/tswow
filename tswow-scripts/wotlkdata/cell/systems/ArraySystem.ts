@@ -46,11 +46,12 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
     }
 
     abstract get length(): number;
-    modify(index: number, callback: (value: A)=>void): T {
+    mod(index: number, callback: (value: A)=>void): T {
         callback(this.get(index));
         return this.owner;
     }
-    protected abstract get(index: number): A;
+
+    abstract get(index: number): A;
 
     objectify() {
         const values: any[] = [];
@@ -63,10 +64,6 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
             }
         }
         return values;
-    }
-
-    static get<T,A extends ArrayEntry<T>>(system: ArraySystem<A,T>, index: number): A {
-        return system.get(index);
     }
 }
 
