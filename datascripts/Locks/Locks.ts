@@ -3,6 +3,7 @@ import { DBC } from "wotlkdata"
 import { Ids } from "../Misc/Ids"
 import { SimpleLock } from "./SimpleLock"
 import { TopCell } from "../Refs/SharedRef";
+import { LockTypeQuery } from "wotlkdata/dbc/types/LockType";
 
 function makeLock() {
     let lock = DBC.Lock.add(Ids.Lock.id());
@@ -15,20 +16,27 @@ function makeLock() {
     return lock;
 }
 
+export const LockTypes = {
+    filter(query: LockTypeQuery) {
+        return DBC.LockType.filter(query).map(row=>new LockType(row));
+    },
+
+    load(id: number) {
+        return new LockType(DBC.LockType.findById(id));
+    },
+
+    create() {
+        return new LockType(DBC.LockType.add(Ids.LockType.id()))
+    }
+}
+
 export const Locks = {
-
-    
-
     loadLock(id: number) {
         return new SimpleLock(DBC.Lock.findById(id),[new TopCell(id)]);
     },
 
     loadType(id: number) {
         return new LockType(DBC.LockType.findById(id));
-    },
-
-    createType() {
-        return new LockType(DBC.LockType.add(Ids.LockType.id()))
     },
 
     createItem(item: number) {

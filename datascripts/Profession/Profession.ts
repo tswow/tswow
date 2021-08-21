@@ -7,7 +7,6 @@ import { ProfessionTier, resolveProfessionTier, isTradeskillSpell } from "./Prof
 import { ProfessionNameSystem } from "./ProfessionName";
 import { ProfessionRecipe } from "./ProfessionRecipe";
 import { GatheringSpell } from "./GatheringSpell";
-import { Locks } from "../Locks/Locks";
 import { LockType } from "../Locks/LockType";
 import { GameObjectTemplates } from "../GameObject/GameObjects";
 
@@ -85,15 +84,6 @@ export class Profession {
         this.skillLine.CanLink.set(1);
     }
 
-    get LockType() {
-        if(this._LockType!==undefined) {
-            return this._LockType;
-        }
-        this._LockType = Locks.createType()
-            .Name.enGB.set(this.Name.enGB.get())
-        return this._LockType;
-    }
-
     addRecipe(mod: string, id: string) {
         return new ProfessionRecipe(this,std.Spells.create(mod,id,3492)
                 .SkillLines.add(this.ID).end)
@@ -102,15 +92,12 @@ export class Profession {
             .Totems.clearAll()
     }
 
-    addGatheringNode(mod: string, name: string, levelNeeded: number) {
-        return GameObjectTemplates.create(mod,name).setChest()
+    addGatheringNode(mod: string, name: string, lockType: LockType, levelNeeded: number) {
+        let lock = std.Locks.createTypeInstance(lockType.ID,levelNeeded)
+        return GameObjectTemplates.create(mod,name)
+            .setChest()
             .IsConsumable.set(1)
-            .Lock
-                .Index.set(this.LockType.ID)
-                .Type.setLockType()
-                .Skill.set(levelNeeded)
-                .Action.set(0)
-            .end
+            .Lock.setID(lock.ID)
     }
 
     addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
