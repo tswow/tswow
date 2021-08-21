@@ -67,7 +67,7 @@ export class ItemObjectives extends ArraySystem<ItemObjective, Quest> {
         return 6;
     }
 
-    protected get(index: number): ItemObjective {
+    get(index: number): ItemObjective {
         return new ItemObjective(this.owner, index);
     }
 
@@ -115,7 +115,7 @@ export class NpcGoObjectives extends ArraySystem<NpcGoObjective,Quest> {
         return 4;
     }
 
-    protected get(index: number): NpcGoObjective {
+    get(index: number): NpcGoObjective {
         return new NpcGoObjective(this.owner, index);
     }
 
@@ -162,7 +162,7 @@ export class ReputationObjectives extends ArraySystem<ReputationObjective,Quest>
         return 2;
     }
 
-    protected get(index: number): ReputationObjective {
+    get(index: number): ReputationObjective {
         return new ReputationObjective(this.owner, index);
     }
 

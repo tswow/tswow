@@ -63,7 +63,7 @@ export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
         return 3;
     }
 
-    protected get(index: number): TalentRequirement {
+    get(index: number): TalentRequirement {
         return new TalentRequirement(this.owner, index);
     }
 

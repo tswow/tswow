@@ -93,8 +93,13 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         return this.owner;
     }
 
-    protected get(index: number) {
+    get(index: number) {
         return new SpellEffect(this.owner, index);
+    }
+
+    modify(index: number, callback: (eff: SpellEffect)=>void) {
+        callback(this.get(index));
+        return this.owner;
     }
 
     modifyTemplate(index: number, callback: (eff: SpellEffectType)=>void) {

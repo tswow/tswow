@@ -203,7 +203,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
         return 10;
     }
 
-    protected get(index: number) {
+    get(index: number) {
         return new ItemStat(this.owner, index);
     }
 

@@ -57,7 +57,7 @@ export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArr
         return this.owner;
     }
 
-    protected get(index: number): SingleArrayEntry<D,T> {
+    get(index: number): SingleArrayEntry<D,T> {
         return new SingleArrayEntry(this.owner,index,this.array, this.clearValue);
     }
 

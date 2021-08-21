@@ -63,7 +63,7 @@ export class ItemChoiceRewards extends ArraySystem<ItemChoiceReward,Quest> {
         return 6;
     }
 
-    protected get(index: number): ItemChoiceReward {
+    get(index: number): ItemChoiceReward {
         return new ItemChoiceReward(this.owner, index);
     }
 
@@ -113,7 +113,7 @@ export class ItemRewards extends ArraySystem<ItemReward,Quest> {
         return 4;
     }
 
-    protected get(index: number): ItemReward {
+    get(index: number): ItemReward {
         return new ItemReward(this.owner,index);
     }
 
@@ -171,7 +171,7 @@ export class ReputationRewards extends ArraySystem<ReputationReward,Quest> {
         return 5;
     }
 
-    protected get(index: number): ReputationReward{
+    get(index: number): ReputationReward{
         return new ReputationReward(this.owner, index);
     }
 

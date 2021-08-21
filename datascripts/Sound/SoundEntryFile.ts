@@ -27,7 +27,7 @@ export class SoundEntryFiles extends ArraySystem<SoundEntryFile, SoundEntry> {
         return 10;
     }
 
-    protected get(index: number): SoundEntryFile {
+    get(index: number): SoundEntryFile {
         return new SoundEntryFile(this.owner, index);
     }
 

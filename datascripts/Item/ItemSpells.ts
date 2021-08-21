@@ -112,7 +112,7 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
 }
 
 export class ItemSpells extends ArraySystem<ItemSpell, ItemTemplate> {
-    protected get(index: number): ItemSpell {
+    get(index: number): ItemSpell {
         return new ItemSpell(this.owner, index);
     }
 

@@ -25,7 +25,7 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         return 4;
     }
 
-    protected get(index: number): FactionReputation {
+    get(index: number): FactionReputation {
         return new FactionReputation(this.owner, index);
     }
 

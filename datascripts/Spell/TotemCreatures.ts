@@ -108,32 +108,32 @@ export const TotemCreatures = {
                     ))
                 switch(controller) {
                     case 'Aggressive':
-                        ArraySystem.get(spell.Effects,0).MiscValueB.set(2)
+                        spell.Effects.get(0).MiscValueB.set(2)
                         controlOut.Aggressive = 
                             spell.Icon.set('Interface\\Icons\\Ability_Racial_BloodRage.blp')
                         break
                     case 'Attack':
-                        ArraySystem.get(spell.Effects,0).MiscValueB.set(5)
+                        spell.Effects.get(0).MiscValueB.set(5)
                         controlOut.Attack = 
                             spell.Icon.set('Interface\\Icons\\Ability_GhoulFrenzy.blp')
                         break
                     case 'Defensive':
-                        ArraySystem.get(spell.Effects,0).MiscValueB.set(1)
+                        spell.Effects.get(0).MiscValueB.set(1)
                         controlOut.Defensive = 
                             spell.Icon.set('Interface\\Icons\\Ability_Defend.blp')
                         break
                     case 'Follow':
-                        ArraySystem.get(spell.Effects,0).MiscValueB.set(4)
+                        spell.Effects.get(0).MiscValueB.set(4)
                         controlOut.Follow = 
                             spell.Icon.set('Interface\\Icons\\Ability_Tracking.blp')
                         break
                     case 'Passive':
-                        ArraySystem.get(spell.Effects,0).MiscValueB.set(0)
+                        spell.Effects.get(0).MiscValueB.set(0)
                         controlOut.Passive = 
                             spell.Icon.set('Interface\\Icons\\AbilitySeal.blp')
                         break
                     case 'Stay':
-                        ArraySystem.get(spell.Effects,0).MiscValueB.set(0)
+                        spell.Effects.get(0).MiscValueB.set(3)
                         controlOut.Stay = 
                             spell.Icon.set('Interface\\Icons\\Spell_Nature_TimeStop.blp')
                         break

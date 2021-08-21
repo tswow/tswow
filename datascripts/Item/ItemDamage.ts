@@ -70,7 +70,7 @@ export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
     get length(): number {
         return 2;
     }
-    protected get(index: number): ItemDamage {
+    get(index: number): ItemDamage {
         return new ItemDamage(this.owner, index);
     }
 

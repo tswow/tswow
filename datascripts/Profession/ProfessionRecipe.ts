@@ -37,7 +37,7 @@ export class RecipeOutputItem extends CellSystem<ProfessionRecipe> {
     }
 
     get() {
-        return ArraySystem.get(this.owner.spell.Effects,0).ItemType.get();
+        return this.owner.spell.Effects.get(0).ItemType.get();
     }
 }
 
@@ -55,7 +55,7 @@ export class ProfessionRecipe extends CellSystem<Profession> {
     /**
      * Set to desired item count -1 (i.e. set to 199 for 200, or 0 for 1)
      */
-    get OutputCount() { return this.wrap(ArraySystem.get(this.spell.Effects,0).BasePoints); }
+    get OutputCount() { return this.wrap(this.spell.Effects.get(0).BasePoints); }
     get OutputItem() { return new RecipeOutputItem(this); }
     get Ranks() { return new RecipeRank(this, this.spell); }
     get Reagents() { return new SpellReagents(this, this.spell); }

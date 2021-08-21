@@ -83,7 +83,7 @@ export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
         return 3;
     }
 
-    protected get(index: number): ItemSocket {
+    get(index: number): ItemSocket {
         return new ItemSocket(this.owner, index);
     }
 
