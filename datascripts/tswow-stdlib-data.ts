@@ -38,7 +38,7 @@ import { LoadingScreens } from "./Map/LoadingScreen";
 import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
 import { TSImages } from "./Images/Image";
 import { Professions } from "./Profession/Professions";
-import { Locks } from "./Locks/Locks";
+import { Locks, LockTypes } from "./Locks/Locks";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
 import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { MailTemplateRegistry } from "./Mail/MailTemplate";
@@ -80,6 +80,7 @@ export const std = {
     Image: TSImages,
     Professions: Professions,
     Locks: Locks,
+    LockTypes: LockTypes,
     ZoneMusic: ZoneMusicRegistry,
     SoundEntries: SoundEntryRegistry,
     MailTemplates: MailTemplateRegistry
