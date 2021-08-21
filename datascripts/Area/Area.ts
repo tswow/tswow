@@ -16,6 +16,7 @@
  */
 import { AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
 import { MainEntity } from "../Misc/Entity";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { ZoneMusicPointer } from "../Sound/ZoneMusic";
 
 export class Area extends MainEntity<AreaTableRow> {
@@ -23,9 +24,9 @@ export class Area extends MainEntity<AreaTableRow> {
     get ID() { return this.row.ID.get(); }
     get MapID() { return this.wrap(this.row.MapID); }
     get ParentArea() { return this.wrap(this.row.ParentAreaID); }
-    get Sound() { return this.wrap(this.row.SoundProviderPref)}
-    get SoundUnderwater() { return this.wrap(this.row.SoundProviderPrefUnderwater)}
-    get SoundAmbience() { return this.wrap(this.row.AmbienceID)}
+    get Sound() { return new SoundEntryPointer(this, this.row.SoundProviderPref)}
+    get SoundUnderwater() { return new SoundEntryPointer(this, this.row.SoundProviderPrefUnderwater)}
+    get SoundAmbience() { return new SoundEntryPointer(this, this.row.AmbienceID)}
     get ZoneMusic() { return new ZoneMusicPointer(this, this.row.ZoneMusic); }
     get IntroMusic() { return this.wrap(this.row.IntroSound)}
     get ExplorationLevel() { return this.wrap(this.row.ExplorationLevel); }
