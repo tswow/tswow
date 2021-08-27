@@ -18,7 +18,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Pos, Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 
-export class CreaturePosition<T> extends CellSystem<CreatureInstance<T>> {
+export class CreaturePosition extends CellSystem<CreatureInstance> {
     get Map() { return this.ownerWrap(this.owner.row.map); }
     get X() { return this.ownerWrap(this.owner.row.position_x); }
     get Y() { return this.ownerWrap(this.owner.row.position_y); }

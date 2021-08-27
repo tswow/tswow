@@ -21,16 +21,16 @@ import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 
-export class CreatureInstance<T> extends CellSystem<T> {
+export class CreatureInstance extends CellSystemTop {
 
     @Transient
     readonly row: creatureRow;
 
-    constructor(owner: T, row: creatureRow) {
-        super(owner);
+    constructor(row: creatureRow) {
+        super();
         this.row = row;
     }
 
@@ -51,23 +51,20 @@ export class CreatureInstance<T> extends CellSystem<T> {
     get GUID() { return this.row.guid.get(); }
     get TemplateID() { return this.wrap(this.row.id); }
     get Map() { return this.wrap(this.row.map); }
-    get SpawnMask(): CreatureSpawnMask<T> {
+    get SpawnMask() {
         return new CreatureSpawnMask(this, this.row.spawnMask);
     }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     /** If 0, use a random model from CreatureTemplate#Models */
     get ModelID() { return this.wrap(this.row.modelid); }
-    get Position(): CreaturePosition<T> {
-        return new CreaturePosition(this);
-    }
-
+    get Position() { return new CreaturePosition(this); }
     /** Respawn time in seconds */
     get SpawnTime() { return this.wrap(this.row.spawntimesecs); }
     get WanderDistance() { return this.wrap(this.row.wander_distance)}
 
     get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
 
-    get PatrolPath(): CreaturePatrolPath<T> {
+    get PatrolPath() {
         return new CreaturePatrolPath(this);
     }
 }

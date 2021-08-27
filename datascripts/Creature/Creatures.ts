@@ -84,7 +84,6 @@ export const CreatureTemplates = {
 export const CreatureInstances = {
     create(mod: string, name: string, template: number, position: Position) {
         return new CreatureInstance(
-            undefined,
             SQL.creature.add(Ids.CreatureInstance.id(mod, name))
                 .curhealth.set(1)
                 .curmana.set(0)
@@ -101,10 +100,10 @@ export const CreatureInstances = {
     },
 
     filter(query: creatureQuery) {
-        return SQL.creature.filter(query).map(x=>new CreatureInstance(undefined,x));
+        return SQL.creature.filter(query).map(x=>new CreatureInstance(x));
     },
 
     load(id: number) {
-        return new CreatureInstance(undefined, SQL.creature.find({guid: id}));
+        return new CreatureInstance(SQL.creature.find({guid: id}));
     }
 }

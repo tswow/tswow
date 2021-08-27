@@ -15,9 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell"
-import { CreatureInstance } from "./CreatureInstance";
 
-export class CreatureSpawnMask<T> extends MaskCell32<CreatureInstance<T>> {
+export class CreatureSpawnMask<T> extends MaskCell32<T> {
     get Normal10Man() { return this.bit(0); }
     get Normal25Man() { return this.bit(1); }
     get Heroic10Man() { return this.bit(2); }
