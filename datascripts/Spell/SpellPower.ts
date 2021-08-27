@@ -115,7 +115,7 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's mana cost per second for each level
      */
     setMana(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.spell.row.PowerType.set(0);
+        this.spell.row.PowerType.set('MANA');
         this.spell.row.ManaCost.set(baseCost);
         this.spell.row.ManaCostPct.set(costPct);
         this.spell.row.ManaCostPerLevel.set(perLevel);
@@ -133,7 +133,7 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's energy cost per second for each level
      */
     setEnergy(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.spell.row.PowerType.set(3);
+        this.spell.row.PowerType.set('ENERGY');
         this.spell.row.ManaCost.set(baseCost);
         this.spell.row.ManaCostPct.set(costPct);
         this.spell.row.ManaCostPerLevel.set(perLevel);
@@ -151,7 +151,7 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's rage cost per second for each level
      */
     setRage(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.spell.row.PowerType.set(1);
+        this.spell.row.PowerType.set('RAGE');
         this.spell.row.ManaCost.set(baseCost*10);
         this.spell.row.ManaCostPct.set(costPct);
         this.spell.row.ManaCostPerLevel.set(perLevel*10);
