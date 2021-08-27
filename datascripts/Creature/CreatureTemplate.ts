@@ -174,8 +174,8 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
         return CreatureInstances.create(mod, id, this.ID, pos);
     }
 
-    spawnMod(mod: string, id: string, callback: (instance: CreatureInstance)=>void) {
-        callback(CreatureInstances.create(mod,id,this.ID,{x:0,y:0,z:0,map:0,o:0}))
+    spawnMod(mod: string, id: string, pos: Position, callback: (instance: CreatureInstance)=>void = ()=>{}) {
+        callback(this.spawn(mod,id,pos));
         return this;
     }
 
