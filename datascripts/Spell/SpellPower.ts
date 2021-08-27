@@ -108,14 +108,14 @@ export class SpellPower<T> extends CellSystem<T> {
 
     /**
      * Sets this spell to use mana
-     * @param baseCost 
-     * @param costPct 
-     * @param perLevel 
-     * @param perSecondBase 
-     * @param perSecondPerLevel 
+     * @param baseCost {number} Defines the spell's base mana cost
+     * @param costPct {number} Defines a percentage of the user's max mana as cost (i.e. 10% of maximum mana)
+     * @param perLevel {number} Increases the spell's mana cost for each level
+     * @param perSecondBase {number} Defines a base mana cost per second
+     * @param perSecondPerLevel {number} Increases the spell's mana cost per second for each level
      */
-    setMana(baseCost: number, costPct = 0, perLevel = 0, perSecondBase = 0, perSecondPerLevel = 0) {
-        this.PowerType.set('MANA');
+    setMana(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
+        this.spell.row.PowerType.set(0);
         this.spell.row.ManaCost.set(baseCost);
         this.spell.row.ManaCostPct.set(costPct);
         this.spell.row.ManaCostPerLevel.set(perLevel);
@@ -126,21 +126,37 @@ export class SpellPower<T> extends CellSystem<T> {
 
     /**
      * Sets this spell to use energy
-     * @param energy 
+     * @param baseCost {number} Defines the spell's base energy cost
+     * @param costPct {number} Defines a percentage of the user's max energy as cost (i.e. 10% of maximum energy)
+     * @param perLevel {number} Increases the spell's energy cost for each level
+     * @param perSecondBase {number} Defines a base energy cost per second
+     * @param perSecondPerLevel {number} Increases the spell's energy cost per second for each level
      */
-    setEnergy(energy: number) {
-        this.PowerType.set('ENERGY');
-        this.spell.row.ManaCost.set(energy);
+    setEnergy(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
+        this.spell.row.PowerType.set(3);
+        this.spell.row.ManaCost.set(baseCost);
+        this.spell.row.ManaCostPct.set(costPct);
+        this.spell.row.ManaCostPerLevel.set(perLevel);
+        this.spell.row.ManaPerSecond.set(perSecondBase);
+        this.spell.row.ManaPerSecondPerLevel.set(perSecondPerLevel);
         return this.owner;
     }
 
     /**
      * Set this spell to use rage
-     * @param rage
+     * @param baseCost {number} Defines the spell's base rage cost
+     * @param costPct {number} Defines a percentage of the user's max rage as cost (i.e. 10% of maximum rage)
+     * @param perLevel {number} Increases the spell's rage cost for each level
+     * @param perSecondBase {number} Defines a base rage cost per second
+     * @param perSecondPerLevel {number} Increases the spell's rage cost per second for each level
      */
-    setRage(rage: number) {
+    setRage(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
         this.spell.row.PowerType.set(1);
-        this.spell.row.ManaCost.set(rage*10);
+        this.spell.row.ManaCost.set(baseCost*10);
+        this.spell.row.ManaCostPct.set(costPct);
+        this.spell.row.ManaCostPerLevel.set(perLevel*10);
+        this.spell.row.ManaPerSecond.set(perSecondBase*10);
+        this.spell.row.ManaPerSecondPerLevel.set(perSecondPerLevel*10);
         return this.owner;
     }
 }
