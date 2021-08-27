@@ -58,4 +58,12 @@ export class SpellCastTimePointer<T> extends Ref<T, SpellCastTime> {
     protected resolve(): SpellCastTime {
         return new SpellCastTime(DBC.SpellCastTimes.findById(this.cell.get()));
     }
+
+    setNewSimple(base: number, perLevel: number = 0, minimum: number = 0) {
+        this.getRefCopy()
+            .Base.set(base)
+            .PerLevel.set(perLevel)
+            .Minimum.set(minimum)
+        return this.owner;
+    }
 }

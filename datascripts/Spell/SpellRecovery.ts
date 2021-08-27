@@ -33,7 +33,7 @@ export class SpellRecovery<T> extends CellSystem<T> {
     get StartTime() { return this.ownerWrap(this.spell.row.StartRecoveryTime); }
     get StartCategory() { return this.ownerWrap(this.spell.row.StartRecoveryCategory); }
 
-    set(time: number, categoryTime: number, startTime: number, startCategory: number) {
+    set(time: number, categoryTime: number = 0, startTime: number = 0, startCategory: number = 0) {
         this.Time.set(time);
         this.CategoryTime.set(categoryTime); 
         this.StartTime.set(startTime);
