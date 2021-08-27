@@ -27,38 +27,39 @@ export abstract class Ref<T,V extends CanObjectify> {
         return this.owner;
     }
 
-    // Do NOT add "owner" to this callback: it doesn't make sense
-    // when we're not creating a copy
-    modRef(callback: (value: V)=>void) {
-        let v: V;
-        if(!this.exists()) {
-            v = this.create();
-        } else {
-            v = this.resolve();
-        }
-        callback(v);
-        return this.owner;
+    protected setCreate() {
+        let v = this.create();
+        this.setRefID(this.id(v));
+        return v;
     }
 
     getRef() {
-        return this.resolve();
+        if(!this.exists()) {
+            return this.setCreate();
+        } else {
+            return this.resolve();
+        }
     }
 
     getRefCopy() {
-        this.setRefID(this.id(this.clone()))
-        return this.resolve();
+        if(!this.exists()) {
+            return this.setCreate();
+        } else {
+            let clone = this.clone();
+            this.setRefID(this.id(clone));
+            return clone;
+        }
+    }
+
+    // Do NOT add "owner" to this callback: it doesn't make sense
+    // when we're not creating a copy
+    modRef(callback: (value: V)=>void) {
+        callback(this.getRef());
+        return this.owner;
     }
 
     modRefCopy(callback: (value: V, owner : T)=>void) {
-        let v: V;
-        if(!this.exists()) {
-            v = this.create();
-            this.setRefID(this.id(v));
-        } else {
-            v = this.clone();
-            this.setRefID(this.id(v));
-        }
-        callback(v,this.owner);
+        callback(this.getRefCopy(), this.owner);
         return this.owner;
     }
 
