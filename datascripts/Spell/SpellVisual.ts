@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
@@ -31,13 +31,13 @@ import { SpellEffectCameraShakePointer } from "./SpellEffectCameraShakes";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 import { MainEntity } from "../Misc/Entity";
 import { Ref } from "../Refs/Ref";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 
-export class SpellVisualKitModelAttach<T> extends CellSystem<T> {
-
+export class SpellVisualKitModelAttach extends CellSystemTop {
     readonly row: SpellVisualKitModelAttachRow;
 
-    constructor(owner: T, row: SpellVisualKitModelAttachRow) {
-        super(owner);
+    constructor(row: SpellVisualKitModelAttachRow) {
+        super();
         this.row = row;
     }
 
@@ -49,24 +49,23 @@ export class SpellVisualKitModelAttach<T> extends CellSystem<T> {
     get Effect() { return new SpellVisualEffectPointer(this, this.row.SpellVisualEffectNameID) }
 }
 
-export class SpellVisualKitModels extends CellSystem<SpellVisualKit> {
+export class SpellVisualKitModels extends MultiRowSystem<SpellVisualKitModelAttach,SpellVisualKit> {
+    protected getAllRows(): SpellVisualKitModelAttach[] {
+        return DBC.SpellVisualKitModelAttach
+            .filter({ParentSpellVisualKitID:this.owner.row.ID.get()})
+            .map(x=>new SpellVisualKitModelAttach(x))
+    }
+    protected isDeleted(value: SpellVisualKitModelAttach): boolean {
+        return value.row.isDeleted();
+    }
     constructor(owner: SpellVisualKit) {
         super(owner);
     }
 
-    add() : SpellVisualKitModelAttach<SpellVisualKit> {
+    add() : SpellVisualKitModelAttach {
         let row = DBC.SpellVisualKitModelAttach.add(Ids.SpellVisualKitModelAttach.id())
         row.ParentSpellVisualKitID.set(this.owner.row.ID.get());
-        return new SpellVisualKitModelAttach(this.owner,row);
-    }
-
-    get() {
-        return DBC.SpellVisualKitModelAttach.filter({ParentSpellVisualKitID: this.owner.row.ID.get()})
-            .map(x=>new SpellVisualKitModelAttach(this.owner, x));
-    }
-
-    forEach(callback: (value: SpellVisualKitModelAttach<SpellVisualKit>)=>void) {
-        this.get().forEach(callback);
+        return new SpellVisualKitModelAttach(row);
     }
 }
 
@@ -87,8 +86,7 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
             .SpellEffects.clearAll()
             .StartAnimation.set(-1)
             .WorldEffect.setRefID(0)
-            // TODO: Actually remove the rows
-            .Models.forEach(x=>x.row.ParentSpellVisualKitID.set(0))
+            .Models.forEach(x=>x.row.delete())
         return this;
     }
 
@@ -129,7 +127,8 @@ export class SpellVisualKitPointer<T> extends Ref<T,SpellVisualKit> {
         return this.cell.get() > 0;
     }
     protected create(): SpellVisualKit {
-        return new SpellVisualKit(DBC.SpellVisualKit.findById(this.cell.get()),this.name);
+        return new SpellVisualKit(DBC.SpellVisualKit.add(Ids.SpellKit.id()),this.name)
+            .clear();
     }
     protected clone(): SpellVisualKit {
         return new SpellVisualKit(this.resolve().row.clone(Ids.SpellKit.id()),this.name);
@@ -142,13 +141,57 @@ export class SpellVisualKitPointer<T> extends Ref<T,SpellVisualKit> {
     }
 }
 
+export class MissileFollowGround extends CellSystem<SpellVisual> {
+    get Height() { return this.ownerWrap(this.owner.row.MissileFollowGroundHeight); }
+    get DropSpeed() { return this.ownerWrap(this.owner.row.MissileFollowGroundDropSpeed); }
+    get Approach() { return this.ownerWrap(this.owner.row.MissileFollowGroundApproach); }
+    get Flags() { return this.ownerWrap(this.owner.row.MissileFollowGroundFlags); }
+
+    set(height: number, dropSpeed: number, groundApproach: number, groundFlags: number) {
+        this.Height.set(height)
+        this.DropSpeed.set(dropSpeed);
+        this.Approach.set(groundApproach);
+        this.Flags.set(groundFlags);
+        return this.owner;
+    }
+}
+
+export class SpellVisualMissile extends CellSystem<SpellVisual> {
+    get DestinationAttachment() {
+        return this.ownerWrap(this.owner.row.MissileDestinationAttachment);
+    }
+    get Sound() {
+        return new SoundEntryPointer(this.owner, this.owner.row.MissileSound);
+    }
+    get FollowGround() { return new MissileFollowGround(this.owner); }
+    get HasMissile() { return this.ownerWrap(this.owner.row.HasMissile); }
+    get Model() { return new SpellVisualEffectPointer(this.owner, this.owner.row.MissileModel); }
+
+    get Attachment() { return this.ownerWrap(this.owner.row.MissileAttachment); }
+
+    get CastOffset() { 
+        return new Vec3(this.owner,
+            this.owner.row.MissileCastOffsetX,
+            this.owner.row.MissileCastOffsetY,
+            this.owner.row.MissileCastOffsetZ)
+    }
+
+    get ImpactOffset() { 
+        return new Vec3(this.owner,
+            this.owner.row.MissileImpactOffsetX,
+            this.owner.row.MissileImpactOffsetY,
+            this.owner.row.MissileImpactOffsetZ)
+    }
+}
+
 export class SpellVisual extends MainEntity<SpellVisualRow> {
     clear(): this {
         this.row
             .ImpactAreaKit.set(0)
             .ImpactKit.set(0)
             .InstantAreaKit.set(0)
-            .MissileAttachment.set(0)
+            .HasMissile.set(0)
+            .MissileAttachment.set(-1)
             .MissileCastOffsetX.set(0)
             .MissileCastOffsetY.set(0)
             .MissileCastOffsetZ.set(0)
@@ -209,22 +252,8 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
     get TargetImpactKit() { return this.kit("TargetImpact", this.row.TargetImpactKit); }
     get PersistentAreaKit() { return this.kit("PersistentArea", this.row.PersistentAreaKit); }
     get MissileTargetingKit() { return this.kit("MissileTargeting", this.row.MissileTargetingKit); }
-    get MissileModel() { return new SpellVisualEffectPointer(this, this.row.MissileModel); }
-    get MissileAttachment() { return this.ownerWrap(this.row.MissileAttachment); }
 
-    get MissileCastOffset() { 
-        return new Vec3(this.owner,
-            this.row.MissileCastOffsetX,
-            this.row.MissileCastOffsetY,
-            this.row.MissileCastOffsetZ)
-    }
-
-    get MissileImpactOffset() { 
-        return new Vec3(this.owner,
-            this.row.MissileImpactOffsetX,
-            this.row.MissileImpactOffsetY,
-            this.row.MissileImpactOffsetZ)
-    }
+    get Missile() { return new SpellVisualMissile(this); }
 
     cloneFromVisual(visualId: number) {
         let row = DBC.SpellVisual.findById(visualId).clone(Ids.SpellVisual.id());
@@ -242,7 +271,7 @@ export class SpellVisualPointer<T> extends Ref<T,SpellVisual> {
         return this.cell.get() > 0;
     }
     protected create(): SpellVisual {
-        return new SpellVisual(DBC.SpellVisual.add(Ids.SpellVisual.id()))
+        return new SpellVisual(DBC.SpellVisual.add(Ids.SpellVisual.id())).clear();
     }
     protected clone(): SpellVisual {
         return new SpellVisual(this.resolve().row.clone(Ids.SpellVisual.id()))

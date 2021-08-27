@@ -40,6 +40,7 @@ export class SpellVisualEffect extends MainEntity<SpellVisualEffectNameRow> {
     get Filename() { return this.wrap(this.row.FileName); }
     get AreaSize() { return this.wrap(this.row.AreaEffectSize); }
     get Scale() { return new VisualScale(this, this.row); }
+    get ID() { return this.row.ID.get(); }
 
     set(filename: string, areaSize: number, scale: number
         , scaleMin: number = scale, scaleMax: number = scale) {
@@ -65,6 +66,16 @@ export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
     }
     protected resolve(): SpellVisualEffect {
         return new SpellVisualEffect(DBC.SpellVisualEffectName.findById(this.cell.get()));
+    }
+
+    createSimple(filename: string, areaSize = 1, scale = 1, scaleMin = 0.0099, scaleMax = 100) {
+        let v = this.getRefCopy();
+        v
+            .Name.set(`__simple_spell_visual_effect_${v.row.ID.get()}`)
+            .Filename.set(filename)
+            .AreaSize.set(areaSize)
+            .Scale.set(scale,scaleMin,scaleMax);
+        return this.owner;
     }
 }
 
