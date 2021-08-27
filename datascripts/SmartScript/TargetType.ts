@@ -86,11 +86,11 @@ export const TARGET_ARGS: {[key:string]:string[]} = {
     '30': ['goEntry','maxDist','','','','','','']
 }
 
-export class TargetType<T> {
+export class TargetType {
     protected row : smart_scriptsRow
-    protected main: SmartScript<T>
+    protected main: SmartScript
 
-    constructor(main: SmartScript<T>, row: smart_scriptsRow) {
+    constructor(main: SmartScript, row: smart_scriptsRow) {
         this.row = row
         this.main = main
     }

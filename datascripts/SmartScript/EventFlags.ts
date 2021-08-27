@@ -17,7 +17,7 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SmartScript } from "./SmartScript";
 
-export class EventFlags<T> extends MaskCell32<SmartScript<T>> {
+export class EventFlags extends MaskCell32<SmartScript> {
     get NonRepeatable() {return this.bit(0)};
     get NormalDungeon(){return this.bit(1)};
     get HeroicDungeon(){return this.bit(2)};

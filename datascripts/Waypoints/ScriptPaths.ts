@@ -1,4 +1,5 @@
 import { Ids } from "../Misc/Ids";
+import { Position } from "../Misc/Position";
 import { ScriptPath } from "./ScriptPath"
 
 export const ScriptPaths = {
@@ -6,9 +7,8 @@ export const ScriptPaths = {
         return new ScriptPath(id);
     },
 
-    create() {
-        return new ScriptPath(Ids.Waypoints.id());
+    create(paths: Position[] = []) {
+        return new ScriptPath(Ids.Waypoints.id())
+            .add(paths)
     }
-
-
 }

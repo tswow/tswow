@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+
 export type ClassType = 
     'WARRIOR' | 'PALADIN' | 'HUNTER' | 'ROGUE' | 
     'PRIEST' | 'DEATH_KNIGHT' | 'SHAMAN' | 'MAGE' | 
@@ -36,6 +39,41 @@ export function resolveClassType(type: ClassType) {
         case 'WARLOCK': return 9;
         case 'DRUID': return 11;
         default: throw new Error(`Invalid class type: ${type}`)
+    }
+}
+
+export function getClassType(type: ClassType): ClassType {
+    if(typeof(type) == 'string') return type;
+    switch(type) {
+        case 1: return 'WARRIOR';
+        case 2: return 'PALADIN';
+        case 3: return 'HUNTER';
+        case 4: return 'ROGUE';
+        case 5: return 'PRIEST';
+        case 6: return 'DEATH_KNIGHT'
+        case 7: return 'SHAMAN';
+        case 8: return 'MAGE';
+        case 9: return 'WARLOCK';
+        case 11: return 'DRUID';
+        default: return type;
+    }
+}
+
+export class ClassTypeCell<T> extends CellSystem<T> {
+    protected cell: Cell<number,any>;
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    set(value: ClassType) {
+        this.cell.set(resolveClassType(value));
+        return this.owner;
+    }
+
+    get() {
+        return getClassType(this.cell.get());
     }
 }
 

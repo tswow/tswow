@@ -128,14 +128,14 @@ class ClassDescription extends CellSystem<Class> {
 
     get Male() {
         return new FunctionalCell(
-              this
+              this.owner
             , ()=>this.descPayload(this.male.text)
             , (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${cleanNewline(value)}";`)
     }
 
     get Female() {
         return new FunctionalCell(
-              this
+              this.owner
             , ()=>this.descPayload(this.female.text)
             , (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${cleanNewline(value)}";`)
     }

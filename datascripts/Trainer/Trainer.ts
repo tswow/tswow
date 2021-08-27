@@ -23,6 +23,9 @@ import { Spells } from "../Spell/Spells";
 import { MainEntity } from "../Misc/Entity";
 import { Ref } from "../Refs/Ref";
 import { Ids } from "../Misc/Ids";
+import { ClassType, ClassTypeCell, resolveClassType } from "../Class/ClassType";
+import { EnumCell, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { RaceType, resolveRaceType } from "../Race/RaceType";
 
 export class TrainerLoc extends SQLLocSystem<Trainer> {
     protected getMain(): Cell<string, any> {
@@ -38,14 +41,50 @@ export class TrainerLoc extends SQLLocSystem<Trainer> {
     }
 }
 
+export class TrainerType extends EnumCell<Trainer> {
+    get(): number {
+        return this.owner.row.Type.get();
+    }
+    set(value: number): Trainer {
+        this.owner.row.Type.set(value);
+        return this.owner;
+    }
+
+    @EnumField(0)
+    setClassTrainer() { return this.set(0); }
+
+    @EnumField(1)
+    setMountTrainer() { return this.set(1); }
+
+    @EnumField(2)
+    setTradeskillTrainer() { return this.set(2); }
+}
+
 export class Trainer extends MainEntity<trainerRow> {
     get ID() {
         return this.row.Id.get();
     }
 
     get Greeting(): TrainerLoc { return new TrainerLoc(this); }
-    get Class() { return this.wrap(this.row.Requirement); }
-    get Type() { return this.wrap(this.row.Type); }
+    get Requirement() { return this.wrap(this.row.Requirement); } 
+    get Type() { return new TrainerType(this); }
+
+    setClassTrainer(cls: ClassType) {
+        this.Type.setClassTrainer()
+        this.Requirement.set(resolveClassType(cls));
+        return this;
+    }
+
+    setMountTrainer(race: RaceType) {
+        this.Type.setMountTrainer();
+        this.Requirement.set(resolveRaceType(race));
+        return this;
+    }
+
+    setTradeskillTrainer(requiredSpell: number = 0) {
+        this.Type.setTradeskillTrainer();
+        this.Requirement.set(requiredSpell);
+    }
 
     addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
         if(reqSkillLine===0) {

@@ -17,7 +17,7 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SmartScript } from "./SmartScript";
 
-export class EventPhase<T> extends MaskCell32<SmartScript<T>> {
+export class EventPhase<T> extends MaskCell32<SmartScript> {
     get Phase1() { return this.bit(0); }
     get Phase2() { return this.bit(1); }
     get Phase3() { return this.bit(2); }

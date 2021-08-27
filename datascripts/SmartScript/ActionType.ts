@@ -21,6 +21,9 @@ import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { b2i } from "../Misc/BasicConversion"
 import { SmartScript } from "./SmartScript"
 import { resolveSummonType, SummonType } from "./SummonType"
+import { Position } from "../Misc/Position"
+import { std } from "../tswow-stdlib-data"
+import { ScriptPath } from "../Waypoints/ScriptPath"
 
 export const ACTION_TYPES : {[key:string]:string} = {
     '0': 'None',
@@ -308,11 +311,11 @@ export const ACTION_ARGS : {[key:string]:string[]} = {
     '139': ['zoneId','weatherId','weatherGrade','','','']
 }
 
-export class ActionType<T> {
+export class ActionType {
     protected row: smart_scriptsRow
-    protected main: SmartScript<T>
+    protected main: SmartScript
 
-    constructor(main: SmartScript<T>, row: smart_scriptsRow) {
+    constructor(main: SmartScript, row: smart_scriptsRow) {
         this.row = row
         this.main = main
     }
@@ -991,11 +994,7 @@ export class ActionType<T> {
      * @param despawnTime 
      * @param reactState 
      */
-    setQuestWalk(shouldRun: boolean, id: number, canRepeat: boolean, quest_template: number, despawnTime: number, reactState: ReactState) {
-        this.main.free.onRespawn(0,0,0)
-            .Action.setAddNpcFlag(2)
-            .Target.setSelf()
-
+    setQuestWalk(questId: number, path: number, reactState: ReactState = 'DEFENSIVE', shouldRun: boolean = true, canRepeat: boolean = false, despawnTime: number = 1) {
         return this.main
             .Target.setInvokerParty()
             .Action.setStoreTargetList(0)
@@ -1004,7 +1003,7 @@ export class ActionType<T> {
             .Action.setStoreTargetList(1)
             .then()
             .Target.setSelf()
-            .Action.setWpStart(shouldRun,id,canRepeat,quest_template,despawnTime,reactState)
+            .Action.setWpStart(shouldRun,path,canRepeat,questId,despawnTime,reactState)
             .then()
             .Target.setSelf()
             .Action.setRemoveNpcFlag(2)

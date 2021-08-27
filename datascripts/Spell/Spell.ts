@@ -50,6 +50,7 @@ import { SpellRank } from "./SpellRank";
 import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
 import { RaceType } from "../Race/RaceType";
 import { Classes } from "../Class/Class";
+import { Ref } from "../Refs/Ref";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }

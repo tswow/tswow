@@ -16,6 +16,7 @@
  */
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { Ids } from "../Misc/Ids";
 import { Trainer } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
@@ -32,33 +33,31 @@ export class GossipOptionType extends CellSystem<GossipOption> {
         return this.owner;
     }
 
-    setVendor(creatureId: number, callback: (vendor: Vendor<void>)=>void) {
+    /**
+     * @deprecated Only use this for modifying blizzlike creatures,
+     * for custom creatures, use "setExistingVendor/setNewVendor"
+     */
+    setCreatureVendor(creatureId: number, callback: (vendor: Vendor<void>)=>void) {
         this.set(3,128);
         this.owner.row.ActionMenuID.set(0);
         callback(new Vendor(undefined,creatureId));
         return this.owner;
     }
 
-    setMultivendor(vendorId: number = -1, callback: (vendor: Vendor<void>)=>void) {
+    setExistingVendor(vendorId: number, callback: (vendor: Vendor<void>)=>void = ()=>{}) {
         this.set(3,128);
-        this.owner.row.ActionMenuID.set(vendorId);
         if(vendorId < 0) {
             vendorId = Ids.Vendor.id();
         }
+        this.owner.row.ActionMenuID.set(vendorId);
         callback(new Vendor(undefined, vendorId));
-        return this.owner;
     }
 
-    setGossipLinkLabel(mod: string, label: string) {
-        let labeledGossip = getGossipLabel(mod, label);
-        if(labeledGossip===undefined) {
-            throw new Error(`Missing gossip label: ${mod}:${label}`)
-        }
-        this.set(1,1,labeledGossip.ID);
-        return this.owner;
+    setNewVendor(callback: (vendor: Vendor<void>)=>void = ()=>{}) {
+        return this.setExistingVendor(Ids.Vendor.id(),callback);
     }
 
-    setGossipLinkID(id: number) {
+    setGossipLink(id: number) {
         this.set(1,1);
         this.owner.row.ActionMenuID.set(id);
         return this.owner;
@@ -71,35 +70,23 @@ export class GossipOptionType extends CellSystem<GossipOption> {
         return this.owner;
     }
 
-    setTrainer(trainerId: number = -1, callback?: (trainer: Trainer)=>void) {
-        this.set(5,16,0);
-        if(trainerId === -1) {
-            trainerId = SQL.trainer.add(Ids.Trainer.id()).Id.get();
-        }
-        if(callback) callback(new Trainer(SQL.trainer.find({Id:trainerId})));
-        return this.owner;
+    setExistingTrainer(id: number, callback: (trainer: Trainer)=>void = ()=>{}) {
+        let defTrainer = SQL.creature_default_trainer.find({TrainerId:id})
+        return this.setTrainer(defTrainer.CreatureId.get(),SQL.trainer.find({Id:id}),callback);
     }
 
-    setMultitrainer(trainerId: number = -1, callback?: (trainer: Trainer)=>void) {
-        let creatureId: number;
-        if(trainerId == 0) {
-            trainerId = SQL.trainer.add(Ids.Trainer.id()).Id.get();
-            let creature = SQL.creature_template.add(Ids.TrainerCreature.id())
-                .npcflag.set(16)
-            SQL.creature_default_trainer.add(creature.entry.get())
-                .TrainerId.set(trainerId)
-            creatureId = creature.entry.get();
-        } else { 
-            let defTrainer = SQL.creature_default_trainer.find({TrainerId:trainerId})
-            if(defTrainer === undefined) {
-                throw new Error(`${trainerId} is not a valid multitrainer: `
-                    + `it has no entry in creature_default_trainer `
-                    + `(you must create use a new blank trainer)`)
-            }
-            creatureId = defTrainer.CreatureId.get();
-        }
+    setNewTrainer(callback: (trainer: Trainer)=>void = ()=>{}) {
+        let row = SQL.trainer.add(Ids.Trainer.id());
+        let creature = SQL.creature_template.add(Ids.TrainerCreature.id())
+            .npcflag.set(16)
+        SQL.creature_default_trainer.add(creature.entry.get())
+            .TrainerId.set(row.Id.get())
+        return this.setTrainer(creature.entry.get(),row,callback);
+    }
+
+    private setTrainer(creatureId: number, trainer: trainerRow, callback: (trainer: Trainer)=>void) {
         this.set(5,16,creatureId);
-        if(callback) callback(new Trainer(SQL.trainer.find({Id:trainerId})));
+        callback(new Trainer(trainer));
         return this.owner;
     }
 

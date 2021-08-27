@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
 function IdRows(owner: ItemTemplate) {
@@ -87,9 +88,29 @@ function CCooldownRows(owner: ItemTemplate) {
     ] 
 }
 
+export class ItemSpellTrigger extends EnumCellWrapper<ItemSpell> {
+    @EnumField(0)
+    setOnUse() { return this.set(0); }
+
+    @EnumField(1)
+    setOnEquip() { return this.set(1); }
+
+    @EnumField(2)
+    setChanceOnHit() { return this.set(2); }
+
+    @EnumField(4)
+    setSoulstone() { return this.set(4); }
+
+    @EnumField(5)
+    setUseNoDelay() { return this.set(5); }
+
+    @EnumField(6)
+    setOnLearn() { return this.set(6); }
+}
+
 export class ItemSpell extends ArrayEntry<ItemTemplate> {
     clear() {
-        this.ID.set(0);
+        this.SpellID.set(0);
         this.Category.set(0);
         this.Trigger.set(0);
         this.Charges.set(0);
@@ -99,12 +120,12 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
         return this;
     }
     isClear(): boolean {
-        return this.ID.get() === 0;
+        return this.SpellID.get() === 0;
     }
 
-    get ID() { return this.wrap(IdRows(this.container)[this.index]); }
+    get SpellID() { return this.wrap(IdRows(this.container)[this.index]); }
     get Category() { return this.wrap(CatRows(this.container)[this.index]); }
-    get Trigger() { return this.wrap(TriggerRows(this.container)[this.index]); }
+    get Trigger() { return new ItemSpellTrigger(this, TriggerRows(this.container)[this.index]); }
     get Charges() { return this.wrap(ChargeRows(this.container)[this.index]); }
     get ProcsPerMinute() { return this.wrap(PPMRows(this.container)[this.index]); }
     get Cooldown () { return this.wrap(CooldownRows(this.container)[this.index]); }
@@ -120,15 +141,12 @@ export class ItemSpells extends ArraySystem<ItemSpell, ItemTemplate> {
         return 5;
     }
 
-    add(id: number, category?: number, trigger?: number, charges?: number, procsPerMinute?: number, cooldown?: number, categoryCooldown?: number) {
-        let free = this.getFree();
-        free.ID.set(id);
-        if(category!==undefined) free.Category.set(category);
-        if(trigger!==undefined) free.Trigger.set(trigger);
-        if(charges!==undefined) free.Charges.set(charges);
-        if(procsPerMinute!==undefined) free.ProcsPerMinute.set(procsPerMinute);
-        if(cooldown!==undefined) free.Cooldown.set(cooldown);
-        if(categoryCooldown!==undefined) free.CategoryCooldown.set(categoryCooldown);
-        return free;
+    getFree() {
+        return super.getFree();
+    }
+
+    modFree(callback: (itemSpell: ItemSpell)=>void) {
+        callback(this.getFree());
+        return this.owner;
     }
 }

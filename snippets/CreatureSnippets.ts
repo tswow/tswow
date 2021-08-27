@@ -22,8 +22,10 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
 
     // Loot
     .Gold.set(1,100)
-    .NormalLoot.addItem(25,10,1,1)
-    .NormalLoot.addItem(100,10,1,1)
+    .NormalLoot.modRefCopy((loot)=>{
+        loot.addItem(25,10,1,1)
+            .addItem(100,10,1,1)
+    })
 /** end-snippet */
 
 /**

@@ -24,6 +24,8 @@ import { Gossip } from "./Gossip";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { WrappedLoc } from "wotlkdata/cell/systems/CellSystem";
+import { npc_textRow } from "../../../../bin/scripts/tswow/wotlkdata/sql/types/npc_text";
+import { Ref } from "../Refs/Ref";
 
 function getNpcText(id: number) {
     let text = SQL.npc_text.find({ID: id});
@@ -49,9 +51,9 @@ function getNpcLocaleText(id: number, loc: Language) {
     return text;
 }
 
-function maleText(id: number, index: number, loc?: Language) {
+function maleText(owner: GossipTextArray, index: number, loc?: Language) {
     if(!loc) {
-        const text = getNpcText(id);
+        const text = owner.row;
         switch(index) {
             case 0: return text.text0_0;
             case 1: return text.text1_0;
@@ -64,7 +66,7 @@ function maleText(id: number, index: number, loc?: Language) {
             default: throw new Error(`Internal error: Invalid maleText index: ${index} (max is 7)`)
         }
     } else {
-        const text = getNpcLocaleText(id, loc);
+        const text = getNpcLocaleText(owner.row.ID.get(), loc);
         switch(index) {
             case 0: return text.Text0_0;
             case 1: return text.Text1_0;
@@ -79,9 +81,9 @@ function maleText(id: number, index: number, loc?: Language) {
     }
 }
 
-function femaleText(id: number, index: number, loc?: Language) {
+function femaleText(owner: GossipTextArray, index: number, loc?: Language) {
     if(!loc) {
-        const text = getNpcText(id);
+        const text = owner.row;
         switch(index) {
             case 0: return text.text0_1;
             case 1: return text.text1_1;
@@ -94,7 +96,7 @@ function femaleText(id: number, index: number, loc?: Language) {
             default: throw new Error(`Internal error: Invalid femaleText index: ${index} (max is 7)`)
         }
     } else {
-        const text = getNpcLocaleText(id, loc);
+        const text = getNpcLocaleText(owner.row.ID.get(), loc);
         switch(index) {
             case 0: return text.Text0_1;
             case 1: return text.Text1_1;
@@ -109,8 +111,8 @@ function femaleText(id: number, index: number, loc?: Language) {
     }
 }
 
-function lang(id: number, index: number) {
-    const text = getNpcText(id);
+function lang(owner: GossipTextArray, index: number) {
+    const text = owner.row;
     switch(index) {
         case 0: return text.lang0;
         case 1: return text.lang1;
@@ -124,8 +126,8 @@ function lang(id: number, index: number) {
     }
 }
 
-function probability(id: number, index: number) {
-    const text = getNpcText(id);
+function probability(owner: GossipTextArray, index: number) {
+    const text = owner.row;
     switch(index) {
         case 0: return text.Probability0;
         case 1: return text.Probability1;
@@ -139,8 +141,8 @@ function probability(id: number, index: number) {
     }
 }
 
-function broadcastID(id: number, index: number) {
-    const text = getNpcText(id);
+function broadcastID(owner: GossipTextArray, index: number) {
+    const text = owner.row;
     switch(index) {
         case 0: return text.BroadcastTextID0;
         case 1: return text.BroadcastTextID1;
@@ -154,8 +156,8 @@ function broadcastID(id: number, index: number) {
     }
 }
 
-function emote(id: number, index: number) {
-    const text = getNpcText(id);
+function emote(owner: GossipTextArray, index: number) {
+    const text = owner.row;
     switch(index) {
         case 0: return text.Emote0_0;
         case 1: return text.Emote1_0;
@@ -169,8 +171,8 @@ function emote(id: number, index: number) {
     }
 }
 
-function emoteDelay(id: number, index: number) {
-    const text = getNpcText(id);
+function emoteDelay(owner: GossipTextArray, index: number) {
+    const text = owner.row;
     switch(index) {
         case 0: return text.EmoteDelay0_0;
         case 1: return text.EmoteDelay1_0;
@@ -187,24 +189,31 @@ function emoteDelay(id: number, index: number) {
 export class GossipText extends SQLLocSystem<GossipTextEntry> {
     protected index: number;
     protected isFemale: boolean;
-    protected id: number;
-    constructor(owner: GossipTextEntry, id: number, index: number, isFemale: boolean) {
+    protected root: GossipTextArray;
+    constructor(owner: GossipTextEntry, root: GossipTextArray, index: number, isFemale: boolean) {
         super(owner);
         this.index = index;
         this.isFemale = isFemale;
-        this.id = id;
+        this.root = root;
     }
 
     protected getMain(): Cell<string, any> {
-        return this.isFemale ? femaleText(this.id, this.index) : maleText(this.id, this.index);
+        return this.isFemale ? femaleText(this.root, this.index) : maleText(this.root, this.index);
     }
 
     protected getLoc(loc: Language): Cell<string, any> {
-        return this.isFemale ? femaleText(this.id, this.index, loc) : maleText(this.id, this.index, loc);
+        return this.isFemale ? femaleText(this.root, this.index, loc) : maleText(this.root, this.index, loc);
     }
 }
 
 export class GossipTextEntry extends ArrayEntry<Gossip> {
+    protected array: GossipTextArray;
+
+    constructor(gossip: Gossip, array: GossipTextArray, index: number) {
+        super(gossip,index);
+        this.array = array;
+    }
+
     clear() {
         this.Probability.set(0);
         this.MaleText.clear();
@@ -219,26 +228,31 @@ export class GossipTextEntry extends ArrayEntry<Gossip> {
         return this.Probability.get() === 0;
     }
 
-    protected get ID() { return this.container.row.TextID.get(); }
-
-    get MaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.ID, this.index, false)); }
-    get FemaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.ID, this.index, true)); }
-    get Lang() { return this.wrap(lang(this.ID, this.index)); }
-    get Probability() { return this.wrap(probability(this.ID, this.index)); }
-    get Emote() { return this.wrap(emote(this.ID, this.index)); }
-    get EmoteDelay() { return this.wrap(emoteDelay(this.ID, this.index)); }
+    get MaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.array, this.index, false)); }
+    get FemaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.array, this.index, true)); }
+    get Lang() { return this.wrap(lang(this.array, this.index)); }
+    get Probability() { return this.wrap(probability(this.array, this.index)); }
+    get Emote() { return this.wrap(emote(this.array, this.index)); }
+    get EmoteDelay() { return this.wrap(emoteDelay(this.array, this.index)); }
 
     @Transient
-    protected get BroadcastID() { return this.wrap(broadcastID(this.ID, this.index))}
+    protected get BroadcastID() { return this.wrap(broadcastID(this.array, this.index))}
 }
 
 export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {
+    readonly row: npc_textRow;
+    
+    constructor(gossip: Gossip, row: npc_textRow) {
+        super(gossip);
+        this.row = row;
+    }
+
     get length(): number {
         return 8;
     }
 
     get(index: number): GossipTextEntry {
-        return new GossipTextEntry(this.owner, index);
+        return new GossipTextEntry(this.owner, this, index);
     }
 
     addGendered(male: loc_constructor, female: loc_constructor, lang: number, emote = 0, emoteDelay = 0) {
@@ -254,5 +268,9 @@ export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {
 
     add(text: loc_constructor, lang = 0, emote = 0,  emoteDelay = 0) {
         return this.addGendered(text,text,lang,emote,emoteDelay);
+    }
+
+    get ID() {
+        return this.row.ID.get();
     }
 }

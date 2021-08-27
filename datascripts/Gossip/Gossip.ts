@@ -29,8 +29,8 @@ export class Gossip extends MainEntity<gossip_menuRow> {
         return this;
     }
 
-    get Text() : GossipTextArray { 
-        return new GossipTextArray(this); 
+    get Text() { 
+        return new GossipTextArray(this, SQL.npc_text.find({ID:this.row.TextID.get()}));
     }
 
     get Options() : GossipOptions {
@@ -51,10 +51,18 @@ export class GossipPointer<T> extends Ref<T, Gossip> {
         return this.cell.get() > 0;
     }
     protected create(): Gossip {
-        return new Gossip(SQL.gossip_menu.add(Ids.GossipMenu.id(),Ids.NPCText.id()))
+        let gossipId = Ids.GossipMenu.id();
+        let textId = Ids.NPCText.id();
+        SQL.npc_text.add(textId);
+        return new Gossip(SQL.gossip_menu.add(gossipId,textId));
     }
     protected clone(): Gossip {
-        throw new Error(`Gossip cloning is not yet implemented`);
+        let gossipRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
+        let gossipId = Ids.GossipMenu.id();
+        let textId = Ids.NPCText.id();        
+        SQL.npc_text.find({ID:gossipRow.TextID.get()})
+            .clone(textId);
+        return new Gossip(gossipRow.clone(gossipId,textId));
     }
     protected id(v: Gossip): number {
         return v.ID;

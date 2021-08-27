@@ -27,6 +27,8 @@ export abstract class Ref<T,V extends CanObjectify> {
         return this.owner;
     }
 
+    // Do NOT add "owner" to this callback: it doesn't make sense
+    // when we're not creating a copy
     modRef(callback: (value: V)=>void) {
         let v: V;
         if(!this.exists()) {
@@ -47,7 +49,7 @@ export abstract class Ref<T,V extends CanObjectify> {
         return this.resolve();
     }
 
-    modRefCopy(callback: (value: V)=>void) {
+    modRefCopy(callback: (value: V, owner : T)=>void) {
         let v: V;
         if(!this.exists()) {
             v = this.create();
@@ -56,7 +58,7 @@ export abstract class Ref<T,V extends CanObjectify> {
             v = this.clone();
             this.setRefID(this.id(v));
         }
-        callback(v);
+        callback(v,this.owner);
         return this.owner;
     }
 

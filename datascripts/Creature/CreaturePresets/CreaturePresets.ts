@@ -15,7 +15,7 @@ export const CreaturePresets = {
                     .Greeting.enGB.set(
                         `Ready for some training, ${cls.Name.enGB.get()}?`
                     )
-                    .Class.set(classId)
+                    .setClassTrainer(classId)
             })
     }
 }

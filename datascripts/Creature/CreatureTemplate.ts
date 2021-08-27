@@ -50,7 +50,7 @@ import { UnitFlags } from "./UnitFlags";
 import { SchoolMask } from "../Misc/School";
 import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 import { CreatureInstance } from "./CreatureInstance";
-import { Gossip, GossipPointer } from "../Gossip/Gossip";
+import { GossipPointer } from "../Gossip/Gossip";
 import { LootSetPointer } from "../Loot/Loot";
 
 export class CreatureTemplate extends GOCreature<creature_templateRow> {
@@ -59,9 +59,9 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
     get Subname() { return new CreatureSubname(this); }
 
     get Scripts() { 
-        return new AttachedScript(()=>{
+        return new AttachedScript(this, ()=>{
             this.row.AIName.set('SmartAI');
-            return SmartScripts.creature(this.ID, this);
+            return SmartScripts.creature(this.ID);
         })
     }
     

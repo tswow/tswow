@@ -21,8 +21,8 @@ export class ClassSkillLines extends MultiRowSystem<SkillLine,Class> {
         return SkillLines.createClass(mod,id,this.owner.ID);
     }
 
-    modCreate(mod: string, id: string, callback: (sl: SkillLine)=>void) {
-        callback(this.getCreate(mod,id));
+    modCreate(mod: string, id: string, callback: (sl: SkillLine, cls: Class)=>void) {
+        callback(this.getCreate(mod,id), this.owner);
         return this.owner;
     }
 }

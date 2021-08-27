@@ -191,9 +191,9 @@ export const EVENT_ARGS : {[key:string]:string[]} = {
 
 export class EventType<T> {
     protected row : smart_scriptsRow
-    protected main : SmartScript<T>
+    protected main : SmartScript
 
-    constructor(main: SmartScript<T>, row: smart_scriptsRow) {
+    constructor(main: SmartScript, row: smart_scriptsRow) {
         this.row = row
         this.main = main
     }
