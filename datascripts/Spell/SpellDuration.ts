@@ -27,9 +27,9 @@ export class SpellDuration extends MainEntity<SpellDurationRow> {
     }
 
     get ID() { return this.row.ID.get(); }
-    get Duration() { return this.ownerWrap(this.row.Duration); }
-    get DurationPerLevel() { return this.ownerWrap(this.row.DurationPerLevel); }
-    get MaxDuration() { return this.ownerWrap(this.row.MaxDuration); }
+    get Duration() { return this.wrap(this.row.Duration); }
+    get DurationPerLevel() { return this.wrap(this.row.DurationPerLevel); }
+    get MaxDuration() { return this.wrap(this.row.MaxDuration); }
 
     set(duration: number, durationPerLevel: number, maxDuration: number) {
         this.Duration.set(duration);
@@ -54,5 +54,10 @@ export class SpellDurationPointer<T> extends Ref<T,SpellDuration> {
     }
     protected resolve(): SpellDuration {
         return new SpellDuration(DBC.SpellDuration.findById(this.cell.get()));
+    }
+
+    setSimple(duration: number, durationPerLevel: number = 0, maxDuration = duration + durationPerLevel*255) {
+        this.getRefCopy().set(duration,durationPerLevel,maxDuration);
+        return this.owner;
     }
 }

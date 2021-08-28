@@ -27,9 +27,9 @@ export class SpellRadius extends MainEntity<SpellRadiusRow> {
     }
 
     get ID() { return this.row.ID.get(); }
-    get Radius() { return this.ownerWrap(this.row.Radius); }
-    get RadiusPerLevel() { return this.ownerWrap(this.row.RadiusPerLevel); }
-    get RadiusMax() { return this.ownerWrap(this.row.RadiusMax); }
+    get Radius() { return this.wrap(this.row.Radius); }
+    get RadiusPerLevel() { return this.wrap(this.row.RadiusPerLevel); }
+    get RadiusMax() { return this.wrap(this.row.RadiusMax); }
 
     set(radius: number, radiusPerLevel: number, radiusMax: number) {
         const row = this.row;
@@ -65,5 +65,13 @@ export class SpellRadiusPointer<T> extends Ref<T,SpellRadius> {
 
     protected resolve(): SpellRadius {
         return new SpellRadius(DBC.SpellRadius.findById(this.cell.get()));
+    }
+
+    setSimple(base: number, perLevel: number = 0, max: number = base + perLevel*255) {
+        this.getRefCopy()
+            .Radius.set(base)
+            .RadiusPerLevel.set(perLevel)
+            .RadiusMax.set(max)
+        return this.owner;
     }
 }
