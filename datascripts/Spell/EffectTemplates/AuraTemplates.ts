@@ -6,6 +6,9 @@ import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffect
 import { SpellPowerType } from "../SpellPowerType";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { CellWrapper } from "wotlkdata/cell/cells/Cell";
+import { Ids } from "../../Misc/Ids";
+import { DBC } from "wotlkdata";
 
 export const all_auras : any = {}
 export function AuraID(id: number) {
@@ -180,9 +183,28 @@ export class ModIncreaseHealth extends PointsBase {}
 @AuraID(35)
 export class ModIncreaseEnergy extends PointsBase {}
 // 36
+export class ShapeshiftFormCell extends CellWrapper<number,ModShapeshift>{
+    setDisplayId(id: number) {
+        let shapeshiftId = Ids.SpellShapeshiftForm.id()
+        DBC.SpellShapeshiftForm.add(shapeshiftId)
+           .CreatureDisplayID.set([id])
+           .Flags.set(0)
+        this.set(shapeshiftId);
+        return this.owner;
+    }
+
+    set(value: number) {
+        this.cell.set(value);
+        return this.owner;
+    }
+
+    get() {
+        return this.cell.get();
+    }
+}
 @AuraID(36)
 export class ModShapeshift extends TargetBase {
-    get Form() { return this.wrap(this.owner.MiscValueA); }
+    get Form() { return new ShapeshiftFormCell(this, this.owner.MiscValueA); }
 }
 // 37
 /** TODO: Uses MiscValueA, which is not used in core */
