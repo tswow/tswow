@@ -1,5 +1,4 @@
 import { std } from "../datascripts/tswow-stdlib-data";
-import { Pos } from "../datascripts/Misc/Position";
 
 /**
  * Snippet: Creature::Aggressive Mob
@@ -53,24 +52,27 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
     .NPCFlags.Gossip.mark()
-    .Gossip
-        .Text.add({enGB:'Welcome to my inn!'})
-        .Options.add()
-            .Text.MaleText.enGB.set('Make this inn your home')
-            .Action.setInnkeeper()
-            .Icon.setCogwheel()
-        .end
-
-        .Options.add()
-            .Text.MaleText.enGB.set('Let me browse your goods')
-            .Icon.setVendor()
-            .Action.setOwnVendor()
-                .addItem(10)
-                .addItem(25)
-                // add items here
-            .end
-        .end
-    .end
+    .NPCFlags.Vendor.mark()
+    .NPCFlags.Innkeeper.mark()
+    .NPCFlags.Trainer.mark()
+    .NPCFlags.ClassTrainer.mark()
+    .Gossip.modRefCopy((gossip)=>{
+        gossip
+            .Text.add({enGB:'Welcome to my inn'})
+            .Options.addMod(option=>{
+                option.Text.MaleText.enGB.set('Make this inn your home')
+                .Action.setInnkeeper()
+                .Icon.setCogwheel()
+            })
+            .Options.addMod(option=>{
+                option.Text.MaleText.enGB.set('Let me browse your goods')
+                .Icon.setVendor()
+                .Action.setNewVendor((vendor)=>{
+                    // Add vendor items here
+                    vendor.addItem(25)
+                })
+            })
+    })
 /** end-snippet */
 
 /**
@@ -83,39 +85,23 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
     .NPCFlags.Gossip.mark()
-    .Gossip
-        .Text.add({enGB:'What goods would you like to browse?'})
-
-        // Weapon vendor
-        .Options.add()
-            .Text.MaleText.enGB.set('Let me browse your weapons')
-            .Icon.setVendor()
-            .Action.setOwnVendor()
-                .addItem(25)
-                // add items here
-            .end
-        .end
-
-        // Food vendor
-        .Options.add()
-            .Text.MaleText.enGB.set('Let me browse your food')
-            .Icon.setVendor()
-            .Action.setMultivendor()
-                .addItem(117)
-                // add items here
-            .end
-        .end
-
-        // Bag vendor
-        .Options.add()
-            .Text.MaleText.enGB.set('Let me browse your bags')
-            .Icon.setVendor()
-            .Action.setMultivendor()
-                .addItem(4496)
-                // add items here
-            .end
-        .end
-    .end
+    .Gossip.modRefCopy((gossip)=>{
+        gossip
+            .Options.addMod(op=>{
+                op.Text.MaleText.enGB.set('Let me browse your goods')
+                  .Icon.setVendor()
+                  .Action.setNewVendor((vendor)=>{
+                      vendor.addItem(25)
+                  })
+            })
+            .Options.addMod(op=>{
+                op.Text.MaleText.enGB.set('Let me browse more goods')
+                  .Icon.setVendor()
+                  .Action.setNewVendor((vendor)=>{
+                      vendor.addItem(100)
+                  })
+            })
+    })
 /** end-snippet */
 
 /**
@@ -140,12 +126,12 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
     .NPCFlags.QuestGiver.mark()
-    .spawn(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spawn',
-        Pos(0,0,0,0,0)
+    .spawnMod(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spawn'
+        , {map:0,x:0,y:0,z:0,o:0}
+        , (spawn=>{
+                spawn.PatrolPath.add('WALK',[
+                    /*@4*/{map:0,x:0,y:0,z:0,o:0}/**/
+                ])
+        })
     )
-    .PatrolPath.add('WALK',
-        [
-            /*@3*/Pos(0,0,0,0,0)/**/
-        ])
-    .end
 /** end-snippet */
