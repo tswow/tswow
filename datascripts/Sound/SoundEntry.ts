@@ -7,6 +7,7 @@ import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
 import { SoundEntryAdvancedPointer } from "./SoundEntryAdvanced";
+import { SoundFlags } from "./SoundFlags";
 
 export class SoundEntryName extends CellSystem<SoundEntry> {
     get() {
@@ -36,6 +37,7 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
             this, this.row.SoundEntriesAdvancedID); 
     }
 
+    get Flags() { return new SoundFlags(this, this.row.Flags); }
     get SoundType() { return new SoundType(this, this.row.SoundType); }
     get Name() { return this.wrap(this.row.Name); }
     get Files(): SoundEntryFiles { return new SoundEntryFiles(this); }
@@ -49,6 +51,13 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
 export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
     setNewSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
         let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
+        this.setRefID(soundEntry.row.ID.get());
+        return this.owner;
+    }
+
+    setSimpleLoop(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
+        let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
+        soundEntry.Flags.Looping.mark();
         this.setRefID(soundEntry.row.ID.get());
         return this.owner;
     }
