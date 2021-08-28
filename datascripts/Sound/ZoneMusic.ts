@@ -46,9 +46,9 @@ export class ZoneMusicPointer<T> extends Ref<T,ZoneMusic> {
         return ZoneMusicRegistry.load(this.cell.get());
     }
 
-    createSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
+    setSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
         this.setRefID(
-            ZoneMusicRegistry.createSimple(
+            ZoneMusicRegistry.setSimple(
                   directoryBase
                 , songs
                 , silenceIntervalMin
@@ -80,8 +80,8 @@ export const ZoneMusicRegistry = {
         return new ZoneMusic(DBC.ZoneMusic.add(Ids.ZoneMusic.id()));
     },
 
-    createSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
-        let sound = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency)
+    setSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
+        let sound = SoundEntryRegistry.setSimple(directoryBase,songs,volume,frequency)
         let zoneMusic = new ZoneMusic(DBC.ZoneMusic.add(Ids.ZoneMusic.id()))
         return zoneMusic
             .SetName.set(`ZoneMusic-${zoneMusic.ID}`)

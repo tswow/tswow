@@ -49,14 +49,14 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
 }
 
 export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
-    setNewSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
-        let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
+    setSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
+        let soundEntry = SoundEntryRegistry.setSimple(directoryBase,songs,volume,frequency);
         this.setRefID(soundEntry.row.ID.get());
         return this.owner;
     }
 
     setSimpleLoop(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
-        let soundEntry = SoundEntryRegistry.createSimple(directoryBase,songs,volume,frequency);
+        let soundEntry = SoundEntryRegistry.setSimple(directoryBase,songs,volume,frequency);
         soundEntry.Flags.Looping.mark();
         this.setRefID(soundEntry.row.ID.get());
         return this.owner;
@@ -90,7 +90,7 @@ export const SoundEntryRegistry = {
             .clear()
     },
 
-    createSimple(directoryBase: string, sounds: string[], volume: number = 1, frequency: number = 1) {
+    setSimple(directoryBase: string, sounds: string[], volume: number = 1, frequency: number = 1) {
         let sound = this.create()
         sound
             .Name.set(`SoundEntry${sound.row.ID.get()}`)

@@ -84,7 +84,7 @@ export class SpellRangePointer<T> extends Ref<T,SpellRange> {
         return new SpellRange(DBC.SpellRange.findById(this.cell.get()));
     }
 
-    setNewSimple(min: number, max: number, flags = 0) {
+    setSimple(min: number, max: number, flags = 0) {
         this.getRefCopy()
             .FriendMin.set(min)
             .FriendMax.set(max)

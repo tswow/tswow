@@ -68,7 +68,7 @@ export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
         return new SpellVisualEffect(DBC.SpellVisualEffectName.findById(this.cell.get()));
     }
 
-    createSimple(filename: string, areaSize = 1, scale = 1, scaleMin = 0.0099, scaleMax = 100) {
+    setSimple(filename: string, areaSize = 1, scale = 1, scaleMin = 0.0099, scaleMax = 100) {
         let v = this.getRefCopy();
         v
             .Name.set(`__simple_spell_visual_effect_${v.row.ID.get()}`)
