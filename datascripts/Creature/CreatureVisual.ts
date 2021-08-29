@@ -141,10 +141,10 @@ export class CreatureModelPointer<T> extends Ref<T,CreatureModel> {
         return this.cell.get() > 0;
     }
     protected create(): CreatureModel {
-        return new CreatureModel(DBC.CreatureModelData.add(Ids.CreatureModel.id()))
+        return new CreatureModel(DBC.CreatureModelData.add(Ids.CreatureModelInfo.id()))
     }
     protected clone(): CreatureModel {
-        return new CreatureModel(this.resolve().row.clone(Ids.CreatureModel.id()))
+        return new CreatureModel(this.resolve().row.clone(Ids.CreatureModelInfo.id()))
     }
     protected id(v: CreatureModel): number {
         return v.row.ID.get()
