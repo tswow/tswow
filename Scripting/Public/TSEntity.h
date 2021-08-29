@@ -89,7 +89,7 @@ public:
     template <typename T>
     std::shared_ptr<T> GetObject(uint32_t modid, TSString key, std::function<std::shared_ptr<T>()> defaultValue = nullptr)
     {
-        return getData()->m_compiledClasses.GetObject();
+        return getData()->m_compiledClasses.GetObject(modid,key,defaultValue);
     }
 
     bool HasObject(uint32_t modid, TSString key)

@@ -16,7 +16,7 @@
  */
 #pragma once
 
-#include "TSJSON.h"
+#include "TSJson.h"
 #include <nlohmann/json.hpp>
 
 /*
