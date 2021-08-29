@@ -18,60 +18,28 @@ import { DBC } from "wotlkdata";
 import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
 import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
-import { FactionRelations } from "./FactionRelations";
+import { FactionTemplates } from "./FactionTemplates";
 import { FactionReputations } from "./FactionReputation";
 
-function emptyTemplate(id: number, factionId: number) {
-    return DBC.FactionTemplate.add(id)
-        .Faction.set(factionId)
-        .Enemies.set([0,0,0,0])
-        .Friend.set([0,0,0,0])
-        .FactionGroup.set(0)
-        .FriendGroup.set(0)
-        .Flags.set(0)
-        .EnemyGroup.set(0)
-}
-
 export class Faction extends MainEntity<FactionRow> {
-    protected relationSets : FactionRelations[];
-
     constructor(row: FactionRow) {
         super(row);
-        this.relationSets = DBC.FactionTemplate
-            .filter({ID:this.row.ID.get()})
-            .map(x=>new FactionRelations(this, x))
-
-        if(this.relationSets.length===0) {
-            this.relationSets = [
-                emptyTemplate(Ids.FactionTemplate.id(),this.row.ID.get())
-            ].map(x=>new FactionRelations(this, x))
-        }
     }
 
-    /**
-     * This is the ID used for creatures
-     */
-    get RelationID() {
-        return this.relation.row.ID.get();
+    get ID() {
+        return this.row.ID.get();
     }
 
-    get relation() {
-        return this.relationSets[0];
-    }
-
-    get extraRelations() {
-        return this.relationSets.slice(1);
+    get Templates() {
+        return new FactionTemplates(this);
     }
 
     get Reputation() { return new FactionReputations(this); }
-
     get Name() { return this.wrapLoc(this.row.Name); }
     get Description() { return this.wrapLoc(this.row.Description); }
-}
 
-export const Factions = {
-    create(mod: string, id: string) {
-        const facrow = DBC.Faction.add(Ids.Faction.id(mod,id))
+    clear() {
+        this.row
             .ParentFactionCap.set([5,5])
             .ParentFactionID.set(0)
             .ParentFactionMod.set([1,1])
@@ -80,7 +48,13 @@ export const Factions = {
             .ReputationFlags.set([0,0,0,0])
             .ReputationIndex.set(-1)
             .ReputationRaceMask.set([0,0,0,0])
-        return new Faction(facrow);
+        return this;
+    }
+}
+
+export const Factions = {
+    create(mod: string, id: string) {
+        return new Faction(DBC.Faction.add(Ids.Faction.id(mod,id))).clear();
     },
 
     load(id: number) {
@@ -93,13 +67,17 @@ export const Factions = {
 
     createHorde(mod: string, id: string) {
         return Factions.create(mod,id)
-            .relation.addFriendGroups(['HORDE'])
-            .relation.addEnemyGroup(['ALLIANCE'])
+            .Templates.modAdd(relation=>{
+                relation.addFriendGroups(['HORDE'])
+                        .addEnemyGroup(['ALLIANCE'])
+            })
     },
 
     createAlliance(mod: string, id: string) {
         return Factions.create(mod,id)
-            .relation.addFriendGroups(['ALLIANCE'])
-            .relation.addEnemyGroup(['HORDE'])
+            .Templates.modAdd(relation=>{
+                relation.addFriendGroups(['ALLIANCE'])
+                        .addEnemyGroup(['HORDE'])
+            })
     }
 }

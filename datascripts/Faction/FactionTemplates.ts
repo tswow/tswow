@@ -14,9 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { FactionTemplateRow } from "wotlkdata/dbc/types/FactionTemplate";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Faction } from "./Faction";
+import { DBC } from "wotlkdata"
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { Ids } from "../Misc/Ids";
 
 export type FactionGroups = 
     'PLAYERS' | 
@@ -24,11 +28,12 @@ export type FactionGroups =
     'ALLIANCE' | 
     'MONSTERS'
 
-export class FactionRelations extends CellSystem<Faction> {
-    row: FactionTemplateRow;
+export class FactionTemplate extends CellSystemTop {
+    @Transient
+    readonly row: FactionTemplateRow;
 
-    constructor(owner: Faction, row: FactionTemplateRow) {
-        super(owner);
+    constructor(row: FactionTemplateRow) {
+        super();
         this.row = row;
     }
 
@@ -53,7 +58,7 @@ export class FactionRelations extends CellSystem<Faction> {
                     break
             }
         }
-        return this.owner;
+        return this;
     }
 
     addOwnGroup(groups : FactionGroups[]) {
@@ -77,7 +82,7 @@ export class FactionRelations extends CellSystem<Faction> {
                     break
             }
         }
-        return this.owner;
+        return this;
     }
 
     addEnemyGroup(groups : FactionGroups[]){
@@ -97,7 +102,7 @@ export class FactionRelations extends CellSystem<Faction> {
                     break
             }
         }
-        return this.owner;
+        return this;
     }
 
     protected friendId() {
@@ -119,7 +124,7 @@ export class FactionRelations extends CellSystem<Faction> {
      */
     addFriendFaction(factionId: number) {
         this.row.Friend.setIndex(this.friendId(),factionId);
-        return this.owner;
+        return this;
     }
 
     /**
@@ -127,6 +132,38 @@ export class FactionRelations extends CellSystem<Faction> {
      */
     addEnemyFaction(factionId: number) {
         this.row.Enemies.setIndex(this.enemyId(),factionId);
+        return this;
+    }
+
+    clear() {
+        this.row
+            .Flags.set(0)
+            .Friend.set([0,0,0,0])
+            .Enemies.set([0,0,0,0])
+            .FriendGroup.set(0)
+            .EnemyGroup.set(0)
+        return this;
+    }
+}
+
+export class FactionTemplates extends MultiRowSystem<FactionTemplate,Faction> {
+    protected getAllRows(): FactionTemplate[] {
+        return DBC.FactionTemplate.filter({Faction:this.owner.ID})
+            .map(x=>new FactionTemplate(x))
+    }
+    protected isDeleted(value: FactionTemplate): boolean {
+        return value.row.isDeleted()
+    }
+
+    getAdd() {
+        return new FactionTemplate(
+            DBC.FactionTemplate.add(Ids.FactionTemplate.id()).Faction.set(this.owner.ID)
+        )
+        .clear()
+    }
+
+    modAdd(callback: (faction: FactionTemplate)=>void = ()=>{}) {
+        callback(this.getAdd());
         return this.owner;
     }
 }
