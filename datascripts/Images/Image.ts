@@ -87,8 +87,8 @@ export class TSImage {
         });
     }
 
-    writeToAssets(mod: string, localPath: string, keepPng = false) {
-        this.write(path.join('modules',mod,'assets',localPath), keepPng);
+    writeToModule(mod: string, localPath: string, keepPng = false) {
+        this.write(path.join('modules',mod,localPath), keepPng);
     }
 
     static create(width: number, height: number) {
@@ -129,7 +129,7 @@ export const TSImages = {
      * @param mod 
      * @param localPath 
      */
-    readFromAssets(mod: string, localPath: string) {
-        return TSImages.read(path.join('modules',mod,'assets',localPath));
+    readFromModule(mod: string, localPath: string) {
+        return TSImages.read(path.join('modules',mod,localPath));
     },
 }

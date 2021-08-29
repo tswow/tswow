@@ -86,6 +86,6 @@ finish('build-class-icons',()=>{
             return;
         }
     }
-    stitchedSquares?.writeToAssets('tswow-stdlib',SQUARES_LOCAL)
-    stitchedCircles?.writeToAssets('tswow-stdlib',CIRCLES_LOCAL)
+    stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL))
+    stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL))
 })
