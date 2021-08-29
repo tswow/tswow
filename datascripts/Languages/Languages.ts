@@ -15,119 +15,130 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { LanguageWordsRow } from "wotlkdata/dbc/types/LanguageWords";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { loc_constructor } from "wotlkdata/primitives";
-import { any } from "wotlkdata/query/Relations";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { std } from "../tswow-stdlib-data";
-import { makeRacemask, RaceType } from "../Race/RaceType";
-import { ClassType, makeClassmask } from "../Class/ClassType";
-import { SQL } from "wotlkdata";
+import { RaceType, resolveRaceType } from "../Race/RaceType";
+import { ClassType, resolveClassType } from "../Class/ClassType";
+import { SQL } from "wotlkdata"
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-const LANGUAGE_CATEGORY_ID = 10;
-const GUTTERSPEAK_SKILL = 673;
-const GUTTERSPEAK_SPELL = 17737;
+export class LanguageAutoLearn extends CellSystem<Language> {
+    add(races: RaceType[], classes: ClassType[]) {
+        let classmask = 0;
+        let racemask = 0;
+        races.forEach(x=>{
+            racemask |= (1<<(resolveRaceType(x)-1));
+        })
+        classes.forEach(x=>{
+            classmask |= (1<<(resolveClassType(x)-1));
+        })
+        SQL.playercreateinfo_skills.add(racemask,classmask,this.owner.SkillID).comment.set('tswow')
+        return this.owner;
+    }
+}
+
+export class LanguageWords extends CellSystem<Language> {
+    add(words: string[]) {
+        // word ids are never used, so their ids can just be incremented.
+        let highest = DBC.LanguageWords.filter({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
+        for(const word of words) {
+            DBC.LanguageWords.add(++highest,
+                {LanguageID:this.owner.ID,Word:word});
+        }
+        return this.owner;
+    }
+
+    get() {
+        return DBC.LanguageWords
+            .filter({LanguageID:this.owner.ID})
+    }
+
+    getText() {
+        return this.get().map(x=>x.Word.get());
+    }
+}
 
 /**
  * Creates and handles languages in World of Warcraft,
  * such as Orcish or Common.
  */
 export class Language extends MainEntity<LanguagesRow> {
-    readonly wordRows : LanguageWordsRow[] = [];
-
     constructor(row : LanguagesRow) {
         super(row);
-        this.wordRows = DBC.LanguageWords.filter({LanguageID:this.ID});
     }
 
     get ID() {
         return this.row.ID.get();
     }
 
-    test() {
-        const skills = DBC.SkillLine.filter({CategoryID:LANGUAGE_CATEGORY_ID});
-        const skillLineAbilities = DBC.SkillLineAbility.filter({SkillLine:any.apply(undefined,skills.map(x=>x.ID.get()))});
-        const spells = DBC.Spell.filter({ID:any.apply(null,skillLineAbilities.map(x=>x.Spell.get()))});
-
-        const spell = spells.find((x)=>x.EffectMiscValue.getIndex(0)==this.ID);
-        if(spell===undefined) {
-            throw new Error('No spell for language '+this.row.Name.enGB.get())
-        }
-
-        const sla = skillLineAbilities.find((x)=>x.Spell.get()===spell.ID.get());
-        if(sla===undefined) {
-            throw new Error('No skill line ability for language '+this.row.Name.enGB.get());
-        }
-
-        const skill = skills.find((x)=>x.ID.get()===sla.SkillLine.get());
-        if(skill===undefined) {
-            throw new Error('No skill for language '+this.row.Name.enGB.get());
-        }
-
-        return spells[0];
-    }
-
     get Name() { return this.wrapLoc(this.row.Name); }
 
-    addWords(words : string[]) {
-        // word ids are never used, so their ids can just be incremented.
-        let highest = DBC.LanguageWords.filter({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
-        for(const word of words) {
-            const row = DBC.LanguageWords.add(++highest,
-                {LanguageID:this.ID,Word:word});
-            this.wordRows.push(row);
+    get SkillID() {
+        let skillLines: {[skill: number]: boolean}= {}
+        std.Spells
+           .filter({Effect:39,EffectMiscValue:this.ID})
+           .forEach(spell=>{
+               spell.SkillLines.forEach(sla=>{
+                    skillLines[sla.SkillLine.get()] = true;
+               })
+           })
+        let keys = Object.keys(skillLines);
+        if(keys.length === 0) {
+            throw new Error(`Language ${this.ID} has no skill!`);
         }
-        return this;
+
+        if(keys.length > 1) {
+            throw new Error(`Language ${this.ID} has multiple skills!`)
+        }
+
+        return parseInt(keys[0]);
     }
+
+    get AutoLearn() { return new LanguageAutoLearn(this); }
+    get Words() { return new LanguageWords(this); }
 }
 
 export const Languages = {
-    create : (mod : string, id : string, name: loc_constructor, autolearnRaces: RaceType[] = [], autolearnClasses: ClassType[] = []) => {
+    create : (mod : string, id : string, name: loc_constructor) => {
         const langRow = DBC.Languages.add(Ids.Language.id(mod,id),{Name:name});
+        let sl = std.SkillLines.create(mod,id+'-skilline')
+           .Category.set(10)
+           .CanLink.set(0)
+           .SkillCosts.set(0)
+           .Name.set(name)
+           .Icon.set('Interface\\Icons\\Trade_Engineering')
+           .CanLink.set(0)
+           .RaceClassInfos.modNew(
+               x=>x.ClassMask.clearAll()
+                   .RaceMask.set(0xffffffff)
+                   .ClassMask.set(0xffffffff)
+                   .Flags.clearAll()
+                   .Flags.IsClassLine.mark()
+                   .SkillTierID.set(0)
+            )
 
-        let gutterSpell = DBC.Spell.findById(GUTTERSPEAK_SPELL)
-        let gutterSkill = DBC.SkillLine.findById(GUTTERSPEAK_SKILL)
-        let gutterSkillRaceClass = DBC.SkillRaceClassInfo.find({SkillID:GUTTERSPEAK_SKILL});
-        let gutterSkillAbility = DBC.SkillLineAbility.find({SkillLine:GUTTERSPEAK_SKILL});
-
-        // Spell definition
-        const spell = gutterSpell.clone(Ids.Spell.id(mod,id+'_spell'))
+        std.Spells.create(mod,id+'-spell')
             .Name.set(name)
-            .EffectMiscValue.set([langRow.ID.get(),0,0])
-
-        // Skill definition
-        const skill = gutterSkill.clone(Ids.SkillLine.id(mod,id+'_skill'))
-            .DisplayName.set(name)
-
-        // Class/race enabling
-        const src = gutterSkillRaceClass.clone(Ids.SkillRaceClassInfo.id())
-            .SkillID.set(skill.ID.get())
-            .ClassMask.set(0xffff)
-            .RaceMask.set(0xffff)
-
-        const cmask = makeClassmask(autolearnClasses);
-        const rmask = makeRacemask(autolearnRaces);
-        if(cmask!==0 || rmask!==0) {
-            // TODO: Doesn't work currently. Don't know why.
-            gutterSkillAbility.clone(Ids.SkillLineAbility.id())
-                .Spell.set(spell.ID.get())
-                .ClassMask.set(cmask)
-                .RaceMask.set(0)
-                .AcquireMethod.set(1)
-            SQL.playercreateinfo_spell_custom
-                .add(rmask, cmask, spell.ID.get())
-                .Note.set('TSWoW') 
-        }
-
-        // Skill<->Spell Mapping
-        const sla = gutterSkillAbility.clone(Ids.SkillLineAbility.id())
-            .Spell.set(spell.ID.get())
-            .SkillLine.set(skill.ID.get())
-            .ClassMask.set(0)
-            .RaceMask.set(0xffff)
-
+            .Attributes.isPassive.mark()
+            .Attributes.isHiddenInSpellbook.mark()
+            .Proc.Chance.set(101)
+            .DefenseType.set(1)
+            .PreventionType.set(1)
+            .Effects.modFree(effect=>{
+                effect.EffectType.setLanguage()
+                      .LanguageID.set(langRow.ID.get())
+                      .ChainAmplitude.set(1)
+            })
+            .SchoolMask.Physical.mark()
+            .SkillLines.modAdd(sl.ID,true,sla=>{
+                sla.RaceMask.set(0xffffffff)
+                   .AcquireMethod.set(2)
+                   .ClassMask.set(0)
+                   .ClassMaskForbidden.set(0)
+            })
         return new Language(langRow);
     },
 
