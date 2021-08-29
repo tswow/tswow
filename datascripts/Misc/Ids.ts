@@ -18,10 +18,14 @@ import { GetId, iterateIds } from "wotlkdata/ids/Ids"
 import { SQLNames } from "wotlkdata/sql/SQLFiles"
 import { DBCNames } from "wotlkdata/dbc/DBCFiles"
 
+// Swap this to check names in this file
+// type TableNameType = SQLNames | DBCNames
+type TableNameType = string;
+
 export class IdGenerator {
-    table : SQLNames | DBCNames
+    table : TableNameType
     startId : number;
-    constructor(table : SQLNames | DBCNames, startId : number) {
+    constructor(table : TableNameType, startId : number) {
         this.table = table;
         this.startId = startId;
     }
@@ -39,7 +43,7 @@ iterateIds((idrange)=>{
 export class AutoIdGenerator {
     curid: number;
     startId: number;
-    constructor(tableName: string, startId: number) {
+    constructor(tableName: TableNameType, startId: number) {
         let usedId = Math.max(startId,(highestReserved[tableName]||-1)+1)
         this.curid = usedId;
         this.startId = usedId;
@@ -80,19 +84,19 @@ export const Ids = {
     SkillRaceClassInfo: new AutoIdGenerator('SkillRaceClassInfo',971),
 
     /** Start at 27000 , Highest base value is 26034 */
-    Quest: new IdGenerator('quest_template',27000),
+    quest_template: new IdGenerator('quest_template',27000),
 
     /** Start at 178, Highest base value is 177 */
-    Title: new IdGenerator('CharTitles',178),
+    CharTitles: new IdGenerator('CharTitles',178),
 
     /** Start at 5000, Highest base value is 4824 */
     Achievement: new IdGenerator('Achievement',5000),
 
     /** Start at 20000, Highest base value is 13470 */
-    AchievementCriteria: new IdGenerator('Achievement_Criteria',20000),
+    Achievement_Criteria: new IdGenerator('Achievement_Criteria',20000),
 
     /** Starts at 16000, Highest base value is 15042 */
-    AchievementCategory: new AutoIdGenerator('Achievement_Category',16000),
+    Achievement_Category: new AutoIdGenerator('Achievement_Category',16000),
 
     /** Starts at 506, Highest base value is 505 */
     AnimationData: new AutoIdGenerator('AnimationData',506),
@@ -101,37 +105,37 @@ export const Ids = {
     SpellIcon: new AutoIdGenerator('SpellIcon',4376),
 
     /** Starts at 1000000, Highest base value is 3479*/
-    FishingLoot: new AutoIdGenerator('fishing_loot_template',1000000),
+    fishing_loot_template: new AutoIdGenerator('fishing_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 100006 */
-    CreatureLoot: new AutoIdGenerator('creature_loot_template',1000000),
+    creature_loot_template: new AutoIdGenerator('creature_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 195672 */
-    GameObjectLoot: new AutoIdGenerator('gameobject_loot_template',1000000),
+    gameobject_loot_template: new AutoIdGenerator('gameobject_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 54537 */
-    ItemLoot: new AutoIdGenerator('item_loot_template',1000000),
+    item_loot_template: new AutoIdGenerator('item_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 69 */
-    DisenchantLoot: new AutoIdGenerator('disenchant_loot_template',1000000),
+    disenchant_loot_template: new AutoIdGenerator('disenchant_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 36912 */
-    ProspectingLoot: new AutoIdGenerator('prospecting_loot_template',1000000),
+    prospecting_loot_template: new AutoIdGenerator('prospecting_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 36912 */
-    MillingLoot: new AutoIdGenerator('milling_loot_template',1000000),
+    milling_loot_template: new AutoIdGenerator('milling_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 34839 */
-    PickPocketLoot: new AutoIdGenerator('pickpocketing_loot_template',1000000),
+    pickpocketing_loot_template: new AutoIdGenerator('pickpocketing_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 100014 */
-    SkinningLoot: new AutoIdGenerator('skinning_loot_template',1000000),
+    skinning_loot_template: new AutoIdGenerator('skinning_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 526760 */
-    ReferenceLoot: new AutoIdGenerator('reference_loot_template',1000000),
+    reference_loot_template: new AutoIdGenerator('reference_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 69412 */
-    SpellLoot: new AutoIdGenerator('spell_loot_template',1000000),
+    spell_loot_template: new AutoIdGenerator('spell_loot_template',1000000),
 
     /** Starts at 1161, Highest base value is 1160. */
     Faction: new IdGenerator('Faction',1161),
@@ -144,13 +148,13 @@ export const Ids = {
     ReputationIndex: new IdGenerator('ReputationIndex',105),
 
     /** Start at 100000 , Highest base value is 56807 */
-    Item: new IdGenerator('item_template',100000),
+    item_template: new IdGenerator('item_template',100000),
 
     /** Starts at 12, Highest base value is 11 */
     Class: new IdGenerator('ChrClasses',12),
 
     /** Starts at 100000, Highest base value is 43282 */
-    CreatureTemplate: new IdGenerator('creature_template',1000000),
+    creature_template: new IdGenerator('creature_template',1000000),
 
     /** Starts at 1000000, Highest base value is 213824 */
     CreatureInstance: new IdGenerator('creature',1000000),
@@ -168,10 +172,10 @@ export const Ids = {
     NPCText: new AutoIdGenerator('npc_text',1000000),
 
     /** Starts at 100000, Highest base value is 74294 */
-    GossipMenuOption: new AutoIdGenerator('gossip_menu_option',100000),
+    gossip_menu_option: new AutoIdGenerator('gossip_menu_option',100000),
 
     /** Starts at 58000, highest base value is 57019 */
-    GossipMenu: new AutoIdGenerator('gossip_menu',58000),
+    gossip_menu: new AutoIdGenerator('gossip_menu',58000),
 
     /** Starts at 100000, highest base value is 77865 */
     BroadcastText: new AutoIdGenerator('broadcast_text',100000),
@@ -276,10 +280,10 @@ export const Ids = {
     BattleMasterList: new AutoIdGenerator('BattlemasterList',40),
 
     /** Starts at 40, highest base value is 37 */
-    CfgCategories: new AutoIdGenerator('Cfg_Categories',40),
+    Cfg_Categories: new AutoIdGenerator('Cfg_Categories',40),
 
     /** Starts at 14, highest base value is 13 */
-    CfgConfigs: new IdGenerator('Cfg_Configs',14),
+    Cfg_Configs: new IdGenerator('Cfg_Configs',14),
 
     /** Starts at 223, highest base value is 222 */
     CharacterFacialHairStyles: new AutoIdGenerator('CharacterFacialHairStyles',223),
@@ -366,11 +370,11 @@ export const Ids = {
     /** Starts at 725, highest base value is 724 */
     Map: new IdGenerator('Map', 725),
     /** Starts at 250000, highest base value is 244605 */
-    GameObjectTemplate: new IdGenerator('gameobject_template',250000),
+    gameobject_template: new IdGenerator('gameobject_template',250000),
     /** Starts at 300000, highest base value is 165990 */
-    GameObjectInstance: new IdGenerator('gameobject', 300000),
+    gameobject: new IdGenerator('gameobject', 300000),
     /** Starts at  10000, highest base value is 9624 */
-    GameObjectDisplay: new AutoIdGenerator('GameObjectDisplayInfo',10000),
+    GameObjectDisplayInfo: new AutoIdGenerator('GameObjectDisplayInfo',10000),
     /** 
      * Starts at 1000, highest base value is 21 
      * (but some Spells use higher values, so 1000 is for safety) 
@@ -390,7 +394,7 @@ export const Ids = {
     /**
      * Starts at 4000, highest base value is 3440
      */
-    CreatureModelInfo: new AutoIdGenerator('creature_model_info',4000),
+    creature_model_info: new AutoIdGenerator('creature_model_info',4000),
 
     /**
      * Starts at 4000, highest base value is 3627
@@ -430,17 +434,17 @@ export const Ids = {
     /** 
      * Starts at 2000, highest base value is 1178 
      */
-    SpellChainEffects: new AutoIdGenerator('SpellEffectChains',2000),
+    SpellChainEffects: new AutoIdGenerator('SpellChainEffects',2000),
 
     /**
      * Starts at 100000, highest base value is 68529
      */
-    SpellGroups: new AutoIdGenerator('spell_group',100000),
+    spell_group: new AutoIdGenerator('spell_group',100000),
 
     /**
      * Starts at 1000000, highest base value is ~1000
      */
-    GameTele: new AutoIdGenerator('game_tele',1000000),
+    game_tele: new AutoIdGenerator('game_tele',1000000),
 
     /**
      * Starts at 22000, highest base value is 21381
@@ -450,7 +454,7 @@ export const Ids = {
     /**
      * Starts at 2147483648, highest base value is 2147483647 (shared with CreatureDisplayInfo/creature_model_info)
      */
-    CreatureTemplateOutfits: new AutoIdGenerator('creature_template_outfits',2147483648),
+    creature_template_outfits: new AutoIdGenerator('creature_template_outfits',2147483648),
 
     /**
      * Starts at 600, highest base value is 575
@@ -706,7 +710,7 @@ export const Ids = {
     ScreenEffect: new IdGenerator('ScreenEffect', 800),
 
     /** Starts at 34, highest base value is 33 */
-    SheatheSoundLookup: new AutoIdGenerator('SheatheSoundLookup', 34),
+    SheatheSoundLookup: new AutoIdGenerator('SheatheSoundLookups', 34),
 
     /** Starts at 1501, highest base value is 1500 (cont) */
     SkillCostsData: new AutoIdGenerator('SkillCostsData', 1501),
@@ -787,7 +791,7 @@ export const Ids = {
     TeamContributionPoints: new AutoIdGenerator('TeamContributionPoints', 1401),
 
     /** Starts at 11, highest base value is 10 (cont) */
-    TerrainTypeSounds: new AutoIdGenerator('TerrainTypeSounds', 11),
+    TerrainTypeSounds: new AutoIdGenerator('TerraintypeSounds', 11),
 
     /** Starts at 200000, highest base value is 179690 */
     TransportAnimation: new AutoIdGenerator('TransportAnimation', 200000),

@@ -139,7 +139,7 @@ function getRows(id: number) : [item_templateRow, ItemRow] {
 
 export const Items = {
     create(mod: string, id: string, parent: number = -1) {
-        const numid = Ids.Item.id(mod,id);
+        const numid = Ids.item_template.id(mod,id);
 
         if(parent < 0) {
             const sqlRow = SQL.item_template.add(numid)

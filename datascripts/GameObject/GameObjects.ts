@@ -27,7 +27,7 @@ import { GameObjectInstance } from "./GameObjectInstance"
 
 export const GameObjectTemplates = {
     create(mod: string, id: string, parent: number = -1) {
-        const entry = Ids.GameObjectTemplate.id(mod,id)
+        const entry = Ids.gameobject_template.id(mod,id)
         const row = parent != -1 ? SQL.gameobject_template
             .find({entry:parent}).clone(entry)
             : (SQL.gameobject_template.add(entry)
@@ -80,7 +80,7 @@ export const GameObjectTemplates = {
 export const GameObjectInstances = {
     create(mod: string, id: string, pos: Position) {
         return new GameObjectInstance(
-            SQL.gameobject.add(Ids.GameObjectInstance.id(mod,id))
+            SQL.gameobject.add(Ids.gameobject.id(mod,id))
                 .VerifiedBuild.set(17688)
         ).Position.set(pos)
     },
@@ -96,7 +96,7 @@ export const GameObjectInstances = {
 
 export const GameObjectDisplays = {
     create(modelPath: string, boundingBox: BoundingBox = new BoundingBox(-1,-1,-1,1,1,1)) {
-        const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplay.id());
+        const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplayInfo.id());
         row.ModelName.set(modelPath);
         return new GameObjectDisplay(row);
     },

@@ -108,7 +108,7 @@ export class LootSetPointer<T> extends Ref<T,LootSet>{
 export const Loot = {
     Fishing: {
         create() {
-            return new LootSet(Ids.FishingLoot.id(),SQL.fishing_loot_template);
+            return new LootSet(Ids.fishing_loot_template.id(),SQL.fishing_loot_template);
         },
         
         load(id: number) {
@@ -118,7 +118,7 @@ export const Loot = {
     
     Creature: {
         create() {
-            return new LootSet(Ids.CreatureLoot.id(),SQL.creature_loot_template);
+            return new LootSet(Ids.creature_loot_template.id(),SQL.creature_loot_template);
         },
         
         load(id: number) {
@@ -128,7 +128,7 @@ export const Loot = {
     
     GameObject: {
         create() {
-            return new LootSet(Ids.GameObjectLoot.id(),SQL.gameobject_loot_template);
+            return new LootSet(Ids.gameobject_loot_template.id(),SQL.gameobject_loot_template);
         },
         
         load(id: number) {
@@ -138,7 +138,7 @@ export const Loot = {
     
     Item: {
         create() {
-            return new LootSet(Ids.ItemLoot.id(),SQL.item_loot_template);
+            return new LootSet(Ids.item_loot_template.id(),SQL.item_loot_template);
         },
         
         load(id: number) {
@@ -148,7 +148,7 @@ export const Loot = {
     
     Disenchant: {
         create() {
-            return new LootSet(Ids.DisenchantLoot.id(),SQL.disenchant_loot_template);
+            return new LootSet(Ids.disenchant_loot_template.id(),SQL.disenchant_loot_template);
         },
         
         load(id: number) {
@@ -158,7 +158,7 @@ export const Loot = {
     
     Prospecting: {
         create() {
-            return new LootSet(Ids.ProspectingLoot.id(),SQL.prospecting_loot_template);
+            return new LootSet(Ids.prospecting_loot_template.id(),SQL.prospecting_loot_template);
         },
         
         load(id: number) {
@@ -168,7 +168,7 @@ export const Loot = {
     
     Milling: {
         create() {
-            return new LootSet(Ids.MillingLoot.id(),SQL.milling_loot_template);
+            return new LootSet(Ids.milling_loot_template.id(),SQL.milling_loot_template);
         },
         
         load(id: number) {
@@ -178,7 +178,7 @@ export const Loot = {
     
     Pickpocket: {
         create() {
-            return new LootSet(Ids.PickPocketLoot.id(),SQL.pickpocketing_loot_template);
+            return new LootSet(Ids.pickpocketing_loot_template.id(),SQL.pickpocketing_loot_template);
         },
         
         load(id: number) {
@@ -188,7 +188,7 @@ export const Loot = {
     
     Skinning: {
         create() {
-            return new LootSet(Ids.SkinningLoot.id(),SQL.skinning_loot_template);
+            return new LootSet(Ids.skinning_loot_template.id(),SQL.skinning_loot_template);
         },
         
         load(id: number) {
@@ -204,7 +204,7 @@ export const Loot = {
     
     Reference: {
         create() {
-            return new LootSet(Ids.ReferenceLoot.id(),SQL.reference_loot_template);
+            return new LootSet(Ids.reference_loot_template.id(),SQL.reference_loot_template);
         },
         
         load(id: number) {
@@ -214,7 +214,7 @@ export const Loot = {
     
     Spell: {
         create() {
-            return new LootSet(Ids.SpellLoot.id(),SQL.spell_loot_template);
+            return new LootSet(Ids.spell_loot_template.id(),SQL.spell_loot_template);
         },
         
         load(id: number) {

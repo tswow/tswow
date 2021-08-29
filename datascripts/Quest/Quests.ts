@@ -21,7 +21,7 @@ import { Quest } from "./Quest";
 
 export const Quests = {
     create(mod : string, id : string) {
-        const genid = Ids.Quest.id(mod,id);
+        const genid = Ids.quest_template.id(mod,id);
         const row = SQL.quest_template.add(genid,{
             AllowableRaces:0,
             AreaDescription: "",

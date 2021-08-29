@@ -51,14 +51,14 @@ export class GossipPointer<T> extends Ref<T, Gossip> {
         return this.cell.get() > 0;
     }
     protected create(): Gossip {
-        let gossipId = Ids.GossipMenu.id();
+        let gossipId = Ids.gossip_menu.id();
         let textId = Ids.NPCText.id();
         SQL.npc_text.add(textId);
         return new Gossip(SQL.gossip_menu.add(gossipId,textId));
     }
     protected clone(): Gossip {
         let gossipRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
-        let gossipId = Ids.GossipMenu.id();
+        let gossipId = Ids.gossip_menu.id();
         let textId = Ids.NPCText.id();        
         SQL.npc_text.find({ID:gossipRow.TextID.get()})
             .clone(textId);

@@ -9,14 +9,14 @@ export class AchievementCriteria extends CellSystem<Achievement> {
 
     protected addCriteria(mod : string,criteriaId: string, c?: Achievement_CriteriaCreator) {
         const crit = DBC.Achievement_Criteria
-            .add(Ids.AchievementCriteria.id(mod,criteriaId),c)
+            .add(Ids.Achievement_Criteria.id(mod,criteriaId),c)
         crit.Achievement_Id.set(this.owner.row.ID.get());
         this.criteria.push(crit);
         return crit;
     }
 
     protected addSimpleCriteria(mod : string, id : string, type : number,assetId : number, quantity : number) {
-        const idgen = Ids.AchievementCriteria.id(mod,id);
+        const idgen = Ids.Achievement_Criteria.id(mod,id);
         const crit = DBC.Achievement_Criteria.add(idgen,{
             Achievement_Id: this.owner.row.ID.get(),
             Timer_Asset_Id:0,

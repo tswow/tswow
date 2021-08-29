@@ -27,7 +27,7 @@ export const CreatureTemplates = {
     Presets: CreaturePresets,
 
     create: (mod: string, id: string, parent: number = -1) => {
-        let nid = Ids.CreatureTemplate.id(mod,id);
+        let nid = Ids.creature_template.id(mod,id);
         if(parent<0) {
             return new CreatureTemplate(SQL.creature_template.add(nid))
                 .Icon.setNone()
@@ -68,7 +68,7 @@ export const CreatureTemplates = {
                 .HoverHeight.set(0)
         } else {
             return new CreatureTemplate(SQL.creature_template.find({entry: parent})
-                .clone(Ids.CreatureTemplate.id(mod, id)));
+                .clone(Ids.creature_template.id(mod, id)));
         }
     },
 

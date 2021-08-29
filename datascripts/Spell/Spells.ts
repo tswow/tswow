@@ -143,7 +143,7 @@ export const SpellGroups = {
     },
 
     create() {
-        let id = Ids.SpellGroups.id();
+        let id = Ids.spell_group.id();
         SQL.spell_group_stack_rules.add(id,{stack_rule: 0});
         return id;
     }

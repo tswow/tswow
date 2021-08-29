@@ -28,7 +28,7 @@ export class Title extends MainEntity<CharTitlesRow>{
 
 export const Titles = {
     create : (mod : string, id : string, name: loc_constructor, femaleName: loc_constructor) => {
-        const genid = Ids.Title.id(mod,id);
+        const genid = Ids.CharTitles.id(mod,id);
         const highest = DBC.CharTitles.filter({}).sort((a,b)=>b.Mask_ID>a.Mask_ID?1:-1)[0].Mask_ID.get();
         const row = DBC.CharTitles.add(genid,{Mask_ID:highest+1, Name:name,Name1:femaleName});
         return new Title(row);

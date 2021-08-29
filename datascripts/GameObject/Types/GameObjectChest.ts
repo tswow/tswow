@@ -37,7 +37,7 @@ export class GameObjectChest extends GameObjectTemplate<GameObjectChest> {
               this
             , this.row.Data1
             , SQL.gameobject_loot_template
-            , Ids.GameObjectLoot
+            , Ids.gameobject_loot_template
             );
     }
 

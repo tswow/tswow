@@ -58,7 +58,7 @@ finish('build-maps',()=>{
                     let cX = minX+(maxX-minX)/2;
                     let cY = minY+(maxY-minY)/2;
 
-                    SQL.game_tele.add(Ids.GameTele.id())
+                    SQL.game_tele.add(Ids.game_tele.id())
                         .map.set(map.ID.get())
                         .name.set(`map:${id}`)
                         .position_x.set(cX)

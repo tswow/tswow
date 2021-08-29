@@ -20,7 +20,7 @@ import { Gossip } from "./Gossip";
 
 export const Gossips = {
     create(){
-        const id = Ids.GossipMenu.id();
+        const id = Ids.gossip_menu.id();
         const text = Ids.NPCText.id();
         const gossipRow = SQL.gossip_menu.add(id, text)
             .VerifiedBuild.set(17688)

@@ -136,7 +136,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
               this
             , this.row.lootid
             , SQL.creature_loot_template
-            , Ids.CreatureLoot
+            , Ids.creature_loot_template
             )
     }
 
@@ -145,7 +145,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
             this
           , this.row.pickpocketloot
           , SQL.pickpocketing_loot_template
-          , Ids.PickPocketLoot
+          , Ids.pickpocketing_loot_template
           )
     }
 
@@ -154,7 +154,7 @@ export class CreatureTemplate extends GOCreature<creature_templateRow> {
             this
           , this.row.skinloot
           , SQL.skinning_loot_template
-          , Ids.SkinningLoot
+          , Ids.skinning_loot_template
           )
     }
 

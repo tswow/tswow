@@ -1,4 +1,3 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
@@ -132,10 +131,10 @@ export class GameObjectDisplayPointer<T> extends Ref<T,GameObjectDisplay> {
     }
     protected create(): GameObjectDisplay {
         return new GameObjectDisplay(
-            DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplay.id()))
+            DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplayInfo.id()))
     }
     protected clone(): GameObjectDisplay {
-        return new GameObjectDisplay(this.resolve().row.clone(Ids.GameObjectDisplay.id()))
+        return new GameObjectDisplay(this.resolve().row.clone(Ids.GameObjectDisplayInfo.id()))
     }
     protected id(v: GameObjectDisplay): number {
         return v.ID;
