@@ -5,6 +5,7 @@ import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { Ids } from "../Misc/Ids";
 import { SkillLine } from "./SkillLine";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
     get IsProfession() { return this.bit(5); }
@@ -12,6 +13,7 @@ export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
 }
 
 export class SkillRaceClassInfo extends CellSystemTop {
+    @Transient
     readonly row: SkillRaceClassInfoRow;
 
     constructor(row: SkillRaceClassInfoRow) {
