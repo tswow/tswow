@@ -95,7 +95,7 @@ function createSpell(id: number, parent: number = 0) {
         .PowerDisplayID.set(0)
         .PowerType.set(0)
         .PreventionType.set(0)
-        .ProcChance.set(0)
+        .ProcChance.set(101)
         .ProcCharges.set(0)
         .ProcTypeMask.set(0)
         .RangeIndex.set(0)

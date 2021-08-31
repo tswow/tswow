@@ -1,4 +1,3 @@
-import { ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Spell } from "../Spell/Spell";
 
 export type DefaultProfession = 
@@ -55,18 +54,30 @@ export type ProfessionTier =
     'Expert' | 
     'Artisan' | 
     'Master' | 
-    'Grand Master'
+    'Grand Master' | number
 
-export function resolveProfessionTier(tier: ProfessionTier|number) {
+export function resolveProfessionRank(tier: ProfessionTier|number) {
     if(typeof(tier)=='number') return tier;
     switch(tier) {
-        case 'Apprentice': return 1;
-        case 'Journeyman': return 2;
-        case 'Expert': return 3;
-        case 'Artisan': return 4;
-        case 'Master': return 5;
-        case 'Grand Master': return 6;
+        case 'Apprentice': return 0;
+        case 'Journeyman': return 1;
+        case 'Expert': return 2;
+        case 'Artisan': return 3;
+        case 'Master': return 4;
+        case 'Grand Master': return 5;
         default: throw new Error(`Invalid profession tier: ${tier}`)
+    }
+}
+
+export function getProfessionRank(rank: number) {
+    switch(rank) {
+        case 1: return 'Apprentice';
+        case 2: return 'Journeyman';
+        case 3: return 'Expert';
+        case 4: return 'Artisan';
+        case 5: return 'Master';
+        case 6: return 'Grand Master';
+        default: throw new Error(`Invalid profession tier: ${rank}`)
     }
 }
 

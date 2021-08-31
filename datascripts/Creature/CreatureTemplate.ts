@@ -14,7 +14,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { Position } from "../Misc/Position";

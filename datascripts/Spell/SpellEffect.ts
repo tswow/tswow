@@ -28,10 +28,24 @@ import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { SpellRadiusPointer } from "./SpellRadius";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     get length() {
         return 3;
+    }
+
+    objectifyPlain() {
+        return [this.get(0),this.get(1),this.get(2)]
+            .filter(x=>!x.isClear())
+            .map(x=>x.objectifyPlain())
+    }
+
+    hasEffectType(effectType: number) {
+        return this.isEffectType(0,effectType) 
+            || this.isEffectType(1,effectType) 
+            || this.isEffectType(2, effectType)
+            ;
     }
 
     isEffectType(index: number, effectType: number) {
@@ -175,7 +189,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
 
     clear(): this {
         this.BasePoints.set(0);
-        this.ChainAmplitude.set(0);
+        this.ChainAmplitude.set(1);
         this.ChainTarget.set(0);
         this.DieSides.set(0);
         this.ImplicitTargetA.set(0);
@@ -198,6 +212,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return this.wrapIndex(arr, this.index);
     }
 
+    @Transient
     get row() { return this.container.row; }
 
     get Radius() { return new SpellRadiusPointer(this, this.w(this.row.EffectRadiusIndex)); }
@@ -220,6 +235,10 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
     get ClassMask(): EffectClassSet<this> { return new EffectClassSet(this, this); }
+
+    objectifyPlain() {
+        return super.objectify();
+    }
 
     objectify() {
         if(all_auras[this.AuraType.get()]) {

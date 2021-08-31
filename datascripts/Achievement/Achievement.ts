@@ -1,4 +1,4 @@
-import { Cell, FunctionalCell } from "wotlkdata/cell/cells/Cell";
+import { FunctionalCell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { Ids } from "../Misc/Ids";
@@ -7,13 +7,14 @@ import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 
 export class Achievement extends MainEntity<AchievementRow> {
-    readonly criteria : AchievementCriteria;
+    readonly Criteria : AchievementCriteria;
 
     constructor(row: AchievementRow) {
         super(row);
-        this.criteria = new AchievementCriteria(this);
+        this.Criteria = new AchievementCriteria(this);
     }
 
+    get ID() { return this.row.ID.get(); }
     get Category() { return this.wrap(this.row.Category); }
     get Description() { return this.wrapLoc(this.row.Description); }
     get Icon() {

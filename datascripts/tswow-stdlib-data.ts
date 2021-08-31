@@ -43,6 +43,7 @@ import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
 import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { MailTemplateRegistry } from "./Mail/MailTemplate";
 import { Compare } from "./Misc/Compare";
+import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
 
 export const std = {
     Spells : Spells,
@@ -85,5 +86,6 @@ export const std = {
     ZoneMusic: ZoneMusicRegistry,
     SoundEntries: SoundEntryRegistry,
     MailTemplates: MailTemplateRegistry,
-    Compare: Compare
+    Compare: Compare,
+    SkillTiers: SkillTiersRegistry
 }

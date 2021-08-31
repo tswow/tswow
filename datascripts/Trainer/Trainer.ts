@@ -84,6 +84,7 @@ export class Trainer extends MainEntity<trainerRow> {
     setTradeskillTrainer(requiredSpell: number = 0) {
         this.Type.setTradeskillTrainer();
         this.Requirement.set(requiredSpell);
+        return this;
     }
 
     addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {

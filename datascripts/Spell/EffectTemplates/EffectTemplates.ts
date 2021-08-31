@@ -539,7 +539,8 @@ export class DurabilityDamagePercent extends DamageBasePct {
 // 118
 @EffectID(118)
 export class Skill extends TargetBase {
-    SkillID() { return this.wrap(this.owner.MiscValueA); }
+    get SkillID() { return this.wrap(this.owner.MiscValueA); }
+    get SkillTier() { return this.wrap(this.owner.BasePoints); }
 }
 // 119
 // 120
@@ -548,7 +549,7 @@ export class Skill extends TargetBase {
 // 123
 @EffectID(123)
 export class SendTaxi extends TargetBase {
-    TaxiID() { return this.wrap(this.owner.MiscValueA); }
+    get TaxiID() { return this.wrap(this.owner.MiscValueA); }
 }
 // 124
 @EffectID(124)

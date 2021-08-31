@@ -13,15 +13,13 @@ export abstract class ProfessionLocSystem extends LocSystem<Profession> {
     protected abstract main(skillLine: SkillLine): LocSystem<any>
 
     protected allSystems() {
-        let systems = [this.main(this.owner.skillLine)];
-
-        for(let i=1;i<this.owner.GetHighestRank();++i) {
-            systems.push(this.forSpell(this.owner.getSkillRank(i)));
-        }
-        if(this.owner.GetHighestRank()>0) {
-            systems.push(this.forSpell(this.owner.ApprenticeLearnSpell));
-        }
-
+        let systems = [this.main(this.owner.SkillLine)];
+        this.owner.Ranks.forEach(el=>{
+            systems.push(this.forSpell(el.ProfessionSpell()));
+            el.LearnSpells().forEach(x=>{
+                systems.push(this.forSpell(x))
+            });
+        });
         return systems;
     }
     
