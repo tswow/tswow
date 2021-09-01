@@ -36,6 +36,7 @@ import { EquipSkills } from "./EquipSkills";
 import { ClassRaces } from "./ClassRaces";
 import { ClassSkillLines } from "./ClassSkillLines";
 import { StartButtons } from "./StartButtons";
+import { ClassTalents } from "./ClassTalents";
 
 type ClassFinder = number;
 
@@ -82,6 +83,7 @@ export class Class extends MainEntity<ChrClassesRow> {
     get Races() { return new ClassRaces(this); }
     get SkillLines() { return new ClassSkillLines(this); }
     get StartButtons() { return new StartButtons(this); }
+    get Talents() { return new ClassTalents(this); }
 }
 
 const clsResolve = (f : ClassFinder) => {

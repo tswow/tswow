@@ -15,15 +15,70 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { TalentRow } from "wotlkdata/dbc/types/Talent";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MainEntity } from "../Misc/Entity";
 import { TalentRequirements } from "./TalentRequirements";
+import { Spell } from "../Spell/Spell";
+import { Spells } from "../Spell/Spells";
+
+export class TalentSpells extends CellSystem<Talent> {
+    get length() {
+        return this.owner.row.SpellRank.length();
+    }
+
+    isValid(index: number) {
+        return this.owner.row.SpellRank.getIndex(index) > 0;
+    }
+
+    get(index: number) {
+        return Spells.load(this.owner.row.SpellRank.getIndex(index));
+    }
+
+    set(index: number, spellId: number) {
+        this.owner.row.SpellRank.setIndex(index,spellId);
+        return this.owner;
+    }
+
+    add(...spellId: number[]) {
+        for(let i=0;i<this.owner.row.SpellRank.length();++i) {
+            if(spellId.length === 0) return this.owner;
+            if(this.owner.row.SpellRank.getIndex(i) === 0) {
+                this.owner.row.SpellRank.setIndex(i,spellId.splice(0,1)[0]);
+            }
+            if(spellId.length === 0) return this.owner;
+        }
+        throw new Error(
+            `No room for more talent ranks!`
+            + `A talent can only have ${this.length} entries`
+            );
+    }
+
+    forEachSpell(callback: (spell: Spell, index: number)=>void) {
+        this.owner.row.SpellRank.get().forEach((x,i)=>{
+            if(x>0) { callback(Spells.load(x),i); }
+        })
+        return this.owner;
+    }
+}
+
+export class TalentPosition extends CellSystem<Talent> {
+    get Column() { return this.ownerWrap(this.owner.row.ColumnIndex); }
+    /**
+     * @note Called "TierID" in DBC
+     */
+    get Row() { return this.ownerWrap(this.owner.row.TierID); }
+    set(row: number, column: number) {
+        this.Row.set(row);
+        this.Column.set(column);
+        return this.owner;
+    }
+}
 
 export class Talent extends MainEntity<TalentRow> {
     get ID() { return this.row.ID.get() }
-    get Column() { return this.wrap(this.row.ColumnIndex); }
+    get Position() { return new TalentPosition(this); }
     get Requirements() { return new TalentRequirements(this); }
     get RequiredSpell() { return this.wrap(this.row.RequiredSpellID); }
-    get Row() { return this.wrap(this.row.TierID); }
     get TabID() { return this.wrap(this.row.TabID); }
-    get Spells() { return this.wrapArray(this.row.SpellRank); }
+    get Spells() { return new TalentSpells(this); }
 }

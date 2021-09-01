@@ -20,6 +20,8 @@ import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { Talent } from "./Talent";
+import { Spell } from "../Spell/Spell";
+import { Spells } from "../Spell/Spells";
 
 export class TalentTree extends MainEntity<TalentTabRow> {
     get ID() { return this.row.ID.get(); }
@@ -27,21 +29,50 @@ export class TalentTree extends MainEntity<TalentTabRow> {
     get BackgroundImage() { return this.wrap(this.row.BackgroundFile); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
 
-    addTalent(mod: string, id: string, row: number, column: number, spellIds: number[], callback?: (talent: Talent)=>void) {
+    forEach(callback: (talent: Talent)=>void) {
+        DBC.Talent.filter({TabID:this.ID})
+            .map(x=>new Talent(x))
+            .forEach(callback);
+        return this;
+    }
+
+    get(row: number, column: number) {
+        return new Talent(DBC.Talent.find({TierID:this.ID,ColumnIndex:column,TabID:row}));
+    }
+
+    mod(row: number, column: number, callback: (talent: Talent)=>void) {
+        callback(this.get(row,column));
+        return this;
+    }
+
+    addSpells(mod: string, id: string, spellCount: number, parentSpell = 0) {
+        let spells: Spell[] = [];
+        for(let i=0;i<spellCount;++i) {
+            spells.push(Spells.create(mod,`${id}-spell-rank-${i}`,parentSpell));
+        }
+        spells.forEach((x,i)=>{
+            x.Rank.set(spells[0].ID,i+1);
+        })
+        return this.add(mod,`${id}-talent`)
+            .Spells.add(...spells.map(x=>x.ID));
+    }
+
+    addSpellsMod(mod: string, id: string, spellCount: number, callback: (talent: Talent)=>void) {
+        callback(this.addSpells(mod,id,spellCount))
+        return this.owner;
+    }
+
+    addMod(mod: string, id: string, callback: (talent: Talent)=>void = ()=>{}) {
+        callback(this.add(mod,id))
+    }
+
+    add(mod: string, id: string) {
         const talent = DBC.Talent.add(Ids.Talent.id(mod,id))
             .TabID.set(this.ID)
-            .ColumnIndex.set(column)
-            .TierID.set(row)
             .PrereqTalent.set([0,0,0])
             .PrereqRank.set([0,0,0])
-            .Flags.set(spellIds.length===0? 1 : 0)
             .CategoryMask.set([0,0])
-            .SpellRank.set([0,0,0,0,0,0,0,0,0])
-
-        for(let i=0;i<spellIds.length;++i) {
-            talent.SpellRank.setIndex(i, spellIds[i]);
-        }
-        if(callback) callback(new Talent(talent));
-        return this;
+            .SpellRank.set([0,0,0,0,0,0,0])
+        return new Talent(talent);
     }
 }
