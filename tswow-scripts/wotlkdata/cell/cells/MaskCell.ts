@@ -55,14 +55,18 @@ export abstract class MaskCell<T> extends CellRoot<T> {
 export class MaskCell32<T> extends MaskCell<T> {
     @Transient
     protected cell: Cell<number, any>;
+    protected readonly signed: boolean;
 
-    constructor(owner: T, cell: Cell<number, any>) {
+    constructor(owner: T, cell: Cell<number, any>, signed = false) {
         super(owner);
         this.cell = cell;
+        this.signed = signed;
     }
 
     toString() {
-        return this.cell.get().toString(2);
+        return (this.signed && this.cell.get() == -1)
+            ? '1'.repeat(32)
+            : this.cell.get().toString(2)
     }
 
     clearAll() {
@@ -71,17 +75,23 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     mark(no: number): T {
-        this.cell.set((this.cell.get() | 1 << no)>>>0);
+        if(!this.signed || this.cell.get() != -1) {
+            this.set((this.cell.get() | 1 << no)>>>0);
+        }
         return this.owner;
     }
 
     clear(no: number): T {
-        this.cell.set((this.cell.get() & ~(1 << no))>>>0);
+        if(this.signed && this.cell.get() == -1 && no < 32 && no >= 0) {
+            this.cell.set(0xffffffff);
+        }
+        this.set((this.cell.get() & ~(1 << no))>>>0);
         return this.owner;
     }
 
     check(no: number): boolean {
-        return ((this.cell.get()) & ((1 << no))>>>0) !== 0;
+        return (this.signed && this.cell.get() == -1)
+            || ((this.cell.get()) & ((1 << no))>>>0) !== 0;
     }
 
     get(): number {
@@ -89,7 +99,7 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     set(value: number) {
-        this.cell.set(value);
+        this.cell.set(this.signed && value == 0xffffffff ? -1 : value);
         return this.owner;
     }
 
