@@ -16,21 +16,22 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
-import { loc_constructor } from "wotlkdata/primitives";
 import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
 
 export class Title extends MainEntity<CharTitlesRow>{
-    get Id() {
-        return this.row.ID;
-    }
+    get ID() { return this.row.ID.get(); }
+    get MaleText() { return this.wrapLoc(this.row.Name); }
+    get FemaleText() { return this.wrapLoc(this.row.Name1); }
 }
 
 export const Titles = {
-    create : (mod : string, id : string, name: loc_constructor, femaleName: loc_constructor) => {
+    create : (mod : string, id : string) => {
         const genid = Ids.CharTitles.id(mod,id);
         const highest = DBC.CharTitles.filter({}).sort((a,b)=>b.Mask_ID>a.Mask_ID?1:-1)[0].Mask_ID.get();
-        const row = DBC.CharTitles.add(genid,{Mask_ID:highest+1, Name:name,Name1:femaleName});
+        const row = DBC.CharTitles.add(genid,{Mask_ID:highest+1})
+        row.Name.clear();
+        row.Name1.clear();
         return new Title(row);
     },
 
@@ -40,5 +41,9 @@ export const Titles = {
 
     filter (query: CharTitlesQuery) {
         return DBC.CharTitles.filter(query).map(x=>new Title(x));
+    },
+
+    find (query: CharTitlesQuery) {
+        return new Title(DBC.CharTitles.find(query));
     }
 }

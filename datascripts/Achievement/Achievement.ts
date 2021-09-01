@@ -5,6 +5,7 @@ import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
+import { AchievementReward } from "./AchievementReward";
 
 export class Achievement extends MainEntity<AchievementRow> {
     readonly Criteria : AchievementCriteria;
@@ -27,6 +28,7 @@ export class Achievement extends MainEntity<AchievementRow> {
     get Points() { return this.wrap(this.row.Points); }
     get Name() { return this.wrapLoc(this.row.Title); }
     get UIOrder() { return this.wrap(this.row.Ui_Order); }
+    get Rewards() { return new AchievementReward(this); }
 }
 
 export const Achievements = {
