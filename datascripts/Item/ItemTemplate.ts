@@ -48,6 +48,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { ClassMask } from "../Misc/ClassMask";
+import { RefStatic } from "../Refs/Ref";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
@@ -218,5 +219,23 @@ export const Items = {
     filter(query: item_templateQuery) {
         // TODO: Can be more efficient
         return SQL.item_template.filter(query).map(x=>Items.load(x.entry.get()));
+    }
+}
+
+export class ItemTemplateRef<T> extends RefStatic<T,ItemTemplate> {
+    protected create(mod: string, id: string, parent?: number): ItemTemplate {
+        return Items.create(mod,id,parent);
+    }
+    protected clone(mod: string, id: string): ItemTemplate {
+        return Items.create(mod,id,this.resolve().ID);
+    }
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: ItemTemplate): number {
+        return v.ID;
+    }
+    protected resolve(): ItemTemplate {
+        return Items.load(this.cell.get());
     }
 }

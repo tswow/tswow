@@ -121,7 +121,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Mana() { return new SpellPower(this,this);}
 
 
-    get ItemEquips() { return new SpellItemEquips(this); }
+    get ItemEquips() { return new SpellItemEquips(this, this.row); }
     get Proc() { return new SpellProc(this); }
     get Priority() { return this.wrap(this.row.SpellPriority); }
     get Cooldown() { return new SpellRecovery(this, this); }

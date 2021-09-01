@@ -22,6 +22,7 @@ export function effectToPath(effect: number) {
     return DBC.ItemVisualEffects.findById(effect).Model;
 }
 
+// TODO: This should be called "ItemVisuals", not "ItemEffects"
 export class ItemEffects extends MainEntity<ItemVisualsRow> {
     get length(): number {
         return 5;

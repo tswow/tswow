@@ -45,6 +45,8 @@ import { MailTemplateRegistry } from "./Mail/MailTemplate";
 import { Compare } from "./Misc/Compare";
 import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
 import { GlyphRegistry } from "./Glyph/Glyph";
+import { EnchantmentRegistry } from "./Enchant/Enchantment";
+import { EnchantmentConditionsRegistry } from "./Enchant/EnchantmentCondition";
 
 export const std = {
     Spells : Spells,
@@ -89,5 +91,7 @@ export const std = {
     MailTemplates: MailTemplateRegistry,
     Compare: Compare,
     SkillTiers: SkillTiersRegistry,
-    Glyphs: GlyphRegistry
+    Glyphs: GlyphRegistry,
+    Enchantments: EnchantmentRegistry,
+    EnchantmentConditions: EnchantmentConditionsRegistry
 }
