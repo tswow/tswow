@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Transient } from '../serialization/Transient';
 import { CellSystem, CellSystemTop } from './CellSystem';
 
 export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem<T> {
@@ -29,6 +30,14 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
     clearAll() {
         for (let i = 0; i < this.length; ++i) {
             this.clear(i);
+        }
+        return this.owner;
+    }
+
+    forEach(callback: (value: A)=>void) {
+        for(let i = 0; i < this.length; ++i) {
+            let v = this.get(i);
+            if(!v.isClear()) callback(v);
         }
         return this.owner;
     }
@@ -68,6 +77,7 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
 }
 
 export abstract class ArrayEntry<T> extends CellSystemTop {
+    @Transient
     protected container: T;
 
     constructor(owner: T, index: number) {
