@@ -47,6 +47,7 @@ import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { ClassMask } from "../Misc/ClassMask";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
@@ -85,7 +86,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get SkillRequirement() { return new ItemSkillRequirement(this); }
     get RequiredSpell() { return this.wrap(this.sqlRow.requiredspell); }
     get RequiredHonorRank() { return this.wrap(this.sqlRow.requiredhonorrank); }
-    get ClassMask() { return new MaskCell32(this, this.sqlRow.AllowableClass); }
+    get ClassMask() { return new ClassMask(this, this.sqlRow.AllowableClass, true); }
     get RaceMask() { return this.wrap(this.sqlRow.AllowableRace); }
     get MaxCount() { return this.wrap(this.sqlRow.maxcount); }
     get MaxStack() { return this.wrap(this.sqlRow.stackable); }

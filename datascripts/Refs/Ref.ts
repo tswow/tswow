@@ -9,7 +9,7 @@ export interface CanObjectify {
     objectify(): any
 }
 
-export abstract class Ref<T,V extends CanObjectify> {
+export abstract class RefBase<T,V extends CanObjectify> {
     protected owner: T;
     protected cell: Cell<number,any>
 
@@ -27,6 +27,35 @@ export abstract class Ref<T,V extends CanObjectify> {
         return this.owner;
     }
 
+    objectify() {
+        if(!this.exists()) {
+            return 'NULL'
+        } else {
+            return this.resolve().objectify()
+        }
+    }
+
+    getRef() {
+        if(!this.exists()) {
+            throw new Error(`Tried following invalid ref: ${this.cell.get()}`)
+        } else {
+            return this.resolve();
+        }
+    }
+
+    // Do NOT add "owner" to this callback: it doesn't make sense
+    // when we're not creating a copy
+    modRef(callback: (value: V)=>void) {
+        callback(this.getRef());
+        return this.owner;
+    }
+
+    protected abstract exists(): boolean;
+    protected abstract id(v: V): number;
+    protected abstract resolve(): V;
+}
+
+export abstract class Ref<T,V extends CanObjectify> extends RefBase<T,V>{
     protected setCreate() {
         let v = this.create();
         this.setRefID(this.id(v));
@@ -51,29 +80,37 @@ export abstract class Ref<T,V extends CanObjectify> {
         }
     }
 
-    // Do NOT add "owner" to this callback: it doesn't make sense
-    // when we're not creating a copy
-    modRef(callback: (value: V)=>void) {
-        callback(this.getRef());
-        return this.owner;
-    }
-
     modRefCopy(callback: (value: V, owner : T)=>void) {
         callback(this.getRefCopy(), this.owner);
         return this.owner;
     }
 
-    objectify() {
+    protected abstract create(): V;
+    protected abstract clone(): V;
+}
+
+export abstract class RefStatic<T,V extends CanObjectify> extends RefBase<T,V> {
+    protected abstract create(mod: string, id: string): V;
+    protected abstract clone(mod: string, id: string): V;
+
+    protected setCreate(mod: string, id: string) {
+        let v = this.create(mod, id);
+        this.setRefID(this.id(v));
+        return v;
+    }
+
+    getRefCopy(mod: string, id: string) {
         if(!this.exists()) {
-            return 'NULL'
+            return this.setCreate(mod, id);
         } else {
-            return this.resolve().objectify()
+            let clone = this.clone(mod, id);
+            this.setRefID(this.id(clone));
+            return clone;
         }
     }
 
-    protected abstract exists(): boolean;
-    protected abstract create(): V;
-    protected abstract clone(): V;
-    protected abstract id(v: V): number;
-    protected abstract resolve(): V;
+    modRefCopy(mod: string, id: string, callback: (value: V, owner : T)=>void) {
+        callback(this.getRefCopy(mod, id), this.owner);
+        return this.owner;
+    }
 }

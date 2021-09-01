@@ -44,6 +44,7 @@ import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { MailTemplateRegistry } from "./Mail/MailTemplate";
 import { Compare } from "./Misc/Compare";
 import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
+import { GlyphRegistry } from "./Glyph/Glyph";
 
 export const std = {
     Spells : Spells,
@@ -87,5 +88,6 @@ export const std = {
     SoundEntries: SoundEntryRegistry,
     MailTemplates: MailTemplateRegistry,
     Compare: Compare,
-    SkillTiers: SkillTiersRegistry
+    SkillTiers: SkillTiersRegistry,
+    Glyphs: GlyphRegistry
 }

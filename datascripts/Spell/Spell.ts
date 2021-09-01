@@ -50,7 +50,8 @@ import { SpellRank } from "./SpellRank";
 import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
 import { RaceType } from "../Race/RaceType";
 import { Classes } from "../Class/Class";
-import { Ref } from "../Refs/Ref";
+import { RefStatic } from "../Refs/Ref";
+import { Spells } from "./Spells";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -172,5 +173,23 @@ export class Spell extends MainEntity<SpellRow> {
         const newId = Ids.Spell.id(mod, id);
         let spell = new Spell(this.row.clone(newId));
         return spell;
+    }
+}
+
+export class SpellRef<T> extends RefStatic<T,Spell> {
+    protected create(mod: string, id: string, parent?: number): Spell {
+        return Spells.create(mod,id,parent);
+    }
+    protected clone(mod: string, id: string): Spell {
+        return Spells.create(mod,id,this.cell.get());
+    }
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: Spell): number {
+        return v.ID;
+    }
+    protected resolve(): Spell {
+        return Spells.load(this.cell.get());
     }
 }
