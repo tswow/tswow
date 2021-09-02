@@ -339,6 +339,9 @@ export const Ids = {
     /** Starts at 400, highest base value is 341 */
     CurrencyTypes: new IdGenerator('CurrencyTypes',400),
 
+    // @ts-ignore
+    CurrencyTypesBitIndex: new IdGenerator('CurrencyTypesBitIndex',30),
+
     /** Starts at 100, highest base value is 85 */
     DanceMoves: new AutoIdGenerator('DanceMoves',100),
 

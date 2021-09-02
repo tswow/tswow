@@ -48,6 +48,8 @@ import { GlyphRegistry } from "./Glyph/Glyph";
 import { EnchantmentRegistry } from "./Enchant/Enchantment";
 import { EnchantmentConditionsRegistry } from "./Enchant/EnchantmentCondition";
 import { GemRegistry } from "./Gem/Gem";
+import { CurrencyRegistry } from "./Currency/Currency";
+import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 
 export const std = {
     Spells : Spells,
@@ -96,4 +98,6 @@ export const std = {
     Enchantments: EnchantmentRegistry,
     EnchantmentConditions: EnchantmentConditionsRegistry,
     Gems: GemRegistry,
+    Currency: CurrencyRegistry,
+    CurrencyCategory: CurrencyCategoryRegistry,
 }
