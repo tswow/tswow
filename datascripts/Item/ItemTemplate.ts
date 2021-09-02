@@ -45,10 +45,10 @@ import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
 import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { ClassMask } from "../Misc/ClassMask";
 import { RefStatic } from "../Refs/Ref";
+import { GemRef } from "../Gem/Gem";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
@@ -111,6 +111,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get FoodType() { return new ItemFoodType(this, this.row.FoodType); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
+    get GemProperties() { return new GemRef(this, this.row.GemProperties); }
 
     get DisplayInfo() { 
         return new ItemDisplayInfoPointer(this

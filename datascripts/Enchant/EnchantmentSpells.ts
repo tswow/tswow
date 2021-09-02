@@ -82,6 +82,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                 .InventoryType.setNonEquippable()
                 .MaxStack.set(5)
                 .Bonding.setNoBounds()
+                .Quality.setWhite()
                 .DisplayInfo.setRefID(811)
 
             spell.Effects.modFree(effect=>{

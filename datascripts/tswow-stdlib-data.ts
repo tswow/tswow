@@ -47,6 +47,7 @@ import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
 import { GlyphRegistry } from "./Glyph/Glyph";
 import { EnchantmentRegistry } from "./Enchant/Enchantment";
 import { EnchantmentConditionsRegistry } from "./Enchant/EnchantmentCondition";
+import { GemRegistry } from "./Gem/Gem";
 
 export const std = {
     Spells : Spells,
@@ -93,5 +94,6 @@ export const std = {
     SkillTiers: SkillTiersRegistry,
     Glyphs: GlyphRegistry,
     Enchantments: EnchantmentRegistry,
-    EnchantmentConditions: EnchantmentConditionsRegistry
+    EnchantmentConditions: EnchantmentConditionsRegistry,
+    Gems: GemRegistry,
 }
