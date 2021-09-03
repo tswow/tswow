@@ -17,7 +17,7 @@
 import { DBC } from "wotlkdata";
 import { LightRow } from "wotlkdata/dbc/types/Light";
 import { MainEntity } from "../Misc/Entity";
-import { PositionXYZCell } from "../Misc/PositionCell";
+import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { LightFalloff } from "./LightFalloff";
 import { LightFloatBand } from "./LightFloatBand";
 import { FLOAT_BAND_COUNT, getFloatBandIndex, getIntBandIndex, INT_BAND_COUNT } from "./LightIndex";
@@ -25,7 +25,7 @@ import { LightIntBand } from "./LightIntBand";
 import { LightParam } from "./LightParam";
 
 export class Light extends MainEntity<LightRow> {
-    get Position() { return new PositionXYZCell(this, this.row.MapID,this.row.X,this.row.Y,this.row.Z); }
+    get Position() { return new PositionMapXYZCell(this, this.row.MapID,this.row.X,this.row.Y,this.row.Z); }
     get Falloff() { return new LightFalloff(this); }
 
     constructor(row: LightRow) {

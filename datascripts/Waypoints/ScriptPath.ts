@@ -1,5 +1,9 @@
 import { SQL } from "wotlkdata";
-import { Position, Pos } from "../Misc/Position";
+import { Position } from "../Misc/Position";
+
+export type ScriptPathPosition = Position & {
+    delay?: number
+}
 
 export class ScriptPath {
     protected pathId: number;
@@ -16,7 +20,7 @@ export class ScriptPath {
         let waypoint = SQL.waypoints.filter({entry:this.pathId,pointid: index+1})[0];
     }
 
-    add(points: Position|Position[]) {
+    add(points: ScriptPathPosition|ScriptPathPosition[]) {
         if(!Array.isArray(points)) {
             points = [points];
         }

@@ -21,7 +21,6 @@ export interface Position {
     y: number;
     z: number;
     o: number;
-    delay?: number;
 }
 
 export function Pos(map: number, x: number, y: number, z: number, o: number) {

@@ -477,7 +477,7 @@ export const Ids = {
     /**
      * Starts at 2000, highest base value is 1978
      */
-    TaxiPath: new AutoIdGenerator('TaxiPath',2000),
+    TaxiPath: new IdGenerator('TaxiPath',2000),
 
     /**
      * Starts at 50000, highest base value is 46874

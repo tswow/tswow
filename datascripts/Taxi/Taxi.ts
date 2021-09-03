@@ -1,141 +1,114 @@
-/*
 import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { TaxiNodesRow } from "wotlkdata/dbc/types/TaxiNodes";
-import { TaxiPathRow } from "wotlkdata/dbc/types/TaxiPath";
+import { TaxiPathQuery, TaxiPathRow } from "wotlkdata/dbc/types/TaxiPath";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { PositionXYZCell } from "../Misc/PositionCell";
+import { TaxiEndNode, TaxiEndNodeRef } from "./TaxiEndNode";
+import { TaxiPathNodes } from "./TaxiPathNode";
 
-export class TaxiNode<T> extends CellSystem<T> {
-    readonly row: TaxiNodesRow
+const ALLIANCE_DEFAULT_MOUNT = 541;
+const HORDE_DEFAULT_MOUNT = 2224;
 
-    constructor(owner: T, row: TaxiNodesRow) {
-        super(owner);
-        this.row = row;
-    }
-
-    get Position() { return new PositionXYZCell(
-          this
-        , this.row.MapID
-        , this.row.X
-        , this.row.Y
-        , this.row.Z
-        )}
-
-    get Name() { return this.wrapLoc(this.row.Name); }
-    get MountCreatureID() { return this.wrapArray(this.row.MountCreatureID)}
-}
-
-export class TaxiPathNodes<T> extends CellSystem<TaxiPath<T>> {
-    get length() {
-        return this.nodes().length;
-    }
-
-    protected nodes() {
-        return DBC.TaxiPathNode
-            .filter({PathID:this.owner.ID})
-            .sort((a,b)=>a.NodeIndex.get() > b.NodeIndex.get() ? 1 : -1)
-    }
-
-    private makeNode(pos: Position, flags: number, delay: number, arrivalEvent: number, departureEvent: number) {
-        return DBC.TaxiPathNode.add(Ids.TaxiPathNode.id())
-            .PathID.set(this.owner.ID)
-            .MapID.set(pos.map)
-            .LocX.set(pos.x)
-            .LocY.set(pos.y)
-            .LocZ.set(pos.z)
-            .Flags.set(flags)
-            .Delay.set(delay)
-            .ArrivalEventID.set(arrivalEvent)
-            .DepartureEventID.set(departureEvent)
-    }
-
-    insert(index: number, pos: Position, flags = 0, delay = 0, arrivalEvent = 0, departureEvent = 0) {
-        this.nodes().slice(index).forEach(x=>x.NodeIndex.set(x.NodeIndex.get()+1));
-        this.makeNode(pos,flags,delay,arrivalEvent,departureEvent)
-            .NodeIndex.set(index);
-        return this;
-    }
-
-    getIndex(index: number) {
-        return this.nodes()[index];
-    }
-
-    push(pos: Position, flags = 0, delay = 0, arrivalEvent = 0, departureEvent = 0) {
-        this.makeNode(pos,flags,delay,arrivalEvent,departureEvent)
-            .NodeIndex.set(this.length-1)
-        return this;
-    }
-
-    objectify() {
-        return this.nodes().map(node=>{
-            return ({
-                  map: node.MapID.get()
-                , x:   node.LocX.get()
-                , y:   node.LocY.get()
-                , z:   node.LocZ.get()
-                , delay:  node.Delay.get()
-                , flags:  node.Flags.get()
-                , ArrivalEventId:  node.ArrivalEventID.get()
-                , DepartureEventId:  node.DepartureEventID.get()
-            });
-        });
-    }
-}
-
-export class TaxiPath<T> extends CellSystem<T> {
-    readonly row: TaxiPathRow;
-
-    constructor(owner: T, row: TaxiPathRow) {
-        super(owner);
-        this.row = row;
-    }
-
+export class TaxiPath extends MainEntity<TaxiPathRow> {
     get ID() { return this.row.ID.get(); }
-
-    get StartNode() {
-        return new TaxiNode(this, DBC.TaxiNodes.findById(this.row.FromTaxiNode.get()));
-    }
-
-    get Nodes(): TaxiPathNodes<T> {
-        return new TaxiPathNodes(this);
-    }
-
-    get EndNode() {
-        return new TaxiNode(this, DBC.TaxiNodes.findById(this.row.FromTaxiNode.get()));
-    }
+    get Start() { return new TaxiEndNodeRef(this, this.row.FromTaxiNode); }
+    get End() { return new TaxiEndNodeRef(this, this.row.ToTaxiNode); }
+    get Nodes(): TaxiPathNodes { return new TaxiPathNodes(this); }
+    get Cost() {  return this.wrap(this.row.Cost) }
 }
 
-export const TaxiPaths = {
-    createStartEnd(fromNode: number, toNode: number, cost = 0) {
-        return new TaxiPath(undefined, DBC.TaxiPath.add(Ids.TaxiPath.id())
+export type TaxiNodeConstructor = Position & {
+    arrival_event?: number,
+    departure_event?: number,
+    delay?: number,
+}
+
+export const TaxiPathRegistry = {
+    createStartEnd(mod: string, id: string, fromNode: number, toNode: number, cost = 0) {
+        return new TaxiPath(DBC.TaxiPath.add(Ids.TaxiPath.id(mod,id))
             .FromTaxiNode.set(fromNode)
             .ToTaxiNode.set(toNode)
             .Cost.set(cost))
     },
 
-    createPath(vertices: Position[], cost = 0) {
+    createNewPath(mod: string, id: string, cost: number, mount: number|[number,number], vertices: TaxiNodeConstructor[]) {
         if(vertices.length < 2) {
             throw new Error(`Taxi paths must be made up of at least two vertices`);
         }
 
-        let ids = [vertices[0],vertices[vertices.length-1]].map(leaf=>
-            DBC.TaxiNodes.add(Ids.TaxiNodes.id())
-                .MapID.set(leaf.map)
-                .X.set(leaf.x)
-                .Y.set(leaf.y)
-                .Z.set(leaf.z)
-                .MountCreatureID.set([0,0])
-                .ID.get()
-        );
+        if(mount === 0) {
+            mount = [HORDE_DEFAULT_MOUNT,ALLIANCE_DEFAULT_MOUNT];
+        }
 
-        let path = TaxiPaths.createStartEnd(ids[0],ids[1],cost);
+        if(typeof(mount) == 'number') {
+            mount = [mount,mount];
+        }
+
+        let start = new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()))
+            .Position.set(vertices[0])
+            .Mount.Horde.set(mount[0])
+            .Mount.Alliance.set(mount[1])
+
+        let end = new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()))
+            .Position.set(vertices[vertices.length-1])
+            .Mount.Horde.set(mount[0])
+            .Mount.Alliance.set(mount[1])
+
+        let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID,0)
+            .Cost.set(cost)
         vertices.forEach(x=>{
             path.Nodes.push(x)
         });
-
         return path;
+    },
+
+    createPathFrom(mod: string, id: string, startNode: number, cost: number, endMount: number|[number,number], vertices: TaxiNodeConstructor[]) {
+        let start = new TaxiEndNode(DBC.TaxiNodes.findById(startNode));
+        if(endMount === 0) {
+            endMount = [start.Mount.Horde.get()||HORDE_DEFAULT_MOUNT,start.Mount.Alliance.get()||ALLIANCE_DEFAULT_MOUNT];
+        }
+
+        if(typeof(endMount) == 'number') {
+            endMount = [endMount,endMount];
+        }
+
+        let end = new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()))
+            .Position.set(vertices[vertices.length-1])
+            .Mount.Horde.set(endMount[0])
+            .Mount.Alliance.set(endMount[1])
+        let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID)
+            .Cost.set(cost)
+        vertices.unshift(start.Position.toPosition())
+        vertices.forEach(x=>{
+            path.Nodes.push(x);
+        })
+        return path;
+    },
+
+    createPathBetween(mod: string, id: string, startNode: number, endNode: number, cost: number, vertices: TaxiNodeConstructor[]) {
+        let start = new TaxiEndNode(DBC.TaxiNodes.findById(startNode));
+        let end = new TaxiEndNode(DBC.TaxiNodes.findById(endNode))
+        let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID)
+            .Cost.set(cost)
+        vertices.unshift(start.Position.toPosition())
+        vertices.push(end.Position.toPosition())
+        vertices.forEach(x=>{
+            path.Nodes.push(x);
+        })
+        return path;
+    },
+
+    load(id: number) {
+        return new TaxiPath(DBC.TaxiPath.findById(id));
+    },
+
+    filter(query: TaxiPathQuery) {
+        return DBC.TaxiPath
+            .filter(query)
+            .map(x=>new TaxiPath(x))
+    },
+
+    find(query: TaxiPathQuery) {
+        return new TaxiPath(DBC.TaxiPath.find(query))
     }
 }
-*/

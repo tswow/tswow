@@ -3,8 +3,12 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 
+export type PatrolPosition = Position & {
+    delay?: number
+}
+
 export class CreaturePatrolPath extends CellSystem<CreatureInstance> {
-    add(movementType: 'WALK'|'RUN'|'FLY', pos: Position | Position[]) {
+    add(movementType: 'WALK'|'RUN'|'FLY', pos: PatrolPosition | PatrolPosition[]) {
         if(!Array.isArray(pos)) {
             pos = [pos];
         }

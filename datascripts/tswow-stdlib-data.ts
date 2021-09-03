@@ -50,6 +50,7 @@ import { EnchantmentConditionsRegistry } from "./Enchant/EnchantmentCondition";
 import { GemRegistry } from "./Gem/Gem";
 import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
+import { TaxiPathRegistry } from "./Taxi/Taxi";
 
 export const std = {
     Spells : Spells,
@@ -100,4 +101,5 @@ export const std = {
     Gems: GemRegistry,
     Currency: CurrencyRegistry,
     CurrencyCategory: CurrencyCategoryRegistry,
+    Taxi: TaxiPathRegistry,
 }
