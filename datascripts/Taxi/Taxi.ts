@@ -3,6 +3,7 @@ import { TaxiPathQuery, TaxiPathRow } from "wotlkdata/dbc/types/TaxiPath";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
+import { RefBase } from "../Refs/Ref";
 import { TaxiEndNode, TaxiEndNodeRef } from "./TaxiEndNode";
 import { TaxiPathNodes } from "./TaxiPathNode";
 
@@ -110,5 +111,17 @@ export const TaxiPathRegistry = {
 
     find(query: TaxiPathQuery) {
         return new TaxiPath(DBC.TaxiPath.find(query))
+    }
+}
+
+export class TaxiPathRef<T> extends RefBase<T,TaxiPath> {
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: TaxiPath): number {
+        return v.ID;
+    }
+    protected resolve(): TaxiPath {
+        return TaxiPathRegistry.load(this.cell.get());
     }
 }

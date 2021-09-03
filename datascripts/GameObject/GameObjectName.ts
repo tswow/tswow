@@ -28,7 +28,7 @@ function gobjectLoc(id: number, lang: Language) {
     return SQL.gameobject_template_locale.add(id, lang);
 }
 
-export class GameObjectName<T extends GameObjectTemplate<T>> extends SQLLocSystem<T> {
+export class GameObjectName<T extends GameObjectTemplate> extends SQLLocSystem<T> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.name;
     }

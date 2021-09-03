@@ -51,6 +51,7 @@ import { GemRegistry } from "./Gem/Gem";
 import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
+import { TransportRegistry } from "./Transport/Transport";
 
 export const std = {
     Spells : Spells,
@@ -102,4 +103,5 @@ export const std = {
     Currency: CurrencyRegistry,
     CurrencyCategory: CurrencyCategoryRegistry,
     Taxi: TaxiPathRegistry,
+    Transports: TransportRegistry,
 }

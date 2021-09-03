@@ -21,9 +21,9 @@ import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_templat
 import { Ids } from "../Misc/Ids"
 import { BoundingBox } from "../Misc/BoundingBox"
 import { Position } from "../Misc/Position"
-import { GameObjectBase } from "./GameObjectBase"
 import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
+import { GameObjectPlain } from "./GameObjectTemplate"
 
 export const GameObjectTemplates = {
     create(mod: string, id: string, parent: number = -1) {
@@ -65,15 +65,21 @@ export const GameObjectTemplates = {
                 .type.set(0)
                 .unk1.set("")
             )
-        return new GameObjectBase(row);
+        return new GameObjectPlain(row);
     },
 
     load(id: number) {
-        return new GameObjectBase(SQL.gameobject_template.findAssert(`gameobject_template(${id})`,{entry:id}));
+        return new GameObjectPlain(SQL.gameobject_template.findAssert(`gameobject_template(${id})`,{entry:id}));
     },
 
     filter(query: gameobject_templateQuery) {
-        return SQL.gameobject_template.filter(query).map(x=>new GameObjectBase(x));
+        return SQL.gameobject_template
+            .filter(query)
+            .map(x=>new GameObjectPlain(x));
+    },
+
+    find(query: gameobject_templateQuery) {
+        return new GameObjectPlain(SQL.gameobject_template.find(query))
     },
 }
 

@@ -1,6 +1,6 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { GameObjectTemplates } from "../GameObject/GameObjects";
-import { GameObjectChest } from "../GameObject/Types/GameObjectChest";
+import { GameObjectChest } from "../GameObject/GameObjectTemplate";
 import { Locks } from "../Locks/Locks";
 import { Profession } from "./Profession";
 
@@ -10,7 +10,7 @@ export class ProfessionGatheringNodes extends CellSystem<Profession> {
     add(mod: string, id: string, lockId: number, levelNeeded: number) {
         let lock = Locks.createTypeInstance(lockId,levelNeeded)
         return GameObjectTemplates.create(mod,id)
-            .setChest()
+            .Type.setChest()
             .IsConsumable.set(1)
             .Lock.setRefID(lock.ID)
     }

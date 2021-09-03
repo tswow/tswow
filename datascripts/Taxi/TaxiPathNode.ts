@@ -54,13 +54,29 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
     }
 
     insert(index: number, pos: TaxiNodeConstructor) {
-        this.getAllRows().slice(index).forEach(x=>x.row.NodeIndex.set(x.row.NodeIndex.get()+1));
-        this.makeNode(pos,pos.delay ? 2 : 0, pos.delay||0,pos.arrival_event||0,pos.departure_event||0)
+        let rows = this.getAllRows();
+        let flag = pos.delay ? 2 : 0;
+        if(rows.length > 0 && index > 0 && rows[index-1].Position.Map.get() != pos.map) {
+            rows[index-1].Flags.MapChange.mark()
+        }
+
+        if(rows.length > 0) {
+            if(rows[index].Position.Map.get() != pos.map) {
+                flag = flag | 1;
+            }
+        }
+
+        rows.slice(index).forEach(x=>x.row.NodeIndex.set(x.row.NodeIndex.get()+1));
+        this.makeNode(pos,flag, pos.delay||0,pos.arrival_event||0,pos.departure_event||0)
             .NodeIndex.set(index);
         return this;
     }
 
     push(pos: TaxiNodeConstructor) {
+        let old = this.getAllRows();
+        if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
+            old[old.length-1].Flags.MapChange.mark()
+        }
         this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
             .NodeIndex.set(this.length-1)
         return this;

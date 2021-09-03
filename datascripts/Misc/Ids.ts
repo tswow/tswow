@@ -883,6 +883,6 @@ export const Ids = {
     /** Starts at 500, highest base value is 453 */
     points_of_interest: new IdGenerator('points_of_interest', 500),
 
-    /** Starts at 100, highest base value is 20 */
-    transports: new IdGenerator('transports', 100)
+    /** Starts at 700, highest base value is 20 (also used for the game object map id)*/
+    transports: new IdGenerator('transports', 700)
 }
