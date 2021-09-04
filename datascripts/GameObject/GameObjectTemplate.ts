@@ -32,6 +32,7 @@ import { RefStatic } from "../Refs/Ref";
 import { GameObjectTemplates } from "./GameObjects";
 import { GameObjectFlags } from "./GameObjectFlags";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
+import { ElevatorKeyframes } from "./ElevatorKeyframes";
 
 export class GameObjectTemplate extends MainEntity<gameobject_templateRow> {
     private _addon_row: gameobject_template_addonRow|undefined;
@@ -646,9 +647,31 @@ export class GameObjectTransport extends GameObjectTemplate {
     get Pause() { return this.wrap(this.row.Data0); }
     get StartOpen() { return this.wrap(this.row.Data1); }
     get AutoCloseTime() { return this.wrap(this.row.Data2); }
-    get Pause1EventID() { return this.wrap(this.row.Data3); }
-    get Pause2EventID() { return this.wrap(this.row.Data4); }
-    get MapID() { return this.wrap(this.row.Data5); }
+    get Pause1Event() { return this.wrap(this.row.Data3); }
+    get Pause2Event() { return this.wrap(this.row.Data4); }
+    get Map() { return this.wrap(this.row.Data5); }
+    get Keyframes() { return new ElevatorKeyframes(this); }
+}
+
+export class GameObjectTransportRef<T> extends RefStatic<T,GameObjectTransport> {
+    protected create(mod: string, id: string): GameObjectTransport {
+        return GameObjectTemplates.create(mod,id)
+            .Type.setTransport()
+    }
+    protected clone(mod: string, id: string): GameObjectTransport {
+        return GameObjectTemplates.create(mod,id,this.cell.get())
+            .Type.setTransport()
+    }
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: GameObjectTransport): number {
+        return v.ID;
+    }
+    protected resolve(): GameObjectTransport {
+        return GameObjectTemplates.load(this.cell.get())
+            .Type.setTransport()
+    }
 }
 
 @GameObjectID(6)

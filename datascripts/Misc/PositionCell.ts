@@ -37,23 +37,33 @@ export class PositionXYZCell<T> extends CellSystem<T> {
     get Y() { return this.ownerWrap(this._y) }
     get Z() { return this.ownerWrap(this._z) }
 
-    set(pos: Position) {
-        this.X.set(pos.x)
-        this.Y.set(pos.y)
-        this.Z.set(pos.z)
+    set(x: number, y: number, z: number) {
+        this.X.set(x)
+        this.Y.set(y)
+        this.Z.set(z)
         return this.owner;
+    }
+
+    toPosition(map: number, o: number = 0) {
+        return {
+              x: this.X.get()
+            , y: this.Y.get()
+            , z: this.Z.get()
+            , map
+            , o
+        }
     }
 }
 
 export class PositionMapXYZCell<T> extends CellSystem<T> {
     @Transient
-    readonly _map: Cell<number,any>;
+    protected readonly _map: Cell<number,any>;
     @Transient
-    readonly _x: Cell<number,any>;
+    protected readonly _x: Cell<number,any>;
     @Transient
-    readonly _y: Cell<number,any>;
+    protected readonly _y: Cell<number,any>;
     @Transient
-    readonly _z: Cell<number,any>;
+    protected readonly _z: Cell<number,any>;
 
     constructor(owner: T,map: Cell<number,any>,x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>) {
         super(owner);
@@ -68,11 +78,11 @@ export class PositionMapXYZCell<T> extends CellSystem<T> {
     get Z() { return this.ownerWrap(this._z); }
     get Map() { return this.ownerWrap(this._map); }
 
-    set(position: Position) {
-        this.X.set(position.x);
-        this.Y.set(position.y);
-        this.Z.set(position.z);
-        this.Map.set(position.map);
+    set(map: number, x: number, y: number, z: number) {
+        this.X.set(x);
+        this.Y.set(y);
+        this.Z.set(z);
+        this.Map.set(map);
         return this.owner;
     }
 
@@ -85,26 +95,157 @@ export class PositionMapXYZCell<T> extends CellSystem<T> {
             , o: 0
         }
     }
+
+    setObject(position: {x?:number,y?:number,z?:number,map?:number}) {
+        if(position.x) this.X.set(position.x);
+        if(position.y) this.Y.set(position.y);
+        if(position.z) this.Z.set(position.z);
+        if(position.map) this.Map.set(position.map);
+        return this.owner;
+    }
 }
 
-export class PositionXYZOCell<T> extends PositionMapXYZCell<T> {
+export class PositionXYZOCell<T> extends CellSystem<T>{
     @Transient
-    readonly _o: Cell<number,any>;
+    protected readonly _x: Cell<number,any>;
+    @Transient
+    protected readonly _y: Cell<number,any>;
+    @Transient
+    protected readonly _z: Cell<number,any>;
+    @Transient
+    protected readonly _o: Cell<number,any>;
 
-    constructor(owner: T,map: Cell<number,any>,x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>, o: Cell<number,any>) {
-        super(owner,map,x,y,z);
+    constructor(owner: T,x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>, o: Cell<number,any>) {
+        super(owner);
+        this._x = x;
+        this._y = y;
+        this._z = z;
         this._o = o;
     }
 
+    get X() { return this.ownerWrap(this._x); }
+    get Y() { return this.ownerWrap(this._y); }
+    get Z() { return this.ownerWrap(this._z); }
     get O() { return this.ownerWrap(this._o); }
 
-    set(position: Position) {
-        super.set(position);
-        this.O.set(position.o);
+    set(x: number,y: number, z: number, o: number) {
+        this.X.set(x)
+        this.Y.set(y)
+        this.Z.set(z)
+        this.O.set(o);
+        return this.owner;
+    }
+
+    setObject(position: {x?:number,y?:number,z?:number,o?:number}) {
+        if(position.x) this.X.set(position.x);
+        if(position.y) this.Y.set(position.y);
+        if(position.z) this.Z.set(position.z);
+        if(position.o) this.O.set(position.o);
+        return this.owner;
+    }
+
+    toPosition(map: number): Position {
+        return {
+            map
+            , x: this.X.get()
+            , y: this.Y.get()
+            , z: this.Z.get()
+            , o: this.O.get()
+        }
+    }
+}
+
+export class PositionMapXYZOCell<T> extends CellSystem<T>{
+    @Transient
+    protected readonly _map: Cell<number,any>;
+    @Transient
+    protected readonly _x: Cell<number,any>;
+    @Transient
+    protected readonly _y: Cell<number,any>;
+    @Transient
+    protected readonly _z: Cell<number,any>;
+    @Transient
+    protected readonly _o: Cell<number,any>;
+
+    constructor(owner: T, map: Cell<number,any>,x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>, o: Cell<number,any>) {
+        super(owner);
+        this._map = map;
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._o = o;
+    }
+
+    get X() { return this.ownerWrap(this._x); }
+    get Y() { return this.ownerWrap(this._y); }
+    get Z() { return this.ownerWrap(this._z); }
+    get O() { return this.ownerWrap(this._o); }
+    get Map() { return this.ownerWrap(this._o); }
+
+    set(map: number, x: number,y: number, z: number, o: number) {
+        this.Map.set(map);
+        this.X.set(x)
+        this.Y.set(y)
+        this.Z.set(z)
+        this.O.set(o);
+        return this.owner;
+    }
+
+    setPosition(position: {map?:number,x?:number,y?:number,z?:number,o?:number}) {
+        if(position.map) this.Map.set(position.map);
+        if(position.x) this.X.set(position.x);
+        if(position.y) this.Y.set(position.y);
+        if(position.z) this.Z.set(position.z);
+        if(position.o) this.O.set(position.o);
         return this.owner;
     }
 
     toPosition(): Position {
-        return Object.assign(super.toPosition(),{o:this.O.get()});
+        return {
+              map: this.Map.get()
+            , x: this.X.get()
+            , y: this.Y.get()
+            , z: this.Z.get()
+            , o: this.O.get()
+        }
+    }
+}
+
+export class QuaternionCell<T> extends CellSystem<T> {
+    @Transient
+    protected readonly _x: Cell<number,any>;
+    @Transient
+    protected readonly _y: Cell<number,any>;
+    @Transient
+    protected readonly _z: Cell<number,any>;
+    @Transient
+    protected readonly _w: Cell<number,any>;
+
+    constructor(owner: T,w: Cell<number,any>,x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>) {
+        super(owner);
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._w = w;
+    }
+    get X() { return this.ownerWrap(this._x); }
+    get Y() { return this.ownerWrap(this._y); }
+    get Z() { return this.ownerWrap(this._z); }
+    get W() { return this.ownerWrap(this._w); }
+
+    setObject(value: {x?: number, y?: number, z?: number, w?: number}) {
+        if(value.x) this.X.set(value.x)
+        if(value.y) this.Y.set(value.y)
+        if(value.z) this.Z.set(value.z)
+        if(value.w) this.W.set(value.w)
+        return this.owner;
+    }
+
+    set(x: number, y: number, z: number, w: number) {
+        this.X.set(x);
+        this.Y.set(y);
+        this.Z.set(z);
+        this.W.set(w);
+        return this.owner;
     }
 }

@@ -52,6 +52,7 @@ import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TransportRegistry } from "./Transport/Transport";
+import { ElevatorRegistry } from "./Elevators/Elevators";
 
 export const std = {
     Spells : Spells,
@@ -104,4 +105,5 @@ export const std = {
     CurrencyCategory: CurrencyCategoryRegistry,
     Taxi: TaxiPathRegistry,
     Transports: TransportRegistry,
+    Elevators: ElevatorRegistry
 }
