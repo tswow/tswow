@@ -98,7 +98,7 @@ export namespace TrinityCore {
     }
 
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
-        term.log('Compiling TrinityCore');
+        term.log('Building TrinityCore');
 
         wfs.mkDirs(bpaths.trinitycore);
 
