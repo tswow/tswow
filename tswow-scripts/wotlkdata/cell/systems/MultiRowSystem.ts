@@ -24,10 +24,12 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
 
     forEachDeleted(callback: (value: A, index: number) => void) {
         this.getDeleted().forEach(callback);
+        return this.owner;
     }
 
     forEach(callback: (value: A, index: number)=>void) {
         this.get().forEach(callback);
+        return this.owner;
     }
 
     map<T>(callback: (value: A, index: number)=>T) {
