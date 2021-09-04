@@ -28,4 +28,5 @@ export function cleanSQL() {
     q('DELETE FROM spell_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM creature_text WHERE comment = "tswow";')
     q('DELETE FROM creature_template_outfits WHERE description = "tswow";')
+    q('DELETE FROM transports WHERE name = "tswow";')
 }
