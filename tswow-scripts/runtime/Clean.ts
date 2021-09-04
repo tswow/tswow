@@ -129,6 +129,15 @@ export namespace Clean {
         allClients.forEach(x=>x.client.start());
     }
 
+    export async function cleanDbc(dataset: Datasets.Dataset[]) {
+        dataset.forEach(x=>{
+            if(wfs.exists(ipaths.datasetDBCSource(x.id))) {
+                wfs.remove(ipaths.datasetDBC(x.id))
+                wfs.copy(ipaths.datasetDBCSource(x.id),ipaths.datasetDBC(x.id))
+            }
+        })
+    }
+
     export async function cleanTypescript() {
         await destroyAllWatchers();
         const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x.id)))
@@ -197,6 +206,15 @@ export namespace Clean {
             await cleanScriptBin(args[0]);
             await removeOldLivescripts();
         });
+
+        Clean.command.addCommand(
+              'dbc'
+            , 'dataset?'
+            , 'removes build dbc data'
+            , async (args)=>{
+                await cleanDbc(Datasets.getDatasetsOrDefault(args))
+            }
+        )
 
         Clean.command.addCommand(
               'datascripts'
