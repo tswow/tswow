@@ -4550,8 +4550,15 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     *
     * @param uint32 phaseMask
     * @param bool update = true : update visibility to nearby objects
+    * @param PhaseType phaseType = PhaseType::PHASE_MASK : what type of phase the unit is entering.
+    * @note changing PhaseType will always force a phase update
     */
-    SetPhaseMask(phaseMask : uint32,update : bool) : void
+    SetPhaseMask(phaseMask : uint32,update : bool, id: uint64) : void
+
+    /**
+     * Returns the [WorldObject]'s phase id.
+     */
+    GetPhaseID(): uint64
 
     /**
      * Returns the current instance ID of the [WorldObject]

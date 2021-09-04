@@ -80,6 +80,11 @@ uint32 TSWorldObject::GetPhaseMask()
 {
     return obj->GetPhaseMask();
 }
+
+uint64 TSWorldObject::GetPhaseID()
+{
+    return uint32(obj->m_phase_id);
+}
     
 /**
 * Sets the [WorldObject]'s phase mask.
@@ -87,9 +92,9 @@ uint32 TSWorldObject::GetPhaseMask()
 * @param uint32 phaseMask
 * @param bool update = true : update visibility to nearby objects
 */
-void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update) 
+void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
 {
-    obj->SetPhaseMask(phaseMask, update);
+    obj->SetPhaseMask(phaseMask, update, id);
 }
 #endif
     

@@ -77,7 +77,8 @@ public:
     TSMap GetMap();
     TSString GetName();
     uint32 GetPhaseMask();
-    void SetPhaseMask(uint32 phaseMask, bool update);
+    uint64 GetPhaseID();
+    void SetPhaseMask(uint32 phaseMask, bool update, uint64 id = 0);
     uint32 GetInstanceId();
     uint32 GetAreaId();
     uint32 GetZoneId();
