@@ -9,6 +9,29 @@ export interface CanObjectify {
     objectify(): any
 }
 
+export class SelfRef<T,V extends CanObjectify> {
+    protected getter: ()=>V;
+    protected owner: T;
+    
+    constructor(owner: T, getter: ()=>V) {
+        this.getter = getter;
+        this.owner = owner;
+    }
+
+    get() {
+        return this.getter();
+    }
+
+    mod(callback: (value: V)=>void) {
+        callback(this.getter());
+        return this.owner;
+    }
+
+    objectify() {
+        return this.getter().objectify()
+    }
+}
+
 export abstract class RefBase<T,V extends CanObjectify> {
     protected owner: T;
     protected cell: Cell<number,any>

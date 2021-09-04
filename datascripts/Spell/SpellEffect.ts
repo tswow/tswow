@@ -41,6 +41,20 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             .map(x=>x.objectifyPlain())
     }
 
+    auraIndex(auraType: number) {
+        if(this.isAuraType(0,auraType)) return 0;
+        if(this.isAuraType(1,auraType)) return 1;
+        if(this.isAuraType(2,auraType)) return 2;
+        return -1;
+    }
+
+    effectIndex(effectType: number) {
+        if(this.isEffectType(0,effectType)) return 0;
+        if(this.isEffectType(1,effectType)) return 1;
+        if(this.isEffectType(2,effectType)) return 2;
+        return -1;
+    }
+
     hasEffectType(effectType: number) {
         return this.isEffectType(0,effectType) 
             || this.isEffectType(1,effectType) 
@@ -48,8 +62,12 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             ;
     }
 
+    isAuraType(index: number, auraType: number) {
+        return this.get(index).AuraType.get() === auraType;
+    }
+
     isEffectType(index: number, effectType: number) {
-        return this.get(index).EffectType.get() == effectType;
+        return this.get(index).EffectType.get() === effectType;
     }
 
     swap(index1: number, index2: number) {

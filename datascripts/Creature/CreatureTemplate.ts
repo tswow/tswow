@@ -33,7 +33,7 @@ import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
-import { CreatureInstances } from "./Creatures";
+import { CreatureInstances, CreatureTemplates } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
@@ -51,6 +51,7 @@ import { CreatureInstance } from "./CreatureInstance";
 import { GossipPointer } from "../Gossip/Gossip";
 import { LootSetPointer } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
+import { RefStatic } from "../Refs/Ref";
 
 export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
@@ -184,5 +185,23 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
 
     protected isGameObject(): boolean {
         return false;
+    }
+}
+
+export class CreatureTemplateRef<T> extends RefStatic<T,CreatureTemplate> {
+    protected create(mod: string, id: string): CreatureTemplate {
+        return CreatureTemplates.create(mod,id);
+    }
+    protected clone(mod: string, id: string): CreatureTemplate {
+        return CreatureTemplates.create(mod,id,this.cell.get());
+    }
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: CreatureTemplate): number {
+        return v.ID;
+    }
+    protected resolve(): CreatureTemplate {
+        return CreatureTemplates.load(this.cell.get());
     }
 }

@@ -78,6 +78,10 @@ export const CreatureTemplates = {
 
     filter(query: creature_templateQuery) {
         return SQL.creature_template.filter(query).map(x=>new CreatureTemplate(x));
+    },
+
+    find(query: creature_templateQuery) {
+        return new CreatureTemplate(SQL.creature_template.find(query));
     }
 }
 

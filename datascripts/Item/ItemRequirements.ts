@@ -49,9 +49,16 @@ export class SkillRequirement extends CellSystem<ItemTemplate> {
         super(owner);
     }
 
+    set(skill: number, rank: number) {
+        this.Skill.set(skill);
+        this.Rank.set(rank);
+        return this.owner;
+    }
+
     clear() {
         this.Skill.set(0);
         this.Rank.set(0);
+        return this.owner;
     }
 }
 

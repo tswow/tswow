@@ -53,6 +53,8 @@ import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TransportRegistry } from "./Transport/Transport";
 import { ElevatorRegistry } from "./Elevators/Elevators";
+import { MountRegistry } from "./PetsCollectibles/Mount";
+import { CompanionRegistry } from "./PetsCollectibles/Companion";
 
 export const std = {
     Spells : Spells,
@@ -105,5 +107,7 @@ export const std = {
     CurrencyCategory: CurrencyCategoryRegistry,
     Taxi: TaxiPathRegistry,
     Transports: TransportRegistry,
-    Elevators: ElevatorRegistry
+    Elevators: ElevatorRegistry,
+    Mounts: MountRegistry,
+    Companions: CompanionRegistry
 }
