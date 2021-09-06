@@ -57,7 +57,7 @@ function queryToSqlRecurse(query: Query|AnyQuery|AllQuery): string {
     } else if (isAllQuery(query)) {
         return `${query.values.map(x => `(${queryToSqlRecurse(x)})`).join(' AND ')}`;
     } else {
-        return `${Object.keys(query).map(x => `${relationToSql(x, query[x])}`).join(' AND ')}`;
+        return `${Object.keys(query).map(x => `${relationToSql(`\`${x}\``, query[x])}`).join(' AND ')}`;
     }
 }
 

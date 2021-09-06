@@ -110,10 +110,10 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
         }
 
         return `INSERT INTO ${this.table.name} ` +
-        `(${Object.keys(obj).join(',')}) ` +
+        `(${Object.keys(obj).map(x=>`\`${x}\``).join(',')}) ` +
         `VALUES (${Object.values(obj).map(x => x === null ? 'null' : typeof(x) === 'string' ? `"${x}"` : x)}) ` +
         `ON DUPLICATE KEY UPDATE ` +
-        `${Object.keys(obj).map(x => `${x} = ${obj[x] === null ? 'null' : typeof(obj[x]) === 'string' ? `"${obj[x]}"` : obj[x]}`).join(', ')}`;
+        `${Object.keys(obj).map(x => `\`${x}\` = ${obj[x] === null ? 'null' : typeof(obj[x]) === 'string' ? `"${obj[x]}"` : obj[x]}`).join(', ')}`;
     }
 
     protected cloneInternal(keys: any[], c?: C) {
