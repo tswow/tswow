@@ -269,6 +269,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
                 EffectType:this.EffectType.objectify()
             },new all_effects[this.EffectType.get()](this,this).objectify())
         }
+        return super.objectify();
     }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
