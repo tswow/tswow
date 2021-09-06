@@ -175,6 +175,7 @@ export abstract class LocSystem<T> extends CellSystem<T> {
                 c.set('')
             }
         });
+        return this.owner;
     }
 }
 
