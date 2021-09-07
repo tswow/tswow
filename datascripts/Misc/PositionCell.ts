@@ -249,3 +249,23 @@ export class QuaternionCell<T> extends CellSystem<T> {
         return this.owner;
     }
 }
+
+export class PositionXYCell<T> extends CellSystem<T> {
+    protected x: Cell<number,any>
+    protected y: Cell<number,any>
+
+    constructor(owner: T,x: Cell<number,any>, y: Cell<number,any>) {
+        super(owner);
+        this.x = x;
+        this.y = y;
+    }
+
+    get X() { return this.ownerWrap(this.x); }
+    get Y() { return this.ownerWrap(this.y); }
+
+    set(x: number, y: number) {
+        this.X.set(x);
+        this.Y.set(y);
+        return this.owner;
+    }
+}

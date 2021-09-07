@@ -63,6 +63,11 @@ import { WorldStateRegistry } from "./WorldState/WorldState";
 import { WMOAreaRegistry } from "./Area/WMOArea";
 import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
 import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
+import { WorldMapAreaRegistry } from "./Worldmap/WorldMapArea";
+import { WorldMapContinentRegistry } from "./Worldmap/WorldmapContinent";
+import { WorldMapOverlayRegistry } from "./Worldmap/WorldMapOverlay";
+import { WorldMapTransformRegistry } from "./Worldmap/WorldMapTransform";
+import { DungeonMapRegistry } from "./Worldmap/DungeonMap";
 
 export const std = {
     Spells : Spells,
@@ -126,4 +131,9 @@ export const std = {
     WorldStateUIs: WorldStateUIRegistry,
     WorldStates: WorldStateRegistry,
     WMOArea: WMOAreaRegistry,
+    WorldMapAreas: WorldMapAreaRegistry,
+    WorldMapContinents: WorldMapContinentRegistry,
+    WorldMapOverlays: WorldMapOverlayRegistry,
+    WorldMapTransforms: WorldMapTransformRegistry,
+    DungeonMaps: DungeonMapRegistry
 }

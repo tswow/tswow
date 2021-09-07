@@ -21,3 +21,73 @@ export class MinMaxCell<T> extends CellSystem<T> {
         return this.owner;
     }
 }
+
+export class MinMax2DCell<T> extends CellSystem<T> {
+    protected minX: Cell<number,any>
+    protected minY: Cell<number,any>
+
+    protected maxX: Cell<number,any>
+    protected maxY: Cell<number,any>
+
+    constructor(
+          owner: T
+        , minX: Cell<number,any>
+        , minY: Cell<number,any>
+        , maxX: Cell<number,any>
+        , maxY: Cell<number,any>
+    ) {
+        super(owner);
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+    }
+
+    get MinX() { return this.ownerWrap(this.minX); }
+    get MinY() { return this.ownerWrap(this.minY); }
+    get MaxX() { return this.ownerWrap(this.maxX); }
+    get MaxY() { return this.ownerWrap(this.maxY); }
+
+    set(minX: number, minY: number, maxX: number, maxY: number) {
+        this.MinX.set(minX);
+        this.MinY.set(minY);
+        this.MaxX.set(maxX)
+        this.MaxY.set(maxY)
+        return this.owner;
+    }
+}
+
+export class Boundary<T> extends CellSystem<T> {
+    protected left: Cell<number,any>
+    protected top: Cell<number,any>
+    protected right: Cell<number,any>
+    protected bottom: Cell<number,any>
+
+    constructor(
+        owner: T
+        , left: Cell<number,any>
+        , top: Cell<number,any>
+        , right: Cell<number,any>
+        , bottom: Cell<number,any>
+    )
+    {
+        super(owner);
+        this.left = left;
+        this.top = top;
+        this.right = right;
+        this.bottom = bottom;
+    }
+
+    get Left() { return this.ownerWrap(this.left) }
+    get Top() { return this.ownerWrap(this.top); }
+    get Right() { return this.ownerWrap(this.right); }
+    get Bottom() { return this.ownerWrap(this.bottom); }
+
+    set(left: number, top: number, right: number, bottom: number) {
+        this.Left.set(left);
+        this.Top.set(top);
+        this.Right.set(right);
+        this.Bottom.set(bottom);
+        return this.owner;
+    }
+}
