@@ -43,7 +43,7 @@ export class SpellCastTime extends MainEntity<SpellCastTimesRow> {
 }
 
 export class SpellCastTimePointer<T> extends Ref<T, SpellCastTime> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellCastTime {

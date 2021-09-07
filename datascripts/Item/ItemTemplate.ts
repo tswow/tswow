@@ -230,7 +230,7 @@ export class ItemTemplateRef<T> extends RefStatic<T,ItemTemplate> {
     protected clone(mod: string, id: string): ItemTemplate {
         return Items.create(mod,id,this.resolve().ID);
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: ItemTemplate): number {

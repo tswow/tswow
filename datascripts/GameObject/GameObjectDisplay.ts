@@ -126,7 +126,7 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
 }
 
 export class GameObjectDisplayPointer<T> extends Ref<T,GameObjectDisplay> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): GameObjectDisplay {

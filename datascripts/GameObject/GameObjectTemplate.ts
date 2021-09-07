@@ -552,7 +552,7 @@ export class GameObjectMoTransportRef<T> extends RefStatic<T,GameObjectMoTranspo
         return GameObjectTemplates.create(mod,id,this.cell.get())
             .Type.setMoTransport()
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: GameObjectMoTransport): number {
@@ -662,7 +662,7 @@ export class GameObjectTransportRef<T> extends RefStatic<T,GameObjectTransport> 
         return GameObjectTemplates.create(mod,id,this.cell.get())
             .Type.setTransport()
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: GameObjectTransport): number {

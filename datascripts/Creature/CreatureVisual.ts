@@ -117,7 +117,7 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
 }
 
 export class CreatureVisualPointer<T> extends Ref<T,CreatureVisual> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): CreatureVisual {
@@ -137,7 +137,7 @@ export class CreatureVisualPointer<T> extends Ref<T,CreatureVisual> {
 }
 
 export class CreatureModelPointer<T> extends Ref<T,CreatureModel> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): CreatureModel {

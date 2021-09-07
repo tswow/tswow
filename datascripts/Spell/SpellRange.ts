@@ -67,7 +67,7 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
 }
 
 export class SpellRangePointer<T> extends Ref<T,SpellRange> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellRange {

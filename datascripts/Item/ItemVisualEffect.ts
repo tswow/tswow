@@ -78,7 +78,7 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
 }
 
 export class ItemEffectsPointer<T> extends Ref<T,ItemEffects> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() == 0;
     }
     protected create(): ItemEffects {

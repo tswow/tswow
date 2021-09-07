@@ -45,7 +45,7 @@ export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariabl
 }
 
 export class SpellDescriptionVariablePointer<T> extends Ref<T,SpellDescriptionVariable> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellDescriptionVariable {

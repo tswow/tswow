@@ -62,7 +62,7 @@ export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
         return this.owner;
     }
 
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
 

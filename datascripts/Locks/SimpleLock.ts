@@ -29,7 +29,7 @@ export class SimpleLock extends MainEntity<LockRow>{
 }
 
 export class SimpleLockPointer<T> extends Ref<T,SimpleLock> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SimpleLock {

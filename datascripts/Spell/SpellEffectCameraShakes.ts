@@ -50,7 +50,7 @@ export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesR
 }
 
 export class SpellEffectCameraShakePointer<T> extends Ref<T,SpellEffectCameraShakes> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellEffectCameraShakes {

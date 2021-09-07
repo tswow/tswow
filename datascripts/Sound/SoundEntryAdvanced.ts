@@ -30,7 +30,7 @@ export class SoundEntryAdvanced extends MainEntity<SoundEntriesAdvancedRow> {
 }
 
 export class SoundEntryAdvancedPointer<T> extends Ref<T,SoundEntryAdvanced> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
 

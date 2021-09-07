@@ -86,7 +86,7 @@ export class LootSetPointer<T> extends Ref<T,LootSet>{
         this.gen = gen;
     }
 
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): LootSet {

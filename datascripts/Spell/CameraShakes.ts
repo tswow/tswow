@@ -36,7 +36,7 @@ export class CameraShakes extends MainEntity<CameraShakesRow> {
 }
 
 export class CameraShakePointer<T> extends Ref<T,CameraShakes> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): CameraShakes {

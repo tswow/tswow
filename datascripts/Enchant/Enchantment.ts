@@ -73,7 +73,7 @@ export class EnchantmentRef<T> extends RefStatic<T,Enchantment> {
     protected clone(mod: string, id: string): Enchantment {
         return EnchantmentRegistry.create(mod,id,this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: Enchantment): number {

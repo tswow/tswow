@@ -47,7 +47,7 @@ export class SpellRadius extends MainEntity<SpellRadiusRow> {
 }
 
 export class SpellRadiusRef<T> extends Ref<T,SpellRadius> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
 

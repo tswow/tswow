@@ -183,7 +183,7 @@ export class SpellRef<T> extends RefStatic<T,Spell> {
     protected clone(mod: string, id: string): Spell {
         return Spells.create(mod,id,this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: Spell): number {

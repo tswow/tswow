@@ -100,7 +100,7 @@ export class SoundAmbienceRef<T> extends Ref<T,SoundAmbience> {
                 .findById(this.cell.get()).clone(Ids.SoundAmbience.id())
         )
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: SoundAmbience): number {

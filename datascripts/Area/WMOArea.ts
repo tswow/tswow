@@ -81,7 +81,7 @@ export class WMOAreaRef<T> extends RefStatic<T,WMOArea> {
     protected clone(mod: string, id: string): WMOArea {
         return WMOAreaRegistry.create(mod,id,this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: WMOArea): number {

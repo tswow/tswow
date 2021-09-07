@@ -64,7 +64,7 @@ export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
 }
 
 export class SpellChainEffectPointer<T> extends Ref<T,SpellChainEffect> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellChainEffect {

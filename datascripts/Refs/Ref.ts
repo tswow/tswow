@@ -102,7 +102,7 @@ export abstract class RefBase<T,V extends CanObjectify> {
         return this.owner;
     }
 
-    protected abstract exists(): boolean;
+    abstract exists(): boolean;
     protected abstract id(v: V): number;
     protected abstract resolve(): V;
 }

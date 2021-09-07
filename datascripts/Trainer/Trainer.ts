@@ -109,7 +109,7 @@ export class Trainer extends MainEntity<trainerRow> {
 }
 
 export class TrainerPointer<T> extends Ref<T,Trainer> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): Trainer {

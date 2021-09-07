@@ -65,7 +65,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
 }
 
 export class ItemDisplayInfoPointer<T> extends Ref<T,ItemDisplayInfo> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): ItemDisplayInfo {

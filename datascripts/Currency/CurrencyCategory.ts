@@ -51,7 +51,7 @@ export class CurrencyCategoryRef<T> extends Ref<T,CurrencyCategory> {
     protected clone(): CurrencyCategory {
         return CurrencyCategoryRegistry.create(this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: CurrencyCategory): number {

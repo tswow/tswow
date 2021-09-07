@@ -195,7 +195,7 @@ export class CreatureTemplateRef<T> extends RefStatic<T,CreatureTemplate> {
     protected clone(mod: string, id: string): CreatureTemplate {
         return CreatureTemplates.create(mod,id,this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: CreatureTemplate): number {

@@ -52,7 +52,7 @@ export class SpellVisualEffect extends MainEntity<SpellVisualEffectNameRow> {
 }
 
 export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellVisualEffect {

@@ -65,7 +65,7 @@ export class Power<T> extends CellSystem<T> {
 }
 
 export class SpellRuneCostPointer extends Ref<Spell,SpellRuneCostRow> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() != 0;
     }
 

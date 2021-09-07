@@ -27,7 +27,7 @@ export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
 }
 
 export class ZoneMusicRef<T> extends Ref<T,ZoneMusic> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
 

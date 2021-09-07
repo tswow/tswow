@@ -123,7 +123,7 @@ export class SpellVisualKitPointer<T> extends Ref<T,SpellVisualKit> {
         this.name = name;
     }
 
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellVisualKit {
@@ -267,7 +267,7 @@ export class SpellVisual extends MainEntity<SpellVisualRow> {
 }
 
 export class SpellVisualPointer<T> extends Ref<T,SpellVisual> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellVisual {

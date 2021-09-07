@@ -128,7 +128,7 @@ export class WorldStateUIRef<T> extends Ref<T,WorldStateUI> {
             .clone(Ids.WorldStateUI.id())
         )
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: WorldStateUI): number {

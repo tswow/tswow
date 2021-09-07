@@ -48,7 +48,7 @@ export class WorldSafeLocRef<T> extends Ref<T,WorldSafeLoc> {
     protected clone(): WorldSafeLoc {
         return WorldSafeLocRegistry.create(this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: WorldSafeLoc): number {

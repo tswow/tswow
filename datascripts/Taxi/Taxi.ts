@@ -115,7 +115,7 @@ export const TaxiPathRegistry = {
 }
 
 export class TaxiPathRef<T> extends RefBase<T,TaxiPath> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: TaxiPath): number {

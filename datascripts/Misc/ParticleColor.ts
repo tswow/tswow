@@ -44,7 +44,7 @@ export class ParticleColor extends MainEntity<ParticleColorRow> {
 }
 
 export class ParticleColorPointer<T> extends Ref<T,ParticleColor> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
 

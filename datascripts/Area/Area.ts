@@ -72,7 +72,7 @@ export class AreaRef<T> extends RefStatic<T,Area> {
         return new Area(DBC.AreaTable.findById(this.cell.get())
             .clone(Ids.Area.id(mod,id)))
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: Area): number {

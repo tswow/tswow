@@ -142,7 +142,7 @@ export class GemRef<T> extends RefStatic<T,Gem>{
     protected clone(mod: string, id: string): Gem {
         return GemRegistry.create(mod,id,undefined,this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: Gem): number {

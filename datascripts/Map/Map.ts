@@ -71,7 +71,7 @@ export class MapRef<T> extends RefStatic<T,Map> {
     protected clone(mod: string, id: string): Map {
         return new Maps().create(mod,id,this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: Map): number {

@@ -42,7 +42,7 @@ export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
 }
 
 export class SpellDifficultyPointer<T> extends Ref<T,SpellDifficulty> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellDifficulty {

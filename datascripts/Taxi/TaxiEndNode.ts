@@ -37,7 +37,7 @@ export class TaxiEndNodeRef<T> extends Ref<T,TaxiEndNode> {
     protected clone(): TaxiEndNode {
         return new TaxiEndNode(this.resolve().row.clone(Ids.TaxiNodes.id()));
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: TaxiEndNode): number {

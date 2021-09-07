@@ -47,7 +47,7 @@ export class Gossip extends MainEntity<gossip_menuRow> {
 }
 
 export class GossipPointer<T> extends Ref<T, Gossip> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): Gossip {

@@ -74,7 +74,7 @@ export class SoundProviderPreferenceRef<T> extends Ref<T,SoundProviderPreference
     protected clone(): SoundProviderPreferences {
         return SoundProviderPreferenceRegistry.create(this.cell.get());
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: SoundProviderPreferences): number {

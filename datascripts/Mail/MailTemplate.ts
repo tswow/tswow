@@ -13,7 +13,7 @@ export class MailTemplate extends MainEntity<MailTemplateRow> {
 }
 
 export class MailTemplatePointer<T> extends Ref<T,MailTemplate> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
 

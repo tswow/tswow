@@ -40,7 +40,7 @@ export class SpellDuration extends MainEntity<SpellDurationRow> {
 }
 
 export class SpellDurationPointer<T> extends Ref<T,SpellDuration> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellDuration {

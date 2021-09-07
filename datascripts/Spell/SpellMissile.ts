@@ -54,7 +54,7 @@ export class SpellMissile extends MainEntity<SpellMissileRow> {
 }
 
 export class SpellMissilePointer<T> extends Ref<T, SpellMissile> {
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected create(): SpellMissile {

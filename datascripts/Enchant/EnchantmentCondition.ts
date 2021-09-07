@@ -151,7 +151,7 @@ export class EnchantmentConditionRef<T> extends Ref<T,EnchantmentConditions> {
     protected clone(): EnchantmentConditions {
         return new EnchantmentConditions(this.resolve().row.clone(Ids.SpellItemEnchantmentCondition.id()))
     }
-    protected exists(): boolean {
+    exists(): boolean {
         return this.cell.get() > 0;
     }
     protected id(v: EnchantmentConditions): number {
