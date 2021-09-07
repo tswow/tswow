@@ -9,6 +9,7 @@ import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRef } from "../Sound/ZoneMusic";
 import { SoundAmbienceRef } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
+import { RefBase } from "../Refs/Ref";
 
 // Note: There is no table containing WorldStates, so we just
 // pretend there is one.
@@ -60,6 +61,8 @@ export class WorldState {
     text() {
         return `%${this.id}w`
     }
+
+    objectify() { return this.get(); }
 }
 
 export const WorldStateRegistry = {
@@ -69,5 +72,17 @@ export const WorldStateRegistry = {
 
     load(id: number) {
         return new WorldState(id);
+    }
+}
+
+export class WorldStateRef<T> extends RefBase<T,WorldState> {
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: WorldState): number {
+        return v.get();
+    }
+    protected resolve(): WorldState {
+        return new WorldState(this.cell.get());
     }
 }

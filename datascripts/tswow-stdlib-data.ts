@@ -68,6 +68,7 @@ import { WorldMapContinentRegistry } from "./Worldmap/WorldmapContinent";
 import { WorldMapOverlayRegistry } from "./Worldmap/WorldMapOverlay";
 import { WorldMapTransformRegistry } from "./Worldmap/WorldMapTransform";
 import { DungeonMapRegistry } from "./Worldmap/DungeonMap";
+import { AreaPOIRegistry } from "./WorldState/AreaPOI";
 
 export const std = {
     Spells : Spells,
@@ -135,5 +136,6 @@ export const std = {
     WorldMapContinents: WorldMapContinentRegistry,
     WorldMapOverlays: WorldMapOverlayRegistry,
     WorldMapTransforms: WorldMapTransformRegistry,
-    DungeonMaps: DungeonMapRegistry
+    DungeonMaps: DungeonMapRegistry,
+    AreaPOI: AreaPOIRegistry
 }

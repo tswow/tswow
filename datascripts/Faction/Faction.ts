@@ -20,6 +20,7 @@ import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
 import { FactionTemplates } from "./FactionTemplates";
 import { FactionReputations } from "./FactionReputation";
+import { RefStatic } from "../Refs/Ref";
 
 export class Faction extends MainEntity<FactionRow> {
     constructor(row: FactionRow) {
@@ -79,5 +80,26 @@ export const Factions = {
                 relation.addFriendGroups(['ALLIANCE'])
                         .addEnemyGroup(['HORDE'])
             })
+    }
+}
+
+export class FactionRef<T> extends RefStatic<T,Faction> {
+    protected create(mod: string, id: string): Faction {
+        return Factions.create(mod,id)
+    }
+    protected clone(mod: string, id: string): Faction {
+        return new Faction(DBC.Faction
+            .findById(this.cell.get())
+            .clone(Ids.Faction.id(mod,id))
+        )
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: Faction): number {
+        return v.ID;
+    }
+    protected resolve(): Faction {
+        return Factions.load(this.cell.get());
     }
 }
