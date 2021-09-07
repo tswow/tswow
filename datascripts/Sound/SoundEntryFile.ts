@@ -27,6 +27,11 @@ export class SoundEntryFiles extends ArraySystem<SoundEntryFile, SoundEntry> {
         return 10;
     }
 
+    addAll(filenames: string[], frequency: number = 1) {
+        filenames.forEach(x=>this.add(x,frequency));
+        return this.owner;
+    }
+
     get(index: number): SoundEntryFile {
         return new SoundEntryFile(this.owner, index);
     }

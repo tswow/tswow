@@ -50,13 +50,13 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
 
 export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
     setSimple(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
-        let soundEntry = SoundEntryRegistry.setSimple(directoryBase,songs,volume,frequency);
+        let soundEntry = SoundEntryRegistry.create(directoryBase,songs,volume,frequency);
         this.setRefID(soundEntry.row.ID.get());
         return this.owner;
     }
 
     setSimpleLoop(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
-        let soundEntry = SoundEntryRegistry.setSimple(directoryBase,songs,volume,frequency);
+        let soundEntry = SoundEntryRegistry.create(directoryBase,songs,volume,frequency);
         soundEntry.Flags.Looping.mark();
         this.setRefID(soundEntry.row.ID.get());
         return this.owner;
@@ -67,11 +67,11 @@ export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
     }
 
     protected create(): SoundEntry {
-        return new SoundEntry(DBC.SoundEntries.add(Ids.SoundEntries.id()));
+        return new SoundEntry(DBC.SoundEntries.add(Ids.SoundEntries.dynamicId()));
     }
 
     protected clone(): SoundEntry {
-        return new SoundEntry(this.resolve().row.clone(Ids.SoundEntries.id()));
+        return new SoundEntry(this.resolve().row.clone(Ids.SoundEntries.dynamicId()));
     }
 
     protected id(v: SoundEntry): number {
@@ -83,24 +83,52 @@ export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
     }
 }
 
+function createSoundEntry(
+      id: number
+    , directoryBase: string = ""
+    , sounds: string[] = []
+    , volume: number = 1
+    , frequency: number = 1
+)
+{
+    return new SoundEntry(DBC.SoundEntries.add(id))
+        .DirectoryBase.set(directoryBase)
+        .Files.addAll(sounds,frequency)
+        .MinDistance.set(8)
+        .DistanceCutoff.set(45)
+        .Volume.set(volume)
+}
+
 export const SoundEntryRegistry = {
-    create() {
-        let row = DBC.SoundEntries.add(Ids.SoundEntries.id());
-        return new SoundEntry(row)
-            .clear()
+    create(
+        directoryBase?: string
+        , sounds?: string[]
+        , volume?: number
+        , frequency?: number
+    ) {
+        return createSoundEntry(
+              Ids.SoundEntries.dynamicId()
+            , directoryBase
+            , sounds
+            , volume
+            , frequency
+        )
     },
 
-    setSimple(directoryBase: string, sounds: string[], volume: number = 1, frequency: number = 1) {
-        let sound = this.create()
-        sound
-            .Name.set(`SoundEntry${sound.row.ID.get()}`)
-            .DirectoryBase.set(directoryBase)
-            .MinDistance.set(8)
-            .DistanceCutoff.set(45)
-            .Volume.set(volume);
-        sounds.forEach(x=>{
-            sound.Files.add(x,frequency)
-        });
-        return sound;
-    }
+    createStatic(
+          mod: string
+        , id: string
+        , directoryBase?: string
+        , sounds?: string[]
+        , volume?: number
+        , frequency?: number
+    ) {
+        return createSoundEntry(
+              Ids.SoundEntries.staticId(mod,id)
+            , directoryBase
+            , sounds
+            , volume
+            , frequency
+        )
+    },
 }

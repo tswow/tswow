@@ -58,6 +58,10 @@ export class SpellSkillLineAbility extends MainEntity<SkillLineAbilityRow> {
 }
 
 export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility,Spell> {
+    static getAllRows(slas: SpellSkillLineAbilites) {
+        return slas.getAllRows();
+    }
+
     protected getAllRows(): SpellSkillLineAbility[] {
         return DBC.SkillLineAbility
             .filter({Spell: this.owner.ID})

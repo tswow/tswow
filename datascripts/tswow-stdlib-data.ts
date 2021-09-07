@@ -32,7 +32,7 @@ import { SmartScripts } from "./SmartScript/SmartScript";
 import { Gossips } from "./Gossip/Gossips";
 import { Lights } from "./Light/Lights";
 import { ScriptPaths } from "./Waypoints/ScriptPaths";
-import { Areas } from "./Area/Areas";
+import { AreaRegistry } from "./Area/Area";
 import { Maps } from "./Map/Maps";
 import { LoadingScreens } from "./Map/LoadingScreen";
 import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
@@ -55,6 +55,14 @@ import { TransportRegistry } from "./Transport/Transport";
 import { ElevatorRegistry } from "./Elevators/Elevators";
 import { MountRegistry } from "./PetsCollectibles/Mount";
 import { CompanionRegistry } from "./PetsCollectibles/Companion";
+import { WorldSafeLocRegistry } from "./WorldSafeLocs/WorldSafeLocs";
+import { BattlegroundRegistry } from "./Battleground/Battleground";
+import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
+import { WorldStateUIRegistry } from "./WorldState/WorldStateUI";
+import { WorldStateRegistry } from "./WorldState/WorldState";
+import { WMOAreaRegistry } from "./Area/WMOArea";
+import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
+import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 
 export const std = {
     Spells : Spells,
@@ -80,7 +88,7 @@ export const std = {
     Gossip: Gossips,
     Lights: Lights,
     ScriptPaths: ScriptPaths,
-    Areas: Areas,
+    Areas: AreaRegistry,
     Maps: new Maps(),
     LoadingScreens: LoadingScreens,
     /** Templates used by one or multiple game object instances */
@@ -94,8 +102,10 @@ export const std = {
     Professions: Professions,
     Locks: Locks,
     LockTypes: LockTypes,
-    ZoneMusic: ZoneMusicRegistry,
     SoundEntries: SoundEntryRegistry,
+    SoundAmbience: SoundAmbienceRegistry,
+    ZoneMusic: ZoneMusicRegistry,
+    ZoneIntroMusic: ZoneIntroMusicRegistry,
     MailTemplates: MailTemplateRegistry,
     Compare: Compare,
     SkillTiers: SkillTiersRegistry,
@@ -109,5 +119,11 @@ export const std = {
     Transports: TransportRegistry,
     Elevators: ElevatorRegistry,
     Mounts: MountRegistry,
-    Companions: CompanionRegistry
+    Companions: CompanionRegistry,
+    WorldSafeLocs: WorldSafeLocRegistry,
+    Battlegrounds: BattlegroundRegistry,
+    BattlegroundPools: BattlegroundPoolRegistry,
+    WorldStateUIs: WorldStateUIRegistry,
+    WorldStates: WorldStateRegistry,
+    WMOArea: WMOAreaRegistry,
 }

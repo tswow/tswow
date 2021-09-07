@@ -46,5 +46,4 @@ export class TaxiEndNodeRef<T> extends Ref<T,TaxiEndNode> {
     protected resolve(): TaxiEndNode {
         return new TaxiEndNode(DBC.TaxiNodes.findById(this.cell.get()));
     }
-
 }

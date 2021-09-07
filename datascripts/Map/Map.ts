@@ -15,9 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MapRow } from "wotlkdata/dbc/types/Map";
+import { DBC } from "wotlkdata"
 import { MainEntity } from "../Misc/Entity";
 import { XYCell } from "../Misc/XYCell";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { MapInstanceType } from "./MapInstanceType";
+import { MapWorldStateUIs } from "./MapWorldStates";
+import { Maps } from "./Maps";
 
 export class Map extends MainEntity<MapRow> {
     get ID() { return this.row.ID.get(); }
@@ -47,4 +51,33 @@ export class Map extends MainEntity<MapRow> {
     get Flags() { return this.wrap(this.row.Flags); }
 
     get IsPVP() { return this.wrap(this.row.PVP); }
+
+    get WorldStateUIs() { return new MapWorldStateUIs(this); }
+}
+
+export class MapRefReadOnly<T> extends RefReadOnly<T,Map> {
+    getRef(): Map {
+        return new Map(DBC.Map.findById(this.cell.get()));
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+}
+
+export class MapRef<T> extends RefStatic<T,Map> {
+    protected create(mod: string, id: string): Map {
+        return new Maps().create(mod,id)
+    }
+    protected clone(mod: string, id: string): Map {
+        return new Maps().create(mod,id,this.cell.get());
+    }
+    protected exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: Map): number {
+        return v.ID;
+    }
+    protected resolve(): Map {
+        return new Maps().load(this.cell.get());
+    }
 }

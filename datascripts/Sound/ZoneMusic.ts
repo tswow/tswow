@@ -26,7 +26,7 @@ export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
     }
 }
 
-export class ZoneMusicPointer<T> extends Ref<T,ZoneMusic> {
+export class ZoneMusicRef<T> extends Ref<T,ZoneMusic> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }
@@ -36,7 +36,7 @@ export class ZoneMusicPointer<T> extends Ref<T,ZoneMusic> {
     }
 
     protected clone(): ZoneMusic {
-        return new ZoneMusic(this.resolve().row.clone(Ids.ZoneMusic.id()));
+        return new ZoneMusic(this.resolve().row.clone(Ids.ZoneMusic.dynamicId()));
     }
 
     protected id(v: ZoneMusic): number {
@@ -46,17 +46,24 @@ export class ZoneMusicPointer<T> extends Ref<T,ZoneMusic> {
         return ZoneMusicRegistry.load(this.cell.get());
     }
 
-    setSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
-        this.setRefID(
-            ZoneMusicRegistry.setSimple(
-                  directoryBase
-                , songs
-                , silenceIntervalMin
-                , silenceIntervalMax
-                , volume
-                , frequency
-                ).ID);
-        return this.owner;
+    setSimple(
+              directoryBase: string
+            , songs: string[]
+            , silenceIntervalMin: number = 0
+            , silenceIntervalMax: number = 0
+            , volume: number = 1
+            , frequency: number = 1
+        ) {
+            this.setRefID(
+                ZoneMusicRegistry.create(
+                      directoryBase
+                    , songs
+                    , silenceIntervalMin
+                    , silenceIntervalMax
+                    , volume
+                    , frequency
+                    ).ID);
+            return this.owner;
     }
 }
 
@@ -75,22 +82,58 @@ export class ZoneMusic extends CellSystemTop {
     get SetName() { return this.wrap(this.row.SetName); }
 }
 
+function createZoneMusic(id: number, directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
+    let sound = SoundEntryRegistry.create(directoryBase,songs,volume,frequency)
+    let zoneMusic = new ZoneMusic(DBC.ZoneMusic.add(id))
+    return zoneMusic
+        .SetName.set(`ZoneMusic-${zoneMusic.ID}`)
+        .SoundDay.SilenceIntervalMin.set(silenceIntervalMin)
+        .SoundDay.SilenceIntervalMax.set(silenceIntervalMax)
+        .SoundNight.SilenceIntervalMin.set(silenceIntervalMin)
+        .SoundNight.SilenceIntervalMax.set(silenceIntervalMax)
+        .SoundDay.Sound.setRefID(sound.row.ID.get())
+        .SoundNight.Sound.setRefID(sound.row.ID.get());
+}
+
 export const ZoneMusicRegistry = {
-    create() {
-        return new ZoneMusic(DBC.ZoneMusic.add(Ids.ZoneMusic.id()));
+    createStatic(
+          mod: string
+        , id: string
+        , directoryBase = ""
+        , songs: string[] = []
+        , silenceMin = 0
+        , silenceMax = 0
+        , volume = 1
+        , frequency = 1
+    ) {
+        return createZoneMusic(
+          Ids.ZoneMusic.staticId(mod,id)
+        , directoryBase
+        , songs
+        , silenceMin
+        , silenceMax
+        , volume
+        , frequency
+        )
     },
 
-    setSimple(directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
-        let sound = SoundEntryRegistry.setSimple(directoryBase,songs,volume,frequency)
-        let zoneMusic = new ZoneMusic(DBC.ZoneMusic.add(Ids.ZoneMusic.id()))
-        return zoneMusic
-            .SetName.set(`ZoneMusic-${zoneMusic.ID}`)
-            .SoundDay.SilenceIntervalMin.set(silenceIntervalMin)
-            .SoundDay.SilenceIntervalMax.set(silenceIntervalMax)
-            .SoundNight.SilenceIntervalMin.set(silenceIntervalMin)
-            .SoundNight.SilenceIntervalMax.set(silenceIntervalMax)
-            .SoundDay.Sound.setRefID(sound.row.ID.get())
-            .SoundNight.Sound.setRefID(sound.row.ID.get());
+    create(
+              directoryBase = ""
+            , songs: string[] = []
+            , silenceMin = 0
+            , silenceMax = 0
+            , volume = 1
+            , frequency = 1
+        ) {
+            return createZoneMusic(
+              Ids.ZoneMusic.dynamicId()
+            , directoryBase
+            , songs
+            , silenceMin
+            , silenceMax
+            , volume
+            , frequency
+            )
     },
 
     load(id: number) {

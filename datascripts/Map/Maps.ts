@@ -29,8 +29,11 @@ export class Maps extends SystemStoreTop<Map> {
         return new Map(DBC.Map.findById(id));
     }
 
-    create(mod: string, id: string) {
-        return new Map(DBC.Map.add(Ids.Map.id(mod,id)));
+    create(mod: string, id: string, parent = 0) {
+        return new Map(
+            parent ? DBC.Map.findById(parent).clone(Ids.Map.id(mod,id))
+            :  DBC.Map.add(Ids.Map.id(mod,id))
+        );
     }
 
     filter(query: MapQuery) {

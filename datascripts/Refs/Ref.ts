@@ -1,4 +1,6 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export interface IntCell {
     get(): number;
@@ -29,6 +31,33 @@ export class SelfRef<T,V extends CanObjectify> {
 
     objectify() {
         return this.getter().objectify()
+    }
+}
+
+export abstract class RefReadOnly<T,V extends CanObjectify> extends CellSystem<T> {
+    protected cell: Cell<number,any>
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    abstract getRef(): V;
+    abstract exists(): boolean
+    
+    modRef(callback: (value: V)=>void) {
+        callback(this.getRef());
+        return this.owner;
+    }
+
+    getRefID() { return this.cell.get(); }
+
+    objectify() {
+        if(this.exists()) {
+            return this.getRef().objectify();
+        } else {
+            return 'NULL'
+        }
     }
 }
 

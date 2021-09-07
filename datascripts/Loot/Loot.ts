@@ -18,7 +18,7 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
 export interface LootRowBase {
@@ -79,8 +79,8 @@ export class LootSet extends CellSystemTop {
 
 export class LootSetPointer<T> extends Ref<T,LootSet>{
     protected table: LootTable;
-    protected gen: AutoIdGenerator;
-    constructor(owner: T, cell: Cell<number,any>, table: LootTable, gen: AutoIdGenerator) {
+    protected gen: DynamicIDGenerator;
+    constructor(owner: T, cell: Cell<number,any>, table: LootTable, gen: DynamicIDGenerator) {
         super(owner, cell);
         this.table = table;
         this.gen = gen;

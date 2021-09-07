@@ -16,31 +16,48 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
-import { loc_constructor } from "wotlkdata/primitives";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { std } from "../tswow-stdlib-data";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { ClassType, resolveClassType } from "../Class/ClassType";
 import { SQL } from "wotlkdata"
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { Language } from "wotlkdata/dbc/Localization";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { RefReadOnly } from "../Refs/Ref";
+import { SkillLine } from "../SkillLines/SkillLine";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { Spell } from "../Spell/Spell";
+import { SpellSkillLineAbilites, SpellSkillLineAbility } from "../Spell/SpellSkillLines";
+import { SkillLines } from "../SkillLines/SkillLines";
 
-export class LanguageAutoLearn extends CellSystem<Language> {
+export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
     add(races: RaceType[], classes: ClassType[]) {
         let classmask = 0;
         let racemask = 0;
+
         races.forEach(x=>{
             racemask |= (1<<(resolveRaceType(x)-1));
         })
+
         classes.forEach(x=>{
             classmask |= (1<<(resolveClassType(x)-1));
         })
-        SQL.playercreateinfo_skills.add(racemask,classmask,this.owner.SkillID).comment.set('tswow')
+
+        this.owner.Skills.forEach(x=>{
+            SQL.playercreateinfo_skills.add(racemask,classmask,x.ID)
+                .comment.set('tswow')
+        });
+
         return this.owner;
     }
 }
 
-export class LanguageWords extends CellSystem<Language> {
+export class LanguageWords extends CellSystem<WoWLanguage> {
     add(words: string[]) {
         // word ids are never used, so their ids can just be incremented.
         let highest = DBC.LanguageWords.filter({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
@@ -61,11 +78,73 @@ export class LanguageWords extends CellSystem<Language> {
     }
 }
 
+export class LanguageName extends LocSystem<WoWLanguage> {
+    lang(lang: Language): Cell<string, WoWLanguage> & PendingCell {
+        return new MulticastCell(this.owner,[
+              ...this.owner.Skills.map(x=>x.Name.lang(lang))
+            , ...this.owner.Spells.map(x=>x.Name.lang(lang))
+            , this.owner.row.Name.lang(lang)
+        ]);
+    }
+
+    get mask(): Cell<number, WoWLanguage> {
+        return new MulticastCell(this.owner,[
+            ...this.owner.Skills.map(x=>x.Name.mask),
+            this.owner.row.Name.mask
+        ]);
+    }
+
+    set(con: loc_constructor): WoWLanguage {
+        iterLocConstructor(con,(lang,value)=>{
+            this.lang(lang).set(value);
+        });
+        return this.owner;
+    }
+}
+
+export class LanguageSkills extends MultiRowSystem<SkillLine,WoWLanguage> {
+    protected getAllRows(): SkillLine[] {
+        let skills: SkillLine[] = [];
+        this.owner.Abilities.forEach((value)=>{
+            let sl = value.SkillLine.get();
+            if(!skills.find((x)=>x.ID == sl)) {
+                skills.push(SkillLines.load(sl));
+            }
+        })
+        return skills;
+    }
+    protected isDeleted(value: SkillLine): boolean {
+        return value.row.isDeleted();
+    }
+}
+
+export class LanguageAbilities extends MultiRowSystem<SpellSkillLineAbility,WoWLanguage> {
+    protected getAllRows(): SpellSkillLineAbility[] {
+        let rows: SpellSkillLineAbility[] = [];
+        this.owner.Spells.forEach(x=>{
+            rows = rows.concat(SpellSkillLineAbilites.getAllRows(x.SkillLines))
+        });
+        return rows;
+    }
+    protected isDeleted(value: SpellSkillLineAbility): boolean {
+        return value.row.isDeleted();
+    }
+}
+export class LanguageSpells extends MultiRowSystem<Spell,WoWLanguage>  {
+    protected getAllRows(): Spell[] {
+        // TODO: possible false positives
+        return std.Spells.filter({Effect:39,EffectMiscValue:this.owner.ID})
+    }
+    protected isDeleted(value: Spell): boolean {
+        return value.row.isDeleted()
+    }
+}
+
 /**
  * Creates and handles languages in World of Warcraft,
  * such as Orcish or Common.
  */
-export class Language extends MainEntity<LanguagesRow> {
+export class WoWLanguage extends MainEntity<LanguagesRow> {
     constructor(row : LanguagesRow) {
         super(row);
     }
@@ -74,41 +153,21 @@ export class Language extends MainEntity<LanguagesRow> {
         return this.row.ID.get();
     }
 
-    get Name() { return this.wrapLoc(this.row.Name); }
-
-    get SkillID() {
-        let skillLines: {[skill: number]: boolean}= {}
-        std.Spells
-           .filter({Effect:39,EffectMiscValue:this.ID})
-           .forEach(spell=>{
-               spell.SkillLines.forEach(sla=>{
-                    skillLines[sla.SkillLine.get()] = true;
-               })
-           })
-        let keys = Object.keys(skillLines);
-        if(keys.length === 0) {
-            throw new Error(`Language ${this.ID} has no skill!`);
-        }
-
-        if(keys.length > 1) {
-            throw new Error(`Language ${this.ID} has multiple skills!`)
-        }
-
-        return parseInt(keys[0]);
-    }
-
+    get Name() {  return new LanguageName(this); }
+    get Spells() { return new LanguageSpells(this); }
+    get Abilities() { return new LanguageAbilities(this); }
+    get Skills() { return new LanguageSkills(this); }
     get AutoLearn() { return new LanguageAutoLearn(this); }
     get Words() { return new LanguageWords(this); }
 }
 
 export const Languages = {
-    create : (mod : string, id : string, name: loc_constructor) => {
-        const langRow = DBC.Languages.add(Ids.Language.id(mod,id),{Name:name});
+    create : (mod : string, id : string) => {
+        const langRow = DBC.Languages.add(Ids.Language.id(mod,id));
         let sl = std.SkillLines.create(mod,id+'-skilline')
            .Category.set(10)
            .CanLink.set(0)
            .SkillCosts.set(0)
-           .Name.set(name)
            .Icon.set('Interface\\Icons\\Trade_Engineering')
            .CanLink.set(0)
            .RaceClassInfos.modNew(
@@ -121,7 +180,6 @@ export const Languages = {
             )
 
         std.Spells.create(mod,id+'-spell')
-            .Name.set(name)
             .Attributes.isPassive.mark()
             .Attributes.isHiddenInSpellbook.mark()
             .Proc.Chance.set(101)
@@ -139,14 +197,14 @@ export const Languages = {
                    .ClassMask.set(0)
                    .ClassMaskForbidden.set(0)
             })
-        return new Language(langRow);
+        return new WoWLanguage(langRow);
     },
 
     load : (id : number) => {
-        return new Language(DBC.Languages.find({ID:id}));
+        return new WoWLanguage(DBC.Languages.find({ID:id}));
     },
 
     filter(query: LanguagesQuery) {
-        return DBC.Languages.filter(query).map(x=>new Language(x));
+        return DBC.Languages.filter(query).map(x=>new WoWLanguage(x));
     }
 }

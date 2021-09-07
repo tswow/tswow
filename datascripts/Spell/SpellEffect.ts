@@ -25,7 +25,7 @@ import { std } from "../tswow-stdlib-data";
 import { Spells } from "./Spells";
 import { all_auras } from "./EffectTemplates/AuraTemplates";
 import { all_effects } from "./EffectTemplates/EffectTemplate";
-import { SpellRadiusPointer } from "./SpellRadius";
+import { SpellRadiusRef } from "./SpellRadius";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
@@ -173,7 +173,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             if(nex!==undefined) {
                 return nex;
             }
-            nex = std.Spells.createAuto()
+            nex = std.Spells.createDynamic()
                 .Icon.setFullPath(SPELL_CHAIN_TOKEN)
             spell.Effects.modFree((eff)=>{
                 eff.EffectType.setTriggerSpell()
@@ -233,7 +233,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     @Transient
     get row() { return this.container.row; }
 
-    get Radius() { return new SpellRadiusPointer(this, this.w(this.row.EffectRadiusIndex)); }
+    get Radius() { return new SpellRadiusRef(this, this.w(this.row.EffectRadiusIndex)); }
     get ItemType() { return this.w(this.row.EffectItemType); }
     get AuraType(): AuraType { return new AuraType(this, this.index); }
     get EffectType(): SpellEffectType { return new SpellEffectType(this, this.index); }

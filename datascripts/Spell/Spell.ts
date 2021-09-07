@@ -170,7 +170,7 @@ export class Spell extends MainEntity<SpellRow> {
      * @param id 
      */
     clone(mod: string, id: string) {
-        const newId = Ids.Spell.id(mod, id);
+        const newId = Ids.Spell.staticId(mod, id);
         let spell = new Spell(this.row.clone(newId));
         return spell;
     }

@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
+import { Ids } from "../Misc/Ids";
 import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
 import { MainEntity } from "../Misc/Entity";
 import { Ref } from "../Refs/Ref";
@@ -46,7 +46,7 @@ export class SpellRadius extends MainEntity<SpellRadiusRow> {
     }
 }
 
-export class SpellRadiusPointer<T> extends Ref<T,SpellRadius> {
+export class SpellRadiusRef<T> extends Ref<T,SpellRadius> {
     protected exists(): boolean {
         return this.cell.get() > 0;
     }

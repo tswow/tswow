@@ -7,7 +7,7 @@ import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SchoolMask } from "../../Misc/School";
 import { EffectClassSet } from "../SpellClassSet";
-import { SpellRadiusPointer } from "../SpellRadius";
+import { SpellRadiusRef } from "../SpellRadius";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 // 1
@@ -34,7 +34,7 @@ export class EnvironmentalDamage extends EffectTemplate {
     get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
     get Radius() { 
-        return new SpellRadiusPointer(this, this.wrapIndex(this.row.EffectRadiusIndex, this.index)); } 
+        return new SpellRadiusRef(this, this.wrapIndex(this.row.EffectRadiusIndex, this.index)); } 
 }
 // 8
 @EffectID(8)

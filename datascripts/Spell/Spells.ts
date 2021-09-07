@@ -143,41 +143,23 @@ export const SpellGroups = {
     },
 
     create() {
-        let id = Ids.spell_group.id();
-        SQL.spell_group_stack_rules.add(id,{stack_rule: 0});
-        return id;
+        let nid = Ids.spell_group.id();
+        SQL.spell_group_stack_rules.add(nid,{stack_rule: 0});
+        return nid;
     }
 }
 
 export const Spells = {
-    /**
-     * @warn Do NOT use this function if you don't know what you're doing.
-     * You should almost always just use "create". The purpose of this
-     * function is to allow creation of some temporary spells that do not
-     * require persistent ids, such as teaching spells and effect chains.
-     */
-    createAuto(parent: number = 0) {
-        return createSpell(Ids.SpellAuto.id(),parent);
-    },
-
     create(mod: string, id: string, parent: number = 0) {
-        return createSpell(Ids.Spell.id(mod,id),parent);
+        return createSpell(Ids.Spell.staticId(mod,id),parent);
     },
 
-    createRanks(mod: string, id: string, parent: number, ranks: number) {
-        const spells : Spell[] = [];
-        for(let i=0;i<ranks; ++i) {
-            const spell = Spells.create(mod, id+i, parent);
-            spell.row.NameSubtext.set({enGB: `Rank ${i+1}`});
-            spells.push(spell);
-        }
-
-        let fst = spells[0];
-        spells.forEach((x,i)=>{
-            SQL.spell_ranks.add(fst.ID,i+1).spell_id.set(x.ID);
-        });
-
-        return new SpellRanks(spells);
+    /** 
+     * @deprecated - Do **NOT** use this unless you know 
+     *               exactly what you're doing
+     */
+    createDynamic(parent: number = 0) {
+        return createSpell(Ids.Spell.dynamicId(),parent);
     },
 
     load(id: number = 0) {
