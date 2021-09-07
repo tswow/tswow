@@ -6,7 +6,7 @@ import { MainEntity } from "../Misc/Entity";
 import { WorldMapAreaRef } from "./WorldMapArea";
 import { PositionXYCell } from "../Misc/PositionCell";
 import { Boundary } from "../Misc/LimitCells";
-import { DBC } from "../../../../bin/scripts/tswow/wotlkdata/wotlkdata";
+import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 

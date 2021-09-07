@@ -64,11 +64,11 @@ import { WMOAreaRegistry } from "./Area/WMOArea";
 import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
 import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 import { WorldMapAreaRegistry } from "./Worldmap/WorldMapArea";
-import { WorldMapContinentRegistry } from "./Worldmap/WorldmapContinent";
 import { WorldMapOverlayRegistry } from "./Worldmap/WorldMapOverlay";
 import { WorldMapTransformRegistry } from "./Worldmap/WorldMapTransform";
 import { DungeonMapRegistry } from "./Worldmap/DungeonMap";
 import { AreaPOIRegistry } from "./WorldState/AreaPOI";
+import { WorldMapContinentRegistry } from "./Worldmap/WorldMapContinent";
 
 export const std = {
     Spells : Spells,

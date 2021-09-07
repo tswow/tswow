@@ -38,19 +38,46 @@ export class QuestNPC extends CellSystem<Quest> {
      * Add a quest ender
      * @param npcId 
      */
-    addEnder(npcId : number) {
+    addEnder(npcId : number, addPoi = true) {
         this.mark(npcId);
         SQL.creature_questender.add(npcId,this.owner.ID)
-        return this.end;
+
+        if(addPoi) {
+            let creatures = SQL.creature.filter({id:npcId})
+            if(creatures.length === 0) {
+                throw new Error(
+                      `No spawn for creature template ${npcId}, `
+                    + `either spawn your creature before creating the quest `
+                    + `or set the complete poi manually (Quest.CompletePoint)`
+                )
+            }
+
+            if(creatures.length > 1) {
+                throw new Error(
+                        `Multiple spawns for creature template ${npcId}, `
+                      + `please set poi manually`
+                )
+            }
+
+            this.owner.POIs.add(-1,[{
+                  map:creatures[0].map.get()
+                , x:creatures[0].position_x.get()
+                , y:creatures[0].position_y.get()
+                , z:creatures[0].position_z.get()
+                , o:0
+            }])
+        }
+
+        return this.owner;
     }
 
     /**
      * Add both a quest starter and ender
      * @param npcId 
      */
-    addBoth(npcId: number) {
+    addBoth(npcId: number, addPoi = true) {
         this.addStarter(npcId);
-        this.addEnder(npcId);
-        return this.end;
+        this.addEnder(npcId, addPoi);
+        return this.owner;
     }
 }

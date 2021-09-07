@@ -1,6 +1,6 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
 
 export interface IntCell {
     get(): number;
@@ -35,9 +35,9 @@ export class SelfRef<T,V extends CanObjectify> {
 }
 
 export abstract class RefReadOnly<T,V extends CanObjectify> extends CellSystem<T> {
-    protected cell: Cell<number,any>
+    protected cell: Cell<number,any>|CellReadOnly<number,any>
 
-    constructor(owner: T, cell: Cell<number,any>) {
+    constructor(owner: T, cell: Cell<number,any>|CellReadOnly<number,any>) {
         super(owner);
         this.cell = cell;
     }

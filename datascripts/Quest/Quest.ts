@@ -26,6 +26,10 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
 import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { Quests } from "./Quests";
+import { Ids } from "../Misc/Ids";
+import { QuestPOIs } from "./QuestPOI";
 
 export class Quest extends MainEntity<quest_templateRow> {
     private _addonRow: quest_template_addonRow|undefined = undefined;
@@ -95,4 +99,36 @@ export class Quest extends MainEntity<quest_templateRow> {
     get QuestLevel() { return this.wrap(this.row.QuestLevel); }
     get StartItem() { return this.wrap(this.row.StartItem); }
     get Flags() { return new QuestFlags(this, this.row.Flags); }
+    get POIs() { return new QuestPOIs(this); }
+}
+
+export class QuestRef<T> extends RefStatic<T,Quest> {
+    protected create(mod: string, id: string): Quest {
+        return Quests.create(mod,id);
+    }
+    protected clone(mod: string, id: string): Quest {
+        return new Quest(
+            SQL.quest_template
+                .add(Ids.quest_template.id(mod,id)
+            )
+        )
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: Quest): number {
+        return v.ID;
+    }
+    protected resolve(): Quest {
+        return Quests.load(this.cell.get());
+    }
+}
+
+export class QuestRefReadOnly<T> extends RefReadOnly<T,Quest> {
+    getRef(): Quest {
+        return Quests.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
 }

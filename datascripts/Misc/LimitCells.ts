@@ -78,6 +78,15 @@ export class Boundary<T> extends CellSystem<T> {
         this.bottom = bottom;
     }
 
+    GetMiddle() {
+        return {
+              x : Math.max(this.Left.get(),this.Right.get())
+              -   Math.min(this.Left.get(),this.Right.get())
+            , y : Math.max(this.Bottom.get(),this.Top.get())
+              -   Math.min(this.bottom.get(),this.Top.get())
+        }
+    }
+
     get Left() { return this.ownerWrap(this.left) }
     get Top() { return this.ownerWrap(this.top); }
     get Right() { return this.ownerWrap(this.right); }
