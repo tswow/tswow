@@ -175,6 +175,9 @@ declare interface TSPlayer extends TSUnit {
     SetBankBagSlotCount(count: uint8)
     AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32, propertyId?: int32)
 
+    GetBattleground(): TSBattleground
+    GetBattlegroundPlayer(): TSBattlegroundPlayer
+
     IsNull() : bool
 
     /**
@@ -3574,6 +3577,8 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      */
     IsBattleground() : bool
 
+    GetBattleground(): TSBattleground
+
     /**
      * Returns `true` if the [Map] is a dungeon, `false` otherwise.
      *
@@ -4053,7 +4058,13 @@ declare interface TSItem extends TSObject {
     SaveToDB() : void    
 }
 
-declare interface TSBattleground {
+declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityProvider<TSBattlegroundPlayer>{
+    GetGUID(): uint64;
+    GetTeam(): TeamId;
+    GetOfflineRemovalTime(): uint64;
+}
+
+declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider<TSBattleground> {
     IsNull() : bool
 
     /**
@@ -4069,7 +4080,7 @@ declare interface TSBattleground {
      * @param [Team] team : team ID
      * @return uint32 count
      */
-    GetAlivePlayersCountByTeam(team : uint32) : uint32
+    GetAlivePlayersCountByTeam(team : TeamId) : uint32
 
     /**
      * Returns the [Map] of the [BattleGround].
@@ -4099,7 +4110,7 @@ declare interface TSBattleground {
      * @param [Team] team : team ID
      * @return uint32 freeSlots
      */
-    GetFreeSlotsForTeam(team : uint32) : uint32
+    GetFreeSlotsForTeam(team : TeamId) : uint32
 
     /**
      * Returns the instance ID of the [BattleGround].
@@ -4177,6 +4188,49 @@ declare interface TSBattleground {
      * @return [BattleGroundStatus] status
      */
     GetStatus() : uint32    
+
+    IsRandom(): bool;
+    GetPlayers(): TSArray<TSBattlegroundPlayer>;
+    SetStartPosition(teamId: uint32, x: float, y: float, z: float, o: float): void;
+    GetStartX(teamid: TeamId): float;
+    GetStartY(teamid: TeamId): float;
+    GetStartZ(teamid: TeamId): float;
+    GetStartO(teamid: TeamId): float;
+    SetStartMaxDist(maxDist: float): void;
+    GetStartMaxDist(): float;
+    SendPacket(packet: TSWorldPacket, team?: TeamId, sender? : TSPlayer, self?: bool): void;
+    PlaySound(sound: uint32, team?: uint32): void;
+    CastSpell(spell: uint32, team?: uint32): void;
+    RemoveAura(aura: uint32, team?: uint32): void;
+    RewardHonor(honor: uint32, team?: uint32): void;
+    RewardReputation(faction: uint32, reputation: uint32, team?: TeamId): void;
+    UpdateWorldState(variable: uint32, value: uint32): void;
+    EndBattleground(winnerTeam?: TeamId): void;
+    GetRaid(faction: TeamId): TSGroup;
+    GetPlayerCount(team?: TeamId): uint32;
+    GetAlivePlayerCount(team?: TeamId): uint32;
+    AddCreature(entry: uint32, type: uint32, x: float, y: float, z: float, o: float, respawnTime?: uint32, teamId?: TeamId): TSCreature;
+    AddObject(type: uint32, entry:uint32, x: float, y: float, z: float, o: float, rot0: float, rot1: float, rot2: float, rot3: float, respawnTime?: uint32, goState?: uint32): bool;
+    AddSpiritGuide(type: uint32, x: float, y: float, z: float, o: float, teamId?: TeamId): void;
+    OpenDoor(type: uint32): void;
+    CloseDoor(type: uint32): void;
+    IsPlayerInBattleground(guid: uint64): bool;
+    GetTeamScore(team: TeamId): uint32;
+    SendMessage(entry: uint32, type: uint8, source?: TSPlayer): void;
+    GetUniqueBracketID(): uint32;
+
+    GetStartDelayTime(): int32;
+    SetStartDelayTime(time: int32): void;
+    SetStartTime(time: uint32): void;
+    GetStartTime(): uint32;
+    RemoveCreature(type: uint32): bool;
+    RemoveObject(type: uint32): bool;
+    RemoveObjectFromWorld(type: uint32): bool;
+    GetObjectType(guid: uint64): int32;
+    SetHoliday(isHoliday: bool): void;
+    IsHoliday(): bool;
+    GetGameObject(type: uint32, logErrors?: bool): TSGameObject;
+    GetCreature(type: uint32, logErrors?: bool): TSCreature;
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -6978,6 +7032,80 @@ declare namespace _hidden {
         OnGenerateSkinningLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
     }
 
+    export class Battlegrounds {
+        OnStart(callback: (bg: TSBattleground)=>void)
+        OnAddPlayer(callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogin(callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogout(callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnUpdateScore(callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
+        OnUpdateEarly(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnUpdateLate(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnKillPlayer(callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
+        OnEndEarly(callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
+        /**
+         * Note that "winner" can no longer be changed at this stage,
+         * for that, use "OnEndEarly"
+         */
+        OnEndLate(callback: (bg: TSBattleground,winner: uint32)=>void)
+        OnKillCreature(callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
+        OnRemovePlayer(callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
+        OnPlayerUnderMap(callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
+        OnGenericEvent(callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
+        OnClickFlag(callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
+        OnDropFlag(callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnDestroyGate(callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
+        OnOpenDoors(callback: (bg: TSBattleground)=>void)
+        OnCloseDoors(callback: (bg: TSBattleground)=>void)
+        OnReset(callback: (bg: TSBattleground)=>void)
+        OnSetup(callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
+        OnAchievementCriteria( callback: (
+              bg: TSBattleground
+            , criteria: uint32
+            , player: TSPlayer
+            , target: TSUnit
+            , miscValueA: uint32
+            , handled: TSMutable<bool>
+        )=>void)
+        OnAreaTrigger(callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
+    }
+
+    export class BattlegroundID {
+        OnStart(id: number, callback: (bg: TSBattleground)=>void)
+        OnAddPlayer(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogin(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogout(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnUpdateScore(id: number, callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
+        OnUpdateEarly(id: number, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnUpdateLate(id: number, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnKillPlayer(id: number, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
+        OnEndEarly(id: number, callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
+        /**
+         * Note that "winner" can no longer be changed at this stage,
+         * for that, use "OnEndEarly"
+         */
+        OnEndLate(id: number, callback: (bg: TSBattleground,winner: uint32)=>void)
+        OnKillCreature(id: number, callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
+        OnRemovePlayer(id: number, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
+        OnPlayerUnderMap(id: number, callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
+        OnGenericEvent(id: number, callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
+        OnClickFlag(id: number, callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
+        OnDropFlag(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnDestroyGate(id: number, callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
+        OnOpenDoors(id: number, callback: (bg: TSBattleground)=>void)
+        OnCloseDoors(id: number, callback: (bg: TSBattleground)=>void)
+        OnReset(id: number, callback: (bg: TSBattleground)=>void)
+        OnSetup(id: number, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
+        OnAchievementCriteria(id: number, callback: (
+              bg: TSBattleground
+            , criteria: uint32
+            , player: TSPlayer
+            , target: TSUnit
+            , miscValueA: uint32
+            , handled: TSMutable<bool>
+        )=>void)
+        OnAreaTrigger(id: number, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void) 
+    }
+
     export class Items {
         OnUse(callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
         OnExpire(callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
@@ -7123,6 +7251,8 @@ declare class TSEventHandlers {
     GameObjects: _hidden.GameObjects;
     GameObjectID: _hidden.GameObjectID;
     Tests: _hidden.Tests;
+    Battlegrounds: _hidden.Battlegrounds;
+    BattlegroundID: _hidden.BattlegroundID;
 }
 
 declare class TSDictionary<K,V> {

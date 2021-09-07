@@ -45,6 +45,7 @@
 #include "MapManager.h"
 #include "base64.h"
 #include "Config.h"
+#include "BattlegroundMgr.h"
 
 class TSServerScript : public ServerScript
 {
@@ -324,6 +325,30 @@ void TSMapMap::OnAdd(uint32_t key, TSMapEvents* events)
 void TSMapMap::OnRemove(uint32_t key)
 {
     
+}
+
+static std::vector<TSBattlegroundEvents*> bgData;
+void TSBattlegroundMap::OnAdd(uint32_t key, TSBattlegroundEvents* events)
+{
+    if (bgData.size() <= key)
+    {
+        bgData.resize(key + 1, nullptr);
+    }
+    bgData[key] = events;
+}
+
+TSBattlegroundEvents* GetBattlegroundEvent(uint32_t id)
+{
+    if (id > bgData.size())
+    {
+        return nullptr;
+    }
+    return bgData[id];
+}
+
+void TSBattlegroundMap::OnRemove(uint32_t key)
+{
+
 }
 
 void TSAchievementMap::OnAdd(uint32_t key, TSAchievementEvents* events)

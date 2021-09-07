@@ -23,6 +23,8 @@
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 
+class TSBattleground;
+
 class TC_GAME_API TSMap: public TSEntityProvider, public TSWorldEntityProvider<TSMap> {
 public:
     Map *map;
@@ -32,6 +34,7 @@ public:
     bool IsNull() { return map == nullptr; };
     bool IsArena();
     bool IsBattleground();
+    TSBattleground GetBattleground();
     bool IsDungeon();
     bool IsEmpty();
     bool IsHeroic();

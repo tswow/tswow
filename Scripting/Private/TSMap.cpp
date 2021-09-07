@@ -22,6 +22,7 @@
 #include "TSGameObject.h"
 #include "TSUnit.h"
 #include "TSCreature.h"
+#include "TSBattleground.h"
 
 #include "ObjectMgr.h"
 #include "CreatureData.h"
@@ -67,6 +68,11 @@ bool TSMap::IsBattleground()
 #else
     return map->IsBattleGround();
 #endif
+}
+
+TSBattleground TSMap::GetBattleground()
+{
+    return TSBattleground(map->ToBattlegroundMap()->GetBG());
 }
     
 /**

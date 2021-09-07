@@ -26,6 +26,8 @@
 
 class TSJsonObject;
 class TSJsonArray;
+class TSBattleground;
+class TSBattlegroundPlayer;
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit {
 public:
@@ -265,6 +267,9 @@ public:
 	void SendQuestTemplate(uint32 questId, bool activateAccept);
 	void SpawnBones();
 	void RemovedInsignia(TSPlayer looter);
+    TSBattlegroundPlayer GetBattlegroundPlayer();
+    TSBattleground GetBattleground();
+
 	bool GroupInvite(TSPlayer invited);
 	TSGroup GroupCreate(TSPlayer invited);
 	void SendCinematicStart(uint32 CinematicSequenceId);

@@ -40,6 +40,8 @@
 #include "ObjectMgr.h"
 #include "Trainer.h"
 #include "DBCStructure.h"
+#include "TSBattleground.h"
+#include "TSMap.h"
 
 #include "TSJson.h"
 #include "TSUnit.h"
@@ -3808,6 +3810,16 @@ uint8 TSPlayer::GetFace()
 void TSPlayer::SetFace(uint8 face)
 {
     player->SetFaceId(face);
+}
+
+TSBattleground TSPlayer::GetBattleground()
+{
+    return GetMap().GetBattleground();
+}
+
+TSBattlegroundPlayer TSPlayer::GetBattlegroundPlayer()
+{
+    return GetMap().GetBattleground().GetPlayer(GetGUID());
 }
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)

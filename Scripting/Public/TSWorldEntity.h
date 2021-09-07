@@ -88,6 +88,13 @@ class TC_GAME_API TSMessageQueue {
     std::mutex m_jsonMessageLock;
     std::vector<JsonMessage<T>> m_jsonMessages;
 public:
+    TSMessageQueue() = default;
+
+    // Note: for Battlegrounds
+    TSMessageQueue(TSMessageQueue const& queue)
+        : m_jsonMessages(queue.m_jsonMessages)
+    {}
+
     void queue(uint8_t channel, TSJsonObject obj, JsonMessageCallback<T> callback)
     {
         const std::lock_guard<std::mutex> lock(m_jsonMessageLock);

@@ -32,6 +32,7 @@
 #include "TSTests.h"
 #include "TSAreaTrigger.h"
 #include "TSAchievementTemplate.h"
+#include "TSBattleground.h"
 #include <cstdint>
 
 // Addon
@@ -513,6 +514,96 @@ struct TSMapDataExtra {
 };
 TC_GAME_API TSMapDataExtra* GetMapDataExtra(uint32_t);
 
+
+EVENT_TYPE(BattlegroundOnStart,TSBattleground)
+EVENT_TYPE(BattlegroundOnAddPlayer,TSBattleground,TSPlayer)
+EVENT_TYPE(BattlegroundOnPlayerLogin,TSBattleground,TSPlayer)
+EVENT_TYPE(BattlegroundOnPlayerLogout,TSBattleground,TSPlayer)
+EVENT_TYPE(BattlegroundOnUpdateScore,TSBattleground,TSPlayer,uint32_t /*type*/, bool isAddHonor, TSMutable<uint32> /*value*/)
+EVENT_TYPE(BattlegroundOnUpdateEarly,TSBattleground, uint32 /*diff*/)
+EVENT_TYPE(BattlegroundOnUpdateLate,TSBattleground, uint32 /*diff*/)
+EVENT_TYPE(BattlegroundOnKillPlayer,TSBattleground,TSPlayer /*victim*/,TSPlayer /*killer*/)
+EVENT_TYPE(BattlegroundOnEndEarly,TSBattleground,TSMutable<uint32> /*winner*/)
+EVENT_TYPE(BattlegroundOnEndLate,TSBattleground,uint32 /*winner*/)
+
+// need to be call explicitly from subclasses
+
+// HandleKillUnit (check)
+EVENT_TYPE(BattlegroundOnKillCreature,TSBattleground,TSCreature /*victim*/, TSPlayer /*killer*/)
+
+// RemovePlayer (check)
+EVENT_TYPE(BattlegroundOnRemovePlayer,TSBattleground,uint64 /*guid*/,TSPlayer, uint32 /*team*/)
+
+// HandlePlayerUnderMap
+EVENT_TYPE(BattlegroundOnPlayerUnderMap,TSBattleground, TSPlayer, TSMutable<bool> /*handled*/)
+
+// ProcessEvent
+EVENT_TYPE(BattlegroundOnGenericEvent,TSBattleground,TSWorldObject,uint32 /*eventId*/,TSWorldObject /*invoker*/)
+
+// EventPlayerClickedOnFlag
+EVENT_TYPE(BattlegroundOnClickFlag,TSBattleground,TSPlayer,TSGameObject /*flag_obj*/)
+
+// EventPlayerDroppedFlag
+EVENT_TYPE(BattlegroundOnDropFlag,TSBattleground,TSPlayer)
+
+// DestroyGate
+EVENT_TYPE(BattlegroundOnDestroyGate,TSBattleground,TSPlayer /*destroyer*/,TSGameObject /*target*/)
+
+// StartingEventOpenDoors
+EVENT_TYPE(BattlegroundOnOpenDoors,TSBattleground)
+// StartingEventCloseDoors
+EVENT_TYPE(BattlegroundOnCloseDoors,TSBattleground)
+// Reset
+EVENT_TYPE(BattlegroundOnReset,TSBattleground)
+// SetupBattleground
+EVENT_TYPE(BattlegroundOnSetup,TSBattleground,TSMutable<bool>)
+
+// requires special handling functions
+EVENT_TYPE(BattlegroundOnAchievementCriteria
+    , TSBattleground
+    , uint32 /*criteriaId*/
+    , TSPlayer /*player*/
+    , TSUnit /*target*/
+    , uint32 /*miscvalueA*/
+    , TSMutable<bool> handled
+)
+EVENT_TYPE(BattlegroundOnAreaTrigger,TSBattleground,TSPlayer,uint32 /*trigger*/, TSMutable<bool> handled)
+
+struct TSBattlegroundEvents
+{
+    EVENT(BattlegroundOnSetup)
+    EVENT(BattlegroundOnStart)
+    EVENT(BattlegroundOnReset)
+    EVENT(BattlegroundOnOpenDoors)
+    EVENT(BattlegroundOnCloseDoors)
+    EVENT(BattlegroundOnDestroyGate)
+    EVENT(BattlegroundOnAchievementCriteria)
+    EVENT(BattlegroundOnAddPlayer)
+    EVENT(BattlegroundOnPlayerLogin)
+    EVENT(BattlegroundOnPlayerLogout)
+    EVENT(BattlegroundOnUpdateScore)
+    EVENT(BattlegroundOnPlayerUnderMap)
+    EVENT(BattlegroundOnEndEarly)
+    EVENT(BattlegroundOnEndLate)
+    EVENT(BattlegroundOnUpdateEarly)
+    EVENT(BattlegroundOnUpdateLate)
+    EVENT(BattlegroundOnRemovePlayer)
+    EVENT(BattlegroundOnKillPlayer)
+    EVENT(BattlegroundOnKillCreature)
+    EVENT(BattlegroundOnAreaTrigger)
+    EVENT(BattlegroundOnGenericEvent)
+    EVENT(BattlegroundOnDropFlag)
+    EVENT(BattlegroundOnClickFlag)
+};
+
+class TSBattlegroundMap : public TSEventMap<TSBattlegroundEvents>
+{
+    void OnAdd(uint32_t, TSBattlegroundEvents*);
+    void OnRemove(uint32_t);
+};
+
+TSBattlegroundEvents * GetBattlegroundEvent(uint32_t id);
+
 struct TSEvents
 {
     // AddonScript
@@ -542,6 +633,31 @@ struct TSEvents
     EVENT(FormulaOnAddThreatEarly)
     EVENT(FormulaOnAddThreatLate)
     EVENT(FormulaOnScaleThreat)
+
+    // BattlegroundScript
+    EVENT(BattlegroundOnSetup)
+    EVENT(BattlegroundOnStart)
+    EVENT(BattlegroundOnReset)
+    EVENT(BattlegroundOnOpenDoors)
+    EVENT(BattlegroundOnCloseDoors)
+    EVENT(BattlegroundOnDestroyGate)
+    EVENT(BattlegroundOnAchievementCriteria)
+    EVENT(BattlegroundOnAddPlayer)
+    EVENT(BattlegroundOnPlayerLogin)
+    EVENT(BattlegroundOnPlayerLogout)
+    EVENT(BattlegroundOnUpdateScore)
+    EVENT(BattlegroundOnEndEarly)
+    EVENT(BattlegroundOnEndLate)
+    EVENT(BattlegroundOnPlayerUnderMap)
+    EVENT(BattlegroundOnUpdateEarly)
+    EVENT(BattlegroundOnUpdateLate)
+    EVENT(BattlegroundOnRemovePlayer)
+    EVENT(BattlegroundOnKillPlayer)
+    EVENT(BattlegroundOnKillCreature)
+    EVENT(BattlegroundOnAreaTrigger)
+    EVENT(BattlegroundOnGenericEvent)
+    EVENT(BattlegroundOnDropFlag)
+    EVENT(BattlegroundOnClickFlag)
 
     // ItemScript
     EVENT(ItemOnUse)
@@ -781,6 +897,7 @@ struct TSEvents
     TSMapMap Maps;
     TSItemMap Items;
     TSAreaTriggerMap AreaTriggers;
+    TSBattlegroundMap Battlegrounds;
 };
 
 TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
@@ -1201,6 +1318,60 @@ public:
           MAP_EVENT_HANDLE(Map,OnMessage) 
     } MapID;
 
+    struct BattlegroundEvents : public EventHandler {
+        BattlegroundEvents* operator->() { return this; }
+        EVENT_HANDLE(Battleground,OnSetup)
+        EVENT_HANDLE(Battleground,OnStart)
+        EVENT_HANDLE(Battleground,OnReset)
+        EVENT_HANDLE(Battleground,OnOpenDoors)
+        EVENT_HANDLE(Battleground,OnCloseDoors)
+        EVENT_HANDLE(Battleground,OnDestroyGate)
+        EVENT_HANDLE(Battleground,OnAchievementCriteria)
+        EVENT_HANDLE(Battleground,OnAddPlayer)
+        EVENT_HANDLE(Battleground,OnPlayerLogin)
+        EVENT_HANDLE(Battleground,OnPlayerLogout)
+        EVENT_HANDLE(Battleground,OnUpdateScore)
+        EVENT_HANDLE(Battleground,OnEndEarly)
+        EVENT_HANDLE(Battleground,OnEndLate)
+        EVENT_HANDLE(Battleground,OnUpdateEarly)
+        EVENT_HANDLE(Battleground,OnUpdateLate)
+        EVENT_HANDLE(Battleground,OnRemovePlayer)
+        EVENT_HANDLE(Battleground,OnKillPlayer)
+        EVENT_HANDLE(Battleground,OnKillCreature)
+        EVENT_HANDLE(Battleground,OnAreaTrigger)
+        EVENT_HANDLE(Battleground,OnGenericEvent)
+        EVENT_HANDLE(Battleground,OnDropFlag)
+        EVENT_HANDLE(Battleground,OnClickFlag)
+        EVENT_HANDLE(Battleground,OnPlayerUnderMap)
+    } Battlegrounds;
+
+    struct BattlegroundIDEvents : public MappedEventHandler<TSBattlegroundMap> {
+        BattlegroundIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(Battleground, OnSetup)
+        MAP_EVENT_HANDLE(Battleground, OnStart)
+        MAP_EVENT_HANDLE(Battleground, OnReset)
+        MAP_EVENT_HANDLE(Battleground, OnOpenDoors)
+        MAP_EVENT_HANDLE(Battleground, OnCloseDoors)
+        MAP_EVENT_HANDLE(Battleground, OnDestroyGate)
+        MAP_EVENT_HANDLE(Battleground, OnAchievementCriteria)
+        MAP_EVENT_HANDLE(Battleground, OnAddPlayer)
+        MAP_EVENT_HANDLE(Battleground, OnPlayerLogin)
+        MAP_EVENT_HANDLE(Battleground, OnPlayerLogout)
+        MAP_EVENT_HANDLE(Battleground, OnUpdateScore)
+        MAP_EVENT_HANDLE(Battleground, OnEndEarly)
+        MAP_EVENT_HANDLE(Battleground, OnEndLate)
+        MAP_EVENT_HANDLE(Battleground, OnPlayerUnderMap)
+        MAP_EVENT_HANDLE(Battleground, OnUpdateEarly)
+        MAP_EVENT_HANDLE(Battleground, OnUpdateLate)
+        MAP_EVENT_HANDLE(Battleground, OnRemovePlayer)
+        MAP_EVENT_HANDLE(Battleground, OnKillPlayer)
+        MAP_EVENT_HANDLE(Battleground, OnKillCreature)
+        MAP_EVENT_HANDLE(Battleground, OnAreaTrigger)
+        MAP_EVENT_HANDLE(Battleground, OnGenericEvent)
+        MAP_EVENT_HANDLE(Battleground, OnDropFlag)
+        MAP_EVENT_HANDLE(Battleground, OnClickFlag)
+    } BattlegroundID;
+
      struct ItemEvents: public EventHandler {
          ItemEvents* operator->(){return this;}
          EVENT_HANDLE(Item,OnUse)
@@ -1317,6 +1488,8 @@ public:
         Spells.LoadEvents(events);
         GameObjects.LoadEvents(events);
         GameObjectID.LoadEvents(&events->GameObjects);
+        Battlegrounds.LoadEvents(events);
+        BattlegroundID.LoadEvents(&events->Battlegrounds);
         Items.LoadEvents(events);
         ItemID.LoadEvents(&events->Items);
         AreaTriggers.LoadEvents(events);
@@ -1351,6 +1524,8 @@ public:
          Creatures.Unload();
          GameObjects.Unload();
          GameObjectID.Unload();
+         Battlegrounds.Unload();
+         BattlegroundID.Unload();
          Items.Unload();
          ItemID.Unload();
          AreaTriggers.Unload();

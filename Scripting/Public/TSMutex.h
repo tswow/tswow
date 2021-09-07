@@ -6,6 +6,8 @@
 class TC_GAME_API TSMutex {
     std::mutex _lock;
 public:
+    TSMutex();
+    TSMutex(TSMutex const&);
     TSMutex* operator->(){return this;}
     void lock();
     void unlock();
