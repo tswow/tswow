@@ -29,4 +29,6 @@ export function cleanSQL() {
     q('DELETE FROM creature_text WHERE comment = "tswow";')
     q('DELETE FROM creature_template_outfits WHERE description = "tswow";')
     q('DELETE FROM transports WHERE name = "tswow";')
+    q('DELETE FROM quest_poi_points WHERE VerifiedBuild = 17688;')
+    q('DELETE FROM quest_poi WHERE VerifiedBuild = 17688;')
 }
