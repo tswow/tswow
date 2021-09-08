@@ -227,7 +227,7 @@ bool TSPlayer::CanUseItem(TSItem _item,uint32 entry)
             return false;
     }
 }
-    
+
 /**
  * Returns 'true' if the [Spell] specified by ID is currently on cooldown for the [Player], 'false' otherwise.
  *
@@ -2979,7 +2979,12 @@ bool TSPlayer::CanEquipItem(TSItem _item,uint32 slot,uint32 entry)
     }
     return true;
 }
-    
+
+float TSPlayer::GetAverageItemLevel()
+{
+    return player->GetAverageItemLevel();
+}
+
 #ifndef CLASSIC
 /**
  * Removes a title by ID from the [Player]s list of known titles

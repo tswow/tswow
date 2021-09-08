@@ -1639,6 +1639,15 @@ declare interface TSPlayer extends TSUnit {
     CanEquipItem(item : TSItem,slot : uint32,entry : uint32) : bool
 
     /**
+     * Returns the average item level of the items equipped by this player
+     * 
+     * @note This check takes into account the quality of items,
+     * and items below epic quality loses 13 levels to a lowest
+     * effective itemlevel of 0
+     */
+    GetAverageItemLevel(): float
+
+    /**
      * Removes a title by ID from the [Player]s list of known titles
      *
      * @param uint32 titleId

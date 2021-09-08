@@ -231,6 +231,7 @@ public:
 	void ToggleAFK();
 	TSItem EquipItem(TSItem item, uint32 slot, uint32 entry);
 	bool CanEquipItem(TSItem item, uint32 slot, uint32 entry);
+	float GetAverageItemLevel();
 	void UnsetKnownTitle(uint32 id);
 	void AdvanceSkillsToMax();
 	void AdvanceAllSkills(uint32 step);
