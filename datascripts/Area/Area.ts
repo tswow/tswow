@@ -24,6 +24,7 @@ import { ZoneMusicRef } from "../Sound/ZoneMusic";
 import { AreaWorldStateUIs, AreaWorldStateSounds } from "./AreaWorldStates";
 import { MapRef } from "../Map/Map";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
+import { AreaFlags } from "./AreaFlags";
 
 export class Area extends MainEntity<AreaTableRow> {
     get ExploreBit() { return this.row.ExploreFlag.get(); }
@@ -42,6 +43,7 @@ export class Area extends MainEntity<AreaTableRow> {
     get Light() { return this.wrap(this.row.Lightid); }
     get WorldStateUIs() { return new AreaWorldStateUIs(this); }
     get WorldStateSounds() { return new AreaWorldStateSounds(this); }
+    get Flags() { return new AreaFlags(this, this.row.Flags); }
 }
 
 export const AreaRegistry = {
