@@ -19,10 +19,44 @@ export class MaskBit<T,D extends MaskCell<T>> {
     clear() { return this.owner.clear(this.bit); }
 }
 
+export class MaskMultiBit<T,D extends MaskCell<T>> {
+    protected owner: D;
+    protected bits: number[];
+    protected get isBit() { return true; }
+
+    constructor(owner: D, bits: number[]) {
+        this.owner = owner;
+        this.bits = bits;
+    }
+
+    check() {
+        return !this.bits.find(x=>!this.owner.check(x))
+    }
+
+    mark(): T {
+        this.bits.forEach(x=>this.owner.mark(x))
+        return MaskCell.owner(this.owner);
+    }
+
+    clear(): T {
+        this.bits.forEach(x=>this.owner.clear(x));
+        return MaskCell.owner(this.owner);
+    }
+}
+
 export abstract class MaskCell<T> extends CellRoot<T> {
+    static owner<T>(cell: MaskCell<T>) {
+        return cell.owner;
+    }
+
     protected bit(no: number): MaskBit<T,this> {
         return new MaskBit(this, no);
     }
+
+    protected multibits(bits: number[]): MaskMultiBit<T,this> {
+        return new MaskMultiBit(this,bits);
+    }
+
     abstract mark(no: number): T;
     abstract clear(no: number): T;
     abstract check(no: number): boolean;
