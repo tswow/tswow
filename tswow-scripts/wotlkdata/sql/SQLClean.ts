@@ -31,4 +31,6 @@ export function cleanSQL() {
     q('DELETE FROM transports WHERE name = "tswow";')
     q('DELETE FROM quest_poi_points WHERE VerifiedBuild = 17688;')
     q('DELETE FROM quest_poi WHERE VerifiedBuild = 17688;')
+    q('DELETE FROM lfg_dungeon_template WHERE VerifiedBuild = 17688;')
+    q('DELETE FROM access_requirement WHERE comment = "tswow";')
 }
