@@ -399,7 +399,7 @@ export const Ids = {
     DestructibleModelData: new DynamicIDGenerator('DestructibleModelData',100),
 
     /** Starts at 1000, highest base value is 894 */
-    DungeonEncounter: new StaticIDGenerator('DungeonEncounter',1000),
+    DungeonEncounter: new DynamicIDGenerator('DungeonEncounter',1000),
 
     /** Starts at 200, highest base value is 110 */
     DungeonMap: new DynamicIDGenerator('DungeonMap',200),

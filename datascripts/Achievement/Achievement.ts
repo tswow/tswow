@@ -6,6 +6,7 @@ import { MainEntity } from "../Misc/Entity";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 import { AchievementReward } from "./AchievementReward";
+import { RefBase, RefStatic } from "../Refs/Ref";
 
 export class Achievement extends MainEntity<AchievementRow> {
     readonly Criteria : AchievementCriteria;
@@ -32,9 +33,9 @@ export class Achievement extends MainEntity<AchievementRow> {
 }
 
 export const Achievements = {
-    create : (mod : string, achievementId : string) => {     
+    create : (mod : string, id : string) => {     
         return new Achievement(
-            DBC.Achievement.add(Ids.Achievement.id(mod,achievementId)))
+            DBC.Achievement.add(Ids.Achievement.id(mod,id)))
     },
 
     filter : (query: AchievementQuery) => {
@@ -47,5 +48,18 @@ export const Achievements = {
     
     load : (id : number) => {
         return new Achievement(DBC.Achievement.find({ID:id}))
+    }
+}
+
+// TODO: can be upgraded when we can clone
+export class AchievementRef<T> extends RefBase<T,Achievement> {
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: Achievement): number {
+        return v.ID;
+    }
+    protected resolve(): Achievement {
+        return Achievements.load(this.cell.get());
     }
 }

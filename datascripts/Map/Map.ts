@@ -22,6 +22,8 @@ import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapWorldStateUIs } from "./MapWorldStates";
 import { Maps } from "./Maps";
+import { LFGDungeons } from "../Dungeon/LFGDungeon";
+import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 
 export class Map extends MainEntity<MapRow> {
     get ID() { return this.row.ID.get(); }
@@ -53,6 +55,9 @@ export class Map extends MainEntity<MapRow> {
     get IsPVP() { return this.wrap(this.row.PVP); }
 
     get WorldStateUIs() { return new MapWorldStateUIs(this); }
+
+    get LFGDungeons() { return new LFGDungeons(this, this.ID); }
+    get Encounters() { return new LFGDungeonEncounters(this, this.ID); }
 }
 
 export class MapRefReadOnly<T> extends RefReadOnly<T,Map> {

@@ -20,13 +20,28 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class MainEntity<T> extends CellSystemTop {
     @Transient
-    row: T;
+    readonly row: T;
 
     constructor(row: T) {
         super();
         this.row = row;
     }
 }
+
+export class TwoRowMainEntity<DBC,SQL> extends CellSystemTop {
+    @Transient
+    readonly dbc_row: DBC;
+
+    @Transient
+    readonly sql_row: SQL;
+
+    constructor(dbc: DBC, sql: SQL) {
+        super();
+        this.dbc_row = dbc;
+        this.sql_row = sql;
+    }
+}
+
 
 export class ChildEntity<R,T extends MainEntity<R>> extends CellSystem<T> {
     @Transient
