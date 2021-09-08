@@ -4,6 +4,13 @@ import { MainEntity } from "../Misc/Entity";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { HorizontalBoundary } from "../Misc/LimitCells";
+import { DBC } from "wotlkdata"
+import { Ids } from "../Misc/Ids";
+import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
+import { VehicleSeatRef } from "./VehicleSeat";
+import { VehicleUIIndicatorCell } from "./VehicleUIIndicator";
+import { Ref, RefReadOnly } from "../Refs/Ref";
 
 export class VehicleFlags extends MaskCell32<Vehicle> {
     get NoStrafe() { return this.bit(0); }
@@ -83,43 +90,155 @@ export class VehicleMissileImpactModels extends ArraySystem<VehicleMissileImpact
         return new VehicleMissileImpactModel(this.owner, index);
     }
 
-    /*
     add(model: string, radius: number) {
-        new VehicleMissileImpactModel(this.owner, this.index);
+        this.getFree()
+            .Model.set(model)
+            .Radius.set(radius)
+        return this.owner;
     }
-    */
+}
+
+export class VehicleMissileImpactTexture extends CellSystem<Vehicle>
+{
+    get Filepath() { return this.ownerWrap(this.owner.row.MsslTrgtImpactTexture)}
+    get Radius() { return this.ownerWrap(this.owner.row.MsslTrgtImpactTexRadius)}
+
+    set(filepath: string, radius: number) {
+        this.Filepath.set(filepath);
+        this.Radius.set(radius);
+        return this.owner;
+    }
 }
 
 export class VehicleMissile extends CellSystem<Vehicle> {
     //get wiofj() { return this.ownerWrap(this.owner.row.mssl)}
+
+    get TurnLingering() {
+        return this.ownerWrap(this.owner.row.MsslTrgtTurnLingering);
+    }
+    get PitchLingering() {
+        return this.ownerWrap(this.owner.row.MsslTrgtPitchLingering);
+    }
+
+    get MouseLingering() {
+        return this.ownerWrap(this.owner.row.MsslTrgtMouseLingering);
+    }
+
+    get EndOpacity() {
+        return this.ownerWrap(this.owner.row.MsslTrgtEndOpacity);
+    }
+
+    get ArcSpeed() {
+        return this.ownerWrap(this.owner.row.MsslTrgtArcSpeed);
+    }
+
+    get ArcRepeat() {
+        return this.ownerWrap(this.owner.row.MsslTrgtArcRepeat);
+    }
+
+    get ArcWidth() {
+        return this.ownerWrap(this.owner.row.MsslTrgtArcWidth);
+    }
+
+    get Models() {
+        return new VehicleMissileImpactModels(this.owner);
+    }
+
+    get ArcTexture() {
+        return this.ownerWrap(this.owner.row.MsslTrgtArcTexture);
+    }
+
+    get ImpactTexture() {
+        return new VehicleMissileImpactTexture(this.owner);
+    }
 }
 
 export class Vehicle extends MainEntity<VehicleRow> {
+    get ID() { return this.row.ID.get(); }
     get Flags() { return new VehicleFlags(this, this.row.Flags)}
-    get Seats() { return new SingleArraySystem(this, this.row.SeatID, 0)}
-    get Camera() { return  new VehicleCamera(this); }
+    get Seats() {
+        return new ArrayRefSystem (
+            this
+            , 0
+            , 8
+            ,  index => new VehicleSeatRef (
+                    this
+                    , this.wrapIndex(this.row.SeatID,index)
+                )
+            )
+    }
+    get Camera() { return new VehicleCamera(this); }
     get Pitch() { return new VehiclePitch(this); }
     get MouseLookOffsetPitch() { return this.wrap(this.row.MouseLookOffsetPitch); }
     get LocomotionType() { return this.wrap(this.row.UilocomotionType)}
     get PowerDisplay() { 
         return new SingleArraySystem(this, this.row.PowerDisplayID, 0)
     }
+
+    get FacingLimit() {
+        return new HorizontalBoundary(
+              this
+            , this.row.FacingLimitLeft
+            , this.row.FacingLimitRight
+            )
+    }
+
+    get TurnSpeed() { return this.wrap(this.row.TurnSpeed); }
+    get UIIndicator() {
+        return new VehicleUIIndicatorCell(this, this.row.VehicleUIIndicatorID);
+    }
 }
 
 export const VehicleRegistry = {
-    create() {
-
+    create(parent?: number) {
+        return new Vehicle(
+            parent
+            ? DBC.Vehicle.findById(parent).clone(Ids.Vehicle.id())
+            // TODO: how to clear this?
+            : DBC.Vehicle.add(Ids.Vehicle.id())
+        )
     },
 
     load(id: number) {
-
+        let res = DBC.Vehicle.findById(id);
+        return (res ? new Vehicle(res) : undefined) as Vehicle;
     },
 
     filter(query: VehicleQuery) {
-
+        return DBC.Vehicle
+            .filter(query)
+            .map(x=> new Vehicle(x))
     },
 
     find(query: VehicleQuery) {
-
+        let res = DBC.Vehicle.find(query);
+        return (res ? new Vehicle(res) : undefined) as Vehicle;
     },
+}
+
+export class VehicleRef<T> extends Ref<T,Vehicle> {
+    protected create(): Vehicle {
+        return VehicleRegistry.create();
+    }
+    protected clone(): Vehicle {
+        return VehicleRegistry.create(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: Vehicle): number {
+        return v.ID;
+    }
+    protected resolve(): Vehicle {
+        return VehicleRegistry.load(this.cell.get());
+    }
+}
+
+export class VehicleRefReadOnly<T> extends RefReadOnly<T,Vehicle> {
+    getRef(): Vehicle {
+        return VehicleRegistry.load(this.cell.get())
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
 }

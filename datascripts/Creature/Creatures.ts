@@ -53,7 +53,7 @@ export const CreatureTemplates = {
                 .TypeFlags.clearAll()
                 .UnitClass.setWarrior()
                 .UnitFlags.clearAll()
-                .VehicleID.set(0)
+                .Vehicle.setRefID(0)
                 .AIName.ReactorAI()
                 .AttackTime.set(1,1,1,1)
                 .DamageSchool.setNormal()

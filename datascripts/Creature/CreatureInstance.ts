@@ -21,8 +21,11 @@ import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { RefReadOnly } from "../Refs/Ref";
+import { CreatureInstances } from "./Creatures";
+import { VehicleInstanceAccessories, VehicleInstanceAccessory } from "../Vehicle/VehicleAccessory";
 
 export class CreatureInstance extends CellSystemTop {
 
@@ -66,5 +69,18 @@ export class CreatureInstance extends CellSystemTop {
 
     get PatrolPath() {
         return new CreaturePatrolPath(this);
+    }
+
+    get VehicleAccessories() {
+        return new VehicleInstanceAccessories(this);
+    }
+}
+
+export class CreatureRefReadOnly<T> extends RefReadOnly<T,CreatureInstance> {
+    getRef(): CreatureInstance {
+        return CreatureInstances.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }

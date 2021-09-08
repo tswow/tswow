@@ -100,3 +100,33 @@ export class Boundary<T> extends CellSystem<T> {
         return this.owner;
     }
 }
+
+export class HorizontalBoundary<T> extends CellSystem<T> {
+    protected left: Cell<number,any>
+    protected right: Cell<number,any>
+
+    constructor(
+        owner: T
+        , left: Cell<number,any>
+        , right: Cell<number,any>
+    )
+    {
+        super(owner);
+        this.left = left;
+        this.right = right;
+    }
+
+    GetMiddle() {
+        return  Math.max(this.Left.get(),this.Right.get())
+              - Math.min(this.Left.get(),this.Right.get())
+    }
+
+    get Left() { return this.ownerWrap(this.left) }
+    get Right() { return this.ownerWrap(this.right); }
+
+    set(left: number, right: number) {
+        this.Left.set(left);
+        this.Right.set(right);
+        return this.owner;
+    }
+}

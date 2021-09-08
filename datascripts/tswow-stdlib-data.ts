@@ -69,6 +69,7 @@ import { WorldMapTransformRegistry } from "./Worldmap/WorldMapTransform";
 import { DungeonMapRegistry } from "./Worldmap/DungeonMap";
 import { AreaPOIRegistry } from "./WorldState/AreaPOI";
 import { WorldMapContinentRegistry } from "./Worldmap/WorldMapContinent";
+import { VehicleRegistry } from "./Vehicle/Vehicle";
 
 export const std = {
     Spells : Spells,
@@ -137,5 +138,6 @@ export const std = {
     WorldMapOverlays: WorldMapOverlayRegistry,
     WorldMapTransforms: WorldMapTransformRegistry,
     DungeonMaps: DungeonMapRegistry,
-    AreaPOI: AreaPOIRegistry
+    AreaPOI: AreaPOIRegistry,
+    Vehicles: VehicleRegistry,
 }

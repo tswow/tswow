@@ -51,7 +51,9 @@ import { CreatureInstance } from "./CreatureInstance";
 import { GossipPointer } from "../Gossip/Gossip";
 import { LootSetPointer } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
-import { RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { VehicleRef } from "../Vehicle/Vehicle";
+import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
 
 export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
@@ -107,7 +109,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get AttackTime() { return new CreatureAttackTime(this); }
     get Family() { return new CreatureFamily(this, this.row.family); }
     get PetSpells() { return this.wrap(this.row.PetSpellDataId); }
-    get VehicleID() { return this.wrap(this.row.VehicleId); }
+    get Vehicle() { return new VehicleRef(this, this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }
     get AIName() { return new CreatureAI(this); }
     get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
@@ -158,6 +160,10 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
           )
     }
 
+    get VehicleAccessories() {
+        return new VehicleTemplateAccessories(this)
+    }
+
     addVendorItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
         this.NPCFlags.Vendor.mark();
         this.Vendor.addItem(item,maxcount,incrTime,extendedCostId);
@@ -203,5 +209,14 @@ export class CreatureTemplateRef<T> extends RefStatic<T,CreatureTemplate> {
     }
     protected resolve(): CreatureTemplate {
         return CreatureTemplates.load(this.cell.get());
+    }
+}
+
+export class CreatureTemplateRefReadOnly<T> extends RefReadOnly<T,CreatureTemplate> {
+    getRef(): CreatureTemplate {
+        return CreatureTemplates.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }
