@@ -33,4 +33,5 @@ export function cleanSQL() {
     q('DELETE FROM quest_poi WHERE VerifiedBuild = 17688;')
     q('DELETE FROM lfg_dungeon_template WHERE VerifiedBuild = 17688;')
     q('DELETE FROM access_requirement WHERE comment = "tswow";')
+    q('DELETE FROM game_event WHERE description = "tswow";')
 }
