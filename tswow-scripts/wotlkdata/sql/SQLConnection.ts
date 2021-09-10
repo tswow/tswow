@@ -67,6 +67,7 @@ export class Connection {
 
     constructor(obj: any) {
         this.settings = obj;
+        this.settings.dateStrings = true;
         this.settings.multipleStatements = true;
     }
 
