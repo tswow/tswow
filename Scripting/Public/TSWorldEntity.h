@@ -204,9 +204,10 @@ public:
     {
         for (auto iter = m_timers.begin(); iter != m_timers.end(); ++iter)
         {
-            if (iter->name == name)
+            if (iter->getName() == name)
             {
                 m_timers.erase(iter);
+                return;
             }
         }
     }
