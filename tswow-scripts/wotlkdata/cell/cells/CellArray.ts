@@ -26,8 +26,15 @@ export abstract class CellArray<D extends CPrim, T> extends CellRoot<T> {
         return array;
     }
     set(value: D[]): T {
-        for (let i = 0; i < this.length(); ++i) {
+        for (let i = 0; i < Math.min(this.length(),value.length); ++i) {
             this.setIndex(i, value[i]);
+        }
+        return this.owner;
+    }
+
+    fill(value: D) {
+        for(let i=0;i<this.length();++i) {
+            this.setIndex(i, value);
         }
         return this.owner;
     }
