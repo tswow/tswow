@@ -5,8 +5,6 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { WorldStateRefCreate } from "../WorldState/WorldState";
 import { GameEventRefReadOnly } from "./GameEvent";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export class GameEventCondition extends MainEntity<game_event_conditionRow> {
     get Index() { return this.row.condition_id.get(); }
@@ -39,19 +37,38 @@ export class GameEventConditions<T> extends MultiRowSystem<GameEventCondition,T>
         .sort((a,b)=>a.Index < b.Index ? 1 : -1)
     }
 
-    add(mod: string, id: string) {
+    add(mod: string, id: string, requiredNumber = 0, doneWorldState = 0, maxWorldState = 0) {
+        this.addGet(mod,id)
+            .RequiredNumber.set(requiredNumber)
+            .MaxWorldState.setRefID(maxWorldState)
+            .DoneWorldState.setRefID(doneWorldState)
+        return this.owner;
+    }
+
+    addMod(mod: string, id: string, callback: (condition: GameEventCondition)=>void) {
+        callback(this.addGet(mod,id));
+        return this.owner;
+    }
+
+    addGet(mod: string, id: string) {
         // we want these to be unique per game_event
         let range = GetIdRange(
             `game_event_condition_${this.event}`, mod, id, 1, 1
-            )
-            SQL.game_event_condition
-            .add(this.event, range.low)
-            .done_world_state_field.set(0)
-            .max_world_state_field.set(0)
-            .description.set('tswow')
-        }
+        )
 
-        protected isDeleted(value: GameEventCondition): boolean {
-            return value.row.isDeleted();
-        }
+        return new GameEventCondition(
+            SQL.game_event_condition
+                .add(this.event, range.low)
+                .done_world_state_field.set(0)
+                .max_world_state_field.set(0)
+                .req_num.set(0)
+                .done_world_state_field.set(0)
+                .max_world_state_field.set(0)
+                .description.set('tswow')
+        )
     }
+
+    protected isDeleted(value: GameEventCondition): boolean {
+        return value.row.isDeleted();
+    }
+}
