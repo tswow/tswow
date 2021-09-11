@@ -30,14 +30,16 @@ import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { Quests } from "./Quests";
 import { Ids } from "../Misc/Ids";
 import { QuestPOIs } from "./QuestPOI";
+import { QuestGameEventCondition } from "./QuestGameEventPoints";
+import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 
 export class Quest extends MainEntity<quest_templateRow> {
     private _addonRow: quest_template_addonRow|undefined = undefined;
 
     @Transient
     get addonRow() {
-        let addon = this._addonRow 
-            || SQL.quest_template_addon.find({ID:this.ID}) 
+        let addon = this._addonRow
+            || SQL.quest_template_addon.find({ID:this.ID})
             || SQL.quest_template_addon.add(this.ID)
             .MaxLevel.set(0)
             .NextQuestID.set(0)
@@ -71,19 +73,19 @@ export class Quest extends MainEntity<quest_templateRow> {
     get BreadcrumbForQuestId() { return this.wrap(this.addonRow.BreadcrumbForQuestId); }
     get ExclusiveGroup() { return this.wrap(this.addonRow.ExclusiveGroup); }
 
-    get RequiredMaxRep() { 
+    get RequiredMaxRep() {
         return new QuestRequiredReputation(this
             , this.addonRow.RequiredMaxRepFaction
             , this.addonRow.RequiredMaxRepValue)
     }
 
-    get RequiredMinRep() { 
+    get RequiredMinRep() {
         return new QuestRequiredReputation(this
             , this.addonRow.RequiredMinRepFaction
             , this.addonRow.RequiredMinRepValue)
     }
 
-    get RequiredSKill() { 
+    get RequiredSKill() {
         return new QuestRequiredSkill(this
             , this.addonRow.RequiredSkillID
             , this.addonRow.RequiredSkillPoints)
@@ -100,6 +102,8 @@ export class Quest extends MainEntity<quest_templateRow> {
     get StartItem() { return this.wrap(this.row.StartItem); }
     get Flags() { return new QuestFlags(this, this.row.Flags); }
     get POIs() { return new QuestPOIs(this); }
+    get GameEvents() { return new QuestGameEventsForward(this); }
+    readonly GameEventPoints = new QuestGameEventCondition(this);
 }
 
 export class QuestRef<T> extends RefStatic<T,Quest> {
@@ -113,12 +117,15 @@ export class QuestRef<T> extends RefStatic<T,Quest> {
             )
         )
     }
+
     exists(): boolean {
         return this.cell.get() > 0;
     }
+
     protected id(v: Quest): number {
         return v.ID;
     }
+
     protected resolve(): Quest {
         return Quests.load(this.cell.get());
     }

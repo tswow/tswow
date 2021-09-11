@@ -1,0 +1,70 @@
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Quest } from "./Quest";
+import { GameEventCondition } from "../GameEvent/GameEventCondition";
+import { SQL } from "wotlkdata"
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { game_event_quest_conditionRow } from "wotlkdata/sql/types/game_event_quest_condition";
+
+export class GameEventConditionRef<T> extends CellSystem<T> {
+    protected eventCell: Cell<number,any>
+    protected conditionCell: Cell<number,any>
+
+    constructor(owner: T, eventCell: Cell<number,any>, conditionCell: Cell<number,any>) {
+        super(owner);
+        this.eventCell = eventCell;
+        this.conditionCell = conditionCell;
+    }
+
+    exists(): boolean {
+        return this.conditionCell.get() > 0 && this.eventCell.get() > 0;
+    }
+
+    getRef(): GameEventCondition {
+        return new GameEventCondition(
+            SQL.game_event_condition.find(
+                {
+                      eventEntry:this.eventCell.get()
+                    , condition_id:this.conditionCell.get()
+                }))
+    }
+
+    getEventID() { return this.eventCell.get(); }
+    getConditionID() { return this.conditionCell.get(); }
+
+    setRefID(event: number, condition: number) {
+        this.eventCell.set(event);
+        this.conditionCell.set(condition);
+        return this.owner;
+    }
+
+    modRef(callback: (condition: GameEventCondition)=>void) {
+        callback(this.getRef());
+        return this.owner;
+    }
+}
+
+export class QuestGameEventCondition extends MaybeSQLEntity<Quest,game_event_quest_conditionRow> {
+    protected createSQL(): game_event_quest_conditionRow {
+        return SQL.game_event_quest_condition.add(this.owner.ID)
+            .eventEntry.set(0)
+            .num.set(0)
+    }
+    protected findSQL(): game_event_quest_conditionRow {
+        return SQL.game_event_quest_condition.find({quest:this.owner.ID})
+    }
+    protected isValidSQL(sql: game_event_quest_conditionRow): boolean {
+        return sql.quest.get() === this.owner.ID;
+    }
+
+    get Condition() {
+        return new GameEventConditionRef(this.owner,
+                  this.wrapSQL(0, sql=>sql.condition_id)
+                , this.wrapSQL(0, sql=>sql.eventEntry
+        ))
+    }
+
+    get NumIncrease() {
+        return this.wrapSQL(0, sql=>sql.num)
+    }
+}

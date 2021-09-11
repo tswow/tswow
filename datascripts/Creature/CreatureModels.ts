@@ -54,9 +54,11 @@ export class CreatureModels extends CellSystem<CreatureTemplate> {
     }
 
     get(index: number): CreatureVisualPointer<CreatureTemplate> {
-        return new CreatureVisualPointer(this.owner, 
+        return new CreatureVisualPointer(this.owner,
             this.rows()[index])
     }
+
+    addDefaultBear() { return this.addIds(29419) }
 
     addIds(...modelIds: number[]) {
         for(let i=0;i<this.length && modelIds.length>0;++i) {

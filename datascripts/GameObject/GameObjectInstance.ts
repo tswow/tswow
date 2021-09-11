@@ -1,7 +1,10 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
+import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
+import { RefReadOnly } from "../Refs/Ref";
+import { GameObjectInstances } from "./GameObjects";
 
 export class GameObjectPosition extends CellSystem<GameObjectInstance> {
     get Map() { return  this.ownerWrap(this.owner.row.map); }
@@ -21,6 +24,7 @@ export class GameObjectPosition extends CellSystem<GameObjectInstance> {
 }
 
 export class GameObjectInstance extends MainEntity<gameobjectRow> {
+    get ID() { return this.row.guid.get(); }
     get Position() { return new GameObjectPosition(this); }
     get Rotation0() { return  this.wrap(this.row.rotation0); }
     get Rotation1() { return  this.wrap(this.row.rotation1); }
@@ -33,4 +37,14 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get SpawnTimeSecs() { return this.wrap(this.row.spawntimesecs); }
     get State() { return this.wrap(this.row.state); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
+    get GameEvents() { return new GameObjectGameEventsForward(this); }
+}
+
+export class GameObjectInstanceRefReadOnly<T> extends RefReadOnly<T,GameObjectInstance> {
+    getRef(): GameObjectInstance {
+        return GameObjectInstances.load(this.cell.get())
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
 }

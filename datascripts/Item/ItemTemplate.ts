@@ -47,7 +47,7 @@ import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { ClassMask } from "../Misc/ClassMask";
-import { RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { GemRef } from "../Gem/Gem";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
@@ -62,7 +62,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get LockID() { return this.wrap(this.row.lockid); }
     get RandomProperty() { return this.wrap(this.row.RandomProperty); }
     get RandomSuffix() { return this.wrap(this.row.RandomSuffix); }
-    
+
     /** Only applicable if item is a shield */
     get BlockChance() { return this.wrap(this.row.block); }
     get ItemSet() { return this.wrap(this.row.itemset); }
@@ -113,22 +113,22 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
     get GemProperties() { return new GemRef(this, this.row.GemProperties); }
 
-    get DisplayInfo() { 
+    get DisplayInfo() {
         return new ItemDisplayInfoPointer(this
             , new MulticastCell(this, [this.row.displayid, this.dbcRow.DisplayInfoID]))
     }
 
     get AmmoType() { return new ItemAmmoTypes(this, this.row.ammo_type); }
-    
+
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
-    
+
     constructor(srow : item_templateRow, crow : ItemRow) {
         super(srow);
         this.sqlRow = srow;
         this.dbcRow = crow;
     }
-    
+
     get ID() {
         return this.sqlRow.entry.get();
     }
@@ -211,7 +211,7 @@ export const Items = {
         const dbcRow = dbcParent.clone(numid);
         return new ItemTemplate(sqlRow, dbcRow);
     },
-    
+
     load(item: number) {
         const [sql,dbc] = getRows(item);
         return new ItemTemplate(sql, dbc);
@@ -238,5 +238,14 @@ export class ItemTemplateRef<T> extends RefStatic<T,ItemTemplate> {
     }
     protected resolve(): ItemTemplate {
         return Items.load(this.cell.get());
+    }
+}
+
+export class ItemTemplateRefReadOnly<T> extends RefReadOnly<T,ItemTemplate> {
+    getRef(): ItemTemplate {
+        return Items.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }

@@ -9,7 +9,7 @@ import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRef } from "../Sound/ZoneMusic";
 import { SoundAmbienceRef } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
-import { RefBase } from "../Refs/Ref";
+import { RefBase, RefStatic } from "../Refs/Ref";
 
 // Note: There is no table containing WorldStates, so we just
 // pretend there is one.
@@ -19,18 +19,18 @@ export class WorldStateSound extends MainEntity<WorldStateZoneSoundsRow> {
     get TriggerValue() { return this.wrap(this.row.WorldStateValue); }
     get Area() { return new AreaRef(this, this.row.AreaID); }
     get WMOArea() { return new WMOAreaRef(this, this.row.WMOAreaID) }
-    get ZoneIntroMusic() { 
-        return new ZoneIntroMusicRef(this, this.row.ZoneintroMusicID) 
+    get ZoneIntroMusic() {
+        return new ZoneIntroMusicRef(this, this.row.ZoneintroMusicID)
     }
-    get ZoneMusic() { 
-        return new ZoneMusicRef(this, this.row.ZoneMusicID); 
+    get ZoneMusic() {
+        return new ZoneMusicRef(this, this.row.ZoneMusicID);
     }
-    get SoundAmbience() { 
-        return new SoundAmbienceRef(this, this.row.SoundAmbienceID); 
+    get SoundAmbience() {
+        return new SoundAmbienceRef(this, this.row.SoundAmbienceID);
     }
-    get SoundProviderPreferences() { 
-        return new SoundProviderPreferenceRef(this, 
-            this.row.SoundProviderPreferencesID); 
+    get SoundProviderPreferences() {
+        return new SoundProviderPreferenceRef(this,
+            this.row.SoundProviderPreferencesID);
     }
 }
 
@@ -47,13 +47,13 @@ export class WorldStateSounds extends MultiRowSystem<WorldStateSound,WorldState>
 
 export class WorldState {
     protected id: number;
-    
+
     constructor(id: number) {
         this.id = id;
     }
 
     get Sounds() { return new WorldStateSounds(this); }
-    
+
     get() {
         return this.id;
     }
@@ -85,4 +85,24 @@ export class WorldStateRef<T> extends RefBase<T,WorldState> {
     protected resolve(): WorldState {
         return new WorldState(this.cell.get());
     }
+}
+
+export class WorldStateRefCreate<T> extends RefStatic<T,WorldState> {
+    protected create(mod: string, id: string): WorldState {
+        return WorldStateRegistry.create(mod,id);
+    }
+    protected clone(mod: string, id: string): WorldState {
+        // TODO: sounds
+        return WorldStateRegistry.create(mod,id);
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: WorldState): number {
+        return v.get();
+    }
+    protected resolve(): WorldState {
+        return WorldStateRegistry.load(this.cell.get());
+    }
+
 }

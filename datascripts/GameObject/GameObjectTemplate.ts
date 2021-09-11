@@ -28,7 +28,7 @@ import { getBroadcast } from "../BroadcastText/BroadcastText";
 import { SimpleLockPointer } from "../Locks/SimpleLock";
 import { LootSetPointer } from "../Loot/Loot";
 import { TaxiPathRef } from "../Taxi/Taxi";
-import { RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { GameObjectTemplates } from "./GameObjects";
 import { GameObjectFlags } from "./GameObjectFlags";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
@@ -70,8 +70,8 @@ export class GameObjectTemplate extends MainEntity<gameobject_templateRow> {
     get Type() { return new GameObjectType(this, this.row.type); }
     get ID() { return this.row.entry.get(); }
 
-    get Display() { 
-        return new GameObjectDisplayPointer(this, this.row.displayId); 
+    get Display() {
+        return new GameObjectDisplayPointer(this, this.row.displayId);
     }
 
     get Name() { return new GameObjectName(this); }
@@ -361,7 +361,7 @@ export class GameObjectDoor extends GameObjectTemplate {
     get AutoClose() { return this.wrap(this.row.Data2); }
 
     /**
-     * 
+     *
      */
     get NoDamageImmune() { return this.wrap(this.row.Data3); }
 
@@ -683,10 +683,10 @@ export class GameObjectTrap extends GameObjectTemplate {
     get Level() { return this.wrap(this.row.Data1); }
     get Diameter() { return this.wrap(this.row.Data2); }
     get SpellID() { return this.wrap(this.row.Data3); }
-    /* 
-     * 0 trap with no despawn after cast. 
-     * 1 trap despawns after cast. 
-     * 2 bomb casts on spawn. 
+    /*
+     * 0 trap with no despawn after cast.
+     * 1 trap despawns after cast.
+     * 2 bomb casts on spawn.
      */
     get TrapType() { return this.wrap(this.row.Data4); }
     get Cooldown() { return this.wrap(this.row.Data5); }
@@ -716,109 +716,118 @@ export class GameObjectTrapdoor extends GameObjectTemplate {
 export class GameObjectType<T extends GameObjectTemplate> extends EnumCellWrapper<T> {
     @EnumField(0)
     setDoor() { return new GameObjectDoor(this.set(0).row) }
-    
+
     @EnumField(1)
     setButton() { return new GameObjectButton(this.set(1).row) }
-    
+
     @EnumField(2)
     setQuestgiver() { return new GameObjectQuestGiver(this.set(2).row) }
-    
+
     @EnumField(3)
     setChest() { return new GameObjectChest(this.set(3).row) }
-    
+
     @EnumField(4)
     setBinder() { return this.set(4) }
-    
+
     @EnumField(5)
     setGeneric() { return this.set(5) }
-    
+
     @EnumField(6)
     setTrap() { return new GameObjectTrap(this.set(6).row) }
-    
+
     @EnumField(7)
     setChair() { return new GameObjectChair(this.set(7).row) }
-    
+
     @EnumField(8)
     setSpellFocus() { return new GameObjectSpellFocus(this.set(8).row) }
-    
+
     @EnumField(9)
     setText() { return new GameObjectText(this.set(9).row) }
-    
+
     @EnumField(10)
     setGoober() { return new GameObjectGoober(this.set(10).row) }
-    
+
     @EnumField(11)
     setTransport() { return new GameObjectTransport(this.set(11).row) }
-    
+
     @EnumField(12)
     setAreadamage() { return new GameObjectAreaDamage(this.set(12).row) }
-    
+
     @EnumField(13)
     setCamera() { return new GameObjectCamera(this.set(13).row) }
-    
+
     @EnumField(14)
     setMapObject() { return this.set(14) }
-    
+
     @EnumField(15)
     setMoTransport() { return new GameObjectMoTransport(this.set(15).row) }
-    
+
     @EnumField(16)
     setDuelArbiter() { return this.set(16) }
-    
+
     @EnumField(17)
     setFishingnode() { return this.set(17) }
-    
+
     @EnumField(18)
     setRitual() { return new GameObjectSummoningRitual(this.set(18).row) }
-    
+
     @EnumField(19)
     setMailbox() { return new GameObjectMailbox(this.set(19).row) }
-    
+
     @EnumField(20)
     setAuctionhouse() { return this.set(20) }
-    
+
     @EnumField(21)
     setGuardpost() { return new GameObjectGuardPost(this.set(21).row) }
-    
+
     @EnumField(22)
     setSpellcaster() { return new GameObjectSpellCaster(this.set(22).row) }
-    
+
     @EnumField(23)
     setMeetingstone() { return new GameObjectMeetingStone(this.set(23).row) }
-    
+
     @EnumField(24)
     setFlagstand() { return new GameObjectFlagStand(this.set(24).row) }
-    
+
     @EnumField(25)
     setFishinghole() { return new GameObjectFishingHole(this.set(25).row) }
-    
+
     @EnumField(26)
     setFlagdrop() { return new GameObjectFlagDrop(this.set(26).row) }
-    
+
     @EnumField(27)
     setMiniGame() { return new GameObjectMinigame(this.set(27).row) }
-    
+
     @EnumField(28)
     setLotteryKiosk() { return this.set(28) }
-    
+
     @EnumField(29)
     setCapturePoint() { return new GameObjectCapturePoint(this.set(29).row) }
-    
+
     @EnumField(30)
     setAuraGenerator() { return new GameObjectAuraGenerator(this.set(30).row) }
-    
+
     @EnumField(31)
     setDungeonDifficulty() { return new GameObjectDungeonDifficulty(this.set(31).row) }
-    
+
     @EnumField(32)
     setBarberChair() { return new GameObjectBarberChair(this.set(32).row) }
-    
+
     @EnumField(33)
     setDestructibleBuilding() { return new GameObjectDestructibleBuilding(this.set(33).row) }
-    
+
     @EnumField(34)
     setGuildBank() { return new GameObjectGuildBank(this.set(34).row) }
-    
+
     @EnumField(35)
     setTrapdoor() { return new GameObjectTrapdoor(this.set(35).row) }
+}
+
+export class GameObjectTemplateRefReadOnly<T> extends RefReadOnly<T,GameObjectTemplate> {
+    getRef(): GameObjectTemplate {
+        return GameObjectTemplates.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
 }

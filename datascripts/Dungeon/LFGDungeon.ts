@@ -14,7 +14,7 @@ import { FactionEnum } from "../Misc/FactionEnum";
 import { LFGDungeonGroupRef } from "./LFGGroup";
 import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
 
-export class LFGPos extends SQLDBCChild<LfgDungeonsRow,lfg_dungeon_templateRow,LFGDungeon> {
+export class LFGPos extends SQLDBCChild<LFGDungeon,LfgDungeonsRow,lfg_dungeon_templateRow,LFGDungeon> {
     get X() { return this.ownerWrapSQL(0, (row)=>row.position_x)}
     get Y() { return this.ownerWrapSQL(0, (row)=>row.position_y)}
     get Z() { return this.ownerWrapSQL(0, (row)=>row.position_z)}
@@ -127,7 +127,7 @@ export class LFGDungeon extends SQLDBCEntity<LfgDungeonsRow, lfg_dungeon_templat
     get Texture() { return this.wrap(this.GetDBC().TextureFilename); }
     get Description() { return this.wrapLoc(this.GetDBC().Description)}
     get Type() { return this.wrap(this.GetDBC().TypeID)}
-    get SpawnPosOverride() { return new LFGPos(this); }
+    get SpawnPosOverride() { return new LFGPos(this,this); }
     get Rewards() { return new LFGDungeonRewards(this); }
     get Levels() { return new LFGLevels(this); }
     get Faction() { return new FactionEnum(this, this.GetDBC().Faction); }

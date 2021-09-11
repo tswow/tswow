@@ -21,7 +21,6 @@ export class CriteriaTimer<T extends CriteriaBase> extends CellSystem<T> {
     }
 }
 
-
 export class CriteriaFlags<T extends CriteriaBase> extends MaskCell32<T> {
     get ProgressBar() { return this.bit(0); }
     get Hidden() { return this.bit(1); }
@@ -35,7 +34,7 @@ export class CriteriaFlags<T extends CriteriaBase> extends MaskCell32<T> {
 
 export class CriteriaBase extends MainEntity<Achievement_CriteriaRow> {
     get Type() { return new CriteriaType(this, this.row.Type); }
-    get AchievementID() { return this.row.Achievement_Id.get(); } 
+    get AchievementID() { return this.row.Achievement_Id.get(); }
     get Description() { return this.wrapLoc(this.row.Description); }
     get Flags() { return new CriteriaFlags(this, this.row.Flags); }
     get UIOrder() { return this.wrap(this.row.Ui_Order); }

@@ -70,6 +70,8 @@ import { DungeonMapRegistry } from "./Worldmap/DungeonMap";
 import { AreaPOIRegistry } from "./WorldState/AreaPOI";
 import { WorldMapContinentRegistry } from "./Worldmap/WorldMapContinent";
 import { VehicleRegistry } from "./Vehicle/Vehicle";
+import { HolidayRegistry } from "./GameEvent/Holiday";
+import { GameEventRegistry } from "./GameEvent/GameEvent";
 
 export const std = {
     Spells : Spells,
@@ -140,4 +142,6 @@ export const std = {
     DungeonMaps: DungeonMapRegistry,
     AreaPOI: AreaPOIRegistry,
     Vehicles: VehicleRegistry,
+    Holidays: HolidayRegistry,
+    GameEvents: GameEventRegistry,
 }
