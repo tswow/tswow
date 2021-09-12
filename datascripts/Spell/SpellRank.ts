@@ -23,8 +23,15 @@ export class SpellRank<T> extends CellSystem<T>{
         SQL.spell_ranks.add(firstSpell,rank,{spell_id:this.spellId});
     }
 
-    getFirstSpell() { return this.getRow().first_spell_id.get(); }
-    getRank() { return this.getRow().rank.get(); }
+    getFirstSpell() {
+        return this.getRow() === undefined
+            ? undefined
+            : this.getRow().first_spell_id.get();
+    }
+
+    getRank() {
+        return this.getRow().rank.get();
+    }
 
     objectify() {
         return {

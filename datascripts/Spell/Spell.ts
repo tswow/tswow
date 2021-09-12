@@ -55,6 +55,7 @@ import { Spells } from "./Spells";
 import { SpellCustomAttr } from "./SpellCustomAttr";
 import { SpellBonusData } from "./SpellBonusData";
 import { SpellThreat } from "./SpellThreat";
+import { SpellScript } from "./SpellScript";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -168,6 +169,12 @@ export class Spell extends MainEntity<SpellRow> {
     readonly BonusData = new SpellBonusData(this);
     /** Custom server core spell threat bonuses */
     readonly Threat = new SpellThreat(this);
+
+    /**
+     * Does **not** support setting this attribute,
+     * please use TSWoW Spell events instead.
+     */
+    get Script() { return new SpellScript(this); }
 
     addStartButton(clazz: number, button: number, races?: RaceType[]) {
         Classes.load(clazz).StartButtons.addSpell(button, this.ID, races);
