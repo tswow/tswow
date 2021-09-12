@@ -52,6 +52,7 @@ import { RaceType } from "../Race/RaceType";
 import { Classes } from "../Class/Class";
 import { RefStatic } from "../Refs/Ref";
 import { Spells } from "./Spells";
+import { SpellCustomAttr } from "./SpellCustomAttr";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -158,6 +159,9 @@ export class Spell extends MainEntity<SpellRow> {
     get InterruptFlags() { return new InterruptFlags(this); }
     get Rank() { return new SpellRank(this, this.ID); }
     get Groups() { return new SpellGroups(this, this.ID); }
+
+    /** Custom server core attributes for this spell */
+    readonly CustomAttributes = new SpellCustomAttr(this);
 
     addStartButton(clazz: number, button: number, races?: RaceType[]) {
         Classes.load(clazz).StartButtons.addSpell(button, this.ID, races);
