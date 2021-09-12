@@ -37,7 +37,7 @@ export class WorldStateSound extends MainEntity<WorldStateZoneSoundsRow> {
 export class WorldStateSounds extends MultiRowSystem<WorldStateSound,WorldState> {
     protected getAllRows(): WorldStateSound[] {
         return DBC.WorldStateZoneSounds
-            .filter({WorldStateID:this.owner.get()})
+            .filter({WorldStateID:this.owner.ID})
             .map(x=>new WorldStateSound(x))
     }
     protected isDeleted(value: WorldStateSound): boolean {
@@ -54,11 +54,17 @@ export class WorldState {
 
     get Sounds() { return new WorldStateSounds(this); }
 
+    get ID() { return this.id; }
+
     get() {
         return this.id;
     }
 
-    text() {
+    gossip_text() {
+        return `$${this.id}w`
+    }
+
+    ui_text() {
         return `%${this.id}w`
     }
 
@@ -80,7 +86,7 @@ export class WorldStateRef<T> extends RefBase<T,WorldState> {
         return this.cell.get() > 0;
     }
     protected id(v: WorldState): number {
-        return v.get();
+        return v.ID;
     }
     protected resolve(): WorldState {
         return new WorldState(this.cell.get());
@@ -99,7 +105,7 @@ export class WorldStateRefCreate<T> extends RefStatic<T,WorldState> {
         return this.cell.get() > 0;
     }
     protected id(v: WorldState): number {
-        return v.get();
+        return v.ID
     }
     protected resolve(): WorldState {
         return WorldStateRegistry.load(this.cell.get());

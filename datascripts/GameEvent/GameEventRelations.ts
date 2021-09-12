@@ -21,6 +21,7 @@ import { ItemTemplate, ItemTemplateRefReadOnly } from "../Item/ItemTemplate";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
 import { any } from "wotlkdata/query/Relations";
+import { NPCFlags } from "../Creature/NPCFlags";
 
 export class GameEventRelationBase<T extends SqlRow<any,any>> extends MainEntity<T> {
     delete() {
@@ -427,7 +428,7 @@ export class GameEventModelEquipsBackward extends GameEventMultiRowSystem<GameEv
 export class GameEventNPCFlag extends GameEventRelationBase<game_event_npcflagRow> {
     get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
     get Creature() { return new CreatureRefReadOnly(this, this.row.guid); }
-    get NPCFlag() { return this.wrap(this.row.npcflag)}
+    get NPCFlag() { return new NPCFlags(this, this.row.npcflag); }
 }
 
 export class GameEventNPCFlagForward extends GameEventMultiRowSystem<GameEventNPCFlag,CreatureInstance> {
@@ -438,12 +439,12 @@ export class GameEventNPCFlagForward extends GameEventMultiRowSystem<GameEventNP
     }
 
     add(event: number, flag: number) {
-        SQL.game_event_npcflag.add(this.owner.GUID,event).npcflag.set(flag);
+        SQL.game_event_npcflag.add(event, this.owner.GUID).npcflag.set(flag);
         return this.owner;
     }
 
     addGet(event: number) {
-        return new GameEventNPCFlag(SQL.game_event_npcflag.add(this.owner.GUID,event))
+        return new GameEventNPCFlag(SQL.game_event_npcflag.add(event, this.owner.GUID))
     }
 
     addMod(event: number, callback: (flag: GameEventNPCFlag)=>void) {

@@ -21,9 +21,6 @@ import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { b2i } from "../Misc/BasicConversion"
 import { SmartScript } from "./SmartScript"
 import { resolveSummonType, SummonType } from "./SummonType"
-import { Position } from "../Misc/Position"
-import { std } from "../tswow-stdlib-data"
-import { ScriptPath } from "../Waypoints/ScriptPath"
 
 export const ACTION_TYPES : {[key:string]:string} = {
     '0': 'None',
@@ -356,7 +353,7 @@ export class ActionType {
      */
     setTalk(texts : loc_constructor|loc_constructor[], Duration : number, unk : number = 0) {
         const rows = SQL.creature_text.filter({CreatureID:this.row.entryorguid.get()})
-        const id = rows.length===0 ? 0 : 
+        const id = rows.length===0 ? 0 :
             rows.sort((a,b)=>b.GroupID>a.GroupID?1:-1)[0].GroupID.get()+1
 
         if(!Array.isArray(texts)) {
@@ -550,7 +547,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param QuestID
      */
     setFinishQuestScript(QuestID : number) {
@@ -626,7 +623,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param smart_scripts.event_phase_mask
      */
     setSetEventPhase(smart_scriptsevent_phase_mask : number) {
@@ -666,7 +663,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param QuestID
      */
     setCallGroupeventhappens(QuestID : number) {
@@ -676,7 +673,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      */
     setCombatStop() {
         this.row.action_type.set(27)
@@ -714,7 +711,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param smart_scripts.event_phase_mask 1
      *  @param smart_scripts.event_phase_mask 2
      *  @param smart_scripts.event_phase_mask 3
@@ -734,7 +731,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param smart_scripts.event_phase_mask minimum
      *  @param smart_scripts.event_phase_mask maximum
      */
@@ -808,7 +805,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      */
     setSetInCombatWithZone() {
         this.row.action_type.set(38)
@@ -828,7 +825,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Sheath (0-unarmed, 1-melee, 2-ranged)
      */
     setSetSheath(Sheath : number) {
@@ -874,7 +871,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param creature.phasemask (3.3.5) creature.phasegroup (4.3.4 +)
      *  @param 0 = remove / 1 = add (4.3.4+ only)
      */
@@ -916,7 +913,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param 0/1
      */
     setSetActive(zo : number) {
@@ -987,12 +984,12 @@ export class ActionType {
 
     /**
      * Creature stores invoker party and starts walking. Use together with 'finishQuestWalk'.
-     * @param walkOrRun 
-     * @param id 
-     * @param canRepeat 
-     * @param quest_template 
-     * @param despawnTime 
-     * @param reactState 
+     * @param walkOrRun
+     * @param id
+     * @param canRepeat
+     * @param quest_template
+     * @param despawnTime
+     * @param reactState
      */
     setQuestWalk(questId: number, path: number, reactState: ReactState = 'DEFENSIVE', shouldRun: boolean = true, canRepeat: boolean = false, despawnTime: number = 1) {
         return this.main
@@ -1011,7 +1008,7 @@ export class ActionType {
 
     /**
      * Fails a quest walk started with "setQuestWalk"
-     * @param questId 
+     * @param questId
      */
     setFailQuestWalk(questId: number) {
         return this.main
@@ -1029,9 +1026,9 @@ export class ActionType {
     }
 
     /**
-     * Completes a quest walk started with "setQuestWalk", 
+     * Completes a quest walk started with "setQuestWalk",
      * which rewards the group that started it
-     * @param questId 
+     * @param questId
      */
     setFinishQuestWalk(questId: number) {
         return this.main
@@ -1100,7 +1097,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param TemplateID (see Predefined SAI templates below)
      */
     setInstallAiTemplate(TemplateID : number) {
@@ -1110,7 +1107,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param 0 = Off / 1 = On
      */
     setSetRun(ZERO : number) {
@@ -1130,7 +1127,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param 0 = Off / 1 = On
      */
     setSetSwim(ZERO : number) {
@@ -1150,7 +1147,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param counterID
      *  @param value
      *  @param reset (0/1)
@@ -1181,7 +1178,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Depends on the script target. if SMART_TARGET_SELF, facing will be the same as in HomePosition, For SMART_TARGET_POSITION you need to set target_o : 0 = North, West = 1.5, South = 3, East = 4.5
      */
     setSetOrientation(Depends : number) {
@@ -1191,7 +1188,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param id
      *  @param InitialMin
      *  @param InitialMax
@@ -1211,7 +1208,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param entry
      */
     setPlaymovie(entry : number) {
@@ -1273,7 +1270,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param id(>1)
      */
     setTriggerTimedEvent(id : number) {
@@ -1283,7 +1280,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param id(>1)
      */
     setRemoveTimedEvent(id : number) {
@@ -1311,7 +1308,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      */
     setResetScriptBaseObject() {
         this.row.action_type.set(77)
@@ -1319,7 +1316,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      */
     setCallScriptReset() {
         this.row.action_type.set(78)
@@ -1339,7 +1336,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param EntryOrGuid * 100 (smart_scripts.entryorguid with 00 added after the entry, or 01, 02, 03 etc. for multiple action lists)
      *  @param timer update type(0 OOC, 1 IC, 2 ALWAYS)
      *  @param Can override in going action list 0/1 This will to stop an action list and start an other
@@ -1353,7 +1350,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Creature_template.npcflag
      */
     setSetNpcFlag(Creature_templatenpcflag : number) {
@@ -1363,7 +1360,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Creature_template.npcflag
      */
     setAddNpcFlag(Creature_templatenpcflag : number) {
@@ -1373,7 +1370,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Creature_template.npcflag
      */
     setRemoveNpcFlag(Creature_templatenpcflag : number) {
@@ -1469,7 +1466,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Value
      *  @param Type
      */
@@ -1481,7 +1478,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Value
      *  @param Type
      */
@@ -1507,7 +1504,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param animprogress (0-255)
      */
     setSendGoCustomAnim(animprogress : number) {
@@ -1517,7 +1514,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param creature.dynamicflags
      */
     setSetDynamicFlag(creaturedynamicflags : number) {
@@ -1527,7 +1524,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param creature.dynamicflags
      */
     setAddDynamicFlag(creaturedynamicflags : number) {
@@ -1537,7 +1534,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param creature.dynamicflags
      */
     setRemoveDynamicFlag(creaturedynamicflags : number) {
@@ -1547,7 +1544,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Speed XY
      *  @param Speed Z
      */
@@ -1571,7 +1568,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param LootState (0 - Not ready, 1 - Ready, 2 - Activated, 3 - Just deactivated)
      */
     setGoSetLootState(LootState : number) {
@@ -1661,7 +1658,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Power type
      *  @param New power
      */
@@ -1673,7 +1670,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Power type
      *  @param Power to add
      */
@@ -1685,7 +1682,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Power type
      *  @param Power to remove
      */
@@ -1697,7 +1694,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param GameEventId
      */
     setGameEventStop(GameEventId : number) {
@@ -1707,7 +1704,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param GameEventId
      */
     setGameEventStart(GameEventId : number) {
@@ -1745,7 +1742,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param soundId1
      *  @param soundId2
      *  @param soundId3
@@ -1765,7 +1762,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param timer
      */
     setSetCorpseDelay(timer : number) {
@@ -1775,7 +1772,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param disable evade (1) / re-enable (0)
      */
     setDisableEvade(disable : number) {
@@ -1785,7 +1782,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param state
      */
     setGoSetGoState(state : number) {
@@ -1795,7 +1792,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param 0/1
      */
     setSetCanFly(zo : number) {
@@ -1805,7 +1802,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Type
      */
     setRemoveAurasByType(Type : number) {
@@ -1815,7 +1812,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param SightDistance
      */
     setSetSightDist(SightDistance : number) {
@@ -1825,7 +1822,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param FleeTime
      */
     setFlee(FleeTime : number) {
@@ -1835,7 +1832,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param #NAME?
      *  @param -threat
      */
@@ -1847,7 +1844,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param Id
      */
     setLoadEquipment(Id : number) {
@@ -1857,7 +1854,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param id min range
      *  @param id max range
      */
@@ -1869,7 +1866,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      */
     setRemoveAllGameobjects() {
         this.row.action_type.set(126)
@@ -1923,7 +1920,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param groupId
      *  @param minDelay
      *  @param maxDelay
@@ -1939,7 +1936,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param groupId
      *  @param minDelay
      *  @param maxDelay
@@ -1981,7 +1978,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param entry
      *  @param cinematic
      */
@@ -1993,7 +1990,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param movementType
      *  @param speedInteger
      *  @param speedFraction
@@ -2017,7 +2014,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param zoneId
      *  @param areaLightId
      *  @param lightId (overrideLightId)
@@ -2033,7 +2030,7 @@ export class ActionType {
     }
 
     /**
-     *  
+     *
      *  @param zoneId
      *  @param weatherId
      *  @param weatherGrade (intensity)
@@ -2044,5 +2041,25 @@ export class ActionType {
         this.row.action_param2.set(weatherId)
         this.row.action_param3.set(weatherGrade)
         return this.main
+    }
+
+
+    // CUSTOM TSWOW EVENTS BELOW
+
+    /**
+     * @param worldStateId
+     * @param value
+     */
+    setSendWorldState(worldStateId: number, value: number) {
+        this.row.action_type.set(270)
+                .action_param1.set(worldStateId)
+                .action_param2.set(value)
+        return this.main;
+    }
+
+    setSendEventState(gameEvent: number) {
+        this.row.action_type.set(271)
+                .action_param1.set(gameEvent)
+        return this.main;
     }
 }

@@ -23,9 +23,9 @@ export class WorldStateLocation extends CellSystem<WorldStateUI> {
 export type CapturePointString = 'CAPTUREPOINT'|''
 
 export class WorldStateUICapturePoint extends CellSystem<WorldStateUI> {
-    get Enabled() { 
+    get Enabled() {
         return this.ownerWrap<CapturePointString>
-            (this.owner.row.ExtendedUI as Cell<CapturePointString,any>); 
+            (this.owner.row.ExtendedUI as Cell<CapturePointString,any>);
     }
     get FactionVar() { return this.ownerWrapIndex(this.owner.row.ExtendedUIStateVariable,0)}
     get GrayPercentVar() { return this.ownerWrapIndex(this.owner.row.ExtendedUIStateVariable,1)}
@@ -38,13 +38,13 @@ export class WorldStateUICapturePoint extends CellSystem<WorldStateUI> {
         , unkVar: WorldState | number= 0
     ) {
         if(typeof(factionVar) == 'object') {
-            factionVar = factionVar.get()
+            factionVar = factionVar.ID
         }
         if(typeof(grayPercentVar) == 'object') {
-            grayPercentVar = grayPercentVar.get()
+            grayPercentVar = grayPercentVar.ID
         }
         if(typeof(unkVar) == 'object') {
-            unkVar = unkVar.get()
+            unkVar = unkVar.ID
         }
         this.Enabled.set(enabled);
         this.FactionVar.set(factionVar);

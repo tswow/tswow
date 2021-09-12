@@ -19,7 +19,6 @@ import { SpellQuery } from "wotlkdata/dbc/types/Spell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { SpellRanks } from "./SpellRanks";
 import { TotemCreatures } from "./TotemCreatures";
 import { SpellGroup } from "./SpellGroup";
 
@@ -154,8 +153,8 @@ export const Spells = {
         return createSpell(Ids.Spell.staticId(mod,id),parent);
     },
 
-    /** 
-     * @deprecated - Do **NOT** use this unless you know 
+    /**
+     * @deprecated - Do **NOT** use this unless you know
      *               exactly what you're doing
      */
     createDynamic(parent: number = 0) {

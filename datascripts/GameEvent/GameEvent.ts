@@ -103,7 +103,7 @@ export class GameEventState extends EnumCellWrapper<GameEvent> {
         this.owner.row.start_time.set(null as any);
         this.owner.row.end_time.set(null as any);
         this.owner.row.occurence.set(BigInt(0));
-        this.owner.row.length.set(BigInt(52560000));
+        this.owner.row.length.set(BigInt(0));
         // make it indefinite by default
         //this.owner.row.length.set(BigInt(Number.MAX_SAFE_INTEGER))
         return this.set(1);

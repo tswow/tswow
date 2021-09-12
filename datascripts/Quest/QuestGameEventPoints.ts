@@ -10,7 +10,7 @@ export class GameEventConditionRef<T> extends CellSystem<T> {
     protected eventCell: Cell<number,any>
     protected conditionCell: Cell<number,any>
 
-    constructor(owner: T, eventCell: Cell<number,any>, conditionCell: Cell<number,any>) {
+    constructor(owner: T , conditionCell: Cell<number,any>, eventCell: Cell<number,any>) {
         super(owner);
         this.eventCell = eventCell;
         this.conditionCell = conditionCell;
