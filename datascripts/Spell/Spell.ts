@@ -54,6 +54,7 @@ import { RefStatic } from "../Refs/Ref";
 import { Spells } from "./Spells";
 import { SpellCustomAttr } from "./SpellCustomAttr";
 import { SpellBonusData } from "./SpellBonusData";
+import { SpellThreat } from "./SpellThreat";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
@@ -163,7 +164,10 @@ export class Spell extends MainEntity<SpellRow> {
 
     /** Custom server core attributes for this spell */
     readonly CustomAttributes = new SpellCustomAttr(this);
-    readonly SpellBonusData = new SpellBonusData(this);
+    /** Custom server core damage bonuses */
+    readonly BonusData = new SpellBonusData(this);
+    /** Custom server core spell threat bonuses */
+    readonly Threat = new SpellThreat(this);
 
     addStartButton(clazz: number, button: number, races?: RaceType[]) {
         Classes.load(clazz).StartButtons.addSpell(button, this.ID, races);
