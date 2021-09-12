@@ -75,6 +75,10 @@ export class Connection {
     protected normal: string[] = [];
     protected late: string[] = [];
 
+    databaseName() {
+        return this.settings.database;
+    }
+
     read(query: string) {
         if(this.sync===undefined) {
             throw new Error(`Tried to read from a disconnected adapter`);
