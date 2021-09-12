@@ -60,26 +60,26 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get Name() { return new CreatureName(this); }
     get Subname() { return new CreatureSubname(this); }
 
-    get Scripts() { 
+    get Scripts() {
         return new AttachedScript(this, ()=>{
             this.row.AIName.set('SmartAI');
             return SmartScripts.creature(this.ID);
         })
     }
-    
+
     /**
      * What expansion the creatures health is taken from, values are from 0-2
      */
     get HealthExpansion() { return this.wrap(this.row.exp); }
 
-    /** 
+    /**
      * ID of the Faction template this creature belongs to
      */
     get FactionTemplate() { return new CreatureFactionTemplate(this, this.row.faction); }
 
-    /** 
+    /**
      * - 0 = does not regenerate health
-     * - 1 = regenerates health 
+     * - 1 = regenerates health
      */
     get RegenHealth() { return this.wrap(this.row.RegenHealth); }
 
@@ -98,7 +98,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get RaidHeroic25ID() { return this.wrap(this.row.difficulty_entry_3); }
     get Models() { return new CreatureModels(this); }
     get Icon() { return new CreatureIconNames(this); }
-    get Gossip() { 
+    get Gossip() {
         return new GossipPointer(this, this.row.gossip_menu_id);
     }
     get Level() { return new CreatureLevel(this);}
@@ -119,7 +119,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get MovementID() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
-    get Trainer() { 
+    get Trainer() {
         let ctrow = SQL.creature_default_trainer.find({CreatureId:this.ID});
         let trainerRow : trainerRow;
         if(ctrow === undefined) {
@@ -129,11 +129,11 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
         } else {
             trainerRow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
         }
-        return new TrainerPointer(this,ctrow.TrainerId); 
+        return new TrainerPointer(this,ctrow.TrainerId);
     }
     get Vendor() { return new CreatureVendor(this); }
 
-    get NormalLoot() { 
+    get NormalLoot() {
         return new LootSetPointer(
               this
             , this.row.lootid
@@ -142,7 +142,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
             )
     }
 
-    get PickpocketLoot() { 
+    get PickpocketLoot() {
         return new LootSetPointer(
             this
           , this.row.pickpocketloot
@@ -151,7 +151,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
           )
     }
 
-    get SkinningLoot() { 
+    get SkinningLoot() {
         return new LootSetPointer(
             this
           , this.row.skinloot

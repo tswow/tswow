@@ -30,7 +30,7 @@ export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<
     /**
      * @deprecated changing this value manually will corrupt `lfg_data`
      * in the characters database.
-     * @param value 
+     * @param value
      */
     set(value: number) {
         this.owner.GetDBC().OrderIndex.set(value);
@@ -114,7 +114,7 @@ export class DungeonEncounterPlain extends DungeonEncounter {
 }
 
 export class DungeonEncounterCreature extends DungeonEncounter {
-    get Creature() { 
+    get Creature() {
         return new CreatureTemplateRef(
               this
             , this.wrapSQL(0,sql=>sql.creditEntry)
@@ -123,7 +123,7 @@ export class DungeonEncounterCreature extends DungeonEncounter {
 }
 
 export class DungeonEncounterSpell extends DungeonEncounter {
-    get Spell() { 
+    get Spell() {
         return new SpellRef(
               this
             , this.wrapSQL(0,sql=>sql.creditEntry)
@@ -167,7 +167,7 @@ export const DungeonEncounterRegistry = {
     create(map: number, index: number) {
         return new DungeonEncounterPlain(Ids.DungeonEncounter.id())
             .Map.setRefID(map)
-            .Index.set(index) 
+            .Index.set(index)
     },
 
     createCreature(map: number, index: number) {
@@ -179,8 +179,8 @@ export const DungeonEncounterRegistry = {
     },
 
     load(id: number) {
-        return DBC.DungeonEncounter.find({ID:id}) 
-            ? new DungeonEncounter(id) 
+        return DBC.DungeonEncounter.find({ID:id})
+            ? new DungeonEncounter(id)
             : undefined
     },
 

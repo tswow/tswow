@@ -22,7 +22,7 @@ export class TaxiPathNode extends MainEntity<TaxiPathNodeRow> {
         , this.row.LocY
         , this.row.LocZ
         )}
-    
+
     get ArrivalEvent() { return this.wrap(this.row.ArrivalEventID); }
     get DepartureEvent() { return this.wrap(this.row.DepartureEventID); }
     get Flags() { return new TaxiPathNodeFlags(this, this.row.Flags); }

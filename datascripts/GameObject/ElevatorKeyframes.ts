@@ -12,7 +12,7 @@ import { PositionXYZCell } from "../Misc/PositionCell";
 export class CellBasic<D extends CPrim,O> extends Cell<D,O> {
     private getter: ()=>D;
     private setter: (value:D)=>void;
-    
+
     constructor(owner: O, get: ()=>D, set: (value: D)=>void) {
         super(owner);
         this.getter = get;
@@ -30,7 +30,7 @@ export class CellBasic<D extends CPrim,O> extends Cell<D,O> {
 
 export abstract class MaybeCell<C extends CPrim,T,O> extends Cell<C,O> {
     protected accessor: (value: T)=>Cell<C,any>
-    
+
     constructor(owner: O, accessor: (value: T)=>Cell<C,any>) {
         super(owner);
         this.accessor = accessor;
@@ -169,12 +169,12 @@ export class ElevatorKeyframe extends CellSystemTop {
 
     @Transient
     get rotation_row(): TransportRotationRow|undefined {
-        return (this._rotation_row 
+        return (this._rotation_row
             && this._rotation_row.TimeIndex.get() == this.time
             && this._rotation_row.GameObjectsID.get() == this.GameObject.get()
             )
-            ? this._rotation_row 
-            : ( this._rotation_row = 
+            ? this._rotation_row
+            : ( this._rotation_row =
                     DBC.TransportRotation
                         .find({GameObjectsID:this.GameObject.get(),TimeIndex:this.time})
             )
@@ -188,7 +188,7 @@ export class ElevatorKeyframe extends CellSystemTop {
             && this._translation_row.SequenceID.get() == 0
             )
             ? this._translation_row
-            : ( this._translation_row = 
+            : ( this._translation_row =
                     DBC.TransportAnimation
                         .find({TransportID:this.GameObject.get(),TimeIndex:this.time,SequenceID:0})
             )
@@ -268,7 +268,7 @@ export type KeyFrameCon =  SeqKeyFrameCon & {
 
 export class ElevatorKeyframes extends CellSystem<GameObjectTransport> {
     getDefault(): ElevatorKeyframe[] {
-        let times: { [key: number]: 
+        let times: { [key: number]:
             {
                   translation?: TransportAnimationRow
                 , rotation?: TransportRotationRow
@@ -357,7 +357,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectTransport> {
                 throw new Error(
                     `Elevator keyframe timestamps not incremental:`
                     + `${prev} followed by ${time} (at index ${index})`
-                ); 
+                );
             }
             return time;
         },-1);
@@ -416,8 +416,8 @@ export class ElevatorKeyframes extends CellSystem<GameObjectTransport> {
 
     /**
      * Non-default sequences cannot have a rotation track (use setDefaultSequence)
-     * @param sequenceId 
-     * @param frames 
+     * @param sequenceId
+     * @param frames
      */
     addToSequence(sequenceId: number, frames: SeqKeyFrameCon[]) {
         frames = this.addTimestamps(frames);
@@ -441,8 +441,8 @@ export class ElevatorKeyframes extends CellSystem<GameObjectTransport> {
     /**
      * Sets the frames for sequence 0 (default)
      * - Only the default sequence can have a rotation track
-     * @param frames 
-     * @returns 
+     * @param frames
+     * @returns
      */
     addDefault(frames: KeyFrameCon[]) {
         frames = this.addTimestamps(frames);

@@ -51,135 +51,135 @@ function b(owner: ItemTemplate) {
 export class Stat extends EnumCellWrapper<ItemStat> {
     @EnumField(0)
     setMana() { return this.set(0)}
-    
+
     @EnumField(1)
     setHealth() { return this.set(1)}
-    
+
     @EnumField(2)
     setAgility() { return this.set(2)}
-    
+
     @EnumField(3)
     setStrength() { return this.set(3)}
-    
+
     @EnumField(4)
     setIntellect() { return this.set(4)}
-    
+
     @EnumField(5)
     setSpirit() { return this.set(5)}
-    
+
     @EnumField(6)
     setStamina() { return this.set(6)}
-    
-    @EnumField(7)  
+
+    @EnumField(7)
     setDefenseSkillRating() { return this.set(7)}
-    
+
     @EnumField(8)
     setDodgeRating() { return this.set(8)}
-    
+
     @EnumField(9)
     setParryRating() { return this.set(9)}
-    
+
     @EnumField(10)
     setBlockRating() { return this.set(10)}
-    
-    @EnumField(11)     
+
+    @EnumField(11)
     setHitMeleeRating() { return this.set(11)}
-    
-    @EnumField(12)    
+
+    @EnumField(12)
     setHitRangedRating() { return this.set(12)}
-    
-    @EnumField(13)     
+
+    @EnumField(13)
     setHitSpellRating() { return this.set(13)}
-    
-    @EnumField(14)    
+
+    @EnumField(14)
     setCritMeleeRating() { return this.set(14)}
-    
-    @EnumField(15)   
+
+    @EnumField(15)
     setCritRangedRating() { return this.set(15)}
-    
-    @EnumField(16)    
+
+    @EnumField(16)
     setCritSpellRating() { return this.set(16)}
-    
+
     @EnumField(17)
     setHitTakenMeleeRating() { return this.set(17)}
-    
+
     @EnumField(18)
     setHitTakenRangedRating() { return this.set(18)}
-    
+
     @EnumField(19)
     setHitTakenSpellRating() { return this.set(19)}
-    
+
     @EnumField(20)
     setCritTakenMeleeRating() { return this.set(20)}
-    
+
     @EnumField(21)
-    setCritTakenRangedRating() { return this.set(21)}        
-    
+    setCritTakenRangedRating() { return this.set(21)}
+
     @EnumField(22)
     setCritTakenSpellRating() { return this.set(22)}
-    
-    @EnumField(23)   
+
+    @EnumField(23)
     setHasteMeleeRating() { return this.set(23)}
-    
-    @EnumField(24)  
+
+    @EnumField(24)
     setHasteRangedRating() { return this.set(24)}
-    
-    @EnumField(25)   
+
+    @EnumField(25)
     setHasteSpellRating() { return this.set(25)}
-    
+
     @EnumField(26)
     setHitRating() { return this.set(26)}
-    
+
     @EnumField(27)
     setCritRating() { return this.set(27)}
-    
-    @EnumField(28)     
+
+    @EnumField(28)
     setHitTakenRating() { return this.set(28)}
-    
-    @EnumField(29)    
+
+    @EnumField(29)
     setCritTakenRating() { return this.set(29)}
-    
-    @EnumField(30)    
+
+    @EnumField(30)
     setResilienceRating() { return this.set(30)}
-    
+
     @EnumField(31)
     setHasteRating() { return this.set(31)}
-    
-    @EnumField(32)     
+
+    @EnumField(32)
     setExpertiseRating() { return this.set(32)}
-    
+
     @EnumField(33)
     setAttackPower() { return this.set(33)}
-    
-    @EnumField(34)  
+
+    @EnumField(34)
     setRangedAttackPower() { return this.set(34)}
-    
-    @EnumField(35)   
+
+    @EnumField(35)
     setFeralAttackPower() { return this.set(35)}
-    
-    @EnumField(36)   
+
+    @EnumField(36)
     setSpellHealingDone() { return this.set(36)}
-    
-    @EnumField(37)    
+
+    @EnumField(37)
     setSpellDamageDone() { return this.set(37)}
-    
-    @EnumField(38)    
+
+    @EnumField(38)
     setManaRegeneration() { return this.set(38)}
-    
+
     @EnumField(39)
-    setArmorPenetrationRating() { return this.set(39)}       
-    
+    setArmorPenetrationRating() { return this.set(39)}
+
     @EnumField(40)
     setSpellPower() { return this.set(40)}
-    
+
     @EnumField(41)
     setHealthRegen() { return this.set(41)}
-    
-    @EnumField(42)    
+
+    @EnumField(42)
     setSpellPenetration() { return this.set(42)}
-    
+
     @EnumField(43)
-    setBlockValue() { return this.set(43)}    
+    setBlockValue() { return this.set(43)}
 }
 
 export class ItemStat extends ArrayEntry<ItemTemplate> {
@@ -264,7 +264,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
 
     addCritTakenMeleeRating(value: number) { return this.add(25, value)}
 
-    addCritTakenRangedRating(value: number) { return this.add(26, value)}        
+    addCritTakenRangedRating(value: number) { return this.add(26, value)}
 
     addCritTakenSpellRating(value: number) { return this.add(27, value)}
 
@@ -300,7 +300,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
 
     addManaRegeneration(value: number) { return this.add(43, value)}
 
-    addArmorPenetrationRating(value: number) { return this.add(44, value)}       
+    addArmorPenetrationRating(value: number) { return this.add(44, value)}
 
     addSpellPower(value: number) { return this.add(45, value)}
 

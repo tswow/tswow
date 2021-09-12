@@ -81,7 +81,7 @@ export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
 
 export class SpellVisualEffects<T> extends CellSystem<T> {
     @Transient
-    protected row: SpellVisualKitRow; 
+    protected row: SpellVisualKitRow;
 
     constructor(owner: T, row: SpellVisualKitRow) {
         super(owner);

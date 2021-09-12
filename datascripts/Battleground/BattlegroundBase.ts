@@ -29,7 +29,7 @@ export class DescriptionCell<T extends BattlegroundBase> extends Cell<string,T> 
         this.lang = lang;
     }
 
-    exists() { 
+    exists() {
         let descs = descriptions[this.owner.ID];
         return descs !== undefined && descs[this.lang] !== undefined;
     }
@@ -80,11 +80,11 @@ export class BattlegroundBase extends CellSystemTop {
         ); }
     get Level() {
         return new MinMaxCell(this,
-          new MulticastCell(this, 
+          new MulticastCell(this,
             [this.sql_row.MinLvl, this.dbc_row.Minlevel])
-        , new MulticastCell(this, 
+        , new MulticastCell(this,
             [this.sql_row.MaxLvl, this.dbc_row.Maxlevel])
-        ); 
+        );
     }
 
     constructor(dbc_row: BattlemasterListRow, sql_row: battleground_templateRow) {
@@ -153,8 +153,8 @@ function GetBattlegroundInfo(index)
     if BattleGroundID == nil then return _GetBattlegroundInfo(index) end
 	local custom_data = custom_battlegrounds[BattleGroundID]
     if custom_data ~= nil then
-        if      player_level >= custom_data["min_level"] 
-            and player_level <= custom_data["max_level"] 
+        if      player_level >= custom_data["min_level"]
+            and player_level <= custom_data["max_level"]
         then
             canEnter = 1
         else

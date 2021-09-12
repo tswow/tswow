@@ -1,6 +1,6 @@
 import { Spell } from "../Spell/Spell";
 
-export type DefaultProfession = 
+export type DefaultProfession =
         'SKINNING' | 'HERBALISM' | 'MINING' | 'FISHING' | 'JEWELCRAFTING'
     |   'COOKING' | 'ALCHEMY' | 'LEATHERWORKING' | 'INSCRIPTION' | 'ENGINEERING'
     |   'TAILORING' | 'BLACKSMITHING' | 'ENCHANTING' | 'FISHING' | 'FIRSTAID'
@@ -48,12 +48,12 @@ export function resolveProfession(type: DefaultProfession|number) {
     }
 }
 
-export type ProfessionTier = 
-    'Apprentice' | 
-    'Journeyman' | 
-    'Expert' | 
-    'Artisan' | 
-    'Master' | 
+export type ProfessionTier =
+    'Apprentice' |
+    'Journeyman' |
+    'Expert' |
+    'Artisan' |
+    'Master' |
     'Grand Master' | number
 
 export function resolveProfessionRank(tier: ProfessionTier|number) {

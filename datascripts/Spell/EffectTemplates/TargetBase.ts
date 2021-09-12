@@ -4,7 +4,7 @@ import { SpellRadiusRef } from "../SpellRadius";
 
 export class TargetBase extends EffectTemplate {
     /**
-     * Generic Target type. 
+     * Generic Target type.
      */
     get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
 

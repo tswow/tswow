@@ -465,10 +465,10 @@ export class TargetType {
 
     /**
      * Sets the target to be a random point around another point
-     * @param x 
-     * @param y 
-     * @param z 
-     * @param range 
+     * @param x
+     * @param y
+     * @param z
+     * @param range
      * @note AzerothCore only
      */
     pointAround(x: number, y: number, z: number, range: number, amount: number = 0) {

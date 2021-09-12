@@ -28,7 +28,7 @@ export function pathToIcon(path: string) {
 }
 
 export function iconToPath(index: number): Cell<string,any> {
-    if(index===0) return new DummyCell(undefined, ""); 
+    if(index===0) return new DummyCell(undefined, "");
     return DBC.SpellIcon.findById(index).TextureFilename;
 }
 

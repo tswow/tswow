@@ -69,14 +69,14 @@ export class GameObjectGeoBox extends ChildEntity<GameObjectDisplayInfoRow,GameO
         return this.owner;
     }
 
-    ToBoundingBox() { 
+    ToBoundingBox() {
         return new BoundingBox(
             this.MinX.get(),
             this.MinY.get(),
             this.MinZ.get(),
             this.MaxX.get(),
             this.MaxY.get(),
-            this.MaxZ.get()); 
+            this.MaxZ.get());
     }
 
     scale(x: number, y: number, z: number) {
@@ -114,14 +114,14 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
     }
     get ID() { return this.row.ID.get(); }
     get ModelName() { return this.wrap(this.row.ModelName); }
-    get Sound() { 
-        return new GameObjectSounds(this); 
+    get Sound() {
+        return new GameObjectSounds(this);
     }
-    get ObjectEffectPackageID() { 
-        return this.wrap(this.row.ObjectEffectPackageID); 
+    get ObjectEffectPackageID() {
+        return this.wrap(this.row.ObjectEffectPackageID);
     }
-    get GeoBox(): GameObjectGeoBox { 
-        return new GameObjectGeoBox(this as any); 
+    get GeoBox(): GameObjectGeoBox {
+        return new GameObjectGeoBox(this as any);
     }
 }
 

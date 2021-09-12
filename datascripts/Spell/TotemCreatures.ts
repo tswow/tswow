@@ -26,7 +26,7 @@ const created = [0,0,0,0];
 export type CreatureControlType =
     'Attack'|'Stay'|'Follow'|'Aggressive'|'Passive'|'Defensive'
 
-const ControllerValues : CreatureControlType[] = 
+const ControllerValues : CreatureControlType[] =
     ['Attack','Stay','Follow','Aggressive','Passive','Defensive']
 
 export class CreatureControllers {
@@ -90,7 +90,7 @@ export const TotemCreatures = {
         return spell;
     },
 
-    createControllers(mod: string, id: string, slots: number[], 
+    createControllers(mod: string, id: string, slots: number[],
         controllers: CreatureControlType[] = ControllerValues) {
             let bitmask = 0;
             slots.forEach((x)=>{
@@ -109,32 +109,32 @@ export const TotemCreatures = {
                 switch(controller) {
                     case 'Aggressive':
                         spell.Effects.get(0).MiscValueB.set(2)
-                        controlOut.Aggressive = 
+                        controlOut.Aggressive =
                             spell.Icon.set('Interface\\Icons\\Ability_Racial_BloodRage.blp')
                         break
                     case 'Attack':
                         spell.Effects.get(0).MiscValueB.set(5)
-                        controlOut.Attack = 
+                        controlOut.Attack =
                             spell.Icon.set('Interface\\Icons\\Ability_GhoulFrenzy.blp')
                         break
                     case 'Defensive':
                         spell.Effects.get(0).MiscValueB.set(1)
-                        controlOut.Defensive = 
+                        controlOut.Defensive =
                             spell.Icon.set('Interface\\Icons\\Ability_Defend.blp')
                         break
                     case 'Follow':
                         spell.Effects.get(0).MiscValueB.set(4)
-                        controlOut.Follow = 
+                        controlOut.Follow =
                             spell.Icon.set('Interface\\Icons\\Ability_Tracking.blp')
                         break
                     case 'Passive':
                         spell.Effects.get(0).MiscValueB.set(0)
-                        controlOut.Passive = 
+                        controlOut.Passive =
                             spell.Icon.set('Interface\\Icons\\AbilitySeal.blp')
                         break
                     case 'Stay':
                         spell.Effects.get(0).MiscValueB.set(3)
-                        controlOut.Stay = 
+                        controlOut.Stay =
                             spell.Icon.set('Interface\\Icons\\Spell_Nature_TimeStop.blp')
                         break
                 }

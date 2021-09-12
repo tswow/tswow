@@ -5,7 +5,7 @@ export class MinMaxCell<T> extends CellSystem<T> {
     protected minCell: Cell<number,any>;
     protected maxCell: Cell<number,any>;
 
-    
+
     constructor(owner: T,minCell: Cell<number,any>, maxCell: Cell<number,any>) {
         super(owner);
         this.minCell = minCell;

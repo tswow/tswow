@@ -39,7 +39,7 @@ export class BattlegroundSafeLoc extends CellSystem<Battleground> {
 
 export class Battleground extends BattlegroundBase {
     get Map() { return new MapRefReadOnly(this, this.wrapIndex(this.dbc_row.MapID,0)) }
-    get HordeStart() { 
+    get HordeStart() {
         return new BattlegroundSafeLoc(
               this
             , new WorldSafeLocRef(this, this.sql_row.HordeStartLoc)
@@ -47,7 +47,7 @@ export class Battleground extends BattlegroundBase {
         );
     }
 
-    get AllianceStart() { 
+    get AllianceStart() {
         return new BattlegroundSafeLoc(
               this
             , new WorldSafeLocRef(this, this.sql_row.AllianceStartLoc)

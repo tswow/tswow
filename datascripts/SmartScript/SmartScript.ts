@@ -42,11 +42,11 @@ export class SmartScript extends CellSystemTop {
     }
 
     get ConditionSelf() {
-        return new Condition(this, 
-            22, 
-            this.row.id.get()+1, 
-            this.row.entryorguid.get(), 
-            this.row.source_type.get(), 
+        return new Condition(this,
+            22,
+            this.row.id.get()+1,
+            this.row.entryorguid.get(),
+            this.row.source_type.get(),
             1
         )
     }
@@ -73,15 +73,15 @@ export class SmartScript extends CellSystemTop {
         let cur = this.row;
         while(cur.link.get()!==0) {
             cur = SQL.smart_scripts.find({
-                entryorguid: this.row.entryorguid.get(), 
+                entryorguid: this.row.entryorguid.get(),
                 source_type: this.row.source_type.get(),
                 id: cur.link.get()
             });
 
             if(cur===undefined) {
-                throw new Error(`Broken SmartScript link from (` + 
-                    `entryorguid=${this.row.entryorguid.get()}, ` + 
-                    `source_type=${this.row.source_type.get()}, ` + 
+                throw new Error(`Broken SmartScript link from (` +
+                    `entryorguid=${this.row.entryorguid.get()}, ` +
+                    `source_type=${this.row.source_type.get()}, ` +
                     `id=${this.row.id.get()})`)
             }
         }

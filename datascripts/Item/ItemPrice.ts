@@ -18,8 +18,8 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 /**
- * The getters in this class are intentional, we DO NOT want people to get confused with 
- * what price they're actually setting, so we should always 
+ * The getters in this class are intentional, we DO NOT want people to get confused with
+ * what price they're actually setting, so we should always
  */
 export class ItemPrice extends CellSystem<ItemTemplate> {
     get PlayerBuyPrice() { return Number(this.owner.row.BuyPrice.get()); }

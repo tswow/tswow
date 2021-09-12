@@ -118,7 +118,7 @@ export const TSImages = {
 
     /**
      * Loads from any path
-     * @param pathIn 
+     * @param pathIn
      */
     read(pathIn: string) {
         return TSImage.read(pathIn);
@@ -126,8 +126,8 @@ export const TSImages = {
 
     /**
      * Loads from the assets directory of a module
-     * @param mod 
-     * @param localPath 
+     * @param mod
+     * @param localPath
      */
     readFromModule(mod: string, localPath: string) {
         return TSImages.read(path.join('modules',mod,localPath));

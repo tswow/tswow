@@ -62,35 +62,35 @@ export class Light extends MainEntity<LightRow> {
     get UnknownFloat4() { return new LightFloatBand(this, 4); }
     get UnknownFloat5() { return new LightFloatBand(this, 5); }
 
-    get HighlightSky() { 
+    get HighlightSky() {
         return new LightParam(this,(x)=>this.paramRow(x).HighlightSky)
     }
 
-    get Skybox() { 
+    get Skybox() {
         return new LightParam(this,(x)=>this.paramRow(x).LightSkyboxID)
     }
 
-    get CloudType() { 
+    get CloudType() {
         return new LightParam(this,(x)=>this.paramRow(x).CloudTypeID)
     }
 
-    get Glow() { 
+    get Glow() {
         return new LightParam(this,(x)=>this.paramRow(x).Glow)
     }
 
-    get WaterShallowAlpha() { 
+    get WaterShallowAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).WaterShallowAlpha)
     }
 
-    get WaterDeepAlpha() { 
+    get WaterDeepAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).WaterDeepAlpha)
     }
 
-    get OceanShallowAlpha() { 
+    get OceanShallowAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).OceanShallowAlpha)
     }
 
-    get OceanDeepAlpha() { 
+    get OceanDeepAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).OceanDeepAlpha)
     }
 

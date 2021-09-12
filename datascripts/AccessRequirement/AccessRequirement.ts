@@ -9,7 +9,7 @@ import { QuestRef } from "../Quest/Quest";
 
 export class AccessRequirement<T> extends CellSystem<T> {
     readonly row: access_requirementRow;
-    
+
     constructor(owner: T, row: access_requirementRow) {
         super(owner);
         this.row = row;
@@ -17,7 +17,7 @@ export class AccessRequirement<T> extends CellSystem<T> {
 
     get Map() { return new MapRefReadOnly(this.owner, this.row.mapId); }
     get Difficulty() { return this.row.difficulty.get(); }
-    get Level() { 
+    get Level() {
         return new MinMaxCell(
               this.owner
             , this.row.level_min
@@ -25,8 +25,8 @@ export class AccessRequirement<T> extends CellSystem<T> {
         )
     }
     get ItemLevel() { return this.ownerWrap(this.row.item_level); }
-    get Achievement() { 
-        return new AchievementRef(this.owner, this.row.completed_achievement) 
+    get Achievement() {
+        return new AchievementRef(this.owner, this.row.completed_achievement)
     }
     get Text() { return this.ownerWrap(this.row.quest_failed_text); }
     get HordeQuest() { return new QuestRef(this.owner, this.row.quest_done_H); }

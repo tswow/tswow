@@ -597,7 +597,7 @@ export class ModOffhandDamagePct extends PercentBase {}
 // 123
 @AuraID(123)
 export class ModTargetResistance extends PointsBase {
-    get Schools() { return new SchoolMask(this, this.owner.MiscValueA); } 
+    get Schools() { return new SchoolMask(this, this.owner.MiscValueA); }
 }
 // 124
 @AuraID(124)
@@ -1248,7 +1248,7 @@ export class SetOpenStable extends TargetBase {}
 // 294 (TODO: What is MiscValueA?)
 @AuraID(294)
 export class PreventRegeneratePower extends TargetBase {
-    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueB); } 
+    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueB); }
 }
 // 295
 // 296

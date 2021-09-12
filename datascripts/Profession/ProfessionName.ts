@@ -22,7 +22,7 @@ export abstract class ProfessionLocSystem extends LocSystem<Profession> {
         });
         return systems;
     }
-    
+
     lang(lang: Language): Cell<string, Profession> & PendingCell {
         return new MulticastCell<string,Profession>(this.owner,this.allSystems().map(x=>x.lang(lang)));
     }

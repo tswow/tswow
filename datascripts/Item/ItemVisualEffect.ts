@@ -39,7 +39,7 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
     }
 
     get(index: number) {
-        return effectToPath(this.row.Slot.getIndex(index)); 
+        return effectToPath(this.row.Slot.getIndex(index));
     }
 
     clearIndex(index: number) {

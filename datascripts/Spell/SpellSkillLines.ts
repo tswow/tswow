@@ -80,7 +80,7 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility
         skillLine: number
       , autolearn: boolean = false
       , callback: (sla: SpellSkillLineAbility)=>void = ()=>{}
-      ) 
+      )
       {
         callback(this.getAdd(skillLine,autolearn));
         return this.owner;

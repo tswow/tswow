@@ -18,7 +18,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate"
 
 export class ReputationRequirement extends CellSystem<ItemTemplate> {
-    get Faction() { 
+    get Faction() {
         return this.owner.row.RequiredReputationRank;
     };
     get Rank() {

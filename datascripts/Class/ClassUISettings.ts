@@ -46,7 +46,7 @@ class TCoordSystem extends CellSystem<Class> {
         this._tCoordsCCEdit = tcoordsCC;
         this._tCoordsEdit = tcoords;
     }
-    
+
     set(x1: number, y1: number, x2: number, y2: number) {
         const txt = `["${this.owner.Filename}"] = {${[x1,y1,x2,y2].join(', ')}},`
         this._tCoordsCCEdit.text = txt;

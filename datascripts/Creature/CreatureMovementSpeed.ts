@@ -28,7 +28,7 @@ export class CreatureMovementSpeed extends CellSystem<CreatureTemplate> {
         return this.owner.row.speed_walk.get();
     }
 
-    getRun() { 
+    getRun() {
         return this.owner.row.speed_run.get();
     }
 

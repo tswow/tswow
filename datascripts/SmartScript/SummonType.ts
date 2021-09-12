@@ -1,6 +1,6 @@
-export type SummonType = 
-    'TIME_OR_DISAPPEAR' | 'TIME_OR_DEATH' | 
-    'TIME' | 'TIME_OUT_COMBAT' | 
+export type SummonType =
+    'TIME_OR_DISAPPEAR' | 'TIME_OR_DEATH' |
+    'TIME' | 'TIME_OUT_COMBAT' |
     'DEATH' | 'TIME_DEAD' | 'DISAPPEAR' | 'MANUAL'
 
 export function resolveSummonType(summonType: SummonType) {

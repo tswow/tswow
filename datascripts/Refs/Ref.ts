@@ -14,7 +14,7 @@ export interface CanObjectify {
 export class SelfRef<T,V extends CanObjectify> {
     protected getter: ()=>V;
     protected owner: T;
-    
+
     constructor(owner: T, getter: ()=>V) {
         this.getter = getter;
         this.owner = owner;
@@ -44,7 +44,7 @@ export abstract class RefReadOnly<T,V extends CanObjectify> extends CellSystem<T
 
     abstract getRef(): V;
     abstract exists(): boolean
-    
+
     modRef(callback: (value: V)=>void) {
         callback(this.getRef());
         return this.owner;

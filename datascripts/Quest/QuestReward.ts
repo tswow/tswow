@@ -113,7 +113,7 @@ function ItemQuantities(row: quest_templateRow) {
 
 export class ItemReward<T> extends ArrayEntry<T> {
     protected row: quest_templateRow;
-    
+
     constructor(container: T, index: number, row: quest_templateRow) {
         super(container, index);
         this.row = row;
@@ -135,7 +135,7 @@ export class ItemReward<T> extends ArrayEntry<T> {
 
 export class ItemRewards<T> extends ArraySystem<ItemReward<T>,T> {
     protected row: quest_templateRow;
-    
+
     constructor(owner: T, row: quest_templateRow) {
         super(owner);
         this.row = row;
@@ -187,7 +187,7 @@ function Reputation(row: quest_templateRow) {
 
 export class ReputationReward<T> extends ArrayEntry<T> {
     protected row: quest_templateRow;
-    
+
     constructor(container: T, index: number, row: quest_templateRow) {
         super(container, index);
         this.row = row;

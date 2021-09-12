@@ -41,7 +41,7 @@ export class SoundProviderPreferences extends MainEntity<SoundProviderPreference
 export const SoundProviderPreferenceRegistry = {
     create(parent?: number) {
         return new SoundProviderPreferences(
-            parent 
+            parent
             ? DBC.SoundProviderPreferences.findById(parent)
                .clone(Ids.SoundProviderPreferences.id())
             : DBC.SoundProviderPreferences.add(

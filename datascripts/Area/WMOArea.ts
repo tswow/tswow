@@ -28,7 +28,7 @@ export class WMOArea extends MainEntity<WMOAreaTableRow> {
     get NameSet() { return this.wrap(this.row.NameSetID); }
     get Group() { return this.wrap(this.row.WMOGroupID); }
     get SoundProviderPreferences() {
-        return new WMOAreaSoundProviderPrefs(this); 
+        return new WMOAreaSoundProviderPrefs(this);
     }
     get Ambience() { return new SoundAmbienceRef(this, this.row.AmbienceID); }
     get ZoneMusic() { return new ZoneMusicRef(this, this.row.ZoneMusic); }

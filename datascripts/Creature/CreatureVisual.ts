@@ -73,7 +73,7 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
         return this.sql_row || SQL.creature_model_info.find({DisplayID:this.row.ID.get()});
     }
 
-    get Model(): CreatureModelPointer<this> { 
+    get Model(): CreatureModelPointer<this> {
         return new CreatureModelPointer(this, this.row.ModelID);
     }
 

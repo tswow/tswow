@@ -20,8 +20,8 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export class SpellRecovery<T> extends CellSystem<T> {
     @Transient
-    protected spell :Spell; 
-    
+    protected spell :Spell;
+
     constructor(owner: T, spell: Spell) {
         super(owner);
         this.spell = spell;
@@ -35,7 +35,7 @@ export class SpellRecovery<T> extends CellSystem<T> {
 
     set(time: number, categoryTime: number = 0, startTime: number = 0, startCategory: number = 0) {
         this.Time.set(time);
-        this.CategoryTime.set(categoryTime); 
+        this.CategoryTime.set(categoryTime);
         this.StartTime.set(startTime);
         this.StartCategory.set(startCategory);
         return this.owner;

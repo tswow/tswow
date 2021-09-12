@@ -56,8 +56,8 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     }
 
     hasEffectType(effectType: number) {
-        return this.isEffectType(0,effectType) 
-            || this.isEffectType(1,effectType) 
+        return this.isEffectType(0,effectType)
+            || this.isEffectType(1,effectType)
             || this.isEffectType(2, effectType)
             ;
     }

@@ -223,7 +223,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param Radius
      *  @param RepeatMin
      *  @param RepeatMax
@@ -379,7 +379,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param CooldownMin
      *  @param CooldownMax
      */
@@ -391,7 +391,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param CooldownMin
      *  @param CooldownMax
      */
@@ -501,7 +501,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onAiInit(callback: (script: SmartScript)=>void) {
         const row = this.create();
@@ -549,7 +549,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onTransportAddplayer(callback: (script: SmartScript)=>void) {
         const row = this.create();
@@ -559,7 +559,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param Entry (0 any)
      */
     onTransportAddcreature(Entry : number, callback: (script: SmartScript)=>void) {
@@ -570,7 +570,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onTransportRemovePlayer(callback: (script: SmartScript)=>void) {
         const row = this.create();
@@ -580,7 +580,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param PointId
      */
     onTransportRelocate(PointId : number, callback: (script: SmartScript)=>void) {
@@ -591,7 +591,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param Team (0 any)
      *  @param CooldownMin
      *  @param CooldownMax
@@ -604,7 +604,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param TriggerId (0 any)
      */
     onAreatriggerOntrigger(TriggerId : number, callback: (script: SmartScript)=>void) {
@@ -739,7 +739,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param Id
      */
     onTimedEventTriggered(Id : number, callback: (script: SmartScript)=>void) {
@@ -750,7 +750,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param InitialMin
      *  @param InitialMax
      *  @param RepeatMin
@@ -786,7 +786,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onJustCreated(callback: (script: SmartScript)=>void) {
         const row = this.create();
@@ -807,7 +807,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onFollowCompleted(callback: (script: SmartScript)=>void) {
         const row = this.create();
@@ -862,7 +862,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param State (0 - Not Ready, 1 - Ready, 2 - Activacted, 3 - Just deactivated)
      */
     onGoLootStateChanged(State : number, callback: (script: SmartScript)=>void) {
@@ -873,7 +873,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param EventId
      */
     onGoEventInform(EventId : number, callback: (script: SmartScript)=>void) {
@@ -884,7 +884,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param EventId
      */
     onActionDone(EventId : number, callback: (script: SmartScript)=>void) {
@@ -895,7 +895,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onOnSpellclick(callback: (script: SmartScript)=>void) {
         const row = this.create();
@@ -905,7 +905,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      *  @param minHpPct
      *  @param maxHpPct
      *  @param repeatMin
@@ -1002,7 +1002,7 @@ export class AttachedScript<T> extends CellSystem<T> {
     }
 
     /**
-     *  
+     *
      */
     onSummonedUnitDies(callback: (script: SmartScript)=>void) {
         const row = this.create();

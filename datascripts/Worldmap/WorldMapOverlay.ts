@@ -26,12 +26,12 @@ export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
 export class WorldMapOverlay extends MainEntity<WorldMapOverlayRow> {
     get ID() { return this.row.ID.get(); }
     get MapArea() { return new WorldMapAreaRef(this, this.row.MapAreaID); }
-    get Areas() { return new ArrayRefSystemStatic(this, 0, 4, 
+    get Areas() { return new ArrayRefSystemStatic(this, 0, 4,
         (index)=>new AreaRef(this, this.wrapIndex(this.row.AreaID,index)))
     }
     get Texture() { return new WorldMapTexture(this); }
 
-    get Offset() { 
+    get Offset() {
         return new PositionXYCell(
               this
             , this.row.OffsetX

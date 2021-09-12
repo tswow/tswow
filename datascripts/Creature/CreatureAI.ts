@@ -23,7 +23,7 @@ export class CreatureAI extends CellSystem<CreatureTemplate> {
         return this.owner;
     }
 
-    get() { 
+    get() {
         return this.owner.row.AIName.get();
     }
 

@@ -35,7 +35,7 @@ export class SpellEffectType extends EnumCellWrapper<SpellEffect> {
 
     /** */
     @EnumField(2)
-    setSchoolDamage(): SchoolDamage { 
+    setSchoolDamage(): SchoolDamage {
         return new SchoolDamage(this.set(2))
     };
 
@@ -207,7 +207,7 @@ export class SpellEffectType extends EnumCellWrapper<SpellEffect> {
     @EnumField(44)
     setSkillStep(): SkillStep { return new SkillStep(this.set(44));  };
 
-    /** 
+    /**
      * Comment test
      */
     @EnumField(45)

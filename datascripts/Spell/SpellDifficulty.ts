@@ -30,7 +30,7 @@ export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     get Normal25Man() { return this.row.DifficultySpellID.getIndex(1); }
     get Heroic10Man() { return this.row.DifficultySpellID.getIndex(2); }
     get Heroic25Man() { return this.row.DifficultySpellID.getIndex(3); }
-    
+
     set(normal10Man: number, normal25Man: number, heroic10Man : number, heroic25Man: number) {
         const row = this.row;
         row.DifficultySpellID.setIndex(0, normal10Man);

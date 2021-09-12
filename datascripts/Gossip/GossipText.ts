@@ -241,7 +241,7 @@ export class GossipTextEntry extends ArrayEntry<Gossip> {
 
 export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {
     readonly row: npc_textRow;
-    
+
     constructor(gossip: Gossip, row: npc_textRow) {
         super(gossip);
         this.row = row;

@@ -90,7 +90,7 @@ export class ClassFormula extends Cell<string,Class> {
 
     get(): string {
         const old = SQL.class_stat_formulas.find({class: this.owner.row.ID.get(), stat_type: this.type});
-        if(old!==undefined) { 
+        if(old!==undefined) {
             return old.formula.get();
         }
         return "";
@@ -130,8 +130,8 @@ export class ClassStats extends CellSystem<Class> {
     get MeleeCrit() { return this.f(100,DBC.GtChanceToMeleeCrit); }
     get SpellCrit() { return this.f(100,DBC.GtChanceToSpellCrit); }
     get CombatRatings() { return this.f(100,DBC.GtCombatRatings); }
-    get CombatRatingsScalar() { 
-        return this.f(32, DBC.GtOCTClassCombatRatingScalar); 
+    get CombatRatingsScalar() {
+        return this.f(32, DBC.GtOCTClassCombatRatingScalar);
     }
 
     get RegenHp() { return this.f(100, DBC.GtOCTRegenHP); }

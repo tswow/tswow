@@ -48,7 +48,7 @@ export const Locks = {
     createEmpty() {
         return new SimpleLock(makeLock())
     },
-    
+
     createTypeInstance(type: number, skill: number = 0) {
         return new SimpleLock(makeLock())
             .Type.setLockType()

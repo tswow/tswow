@@ -18,7 +18,7 @@ import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemFlags extends MaskCell32<ItemTemplate> {
-    
+
     get NoPickup() { return this.bit(0); }
     get Conjured() { return this.bit(1); }
     get Openable() { return this.bit(2); }

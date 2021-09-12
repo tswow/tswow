@@ -32,9 +32,9 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
         return this;
     }
 
-    get Advanced() { 
+    get Advanced() {
         return new SoundEntryAdvancedPointer(
-            this, this.row.SoundEntriesAdvancedID); 
+            this, this.row.SoundEntriesAdvancedID);
     }
 
     get Flags() { return new SoundFlags(this, this.row.Flags); }

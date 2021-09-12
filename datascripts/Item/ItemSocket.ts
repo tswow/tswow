@@ -55,7 +55,7 @@ export class ItemColor extends EnumCellWrapper<ItemSocket> {
     setGreen() {return this.set(5)};
 
     @EnumField(6)
-    setYellow() {return this.set(6)};    
+    setYellow() {return this.set(6)};
 }
 
 export class ItemSocket extends ArrayEntry<ItemTemplate>{

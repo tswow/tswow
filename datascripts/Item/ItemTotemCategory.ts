@@ -44,16 +44,16 @@ export class ItemTotemCategory extends EnumCellWrapper<ItemTemplate> {
 
     @EnumField(9)
     setRunedTruesilverRod() { return this.set(9); }
-    
+
     @EnumField(10)
     setRunedArcaniteRod() { return this.set(10); }
-    
+
     @EnumField(11)
     setMiningPick() { return this.set(11); }
-    
+
     @EnumField(12)
     setPhilosophersStone() { return this.set(12); }
-    
+
     @EnumField(13)
     setBlacksmithHammer() { return this.set(13); }
 
@@ -80,7 +80,7 @@ export class ItemTotemCategory extends EnumCellWrapper<ItemTemplate> {
 
     @EnumField(101)
     setRunedAzuriteRod() { return this.set(101); }
-    
+
     @EnumField(121)
     setVirtuosoInkingSet() { return this.set(121); }
 

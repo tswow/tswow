@@ -14,7 +14,7 @@ export class LFGDungeonGroup extends MainEntity<LfgDungeonGroupRow> {
 export const LFGDungeonGroupRegistry = {
     create(parent = 0) {
         return new LFGDungeonGroup(
-            parent 
+            parent
             ? DBC.LfgDungeonGroup
                 .find({ID:parent})
                 .clone(Ids.LfgDungeonGroup.id())

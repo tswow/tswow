@@ -76,27 +76,27 @@ export class Spell extends MainEntity<SpellRow> {
 
     get RequiresSpellFocus() { return this.wrap(this.row.RequiresSpellFocus); }
     get FacingCasterFlags() { return new MaskCell32(this, this.row.FacingCasterFlags); }
-    
-    get CasterAuraState() : IncludeExclude<number, this> { 
-        return new IncludeExclude(this, 
+
+    get CasterAuraState() : IncludeExclude<number, this> {
+        return new IncludeExclude(this,
             this.wrap(this.row.CasterAuraState),
             this.wrap(this.row.ExcludeCasterAuraState)
     )}
 
-    get TargetAuraState() : IncludeExclude<number, this> { 
-        return new IncludeExclude(this, 
+    get TargetAuraState() : IncludeExclude<number, this> {
+        return new IncludeExclude(this,
             this.wrap(this.row.TargetAuraState),
             this.wrap(this.row.ExcludeTargetAuraState)
     )}
 
-    get CasterAuraSpell() : IncludeExclude<number, this> { 
-        return new IncludeExclude(this, 
+    get CasterAuraSpell() : IncludeExclude<number, this> {
+        return new IncludeExclude(this,
         this.wrap(this.row.CasterAuraSpell),
         this.wrap(this.row.ExcludeCasterAuraSpell)
     )}
 
-    get TargetAuraSpell() : IncludeExclude<number, this> { 
-        return new IncludeExclude(this, 
+    get TargetAuraSpell() : IncludeExclude<number, this> {
+        return new IncludeExclude(this,
         this.wrap(this.row.TargetAuraSpell),
         this.wrap(this.row.ExcludeTargetAuraSpell)
     )}
@@ -145,7 +145,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Mechanic() { return this.wrap(this.row.Mechanic); }
     get Missile() { return new SpellMissilePointer(this, this.row.SpellMissileID) }
 
-    get ShapeshiftMask() { return new IncludeExcludeMask(this, 
+    get ShapeshiftMask() { return new IncludeExcludeMask(this,
         new MaskCell64(this,this.row.ShapeshiftMask),
         new MaskCell64(this,this.row.ShapeshiftMask),
     )}
@@ -166,8 +166,8 @@ export class Spell extends MainEntity<SpellRow> {
 
     /**
      * Creates a separate clone of this spell
-     * @param mod 
-     * @param id 
+     * @param mod
+     * @param id
      */
     clone(mod: string, id: string) {
         const newId = Ids.Spell.staticId(mod, id);

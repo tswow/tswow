@@ -42,7 +42,7 @@ export class AchievementRewardTitle extends CellSystem<Achievement> {
 }
 
 export class AchievementReward extends CellSystem<Achievement> {
-    get row() { 
+    get row() {
         let row = SQL.achievement_reward.find({ID:this.owner.ID});
         if(!row) {
             row = SQL.achievement_reward.add(this.owner.ID)

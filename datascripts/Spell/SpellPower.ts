@@ -69,8 +69,8 @@ export class SpellRuneCostPointer extends Ref<Spell,SpellRuneCostRow> {
         return this.cell.get() != 0;
     }
 
-    protected id(v: SpellRuneCostRow) { 
-        return v.ID.get(); 
+    protected id(v: SpellRuneCostRow) {
+        return v.ID.get();
     }
 
     protected create(): SpellRuneCostRow {
@@ -108,11 +108,11 @@ export class SpellPower<T> extends CellSystem<T> {
 
     /**
      * Sets this spell to use mana
-     * @param baseCost 
-     * @param costPct 
-     * @param perLevel 
-     * @param perSecondBase 
-     * @param perSecondPerLevel 
+     * @param baseCost
+     * @param costPct
+     * @param perLevel
+     * @param perSecondBase
+     * @param perSecondPerLevel
      */
     setMana(baseCost: number, costPct = 0, perLevel = 0, perSecondBase = 0, perSecondPerLevel = 0) {
         this.PowerType.set('MANA');
@@ -126,7 +126,7 @@ export class SpellPower<T> extends CellSystem<T> {
 
     /**
      * Sets this spell to use energy
-     * @param energy 
+     * @param energy
      */
     setEnergy(energy: number) {
         this.PowerType.set('ENERGY');

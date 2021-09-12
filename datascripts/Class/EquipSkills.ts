@@ -46,7 +46,7 @@ export class EquipSystem extends CellSystem<Class> {
         this.row.AcquireMethod.set(1);
         SQL.playercreateinfo_skills.add(0,1<<(this.owner.ID-1),
             this.row.SkillLine.get())
-            
+
         return this.owner;
     }
 }

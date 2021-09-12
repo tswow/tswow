@@ -22,7 +22,7 @@ import { SpellIconCell } from "../Spell/SpellIcon";
 
 /**
  * Represents a class skill type (Mage/Frost, Warlock/Destruction, Warrior/Arms etc.)
- * 
+ *
  * Talent trees are completely separate from these.
  */
 export class ClassSkill extends MainEntity<SkillLineRow> {

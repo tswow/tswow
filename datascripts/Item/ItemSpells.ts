@@ -25,7 +25,7 @@ function IdRows(owner: ItemTemplate) {
         owner.row.spellid_3,
         owner.row.spellid_4,
         owner.row.spellid_5,
-    ] 
+    ]
 }
 
 function CatRows(owner: ItemTemplate) {
@@ -35,7 +35,7 @@ function CatRows(owner: ItemTemplate) {
         owner.row.spellcategory_3,
         owner.row.spellcategory_4,
         owner.row.spellcategory_5,
-    ] 
+    ]
 }
 
 function TriggerRows(owner: ItemTemplate) {
@@ -45,7 +45,7 @@ function TriggerRows(owner: ItemTemplate) {
         owner.row.spelltrigger_3,
         owner.row.spelltrigger_4,
         owner.row.spelltrigger_5,
-    ] 
+    ]
 }
 
 function ChargeRows(owner: ItemTemplate) {
@@ -55,7 +55,7 @@ function ChargeRows(owner: ItemTemplate) {
         owner.row.spellcharges_3,
         owner.row.spellcharges_4,
         owner.row.spellcharges_5,
-    ] 
+    ]
 }
 
 function PPMRows(owner: ItemTemplate) {
@@ -65,7 +65,7 @@ function PPMRows(owner: ItemTemplate) {
         owner.row.spellppmRate_3,
         owner.row.spellppmRate_4,
         owner.row.spellppmRate_5,
-    ] 
+    ]
 }
 
 function CooldownRows(owner: ItemTemplate) {
@@ -75,7 +75,7 @@ function CooldownRows(owner: ItemTemplate) {
         owner.row.spellcooldown_3,
         owner.row.spellcooldown_4,
         owner.row.spellcooldown_5,
-    ] 
+    ]
 }
 
 function CCooldownRows(owner: ItemTemplate) {
@@ -85,7 +85,7 @@ function CCooldownRows(owner: ItemTemplate) {
         owner.row.spellcategorycooldown_3,
         owner.row.spellcategorycooldown_4,
         owner.row.spellcategorycooldown_5,
-    ] 
+    ]
 }
 
 export class ItemSpellTrigger extends EnumCellWrapper<ItemSpell> {

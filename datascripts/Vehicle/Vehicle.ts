@@ -74,10 +74,10 @@ export class VehicleMissileImpactModel extends ArrayEntry<Vehicle> {
         throw new Error("Method not implemented.");
     }
 
-    get Model() { 
+    get Model() {
         return this.wrapIndex(this.container.row.MsslTrgtImpactModel,this.index);
     }
-    get Radius() { 
+    get Radius() {
         return this.wrapIndex(this.container.row.MsslTrgtImpactRadius,this.index);
     }
 }
@@ -171,7 +171,7 @@ export class Vehicle extends MainEntity<VehicleRow> {
     get Pitch() { return new VehiclePitch(this); }
     get MouseLookOffsetPitch() { return this.wrap(this.row.MouseLookOffsetPitch); }
     get LocomotionType() { return this.wrap(this.row.UilocomotionType)}
-    get PowerDisplay() { 
+    get PowerDisplay() {
         return new SingleArraySystem(this, this.row.PowerDisplayID, 0)
     }
 

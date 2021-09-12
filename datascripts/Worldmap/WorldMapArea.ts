@@ -13,18 +13,18 @@ export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
     get Map() { return new MapRef(this, this.row.MapID); }
     get Area() { return new AreaRef(this, this.row.AreaID); }
     get Name() { return this.wrap(this.row.AreaName); }
-    get Boundary() { 
+    get Boundary() {
         return new Boundary(
               this
             , this.row.LocLeft
             , this.row.LocTop
             , this.row.LocRight
             , this.row.LocBottom
-        ); 
+        );
     }
     get DisplayMap() { return new MapRef(this, this.row.DisplayMapID); }
-    get DefaultDungeonFloor() { 
-        return new DungeonMapRef(this, this.row.DefaultDungeonFloor); 
+    get DefaultDungeonFloor() {
+        return new DungeonMapRef(this, this.row.DefaultDungeonFloor);
     }
     get ParentWorldMap() { return this.wrap(this.row.ParentWorldMapID) }
 }
@@ -32,7 +32,7 @@ export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
 export const WorldMapAreaRegistry = {
     create(parent?: number) {
         return new WorldMapArea(
-            parent 
+            parent
             ? DBC.WorldMapArea
                 .findById(parent)
                 .clone(Ids.WorldMapArea.id())

@@ -29,7 +29,7 @@ export class DungeonMap extends MainEntity<DungeonMapRow> {
 export const DungeonMapRegistry = {
     create(parent?: number) {
         return new DungeonMap(
-            parent 
+            parent
             ? DBC.DungeonMap
                 .find({ID:parent}).clone(Ids.DungeonMap.id())
             : DBC.DungeonMap.add(Ids.DungeonMap.id())

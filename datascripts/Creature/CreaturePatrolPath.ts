@@ -18,8 +18,8 @@ export class CreaturePatrolPath extends CellSystem<CreatureInstance> {
 
         const prev = SQL.waypoint_data.filter({id:this.owner.GUID*10});
 
-        const movementNum = 
-            movementType === 'WALK' ? 0 : 
+        const movementNum =
+            movementType === 'WALK' ? 0 :
             movementType === 'RUN' ? 1 : 2;
 
         pos.forEach((x,i)=>

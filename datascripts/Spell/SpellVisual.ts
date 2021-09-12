@@ -169,14 +169,14 @@ export class SpellVisualMissile extends CellSystem<SpellVisual> {
 
     get Attachment() { return this.ownerWrap(this.owner.row.MissileAttachment); }
 
-    get CastOffset() { 
+    get CastOffset() {
         return new Vec3(this.owner,
             this.owner.row.MissileCastOffsetX,
             this.owner.row.MissileCastOffsetY,
             this.owner.row.MissileCastOffsetZ)
     }
 
-    get ImpactOffset() { 
+    get ImpactOffset() {
         return new Vec3(this.owner,
             this.owner.row.MissileImpactOffsetX,
             this.owner.row.MissileImpactOffsetY,

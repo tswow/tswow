@@ -32,7 +32,7 @@ export interface LootRowBase {
     MinCount: SQLCell<number,any>;
     MaxCount: SQLCell<number,any>;
     clone(id: number, item: number): any;
-} 
+}
 
 export interface LootTable {
     filter(search: {Entry: number}): LootRowBase[];
@@ -45,7 +45,7 @@ export class LootSet extends CellSystemTop {
 
     get ID() { return this.id; }
     get rows() { return this.table.filter({Entry:this.id})}
-    
+
     addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
         this.table.add(this.id,item)
             .Chance.set(chance)
@@ -57,7 +57,7 @@ export class LootSet extends CellSystemTop {
             .LootMode.set(lootMode)
         return this;
     }
-    
+
     addReference(table: number, chance: number, lootMode: number = 1) {
         this.table.add(this.id,table)
             .Chance.set(chance)
@@ -69,7 +69,7 @@ export class LootSet extends CellSystemTop {
             .LootMode.set(lootMode)
         return this;
     }
-    
+
     constructor(id: number, table: LootTable) {
         super();
         this.id = id;
@@ -110,113 +110,113 @@ export const Loot = {
         create() {
             return new LootSet(Ids.fishing_loot_template.id(),SQL.fishing_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.fishing_loot_template);
         }
     },
-    
+
     Creature: {
         create() {
             return new LootSet(Ids.creature_loot_template.id(),SQL.creature_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.creature_loot_template)
         }
     },
-    
+
     GameObject: {
         create() {
             return new LootSet(Ids.gameobject_loot_template.id(),SQL.gameobject_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.gameobject_loot_template)
-        } 
+        }
     },
-    
+
     Item: {
         create() {
             return new LootSet(Ids.item_loot_template.id(),SQL.item_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.item_loot_template)
-        } 
+        }
     },
-    
+
     Disenchant: {
         create() {
             return new LootSet(Ids.disenchant_loot_template.id(),SQL.disenchant_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.disenchant_loot_template)
-        } 
+        }
     },
-    
+
     Prospecting: {
         create() {
             return new LootSet(Ids.prospecting_loot_template.id(),SQL.prospecting_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.prospecting_loot_template)
-        } 
+        }
     },
-    
+
     Milling: {
         create() {
             return new LootSet(Ids.milling_loot_template.id(),SQL.milling_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.milling_loot_template)
-        } 
+        }
     },
-    
+
     Pickpocket: {
         create() {
             return new LootSet(Ids.pickpocketing_loot_template.id(),SQL.pickpocketing_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.pickpocketing_loot_template)
-        } 
+        }
     },
-    
+
     Skinning: {
         create() {
             return new LootSet(Ids.skinning_loot_template.id(),SQL.skinning_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.skinning_loot_template)
-        } 
+        }
     },
-    
+
     Mail: {
         load(id: number) {
             return new LootSet(id, SQL.mail_loot_template)
-        } 
+        }
     },
-    
+
     Reference: {
         create() {
             return new LootSet(Ids.reference_loot_template.id(),SQL.reference_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.reference_loot_template)
-        } 
+        }
     },
-    
+
     Spell: {
         create() {
             return new LootSet(Ids.spell_loot_template.id(),SQL.spell_loot_template);
         },
-        
+
         load(id: number) {
             return new LootSet(id, SQL.spell_loot_template)
         },

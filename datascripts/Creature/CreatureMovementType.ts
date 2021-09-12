@@ -18,12 +18,12 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 export class CreatureMovementType<T> extends EnumCellWrapper<T> {
-    @EnumField(0) 
+    @EnumField(0)
     setIdle() { return this.set(0); }
 
-    @EnumField(1) 
+    @EnumField(1)
     setRandomMovement() { return this.set(1); }
 
-    @EnumField(2) 
+    @EnumField(2)
     setWaypoint() { return this.set(2); }
 }

@@ -57,8 +57,8 @@ export class QuestPOI extends MainEntity<quest_poiRow> {
     get Index() { return this.row.id.get(); }
     get ObjectiveIndex() { return this.wrap(this.row.ObjectiveIndex); }
     get Map() { return new MapRef(this, this.row.MapID); }
-    get WorldMapArea() { 
-        return new WorldMapAreaRef(this, this.row.WorldMapAreaId); 
+    get WorldMapArea() {
+        return new WorldMapAreaRef(this, this.row.WorldMapAreaId);
     }
     get Floor() { return this.wrap(this.row.Floor); }
     get Priority() { return this.wrap(this.row.Priority); }
@@ -138,8 +138,8 @@ export class QuestPOIs extends MultiRowSystem<QuestPOI,Quest> {
         let rows = this.getAllRows();
 
         new QuestPOI(SQL.quest_poi.add(
-            this.owner.ID,rows.length === 0 
-                ? 0 
+            this.owner.ID,rows.length === 0
+                ? 0
                 : (rows[rows.length-1].Index + 1)
         ))
             .ObjectiveIndex.set(objective)

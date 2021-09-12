@@ -91,15 +91,15 @@ export class OutfitPart extends CellSystem<Class> {
 
     /**
      * @param item Item ID that the character will actually use.
-     * @param displayId Display ID (not Item ID) of item shown during character creation (not item ID). 
+     * @param displayId Display ID (not Item ID) of item shown during character creation (not item ID).
      * Set to 0 (default) to use the model of the item
      * Set to -1 to make item invisible during character creation.
-     * @param genders 
-     * @param races 
+     * @param genders
+     * @param races
      */
     set(item: number, displayId: number = 0, genders: Gender[] = ['Male','Female'], races: number[] = []) {
         this.clear(genders, races);
-        // Automatically read displayId from item if set to 0. 
+        // Automatically read displayId from item if set to 0.
         if(displayId===0 && item!==-1) {
             displayId = SQL.item_template.find({entry: item}).displayid.get();
         }

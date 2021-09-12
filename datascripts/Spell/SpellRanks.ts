@@ -18,7 +18,7 @@ import { Spell } from "./Spell";
 
 export class SpellRanks {
     protected spells: Spell[];
-    
+
     constructor(spells: Spell[]) {
         this.spells = spells;
     }

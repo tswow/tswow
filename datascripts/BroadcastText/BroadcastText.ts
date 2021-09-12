@@ -43,12 +43,12 @@ export class BroadcastTextContent<T> extends SQLLocSystem<T> {
     }
 
     protected getMain(): Cell<string, any> {
-        return this.isFemale ? 
+        return this.isFemale ?
             this.text.row.Text1 : this.text.row.Text
     }
 
     protected getLoc(loc: Language): Cell<string, any> {
-        return this.isFemale ? 
+        return this.isFemale ?
             getLocRow(this.text.row.ID.get(),loc).Text1 :
             getLocRow(this.text.row.ID.get(),loc).Text
     }
@@ -68,7 +68,7 @@ export class BroadcastText<T> extends CellSystem<T> {
     }
 
     get FemaleText() {
-        return new BroadcastTextContent<T>(this.owner, this, true); 
+        return new BroadcastTextContent<T>(this.owner, this, true);
     }
 
     get Emote1() { return this.wrap(this.row.EmoteID1); }

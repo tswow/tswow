@@ -13,14 +13,14 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
     /** 0 for outland, 1 for azeroth */
     get World() { return this.wrap(this.row.WorldMapID); }
 
-    get Boundary() { 
+    get Boundary() {
         return new Boundary(
               this
             , this.row.LeftBoundary
             , this.row.TopBoundary
             , this.row.RightBoundary
             , this.row.BottomBoundary
-        ); 
+        );
     }
 
     get ContinentOffset() { return new PositionXYCell(
@@ -43,7 +43,7 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
 export const WorldMapContinentRegistry = {
     create(parent?: number) {
         return new WorldMapContinent(
-            parent 
+            parent
             ? DBC.WorldMapContinent.findById(parent)
                 .clone(Ids.WorldMapContinent.id())
             : DBC.WorldMapContinent.add(Ids.WorldMapContinent.id())

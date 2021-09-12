@@ -36,7 +36,7 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
     get Name() { return this.wrapLoc(this.row.DisplayName); }
     get NameShort() { return this.wrapLoc(this.row.DisplayNameShort); }
     get Flags() { return this.wrap(this.row.Flags); }
-    
+
     get HostileMin() { return this.wrapIndex(this.row.RangeMin, 0)}
     get FriendMin() { return this.wrapIndex(this.row.RangeMin, 1)}
 
@@ -61,7 +61,7 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
         if(flags!==undefined) {
             this.Flags.set(flags);
         }
-        
+
         return this;
     }
 }

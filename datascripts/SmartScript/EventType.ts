@@ -432,7 +432,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param Radius
      *  @param RepeatMin
      *  @param RepeatMax
@@ -598,7 +598,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param CooldownMin
      *  @param CooldownMax
      */
@@ -610,7 +610,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param CooldownMin
      *  @param CooldownMax
      */
@@ -722,7 +722,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setAiInit() {
         this.row.event_type.set(37)
@@ -770,7 +770,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setTransportAddplayer() {
         this.row.event_type.set(41)
@@ -778,7 +778,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param Entry (0 any)
      */
     setTransportAddcreature(Entry : number) {
@@ -788,7 +788,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setTransportRemovePlayer() {
         this.row.event_type.set(43)
@@ -796,7 +796,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param PointId
      */
     setTransportRelocate(PointId : number) {
@@ -806,7 +806,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param Team (0 any)
      *  @param CooldownMin
      *  @param CooldownMax
@@ -820,7 +820,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param TriggerId (0 any)
      */
     setAreatriggerOntrigger(TriggerId : number) {
@@ -955,7 +955,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param Id
      */
     setTimedEventTriggered(Id : number) {
@@ -965,7 +965,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param InitialMin
      *  @param InitialMax
      *  @param RepeatMin
@@ -1001,7 +1001,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setJustCreated() {
         this.row.event_type.set(63)
@@ -1019,7 +1019,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setFollowCompleted() {
         this.row.event_type.set(65)
@@ -1069,7 +1069,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param State (0 - Not Ready, 1 - Ready, 2 - Activacted, 3 - Just deactivated)
      */
     setGoLootStateChanged(State : number) {
@@ -1079,7 +1079,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param EventId
      */
     setGoEventInform(EventId : number) {
@@ -1089,7 +1089,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param EventId
      */
     setActionDone(EventId : number) {
@@ -1099,7 +1099,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setOnSpellclick() {
         this.row.event_type.set(73)
@@ -1107,7 +1107,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      *  @param minHpPct
      *  @param maxHpPct
      *  @param repeatMin
@@ -1205,7 +1205,7 @@ export class EventType<T> {
     }
 
     /**
-     *  
+     *
      */
     setSummonedUnitDies() {
         this.row.event_type.set(82)

@@ -22,7 +22,7 @@ export class AreaPOIFlags extends MaskCell32<AreaPOI> {
 
 export class AreaPOI extends MainEntity<AreaPOIRow> {
     get Flags() { return new AreaPOIFlags(this, this.row.Flags); }
-    get Position() { 
+    get Position() {
         return new PositionMapXYZCell(
               this
             , this.row.MapID

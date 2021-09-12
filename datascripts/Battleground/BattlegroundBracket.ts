@@ -14,7 +14,7 @@ export class BattlegroundBracket extends MainEntity<PvpDifficultyRow> {
     get Level() { return new MinMaxCell(
           this
         , this.row.MinLevel
-        , this.row.MaxLevel); 
+        , this.row.MaxLevel);
     }
 }
 
@@ -45,8 +45,8 @@ export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Bat
             )
             .MapID.set(this.owner.Map.getRefID())
             .RangeIndex.set(
-                rows.length === 0 
-                    ? 0 
+                rows.length === 0
+                    ? 0
                     : rows[rows.length - 1].RangeIndex.get() + 1
             )
     }

@@ -38,7 +38,7 @@ export class Condition<T> extends CellSystem<T> {
     protected state: conditionsCreator = {};
 
     protected addRow(type: number, group: number, value1: number = 0, value2: number = 0, value3: number = 0) {
-        SQL.conditions.add(this.sourceType, this.sourceGroup||0, 
+        SQL.conditions.add(this.sourceType, this.sourceGroup||0,
             this.sourceEntry||0, this.sourceId||0, group,
             type, 0, value1, value2, value3).Comment.set('tswow')
         return this.owner;
@@ -51,11 +51,11 @@ export class Condition<T> extends CellSystem<T> {
     protected sourceTarget?: number;
 
     constructor(
-        owner: T, 
-        sourceType: number, 
-        sourceGroup?: number, 
-        sourceEntry?: number, 
-        sourceId?: number, 
+        owner: T,
+        sourceType: number,
+        sourceGroup?: number,
+        sourceEntry?: number,
+        sourceId?: number,
         sourceTarget?: number) {
 
         super(owner);
@@ -145,7 +145,7 @@ export class Condition<T> extends CellSystem<T> {
             {Conditions: this.rows()}
         );
     }
-    
+
     @ConditionType(1,["SpellID","EffectIndex"])
     addHasAura(spellId: number, effectIndex: number, group = 0) {
         return this.addRow(1,group,spellId,effectIndex);
@@ -367,41 +367,41 @@ export class Condition<T> extends CellSystem<T> {
 
     @ConditionType(40,[])
     addInWater(group = 0) {
-        return this.addRow(40, group); 
+        return this.addRow(40, group);
     }
 
     @ConditionType(42,["StateType","StandState"],[null,getStandState])
     addStandState(group = 0, stateType: number, standState: StandState) {
-        return this.addRow(42, group, stateType, resolveStandState(standState)); 
+        return this.addRow(42, group, stateType, resolveStandState(standState));
     }
 
     @ConditionType(43,["QuestID"])
     addDailyQuestDone(questId: number, group = 0) {
-        return this.addRow(43, group, questId); 
+        return this.addRow(43, group, questId);
     }
 
     @ConditionType(44,[])
     addCharmed(group = 0) {
-        return this.addRow(44, group); 
+        return this.addRow(44, group);
     }
 
     @ConditionType(45,["PetType"])
     addPetType(petTypeMask: number,group = 0) {
-        return this.addRow(45, group, petTypeMask); 
+        return this.addRow(45, group, petTypeMask);
     }
 
     @ConditionType(46,[])
     addTaxi(group = 0) {
-        return this.addRow(46, group); 
+        return this.addRow(46, group);
     }
 
     @ConditionType(47,["QuestID","StateMask"],[getQuestStates])
     addQuestState(questId: number, stateMask: QuestStateMask[], group = 0) {
-        return this.addRow(47, group, questId, resolveQuestStates(stateMask)); 
+        return this.addRow(47, group, questId, resolveQuestStates(stateMask));
     }
 
     @ConditionType(48,["QuestID","ObjectiveIndex"])
     addQuestObjective(questId: number, objectiveIndex: number, group = 0) {
-        return this.addRow(47, group, questId, objectiveIndex); 
+        return this.addRow(47, group, questId, objectiveIndex);
     }
 }

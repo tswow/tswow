@@ -15,13 +15,13 @@ export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
         this.index = index;
     }
 
-    get SilenceIntervalMin() { 
+    get SilenceIntervalMin() {
         return this.ownerWrapIndex(this.owner.row.SilenceintervalMin,this.index)
     }
-    get SilenceIntervalMax() { 
+    get SilenceIntervalMax() {
         return this.ownerWrapIndex(this.owner.row.SilenceintervalMax,this.index)
     }
-    get Sound() { 
+    get Sound() {
         return new SoundEntryPointer(this.owner,this.ownerWrapIndex(this.owner.row.Sounds,this.index));
     }
 }

@@ -82,13 +82,13 @@ export class Mount extends MainEntity<SpellRow> {
 
     get ID() { return this.row.ID.get(); }
     /**
-     * @warning Currently, tswow can only find Mount items that are implemented by specifying its spell id 
-     * in one of the items spells with a "learn (6)" spell item trigger. 
+     * @warning Currently, tswow can only find Mount items that are implemented by specifying its spell id
+     * in one of the items spells with a "learn (6)" spell item trigger.
      * This misses ~20 mounts that have a real spell to learn it instead (which may or may not have an item to trigger it),
      * and an additional ~80 mounts that have seemingly no way to learn to learn it at all.
      */
     get Items() { return new MountItems(this); }
-    get Creature() { 
+    get Creature() {
         return new CreatureTemplateRef(
               this
             , this.wrapIndex(this.row.EffectMiscValue,this.mountIndex())

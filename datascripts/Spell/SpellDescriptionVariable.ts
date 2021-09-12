@@ -26,7 +26,7 @@ export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariabl
         return this;
     }
 
-    objectify() { 
+    objectify() {
         return this.row.Variables.get();
     }
 

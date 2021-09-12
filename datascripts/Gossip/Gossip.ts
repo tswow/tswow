@@ -29,7 +29,7 @@ export class Gossip extends MainEntity<gossip_menuRow> {
         return this;
     }
 
-    get Text() { 
+    get Text() {
         return new GossipTextArray(this, SQL.npc_text.find({ID:this.row.TextID.get()}));
     }
 
@@ -59,7 +59,7 @@ export class GossipPointer<T> extends Ref<T, Gossip> {
     protected clone(): Gossip {
         let gossipRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
         let gossipId = Ids.gossip_menu.id();
-        let textId = Ids.NPCText.id();        
+        let textId = Ids.NPCText.id();
         SQL.npc_text.find({ID:gossipRow.TextID.get()})
             .clone(textId);
         return new Gossip(gossipRow.clone(gossipId,textId));

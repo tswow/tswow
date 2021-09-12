@@ -69,10 +69,10 @@ export abstract class SQLDBCEntityStatic<DBC,SQL> extends CellSystemTop {
     HasDBC() { return this.GetSQL() !== undefined; }
 }
 
-export class MaybeDBCCellStatic<C extends CPrim, DBC, T extends SQLDBCEntityStatic<DBC,any>> extends Cell<C,T>{ 
+export class MaybeDBCCellStatic<C extends CPrim, DBC, T extends SQLDBCEntityStatic<DBC,any>> extends Cell<C,T>{
     private defaultValue: C;
     private safeGetter: (row: DBC)=>Cell<C,any>
-    
+
     constructor(owner: T, defaultValue: C, safeGetter: (row: DBC)=>Cell<C,any>) {
         super(owner);
         this.defaultValue = defaultValue;
@@ -130,10 +130,10 @@ export class MaybeDBCLocStatic<DBC,T extends SQLDBCEntityStatic<DBC,any>> extend
     }
 }
 
-export class MaybeSQLCellStatic<C extends CPrim, SQL, T extends SQLDBCEntityStatic<any,SQL>> extends Cell<C,T>{ 
+export class MaybeSQLCellStatic<C extends CPrim, SQL, T extends SQLDBCEntityStatic<any,SQL>> extends Cell<C,T>{
     private defaultValue: C;
     private safeGetter: (sql: SQL)=>Cell<C,any>
-    
+
     constructor(owner: T, defaultValue: C, safeGetter: (row: SQL)=>Cell<C,any>) {
         super(owner);
         this.defaultValue = defaultValue;

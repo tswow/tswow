@@ -50,14 +50,14 @@ export class Class extends MainEntity<ChrClassesRow> {
     readonly UI : ClassUISettings;
     readonly BaseClass: number;
 
-    constructor(baseClass: number, row : ChrClassesRow, 
-        tCoordsCCEdit : Edit, 
-        classColorEdit : Edit, 
-        sortOrderEdit : Edit, 
-        tCoordsEdit : Edit, 
-        xmlEdit : Edit, 
-        maleDescription : Edit, 
-        femaleDescription : Edit, 
+    constructor(baseClass: number, row : ChrClassesRow,
+        tCoordsCCEdit : Edit,
+        classColorEdit : Edit,
+        sortOrderEdit : Edit,
+        tCoordsEdit : Edit,
+        xmlEdit : Edit,
+        maleDescription : Edit,
+        femaleDescription : Edit,
         infoRows : Edit[]) {
             super(row);
             loadedClasses[this.ID] = this;
@@ -199,9 +199,9 @@ export const Classes = {
         const p = (size: number, dbc: GTFile) =>
             dbc.filter({})
             .filter((x,i)=>x.index>=parent*size && x.index<parent*size+size)
-        const g = (size: number, dbc: GTFile) => 
+        const g = (size: number, dbc: GTFile) =>
             p(size,dbc).forEach((x)=>x.clone().Data.set(x.Data.get()))
-        
+
         g(100,DBC.GtChanceToMeleeCrit)
         g(100,DBC.GtChanceToSpellCrit)
         g(100,DBC.GtOCTRegenHP)

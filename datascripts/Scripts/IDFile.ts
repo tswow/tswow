@@ -9,7 +9,7 @@ finish('build-idfiles',()=>{
     }
 
     let modulemap : {[key:string]: string}= {};
-    
+
     iterateIds((r)=>{
         const uMod = r.mod.toUpperCase().split('-').join('_').split(' ').join('_');
         const uName = r.name.toUpperCase().split('-').join('_').split(' ').join('_');

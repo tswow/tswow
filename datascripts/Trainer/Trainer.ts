@@ -66,7 +66,7 @@ export class Trainer extends MainEntity<trainerRow> {
     }
 
     get Greeting(): TrainerLoc { return new TrainerLoc(this); }
-    get Requirement() { return this.wrap(this.row.Requirement); } 
+    get Requirement() { return this.wrap(this.row.Requirement); }
     get Type() { return new TrainerType(this); }
 
     setClassTrainer(cls: ClassType) {

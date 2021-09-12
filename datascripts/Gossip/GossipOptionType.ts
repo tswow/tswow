@@ -90,47 +90,47 @@ export class GossipOptionType extends CellSystem<GossipOption> {
         return this.owner;
     }
 
-    setSpiritHealer() { 
-        return this.set(6,16384); 
+    setSpiritHealer() {
+        return this.set(6,16384);
     }
 
-    setSpiritGuide() { 
-        return this.set(7,32768); 
-    }
-    
-    setInnkeeper() { 
-        return this.set(8,65536); 
+    setSpiritGuide() {
+        return this.set(7,32768);
     }
 
-    setBanker() { 
-        return this.set(9,131072); 
+    setInnkeeper() {
+        return this.set(8,65536);
     }
 
-    setPetition() { 
-        return this.set(10,262144); 
+    setBanker() {
+        return this.set(9,131072);
     }
 
-    setTabardDesigner() { 
-        return this.set(11,524288); 
+    setPetition() {
+        return this.set(10,262144);
     }
 
-    setAuctioneer() { 
-        return this.set(13,2097152); 
+    setTabardDesigner() {
+        return this.set(11,524288);
     }
 
-    setStableMaster() { 
-        return this.set(14,4194304); 
+    setAuctioneer() {
+        return this.set(13,2097152);
     }
 
-    setUnlearnTalents() { 
-        return this.set(16,16); 
+    setStableMaster() {
+        return this.set(14,4194304);
     }
 
-    setUnlearnPetTalents() { 
-        return this.set(17,16); 
+    setUnlearnTalents() {
+        return this.set(16,16);
     }
 
-    setLearnDualSpec() { 
-        return this.set(18,16); 
+    setUnlearnPetTalents() {
+        return this.set(17,16);
+    }
+
+    setLearnDualSpec() {
+        return this.set(18,16);
     }
 }

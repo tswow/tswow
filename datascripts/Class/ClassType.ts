@@ -17,9 +17,9 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 
-export type ClassType = 
-    'WARRIOR' | 'PALADIN' | 'HUNTER' | 'ROGUE' | 
-    'PRIEST' | 'DEATH_KNIGHT' | 'SHAMAN' | 'MAGE' | 
+export type ClassType =
+    'WARRIOR' | 'PALADIN' | 'HUNTER' | 'ROGUE' |
+    'PRIEST' | 'DEATH_KNIGHT' | 'SHAMAN' | 'MAGE' |
     'WARLOCK' | 'DRUID' | number
 
 export function resolveClassType(type: ClassType) {

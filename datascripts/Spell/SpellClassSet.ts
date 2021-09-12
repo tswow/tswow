@@ -20,7 +20,7 @@ import { Spell } from "./Spell";
 import { SpellEffect } from "./SpellEffect";
 
 export abstract class ClassSet<T> extends CellSystem<T> {
-    
+
     constructor(owner: T) {
         super(owner);
     }
@@ -53,7 +53,7 @@ export class BaseClassSet extends ClassSet<Spell> {
 
     /**
      * Sets this spells ClassSets to match this spell effect
-     * @param effect 
+     * @param effect
      */
     match(effect: SpellEffect, matches: ('A'|'B'|'C')[] = ['A','B','C']) {
         if(matches.includes('A')) {

@@ -33,8 +33,8 @@ export class EnvironmentalDamage extends EffectTemplate {
     get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
-    get Radius() { 
-        return new SpellRadiusRef(this, this.wrapIndex(this.row.EffectRadiusIndex, this.index)); } 
+    get Radius() {
+        return new SpellRadiusRef(this, this.wrapIndex(this.row.EffectRadiusIndex, this.index)); }
 }
 // 8
 @EffectID(8)
@@ -144,13 +144,13 @@ export class Energize extends PowerBase {
 // 31
 @EffectID(31)
 export class WeaponPercentDamage extends DamageBasePct {
-    
+
     /**
      * Percentage (in whole percentage, i.e. value of "200" = 200%)
      */
     get Percentage() { return this.wrap(this.owner.BasePoints); }
 
-    setSingleTarget() { 
+    setSingleTarget() {
         this.TargetA.setUnitTargetEnemy();
         this.TargetB.set(0);
         return this.owner;
@@ -174,7 +174,7 @@ export class OpenLock extends EffectTemplate {
     get SkillValue() { return this.wrap(this.owner.PointsPerLevel); }
 
     /**
-     * Generic Target type. 
+     * Generic Target type.
      */
     get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
 
@@ -270,7 +270,7 @@ export class EnchantItemTemp extends EffectTemplate {
 @EffectID(56)
 export class SummonPet extends EffectTemplate {
     get SummonedCreature() {
-        return this.wrap(this.owner.MiscValueA); 
+        return this.wrap(this.owner.MiscValueA);
     }
 }
 // 57
@@ -301,7 +301,7 @@ export class PowerBurn extends PowerBase {}
 // 63
 @EffectID(63)
 export class Threat extends TargetBase {
-    
+
     get ThreatAmount() { return this.wrap(this.owner.BasePoints); }
     get DieSides() { return this.wrap(this.owner.DieSides); }
 }
@@ -449,7 +449,7 @@ export class ResurrectSelf extends EffectTemplate {
     get HealthPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get HealthPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
-    get MultipleValue() { return this.wrap(this.owner.MultipleValue); } 
+    get MultipleValue() { return this.wrap(this.owner.MultipleValue); }
     get Mana() { return this.wrap(this.owner.MiscValueA); }
 }
 // 95

@@ -50,7 +50,7 @@ export class StaticIDGenerator extends IDGeneratorBase {
 export class DynamicIDGenerator {
     readonly table: string
     protected curid: number
-    
+
     constructor(table: string, startId: number) {
         this.table = table;
         this.curid = Math.max(((highestReserved[table]||(-1))+1),startId)
@@ -269,18 +269,18 @@ export const Ids = {
     /** Starts at 8000, highest base value is 7087 */
     SpellVisualEffectName: new DynamicIDGenerator('SpellVisualEffectName',8000),
 
-    /** 
+    /**
      * Starts at 5000000, highest base value is CreatureTemplate which grows up from 1000000.
      * Will collide if using more than 4000000 creature templates.
      */
     Vendor: new DynamicIDGenerator('npc_vendor',4000000),
 
-    /** 
+    /**
      * Starts at 8000000, highest base value is Vendor which grows up from 4000000.
      * Will collide if using more than 4000000 Vendors.
      */
     TrainerCreature: new DynamicIDGenerator('creature_template',8000000),
-    
+
     /** Starts at 2539, highest base value is 2538 */
     Light: new DynamicIDGenerator('Light',2539),
 
@@ -419,9 +419,9 @@ export const Ids = {
     gameobject: new StaticIDGenerator('gameobject', 300000),
     /** Starts at  10000, highest base value is 9624 */
     GameObjectDisplayInfo: new DynamicIDGenerator('GameObjectDisplayInfo',10000),
-    /** 
-     * Starts at 1000, highest base value is 21 
-     * (but some Spells use higher values, so 1000 is for safety) 
+    /**
+     * Starts at 1000, highest base value is 21
+     * (but some Spells use higher values, so 1000 is for safety)
      */
     LockType: new DynamicIDGenerator('LockType',1000),
 
@@ -470,13 +470,13 @@ export const Ids = {
      */
     CameraShakes: new DynamicIDGenerator('CameraShakes',200),
 
-    /** 
+    /**
      * Starts at 100, highest base value is 92
      */
     SpellEffectCameraShakes: new DynamicIDGenerator('SpellEffectCameraShakes',100),
 
-    /** 
-     * Starts at 2000, highest base value is 1178 
+    /**
+     * Starts at 2000, highest base value is 1178
      */
     SpellChainEffects: new DynamicIDGenerator('SpellChainEffects',2000),
 
@@ -841,7 +841,7 @@ export const Ids = {
     TransportAnimation: new DynamicIDGenerator('TransportAnimation', 200000),
 
     /** Starts at 100, highest base value is 61 */
-    TransportPhysics: new DynamicIDGenerator('TransportPhysics', 100), 
+    TransportPhysics: new DynamicIDGenerator('TransportPhysics', 100),
 
     /** Starts at 2000, highest base value is 1608 */
     TransportRotation: new DynamicIDGenerator('TransportRotation', 2000),

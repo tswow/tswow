@@ -22,10 +22,10 @@ import { DBC } from "wotlkdata"
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { Ids } from "../Misc/Ids";
 
-export type FactionGroups = 
-    'PLAYERS' | 
-    'HORDE' | 
-    'ALLIANCE' | 
+export type FactionGroups =
+    'PLAYERS' |
+    'HORDE' |
+    'ALLIANCE' |
     'MONSTERS'
 
 export class FactionTemplate extends CellSystemTop {

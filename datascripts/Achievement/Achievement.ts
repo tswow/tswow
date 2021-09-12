@@ -33,7 +33,7 @@ export class Achievement extends MainEntity<AchievementRow> {
 }
 
 export const Achievements = {
-    create : (mod : string, id : string) => {     
+    create : (mod : string, id : string) => {
         return new Achievement(
             DBC.Achievement.add(Ids.Achievement.id(mod,id)))
     },
@@ -45,7 +45,7 @@ export const Achievements = {
     find: (query: AchievementQuery) => {
         return Achievements.filter(query)[0];
     },
-    
+
     load : (id : number) => {
         return new Achievement(DBC.Achievement.find({ID:id}))
     }

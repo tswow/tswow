@@ -73,7 +73,7 @@ export class Profession {
         if(index==1) {
             return this.findApprenticeSpell(profession);
         }
-        
+
         let apprentice = this.findApprenticeSpell(profession);
         if(!apprentice) {
             return undefined;
@@ -174,7 +174,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .filter({first_spell_id:fst.ID})
             .sort((a,b)=>a.rank.get()>b.rank.get() ? -1 : 1)
             .map(x=>x.rank.get())
-    
+
         if(ranks.length == 0) {
             throw new Error(`Profession ${this.owner.ID} does not have any correct spell ranks`);
         }
@@ -239,7 +239,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Attributes.isHiddenFromLog.mark()
             .Attributes.sheatheUnchanged.mark()
             .TargetType.UnitAlly.mark()
-            .SchoolMask.Physical.mark() 
+            .SchoolMask.Physical.mark()
             .Effects.modFree(effect=>{
                 effect.EffectType.setLearnSpell()
                     .LearntSpell.set(spell.ID)

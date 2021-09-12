@@ -29,7 +29,7 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
         return this.array.getIndex(this.index);
     }
 
-    objectify() { 
+    objectify() {
         return this.array.getIndex(this.index);
     }
 }

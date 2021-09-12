@@ -47,7 +47,7 @@ export class GemItem extends CellSystem<Gem> {
         if(items.length > 1) {
             throw new Error(`Multiple gem items for ${this.owner.ID}`)
         }
-        
+
         return items[0];
     }
 
@@ -96,20 +96,20 @@ export const GemRegistry = {
             .DisplayInfo.setRefID(60325)
             .GemProperties.setRefID(gemId)
             .Quality.setGreen()
-    
+
         let parent = parentId > 0 ? DBC.GemProperties.findById(parentId) : undefined;
         let enchantment = EnchantmentRegistry.create(
               mod
             , `${id}-enchantment`
-            , enchantmentId > 0 
-                ? enchantmentId 
+            , enchantmentId > 0
+                ? enchantmentId
                 : parent
                 ? parent.Enchant_Id.get()
                 : 0
             )
         enchantment.row.Src_ItemID.set(item.ID);
         let gem = (
-                parentId === 0 ? 
+                parentId === 0 ?
                       new Gem(DBC.GemProperties.add(gemId)).clear()
                     : new Gem(DBC.GemProperties.findById(parentId)
                         .clone(gemId))

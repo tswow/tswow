@@ -12,7 +12,7 @@ export class WorldMapTransform extends MainEntity<WorldMapTransformsRow> {
     get ID() { return this.row.ID.get(); }
     get SourceMap() { return new MapRef(this, this.row.MapID); }
     get DestinationMap() { return new MapRef(this, this.row.NewMapID); }
-    get Region() { 
+    get Region() {
         return new MinMax2DCell(
               this
             , this.row.RegionMinX

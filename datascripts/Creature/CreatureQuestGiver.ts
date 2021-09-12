@@ -31,7 +31,7 @@ export class CreatureQuestgiver extends CellSystem<CreatureTemplate> {
     }
 
     addEnder(questId: number) {
-        SQL.creature_questender.add(this.owner.ID,questId) 
+        SQL.creature_questender.add(this.owner.ID,questId)
         return this.owner;
     }
 }

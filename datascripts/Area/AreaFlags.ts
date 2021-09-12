@@ -18,7 +18,7 @@ import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { Area } from "./Area";
 
 export class AreaFlags extends MaskCell32<Area> {
-    
+
     /**
      * Whether there are breath particles in this area
      */
