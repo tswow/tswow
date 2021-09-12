@@ -29,6 +29,7 @@ import { SpellRadiusRef } from "./SpellRadius";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { SpellTargetPosition } from "./SpellTargetPosition";
 
 export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     get length() {
@@ -253,6 +254,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
     get ClassMask(): EffectClassSet<this> { return new EffectClassSet(this, this); }
+    get TargetPosition() { return new SpellTargetPosition(this, this.container); }
 
     objectifyPlain() {
         return super.objectify();

@@ -4,6 +4,7 @@ import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRow> {
     protected createSQL(): spell_custom_attrRow {
@@ -21,6 +22,7 @@ export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRo
 }
 
 export class SpellCustomAttr extends MaskCell32<Spell> {
+    @Transient
     private sql: SpellCustomAttrSQL;
     constructor(owner: Spell) {
         super(owner,
