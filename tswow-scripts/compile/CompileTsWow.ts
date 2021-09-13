@@ -14,31 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { setContext } from '../util/TSWoWContext';
-setContext('build');
+import { commands } from '../runtime/Commands';
+import { wfs } from '../util/FileSystem';
 import { BuildPaths, InstallPaths, ipaths } from '../util/Paths';
-import { build_path, install_path } from './BuildConfig';
-InstallPaths.setInstallBase(install_path());
-BuildPaths.setBuildBase(build_path());
+import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
-import { commands } from '../runtime/Commands';
-import { isWindows } from '../util/Platform';
-import { Config } from './Config';
-import { MPQBuilder } from './MPQBuilder';
-import { TrinityCore } from './TrinityCore';
-import { CMake } from './Cmake';
-import { OpenSSL } from './OpenSSL';
-import { MySQL } from './MySQL';
-import { Transpiler } from './Transpiler';
-import { Scripts } from './Scripts';
-import { Boost } from './Boost';
-import { Clean } from './Clean';
-import { BLPConverter } from './BLPConverter';
 import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
-import { wfs } from '../util/FileSystem';
+import { setContext } from '../util/TSWoWContext';
 import { SevenZipInstall } from './7Zip';
 import { ADTCreator } from './ADTCreator';
+import { BLPConverter } from './BLPConverter';
+import { Boost } from './Boost';
+import { build_path, install_path } from './BuildConfig';
+import { Clean } from './Clean';
+import { CMake } from './Cmake';
+import { Config } from './Config';
+import { MPQBuilder } from './MPQBuilder';
+import { MySQL } from './MySQL';
+import { OpenSSL } from './OpenSSL';
+import { Scripts } from './Scripts';
+import { Transpiler } from './Transpiler';
+import { TrinityCore } from './TrinityCore';
+setContext('build');
+InstallPaths.setInstallBase(install_path());
+BuildPaths.setBuildBase(build_path());
 
 let buildingScripts = false;
 

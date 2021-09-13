@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CPrim, Cell } from './Cell';
+import { Cell, CPrim } from './Cell';
 
 export class DummyCell<D extends CPrim, T> extends Cell<D, T> {
     protected value: D;

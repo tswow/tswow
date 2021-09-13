@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SqlTable } from './SQLTable';
-import { Row } from '../table/Row';
 import { CellSystem } from '../cell/systems/CellSystem';
+import { Row } from '../table/Row';
+import { SqlTable } from './SQLTable';
 
 /**
  * Represents a single row in the SQL table. If this row was loaded directly from the db,

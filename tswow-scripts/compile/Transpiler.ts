@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { mpath, wfs } from '../util/FileSystem';
-import path = require('path');
-import { getTSWatcher } from '../util/TSWatcher';
-import { wsys } from '../util/System';
 import { spaths } from '../util/Paths';
+import { wsys } from '../util/System';
+import { getTSWatcher } from '../util/TSWatcher';
+import path = require('path');
 
 export namespace Transpiler {
     export async function buildTranspiler(buildLine: string, installLine: string) {

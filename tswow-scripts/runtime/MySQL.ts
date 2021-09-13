@@ -15,16 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as mysql_lib from 'mysql2';
-import { wsys } from '../util/System';
-import { term } from '../util/Terminal';
-import { commands } from './Commands';
-import { isWindows } from '../util/Platform';
-import { Process } from '../util/Process';
+import { start } from 'repl';
 import { wfs, wfsa } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
+import { isWindows } from '../util/Platform';
+import { Process } from '../util/Process';
+import { wsys } from '../util/System';
+import { term } from '../util/Terminal';
 import { databaseSettings, DatabaseSettings, DatabaseType } from '../util/Yaml';
+import { commands } from './Commands';
 import { NodeConfig } from './NodeConfig';
-import { start } from 'repl';
 
 /**
  * Represents a single connection to a mysql server.

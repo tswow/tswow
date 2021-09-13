@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBCRow } from './DBCRow';
-import { Settings } from '../Settings';
-import { inMemory } from '../query/Query';
-import { Table } from '../table/Table';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
+import { inMemory } from '../query/Query';
+import { Settings } from '../Settings';
+import { Table } from '../table/Table';
 import { DBCBuffer } from './DBCBuffer';
+import { DBCRow } from './DBCRow';
 
 export type AnyFile = DBCFile<any, any, any>;
 

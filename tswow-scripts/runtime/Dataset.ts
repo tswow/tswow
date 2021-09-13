@@ -1,17 +1,17 @@
-import { YamlFile, DatabaseType } from "../util/Yaml";
+import { datasetYaml } from "../util/ConfigFiles";
+import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
-import { wfs, mpath } from "../util/FileSystem";
-import { Connection, mysql } from "./MySQL";
-import { MapData } from "./MapData";
+import { term } from "../util/Terminal";
+import { DatabaseType, YamlFile } from "../util/Yaml";
 import { bool } from "../wotlkdata/primitives";
-import { commands } from "./Commands";
+import { Build } from "./Build";
 import { Client } from "./Client";
+import { commands } from "./Commands";
+import { Identifiers } from "./Identifiers";
+import { MapData } from "./MapData";
+import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
-import { Identifiers } from "./Identifiers";
-import { term } from "../util/Terminal";
-import { Build } from "./Build";
-import { datasetYaml } from "../util/ConfigFiles";
 
 /**
  * Contains functions for managing TSWoW datasets

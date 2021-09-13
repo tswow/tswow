@@ -1,15 +1,15 @@
-import { MPQ } from "./MPQ";
-import { Datasets } from "./Dataset";
-import { Datascripts } from "./Datascripts";
-import { commands } from "./Commands";
-import { Modules } from "./Modules";
-import { ipaths } from "../util/Paths";
-import { wfs, mpath } from "../util/FileSystem";
-import { Addon } from "./Addon";
-import { Livescripts } from "./Livescripts";
-import { term } from "../util/Terminal";
 import { SevenZip } from "../util/7zip";
-import { findBuildType, BuildType } from "../util/BuildType";
+import { BuildType, findBuildType } from "../util/BuildType";
+import { mpath, wfs } from "../util/FileSystem";
+import { ipaths } from "../util/Paths";
+import { term } from "../util/Terminal";
+import { Addon } from "./Addon";
+import { commands } from "./Commands";
+import { Datascripts } from "./Datascripts";
+import { Datasets } from "./Dataset";
+import { Livescripts } from "./Livescripts";
+import { Modules } from "./Modules";
+import { MPQ } from "./MPQ";
 import { NodeConfig } from "./NodeConfig";
 
 export namespace Build {

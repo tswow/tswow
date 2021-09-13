@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { term } from '../util/Terminal';
-import { wfs } from '../util/FileSystem';
-import { install_path } from './BuildConfig';
-import { wsys } from '../util/System';
-import { ipaths, spaths } from '../util/Paths';
 import { datasetYaml, realmYaml } from '../util/ConfigFiles';
+import { wfs } from '../util/FileSystem';
+import { ipaths, spaths } from '../util/Paths';
+import { wsys } from '../util/System';
+import { term } from '../util/Terminal';
+import { install_path } from './BuildConfig';
 
 export namespace Config {
     export async function create() {

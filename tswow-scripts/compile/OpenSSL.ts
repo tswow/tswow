@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
-import { wsys } from '../util/System';
 import { bpaths } from '../util/Paths';
+import { wsys } from '../util/System';
 
 export namespace OpenSSL {
     export async function find() {

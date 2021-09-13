@@ -14,29 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { setContext } from '../util/TSWoWContext';
-setContext('install');
 import { InstallPaths } from '../util/Paths';
-InstallPaths.setInstallBase('./');
-import { mysql } from './MySQL';
 import { term } from '../util/Terminal';
-import { Modules } from './Modules';
-import { commands } from './Commands';
 import { Timer } from '../util/Timer';
-import { Client } from './Client';
-import { Test } from './Test';
-import { Assets } from './Assets';
-import { Clean } from './Clean';
+import { setContext } from '../util/TSWoWContext';
 import { Addon } from './Addon';
-import { Realm } from './Realm';
+import { Assets } from './Assets';
 import { AuthServer } from './AuthServer';
-import { Datasets } from './Dataset';
 import { Build } from './Build';
+import { Clean } from './Clean';
+import { Client } from './Client';
+import { commands } from './Commands';
 import { Datascripts } from './Datascripts';
-import { Snippets } from './Snippets';
-import { PositionsFile } from './PositionsFile';
-import { MapData } from './MapData';
+import { Datasets } from './Dataset';
 import { MapCreator } from './MapCreator';
+import { MapData } from './MapData';
+import { Modules } from './Modules';
+import { mysql } from './MySQL';
+import { PositionsFile } from './PositionsFile';
+import { Realm } from './Realm';
+import { Snippets } from './Snippets';
+import { Test } from './Test';
+setContext('install');
+InstallPaths.setInstallBase('./');
 
 export async function main() {
     try {

@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as mysql from 'mysql2';
 import * as fs from 'fs';
-import { SqlRow } from './SQLRow';
-import { getDatabase, Settings } from '../Settings';
-import { SqlTable } from './SQLTable';
+import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
+import { getDatabase, Settings } from '../Settings';
 import { SQLTables } from './SQLFiles';
+import { SqlRow } from './SQLRow';
+import { SqlTable } from './SQLTable';
 import deasync = require('deasync');
 
 export class Connection {

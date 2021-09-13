@@ -17,7 +17,6 @@
 import * as child_process from 'child_process';
 import * as readline from 'readline';
 import { wfs } from './FileSystem';
-import { term } from './Terminal';
 
 /**
  * Contains functions for running external programs and managing processes and working directories.

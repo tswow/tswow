@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { mpath, wfs } from '../util/FileSystem';
-import { ipaths, bpaths } from '../util/Paths';
+import { bpaths, ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 
 export namespace MySQL {

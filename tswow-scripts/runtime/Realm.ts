@@ -1,5 +1,6 @@
+import { BuildType, DEFAULT_BUILD_TYPE, findBuildType } from "../util/BuildType";
+import { realmYaml } from "../util/ConfigFiles";
 import { mpath, wfs } from "../util/FileSystem";
-import { Connection, mysql } from "./MySQL";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
@@ -7,10 +8,9 @@ import { term } from "../util/Terminal";
 import { yaml } from "../util/Yaml";
 import { commands } from "./Commands";
 import { Datasets } from "./Dataset";
-import { NodeConfig } from "./NodeConfig";
 import { Identifiers } from "./Identifiers";
-import { realmYaml } from "../util/ConfigFiles";
-import { BuildType, DEFAULT_BUILD_TYPE, findBuildType } from "../util/BuildType";
+import { Connection, mysql } from "./MySQL";
+import { NodeConfig } from "./NodeConfig";
 
 
 export namespace Realm {

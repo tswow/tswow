@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as fs from 'fs';
+import * as path from 'path';
+import { Settings } from '../Settings';
 import { LUAXMLFiles } from './LUAXMLFiles';
 import { TextFile } from './TextFile';
-import { Settings } from '../Settings';
-import * as path from 'path';
-import * as fs from 'fs';
 
 let files: {[key: string]: TextFile} = {};
 

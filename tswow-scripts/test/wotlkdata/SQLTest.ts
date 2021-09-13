@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from '../../wotlkdata/sql/SQLFiles';
+import * as assert from 'assert';
 import { gte } from '../../wotlkdata/query/Relations';
 import { SqlConnection } from '../../wotlkdata/sql/SQLConnection';
-import * as assert from 'assert';
+import { SQL } from '../../wotlkdata/sql/SQLFiles';
 import { Random } from './Random';
 
 describe('SQL', function() {

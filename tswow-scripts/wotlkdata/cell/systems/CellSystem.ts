@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Language, Languages } from '../../dbc/Localization';
+import { loc_constructor } from '../../primitives';
+import { Cell, CellWrapper, CPrim } from '../cells/Cell';
 import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
-import { CPrim, Cell, CellWrapper } from '../cells/Cell';
+import { MulticastCell } from '../cells/MulticastCell';
 import { CellWrapperExists, PendingCell } from '../cells/PendingCell';
+import { CommonStruct } from '../serialization/CommonStruct';
 import { Objects } from '../serialization/ObjectIteration';
 import { Transient } from '../serialization/Transient';
-import { MulticastCell } from '../cells/MulticastCell';
-import { loc_constructor } from '../../primitives';
-import { Language, Languages } from '../../dbc/Localization';
-import { CommonStruct } from '../serialization/CommonStruct';
 
 export class CellSystem<T> {
     static cloneFrom(tar: any, src: any) {

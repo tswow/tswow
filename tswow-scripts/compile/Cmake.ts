@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs, mpath } from '../util/FileSystem';
-import { ipaths, bpaths } from '../util/Paths';
+import { mpath, wfs } from '../util/FileSystem';
+import { bpaths, ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 
 export namespace CMake {

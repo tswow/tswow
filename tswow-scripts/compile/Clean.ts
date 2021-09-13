@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { wfs } from '../util/FileSystem';
-import { term } from '../util/Terminal';
-import { build_path, install_directory } from './BuildConfig';
 import { ipaths } from '../util/Paths';
+import { term } from '../util/Terminal';
 import { destroyAllWatchers } from '../util/TSWatcher';
+import { build_path, install_directory } from './BuildConfig';
 
 export namespace Clean {
     export async function cleanBuild() {

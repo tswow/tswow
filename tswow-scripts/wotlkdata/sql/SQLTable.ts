@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SqlRow } from './SQLRow';
-import { SqlConnection } from './SQLConnection';
 import { inMemory } from '../query/Query';
-import { Table } from '../table/Table';
 import { Row } from '../table/Row';
+import { Table } from '../table/Table';
+import { SqlConnection } from './SQLConnection';
+import { SqlRow } from './SQLRow';
 
 export type SqlRowCreator<C, Q, R extends SqlRow<C, Q>> = (table: SqlTable<C, Q, R>, obj: {[key: string]: any}) => R;
 

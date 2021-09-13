@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import ts from "typescript";
 import { Plugin } from "typescript-to-lua";
 import { GetId, IdPrivate } from "../wotlkdata/ids/Ids";
 import { registerMessage } from "./tswow-data-def";
-import * as path from 'path';
-import * as fs from 'fs'
 
 /**
  *  This file contains a plugin for typescript-to-lua

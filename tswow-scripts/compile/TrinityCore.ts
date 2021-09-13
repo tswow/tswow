@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { term } from '../util/Terminal';
-import { wfs, mpath } from '../util/FileSystem';
-import { isWindows } from '../util/Platform';
-import { wsys } from '../util/System';
-import { bpaths, ipaths, spaths, TDB_URL } from '../util/Paths';
 import * as fs from 'fs';
 import request from 'request';
 import progress from 'request-progress';
 import { SevenZip } from '../util/7zip';
 import { BuildType } from '../util/BuildType';
+import { mpath, wfs } from '../util/FileSystem';
+import { bpaths, ipaths, spaths, TDB_URL } from '../util/Paths';
+import { isWindows } from '../util/Platform';
+import { wsys } from '../util/System';
+import { term } from '../util/Terminal';
 
 export namespace TrinityCore {
     export function headers() {

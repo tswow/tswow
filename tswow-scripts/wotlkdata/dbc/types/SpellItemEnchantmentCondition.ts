@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { byte, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCByteArrayCell , DBCIntArrayCell} from '../DBCCell'
-import { int , byte} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCByteArrayCell, DBCIntArrayCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition

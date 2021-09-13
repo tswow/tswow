@@ -16,15 +16,15 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { SqlConnection } from './sql/SQLConnection';
-import { Settings } from './Settings';
-import { saveDbc } from './dbc/DBCSave';
-import { DBC as _DBC } from './dbc/DBCFiles';
-import { SQL as _SQL } from './sql/SQLFiles';
-import { IdPrivate, GetIdRange as _GetIdRange, GetId as _GetId } from './ids/Ids';
-import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
+import { DBC as _DBC } from './dbc/DBCFiles';
+import { saveDbc } from './dbc/DBCSave';
+import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from './ids/Ids';
+import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
+import { Settings } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
+import { SqlConnection } from './sql/SQLConnection';
+import { SQL as _SQL } from './sql/SQLFiles';
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 

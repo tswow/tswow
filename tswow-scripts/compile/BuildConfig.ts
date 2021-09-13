@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as jsyaml from 'js-yaml';
-import { wfs, mpath } from '../util/FileSystem';
 import { args } from '../util/Args';
+import { mpath, wfs } from '../util/FileSystem';
 import { spaths } from '../util/Paths';
 
 export const CMAKE_DOWNLOAD_URL = 'https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip';

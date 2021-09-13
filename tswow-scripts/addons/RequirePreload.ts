@@ -28,17 +28,17 @@
  */
 
 /* eslint-disable @typescript-eslint/no-object-literal-type-assertion */
-import * as ts from "typescript";
 import * as path from "path";
+import * as ts from "typescript";
 import {
-  Block,
-  createBlock,
-  createCallExpression,
-  createExpressionStatement,
-  createFunctionExpression,
-  createIdentifier,
-  createStringLiteral,
-  Plugin
+    Block,
+    createBlock,
+    createCallExpression,
+    createExpressionStatement,
+    createFunctionExpression,
+    createIdentifier,
+    createStringLiteral,
+    Plugin
 } from "typescript-to-lua";
 
 export const RequirePreload: Plugin = {

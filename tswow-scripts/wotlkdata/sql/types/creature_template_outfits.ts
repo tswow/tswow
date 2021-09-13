@@ -1,9 +1,9 @@
-import {int,tinyint,text } from "../../primitives"
+import { int, text, tinyint } from "../../primitives"
+import { Relation } from "../../query/Relations"
+import { PrimaryKey } from "../../table/PrimaryKey"
+import { SQLCell, SQLCellReadOnly } from "../SQLCell"
 import { SqlRow } from "../SQLRow"
 import { SqlTable } from "../SQLTable"
-import { Relation } from "../../query/Relations"
-import { SQLCell, SQLCellReadOnly } from "../SQLCell"
-import { PrimaryKey } from "../../table/PrimaryKey"
 
 export type creature_template_outfitsConstructor = {
     entry? : int,

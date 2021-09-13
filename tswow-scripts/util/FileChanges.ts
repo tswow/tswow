@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from './FileSystem';
 import * as fs from 'fs';
+import { wfs } from './FileSystem';
 import { ipaths } from './Paths';
 
 /** Contains functions for tracking changes on the file system. */

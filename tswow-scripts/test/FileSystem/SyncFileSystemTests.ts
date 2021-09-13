@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as fs from 'fs';
 import * as assert from 'assert';
-import { wfs, mpath } from '../../util/FileSystem';
 import { sleep } from 'deasync';
+import * as fs from 'fs';
+import { mpath, wfs } from '../../util/FileSystem';
 
 const tempdir = './bin/tmpfs';
 

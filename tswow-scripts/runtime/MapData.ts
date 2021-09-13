@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs, mpath } from '../util/FileSystem';
-import { wsys } from '../util/System';
-import { ipaths } from '../util/Paths';
-import { Datasets } from './Dataset';
 import { BuildType, findBuildType } from '../util/BuildType';
-import { NodeConfig } from './NodeConfig';
-import { commands } from './Commands';
+import { mpath, wfs } from '../util/FileSystem';
+import { ipaths } from '../util/Paths';
+import { wsys } from '../util/System';
 import { util } from '../util/Util';
+import { commands } from './Commands';
+import { Datasets } from './Dataset';
+import { NodeConfig } from './NodeConfig';
 
 /**
  * Contains functions for extracting map data from the client that TrinityCore uses for its AI.

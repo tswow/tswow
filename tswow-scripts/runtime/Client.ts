@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { isWindows } from '../util/Platform';
 import { mpath, wfs } from '../util/FileSystem';
-import { Process } from '../util/Process';
 import { ipaths } from '../util/Paths';
-import { Datasets } from './Dataset';
-import { commands } from './Commands';
+import { isWindows } from '../util/Platform';
+import { Process } from '../util/Process';
 import { term } from '../util/Terminal';
 import { util } from '../util/Util';
+import { commands } from './Commands';
+import { Datasets } from './Dataset';
 import { NodeConfig } from './NodeConfig';
 
 /**

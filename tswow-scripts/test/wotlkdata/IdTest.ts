@@ -16,8 +16,8 @@
  */
 import * as assert from 'assert';
 import * as fs from 'fs';
+import { GetIdRange, IdPrivate, IdRange } from '../../wotlkdata/ids/Ids';
 import { Random } from './Random';
-import { IdPrivate, GetIdRange, IdRange } from '../../wotlkdata/ids/Ids';
 
 const file = './testids.txt';
 

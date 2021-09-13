@@ -17,8 +17,8 @@
 import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
-import { commands } from "./Commands";
 import { term } from "../util/Terminal";
+import { commands } from "./Commands";
 import { Datasets } from "./Dataset";
 import { Modules } from "./Modules";
 

@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellRoot } from './CellRoot';
 import { CPrim } from './Cell';
+import { CellRoot } from './CellRoot';
 
 export abstract class CellReadOnly<D extends CPrim, T> extends CellRoot<T> {
     static make<D extends CPrim, T>(owner: T, getter: () => D, setter: (value: D) => T) {

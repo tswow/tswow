@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { mpath, wfs } from './FileSystem';
+import { ipaths } from './Paths';
 import { Process } from './Process';
 import { wsys } from './System';
 import { term } from './Terminal';
-import { ipaths } from './Paths';
 
 /**
  * Wrapper around a "tsc --w" process

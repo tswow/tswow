@@ -14,19 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs, mpath } from '../util/FileSystem';
-import { term } from '../util/Terminal';
-import { commands } from './Commands';
+import { BUILD_TYPES } from '../util/BuildType';
+import { mpath, wfs } from '../util/FileSystem';
+import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
+import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
 import { destroyTSWatcher, getTSWatcher } from '../util/TSWatcher';
-import { ipaths } from '../util/Paths';
-import { Identifiers } from './Identifiers';
-import { Livescripts } from './Livescripts';
 import { Addon } from './Addon';
-import { BUILD_TYPES } from '../util/BuildType';
+import { commands } from './Commands';
 import { Datasets } from './Dataset';
-import { Client } from './Client';
+import { Identifiers } from './Identifiers';
 
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.

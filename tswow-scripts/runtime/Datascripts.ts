@@ -1,12 +1,12 @@
-import { Modules } from "./Modules";
-import { compileAll } from "../util/TSWatcher";
-import { term } from "../util/Terminal";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
-import { Datasets } from "./Dataset";
 import { wsys } from "../util/System";
-import { commands } from "./Commands";
+import { term } from "../util/Terminal";
+import { compileAll } from "../util/TSWatcher";
 import { ChildProcessSettings } from "./ChildProcessSettings";
+import { commands } from "./Commands";
+import { Datasets } from "./Dataset";
+import { Modules } from "./Modules";
 
 export namespace Datascripts {
     /**

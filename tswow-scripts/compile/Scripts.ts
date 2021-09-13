@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath, wfs, rpath } from '../util/FileSystem';
+import { mpath, rpath, wfs } from '../util/FileSystem';
+import { ipaths, spaths } from '../util/Paths';
 import { getTSWatcher } from '../util/TSWatcher';
-import { spaths, ipaths } from '../util/Paths';
 
 export namespace Scripts {
     export async function build(buildLine: string, installLine: string) {

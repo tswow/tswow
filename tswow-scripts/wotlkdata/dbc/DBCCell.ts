@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBCBuffer } from './DBCBuffer';
-import { loc_constructor, iterLocConstructor } from '../primitives';
-import { Language } from './Localization';
 import { Cell, CPrim } from '../cell/cells/Cell';
-import { LocSystem } from '../cell/systems/CellSystem';
-import { PendingCell } from '../cell/cells/PendingCell';
 import { CellArray } from '../cell/cells/CellArray';
 import { CellReadOnly } from '../cell/cells/CellReadOnly';
+import { PendingCell } from '../cell/cells/PendingCell';
+import { LocSystem } from '../cell/systems/CellSystem';
+import { iterLocConstructor, loc_constructor } from '../primitives';
+import { DBCBuffer } from './DBCBuffer';
+import { Language } from './Localization';
 
 export abstract class DBCCell<D extends CPrim, T> extends Cell<D, T> {
     protected buffer: DBCBuffer;

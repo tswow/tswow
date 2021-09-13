@@ -1,6 +1,6 @@
-import { ipaths } from "../util/Paths";
-import { YamlFile, DatabaseType, databaseSettings } from "../util/Yaml";
 import { DEFAULT_BUILD_TYPE } from "../util/BuildType";
+import { ipaths } from "../util/Paths";
+import { databaseSettings, DatabaseType, YamlFile } from "../util/Yaml";
 
 export class NodeConfiguration extends YamlFile {
     constructor() {

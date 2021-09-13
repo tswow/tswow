@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { wfs } from '../util/FileSystem';
+import { ipaths } from '../util/Paths';
 import { term } from '../util/Terminal';
 import yaml = require('js-yaml');
-import { ipaths } from '../util/Paths';
 
 
 /**

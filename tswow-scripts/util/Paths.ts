@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { BuildType, BUILD_TYPES } from './BuildType';
 import { mpath, wfs } from './FileSystem';
 import { isWindows } from './Platform';
 
@@ -964,5 +965,4 @@ export class SourcePaths {
 
 export const spaths = new SourcePaths();
 
-import { Datasets } from '../runtime/Dataset';
-import { BuildType, BUILD_TYPES } from './BuildType';
+

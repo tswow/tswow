@@ -1,13 +1,13 @@
+import { BuildType, findBuildType } from "../util/BuildType";
 import { mpath, wfs } from "../util/FileSystem";
-import { Connection, mysql } from "./MySQL";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
 import { commands } from "./Commands";
-import { Realm } from "./Realm";
-import { NodeConfig } from "./NodeConfig";
 import { Datasets } from "./Dataset";
-import { BuildType, findBuildType } from "../util/BuildType";
+import { Connection, mysql } from "./MySQL";
+import { NodeConfig } from "./NodeConfig";
+import { Realm } from "./Realm";
 
 export namespace AuthServer {
     const authserver = new Process().showOutput(true);

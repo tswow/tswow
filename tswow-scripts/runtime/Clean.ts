@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs, mpath } from "../util/FileSystem";
-import { mysql } from "./MySQL";
+import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
+import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
-import { data_tsconfig, Modules } from "./Modules";
 import { Datasets } from "./Dataset";
 import { Identifiers } from "./Identifiers";
-import { isWindows } from "../util/Platform";
+import { data_tsconfig, Modules } from "./Modules";
+import { mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 
 /**

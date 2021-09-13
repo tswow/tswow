@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { FileChanges } from '../util/FileChanges';
-import { mpath, wfs } from '../util/FileSystem';
+import { wfs } from '../util/FileSystem';
+import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { commands } from './Commands';
 import { Modules } from './Modules';
-import { ipaths } from '../util/Paths';
 
 /**
  * Contains functions for MPQ building

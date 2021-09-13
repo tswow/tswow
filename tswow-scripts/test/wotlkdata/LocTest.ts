@@ -14,8 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { loc } from '../../wotlkdata/primitives';
-import * as assert from 'assert';
 
 describe('Loc', function() {
     describe('read', function() {

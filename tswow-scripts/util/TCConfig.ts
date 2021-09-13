@@ -16,12 +16,12 @@
  */
 
 import path from "path";
+import { BuildType } from "./BuildType";
 import { mpath, wfs } from "./FileSystem";
 import { ipaths } from "./Paths";
 import { isWindows } from "./Platform";
 import { util } from "./Util";
 import { databaseSettings, yaml } from "./Yaml";
-import { BuildType } from "./BuildType";
 
 /** Settings for connecting to an TrinityCore database. */
 export interface DatabaseSettings {

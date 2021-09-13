@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Settings } from '../Settings';
+import { DBCFile } from './DBCFile';
 import { DBCFiles } from './DBCFiles';
 import path = require('path');
-import { Settings } from '../Settings';
 import fs = require('fs');
-import { DBCFile } from './DBCFile';
 
 export function saveDbc() {
     if (Settings.READONLY) { return; }

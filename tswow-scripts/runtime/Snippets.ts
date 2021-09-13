@@ -1,8 +1,8 @@
 import { wfs } from "../util/FileSystem";
-import { Modules } from "./Modules";
 import { ipaths } from "../util/Paths";
 import { Build } from "./Build";
 import { Clean } from "./Clean";
+import { Modules } from "./Modules";
 
 export namespace Snippets {
     enum Mode {

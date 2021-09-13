@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Table } from './Table';
-import { PKFIELDS_FIELD } from './PrimaryKey';
 import { CellSystem, CellSystemTop } from '../cell/systems/CellSystem';
+import { PKFIELDS_FIELD } from './PrimaryKey';
+import { Table } from './Table';
 
 export abstract class Row<C, Q> extends CellSystemTop {
     constructor(table: Table<C, Q, Row<C, Q>>) {

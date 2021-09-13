@@ -1,6 +1,6 @@
+import * as clipboardy from 'clipboardy'
 import { wfs } from "../util/FileSystem"
 import { ipaths } from "../util/Paths"
-import * as clipboardy from 'clipboardy'
 import { NodeConfig } from "./NodeConfig"
 
 export namespace PositionsFile {

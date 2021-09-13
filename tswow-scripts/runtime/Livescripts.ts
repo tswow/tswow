@@ -1,13 +1,12 @@
-import { isWindows } from "../util/Platform";
-import { Modules } from "./Modules";
-import { ipaths } from "../util/Paths";
+import { BuildType } from "../util/BuildType";
 import { wfs } from "../util/FileSystem";
-import { Timer } from "../util/Timer";
+import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { Datasets } from "./Dataset";
-import { BuildType } from "../util/BuildType";
+import { Timer } from "../util/Timer";
 import { commands } from "./Commands";
+import { Datasets } from "./Dataset";
+import { Modules } from "./Modules";
 
 export namespace Livescripts {
     /**

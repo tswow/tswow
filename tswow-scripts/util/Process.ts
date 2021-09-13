@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wsys } from './System';
 import { ChildProcessWithoutNullStreams } from 'child_process';
-import { term } from './Terminal';
 import { isWindows } from './Platform';
+import { wsys } from './System';
+import { term } from './Terminal';
 
 const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
 function cleanup() {

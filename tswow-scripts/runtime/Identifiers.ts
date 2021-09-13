@@ -1,6 +1,6 @@
+import { BUILD_TYPES } from "../util/BuildType";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
-import { BUILD_TYPES } from "../util/BuildType";
 
 /**
  * Used to track what type an identifier refers to

@@ -16,8 +16,8 @@
  */
 import * as assert from 'assert';
 import { DBC } from '../../wotlkdata/dbc/DBCFiles';
-import {queryToSql, inMemory, qall, qany} from '../../wotlkdata/query/Query';
-import { streq, strneq, numeq, numneq, eq, neq, lte, lt, gt, gte, any, all, includes } from '../../wotlkdata/query/Relations';
+import { inMemory, qall, qany, queryToSql } from '../../wotlkdata/query/Query';
+import { all, any, eq, gt, gte, includes, lt, lte, neq, numeq, numneq, streq, strneq } from '../../wotlkdata/query/Relations';
 
 describe('Query', function() {
     describe('AllQuery', function() {
