@@ -1312,9 +1312,15 @@ void TSCreature::SetOutfit(TSOutfit const& outfit)
 
 void TSCreature::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj)
 {
+    if (!creature->IsAIEnabled()) return;
     auto ai = creature->AI();
     if (SmartAI * sai = dynamic_cast<SmartAI*>(ai))
     {
         sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
     }
+}
+
+bool TSCreature::IsAIEnabled()
+{
+    return creature->IsAIEnabled();
 }

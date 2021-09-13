@@ -338,8 +338,14 @@ TSLoot TSGameObject::GetLoot()
 void TSGameObject::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj)
 {
     auto ai = go->AI();
+    if (!ai) return;
     if (SmartAI* sai = dynamic_cast<SmartAI*>(ai))
     {
         sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
     }
+}
+
+bool TSGameObject::IsAIEnabled()
+{
+    return go->AI();
 }

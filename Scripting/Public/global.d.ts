@@ -2207,7 +2207,10 @@ declare interface TSOutfit {
 }
 
 declare interface TSCreature extends TSUnit {
+    IsAIEnabled(): boolean
+
     GetLoot(): TSLoot;
+
     GetTemplate(): TSCreatureTemplate;
 
     FireSmartEvent(id: uint32, unit: TSUnit, var0: uint32, var1: uint32, bvar: bool, spell: TSSpellInfo, obj: TSGameObject);
@@ -4246,6 +4249,8 @@ declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider
 }
 
 declare interface TSGameObject extends TSWorldObject {
+    IsAIEnabled(): bool
+
     IsNull() : bool
 
     GetLoot(): TSLoot;
