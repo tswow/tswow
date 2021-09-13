@@ -38,6 +38,7 @@ export function cleanSQL() {
     col('game_event_quest_condition');
     col('holiday_dates');
     col('spell_custom_attr');
+    col('spell_proc')
     q('DELETE FROM spell_target_position WHERE VerifiedBuild = 17688;');
     q('DELETE FROM spell_bonus_data WHERE comments = "tswow";');
     q('DELETE FROM smart_scripts WHERE comment = "tswow";');
