@@ -24,6 +24,7 @@
 #include "TSWorldObject.h"
 #include "TSIncludes.h"
 #include "TSGameObject.h"
+#include "SmartAI.h"
 
 
 TSGameObject::TSGameObject(GameObject *go) : TSWorldObject(go)
@@ -332,4 +333,13 @@ void TSGameObject::SetRespawnTime(int32 respawn)
 TSLoot TSGameObject::GetLoot()
 {
     return TSLoot(&go->loot);
+}
+
+void TSGameObject::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj)
+{
+    auto ai = go->AI();
+    if (SmartAI* sai = dynamic_cast<SmartAI*>(ai))
+    {
+        sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
+    }
 }

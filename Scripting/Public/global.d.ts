@@ -1,17 +1,17 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 type int = number;
@@ -103,7 +103,7 @@ declare interface TSMutex {
     try_lock(): bool;
 }
 
-// should not be interface, 
+// should not be interface,
 // will make it look like {x:0,y:0,z:0,o:0,map:0} is legal
 declare class TSPosition {
     x: float;
@@ -172,6 +172,7 @@ declare interface TSAchievementCriteriaEntry
 declare interface TSPlayer extends TSUnit {
     LearnClassSpells(trainer: boolean, quests: boolean);
     SendData(data: any)
+    SendUpdateWorldState(worldState: uint32, value: uint32);
     SetBankBagSlotCount(count: uint8)
     AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32, propertyId?: int32)
 
@@ -182,13 +183,13 @@ declare interface TSPlayer extends TSUnit {
 
     /**
      * Immediately sends a mail to this player
-     * @param senderType 
-     * @param from 
-     * @param subject 
-     * @param body 
-     * @param money 
-     * @param cod 
-     * @param items 
+     * @param senderType
+     * @param from
+     * @param subject
+     * @param body
+     * @param money
+     * @param cod
+     * @param items
      */
 	SendMail(senderType: uint8, from: uint64, subject: string, body: string, money? : uint32, cod? : uint32, items? : TSArray<TSItem>);
 
@@ -1275,21 +1276,21 @@ declare interface TSPlayer extends TSUnit {
      * @param [Number] entry
      */
     SendCreatureQueryPacket(entry : number) : void
-	
+
     /**
      * Sends a [GameObject] cache packet to the [Player] from the [GameObject] entry specified
      *
      * @param [Number] entry
      */
     SendGameObjectQueryPacket(entry : number) : void
-    
+
     /**
      * Sends a [Item] cache packet to the [Player] from the [Item] entry specified
      *
      * @param [Number] entry
      */
     SendItemQueryPacket(entry : number) : void
-    
+
     /**
      * Sends a spirit resurrection request to the [Player]
      */
@@ -1365,7 +1366,7 @@ declare interface TSPlayer extends TSUnit {
     LeaveBattleground(teleToEntryPoint : bool) : void
 
     /**
-     * Repairs [Item] at specified position. Returns total repair cost 
+     * Repairs [Item] at specified position. Returns total repair cost
      *
      * @param uint16 position
      * @param bool cost = true
@@ -1640,7 +1641,7 @@ declare interface TSPlayer extends TSUnit {
 
     /**
      * Returns the average item level of the items equipped by this player
-     * 
+     *
      * @note This check takes into account the quality of items,
      * and items below epic quality loses 13 levels to a lowest
      * effective itemlevel of 0
@@ -1810,9 +1811,9 @@ declare interface TSPlayer extends TSUnit {
     /**
      * Adds a new item to the gossip menu shown to the [Player] on next call to [Player:GossipSendMenu].
      *
-     * sender and intid are numbers which are passed directly to the gossip selection handler. Internally they are partly used for the database gossip handling.  
-     * code specifies whether to show a box to insert text to. The player inserted text is passed to the gossip selection handler.  
-     * money specifies an amount of money the player needs to have to click the option. An error message is shown if the player doesn't have enough money.  
+     * sender and intid are numbers which are passed directly to the gossip selection handler. Internally they are partly used for the database gossip handling.
+     * code specifies whether to show a box to insert text to. The player inserted text is passed to the gossip selection handler.
+     * money specifies an amount of money the player needs to have to click the option. An error message is shown if the player doesn't have enough money.
      * Note that the money amount is only checked client side and is not removed from the player either. You will need to check again in your code before taking action.
      *
      * See also: [Player:GossipSendMenu], [Player:GossipAddQuests], [Player:GossipComplete], [Player:GossipClearMenu]
@@ -1854,7 +1855,7 @@ declare interface TSPlayer extends TSUnit {
      * Clears the [Player]s current gossip item list.
      *
      * See also: [Player:GossipMenuAddItem], [Player:GossipSendMenu], [Player:GossipAddQuests], [Player:GossipComplete]
-     * 
+     *
      *     Note: This is needed when you show a gossip menu without using gossip hello or select hooks which do this automatically.
      *     Usually this is needed when using [Player] is the sender of a Gossip Menu.
      */
@@ -1934,17 +1935,17 @@ declare interface TSPlayer extends TSUnit {
      *
      * @param uint32 MovieId : entry of a movie
      */
-    SendMovieStart(MovieId : uint32) : void    
+    SendMovieStart(MovieId : uint32) : void
 
     /**
      * Sends an addon message that can be longer than the standard
-     * 255 bytes. 
-     * 
+     * 255 bytes.
+     *
      * Maximum size can be configured in worldserver.conf under
      * TSWoW.MessageBufferBytes
-     * 
-     * @param channel 
-     * @param message 
+     *
+     * @param channel
+     * @param message
      */
     SendLongAddonMessage(channel: uint8, message: string): void;
 
@@ -2006,7 +2007,7 @@ declare interface TSCorpse extends TSWorldObject {
     /**
      * Saves the [Corpse] to the database.
      */
-    SaveToDB() : void    
+    SaveToDB() : void
 }
 
 declare interface TSEntityProvider {
@@ -2026,7 +2027,7 @@ declare interface TSEntityProvider {
     GetFloat(key: string, def?: float): double;
     SetString(key: string, value: string): string;
     HasString(key: string): boolean;
-    GetString(key: string, def?: string): string;    
+    GetString(key: string, def?: string): string;
 
     SetNumber(key: string, value: double): void;
     GetNumber(key: string, def?: double): double;
@@ -2171,7 +2172,7 @@ declare interface TSCreatureTemplate extends TSEntityProvider {
     GetIsGroundAllowed(): bool;
     GetIsSwimAllowed(): bool;
     GetIsFlightAllowed(): bool;
-    GetIsRooted(): bool; 
+    GetIsRooted(): bool;
 }
 
 declare interface TSOutfit {
@@ -2208,6 +2209,8 @@ declare interface TSOutfit {
 declare interface TSCreature extends TSUnit {
     GetLoot(): TSLoot;
     GetTemplate(): TSCreatureTemplate;
+
+    FireSmartEvent(id: uint32, unit: TSUnit, var0: uint32, var1: uint32, bvar: bool, spell: TSSpellInfo, obj: TSGameObject);
 
     IsNull() : bool
 
@@ -2836,7 +2839,7 @@ declare interface TSAura {
 
     /**
      * Returns all active applications of this aura.
-     * 
+     *
      * @return [TSAuraApplication[]] applications
      */
     GetApplications(): TSArray<TSAuraApplication>
@@ -2932,7 +2935,7 @@ declare interface TSAura {
     /**
      * Remove this [Aura] from the [Unit] it is applied to.
      */
-    Remove() : void    
+    Remove() : void
 }
 
 declare interface TSAuraEffect {
@@ -3089,7 +3092,7 @@ declare interface TSGuild {
      * @param [Player] player : the [Player] to be promoted/demoted
      * @param uint8 rankId : the rank ID
      */
-    SetMemberRank(player : TSPlayer,newRank : uint8) : void    
+    SetMemberRank(player : TSPlayer,newRank : uint8) : void
 }
 
 declare interface TSGroup {
@@ -3269,7 +3272,7 @@ declare interface TSGroup {
      * @param uint64 target : GUID of the icon target, 0 is to clear the icon
      * @param uint64 setter : GUID of the icon setter
      */
-    SetTargetIcon(icon : uint8,target : uint64,setter : uint64) : void    
+    SetTargetIcon(icon : uint8,target : uint64,setter : uint64) : void
 }
 
 declare interface TSWorldPacket {
@@ -3436,7 +3439,7 @@ declare interface TSWorldPacket {
      *
      * @param double value : the double value to be written to the [WorldPacket]
      */
-    WriteDouble(_val : double) : void    
+    WriteDouble(_val : double) : void
 }
 
 declare interface TSQuest {
@@ -3548,7 +3551,7 @@ declare interface TSQuest {
      *
      * @return uint32 type
      */
-    GetType() : uint32    
+    GetType() : uint32
 }
 
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
@@ -3556,7 +3559,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
 
     GetUnits(): TSArray<TSWorldObject>
     /**
-     * @param entry only return gameobjects of this entry. 
+     * @param entry only return gameobjects of this entry.
      * Leave out to select all gameobjects.
      */
     GetGameObjects(entry?: uint32): TSArray<TSGameObject>
@@ -3565,7 +3568,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     SpawnGameObject(entry: uint32, x: float, y: float, z: float, o: float, despawnTimer?: uint32, phase?: uint32): TSGameObject
 
     /**
-     * @param entry only return creatures of this entry. 
+     * @param entry only return creatures of this entry.
      * Leave out to select all creatures.
      */
     GetCreatures(entry?: uint32): TSArray<TSCreature>
@@ -4064,7 +4067,7 @@ declare interface TSItem extends TSObject {
     /**
      * Saves the [Item] to the database
      */
-    SaveToDB() : void    
+    SaveToDB() : void
 }
 
 declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityProvider<TSBattlegroundPlayer>{
@@ -4196,7 +4199,7 @@ declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider
      *
      * @return [BattleGroundStatus] status
      */
-    GetStatus() : uint32    
+    GetStatus() : uint32
 
     IsRandom(): bool;
     GetPlayers(): TSArray<TSBattlegroundPlayer>;
@@ -4246,6 +4249,8 @@ declare interface TSGameObject extends TSWorldObject {
     IsNull() : bool
 
     GetLoot(): TSLoot;
+
+    FireSmartEvent(id: uint32, unit: TSUnit, var0: uint32, var1: uint32, bvar: bool, spell: TSSpellInfo, obj: TSGameObject);
 
     /**
      * Returns 'true' if the [GameObject] can give the specified [Quest]
@@ -4410,13 +4415,13 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
      */
-    SetRespawnTime(respawn : int32) : void    
+    SetRespawnTime(respawn : int32) : void
 }
 
 declare interface TSSpell {
 	//soonTM
 	GetSpellInfo() : TSSpellInfo
-	
+
     IsNull() : bool
 
     /**
@@ -4506,7 +4511,7 @@ declare interface TSSpell {
     /**
      * Finishes the [Spell].
      */
-    Finish() : void    
+    Finish() : void
 }
 
 declare interface TSVehicle {
@@ -4555,7 +4560,7 @@ declare interface TSVehicle {
      *
      * @param [Unit] passenger
      */
-    RemovePassenger(passenger : TSUnit) : void    
+    RemovePassenger(passenger : TSUnit) : void
 }
 
 declare interface TSCollisionEntry {
@@ -4939,7 +4944,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 sound : entry of a sound
      * @param [Player] player = nil : [Player] to play the sound to
      */
-    PlayDistanceSound(soundId : uint32,player : TSPlayer) : void    
+    PlayDistanceSound(soundId : uint32,player : TSPlayer) : void
 
     GetGameObject(guid: uint64): TSGameObject
     GetCorpse(guid: uint64): TSCorpse
@@ -5038,12 +5043,12 @@ declare interface TSObject extends TSEntityProvider {
 
     /**
      * Returns the GUID of the [Object].
-     * 
+     *
      * GUID is an unique identifier for the object.
-     * 
+     *
      * However on MaNGOS and cMangos creatures and gameobjects inside different maps can share
      * the same GUID but not on the same map.
-     * 
+     *
      * On TrinityCore this value is unique across all maps
      *
      * @return uint64 guid
@@ -5052,10 +5057,10 @@ declare interface TSObject extends TSEntityProvider {
 
     /**
      * Returns the low-part of the [Object]'s GUID.
-     * 
+     *
      * On TrinityCore all low GUIDs are different for all objects of the same type.
      * For example creatures in instances are assigned new GUIDs when the Map is created.
-     * 
+     *
      * On MaNGOS and cMaNGOS low GUIDs are unique only on the same map.
      * For example creatures in instances use the same low GUID assigned for that spawn in the database.
      * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]
@@ -5187,7 +5192,7 @@ declare interface TSObject extends TSEntityProvider {
     ToGameObject() : TSGameObject
     ToUnit() : TSUnit
     ToCreature() : TSCreature
-    ToPlayer() : TSPlayer    
+    ToPlayer() : TSPlayer
 }
 
 declare interface TSUnit extends TSWorldObject {
@@ -5866,7 +5871,7 @@ declare interface TSUnit extends TSWorldObject {
      *     WAYPOINT_MOTION_TYPE            = 2,
      *     MAX_DB_MOTION_TYPE              = 3,
      *     ANIMAL_RANDOM_MOTION_TYPE       = 3, // TC
-     * 
+     *
      *     CONFUSED_MOTION_TYPE            = 4,
      *     CHASE_MOTION_TYPE               = 5,
      *     HOME_MOTION_TYPE                = 6,
@@ -5875,7 +5880,7 @@ declare interface TSUnit extends TSWorldObject {
      *     FLEEING_MOTION_TYPE             = 9,
      *     DISTRACT_MOTION_TYPE            = 10,
      *     ASSISTANCE_MOTION_TYPE          = 11,
-     *     ASSISTANCE_DISTRACT_MOTION_TYPE = 12,          
+     *     ASSISTANCE_DISTRACT_MOTION_TYPE = 12,
      *     TIMED_FLEEING_MOTION_TYPE       = 13,
      *     FOLLOW_MOTION_TYPE              = 14,
      *     EFFECT_MOTION_TYPE              = 15, // mangos
@@ -6580,7 +6585,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
     IsPotion(): bool
     IsWeaponVellum(): bool
     IsArmorVellum(): bool
-    IsConjuredConsumable(): bool 
+    IsConjuredConsumable(): bool
     HasSignature(): bool;
 }
 
@@ -6657,6 +6662,80 @@ declare interface TSSpellCastTargets {
     GetUnit() : TSUnit;
 }
 
+declare interface TSCondition {
+    GetSourceType(): uint32;
+    GetSourceGroup(): uint32;
+    GetSouceEntry(): uint32;
+    GetSourceID(): uint32;
+    GetElseGroup(): uint32;
+    GetConditionType(): uint32;
+    GetConditionValue1(): uint32;
+    GetConditionValue2(): uint32;
+    GetConditionValue3(): uint32;
+    GetErrorType(): uint32;
+    GetErrorTextID(): uint32;
+    GetReferenceID(): uint32;
+    GetScriptID(): uint32;
+    GetConditionTarget(): uint8
+    IsNegativeCondition(): bool
+    ToString(ext?: bool): TSString
+    IsNull(): bool
+}
+
+declare interface TSConditionSourceInfo {
+    GetTarget(index: uint32): TSWorldObject;
+    GetLastFailedCondition(): TSCondition;
+}
+
+declare interface TSSmartScriptValues {
+    GetEntryOrGUID(): int32;
+    GetSourceType(): uint32;
+    GetEventID(): uint32;
+    GetLink(): uint32;
+    GetEventPhaseMask(): uint32;
+    GetEventChance(): uint32;
+    GetEventFlags(): uint32;
+
+    GetActionArgument1(): uint32;
+    GetActionArgument2(): uint32;
+    GetActionArgument3(): uint32;
+    GetActionArgument4(): uint32;
+    GetActionArgument5(): uint32;
+    GetActionArgument6(): uint32;
+
+    GetEventArgument1(): uint32;
+    GetEventArgument2(): uint32;
+    GetEventArgument3(): uint32;
+    GetEventArgument4(): uint32;
+    GetEventArgument5(): uint32;
+
+    GetTargetParam1(): uint32;
+    GetTargetParam2(): uint32;
+    GetTargetParam3(): uint32;
+    GetTargetParam4(): uint32;
+
+    GetTargetX(): float;
+    GetTargetY(): float;
+    GetTargetZ(): float;
+
+    GetTimer(): uint32;
+    GetPriority(): uint32;
+
+    GetLastInvoker(): TSUnit;
+    GetTargets(): TSArray<TSWorldObject>;
+    StoreTargetList(objects: TSArray<TSWorldObject>, id: uint32): void;
+    GetTargetList(id: uint32, ref: TSWorldObject): TSArray<TSWorldObject>;
+    StoreCounter(id: uint32, value: uint32, reset: uint32): void;
+    GetCounterValue(id: uint32): uint32;
+    GetUnitArg(): TSUnit;
+    GetUIntArg1(): uint32;
+    GetUIntArg2(): uint32;
+    GetBoolArg(): bool;
+    GetSpellArg(): TSSpellInfo;
+    GetGameObjectArg(): TSGameObject;
+    GetSelf(): TSWorldObject;
+}
+
 declare interface TSAssert {
     isTrue(expression: boolean, reason?: string): void;
     isFalse(expression: boolean, reason?: string): void;
@@ -6668,19 +6747,19 @@ declare interface TSAssert {
 declare interface TSManualStepBuilder {
     /**
      * Sets the displayed description of this step
-     * @param description 
+     * @param description
      */
     description(description: string): TSManualStepBuilder;
 
     /**
      * Sets a function to call when the player starts this step
-     * @param callback 
+     * @param callback
      */
     setup(callback: (player: TSPlayer)=>void);
 
     /**
      * Sets a function to call when the player attempts to finish this step
-     * @param callback 
+     * @param callback
      */
     verify(callback: (player: TSPlayer, assert: TSAssert)=>void);
 }
@@ -6688,21 +6767,20 @@ declare interface TSManualStepBuilder {
 declare interface TSManualTestBuilder {
     /**
      * Adds a new simple step with a description
-     * @param name 
-     * @param description 
+     * @param name
+     * @param description
      */
     step(name: string, description: string): TSManualTestBuilder
 
     /**
      * Adds a new step that you can customize through the callback argument, see TSManualStepBuilder
-     * @param name 
-     * @param callback 
+     * @param name
+     * @param callback
      */
     step(name: string, callback: (builder: TSManualStepBuilder)=>void): TSManualTestBuilder
 }
 
 declare namespace _hidden {
-
     export class AchievementID {
         OnUpdate(entry: number, callback: (
               player: TSPlayer
@@ -6770,7 +6848,7 @@ declare namespace _hidden {
         OnIntellectManaBonus(callback: (player: TSPlayer,baseInt: float,bonusInt: float,maxMana: TSMutable<float>)=>void);
         OnMaxHealth(callback: (player: TSPlayer,health: TSMutable<float>)=>void);
         OnMaxPower(callback: (player: TSPlayer,power:uint32,bonus: float, value: TSMutable<float>)=>void);
-        OnManaRegen(callback: (player: TSPlayer,power_regen: TSMutable<float>,power_regen_mp5: TSMutable<float>,manaRegenInterrupt: TSMutable<int32>)=>void); 
+        OnManaRegen(callback: (player: TSPlayer,power_regen: TSMutable<float>,power_regen_mp5: TSMutable<float>,manaRegenInterrupt: TSMutable<int32>)=>void);
         OnSkillGainChance(callback: (player: TSPlayer, skillId: uint32, value: uint32, grayLevel: uint32, greenLevel: uint32, yellowLevel: uint32, chance: TSMutable<float>)=>void)
 
         OnAddThreatEarly(callback: (
@@ -7079,32 +7157,32 @@ declare namespace _hidden {
     }
 
     export class BattlegroundID {
-        OnStart(id: number, callback: (bg: TSBattleground)=>void)
-        OnAddPlayer(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnPlayerLogin(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnPlayerLogout(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnUpdateScore(id: number, callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
-        OnUpdateEarly(id: number, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
-        OnUpdateLate(id: number, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
-        OnKillPlayer(id: number, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
-        OnEndEarly(id: number, callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
+        OnStart(id: uint32, callback: (bg: TSBattleground)=>void)
+        OnAddPlayer(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogin(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogout(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnUpdateScore(id: uint32, callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
+        OnUpdateEarly(id: uint32, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnUpdateLate(id: uint32, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnKillPlayer(id: uint32, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
+        OnEndEarly(id: uint32, callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
         /**
          * Note that "winner" can no longer be changed at this stage,
          * for that, use "OnEndEarly"
          */
-        OnEndLate(id: number, callback: (bg: TSBattleground,winner: uint32)=>void)
-        OnKillCreature(id: number, callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
-        OnRemovePlayer(id: number, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
-        OnPlayerUnderMap(id: number, callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
-        OnGenericEvent(id: number, callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
-        OnClickFlag(id: number, callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
-        OnDropFlag(id: number, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnDestroyGate(id: number, callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
-        OnOpenDoors(id: number, callback: (bg: TSBattleground)=>void)
-        OnCloseDoors(id: number, callback: (bg: TSBattleground)=>void)
-        OnReset(id: number, callback: (bg: TSBattleground)=>void)
-        OnSetup(id: number, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
-        OnAchievementCriteria(id: number, callback: (
+        OnEndLate(id: uint32, callback: (bg: TSBattleground,winner: uint32)=>void)
+        OnKillCreature(id: uint32, callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
+        OnRemovePlayer(id: uint32, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
+        OnPlayerUnderMap(id: uint32, callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
+        OnGenericEvent(id: uint32, callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
+        OnClickFlag(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
+        OnDropFlag(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnDestroyGate(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
+        OnOpenDoors(id: uint32, callback: (bg: TSBattleground)=>void)
+        OnCloseDoors(id: uint32, callback: (bg: TSBattleground)=>void)
+        OnReset(id: uint32, callback: (bg: TSBattleground)=>void)
+        OnSetup(id: uint32, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
+        OnAchievementCriteria(id: uint32, callback: (
               bg: TSBattleground
             , criteria: uint32
             , player: TSPlayer
@@ -7112,7 +7190,19 @@ declare namespace _hidden {
             , miscValueA: uint32
             , handled: TSMutable<bool>
         )=>void)
-        OnAreaTrigger(id: number, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void) 
+        OnAreaTrigger(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
+    }
+
+    export class GameEvents {
+        OnStart(callback: (event: uint16)=>void)
+        OnUpdateState(callback: (event: uint16)=>void)
+        OnEnd(callback: (event: uint16)=>void)
+    }
+
+    export class GameEventID {
+        OnStart(id: uint32, callback: (event: uint16)=>void)
+        UpdateState(id: uint32, callback: (event: uint16)=>void)
+        OnEnd(id: uint32, callback: (event: uint16)=>void)
     }
 
     export class Items {
@@ -7223,6 +7313,24 @@ declare namespace _hidden {
         OnAuctionExpire(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
     }
 
+    export class Conditions {
+        OnCheck(callback: (condition: TSCondition, sourceInfo: TSConditionSourceInfo, condMeets: TSMutable<bool>)=>void)
+    }
+
+    export class ConditionID {
+        OnCheck(type: uint32, callback: (condition: TSCondition, sourceInfo: TSConditionSourceInfo, condMeets: TSMutable<bool>)=>void)
+    }
+
+    export class SmartActions {
+        OnActivateEarly(callback: (script: TSSmartScriptValues, cancelAction: TSMutable<bool>, cancelLink: TSMutable<bool>)=>void)
+        OnActivateLate(callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
+    }
+
+    export class SmartActionID {
+        OnActivateEarly(actionType: uint32, callback: (script: TSSmartScriptValues, cancelAction: TSMutable<bool>, cancelLink: TSMutable<bool>)=>void)
+        OnActivateLate(actionType: uint32, callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
+    }
+
     export class Addon {
         OnMessage(callback: (reader: any)=>void);
         OnMessageID<T>(cls: new()=>T, callback: (player: TSPlayer,message: T)=>void);
@@ -7262,6 +7370,12 @@ declare class TSEventHandlers {
     Tests: _hidden.Tests;
     Battlegrounds: _hidden.Battlegrounds;
     BattlegroundID: _hidden.BattlegroundID;
+    GameEvents: _hidden.GameEvents
+    GameEventID: _hidden.GameEventID
+    SmartActions: _hidden.SmartActions
+    SmartActionID: _hidden.SmartActionID
+    Conditions: _hidden.Conditions
+    ConditionID: _hidden.ConditionID
 }
 
 declare class TSDictionary<K,V> {
@@ -7343,7 +7457,7 @@ declare interface TSAuctionEntry {
     GetETime(): uint32;
     GetBidders(): TSArray<uint64>
     GetFlags(): uint32;
-    
+
     SetItemID(itemId: uint64);
     SetItemEntry(itemEntry: uint64);
     SetItemCount(itemCount: uint32);
@@ -7501,7 +7615,7 @@ declare class _TSJSON {
     parseObject(str: string): TSJsonObject
     parseArray(str: string): TSJsonArray
 }
-declare const TSJSON: _TSJSON 
+declare const TSJSON: _TSJSON
 
 // Global.h
 declare function GetCurrTime(): uint32;
@@ -7509,6 +7623,11 @@ declare function GetUnixTime(): uint64;
 declare function SendMail(senderType: uint8, from: uint64, subject: string, body: string, money?: uint32, cod?: uint32, delay?: uint32, items?: TSArray<TSItem>);
 declare function SendWorldMessage(message: string);
 declare function SyncHttpGet(url: string): string;
+declare function IsGameEventActive(event: uint16): boolean
+declare function IsHolidayActive(holiday: uint16): boolean
+declare function GetActiveGameEvents(): TSArray<uint16>
+declare function StartGameEvent(event_id: uint16): void
+declare function StopGameEvent(event_id: uint16): void
 // end of Global.h
 
 declare function MakeDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
@@ -7651,6 +7770,13 @@ declare function MsgPrimitive(classTarget: any, name: string)
 declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>void;
 declare function MsgString(size: number): (field: any, name: any)=>void
 declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void
+
+// Null values
+declare function NULL_UNIT(): TSUnit;
+declare function NULL_PLAYER(): TSPlayer;
+declare function NULL_GAMEOBJECT(): TSGameObject;
+declare function NULL_MAP(): TSMap;
+declare function NULL_SPELLINFO(): TSSpellInfo;
 
 // Type conversions
 declare function ToStr(val: number);

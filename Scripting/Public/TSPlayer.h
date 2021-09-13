@@ -292,6 +292,10 @@ public:
     uint8 GetFace();
     void SetFace(uint8 face);
 
+    void SendUpdateWorldState(uint32 worldState, uint32 value);
+
+    void SendUpdateEventStates(uint32 eventId);
+
 	template <typename T>
 	void SendData(std::shared_ptr<T> value)
 	{

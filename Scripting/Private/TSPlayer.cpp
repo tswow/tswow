@@ -17,6 +17,7 @@
 
 #include <memory.h>
 #include "TSIncludes.h"
+#include "GameEventMgr.h"
 #include "Object.h"
 #include "Player.h"
 #include "TSIncludes.h"
@@ -3815,6 +3816,16 @@ uint8 TSPlayer::GetFace()
 void TSPlayer::SetFace(uint8 face)
 {
     player->SetFaceId(face);
+}
+
+void TSPlayer::SendUpdateWorldState(uint32 worldState, uint32 value)
+{
+    player->SendUpdateWorldState(worldState, value);
+}
+
+void TSPlayer::SendUpdateEventStates(uint32 eventId)
+{
+    sGameEventMgr->SendWorldStateUpdate(player, eventId);
 }
 
 TSBattleground TSPlayer::GetBattleground()

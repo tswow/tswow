@@ -16,13 +16,15 @@
 
 #include "TSGlobal.h"
 #include "ObjectAccessor.h"
+
+#include "HTTPRequest.h"
+
 #include "Mail.h"
 #include "Item.h"
 #include "Player.h"
 #include "World.h"
 #include "Timer.h"
-
-#include "HTTPRequest.h"
+#include "GameEventMgr.h"
 
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
@@ -65,4 +67,34 @@ TSString SyncHttpGet(TSString url)
     http::Request request{url.std_str()};
     const auto response = request.send("GET");
     return TSString(std::string{response.body.begin(), response.body.end()});
+}
+
+bool TC_GAME_API IsGameEventActive(uint16_t event_id)
+{
+    return IsEventActive(event_id);
+}
+
+bool TC_GAME_API IsHolidayActive(uint16_t holiday_id)
+{
+    return IsHolidayActive(HolidayIds(holiday_id));
+}
+
+TSArray<uint16_t> TC_GAME_API GetActiveGameEvents()
+{
+    TSArray<uint16_t> arr;
+    for (auto const& evt: sGameEventMgr->GetActiveEventList())
+    {
+        arr.push(evt);
+    }
+    return arr;
+}
+
+void StartGameEvent(uint16_t event_id)
+{
+    sGameEventMgr->StartEvent(event_id, true);
+}
+
+void StopGameEvent(uint16_t event_id)
+{
+    sGameEventMgr->StopEvent(event_id, true);
 }

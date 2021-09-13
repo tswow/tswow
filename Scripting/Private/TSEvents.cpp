@@ -351,6 +351,78 @@ void TSBattlegroundMap::OnRemove(uint32_t key)
 
 }
 
+static std::vector<TSGameEventEvents*> geData;
+void TSGameEventMap::OnAdd(uint32_t key, TSGameEventEvents* events)
+{
+    if (geData.size() <= key)
+    {
+        geData.resize(key + 1, nullptr);
+    }
+    geData[key] = events;
+}
+
+TSGameEventEvents * GetGameEventsEvent(uint32_t id)
+{
+    if (id >= geData.size())
+    {
+        return nullptr;
+    }
+    return geData[id];
+}
+
+void TSGameEventMap::OnRemove(uint32_t key)
+{
+
+}
+
+static std::vector<TSSmartActionEvents*> saiData;
+void TSSmartActionMap::OnAdd(uint32_t key, TSSmartActionEvents* events)
+{
+    if (saiData.size() <= key)
+    {
+        saiData.resize(key + 1, nullptr);
+    }
+    saiData[key] = events;
+}
+
+TSSmartActionEvents * GetSmartActionEvent(uint32_t id)
+{
+    if (id >= saiData.size())
+    {
+        return nullptr;
+    }
+    return saiData[id];
+}
+
+void TSSmartActionMap::OnRemove(uint32_t key)
+{
+
+}
+
+static std::vector<TSConditionEvents*> conData;
+void TSConditionMap::OnAdd(uint32_t key, TSConditionEvents* events)
+{
+    if (conData.size() <= key)
+    {
+        conData.resize(key + 1, nullptr);
+    }
+    conData[key] = events;
+}
+
+TSConditionEvents* GetConditionEvent(uint32_t id)
+{
+    if (id >= conData.size())
+    {
+        return nullptr;
+    }
+    return conData[id];
+}
+
+void TSConditionMap::OnRemove(uint32_t key)
+{
+
+}
+
 void TSAchievementMap::OnAdd(uint32_t key, TSAchievementEvents* events)
 {
     InitializeAchievementEvent(key, events);

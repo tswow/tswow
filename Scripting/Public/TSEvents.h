@@ -17,6 +17,7 @@
 #pragma once
 
 #include "TSEvent.h"
+#include "TSSmartScript.h"
 #include "TSPlayer.h"
 #include "TSMutable.h"
 #include "TSMutableString.h"
@@ -114,9 +115,6 @@ EVENT_TYPE(AuctionHouseOnAuctionAdd, TSAuctionHouseObject, TSAuctionEntry)
 EVENT_TYPE(AuctionHouseOnAuctionRemove, TSAuctionHouseObject, TSAuctionEntry)
 EVENT_TYPE(AuctionHouseOnAuctionSuccessful, TSAuctionHouseObject, TSAuctionEntry)
 EVENT_TYPE(AuctionHouseOnAuctionExpire, TSAuctionHouseObject, TSAuctionEntry)
-
-// ConditionScript
-//EVENT_TYPE(ConditionOnConditionCheck,const*,TSMutable<ConditionSourceInfo>, TSMutable<bool>)
 
 // VehicleScript
 EVENT_TYPE(VehicleOnInstall, TSVehicle)
@@ -604,6 +602,53 @@ class TSBattlegroundMap : public TSEventMap<TSBattlegroundEvents>
 
 TSBattlegroundEvents * GetBattlegroundEvent(uint32_t id);
 
+// GameEvent
+EVENT_TYPE(GameEventOnStart,uint16 /*event_id*/)
+// todo: can we get a next_event_id here?
+EVENT_TYPE(GameEventOnUpdateState,uint16 /*cur_event_id*/)
+EVENT_TYPE(GameEventOnEnd,uint16 /*cur_event_id*/)
+struct TSGameEventEvents {
+    EVENT(GameEventOnStart)
+    EVENT(GameEventOnUpdateState)
+    EVENT(GameEventOnEnd)
+};
+
+class TSGameEventMap : public TSEventMap<TSGameEventEvents> {
+    void OnAdd(uint32_t, TSGameEventEvents*);
+    void OnRemove(uint32_t);
+};
+
+TSGameEventEvents* GetGameEventsEvent(uint32_t id);
+
+
+// SAI
+EVENT_TYPE(SmartActionOnActivateEarly, TSSmartScriptValues, TSMutable<bool> /*cancelAction*/, TSMutable<bool> /*cancelLink*/)
+EVENT_TYPE(SmartActionOnActivateLate, TSSmartScriptValues, TSMutable<bool> /*cancelLink*/)
+struct TSSmartActionEvents {
+    EVENT(SmartActionOnActivateEarly)
+    EVENT(SmartActionOnActivateLate)
+};
+
+class TSSmartActionMap : public TSEventMap<TSSmartActionEvents> {
+    void OnAdd(uint32_t, TSSmartActionEvents*);
+    void OnRemove(uint32_t);
+};
+
+TSSmartActionEvents* GetSmartActionEvent(uint32_t id);
+
+// Condition
+EVENT_TYPE(ConditionOnCheck, TSCondition, TSConditionSourceInfo, TSMutable<bool> /*condMeets*/)
+struct TSConditionEvents {
+    EVENT(ConditionOnCheck)
+};
+
+class TSConditionMap : public TSEventMap<TSConditionEvents> {
+    void OnAdd(uint32_t, TSConditionEvents*);
+    void OnRemove(uint32_t);
+};
+
+TSConditionEvents* GetConditionEvent(uint32_t id);
+
 struct TSEvents
 {
     // AddonScript
@@ -890,6 +935,18 @@ struct TSEvents
     EVENT(AchievementOnUpdate)
     EVENT(AchievementOnComplete)
 
+    // GameEvent
+    EVENT(GameEventOnStart)
+    EVENT(GameEventOnUpdateState)
+    EVENT(GameEventOnEnd)
+
+    // SAI
+    EVENT(SmartActionOnActivateEarly)
+    EVENT(SmartActionOnActivateLate)
+
+    // Conditions
+    EVENT(ConditionOnCheck)
+
     TSAchievementMap Achievements;
     TSSpellMap Spells;
     TSCreatureMap Creatures;
@@ -898,6 +955,9 @@ struct TSEvents
     TSItemMap Items;
     TSAreaTriggerMap AreaTriggers;
     TSBattlegroundMap Battlegrounds;
+    TSGameEventMap GameEvents;
+    TSSmartActionMap SmartActions;
+    TSConditionMap Conditions;
 };
 
 TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
@@ -981,12 +1041,6 @@ public:
          EVENT_HANDLE(AuctionHouse,OnAuctionSuccessful)
          EVENT_HANDLE(AuctionHouse,OnAuctionExpire)
     } AuctionHouse;
-
-    struct ConditionEvents: public EventHandler
-    {
-         ConditionEvents* operator->() { return this;}
-         //EVENT_HANDLE(Condition,OnConditionCheck)
-    } Condition;
 
     struct VehicleEvents: public EventHandler
     {
@@ -1427,6 +1481,42 @@ public:
         MAP_EVENT_HANDLE(AreaTrigger,OnTrigger)
     } AreaTriggerID;
 
+    struct GameEventsEvents : public EventHandler {
+        GameEventsEvents* operator->() { return this; }
+        EVENT_HANDLE(GameEvent,OnStart)
+        EVENT_HANDLE(GameEvent,OnUpdateState)
+        EVENT_HANDLE(GameEvent,OnEnd)
+    } GameEvents;
+
+    struct GameEventIDEvents : public MappedEventHandler<TSGameEventMap> {
+        GameEventIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(GameEvent, OnStart)
+        MAP_EVENT_HANDLE(GameEvent, OnUpdateState)
+        MAP_EVENT_HANDLE(GameEvent, OnEnd)
+    } GameEventID;
+
+    struct SmartActionEvents : public EventHandler {
+        SmartActionEvents * operator->() { return this; }
+        EVENT_HANDLE(SmartAction, OnActivateEarly)
+        EVENT_HANDLE(SmartAction, OnActivateLate)
+    } SmartActions;
+
+    struct SmartActionIDEvents : public MappedEventHandler<TSSmartActionMap> {
+        SmartActionIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(SmartAction, OnActivateEarly)
+        MAP_EVENT_HANDLE(SmartAction, OnActivateLate)
+    } SmartActionID;
+
+    struct ConditionEvents : public EventHandler {
+        ConditionEvents* operator->() { return this; }
+        EVENT_HANDLE(Condition,OnCheck)
+    } Conditions;
+
+    struct ConditionIDEvents : public MappedEventHandler<TSConditionMap> {
+        ConditionIDEvents * operator->() { return this; }
+        MAP_EVENT_HANDLE(Condition,OnCheck)
+    } ConditionID;
+
     struct AddonEvents: public EventHandler {
          AddonEvents* operator->(){return this;}
          EVENT_HANDLE(Addon,OnMessage)
@@ -1476,7 +1566,6 @@ public:
         AreaTriggers.LoadEvents(events);
         Weather.LoadEvents(events);
         AuctionHouse.LoadEvents(events);
-        Condition.LoadEvents(events);
         Vehicle.LoadEvents(events);
         Player.LoadEvents(events);
         Account.LoadEvents(events);
@@ -1498,6 +1587,12 @@ public:
         MapID.LoadEvents(&events->Maps);
         Achievements.LoadEvents(events);
         AchievementID.LoadEvents(&events->Achievements);
+        GameEvents.LoadEvents(events);
+        GameEventID.LoadEvents(&events->GameEvents);
+        SmartActions.LoadEvents(events);
+        SmartActionID.LoadEvents(&events->SmartActions);
+        Conditions.LoadEvents(events);
+        ConditionID.LoadEvents(&events->Conditions);
     }
 
     void Unload()
@@ -1510,7 +1605,6 @@ public:
          AreaTriggers.Unload();
          Weather.Unload();
          AuctionHouse.Unload();
-         Condition.Unload();
          Vehicle.Unload();
          Achievements.Unload();
          AchievementID.Unload();
@@ -1533,6 +1627,12 @@ public:
          Maps.Unload();
          MapID.Unload();
          Tests.Unload();
+         GameEvents.Unload();
+         GameEventID.Unload();
+         SmartActions.Unload();
+         SmartActionID.Unload();
+         Conditions.Unload();
+         ConditionID.Unload();
     }
 };
 
