@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,25 +29,25 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_queststarterRow extends SqlRow<creature_queststarterCreator,creature_queststarterQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<mediumint, this>(this, 'id')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get quest() {return new SQLCellReadOnly<mediumint, this>(this, 'quest')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : mediumint,quest : mediumint, c? : creature_queststarterCreator) : this {
         return this.cloneInternal([id,quest],c)
     }

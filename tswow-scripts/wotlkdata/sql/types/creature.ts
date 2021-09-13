@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,132 +29,132 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creatureRow extends SqlRow<creatureCreator,creatureQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get id() {return new SQLCell<mediumint, this>(this, 'id')}
-    
+
     /**
      * No comment (yet!)
      */
     get map() {return new SQLCell<smallint, this>(this, 'map')}
-    
+
     /**
      * No comment (yet!)
      */
     get zoneId() {return new SQLCell<smallint, this>(this, 'zoneId')}
-    
+
     /**
      * No comment (yet!)
      */
     get areaId() {return new SQLCell<smallint, this>(this, 'areaId')}
-    
+
     /**
      * No comment (yet!)
      */
     get spawnMask() {return new SQLCell<tinyint, this>(this, 'spawnMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get phaseMask() {return new SQLCell<int, this>(this, 'phaseMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get modelid() {return new SQLCell<mediumint, this>(this, 'modelid')}
-    
+
     /**
      * No comment (yet!)
      */
     get equipment_id() {return new SQLCell<tinyint, this>(this, 'equipment_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_x() {return new SQLCell<float, this>(this, 'position_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_y() {return new SQLCell<float, this>(this, 'position_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_z() {return new SQLCell<float, this>(this, 'position_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get orientation() {return new SQLCell<float, this>(this, 'orientation')}
-    
+
     /**
      * No comment (yet!)
      */
     get spawntimesecs() {return new SQLCell<int, this>(this, 'spawntimesecs')}
-    
+
     /**
      * No comment (yet!)
      */
     get wander_distance() {return new SQLCell<float, this>(this, 'wander_distance')}
-    
+
     /**
      * No comment (yet!)
      */
     get currentwaypoint() {return new SQLCell<mediumint, this>(this, 'currentwaypoint')}
-    
+
     /**
      * No comment (yet!)
      */
     get curhealth() {return new SQLCell<int, this>(this, 'curhealth')}
-    
+
     /**
      * No comment (yet!)
      */
     get curmana() {return new SQLCell<int, this>(this, 'curmana')}
-    
+
     /**
      * No comment (yet!)
      */
     get MovementType() {return new SQLCell<tinyint, this>(this, 'MovementType')}
-    
+
     /**
      * No comment (yet!)
      */
     get npcflag() {return new SQLCell<int, this>(this, 'npcflag')}
-    
+
     /**
      * No comment (yet!)
      */
     get unit_flags() {return new SQLCell<int, this>(this, 'unit_flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get dynamicflags() {return new SQLCell<int, this>(this, 'dynamicflags')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : int, c? : creatureCreator) : this {
         return this.cloneInternal([guid],c)
     }

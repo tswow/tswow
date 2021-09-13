@@ -60,122 +60,122 @@ export type creature_template_outfitsQuery = {
 export class creature_template_outfitsRow extends SqlRow<creature_template_outfitsConstructor,creature_template_outfitsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<int, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get npcsoundsid() {return new SQLCell<int, this>(this, 'npcsoundsid')}
-    
+
     /**
      * No comment (yet!)
      */
     get race() {return new SQLCell<tinyint, this>(this, 'race')}
-    
+
     /**
      * No comment (yet!)
      */
     get class() {return new SQLCell<tinyint, this>(this, 'class')}
-    
+
     /**
      * No comment (yet!)
      */
     get gender() {return new SQLCell<tinyint, this>(this, 'gender')}
-    
+
     /**
      * No comment (yet!)
      */
     get skin() {return new SQLCell<tinyint, this>(this, 'skin')}
-    
+
     /**
      * No comment (yet!)
      */
     get face() {return new SQLCell<tinyint, this>(this, 'face')}
-    
+
     /**
      * No comment (yet!)
      */
     get hair() {return new SQLCell<tinyint, this>(this, 'hair')}
-    
+
     /**
      * No comment (yet!)
      */
     get haircolor() {return new SQLCell<tinyint, this>(this, 'haircolor')}
-    
+
     /**
      * No comment (yet!)
      */
     get facialhair() {return new SQLCell<tinyint, this>(this, 'facialhair')}
-    
+
     /**
      * No comment (yet!)
      */
     get head() {return new SQLCell<int, this>(this, 'head')}
-    
+
     /**
      * No comment (yet!)
      */
     get shoulders() {return new SQLCell<int, this>(this, 'shoulders')}
-    
+
     /**
      * No comment (yet!)
      */
     get body() {return new SQLCell<int, this>(this, 'body')}
-    
+
     /**
      * No comment (yet!)
      */
     get chest() {return new SQLCell<int, this>(this, 'chest')}
-    
+
     /**
      * No comment (yet!)
      */
     get waist() {return new SQLCell<int, this>(this, 'waist')}
-    
+
     /**
      * No comment (yet!)
      */
     get legs() {return new SQLCell<int, this>(this, 'legs')}
-    
+
     /**
      * No comment (yet!)
      */
     get feet() {return new SQLCell<int, this>(this, 'feet')}
-    
+
     /**
      * No comment (yet!)
      */
     get wrists() {return new SQLCell<int, this>(this, 'wrists')}
-    
+
     /**
      * No comment (yet!)
      */
     get hands() {return new SQLCell<int, this>(this, 'hands')}
-    
+
     /**
      * No comment (yet!)
      */
     get back() {return new SQLCell<int, this>(this, 'back')}
-    
+
     /**
      * No comment (yet!)
      */
     get tabard() {return new SQLCell<int, this>(this, 'tabard')}
-    
+
     /**
      * No comment (yet!)
      */
     get guildid() {return new SQLCell<int, this>(this, 'guildid')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<text, this>(this, 'description')}
-    
+
     clone(entry : int, c? : creature_template_outfitsConstructor) : this {
         return this.cloneInternal([entry],c)
     }
@@ -196,6 +196,6 @@ export class creature_template_outfitsTable extends SqlTable<
  * Table singleton (Object used by 'SQL' namespace)
  * - Add file comments to SQLFiles.ts
  */
-export const SQL_creature_template_outfits 
+export const SQL_creature_template_outfits
     = new creature_template_outfitsTable("creature_template_outfits",(table,obj)=>
         new creature_template_outfitsRow(table,obj))

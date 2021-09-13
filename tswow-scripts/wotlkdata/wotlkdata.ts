@@ -152,7 +152,7 @@ async function main() {
     await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
         Settings.SQL_WRITE_TO_FILE);
 
-    
+
     time(`Wrote SQL`);
     saveDbc();
     time(`Wrote DBC`);

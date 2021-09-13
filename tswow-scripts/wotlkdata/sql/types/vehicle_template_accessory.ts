@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,50 +29,50 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class vehicle_template_accessoryRow extends SqlRow<vehicle_template_accessoryCreator,vehicle_template_accessoryQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get accessory_entry() {return new SQLCell<mediumint, this>(this, 'accessory_entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get seat_id() {return new SQLCellReadOnly<tinyint, this>(this, 'seat_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get minion() {return new SQLCell<tinyint, this>(this, 'minion')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<text, this>(this, 'description')}
-    
+
     /**
      * No comment (yet!)
      */
     get summontype() {return new SQLCell<tinyint, this>(this, 'summontype')}
-    
+
     /**
      * No comment (yet!)
      */
     get summontimer() {return new SQLCell<int, this>(this, 'summontimer')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint,seat_id : tinyint, c? : vehicle_template_accessoryCreator) : this {
         return this.cloneInternal([entry,seat_id],c)
     }

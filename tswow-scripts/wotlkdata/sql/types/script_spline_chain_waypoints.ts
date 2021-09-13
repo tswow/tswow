@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,56 +29,56 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class script_spline_chain_waypointsRow extends SqlRow<script_spline_chain_waypointsCreator,script_spline_chain_waypointsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<int, this>(this, 'entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get chainId() {return new SQLCellReadOnly<smallint, this>(this, 'chainId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get splineId() {return new SQLCellReadOnly<tinyint, this>(this, 'splineId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get wpId() {return new SQLCellReadOnly<tinyint, this>(this, 'wpId')}
-    
+
     /**
      * No comment (yet!)
      */
     get x() {return new SQLCell<float, this>(this, 'x')}
-    
+
     /**
      * No comment (yet!)
      */
     get y() {return new SQLCell<float, this>(this, 'y')}
-    
+
     /**
      * No comment (yet!)
      */
     get z() {return new SQLCell<float, this>(this, 'z')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : int,chainId : smallint,splineId : tinyint,wpId : tinyint, c? : script_spline_chain_waypointsCreator) : this {
         return this.cloneInternal([entry,chainId,splineId,wpId],c)
     }

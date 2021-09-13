@@ -106,7 +106,7 @@ export class Connection {
         if (this.status !== undefined) {
             return this.status;
         }
-    
+
         const creator = mysql_lib.createConnection(this.configWithoutDb());
 
         return this.status = new Promise<void>(async (res,rej)=>{
@@ -181,7 +181,7 @@ export namespace mysql {
                 + ` --log_syslog=0`
                 + ` --datadir=${wfs.absPath(ipaths.databaseDir)}`);
             term.success('Created mysql database');
-        } 
+        }
 
         const user = databaseSettings('world').user;
         const pass = databaseSettings('world').password;
@@ -229,15 +229,15 @@ export namespace mysql {
      * Returns whether this instance of TSWoW should manage its own MySQL process.
      */
     export function hasOwnProcess() {
-        return isWindows() 
-            && (process.argv.includes('own-mysql') 
+        return isWindows()
+            && (process.argv.includes('own-mysql')
             || NodeConfig.mysql_executable === undefined);
     }
 
     /**
      * Sets whether the MySQL process should display output in the console
      * (very messy, only use when you need to debug)
-     * @param show 
+     * @param show
      */
     export function showProcessOutput(show: boolean) {
         mysqlprocess.showOutput(show);
@@ -245,7 +245,7 @@ export namespace mysql {
 
     /**
      * Checks if world databases are installed on multiple connections
-     * @param worldConnections 
+     * @param worldConnections
      */
     export async function isWorldInstalled(worldConnections: Connection[]) {
         for(const con of worldConnections) {
@@ -282,20 +282,20 @@ export namespace mysql {
 
     /**
      * Rebuilds a database from an sql file
-     * @param con 
-     * @param sqlFilePath 
+     * @param con
+     * @param sqlFilePath
      */
     export async function rebuildDatabase(
           con: Connection
-        , sqlFilePath: string) 
+        , sqlFilePath: string)
         {
 
         term.log(`Beginning to rebuild ${con.name()}`);
         await con.clean();
 
-        const mysqlCommand = mysql.hasOwnProcess() ? 
-            `"${ipaths.mysqlExe}"` : 
-                NodeConfig.mysql_executable != undefined ? 
+        const mysqlCommand = mysql.hasOwnProcess() ?
+            `"${ipaths.mysqlExe}"` :
+                NodeConfig.mysql_executable != undefined ?
             `"${NodeConfig.mysql_executable}"`:
                 `sudo mysql`;
 
@@ -351,7 +351,7 @@ export namespace mysql {
                 await cons.query(wfs.read(filepath));
                 await cons.query(
                       `INSERT INTO updates (name,hash,speed)`
-                    + ` VALUES ("${filename}", "tswow",0);`) 
+                    + ` VALUES ("${filename}", "tswow",0);`)
             }
         }
     }
@@ -364,7 +364,7 @@ export namespace mysql {
 
     export async function installCharacters(connection: Connection) {
         // Special hack to get the characters tables in, because some scripts depend on it
-        let charRowCount = 
+        let charRowCount =
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(charRowCount[1][0]['FOUND_ROWS()']===0) {
             term.log(
@@ -376,7 +376,7 @@ export namespace mysql {
     }
 
     export async function installAuth(connection: Connection) {
-        let authRowCount = 
+        let authRowCount =
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(authRowCount[1][0]['FOUND_ROWS()']===0) {
             term.log(

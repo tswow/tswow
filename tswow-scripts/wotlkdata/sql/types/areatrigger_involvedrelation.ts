@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,22 +29,22 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class areatrigger_involvedrelationRow extends SqlRow<areatrigger_involvedrelationCreator,areatrigger_involvedrelationQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<mediumint, this>(this, 'id')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest() {return new SQLCell<mediumint, this>(this, 'quest')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : mediumint, c? : areatrigger_involvedrelationCreator) : this {
         return this.cloneInternal([id],c)
     }

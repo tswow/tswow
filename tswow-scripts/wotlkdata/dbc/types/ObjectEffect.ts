@@ -34,67 +34,67 @@ export class ObjectEffectRow extends DBCRow<ObjectEffectCreator,ObjectEffectQuer
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectEffectGroupID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get TriggerType() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get EventType() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRecType() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRecID() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get Attachment() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get OffsetX() { return new DBCFloatCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get OffsetY() { return new DBCFloatCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get OffsetZ() { return new DBCFloatCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectEffectModifierID() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ObjectEffectCreator) : this {
         return this.cloneInternal([ID],c);
     }

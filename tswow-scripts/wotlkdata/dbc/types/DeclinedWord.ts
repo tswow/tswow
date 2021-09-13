@@ -34,17 +34,17 @@ export class DeclinedWordRow extends DBCRow<DeclinedWordCreator,DeclinedWordQuer
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Word() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : DeclinedWordCreator) : this {
         return this.cloneInternal([ID],c);
     }

@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,492 +29,492 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_dbcRow extends SqlRow<spell_dbcCreator,spell_dbcQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Id() {return new SQLCellReadOnly<int, this>(this, 'Id')}
-    
+
     /**
      * No comment (yet!)
      */
     get Dispel() {return new SQLCell<int, this>(this, 'Dispel')}
-    
+
     /**
      * No comment (yet!)
      */
     get Mechanic() {return new SQLCell<int, this>(this, 'Mechanic')}
-    
+
     /**
      * No comment (yet!)
      */
     get Attributes() {return new SQLCell<int, this>(this, 'Attributes')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx() {return new SQLCell<int, this>(this, 'AttributesEx')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx2() {return new SQLCell<int, this>(this, 'AttributesEx2')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx3() {return new SQLCell<int, this>(this, 'AttributesEx3')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx4() {return new SQLCell<int, this>(this, 'AttributesEx4')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx5() {return new SQLCell<int, this>(this, 'AttributesEx5')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx6() {return new SQLCell<int, this>(this, 'AttributesEx6')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesEx7() {return new SQLCell<int, this>(this, 'AttributesEx7')}
-    
+
     /**
      * No comment (yet!)
      */
     get Stances() {return new SQLCell<int, this>(this, 'Stances')}
-    
+
     /**
      * No comment (yet!)
      */
     get StancesNot() {return new SQLCell<int, this>(this, 'StancesNot')}
-    
+
     /**
      * No comment (yet!)
      */
     get Targets() {return new SQLCell<int, this>(this, 'Targets')}
-    
+
     /**
      * No comment (yet!)
      */
     get CastingTimeIndex() {return new SQLCell<int, this>(this, 'CastingTimeIndex')}
-    
+
     /**
      * No comment (yet!)
      */
     get AuraInterruptFlags() {return new SQLCell<int, this>(this, 'AuraInterruptFlags')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProcFlags() {return new SQLCell<int, this>(this, 'ProcFlags')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProcChance() {return new SQLCell<int, this>(this, 'ProcChance')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProcCharges() {return new SQLCell<int, this>(this, 'ProcCharges')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxLevel() {return new SQLCell<int, this>(this, 'MaxLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get BaseLevel() {return new SQLCell<int, this>(this, 'BaseLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellLevel() {return new SQLCell<int, this>(this, 'SpellLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get DurationIndex() {return new SQLCell<int, this>(this, 'DurationIndex')}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeIndex() {return new SQLCell<int, this>(this, 'RangeIndex')}
-    
+
     /**
      * No comment (yet!)
      */
     get StackAmount() {return new SQLCell<int, this>(this, 'StackAmount')}
-    
+
     /**
      * No comment (yet!)
      */
     get EquippedItemClass() {return new SQLCell<int, this>(this, 'EquippedItemClass')}
-    
+
     /**
      * No comment (yet!)
      */
     get EquippedItemSubClassMask() {return new SQLCell<int, this>(this, 'EquippedItemSubClassMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get EquippedItemInventoryTypeMask() {return new SQLCell<int, this>(this, 'EquippedItemInventoryTypeMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get Effect1() {return new SQLCell<int, this>(this, 'Effect1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Effect2() {return new SQLCell<int, this>(this, 'Effect2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Effect3() {return new SQLCell<int, this>(this, 'Effect3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectDieSides1() {return new SQLCell<int, this>(this, 'EffectDieSides1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectDieSides2() {return new SQLCell<int, this>(this, 'EffectDieSides2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectDieSides3() {return new SQLCell<int, this>(this, 'EffectDieSides3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRealPointsPerLevel1() {return new SQLCell<float, this>(this, 'EffectRealPointsPerLevel1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRealPointsPerLevel2() {return new SQLCell<float, this>(this, 'EffectRealPointsPerLevel2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRealPointsPerLevel3() {return new SQLCell<float, this>(this, 'EffectRealPointsPerLevel3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectBasePoints1() {return new SQLCell<int, this>(this, 'EffectBasePoints1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectBasePoints2() {return new SQLCell<int, this>(this, 'EffectBasePoints2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectBasePoints3() {return new SQLCell<int, this>(this, 'EffectBasePoints3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMechanic1() {return new SQLCell<int, this>(this, 'EffectMechanic1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMechanic2() {return new SQLCell<int, this>(this, 'EffectMechanic2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMechanic3() {return new SQLCell<int, this>(this, 'EffectMechanic3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectImplicitTargetA1() {return new SQLCell<int, this>(this, 'EffectImplicitTargetA1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectImplicitTargetA2() {return new SQLCell<int, this>(this, 'EffectImplicitTargetA2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectImplicitTargetA3() {return new SQLCell<int, this>(this, 'EffectImplicitTargetA3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectImplicitTargetB1() {return new SQLCell<int, this>(this, 'EffectImplicitTargetB1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectImplicitTargetB2() {return new SQLCell<int, this>(this, 'EffectImplicitTargetB2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectImplicitTargetB3() {return new SQLCell<int, this>(this, 'EffectImplicitTargetB3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRadiusIndex1() {return new SQLCell<int, this>(this, 'EffectRadiusIndex1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRadiusIndex2() {return new SQLCell<int, this>(this, 'EffectRadiusIndex2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectRadiusIndex3() {return new SQLCell<int, this>(this, 'EffectRadiusIndex3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectApplyAuraName1() {return new SQLCell<int, this>(this, 'EffectApplyAuraName1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectApplyAuraName2() {return new SQLCell<int, this>(this, 'EffectApplyAuraName2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectApplyAuraName3() {return new SQLCell<int, this>(this, 'EffectApplyAuraName3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectAmplitude1() {return new SQLCell<int, this>(this, 'EffectAmplitude1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectAmplitude2() {return new SQLCell<int, this>(this, 'EffectAmplitude2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectAmplitude3() {return new SQLCell<int, this>(this, 'EffectAmplitude3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMultipleValue1() {return new SQLCell<float, this>(this, 'EffectMultipleValue1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMultipleValue2() {return new SQLCell<float, this>(this, 'EffectMultipleValue2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMultipleValue3() {return new SQLCell<float, this>(this, 'EffectMultipleValue3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectItemType1() {return new SQLCell<int, this>(this, 'EffectItemType1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectItemType2() {return new SQLCell<int, this>(this, 'EffectItemType2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectItemType3() {return new SQLCell<int, this>(this, 'EffectItemType3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMiscValue1() {return new SQLCell<int, this>(this, 'EffectMiscValue1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMiscValue2() {return new SQLCell<int, this>(this, 'EffectMiscValue2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMiscValue3() {return new SQLCell<int, this>(this, 'EffectMiscValue3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMiscValueB1() {return new SQLCell<int, this>(this, 'EffectMiscValueB1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMiscValueB2() {return new SQLCell<int, this>(this, 'EffectMiscValueB2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectMiscValueB3() {return new SQLCell<int, this>(this, 'EffectMiscValueB3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectTriggerSpell1() {return new SQLCell<int, this>(this, 'EffectTriggerSpell1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectTriggerSpell2() {return new SQLCell<int, this>(this, 'EffectTriggerSpell2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectTriggerSpell3() {return new SQLCell<int, this>(this, 'EffectTriggerSpell3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskA1() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskA1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskA2() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskA2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskA3() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskA3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskB1() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskB1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskB2() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskB2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskB3() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskB3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskC1() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskC1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskC2() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskC2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectSpellClassMaskC3() {return new SQLCell<int, this>(this, 'EffectSpellClassMaskC3')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellName() {return new SQLCell<varchar, this>(this, 'SpellName')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxTargetLevel() {return new SQLCell<int, this>(this, 'MaxTargetLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyName() {return new SQLCell<int, this>(this, 'SpellFamilyName')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyFlags1() {return new SQLCell<int, this>(this, 'SpellFamilyFlags1')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyFlags2() {return new SQLCell<int, this>(this, 'SpellFamilyFlags2')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyFlags3() {return new SQLCell<int, this>(this, 'SpellFamilyFlags3')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxAffectedTargets() {return new SQLCell<int, this>(this, 'MaxAffectedTargets')}
-    
+
     /**
      * No comment (yet!)
      */
     get DmgClass() {return new SQLCell<int, this>(this, 'DmgClass')}
-    
+
     /**
      * No comment (yet!)
      */
     get PreventionType() {return new SQLCell<int, this>(this, 'PreventionType')}
-    
+
     /**
      * No comment (yet!)
      */
     get DmgMultiplier1() {return new SQLCell<float, this>(this, 'DmgMultiplier1')}
-    
+
     /**
      * No comment (yet!)
      */
     get DmgMultiplier2() {return new SQLCell<float, this>(this, 'DmgMultiplier2')}
-    
+
     /**
      * No comment (yet!)
      */
     get DmgMultiplier3() {return new SQLCell<float, this>(this, 'DmgMultiplier3')}
-    
+
     /**
      * No comment (yet!)
      */
     get AreaGroupId() {return new SQLCell<int, this>(this, 'AreaGroupId')}
-    
+
     /**
      * No comment (yet!)
      */
     get SchoolMask() {return new SQLCell<int, this>(this, 'SchoolMask')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(Id : int, c? : spell_dbcCreator) : this {
         return this.cloneInternal([Id],c)
     }

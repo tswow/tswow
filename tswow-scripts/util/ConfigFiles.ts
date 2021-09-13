@@ -7,7 +7,7 @@ use_mmaps: false
 client_path: c:\\path\\to\\my\\client
 
 # What modules this dataset uses
-modules: 
+modules:
   - all
 
 # What extensions to ignore when building assets

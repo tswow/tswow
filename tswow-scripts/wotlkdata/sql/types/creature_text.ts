@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,83 +29,83 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_textRow extends SqlRow<creature_textCreator,creature_textQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get CreatureID() {return new SQLCellReadOnly<mediumint, this>(this, 'CreatureID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get GroupID() {return new SQLCellReadOnly<tinyint, this>(this, 'GroupID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<tinyint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text() {return new SQLCell<longtext, this>(this, 'Text')}
-    
+
     /**
      * No comment (yet!)
      */
     get Type() {return new SQLCell<tinyint, this>(this, 'Type')}
-    
+
     /**
      * No comment (yet!)
      */
     get Language() {return new SQLCell<tinyint, this>(this, 'Language')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability() {return new SQLCell<float, this>(this, 'Probability')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote() {return new SQLCell<mediumint, this>(this, 'Emote')}
-    
+
     /**
      * No comment (yet!)
      */
     get Duration() {return new SQLCell<mediumint, this>(this, 'Duration')}
-    
+
     /**
      * No comment (yet!)
      */
     get Sound() {return new SQLCell<mediumint, this>(this, 'Sound')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextId() {return new SQLCell<mediumint, this>(this, 'BroadcastTextId')}
-    
+
     /**
      * No comment (yet!)
      */
     get TextRange() {return new SQLCell<tinyint, this>(this, 'TextRange')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<varchar, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(CreatureID : mediumint,GroupID : tinyint,ID : tinyint, c? : creature_textCreator) : this {
         return this.cloneInternal([CreatureID,GroupID,ID],c)
     }

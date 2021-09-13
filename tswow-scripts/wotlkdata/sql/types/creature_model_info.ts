@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_model_infoRow extends SqlRow<creature_model_infoCreator,creature_model_infoQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get DisplayID() {return new SQLCellReadOnly<mediumint, this>(this, 'DisplayID')}
-    
+
     /**
      * No comment (yet!)
      */
     get BoundingRadius() {return new SQLCell<float, this>(this, 'BoundingRadius')}
-    
+
     /**
      * No comment (yet!)
      */
     get CombatReach() {return new SQLCell<float, this>(this, 'CombatReach')}
-    
+
     /**
      * No comment (yet!)
      */
     get Gender() {return new SQLCell<tinyint, this>(this, 'Gender')}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayID_Other_Gender() {return new SQLCell<mediumint, this>(this, 'DisplayID_Other_Gender')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(DisplayID : mediumint, c? : creature_model_infoCreator) : this {
         return this.cloneInternal([DisplayID],c)
     }

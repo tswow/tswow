@@ -34,72 +34,72 @@ export class SkillLineAbilityRow extends DBCRow<SkillLineAbilityCreator,SkillLin
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get SkillLine() { return new DBCUIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Spell() { return new DBCUIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get RaceMask() { return new DBCMaskCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get ClassMask() { return new DBCMaskCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get RaceMaskForbidden() { return new DBCMaskCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get ClassMaskForbidden() { return new DBCMaskCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinSkillLineRank() { return new DBCUIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get SupercededBySpell() { return new DBCUIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get AcquireMethod() { return new DBCUIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get TrivialSkillLineRankHigh() { return new DBCUIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get TrivialSkillLineRankLow() { return new DBCUIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get CharacterPoints() { return new DBCUIntArrayCell(this,2,this.buffer,this.offset+48)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SkillLineAbilityCreator) : this {
         return this.cloneInternal([ID],c);
     }

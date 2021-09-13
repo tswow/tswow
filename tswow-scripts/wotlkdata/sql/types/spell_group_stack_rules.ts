@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,22 +29,22 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_group_stack_rulesRow extends SqlRow<spell_group_stack_rulesCreator,spell_group_stack_rulesQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get group_id() {return new SQLCellReadOnly<int, this>(this, 'group_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get stack_rule() {return new SQLCell<tinyint, this>(this, 'stack_rule')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(group_id : int, c? : spell_group_stack_rulesCreator) : this {
         return this.cloneInternal([group_id],c)
     }

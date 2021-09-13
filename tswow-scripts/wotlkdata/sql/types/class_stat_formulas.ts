@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,7 +29,7 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,class_stat_formulasQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
@@ -37,22 +37,22 @@ export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,cl
 
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get stat_type() {return new SQLCellReadOnly<mediumint, this>(this, 'stat_type')}
-    
+
     /**
      * No comment (yet!)
      */
     get formula() {return new SQLCell<text, this>(this, 'formula')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(cls: mediumint, stat_type: number, c? : class_stat_formulasCreator) : this {
         return this.cloneInternal([cls, stat_type],c)
     }

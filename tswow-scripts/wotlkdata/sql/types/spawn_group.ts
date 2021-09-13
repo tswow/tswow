@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,33 +29,33 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spawn_groupRow extends SqlRow<spawn_groupCreator,spawn_groupQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get groupId() {return new SQLCellReadOnly<int, this>(this, 'groupId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spawnType() {return new SQLCellReadOnly<tinyint, this>(this, 'spawnType')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spawnId() {return new SQLCellReadOnly<int, this>(this, 'spawnId')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(groupId : int,spawnType : tinyint,spawnId : int, c? : spawn_groupCreator) : this {
         return this.cloneInternal([groupId,spawnType,spawnId],c)
     }

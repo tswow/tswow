@@ -1,17 +1,17 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2021 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import ts from "typescript";
@@ -22,7 +22,7 @@ import * as path from 'path';
 import * as fs from 'fs'
 
 /**
- *  This file contains a plugin for typescript-to-lua 
+ *  This file contains a plugin for typescript-to-lua
  *  to generate messages
  */
 
@@ -119,7 +119,7 @@ function handle(node: ts.ClassDeclaration) {
         ctr+=field.size;
     }
     wnl('end\n');
-    
+
     ctr = 0;
     wnl(`function ${messages.className}.prototype.Write(self,r,o)`)
     for(const field of messages.fields) {
@@ -129,7 +129,7 @@ function handle(node: ts.ClassDeclaration) {
                 wnl(`(${ctr}+o,self.${field.name});`);
                 break;
             case 'MsgPrimitiveArray':
-                w(`    r:WriteArray(`) 
+                w(`    r:WriteArray(`)
                 w(`${ctr}+o,self.${field.name},${field.indSize},${field.capacity},`)
                 wnl(`function(oo,v) return r:${primWriteName(field.innerType)}(oo,v) end);`)
                 break;

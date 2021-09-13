@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,38 +29,38 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class playercreateinfo_itemRow extends SqlRow<playercreateinfo_itemCreator,playercreateinfo_itemQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get race() {return new SQLCellReadOnly<tinyint, this>(this, 'race')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get class() {return new SQLCellReadOnly<tinyint, this>(this, 'class')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get itemid() {return new SQLCellReadOnly<mediumint, this>(this, 'itemid')}
-    
+
     /**
      * No comment (yet!)
      */
     get amount() {return new SQLCell<tinyint, this>(this, 'amount')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(race : tinyint,cls : tinyint,itemid : mediumint, c? : playercreateinfo_itemCreator) : this {
         return this.cloneInternal([race,cls,itemid],c)
     }

@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,43 +29,43 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gossip_menu_option_localeRow extends SqlRow<gossip_menu_option_localeCreator,gossip_menu_option_localeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get MenuID() {return new SQLCellReadOnly<smallint, this>(this, 'MenuID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get OptionID() {return new SQLCellReadOnly<smallint, this>(this, 'OptionID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Locale() {return new SQLCellReadOnly<varchar, this>(this, 'Locale')}
-    
+
     /**
      * No comment (yet!)
      */
     get OptionText() {return new SQLCell<text, this>(this, 'OptionText')}
-    
+
     /**
      * No comment (yet!)
      */
     get BoxText() {return new SQLCell<text, this>(this, 'BoxText')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(MenuID : smallint,OptionID : smallint,Locale : varchar, c? : gossip_menu_option_localeCreator) : this {
         return this.cloneInternal([MenuID,OptionID,Locale],c)
     }

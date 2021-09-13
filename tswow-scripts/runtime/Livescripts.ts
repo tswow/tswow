@@ -26,9 +26,9 @@ export namespace Livescripts {
 
         // Don't build if the entry point doesn't exist.
         const mainScript = ipaths.moduleMainScriptName(name);
-        if (!files.includes(mainScript)) { 
+        if (!files.includes(mainScript)) {
             term.warn(`Module ${name} has a livescripts directory, but no valid entrypoint`);
-            return false; 
+            return false;
         }
         term.log(`Building LiveScripts for ${name} (${type} mode)`);
 

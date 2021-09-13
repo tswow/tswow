@@ -34,22 +34,22 @@ export class ItemSubClassMaskRow extends DBCRow<ItemSubClassMaskCreator,ItemSubC
      */
     @PrimaryKey()
     get ClassID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get flag() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ClassID : int, c? : ItemSubClassMaskCreator) : this {
         return this.cloneInternal([ClassID],c);
     }

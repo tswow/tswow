@@ -34,102 +34,102 @@ export class DestructibleModelDataRow extends DBCRow<DestructibleModelDataCreato
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get State0Wmo() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get State0DestructionDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get State0ImpactEffectDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get State0AmbientDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get State1Wmo() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get State1DestructionDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get State1ImpactEffectDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get State1AmbientDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get State2Wmo() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get State2DestructionDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get State2ImpactEffectDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get State2AmbientDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get State3Wmo() { return new DBCIntCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get State3DestructionDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get State3ImpactEffectDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get State3AmbientDoodadSet() { return new DBCIntCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field17() { return new DBCIntCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field18() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : DestructibleModelDataCreator) : this {
         return this.cloneInternal([ID],c);
     }

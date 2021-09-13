@@ -34,52 +34,52 @@ export class SpellShapeshiftFormRow extends DBCRow<SpellShapeshiftFormCreator,Sp
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get BonusActionBar() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get CreatureType() { return new DBCIntCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get AttackIconID() { return new DBCIntCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get CombatRoundTime() { return new DBCIntCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get CreatureDisplayID() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get PresetSpellID() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+108)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellShapeshiftFormCreator) : this {
         return this.cloneInternal([ID],c);
     }

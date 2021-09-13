@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,47 +29,47 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_teleRow extends SqlRow<game_teleCreator,game_teleQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<mediumint, this>(this, 'id')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_x() {return new SQLCell<float, this>(this, 'position_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_y() {return new SQLCell<float, this>(this, 'position_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_z() {return new SQLCell<float, this>(this, 'position_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get orientation() {return new SQLCell<float, this>(this, 'orientation')}
-    
+
     /**
      * No comment (yet!)
      */
     get map() {return new SQLCell<smallint, this>(this, 'map')}
-    
+
     /**
      * No comment (yet!)
      */
     get name() {return new SQLCell<varchar, this>(this, 'name')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : mediumint, c? : game_teleCreator) : this {
         return this.cloneInternal([id],c)
     }

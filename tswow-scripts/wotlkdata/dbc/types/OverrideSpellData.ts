@@ -34,22 +34,22 @@ export class OverrideSpellDataRow extends DBCRow<OverrideSpellDataCreator,Overri
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Spells() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : OverrideSpellDataCreator) : this {
         return this.cloneInternal([ID],c);
     }

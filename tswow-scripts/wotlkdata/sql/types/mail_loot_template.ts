@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,65 +29,65 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class mail_loot_templateRow extends SqlRow<mail_loot_templateCreator,mail_loot_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Entry() {return new SQLCellReadOnly<mediumint, this>(this, 'Entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Item() {return new SQLCellReadOnly<mediumint, this>(this, 'Item')}
-    
+
     /**
      * No comment (yet!)
      */
     get Reference() {return new SQLCell<mediumint, this>(this, 'Reference')}
-    
+
     /**
      * No comment (yet!)
      */
     get Chance() {return new SQLCell<float, this>(this, 'Chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestRequired() {return new SQLCell<tinyint, this>(this, 'QuestRequired')}
-    
+
     /**
      * No comment (yet!)
      */
     get LootMode() {return new SQLCell<smallint, this>(this, 'LootMode')}
-    
+
     /**
      * No comment (yet!)
      */
     get GroupId() {return new SQLCell<tinyint, this>(this, 'GroupId')}
-    
+
     /**
      * No comment (yet!)
      */
     get MinCount() {return new SQLCell<tinyint, this>(this, 'MinCount')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxCount() {return new SQLCell<tinyint, this>(this, 'MaxCount')}
-    
+
     /**
      * No comment (yet!)
      */
     get Comment() {return new SQLCell<varchar, this>(this, 'Comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(Entry : mediumint,Item : mediumint, c? : mail_loot_templateCreator) : this {
         return this.cloneInternal([Entry,Item],c)
     }

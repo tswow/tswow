@@ -34,7 +34,7 @@ export namespace Datascripts {
 
         try {
             wsys.exec(
-                `node -r source-map-support/register ${ipaths.wotlkdataIndex}` 
+                `node -r source-map-support/register ${ipaths.wotlkdataIndex}`
                 +` ${ChildProcessSettings(dataset,readonly,useTimer)}`
                 + ` ${(args ? args.join(' '):'')}`
                 , 'inherit');

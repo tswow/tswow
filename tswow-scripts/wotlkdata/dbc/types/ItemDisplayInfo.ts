@@ -34,67 +34,67 @@ export class ItemDisplayInfoRow extends DBCRow<ItemDisplayInfoCreator,ItemDispla
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get ModelName() { return new DBCStringArrayCell(this,2,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ModelTexture() { return new DBCStringArrayCell(this,2,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get InventoryIcon() { return new DBCStringArrayCell(this,2,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeosetGroup() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellVisualID() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get GroupSoundIndex() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get HelmetGeosetVis() { return new DBCIntArrayCell(this,2,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get Texture() { return new DBCStringArrayCell(this,8,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemVisual() { return new DBCIntCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParticleColorID() { return new DBCIntCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ItemDisplayInfoCreator) : this {
         return this.cloneInternal([ID],c);
     }

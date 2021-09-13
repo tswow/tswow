@@ -30,7 +30,7 @@ export class EnumCellWrapper<T> extends EnumCell<T> {
         this.cell.set(value);
         return this.owner;
     }
-    
+
     protected cell: Cell<number,any>;
 
     constructor(owner: T, cell: Cell<number,any>) {

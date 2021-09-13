@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,82 +29,82 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_weatherRow extends SqlRow<game_weatherCreator,game_weatherQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get zone() {return new SQLCellReadOnly<mediumint, this>(this, 'zone')}
-    
+
     /**
      * No comment (yet!)
      */
     get spring_rain_chance() {return new SQLCell<tinyint, this>(this, 'spring_rain_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get spring_snow_chance() {return new SQLCell<tinyint, this>(this, 'spring_snow_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get spring_storm_chance() {return new SQLCell<tinyint, this>(this, 'spring_storm_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get summer_rain_chance() {return new SQLCell<tinyint, this>(this, 'summer_rain_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get summer_snow_chance() {return new SQLCell<tinyint, this>(this, 'summer_snow_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get summer_storm_chance() {return new SQLCell<tinyint, this>(this, 'summer_storm_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get fall_rain_chance() {return new SQLCell<tinyint, this>(this, 'fall_rain_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get fall_snow_chance() {return new SQLCell<tinyint, this>(this, 'fall_snow_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get fall_storm_chance() {return new SQLCell<tinyint, this>(this, 'fall_storm_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get winter_rain_chance() {return new SQLCell<tinyint, this>(this, 'winter_rain_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get winter_snow_chance() {return new SQLCell<tinyint, this>(this, 'winter_snow_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get winter_storm_chance() {return new SQLCell<tinyint, this>(this, 'winter_storm_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(zone : mediumint, c? : game_weatherCreator) : this {
         return this.cloneInternal([zone],c)
     }

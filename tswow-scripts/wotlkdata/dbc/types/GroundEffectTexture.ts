@@ -34,32 +34,32 @@ export class GroundEffectTextureRow extends DBCRow<GroundEffectTextureCreator,Gr
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get DoodadId() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get DoodadWeight() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get Density() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get Sound() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : GroundEffectTextureCreator) : this {
         return this.cloneInternal([ID],c);
     }

@@ -34,32 +34,32 @@ export class LoadingScreenTaxiSplinesRow extends DBCRow<LoadingScreenTaxiSplines
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get PathID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Locx() { return new DBCFloatArrayCell(this,8,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get Locy() { return new DBCFloatArrayCell(this,8,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get LegIndex() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : LoadingScreenTaxiSplinesCreator) : this {
         return this.cloneInternal([ID],c);
     }

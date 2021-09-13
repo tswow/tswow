@@ -17,6 +17,6 @@ export function ChildProcessSettings(dataset: Datasets.Dataset, readonly: boolea
         id_path: ipaths.datasetIds(dataset.id),
         readonly: readonly,
         use_timer: useTimer
-    } 
+    }
     return Buffer.from(JSON.stringify(settings)).toString('base64')
 }

@@ -34,62 +34,62 @@ export class FactionRow extends DBCRow<FactionCreator,FactionQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get ReputationIndex() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ReputationRaceMask() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ReputationClassMask() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get ReputationBase() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get ReputationFlags() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParentFactionID() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParentFactionMod() { return new DBCFloatArrayCell(this,2,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParentFactionCap() { return new DBCIntArrayCell(this,2,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get Description() { return new DBCLocCell(this,this.buffer,this.offset+160)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : FactionCreator) : this {
         return this.cloneInternal([ID],c);
     }

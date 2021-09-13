@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,52 +29,52 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class areatrigger_teleportRow extends SqlRow<areatrigger_teleportCreator,areatrigger_teleportQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() {return new SQLCell<text, this>(this, 'Name')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_map() {return new SQLCell<smallint, this>(this, 'target_map')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_position_x() {return new SQLCell<float, this>(this, 'target_position_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_position_y() {return new SQLCell<float, this>(this, 'target_position_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_position_z() {return new SQLCell<float, this>(this, 'target_position_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_orientation() {return new SQLCell<float, this>(this, 'target_orientation')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : areatrigger_teleportCreator) : this {
         return this.cloneInternal([ID],c)
     }

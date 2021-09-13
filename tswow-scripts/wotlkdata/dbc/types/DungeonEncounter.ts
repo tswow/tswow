@@ -34,42 +34,42 @@ export class DungeonEncounterRow extends DBCRow<DungeonEncounterCreator,DungeonE
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Difficulty() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get OrderIndex() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Bit() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellIconID() { return new DBCIntCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : DungeonEncounterCreator) : this {
         return this.cloneInternal([ID],c);
     }

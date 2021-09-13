@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,77 +29,77 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_areaRow extends SqlRow<spell_areaCreator,spell_areaQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spell() {return new SQLCellReadOnly<mediumint, this>(this, 'spell')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get area() {return new SQLCellReadOnly<mediumint, this>(this, 'area')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get quest_start() {return new SQLCellReadOnly<mediumint, this>(this, 'quest_start')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest_end() {return new SQLCell<mediumint, this>(this, 'quest_end')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get aura_spell() {return new SQLCellReadOnly<mediumint, this>(this, 'aura_spell')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get racemask() {return new SQLCellReadOnly<mediumint, this>(this, 'racemask')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get gender() {return new SQLCellReadOnly<tinyint, this>(this, 'gender')}
-    
+
     /**
      * No comment (yet!)
      */
     get autocast() {return new SQLCell<tinyint, this>(this, 'autocast')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest_start_status() {return new SQLCell<int, this>(this, 'quest_start_status')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest_end_status() {return new SQLCell<int, this>(this, 'quest_end_status')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spell : mediumint,area : mediumint,quest_start : mediumint,aura_spell : mediumint,racemask : mediumint,gender : tinyint, c? : spell_areaCreator) : this {
         return this.cloneInternal([spell,area,quest_start,aura_spell,racemask,gender],c)
     }

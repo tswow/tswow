@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,45 +29,45 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class disablesRow extends SqlRow<disablesCreator,disablesQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get sourceType() {return new SQLCellReadOnly<int, this>(this, 'sourceType')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<int, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get flags() {return new SQLCell<smallint, this>(this, 'flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get params_0() {return new SQLCell<varchar, this>(this, 'params_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get params_1() {return new SQLCell<varchar, this>(this, 'params_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<varchar, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(sourceType : int,entry : int, c? : disablesCreator) : this {
         return this.cloneInternal([sourceType,entry],c)
     }

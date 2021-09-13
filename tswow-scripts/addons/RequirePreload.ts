@@ -22,7 +22,7 @@
 
 /*
  * Modified by TSWoW
- * 
+ *
  * This file contains a plugin for typescript-to-lua
  * to enable CommonJS-style calls to "require"
  */

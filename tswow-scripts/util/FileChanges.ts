@@ -20,12 +20,12 @@ import { ipaths } from './Paths';
 
 /** Contains functions for tracking changes on the file system. */
 export namespace FileChanges {
-    /** 
-     * The file used for tracking changes 
-     * 
+    /**
+     * The file used for tracking changes
+     *
      * This would be a direct reference, but for some reason
      * there's a test that can actually change this.
-     * 
+     *
      * (That should never happen in production)
      */
     let changedFile = ipaths.changeFile;

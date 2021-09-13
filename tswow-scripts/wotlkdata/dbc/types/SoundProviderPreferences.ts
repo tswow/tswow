@@ -34,127 +34,127 @@ export class SoundProviderPreferencesRow extends DBCRow<SoundProviderPreferences
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Description() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAXEnvironmentSelection() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAXDecayTime() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2EnvironmentSize() { return new DBCFloatCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2EnvironmentDiffusion() { return new DBCFloatCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2Room() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2RoomHF() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2DecayHFRatio() { return new DBCFloatCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2Reflections() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2ReflectionsDelay() { return new DBCFloatCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2Reverb() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2ReverbDelay() { return new DBCFloatCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2RoomRolloff() { return new DBCFloatCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX2AirAbsorption() { return new DBCFloatCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3RoomLF() { return new DBCIntCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3DecayLFRatio() { return new DBCFloatCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3EchoTime() { return new DBCFloatCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3EchoDepth() { return new DBCFloatCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3ModulationTime() { return new DBCFloatCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3ModulationDepth() { return new DBCFloatCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3HFReference() { return new DBCFloatCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAX3LFReference() { return new DBCFloatCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SoundProviderPreferencesCreator) : this {
         return this.cloneInternal([ID],c);
     }

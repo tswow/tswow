@@ -34,247 +34,247 @@ export class SpellChainEffectsRow extends DBCRow<SpellChainEffectsCreator,SpellC
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get AvgSegLen() { return new DBCFloatCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Width() { return new DBCFloatCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get NoiseScale() { return new DBCFloatCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get TexCoordScale() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get SegDuration() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get SegDelay() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get Texture() { return new DBCStringCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get JointCount() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get JointOffsetRadius() { return new DBCFloatCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get JointsPerMinorJoint() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinorJointsPerMajorJoint() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinorJointScale() { return new DBCFloatCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get MajorJointScale() { return new DBCFloatCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get JointMoveSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get JointSmoothness() { return new DBCFloatCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinDurationBetweenJointJumps() { return new DBCFloatCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxDurationBetweenJointJumps() { return new DBCFloatCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get WaveHeight() { return new DBCFloatCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get WaveFreq() { return new DBCFloatCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get WaveSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinWaveAngle() { return new DBCFloatCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxWaveAngle() { return new DBCFloatCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinWaveSpin() { return new DBCFloatCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxWaveSpin() { return new DBCFloatCell(this,this.buffer,this.offset+100)}
-    
+
     /**
      * No comment (yet!)
      */
     get ArcHeight() { return new DBCFloatCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinArcAngle() { return new DBCFloatCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxArcAngle() { return new DBCFloatCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinArcSpin() { return new DBCFloatCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxArcSpin() { return new DBCFloatCell(this,this.buffer,this.offset+120)}
-    
+
     /**
      * No comment (yet!)
      */
     get DelayBetweenEffects() { return new DBCFloatCell(this,this.buffer,this.offset+124)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinFlickerOnDuration() { return new DBCFloatCell(this,this.buffer,this.offset+128)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxFlickerOnDuration() { return new DBCFloatCell(this,this.buffer,this.offset+132)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinFlickerOffDuration() { return new DBCFloatCell(this,this.buffer,this.offset+136)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxFlickerOffDuration() { return new DBCFloatCell(this,this.buffer,this.offset+140)}
-    
+
     /**
      * No comment (yet!)
      */
     get PulseSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+144)}
-    
+
     /**
      * No comment (yet!)
      */
     get PulseOnLength() { return new DBCFloatCell(this,this.buffer,this.offset+148)}
-    
+
     /**
      * No comment (yet!)
      */
     get PulseFadeLength() { return new DBCFloatCell(this,this.buffer,this.offset+152)}
-    
+
     /**
      * No comment (yet!)
      */
     get Alpha() { return new DBCByteCell(this,this.buffer,this.offset+156)}
-    
+
     /**
      * No comment (yet!)
      */
     get Red() { return new DBCByteCell(this,this.buffer,this.offset+157)}
-    
+
     /**
      * No comment (yet!)
      */
     get Green() { return new DBCByteCell(this,this.buffer,this.offset+158)}
-    
+
     /**
      * No comment (yet!)
      */
     get Blue() { return new DBCByteCell(this,this.buffer,this.offset+159)}
-    
+
     /**
      * No comment (yet!)
      */
     get BlendMode() { return new DBCByteCell(this,this.buffer,this.offset+160)}
-    
+
     /**
      * No comment (yet!)
      */
     get Combo() { return new DBCStringCell(this,this.buffer,this.offset+161)}
-    
+
     /**
      * No comment (yet!)
      */
     get RenderLayer() { return new DBCIntCell(this,this.buffer,this.offset+165)}
-    
+
     /**
      * No comment (yet!)
      */
     get TextureLength() { return new DBCFloatCell(this,this.buffer,this.offset+169)}
-    
+
     /**
      * No comment (yet!)
      */
     get WavePhase() { return new DBCFloatCell(this,this.buffer,this.offset+173)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellChainEffectsCreator) : this {
         return this.cloneInternal([ID],c);
     }

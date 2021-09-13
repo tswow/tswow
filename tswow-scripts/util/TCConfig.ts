@@ -38,7 +38,7 @@ function cleanConfigName(configName: string) {
 
 /**
  * Converts yaml settings to corresponding .conf values
- * @param value 
+ * @param value
  */
 function yamlToConfigValue(value: string) {
     // booleans
@@ -99,14 +99,14 @@ export function writeYamlToConf(yamlPath: string, configPath: string, extraValue
 
     const acs = (dbs: DatabaseSettings) => `"${dbs.host};${dbs.port};${dbs.user};${dbs.password};${dbs.database}"`;
     if (configName === 'worldserver') {
-        file[settings['logindatabaseinfo'].line] 
+        file[settings['logindatabaseinfo'].line]
             = `LoginDatabaseInfo = ${acs(databaseSettings('auth',database_prefixes['auth']))}`;
-        file[settings['worlddatabaseinfo'].line] 
+        file[settings['worlddatabaseinfo'].line]
             = `WorldDatabaseInfo = ${acs(databaseSettings('world',database_prefixes['world']))}`;
-        file[settings['characterdatabaseinfo'].line] 
+        file[settings['characterdatabaseinfo'].line]
             = `CharacterDatabaseInfo = ${acs(databaseSettings('characters',database_prefixes['characters']))}`;
     } else if (configName === 'authserver') {
-        file[settings['logindatabaseinfo'].line] 
+        file[settings['logindatabaseinfo'].line]
             = `LoginDatabaseInfo = ${acs(databaseSettings('auth',database_prefixes['auth']))}`;
     }
 
@@ -133,7 +133,7 @@ export function writeYamlToConf(yamlPath: string, configPath: string, extraValue
 
 /**
  * Updates all TrinityCore config files in a mod profile.
- * @param realm 
+ * @param realm
  */
 export function writeRealmYamlToConf(realm: string) {
     wfs.readDir(ipaths.realmDir(realm), false, 'files')
@@ -143,7 +143,7 @@ export function writeRealmYamlToConf(realm: string) {
 
 /**
  * Copies all library files
- * @param type 
+ * @param type
  */
 export function copyLibraryFiles(type: BuildType) {
     if (isWindows()) {
@@ -153,7 +153,7 @@ export function copyLibraryFiles(type: BuildType) {
                 const dst = mpath(ipaths.tc(type),x);
                 if(!wfs.exists(dst)) {
                     wfs.copy(
-                        mpath(ipaths.tcRoot, x), 
+                        mpath(ipaths.tcRoot, x),
                         dst)
                 }
             });

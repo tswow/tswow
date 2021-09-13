@@ -34,27 +34,27 @@ export class EmotesTextRow extends DBCRow<EmotesTextCreator,EmotesTextQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteText() { return new DBCIntArrayCell(this,16,this.buffer,this.offset+12)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : EmotesTextCreator) : this {
         return this.cloneInternal([ID],c);
     }

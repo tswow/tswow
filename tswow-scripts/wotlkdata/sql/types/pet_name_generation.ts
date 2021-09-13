@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class pet_name_generationRow extends SqlRow<pet_name_generationCreator,pet_name_generationQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<mediumint, this>(this, 'id')}
-    
+
     /**
      * No comment (yet!)
      */
     get word() {return new SQLCell<tinytext, this>(this, 'word')}
-    
+
     /**
      * No comment (yet!)
      */
     get entry() {return new SQLCell<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get half() {return new SQLCell<tinyint, this>(this, 'half')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : mediumint, c? : pet_name_generationCreator) : this {
         return this.cloneInternal([id],c)
     }

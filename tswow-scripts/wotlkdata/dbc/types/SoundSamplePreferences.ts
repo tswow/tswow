@@ -34,92 +34,92 @@ export class SoundSamplePreferencesRow extends DBCRow<SoundSamplePreferencesCrea
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field01() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field02() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field03() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field04() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field05() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field06() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field07() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field08() { return new DBCFloatCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field09() { return new DBCFloatCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field10() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field11() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field12() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field13() { return new DBCFloatCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field14() { return new DBCIntCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field15() { return new DBCFloatCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field16() { return new DBCIntCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SoundSamplePreferencesCreator) : this {
         return this.cloneInternal([ID],c);
     }

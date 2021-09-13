@@ -34,17 +34,17 @@ export class ItemVisualsRow extends DBCRow<ItemVisualsCreator,ItemVisualsQuery> 
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Slot() { return new DBCIntArrayCell(this,5,this.buffer,this.offset+4)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ItemVisualsCreator) : this {
         return this.cloneInternal([ID],c);
     }

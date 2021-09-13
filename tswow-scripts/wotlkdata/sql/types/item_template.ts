@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,707 +29,707 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class item_templateRow extends SqlRow<item_templateCreator,item_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get class() {return new SQLCell<tinyint, this>(this, 'class')}
-    
+
     /**
      * No comment (yet!)
      */
     get subclass() {return new SQLCell<tinyint, this>(this, 'subclass')}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundOverrideSubclass() {return new SQLCell<tinyint, this>(this, 'SoundOverrideSubclass')}
-    
+
     /**
      * No comment (yet!)
      */
     get name() {return new SQLCell<varchar, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get displayid() {return new SQLCell<mediumint, this>(this, 'displayid')}
-    
+
     /**
      * No comment (yet!)
      */
     get Quality() {return new SQLCell<tinyint, this>(this, 'Quality')}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() {return new SQLCell<int, this>(this, 'Flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get FlagsExtra() {return new SQLCell<int, this>(this, 'FlagsExtra')}
-    
+
     /**
      * No comment (yet!)
      */
     get BuyCount() {return new SQLCell<tinyint, this>(this, 'BuyCount')}
-    
+
     /**
      * No comment (yet!)
      */
     get BuyPrice() {return new SQLCell<bigint, this>(this, 'BuyPrice')}
-    
+
     /**
      * No comment (yet!)
      */
     get SellPrice() {return new SQLCell<int, this>(this, 'SellPrice')}
-    
+
     /**
      * No comment (yet!)
      */
     get InventoryType() {return new SQLCell<tinyint, this>(this, 'InventoryType')}
-    
+
     /**
      * No comment (yet!)
      */
     get AllowableClass() {return new SQLCell<int, this>(this, 'AllowableClass')}
-    
+
     /**
      * No comment (yet!)
      */
     get AllowableRace() {return new SQLCell<int, this>(this, 'AllowableRace')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemLevel() {return new SQLCell<smallint, this>(this, 'ItemLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredLevel() {return new SQLCell<tinyint, this>(this, 'RequiredLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSkill() {return new SQLCell<smallint, this>(this, 'RequiredSkill')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSkillRank() {return new SQLCell<smallint, this>(this, 'RequiredSkillRank')}
-    
+
     /**
      * No comment (yet!)
      */
     get requiredspell() {return new SQLCell<mediumint, this>(this, 'requiredspell')}
-    
+
     /**
      * No comment (yet!)
      */
     get requiredhonorrank() {return new SQLCell<mediumint, this>(this, 'requiredhonorrank')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredCityRank() {return new SQLCell<mediumint, this>(this, 'RequiredCityRank')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredReputationFaction() {return new SQLCell<smallint, this>(this, 'RequiredReputationFaction')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredReputationRank() {return new SQLCell<smallint, this>(this, 'RequiredReputationRank')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxcount() {return new SQLCell<int, this>(this, 'maxcount')}
-    
+
     /**
      * No comment (yet!)
      */
     get stackable() {return new SQLCell<int, this>(this, 'stackable')}
-    
+
     /**
      * No comment (yet!)
      */
     get ContainerSlots() {return new SQLCell<tinyint, this>(this, 'ContainerSlots')}
-    
+
     /**
      * No comment (yet!)
      */
     get StatsCount() {return new SQLCell<tinyint, this>(this, 'StatsCount')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type1() {return new SQLCell<tinyint, this>(this, 'stat_type1')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value1() {return new SQLCell<smallint, this>(this, 'stat_value1')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type2() {return new SQLCell<tinyint, this>(this, 'stat_type2')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value2() {return new SQLCell<smallint, this>(this, 'stat_value2')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type3() {return new SQLCell<tinyint, this>(this, 'stat_type3')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value3() {return new SQLCell<smallint, this>(this, 'stat_value3')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type4() {return new SQLCell<tinyint, this>(this, 'stat_type4')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value4() {return new SQLCell<smallint, this>(this, 'stat_value4')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type5() {return new SQLCell<tinyint, this>(this, 'stat_type5')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value5() {return new SQLCell<smallint, this>(this, 'stat_value5')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type6() {return new SQLCell<tinyint, this>(this, 'stat_type6')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value6() {return new SQLCell<smallint, this>(this, 'stat_value6')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type7() {return new SQLCell<tinyint, this>(this, 'stat_type7')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value7() {return new SQLCell<smallint, this>(this, 'stat_value7')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type8() {return new SQLCell<tinyint, this>(this, 'stat_type8')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value8() {return new SQLCell<smallint, this>(this, 'stat_value8')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type9() {return new SQLCell<tinyint, this>(this, 'stat_type9')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value9() {return new SQLCell<smallint, this>(this, 'stat_value9')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_type10() {return new SQLCell<tinyint, this>(this, 'stat_type10')}
-    
+
     /**
      * No comment (yet!)
      */
     get stat_value10() {return new SQLCell<smallint, this>(this, 'stat_value10')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScalingStatDistribution() {return new SQLCell<smallint, this>(this, 'ScalingStatDistribution')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScalingStatValue() {return new SQLCell<int, this>(this, 'ScalingStatValue')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmg_min1() {return new SQLCell<float, this>(this, 'dmg_min1')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmg_max1() {return new SQLCell<float, this>(this, 'dmg_max1')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmg_type1() {return new SQLCell<tinyint, this>(this, 'dmg_type1')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmg_min2() {return new SQLCell<float, this>(this, 'dmg_min2')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmg_max2() {return new SQLCell<float, this>(this, 'dmg_max2')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmg_type2() {return new SQLCell<tinyint, this>(this, 'dmg_type2')}
-    
+
     /**
      * No comment (yet!)
      */
     get armor() {return new SQLCell<smallint, this>(this, 'armor')}
-    
+
     /**
      * No comment (yet!)
      */
     get holy_res() {return new SQLCell<tinyint, this>(this, 'holy_res')}
-    
+
     /**
      * No comment (yet!)
      */
     get fire_res() {return new SQLCell<tinyint, this>(this, 'fire_res')}
-    
+
     /**
      * No comment (yet!)
      */
     get nature_res() {return new SQLCell<tinyint, this>(this, 'nature_res')}
-    
+
     /**
      * No comment (yet!)
      */
     get frost_res() {return new SQLCell<tinyint, this>(this, 'frost_res')}
-    
+
     /**
      * No comment (yet!)
      */
     get shadow_res() {return new SQLCell<tinyint, this>(this, 'shadow_res')}
-    
+
     /**
      * No comment (yet!)
      */
     get arcane_res() {return new SQLCell<tinyint, this>(this, 'arcane_res')}
-    
+
     /**
      * No comment (yet!)
      */
     get delay() {return new SQLCell<smallint, this>(this, 'delay')}
-    
+
     /**
      * No comment (yet!)
      */
     get ammo_type() {return new SQLCell<tinyint, this>(this, 'ammo_type')}
-    
+
     /**
      * No comment (yet!)
      */
     get RangedModRange() {return new SQLCell<float, this>(this, 'RangedModRange')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid_1() {return new SQLCell<mediumint, this>(this, 'spellid_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spelltrigger_1() {return new SQLCell<tinyint, this>(this, 'spelltrigger_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcharges_1() {return new SQLCell<smallint, this>(this, 'spellcharges_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellppmRate_1() {return new SQLCell<float, this>(this, 'spellppmRate_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcooldown_1() {return new SQLCell<int, this>(this, 'spellcooldown_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategory_1() {return new SQLCell<smallint, this>(this, 'spellcategory_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategorycooldown_1() {return new SQLCell<int, this>(this, 'spellcategorycooldown_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid_2() {return new SQLCell<mediumint, this>(this, 'spellid_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spelltrigger_2() {return new SQLCell<tinyint, this>(this, 'spelltrigger_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcharges_2() {return new SQLCell<smallint, this>(this, 'spellcharges_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellppmRate_2() {return new SQLCell<float, this>(this, 'spellppmRate_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcooldown_2() {return new SQLCell<int, this>(this, 'spellcooldown_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategory_2() {return new SQLCell<smallint, this>(this, 'spellcategory_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategorycooldown_2() {return new SQLCell<int, this>(this, 'spellcategorycooldown_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid_3() {return new SQLCell<mediumint, this>(this, 'spellid_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spelltrigger_3() {return new SQLCell<tinyint, this>(this, 'spelltrigger_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcharges_3() {return new SQLCell<smallint, this>(this, 'spellcharges_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellppmRate_3() {return new SQLCell<float, this>(this, 'spellppmRate_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcooldown_3() {return new SQLCell<int, this>(this, 'spellcooldown_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategory_3() {return new SQLCell<smallint, this>(this, 'spellcategory_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategorycooldown_3() {return new SQLCell<int, this>(this, 'spellcategorycooldown_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid_4() {return new SQLCell<mediumint, this>(this, 'spellid_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spelltrigger_4() {return new SQLCell<tinyint, this>(this, 'spelltrigger_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcharges_4() {return new SQLCell<smallint, this>(this, 'spellcharges_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellppmRate_4() {return new SQLCell<float, this>(this, 'spellppmRate_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcooldown_4() {return new SQLCell<int, this>(this, 'spellcooldown_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategory_4() {return new SQLCell<smallint, this>(this, 'spellcategory_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategorycooldown_4() {return new SQLCell<int, this>(this, 'spellcategorycooldown_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid_5() {return new SQLCell<mediumint, this>(this, 'spellid_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get spelltrigger_5() {return new SQLCell<tinyint, this>(this, 'spelltrigger_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcharges_5() {return new SQLCell<smallint, this>(this, 'spellcharges_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellppmRate_5() {return new SQLCell<float, this>(this, 'spellppmRate_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcooldown_5() {return new SQLCell<int, this>(this, 'spellcooldown_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategory_5() {return new SQLCell<smallint, this>(this, 'spellcategory_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellcategorycooldown_5() {return new SQLCell<int, this>(this, 'spellcategorycooldown_5')}
-    
+
     /**
      * No comment (yet!)
      */
     get bonding() {return new SQLCell<tinyint, this>(this, 'bonding')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<varchar, this>(this, 'description')}
-    
+
     /**
      * No comment (yet!)
      */
     get PageText() {return new SQLCell<mediumint, this>(this, 'PageText')}
-    
+
     /**
      * No comment (yet!)
      */
     get LanguageID() {return new SQLCell<tinyint, this>(this, 'LanguageID')}
-    
+
     /**
      * No comment (yet!)
      */
     get PageMaterial() {return new SQLCell<tinyint, this>(this, 'PageMaterial')}
-    
+
     /**
      * No comment (yet!)
      */
     get startquest() {return new SQLCell<mediumint, this>(this, 'startquest')}
-    
+
     /**
      * No comment (yet!)
      */
     get lockid() {return new SQLCell<mediumint, this>(this, 'lockid')}
-    
+
     /**
      * No comment (yet!)
      */
     get Material() {return new SQLCell<tinyint, this>(this, 'Material')}
-    
+
     /**
      * No comment (yet!)
      */
     get sheath() {return new SQLCell<tinyint, this>(this, 'sheath')}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomProperty() {return new SQLCell<mediumint, this>(this, 'RandomProperty')}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomSuffix() {return new SQLCell<mediumint, this>(this, 'RandomSuffix')}
-    
+
     /**
      * No comment (yet!)
      */
     get block() {return new SQLCell<mediumint, this>(this, 'block')}
-    
+
     /**
      * No comment (yet!)
      */
     get itemset() {return new SQLCell<mediumint, this>(this, 'itemset')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxDurability() {return new SQLCell<smallint, this>(this, 'MaxDurability')}
-    
+
     /**
      * No comment (yet!)
      */
     get area() {return new SQLCell<mediumint, this>(this, 'area')}
-    
+
     /**
      * No comment (yet!)
      */
     get Map() {return new SQLCell<smallint, this>(this, 'Map')}
-    
+
     /**
      * No comment (yet!)
      */
     get BagFamily() {return new SQLCell<mediumint, this>(this, 'BagFamily')}
-    
+
     /**
      * No comment (yet!)
      */
     get TotemCategory() {return new SQLCell<mediumint, this>(this, 'TotemCategory')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketColor_1() {return new SQLCell<tinyint, this>(this, 'socketColor_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketContent_1() {return new SQLCell<mediumint, this>(this, 'socketContent_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketColor_2() {return new SQLCell<tinyint, this>(this, 'socketColor_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketContent_2() {return new SQLCell<mediumint, this>(this, 'socketContent_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketColor_3() {return new SQLCell<tinyint, this>(this, 'socketColor_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketContent_3() {return new SQLCell<mediumint, this>(this, 'socketContent_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get socketBonus() {return new SQLCell<mediumint, this>(this, 'socketBonus')}
-    
+
     /**
      * No comment (yet!)
      */
     get GemProperties() {return new SQLCell<mediumint, this>(this, 'GemProperties')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredDisenchantSkill() {return new SQLCell<smallint, this>(this, 'RequiredDisenchantSkill')}
-    
+
     /**
      * No comment (yet!)
      */
     get ArmorDamageModifier() {return new SQLCell<float, this>(this, 'ArmorDamageModifier')}
-    
+
     /**
      * No comment (yet!)
      */
     get duration() {return new SQLCell<int, this>(this, 'duration')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemLimitCategory() {return new SQLCell<smallint, this>(this, 'ItemLimitCategory')}
-    
+
     /**
      * No comment (yet!)
      */
     get HolidayId() {return new SQLCell<int, this>(this, 'HolidayId')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<varchar, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get DisenchantID() {return new SQLCell<mediumint, this>(this, 'DisenchantID')}
-    
+
     /**
      * No comment (yet!)
      */
     get FoodType() {return new SQLCell<tinyint, this>(this, 'FoodType')}
-    
+
     /**
      * No comment (yet!)
      */
     get minMoneyLoot() {return new SQLCell<int, this>(this, 'minMoneyLoot')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxMoneyLoot() {return new SQLCell<int, this>(this, 'maxMoneyLoot')}
-    
+
     /**
      * No comment (yet!)
      */
     get flagsCustom() {return new SQLCell<int, this>(this, 'flagsCustom')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : item_templateCreator) : this {
         return this.cloneInternal([entry],c)
     }

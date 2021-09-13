@@ -34,67 +34,67 @@ export class HolidaysRow extends DBCRow<HolidaysCreator,HolidaysQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Duration() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Date() { return new DBCIntArrayCell(this,26,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get Region() { return new DBCIntCell(this,this.buffer,this.offset+148)}
-    
+
     /**
      * No comment (yet!)
      */
     get Looping() { return new DBCIntCell(this,this.buffer,this.offset+152)}
-    
+
     /**
      * No comment (yet!)
      */
     get CalendarFlags() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+156)}
-    
+
     /**
      * No comment (yet!)
      */
     get HolidayNameID() { return new DBCIntCell(this,this.buffer,this.offset+196)}
-    
+
     /**
      * No comment (yet!)
      */
     get HolidayDescriptionID() { return new DBCIntCell(this,this.buffer,this.offset+200)}
-    
+
     /**
      * No comment (yet!)
      */
     get TextureFilename() { return new DBCStringCell(this,this.buffer,this.offset+204)}
-    
+
     /**
      * No comment (yet!)
      */
     get Priority() { return new DBCIntCell(this,this.buffer,this.offset+208)}
-    
+
     /**
      * No comment (yet!)
      */
     get CalendarFilterType() { return new DBCIntCell(this,this.buffer,this.offset+212)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+216)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : HolidaysCreator) : this {
         return this.cloneInternal([ID],c);
     }

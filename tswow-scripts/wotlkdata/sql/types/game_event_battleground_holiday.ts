@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,22 +29,22 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_event_battleground_holidayRow extends SqlRow<game_event_battleground_holidayCreator,game_event_battleground_holidayQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get EventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'EventEntry')}
-    
+
     /**
      * No comment (yet!)
      */
     get BattlegroundID() {return new SQLCell<int, this>(this, 'BattlegroundID')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(EventEntry : tinyint, c? : game_event_battleground_holidayCreator) : this {
         return this.cloneInternal([EventEntry],c)
     }

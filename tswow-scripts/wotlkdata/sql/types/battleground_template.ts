@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,77 +29,77 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class battleground_templateRow extends SqlRow<battleground_templateCreator,battleground_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get MinPlayersPerTeam() {return new SQLCell<smallint, this>(this, 'MinPlayersPerTeam')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxPlayersPerTeam() {return new SQLCell<smallint, this>(this, 'MaxPlayersPerTeam')}
-    
+
     /**
      * No comment (yet!)
      */
     get MinLvl() {return new SQLCell<tinyint, this>(this, 'MinLvl')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxLvl() {return new SQLCell<tinyint, this>(this, 'MaxLvl')}
-    
+
     /**
      * No comment (yet!)
      */
     get AllianceStartLoc() {return new SQLCell<mediumint, this>(this, 'AllianceStartLoc')}
-    
+
     /**
      * No comment (yet!)
      */
     get AllianceStartO() {return new SQLCell<float, this>(this, 'AllianceStartO')}
-    
+
     /**
      * No comment (yet!)
      */
     get HordeStartLoc() {return new SQLCell<mediumint, this>(this, 'HordeStartLoc')}
-    
+
     /**
      * No comment (yet!)
      */
     get HordeStartO() {return new SQLCell<float, this>(this, 'HordeStartO')}
-    
+
     /**
      * No comment (yet!)
      */
     get StartMaxDist() {return new SQLCell<float, this>(this, 'StartMaxDist')}
-    
+
     /**
      * No comment (yet!)
      */
     get Weight() {return new SQLCell<tinyint, this>(this, 'Weight')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get Comment() {return new SQLCell<char, this>(this, 'Comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : battleground_templateCreator) : this {
         return this.cloneInternal([ID],c)
     }

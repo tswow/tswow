@@ -72,8 +72,8 @@ export namespace Identifiers {
 
     /**
      * Checks that at least one of the provided arguments is a valid instance of type
-     * @param type 
-     * @param identifiers 
+     * @param type
+     * @param identifiers
      */
     export function assertExists(type: Identifier, identifiers: string[]) {
         let res = getTypes(type, identifiers);
@@ -86,9 +86,9 @@ export namespace Identifiers {
     /**
      * Asserts all arguments are valid instances of type
      * , and that |identifiers|>0
-     * 
-     * @param type 
-     * @param identifiers 
+     *
+     * @param type
+     * @param identifiers
      */
     export function assertTypeNoEmpty(type: Identifier, identifiers: string[]) {
         if(identifiers.length===0) {
@@ -98,11 +98,11 @@ export namespace Identifiers {
     }
 
     /**
-     * Asserts all arguments, if any, are valid instances of type, 
+     * Asserts all arguments, if any, are valid instances of type,
      * then returns the identifiers again
-     * 
-     * @param type 
-     * @param identifiers 
+     *
+     * @param type
+     * @param identifiers
      */
     export function assertType(type: Identifier, identifiers: string[]) {
         let offending = identifiers.filter(x=>getType(x)!=type);
@@ -114,8 +114,8 @@ export namespace Identifiers {
 
     /**
      * Returns all names in identifiers that are instances of type
-     * @param type 
-     * @param identifiers 
+     * @param type
+     * @param identifiers
      */
     export function getTypes(type: Identifier, identifiers: string[]) {
         return identifiers.filter(x=>getType(x)==type);

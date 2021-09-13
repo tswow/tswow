@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,22 +29,22 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class commandRow extends SqlRow<commandCreator,commandQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get name() {return new SQLCellReadOnly<varchar, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get help() {return new SQLCell<longtext, this>(this, 'help')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(name : varchar, c? : commandCreator) : this {
         return this.cloneInternal([name],c)
     }

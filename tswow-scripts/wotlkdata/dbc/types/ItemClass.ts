@@ -34,7 +34,7 @@ export class ItemClassRow extends DBCRow<ItemClassCreator,ItemClassQuery> {
      */
     @PrimaryKey()
     get ClassID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Primary Key
      *
@@ -42,22 +42,22 @@ export class ItemClassRow extends DBCRow<ItemClassCreator,ItemClassQuery> {
      */
     @PrimaryKey()
     get SubclassMapID() { return new DBCKeyCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ClassName() { return new DBCLocCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ClassID : int,SubclassMapID : int, c? : ItemClassCreator) : this {
         return this.cloneInternal([ClassID,SubclassMapID],c);
     }

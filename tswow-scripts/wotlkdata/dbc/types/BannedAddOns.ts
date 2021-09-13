@@ -34,32 +34,32 @@ export class BannedAddOnsRow extends DBCRow<BannedAddOnsCreator,BannedAddOnsQuer
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get NameMD5_() { return new DBCUIntArrayCell(this,4,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get VersionMD5_() { return new DBCUIntArrayCell(this,4,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get LastModified() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : BannedAddOnsCreator) : this {
         return this.cloneInternal([ID],c);
     }

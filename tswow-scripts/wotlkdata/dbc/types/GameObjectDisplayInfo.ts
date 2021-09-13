@@ -34,57 +34,57 @@ export class GameObjectDisplayInfoRow extends DBCRow<GameObjectDisplayInfoCreato
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get ModelName() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Sound() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMinX() { return new DBCFloatCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMinY() { return new DBCFloatCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMinZ() { return new DBCFloatCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMaxX() { return new DBCFloatCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMaxY() { return new DBCFloatCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMaxZ() { return new DBCFloatCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectEffectPackageID() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : GameObjectDisplayInfoCreator) : this {
         return this.cloneInternal([ID],c);
     }

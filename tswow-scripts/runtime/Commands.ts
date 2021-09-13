@@ -282,7 +282,7 @@ export namespace commands {
             await sendCommand(args.concat(runArgs).join(' '));
         });
     }
-    
+
     addCommand(
           'command'
         , 'alias command'

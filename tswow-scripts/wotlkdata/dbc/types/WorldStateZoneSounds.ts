@@ -31,47 +31,47 @@ export class WorldStateZoneSoundsRow extends DBCRow<WorldStateZoneSoundsCreator,
      * No comment (yet!)
      */
     get WorldStateID() { return new DBCIntCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get WorldStateValue() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get AreaID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get WMOAreaID() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get ZoneintroMusicID() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get ZoneMusicID() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundAmbienceID() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundProviderPreferencesID() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(c?: WorldStateZoneSoundsCreator) : this {
         return this.cloneInternal([],c);
     }

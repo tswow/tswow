@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_enchant_proc_dataRow extends SqlRow<spell_enchant_proc_dataCreator,spell_enchant_proc_dataQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get EnchantID() {return new SQLCellReadOnly<int, this>(this, 'EnchantID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Chance() {return new SQLCell<float, this>(this, 'Chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProcsPerMinute() {return new SQLCell<float, this>(this, 'ProcsPerMinute')}
-    
+
     /**
      * No comment (yet!)
      */
     get HitMask() {return new SQLCell<int, this>(this, 'HitMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesMask() {return new SQLCell<int, this>(this, 'AttributesMask')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(EnchantID : int, c? : spell_enchant_proc_dataCreator) : this {
         return this.cloneInternal([EnchantID],c)
     }

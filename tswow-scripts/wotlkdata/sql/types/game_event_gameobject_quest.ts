@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,33 +29,33 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_event_gameobject_questRow extends SqlRow<game_event_gameobject_questCreator,game_event_gameobject_questQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get eventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<mediumint, this>(this, 'id')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get quest() {return new SQLCellReadOnly<mediumint, this>(this, 'quest')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : tinyint,quest : mediumint,eventEntry : mediumint, c? : game_event_gameobject_questCreator) : this {
         return this.cloneInternal([id,quest,eventEntry],c)
     }

@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_template_spellRow extends SqlRow<creature_template_spellCreator,creature_template_spellQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get CreatureID() {return new SQLCellReadOnly<mediumint, this>(this, 'CreatureID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Index() {return new SQLCellReadOnly<tinyint, this>(this, 'Index')}
-    
+
     /**
      * No comment (yet!)
      */
     get Spell() {return new SQLCell<mediumint, this>(this, 'Spell')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(CreatureID : mediumint,Index : tinyint, c? : creature_template_spellCreator) : this {
         return this.cloneInternal([CreatureID,Index],c)
     }

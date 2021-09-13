@@ -34,27 +34,27 @@ export class DeclinedWordCasesRow extends DBCRow<DeclinedWordCasesCreator,Declin
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get DeclinedWordID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get CaseIndex() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get DeclinedWord() { return new DBCStringCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : DeclinedWordCasesCreator) : this {
         return this.cloneInternal([ID],c);
     }

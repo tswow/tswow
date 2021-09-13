@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,105 +29,105 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class npc_text_localeRow extends SqlRow<npc_text_localeCreator,npc_text_localeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Locale() {return new SQLCellReadOnly<varchar, this>(this, 'Locale')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text0_0() {return new SQLCell<longtext, this>(this, 'Text0_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text0_1() {return new SQLCell<longtext, this>(this, 'Text0_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text1_0() {return new SQLCell<longtext, this>(this, 'Text1_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text1_1() {return new SQLCell<longtext, this>(this, 'Text1_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text2_0() {return new SQLCell<longtext, this>(this, 'Text2_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text2_1() {return new SQLCell<longtext, this>(this, 'Text2_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text3_0() {return new SQLCell<longtext, this>(this, 'Text3_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text3_1() {return new SQLCell<longtext, this>(this, 'Text3_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text4_0() {return new SQLCell<longtext, this>(this, 'Text4_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text4_1() {return new SQLCell<longtext, this>(this, 'Text4_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text5_0() {return new SQLCell<longtext, this>(this, 'Text5_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text5_1() {return new SQLCell<longtext, this>(this, 'Text5_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text6_0() {return new SQLCell<longtext, this>(this, 'Text6_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text6_1() {return new SQLCell<longtext, this>(this, 'Text6_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text7_0() {return new SQLCell<longtext, this>(this, 'Text7_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text7_1() {return new SQLCell<longtext, this>(this, 'Text7_1')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint,Locale : varchar, c? : npc_text_localeCreator) : this {
         return this.cloneInternal([ID,Locale],c)
     }

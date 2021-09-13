@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,30 +29,30 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_learn_spellRow extends SqlRow<spell_learn_spellCreator,spell_learn_spellQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<smallint, this>(this, 'entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SpellID() {return new SQLCellReadOnly<smallint, this>(this, 'SpellID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Active() {return new SQLCell<tinyint, this>(this, 'Active')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : smallint,SpellID : smallint, c? : spell_learn_spellCreator) : this {
         return this.cloneInternal([entry,SpellID],c)
     }

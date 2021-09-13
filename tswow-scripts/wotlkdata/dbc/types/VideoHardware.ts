@@ -34,122 +34,122 @@ export class VideoHardwareRow extends DBCRow<VideoHardwareCreator,VideoHardwareQ
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get VendorID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get DeviceID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get FarclipIdx() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get TerrainLODDistIdx() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get TerrainShadowLOD() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get DetailDoodadDensityIdx() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get DetailDoodadAlpha() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get AnimatingDoodadIdx() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get Trilinear() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get NumLights() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get Specularity() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get WaterLODIdx() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParticleDensityIdx() { return new DBCIntCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get UnitDrawDistIdx() { return new DBCIntCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get SmallCullDistIdx() { return new DBCIntCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get ResolutionIdx() { return new DBCIntCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get BaseMipLevel() { return new DBCIntCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get OglOverrides() { return new DBCStringCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get D3dOverrides() { return new DBCStringCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get FixLag() { return new DBCIntCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get Multisample() { return new DBCIntCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get Atlasdisable() { return new DBCIntCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : VideoHardwareCreator) : this {
         return this.cloneInternal([ID],c);
     }

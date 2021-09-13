@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,38 +29,38 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class playercreateinfo_spell_customRow extends SqlRow<playercreateinfo_spell_customCreator,playercreateinfo_spell_customQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get racemask() {return new SQLCellReadOnly<int, this>(this, 'racemask')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get classmask() {return new SQLCellReadOnly<int, this>(this, 'classmask')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Spell() {return new SQLCellReadOnly<mediumint, this>(this, 'Spell')}
-    
+
     /**
      * No comment (yet!)
      */
     get Note() {return new SQLCell<varchar, this>(this, 'Note')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(racemask : int,clsmask : int,Spell : mediumint, c? : playercreateinfo_spell_customCreator) : this {
         return this.cloneInternal([racemask,clsmask,Spell],c)
     }

@@ -268,7 +268,7 @@ export namespace Modules {
             wfs.remove(ipaths.moduleNodeModule(this.id));
             await refreshModules(false);
         }
-        
+
         linkModule() {
             wfs.write(
                   ipaths.moduleDataPackagePath(this.id)
@@ -410,7 +410,7 @@ export namespace Modules {
         if(!wfs.exists(ipaths.moduleRoot(name))) {
             return;
         }
-        
+
         wfs.copy(ipaths.moduleRoot(name), ipaths.moduleFreeGarbage(name));
 
         // hackfix but this seems to be long enough for vscode to stop fucking around
@@ -464,7 +464,7 @@ export namespace Modules {
                     wfs.remove(x);
                 });
             });
-        } 
+        }
 
         for(const {module} of nonSymlinked) {
             try {
@@ -528,8 +528,8 @@ export namespace Modules {
             , 'name --datascripts --livescripts --addon --assets --all'
             , 'Create a new module from a name or git repository'
             , (args) => {
-            if (args.length < 1) { 
-                throw new Error('Please provide a name for the new module'); 
+            if (args.length < 1) {
+                throw new Error('Please provide a name for the new module');
             }
             if(args.includes(('--all'))) {
                 addModule(args[0],true,true,true,true,true);

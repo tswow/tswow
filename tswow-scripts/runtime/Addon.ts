@@ -43,7 +43,7 @@ return {
     "exclude":['../scripts','../assets','../data'],
     "tstl": {
       "luaTarget": "5.1",
-      "luaPlugins": [ 
+      "luaPlugins": [
         {"name": "../../../bin/scripts/tswow/addons/RequirePreload.js",'import':'RequirePreload'},
         {"name": "../../../bin/scripts/tswow/addons/MessagePlugin.js",'import':'MessagePlugin'},
       ],
@@ -121,7 +121,7 @@ export namespace Addon {
             .filter(x=>x.endsWith('.lua'))
             .map(x=>wfs.basename(x))
             .filter(x=>x!=='lualib_bundle.lua')
-    
+
         // These must be first for requires to work correctly
         const score = (a: string) => {
             if(a==='LualibBundle.lua') return 2;
@@ -212,7 +212,7 @@ export namespace Addon {
         term.log(`Building addon ${mod} for dataset ${dataset}`);
         wfs.remove(ipaths.moduleAddonClasses(mod));
 
-        // need to bypass the normal checks for decorators, 
+        // need to bypass the normal checks for decorators,
         // so we inject a patch into tstl instead of maintaining a fork of their repository
         let decoText = wfs.read(ipaths.tstlDecorators);
         let diagnosticsIndex = decoText.indexOf('context.diagnostics.push(');
@@ -278,7 +278,7 @@ export namespace Addon {
                     }
                     x = x.replace(m[1],p);
                 }
-                return x; 
+                return x;
             });
             wfs.writeLines(name,rows);
         });

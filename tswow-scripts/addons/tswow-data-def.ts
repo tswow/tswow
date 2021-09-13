@@ -1,24 +1,24 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2021 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import ts = require("typescript");
 
 /**
  * This file contains the definitions for MessagePlugin.ts,
- * that should ensure the lua-side output is equivalent to the 
+ * that should ensure the lua-side output is equivalent to the
  * C++ transpiler.
  */
 
@@ -133,7 +133,7 @@ export function registerMessage(node: ts.ClassDeclaration) {
 
         message.fields.push(field);
     });
-    
+
     // @ts-ignore
     const className = node.name.getText(node.getSourceFile());
     messages[className] = message;
@@ -141,6 +141,6 @@ export function registerMessage(node: ts.ClassDeclaration) {
     if(message.size>180) {
         throw new Error(`Message ${className} is ${message.size} bytes long (maximum is 180)`)
     }
-    
+
     return message;
 }

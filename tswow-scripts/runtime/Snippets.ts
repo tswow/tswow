@@ -20,7 +20,7 @@ export namespace Snippets {
         description: string[] = []
         body: string[] = []
     }
-    
+
     export function parseText(
           content: string
         , removeComments: boolean
@@ -38,8 +38,8 @@ export namespace Snippets {
                 curSnippet = new Snippet(nameMatch[1]);
                 curMode = x.includes('*/') ? Mode.CODE : Mode.DESCRIPTION;
                 return;
-            } 
-            
+            }
+
             if(curMode == Mode.DESCRIPTION) {
                 let m = x.match(/\* *(.+?) *(\*\/|)$/)
                 if(m && m[1].length>1) {
@@ -117,7 +117,7 @@ export namespace Snippets {
                     }
 
                     // comment rows that are now empty should be skipped
-                    if(curMode != Mode.CODE_COMMENT 
+                    if(curMode != Mode.CODE_COMMENT
                         && (!hadComment || x.split(' ').join('').length>0)) {
                         x = x.trimRight();
                         // necessary because of json
@@ -167,7 +167,7 @@ export namespace Snippets {
                 x.body.forEach(y=>{
                     let trimmed = y.length - trim(y).length
 
-                    // don't count single space indention 
+                    // don't count single space indention
                     // for things like comment blocks
                     if((trimmed > (usesTabs?0:1) && trimmed < smallest)) {
                         smallest = trimmed;
@@ -192,7 +192,7 @@ export namespace Snippets {
 
     export function cleanSnippets(modules: Modules.Module[]) {
         let json: any = JSON.parse(wfs.readOr(ipaths.generatedSnippetsOut,'{}'));
-        
+
         // Delete removed modules
         let allModules = Modules.getModules().map(x=>x.id);
         Object.keys(json)

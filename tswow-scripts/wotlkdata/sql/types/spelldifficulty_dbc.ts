@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spelldifficulty_dbcRow extends SqlRow<spelldifficulty_dbcCreator,spelldifficulty_dbcQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<int, this>(this, 'id')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid0() {return new SQLCell<int, this>(this, 'spellid0')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid1() {return new SQLCell<int, this>(this, 'spellid1')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid2() {return new SQLCell<int, this>(this, 'spellid2')}
-    
+
     /**
      * No comment (yet!)
      */
     get spellid3() {return new SQLCell<int, this>(this, 'spellid3')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : int, c? : spelldifficulty_dbcCreator) : this {
         return this.cloneInternal([id],c)
     }

@@ -120,7 +120,7 @@ export namespace wsys {
      */
     export function execIn(dirname: string, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
         let str = '';
-        const data = child_process.execSync(program, 
+        const data = child_process.execSync(program,
             {stdio: stdio, cwd: wfs.absPath(dirname)});
         if(stdio==='pipe' && data !== null && data !== undefined) {
             str = data.toString();

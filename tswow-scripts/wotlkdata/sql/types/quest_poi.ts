@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,60 +29,60 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_poiRow extends SqlRow<quest_poiCreator,quest_poiQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get QuestID() {return new SQLCellReadOnly<int, this>(this, 'QuestID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<int, this>(this, 'id')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveIndex() {return new SQLCell<int, this>(this, 'ObjectiveIndex')}
-    
+
     /**
      * No comment (yet!)
      */
     get MapID() {return new SQLCell<int, this>(this, 'MapID')}
-    
+
     /**
      * No comment (yet!)
      */
     get WorldMapAreaId() {return new SQLCell<int, this>(this, 'WorldMapAreaId')}
-    
+
     /**
      * No comment (yet!)
      */
     get Floor() {return new SQLCell<int, this>(this, 'Floor')}
-    
+
     /**
      * No comment (yet!)
      */
     get Priority() {return new SQLCell<int, this>(this, 'Priority')}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() {return new SQLCell<int, this>(this, 'Flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(QuestID : int,id : int, c? : quest_poiCreator) : this {
         return this.cloneInternal([QuestID,id],c)
     }

@@ -32,9 +32,9 @@ export type DatabaseType = 'world' | 'auth' | 'characters' | 'world_source';
 
 /**
  * Safely read a yaml setting from disk
- * @param path 
- * @param defaultValue 
- * @param fpath 
+ * @param path
+ * @param defaultValue
+ * @param fpath
  */
 export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): T {
     if(!Array.isArray(fpath)) {
@@ -63,7 +63,7 @@ export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): 
                 + `Example:\n`
                 + `client_path = a\\b\\c\\d      <-- valid\n`
                 + `client_path = "a\\\\b\\\\c\\\\d" <-- valid\n`
-                + `client_path = "a\\b\\c\\d"    <-- INVALID\n` 
+                + `client_path = "a\\b\\c\\d"    <-- INVALID\n`
                 )
         } else {
             throw err;
@@ -98,8 +98,8 @@ export function databaseSettings(database: DatabaseType, nameSuffix?: string): D
 export class YamlFile {
     protected filepath: string;
 
-    protected get<T>(path: string, defValue: T) { 
-        return yaml(this.filepath, defValue,path); 
+    protected get<T>(path: string, defValue: T) {
+        return yaml(this.filepath, defValue,path);
     }
 
     protected getArray<T>(path: string, defValue: T): T {

@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class trainerRow extends SqlRow<trainerCreator,trainerQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Id() {return new SQLCellReadOnly<int, this>(this, 'Id')}
-    
+
     /**
      * No comment (yet!)
      */
     get Type() {return new SQLCell<tinyint, this>(this, 'Type')}
-    
+
     /**
      * No comment (yet!)
      */
     get Requirement() {return new SQLCell<mediumint, this>(this, 'Requirement')}
-    
+
     /**
      * No comment (yet!)
      */
     get Greeting() {return new SQLCell<text, this>(this, 'Greeting')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(Id : int, c? : trainerCreator) : this {
         return this.cloneInternal([Id],c)
     }

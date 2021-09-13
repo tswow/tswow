@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class versionRow extends SqlRow<versionCreator,versionQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get core_version() {return new SQLCellReadOnly<varchar, this>(this, 'core_version')}
-    
+
     /**
      * No comment (yet!)
      */
     get core_revision() {return new SQLCell<varchar, this>(this, 'core_revision')}
-    
+
     /**
      * No comment (yet!)
      */
     get db_version() {return new SQLCell<varchar, this>(this, 'db_version')}
-    
+
     /**
      * No comment (yet!)
      */
     get cache_id() {return new SQLCell<int, this>(this, 'cache_id')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(core_version : varchar, c? : versionCreator) : this {
         return this.cloneInternal([core_version],c)
     }

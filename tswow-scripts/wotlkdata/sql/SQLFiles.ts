@@ -197,7 +197,7 @@ import { Connection, SqlConnection } from './SQLConnection'
 
 export class Databases {
     private isDatabase = true;
-    get world_source() { return SqlConnection.world_src; } 
+    get world_source() { return SqlConnection.world_src; }
     get world_dest() { return SqlConnection.world_dst; }
     get auth() { return SqlConnection.auth; }
 
@@ -216,64 +216,64 @@ export const SQL = {
      * No comment (yet!)
      */
     access_requirement : SQL_access_requirement,
-    
+
     /**
      * No comment (yet!)
      */
     achievement_criteria_data : SQL_achievement_criteria_data,
-    
+
     /**
      * SQL table of DBC data. Populating this table makes the server ignore the corresponding DBC file.
-     * 
+     *
      * Only use this table if AzerothCore already does, very few are actually used.
      */
     achievement_dbc : SQL_achievement_dbc,
-    
+
     /**
      * No comment (yet!)
      */
     achievement_reward : SQL_achievement_reward,
-    
+
     /**
      * No comment (yet!)
      */
     achievement_reward_locale : SQL_achievement_reward_locale,
-    
+
     /**
      * No comment (yet!)
      */
     areatrigger_involvedrelation : SQL_areatrigger_involvedrelation,
-    
+
     /**
      * No comment (yet!)
      */
     areatrigger_scripts : SQL_areatrigger_scripts,
-    
+
     /**
      * No comment (yet!)
      */
     areatrigger_tavern : SQL_areatrigger_tavern,
-    
+
     /**
      * No comment (yet!)
      */
     areatrigger_teleport : SQL_areatrigger_teleport,
-    
+
     /**
      * No comment (yet!)
      */
     battleground_template : SQL_battleground_template,
-    
+
     /**
      * No comment (yet!)
      */
     battlemaster_entry : SQL_battlemaster_entry,
-    
+
     /**
      * No comment (yet!)
      */
     broadcast_text : SQL_broadcast_text,
-    
+
     /**
      * No comment (yet!)
      */
@@ -283,97 +283,97 @@ export const SQL = {
      * No comment (yet!)
      */
     class_stat_formulas : SQL_class_stat_formulas,
-    
+
     /**
      * No comment (yet!)
      */
     command : SQL_command,
-    
+
     /**
      * No comment (yet!)
      */
     conditions : SQL_conditions,
-    
+
     /**
      * No comment (yet!)
      */
     creature : SQL_creature,
-    
+
     /**
      * No comment (yet!)
      */
     creature_addon : SQL_creature_addon,
-    
+
     /**
      * No comment (yet!)
      */
     creature_classlevelstats : SQL_creature_classlevelstats,
-    
+
     /**
      * No comment (yet!)
      */
     creature_default_trainer : SQL_creature_default_trainer,
-    
+
     /**
      * No comment (yet!)
      */
     creature_equip_template : SQL_creature_equip_template,
-    
+
     /**
      * No comment (yet!)
      */
     creature_formations : SQL_creature_formations,
-    
+
     /**
      * No comment (yet!)
      */
     creature_loot_template : SQL_creature_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     creature_model_info : SQL_creature_model_info,
-    
+
     /**
      * No comment (yet!)
      */
     creature_movement_override : SQL_creature_movement_override,
-    
+
     /**
      * No comment (yet!)
      */
     creature_onkill_reputation : SQL_creature_onkill_reputation,
-    
+
     /**
      * No comment (yet!)
      */
     creature_questender : SQL_creature_questender,
-    
+
     /**
      * No comment (yet!)
      */
     creature_questitem : SQL_creature_questitem,
-    
+
     /**
      * No comment (yet!)
      */
     creature_queststarter : SQL_creature_queststarter,
-    
+
     /**
      * No comment (yet!)
      */
     creature_template : SQL_creature_template,
-    
+
     /**
      * No comment (yet!)
      */
     creature_template_addon : SQL_creature_template_addon,
-    
+
     /**
      * No comment (yet!)
      */
     creature_template_locale : SQL_creature_template_locale,
-    
+
     /**
      * No comment (yet!)
      */
@@ -383,721 +383,721 @@ export const SQL = {
      * No comment (yet!)
      */
     creature_template_outfits: SQL_creature_template_outfits,
-    
+
     /**
      * No comment (yet!)
      */
     creature_template_resistance : SQL_creature_template_resistance,
-    
+
     /**
      * No comment (yet!)
      */
     creature_template_spell : SQL_creature_template_spell,
-    
+
     /**
      * No comment (yet!)
      */
     creature_text : SQL_creature_text,
-    
+
     /**
      * No comment (yet!)
      */
     creature_text_locale : SQL_creature_text_locale,
-    
+
     /**
      * No comment (yet!)
      */
     disables : SQL_disables,
-    
+
     /**
      * No comment (yet!)
      */
     disenchant_loot_template : SQL_disenchant_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     exploration_basexp : SQL_exploration_basexp,
-    
+
     /**
      * No comment (yet!)
      */
     fishing_loot_template : SQL_fishing_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     game_event : SQL_game_event,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_battleground_holiday : SQL_game_event_battleground_holiday,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_condition : SQL_game_event_condition,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_creature : SQL_game_event_creature,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_creature_quest : SQL_game_event_creature_quest,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_gameobject : SQL_game_event_gameobject,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_gameobject_quest : SQL_game_event_gameobject_quest,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_model_equip : SQL_game_event_model_equip,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_npc_vendor : SQL_game_event_npc_vendor,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_npcflag : SQL_game_event_npcflag,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_pool : SQL_game_event_pool,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_prerequisite : SQL_game_event_prerequisite,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_quest_condition : SQL_game_event_quest_condition,
-    
+
     /**
      * No comment (yet!)
      */
     game_event_seasonal_questrelation : SQL_game_event_seasonal_questrelation,
-    
+
     /**
      * No comment (yet!)
      */
     game_tele : SQL_game_tele,
-    
+
     /**
      * No comment (yet!)
      */
     game_weather : SQL_game_weather,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject : SQL_gameobject,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_addon : SQL_gameobject_addon,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_loot_template : SQL_gameobject_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_overrides : SQL_gameobject_overrides,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_questender : SQL_gameobject_questender,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_questitem : SQL_gameobject_questitem,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_queststarter : SQL_gameobject_queststarter,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_template : SQL_gameobject_template,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_template_addon : SQL_gameobject_template_addon,
-    
+
     /**
      * No comment (yet!)
      */
     gameobject_template_locale : SQL_gameobject_template_locale,
-    
+
     /**
      * No comment (yet!)
      */
     gossip_menu : SQL_gossip_menu,
-    
+
     /**
      * No comment (yet!)
      */
     gossip_menu_option : SQL_gossip_menu_option,
-    
+
     /**
      * No comment (yet!)
      */
     gossip_menu_option_locale : SQL_gossip_menu_option_locale,
-    
+
     /**
      * No comment (yet!)
      */
     graveyard_zone : SQL_graveyard_zone,
-    
+
     /**
      * No comment (yet!)
      */
     holiday_dates : SQL_holiday_dates,
-    
+
     /**
      * No comment (yet!)
      */
     instance_encounters : SQL_instance_encounters,
-    
+
     /**
      * No comment (yet!)
      */
     instance_spawn_groups : SQL_instance_spawn_groups,
-    
+
     /**
      * No comment (yet!)
      */
     instance_template : SQL_instance_template,
-    
+
     /**
      * No comment (yet!)
      */
     item_enchantment_template : SQL_item_enchantment_template,
-    
+
     /**
      * No comment (yet!)
      */
     item_loot_template : SQL_item_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     item_set_names : SQL_item_set_names,
-    
+
     /**
      * No comment (yet!)
      */
     item_set_names_locale : SQL_item_set_names_locale,
-    
+
     /**
      * No comment (yet!)
      */
     item_template : SQL_item_template,
-    
+
     /**
      * No comment (yet!)
      */
     item_template_locale : SQL_item_template_locale,
-    
+
     /**
      * No comment (yet!)
      */
     lfg_dungeon_rewards : SQL_lfg_dungeon_rewards,
-    
+
     /**
      * No comment (yet!)
      */
     lfg_dungeon_template : SQL_lfg_dungeon_template,
-    
+
     /**
      * No comment (yet!)
      */
     linked_respawn : SQL_linked_respawn,
-    
+
     /**
      * No comment (yet!)
      */
     mail_level_reward : SQL_mail_level_reward,
-    
+
     /**
      * No comment (yet!)
      */
     mail_loot_template : SQL_mail_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     milling_loot_template : SQL_milling_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     npc_spellclick_spells : SQL_npc_spellclick_spells,
-    
+
     /**
      * No comment (yet!)
      */
     npc_text : SQL_npc_text,
-    
+
     /**
      * No comment (yet!)
      */
     npc_text_locale : SQL_npc_text_locale,
-    
+
     /**
      * No comment (yet!)
      */
     npc_vendor : SQL_npc_vendor,
-    
+
     /**
      * No comment (yet!)
      */
     outdoorpvp_template : SQL_outdoorpvp_template,
-    
+
     /**
      * No comment (yet!)
      */
     page_text : SQL_page_text,
-    
+
     /**
      * No comment (yet!)
      */
     page_text_locale : SQL_page_text_locale,
-    
+
     /**
      * No comment (yet!)
      */
     pet_levelstats : SQL_pet_levelstats,
-    
+
     /**
      * No comment (yet!)
      */
     pet_name_generation : SQL_pet_name_generation,
-    
+
     /**
      * No comment (yet!)
      */
     pickpocketing_loot_template : SQL_pickpocketing_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     player_classlevelstats : SQL_player_classlevelstats,
-    
+
     /**
      * No comment (yet!)
      */
     player_factionchange_achievement : SQL_player_factionchange_achievement,
-    
+
     /**
      * No comment (yet!)
      */
     player_factionchange_items : SQL_player_factionchange_items,
-    
+
     /**
      * No comment (yet!)
      */
     player_factionchange_quests : SQL_player_factionchange_quests,
-    
+
     /**
      * No comment (yet!)
      */
     player_factionchange_reputations : SQL_player_factionchange_reputations,
-    
+
     /**
      * No comment (yet!)
      */
     player_factionchange_spells : SQL_player_factionchange_spells,
-    
+
     /**
      * No comment (yet!)
      */
     player_factionchange_titles : SQL_player_factionchange_titles,
-    
+
     /**
      * No comment (yet!)
      */
     player_levelstats : SQL_player_levelstats,
-    
+
     /**
      * No comment (yet!)
      */
     player_totem_model : SQL_player_totem_model,
-    
+
     /**
      * No comment (yet!)
      */
     player_xp_for_level : SQL_player_xp_for_level,
-    
+
     /**
      * No comment (yet!)
      */
     playercreateinfo : SQL_playercreateinfo,
-    
+
     /**
      * No comment (yet!)
      */
     playercreateinfo_action : SQL_playercreateinfo_action,
-    
+
     /**
      * No comment (yet!)
      */
     playercreateinfo_item : SQL_playercreateinfo_item,
-    
+
     /**
      * No comment (yet!)
      */
     playercreateinfo_skills : SQL_playercreateinfo_skills,
-    
+
     /**
      * No comment (yet!)
      */
     playercreateinfo_spell_custom : SQL_playercreateinfo_spell_custom,
-    
+
     /**
      * No comment (yet!)
      */
     points_of_interest : SQL_points_of_interest,
-    
+
     /**
      * No comment (yet!)
      */
     points_of_interest_locale : SQL_points_of_interest_locale,
-    
+
     /**
      * No comment (yet!)
      */
     pool_members : SQL_pool_members,
-    
+
     /**
      * No comment (yet!)
      */
     pool_template : SQL_pool_template,
-    
+
     /**
      * No comment (yet!)
      */
     prospecting_loot_template : SQL_prospecting_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     quest_details : SQL_quest_details,
-    
+
     /**
      * No comment (yet!)
      */
     quest_greeting : SQL_quest_greeting,
-    
+
     /**
      * No comment (yet!)
      */
     quest_greeting_locale : SQL_quest_greeting_locale,
-    
+
     /**
      * No comment (yet!)
      */
     quest_mail_sender : SQL_quest_mail_sender,
-    
+
     /**
      * No comment (yet!)
      */
     quest_offer_reward : SQL_quest_offer_reward,
-    
+
     /**
      * No comment (yet!)
      */
     quest_offer_reward_locale : SQL_quest_offer_reward_locale,
-    
+
     /**
      * No comment (yet!)
      */
     quest_poi : SQL_quest_poi,
-    
+
     /**
      * No comment (yet!)
      */
     quest_poi_points : SQL_quest_poi_points,
-    
+
     /**
      * No comment (yet!)
      */
     quest_pool_members : SQL_quest_pool_members,
-    
+
     /**
      * No comment (yet!)
      */
     quest_pool_template : SQL_quest_pool_template,
-    
+
     /**
      * No comment (yet!)
      */
     quest_request_items : SQL_quest_request_items,
-    
+
     /**
      * No comment (yet!)
      */
     quest_request_items_locale : SQL_quest_request_items_locale,
-    
+
     /**
      * No comment (yet!)
      */
     quest_template : SQL_quest_template,
-    
+
     /**
      * No comment (yet!)
      */
     quest_template_addon : SQL_quest_template_addon,
-    
+
     /**
      * No comment (yet!)
      */
     quest_template_locale : SQL_quest_template_locale,
-    
+
     /**
      * No comment (yet!)
      */
     reference_loot_template : SQL_reference_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     reputation_reward_rate : SQL_reputation_reward_rate,
-    
+
     /**
      * No comment (yet!)
      */
     reputation_spillover_template : SQL_reputation_spillover_template,
-    
+
     /**
      * No comment (yet!)
      */
     script_spline_chain_meta : SQL_script_spline_chain_meta,
-    
+
     /**
      * No comment (yet!)
      */
     script_spline_chain_waypoints : SQL_script_spline_chain_waypoints,
-    
+
     /**
      * No comment (yet!)
      */
     script_waypoint : SQL_script_waypoint,
-    
+
     /**
      * No comment (yet!)
      */
     skill_discovery_template : SQL_skill_discovery_template,
-    
+
     /**
      * No comment (yet!)
      */
     skill_extra_item_template : SQL_skill_extra_item_template,
-    
+
     /**
      * No comment (yet!)
      */
     skill_fishing_base_level : SQL_skill_fishing_base_level,
-    
+
     /**
      * No comment (yet!)
      */
     skill_perfect_item_template : SQL_skill_perfect_item_template,
-    
+
     /**
      * No comment (yet!)
      */
     skinning_loot_template : SQL_skinning_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     smart_scripts : SQL_smart_scripts,
-    
+
     /**
      * No comment (yet!)
      */
     spawn_group : SQL_spawn_group,
-    
+
     /**
      * No comment (yet!)
      */
     spawn_group_template : SQL_spawn_group_template,
-    
+
     /**
      * No comment (yet!)
      */
     spell_area : SQL_spell_area,
-    
+
     /**
      * No comment (yet!)
      */
     spell_bonus_data : SQL_spell_bonus_data,
-    
+
     /**
      * No comment (yet!)
      */
     spell_custom_attr : SQL_spell_custom_attr,
-    
+
     /**
      * SQL table of DBC data. Populating this table makes the server ignore the corresponding DBC file.
-     * 
+     *
      * Only use this table if AzerothCore already does, very few are actually used.
      */
     spell_dbc : SQL_spell_dbc,
-    
+
     /**
      * No comment (yet!)
      */
     spell_enchant_proc_data : SQL_spell_enchant_proc_data,
-    
+
     /**
      * No comment (yet!)
      */
     spell_group : SQL_spell_group,
-    
+
     /**
      * No comment (yet!)
      */
     spell_group_stack_rules : SQL_spell_group_stack_rules,
-    
+
     /**
      * No comment (yet!)
      */
     spell_learn_spell : SQL_spell_learn_spell,
-    
+
     /**
      * No comment (yet!)
      */
     spell_loot_template : SQL_spell_loot_template,
-    
+
     /**
      * No comment (yet!)
      */
     spell_pet_auras : SQL_spell_pet_auras,
-    
+
     /**
      * No comment (yet!)
      */
     spell_proc : SQL_spell_proc,
-    
+
     /**
      * No comment (yet!)
      */
     spell_ranks : SQL_spell_ranks,
-    
+
     /**
      * No comment (yet!)
      */
     spell_required : SQL_spell_required,
-    
+
     /**
      * No comment (yet!)
      */
     spell_target_position : SQL_spell_target_position,
-    
+
     /**
      * No comment (yet!)
      */
     spell_threat : SQL_spell_threat,
-    
+
     /**
      * SQL table of DBC data. Populating this table makes the server ignore the corresponding DBC file.
-     * 
+     *
      * Only use this table if AzerothCore already does, very few are actually used.
      */
     spelldifficulty_dbc : SQL_spelldifficulty_dbc,
-    
+
     /**
      * No comment (yet!)
      */
     trainer : SQL_trainer,
-    
+
     /**
      * No comment (yet!)
      */
     trainer_locale : SQL_trainer_locale,
-    
+
     /**
      * No comment (yet!)
      */
     trainer_spell : SQL_trainer_spell,
-    
+
     /**
      * No comment (yet!)
      */
     transports : SQL_transports,
-    
+
     /**
      * No comment (yet!)
      */
     trinity_string : SQL_trinity_string,
-    
+
     /**
      * No comment (yet!)
      */
     updates : SQL_updates,
-    
+
     /**
      * No comment (yet!)
      */
     updates_include : SQL_updates_include,
-    
+
     /**
      * No comment (yet!)
      */
     vehicle_accessory : SQL_vehicle_accessory,
-    
+
     /**
      * No comment (yet!)
      */
     vehicle_seat_addon : SQL_vehicle_seat_addon,
-    
+
     /**
      * No comment (yet!)
      */
     vehicle_template_accessory : SQL_vehicle_template_accessory,
-    
+
     /**
      * No comment (yet!)
      */
     version : SQL_version,
-    
+
     /**
      * No comment (yet!)
      */
     waypoint_data : SQL_waypoint_data,
-    
+
     /**
      * No comment (yet!)
      */
     waypoint_scripts : SQL_waypoint_scripts,
-    
+
     /**
      * No comment (yet!)
      */

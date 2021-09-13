@@ -34,37 +34,37 @@ export class SpellRangeRow extends DBCRow<SpellRangeCreator,SpellRangeQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeMin() { return new DBCFloatArrayCell(this,2,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeMax() { return new DBCFloatArrayCell(this,2,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayName() { return new DBCLocCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayNameShort() { return new DBCLocCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellRangeCreator) : this {
         return this.cloneInternal([ID],c);
     }

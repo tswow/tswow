@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,45 +29,45 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_greetingRow extends SqlRow<quest_greetingCreator,quest_greetingQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Type() {return new SQLCellReadOnly<tinyint, this>(this, 'Type')}
-    
+
     /**
      * No comment (yet!)
      */
     get GreetEmoteType() {return new SQLCell<smallint, this>(this, 'GreetEmoteType')}
-    
+
     /**
      * No comment (yet!)
      */
     get GreetEmoteDelay() {return new SQLCell<int, this>(this, 'GreetEmoteDelay')}
-    
+
     /**
      * No comment (yet!)
      */
     get Greeting() {return new SQLCell<text, this>(this, 'Greeting')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint,Type : tinyint, c? : quest_greetingCreator) : this {
         return this.cloneInternal([ID,Type],c)
     }

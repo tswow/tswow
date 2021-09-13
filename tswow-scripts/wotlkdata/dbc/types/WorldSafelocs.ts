@@ -34,37 +34,37 @@ export class WorldSafelocsRow extends DBCRow<WorldSafelocsCreator,WorldSafelocsQ
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Continent() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get LocX() { return new DBCFloatCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get LocY() { return new DBCFloatCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get LocZ() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get AreaName() { return new DBCLocCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : WorldSafelocsCreator) : this {
         return this.cloneInternal([ID],c);
     }

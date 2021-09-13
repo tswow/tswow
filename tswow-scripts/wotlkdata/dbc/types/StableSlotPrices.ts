@@ -34,17 +34,17 @@ export class StableSlotPricesRow extends DBCRow<StableSlotPricesCreator,StableSl
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Cost() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : StableSlotPricesCreator) : this {
         return this.cloneInternal([ID],c);
     }

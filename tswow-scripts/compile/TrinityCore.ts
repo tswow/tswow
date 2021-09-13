@@ -44,7 +44,7 @@ export namespace TrinityCore {
                 let declName = match[1]
                 let filename = match[2];
                 let realname = match[3];
-        
+
                 let typeStr = "/**@realType:uint32*/";
                 let content = "{}";
                 let found = false;
@@ -171,7 +171,7 @@ export namespace TrinityCore {
         if (isWindows()) {
             bpaths.mysqlLibs(mysql)
                 .forEach(x=>wfs.copy(x,mpath(ipaths.tc(type),wfs.basename(x))))
-            wfs.copy(bpaths.libcrypto(openssl), 
+            wfs.copy(bpaths.libcrypto(openssl),
                 mpath(ipaths.tc(type),wfs.basename(bpaths.libcrypto(openssl))))
         }
 

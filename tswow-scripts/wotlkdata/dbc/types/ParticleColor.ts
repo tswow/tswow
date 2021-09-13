@@ -34,27 +34,27 @@ export class ParticleColorRow extends DBCRow<ParticleColorCreator,ParticleColorQ
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Start() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Mid() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get End() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+28)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ParticleColorCreator) : this {
         return this.cloneInternal([ID],c);
     }

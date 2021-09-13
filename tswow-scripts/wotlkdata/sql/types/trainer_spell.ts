@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,65 +29,65 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class trainer_spellRow extends SqlRow<trainer_spellCreator,trainer_spellQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get TrainerId() {return new SQLCellReadOnly<int, this>(this, 'TrainerId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SpellId() {return new SQLCellReadOnly<int, this>(this, 'SpellId')}
-    
+
     /**
      * No comment (yet!)
      */
     get MoneyCost() {return new SQLCell<int, this>(this, 'MoneyCost')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqSkillLine() {return new SQLCell<int, this>(this, 'ReqSkillLine')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqSkillRank() {return new SQLCell<int, this>(this, 'ReqSkillRank')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqAbility1() {return new SQLCell<int, this>(this, 'ReqAbility1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqAbility2() {return new SQLCell<int, this>(this, 'ReqAbility2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqAbility3() {return new SQLCell<int, this>(this, 'ReqAbility3')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqLevel() {return new SQLCell<tinyint, this>(this, 'ReqLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(TrainerId : int,SpellId : int, c? : trainer_spellCreator) : this {
         return this.cloneInternal([TrainerId,SpellId],c)
     }

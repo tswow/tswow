@@ -83,7 +83,7 @@ export namespace Clean {
         if(!mod) {
             Modules.getModules().forEach((x)=>{
                 wfs.remove(ipaths.moduleDataBuild(x.id));
-                wfs.remove(ipaths.moduleNoEdit(x.id));        
+                wfs.remove(ipaths.moduleNoEdit(x.id));
             });
         } else {
             wfs.remove(ipaths.moduleDataBuild(mod));
@@ -185,13 +185,13 @@ export namespace Clean {
         wfs.remove(mpath(ds.client.path,'vmaps'));
         wfs.remove(mpath(ds.client.path,'buildings'));
         wfs.remove(mpath(ds.client.path,'mmaps'));
-        
+
         wfs.remove(ipaths.datasetDBCSource(dataset));
         wfs.remove(ipaths.datasetDBC(dataset));
         wfs.remove(ipaths.datasetMaps(dataset));
         wfs.remove(ipaths.datasetVmaps(dataset));
         wfs.remove(ipaths.datasetMmaps(dataset));
-        
+
         Datasets.get(dataset).installServerData();
     }
 

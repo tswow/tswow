@@ -42,8 +42,8 @@ export namespace Realm {
             this.realm = realm;
         }
         protected realm: Realm;
-        protected ryaml<T>(path: string, defValue: T) { 
-            return yaml(ipaths.realmYaml(this.realm.identifier), defValue,path); 
+        protected ryaml<T>(path: string, defValue: T) {
+            return yaml(ipaths.realmYaml(this.realm.identifier), defValue,path);
         }
 
         get dataset() { return this.ryaml('dataset','default')}
@@ -56,7 +56,7 @@ export namespace Realm {
         get flag() { return this.ryaml("flag",0); }
         get security_level() { return this.ryaml("security_level",0); }
         get timezone() { return this.ryaml("timezone",1); }
-        get modules(): string[] { 
+        get modules(): string[] {
             if(this.dataset=='default') {
                 return wfs.readDir(ipaths.modules);
             }
@@ -100,7 +100,7 @@ export namespace Realm {
 
         sendWorldserverCommand(command: string, useNewline: boolean = true) {
             if(this.worldserver.isRunning()) {
-                this.worldserver.send(command,useNewline); 
+                this.worldserver.send(command,useNewline);
             }
         }
 
@@ -119,7 +119,7 @@ export namespace Realm {
             copyLibraryFiles(type);
             await this.set.installBoth(false);
             this.set.installServerData();
-        
+
             // Generate .conf files
             wfs.readDir(ipaths.tc(type),false,'files').forEach(x=>{
                 if(!x.endsWith('.conf.dist')) return;
@@ -245,10 +245,10 @@ export namespace Realm {
     }
 
     /**
-     * Returns the candidates that are existing realm names, 
+     * Returns the candidates that are existing realm names,
      * or the default realm configured in node.yaml
-     * 
-     * @param candidates 
+     *
+     * @param candidates
      */
     export function getRealmsOrDefault(candidates: string[]) {
         if(candidates.includes('all')) {
@@ -309,7 +309,7 @@ export namespace Realm {
 
             let realms = Identifiers.assertType('realm',args)
                 .map(x=>getRealm(x));
-            await Promise.all(realms.map(x=>x.stopWorldserver())); 
+            await Promise.all(realms.map(x=>x.stopWorldserver()));
         });
 
         realm.addCommand(

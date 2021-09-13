@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,27 +29,27 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class pool_templateRow extends SqlRow<pool_templateCreator,pool_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get max_limit() {return new SQLCell<int, this>(this, 'max_limit')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<varchar, this>(this, 'description')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : pool_templateCreator) : this {
         return this.cloneInternal([entry],c)
     }

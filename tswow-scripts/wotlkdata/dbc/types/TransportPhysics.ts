@@ -34,62 +34,62 @@ export class TransportPhysicsRow extends DBCRow<TransportPhysicsCreator,Transpor
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get WaveAmp() { return new DBCFloatCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get WaveTimeScale() { return new DBCFloatCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get RollAmp() { return new DBCFloatCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get RollTimeScale() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get PitchAmp() { return new DBCFloatCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get PitchTimeScale() { return new DBCFloatCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxBank() { return new DBCFloatCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxBankTurnSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get SpeedDampThresh() { return new DBCFloatCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get SpeedDamp() { return new DBCFloatCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : TransportPhysicsCreator) : this {
         return this.cloneInternal([ID],c);
     }

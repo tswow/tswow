@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,62 +29,62 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_onkill_reputationRow extends SqlRow<creature_onkill_reputationCreator,creature_onkill_reputationQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get creature_id() {return new SQLCellReadOnly<mediumint, this>(this, 'creature_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewOnKillRepFaction1() {return new SQLCell<smallint, this>(this, 'RewOnKillRepFaction1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewOnKillRepFaction2() {return new SQLCell<smallint, this>(this, 'RewOnKillRepFaction2')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxStanding1() {return new SQLCell<tinyint, this>(this, 'MaxStanding1')}
-    
+
     /**
      * No comment (yet!)
      */
     get IsTeamAward1() {return new SQLCell<tinyint, this>(this, 'IsTeamAward1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewOnKillRepValue1() {return new SQLCell<mediumint, this>(this, 'RewOnKillRepValue1')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxStanding2() {return new SQLCell<tinyint, this>(this, 'MaxStanding2')}
-    
+
     /**
      * No comment (yet!)
      */
     get IsTeamAward2() {return new SQLCell<tinyint, this>(this, 'IsTeamAward2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewOnKillRepValue2() {return new SQLCell<mediumint, this>(this, 'RewOnKillRepValue2')}
-    
+
     /**
      * No comment (yet!)
      */
     get TeamDependent() {return new SQLCell<tinyint, this>(this, 'TeamDependent')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(creature_id : mediumint, c? : creature_onkill_reputationCreator) : this {
         return this.cloneInternal([creature_id],c)
     }

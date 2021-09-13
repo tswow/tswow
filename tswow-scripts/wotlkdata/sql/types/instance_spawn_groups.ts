@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,46 +29,46 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class instance_spawn_groupsRow extends SqlRow<instance_spawn_groupsCreator,instance_spawn_groupsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get instanceMapId() {return new SQLCellReadOnly<smallint, this>(this, 'instanceMapId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get bossStateId() {return new SQLCellReadOnly<tinyint, this>(this, 'bossStateId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get bossStates() {return new SQLCellReadOnly<tinyint, this>(this, 'bossStates')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spawnGroupId() {return new SQLCellReadOnly<int, this>(this, 'spawnGroupId')}
-    
+
     /**
      * No comment (yet!)
      */
     get flags() {return new SQLCell<tinyint, this>(this, 'flags')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(instanceMapId : smallint,bossStateId : tinyint,spawnGroupId : tinyint,bossStates : int, c? : instance_spawn_groupsCreator) : this {
         return this.cloneInternal([instanceMapId,bossStateId,spawnGroupId,bossStates],c)
     }

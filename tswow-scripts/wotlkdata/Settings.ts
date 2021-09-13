@@ -61,7 +61,7 @@ class SettingsClass {
     get CLIENT_PATH() { return settings.client_path }
     get ID_FILE_PATH() {return settings.id_path }
     get READONLY() {return settings.readonly; }
-    get PATCH_DIRECTORY() { 
+    get PATCH_DIRECTORY() {
         if(typeof(settings.modules)=='string') {
             settings.modules = [settings.modules];
         }
@@ -75,7 +75,7 @@ class SettingsClass {
             });
         }
 
-        return settings.modules 
+        return settings.modules
     }
 }
 

@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class graveyard_zoneRow extends SqlRow<graveyard_zoneCreator,graveyard_zoneQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get GhostZone() {return new SQLCellReadOnly<mediumint, this>(this, 'GhostZone')}
-    
+
     /**
      * No comment (yet!)
      */
     get Faction() {return new SQLCell<smallint, this>(this, 'Faction')}
-    
+
     /**
      * No comment (yet!)
      */
     get Comment() {return new SQLCell<text, this>(this, 'Comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint,GhostZone : mediumint, c? : graveyard_zoneCreator) : this {
         return this.cloneInternal([ID,GhostZone],c)
     }

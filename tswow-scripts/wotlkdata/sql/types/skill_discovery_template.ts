@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class skill_discovery_templateRow extends SqlRow<skill_discovery_templateCreator,skill_discovery_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spellId() {return new SQLCellReadOnly<mediumint, this>(this, 'spellId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get reqSpell() {return new SQLCellReadOnly<mediumint, this>(this, 'reqSpell')}
-    
+
     /**
      * No comment (yet!)
      */
     get reqSkillValue() {return new SQLCell<smallint, this>(this, 'reqSkillValue')}
-    
+
     /**
      * No comment (yet!)
      */
     get chance() {return new SQLCell<float, this>(this, 'chance')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spellId : mediumint,reqSpell : mediumint, c? : skill_discovery_templateCreator) : this {
         return this.cloneInternal([spellId,reqSpell],c)
     }

@@ -34,32 +34,32 @@ export class WeaponImpactSoundsRow extends DBCRow<WeaponImpactSoundsCreator,Weap
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get WeaponSubClassID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParrySoundType() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ImpactSoundID() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get CritImpactSoundID() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+52)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : WeaponImpactSoundsCreator) : this {
         return this.cloneInternal([ID],c);
     }

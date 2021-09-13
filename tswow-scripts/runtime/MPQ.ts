@@ -13,8 +13,8 @@ import { Realm } from "./Realm";
 export namespace MPQ {
     /**
      * Operations necessary for both folder and archive builds
-     * @param dataset 
-     * @param useTimer 
+     * @param dataset
+     * @param useTimer
      */
     async function prepareBuild(
           dataset: Datasets.Dataset
@@ -74,15 +74,15 @@ export namespace MPQ {
             }
             const out = mpath(destination, rel);
             if (
-                FileChanges.isChanged(path, 'mpq') 
-                || !wfs.exists(out) 
+                FileChanges.isChanged(path, 'mpq')
+                || !wfs.exists(out)
                 || rel.endsWith('.dbc')
                 || rel.endsWith('.lua')
                 || rel.endsWith('.xml')) {
                     wfs.copy(path, out);
                 }
             FileChanges.tagChange(path, 'mpq');
-        })); 
+        }));
         FileChanges.endCache();
         term.success(
               `Finished building MPQ folder`

@@ -54,7 +54,7 @@ export const Objects = {
         this.getAllPropertyNames(entry).forEach(x=>{
             let val = entry[x]
             if(typeof(val) !== 'object') return;
-    
+
             if(val.storeClassName && typeof(val.storeClassName) === 'string') {
                 objIn[x] = val.storeClassName;
                 return;

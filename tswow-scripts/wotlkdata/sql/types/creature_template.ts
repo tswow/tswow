@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,302 +29,302 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_templateRow extends SqlRow<creature_templateCreator,creature_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get difficulty_entry_1() {return new SQLCell<mediumint, this>(this, 'difficulty_entry_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get difficulty_entry_2() {return new SQLCell<mediumint, this>(this, 'difficulty_entry_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get difficulty_entry_3() {return new SQLCell<mediumint, this>(this, 'difficulty_entry_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get KillCredit1() {return new SQLCell<int, this>(this, 'KillCredit1')}
-    
+
     /**
      * No comment (yet!)
      */
     get KillCredit2() {return new SQLCell<int, this>(this, 'KillCredit2')}
-    
+
     /**
      * No comment (yet!)
      */
     get modelid1() {return new SQLCell<mediumint, this>(this, 'modelid1')}
-    
+
     /**
      * No comment (yet!)
      */
     get modelid2() {return new SQLCell<mediumint, this>(this, 'modelid2')}
-    
+
     /**
      * No comment (yet!)
      */
     get modelid3() {return new SQLCell<mediumint, this>(this, 'modelid3')}
-    
+
     /**
      * No comment (yet!)
      */
     get modelid4() {return new SQLCell<mediumint, this>(this, 'modelid4')}
-    
+
     /**
      * No comment (yet!)
      */
     get name() {return new SQLCell<char, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get subname() {return new SQLCell<char, this>(this, 'subname')}
-    
+
     /**
      * No comment (yet!)
      */
     get IconName() {return new SQLCell<char, this>(this, 'IconName')}
-    
+
     /**
      * No comment (yet!)
      */
     get gossip_menu_id() {return new SQLCell<mediumint, this>(this, 'gossip_menu_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get minlevel() {return new SQLCell<tinyint, this>(this, 'minlevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxlevel() {return new SQLCell<tinyint, this>(this, 'maxlevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get exp() {return new SQLCell<smallint, this>(this, 'exp')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction() {return new SQLCell<smallint, this>(this, 'faction')}
-    
+
     /**
      * No comment (yet!)
      */
     get npcflag() {return new SQLCell<int, this>(this, 'npcflag')}
-    
+
     /**
      * No comment (yet!)
      */
     get speed_walk() {return new SQLCell<float, this>(this, 'speed_walk')}
-    
+
     /**
      * No comment (yet!)
      */
     get speed_run() {return new SQLCell<float, this>(this, 'speed_run')}
-    
+
     /**
      * No comment (yet!)
      */
     get scale() {return new SQLCell<float, this>(this, 'scale')}
-    
+
     /**
      * No comment (yet!)
      */
     get rank() {return new SQLCell<tinyint, this>(this, 'rank')}
-    
+
     /**
      * No comment (yet!)
      */
     get dmgschool() {return new SQLCell<tinyint, this>(this, 'dmgschool')}
-    
+
     /**
      * No comment (yet!)
      */
     get BaseAttackTime() {return new SQLCell<int, this>(this, 'BaseAttackTime')}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeAttackTime() {return new SQLCell<int, this>(this, 'RangeAttackTime')}
-    
+
     /**
      * No comment (yet!)
      */
     get BaseVariance() {return new SQLCell<float, this>(this, 'BaseVariance')}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeVariance() {return new SQLCell<float, this>(this, 'RangeVariance')}
-    
+
     /**
      * No comment (yet!)
      */
     get unit_class() {return new SQLCell<tinyint, this>(this, 'unit_class')}
-    
+
     /**
      * No comment (yet!)
      */
     get unit_flags() {return new SQLCell<int, this>(this, 'unit_flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get unit_flags2() {return new SQLCell<int, this>(this, 'unit_flags2')}
-    
+
     /**
      * No comment (yet!)
      */
     get dynamicflags() {return new SQLCell<int, this>(this, 'dynamicflags')}
-    
+
     /**
      * No comment (yet!)
      */
     get family() {return new SQLCell<tinyint, this>(this, 'family')}
-    
+
     /**
      * No comment (yet!)
      */
     get type() {return new SQLCell<tinyint, this>(this, 'type')}
-    
+
     /**
      * No comment (yet!)
      */
     get type_flags() {return new SQLCell<int, this>(this, 'type_flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get lootid() {return new SQLCell<mediumint, this>(this, 'lootid')}
-    
+
     /**
      * No comment (yet!)
      */
     get pickpocketloot() {return new SQLCell<mediumint, this>(this, 'pickpocketloot')}
-    
+
     /**
      * No comment (yet!)
      */
     get skinloot() {return new SQLCell<mediumint, this>(this, 'skinloot')}
-    
+
     /**
      * No comment (yet!)
      */
     get PetSpellDataId() {return new SQLCell<mediumint, this>(this, 'PetSpellDataId')}
-    
+
     /**
      * No comment (yet!)
      */
     get VehicleId() {return new SQLCell<mediumint, this>(this, 'VehicleId')}
-    
+
     /**
      * No comment (yet!)
      */
     get mingold() {return new SQLCell<mediumint, this>(this, 'mingold')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxgold() {return new SQLCell<mediumint, this>(this, 'maxgold')}
-    
+
     /**
      * No comment (yet!)
      */
     get AIName() {return new SQLCell<char, this>(this, 'AIName')}
-    
+
     /**
      * No comment (yet!)
      */
     get MovementType() {return new SQLCell<tinyint, this>(this, 'MovementType')}
-    
+
     /**
      * No comment (yet!)
      */
     get HoverHeight() {return new SQLCell<float, this>(this, 'HoverHeight')}
-    
+
     /**
      * No comment (yet!)
      */
     get HealthModifier() {return new SQLCell<float, this>(this, 'HealthModifier')}
-    
+
     /**
      * No comment (yet!)
      */
     get ManaModifier() {return new SQLCell<float, this>(this, 'ManaModifier')}
-    
+
     /**
      * No comment (yet!)
      */
     get ArmorModifier() {return new SQLCell<float, this>(this, 'ArmorModifier')}
-    
+
     /**
      * No comment (yet!)
      */
     get DamageModifier() {return new SQLCell<float, this>(this, 'DamageModifier')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExperienceModifier() {return new SQLCell<float, this>(this, 'ExperienceModifier')}
-    
+
     /**
      * No comment (yet!)
      */
     get RacialLeader() {return new SQLCell<tinyint, this>(this, 'RacialLeader')}
-    
+
     /**
      * No comment (yet!)
      */
     get movementId() {return new SQLCell<int, this>(this, 'movementId')}
-    
+
     /**
      * No comment (yet!)
      */
     get RegenHealth() {return new SQLCell<tinyint, this>(this, 'RegenHealth')}
-    
+
     /**
      * No comment (yet!)
      */
     get mechanic_immune_mask() {return new SQLCell<int, this>(this, 'mechanic_immune_mask')}
-    
+
     /**
      * No comment (yet!)
      */
     get spell_school_immune_mask() {return new SQLCell<int, this>(this, 'spell_school_immune_mask')}
-    
+
     /**
      * No comment (yet!)
      */
     get flags_extra() {return new SQLCell<int, this>(this, 'flags_extra')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : creature_templateCreator) : this {
         return this.cloneInternal([entry],c)
     }

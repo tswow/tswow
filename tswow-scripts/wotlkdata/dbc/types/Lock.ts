@@ -34,32 +34,32 @@ export class LockRow extends DBCRow<LockCreator,LockQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Type() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Index() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get Skill() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get Action() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+100)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : LockCreator) : this {
         return this.cloneInternal([ID],c);
     }

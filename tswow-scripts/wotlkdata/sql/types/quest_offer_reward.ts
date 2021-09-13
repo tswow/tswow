@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,67 +29,67 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_offer_rewardRow extends SqlRow<quest_offer_rewardCreator,quest_offer_rewardQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote1() {return new SQLCell<smallint, this>(this, 'Emote1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote2() {return new SQLCell<smallint, this>(this, 'Emote2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote3() {return new SQLCell<smallint, this>(this, 'Emote3')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote4() {return new SQLCell<smallint, this>(this, 'Emote4')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay1() {return new SQLCell<int, this>(this, 'EmoteDelay1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay2() {return new SQLCell<int, this>(this, 'EmoteDelay2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay3() {return new SQLCell<int, this>(this, 'EmoteDelay3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay4() {return new SQLCell<int, this>(this, 'EmoteDelay4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardText() {return new SQLCell<text, this>(this, 'RewardText')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : quest_offer_rewardCreator) : this {
         return this.cloneInternal([ID],c)
     }

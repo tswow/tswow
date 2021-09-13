@@ -65,7 +65,7 @@ export class InstallPaths {
 
     /**
      * Returns a path relative to the tswow install root
-     * @param path 
+     * @param path
      */
     rel(path: string) {
         return wfs.relative(installBase,path);
@@ -128,7 +128,7 @@ export class InstallPaths {
 
     /** Core data paths */
 
-    moduleFreeGarbage(mod: string) { 
+    moduleFreeGarbage(mod: string) {
         return this.freeBackupPath(mpath(this.coredata, 'garbage',mod));
     }
 
@@ -142,7 +142,7 @@ export class InstallPaths {
         return mpath(installBase,'commands.yaml');
     }
 
-    wsWorkingDir(realm: string) { 
+    wsWorkingDir(realm: string) {
         return mpath(this.realms,realm);
     }
 
@@ -150,7 +150,7 @@ export class InstallPaths {
         return mpath(installBase,'coredata');
     }
 
-    datasetDir(dataset: string) { 
+    datasetDir(dataset: string) {
         return mpath(this.datasets, dataset);
     }
 
@@ -220,8 +220,8 @@ export class InstallPaths {
 
     /** Dataset paths */
     get datasets() { return mpath(this.coredata, 'datasets'); }
-    datasetRoot(dataset: string) { 
-        return mpath(this.datasets,dataset); 
+    datasetRoot(dataset: string) {
+        return mpath(this.datasets,dataset);
     }
 
     datasetYaml(dataset: string) {
@@ -359,7 +359,7 @@ export class InstallPaths {
     get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
     get tcRoot() {return mpath(this.bin, 'trinitycore'); }
     get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
-    
+
     get adtCreatorDir() {
         return mpath(this.bin,'adt-creator');
     }
@@ -368,8 +368,8 @@ export class InstallPaths {
         return mpath(this.adtCreatorDir,'adt-creator.exe');
     }
 
-    get mpqBuilderExe() { 
-        return isWindows() 
+    get mpqBuilderExe() {
+        return isWindows()
             ? mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe')
             : mpath(this.bin, 'mpqbuilder', 'mpqbuilder');
     }
@@ -423,7 +423,7 @@ export class InstallPaths {
     get startupSql() { return mpath(this.bin, 'sql'); }
 
 
-    startupSqlDir(type: 'world'|'auth'|'characters') { 
+    startupSqlDir(type: 'world'|'auth'|'characters') {
         return mpath(this.startupSql, type)
     }
 
@@ -510,7 +510,7 @@ export class InstallPaths {
 
     /**
      * Name of the main data file for a module.
-     * @param mod 
+     * @param mod
      * @example modules/my-module/data/my-module-data.ts
      */
     moduleDataMain(mod: string) {
@@ -585,8 +585,8 @@ export class InstallPaths {
 
     /**
      * The built library path of a module
-     * @param mod 
-     * @param type 
+     * @param mod
+     * @param type
      */
     moduleScriptsBuiltLibrary(mod: string, type: BuildType) {
         return isWindows()
@@ -595,8 +595,8 @@ export class InstallPaths {
     }
 
     /**
-     * @param mod 
-     * @param type 
+     * @param mod
+     * @param type
      * @note windows only
      */
     moduleScriptsBuiltPdb(mod: string, type: BuildType) {
@@ -643,7 +643,7 @@ export class InstallPaths {
     }
 
     /**
-     * 
+     *
      * TODO: What is this file for?
      */
     moduleAddonClasses(mod: string) {
@@ -695,7 +695,7 @@ export class InstallPaths {
     addonLib(mod: string) {
         return mpath(this.moduleAddons(mod),'lib');
     }
-    
+
     addonDouble(mod: string) {
         return mpath(this.addonBuild(mod),'Double.lua');
     }
@@ -741,7 +741,7 @@ export class BuildPaths {
     }
 
     get stormLibInclude() {
-        return isWindows() 
+        return isWindows()
             ? mpath(this.stormLibBuildRelease)
             : mpath(this.stormlibInstall, 'include')
     }
@@ -767,8 +767,8 @@ export class BuildPaths {
     }
 
     get stormLibLibraryFile() {
-        return isWindows() 
-            ? mpath(this.stormlibBuild, 'Release','storm.lib') 
+        return isWindows()
+            ? mpath(this.stormlibBuild, 'Release','storm.lib')
             : mpath(this.stormlibInstall,'lib','libstorm.a');
     }
 
@@ -781,20 +781,20 @@ export class BuildPaths {
     }
 
     get adtCreatorExe() {
-        return isWindows () 
+        return isWindows ()
             ? mpath(this.adtCreator, 'Release','adt-creator.exe')
             : mpath(this.adtCreator, 'Release','adt-creator');
     }
 
     get mpqBuilderBinary() {
-        return isWindows() 
+        return isWindows()
             ? mpath(this.mpqBuilder,'Release','mpqbuilder.exe')
             : mpath(this.mpqBuilder,'mpqbuilder')
 
     }
 
     get luaxmlBinary() {
-        return isWindows() 
+        return isWindows()
             ? mpath(this.mpqBuilder,'Release','luaxmlreader.exe')
             : mpath(this.mpqBuilder,'luaxmlreader')
 
@@ -811,7 +811,7 @@ export class BuildPaths {
         return isWindows() ? bpaths.trinitycoreBin(type)
             : mpath(this.trinitycore, 'install', 'trinitycore', 'etc');
     }
-    
+
     get mysql() { return mpath(this.base, 'mysql'); }
 
     get openssl() { return mpath(this.base,'openssl'); }
@@ -869,7 +869,7 @@ export class BuildPaths {
 export const bpaths = new BuildPaths();
 
 export class SourcePaths {
-    get installConfig() { 
+    get installConfig() {
         return './install-config';
     }
 
@@ -888,7 +888,7 @@ export class SourcePaths {
     get buildYaml() {
         return './build.yaml';
     }
-    
+
     get installAddonInclude() {
         return mpath(this.installConfig, 'include-addon');
     }

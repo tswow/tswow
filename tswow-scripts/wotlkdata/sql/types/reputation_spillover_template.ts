@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,77 +29,77 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class reputation_spillover_templateRow extends SqlRow<reputation_spillover_templateCreator,reputation_spillover_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get faction() {return new SQLCellReadOnly<smallint, this>(this, 'faction')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction1() {return new SQLCell<smallint, this>(this, 'faction1')}
-    
+
     /**
      * No comment (yet!)
      */
     get rate_1() {return new SQLCell<float, this>(this, 'rate_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get rank_1() {return new SQLCell<tinyint, this>(this, 'rank_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction2() {return new SQLCell<smallint, this>(this, 'faction2')}
-    
+
     /**
      * No comment (yet!)
      */
     get rate_2() {return new SQLCell<float, this>(this, 'rate_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get rank_2() {return new SQLCell<tinyint, this>(this, 'rank_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction3() {return new SQLCell<smallint, this>(this, 'faction3')}
-    
+
     /**
      * No comment (yet!)
      */
     get rate_3() {return new SQLCell<float, this>(this, 'rate_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get rank_3() {return new SQLCell<tinyint, this>(this, 'rank_3')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction4() {return new SQLCell<smallint, this>(this, 'faction4')}
-    
+
     /**
      * No comment (yet!)
      */
     get rate_4() {return new SQLCell<float, this>(this, 'rate_4')}
-    
+
     /**
      * No comment (yet!)
      */
     get rank_4() {return new SQLCell<tinyint, this>(this, 'rank_4')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(faction : smallint, c? : reputation_spillover_templateCreator) : this {
         return this.cloneInternal([faction],c)
     }

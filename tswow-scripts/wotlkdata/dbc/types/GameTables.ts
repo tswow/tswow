@@ -34,22 +34,22 @@ export class GameTablesRow extends DBCRow<GameTablesCreator,GameTablesQuery> {
      */
     @PrimaryKey()
     get Name() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get NumRows() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get NumColumns() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(Name : string, c? : GameTablesCreator) : this {
         return this.cloneInternal([Name],c);
     }

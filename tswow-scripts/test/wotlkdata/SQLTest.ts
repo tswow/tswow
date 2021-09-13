@@ -158,7 +158,7 @@ describe('SQL', function() {
                     sourceValue,restoredValue
                   , `failed to restore ${TEST_CREATURE_TEMPLATE}`
                   + `(${key} values differ: source=${sourceValue} restored=${restoredValue})`
-                  ) 
+                  )
             }
         });
     });

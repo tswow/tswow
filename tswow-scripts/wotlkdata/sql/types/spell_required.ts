@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,25 +29,25 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_requiredRow extends SqlRow<spell_requiredCreator,spell_requiredQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spell_id() {return new SQLCellReadOnly<mediumint, this>(this, 'spell_id')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get req_spell() {return new SQLCellReadOnly<mediumint, this>(this, 'req_spell')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spell_id : mediumint,req_spell : mediumint, c? : spell_requiredCreator) : this {
         return this.cloneInternal([spell_id,req_spell],c)
     }

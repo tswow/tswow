@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class instance_encountersRow extends SqlRow<instance_encountersCreator,instance_encountersQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<int, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get creditType() {return new SQLCell<tinyint, this>(this, 'creditType')}
-    
+
     /**
      * No comment (yet!)
      */
     get creditEntry() {return new SQLCell<int, this>(this, 'creditEntry')}
-    
+
     /**
      * No comment (yet!)
      */
     get lastEncounterDungeon() {return new SQLCell<smallint, this>(this, 'lastEncounterDungeon')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<varchar, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : int, c? : instance_encountersCreator) : this {
         return this.cloneInternal([entry],c)
     }

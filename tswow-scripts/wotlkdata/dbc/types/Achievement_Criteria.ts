@@ -34,82 +34,82 @@ export class Achievement_CriteriaRow extends DBCRow<Achievement_CriteriaCreator,
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Achievement_Id() { return new DBCPointerCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * What kind of Achievement this is. Defines the rows below.
      */
     get Type() { return new DBCEnumCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Main requirement id, such as creature or type.
      */
     get Asset_Id() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * Main requirement count
      */
     get Quantity() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * Additional requirement 1 type
      */
     get Start_Event() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * Additional requirement 1 value
      */
     get Start_Asset() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * Additional requirement 2 type
      */
     get Fail_Event() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * Additional requirement 2 value
      */
     get Fail_Asset() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * Displayed description
      */
     get Description() { return new DBCLocCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * 1 means it shows a progress bar.
      */
     get Flags() { return new DBCFlagCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get Timer_Start_Event() { return new DBCIntCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * No comment (yet!)
      */
     get Timer_Asset_Id() { return new DBCIntCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * For complete quest in %i seconds type of events
      */
     get Timer_Time() { return new DBCIntCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * Sort order in achievement row. Lower means higher up.
      */
     get Ui_Order() { return new DBCIntCell(this,this.buffer,this.offset+120)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : Achievement_CriteriaCreator) : this {
         return this.cloneInternal([ID],c);
     }

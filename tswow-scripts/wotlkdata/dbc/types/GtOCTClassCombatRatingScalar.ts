@@ -31,17 +31,17 @@ export class GtOCTClassCombatRatingScalarRow extends DBCRow<GtOCTClassCombatRati
      * No comment (yet!)
      */
     get ID() { return new DBCUIntCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Data() { return new DBCFloatCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(c?: GtOCTClassCombatRatingScalarCreator) : this {
         return this.cloneInternal([],c);
     }

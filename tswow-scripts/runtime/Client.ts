@@ -118,7 +118,7 @@ export namespace Client {
          * Writes the following binary edits in the wow.exe:
          * - 0x415b5f: writes 0xb803000ebedc3 to enable login interface patches.
          * - 0xe0355: writes 0x78888888 to enable more than 10 classes per race.
-         * @param clientPath 
+         * @param clientPath
          */
         patchBinary() {
             const wowbin = wfs.readBin(this.exePath);
@@ -171,7 +171,7 @@ export namespace Client {
             if(!found) {
                 return;
             }
-            
+
             wfs.makeBackup(this.exePath);
 
             for(const {offset,value} of byteOffsets) {

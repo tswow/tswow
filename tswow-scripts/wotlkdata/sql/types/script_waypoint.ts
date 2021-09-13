@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,50 +29,50 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class script_waypointRow extends SqlRow<script_waypointCreator,script_waypointQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get pointid() {return new SQLCellReadOnly<mediumint, this>(this, 'pointid')}
-    
+
     /**
      * No comment (yet!)
      */
     get location_x() {return new SQLCell<float, this>(this, 'location_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get location_y() {return new SQLCell<float, this>(this, 'location_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get location_z() {return new SQLCell<float, this>(this, 'location_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get waittime() {return new SQLCell<int, this>(this, 'waittime')}
-    
+
     /**
      * No comment (yet!)
      */
     get point_comment() {return new SQLCell<text, this>(this, 'point_comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint,pointid : mediumint, c? : script_waypointCreator) : this {
         return this.cloneInternal([entry,pointid],c)
     }

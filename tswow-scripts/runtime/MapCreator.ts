@@ -10,12 +10,12 @@ import { MPQ } from "./MPQ";
 
 export namespace MapCreator {
     export function createMap(
-        sourceAdt: string, 
-        dest: string, 
-        mapName: string, 
-        lowX: number, 
-        lowY: number, 
-        highX: number, 
+        sourceAdt: string,
+        dest: string,
+        mapName: string,
+        lowX: number,
+        lowY: number,
+        highX: number,
         highY: number
     ) {
         wsys.exec(

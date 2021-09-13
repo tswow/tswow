@@ -34,22 +34,22 @@ export class MailTemplateRow extends DBCRow<MailTemplateCreator,MailTemplateQuer
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Subject() { return new DBCLocCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Body() { return new DBCLocCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : MailTemplateCreator) : this {
         return this.cloneInternal([ID],c);
     }

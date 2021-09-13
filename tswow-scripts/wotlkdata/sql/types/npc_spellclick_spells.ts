@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class npc_spellclick_spellsRow extends SqlRow<npc_spellclick_spellsCreator,npc_spellclick_spellsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get npc_entry() {return new SQLCellReadOnly<int, this>(this, 'npc_entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spell_id() {return new SQLCellReadOnly<int, this>(this, 'spell_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get cast_flags() {return new SQLCell<tinyint, this>(this, 'cast_flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get user_type() {return new SQLCell<smallint, this>(this, 'user_type')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(npc_entry : int,spell_id : int, c? : npc_spellclick_spellsCreator) : this {
         return this.cloneInternal([npc_entry,spell_id],c)
     }

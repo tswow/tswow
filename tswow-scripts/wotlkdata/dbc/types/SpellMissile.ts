@@ -34,82 +34,82 @@ export class SpellMissileRow extends DBCRow<SpellMissileCreator,SpellMissileQuer
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get DefaultPitchMin() { return new DBCFloatCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get DefaultPitchMax() { return new DBCFloatCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get DefaultSpeedMin() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get DefaultSpeedMax() { return new DBCFloatCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomizeFacingMin() { return new DBCFloatCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomizeFacingMax() { return new DBCFloatCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomizePitchMin() { return new DBCFloatCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomizePitchMax() { return new DBCFloatCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomizeSpeedMin() { return new DBCFloatCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get RandomizeSpeedMax() { return new DBCFloatCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get Gravity() { return new DBCFloatCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxDuration() { return new DBCFloatCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get CollisionRadius() { return new DBCFloatCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellMissileCreator) : this {
         return this.cloneInternal([ID],c);
     }

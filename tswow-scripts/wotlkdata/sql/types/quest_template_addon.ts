@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,102 +29,102 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_template_addonRow extends SqlRow<quest_template_addonCreator,quest_template_addonQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxLevel() {return new SQLCell<tinyint, this>(this, 'MaxLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get AllowableClasses() {return new SQLCell<int, this>(this, 'AllowableClasses')}
-    
+
     /**
      * No comment (yet!)
      */
     get SourceSpellID() {return new SQLCell<mediumint, this>(this, 'SourceSpellID')}
-    
+
     /**
      * No comment (yet!)
      */
     get PrevQuestID() {return new SQLCell<mediumint, this>(this, 'PrevQuestID')}
-    
+
     /**
      * No comment (yet!)
      */
     get NextQuestID() {return new SQLCell<mediumint, this>(this, 'NextQuestID')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExclusiveGroup() {return new SQLCell<mediumint, this>(this, 'ExclusiveGroup')}
-    
+
     /**
      * No comment (yet!)
      */
     get BreadcrumbForQuestId() {return new SQLCell<mediumint, this>(this, 'BreadcrumbForQuestId')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardMailTemplateID() {return new SQLCell<mediumint, this>(this, 'RewardMailTemplateID')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardMailDelay() {return new SQLCell<int, this>(this, 'RewardMailDelay')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSkillID() {return new SQLCell<smallint, this>(this, 'RequiredSkillID')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSkillPoints() {return new SQLCell<smallint, this>(this, 'RequiredSkillPoints')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredMinRepFaction() {return new SQLCell<smallint, this>(this, 'RequiredMinRepFaction')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredMaxRepFaction() {return new SQLCell<smallint, this>(this, 'RequiredMaxRepFaction')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredMinRepValue() {return new SQLCell<mediumint, this>(this, 'RequiredMinRepValue')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredMaxRepValue() {return new SQLCell<mediumint, this>(this, 'RequiredMaxRepValue')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProvidedItemCount() {return new SQLCell<tinyint, this>(this, 'ProvidedItemCount')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpecialFlags() {return new SQLCell<tinyint, this>(this, 'SpecialFlags')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : quest_template_addonCreator) : this {
         return this.cloneInternal([ID],c)
     }

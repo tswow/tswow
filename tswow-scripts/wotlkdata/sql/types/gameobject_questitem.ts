@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gameobject_questitemRow extends SqlRow<gameobject_questitemCreator,gameobject_questitemQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get GameObjectEntry() {return new SQLCellReadOnly<int, this>(this, 'GameObjectEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Idx() {return new SQLCellReadOnly<int, this>(this, 'Idx')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemId() {return new SQLCell<int, this>(this, 'ItemId')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(GameObjectEntry : int,Idx : int, c? : gameobject_questitemCreator) : this {
         return this.cloneInternal([GameObjectEntry,Idx],c)
     }

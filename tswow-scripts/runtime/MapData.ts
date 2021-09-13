@@ -67,7 +67,7 @@ export namespace MapData {
           + ` -i ${dataset.client.path}`
           + (maps.length>0?` --maps=${maps.join(',')}`:'')
           + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
-          
+
         wsys.exec(prog,'inherit')
     }
 
@@ -102,7 +102,7 @@ export namespace MapData {
       let prog = `${wfs.absPath(ipaths.tcMMapsGenerator(type))}`
       + (maps.length>0?` --maps=${maps.join(',')}`:'')
       + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
-    
+
       wsys.execIn(
           ipaths.datasetDir(dataset.id)
         , prog
@@ -127,7 +127,7 @@ export namespace MapData {
           , (args)=>{
           Datasets.getDatasetsOrDefault(args).forEach(x=>{
             dbc(
-                x 
+                x
               , findBuildType(args)
             );
           });

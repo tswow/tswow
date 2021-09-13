@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,53 +29,53 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class npc_vendorRow extends SqlRow<npc_vendorCreator,npc_vendorQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get slot() {return new SQLCell<smallint, this>(this, 'slot')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get item() {return new SQLCellReadOnly<mediumint, this>(this, 'item')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxcount() {return new SQLCell<tinyint, this>(this, 'maxcount')}
-    
+
     /**
      * No comment (yet!)
      */
     get incrtime() {return new SQLCell<int, this>(this, 'incrtime')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ExtendedCost() {return new SQLCellReadOnly<mediumint, this>(this, 'ExtendedCost')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint,item : mediumint,ExtendedCost : mediumint, c? : npc_vendorCreator) : this {
         return this.cloneInternal([entry,item,ExtendedCost],c)
     }

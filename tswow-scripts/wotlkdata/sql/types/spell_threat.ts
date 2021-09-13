@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_threatRow extends SqlRow<spell_threatCreator,spell_threatQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get flatMod() {return new SQLCell<int, this>(this, 'flatMod')}
-    
+
     /**
      * No comment (yet!)
      */
     get pctMod() {return new SQLCell<float, this>(this, 'pctMod')}
-    
+
     /**
      * No comment (yet!)
      */
     get apPctMod() {return new SQLCell<float, this>(this, 'apPctMod')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : spell_threatCreator) : this {
         return this.cloneInternal([entry],c)
     }

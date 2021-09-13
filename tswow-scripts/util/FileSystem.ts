@@ -407,7 +407,7 @@ export namespace wfs {
 
     /**
      * Reads a text file from the file system
-     * @param filepath 
+     * @param filepath
      * @throws if `path` doesn't point at a file
      * @returns Text contents of the file at `path` split by lines
      */
@@ -420,8 +420,8 @@ export namespace wfs {
 
     /**
      * Writes a text file to the file system
-     * @param filepath 
-     * @param lines 
+     * @param filepath
+     * @param lines
      */
     export function writeLines(filepath: string, lines: string[]) {
         write(filepath, lines.join('\n'));
@@ -430,8 +430,8 @@ export namespace wfs {
     /**
      * Creates a numbered backup of a file, checking for previous backups
      * so they are not overwritten.
-     * @param filePath 
-     * @param backupBase 
+     * @param filePath
+     * @param backupBase
      */
     export function makeBackup(filePath: string, backupBase = filePath+'.backup') {
         let i = 1;

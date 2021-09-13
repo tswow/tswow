@@ -34,22 +34,22 @@ export class DurabilityCostsRow extends DBCRow<DurabilityCostsCreator,Durability
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get WeaponSubClassCost() { return new DBCIntArrayCell(this,21,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ArmorSubClassCost() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+88)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : DurabilityCostsCreator) : this {
         return this.cloneInternal([ID],c);
     }

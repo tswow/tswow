@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,42 +29,42 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_bonus_dataRow extends SqlRow<spell_bonus_dataCreator,spell_bonus_dataQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get direct_bonus() {return new SQLCell<float, this>(this, 'direct_bonus')}
-    
+
     /**
      * No comment (yet!)
      */
     get dot_bonus() {return new SQLCell<float, this>(this, 'dot_bonus')}
-    
+
     /**
      * No comment (yet!)
      */
     get ap_bonus() {return new SQLCell<float, this>(this, 'ap_bonus')}
-    
+
     /**
      * No comment (yet!)
      */
     get ap_dot_bonus() {return new SQLCell<float, this>(this, 'ap_dot_bonus')}
-    
+
     /**
      * No comment (yet!)
      */
     get comments() {return new SQLCell<varchar, this>(this, 'comments')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : spell_bonus_dataCreator) : this {
         return this.cloneInternal([entry],c)
     }

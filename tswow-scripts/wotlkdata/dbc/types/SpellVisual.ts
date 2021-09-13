@@ -34,167 +34,167 @@ export class SpellVisualRow extends DBCRow<SpellVisualCreator,SpellVisualQuery> 
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get PrecastKit() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get CastKit() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ImpactKit() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get StateKit() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get StateDoneKit() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get ChannelKit() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get HasMissile() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileModel() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissilePathType() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileDestinationAttachment() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileSound() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get AnimEventSoundID() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get CasterImpactKit() { return new DBCIntCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get TargetImpactKit() { return new DBCIntCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileAttachment() { return new DBCIntCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileFollowGroundHeight() { return new DBCIntCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileFollowGroundDropSpeed() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileFollowGroundApproach() { return new DBCIntCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileFollowGroundFlags() { return new DBCIntCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileMotion() { return new DBCIntCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileTargetingKit() { return new DBCIntCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get InstantAreaKit() { return new DBCIntCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get ImpactAreaKit() { return new DBCIntCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * No comment (yet!)
      */
     get PersistentAreaKit() { return new DBCIntCell(this,this.buffer,this.offset+100)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileCastOffsetX() { return new DBCFloatCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileCastOffsetY() { return new DBCFloatCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileCastOffsetZ() { return new DBCFloatCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileImpactOffsetX() { return new DBCFloatCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileImpactOffsetY() { return new DBCFloatCell(this,this.buffer,this.offset+120)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileImpactOffsetZ() { return new DBCFloatCell(this,this.buffer,this.offset+124)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellVisualCreator) : this {
         return this.cloneInternal([ID],c);
     }

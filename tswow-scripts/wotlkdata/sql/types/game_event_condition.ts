@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,45 +29,45 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_event_conditionRow extends SqlRow<game_event_conditionCreator,game_event_conditionQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get eventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get condition_id() {return new SQLCellReadOnly<mediumint, this>(this, 'condition_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get req_num() {return new SQLCell<float, this>(this, 'req_num')}
-    
+
     /**
      * No comment (yet!)
      */
     get max_world_state_field() {return new SQLCell<smallint, this>(this, 'max_world_state_field')}
-    
+
     /**
      * No comment (yet!)
      */
     get done_world_state_field() {return new SQLCell<smallint, this>(this, 'done_world_state_field')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<varchar, this>(this, 'description')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(eventEntry : tinyint,condition_id : mediumint, c? : game_event_conditionCreator) : this {
         return this.cloneInternal([eventEntry,condition_id],c)
     }

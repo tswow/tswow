@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,47 +29,47 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_template_movementRow extends SqlRow<creature_template_movementCreator,creature_template_movementQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get CreatureId() {return new SQLCellReadOnly<int, this>(this, 'CreatureId')}
-    
+
     /**
      * No comment (yet!)
      */
     get Ground() {return new SQLCell<tinyint, this>(this, 'Ground')}
-    
+
     /**
      * No comment (yet!)
      */
     get Swim() {return new SQLCell<tinyint, this>(this, 'Swim')}
-    
+
     /**
      * No comment (yet!)
      */
     get Flight() {return new SQLCell<tinyint, this>(this, 'Flight')}
-    
+
     /**
      * No comment (yet!)
      */
     get Rooted() {return new SQLCell<tinyint, this>(this, 'Rooted')}
-    
+
     /**
      * No comment (yet!)
      */
     get Chase() {return new SQLCell<tinyint, this>(this, 'Chase')}
-    
+
     /**
      * No comment (yet!)
      */
     get Random() {return new SQLCell<tinyint, this>(this, 'Random')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(CreatureId : int, c? : creature_template_movementCreator) : this {
         return this.cloneInternal([CreatureId],c)
     }

@@ -31,12 +31,12 @@ export class GtOCTRegenMPRow extends DBCRow<GtOCTRegenMPCreator,GtOCTRegenMPQuer
      * No comment (yet!)
      */
     get Data() { return new DBCFloatCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(c?: GtOCTRegenMPCreator) : this {
         return this.cloneInternal([],c);
     }

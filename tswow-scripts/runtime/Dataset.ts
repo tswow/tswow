@@ -37,7 +37,7 @@ export namespace Datasets {
             }
         }
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
-        get client_path() { 
+        get client_path() {
             let val: string;
             try {
                 val = this.get<string>('client_path','');
@@ -59,7 +59,7 @@ export namespace Datasets {
             // don't use wow.exe for validation, it's sometimes named Wow.exe and sometimes wow.exe
             if(!wfs.exists(mpath(val,'Data'))) {
                 throw new Error(
-                      `No valid client at: ${val}` 
+                      `No valid client at: ${val}`
                     + `\n(check your client_path settings in`
                     + ` ${ipaths.datasetYaml(this.set.id)})`);
             }
@@ -84,7 +84,7 @@ export namespace Datasets {
 
     /**
      * Represents a single TSWoW dataset.
-     * 
+     *
      * These objects are unique for each dataset in memory.
      */
     export class Dataset {
@@ -168,13 +168,13 @@ export namespace Datasets {
                 anyChange = true;
             }
 
-            if(this.config.use_mmaps 
+            if(this.config.use_mmaps
                 && !wfs.exists(ipaths.datasetMmaps(this.id))) {
                 MapData.mmaps(this);
                 anyChange = true;
             }
 
-            if(wfs.exists(ipaths.datasetMmaps(this.id)) 
+            if(wfs.exists(ipaths.datasetMmaps(this.id))
                 && ! this.config.use_mmaps) {
                 term.warn(`Dataset ${this.id} has mmap data, but is not configured to use it (use_mmaps: false)`);
             }
@@ -276,9 +276,9 @@ export namespace Datasets {
 
     export function initialize() {
         if (
-            ! wfs.exists(ipaths.datasets) 
+            ! wfs.exists(ipaths.datasets)
             || wfs.readDir(ipaths.datasets,false,'directories').length == 0
-           ) 
+           )
         {
             create('default');
         }

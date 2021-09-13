@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,22 +29,22 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class updates_includeRow extends SqlRow<updates_includeCreator,updates_includeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get path() {return new SQLCellReadOnly<varchar, this>(this, 'path')}
-    
+
     /**
      * No comment (yet!)
      */
     get state() {return new SQLCell<text, this>(this, 'state')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(path : varchar, c? : updates_includeCreator) : this {
         return this.cloneInternal([path],c)
     }

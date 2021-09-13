@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,38 +29,38 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_pet_aurasRow extends SqlRow<spell_pet_aurasCreator,spell_pet_aurasQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spell() {return new SQLCellReadOnly<mediumint, this>(this, 'spell')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get effectId() {return new SQLCellReadOnly<tinyint, this>(this, 'effectId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get pet() {return new SQLCellReadOnly<mediumint, this>(this, 'pet')}
-    
+
     /**
      * No comment (yet!)
      */
     get aura() {return new SQLCell<mediumint, this>(this, 'aura')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spell : mediumint,effectId : tinyint,pet : mediumint, c? : spell_pet_aurasCreator) : this {
         return this.cloneInternal([spell,effectId,pet],c)
     }

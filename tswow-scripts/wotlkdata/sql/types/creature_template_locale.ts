@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,40 +29,40 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_template_localeRow extends SqlRow<creature_template_localeCreator,creature_template_localeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get locale() {return new SQLCellReadOnly<varchar, this>(this, 'locale')}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() {return new SQLCell<text, this>(this, 'Name')}
-    
+
     /**
      * No comment (yet!)
      */
     get Title() {return new SQLCell<text, this>(this, 'Title')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint,locale : varchar, c? : creature_template_localeCreator) : this {
         return this.cloneInternal([entry,locale],c)
     }

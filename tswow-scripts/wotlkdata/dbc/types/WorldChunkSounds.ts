@@ -34,7 +34,7 @@ export class WorldChunkSoundsRow extends DBCRow<WorldChunkSoundsCreator,WorldChu
      */
     @PrimaryKey()
     get WorldMapMapID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Primary Key
      *
@@ -42,7 +42,7 @@ export class WorldChunkSoundsRow extends DBCRow<WorldChunkSoundsCreator,WorldChu
      */
     @PrimaryKey()
     get ChunkX() { return new DBCKeyCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * Primary Key
      *
@@ -50,7 +50,7 @@ export class WorldChunkSoundsRow extends DBCRow<WorldChunkSoundsCreator,WorldChu
      */
     @PrimaryKey()
     get ChunkY() { return new DBCKeyCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Primary Key
      *
@@ -58,7 +58,7 @@ export class WorldChunkSoundsRow extends DBCRow<WorldChunkSoundsCreator,WorldChu
      */
     @PrimaryKey()
     get SubchunkX() { return new DBCKeyCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * Primary Key
      *
@@ -66,32 +66,32 @@ export class WorldChunkSoundsRow extends DBCRow<WorldChunkSoundsCreator,WorldChu
      */
     @PrimaryKey()
     get SubchunkY() { return new DBCKeyCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get ZoneintroMusicID() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get ZoneMusicID() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundAmbienceID() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundProviderPreferencesID() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(WorldMapMapID : int,ChunkX : int,ChunkY : int,SubchunkX : int,SubchunkY : int, c? : WorldChunkSoundsCreator) : this {
         return this.cloneInternal([WorldMapMapID,ChunkX,ChunkY,SubchunkX,SubchunkY],c);
     }

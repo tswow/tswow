@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,58 +29,58 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class player_levelstatsRow extends SqlRow<player_levelstatsCreator,player_levelstatsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get race() {return new SQLCellReadOnly<tinyint, this>(this, 'race')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get class() {return new SQLCellReadOnly<tinyint, this>(this, 'class')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get level() {return new SQLCellReadOnly<tinyint, this>(this, 'level')}
-    
+
     /**
      * No comment (yet!)
      */
     get str() {return new SQLCell<tinyint, this>(this, 'str')}
-    
+
     /**
      * No comment (yet!)
      */
     get agi() {return new SQLCell<tinyint, this>(this, 'agi')}
-    
+
     /**
      * No comment (yet!)
      */
     get sta() {return new SQLCell<tinyint, this>(this, 'sta')}
-    
+
     /**
      * No comment (yet!)
      */
     get inte() {return new SQLCell<tinyint, this>(this, 'inte')}
-    
+
     /**
      * No comment (yet!)
      */
     get spi() {return new SQLCell<tinyint, this>(this, 'spi')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(race : tinyint,cls : tinyint,level : tinyint, c? : player_levelstatsCreator) : this {
         return this.cloneInternal([race,cls,level],c)
     }

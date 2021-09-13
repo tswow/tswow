@@ -23,7 +23,7 @@ export class NodeConfiguration extends YamlFile {
         return this.get('use_pooling',false);
     }
 
-    get default_build_type() { 
+    get default_build_type() {
         return this.get('default_build_type',DEFAULT_BUILD_TYPE);
     }
 

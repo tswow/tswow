@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_request_itemsRow extends SqlRow<quest_request_itemsCreator,quest_request_itemsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteOnComplete() {return new SQLCell<smallint, this>(this, 'EmoteOnComplete')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteOnIncomplete() {return new SQLCell<smallint, this>(this, 'EmoteOnIncomplete')}
-    
+
     /**
      * No comment (yet!)
      */
     get CompletionText() {return new SQLCell<text, this>(this, 'CompletionText')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : quest_request_itemsCreator) : this {
         return this.cloneInternal([ID],c)
     }

@@ -31,12 +31,12 @@ export class GtNPCManaCostScalerRow extends DBCRow<GtNPCManaCostScalerCreator,Gt
      * No comment (yet!)
      */
     get Data() { return new DBCFloatCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(c?: GtNPCManaCostScalerCreator) : this {
         return this.cloneInternal([],c);
     }

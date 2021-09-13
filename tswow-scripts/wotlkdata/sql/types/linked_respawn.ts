@@ -21,7 +21,7 @@ import { Relation } from '../../query/Relations'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,30 +29,30 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class linked_respawnRow extends SqlRow<linked_respawnCreator,linked_respawnQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get linkedGuid() {return new SQLCell<int, this>(this, 'linkedGuid')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get linkType() {return new SQLCellReadOnly<tinyint, this>(this, 'linkType')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : int,linkType : tinyint, c? : linked_respawnCreator) : this {
         return this.cloneInternal([guid,linkType],c)
     }
