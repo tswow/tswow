@@ -31,37 +31,37 @@ import { Identifiers } from './Identifiers';
  */
 const lib_package_json =
 (name: string) => JSON.stringify({
-    'name': name,
-    'version': '1.0.0',
-    'description': '',
-    'main': `${name}-data.js`,
-    'types': `${name}-data.d.ts`,
-    'dependencies': {
-    },
-    'devDependencies': {},
-    'scripts': {},
-  }, null, 4);
+  'name': name,
+  'version': '1.0.0',
+  'description': '',
+  'main': `${name}-data.js`,
+  'types': `${name}-data.d.ts`,
+  'dependencies': {
+  },
+  'devDependencies': {},
+  'scripts': {},
+}, null, 4);
 
 /**
  * The tsconfig.json that will be used to compile 'datalib' directories
  */
 export const data_tsconfig =
 `{
-    "compilerOptions": {
-      "target": "es2018",
-      "module": "commonjs",
-      "outDir": "./build",
-      "rootDir": "./",
-      "strict": true,
-      "esModuleInterop": true,
-      "declaration": true,
-      "skipLibCheck": true,
-      "incremental": true,
-      "forceConsistentCasingInFileNames": true,
-      "experimentalDecorators": true,
-      "sourceMap": true
-    },
-    "exclude":["**/build/**","**/tswow/wotlkdata/**"]
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "outDir": "./build",
+    "rootDir": "./",
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "sourceMap": true
+  },
+  "exclude":["**/build/**","**/tswow/wotlkdata/**"]
 }`;
 
 /**
@@ -215,7 +215,7 @@ export namespace Modules {
                         wsys.execIn(
                               ipaths.moduleData(this.id)
                             , `node ../../../${ipaths.tsc}`);
-                    } catch (error) {
+                    } catch (error: any) {
                         term.error(error.message);
                         term.error(
                               `Can't noedit ${this.id}`
@@ -245,7 +245,7 @@ export namespace Modules {
                     // Don't run tsc if we didn't update.
                     return;
                 }
-            } catch (err) {
+            } catch (err: any) {
                 const msg = err.message as string;
                 if (!msg.includes(
                     'There is no tracking information for the current branch')) {
