@@ -1,7 +1,7 @@
-import { Profession } from "./Profession"
-import { SkillLines } from "../SkillLines/SkillLines"
-import { DefaultProfession, resolveProfession, ProfessionType } from "./ProfessionType";
+import { SkillLines } from "../SkillLines/SkillLines";
 import { SkillTiersRegistry } from "../SkillTiers/SkillTiers";
+import { Profession } from "./Profession";
+import { DefaultProfession, ProfessionType, resolveProfession } from "./ProfessionType";
 
 export const Professions = {
     load(id: number | DefaultProfession) {

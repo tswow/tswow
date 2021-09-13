@@ -14,16 +14,16 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { ItemVisualModels } from "./ItemVisualModels";
-import { ItemIcon } from "./ItemIcon";
 import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
-import { ItemEffectsPointer } from "./ItemVisualEffect";
-import { SpellVisualPointer } from "../Spell/SpellVisual";
-import { ParticleColorPointer } from "../Misc/ParticleColor";
+import { DBC, SQL } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/Ref";
-import { DBC,SQL } from "wotlkdata/wotlkdata";
 import { Ids } from "../Misc/Ids";
+import { ParticleColorPointer } from "../Misc/ParticleColor";
+import { Ref } from "../Refs/Ref";
+import { SpellVisualPointer } from "../Spell/SpellVisual";
+import { ItemIcon } from "./ItemIcon";
+import { ItemEffectsPointer } from "./ItemVisualEffect";
+import { ItemVisualModels } from "./ItemVisualModels";
 
 export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     clear(): this {

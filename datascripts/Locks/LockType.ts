@@ -1,5 +1,5 @@
-import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
 
 export type LockTypeCursorType = "FishingCursor"|"PickLock"|"GatherHerbs"|"Mine"|string
 export class LockTypeCursor extends CellSystem<LockType> {

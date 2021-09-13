@@ -1,8 +1,8 @@
-import * as pureimage from 'pureimage'
+import * as child_process from 'child_process';
 import * as fs from 'fs';
-import * as path from 'path'
-import * as child_process from 'child_process'
-import { PNG } from 'pngjs'
+import * as path from 'path';
+import { PNG } from 'pngjs';
+import * as pureimage from 'pureimage';
 
 export class TSImage {
     protected bitmap: any;

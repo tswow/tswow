@@ -1,10 +1,10 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Quest } from "./Quest";
-import { GameEventCondition } from "../GameEvent/GameEventCondition";
-import { SQL } from "wotlkdata"
-import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { game_event_quest_conditionRow } from "wotlkdata/sql/types/game_event_quest_condition";
+import { GameEventCondition } from "../GameEvent/GameEventCondition";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { Quest } from "./Quest";
 
 export class GameEventConditionRef<T> extends CellSystem<T> {
     protected eventCell: Cell<number,any>

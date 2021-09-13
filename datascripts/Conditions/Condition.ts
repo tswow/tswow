@@ -16,7 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { conditionsCreator, conditionsQuery} from "wotlkdata/sql/types/conditions";
+import { conditionsCreator, conditionsQuery } from "wotlkdata/sql/types/conditions";
 import { ClassType, resolveClassType } from "../Class/ClassType";
 import { getRanks, ReputationRanks, reputationRanksToMask } from "../Faction/ReputationRanks";
 import { DrunkState, idToDrunkState, resolveDrunkState } from "../Misc/DrunkState";

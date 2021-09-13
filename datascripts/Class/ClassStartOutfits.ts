@@ -18,10 +18,10 @@ import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CharStartOutfitRow } from "wotlkdata/dbc/types/CharStartOutfit";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Misc/Ids";
 import { InventoryType } from "../Item/ItemInventoryType";
-import { Class } from "./Class";
+import { Ids } from "../Misc/Ids";
 import { ALL_RACES, RaceType, resolveRaceType } from "../Race/RaceType";
+import { Class } from "./Class";
 
 export type Gender = 'Male'|'Female';
 

@@ -1,18 +1,18 @@
+import { DBC } from "wotlkdata";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LfgDungeonsQuery, LfgDungeonsRow } from "wotlkdata/dbc/types/LfgDungeons";
-import { lfg_dungeon_templateQuery, lfg_dungeon_templateRow } from "wotlkdata/sql/types/lfg_dungeon_template";
-import { SQLDBCChild, SQLDBCEntity } from "../Misc/SQLDBCEntity";
-import { DBC } from "wotlkdata"
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { lfg_dungeon_templateQuery, lfg_dungeon_templateRow } from "wotlkdata/sql/types/lfg_dungeon_template";
+import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
 import { MapRef } from "../Map/Map";
+import { FactionEnum } from "../Misc/FactionEnum";
 import { Ids } from "../Misc/Ids";
+import { SQLDBCChild, SQLDBCEntity } from "../Misc/SQLDBCEntity";
 import { RefBase, RefReadOnly } from "../Refs/Ref";
 import { LFGDungeonRewards } from "./LFGDungeonRewards";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { FactionEnum } from "../Misc/FactionEnum";
 import { LFGDungeonGroupRef } from "./LFGGroup";
-import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
 
 export class LFGPos extends SQLDBCChild<LFGDungeon,LfgDungeonsRow,lfg_dungeon_templateRow,LFGDungeon> {
     get X() { return this.ownerWrapSQL(0, (row)=>row.position_x)}

@@ -1,5 +1,5 @@
+import { DBC } from "wotlkdata";
 import { WorldMapTransformsQuery, WorldMapTransformsRow } from "wotlkdata/dbc/types/WorldMapTransforms";
-import { DBC } from "wotlkdata"
 import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";

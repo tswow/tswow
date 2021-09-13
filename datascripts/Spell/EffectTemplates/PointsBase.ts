@@ -1,5 +1,5 @@
-import { TargetBase } from "./TargetBase";
 import { SpellPowerType } from "../SpellPowerType";
+import { TargetBase } from "./TargetBase";
 
 
 export class PointsRoot extends TargetBase {

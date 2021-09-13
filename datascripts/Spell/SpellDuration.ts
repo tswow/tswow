@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
 import { DBC } from "wotlkdata";
+import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
-import { MainEntity } from "../Misc/Entity";
 
 export class SpellDuration extends MainEntity<SpellDurationRow> {
     clear(): this {

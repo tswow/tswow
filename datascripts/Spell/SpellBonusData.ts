@@ -1,7 +1,7 @@
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { spell_bonus_dataRow } from "wotlkdata/sql/types/spell_bonus_data";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
-import { spell_bonus_dataRow } from "wotlkdata/sql/types/spell_bonus_data";
 
 export class SpellBonusData extends MaybeSQLEntity<Spell,spell_bonus_dataRow> {
     protected createSQL(): spell_bonus_dataRow {

@@ -1,13 +1,13 @@
-import { GemPropertiesQuery, GemPropertiesRow } from "wotlkdata/dbc/types/GemProperties"
 import { DBC } from "wotlkdata"
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
+import { GemPropertiesQuery, GemPropertiesRow } from "wotlkdata/dbc/types/GemProperties"
+import { Enchantment, EnchantmentRegistry } from "../Enchant/Enchantment"
+import { Items, ItemTemplate } from "../Item/ItemTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
 import { RefStatic } from "../Refs/Ref"
-import { Enchantment, EnchantmentRegistry } from "../Enchant/Enchantment"
 import { std } from "../tswow-stdlib-data"
-import { Items, ItemTemplate } from "../Item/ItemTemplate"
 import { colToId, GemColorType, GemType } from "./GemType"
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
 
 export class Gem extends MainEntity<GemPropertiesRow> {
     clear() {

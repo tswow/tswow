@@ -1,13 +1,13 @@
-import { AreaPOIQuery, AreaPOIRow } from "wotlkdata/dbc/types/AreaPOI";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { AreaPOIQuery, AreaPOIRow } from "wotlkdata/dbc/types/AreaPOI";
 import { AreaRef } from "../Area/Area";
 import { FactionRef } from "../Faction/Faction";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { WorldStateRef } from "./WorldState";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids } from "../Misc/Ids";
 
 export class AreaPOIFlags extends MaskCell32<AreaPOI> {
     get ShowMinimapArrow() { return this.bit(0); }

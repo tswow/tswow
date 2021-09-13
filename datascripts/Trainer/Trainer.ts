@@ -15,17 +15,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCell, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
-import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { Spells } from "../Spell/Spells";
+import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/Ref";
 import { Ids } from "../Misc/Ids";
-import { ClassType, ClassTypeCell, resolveClassType } from "../Class/ClassType";
-import { EnumCell, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
+import { Ref } from "../Refs/Ref";
+import { Spells } from "../Spell/Spells";
 
 export class TrainerLoc extends SQLLocSystem<Trainer> {
     protected getMain(): Cell<string, any> {

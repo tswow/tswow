@@ -1,13 +1,12 @@
-import { CreatureDisplayInfoRow } from "wotlkdata/dbc/types/CreatureDisplayInfo";
-import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info";
-import { SQL } from "wotlkdata";
-import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
-import { Ref } from "../Refs/Ref";
-import { MainEntity } from "../Misc/Entity";
+import { DBC, SQL } from "wotlkdata";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { DBC } from "wotlkdata";
+import { CreatureDisplayInfoRow } from "wotlkdata/dbc/types/CreatureDisplayInfo";
+import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
+import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
 
 export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     clear(): this {

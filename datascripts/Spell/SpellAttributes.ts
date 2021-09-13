@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { MaskCell } from "wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { Spell } from "./Spell";
 
 export class SpellAttributes<T> extends MaskCell<T> {
     @Transient

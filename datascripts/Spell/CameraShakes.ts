@@ -1,8 +1,8 @@
-import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
-import { Ids } from "../Misc/Ids";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
 export class CameraShakeType<T> extends EnumCellWrapper<T> {

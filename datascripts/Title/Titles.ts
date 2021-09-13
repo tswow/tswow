@@ -16,8 +16,8 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 
 export class Title extends MainEntity<CharTitlesRow>{
     get ID() { return this.row.ID.get(); }

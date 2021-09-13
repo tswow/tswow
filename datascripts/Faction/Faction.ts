@@ -16,11 +16,11 @@
  */
 import { DBC } from "wotlkdata";
 import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
-import { FactionTemplates } from "./FactionTemplates";
-import { FactionReputations } from "./FactionReputation";
+import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
+import { FactionReputations } from "./FactionReputation";
+import { FactionTemplates } from "./FactionTemplates";
 
 export class Faction extends MainEntity<FactionRow> {
     constructor(row: FactionRow) {

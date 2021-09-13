@@ -16,14 +16,14 @@
  */
 import { SQL } from "wotlkdata";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
-import { Ids } from "../Misc/Ids";
 import { BroadcastText } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
+import { Ids } from "../Misc/Ids";
 import { Gossip } from "./Gossip";
 import { GossipIconCell } from "./GossipIcon";
 import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 
 export class GossipOption extends CellSystemTop {
     readonly Condition: Condition<this>;

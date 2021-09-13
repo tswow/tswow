@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
 import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 
 export abstract class SQLLocSystem<T> extends LocSystem<T> {
     protected abstract getMain() : Cell<string, any>;

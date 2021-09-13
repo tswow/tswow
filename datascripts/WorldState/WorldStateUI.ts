@@ -1,13 +1,13 @@
-import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldStateUI";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MainEntity } from "../Misc/Entity";
-import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { DBC } from "wotlkdata"
-import { Ids } from "../Misc/Ids";
-import { Ref, RefStatic } from "../Refs/Ref";
+import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { WorldState } from "./WorldState";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldStateUI";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
+import { Ref } from "../Refs/Ref";
+import { WorldState } from "./WorldState";
 
 export class WorldStateLocation extends CellSystem<WorldStateUI> {
     get Map() { return this.ownerWrap(this.owner.row.MapID)}

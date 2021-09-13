@@ -1,16 +1,16 @@
-import { VehicleQuery, VehicleRow } from "wotlkdata/dbc/types/Vehicle";
+import { DBC } from "wotlkdata";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { MainEntity } from "../Misc/Entity";
-import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { HorizontalBoundary } from "../Misc/LimitCells";
-import { DBC } from "wotlkdata"
-import { Ids } from "../Misc/Ids";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { VehicleQuery, VehicleRow } from "wotlkdata/dbc/types/Vehicle";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { HorizontalBoundary } from "../Misc/LimitCells";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
+import { Ref, RefReadOnly } from "../Refs/Ref";
 import { VehicleSeatRef } from "./VehicleSeat";
 import { VehicleUIIndicatorCell } from "./VehicleUIIndicator";
-import { Ref, RefReadOnly } from "../Refs/Ref";
 
 export class VehicleFlags extends MaskCell32<Vehicle> {
     get NoStrafe() { return this.bit(0); }

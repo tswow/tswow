@@ -15,11 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Ids } from "../Misc/Ids";
 import { resolveTotemType, TotemType } from "../Totem/TotemType";
 import { Spell } from "./Spell";
-import { Spells } from "./Spells"
+import { Spells } from "./Spells";
 
 const created = [0,0,0,0];
 

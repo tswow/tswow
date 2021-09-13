@@ -1,6 +1,6 @@
 import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
-import { CellSystem, CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { CellSystem, CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 

@@ -1,13 +1,13 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SoundType } from "./SoundType";
-import { Ids } from "../Misc/Ids";
-import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
-import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
 import { SoundEntryAdvancedPointer } from "./SoundEntryAdvanced";
+import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundFlags } from "./SoundFlags";
+import { SoundType } from "./SoundType";
 
 export class SoundEntryName extends CellSystem<SoundEntry> {
     get() {

@@ -1,6 +1,6 @@
 import { SQL } from "wotlkdata";
-import { Spell } from "./Spell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Spell } from "./Spell";
 
 export class SpellScript extends CellSystem<Spell> {
     get(): string|undefined {

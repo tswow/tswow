@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
 export class MainEntity<T> extends CellSystemTop {
     @Transient

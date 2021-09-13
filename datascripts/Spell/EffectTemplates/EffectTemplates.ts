@@ -1,14 +1,14 @@
-import { EffectID, EffectTemplate } from "./EffectTemplate";
-import { TargetBase } from "./TargetBase";
-import { CountBase, PowerBase, PowerBasePct, DamageBase, PointsRoot, HealBasePct, HealBase, PointsBase, DamageBasePct } from "./PointsBase";
-import { SpellPowerType } from "../SpellPowerType";
-import { SpellImplicitTarget } from "../SpellImplicitTarget";
-import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SchoolMask } from "../../Misc/School";
 import { EffectClassSet } from "../SpellClassSet";
+import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
+import { SpellImplicitTarget } from "../SpellImplicitTarget";
+import { SpellPowerType } from "../SpellPowerType";
 import { SpellRadiusRef } from "../SpellRadius";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EffectID, EffectTemplate } from "./EffectTemplate";
+import { CountBase, DamageBase, DamageBasePct, HealBase, HealBasePct, PointsBase, PointsRoot, PowerBase, PowerBasePct } from "./PointsBase";
+import { TargetBase } from "./TargetBase";
 
 // 1
 // 2

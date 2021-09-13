@@ -1,15 +1,15 @@
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/dbc/types/DungeonEncounter";
 import { instance_encountersQuery, instance_encountersRow } from "wotlkdata/sql/types/instance_encounters";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { MapRef } from "../Map/Map";
-import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
-import { SpellRef } from "../Spell/Spell";
+import { MapRef } from "../Map/Map";
 import { Ids } from "../Misc/Ids";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
+import { SpellRef } from "../Spell/Spell";
 import { LFGDungeonRef } from "./LFGDungeon";
 
 export class DungeonEncounterCreditType extends EnumCellWrapper<DungeonEncounter> {

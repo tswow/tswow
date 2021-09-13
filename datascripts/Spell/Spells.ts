@@ -19,8 +19,8 @@ import { SpellQuery } from "wotlkdata/dbc/types/Spell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { TotemCreatures } from "./TotemCreatures";
 import { SpellGroup } from "./SpellGroup";
+import { TotemCreatures } from "./TotemCreatures";
 
 function createSpell(id: number, parent: number = 0) {
     if(parent===0) {

@@ -1,12 +1,12 @@
 import { FunctionalCell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { RefBase } from "../Refs/Ref";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 import { AchievementReward } from "./AchievementReward";
-import { RefBase, RefStatic } from "../Refs/Ref";
 
 export class Achievement extends MainEntity<AchievementRow> {
     readonly Criteria : AchievementCriteria;

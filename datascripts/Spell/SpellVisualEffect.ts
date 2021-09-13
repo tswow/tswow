@@ -1,10 +1,10 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectName";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids } from "../Misc/Ids";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectName";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
 export class VisualScale<T> extends CellSystem<T> {

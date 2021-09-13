@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { TalentRow } from "wotlkdata/dbc/types/Talent";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { TalentRow } from "wotlkdata/dbc/types/Talent";
 import { MainEntity } from "../Misc/Entity";
-import { TalentRequirements } from "./TalentRequirements";
 import { Spell } from "../Spell/Spell";
 import { Spells } from "../Spell/Spells";
+import { TalentRequirements } from "./TalentRequirements";
 
 export class TalentSpells extends CellSystem<Talent> {
     get length() {

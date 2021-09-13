@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureFlagsExtra extends MaskCell32<CreatureTemplate> {

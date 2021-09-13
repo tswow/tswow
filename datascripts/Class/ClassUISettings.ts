@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { LUAXML } from "wotlkdata";
+import { FunctionalCell } from "wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Edit, EditSystem } from "wotlkdata/luaxml/TextFile";
+import { TSImage } from "../Images/Image";
 import { AnchorRow } from "../UI/Components/AnchorRow";
 import { Class } from "./Class";
-import { FunctionalCell } from "wotlkdata/cell/cells/Cell";
-import { TSImage } from "../Images/Image";
 import { stitchClassIcon } from "./ClassIcon";
 
 function float(rgb : number) {

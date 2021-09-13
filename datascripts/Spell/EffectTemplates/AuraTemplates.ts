@@ -1,14 +1,14 @@
-import { DamageBase, ChanceBase, HealBase, PercentBase, DamageBasePct, PointsBase, HealBasePct, PowerBasePct, PowerBase, ManaBase, CountBase } from "./PointsBase";
-import { TargetBase } from "./TargetBase";
-import { SchoolMask, SchoolEnum } from "../../Misc/School";
+import { DBC } from "wotlkdata";
+import { CellWrapper } from "wotlkdata/cell/cells/Cell";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTypeEnum, CreatureTypeMask } from "../../Creature/CreatureType";
+import { Ids } from "../../Misc/Ids";
+import { SchoolEnum, SchoolMask } from "../../Misc/School";
 import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffectMechanics";
 import { SpellPowerType } from "../SpellPowerType";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellWrapper } from "wotlkdata/cell/cells/Cell";
-import { Ids } from "../../Misc/Ids";
-import { DBC } from "wotlkdata";
+import { ChanceBase, CountBase, DamageBase, DamageBasePct, HealBase, HealBasePct, ManaBase, PercentBase, PointsBase, PowerBase, PowerBasePct } from "./PointsBase";
+import { TargetBase } from "./TargetBase";
 
 export const all_auras : any = {}
 export function AuraID(id: number) {

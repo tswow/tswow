@@ -1,8 +1,8 @@
-import { game_event_prerequisiteRow } from "wotlkdata/sql/types/game_event_prerequisite";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { GameEvent, GameEventRefReadOnly } from "./GameEvent";
+import { game_event_prerequisiteRow } from "wotlkdata/sql/types/game_event_prerequisite";
 import { MainEntity } from "../Misc/Entity";
+import { GameEvent, GameEventRefReadOnly } from "./GameEvent";
 
 export class GameEventPrerequisite extends MainEntity<game_event_prerequisiteRow> {
     get Event() {

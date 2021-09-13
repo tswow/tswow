@@ -16,7 +16,6 @@
  */
 import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { std } from "../tswow-stdlib-data";
 import { Quest } from "./Quest";
 
 export class QuestNPC extends CellSystem<Quest> {

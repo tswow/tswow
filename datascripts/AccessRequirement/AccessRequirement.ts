@@ -1,6 +1,6 @@
-import { access_requirementQuery, access_requirementRow } from "wotlkdata/sql/types/access_requirement";
+import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata"
+import { access_requirementQuery, access_requirementRow } from "wotlkdata/sql/types/access_requirement";
 import { AchievementRef } from "../Achievement/Achievement";
 import { ItemTemplateRef } from "../Item/ItemTemplate";
 import { MapRefReadOnly } from "../Map/Map";

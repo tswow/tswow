@@ -1,6 +1,6 @@
 import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template";
-import { KeyFrameCon } from "../GameObject/ElevatorKeyframes"
-import { GameObjectTemplates } from "../GameObject/GameObjects"
+import { KeyFrameCon } from "../GameObject/ElevatorKeyframes";
+import { GameObjectTemplates } from "../GameObject/GameObjects";
 import { Position } from "../Misc/Position";
 
 const DEFAULT_ELEVATOR_DISPLAY_ID = 455 // undercity

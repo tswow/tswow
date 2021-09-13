@@ -1,10 +1,10 @@
-import { lfg_dungeon_rewardsRow } from "wotlkdata/sql/types/lfg_dungeon_rewards";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { MainEntity } from "../Misc/Entity";
-import { LFGDungeon, LFGDungeonRefReadOnly } from "./LFGDungeon";
-import { QuestRewardRef } from "../Quest/QuestReward";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { lfg_dungeon_rewardsRow } from "wotlkdata/sql/types/lfg_dungeon_rewards";
+import { MainEntity } from "../Misc/Entity";
+import { QuestRewardRef } from "../Quest/QuestReward";
+import { LFGDungeon, LFGDungeonRefReadOnly } from "./LFGDungeon";
 
 export class LFGDungeonReward extends MainEntity<lfg_dungeon_rewardsRow> {
     @Transient

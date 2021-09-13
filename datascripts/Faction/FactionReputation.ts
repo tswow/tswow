@@ -1,9 +1,9 @@
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { Ids } from "../Misc/Ids";
 import { ClassType, makeClassmask } from "../Class/ClassType";
+import { Ids } from "../Misc/Ids";
 import { makeRacemask, RaceType } from "../Race/RaceType";
 import { Faction } from "./Faction";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
 export class FactionReputationFlags extends MaskCell32<FactionReputation> {
     get Visible() { return this.bit(0); }

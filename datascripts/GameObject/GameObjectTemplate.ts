@@ -15,24 +15,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
-import { Ids } from "../Misc/Ids";
-import { Position } from "../Misc/Position";
-import { GameObjectInstance } from "./GameObjectInstance";
-import { GameObjectName } from "./GameObjectName";
-import { GameObjectDisplayPointer } from "./GameObjectDisplay";
-import { MainEntity } from "../Misc/Entity";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { GameObjectID } from "./GameObjectID";
+import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
+import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
 import { getBroadcast } from "../BroadcastText/BroadcastText";
 import { SimpleLockPointer } from "../Locks/SimpleLock";
 import { LootSetPointer } from "../Loot/Loot";
-import { TaxiPathRef } from "../Taxi/Taxi";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { Position } from "../Misc/Position";
 import { RefReadOnly, RefStatic } from "../Refs/Ref";
-import { GameObjectTemplates } from "./GameObjects";
-import { GameObjectFlags } from "./GameObjectFlags";
-import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
+import { TaxiPathRef } from "../Taxi/Taxi";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
+import { GameObjectDisplayPointer } from "./GameObjectDisplay";
+import { GameObjectFlags } from "./GameObjectFlags";
+import { GameObjectID } from "./GameObjectID";
+import { GameObjectInstance } from "./GameObjectInstance";
+import { GameObjectName } from "./GameObjectName";
+import { GameObjectTemplates } from "./GameObjects";
 
 export class GameObjectTemplate extends MainEntity<gameobject_templateRow> {
     private _addon_row: gameobject_template_addonRow|undefined;

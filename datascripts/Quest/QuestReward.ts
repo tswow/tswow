@@ -16,8 +16,8 @@
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";

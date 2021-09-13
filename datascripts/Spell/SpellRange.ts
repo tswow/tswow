@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { loc_constructor } from "wotlkdata/primitives";
-import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
-import { Ref } from "../Refs/Ref";
-import { MainEntity } from "../Misc/Entity";
 import { DBC } from "wotlkdata";
+import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
+import { loc_constructor } from "wotlkdata/primitives";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
 
 export class SpellRange extends MainEntity<SpellRangeRow> {
     clear(): this {

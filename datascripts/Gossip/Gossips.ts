@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Ids } from "../Misc/Ids"
+import { Ids } from "../Misc/Ids";
 import { Gossip } from "./Gossip";
 
 export const Gossips = {

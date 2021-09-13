@@ -1,12 +1,10 @@
-import { DBC } from "wotlkdata"
-import { all } from "wotlkdata/query/Relations"
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Ids } from "../Misc/Ids"
+import { DBC } from "wotlkdata";
 import { SoundAmbienceQuery, SoundAmbienceRow } from "wotlkdata/dbc/types/SoundAmbience";
+import { all } from "wotlkdata/query/Relations";
 import { MainEntity } from "../Misc/Entity";
-import { SoundEntryPointer } from "./SoundEntry";
+import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
+import { SoundEntryPointer } from "./SoundEntry";
 
 export function pairToRow(id1: number, id2: number) {
     let old = DBC.SoundAmbience.filter({AmbienceID:all(id1,id2)})

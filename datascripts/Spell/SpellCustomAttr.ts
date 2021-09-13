@@ -1,10 +1,10 @@
-import { spell_custom_attrRow } from "wotlkdata/sql/types/spell_custom_attr";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { spell_custom_attrRow } from "wotlkdata/sql/types/spell_custom_attr";
+import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellBasic } from "../GameObject/ElevatorKeyframes";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRow> {
     protected createSQL(): spell_custom_attrRow {

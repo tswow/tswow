@@ -16,15 +16,27 @@
 */
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
+import { trainerRow } from "wotlkdata/sql/types/trainer";
+import { GossipPointer } from "../Gossip/Gossip";
+import { LootSetPointer } from "../Loot/Loot";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
+import { SchoolMask } from "../Misc/School";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
+import { TrainerPointer } from "../Trainer/Trainer";
+import { VehicleRef } from "../Vehicle/Vehicle";
+import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
+import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
+import { CreatureInstance } from "./CreatureInstance";
 import { CreatureLevel } from "./CreatureLevel";
 import { CreatureName, CreatureSubname } from "./CreatureLoc";
 import { MechanicImmunity } from "./CreatureMechanicImmunity";
@@ -37,23 +49,11 @@ import { CreatureInstances, CreatureTemplates } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
+import { CreatureVendor } from "./CreatureVendor";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
-import { TrainerPointer } from "../Trainer/Trainer";
 import { UnitClass } from "./UnitClass";
-import { CreatureVendor } from "./CreatureVendor";
-import { trainerRow } from "wotlkdata/sql/types/trainer";
-import { Ids } from "../Misc/Ids";
 import { UnitFlags } from "./UnitFlags";
-import { SchoolMask } from "../Misc/School";
-import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
-import { CreatureInstance } from "./CreatureInstance";
-import { GossipPointer } from "../Gossip/Gossip";
-import { LootSetPointer } from "../Loot/Loot";
-import { MainEntity } from "../Misc/Entity";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
-import { VehicleRef } from "../Vehicle/Vehicle";
-import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
 
 export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }

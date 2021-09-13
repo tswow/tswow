@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CreatureTemplate } from "./CreatureTemplate";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CreatureTemplate } from "./CreatureTemplate";
 import { CreatureVisualPointer } from "./CreatureVisual";
 
 function getModel(template: CreatureTemplate, index: number) {

@@ -1,9 +1,9 @@
+import { SQL } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { Class } from "./Class";
-import { SQL } from "wotlkdata"
 import { playercreateinfo_actionRow } from "wotlkdata/sql/types/playercreateinfo_action";
 import { MainEntity } from "../Misc/Entity";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
+import { Class } from "./Class";
 
 export class ClassAction extends MainEntity<playercreateinfo_actionRow>{
     get Race() { return this.row.race.get(); }

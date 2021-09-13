@@ -1,8 +1,8 @@
-import { Map } from "./Map"
-import { SystemStoreTop, CreateArgument } from "wotlkdata/cell/serialization/SystemStore";
 import { DBC } from "wotlkdata";
-import { Ids } from "../Misc/Ids";
+import { CreateArgument, SystemStoreTop } from "wotlkdata/cell/serialization/SystemStore";
 import { MapQuery } from "wotlkdata/dbc/types/Map";
+import { Ids } from "../Misc/Ids";
+import { Map } from "./Map";
 
 export class Maps extends SystemStoreTop<Map> {
     protected registeredClass() { return Map; }

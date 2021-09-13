@@ -1,10 +1,10 @@
+import { DBC } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata"
 import { PvpDifficultyRow } from "wotlkdata/dbc/types/PvpDifficulty";
 import { MainEntity } from "../Misc/Entity";
-import { Battleground } from "./Battleground";
-import { MinMaxCell } from "../Misc/LimitCells";
 import { Ids } from "../Misc/Ids";
+import { MinMaxCell } from "../Misc/LimitCells";
+import { Battleground } from "./Battleground";
 
 export class BattlegroundBracket extends MainEntity<PvpDifficultyRow> {
     get ID() { return this.row.ID.get(); }

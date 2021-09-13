@@ -15,20 +15,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CPrim } from "wotlkdata/cell/cells/Cell";
+import { CellArray } from "wotlkdata/cell/cells/CellArray";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { std } from "../tswow-stdlib-data";
 import { AuraType } from "./AuraType";
+import { all_auras } from "./EffectTemplates/AuraTemplates";
+import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
-import { std } from "../tswow-stdlib-data";
-import { Spells } from "./Spells";
-import { all_auras } from "./EffectTemplates/AuraTemplates";
-import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { SpellRadiusRef } from "./SpellRadius";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { CellArray } from "wotlkdata/cell/cells/CellArray";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { Spells } from "./Spells";
 import { SpellTargetPosition } from "./SpellTargetPosition";
 
 export class SpellEffects extends ArraySystem<SpellEffect,Spell> {

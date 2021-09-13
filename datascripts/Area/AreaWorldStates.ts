@@ -1,8 +1,8 @@
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { WorldStateUI, WorldStateUIRegistry } from "../WorldState/WorldStateUI";
-import { Area } from "./Area";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { WorldStateSound } from "../WorldState/WorldState";
+import { WorldStateUI, WorldStateUIRegistry } from "../WorldState/WorldStateUI";
+import { Area } from "./Area";
 
 export class AreaWorldStateUIs extends MultiRowSystem<WorldStateUI,Area> {
     protected getAllRows(): WorldStateUI[] {

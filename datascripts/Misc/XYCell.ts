@@ -1,7 +1,7 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CommonStruct } from "wotlkdata/cell/serialization/CommonStruct";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { CommonStruct } from "wotlkdata/cell/serialization/CommonStruct"
 
 /*
  * This file is part of tswow (https://github.com/tswow)

@@ -1,6 +1,6 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/dbc/types/CurrencyCategory";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/dbc/types/CurrencyCategory";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";

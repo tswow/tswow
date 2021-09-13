@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { Ids } from "../Misc/Ids";
-import { Spell } from "./Spell";
-import { Ref } from "../Refs/Ref";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellRuneCostRow } from "wotlkdata/dbc/types/SpellRuneCost";
+import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
+import { Spell } from "./Spell";
 
 export const PowerTypeMap = {
     'HEALTH':-2,

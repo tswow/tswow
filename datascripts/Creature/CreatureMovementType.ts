@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 export class CreatureMovementType<T> extends EnumCellWrapper<T> {

@@ -1,10 +1,10 @@
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
-import { spell_target_positionRow } from "wotlkdata/sql/types/spell_target_position";
-import { SpellEffect } from "./SpellEffect";
-import { Spell } from "./Spell";
-import { MapRef } from "../Map/Map";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { SQL } from "wotlkdata/sql/SQLFiles";
+import { spell_target_positionRow } from "wotlkdata/sql/types/spell_target_position";
+import { MapRef } from "../Map/Map";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { Spell } from "./Spell";
+import { SpellEffect } from "./SpellEffect";
 
 export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target_positionRow> {
     @Transient

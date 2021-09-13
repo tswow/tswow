@@ -1,6 +1,6 @@
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { ScriptPath } from "./ScriptPath"
+import { ScriptPath } from "./ScriptPath";
 
 export const ScriptPaths = {
     load(id: number) {

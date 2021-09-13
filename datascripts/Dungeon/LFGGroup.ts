@@ -1,5 +1,5 @@
-import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "wotlkdata/dbc/types/LfgDungeonGroup";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "wotlkdata/dbc/types/LfgDungeonGroup";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";

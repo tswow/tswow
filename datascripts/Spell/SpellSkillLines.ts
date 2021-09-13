@@ -16,12 +16,12 @@
  */
 import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "./Spell";
-import { MainEntity } from "../Misc/Entity";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 
 export class TrivialSkillLineRank extends CellSystem<SpellSkillLineAbility> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }

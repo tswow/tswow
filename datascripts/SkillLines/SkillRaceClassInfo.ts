@@ -1,11 +1,11 @@
 import { DBC } from "wotlkdata";
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { Ids } from "../Misc/Ids";
 import { SkillLine } from "./SkillLine";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
 
 export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
     get IsProfession() { return this.bit(5); }

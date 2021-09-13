@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
-import { MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/Ref";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Misc/Ids";
 
 export class Gossip extends MainEntity<gossip_menuRow> {
     addLabel(mod: string, label: string) {

@@ -1,15 +1,15 @@
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Items, ItemTemplateRef } from "../Item/ItemTemplate";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
+import { SpellCastTimePointer } from "../Spell/SpellCastTime";
+import { SpellItemEquips } from "../Spell/SpellItemEquips";
+import { SpellReagents } from "../Spell/SpellReagents";
+import { Spells } from "../Spell/Spells";
+import { SpellVisualPointer } from "../Spell/SpellVisual";
 import { std } from "../tswow-stdlib-data";
 import { Enchantment } from "./Enchantment";
-import { SpellReagents } from "../Spell/SpellReagents";
-import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { SpellCastTimePointer } from "../Spell/SpellCastTime";
-import { Spells } from "../Spell/Spells";
-import { SpellItemEquips } from "../Spell/SpellItemEquips";
-import { SpellVisualPointer } from "../Spell/SpellVisual";
 
 export class EnchantmentSpell extends CellSystemTop {
     protected readonly spell: Spell;

@@ -1,5 +1,5 @@
-import { CreatureTemplates } from "../Creatures"
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { CreatureTemplates } from "../Creatures";
 
 export const CreaturePresets = {
     CreateClassTrainer(mod: string, id: string, classId: number) {

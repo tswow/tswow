@@ -15,18 +15,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
+import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
+import { RefReadOnly } from "../Refs/Ref";
+import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreaturePosition } from "./CreaturePosition";
-import { CreatureSpawnMask } from "./CreatureSpawnMask";
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { RefReadOnly } from "../Refs/Ref";
 import { CreatureInstances } from "./Creatures";
-import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
-import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendor, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
+import { CreatureSpawnMask } from "./CreatureSpawnMask";
 
 export class CreatureInstance extends CellSystemTop {
 

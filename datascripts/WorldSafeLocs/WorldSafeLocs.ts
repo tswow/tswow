@@ -1,6 +1,5 @@
+import { DBC } from "wotlkdata";
 import { WorldSafelocsQuery, WorldSafelocsRow } from "wotlkdata/dbc/types/WorldSafelocs";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { DBC } from "wotlkdata"
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";

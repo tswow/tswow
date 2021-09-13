@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Ids } from "../Misc/Ids";
 import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
 export class SpellRadius extends MainEntity<SpellRadiusRow> {

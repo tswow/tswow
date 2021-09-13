@@ -1,8 +1,8 @@
-import { LockType } from "./LockType"
-import { DBC } from "wotlkdata"
-import { Ids } from "../Misc/Ids"
-import { SimpleLock } from "./SimpleLock"
+import { DBC } from "wotlkdata";
 import { LockTypeQuery } from "wotlkdata/dbc/types/LockType";
+import { Ids } from "../Misc/Ids";
+import { LockType } from "./LockType";
+import { SimpleLock } from "./SimpleLock";
 
 function makeLock() {
     let lock = DBC.Lock.add(Ids.Lock.id());

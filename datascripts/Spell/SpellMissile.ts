@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Ids } from "../Misc/Ids";
 import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
-import { Ref } from "../Refs/Ref";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
 
 export class SpellMissile extends MainEntity<SpellMissileRow> {
     clear(): this {

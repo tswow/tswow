@@ -15,17 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Language } from "wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/primitives";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Misc/Ids";
-import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { Gossip } from "./Gossip";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { WrappedLoc } from "wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/dbc/Localization";
+import { loc_constructor } from "wotlkdata/primitives";
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { npc_textRow } from "../../../../bin/scripts/tswow/wotlkdata/sql/types/npc_text";
-import { Ref } from "../Refs/Ref";
+import { Ids } from "../Misc/Ids";
+import { SQLLocSystem } from "../Misc/SQLLocSystem";
+import { Gossip } from "./Gossip";
 
 function getNpcText(id: number) {
     let text = SQL.npc_text.find({ID: id});

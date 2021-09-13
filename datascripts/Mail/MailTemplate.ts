@@ -1,8 +1,8 @@
-import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/dbc/types/MailTemplate";
 import { DBC } from "wotlkdata";
+import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/dbc/types/MailTemplate";
 import { Loot } from "../Loot/Loot";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
 export class MailTemplate extends MainEntity<MailTemplateRow> {

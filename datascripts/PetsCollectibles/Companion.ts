@@ -1,11 +1,11 @@
-import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell"
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
+import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
 import { Items, ItemTemplate } from "../Item/ItemTemplate";
-import { MainEntity } from "../Misc/Entity"
+import { MainEntity } from "../Misc/Entity";
 import { SelfRef } from "../Refs/Ref";
 import { Spell } from "../Spell/Spell";
-import { Spells } from "../Spell/Spells"
-import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
+import { Spells } from "../Spell/Spells";
 
 const SUMMON_EFFECT_INDEX = 28;
 const COMPANION_SKILLINE = 778

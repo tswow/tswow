@@ -1,14 +1,14 @@
-import { WMOAreaTableQuery, WMOAreaTableRow } from "wotlkdata/dbc/types/WMOAreaTable";
+import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata"
+import { WMOAreaTableQuery, WMOAreaTableRow } from "wotlkdata/dbc/types/WMOAreaTable";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
-import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
-import { AreaRef } from "./Area";
 import { SoundAmbienceRef } from "../Sound/SoundAmbience";
-import { ZoneMusicRef } from "../Sound/ZoneMusic";
+import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
+import { ZoneMusicRef } from "../Sound/ZoneMusic";
+import { AreaRef } from "./Area";
 
 export class WMOAreaSoundProviderPrefs extends CellSystem<WMOArea> {
     get Normal() {

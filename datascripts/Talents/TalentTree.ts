@@ -16,12 +16,12 @@
  */
 import { DBC } from "wotlkdata";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
-import { SpellIconCell } from "../Spell/SpellIcon";
-import { Talent } from "./Talent";
+import { Ids } from "../Misc/Ids";
 import { Spell } from "../Spell/Spell";
+import { SpellIconCell } from "../Spell/SpellIcon";
 import { Spells } from "../Spell/Spells";
+import { Talent } from "./Talent";
 
 export class TalentTree extends MainEntity<TalentTabRow> {
     get ID() { return this.row.ID.get(); }

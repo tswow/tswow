@@ -1,6 +1,6 @@
-import { EffectTemplate } from "./EffectTemplate";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellRadiusRef } from "../SpellRadius";
+import { EffectTemplate } from "./EffectTemplate";
 
 export class TargetBase extends EffectTemplate {
     /**

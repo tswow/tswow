@@ -1,6 +1,6 @@
-import { SkillTiersQuery, SkillTiersRow } from "wotlkdata/dbc/types/SkillTiers";
+import { DBC } from "wotlkdata";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { DBC } from "wotlkdata"
+import { SkillTiersQuery, SkillTiersRow } from "wotlkdata/dbc/types/SkillTiers";
 import { Ids } from "../Misc/Ids";
 
 export class SkillTier extends ArrayEntry<SkillTiers> {

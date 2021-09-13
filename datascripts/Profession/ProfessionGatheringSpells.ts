@@ -1,8 +1,8 @@
+import { DBC } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Spell } from "../Spell/Spell";
 import { Spells } from "../Spell/Spells";
 import { Profession } from "./Profession";
-import { DBC } from "wotlkdata"
 
 export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> {
     protected getAllRows(): Spell[] {

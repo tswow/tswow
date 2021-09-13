@@ -1,8 +1,8 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { DayOfTheWeekCell } from "./DayOfTheWeek";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { OffsetCell } from "../Misc/OffsetCell";
+import { DayOfTheWeekCell } from "./DayOfTheWeek";
 import { MonthCell } from "./Month";
 
 export class HolidayPackedCell<T> extends Cell<number,T> {

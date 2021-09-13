@@ -1,11 +1,11 @@
-import { vehicle_template_accessoryRow } from "wotlkdata/sql/types/vehicle_template_accessory";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { SQL } from "wotlkdata/sql/SQLFiles";
+import { vehicle_accessoryRow } from "wotlkdata/sql/types/vehicle_accessory";
+import { vehicle_template_accessoryRow } from "wotlkdata/sql/types/vehicle_template_accessory";
+import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
 import { CreatureTemplate, CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { SummonType } from "../Misc/SummonType";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { vehicle_accessoryRow } from "wotlkdata/sql/types/vehicle_accessory";
-import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
 
 export class VehicleAccessoryBase<
     T extends vehicle_template_accessoryRow

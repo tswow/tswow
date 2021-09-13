@@ -15,7 +15,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Spell } from "./Spell";
 
 export class SpellTargetType<T> extends MaskCell32<T> {
     /**

@@ -1,14 +1,14 @@
-import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/dbc/types/WorldMapOverlay";
+import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/dbc/types/WorldMapOverlay";
 import { AreaRef } from "../Area/Area";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
-import { WorldMapAreaRef } from "./WorldMapArea";
-import { PositionXYCell } from "../Misc/PositionCell";
-import { Boundary } from "../Misc/LimitCells";
-import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
+import { Boundary } from "../Misc/LimitCells";
+import { PositionXYCell } from "../Misc/PositionCell";
 import { Ref } from "../Refs/Ref";
+import { WorldMapAreaRef } from "./WorldMapArea";
 
 export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
     get Name() { return this.ownerWrap(this.owner.row.TextureName); }

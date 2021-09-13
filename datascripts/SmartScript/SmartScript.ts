@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts";
@@ -21,8 +23,6 @@ import { Condition } from "../Conditions/Condition";
 import { ActionType } from "./ActionType";
 import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
 function findId(type: number, entry: number) {
     let oldest = SQL.smart_scripts.filter(

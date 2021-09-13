@@ -1,6 +1,6 @@
+import * as fs from 'fs';
 import { finish } from "wotlkdata";
 import { iterateIds } from "wotlkdata/ids/Ids";
-import * as fs from 'fs';
 
 // Patch ID files
 finish('build-idfiles',()=>{

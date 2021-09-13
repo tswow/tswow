@@ -1,15 +1,15 @@
-import { WorldStateZoneSoundsRow } from "wotlkdata/dbc/types/WorldStateZoneSounds";
+import { DBC } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { DBC } from "wotlkdata"
+import { WorldStateZoneSoundsRow } from "wotlkdata/dbc/types/WorldStateZoneSounds";
 import { AreaRef } from "../Area/Area";
 import { WMOAreaRef } from "../Area/WMOArea";
-import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
-import { ZoneMusicRef } from "../Sound/ZoneMusic";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { RefBase, RefStatic } from "../Refs/Ref";
 import { SoundAmbienceRef } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
-import { RefBase, RefStatic } from "../Refs/Ref";
+import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
+import { ZoneMusicRef } from "../Sound/ZoneMusic";
 
 // Note: There is no table containing WorldStates, so we just
 // pretend there is one.

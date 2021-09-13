@@ -1,10 +1,10 @@
+import { DBC } from "wotlkdata";
 import { WorldMapContinentQuery, WorldMapContinentRow } from "wotlkdata/dbc/types/WorldMapContinent";
 import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
-import { PositionXYCell } from "../Misc/PositionCell";
-import { Boundary, MinMax2DCell } from "../Misc/LimitCells";
-import { DBC } from "wotlkdata"
 import { Ids } from "../Misc/Ids";
+import { Boundary, MinMax2DCell } from "../Misc/LimitCells";
+import { PositionXYCell } from "../Misc/PositionCell";
 import { Ref } from "../Refs/Ref";
 
 export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {

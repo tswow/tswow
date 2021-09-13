@@ -1,27 +1,27 @@
+import { SQL } from "wotlkdata";
+import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata"
-import { game_event_seasonal_questrelationRow } from "wotlkdata/sql/types/game_event_seasonal_questrelation";
-import { GameEvent, GameEventRef, GameEventRefReadOnly } from "./GameEvent";
-import { MainEntity } from "../Misc/Entity";
-import { Quest, QuestRefReadOnly } from "../Quest/Quest";
+import { any } from "wotlkdata/query/Relations";
 import { SqlRow } from "wotlkdata/sql/SQLRow";
 import { game_event_creatureRow } from "wotlkdata/sql/types/game_event_creature";
-import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
 import { game_event_creature_questQuery, game_event_creature_questRow } from "wotlkdata/sql/types/game_event_creature_quest";
-import { CreatureTemplate, CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
 import { game_event_gameobjectRow } from "wotlkdata/sql/types/game_event_gameobject";
-import { GameObjectInstance, GameObjectInstanceRefReadOnly } from "../GameObject/GameObjectInstance";
 import { game_event_gameobject_questQuery, game_event_gameobject_questRow } from "wotlkdata/sql/types/game_event_gameobject_quest";
-import { GameObjectTemplate, GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
 import { game_event_model_equipRow } from "wotlkdata/sql/types/game_event_model_equip";
-import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { game_event_npcflagRow } from "wotlkdata/sql/types/game_event_npcflag";
 import { game_event_npc_vendorRow } from "wotlkdata/sql/types/game_event_npc_vendor";
-import { ItemTemplate, ItemTemplateRefReadOnly } from "../Item/ItemTemplate";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
-import { any } from "wotlkdata/query/Relations";
+import { game_event_seasonal_questrelationRow } from "wotlkdata/sql/types/game_event_seasonal_questrelation";
+import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
+import { CreatureTemplate, CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
 import { NPCFlags } from "../Creature/NPCFlags";
+import { GameObjectInstance, GameObjectInstanceRefReadOnly } from "../GameObject/GameObjectInstance";
+import { GameObjectTemplate, GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
+import { ItemTemplate, ItemTemplateRefReadOnly } from "../Item/ItemTemplate";
+import { MainEntity } from "../Misc/Entity";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { Quest, QuestRefReadOnly } from "../Quest/Quest";
+import { GameEvent, GameEventRef, GameEventRefReadOnly } from "./GameEvent";
 
 export class GameEventRelationBase<T extends SqlRow<any,any>> extends MainEntity<T> {
     delete() {

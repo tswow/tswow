@@ -23,20 +23,20 @@ import { Edit } from "wotlkdata/luaxml/TextFile";
 import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
+import { ClassRaces } from "./ClassRaces";
+import { ClassSkillLines } from "./ClassSkillLines";
 import { ClassStartInventory } from "./ClassStartInventory";
 import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
+import { ClassTalents } from "./ClassTalents";
 import { ClassType, resolveClassType } from "./ClassType";
 import { ClassUISettings } from "./ClassUISettings";
 import { EquipSkills } from "./EquipSkills";
-import { ClassRaces } from "./ClassRaces";
-import { ClassSkillLines } from "./ClassSkillLines";
 import { StartButtons } from "./StartButtons";
-import { ClassTalents } from "./ClassTalents";
 
 type ClassFinder = number;
 

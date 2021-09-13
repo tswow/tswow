@@ -1,6 +1,6 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export interface IntCell {
     get(): number;

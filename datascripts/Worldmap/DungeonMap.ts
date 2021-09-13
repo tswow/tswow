@@ -1,5 +1,5 @@
+import { DBC } from "wotlkdata";
 import { DungeonMapQuery, DungeonMapRow } from "wotlkdata/dbc/types/DungeonMap";
-import { DBC } from "wotlkdata"
 import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";

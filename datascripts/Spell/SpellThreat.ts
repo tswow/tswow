@@ -1,7 +1,7 @@
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { spell_threatRow } from "wotlkdata/sql/types/spell_threat";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
-import { spell_threatRow } from "wotlkdata/sql/types/spell_threat";
 
 export class SpellThreat extends MaybeSQLEntity<Spell,spell_threatRow> {
     protected createSQL(): spell_threatRow {

@@ -1,9 +1,9 @@
-import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/Ref";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { LockRow } from "wotlkdata/dbc/types/Lock";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
 
 export class LockType extends EnumCellWrapper<SimpleLock> {
     @EnumField(0)

@@ -21,7 +21,6 @@ import { Ids } from "../Misc/Ids";
 import { Trainer } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
 import { Gossip } from "./Gossip";
-import { getGossipLabel } from "./GossipLabels";
 import { GossipOption } from "./GossipOption";
 import { Gossips } from "./Gossips";
 

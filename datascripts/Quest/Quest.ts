@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
+import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
+import { QuestGameEventCondition } from "./QuestGameEventPoints";
 import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";
-import { QuestReward } from "./QuestReward";
-import { QuestText } from "./QuestText";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
-import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
-import { Quests } from "./Quests";
-import { Ids } from "../Misc/Ids";
 import { QuestPOIs } from "./QuestPOI";
-import { QuestGameEventCondition } from "./QuestGameEventPoints";
-import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
+import { QuestReward } from "./QuestReward";
+import { Quests } from "./Quests";
+import { QuestText } from "./QuestText";
 
 export class Quest extends MainEntity<quest_templateRow> {
     private _addonRow: quest_template_addonRow|undefined = undefined;

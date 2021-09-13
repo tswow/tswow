@@ -1,5 +1,5 @@
+import { DBC } from "wotlkdata";
 import { SoundEntriesAdvancedQuery, SoundEntriesAdvancedRow } from "wotlkdata/dbc/types/SoundEntriesAdvanced";
-import { DBC } from "wotlkdata"
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";

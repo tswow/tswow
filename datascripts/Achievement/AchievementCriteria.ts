@@ -1,12 +1,12 @@
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/dbc/types/Achievement_Criteria";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Achievement } from "./Achievement";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 export class CriteriaTimer<T extends CriteriaBase> extends CellSystem<T> {
     get Asset() { return this.wrap(this.owner.row.Timer_Asset_Id); }

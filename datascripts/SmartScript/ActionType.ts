@@ -17,8 +17,8 @@
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
 import { SQL } from "wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
-import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { b2i } from "../Misc/BasicConversion"
+import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { SmartScript } from "./SmartScript"
 import { resolveSummonType, SummonType } from "./SummonType"
 
@@ -2060,6 +2060,26 @@ export class ActionType {
     setSendEventState(gameEvent: number) {
         this.row.action_type.set(271)
                 .action_param1.set(gameEvent)
+        return this.main;
+    }
+
+    setCustom(
+          entry: number
+        , param1 = 0
+        , param2 = 0
+        , param3 = 0
+        , param4 = 0
+        , param5 = 0
+        , param6 = 0
+        ) {
+        this.row
+            .action_type.set(entry)
+            .action_param1.set(param1)
+            .action_param2.set(param2)
+            .action_param3.set(param3)
+            .action_param4.set(param4)
+            .action_param5.set(param5)
+            .action_param6.set(param6)
         return this.main;
     }
 }

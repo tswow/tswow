@@ -1,11 +1,11 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { finish } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
+import { MapRefReadOnly } from "../Map/Map";
 import { WorldSafeLocRef } from "../WorldSafeLocs/WorldSafeLocs";
 import { BattlegroundBase, createBgBase, filterBgsBase } from "./BattlegroundBase";
-import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
-import { finish } from "wotlkdata"
 import { BattlegroundBrackets } from "./BattlegroundBracket";
-import { MapRefReadOnly } from "../Map/Map";
 
 export class BattlegroundSafeLoc extends CellSystem<Battleground> {
     protected loc: WorldSafeLocRef<Battleground>

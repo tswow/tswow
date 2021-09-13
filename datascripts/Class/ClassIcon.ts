@@ -1,9 +1,9 @@
+import * as fs from 'fs';
+import * as path from 'path';
+import { finish } from "wotlkdata";
 import { Settings } from "wotlkdata/Settings";
 import { TSImage, TSImages } from "../Images/Image";
-import { finish } from "wotlkdata";
 import { Classes } from "./Class";
-import * as path from 'path'
-import * as fs from 'fs';
 
 const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"

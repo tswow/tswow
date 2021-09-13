@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { DBC } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
-import { DBC } from "wotlkdata"
+import { LFGDungeonEncounters } from "../Dungeon/Encounter";
+import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { MainEntity } from "../Misc/Entity";
 import { XYCell } from "../Misc/XYCell";
 import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { MapInstanceType } from "./MapInstanceType";
-import { MapWorldStateUIs } from "./MapWorldStates";
 import { Maps } from "./Maps";
-import { LFGDungeons } from "../Dungeon/LFGDungeon";
-import { LFGDungeonEncounters } from "../Dungeon/Encounter";
+import { MapWorldStateUIs } from "./MapWorldStates";
 
 export class Map extends MainEntity<MapRow> {
     get ID() { return this.row.ID.get(); }

@@ -1,9 +1,9 @@
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/dbc/types/SpellItemEnchantmentCondition";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/dbc/types/SpellItemEnchantmentCondition";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 

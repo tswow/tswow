@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell"
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
 export class CreatureSpawnMask<T> extends MaskCell32<T> {
     get Normal10Man() { return this.bit(0); }

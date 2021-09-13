@@ -1,17 +1,17 @@
-import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { BattlemasterListQuery, BattlemasterListRow } from "wotlkdata/dbc/types/BattlemasterList";
-import { battleground_templateRow } from "wotlkdata/sql/types/battleground_template";
+import { DBC, finish, LUAXML, SQL } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { DBC, LUAXML, SQL, finish } from "wotlkdata";
+import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Language, Languages } from "wotlkdata/dbc/Localization";
+import { BattlemasterListQuery, BattlemasterListRow } from "wotlkdata/dbc/types/BattlemasterList";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { all, gt, neq } from "wotlkdata/query/Relations";
+import { battleground_templateRow } from "wotlkdata/sql/types/battleground_template";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
-import { all, gt, neq } from "wotlkdata/query/Relations";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { Language, Languages } from "wotlkdata/dbc/Localization";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 
 export class BattlegroundType<T> extends EnumCellWrapper<T> {
     @EnumField(3)

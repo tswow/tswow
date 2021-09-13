@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { Quest } from "./Quest";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MailTemplatePointer } from "../Mail/MailTemplate";
+import { Quest } from "./Quest";
 
 export class QuestRequiredReputation extends CellSystem<Quest> {
     @Transient

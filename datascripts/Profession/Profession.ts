@@ -1,17 +1,17 @@
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { loc_constructor } from "wotlkdata/primitives";
+import { SQL } from "wotlkdata/sql/SQLFiles";
+import { Ids } from "../Misc/Ids";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { std } from "../tswow-stdlib-data";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { ProfessionNameSystem } from "./ProfessionName";
-import { ProfessionRecipes } from "./ProfessionRecipe";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { ProfessionTier, resolveProfessionRank } from "./ProfessionType";
-import { Ids } from "../Misc/Ids";
-import { loc_constructor } from "wotlkdata/primitives";
 import { Trainer } from "../Trainer/Trainer";
+import { std } from "../tswow-stdlib-data";
 import { ProfessionGatheringNodes } from "./ProfessionGatheringNodes";
 import { ProfessionGatheringSpells } from "./ProfessionGatheringSpells";
+import { ProfessionNameSystem } from "./ProfessionName";
+import { ProfessionRecipes } from "./ProfessionRecipe";
+import { ProfessionTier, resolveProfessionRank } from "./ProfessionType";
 
 export class Profession {
     readonly SkillLine: SkillLine;

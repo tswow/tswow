@@ -1,13 +1,13 @@
-import { TransportAnimationRow } from "wotlkdata/dbc/types/TransportAnimation";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { GameObjectTransport } from "./GameObjectTemplate";
-import { TransportRotationRow } from "wotlkdata/dbc/types/TransportRotation";
-import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
-import { Ids } from "../Misc/Ids";
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
+import { Transient, TransientOn } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { TransportAnimationRow } from "wotlkdata/dbc/types/TransportAnimation";
+import { TransportRotationRow } from "wotlkdata/dbc/types/TransportRotation";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";
+import { GameObjectTransport } from "./GameObjectTemplate";
 
 export class CellBasic<D extends CPrim,O> extends Cell<D,O> {
     private getter: ()=>D;

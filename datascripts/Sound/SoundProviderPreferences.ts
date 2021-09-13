@@ -1,6 +1,6 @@
-import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "wotlkdata/dbc/types/SoundProviderPreferences";
+import { DBC } from "wotlkdata";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { DBC } from "wotlkdata"
+import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "wotlkdata/dbc/types/SoundProviderPreferences";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";

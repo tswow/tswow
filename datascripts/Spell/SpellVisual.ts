@@ -14,24 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellVisualRow } from "wotlkdata/dbc/types/SpellVisual";
-import { Ids } from "../Misc/Ids";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
-import { SpellAnimation } from "./SpellAnimation";
 import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKitModelAttach";
 import { Attachment } from "../Misc/Attachment";
-import { Vec3 } from "../Misc/Vec3";
-import { SpellVisualEffectPointer, SpellVisualEffects } from "./SpellVisualEffect";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
-import { SpellEffectCameraShakePointer } from "./SpellEffectCameraShakes";
-import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { Vec3 } from "../Misc/Vec3";
 import { Ref } from "../Refs/Ref";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SpellAnimation } from "./SpellAnimation";
+import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
+import { SpellEffectCameraShakePointer } from "./SpellEffectCameraShakes";
+import { SpellVisualEffectPointer, SpellVisualEffects } from "./SpellVisualEffect";
 
 export class SpellVisualKitModelAttach extends CellSystemTop {
     readonly row: SpellVisualKitModelAttachRow;

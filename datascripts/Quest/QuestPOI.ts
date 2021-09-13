@@ -1,16 +1,16 @@
-import { quest_poi_pointsRow } from "wotlkdata/sql/types/quest_poi_points";
-import { quest_poiRow } from "wotlkdata/sql/types/quest_poi";
-import { MainEntity } from "../Misc/Entity";
-import { Quest, QuestRefReadOnly } from "./Quest";
-import { MapRef } from "../Map/Map";
-import { WorldMapArea, WorldMapAreaRef, WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
-import { RefBase } from "../Refs/Ref";
-import { SQL } from "wotlkdata"
+import { SQL } from "wotlkdata";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { PositionXYCell } from "../Misc/PositionCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { Position } from "../Misc/Position";
 import { gt, lt } from "wotlkdata/query/Relations";
+import { quest_poiRow } from "wotlkdata/sql/types/quest_poi";
+import { quest_poi_pointsRow } from "wotlkdata/sql/types/quest_poi_points";
+import { MapRef } from "../Map/Map";
+import { MainEntity } from "../Misc/Entity";
+import { Position } from "../Misc/Position";
+import { PositionXYCell } from "../Misc/PositionCell";
+import { RefBase } from "../Refs/Ref";
+import { WorldMapArea, WorldMapAreaRef, WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
+import { Quest, QuestRefReadOnly } from "./Quest";
 
 export class QuestPOIPoint extends MainEntity<quest_poi_pointsRow> {
     get Quest() { return new QuestRefReadOnly(this, this.row.QuestID); }

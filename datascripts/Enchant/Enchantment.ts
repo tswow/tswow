@@ -1,8 +1,8 @@
-import { DBC } from "wotlkdata"
+import { DBC } from "wotlkdata";
 import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
 import { ItemEffectsPointer } from "../Item/ItemVisualEffect";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids"
+import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
 import { EnchantmentConditionRef } from "./EnchantmentCondition";
 import { EnchantmentEffects } from "./EnchantmentEffect";

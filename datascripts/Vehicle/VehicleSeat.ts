@@ -1,13 +1,13 @@
+import { DBC } from "wotlkdata";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/dbc/types/VehicleSeat";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/dbc/types/VehicleSeat";
 import { MainEntity } from "../Misc/Entity";
-import { MinMaxCell } from "../Misc/LimitCells";
-import { SpellAnimation } from "../Spell/SpellAnimation";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
-import { DBC } from "wotlkdata"
 import { Ids } from "../Misc/Ids";
+import { MinMaxCell } from "../Misc/LimitCells";
 import { Ref } from "../Refs/Ref";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SpellAnimation } from "../Spell/SpellAnimation";
 
 export class VehicleSeatFlags extends MaskCell32<VehicleSeat> {
     get HasLowerAnimForEnter() { return this.bit(0); }

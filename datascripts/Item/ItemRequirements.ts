@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { ItemTemplate } from "./ItemTemplate"
+import { ItemTemplate } from "./ItemTemplate";
 
 export class ReputationRequirement extends CellSystem<ItemTemplate> {
     get Faction() {

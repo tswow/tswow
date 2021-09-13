@@ -1,4 +1,4 @@
-import { DBC, SQL } from "wotlkdata"
+import { DBC, SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { any, eq } from "wotlkdata/query/Relations";
 import { Ids } from "../Misc/Ids";

@@ -14,48 +14,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
+import { Classes } from "../Class/Class";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
-import { MainEntity } from "../Misc/Entity";
+import { SchoolMask } from "../Misc/School";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
+import { RaceType } from "../Race/RaceType";
+import { RefStatic } from "../Refs/Ref";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
+import { SpellBonusData } from "./SpellBonusData";
+import { SpellCastTimePointer } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
+import { SpellCustomAttr } from "./SpellCustomAttr";
+import { SpellDescriptionVariablePointer } from "./SpellDescriptionVariable";
+import { SpellDifficultyPointer } from "./SpellDifficulty";
+import { SpellDurationPointer } from "./SpellDuration";
 import { SpellEffects } from "./SpellEffect";
+import { SpellGroups } from "./SpellGroup";
 import { SpellIconCell } from "./SpellIcon";
 import { SpellItemEquips } from "./SpellItemEquips";
 import { SpellLevels } from "./SpellLevels";
+import { SpellMissilePointer } from "./SpellMissile";
 import { SpellPower } from "./SpellPower";
 import { SpellPowerDisplay } from "./SpellPowerDisplay";
 import { SpellProc } from "./SpellProc";
+import { SpellRangePointer } from "./SpellRange";
+import { SpellRank } from "./SpellRank";
 import { SpellReagents } from "./SpellReagents";
 import { SpellRecovery } from "./SpellRecovery";
 import { SpellReputation } from "./SpellReputation";
+import { Spells } from "./Spells";
+import { SpellScript } from "./SpellScript";
 import { SpellSkillLineAbilites } from "./SpellSkillLines";
+import { SpellThreat } from "./SpellThreat";
+import { SpellVisualPointer } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
-import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { SpellCastTimePointer } from "./SpellCastTime";
-import { SpellMissilePointer } from "./SpellMissile";
-import { SpellDescriptionVariablePointer } from "./SpellDescriptionVariable";
-import { SpellDifficultyPointer } from "./SpellDifficulty";
-import { SpellVisualPointer } from "./SpellVisual";
-import { SpellDurationPointer } from "./SpellDuration";
-import { SpellRangePointer } from "./SpellRange";
-import { SchoolMask } from "../Misc/School";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { SpellGroups } from "./SpellGroup";
-import { SpellRank } from "./SpellRank";
-import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
-import { RaceType } from "../Race/RaceType";
-import { Classes } from "../Class/Class";
-import { RefStatic } from "../Refs/Ref";
-import { Spells } from "./Spells";
-import { SpellCustomAttr } from "./SpellCustomAttr";
-import { SpellBonusData } from "./SpellBonusData";
-import { SpellThreat } from "./SpellThreat";
-import { SpellScript } from "./SpellScript";
 
 export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }

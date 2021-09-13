@@ -14,26 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { SQL } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { Language } from "wotlkdata/dbc/Localization";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { std } from "../tswow-stdlib-data";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
-import { ClassType, resolveClassType } from "../Class/ClassType";
-import { SQL } from "wotlkdata"
-import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { Language } from "wotlkdata/dbc/Localization";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { RefReadOnly } from "../Refs/Ref";
 import { SkillLine } from "../SkillLines/SkillLine";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { SkillLines } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
 import { SpellSkillLineAbilites, SpellSkillLineAbility } from "../Spell/SpellSkillLines";
-import { SkillLines } from "../SkillLines/SkillLines";
+import { std } from "../tswow-stdlib-data";
 
 export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
     add(races: RaceType[], classes: ClassType[]) {

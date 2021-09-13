@@ -1,7 +1,7 @@
+import { finish } from "wotlkdata";
 import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { BattlegroundBase, createBgBase, filterBgsBase } from "./BattlegroundBase";
-import { finish } from "wotlkdata"
 
 export class BattlegroundPool extends BattlegroundBase {
     get Maps() { return new SingleArraySystem(this, this.dbc_row.MapID, -1); }

@@ -1,19 +1,19 @@
+import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { Language } from "wotlkdata/dbc/Localization";
 import { GlyphPropertiesQuery, GlyphPropertiesRow } from "wotlkdata/dbc/types/GlyphProperties";
-import { DBC } from "wotlkdata"
+import { loc_constructor } from "wotlkdata/primitives";
+import { Items, ItemTemplate } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Spell, SpellRef } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
-import { Ids } from "../Misc/Ids";
 import { Spells } from "../Spell/Spells";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Items, ItemTemplate } from "../Item/ItemTemplate";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { Language } from "wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/primitives";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 
 export class GlyphFlags extends MaskCell32<Glyph> {
     get IsMinor() { return this.bit(0); }

@@ -15,14 +15,20 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC, SQL } from "wotlkdata";
+import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
-import { Ids } from "../Misc/Ids";
+import { GemRef } from "../Gem/Gem";
+import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
 import { ItemDamages } from "./ItemDamage";
+import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
 import { ItemFlags } from "./ItemFlags";
 import { ItemFlagsCustom } from "./ItemFlagsCustom";
 import { ItemFlagsExtra } from "./ItemFlagsExtra";
@@ -43,12 +49,6 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
-import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { ClassMask } from "../Misc/ClassMask";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
-import { GemRef } from "../Gem/Gem";
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient

@@ -1,8 +1,8 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { SpellEffect } from "../SpellEffect";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { CellArray, CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { SpellEffect } from "../SpellEffect";
 
 export const all_effects : any = {}
 export function EffectID(id: number) {

@@ -1,8 +1,8 @@
 import { DBC } from "wotlkdata";
-import { Ids } from "../Misc/Ids";
-import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
+import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
 export function pathToEffect(effectPath: string) {

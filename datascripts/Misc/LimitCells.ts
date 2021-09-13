@@ -1,5 +1,5 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export class MinMaxCell<T> extends CellSystem<T> {
     protected minCell: Cell<number,any>;

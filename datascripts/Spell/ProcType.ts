@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { Spell } from "./Spell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell"
 
 export class ProcType extends MaskCell32<Spell> {
     constructor(owner: Spell) {

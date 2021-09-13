@@ -14,9 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { GetId, GetIdRange, iterateIds } from "wotlkdata/ids/Ids"
-import { SQLNames } from "wotlkdata/sql/SQLFiles"
-import { DBCNames } from "wotlkdata/dbc/DBCFiles"
+import { GetId, GetIdRange, iterateIds } from "wotlkdata/ids/Ids";
 
 // Swap this to check names in this file
 // type TableNameType = SQLNames | DBCNames

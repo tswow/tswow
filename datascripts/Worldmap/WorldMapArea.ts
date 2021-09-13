@@ -1,12 +1,12 @@
+import { DBC } from "wotlkdata";
 import { WorldMapAreaQuery, WorldMapAreaRow } from "wotlkdata/dbc/types/WorldMapArea";
-import { DBC } from "wotlkdata"
 import { AreaRef } from "../Area/Area";
 import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
-import { Boundary } from "../Misc/LimitCells";
 import { Ids } from "../Misc/Ids";
-import { DungeonMapRef } from "./DungeonMap";
+import { Boundary } from "../Misc/LimitCells";
 import { Ref } from "../Refs/Ref";
+import { DungeonMapRef } from "./DungeonMap";
 
 export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
     get ID() { return this.row.ID.get(); }

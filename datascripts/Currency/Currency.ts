@@ -1,8 +1,8 @@
+import { DBC } from "wotlkdata";
 import { CurrencyTypesQuery, CurrencyTypesRow } from "wotlkdata/dbc/types/CurrencyTypes";
-import { DBC } from "wotlkdata"
+import { Items, ItemTemplateRef } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Items, ItemTemplateRef } from "../Item/ItemTemplate";
 import { CurrencyCategoryRef } from "./CurrencyCategory";
 
 export class Currency extends MainEntity<CurrencyTypesRow> {

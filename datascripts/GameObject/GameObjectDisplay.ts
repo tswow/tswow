@@ -1,11 +1,11 @@
-import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
-import { BoundingBox } from "../Misc/BoundingBox";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
-import { ChildEntity, MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/Ref";
+import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
 import { DBC } from "wotlkdata/wotlkdata";
+import { BoundingBox } from "../Misc/BoundingBox";
+import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
+import { SoundEntryPointer } from "../Sound/SoundEntry";
 
 export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameObjectDisplay> {
     get length(): number { return 10; }

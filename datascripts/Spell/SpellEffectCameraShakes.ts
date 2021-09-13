@@ -1,9 +1,9 @@
-import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
-import { CameraShakePointer } from "./CameraShakes";
-import { MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/Ref";
 import { DBC } from "wotlkdata";
+import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
+import { CameraShakePointer } from "./CameraShakes";
 
 export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesRow> {
     clear(): this {

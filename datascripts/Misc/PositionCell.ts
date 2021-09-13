@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Position } from "./Position";
 
 export class PositionXYZCell<T> extends CellSystem<T> {

@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { DBC } from "wotlkdata";
 import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
-import { DBC } from "wotlkdata"
+import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
-import { ZoneMusicRef } from "../Sound/ZoneMusic";
-import { AreaWorldStateUIs, AreaWorldStateSounds } from "./AreaWorldStates";
-import { MapRef } from "../Map/Map";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
+import { ZoneMusicRef } from "../Sound/ZoneMusic";
 import { AreaFlags } from "./AreaFlags";
+import { AreaWorldStateSounds, AreaWorldStateUIs } from "./AreaWorldStates";
 
 export class Area extends MainEntity<AreaTableRow> {
     get ExploreBit() { return this.row.ExploreFlag.get(); }

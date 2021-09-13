@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { FactionTemplateRow } from "wotlkdata/dbc/types/FactionTemplate";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { Faction } from "./Faction";
-import { DBC } from "wotlkdata"
+import { DBC } from "wotlkdata";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { FactionTemplateRow } from "wotlkdata/dbc/types/FactionTemplate";
 import { Ids } from "../Misc/Ids";
+import { Faction } from "./Faction";
 
 export type FactionGroups =
     'PLAYERS' |

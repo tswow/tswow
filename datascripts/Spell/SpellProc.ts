@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { spell_procRow } from "wotlkdata/sql/types/spell_proc";
-import { Spell } from "./Spell";
 import { SchoolMask } from "../Misc/School";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { Spell } from "./Spell";
 
 export class DisableEffectsMask extends MaskCell32<Spell> {
     /** explicitly disable aura proc effect 0 */

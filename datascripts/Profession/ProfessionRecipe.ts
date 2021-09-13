@@ -1,14 +1,14 @@
-import { Spell } from "../Spell/Spell";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { Profession } from "./Profession";
-import { SpellReagents } from "../Spell/SpellReagents";
-import { std } from "../tswow-stdlib-data";
-import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { SpellCastTimePointer } from "../Spell/SpellCastTime";
-import { ProfessionTier } from "./ProfessionType";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { SingleArraySystem } from "../Misc/SingleArraySystem";
+import { Spell } from "../Spell/Spell";
+import { SpellCastTimePointer } from "../Spell/SpellCastTime";
+import { SpellReagents } from "../Spell/SpellReagents";
 import { Spells } from "../Spell/Spells";
+import { std } from "../tswow-stdlib-data";
+import { Profession } from "./Profession";
+import { ProfessionTier } from "./ProfessionType";
 
 export class RecipeRank extends CellSystem<ProfessionRecipe> {
     protected readonly spell: Spell;

@@ -1,12 +1,11 @@
+import { DBC } from "wotlkdata";
+import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 import { HolidaysQuery, HolidaysRow } from "wotlkdata/dbc/types/Holidays";
 import { MainEntity } from "../Misc/Entity";
-import { DBC } from "wotlkdata";
-import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { Ids } from "../Misc/Ids";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { HolidayAnnualStages, HolidayWeeklyStages, HolidayPeriod } from "./HolidayStage";
-import { SQL } from "wotlkdata";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
+import { HolidayDescription, HolidayName } from "./HolidayLoc";
+import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";
 
 export const all_holidays: any = {}
 export function HolidayID(...id: number[]) {

@@ -1,10 +1,10 @@
-import { DBC, finish, SQL } from "wotlkdata";
-import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
+import * as path from 'path';
+import { DBC, finish, SQL } from "wotlkdata";
 import { MapCreator } from "wotlkdata/dbc/types/Map";
-import { Ids } from "../Misc/Ids";
 import { Settings } from "wotlkdata/Settings";
+import { Ids } from "../Misc/Ids";
 
 finish('build-maps',()=>{
     let localeDirs = [

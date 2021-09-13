@@ -16,8 +16,8 @@
  */
 import { DBC } from "wotlkdata";
 import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
-import { Ids } from "../Misc/Ids";
 import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { SpellIconCell } from "../Spell/SpellIcon";
 
 /**

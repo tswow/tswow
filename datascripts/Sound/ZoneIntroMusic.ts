@@ -1,5 +1,5 @@
-import { ZoneintroMusicTableQuery, ZoneintroMusicTableRow } from "wotlkdata/dbc/types/ZoneintroMusicTable";
 import { DBC } from "wotlkdata";
+import { ZoneintroMusicTableQuery, ZoneintroMusicTableRow } from "wotlkdata/dbc/types/ZoneintroMusicTable";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
