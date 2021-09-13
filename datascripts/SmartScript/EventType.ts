@@ -1211,4 +1211,21 @@ export class EventType<T> {
         this.row.event_type.set(82)
         return this.main
     }
+
+    setCustom(
+          id: number
+        , params: {
+              param1?: number
+            , param2?: number
+            , param3?: number
+            , param4?: number
+            }
+        ) {
+            this.row.event_type.set(id);
+            this.row.event_param1.set(params.param1||0);
+            this.row.event_param2.set(params.param2||0);
+            this.row.event_param3.set(params.param3||0);
+            this.row.event_param4.set(params.param4||0);
+            return this.main;
+    }
 }

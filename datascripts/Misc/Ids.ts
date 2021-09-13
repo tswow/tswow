@@ -929,5 +929,23 @@ export const Ids = {
     points_of_interest: new StaticIDGenerator('points_of_interest', 500),
 
     /** Starts at 700, highest base value is 20 (also used for the game object map id)*/
-    transports: new StaticIDGenerator('transports', 700)
+    transports: new StaticIDGenerator('transports', 700),
+
+    /**
+     * Starts at 300, highest base value is 299
+     * - value is hardcoded in server, see TSSmartScripts.h
+     */
+    smart_actions: new StaticIDGenerator('smart_actions',300),
+
+    /**
+     * Starts at 300, highest base value is 299
+     * - value is hardcoded in server, see TSSmartScripts.h
+     */
+    smart_events: new StaticIDGenerator('smart_events',300),
+
+    /**
+     * Starts at 100, highest base value is 52
+     * - value is hardcoded in server, see TSSmartScripts.h
+     */
+    condition_types: new StaticIDGenerator('smart_events',100),
 }

@@ -1010,4 +1010,20 @@ export class AttachedScript<T> extends CellSystem<T> {
         callback(row);
         return this.owner;
     }
+
+    onCustom(
+          id: number
+          , params: {
+              param1?: number
+            , param2?: number
+            , param3?: number
+            , param4?: number
+          }
+          , callback: (script: SmartScript)=>void
+    ) {
+        const row = this.create();
+        row.Event.setCustom(id,params);
+        callback(row);
+        return this.owner;
+    }
 }

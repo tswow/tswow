@@ -404,4 +404,8 @@ export class Condition<T> extends CellSystem<T> {
     addQuestObjective(questId: number, objectiveIndex: number, group = 0) {
         return this.addRow(47, group, questId, objectiveIndex);
     }
+
+    addCustom(entry: number, group = 0, value1 = 0, value2 = 0, value3 = 0) {
+        return this.addRow(entry,group,value1,value2,value3)
+    }
 }

@@ -43,6 +43,7 @@ import { MailTemplateRegistry } from "./Mail/MailTemplate";
 import { LoadingScreens } from "./Map/LoadingScreen";
 import { Maps } from "./Map/Maps";
 import { Compare } from "./Misc/Compare";
+import { Ids } from "./Misc/Ids";
 import { CompanionRegistry } from "./PetsCollectibles/Companion";
 import { MountRegistry } from "./PetsCollectibles/Mount";
 import { Professions } from "./Profession/Professions";
@@ -144,4 +145,5 @@ export const std = {
     Vehicles: VehicleRegistry,
     Holidays: HolidayRegistry,
     GameEvents: GameEventRegistry,
+    IDs: Ids
 }
