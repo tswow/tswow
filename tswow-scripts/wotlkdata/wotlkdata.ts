@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
-import { DBC as _DBC } from './dbc/DBCFiles';
+import { DBC as _DBC, DBCNames } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from './ids/Ids';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
@@ -33,6 +33,13 @@ const reads: PatchCollection = [];
 const writes: PatchCollection = [];
 const patches: PatchCollection = [];
 const finishes: PatchCollection = [];
+const sorts: PatchCollection = [];
+
+export type Stages = 'SETUP' | 'READ' | 'WRITE' | 'PATCH' | 'FINISH' | 'SORT'
+let cur_stage: Stages = 'SETUP'
+export function GetStage() {
+    return cur_stage;
+}
 
 class IdPublic extends IdPrivate {
     static readFile = () => IdPrivate.readFile(Settings.ID_FILE_PATH);
@@ -65,7 +72,6 @@ function patchSubdirs(dir: string) {
         })
         .map(x => path.relative(__dirname, x))
         .forEach(x => {
-
             require(x);
             applyStage(setups);
         });
@@ -107,7 +113,7 @@ function time(msg: string) {
 async function mainWrap() {
     try {
         await main();
-    } catch(error) {
+    } catch(error: any) {
         console.error(error.message+error.stack);
         process.exit(1);
     }
@@ -120,7 +126,7 @@ async function main() {
 
     try{
         await cleanSQL();
-    } catch(err) {
+    } catch(err: any) {
         console.error(err.stack);
         process.exit(2);
     }
@@ -142,11 +148,16 @@ async function main() {
         }
     }
 
+    cur_stage = 'READ'
     await applyStage(reads);
+    cur_stage = 'WRITE'
     await applyStage(writes);
+    cur_stage = 'PATCH'
     await applyStage(patches);
+    cur_stage = 'FINISH'
     await applyStage(finishes);
-
+    cur_stage = 'SORT'
+    await applyStage(sorts);
     time(`Executed scripts`);
 
     await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
@@ -240,7 +251,7 @@ export function patch(name: string, callback: () => any) {
 }
 
 /**
- * Step 5 of script loading (final step)
+ * Step 5 of script loading (final step that can handle existing data)
  * - Runs AFTER global scope, setup, read, write and patch.
  *
  * This stage should:
@@ -255,6 +266,23 @@ export function finish(name: string, callback: () => any) {
     finishes.push({name, callback});
 }
 
+
+/**
+ * Step 6 of script loading (final step)
+ * - Runs AFTER global scope, setup, read, write, patch and even finish.
+ *
+ * This stage should:
+ * - Sort DBC files in place.
+ *
+ * At this stage, all previous DBC pointers can become invalid, and the only valid
+ * API operation is calling DBCTable#sort and reading the rows it calls back with
+ *
+ * @param name
+ * @param callback
+ */
+export function sort(name: string, callback: () => any) {
+    sorts.push({name,callback});
+}
 
 /**
  * Contains references to all DBC files
