@@ -42,8 +42,9 @@ export class ItemVisualModels<T> extends ArraySystem<ItemVisualModel<T>,ItemDisp
     }
 
     add(model: string, texture: string) {
-        return this.getFree()
+        this.addGet()
             .Model.set(model)
             .ModelTexture.set(texture);
+        return this.owner;
     }
 }

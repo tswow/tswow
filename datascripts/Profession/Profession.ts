@@ -203,10 +203,10 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Icon.set('Interface\\Icons\\Trade_BlackSmithing')
             .SchoolMask.Physical.mark()
             .Visual.set(0)
-            .Effects.modFree(eff=>{
+            .Effects.addMod(eff=>{
                 eff.EffectType.TradeSkill.set()
             })
-            .Effects.modFree(eff=>{
+            .Effects.addMod(eff=>{
                 eff.EffectType.Skill.set()
                     .SkillTier.set(newIndex)
                     .SkillID.set(this.owner.ID)
@@ -240,11 +240,11 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Attributes.sheatheUnchanged.mark()
             .TargetType.UnitAlly.mark()
             .SchoolMask.Physical.mark()
-            .Effects.modFree(effect=>{
+            .Effects.addMod(effect=>{
                 effect.EffectType.LearnSpell.set()
                     .LearntSpell.set(spell.ID)
             })
-            .Effects.modFree(effect=>{
+            .Effects.addMod(effect=>{
                 effect.EffectType.SkillStep.set()
                         .Skill.set(this.owner.ID)
                         .Tier.set(newIndex)

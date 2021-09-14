@@ -136,12 +136,8 @@ export class ItemSpells extends ArraySystem<ItemSpell, ItemTemplate> {
         return 5;
     }
 
-    getFree() {
-        return super.getFree();
-    }
-
-    modFree(callback: (itemSpell: ItemSpell)=>void) {
-        callback(this.getFree());
+    addMod(callback: (itemSpell: ItemSpell)=>void) {
+        callback(this.addGet());
         return this.owner;
     }
 }

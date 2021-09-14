@@ -165,7 +165,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
     }
 
     private add(stat: number, value: number) {
-        const free = this.getFree();
+        const free = this.addGet();
         free.Type.set(stat);
         free.Value.set(value);
         // Needs to be updated with the amount of used stats

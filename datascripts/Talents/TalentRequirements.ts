@@ -68,7 +68,7 @@ export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
     }
 
     add(talent: number, rank: number) {
-        this.getFree().set(talent, rank);
+        this.addGet().set(talent, rank);
         return this.owner;
     }
 }

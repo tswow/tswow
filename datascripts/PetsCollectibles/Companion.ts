@@ -28,7 +28,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
     add(mod: string, id: string) {
         const spell = Spells.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
-            .Effects.modFree(efffect=>{
+            .Effects.addMod(efffect=>{
                 efffect.EffectType.LearnSpell.set()
                     .LearntSpell.set(this.owner.ID)
                     .ImplicitTargetA.SrcCaster.set()
@@ -48,7 +48,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .Class.setMount()
             .Material.Liquid.set()
             .InventoryType.NonEquippable.set()
-            .Spells.modFree((ispell=>{
+            .Spells.addMod((ispell=>{
                 ispell.SpellID.set(spell.ID)
                      .Category.set(330)
                      .Trigger.OnUse.set()
@@ -57,7 +57,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
                      .Cooldown.set(-1)
                      .CategoryCooldown.set(3000)
             }))
-            .Spells.modFree((spell=>{
+            .Spells.addMod((spell=>{
                 spell.SpellID.set(this.owner.ID)
                     .Category.set(0)
                     .Trigger.OnLearn.set()
@@ -111,7 +111,7 @@ export const CompanionRegistry = {
             .SkillLines.addMod(COMPANION_SKILLINE,false,sla=>{
                 sla.MinSkillRank.set(1)
             })
-            .Effects.modFree(effects=>{
+            .Effects.addMod(effects=>{
                 effects.EffectType.Summon.set()
                     .SummonProperties.set(41)
                     .SummonedCreature.set(0)

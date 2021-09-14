@@ -70,7 +70,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
         let itemId = 0;
         if(createItem) {
             let item = Items.create(mod,`${id}-item`)
-                .Spells.modFree(ispell=>{
+                .Spells.addMod(ispell=>{
                     ispell.SpellID.set(spell.ID)
                         .Trigger.OnUse.set()
                         .Charges.set(-1)
@@ -85,7 +85,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                 .Quality.White.set()
                 .DisplayInfo.set(811)
 
-            spell.Effects.modFree(effect=>{
+            spell.Effects.addMod(effect=>{
                 effect.EffectType.EnchantItem.set()
                     .Enchant.set(this.owner.ID)
                     .EnchantingItem.set(item.ID);
@@ -93,7 +93,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
             itemId = item.ID
         }
 
-        spell.Effects.modFree(effect=>{
+        spell.Effects.addMod(effect=>{
             effect.EffectType.EnchantItem.set()
                 .Enchant.set(this.owner.ID)
                 .EnchantingItem.set(itemId)

@@ -135,13 +135,9 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         return this.owner;
     }
 
-    modFree(callback: (eff: SpellEffect)=>void) {
-        callback(this.getFree());
+    addMod(callback: (eff: SpellEffect)=>void) {
+        callback(this.addGet());
         return this.owner;
-    }
-
-    getFree() {
-        return super.getFree();
     }
 
     addLearnSpells(...spells: number[]) {
@@ -176,7 +172,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             }
             nex = std.Spells.createDynamic()
                 .Icon.setFullPath(SPELL_CHAIN_TOKEN)
-            spell.Effects.modFree((eff)=>{
+            spell.Effects.addMod((eff)=>{
                 eff.EffectType.TriggerSpell.set()
                    .TriggerSpell.set((nex as Spell).ID);
             })

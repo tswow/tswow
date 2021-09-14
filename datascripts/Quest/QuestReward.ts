@@ -86,7 +86,7 @@ export class ItemChoiceRewards<T> extends ArraySystem<ItemChoiceReward<T>,T> {
     }
 
     add(item: number, quantity: number) {
-        const free = this.getFree();
+        const free = this.addGet();
         free.ItemId.set(item);
         free.Quantity.set(quantity);
         return this.owner;
@@ -150,7 +150,7 @@ export class ItemRewards<T> extends ArraySystem<ItemReward<T>,T> {
     }
 
     add(item: number, quantity: number) {
-        this.getFree()
+        this.addGet()
             .Item.set(item)
             .Quantity.set(quantity);
         return this.owner;
@@ -224,7 +224,7 @@ export class ReputationRewards<T> extends ArraySystem<ReputationReward<T>,T> {
     }
 
     add(faction: number, reputation: number) {
-        const free = this.getFree();
+        const free = this.addGet();
         free.FactionId.set(faction);
         free.Reputation.set(reputation);
         return this.owner;

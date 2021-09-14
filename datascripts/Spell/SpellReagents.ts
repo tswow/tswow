@@ -59,7 +59,7 @@ export class SpellReagents<T> extends ArraySystem<SpellReagentEntry<T>, T> {
     }
 
     add(reagent: number, count: number) {
-        this.getFree().set(reagent, count);
+        this.addGet().set(reagent, count);
         return this.owner;
     }
 }

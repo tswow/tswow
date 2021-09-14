@@ -94,7 +94,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .Icon.set('Interface\\Icons\\INV_Inscription_Tradeskill01')
             .TargetType.GlyphSlot.mark()
             .CastTime.set(6)
-            .Effects.modFree(effect=>{
+            .Effects.addMod(effect=>{
                 effect.EffectType.ApplyGlyph.set()
                       .Glyph.set(this.owner.ID)
             })
@@ -108,7 +108,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
         let item = Items.create(mod,`${id}-item`)
             .BagFamily.set(16)
             .Quality.White.set()
-            .Spells.modFree(ispell=>{
+            .Spells.addMod(ispell=>{
                 ispell.SpellID.set(spell.ID)
                     .Trigger.OnUse.set()
                     .Charges.set(-1)

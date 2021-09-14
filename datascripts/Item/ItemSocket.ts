@@ -82,7 +82,7 @@ export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
     }
 
     protected add(col: number, amt: number) {
-        const free = this.getFree();
+        const free = this.addGet();
         free.color.set(col);
         free.content.set(amt);
         return this.owner;

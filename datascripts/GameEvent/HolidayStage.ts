@@ -219,7 +219,7 @@ export class HolidayAnnualStages extends ArraySystem<HolidayAnnualStage,HolidayA
     }
 
     addGet() {
-        return this.getFree()
+        return super.addGet()
             .FullDate.set(529823808)
             .FullDate.Year.set(31)
             .FullDate.DayOfWeek.set(0)
@@ -259,7 +259,7 @@ export class HolidayWeeklyStages extends ArraySystem<HolidayWeeklyStage,HolidayW
     }
 
     addGet() {
-        return this.getFree().FullDate.set(536867712)
+        return super.addGet().FullDate.set(536867712)
     }
 
     addMod(callback: (value: HolidayWeeklyStage)=>void) {
@@ -268,13 +268,13 @@ export class HolidayWeeklyStages extends ArraySystem<HolidayWeeklyStage,HolidayW
     }
 
     addWithEvent(mod: string, id: string, day: DayOfTheWeek, startHour: number, startMinute: number, duration: number, durationType: TimeUnit) {
-        this.getFree().set(day,startHour,startMinute,duration,durationType)
+        this.addGet().set(day,startHour,startMinute,duration,durationType)
             .GameEvents.addMod(mod,id);
         return this.owner;
     }
 
     add(day: DayOfTheWeek, startHour: number, startMinute: number, duration: number, durationType: TimeUnit) {
-        this.getFree().set(day,startHour,startMinute,duration,durationType);
+        this.addGet().set(day,startHour,startMinute,duration,durationType);
         return this.owner;
     }
 }

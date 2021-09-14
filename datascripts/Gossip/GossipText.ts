@@ -255,7 +255,7 @@ export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {
     }
 
     addGendered(male: loc_constructor, female: loc_constructor, lang: number, emote = 0, emoteDelay = 0) {
-        this.getFree()
+        this.addGet()
             .MaleText.set(male)
             .FemaleText.set(female)
             .Lang.set(lang)

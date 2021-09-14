@@ -22,7 +22,7 @@ std.Spells.create(/*@1*/"mod"/**/,/*@2*/"id"/**/)
     .InterruptFlags.OnPushback.mark()
     .InterruptFlags.OnInterruptCast.mark()
     .InterruptFlags.mark(3)
-    .Effects.modFree(eff=>{
+    .Effects.addMod(eff=>{
         eff.EffectType.setSchoolDamage()
         .BaseDamage.set(10)
         .BonusMultiplier.set(0.14)
@@ -72,7 +72,7 @@ std.Spells.create(/*@1*/"mod"/**/,/*@2*/"id"/**/)
     .CastTime.setSimple(0)
     .Cooldown.set(1000)
     .Icon.set(`Interface\\Icons\\Spell_Shadow_AbominationExplosion`)
-    .Effects.modFree(effect=>{
+    .Effects.addMod(effect=>{
         effect.EffectType
             .setSchoolDamage()
             .BaseDamage.set(1000)
@@ -102,7 +102,7 @@ std.Spells.create(/*@1*/"mod"/**/,/*@2*/"id"/**/)
     .Name.enGB.set('Summon Pet')
     .Subtext.enGB.set('Summon')
     .Description.enGB.set('Description')
-    .Effects.modFree(effect=>{
+    .Effects.addMod(effect=>{
         effect.EffectType.setSummonPet()
             .SummonedCreature.set(/*@3*/416/**/)
     })
@@ -138,7 +138,7 @@ std.Spells.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Name.enGB.set('Chain Spell')
     .Subtext.enGB.set('Rank 1')
     .Description.enGB.set('Description')
-    .Effects.modFree(effect=>{
+    .Effects.addMod(effect=>{
         effect.EffectType.setSchoolDamage()
             .BaseDamage.set(190)
             .RandomDamage.set(27)
@@ -162,7 +162,7 @@ std.Spells.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
             .Animation.setSpellCastDirected()
             .LeftHandEffect.setSimple("Spells\\Lightning_Cast_Hand.mdx")
             .RightHandEffect.setSimple("Spells\\Lightning_Cast_Hand.mdx")
-            .CharProcedures.modFree(procedure=>{
+            .CharProcedures.addMod(procedure=>{
                 procedure.SetChain()
                     .TargetCount.set(1)
                     .Forever.set(0)
@@ -193,12 +193,12 @@ std.Spells.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
                             .DelayBetweenEffects.set(0)
                             .SegDelay.set(0)
             })
-        
+
         visual.ImpactKit.getRefCopy()
             .Animation.setCombatWound()
             .ChestEffect.setSimple("Spells\\ChainLightning_Impact_Chest.mdx")
             .Sound.setSimple("Sound\\Spells",["LightningBoltImpact.wav"])
-            
+
         visual.PrecastKit.getRefCopy()
             .Animation.setReadySpellDirected()
             .LeftHandEffect.setSimple("Spells\\Lightning_PreCast_Low_Hand.mdx")
@@ -220,7 +220,7 @@ std.Spells.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Duration.setSimple(1800000)
     .Power.setMana(100)
     .Cooldown.set(1000)
-    .Effects.modFree(effect=>{
+    .Effects.addMod(effect=>{
         effect.EffectType
                 .setApplyAura()
                 .setModResistance()
@@ -252,7 +252,7 @@ std.Spells.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Duration.setSimple(-1,0,-1)
     .Power.setMana(100)
     .Cooldown.set(1000)
-    .Effects.modFree(effect=>{
+    .Effects.addMod(effect=>{
         effect.EffectType.setApplyAura()
             .setModShapeshift()
             .Form.setDisplayId(26)

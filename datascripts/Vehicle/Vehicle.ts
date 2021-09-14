@@ -91,7 +91,7 @@ export class VehicleMissileImpactModels extends ArraySystem<VehicleMissileImpact
     }
 
     add(model: string, radius: number) {
-        this.getFree()
+        this.addGet()
             .Model.set(model)
             .Radius.set(radius)
         return this.owner;

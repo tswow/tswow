@@ -119,7 +119,7 @@ export class SpellCharacterProcedures<T> extends CellSystem<T> {
 
     get length() { return 4; }
 
-    getFree() {
+    addGet() {
         for(let i=0;i<this.length;++i) {
             if(this.row.CharProc.getIndex(i)<0) {
                 return this.get(i);
@@ -133,8 +133,8 @@ export class SpellCharacterProcedures<T> extends CellSystem<T> {
         return this.owner;
     }
 
-    modFree(callback: (proc: SpellCharacterProcedure)=>void) {
-        callback(this.getFree());
+    addMod(callback: (proc: SpellCharacterProcedure)=>void) {
+        callback(this.addGet());
         return this.owner;
     }
 

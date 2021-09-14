@@ -184,7 +184,7 @@ export const Languages = {
             .Proc.Chance.set(101)
             .DefenseType.set(1)
             .PreventionType.set(1)
-            .Effects.modFree(effect=>{
+            .Effects.addMod(effect=>{
                 effect.EffectType.Language.set()
                       .LanguageID.set(langRow.ID.get())
                       .ChainAmplitude.set(1)

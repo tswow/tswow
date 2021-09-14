@@ -103,7 +103,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
                     .InterruptFlags.OnMovement.mark()
                     .InterruptFlags.OnPushback.mark()
                     .InterruptFlags.OnInterruptCast.mark()
-                    .Effects.modFree((effect)=>{
+                    .Effects.addMod((effect)=>{
                         effect.EffectType.CreateItem.set()
                               .TargetA.UnitCaster.set()
                     })

@@ -71,7 +71,7 @@ export class ItemObjectives extends ArraySystem<ItemObjective, Quest> {
     }
 
     add(item: number, count: number) {
-        let free = this.getFree();
+        let free = this.addGet();
         free.ItemID.set(item);
         free.Count.set(count);
         return this.owner;
@@ -120,7 +120,7 @@ export class NpcGoObjectives extends ArraySystem<NpcGoObjective,Quest> {
 
     // TODO: Split npc/go?
     add(id: number, count: number) {
-        const free = this.getFree();
+        const free = this.addGet();
         free.ID.set(id);
         free.Count.set(count);
         return this.owner;
@@ -166,7 +166,7 @@ export class ReputationObjectives extends ArraySystem<ReputationObjective,Quest>
     }
 
     add(faction: number, reputation: number) {
-        this.getFree()
+        this.addGet()
             .Faction.set(faction)
             .Reputation.set(reputation);
         return this.owner;

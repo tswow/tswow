@@ -134,17 +134,13 @@ export class EnchantmentEffects extends ArraySystem<EnchantmentEffectPlain,Encha
         return new EnchantmentEffectPlain(this.owner, index);
     }
 
-    add() {
-        return this.getFree();
-    }
-
     mod(index: number, callback: (effect: EnchantmentEffectPlain)=>void)  {
         callback(this.get(index));
         return this.owner;
     }
 
     addMod(callback: (effect: EnchantmentEffectPlain)=>void)  {
-        callback(this.add());
+        callback(this.addGet());
         return this.owner;
     }
 

@@ -21,7 +21,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .Attributes.isHiddenFromLog.mark()
         .Attributes.unk41.mark()
         .SkillLines.addMod(this.owner.ID)
-        .Effects.modFree((eff)=>{
+        .Effects.addMod((eff)=>{
             eff.EffectType.OpenLock.set()
             .TargetA.GameobjectTarget.set()
             .LockType.set(lockType)
@@ -31,7 +31,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
             .Radius.modRefCopy(x=>x.set(2,0,2))
             .ChainAmplitude.set(1)
         })
-        .Effects.modFree((eff)=>{
+        .Effects.addMod((eff)=>{
             eff.EffectType.Skill.set()
             .AsRawEffect()
             .MiscValueA.set(this.owner.ID)

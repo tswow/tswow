@@ -28,7 +28,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
     add(mod: string, id: string) {
         const spell = Spells.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
-            .Effects.modFree(efffect=>{
+            .Effects.addMod(efffect=>{
                 efffect.EffectType.LearnSpell.set()
                     .LearntSpell.set(this.owner.ID)
                     .ImplicitTargetA.SrcCaster.set()
@@ -49,7 +49,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
             .Class.setMount()
             .Material.Liquid.set()
             .InventoryType.NonEquippable.set()
-            .Spells.modFree((ispell=>{
+            .Spells.addMod((ispell=>{
                 ispell.SpellID.set(spell.ID)
                      .Category.set(330)
                      .Trigger.OnUse.set()
@@ -58,7 +58,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
                      .Cooldown.set(-1)
                      .CategoryCooldown.set(3000)
             }))
-            .Spells.modFree((spell=>{
+            .Spells.addMod((spell=>{
                 spell.SpellID.set(this.owner.ID)
                      .Category.set(0)
                      .Trigger.OnLearn.set()
@@ -125,14 +125,14 @@ export const MountRegistry = {
             .Cooldown.StartCategory.set(330)
             .Mechanic.set(21)
             .Levels.Spell.set(1)
-            .Effects.modFree(effect=>{
+            .Effects.addMod(effect=>{
                 effect
                     .EffectType.ApplyAura.set()
                     .AuraType.Mounted.set()
                     .CreatureTemplate.set(0)
                     .TargetA.UnitCaster.set()
             })
-            .Effects.modFree(effect=>{
+            .Effects.addMod(effect=>{
                 effect
                     .EffectType.ApplyAura.set()
                     .AuraType.ModIncreaseMountedSpeed.set()
@@ -142,7 +142,7 @@ export const MountRegistry = {
             })
 
         if(flightSpeed>0) {
-            spell.Effects.modFree(effect=>{
+            spell.Effects.addMod(effect=>{
                 effect
                     .EffectType.ApplyAura.set()
                     .AuraType.ModIncreaseFlightSpeed.set()

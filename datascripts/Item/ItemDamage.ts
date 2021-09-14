@@ -80,7 +80,7 @@ export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
     }
 
     private add(type: number, min: number, max: number) {
-        const free = this.getFree()
+        const free = this.addGet()
         free.school.set(type);
         free.min.set(min);
         free.max.set(max);

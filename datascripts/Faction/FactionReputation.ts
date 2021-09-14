@@ -75,12 +75,8 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         return this.owner;
     }
 
-    getFree() {
-        return super.getFree();
-    }
-
-    modFree(callback: (reputation: FactionReputation)=>void = ()=>{}) {
-        callback(this.getFree());
+    addMod(callback: (reputation: FactionReputation)=>void = ()=>{}) {
+        callback(this.addGet());
         return this.owner;
     }
 
@@ -92,7 +88,7 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
                 )
         }
 
-        let rep = this.getFree()
+        let rep = this.addGet()
             .StartReputation.set(startReputation)
             .addClasses(classes)
             .addRaces(races)

@@ -34,7 +34,7 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
     }
 
     add(path: string) {
-        this.set(this.getFree(),path);
+        this.set(this.addGet(),path);
         return this;
     }
 
@@ -54,7 +54,7 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
         return this;
     }
 
-    protected getFree() {
+    protected addGet() {
         for (let i = 0; i < this.length; ++i) {
             const cur = this.row.Slot.getIndex(i);
             if(cur == 0) {
