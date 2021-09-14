@@ -62,13 +62,13 @@ export class Quest extends MainEntity<quest_templateRow> {
         return addon;
     }
 
+    get SpecialFlags() { return this.wrap(this.addonRow.SpecialFlags); }
     get MaxLevel() { return this.wrap(this.addonRow.MaxLevel); }
     get NextQuestID() { return this.wrap(this.addonRow.NextQuestID); }
     get PrevQuestID() { return this.wrap(this.addonRow.PrevQuestID); }
     get ProvidedItemCount() { return this.wrap(this.addonRow.ProvidedItemCount); }
 
     get SourceSpellID() { return this.wrap(this.addonRow.SourceSpellID); }
-    get SpecialFlags() { return new MaskCell32(this,this.addonRow.SpecialFlags); }
     get AllowableClasses() { return new MaskCell32(this,this.addonRow.AllowableClasses); }
     get BreadcrumbForQuestId() { return this.wrap(this.addonRow.BreadcrumbForQuestId); }
     get ExclusiveGroup() { return this.wrap(this.addonRow.ExclusiveGroup); }
