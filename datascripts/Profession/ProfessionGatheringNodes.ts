@@ -10,7 +10,7 @@ export class ProfessionGatheringNodes extends CellSystem<Profession> {
     add(mod: string, id: string, lockId: number, levelNeeded: number) {
         let lock = Locks.createTypeInstance(lockId,levelNeeded)
         return GameObjectTemplates.create(mod,id)
-            .Type.setChest()
+            .Type.Chest.set()
             .IsConsumable.set(1)
             .Lock.setRefID(lock.ID)
     }

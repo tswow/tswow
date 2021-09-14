@@ -29,9 +29,9 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
         const spell = Spells.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.modFree(efffect=>{
-                efffect.EffectType.setLearnSpell()
+                efffect.EffectType.LearnSpell.set()
                     .LearntSpell.set(this.owner.ID)
-                    .ImplicitTargetA.setSrcCaster()
+                    .ImplicitTargetA.SrcCaster.set()
                     .ChainAmplitude.set(1)
             })
             .StanceBarOrder.set(4294967295)
@@ -42,17 +42,17 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
 
         Items.create(mod,id)
             .Name.set(this.owner.Spell.get().Name.objectify())
-            .Quality.setBlue()
+            .Quality.Blue.set()
             .ClassMask.set(-1)
-            .Bonding.setBindsOnPickup()
+            .Bonding.BindsOnPickup.set()
             .Requirements.Skill.set(MOUNT_SKILL,DEFAULT_MOUNT_RANK)
             .Class.setMount()
-            .Material.setLiquid()
-            .InventoryType.setNonEquippable()
+            .Material.Liquid.set()
+            .InventoryType.NonEquippable.set()
             .Spells.modFree((ispell=>{
                 ispell.SpellID.set(spell.ID)
                      .Category.set(330)
-                     .Trigger.setOnUse()
+                     .Trigger.OnUse.set()
                      .Charges.set(-1)
                      .ProcsPerMinute.set(0)
                      .Cooldown.set(-1)
@@ -61,7 +61,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
             .Spells.modFree((spell=>{
                 spell.SpellID.set(this.owner.ID)
                      .Category.set(0)
-                     .Trigger.setOnLearn()
+                     .Trigger.OnLearn.set()
                      .Charges.set(0)
                      .ProcsPerMinute.set(0)
                      .Cooldown.set(0)
@@ -126,25 +126,28 @@ export const MountRegistry = {
             .Mechanic.set(21)
             .Levels.Spell.set(1)
             .Effects.modFree(effect=>{
-                effect.EffectType.setApplyAura()
-                    .setMounted()
+                effect
+                    .EffectType.ApplyAura.set()
+                    .AuraType.Mounted.set()
                     .CreatureTemplate.set(0)
-                    .TargetA.setUnitCaster()
+                    .TargetA.UnitCaster.set()
             })
             .Effects.modFree(effect=>{
-                effect.EffectType.setApplyAura()
-                    .setModIncreaseMountedSpeed()
+                effect
+                    .EffectType.ApplyAura.set()
+                    .AuraType.ModIncreaseMountedSpeed.set()
                     .BasePercent.set(speed)
-                    .TargetA.setUnitCaster()
+                    .TargetA.UnitCaster.set()
                     .RandomPercent.set(1)
             })
 
         if(flightSpeed>0) {
             spell.Effects.modFree(effect=>{
-                effect.EffectType.setApplyAura()
-                    .setModIncreaseMountedFlightSpeed()
+                effect
+                    .EffectType.ApplyAura.set()
+                    .AuraType.ModIncreaseFlightSpeed.set()
                     .BasePercent.set(flightSpeed)
-                    .TargetA.setUnitCaster()
+                    .TargetA.UnitCaster.set()
                     .RandomPercent.set(1)
             })
         }

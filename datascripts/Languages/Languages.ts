@@ -185,7 +185,7 @@ export const Languages = {
             .DefenseType.set(1)
             .PreventionType.set(1)
             .Effects.modFree(effect=>{
-                effect.EffectType.setLanguage()
+                effect.EffectType.Language.set()
                       .LanguageID.set(langRow.ID.get())
                       .ChainAmplitude.set(1)
             })

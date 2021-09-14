@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
@@ -42,22 +42,12 @@ export class TrainerLoc extends SQLLocSystem<Trainer> {
 }
 
 export class TrainerType extends EnumCell<Trainer> {
-    get(): number {
-        return this.owner.row.Type.get();
-    }
-    set(value: number): Trainer {
-        this.owner.row.Type.set(value);
-        return this.owner;
-    }
-
-    @EnumField(0)
-    setClassTrainer() { return this.set(0); }
-
-    @EnumField(1)
-    setMountTrainer() { return this.set(1); }
-
-    @EnumField(2)
-    setTradeskillTrainer() { return this.set(2); }
+    /** Enum Value:                             0 */
+    get ClassTrainer()      { return this.value(0) }
+    /** Enum Value:                             1 */
+    get MountTrainer()      { return this.value(1) }
+    /** Enum Value:                             2 */
+    get TradeskillTrainer() { return this.value(2) }
 }
 
 export class Trainer extends MainEntity<trainerRow> {
@@ -67,22 +57,22 @@ export class Trainer extends MainEntity<trainerRow> {
 
     get Greeting(): TrainerLoc { return new TrainerLoc(this); }
     get Requirement() { return this.wrap(this.row.Requirement); }
-    get Type() { return new TrainerType(this); }
+    get Type() { return new TrainerType(this,this.row.Type); }
 
     setClassTrainer(cls: ClassType) {
-        this.Type.setClassTrainer()
+        this.Type.ClassTrainer.set()
         this.Requirement.set(resolveClassType(cls));
         return this;
     }
 
     setMountTrainer(race: RaceType) {
-        this.Type.setMountTrainer();
+        this.Type.MountTrainer.set()
         this.Requirement.set(resolveRaceType(race));
         return this;
     }
 
     setTradeskillTrainer(requiredSpell: number = 0) {
-        this.Type.setTradeskillTrainer();
+        this.Type.TradeskillTrainer.set()
         this.Requirement.set(requiredSpell);
         return this;
     }

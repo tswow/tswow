@@ -1,22 +1,19 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/dbc/types/SpellItemEnchantmentCondition";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
-export class ConditionComparator extends EnumCellWrapper<EnchantmentCondition> {
-    /** value = 2 */
-    @EnumField(2)
-    setLesserThan() { return this.set(2); }
-    /** value = 3 */
-    @EnumField(3)
-    setGreaterThan() { return this.set(3); }
-    /** value = 5 */
-    @EnumField(5)
-    setGreaterThanOrEqual() { return this.set(5); }
+export class ConditionComparator extends EnumCell<EnchantmentCondition> {
+    /** Enum Value = 2 */
+    get LesserThan()         { return this.value(2) }
+    /** Enum Value = 3 */
+    get GreaterThan()        { return this.value(3) }
+    /** Enum Value = 5 */
+    get GreaterThanOrEqual() { return this.value(5) }
 }
 
 export class Operand extends CellSystem<EnchantmentCondition> {
@@ -40,7 +37,7 @@ export class Operand extends CellSystem<EnchantmentCondition> {
     }
 }
 
-export class ConditionLogic extends EnumCellWrapper<EnchantmentCondition> {
+export class ConditionLogic extends EnumCell<EnchantmentCondition> {
 }
 
 export class EnchantmentCondition extends ArrayEntry<EnchantmentConditions> {

@@ -95,7 +95,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .TargetType.GlyphSlot.mark()
             .CastTime.setRefID(6)
             .Effects.modFree(effect=>{
-                effect.EffectType.setApplyGlyph()
+                effect.EffectType.ApplyGlyph.set()
                       .Glyph.set(this.owner.ID)
             })
             .InterruptFlags.OnMovement.mark()
@@ -107,15 +107,15 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
 
         let item = Items.create(mod,`${id}-item`)
             .BagFamily.set(16)
-            .Quality.setWhite()
+            .Quality.White.set()
             .Spells.modFree(ispell=>{
                 ispell.SpellID.set(spell.ID)
-                    .Trigger.setOnUse()
+                    .Trigger.OnUse.set()
                     .Charges.set(-1)
             })
-            .Material.setLiquid()
+            .Material.Liquid.set()
             .Flags.PlayerCast.mark()
-            .InventoryType.setNonEquippable()
+            .InventoryType.NonEquippable.set()
             .DisplayInfo.setRefID(58841)
             .ClassMask.clearAll()
 

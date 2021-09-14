@@ -1,20 +1,13 @@
 import { DBC } from "wotlkdata";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { HolidaysQuery, HolidaysRow } from "wotlkdata/dbc/types/Holidays";
-import { MainEntity } from "../Misc/Entity";
+import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";
 
-export const all_holidays: any = {}
-export function HolidayID(...id: number[]) {
-    return function(target: any) {
-        id.forEach(x=>all_holidays[x] = target)
-    }
-}
-
-export class HolidayType<T extends HolidayBase> extends EnumCellWrapper<T> {
+export class HolidayType extends EnumCellTransform<HolidayBase> {
     set(value: number) {
         super.set(value);
         // need to update Game Events if we change occurrence
@@ -23,16 +16,14 @@ export class HolidayType<T extends HolidayBase> extends EnumCellWrapper<T> {
         return this.owner;
     }
 
-    @EnumField(-1)
-    setYearly() { return new HolidayAnnual(this.set(-1).row); }
+    /** Enum Value = -1 */
+    get Yearly()       { return this.value(-1, x=>new HolidayAnnual(x.row)) }
 
-    @EnumField(0)
-    setWeekly() {  return new HolidayWeekly(this.set(0).row) }
+    /** Enum Value = 0 */
+    get Weekly()       { return this.value(0, x=>new HolidayWeekly(x.row)) }
 
-    // todo: multiple defined dates don't seem to have working game
-
-    @EnumField(1)
-    setDefinedDates() { return new HolidayAnnual(this.set(1).row); }
+    /** Enum Value = 1 */
+    get DefinedDates() { return this.value(1, x=>new HolidayAnnual(x.row)) }
 
     // todo: The hourly events don't seem to appear in the calendar,
     // so we'll enable them when we have a workflow up for
@@ -55,7 +46,12 @@ export class HolidayType<T extends HolidayBase> extends EnumCellWrapper<T> {
     */
 }
 
-export class HolidayBase extends MainEntity<HolidaysRow> {
+export class HolidayBase extends TransformedEntity<HolidaysRow,HolidayPlain> {
+    protected transformer(): any  { return this.Type; }
+    protected default(): HolidayPlain {
+        return new HolidayPlain(this.row);
+    }
+
     get ID() { return this.row.ID.get(); }
     get Name() { return new HolidayName(this); }
     get Description() { return new HolidayDescription(this); }
@@ -63,29 +59,23 @@ export class HolidayBase extends MainEntity<HolidaysRow> {
     get Flags() { return this.wrap(this.row.Flags); }
     get Type() { return new HolidayType(this, this.row.CalendarFilterType); }
     get Texture() { return this.wrap(this.row.TextureFilename); }
-
-    objectify() {
-        let res = all_holidays[this.Type.get()];
-        if(res) {
-            return res ? new res(this.row).objectify() : super.objectify();
-        }
-    }
 }
 
-@HolidayID(0)
 export class HolidayWeekly extends HolidayBase {
     get Stages() { return new HolidayWeeklyStages(this); }
 }
 
-@HolidayID(-1,1)
 export class HolidayAnnual extends HolidayBase {
     get Stages() { return new HolidayAnnualStages(this); }
 }
 
-@HolidayID(2)
 export class HolidayCustomPeriod extends HolidayBase {
     // custom periods can only be on stage 0
     get Period() { return new HolidayPeriod(this, 0); }
+}
+
+export class HolidayPlain extends HolidayBase {
+
 }
 
 export const HolidayRegistry = {

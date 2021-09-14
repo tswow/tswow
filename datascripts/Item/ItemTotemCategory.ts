@@ -14,103 +14,72 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemTotemCategory extends EnumCellWrapper<ItemTemplate> {
-    @EnumField(1)
-    setSkinningKnife() { return this.set(1); }
-
-    @EnumField(2)
-    setEarthTotem() { return this.set(2); }
-
-    @EnumField(3)
-    setAirTotem() { return this.set(3); }
-
-    @EnumField(4)
-    setFireTotem() { return this.set(4); }
-
-    @EnumField(5)
-    setWaterTotem() { return this.set(5); }
-
-    @EnumField(6)
-    setRunedCopperRod() { return this.set(6); }
-
-    @EnumField(7)
-    setRunedSilverRod() { return this.set(7); }
-
-    @EnumField(8)
-    setRunedGoldenRod() { return this.set(8); }
-
-    @EnumField(9)
-    setRunedTruesilverRod() { return this.set(9); }
-
-    @EnumField(10)
-    setRunedArcaniteRod() { return this.set(10); }
-
-    @EnumField(11)
-    setMiningPick() { return this.set(11); }
-
-    @EnumField(12)
-    setPhilosophersStone() { return this.set(12); }
-
-    @EnumField(13)
-    setBlacksmithHammer() { return this.set(13); }
-
-    @EnumField(14)
-    setArclightSpanner() { return this.set(14); }
-
-    @EnumField(15)
-    setGyromaticMicroAdjustor() { return this.set(15); }
-
-    @EnumField(21)
-    setMasterTotem() { return this.set(21); }
-
-    @EnumField(41)
-    setRunedFelIronRod() { return this.set(41); }
-
-    @EnumField(62)
-    setRunedAdamantiteRod() { return this.set(62); }
-
-    @EnumField(63)
-    setRunedEterniumRod() { return this.set(63); }
-
-    @EnumField(81)
-    setHollowQuill() { return this.set(81); }
-
-    @EnumField(101)
-    setRunedAzuriteRod() { return this.set(101); }
-
-    @EnumField(121)
-    setVirtuosoInkingSet() { return this.set(121); }
-
-    @EnumField(141)
-    setDrums() { return this.set(141); }
-
-    @EnumField(161)
-    setGnomishArmyKnife() { return this.set(161); }
-
-    @EnumField(162)
-    setBlacksmithHammer2() { return this.set(162); }
-
-    @EnumField(165)
-    setMiningPick2() { return this.set(165); }
-
-    @EnumField(166)
-    setSkinningKnife2() { return this.set(166); }
-
-    @EnumField(167)
-    setHammerPick() { return this.set(167); }
-
-    @EnumField(168)
-    setBladedPickaxe() { return this.set(168); }
-
-    @EnumField(169)
-    setFlintAndTinder() { return this.set(169); }
-
-    @EnumField(189)
-    setRunedCobaltRod() { return this.set(189); }
-
-    @EnumField(190)
-    setRunedTitaniumRod() { return this.set(190); }
+export class ItemTotemCategory extends EnumCell<ItemTemplate> {
+    /** Enum Value:                                  1 */
+    get SkinningKnife()          { return this.value(1) }
+    /** Enum Value:                                  2 */
+    get EarthTotem()             { return this.value(2) }
+    /** Enum Value:                                  3 */
+    get AirTotem()               { return this.value(3) }
+    /** Enum Value:                                  4 */
+    get FireTotem()              { return this.value(4) }
+    /** Enum Value:                                  5 */
+    get WaterTotem()             { return this.value(5) }
+    /** Enum Value:                                  6 */
+    get RunedCopperRod()         { return this.value(6) }
+    /** Enum Value:                                  7 */
+    get RunedSilverRod()         { return this.value(7) }
+    /** Enum Value:                                  8 */
+    get RunedGoldenRod()         { return this.value(8) }
+    /** Enum Value:                                  9 */
+    get RunedTruesilverRod()     { return this.value(9) }
+    /** Enum Value:                                  10 */
+    get RunedArcaniteRod()       { return this.value(10) }
+    /** Enum Value:                                  11 */
+    get MiningPick()             { return this.value(11) }
+    /** Enum Value:                                  12 */
+    get PhilosophersStone()      { return this.value(12) }
+    /** Enum Value:                                  13 */
+    get BlacksmithHammer()       { return this.value(13) }
+    /** Enum Value:                                  14 */
+    get ArclightSpanner()        { return this.value(14) }
+    /** Enum Value:                                  15 */
+    get GyromaticMicroAdjustor() { return this.value(15) }
+    /** Enum Value:                                  21 */
+    get MasterTotem()            { return this.value(21) }
+    /** Enum Value:                                  41 */
+    get RunedFelIronRod()        { return this.value(41) }
+    /** Enum Value:                                  62 */
+    get RunedAdamantiteRod()     { return this.value(62) }
+    /** Enum Value:                                  63 */
+    get RunedEterniumRod()       { return this.value(63) }
+    /** Enum Value:                                  81 */
+    get HollowQuill()            { return this.value(81) }
+    /** Enum Value:                                  101 */
+    get RunedAzuriteRod()        { return this.value(101) }
+    /** Enum Value:                                  121 */
+    get VirtuosoInkingSet()      { return this.value(121) }
+    /** Enum Value:                                  141 */
+    get Drums()                  { return this.value(141) }
+    /** Enum Value:                                  161 */
+    get GnomishArmyKnife()       { return this.value(161) }
+    /** Enum Value:                                  162 */
+    get BlacksmithHammer2()      { return this.value(162) }
+    /** Enum Value:                                  165 */
+    get MiningPick2()            { return this.value(165) }
+    /** Enum Value:                                  166 */
+    get SkinningKnife2()         { return this.value(166) }
+    /** Enum Value:                                  167 */
+    get HammerPick()             { return this.value(167) }
+    /** Enum Value:                                  168 */
+    get BladedPickaxe()          { return this.value(168) }
+    /** Enum Value:                                  169 */
+    get FlintAndTinder()         { return this.value(169) }
+    /** Enum Value:                                  189 */
+    get RunedCobaltRod()         { return this.value(189) }
+    /** Enum Value:                                  190 */
+    get RunedTitaniumRod()       { return this.value(190) }
 }

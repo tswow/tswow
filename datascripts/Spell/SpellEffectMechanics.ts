@@ -14,204 +14,74 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class SpellEffectMechanicEnum<T> extends EnumCellWrapper<T> {
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(0)
-    setNone() { return this.set(0);}
-
-    /**
-     * No comment (yet!)
-     */
-
-    @EnumField(1)
-    setCharmed() { return this.set(1); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(2)
-    setDisoriented() { return this.set(2); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(3)
-    setDisarmed() { return this.set(3); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(4)
-    setDistracted() { return this.set(4); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(5)
-    setFleeing() { return this.set(5); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(6)
-    setGripped() { return this.set(6); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(7)
-    setRooted() { return this.set(7); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(8)
-    setSlowed() { return this.set(8); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(9)
-    setSilenced() { return this.set(9); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(10)
-    setAsleep() { return this.set(10); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(11)
-    setSnared() { return this.set(11); }
-
-    /**
-     * No comment (yet!)
-     */
-
-    @EnumField(12)
-    setStunned() { return this.set(12); }
-
-    /**
-     * No comment (yet!)
-     */
-
-    @EnumField(13)
-    setFrozen() { return this.set(13); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(14)
-    setIncapacitated() { return this.set(14); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(15)
-    setBleeding() { return this.set(15); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(16)
-    setHealing() { return this.set(16); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(17)
-    setPolymorphed() { return this.set(17); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(18)
-    setBanished() { return this.set(18); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(19)
-    setShielded() { return this.set(19); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(20)
-    setShackled() { return this.set(20); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(21)
-    setMounted() { return this.set(21); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(22)
-    setInfected() { return this.set(22); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(23)
-    setTurned() { return this.set(23); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(24)
-    setHorrified() { return this.set(24); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(25)
-    setInvulnerable() { return this.set(25); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(26)
-    setInterrupted() { return this.set(26); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(27)
-    setDazed() { return this.set(27); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(28)
-    setDiscovery() { return this.set(28); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(29)
-    setInvulnerable2() { return this.set(29); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(30)
-    setSapped() { return this.set(30); }
-
-    /**
-     * No comment (yet!)
-     */
-    @EnumField(31)
-    setEnraged() { return this.set(31);}
+export class SpellEffectMechanicEnum<T> extends EnumCell<T> {
+    /** Enum Value:                         0 */
+    get None()          { return this.value(0) }
+    /** Enum Value:                         1 */
+    get Charmed()       { return this.value(1) }
+    /** Enum Value:                         2 */
+    get Disoriented()   { return this.value(2) }
+    /** Enum Value:                         3 */
+    get Disarmed()      { return this.value(3) }
+    /** Enum Value:                         4 */
+    get Distracted()    { return this.value(4) }
+    /** Enum Value:                         5 */
+    get Fleeing()       { return this.value(5) }
+    /** Enum Value:                         6 */
+    get Gripped()       { return this.value(6) }
+    /** Enum Value:                         7 */
+    get Rooted()        { return this.value(7) }
+    /** Enum Value:                         8 */
+    get Slowed()        { return this.value(8) }
+    /** Enum Value:                         9 */
+    get Silenced()      { return this.value(9) }
+    /** Enum Value:                         10 */
+    get Asleep()        { return this.value(10) }
+    /** Enum Value:                         11 */
+    get Snared()        { return this.value(11) }
+    /** Enum Value:                         12 */
+    get Stunned()       { return this.value(12) }
+    /** Enum Value:                         13 */
+    get Frozen()        { return this.value(13) }
+    /** Enum Value:                         14 */
+    get Incapacitated() { return this.value(14) }
+    /** Enum Value:                         15 */
+    get Bleeding()      { return this.value(15) }
+    /** Enum Value:                         16 */
+    get Healing()       { return this.value(16) }
+    /** Enum Value:                         17 */
+    get Polymorphed()   { return this.value(17) }
+    /** Enum Value:                         18 */
+    get Banished()      { return this.value(18) }
+    /** Enum Value:                         19 */
+    get Shielded()      { return this.value(19) }
+    /** Enum Value:                         20 */
+    get Shackled()      { return this.value(20) }
+    /** Enum Value:                         21 */
+    get Mounted()       { return this.value(21) }
+    /** Enum Value:                         22 */
+    get Infected()      { return this.value(22) }
+    /** Enum Value:                         23 */
+    get Turned()        { return this.value(23) }
+    /** Enum Value:                         24 */
+    get Horrified()     { return this.value(24) }
+    /** Enum Value:                         25 */
+    get Invulnerable()  { return this.value(25) }
+    /** Enum Value:                         26 */
+    get Interrupted()   { return this.value(26) }
+    /** Enum Value:                         27 */
+    get Dazed()         { return this.value(27) }
+    /** Enum Value:                         28 */
+    get Discovery()     { return this.value(28) }
+    /** Enum Value:                         29 */
+    get Invulnerable2() { return this.value(29) }
+    /** Enum Value:                         30 */
+    get Sapped()        { return this.value(30) }
+    /** Enum Value:                         31 */
+    get Enraged()       { return this.value(31) }
 }
 
 export class SpellEffectMechanicMask<T> extends MaskCell32<T> {

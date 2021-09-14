@@ -14,34 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ReputationRank extends EnumCellWrapper<ItemTemplate> {
-    @EnumField(0)
-    Hated() {return this.set(0); }
-
-    @EnumField(1)
-    Hostile() {return this.set(1); }
-
-    @EnumField(2)
-    Unfriendly() {return this.set(2); }
-
-    @EnumField(3)
-    Neutral() {return this.set(3); }
-
-    @EnumField(4)
-    Friendly() {return this.set(4); }
-
-    @EnumField(5)
-    Honored() {return this.set(5); }
-
-    @EnumField(6)
-    Revered() {return this.set(6); }
-
-    @EnumField(7)
-    Exalted() {return this.set(7); }
+export class ReputationRank extends EnumCell<ItemTemplate> {
+    /** Enum Value:                      0 */
+    get Hated()      { return this.value(0) }
+    /** Enum Value:                      1 */
+    get Hostile()    { return this.value(1) }
+    /** Enum Value:                      2 */
+    get Unfriendly() { return this.value(2) }
+    /** Enum Value:                      3 */
+    get Neutral()    { return this.value(3) }
+    /** Enum Value:                      4 */
+    get Friendly()   { return this.value(4) }
+    /** Enum Value:                      5 */
+    get Honored()    { return this.value(5) }
+    /** Enum Value:                      6 */
+    get Revered()    { return this.value(6) }
+    /** Enum Value:                      7 */
+    get Exalted()    { return this.value(7) }
 }
 
 export class ItemRequiredFaction extends CellSystem<ItemTemplate> {

@@ -41,7 +41,7 @@ export const Locks = {
     createItem(item: number) {
         let lock = makeLock();
         return new SimpleLock(lock)
-            .Type.setItem()
+            .Type.Item.set()
             .Index.set(item)
     },
 
@@ -51,7 +51,7 @@ export const Locks = {
 
     createTypeInstance(type: number, skill: number = 0) {
         return new SimpleLock(makeLock())
-            .Type.setLockType()
+            .Type.LockType.set()
             .Index.set(type)
             .Skill.set(skill)
     },

@@ -1,15 +1,10 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 
-export class FactionEnum<T> extends EnumCellWrapper<T> {
-    /** value = -1 */
-    @EnumField(-1)
-    setNone() { return this.set(-1); }
-
-    /** value = 0 */
-    @EnumField(0)
-    setHorde() { return this.set(0); }
-
-    /** value = 1 */
-    @EnumField(1)
-    setAlliance() { return this.set(1); }
+export class FactionEnum<T> extends EnumCell<T> {
+    /** Enum Value:                    -1 */
+    get None()     { return this.value(-1) }
+    /** Enum Value:                    0 */
+    get Horde()    { return this.value(0) }
+    /** Enum Value:                    1 */
+    get Alliance() { return this.value(1) }
 }

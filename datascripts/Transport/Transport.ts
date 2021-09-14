@@ -21,7 +21,7 @@ export const TransportRegistry = {
         let taxiPath = TaxiPathRegistry.createNewPath(mod,id,1,0,points);
 
         let gameObject = std.GameObjectTemplates.create(mod,id)
-            .Type.setMoTransport()
+            .Type.MoTransport.set()
             .SpawnGroup.set(0)
             .Display.setRefID(DEFAULT_DISPLAY_ID)
             .Size.set(1)

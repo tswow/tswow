@@ -1,7 +1,7 @@
 import { DBC, finish, LUAXML, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
 import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
@@ -13,12 +13,9 @@ import { battleground_templateRow } from "wotlkdata/sql/types/battleground_templ
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 
-export class BattlegroundType<T> extends EnumCellWrapper<T> {
-    @EnumField(3)
-    setBattleground() { return this.set(3); }
-
-    @EnumField(4)
-    setArena() { return this.set(4); }
+export class BattlegroundType<T> extends EnumCell<T> {
+    get Battleground() { return this.value(3)}
+    get Arena()        { return this.value(4)}
 }
 
 export class DescriptionCell<T extends BattlegroundBase> extends Cell<string,T> {
@@ -112,7 +109,7 @@ export function createBgBase(mod: string, id: string) {
     .MaxGroupSize.set(5)
     .PlayersPerTeam.set(1,10)
     .Level.set(1,80)
-    .Type.setBattleground()
+    .Type.Battleground.set()
     .HolidayWorldState.set(0)
     bg.dbc_row.MapID.set([-1,-1,-1,-1,-1,-1,-1,-1])
     bg.sql_row

@@ -15,427 +15,220 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBCUIntArrayCell } from "wotlkdata/dbc/DBCCell";
 
-export class SpellImplicitTarget<T> extends EnumCellWrapper<T> {
+export class SpellImplicitTarget<T> extends EnumCell<T> {
     constructor(owner: T, cell: DBCUIntArrayCell<any>, index: number) {
         super(owner, new CellIndexWrapper(undefined, cell, index));
     }
 
-    /** No Comment (yet!) */
-    @EnumField(1)
-    setUnitCaster() { return this.set(1); }
-
-    /** No Comment (yet!) */
-    @EnumField(2)
-    setUnitNearbyEnemy() { return this.set(2); }
-
-    /** No Comment (yet!) */
-    @EnumField(3)
-    setUnitNearbyAlly() { return this.set(3); }
-
-    /** No Comment (yet!) */
-    @EnumField(4)
-    setUnitNearbyParty() { return this.set(4); }
-
-    /** No Comment (yet!) */
-    @EnumField(5)
-    setUnitPet() { return this.set(5); }
-
-    /** No Comment (yet!) */
-    @EnumField(6)
-    setUnitTargetEnemy() { return this.set(6); }
-
-    /** No Comment (yet!) */
-    @EnumField(7)
-    setUnitSrcAreaEntry() { return this.set(7); }
-
-    /** No Comment (yet!) */
-    @EnumField(8)
-    setUnitDestAreaEntry() { return this.set(8); }
-
-    /** No Comment (yet!) */
-    @EnumField(9)
-    setDestHome() { return this.set(9); }
-
-    /** No Comment (yet!) */
-    @EnumField(11)
-    setUnitSrcAreaUnk11() { return this.set(11); }
-
-    /** No Comment (yet!) */
-    @EnumField(15)
-    setUnitSrcAreaEnemy() { return this.set(15); }
-
-    /** No Comment (yet!) */
-    @EnumField(16)
-    setUnitDestAreaEnemy() { return this.set(16); }
-
-    /** No Comment (yet!) */
-    @EnumField(17)
-    setDestDb() { return this.set(17); }
-
-    /** No Comment (yet!) */
-    @EnumField(18)
-    setDestCaster() { return this.set(18); }
-
-    /** No Comment (yet!) */
-    @EnumField(20)
-    setUnitCasterAreaParty() { return this.set(20); }
-
-    /** No Comment (yet!) */
-    @EnumField(21)
-    setUnitTargetAlly() { return this.set(21); }
-
-    /** No Comment (yet!) */
-    @EnumField(22)
-    setSrcCaster() { return this.set(22); }
-
-    /** No Comment (yet!) */
-    @EnumField(23)
-    setGameobjectTarget() { return this.set(23); }
-
-    /** No Comment (yet!) */
-    @EnumField(24)
-    setUnitConeEnemy24() { return this.set(24); }
-
-    /** No Comment (yet!) */
-    @EnumField(25)
-    setUnitTargetAny() { return this.set(25); }
-
-    /** No Comment (yet!) */
-    @EnumField(26)
-    setGameobjectItemTarget() { return this.set(26); }
-
-    /** No Comment (yet!) */
-    @EnumField(27)
-    setUnitMaster() { return this.set(27); }
-
-    /** No Comment (yet!) */
-    @EnumField(28)
-    setDestDynobjEnemy() { return this.set(28); }
-
-    /** No Comment (yet!) */
-    @EnumField(29)
-    setDestDynobjAlly() { return this.set(29); }
-
-    /** No Comment (yet!) */
-    @EnumField(30)
-    setUnitSrcAreaAlly() { return this.set(30); }
-
-    /** No Comment (yet!) */
-    @EnumField(31)
-    setUnitDestAreaAlly() { return this.set(31); }
-
-    /** No Comment (yet!) */
-    @EnumField(32)
-    setDestCasterSummon() { return this.set(32); }
-
-    /** No Comment (yet!) */
-    @EnumField(33)
-    setUnitSrcAreaParty() { return this.set(33); }
-
-    /** No Comment (yet!) */
-    @EnumField(34)
-    setUnitDestAreaParty() { return this.set(34); }
-
-    /** No Comment (yet!) */
-    @EnumField(35)
-    setUnitTargetParty() { return this.set(35); }
-
-    /** No Comment (yet!) */
-    @EnumField(36)
-    setDestCasterUnk36() { return this.set(36); }
-
-    /** No Comment (yet!) */
-    @EnumField(37)
-    setUnitLasttargetAreaParty() { return this.set(37); }
-
-    /** No Comment (yet!) */
-    @EnumField(38)
-    setUnitNearbyEntry() { return this.set(38); }
-
-    /** No Comment (yet!) */
-    @EnumField(39)
-    setDestCasterFishing() { return this.set(39); }
-
-    /** No Comment (yet!) */
-    @EnumField(40)
-    setGameobjectNearbyEntry() { return this.set(40); }
-
-    /** No Comment (yet!) */
-    @EnumField(41)
-    setDestCasterFrontRight() { return this.set(41); }
-
-    /** No Comment (yet!) */
-    @EnumField(42)
-    setDestCasterBackRight() { return this.set(42); }
-
-    /** No Comment (yet!) */
-    @EnumField(43)
-    setDestCasterBackLeft() { return this.set(43); }
-
-    /** No Comment (yet!) */
-    @EnumField(44)
-    setDestCasterFrontLeft() { return this.set(44); }
-
-    /** No Comment (yet!) */
-    @EnumField(45)
-    setUnitTargetChainhealAlly() { return this.set(45); }
-
-    /** No Comment (yet!) */
-    @EnumField(46)
-    setDestNearbyEntry() { return this.set(46); }
-
-    /** No Comment (yet!) */
-    @EnumField(47)
-    setDestCasterFront() { return this.set(47); }
-
-    /** No Comment (yet!) */
-    @EnumField(48)
-    setDestCasterBack() { return this.set(48); }
-
-    /** No Comment (yet!) */
-    @EnumField(49)
-    setDestCasterRight() { return this.set(49); }
-
-    /** No Comment (yet!) */
-    @EnumField(50)
-    setDestCasterLeft() { return this.set(50); }
-
-    /** No Comment (yet!) */
-    @EnumField(51)
-    setGameobjectSrcArea() { return this.set(51); }
-
-    /** No Comment (yet!) */
-    @EnumField(52)
-    setGameobjectDestArea() { return this.set(52); }
-
-    /** No Comment (yet!) */
-    @EnumField(53)
-    setDestTargetEnemy() { return this.set(53); }
-
-    /** No Comment (yet!) */
-    @EnumField(54)
-    setUnitConeEnemy54() { return this.set(54); }
-
-    /** No Comment (yet!) */
-    @EnumField(55)
-    setDestCasterFrontLeap() { return this.set(55); }
-
-    /** No Comment (yet!) */
-    @EnumField(56)
-    setUnitCasterAreaRaid() { return this.set(56); }
-
-    /** No Comment (yet!) */
-    @EnumField(57)
-    setUnitTargetRaid() { return this.set(57); }
-
-    /** No Comment (yet!) */
-    @EnumField(58)
-    setUnitNearbyRaid() { return this.set(58); }
-
-    /** No Comment (yet!) */
-    @EnumField(59)
-    setUnitConeAlly() { return this.set(59); }
-
-    /** No Comment (yet!) */
-    @EnumField(60)
-    setUnitConeEntry() { return this.set(60); }
-
-    /** No Comment (yet!) */
-    @EnumField(61)
-    setUnitTargetAreaRaidClass() { return this.set(61); }
-
-    /** No Comment (yet!) */
-    @EnumField(62)
-    setUnk62() { return this.set(62); }
-
-    /** No Comment (yet!) */
-    @EnumField(63)
-    setDestTargetAny() { return this.set(63); }
-
-    /** No Comment (yet!) */
-    @EnumField(64)
-    setDestTargetFront() { return this.set(64); }
-
-    /** No Comment (yet!) */
-    @EnumField(65)
-    setDestTargetBack() { return this.set(65); }
-
-    /** No Comment (yet!) */
-    @EnumField(66)
-    setDestTargetRight() { return this.set(66); }
-
-    /** No Comment (yet!) */
-    @EnumField(67)
-    setDestTargetLeft() { return this.set(67); }
-
-    /** No Comment (yet!) */
-    @EnumField(68)
-    setDestTargetFrontRight() { return this.set(68); }
-
-    /** No Comment (yet!) */
-    @EnumField(69)
-    setDestTargetBackRight() { return this.set(69); }
-
-    /** No Comment (yet!) */
-    @EnumField(70)
-    setDestTargetBackLeft() { return this.set(70); }
-
-    /** No Comment (yet!) */
-    @EnumField(71)
-    setDestTargetFrontLeft() { return this.set(71); }
-
-    /** No Comment (yet!) */
-    @EnumField(72)
-    setDestCasterRandom() { return this.set(72); }
-
-    /** No Comment (yet!) */
-    @EnumField(73)
-    setDestCasterRadius() { return this.set(73); }
-
-    /** No Comment (yet!) */
-    @EnumField(74)
-    setDestTargetRandom() { return this.set(74); }
-
-    /** No Comment (yet!) */
-    @EnumField(75)
-    setDestTargetRadius() { return this.set(75); }
-
-    /** No Comment (yet!) */
-    @EnumField(76)
-    setDestChannelTarget() { return this.set(76); }
-
-    /** No Comment (yet!) */
-    @EnumField(77)
-    setUnitChannelTarget() { return this.set(77); }
-
-    /** No Comment (yet!) */
-    @EnumField(78)
-    setDestDestFront() { return this.set(78); }
-
-    /** No Comment (yet!) */
-    @EnumField(79)
-    setDestDestBack() { return this.set(79); }
-
-    /** No Comment (yet!) */
-    @EnumField(80)
-    setDestDestRight() { return this.set(80); }
-
-    /** No Comment (yet!) */
-    @EnumField(81)
-    setDestDestLeft() { return this.set(81); }
-
-    /** No Comment (yet!) */
-    @EnumField(82)
-    setDestDestFrontRight() { return this.set(82); }
-
-    /** No Comment (yet!) */
-    @EnumField(83)
-    setDestDestBackRight() { return this.set(83); }
-
-    /** No Comment (yet!) */
-    @EnumField(84)
-    setDestDestBackLeft() { return this.set(84); }
-
-    /** No Comment (yet!) */
-    @EnumField(85)
-    setDestDestFrontLeft() { return this.set(85); }
-
-    /** No Comment (yet!) */
-    @EnumField(86)
-    setDestDestRandom() { return this.set(86); }
-
-    /** No Comment (yet!) */
-    @EnumField(87)
-    setDestDest() { return this.set(87); }
-
-    /** No Comment (yet!) */
-    @EnumField(88)
-    setDestDynobjNone() { return this.set(88); }
-
-    /** No Comment (yet!) */
-    @EnumField(89)
-    setDestTraj() { return this.set(89); }
-
-    /** No Comment (yet!) */
-    @EnumField(90)
-    setUnitTargetMinipet() { return this.set(90); }
-
-    /** No Comment (yet!) */
-    @EnumField(91)
-    setDestDestRadius() { return this.set(91); }
-
-    /** No Comment (yet!) */
-    @EnumField(92)
-    setUnitSummoner() { return this.set(92); }
-
-    /** No Comment (yet!) */
-    @EnumField(93)
-    setCorpseSrcAreaEnemy() { return this.set(93); }
-
-    /** No Comment (yet!) */
-    @EnumField(94)
-    setUnitVehicle() { return this.set(94); }
-
-    /** No Comment (yet!) */
-    @EnumField(95)
-    setUnitTargetPassenger() { return this.set(95); }
-
-    /** No Comment (yet!) */
-    @EnumField(96)
-    setUnitPassenger0() { return this.set(96); }
-
-    /** No Comment (yet!) */
-    @EnumField(97)
-    setUnitPassenger1() { return this.set(97); }
-
-    /** No Comment (yet!) */
-    @EnumField(98)
-    setUnitPassenger2() { return this.set(98); }
-
-    /** No Comment (yet!) */
-    @EnumField(99)
-    setUnitPassenger3() { return this.set(99); }
-
-    /** No Comment (yet!) */
-    @EnumField(100)
-    setUnitPassenger4() { return this.set(100); }
-
-    /** No Comment (yet!) */
-    @EnumField(101)
-    setUnitPassenger5() { return this.set(101); }
-
-    /** No Comment (yet!) */
-    @EnumField(102)
-    setUnitPassenger6() { return this.set(102); }
-
-    /** No Comment (yet!) */
-    @EnumField(103)
-    setUnitPassenger7() { return this.set(103); }
-
-    /** No Comment (yet!) */
-    @EnumField(104)
-    setUnitConeEnemy104() { return this.set(104); }
-
-    /** No Comment (yet!) */
-    @EnumField(105)
-    setUnitUnk105() { return this.set(105); }
-
-    /** No Comment (yet!) */
-    @EnumField(106)
-    setDestChannelCaster() { return this.set(106); }
-
-    /** No Comment (yet!) */
-    @EnumField(107)
-    setUnkDestAreaUnk107() { return this.set(107); }
-
-    /** No Comment (yet!) */
-    @EnumField(108)
-    setGameobjectCone() { return this.set(108); }
-
-    /** No Comment (yet!) */
-    @EnumField(110)
-    setUnitConeEntry110() { return this.set(110); }
+    /** Enum Value:                                   1 */
+    get UnitCaster()              { return this.value(1) }
+    /** Enum Value:                                   2 */
+    get UnitNearbyEnemy()         { return this.value(2) }
+    /** Enum Value:                                   3 */
+    get UnitNearbyAlly()          { return this.value(3) }
+    /** Enum Value:                                   4 */
+    get UnitNearbyParty()         { return this.value(4) }
+    /** Enum Value:                                   5 */
+    get UnitPet()                 { return this.value(5) }
+    /** Enum Value:                                   6 */
+    get UnitTargetEnemy()         { return this.value(6) }
+    /** Enum Value:                                   7 */
+    get UnitSrcAreaEntry()        { return this.value(7) }
+    /** Enum Value:                                   8 */
+    get UnitDestAreaEntry()       { return this.value(8) }
+    /** Enum Value:                                   9 */
+    get DestHome()                { return this.value(9) }
+    /** Enum Value:                                   11 */
+    get UnitSrcAreaUnk11()        { return this.value(11) }
+    /** Enum Value:                                   15 */
+    get UnitSrcAreaEnemy()        { return this.value(15) }
+    /** Enum Value:                                   16 */
+    get UnitDestAreaEnemy()       { return this.value(16) }
+    /** Enum Value:                                   17 */
+    get DestDb()                  { return this.value(17) }
+    /** Enum Value:                                   18 */
+    get DestCaster()              { return this.value(18) }
+    /** Enum Value:                                   20 */
+    get UnitCasterAreaParty()     { return this.value(20) }
+    /** Enum Value:                                   21 */
+    get UnitTargetAlly()          { return this.value(21) }
+    /** Enum Value:                                   22 */
+    get SrcCaster()               { return this.value(22) }
+    /** Enum Value:                                   23 */
+    get GameobjectTarget()        { return this.value(23) }
+    /** Enum Value:                                   24 */
+    get UnitConeEnemy24()         { return this.value(24) }
+    /** Enum Value:                                   25 */
+    get UnitTargetAny()           { return this.value(25) }
+    /** Enum Value:                                   26 */
+    get GameobjectItemTarget()    { return this.value(26) }
+    /** Enum Value:                                   27 */
+    get UnitMaster()              { return this.value(27) }
+    /** Enum Value:                                   28 */
+    get DestDynobjEnemy()         { return this.value(28) }
+    /** Enum Value:                                   29 */
+    get DestDynobjAlly()          { return this.value(29) }
+    /** Enum Value:                                   30 */
+    get UnitSrcAreaAlly()         { return this.value(30) }
+    /** Enum Value:                                   31 */
+    get UnitDestAreaAlly()        { return this.value(31) }
+    /** Enum Value:                                   32 */
+    get DestCasterSummon()        { return this.value(32) }
+    /** Enum Value:                                   33 */
+    get UnitSrcAreaParty()        { return this.value(33) }
+    /** Enum Value:                                   34 */
+    get UnitDestAreaParty()       { return this.value(34) }
+    /** Enum Value:                                   35 */
+    get UnitTargetParty()         { return this.value(35) }
+    /** Enum Value:                                   36 */
+    get DestCasterUnk36()         { return this.value(36) }
+    /** Enum Value:                                   37 */
+    get UnitLasttargetAreaParty() { return this.value(37) }
+    /** Enum Value:                                   38 */
+    get UnitNearbyEntry()         { return this.value(38) }
+    /** Enum Value:                                   39 */
+    get DestCasterFishing()       { return this.value(39) }
+    /** Enum Value:                                   40 */
+    get GameobjectNearbyEntry()   { return this.value(40) }
+    /** Enum Value:                                   41 */
+    get DestCasterFrontRight()    { return this.value(41) }
+    /** Enum Value:                                   42 */
+    get DestCasterBackRight()     { return this.value(42) }
+    /** Enum Value:                                   43 */
+    get DestCasterBackLeft()      { return this.value(43) }
+    /** Enum Value:                                   44 */
+    get DestCasterFrontLeft()     { return this.value(44) }
+    /** Enum Value:                                   45 */
+    get UnitTargetChainhealAlly() { return this.value(45) }
+    /** Enum Value:                                   46 */
+    get DestNearbyEntry()         { return this.value(46) }
+    /** Enum Value:                                   47 */
+    get DestCasterFront()         { return this.value(47) }
+    /** Enum Value:                                   48 */
+    get DestCasterBack()          { return this.value(48) }
+    /** Enum Value:                                   49 */
+    get DestCasterRight()         { return this.value(49) }
+    /** Enum Value:                                   50 */
+    get DestCasterLeft()          { return this.value(50) }
+    /** Enum Value:                                   51 */
+    get GameobjectSrcArea()       { return this.value(51) }
+    /** Enum Value:                                   52 */
+    get GameobjectDestArea()      { return this.value(52) }
+    /** Enum Value:                                   53 */
+    get DestTargetEnemy()         { return this.value(53) }
+    /** Enum Value:                                   54 */
+    get UnitConeEnemy54()         { return this.value(54) }
+    /** Enum Value:                                   55 */
+    get DestCasterFrontLeap()     { return this.value(55) }
+    /** Enum Value:                                   56 */
+    get UnitCasterAreaRaid()      { return this.value(56) }
+    /** Enum Value:                                   57 */
+    get UnitTargetRaid()          { return this.value(57) }
+    /** Enum Value:                                   58 */
+    get UnitNearbyRaid()          { return this.value(58) }
+    /** Enum Value:                                   59 */
+    get UnitConeAlly()            { return this.value(59) }
+    /** Enum Value:                                   60 */
+    get UnitConeEntry()           { return this.value(60) }
+    /** Enum Value:                                   61 */
+    get UnitTargetAreaRaidClass() { return this.value(61) }
+    /** Enum Value:                                   62 */
+    get Unk62()                   { return this.value(62) }
+    /** Enum Value:                                   63 */
+    get DestTargetAny()           { return this.value(63) }
+    /** Enum Value:                                   64 */
+    get DestTargetFront()         { return this.value(64) }
+    /** Enum Value:                                   65 */
+    get DestTargetBack()          { return this.value(65) }
+    /** Enum Value:                                   66 */
+    get DestTargetRight()         { return this.value(66) }
+    /** Enum Value:                                   67 */
+    get DestTargetLeft()          { return this.value(67) }
+    /** Enum Value:                                   68 */
+    get DestTargetFrontRight()    { return this.value(68) }
+    /** Enum Value:                                   69 */
+    get DestTargetBackRight()     { return this.value(69) }
+    /** Enum Value:                                   70 */
+    get DestTargetBackLeft()      { return this.value(70) }
+    /** Enum Value:                                   71 */
+    get DestTargetFrontLeft()     { return this.value(71) }
+    /** Enum Value:                                   72 */
+    get DestCasterRandom()        { return this.value(72) }
+    /** Enum Value:                                   73 */
+    get DestCasterRadius()        { return this.value(73) }
+    /** Enum Value:                                   74 */
+    get DestTargetRandom()        { return this.value(74) }
+    /** Enum Value:                                   75 */
+    get DestTargetRadius()        { return this.value(75) }
+    /** Enum Value:                                   76 */
+    get DestChannelTarget()       { return this.value(76) }
+    /** Enum Value:                                   77 */
+    get UnitChannelTarget()       { return this.value(77) }
+    /** Enum Value:                                   78 */
+    get DestDestFront()           { return this.value(78) }
+    /** Enum Value:                                   79 */
+    get DestDestBack()            { return this.value(79) }
+    /** Enum Value:                                   80 */
+    get DestDestRight()           { return this.value(80) }
+    /** Enum Value:                                   81 */
+    get DestDestLeft()            { return this.value(81) }
+    /** Enum Value:                                   82 */
+    get DestDestFrontRight()      { return this.value(82) }
+    /** Enum Value:                                   83 */
+    get DestDestBackRight()       { return this.value(83) }
+    /** Enum Value:                                   84 */
+    get DestDestBackLeft()        { return this.value(84) }
+    /** Enum Value:                                   85 */
+    get DestDestFrontLeft()       { return this.value(85) }
+    /** Enum Value:                                   86 */
+    get DestDestRandom()          { return this.value(86) }
+    /** Enum Value:                                   87 */
+    get DestDest()                { return this.value(87) }
+    /** Enum Value:                                   88 */
+    get DestDynobjNone()          { return this.value(88) }
+    /** Enum Value:                                   89 */
+    get DestTraj()                { return this.value(89) }
+    /** Enum Value:                                   90 */
+    get UnitTargetMinipet()       { return this.value(90) }
+    /** Enum Value:                                   91 */
+    get DestDestRadius()          { return this.value(91) }
+    /** Enum Value:                                   92 */
+    get UnitSummoner()            { return this.value(92) }
+    /** Enum Value:                                   93 */
+    get CorpseSrcAreaEnemy()      { return this.value(93) }
+    /** Enum Value:                                   94 */
+    get UnitVehicle()             { return this.value(94) }
+    /** Enum Value:                                   95 */
+    get UnitTargetPassenger()     { return this.value(95) }
+    /** Enum Value:                                   96 */
+    get UnitPassenger0()          { return this.value(96) }
+    /** Enum Value:                                   97 */
+    get UnitPassenger1()          { return this.value(97) }
+    /** Enum Value:                                   98 */
+    get UnitPassenger2()          { return this.value(98) }
+    /** Enum Value:                                   99 */
+    get UnitPassenger3()          { return this.value(99) }
+    /** Enum Value:                                   100 */
+    get UnitPassenger4()          { return this.value(100) }
+    /** Enum Value:                                   101 */
+    get UnitPassenger5()          { return this.value(101) }
+    /** Enum Value:                                   102 */
+    get UnitPassenger6()          { return this.value(102) }
+    /** Enum Value:                                   103 */
+    get UnitPassenger7()          { return this.value(103) }
+    /** Enum Value:                                   104 */
+    get UnitConeEnemy104()        { return this.value(104) }
+    /** Enum Value:                                   105 */
+    get UnitUnk105()              { return this.value(105) }
+    /** Enum Value:                                   106 */
+    get DestChannelCaster()       { return this.value(106) }
+    /** Enum Value:                                   107 */
+    get UnkDestAreaUnk107()       { return this.value(107) }
+    /** Enum Value:                                   108 */
+    get GameobjectCone()          { return this.value(108) }
+    /** Enum Value:                                   110 */
+    get UnitConeEntry110()        { return this.value(110) }
 }

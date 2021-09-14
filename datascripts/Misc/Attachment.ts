@@ -1,165 +1,112 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 
-export class Attachment<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setShield() { return this.set(0); }
-
-    @EnumField(1)
-    setHandRight() { return this.set(1); }
-
-    @EnumField(2)
-    setHandLeft() { return this.set(2); }
-
-    @EnumField(3)
-    setElbowRight() { return this.set(3); }
-
-    @EnumField(4)
-    setElbowLeft() { return this.set(4); }
-
-    @EnumField(5)
-    setShoulderRight() { return this.set(5); }
-
-    @EnumField(6)
-    setShoulderLeft() { return this.set(6); }
-
-    @EnumField(7)
-    setKneeRight() { return this.set(7); }
-
-    @EnumField(8)
-    setKneeLeft() { return this.set(8); }
-
-    @EnumField(9)
-    setHipRight() { return this.set(9); }
-
-    @EnumField(10)
-    setHipLeft() { return this.set(10); }
-
-    @EnumField(11)
-    setHelm() { return this.set(11); }
-
-    @EnumField(12)
-    setBack() { return this.set(12); }
-
-    @EnumField(13)
-    setShoulderFlapRight() { return this.set(13); }
-
-    @EnumField(14)
-    setShoulderFlapLeft() { return this.set(14); }
-
-    @EnumField(15)
-    setChestBloodFront() { return this.set(15); }
-
-    @EnumField(16)
-    setChestBloodBack() { return this.set(16); }
-
-    @EnumField(17)
-    setBreath() { return this.set(17); }
-
-    @EnumField(18)
-    setPlayerName() { return this.set(18); }
-
-    @EnumField(19)
-    setBase() { return this.set(19); }
-
-    @EnumField(20)
-    setHead() { return this.set(20); }
-
-    @EnumField(21)
-    setSpellLeftHand() { return this.set(21); }
-
-    @EnumField(22)
-    setSpellRightHand() { return this.set(22); }
-
-    @EnumField(23)
-    setSpecial1() { return this.set(23); }
-
-    @EnumField(24)
-    setSpecial2() { return this.set(24); }
-
-    @EnumField(25)
-    setSpecial3() { return this.set(25); }
-
-    @EnumField(26)
-    setSheathMainHand() { return this.set(26); }
-
-    @EnumField(27)
-    setSheathOffHand() { return this.set(27); }
-
-    @EnumField(28)
-    setSheathShield() { return this.set(28); }
-
-    @EnumField(29)
-    setPlayerNameMounted() { return this.set(29); }
-
-    @EnumField(30)
-    setLargeWeaponLeft() { return this.set(30); }
-
-    @EnumField(31)
-    setLargeWeaponRight() { return this.set(31); }
-
-    @EnumField(32)
-    setHipWeaponLeft() { return this.set(32); }
-
-    @EnumField(33)
-    setHipWeaponRight() { return this.set(33); }
-
-    @EnumField(34)
-    setChest() { return this.set(34); }
-
-    @EnumField(35)
-    setHandArrow() { return this.set(35); }
-
-    @EnumField(36)
-    setBullet() { return this.set(36); }
-
-    @EnumField(37)
-    setSpellHandOmni() { return this.set(37); }
-
-    @EnumField(38)
-    setSpellHandDirected() { return this.set(38); }
-
-    @EnumField(39)
-    setVehicleSeat1() { return this.set(39); }
-
-    @EnumField(40)
-    setVehicleSeat2() { return this.set(40); }
-
-    @EnumField(41)
-    setVehicleSeat3() { return this.set(41); }
-
-    @EnumField(42)
-    setVehicleSeat4() { return this.set(42); }
-
-    @EnumField(43)
-    setVehicleSeat5() { return this.set(43); }
-
-    @EnumField(44)
-    setVehicleSeat6() { return this.set(44); }
-
-    @EnumField(45)
-    setVehicleSeat7() { return this.set(45); }
-
-    @EnumField(46)
-    setVehicleSeat8() { return this.set(46); }
-
-    @EnumField(47)
-    setLeftFoot() { return this.set(47); }
-
-    @EnumField(48)
-    setRightFoot() { return this.set(48); }
-
-    @EnumField(49)
-    setShieldNoGlove() { return this.set(49); }
-
-    @EnumField(50)
-    setSpineLow() { return this.set(50); }
-
-    @EnumField(51)
-    setAlteredShoulderR() { return this.set(51); }
-
-    @EnumField(52)
-    setAlteredShoulderL() { return this.set(52); }
-
-    @EnumField(54)
-    setSheathCrossbow() { return this.set(54); }
+export class Attachment<T> extends EnumCell<T> {
+    /** Enum Value:                             0 */
+    get Shield()            { return this.value(0) }
+    /** Enum Value:                             1 */
+    get HandRight()         { return this.value(1) }
+    /** Enum Value:                             2 */
+    get HandLeft()          { return this.value(2) }
+    /** Enum Value:                             3 */
+    get ElbowRight()        { return this.value(3) }
+    /** Enum Value:                             4 */
+    get ElbowLeft()         { return this.value(4) }
+    /** Enum Value:                             5 */
+    get ShoulderRight()     { return this.value(5) }
+    /** Enum Value:                             6 */
+    get ShoulderLeft()      { return this.value(6) }
+    /** Enum Value:                             7 */
+    get KneeRight()         { return this.value(7) }
+    /** Enum Value:                             8 */
+    get KneeLeft()          { return this.value(8) }
+    /** Enum Value:                             9 */
+    get HipRight()          { return this.value(9) }
+    /** Enum Value:                             10 */
+    get HipLeft()           { return this.value(10) }
+    /** Enum Value:                             11 */
+    get Helm()              { return this.value(11) }
+    /** Enum Value:                             12 */
+    get Back()              { return this.value(12) }
+    /** Enum Value:                             13 */
+    get ShoulderFlapRight() { return this.value(13) }
+    /** Enum Value:                             14 */
+    get ShoulderFlapLeft()  { return this.value(14) }
+    /** Enum Value:                             15 */
+    get ChestBloodFront()   { return this.value(15) }
+    /** Enum Value:                             16 */
+    get ChestBloodBack()    { return this.value(16) }
+    /** Enum Value:                             17 */
+    get Breath()            { return this.value(17) }
+    /** Enum Value:                             18 */
+    get PlayerName()        { return this.value(18) }
+    /** Enum Value:                             19 */
+    get Base()              { return this.value(19) }
+    /** Enum Value:                             20 */
+    get Head()              { return this.value(20) }
+    /** Enum Value:                             21 */
+    get SpellLeftHand()     { return this.value(21) }
+    /** Enum Value:                             22 */
+    get SpellRightHand()    { return this.value(22) }
+    /** Enum Value:                             23 */
+    get Special1()          { return this.value(23) }
+    /** Enum Value:                             24 */
+    get Special2()          { return this.value(24) }
+    /** Enum Value:                             25 */
+    get Special3()          { return this.value(25) }
+    /** Enum Value:                             26 */
+    get SheathMainHand()    { return this.value(26) }
+    /** Enum Value:                             27 */
+    get SheathOffHand()     { return this.value(27) }
+    /** Enum Value:                             28 */
+    get SheathShield()      { return this.value(28) }
+    /** Enum Value:                             29 */
+    get PlayerNameMounted() { return this.value(29) }
+    /** Enum Value:                             30 */
+    get LargeWeaponLeft()   { return this.value(30) }
+    /** Enum Value:                             31 */
+    get LargeWeaponRight()  { return this.value(31) }
+    /** Enum Value:                             32 */
+    get HipWeaponLeft()     { return this.value(32) }
+    /** Enum Value:                             33 */
+    get HipWeaponRight()    { return this.value(33) }
+    /** Enum Value:                             34 */
+    get Chest()             { return this.value(34) }
+    /** Enum Value:                             35 */
+    get HandArrow()         { return this.value(35) }
+    /** Enum Value:                             36 */
+    get Bullet()            { return this.value(36) }
+    /** Enum Value:                             37 */
+    get SpellHandOmni()     { return this.value(37) }
+    /** Enum Value:                             38 */
+    get SpellHandDirected() { return this.value(38) }
+    /** Enum Value:                             39 */
+    get VehicleSeat1()      { return this.value(39) }
+    /** Enum Value:                             40 */
+    get VehicleSeat2()      { return this.value(40) }
+    /** Enum Value:                             41 */
+    get VehicleSeat3()      { return this.value(41) }
+    /** Enum Value:                             42 */
+    get VehicleSeat4()      { return this.value(42) }
+    /** Enum Value:                             43 */
+    get VehicleSeat5()      { return this.value(43) }
+    /** Enum Value:                             44 */
+    get VehicleSeat6()      { return this.value(44) }
+    /** Enum Value:                             45 */
+    get VehicleSeat7()      { return this.value(45) }
+    /** Enum Value:                             46 */
+    get VehicleSeat8()      { return this.value(46) }
+    /** Enum Value:                             47 */
+    get LeftFoot()          { return this.value(47) }
+    /** Enum Value:                             48 */
+    get RightFoot()         { return this.value(48) }
+    /** Enum Value:                             49 */
+    get ShieldNoGlove()     { return this.value(49) }
+    /** Enum Value:                             50 */
+    get SpineLow()          { return this.value(50) }
+    /** Enum Value:                             51 */
+    get AlteredShoulderR()  { return this.value(51) }
+    /** Enum Value:                             52 */
+    get AlteredShoulderL()  { return this.value(52) }
+    /** Enum Value:                             54 */
+    get SheathCrossbow()    { return this.value(54) }
 }

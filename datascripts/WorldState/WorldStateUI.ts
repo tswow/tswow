@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldStateUI";
 import { MainEntity } from "../Misc/Entity";
@@ -53,12 +53,11 @@ export class WorldStateUICapturePoint extends CellSystem<WorldStateUI> {
     }
 }
 
-export class WorldStateType extends EnumCellWrapper<WorldStateUI> {
-    @EnumField(0)
-    setDefault() { return this.set(0); }
-
-    @EnumField(2)
-    setBattlegroundField() { return this.set(2); }
+export class WorldStateType extends EnumCell<WorldStateUI> {
+    /** Enum Value:                             0 */
+    get Default()           { return this.value(0) }
+    /** Enum Value:                             2 */
+    get BattlegroundField() { return this.value(2) }
 }
 
 export class WorldStateUI extends MainEntity<WorldStateUIRow> {

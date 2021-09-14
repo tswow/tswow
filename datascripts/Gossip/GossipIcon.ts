@@ -14,19 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { GossipOption } from "./GossipOption";
 
-export class GossipIconCell extends EnumCellWrapper<GossipOption> {
-    setChat() { return this.set(0); }
-    setVendor() { return this.set(1); }
-    setTaxi() { return this.set(2); }
-    setTrainer() { return this.set(3); }
-    setCogwheel() { return this.set(4); }
-    setCogwheel2() { return this.set(5); }
-    setMoneyBag() { return this.set(6); }
-    setTalkBubble() { return this.set(7); }
-    setTabard() { return this.set(8); }
-    setCrossedSwords() { return this.set(9); }
-    setYellowDot() { return this.set(10); }
+export class GossipIconCell extends EnumCell<GossipOption> {
+    /** Enum Value:                         0 */
+    get Chat()          { return this.value(0) }
+    /** Enum Value:                         1 */
+    get Vendor()        { return this.value(1) }
+    /** Enum Value:                         2 */
+    get Taxi()          { return this.value(2) }
+    /** Enum Value:                         3 */
+    get Trainer()       { return this.value(3) }
+    /** Enum Value:                         4 */
+    get Cogwheel()      { return this.value(4) }
+    /** Enum Value:                         5 */
+    get Cogwheel2()     { return this.value(5) }
+    /** Enum Value:                         6 */
+    get MoneyBag()      { return this.value(6) }
+    /** Enum Value:                         7 */
+    get TalkBubble()    { return this.value(7) }
+    /** Enum Value:                         8 */
+    get Tabard()        { return this.value(8) }
+    /** Enum Value:                         9 */
+    get CrossedSwords() { return this.value(9) }
+    /** Enum Value:                         10 */
+    get YellowDot()     { return this.value(10) }
 }

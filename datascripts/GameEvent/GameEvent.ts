@@ -1,5 +1,5 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { game_eventQuery, game_eventRow } from "wotlkdata/sql/types/game_event";
@@ -89,34 +89,33 @@ class GameEventBigIntCell extends Cell<number,GameEvent> {
     }
 }
 
-export class GameEventState extends EnumCellWrapper<GameEvent> {
+export class GameEventState extends EnumCell<GameEvent> {
     set(value: number) {
         GameEvent.checkHoliday(this.owner);
         return super.set(value);
     }
 
-    @EnumField(0)
-    setNormal() { return this.set(0); }
+    /** Enum Value = 0 */
+    get Normal() { return this.value(0); }
 
-    @EnumField(1)
-    setWorldEvent() {
-        this.owner.row.start_time.set(null as any);
-        this.owner.row.end_time.set(null as any);
-        this.owner.row.occurence.set(BigInt(0));
-        this.owner.row.length.set(BigInt(0));
-        // make it indefinite by default
-        //this.owner.row.length.set(BigInt(Number.MAX_SAFE_INTEGER))
-        return this.set(1);
+    /** Enum Value = 1 */
+    get WorldEvent() {
+        return this.value(1,()=>{
+            this.owner.row.start_time.set(null as any);
+            this.owner.row.end_time.set(null as any);
+            this.owner.row.occurence.set(BigInt(0));
+            this.owner.row.length.set(BigInt(0));
+        });
     }
 
-    @EnumField(5)
-    setInternal() { return this.set(5); }
+    /** Enum Value = 5 */
+    get Internal() { return this.value(5); }
 }
 
 export class GameEvent extends MainEntity<game_eventRow> {
     get ID() { return this.row.eventEntry.get(); }
-    get Length() { return this.wrap(this.row.length); }
     get Type() { return new GameEventState(this, this.row.world_event)}
+    get Length() { return this.wrap(this.row.length); }
 
     get Occurrence() { return new GameEventOccurrence(this); }
 

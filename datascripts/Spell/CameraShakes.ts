@@ -1,16 +1,15 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
-export class CameraShakeType<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setSine() { return this.set(0); }
-
-    @EnumField(1)
-    setDecayedSine() { return this.set(1); }
+export class CameraShakeType<T> extends EnumCell<T> {
+    /** Enum Value:                       0 */
+    get Sine()        { return this.value(0) }
+    /** Enum Value:                       1 */
+    get DecayedSine() { return this.value(1) }
 }
 
 export class CameraShakes extends MainEntity<CameraShakesRow> {

@@ -29,9 +29,9 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
         const spell = Spells.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.modFree(efffect=>{
-                efffect.EffectType.setLearnSpell()
+                efffect.EffectType.LearnSpell.set()
                     .LearntSpell.set(this.owner.ID)
-                    .ImplicitTargetA.setSrcCaster()
+                    .ImplicitTargetA.SrcCaster.set()
                     .ChainAmplitude.set(1)
             })
             .StanceBarOrder.set(4294967295)
@@ -42,16 +42,16 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
 
         Items.create(mod,id)
             .Name.set(this.owner.Spell.get().Name.objectify())
-            .Quality.setBlue()
+            .Quality.Blue.set()
             .ClassMask.set(-1)
-            .Bonding.setBindsOnPickup()
+            .Bonding.BindsOnPickup.set()
             .Class.setMount()
-            .Material.setLiquid()
-            .InventoryType.setNonEquippable()
+            .Material.Liquid.set()
+            .InventoryType.NonEquippable.set()
             .Spells.modFree((ispell=>{
                 ispell.SpellID.set(spell.ID)
                      .Category.set(330)
-                     .Trigger.setOnUse()
+                     .Trigger.OnUse.set()
                      .Charges.set(-1)
                      .ProcsPerMinute.set(0)
                      .Cooldown.set(-1)
@@ -59,12 +59,12 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             }))
             .Spells.modFree((spell=>{
                 spell.SpellID.set(this.owner.ID)
-                     .Category.set(0)
-                     .Trigger.setOnLearn()
-                     .Charges.set(0)
-                     .ProcsPerMinute.set(0)
-                     .Cooldown.set(0)
-                     .CategoryCooldown.set(0)
+                    .Category.set(0)
+                    .Trigger.OnLearn.set()
+                    .Charges.set(0)
+                    .ProcsPerMinute.set(0)
+                    .Cooldown.set(0)
+                    .CategoryCooldown.set(0)
             }))
         return this.owner;
     }
@@ -112,10 +112,10 @@ export const CompanionRegistry = {
                 sla.MinSkillRank.set(1)
             })
             .Effects.modFree(effects=>{
-                effects.EffectType.setSummon()
+                effects.EffectType.Summon.set()
                     .SummonProperties.set(41)
                     .SummonedCreature.set(0)
-                    .TargetA.setDestCasterSummon()
+                    .TargetA.DestCasterSummon.set()
             })
         return new Companion(spell.row);
     },

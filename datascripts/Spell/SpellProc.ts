@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { spell_procRow } from "wotlkdata/sql/types/spell_proc";
@@ -78,31 +78,31 @@ export class SpellTypeMask extends MaskCell32<Spell> {
     get Other() { return this.bit(2); }
 }
 
-export class SpellFamilyName extends EnumCellWrapper<Spell> {
-    @EnumField(0)
-    setGeneric() { return this.set(0); }
-    @EnumField(3)
-    setMage() { return this.set(3); }
-    @EnumField(4)
-    setWarrior() { return this.set(4); }
-    @EnumField(5)
-    setWarlock() { return this.set(5); }
-    @EnumField(6)
-    setPriest() { return this.set(6); }
-    @EnumField(7)
-    setDruid() { return this.set(7); }
-    @EnumField(8)
-    setRogue() { return this.set(8); }
-    @EnumField(9)
-    setHunter() { return this.set(9); }
-    @EnumField(10)
-    setPaladin() { return this.set(10); }
-    @EnumField(11)
-    setShaman() { return this.set(11); }
-    @EnumField(13)
-    setPotion() { return this.set(13); }
-    @EnumField(15)
-    setDeathKnight() { return this.set(15); }
+export class SpellFamilyName extends EnumCell<Spell> {
+    /** Enum Value:                       0 */
+    get Generic()     { return this.value(0) }
+    /** Enum Value:                       3 */
+    get Mage()        { return this.value(3) }
+    /** Enum Value:                       4 */
+    get Warrior()     { return this.value(4) }
+    /** Enum Value:                       5 */
+    get Warlock()     { return this.value(5) }
+    /** Enum Value:                       6 */
+    get Priest()      { return this.value(6) }
+    /** Enum Value:                       7 */
+    get Druid()       { return this.value(7) }
+    /** Enum Value:                       8 */
+    get Rogue()       { return this.value(8) }
+    /** Enum Value:                       9 */
+    get Hunter()      { return this.value(9) }
+    /** Enum Value:                       10 */
+    get Paladin()     { return this.value(10) }
+    /** Enum Value:                       11 */
+    get Shaman()      { return this.value(11) }
+    /** Enum Value:                       13 */
+    get Potion()      { return this.value(13) }
+    /** Enum Value:                       15 */
+    get DeathKnight() { return this.value(15) }
 }
 
 export class SpellProcFlags extends MaskCell32<Spell> {

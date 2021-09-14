@@ -15,964 +15,647 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { AddCasterHitTrigger, AddFlatModifier, AddPctModifier, AddTargetTrigger, AllowOnlyAbility, AllowTamePetType, AoECharm, ArenaPreparation, AurasVisible, BindSight, CannotBeDodged, ChannelDeathItem, CloneCaster, ComprehendLanguage, ConsumeNoAmmo, ControlVehicle, ConvertRune, DamageImmunity, DamageShield, DeflectSpells, DetectAmore, DetectStealth, DispelImmunity, EffectImmunity, Empathy, FarSight, FeatherFall, FeignDeath, Fly, ForceMoveForward, ForceReaction, Ghost, HasteRanged, HasteSpells, Hover, IgnoreHitDirection, IgnoreMeleeReset, IncreaseBaseHealthPercent, InitializeImages, InterruptRegen, ManaShield, MechanicDurationMod, MechanicDurationModNotStack, MechanicImmunity, MechanicImmunityMask, MeleeAttackPowerAttackerBonus, MeleeSlow, ModAbilityAffectedTargets, ModAoEAvoidance, ModAoEDamageAvoidance, ModAttackerMeleeCritChance, ModAttackerMeleeCritDamage, ModAttackerMeleeHitChance, ModAttackerRangedCritChance, ModAttackerRangedCritDamage, ModAttackerRangedHitChance, ModAttackerSpellAndWeaponCritChance, ModAttackerSpellCritChance, ModAttackerSpellHitChance, ModAttackPower, ModAttackPowerOfArmor, ModAttackPowerOfStatPercent, ModAttackPowerPct, ModAttackSpeed, ModAuraDurationByDispel, ModAuraDurationByDispelNotStack, ModBaseResistance, ModBaseResistancePct, ModBlockCritChance, ModBlockPercent, ModCastingSpeedNotStack, ModCharm, ModCombatResultChance, ModConfuse, ModCooldown, ModCreatureAoEDamageAvoidance, ModCritDamageBonus, ModCriticalHealAmount, ModCriticalThreat, ModCritPct, ModCritPercentVersus, ModDamageDone, ModDamageDoneCreature, ModDamageDoneVersus, ModDamageFromCaster, ModDamagePercentDone, ModDamagePercentTaken, ModDamageTaken, ModDebuffResistance, ModDecreaseSpeed, ModDetaunt, ModDetect, ModDetectedRange, ModDetectRange, ModDisarm, ModDisarmOffhand, ModDisarmRanged, ModDispelResist, ModDodgePercent, ModEnemyDodge, ModExpertise, ModFaction, ModFactionReputationGain, ModFear, ModFlatSpellDamageVersus, ModFlightSpeedNotStack, ModHealing, ModHealingDone, ModHealingDonePercent, ModHealingPct, ModHealingReceived, ModHealthRegenPercent, ModHitChance, ModHonorGainPct, ModHotPct, ModIgnoreShapeshift, ModIgnoreTargetResist, ModImmuneAuraApplySchool, ModIncreaseEnergy, ModIncreaseEnergyPercent, ModIncreaseFlightSpeed, ModIncreaseHealth, ModIncreaseHealth2, ModIncreaseHealth3, ModIncreaseHealthPercent, ModIncreaseMountedFlightSpeed, ModIncreaseMountSpeed, ModIncreaseSpeed, ModIncreasesSpellPctToHit, ModIncreaseSwimSpeed, ModIncreaseVehicleFlightSpeed, ModInvisibility, ModInvisibilityDetection, ModLanguage, ModManaRegenFromStat, ModManaRegenInterrupt, ModMechanicDamageTakenPercent, ModMechanicResistance, ModMeleeAttackPowerVersus, ModMeleeDamageTaken, ModMeleeDamageTakenPct, ModMeleeHaste, ModMeleeRangedHaste, ModMinimumSpeed, ModMountedFlightSpeedAlways, ModMountedSpeedAlways, ModMountedSpeedNotStack, ModOffhandDamagePct, ModPacify, ModPacifySilence, ModParryPercent, ModPercentStat, ModPetTalentPoints, ModPossess, ModPossessPet, ModPowerCostSchool, ModPowerCostSchoolPct, ModPowerRegen, ModPowerRegenPercent, ModRageFromDamageDealt, ModRangedAmmoHaste, ModRangedAttackPower, ModRangedAttackPowerOfStatPercent, ModRangedAttackPowerPct, ModRangedAttackPowerVersus, ModRangedDamageTaken, ModRangedDamageTakenPct, ModRangedHaste, ModRating, ModRatingFromStat, ModRegen, ModRegenDuringCombat, ModReputationGain, ModResistance, ModResistanceExclusive, ModResistanceOfStatPercent, ModResistancePct, ModRoot, ModScale, ModScale2, ModSchoolCritDmgTaken, ModShapeshift, ModShieldBlockValue, ModShieldBlockValuePct, ModSilence, ModSkill, ModSkillTalent, ModSpeedAlways, ModSpeedNotStack, ModSpellCritChance, ModSpellCritChanceSchool, ModSpellDamageFromHealing, ModSpellDamageOfAttackPower, ModSpellDamageOfStatPercent, ModSpellHealingOfAttackPower, ModSpellHealingOfStatPercent, ModSpellHitChance, ModStalked, ModStat, ModStealth, ModStealthLevel, ModStun, ModTargetAbilityAbsorbSchool, ModTargetAbsorbSchool, ModTargetArmorPct, ModTargetResistance, ModTargetResistBySpellClass, ModTaunt, ModThreat, ModTotalStatPercentage, ModTotalThreat, ModUnattackable, ModVehicleSpeedAlways, ModWaterBreathing, ModWeaponCritPercent, ModXpPct, ModXpQuestPct, Mounted, NoPvPCredit, NoReagentUse, ObsModHealth, ObsModPower, PeriodicDamage, PeriodicDamagePercent, PeriodicEnergize, PeriodicHeal, PeriodicHealthFunnel, PeriodicLeech, PeriodicManaLeech, PetDamageMulti, Phase, PowerBurn, PreventRegeneratePower, PreventResurrection, PreventsFleeing, ProcTriggerDamage, ProcTriggerSpell, RaidProcFromCharge, RaidProcFromChargeWithValue, RangedAttackPowerAttackerBonus, ReducePushback, ReflectSpells, ReflectSpellsSchool, RetainComboPoints, SafeFall, SchoolAbsorb, SchoolHealAbsorb, SchoolImmunity, ScreenEffect, SetVehicleId, ShareDamagePct, SpellMagnet, SpiritOfRedemption, SplitDamageFlat, SplitDamagePct, StateImmunity, Tamed, TrackCreatures, TrackResources, TrackStealthed, Transform, UnderwaterWalking, Untrackable, UseNormalMovementSpeed, WaterBreathing, WaterWalk } from "./EffectTemplates/AuraTemplates";
 import { SpellEffect } from "./SpellEffect";
 
-export class AuraType extends EnumCellWrapper<SpellEffect> {
+export class AuraType extends EnumCellTransform<SpellEffect> {
     constructor(owner: SpellEffect, effectIndex: number) {
         super(owner, new CellIndexWrapper(undefined, owner.row.EffectAura,effectIndex));
     }
 
-    /** */
-    @EnumField(0)
-    setNone() { return this.set(0);  };
-    /** */
-    @EnumField(1)
-    setBindSight(): BindSight { return new BindSight(this.set(1));  };
-    /** */
-    @EnumField(2)
-    setModPossess(): ModPossess { return new ModPossess(this.set(2));  };
-    /** */
-    @EnumField(3)
-    setPeriodicDamage(): PeriodicDamage { return new PeriodicDamage(this.set(3));  };
-    /** */
-    @EnumField(4)
-    setDummy() { return this.set(4);  };
-    /** */
-    @EnumField(5)
-    setModConfuse(): ModConfuse { return new ModConfuse(this.set(5));  };
-    /** */
-    @EnumField(6)
-    setModCharm(): ModCharm { return new ModCharm(this.set(6));  };
-    /** */
-    @EnumField(7)
-    setModFear(): ModFear { return new ModFear(this.set(7));  };
-    /** */
-    @EnumField(8)
-    setPeriodicHeal(): PeriodicHeal { return new PeriodicHeal(this.set(8));  };
-    /** */
-    @EnumField(9)
-    setModAttackspeed(): ModAttackSpeed { return new ModAttackSpeed(this.set(9));  };
-    /** */
-    @EnumField(10)
-    setModThreat(): ModThreat { return new ModThreat(this.set(10));  };
-    /** */
-    @EnumField(11)
-    setModTaunt(): ModTaunt { return new ModTaunt(this.set(11));  };
-    /** */
-    @EnumField(12)
-    setModStun(): ModStun { return new ModStun(this.set(12));  };
-    /** */
-    @EnumField(13)
-    setModDamageDone(): ModDamageDone { return new ModDamageDone(this.set(13));  };
-    /** */
-    @EnumField(14)
-    setModDamageTaken(): ModDamageTaken { return new ModDamageTaken(this.set(14));  };
-    /** */
-    @EnumField(15)
-    setDamageShield(): DamageShield { return new DamageShield(this.set(15));  };
-    /** */
-    @EnumField(16)
-    setModStealth(): ModStealth { return new ModStealth(this.set(16));  };
-    /** */
-    @EnumField(17)
-    setModDetect(): ModDetect { return new ModDetect(this.set(17));  };
-    /** */
-    @EnumField(18)
-    setModInvisibility(): ModInvisibility { return new ModInvisibility(this.set(18));  };
-    /** */
-    @EnumField(19)
-    setModInvisibilityDetection(): ModInvisibilityDetection { return new ModInvisibilityDetection(this.set(19));  };
-    /** */
-    @EnumField(20)
-    setObsModHealth(): ObsModHealth { return new ObsModHealth(this.set(20));  };
-    /** */
-    @EnumField(21)
-    setObsModPower(): ObsModPower { return new ObsModPower(this.set(21));  };
-    /** */
-    @EnumField(22)
-    setModResistance(): ModResistance { return new ModResistance(this.set(22));  };
-    /** */
-    @EnumField(23)
-    setPeriodicTriggerSpell() { return this.set(23);  };
-    /** */
-    @EnumField(24)
-    setPeriodicEnergize(): PeriodicEnergize { return new PeriodicEnergize(this.set(24));  };
-    /** */
-    @EnumField(25)
-    setModPacify(): ModPacify { return new ModPacify(this.set(25));  };
-    /** */
-    @EnumField(26)
-    setModRoot(): ModRoot { return new ModRoot(this.set(26));  };
-    /** */
-    @EnumField(27)
-    setModSilence(): ModSilence { return new ModSilence(this.set(27));  };
-    /** */
-    @EnumField(28)
-    setReflectSpells(): ReflectSpells { return new ReflectSpells(this.set(28));  };
-    /** */
-    @EnumField(29)
-    setModStat(): ModStat { return new ModStat(this.set(29));  };
-    /** */
-    @EnumField(30)
-    setModSkill(): ModSkill { return new ModSkill(this.set(30));  };
-    /** */
-    @EnumField(31)
-    setModIncreaseSpeed(): ModIncreaseSpeed { return new ModIncreaseSpeed(this.set(31));  };
-    /** */
-    @EnumField(32)
-    setModIncreaseMountedSpeed(): ModIncreaseMountSpeed { return new ModIncreaseMountSpeed(this.set(32));  };
-    /** */
-    @EnumField(33)
-    setModDecreaseSpeed(): ModDecreaseSpeed { return new ModDecreaseSpeed(this.set(33));  };
-    /** */
-    @EnumField(34)
-    setModIncreaseHealth(): ModIncreaseHealth { return new ModIncreaseHealth(this.set(34));  };
-    /** */
-    @EnumField(35)
-    setModIncreaseEnergy(): ModIncreaseEnergy { return new ModIncreaseEnergy(this.set(35));  };
-    /** */
-    @EnumField(36)
-    setModShapeshift(): ModShapeshift { return new ModShapeshift(this.set(36));  };
-    /** */
-    @EnumField(37)
-    setEffectImmunity(): EffectImmunity { return new EffectImmunity(this.set(37));  };
-    /** */
-    @EnumField(38)
-    setStateImmunity(): StateImmunity { return new StateImmunity(this.set(38));  };
-    /** */
-    @EnumField(39)
-    setSchoolImmunity(): SchoolImmunity { return new SchoolImmunity(this.set(39));  };
-    /** */
-    @EnumField(40)
-    setDamageImmunity(): DamageImmunity { return new DamageImmunity(this.set(40));  };
-    /** */
-    @EnumField(41)
-    setDispelImmunity(): DispelImmunity { return new DispelImmunity(this.set(41));  };
-    /** */
-    @EnumField(42)
-    setProcTriggerSpell(): ProcTriggerSpell { return new ProcTriggerSpell(this.set(42));  };
-    /** */
-    @EnumField(43)
-    setProcTriggerDamage(): ProcTriggerDamage { return new ProcTriggerDamage(this.set(43));  };
-    /** */
-    @EnumField(44)
-    setTrackCreatures(): TrackCreatures { return new TrackCreatures(this.set(44));  };
-    /** */
-    @EnumField(45)
-    setTrackResources(): TrackResources { return new TrackResources(this.set(45));  };
-    /** */
-    @EnumField(46)
-    setSpellAura46() { return this.set(46);  };
-    /** */
-    @EnumField(47)
-    setModParryPercent(): ModParryPercent { return new ModParryPercent(this.set(47));  };
-    /** */
-    @EnumField(48)
-    setSpellAura48() { return this.set(48);  };
-    /** */
-    @EnumField(49)
-    setModDodgePercent(): ModDodgePercent { return new ModDodgePercent(this.set(49));  };
-    /** */
-    @EnumField(50)
-    setModCriticalHealingAmount(): ModCriticalHealAmount { return new ModCriticalHealAmount(this.set(50));  };
-    /** */
-    @EnumField(51)
-    setModBlockPercent(): ModBlockPercent { return new ModBlockPercent(this.set(51));  };
-    /** */
-    @EnumField(52)
-    setModWeaponCritPercent(): ModWeaponCritPercent { return new ModWeaponCritPercent(this.set(52));  };
-    /** */
-    @EnumField(53)
-    setPeriodicLeech(): PeriodicLeech { return new PeriodicLeech(this.set(53));  };
-    /** */
-    @EnumField(54)
-    setModHitChance(): ModHitChance { return new ModHitChance(this.set(54));  };
-    /** */
-    @EnumField(55)
-    setModSpellHitChance(): ModSpellHitChance { return new ModSpellHitChance(this.set(55));  };
-    /** */
-    @EnumField(56)
-    setTransform(): Transform { return new Transform(this.set(56));  };
-    /** */
-    @EnumField(57)
-    setModSpellCritChance(): ModSpellCritChance { return new ModSpellCritChance(this.set(57));  };
-    /** */
-    @EnumField(58)
-    setModIncreaseSwimSpeed(): ModIncreaseSwimSpeed { return new ModIncreaseSwimSpeed(this.set(58));  };
-    /** */
-    @EnumField(59)
-    setModDamageDoneCreature(): ModDamageDoneCreature { return new ModDamageDoneCreature(this.set(59));  };
-    /** */
-    @EnumField(60)
-    setModPacifySilence(): ModPacifySilence { return new ModPacifySilence(this.set(60));  };
-    /** */
-    @EnumField(61)
-    setModScale(): ModScale { return new ModScale(this.set(61));  };
-    /** */
-    @EnumField(62)
-    setPeriodicHealthFunnel(): PeriodicHealthFunnel { return new PeriodicHealthFunnel(this.set(62));  };
-    /** */
-    @EnumField(63)
-    setSpellAura63() { return this.set(63);  };
-    /** */
-    @EnumField(64)
-    setPeriodicManaLeech(): PeriodicManaLeech { return new PeriodicManaLeech(this.set(64));  };
-    /** */
-    @EnumField(65)
-    setModCastingSpeedNotStack(): ModCastingSpeedNotStack { return new ModCastingSpeedNotStack(this.set(65));  };
-    /** */
-    @EnumField(66)
-    setFeignDeath(): FeignDeath { return new FeignDeath(this.set(66));  };
-    /** */
-    @EnumField(67)
-    setModDisarm(): ModDisarm { return new ModDisarm(this.set(67));  };
-    /** */
-    @EnumField(68)
-    setModStalked(): ModStalked { return new ModStalked(this.set(68));  };
-    /** */
-    @EnumField(69)
-    setSchoolAbsorb(): SchoolAbsorb { return new SchoolAbsorb(this.set(69));  };
-    /** */
-    @EnumField(70)
-    setExtraAttacks() { return this.set(70);  };
-    /** */
-    @EnumField(71)
-    setModSpellCritChanceSchool(): ModSpellCritChanceSchool { return new ModSpellCritChanceSchool(this.set(71));  };
-    /** */
-    @EnumField(72)
-    setModPowerCostSchoolPct(): ModPowerCostSchoolPct { return new ModPowerCostSchoolPct(this.set(72));  };
-    /** */
-    @EnumField(73)
-    setModPowerCostSchool(): ModPowerCostSchool { return new ModPowerCostSchool(this.set(73));  };
-    /** */
-    @EnumField(74)
-    setReflectSpellsSchool(): ReflectSpellsSchool { return new ReflectSpellsSchool(this.set(74));  };
-    /** */
-    @EnumField(75)
-    setModLanguage(): ModLanguage { return new ModLanguage(this.set(75));  };
-    /** */
-    @EnumField(76)
-    setFarSight(): FarSight { return new FarSight(this.set(76));  };
-    /** */
-    @EnumField(77)
-    setMechanicImmunity(): MechanicImmunity { return new MechanicImmunity(this.set(77));  };
-    /** */
-    @EnumField(78)
-    setMounted(): Mounted { return new Mounted(this.set(78));  };
-    /** */
-    @EnumField(79)
-    setModDamagePercentDone(): ModDamagePercentDone { return new ModDamagePercentDone(this.set(79));  };
-    /** */
-    @EnumField(80)
-    setModPercentStat(): ModPercentStat { return new ModPercentStat(this.set(80));  };
-    /** */
-    @EnumField(81)
-    setSplitDamagePct(): SplitDamagePct { return new SplitDamagePct(this.set(81));  };
-    /** */
-    @EnumField(82)
-    setWaterBreathing(): WaterBreathing { return new WaterBreathing(this.set(82));  };
-    /** */
-    @EnumField(83)
-    setModBaseResistance(): ModBaseResistance { return new ModBaseResistance(this.set(83));  };
-    /** */
-    @EnumField(84)
-    setModRegen(): ModRegen { return new ModRegen(this.set(84));  };
-    /** */
-    @EnumField(85)
-    setModPowerRegen(): ModPowerRegen { return new ModPowerRegen(this.set(85));  };
-    /** */
-    @EnumField(86)
-    setChannelDeathItem(): ChannelDeathItem { return new ChannelDeathItem(this.set(86));  };
-    /** */
-    @EnumField(87)
-    setModDamagePercentTaken(): ModDamagePercentTaken { return new ModDamagePercentTaken(this.set(87));  };
-    /** */
-    @EnumField(88)
-    setModHealthRegenPercent(): ModHealthRegenPercent { return new ModHealthRegenPercent(this.set(88));  };
-    /** */
-    @EnumField(89)
-    setPeriodicDamagePercent(): PeriodicDamagePercent { return new PeriodicDamagePercent(this.set(89));  };
-    /** */
-    @EnumField(90)
-    setSpellAura90() { return this.set(90);  };
-    /** */
-    @EnumField(91)
-    setModDetectRange(): ModDetectRange { return new ModDetectRange(this.set(91));  };
-    /** */
-    @EnumField(92)
-    setPreventsFleeing(): PreventsFleeing { return new PreventsFleeing(this.set(92));  };
-    /** */
-    @EnumField(93)
-    setModUnattackable(): ModUnattackable { return new ModUnattackable(this.set(93));  };
-    /** */
-    @EnumField(94)
-    setInterruptRegen(): InterruptRegen { return new InterruptRegen(this.set(94));  };
-    /** */
-    @EnumField(95)
-    setGhost(): Ghost { return new Ghost(this.set(95));  };
-    /** */
-    @EnumField(96)
-    setSpellMagnet(): SpellMagnet { return new SpellMagnet(this.set(96));  };
-    /** */
-    @EnumField(97)
-    setManaShield(): ManaShield { return new ManaShield(this.set(97));  };
-    /** */
-    @EnumField(98)
-    setModSkillTalent(): ModSkillTalent { return new ModSkillTalent(this.set(98));  };
-    /** */
-    @EnumField(99)
-    setModAttackPower(): ModAttackPower { return new ModAttackPower(this.set(99));  };
-    /** */
-    @EnumField(100)
-    setAurasVisible(): AurasVisible { return new AurasVisible(this.set(100));  };
-    /** */
-    @EnumField(101)
-    setModResistancePct(): ModResistancePct { return new ModResistancePct(this.set(101));  };
-    /** */
-    @EnumField(102)
-    setModMeleeAttackPowerVersus(): ModMeleeAttackPowerVersus { return new ModMeleeAttackPowerVersus(this.set(102));  };
-    /** */
-    @EnumField(103)
-    setModTotalThreat(): ModTotalThreat { return new ModTotalThreat(this.set(103));  };
-    /** */
-    @EnumField(104)
-    setWaterWalk(): WaterWalk { return new WaterWalk(this.set(104));  };
-    /** */
-    @EnumField(105)
-    setFeatherFall(): FeatherFall { return new FeatherFall(this.set(105));  };
-    /** */
-    @EnumField(106)
-    setHover(): Hover { return new Hover(this.set(106));  };
-    /** */
-    @EnumField(107)
-    setAddFlatModifier(): AddFlatModifier { return new AddFlatModifier(this.set(107));  };
-    /** */
-    @EnumField(108)
-    setAddPctModifier(): AddPctModifier { return new AddPctModifier(this.set(108));  };
-    /** */
-    @EnumField(109)
-    setAddTargetTrigger(): AddTargetTrigger { return new AddTargetTrigger(this.set(109));  };
-    /** */
-    @EnumField(110)
-    setModPowerRegenPercent(): ModPowerRegenPercent { return new ModPowerRegenPercent(this.set(110));  };
-    /** */
-    @EnumField(111)
-    setAddCasterHitTrigger(): AddCasterHitTrigger { return new AddCasterHitTrigger(this.set(111));  };
-    /** */
-    @EnumField(112)
-    setOverrideClassScripts() { return this.set(112);  };
-    /** */
-    @EnumField(113)
-    setModRangedDamageTaken(): ModRangedDamageTaken { return new ModRangedDamageTaken(this.set(113));  };
-    /** */
-    @EnumField(114)
-    setModRangedDamageTakenPct(): ModRangedDamageTakenPct { return new ModRangedDamageTakenPct(this.set(114));  };
-    /** */
-    @EnumField(115)
-    setModHealing(): ModHealing { return new ModHealing(this.set(115));  };
-    /** */
-    @EnumField(116)
-    setModRegenDuringCombat(): ModRegenDuringCombat { return new ModRegenDuringCombat(this.set(116));  };
-    /** */
-    @EnumField(117)
-    setModMechanicResistance(): ModMechanicResistance { return new ModMechanicResistance(this.set(117));  };
-    /** */
-    @EnumField(118)
-    setModHealingPct(): ModHealingPct { return new ModHealingPct(this.set(118));  };
-    /** */
-    @EnumField(119)
-    setSpellAura119() { return this.set(119);  };
-    /** */
-    @EnumField(120)
-    setUntrackable(): Untrackable { return new Untrackable(this.set(120));  };
-    /** */
-    @EnumField(121)
-    setEmpathy(): Empathy { return new Empathy(this.set(121));  };
-    /** */
-    @EnumField(122)
-    setModOffhandDamagePct(): ModOffhandDamagePct { return new ModOffhandDamagePct(this.set(122));  };
-    /** */
-    @EnumField(123)
-    setModTargetResistance(): ModTargetResistance { return new ModTargetResistance(this.set(123));  };
-    /** */
-    @EnumField(124)
-    setModRangedAttackPower(): ModRangedAttackPower { return new ModRangedAttackPower(this.set(124));  };
-    /** */
-    @EnumField(125)
-    setModMeleeDamageTaken(): ModMeleeDamageTaken { return new ModMeleeDamageTaken(this.set(125));  };
-    /** */
-    @EnumField(126)
-    setModMeleeDamageTakenPct(): ModMeleeDamageTakenPct { return new ModMeleeDamageTakenPct(this.set(126));  };
-    /** */
-    @EnumField(127)
-    setRangedAttackPowerAttackerBonus(): RangedAttackPowerAttackerBonus { return new RangedAttackPowerAttackerBonus(this.set(127));  };
-    /** */
-    @EnumField(128)
-    setModPossessPet(): ModPossessPet { return new ModPossessPet(this.set(128));  };
-    /** */
-    @EnumField(129)
-    setModSpeedAlways(): ModSpeedAlways { return new ModSpeedAlways(this.set(129));  };
-    /** */
-    @EnumField(130)
-    setModMountedSpeedAlways(): ModMountedSpeedAlways { return new ModMountedSpeedAlways(this.set(130));  };
-    /** */
-    @EnumField(131)
-    setModRangedAttackPowerVersus(): ModRangedAttackPowerVersus { return new ModRangedAttackPowerVersus(this.set(131));  };
-    /** */
-    @EnumField(132)
-    setModIncreaseEnergyPercent(): ModIncreaseEnergyPercent { return new ModIncreaseEnergyPercent(this.set(132));  };
-    /** */
-    @EnumField(133)
-    setModIncreaseHealthPercent(): ModIncreaseHealthPercent { return new ModIncreaseHealthPercent(this.set(133));  };
-    /** */
-    @EnumField(134)
-    setModManaRegenInterrupt(): ModManaRegenInterrupt { return new ModManaRegenInterrupt(this.set(134));  };
-    /** */
-    @EnumField(135)
-    setModHealingDone(): ModHealingDone { return new ModHealingDone(this.set(135));  };
-    /** */
-    @EnumField(136)
-    setModHealingDonePercent(): ModHealingDonePercent { return new ModHealingDonePercent(this.set(136));  };
-    /** */
-    @EnumField(137)
-    setModTotalStatPercentage(): ModTotalStatPercentage { return new ModTotalStatPercentage(this.set(137));  };
-    /** */
-    @EnumField(138)
-    setModMeleeHaste(): ModMeleeHaste { return new ModMeleeHaste(this.set(138));  };
-    /** */
-    @EnumField(139)
-    setForceReaction(): ForceReaction { return new ForceReaction(this.set(139));  };
-    /** */
-    @EnumField(140)
-    setModRangedHaste(): ModRangedHaste { return new ModRangedHaste(this.set(140));  };
-    /** */
-    @EnumField(141)
-    setModRangedAmmoHaste(): ModRangedAmmoHaste { return new ModRangedAmmoHaste(this.set(141));  };
-    /** */
-    @EnumField(142)
-    setModBaseResistancePct(): ModBaseResistancePct { return new ModBaseResistancePct(this.set(142));  };
-    /** */
-    @EnumField(143)
-    setModResistanceExclusive(): ModResistanceExclusive { return new ModResistanceExclusive(this.set(143));  };
-    /** */
-    @EnumField(144)
-    setSafeFall(): SafeFall { return new SafeFall(this.set(144));  };
-    /** */
-    @EnumField(145)
-    setModPetTalentPoints(): ModPetTalentPoints { return new ModPetTalentPoints(this.set(145));  };
-    /** */
-    @EnumField(146)
-    setAllowTamePetType(): AllowTamePetType { return new AllowTamePetType(this.set(146));  };
-    /** */
-    @EnumField(147)
-    setMechanicImmunityMask(): MechanicImmunityMask { return new MechanicImmunityMask(this.set(147));  };
-    /** */
-    @EnumField(148)
-    setRetainComboPoints(): RetainComboPoints { return new RetainComboPoints(this.set(148));  };
-    /** */
-    @EnumField(149)
-    setReducePushback(): ReducePushback { return new ReducePushback(this.set(149));  };
-    /** */
-    @EnumField(150)
-    setModShieldBlockvaluePct(): ModShieldBlockValuePct { return new ModShieldBlockValuePct(this.set(150));  };
-    /** */
-    @EnumField(151)
-    setTrackStealthed(): TrackStealthed { return new TrackStealthed(this.set(151));  };
-    /** */
-    @EnumField(152)
-    setModDetectedRange(): ModDetectedRange { return new ModDetectedRange(this.set(152));  };
-    /** */
-    @EnumField(153)
-    setSplitDamageFlat(): SplitDamageFlat { return new SplitDamageFlat(this.set(153));  };
-    /** */
-    @EnumField(154)
-    setModStealthLevel(): ModStealthLevel { return new ModStealthLevel(this.set(154));  };
-    /** */
-    @EnumField(155)
-    setModWaterBreathing(): ModWaterBreathing { return new ModWaterBreathing(this.set(155));  };
-    /** */
-    @EnumField(156)
-    setModReputationGain(): ModReputationGain { return new ModReputationGain(this.set(156));  };
-    /** */
-    @EnumField(157)
-    setPetDamageMulti(): PetDamageMulti { return new PetDamageMulti(this.set(157));  };
-    /** */
-    @EnumField(158)
-    setModShieldBlockvalue(): ModShieldBlockValue { return new ModShieldBlockValue(this.set(158));  };
-    /** */
-    @EnumField(159)
-    setNoPvpCredit(): NoPvPCredit { return new NoPvPCredit(this.set(159));  };
-    /** */
-    @EnumField(160)
-    setModAoeAvoidance(): ModAoEAvoidance { return new ModAoEAvoidance(this.set(160));  };
-    /** */
-    @EnumField(161)
-    setModHealthRegenInCombat() { return this.set(161);  };
-    /** */
-    @EnumField(162)
-    setPowerBurn(): PowerBurn { return new PowerBurn(this.set(162));  };
-    /** */
-    @EnumField(163)
-    setModCritDamageBonus(): ModCritDamageBonus { return new ModCritDamageBonus(this.set(163));  };
-    /** */
-    @EnumField(164)
-    setSpellAura164() { return this.set(164);  };
-    /** */
-    @EnumField(165)
-    setMeleeAttackPowerAttackerBonus(): MeleeAttackPowerAttackerBonus { return new MeleeAttackPowerAttackerBonus(this.set(165));  };
-    /** */
-    @EnumField(166)
-    setModAttackPowerPct(): ModAttackPowerPct { return new ModAttackPowerPct(this.set(166));  };
-    /** */
-    @EnumField(167)
-    setModRangedAttackPowerPct(): ModRangedAttackPowerPct { return new ModRangedAttackPowerPct(this.set(167));  };
-    /** */
-    @EnumField(168)
-    setModDamageDoneVersus(): ModDamageDoneVersus { return new ModDamageDoneVersus(this.set(168));  };
-    /** */
-    @EnumField(169)
-    setModCritPercentVersus(): ModCritPercentVersus { return new ModCritPercentVersus(this.set(169));  };
-    /** */
-    @EnumField(170)
-    setDetectAmore(): DetectAmore { return new DetectAmore(this.set(170));  };
-    /** */
-    @EnumField(171)
-    setModSpeedNotStack(): ModSpeedNotStack { return new ModSpeedNotStack(this.set(171));  };
-    /** */
-    @EnumField(172)
-    setModMountedSpeedNotStack(): ModMountedSpeedNotStack { return new ModMountedSpeedNotStack(this.set(172));  };
-    /** */
-    @EnumField(173)
-    setSpellAura173() { return this.set(173);  };
-    /** */
-    @EnumField(174)
-    setModSpellDamageOfStatPercent(): ModSpellDamageOfStatPercent { return new ModSpellDamageOfStatPercent(this.set(174));  };
-    /** */
-    @EnumField(175)
-    setModSpellHealingOfStatPercent(): ModSpellHealingOfStatPercent { return new ModSpellHealingOfStatPercent(this.set(175));  };
-    /** */
-    @EnumField(176)
-    setSpiritOfRedemption(): SpiritOfRedemption { return new SpiritOfRedemption(this.set(176));  };
-    /** */
-    @EnumField(177)
-    setAoeCharm(): AoECharm { return new AoECharm(this.set(177));  };
-    /** */
-    @EnumField(178)
-    setModDebuffResistance(): ModDebuffResistance { return new ModDebuffResistance(this.set(178));  };
-    /** */
-    @EnumField(179)
-    setModAttackerSpellCritChance(): ModAttackerSpellCritChance { return new ModAttackerSpellCritChance(this.set(179));  };
-    /** */
-    @EnumField(180)
-    setModFlatSpellDamageVersus(): ModFlatSpellDamageVersus { return new ModFlatSpellDamageVersus(this.set(180));  };
-    /** */
-    @EnumField(181)
-    setSpellAura181() { return this.set(181);  };
-    /** */
-    @EnumField(182)
-    setModResistanceOfStatPercent(): ModResistanceOfStatPercent { return new ModResistanceOfStatPercent(this.set(182));  };
-    /** */
-    @EnumField(183)
-    setModCriticalThreat(): ModCriticalThreat { return new ModCriticalThreat(this.set(183));  };
-    /** */
-    @EnumField(184)
-    setModAttackerMeleeHitChance(): ModAttackerMeleeHitChance { return new ModAttackerMeleeHitChance(this.set(184));  };
-    /** */
-    @EnumField(185)
-    setModAttackerRangedHitChance(): ModAttackerRangedHitChance { return new ModAttackerRangedHitChance(this.set(185));  };
-    /** */
-    @EnumField(186)
-    setModAttackerSpellHitChance(): ModAttackerSpellHitChance { return new ModAttackerSpellHitChance(this.set(186));  };
-    /** */
-    @EnumField(187)
-    setModAttackerMeleeCritChance(): ModAttackerMeleeCritChance { return new ModAttackerMeleeCritChance(this.set(187));  };
-    /** */
-    @EnumField(188)
-    setModAttackerRangedCritChance(): ModAttackerRangedCritChance { return new ModAttackerRangedCritChance(this.set(188));  };
-    /** */
-    @EnumField(189)
-    setModRating(): ModRating { return new ModRating(this.set(189));  };
-    /** */
-    @EnumField(190)
-    setModFactionReputationGain(): ModFactionReputationGain { return new ModFactionReputationGain(this.set(190));  };
-    /** */
-    @EnumField(191)
-    setUseNormalMovementSpeed(): UseNormalMovementSpeed { return new UseNormalMovementSpeed(this.set(191));  };
-    /** */
-    @EnumField(192)
-    setModMeleeRangedHaste(): ModMeleeRangedHaste { return new ModMeleeRangedHaste(this.set(192));  };
-    /** */
-    @EnumField(193)
-    setMeleeSlow(): MeleeSlow { return new MeleeSlow(this.set(193));  };
-    /** */
-    @EnumField(194)
-    setModTargetAbsorbSchool(): ModTargetAbsorbSchool { return new ModTargetAbsorbSchool(this.set(194));  };
-    /** */
-    @EnumField(195)
-    setModTargetAbilityAbsorbSchool(): ModTargetAbilityAbsorbSchool { return new ModTargetAbilityAbsorbSchool(this.set(195));  };
-    /** */
-    @EnumField(196)
-    setModCooldown(): ModCooldown { return new ModCooldown(this.set(196));  };
-    /** */
-    @EnumField(197)
-    setModAttackerSpellAndWeaponCritChance(): ModAttackerSpellAndWeaponCritChance { return new ModAttackerSpellAndWeaponCritChance(this.set(197));  };
-    /** */
-    @EnumField(198)
-    setSpellAura198() { return this.set(198);  };
-    /** */
-    @EnumField(199)
-    setModIncreasesSpellPctToHit(): ModIncreasesSpellPctToHit { return new ModIncreasesSpellPctToHit(this.set(199));  };
-    /** */
-    @EnumField(200)
-    setModXpPct(): ModXpPct { return new ModXpPct(this.set(200));  };
-    /** */
-    @EnumField(201)
-    setFly(): Fly { return new Fly(this.set(201));  };
-    /** */
-    @EnumField(202)
-    setCannotBeDodged(): CannotBeDodged { return new CannotBeDodged(this.set(202));  };
-    /** */
-    @EnumField(203)
-    setModAttackerMeleeCritDamage(): ModAttackerMeleeCritDamage { return new ModAttackerMeleeCritDamage(this.set(203));  };
-    /** */
-    @EnumField(204)
-    setModAttackerRangedCritDamage(): ModAttackerRangedCritDamage { return new ModAttackerRangedCritDamage(this.set(204));  };
-    /** */
-    @EnumField(205)
-    setModSchoolCritDmgTaken(): ModSchoolCritDmgTaken { return new ModSchoolCritDmgTaken(this.set(205));  };
-    /** */
-    @EnumField(206)
-    setModIncreaseVehicleFlightSpeed(): ModIncreaseVehicleFlightSpeed { return new ModIncreaseVehicleFlightSpeed(this.set(206));  };
-    /** */
-    @EnumField(207)
-    setModIncreaseMountedFlightSpeed(): ModIncreaseMountedFlightSpeed { return new ModIncreaseMountedFlightSpeed(this.set(207));  };
-    /** */
-    @EnumField(208)
-    setModIncreaseFlightSpeed(): ModIncreaseFlightSpeed { return new ModIncreaseFlightSpeed(this.set(208));  };
-    /** */
-    @EnumField(209)
-    setModMountedFlightSpeedAlways(): ModMountedFlightSpeedAlways { return new ModMountedFlightSpeedAlways(this.set(209));  };
-    /** */
-    @EnumField(210)
-    setModVehicleSpeedAlways(): ModVehicleSpeedAlways { return new ModVehicleSpeedAlways(this.set(210));  };
-    /** */
-    @EnumField(211)
-    setModFlightSpeedNotStack(): ModFlightSpeedNotStack { return new ModFlightSpeedNotStack(this.set(211));  };
-    /** */
-    @EnumField(212)
-    setModRangedAttackPowerOfStatPercent(): ModRangedAttackPowerOfStatPercent { return new ModRangedAttackPowerOfStatPercent(this.set(212));  };
-    /** */
-    @EnumField(213)
-    setModRageFromDamageDealt(): ModRageFromDamageDealt { return new ModRageFromDamageDealt(this.set(213));  };
-    /** */
-    @EnumField(214)
-    setTamed(): Tamed { return new Tamed(this.set(214));  };
-    /** */
-    @EnumField(215)
-    setArenaPreparation(): ArenaPreparation { return new ArenaPreparation(this.set(215));  };
-    /** */
-    @EnumField(216)
-    setHasteSpells(): HasteSpells { return new HasteSpells(this.set(216));  };
-    /** */
-    @EnumField(217)
-    setSpellAura217() { return this.set(217);  };
-    /** */
-    @EnumField(218)
-    setHasteRanged(): HasteRanged { return new HasteRanged(this.set(218));  };
-    /** */
-    @EnumField(219)
-    setModManaRegenFromStat(): ModManaRegenFromStat { return new ModManaRegenFromStat(this.set(219));  };
-    /** */
-    @EnumField(220)
-    setModRatingFromStat(): ModRatingFromStat { return new ModRatingFromStat(this.set(220));  };
-    /** */
-    @EnumField(221)
-    setModDetaunt(): ModDetaunt { return new ModDetaunt(this.set(221));  };
-    /** */
-    @EnumField(222)
-    setSpellAura222() { return this.set(222);  };
-    /** */
-    @EnumField(223)
-    setRaidProcFromCharge(): RaidProcFromCharge { return new RaidProcFromCharge(this.set(223));  };
-    /** */
-    @EnumField(224)
-    setSpellAura224() { return this.set(224);  };
-    /** */
-    @EnumField(225)
-    setRaidProcFromChargeWithValue(): RaidProcFromChargeWithValue { return new RaidProcFromChargeWithValue(this.set(225));  };
-    /** */
-    @EnumField(226)
-    setPeriodicDummy() { return this.set(226);  };
-    /** */
-    @EnumField(227)
-    setPeriodicTriggerSpellWithValue() { return this.set(227);  };
-    /** */
-    @EnumField(228)
-    setDetectStealth(): DetectStealth { return new DetectStealth(this.set(228));  };
-    /** */
-    @EnumField(229)
-    setModAoeDamageAvoidance(): ModAoEDamageAvoidance { return new ModAoEDamageAvoidance(this.set(229));  };
-    /** */
-    @EnumField(230)
-    setModIncreaseHealth2(): ModIncreaseHealth2 { return new ModIncreaseHealth2(this.set(230));  };
-    /** */
-    @EnumField(231)
-    setProcTriggerSpellWithValue() { return this.set(231);  };
-    /** */
-    @EnumField(232)
-    setMechanicDurationMod(): MechanicDurationMod { return new MechanicDurationMod(this.set(232));  };
-    /** */
-    @EnumField(233)
-    setSpellAura233() { return this.set(233);  };
-    /** */
-    @EnumField(234)
-    setMechanicDurationModNotStack(): MechanicDurationModNotStack { return new MechanicDurationModNotStack(this.set(234));  };
-    /** */
-    @EnumField(235)
-    setModDispelResist(): ModDispelResist { return new ModDispelResist(this.set(235));  };
-    /** */
-    @EnumField(236)
-    setControlVehicle(): ControlVehicle { return new ControlVehicle(this.set(236));  };
-    /** */
-    @EnumField(237)
-    setModSpellDamageOfAttackPower(): ModSpellDamageOfAttackPower { return new ModSpellDamageOfAttackPower(this.set(237));  };
-    /** */
-    @EnumField(238)
-    setModSpellHealingOfAttackPower(): ModSpellHealingOfAttackPower { return new ModSpellHealingOfAttackPower(this.set(238));  };
-    /** */
-    @EnumField(239)
-    setModScale2(): ModScale2 { return new ModScale2(this.set(239));  };
-    /** */
-    @EnumField(240)
-    setModExpertise(): ModExpertise { return new ModExpertise(this.set(240));  };
-    /** */
-    @EnumField(241)
-    setForceMoveForward(): ForceMoveForward { return new ForceMoveForward(this.set(241));  };
-    /** */
-    @EnumField(242)
-    setModSpellDamageFromHealing(): ModSpellDamageFromHealing { return new ModSpellDamageFromHealing(this.set(242));  };
-    /** */
-    @EnumField(243)
-    setModFaction(): ModFaction { return new ModFaction(this.set(243));  };
-    /** */
-    @EnumField(244)
-    setComprehendLanguage(): ComprehendLanguage { return new ComprehendLanguage(this.set(244));  };
-    /** */
-    @EnumField(245)
-    setModAuraDurationByDispel(): ModAuraDurationByDispel { return new ModAuraDurationByDispel(this.set(245));  };
-    /** */
-    @EnumField(246)
-    setModAuraDurationByDispelNotStack(): ModAuraDurationByDispelNotStack { return new ModAuraDurationByDispelNotStack(this.set(246));  };
-    /** */
-    @EnumField(247)
-    setCloneCaster(): CloneCaster { return new CloneCaster(this.set(247));  };
-    /** */
-    @EnumField(248)
-    setModCombatResultChance(): ModCombatResultChance { return new ModCombatResultChance(this.set(248));  };
-    /** */
-    @EnumField(249)
-    setConvertRune(): ConvertRune { return new ConvertRune(this.set(249));  };
-    /** */
-    @EnumField(250)
-    setModIncreaseHealth3(): ModIncreaseHealth3 { return new ModIncreaseHealth3(this.set(250));  };
-    /** */
-    @EnumField(251)
-    setModEnemyDodge(): ModEnemyDodge { return new ModEnemyDodge(this.set(251));  };
-    /** */
-    @EnumField(252)
-    setSpellAura252() { return this.set(252);  };
-    /** */
-    @EnumField(253)
-    setModBlockCritChance(): ModBlockCritChance { return new ModBlockCritChance(this.set(253));  };
-    /** */
-    @EnumField(254)
-    setModDisarmOffhand(): ModDisarmOffhand { return new ModDisarmOffhand(this.set(254));  };
-    /** */
-    @EnumField(255)
-    setModMechanicDamageTakenPercent(): ModMechanicDamageTakenPercent { return new ModMechanicDamageTakenPercent(this.set(255));  };
-    /** */
-    @EnumField(256)
-    setNoReagentUse(): NoReagentUse { return new NoReagentUse(this.set(256));  };
-    /** */
-    @EnumField(257)
-    setModTargetResistBySpellClass(): ModTargetResistBySpellClass { return new ModTargetResistBySpellClass(this.set(257));  };
-    /** */
-    @EnumField(258)
-    setModSpellVisual() { return this.set(258);  };
-    /** */
-    @EnumField(259)
-    setModHotPct(): ModHotPct { return new ModHotPct(this.set(259));  };
-    /** */
-    @EnumField(260)
-    setScreenEffect(): ScreenEffect { return new ScreenEffect(this.set(260));  };
-    /** */
-    @EnumField(261)
-    setPhase(): Phase { return new Phase(this.set(261));  };
-    /** */
-    @EnumField(262)
-    setAbilityIgnoreAurastate() { return this.set(262);  };
-    /** */
-    @EnumField(263)
-    setAllowOnlyAbility(): AllowOnlyAbility { return new AllowOnlyAbility(this.set(263));  };
-    /** */
-    @EnumField(264)
-    setSpellAura264() { return this.set(264);  };
-    /** */
-    @EnumField(265)
-    setSpellAura265() { return this.set(265);  };
-    /** */
-    @EnumField(266)
-    setSpellAura266() { return this.set(266);  };
-    /** */
-    @EnumField(267)
-    setModImmuneAuraApplySchool(): ModImmuneAuraApplySchool { return new ModImmuneAuraApplySchool(this.set(267));  };
-    /** */
-    @EnumField(268)
-    setModAttackPowerOfStatPercent(): ModAttackPowerOfStatPercent { return new ModAttackPowerOfStatPercent(this.set(268));  };
-    /** */
-    @EnumField(269)
-    setModIgnoreTargetResist(): ModIgnoreTargetResist { return new ModIgnoreTargetResist(this.set(269));  };
-    /** */
-    @EnumField(270)
-    setModAbilityIgnoreTargetResist() { return this.set(270);  };
-    /** */
-    @EnumField(271)
-    setModDamageFromCaster(): ModDamageFromCaster { return new ModDamageFromCaster(this.set(271));  };
-    /** */
-    @EnumField(272)
-    setIgnoreMeleeReset(): IgnoreMeleeReset { return new IgnoreMeleeReset(this.set(272));  };
-    /** */
-    @EnumField(273)
-    setSpellAura273() { return this.set(273);  };
-    /** */
-    @EnumField(274)
-    setConsumeNoAmmo(): ConsumeNoAmmo { return new ConsumeNoAmmo(this.set(274));  };
-    /** */
-    @EnumField(275)
-    setModIgnoreShapeshift(): ModIgnoreShapeshift { return new ModIgnoreShapeshift(this.set(275));  };
-    /** */
-    @EnumField(276)
-    setSpellAura276() { return this.set(276);  };
-    /** */
-    @EnumField(277)
-    setModAbilityAffectedTargets(): ModAbilityAffectedTargets { return new ModAbilityAffectedTargets(this.set(277));  };
-    /** */
-    @EnumField(278)
-    setModDisarmRanged(): ModDisarmRanged { return new ModDisarmRanged(this.set(278));  };
-    /** */
-    @EnumField(279)
-    setInitializeImages(): InitializeImages { return new InitializeImages(this.set(279));  };
-    /** */
-    @EnumField(280)
-    setModTargetArmorPct(): ModTargetArmorPct { return new ModTargetArmorPct(this.set(280));  };
-    /** */
-    @EnumField(281)
-    setModHonorGainPct(): ModHonorGainPct { return new ModHonorGainPct(this.set(281));  };
-    /** */
-    @EnumField(282)
-    setIncreaseBaseHealthPercent(): IncreaseBaseHealthPercent { return new IncreaseBaseHealthPercent(this.set(282));  };
-    /** */
-    @EnumField(283)
-    setModHealingReceived(): ModHealingReceived { return new ModHealingReceived(this.set(283));  };
-    /** */
-    @EnumField(284)
-    setLinked() { return this.set(284);  };
-    /** */
-    @EnumField(285)
-    setModAttackPowerOfArmor(): ModAttackPowerOfArmor { return new ModAttackPowerOfArmor(this.set(285));  };
-    /** */
-    @EnumField(286)
-    setAbilityPeriodicCrit() { return this.set(286);  };
-    /** */
-    @EnumField(287)
-    setDeflectSpells(): DeflectSpells { return new DeflectSpells(this.set(287));  };
-    /** */
-    @EnumField(288)
-    setIgnoreHitDirection(): IgnoreHitDirection { return new IgnoreHitDirection(this.set(288));  };
-    /** */
-    @EnumField(289)
-    setSpellAura289() { return this.set(289);  };
-    /** */
-    @EnumField(290)
-    setModCritPct(): ModCritPct { return new ModCritPct(this.set(290));  };
-    /** */
-    @EnumField(291)
-    setModXpQuestPct(): ModXpQuestPct { return new ModXpQuestPct(this.set(291));  };
-    /** */
-    @EnumField(292)
-    setOpenStable() { return this.set(292);  };
-    /** */
-    @EnumField(293)
-    setSpellAura293() { return this.set(293);  };
-    /** */
-    @EnumField(294)
-    setPreventRegeneratePower(): PreventRegeneratePower { return new PreventRegeneratePower(this.set(294));  };
-    /** */
-    @EnumField(295)
-    setSpellAura295() { return this.set(295);  };
-    /** */
-    @EnumField(296)
-    setSetVehicleId(): SetVehicleId { return new SetVehicleId(this.set(296));  };
-    /** */
-    @EnumField(297)
-    setSpellAura297() { return this.set(297);  };
-    /** */
-    @EnumField(298)
-    setSpellAura298() { return this.set(298);  };
-    /** */
-    @EnumField(299)
-    setSpellAura299() { return this.set(299);  };
-    /** */
-    @EnumField(300)
-    setShareDamagePct(): ShareDamagePct { return new ShareDamagePct(this.set(300));  };
-    /** */
-    @EnumField(301)
-    setSchoolHealAbsorb(): SchoolHealAbsorb { return new SchoolHealAbsorb(this.set(301));  };
-    /** */
-    @EnumField(302)
-    setSpellAura302() { return this.set(302);  };
-    /** */
-    @EnumField(303)
-    setModDamageDoneVersusAurastate() { return this.set(303);  };
-    /** */
-    @EnumField(304)
-    setModDrunk() { return this.set(304);  };
-    /** */
-    @EnumField(305)
-    setModMinimumSpeed(): ModMinimumSpeed { return new ModMinimumSpeed(this.set(305));  };
-    /** */
-    @EnumField(306)
-    setSpellAura306() { return this.set(306);  };
-    /** */
-    @EnumField(307)
-    setSpellAura307() { return this.set(307);  };
-    /** */
-    @EnumField(308)
-    setSpellAura308() { return this.set(308);  };
-    /** */
-    @EnumField(309)
-    setSpellAura309() { return this.set(309);  };
-    /** */
-    @EnumField(310)
-    setModCreatureAoeDamageAvoidance(): ModCreatureAoEDamageAvoidance { return new ModCreatureAoEDamageAvoidance(this.set(310));  };
-    /** */
-    @EnumField(311)
-    setSpellAura311() { return this.set(311);  };
-    /** */
-    @EnumField(312)
-    setSpellAura312() { return this.set(312);  };
-    /** */
-    @EnumField(313)
-    setSpellAura313() { return this.set(313);  };
-    /** */
-    @EnumField(314)
-    setPreventResurrection(): PreventResurrection { return new PreventResurrection(this.set(314));  };
-    /** */
-    @EnumField(315)
-    setUnderwaterWalking(): UnderwaterWalking { return new UnderwaterWalking(this.set(315));  };
-    /** */
-    @EnumField(316)
-    setPeriodicHaste() { return this.set(316);  };
+    /** Enum Value:                                               0 */
+    get None()                                { return this.value(0, x=>x) }
+    /** Enum Value:                                               1 */
+    get BindSight()                           { return this.value(1, x=>new BindSight(x)) }
+    /** Enum Value:                                               2 */
+    get ModPossess()                          { return this.value(2, x=>new ModPossess(x)) }
+    /** Enum Value:                                               3 */
+    get PeriodicDamage()                      { return this.value(3, x=>new PeriodicDamage(x)) }
+    /** Enum Value:                                               4 */
+    get Dummy()                               { return this.value(4, x=>x) }
+    /** Enum Value:                                               5 */
+    get ModConfuse()                          { return this.value(5, x=>new ModConfuse(x)) }
+    /** Enum Value:                                               6 */
+    get ModCharm()                            { return this.value(6, x=>new ModCharm(x)) }
+    /** Enum Value:                                               7 */
+    get ModFear()                             { return this.value(7, x=>new ModFear(x)) }
+    /** Enum Value:                                               8 */
+    get PeriodicHeal()                        { return this.value(8, x=>new PeriodicHeal(x)) }
+    /** Enum Value:                                               9 */
+    get ModAttackspeed()                      { return this.value(9, x=>new ModAttackSpeed(x)) }
+    /** Enum Value:                                               10 */
+    get ModThreat()                           { return this.value(10, x=>new ModThreat(x)) }
+    /** Enum Value:                                               11 */
+    get ModTaunt()                            { return this.value(11, x=>new ModTaunt(x)) }
+    /** Enum Value:                                               12 */
+    get ModStun()                             { return this.value(12, x=>new ModStun(x)) }
+    /** Enum Value:                                               13 */
+    get ModDamageDone()                       { return this.value(13, x=>new ModDamageDone(x)) }
+    /** Enum Value:                                               14 */
+    get ModDamageTaken()                      { return this.value(14, x=>new ModDamageTaken(x)) }
+    /** Enum Value:                                               15 */
+    get DamageShield()                        { return this.value(15, x=>new DamageShield(x)) }
+    /** Enum Value:                                               16 */
+    get ModStealth()                          { return this.value(16, x=>new ModStealth(x)) }
+    /** Enum Value:                                               17 */
+    get ModDetect()                           { return this.value(17, x=>new ModDetect(x)) }
+    /** Enum Value:                                               18 */
+    get ModInvisibility()                     { return this.value(18, x=>new ModInvisibility(x)) }
+    /** Enum Value:                                               19 */
+    get ModInvisibilityDetection()            { return this.value(19, x=>new ModInvisibilityDetection(x)) }
+    /** Enum Value:                                               20 */
+    get ObsModHealth()                        { return this.value(20, x=>new ObsModHealth(x)) }
+    /** Enum Value:                                               21 */
+    get ObsModPower()                         { return this.value(21, x=>new ObsModPower(x)) }
+    /** Enum Value:                                               22 */
+    get ModResistance()                       { return this.value(22, x=>new ModResistance(x)) }
+    /** Enum Value:                                               23 */
+    get PeriodicTriggerSpell()                { return this.value(23, x=>x) }
+    /** Enum Value:                                               24 */
+    get PeriodicEnergize()                    { return this.value(24, x=>new PeriodicEnergize(x)) }
+    /** Enum Value:                                               25 */
+    get ModPacify()                           { return this.value(25, x=>new ModPacify(x)) }
+    /** Enum Value:                                               26 */
+    get ModRoot()                             { return this.value(26, x=>new ModRoot(x)) }
+    /** Enum Value:                                               27 */
+    get ModSilence()                          { return this.value(27, x=>new ModSilence(x)) }
+    /** Enum Value:                                               28 */
+    get ReflectSpells()                       { return this.value(28, x=>new ReflectSpells(x)) }
+    /** Enum Value:                                               29 */
+    get ModStat()                             { return this.value(29, x=>new ModStat(x)) }
+    /** Enum Value:                                               30 */
+    get ModSkill()                            { return this.value(30, x=>new ModSkill(x)) }
+    /** Enum Value:                                               31 */
+    get ModIncreaseSpeed()                    { return this.value(31, x=>new ModIncreaseSpeed(x)) }
+    /** Enum Value:                                               32 */
+    get ModIncreaseMountedSpeed()             { return this.value(32, x=>new ModIncreaseMountSpeed(x)) }
+    /** Enum Value:                                               33 */
+    get ModDecreaseSpeed()                    { return this.value(33, x=>new ModDecreaseSpeed(x)) }
+    /** Enum Value:                                               34 */
+    get ModIncreaseHealth()                   { return this.value(34, x=>new ModIncreaseHealth(x)) }
+    /** Enum Value:                                               35 */
+    get ModIncreaseEnergy()                   { return this.value(35, x=>new ModIncreaseEnergy(x)) }
+    /** Enum Value:                                               36 */
+    get ModShapeshift()                       { return this.value(36, x=>new ModShapeshift(x)) }
+    /** Enum Value:                                               37 */
+    get EffectImmunity()                      { return this.value(37, x=>new EffectImmunity(x)) }
+    /** Enum Value:                                               38 */
+    get StateImmunity()                       { return this.value(38, x=>new StateImmunity(x)) }
+    /** Enum Value:                                               39 */
+    get SchoolImmunity()                      { return this.value(39, x=>new SchoolImmunity(x)) }
+    /** Enum Value:                                               40 */
+    get DamageImmunity()                      { return this.value(40, x=>new DamageImmunity(x)) }
+    /** Enum Value:                                               41 */
+    get DispelImmunity()                      { return this.value(41, x=>new DispelImmunity(x)) }
+    /** Enum Value:                                               42 */
+    get ProcTriggerSpell()                    { return this.value(42, x=>new ProcTriggerSpell(x)) }
+    /** Enum Value:                                               43 */
+    get ProcTriggerDamage()                   { return this.value(43, x=>new ProcTriggerDamage(x)) }
+    /** Enum Value:                                               44 */
+    get TrackCreatures()                      { return this.value(44, x=>new TrackCreatures(x)) }
+    /** Enum Value:                                               45 */
+    get TrackResources()                      { return this.value(45, x=>new TrackResources(x)) }
+    /** Enum Value:                                               46 */
+    get SpellAura46()                         { return this.value(46, x=>x) }
+    /** Enum Value:                                               47 */
+    get ModParryPercent()                     { return this.value(47, x=>new ModParryPercent(x)) }
+    /** Enum Value:                                               48 */
+    get SpellAura48()                         { return this.value(48, x=>x) }
+    /** Enum Value:                                               49 */
+    get ModDodgePercent()                     { return this.value(49, x=>new ModDodgePercent(x)) }
+    /** Enum Value:                                               50 */
+    get ModCriticalHealingAmount()            { return this.value(50, x=>new ModCriticalHealAmount(x)) }
+    /** Enum Value:                                               51 */
+    get ModBlockPercent()                     { return this.value(51, x=>new ModBlockPercent(x)) }
+    /** Enum Value:                                               52 */
+    get ModWeaponCritPercent()                { return this.value(52, x=>new ModWeaponCritPercent(x)) }
+    /** Enum Value:                                               53 */
+    get PeriodicLeech()                       { return this.value(53, x=>new PeriodicLeech(x)) }
+    /** Enum Value:                                               54 */
+    get ModHitChance()                        { return this.value(54, x=>new ModHitChance(x)) }
+    /** Enum Value:                                               55 */
+    get ModSpellHitChance()                   { return this.value(55, x=>new ModSpellHitChance(x)) }
+    /** Enum Value:                                               56 */
+    get Transform()                           { return this.value(56, x=>new Transform(x)) }
+    /** Enum Value:                                               57 */
+    get ModSpellCritChance()                  { return this.value(57, x=>new ModSpellCritChance(x)) }
+    /** Enum Value:                                               58 */
+    get ModIncreaseSwimSpeed()                { return this.value(58, x=>new ModIncreaseSwimSpeed(x)) }
+    /** Enum Value:                                               59 */
+    get ModDamageDoneCreature()               { return this.value(59, x=>new ModDamageDoneCreature(x)) }
+    /** Enum Value:                                               60 */
+    get ModPacifySilence()                    { return this.value(60, x=>new ModPacifySilence(x)) }
+    /** Enum Value:                                               61 */
+    get ModScale()                            { return this.value(61, x=>new ModScale(x)) }
+    /** Enum Value:                                               62 */
+    get PeriodicHealthFunnel()                { return this.value(62, x=>new PeriodicHealthFunnel(x)) }
+    /** Enum Value:                                               63 */
+    get SpellAura63()                         { return this.value(63, x=>x) }
+    /** Enum Value:                                               64 */
+    get PeriodicManaLeech()                   { return this.value(64, x=>new PeriodicManaLeech(x)) }
+    /** Enum Value:                                               65 */
+    get ModCastingSpeedNotStack()             { return this.value(65, x=>new ModCastingSpeedNotStack(x)) }
+    /** Enum Value:                                               66 */
+    get FeignDeath()                          { return this.value(66, x=>new FeignDeath(x)) }
+    /** Enum Value:                                               67 */
+    get ModDisarm()                           { return this.value(67, x=>new ModDisarm(x)) }
+    /** Enum Value:                                               68 */
+    get ModStalked()                          { return this.value(68, x=>new ModStalked(x)) }
+    /** Enum Value:                                               69 */
+    get SchoolAbsorb()                        { return this.value(69, x=>new SchoolAbsorb(x)) }
+    /** Enum Value:                                               70 */
+    get ExtraAttacks()                        { return this.value(70, x=>x) }
+    /** Enum Value:                                               71 */
+    get ModSpellCritChanceSchool()            { return this.value(71, x=>new ModSpellCritChanceSchool(x)) }
+    /** Enum Value:                                               72 */
+    get ModPowerCostSchoolPct()               { return this.value(72, x=>new ModPowerCostSchoolPct(x)) }
+    /** Enum Value:                                               73 */
+    get ModPowerCostSchool()                  { return this.value(73, x=>new ModPowerCostSchool(x)) }
+    /** Enum Value:                                               74 */
+    get ReflectSpellsSchool()                 { return this.value(74, x=>new ReflectSpellsSchool(x)) }
+    /** Enum Value:                                               75 */
+    get ModLanguage()                         { return this.value(75, x=>new ModLanguage(x)) }
+    /** Enum Value:                                               76 */
+    get FarSight()                            { return this.value(76, x=>new FarSight(x)) }
+    /** Enum Value:                                               77 */
+    get MechanicImmunity()                    { return this.value(77, x=>new MechanicImmunity(x)) }
+    /** Enum Value:                                               78 */
+    get Mounted()                             { return this.value(78, x=>new Mounted(x)) }
+    /** Enum Value:                                               79 */
+    get ModDamagePercentDone()                { return this.value(79, x=>new ModDamagePercentDone(x)) }
+    /** Enum Value:                                               80 */
+    get ModPercentStat()                      { return this.value(80, x=>new ModPercentStat(x)) }
+    /** Enum Value:                                               81 */
+    get SplitDamagePct()                      { return this.value(81, x=>new SplitDamagePct(x)) }
+    /** Enum Value:                                               82 */
+    get WaterBreathing()                      { return this.value(82, x=>new WaterBreathing(x)) }
+    /** Enum Value:                                               83 */
+    get ModBaseResistance()                   { return this.value(83, x=>new ModBaseResistance(x)) }
+    /** Enum Value:                                               84 */
+    get ModRegen()                            { return this.value(84, x=>new ModRegen(x)) }
+    /** Enum Value:                                               85 */
+    get ModPowerRegen()                       { return this.value(85, x=>new ModPowerRegen(x)) }
+    /** Enum Value:                                               86 */
+    get ChannelDeathItem()                    { return this.value(86, x=>new ChannelDeathItem(x)) }
+    /** Enum Value:                                               87 */
+    get ModDamagePercentTaken()               { return this.value(87, x=>new ModDamagePercentTaken(x)) }
+    /** Enum Value:                                               88 */
+    get ModHealthRegenPercent()               { return this.value(88, x=>new ModHealthRegenPercent(x)) }
+    /** Enum Value:                                               89 */
+    get PeriodicDamagePercent()               { return this.value(89, x=>new PeriodicDamagePercent(x)) }
+    /** Enum Value:                                               90 */
+    get SpellAura90()                         { return this.value(90, x=>x) }
+    /** Enum Value:                                               91 */
+    get ModDetectRange()                      { return this.value(91, x=>new ModDetectRange(x)) }
+    /** Enum Value:                                               92 */
+    get PreventsFleeing()                     { return this.value(92, x=>new PreventsFleeing(x)) }
+    /** Enum Value:                                               93 */
+    get ModUnattackable()                     { return this.value(93, x=>new ModUnattackable(x)) }
+    /** Enum Value:                                               94 */
+    get InterruptRegen()                      { return this.value(94, x=>new InterruptRegen(x)) }
+    /** Enum Value:                                               95 */
+    get Ghost()                               { return this.value(95, x=>new Ghost(x)) }
+    /** Enum Value:                                               96 */
+    get SpellMagnet()                         { return this.value(96, x=>new SpellMagnet(x)) }
+    /** Enum Value:                                               97 */
+    get ManaShield()                          { return this.value(97, x=>new ManaShield(x)) }
+    /** Enum Value:                                               98 */
+    get ModSkillTalent()                      { return this.value(98, x=>new ModSkillTalent(x)) }
+    /** Enum Value:                                               99 */
+    get ModAttackPower()                      { return this.value(99, x=>new ModAttackPower(x)) }
+    /** Enum Value:                                               100 */
+    get AurasVisible()                        { return this.value(100, x=>new AurasVisible(x)) }
+    /** Enum Value:                                               101 */
+    get ModResistancePct()                    { return this.value(101, x=>new ModResistancePct(x)) }
+    /** Enum Value:                                               102 */
+    get ModMeleeAttackPowerVersus()           { return this.value(102, x=>new ModMeleeAttackPowerVersus(x)) }
+    /** Enum Value:                                               103 */
+    get ModTotalThreat()                      { return this.value(103, x=>new ModTotalThreat(x)) }
+    /** Enum Value:                                               104 */
+    get WaterWalk()                           { return this.value(104, x=>new WaterWalk(x)) }
+    /** Enum Value:                                               105 */
+    get FeatherFall()                         { return this.value(105, x=>new FeatherFall(x)) }
+    /** Enum Value:                                               106 */
+    get Hover()                               { return this.value(106, x=>new Hover(x)) }
+    /** Enum Value:                                               107 */
+    get AddFlatModifier()                     { return this.value(107, x=>new AddFlatModifier(x)) }
+    /** Enum Value:                                               108 */
+    get AddPctModifier()                      { return this.value(108, x=>new AddPctModifier(x)) }
+    /** Enum Value:                                               109 */
+    get AddTargetTrigger()                    { return this.value(109, x=>new AddTargetTrigger(x)) }
+    /** Enum Value:                                               110 */
+    get ModPowerRegenPercent()                { return this.value(110, x=>new ModPowerRegenPercent(x)) }
+    /** Enum Value:                                               111 */
+    get AddCasterHitTrigger()                 { return this.value(111, x=>new AddCasterHitTrigger(x)) }
+    /** Enum Value:                                               112 */
+    get OverrideClassScripts()                { return this.value(112, x=>x) }
+    /** Enum Value:                                               113 */
+    get ModRangedDamageTaken()                { return this.value(113, x=>new ModRangedDamageTaken(x)) }
+    /** Enum Value:                                               114 */
+    get ModRangedDamageTakenPct()             { return this.value(114, x=>new ModRangedDamageTakenPct(x)) }
+    /** Enum Value:                                               115 */
+    get ModHealing()                          { return this.value(115, x=>new ModHealing(x)) }
+    /** Enum Value:                                               116 */
+    get ModRegenDuringCombat()                { return this.value(116, x=>new ModRegenDuringCombat(x)) }
+    /** Enum Value:                                               117 */
+    get ModMechanicResistance()               { return this.value(117, x=>new ModMechanicResistance(x)) }
+    /** Enum Value:                                               118 */
+    get ModHealingPct()                       { return this.value(118, x=>new ModHealingPct(x)) }
+    /** Enum Value:                                               119 */
+    get SpellAura119()                        { return this.value(119, x=>x) }
+    /** Enum Value:                                               120 */
+    get Untrackable()                         { return this.value(120, x=>new Untrackable(x)) }
+    /** Enum Value:                                               121 */
+    get Empathy()                             { return this.value(121, x=>new Empathy(x)) }
+    /** Enum Value:                                               122 */
+    get ModOffhandDamagePct()                 { return this.value(122, x=>new ModOffhandDamagePct(x)) }
+    /** Enum Value:                                               123 */
+    get ModTargetResistance()                 { return this.value(123, x=>new ModTargetResistance(x)) }
+    /** Enum Value:                                               124 */
+    get ModRangedAttackPower()                { return this.value(124, x=>new ModRangedAttackPower(x)) }
+    /** Enum Value:                                               125 */
+    get ModMeleeDamageTaken()                 { return this.value(125, x=>new ModMeleeDamageTaken(x)) }
+    /** Enum Value:                                               126 */
+    get ModMeleeDamageTakenPct()              { return this.value(126, x=>new ModMeleeDamageTakenPct(x)) }
+    /** Enum Value:                                               127 */
+    get RangedAttackPowerAttackerBonus()      { return this.value(127, x=>new RangedAttackPowerAttackerBonus(x)) }
+    /** Enum Value:                                               128 */
+    get ModPossessPet()                       { return this.value(128, x=>new ModPossessPet(x)) }
+    /** Enum Value:                                               129 */
+    get ModSpeedAlways()                      { return this.value(129, x=>new ModSpeedAlways(x)) }
+    /** Enum Value:                                               130 */
+    get ModMountedSpeedAlways()               { return this.value(130, x=>new ModMountedSpeedAlways(x)) }
+    /** Enum Value:                                               131 */
+    get ModRangedAttackPowerVersus()          { return this.value(131, x=>new ModRangedAttackPowerVersus(x)) }
+    /** Enum Value:                                               132 */
+    get ModIncreaseEnergyPercent()            { return this.value(132, x=>new ModIncreaseEnergyPercent(x)) }
+    /** Enum Value:                                               133 */
+    get ModIncreaseHealthPercent()            { return this.value(133, x=>new ModIncreaseHealthPercent(x)) }
+    /** Enum Value:                                               134 */
+    get ModManaRegenInterrupt()               { return this.value(134, x=>new ModManaRegenInterrupt(x)) }
+    /** Enum Value:                                               135 */
+    get ModHealingDone()                      { return this.value(135, x=>new ModHealingDone(x)) }
+    /** Enum Value:                                               136 */
+    get ModHealingDonePercent()               { return this.value(136, x=>new ModHealingDonePercent(x)) }
+    /** Enum Value:                                               137 */
+    get ModTotalStatPercentage()              { return this.value(137, x=>new ModTotalStatPercentage(x)) }
+    /** Enum Value:                                               138 */
+    get ModMeleeHaste()                       { return this.value(138, x=>new ModMeleeHaste(x)) }
+    /** Enum Value:                                               139 */
+    get ForceReaction()                       { return this.value(139, x=>new ForceReaction(x)) }
+    /** Enum Value:                                               140 */
+    get ModRangedHaste()                      { return this.value(140, x=>new ModRangedHaste(x)) }
+    /** Enum Value:                                               141 */
+    get ModRangedAmmoHaste()                  { return this.value(141, x=>new ModRangedAmmoHaste(x)) }
+    /** Enum Value:                                               142 */
+    get ModBaseResistancePct()                { return this.value(142, x=>new ModBaseResistancePct(x)) }
+    /** Enum Value:                                               143 */
+    get ModResistanceExclusive()              { return this.value(143, x=>new ModResistanceExclusive(x)) }
+    /** Enum Value:                                               144 */
+    get SafeFall()                            { return this.value(144, x=>new SafeFall(x)) }
+    /** Enum Value:                                               145 */
+    get ModPetTalentPoints()                  { return this.value(145, x=>new ModPetTalentPoints(x)) }
+    /** Enum Value:                                               146 */
+    get AllowTamePetType()                    { return this.value(146, x=>new AllowTamePetType(x)) }
+    /** Enum Value:                                               147 */
+    get MechanicImmunityMask()                { return this.value(147, x=>new MechanicImmunityMask(x)) }
+    /** Enum Value:                                               148 */
+    get RetainComboPoints()                   { return this.value(148, x=>new RetainComboPoints(x)) }
+    /** Enum Value:                                               149 */
+    get ReducePushback()                      { return this.value(149, x=>new ReducePushback(x)) }
+    /** Enum Value:                                               150 */
+    get ModShieldBlockvaluePct()              { return this.value(150, x=>new ModShieldBlockValuePct(x)) }
+    /** Enum Value:                                               151 */
+    get TrackStealthed()                      { return this.value(151, x=>new TrackStealthed(x)) }
+    /** Enum Value:                                               152 */
+    get ModDetectedRange()                    { return this.value(152, x=>new ModDetectedRange(x)) }
+    /** Enum Value:                                               153 */
+    get SplitDamageFlat()                     { return this.value(153, x=>new SplitDamageFlat(x)) }
+    /** Enum Value:                                               154 */
+    get ModStealthLevel()                     { return this.value(154, x=>new ModStealthLevel(x)) }
+    /** Enum Value:                                               155 */
+    get ModWaterBreathing()                   { return this.value(155, x=>new ModWaterBreathing(x)) }
+    /** Enum Value:                                               156 */
+    get ModReputationGain()                   { return this.value(156, x=>new ModReputationGain(x)) }
+    /** Enum Value:                                               157 */
+    get PetDamageMulti()                      { return this.value(157, x=>new PetDamageMulti(x)) }
+    /** Enum Value:                                               158 */
+    get ModShieldBlockvalue()                 { return this.value(158, x=>new ModShieldBlockValue(x)) }
+    /** Enum Value:                                               159 */
+    get NoPvpCredit()                         { return this.value(159, x=>new NoPvPCredit(x)) }
+    /** Enum Value:                                               160 */
+    get ModAoeAvoidance()                     { return this.value(160, x=>new ModAoEAvoidance(x)) }
+    /** Enum Value:                                               161 */
+    get ModHealthRegenInCombat()              { return this.value(161, x=>x) }
+    /** Enum Value:                                               162 */
+    get PowerBurn()                           { return this.value(162, x=>new PowerBurn(x)) }
+    /** Enum Value:                                               163 */
+    get ModCritDamageBonus()                  { return this.value(163, x=>new ModCritDamageBonus(x)) }
+    /** Enum Value:                                               164 */
+    get SpellAura164()                        { return this.value(164, x=>x) }
+    /** Enum Value:                                               165 */
+    get MeleeAttackPowerAttackerBonus()       { return this.value(165, x=>new MeleeAttackPowerAttackerBonus(x)) }
+    /** Enum Value:                                               166 */
+    get ModAttackPowerPct()                   { return this.value(166, x=>new ModAttackPowerPct(x)) }
+    /** Enum Value:                                               167 */
+    get ModRangedAttackPowerPct()             { return this.value(167, x=>new ModRangedAttackPowerPct(x)) }
+    /** Enum Value:                                               168 */
+    get ModDamageDoneVersus()                 { return this.value(168, x=>new ModDamageDoneVersus(x)) }
+    /** Enum Value:                                               169 */
+    get ModCritPercentVersus()                { return this.value(169, x=>new ModCritPercentVersus(x)) }
+    /** Enum Value:                                               170 */
+    get DetectAmore()                         { return this.value(170, x=>new DetectAmore(x)) }
+    /** Enum Value:                                               171 */
+    get ModSpeedNotStack()                    { return this.value(171, x=>new ModSpeedNotStack(x)) }
+    /** Enum Value:                                               172 */
+    get ModMountedSpeedNotStack()             { return this.value(172, x=>new ModMountedSpeedNotStack(x)) }
+    /** Enum Value:                                               173 */
+    get SpellAura173()                        { return this.value(173, x=>x) }
+    /** Enum Value:                                               174 */
+    get ModSpellDamageOfStatPercent()         { return this.value(174, x=>new ModSpellDamageOfStatPercent(x)) }
+    /** Enum Value:                                               175 */
+    get ModSpellHealingOfStatPercent()        { return this.value(175, x=>new ModSpellHealingOfStatPercent(x)) }
+    /** Enum Value:                                               176 */
+    get SpiritOfRedemption()                  { return this.value(176, x=>new SpiritOfRedemption(x)) }
+    /** Enum Value:                                               177 */
+    get AoeCharm()                            { return this.value(177, x=>new AoECharm(x)) }
+    /** Enum Value:                                               178 */
+    get ModDebuffResistance()                 { return this.value(178, x=>new ModDebuffResistance(x)) }
+    /** Enum Value:                                               179 */
+    get ModAttackerSpellCritChance()          { return this.value(179, x=>new ModAttackerSpellCritChance(x)) }
+    /** Enum Value:                                               180 */
+    get ModFlatSpellDamageVersus()            { return this.value(180, x=>new ModFlatSpellDamageVersus(x)) }
+    /** Enum Value:                                               181 */
+    get SpellAura181()                        { return this.value(181, x=>x) }
+    /** Enum Value:                                               182 */
+    get ModResistanceOfStatPercent()          { return this.value(182, x=>new ModResistanceOfStatPercent(x)) }
+    /** Enum Value:                                               183 */
+    get ModCriticalThreat()                   { return this.value(183, x=>new ModCriticalThreat(x)) }
+    /** Enum Value:                                               184 */
+    get ModAttackerMeleeHitChance()           { return this.value(184, x=>new ModAttackerMeleeHitChance(x)) }
+    /** Enum Value:                                               185 */
+    get ModAttackerRangedHitChance()          { return this.value(185, x=>new ModAttackerRangedHitChance(x)) }
+    /** Enum Value:                                               186 */
+    get ModAttackerSpellHitChance()           { return this.value(186, x=>new ModAttackerSpellHitChance(x)) }
+    /** Enum Value:                                               187 */
+    get ModAttackerMeleeCritChance()          { return this.value(187, x=>new ModAttackerMeleeCritChance(x)) }
+    /** Enum Value:                                               188 */
+    get ModAttackerRangedCritChance()         { return this.value(188, x=>new ModAttackerRangedCritChance(x)) }
+    /** Enum Value:                                               189 */
+    get ModRating()                           { return this.value(189, x=>new ModRating(x)) }
+    /** Enum Value:                                               190 */
+    get ModFactionReputationGain()            { return this.value(190, x=>new ModFactionReputationGain(x)) }
+    /** Enum Value:                                               191 */
+    get UseNormalMovementSpeed()              { return this.value(191, x=>new UseNormalMovementSpeed(x)) }
+    /** Enum Value:                                               192 */
+    get ModMeleeRangedHaste()                 { return this.value(192, x=>new ModMeleeRangedHaste(x)) }
+    /** Enum Value:                                               193 */
+    get MeleeSlow()                           { return this.value(193, x=>new MeleeSlow(x)) }
+    /** Enum Value:                                               194 */
+    get ModTargetAbsorbSchool()               { return this.value(194, x=>new ModTargetAbsorbSchool(x)) }
+    /** Enum Value:                                               195 */
+    get ModTargetAbilityAbsorbSchool()        { return this.value(195, x=>new ModTargetAbilityAbsorbSchool(x)) }
+    /** Enum Value:                                               196 */
+    get ModCooldown()                         { return this.value(196, x=>new ModCooldown(x)) }
+    /** Enum Value:                                               197 */
+    get ModAttackerSpellAndWeaponCritChance() { return this.value(197, x=>new ModAttackerSpellAndWeaponCritChance(x)) }
+    /** Enum Value:                                               198 */
+    get SpellAura198()                        { return this.value(198, x=>x) }
+    /** Enum Value:                                               199 */
+    get ModIncreasesSpellPctToHit()           { return this.value(199, x=>new ModIncreasesSpellPctToHit(x)) }
+    /** Enum Value:                                               200 */
+    get ModXpPct()                            { return this.value(200, x=>new ModXpPct(x)) }
+    /** Enum Value:                                               201 */
+    get Fly()                                 { return this.value(201, x=>new Fly(x)) }
+    /** Enum Value:                                               202 */
+    get CannotBeDodged()                      { return this.value(202, x=>new CannotBeDodged(x)) }
+    /** Enum Value:                                               203 */
+    get ModAttackerMeleeCritDamage()          { return this.value(203, x=>new ModAttackerMeleeCritDamage(x)) }
+    /** Enum Value:                                               204 */
+    get ModAttackerRangedCritDamage()         { return this.value(204, x=>new ModAttackerRangedCritDamage(x)) }
+    /** Enum Value:                                               205 */
+    get ModSchoolCritDmgTaken()               { return this.value(205, x=>new ModSchoolCritDmgTaken(x)) }
+    /** Enum Value:                                               206 */
+    get ModIncreaseVehicleFlightSpeed()       { return this.value(206, x=>new ModIncreaseVehicleFlightSpeed(x)) }
+    /** Enum Value:                                               207 */
+    get ModIncreaseMountedFlightSpeed()       { return this.value(207, x=>new ModIncreaseMountedFlightSpeed(x)) }
+    /** Enum Value:                                               208 */
+    get ModIncreaseFlightSpeed()              { return this.value(208, x=>new ModIncreaseFlightSpeed(x)) }
+    /** Enum Value:                                               209 */
+    get ModMountedFlightSpeedAlways()         { return this.value(209, x=>new ModMountedFlightSpeedAlways(x)) }
+    /** Enum Value:                                               210 */
+    get ModVehicleSpeedAlways()               { return this.value(210, x=>new ModVehicleSpeedAlways(x)) }
+    /** Enum Value:                                               211 */
+    get ModFlightSpeedNotStack()              { return this.value(211, x=>new ModFlightSpeedNotStack(x)) }
+    /** Enum Value:                                               212 */
+    get ModRangedAttackPowerOfStatPercent()   { return this.value(212, x=>new ModRangedAttackPowerOfStatPercent(x)) }
+    /** Enum Value:                                               213 */
+    get ModRageFromDamageDealt()              { return this.value(213, x=>new ModRageFromDamageDealt(x)) }
+    /** Enum Value:                                               214 */
+    get Tamed()                               { return this.value(214, x=>new Tamed(x)) }
+    /** Enum Value:                                               215 */
+    get ArenaPreparation()                    { return this.value(215, x=>new ArenaPreparation(x)) }
+    /** Enum Value:                                               216 */
+    get HasteSpells()                         { return this.value(216, x=>new HasteSpells(x)) }
+    /** Enum Value:                                               217 */
+    get SpellAura217()                        { return this.value(217, x=>x) }
+    /** Enum Value:                                               218 */
+    get HasteRanged()                         { return this.value(218, x=>new HasteRanged(x)) }
+    /** Enum Value:                                               219 */
+    get ModManaRegenFromStat()                { return this.value(219, x=>new ModManaRegenFromStat(x)) }
+    /** Enum Value:                                               220 */
+    get ModRatingFromStat()                   { return this.value(220, x=>new ModRatingFromStat(x)) }
+    /** Enum Value:                                               221 */
+    get ModDetaunt()                          { return this.value(221, x=>new ModDetaunt(x)) }
+    /** Enum Value:                                               222 */
+    get SpellAura222()                        { return this.value(222, x=>x) }
+    /** Enum Value:                                               223 */
+    get RaidProcFromCharge()                  { return this.value(223, x=>new RaidProcFromCharge(x)) }
+    /** Enum Value:                                               224 */
+    get SpellAura224()                        { return this.value(224, x=>x) }
+    /** Enum Value:                                               225 */
+    get RaidProcFromChargeWithValue()         { return this.value(225, x=>new RaidProcFromChargeWithValue(x)) }
+    /** Enum Value:                                               226 */
+    get PeriodicDummy()                       { return this.value(226, x=>x) }
+    /** Enum Value:                                               227 */
+    get PeriodicTriggerSpellWithValue()       { return this.value(227, x=>x) }
+    /** Enum Value:                                               228 */
+    get DetectStealth()                       { return this.value(228, x=>new DetectStealth(x)) }
+    /** Enum Value:                                               229 */
+    get ModAoeDamageAvoidance()               { return this.value(229, x=>new ModAoEDamageAvoidance(x)) }
+    /** Enum Value:                                               230 */
+    get ModIncreaseHealth2()                  { return this.value(230, x=>new ModIncreaseHealth2(x)) }
+    /** Enum Value:                                               231 */
+    get ProcTriggerSpellWithValue()           { return this.value(231, x=>x) }
+    /** Enum Value:                                               232 */
+    get MechanicDurationMod()                 { return this.value(232, x=>new MechanicDurationMod(x)) }
+    /** Enum Value:                                               233 */
+    get SpellAura233()                        { return this.value(233, x=>x) }
+    /** Enum Value:                                               234 */
+    get MechanicDurationModNotStack()         { return this.value(234, x=>new MechanicDurationModNotStack(x)) }
+    /** Enum Value:                                               235 */
+    get ModDispelResist()                     { return this.value(235, x=>new ModDispelResist(x)) }
+    /** Enum Value:                                               236 */
+    get ControlVehicle()                      { return this.value(236, x=>new ControlVehicle(x)) }
+    /** Enum Value:                                               237 */
+    get ModSpellDamageOfAttackPower()         { return this.value(237, x=>new ModSpellDamageOfAttackPower(x)) }
+    /** Enum Value:                                               238 */
+    get ModSpellHealingOfAttackPower()        { return this.value(238, x=>new ModSpellHealingOfAttackPower(x)) }
+    /** Enum Value:                                               239 */
+    get ModScale2()                           { return this.value(239, x=>new ModScale2(x)) }
+    /** Enum Value:                                               240 */
+    get ModExpertise()                        { return this.value(240, x=>new ModExpertise(x)) }
+    /** Enum Value:                                               241 */
+    get ForceMoveForward()                    { return this.value(241, x=>new ForceMoveForward(x)) }
+    /** Enum Value:                                               242 */
+    get ModSpellDamageFromHealing()           { return this.value(242, x=>new ModSpellDamageFromHealing(x)) }
+    /** Enum Value:                                               243 */
+    get ModFaction()                          { return this.value(243, x=>new ModFaction(x)) }
+    /** Enum Value:                                               244 */
+    get ComprehendLanguage()                  { return this.value(244, x=>new ComprehendLanguage(x)) }
+    /** Enum Value:                                               245 */
+    get ModAuraDurationByDispel()             { return this.value(245, x=>new ModAuraDurationByDispel(x)) }
+    /** Enum Value:                                               246 */
+    get ModAuraDurationByDispelNotStack()     { return this.value(246, x=>new ModAuraDurationByDispelNotStack(x)) }
+    /** Enum Value:                                               247 */
+    get CloneCaster()                         { return this.value(247, x=>new CloneCaster(x)) }
+    /** Enum Value:                                               248 */
+    get ModCombatResultChance()               { return this.value(248, x=>new ModCombatResultChance(x)) }
+    /** Enum Value:                                               249 */
+    get ConvertRune()                         { return this.value(249, x=>new ConvertRune(x)) }
+    /** Enum Value:                                               250 */
+    get ModIncreaseHealth3()                  { return this.value(250, x=>new ModIncreaseHealth3(x)) }
+    /** Enum Value:                                               251 */
+    get ModEnemyDodge()                       { return this.value(251, x=>new ModEnemyDodge(x)) }
+    /** Enum Value:                                               252 */
+    get SpellAura252()                        { return this.value(252, x=>x) }
+    /** Enum Value:                                               253 */
+    get ModBlockCritChance()                  { return this.value(253, x=>new ModBlockCritChance(x)) }
+    /** Enum Value:                                               254 */
+    get ModDisarmOffhand()                    { return this.value(254, x=>new ModDisarmOffhand(x)) }
+    /** Enum Value:                                               255 */
+    get ModMechanicDamageTakenPercent()       { return this.value(255, x=>new ModMechanicDamageTakenPercent(x)) }
+    /** Enum Value:                                               256 */
+    get NoReagentUse()                        { return this.value(256, x=>new NoReagentUse(x)) }
+    /** Enum Value:                                               257 */
+    get ModTargetResistBySpellClass()         { return this.value(257, x=>new ModTargetResistBySpellClass(x)) }
+    /** Enum Value:                                               258 */
+    get ModSpellVisual()                      { return this.value(258, x=>x) }
+    /** Enum Value:                                               259 */
+    get ModHotPct()                           { return this.value(259, x=>new ModHotPct(x)) }
+    /** Enum Value:                                               260 */
+    get ScreenEffect()                        { return this.value(260, x=>new ScreenEffect(x)) }
+    /** Enum Value:                                               261 */
+    get Phase()                               { return this.value(261, x=>new Phase(x)) }
+    /** Enum Value:                                               262 */
+    get AbilityIgnoreAurastate()              { return this.value(262, x=>x) }
+    /** Enum Value:                                               263 */
+    get AllowOnlyAbility()                    { return this.value(263, x=>new AllowOnlyAbility(x)) }
+    /** Enum Value:                                               264 */
+    get SpellAura264()                        { return this.value(264, x=>x) }
+    /** Enum Value:                                               265 */
+    get SpellAura265()                        { return this.value(265, x=>x) }
+    /** Enum Value:                                               266 */
+    get SpellAura266()                        { return this.value(266, x=>x) }
+    /** Enum Value:                                               267 */
+    get ModImmuneAuraApplySchool()            { return this.value(267, x=>new ModImmuneAuraApplySchool(x)) }
+    /** Enum Value:                                               268 */
+    get ModAttackPowerOfStatPercent()         { return this.value(268, x=>new ModAttackPowerOfStatPercent(x)) }
+    /** Enum Value:                                               269 */
+    get ModIgnoreTargetResist()               { return this.value(269, x=>new ModIgnoreTargetResist(x)) }
+    /** Enum Value:                                               270 */
+    get ModAbilityIgnoreTargetResist()        { return this.value(270, x=>x) }
+    /** Enum Value:                                               271 */
+    get ModDamageFromCaster()                 { return this.value(271, x=>new ModDamageFromCaster(x)) }
+    /** Enum Value:                                               272 */
+    get IgnoreMeleeReset()                    { return this.value(272, x=>new IgnoreMeleeReset(x)) }
+    /** Enum Value:                                               273 */
+    get SpellAura273()                        { return this.value(273, x=>x) }
+    /** Enum Value:                                               274 */
+    get ConsumeNoAmmo()                       { return this.value(274, x=>new ConsumeNoAmmo(x)) }
+    /** Enum Value:                                               275 */
+    get ModIgnoreShapeshift()                 { return this.value(275, x=>new ModIgnoreShapeshift(x)) }
+    /** Enum Value:                                               276 */
+    get SpellAura276()                        { return this.value(276, x=>x) }
+    /** Enum Value:                                               277 */
+    get ModAbilityAffectedTargets()           { return this.value(277, x=>new ModAbilityAffectedTargets(x)) }
+    /** Enum Value:                                               278 */
+    get ModDisarmRanged()                     { return this.value(278, x=>new ModDisarmRanged(x)) }
+    /** Enum Value:                                               279 */
+    get InitializeImages()                    { return this.value(279, x=>new InitializeImages(x)) }
+    /** Enum Value:                                               280 */
+    get ModTargetArmorPct()                   { return this.value(280, x=>new ModTargetArmorPct(x)) }
+    /** Enum Value:                                               281 */
+    get ModHonorGainPct()                     { return this.value(281, x=>new ModHonorGainPct(x)) }
+    /** Enum Value:                                               282 */
+    get IncreaseBaseHealthPercent()           { return this.value(282, x=>new IncreaseBaseHealthPercent(x)) }
+    /** Enum Value:                                               283 */
+    get ModHealingReceived()                  { return this.value(283, x=>new ModHealingReceived(x)) }
+    /** Enum Value:                                               284 */
+    get Linked()                              { return this.value(284, x=>x) }
+    /** Enum Value:                                               285 */
+    get ModAttackPowerOfArmor()               { return this.value(285, x=>new ModAttackPowerOfArmor(x)) }
+    /** Enum Value:                                               286 */
+    get AbilityPeriodicCrit()                 { return this.value(286, x=>x) }
+    /** Enum Value:                                               287 */
+    get DeflectSpells()                       { return this.value(287, x=>new DeflectSpells(x)) }
+    /** Enum Value:                                               288 */
+    get IgnoreHitDirection()                  { return this.value(288, x=>new IgnoreHitDirection(x)) }
+    /** Enum Value:                                               289 */
+    get SpellAura289()                        { return this.value(289, x=>x) }
+    /** Enum Value:                                               290 */
+    get ModCritPct()                          { return this.value(290, x=>new ModCritPct(x)) }
+    /** Enum Value:                                               291 */
+    get ModXpQuestPct()                       { return this.value(291, x=>new ModXpQuestPct(x)) }
+    /** Enum Value:                                               292 */
+    get OpenStable()                          { return this.value(292, x=>x) }
+    /** Enum Value:                                               293 */
+    get SpellAura293()                        { return this.value(293, x=>x) }
+    /** Enum Value:                                               294 */
+    get PreventRegeneratePower()              { return this.value(294, x=>new PreventRegeneratePower(x)) }
+    /** Enum Value:                                               295 */
+    get SpellAura295()                        { return this.value(295, x=>x) }
+    /** Enum Value:                                               296 */
+    get SetVehicleId()                        { return this.value(296, x=>new SetVehicleId(x)) }
+    /** Enum Value:                                               297 */
+    get SpellAura297()                        { return this.value(297, x=>x) }
+    /** Enum Value:                                               298 */
+    get SpellAura298()                        { return this.value(298, x=>x) }
+    /** Enum Value:                                               299 */
+    get SpellAura299()                        { return this.value(299, x=>x) }
+    /** Enum Value:                                               300 */
+    get ShareDamagePct()                      { return this.value(300, x=>new ShareDamagePct(x)) }
+    /** Enum Value:                                               301 */
+    get SchoolHealAbsorb()                    { return this.value(301, x=>new SchoolHealAbsorb(x)) }
+    /** Enum Value:                                               302 */
+    get SpellAura302()                        { return this.value(302, x=>x) }
+    /** Enum Value:                                               303 */
+    get ModDamageDoneVersusAurastate()        { return this.value(303, x=>x) }
+    /** Enum Value:                                               304 */
+    get ModDrunk()                            { return this.value(304, x=>x) }
+    /** Enum Value:                                               305 */
+    get ModMinimumSpeed()                     { return this.value(305, x=>new ModMinimumSpeed(x)) }
+    /** Enum Value:                                               306 */
+    get SpellAura306()                        { return this.value(306, x=>x) }
+    /** Enum Value:                                               307 */
+    get SpellAura307()                        { return this.value(307, x=>x) }
+    /** Enum Value:                                               308 */
+    get SpellAura308()                        { return this.value(308, x=>x) }
+    /** Enum Value:                                               309 */
+    get SpellAura309()                        { return this.value(309, x=>x) }
+    /** Enum Value:                                               310 */
+    get ModCreatureAoeDamageAvoidance()       { return this.value(310, x=>new ModCreatureAoEDamageAvoidance(x)) }
+    /** Enum Value:                                               311 */
+    get SpellAura311()                        { return this.value(311, x=>x) }
+    /** Enum Value:                                               312 */
+    get SpellAura312()                        { return this.value(312, x=>x) }
+    /** Enum Value:                                               313 */
+    get SpellAura313()                        { return this.value(313, x=>x) }
+    /** Enum Value:                                               314 */
+    get PreventResurrection()                 { return this.value(314, x=>new PreventResurrection(x)) }
+    /** Enum Value:                                               315 */
+    get UnderwaterWalking()                   { return this.value(315, x=>new UnderwaterWalking(x)) }
+    /** Enum Value:                                               316 */
+    get PeriodicHaste()                       { return this.value(316, x=>x) }
 }

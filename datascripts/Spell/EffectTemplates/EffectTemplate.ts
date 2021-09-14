@@ -4,13 +4,6 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellEffect } from "../SpellEffect";
 
-export const all_effects : any = {}
-export function EffectID(id: number) {
-    return function(target: any) {
-        all_effects[id] = target;
-    }
-}
-
 export class EffectTemplate extends CellSystem<SpellEffect> {
     protected w<T extends CPrim>(arr: CellArray<T,any>): CellIndexWrapper<T,this> {
         return this.wrapIndex(arr, this.index);

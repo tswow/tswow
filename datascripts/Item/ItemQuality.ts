@@ -14,32 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemQuality extends EnumCellWrapper<ItemTemplate> {
+export class ItemQuality extends EnumCell<ItemTemplate> {
     constructor(owner: ItemTemplate) {
         super(owner, owner.row.Quality);
     }
 
-    @EnumField(0)
-    setGray() { return this.set(0); }
-
-    @EnumField(1)
-    setWhite() { return this.set(1); }
-
-    @EnumField(2)
-    setGreen() { return this.set(2); }
-
-    @EnumField(3)
-    setBlue() { return this.set(3); }
-
-    @EnumField(4)
-    setPurple() { return this.set(4); }
-
-    @EnumField(5)
-    setOrange() { return this.set(5); }
-
-    @EnumField(6)
-    setHeirloom() { return this.set(6); }
+    /** Enum Value:                    0 */
+    get Gray()     { return this.value(0) }
+    /** Enum Value:                    1 */
+    get White()    { return this.value(1) }
+    /** Enum Value:                    2 */
+    get Green()    { return this.value(2) }
+    /** Enum Value:                    3 */
+    get Blue()     { return this.value(3) }
+    /** Enum Value:                    4 */
+    get Purple()   { return this.value(4) }
+    /** Enum Value:                    5 */
+    get Orange()   { return this.value(5) }
+    /** Enum Value:                    6 */
+    get Heirloom() { return this.value(6) }
 }

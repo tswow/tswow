@@ -1,90 +1,62 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell"
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell"
 
-export class SoundType<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setUnusedmiscellaneous() { return this.set(0) }
-
-    @EnumField(1)
-    setSpells() { return this.set(1) }
-
-    @EnumField(2)
-    setUi() { return this.set(2) }
-
-    @EnumField(3)
-    setFootsteps1() { return this.set(3) }
-
-    @EnumField(4)
-    setWeaponsimpact() { return this.set(4) }
-
-    @EnumField(6)
-    setWeaponsmiss() { return this.set(6) }
-
-    @EnumField(7)
-    setGreetings() { return this.set(7) }
-
-    @EnumField(8)
-    setCasting() { return this.set(8) }
-
-    @EnumField(9)
-    setPickupputdown() { return this.set(9) }
-
-    @EnumField(10)
-    setNpccombat() { return this.set(10) }
-
-    @EnumField(12)
-    setErrors() { return this.set(12) }
-
-    @EnumField(13)
-    setBirds() { return this.set(13) }
-
-    @EnumField(14)
-    setObjects() { return this.set(14) }
-
-    @EnumField(16)
-    setDeath() { return this.set(16) }
-
-    @EnumField(17)
-    setNpcgreetings() { return this.set(17) }
-
-    @EnumField(18)
-    setTesttemporary() { return this.set(18) }
-
-    @EnumField(19)
-    setArmorfoley() { return this.set(19) }
-
-    @EnumField(20)
-    setFootsteps2() { return this.set(20) }
-
-    @EnumField(21)
-    setWatercharacter() { return this.set(21) }
-
-    @EnumField(22)
-    setWaterliquid() { return this.set(22) }
-
-    @EnumField(23)
-    setTradeskills() { return this.set(23) }
-
-    @EnumField(25)
-    setDoodads() { return this.set(25) }
-
-    @EnumField(26)
-    setSpellfizzle() { return this.set(26) }
-
-    @EnumField(27)
-    setNpcloops() { return this.set(27) }
-
-    @EnumField(28)
-    setZonemusic() { return this.set(28) }
-
-    @EnumField(29)
-    setEmotes() { return this.set(29) }
-
-    @EnumField(30)
-    setNarrationmusic() { return this.set(30) }
-
-    @EnumField(31)
-    setNarration() { return this.set(31) }
-
-    @EnumField(50)
-    setZoneambience() { return this.set(50) }
+export class SoundType<T> extends EnumCell<T> {
+    /** Enum Value:                               0 */
+    get Unusedmiscellaneous() { return this.value(0) }
+    /** Enum Value:                               1 */
+    get Spells()              { return this.value(1) }
+    /** Enum Value:                               2 */
+    get Ui()                  { return this.value(2) }
+    /** Enum Value:                               3 */
+    get Footsteps1()          { return this.value(3) }
+    /** Enum Value:                               4 */
+    get Weaponsimpact()       { return this.value(4) }
+    /** Enum Value:                               6 */
+    get Weaponsmiss()         { return this.value(6) }
+    /** Enum Value:                               7 */
+    get Greetings()           { return this.value(7) }
+    /** Enum Value:                               8 */
+    get Casting()             { return this.value(8) }
+    /** Enum Value:                               9 */
+    get Pickupputdown()       { return this.value(9) }
+    /** Enum Value:                               10 */
+    get Npccombat()           { return this.value(10) }
+    /** Enum Value:                               12 */
+    get Errors()              { return this.value(12) }
+    /** Enum Value:                               13 */
+    get Birds()               { return this.value(13) }
+    /** Enum Value:                               14 */
+    get Objects()             { return this.value(14) }
+    /** Enum Value:                               16 */
+    get Death()               { return this.value(16) }
+    /** Enum Value:                               17 */
+    get Npcgreetings()        { return this.value(17) }
+    /** Enum Value:                               18 */
+    get Testtemporary()       { return this.value(18) }
+    /** Enum Value:                               19 */
+    get Armorfoley()          { return this.value(19) }
+    /** Enum Value:                               20 */
+    get Footsteps2()          { return this.value(20) }
+    /** Enum Value:                               21 */
+    get Watercharacter()      { return this.value(21) }
+    /** Enum Value:                               22 */
+    get Waterliquid()         { return this.value(22) }
+    /** Enum Value:                               23 */
+    get Tradeskills()         { return this.value(23) }
+    /** Enum Value:                               25 */
+    get Doodads()             { return this.value(25) }
+    /** Enum Value:                               26 */
+    get Spellfizzle()         { return this.value(26) }
+    /** Enum Value:                               27 */
+    get Npcloops()            { return this.value(27) }
+    /** Enum Value:                               28 */
+    get Zonemusic()           { return this.value(28) }
+    /** Enum Value:                               29 */
+    get Emotes()              { return this.value(29) }
+    /** Enum Value:                               30 */
+    get Narrationmusic()      { return this.value(30) }
+    /** Enum Value:                               31 */
+    get Narration()           { return this.value(31) }
+    /** Enum Value:                               50 */
+    get Zoneambience()        { return this.value(50) }
 }

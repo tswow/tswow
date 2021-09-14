@@ -1,4 +1,4 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { StatType } from "../Misc/StatTypes";
 import { Enchantment } from "./Enchantment";
@@ -10,34 +10,25 @@ export function EnchantmentTypeID(id: number) {
     }
 }
 
-export class EnchantmentType extends EnumCellWrapper<EnchantmentEffectBase> {
-    /** value=0 */
-    @EnumField(0)
-    setMisc() { return this.set(0); }
-    /** value=1 */
-    @EnumField(1)
-    setProc() { return new Proc(this.set(1)); }
-    /** value=2 */
-    @EnumField(2)
-    setDamage() { return new Damage(this.set(2)); }
-    /** value=3 */
-    @EnumField(3)
-    setBuffEquipped() { return new Buff(this.set(3)); }
-    /** value=4 */
-    @EnumField(4)
-    setAddArmor() { return new Armor(this.set(4)); }
-    /** value=5 */
-    @EnumField(5)
-    setStat() { return new Stat(this.set(5)); }
-    /** value=6 */
-    @EnumField(6)
-    setTotem() { return new Totem(this.set(6)); }
-    /** value=7 */
-    @EnumField(7)
-    setUseSpell() { return new UseSpell(this.set(7)); }
-    /** value=8 */
-    @EnumField(8)
-    setPrismaticSocket() { return new PrismaticSocket(this.set(8)); }
+export class EnchantmentType extends EnumCell<EnchantmentEffectBase> {
+    /** Enum Value = 0 */
+    get Misc()            { return this.value(0) }
+    /** Enum Value = 1 */
+    get Proc()            { return this.value(1) }
+    /** Enum Value = 2 */
+    get Damage()          { return this.value(2) }
+    /** Enum Value = 3 */
+    get BuffEquipped()    { return this.value(3) }
+    /** Enum Value = 4 */
+    get AddArmor()        { return this.value(4) }
+    /** Enum Value = 5 */
+    get Stat()            { return this.value(5) }
+    /** Enum Value = 6 */
+    get Totem()           { return this.value(6) }
+    /** Enum Value = 7 */
+    get UseSpell()        { return this.value(7) }
+    /** Enum Value = 8 */
+    get PrismaticSocket() { return this.value(8) }
 }
 
 export class EnchantmentEffectBase extends ArrayEntry<Enchantment> {

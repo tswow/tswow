@@ -1,5 +1,5 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/dbc/types/DungeonEncounter";
@@ -12,14 +12,11 @@ import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
 import { SpellRef } from "../Spell/Spell";
 import { LFGDungeonRef } from "./LFGDungeon";
 
-export class DungeonEncounterCreditType extends EnumCellWrapper<DungeonEncounter> {
-    /** value = 0 */
-    @EnumField(0)
-    setKillCreature() { return new DungeonEncounterCreature(this.set(0).ID)}
-
-    /** value = 1 */
-    @EnumField(1)
-    setCastSpell() { return new DungeonEncounterSpell(this.set(1).ID)}
+export class DungeonEncounterCreditType extends EnumCell<DungeonEncounter> {
+    /** Enum Value = 0 */
+    get KillCreature() { return this.value(0) }
+    /** Enum Value = 1 */
+    get CastSpell()    { return this.value(1) }
 }
 
 export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<number,T>{
@@ -39,12 +36,11 @@ export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<
 
 }
 
-export class DungeonEncounterCredit extends EnumCellWrapper<DungeonEncounter> {
-    @EnumField(0)
-    setKillCreature() { return this.set(0); }
-
-    @EnumField(1)
-    setCastSpell() { return this.set(1); }
+export class DungeonEncounterCredit extends EnumCell<DungeonEncounter> {
+    /** Enum Value = 0 */
+    get KillCreature() { return this.value(0) }
+    /** Enum Value = 1 */
+    get CastSpell()    { return this.value(1) }
 }
 
 export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance_encountersRow> {
@@ -171,11 +167,11 @@ export const DungeonEncounterRegistry = {
     },
 
     createCreature(map: number, index: number) {
-        return this.create(map,index).Type.setKillCreature()
+        return this.create(map,index).Type.KillCreature.set()
     },
 
     createSpell(map: number, index: number) {
-        return this.create(map,index).Type.setCastSpell()
+        return this.create(map,index).Type.CastSpell.set()
     },
 
     load(id: number) {

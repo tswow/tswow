@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
 import { getBroadcast } from "../BroadcastText/BroadcastText";
 import { SimpleLockPointer } from "../Locks/SimpleLock";
 import { LootSetPointer } from "../Loot/Loot";
-import { MainEntity } from "../Misc/Entity";
+import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { RefReadOnly, RefStatic } from "../Refs/Ref";
@@ -34,7 +34,12 @@ import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
 import { GameObjectTemplates } from "./GameObjects";
 
-export class GameObjectTemplate extends MainEntity<gameobject_templateRow> {
+export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
+    protected transformer() { return this.Type; }
+    protected default(): GameObjectPlain {
+        return new GameObjectPlain(this.row);
+    }
+
     private _addon_row: gameobject_template_addonRow|undefined;
 
     protected isCreature(): boolean {
@@ -126,7 +131,6 @@ export class GameObjectPlain extends GameObjectTemplate {
     get Data23() { return this.wrap(this.row.Data23); }
 }
 
-@GameObjectID(12)
 export class GameObjectAreaDamage extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -141,7 +145,6 @@ export class GameObjectAreaDamage extends GameObjectTemplate {
     get ClosetextID() { return this.wrap(this.row.Data7); }
 }
 
-@GameObjectID(30)
 export class GameObjectAuraGenerator extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -156,7 +159,6 @@ export class GameObjectAuraGenerator extends GameObjectTemplate {
     get ServerOnly() { return this.wrap(this.row.Data6); }
 }
 
-@GameObjectID(32)
 export class GameObjectBarberChair extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -211,7 +213,6 @@ export class GameObjectButton extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data9); }
 }
 
-@GameObjectID(13)
 export class GameObjectCamera extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -223,7 +224,6 @@ export class GameObjectCamera extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data4); }
 }
 
-@GameObjectID(29)
 export class GameObjectCapturePoint extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -252,7 +252,6 @@ export class GameObjectCapturePoint extends GameObjectTemplate {
     get Unidirectional() { return this.wrap(this.row.Data21); }
 }
 
-@GameObjectID(7)
 export class GameObjectChair extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -265,7 +264,6 @@ export class GameObjectChair extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data4); }
 }
 
-@GameObjectID(3)
 export class GameObjectChest extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -308,7 +306,6 @@ export class GameObjectChest extends GameObjectTemplate {
     get Condition() { return this.wrap(this.row.Data17); }
 }
 
-@GameObjectID(33)
 export class GameObjectDestructibleBuilding extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -339,7 +336,6 @@ export class GameObjectDestructibleBuilding extends GameObjectTemplate {
     get Empty14() { return this.wrap(this.row.Data23); }
 }
 
-@GameObjectID(0)
 export class GameObjectDoor extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -386,7 +382,6 @@ export class GameObjectDoor extends GameObjectTemplate {
     get Condition1() { return getBroadcast(this, this.row.Data7); }
 }
 
-@GameObjectID(31)
 export class GameObjectDungeonDifficulty extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -395,7 +390,6 @@ export class GameObjectDungeonDifficulty extends GameObjectTemplate {
     get Difficulty() { return this.wrap(this.row.Data1); }
 }
 
-@GameObjectID(25)
 export class GameObjectFishingHole extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -413,7 +407,6 @@ export class GameObjectFishingHole extends GameObjectTemplate {
     get LockID() { return this.wrap(this.row.Data4); }
 }
 
-@GameObjectID(26)
 export class GameObjectFlagDrop extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -425,7 +418,6 @@ export class GameObjectFlagDrop extends GameObjectTemplate {
     get OpenTextID() { return this.wrap(this.row.Data4); }
 }
 
-@GameObjectID(24)
 export class GameObjectFlagStand extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -441,7 +433,6 @@ export class GameObjectFlagStand extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data8); }
 }
 
-@GameObjectID(4)
 export class GameObjectGeneric extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -455,7 +446,6 @@ export class GameObjectGeneric extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data6); }
 }
 
-@GameObjectID(10)
 export class GameObjectGoober extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -485,7 +475,6 @@ export class GameObjectGoober extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data22); }
 }
 
-@GameObjectID(21)
 export class GameObjectGuardPost extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -494,7 +483,6 @@ export class GameObjectGuardPost extends GameObjectTemplate {
     get Charges() { return this.wrap(this.row.Data1); }
 }
 
-@GameObjectID(34)
 export class GameObjectGuildBank extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -502,7 +490,6 @@ export class GameObjectGuildBank extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data0); }
 }
 
-@GameObjectID(19)
 export class GameObjectMailbox extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -510,7 +497,6 @@ export class GameObjectMailbox extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data0); }
 }
 
-@GameObjectID(23)
 export class GameObjectMeetingStone extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -520,7 +506,6 @@ export class GameObjectMeetingStone extends GameObjectTemplate {
     get AreaID() { return this.wrap(this.row.Data2); }
 }
 
-@GameObjectID(27)
 export class GameObjectMinigame extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -542,15 +527,14 @@ export class GameObjectMoTransport extends GameObjectTemplate {
     get WorldState1() { return this.wrap(this.row.Data7); }
     get CanBeStopped() { return this.wrap(this.row.Data8); }
 }
-@GameObjectID(15)
 export class GameObjectMoTransportRef<T> extends RefStatic<T,GameObjectMoTransport> {
     protected create(mod: string, id: string): GameObjectMoTransport {
         return GameObjectTemplates.create(mod,id)
-            .Type.setMoTransport()
+            .Type.MoTransport.set()
     }
     protected clone(mod: string, id: string): GameObjectMoTransport {
         return GameObjectTemplates.create(mod,id,this.cell.get())
-            .Type.setMoTransport()
+            .Type.MoTransport.as()
     }
     exists(): boolean {
         return this.cell.get() > 0;
@@ -560,11 +544,10 @@ export class GameObjectMoTransportRef<T> extends RefStatic<T,GameObjectMoTranspo
     }
     protected resolve(): GameObjectMoTransport {
         return GameObjectTemplates.load(this.cell.get())
-            .Type.setMoTransport()
+            .Type.MoTransport.as()
     }
 }
 
-@GameObjectID(2)
 export class GameObjectQuestGiver extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -582,7 +565,6 @@ export class GameObjectQuestGiver extends GameObjectTemplate {
     get ConditionID() { return getBroadcast(this, this.row.Data10) }
 }
 
-@GameObjectID(22)
 export class GameObjectSpellCaster extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -595,7 +577,6 @@ export class GameObjectSpellCaster extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data5); }
 }
 
-@GameObjectID(8)
 export class GameObjectSpellFocus extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -611,7 +592,6 @@ export class GameObjectSpellFocus extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data8); }
 }
 
-@GameObjectID(18)
 export class GameObjectSummoningRitual extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -627,7 +607,6 @@ export class GameObjectSummoningRitual extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data8); }
 }
 
-@GameObjectID(9)
 export class GameObjectText extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -639,7 +618,6 @@ export class GameObjectText extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data4); }
 }
 
-@GameObjectID(11)
 export class GameObjectTransport extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -656,11 +634,11 @@ export class GameObjectTransport extends GameObjectTemplate {
 export class GameObjectTransportRef<T> extends RefStatic<T,GameObjectTransport> {
     protected create(mod: string, id: string): GameObjectTransport {
         return GameObjectTemplates.create(mod,id)
-            .Type.setTransport()
+            .Type.Transport.set()
     }
     protected clone(mod: string, id: string): GameObjectTransport {
         return GameObjectTemplates.create(mod,id,this.cell.get())
-            .Type.setTransport()
+            .Type.Transport.as()
     }
     exists(): boolean {
         return this.cell.get() > 0;
@@ -670,11 +648,10 @@ export class GameObjectTransportRef<T> extends RefStatic<T,GameObjectTransport> 
     }
     protected resolve(): GameObjectTransport {
         return GameObjectTemplates.load(this.cell.get())
-            .Type.setTransport()
+            .Type.Transport.as()
     }
 }
 
-@GameObjectID(6)
 export class GameObjectTrap extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -702,7 +679,6 @@ export class GameObjectTrap extends GameObjectTemplate {
     get ConditionID() { return this.wrap(this.row.Data15); }
 }
 
-@GameObjectID(35)
 export class GameObjectTrapdoor extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -713,114 +689,79 @@ export class GameObjectTrapdoor extends GameObjectTemplate {
     get AutoClose() { return this.wrap(this.row.Data2); }
 }
 
-export class GameObjectType<T extends GameObjectTemplate> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setDoor() { return new GameObjectDoor(this.set(0).row) }
-
-    @EnumField(1)
-    setButton() { return new GameObjectButton(this.set(1).row) }
-
-    @EnumField(2)
-    setQuestgiver() { return new GameObjectQuestGiver(this.set(2).row) }
-
-    @EnumField(3)
-    setChest() { return new GameObjectChest(this.set(3).row) }
-
-    @EnumField(4)
-    setBinder() { return this.set(4) }
-
-    @EnumField(5)
-    setGeneric() { return this.set(5) }
-
-    @EnumField(6)
-    setTrap() { return new GameObjectTrap(this.set(6).row) }
-
-    @EnumField(7)
-    setChair() { return new GameObjectChair(this.set(7).row) }
-
-    @EnumField(8)
-    setSpellFocus() { return new GameObjectSpellFocus(this.set(8).row) }
-
-    @EnumField(9)
-    setText() { return new GameObjectText(this.set(9).row) }
-
-    @EnumField(10)
-    setGoober() { return new GameObjectGoober(this.set(10).row) }
-
-    @EnumField(11)
-    setTransport() { return new GameObjectTransport(this.set(11).row) }
-
-    @EnumField(12)
-    setAreadamage() { return new GameObjectAreaDamage(this.set(12).row) }
-
-    @EnumField(13)
-    setCamera() { return new GameObjectCamera(this.set(13).row) }
-
-    @EnumField(14)
-    setMapObject() { return this.set(14) }
-
-    @EnumField(15)
-    setMoTransport() { return new GameObjectMoTransport(this.set(15).row) }
-
-    @EnumField(16)
-    setDuelArbiter() { return this.set(16) }
-
-    @EnumField(17)
-    setFishingnode() { return this.set(17) }
-
-    @EnumField(18)
-    setRitual() { return new GameObjectSummoningRitual(this.set(18).row) }
-
-    @EnumField(19)
-    setMailbox() { return new GameObjectMailbox(this.set(19).row) }
-
-    @EnumField(20)
-    setAuctionhouse() { return this.set(20) }
-
-    @EnumField(21)
-    setGuardpost() { return new GameObjectGuardPost(this.set(21).row) }
-
-    @EnumField(22)
-    setSpellcaster() { return new GameObjectSpellCaster(this.set(22).row) }
-
-    @EnumField(23)
-    setMeetingstone() { return new GameObjectMeetingStone(this.set(23).row) }
-
-    @EnumField(24)
-    setFlagstand() { return new GameObjectFlagStand(this.set(24).row) }
-
-    @EnumField(25)
-    setFishinghole() { return new GameObjectFishingHole(this.set(25).row) }
-
-    @EnumField(26)
-    setFlagdrop() { return new GameObjectFlagDrop(this.set(26).row) }
-
-    @EnumField(27)
-    setMiniGame() { return new GameObjectMinigame(this.set(27).row) }
-
-    @EnumField(28)
-    setLotteryKiosk() { return this.set(28) }
-
-    @EnumField(29)
-    setCapturePoint() { return new GameObjectCapturePoint(this.set(29).row) }
-
-    @EnumField(30)
-    setAuraGenerator() { return new GameObjectAuraGenerator(this.set(30).row) }
-
-    @EnumField(31)
-    setDungeonDifficulty() { return new GameObjectDungeonDifficulty(this.set(31).row) }
-
-    @EnumField(32)
-    setBarberChair() { return new GameObjectBarberChair(this.set(32).row) }
-
-    @EnumField(33)
-    setDestructibleBuilding() { return new GameObjectDestructibleBuilding(this.set(33).row) }
-
-    @EnumField(34)
-    setGuildBank() { return new GameObjectGuildBank(this.set(34).row) }
-
-    @EnumField(35)
-    setTrapdoor() { return new GameObjectTrapdoor(this.set(35).row) }
+export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {
+    /** Enum Value = 0 */
+    get Door()                 { return this.value(0, x=>new GameObjectDoor(x.row)) }
+    /** Enum Value = 1 */
+    get Button()               { return this.value(1, x=>new GameObjectButton(x.row)) }
+    /** Enum Value = 2 */
+    get Questgiver()           { return this.value(2, x=>new GameObjectQuestGiver(x.row)) }
+    /** Enum Value = 3 */
+    get Chest()                { return this.value(3, x=>new GameObjectChest(x.row)) }
+    /** Enum Value = 4 */
+    get Binder()               { return this.plain_value(4) }
+    /** Enum Value = 5 */
+    get Generic()              { return this.plain_value(5) }
+    /** Enum Value = 6 */
+    get Trap()                 { return this.value(6, x=>new GameObjectTrap(x.row)) }
+    /** Enum Value = 7 */
+    get Chair()                { return this.value(7, x=>new GameObjectChair(x.row)) }
+    /** Enum Value = 8 */
+    get SpellFocus()           { return this.value(8, x=>new GameObjectSpellFocus(x.row)) }
+    /** Enum Value = 9 */
+    get Text()                 { return this.value(9, x=>new GameObjectText(x.row)) }
+    /** Enum Value = 10 */
+    get Goober()               { return this.value(10, x=>new GameObjectGoober(x.row)) }
+    /** Enum Value = 11 */
+    get Transport()            { return this.value(11, x=>new GameObjectTransport(x.row)) }
+    /** Enum Value = 12 */
+    get Areadamage()           { return this.value(12, x=>new GameObjectAreaDamage(x.row)) }
+    /** Enum Value = 13 */
+    get Camera()               { return this.value(13, x=>new GameObjectCamera(x.row)) }
+    /** Enum Value = 14 */
+    get MapObject()            { return this.plain_value(14) }
+    /** Enum Value = 15 */
+    get MoTransport()          { return this.value(15, x=>new GameObjectMoTransport(x.row)) }
+    /** Enum Value = 16 */
+    get DuelArbiter()          { return this.plain_value(16) }
+    /** Enum Value = 17 */
+    get Fishingnode()          { return this.plain_value(17) }
+    /** Enum Value = 18 */
+    get Ritual()               { return this.value(18, x=>new GameObjectSummoningRitual(x.row)) }
+    /** Enum Value = 19 */
+    get Mailbox()              { return this.value(19, x=>new GameObjectMailbox(x.row)) }
+    /** Enum Value = 20 */
+    get Auctionhouse()         { return this.plain_value(20) }
+    /** Enum Value = 21 */
+    get Guardpost()            { return this.value(21, x=>new GameObjectGuardPost(x.row)) }
+    /** Enum Value = 22 */
+    get Spellcaster()          { return this.value(22, x=>new GameObjectSpellCaster(x.row)) }
+    /** Enum Value = 23 */
+    get Meetingstone()         { return this.value(23, x=>new GameObjectMeetingStone(x.row)) }
+    /** Enum Value = 24 */
+    get Flagstand()            { return this.value(24, x=>new GameObjectFlagStand(x.row)) }
+    /** Enum Value = 25 */
+    get Fishinghole()          { return this.value(25, x=>new GameObjectFishingHole(x.row)) }
+    /** Enum Value = 26 */
+    get Flagdrop()             { return this.value(26, x=>new GameObjectFlagDrop(x.row)) }
+    /** Enum Value = 27 */
+    get MiniGame()             { return this.value(27, x=>new GameObjectMinigame(x.row)) }
+    /** Enum Value = 28 */
+    get LotteryKiosk()         { return this.plain_value(28) }
+    /** Enum Value = 29 */
+    get CapturePoint()         { return this.value(29, x=>new GameObjectCapturePoint(x.row)) }
+    /** Enum Value = 30 */
+    get AuraGenerator()        { return this.value(30, x=>new GameObjectAuraGenerator(x.row)) }
+    /** Enum Value = 31 */
+    get DungeonDifficulty()    { return this.value(31, x=>new GameObjectDungeonDifficulty(x.row)) }
+    /** Enum Value = 32 */
+    get BarberChair()          { return this.value(32, x=>new GameObjectBarberChair(x.row)) }
+    /** Enum Value = 33 */
+    get DestructibleBuilding() { return this.value(33, x=>new GameObjectDestructibleBuilding(x.row)) }
+    /** Enum Value = 34 */
+    get GuildBank()            { return this.value(34, x=>new GameObjectGuildBank(x.row)) }
+    /** Enum Value = 35 */
+    get Trapdoor()             { return this.value(35, x=>new GameObjectTrapdoor(x.row)) }
 }
 
 export class GameObjectTemplateRefReadOnly<T> extends RefReadOnly<T,GameObjectTemplate> {

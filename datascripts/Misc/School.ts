@@ -1,4 +1,4 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
 /*
@@ -27,25 +27,19 @@ export class SchoolMask<T> extends MaskCell32<T> {
     get Arcane() {return this.bit(6); }
 }
 
-export class SchoolEnum<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setPhysical() {return this.set(0); }
-
-    @EnumField(1)
-    setHoly() {return this.set(1); }
-
-    @EnumField(2)
-    setFire() {return this.set(2); }
-
-    @EnumField(3)
-    setNature() {return this.set(3); }
-
-    @EnumField(4)
-    setFrost() {return this.set(4); }
-
-    @EnumField(5)
-    setShadow() {return this.set(5); }
-
-    @EnumField(6)
-    setArcane() {return this.set(6); }
+export class SchoolEnum<T> extends EnumCell<T> {
+    /** Enum Value:                    0 */
+    get Physical() { return this.value(0) }
+    /** Enum Value:                    1 */
+    get Holy()     { return this.value(1) }
+    /** Enum Value:                    2 */
+    get Fire()     { return this.value(2) }
+    /** Enum Value:                    3 */
+    get Nature()   { return this.value(3) }
+    /** Enum Value:                    4 */
+    get Frost()    { return this.value(4) }
+    /** Enum Value:                    5 */
+    get Shadow()   { return this.value(5) }
+    /** Enum Value:                    6 */
+    get Arcane()   { return this.value(6) }
 }

@@ -14,26 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemBonding extends EnumCellWrapper<ItemTemplate> {
+export class ItemBonding extends EnumCell<ItemTemplate> {
     constructor(owner: ItemTemplate) {
         super(owner, owner.row.bonding);
     }
 
-    @EnumField(0)
-    setNoBounds() { return this.set(0); }
-
-    @EnumField(1)
-    setBindsOnPickup() { return this.set(1); }
-
-    @EnumField(2)
-    setBindsOnEquip() { return this.set(2); }
-
-    @EnumField(3)
-    setBindsOnUse() { return this.set(3); }
-
-    @EnumField(4)
-    setQuestItem() { return this.set(4); }
+    /** Enum Value:                         0 */
+    get NoBounds()      { return this.value(0) }
+    /** Enum Value:                         1 */
+    get BindsOnPickup() { return this.value(1) }
+    /** Enum Value:                         2 */
+    get BindsOnEquip()  { return this.value(2) }
+    /** Enum Value:                         3 */
+    get BindsOnUse()    { return this.value(3) }
+    /** Enum Value:                         4 */
+    get QuestItem()     { return this.value(4) }
 }

@@ -38,7 +38,7 @@ export class EnchantmentSpell extends CellSystemTop {
     get Item() {
         return new ItemTemplateRef(this
             , this.spell.Effects.get(0)
-                .EffectType.setEnchantItem().EnchantingItem
+                .EffectType.EnchantItem.as().EnchantingItem
         )
     }
 }
@@ -72,21 +72,21 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
             let item = Items.create(mod,`${id}-item`)
                 .Spells.modFree(ispell=>{
                     ispell.SpellID.set(spell.ID)
-                        .Trigger.setOnUse()
+                        .Trigger.OnUse.set()
                         .Charges.set(-1)
                 })
                 .Class.setItemEnhancement()
-                .Material.setCloth()
+                .Material.Cloth.set()
                 .Flags.PlayerCast.mark()
                 .Flags.IgnoreReagents.mark()
-                .InventoryType.setNonEquippable()
+                .InventoryType.NonEquippable.set()
                 .MaxStack.set(5)
-                .Bonding.setNoBounds()
-                .Quality.setWhite()
+                .Bonding.NoBounds.set()
+                .Quality.White.set()
                 .DisplayInfo.setRefID(811)
 
             spell.Effects.modFree(effect=>{
-                effect.EffectType.setEnchantItem()
+                effect.EffectType.EnchantItem.set()
                     .Enchant.set(this.owner.ID)
                     .EnchantingItem.set(item.ID);
             });
@@ -94,7 +94,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
         }
 
         spell.Effects.modFree(effect=>{
-            effect.EffectType.setEnchantItem()
+            effect.EffectType.EnchantItem.set()
                 .Enchant.set(this.owner.ID)
                 .EnchantingItem.set(itemId)
         });

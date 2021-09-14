@@ -1,19 +1,17 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/Ref";
 
-export class LockType extends EnumCellWrapper<SimpleLock> {
-    @EnumField(0)
-    setNone() { return this.set(0); }
-
-    @EnumField(1)
-    setItem() { return this.set(1); }
-
-    @EnumField(2)
-    setLockType() { return this.set(2); }
+export class LockType extends EnumCell<SimpleLock> {
+    /** Enum Value:                    0 */
+    get None()     { return this.value(0) }
+    /** Enum Value:                    1 */
+    get Item()     { return this.value(1) }
+    /** Enum Value:                    2 */
+    get LockType() { return this.value(2) }
 }
 
 export class SimpleLock extends MainEntity<LockRow>{

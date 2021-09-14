@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -48,138 +48,95 @@ function b(owner: ItemTemplate) {
     ]
 }
 
-export class Stat extends EnumCellWrapper<ItemStat> {
-    @EnumField(0)
-    setMana() { return this.set(0)}
-
-    @EnumField(1)
-    setHealth() { return this.set(1)}
-
-    @EnumField(2)
-    setAgility() { return this.set(2)}
-
-    @EnumField(3)
-    setStrength() { return this.set(3)}
-
-    @EnumField(4)
-    setIntellect() { return this.set(4)}
-
-    @EnumField(5)
-    setSpirit() { return this.set(5)}
-
-    @EnumField(6)
-    setStamina() { return this.set(6)}
-
-    @EnumField(7)
-    setDefenseSkillRating() { return this.set(7)}
-
-    @EnumField(8)
-    setDodgeRating() { return this.set(8)}
-
-    @EnumField(9)
-    setParryRating() { return this.set(9)}
-
-    @EnumField(10)
-    setBlockRating() { return this.set(10)}
-
-    @EnumField(11)
-    setHitMeleeRating() { return this.set(11)}
-
-    @EnumField(12)
-    setHitRangedRating() { return this.set(12)}
-
-    @EnumField(13)
-    setHitSpellRating() { return this.set(13)}
-
-    @EnumField(14)
-    setCritMeleeRating() { return this.set(14)}
-
-    @EnumField(15)
-    setCritRangedRating() { return this.set(15)}
-
-    @EnumField(16)
-    setCritSpellRating() { return this.set(16)}
-
-    @EnumField(17)
-    setHitTakenMeleeRating() { return this.set(17)}
-
-    @EnumField(18)
-    setHitTakenRangedRating() { return this.set(18)}
-
-    @EnumField(19)
-    setHitTakenSpellRating() { return this.set(19)}
-
-    @EnumField(20)
-    setCritTakenMeleeRating() { return this.set(20)}
-
-    @EnumField(21)
-    setCritTakenRangedRating() { return this.set(21)}
-
-    @EnumField(22)
-    setCritTakenSpellRating() { return this.set(22)}
-
-    @EnumField(23)
-    setHasteMeleeRating() { return this.set(23)}
-
-    @EnumField(24)
-    setHasteRangedRating() { return this.set(24)}
-
-    @EnumField(25)
-    setHasteSpellRating() { return this.set(25)}
-
-    @EnumField(26)
-    setHitRating() { return this.set(26)}
-
-    @EnumField(27)
-    setCritRating() { return this.set(27)}
-
-    @EnumField(28)
-    setHitTakenRating() { return this.set(28)}
-
-    @EnumField(29)
-    setCritTakenRating() { return this.set(29)}
-
-    @EnumField(30)
-    setResilienceRating() { return this.set(30)}
-
-    @EnumField(31)
-    setHasteRating() { return this.set(31)}
-
-    @EnumField(32)
-    setExpertiseRating() { return this.set(32)}
-
-    @EnumField(33)
-    setAttackPower() { return this.set(33)}
-
-    @EnumField(34)
-    setRangedAttackPower() { return this.set(34)}
-
-    @EnumField(35)
-    setFeralAttackPower() { return this.set(35)}
-
-    @EnumField(36)
-    setSpellHealingDone() { return this.set(36)}
-
-    @EnumField(37)
-    setSpellDamageDone() { return this.set(37)}
-
-    @EnumField(38)
-    setManaRegeneration() { return this.set(38)}
-
-    @EnumField(39)
-    setArmorPenetrationRating() { return this.set(39)}
-
-    @EnumField(40)
-    setSpellPower() { return this.set(40)}
-
-    @EnumField(41)
-    setHealthRegen() { return this.set(41)}
-
-    @EnumField(42)
-    setSpellPenetration() { return this.set(42)}
-
-    @EnumField(43)
-    setBlockValue() { return this.set(43)}
+export class Stat extends EnumCell<ItemStat> {
+    /** Enum Value:                                  0 */
+    get Mana()                   { return this.value(0) }
+    /** Enum Value:                                  1 */
+    get Health()                 { return this.value(1) }
+    /** Enum Value:                                  2 */
+    get Agility()                { return this.value(2) }
+    /** Enum Value:                                  3 */
+    get Strength()               { return this.value(3) }
+    /** Enum Value:                                  4 */
+    get Intellect()              { return this.value(4) }
+    /** Enum Value:                                  5 */
+    get Spirit()                 { return this.value(5) }
+    /** Enum Value:                                  6 */
+    get Stamina()                { return this.value(6) }
+    /** Enum Value:                                  7 */
+    get DefenseSkillRating()     { return this.value(7) }
+    /** Enum Value:                                  8 */
+    get DodgeRating()            { return this.value(8) }
+    /** Enum Value:                                  9 */
+    get ParryRating()            { return this.value(9) }
+    /** Enum Value:                                  10 */
+    get BlockRating()            { return this.value(10) }
+    /** Enum Value:                                  11 */
+    get HitMeleeRating()         { return this.value(11) }
+    /** Enum Value:                                  12 */
+    get HitRangedRating()        { return this.value(12) }
+    /** Enum Value:                                  13 */
+    get HitSpellRating()         { return this.value(13) }
+    /** Enum Value:                                  14 */
+    get CritMeleeRating()        { return this.value(14) }
+    /** Enum Value:                                  15 */
+    get CritRangedRating()       { return this.value(15) }
+    /** Enum Value:                                  16 */
+    get CritSpellRating()        { return this.value(16) }
+    /** Enum Value:                                  17 */
+    get HitTakenMeleeRating()    { return this.value(17) }
+    /** Enum Value:                                  18 */
+    get HitTakenRangedRating()   { return this.value(18) }
+    /** Enum Value:                                  19 */
+    get HitTakenSpellRating()    { return this.value(19) }
+    /** Enum Value:                                  20 */
+    get CritTakenMeleeRating()   { return this.value(20) }
+    /** Enum Value:                                  21 */
+    get CritTakenRangedRating()  { return this.value(21) }
+    /** Enum Value:                                  22 */
+    get CritTakenSpellRating()   { return this.value(22) }
+    /** Enum Value:                                  23 */
+    get HasteMeleeRating()       { return this.value(23) }
+    /** Enum Value:                                  24 */
+    get HasteRangedRating()      { return this.value(24) }
+    /** Enum Value:                                  25 */
+    get HasteSpellRating()       { return this.value(25) }
+    /** Enum Value:                                  26 */
+    get HitRating()              { return this.value(26) }
+    /** Enum Value:                                  27 */
+    get CritRating()             { return this.value(27) }
+    /** Enum Value:                                  28 */
+    get HitTakenRating()         { return this.value(28) }
+    /** Enum Value:                                  29 */
+    get CritTakenRating()        { return this.value(29) }
+    /** Enum Value:                                  30 */
+    get ResilienceRating()       { return this.value(30) }
+    /** Enum Value:                                  31 */
+    get HasteRating()            { return this.value(31) }
+    /** Enum Value:                                  32 */
+    get ExpertiseRating()        { return this.value(32) }
+    /** Enum Value:                                  33 */
+    get AttackPower()            { return this.value(33) }
+    /** Enum Value:                                  34 */
+    get RangedAttackPower()      { return this.value(34) }
+    /** Enum Value:                                  35 */
+    get FeralAttackPower()       { return this.value(35) }
+    /** Enum Value:                                  36 */
+    get SpellHealingDone()       { return this.value(36) }
+    /** Enum Value:                                  37 */
+    get SpellDamageDone()        { return this.value(37) }
+    /** Enum Value:                                  38 */
+    get ManaRegeneration()       { return this.value(38) }
+    /** Enum Value:                                  39 */
+    get ArmorPenetrationRating() { return this.value(39) }
+    /** Enum Value:                                  40 */
+    get SpellPower()             { return this.value(40) }
+    /** Enum Value:                                  41 */
+    get HealthRegen()            { return this.value(41) }
+    /** Enum Value:                                  42 */
+    get SpellPenetration()       { return this.value(42) }
+    /** Enum Value:                                  43 */
+    get BlockValue()             { return this.value(43) }
 }
 
 export class ItemStat extends ArrayEntry<ItemTemplate> {

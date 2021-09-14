@@ -1,4 +1,4 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { Gem } from "./Gem";
 
 const META = 1;
@@ -10,7 +10,7 @@ const PURPLE = 10;
 const GREEN = 12;
 const PRISMATIC = 14;
 
-export class GemType extends EnumCellWrapper<Gem> {
+export class GemType extends EnumCell<Gem> {
     writeToItem() {
         switch(this.get()) {
             case META: this.owner.Item.get().Class.setMetaGem();
@@ -31,37 +31,22 @@ export class GemType extends EnumCellWrapper<Gem> {
         return this.owner;
     }
 
-    /** value = 1 */
-    @EnumField(META)
-    setMeta() { return this.set(META); }
-
-    /** value = 2 */
-    @EnumField(RED)
-    setRed() { return this.set(RED); }
-
-    /** value = 4 */
-    @EnumField(YELLOW)
-    setYellow() { return this.set(YELLOW); }
-
-    /** value = 6 */
-    @EnumField(ORANGE)
-    setOrange() { return this.set(ORANGE); }
-
-    /** value = 8 */
-    @EnumField(BLUE)
-    setBlue() { return this.set(BLUE); }
-
-    /** value = 10 */
-    @EnumField(PURPLE)
-    setPurple() { return this.set(PURPLE); }
-
-    /** value = 12 */
-    @EnumField(GREEN)
-    setGreen() { return this.set(GREEN); }
-
-    /** value = 14 */
-    @EnumField(PRISMATIC)
-    setPrismatic() { return this.set(PRISMATIC); }
+    /** Enum Value = PRISMATIC */
+    get Prismatic() { return this.value(PRISMATIC) }
+    /** Enum Value = GREEN */
+    get Green()     { return this.value(GREEN) }
+    /** Enum Value = PURPLE */
+    get Purple()    { return this.value(PURPLE) }
+    /** Enum Value = BLUE */
+    get Blue()      { return this.value(BLUE) }
+    /** Enum Value = ORANGE */
+    get Orange()    { return this.value(ORANGE) }
+    /** Enum Value = YELLOW */
+    get Yellow()    { return this.value(YELLOW) }
+    /** Enum Value = RED */
+    get Red()       { return this.value(RED) }
+    /** Enum Value = META */
+    get Meta()      { return this.value(META) }
 }
 
 export type GemColorType =

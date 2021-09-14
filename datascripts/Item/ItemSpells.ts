@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -88,24 +88,19 @@ function CCooldownRows(owner: ItemTemplate) {
     ]
 }
 
-export class ItemSpellTrigger extends EnumCellWrapper<ItemSpell> {
-    @EnumField(0)
-    setOnUse() { return this.set(0); }
-
-    @EnumField(1)
-    setOnEquip() { return this.set(1); }
-
-    @EnumField(2)
-    setChanceOnHit() { return this.set(2); }
-
-    @EnumField(4)
-    setSoulstone() { return this.set(4); }
-
-    @EnumField(5)
-    setUseNoDelay() { return this.set(5); }
-
-    @EnumField(6)
-    setOnLearn() { return this.set(6); }
+export class ItemSpellTrigger extends EnumCell<ItemSpell> {
+    /** Enum Value:                       0 */
+    get OnUse()       { return this.value(0) }
+    /** Enum Value:                       1 */
+    get OnEquip()     { return this.value(1) }
+    /** Enum Value:                       2 */
+    get ChanceOnHit() { return this.value(2) }
+    /** Enum Value:                       4 */
+    get Soulstone()   { return this.value(4) }
+    /** Enum Value:                       5 */
+    get UseNoDelay()  { return this.value(5) }
+    /** Enum Value:                       6 */
+    get OnLearn()     { return this.value(6) }
 }
 
 export class ItemSpell extends ArrayEntry<ItemTemplate> {

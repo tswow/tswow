@@ -1,30 +1,22 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 
-export class SpellPowerType<T> extends EnumCellWrapper<T> {
-    @EnumField(-2)
-    setHealth() { return this.set(-2); }
-
-    @EnumField(0)
-    setMana() { return this.set(0); }
-
-    @EnumField(1)
-    setRage() { return this.set(1); }
-
-    @EnumField(2)
-    setFocus() { return this.set(2); }
-
-    @EnumField(3)
-    setEnergy() { return this.set(3); }
-
-    @EnumField(4)
-    setHappiness() { return this.set(4); }
-
-    @EnumField(5)
-    setRune() { return this.set(5); }
-
-    @EnumField(6)
-    setRunicPower() { return this.set(6); }
-
-    @EnumField(127)
-    setAll() { return this.set(127); }
+export class SpellPowerType<T> extends EnumCell<T> {
+    /** Enum Value:                      -2 */
+    get Health()     { return this.value(-2) }
+    /** Enum Value:                      0 */
+    get Mana()       { return this.value(0) }
+    /** Enum Value:                      1 */
+    get Rage()       { return this.value(1) }
+    /** Enum Value:                      2 */
+    get Focus()      { return this.value(2) }
+    /** Enum Value:                      3 */
+    get Energy()     { return this.value(3) }
+    /** Enum Value:                      4 */
+    get Happiness()  { return this.value(4) }
+    /** Enum Value:                      5 */
+    get Rune()       { return this.value(5) }
+    /** Enum Value:                      6 */
+    get RunicPower() { return this.value(6) }
+    /** Enum Value:                      127 */
+    get All()        { return this.value(127) }
 }

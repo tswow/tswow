@@ -16,12 +16,12 @@
  */
 import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
+import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
+import { Objects } from "wotlkdata/cell/serialization/ObjectIteration";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { std } from "../tswow-stdlib-data";
 import { AuraType } from "./AuraType";
-import { all_auras } from "./EffectTemplates/AuraTemplates";
-import { all_effects } from "./EffectTemplates/EffectTemplate";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
@@ -147,7 +147,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     addLearnSpells(...spells: number[]) {
         for(const spell of spells) {
             this.addFreeEffect((eff)=>{
-                eff.EffectType.setLearnSpell()
+                eff.EffectType.LearnSpell.set()
                    .LearntSpell.set(spell)
             })
         }
@@ -177,7 +177,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             nex = std.Spells.createDynamic()
                 .Icon.setFullPath(SPELL_CHAIN_TOKEN)
             spell.Effects.modFree((eff)=>{
-                eff.EffectType.setTriggerSpell()
+                eff.EffectType.TriggerSpell.set()
                    .TriggerSpell.set((nex as Spell).ID);
             })
             return nex;
@@ -256,22 +256,16 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get ClassMask(): EffectClassSet<this> { return new EffectClassSet(this, this); }
     get TargetPosition() { return new SpellTargetPosition(this, this.container); }
 
-    objectifyPlain() {
-        return super.objectify();
+    objectifyPlain(){
+        return Objects.objectifyObj(this);
     }
 
     objectify() {
-        if(all_auras[this.AuraType.get()]) {
-            return Object.assign({
-                AuraType:this.AuraType.objectify(),
-                EffectType:this.EffectType.objectify()
-            },new all_auras[this.AuraType.get()](this,this).objectify())
-        } else if(all_effects[this.EffectType.get()]){
-            return Object.assign({
-                EffectType:this.EffectType.objectify()
-            },new all_effects[this.EffectType.get()](this,this).objectify())
-        }
-        return super.objectify();
+        let {cell:auraCell} = EnumCellTransform.getSelection(this.AuraType);
+        if(auraCell !== undefined) return auraCell.as().objectifyPlain();
+        let {cell:effectCell} = EnumCellTransform.getSelection(this.EffectType);
+        if(effectCell !== undefined) return effectCell.as().objectifyPlain();
+        return this.objectifyPlain();
     }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {

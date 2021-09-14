@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { TransformedClass } from "wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
@@ -39,6 +40,14 @@ export class TwoRowMainEntity<DBC,SQL> extends CellSystemTop {
         super();
         this.dbc_row = dbc;
         this.sql_row = sql;
+    }
+}
+
+export abstract class TransformedEntity<R,C> extends TransformedClass<C> {
+    readonly row: R;
+    constructor(row: R) {
+        super();
+        this.row = row;
     }
 }
 

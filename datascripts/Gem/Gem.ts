@@ -92,10 +92,10 @@ export const GemRegistry = {
             .BagFamily.set(512)
             .ClassMask.set(-1)
             .RaceMask.set(-1)
-            .Material.setLiquid()
+            .Material.Liquid.set()
             .DisplayInfo.setRefID(60325)
             .GemProperties.setRefID(gemId)
-            .Quality.setGreen()
+            .Quality.Green.set()
 
         let parent = parentId > 0 ? DBC.GemProperties.findById(parentId) : undefined;
         let enchantment = EnchantmentRegistry.create(

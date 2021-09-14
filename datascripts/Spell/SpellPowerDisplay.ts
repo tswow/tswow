@@ -1,4 +1,4 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 
 /*
  * This file is part of tswow (https://github.com/tswow)
@@ -16,28 +16,21 @@ import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export class SpellPowerDisplay<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setNone() { return this.set(0); }
-
-    @EnumField(1)
-    setAmmoSlot() { return this.set(1); }
-
-    @EnumField(41)
-    setPyrite() { return this.set(41); }
-
-    @EnumField(61)
-    setSteam() { return this.set(61); }
-
-    @EnumField(101)
-    setHeat() { return this.set(101); }
-
-    @EnumField(121)
-    setOoze() { return this.set(121); }
-
-    @EnumField(141)
-    setBloodPower() { return this.set(141); }
-
-    @EnumField(142)
-    setWrath() { return this.set(142); }
+export class SpellPowerDisplay<T> extends EnumCell<T> {
+    /** Enum Value:                      0 */
+    get None()       { return this.value(0) }
+    /** Enum Value:                      1 */
+    get AmmoSlot()   { return this.value(1) }
+    /** Enum Value:                      41 */
+    get Pyrite()     { return this.value(41) }
+    /** Enum Value:                      61 */
+    get Steam()      { return this.value(61) }
+    /** Enum Value:                      101 */
+    get Heat()       { return this.value(101) }
+    /** Enum Value:                      121 */
+    get Ooze()       { return this.value(121) }
+    /** Enum Value:                      141 */
+    get BloodPower() { return this.value(141) }
+    /** Enum Value:                      142 */
+    get Wrath()      { return this.value(142) }
 }

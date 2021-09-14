@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
 export enum InventoryType {
@@ -47,7 +47,7 @@ export enum InventoryType {
     RELIC = 28
 }
 
-export class ItemInventoryType extends EnumCellWrapper<ItemTemplate> {
+export class ItemInventoryType extends EnumCell<ItemTemplate> {
     constructor(owner: ItemTemplate) {
         super(owner, owner.row.InventoryType);
     }
@@ -62,62 +62,62 @@ export class ItemInventoryType extends EnumCellWrapper<ItemTemplate> {
         return this.owner;
     }
 
-    @EnumField(0)
-    setNonEquippable() { return this.set(0); }
-    @EnumField(1)
-    setHead() { return this.set(1); }
-    @EnumField(2)
-    setNeck() { return this.set(2); }
-    @EnumField(3)
-    setShoulder() { return this.set(3); }
-    @EnumField(4)
-    setShirt() { return this.set(4); }
-    @EnumField(5)
-    setChest() { return this.set(5); }
-    @EnumField(6)
-    setWaist() { return this.set(6); }
-    @EnumField(7)
-    setLegs() { return this.set(7); }
-    @EnumField(8)
-    setFeet() { return this.set(8); }
-    @EnumField(9)
-    setWrists() { return this.set(9); }
-    @EnumField(10)
-    setHands() { return this.set(10); }
-    @EnumField(11)
-    setFinger() { return this.set(11); }
-    @EnumField(12)
-    setTrinket() { return this.set(12); }
-    @EnumField(13)
-    setWeapon() { return this.set(13); }
-    @EnumField(14)
-    setShield() { return this.set(14); }
-    @EnumField(15)
-    setRanged() { return this.set(15); }
-    @EnumField(16)
-    setBack() { return this.set(16); }
-    @EnumField(17)
-    setTwohand() { return this.set(17); }
-    @EnumField(18)
-    setBag() { return this.set(18); }
-    @EnumField(19)
-    setTabard() { return this.set(19); }
-    @EnumField(20)
-    setRobe() { return this.set(20); }
-    @EnumField(21)
-    setMainhand() { return this.set(21); }
-    @EnumField(22)
-    setOffhand() { return this.set(22); }
-    @EnumField(23)
-    setTome() { return this.set(23); }
-    @EnumField(24)
-    setAmmo() { return this.set(24); }
-    @EnumField(25)
-    setThrown() { return this.set(25); }
-    @EnumField(26)
-    setWandGun() { return this.set(26); }
-    @EnumField(27)
-    setQuiver() { return this.set(27); }
-    @EnumField(28)
-    setRelic() { return this.set(28); }
+    /** Enum Value:                         0 */
+    get NonEquippable() { return this.value(0) }
+    /** Enum Value:                         1 */
+    get Head()          { return this.value(1) }
+    /** Enum Value:                         2 */
+    get Neck()          { return this.value(2) }
+    /** Enum Value:                         3 */
+    get Shoulder()      { return this.value(3) }
+    /** Enum Value:                         4 */
+    get Shirt()         { return this.value(4) }
+    /** Enum Value:                         5 */
+    get Chest()         { return this.value(5) }
+    /** Enum Value:                         6 */
+    get Waist()         { return this.value(6) }
+    /** Enum Value:                         7 */
+    get Legs()          { return this.value(7) }
+    /** Enum Value:                         8 */
+    get Feet()          { return this.value(8) }
+    /** Enum Value:                         9 */
+    get Wrists()        { return this.value(9) }
+    /** Enum Value:                         10 */
+    get Hands()         { return this.value(10) }
+    /** Enum Value:                         11 */
+    get Finger()        { return this.value(11) }
+    /** Enum Value:                         12 */
+    get Trinket()       { return this.value(12) }
+    /** Enum Value:                         13 */
+    get Weapon()        { return this.value(13) }
+    /** Enum Value:                         14 */
+    get Shield()        { return this.value(14) }
+    /** Enum Value:                         15 */
+    get Ranged()        { return this.value(15) }
+    /** Enum Value:                         16 */
+    get Back()          { return this.value(16) }
+    /** Enum Value:                         17 */
+    get Twohand()       { return this.value(17) }
+    /** Enum Value:                         18 */
+    get Bag()           { return this.value(18) }
+    /** Enum Value:                         19 */
+    get Tabard()        { return this.value(19) }
+    /** Enum Value:                         20 */
+    get Robe()          { return this.value(20) }
+    /** Enum Value:                         21 */
+    get Mainhand()      { return this.value(21) }
+    /** Enum Value:                         22 */
+    get Offhand()       { return this.value(22) }
+    /** Enum Value:                         23 */
+    get Tome()          { return this.value(23) }
+    /** Enum Value:                         24 */
+    get Ammo()          { return this.value(24) }
+    /** Enum Value:                         25 */
+    get Thrown()        { return this.value(25) }
+    /** Enum Value:                         26 */
+    get WandGun()       { return this.value(26) }
+    /** Enum Value:                         27 */
+    get Quiver()        { return this.value(27) }
+    /** Enum Value:                         28 */
+    get Relic()         { return this.value(28) }
 }

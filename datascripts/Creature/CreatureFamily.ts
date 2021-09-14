@@ -14,137 +14,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureFamily extends EnumCellWrapper<CreatureTemplate> {
-    get(): number {
-        return this.owner.row.family.get();
-    }
-
-    set(value: number): CreatureTemplate {
-        this.owner.row.family.set(value);
-        return this.owner;
-    }
-
-
-    @EnumField(1)
-    setWolf() { return this.set(1); }
-
-    @EnumField(2)
-    setCat() { return this.set(2); }
-
-    @EnumField(3)
-    setSpider() { return this.set(3); }
-
-    @EnumField(4)
-    setBear() { return this.set(4); }
-
-    @EnumField(5)
-    setBoar() { return this.set(5); }
-
-    @EnumField(6)
-    setCrocolisk() { return this.set(6); }
-
-    @EnumField(7)
-    setCarrionBird() { return this.set(7); }
-
-    @EnumField(8)
-    setCrab() { return this.set(8); }
-
-    @EnumField(9)
-    setGorilla() { return this.set(9); }
-
-    @EnumField(10)
-    setRaptor() { return this.set(10); }
-
-    @EnumField(11)
-    setTallstrider() { return this.set(11); }
-
-    @EnumField(12)
-    setFelhunter() { return this.set(12); }
-
-    @EnumField(13)
-    setVoidwalker() { return this.set(13); }
-
-    @EnumField(14)
-    setSuccubus() { return this.set(14); }
-
-    @EnumField(15)
-    setDoomguard() { return this.set(15); }
-
-    @EnumField(16)
-    setScorpid() { return this.set(16); }
-
-    @EnumField(17)
-    setTurtle() { return this.set(17); }
-
-    @EnumField(18)
-    setImp() { return this.set(18); }
-
-    @EnumField(19)
-    setBat() { return this.set(19); }
-
-    @EnumField(20)
-    setHyena() { return this.set(20); }
-
-    @EnumField(21)
-    setOwl() { return this.set(21); }
-
-    @EnumField(22)
-    setWindSerpent() { return this.set(22); }
-
-    @EnumField(23)
-    setRemoteControl() { return this.set(23); }
-
-    @EnumField(24)
-    setFelguard() { return this.set(24); }
-
-    @EnumField(25)
-    setDragonHawk() { return this.set(25); }
-
-    @EnumField(26)
-    setRavager() { return this.set(26); }
-
-    @EnumField(27)
-    setWarpStalker() { return this.set(27); }
-
-    @EnumField(28)
-    setSporebat() { return this.set(28); }
-
-    @EnumField(29)
-    setNetherRay() { return this.set(29); }
-
-    @EnumField(30)
-    setSerpent() { return this.set(30); }
-
-    @EnumField(31)
-    setMoth() { return this.set(31); }
-
-    @EnumField(32)
-    setChimaera() { return this.set(32); }
-
-    @EnumField(33)
-    setDevilsaur() { return this.set(33); }
-
-    @EnumField(34)
-    setGhoul() { return this.set(34); }
-
-    @EnumField(35)
-    setSilithid() { return this.set(35); }
-
-    @EnumField(36)
-    setWorm() { return this.set(36); }
-
-    @EnumField(37)
-    setRhino() { return this.set(37); }
-
-    @EnumField(38)
-    setWasp() { return this.set(38); }
-
-    @EnumField(39)
-    setCorehound() { return this.set(39); }
-
-    @EnumField(40)
-    setSpiritBeast() { return this.set(40); }
+export class CreatureFamily extends EnumCell<CreatureTemplate> {
+    get Wolf()          { return this.value(1)}
+    get Cat()           { return this.value(2)}
+    get Spider()        { return this.value(3)}
+    get Bear()          { return this.value(4)}
+    get Boar()          { return this.value(5)}
+    get Crocolisk()     { return this.value(6)}
+    get CarrionBird()   { return this.value(7)}
+    get Crab()          { return this.value(8)}
+    get Gorilla()       { return this.value(9)}
+    get Raptor()        { return this.value(10)}
+    get Tallstrider()   { return this.value(11)}
+    get Felhunter()     { return this.value(12)}
+    get Voidwalker()    { return this.value(13)}
+    get Succubus()      { return this.value(14)}
+    get Doomguard()     { return this.value(15)}
+    get Scorpid()       { return this.value(16)}
+    get Turtle()        { return this.value(17)}
+    get Imp()           { return this.value(18)}
+    get Bat()           { return this.value(19)}
+    get Hyena()         { return this.value(20)}
+    get Owl()           { return this.value(21)}
+    get WindSerpent()   { return this.value(22)}
+    get RemoteControl() { return this.value(23)}
+    get Felguard()      { return this.value(24)}
+    get DragonHawk()    { return this.value(25)}
+    get Ravager()       { return this.value(26)}
+    get WarpStalker()   { return this.value(27)}
+    get Sporebat()      { return this.value(28)}
+    get NetherRay()     { return this.value(29)}
+    get Serpent()       { return this.value(30)}
+    get Moth()          { return this.value(31)}
+    get Chimaera()      { return this.value(32)}
+    get Devilsaur()     { return this.value(33)}
+    get Ghoul()         { return this.value(34)}
+    get Silithid()      { return this.value(35)}
+    get Worm()          { return this.value(36)}
+    get Rhino()         { return this.value(37)}
+    get Wasp()          { return this.value(38)}
+    get Corehound()     { return this.value(39)}
+    get SpiritBeast()   { return this.value(40)}
 }

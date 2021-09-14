@@ -9,7 +9,7 @@ const ELEVATOR_GAMEOBJECT_TYPE = 11;
 export const ElevatorRegistry = {
     createLocalTemplate(mod: string, id: string, keyframes: KeyFrameCon[]) {
         return GameObjectTemplates.create(mod,id)
-            .Type.setTransport()
+            .Type.Transport.set()
             .Flags.Transport.mark()
             .Keyframes.addDefault(keyframes)
             .Display.setRefID(DEFAULT_ELEVATOR_DISPLAY_ID)
@@ -31,17 +31,17 @@ export const ElevatorRegistry = {
 
     load(id: number) {
         return GameObjectTemplates.find({entry:id,type:ELEVATOR_GAMEOBJECT_TYPE})
-            .Type.setTransport()
+            .Type.Transport.as()
     },
 
     filter(query: gameobject_templateQuery) {
         return GameObjectTemplates
             .filter({...query,type:ELEVATOR_GAMEOBJECT_TYPE})
-            .map(x=>x.Type.setTransport())
+            .map(x=>x.Type.Transport.set())
     },
 
     find(query: gameobject_templateQuery) {
         return GameObjectTemplates.find({...query,type:ELEVATOR_GAMEOBJECT_TYPE})
-            .Type.setTransport()
+            .Type.Transport.set()
     }
 }

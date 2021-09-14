@@ -17,10 +17,10 @@ export const CurrencyRegistry = {
         let item = Items.create(mod,id)
             .Name.enGB.set('Currency')
             .BagFamily.set(8192)
-            .Quality.setWhite()
+            .Quality.White.set()
             .MaxStack.set(2147483647)
             .Class.set(10,0)
-            .Material.setLiquid()
+            .Material.Liquid.set()
             .DisplayInfo.setRefID(32278)
         let id1 = Ids.CurrencyTypes.id(mod,id);
         let bitId = Ids.CurrencyTypesBitIndex.id(mod,id);

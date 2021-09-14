@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemSheath extends EnumCellWrapper<ItemTemplate> {
+export class ItemSheath extends EnumCell<ItemTemplate> {
     get(): number {
         return this.owner.row.sheath.get();
     }
@@ -26,24 +26,18 @@ export class ItemSheath extends EnumCellWrapper<ItemTemplate> {
         return this.owner;
     }
 
-    @EnumField(0)
-    setNone() { return this.set(0); }
-
-    @EnumField(1)
-    setTwoHandedWeapon() { return this.set(1); }
-
-    @EnumField(2)
-    setStaff() { return this.set(2); }
-
-    @EnumField(3)
-    setOneHanded() { return this.set(3); }
-
-    @EnumField(4)
-    setShield() { return this.set(4); }
-
-    @EnumField(5)
-    setEnchantersRod() { return this.set(5); }
-
-    @EnumField(6)
-    setOffhand() { return this.set(6); }
+    /** Enum Value:                           0 */
+    get None()            { return this.value(0) }
+    /** Enum Value:                           1 */
+    get TwoHandedWeapon() { return this.value(1) }
+    /** Enum Value:                           2 */
+    get Staff()           { return this.value(2) }
+    /** Enum Value:                           3 */
+    get OneHanded()       { return this.value(3) }
+    /** Enum Value:                           4 */
+    get Shield()          { return this.value(4) }
+    /** Enum Value:                           5 */
+    get EnchantersRod()   { return this.value(5) }
+    /** Enum Value:                           6 */
+    get Offhand()         { return this.value(6) }
 }
