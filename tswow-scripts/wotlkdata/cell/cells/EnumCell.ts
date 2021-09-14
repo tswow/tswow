@@ -1,4 +1,5 @@
-import { Cell } from "./Cell";
+import { Objects } from "../serialization/ObjectIteration";
+import { Cell, CellWrapper } from "./Cell";
 
 function getEnumKey(obj: any, index: number) {
     if (obj === undefined) {
@@ -46,4 +47,41 @@ export function EnumField(index: number) {
         }
         prototype.enumKeys[index] = getEnumFieldName(field);
     };
+}
+
+
+export class EnumCellWrapperNew<T> extends CellWrapper<number,T> {
+    value(index: number): EnumValue<T> {
+        return new EnumValue(this.owner, this, index);
+    }
+
+    objectify() {
+        let enums = Objects.mapObject(this,['object'],(k,v)=>v.isEnum);
+        for(const [key,value] of Object.entries(enums)) {
+            if(value.isSelected()) return key;
+        }
+        return this.cell.get();
+    }
+}
+
+export class EnumValue<T> {
+    private owner: T;
+    private cell: Cell<number,any>
+    private index: number;
+    protected get isEnum() { return true; }
+
+    constructor(owner: T, cell: EnumCellWrapperNew<T>, index: number) {
+        this.owner = owner;
+        this.cell = cell;
+        this.index = index;
+    }
+
+    isSelected() {
+        return this.cell.get() === this.index;
+    }
+
+    select() {
+        this.cell.set(this.index);
+        return this.owner;
+    }
 }
