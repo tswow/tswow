@@ -95,7 +95,7 @@ export class GameObjectDisplayInfoRow extends DBCRow<GameObjectDisplayInfoCreato
  */
 export type GameObjectDisplayInfoCreator = {
     ModelName?: string
-    Sound?: int
+    Sound?: int[]
     GeoBoxMinX?: float
     GeoBoxMinY?: float
     GeoBoxMinZ?: float

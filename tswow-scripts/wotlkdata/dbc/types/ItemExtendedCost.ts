@@ -87,8 +87,8 @@ export type ItemExtendedCostCreator = {
     HonorPoints?: int
     ArenaPoints?: int
     ArenaBracket?: int
-    ItemID?: int
-    ItemCount?: int
+    ItemID?: int[]
+    ItemCount?: int[]
     RequiredArenaRating?: int
     ItemPurchaseGroup?: int
 }

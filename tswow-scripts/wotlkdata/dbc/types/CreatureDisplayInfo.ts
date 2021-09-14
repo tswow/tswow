@@ -119,7 +119,7 @@ export type CreatureDisplayInfoCreator = {
     ExtendedDisplayInfoID?: int
     CreatureModelScale?: float
     CreatureModelAlpha?: int
-    TextureVariation?: string
+    TextureVariation?: string[]
     PortraitTextureName?: string
     BloodLevel?: int
     BloodID?: int

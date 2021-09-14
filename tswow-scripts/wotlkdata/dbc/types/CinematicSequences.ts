@@ -60,7 +60,7 @@ export class CinematicSequencesRow extends DBCRow<CinematicSequencesCreator,Cine
  */
 export type CinematicSequencesCreator = {
     SoundID?: int
-    Camera?: int
+    Camera?: int[]
 }
 
 /**

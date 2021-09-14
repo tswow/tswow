@@ -120,7 +120,7 @@ export type WorldStateUICreator = {
     DynamicIcon?: string
     DynamicTooltip?: loc_constructor
     ExtendedUI?: string
-    ExtendedUIStateVariable?: int
+    ExtendedUIStateVariable?: int[]
 }
 
 /**

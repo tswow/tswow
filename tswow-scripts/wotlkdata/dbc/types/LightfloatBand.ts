@@ -65,8 +65,8 @@ export class LightfloatBandRow extends DBCRow<LightfloatBandCreator,LightfloatBa
  */
 export type LightfloatBandCreator = {
     Num?: int
-    Time?: int
-    Data?: float
+    Time?: int[]
+    Data?: float[]
 }
 
 /**

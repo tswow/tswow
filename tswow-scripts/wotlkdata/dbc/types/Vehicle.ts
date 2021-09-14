@@ -194,7 +194,7 @@ export type VehicleCreator = {
     PitchSpeed?: float
     PitchMin?: float
     PitchMax?: float
-    SeatID?: int
+    SeatID?: int[]
     MouseLookOffsetPitch?: float
     CameraFadeDistScalarMin?: float
     CameraFadeDistScalarMax?: float
@@ -208,15 +208,15 @@ export type VehicleCreator = {
     MsslTrgtArcSpeed?: float
     MsslTrgtArcRepeat?: float
     MsslTrgtArcWidth?: float
-    MsslTrgtImpactRadius?: float
+    MsslTrgtImpactRadius?: float[]
     MsslTrgtArcTexture?: string
     MsslTrgtImpactTexture?: string
-    MsslTrgtImpactModel?: string
+    MsslTrgtImpactModel?: string[]
     CameraYawOffset?: float
     UilocomotionType?: int
     MsslTrgtImpactTexRadius?: float
     VehicleUIIndicatorID?: int
-    PowerDisplayID?: int
+    PowerDisplayID?: int[]
 }
 
 /**

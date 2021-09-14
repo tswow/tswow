@@ -64,8 +64,8 @@ export class ScalingStatDistributionRow extends DBCRow<ScalingStatDistributionCr
  * Used for object creation (Don't comment these)
  */
 export type ScalingStatDistributionCreator = {
-    StatID?: int
-    Bonus?: int
+    StatID?: int[]
+    Bonus?: int[]
     Maxlevel?: int
 }
 

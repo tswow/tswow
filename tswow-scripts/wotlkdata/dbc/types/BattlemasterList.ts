@@ -89,7 +89,7 @@ export class BattlemasterListRow extends DBCRow<BattlemasterListCreator,Battlema
  * Used for object creation (Don't comment these)
  */
 export type BattlemasterListCreator = {
-    MapID?: int
+    MapID?: int[]
     InstanceType?: int
     GroupsAllowed?: int
     Name?: loc_constructor

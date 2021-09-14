@@ -74,8 +74,8 @@ export class SpellRangeRow extends DBCRow<SpellRangeCreator,SpellRangeQuery> {
  * Used for object creation (Don't comment these)
  */
 export type SpellRangeCreator = {
-    RangeMin?: float
-    RangeMax?: float
+    RangeMin?: float[]
+    RangeMax?: float[]
     Flags?: int
     DisplayName?: loc_constructor
     DisplayNameShort?: loc_constructor

@@ -81,7 +81,7 @@ export class ScreenEffectRow extends DBCRow<ScreenEffectCreator,ScreenEffectQuer
 export type ScreenEffectCreator = {
     Name?: string
     Effect?: int
-    Param?: int
+    Param?: int[]
     LightParamsID?: int
     SoundAmbienceID?: int
     ZoneMusicID?: int

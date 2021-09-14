@@ -64,9 +64,9 @@ export class ParticleColorRow extends DBCRow<ParticleColorCreator,ParticleColorQ
  * Used for object creation (Don't comment these)
  */
 export type ParticleColorCreator = {
-    Start?: int
-    Mid?: int
-    End?: int
+    Start?: int[]
+    Mid?: int[]
+    End?: int[]
 }
 
 /**

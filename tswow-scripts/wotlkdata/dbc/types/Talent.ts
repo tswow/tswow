@@ -97,12 +97,12 @@ export type TalentCreator = {
     TabID?: int
     TierID?: int
     ColumnIndex?: int
-    SpellRank?: int
-    PrereqTalent?: int
-    PrereqRank?: int
+    SpellRank?: int[]
+    PrereqTalent?: int[]
+    PrereqRank?: int[]
     Flags?: int
     RequiredSpellID?: int
-    CategoryMask?: int
+    CategoryMask?: int[]
 }
 
 /**

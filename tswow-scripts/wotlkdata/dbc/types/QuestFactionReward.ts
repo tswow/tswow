@@ -54,7 +54,7 @@ export class QuestFactionRewardRow extends DBCRow<QuestFactionRewardCreator,Ques
  * Used for object creation (Don't comment these)
  */
 export type QuestFactionRewardCreator = {
-    Difficulty?: int
+    Difficulty?: int[]
 }
 
 /**

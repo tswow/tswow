@@ -632,33 +632,33 @@ export type SpellCreator = {
     Speed?: float
     ModalNextSpell?: uint
     CumulativeAura?: uint
-    Totem?: uint
-    Reagent?: int
-    ReagentCount?: int
+    Totem?: uint[]
+    Reagent?: int[]
+    ReagentCount?: int[]
     EquippedItemClass?: int
     EquippedItemSubclass?: int
     EquippedItemInvTypes?: int
-    Effect?: uint
-    EffectDieSides?: int
-    EffectRealPointsPerLevel?: float
-    EffectBasePoints?: int
-    EffectMechanic?: uint
-    ImplicitTargetA?: uint
-    ImplicitTargetB?: uint
-    EffectRadiusIndex?: uint
-    EffectAura?: uint
-    EffectAuraPeriod?: uint
-    EffectMultipleValue?: float
-    EffectChainTargets?: uint
-    EffectItemType?: uint
-    EffectMiscValue?: int
-    EffectMiscValueB?: int
-    EffectTriggerSpell?: uint
-    EffectPointsPerCombo?: float
-    EffectSpellClassMaskA?: uint
-    EffectSpellClassMaskB?: uint
-    EffectSpellClassMaskC?: uint
-    SpellVisualID?: uint
+    Effect?: uint[]
+    EffectDieSides?: int[]
+    EffectRealPointsPerLevel?: float[]
+    EffectBasePoints?: int[]
+    EffectMechanic?: uint[]
+    ImplicitTargetA?: uint[]
+    ImplicitTargetB?: uint[]
+    EffectRadiusIndex?: uint[]
+    EffectAura?: uint[]
+    EffectAuraPeriod?: uint[]
+    EffectMultipleValue?: float[]
+    EffectChainTargets?: uint[]
+    EffectItemType?: uint[]
+    EffectMiscValue?: int[]
+    EffectMiscValueB?: int[]
+    EffectTriggerSpell?: uint[]
+    EffectPointsPerCombo?: float[]
+    EffectSpellClassMaskA?: uint[]
+    EffectSpellClassMaskB?: uint[]
+    EffectSpellClassMaskC?: uint[]
+    SpellVisualID?: uint[]
     SpellIconID?: uint
     ActiveIconID?: uint
     SpellPriority?: uint
@@ -671,16 +671,16 @@ export type SpellCreator = {
     StartRecoveryTime?: uint
     MaxTargetLevel?: uint
     SpellClassSet?: uint
-    SpellClassMask?: uint
+    SpellClassMask?: uint[]
     MaxTargets?: uint
     DefenseType?: uint
     PreventionType?: uint
     StanceBarOrder?: uint
-    EffectChainAmplitude?: float
+    EffectChainAmplitude?: float[]
     MinFactionID?: uint
     MinReputation?: uint
     RequiredAuraVision?: uint
-    RequiredTotemCategoryID?: uint
+    RequiredTotemCategoryID?: uint[]
     RequiredAreasID?: int
     SchoolMask?: uint
     RuneCostID?: uint

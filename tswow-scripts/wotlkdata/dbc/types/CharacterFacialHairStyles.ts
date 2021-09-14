@@ -70,7 +70,7 @@ export class CharacterFacialHairStylesRow extends DBCRow<CharacterFacialHairStyl
  * Used for object creation (Don't comment these)
  */
 export type CharacterFacialHairStylesCreator = {
-    Geoset?: int
+    Geoset?: int[]
 }
 
 /**

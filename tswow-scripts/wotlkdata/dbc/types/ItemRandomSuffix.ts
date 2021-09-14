@@ -71,8 +71,8 @@ export class ItemRandomSuffixRow extends DBCRow<ItemRandomSuffixCreator,ItemRand
 export type ItemRandomSuffixCreator = {
     Name?: loc_constructor
     InternalName?: string
-    Enchantment?: int
-    AllocationPct?: int
+    Enchantment?: int[]
+    AllocationPct?: int[]
 }
 
 /**

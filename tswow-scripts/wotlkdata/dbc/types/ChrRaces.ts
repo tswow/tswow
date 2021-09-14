@@ -160,7 +160,7 @@ export type ChrRacesCreator = {
     Name?: loc_constructor
     Name_Female?: loc_constructor
     Name_Male?: loc_constructor
-    FacialHairCustomization?: string
+    FacialHairCustomization?: string[]
     HairCustomization?: string
     Required_Expansion?: int
 }

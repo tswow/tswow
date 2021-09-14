@@ -65,8 +65,8 @@ export class LightintBandRow extends DBCRow<LightintBandCreator,LightintBandQuer
  */
 export type LightintBandCreator = {
     Num?: int
-    Time?: int
-    Data?: int
+    Time?: int[]
+    Data?: int[]
 }
 
 /**

@@ -84,7 +84,7 @@ export type TaxiNodesCreator = {
     Y?: float
     Z?: float
     Name?: loc_constructor
-    MountCreatureID?: int
+    MountCreatureID?: int[]
 }
 
 /**

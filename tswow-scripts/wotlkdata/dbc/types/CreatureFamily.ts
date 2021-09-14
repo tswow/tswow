@@ -103,7 +103,7 @@ export type CreatureFamilyCreator = {
     MinScaleLevel?: int
     MaxScale?: float
     MaxScaleLevel?: int
-    SkillLine?: int
+    SkillLine?: int[]
     PetFoodMask?: int
     PetTalentType?: int
     CategoryEnumID?: int

@@ -90,7 +90,7 @@ export type LightCreator = {
     Z?: float
     FalloffStart?: float
     FalloffEnd?: float
-    LightParamsID?: int
+    LightParamsID?: int[]
 }
 
 /**

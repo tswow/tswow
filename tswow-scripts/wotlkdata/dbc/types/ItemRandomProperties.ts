@@ -65,7 +65,7 @@ export class ItemRandomPropertiesRow extends DBCRow<ItemRandomPropertiesCreator,
  */
 export type ItemRandomPropertiesCreator = {
     Name?: string
-    Enchantment?: int
+    Enchantment?: int[]
     Name2?: loc_constructor
 }
 

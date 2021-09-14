@@ -69,10 +69,10 @@ export class LockRow extends DBCRow<LockCreator,LockQuery> {
  * Used for object creation (Don't comment these)
  */
 export type LockCreator = {
-    Type?: int
-    Index?: int
-    Skill?: int
-    Action?: int
+    Type?: int[]
+    Index?: int[]
+    Skill?: int[]
+    Action?: int[]
 }
 
 /**

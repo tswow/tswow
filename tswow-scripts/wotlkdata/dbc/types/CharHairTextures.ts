@@ -72,7 +72,7 @@ export type CharHairTexturesCreator = {
     Race?: int
     Gender?: bool
     Field03?: bool
-    Field04?: int
+    Field04?: int[]
 }
 
 /**

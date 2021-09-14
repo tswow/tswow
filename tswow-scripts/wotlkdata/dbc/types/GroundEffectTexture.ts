@@ -69,8 +69,8 @@ export class GroundEffectTextureRow extends DBCRow<GroundEffectTextureCreator,Gr
  * Used for object creation (Don't comment these)
  */
 export type GroundEffectTextureCreator = {
-    DoodadId?: int
-    DoodadWeight?: int
+    DoodadId?: int[]
+    DoodadWeight?: int[]
     Density?: int
     Sound?: int
 }

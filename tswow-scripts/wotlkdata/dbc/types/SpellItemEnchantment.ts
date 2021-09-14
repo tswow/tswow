@@ -115,10 +115,10 @@ export class SpellItemEnchantmentRow extends DBCRow<SpellItemEnchantmentCreator,
  */
 export type SpellItemEnchantmentCreator = {
     Charges?: int
-    Effect?: int
-    EffectPointsMin?: int
-    EffectPointsMax?: int
-    EffectArg?: int
+    Effect?: int[]
+    EffectPointsMin?: int[]
+    EffectPointsMax?: int[]
+    EffectArg?: int[]
     Name?: loc_constructor
     ItemVisual?: int
     Flags?: int

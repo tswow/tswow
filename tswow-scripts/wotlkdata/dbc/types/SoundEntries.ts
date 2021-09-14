@@ -106,8 +106,8 @@ export class SoundEntriesRow extends DBCRow<SoundEntriesCreator,SoundEntriesQuer
 export type SoundEntriesCreator = {
     SoundType?: int
     Name?: string
-    File?: string
-    Freq?: int
+    File?: string[]
+    Freq?: int[]
     DirectoryBase?: string
     Volumefloat?: float
     Flags?: int

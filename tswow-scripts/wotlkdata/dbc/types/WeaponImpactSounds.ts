@@ -71,8 +71,8 @@ export class WeaponImpactSoundsRow extends DBCRow<WeaponImpactSoundsCreator,Weap
 export type WeaponImpactSoundsCreator = {
     WeaponSubClassID?: int
     ParrySoundType?: int
-    ImpactSoundID?: int
-    CritImpactSoundID?: int
+    ImpactSoundID?: int[]
+    CritImpactSoundID?: int[]
 }
 
 /**

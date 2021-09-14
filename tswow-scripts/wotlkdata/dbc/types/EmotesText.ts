@@ -66,7 +66,7 @@ export class EmotesTextRow extends DBCRow<EmotesTextCreator,EmotesTextQuery> {
 export type EmotesTextCreator = {
     Name?: string
     EmoteID?: int
-    EmoteText?: int
+    EmoteText?: int[]
 }
 
 /**

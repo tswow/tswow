@@ -59,8 +59,8 @@ export class GameObjectArtKitRow extends DBCRow<GameObjectArtKitCreator,GameObje
  * Used for object creation (Don't comment these)
  */
 export type GameObjectArtKitCreator = {
-    TextureVariation?: string
-    AttachModel?: string
+    TextureVariation?: string[]
+    AttachModel?: string[]
 }
 
 /**

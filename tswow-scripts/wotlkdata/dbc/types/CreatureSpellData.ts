@@ -59,8 +59,8 @@ export class CreatureSpellDataRow extends DBCRow<CreatureSpellDataCreator,Creatu
  * Used for object creation (Don't comment these)
  */
 export type CreatureSpellDataCreator = {
-    Spells?: int
-    Availability?: int
+    Spells?: int[]
+    Availability?: int[]
 }
 
 /**

@@ -72,7 +72,7 @@ export type ObjectEffectModifierCreator = {
     InputType?: int
     MapType?: int
     OutputType?: int
-    Param?: float
+    Param?: float[]
 }
 
 /**

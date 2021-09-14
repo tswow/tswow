@@ -54,7 +54,7 @@ export class SpellDifficultyRow extends DBCRow<SpellDifficultyCreator,SpellDiffi
  * Used for object creation (Don't comment these)
  */
 export type SpellDifficultyCreator = {
-    DifficultySpellID?: int
+    DifficultySpellID?: int[]
 }
 
 /**

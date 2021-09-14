@@ -88,9 +88,9 @@ export type CharStartOutfitCreator = {
     ClassID?: byte
     SexID?: byte
     OutfitID?: byte
-    ItemID?: int
-    DisplayItemID?: int
-    InventoryType?: int
+    ItemID?: int[]
+    DisplayItemID?: int[]
+    InventoryType?: int[]
 }
 
 /**

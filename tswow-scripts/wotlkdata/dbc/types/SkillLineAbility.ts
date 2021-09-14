@@ -120,7 +120,7 @@ export type SkillLineAbilityCreator = {
     AcquireMethod?: uint
     TrivialSkillLineRankHigh?: uint
     TrivialSkillLineRankLow?: uint
-    CharacterPoints?: uint
+    CharacterPoints?: uint[]
 }
 
 /**

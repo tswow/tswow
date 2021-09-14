@@ -59,8 +59,8 @@ export class SkillTiersRow extends DBCRow<SkillTiersCreator,SkillTiersQuery> {
  * Used for object creation (Don't comment these)
  */
 export type SkillTiersCreator = {
-    Cost?: int
-    Value?: int
+    Cost?: int[]
+    Value?: int[]
 }
 
 /**

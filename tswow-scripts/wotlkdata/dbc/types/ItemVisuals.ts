@@ -54,7 +54,7 @@ export class ItemVisualsRow extends DBCRow<ItemVisualsCreator,ItemVisualsQuery> 
  * Used for object creation (Don't comment these)
  */
 export type ItemVisualsCreator = {
-    Slot?: int
+    Slot?: int[]
 }
 
 /**

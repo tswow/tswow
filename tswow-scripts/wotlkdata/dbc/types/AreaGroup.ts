@@ -59,7 +59,7 @@ export class AreaGroupRow extends DBCRow<AreaGroupCreator,AreaGroupQuery> {
  * Used for object creation (Don't comment these)
  */
 export type AreaGroupCreator = {
-    AreaID?: int
+    AreaID?: int[]
     NextAreaID?: int
 }
 

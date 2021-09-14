@@ -65,8 +65,8 @@ export class PetPersonalityRow extends DBCRow<PetPersonalityCreator,PetPersonali
  */
 export type PetPersonalityCreator = {
     Name?: loc_constructor
-    HappinessThreshold?: int
-    HappinessDamage?: float
+    HappinessThreshold?: int[]
+    HappinessDamage?: float[]
 }
 
 /**

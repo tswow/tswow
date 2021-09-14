@@ -153,10 +153,10 @@ export type LiquidTypeCreator = {
     ParticleMovement?: int
     ParticleTexSlots?: int
     MaterialID?: int
-    Texture?: string
-    Color?: int
-    Float?: float
-    Int?: int
+    Texture?: string[]
+    Color?: int[]
+    Float?: float[]
+    Int?: int[]
 }
 
 /**

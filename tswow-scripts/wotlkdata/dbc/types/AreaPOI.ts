@@ -115,7 +115,7 @@ export class AreaPOIRow extends DBCRow<AreaPOICreator,AreaPOIQuery> {
  */
 export type AreaPOICreator = {
     Importance?: int
-    Icon?: int
+    Icon?: int[]
     FactionID?: int
     X?: float
     Y?: float

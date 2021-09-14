@@ -64,9 +64,9 @@ export class RandPropPointsRow extends DBCRow<RandPropPointsCreator,RandPropPoin
  * Used for object creation (Don't comment these)
  */
 export type RandPropPointsCreator = {
-    Epic?: int
-    Superior?: int
-    Good?: int
+    Epic?: int[]
+    Superior?: int[]
+    Good?: int[]
 }
 
 /**

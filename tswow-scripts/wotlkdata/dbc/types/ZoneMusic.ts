@@ -70,9 +70,9 @@ export class ZoneMusicRow extends DBCRow<ZoneMusicCreator,ZoneMusicQuery> {
  */
 export type ZoneMusicCreator = {
     SetName?: string
-    SilenceintervalMin?: int
-    SilenceintervalMax?: int
-    Sounds?: int
+    SilenceintervalMin?: int[]
+    SilenceintervalMax?: int[]
+    Sounds?: int[]
 }
 
 /**

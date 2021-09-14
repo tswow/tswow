@@ -80,9 +80,9 @@ export class ItemSetRow extends DBCRow<ItemSetCreator,ItemSetQuery> {
  */
 export type ItemSetCreator = {
     Name?: loc_constructor
-    ItemID?: int
-    SetSpellID?: int
-    SetThreshold?: int
+    ItemID?: int[]
+    SetSpellID?: int[]
+    SetThreshold?: int[]
     RequiredSkill?: int
     RequiredSkillRank?: int
 }

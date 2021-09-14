@@ -59,8 +59,8 @@ export class DurabilityCostsRow extends DBCRow<DurabilityCostsCreator,Durability
  * Used for object creation (Don't comment these)
  */
 export type DurabilityCostsCreator = {
-    WeaponSubClassCost?: int
-    ArmorSubClassCost?: int
+    WeaponSubClassCost?: int[]
+    ArmorSubClassCost?: int[]
 }
 
 /**

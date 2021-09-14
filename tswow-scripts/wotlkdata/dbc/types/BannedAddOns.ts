@@ -69,8 +69,8 @@ export class BannedAddOnsRow extends DBCRow<BannedAddOnsCreator,BannedAddOnsQuer
  * Used for object creation (Don't comment these)
  */
 export type BannedAddOnsCreator = {
-    NameMD5_?: uint
-    VersionMD5_?: uint
+    NameMD5_?: uint[]
+    VersionMD5_?: uint[]
     LastModified?: int
     Flags?: int
 }

@@ -87,7 +87,7 @@ export type CharSectionsCreator = {
     RaceID?: int
     SexID?: int
     BaseSection?: int
-    TextureName?: string
+    TextureName?: string[]
     Flags?: int
     VariationIndex?: int
     ColorIndex?: int

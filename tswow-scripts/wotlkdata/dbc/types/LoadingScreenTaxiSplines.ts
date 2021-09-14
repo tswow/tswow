@@ -70,8 +70,8 @@ export class LoadingScreenTaxiSplinesRow extends DBCRow<LoadingScreenTaxiSplines
  */
 export type LoadingScreenTaxiSplinesCreator = {
     PathID?: int
-    Locx?: float
-    Locy?: float
+    Locx?: float[]
+    Locy?: float[]
     LegIndex?: int
 }
 

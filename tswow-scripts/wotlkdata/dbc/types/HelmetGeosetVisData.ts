@@ -54,7 +54,7 @@ export class HelmetGeosetVisDataRow extends DBCRow<HelmetGeosetVisDataCreator,He
  * Used for object creation (Don't comment these)
  */
 export type HelmetGeosetVisDataCreator = {
-    HideGeoset?: int
+    HideGeoset?: int[]
 }
 
 /**

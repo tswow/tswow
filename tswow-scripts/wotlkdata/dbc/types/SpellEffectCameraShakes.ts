@@ -54,7 +54,7 @@ export class SpellEffectCameraShakesRow extends DBCRow<SpellEffectCameraShakesCr
  * Used for object creation (Don't comment these)
  */
 export type SpellEffectCameraShakesCreator = {
-    CameraShake?: int
+    CameraShake?: int[]
 }
 
 /**

@@ -54,7 +54,7 @@ export class QuestXPRow extends DBCRow<QuestXPCreator,QuestXPQuery> {
  * Used for object creation (Don't comment these)
  */
 export type QuestXPCreator = {
-    Difficulty?: int
+    Difficulty?: int[]
 }
 
 /**

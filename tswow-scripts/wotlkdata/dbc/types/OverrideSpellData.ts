@@ -59,7 +59,7 @@ export class OverrideSpellDataRow extends DBCRow<OverrideSpellDataCreator,Overri
  * Used for object creation (Don't comment these)
  */
 export type OverrideSpellDataCreator = {
-    Spells?: int
+    Spells?: int[]
     Flags?: int
 }
 

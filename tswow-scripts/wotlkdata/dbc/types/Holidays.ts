@@ -104,11 +104,11 @@ export class HolidaysRow extends DBCRow<HolidaysCreator,HolidaysQuery> {
  * Used for object creation (Don't comment these)
  */
 export type HolidaysCreator = {
-    Duration?: int
-    Date?: int
+    Duration?: int[]
+    Date?: int[]
     Region?: int
     Looping?: int
-    CalendarFlags?: int
+    CalendarFlags?: int[]
     HolidayNameID?: int
     HolidayDescriptionID?: int
     TextureFilename?: string

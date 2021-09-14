@@ -159,15 +159,15 @@ export type SpellVisualKitCreator = {
     BreathEffect?: int
     LeftWeaponEffect?: int
     RightWeaponEffect?: int
-    SpecialEffect?: int
+    SpecialEffect?: int[]
     WorldEffect?: int
     SoundID?: int
     ShakeID?: int
-    CharProc?: int
-    CharParamZero?: float
-    CharParamOne?: float
-    CharParamTwo?: float
-    CharParamThree?: float
+    CharProc?: int[]
+    CharParamZero?: float[]
+    CharParamOne?: float[]
+    CharParamTwo?: float[]
+    CharParamThree?: float[]
     Flags?: uint
 }
 

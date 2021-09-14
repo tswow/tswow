@@ -54,7 +54,7 @@ export class NPCSoundsRow extends DBCRow<NPCSoundsCreator,NPCSoundsQuery> {
  * Used for object creation (Don't comment these)
  */
 export type NPCSoundsCreator = {
-    SoundID?: int
+    SoundID?: int[]
 }
 
 /**

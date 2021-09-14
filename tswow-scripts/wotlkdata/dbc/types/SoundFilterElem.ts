@@ -72,7 +72,7 @@ export type SoundFilterElemCreator = {
     SoundFilterID?: int
     OrderIndex?: int
     FilterType?: int
-    Params?: float
+    Params?: float[]
 }
 
 /**

@@ -106,7 +106,7 @@ export type CreatureDisplayInfoExtraCreator = {
     HairStyleID?: int
     HairColorID?: int
     FacialHairID?: int
-    NPCItemDisplay?: int
+    NPCItemDisplay?: int[]
     Flags?: int
     BakeName?: string
 }

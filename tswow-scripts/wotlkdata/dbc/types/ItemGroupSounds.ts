@@ -54,7 +54,7 @@ export class ItemGroupSoundsRow extends DBCRow<ItemGroupSoundsCreator,ItemGroupS
  * Used for object creation (Don't comment these)
  */
 export type ItemGroupSoundsCreator = {
-    Sound?: int
+    Sound?: int[]
 }
 
 /**

@@ -77,7 +77,7 @@ export type WeatherCreator = {
     AmbienceID?: int
     EffectType?: int
     TransitionSkyBox?: float
-    EffectColor?: float
+    EffectColor?: float[]
     EffectTexture?: string
 }
 

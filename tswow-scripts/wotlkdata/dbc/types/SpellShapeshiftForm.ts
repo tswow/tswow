@@ -95,8 +95,8 @@ export type SpellShapeshiftFormCreator = {
     CreatureType?: int
     AttackIconID?: int
     CombatRoundTime?: int
-    CreatureDisplayID?: int
-    PresetSpellID?: int
+    CreatureDisplayID?: int[]
+    PresetSpellID?: int[]
 }
 
 /**

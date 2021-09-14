@@ -79,12 +79,12 @@ export class SpellItemEnchantmentConditionRow extends DBCRow<SpellItemEnchantmen
  * Used for object creation (Don't comment these)
  */
 export type SpellItemEnchantmentConditionCreator = {
-    Lt_OperandType?: byte
-    Lt_Operand?: int
-    Operator?: byte
-    Rt_OperandType?: byte
-    Rt_Operand?: int
-    Logic?: byte
+    Lt_OperandType?: byte[]
+    Lt_Operand?: int[]
+    Operator?: byte[]
+    Rt_OperandType?: byte[]
+    Rt_Operand?: int[]
+    Logic?: byte[]
 }
 
 /**

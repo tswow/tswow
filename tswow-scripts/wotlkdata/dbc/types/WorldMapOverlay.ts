@@ -114,7 +114,7 @@ export class WorldMapOverlayRow extends DBCRow<WorldMapOverlayCreator,WorldMapOv
  * Used for object creation (Don't comment these)
  */
 export type WorldMapOverlayCreator = {
-    MapAreaID?: int
+    MapAreaID?: int[]
     AreaID?: int
     MapPointX?: int
     MapPointY?: int

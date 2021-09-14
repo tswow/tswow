@@ -54,7 +54,7 @@ export class SoundAmbienceRow extends DBCRow<SoundAmbienceCreator,SoundAmbienceQ
  * Used for object creation (Don't comment these)
  */
 export type SoundAmbienceCreator = {
-    AmbienceID?: int
+    AmbienceID?: int[]
 }
 
 /**

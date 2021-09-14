@@ -212,8 +212,8 @@ export type CreatureSoundDataCreator = {
     SoundWingFlapID?: int
     SoundWingGlideID?: int
     SoundAlertID?: int
-    SoundFidget?: int
-    CustomAttack?: int
+    SoundFidget?: int[]
+    CustomAttack?: int[]
     NPCSoundID?: int
     LoopSoundID?: int
     CreatureImpactType?: int

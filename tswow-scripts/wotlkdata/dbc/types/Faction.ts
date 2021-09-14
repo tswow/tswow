@@ -100,13 +100,13 @@ export class FactionRow extends DBCRow<FactionCreator,FactionQuery> {
  */
 export type FactionCreator = {
     ReputationIndex?: int
-    ReputationRaceMask?: int
-    ReputationClassMask?: int
-    ReputationBase?: int
-    ReputationFlags?: int
+    ReputationRaceMask?: int[]
+    ReputationClassMask?: int[]
+    ReputationBase?: int[]
+    ReputationFlags?: int[]
     ParentFactionID?: int
-    ParentFactionMod?: float
-    ParentFactionCap?: int
+    ParentFactionMod?: float[]
+    ParentFactionCap?: int[]
     Name?: loc_constructor
     Description?: loc_constructor
 }

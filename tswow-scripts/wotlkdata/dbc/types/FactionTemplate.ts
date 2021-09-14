@@ -89,8 +89,8 @@ export type FactionTemplateCreator = {
     FactionGroup?: int
     FriendGroup?: int
     EnemyGroup?: int
-    Enemies?: int
-    Friend?: int
+    Enemies?: int[]
+    Friend?: int[]
 }
 
 /**

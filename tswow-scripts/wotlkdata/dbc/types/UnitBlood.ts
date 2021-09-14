@@ -64,9 +64,9 @@ export class UnitBloodRow extends DBCRow<UnitBloodCreator,UnitBloodQuery> {
  * Used for object creation (Don't comment these)
  */
 export type UnitBloodCreator = {
-    CombatBloodSpurtFront?: int
-    CombatBloodSpurtBack?: int
-    GroundBlood?: string
+    CombatBloodSpurtFront?: int[]
+    CombatBloodSpurtBack?: int[]
+    GroundBlood?: string[]
 }
 
 /**

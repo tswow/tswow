@@ -60,7 +60,7 @@ export class SkillCostsDataRow extends DBCRow<SkillCostsDataCreator,SkillCostsDa
  */
 export type SkillCostsDataCreator = {
     SkillCostsID?: int
-    Cost?: int
+    Cost?: int[]
 }
 
 /**

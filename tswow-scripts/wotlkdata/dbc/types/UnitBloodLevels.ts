@@ -54,7 +54,7 @@ export class UnitBloodLevelsRow extends DBCRow<UnitBloodLevelsCreator,UnitBloodL
  * Used for object creation (Don't comment these)
  */
 export type UnitBloodLevelsCreator = {
-    Violencelevel?: int
+    Violencelevel?: int[]
 }
 
 /**

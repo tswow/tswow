@@ -54,7 +54,7 @@ export class GMSurveySurveysRow extends DBCRow<GMSurveySurveysCreator,GMSurveySu
  * Used for object creation (Don't comment these)
  */
 export type GMSurveySurveysCreator = {
-    Q?: int
+    Q?: int[]
 }
 
 /**

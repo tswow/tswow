@@ -141,7 +141,7 @@ export type AreaTableCreator = {
     ExplorationLevel?: int
     AreaName?: loc_constructor
     FactionGroupMask?: int
-    LiquidTypeID?: int
+    LiquidTypeID?: int[]
     MinElevation?: float
     Ambient_Multiplier?: float
     Lightid?: uint

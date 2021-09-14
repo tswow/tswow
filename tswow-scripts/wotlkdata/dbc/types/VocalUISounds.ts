@@ -71,8 +71,8 @@ export class VocalUISoundsRow extends DBCRow<VocalUISoundsCreator,VocalUISoundsQ
 export type VocalUISoundsCreator = {
     VocalUIEnum?: int
     RaceID?: int
-    NormalSoundID?: int
-    PissedSoundID?: int
+    NormalSoundID?: int[]
+    PissedSoundID?: int[]
 }
 
 /**

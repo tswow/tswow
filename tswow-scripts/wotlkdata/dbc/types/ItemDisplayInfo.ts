@@ -104,14 +104,14 @@ export class ItemDisplayInfoRow extends DBCRow<ItemDisplayInfoCreator,ItemDispla
  * Used for object creation (Don't comment these)
  */
 export type ItemDisplayInfoCreator = {
-    ModelName?: string
-    ModelTexture?: string
-    InventoryIcon?: string
-    GeosetGroup?: int
+    ModelName?: string[]
+    ModelTexture?: string[][]
+    InventoryIcon?: string[]
+    GeosetGroup?: int[]
     Flags?: int
     SpellVisualID?: int
     GroupSoundIndex?: int
-    HelmetGeosetVis?: int
+    HelmetGeosetVis?: int[]
     Texture?: string
     ItemVisual?: int
     ParticleColorID?: int

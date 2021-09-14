@@ -59,7 +59,7 @@ export class ItemPurchaseGroupRow extends DBCRow<ItemPurchaseGroupCreator,ItemPu
  * Used for object creation (Don't comment these)
  */
 export type ItemPurchaseGroupCreator = {
-    ItemID?: int
+    ItemID?: int[]
     Name?: loc_constructor
 }
 
