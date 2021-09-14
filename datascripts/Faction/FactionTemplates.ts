@@ -155,15 +155,15 @@ export class FactionTemplates extends MultiRowSystem<FactionTemplate,Faction> {
         return value.row.isDeleted()
     }
 
-    getAdd() {
+    addGet() {
         return new FactionTemplate(
             DBC.FactionTemplate.add(Ids.FactionTemplate.id()).Faction.set(this.owner.ID)
         )
         .clear()
     }
 
-    modAdd(callback: (faction: FactionTemplate)=>void = ()=>{}) {
-        callback(this.getAdd());
+    addMod(callback: (faction: FactionTemplate)=>void = ()=>{}) {
+        callback(this.addGet());
         return this.owner;
     }
 }

@@ -7,10 +7,10 @@ import { Pos } from "tswow-stdlib/Misc/Position";
  */
 std.Classes.create(/*@1*/'mod'/**/,/*@2*/'id'/**/,'MAGE')
     .Name.enGB.set('New Class')
-    
+
     // Modify stats
     .Stats.Stamina.set((old,race,level)=>old)
-    
+
     // Modify starting gear
     .StartGear.Mainhand.set(25)
 
@@ -30,10 +30,10 @@ std.Classes.create(/*@1*/'mod'/**/,/*@2*/'id'/**/,'MAGE')
  */
 export const CLASS = std.Classes.create(/*@1*/'mod'/**/,/*@2*/'id'/**/,'MAGE')
     .Name.enGB.set('New Class')
-    
+
     // Modify stats
     .Stats.Stamina.set((old,race,level)=>old)
-    
+
     // Modify starting gear
     .StartGear.Mainhand.set(25)
 
@@ -53,12 +53,12 @@ export const CLASS_SKILL = std.SkillLines
 // Autolearn spell
 std.Spells.Presets.CreateBolt(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spell 1')
     .Name.enGB.set('My Class Spell 2')
-    .SkillLines.modAdd(CLASS_SKILL.ID,true)
+    .SkillLines.addMod(CLASS_SKILL.ID,true)
 
 // Learnt spell
 const spell = std.Spells.Presets.CreateBolt(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spell 2')
     .Name.enGB.set('My Class Spell')
-    .SkillLines.modAdd(CLASS_SKILL.ID,false)
+    .SkillLines.addMod(CLASS_SKILL.ID,false)
 
 const trainer = (id: string)=>
     std.CreatureTemplates.Presets

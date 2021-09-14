@@ -23,6 +23,6 @@ export class SkillLine extends MainEntity<SkillLineRow> {
 
     getCreateSpell(mod: string, id: string, autolearn: boolean, parent?: number) {
         return Spells.create(mod,id,parent)
-            .SkillLines.modAdd(this.ID,autolearn)
+            .SkillLines.addMod(this.ID,autolearn)
     }
 }

@@ -76,17 +76,17 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility
         super(owner);
     }
 
-    modAdd(
+    addMod(
         skillLine: number
       , autolearn: boolean = false
       , callback: (sla: SpellSkillLineAbility)=>void = ()=>{}
       )
       {
-        callback(this.getAdd(skillLine,autolearn));
+        callback(this.addGet(skillLine,autolearn));
         return this.owner;
       }
 
-    getAdd(
+    addGet(
           skillLine: number
         , autolearn: boolean = false
         ) {

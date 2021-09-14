@@ -68,7 +68,7 @@ export const Factions = {
 
     createHorde(mod: string, id: string) {
         return Factions.create(mod,id)
-            .Templates.modAdd(relation=>{
+            .Templates.addMod(relation=>{
                 relation.addFriendGroups(['HORDE'])
                         .addEnemyGroup(['ALLIANCE'])
             })
@@ -76,7 +76,7 @@ export const Factions = {
 
     createAlliance(mod: string, id: string) {
         return Factions.create(mod,id)
-            .Templates.modAdd(relation=>{
+            .Templates.addMod(relation=>{
                 relation.addFriendGroups(['ALLIANCE'])
                         .addEnemyGroup(['HORDE'])
             })

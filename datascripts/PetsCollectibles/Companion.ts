@@ -108,7 +108,7 @@ export const CompanionRegistry = {
             .InterruptFlags.mark(3)
             .InterruptFlags.mark(4)
             .Visual.set(DEFAULT_COMPANION_VISUAL)
-            .SkillLines.modAdd(COMPANION_SKILLINE,false,sla=>{
+            .SkillLines.addMod(COMPANION_SKILLINE,false,sla=>{
                 sla.MinSkillRank.set(1)
             })
             .Effects.modFree(effects=>{

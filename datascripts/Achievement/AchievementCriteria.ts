@@ -106,13 +106,13 @@ export class AchievementCriteria extends MultiRowSystem<CriteriaPlain,Achievemen
         return crit;
     }
 
-    getAdd(mod: string, id: string) {
+    addGet(mod: string, id: string) {
         return new CriteriaBase(this.addCriteria(mod,id,{}))
             .clear()
     }
 
-    modAdd(mod: string, id: string, callback: (criteria: CriteriaBase)=>void) {
-        callback(this.getAdd(mod,id));
+    addMod(mod: string, id: string, callback: (criteria: CriteriaBase)=>void) {
+        callback(this.addGet(mod,id));
         return this.owner;
     }
 }

@@ -190,7 +190,7 @@ export const Languages = {
                       .ChainAmplitude.set(1)
             })
             .SchoolMask.Physical.mark()
-            .SkillLines.modAdd(sl.ID,true,sla=>{
+            .SkillLines.addMod(sl.ID,true,sla=>{
                 sla.RaceMask.set(0xffffffff)
                    .AcquireMethod.set(2)
                    .ClassMask.set(0)
