@@ -57,6 +57,7 @@ export const data_tsconfig =
     "declaration": true,
     "skipLibCheck": true,
     "incremental": true,
+    "allowJs": false,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
     "sourceMap": true
