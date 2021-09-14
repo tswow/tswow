@@ -14,9 +14,8 @@ export class MaskBit<T,D extends MaskCell<T>> {
 
     protected get isBit() { return true; }
 
-    check() { return this.owner.check(this.bit); }
-    mark() { return this.owner.mark(this.bit); }
-    clear() { return this.owner.clear(this.bit); }
+    get() { return this.owner.getBit(this.bit); }
+    set(value: boolean) { return this.owner.setBit(this.bit,value)}
 }
 
 export class MaskMultiBit<T,D extends MaskCell<T>> {
@@ -29,17 +28,12 @@ export class MaskMultiBit<T,D extends MaskCell<T>> {
         this.bits = bits;
     }
 
-    check() {
-        return !this.bits.find(x=>!this.owner.check(x))
+    get() {
+        return !this.bits.find(x=>!this.owner.getBit(x))
     }
 
-    mark(): T {
-        this.bits.forEach(x=>this.owner.mark(x))
-        return MaskCell.owner(this.owner);
-    }
-
-    clear(): T {
-        this.bits.forEach(x=>this.owner.clear(x));
+    set(value: boolean): T {
+        this.bits.forEach(x=>this.owner.setBit(x,value))
         return MaskCell.owner(this.owner);
     }
 }
@@ -57,9 +51,8 @@ export abstract class MaskCell<T> extends CellRoot<T> {
         return new MaskMultiBit(this,bits);
     }
 
-    abstract mark(no: number): T;
-    abstract clear(no: number): T;
-    abstract check(no: number): boolean;
+    abstract setBit(bit: number, value: boolean): T;
+    abstract getBit(bit: number): boolean;
     abstract clearAll(): T;
     abstract toString(): string;
 
@@ -78,7 +71,7 @@ export abstract class MaskCell<T> extends CellRoot<T> {
         ));
 
         for(let i=0;i<this.length;++i) {
-            if(this.bit(i).check() && ! usedIndices.includes(i)) {
+            if(this.bit(i).get() && ! usedIndices.includes(i)) {
                 thing.push(`Bit${i}`);
             }
         }
@@ -108,22 +101,21 @@ export class MaskCell32<T> extends MaskCell<T> {
         return this.owner;
     }
 
-    mark(no: number): T {
-        if(!this.signed || this.cell.get() != -1) {
-            this.set((this.cell.get() | 1 << no)>>>0);
+    setBit(no: number, value: boolean) {
+        if(value) {
+            if(!this.signed || this.cell.get() != -1) {
+                this.set((this.cell.get() | 1 << no)>>>0);
+            }
+        } else {
+            if(this.signed && this.cell.get() == -1 && no < 32 && no >= 0) {
+                this.cell.set(0xffffffff);
+            }
+            this.set((this.cell.get() & ~(1 << no))>>>0);
         }
         return this.owner;
     }
 
-    clear(no: number): T {
-        if(this.signed && this.cell.get() == -1 && no < 32 && no >= 0) {
-            this.cell.set(0xffffffff);
-        }
-        this.set((this.cell.get() & ~(1 << no))>>>0);
-        return this.owner;
-    }
-
-    check(no: number): boolean {
+    getBit(no: number): boolean {
         return (this.signed && this.cell.get() == -1)
             || ((this.cell.get()) & ((1 << no))>>>0) !== 0;
     }
@@ -162,18 +154,16 @@ export class MaskCell64<T> extends MaskCell<T> {
 
     get() { return this.cell.get(); }
 
-    mark(no: number): T {
-        this.cell.set(this.cell.get() | (BigInt(1) << BigInt(no)));
+    setBit(no: number, value: boolean) {
+        if(value) {
+            this.cell.set(this.cell.get() | (BigInt(1) << BigInt(no)));
+        } else {
+            this.cell.set(this.cell.get() & (~((BigInt(1) << BigInt(no)))));
+        }
         return this.owner;
     }
 
-    clear(no: number): T {
-        this.cell.set(this.cell.get() & (~((BigInt(1) << BigInt(no)))));
-        this.cell.set(BigInt(0));
-        return this.owner;
-    }
-
-    check(no: number): boolean {
+    getBit(no: number): boolean {
         return (this.cell.get() & ((BigInt(1) << BigInt(no)))) !== BigInt(0);
     }
 
