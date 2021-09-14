@@ -50,7 +50,7 @@ export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target
         this.Y.set(y);
         this.Z.set(z);
         this.O.set(o);
-        this.Map.setRefID(map);
+        this.Map.set(map);
         return this.owner;
     }
 

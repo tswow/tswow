@@ -51,15 +51,15 @@ export const AreaPOIRegistry = {
             ? DBC.AreaPOI.find({ID:parent}).clone(Ids.AreaPOI.id())
             : DBC.AreaPOI.add(Ids.AreaPOI.id())
         )
-        .Area.setRefID(0)
+        .Area.set(0)
         .Description.clear()
-        .Faction.setRefID(0)
+        .Faction.set(0)
         .Flags.set(0)
         .Icons.clearAll()
         .Importance.set(0)
         .Name.clear()
         .Position.set(0,0,0,0)
-        .WorldState.setRefID(0)
+        .WorldState.set(0)
     },
 
     load(id: number) {

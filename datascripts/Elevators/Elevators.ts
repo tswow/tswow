@@ -12,7 +12,7 @@ export const ElevatorRegistry = {
             .Type.Transport.set()
             .Flags.Transport.mark()
             .Keyframes.addDefault(keyframes)
-            .Display.setRefID(DEFAULT_ELEVATOR_DISPLAY_ID)
+            .Display.set(DEFAULT_ELEVATOR_DISPLAY_ID)
     },
 
     createGlobalInstance(mod: string, id: string, keyframes: (Position&{time?:number})[]) {

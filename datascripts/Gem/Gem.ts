@@ -62,7 +62,7 @@ export class GemEnchantmentRef extends CellSystem<Gem> {
         return EnchantmentRegistry.load(this.owner.row.Enchant_Id.get());
     }
 
-    setRefIDCopy(mod: string, id: string, source: number) {
+    setCopy(mod: string, id: string, source: number) {
         let enchantment = EnchantmentRegistry.create(mod,id,source)
         enchantment.row.Src_ItemID.set(this.owner.Item.get().ID);
         this.owner.row.Enchant_Id.set(enchantment.ID);
@@ -74,7 +74,7 @@ export class GemEnchantmentRef extends CellSystem<Gem> {
         return this.owner;
     }
 
-    getRefID() {
+    get() {
         return this.owner.row.Enchant_Id.get();
     }
 }
@@ -93,8 +93,8 @@ export const GemRegistry = {
             .ClassMask.set(-1)
             .RaceMask.set(-1)
             .Material.Liquid.set()
-            .DisplayInfo.setRefID(60325)
-            .GemProperties.setRefID(gemId)
+            .DisplayInfo.set(60325)
+            .GemProperties.set(gemId)
             .Quality.Green.set()
 
         let parent = parentId > 0 ? DBC.GemProperties.findById(parentId) : undefined;

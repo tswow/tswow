@@ -21,7 +21,7 @@ export class BattlegroundBracket extends MainEntity<PvpDifficultyRow> {
 export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Battleground> {
     protected getAllRows(): BattlegroundBracket[] {
         return DBC.PvpDifficulty
-            .filter({MapID:this.owner.Map.getRefID()})
+            .filter({MapID:this.owner.Map.get()})
             .map(x=>new BattlegroundBracket(x))
             .sort((a,b)=>a.RangeIndex.get() > b.RangeIndex.get() ? -1 : 1)
     }
@@ -43,7 +43,7 @@ export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Bat
         return new BattlegroundBracket(
                 DBC.PvpDifficulty.add(Ids.PvpDifficulty.id())
             )
-            .MapID.set(this.owner.Map.getRefID())
+            .MapID.set(this.owner.Map.get())
             .RangeIndex.set(
                 rows.length === 0
                     ? 0

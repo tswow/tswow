@@ -31,7 +31,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
             .Flags.set(0)
             .GeosetGroup.set([0,0,0])
             .HelmGeosetVis.set([0,0])
-            .Effects.setRefID(0)
+            .Effects.set(0)
             .Models.clearAll()
             .Texture.set(["","","","","","","",""])
             .Icon.set("")

@@ -74,7 +74,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     swap(index1: number, index2: number) {
         let e1 = this.get(index1);
         let e2 = this.get(index2);
-        let r1 = e1.Radius.getRefID()
+        let r1 = e1.Radius.get()
         let i1 = e1.ItemType.get();
         let a1 = e1.AuraType.get();
         let t1 = e1.EffectType.get();
@@ -94,7 +94,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         let cmb1 = e1.ClassMask.B.get();
         let cmc1 = e1.ClassMask.C.get();
         e1.copyFrom(e2);
-        e2.Radius.setRefID(r1);
+        e2.Radius.set(r1);
         e2.ItemType.set(i1);
         e2.AuraType.set(a1);
         e2.EffectType.set(t1);
@@ -277,7 +277,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     }
 
     copyFrom(source: SpellEffect) {
-        this.Radius.setRefID(source.Radius.getRefID());
+        this.Radius.set(source.Radius.get());
         this.ItemType.set(source.ItemType.get());
         this.AuraType.set(source.AuraType.get());
         this.EffectType.set(source.EffectType.get());

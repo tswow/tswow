@@ -64,8 +64,8 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
             .InterruptFlags.OnPushback.mark()
             .InterruptFlags.OnInterruptCast.mark()
             .InterruptFlags.mark(3)
-            .CastTime.setRefID(6)
-            .Visual.setRefID(3182)
+            .CastTime.set(6)
+            .Visual.set(3182)
 
         let itemId = 0;
         if(createItem) {
@@ -83,7 +83,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                 .MaxStack.set(5)
                 .Bonding.NoBounds.set()
                 .Quality.White.set()
-                .DisplayInfo.setRefID(811)
+                .DisplayInfo.set(811)
 
             spell.Effects.modFree(effect=>{
                 effect.EffectType.EnchantItem.set()

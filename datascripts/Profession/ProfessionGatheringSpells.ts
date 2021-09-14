@@ -46,7 +46,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .InterruptFlags.mark(3)
         .InterruptFlags.mark(4)
         // 12 is the one used by mining
-        .Range.setRefID(12)
+        .Range.set(12)
         if(autoLearnAt>=0) {
             this.owner.Ranks.get(autoLearnAt).LearnSpells().forEach(x=>{
                 x.Effects.addLearnSpells(spl.ID)

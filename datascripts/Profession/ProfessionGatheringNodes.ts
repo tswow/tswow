@@ -12,7 +12,7 @@ export class ProfessionGatheringNodes extends CellSystem<Profession> {
         return GameObjectTemplates.create(mod,id)
             .Type.Chest.set()
             .IsConsumable.set(1)
-            .Lock.setRefID(lock.ID)
+            .Lock.set(lock.ID)
     }
 
     addMod(mod: string, id: string, lockId: number, levelNeeded: number, callback: (gobj: GameObjectChest)=>void) {

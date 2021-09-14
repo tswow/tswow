@@ -21,13 +21,13 @@ export class BattlegroundSafeLoc extends CellSystem<Battleground> {
     get O() { return this.o; }
 
     set(x: number, y: number, z: number, o: number) {
-        this.loc.setSimple(this.owner.Map.getRefID(),x,y,z);
+        this.loc.setSimple(this.owner.Map.get(),x,y,z);
         this.o.set(o);
         return this.owner;
     }
 
     setObject(obj: {map: number, x: number, y: number, z: number, o: number}) {
-        if(obj.map !== undefined && this.owner.Map.getRefID() !== obj.map) {
+        if(obj.map !== undefined && this.owner.Map.get() !== obj.map) {
             throw new Error(
                   `Trying to set safe location on a different map `
                 + `than the battleground map.`
@@ -95,7 +95,7 @@ export const BattlegroundRegistry = {
 finish('bg-worldsafelocs',()=>{
     BattlegroundRegistry.filter({})
         .forEach(x=>{
-            if(x.HordeStart.Loc.getRefID() === 0 ||x.AllianceStart.Loc.getRefID() === 0) {
+            if(x.HordeStart.Loc.get() === 0 ||x.AllianceStart.Loc.get() === 0) {
                 throw new Error(
                       `Battlemaster ${x.ID} only has one map registered, `
                     + `but doesn't specify starting locations for both Horde and Alliance.`
@@ -105,7 +105,7 @@ finish('bg-worldsafelocs',()=>{
 
             let hordemap = x.HordeStart.Loc.getRef().Position.Map.get();
             let allymap = x.AllianceStart.Loc.getRef().Position.Map.get();
-            let map = x.Map.getRefID()
+            let map = x.Map.get()
 
             if(hordemap !== map) {
                 throw new Error(

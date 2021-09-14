@@ -40,8 +40,8 @@ export class GameEventConditions<T> extends MultiRowSystem<GameEventCondition,T>
     add(mod: string, id: string, requiredNumber = 0, doneWorldState = 0, maxWorldState = 0) {
         this.addGet(mod,id)
             .RequiredNumber.set(requiredNumber)
-            .MaxWorldState.setRefID(maxWorldState)
-            .DoneWorldState.setRefID(doneWorldState)
+            .MaxWorldState.set(maxWorldState)
+            .DoneWorldState.set(doneWorldState)
         return this.owner;
     }
 

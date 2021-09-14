@@ -32,7 +32,7 @@ export class GameEventConditionRef<T> extends CellSystem<T> {
     getEventID() { return this.eventCell.get(); }
     getConditionID() { return this.conditionCell.get(); }
 
-    setRefID(event: number, condition: number) {
+    set(event: number, condition: number) {
         this.eventCell.set(event);
         this.conditionCell.set(condition);
         return this.owner;

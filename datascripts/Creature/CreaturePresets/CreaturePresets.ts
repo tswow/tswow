@@ -8,7 +8,7 @@ export const CreaturePresets = {
         return CreatureTemplates.create(mod,id)
             .Name.enGB.set(trainerName)
             .Subname.enGB.set(trainerName)
-            .Gossip.setRefID(0)
+            .Gossip.set(0)
             .NPCFlags.Trainer.mark()
             .Trainer.modRefCopy((trainer)=>{
                 trainer

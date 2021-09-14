@@ -54,7 +54,7 @@ export class ZoneMusicRef<T> extends Ref<T,ZoneMusic> {
             , volume: number = 1
             , frequency: number = 1
         ) {
-            this.setRefID(
+            this.set(
                 ZoneMusicRegistry.create(
                       directoryBase
                     , songs
@@ -91,8 +91,8 @@ function createZoneMusic(id: number, directoryBase: string, songs: string[], sil
         .SoundDay.SilenceIntervalMax.set(silenceIntervalMax)
         .SoundNight.SilenceIntervalMin.set(silenceIntervalMin)
         .SoundNight.SilenceIntervalMax.set(silenceIntervalMax)
-        .SoundDay.Sound.setRefID(sound.row.ID.get())
-        .SoundNight.Sound.setRefID(sound.row.ID.get());
+        .SoundDay.Sound.set(sound.row.ID.get())
+        .SoundNight.Sound.set(sound.row.ID.get());
 }
 
 export const ZoneMusicRegistry = {

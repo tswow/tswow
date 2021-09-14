@@ -93,7 +93,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .Attributes.cannotUseInCombat.mark()
             .Icon.set('Interface\\Icons\\INV_Inscription_Tradeskill01')
             .TargetType.GlyphSlot.mark()
-            .CastTime.setRefID(6)
+            .CastTime.set(6)
             .Effects.modFree(effect=>{
                 effect.EffectType.ApplyGlyph.set()
                       .Glyph.set(this.owner.ID)
@@ -116,7 +116,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .Material.Liquid.set()
             .Flags.PlayerCast.mark()
             .InventoryType.NonEquippable.set()
-            .DisplayInfo.setRefID(58841)
+            .DisplayInfo.set(58841)
             .ClassMask.clearAll()
 
         return new GlyphItem(spell,item);

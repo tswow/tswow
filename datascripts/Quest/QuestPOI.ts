@@ -41,7 +41,7 @@ export class QuestPOIPoints extends MultiRowSystem<QuestPOIPoint,QuestPOI> {
         let lastIndex = rows.length === 0 ? 0 : (rows[rows.length-1].Index - 1)
         values.forEach((pos,i)=>{
             SQL.quest_poi_points.add(
-                  this.owner.Quest.getRefID()
+                  this.owner.Quest.get()
                 , this.owner.Index
                 , lastIndex+i
             )
@@ -145,7 +145,7 @@ export class QuestPOIs extends MultiRowSystem<QuestPOI,Quest> {
             .ObjectiveIndex.set(objective)
             .Flags.set(3)
             .Floor.set(0)
-            .Map.setRefID(map)
+            .Map.set(map)
             .Points.add(points)
 
         return this.owner;

@@ -1,5 +1,6 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
+import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export interface IntCell {
@@ -7,11 +8,7 @@ export interface IntCell {
     set(value: number): any;
 }
 
-export interface CanObjectify {
-    objectify(): any
-}
-
-export class SelfRef<T,V extends CanObjectify> {
+export class SelfRef<T,V extends Objectified> {
     protected getter: ()=>V;
     protected owner: T;
 
@@ -34,7 +31,7 @@ export class SelfRef<T,V extends CanObjectify> {
     }
 }
 
-export abstract class RefReadOnly<T,V extends CanObjectify> extends CellSystem<T> {
+export abstract class RefReadOnly<T,V extends Objectified> extends CellSystem<T> {
     protected cell: Cell<number,any>|CellReadOnly<number,any>
 
     constructor(owner: T, cell: Cell<number,any>|CellReadOnly<number,any>) {
@@ -50,7 +47,7 @@ export abstract class RefReadOnly<T,V extends CanObjectify> extends CellSystem<T
         return this.owner;
     }
 
-    getRefID() { return this.cell.get(); }
+    get() { return this.cell.get(); }
 
     objectify() {
         if(this.exists()) {
@@ -61,7 +58,7 @@ export abstract class RefReadOnly<T,V extends CanObjectify> extends CellSystem<T
     }
 }
 
-export abstract class RefBase<T,V extends CanObjectify> {
+export abstract class RefBase<T,V extends Objectified> {
     protected owner: T;
     protected cell: Cell<number,any>
 
@@ -70,11 +67,11 @@ export abstract class RefBase<T,V extends CanObjectify> {
         this.cell = cell;
     }
 
-    getRefID() {
+    get() {
         return this.cell.get();
     }
 
-    setRefID(newPointer: number) {
+    set(newPointer: number) {
         this.cell.set(newPointer);
         return this.owner;
     }
@@ -107,10 +104,10 @@ export abstract class RefBase<T,V extends CanObjectify> {
     protected abstract resolve(): V;
 }
 
-export abstract class Ref<T,V extends CanObjectify> extends RefBase<T,V>{
+export abstract class Ref<T,V extends Objectified> extends RefBase<T,V>{
     protected setCreate() {
         let v = this.create();
-        this.setRefID(this.id(v));
+        this.set(this.id(v));
         return v;
     }
 
@@ -127,7 +124,7 @@ export abstract class Ref<T,V extends CanObjectify> extends RefBase<T,V>{
             return this.setCreate();
         } else {
             let clone = this.clone();
-            this.setRefID(this.id(clone));
+            this.set(this.id(clone));
             return clone;
         }
     }
@@ -141,13 +138,13 @@ export abstract class Ref<T,V extends CanObjectify> extends RefBase<T,V>{
     protected abstract clone(): V;
 }
 
-export abstract class RefStatic<T,V extends CanObjectify> extends RefBase<T,V> {
+export abstract class RefStatic<T,V extends Objectified> extends RefBase<T,V> {
     protected abstract create(mod: string, id: string): V;
     protected abstract clone(mod: string, id: string): V;
 
     protected setCreate(mod: string, id: string) {
         let v = this.create(mod, id);
-        this.setRefID(this.id(v));
+        this.set(this.id(v));
         return v;
     }
 
@@ -156,7 +153,7 @@ export abstract class RefStatic<T,V extends CanObjectify> extends RefBase<T,V> {
             return this.setCreate(mod, id);
         } else {
             let clone = this.clone(mod, id);
-            this.setRefID(this.id(clone));
+            this.set(this.id(clone));
             return clone;
         }
     }

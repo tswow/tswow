@@ -202,7 +202,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Attributes.castableOnVehicle.mark()
             .Icon.set('Interface\\Icons\\Trade_BlackSmithing')
             .SchoolMask.Physical.mark()
-            .Visual.setRefID(0)
+            .Visual.set(0)
             .Effects.modFree(eff=>{
                 eff.EffectType.TradeSkill.set()
             })

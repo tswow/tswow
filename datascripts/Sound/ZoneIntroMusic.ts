@@ -30,7 +30,7 @@ export const ZoneIntroMusicRegistry = {
             .Name.set(`ZoneIntroMusic-${zoneMusic.ID}`)
             .MinDelayMinutes.set(minDelay)
             .Priority.set(1)
-            .Sound.setRefID(sound.row.ID.get())
+            .Sound.set(sound.row.ID.get())
     },
 
     load(id: number) {
@@ -75,7 +75,7 @@ export class ZoneIntroMusicRef<T> extends Ref<T,ZoneIntroMusic> {
       , volume: number = 1
       , frequency: number = 1
     ) {
-        this.setRefID(
+        this.set(
             ZoneIntroMusicRegistry.create(
                     directoryBase
                 , songs

@@ -21,7 +21,7 @@ export const CurrencyRegistry = {
             .MaxStack.set(2147483647)
             .Class.set(10,0)
             .Material.Liquid.set()
-            .DisplayInfo.setRefID(32278)
+            .DisplayInfo.set(32278)
         let id1 = Ids.CurrencyTypes.id(mod,id);
         let bitId = Ids.CurrencyTypesBitIndex.id(mod,id);
         return new Currency (

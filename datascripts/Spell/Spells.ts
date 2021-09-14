@@ -129,7 +129,7 @@ function createSpell(id: number, parent: number = 0) {
         .Totem.set([0,0]))
     } else {
         const spell = new Spell(DBC.Spell.findById(parent).clone(id))
-        if(spell.Visual.getRefID()>0) {
+        if(spell.Visual.get()>0) {
             spell.Visual.modRefCopy(()=>{})
         }
         return spell;

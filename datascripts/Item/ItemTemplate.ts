@@ -161,7 +161,7 @@ export const Items = {
                 .Damage.clearAll()
                 .Delay.set(0)
                 .DisenchantID.set(0)
-                .DisplayInfo.setRefID(0)
+                .DisplayInfo.set(0)
                 .Durability.set(0)
                 .Duration.set(0)
                 .Flags.set(0)

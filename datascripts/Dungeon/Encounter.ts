@@ -162,7 +162,7 @@ export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounter,T> 
 export const DungeonEncounterRegistry = {
     create(map: number, index: number) {
         return new DungeonEncounterPlain(Ids.DungeonEncounter.id())
-            .Map.setRefID(map)
+            .Map.set(map)
             .Index.set(index)
     },
 

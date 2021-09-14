@@ -49,12 +49,12 @@ export const WMOAreaRegistry = {
                 .WMO.set(0)
                 .NameSet.set(0)
                 .Group.set(0)
-                .SoundProviderPreferences.Normal.setRefID(0)
-                .SoundProviderPreferences.Underwater.setRefID(0)
-                .Ambience.setRefID(0)
-                .ZoneMusic.setRefID(0)
-                .IntroSound.setRefID(0)
-                .AreaTable.setRefID(0)
+                .SoundProviderPreferences.Normal.set(0)
+                .SoundProviderPreferences.Underwater.set(0)
+                .Ambience.set(0)
+                .ZoneMusic.set(0)
+                .IntroSound.set(0)
+                .AreaTable.set(0)
                 .Name.clear()
         }
     },

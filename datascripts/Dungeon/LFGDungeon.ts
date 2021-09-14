@@ -31,10 +31,10 @@ export class LFGPos extends SQLDBCChild<LFGDungeon,LfgDungeonsRow,lfg_dungeon_te
     exists() { return this.owner.HasSQL(); }
 
     set(obj: {x: number, y: number, z: number, o: number, map?: number}) {
-        if((obj.map !== undefined) && (obj.map !== this.owner.Map.getRefID())) {
+        if((obj.map !== undefined) && (obj.map !== this.owner.Map.get())) {
             throw new Error(
                   `Attempting to set LFGPos on map (${obj.map}) `
-                + `different from parent map (${this.owner.Map.getRefID()})`
+                + `different from parent map (${this.owner.Map.get()})`
             )
         }
         return this.setSpread(obj.x,obj.y,obj.z,obj.o)
@@ -138,7 +138,7 @@ export class LFGDungeon extends SQLDBCEntity<LfgDungeonsRow, lfg_dungeon_templat
         return new AccessRequirement(
               this
             , AccessRequirementRegistry.get(
-                  this.Map.getRefID()
+                  this.Map.get()
                 , this.Difficulty.get()
             )
             .row
@@ -156,7 +156,7 @@ export class LFGDungeons<T> extends MultiRowSystem<LFGDungeon,T> {
 
     addGet() {
         return LFGDungeonRegistry.create()
-            .Map.setRefID(this.mapId)
+            .Map.set(this.mapId)
     }
 
     addMod(callback: (dungeon: LFGDungeon)=>void) {

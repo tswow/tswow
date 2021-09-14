@@ -1,7 +1,8 @@
+import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { CanObjectify, Ref, RefStatic } from "../Refs/Ref";
+import { Ref, RefStatic } from "../Refs/Ref";
 
-export class ArrayRefSystem<T,V extends CanObjectify> extends CellSystem<T> {
+export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
     protected readonly clearValue: number;
     protected readonly length: number;
     protected readonly getter: (index: number)=>Ref<T,V>;
@@ -18,7 +19,7 @@ export class ArrayRefSystem<T,V extends CanObjectify> extends CellSystem<T> {
     }
 
     clearAll(index: number) {
-        return this.forEach(x=>x.setRefID(index));
+        return this.forEach(x=>x.set(index));
     }
 
     forEachRef(callback: (ref: V)=>void) {
@@ -37,7 +38,7 @@ export class ArrayRefSystem<T,V extends CanObjectify> extends CellSystem<T> {
     }
 
     setId(index: number, ref: number) {
-        this.getter(index).setRefID(ref);
+        this.getter(index).set(ref);
         return this.owner;
     }
 
@@ -85,7 +86,7 @@ export class ArrayRefSystem<T,V extends CanObjectify> extends CellSystem<T> {
     }
 }
 
-export class ArrayRefSystemStatic<T,V extends CanObjectify> extends CellSystem<T> {
+export class ArrayRefSystemStatic<T,V extends Objectified> extends CellSystem<T> {
     protected readonly clearValue: number;
     protected readonly length: number;
     protected readonly getter: (index: number)=>RefStatic<T,V>;
@@ -102,7 +103,7 @@ export class ArrayRefSystemStatic<T,V extends CanObjectify> extends CellSystem<T
     }
 
     clearAll(index: number) {
-        return this.forEach(x=>x.setRefID(index));
+        return this.forEach(x=>x.set(index));
     }
 
     forEachRef(callback: (ref: V)=>void) {
@@ -121,7 +122,7 @@ export class ArrayRefSystemStatic<T,V extends CanObjectify> extends CellSystem<T
     }
 
     setId(index: number, ref: number) {
-        this.getter(index).setRefID(ref);
+        this.getter(index).set(ref);
         return this.owner;
     }
 
