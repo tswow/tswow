@@ -27,7 +27,7 @@ std.Quests.create('my','quest')
         .Name.enGB.set('Questgiver NPC')
         .Models.addIds(29419)
         .FactionTemplate.setNeutralPassive()
-        .NPCFlags.QuestGiver.mark()
+        .NPCFlags.QuestGiver.set(true)
         .spawnMod(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-walker-spawn',
             // Spawn location of walker npc
             /*@3*/{map:530,x:10350.250000,y:-6383.138184,z:38.526325,o:1.679071}/**/
@@ -37,7 +37,7 @@ std.Quests.create('my','quest')
         .Name.enGB.set('Returner NPC')
         .Models.addIds(29419)
         .FactionTemplate.setNeutralPassive()
-        .NPCFlags.QuestGiver.mark()
+        .NPCFlags.QuestGiver.set(true)
         .spawnMod(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-finisher-spawn',
             // Spawn location of finisher npc (replace with your own)
             /*@4*/{map:530,x:10340.181641,y:-6371.824707,z:35.110600,o:0.795497},/**/

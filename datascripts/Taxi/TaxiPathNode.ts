@@ -57,7 +57,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         let rows = this.getAllRows();
         let flag = pos.delay ? 2 : 0;
         if(rows.length > 0 && index > 0 && rows[index-1].Position.Map.get() != pos.map) {
-            rows[index-1].Flags.MapChange.mark()
+            rows[index-1].Flags.MapChange.set(true)
         }
 
         if(rows.length > 0) {
@@ -75,7 +75,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
     push(pos: TaxiNodeConstructor) {
         let old = this.getAllRows();
         if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
-            old[old.length-1].Flags.MapChange.mark()
+            old[old.length-1].Flags.MapChange.set(true)
         }
         this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
             .NodeIndex.set(this.length-1)

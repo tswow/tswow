@@ -17,9 +17,9 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
 
     add(mod: string, id: string, lockType: number, autoLearnAt: number = 0) {
         let spl = Spells.create(mod,id)
-        .Attributes.isHiddenInSpellbook.mark()
-        .Attributes.isHiddenFromLog.mark()
-        .Attributes.unk41.mark()
+        .Attributes.isHiddenInSpellbook.set(true)
+        .Attributes.isHiddenFromLog.set(true)
+        .Attributes.unk41.set(true)
         .SkillLines.addMod(this.owner.ID)
         .Effects.addMod((eff)=>{
             eff.EffectType.OpenLock.set()
@@ -39,12 +39,12 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
             .ChainAmplitude.set(1)
             .BonusMultiplier.set(1)
         })
-        .SchoolMask.mark(0)
-        .InterruptFlags.OnMovement.mark()
-        .InterruptFlags.OnPushback.mark()
-        .InterruptFlags.OnInterruptCast.mark()
-        .InterruptFlags.mark(3)
-        .InterruptFlags.mark(4)
+        .SchoolMask.setBit(0,true)
+        .InterruptFlags.OnMovement.set(true)
+        .InterruptFlags.OnPushback.set(true)
+        .InterruptFlags.OnInterruptCast.set(true)
+        .InterruptFlags.setBit(3,true)
+        .InterruptFlags.setBit(4,true)
         // 12 is the one used by mining
         .Range.set(12)
         if(autoLearnAt>=0) {

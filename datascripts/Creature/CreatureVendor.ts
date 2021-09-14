@@ -28,7 +28,7 @@ export class CreatureVendor extends CellSystem<CreatureTemplate> {
 
     addItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
         // We must always have vendor flag if we sell items
-        this.owner.NPCFlags.Vendor.mark();
+        this.owner.NPCFlags.Vendor.set(true);
         SQL.npc_vendor.add(this.owner.ID, item, extendedCostId)
             .maxcount.set(maxcount)
             .incrtime.set(incrTime)
@@ -38,7 +38,7 @@ export class CreatureVendor extends CellSystem<CreatureTemplate> {
 
     copyFrom(creatureTemplate: number, filter?: (row: npc_vendorRow)=>boolean) {
         // We must always have vendor flag if we sell items
-        this.owner.NPCFlags.Vendor.mark();
+        this.owner.NPCFlags.Vendor.set(true);
         SQL.npc_vendor.filter({entry: creatureTemplate}).forEach((x)=>{
             if(filter && !filter(x)) {
                 return;

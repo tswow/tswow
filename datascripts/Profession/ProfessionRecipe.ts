@@ -96,13 +96,13 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
         return new ProfessionRecipe(
               this.owner
             , Spells.create(mod,id)
-                    .Attributes.isAbility.mark()
-                    .Attributes.isTradeSpell.mark()
-                    .Attributes.notShapeshifted.mark()
-                    .Attributes.noThreat.mark()
-                    .InterruptFlags.OnMovement.mark()
-                    .InterruptFlags.OnPushback.mark()
-                    .InterruptFlags.OnInterruptCast.mark()
+                    .Attributes.isAbility.set(true)
+                    .Attributes.isTradeSpell.set(true)
+                    .Attributes.notShapeshifted.set(true)
+                    .Attributes.noThreat.set(true)
+                    .InterruptFlags.OnMovement.set(true)
+                    .InterruptFlags.OnPushback.set(true)
+                    .InterruptFlags.OnInterruptCast.set(true)
                     .Effects.addMod((effect)=>{
                         effect.EffectType.CreateItem.set()
                               .TargetA.UnitCaster.set()

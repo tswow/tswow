@@ -165,13 +165,13 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     }
 
     addVendorItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
-        this.NPCFlags.Vendor.mark();
+        this.NPCFlags.Vendor.set(true);
         this.Vendor.addItem(item,maxcount,incrTime,extendedCostId);
         return this;
     }
 
     addTrainerSpell(spellId: number, cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
-        this.NPCFlags.Trainer.mark();
+        this.NPCFlags.Trainer.set(true);
         this.Trainer.modRef((t=>t.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities)));
         return this;
     }

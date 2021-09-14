@@ -96,28 +96,28 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         flags.forEach(x=>{
             switch(x) {
                 case 'AtWar':
-                    rep.Flags.AtWar.mark()
+                    rep.Flags.AtWar.set(true)
                     break;
                 case 'Hidden':
-                    rep.Flags.Hidden.mark()
+                    rep.Flags.Hidden.set(true)
                     break;
                 case 'Inactive':
-                    rep.Flags.Inactive.mark()
+                    rep.Flags.Inactive.set(true)
                     break;
                 case 'InvisibleForced':
-                    rep.Flags.InvisibleForced.mark()
+                    rep.Flags.InvisibleForced.set(true)
                     break;
                 case 'PeaceForced':
-                    rep.Flags.PeaceForced.mark()
+                    rep.Flags.PeaceForced.set(true)
                     break;
                 case 'Rival':
-                    rep.Flags.Rival.mark()
+                    rep.Flags.Rival.set(true)
                     break;
                 case 'Special':
-                    rep.Flags.Special.mark()
+                    rep.Flags.Special.set(true)
                     break;
                 case 'Visible':
-                    rep.Flags.Visible.mark()
+                    rep.Flags.Visible.set(true)
                     break;
             }
         })

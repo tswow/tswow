@@ -25,7 +25,7 @@ export const SkillLines = {
             .RaceClassInfos.modNew(rci=>{
                 rci.RaceMask.set(4294967295)
                    .ClassMask.clearAll()
-                   .ClassMask.mark(cls-1)
+                   .ClassMask.setBit(cls-1,true)
                    .Flags.set(1040)
             })
         SQL.playercreateinfo_skills

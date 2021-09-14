@@ -16,8 +16,8 @@ export const Professions = {
                 rci.ClassMask.set(0xffffff)
                    .RaceMask.set(0xffffff)
                    .Flags.clearAll()
-                   .Flags.IsProfession.mark()
-                   .Flags.IsClassLine.mark()
+                   .Flags.IsProfession.set(true)
+                   .Flags.IsClassLine.set(true)
                    .SkillTierID.set(SkillTiersRegistry.create().ID)
             }))
     }

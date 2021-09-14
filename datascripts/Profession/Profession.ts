@@ -21,11 +21,11 @@ export class Profession {
         this.Ranks.forEach(rank=>{
             let spell = rank.ProfessionSpell();
             if(value) {
-                spell.Attributes.isHiddenInSpellbook.clear();
-                spell.Attributes.unk41.clear();
+                spell.Attributes.isHiddenInSpellbook.set(false);
+                spell.Attributes.unk41.set(false);
             } else {
-                spell.Attributes.unk41.mark();
-                spell.Attributes.isHiddenInSpellbook.mark();
+                spell.Attributes.unk41.set(true);
+                spell.Attributes.isHiddenInSpellbook.set(true);
             }
         })
         return this;
@@ -196,12 +196,12 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Name.set(this.owner.SkillLine.Name.objectify())
             .Subtext.set(subtext)
             .Description.set(this.owner.SkillLine.Description.objectify())
-            .Attributes.isAbility.mark()
-            .Attributes.notShapeshifted.mark()
-            .Attributes.castableWhileMounted.mark()
-            .Attributes.castableOnVehicle.mark()
+            .Attributes.isAbility.set(true)
+            .Attributes.notShapeshifted.set(true)
+            .Attributes.castableWhileMounted.set(true)
+            .Attributes.castableOnVehicle.set(true)
             .Icon.set('Interface\\Icons\\Trade_BlackSmithing')
-            .SchoolMask.Physical.mark()
+            .SchoolMask.Physical.set(true)
             .Visual.set(0)
             .Effects.addMod(eff=>{
                 eff.EffectType.TradeSkill.set()
@@ -236,10 +236,10 @@ export class ProfessionRanks extends CellSystem<Profession> {
         std.Spells.create(modid,`${id}_learn`)
             .Name.set(this.owner.SkillLine.Name.objectify())
             .Subtext.set(subtext)
-            .Attributes.isHiddenFromLog.mark()
-            .Attributes.sheatheUnchanged.mark()
-            .TargetType.UnitAlly.mark()
-            .SchoolMask.Physical.mark()
+            .Attributes.isHiddenFromLog.set(true)
+            .Attributes.sheatheUnchanged.set(true)
+            .TargetType.UnitAlly.set(true)
+            .SchoolMask.Physical.set(true)
             .Effects.addMod(effect=>{
                 effect.EffectType.LearnSpell.set()
                     .LearntSpell.set(spell.ID)

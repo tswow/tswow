@@ -55,9 +55,14 @@ export class SpellAttributes<T> extends MaskCell<T> {
         return this.owner;
     }
 
-    mark(no: number): T {
-        const cell = this.cell(no);
-        cell.set(cell.get()|1<<this.bitno(no));
+    setBit(no: number, value: boolean)  {
+        if(value) {
+            const cell = this.cell(no);
+            cell.set(cell.get()|1<<this.bitno(no));
+        } else {
+            const cell = this.cell(no);
+            cell.set((cell.get()&~1<<this.bitno(no))>>>0);
+        }
         return this.owner;
     }
 
@@ -65,13 +70,7 @@ export class SpellAttributes<T> extends MaskCell<T> {
         return this.cells().reduce((p,c)=>p+c.get().toString(2),"");
     }
 
-    clear(no: number): T {
-        const cell = this.cell(no);
-        cell.set((cell.get()&~1<<this.bitno(no))>>>0);
-        return this.owner;
-    }
-
-    check(no: number): boolean {
+    getBit(no: number): boolean {
         const cell = this.cell(no);
         return ((cell.get()&1<<this.bitno(no))>>>0) !== 0;
     }

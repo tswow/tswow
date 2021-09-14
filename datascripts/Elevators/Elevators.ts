@@ -10,7 +10,7 @@ export const ElevatorRegistry = {
     createLocalTemplate(mod: string, id: string, keyframes: KeyFrameCon[]) {
         return GameObjectTemplates.create(mod,id)
             .Type.Transport.set()
-            .Flags.Transport.mark()
+            .Flags.Transport.set(true)
             .Keyframes.addDefault(keyframes)
             .Display.set(DEFAULT_ELEVATOR_DISPLAY_ID)
     },

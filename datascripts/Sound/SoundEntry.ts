@@ -57,7 +57,7 @@ export class SoundEntryPointer<T> extends Ref<T,SoundEntry> {
 
     setSimpleLoop(directoryBase: string, songs: string[], volume?: number, frequency?: number) {
         let soundEntry = SoundEntryRegistry.create(directoryBase,songs,volume,frequency);
-        soundEntry.Flags.Looping.mark();
+        soundEntry.Flags.Looping.set(true);
         this.set(soundEntry.row.ID.get());
         return this.owner;
     }

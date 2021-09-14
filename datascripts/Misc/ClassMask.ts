@@ -1,7 +1,8 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
 export class ClassMask<T> extends MaskCell32<T> {
-    markClass(classId: number) { return this.mark(classId-1); }
+    enableClass(classId: number) { return this.setBit(classId-1, true); }
+    disableClass(classId: number) { return this.setBit(classId-1, false); }
     get Warrior() { return this.bit(0); }
     get Paladin() { return this.bit(1); }
     get Hunter() { return this.bit(2); }

@@ -36,19 +36,18 @@ export class UnitFlags extends MaskCell<CreatureTemplate> {
     protected bitno(no: number) { return no%32; }
 
 
-    mark(no: number): CreatureTemplate {
-        const cell = this.cell(no);
-        cell.set((cell.get()|1<<this.bitno(no))>>>0);
+    setBit(no: number, value: boolean) {
+        if(value) {
+            const cell = this.cell(no);
+            cell.set((cell.get()|1<<this.bitno(no))>>>0);
+        } else {
+            const cell = this.cell(no);
+            cell.set((cell.get()&~1<<this.bitno(no))>>>0);
+        }
         return this.owner;
     }
 
-    clear(no: number): CreatureTemplate {
-        const cell = this.cell(no);
-        cell.set((cell.get()&~1<<this.bitno(no))>>>0);
-        return this.owner;
-    }
-
-    check(no: number): boolean {
+    getBit(no: number): boolean {
         const cell = this.cell(no);
         return ((cell.get()&1<<this.bitno(no))>>>0) !== 0;
     }

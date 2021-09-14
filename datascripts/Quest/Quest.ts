@@ -31,6 +31,7 @@ import { QuestObjective } from "./QuestObjective";
 import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
 import { Quests } from "./Quests";
+import { QuestSpecialFlags } from "./QuestSpecialFlags";
 import { QuestText } from "./QuestText";
 
 export class Quest extends MainEntity<quest_templateRow> {
@@ -62,7 +63,7 @@ export class Quest extends MainEntity<quest_templateRow> {
         return addon;
     }
 
-    get SpecialFlags() { return this.wrap(this.addonRow.SpecialFlags); }
+    get SpecialFlags() { return new QuestSpecialFlags(this, this.addonRow.SpecialFlags); }
     get MaxLevel() { return this.wrap(this.addonRow.MaxLevel); }
     get NextQuestID() { return this.wrap(this.addonRow.NextQuestID); }
     get PrevQuestID() { return this.wrap(this.addonRow.PrevQuestID); }

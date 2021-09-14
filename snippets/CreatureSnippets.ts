@@ -37,7 +37,7 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
 
-    .NPCFlags.Repairer.mark()
+    .NPCFlags.Repairer.set(true)
     .Vendor.addItem(25)
     // add items here
 /** end-snippet */
@@ -51,11 +51,11 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Subname.enGB.set('Innkeeper')
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
-    .NPCFlags.Gossip.mark()
-    .NPCFlags.Vendor.mark()
-    .NPCFlags.Innkeeper.mark()
-    .NPCFlags.Trainer.mark()
-    .NPCFlags.ClassTrainer.mark()
+    .NPCFlags.Gossip.set(true)
+    .NPCFlags.Vendor.set(true)
+    .NPCFlags.Innkeeper.set(true)
+    .NPCFlags.Trainer.set(true)
+    .NPCFlags.ClassTrainer.set(true)
     .Gossip.modRefCopy((gossip)=>{
         gossip
             .Text.add({enGB:'Welcome to my inn'})
@@ -84,7 +84,7 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Subname.enGB.set('Multivendor')
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
-    .NPCFlags.Gossip.mark()
+    .NPCFlags.Gossip.set(true)
     .Gossip.modRefCopy((gossip)=>{
         gossip
             .Options.addMod(op=>{
@@ -113,7 +113,7 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Subname.enGB.set('Questgiver')
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
-    .NPCFlags.QuestGiver.mark()
+    .NPCFlags.QuestGiver.set(true)
 /** end-snippet */
 
 /**
@@ -125,7 +125,7 @@ std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/)
     .Subname.enGB.set('Patroller')
     .Models.addIds(29419)
     .FactionTemplate.setNeutralPassive()
-    .NPCFlags.QuestGiver.mark()
+    .NPCFlags.QuestGiver.set(true)
     .spawnMod(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spawn'
         , {map:0,x:0,y:0,z:0,o:0}
         , (spawn=>{

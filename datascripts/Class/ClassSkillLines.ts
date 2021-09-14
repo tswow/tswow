@@ -11,7 +11,7 @@ export class ClassSkillLines extends MultiRowSystem<SkillLine,Class> {
             .map(x=>new SkillLine(x))
             .filter(x=>
                 x.RaceClassInfos
-                    .filter(y=>y.ClassMask.check(this.owner.ID-1)).length>0)
+                    .filter(y=>y.ClassMask.getBit(this.owner.ID-1)).length>0)
     }
     protected isDeleted(a: SkillLine): boolean {
         return a.row.isDeleted();

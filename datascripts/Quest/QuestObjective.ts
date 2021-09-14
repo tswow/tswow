@@ -193,12 +193,12 @@ export class Scripted extends LocSystem<Quest> {
 
     constructor(owner: Quest) {
         super(owner);
-        this.owner.SpecialFlags.mark(1);
+        this.owner.SpecialFlags.CustomComplete.set(true)
     }
 
     clear() {
         this.owner.row.AreaDescription.set("");
-        this.owner.SpecialFlags.clear(1);
+        this.owner.SpecialFlags.CustomComplete.set(false)
         return this.owner;
     }
 
