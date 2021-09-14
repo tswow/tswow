@@ -17,6 +17,7 @@
 import { Achievements } from "./Achievement/Achievement";
 import { AreaRegistry } from "./Area/Area";
 import { WMOAreaRegistry } from "./Area/WMOArea";
+import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
 import { BattlegroundRegistry } from "./Battleground/Battleground";
 import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
 import { Classes } from "./Class/Class";
@@ -145,5 +146,6 @@ export const std = {
     Vehicles: VehicleRegistry,
     Holidays: HolidayRegistry,
     GameEvents: GameEventRegistry,
-    IDs: Ids
+    IDs: Ids,
+    AreaTriggers: AreaTriggerRegistry
 }
