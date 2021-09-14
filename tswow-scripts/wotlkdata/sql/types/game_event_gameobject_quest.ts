@@ -56,8 +56,8 @@ export class game_event_gameobject_questRow extends SqlRow<game_event_gameobject
      *
      * Cloned rows are automatically added to the SQL table.
      */
-    clone(id : tinyint,quest : mediumint,eventEntry : mediumint, c? : game_event_gameobject_questCreator) : this {
-        return this.cloneInternal([id,quest,eventEntry],c)
+    clone(eventEntry: tinyint,id: mediumint,quest: mediumint, c? : game_event_gameobject_questCreator) : this {
+        return this.cloneInternal([eventEntry,id,quest],c)
     }
 }
 
@@ -87,10 +87,10 @@ export class game_event_gameobject_questTable extends SqlTable<
     game_event_gameobject_questCreator,
     game_event_gameobject_questQuery,
     game_event_gameobject_questRow> {
-    add(id : tinyint,quest : mediumint,eventEntry : mediumint, c? : game_event_gameobject_questCreator) : game_event_gameobject_questRow {
+    add(eventEntry: tinyint,id: mediumint,quest: mediumint, c? : game_event_gameobject_questCreator) : game_event_gameobject_questRow {
         const first = this.first();
-        if(first) return first.clone(id,quest,eventEntry,c)
-        else return this.rowCreator(this, {}).clone(id,quest,eventEntry,c)
+        if(first) return first.clone(eventEntry,id,quest,c)
+        else return this.rowCreator(this, {}).clone(eventEntry,id,quest,c)
     }
 }
 
