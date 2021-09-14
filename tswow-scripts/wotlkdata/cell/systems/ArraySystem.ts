@@ -42,7 +42,7 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
         return this.owner;
     }
 
-    protected getFree(): A {
+    addGet(): A {
         for (let i = 0; i < this.length; ++i) {
             const cur = this.get(i);
             if (cur.isClear()) {
