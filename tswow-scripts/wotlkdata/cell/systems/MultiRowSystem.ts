@@ -40,7 +40,7 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
         return this.get().filter(callback);
     }
 
-    objectify() {
+    objectify(): any {
         return this.get().map(x=>{
             let y = x as any;
             return y.objectify && typeof(y.objectify) == 'function'
