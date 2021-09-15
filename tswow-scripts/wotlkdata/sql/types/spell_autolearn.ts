@@ -54,7 +54,7 @@ export class spell_autolearnRow extends SqlRow<spell_autolearnCreator,spell_auto
     /**
      * No comment (yet!)
      */
-    get level() {return new SQLCell<int, this>(this, 'classmask')}
+    get level() {return new SQLCell<int, this>(this, 'level')}
 
     /**
      * Creates a clone of this row with new primary keys.
@@ -72,7 +72,7 @@ export class spell_autolearnRow extends SqlRow<spell_autolearnCreator,spell_auto
 export type spell_autolearnCreator = {
     spell?: int,
     racemask?: int,
-        classmask?: int,
+    classmask?: int,
     level?: int,
 }
 
