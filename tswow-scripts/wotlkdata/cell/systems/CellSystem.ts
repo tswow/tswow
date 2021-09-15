@@ -18,6 +18,7 @@ import { Language, Languages } from '../../dbc/Localization';
 import { loc_constructor } from '../../primitives';
 import { Cell, CellWrapper, CPrim } from '../cells/Cell';
 import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
+import { CellReadOnly, CellWrapperReadOnly } from '../cells/CellReadOnly';
 import { MulticastCell } from '../cells/MulticastCell';
 import { CellWrapperExists, PendingCell } from '../cells/PendingCell';
 import { CommonStruct } from '../serialization/CommonStruct';
@@ -72,6 +73,10 @@ export class CellSystem<T> {
     static isSystem(candidate: any) {
         if(!candidate ||  typeof(candidate) != 'object') return false;
         return (candidate as CellSystem<any>).isSubsystem || false;
+    }
+
+    protected wrapReadOnly<W extends CPrim>(cell: CellReadOnly<W, any>) {
+        return new CellWrapperReadOnly(this, cell);
     }
 
     protected wrap<W extends CPrim>(cell: Cell<W, any>) {
