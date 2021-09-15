@@ -29,13 +29,17 @@ export abstract class CellReadOnly<D extends CPrim, T> extends CellRoot<T> {
         return this.get();
     }
 
-    get isReadOnly() { return true; }
+    protected get isReadOnly() { return true; }
 
     protected deserialize(value: any) {
         throw new Error(`Attempting to deserialize read-only property`);
     }
 
     protected serialize() {}
+
+    static set<D extends CPrim>(cell: CellReadOnly<D,any>, value: D) {
+        cell.set(value);
+    }
 }
 
 export class CellSimpleReadOnly<D extends CPrim, T> extends CellReadOnly<D, T> {
@@ -46,4 +50,23 @@ export class CellSimpleReadOnly<D extends CPrim, T> extends CellReadOnly<D, T> {
         this.get = getter;
         this.set = setter;
     }
+}
+
+export class CellWrapperReadOnly<D extends CPrim,T> extends CellReadOnly<D,T> {
+    protected cell: CellReadOnly<D,any>;
+
+    constructor(owner: T, cell: CellReadOnly<D,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    get(): D {
+        return this.cell.get();
+    }
+
+    protected set(value: D): T {
+        CellReadOnly.set(this.cell, value);
+        return this.owner;
+    }
+
 }

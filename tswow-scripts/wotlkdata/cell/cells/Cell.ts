@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellRoot } from './CellRoot';
+import { CellReadOnly } from './CellReadOnly';
 
 export type CPrim = number | string | boolean | bigint;
 
-export abstract class Cell<D extends CPrim, T> extends CellRoot<T> {
+export abstract class Cell<D extends CPrim, T> extends CellReadOnly<D,T> {
     abstract get(): D;
     abstract set(value: D): T;
     protected objectify(): any {
@@ -28,6 +28,8 @@ export abstract class Cell<D extends CPrim, T> extends CellRoot<T> {
     protected deserialize(value: any) {
         this.set(value);
     }
+
+    protected get isReadOnly() { return false; }
 }
 
 export class CellWrapper<D extends CPrim, T> extends Cell<D, T> {
