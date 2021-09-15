@@ -24,10 +24,11 @@ import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { RaceType } from "../Race/RaceType";
-import { RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
+import { SpellAutoLearns } from "./SpellAutoLearn";
 import { SpellBonusData } from "./SpellBonusData";
 import { SpellCastTimePointer } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
@@ -163,6 +164,8 @@ export class Spell extends MainEntity<SpellRow> {
     get Rank() { return new SpellRank(this, this.ID); }
     get Groups() { return new SpellGroups(this, this.ID); }
 
+    get AutoLearn() { return new SpellAutoLearns(this); }
+
     /** Custom server core attributes for this spell */
     readonly CustomAttributes = new SpellCustomAttr(this);
     /** Custom server core damage bonuses */
@@ -208,5 +211,14 @@ export class SpellRef<T> extends RefStatic<T,Spell> {
     }
     protected resolve(): Spell {
         return Spells.load(this.cell.get());
+    }
+}
+
+export class SpellRefReadOnly<T> extends RefReadOnly<T,Spell> {
+    getRef(): Spell {
+        return Spells.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }
