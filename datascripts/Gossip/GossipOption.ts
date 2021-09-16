@@ -63,7 +63,7 @@ export class GossipOptions extends MultiRowSystem<GossipOption,Gossip> {
         return value.row.isDeleted();
     }
 
-    add() {
+    addGet() {
         return new GossipOption(
              SQL.gossip_menu_option.add(this.owner.ID, this.length)
             .OptionType.set(1)
@@ -73,7 +73,7 @@ export class GossipOptions extends MultiRowSystem<GossipOption,Gossip> {
     }
 
     addMod(callback: (option: GossipOption)=>void) {
-        callback(this.add());
+        callback(this.addGet());
         return this.owner;
     }
 }

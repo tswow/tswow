@@ -3,7 +3,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefBase } from "../Refs/Ref";
+import { RefBase, RefReadOnly } from "../Refs/Ref";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 import { AchievementReward } from "./AchievementReward";
@@ -61,5 +61,14 @@ export class AchievementRef<T> extends RefBase<T,Achievement> {
     }
     protected resolve(): Achievement {
         return Achievements.load(this.cell.get());
+    }
+}
+
+export class AchievementRefReadOnly<T> extends RefReadOnly<T,Achievement> {
+    getRef(): Achievement {
+        return Achievements.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }

@@ -19,7 +19,7 @@ import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
 import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRef } from "../Sound/ZoneMusic";
@@ -82,5 +82,14 @@ export class AreaRef<T> extends RefStatic<T,Area> {
     }
     protected resolve(): Area {
         return AreaRegistry.load(this.cell.get());
+    }
+}
+
+export class AreaRefReadOnly<T> extends RefReadOnly<T,Area> {
+    getRef(): Area {
+        return AreaRegistry.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }

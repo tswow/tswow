@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { TransformedClass } from "wotlkdata/cell/cells/EnumCell";
+import { TransformedClass, TransformedClassReadOnly } from "wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 
@@ -51,6 +51,13 @@ export abstract class TransformedEntity<R,C> extends TransformedClass<C> {
     }
 }
 
+export abstract class TransformedEntityReadOnly<R,C> extends TransformedClassReadOnly<C> {
+    readonly row: R;
+    constructor(row: R) {
+        super();
+        this.row = row;
+    }
+}
 
 export class ChildEntity<R,T extends MainEntity<R>> extends CellSystem<T> {
     @Transient

@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { FactionReputations } from "./FactionReputation";
 import { FactionTemplates } from "./FactionTemplates";
 
@@ -101,5 +101,15 @@ export class FactionRef<T> extends RefStatic<T,Faction> {
     }
     protected resolve(): Faction {
         return Factions.load(this.cell.get());
+    }
+}
+
+export class FactionRefReadOnly<T> extends RefReadOnly<T,Faction> {
+    getRef(): Faction {
+        return Factions.load(this.cell.get());
+    }
+
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }

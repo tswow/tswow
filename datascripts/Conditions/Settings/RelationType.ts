@@ -1,3 +1,5 @@
+import { EnumCellReadOnly } from "wotlkdata/cell/cells/EnumCell";
+
 /*
  * This file is part of tswow (https://github.com/tswow)
  *
@@ -14,26 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export type RelationType = 'SELF' | 'PARTY' | 'RAID_OR_PARTY' | 'OWNED_BY' | 'PASSENGER_OF' | 'CREATED_BY'
-
-export function resolveRelation(type: RelationType) {
-    switch(type) {
-        case 'SELF': return 0;
-        case 'PARTY': return 1;
-        case 'OWNED_BY': return 2;
-        case 'PASSENGER_OF': return 3;
-        case 'CREATED_BY': return 4;
-        default: throw new Error(`Invalid relation type: ${type}`);
-    }
+export enum RelationTypes {
+      SELF         = 0
+    , PARTY        = 1
+    , OWNED_BY     = 2
+    , PASSANGER_OF = 3
+    , CREATED_BY   = 4
 }
 
-export function getRelation(id: number) : RelationType {
-    switch(id) {
-        case 0: return 'SELF'
-        case 1: return 'PARTY'
-        case 2: return 'OWNED_BY'
-        case 3: return 'PASSENGER_OF'
-        case 4: return 'CREATED_BY'
-        default: throw new Error(`Invalid relation type: ${id}`);
-    }
+export type RelationType = keyof typeof RelationTypes;
+
+export function resolveRelation(type: RelationType) {
+    return RelationTypes[type];
+}
+
+export class RelationTypeEnumReadOnly<T> extends EnumCellReadOnly<T> {
+    get Self()        { return this.value(RelationTypes.SELF); }
+    get Party()       { return this.value(RelationTypes.PARTY); }
+    get OwnedBy()     { return this.value(RelationTypes.OWNED_BY); }
+    get PassangerOf() { return this.value(RelationTypes.PASSANGER_OF); }
+    get CreatedBy()   { return this.value(RelationTypes.CREATED_BY); }
 }

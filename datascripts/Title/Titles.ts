@@ -18,6 +18,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { RefReadOnly } from "../Refs/Ref";
 
 export class Title extends MainEntity<CharTitlesRow>{
     get ID() { return this.row.ID.get(); }
@@ -45,5 +46,14 @@ export const Titles = {
 
     find (query: CharTitlesQuery) {
         return new Title(DBC.CharTitles.find(query));
+    }
+}
+
+export class TitleRefReadOnly<T> extends RefReadOnly<T, Title> {
+    getRef(): Title {
+        return Titles.load(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 }

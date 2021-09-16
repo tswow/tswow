@@ -15,32 +15,73 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { conditionsCreator, conditionsQuery } from "wotlkdata/sql/types/conditions";
-import { ClassType, resolveClassType } from "../Class/ClassType";
-import { getRanks, ReputationRanks, reputationRanksToMask } from "../Faction/ReputationRanks";
-import { DrunkState, idToDrunkState, resolveDrunkState } from "../Misc/DrunkState";
-import { GenderAllowNone, getGender, resolveGender } from "../Misc/Gender";
-import { RaceType, resolveRaceType } from "../Race/RaceType";
-import { ComparisonType, getComparison, resolveComparison } from "./ConditionComparisonType";
-import { ConditionRow } from "./ConditionRow";
-import { ConditionType } from "./ConditionType";
-import { ConditionTypeID, getConditionTypeID, resolveConditionTypeID } from "./ConditionTypeID";
-import { ConditionTypeMask, getConditionTypeMask, resolveConditionTypeMask } from "./ConditionTypeMask";
-import { getQuestStates, QuestStateMask, resolveQuestStates } from "./QuestStateMask";
-import { getRelation, RelationType, resolveRelation } from "./RelationType";
-import { getStandState, resolveStandState, StandState } from "./StandState";
+import { ClassType, makeClassmask } from "../Class/ClassType";
+import { DrunkState, resolveDrunkState } from "../Misc/DrunkState";
+import { makeReputationRankMask, ReputationRank } from "../Misc/ReputationRank";
+import { makeRacemask, RaceType } from "../Race/RaceType";
+import { ConditionPlain } from "./ConditionTypes";
+import { ComparisonType, resolveComparison } from "./Settings/ComparisonType";
+import { GenderAllowNone, resolveGenderAllowNone } from "./Settings/Gender";
+import { makeQuestStateMask, QuestState } from "./Settings/QuestState";
+import { RelationType, resolveRelation } from "./Settings/RelationType";
+import { resolveStandState, StandState } from "./Settings/StandState";
+import { resolveWorldObjectTypeEnum, resolveWorldObjectTypeMask, WorldObjectTypeEnum, WorldObjectTypeMask } from "./Settings/WorldObjectType";
 
 /**
  * TODO: Add missing type transforms
  */
-export class Condition<T> extends CellSystem<T> {
+export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
+    private defElse: number;
+
+    else(elseGroup: number, callback: (condition: ConditionElse)=>void){
+        let condition = new Condition<any>(
+              undefined
+            , this.sourceType
+            , this.sourceGroup
+            , this.sourceEntry
+            , this.sourceId
+            , this.sourceTarget
+            , elseGroup
+            )
+        // @ts-ignore hack
+        condition.owner = condition;
+        callback(condition as any);
+        return this.owner;
+    }
+
+    protected getAllRows(): ConditionPlain[] {
+        let condition: conditionsQuery = {
+              SourceTypeOrReferenceId: this.sourceType
+        }
+        if(this.sourceGroup)  condition.SourceGroup     = this.sourceGroup;
+        if(this.sourceEntry)  condition.SourceEntry     = this.sourceEntry;
+        if(this.sourceId)     condition.SourceId        = this.sourceId;
+        if(this.sourceTarget) condition.ConditionTarget = this.sourceTarget;
+        return SQL.conditions.filter(condition)
+            .map(x=>new ConditionPlain(x))
+    }
+
+    protected isDeleted(value: ConditionPlain): boolean {
+        return value.isDeleted();
+    }
+
     protected state: conditionsCreator = {};
 
-    protected addRow(type: number, group: number, value1: number = 0, value2: number = 0, value3: number = 0) {
-        SQL.conditions.add(this.sourceType, this.sourceGroup||0,
-            this.sourceEntry||0, this.sourceId||0, group,
-            type, 0, value1, value2, value3).Comment.set('tswow')
+    protected addRow(type: number, group: number|undefined, value1: number = 0, value2: number = 0, value3: number = 0) {
+        SQL.conditions.add(
+              this.sourceType
+            , this.sourceGroup  || 0
+            , this.sourceEntry  || 0
+            , this.sourceId     || 0
+            , group             || 0
+            , type
+            , this.sourceTarget || 0
+            , value1
+            , value2
+            , value3
+            ).Comment.set('tswow')
         return this.owner;
     }
 
@@ -51,128 +92,45 @@ export class Condition<T> extends CellSystem<T> {
     protected sourceTarget?: number;
 
     constructor(
-        owner: T,
-        sourceType: number,
-        sourceGroup?: number,
-        sourceEntry?: number,
-        sourceId?: number,
-        sourceTarget?: number) {
-
+          owner: T
+        , sourceType: number
+        , sourceGroup?: number
+        , sourceEntry?: number
+        , sourceId?: number
+        , sourceTarget?: number
+        , defaultElseGroup?: number
+    ) {
         super(owner);
         this.sourceType = sourceType;
         this.sourceGroup = sourceGroup;
         this.sourceEntry = sourceEntry;
         this.sourceId = sourceId;
         this.sourceTarget = sourceTarget;
+        this.defElse = defaultElseGroup || 0;
     }
 
-    protected sourceNames(eventName: string, names: (string|undefined)[], conditionTransform: {[key:number]:any} = {}) {
-        const values = [this.sourceGroup, this.sourceEntry, this.sourceId]
-        const obj : {[key:string]: any}= {};
-        obj['SourceType'] = eventName;
-        for(let i=0;i<names.length;++i) {
-            const name = names[i];
-            const value = values[i];
-            if(name===undefined||value===undefined) {
-                continue;
-            } else {
-                if(conditionTransform[value]!==undefined) {
-                    obj[name] = conditionTransform[value];
-                } else {
-                    obj[name] = value;
-                }
-            }
-        }
-        return obj;
+
+    addHasAura(spellId: number, effectIndex: number, elseGroup: number) {
+        return this.addRow(1,elseGroup,spellId,effectIndex);
     }
 
-    protected objectifySource() {
-        switch (this.sourceType) {
-            case 0: return this.sourceNames("None",[]);
-            case 1: return this.sourceNames("CreatureLoot",["LootID","ItemID"])
-            case 2: return this.sourceNames("DisenchantLoot",["LootID","ItemID"])
-            case 3: return this.sourceNames("FishingLoot",["LootID","ItemID"])
-            case 4: return this.sourceNames("GameObjectLoot",["LootID","ItemID"])
-            case 5: return this.sourceNames("ItemLoot",["LootID","ItemID"])
-            case 6: return this.sourceNames("MailLoot",["LootID","ItemID"])
-            case 7: return this.sourceNames("MillingLoot",["LootID","ItemID"])
-            case 8: return this.sourceNames("PickpocketingLoot",["LootID","ItemID"])
-            case 9: return this.sourceNames("ProspectingLoot",["LootID","ItemID"])
-            case 10: return this.sourceNames("ReferenceLoot",["LootID","ItemID"])
-            case 11: return this.sourceNames("SkinningLoot",["LootID","ItemID"])
-            case 12: return this.sourceNames("SpellLoot",["LootID","ItemID"])
-            case 13: return this.sourceNames("SpellImplicitTarget",["TargetMask","SpellID"], {0:"SpellTarget",1:"Caster"})
-            case 14: return this.sourceNames("GossipMenu",["MenuID","TextID"],{0:"Player",1:"Self"})
-            case 15: return this.sourceNames("GossipMenuOption",["MenuID","OptionID"],{0:"Player",1:"Self"})
-            case 16: return this.sourceNames("TemplateVehicle",[undefined,"CreatureID"],{0:"RidingPlayer",1:"Vehicle"})
-            case 17: return this.sourceNames("Spell",[undefined,"SpellID"],{0:"Caster",1:"Target"})
-            case 18: return this.sourceNames("SpellClickEvent",["CreatureID","Spell"],{0:"Clicker",1:"Target"})
-            case 19: return this.sourceNames("QuestAvailable",[undefined,"QuestID"])
-            case 20: return this.sourceNames("Unused",[])
-            case 21: return this.sourceNames("VehicleSpell",["CreatureID","Spell"],{0:"Player",1:"Vehicle"})
-            case 22: return this.sourceNames("SmartEvent",["ScriptID","ID","SourceType"],{0:"Invoker",1:"Object"})
-            case 23: return this.sourceNames("NPCVendor",["VendorID","ItemID"])
-            case 24: return this.sourceNames("SpellProc",[undefined,"SpellID"],{0:"Actor",1:"Target"})
-            default: return {SourceType: `Invalid: (${this.sourceType})`}
-        }
-    }
-
-    rows() {
-        let searchObj : conditionsQuery = {
-            SourceTypeOrReferenceId: this.sourceType
-        };
-
-        if(this.sourceGroup!==undefined) {
-            searchObj.SourceGroup = this.sourceGroup;
-        }
-
-        if(this.sourceEntry!==undefined) {
-            searchObj.SourceEntry = this.sourceEntry;
-        }
-
-        if(this.sourceId!==undefined) {
-            searchObj.SourceId = this.sourceId;
-        }
-
-        return SQL.conditions
-            .filter(searchObj)
-            .map(x=>new ConditionRow(this.owner, x));
-    }
-
-    objectify() {
-        return Object.assign(
-            this.objectifySource(),
-            {Conditions: this.rows()}
-        );
-    }
-
-    @ConditionType(1,["SpellID","EffectIndex"])
-    addHasAura(spellId: number, effectIndex: number, group = 0) {
-        return this.addRow(1,group,spellId,effectIndex);
-    }
-
-    @ConditionType(2,["Item","Count","InBank"])
-    addHasItem(item: number, count: number, inBank: boolean = false, group = 0) {
+    addHasItem(item: number, count: number, inBank: boolean = false, group = this.defElse) {
         return this.addRow(2,group,item,count,inBank ? 1 : 0);
     }
 
-    @ConditionType(3,["Item"])
-    addHasItemEquipped(item: number, group = 0) {
+    addHasItemEquipped(item: number, group = this.defElse) {
         return this.addRow(3,group,item);
     }
 
-    @ConditionType(4,["Zone"])
-    addZoneId(zone: number, group = 0) {
+    addZoneId(zone: number, group = this.defElse) {
         return this.addRow(4,group,zone);
     }
 
-    @ConditionType(5,["FactionTemplate","RankMask"],[null,getRanks])
-    addReputationRank(factionTemplate: number, ranks: ReputationRanks[], group = 0) {
-        return this.addRow(5, group, factionTemplate, reputationRanksToMask(ranks));
+    addReputationRank(factionTemplate: number, ranks: ReputationRank[], group = this.defElse) {
+        return this.addRow(5, group, factionTemplate, makeReputationRankMask(ranks));
     }
 
-    @ConditionType(6,["Team"])
-    addIsTeam(team: 'HORDE'|'ALLIANCE', group = 0) {
+    addIsTeam(team: 'HORDE'|'ALLIANCE', group = this.defElse) {
         return this.addRow(6, group, team === 'HORDE' ? 67 : 469);
     }
 
@@ -180,232 +138,192 @@ export class Condition<T> extends CellSystem<T> {
      * @param skillLine DBC.SkillLine#ID
      * @param rankValue 1-450
      */
-    @ConditionType(7,["SkillLine","RankValue"])
-    addSkill(skillLine: number, rankValue: number, group = 0) {
+    addSkill(skillLine: number, rankValue: number, group = this.defElse) {
         this.addRow(7, group, skillLine, rankValue);
     }
 
-    @ConditionType(8,["QuestID"])
-    addFinishedQuest(questId: number, group = 0) {
+    addFinishedQuest(questId: number, group = this.defElse) {
         return this.addRow(8, group, questId);
     }
 
-    @ConditionType(9,["QuestID"])
-    addStartedQuest(questId: number, group = 0) {
+    addStartedQuest(questId: number, group = this.defElse) {
         return this.addRow(9, group, questId);
     }
 
-    @ConditionType(10,["DrunkState"],[idToDrunkState])
-    addIsDrunk(state : DrunkState, group = 0) {
+    addIsDrunk(state : DrunkState, group = this.defElse) {
         return this.addRow(10,group,resolveDrunkState(state));
     }
 
-    @ConditionType(11,["Index","Value"])
-    addWorldState(index: number, value: number, group = 0) {
+    addWorldState(index: number, value: number, group = this.defElse) {
         return this.addRow(11, group,index, value);
     }
 
     /**
      * @param entry SQL.game_event#entry
      */
-    @ConditionType(12,["Entry"])
-    addActiveEvent(entry: number, group = 0) {
+    addActiveEvent(entry: number, group = this.defElse) {
         return this.addRow(12, group,entry);
     }
 
-    @ConditionType(13,["Data"])
-    addInstanceInfo(entry: number, data: number, group = 0) {
+    addInstanceInfo(entry: number, data: number, group = this.defElse) {
         return this.addRow(13, group, entry, data);
     }
 
-    @ConditionType(14,["QuestID"])
-    addQuestNone(quest: number, group = 0) {
+    addQuestNone(quest: number, group = this.defElse) {
         return this.addRow(14, group, quest);
     }
 
-    @ConditionType(15,["ClassMask"])
-    addIsClass(cls: ClassType, group = 0) {
-        return this.addRow(15, group, 1<<(resolveClassType(cls)-1));
+    addIsClass(cls: ClassType[], group = this.defElse) {
+        return this.addRow(15, group, makeClassmask(cls))
     }
 
-    @ConditionType(16,["RaceMask"])
-    addIsRace(race: RaceType, group = 0) {
-        return this.addRow(16, group, resolveRaceType(race));
+    addIsRace(races: RaceType[], group = this.defElse) {
+        return this.addRow(16, group, makeRacemask(races));
     }
 
     /**
      * @param id DBC.Achievement#ID
      */
-    @ConditionType(17,["AchievementID"])
-    addHasAchievement(id: number, group = 0) {
+    addHasAchievement(id: number, group = this.defElse) {
         return this.addRow(17, group, id);
     }
 
     /**
      * @param id DBC.CharTitles#ID
      */
-    @ConditionType(18,["Title"])
-    addHasTitle(id: number, group = 0) {
+    addHasTitle(id: number, group = this.defElse) {
         return this.addRow(18, group, id);
     }
 
     /**
      * @param id DBC.CharTitles#ID
      */
-    @ConditionType(18,["SpawnMask"])
-    addSpawnMask(spawnMask: number, group = 0) {
+    addSpawnMask(spawnMask: number, group = this.defElse) {
         return this.addRow(18, group, spawnMask);
     }
 
-    @ConditionType(20,["Gender"],[getGender])
-    addGender(gender: GenderAllowNone, group = 0) {
-        return this.addRow(20, group, resolveGender(gender));
+    addGender(gender: GenderAllowNone, group = this.defElse) {
+        return this.addRow(20, group, resolveGenderAllowNone(gender));
     }
 
     /**
      * @param state enum from Unit.h
      */
-    @ConditionType(20,["State"])
-    addUnitState(state: number, group = 0) {
+    addUnitState(state: number, group = this.defElse) {
         return this.addRow(21, group, state);
     }
 
-    @ConditionType(21,["MapID"])
-    addMapId(mapid: number, group = 0) {
+    addMapId(mapid: number, group = this.defElse) {
         return this.addRow(22, group, mapid);
     }
 
-    @ConditionType(22,["AreaID"])
-    addAreaId(areaId: number, group = 0) {
+    addAreaId(areaId: number, group = this.defElse) {
         return this.addRow(23, group, areaId);
     }
 
-    @ConditionType(23,["CreatureType"])
-    addCreatureType(type: number, group = 0) {
+    addCreatureType(type: number, group = this.defElse) {
         return this.addRow(24, group, type);
     }
 
-    @ConditionType(24,["SpellID"])
-    addHasSpell(id: number, group = 0) {
+    addHasSpell(id: number, group = this.defElse) {
         return this.addRow(25, group, id);
     }
 
-    @ConditionType(25,["Phasemask"])
-    addInPhase(phasemask: number, group = 0) {
+    addInPhase(phasemask: number, group = this.defElse) {
         return this.addRow(26, group, phasemask);
     }
 
-    @ConditionType(26,["Phasemask"])
-    addPhasemask(phaseMask: number, group = 0) {
+    addPhasemask(phaseMask: number, group = this.defElse) {
         return this.addRow(26, group, phaseMask);
     }
 
-    @ConditionType(27,["Level"])
-    addLevel(level: number, group = 0) {
-        return this.addRow(27, group, level);
+    addLevel(level: number, comparison: ComparisonType, group = this.defElse) {
+        return this.addRow(27, group, level, resolveComparison(comparison));
     }
 
-    @ConditionType(28,["QuestID"])
-    addQuestComplete(questId: number, group = 0) {
+    addQuestComplete(questId: number, group = this.defElse) {
         return this.addRow(28, group, questId);
     }
 
-    @ConditionType(29,["CreatureID"])
-    addNearCreature(creatureId: number, group = 0) {
+    addNearCreature(creatureId: number, group = this.defElse) {
         return this.addRow(29, group, creatureId);
     }
 
-    @ConditionType(30,["GameObjectID"])
-    addNearGameObject(gameObjectId: number, group = 0) {
+    addNearGameObject(gameObjectId: number, group = this.defElse) {
         return this.addRow(30, group, gameObjectId);
     }
 
-    @ConditionType(31,["TypeID","ID"],[getConditionTypeID])
-    addObjectEntry(typeId:ConditionTypeID, id: number, group = 0) {
-        return this.addRow(31, group, resolveConditionTypeID(typeId), id);
+    addObjectEntry(typeId:WorldObjectTypeEnum, id: number, group = this.defElse) {
+        return this.addRow(31, group, resolveWorldObjectTypeEnum(typeId), id);
     }
 
-    @ConditionType(32,["TypeMask"],[getConditionTypeMask])
-    addTypeMask(typeMask: ConditionTypeMask, group = 0) {
-        return this.addRow(32, group, resolveConditionTypeMask(typeMask));
+    addTypeMask(typeMask: WorldObjectTypeMask, group = this.defElse) {
+        return this.addRow(32, group, resolveWorldObjectTypeMask(typeMask));
     }
 
-    @ConditionType(33,["Target","RelationType"],[null,getRelation])
-    addRelationTo(target: number, relationType: RelationType, group = 0) {
+    addRelationTo(target: number, relationType: RelationType, group = this.defElse) {
         return this.addRow(33, group, target, resolveRelation(relationType));
     }
 
-    @ConditionType(34,["Target","RankMask"],[null,getRanks])
-    addReactionTo(target: number, rankMask: ReputationRanks[], group = 0) {
-        return this.addRow(34, group, target, reputationRanksToMask(rankMask));
+    addReactionTo(target: number, rankMask: ReputationRank[], group = this.defElse) {
+        return this.addRow(34, group, target, makeReputationRankMask(rankMask));
     }
 
-    @ConditionType(35,["Target","Distance","ComparisonType"],[null,null,getComparison])
-    addDistanceTo(target: number, distance: number, comparison: ComparisonType,group = 0) {
+    addDistanceTo(target: number, distance: number, comparison: ComparisonType,group = this.defElse) {
         return this.addRow(35, group, target, distance, resolveComparison(comparison));
     }
 
-    @ConditionType(36,[])
-    addAlive(group = 0) {
+    addAlive(group = this.defElse) {
         return this.addRow(36, group);
     }
 
-    @ConditionType(37,["HPValue","ComparisonType"],[null,getComparison])
-    addHpValue(hpValue: number, comparison: ComparisonType, group = 0) {
+    addHpValue(hpValue: number, comparison: ComparisonType, group = this.defElse) {
         return this.addRow(37, group, hpValue, resolveComparison(comparison));
     }
 
-    @ConditionType(38,["HPPercentage","ComparisonType"], [null,getComparison])
-    addHpPercentage(hpPercentage: number, comparison: ComparisonType, group = 0) {
+    addHpPercentage(hpPercentage: number, comparison: ComparisonType, group = this.defElse) {
         return this.addRow(38, group, hpPercentage, resolveComparison(comparison));
     }
 
-    @ConditionType(39,["AchievementID"])
-    addRealmAchievement(achievementID: number, group = 0) {
+    addRealmAchievement(achievementID: number, group = this.defElse) {
         return this.addRow(39, group, achievementID);
     }
 
-    @ConditionType(40,[])
-    addInWater(group = 0) {
+    addInWater(group = this.defElse) {
         return this.addRow(40, group);
     }
 
-    @ConditionType(42,["StateType","StandState"],[null,getStandState])
-    addStandState(group = 0, stateType: number, standState: StandState) {
+    addStandState(stateType: number, standState: StandState, group = this.defElse) {
         return this.addRow(42, group, stateType, resolveStandState(standState));
     }
 
-    @ConditionType(43,["QuestID"])
-    addDailyQuestDone(questId: number, group = 0) {
+    addDailyQuestDone(questId: number, group = this.defElse) {
         return this.addRow(43, group, questId);
     }
 
-    @ConditionType(44,[])
-    addCharmed(group = 0) {
+    addCharmed(group = this.defElse) {
         return this.addRow(44, group);
     }
 
-    @ConditionType(45,["PetType"])
-    addPetType(petTypeMask: number,group = 0) {
+    addPetType(petTypeMask: number,group = this.defElse) {
         return this.addRow(45, group, petTypeMask);
     }
 
-    @ConditionType(46,[])
-    addTaxi(group = 0) {
+    addTaxi(group = this.defElse) {
         return this.addRow(46, group);
     }
 
-    @ConditionType(47,["QuestID","StateMask"],[getQuestStates])
-    addQuestState(questId: number, stateMask: QuestStateMask[], group = 0) {
-        return this.addRow(47, group, questId, resolveQuestStates(stateMask));
+    addQuestState(questId: number, stateMask: QuestState[], group = this.defElse) {
+        return this.addRow(47, group, questId, makeQuestStateMask(stateMask));
     }
 
-    @ConditionType(48,["QuestID","ObjectiveIndex"])
-    addQuestObjective(questId: number, objectiveIndex: number, group = 0) {
+    addQuestObjective(questId: number, objectiveIndex: number, group = this.defElse) {
         return this.addRow(47, group, questId, objectiveIndex);
     }
 
-    addCustom(entry: number, group = 0, value1 = 0, value2 = 0, value3 = 0) {
+    addCustom(entry: number, value1 = 0, value2 = 0, value3 = 0, group = this.defElse) {
         return this.addRow(entry,group,value1,value2,value3)
     }
 }
+
+export class ConditionElse extends Condition<ConditionElse> {}
