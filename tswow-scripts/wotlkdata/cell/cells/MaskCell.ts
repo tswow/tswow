@@ -68,7 +68,7 @@ export abstract class MaskCell<T> extends CellRoot<T> {
         let thing = Object.keys(Objects.mapObject(this, ['object'],
             (k, v) => {
                 usedIndices.push(v.bit);
-                return v.isBit && v.check();
+                return v.isBit && v.get();
             },
             (k, v) => {
                 return k;
@@ -207,7 +207,7 @@ export abstract class MaskCellReadOnly<T> extends CellRoot<T> {
         let thing = Object.keys(Objects.mapObject(this, ['object'],
             (k, v) => {
                 usedIndices.push(v.bit);
-                return v.isBit && v.check();
+                return v.isBit && v.get();
             },
             (k, v) => {
                 return k;
