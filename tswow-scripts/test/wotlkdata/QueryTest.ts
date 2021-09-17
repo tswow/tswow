@@ -23,10 +23,10 @@ describe('Query', function() {
     describe('AllQuery', function() {
         it('exports correctly to sql', function() {
             assert.strictEqual(queryToSql(qall({k: 1}, {k: 1})),
-            '(k = 1) AND (k = 1);');
+            '(`k` = 1) AND (`k` = 1);');
 
             assert.strictEqual(queryToSql(qall({k: 1, k1: 2}, {k: 1, k1: 2})),
-            '(k = 1 AND k1 = 2) AND (k = 1 AND k1 = 2);');
+            '(`k` = 1 AND `k1` = 2) AND (`k` = 1 AND `k1` = 2);');
         });
 
         it('compares correctly in-memory', function() {
@@ -39,10 +39,10 @@ describe('Query', function() {
     describe('AnyQuery', function() {
         it('exports correctly to sql', function() {
             assert.strictEqual(queryToSql(qany({k: 1}, {k: 1})),
-            '(k = 1) OR (k = 1);');
+            '(`k` = 1) OR (`k` = 1);');
 
             assert.strictEqual(queryToSql(qany({k: 1, k1: 2}, {k: 1, k1: 2})),
-            '(k = 1 AND k1 = 2) OR (k = 1 AND k1 = 2);');
+            '(`k` = 1 AND `k1` = 2) OR (`k` = 1 AND `k1` = 2);');
         });
 
         it('compares correctly in-memory', function() {
@@ -82,8 +82,8 @@ describe('Query', function() {
 describe('Relations', function() {
     describe('StrEq', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: streq('v')}), 'k LIKE "v";');
-            assert.strictEqual(queryToSql({k: streq('v', true)}), 'k = "v";');
+            assert.strictEqual(queryToSql({k: streq('v')}), '`k` LIKE "v";');
+            assert.strictEqual(queryToSql({k: streq('v', true)}), '`k` = "v";');
         });
 
         it('compares correctly in-memory', function() {
@@ -94,8 +94,8 @@ describe('Relations', function() {
 
     describe('StrNeq', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: strneq('v')}), '(NOT k LIKE "v");');
-            assert.strictEqual(queryToSql({k: strneq('v', true)}), '(NOT k = "v");');
+            assert.strictEqual(queryToSql({k: strneq('v')}), '(NOT `k` LIKE "v");');
+            assert.strictEqual(queryToSql({k: strneq('v', true)}), '(NOT `k` = "v");');
         });
 
         it('compares correctly in-memory', function() {
@@ -106,8 +106,8 @@ describe('Relations', function() {
 
     describe('NumEq', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: numeq(1.001)}), 'k = 1.001;');
-            assert.strictEqual(queryToSql({k: numeq(1.001, 2)}), 'ROUND(k,2) = 1.00;');
+            assert.strictEqual(queryToSql({k: numeq(1.001)}), '`k` = 1.001;');
+            assert.strictEqual(queryToSql({k: numeq(1.001, 2)}), 'ROUND(`k`,2) = 1.00;');
         });
 
         it('compares correctly in-memory', function() {
@@ -119,8 +119,8 @@ describe('Relations', function() {
 
     describe('NumNeq', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: numneq(1.001)}), 'k != 1.001;');
-            assert.strictEqual(queryToSql({k: numneq(1.001, 2)}), 'ROUND(k,2) != 1.00;');
+            assert.strictEqual(queryToSql({k: numneq(1.001)}), '`k` != 1.001;');
+            assert.strictEqual(queryToSql({k: numneq(1.001, 2)}), 'ROUND(`k`,2) != 1.00;');
         });
 
         it('compares correctly in-memory', function() {
@@ -132,8 +132,8 @@ describe('Relations', function() {
 
     describe('LTE', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: lte(1.001)}), 'k <= 1.001;');
-            assert.strictEqual(queryToSql({k: lte(1.001, 2)}), 'ROUND(k,2) <= 1.00;');
+            assert.strictEqual(queryToSql({k: lte(1.001)}), '`k` <= 1.001;');
+            assert.strictEqual(queryToSql({k: lte(1.001, 2)}), 'ROUND(`k`,2) <= 1.00;');
         });
 
         it('compares correctly in-memory', function() {
@@ -147,8 +147,8 @@ describe('Relations', function() {
 
     describe('LT', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: lt(1.001)}), 'k < 1.001;');
-            assert.strictEqual(queryToSql({k: lt(1.001, 2)}), 'ROUND(k,2) < 1.00;');
+            assert.strictEqual(queryToSql({k: lt(1.001)}), '`k` < 1.001;');
+            assert.strictEqual(queryToSql({k: lt(1.001, 2)}), 'ROUND(`k`,2) < 1.00;');
         });
 
         it('compares correctly in-memory', function() {
@@ -161,8 +161,8 @@ describe('Relations', function() {
 
     describe('GT', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: gt(1.001)}), 'k > 1.001;');
-            assert.strictEqual(queryToSql({k: gt(1.001, 2)}), 'ROUND(k,2) > 1.00;');
+            assert.strictEqual(queryToSql({k: gt(1.001)}), '`k` > 1.001;');
+            assert.strictEqual(queryToSql({k: gt(1.001, 2)}), 'ROUND(`k`,2) > 1.00;');
         });
 
         it('compares correctly in-memory', function() {
@@ -175,8 +175,8 @@ describe('Relations', function() {
 
     describe('GTE', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: gte(1.001)}), 'k >= 1.001;');
-            assert.strictEqual(queryToSql({k: gte(1.001, 2)}), 'ROUND(k,2) >= 1.00;');
+            assert.strictEqual(queryToSql({k: gte(1.001)}), '`k` >= 1.001;');
+            assert.strictEqual(queryToSql({k: gte(1.001, 2)}), 'ROUND(`k`,2) >= 1.00;');
         });
 
         it('compares correctly in-memory', function() {
@@ -190,8 +190,8 @@ describe('Relations', function() {
 
     describe('BoolEq', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: eq(true)}), '(NOT k = 0);');
-            assert.strictEqual(queryToSql({k: eq(false)}), '(k = 0);');
+            assert.strictEqual(queryToSql({k: eq(true)}), '(NOT `k` = 0);');
+            assert.strictEqual(queryToSql({k: eq(false)}), '(`k` = 0);');
         });
 
         it('compares correctly in-memory', function() {
@@ -204,8 +204,8 @@ describe('Relations', function() {
 
     describe('BoolNeq', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: neq(true)}), '(k = 0);');
-            assert.strictEqual(queryToSql({k: neq(false)}), '(NOT k = 0);');
+            assert.strictEqual(queryToSql({k: neq(true)}), '(`k` = 0);');
+            assert.strictEqual(queryToSql({k: neq(false)}), '(NOT `k` = 0);');
         });
 
         it('compares correctly in-memory', function() {
@@ -218,9 +218,9 @@ describe('Relations', function() {
 
     describe('Primitives', function() {
         it('exports correct sql', function() {
-            assert.strictEqual(queryToSql({k: 'a'}), 'k LIKE "a";');
-            assert.strictEqual(queryToSql({k: 1}), 'k = 1;');
-            assert.strictEqual(queryToSql({k: true}), '(NOT k = 0);');
+            assert.strictEqual(queryToSql({k: 'a'}), '`k` LIKE "a";');
+            assert.strictEqual(queryToSql({k: 1}), '`k` = 1;');
+            assert.strictEqual(queryToSql({k: true}), '(NOT `k` = 0);');
         });
 
         it('compares correctly in-memory', function() {
@@ -237,13 +237,13 @@ describe('Relations', function() {
     describe('AnyRelation', function() {
         it('exports correct sql', function() {
             assert.strictEqual(queryToSql({k: any('a', 'b', 'c')}),
-                '(k LIKE "a" OR k LIKE "b" OR k LIKE "c");');
+                '(`k` LIKE "a" OR `k` LIKE "b" OR `k` LIKE "c");');
             assert.strictEqual(queryToSql({k: any(1, 2, 3)}),
-                '(k = 1 OR k = 2 OR k = 3);');
+                '(`k` = 1 OR `k` = 2 OR `k` = 3);');
             assert.strictEqual(queryToSql({k: any(true, false, true)}),
-                '((NOT k = 0) OR (k = 0) OR (NOT k = 0));');
+                '((NOT `k` = 0) OR (`k` = 0) OR (NOT `k` = 0));');
             assert.strictEqual(queryToSql({k: any(gt(0), lt(0), lte(0), gte(0), eq(0))}),
-                '(k > 0 OR k < 0 OR k <= 0 OR k >= 0 OR k = 0);');
+                '(`k` > 0 OR `k` < 0 OR `k` <= 0 OR `k` >= 0 OR `k` = 0);');
         });
 
         it('compares correctly in-memory', function() {
@@ -255,13 +255,13 @@ describe('Relations', function() {
     describe('AllRelation', function() {
         it('exports correct sql', function() {
             assert.strictEqual(queryToSql({k: all('a', 'b', 'c')}),
-                '(k LIKE "a" AND k LIKE "b" AND k LIKE "c");');
+                '(`k` LIKE "a" AND `k` LIKE "b" AND `k` LIKE "c");');
             assert.strictEqual(queryToSql({k: all(1, 2, 3)}),
-                '(k = 1 AND k = 2 AND k = 3);');
+                '(`k` = 1 AND `k` = 2 AND `k` = 3);');
             assert.strictEqual(queryToSql({k: all(true, false, true)}),
-                '((NOT k = 0) AND (k = 0) AND (NOT k = 0));');
+                '((NOT `k` = 0) AND (`k` = 0) AND (NOT `k` = 0));');
             assert.strictEqual(queryToSql({k: all(gt(0), lt(0), lte(0), gte(0), eq(0))}),
-                '(k > 0 AND k < 0 AND k <= 0 AND k >= 0 AND k = 0);');
+                '(`k` > 0 AND `k` < 0 AND `k` <= 0 AND `k` >= 0 AND `k` = 0);');
         });
 
         it('compares correctly in-memory', function() {
@@ -275,10 +275,10 @@ describe('Relations', function() {
     describe('All/Any Nesting', function() {
         it('exports correct sql', function() {
             assert.strictEqual(queryToSql({k: all(any(1, 2), any(3, 4))}),
-                '((k = 1 OR k = 2) AND (k = 3 OR k = 4));');
+                '((`k` = 1 OR `k` = 2) AND (`k` = 3 OR `k` = 4));');
 
             assert.strictEqual(queryToSql({k: any(all(1, 2), all(3, 4))}),
-                '((k = 1 AND k = 2) OR (k = 3 AND k = 4));');
+                '((`k` = 1 AND `k` = 2) OR (`k` = 3 AND `k` = 4));');
         });
 
         it('compares correctly in-memory', function() {

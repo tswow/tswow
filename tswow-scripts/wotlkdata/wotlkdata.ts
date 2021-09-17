@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
-import { DBC as _DBC, DBCNames } from './dbc/DBCFiles';
+import { DBC as _DBC } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from './ids/Ids';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
@@ -120,6 +120,8 @@ async function mainWrap() {
 }
 
 async function main() {
+    if(process.argv.includes('bin/scripts/tswow/test')) return;
+
     ctime = Date.now();
     await IdPublic.readFile();
     SqlConnection.connect();
