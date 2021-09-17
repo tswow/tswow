@@ -89,19 +89,20 @@ export class LockIndexType extends EnumCellTransform<LockIndexBase> {
         return LockIndexBase.container(this.owner);
     }
 
-    get LockType() {
-        return this.value(
-              1
-            , t=>new LockIndexLockType(this.container,t.index)
-        )
-    }
-
     get ItemTemplate() {
         return this.value(
               1
             , t=>new LockIndexItem(this.container,t.index)
         )
     }
+
+    get LockType() {
+        return this.value(
+              2
+            , t=>new LockIndexLockType(this.container,t.index)
+        )
+    }
+
 }
 
 type QueryKey =
