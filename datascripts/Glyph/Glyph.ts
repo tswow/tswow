@@ -109,7 +109,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .BagFamily.set(16)
             .Quality.White.set()
             .Spells.addMod(ispell=>{
-                ispell.SpellID.set(spell.ID)
+                ispell.Spell.set(spell.ID)
                     .Trigger.OnUse.set()
                     .Charges.set(-1)
             })

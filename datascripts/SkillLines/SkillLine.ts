@@ -1,6 +1,6 @@
 import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
 import { MainEntity } from "../Misc/Entity";
-import { RefReadOnly } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { Spells } from "../Spell/Spells";
@@ -35,5 +35,23 @@ export class SkillLineRefReadOnly<T> extends RefReadOnly<T,SkillLine> {
     }
     exists(): boolean {
         return this.cell.get() > 0;
+    }
+}
+
+export class SkillLineRef<T> extends RefStatic<T,SkillLine> {
+    protected create(mod: string, id: string): SkillLine {
+        return SkillLines.create(mod,id);
+    }
+    protected clone(mod: string, id: string): SkillLine {
+        throw new Error(`SkillLines cannot be cloned yet`);
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: SkillLine): number {
+        return v.ID;
+    }
+    protected resolve(): SkillLine {
+        return SkillLines.load(this.cell.get());
     }
 }

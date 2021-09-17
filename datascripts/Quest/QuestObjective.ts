@@ -22,6 +22,7 @@ import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { ItemTemplateRef } from "../Item/ItemTemplate";
 import { Quest } from "./Quest";
 
 function ItemIds(owner: Quest) {
@@ -47,17 +48,17 @@ function RequiredItemCounts(owner: Quest) {
 }
 
 export class ItemObjective extends ArrayEntry<Quest> {
-    get ItemID() { return this.wrap(ItemIds(this.container)[this.index])}
+    get Item() { return new ItemTemplateRef(this, this.wrap(ItemIds(this.container)[this.index]))}
     get Count() { return this.wrap(RequiredItemCounts(this.container)[this.index]); }
 
     clear() {
-        this.ItemID.set(0);
+        this.Item.set(0);
         this.Count.set(0);
         return this;
     }
 
     isClear(): boolean {
-        return this.ItemID.get() === 0;
+        return this.Item.get() === 0;
     }
 }
 
@@ -72,7 +73,7 @@ export class ItemObjectives extends ArraySystem<ItemObjective, Quest> {
 
     add(item: number, count: number) {
         let free = this.addGet();
-        free.ItemID.set(item);
+        free.Item.set(item);
         free.Count.set(count);
         return this.owner;
     }

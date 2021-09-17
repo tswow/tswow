@@ -1,5 +1,10 @@
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
+import { Ref } from "../Refs/Ref";
+import { Lock } from "./Lock";
+import { Locks, LockTypes } from "./Locks";
 
 export type LockTypeCursorType = "FishingCursor"|"PickLock"|"GatherHerbs"|"Mine"|string
 export class LockTypeCursor extends CellSystem<LockType> {
@@ -33,6 +38,36 @@ export class LockTypeCursor extends CellSystem<LockType> {
     }
 }
 
+export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
+    protected getAllRows(): Lock[] {
+        return Locks.filterCb(x=>x.isOfType(this.owner.ID))
+    }
+
+    protected isDeleted(value: Lock): boolean {
+        return value.row.isDeleted();
+    }
+
+    add(requiredSkill: number, requiredItems: number[] = []) {
+        let locks = Locks.create()
+            .addMod(i=>i
+                .Type.LockType.set()
+                .LockType.set(this.owner.ID)
+                .RequiredSkill.set(requiredSkill)
+            )
+        if(requiredItems.length >= locks.length-1) {
+            throw new Error(
+                  `Adding too many item to lock (${requiredItems.length})`
+                + `: can only add ${locks.length-1}`
+            )
+        }
+        requiredItems.forEach(x=>locks.addGet()
+            .Type.ItemTemplate.set()
+            .ItemTemplate.set(x)
+        )
+        return locks;
+    }
+}
+
 export class LockType extends CellSystemTop {
     readonly row: LockTypeRow;
     constructor(row: LockTypeRow) {
@@ -45,4 +80,28 @@ export class LockType extends CellSystemTop {
     get ResourceName() { return this.wrapLoc(this.row.ResourceName); }
     get Verb() { return this.wrapLoc(this.row.Verb); }
     get Cursor() { return new LockTypeCursor(this); }
+    @Transient
+    get Locks() { return new LockTypeLocks(this); }
+}
+
+export class LockTypeRef<T> extends Ref<T,LockType> {
+    protected create(): LockType {
+        return LockTypes.create();
+    }
+
+    protected clone(): LockType {
+        return LockTypes.create(this.cell.get());
+    }
+
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+
+    protected id(v: LockType): number {
+        return v.ID;
+    }
+
+    protected resolve(): LockType {
+        return LockTypes.load(this.cell.get());
+    }
 }

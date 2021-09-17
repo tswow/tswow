@@ -8,7 +8,10 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
     protected getAllRows(): Spell[] {
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
             .map(x=>Spells.load(x.Spell.get()))
-            .filter(x=>x.Effects.hasEffectType(33) && x.Effects.hasEffectType(118))
+            .filter(x=>
+                   x.Effects.find(y=>y.EffectType.OpenLock.isSelected())
+                && x.Effects.find(y=>y.EffectType.Skill.isSelected())
+            )
     }
 
     protected isDeleted(value: Spell): boolean {
@@ -28,7 +31,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
             .AsRawEffect()
             .BasePoints.set(-1)
             .PointsPerLevel.set(5)
-            .Radius.modRefCopy(x=>x.set(2,0,2))
+            .Radius.setSimple(2,0,2)
             .ChainAmplitude.set(1)
         })
         .Effects.addMod((eff)=>{

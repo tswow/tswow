@@ -91,11 +91,11 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get UnitFlags() { return new UnitFlags(this); }
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
     get UnitClass() { return new UnitClass(this, this.row.unit_class); }
-    get DynamicFlags() { return this.wrap(this.row.dynamicflags); }
-    get DungeonHeroicID() { return this.wrap(this.row.difficulty_entry_1); }
-    get RaidNormal25ID() { return this.wrap(this.row.difficulty_entry_1); }
-    get RaidHeroic10ID() { return this.wrap(this.row.difficulty_entry_2); }
-    get RaidHeroic25ID() { return this.wrap(this.row.difficulty_entry_3); }
+    get DynamicFlags() { return new CreatureTemplateRef(this, this.row.dynamicflags); }
+    get DungeonHeroic() { return new CreatureTemplateRef(this, this.row.difficulty_entry_1); }
+    get RaidNormal25() { return new CreatureTemplateRef(this, this.row.difficulty_entry_1); }
+    get RaidHeroic10() { return new CreatureTemplateRef(this, this.row.difficulty_entry_2); }
+    get RaidHeroic25() { return new CreatureTemplateRef(this, this.row.difficulty_entry_3); }
     get Models() { return new CreatureModels(this); }
     get Icon() { return new CreatureIconNames(this); }
     get Gossip() {
@@ -116,7 +116,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get HoverHeight() { return this.wrap(this.row.HoverHeight); }
     get Stats() { return new CreatureStats(this); }
     get RacialLeader() { return this.wrap(this.row.RacialLeader); }
-    get MovementID() { return this.wrap(this.row.movementId); }
+    get Movement() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
     get Trainer() {

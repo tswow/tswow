@@ -71,7 +71,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
         if(createItem) {
             let item = Items.create(mod,`${id}-item`)
                 .Spells.addMod(ispell=>{
-                    ispell.SpellID.set(spell.ID)
+                    ispell.Spell.set(spell.ID)
                         .Trigger.OnUse.set()
                         .Charges.set(-1)
                 })

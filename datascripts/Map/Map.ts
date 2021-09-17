@@ -38,10 +38,10 @@ export class Map extends MainEntity<MapRow> {
     get LoadingScreen() { return this.wrap(this.row.LoadingScreenID); }
     get MinimapIconScale() { return this.wrap(this.row.MinimapIconScale); }
 
-    get CorpseMapID() { return this.wrap(this.row.CorpseMapID); }
+    get CorpseMap() { return new MapRef(this, this.row.CorpseMapID); }
     get CorpsePos() { return new XYCell(this, this.row.CorpseX, this.row.CorpseY); }
     get TimeofDayOverride() { return this.wrap(this.row.TimeOfDayOverride); }
-    get ExpansionID() { return this.wrap(this.row.ExpansionID); }
+    get Expansion() { return this.wrap(this.row.ExpansionID); }
     get MaxPlayers() { return this.wrap(this.row.MaxPlayers); }
     get RaidOffset() { return this.wrap(this.row.RaidOffset); }
     get AreaTable() { return this.wrap(this.row.AreaTableID); }

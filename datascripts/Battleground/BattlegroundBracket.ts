@@ -8,7 +8,7 @@ import { Battleground } from "./Battleground";
 
 export class BattlegroundBracket extends MainEntity<PvpDifficultyRow> {
     get ID() { return this.row.ID.get(); }
-    get MapID() { return this.wrap(this.row.MapID); }
+    get Map() { return this.wrap(this.row.MapID); }
     get RangeIndex() { return this.wrap(this.row.RangeIndex); }
     get Difficulty() { return this.wrap(this.row.Difficulty); }
     get Level() { return new MinMaxCell(
@@ -43,7 +43,7 @@ export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Bat
         return new BattlegroundBracket(
                 DBC.PvpDifficulty.add(Ids.PvpDifficulty.id())
             )
-            .MapID.set(this.owner.Map.get())
+            .Map.set(this.owner.Map.get())
             .RangeIndex.set(
                 rows.length === 0
                     ? 0

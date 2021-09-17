@@ -97,13 +97,13 @@ export class Profession {
 
     static getTiers(profession: Profession) {
         return DBC.SkillTiers.findById(
-            profession.SkillLine.RaceClassInfos.get()[0].SkillTierID.get()
+            profession.SkillLine.RaceClassInfos.get()[0].SkillTier.get()
         )
     }
 
     static copyTiers(profession: Profession) {
         profession.SkillLine.RaceClassInfos
-            .get()[0].SkillTierID.set
+            .get()[0].SkillTier.set
                 (
                     this.getTiers(profession)
                         .clone(Ids.SkillTiers.id())
@@ -209,7 +209,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Effects.addMod(eff=>{
                 eff.EffectType.Skill.set()
                     .SkillTier.set(newIndex)
-                    .SkillID.set(this.owner.ID)
+                    .Skill.set(this.owner.ID)
                     .TargetA.set(0)
                     .TargetB.set(0)
                     .ChainAmplitude.set(1)

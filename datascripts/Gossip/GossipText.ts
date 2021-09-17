@@ -220,7 +220,7 @@ export class GossipTextEntry extends ArrayEntry<Gossip> {
         this.Emote.set(0);
         this.EmoteDelay.set(0);
         this.Probability.set(0);
-        this.BroadcastID.set(0);
+        this.Broadcast.set(0);
         return this;
     }
     isClear(): boolean {
@@ -235,7 +235,7 @@ export class GossipTextEntry extends ArrayEntry<Gossip> {
     get EmoteDelay() { return this.wrap(emoteDelay(this.array, this.index)); }
 
     @Transient
-    protected get BroadcastID() { return this.wrap(broadcastID(this.array, this.index))}
+    protected get Broadcast() { return this.wrap(broadcastID(this.array, this.index))}
 }
 
 export class GossipTextArray extends ArraySystem<GossipTextEntry, Gossip> {

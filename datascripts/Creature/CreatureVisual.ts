@@ -13,10 +13,10 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
         this.ModelName.set("")
         this.SizeClass.set(0)
         this.ModelScale.set(0)
-        this.BloodID.set(0)
-        this.FootprintTextureID.set(0)
+        this.Blood.set(0)
+        this.FootprintTexture.set(0)
         this.FootprintTextureLength.set(0)
-        this.FoleyMaterialID.set(0)
+        this.FoleyMaterial.set(0)
         this.FootstepShakeSize.set(0)
         this.DeathThudShake.set(0)
         this.CollisionHeight.set(0)
@@ -36,10 +36,10 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     get ModelName() { return this.wrap(this.row.ModelName); }
     get SizeClass() { return this.wrap(this.row.SizeClass); }
     get ModelScale() { return this.wrap(this.row.ModelScale); }
-    get BloodID() { return this.wrap(this.row.BloodID); }
-    get FootprintTextureID() { return this.wrap(this.row.FootprintTextureID); }
+    get Blood() { return this.wrap(this.row.BloodID); }
+    get FootprintTexture() { return this.wrap(this.row.FootprintTextureID); }
     get FootprintTextureLength() { return this.wrap(this.row.FootprintTextureLength); }
-    get FoleyMaterialID() { return this.wrap(this.row.FoleyMaterialID); }
+    get FoleyMaterial() { return this.wrap(this.row.FoleyMaterialID); }
     get FootstepShakeSize() { return this.wrap(this.row.FootstepShakeSize); }
     get DeathThudShake() { return this.wrap(this.row.DeathThudShakeSize); }
     get Sound() { return new SoundEntryPointer(this, this.row.SoundID); }
@@ -80,27 +80,27 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
     get CombatReach() { return this.wrap(this.sql_row.CombatReach); }
 
     get Sound() { return new SoundEntryPointer(this,this.row.SoundID); }
-    get ExtendedDisplayID() { return this.wrap(this.row.ExtendedDisplayInfoID); }
+    get ExtendedDisplay() { return this.wrap(this.row.ExtendedDisplayInfoID); }
     get CreatureModelScale() { return this.wrap(this.row.CreatureModelScale); }
     get CreatureModelAlpha() { return this.wrap(this.row.CreatureModelAlpha); }
     get TextureVariation() { return this.wrapArray(this.row.TextureVariation); }
     get BloodLevel() { return this.wrap(this.row.BloodLevel); }
-    get BloodID() { return this.wrap(this.row.BloodID); }
+    get Blood() { return this.wrap(this.row.BloodID); }
     get NPCSound() { return new SoundEntryPointer(this,this.row.NPCSoundID); }
-    get ParticleColorID() { return this.wrap(this.row.ParticleColorID); }
+    get ParticleColor() { return this.wrap(this.row.ParticleColorID); }
     get CreatureGeosetData() { return this.wrap(this.row.CreatureGeosetData); }
-    get ObjectEffectPackageID() { return this.wrap(this.row.ObjectEffectPackageID); }
+    get ObjectEffectPackage() { return this.wrap(this.row.ObjectEffectPackageID); }
 
     clear(): this {
-        this.ExtendedDisplayID.set(0)
+        this.ExtendedDisplay.set(0)
             .CreatureModelScale.set(0)
             .CreatureModelAlpha.set(0)
             .TextureVariation.set(["","",""])
             .BloodLevel.set(0)
-            .BloodID.set(0)
-            .ParticleColorID.set(0)
+            .Blood.set(0)
+            .ParticleColor.set(0)
             .CreatureGeosetData.set(0)
-            .ObjectEffectPackageID.set(0)
+            .ObjectEffectPackage.set(0)
             .row.SoundID.set(0)
             .NPCSoundID.set(0)
 

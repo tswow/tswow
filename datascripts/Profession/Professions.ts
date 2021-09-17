@@ -18,7 +18,7 @@ export const Professions = {
                    .Flags.clearAll()
                    .Flags.IsProfession.set(true)
                    .Flags.IsClassLine.set(true)
-                   .SkillTierID.set(SkillTiersRegistry.create().ID)
+                   .SkillTier.set(SkillTiersRegistry.create().ID)
             }))
     }
 }

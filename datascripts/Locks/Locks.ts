@@ -1,19 +1,9 @@
 import { DBC } from "wotlkdata";
+import { LockQuery } from "wotlkdata/dbc/types/Lock";
 import { LockTypeQuery } from "wotlkdata/dbc/types/LockType";
 import { Ids } from "../Misc/Ids";
+import { Lock } from "./Lock";
 import { LockType } from "./LockType";
-import { SimpleLock } from "./SimpleLock";
-
-function makeLock() {
-    let lock = DBC.Lock.add(Ids.Lock.id());
-    for(let i=0;i<6;++i) {
-        lock.Action.setIndex(i,0);
-        lock.Index.setIndex(i,0);
-        lock.Skill.setIndex(i,0);
-        lock.Type.setIndex(i,0);
-    }
-    return lock;
-}
 
 export const LockTypes = {
     filter(query: LockTypeQuery) {
@@ -24,35 +14,45 @@ export const LockTypes = {
         return new LockType(DBC.LockType.findById(id));
     },
 
-    create() {
-        return new LockType(DBC.LockType.add(Ids.LockType.id()))
+    create(parent = 0) {
+        return new LockType(
+            parent > 0
+            ? DBC.LockType.findById(parent).clone(Ids.LockType.id())
+            : DBC.LockType.add(Ids.LockType.id())
+        )
     }
 }
 
 export const Locks = {
-    loadLock(id: number) {
-        return new SimpleLock(DBC.Lock.findById(id));
+    load(id: number) {
+        let v = DBC.Lock.findById(id);
+        return (v ? new Lock(v) : undefined) as Lock;
     },
 
-    loadType(id: number) {
-        return new LockType(DBC.LockType.findById(id));
+    create(parent = 0) {
+        return new Lock(
+            parent > 0
+            ? DBC.Lock.findById(parent).clone(Ids.Lock.id())
+            : DBC.Lock.add(Ids.Lock.id())
+        );
     },
 
-    createItem(item: number) {
-        let lock = makeLock();
-        return new SimpleLock(lock)
-            .Type.Item.set()
-            .Index.set(item)
+    filter(query: LockQuery) {
+        return DBC.Lock
+            .filter(query)
+            .map(x=>new Lock(x));
     },
 
-    createEmpty() {
-        return new SimpleLock(makeLock())
+    find(query: LockQuery) {
+        let v = DBC.Lock.find(query);
+        return (v ? new Lock(v) : undefined) as Lock;
     },
 
-    createTypeInstance(type: number, skill: number = 0) {
-        return new SimpleLock(makeLock())
-            .Type.LockType.set()
-            .Index.set(type)
-            .Skill.set(skill)
+    forEach(callback: (lock: Lock)=>void) {
+        this.filter({}).forEach(callback);
+    },
+
+    filterCb(callback: (lock: Lock)=>void) {
+        return this.filter({}).filter(callback);
     },
 }

@@ -18,6 +18,8 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { FactionRef } from "../Faction/Faction";
+import { ItemTemplateRef } from "../Item/ItemTemplate";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
@@ -56,16 +58,16 @@ export class ItemChoiceReward<T> extends ArrayEntry<T> {
         this.row = row;
     }
 
-    get ItemId() { return this.wrap(ChoiceItemIds(this.row)[this.index])}
+    get Item() { return new ItemTemplateRef(this, this.wrap(ChoiceItemIds(this.row)[this.index]))}
     get Quantity() { return this.wrap(ChoiceItemQuantities(this.row)[this.index])}
 
     clear() {
-        this.ItemId.set(0);
+        this.Item.set(0);
         this.Quantity.set(0);
         return this;
     }
     isClear(): boolean {
-        return this.ItemId.get() === 0;
+        return this.Item.get() === 0;
     }
 }
 
@@ -87,7 +89,7 @@ export class ItemChoiceRewards<T> extends ArraySystem<ItemChoiceReward<T>,T> {
 
     add(item: number, quantity: number) {
         const free = this.addGet();
-        free.ItemId.set(item);
+        free.Item.set(item);
         free.Quantity.set(quantity);
         return this.owner;
     }
@@ -193,17 +195,17 @@ export class ReputationReward<T> extends ArrayEntry<T> {
         this.row = row;
     }
 
-    get FactionId() { return this.wrap(FactionIds(this.row)[this.index])}
+    get Faction() { return new FactionRef(this,this.wrap(FactionIds(this.row)[this.index]))}
     get Reputation() { return this.wrap(Reputation(this.row)[this.index])}
 
     clear() {
-        this.FactionId.set(0);
+        this.Faction.set(0);
         this.Reputation.set(0);
         return this;
     }
 
     isClear(): boolean {
-        return this.FactionId.get() === 0;
+        return this.Faction.get() === 0;
     }
 }
 
@@ -225,7 +227,7 @@ export class ReputationRewards<T> extends ArraySystem<ReputationReward<T>,T> {
 
     add(faction: number, reputation: number) {
         const free = this.addGet();
-        free.FactionId.set(faction);
+        free.Faction.set(faction);
         free.Reputation.set(reputation);
         return this.owner;
     }

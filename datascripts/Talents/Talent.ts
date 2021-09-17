@@ -17,6 +17,7 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { TalentRow } from "wotlkdata/dbc/types/Talent";
 import { MainEntity } from "../Misc/Entity";
+import { RefUnknown } from "../Refs/Ref";
 import { Spell } from "../Spell/Spell";
 import { Spells } from "../Spell/Spells";
 import { TalentRequirements } from "./TalentRequirements";
@@ -79,6 +80,6 @@ export class Talent extends MainEntity<TalentRow> {
     get Position() { return new TalentPosition(this); }
     get Requirements() { return new TalentRequirements(this); }
     get RequiredSpell() { return this.wrap(this.row.RequiredSpellID); }
-    get TabID() { return this.wrap(this.row.TabID); }
+    get Tab() { return new RefUnknown(this, this.row.TabID); }
     get Spells() { return new TalentSpells(this); }
 }

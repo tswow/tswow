@@ -1,5 +1,6 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
+import { AreaRef } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
@@ -30,8 +31,8 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get Rotation1() { return  this.wrap(this.row.rotation1); }
     get Rotation2() { return  this.wrap(this.row.rotation2); }
     get Rotation3() { return  this.wrap(this.row.rotation3); }
-    get ZoneID() { return this.wrap(this.row.zoneId); }
-    get AreaID() { return this.wrap(this.row.areaId); }
+    get Zone() { return new AreaRef(this, this.row.zoneId); }
+    get Area() { return new AreaRef(this, this.row.areaId); }
     get SpawnMask() { return this.wrap(this.row.spawnMask); }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     get SpawnTimeSecs() { return this.wrap(this.row.spawntimesecs); }

@@ -6,6 +6,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
+import { RefUnknown } from "../Refs/Ref";
 import { TaxiNodeConstructor, TaxiPath } from "./Taxi";
 
 export class TaxiPathNodeFlags extends MaskCell32<TaxiPathNode> {
@@ -23,8 +24,8 @@ export class TaxiPathNode extends MainEntity<TaxiPathNodeRow> {
         , this.row.LocZ
         )}
 
-    get ArrivalEvent() { return this.wrap(this.row.ArrivalEventID); }
-    get DepartureEvent() { return this.wrap(this.row.DepartureEventID); }
+    get ArrivalEvent() { return new RefUnknown(this, this.row.ArrivalEventID); }
+    get DepartureEvent() { return new RefUnknown(this, this.row.DepartureEventID); }
     get Flags() { return new TaxiPathNodeFlags(this, this.row.Flags); }
     get Delay() { return this.wrap(this.row.Delay); }
 }

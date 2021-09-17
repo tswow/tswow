@@ -5,7 +5,7 @@ import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { Ids } from "../Misc/Ids";
-import { SkillLine } from "./SkillLine";
+import { SkillLine, SkillLineRef } from "./SkillLine";
 
 export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
     get IsProfession() { return this.bit(5); }
@@ -26,8 +26,8 @@ export class SkillRaceClassInfo extends CellSystemTop {
     get RaceMask() { return new MaskCell32(this, this.row.RaceMask); }
 
     get SkillCostIndex() { return this.wrap(this.row.SkillCostIndex); }
-    get SkillID() { return this.wrap(this.row.SkillID); }
-    get SkillTierID() { return this.wrap(this.row.SkillTierID); }
+    get Skill() { return new SkillLineRef(this, this.row.SkillID); }
+    get SkillTier() { return this.wrap(this.row.SkillTierID); }
     get ID() { return this.row.ID.get() }
 }
 

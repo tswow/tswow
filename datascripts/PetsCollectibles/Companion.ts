@@ -49,7 +49,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .Material.Liquid.set()
             .InventoryType.NonEquippable.set()
             .Spells.addMod((ispell=>{
-                ispell.SpellID.set(spell.ID)
+                ispell.Spell.set(spell.ID)
                      .Category.set(330)
                      .Trigger.OnUse.set()
                      .Charges.set(-1)
@@ -58,7 +58,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
                      .CategoryCooldown.set(3000)
             }))
             .Spells.addMod((spell=>{
-                spell.SpellID.set(this.owner.ID)
+                spell.Spell.set(this.owner.ID)
                     .Category.set(0)
                     .Trigger.OnLearn.set()
                     .Charges.set(0)

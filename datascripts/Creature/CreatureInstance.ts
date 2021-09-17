@@ -53,14 +53,14 @@ export class CreatureInstance extends CellSystemTop {
     }
 
     get GUID() { return this.row.guid.get(); }
-    get TemplateID() { return this.wrap(this.row.id); }
+    get Template() { return this.wrap(this.row.id); }
     get Map() { return this.wrap(this.row.map); }
     get SpawnMask() {
         return new CreatureSpawnMask(this, this.row.spawnMask);
     }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     /** If 0, use a random model from CreatureTemplate#Models */
-    get ModelID() { return this.wrap(this.row.modelid); }
+    get Model() { return this.wrap(this.row.modelid); }
     get Position() { return new CreaturePosition(this); }
     /** Respawn time in seconds */
     get SpawnTime() { return this.wrap(this.row.spawntimesecs); }

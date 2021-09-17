@@ -16,6 +16,7 @@
  */
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { SpellRef } from "../Spell/Spell";
 import { ItemTemplate } from "./ItemTemplate";
 
 function IdRows(owner: ItemTemplate) {
@@ -105,7 +106,7 @@ export class ItemSpellTrigger extends EnumCell<ItemSpell> {
 
 export class ItemSpell extends ArrayEntry<ItemTemplate> {
     clear() {
-        this.SpellID.set(0);
+        this.Spell.set(0);
         this.Category.set(0);
         this.Trigger.set(0);
         this.Charges.set(0);
@@ -115,10 +116,10 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
         return this;
     }
     isClear(): boolean {
-        return this.SpellID.get() === 0;
+        return this.Spell.get() === 0;
     }
 
-    get SpellID() { return this.wrap(IdRows(this.container)[this.index]); }
+    get Spell() { return new SpellRef(this, IdRows(this.container)[this.index]); }
     get Category() { return this.wrap(CatRows(this.container)[this.index]); }
     get Trigger() { return new ItemSpellTrigger(this, TriggerRows(this.container)[this.index]); }
     get Charges() { return this.wrap(ChargeRows(this.container)[this.index]); }

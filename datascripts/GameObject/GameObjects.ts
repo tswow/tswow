@@ -104,6 +104,12 @@ export const GameObjectDisplays = {
     create(modelPath: string, boundingBox: BoundingBox = new BoundingBox(-1,-1,-1,1,1,1)) {
         const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplayInfo.id());
         row.ModelName.set(modelPath);
+        row.GeoBoxMinX.set(boundingBox.minX)
+           .GeoBoxMinY.set(boundingBox.minY)
+           .GeoBoxMinZ.set(boundingBox.minZ)
+           .GeoBoxMaxX.set(boundingBox.maxX)
+           .GeoBoxMaxY.set(boundingBox.maxY)
+           .GeoBoxMaxZ.set(boundingBox.maxZ)
         return new GameObjectDisplay(row);
     },
 

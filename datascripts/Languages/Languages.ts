@@ -28,6 +28,7 @@ import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
+import { RefStatic } from "../Refs/Ref";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLines } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
@@ -175,7 +176,7 @@ export const Languages = {
                    .ClassMask.set(0xffffffff)
                    .Flags.clearAll()
                    .Flags.IsClassLine.set(true)
-                   .SkillTierID.set(0)
+                   .SkillTier.set(0)
             )
 
         std.Spells.create(mod,id+'-spell')
@@ -186,7 +187,7 @@ export const Languages = {
             .PreventionType.set(1)
             .Effects.addMod(effect=>{
                 effect.EffectType.Language.set()
-                      .LanguageID.set(langRow.ID.get())
+                      .Language.set(langRow.ID.get())
                       .ChainAmplitude.set(1)
             })
             .SchoolMask.Physical.set(true)
@@ -205,5 +206,23 @@ export const Languages = {
 
     filter(query: LanguagesQuery) {
         return DBC.Languages.filter(query).map(x=>new WoWLanguage(x));
+    }
+}
+
+export class LanguageRef<T> extends RefStatic<T,WoWLanguage> {
+    protected create(mod: string, id: string): WoWLanguage {
+        return Languages.create(mod,id);
+    }
+    protected clone(mod: string, id: string): WoWLanguage {
+        throw new Error(`Languages cannot be cloned yet`);
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: WoWLanguage): number {
+        return v.ID;
+    }
+    protected resolve(): WoWLanguage {
+        return Languages.load(this.cell.get());
     }
 }

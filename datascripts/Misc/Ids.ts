@@ -923,7 +923,7 @@ export const Ids = {
     game_event_condition: new StaticIDGenerator('game_event_condition',1),
 
     /** Starts at 4000, highest base value is 3622 */
-    page_text: new StaticIDGenerator('page_text', 4000),
+    page_text: new DynamicIDGenerator('page_text', 4000),
 
     /** Starts at 500, highest base value is 453 */
     points_of_interest: new StaticIDGenerator('points_of_interest', 500),

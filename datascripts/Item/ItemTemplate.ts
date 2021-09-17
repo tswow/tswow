@@ -19,11 +19,13 @@ import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
+import { HolidayRef } from "../GameEvent/Holiday";
 import { GemRef } from "../Gem/Gem";
+import { LockRef } from "../Locks/Lock";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/Ref";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
@@ -59,7 +61,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
     get StartQuest() { return this.wrap(this.row.startquest); }
-    get LockID() { return this.wrap(this.row.lockid); }
+    get Lock() { return new LockRef(this, this.row.lockid); }
     get RandomProperty() { return this.wrap(this.row.RandomProperty); }
     get RandomSuffix() { return this.wrap(this.row.RandomSuffix); }
 
@@ -81,7 +83,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Description() { return new ItemDescription(this); }
     get Quality() { return new ItemQuality(this); }
     get Durability() { return this.wrap(this.sqlRow.MaxDurability); }
-    get DisenchantId() { return this.wrap(this.sqlRow.DisenchantID); }
+    get Disenchant() { return new RefUnknown(this, this.sqlRow.DisenchantID); }
     get RequiredLevel() { return this.wrap(this.sqlRow.RequiredLevel); }
     get ItemLevel() { return this.wrap(this.sqlRow.ItemLevel); }
     get SkillRequirement() { return new ItemSkillRequirement(this); }
@@ -105,9 +107,8 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get ContainerSlots() { return this.wrap(this.row.ContainerSlots); }
     get RequiredDisenchantSkill() { return this.wrap(this.row.RequiredDisenchantSkill); }
     get Duration() { return this.wrap(this.row.duration); }
-    get HolidayID() { return this.wrap(this.row.HolidayId); }
+    get Holiday() { return new HolidayRef(this, this.row.HolidayId); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
-    get DisenchantID() { return this.wrap(this.row.DisenchantID); }
     get FoodType() { return new ItemFoodType(this, this.row.FoodType); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
@@ -160,7 +161,7 @@ export const Items = {
                 .ContainerSlots.set(0)
                 .Damage.clearAll()
                 .Delay.set(0)
-                .DisenchantID.set(0)
+                .Disenchant.set(0)
                 .DisplayInfo.set(0)
                 .Durability.set(0)
                 .Duration.set(0)
@@ -168,11 +169,11 @@ export const Items = {
                 .FlagsCustom.set(0)
                 .FlagsExtra.set(0)
                 .FoodType.set(0)
-                .HolidayID.set(0)
+                .Holiday.set(0)
                 .InventoryType.NonEquippable.set()
                 .ItemLevel.set(0)
                 .ItemSet.set(0)
-                .LockID.set(0)
+                .Lock.set(0)
                 .Map.set(0)
                 .Material.set(0)
                 .MaxCount.set(0)

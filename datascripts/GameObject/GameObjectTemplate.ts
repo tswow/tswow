@@ -18,14 +18,21 @@ import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
-import { getBroadcast } from "../BroadcastText/BroadcastText";
-import { SimpleLockPointer } from "../Locks/SimpleLock";
+import { AreaRef } from "../Area/Area";
+import { BroadcastTextRef } from "../BroadcastText/BroadcastText";
+import { GossipPointer } from "../Gossip/Gossip";
+import { LockRef } from "../Locks/Lock";
 import { LootSetPointer } from "../Loot/Loot";
+import { MapRef } from "../Map/Map";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { PageTextRef } from "../PageText/PageText";
+import { QuestRef } from "../Quest/Quest";
+import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/Ref";
+import { SpellRef } from "../Spell/Spell";
 import { TaxiPathRef } from "../Taxi/Taxi";
+import { WorldStateRef } from "../WorldState/WorldState";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
 import { GameObjectDisplayPointer } from "./GameObjectDisplay";
 import { GameObjectFlags } from "./GameObjectFlags";
@@ -33,6 +40,7 @@ import { GameObjectID } from "./GameObjectID";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
 import { GameObjectTemplates } from "./GameObjects";
+import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_AURA_GENERATOR, GAMEOBJECT_TYPE_BARBER_CHAIR, GAMEOBJECT_TYPE_BINDER, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CAPTURE_POINT, GAMEOBJECT_TYPE_CHAIR, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_DO_NOT_USE, GAMEOBJECT_TYPE_DO_NOT_USE_2, GAMEOBJECT_TYPE_DUEL_ARBITER, GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FISHINGNODE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GENERIC, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_GUARDPOST, GAMEOBJECT_TYPE_GUILD_BANK, GAMEOBJECT_TYPE_MAILBOX, GAMEOBJECT_TYPE_MAP_OBJECT, GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, GAMEOBJECT_TYPE_MEETINGSTONE, GAMEOBJECT_TYPE_MINI_GAME, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_RITUAL, GAMEOBJECT_TYPE_SPELLCASTER, GAMEOBJECT_TYPE_SPELL_FOCUS, GAMEOBJECT_TYPE_TEXT, GAMEOBJECT_TYPE_TRANSPORT, GAMEOBJECT_TYPE_TRAP, GAMEOBJECT_TYPE_TRAPDOOR } from "./GameObjectTypes";
 
 export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
     protected transformer() { return this.Type; }
@@ -135,14 +143,14 @@ export class GameObjectAreaDamage extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
+    get Lock() { return new LockRef(this, this.row.Data0); }
     get Radius() { return this.wrap(this.row.Data1); }
     get DamageMin() { return this.wrap(this.row.Data2); }
     get DamageMax() { return this.wrap(this.row.Data3); }
     get DamageSchool() { return this.wrap(this.row.Data4); }
     get AutoCloseTime() { return this.wrap(this.row.Data5); }
-    get OpenTextID() { return this.wrap(this.row.Data6); }
-    get ClosetextID() { return this.wrap(this.row.Data7); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data6); }
+    get Closetext() { return new BroadcastTextRef(this, this.row.Data7); }
 }
 
 export class GameObjectAuraGenerator extends GameObjectTemplate {
@@ -153,9 +161,9 @@ export class GameObjectAuraGenerator extends GameObjectTemplate {
     get StartOpen() { return this.wrap(this.row.Data0); }
     get Radius() { return this.wrap(this.row.Data1); }
     get AuraID1() { return this.wrap(this.row.Data2); }
-    get ConditionID1() { return this.wrap(this.row.Data3); }
+    get Condition1() { return new RefUnknown(this, this.row.Data3); }
     get AuraID2() { return this.wrap(this.row.Data4); }
-    get ConditionID2() { return this.wrap(this.row.Data5); }
+    get Condition2() { return new RefUnknown(this, this.row.Data5); }
     get ServerOnly() { return this.wrap(this.row.Data6); }
 }
 
@@ -180,7 +188,7 @@ export class GameObjectButton extends GameObjectTemplate {
     /**
      * The lock used to press this button
      */
-    get LockID() { return this.wrap(this.row.Data1); }
+    get Lock() { return new LockRef(this, this.row.Data1); }
 
     get AutoClose() { return this.wrap(this.row.Data2); }
 
@@ -188,7 +196,7 @@ export class GameObjectButton extends GameObjectTemplate {
     /**
      * A linked spawned gameobject of type 6
      */
-    get LinkedTrap() { return this.wrap(this.row.Data3); }
+    get LinkedTrap() { return new GameObjectTrapRef(this, this.row.Data3); }
 
     get NoDamageImmune() { return this.wrap(this.row.Data4); }
 
@@ -197,31 +205,31 @@ export class GameObjectButton extends GameObjectTemplate {
     /**
      * Text displayed when the button is pressed
      */
-    get ActivateTextID() { return getBroadcast(this, this.row.Data6) }
+    get ActivateText() { return new BroadcastTextRef(this, this.row.Data6) }
 
 
     /**
      * Text displayed when the button is unpressed
      */
-    get DeactivateTextID() { return getBroadcast(this, this.row.Data7) }
+    get DeactivateText() { return new BroadcastTextRef(this, this.row.Data7) }
 
     /**
      * TODO: ??
      */
-    get LineOfSightOK() { return getBroadcast(this, this.row.Data8) }
+    get LineOfSightOK() { return new BroadcastTextRef(this, this.row.Data8) }
 
-    get ConditionID() { return this.wrap(this.row.Data9); }
+    get Condition() { return new RefUnknown(this, this.row.Data9); }
 }
 
 export class GameObjectCamera extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
-    get CinematicID() { return this.wrap(this.row.Data1); }
-    get EventID() { return this.wrap(this.row.Data2); }
-    get OpenTextID() { return this.wrap(this.row.Data3); }
-    get ConditionID() { return this.wrap(this.row.Data4); }
+    get Lock() { return new LockRef(this, this.row.Data0); }
+    get Cinematic() { return this.wrap(this.row.Data1); }
+    get Event() { return new RefUnknown(this, this.row.Data2); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data3); }
+    get Condition() { return new RefUnknown(this, this.row.Data4); }
 }
 
 export class GameObjectCapturePoint extends GameObjectTemplate {
@@ -230,18 +238,18 @@ export class GameObjectCapturePoint extends GameObjectTemplate {
     }
     get Radius() { return this.wrap(this.row.Data0); }
     get Spell() { return this.wrap(this.row.Data1); }
-    get WorldState1() { return this.wrap(this.row.Data2); }
-    get WorldState2() { return this.wrap(this.row.Data3); }
-    get WinEventID1() { return this.wrap(this.row.Data4); }
-    get WinEventID2() { return this.wrap(this.row.Data5); }
-    get ContestedEventID1() { return this.wrap(this.row.Data6); }
-    get ContestedEventID2() { return this.wrap(this.row.Data7); }
-    get ProgressEventID1() { return this.wrap(this.row.Data8); }
-    get ProgressEventID2() { return this.wrap(this.row.Data9); }
-    get NeutralEventID1() { return this.wrap(this.row.Data10); }
-    get NeutralEventID2() { return this.wrap(this.row.Data11); }
+    get WorldState1() { return new WorldStateRef(this, this.row.Data2); }
+    get WorldState2() { return new WorldStateRef(this, this.row.Data3); }
+    get WinEvent1() { return this.wrap(this.row.Data4); }
+    get WinEvent2() { return this.wrap(this.row.Data5); }
+    get ContestedEvent1() { return this.wrap(this.row.Data6); }
+    get ContestedEvent2() { return this.wrap(this.row.Data7); }
+    get ProgressEvent1() { return this.wrap(this.row.Data8); }
+    get ProgressEvent2() { return this.wrap(this.row.Data9); }
+    get NeutralEvent1() { return this.wrap(this.row.Data10); }
+    get NeutralEvent2() { return this.wrap(this.row.Data11); }
     get NeutralPercent() { return this.wrap(this.row.Data12); }
-    get WorldState3() { return this.wrap(this.row.Data13); }
+    get WorldState3() { return new WorldStateRef(this, this.row.Data13); }
     get MinSuperiority() { return this.wrap(this.row.Data14); }
     get MaxSuperiority() { return this.wrap(this.row.Data15); }
     get MinTime() { return this.wrap(this.row.Data16); }
@@ -260,8 +268,8 @@ export class GameObjectChair extends GameObjectTemplate {
     get Slots() { return this.wrap(this.row.Data0); }
     get Height() { return this.wrap(this.row.Data1); }
     get OnlyCreatorUse() { return this.wrap(this.row.Data2); }
-    get TriggeredEvent() { return this.wrap(this.row.Data3); }
-    get ConditionID() { return this.wrap(this.row.Data4); }
+    get TriggeredEvent() { return new RefUnknown(this, this.row.Data3); }
+    get Condition() { return new RefUnknown(this, this.row.Data4); }
 }
 
 export class GameObjectChest extends GameObjectTemplate {
@@ -270,7 +278,7 @@ export class GameObjectChest extends GameObjectTemplate {
     }
 
     get Lock() {
-        return new SimpleLockPointer(this,this.row.Data0);
+        return new LockRef(this,this.row.Data0);
     }
 
     get Loot() {
@@ -292,18 +300,18 @@ export class GameObjectChest extends GameObjectTemplate {
     /**
      * EventID from event_scripts
      */
-    get LootedEvent() { return this.wrap(this.row.Data6); }
+    get LootedEvent() { return new RefUnknown(this, this.row.Data6); }
     get LinkedTrap() { return this.wrap(this.row.Data7); }
-    get QuestID() { return this.wrap(this.row.Data8); }
+    get Quest() { return new QuestRef(this, this.row.Data8); }
     get Level() { return this.wrap(this.row.Data9); }
     get LosOK() { return this.wrap(this.row.Data10); }
     get LeaveLoot() { return this.wrap(this.row.Data11); }
     get NotInCombat() { return this.wrap(this.row.Data12); }
     get LogLoot() { return this.wrap(this.row.Data13); }
-    get OpenTextID() { return getBroadcast(this, this.row.Data14); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data14); }
     get UseGroupLoot() { return this.wrap(this.row.Data15); }
-    get TooltipID() { return this.wrap(this.row.Data16); }
-    get Condition() { return this.wrap(this.row.Data17); }
+    get Tooltip() { return this.wrap(this.row.Data16); }
+    get Condition() { return new RefUnknown(this, this.row.Data17); }
 }
 
 export class GameObjectDestructibleBuilding extends GameObjectTemplate {
@@ -313,26 +321,26 @@ export class GameObjectDestructibleBuilding extends GameObjectTemplate {
     get InteractNumHits() { return this.wrap(this.row.Data0); }
     get CreditProxyCreature() { return this.wrap(this.row.Data1); }
     get Empty1() { return this.wrap(this.row.Data2); }
-    get IntactEvent() { return this.wrap(this.row.Data3); }
+    get IntactEvent() { return new RefUnknown(this, this.row.Data3); }
     get Empty2() { return this.wrap(this.row.Data4); }
     get DamageNumHits() { return this.wrap(this.row.Data5); }
     get Empty3() { return this.wrap(this.row.Data6); }
     get Empty4() { return this.wrap(this.row.Data7); }
     get Empty5() { return this.wrap(this.row.Data8); }
-    get DamagedEvent() { return this.wrap(this.row.Data9); }
+    get DamagedEvent() { return new RefUnknown(this, this.row.Data9); }
     get Empty6() { return this.wrap(this.row.Data10); }
     get Empty7() { return this.wrap(this.row.Data11); }
     get Empty8() { return this.wrap(this.row.Data12); }
     get Empty9() { return this.wrap(this.row.Data13); }
-    get DestroyedEvent() { return this.wrap(this.row.Data14); }
+    get DestroyedEvent() { return new RefUnknown(this, this.row.Data14); }
     get Empty10() { return this.wrap(this.row.Data15); }
     get RebuildingTimeSecs() { return this.wrap(this.row.Data16); }
     get Empty11() { return this.wrap(this.row.Data17); }
     get DestructibleData() { return this.wrap(this.row.Data18); }
-    get RebuildingEvent() { return this.wrap(this.row.Data19); }
+    get RebuildingEvent() { return new RefUnknown(this, this.row.Data19); }
     get Empty12() { return this.wrap(this.row.Data20); }
     get Empty13() { return this.wrap(this.row.Data21); }
-    get DamageEvent() { return this.wrap(this.row.Data22); }
+    get DamageEvent() { return new RefUnknown(this, this.row.Data22); }
     get Empty14() { return this.wrap(this.row.Data23); }
 }
 
@@ -349,7 +357,7 @@ export class GameObjectDoor extends GameObjectTemplate {
     /**
      * Lock ID to DBC.Lock that opens this door
      */
-    get LockID() { return this.wrap(this.row.Data1); }
+    get Lock() { return new LockRef(this, this.row.Data1); }
 
     /**
      * After how many milliseconds the door autocloses
@@ -364,29 +372,26 @@ export class GameObjectDoor extends GameObjectTemplate {
     /**
      * Text displayed when the door is opened
      */
-    get OpenText() { return getBroadcast(this, this.row.Data4); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data4); }
 
     /**
      * Text displayed when the door is closed
      */
-    get CloseText() { return getBroadcast(this, this.row.Data5); }
+    get CloseText() { return new BroadcastTextRef(this, this.row.Data5); }
 
     /**
      * Whether pathfinding should ignore this door
      */
-    get IgnoredByPathfinding() { return getBroadcast(this, this.row.Data6); }
+    get IgnoredByPathfinding() { return new BroadcastTextRef(this, this.row.Data6); }
 
-    /**
-     * Unknown
-     */
-    get Condition1() { return getBroadcast(this, this.row.Data7); }
+    get Condition1() { return new RefUnknown(this, this.row.Data7); }
 }
 
 export class GameObjectDungeonDifficulty extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get MapID() { return this.wrap(this.row.Data0); }
+    get Map() { return new MapRef(this, this.row.Data0); }
     get Difficulty() { return this.wrap(this.row.Data1); }
 }
 
@@ -398,88 +403,95 @@ export class GameObjectFishingHole extends GameObjectTemplate {
      * How close bobber must be
      */
     get Radius() { return this.wrap(this.row.Data0); }
-    get LootID() { return this.wrap(this.row.Data1); }
+    get Loot() {
+        return new LootSetPointer(
+              this
+            , this.row.Data1
+            , SQL.fishing_loot_template
+            , Ids.fishing_loot_template
+        );
+    }
     get MinSuccessOpens() { return this.wrap(this.row.Data2); }
     get MaxSuccessOpens() { return this.wrap(this.row.Data3); }
     /**
      * Possibly 1628 for all fishing holes.
      */
-    get LockID() { return this.wrap(this.row.Data4); }
+    get Lock() { return new LockRef(this, this.row.Data4); }
 }
 
 export class GameObjectFlagDrop extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
-    get EventID() { return this.wrap(this.row.Data1); }
+    get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
+    get Event() { return new RefUnknown(this, this.row.Data1); }
     get PickupSpell() { return this.wrap(this.row.Data2); }
     get NoDamageImmune() { return this.wrap(this.row.Data3); }
-    get OpenTextID() { return this.wrap(this.row.Data4); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data4); }
 }
 
 export class GameObjectFlagStand extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
+    get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
     get PickupSpell() { return this.wrap(this.row.Data1); }
     get Radius() { return this.wrap(this.row.Data2); }
     get ReturnAura() { return this.wrap(this.row.Data3); }
     get ReturnSpell() { return this.wrap(this.row.Data4); }
     get NoDamageImmune() { return this.wrap(this.row.Data5); }
-    get OpenTextID() { return this.wrap(this.row.Data6); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data6); }
     get LineOfSightOK() { return this.wrap(this.row.Data7); }
-    get ConditionID() { return this.wrap(this.row.Data8); }
+    get Condition() { return new RefUnknown(this, this.row.Data8); }
 }
 
 export class GameObjectGeneric extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get TooltipID() { return this.wrap(this.row.Data0); }
+    get Tooltip() { return this.wrap(this.row.Data0); }
     get Highlight() { return this.wrap(this.row.Data1); }
     get ServerOnly() { return this.wrap(this.row.Data2); }
     get Large() { return this.wrap(this.row.Data3); }
     get FloatOnWater() { return this.wrap(this.row.Data4); }
-    get QuestID() { return this.wrap(this.row.Data5); }
-    get ConditionID() { return this.wrap(this.row.Data6); }
+    get Quest() { return new QuestRef(this, this.wrap(this.row.Data5)); }
+    get Condition() { return new RefUnknown(this, this.row.Data6); }
 }
 
 export class GameObjectGoober extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
-    get QuestID() { return this.wrap(this.row.Data1); }
-    get EventID() { return this.wrap(this.row.Data2); }
+    get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
+    get Quest() { return new QuestRef(this, this.row.Data1); }
+    get Event() { return new RefUnknown(this, this.row.Data2); }
     get AutoCloseTime() { return this.wrap(this.row.Data3); }
     get CustomAnim() { return this.wrap(this.row.Data4); }
     get Consumable() { return this.wrap(this.row.Data5); }
     get Cooldown() { return this.wrap(this.row.Data6); }
-    get PageID() { return this.wrap(this.row.Data7); }
+    get Page() { return new PageTextRef(this, this.row.Data7); }
     get Language() { return this.wrap(this.row.Data8); }
     get PageMaterial() { return this.wrap(this.row.Data9); }
-    get SpellID() { return this.wrap(this.row.Data10); }
+    get Spell() { return new SpellRef(this, this.row.Data10); }
     get NoDamageImmune() { return this.wrap(this.row.Data11); }
-    get LinkedTrapID() { return this.wrap(this.row.Data12); }
+    get LinkedTrap() { return new GameObjectTrapRef(this, this.row.Data12); }
     get Large() { return this.wrap(this.row.Data13); }
-    get OpenTextID() { return this.wrap(this.row.Data14); }
-    get CloseTextID() { return this.wrap(this.row.Data15); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data14); }
+    get CloseText() { return new BroadcastTextRef(this, this.row.Data15); }
     get LineOfSightOK() { return this.wrap(this.row.Data16); }
     get AllowMounted() { return this.wrap(this.row.Data17); }
     get FloatingTooltip() { return this.wrap(this.row.Data18); }
-    get GossipID() { return this.wrap(this.row.Data19); }
+    get Gossip() { return new GossipPointer(this, this.row.Data19); }
     get WorldStateSetsState() { return this.wrap(this.row.Data20); }
     get FloatOnWater() { return this.wrap(this.row.Data21); }
-    get ConditionID() { return this.wrap(this.row.Data22); }
+    get Condition() { return new RefUnknown(this, this.row.Data22); }
 }
 
 export class GameObjectGuardPost extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get CreatureID() { return this.wrap(this.row.Data0); }
+    get Creature() { return new RefUnknown(this, this.row.Data0); }
     get Charges() { return this.wrap(this.row.Data1); }
 }
 
@@ -487,14 +499,14 @@ export class GameObjectGuildBank extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get ConditionID() { return this.wrap(this.row.Data0); }
+    get Condition() { return new RefUnknown(this, this.row.Data0); }
 }
 
 export class GameObjectMailbox extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get ConditionID() { return this.wrap(this.row.Data0); }
+    get Condition() { return new RefUnknown(this, this.row.Data0); }
 }
 
 export class GameObjectMeetingStone extends GameObjectTemplate {
@@ -503,7 +515,7 @@ export class GameObjectMeetingStone extends GameObjectTemplate {
     }
     get MinLevel() { return this.wrap(this.row.Data0); }
     get MaxLevel() { return this.wrap(this.row.Data1); }
-    get AreaID() { return this.wrap(this.row.Data2); }
+    get Area() { return new AreaRef(this, this.row.Data2); }
 }
 
 export class GameObjectMinigame extends GameObjectTemplate {
@@ -520,8 +532,8 @@ export class GameObjectMoTransport extends GameObjectTemplate {
     get TaxiPath() { return new TaxiPathRef(this, this.row.Data0); }
     get MoveSpeed() { return this.wrap(this.row.Data1); }
     get AccelRate() { return this.wrap(this.row.Data2); }
-    get StartEventID() { return this.wrap(this.row.Data3); }
-    get StopEventID() { return this.wrap(this.row.Data4); }
+    get StartEvent() { return new RefUnknown(this, this.row.Data3); }
+    get StopEvent() { return new RefUnknown(this, this.row.Data4); }
     get TransportPhysics() { return this.wrap(this.row.Data5); }
     get SpawnGroup() { return this.wrap(this.row.Data6); }
     get WorldState1() { return this.wrap(this.row.Data7); }
@@ -552,44 +564,44 @@ export class GameObjectQuestGiver extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
+    get Lock() { return new LockRef(this ,this.row.Data0); }
     get QuestList() { return this.wrap(this.row.Data1); }
     get PageMaterial() { return this.wrap(this.row.Data2); }
-    get GossipID() { return this.wrap(this.row.Data3); }
+    get Gossip() { return new GossipPointer(this, this.row.Data3); }
     get CustomAnim() { return this.wrap(this.row.Data4); }
     get NoDamageImmune() { return this.wrap(this.row.Data5); }
-    get OpenTextID() { return getBroadcast(this, this.row.Data6) }
-    get IsLOSOk() { return getBroadcast(this, this.row.Data7) }
-    get AllowMounted() { return getBroadcast(this, this.row.Data8) }
-    get IsLarge() { return getBroadcast(this, this.row.Data9) }
-    get ConditionID() { return getBroadcast(this, this.row.Data10) }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data6) }
+    get IsLOSOk() { return new BroadcastTextRef(this, this.row.Data7) }
+    get AllowMounted() { return new BroadcastTextRef(this, this.row.Data8) }
+    get IsLarge() { return new BroadcastTextRef(this, this.row.Data9) }
+    get Condition() { return new RefUnknown(this, this.row.Data10) }
 }
 
 export class GameObjectSpellCaster extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get SpellID() { return this.wrap(this.row.Data0); }
+    get Spell() { return new SpellRef(this, this.row.Data0); }
     get Charges() { return this.wrap(this.row.Data1); }
     get PartyOnly() { return this.wrap(this.row.Data2); }
     get AllowMounted() { return this.wrap(this.row.Data3); }
     get Large() { return this.wrap(this.row.Data4); }
-    get ConditionID() { return this.wrap(this.row.Data5); }
+    get Condition() { return new RefUnknown(this, this.row.Data5); }
 }
 
 export class GameObjectSpellFocus extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get FocusID() { return this.wrap(this.row.Data0); }
+    get Focus() { return new RefUnknown(this, this.row.Data0); }
     get Distance() { return this.wrap(this.row.Data1); }
-    get LinkedTrapID() { return this.wrap(this.row.Data2); }
+    get LinkedTrap() { return new GameObjectTrapRef(this ,this.row.Data2); }
     get ServerOnly() { return this.wrap(this.row.Data3); }
-    get QuestID() { return this.wrap(this.row.Data4); }
+    get Quest() { return new QuestRef(this, this.row.Data4); }
     get Large() { return this.wrap(this.row.Data5); }
     get FloatingTooltip() { return this.wrap(this.row.Data6); }
     get FloatOnWater() { return this.wrap(this.row.Data7); }
-    get ConditionID() { return this.wrap(this.row.Data8); }
+    get Condition() { return new RefUnknown(this, this.row.Data8); }
 }
 
 export class GameObjectSummoningRitual extends GameObjectTemplate {
@@ -597,25 +609,25 @@ export class GameObjectSummoningRitual extends GameObjectTemplate {
         super(row);
     }
     get RequiredParticipants() { return this.wrap(this.row.Data0); }
-    get SpellID() { return this.wrap(this.row.Data1); }
+    get Spell() { return new SpellRef(this, this.row.Data1); }
     get AnimSpell() { return this.wrap(this.row.Data2); }
     get RitualPersistent() { return this.wrap(this.row.Data3); }
     get CasterTargetSpell() { return this.wrap(this.row.Data4); }
     get CasterTargetSpellTargets() { return this.wrap(this.row.Data5); }
     get CasterGrouped() { return this.wrap(this.row.Data6); }
     get RitualNoTargetCheck() { return this.wrap(this.row.Data7); }
-    get ConditionID() { return this.wrap(this.row.Data8); }
+    get Condition() { return new RefUnknown(this, this.row.Data8); }
 }
 
 export class GameObjectText extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get PageID() { return this.wrap(this.row.Data0); }
+    get Page() { return new PageTextRef(this, this.row.Data0); }
     get Language() { return this.wrap(this.row.Data1); }
     get PageMaterial() { return this.wrap(this.row.Data2); }
     get AllowMounted() { return this.wrap(this.row.Data3); }
-    get ConditionID() { return this.wrap(this.row.Data4); }
+    get Condition() { return new RefUnknown(this, this.row.Data4); }
 }
 
 export class GameObjectTransport extends GameObjectTemplate {
@@ -625,8 +637,8 @@ export class GameObjectTransport extends GameObjectTemplate {
     get Pause() { return this.wrap(this.row.Data0); }
     get StartOpen() { return this.wrap(this.row.Data1); }
     get AutoCloseTime() { return this.wrap(this.row.Data2); }
-    get Pause1Event() { return this.wrap(this.row.Data3); }
-    get Pause2Event() { return this.wrap(this.row.Data4); }
+    get Pause1Event() { return new RefUnknown(this, this.row.Data3); }
+    get Pause2Event() { return new RefUnknown(this, this.row.Data4); }
     get Map() { return this.wrap(this.row.Data5); }
     get Keyframes() { return new ElevatorKeyframes(this); }
 }
@@ -656,10 +668,10 @@ export class GameObjectTrap extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get LockID() { return this.wrap(this.row.Data0); }
+    get Lock() { return new LockRef(this, this.row.Data0); }
     get Level() { return this.wrap(this.row.Data1); }
     get Diameter() { return this.wrap(this.row.Data2); }
-    get SpellID() { return this.wrap(this.row.Data3); }
+    get Spell() { return new SpellRef(this, this.row.Data3); }
     /*
      * 0 trap with no despawn after cast.
      * 1 trap despawns after cast.
@@ -673,10 +685,31 @@ export class GameObjectTrap extends GameObjectTemplate {
     get Stealthed() { return this.wrap(this.row.Data9); }
     get Large() { return this.wrap(this.row.Data10); }
     get Invisible() { return this.wrap(this.row.Data11); }
-    get OpenTextID() { return this.wrap(this.row.Data12); }
-    get CloseTextID() { return this.wrap(this.row.Data13); }
+    get OpenText() { return new BroadcastTextRef(this, this.row.Data12); }
+    get CloseText() { return new BroadcastTextRef(this, this.row.Data13); }
     get IgnoreTotems() { return this.wrap(this.row.Data14); }
-    get ConditionID() { return this.wrap(this.row.Data15); }
+    get Condition() { return new RefUnknown(this, this.row.Data15); }
+}
+
+export class GameObjectTrapRef<T> extends RefStatic<T,GameObjectTrap> {
+    protected create(mod: string, id: string): GameObjectTrap {
+        return GameObjectTemplates.create(mod,id)
+            .Type.Trap.set()
+    }
+    protected clone(mod: string, id: string): GameObjectTrap {
+        return GameObjectTemplates.create(mod,id,this.cell.get())
+            .Type.Trap.as()
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: GameObjectTrap): number {
+        return v.ID;
+    }
+    protected resolve(): GameObjectTrap {
+        return GameObjectTemplates.load(this.cell.get())
+            .Type.Trap.as()
+    }
 }
 
 export class GameObjectTrapdoor extends GameObjectTemplate {
@@ -691,77 +724,77 @@ export class GameObjectTrapdoor extends GameObjectTemplate {
 
 export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {
     /** Enum Value = 0 */
-    get Door()                 { return this.value(0, x=>new GameObjectDoor(x.row)) }
+    get Door()                 { return this.value(GAMEOBJECT_TYPE_DOOR, x=>new GameObjectDoor(x.row)) }
     /** Enum Value = 1 */
-    get Button()               { return this.value(1, x=>new GameObjectButton(x.row)) }
+    get Button()               { return this.value(GAMEOBJECT_TYPE_BUTTON, x=>new GameObjectButton(x.row)) }
     /** Enum Value = 2 */
-    get Questgiver()           { return this.value(2, x=>new GameObjectQuestGiver(x.row)) }
+    get Questgiver()           { return this.value(GAMEOBJECT_TYPE_QUESTGIVER, x=>new GameObjectQuestGiver(x.row)) }
     /** Enum Value = 3 */
-    get Chest()                { return this.value(3, x=>new GameObjectChest(x.row)) }
+    get Chest()                { return this.value(GAMEOBJECT_TYPE_CHEST, x=>new GameObjectChest(x.row)) }
     /** Enum Value = 4 */
-    get Binder()               { return this.plain_value(4) }
+    get Binder()               { return this.plain_value(GAMEOBJECT_TYPE_BINDER) }
     /** Enum Value = 5 */
-    get Generic()              { return this.plain_value(5) }
+    get Generic()              { return this.plain_value(GAMEOBJECT_TYPE_GENERIC) }
     /** Enum Value = 6 */
-    get Trap()                 { return this.value(6, x=>new GameObjectTrap(x.row)) }
+    get Trap()                 { return this.value(GAMEOBJECT_TYPE_TRAP, x=>new GameObjectTrap(x.row)) }
     /** Enum Value = 7 */
-    get Chair()                { return this.value(7, x=>new GameObjectChair(x.row)) }
+    get Chair()                { return this.value(GAMEOBJECT_TYPE_CHAIR, x=>new GameObjectChair(x.row)) }
     /** Enum Value = 8 */
-    get SpellFocus()           { return this.value(8, x=>new GameObjectSpellFocus(x.row)) }
+    get SpellFocus()           { return this.value(GAMEOBJECT_TYPE_SPELL_FOCUS, x=>new GameObjectSpellFocus(x.row)) }
     /** Enum Value = 9 */
-    get Text()                 { return this.value(9, x=>new GameObjectText(x.row)) }
+    get Text()                 { return this.value(GAMEOBJECT_TYPE_TEXT, x=>new GameObjectText(x.row)) }
     /** Enum Value = 10 */
-    get Goober()               { return this.value(10, x=>new GameObjectGoober(x.row)) }
+    get Goober()               { return this.value(GAMEOBJECT_TYPE_GOOBER, x=>new GameObjectGoober(x.row)) }
     /** Enum Value = 11 */
-    get Transport()            { return this.value(11, x=>new GameObjectTransport(x.row)) }
+    get Transport()            { return this.value(GAMEOBJECT_TYPE_TRANSPORT, x=>new GameObjectTransport(x.row)) }
     /** Enum Value = 12 */
-    get Areadamage()           { return this.value(12, x=>new GameObjectAreaDamage(x.row)) }
+    get Areadamage()           { return this.value(GAMEOBJECT_TYPE_AREADAMAGE, x=>new GameObjectAreaDamage(x.row)) }
     /** Enum Value = 13 */
-    get Camera()               { return this.value(13, x=>new GameObjectCamera(x.row)) }
+    get Camera()               { return this.value(GAMEOBJECT_TYPE_CAMERA, x=>new GameObjectCamera(x.row)) }
     /** Enum Value = 14 */
-    get MapObject()            { return this.plain_value(14) }
+    get MapObject()            { return this.plain_value(GAMEOBJECT_TYPE_MAP_OBJECT) }
     /** Enum Value = 15 */
-    get MoTransport()          { return this.value(15, x=>new GameObjectMoTransport(x.row)) }
+    get MoTransport()          { return this.value(GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, x=>new GameObjectMoTransport(x.row)) }
     /** Enum Value = 16 */
-    get DuelArbiter()          { return this.plain_value(16) }
+    get DuelArbiter()          { return this.plain_value(GAMEOBJECT_TYPE_DUEL_ARBITER) }
     /** Enum Value = 17 */
-    get Fishingnode()          { return this.plain_value(17) }
+    get Fishingnode()          { return this.plain_value(GAMEOBJECT_TYPE_FISHINGNODE) }
     /** Enum Value = 18 */
-    get Ritual()               { return this.value(18, x=>new GameObjectSummoningRitual(x.row)) }
+    get Ritual()               { return this.value(GAMEOBJECT_TYPE_RITUAL, x=>new GameObjectSummoningRitual(x.row)) }
     /** Enum Value = 19 */
-    get Mailbox()              { return this.value(19, x=>new GameObjectMailbox(x.row)) }
+    get Mailbox()              { return this.value(GAMEOBJECT_TYPE_MAILBOX, x=>new GameObjectMailbox(x.row)) }
     /** Enum Value = 20 */
-    get Auctionhouse()         { return this.plain_value(20) }
+    get Auctionhouse()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE) }
     /** Enum Value = 21 */
-    get Guardpost()            { return this.value(21, x=>new GameObjectGuardPost(x.row)) }
+    get Guardpost()            { return this.value(GAMEOBJECT_TYPE_GUARDPOST, x=>new GameObjectGuardPost(x.row)) }
     /** Enum Value = 22 */
-    get Spellcaster()          { return this.value(22, x=>new GameObjectSpellCaster(x.row)) }
+    get Spellcaster()          { return this.value(GAMEOBJECT_TYPE_SPELLCASTER, x=>new GameObjectSpellCaster(x.row)) }
     /** Enum Value = 23 */
-    get Meetingstone()         { return this.value(23, x=>new GameObjectMeetingStone(x.row)) }
+    get Meetingstone()         { return this.value(GAMEOBJECT_TYPE_MEETINGSTONE, x=>new GameObjectMeetingStone(x.row)) }
     /** Enum Value = 24 */
-    get Flagstand()            { return this.value(24, x=>new GameObjectFlagStand(x.row)) }
+    get Flagstand()            { return this.value(GAMEOBJECT_TYPE_FLAGSTAND, x=>new GameObjectFlagStand(x.row)) }
     /** Enum Value = 25 */
-    get Fishinghole()          { return this.value(25, x=>new GameObjectFishingHole(x.row)) }
+    get Fishinghole()          { return this.value(GAMEOBJECT_TYPE_FISHINGHOLE, x=>new GameObjectFishingHole(x.row)) }
     /** Enum Value = 26 */
-    get Flagdrop()             { return this.value(26, x=>new GameObjectFlagDrop(x.row)) }
+    get Flagdrop()             { return this.value(GAMEOBJECT_TYPE_FLAGDROP, x=>new GameObjectFlagDrop(x.row)) }
     /** Enum Value = 27 */
-    get MiniGame()             { return this.value(27, x=>new GameObjectMinigame(x.row)) }
+    get MiniGame()             { return this.value(GAMEOBJECT_TYPE_MINI_GAME, x=>new GameObjectMinigame(x.row)) }
     /** Enum Value = 28 */
-    get LotteryKiosk()         { return this.plain_value(28) }
+    get LotteryKiosk()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE_2) }
     /** Enum Value = 29 */
-    get CapturePoint()         { return this.value(29, x=>new GameObjectCapturePoint(x.row)) }
+    get CapturePoint()         { return this.value(GAMEOBJECT_TYPE_CAPTURE_POINT, x=>new GameObjectCapturePoint(x.row)) }
     /** Enum Value = 30 */
-    get AuraGenerator()        { return this.value(30, x=>new GameObjectAuraGenerator(x.row)) }
+    get AuraGenerator()        { return this.value(GAMEOBJECT_TYPE_AURA_GENERATOR, x=>new GameObjectAuraGenerator(x.row)) }
     /** Enum Value = 31 */
-    get DungeonDifficulty()    { return this.value(31, x=>new GameObjectDungeonDifficulty(x.row)) }
+    get DungeonDifficulty()    { return this.value(GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, x=>new GameObjectDungeonDifficulty(x.row)) }
     /** Enum Value = 32 */
-    get BarberChair()          { return this.value(32, x=>new GameObjectBarberChair(x.row)) }
+    get BarberChair()          { return this.value(GAMEOBJECT_TYPE_BARBER_CHAIR, x=>new GameObjectBarberChair(x.row)) }
     /** Enum Value = 33 */
-    get DestructibleBuilding() { return this.value(33, x=>new GameObjectDestructibleBuilding(x.row)) }
+    get DestructibleBuilding() { return this.value(GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, x=>new GameObjectDestructibleBuilding(x.row)) }
     /** Enum Value = 34 */
-    get GuildBank()            { return this.value(34, x=>new GameObjectGuildBank(x.row)) }
+    get GuildBank()            { return this.value(GAMEOBJECT_TYPE_GUILD_BANK, x=>new GameObjectGuildBank(x.row)) }
     /** Enum Value = 35 */
-    get Trapdoor()             { return this.value(35, x=>new GameObjectTrapdoor(x.row)) }
+    get Trapdoor()             { return this.value(GAMEOBJECT_TYPE_TRAPDOOR, x=>new GameObjectTrapdoor(x.row)) }
 }
 
 export class GameObjectTemplateRefReadOnly<T> extends RefReadOnly<T,GameObjectTemplate> {

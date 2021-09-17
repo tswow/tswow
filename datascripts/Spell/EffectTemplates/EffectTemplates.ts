@@ -1,6 +1,16 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { CreatureTemplateRef } from "../../Creature/CreatureTemplate";
+import { EnchantmentRef } from "../../Enchant/Enchantment";
+import { LanguageRef } from "../../Languages/Languages";
+import { LockTypeRef } from "../../Locks/LockType";
 import { SchoolMask } from "../../Misc/School";
+import { QuestRef } from "../../Quest/Quest";
+import { RefUnknown } from "../../Refs/Ref";
+import { SkillLineRef } from "../../SkillLines/SkillLine";
+import { SoundEntryPointer } from "../../Sound/SoundEntry";
+import { TaxiPathRef } from "../../Taxi/Taxi";
+import { SpellRef } from "../Spell";
 import { EffectClassSet } from "../SpellClassSet";
 import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
@@ -76,7 +86,7 @@ export class CommandTotemCreature extends EffectTemplate {
 // 15
 // 16
 export class CompleteQuest extends TargetBase {
-    get QuestID() { return this.wrap(this.owner.MiscValueA); }
+    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
 }
 // 17
 export class WeaponDamageNoSchool extends DamageBase {}
@@ -145,7 +155,7 @@ export class TriggerMissile extends TargetBase {
 }
 // 33
 export class OpenLock extends EffectTemplate {
-    get LockType() { return this.wrap(this.owner.MiscValueA); }
+    get LockType() { return new LockTypeRef(this, this.owner.MiscValueA); }
     get SkillValue() { return this.wrap(this.owner.PointsPerLevel); }
 
     /**
@@ -181,7 +191,7 @@ export class Language extends TargetBase {
     /**
      * Reference to Languages.dbc
      */
-    get LanguageID() { return this.wrap(this.owner.MiscValueA); }
+    get Language() { return new LanguageRef(this, this.owner.MiscValueA); }
 }
 // 40
 // 41
@@ -226,7 +236,7 @@ export class EnchantItem extends EffectTemplate {
 // 54
 export class EnchantItemTemp extends EffectTemplate {
     get EnchantingItem() { return this.wrap(this.owner.ItemType); }
-    get EnchantID() { return this.wrap(this.owner.MiscValueA); }
+    get Enchant() { return new EnchantmentRef(this, this.owner.MiscValueA); }
 }
 // 55
 // 56
@@ -251,7 +261,7 @@ export class CreateRandomItem extends TargetBase {
 // 60
 // 61
 export class SendEvent extends EffectTemplate {
-    get EventID() { return this.wrap(this.owner.MiscValueA); }
+    get Event() { return new RefUnknown(this, this.owner.MiscValueA); }
 }
 // 62
 export class PowerBurn extends PowerBase {}
@@ -391,12 +401,12 @@ export class SetGameObjectDestructibleState extends DamageBase {
 }
 // 90
 export class KillCredit extends TargetBase {
-    get CreatureID() { return this.wrap(this.owner.MiscValueA); }
+    get Creature() { return new CreatureTemplateRef(this, this.owner.MiscValueA); }
 }
 // 91
 // 92
 export class EnchantHeldItem extends EffectTemplate {
-    get EnchantID() { return this.wrap(this.owner.MiscValueA); }
+    get Enchant() { return new EnchantmentRef(this, this.owner.MiscValueA); }
 }
 // 93
 // 94
@@ -417,7 +427,7 @@ export class CastButtons extends EffectTemplate {
     /**
      * Actual ButtonID is this value + 132
      */
-    get ButtonID() { return this.wrap(this.owner.MiscValueA); }
+    get Button() { return new RefUnknown(this, this.owner.MiscValueA); }
 
     get ButtonCount() { return this.wrap(this.owner.MiscValueB); }
 }
@@ -482,7 +492,7 @@ export class DurabilityDamagePercent extends DamageBasePct {
 // 117
 // 118
 export class Skill extends TargetBase {
-    get SkillID() { return this.wrap(this.owner.MiscValueA); }
+    get Skill() { return new SkillLineRef(this, this.owner.MiscValueA); }
     get SkillTier() { return this.wrap(this.owner.BasePoints); }
 }
 // 119
@@ -491,7 +501,7 @@ export class Skill extends TargetBase {
 // 122
 // 123
 export class SendTaxi extends TargetBase {
-    get TaxiID() { return this.wrap(this.owner.MiscValueA); }
+    get Taxi() { return new TaxiPathRef(this, this.owner.MiscValueA); }
 }
 // 124
 export class PullTowards extends TargetBase{
@@ -516,11 +526,11 @@ export class RedirectThreat extends TargetBase {
 }
 // 131
 export class PlaySound extends TargetBase {
-    get SoundID() { return this.wrap(this.owner.MiscValueA); }
+    get Sound() { return new SoundEntryPointer(this, this.owner.MiscValueA); }
 }
 // 132
 export class PlayMusic extends TargetBase {
-    get SoundID() { return this.wrap(this.owner.MiscValueA); }
+    get Sound() { return new SoundEntryPointer(this, this.owner.MiscValueA); }
 }
 // 133
 // 134
@@ -535,7 +545,7 @@ export class EnergizePercent extends PowerBasePct {
 export class LeapBack extends TargetBase {}
 // 139
 export class ClearQuest extends TargetBase {
-    get QuestID() { return this.wrap(this.owner.MiscValueA); }
+    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
 }
 // 140
 export class ForceCast extends EffectTemplate {
@@ -580,7 +590,7 @@ export class ActivateRune extends CountBase {
 }
 // 147
 export class FailQuest extends TargetBase {
-    get QuestID() { return this.wrap(this.owner.MiscValueA); }
+    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
 }
 // 148
 export class TriggerMissileWithValue extends TargetBase {
@@ -594,7 +604,7 @@ export class TriggerMissileWithValue extends TargetBase {
 export class ChargeDest extends TargetBase {}
 // 150
 export class StartQuest extends TargetBase {
-    get QuestID() { return this.wrap(this.owner.MiscValueA); }
+    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
 }
 // 151
 // 152
@@ -602,11 +612,11 @@ export class StartQuest extends TargetBase {
 // 154
 // 155
 export class CanTitanGrip extends TargetBase {
-    get PenaltySpellID() { return this.wrap(this.owner.MiscValueA); }
+    get PenaltySpell() { return new SpellRef(this, this.owner.MiscValueA); }
 }
 // 156
 export class EnchantPrismaticItem extends EffectTemplate {
-    get EnchantID() { return this.wrap(this.owner.MiscValueA); }
+    get Enchant() { return new EnchantmentRef(this, this.owner.MiscValueA); }
 }
 // 157
 // 158

@@ -1,22 +1,67 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { GameObjectTemplates } from "../GameObject/GameObjects";
 import { GameObjectChest } from "../GameObject/GameObjectTemplate";
+import { Lock } from "../Locks/Lock";
 import { Locks } from "../Locks/Locks";
 import { Profession } from "./Profession";
 
-export class ProfessionGatheringNodes extends CellSystem<Profession> {
-    // TODO: upgrade to real MultiRowSystem to find existing nodes
+export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Profession> {
+    protected getAllRows(): GameObjectChest[] {
+        return this.owner.GatheringSpells.get()
+            .map(x=>x.Effects.findEffect(y=>y.OpenLock))
+            .map(x=>x.LockType.getRef())
+            .reduce<Lock[]>((p,c)=>p.concat(c.Locks.get()),[])
+            .reduce<GameObjectChest[]>((p,c)=>p.concat(c.Chests.get()),[])
+    }
+    protected isDeleted(value: GameObjectChest): boolean {
+        return value.row.isDeleted();
+    }
 
-    add(mod: string, id: string, lockId: number, levelNeeded: number) {
-        let lock = Locks.createTypeInstance(lockId,levelNeeded)
-        return GameObjectTemplates.create(mod,id)
+    add(mod: string, id: string, lockType: number, levelNeeded: number,itemsNeeded: number[], displayid: number) {
+        let lock = Locks.create()
+            .addMod(i=>i
+                .Type.LockType.set()
+                .LockType.set(lockType)
+                .RequiredSkill.set(levelNeeded)
+            )
+        if(itemsNeeded.length >= lock.length-1) {
+            throw new Error(
+                  `Too many items needed:`
+                + ` can only have ${lock.length-1}`
+                )
+        }
+        itemsNeeded.forEach(item=>{
+            lock.addMod(lock=>{
+                lock.Type.ItemTemplate.set()
+                    .ItemTemplate.set(item)
+            })
+        })
+        GameObjectTemplates.create(mod,id)
             .Type.Chest.set()
             .IsConsumable.set(1)
             .Lock.set(lock.ID)
+            .Display.set(displayid)
+            .Size.set(1)
+        return this.owner;
     }
 
-    addMod(mod: string, id: string, lockId: number, levelNeeded: number, callback: (gobj: GameObjectChest)=>void) {
-        callback(this.add(mod,id,lockId,levelNeeded));
+    addGet(mod: string, id: string, lockType: number, level: number) {
+        let lock = Locks.create()
+            .addMod(x=>x.Type.LockType.set()
+                .LockType.set(lockType)
+                .RequiredSkill.set(level)
+            )
+        let chest = GameObjectTemplates.create(mod,id)
+            .Type.Chest.set()
+            .IsConsumable.set(1)
+            .Lock.set(lock.ID)
+            .Size.set(1)
+        return chest
+    }
+
+    addMod(mod: string, id: string, lockType: number, level: number, callback: (chest: GameObjectChest)=>void) {
+        let chest = this.addGet(mod,id,lockType,level);
+        callback(chest);
         return this.owner;
     }
 }

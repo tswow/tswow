@@ -25,6 +25,7 @@ import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { RaceType } from "../Race/RaceType";
 import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { WorldMapAreaRef } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
@@ -144,7 +145,7 @@ export class Spell extends MainEntity<SpellRow> {
     get RequiredAuraVision() { return this.wrap(this.row.RequiredAuraVision); }
 
     /** Points to a WorldMapArea */
-    get RequiredAreaID() { return this.wrap(this.row.RequiredAreasID); }
+    get RequiredArea() { return new WorldMapAreaRef(this, this.row.RequiredAreasID); }
     get SchoolMask() { return new SchoolMask(this, this.row.SchoolMask); }
     get DispelType() { return this.wrap(this.row.DispelType); }
     get Mechanic() { return this.wrap(this.row.Mechanic); }

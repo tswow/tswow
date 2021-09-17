@@ -16,8 +16,8 @@
  */
 import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
-import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
-import { Objects } from "wotlkdata/cell/serialization/ObjectIteration";
+import { EnumCellTransform, EnumValueTransform } from "wotlkdata/cell/cells/EnumCell";
+import { Objectified, Objects } from "wotlkdata/cell/serialization/ObjectIteration";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { std } from "../tswow-stdlib-data";
@@ -124,6 +124,27 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     filterType(type: number, callback: (effects: SpellEffect[])=>void) {
         callback([this.get(0),this.get(1),this.get(2)].filter(x=>x.EffectType.get()===type));
         return this.owner;
+    }
+
+    filter(callback: (effect: SpellEffect, index: number)=>boolean): SpellEffect[] {
+        return [this.get(0),this.get(1),this.get(2)]
+            .filter(callback);
+    }
+
+    find(callback: (effect: SpellEffect, index: number)=>boolean): SpellEffect|undefined {
+        return [this.get(0),this.get(1),this.get(2)].find(callback);
+    }
+
+    findEffect<T extends Objectified>(callback: (effect: SpellEffectType)=>EnumValueTransform<SpellEffect,T>): T {
+        let v1 = callback(this.get(0).EffectType);
+        if(v1.isSelected()) return v1.as();
+
+        let v2 = callback(this.get(0).EffectType);
+        if(v2.isSelected()) return v2.as();
+
+        let v3 = callback(this.get(0).EffectType);
+
+        return v3.as();
     }
 
     get(index: number) {

@@ -3,6 +3,7 @@ import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { HolidaysQuery, HolidaysRow } from "wotlkdata/dbc/types/Holidays";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { Ref } from "../Refs/Ref";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";
@@ -74,9 +75,7 @@ export class HolidayCustomPeriod extends HolidayBase {
     get Period() { return new HolidayPeriod(this, 0); }
 }
 
-export class HolidayPlain extends HolidayBase {
-
-}
+export class HolidayPlain extends HolidayBase {}
 
 export const HolidayRegistry = {
     create(parent?: number) {
@@ -125,4 +124,23 @@ export const HolidayRegistry = {
         let v = DBC.Holidays.find(query)
         return (v ? new HolidayBase(v) : undefined) as HolidayBase
     }
+}
+
+export class HolidayRef<T> extends Ref<T,HolidayPlain> {
+    protected create(): HolidayPlain {
+        return HolidayRegistry.create();
+    }
+    protected clone(): HolidayPlain {
+        return HolidayRegistry.create(this.cell.get());
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: HolidayPlain): number {
+        return v.ID;
+    }
+    protected resolve(): HolidayPlain {
+        return HolidayRegistry.load(this.cell.get());
+    }
+
 }

@@ -6,11 +6,12 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/dbc/types/Achievement_Criteria";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { RefUnknown } from "../Refs/Ref";
 import { Achievement } from "./Achievement";
 
 export class CriteriaTimer<T extends CriteriaBase> extends CellSystem<T> {
     get Asset() { return this.wrap(this.owner.row.Timer_Asset_Id); }
-    get StartEvent() { return this.wrap(this.owner.row.Timer_Start_Event); }
+    get StartEvent() { return new RefUnknown(this, this.owner.row.Timer_Start_Event); }
     get Time() { return this.wrap(this.owner.row.Timer_Time); }
 
     set(asset: number, startEvent: number, time: number) {
@@ -44,7 +45,7 @@ export class CriteriaBase extends TransformedEntity<Achievement_CriteriaRow,Crit
     }
 
     get Type() { return new CriteriaType(this, this.row.Type); }
-    get AchievementID() { return this.row.Achievement_Id.get(); }
+    get Achievement() { return this.row.Achievement_Id.get(); }
     get Description() { return this.wrapLoc(this.row.Description); }
     get Flags() { return new CriteriaFlags(this, this.row.Flags); }
     get UIOrder() { return this.wrap(this.row.Ui_Order); }
@@ -72,10 +73,10 @@ export class CriteriaPlain extends CriteriaBase {
     get Asset() { return this.wrap(this.row.Asset_Id); }
     get Description() { return this.wrapLoc(this.row.Description); }
     get FailAsset() { return this.wrap(this.row.Fail_Asset); }
-    get FailEvent() {return this.wrap(this.row.Fail_Event); }
+    get FailEvent() {return new RefUnknown(this, this.row.Fail_Event); }
     get Quantity() { return this.wrap(this.row.Quantity)}
     get StartAsset() { return this.wrap(this.row.Start_Asset); }
-    get StartEvent() { return this.wrap(this.row.Start_Event); }
+    get StartEvent() { return new RefUnknown(this, this.row.Start_Event); }
 
     clear() {
         return this.Type.set(0)
@@ -118,12 +119,12 @@ export class AchievementCriteria extends MultiRowSystem<CriteriaPlain,Achievemen
 }
 
 export class KillCreature extends CriteriaBase {
-    get CreatureTemplateID() { return this.wrap(this.row.Asset_Id); }
+    get CreatureTemplate() { return this.wrap(this.row.Asset_Id); }
     get KillQuantity() { return this.wrap(this.row.Quantity); }
 }
 
 export class WinBG extends CriteriaBase {
-    get MapID() { return this.wrap(this.row.Asset_Id); }
+    get Map() { return this.wrap(this.row.Asset_Id); }
     get WinCount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -132,7 +133,7 @@ export class ReachLevel extends CriteriaBase {
 }
 
 export class ReachSkillLevel extends CriteriaBase {
-    get SkillID() { return this.wrap(this.row.Asset_Id); }
+    get Skill() { return this.wrap(this.row.Asset_Id); }
     get SkillLevel() { return this.wrap(this.row.Quantity); }
 }
 
@@ -149,7 +150,7 @@ export class CompleteDailyQuestDay extends CriteriaBase {
 }
 
 export class CompleteQuestsInZone extends CriteriaBase {
-    get ZoneID() { return this.wrap(this.row.Asset_Id); }
+    get Zone() { return this.wrap(this.row.Asset_Id); }
     get NumberOfDays() { return this.wrap(this.row.Quantity); }
 }
 
@@ -161,7 +162,7 @@ export class CompleteBattleGround extends CriteriaBase {
 }
 
 export class DeathAtMap extends CriteriaBase {
-    get MapID() { return this.wrap(this.row.Asset_Id); }
+    get Map() { return this.wrap(this.row.Asset_Id); }
     get Count() { return this.wrap(this.row.Quantity); }
 }
 
@@ -175,7 +176,7 @@ export class CompleteRaid extends CriteriaBase {
 }
 
 export class KilledByCreature extends CriteriaBase {
-    get CreatureTemplateID() { return this.wrap(this.row.Asset_Id); }
+    get CreatureTemplate() { return this.wrap(this.row.Asset_Id); }
 }
 
 export class FallWithoutDying extends CriteriaBase {
@@ -187,7 +188,7 @@ export class DeathsFrom extends CriteriaBase {
 }
 
 export class CompleteQuest extends CriteriaBase {
-    get QuestID() { return this.wrap(this.row.Asset_Id); }
+    get Quest() { return this.wrap(this.row.Asset_Id); }
     get QuestCount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -195,14 +196,14 @@ export class BeSpellTarget1 extends CriteriaBase {
 }
 
 export class BeSpellTarget2 extends CriteriaBase {
-    get SpellID() { return this.wrap(this.row.Asset_Id); }
+    get Spell() { return this.wrap(this.row.Asset_Id); }
     get SpellCount() { return this.wrap(this.row.Quantity); }
 }
 
 export class CastSpell extends CriteriaBase {}
 
 export class CastSpell2 extends CriteriaBase {
-    get SpellID() { return this.wrap(this.row.Asset_Id); }
+    get Spell() { return this.wrap(this.row.Asset_Id); }
     get SpellCount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -212,7 +213,7 @@ export class BgObjectiveCapture extends CriteriaBase {
 }
 
 export class HonorableKillAtArea extends CriteriaBase {
-    get AreaID() { return this.wrap(this.row.Asset_Id); }
+    get Area() { return this.wrap(this.row.Asset_Id); }
     get KillCount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -220,11 +221,11 @@ export class WinArena extends CriteriaBase {
 }
 
 export class PlayArena extends CriteriaBase {
-    get MapID() { return this.wrap(this.row.Asset_Id); }
+    get Map() { return this.wrap(this.row.Asset_Id); }
 }
 
 export class LearnSpell extends CriteriaBase {
-    get SpellID() { return this.wrap(this.row.Asset_Id); }
+    get Spell() { return this.wrap(this.row.Asset_Id); }
 }
 
 export class WinRatedArena extends CriteriaBase {
@@ -242,7 +243,7 @@ export class ReachTeamRating extends CriteriaBase {
 }
 
 export class LearnSkillLevel extends CriteriaBase {
-    get SkillID() { return this.wrap(this.row.Asset_Id); }
+    get Skill() { return this.wrap(this.row.Asset_Id); }
     /** apprentice = 1, journeyman=2 etc */
     get SkillLevel() { return this.wrap(this.row.Quantity); }
 }
@@ -257,12 +258,12 @@ export class LootItem extends CriteriaBase {
 }
 
 export class EquipItem extends CriteriaBase {
-    get ItemTemplateID() { return this.wrap(this.row.Asset_Id); }
+    get ItemTemplate() { return this.wrap(this.row.Asset_Id); }
     get ItemCount() { return this.wrap(this.row.Quantity); }
 }
 
 export class ExploreArea extends CriteriaBase {
-    get WorldMapOverlayID() { return this.wrap(this.row.Asset_Id); }
+    get WorldMapOverlay() { return this.wrap(this.row.Asset_Id); }
 }
 
 export class OwnRank extends CriteriaBase {
@@ -275,7 +276,7 @@ export class BuyBankSlot extends CriteriaBase {
 }
 
 export class GainReputation extends CriteriaBase {
-    get FactionID() { return this.wrap(this.row.Asset_Id); }
+    get Faction() { return this.wrap(this.row.Asset_Id); }
     get ReputationAmount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -300,17 +301,17 @@ export class RollGreedOnLoot extends CriteriaBase {
 }
 
 export class HonorableKillClass extends CriteriaBase {
-    get ClassID() { return this.wrap(this.row.Asset_Id); }
+    get Class() { return this.wrap(this.row.Asset_Id); }
     get KillCount() { return this.wrap(this.row.Quantity); }
 }
 
 export class HonorableKillRace extends CriteriaBase {
-    get RaceID() { return this.wrap(this.row.Asset_Id); }
+    get Race() { return this.wrap(this.row.Asset_Id); }
     get KillCount() { return this.wrap(this.row.Quantity); }
 }
 
 export class DoEmote extends CriteriaBase {
-    get EmoteID() { return this.wrap(this.row.Asset_Id); }
+    get Emote() { return this.wrap(this.row.Asset_Id); }
     get EmoteCount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -334,7 +335,7 @@ export class LootMoney extends CriteriaBase {
 }
 
 export class UseGameObject extends CriteriaBase {
-    get GameObjectTemplateID() { return this.wrap(this.row.Asset_Id); }
+    get GameObjectTemplate() { return this.wrap(this.row.Asset_Id); }
     get UseCount() { return this.wrap(this.row.Quantity); }
 }
 

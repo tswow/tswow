@@ -16,59 +16,58 @@
  */
 import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
-import { broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
+import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
+import { Ref } from "../Refs/Ref";
 
 function getLocRow(id: number, lang: Language) {
-    const row = SQL.broadcast_text_locale.find({ID: id});
+    const row = SQL.broadcast_text_locale.find({ID: id, locale: lang});
     if(row!==undefined) {
         return row;
     } else {
-        return SQL.broadcast_text_locale.add(id, lang);
+        return SQL.broadcast_text_locale.add(id, lang)
+            .Text.set('')
+            .Text1.set('')
     }
 }
 
-export class BroadcastTextContent<T> extends SQLLocSystem<T> {
+export class BroadcastTextContent extends SQLLocSystem<BroadcastText> {
     protected isFemale: boolean;
-    protected text: BroadcastText<T>;
 
-    constructor(owner: T, text: BroadcastText<T>, isFemale: boolean){
+    constructor(owner: BroadcastText, isFemale: boolean){
         super(owner);
         this.isFemale = isFemale;
-        this.text = text;
     }
 
     protected getMain(): Cell<string, any> {
         return this.isFemale ?
-            this.text.row.Text1 : this.text.row.Text
+            this.owner.row.Text1 : this.owner.row.Text
     }
 
     protected getLoc(loc: Language): Cell<string, any> {
         return this.isFemale ?
-            getLocRow(this.text.row.ID.get(),loc).Text1 :
-            getLocRow(this.text.row.ID.get(),loc).Text
+            getLocRow(this.owner.row.ID.get(),loc).Text1 :
+            getLocRow(this.owner.row.ID.get(),loc).Text
     }
-
 }
 
-export class BroadcastText<T> extends CellSystem<T> {
-    readonly row: broadcast_textRow;
-
-    constructor(owner: T, row: broadcast_textRow) {
-        super(owner);
-        this.row = row;
+export class BroadcastText extends MainEntity<broadcast_textRow> {
+    constructor(row: broadcast_textRow) {
+        super(row);
     }
 
+    get ID() { return this.row.ID.get(); }
+
     get MaleText() {
-        return new BroadcastTextContent<T>(this.owner, this, false);
+        return new BroadcastTextContent(this, false);
     }
 
     get FemaleText() {
-        return new BroadcastTextContent<T>(this.owner, this, true);
+        return new BroadcastTextContent(this, true);
     }
 
     get Emote1() { return this.wrap(this.row.EmoteID1); }
@@ -95,14 +94,57 @@ export class BroadcastText<T> extends CellSystem<T> {
     }
 }
 
-export function getBroadcast<T>(owner: T, cell: Cell<number,any>) {
-    let row: broadcast_textRow;
-    if(cell.get()<=0) {
-        cell.set(Ids.BroadcastText.id());
-        row = SQL.broadcast_text.add(cell.get());
-    } else {
-        row = SQL.broadcast_text.find({ID: cell.get()});
+export const BroadcastTextRegistry = {
+    create(parent = 0) {
+        return new BroadcastText(
+            parent > 0
+                ? SQL.broadcast_text
+                    .find({ID:parent})
+                    .clone(Ids.BroadcastText.id())
+                : SQL.broadcast_text.add(Ids.BroadcastText.id())
+        )
+    },
+
+    load(id: number) {
+        let v = SQL.broadcast_text.find({ID:id});
+        return (v ? new BroadcastText(v) : undefined) as BroadcastText;
+    },
+
+    filter(query: broadcast_textQuery) {
+        return SQL.broadcast_text
+            .filter(query)
+            .map(x=>new BroadcastText(x))
+    },
+
+    find(query: broadcast_textQuery) {
+        let v = SQL.broadcast_text.find(query)
+        return (v ? new BroadcastText(v) : undefined) as BroadcastText;
+    }
+}
+
+export class BroadcastTextRef<T> extends Ref<T,BroadcastText> {
+    protected create(): BroadcastText {
+        return BroadcastTextRegistry.create();
+    }
+    protected clone(): BroadcastText {
+        return BroadcastTextRegistry.create(this.cell.get())
+    }
+    exists(): boolean {
+        return this.cell.get() > 0;
+    }
+    protected id(v: BroadcastText): number {
+        return v.ID;
+    }
+    protected resolve(): BroadcastText {
+        return BroadcastTextRegistry.load(this.cell.get());
     }
 
-    return new BroadcastText(owner, row);
+    setSimple(langMale: loc_constructor, langFemale?: loc_constructor) {
+        let v = this.getRefCopy();
+        v.MaleText.set(langMale);
+        if(langFemale) {
+            v.FemaleText.set(langFemale);
+        }
+        return this.owner;
+    }
 }

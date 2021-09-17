@@ -108,7 +108,7 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
     clear(): this {
         this.ModelName.set("")
             .Sound.clearAll()
-            .ObjectEffectPackageID.set(0)
+            .ObjectEffectPackage.set(0)
             .GeoBox.set(new BoundingBox(0,0,0,0,0,0))
         return this;
     }
@@ -117,7 +117,7 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
     get Sound() {
         return new GameObjectSounds(this);
     }
-    get ObjectEffectPackageID() {
+    get ObjectEffectPackage() {
         return this.wrap(this.row.ObjectEffectPackageID);
     }
     get GeoBox(): GameObjectGeoBox {

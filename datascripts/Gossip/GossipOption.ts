@@ -18,9 +18,8 @@ import { SQL } from "wotlkdata";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
-import { BroadcastText } from "../BroadcastText/BroadcastText";
+import { BroadcastTextRef } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
-import { Ids } from "../Misc/Ids";
 import { Gossip } from "./Gossip";
 import { GossipIconCell } from "./GossipIcon";
 import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
@@ -37,18 +36,9 @@ export class GossipOption extends CellSystemTop {
     get Icon(){return new GossipIconCell(this, this.row.OptionIcon); }
     get Action(){return new GossipOptionAction(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
-    get MenuID() { return this.wrap(this.row.ActionMenuID); }
-
-    get Text(){
-        const id = this.row.OptionBroadcastTextID;
-        if(id.get()>0) {
-            return new BroadcastText(this,
-                SQL.broadcast_text.find({ID:id.get()}));
-        } else {
-            id.set(Ids.BroadcastText.id());
-            return new BroadcastText(this,
-                SQL.broadcast_text.add(id.get()))
-        }
+    get Gossip() { return this.wrap(this.row.ActionMenuID); }
+    get Text() {
+        return new BroadcastTextRef(this, this.row.OptionBroadcastTextID);
     }
 }
 

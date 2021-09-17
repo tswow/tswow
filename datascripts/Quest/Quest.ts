@@ -23,6 +23,7 @@ import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { SpellRef } from "../Spell/Spell";
 import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
 import { QuestGameEventCondition } from "./QuestGameEventPoints";
@@ -65,13 +66,13 @@ export class Quest extends MainEntity<quest_templateRow> {
 
     get SpecialFlags() { return new QuestSpecialFlags(this, this.addonRow.SpecialFlags); }
     get MaxLevel() { return this.wrap(this.addonRow.MaxLevel); }
-    get NextQuestID() { return this.wrap(this.addonRow.NextQuestID); }
-    get PrevQuestID() { return this.wrap(this.addonRow.PrevQuestID); }
+    get NextQuest() { return new QuestRef(this, this.addonRow.NextQuestID); }
+    get PrevQuest() { return new QuestRef(this, this.addonRow.PrevQuestID); }
     get ProvidedItemCount() { return this.wrap(this.addonRow.ProvidedItemCount); }
 
-    get SourceSpellID() { return this.wrap(this.addonRow.SourceSpellID); }
+    get SourceSpell() { return new SpellRef(this, this.addonRow.SourceSpellID); }
     get AllowableClasses() { return new MaskCell32(this,this.addonRow.AllowableClasses); }
-    get BreadcrumbForQuestId() { return this.wrap(this.addonRow.BreadcrumbForQuestId); }
+    get BreadcrumbForQuest() { return new QuestRef(this, this.addonRow.BreadcrumbForQuestId); }
     get ExclusiveGroup() { return this.wrap(this.addonRow.ExclusiveGroup); }
 
     get RequiredMaxRep() {
@@ -97,7 +98,7 @@ export class Quest extends MainEntity<quest_templateRow> {
     get Rewards() { return new QuestReward(this); }
     get Objectives() { return new QuestObjective(this); }
     get Text() { return new QuestText(this); }
-    get SortID() { return this.wrap(this.row.QuestSortID); }
+    get AreaSort() { return this.wrap(this.row.QuestSortID); }
     get MinLevel() { return this.wrap(this.row.MinLevel); }
     get QuestLevel() { return this.wrap(this.row.QuestLevel); }
     get StartItem() { return this.wrap(this.row.StartItem); }

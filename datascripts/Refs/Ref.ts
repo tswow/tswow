@@ -58,6 +58,19 @@ export abstract class RefReadOnly<T,V extends Objectified> extends CellSystem<T>
     }
 }
 
+export class RefUnknown<T> {
+    protected owner: T;
+    protected cell: Cell<number,any>;
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        this.owner = owner;
+        this.cell = cell;
+    }
+
+    get() { return this.cell.get(); }
+    set(value: number) {this.cell.set(value); return this.owner; }
+}
+
 export abstract class RefBase<T,V extends Objectified> {
     protected owner: T;
     protected cell: Cell<number,any>

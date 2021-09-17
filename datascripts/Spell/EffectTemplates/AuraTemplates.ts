@@ -3,8 +3,11 @@ import { CellWrapper } from "wotlkdata/cell/cells/Cell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTypeEnum, CreatureTypeMask } from "../../Creature/CreatureType";
+import { FactionRef } from "../../Faction/Faction";
 import { Ids } from "../../Misc/Ids";
 import { SchoolEnum, SchoolMask } from "../../Misc/School";
+import { RefUnknown } from "../../Refs/Ref";
+import { VehicleRef } from "../../Vehicle/Vehicle";
 import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffectMechanics";
 import { SpellPowerType } from "../SpellPowerType";
 import { ChanceBase, CountBase, DamageBase, DamageBasePct, HealBase, HealBasePct, ManaBase, PercentBase, PointsBase, PowerBase, PowerBasePct } from "./PointsBase";
@@ -537,7 +540,7 @@ export class ModTotalStatPercentage extends PercentBase {
 export class ModMeleeHaste extends PercentBase {}
 // 139
 export class ForceReaction extends PointsBase {
-    get FactionID() { return this.wrap(this.owner.MiscValueA); }
+    get Faction() { return new FactionRef(this, this.owner.MiscValueA); }
 }
 // 140
 export class ModRangedHaste extends PercentBase {}
@@ -929,7 +932,7 @@ export class ModHotPct extends PercentBase {
 }
 // 260
 export class ScreenEffect extends PointsBase {
-    get EffectID() { return this.wrap(this.owner.MiscValueA); }
+    get Effect() { return new RefUnknown(this, this.owner.MiscValueA); }
 }
 // 261
 export class Phase extends TargetBase {
@@ -1001,7 +1004,7 @@ export class PreventRegeneratePower extends TargetBase {
 // 295
 // 296
 export class SetVehicleId extends TargetBase {
-    get VehicleID() { return this.wrap(this.owner.MiscValueA); }
+    get Vehicle() { return new VehicleRef(this,this.owner.MiscValueA); }
 }
 // 297
 // 298
