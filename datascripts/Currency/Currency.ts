@@ -1,8 +1,9 @@
 import { DBC } from "wotlkdata";
 import { CurrencyTypesQuery, CurrencyTypesRow } from "wotlkdata/dbc/types/CurrencyTypes";
+import { Table } from "wotlkdata/table/Table";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { CurrencyCategoryRef } from "./CurrencyCategory";
 
@@ -14,20 +15,30 @@ export class Currency extends MainEntity<CurrencyTypesRow> {
 }
 
 export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypesRow,CurrencyTypesQuery> {
-    protected IDs           = Ids.CurrencyTypes
-    protected Table         = DBC.CurrencyTypes
-    protected EmptyQuery    = {}
-    protected Entity        = (r: CurrencyTypesRow)=>new Currency(r)
-    protected FindByID      = (id: number)=>DBC.CurrencyTypes.find({ID:id})
-    protected ID            = (e: Currency)=>e.ID;
-    protected Clear         = (r: Currency)=> {
-        r.Category.set(0)
-         .Item.set(0)
+    protected Table(): Table<any, CurrencyTypesQuery, CurrencyTypesRow> & { add: (id: number) => CurrencyTypesRow; } {
+        return DBC.CurrencyTypes
     }
-    protected OnCreate      = (mod: string, id: string, self: Currency, owner?: Currency)=> {
-        if(parent !== undefined) {
-            throw new Error(`Currencies cannot be cloned at the moment`);
-        }
+    protected IDs(): StaticIDGenerator {
+        return Ids.CurrencyTypes
+    }
+    protected Clone(mod: string, name: string, r: Currency, parent: Currency): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: CurrencyTypesRow): Currency {
+        return new Currency(r);
+    }
+    protected FindByID(id: number): CurrencyTypesRow {
+        return this.Table().find({ID:id});
+    }
+    protected EmptyQuery(): CurrencyTypesQuery {
+        return {}
+    }
+    protected ID(e: Currency): number {
+        return e.ID
+    }
+    protected Clear(entity: Currency, mod: string, id: string) {
+        entity.Category.set(0)
+         .Item.set(0)
         let item = ItemTemplateRegistry.create(mod,id)
             .Name.enGB.set('Currency')
             .BagFamily.set(8192)
@@ -36,7 +47,7 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
             .Class.set(10,0)
             .Material.Liquid.set()
             .DisplayInfo.set(32278)
-       self.row
+       entity.row
            .BitIndex.set(Ids.CurrencyTypesBitIndex.id(mod,id))
            .ItemID.set(item.ID)
     }

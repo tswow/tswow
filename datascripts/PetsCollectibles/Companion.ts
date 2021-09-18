@@ -1,7 +1,7 @@
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
-import { Items, ItemTemplate } from "../Item/ItemTemplate";
+import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { SelfRef } from "../Refs/RefOld";
 import { Spell } from "../Spell/Spell";
@@ -13,11 +13,12 @@ const DEFAULT_COMPANION_VISUAL = 353
 
 export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
     protected getAllRows(): ItemTemplate[] {
-        return Items.filter({spelltrigger_1:6,spellid_1:this.owner.ID})
-            .concat(Items.filter({spelltrigger_2:6,spellid_2:this.owner.ID}))
-            .concat(Items.filter({spelltrigger_3:6,spellid_3:this.owner.ID}))
-            .concat(Items.filter({spelltrigger_4:6,spellid_4:this.owner.ID}))
-            .concat(Items.filter({spelltrigger_5:6,spellid_5:this.owner.ID}))
+        // TODO: inefficient query
+        return ItemTemplateRegistry.queryAll({spelltrigger_1:6,spellid_1:this.owner.ID})
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_2:6,spellid_2:this.owner.ID}))
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_3:6,spellid_3:this.owner.ID}))
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_4:6,spellid_4:this.owner.ID}))
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_5:6,spellid_5:this.owner.ID}))
             .filter((x,i,arr)=>arr.findIndex(y=>y.ID==x.ID)===i);
     }
 
@@ -40,7 +41,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .InterruptFlags.OnInterruptCast.set(true)
             .InterruptFlags.setBit(3, true)
 
-        Items.create(mod,id)
+        ItemTemplateRegistry.create(mod,id)
             .Name.set(this.owner.Spell.get().Name.objectify())
             .Quality.Blue.set()
             .ClassMask.set(-1)

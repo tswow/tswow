@@ -14,17 +14,19 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { DBC, SQL } from "wotlkdata";
+import { DBC } from "wotlkdata";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
+import { Table } from "wotlkdata/table/Table";
 import { HolidayRef } from "../GameEvent/Holiday";
 import { GemRef } from "../Gem/Gem";
 import { LockRef } from "../Locks/Lock";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RefUnknown } from "../Refs/RefOld";
 import { RegistryStatic } from "../Refs/Registry";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
@@ -138,17 +140,32 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
 
 export class ItemTemplateRegistryClass
 extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
-    protected IDs           = Ids.item_template
-    protected Table         = SQL.item_template
-    protected EmptyQuery    = {}
-    protected FindByID      = (id: number)=>SQL.item_template.find({entry:id})
-    protected ID            = (e: ItemTemplate)=>e.ID;
-    protected Entity        = (r: item_templateRow)=>{
-        let dbc = DBC.Item.findById(r.entry.get())
-            || DBC.Item.add(r.entry.get());
-        return new ItemTemplate(r,dbc);
+    protected Clone(mod: string, name: string, r: ItemTemplate, parent: ItemTemplate): void {
+        throw new Error("Method not implemented.");
     }
-    protected Clear         = (r: ItemTemplate)=> {
+    protected Table(): Table<any, item_templateQuery, item_templateRow> & { add: (id: number) => item_templateRow; } {
+        return SQL.item_template
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.item_template
+    }
+    protected Entity(r: item_templateRow): ItemTemplate {
+        return new ItemTemplate(
+               r
+            ,  DBC.Item.findById(r.entry.get())
+            || DBC.Item.add(r.entry.get())
+        )
+    }
+    protected FindByID(id: number): item_templateRow {
+        return SQL.item_template.find({entry:id});
+    }
+    protected EmptyQuery(): item_templateQuery {
+        return {}
+    }
+    protected ID(e: ItemTemplate): number {
+        return e.ID;
+    }
+    protected Clear(r: ItemTemplate) {
         r.AmmoType.None.set()
          .Area.set(0)
          .Armor.set(0)

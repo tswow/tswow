@@ -17,7 +17,7 @@ import { CreatureTemplate, CreatureTemplateRefReadOnly } from "../Creature/Creat
 import { NPCFlags } from "../Creature/NPCFlags";
 import { GameObjectInstance, GameObjectInstanceRefReadOnly } from "../GameObject/GameObjectInstance";
 import { GameObjectTemplate, GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
-import { ItemTemplate, ItemTemplateRefReadOnly } from "../Item/ItemTemplate";
+import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Quest } from "../Quest/Quest";
@@ -481,7 +481,7 @@ export class GameEventModelNPCFlagsBackward extends GameEventMultiRowSystem<Game
 export class GameEventNPCVendor extends GameEventRelationBase<game_event_npc_vendorRow> {
     get Event() { return new GameEventRef(this, this.row.eventEntry)}
     get Creature() { return new CreatureRefReadOnly(this, this.row.guid); }
-    get Item() { return new ItemTemplateRefReadOnly(this, this.row.item); }
+    get Item() { return ItemTemplateRegistry.readOnlyRef(this, this.row.item); }
     get Slot() { return this.wrap(this.row.slot); }
     get MaxCount() { return this.wrap(this.row.maxcount); }
     get IncrementTime() { return this.wrap(this.row.incrtime); }

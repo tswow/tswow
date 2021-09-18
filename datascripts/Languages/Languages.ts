@@ -24,9 +24,10 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Language } from "wotlkdata/dbc/Localization";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { Table } from "wotlkdata/table/Table";
 import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { RegistryStatic } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
@@ -162,30 +163,44 @@ export class WoWLanguage extends MainEntity<LanguagesRow> {
 }
 
 export class LanguageRegistryClass extends RegistryStatic<WoWLanguage,LanguagesRow,LanguagesQuery> {
-    protected IDs           = Ids.Language
-    protected Table         = DBC.Languages
-    protected EmptyQuery    = {}
-    protected Entity        = (r: LanguagesRow)=>new WoWLanguage(r)
-    protected FindByID      = (id: number)=>DBC.Languages.findById(id)
-    protected ID            = (e: WoWLanguage)=>e.ID;
-    protected Clear         = (lang: WoWLanguage) => {
-        lang.Name.clear()
+    protected Table(): Table<any, LanguagesQuery, LanguagesRow> & { add: (id: number) => LanguagesRow; } {
+        return DBC.Languages
     }
-    protected OnCreate      = (mod: string,id: string,lang: WoWLanguage) => {
-        let sl = std.SkillLines.create(mod,id+'-skilline')
-            .Category.set(10)
-            .CanLink.set(0)
-            .SkillCosts.set(0)
-            .Icon.set('Interface\\Icons\\Trade_Engineering')
-            .CanLink.set(0)
-            .RaceClassInfos.modNew(
-                x=>x.ClassMask.clearAll()
-                    .RaceMask.set(0xffffffff)
-                    .ClassMask.set(0xffffffff)
-                    .Flags.clearAll()
-                    .Flags.IsClassLine.set(true)
-                    .SkillTier.set(0)
-            )
+    protected IDs(): StaticIDGenerator {
+        return Ids.Language
+    }
+    protected Clone(mod: string, name: string, r: WoWLanguage, parent: WoWLanguage): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: LanguagesRow): WoWLanguage {
+        return new WoWLanguage(r);
+    }
+    protected FindByID(id: number): LanguagesRow {
+        return this.Table().find({ID:id})
+    }
+    protected EmptyQuery(): LanguagesQuery {
+        return {}
+    }
+    protected ID(e: WoWLanguage): number {
+        return e.ID;
+    }
+
+    protected Clear(lang: WoWLanguage, mod: string, id: string) {
+        lang.Name.clear()
+        let sl = std.SkillLines.create(mod,id+'-skill')
+        .Category.set(10)
+        .CanLink.set(0)
+        .SkillCosts.set(0)
+        .Icon.set('Interface\\Icons\\Trade_Engineering')
+        .CanLink.set(0)
+        .RaceClassInfos.modNew(
+            x=>x.ClassMask.clearAll()
+                .RaceMask.set(0xffffffff)
+                .ClassMask.set(0xffffffff)
+                .Flags.clearAll()
+                .Flags.IsClassLine.set(true)
+                .SkillTier.set(0)
+        )
 
         std.Spells.create(mod,id+'-spell')
             .Attributes.isPassive.set(true)

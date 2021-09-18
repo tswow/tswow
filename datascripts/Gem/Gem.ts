@@ -2,11 +2,10 @@ import { DBC } from "wotlkdata"
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
 import { GemPropertiesQuery, GemPropertiesRow } from "wotlkdata/dbc/types/GemProperties"
 import { Enchantment, EnchantmentRegistry } from "../Enchant/Enchantment"
-import { Items, ItemTemplate } from "../Item/ItemTemplate"
+import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
 import { RefStatic } from "../Refs/RefOld"
-import { std } from "../tswow-stdlib-data"
 import { colToId, GemColorType, GemType } from "./GemType"
 
 export class Gem extends MainEntity<GemPropertiesRow> {
@@ -39,7 +38,7 @@ export class GemItem extends CellSystem<Gem> {
         // It's not possible for a gem to have multiple items,
         // because the enchantment on the gem must reference
         // the item id
-        let items = std.Items.filter({GemProperties:this.owner.ID});
+        let items = ItemTemplateRegistry.queryAll({GemProperties:this.owner.ID});
         if(items.length === 0) {
             throw new Error(`No gem item for ${this.owner.ID}`);
         }
@@ -88,7 +87,7 @@ export const GemRegistry = {
         , enchantmentId = 0
     ) {
         let gemId = Ids.GemProperties.id()
-        let item = Items.create(mod,id)
+        let item = ItemTemplateRegistry.create(mod,id)
             .BagFamily.set(512)
             .ClassMask.set(-1)
             .RaceMask.set(-1)

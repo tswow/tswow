@@ -19,7 +19,7 @@ import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { FactionRef } from "../Faction/Faction";
-import { ItemTemplateRef } from "../Item/ItemTemplate";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/RefOld";
@@ -58,14 +58,23 @@ export class ItemChoiceReward<T> extends ArrayEntry<T> {
         this.row = row;
     }
 
-    get Item() { return new ItemTemplateRef(this, this.wrap(ChoiceItemIds(this.row)[this.index]))}
-    get Quantity() { return this.wrap(ChoiceItemQuantities(this.row)[this.index])}
+    get Item() {
+        return ItemTemplateRegistry.ref(
+              this
+            , this.wrap(ChoiceItemIds(this.row)[this.index])
+        )
+    }
+
+    get Quantity() {
+        return this.wrap(ChoiceItemQuantities(this.row)[this.index])
+    }
 
     clear() {
         this.Item.set(0);
         this.Quantity.set(0);
         return this;
     }
+
     isClear(): boolean {
         return this.Item.get() === 0;
     }

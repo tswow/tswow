@@ -8,7 +8,7 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { GlyphPropertiesQuery, GlyphPropertiesRow } from "wotlkdata/dbc/types/GlyphProperties";
 import { loc_constructor } from "wotlkdata/primitives";
-import { Items, ItemTemplate } from "../Item/ItemTemplate";
+import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "../Spell/Spell";
@@ -78,11 +78,11 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
         let glyphItems: GlyphItem[] = [];
         spells.forEach(spell=>{
             // TODO: bad not good
-            let items = Items.filter({spellid_1:spell.ID});
-            items = items.concat(Items.filter({spellid_2:spell.ID}));
-            items = items.concat(Items.filter({spellid_3:spell.ID}));
-            items = items.concat(Items.filter({spellid_4:spell.ID}));
-            items = items.concat(Items.filter({spellid_5:spell.ID}));
+            let items = ItemTemplateRegistry.queryAll({spellid_1:spell.ID});
+            items = items.concat(ItemTemplateRegistry.queryAll({spellid_2:spell.ID}));
+            items = items.concat(ItemTemplateRegistry.queryAll({spellid_3:spell.ID}));
+            items = items.concat(ItemTemplateRegistry.queryAll({spellid_4:spell.ID}));
+            items = items.concat(ItemTemplateRegistry.queryAll({spellid_5:spell.ID}));
             glyphItems = glyphItems.concat(items.map(x=>new GlyphItem(spell,x)))
         });
         return glyphItems;
@@ -105,7 +105,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .InterruptFlags.setBit(4, true)
             .InterruptFlags.setBit(5, true)
 
-        let item = Items.create(mod,`${id}-item`)
+        let item = ItemTemplateRegistry.create(mod,`${id}-item`)
             .BagFamily.set(16)
             .Quality.White.set()
             .Spells.addMod(ispell=>{

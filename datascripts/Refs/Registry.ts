@@ -8,12 +8,11 @@ import { RefReadOnly, RefStatic } from "./Ref";
 
 export abstract class RegistryBase<E extends MainEntity<R>,R extends Row<any,Q>,Q> {
     protected nullID = () => 0;
-    protected abstract Entity: (r: R) => E;
-    protected abstract FindByID: (id: number) => R;
-    protected abstract EmptyQuery: Q;
-    protected abstract ID: (e: E)=>number;
-    protected abstract Table: Table<any,Q,R>
-    protected abstract Clear: (entity: E)=>void
+    protected abstract Entity(r: R): E;
+    protected abstract FindByID(id: number): R;
+    protected abstract EmptyQuery(): Q;
+    protected abstract ID(e: E): number;
+    protected abstract Table(): Table<any,Q,R>
 
     load(id: number) {
         let v = this.FindByID(id);
@@ -21,32 +20,32 @@ export abstract class RegistryBase<E extends MainEntity<R>,R extends Row<any,Q>,
     }
 
     queryAll(query: Q) {
-        return this.Table.filter(query).map(x=>this.Entity(x));
+        return this.Table().filter(query).map(x=>this.Entity(x));
     }
 
     query(query: Q) {
-        let v = this.Table.find(query);
+        let v = this.Table().find(query);
         return (v ? this.Entity(v) : undefined) as E;
     }
 
     filter(callback: (entity: E, index: number, array: E[])=>boolean) {
-        return this.queryAll(this.EmptyQuery).filter(callback);
+        return this.queryAll(this.EmptyQuery()).filter(callback);
     }
 
     find(callback: (entity: E, index: number, array: E[])=>boolean) {
-        return this.queryAll(this.EmptyQuery).find(callback);
+        return this.queryAll(this.EmptyQuery()).find(callback);
     }
 
     map<T>(callback: (entity: E, index: number, array: E[])=>T) {
-        return this.queryAll(this.EmptyQuery).map(callback);
+        return this.queryAll(this.EmptyQuery()).map(callback);
     }
 
     reduce<T>(callback: (last: T, cur: E, index: number, array: E[])=>T, initial: T) {
-        return this.queryAll(this.EmptyQuery).reduce(callback,initial);
+        return this.queryAll(this.EmptyQuery()).reduce(callback,initial);
     }
 
     reduceRight<T>(callback: (last: T, cur: E, index: number, array: E[])=>T, initial: T) {
-        return this.queryAll(this.EmptyQuery).reduceRight(callback,initial);
+        return this.queryAll(this.EmptyQuery()).reduceRight(callback,initial);
     }
 
     static id<E extends MainEntity<any>>(registry: RegistryBase<E,any,any>, e: E) {
@@ -65,21 +64,21 @@ export abstract class RegistryStaticNoRef<
     >
     extends RegistryBase<E,R,Q>
 {
-    protected abstract Table: Table<any,Q,R> & { add: (id: number)=>R}
-    protected abstract IDs: StaticIDGenerator
-    protected OnCreate = (mod: string,name: string,r: E,p?:E) => {}
+    protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
+    protected abstract IDs(): StaticIDGenerator
+    protected abstract Clear(r: E, mod: string, name: string): void;
+    protected abstract Clone(mod: string, name: string, r: E, parent: E): void;
 
     create(mod: string, name: string, parent: number = 0) {
-        let id = this.IDs.id(mod,name);
+        let id = this.IDs().id(mod,name);
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
             let entity = this.Entity(parentEntity.row.clone(id));
-            this.OnCreate(mod,name,entity,parentEntity);
+            this.Clone(mod,name,entity,parentEntity);
             return entity;
         } else {
-            let entity = this.Entity(this.Table.add(id));
-            this.Clear(entity);
-            this.OnCreate(mod,name,entity);
+            let entity = this.Entity(this.Table().add(id));
+            this.Clear(entity, mod, name);
             return entity;
         }
     }
@@ -104,21 +103,21 @@ export abstract class RegistryDynamic<
     >
     extends RegistryBase<E,R,Q>
 {
-    protected abstract Table: Table<any,Q,R> & { add: (id: number)=>R}
-    protected abstract ids: DynamicIDGenerator
-    protected OnCreate = (entity: E,parent?:E) => {}
+    protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
+    protected abstract ids(): DynamicIDGenerator
+    protected abstract Clear(entity: E): void;
+    protected abstract Clone(entity: E, parent: E): void;
 
     create(parent: number = 0) {
-        let id = this.ids.id();
+        let id = this.ids().id();
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
             let entity = this.Entity(parentEntity.row.clone(id))
-            this.OnCreate(entity,parentEntity)
+            this.Clone(entity,parentEntity);
             return entity;
         } else {
-            let entity = this.Entity(this.Table.add(id));
+            let entity = this.Entity(this.Table().add(id));
             this.Clear(entity);
-            this.OnCreate(entity);
             return entity;
         }
     }

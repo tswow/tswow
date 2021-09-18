@@ -16,18 +16,34 @@
  */
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateQuery, quest_templateRow } from "wotlkdata/sql/types/quest_template";
-import { Ids } from "../Misc/Ids";
+import { Table } from "wotlkdata/table/Table";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Quest } from "./Quest";
 
 export class QuestRegistryClass extends RegistryStatic<Quest,quest_templateRow,quest_templateQuery> {
-    protected IDs           = Ids.quest_template
-    protected Table         = SQL.quest_template
-    protected EmptyQuery    = {}
-    protected Entity        = (r: quest_templateRow)=>new Quest(r)
-    protected FindByID      = (id: number)=>SQL.quest_template.find({ID:id})
-    protected ID            = (e: Quest)=>e.ID;
-    protected Clear         = (r: Quest)=> {
+    protected Clone(mod: string, name: string, r: Quest, parent: Quest): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Table(): Table<any, quest_templateQuery, quest_templateRow> & { add: (id: number) => quest_templateRow; } {
+        return SQL.quest_template
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.quest_template
+    }
+    protected Entity(r: quest_templateRow): Quest {
+        return new Quest(r);
+    }
+    protected FindByID(id: number): quest_templateRow {
+        return SQL.quest_template.find({ID:id});
+    }
+    protected EmptyQuery(): quest_templateQuery {
+        return {}
+    }
+    protected ID(e: Quest): number {
+        return e.ID;
+    }
+    protected Clear(r: Quest) {
         r.row.AllowableRaces.set(0)
              .AreaDescription.set("")
              .Flags.set(0)

@@ -17,7 +17,8 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Misc/Ids";
+import { Table } from "wotlkdata/table/Table";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "./Spell";
 import { SpellGroup } from "./SpellGroup";
@@ -35,13 +36,28 @@ export const SpellGroups = {
 }
 
 export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery> {
-    protected IDs           = Ids.Spell
-    protected Table         = DBC.Spell
-    protected EmptyQuery    = {}
-    protected Entity        = (r: SpellRow)=>new Spell(r)
-    protected FindByID      = (id: number)=>DBC.Spell.findById(id)
-    protected ID            = (e: Spell)=>e.ID;
-    protected Clear         = (r: Spell)=> {
+    protected Clone(mod: string, name: string, r: Spell, parent: Spell): void {
+        throw new Error("Clone not implemented for spells.");
+    }
+    protected Table(): Table<any, SpellQuery, SpellRow> & { add: (id: number) => SpellRow; } {
+        return DBC.Spell;
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.Spell
+    }
+    protected Entity(r: SpellRow): Spell {
+        return new Spell(r);
+    }
+    protected FindByID(id: number): SpellRow {
+        return DBC.Spell.findById(id);
+    }
+    protected EmptyQuery(): SpellQuery {
+        return {}
+    }
+    protected ID(e: Spell): number {
+        return e.ID;
+    }
+    protected Clear(r: Spell) {
         r.row
             .ActiveIconID.set(0)
             .Attributes.set(0)

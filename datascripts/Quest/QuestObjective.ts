@@ -22,7 +22,7 @@ import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
-import { ItemTemplateRef } from "../Item/ItemTemplate";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { Quest } from "./Quest";
 
 function ItemIds(owner: Quest) {
@@ -48,7 +48,7 @@ function RequiredItemCounts(owner: Quest) {
 }
 
 export class ItemObjective extends ArrayEntry<Quest> {
-    get Item() { return new ItemTemplateRef(this, this.wrap(ItemIds(this.container)[this.index]))}
+    get Item() { return ItemTemplateRegistry.ref(this, this.wrap(ItemIds(this.container)[this.index]))}
     get Count() { return this.wrap(RequiredItemCounts(this.container)[this.index]); }
 
     clear() {
