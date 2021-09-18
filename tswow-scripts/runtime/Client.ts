@@ -124,6 +124,22 @@ export namespace Client {
             const wowbin = wfs.readBin(this.exePath);
 
             const byteOffsets = [
+                // Allow 4gb memory allocated
+                {offset: 0x000126, value: 0x23},
+
+                // View distance unlocker
+                {offset: 0x014137, value: 0x10},
+                {offset: 0x014138, value: 0x27},
+                {offset: 0x4c99f0, value: 0x34},
+                {offset: 0x63cf0c, value: 0x00},
+                {offset: 0x63cf0d, value: 0x40},
+                {offset: 0x63cf0e, value: 0x1c},
+                {offset: 0x63cf0f, value: 0x46},
+                {offset: 0x63cf10, value: 0x00},
+                {offset: 0x63cf11, value: 0x40},
+                {offset: 0x63cf12, value: 0x1c},
+                {offset: 0x63cf13, value: 0x46},
+
                 // Combo points fix
                 {offset: 0x210B12, value: 0x90},
                 {offset: 0x210B13, value: 0x90},
