@@ -37,11 +37,15 @@ export class PositionXYZCell<T> extends CellSystem<T> {
     get Y() { return this.ownerWrap(this._y) }
     get Z() { return this.ownerWrap(this._z) }
 
-    set(x: number, y: number, z: number) {
+    setSpread(x: number, y: number, z: number) {
         this.X.set(x)
         this.Y.set(y)
         this.Z.set(z)
         return this.owner;
+    }
+
+    set(obj: {x: number, y: number, z: number}) {
+        return this.setSpread(obj.x,obj.y,obj.z);
     }
 
     toPosition(map: number, o: number = 0) {
@@ -78,7 +82,7 @@ export class PositionMapXYZCell<T> extends CellSystem<T> {
     get Z() { return this.ownerWrap(this._z); }
     get Map() { return this.ownerWrap(this._map); }
 
-    set(map: number, x: number, y: number, z: number) {
+    setSpread(map: number, x: number, y: number, z: number) {
         this.X.set(x);
         this.Y.set(y);
         this.Z.set(z);
@@ -96,7 +100,7 @@ export class PositionMapXYZCell<T> extends CellSystem<T> {
         }
     }
 
-    setObject(position: {x?:number,y?:number,z?:number,map?:number}) {
+    set(position: {x:number,y:number,z:number,map:number}) {
         if(position.x) this.X.set(position.x);
         if(position.y) this.Y.set(position.y);
         if(position.z) this.Z.set(position.z);
@@ -128,7 +132,7 @@ export class PositionXYZOCell<T> extends CellSystem<T>{
     get Z() { return this.ownerWrap(this._z); }
     get O() { return this.ownerWrap(this._o); }
 
-    set(x: number,y: number, z: number, o: number) {
+    setSpread(x: number,y: number, z: number, o: number) {
         this.X.set(x)
         this.Y.set(y)
         this.Z.set(z)
@@ -136,11 +140,8 @@ export class PositionXYZOCell<T> extends CellSystem<T>{
         return this.owner;
     }
 
-    setObject(position: {x?:number,y?:number,z?:number,o?:number}) {
-        if(position.x) this.X.set(position.x);
-        if(position.y) this.Y.set(position.y);
-        if(position.z) this.Z.set(position.z);
-        if(position.o) this.O.set(position.o);
+    set(obj: {x:number,y:number,z:number,o:number}) {
+        this.setSpread(obj.x,obj.y,obj.z,obj.o);
         return this.owner;
     }
 
@@ -182,7 +183,7 @@ export class PositionMapXYZOCell<T> extends CellSystem<T>{
     get O() { return this.ownerWrap(this._o); }
     get Map() { return this.ownerWrap(this._o); }
 
-    set(map: number, x: number,y: number, z: number, o: number) {
+    setSpread(map: number, x: number,y: number, z: number, o: number) {
         this.Map.set(map);
         this.X.set(x)
         this.Y.set(y)
@@ -191,12 +192,8 @@ export class PositionMapXYZOCell<T> extends CellSystem<T>{
         return this.owner;
     }
 
-    setPosition(position: {map?:number,x?:number,y?:number,z?:number,o?:number}) {
-        if(position.map) this.Map.set(position.map);
-        if(position.x) this.X.set(position.x);
-        if(position.y) this.Y.set(position.y);
-        if(position.z) this.Z.set(position.z);
-        if(position.o) this.O.set(position.o);
+    set(obj: {map:number,x:number,y:number,z:number,o:number}) {
+        this.setSpread(obj.map,obj.x,obj.y,obj.z,obj.o);
         return this.owner;
     }
 
@@ -233,15 +230,12 @@ export class QuaternionCell<T> extends CellSystem<T> {
     get Z() { return this.ownerWrap(this._z); }
     get W() { return this.ownerWrap(this._w); }
 
-    setObject(value: {x?: number, y?: number, z?: number, w?: number}) {
-        if(value.x) this.X.set(value.x)
-        if(value.y) this.Y.set(value.y)
-        if(value.z) this.Z.set(value.z)
-        if(value.w) this.W.set(value.w)
+    set(obj: {x: number, y: number, z: number, w: number}) {
+        this.setSpread(obj.x,obj.y,obj.z,obj.w);
         return this.owner;
     }
 
-    set(x: number, y: number, z: number, w: number) {
+    setSpread(x: number, y: number, z: number, w: number) {
         this.X.set(x);
         this.Y.set(y);
         this.Z.set(z);
@@ -263,9 +257,13 @@ export class PositionXYCell<T> extends CellSystem<T> {
     get X() { return this.ownerWrap(this.x); }
     get Y() { return this.ownerWrap(this.y); }
 
-    set(x: number, y: number) {
+    setSpread(x: number, y: number) {
         this.X.set(x);
         this.Y.set(y);
         return this.owner;
+    }
+
+    set(obj: {x: number, y: number}) {
+        this.setSpread(obj.x,obj.y);
     }
 }

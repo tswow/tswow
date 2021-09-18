@@ -431,7 +431,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectTransport> {
                 row  = DBC.TransportAnimation.add(Ids.TransportAnimation.id())
             }
             new ElevatorSequenceKeyframe(row)
-                .Position.set(frame.x||0,frame.y||0,frame.z||0)
+                .Position.setSpread(frame.x||0,frame.y||0,frame.z||0)
                 .Time.set(frame.time)
                 .GameObject.set(this.owner.ID)
                 .row.undelete();

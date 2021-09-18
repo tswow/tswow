@@ -25,7 +25,7 @@ import { SpellVisualKitModelAttachRow } from "wotlkdata/dbc/types/SpellVisualKit
 import { Attachment } from "../Misc/Attachment";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Vec3 } from "../Misc/Vec3";
+import { PositionXYZCell } from "../Misc/PositionCell";
 import { Ref } from "../Refs/Ref";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { SpellAnimation } from "./SpellAnimation";
@@ -42,7 +42,7 @@ export class SpellVisualKitModelAttach extends CellSystemTop {
     }
 
     get Attachment() { return new Attachment(this, this.row.AttachmentID); }
-    get Offset() { return new Vec3(this,this.row.OffsetX,this.row.OffsetY,this.row.OffsetZ);}
+    get Offset() { return new PositionXYZCell(this, this.row.OffsetX, this.row.OffsetY, this.row.OffsetZ);}
     get Yaw() { return this.wrap(this.row.Yaw); }
     get Pitch() { return this.wrap(this.row.Pitch); }
     get Roll() { return this.wrap(this.row.Roll); }
@@ -170,14 +170,14 @@ export class SpellVisualMissile extends CellSystem<SpellVisual> {
     get Attachment() { return this.ownerWrap(this.owner.row.MissileAttachment); }
 
     get CastOffset() {
-        return new Vec3(this.owner,
+        return new PositionXYZCell(this.owner,
             this.owner.row.MissileCastOffsetX,
             this.owner.row.MissileCastOffsetY,
             this.owner.row.MissileCastOffsetZ)
     }
 
     get ImpactOffset() {
-        return new Vec3(this.owner,
+        return new PositionXYZCell(this.owner,
             this.owner.row.MissileImpactOffsetX,
             this.owner.row.MissileImpactOffsetY,
             this.owner.row.MissileImpactOffsetZ)

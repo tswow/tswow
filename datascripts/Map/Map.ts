@@ -19,7 +19,7 @@ import { MapRow } from "wotlkdata/dbc/types/Map";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { MainEntity } from "../Misc/Entity";
-import { XYCell } from "../Misc/XYCell";
+import { PositionXYCell } from "../Misc/PositionCell";
 import { RefReadOnly, RefStatic } from "../Refs/Ref";
 import { MapInstanceType } from "./MapInstanceType";
 import { Maps } from "./Maps";
@@ -39,7 +39,7 @@ export class Map extends MainEntity<MapRow> {
     get MinimapIconScale() { return this.wrap(this.row.MinimapIconScale); }
 
     get CorpseMap() { return new MapRef(this, this.row.CorpseMapID); }
-    get CorpsePos() { return new XYCell(this, this.row.CorpseX, this.row.CorpseY); }
+    get CorpsePos() { return new PositionXYCell(this, this.row.CorpseX, this.row.CorpseY); }
     get TimeofDayOverride() { return this.wrap(this.row.TimeOfDayOverride); }
     get Expansion() { return this.wrap(this.row.ExpansionID); }
     get MaxPlayers() { return this.wrap(this.row.MaxPlayers); }

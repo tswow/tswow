@@ -56,7 +56,7 @@ export const AreaTriggerRegistry = {
                 .Box_Width.set(0)
                 .Box_Yaw.set(0)
             )
-            .Position.setObject(pos)
+            .Position.set(pos)
             .Radius.set(radius)
     },
 
@@ -66,7 +66,7 @@ export const AreaTriggerRegistry = {
                 .add(Ids.AreaTrigger.id(mod,id))
                 .Radius.set(0)
             )
-            .Position.setObject(pos)
+            .Position.set(pos)
             .Box.set(length,width,height,pos.o)
     },
 }

@@ -46,12 +46,12 @@ export const TaxiPathRegistry = {
         }
 
         let start = new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()))
-            .Position.setObject(vertices[0])
+            .Position.set(vertices[0])
             .Mount.Horde.set(mount[0])
             .Mount.Alliance.set(mount[1])
 
         let end = new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()))
-            .Position.setObject(vertices[vertices.length-1])
+            .Position.set(vertices[vertices.length-1])
             .Mount.Horde.set(mount[0])
             .Mount.Alliance.set(mount[1])
 
@@ -74,7 +74,7 @@ export const TaxiPathRegistry = {
         }
 
         let end = new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()))
-            .Position.setObject(vertices[vertices.length-1])
+            .Position.set(vertices[vertices.length-1])
             .Mount.Horde.set(endMount[0])
             .Mount.Alliance.set(endMount[1])
         let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID)

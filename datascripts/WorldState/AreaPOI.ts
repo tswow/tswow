@@ -58,7 +58,7 @@ export const AreaPOIRegistry = {
         .Icons.clearAll()
         .Importance.set(0)
         .Name.clear()
-        .Position.set(0,0,0,0)
+        .Position.setSpread(0,0,0,0)
         .WorldState.set(0)
     },
 

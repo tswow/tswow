@@ -20,7 +20,7 @@ export const WorldSafeLocRegistry = {
             )
         } else {
             return new WorldSafeLoc(DBC.WorldSafelocs.add(Ids.WorldSafelocs.id()))
-                .Position.set(0,0,0,0)
+                .Position.setSpread(0,0,0,0)
                 .Name.clear()
         }
     },
@@ -59,7 +59,7 @@ export class WorldSafeLocRef<T> extends Ref<T,WorldSafeLoc> {
 
     setSimple(map: number, x: number, y: number, z: number) {
         this.getRefCopy()
-            .Position.set(map,x,y,z)
+            .Position.setSpread(map,x,y,z)
         return this.owner;
     }
 }
