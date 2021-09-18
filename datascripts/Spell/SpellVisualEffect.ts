@@ -5,7 +5,7 @@ import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectN
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class VisualScale<T> extends CellSystem<T> {
     @Transient

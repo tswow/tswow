@@ -28,7 +28,7 @@ import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { SpellRadiusRef } from "./SpellRadius";
-import { Spells } from "./Spells";
+import { SpellRegistry } from "./Spells";
 import { SpellTargetPosition } from "./SpellTargetPosition";
 
 export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
@@ -161,9 +161,9 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         return this.owner;
     }
 
-    addLearnSpells(...spells: number[]) {
+    addLearnSpells(mod: string, id: string, ...spells: number[]) {
         for(const spell of spells) {
-            this.addFreeEffect((eff)=>{
+            this.addFreeEffect(mod, id, (eff)=>{
                 eff.EffectType.LearnSpell.set()
                    .LearntSpell.set(spell)
             })
@@ -171,14 +171,15 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         return this.owner;
     }
 
-    addFreeEffect(callback: (effect: SpellEffect)=>void) {
+    addFreeEffect(mod: string, id: string, callback: (effect: SpellEffect)=>void) {
+        let ctr = 0;
         const SPELL_CHAIN_TOKEN = '__tswow_spell_chain';
         function getNextSpell(spell: Spell) {
             for(let i=0;i<3;++i) {
                 if(spell.Effects.get(i).EffectType.get()!==64) {
                     continue;
                 }
-                let nex = Spells.load(spell.Effects.get(i).TriggerSpell.get());
+                let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());
                 if(nex.Icon.get()===SPELL_CHAIN_TOKEN) {
                     return nex;
                 }
@@ -191,7 +192,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             if(nex!==undefined) {
                 return nex;
             }
-            nex = std.Spells.createDynamic()
+            nex = std.Spells.create(mod,`${id}-${ctr++}`)
                 .Icon.setFullPath(SPELL_CHAIN_TOKEN)
             spell.Effects.addMod((eff)=>{
                 eff.EffectType.TriggerSpell.set()

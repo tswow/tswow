@@ -3,7 +3,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { ZoneMusicRow } from "wotlkdata/dbc/types/ZoneMusic";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer, SoundEntryRegistry } from "./SoundEntry";
 
 export class ZoneMusicEntry extends CellSystem<ZoneMusic> {

@@ -4,7 +4,7 @@ import { DBC } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class TaxiNodeMount extends CellSystem<TaxiEndNode> {
     get Horde() { return this.ownerWrapIndex(this.owner.row.MountCreatureID,0)}

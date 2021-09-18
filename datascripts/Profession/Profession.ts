@@ -62,7 +62,8 @@ export class Profession {
     static getLearnSpells(profession: Profession, rank: number) {
         let rankSpell = this.getSkillRank(profession, rank);
         if(!rankSpell) return [];
-        let spells = std.Spells.filter({Effect:36,EffectTriggerSpell:rankSpell.ID})
+        // TODO: false positive
+        let spells = std.Spells.queryAll({Effect:36,EffectTriggerSpell:rankSpell.ID})
         if(spells.length === 0) {
             throw new Error(`Profession ${profession.ID} lacks a learn spell for rank ${rank}!`)
         }

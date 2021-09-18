@@ -26,7 +26,7 @@ import { Attachment } from "../Misc/Attachment";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { SpellAnimation } from "./SpellAnimation";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";

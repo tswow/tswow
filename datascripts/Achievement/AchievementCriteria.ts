@@ -6,7 +6,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/dbc/types/Achievement_Criteria";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefUnknown } from "../Refs/Ref";
+import { RefUnknown } from "../Refs/RefOld";
 import { Achievement } from "./Achievement";
 
 export class CriteriaTimer<T extends CriteriaBase> extends CellSystem<T> {

@@ -3,7 +3,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WMOAreaTableQuery, WMOAreaTableRow } from "wotlkdata/dbc/types/WMOAreaTable";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/Ref";
+import { RefStatic } from "../Refs/RefOld";
 import { SoundAmbienceRef } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";

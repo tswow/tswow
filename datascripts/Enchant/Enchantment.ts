@@ -3,7 +3,7 @@ import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/db
 import { ItemEffectsPointer } from "../Item/ItemVisualEffect";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/Ref";
+import { RefStatic } from "../Refs/RefOld";
 import { EnchantmentConditionRef } from "./EnchantmentCondition";
 import { EnchantmentEffects } from "./EnchantmentEffect";
 import { EnchantmentFlags } from "./EnchantmentFlags";

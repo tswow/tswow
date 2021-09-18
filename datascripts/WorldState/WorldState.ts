@@ -5,7 +5,7 @@ import { AreaRef } from "../Area/Area";
 import { WMOAreaRef } from "../Area/WMOArea";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefBase, RefStatic } from "../Refs/Ref";
+import { RefBase, RefStatic } from "../Refs/RefOld";
 import { SoundAmbienceRef } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";

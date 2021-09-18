@@ -20,7 +20,7 @@ import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { MainEntity } from "../Misc/Entity";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { MapInstanceType } from "./MapInstanceType";
 import { Maps } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";

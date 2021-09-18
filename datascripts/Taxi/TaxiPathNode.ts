@@ -6,7 +6,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
-import { RefUnknown } from "../Refs/Ref";
+import { RefUnknown } from "../Refs/RefOld";
 import { TaxiNodeConstructor, TaxiPath } from "./Taxi";
 
 export class TaxiPathNodeFlags extends MaskCell32<TaxiPathNode> {

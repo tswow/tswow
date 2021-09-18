@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Achievements } from "./Achievement/Achievement";
+import { AchievementRegistry } from "./Achievement/Achievement";
 import { AreaRegistry } from "./Area/Area";
 import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
@@ -35,8 +35,8 @@ import { GemRegistry } from "./Gem/Gem";
 import { GlyphRegistry } from "./Glyph/Glyph";
 import { Gossips } from "./Gossip/Gossips";
 import { TSImages } from "./Images/Image";
-import { Items } from "./Item/ItemTemplate";
-import { Languages } from "./Languages/Languages";
+import { ItemTemplateRegistry } from "./Item/ItemTemplate";
+import { LanguageRegistry } from "./Languages/Languages";
 import { Lights } from "./Light/Lights";
 import { Locks, LockTypes } from "./Locks/Locks";
 import { Loot } from "./Loot/Loot";
@@ -48,7 +48,7 @@ import { Ids } from "./Misc/Ids";
 import { CompanionRegistry } from "./PetsCollectibles/Companion";
 import { MountRegistry } from "./PetsCollectibles/Mount";
 import { Professions } from "./Profession/Professions";
-import { Quests } from "./Quest/Quests";
+import { QuestRegistry } from "./Quest/Quests";
 import { SkillLines } from "./SkillLines/SkillLines";
 import { ClassSkills } from "./Skills/ClassSkill";
 import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
@@ -57,10 +57,10 @@ import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
 import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
-import { SpellGroups, Spells } from "./Spell/Spells";
+import { SpellGroups, SpellRegistry } from "./Spell/Spells";
 import { TalentTrees } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
-import { Titles } from "./Title/Titles";
+import { TitleRegistry } from "./Title/Titles";
 import { TransportRegistry } from "./Transport/Transport";
 import { UI } from "./UI/UI";
 import { VehicleRegistry } from "./Vehicle/Vehicle";
@@ -76,14 +76,14 @@ import { WorldStateRegistry } from "./WorldState/WorldState";
 import { WorldStateUIRegistry } from "./WorldState/WorldStateUI";
 
 export const std = {
-    Spells : Spells,
+    Spells : SpellRegistry,
     SpellGroups : SpellGroups,
-    Languages : Languages,
-    Quests : Quests,
-    Titles: Titles,
-    Achievements: Achievements,
+    Languages : LanguageRegistry,
+    Quests : QuestRegistry,
+    Titles: TitleRegistry,
+    Achievements: AchievementRegistry,
     Loot: Loot,
-    Items: Items,
+    Items: ItemTemplateRegistry,
     Creatures: CreatureInstances,
     Classes: Classes,
     UI: UI,

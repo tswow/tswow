@@ -5,7 +5,7 @@ import { page_textQuery, page_textRow } from "wotlkdata/sql/types/page_text";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class PageTextContent extends SQLLocSystem<PageText> {
     protected getMain(): Cell<string, any> {

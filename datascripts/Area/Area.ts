@@ -19,7 +19,7 @@ import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
 import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRef } from "../Sound/ZoneMusic";

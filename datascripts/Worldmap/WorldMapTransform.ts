@@ -5,7 +5,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMax2DCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { DungeonMapRef } from "./DungeonMap";
 
 export class WorldMapTransform extends MainEntity<WorldMapTransformsRow> {

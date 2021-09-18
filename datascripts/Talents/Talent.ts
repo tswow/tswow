@@ -17,9 +17,9 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { TalentRow } from "wotlkdata/dbc/types/Talent";
 import { MainEntity } from "../Misc/Entity";
-import { RefUnknown } from "../Refs/Ref";
+import { RefUnknown } from "../Refs/RefOld";
 import { Spell } from "../Spell/Spell";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 import { TalentRequirements } from "./TalentRequirements";
 
 export class TalentSpells extends CellSystem<Talent> {
@@ -32,7 +32,7 @@ export class TalentSpells extends CellSystem<Talent> {
     }
 
     get(index: number) {
-        return Spells.load(this.owner.row.SpellRank.getIndex(index));
+        return SpellRegistry.load(this.owner.row.SpellRank.getIndex(index));
     }
 
     set(index: number, spellId: number) {
@@ -56,7 +56,7 @@ export class TalentSpells extends CellSystem<Talent> {
 
     forEachSpell(callback: (spell: Spell, index: number)=>void) {
         this.owner.row.SpellRank.get().forEach((x,i)=>{
-            if(x>0) { callback(Spells.load(x),i); }
+            if(x>0) { callback(SpellRegistry.load(x),i); }
         })
         return this.owner;
     }

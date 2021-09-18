@@ -28,9 +28,9 @@ import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { PageTextRef } from "../PageText/PageText";
-import { QuestRef } from "../Quest/Quest";
-import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/Ref";
-import { SpellRef } from "../Spell/Spell";
+import { QuestRegistry } from "../Quest/Quests";
+import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/RefOld";
+import { SpellRegistry } from "../Spell/Spells";
 import { TaxiPathRef } from "../Taxi/Taxi";
 import { WorldStateRef } from "../WorldState/WorldState";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
@@ -302,7 +302,7 @@ export class GameObjectChest extends GameObjectTemplate {
      */
     get LootedEvent() { return new RefUnknown(this, this.row.Data6); }
     get LinkedTrap() { return this.wrap(this.row.Data7); }
-    get Quest() { return new QuestRef(this, this.row.Data8); }
+    get Quest() { return QuestRegistry.ref(this, this.row.Data8); }
     get Level() { return this.wrap(this.row.Data9); }
     get LosOK() { return this.wrap(this.row.Data10); }
     get LeaveLoot() { return this.wrap(this.row.Data11); }
@@ -454,7 +454,7 @@ export class GameObjectGeneric extends GameObjectTemplate {
     get ServerOnly() { return this.wrap(this.row.Data2); }
     get Large() { return this.wrap(this.row.Data3); }
     get FloatOnWater() { return this.wrap(this.row.Data4); }
-    get Quest() { return new QuestRef(this, this.wrap(this.row.Data5)); }
+    get Quest() { return QuestRegistry.ref(this, this.wrap(this.row.Data5)); }
     get Condition() { return new RefUnknown(this, this.row.Data6); }
 }
 
@@ -463,7 +463,7 @@ export class GameObjectGoober extends GameObjectTemplate {
         super(row);
     }
     get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
-    get Quest() { return new QuestRef(this, this.row.Data1); }
+    get Quest() { return QuestRegistry.ref(this, this.row.Data1); }
     get Event() { return new RefUnknown(this, this.row.Data2); }
     get AutoCloseTime() { return this.wrap(this.row.Data3); }
     get CustomAnim() { return this.wrap(this.row.Data4); }
@@ -472,7 +472,7 @@ export class GameObjectGoober extends GameObjectTemplate {
     get Page() { return new PageTextRef(this, this.row.Data7); }
     get Language() { return this.wrap(this.row.Data8); }
     get PageMaterial() { return this.wrap(this.row.Data9); }
-    get Spell() { return new SpellRef(this, this.row.Data10); }
+    get Spell() { return SpellRegistry.ref(this, this.row.Data10); }
     get NoDamageImmune() { return this.wrap(this.row.Data11); }
     get LinkedTrap() { return new GameObjectTrapRef(this, this.row.Data12); }
     get Large() { return this.wrap(this.row.Data13); }
@@ -581,7 +581,7 @@ export class GameObjectSpellCaster extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Spell() { return new SpellRef(this, this.row.Data0); }
+    get Spell() { return SpellRegistry.ref(this, this.row.Data0); }
     get Charges() { return this.wrap(this.row.Data1); }
     get PartyOnly() { return this.wrap(this.row.Data2); }
     get AllowMounted() { return this.wrap(this.row.Data3); }
@@ -597,7 +597,7 @@ export class GameObjectSpellFocus extends GameObjectTemplate {
     get Distance() { return this.wrap(this.row.Data1); }
     get LinkedTrap() { return new GameObjectTrapRef(this ,this.row.Data2); }
     get ServerOnly() { return this.wrap(this.row.Data3); }
-    get Quest() { return new QuestRef(this, this.row.Data4); }
+    get Quest() { return QuestRegistry.ref(this, this.row.Data4); }
     get Large() { return this.wrap(this.row.Data5); }
     get FloatingTooltip() { return this.wrap(this.row.Data6); }
     get FloatOnWater() { return this.wrap(this.row.Data7); }
@@ -609,7 +609,7 @@ export class GameObjectSummoningRitual extends GameObjectTemplate {
         super(row);
     }
     get RequiredParticipants() { return this.wrap(this.row.Data0); }
-    get Spell() { return new SpellRef(this, this.row.Data1); }
+    get Spell() { return SpellRegistry.ref(this, this.row.Data1); }
     get AnimSpell() { return this.wrap(this.row.Data2); }
     get RitualPersistent() { return this.wrap(this.row.Data3); }
     get CasterTargetSpell() { return this.wrap(this.row.Data4); }
@@ -671,7 +671,7 @@ export class GameObjectTrap extends GameObjectTemplate {
     get Lock() { return new LockRef(this, this.row.Data0); }
     get Level() { return this.wrap(this.row.Data1); }
     get Diameter() { return this.wrap(this.row.Data2); }
-    get Spell() { return new SpellRef(this, this.row.Data3); }
+    get Spell() { return SpellRegistry.ref(this, this.row.Data3); }
     /*
      * 0 trap with no despawn after cast.
      * 1 trap despawns after cast.

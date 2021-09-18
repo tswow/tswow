@@ -6,7 +6,7 @@ import { game_eventQuery, game_eventRow } from "wotlkdata/sql/types/game_event";
 import { convertTime, DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { default_end_date, makeSQLDate, SQLDateCell } from "./Date";
 import { DayOfTheWeek, resolveDayOfTheWeek } from "./DayOfTheWeek";
 import { GameEventConditions } from "./GameEventCondition";

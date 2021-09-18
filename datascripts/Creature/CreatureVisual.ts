@@ -5,7 +5,7 @@ import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
 import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 
 export class CreatureModel extends MainEntity<CreatureModelDataRow> {

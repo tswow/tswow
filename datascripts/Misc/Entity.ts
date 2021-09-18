@@ -27,6 +27,10 @@ export class MainEntity<T> extends CellSystemTop {
         super();
         this.row = row;
     }
+
+    clear(): this {
+        throw new Error(`Entity does not have "clear" implemented`)
+    }
 }
 
 export class TwoRowMainEntity<DBC,SQL> extends CellSystemTop {

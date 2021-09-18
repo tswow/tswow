@@ -8,7 +8,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { HorizontalBoundary } from "../Misc/LimitCells";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { Ref, RefReadOnly } from "../Refs/Ref";
+import { Ref, RefReadOnly } from "../Refs/RefOld";
 import { VehicleSeatRef } from "./VehicleSeat";
 import { VehicleUIIndicatorCell } from "./VehicleUIIndicator";
 

@@ -2,7 +2,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { Lock } from "./Lock";
 import { Locks, LockTypes } from "./Locks";
 

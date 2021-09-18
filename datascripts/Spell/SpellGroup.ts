@@ -1,6 +1,6 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 
 export class SpellGroupType<T> extends EnumCell<T> {
@@ -16,11 +16,12 @@ export class SpellGroupType<T> extends EnumCell<T> {
     get ExclusiveHighest()    { return this.value(4) }
 }
 
-export class SpellGroup {
+export class SpellGroup extends CellSystemTop {
     @Transient
     protected id: number;
 
     constructor(groupId: number) {
+        super();
         this.id = groupId;
     }
 

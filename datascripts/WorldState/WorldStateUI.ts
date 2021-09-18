@@ -6,7 +6,7 @@ import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldSta
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { WorldState } from "./WorldState";
 
 export class WorldStateLocation extends CellSystem<WorldStateUI> {

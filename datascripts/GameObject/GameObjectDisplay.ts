@@ -4,7 +4,7 @@ import { DBC } from "wotlkdata/wotlkdata";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 
 export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameObjectDisplay> {

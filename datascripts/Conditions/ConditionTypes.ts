@@ -1,24 +1,24 @@
 import { EnumCellReadOnly, EnumCellTransformReadOnly } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
 import { conditionsRow } from "wotlkdata/sql/types/conditions";
-import { AchievementRefReadOnly } from "../Achievement/Achievement";
+import { AchievementRegistry } from "../Achievement/Achievement";
 import { AreaRefReadOnly } from "../Area/Area";
 import { CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
 import { CreatureTypeEnumReadOnly } from "../Creature/CreatureType";
 import { FactionRefReadOnly } from "../Faction/Faction";
 import { GameEventRefReadOnly } from "../GameEvent/GameEvent";
 import { GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
-import { ItemTemplateRefReadOnly } from "../Item/ItemTemplate";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MapRefReadOnly } from "../Map/Map";
 import { ClassMaskReadOnly } from "../Misc/ClassMask";
 import { TransformedEntityReadOnly } from "../Misc/Entity";
 import { RaceMaskReadOnly } from "../Misc/RaceMask";
 import { ReputationRankMaskReadOnly } from "../Misc/ReputationRank";
 import { TeamEnumReadOnly } from "../Misc/TeamEnum";
-import { QuestRefReadOnly } from "../Quest/Quest";
+import { QuestRegistry } from "../Quest/Quests";
 import { SkillLineRefReadOnly } from "../SkillLines/SkillLine";
-import { SpellRefReadOnly } from "../Spell/Spell";
-import { TitleRefReadOnly } from "../Title/Titles";
+import { SpellRegistry } from "../Spell/Spells";
+import { TitleRegistry } from "../Title/Titles";
 import { ComparisonEnumReadOnly } from "./Settings/ComparisonType";
 import { DrunkenStateEnumReadOnly } from "./Settings/DrunkenState";
 import { GenderAllowNoneEnumReadOnly } from "./Settings/Gender";
@@ -65,18 +65,18 @@ export class ConditionPlain extends ConditionBase {
 }
 
 export class ConditionAura extends ConditionBase {
-    get Spell() { return new SpellRefReadOnly(this, this.v1); }
+    get Spell() { return SpellRegistry.readOnlyRef(this, this.v1); }
     get EffectIndex() { return this.v2.get() }
 }
 
 export class ConditionItem extends ConditionBase {
-    get Item() { return new ItemTemplateRefReadOnly(this, this.v1); }
+    get Item() { return ItemTemplateRegistry.readOnlyRef(this, this.v1); }
     get Count() { return this.v2.get(); }
     get InBank() { return this.v3.get() === 0 ? false : true; }
 }
 
 export class ConditionItemEquipped extends ConditionBase {
-    get Item() { return new ItemTemplateRefReadOnly(this, this.v1); }
+    get Item() { return ItemTemplateRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionZone extends ConditionBase {
@@ -98,11 +98,11 @@ export class ConditionSkill extends ConditionBase {
 }
 
 export class ConditionQuestRewarded extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionQuestTaken extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionDrunkenState extends ConditionBase {
@@ -132,7 +132,7 @@ export class ConditionInstanceInfo extends ConditionBase {
 }
 
 export class ConditionQuestNone extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionClass extends ConditionBase {
@@ -144,11 +144,13 @@ export class ConditionRace extends ConditionBase {
 }
 
 export class ConditionAchievement extends ConditionBase {
-    get Achievement() { return new AchievementRefReadOnly(this, this.v1) }
+    get Achievement() {
+        return AchievementRegistry.readOnlyRef(this, this.v1)
+    }
 }
 
 export class ConditionTitle extends ConditionBase {
-    get Title() { return new TitleRefReadOnly(this, this.v1); }
+    get Title() { return TitleRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionSpawnMask extends ConditionBase {
@@ -176,7 +178,7 @@ export class ConditionCreatureType extends ConditionBase {
 }
 
 export class ConditionSpell extends ConditionBase {
-    get Spell() { return new SpellRefReadOnly(this, this.v1); }
+    get Spell() { return SpellRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionPhaseMask extends ConditionBase {
@@ -189,7 +191,7 @@ export class ConditionLevel extends ConditionBase {
 }
 
 export class ConditionQuestComplete extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionNearCreature extends ConditionBase {
@@ -247,7 +249,9 @@ export class ConditionHPPercent extends ConditionBase {
 }
 
 export class ConditionRealmAchievement extends ConditionBase {
-    get Achievement() { return new AchievementRefReadOnly(this, this.v1); }
+    get Achievement() {
+        return AchievementRegistry.readOnlyRef(this, this.v1);
+    }
 }
 
 export class ConditionInWater extends ConditionBase {}
@@ -258,7 +262,7 @@ export class ConditionStandState extends ConditionBase {
 }
 
 export class ConditionDailyQuestDone extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionCharmed extends ConditionBase {
@@ -271,12 +275,12 @@ export class ConditionPetType extends ConditionBase {
 export class ConditionTaxi extends ConditionBase {}
 
 export class ConditionQuestStateMask extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
     get State() { return new QuestStateMaskReadOnly(this, this.v2); }
 }
 
 export class ConditionQuestObjective extends ConditionBase {
-    get Quest() { return new QuestRefReadOnly(this, this.v1); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.v1); }
     get Objective() { return this.wrapReadOnly(this.v2); }
     get Counter() { return this.wrapReadOnly(this.v3); }
 }

@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariablesRow> {
     clear(): this {

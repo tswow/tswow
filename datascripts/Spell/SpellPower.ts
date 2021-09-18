@@ -19,7 +19,7 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellRuneCostRow } from "wotlkdata/dbc/types/SpellRuneCost";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { Spell } from "./Spell";
 
 export const PowerTypeMap = {

@@ -3,7 +3,7 @@ import { SoundAmbienceQuery, SoundAmbienceRow } from "wotlkdata/dbc/types/SoundA
 import { all } from "wotlkdata/query/Relations";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer } from "./SoundEntry";
 
 export function pairToRow(id1: number, id2: number) {

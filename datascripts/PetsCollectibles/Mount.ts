@@ -3,9 +3,9 @@ import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
 import { Items, ItemTemplate } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
-import { SelfRef } from "../Refs/Ref";
+import { SelfRef } from "../Refs/RefOld";
 import { Spell } from "../Spell/Spell";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 
 const MOUNT_AURA_TYPE = 78;
 const MOUNT_SKILL = 762;
@@ -26,7 +26,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
     }
 
     add(mod: string, id: string) {
-        const spell = Spells.create(mod,id)
+        const spell = SpellRegistry.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
                 efffect.EffectType.LearnSpell.set()
@@ -106,7 +106,7 @@ export const MountRegistry = {
     },
 
     create(mod: string, id: string, speed: number, flightSpeed = 0) {
-        let spell = Spells.create(mod,id)
+        let spell = SpellRegistry.create(mod,id)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.isAbility.set(true)
             .Attributes.outdoorsOnly.set(true)
@@ -155,7 +155,7 @@ export const MountRegistry = {
     },
 
     load(id: number) {
-        let spell = Spells.load(id)
+        let spell = SpellRegistry.load(id)
         if(!spell || spell.Effects.auraIndex(MOUNT_AURA_TYPE)<0) {
             return undefined;
         }
@@ -163,12 +163,12 @@ export const MountRegistry = {
     },
 
     filter(query: SpellQuery) {
-        return Spells.filter({...query,EffectAura:MOUNT_AURA_TYPE})
+        return SpellRegistry.queryAll({...query,EffectAura:MOUNT_AURA_TYPE})
             .map(x=>new Mount(x.row))
     },
 
     find(query: SpellQuery) {
-        let spell = Spells.find({...query,EffectAura:MOUNT_AURA_TYPE})
+        let spell = SpellRegistry.query({...query,EffectAura:MOUNT_AURA_TYPE})
         return spell ? new Mount(spell.row) : undefined;
     }
 }

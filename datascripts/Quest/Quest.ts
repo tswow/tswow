@@ -22,8 +22,8 @@ import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addo
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
-import { SpellRef } from "../Spell/Spell";
+import { RefReadOnly, RefStatic } from "../Refs/RefOld";
+import { SpellRegistry } from "../Spell/Spells";
 import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
 import { QuestGameEventCondition } from "./QuestGameEventPoints";
@@ -31,7 +31,7 @@ import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";
 import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
-import { Quests } from "./Quests";
+import { QuestRegistry } from "./Quests";
 import { QuestSpecialFlags } from "./QuestSpecialFlags";
 import { QuestText } from "./QuestText";
 
@@ -66,13 +66,13 @@ export class Quest extends MainEntity<quest_templateRow> {
 
     get SpecialFlags() { return new QuestSpecialFlags(this, this.addonRow.SpecialFlags); }
     get MaxLevel() { return this.wrap(this.addonRow.MaxLevel); }
-    get NextQuest() { return new QuestRef(this, this.addonRow.NextQuestID); }
-    get PrevQuest() { return new QuestRef(this, this.addonRow.PrevQuestID); }
+    get NextQuest() { return QuestRegistry.ref(this, this.addonRow.NextQuestID); }
+    get PrevQuest() { return QuestRegistry.ref(this, this.addonRow.PrevQuestID); }
     get ProvidedItemCount() { return this.wrap(this.addonRow.ProvidedItemCount); }
 
-    get SourceSpell() { return new SpellRef(this, this.addonRow.SourceSpellID); }
+    get SourceSpell() { return SpellRegistry.ref(this, this.addonRow.SourceSpellID); }
     get AllowableClasses() { return new MaskCell32(this,this.addonRow.AllowableClasses); }
-    get BreadcrumbForQuest() { return new QuestRef(this, this.addonRow.BreadcrumbForQuestId); }
+    get BreadcrumbForQuest() { return QuestRegistry.ref(this, this.addonRow.BreadcrumbForQuestId); }
     get ExclusiveGroup() { return this.wrap(this.addonRow.ExclusiveGroup); }
 
     get RequiredMaxRep() {
@@ -110,7 +110,7 @@ export class Quest extends MainEntity<quest_templateRow> {
 
 export class QuestRef<T> extends RefStatic<T,Quest> {
     protected create(mod: string, id: string): Quest {
-        return Quests.create(mod,id);
+        return QuestRegistry.create(mod,id);
     }
     protected clone(mod: string, id: string): Quest {
         return new Quest(
@@ -129,13 +129,13 @@ export class QuestRef<T> extends RefStatic<T,Quest> {
     }
 
     protected resolve(): Quest {
-        return Quests.load(this.cell.get());
+        return QuestRegistry.load(this.cell.get());
     }
 }
 
 export class QuestRefReadOnly<T> extends RefReadOnly<T,Quest> {
     getRef(): Quest {
-        return Quests.load(this.cell.get());
+        return QuestRegistry.load(this.cell.get());
     }
     exists(): boolean {
         return this.cell.get() > 0;

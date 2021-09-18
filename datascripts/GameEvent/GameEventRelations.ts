@@ -20,7 +20,8 @@ import { GameObjectTemplate, GameObjectTemplateRefReadOnly } from "../GameObject
 import { ItemTemplate, ItemTemplateRefReadOnly } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
-import { Quest, QuestRefReadOnly } from "../Quest/Quest";
+import { Quest } from "../Quest/Quest";
+import { QuestRegistry } from "../Quest/Quests";
 import { GameEvent, GameEventRef, GameEventRefReadOnly } from "./GameEvent";
 
 export class GameEventRelationBase<T extends SqlRow<any,any>> extends MainEntity<T> {
@@ -46,7 +47,7 @@ export abstract class GameEventMultiRowSystem<T extends GameEventRelationBase<an
 
 export class QuestGameEvent extends GameEventRelationBase<game_event_seasonal_questrelationRow>{
     get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
-    get Quest() { return new QuestRefReadOnly(this, this.row.questId); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.row.questId); }
 }
 
 export class QuestGameEventsForward extends GameEventMultiRowSystem<QuestGameEvent,Quest> {
@@ -182,7 +183,7 @@ export class CreatureGameEventsBackwards extends GameEventMultiRowSystem<Creatur
  export class CreatureQuestGameEvent extends GameEventRelationBase<game_event_creature_questRow>{
     get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
     get Creature() { return new CreatureTemplateRefReadOnly(this, this.row.id); }
-    get Quest() { return new QuestRefReadOnly(this, this.row.quest); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.row.quest); }
 }
 
 export class CreatureQuestGameEventsForwardCreature extends GameEventMultiRowSystem<CreatureQuestGameEvent,CreatureTemplate> {
@@ -311,7 +312,7 @@ export class GameObjectQuestGameEvent extends GameEventRelationBase<game_event_g
     get GameObject() {
         return new GameObjectTemplateRefReadOnly(this, this.row.id);
     }
-    get Quest() { return new QuestRefReadOnly(this, this.row.quest); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.row.quest); }
 }
 
 export class GameObejctQuestGameEventsForwardGameObject extends GameEventMultiRowSystem<GameObjectQuestGameEvent,GameObjectTemplate> {

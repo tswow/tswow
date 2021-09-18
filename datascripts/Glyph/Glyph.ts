@@ -11,9 +11,9 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { Items, ItemTemplate } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Spell, SpellRef } from "../Spell/Spell";
+import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 
 export class GlyphFlags extends MaskCell32<Glyph> {
     get IsMinor() { return this.bit(0); }
@@ -74,7 +74,7 @@ export class GlyphItem extends CellSystemTop {
 export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
     protected getAllRows(): GlyphItem[] {
         // TODO: can get false positives if combining 74 with other spell types
-        let spells = Spells.filter({Effect:74,EffectMiscValue:this.owner.ID})
+        let spells = SpellRegistry.queryAll({Effect:74,EffectMiscValue:this.owner.ID})
         let glyphItems: GlyphItem[] = [];
         spells.forEach(spell=>{
             // TODO: bad not good
@@ -89,7 +89,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
     }
 
     add(mod: string, id: string) {
-        let spell = Spells.create(mod,`${id}-spell`)
+        let spell = SpellRegistry.create(mod,`${id}-spell`)
             .Attributes.cannotUseInCombat.set(true)
             .Icon.set('Interface\\Icons\\INV_Inscription_Tradeskill01')
             .TargetType.GlyphSlot.set(true)
@@ -149,7 +149,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
 export class Glyph extends MainEntity<GlyphPropertiesRow> {
     get ID() { return this.row.ID.get(); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
-    get Spell() { return new SpellRef(this, this.row.SpellID); }
+    get Spell() { return SpellRegistry.ref(this, this.row.SpellID); }
     get Flags() { return new GlyphFlags(this, this.row.GlyphSlotFlags); }
     get Items() { return new GlyphItems(this); }
 }
@@ -165,7 +165,7 @@ export const GlyphRegistry = {
     },
 
     createWithSpell(mod: string, id: string, parentSpell = 0) {
-        return this.create(Spells.create(mod,id,parentSpell).ID)
+        return this.create(SpellRegistry.create(mod,id,parentSpell).ID)
     },
 
     load(id: number) {

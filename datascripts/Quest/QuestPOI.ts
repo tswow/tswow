@@ -8,12 +8,13 @@ import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { RefBase } from "../Refs/Ref";
+import { RefBase } from "../Refs/RefOld";
 import { WorldMapArea, WorldMapAreaRef, WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
-import { Quest, QuestRefReadOnly } from "./Quest";
+import { Quest } from "./Quest";
+import { QuestRegistry } from "./Quests";
 
 export class QuestPOIPoint extends MainEntity<quest_poi_pointsRow> {
-    get Quest() { return new QuestRefReadOnly(this, this.row.QuestID); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.row.QuestID); }
     get POI() { return new QuestPOIRef(this,new DummyCell(this,0))}
     get Index() { return this.row.Idx2.get(); }
     get Position() {
@@ -53,7 +54,7 @@ export class QuestPOIPoints extends MultiRowSystem<QuestPOIPoint,QuestPOI> {
 }
 
 export class QuestPOI extends MainEntity<quest_poiRow> {
-    get Quest() { return new QuestRefReadOnly(this, this.row.QuestID); }
+    get Quest() { return QuestRegistry.readOnlyRef(this, this.row.QuestID); }
     get Index() { return this.row.id.get(); }
     get ObjectiveIndex() { return this.wrap(this.row.ObjectiveIndex); }
     get Map() { return new MapRef(this, this.row.MapID); }

@@ -4,7 +4,7 @@ import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMax2DCell } from "../Misc/LimitCells";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class DungeonMap extends MainEntity<DungeonMapRow> {
     get ID() { return this.row.ID.get(); }

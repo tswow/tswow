@@ -1,9 +1,9 @@
 import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
 import { MainEntity } from "../Misc/Entity";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 import { SkillLines } from "./SkillLines";
 import { SkillRaceClassInfos } from "./SkillRaceClassInfo";
 
@@ -24,7 +24,7 @@ export class SkillLine extends MainEntity<SkillLineRow> {
     }
 
     getCreateSpell(mod: string, id: string, autolearn: boolean, parent?: number) {
-        return Spells.create(mod,id,parent)
+        return SpellRegistry.create(mod,id,parent)
             .SkillLines.addMod(this.ID,autolearn)
     }
 }

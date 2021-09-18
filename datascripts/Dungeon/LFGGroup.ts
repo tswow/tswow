@@ -2,7 +2,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "wotlkdata/dbc/types/LfgDungeonGroup";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class LFGDungeonGroup extends MainEntity<LfgDungeonGroupRow> {
     get ID() { return this.row.ID.get(); }

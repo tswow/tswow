@@ -4,7 +4,7 @@ import { AreaRef } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
-import { RefReadOnly } from "../Refs/Ref";
+import { RefReadOnly } from "../Refs/RefOld";
 import { GameObjectInstances } from "./GameObjects";
 
 export class GameObjectPosition extends CellSystem<GameObjectInstance> {

@@ -10,7 +10,7 @@ import { MapRef } from "../Map/Map";
 import { FactionEnum } from "../Misc/FactionEnum";
 import { Ids } from "../Misc/Ids";
 import { SQLDBCChild, SQLDBCEntity } from "../Misc/SQLDBCEntity";
-import { RefBase, RefReadOnly } from "../Refs/Ref";
+import { RefBase, RefReadOnly } from "../Refs/RefOld";
 import { LFGDungeonRewards } from "./LFGDungeonRewards";
 import { LFGDungeonGroupRef } from "./LFGGroup";
 

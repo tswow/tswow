@@ -2,7 +2,7 @@ import { DBC } from "wotlkdata";
 import { ZoneintroMusicTableQuery, ZoneintroMusicTableRow } from "wotlkdata/dbc/types/ZoneintroMusicTable";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer, SoundEntryRegistry } from "./SoundEntry";
 
 export class ZoneIntroMusic extends MainEntity<ZoneintroMusicTableRow> {

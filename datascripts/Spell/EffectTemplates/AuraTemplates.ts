@@ -6,7 +6,7 @@ import { CreatureTypeEnum, CreatureTypeMask } from "../../Creature/CreatureType"
 import { FactionRef } from "../../Faction/Faction";
 import { Ids } from "../../Misc/Ids";
 import { SchoolEnum, SchoolMask } from "../../Misc/School";
-import { RefUnknown } from "../../Refs/Ref";
+import { RefUnknown } from "../../Refs/RefOld";
 import { VehicleRef } from "../../Vehicle/Vehicle";
 import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffectMechanics";
 import { SpellPowerType } from "../SpellPowerType";

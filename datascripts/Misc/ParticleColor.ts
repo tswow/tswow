@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { MainEntity } from "./Entity";
 import { Ids } from "./Ids";
 

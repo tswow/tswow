@@ -5,7 +5,7 @@ import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/dbc/types/VehicleSea
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryPointer } from "../Sound/SoundEntry";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 

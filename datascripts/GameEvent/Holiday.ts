@@ -3,7 +3,7 @@ import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { HolidaysQuery, HolidaysRow } from "wotlkdata/dbc/types/Holidays";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";

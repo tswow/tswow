@@ -102,7 +102,7 @@ export const Ids = {
     Language: new StaticIDGenerator('Languages',39),
 
     /** Start at 200000, Highest base value is 80864, capped at 1999999 */
-    Spell: new HybridIDGenerator('Spell',200000,2000000),
+    Spell: new StaticIDGenerator('Spell',200000),
 
     /** Starts at 20000 */
     SpellAuto: new DynamicIDGenerator('Spell',2000000),

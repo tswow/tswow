@@ -18,7 +18,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";

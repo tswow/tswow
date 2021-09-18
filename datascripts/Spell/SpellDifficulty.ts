@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     clear(): this {

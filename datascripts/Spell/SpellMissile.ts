@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellMissile extends MainEntity<SpellMissileRow> {
     clear(): this {

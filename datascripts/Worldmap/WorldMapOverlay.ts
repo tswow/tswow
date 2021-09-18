@@ -7,7 +7,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { WorldMapAreaRef } from "./WorldMapArea";
 
 export class WorldMapTexture extends CellSystem<WorldMapOverlay>{

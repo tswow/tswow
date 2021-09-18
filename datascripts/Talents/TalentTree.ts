@@ -20,7 +20,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 import { Talent } from "./Talent";
 
 export class TalentTree extends MainEntity<TalentTabRow> {
@@ -48,7 +48,7 @@ export class TalentTree extends MainEntity<TalentTabRow> {
     addSpells(mod: string, id: string, spellCount: number, parentSpell = 0) {
         let spells: Spell[] = [];
         for(let i=0;i<spellCount;++i) {
-            spells.push(Spells.create(mod,`${id}-spell-rank-${i}`,parentSpell));
+            spells.push(SpellRegistry.create(mod,`${id}-spell-rank-${i}`,parentSpell));
         }
         spells.forEach((x,i)=>{
             x.Rank.set(spells[0].ID,i+1);

@@ -20,7 +20,7 @@ import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
-import { RefReadOnly } from "../Refs/Ref";
+import { RefReadOnly } from "../Refs/RefOld";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";

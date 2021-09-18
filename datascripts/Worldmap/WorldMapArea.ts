@@ -5,7 +5,7 @@ import { MapRef } from "../Map/Map";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { DungeonMapRef } from "./DungeonMap";
 
 export class WorldMapArea extends MainEntity<WorldMapAreaRow> {

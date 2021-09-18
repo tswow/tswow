@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefReadOnly } from "../Refs/Ref";
+import { RegistryStatic } from "../Refs/Registry";
 
 export class Title extends MainEntity<CharTitlesRow>{
     get ID() { return this.row.ID.get(); }
@@ -26,34 +26,15 @@ export class Title extends MainEntity<CharTitlesRow>{
     get FemaleText() { return this.wrapLoc(this.row.Name1); }
 }
 
-export const Titles = {
-    create: (mod : string, id : string) => {
-        const genid = Ids.CharTitles.id(mod,id);
-        const highest = DBC.CharTitles.filter({}).sort((a,b)=>b.Mask_ID>a.Mask_ID?1:-1)[0].Mask_ID.get();
-        const row = DBC.CharTitles.add(genid,{Mask_ID:highest+1})
-        row.Name.clear();
-        row.Name1.clear();
-        return new Title(row);
-    },
-
-    load : (id : number) => {
-        return new Title(DBC.CharTitles.findById(id));
-    },
-
-    filter (query: CharTitlesQuery) {
-        return DBC.CharTitles.filter(query).map(x=>new Title(x));
-    },
-
-    find (query: CharTitlesQuery) {
-        return new Title(DBC.CharTitles.find(query));
+export class TitleRegistryClass extends RegistryStatic<Title,CharTitlesRow,CharTitlesQuery> {
+    protected IDs           = Ids.CharTitles
+    protected Table         = DBC.CharTitles
+    protected EmptyQuery    = {}
+    protected Entity        = (r: CharTitlesRow)=>new Title(r)
+    protected FindByID      = (id: number)=>DBC.CharTitles.findById(id)
+    protected ID            = (e: Title)=>e.ID;
+    protected Clear         = (r: Title)=> {
+        r.MaleText.clear().FemaleText.clear()
     }
 }
-
-export class TitleRefReadOnly<T> extends RefReadOnly<T, Title> {
-    getRef(): Title {
-        return Titles.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
+export const TitleRegistry = new TitleRegistryClass();

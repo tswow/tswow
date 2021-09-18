@@ -19,7 +19,7 @@ import { DBC, SQL } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { ParticleColorPointer } from "../Misc/ParticleColor";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SpellVisualPointer } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
 import { ItemEffectsPointer } from "./ItemVisualEffect";

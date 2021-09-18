@@ -3,7 +3,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/dbc/types/CurrencyCategory";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class CurrencyCategoryFlags<T> extends MaskCell32<T> {
     get SortLast() { return this.bit(0); }

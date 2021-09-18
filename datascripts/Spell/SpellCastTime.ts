@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellCastTime extends MainEntity<SpellCastTimesRow> {
     clear(): this {

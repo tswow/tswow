@@ -1,178 +1,67 @@
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
-import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell, CellWrapper } from "wotlkdata/cell/cells/Cell";
+import { CellReadOnly, CellWrapperReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
+import { MainEntity } from "../Misc/Entity";
+import { RegistryBase, RegistryDynamic, RegistryStatic } from "./Registry";
 
-export interface IntCell {
-    get(): number;
-    set(value: number): any;
-}
+export class RefReadOnly<T,V extends MainEntity<any>> extends CellWrapperReadOnly<number,T>{
+    protected registry: RegistryBase<V,any,any>;
 
-export class SelfRef<T,V extends Objectified> {
-    protected getter: ()=>V;
-    protected owner: T;
-
-    constructor(owner: T, getter: ()=>V) {
-        this.getter = getter;
-        this.owner = owner;
+    constructor(owner: T, cell: CellReadOnly<number,any>, registry: RegistryBase<V,any,any>) {
+        super(owner,cell);
+        this.registry = registry;
     }
 
-    get() {
-        return this.getter();
+    getRef() {
+        return this.registry.load(this.cell.get());
     }
 
-    mod(callback: (value: V)=>void) {
-        callback(this.getter());
-        return this.owner;
-    }
-
-    objectify() {
-        return this.getter().objectify()
+    modRef(callback: (value: V)=>void) {
+        callback(this.getRef());
     }
 }
 
-export abstract class RefReadOnly<T,V extends Objectified> extends CellSystem<T> {
-    protected cell: Cell<number,any>|CellReadOnly<number,any>
+export class RefBase<T,V extends MainEntity<any>, R extends RegistryBase<V,any,any>> extends CellWrapper<number,T> {
+    protected registry: R;
 
-    constructor(owner: T, cell: Cell<number,any>|CellReadOnly<number,any>) {
-        super(owner);
-        this.cell = cell;
+    constructor(owner: T, cell: Cell<number,any>, registry: R) {
+        super(owner,cell);
+        this.registry = registry;
     }
 
-    abstract getRef(): V;
-    abstract exists(): boolean
+    getRef() {
+        return this.registry.load(this.cell.get());
+    }
 
     modRef(callback: (value: V)=>void) {
         callback(this.getRef());
         return this.owner;
     }
-
-    get() { return this.cell.get(); }
-
-    objectify() {
-        if(this.exists()) {
-            return this.getRef().objectify();
-        } else {
-            return 'NULL'
-        }
-    }
 }
 
-export class RefUnknown<T> {
-    protected owner: T;
-    protected cell: Cell<number,any>;
+export class RefNoCreate<T,V extends MainEntity<any>> extends RefBase<T,V,RegistryBase<V,any,any>> {}
 
-    constructor(owner: T, cell: Cell<number,any>) {
-        this.owner = owner;
-        this.cell = cell;
-    }
-
-    get() { return this.cell.get(); }
-    set(value: number) {this.cell.set(value); return this.owner; }
-}
-
-export abstract class RefBase<T,V extends Objectified> {
-    protected owner: T;
-    protected cell: Cell<number,any>
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        this.owner = owner;
-        this.cell = cell;
-    }
-
-    get() {
-        return this.cell.get();
-    }
-
-    set(newPointer: number) {
-        this.cell.set(newPointer);
-        return this.owner;
-    }
-
-    objectify() {
-        if(!this.exists()) {
-            return 'NULL'
-        } else {
-            return this.resolve().objectify()
-        }
-    }
-
-    getRef() {
-        if(!this.exists()) {
-            throw new Error(`Tried following invalid ref: ${this.cell.get()}`)
-        } else {
-            return this.resolve();
-        }
-    }
-
-    // Do NOT add "owner" to this callback: it doesn't make sense
-    // when we're not creating a copy
-    modRef(callback: (value: V)=>void) {
-        callback(this.getRef());
-        return this.owner;
-    }
-
-    abstract exists(): boolean;
-    protected abstract id(v: V): number;
-    protected abstract resolve(): V;
-}
-
-export abstract class Ref<T,V extends Objectified> extends RefBase<T,V>{
-    protected setCreate() {
-        let v = this.create();
-        this.set(this.id(v));
-        return v;
-    }
-
-    getRef() {
-        if(!this.exists()) {
-            return this.setCreate();
-        } else {
-            return this.resolve();
-        }
-    }
-
-    getRefCopy() {
-        if(!this.exists()) {
-            return this.setCreate();
-        } else {
-            let clone = this.clone();
-            this.set(this.id(clone));
-            return clone;
-        }
-    }
-
-    modRefCopy(callback: (value: V, owner : T)=>void) {
-        callback(this.getRefCopy(), this.owner);
-        return this.owner;
-    }
-
-    protected abstract create(): V;
-    protected abstract clone(): V;
-}
-
-export abstract class RefStatic<T,V extends Objectified> extends RefBase<T,V> {
-    protected abstract create(mod: string, id: string): V;
-    protected abstract clone(mod: string, id: string): V;
-
-    protected setCreate(mod: string, id: string) {
-        let v = this.create(mod, id);
-        this.set(this.id(v));
-        return v;
-    }
-
+export class RefStatic<T,V extends MainEntity<any>> extends RefBase<T,V,RegistryStatic<V,any,any>> {
     getRefCopy(mod: string, id: string) {
-        if(!this.exists()) {
-            return this.setCreate(mod, id);
-        } else {
-            let clone = this.clone(mod, id);
-            this.set(this.id(clone));
-            return clone;
-        }
+        let v = this.registry.create(mod,id,this.cell.get());
+        this.cell.set(RegistryBase.id(this.registry,v));
+        return v;
     }
 
-    modRefCopy(mod: string, id: string, callback: (value: V, owner : T)=>void) {
-        callback(this.getRefCopy(mod, id), this.owner);
+    modRefCopy(mod: string, id: string, callback: (value: V)=>void) {
+        callback(this.getRefCopy(mod,id));
+        return this.owner;
+    }
+}
+
+export class RefDynamic<T,V extends MainEntity<any>> extends RefBase<T,V,RegistryDynamic<V,any,any>> {
+    getRefCopy() {
+        let v = this.registry.create(this.cell.get());
+        this.cell.set(RegistryBase.id(this.registry,v));
+        return v;
+    }
+
+    modRefCopy(callback: (value: V)=>void) {
+        callback(this.getRefCopy());
         return this.owner;
     }
 }

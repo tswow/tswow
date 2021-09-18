@@ -3,7 +3,7 @@ import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');

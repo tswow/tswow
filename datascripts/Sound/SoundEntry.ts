@@ -3,7 +3,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 import { SoundEntryAdvancedPointer } from "./SoundEntryAdvanced";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundFlags } from "./SoundFlags";

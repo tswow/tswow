@@ -1,13 +1,13 @@
 import { DBC } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Spell } from "../Spell/Spell";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 import { Profession } from "./Profession";
 
 export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> {
     protected getAllRows(): Spell[] {
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
-            .map(x=>Spells.load(x.Spell.get()))
+            .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>
                    x.Effects.find(y=>y.EffectType.OpenLock.isSelected())
                 && x.Effects.find(y=>y.EffectType.Skill.isSelected())
@@ -19,7 +19,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
     }
 
     add(mod: string, id: string, lockType: number, autoLearnAt: number = 0) {
-        let spl = Spells.create(mod,id)
+        let spl = SpellRegistry.create(mod,id)
         .Attributes.isHiddenInSpellbook.set(true)
         .Attributes.isHiddenFromLog.set(true)
         .Attributes.unk41.set(true)
@@ -52,7 +52,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .Range.set(12)
         if(autoLearnAt>=0) {
             this.owner.Ranks.get(autoLearnAt).LearnSpells().forEach(x=>{
-                x.Effects.addLearnSpells(spl.ID)
+                x.Effects.addLearnSpells(mod,`${id}-learn`,spl.ID)
             })
         }
         return spl;

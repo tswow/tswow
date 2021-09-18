@@ -5,7 +5,7 @@ import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
 import { SpellCastTimePointer } from "../Spell/SpellCastTime";
 import { SpellReagents } from "../Spell/SpellReagents";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 import { std } from "../tswow-stdlib-data";
 import { Profession } from "./Profession";
 import { ProfessionTier } from "./ProfessionType";
@@ -68,10 +68,10 @@ export class ProfessionRecipe extends CellSystemTop {
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
     get CastTime() { return new SpellCastTimePointer(this, this.spell.row.CastingTimeIndex); }
 
-    LearnOnRank(rank: ProfessionTier) {
+    LearnOnRank(mod: string, id: string, rank: ProfessionTier) {
         this.profession.Ranks.get(rank).LearnSpells().forEach(x=>
             {
-                x.Effects.addLearnSpells(this.ID);
+                x.Effects.addLearnSpells(mod, id, this.ID);
             })
         return this;
     }
@@ -84,7 +84,7 @@ export class ProfessionRecipe extends CellSystemTop {
 export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Profession> {
     protected getAllRows(): ProfessionRecipe[] {
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
-            .map(x=>Spells.load(x.Spell.get()))
+            .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>x.Effects.hasEffectType(23))
             .map(x=>new ProfessionRecipe(this.owner, x))
     }
@@ -95,7 +95,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
     addGet(mod: string, id: string) {
         return new ProfessionRecipe(
               this.owner
-            , Spells.create(mod,id)
+            , SpellRegistry.create(mod,id)
                     .Attributes.isAbility.set(true)
                     .Attributes.isTradeSpell.set(true)
                     .Attributes.notShapeshifted.set(true)

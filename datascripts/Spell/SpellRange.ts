@@ -19,7 +19,7 @@ import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
 import { loc_constructor } from "wotlkdata/primitives";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellRange extends MainEntity<SpellRangeRow> {
     clear(): this {

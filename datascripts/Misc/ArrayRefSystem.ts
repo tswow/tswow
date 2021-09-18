@@ -1,6 +1,6 @@
 import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Ref, RefStatic } from "../Refs/Ref";
+import { Ref, RefStatic } from "../Refs/RefOld";
 
 export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
     protected readonly clearValue: number;

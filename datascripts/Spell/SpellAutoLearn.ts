@@ -5,10 +5,11 @@ import { ClassType, makeClassmask } from "../Class/ClassType";
 import { ClassMaskReadOnly } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { makeRacemask, RaceType } from "../Race/RaceType";
-import { Spell, SpellRefReadOnly } from "./Spell";
+import { Spell } from "./Spell";
+import { SpellRegistry } from "./Spells";
 
 export class SpellAutoLearn extends MainEntity<spell_autolearnRow> {
-    get Spell() { return new SpellRefReadOnly(this, this.row.spell); }
+    get Spell() { return SpellRegistry.readOnlyRef(this, this.row.spell); }
     get ClassMask() { return new ClassMaskReadOnly(this, this.row.classmask); }
     get RaceMask() { return new ClassMaskReadOnly(this, this.row.racemask); }
     get Level() { return this.wrap(this.row.level); }

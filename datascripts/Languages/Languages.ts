@@ -28,7 +28,7 @@ import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
-import { RefStatic } from "../Refs/Ref";
+import { RegistryStatic } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLines } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
@@ -133,7 +133,7 @@ export class LanguageAbilities extends MultiRowSystem<SpellSkillLineAbility,WoWL
 export class LanguageSpells extends MultiRowSystem<Spell,WoWLanguage>  {
     protected getAllRows(): Spell[] {
         // TODO: possible false positives
-        return std.Spells.filter({Effect:39,EffectMiscValue:this.owner.ID})
+        return std.Spells.queryAll({Effect:39,EffectMiscValue:this.owner.ID})
     }
     protected isDeleted(value: Spell): boolean {
         return value.row.isDeleted()
@@ -161,22 +161,30 @@ export class WoWLanguage extends MainEntity<LanguagesRow> {
     get Words() { return new LanguageWords(this); }
 }
 
-export const Languages = {
-    create : (mod : string, id : string) => {
-        const langRow = DBC.Languages.add(Ids.Language.id(mod,id));
+export class LanguageRegistryClass extends RegistryStatic<WoWLanguage,LanguagesRow,LanguagesQuery> {
+    protected IDs           = Ids.Language
+    protected Table         = DBC.Languages
+    protected EmptyQuery    = {}
+    protected Entity        = (r: LanguagesRow)=>new WoWLanguage(r)
+    protected FindByID      = (id: number)=>DBC.Languages.findById(id)
+    protected ID            = (e: WoWLanguage)=>e.ID;
+    protected Clear         = (lang: WoWLanguage) => {
+        lang.Name.clear()
+    }
+    protected OnCreate      = (mod: string,id: string,lang: WoWLanguage) => {
         let sl = std.SkillLines.create(mod,id+'-skilline')
-           .Category.set(10)
-           .CanLink.set(0)
-           .SkillCosts.set(0)
-           .Icon.set('Interface\\Icons\\Trade_Engineering')
-           .CanLink.set(0)
-           .RaceClassInfos.modNew(
-               x=>x.ClassMask.clearAll()
-                   .RaceMask.set(0xffffffff)
-                   .ClassMask.set(0xffffffff)
-                   .Flags.clearAll()
-                   .Flags.IsClassLine.set(true)
-                   .SkillTier.set(0)
+            .Category.set(10)
+            .CanLink.set(0)
+            .SkillCosts.set(0)
+            .Icon.set('Interface\\Icons\\Trade_Engineering')
+            .CanLink.set(0)
+            .RaceClassInfos.modNew(
+                x=>x.ClassMask.clearAll()
+                    .RaceMask.set(0xffffffff)
+                    .ClassMask.set(0xffffffff)
+                    .Flags.clearAll()
+                    .Flags.IsClassLine.set(true)
+                    .SkillTier.set(0)
             )
 
         std.Spells.create(mod,id+'-spell')
@@ -187,42 +195,16 @@ export const Languages = {
             .PreventionType.set(1)
             .Effects.addMod(effect=>{
                 effect.EffectType.Language.set()
-                      .Language.set(langRow.ID.get())
-                      .ChainAmplitude.set(1)
+                    .Language.set(lang.ID)
+                    .ChainAmplitude.set(1)
             })
             .SchoolMask.Physical.set(true)
             .SkillLines.addMod(sl.ID,true,sla=>{
                 sla.RaceMask.set(0xffffffff)
-                   .AcquireMethod.set(2)
-                   .ClassMask.set(0)
-                   .ClassMaskForbidden.set(0)
+                    .AcquireMethod.set(2)
+                    .ClassMask.set(0)
+                    .ClassMaskForbidden.set(0)
             })
-        return new WoWLanguage(langRow);
-    },
-
-    load : (id : number) => {
-        return new WoWLanguage(DBC.Languages.find({ID:id}));
-    },
-
-    filter(query: LanguagesQuery) {
-        return DBC.Languages.filter(query).map(x=>new WoWLanguage(x));
     }
 }
-
-export class LanguageRef<T> extends RefStatic<T,WoWLanguage> {
-    protected create(mod: string, id: string): WoWLanguage {
-        return Languages.create(mod,id);
-    }
-    protected clone(mod: string, id: string): WoWLanguage {
-        throw new Error(`Languages cannot be cloned yet`);
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WoWLanguage): number {
-        return v.ID;
-    }
-    protected resolve(): WoWLanguage {
-        return Languages.load(this.cell.get());
-    }
-}
+export const LanguageRegistry = new LanguageRegistryClass();

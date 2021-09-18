@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellRadius extends MainEntity<SpellRadiusRow> {
     clear(): this {

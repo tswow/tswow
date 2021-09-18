@@ -2,7 +2,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     clear(): this {

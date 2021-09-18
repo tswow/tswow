@@ -3,7 +3,7 @@ import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "wotlkdata/dbc/types/SoundProviderPreferences";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SoundProviderPreferencesFlags extends MaskCell32<SoundProviderPreferences> {
     get Outdoors() { return this.bit(0); }

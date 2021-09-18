@@ -19,7 +19,7 @@ import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;

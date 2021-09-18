@@ -2,20 +2,20 @@ import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTemplateRef } from "../../Creature/CreatureTemplate";
 import { EnchantmentRef } from "../../Enchant/Enchantment";
-import { LanguageRef } from "../../Languages/Languages";
+import { LanguageRegistry } from "../../Languages/Languages";
 import { LockTypeRef } from "../../Locks/LockType";
 import { SchoolMask } from "../../Misc/School";
 import { QuestRef } from "../../Quest/Quest";
-import { RefUnknown } from "../../Refs/Ref";
+import { RefUnknown } from "../../Refs/RefOld";
 import { SkillLineRef } from "../../SkillLines/SkillLine";
 import { SoundEntryPointer } from "../../Sound/SoundEntry";
 import { TaxiPathRef } from "../../Taxi/Taxi";
-import { SpellRef } from "../Spell";
 import { EffectClassSet } from "../SpellClassSet";
 import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellPowerType } from "../SpellPowerType";
 import { SpellRadiusRef } from "../SpellRadius";
+import { SpellRegistry } from "../Spells";
 import { EffectTemplate } from "./EffectTemplate";
 import { CountBase, DamageBase, DamageBasePct, HealBase, HealBasePct, PointsBase, PointsRoot, PowerBase, PowerBasePct } from "./PointsBase";
 import { TargetBase } from "./TargetBase";
@@ -191,7 +191,7 @@ export class Language extends TargetBase {
     /**
      * Reference to Languages.dbc
      */
-    get Language() { return new LanguageRef(this, this.owner.MiscValueA); }
+    get Language() { return LanguageRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 40
 // 41
@@ -612,7 +612,9 @@ export class StartQuest extends TargetBase {
 // 154
 // 155
 export class CanTitanGrip extends TargetBase {
-    get PenaltySpell() { return new SpellRef(this, this.owner.MiscValueA); }
+    get PenaltySpell() {
+        return SpellRegistry.ref(this, this.owner.MiscValueA);
+    }
 }
 // 156
 export class EnchantPrismaticItem extends EffectTemplate {

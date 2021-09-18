@@ -9,7 +9,7 @@ import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
 import { MapRef } from "../Map/Map";
 import { Ids } from "../Misc/Ids";
 import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
-import { SpellRef } from "../Spell/Spell";
+import { SpellRegistry } from "../Spell/Spells";
 import { LFGDungeonRef } from "./LFGDungeon";
 
 export class DungeonEncounterCreditType extends EnumCell<DungeonEncounter> {
@@ -120,7 +120,7 @@ export class DungeonEncounterCreature extends DungeonEncounter {
 
 export class DungeonEncounterSpell extends DungeonEncounter {
     get Spell() {
-        return new SpellRef(
+        return SpellRegistry.ref(
               this
             , this.wrapSQL(0,sql=>sql.creditEntry)
         )

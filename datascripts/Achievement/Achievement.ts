@@ -3,7 +3,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefBase, RefReadOnly } from "../Refs/Ref";
+import { RegistryStatic } from "../Refs/Registry";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 import { AchievementReward } from "./AchievementReward";
@@ -32,43 +32,28 @@ export class Achievement extends MainEntity<AchievementRow> {
     get Rewards() { return new AchievementReward(this); }
 }
 
-export const Achievements = {
-    create : (mod : string, id : string) => {
-        return new Achievement(
-            DBC.Achievement.add(Ids.Achievement.id(mod,id)))
-    },
-
-    filter : (query: AchievementQuery) => {
-        return DBC.Achievement.filter(query).map(x=>new Achievement(x));
-    },
-
-    find: (query: AchievementQuery) => {
-        return Achievements.filter(query)[0];
-    },
-
-    load : (id : number) => {
-        return new Achievement(DBC.Achievement.find({ID:id}))
+export class AchievementRegistryClass extends
+    RegistryStatic<Achievement,AchievementRow,AchievementQuery> {
+    protected IDs           = Ids.Achievement
+    protected Table         = DBC.Achievement
+    protected EmptyQuery    = {}
+    protected Entity        = (r: AchievementRow)=>new Achievement(r)
+    protected FindByID      = (id: number)=>DBC.Achievement.find({ID:id})
+    protected ID            = (e: Achievement)=>e.ID;
+    protected Clear         = (r: Achievement)=> {
+        r.row.Category.set(0)
+             .Description.clear()
+             .Faction.set(0)
+             .Flags.set(0)
+             .IconID.set(0)
+             .Map.set(0)
+             .Minimum_Criteria.set(0)
+             .Points.set(0)
+             .Previous.set(0)
+             .Reward.clear()
+             .Shares_Criteria.set(0)
+             .Title.clear()
+             .Ui_Order.set(0)
     }
 }
-
-// TODO: can be upgraded when we can clone
-export class AchievementRef<T> extends RefBase<T,Achievement> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: Achievement): number {
-        return v.ID;
-    }
-    protected resolve(): Achievement {
-        return Achievements.load(this.cell.get());
-    }
-}
-
-export class AchievementRefReadOnly<T> extends RefReadOnly<T,Achievement> {
-    getRef(): Achievement {
-        return Achievements.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
+export const AchievementRegistry = new AchievementRegistryClass()

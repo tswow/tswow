@@ -3,7 +3,7 @@ import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/dbc/types/MailTemp
 import { Loot } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class MailTemplate extends MainEntity<MailTemplateRow> {
     get Body() { return this.wrapLoc(this.row.Body); }

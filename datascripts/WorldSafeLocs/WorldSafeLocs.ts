@@ -3,7 +3,7 @@ import { WorldSafelocsQuery, WorldSafelocsRow } from "wotlkdata/dbc/types/WorldS
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class WorldSafeLoc extends MainEntity<WorldSafelocsRow> {
     get ID() { return this.row.ID.get(); }

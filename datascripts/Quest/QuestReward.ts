@@ -22,11 +22,11 @@ import { FactionRef } from "../Faction/Faction";
 import { ItemTemplateRef } from "../Item/ItemTemplate";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/Ref";
+import { RefStatic } from "../Refs/RefOld";
 import { Quest } from "./Quest";
 import { QuestRewardMail } from "./QuestAddon";
 import { QuestDifficultyIndex } from "./QuestDifficultyIndex";
-import { Quests } from "./Quests";
+import { QuestRegistry } from "./Quests";
 
 function ChoiceItemIds(row: quest_templateRow) {
     return [
@@ -298,7 +298,7 @@ export class QuestRewardStandalone extends MainEntity<quest_templateRow> {
 
 export class QuestRewardRef<T> extends RefStatic<T,QuestRewardStandalone> {
     protected create(mod: string, id: string): QuestRewardStandalone {
-        return new QuestRewardStandalone(Quests.create(mod,id).row);
+        return new QuestRewardStandalone(QuestRegistry.create(mod,id).row);
     }
 
     protected clone(mod: string, id: string): QuestRewardStandalone {
@@ -318,6 +318,6 @@ export class QuestRewardRef<T> extends RefStatic<T,QuestRewardStandalone> {
     }
 
     protected resolve(): QuestRewardStandalone {
-        return new QuestRewardStandalone(Quests.load(this.cell.get()).row)
+        return new QuestRewardStandalone(QuestRegistry.load(this.cell.get()).row)
     }
 }

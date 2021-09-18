@@ -2,7 +2,7 @@ import { DBC } from "wotlkdata";
 import { SoundEntriesAdvancedQuery, SoundEntriesAdvancedRow } from "wotlkdata/dbc/types/SoundEntriesAdvanced";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class SoundEntryAdvanced extends MainEntity<SoundEntriesAdvancedRow> {
     get ID() { return this.row.ID.get(); }

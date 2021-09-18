@@ -23,7 +23,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { SchoolMask } from "../Misc/School";
-import { RefReadOnly, RefStatic } from "../Refs/Ref";
+import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
 import { TrainerPointer } from "../Trainer/Trainer";

@@ -3,9 +3,9 @@ import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
 import { Items, ItemTemplate } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
-import { SelfRef } from "../Refs/Ref";
+import { SelfRef } from "../Refs/RefOld";
 import { Spell } from "../Spell/Spell";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 
 const SUMMON_EFFECT_INDEX = 28;
 const COMPANION_SKILLINE = 778
@@ -26,7 +26,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
     }
 
     add(mod: string, id: string) {
-        const spell = Spells.create(mod,id)
+        const spell = SpellRegistry.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
                 efffect.EffectType.LearnSpell.set()
@@ -93,7 +93,7 @@ export class Companion extends MainEntity<SpellRow> {
 
 export const CompanionRegistry = {
     create(mod: string,id: string) {
-        let spell = Spells.create(mod,id)
+        let spell = SpellRegistry.create(mod,id)
             .Attributes.isAbility.set(true)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.sheatheUnchanged.set(true)
@@ -126,7 +126,7 @@ export const CompanionRegistry = {
     },
 
     load(id: number) {
-        let spell = Spells.load(id)
+        let spell = SpellRegistry.load(id)
         if(!spell || spell.Effects.effectIndex(SUMMON_EFFECT_INDEX)<0) {
             return undefined;
         }
@@ -134,14 +134,14 @@ export const CompanionRegistry = {
     },
 
     filter(query: SpellQuery) {
-        return Spells.filter({...query,Effect:SUMMON_EFFECT_INDEX})
+        return SpellRegistry.queryAll({...query,Effect:SUMMON_EFFECT_INDEX})
             .filter(x=>x.SkillLines
                 .filter(y=>y.SkillLine.get()===COMPANION_SKILLINE).length>0)
             .map(x=>new Companion(x.row))
     },
 
     find(query: SpellQuery) {
-        let spell = Spells.filter({...query,EffectAura:SUMMON_EFFECT_INDEX})
+        let spell = SpellRegistry.queryAll({...query,EffectAura:SUMMON_EFFECT_INDEX})
             .filter(x=>x.SkillLines
                 .filter(y=>y.SkillLine.get()===COMPANION_SKILLINE).length>0)
         return spell.length>0 ? new Companion(spell[0].row) : undefined;

@@ -1,12 +1,12 @@
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { Items, ItemTemplateRef } from "../Item/ItemTemplate";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
 import { SpellCastTimePointer } from "../Spell/SpellCastTime";
 import { SpellItemEquips } from "../Spell/SpellItemEquips";
 import { SpellReagents } from "../Spell/SpellReagents";
-import { Spells } from "../Spell/Spells";
+import { SpellRegistry } from "../Spell/Spells";
 import { SpellVisualPointer } from "../Spell/SpellVisual";
 import { std } from "../tswow-stdlib-data";
 import { Enchantment } from "./Enchantment";
@@ -36,7 +36,7 @@ export class EnchantmentSpell extends CellSystemTop {
 
     // TODO: Spell effect in other slot?
     get Item() {
-        return new ItemTemplateRef(this
+        return ItemTemplateRegistry.ref(this
             , this.spell.Effects.get(0)
                 .EffectType.EnchantItem.as().EnchantingItem
         )
@@ -46,7 +46,8 @@ export class EnchantmentSpell extends CellSystemTop {
 export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantment> {
     protected getAllRows(): EnchantmentSpell[] {
         // TODO: false positives
-        return std.Spells.filter({Effect:53,EffectMiscValue:this.owner.ID})
+        return std.Spells
+            .queryAll({Effect:53,EffectMiscValue:this.owner.ID})
             .map(x=>new EnchantmentSpell(x))
     }
     protected isDeleted(value: EnchantmentSpell): boolean {
@@ -54,7 +55,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
     }
 
     add(mod: string, id: string, createItem = true) {
-        let spell = Spells.create(mod,`${id}-spell`)
+        let spell = SpellRegistry.create(mod,`${id}-spell`)
             .Attributes.isTradeSpell.set(true)
             .Attributes.notShapeshifted.set(true)
             .Attributes.noThreat.set(true)
@@ -69,7 +70,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
 
         let itemId = 0;
         if(createItem) {
-            let item = Items.create(mod,`${id}-item`)
+            let item = ItemTemplateRegistry.create(mod,`${id}-item`)
                 .Spells.addMod(ispell=>{
                     ispell.Spell.set(spell.ID)
                         .Trigger.OnUse.set()

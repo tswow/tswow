@@ -3,7 +3,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 export class CameraShakeType<T> extends EnumCell<T> {
     /** Enum Value:                       0 */

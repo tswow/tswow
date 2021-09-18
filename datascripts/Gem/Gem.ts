@@ -5,7 +5,7 @@ import { Enchantment, EnchantmentRegistry } from "../Enchant/Enchantment"
 import { Items, ItemTemplate } from "../Item/ItemTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
-import { RefStatic } from "../Refs/Ref"
+import { RefStatic } from "../Refs/RefOld"
 import { std } from "../tswow-stdlib-data"
 import { colToId, GemColorType, GemType } from "./GemType"
 

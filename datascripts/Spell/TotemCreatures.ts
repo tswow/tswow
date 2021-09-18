@@ -18,7 +18,7 @@ import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { resolveTotemType, TotemType } from "../Totem/TotemType";
 import { Spell } from "./Spell";
-import { Spells } from "./Spells";
+import { SpellRegistry } from "./Spells";
 
 const created = [0,0,0,0];
 
@@ -79,7 +79,7 @@ export const TotemCreatures = {
                 .Flags.set(512)
         }
 
-        const spell = Spells.create(mod, id, 2484)
+        const spell = SpellRegistry.create(mod, id, 2484)
             .Effects.mod(0,eff=>{
                 eff.MiscValueA.set(creature)
                    .MiscValueB.set(created[slot])
@@ -99,7 +99,7 @@ export const TotemCreatures = {
             const controlOut = new CreatureControllers();
 
             for(const controller of controllers) {
-                const spell = Spells.create(mod, id+'_'+controller.toLowerCase())
+                const spell = SpellRegistry.create(mod, id+'_'+controller.toLowerCase())
                     .Effects.addMod(eff=>
                         eff.EffectType.ControlTotemCreature.set()
                             .AsRawEffect()

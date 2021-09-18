@@ -25,7 +25,8 @@ import { LockRef } from "../Locks/Lock";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/Ref";
+import { RefUnknown } from "../Refs/RefOld";
+import { RegistryStatic } from "../Refs/Registry";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
@@ -135,118 +136,75 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     }
 }
 
-function getRows(id: number) : [item_templateRow, ItemRow] {
-    const sqlParent = SQL.item_template.find({entry:id});
-    const dbcParent = DBC.Item.findById(id);
-    return [sqlParent,dbcParent];
-}
-
-export const Items = {
-    create(mod: string, id: string, parent: number = -1) {
-        const numid = Ids.item_template.id(mod,id);
-
-        if(parent < 0) {
-            const sqlRow = SQL.item_template.add(numid)
-            const dbcRow = DBC.Item.add(numid)
-            let item = new ItemTemplate(sqlRow,dbcRow)
-                .AmmoType.None.set()
-                .Area.set(0)
-                .Armor.set(0)
-                .BagFamily.set(0)
-                .BlockChance.set(0)
-                .Bonding.NoBounds.set()
-                .Class.set(0,0)
-                .ClassMask.set(-1)
-                .RaceMask.set(-1)
-                .ContainerSlots.set(0)
-                .Damage.clearAll()
-                .Delay.set(0)
-                .Disenchant.set(0)
-                .DisplayInfo.set(0)
-                .Durability.set(0)
-                .Duration.set(0)
-                .Flags.set(0)
-                .FlagsCustom.set(0)
-                .FlagsExtra.set(0)
-                .FoodType.set(0)
-                .Holiday.set(0)
-                .InventoryType.NonEquippable.set()
-                .ItemLevel.set(0)
-                .ItemSet.set(0)
-                .Lock.set(0)
-                .Map.set(0)
-                .Material.set(0)
-                .MaxCount.set(0)
-                .MaxStack.set(0)
-                .MoneyLoot.set(0,0)
-                .Name.enGB.set('Plain Item')
-                .Price.set(0,0,0)
-                .Quality.set(0)
-                .RandomProperty.set(0)
-                .RandomSuffix.set(0)
-                .RangeMod.set(0)
-                .RequiredDisenchantSkill.set(0)
-                .RequiredFaction.set(0,0)
-                .RequiredHonorRank.set(0)
-                .RequiredLevel.set(0)
-                .RequiredSpell.set(0)
-                .Requirements.clearAll()
-                .Resistances.clearAll()
-                .ScalingStats.set(0,0)
-                .ScriptName.set('')
-                .Sheath.set(0)
-                .SkillRequirement.set(0,0)
-                .Socket.clearAll()
-                .SoundOverride.set(-1)
-                .Spells.clearAll()
-                .StartQuest.set(0)
-                .Stats.clearAll()
-                .TotemCategory.set(0)
-
-            item.sqlRow.LanguageID.set(0)
-            return item;
-        }
-
-        const [sqlParent,dbcParent] = getRows(parent);
-        const sqlRow = sqlParent.clone(numid)
-        const dbcRow = dbcParent.clone(numid);
-        return new ItemTemplate(sqlRow, dbcRow);
-    },
-
-    load(item: number) {
-        const [sql,dbc] = getRows(item);
-        return new ItemTemplate(sql, dbc);
-    },
-
-    filter(query: item_templateQuery) {
-        // TODO: Can be more efficient
-        return SQL.item_template.filter(query).map(x=>Items.load(x.entry.get()));
+export class ItemTemplateRegistryClass
+extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
+    protected IDs           = Ids.item_template
+    protected Table         = SQL.item_template
+    protected EmptyQuery    = {}
+    protected FindByID      = (id: number)=>SQL.item_template.find({entry:id})
+    protected ID            = (e: ItemTemplate)=>e.ID;
+    protected Entity        = (r: item_templateRow)=>{
+        let dbc = DBC.Item.findById(r.entry.get())
+            || DBC.Item.add(r.entry.get());
+        return new ItemTemplate(r,dbc);
+    }
+    protected Clear         = (r: ItemTemplate)=> {
+        r.AmmoType.None.set()
+         .Area.set(0)
+         .Armor.set(0)
+         .BagFamily.set(0)
+         .BlockChance.set(0)
+         .Bonding.NoBounds.set()
+         .Class.setJunk()
+         .ClassMask.clearAll()
+         .ContainerSlots.set(0)
+         .Damage.clearAll()
+         .Delay.set(0)
+         .Description.clear()
+         .Disenchant.set(0)
+         .DisplayInfo.set(0)
+         .Durability.set(0)
+         .Duration.set(0)
+         .Flags.clearAll()
+         .FlagsCustom.clearAll()
+         .FlagsExtra.clearAll()
+         .FoodType.set(0)
+         .GemProperties.set(0)
+         .Holiday.set(0)
+         .InventoryType.set(0)
+         .ItemLevel.set(0)
+         .ItemSet.set(0)
+         .Lock.set(0)
+         .Map.set(0)
+         .Material.set(0)
+         .MaxCount.set(0)
+         .MaxStack.set(0)
+         .MoneyLoot.set(0,0)
+         .Name.clear()
+         .Price.set(0,0,0)
+         .Quality.set(0)
+         .RaceMask.set(0)
+         .RandomProperty.set(0)
+         .RandomSuffix.set(0)
+         .RangeMod.set(0)
+         .RequiredDisenchantSkill.set(0)
+         .RequiredFaction.set(0,0)
+         .RequiredHonorRank.set(0)
+         .RequiredLevel.set(0)
+         .RequiredSpell.set(0)
+         .Requirements.clearAll()
+         .Resistances.clearAll()
+         .ScalingStats.set(0,0)
+         .ScriptName.set('')
+         .Sheath.None.set()
+         .SkillRequirement.set(0,0)
+         .Socket.clearAll()
+         .SoundOverride.set(0)
+         .Spells.clearAll()
+         .StartQuest.set(0)
+         .Stats.clearAll()
+         .TotemCategory.set(0)
     }
 }
 
-export class ItemTemplateRef<T> extends RefStatic<T,ItemTemplate> {
-    protected create(mod: string, id: string, parent?: number): ItemTemplate {
-        return Items.create(mod,id,parent);
-    }
-    protected clone(mod: string, id: string): ItemTemplate {
-        return Items.create(mod,id,this.resolve().ID);
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: ItemTemplate): number {
-        return v.ID;
-    }
-    protected resolve(): ItemTemplate {
-        return Items.load(this.cell.get());
-    }
-}
-
-export class ItemTemplateRefReadOnly<T> extends RefReadOnly<T,ItemTemplate> {
-    getRef(): ItemTemplate {
-        return Items.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
+export const ItemTemplateRegistry = new ItemTemplateRegistryClass();

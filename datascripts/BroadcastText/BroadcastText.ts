@@ -22,7 +22,7 @@ import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/sql/types/broa
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { Ref } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
 
 function getLocRow(id: number, lang: Language) {
     const row = SQL.broadcast_text_locale.find({ID: id, locale: lang});

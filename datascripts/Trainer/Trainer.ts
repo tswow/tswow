@@ -24,8 +24,8 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
-import { Ref } from "../Refs/Ref";
-import { Spells } from "../Spell/Spells";
+import { Ref } from "../Refs/RefOld";
+import { SpellRegistry } from "../Spell/Spells";
 
 export class TrainerLoc extends SQLLocSystem<Trainer> {
     protected getMain(): Cell<string, any> {
@@ -79,7 +79,7 @@ export class Trainer extends MainEntity<trainerRow> {
 
     addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
         if(reqSkillLine===0) {
-            const sla = Spells.load(spellId).SkillLines.getIndex(0);
+            const sla = SpellRegistry.load(spellId).SkillLines.getIndex(0);
             if(sla!==undefined) {
                 reqSkillLine = sla.SkillLine.get();
             }

@@ -1,11 +1,11 @@
 import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { access_requirementQuery, access_requirementRow } from "wotlkdata/sql/types/access_requirement";
-import { AchievementRef } from "../Achievement/Achievement";
-import { ItemTemplateRef } from "../Item/ItemTemplate";
+import { AchievementRegistry } from "../Achievement/Achievement";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MapRefReadOnly } from "../Map/Map";
 import { MinMaxCell } from "../Misc/LimitCells";
-import { QuestRef } from "../Quest/Quest";
+import { QuestRegistry } from "../Quest/Quests";
 
 export class AccessRequirement<T> extends CellSystem<T> {
     readonly row: access_requirementRow;
@@ -26,14 +26,16 @@ export class AccessRequirement<T> extends CellSystem<T> {
     }
     get ItemLevel() { return this.ownerWrap(this.row.item_level); }
     get Achievement() {
-        return new AchievementRef(this.owner, this.row.completed_achievement)
+        return AchievementRegistry.ref(this.owner, this.row.completed_achievement)
     }
     get Text() { return this.ownerWrap(this.row.quest_failed_text); }
-    get HordeQuest() { return new QuestRef(this.owner, this.row.quest_done_H); }
-    get AllianceQuest() { return new QuestRef(this.owner, this.row.quest_done_A); }
-    get HordeItem() { return new ItemTemplateRef(this.owner, this.row.item); }
-    get AllianceItem() { return new ItemTemplateRef(this.owner, this.row.item2); }
+    get HordeQuest() { return QuestRegistry.ref(this.owner, this.row.quest_done_H); }
+    get AllianceQuest() { return QuestRegistry.ref(this.owner, this.row.quest_done_A); }
+    get HordeItem() { return ItemTemplateRegistry.ref(this.owner, this.row.item); }
+    get AllianceItem() {
+        return ItemTemplateRegistry.ref(this.owner, this.row.item2);
     }
+}
 
 export class AccessRequirementStandalone extends AccessRequirement<AccessRequirementStandalone> {
     constructor(row: access_requirementRow) {

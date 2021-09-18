@@ -3,7 +3,7 @@ import { TaxiPathQuery, TaxiPathRow } from "wotlkdata/dbc/types/TaxiPath";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { RefBase } from "../Refs/Ref";
+import { RefBase } from "../Refs/RefOld";
 import { TaxiEndNode, TaxiEndNodeRef } from "./TaxiEndNode";
 import { TaxiPathNodes } from "./TaxiPathNode";
 
