@@ -163,3 +163,7 @@ export function GetIdRange(table: string, mod: string, name: string, size: numbe
     forward.entries[fullname] = entry;
     return entry;
 }
+
+export function GetTempId(startId: number) {
+    return allocator.add(startId,1);
+}
