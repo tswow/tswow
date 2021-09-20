@@ -1,11 +1,12 @@
 import { DBC, SQL } from "wotlkdata";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CreatureDisplayInfoRow } from "wotlkdata/dbc/types/CreatureDisplayInfo";
-import { CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
+import { CreatureDisplayInfoQuery, CreatureDisplayInfoRow } from "wotlkdata/dbc/types/CreatureDisplayInfo";
+import { CreatureModelDataQuery, CreatureModelDataRow } from "wotlkdata/dbc/types/CreatureModelData";
 import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 
 export class CreatureModel extends MainEntity<CreatureModelDataRow> {
@@ -33,6 +34,7 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
         return this;
     }
 
+    get ID() {return this.row.ID.get(); }
     get ModelName() { return this.wrap(this.row.ModelName); }
     get SizeClass() { return this.wrap(this.row.SizeClass); }
     get ModelScale() { return this.wrap(this.row.ModelScale); }
@@ -72,8 +74,9 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
         return this.sql_row || SQL.creature_model_info.find({DisplayID:this.row.ID.get()});
     }
 
-    get Model(): CreatureModelPointer<this> {
-        return new CreatureModelPointer(this, this.row.ModelID);
+    get ID() { return this.row.ID.get(); }
+    get Model() {
+        return CreatureModelRegistry.ref(this, this.row.ModelID);
     }
 
     get BoundingRadius() { return this.wrap(this.sql_row.BoundingRadius); }
@@ -92,17 +95,7 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
     get ObjectEffectPackage() { return this.wrap(this.row.ObjectEffectPackageID); }
 
     clear(): this {
-        this.ExtendedDisplay.set(0)
-            .CreatureModelScale.set(0)
-            .CreatureModelAlpha.set(0)
-            .TextureVariation.set(["","",""])
-            .BloodLevel.set(0)
-            .Blood.set(0)
-            .ParticleColor.set(0)
-            .CreatureGeosetData.set(0)
-            .ObjectEffectPackage.set(0)
-            .row.SoundID.set(0)
-            .NPCSoundID.set(0)
+
 
         if(this.hasSql()) {
             this.sql_row
@@ -115,40 +108,99 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
     }
 }
 
-export class CreatureVisualPointer<T> extends Ref<T,CreatureVisual> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class CreatureModelRegistryClass
+    extends RegistryDynamic<
+          CreatureModel
+        , CreatureModelDataRow
+        , CreatureModelDataQuery
+    >
+{
+    protected Table(): Table<any, CreatureModelDataQuery, CreatureModelDataRow> & { add: (id: number) => CreatureModelDataRow; } {
+        return DBC.CreatureModelData
     }
-    protected create(): CreatureVisual {
-        return new CreatureVisual(DBC.CreatureDisplayInfo.add(Ids.CreatureDisplayInfo.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.CreatureModelData
     }
-    protected clone(): CreatureVisual {
-        return new CreatureVisual(
-            this.resolve().row.clone(Ids.CreatureDisplayInfo.id())
-        )
+    Clear(entity: CreatureModel): void {
+        entity
+            .AttachedEffectScale.set(0)
+            .Blood.set(0)
+            .CollisionHeight.set(0)
+            .CollisionWidth.set(0)
+            .DeathThudShake.set(0)
+            .FoleyMaterial.set(0)
+            .FootprintTexture.set(0)
+            .FootprintTextureLength.set(0)
+            .FootstepShakeSize.set(0)
+            .MissileCollisionPush.set(0)
+            .MissileCollisionRadius.set(0)
+            .MissileCollisionRaise.set(0)
+            .ModelName.set('')
+            .ModelScale.set(1)
+            .MountHeight.set(0)
+            .SizeClass.set(0)
+            .Sound.set(0)
+            .WorldEffectScale.set(1)
     }
-    protected id(v: CreatureVisual): number {
-        return v.row.ID.get()
+    protected Clone(entity: CreatureModel, parent: CreatureModel): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): CreatureVisual {
-        return new CreatureVisual(DBC.CreatureDisplayInfo.findById(this.cell.get()));
+    protected FindByID(id: number): CreatureModelDataRow {
+        return DBC.CreatureModelData.findById(id);
+    }
+    protected EmptyQuery(): CreatureModelDataQuery {
+        return {}
+    }
+    ID(e: CreatureModel): number {
+        return e.ID
+    }
+    protected Entity(r: CreatureModelDataRow): CreatureModel {
+        return new CreatureModel(r);
     }
 }
+export const CreatureModelRegistry = new CreatureModelRegistryClass();
 
-export class CreatureModelPointer<T> extends Ref<T,CreatureModel> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class CreatureVisualRegistryClass
+    extends RegistryDynamic<
+          CreatureVisual
+        , CreatureDisplayInfoRow
+        , CreatureDisplayInfoQuery
+        >
+{
+    protected Table(): Table<any, CreatureDisplayInfoQuery, CreatureDisplayInfoRow> & { add: (id: number) => CreatureDisplayInfoRow; } {
+        return DBC.CreatureDisplayInfo
     }
-    protected create(): CreatureModel {
-        return new CreatureModel(DBC.CreatureModelData.add(Ids.creature_model_info.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.CreatureDisplayInfo
     }
-    protected clone(): CreatureModel {
-        return new CreatureModel(this.resolve().row.clone(Ids.creature_model_info.id()))
+    Clear(entity: CreatureVisual): void {
+        entity
+            .ExtendedDisplay.set(0)
+            .CreatureModelScale.set(0)
+            .CreatureModelAlpha.set(0)
+            .TextureVariation.set(["","",""])
+            .BloodLevel.set(0)
+            .Blood.set(0)
+            .ParticleColor.set(0)
+            .CreatureGeosetData.set(0)
+            .ObjectEffectPackage.set(0)
+            .row.SoundID.set(0)
+            .NPCSoundID.set(0)
     }
-    protected id(v: CreatureModel): number {
-        return v.row.ID.get()
+    protected Clone(entity: CreatureVisual, parent: CreatureVisual): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): CreatureModel {
-        return new CreatureModel(DBC.CreatureModelData.findById(this.cell.get()));
+    protected FindByID(id: number): CreatureDisplayInfoRow {
+        return DBC.CreatureDisplayInfo.findById(id);
+    }
+    protected EmptyQuery(): CreatureDisplayInfoQuery {
+        return {}
+    }
+    ID(e: CreatureVisual): number {
+        return e.ID
+    }
+    protected Entity(r: CreatureDisplayInfoRow): CreatureVisual {
+        return new CreatureVisual(r);
     }
 }
+export const CreatureDisplayInfoRegistry = new CreatureVisualRegistryClass();

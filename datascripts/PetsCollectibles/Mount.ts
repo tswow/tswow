@@ -3,7 +3,7 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Table } from "wotlkdata/table/Table";
-import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { RefNoCreate } from "../Refs/Ref";
@@ -95,7 +95,7 @@ export class Mount extends MainEntity<SpellRow> {
      */
     get Items() { return new MountItems(this); }
     get Creature() {
-        return new CreatureTemplateRef(
+        return CreatureTemplateRegistry.ref(
               this
             , this.wrapIndex(this.row.EffectMiscValue,this.mountIndex())
         )
@@ -120,7 +120,7 @@ export class MountRegistryClass
     protected EmptyQuery(): SpellQuery {
         return {}
     }
-    protected ID(e: Mount): number {
+    ID(e: Mount): number {
         return e.ID;
     }
     protected Table(): Table<any, SpellQuery, SpellRow> {

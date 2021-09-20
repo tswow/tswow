@@ -49,7 +49,7 @@ export class TalentTreeRegistryClass
     protected EmptyQuery(): TalentTabQuery {
         return {}
     }
-    protected ID(e: TalentTree): number {
+    ID(e: TalentTree): number {
         return e.ID;
     }
 

@@ -2,10 +2,12 @@ import { DBC } from "wotlkdata";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/dbc/types/VehicleSeat";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
-import { Ref } from "../Refs/RefOld";
+import { PositionXYZCell } from "../Misc/PositionCell";
+import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 
@@ -71,6 +73,11 @@ export class VehicleSeatAttachment extends CellSystem<VehicleSeat> {
         this.OffsetZ.set(offsetZ);
         return this.owner;
     }
+
+    clear() {
+        this.set(0,0,0,0)
+        return this.owner;
+    }
 }
 
 export class VehicleSeatEnter extends CellSystem<VehicleSeat> {
@@ -108,6 +115,21 @@ export class VehicleSeatEnter extends CellSystem<VehicleSeat> {
     get CameraZoom() {
         return this.ownerWrap(this.owner.row.CameraEnteringZoom);
     }
+
+    clear() {
+        this.AnimLoop.set(0)
+        this.AnimStart.set(0)
+        this.ArcHeight.set(0,0)
+        this.CameraDelay.set(0)
+        this.CameraDuration.set(0)
+        this.CameraZoom.set(0)
+        this.Duration.set(0,0)
+        this.Gravity.set(0)
+        this.PreDelay.set(0)
+        this.Speed.set(0)
+        this.UISound.set(0)
+        return this.owner;
+    }
 }
 
 export class VehicleSeatRide extends CellSystem<VehicleSeat> {
@@ -116,6 +138,14 @@ export class VehicleSeatRide extends CellSystem<VehicleSeat> {
 
     get UpperAnimStart() { return new SpellAnimation(this, this.owner.row.RideUpperAnimStart); }
     get UpperAnimLoop() { return new SpellAnimation(this, this.owner.row.RideUpperAnimLoop); }
+
+    clear() {
+        this.AnimStart.set(0)
+        this.AnimLoop.set(0)
+        this.UpperAnimStart.set(0)
+        this.UpperAnimLoop.set(0)
+        return this.owner;
+    }
 }
 
 export class VehicleSeatExit extends CellSystem<VehicleSeat> {
@@ -148,6 +178,20 @@ export class VehicleSeatExit extends CellSystem<VehicleSeat> {
     get CameraDuration() {
         return this.ownerWrap(this.owner.row.CameraExitingDuration);
     }
+
+    clear() {
+        this.PreDelay.set(0)
+        this.Speed.set(0)
+        this.Gravity.set(0)
+        this.Duration.set(0,0)
+        this.ArcHeight.set(0,0)
+        this.AnimStart.set(0)
+        this.AnimLoop.set(0)
+        this.UISound.set(0)
+        this.CameraDelay.set(0)
+        this.CameraDuration.set(0)
+        return this.owner
+    }
 }
 
 export class VehicleSeatPassenger extends CellSystem<VehicleSeat> {
@@ -161,6 +205,11 @@ export class VehicleSeatPassenger extends CellSystem<VehicleSeat> {
         this.Yaw.set(yaw);
         this.Pitch.set(pitch);
         this.Roll.set(roll);
+        return this.owner;
+    }
+
+    clear() {
+        this.set(0,0,0,0)
         return this.owner;
     }
 }
@@ -177,12 +226,31 @@ export class VehicleSeatVehicle extends CellSystem<VehicleSeat> {
     get ExitAnimDelay() { return this.ownerWrap(this.owner.row.VehicleExitAnimDelay); }
 
     get AbilityDisplay() { return this.ownerWrap(this.owner.row.VehicleAbilityDisplay); }
+
+    clear() {
+        this.EnterAnim.set(0)
+        this.EnterAnimBone.set(0)
+        this.ExitAnim.set(0)
+        this.ExitAnimBone.set(0)
+        this.RideAnimLoop.set(0)
+        this.RideAnimLoopBone.set(0)
+        this.EnterAnimDelay.set(0)
+        this.ExitAnimDelay.set(0)
+        this.AbilityDisplay.set(0)
+        return this.owner;
+    }
 }
 
 export class VehicleCamera extends CellSystem<VehicleSeat> {
-    get OffsetX() { return this.ownerWrap(this.owner.row.CameraOffsetX); }
-    get OffsetY() { return this.ownerWrap(this.owner.row.CameraOffsetY); }
-    get OffsetZ() { return this.ownerWrap(this.owner.row.CameraOffsetZ); }
+
+    get Offset() {
+        return new PositionXYZCell(this,
+              this.owner.row.CameraOffsetX
+            , this.owner.row.CameraOffsetY
+            , this.owner.row.CameraOffsetZ
+        )
+    }
+
     get PosChaseRate() { return this.ownerWrap(this.owner.row.CameraPosChaseRate); }
     get FacingChaseRate() { return this.ownerWrap(this.owner.row.CameraFacingChaseRate); }
     get Zoom() {
@@ -190,6 +258,14 @@ export class VehicleCamera extends CellSystem<VehicleSeat> {
             , this.owner.row.CameraSeatZoomMin
             , this.owner.row.CameraSeatZoomMax
         )
+    }
+
+    clear() {
+        this.Offset.setSpread(0,0,0)
+        this.PosChaseRate.set(0)
+        this.FacingChaseRate.set(0)
+        this.Zoom.set(0,0)
+        return this.owner
     }
 }
 
@@ -204,54 +280,48 @@ export class VehicleSeat extends MainEntity<VehicleSeatRow> {
     get Passenger() { return new VehicleSeatPassenger(this); }
     get Vehicle() { return new VehicleSeatVehicle(this); }
     get HasUISkin() { return this.wrap(this.row.UiSkin); }
+
+    clear() {
+        this.FlagsA.set(0)
+        this.FlagsB.set(0)
+        this.Attachment.clear()
+        this.Enter.clear()
+        this.Ride.clear()
+        this.Exit.clear()
+        this.Passenger.clear()
+        this.Vehicle.clear()
+        this.HasUISkin.set(0)
+        return this;
+    }
 }
 
-export const VehicleSeatRegistry = {
-    create(parent?: number) {
-        return new VehicleSeat(
-            parent
-            ? DBC.VehicleSeat
-                .findById(parent)
-                .clone(Ids.VehicleSeat.id())
-            : DBC.VehicleSeat.add(Ids.VehicleSeat.id())
-        )
-    },
-
-    load(id: number) {
-        let res = DBC.VehicleSeat.findById(id);
-        return (res ? new VehicleSeat(res) : undefined) as VehicleSeat
-    },
-
-    filter(query: VehicleSeatQuery) {
+export class VehicleSeatRegistryClass
+    extends RegistryDynamic<VehicleSeat,VehicleSeatRow,VehicleSeatQuery>
+{
+    protected Table(): Table<any, VehicleSeatQuery, VehicleSeatRow> & { add: (id: number) => VehicleSeatRow; } {
         return DBC.VehicleSeat
-            .filter(query)
-            .map(x=>new VehicleSeat(x));
-    },
-
-    find(query: VehicleSeatQuery) {
-        let res = DBC.VehicleSeat.find(query)
-        return (res ? new VehicleSeat(res) : undefined) as VehicleSeat
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.VehicleSeat
+    }
+    Clear(entity: VehicleSeat): void {
+        entity.clear();
+    }
+    protected Clone(entity: VehicleSeat, parent: VehicleSeat): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): VehicleSeatRow {
+        return DBC.VehicleSeat.findById(id);
+    }
+    protected EmptyQuery(): VehicleSeatQuery {
+        return {}
+    }
+    ID(e: VehicleSeat): number {
+        return e.ID
+    }
+    protected Entity(r: VehicleSeatRow): VehicleSeat {
+        return new VehicleSeat(r);
     }
 }
 
-export class VehicleSeatRef<T> extends Ref<T,VehicleSeat> {
-    protected create(): VehicleSeat {
-        return VehicleSeatRegistry.create();
-    }
-
-    protected clone(): VehicleSeat {
-        return VehicleSeatRegistry.create(this.cell.get())
-    }
-
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-
-    protected id(v: VehicleSeat): number {
-        return v.ID
-    }
-
-    protected resolve(): VehicleSeat {
-        return VehicleSeatRegistry.load(this.cell.get());
-    }
-}
+export const VehicleSeatRegistry = new VehicleSeatRegistryClass();

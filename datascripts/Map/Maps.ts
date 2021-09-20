@@ -8,6 +8,9 @@ import { Map } from "./Map";
 export class MapRegistryClass
     extends RegistryStatic<Map,MapRow,MapQuery>
 {
+    // map 0 is a real map
+    protected nullID = ()=>-1;
+
     protected Table(): Table<any, MapQuery, MapRow> & { add: (id: number) => MapRow; } {
         return DBC.Map
     }
@@ -45,7 +48,7 @@ export class MapRegistryClass
     protected EmptyQuery(): MapQuery {
         return {}
     }
-    protected ID(e: Map): number {
+    ID(e: Map): number {
         return e.ID;
     }
 }

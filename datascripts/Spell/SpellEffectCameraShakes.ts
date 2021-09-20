@@ -1,9 +1,10 @@
 import { DBC } from "wotlkdata";
-import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
+import { SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
-import { CameraShakePointer } from "./CameraShakes";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
+import { CameraShakeRegistry } from "./CameraShakes";
 
 export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesRow> {
     clear(): this {
@@ -18,7 +19,7 @@ export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesR
     }
 
     get(index: number) {
-        return new CameraShakePointer(this.owner, this.wrapIndex(this.row.CameraShake,index));
+        return CameraShakeRegistry.ref(this.owner, this.wrapIndex(this.row.CameraShake,index));
     }
 
     add() {
@@ -49,20 +50,38 @@ export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesR
     get ID() { return this.row.ID.get(); }
 }
 
-export class SpellEffectCameraShakePointer<T> extends Ref<T,SpellEffectCameraShakes> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class SpellEffectCameraShakesRegistryClass
+    extends RegistryDynamic<
+          SpellEffectCameraShakes
+        , SpellEffectCameraShakesRow
+        , SpellEffectCameraShakesQuery
+    >
+{
+    protected Table(): Table<any, SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow> & { add: (id: number) => SpellEffectCameraShakesRow; } {
+        return DBC.SpellEffectCameraShakes
     }
-    protected create(): SpellEffectCameraShakes {
-        return new SpellEffectCameraShakes(DBC.SpellEffectCameraShakes.add(Ids.SpellEffectCameraShakes.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellEffectCameraShakes
     }
-    protected clone(): SpellEffectCameraShakes {
-        return new SpellEffectCameraShakes(this.resolve().row.clone(Ids.SpellEffectCameraShakes.id()))
+    Clear(entity: SpellEffectCameraShakes): void {
+        entity.clear();
     }
-    protected id(v: SpellEffectCameraShakes): number {
-        return v.ID;
+    protected Clone(entity: SpellEffectCameraShakes, parent: SpellEffectCameraShakes): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): SpellEffectCameraShakes {
-        return new SpellEffectCameraShakes(DBC.SpellEffectCameraShakes.findById(this.cell.get()))
+    protected FindByID(id: number): SpellEffectCameraShakesRow {
+        return DBC.SpellEffectCameraShakes.findById(id);
+    }
+    protected EmptyQuery(): SpellEffectCameraShakesQuery {
+        return {}
+    }
+    ID(e: SpellEffectCameraShakes): number {
+        return e.ID
+    }
+    protected Entity(r: SpellEffectCameraShakesRow): SpellEffectCameraShakes {
+        return new SpellEffectCameraShakes(r);
     }
 }
+
+export const SpellEffectCameraShakeRegistry
+    = new SpellEffectCameraShakesRegistryClass();

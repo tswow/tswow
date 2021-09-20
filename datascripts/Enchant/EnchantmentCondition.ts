@@ -139,7 +139,7 @@ export class EnchantmentConditionRegistryClass
     protected EmptyQuery(): SpellItemEnchantmentConditionQuery {
         return {}
     }
-    protected ID(e: EnchantmentConditions): number {
+    ID(e: EnchantmentConditions): number {
         return e.ID;
     }
 }

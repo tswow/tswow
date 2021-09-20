@@ -24,16 +24,16 @@ import { ClassRegistry } from "./Class/Class";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creature/Creatures";
 import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
-import { ElevatorRegistry } from "./Elevators/Elevators";
 import { EnchantmentRegistry } from "./Enchant/Enchantment";
 import { EnchantmentConditionRegistry } from "./Enchant/EnchantmentCondition";
 import { FactionRegistry } from "./Faction/Faction";
 import { GameEventRegistry } from "./GameEvent/GameEvent";
 import { HolidayRegistry } from "./GameEvent/Holiday";
-import { GameObjectDisplayRegistry, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
+import { GORegistry } from "./GameObject/GameObjectRegistries";
+import { GameObjectDisplayRegistry, GameObjectInstances } from "./GameObject/GameObjects";
 import { GemRegistry } from "./Gem/Gem";
 import { GlyphRegistry } from "./Glyph/Glyph";
-import { Gossips } from "./Gossip/Gossips";
+import { GossipRegistry } from "./Gossip/Gossips";
 import { TSImages } from "./Images/Image";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
 import { LanguageRegistry } from "./Languages/Languages";
@@ -60,7 +60,6 @@ import { SpellGroups, SpellRegistry } from "./Spell/Spells";
 import { TalentTreeRegistry } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TitleRegistry } from "./Title/Titles";
-import { TransportRegistry } from "./Transport/Transport";
 import { UI } from "./UI/UI";
 import { VehicleRegistry } from "./Vehicle/Vehicle";
 import { ScriptPaths } from "./Waypoints/ScriptPaths";
@@ -94,14 +93,14 @@ export const std = {
     TalentTrees: TalentTreeRegistry,
     Factions: FactionRegistry,
     Scripts: SmartScripts,
-    Gossip: Gossips,
+    Gossip: GossipRegistry,
     Lights: Lights,
     ScriptPaths: ScriptPaths,
     Areas: AreaRegistry,
     Maps: MapRegistry,
     LoadingScreens: LoadingScreens,
     /** Templates used by one or multiple game object instances */
-    GameObjectTemplates: GameObjectTemplates,
+    GameObjectTemplates: GORegistry,
     /** Individual Game Objects placed in the world */
     GameObjectInstances: GameObjectInstances,
     /** Model, sound and bounding box data for GameObjects */
@@ -125,8 +124,6 @@ export const std = {
     Currency: CurrencyRegistry,
     CurrencyCategory: CurrencyCategoryRegistry,
     Taxi: TaxiPathRegistry,
-    Transports: TransportRegistry,
-    Elevators: ElevatorRegistry,
     Mounts: MountRegistry,
     Companions: CompanionRegistry,
     WorldSafeLocs: WorldSafeLocRegistry,

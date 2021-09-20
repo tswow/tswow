@@ -46,7 +46,7 @@ export class TitleRegistryClass extends RegistryStatic<Title,CharTitlesRow,CharT
     protected EmptyQuery(): CharTitlesQuery {
         return {}
     }
-    protected ID(e: Title): number {
+    ID(e: Title): number {
         return e.ID;
     }
     Clear(title: Title) {

@@ -5,12 +5,12 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/dbc/types/DungeonEncounter";
 import { instance_encountersQuery, instance_encountersRow } from "wotlkdata/sql/types/instance_encounters";
 import { SQL } from "wotlkdata/wotlkdata";
-import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { MapRegistry } from "../Map/Maps";
 import { Ids } from "../Misc/Ids";
 import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
 import { SpellRegistry } from "../Spell/Spells";
-import { LFGDungeonRef } from "./LFGDungeon";
+import { LFGDungeonRegistry } from "./LFGDungeon";
 
 export class DungeonEncounterCreditType extends EnumCell<DungeonEncounter> {
     /** Enum Value = 0 */
@@ -90,7 +90,7 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
      * The dungeon that this is the last encounter for
      */
     get LastEncounterFor() {
-        return new LFGDungeonRef(this, this.wrapSQL(0,sql=>sql.lastEncounterDungeon));
+        return LFGDungeonRegistry.ref(this, this.wrapSQL(0,sql=>sql.lastEncounterDungeon));
     }
 
     objectify(): any {
@@ -111,7 +111,7 @@ export class DungeonEncounterPlain extends DungeonEncounter {
 
 export class DungeonEncounterCreature extends DungeonEncounter {
     get Creature() {
-        return new CreatureTemplateRef(
+        return CreatureTemplateRegistry.ref(
               this
             , this.wrapSQL(0,sql=>sql.creditEntry)
         )

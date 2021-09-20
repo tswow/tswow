@@ -1,9 +1,10 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
+import { CameraShakesQuery, CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class CameraShakeType<T> extends EnumCell<T> {
     /** Enum Value:                       0 */
@@ -34,20 +35,34 @@ export class CameraShakes extends MainEntity<CameraShakesRow> {
     get ID() { return this.row.ID.get(); }
 }
 
-export class CameraShakePointer<T> extends Ref<T,CameraShakes> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class CameraShakeRegistryClass
+    extends RegistryDynamic<CameraShakes,CameraShakesRow,CameraShakesQuery>
+{
+    protected Table(): Table<any, CameraShakesQuery, CameraShakesRow> & { add: (id: number) => CameraShakesRow; } {
+        return DBC.CameraShakes
     }
-    protected create(): CameraShakes {
-        return new CameraShakes(DBC.CameraShakes.add(Ids.CameraShakes.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.CameraShakes
     }
-    protected clone(): CameraShakes {
-        return new CameraShakes(this.resolve().row.clone(Ids.CameraShakes.id()));
+    Clear(entity: CameraShakes): void {
+        // No idea
+        throw new Error("Method not implemented.");
     }
-    protected id(v: CameraShakes): number {
-        return v.ID;
+    protected Clone(entity: CameraShakes, parent: CameraShakes): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): CameraShakes {
-        return new CameraShakes(DBC.CameraShakes.findById(this.cell.get()));
+    protected FindByID(id: number): CameraShakesRow {
+        return DBC.CameraShakes.findById(id)
+    }
+    protected EmptyQuery(): CameraShakesQuery {
+        return {}
+    }
+    ID(e: CameraShakes): number {
+        return e.ID
+    }
+    protected Entity(r: CameraShakesRow): CameraShakes {
+        return new CameraShakes(r);
     }
 }
+
+export const CameraShakeRegistry = new CameraShakeRegistryClass();

@@ -59,7 +59,7 @@ export class WorldSafeLocsRegistryClass
     protected EmptyQuery(): WorldSafelocsQuery {
         return {}
     }
-    protected ID(e: WorldSafeLoc): number {
+    ID(e: WorldSafeLoc): number {
         return e.ID
     }
 

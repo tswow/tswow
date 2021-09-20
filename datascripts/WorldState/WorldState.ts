@@ -1,13 +1,14 @@
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { WorldStateZoneSoundsRow } from "wotlkdata/dbc/types/WorldStateZoneSounds";
 import { AreaRegistry } from "../Area/Area";
-import { WMOAreaRef } from "../Area/WMOArea";
+import { WMOAreaRegistry } from "../Area/WMOArea";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { RefBase, RefStatic } from "../Refs/RefOld";
+import { RefNoCreate, RefStatic, StaticRegistry } from "../Refs/Ref";
 import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
-import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
+import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
 
@@ -18,7 +19,7 @@ export class WorldStateSound extends MainEntity<WorldStateZoneSoundsRow> {
     get WorldState() { return this.row.WorldStateID.get(); }
     get TriggerValue() { return this.wrap(this.row.WorldStateValue); }
     get Area() { return AreaRegistry.ref(this, this.row.AreaID); }
-    get WMOArea() { return new WMOAreaRef(this, this.row.WMOAreaID) }
+    get WMOArea() { return WMOAreaRegistry.ref(this, this.row.WMOAreaID) }
     get ZoneIntroMusic() {
         return ZoneIntroMusicRegistry.ref(this, this.row.ZoneintroMusicID)
     }
@@ -29,7 +30,7 @@ export class WorldStateSound extends MainEntity<WorldStateZoneSoundsRow> {
         return SoundAmbienceRegistry.ref(this, this.row.SoundAmbienceID);
     }
     get SoundProviderPreferences() {
-        return new SoundProviderPreferenceRef(this,
+        return SoundProviderPreferenceRegistry.ref(this,
             this.row.SoundProviderPreferencesID);
     }
 }
@@ -71,44 +72,26 @@ export class WorldState {
     objectify() { return this.get(); }
 }
 
-export const WorldStateRegistry = {
-    create(mod: string, id: string) {
+export class WorldStateRegistryClass implements StaticRegistry<WorldState> {
+    create(mod: string, id: string, parent?: number): WorldState {
         return new WorldState(Ids.WorldState.id(mod,id));
-    },
-
-    load(id: number) {
+    }
+    ID(entity: WorldState): number {
+        return entity.ID
+    }
+    load(id: number): WorldState {
         return new WorldState(id);
     }
-}
-
-export class WorldStateRef<T> extends RefBase<T,WorldState> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Exists(num: number): boolean {
+        return num > 0;
     }
-    protected id(v: WorldState): number {
-        return v.ID;
-    }
-    protected resolve(): WorldState {
-        return new WorldState(this.cell.get());
-    }
-}
-
-export class WorldStateRefCreate<T> extends RefStatic<T,WorldState> {
-    protected create(mod: string, id: string): WorldState {
-        return WorldStateRegistry.create(mod,id);
-    }
-    protected clone(mod: string, id: string): WorldState {
-        // TODO: sounds
-        return WorldStateRegistry.create(mod,id);
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WorldState): number {
-        return v.ID
-    }
-    protected resolve(): WorldState {
-        return WorldStateRegistry.load(this.cell.get());
+    refNoCreate<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner,cell,this);
     }
 
+    refCreate<T>(owner: T, cell: Cell<number,any>) {
+        return new RefStatic(owner, cell, this);
+    }
 }
+
+export const WorldStateRegistry = new WorldStateRegistryClass();

@@ -148,7 +148,7 @@ export class ClassRegistryClass extends RegistryRowBase<Class,ChrClassesRow,ChrC
     protected EmptyQuery(): ChrClassesQuery {
         return {}
     }
-    protected ID(e: Class): number {
+    ID(e: Class): number {
         return e.ID;
     }
 

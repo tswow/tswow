@@ -128,17 +128,8 @@ export const Ids = {
     /** Starts at 1000000, Highest base value is 195672 */
     gameobject_loot_template: new DynamicIDGenerator('gameobject_loot_template',1000000),
 
-    /** Starts at 1000000, Highest base value is 54537 */
-    item_loot_template: new DynamicIDGenerator('item_loot_template',1000000),
-
     /** Starts at 1000000, Highest base value is 69 */
     disenchant_loot_template: new DynamicIDGenerator('disenchant_loot_template',1000000),
-
-    /** Starts at 1000000, Highest base value is 36912 */
-    prospecting_loot_template: new DynamicIDGenerator('prospecting_loot_template',1000000),
-
-    /** Starts at 1000000, Highest base value is 36912 */
-    milling_loot_template: new DynamicIDGenerator('milling_loot_template',1000000),
 
     /** Starts at 1000000, Highest base value is 34839 */
     pickpocketing_loot_template: new DynamicIDGenerator('pickpocketing_loot_template',1000000),
@@ -148,9 +139,6 @@ export const Ids = {
 
     /** Starts at 1000000, Highest base value is 526760 */
     reference_loot_template: new DynamicIDGenerator('reference_loot_template',1000000),
-
-    /** Starts at 1000000, Highest base value is 69412 */
-    spell_loot_template: new DynamicIDGenerator('spell_loot_template',1000000),
 
     /** Starts at 1161, Highest base value is 1160. */
     Faction: new StaticIDGenerator('Faction',1161),
@@ -192,8 +180,8 @@ export const Ids = {
     /** Starts at 58000, highest base value is 57019 */
     gossip_menu: new DynamicIDGenerator('gossip_menu',58000),
 
-    /** Starts at 100000, highest base value is 77865 */
-    BroadcastText: new DynamicIDGenerator('broadcast_text',100000),
+    /** Starts at 80000, highest base value is 77865 */
+    BroadcastText: new StaticIDGenerator('broadcast_text',100000),
 
     /** Starts at 210, highest base value is 209 */
     SpellCastTimes: new DynamicIDGenerator('SpellCastTimes',210),
@@ -334,7 +322,7 @@ export const Ids = {
     CreatureFamily: new StaticIDGenerator('CreatureFamily',47),
 
     /** Starts at 4000, highest base value is 3440 */
-    CreatureModelData: new StaticIDGenerator('CreatureModelData',4000),
+    CreatureModelData: new DynamicIDGenerator('CreatureModelData',4000),
 
     /** Starts at 900, highest base value is 821 */
     CreatureMovementInfo: new DynamicIDGenerator('CreatureMovementInfo',900),

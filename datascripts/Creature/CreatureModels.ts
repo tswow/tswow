@@ -16,7 +16,7 @@
  */
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
-import { CreatureVisualPointer } from "./CreatureVisual";
+import { CreatureDisplayInfoRegistry } from "./CreatureVisual";
 
 function getModel(template: CreatureTemplate, index: number) {
     switch(index) {
@@ -43,7 +43,8 @@ export class CreatureModels extends CellSystem<CreatureTemplate> {
     }
 
     objectify() {
-        return this.rows().filter(x=>x.get()!=0).map(x=>new CreatureVisualPointer(this.owner,x).objectify());
+        return this.rows().filter(x=>x.get()!=0).map(
+            x=>CreatureDisplayInfoRegistry.ref(this.owner,x).objectify());
     }
 
     clearAll() {
@@ -53,8 +54,8 @@ export class CreatureModels extends CellSystem<CreatureTemplate> {
         return this.owner;
     }
 
-    get(index: number): CreatureVisualPointer<CreatureTemplate> {
-        return new CreatureVisualPointer(this.owner,
+    get(index: number) {
+        return CreatureDisplayInfoRegistry.ref(this.owner,
             this.rows()[index])
     }
 

@@ -1,10 +1,11 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { TaxiNodesRow } from "wotlkdata/dbc/types/TaxiNodes";
+import { TaxiNodesQuery, TaxiNodesRow } from "wotlkdata/dbc/types/TaxiNodes";
+import { Table } from "wotlkdata/table/Table";
 import { DBC } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/RefOld";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class TaxiNodeMount extends CellSystem<TaxiEndNode> {
     get Horde() { return this.ownerWrapIndex(this.owner.row.MountCreatureID,0)}
@@ -30,20 +31,35 @@ export class TaxiEndNode extends MainEntity<TaxiNodesRow> {
     get ID() { return this.row.ID.get(); }
 }
 
-export class TaxiEndNodeRef<T> extends Ref<T,TaxiEndNode> {
-    protected create(): TaxiEndNode {
-        return new TaxiEndNode(DBC.TaxiNodes.add(Ids.TaxiNodes.id()));
+export class TaxiEndNodeRegistryClass
+    extends RegistryDynamic<TaxiEndNode,TaxiNodesRow,TaxiNodesQuery>
+{
+    protected Table(): Table<any, TaxiNodesQuery, TaxiNodesRow> & { add: (id: number) => TaxiNodesRow; } {
+        return DBC.TaxiNodes
     }
-    protected clone(): TaxiEndNode {
-        return new TaxiEndNode(this.resolve().row.clone(Ids.TaxiNodes.id()));
+    protected ids(): DynamicIDGenerator {
+        return Ids.TaxiNodes
     }
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Clear(entity: TaxiEndNode): void {
+        entity.Mount.set(0)
+              .Name.clear()
+              .Position.setSpread(0,0,0,0)
     }
-    protected id(v: TaxiEndNode): number {
-        return v.ID;
+    protected Clone(entity: TaxiEndNode, parent: TaxiEndNode): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): TaxiEndNode {
-        return new TaxiEndNode(DBC.TaxiNodes.findById(this.cell.get()));
+    protected FindByID(id: number): TaxiNodesRow {
+        return DBC.TaxiNodes.findById(id);
+    }
+    protected EmptyQuery(): TaxiNodesQuery {
+        return {}
+    }
+    ID(e: TaxiEndNode): number {
+        return e.ID
+    }
+    protected Entity(r: TaxiNodesRow): TaxiEndNode {
+        return new TaxiEndNode(r);
     }
 }
+
+export const TaxiEndNodeRegistry = new TaxiEndNodeRegistryClass();

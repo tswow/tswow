@@ -91,7 +91,7 @@ export class GemRegistryClass
     protected EmptyQuery(): GemPropertiesQuery {
         return {}
     }
-    protected ID(e: Gem): number {
+    ID(e: Gem): number {
         return e.ID
     }
     protected Table(): Table<any, GemPropertiesQuery, GemPropertiesRow> {

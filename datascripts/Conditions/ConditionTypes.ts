@@ -3,11 +3,11 @@ import { MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
 import { conditionsRow } from "wotlkdata/sql/types/conditions";
 import { AchievementRegistry } from "../Achievement/Achievement";
 import { AreaRegistry } from "../Area/Area";
-import { CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { CreatureTypeEnumReadOnly } from "../Creature/CreatureType";
 import { FactionRegistry } from "../Faction/Faction";
-import { GameEventRefReadOnly } from "../GameEvent/GameEvent";
-import { GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
+import { GameEventRegistry } from "../GameEvent/GameEvent";
+import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MapRegistry } from "../Map/Maps";
 import { ClassMaskReadOnly } from "../Misc/ClassMask";
@@ -119,7 +119,7 @@ export class ConditionWorldState extends ConditionBase {
 }
 
 export class ConditionActiveEvent extends ConditionBase {
-    get Event() { return new GameEventRefReadOnly(this, this.v1); }
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionInstanceInfoType extends EnumCellReadOnly<ConditionInstanceInfo> {
@@ -199,13 +199,13 @@ export class ConditionQuestComplete extends ConditionBase {
 }
 
 export class ConditionNearCreature extends ConditionBase {
-    get Creature() { return new CreatureTemplateRefReadOnly(this, this.v1); }
+    get Creature() { return CreatureTemplateRegistry.readOnlyRef(this, this.v1); }
     get Distance() { return this.v2; }
 }
 
 export class ConditionNearGameObject extends ConditionBase {
     get GameObject() {
-        return new GameObjectTemplateRefReadOnly(this, this.v1);
+        return GORegistry.Plain.readOnlyRef(this, this.v1);
     }
     get Distance() { return this.v2; }
 }

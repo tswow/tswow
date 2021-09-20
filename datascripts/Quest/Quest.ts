@@ -107,37 +107,3 @@ export class Quest extends MainEntity<quest_templateRow> {
     get GameEvents() { return new QuestGameEventsForward(this); }
     readonly GameEventPoints = new QuestGameEventCondition(this);
 }
-
-export class QuestRef<T> extends RefStatic<T,Quest> {
-    protected create(mod: string, id: string): Quest {
-        return QuestRegistry.create(mod,id);
-    }
-    protected clone(mod: string, id: string): Quest {
-        return new Quest(
-            SQL.quest_template
-                .add(Ids.quest_template.id(mod,id)
-            )
-        )
-    }
-
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-
-    protected id(v: Quest): number {
-        return v.ID;
-    }
-
-    protected resolve(): Quest {
-        return QuestRegistry.load(this.cell.get());
-    }
-}
-
-export class QuestRefReadOnly<T> extends RefReadOnly<T,Quest> {
-    getRef(): Quest {
-        return QuestRegistry.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}

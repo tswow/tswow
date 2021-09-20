@@ -7,7 +7,7 @@ import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { RefNoCreate } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";
-import { TaxiEndNode, TaxiEndNodeRef } from "./TaxiEndNode";
+import { TaxiEndNode, TaxiEndNodeRegistry } from "./TaxiEndNode";
 import { TaxiPathNodes } from "./TaxiPathNode";
 
 const ALLIANCE_DEFAULT_MOUNT = 541;
@@ -15,8 +15,12 @@ const HORDE_DEFAULT_MOUNT = 2224;
 
 export class TaxiPath extends MainEntity<TaxiPathRow> {
     get ID() { return this.row.ID.get(); }
-    get Start() { return new TaxiEndNodeRef(this, this.row.FromTaxiNode); }
-    get End() { return new TaxiEndNodeRef(this, this.row.ToTaxiNode); }
+    get Start() {
+        return TaxiEndNodeRegistry.ref(this, this.row.FromTaxiNode);
+    }
+    get End() {
+        return TaxiEndNodeRegistry.ref(this, this.row.ToTaxiNode);
+    }
     get Nodes(): TaxiPathNodes { return new TaxiPathNodes(this); }
     get Cost() {  return this.wrap(this.row.Cost) }
 }
@@ -44,7 +48,7 @@ export class TaxiPathRegistryClass
     protected EmptyQuery(): TaxiPathQuery {
         return {}
     }
-    protected ID(e: TaxiPath): number {
+    ID(e: TaxiPath): number {
         return e.ID
     }
     protected Table(): Table<any, TaxiPathQuery, TaxiPathRow> & { add: (id: number) => TaxiPathRow; } {

@@ -22,7 +22,7 @@ import { Trainer } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
 import { Gossip } from "./Gossip";
 import { GossipOption } from "./GossipOption";
-import { Gossips } from "./Gossips";
+import { GossipRegistry } from "./Gossips";
 
 export class GossipOptionType extends CellSystem<GossipOption> {
     protected set(value: number, npcValue: number, action = 0) {
@@ -63,7 +63,7 @@ export class GossipOptionType extends CellSystem<GossipOption> {
     }
 
     setNewGossip(callback: (gossip: Gossip)=>void) {
-        const gossip = Gossips.create();
+        const gossip = GossipRegistry.create();
         this.set(1,1,gossip.ID);
         callback(gossip);
         return this.owner;

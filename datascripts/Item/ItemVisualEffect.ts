@@ -1,9 +1,10 @@
 import { DBC } from "wotlkdata";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
+import { ItemVisualsQuery, ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');
@@ -24,6 +25,8 @@ export function effectToPath(effect: number) {
 
 // TODO: This should be called "ItemVisuals", not "ItemEffects"
 export class ItemEffects extends MainEntity<ItemVisualsRow> {
+    get ID() { return this.row.ID.get(); }
+
     get length(): number {
         return 5;
     }
@@ -77,20 +80,33 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
     }
 }
 
-export class ItemEffectsPointer<T> extends Ref<T,ItemEffects> {
-    exists(): boolean {
-        return this.cell.get() == 0;
+export class ItemEffectsRegistryClass
+    extends RegistryDynamic<ItemEffects,ItemVisualsRow,ItemVisualsQuery>
+{
+    protected Table(): Table<any, ItemVisualsQuery, ItemVisualsRow> & { add: (id: number) => ItemVisualsRow; } {
+        return DBC.ItemVisuals
     }
-    protected create(): ItemEffects {
-        return new ItemEffects(DBC.ItemVisuals.add(Ids.ItemVisuals.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.ItemVisuals
     }
-    protected clone(): ItemEffects {
-        return new ItemEffects(this.resolve().row.clone(Ids.ItemVisuals.id()));
+    Clear(entity: ItemEffects): void {
+        entity.clearAll();
     }
-    protected id(v: ItemEffects): number {
-        return v.row.ID.get()
+    protected Clone(entity: ItemEffects, parent: ItemEffects): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): ItemEffects {
-        return new ItemEffects(DBC.ItemVisuals.findById(this.cell.get()));
+    protected FindByID(id: number): ItemVisualsRow {
+        return DBC.ItemVisuals.findById(id);
+    }
+    protected EmptyQuery(): ItemVisualsQuery {
+        return {}
+    }
+    ID(e: ItemEffects): number {
+        return e.ID
+    }
+    protected Entity(r: ItemVisualsRow): ItemEffects {
+        return new ItemEffects(r);
     }
 }
+
+export const ItemEffectsRegistry = new ItemEffectsRegistryClass();

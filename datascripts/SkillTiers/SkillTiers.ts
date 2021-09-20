@@ -56,7 +56,7 @@ export class SkillTiersRegistryClass
     protected EmptyQuery(): SkillTiersQuery {
         return {}
     }
-    protected ID(e: SkillTiers): number {
+    ID(e: SkillTiers): number {
         return e.ID
     }
 }

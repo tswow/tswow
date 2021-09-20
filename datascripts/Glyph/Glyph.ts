@@ -184,7 +184,7 @@ export class GlyphRegistryClass
     protected EmptyQuery(): GlyphPropertiesQuery {
         return {}
     }
-    protected ID(e: Glyph): number {
+    ID(e: Glyph): number {
         return e.ID
     }
 }

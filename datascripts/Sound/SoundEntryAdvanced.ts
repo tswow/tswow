@@ -1,8 +1,9 @@
 import { DBC } from "wotlkdata";
 import { SoundEntriesAdvancedQuery, SoundEntriesAdvancedRow } from "wotlkdata/dbc/types/SoundEntriesAdvanced";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SoundEntryAdvanced extends MainEntity<SoundEntriesAdvancedRow> {
     get ID() { return this.row.ID.get(); }
@@ -29,45 +30,37 @@ export class SoundEntryAdvanced extends MainEntity<SoundEntriesAdvancedRow> {
     get OuterRadius2D() { return this.wrap(this.row.OuterRadius2D); }
 }
 
-export class SoundEntryAdvancedPointer<T> extends Ref<T,SoundEntryAdvanced> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class SoundEntryAdvancedRegistryClass
+    extends RegistryDynamic<
+          SoundEntryAdvanced
+        , SoundEntriesAdvancedRow
+        , SoundEntriesAdvancedQuery
+    >
+{
+    protected Table(): Table<any, SoundEntriesAdvancedQuery, SoundEntriesAdvancedRow> & { add: (id: number) => SoundEntriesAdvancedRow; } {
+        return DBC.SoundEntriesAdvanced
     }
-
-    protected create(): SoundEntryAdvanced {
-        return SoundEntriesAdvanced.create();
+    protected ids(): DynamicIDGenerator {
+        return Ids.SoundEntriesAdvanced
     }
-
-    protected clone(): SoundEntryAdvanced {
-        return new SoundEntryAdvanced(SoundEntriesAdvanced
-            .load(this.cell.get()).row
-            .clone(Ids.SoundEntriesAdvanced.id()));
+    Clear(entity: SoundEntryAdvanced): void {
+        // I have no idea
+        throw new Error("Method not implemented.");
     }
-
-    protected id(v: SoundEntryAdvanced): number {
-        return v.ID;
+    protected Clone(entity: SoundEntryAdvanced, parent: SoundEntryAdvanced): void {
+        throw new Error("Method not implemented.");
     }
-
-    protected resolve(): SoundEntryAdvanced {
-        return new SoundEntryAdvanced(
-            DBC.SoundEntriesAdvanced.findById(this.cell.get()))
+    protected FindByID(id: number): SoundEntriesAdvancedRow {
+        return DBC.SoundEntriesAdvanced.findById(id);
     }
-}
-
-export const SoundEntriesAdvanced = {
-    create() {
-        return new SoundEntryAdvanced(DBC.SoundEntriesAdvanced.add(Ids.SoundEntriesAdvanced.id()))
-    },
-
-    load(id: number) {
-        return new SoundEntryAdvanced(DBC.SoundEntriesAdvanced.findById(id))
-    },
-
-    filter(query: SoundEntriesAdvancedQuery) {
-        return DBC.SoundEntriesAdvanced.filter(query).map(x=>new SoundEntryAdvanced(x));
-    },
-
-    find(query: SoundEntriesAdvancedQuery) {
-        return new SoundEntryAdvanced(DBC.SoundEntriesAdvanced.find(query))
+    protected EmptyQuery(): SoundEntriesAdvancedQuery {
+        return {}
+    }
+    ID(e: SoundEntryAdvanced): number {
+        return e.ID
+    }
+    protected Entity(r: SoundEntriesAdvancedRow): SoundEntryAdvanced {
+        return new SoundEntryAdvanced(r);
     }
 }
+export const SoundEntryAdvancedRegistry = new SoundEntryAdvancedRegistryClass();

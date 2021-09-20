@@ -15,11 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { SpellRuneCostRow } from "wotlkdata/dbc/types/SpellRuneCost";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { SpellRuneCostQuery, SpellRuneCostRow } from "wotlkdata/dbc/types/SpellRuneCost";
+import { Table } from "wotlkdata/table/Table";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 import { Spell } from "./Spell";
 
 export const PowerTypeMap = {
@@ -64,31 +68,62 @@ export class Power<T> extends CellSystem<T> {
     }
 }
 
-export class SpellRuneCostPointer extends Ref<Spell,SpellRuneCostRow> {
-    exists(): boolean {
-        return this.cell.get() != 0;
-    }
+export class SpellRuneCost extends MainEntity<SpellRuneCostRow> {
+    get ID() { return this.row.ID.get(); }
+    get RunicPower() { return this.wrap(this.row.RunicPower); }
+    get Blood() { return this.wrap(this.row.Blood); }
+    get Frost() { return this.wrap(this.row.Frost); }
+    get Unholy() { return this.wrap(this.row.Unholy); }
+}
 
-    protected id(v: SpellRuneCostRow) {
-        return v.ID.get();
-    }
+export class SpellRuneCostRef<T> extends RefDynamic<T,SpellRuneCost> {
 
-    protected create(): SpellRuneCostRow {
-        return DBC.SpellRuneCost.add(Ids.SpellRuneCost.id())
-            .Blood.set(0)
-            .Frost.set(0)
-            .RunicPower.set(0)
-            .Unholy.set(0)
-    }
-
-    protected clone(): SpellRuneCostRow {
-        return this.resolve().clone(Ids.SpellRuneCost.id());
-    }
-
-    protected resolve(): SpellRuneCostRow {
-        return DBC.SpellRuneCost.findById(this.owner.row.RuneCostID.get());
+    setSimple(runicPower: number, blood: number, frost: number, unholy: number) {
+        this.getRefCopy()
+            .RunicPower.set(runicPower)
+            .Blood.set(blood)
+            .Frost.set(frost)
+            .Unholy.set(unholy)
+        return this.owner;
     }
 }
+
+export class SpellRuneCostRegistryClass
+    extends RegistryDynamicNoRef<SpellRuneCost,SpellRuneCostRow,SpellRuneCostQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellRuneCostRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellRuneCostQuery, SpellRuneCostRow> & { add: (id: number) => SpellRuneCostRow; } {
+        return DBC.SpellRuneCost
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellRuneCost
+    }
+    Clear(entity: SpellRuneCost): void {
+        entity.Blood.set(0)
+              .Frost.set(0)
+              .RunicPower.set(0)
+              .Unholy.set(0)
+    }
+    protected Clone(entity: SpellRuneCost, parent: SpellRuneCost): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellRuneCostRow {
+        return DBC.SpellRuneCost.findById(id);
+    }
+    protected EmptyQuery(): SpellRuneCostQuery {
+        return {}
+    }
+    ID(e: SpellRuneCost): number {
+        return e.ID
+    }
+    protected Entity(r: SpellRuneCostRow): SpellRuneCost {
+        return new SpellRuneCost(r);
+    }
+}
+
+export const SpellRuneCostRegistry = new SpellRuneCostRegistryClass()
 
 export class SpellPower<T> extends CellSystem<T> {
     @Transient
@@ -104,7 +139,7 @@ export class SpellPower<T> extends CellSystem<T> {
     get PowerCostPerLevel() { return this.ownerWrap(this.spell.row.ManaCostPerLevel);}
     get PowerPerSecond() { return this.ownerWrap(this.spell.row.ManaPerSecond);}
     get PowerPerSecondPerLevel() { return this.ownerWrap(this.spell.row.ManaPerSecondPerLevel);}
-    get RuneCost() { return new SpellRuneCostPointer(this.spell, this.spell.row.RuneCostID); }
+    get RuneCost() { return SpellRuneCostRegistry.ref(this.spell, this.spell.row.RuneCostID); }
 
     /**
      * Sets this spell to use mana

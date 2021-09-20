@@ -73,7 +73,7 @@ export class FactionRegistryClass
     protected EmptyQuery(): FactionQuery {
         return {}
     }
-    protected ID(e: Faction): number {
+    ID(e: Faction): number {
         return e.ID;
     }
 

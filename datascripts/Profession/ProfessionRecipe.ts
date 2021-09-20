@@ -3,7 +3,7 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
-import { SpellCastTimePointer } from "../Spell/SpellCastTime";
+import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { SpellRegistry } from "../Spell/Spells";
 import { std } from "../tswow-stdlib-data";
@@ -66,7 +66,7 @@ export class ProfessionRecipe extends CellSystemTop {
     get Ranks() { return new RecipeRank(this, this.spell); }
     get Reagents() { return new SpellReagents(this, this.spell); }
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
-    get CastTime() { return new SpellCastTimePointer(this, this.spell.row.CastingTimeIndex); }
+    get CastTime() { return SpellCastTimeRegistry.ref(this, this.spell.row.CastingTimeIndex); }
 
     LearnOnRank(mod: string, id: string, rank: ProfessionTier) {
         this.profession.Ranks.get(rank).LearnSpells().forEach(x=>

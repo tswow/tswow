@@ -54,7 +54,7 @@ export class LoadingScreenRegistryClass
     protected EmptyQuery(): LoadingScreensQuery {
         return {}
     }
-    protected ID(e: LoadingScreen): number {
+    ID(e: LoadingScreen): number {
         return e.ID
     }
 

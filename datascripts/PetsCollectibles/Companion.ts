@@ -2,7 +2,7 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Table } from "wotlkdata/table/Table";
-import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -87,7 +87,7 @@ export class Companion extends MainEntity<SpellRow> {
 
     get Items() { return new CompanionItems(this); }
     get Creature() {
-        return new CreatureTemplateRef(
+        return CreatureTemplateRegistry.ref(
               this
             , this.wrapIndex(this.row.EffectMiscValue,this.mountIndex())
         )
@@ -153,7 +153,7 @@ export class CompanionRegistryClass
     protected EmptyQuery(): SpellQuery {
         return {}
     }
-    protected ID(e: Companion): number {
+    ID(e: Companion): number {
         return e.ID;
     }
 }

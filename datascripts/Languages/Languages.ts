@@ -181,7 +181,7 @@ export class LanguageRegistryClass extends RegistryStatic<WoWLanguage,LanguagesR
     protected EmptyQuery(): LanguagesQuery {
         return {}
     }
-    protected ID(e: WoWLanguage): number {
+    ID(e: WoWLanguage): number {
         return e.ID;
     }
 

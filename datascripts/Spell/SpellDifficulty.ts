@@ -15,10 +15,13 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC } from "wotlkdata";
-import { SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { SpellDifficultyQuery, SpellDifficultyRow } from "wotlkdata/dbc/types/SpellDifficulty";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     clear(): this {
@@ -26,10 +29,13 @@ export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
         return this;
     }
 
-    get Normal10Man() { return this.row.DifficultySpellID.getIndex(0); }
-    get Normal25Man() { return this.row.DifficultySpellID.getIndex(1); }
-    get Heroic10Man() { return this.row.DifficultySpellID.getIndex(2); }
-    get Heroic25Man() { return this.row.DifficultySpellID.getIndex(3); }
+    get ID() { return this.row.ID.get(); }
+
+    get Normal10Man() { return this.wrapIndex(this.row.DifficultySpellID,0); }
+    get Normal25Man() { return this.wrapIndex(this.row.DifficultySpellID,1); }
+
+    get Heroic10Man() { return this.wrapIndex(this.row.DifficultySpellID,2); }
+    get Heroic25Man() { return this.wrapIndex(this.row.DifficultySpellID,3); }
 
     set(normal10Man: number, normal25Man: number, heroic10Man : number, heroic25Man: number) {
         const row = this.row;
@@ -41,20 +47,45 @@ export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     }
 }
 
-export class SpellDifficultyPointer<T> extends Ref<T,SpellDifficulty> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): SpellDifficulty {
-        return new SpellDifficulty(DBC.SpellDifficulty.add(Ids.SpellDifficulty.id()));
-    }
-    protected clone(): SpellDifficulty {
-        return new SpellDifficulty(this.resolve().row.clone(Ids.SpellDifficulty.id()));
-    }
-    protected id(v: SpellDifficulty): number {
-        return v.row.ID.get();
-    }
-    protected resolve(): SpellDifficulty {
-        return new SpellDifficulty(DBC.SpellDifficulty.findById(this.cell.get()))
+export class SpellDifficultyRef<T> extends RefDynamic<T,SpellDifficulty>
+{
+    setSimple(normal10: number, normal25 = 0, heroic10 = 0, heroic25 = 0)
+    {
+        this.getRefCopy().set(normal10,normal25,heroic10,heroic25)
+        return this.owner;
     }
 }
+
+export class SpellDifficultyRegistryClass
+    extends RegistryDynamicNoRef<SpellDifficulty,SpellDifficultyRow,SpellDifficultyQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellDifficultyRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellDifficultyQuery, SpellDifficultyRow> & { add: (id: number) => SpellDifficultyRow; } {
+        return DBC.SpellDifficulty
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellDifficulty
+    }
+    Clear(entity: SpellDifficulty): void {
+        entity.set(0,0,0,0)
+    }
+    protected Clone(entity: SpellDifficulty, parent: SpellDifficulty): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellDifficultyRow {
+        return DBC.SpellDifficulty.findById(id);
+    }
+    protected EmptyQuery(): SpellDifficultyQuery {
+        return {}
+    }
+    ID(e: SpellDifficulty): number {
+        return e.ID
+    }
+    protected Entity(r: SpellDifficultyRow): SpellDifficulty {
+        return new SpellDifficulty(r);
+    }
+}
+
+export const SpellDifficultyRegistry = new SpellDifficultyRegistryClass();

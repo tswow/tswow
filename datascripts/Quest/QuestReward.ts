@@ -17,12 +17,13 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { quest_templateQuery, quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { Table } from "wotlkdata/table/Table";
 import { FactionRegistry } from "../Faction/Faction";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/RefOld";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
 import { Quest } from "./Quest";
 import { QuestRewardMail } from "./QuestAddon";
 import { QuestDifficultyIndex } from "./QuestDifficultyIndex";
@@ -307,28 +308,32 @@ export class QuestRewardStandalone extends MainEntity<quest_templateRow> {
     get ArenaPoints() { return this.ownerWrap(this.row.RewardArenaPoints)}
 }
 
-export class QuestRewardRef<T> extends RefStatic<T,QuestRewardStandalone> {
-    protected create(mod: string, id: string): QuestRewardStandalone {
-        return new QuestRewardStandalone(QuestRegistry.create(mod,id).row);
+export class QuestRewardRegistryClass
+    extends RegistryStatic<QuestRewardStandalone,quest_templateRow,quest_templateQuery>
+{
+    protected Table(): Table<any, quest_templateQuery, quest_templateRow> & { add: (id: number) => quest_templateRow; } {
+        return SQL.quest_template
     }
-
-    protected clone(mod: string, id: string): QuestRewardStandalone {
-        return new QuestRewardStandalone(
-            SQL.quest_template
-                .find({ID:this.cell.get()})
-                .clone(Ids.quest_template.id(mod,id))
-            )
+    protected IDs(): StaticIDGenerator {
+        return Ids.quest_template
     }
-
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Clear(r: QuestRewardStandalone): void {
+        return QuestRegistry.Clear(new Quest(r.row));
     }
-
-    protected id(v: QuestRewardStandalone): number {
-        return v.ID;
+    protected Clone(mod: string, name: string, r: QuestRewardStandalone, parent: QuestRewardStandalone): void {
+        throw new Error("Method not implemented.");
     }
-
-    protected resolve(): QuestRewardStandalone {
-        return new QuestRewardStandalone(QuestRegistry.load(this.cell.get()).row)
+    protected FindByID(id: number): quest_templateRow {
+        return SQL.quest_template.find({ID:id});
+    }
+    protected EmptyQuery(): quest_templateQuery {
+        return {}
+    }
+    ID(e: QuestRewardStandalone): number {
+        return e.ID
+    }
+    protected Entity(r: quest_templateRow): QuestRewardStandalone {
+        return new QuestRewardStandalone(r);
     }
 }
+export const QuestRewardRegistry = new QuestRewardRegistryClass();

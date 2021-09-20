@@ -21,9 +21,9 @@ import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Table } from "wotlkdata/table/Table";
-import { HolidayRef } from "../GameEvent/Holiday";
+import { HolidayRegistry } from "../GameEvent/Holiday";
 import { GemRegistry } from "../Gem/Gem";
-import { LockRef } from "../Locks/Lock";
+import { LockRegistry } from "../Locks/Locks";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -33,7 +33,7 @@ import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
 import { ItemDamages } from "./ItemDamage";
-import { ItemDisplayInfoPointer } from "./ItemDisplayInfo";
+import { ItemDisplayinfoRegistry } from "./ItemDisplayInfo";
 import { ItemFlags } from "./ItemFlags";
 import { ItemFlagsCustom } from "./ItemFlagsCustom";
 import { ItemFlagsExtra } from "./ItemFlagsExtra";
@@ -64,7 +64,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
     get StartQuest() { return this.wrap(this.row.startquest); }
-    get Lock() { return new LockRef(this, this.row.lockid); }
+    get Lock() { return LockRegistry.ref(this, this.row.lockid); }
     get RandomProperty() { return this.wrap(this.row.RandomProperty); }
     get RandomSuffix() { return this.wrap(this.row.RandomSuffix); }
 
@@ -110,7 +110,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get ContainerSlots() { return this.wrap(this.row.ContainerSlots); }
     get RequiredDisenchantSkill() { return this.wrap(this.row.RequiredDisenchantSkill); }
     get Duration() { return this.wrap(this.row.duration); }
-    get Holiday() { return new HolidayRef(this, this.row.HolidayId); }
+    get Holiday() { return HolidayRegistry.ref(this, this.row.HolidayId); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get FoodType() { return new ItemFoodType(this, this.row.FoodType); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
@@ -126,7 +126,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get GemProperties() { return GemRegistry.readOnlyRef(this, this.row.GemProperties); }
 
     get DisplayInfo() {
-        return new ItemDisplayInfoPointer(this
+        return ItemDisplayinfoRegistry.ref(this
             , new MulticastCell(this, [this.row.displayid, this.dbcRow.DisplayInfoID]))
     }
 
@@ -170,7 +170,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
     protected EmptyQuery(): item_templateQuery {
         return {}
     }
-    protected ID(e: ItemTemplate): number {
+    ID(e: ItemTemplate): number {
         return e.ID;
     }
     Clear(r: ItemTemplate) {

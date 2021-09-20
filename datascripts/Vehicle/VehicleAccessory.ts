@@ -3,7 +3,8 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { vehicle_accessoryRow } from "wotlkdata/sql/types/vehicle_accessory";
 import { vehicle_template_accessoryRow } from "wotlkdata/sql/types/vehicle_template_accessory";
 import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
-import { CreatureTemplate, CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
+import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { SummonType } from "../Misc/SummonType";
 
@@ -20,7 +21,7 @@ export class VehicleAccessoryBase<
 
 export class VehicleTemplateAccessory extends VehicleAccessoryBase<vehicle_template_accessoryRow> {
     get Creature() {
-        return new CreatureTemplateRefReadOnly(this, this.row.entry);
+        return CreatureTemplateRegistry.readOnlyRef(this, this.row.entry);
     }
 }
 

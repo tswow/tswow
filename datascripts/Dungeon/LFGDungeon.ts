@@ -4,21 +4,40 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LfgDungeonsQuery, LfgDungeonsRow } from "wotlkdata/dbc/types/LfgDungeons";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { lfg_dungeon_templateQuery, lfg_dungeon_templateRow } from "wotlkdata/sql/types/lfg_dungeon_template";
+import { lfg_dungeon_templateRow } from "wotlkdata/sql/types/lfg_dungeon_template";
+import { Table } from "wotlkdata/table/Table";
 import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
 import { MapRegistry } from "../Map/Maps";
+import { MainEntity } from "../Misc/Entity";
 import { FactionEnum } from "../Misc/FactionEnum";
-import { Ids } from "../Misc/Ids";
-import { SQLDBCChild, SQLDBCEntity } from "../Misc/SQLDBCEntity";
-import { RefBase, RefReadOnly } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { RegistryDynamic } from "../Refs/Registry";
 import { LFGDungeonRewards } from "./LFGDungeonRewards";
-import { LFGDungeonGroupRef } from "./LFGGroup";
+import { LFGDungeonGroupRegistry } from "./LFGGroup";
 
-export class LFGPos extends SQLDBCChild<LFGDungeon,LfgDungeonsRow,lfg_dungeon_templateRow,LFGDungeon> {
-    get X() { return this.ownerWrapSQL(0, (row)=>row.position_x)}
-    get Y() { return this.ownerWrapSQL(0, (row)=>row.position_y)}
-    get Z() { return this.ownerWrapSQL(0, (row)=>row.position_z)}
-    get O() { return this.ownerWrapSQL(0, (row)=>row.orientation)}
+export class LFGPos extends MaybeSQLEntity<LFGDungeon,lfg_dungeon_templateRow> {
+    protected createSQL(): lfg_dungeon_templateRow {
+        return SQL.lfg_dungeon_template.add(this.owner.ID)
+            .position_x.set(0)
+            .position_y.set(0)
+            .position_z.set(0)
+            .orientation.set(0)
+            .name.set('LFGPos')
+            .VerifiedBuild.set(17688)
+    }
+    protected findSQL(): lfg_dungeon_templateRow {
+        return SQL.lfg_dungeon_template.find({dungeonId:this.owner.ID})
+    }
+
+    protected isValidSQL(sql: lfg_dungeon_templateRow): boolean {
+        return sql.dungeonId.get() === this.owner.ID
+    }
+
+    get X() { return this.wrapSQL(0, row=>row.position_x); }
+    get Y() { return this.wrapSQL(0, row=>row.position_y); }
+    get Z() { return this.wrapSQL(0, row=>row.position_z); }
+    get O() { return this.wrapSQL(0, row=>row.orientation); }
 
     setSpread(x: number, y: number, z: number, o: number) {
         this.X.set(x);
@@ -28,7 +47,7 @@ export class LFGPos extends SQLDBCChild<LFGDungeon,LfgDungeonsRow,lfg_dungeon_te
         return this.owner;
     }
 
-    exists() { return this.owner.HasSQL(); }
+    exists() { return MaybeSQLEntity.HasSQL(this); }
 
     set(obj: {x: number, y: number, z: number, o: number, map?: number}) {
         if((obj.map !== undefined) && (obj.map !== this.owner.Map.get())) {
@@ -42,11 +61,11 @@ export class LFGPos extends SQLDBCChild<LFGDungeon,LfgDungeonsRow,lfg_dungeon_te
 }
 
 export class LFGLevels extends CellSystem<LFGDungeon> {
-    get Min() { return this.ownerWrap(this.owner.GetDBC().MinLevel)}
-    get Max() { return this.ownerWrap(this.owner.GetDBC().MaxLevel)}
-    get TargetMin() { return this.ownerWrap(this.owner.GetDBC().Target_Level_Min)}
-    get Target() { return this.ownerWrap(this.owner.GetDBC().Target_Level)}
-    get TargetMax() { return this.ownerWrap(this.owner.GetDBC().Target_Level_Max)}
+    get Min() { return this.ownerWrap(this.owner.row.MinLevel)}
+    get Max() { return this.ownerWrap(this.owner.row.MaxLevel)}
+    get TargetMin() { return this.ownerWrap(this.owner.row.Target_Level_Min)}
+    get Target() { return this.ownerWrap(this.owner.row.Target_Level)}
+    get TargetMax() { return this.ownerWrap(this.owner.row.Target_Level_Max)}
 
     set(min: number, max: number, targetMin: number, target: number, targetMax: number) {
         this.Min.set(min);
@@ -65,75 +84,23 @@ export class LFGFlags extends MaskCell32<LFGDungeon> {
     get IsHoliday() { return this.multibits([2,3])}
 }
 
-export class LFGDungeon extends SQLDBCEntity<LfgDungeonsRow, lfg_dungeon_templateRow> {
-    protected id: number;
-    constructor(id: number) {
-        super();
-        this.id = id;
-    }
-
-    protected createDBC(): LfgDungeonsRow {
-        return DBC.LfgDungeons.add(this.id)
-            .Name.clear()
-            .Order_Index.set(0)
-            .Target_Level.set(0)
-            .Target_Level_Max.set(0)
-            .Target_Level_Min.set(0)
-            .TextureFilename.set('')
-            .TypeID.set(0)
-            .Description.clear()
-            .Difficulty.set(0)
-            .ExpansionLevel.set(0)
-            .Faction.set(0)
-            .Flags.set(0)
-            .Group_Id.set(0)
-            .MapID.set(0)
-            .MaxLevel.set(0)
-            .MinLevel.set(0)
-    }
-
-    protected createSQL(): lfg_dungeon_templateRow {
-        return SQL.lfg_dungeon_template.add(this.id)
-            .name.set('')
-            .orientation.set(0)
-            .position_x.set(0)
-            .position_y.set(0)
-            .position_z.set(0)
-            .VerifiedBuild.set(17688)
-    }
-
-    protected findDBC(): LfgDungeonsRow {
-        return DBC.LfgDungeons.find({ID:this.id});
-    }
-
-    protected findSQL(): lfg_dungeon_templateRow {
-        return SQL.lfg_dungeon_template.find({dungeonId:this.id})
-    }
-
-    protected isValidDBC(dbc: LfgDungeonsRow): boolean {
-        return dbc.ID.get() == this.id;
-    }
-
-    protected isValidSQL(sql: lfg_dungeon_templateRow): boolean {
-        return sql.dungeonId.get() == this.id;
-    }
-
+export class LFGDungeon extends MainEntity<LfgDungeonsRow> {
     // dbc fields always exist for LFGDungeon
-    get Name() { return this.wrapLoc(this.GetDBC().Name); }
-    get ID() { return this.GetDBC().ID.get(); }
-    get Map() { return MapRegistry.ref(this, this.GetDBC().MapID); }
-    get Difficulty() { return this.wrap(this.GetDBC().Difficulty); }
-    get Flags() { return new LFGFlags(this, this.GetDBC().Flags); }
-    get Texture() { return this.wrap(this.GetDBC().TextureFilename); }
-    get Description() { return this.wrapLoc(this.GetDBC().Description)}
-    get Type() { return this.wrap(this.GetDBC().TypeID)}
-    get SpawnPosOverride() { return new LFGPos(this,this); }
+    get Name() { return this.wrapLoc(this.row.Name); }
+    get ID() { return this.row.ID.get(); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
+    get Difficulty() { return this.wrap(this.row.Difficulty); }
+    get Flags() { return new LFGFlags(this, this.row.Flags); }
+    get Texture() { return this.wrap(this.row.TextureFilename); }
+    get Description() { return this.wrapLoc(this.row.Description)}
+    get Type() { return this.wrap(this.row.TypeID)}
+    get SpawnPosOverride() { return new LFGPos(this); }
     get Rewards() { return new LFGDungeonRewards(this); }
     get Levels() { return new LFGLevels(this); }
-    get Faction() { return new FactionEnum(this, this.GetDBC().Faction); }
-    get OrderIndex() { return this.wrap(this.GetDBC().Order_Index); }
-    get ExpansionLevel() { return this.wrap(this.GetDBC().Order_Index); }
-    get Group() { return new LFGDungeonGroupRef(this, this.GetDBC().Group_Id)}
+    get Faction() { return new FactionEnum(this, this.row.Faction); }
+    get OrderIndex() { return this.wrap(this.row.Order_Index); }
+    get ExpansionLevel() { return this.wrap(this.row.Order_Index); }
+    get Group() { return LFGDungeonGroupRegistry.ref(this, this.row.Group_Id)}
     get Requirements() {
         return new AccessRequirement(
               this
@@ -165,68 +132,53 @@ export class LFGDungeons<T> extends MultiRowSystem<LFGDungeon,T> {
     }
 
     protected getAllRows(): LFGDungeon[] {
-        return LFGDungeonRegistry.filterDBC({MapID:this.mapId});
+        return LFGDungeonRegistry.queryAll({MapID:this.mapId});
     }
 
     protected isDeleted(value: LFGDungeon): boolean {
-        return value.GetDBC().isDeleted();
+        return value.row.isDeleted();
     }
 }
 
-export class LFGDungeonRefReadOnly<T> extends RefReadOnly<T,LFGDungeon> {
-    getRef(): LFGDungeon {
-        return new LFGDungeon(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
-
-export class LFGDungeonRef<T> extends RefBase<T,LFGDungeon> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-
-    protected id(v: LFGDungeon): number {
-        return v.ID;
-    }
-
-    protected resolve(): LFGDungeon {
-        return LFGDungeonRegistry.load(this.cell.get()) as LFGDungeon;
-    }
-}
-
-
-export const LFGDungeonRegistry = {
-    create() {
-        let dungeon = new LFGDungeon(Ids.LfgDungeons.id());
-        dungeon.GetOrCreateDBC();
-        return dungeon;
-    },
-
-    load(id: number) {
-        return DBC.LfgDungeons.find({ID:id}) ? new LFGDungeon(id) : undefined;
-    },
-
-    filterDBC(query: LfgDungeonsQuery) {
+export class LFGDungeonRegistryClass
+    extends RegistryDynamic<LFGDungeon,LfgDungeonsRow,LfgDungeonsQuery>
+{
+    protected Table(): Table<any, LfgDungeonsQuery, LfgDungeonsRow> & { add: (id: number) => LfgDungeonsRow; } {
         return DBC.LfgDungeons
-            .filter(query)
-            .map(x=>new LFGDungeon(x.ID.get()))
-    },
-
-    findDBC(query: LfgDungeonsQuery) {
-        let res = DBC.LfgDungeons.find(query)
-        return res ? new LFGDungeon(res.ID.get()) : undefined;
-    },
-
-    filterSQL(query: lfg_dungeon_templateQuery) {
-        return SQL.lfg_dungeon_template
-            .filter(query)
-            .map(x=>new LFGDungeon(x.dungeonId.get()))
-    },
-
-    findSQL(query: lfg_dungeon_templateQuery) {
-        let res = SQL.lfg_dungeon_template.find(query)
-        return res ? new LFGDungeon(res.dungeonId.get()) : undefined;
-    },
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.LfgDungeons
+    }
+    Clear(entity: LFGDungeon): void {
+        entity
+            .Levels.set(0,0,0,0,0)
+            .Map.set(0)
+            .Name.clear()
+            .OrderIndex.set(0)
+            .Texture.set('')
+            .Type.set(0)
+            .Description.clear()
+            .Difficulty.set(0)
+            .ExpansionLevel.set(0)
+            .Faction.None.set()
+            .Flags.set(0)
+            .Group.set(0)
+    }
+    protected Clone(entity: LFGDungeon, parent: LFGDungeon): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): LfgDungeonsRow {
+        return DBC.LfgDungeons.find({ID:id});
+    }
+    protected EmptyQuery(): LfgDungeonsQuery {
+        return {}
+    }
+    ID(e: LFGDungeon): number {
+        return e.ID
+    }
+    protected Entity(r: LfgDungeonsRow): LFGDungeon {
+        return new LFGDungeon(r);
+    }
 }
+
+export const LFGDungeonRegistry = new LFGDungeonRegistryClass();

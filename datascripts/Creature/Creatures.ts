@@ -87,7 +87,7 @@ export class CreatureTemplateRegistryClass
     protected EmptyQuery(): creature_templateQuery {
         return {}
     }
-    protected ID(e: CreatureTemplate): number {
+    ID(e: CreatureTemplate): number {
         return e.ID;
     }
 }
@@ -127,7 +127,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
     protected EmptyQuery(): creatureQuery {
         return {}
     }
-    protected ID(e: CreatureInstance): number {
+    ID(e: CreatureInstance): number {
         return e.GUID;
     }
 }

@@ -3,10 +3,11 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldStateUI";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { Ref } from "../Refs/RefOld";
+import { RegistryDynamic } from "../Refs/Registry";
 import { WorldState } from "./WorldState";
 
 export class WorldStateLocation extends CellSystem<WorldStateUI> {
@@ -50,6 +51,7 @@ export class WorldStateUICapturePoint extends CellSystem<WorldStateUI> {
         this.FactionVar.set(factionVar);
         this.GrayPercentVar.set(grayPercentVar);
         this.UnkVar.set(unkVar);
+        return this.owner;
     }
 }
 
@@ -85,55 +87,45 @@ export class WorldStateUI extends MainEntity<WorldStateUIRow> {
     }
 }
 
-export const WorldStateUIRegistry = {
-    create() {
-        let nid = Ids.WorldStateUI.id();
-        return new WorldStateUI(DBC.WorldStateUI.add(nid))
+export class WorldStateUIRegistryClass
+    extends RegistryDynamic<WorldStateUI,WorldStateUIRow,WorldStateUIQuery>
+{
+    protected Table(): Table<any, WorldStateUIQuery, WorldStateUIRow> & { add: (id: number) => WorldStateUIRow; } {
+        return DBC.WorldStateUI
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.WorldStateUI
+    }
+    Clear(entity: WorldStateUI): void {
+        entity
+            .Capture.set('',0,0,0)
             .DynamicIcon.set('')
             .DynamicTooltip.clear()
             .ExtendedUI.set('')
             .ExtendedUIVariable.clearAll()
             .Icon.set('')
-            .Location.set(-1,0)
+            .Location.set(0,0)
             .PhaseShift.set(0)
             .String.clear()
             .Tooltip.clear()
-            .Type.set(0)
+            .Type.Default.set()
             .Variable.set(0)
-    },
-
-    load(id: number) {
-        return new WorldStateUI(DBC.WorldStateUI.find({ID:id}));
-    },
-
-    filter(query: WorldStateUIQuery) {
-        return DBC.WorldStateUI
-            .filter(query)
-            .map(x=>new WorldStateUI(x))
-    },
-
-    find(query: WorldStateUIQuery) {
-        return new WorldStateUI(DBC.WorldStateUI.find(query));
+    }
+    protected Clone(entity: WorldStateUI, parent: WorldStateUI): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): WorldStateUIRow {
+        return DBC.WorldStateUI.find({ID:id});
+    }
+    protected EmptyQuery(): WorldStateUIQuery {
+        return {}
+    }
+    ID(e: WorldStateUI): number {
+        return e.ID
+    }
+    protected Entity(r: WorldStateUIRow): WorldStateUI {
+        return new WorldStateUI(r);
     }
 }
 
-export class WorldStateUIRef<T> extends Ref<T,WorldStateUI> {
-    protected create(): WorldStateUI {
-        return WorldStateUIRegistry.create()
-    }
-    protected clone(): WorldStateUI {
-        return new WorldStateUI(DBC.WorldStateUI
-            .find({ID:this.cell.get()})
-            .clone(Ids.WorldStateUI.id())
-        )
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WorldStateUI): number {
-        return v.ID;
-    }
-    protected resolve(): WorldStateUI {
-        return WorldStateUIRegistry.load(this.cell.get());
-    }
-}
+export const WorldStateUIRegistry = new WorldStateUIRegistryClass();

@@ -1,14 +1,15 @@
 import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/dbc/types/WorldMapOverlay";
+import { Table } from "wotlkdata/table/Table";
 import { AreaRegistry } from "../Area/Area";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/RefOld";
-import { WorldMapAreaRef } from "./WorldMapArea";
+import { RegistryDynamic } from "../Refs/Registry";
+import { WorldMapAreaRegistry } from "./WorldMapArea";
 
 export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
     get Name() { return this.ownerWrap(this.owner.row.TextureName); }
@@ -25,7 +26,7 @@ export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
 
 export class WorldMapOverlay extends MainEntity<WorldMapOverlayRow> {
     get ID() { return this.row.ID.get(); }
-    get MapArea() { return new WorldMapAreaRef(this, this.row.MapAreaID); }
+    get MapArea() { return WorldMapAreaRegistry.ref(this, this.row.MapAreaID); }
     // TODO: fixe
     get Areas() { return new ArrayRefSystemStatic(this, 0, 4,
         (index)=>AreaRegistry.ref(this, this.wrapIndex(this.row.AreaID,index)))
@@ -59,51 +60,39 @@ export class WorldMapOverlay extends MainEntity<WorldMapOverlayRow> {
     }
 }
 
-export const WorldMapOverlayRegistry = {
-    create(parent?: number) {
-        return new WorldMapOverlay(
-            parent
-            ? DBC.WorldMapOverlay
-                .findById(parent)
-                .clone(Ids.WorldMapOverlay.id())
-            : DBC.WorldMapOverlay
-                .add(Ids.WorldMapOverlay.id())
-        );
-    },
-
-    load(id: number) {
-        return new WorldMapOverlay(DBC.WorldMapOverlay.findById(id))
-    },
-
-    filter(query: WorldMapOverlayQuery) {
+export class WorldMapOverlayRegistryClass
+    extends RegistryDynamic<WorldMapOverlay,WorldMapOverlayRow,WorldMapOverlayQuery>
+{
+    protected Table(): Table<any, WorldMapOverlayQuery, WorldMapOverlayRow> & { add: (id: number) => WorldMapOverlayRow; } {
         return DBC.WorldMapOverlay
-            .filter(query)
-            .map(x=>new WorldMapOverlay(x))
-    },
-
-    find(query: WorldMapOverlayQuery) {
-        return new WorldMapOverlay(
-            DBC.WorldMapOverlay
-            .find(query)
-        )
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.WorldMapOverlay
+    }
+    Clear(entity: WorldMapOverlay): void {
+        entity
+            .Areas.clearAll()
+            .HitRect.set(0,0,0,0)
+            .MapArea.set(0)
+            .MapPoint.setSpread(0,0)
+            .Offset.setSpread(0,0)
+            .Texture.set('',0,0)
+    }
+    protected Clone(entity: WorldMapOverlay, parent: WorldMapOverlay): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): WorldMapOverlayRow {
+        return DBC.WorldMapOverlay.findById(id);
+    }
+    protected EmptyQuery(): WorldMapOverlayQuery {
+        return {}
+    }
+    ID(e: WorldMapOverlay): number {
+        return e.ID
+    }
+    protected Entity(r: WorldMapOverlayRow): WorldMapOverlay {
+        return new WorldMapOverlay(r);
     }
 }
 
-
-export class WorldMapOverlayRef<T> extends Ref<T,WorldMapOverlay> {
-    protected create(): WorldMapOverlay {
-        return WorldMapOverlayRegistry.create();
-    }
-    protected clone(): WorldMapOverlay {
-        return WorldMapOverlayRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WorldMapOverlay): number {
-        return v.ID
-    }
-    protected resolve(): WorldMapOverlay {
-        return WorldMapOverlayRegistry.load(this.cell.get());
-    }
-}
+export const WorldMapOverlayRegistry = new WorldMapOverlayRegistryClass();

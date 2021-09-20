@@ -54,7 +54,7 @@ export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery
     protected EmptyQuery(): SpellQuery {
         return {}
     }
-    protected ID(e: Spell): number {
+    ID(e: Spell): number {
         return e.ID;
     }
     Clear(r: Spell) {

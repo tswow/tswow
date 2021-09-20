@@ -29,7 +29,7 @@ export class SkillLineRegistryClass extends RegistryStatic<SkillLine,SkillLineRo
     protected EmptyQuery(): SkillLineQuery {
         return {}
     }
-    protected ID(e: SkillLine): number {
+    ID(e: SkillLine): number {
         return e.ID;
     }
 }

@@ -1,8 +1,10 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "wotlkdata/dbc/types/LfgDungeonGroup";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/RefOld";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class LFGDungeonGroup extends MainEntity<LfgDungeonGroupRow> {
     get ID() { return this.row.ID.get(); }
@@ -11,53 +13,36 @@ export class LFGDungeonGroup extends MainEntity<LfgDungeonGroupRow> {
     get Type() { return this.wrap(this.row.Parent_Group_Id); }
 }
 
-export const LFGDungeonGroupRegistry = {
-    create(parent = 0) {
-        return new LFGDungeonGroup(
-            parent
-            ? DBC.LfgDungeonGroup
-                .find({ID:parent})
-                .clone(Ids.LfgDungeonGroup.id())
-            : DBC.LfgDungeonGroup.add(Ids.LfgDungeonGroup.id())
-        )
-    },
-
-    load(id: number) {
-        let v = DBC.LfgDungeonGroup.find({ID:id});
-        return (v ? new LFGDungeonGroup(v) : undefined) as LFGDungeonGroup
-    },
-
-    filter(query: LfgDungeonGroupQuery) {
+export class LFGDungeonGroupRegistryClass
+    extends RegistryDynamic<LFGDungeonGroup,LfgDungeonGroupRow,LfgDungeonGroupQuery>
+{
+    protected Table(): Table<any, LfgDungeonGroupQuery, LfgDungeonGroupRow> & { add: (id: number) => LfgDungeonGroupRow; } {
         return DBC.LfgDungeonGroup
-            .filter(query)
-            .map(x=>new LFGDungeonGroup(x))
-    },
-
-    find(query: LfgDungeonGroupQuery) {
-        let v = DBC.LfgDungeonGroup
-            .find(query)
-        return (v ? new LFGDungeonGroup(v) : undefined) as LFGDungeonGroup
-    },
-}
-
-export class LFGDungeonGroupRef<T> extends Ref<T,LFGDungeonGroup> {
-    protected create(): LFGDungeonGroup {
-        return LFGDungeonGroupRegistry.create();
     }
-
-    protected clone(): LFGDungeonGroup {
-        return LFGDungeonGroupRegistry.create(this.cell.get());
+    protected ids(): DynamicIDGenerator {
+        return Ids.LfgDungeonGroup
     }
-
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Clear(entity: LFGDungeonGroup): void {
+        entity
+            .Name.clear()
+            .OrderIndex.set(0)
+            .Type.set(0)
     }
-
-    protected id(v: LFGDungeonGroup): number {
-        return v.ID;
+    protected Clone(entity: LFGDungeonGroup, parent: LFGDungeonGroup): void {
+        throw new Error("Method not implemented.");
     }
-
-    protected resolve(): LFGDungeonGroup {
-        return LFGDungeonGroupRegistry.load(this.cell.get())
+    protected FindByID(id: number): LfgDungeonGroupRow {
+        return DBC.LfgDungeonGroup.find({ID:id})
+    }
+    protected EmptyQuery(): LfgDungeonGroupQuery {
+        return {}
+    }
+    ID(e: LFGDungeonGroup): number {
+        return e.ID
+    }
+    protected Entity(r: LfgDungeonGroupRow): LFGDungeonGroup {
+        return new LFGDungeonGroup(r);
     }
 }
+
+export const LFGDungeonGroupRegistry = new LFGDungeonGroupRegistryClass();

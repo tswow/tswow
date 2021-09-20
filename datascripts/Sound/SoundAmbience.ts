@@ -96,7 +96,7 @@ export class SoundAmbienceRegistryClass
     protected EmptyQuery(): SoundAmbienceQuery {
         return {}
     }
-    protected ID(e: SoundAmbience): number {
+    ID(e: SoundAmbience): number {
         return e.ID
     }
 }

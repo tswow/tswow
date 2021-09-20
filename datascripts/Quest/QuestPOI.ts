@@ -1,5 +1,4 @@
 import { SQL } from "wotlkdata";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gt, lt } from "wotlkdata/query/Relations";
 import { quest_poiRow } from "wotlkdata/sql/types/quest_poi";
@@ -8,14 +7,12 @@ import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { RefBase } from "../Refs/RefOld";
-import { WorldMapArea, WorldMapAreaRef, WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
+import { WorldMapArea, WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { Quest } from "./Quest";
 import { QuestRegistry } from "./Quests";
 
 export class QuestPOIPoint extends MainEntity<quest_poi_pointsRow> {
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.QuestID); }
-    get POI() { return new QuestPOIRef(this,new DummyCell(this,0))}
     get Index() { return this.row.Idx2.get(); }
     get Position() {
         return new PositionXYCell(
@@ -59,29 +56,13 @@ export class QuestPOI extends MainEntity<quest_poiRow> {
     get ObjectiveIndex() { return this.wrap(this.row.ObjectiveIndex); }
     get Map() { return MapRegistry.ref(this, this.row.MapID); }
     get WorldMapArea() {
-        return new WorldMapAreaRef(this, this.row.WorldMapAreaId);
+        return WorldMapAreaRegistry.ref(this, this.row.WorldMapAreaId);
     }
     get Floor() { return this.wrap(this.row.Floor); }
     get Priority() { return this.wrap(this.row.Priority); }
     // TODO: figure out the flags
     get Flags() { return this.wrap(this.row.Flags); }
     get Points() { return new QuestPOIPoints(this); }
-}
-
-export class QuestPOIRef extends RefBase<QuestPOIPoint,QuestPOI> {
-    exists(): boolean {
-        return true;
-    }
-    protected id(v: QuestPOI): number {
-        return v.Index;
-    }
-    protected resolve(): QuestPOI {
-        return new QuestPOI(SQL.quest_poi
-            .find({
-                QuestID:this.owner.row.QuestID.get(),
-                id: this.owner.row.Idx1.get()
-            }))
-    }
 }
 
 export class QuestPOIs extends MultiRowSystem<QuestPOI,Quest> {
@@ -112,15 +93,12 @@ export class QuestPOIs extends MultiRowSystem<QuestPOI,Quest> {
                 .reduce(({x,y},c)=>({x:x+c.y,y:y+c.x}),{x:0,y:0})
             x /= points.length;
             y /= points.length;
-            area = WorldMapAreaRegistry.filter({
+            area = WorldMapAreaRegistry.queryAll({
                   MapID:map
                 , LocLeft:gt(x)
                 , LocRight:lt(x)
                 , LocBottom:lt(y)
                 , LocTop:gt(y)
-            })
-            .filter(x=>{
-                return true;
             })
             .sort((a,b)=>{
                 let {x:ax,y:ay} = a.Boundary.GetMiddle();

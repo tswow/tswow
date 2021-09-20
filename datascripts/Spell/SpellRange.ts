@@ -15,11 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { SpellRangeQuery, SpellRangeRow } from "wotlkdata/dbc/types/SpellRange";
 import { loc_constructor } from "wotlkdata/primitives";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class SpellRange extends MainEntity<SpellRangeRow> {
     clear(): this {
@@ -66,24 +69,8 @@ export class SpellRange extends MainEntity<SpellRangeRow> {
     }
 }
 
-export class SpellRangePointer<T> extends Ref<T,SpellRange> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): SpellRange {
-        return new SpellRange(DBC.SpellRange.add(Ids.SpellRange.id()))
-            .clear();
-    }
-    protected clone(): SpellRange {
-        return new SpellRange(this.resolve().row.clone(Ids.SpellRange.id()))
-    }
-    protected id(v: SpellRange): number {
-        return v.ID;
-    }
-    protected resolve(): SpellRange {
-        return new SpellRange(DBC.SpellRange.findById(this.cell.get()));
-    }
-
+export class SpellRangeRef<T> extends RefDynamic<T,SpellRange>
+{
     setSimple(min: number, max: number, flags = 0) {
         this.getRefCopy()
             .FriendMin.set(min)
@@ -94,3 +81,43 @@ export class SpellRangePointer<T> extends Ref<T,SpellRange> {
         return this.owner;
     }
 }
+
+export class SpellRangeRegistryClass
+    extends RegistryDynamicNoRef<SpellRange,SpellRangeRow,SpellRangeQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellRangeRef(owner,cell,this);
+    }
+    protected Table(): Table<any, SpellRangeQuery, SpellRangeRow> & { add: (id: number) => SpellRangeRow; } {
+        return DBC.SpellRange
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellRange
+    }
+    Clear(entity: SpellRange): void {
+        entity.Flags.set(0)
+              .FriendMax.set(0)
+              .FriendMin.set(0)
+              .HostileMax.set(0)
+              .HostileMin.set(0)
+              .Name.clear()
+              .NameShort.clear()
+    }
+    protected Clone(entity: SpellRange, parent: SpellRange): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellRangeRow {
+        return DBC.SpellRange.findById(id);
+    }
+    protected EmptyQuery(): SpellRangeQuery {
+        return {}
+    }
+    ID(e: SpellRange): number {
+        return e.ID;
+    }
+    protected Entity(r: SpellRangeRow): SpellRange {
+        return new SpellRange(r);
+    }
+}
+
+export const SpellRangeRegistry = new SpellRangeRegistryClass();

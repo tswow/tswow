@@ -1,8 +1,9 @@
 import { DBC } from "wotlkdata";
-import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
-import { Ref } from "../Refs/RefOld";
+import { ParticleColorQuery, ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
+import { Table } from "wotlkdata/table/Table";
+import { RegistryDynamic } from "../Refs/Registry";
 import { MainEntity } from "./Entity";
-import { Ids } from "./Ids";
+import { DynamicIDGenerator, Ids } from "./Ids";
 
 export class ParticleColor extends MainEntity<ParticleColorRow> {
     clear(): this {
@@ -43,29 +44,35 @@ export class ParticleColor extends MainEntity<ParticleColorRow> {
     }
 }
 
-export class ParticleColorPointer<T> extends Ref<T,ParticleColor> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class ParticleColorRegistryClass
+    extends RegistryDynamic<ParticleColor,ParticleColorRow,ParticleColorQuery>
+{
+    protected Table(): Table<any, ParticleColorQuery, ParticleColorRow> & { add: (id: number) => ParticleColorRow; } {
+        return DBC.ParticleColor
     }
-
-    protected create(): ParticleColor {
-        return new ParticleColor(DBC.ParticleColor
-            .add(Ids.ParticleColors.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.ParticleColors
     }
-
-    protected clone(): ParticleColor {
-        return new ParticleColor(
-            this.resolve().row
-                .clone(Ids.ParticleColors.id()))
+    Clear(entity: ParticleColor): void {
+        entity
+            .End.fill(0)
+            .Mid.fill(0)
+            .Start.fill(0)
     }
-
-    protected id(v: ParticleColor): number {
-        return v.row.ID.get()
+    protected Clone(entity: ParticleColor, parent: ParticleColor): void {
+        throw new Error("Method not implemented.");
     }
-
-    protected resolve(): ParticleColor {
-        return new ParticleColor(
-            DBC.ParticleColor
-               .findById(this.cell.get()))
+    protected FindByID(id: number): ParticleColorRow {
+        return DBC.ParticleColor.findById(id);
+    }
+    protected EmptyQuery(): ParticleColorQuery {
+        return {}
+    }
+    ID(e: ParticleColor): number {
+        return e.row.ID.get()
+    }
+    protected Entity(r: ParticleColorRow): ParticleColor {
+        return new ParticleColor(r);
     }
 }
+export const ParticleColorRegistry = new ParticleColorRegistryClass();

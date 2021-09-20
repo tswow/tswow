@@ -38,7 +38,7 @@ export class ProfessionRegistryClass
     protected EmptyQuery(): SkillLineQuery {
         return {}
     }
-    protected ID(e: Profession): number {
+    ID(e: Profession): number {
         return e.ID;
     }
 }

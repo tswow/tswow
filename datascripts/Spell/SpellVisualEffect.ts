@@ -1,11 +1,14 @@
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectName";
+import { SpellVisualEffectNameQuery, SpellVisualEffectNameRow } from "wotlkdata/dbc/types/SpellVisualEffectName";
 import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class VisualScale<T> extends CellSystem<T> {
     @Transient
@@ -51,23 +54,7 @@ export class SpellVisualEffect extends MainEntity<SpellVisualEffectNameRow> {
     }
 }
 
-export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): SpellVisualEffect {
-        return new SpellVisualEffect(DBC.SpellVisualEffectName.add(Ids.SpellVisualEffectName.id()))
-    }
-    protected clone(): SpellVisualEffect {
-        return new SpellVisualEffect(this.resolve().row.clone(Ids.SpellVisualEffectName.id()));
-    }
-    protected id(v: SpellVisualEffect): number {
-        return v.row.ID.get()
-    }
-    protected resolve(): SpellVisualEffect {
-        return new SpellVisualEffect(DBC.SpellVisualEffectName.findById(this.cell.get()));
-    }
-
+export class SpellVisualEffectRef<T> extends RefDynamic<T,SpellVisualEffect> {
     setSimple(filename: string, areaSize = 1, scale = 1, scaleMin = 0.0099, scaleMax = 100) {
         let v = this.getRefCopy();
         v
@@ -78,6 +65,47 @@ export class SpellVisualEffectPointer<T> extends Ref<T,SpellVisualEffect> {
         return this.owner;
     }
 }
+
+export class SpellVisualEffectRegistryClass
+    extends RegistryDynamicNoRef<
+          SpellVisualEffect
+        , SpellVisualEffectNameRow
+        , SpellVisualEffectNameQuery
+    >
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellVisualEffectRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellVisualEffectNameQuery, SpellVisualEffectNameRow> & { add: (id: number) => SpellVisualEffectNameRow; } {
+        return DBC.SpellVisualEffectName
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellVisualEffectName
+    }
+    Clear(entity: SpellVisualEffect): void {
+        entity.AreaSize.set(0)
+              .Filename.set('')
+              .Name.set('')
+              .Scale.set(1,1,1)
+    }
+    protected Clone(entity: SpellVisualEffect, parent: SpellVisualEffect): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellVisualEffectNameRow {
+        return DBC.SpellVisualEffectName.findById(id);
+    }
+    protected EmptyQuery(): SpellVisualEffectNameQuery {
+        return {}
+    }
+    ID(e: SpellVisualEffect): number {
+        return e.ID;
+    }
+    protected Entity(r: SpellVisualEffectNameRow): SpellVisualEffect {
+        return new SpellVisualEffect(r);
+    }
+}
+
+export const SpellVisualEffectRegistry = new SpellVisualEffectRegistryClass()
 
 export class SpellVisualEffects<T> extends CellSystem<T> {
     @Transient
@@ -102,7 +130,7 @@ export class SpellVisualEffects<T> extends CellSystem<T> {
     }
 
     get(index: number) {
-        return new SpellVisualEffectPointer(this, this.wrapIndex(this.row.SpecialEffect, index));
+        return SpellVisualEffectRegistry.ref(this, this.wrapIndex(this.row.SpecialEffect, index));
     }
 
     add() {

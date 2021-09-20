@@ -34,7 +34,7 @@ export class LockTypeRegistryClass
     protected EmptyQuery(): LockTypeQuery {
         return {}
     }
-    protected ID(e: LockType): number {
+    ID(e: LockType): number {
         return e.ID;
     }
 }
@@ -64,7 +64,7 @@ export class LockRegistryClass
     protected EmptyQuery(): LockQuery {
         return {}
     }
-    protected ID(e: Lock): number {
+    ID(e: Lock): number {
         return e.ID;
     }
 }

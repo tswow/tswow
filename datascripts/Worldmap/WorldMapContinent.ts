@@ -1,11 +1,12 @@
 import { DBC } from "wotlkdata";
 import { WorldMapContinentQuery, WorldMapContinentRow } from "wotlkdata/dbc/types/WorldMapContinent";
+import { Table } from "wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary, MinMax2DCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/RefOld";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
     get Map() { return MapRegistry.ref(this, this.row.MapID); }
@@ -40,48 +41,43 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
     get ID() { return this.row.ID.get(); }
 }
 
-export const WorldMapContinentRegistry = {
-    create(parent?: number) {
-        return new WorldMapContinent(
-            parent
-            ? DBC.WorldMapContinent.findById(parent)
-                .clone(Ids.WorldMapContinent.id())
-            : DBC.WorldMapContinent.add(Ids.WorldMapContinent.id())
-        )
-    },
-
-    load(id: number) {
-        return new WorldMapContinent(DBC.WorldMapContinent.findById(id));
-    },
-
-    filter(query: WorldMapContinentQuery) {
+export class WorldMapContinentRegistryClass
+    extends RegistryDynamic<
+          WorldMapContinent
+        , WorldMapContinentRow
+        , WorldMapContinentQuery
+    >
+{
+    protected Table(): Table<any, WorldMapContinentQuery, WorldMapContinentRow> & { add: (id: number) => WorldMapContinentRow; } {
         return DBC.WorldMapContinent
-            .filter(query)
-            .map(x=>new WorldMapContinent(x))
-    },
-
-    find(query: WorldMapContinentQuery) {
-        return new WorldMapContinent(
-            DBC.WorldMapContinent
-            .find(query)
-        )
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.WorldMapContinent
+    }
+    Clear(entity: WorldMapContinent): void {
+        entity
+            .Boundary.set(0,0,0,0)
+            .ContinentOffset.setSpread(0,0)
+            .Map.set(0)
+            .Scale.set(0)
+            .Taxi.set(0,0,0,0)
+            .World.set(0)
+    }
+    protected Clone(entity: WorldMapContinent, parent: WorldMapContinent): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): WorldMapContinentRow {
+        return DBC.WorldMapContinent.findById(id);
+    }
+    protected EmptyQuery(): WorldMapContinentQuery {
+        return {}
+    }
+    ID(e: WorldMapContinent): number {
+        return e.ID
+    }
+    protected Entity(r: WorldMapContinentRow): WorldMapContinent {
+        return new WorldMapContinent(r);
     }
 }
 
-export class WorldMapContinentRef<T> extends Ref<T,WorldMapContinent> {
-    protected create(): WorldMapContinent {
-        return WorldMapContinentRegistry.create();
-    }
-    protected clone(): WorldMapContinent {
-        return WorldMapContinentRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WorldMapContinent): number {
-        return v.ID
-    }
-    protected resolve(): WorldMapContinent {
-        return WorldMapContinentRegistry.load(this.cell.get());
-    }
-}
+export const WorldMapContinentRegistry = new WorldMapContinentRegistryClass();

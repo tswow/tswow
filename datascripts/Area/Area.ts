@@ -15,27 +15,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
 import { Table } from "wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
-import { SoundEntryRegistry } from "../Sound/SoundEntry";
+import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
+import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
 import { AreaFlags } from "./AreaFlags";
 import { AreaWorldStateSounds, AreaWorldStateUIs } from "./AreaWorldStates";
+
+export class AreaSoundProviderPreferences extends CellSystem<Area> {
+    get Normal() {
+        return SoundProviderPreferenceRegistry
+            .ref(this, this.owner.row.SoundProviderPref)
+    }
+    get Underwater() {
+        return SoundProviderPreferenceRegistry
+            .ref(this, this.owner.row.SoundProviderPrefUnderwater)
+    }
+}
 
 export class Area extends MainEntity<AreaTableRow> {
     get ExploreBit() { return this.row.ExploreFlag.get(); }
     get ID() { return this.row.ID.get(); }
     get Map() { return MapRegistry.ref(this, this.row.MapID) }
     get ParentArea() { return this.wrap(this.row.ParentAreaID); }
-    get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundProviderPref)}
-    get SoundUnderwater() { return SoundEntryRegistry.ref(this, this.row.SoundProviderPrefUnderwater)}
-    get SoundAmbience() { return SoundEntryRegistry.ref(this, this.row.AmbienceID)}
-    get ZoneMusic() { return ZoneMusicRegistry.ref(this, this.row.ZoneMusic); }
+    get SoundProviderPreferences() { return new AreaSoundProviderPreferences(this); }
+    get SoundAmbience() {
+        return SoundAmbienceRegistry.ref(this, this.row.AmbienceID)
+    }
+    get ZoneMusic() {
+        return ZoneMusicRegistry.ref(this, this.row.ZoneMusic);
+    }
     get IntroMusic() {
         return ZoneIntroMusicRegistry.ref(this, this.row.IntroSound)
     }
@@ -48,6 +64,7 @@ export class Area extends MainEntity<AreaTableRow> {
     get WorldStateSounds() { return new AreaWorldStateSounds(this); }
     get Flags() { return new AreaFlags(this, this.row.Flags); }
 }
+
 
 export class AreaRegistryClass
     extends RegistryStatic<Area,AreaTableRow,AreaTableQuery>
@@ -88,7 +105,7 @@ export class AreaRegistryClass
     protected EmptyQuery(): AreaTableQuery {
         return {}
     }
-    protected ID(e: Area): number {
+    ID(e: Area): number {
         return e.ID;
     }
 }

@@ -18,13 +18,14 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { trainerRow } from "wotlkdata/sql/types/trainer";
+import { trainerQuery, trainerRow } from "wotlkdata/sql/types/trainer";
+import { Table } from "wotlkdata/table/Table";
 import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
-import { Ref } from "../Refs/RefOld";
+import { RegistryDynamic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
 
 export class TrainerLoc extends SQLLocSystem<Trainer> {
@@ -98,20 +99,36 @@ export class Trainer extends MainEntity<trainerRow> {
     }
 }
 
-export class TrainerPointer<T> extends Ref<T,Trainer> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class TrainerRegistryClass
+    extends RegistryDynamic<Trainer,trainerRow,trainerQuery>
+{
+    protected Table(): Table<any, trainerQuery, trainerRow> & { add: (id: number) => trainerRow; } {
+        return SQL.trainer
     }
-    protected create(): Trainer {
-        return new Trainer(SQL.trainer.add(Ids.Trainer.id()));
+    protected ids(): DynamicIDGenerator {
+        return Ids.Trainer
     }
-    protected clone(): Trainer {
-        return new Trainer(this.resolve().row.clone(Ids.Trainer.id()));
+    Clear(entity: Trainer): void {
+        entity
+            .Greeting.clear()
+            .Requirement.set(0)
+            .Type.set(0)
     }
-    protected id(v: Trainer): number {
-        return v.ID;
+    protected Clone(entity: Trainer, parent: Trainer): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): Trainer {
-        return new Trainer(SQL.trainer.find({Id:this.cell.get()}));
+    protected FindByID(id: number): trainerRow {
+        return SQL.trainer.find({Id:id});
+    }
+    protected EmptyQuery(): trainerQuery {
+        return {}
+    }
+    ID(e: Trainer): number {
+        return e.ID
+    }
+    protected Entity(r: trainerRow): Trainer {
+        return new Trainer(r);
     }
 }
+
+export const TrainerRegistry = new TrainerRegistryClass();

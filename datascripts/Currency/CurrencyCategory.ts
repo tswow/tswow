@@ -52,7 +52,7 @@ export class CurrencyCategoryRegistryClass
     protected EmptyQuery(): CurrencyCategoryQuery {
         return {}
     }
-    protected ID(e: CurrencyCategory): number {
+    ID(e: CurrencyCategory): number {
         return e.ID;
     }
 }

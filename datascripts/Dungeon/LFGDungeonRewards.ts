@@ -3,20 +3,20 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { lfg_dungeon_rewardsRow } from "wotlkdata/sql/types/lfg_dungeon_rewards";
 import { MainEntity } from "../Misc/Entity";
-import { QuestRewardRef } from "../Quest/QuestReward";
-import { LFGDungeon, LFGDungeonRefReadOnly } from "./LFGDungeon";
+import { QuestRewardRegistry } from "../Quest/QuestReward";
+import { LFGDungeon, LFGDungeonRegistry } from "./LFGDungeon";
 
 export class LFGDungeonReward extends MainEntity<lfg_dungeon_rewardsRow> {
     @Transient
-    get Dungeon() { return new LFGDungeonRefReadOnly(this, this.row.dungeonId); }
+    get Dungeon() { return LFGDungeonRegistry.readOnlyRef(this, this.row.dungeonId); }
 
     get MaxLevel() { return this.row.maxLevel.get(); }
 
     /** Reward the first time this lfg dungeon is completed in a day */
-    get FirstReward() { return new QuestRewardRef(this, this.row.firstQuestId); }
+    get FirstReward() { return QuestRewardRegistry.ref(this, this.row.firstQuestId); }
 
     /** Reward other times the lfg dungeon is completed */
-    get OtherReward() { return new QuestRewardRef(this, this.row.otherQuestId); }
+    get OtherReward() { return QuestRewardRegistry.ref(this, this.row.otherQuestId); }
 }
 
 export class LFGDungeonRewards extends MultiRowSystem<LFGDungeonReward,LFGDungeon> {

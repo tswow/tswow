@@ -7,7 +7,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { WorldStateRef } from "./WorldState";
+import { WorldStateRegistry } from "./WorldState";
 
 export class AreaPOIFlags extends MaskCell32<AreaPOI> {
     get ShowMinimapArrow() { return this.bit(0); }
@@ -51,7 +51,7 @@ export class AreaPOI extends MainEntity<AreaPOIRow> {
         return this.wrapLoc(this.row.Description);
     }
     get WorldState() {
-        return new WorldStateRef(this, this.row.WorldStateID)
+        return WorldStateRegistry.refCreate(this, this.row.WorldStateID)
     }
 }
 

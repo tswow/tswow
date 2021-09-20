@@ -4,7 +4,7 @@ import { Map } from "./Map";
 
 export class MapWorldStateUIs extends MultiRowSystem<WorldStateUI,Map> {
     protected getAllRows(): WorldStateUI[] {
-        return WorldStateUIRegistry.filter({MapID:this.owner.ID})
+        return WorldStateUIRegistry.queryAll({MapID:this.owner.ID})
     }
     protected isDeleted(value: WorldStateUI): boolean {
         return value.row.isDeleted()

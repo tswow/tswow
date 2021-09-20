@@ -19,10 +19,12 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { Ref } from "../Refs/RefOld";
+import { RefStatic } from "../Refs/Ref";
+import { RegistryStaticNoRef } from "../Refs/Registry";
 
 function getLocRow(id: number, lang: Language) {
     const row = SQL.broadcast_text_locale.find({ID: id, locale: lang});
@@ -94,53 +96,11 @@ export class BroadcastText extends MainEntity<broadcast_textRow> {
     }
 }
 
-export const BroadcastTextRegistry = {
-    create(parent = 0) {
-        return new BroadcastText(
-            parent > 0
-                ? SQL.broadcast_text
-                    .find({ID:parent})
-                    .clone(Ids.BroadcastText.id())
-                : SQL.broadcast_text.add(Ids.BroadcastText.id())
-        )
-    },
-
-    load(id: number) {
-        let v = SQL.broadcast_text.find({ID:id});
-        return (v ? new BroadcastText(v) : undefined) as BroadcastText;
-    },
-
-    filter(query: broadcast_textQuery) {
-        return SQL.broadcast_text
-            .filter(query)
-            .map(x=>new BroadcastText(x))
-    },
-
-    find(query: broadcast_textQuery) {
-        let v = SQL.broadcast_text.find(query)
-        return (v ? new BroadcastText(v) : undefined) as BroadcastText;
-    }
-}
-
-export class BroadcastTextRef<T> extends Ref<T,BroadcastText> {
-    protected create(): BroadcastText {
-        return BroadcastTextRegistry.create();
-    }
-    protected clone(): BroadcastText {
-        return BroadcastTextRegistry.create(this.cell.get())
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: BroadcastText): number {
-        return v.ID;
-    }
-    protected resolve(): BroadcastText {
-        return BroadcastTextRegistry.load(this.cell.get());
-    }
-
+export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
     setSimple(langMale: loc_constructor, langFemale?: loc_constructor) {
-        let v = this.getRefCopy();
+        let v = new BroadcastText(
+                    SQL.broadcast_text.add(Ids.BroadcastText.dynamicId())
+                )
         v.MaleText.set(langMale);
         if(langFemale) {
             v.FemaleText.set(langFemale);
@@ -148,3 +108,47 @@ export class BroadcastTextRef<T> extends Ref<T,BroadcastText> {
         return this.owner;
     }
 }
+
+export class BroadcastTextRegistryClass
+    extends RegistryStaticNoRef<BroadcastText,broadcast_textRow,broadcast_textQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new BroadcastTextRef(owner, cell, this);
+    }
+    protected Table(): Table<any, broadcast_textQuery, broadcast_textRow> & { add: (id: number) => broadcast_textRow; } {
+        return SQL.broadcast_text
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.BroadcastText
+    }
+
+    Clear(r: BroadcastText): void {
+        r.Emote1.set(0)
+         .Emote2.set(0)
+         .Emote3.set(0)
+         .EmoteDelay1.set(0)
+         .EmoteDelay2.set(0)
+         .EmoteDelay3.set(0)
+         .FemaleText.clear()
+         .Flags.set(0)
+         .MaleText.clear()
+         .SoundEntry.set(0)
+    }
+
+    protected Clone(mod: string, name: string, r: BroadcastText, parent: BroadcastText): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): broadcast_textRow {
+        return SQL.broadcast_text.find({ID:id})
+    }
+    protected EmptyQuery(): broadcast_textQuery {
+        return {}
+    }
+    ID(e: BroadcastText): number {
+        return e.ID
+    }
+    protected Entity(r: broadcast_textRow): BroadcastText {
+        return new BroadcastText(r);
+    }
+}
+export const BroadcastTextRegistry = new BroadcastTextRegistryClass();

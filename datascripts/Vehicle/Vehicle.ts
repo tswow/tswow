@@ -3,13 +3,14 @@ import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { VehicleQuery, VehicleRow } from "wotlkdata/dbc/types/Vehicle";
+import { Table } from "wotlkdata/table/Table";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { HorizontalBoundary } from "../Misc/LimitCells";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { Ref, RefReadOnly } from "../Refs/RefOld";
-import { VehicleSeatRef } from "./VehicleSeat";
+import { RegistryDynamic } from "../Refs/Registry";
+import { VehicleSeatRegistry } from "./VehicleSeat";
 import { VehicleUIIndicatorCell } from "./VehicleUIIndicator";
 
 export class VehicleFlags extends MaskCell32<Vehicle> {
@@ -161,8 +162,8 @@ export class Vehicle extends MainEntity<VehicleRow> {
             this
             , 0
             , 8
-            ,  index => new VehicleSeatRef (
-                    this
+            ,  index => VehicleSeatRegistry.ref(
+                      this
                     , this.wrapIndex(this.row.SeatID,index)
                 )
             )
@@ -189,56 +190,34 @@ export class Vehicle extends MainEntity<VehicleRow> {
     }
 }
 
-export const VehicleRegistry = {
-    create(parent?: number) {
-        return new Vehicle(
-            parent
-            ? DBC.Vehicle.findById(parent).clone(Ids.Vehicle.id())
-            // TODO: how to clear this?
-            : DBC.Vehicle.add(Ids.Vehicle.id())
-        )
-    },
-
-    load(id: number) {
-        let res = DBC.Vehicle.findById(id);
-        return (res ? new Vehicle(res) : undefined) as Vehicle;
-    },
-
-    filter(query: VehicleQuery) {
+export class VehicleRegistryClass
+    extends RegistryDynamic<Vehicle,VehicleRow,VehicleQuery>
+{
+    protected Table(): Table<any, VehicleQuery, VehicleRow> & { add: (id: number) => VehicleRow; } {
         return DBC.Vehicle
-            .filter(query)
-            .map(x=> new Vehicle(x))
-    },
-
-    find(query: VehicleQuery) {
-        let res = DBC.Vehicle.find(query);
-        return (res ? new Vehicle(res) : undefined) as Vehicle;
-    },
-}
-
-export class VehicleRef<T> extends Ref<T,Vehicle> {
-    protected create(): Vehicle {
-        return VehicleRegistry.create();
     }
-    protected clone(): Vehicle {
-        return VehicleRegistry.create(this.cell.get());
+    protected ids(): DynamicIDGenerator {
+        return Ids.Vehicle
     }
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Clear(entity: Vehicle): void {
+        // I have no idea
+        throw new Error("Method not implemented.");
     }
-    protected id(v: Vehicle): number {
-        return v.ID;
+    protected Clone(entity: Vehicle, parent: Vehicle): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): Vehicle {
-        return VehicleRegistry.load(this.cell.get());
+    protected FindByID(id: number): VehicleRow {
+        return DBC.Vehicle.findById(id);
+    }
+    protected EmptyQuery(): VehicleQuery {
+        return {}
+    }
+    ID(e: Vehicle): number {
+        return e.ID
+    }
+    protected Entity(r: VehicleRow): Vehicle {
+        return new Vehicle(r);
     }
 }
 
-export class VehicleRefReadOnly<T> extends RefReadOnly<T,Vehicle> {
-    getRef(): Vehicle {
-        return VehicleRegistry.load(this.cell.get())
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
+export const VehicleRegistry = new VehicleRegistryClass();

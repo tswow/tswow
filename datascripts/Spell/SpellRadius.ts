@@ -15,10 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { SpellRadiusQuery, SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class SpellRadius extends MainEntity<SpellRadiusRow> {
     clear(): this {
@@ -46,27 +49,8 @@ export class SpellRadius extends MainEntity<SpellRadiusRow> {
     }
 }
 
-export class SpellRadiusRef<T> extends Ref<T,SpellRadius> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-
-    protected create(): SpellRadius {
-        return new SpellRadius(DBC.SpellRadius.add(Ids.SpellRadius.id()));
-    }
-
-    protected clone(): SpellRadius {
-        return new SpellRadius(this.resolve().row.clone(Ids.SpellRadius.id()));
-    }
-
-    protected id(v: SpellRadius): number {
-        return v.ID;
-    }
-
-    protected resolve(): SpellRadius {
-        return new SpellRadius(DBC.SpellRadius.findById(this.cell.get()));
-    }
-
+export class SpellRadiusRef<T> extends RefDynamic<T,SpellRadius>
+{
     setSimple(base: number, perLevel: number = 0, max: number = base + perLevel*255) {
         this.getRefCopy()
             .Radius.set(base)
@@ -75,3 +59,36 @@ export class SpellRadiusRef<T> extends Ref<T,SpellRadius> {
         return this.owner;
     }
 }
+
+export class SpellRadiusRegistryClass
+    extends RegistryDynamicNoRef<SpellRadius,SpellRadiusRow,SpellRadiusQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellRadiusRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellRadiusQuery, SpellRadiusRow> & { add: (id: number) => SpellRadiusRow; } {
+        return DBC.SpellRadius
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellRadius
+    }
+    Clear(entity: SpellRadius): void {
+        entity.set(0,0,0)
+    }
+    protected Clone(entity: SpellRadius, parent: SpellRadius): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellRadiusRow {
+        return DBC.SpellRadius.findById(id);
+    }
+    protected EmptyQuery(): SpellRadiusQuery {
+        return {}
+    }
+    ID(e: SpellRadius): number {
+        return e.ID
+    }
+    protected Entity(r: SpellRadiusRow): SpellRadius {
+        return new SpellRadius(r);
+    }
+}
+export const SpellRadiusRegistry = new SpellRadiusRegistryClass();

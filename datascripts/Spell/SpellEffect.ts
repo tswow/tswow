@@ -27,7 +27,7 @@ import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
-import { SpellRadiusRef } from "./SpellRadius";
+import { SpellRadius, SpellRadiusRef, SpellRadiusRegistry } from "./SpellRadius";
 import { SpellRegistry } from "./Spells";
 import { SpellTargetPosition } from "./SpellTargetPosition";
 
@@ -252,7 +252,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
     @Transient
     get row() { return this.container.row; }
 
-    get Radius() { return new SpellRadiusRef(this, this.w(this.row.EffectRadiusIndex)); }
+    get Radius() { return SpellRadiusRegistry.ref(this, this.w(this.row.EffectRadiusIndex)); }
     get ItemType() { return this.w(this.row.EffectItemType); }
     get AuraType(): AuraType { return new AuraType(this, this.index); }
     get EffectType(): SpellEffectType { return new SpellEffectType(this, this.index); }

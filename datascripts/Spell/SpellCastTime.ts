@@ -15,10 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { SpellCastTimesQuery, SpellCastTimesRow } from "wotlkdata/dbc/types/SpellCastTimes";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class SpellCastTime extends MainEntity<SpellCastTimesRow> {
     clear(): this {
@@ -42,23 +45,8 @@ export class SpellCastTime extends MainEntity<SpellCastTimesRow> {
     get ID() { return this.row.ID.get(); }
 }
 
-export class SpellCastTimePointer<T> extends Ref<T, SpellCastTime> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): SpellCastTime {
-        return new SpellCastTime(DBC.SpellCastTimes.add(Ids.SpellCastTimes.id()));
-    }
-    protected clone(): SpellCastTime {
-        return new SpellCastTime(this.resolve().row.clone(Ids.SpellCastTimes.id()));
-    }
-    protected id(v: SpellCastTime): number {
-        return v.ID;
-    }
-    protected resolve(): SpellCastTime {
-        return new SpellCastTime(DBC.SpellCastTimes.findById(this.cell.get()));
-    }
-
+export class SpellCastTimeRef<T> extends RefDynamic<T,SpellCastTime>
+{
     setSimple(base: number, perLevel: number = 0, minimum: number = 0) {
         this.getRefCopy()
             .Base.set(base)
@@ -67,3 +55,42 @@ export class SpellCastTimePointer<T> extends Ref<T, SpellCastTime> {
         return this.owner;
     }
 }
+
+export class SpellCastTimeRegistryClass
+    extends RegistryDynamicNoRef<
+      SpellCastTime
+    , SpellCastTimesRow
+    , SpellCastTimesQuery
+    >
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellCastTimeRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellCastTimesQuery, SpellCastTimesRow> & { add: (id: number) => SpellCastTimesRow; } {
+        return DBC.SpellCastTimes
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellCastTimes
+    }
+    Clear(entity: SpellCastTime): void {
+        entity.Base.set(0)
+              .Minimum.set(0)
+              .PerLevel.set(0)
+    }
+    protected Clone(entity: SpellCastTime, parent: SpellCastTime): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellCastTimesRow {
+        return DBC.SpellCastTimes.findById(id)
+    }
+    protected EmptyQuery(): SpellCastTimesQuery {
+        return {}
+    }
+    ID(e: SpellCastTime): number {
+        return e.ID
+    }
+    protected Entity(r: SpellCastTimesRow): SpellCastTime {
+        return new SpellCastTime(r);
+    }
+}
+export const SpellCastTimeRegistry = new SpellCastTimeRegistryClass();

@@ -3,11 +3,11 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
-import { SpellCastTimePointer } from "../Spell/SpellCastTime";
+import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";
 import { SpellItemEquips } from "../Spell/SpellItemEquips";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { SpellRegistry } from "../Spell/Spells";
-import { SpellVisualPointer } from "../Spell/SpellVisual";
+import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { std } from "../tswow-stdlib-data";
 import { Enchantment } from "./Enchantment";
 
@@ -21,12 +21,12 @@ export class EnchantmentSpell extends CellSystemTop {
     get ValidTarget() { return new SpellItemEquips(this, this.spell.row); }
     get Reagents() { return new SpellReagents(this, this.spell); }
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
-    get CastTime() { return new SpellCastTimePointer(this, this.spell.row.CastingTimeIndex); }
+    get CastTime() { return SpellCastTimeRegistry.ref(this, this.spell.row.CastingTimeIndex); }
     get SpellFocus() { return this.wrap(this.spell.RequiresSpellFocus); }
     get Name() { return this.wrapLoc(this.spell.Name); }
     get Subtext() { return this.wrapLoc(this.spell.Subtext); }
     get Visual() {
-        return new SpellVisualPointer(
+        return SpellVisualRegistry.ref(
               this
             , this.wrapIndex(this.spell.row.SpellVisualID,0)
         )

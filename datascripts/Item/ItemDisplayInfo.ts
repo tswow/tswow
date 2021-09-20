@@ -14,39 +14,27 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
+import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
+import { Table } from "wotlkdata/table/Table";
 import { DBC, SQL } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { ParticleColorPointer } from "../Misc/ParticleColor";
-import { Ref } from "../Refs/RefOld";
-import { SpellVisualPointer } from "../Spell/SpellVisual";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { ParticleColorRegistry } from "../Misc/ParticleColor";
+import { RegistryDynamic } from "../Refs/Registry";
+import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
-import { ItemEffectsPointer } from "./ItemVisualEffect";
+import { ItemEffectsRegistry } from "./ItemVisualEffect";
 import { ItemVisualModels } from "./ItemVisualModels";
 
 export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
-    clear(): this {
-        this
-            .Flags.set(0)
-            .GeosetGroup.set([0,0,0])
-            .HelmGeosetVis.set([0,0])
-            .Effects.set(0)
-            .Models.clearAll()
-            .Texture.set(["","","","","","","",""])
-            .Icon.set("")
-            .row.ParticleColorID.set(0)
-                .SpellVisualID.set(0)
-        return this;
-    }
-
+    get ID() { return this.row.ID.get(); }
     get Flags() { return this.wrap(this.row.Flags); }
     get GeosetGroup() { return this.wrapArray(this.row.GeosetGroup); }
     get HelmGeosetVis() { return this.wrapArray(this.row.HelmetGeosetVis); }
-    get Effects() { return new ItemEffectsPointer(this, this.row.ItemVisual); }
+    get Effects() { return ItemEffectsRegistry.ref(this, this.row.ItemVisual); }
     get Models() { return new ItemVisualModels(this); }
-    get ParticleColor() { return new ParticleColorPointer(this, this.row.ParticleColorID); }
-    get SpellVisual() { return new SpellVisualPointer(this, this.row.SpellVisualID); }
+    get ParticleColor() { return ParticleColorRegistry.ref(this, this.row.ParticleColorID); }
+    get SpellVisual() { return SpellVisualRegistry.ref(this, this.row.SpellVisualID); }
     get Texture() { return this.wrapArray(this.row.Texture); }
     get Icon() { return new ItemIcon(this); }
 
@@ -64,22 +52,45 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     }
 }
 
-export class ItemDisplayInfoPointer<T> extends Ref<T,ItemDisplayInfo> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class ItemDisplayInfoRegistryClass
+    extends RegistryDynamic<
+          ItemDisplayInfo
+        , ItemDisplayInfoRow
+        , ItemDisplayInfoQuery
+        >
+{
+    protected Table(): Table<any, ItemDisplayInfoQuery, ItemDisplayInfoRow> & { add: (id: number) => ItemDisplayInfoRow; } {
+        return DBC.ItemDisplayInfo
     }
-    protected create(): ItemDisplayInfo {
-        return new ItemDisplayInfo(
-            DBC.ItemDisplayInfo.add(Ids.ItemDisplayInfo.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.ItemDisplayInfo
     }
-    protected clone(): ItemDisplayInfo {
-        return new ItemDisplayInfo(
-            this.resolve().row.clone(Ids.ItemDisplayInfo.id()))
+    Clear(entity: ItemDisplayInfo): void {
+        entity.Effects.set(0)
+              .Flags.set(0)
+              .GeosetGroup.fill(0)
+              .HelmGeosetVis.fill(0)
+              .Icon.set('')
+              .Models.clearAll()
+              .ParticleColor.set(0)
+              .SpellVisual.set(0)
+              .Texture.fill('')
     }
-    protected id(v: ItemDisplayInfo): number {
-        return v.row.ID.get()
+    protected Clone(entity: ItemDisplayInfo, parent: ItemDisplayInfo): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): ItemDisplayInfo {
-        return new ItemDisplayInfo(DBC.ItemDisplayInfo.findById(this.cell.get()));
+    protected FindByID(id: number): ItemDisplayInfoRow {
+        return DBC.ItemDisplayInfo.findById(id);
+    }
+    protected EmptyQuery(): ItemDisplayInfoQuery {
+        return {}
+    }
+    ID(e: ItemDisplayInfo): number {
+        return e.ID
+    }
+    protected Entity(r: ItemDisplayInfoRow): ItemDisplayInfo {
+        return new ItemDisplayInfo(r);
     }
 }
+
+export const ItemDisplayinfoRegistry = new ItemDisplayInfoRegistryClass();

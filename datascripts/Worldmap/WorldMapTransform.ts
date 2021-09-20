@@ -1,12 +1,13 @@
 import { DBC } from "wotlkdata";
 import { WorldMapTransformsQuery, WorldMapTransformsRow } from "wotlkdata/dbc/types/WorldMapTransforms";
+import { Table } from "wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMax2DCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/RefOld";
-import { DungeonMapRef } from "./DungeonMap";
+import { RegistryDynamic } from "../Refs/Registry";
+import { DungeonMapRegistry } from "./DungeonMap";
 
 export class WorldMapTransform extends MainEntity<WorldMapTransformsRow> {
     get ID() { return this.row.ID.get(); }
@@ -31,54 +32,46 @@ export class WorldMapTransform extends MainEntity<WorldMapTransformsRow> {
     }
 
     get DungeonFloor() {
-        return new DungeonMapRef(this, this.row.NewDungeonMapID);
+        return DungeonMapRegistry.ref(this, this.row.NewDungeonMapID);
     }
 }
 
-export const WorldMapTransformRegistry = {
-    create(parent?: number) {
-        return new WorldMapTransform(
-            parent
-            ? DBC.WorldMapTransforms
-                .findById(parent)
-                .clone(Ids.WorldMapTransforms.id())
-            : DBC.WorldMapTransforms
-                .add(Ids.WorldMapTransforms.id())
-        );
-    },
-
-    load(id: number) {
-        return new WorldMapTransform(DBC.WorldMapTransforms.findById(id))
-    },
-
-    filter(query: WorldMapTransformsQuery) {
+export class WorldMapTransformRegistryClass
+    extends RegistryDynamic<
+          WorldMapTransform
+        , WorldMapTransformsRow
+        , WorldMapTransformsQuery
+    >
+{
+    protected Table(): Table<any, WorldMapTransformsQuery, WorldMapTransformsRow> & { add: (id: number) => WorldMapTransformsRow; } {
         return DBC.WorldMapTransforms
-            .filter(query)
-            .map(x=>new WorldMapTransform(x))
-    },
-
-    find(query: WorldMapTransformsQuery) {
-        return new WorldMapTransform(
-            DBC.WorldMapTransforms
-            .find(query)
-        )
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.WorldMapTransforms
+    }
+    Clear(entity: WorldMapTransform): void {
+        entity.DestinationMap.set(0)
+              .DungeonFloor.set(0)
+              .Offset.setSpread(0,0)
+              .Region.set(0,0,0,0)
+              .SourceMap.set(0)
+    }
+    protected Clone(entity: WorldMapTransform, parent: WorldMapTransform): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): WorldMapTransformsRow {
+        return DBC.WorldMapTransforms.findById(id);
+    }
+    protected EmptyQuery(): WorldMapTransformsQuery {
+        return {}
+    }
+    ID(e: WorldMapTransform): number {
+        return e.ID
+    }
+    protected Entity(r: WorldMapTransformsRow): WorldMapTransform {
+        return new WorldMapTransform(r);
     }
 }
 
-export class WorldMapTransformRef<T> extends Ref<T,WorldMapTransform> {
-    protected create(): WorldMapTransform {
-        return WorldMapTransformRegistry.create();
-    }
-    protected clone(): WorldMapTransform {
-        return WorldMapTransformRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WorldMapTransform): number {
-        return v.ID
-    }
-    protected resolve(): WorldMapTransform {
-        return WorldMapTransformRegistry.load(this.cell.get());
-    }
-}
+export const WorldMapTransformRegistry
+    = new WorldMapTransformRegistryClass();

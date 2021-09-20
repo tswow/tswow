@@ -1,9 +1,10 @@
 import { DBC } from "wotlkdata";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "wotlkdata/dbc/types/SoundProviderPreferences";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SoundProviderPreferencesFlags extends MaskCell32<SoundProviderPreferences> {
     get Outdoors() { return this.bit(0); }
@@ -38,49 +39,38 @@ export class SoundProviderPreferences extends MainEntity<SoundProviderPreference
     get EAX3LFReference() { return this.wrap(this.row.EAX3LFReference); }
 }
 
-export const SoundProviderPreferenceRegistry = {
-    create(parent?: number) {
-        return new SoundProviderPreferences(
-            parent
-            ? DBC.SoundProviderPreferences.findById(parent)
-               .clone(Ids.SoundProviderPreferences.id())
-            : DBC.SoundProviderPreferences.add(
-                Ids.SoundProviderPreferences.id()
-            )
-        )
-    },
-
-    load(id: number) {
-        return new SoundProviderPreferences(DBC.SoundProviderPreferences.findById(id))
-    },
-
-    filter(query: SoundProviderPreferencesQuery) {
+export class SoundProviderPreferenceRegistryClass
+    extends RegistryDynamic<
+          SoundProviderPreferences
+        , SoundProviderPreferencesRow
+        , SoundProviderPreferencesQuery
+    >
+{
+    protected Table(): Table<any, SoundProviderPreferencesQuery, SoundProviderPreferencesRow> & { add: (id: number) => SoundProviderPreferencesRow; } {
         return DBC.SoundProviderPreferences
-            .filter(query)
-            .map(x=>new SoundProviderPreferences(x))
-    },
-
-    find(query: SoundProviderPreferencesQuery) {
-        return new SoundProviderPreferences(
-            DBC.SoundProviderPreferences.find(query)
-        )
-    },
-}
-
-export class SoundProviderPreferenceRef<T> extends Ref<T,SoundProviderPreferences> {
-    protected create(): SoundProviderPreferences {
-        return SoundProviderPreferenceRegistry.create();
     }
-    protected clone(): SoundProviderPreferences {
-        return SoundProviderPreferenceRegistry.create(this.cell.get());
+    protected ids(): DynamicIDGenerator {
+        return Ids.SoundProviderPreferences
     }
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Clear(entity: SoundProviderPreferences): void {
+        throw new Error("Method not implemented.");
     }
-    protected id(v: SoundProviderPreferences): number {
-        return v.ID;
+    protected Clone(entity: SoundProviderPreferences, parent: SoundProviderPreferences): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): SoundProviderPreferences {
-        return SoundProviderPreferenceRegistry.load(this.cell.get());
+    protected FindByID(id: number): SoundProviderPreferencesRow {
+        return DBC.SoundProviderPreferences.findById(id);
+    }
+    protected EmptyQuery(): SoundProviderPreferencesQuery {
+        return {}
+    }
+    ID(e: SoundProviderPreferences): number {
+        return e.ID
+    }
+    protected Entity(r: SoundProviderPreferencesRow): SoundProviderPreferences {
+        return new SoundProviderPreferences(r);
     }
 }
+
+export const SoundProviderPreferenceRegistry =
+    new SoundProviderPreferenceRegistryClass();

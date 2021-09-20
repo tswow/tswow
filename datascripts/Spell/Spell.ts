@@ -24,28 +24,28 @@ import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { RaceType } from "../Race/RaceType";
-import { WorldMapAreaRef } from "../Worldmap/WorldMapArea";
+import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
 import { SpellAutoLearns } from "./SpellAutoLearn";
 import { SpellBonusData } from "./SpellBonusData";
-import { SpellCastTimePointer } from "./SpellCastTime";
+import { SpellCastTimeRegistry } from "./SpellCastTime";
 import { BaseClassSet } from "./SpellClassSet";
 import { SpellCustomAttr } from "./SpellCustomAttr";
-import { SpellDescriptionVariablePointer } from "./SpellDescriptionVariable";
-import { SpellDifficultyPointer } from "./SpellDifficulty";
-import { SpellDurationPointer } from "./SpellDuration";
+import { SpellDescriptionVariableRegistry } from "./SpellDescriptionVariable";
+import { SpellDifficultyRegistry } from "./SpellDifficulty";
+import { SpellDurationRegistry } from "./SpellDuration";
 import { SpellEffects } from "./SpellEffect";
 import { SpellGroups } from "./SpellGroup";
 import { SpellIconCell } from "./SpellIcon";
 import { SpellItemEquips } from "./SpellItemEquips";
 import { SpellLevels } from "./SpellLevels";
-import { SpellMissilePointer } from "./SpellMissile";
+import { SpellMissileRegistry } from "./SpellMissile";
 import { SpellPower } from "./SpellPower";
 import { SpellPowerDisplay } from "./SpellPowerDisplay";
 import { SpellProc } from "./SpellProc";
-import { SpellRangePointer } from "./SpellRange";
+import { SpellRangeRegistry } from "./SpellRange";
 import { SpellRank } from "./SpellRank";
 import { SpellReagents } from "./SpellReagents";
 import { SpellRecovery } from "./SpellRecovery";
@@ -53,7 +53,7 @@ import { SpellReputation } from "./SpellReputation";
 import { SpellScript } from "./SpellScript";
 import { SpellSkillLineAbilites } from "./SpellSkillLines";
 import { SpellThreat } from "./SpellThreat";
-import { SpellVisualPointer } from "./SpellVisual";
+import { SpellVisualRegistry } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
 
@@ -61,7 +61,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
 
     @Transient
-    get Visual() { return new SpellVisualPointer(this, this.wrapIndex(this.row.SpellVisualID,0)); }
+    get Visual() { return SpellVisualRegistry.ref(this, this.wrapIndex(this.row.SpellVisualID,0)); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get ActiveIcon() { return new SpellIconCell(this, this.row.ActiveIconID); }
     get Name() { return this.wrapLoc(this.row.Name); }
@@ -111,8 +111,8 @@ export class Spell extends MainEntity<SpellRow> {
 
     get ModalNextSpell() { return this.wrap(this.row.ModalNextSpell); }
     get Effects() { return new SpellEffects(this); }
-    get Duration() { return new SpellDurationPointer(this, this.row.DurationIndex); }
-    get Range() { return new SpellRangePointer(this, this.row.RangeIndex); }
+    get Duration() { return SpellDurationRegistry.ref(this, this.row.DurationIndex); }
+    get Range() { return SpellRangeRegistry.ref(this, this.row.RangeIndex); }
     get Speed() { return this.wrap(this.row.Speed); }
     get ClassMask() { return new BaseClassSet(this); }
 
@@ -134,7 +134,7 @@ export class Spell extends MainEntity<SpellRow> {
     get DefenseType() { return this.wrap(this.row.DefenseType); }
     get PreventionType() { return this.wrap(this.row.PreventionType); }
     get StanceBarOrder() { return this.wrap(this.row.StanceBarOrder); }
-    get CastTime() { return new SpellCastTimePointer(this,this.row.CastingTimeIndex); }
+    get CastTime() { return SpellCastTimeRegistry.ref(this,this.row.CastingTimeIndex); }
     get Category() { return this.wrap(this.row.Category); }
 
     /** Points to a TotemCategory */
@@ -143,11 +143,11 @@ export class Spell extends MainEntity<SpellRow> {
     get RequiredAuraVision() { return this.wrap(this.row.RequiredAuraVision); }
 
     /** Points to a WorldMapArea */
-    get RequiredArea() { return new WorldMapAreaRef(this, this.row.RequiredAreasID); }
+    get RequiredArea() { return WorldMapAreaRegistry.ref(this, this.row.RequiredAreasID); }
     get SchoolMask() { return new SchoolMask(this, this.row.SchoolMask); }
     get DispelType() { return this.wrap(this.row.DispelType); }
     get Mechanic() { return this.wrap(this.row.Mechanic); }
-    get Missile() { return new SpellMissilePointer(this, this.row.SpellMissileID) }
+    get Missile() { return SpellMissileRegistry.ref(this, this.row.SpellMissileID) }
 
     get ShapeshiftMask() { return new IncludeExcludeMask(this,
         new MaskCell64(this,this.row.ShapeshiftMask),
@@ -155,8 +155,8 @@ export class Spell extends MainEntity<SpellRow> {
     )}
 
     get Levels() { return new SpellLevels(this); }
-    get SpellDescriptionVariable() { return new SpellDescriptionVariablePointer(this, this.row.SpellDescriptionVariableID) }
-    get Difficulty() { return new SpellDifficultyPointer(this, this.row.SpellDifficultyID); }
+    get SpellDescriptionVariable() { return SpellDescriptionVariableRegistry.ref(this, this.row.SpellDescriptionVariableID) }
+    get Difficulty() { return SpellDifficultyRegistry.ref(this, this.row.SpellDifficultyID); }
     get ChannelInterruptFlags() { return new MaskCell32(this, this.row.ChannelInterruptFlags); }
     get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
     get InterruptFlags() { return new InterruptFlags(this); }

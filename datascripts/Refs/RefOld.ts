@@ -113,14 +113,14 @@ export abstract class RefBase<T,V extends Objectified> {
     }
 
     abstract exists(): boolean;
-    protected abstract id(v: V): number;
+    protected abstract ID(v: V): number;
     protected abstract resolve(): V;
 }
 
 export abstract class Ref<T,V extends Objectified> extends RefBase<T,V>{
     protected setCreate() {
         let v = this.create();
-        this.set(this.id(v));
+        this.set(this.ID(v));
         return v;
     }
 
@@ -137,7 +137,7 @@ export abstract class Ref<T,V extends Objectified> extends RefBase<T,V>{
             return this.setCreate();
         } else {
             let clone = this.clone();
-            this.set(this.id(clone));
+            this.set(this.ID(clone));
             return clone;
         }
     }
@@ -157,7 +157,7 @@ export abstract class RefStatic<T,V extends Objectified> extends RefBase<T,V> {
 
     protected setCreate(mod: string, id: string) {
         let v = this.create(mod, id);
-        this.set(this.id(v));
+        this.set(this.ID(v));
         return v;
     }
 
@@ -166,7 +166,7 @@ export abstract class RefStatic<T,V extends Objectified> extends RefBase<T,V> {
             return this.setCreate(mod, id);
         } else {
             let clone = this.clone(mod, id);
-            this.set(this.id(clone));
+            this.set(this.ID(clone));
             return clone;
         }
     }

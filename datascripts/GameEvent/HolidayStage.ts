@@ -22,7 +22,7 @@ export class GameEventsBase<O,V extends HolidayBase,T extends HolidayStageBase<V
     }
 
     protected getAllRows(): GameEvent[] {
-        return GameEventRegistry.filter({
+        return GameEventRegistry.queryAll({
               holiday:HolidayStageBase.Holiday(this.stage).ID
             , holidayStage:this.stage.index
         })

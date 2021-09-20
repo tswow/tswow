@@ -13,16 +13,18 @@ import { game_event_npcflagRow } from "wotlkdata/sql/types/game_event_npcflag";
 import { game_event_npc_vendorRow } from "wotlkdata/sql/types/game_event_npc_vendor";
 import { game_event_seasonal_questrelationRow } from "wotlkdata/sql/types/game_event_seasonal_questrelation";
 import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
-import { CreatureTemplate, CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
+import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { NPCFlags } from "../Creature/NPCFlags";
 import { GameObjectInstance, GameObjectInstanceRefReadOnly } from "../GameObject/GameObjectInstance";
-import { GameObjectTemplate, GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
+import { GORegistry } from "../GameObject/GameObjectRegistries";
+import { GameObjectTemplate } from "../GameObject/GameObjectTemplate";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Quest } from "../Quest/Quest";
 import { QuestRegistry } from "../Quest/Quests";
-import { GameEvent, GameEventRef, GameEventRefReadOnly } from "./GameEvent";
+import { GameEvent, GameEventRegistry } from "./GameEvent";
 
 export class GameEventRelationBase<T extends SqlRow<any,any>> extends MainEntity<T> {
     delete() {
@@ -46,7 +48,7 @@ export abstract class GameEventMultiRowSystem<T extends GameEventRelationBase<an
  */
 
 export class QuestGameEvent extends GameEventRelationBase<game_event_seasonal_questrelationRow>{
-    get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.questId); }
 }
 
@@ -181,8 +183,8 @@ export class CreatureGameEventsBackwards extends GameEventMultiRowSystem<Creatur
  */
 
  export class CreatureQuestGameEvent extends GameEventRelationBase<game_event_creature_questRow>{
-    get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
-    get Creature() { return new CreatureTemplateRefReadOnly(this, this.row.id); }
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
+    get Creature() { return CreatureTemplateRegistry.readOnlyRef(this, this.row.id); }
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.quest); }
 }
 
@@ -262,7 +264,7 @@ export class CreatureQuestGameEventsBackward extends GameEventMultiRowSystem<Cre
 /** gameobject */
 
 export class GameObjectGameEvent extends GameEventRelationBase<game_event_gameobjectRow>{
-    get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
     get GameObject() {
         return new GameObjectInstanceRefReadOnly(this, this.row.guid);
     }
@@ -308,9 +310,10 @@ export class GameObjectGameEventsBackward extends GameEventMultiRowSystem<GameOb
 /** GameObject / Quest */
 
 export class GameObjectQuestGameEvent extends GameEventRelationBase<game_event_gameobject_questRow>{
-    get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
     get GameObject() {
-        return new GameObjectTemplateRefReadOnly(this, this.row.id);
+        // is GOQuestGiver?
+        return GORegistry.Plain.readOnlyRef(this, this.row.id);
     }
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.quest); }
 }
@@ -404,13 +407,13 @@ export class GameEventModelEquipForward extends MaybeSQLEntity<CreatureInstance,
         return sql.guid.get() === this.owner.GUID;
     }
 
-    get Event() { return new GameEventRef(this, this.wrapSQL(0,sql=>sql.eventEntry))}
+    get Event() { return GameEventRegistry.ref(this, this.wrapSQL(0,sql=>sql.eventEntry))}
     get Model() { return this.wrapSQL(0,sql=>sql.modelid); }
     get Equipment() { return this.wrapSQL(0,sql=>sql.equipment_id); }
 }
 
 export class GameEventModelEquipBackward extends GameEventRelationBase<game_event_model_equipRow> {
-    get Event() { return new GameEventRef(this, this.row.eventEntry )}
+    get Event() { return GameEventRegistry.ref(this, this.row.eventEntry )}
     get Model() { return this.wrap(this.row.modelid); }
     get Equipment() { return this.wrap(this.row.equipment_id); }
     get Creature() { return new CreatureRefReadOnly(this, this.row.guid); }
@@ -427,7 +430,7 @@ export class GameEventModelEquipsBackward extends GameEventMultiRowSystem<GameEv
 /** npcflag */
 
 export class GameEventNPCFlag extends GameEventRelationBase<game_event_npcflagRow> {
-    get Event() { return new GameEventRefReadOnly(this, this.row.eventEntry)}
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
     get Creature() { return new CreatureRefReadOnly(this, this.row.guid); }
     get NPCFlag() { return new NPCFlags(this, this.row.npcflag); }
 }
@@ -479,7 +482,7 @@ export class GameEventModelNPCFlagsBackward extends GameEventMultiRowSystem<Game
 /** npc_vendor */
 
 export class GameEventNPCVendor extends GameEventRelationBase<game_event_npc_vendorRow> {
-    get Event() { return new GameEventRef(this, this.row.eventEntry)}
+    get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
     get Creature() { return new CreatureRefReadOnly(this, this.row.guid); }
     get Item() { return ItemTemplateRegistry.readOnlyRef(this, this.row.item); }
     get Slot() { return this.wrap(this.row.slot); }

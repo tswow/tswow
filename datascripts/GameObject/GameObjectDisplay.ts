@@ -1,10 +1,7 @@
 import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 import { GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo";
-import { DBC } from "wotlkdata/wotlkdata";
 import { BoundingBox } from "../Misc/BoundingBox";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 
 export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameObjectDisplay> {
@@ -122,24 +119,5 @@ export class GameObjectDisplay extends MainEntity<GameObjectDisplayInfoRow> {
     }
     get GeoBox(): GameObjectGeoBox {
         return new GameObjectGeoBox(this as any);
-    }
-}
-
-export class GameObjectDisplayPointer<T> extends Ref<T,GameObjectDisplay> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): GameObjectDisplay {
-        return new GameObjectDisplay(
-            DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplayInfo.id()))
-    }
-    protected clone(): GameObjectDisplay {
-        return new GameObjectDisplay(this.resolve().row.clone(Ids.GameObjectDisplayInfo.id()))
-    }
-    protected id(v: GameObjectDisplay): number {
-        return v.ID;
-    }
-    protected resolve(): GameObjectDisplay {
-        return new GameObjectDisplay(DBC.GameObjectDisplayInfo.findById(this.cell.get()));
     }
 }

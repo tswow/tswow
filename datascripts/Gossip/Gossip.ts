@@ -17,8 +17,6 @@
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gossip_menuRow } from "wotlkdata/sql/types/gossip_menu";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";
 import { GossipTextArray } from "./GossipText";
@@ -43,31 +41,5 @@ export class Gossip extends MainEntity<gossip_menuRow> {
 
     get TextID() {
         return this.row.TextID.get();
-    }
-}
-
-export class GossipPointer<T> extends Ref<T, Gossip> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): Gossip {
-        let gossipId = Ids.gossip_menu.id();
-        let textId = Ids.NPCText.id();
-        SQL.npc_text.add(textId);
-        return new Gossip(SQL.gossip_menu.add(gossipId,textId));
-    }
-    protected clone(): Gossip {
-        let gossipRow = SQL.gossip_menu.find({MenuID:this.cell.get()});
-        let gossipId = Ids.gossip_menu.id();
-        let textId = Ids.NPCText.id();
-        SQL.npc_text.find({ID:gossipRow.TextID.get()})
-            .clone(textId);
-        return new Gossip(gossipRow.clone(gossipId,textId));
-    }
-    protected id(v: Gossip): number {
-        return v.ID;
-    }
-    protected resolve(): Gossip {
-        return new Gossip(SQL.gossip_menu.find({MenuID:this.cell.get()}));
     }
 }

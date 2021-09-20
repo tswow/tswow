@@ -40,7 +40,7 @@ export class QuestRegistryClass extends RegistryStatic<Quest,quest_templateRow,q
     protected EmptyQuery(): quest_templateQuery {
         return {}
     }
-    protected ID(e: Quest): number {
+    ID(e: Quest): number {
         return e.ID;
     }
     Clear(r: Quest) {

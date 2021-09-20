@@ -14,12 +14,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Cell, CellWrapper } from "wotlkdata/cell/cells/Cell";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;
@@ -77,7 +76,7 @@ export class LootSet extends CellSystemTop {
     }
 }
 
-export class LootSetPointer<T> extends Ref<T,LootSet>{
+export class LootSetPointer<T> extends CellWrapper<number,T>{
     protected table: LootTable;
     protected gen: DynamicIDGenerator;
     constructor(owner: T, cell: Cell<number,any>, table: LootTable, gen: DynamicIDGenerator) {
@@ -89,19 +88,27 @@ export class LootSetPointer<T> extends Ref<T,LootSet>{
     exists(): boolean {
         return this.cell.get() > 0;
     }
-    protected create(): LootSet {
-        return new LootSet(this.gen.id(), this.table);
+
+    getRef() {
+        if(!this.exists()) {
+            this.cell.set(this.gen.id());
+        }
+        return new LootSet(this.cell.get(),this.table);
     }
-    protected clone(): LootSet {
-        let newId = this.gen.id();
-        this.resolve().rows.forEach(x=>x.clone(newId,x.Item.get()))
-        return new LootSet(newId, this.table);
+
+    modRef(callback: (table: LootSet)=>void) {
+        callback(this.getRef());
+        return this.owner;
     }
-    protected id(v: LootSet): number {
-        return v.ID;
+
+    getRefCopy() {
+        this.cell.set(this.gen.id());
+        return this.getRef();
     }
-    protected resolve(): LootSet {
-        return new LootSet(this.cell.get(), this.table);
+
+    modRefCopy(callback: (table: LootSet)=>void) {
+        callback(this.getRefCopy());
+        return this.owner;
     }
 }
 
@@ -136,16 +143,6 @@ export const Loot = {
         }
     },
 
-    Item: {
-        create() {
-            return new LootSet(Ids.item_loot_template.id(),SQL.item_loot_template);
-        },
-
-        load(id: number) {
-            return new LootSet(id, SQL.item_loot_template)
-        }
-    },
-
     Disenchant: {
         create() {
             return new LootSet(Ids.disenchant_loot_template.id(),SQL.disenchant_loot_template);
@@ -153,26 +150,6 @@ export const Loot = {
 
         load(id: number) {
             return new LootSet(id, SQL.disenchant_loot_template)
-        }
-    },
-
-    Prospecting: {
-        create() {
-            return new LootSet(Ids.prospecting_loot_template.id(),SQL.prospecting_loot_template);
-        },
-
-        load(id: number) {
-            return new LootSet(id, SQL.prospecting_loot_template)
-        }
-    },
-
-    Milling: {
-        create() {
-            return new LootSet(Ids.milling_loot_template.id(),SQL.milling_loot_template);
-        },
-
-        load(id: number) {
-            return new LootSet(id, SQL.milling_loot_template)
         }
     },
 
@@ -210,15 +187,5 @@ export const Loot = {
         load(id: number) {
             return new LootSet(id, SQL.reference_loot_template)
         }
-    },
-
-    Spell: {
-        create() {
-            return new LootSet(Ids.spell_loot_template.id(),SQL.spell_loot_template);
-        },
-
-        load(id: number) {
-            return new LootSet(id, SQL.spell_loot_template)
-        },
     },
 }

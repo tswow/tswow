@@ -2,14 +2,14 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { game_event_prerequisiteRow } from "wotlkdata/sql/types/game_event_prerequisite";
 import { MainEntity } from "../Misc/Entity";
-import { GameEvent, GameEventRefReadOnly } from "./GameEvent";
+import { GameEvent, GameEventRegistry } from "./GameEvent";
 
 export class GameEventPrerequisite extends MainEntity<game_event_prerequisiteRow> {
     get Event() {
-        return new GameEventRefReadOnly(this, this.row.eventEntry);
+        return GameEventRegistry.readOnlyRef(this, this.row.eventEntry);
     }
     get Prerequisite() {
-        return new GameEventRefReadOnly(this, this.row.prerequisite_event);
+        return GameEventRegistry.readOnlyRef(this, this.row.prerequisite_event);
     }
 
     isDeleted() {

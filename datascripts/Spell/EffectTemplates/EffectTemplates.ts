@@ -1,11 +1,11 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CreatureTemplateRef } from "../../Creature/CreatureTemplate";
+import { CreatureTemplateRegistry } from "../../Creature/Creatures";
 import { EnchantmentRegistry } from "../../Enchant/Enchantment";
 import { LanguageRegistry } from "../../Languages/Languages";
-import { LockTypeRef } from "../../Locks/LockType";
+import { LockTypeRegistry } from "../../Locks/Locks";
 import { SchoolMask } from "../../Misc/School";
-import { QuestRef } from "../../Quest/Quest";
+import { QuestRegistry } from "../../Quest/Quests";
 import { RefUnknown } from "../../Refs/RefOld";
 import { SkillLineRegistry } from "../../SkillLines/SkillLines";
 import { SoundEntryRegistry } from "../../Sound/SoundEntry";
@@ -14,7 +14,7 @@ import { EffectClassSet } from "../SpellClassSet";
 import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellPowerType } from "../SpellPowerType";
-import { SpellRadiusRef } from "../SpellRadius";
+import { SpellRadiusRegistry } from "../SpellRadius";
 import { SpellRegistry } from "../Spells";
 import { EffectTemplate } from "./EffectTemplate";
 import { CountBase, DamageBase, DamageBasePct, HealBase, HealBasePct, PointsBase, PointsRoot, PowerBase, PowerBasePct } from "./PointsBase";
@@ -41,7 +41,11 @@ export class EnvironmentalDamage extends EffectTemplate {
     get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
     get Radius() {
-        return new SpellRadiusRef(this, this.wrapIndex(this.row.EffectRadiusIndex, this.index)); }
+        return SpellRadiusRegistry.ref(
+              this
+            , this.wrapIndex(this.row.EffectRadiusIndex, this.index)
+        );
+    }
 }
 // 8
 export class PowerDrain extends PowerBase {}
@@ -86,7 +90,7 @@ export class CommandTotemCreature extends EffectTemplate {
 // 15
 // 16
 export class CompleteQuest extends TargetBase {
-    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
+    get Quest() { return QuestRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 17
 export class WeaponDamageNoSchool extends DamageBase {}
@@ -155,7 +159,7 @@ export class TriggerMissile extends TargetBase {
 }
 // 33
 export class OpenLock extends EffectTemplate {
-    get LockType() { return new LockTypeRef(this, this.owner.MiscValueA); }
+    get LockType() { return LockTypeRegistry.ref(this, this.owner.MiscValueA); }
     get SkillValue() { return this.wrap(this.owner.PointsPerLevel); }
 
     /**
@@ -401,7 +405,7 @@ export class SetGameObjectDestructibleState extends DamageBase {
 }
 // 90
 export class KillCredit extends TargetBase {
-    get Creature() { return new CreatureTemplateRef(this, this.owner.MiscValueA); }
+    get Creature() { return CreatureTemplateRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 91
 // 92
@@ -545,7 +549,7 @@ export class EnergizePercent extends PowerBasePct {
 export class LeapBack extends TargetBase {}
 // 139
 export class ClearQuest extends TargetBase {
-    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
+    get Quest() { return QuestRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 140
 export class ForceCast extends EffectTemplate {
@@ -590,7 +594,7 @@ export class ActivateRune extends CountBase {
 }
 // 147
 export class FailQuest extends TargetBase {
-    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
+    get Quest() { return QuestRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 148
 export class TriggerMissileWithValue extends TargetBase {
@@ -604,7 +608,7 @@ export class TriggerMissileWithValue extends TargetBase {
 export class ChargeDest extends TargetBase {}
 // 150
 export class StartQuest extends TargetBase {
-    get Quest() { return new QuestRef(this, this.owner.MiscValueA); }
+    get Quest() { return QuestRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 151
 // 152

@@ -1,15 +1,14 @@
 import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { RefStatic } from "../Refs/Ref";
-import { Ref } from "../Refs/RefOld";
+import { RefDynamic, RefStatic } from "../Refs/Ref";
 import { MainEntity } from "./Entity";
 
 export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
     protected readonly clearValue: number;
     protected readonly length: number;
-    protected readonly getter: (index: number)=>Ref<T,V>;
+    protected readonly getter: (index: number)=>RefDynamic<T,V>;
 
-    constructor(owner: T, clearValue: number, length: number, getter: (index: number)=>Ref<T,V>) {
+    constructor(owner: T, clearValue: number, length: number, getter: (index: number)=>RefDynamic<T,V>) {
         super(owner);
         this.clearValue = clearValue;
         this.length = length;
@@ -32,7 +31,7 @@ export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
         return this.owner;
     }
 
-    forEach(callback: (ref: Ref<T,V>)=>void) {
+    forEach(callback: (ref: RefDynamic<T,V>)=>void) {
         for(let i=0;i<this.length;++i) {
             callback(this.getter(i));
         }
@@ -104,8 +103,8 @@ export class ArrayRefSystemStatic<T,V extends MainEntity<any>> extends CellSyste
         return this.setId(index,this.clearValue);
     }
 
-    clearAll(index: number) {
-        return this.forEach(x=>x.set(index));
+    clearAll() {
+        return this.forEach(x=>x.set(this.clearValue));
     }
 
     forEachRef(callback: (ref: V)=>void) {

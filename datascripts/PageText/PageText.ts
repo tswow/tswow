@@ -1,11 +1,14 @@
 import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Language } from "wotlkdata/dbc/Localization";
+import { loc_constructor } from "wotlkdata/primitives";
 import { page_textQuery, page_textRow } from "wotlkdata/sql/types/page_text";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { Ref } from "../Refs/RefOld";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class PageTextContent extends SQLLocSystem<PageText> {
     protected getMain(): Cell<string, any> {
@@ -23,6 +26,7 @@ export class PageTextContent extends SQLLocSystem<PageText> {
 export class PageText extends MainEntity<page_textRow> {
     get ID() { return this.row.ID.get(); }
     get Text() { return new PageTextContent(this); }
+    get NextPage() { return this.wrap(this.row.NextPageID); }
 
     clone() {
         let id = Ids.page_text.id()
@@ -33,45 +37,46 @@ export class PageText extends MainEntity<page_textRow> {
     }
 }
 
-export const PageTextRegistry = {
-    create(parent = 0) {
-        return new PageText(
-            parent > 0
-            ? this.load(parent).clone().row
-            : SQL.page_text.add(Ids.page_text.id())
-        );
-    },
+export class PageTextRef<T> extends RefDynamic<T,PageText> {
+    setSimple(loc: loc_constructor, nextPage: number = 0) {
+        this.getRefCopy()
+            .Text.set(loc)
+            .NextPage.set(nextPage);
+        return this.owner;
+    }
+}
 
-    load(id: number) {
-        return this.find({ID:id});
-    },
+export class PageTextRegistryClass
+    extends RegistryDynamicNoRef<PageText,page_textRow,page_textQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new PageTextRef(owner, cell, this);
+    }
 
-    filter(query: page_textQuery) {
+    protected Table(): Table<any, page_textQuery, page_textRow> & { add: (id: number) => page_textRow; } {
         return SQL.page_text
-            .filter(query)
-            .map(x=> new PageText(x))
-    },
-
-    find(query: page_textQuery) {
-        let v = SQL.page_text.find(query);
-        return ( v ? new PageText(v) : undefined) as PageText;
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.PageTextMaterial
+    }
+    Clear(entity: PageText): void {
+        entity.Text.clear()
+    }
+    protected Clone(entity: PageText, parent: PageText): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): page_textRow {
+        return SQL.page_text.find({ID:id});
+    }
+    protected EmptyQuery(): page_textQuery {
+        return {}
+    }
+    ID(e: PageText): number {
+        return e.ID
+    }
+    protected Entity(r: page_textRow): PageText {
+        return new PageText(r);
     }
 }
 
-export class PageTextRef<T> extends Ref<T,PageText> {
-    protected create(): PageText {
-        return PageTextRegistry.create();
-    }
-    protected clone(): PageText {
-        return PageTextRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: PageText): number {
-        return v.ID;
-    }
-    protected resolve(): PageText {
-        return PageTextRegistry.load(this.cell.get());
-    }
-}
+export const PageTextRegistry = new PageTextRegistryClass();

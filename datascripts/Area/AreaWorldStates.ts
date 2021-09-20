@@ -6,7 +6,7 @@ import { Area } from "./Area";
 
 export class AreaWorldStateUIs extends MultiRowSystem<WorldStateUI,Area> {
     protected getAllRows(): WorldStateUI[] {
-        return WorldStateUIRegistry.filter({AreaID:this.owner.ID})
+        return WorldStateUIRegistry.queryAll({AreaID:this.owner.ID})
     }
 
     protected isDeleted(value: WorldStateUI): boolean {

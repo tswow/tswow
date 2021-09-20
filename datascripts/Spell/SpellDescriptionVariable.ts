@@ -15,10 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { SpellDescriptionVariablesQuery, SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariablesRow> {
     clear(): this {
@@ -44,20 +47,51 @@ export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariabl
     }
 }
 
-export class SpellDescriptionVariablePointer<T> extends Ref<T,SpellDescriptionVariable> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): SpellDescriptionVariable {
-        return new SpellDescriptionVariable(DBC.SpellDescriptionVariables.add(Ids.SpellDescriptionVariable.id()));
-    }
-    protected clone(): SpellDescriptionVariable {
-        return new SpellDescriptionVariable(this.resolve().row.clone(Ids.SpellDescriptionVariable.id()))
-    }
-    protected id(v: SpellDescriptionVariable): number {
-        return v.ID;
-    }
-    protected resolve(): SpellDescriptionVariable {
-        return new SpellDescriptionVariable(DBC.SpellDescriptionVariables.findById(this.cell.get()));
+export class SpellDescriptionVariableRef<T>
+    extends RefDynamic<T,SpellDescriptionVariable>
+{
+    setSimple(variables: string) {
+        this.getRefCopy()
+            .row.Variables.set(variables)
+        return this.owner;
     }
 }
+
+export class SpellDescriptionVariableRegistryClass
+    extends RegistryDynamicNoRef<
+          SpellDescriptionVariable
+        , SpellDescriptionVariablesRow
+        , SpellDescriptionVariablesQuery
+    >
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellDescriptionVariableRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellDescriptionVariablesQuery, SpellDescriptionVariablesRow> & { add: (id: number) => SpellDescriptionVariablesRow; } {
+        return DBC.SpellDescriptionVariables
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellDescriptionVariable
+    }
+    Clear(entity: SpellDescriptionVariable): void {
+        entity.row.Variables.set('')
+    }
+    protected Clone(entity: SpellDescriptionVariable, parent: SpellDescriptionVariable): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellDescriptionVariablesRow {
+        return DBC.SpellDescriptionVariables.findById(id);
+    }
+    protected EmptyQuery(): SpellDescriptionVariablesQuery {
+        return {}
+    }
+    ID(e: SpellDescriptionVariable): number {
+        return e.ID
+    }
+    protected Entity(r: SpellDescriptionVariablesRow): SpellDescriptionVariable {
+        return new SpellDescriptionVariable(r);
+    }
+}
+
+export const SpellDescriptionVariableRegistry =
+    new SpellDescriptionVariableRegistryClass();

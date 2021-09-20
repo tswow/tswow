@@ -1,9 +1,10 @@
 import { DBC } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { HolidaysQuery, HolidaysRow } from "wotlkdata/dbc/types/Holidays";
+import { Table } from "wotlkdata/table/Table";
 import { TransformedEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";
@@ -12,7 +13,7 @@ export class HolidayType extends EnumCellTransform<HolidayBase> {
     set(value: number) {
         super.set(value);
         // need to update Game Events if we change occurrence
-        GameEventRegistry.filter({holiday:this.owner.ID})
+        GameEventRegistry.queryAll({holiday:this.owner.ID})
             .forEach(x=>GameEvent.updateHolidayOccurrence(x,value))
         return this.owner;
     }
@@ -77,70 +78,43 @@ export class HolidayCustomPeriod extends HolidayBase {
 
 export class HolidayPlain extends HolidayBase {}
 
-export const HolidayRegistry = {
-    create(parent?: number) {
-        let id = Ids.Holidays.id()
-
-        const newName = ()=>
-            DBC.HolidayNames
-            .add(Ids.HolidayNames.id())
-            .Name.clear()
-            .ID.get()
-
-        const newDesc = ()=>
-            DBC.HolidayDescriptions
-                .add(Ids.HolidayDescriptions.id())
-                .Description.clear()
-                .ID.get()
-
-        return new HolidayBase(
-            parent
-            ? DBC.Holidays
-                .findById(parent)
-                .clone(id)
-                .HolidayNameID.set(newName())
-                .HolidayDescriptionID.set(newDesc())
-            : DBC.Holidays
-                .add(id)
-                .Date.fill(0)
-                .Duration.fill(0)
-                .HolidayNameID.set(newName())
-                .HolidayDescriptionID.set(newDesc())
-        );
-    },
-
-    load(id: number) {
-        let res = DBC.Holidays.findById(id);
-        return(res ? new HolidayBase(res) : undefined) as HolidayBase;
-    },
-
-    filter(query: HolidaysQuery) {
+export class HolidayRegistryClass
+    extends RegistryDynamic<HolidayPlain,HolidaysRow,HolidaysQuery>
+{
+    protected Table(): Table<any, HolidaysQuery, HolidaysRow> & { add: (id: number) => HolidaysRow; } {
         return DBC.Holidays
-            .filter(query)
-            .map(x=>new HolidayBase(x))
-    },
-
-    find(query: HolidaysQuery) {
-        let v = DBC.Holidays.find(query)
-        return (v ? new HolidayBase(v) : undefined) as HolidayBase
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.Holidays
+    }
+    Clear(entity: HolidayPlain): void {
+        let name = DBC.HolidayNames.add(Ids.HolidayNames.id())
+        let desc = DBC.HolidayDescriptions.add(Ids.HolidayDescriptions.id())
+        name.Name.clear()
+        desc.Description.clear()
+        entity.row.HolidayNameID.set(name.ID.get())
+        entity.row.HolidayDescriptionID.set(desc.ID.get())
+        entity
+            .Flags.set(0)
+            .Priority.set(0)
+            .Texture.set('')
+            .Type.set(0)
+    }
+    protected Clone(entity: HolidayPlain, parent: HolidayPlain): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): HolidaysRow {
+        return DBC.Holidays.findById(id);
+    }
+    protected EmptyQuery(): HolidaysQuery {
+        return {}
+    }
+    ID(e: HolidayPlain): number {
+        return e.ID
+    }
+    protected Entity(r: HolidaysRow): HolidayPlain {
+        return new HolidayPlain(r);
     }
 }
 
-export class HolidayRef<T> extends Ref<T,HolidayPlain> {
-    protected create(): HolidayPlain {
-        return HolidayRegistry.create();
-    }
-    protected clone(): HolidayPlain {
-        return HolidayRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: HolidayPlain): number {
-        return v.ID;
-    }
-    protected resolve(): HolidayPlain {
-        return HolidayRegistry.load(this.cell.get());
-    }
-
-}
+export const HolidayRegistry = new HolidayRegistryClass();

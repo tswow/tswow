@@ -7,7 +7,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
 import { RegistryStaticNoRef } from "../Refs/Registry";
-import { SoundEntryAdvancedPointer } from "./SoundEntryAdvanced";
+import { SoundEntryAdvancedRegistry } from "./SoundEntryAdvanced";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundFlags } from "./SoundFlags";
 import { SoundType } from "./SoundType";
@@ -27,7 +27,7 @@ export class SoundEntryName extends CellSystem<SoundEntry> {
 export class SoundEntry extends MainEntity<SoundEntriesRow>{
     get ID() { return this.row.ID.get(); }
     get Advanced() {
-        return new SoundEntryAdvancedPointer(
+        return SoundEntryAdvancedRegistry.ref(
             this, this.row.SoundEntriesAdvancedID);
     }
     get Flags() { return new SoundFlags(this, this.row.Flags); }
@@ -101,7 +101,7 @@ export class SoundEntryRegistryClass
     protected EmptyQuery(): SoundEntriesQuery {
         return {}
     }
-    protected ID(e: SoundEntry): number {
+    ID(e: SoundEntry): number {
         return e.ID
     }
 

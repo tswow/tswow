@@ -18,7 +18,7 @@ import { SQL } from "wotlkdata";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
-import { BroadcastTextRef } from "../BroadcastText/BroadcastText";
+import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
 import { Gossip } from "./Gossip";
 import { GossipIconCell } from "./GossipIcon";
@@ -38,7 +38,7 @@ export class GossipOption extends CellSystemTop {
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get Gossip() { return this.wrap(this.row.ActionMenuID); }
     get Text() {
-        return new BroadcastTextRef(this, this.row.OptionBroadcastTextID);
+        return BroadcastTextRegistry.ref(this, this.row.OptionBroadcastTextID);
     }
 }
 

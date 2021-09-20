@@ -67,7 +67,7 @@ export class ZoneIntroMusicRegistryClass
     protected EmptyQuery(): ZoneintroMusicTableQuery {
         return {}
     }
-    protected ID(e: ZoneIntroMusic): number {
+    ID(e: ZoneIntroMusic): number {
         return e.ID;
     }
 

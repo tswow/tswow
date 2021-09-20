@@ -39,7 +39,7 @@ export class MailTemplateRegistryClass
     protected EmptyQuery(): MailTemplateQuery {
         return {}
     }
-    protected ID(e: MailTemplate): number {
+    ID(e: MailTemplate): number {
         return e.ID
     }
 }

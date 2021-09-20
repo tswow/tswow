@@ -19,27 +19,27 @@ import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
 import { AreaRegistry } from "../Area/Area";
-import { BroadcastTextRef } from "../BroadcastText/BroadcastText";
-import { GossipPointer } from "../Gossip/Gossip";
-import { LockRef } from "../Locks/Lock";
+import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
+import { GossipRegistry } from "../Gossip/Gossips";
+import { LockRegistry } from "../Locks/Locks";
 import { LootSetPointer } from "../Loot/Loot";
 import { MapRegistry } from "../Map/Maps";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { PageTextRef } from "../PageText/PageText";
+import { PageTextRegistry } from "../PageText/PageText";
 import { QuestRegistry } from "../Quest/Quests";
-import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/RefOld";
+import { RefUnknown } from "../Refs/RefOld";
 import { SpellRegistry } from "../Spell/Spells";
 import { TaxiPathRegistry } from "../Taxi/Taxi";
-import { WorldStateRef } from "../WorldState/WorldState";
+import { WorldStateRegistry } from "../WorldState/WorldState";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
-import { GameObjectDisplayPointer } from "./GameObjectDisplay";
 import { GameObjectFlags } from "./GameObjectFlags";
 import { GameObjectID } from "./GameObjectID";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
-import { GameObjectTemplates } from "./GameObjects";
+import { GORegistry } from "./GameObjectRegistries";
+import { GameObjectDisplayRegistry } from "./GameObjects";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_AURA_GENERATOR, GAMEOBJECT_TYPE_BARBER_CHAIR, GAMEOBJECT_TYPE_BINDER, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CAPTURE_POINT, GAMEOBJECT_TYPE_CHAIR, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_DO_NOT_USE, GAMEOBJECT_TYPE_DO_NOT_USE_2, GAMEOBJECT_TYPE_DUEL_ARBITER, GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FISHINGNODE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GENERIC, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_GUARDPOST, GAMEOBJECT_TYPE_GUILD_BANK, GAMEOBJECT_TYPE_MAILBOX, GAMEOBJECT_TYPE_MAP_OBJECT, GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, GAMEOBJECT_TYPE_MEETINGSTONE, GAMEOBJECT_TYPE_MINI_GAME, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_RITUAL, GAMEOBJECT_TYPE_SPELLCASTER, GAMEOBJECT_TYPE_SPELL_FOCUS, GAMEOBJECT_TYPE_TEXT, GAMEOBJECT_TYPE_TRANSPORT, GAMEOBJECT_TYPE_TRAP, GAMEOBJECT_TYPE_TRAPDOOR } from "./GameObjectTypes";
 
 export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
@@ -84,7 +84,7 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
     get ID() { return this.row.entry.get(); }
 
     get Display() {
-        return new GameObjectDisplayPointer(this, this.row.displayId);
+        return GameObjectDisplayRegistry.ref(this, this.row.displayId);
     }
 
     get Name() { return new GameObjectName(this); }
@@ -143,14 +143,14 @@ export class GameObjectAreaDamage extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this, this.row.Data0); }
+    get Lock() { return LockRegistry.ref(this, this.row.Data0); }
     get Radius() { return this.wrap(this.row.Data1); }
     get DamageMin() { return this.wrap(this.row.Data2); }
     get DamageMax() { return this.wrap(this.row.Data3); }
     get DamageSchool() { return this.wrap(this.row.Data4); }
     get AutoCloseTime() { return this.wrap(this.row.Data5); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data6); }
-    get Closetext() { return new BroadcastTextRef(this, this.row.Data7); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data6); }
+    get Closetext() { return BroadcastTextRegistry.ref(this, this.row.Data7); }
 }
 
 export class GameObjectAuraGenerator extends GameObjectTemplate {
@@ -188,7 +188,7 @@ export class GameObjectButton extends GameObjectTemplate {
     /**
      * The lock used to press this button
      */
-    get Lock() { return new LockRef(this, this.row.Data1); }
+    get Lock() { return LockRegistry.ref(this, this.row.Data1); }
 
     get AutoClose() { return this.wrap(this.row.Data2); }
 
@@ -196,7 +196,9 @@ export class GameObjectButton extends GameObjectTemplate {
     /**
      * A linked spawned gameobject of type 6
      */
-    get LinkedTrap() { return new GameObjectTrapRef(this, this.row.Data3); }
+    get LinkedTrap() {
+        return GORegistry.Traps.ref(this, this.row.Data3);
+    }
 
     get NoDamageImmune() { return this.wrap(this.row.Data4); }
 
@@ -205,18 +207,18 @@ export class GameObjectButton extends GameObjectTemplate {
     /**
      * Text displayed when the button is pressed
      */
-    get ActivateText() { return new BroadcastTextRef(this, this.row.Data6) }
+    get ActivateText() { return BroadcastTextRegistry.ref(this, this.row.Data6) }
 
 
     /**
      * Text displayed when the button is unpressed
      */
-    get DeactivateText() { return new BroadcastTextRef(this, this.row.Data7) }
+    get DeactivateText() { return BroadcastTextRegistry.ref(this, this.row.Data7) }
 
     /**
      * TODO: ??
      */
-    get LineOfSightOK() { return new BroadcastTextRef(this, this.row.Data8) }
+    get LineOfSightOK() { return BroadcastTextRegistry.ref(this, this.row.Data8) }
 
     get Condition() { return new RefUnknown(this, this.row.Data9); }
 }
@@ -225,10 +227,10 @@ export class GameObjectCamera extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this, this.row.Data0); }
+    get Lock() { return LockRegistry.ref(this, this.row.Data0); }
     get Cinematic() { return this.wrap(this.row.Data1); }
     get Event() { return new RefUnknown(this, this.row.Data2); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data3); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data3); }
     get Condition() { return new RefUnknown(this, this.row.Data4); }
 }
 
@@ -238,8 +240,8 @@ export class GameObjectCapturePoint extends GameObjectTemplate {
     }
     get Radius() { return this.wrap(this.row.Data0); }
     get Spell() { return this.wrap(this.row.Data1); }
-    get WorldState1() { return new WorldStateRef(this, this.row.Data2); }
-    get WorldState2() { return new WorldStateRef(this, this.row.Data3); }
+    get WorldState1() { return WorldStateRegistry.refCreate(this, this.row.Data2); }
+    get WorldState2() { return WorldStateRegistry.refCreate(this, this.row.Data3); }
     get WinEvent1() { return this.wrap(this.row.Data4); }
     get WinEvent2() { return this.wrap(this.row.Data5); }
     get ContestedEvent1() { return this.wrap(this.row.Data6); }
@@ -249,7 +251,7 @@ export class GameObjectCapturePoint extends GameObjectTemplate {
     get NeutralEvent1() { return this.wrap(this.row.Data10); }
     get NeutralEvent2() { return this.wrap(this.row.Data11); }
     get NeutralPercent() { return this.wrap(this.row.Data12); }
-    get WorldState3() { return new WorldStateRef(this, this.row.Data13); }
+    get WorldState3() { return WorldStateRegistry.refCreate(this, this.row.Data13); }
     get MinSuperiority() { return this.wrap(this.row.Data14); }
     get MaxSuperiority() { return this.wrap(this.row.Data15); }
     get MinTime() { return this.wrap(this.row.Data16); }
@@ -278,7 +280,7 @@ export class GameObjectChest extends GameObjectTemplate {
     }
 
     get Lock() {
-        return new LockRef(this,this.row.Data0);
+        return LockRegistry.ref(this,this.row.Data0);
     }
 
     get Loot() {
@@ -308,7 +310,7 @@ export class GameObjectChest extends GameObjectTemplate {
     get LeaveLoot() { return this.wrap(this.row.Data11); }
     get NotInCombat() { return this.wrap(this.row.Data12); }
     get LogLoot() { return this.wrap(this.row.Data13); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data14); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data14); }
     get UseGroupLoot() { return this.wrap(this.row.Data15); }
     get Tooltip() { return this.wrap(this.row.Data16); }
     get Condition() { return new RefUnknown(this, this.row.Data17); }
@@ -357,7 +359,7 @@ export class GameObjectDoor extends GameObjectTemplate {
     /**
      * Lock ID to DBC.Lock that opens this door
      */
-    get Lock() { return new LockRef(this, this.row.Data1); }
+    get Lock() { return LockRegistry.ref(this, this.row.Data1); }
 
     /**
      * After how many milliseconds the door autocloses
@@ -372,17 +374,17 @@ export class GameObjectDoor extends GameObjectTemplate {
     /**
      * Text displayed when the door is opened
      */
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data4); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data4); }
 
     /**
      * Text displayed when the door is closed
      */
-    get CloseText() { return new BroadcastTextRef(this, this.row.Data5); }
+    get CloseText() { return BroadcastTextRegistry.ref(this, this.row.Data5); }
 
     /**
      * Whether pathfinding should ignore this door
      */
-    get IgnoredByPathfinding() { return new BroadcastTextRef(this, this.row.Data6); }
+    get IgnoredByPathfinding() { return BroadcastTextRegistry.ref(this, this.row.Data6); }
 
     get Condition1() { return new RefUnknown(this, this.row.Data7); }
 }
@@ -416,31 +418,31 @@ export class GameObjectFishingHole extends GameObjectTemplate {
     /**
      * Possibly 1628 for all fishing holes.
      */
-    get Lock() { return new LockRef(this, this.row.Data4); }
+    get Lock() { return LockRegistry.ref(this, this.row.Data4); }
 }
 
 export class GameObjectFlagDrop extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
+    get Lock() { return LockRegistry.ref(this, this.wrap(this.row.Data0)); }
     get Event() { return new RefUnknown(this, this.row.Data1); }
     get PickupSpell() { return this.wrap(this.row.Data2); }
     get NoDamageImmune() { return this.wrap(this.row.Data3); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data4); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data4); }
 }
 
 export class GameObjectFlagStand extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
+    get Lock() { return LockRegistry.ref(this, this.wrap(this.row.Data0)); }
     get PickupSpell() { return this.wrap(this.row.Data1); }
     get Radius() { return this.wrap(this.row.Data2); }
     get ReturnAura() { return this.wrap(this.row.Data3); }
     get ReturnSpell() { return this.wrap(this.row.Data4); }
     get NoDamageImmune() { return this.wrap(this.row.Data5); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data6); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data6); }
     get LineOfSightOK() { return this.wrap(this.row.Data7); }
     get Condition() { return new RefUnknown(this, this.row.Data8); }
 }
@@ -462,26 +464,26 @@ export class GameObjectGoober extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this, this.wrap(this.row.Data0)); }
+    get Lock() { return LockRegistry.ref(this, this.wrap(this.row.Data0)); }
     get Quest() { return QuestRegistry.ref(this, this.row.Data1); }
     get Event() { return new RefUnknown(this, this.row.Data2); }
     get AutoCloseTime() { return this.wrap(this.row.Data3); }
     get CustomAnim() { return this.wrap(this.row.Data4); }
     get Consumable() { return this.wrap(this.row.Data5); }
     get Cooldown() { return this.wrap(this.row.Data6); }
-    get Page() { return new PageTextRef(this, this.row.Data7); }
+    get Page() { return PageTextRegistry.ref(this, this.row.Data7); }
     get Language() { return this.wrap(this.row.Data8); }
     get PageMaterial() { return this.wrap(this.row.Data9); }
     get Spell() { return SpellRegistry.ref(this, this.row.Data10); }
     get NoDamageImmune() { return this.wrap(this.row.Data11); }
-    get LinkedTrap() { return new GameObjectTrapRef(this, this.row.Data12); }
+    get LinkedTrap() { return GORegistry.Traps.ref(this, this.row.Data12); }
     get Large() { return this.wrap(this.row.Data13); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data14); }
-    get CloseText() { return new BroadcastTextRef(this, this.row.Data15); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data14); }
+    get CloseText() { return BroadcastTextRegistry.ref(this, this.row.Data15); }
     get LineOfSightOK() { return this.wrap(this.row.Data16); }
     get AllowMounted() { return this.wrap(this.row.Data17); }
     get FloatingTooltip() { return this.wrap(this.row.Data18); }
-    get Gossip() { return new GossipPointer(this, this.row.Data19); }
+    get Gossip() { return GossipRegistry.ref(this, this.row.Data19); }
     get WorldStateSetsState() { return this.wrap(this.row.Data20); }
     get FloatOnWater() { return this.wrap(this.row.Data21); }
     get Condition() { return new RefUnknown(this, this.row.Data22); }
@@ -525,7 +527,7 @@ export class GameObjectMinigame extends GameObjectTemplate {
     get GameType() { return this.wrap(this.row.Data0); }
 }
 
-export class GameObjectMoTransport extends GameObjectTemplate {
+export class GameObjectShip extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
@@ -539,41 +541,21 @@ export class GameObjectMoTransport extends GameObjectTemplate {
     get WorldState1() { return this.wrap(this.row.Data7); }
     get CanBeStopped() { return this.wrap(this.row.Data8); }
 }
-export class GameObjectMoTransportRef<T> extends RefStatic<T,GameObjectMoTransport> {
-    protected create(mod: string, id: string): GameObjectMoTransport {
-        return GameObjectTemplates.create(mod,id)
-            .Type.MoTransport.set()
-    }
-    protected clone(mod: string, id: string): GameObjectMoTransport {
-        return GameObjectTemplates.create(mod,id,this.cell.get())
-            .Type.MoTransport.as()
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: GameObjectMoTransport): number {
-        return v.ID;
-    }
-    protected resolve(): GameObjectMoTransport {
-        return GameObjectTemplates.load(this.cell.get())
-            .Type.MoTransport.as()
-    }
-}
 
 export class GameObjectQuestGiver extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this ,this.row.Data0); }
+    get Lock() { return LockRegistry.ref(this ,this.row.Data0); }
     get QuestList() { return this.wrap(this.row.Data1); }
     get PageMaterial() { return this.wrap(this.row.Data2); }
-    get Gossip() { return new GossipPointer(this, this.row.Data3); }
+    get Gossip() { return GossipRegistry.ref(this, this.row.Data3); }
     get CustomAnim() { return this.wrap(this.row.Data4); }
     get NoDamageImmune() { return this.wrap(this.row.Data5); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data6) }
-    get IsLOSOk() { return new BroadcastTextRef(this, this.row.Data7) }
-    get AllowMounted() { return new BroadcastTextRef(this, this.row.Data8) }
-    get IsLarge() { return new BroadcastTextRef(this, this.row.Data9) }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data6) }
+    get IsLOSOk() { return BroadcastTextRegistry.ref(this, this.row.Data7) }
+    get AllowMounted() { return BroadcastTextRegistry.ref(this, this.row.Data8) }
+    get IsLarge() { return BroadcastTextRegistry.ref(this, this.row.Data9) }
     get Condition() { return new RefUnknown(this, this.row.Data10) }
 }
 
@@ -595,7 +577,7 @@ export class GameObjectSpellFocus extends GameObjectTemplate {
     }
     get Focus() { return new RefUnknown(this, this.row.Data0); }
     get Distance() { return this.wrap(this.row.Data1); }
-    get LinkedTrap() { return new GameObjectTrapRef(this ,this.row.Data2); }
+    get LinkedTrap() { return GORegistry.Traps.ref(this ,this.row.Data2); }
     get ServerOnly() { return this.wrap(this.row.Data3); }
     get Quest() { return QuestRegistry.ref(this, this.row.Data4); }
     get Large() { return this.wrap(this.row.Data5); }
@@ -623,14 +605,14 @@ export class GameObjectText extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Page() { return new PageTextRef(this, this.row.Data0); }
+    get Page() { return PageTextRegistry.ref(this, this.row.Data0); }
     get Language() { return this.wrap(this.row.Data1); }
     get PageMaterial() { return this.wrap(this.row.Data2); }
     get AllowMounted() { return this.wrap(this.row.Data3); }
     get Condition() { return new RefUnknown(this, this.row.Data4); }
 }
 
-export class GameObjectTransport extends GameObjectTemplate {
+export class GameObjectElevator extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
@@ -643,32 +625,11 @@ export class GameObjectTransport extends GameObjectTemplate {
     get Keyframes() { return new ElevatorKeyframes(this); }
 }
 
-export class GameObjectTransportRef<T> extends RefStatic<T,GameObjectTransport> {
-    protected create(mod: string, id: string): GameObjectTransport {
-        return GameObjectTemplates.create(mod,id)
-            .Type.Transport.set()
-    }
-    protected clone(mod: string, id: string): GameObjectTransport {
-        return GameObjectTemplates.create(mod,id,this.cell.get())
-            .Type.Transport.as()
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: GameObjectTransport): number {
-        return v.ID;
-    }
-    protected resolve(): GameObjectTransport {
-        return GameObjectTemplates.load(this.cell.get())
-            .Type.Transport.as()
-    }
-}
-
 export class GameObjectTrap extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Lock() { return new LockRef(this, this.row.Data0); }
+    get Lock() { return LockRegistry.ref(this, this.row.Data0); }
     get Level() { return this.wrap(this.row.Data1); }
     get Diameter() { return this.wrap(this.row.Data2); }
     get Spell() { return SpellRegistry.ref(this, this.row.Data3); }
@@ -685,31 +646,10 @@ export class GameObjectTrap extends GameObjectTemplate {
     get Stealthed() { return this.wrap(this.row.Data9); }
     get Large() { return this.wrap(this.row.Data10); }
     get Invisible() { return this.wrap(this.row.Data11); }
-    get OpenText() { return new BroadcastTextRef(this, this.row.Data12); }
-    get CloseText() { return new BroadcastTextRef(this, this.row.Data13); }
+    get OpenText() { return BroadcastTextRegistry.ref(this, this.row.Data12); }
+    get CloseText() { return BroadcastTextRegistry.ref(this, this.row.Data13); }
     get IgnoreTotems() { return this.wrap(this.row.Data14); }
     get Condition() { return new RefUnknown(this, this.row.Data15); }
-}
-
-export class GameObjectTrapRef<T> extends RefStatic<T,GameObjectTrap> {
-    protected create(mod: string, id: string): GameObjectTrap {
-        return GameObjectTemplates.create(mod,id)
-            .Type.Trap.set()
-    }
-    protected clone(mod: string, id: string): GameObjectTrap {
-        return GameObjectTemplates.create(mod,id,this.cell.get())
-            .Type.Trap.as()
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: GameObjectTrap): number {
-        return v.ID;
-    }
-    protected resolve(): GameObjectTrap {
-        return GameObjectTemplates.load(this.cell.get())
-            .Type.Trap.as()
-    }
 }
 
 export class GameObjectTrapdoor extends GameObjectTemplate {
@@ -746,15 +686,15 @@ export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {
     /** Enum Value = 10 */
     get Goober()               { return this.value(GAMEOBJECT_TYPE_GOOBER, x=>new GameObjectGoober(x.row)) }
     /** Enum Value = 11 */
-    get Transport()            { return this.value(GAMEOBJECT_TYPE_TRANSPORT, x=>new GameObjectTransport(x.row)) }
+    get Elevator()            { return this.value(GAMEOBJECT_TYPE_TRANSPORT, x=>new GameObjectElevator(x.row)) }
     /** Enum Value = 12 */
-    get Areadamage()           { return this.value(GAMEOBJECT_TYPE_AREADAMAGE, x=>new GameObjectAreaDamage(x.row)) }
+    get AreaDamage()           { return this.value(GAMEOBJECT_TYPE_AREADAMAGE, x=>new GameObjectAreaDamage(x.row)) }
     /** Enum Value = 13 */
     get Camera()               { return this.value(GAMEOBJECT_TYPE_CAMERA, x=>new GameObjectCamera(x.row)) }
     /** Enum Value = 14 */
     get MapObject()            { return this.plain_value(GAMEOBJECT_TYPE_MAP_OBJECT) }
     /** Enum Value = 15 */
-    get MoTransport()          { return this.value(GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, x=>new GameObjectMoTransport(x.row)) }
+    get Ship()                 { return this.value(GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, x=>new GameObjectShip(x.row)) }
     /** Enum Value = 16 */
     get DuelArbiter()          { return this.plain_value(GAMEOBJECT_TYPE_DUEL_ARBITER) }
     /** Enum Value = 17 */
@@ -766,19 +706,19 @@ export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {
     /** Enum Value = 20 */
     get Auctionhouse()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE) }
     /** Enum Value = 21 */
-    get Guardpost()            { return this.value(GAMEOBJECT_TYPE_GUARDPOST, x=>new GameObjectGuardPost(x.row)) }
+    get GuardPost()            { return this.value(GAMEOBJECT_TYPE_GUARDPOST, x=>new GameObjectGuardPost(x.row)) }
     /** Enum Value = 22 */
-    get Spellcaster()          { return this.value(GAMEOBJECT_TYPE_SPELLCASTER, x=>new GameObjectSpellCaster(x.row)) }
+    get SpellCaster()          { return this.value(GAMEOBJECT_TYPE_SPELLCASTER, x=>new GameObjectSpellCaster(x.row)) }
     /** Enum Value = 23 */
-    get Meetingstone()         { return this.value(GAMEOBJECT_TYPE_MEETINGSTONE, x=>new GameObjectMeetingStone(x.row)) }
+    get MeetingStone()         { return this.value(GAMEOBJECT_TYPE_MEETINGSTONE, x=>new GameObjectMeetingStone(x.row)) }
     /** Enum Value = 24 */
-    get Flagstand()            { return this.value(GAMEOBJECT_TYPE_FLAGSTAND, x=>new GameObjectFlagStand(x.row)) }
+    get FlagStand()            { return this.value(GAMEOBJECT_TYPE_FLAGSTAND, x=>new GameObjectFlagStand(x.row)) }
     /** Enum Value = 25 */
-    get Fishinghole()          { return this.value(GAMEOBJECT_TYPE_FISHINGHOLE, x=>new GameObjectFishingHole(x.row)) }
+    get FishingHole()          { return this.value(GAMEOBJECT_TYPE_FISHINGHOLE, x=>new GameObjectFishingHole(x.row)) }
     /** Enum Value = 26 */
-    get Flagdrop()             { return this.value(GAMEOBJECT_TYPE_FLAGDROP, x=>new GameObjectFlagDrop(x.row)) }
+    get FlagDrop()             { return this.value(GAMEOBJECT_TYPE_FLAGDROP, x=>new GameObjectFlagDrop(x.row)) }
     /** Enum Value = 27 */
-    get MiniGame()             { return this.value(GAMEOBJECT_TYPE_MINI_GAME, x=>new GameObjectMinigame(x.row)) }
+    get Minigame()             { return this.value(GAMEOBJECT_TYPE_MINI_GAME, x=>new GameObjectMinigame(x.row)) }
     /** Enum Value = 28 */
     get LotteryKiosk()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE_2) }
     /** Enum Value = 29 */
@@ -795,13 +735,4 @@ export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {
     get GuildBank()            { return this.value(GAMEOBJECT_TYPE_GUILD_BANK, x=>new GameObjectGuildBank(x.row)) }
     /** Enum Value = 35 */
     get Trapdoor()             { return this.value(GAMEOBJECT_TYPE_TRAPDOOR, x=>new GameObjectTrapdoor(x.row)) }
-}
-
-export class GameObjectTemplateRefReadOnly<T> extends RefReadOnly<T,GameObjectTemplate> {
-    getRef(): GameObjectTemplate {
-        return GameObjectTemplates.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
 }

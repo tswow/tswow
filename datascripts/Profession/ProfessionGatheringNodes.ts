@@ -1,5 +1,5 @@
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { GameObjectTemplates } from "../GameObject/GameObjects";
+import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { GameObjectChest } from "../GameObject/GameObjectTemplate";
 import { Lock } from "../Locks/Lock";
 import { LockRegistry } from "../Locks/Locks";
@@ -36,8 +36,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
                     .ItemTemplate.set(item)
             })
         })
-        GameObjectTemplates.create(mod,id)
-            .Type.Chest.set()
+        GORegistry.Chests.create(mod,id)
             .IsConsumable.set(1)
             .Lock.set(lock.ID)
             .Display.set(displayid)
@@ -51,8 +50,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
                 .LockType.set(lockType)
                 .RequiredSkill.set(level)
             )
-        let chest = GameObjectTemplates.create(mod,id)
-            .Type.Chest.set()
+        let chest = GORegistry.Chests.create(mod,id)
             .IsConsumable.set(1)
             .Lock.set(lock.ID)
             .Size.set(1)

@@ -53,7 +53,7 @@ export class AchievementRegistryClass extends
     protected EmptyQuery(): AchievementQuery {
         return {}
     }
-    protected ID(e: Achievement): number {
+    ID(e: Achievement): number {
         return e.ID;
     }
     Clear(r: Achievement) {

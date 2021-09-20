@@ -3,22 +3,22 @@ import { GetIdRange } from "wotlkdata/ids/Ids";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { game_event_conditionRow } from "wotlkdata/sql/types/game_event_condition";
 import { MainEntity } from "../Misc/Entity";
-import { WorldStateRefCreate } from "../WorldState/WorldState";
-import { GameEventRefReadOnly } from "./GameEvent";
+import { WorldStateRegistry } from "../WorldState/WorldState";
+import { GameEventRegistry } from "./GameEvent";
 
 export class GameEventCondition extends MainEntity<game_event_conditionRow> {
     get Index() { return this.row.condition_id.get(); }
     get Event() {
-        return new GameEventRefReadOnly(this, this.row.eventEntry);
+        return GameEventRegistry.readOnlyRef(this, this.row.eventEntry);
     }
     get RequiredNumber() { return this.wrap(this.row.req_num) }
 
     get MaxWorldState() {
-        return new WorldStateRefCreate(this, this.row.max_world_state_field)
+        return WorldStateRegistry.refCreate(this, this.row.max_world_state_field)
     }
 
     get DoneWorldState() {
-        return new WorldStateRefCreate(this, this.row.done_world_state_field)
+        return WorldStateRegistry.refCreate(this, this.row.done_world_state_field)
     }
 }
 

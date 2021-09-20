@@ -3,9 +3,8 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
 import { MainEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/RefOld";
 import { Lock } from "./Lock";
-import { LockRegistry, LockTypeRegistry } from "./Locks";
+import { LockRegistry } from "./Locks";
 
 export type LockTypeCursorType = "FishingCursor"|"PickLock"|"GatherHerbs"|"Mine"|string
 export class LockTypeCursor extends CellSystem<LockType> {
@@ -77,26 +76,4 @@ export class LockType extends MainEntity<LockTypeRow> {
     get Cursor() { return new LockTypeCursor(this); }
     @Transient
     get Locks() { return new LockTypeLocks(this); }
-}
-
-export class LockTypeRef<T> extends Ref<T,LockType> {
-    protected create(): LockType {
-        return LockTypeRegistry.create();
-    }
-
-    protected clone(): LockType {
-        return LockTypeRegistry.create(this.cell.get());
-    }
-
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-
-    protected id(v: LockType): number {
-        return v.ID;
-    }
-
-    protected resolve(): LockType {
-        return LockTypeRegistry.load(this.cell.get());
-    }
 }

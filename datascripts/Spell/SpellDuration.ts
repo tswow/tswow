@@ -15,10 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { SpellDurationQuery, SpellDurationRow } from "wotlkdata/dbc/types/SpellDuration";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class SpellDuration extends MainEntity<SpellDurationRow> {
     clear(): this {
@@ -39,25 +42,46 @@ export class SpellDuration extends MainEntity<SpellDurationRow> {
     }
 }
 
-export class SpellDurationPointer<T> extends Ref<T,SpellDuration> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected create(): SpellDuration {
-        return new SpellDuration(DBC.SpellDuration.add(Ids.SpellDuration.id()));
-    }
-    protected clone(): SpellDuration {
-        return new SpellDuration(this.resolve().row.clone(Ids.SpellDuration.id()));
-    }
-    protected id(v: SpellDuration): number {
-        return v.row.ID.get()
-    }
-    protected resolve(): SpellDuration {
-        return new SpellDuration(DBC.SpellDuration.findById(this.cell.get()));
-    }
-
+export class SpellDurationRef<T> extends RefDynamic<T,SpellDuration>
+{
     setSimple(duration: number, durationPerLevel: number = 0, maxDuration = duration + durationPerLevel*255) {
         this.getRefCopy().set(duration,durationPerLevel,maxDuration);
         return this.owner;
     }
 }
+
+export class SpellDurationRegistryClass
+    extends RegistryDynamicNoRef<SpellDuration,SpellDurationRow,SpellDurationQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellDurationRef(owner,cell,this);
+    }
+    protected Table(): Table<any, SpellDurationQuery, SpellDurationRow> & { add: (id: number) => SpellDurationRow; } {
+        return DBC.SpellDuration
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellDuration
+    }
+    Clear(entity: SpellDuration): void {
+        entity.Duration.set(0)
+              .DurationPerLevel.set(0)
+              .MaxDuration.set(0)
+    }
+    protected Clone(entity: SpellDuration, parent: SpellDuration): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): SpellDurationRow {
+        return DBC.SpellDuration.findById(id);
+    }
+    protected EmptyQuery(): SpellDurationQuery {
+        return {}
+    }
+    ID(e: SpellDuration): number {
+        return e.ID;
+    }
+    protected Entity(r: SpellDurationRow): SpellDuration {
+        return new SpellDuration(r);
+    }
+}
+
+export const SpellDurationRegistry = new SpellDurationRegistryClass();

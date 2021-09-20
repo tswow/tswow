@@ -1,9 +1,8 @@
 import { finish } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { BattlemasterListQuery, BattlemasterListRow } from "wotlkdata/dbc/types/BattlemasterList";
+import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
 import { MapRegistry } from "../Map/Maps";
-import { RegistryStatic } from "../Refs/Registry";
 import { WorldSafeLocRef, WorldSafeLocRegistry } from "../WorldSafeLocs/WorldSafeLocs";
 import { BattlegroundBase, createBgBase, filterBgsBase } from "./BattlegroundBase";
 import { BattlegroundBrackets } from "./BattlegroundBracket";
@@ -72,13 +71,6 @@ function filterBgs(query: BattlemasterListQuery) {
         )
         .map(({dbc,sql})=>new Battleground(dbc,sql))
 }
-
-export class BattlegroundRegistryClass
-    extends RegistryStatic<
-          Battleground
-        , BattlemasterListRow
-        , BattlemasterListQuery
-    >
 
 export const BattlegroundRegistry = {
     create(mod: string, id: string, map: number) {

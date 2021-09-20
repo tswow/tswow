@@ -15,10 +15,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
 import { Gossip } from "./Gossip";
 
-export const Gossips = {
+export class GossipRef<T> extends RefDynamic<T,Gossip> {}
+
+// needs special handling since the constructor is different
+export const GossipRegistry = {
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new GossipRef(owner, cell, this);
+    },
+
+    ID(gossip: Gossip) {
+        return gossip.ID
+    },
+
+    Exists(value: number) {
+        return value > 0;
+    },
+
     create(){
         const id = Ids.gossip_menu.id();
         const text = Ids.NPCText.id();
@@ -38,6 +55,7 @@ export const Gossips = {
     },
 
     load(id: number) {
-        return new Gossip(SQL.gossip_menu.find({MenuID:id}));
+        let value = SQL.gossip_menu.find({MenuID:id});
+        return (value ? new Gossip(value) : undefined) as Gossip;
     }
 }

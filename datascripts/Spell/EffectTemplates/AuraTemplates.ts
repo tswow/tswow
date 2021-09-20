@@ -7,7 +7,7 @@ import { FactionRegistry } from "../../Faction/Faction";
 import { Ids } from "../../Misc/Ids";
 import { SchoolEnum, SchoolMask } from "../../Misc/School";
 import { RefUnknown } from "../../Refs/RefOld";
-import { VehicleRef } from "../../Vehicle/Vehicle";
+import { VehicleRegistry } from "../../Vehicle/Vehicle";
 import { SpellEffectMechanicEnum, SpellEffectMechanicMask } from "../SpellEffectMechanics";
 import { SpellPowerType } from "../SpellPowerType";
 import { ChanceBase, CountBase, DamageBase, DamageBasePct, HealBase, HealBasePct, ManaBase, PercentBase, PointsBase, PowerBase, PowerBasePct } from "./PointsBase";
@@ -1006,7 +1006,7 @@ export class PreventRegeneratePower extends TargetBase {
 // 295
 // 296
 export class SetVehicleId extends TargetBase {
-    get Vehicle() { return new VehicleRef(this,this.owner.MiscValueA); }
+    get Vehicle() { return VehicleRegistry.ref(this,this.owner.MiscValueA); }
 }
 // 297
 // 298

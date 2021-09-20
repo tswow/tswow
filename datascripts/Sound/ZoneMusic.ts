@@ -101,7 +101,7 @@ export class ZoneMusicRegistryClass
     protected EmptyQuery(): ZoneMusicQuery {
         return {}
     }
-    protected ID(e: ZoneMusic): number {
+    ID(e: ZoneMusic): number {
         return e.ID;
     }
 

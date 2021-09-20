@@ -17,17 +17,16 @@
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
-import { GossipPointer } from "../Gossip/Gossip";
+import { GossipRegistry } from "../Gossip/Gossips";
 import { LootSetPointer } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { SchoolMask } from "../Misc/School";
-import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
-import { TrainerPointer } from "../Trainer/Trainer";
-import { VehicleRef } from "../Vehicle/Vehicle";
+import { TrainerRegistry } from "../Trainer/Trainer";
+import { VehicleRegistry } from "../Vehicle/Vehicle";
 import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
@@ -91,15 +90,15 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get UnitFlags() { return new UnitFlags(this); }
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
     get UnitClass() { return new UnitClass(this, this.row.unit_class); }
-    get DynamicFlags() { return new CreatureTemplateRef(this, this.row.dynamicflags); }
-    get DungeonHeroic() { return new CreatureTemplateRef(this, this.row.difficulty_entry_1); }
-    get RaidNormal25() { return new CreatureTemplateRef(this, this.row.difficulty_entry_1); }
-    get RaidHeroic10() { return new CreatureTemplateRef(this, this.row.difficulty_entry_2); }
-    get RaidHeroic25() { return new CreatureTemplateRef(this, this.row.difficulty_entry_3); }
+    get DynamicFlags() { return CreatureTemplateRegistry.ref(this, this.row.dynamicflags); }
+    get DungeonHeroic() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_1); }
+    get RaidNormal25() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_1); }
+    get RaidHeroic10() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_2); }
+    get RaidHeroic25() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_3); }
     get Models() { return new CreatureModels(this); }
     get Icon() { return new CreatureIconNames(this); }
     get Gossip() {
-        return new GossipPointer(this, this.row.gossip_menu_id);
+        return GossipRegistry.ref(this, this.row.gossip_menu_id);
     }
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
@@ -109,7 +108,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get AttackTime() { return new CreatureAttackTime(this); }
     get Family() { return new CreatureFamily(this, this.row.family); }
     get PetSpells() { return this.wrap(this.row.PetSpellDataId); }
-    get Vehicle() { return new VehicleRef(this, this.row.VehicleId); }
+    get Vehicle() { return VehicleRegistry.ref(this, this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }
     get AIName() { return new CreatureAI(this); }
     get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
@@ -129,7 +128,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
         } else {
             trainerRow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
         }
-        return new TrainerPointer(this,ctrow.TrainerId);
+        return TrainerRegistry.readOnlyRef(this,ctrow.TrainerId);
     }
     get Vendor() { return new CreatureVendor(this); }
 
@@ -191,32 +190,5 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
 
     protected isGameObject(): boolean {
         return false;
-    }
-}
-
-export class CreatureTemplateRef<T> extends RefStatic<T,CreatureTemplate> {
-    protected create(mod: string, id: string): CreatureTemplate {
-        return CreatureTemplateRegistry.create(mod,id);
-    }
-    protected clone(mod: string, id: string): CreatureTemplate {
-        return CreatureTemplateRegistry.create(mod,id,this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: CreatureTemplate): number {
-        return v.ID;
-    }
-    protected resolve(): CreatureTemplate {
-        return CreatureTemplateRegistry.load(this.cell.get());
-    }
-}
-
-export class CreatureTemplateRefReadOnly<T> extends RefReadOnly<T,CreatureTemplate> {
-    getRef(): CreatureTemplate {
-        return CreatureTemplateRegistry.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
     }
 }

@@ -2,14 +2,12 @@ import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkda
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template";
-import { GameObjectTemplates } from "../GameObject/GameObjects";
+import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { GameObjectAreaDamage, GameObjectButton, GameObjectCamera, GameObjectChest, GameObjectDoor, GameObjectFishingHole, GameObjectFlagDrop, GameObjectFlagStand, GameObjectGoober, GameObjectQuestGiver, GameObjectTemplate, GameObjectTrap, GameObjectType } from "../GameObject/GameObjectTemplate";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_TRAP } from "../GameObject/GameObjectTypes";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { ArrayEntity } from "../Misc/Entity";
-import { Ref } from "../Refs/RefOld";
-import { LockRegistry } from "./Locks";
-import { LockTypeRef } from "./LockType";
+import { LockTypeRegistry } from "./Locks";
 
 export class LockIndexBase extends TransformedClass<LockIndexPlain> {
     protected container: Lock;
@@ -64,7 +62,7 @@ export class LockIndexPlain extends LockIndexBase {
 
 export class LockIndexLockType extends LockIndexBase {
     get LockType() {
-        return new LockTypeRef(
+        return LockTypeRegistry.ref(
               this
             , this.wrapIndex(this.container.row.Index,this.index)
         )
@@ -137,7 +135,7 @@ export abstract class LockGameObject<T extends GameObjectTemplate> extends Multi
         let [lockIndex,type,transformer] = this.values();
         let query: gameobject_templateQuery = {type}
         query[lockIndex] = this.owner.ID
-        return GameObjectTemplates
+        return GORegistry.Plain
             .queryAll(query)
             .map(x=>transformer(x.Type).as())
     }
@@ -153,7 +151,7 @@ export class LockChests extends LockGameObject<GameObjectChest> {
 
 export class LockAreaDamages extends LockGameObject<GameObjectAreaDamage> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectAreaDamage>] {
-        return ['Data0',GAMEOBJECT_TYPE_AREADAMAGE,x=>x.Areadamage]
+        return ['Data0',GAMEOBJECT_TYPE_AREADAMAGE,x=>x.AreaDamage]
     }
 }
 
@@ -177,19 +175,19 @@ export class LockDoors extends LockGameObject<GameObjectDoor> {
 
 export class LockFishingHoles extends LockGameObject<GameObjectFishingHole> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectFishingHole>] {
-        return ['Data4', GAMEOBJECT_TYPE_FISHINGHOLE,x=>x.Fishinghole]
+        return ['Data4', GAMEOBJECT_TYPE_FISHINGHOLE,x=>x.FishingHole]
     }
 }
 
 export class LockFlagDrops extends LockGameObject<GameObjectFlagDrop> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectFlagDrop>] {
-        return ['Data0',GAMEOBJECT_TYPE_FLAGDROP,x=>x.Flagdrop]
+        return ['Data0',GAMEOBJECT_TYPE_FLAGDROP,x=>x.FlagDrop]
     }
 }
 
 export class LockFlagStands extends LockGameObject<GameObjectFlagStand> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectFlagStand>] {
-        return ['Data0',GAMEOBJECT_TYPE_FLAGSTAND,x=>x.Flagstand]
+        return ['Data0',GAMEOBJECT_TYPE_FLAGSTAND,x=>x.FlagStand]
     }
 }
 
@@ -248,22 +246,4 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
     get Goobers() { return new LockGoobers(this); }
     get QuestGivers() { return new LockQuestGivers(this); }
     get Traps() { return new LockTraps(this); }
-}
-
-export class LockRef<T> extends Ref<T,Lock> {
-    protected create(): Lock {
-        return LockRegistry.create();
-    }
-    protected clone(): Lock {
-        return LockRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: Lock): number {
-        return v.ID
-    }
-    protected resolve(): Lock {
-        return LockRegistry.load(this.cell.get());
-    }
 }

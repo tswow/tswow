@@ -1,10 +1,11 @@
 import { DBC } from "wotlkdata";
 import { DungeonMapQuery, DungeonMapRow } from "wotlkdata/dbc/types/DungeonMap";
+import { Table } from "wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMax2DCell } from "../Misc/LimitCells";
-import { Ref } from "../Refs/RefOld";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class DungeonMap extends MainEntity<DungeonMapRow> {
     get ID() { return this.row.ID.get(); }
@@ -26,48 +27,37 @@ export class DungeonMap extends MainEntity<DungeonMapRow> {
     get ParentWorldMap() { return this.wrap(this.row.ParentWorldMapID); }
 }
 
-export const DungeonMapRegistry = {
-    create(parent?: number) {
-        return new DungeonMap(
-            parent
-            ? DBC.DungeonMap
-                .find({ID:parent}).clone(Ids.DungeonMap.id())
-            : DBC.DungeonMap.add(Ids.DungeonMap.id())
-        );
-    },
-
-    load(id: number) {
-        return new DungeonMap(DBC.DungeonMap.find({ID:id}))
-    },
-
-    filter(query: DungeonMapQuery) {
+export class DungeonMapRegistryClass
+    extends RegistryDynamic<DungeonMap,DungeonMapRow,DungeonMapQuery>
+{
+    protected Table(): Table<any, DungeonMapQuery, DungeonMapRow> & { add: (id: number) => DungeonMapRow; } {
         return DBC.DungeonMap
-            .filter(query)
-            .map(x=>new DungeonMap(x))
-    },
-
-    find(query: DungeonMapQuery) {
-        return new DungeonMap(
-            DBC.DungeonMap
-            .find(query)
-        )
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.DungeonMap
+    }
+    Clear(entity: DungeonMap): void {
+        entity
+            .Boundary.set(0,0,0,0)
+            .FloorIndex.set(0)
+            .Map.set(0)
+            .ParentWorldMap.set(0)
+    }
+    protected Clone(entity: DungeonMap, parent: DungeonMap): void {
+        throw new Error("Method not implemented.");
+    }
+    protected FindByID(id: number): DungeonMapRow {
+        return DBC.DungeonMap.find({ID:id})
+    }
+    protected EmptyQuery(): DungeonMapQuery {
+        return {}
+    }
+    ID(e: DungeonMap): number {
+        return e.ID
+    }
+    protected Entity(r: DungeonMapRow): DungeonMap {
+        return new DungeonMap(r);
     }
 }
 
-export class DungeonMapRef<T> extends Ref<T,DungeonMap> {
-    protected create(): DungeonMap {
-        return DungeonMapRegistry.create();
-    }
-    protected clone(): DungeonMap {
-        return DungeonMapRegistry.create(this.cell.get())
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: DungeonMap): number {
-        return v.ID;
-    }
-    protected resolve(): DungeonMap {
-        return DungeonMapRegistry.load(this.cell.get());
-    }
-}
+export const DungeonMapRegistry = new DungeonMapRegistryClass();

@@ -7,7 +7,7 @@ import { TransportRotationRow } from "wotlkdata/dbc/types/TransportRotation";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";
-import { GameObjectTransport } from "./GameObjectTemplate";
+import { GameObjectElevator } from "./GameObjectTemplate";
 
 export class CellBasic<D extends CPrim,O> extends Cell<D,O> {
     private getter: ()=>D;
@@ -266,7 +266,7 @@ export type KeyFrameCon =  SeqKeyFrameCon & {
     o?: number
 }
 
-export class ElevatorKeyframes extends CellSystem<GameObjectTransport> {
+export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
     getDefault(): ElevatorKeyframe[] {
         let times: { [key: number]:
             {

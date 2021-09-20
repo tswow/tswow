@@ -1,8 +1,9 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
+import { SpellChainEffectsQuery, SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     clear(): this {
@@ -63,20 +64,38 @@ export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     get ID() { return this.row.ID.get(); }
 }
 
-export class SpellChainEffectPointer<T> extends Ref<T,SpellChainEffect> {
-    exists(): boolean {
-        return this.cell.get() > 0;
+export class SpellChainEffectRegistryClass
+    extends RegistryDynamic<
+          SpellChainEffect
+        , SpellChainEffectsRow
+        , SpellChainEffectsQuery
+    >
+{
+    protected Table(): Table<any, SpellChainEffectsQuery, SpellChainEffectsRow> & { add: (id: number) => SpellChainEffectsRow; } {
+        return DBC.SpellChainEffects
     }
-    protected create(): SpellChainEffect {
-        return new SpellChainEffect(DBC.SpellChainEffects.add(Ids.SpellChainEffects.id()))
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellChainEffects
     }
-    protected clone(): SpellChainEffect {
-        return new SpellChainEffect(this.resolve().row.clone(Ids.SpellChainEffects.id()))
+    Clear(entity: SpellChainEffect): void {
+        // I have no idea
+        throw new Error("Method not implemented.");
     }
-    protected id(v: SpellChainEffect): number {
-        return v.ID;
+    protected Clone(entity: SpellChainEffect, parent: SpellChainEffect): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): SpellChainEffect {
-        return new SpellChainEffect(DBC.SpellChainEffects.findById(this.cell.get()));
+    protected FindByID(id: number): SpellChainEffectsRow {
+        return DBC.SpellChainEffects.findById(id);
+    }
+    protected EmptyQuery(): SpellChainEffectsQuery {
+        return {}
+    }
+    ID(e: SpellChainEffect): number {
+        return e.ID
+    }
+    protected Entity(r: SpellChainEffectsRow): SpellChainEffect {
+        return new SpellChainEffect(r);
     }
 }
+
+export const SpellChainEffectRegistry = new SpellChainEffectRegistryClass();

@@ -33,7 +33,7 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
     protected EmptyQuery(): CurrencyTypesQuery {
         return {}
     }
-    protected ID(e: Currency): number {
+    ID(e: Currency): number {
         return e.ID
     }
     Clear(entity: Currency, mod: string, id: string) {
