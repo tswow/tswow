@@ -4,7 +4,7 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gt, lt } from "wotlkdata/query/Relations";
 import { quest_poiRow } from "wotlkdata/sql/types/quest_poi";
 import { quest_poi_pointsRow } from "wotlkdata/sql/types/quest_poi_points";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
 import { PositionXYCell } from "../Misc/PositionCell";
@@ -57,7 +57,7 @@ export class QuestPOI extends MainEntity<quest_poiRow> {
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.QuestID); }
     get Index() { return this.row.id.get(); }
     get ObjectiveIndex() { return this.wrap(this.row.ObjectiveIndex); }
-    get Map() { return new MapRef(this, this.row.MapID); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
     get WorldMapArea() {
         return new WorldMapAreaRef(this, this.row.WorldMapAreaId);
     }

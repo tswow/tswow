@@ -6,7 +6,7 @@ import { creature_model_infoRow } from "wotlkdata/sql/types/creature_model_info"
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SoundEntryRegistry } from "../Sound/SoundEntry";
 
 export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     clear(): this {
@@ -42,7 +42,7 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     get FoleyMaterial() { return this.wrap(this.row.FoleyMaterialID); }
     get FootstepShakeSize() { return this.wrap(this.row.FootstepShakeSize); }
     get DeathThudShake() { return this.wrap(this.row.DeathThudShakeSize); }
-    get Sound() { return new SoundEntryPointer(this, this.row.SoundID); }
+    get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundID); }
     get CollisionWidth() { return this.wrap(this.row.CollisionWidth); }
     get CollisionHeight() { return this.wrap(this.row.CollisionHeight);}
     get MountHeight() { return this.wrap(this.row.MountHeight); }
@@ -79,14 +79,14 @@ export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
     get BoundingRadius() { return this.wrap(this.sql_row.BoundingRadius); }
     get CombatReach() { return this.wrap(this.sql_row.CombatReach); }
 
-    get Sound() { return new SoundEntryPointer(this,this.row.SoundID); }
+    get Sound() { return SoundEntryRegistry.ref(this,this.row.SoundID); }
     get ExtendedDisplay() { return this.wrap(this.row.ExtendedDisplayInfoID); }
     get CreatureModelScale() { return this.wrap(this.row.CreatureModelScale); }
     get CreatureModelAlpha() { return this.wrap(this.row.CreatureModelAlpha); }
     get TextureVariation() { return this.wrapArray(this.row.TextureVariation); }
     get BloodLevel() { return this.wrap(this.row.BloodLevel); }
     get Blood() { return this.wrap(this.row.BloodID); }
-    get NPCSound() { return new SoundEntryPointer(this,this.row.NPCSoundID); }
+    get NPCSound() { return SoundEntryRegistry.ref(this,this.row.NPCSoundID); }
     get ParticleColor() { return this.wrap(this.row.ParticleColorID); }
     get CreatureGeosetData() { return this.wrap(this.row.CreatureGeosetData); }
     get ObjectEffectPackage() { return this.wrap(this.row.ObjectEffectPackageID); }

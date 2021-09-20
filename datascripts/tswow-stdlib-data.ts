@@ -20,17 +20,17 @@ import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
 import { BattlegroundRegistry } from "./Battleground/Battleground";
 import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
-import { Classes } from "./Class/Class";
-import { CreatureInstances, CreatureTemplates } from "./Creature/Creatures";
+import { ClassRegistry } from "./Class/Class";
+import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creature/Creatures";
 import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 import { ElevatorRegistry } from "./Elevators/Elevators";
 import { EnchantmentRegistry } from "./Enchant/Enchantment";
-import { EnchantmentConditionsRegistry } from "./Enchant/EnchantmentCondition";
-import { Factions } from "./Faction/Faction";
+import { EnchantmentConditionRegistry } from "./Enchant/EnchantmentCondition";
+import { FactionRegistry } from "./Faction/Faction";
 import { GameEventRegistry } from "./GameEvent/GameEvent";
 import { HolidayRegistry } from "./GameEvent/Holiday";
-import { GameObjectDisplays, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
+import { GameObjectDisplayRegistry, GameObjectInstances, GameObjectTemplates } from "./GameObject/GameObjects";
 import { GemRegistry } from "./Gem/Gem";
 import { GlyphRegistry } from "./Glyph/Glyph";
 import { Gossips } from "./Gossip/Gossips";
@@ -38,19 +38,18 @@ import { TSImages } from "./Images/Image";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
 import { LanguageRegistry } from "./Languages/Languages";
 import { Lights } from "./Light/Lights";
-import { Locks, LockTypes } from "./Locks/Locks";
+import { LockRegistry, LockTypeRegistry } from "./Locks/Locks";
 import { Loot } from "./Loot/Loot";
 import { MailTemplateRegistry } from "./Mail/MailTemplate";
 import { LoadingScreens } from "./Map/LoadingScreen";
-import { Maps } from "./Map/Maps";
+import { MapRegistry } from "./Map/Maps";
 import { Compare } from "./Misc/Compare";
 import { Ids } from "./Misc/Ids";
 import { CompanionRegistry } from "./PetsCollectibles/Companion";
 import { MountRegistry } from "./PetsCollectibles/Mount";
-import { Professions } from "./Profession/Professions";
+import { ProfessionRegistry } from "./Profession/Professions";
 import { QuestRegistry } from "./Quest/Quests";
-import { SkillLines } from "./SkillLines/SkillLines";
-import { ClassSkills } from "./Skills/ClassSkill";
+import { SkillLineRegistry } from "./SkillLines/SkillLines";
 import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
 import { SmartScripts } from "./SmartScript/SmartScript";
 import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
@@ -58,7 +57,7 @@ import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
 import { SpellGroups, SpellRegistry } from "./Spell/Spells";
-import { TalentTrees } from "./Talents/Talents";
+import { TalentTreeRegistry } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TitleRegistry } from "./Title/Titles";
 import { TransportRegistry } from "./Transport/Transport";
@@ -84,35 +83,34 @@ export const std = {
     Achievements: AchievementRegistry,
     Loot: Loot,
     Items: ItemTemplateRegistry,
-    Creatures: CreatureInstances,
-    Classes: Classes,
+    Creatures: CreatureInstanceRegistry,
+    Classes: ClassRegistry,
     UI: UI,
-    ClassSkills: ClassSkills,
-    SkillLines: SkillLines,
+    SkillLines: SkillLineRegistry,
     /** Templates used by one or multiple creature instances */
-    CreatureTemplates: CreatureTemplates,
+    CreatureTemplates: CreatureTemplateRegistry,
     /** Individual creatures placed in the world */
-    CreatureInstances: CreatureInstances,
-    TalentTrees: TalentTrees,
-    Factions: Factions,
+    CreatureInstances: CreatureInstanceRegistry,
+    TalentTrees: TalentTreeRegistry,
+    Factions: FactionRegistry,
     Scripts: SmartScripts,
     Gossip: Gossips,
     Lights: Lights,
     ScriptPaths: ScriptPaths,
     Areas: AreaRegistry,
-    Maps: new Maps(),
+    Maps: MapRegistry,
     LoadingScreens: LoadingScreens,
     /** Templates used by one or multiple game object instances */
     GameObjectTemplates: GameObjectTemplates,
     /** Individual Game Objects placed in the world */
     GameObjectInstances: GameObjectInstances,
     /** Model, sound and bounding box data for GameObjects */
-    GameObjectDisplays: GameObjectDisplays,
+    GameObjectDisplays: GameObjectDisplayRegistry,
     /** Allows manipulating images programmatically */
     Image: TSImages,
-    Professions: Professions,
-    Locks: Locks,
-    LockTypes: LockTypes,
+    Professions: ProfessionRegistry,
+    Locks: LockRegistry,
+    LockTypes: LockTypeRegistry,
     SoundEntries: SoundEntryRegistry,
     SoundAmbience: SoundAmbienceRegistry,
     ZoneMusic: ZoneMusicRegistry,
@@ -122,7 +120,7 @@ export const std = {
     SkillTiers: SkillTiersRegistry,
     Glyphs: GlyphRegistry,
     Enchantments: EnchantmentRegistry,
-    EnchantmentConditions: EnchantmentConditionsRegistry,
+    EnchantmentConditions: EnchantmentConditionRegistry,
     Gems: GemRegistry,
     Currency: CurrencyRegistry,
     CurrencyCategory: CurrencyCategoryRegistry,

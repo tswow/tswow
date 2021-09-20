@@ -45,7 +45,7 @@ import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
-import { CreatureInstances, CreatureTemplates } from "./Creatures";
+import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
 import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
@@ -177,7 +177,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     }
 
     spawn(mod: string, id: string, pos: Position) {
-        return CreatureInstances.create(mod, id, this.ID, pos);
+        return CreatureInstanceRegistry.create(mod, id, this.ID).Position.set(pos);
     }
 
     spawnMod(mod: string, id: string, pos: Position, callback: (instance: CreatureInstance)=>void = ()=>{}) {
@@ -196,10 +196,10 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
 
 export class CreatureTemplateRef<T> extends RefStatic<T,CreatureTemplate> {
     protected create(mod: string, id: string): CreatureTemplate {
-        return CreatureTemplates.create(mod,id);
+        return CreatureTemplateRegistry.create(mod,id);
     }
     protected clone(mod: string, id: string): CreatureTemplate {
-        return CreatureTemplates.create(mod,id,this.cell.get());
+        return CreatureTemplateRegistry.create(mod,id,this.cell.get());
     }
     exists(): boolean {
         return this.cell.get() > 0;
@@ -208,13 +208,13 @@ export class CreatureTemplateRef<T> extends RefStatic<T,CreatureTemplate> {
         return v.ID;
     }
     protected resolve(): CreatureTemplate {
-        return CreatureTemplates.load(this.cell.get());
+        return CreatureTemplateRegistry.load(this.cell.get());
     }
 }
 
 export class CreatureTemplateRefReadOnly<T> extends RefReadOnly<T,CreatureTemplate> {
     getRef(): CreatureTemplate {
-        return CreatureTemplates.load(this.cell.get());
+        return CreatureTemplateRegistry.load(this.cell.get());
     }
     exists(): boolean {
         return this.cell.get() > 0;

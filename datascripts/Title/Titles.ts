@@ -49,7 +49,7 @@ export class TitleRegistryClass extends RegistryStatic<Title,CharTitlesRow,CharT
     protected ID(e: Title): number {
         return e.ID;
     }
-    protected Clear(title: Title) {
+    Clear(title: Title) {
         title.MaleText.clear().FemaleText.clear()
     }
 }

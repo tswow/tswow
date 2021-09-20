@@ -56,7 +56,7 @@ export class AchievementRegistryClass extends
     protected ID(e: Achievement): number {
         return e.ID;
     }
-    protected Clear(r: Achievement) {
+    Clear(r: Achievement) {
         r.row.Category.set(0)
              .Description.clear()
              .Faction.set(0)

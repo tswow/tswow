@@ -1,42 +1,53 @@
 import { DBC } from "wotlkdata";
-import { CreateArgument, SystemStoreTop } from "wotlkdata/cell/serialization/SystemStore";
-import { MapQuery } from "wotlkdata/dbc/types/Map";
-import { Ids } from "../Misc/Ids";
+import { MapQuery, MapRow } from "wotlkdata/dbc/types/Map";
+import { Table } from "wotlkdata/table/Table";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
 import { Map } from "./Map";
 
-export class Maps extends SystemStoreTop<Map> {
-    protected registeredClass() { return Map; }
-
-    protected loadRaw(args: any[]): Map {
-        return this.load(args[0] as number);
+export class MapRegistryClass
+    extends RegistryStatic<Map,MapRow,MapQuery>
+{
+    protected Table(): Table<any, MapQuery, MapRow> & { add: (id: number) => MapRow; } {
+        return DBC.Map
     }
-
-    protected createInt(mod: string, id: string): Map {
-        return this.create(mod,id);
+    protected IDs(): StaticIDGenerator {
+        return Ids.Map
     }
-
-    protected className(): string {
-        return "tswow-stdlib.Map";
+    Clear(r: Map): void {
+        r.InstanceType.None.set()
+        .AllianceDescription.clear()
+        .AreaTable.set(0)
+        .CorpseMap.set(-1)
+        .CorpsePos.setSpread(0,0)
+        .Directory.set('')
+        .Expansion.set(0)
+        .Flags.set(0)
+        .HordeDescription.clear()
+        .InstanceType.None.set()
+        .IsPVP.set(0)
+        .LoadingScreen.set(0)
+        .MaxPlayers.set(0)
+        .MinimapIconScale.set(0)
+        .Name.clear()
+        .RaidOffset.set(0)
+        .TimeofDayOverride.set(0)
     }
-
-    protected template(): Map {
-        return this.load(0);
+    protected Clone(mod: string, name: string, r: Map, parent: Map): void {
+        throw new Error("Method not implemented.");
     }
-
-    protected createArguments(): CreateArgument[] { return [] }
-
-    load(id: number): Map {
-        return new Map(DBC.Map.findById(id));
+    protected Entity(r: MapRow): Map {
+        return new Map(r);
     }
-
-    create(mod: string, id: string, parent = 0) {
-        return new Map(
-            parent ? DBC.Map.findById(parent).clone(Ids.Map.id(mod,id))
-            :  DBC.Map.add(Ids.Map.id(mod,id))
-        );
+    protected FindByID(id: number): MapRow {
+        return DBC.Map.findById(id);
     }
-
-    filter(query: MapQuery) {
-        return DBC.Map.filter(query).map(x=>new Map(x));
+    protected EmptyQuery(): MapQuery {
+        return {}
+    }
+    protected ID(e: Map): number {
+        return e.ID;
     }
 }
+
+export const MapRegistry = new MapRegistryClass();

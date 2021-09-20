@@ -1,8 +1,12 @@
 import { SQL } from "wotlkdata"
+import { Cell } from "wotlkdata/cell/cells/Cell"
 import { transportsQuery, transportsRow } from "wotlkdata/sql/types/transports"
+import { Table } from "wotlkdata/table/Table"
 import { GameObjectMoTransportRef } from "../GameObject/GameObjectTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
+import { RefNoCreate } from "../Refs/Ref"
+import { RegistryRowBase } from "../Refs/Registry"
 import { TaxiNodeConstructor, TaxiPathRegistry } from "../Taxi/Taxi"
 import { std } from "../tswow-stdlib-data"
 
@@ -15,12 +19,34 @@ export class Transport extends MainEntity<transportsRow> {
     get ScriptName() { return this.wrap(this.row.ScriptName); }
 }
 
-export const TransportRegistry = {
-    create(mod: string, id: string, points: TaxiNodeConstructor[]) {
-        let nid = Ids.transports.id(mod,id)
-        let taxiPath = TaxiPathRegistry.createNewPath(mod,id,1,0,points);
+export class TransportRegistryClass
+    extends RegistryRowBase<Transport,transportsRow,transportsQuery>
+{
 
-        let gameObject = std.GameObjectTemplates.create(mod,id)
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner, cell, this);
+    }
+
+    protected Entity(r: transportsRow): Transport {
+        return new Transport(r);
+    }
+    protected FindByID(id: number): transportsRow {
+        return SQL.transports.find({guid:id});
+    }
+    protected EmptyQuery(): transportsQuery {
+        return {}
+    }
+    protected ID(e: Transport): number {
+        return e.ID
+    }
+    protected Table(): Table<any, transportsQuery, transportsRow> {
+        return SQL.transports;
+    }
+
+    createSimple(mod: string,id: string, points: TaxiNodeConstructor[]) {
+        let nid = Ids.transports.id(mod,id)
+        let taxiPath = TaxiPathRegistry.createNewPath(mod,`${id}-path`,1,0,points);
+        let gameObject = std.GameObjectTemplates.create(mod,`${id}-gameobject`)
             .Type.MoTransport.set()
             .SpawnGroup.set(0)
             .Display.set(DEFAULT_DISPLAY_ID)
@@ -36,18 +62,7 @@ export const TransportRegistry = {
             .entry.set(gameObject.ID)
             .name.set('tswow')
         )
-    },
-
-    load(id: number) {
-        return new Transport(SQL.transports.find({entry:id}))
-    },
-
-    filter(query: transportsQuery) {
-        return SQL.transports.filter(query)
-            .map(x=>new Transport(x));
-    },
-
-    find(query: transportsQuery) {
-        return new Transport(SQL.transports.find(query));
     }
 }
+
+export const TransportRegistry = new TransportRegistryClass();

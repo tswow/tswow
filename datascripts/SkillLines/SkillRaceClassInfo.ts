@@ -5,7 +5,8 @@ import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { Ids } from "../Misc/Ids";
-import { SkillLine, SkillLineRef } from "./SkillLine";
+import { SkillLine } from "./SkillLine";
+import { SkillLineRegistry } from "./SkillLines";
 
 export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
     get IsProfession() { return this.bit(5); }
@@ -26,7 +27,7 @@ export class SkillRaceClassInfo extends CellSystemTop {
     get RaceMask() { return new MaskCell32(this, this.row.RaceMask); }
 
     get SkillCostIndex() { return this.wrap(this.row.SkillCostIndex); }
-    get Skill() { return new SkillLineRef(this, this.row.SkillID); }
+    get Skill() { return SkillLineRegistry.ref(this, this.row.SkillID); }
     get SkillTier() { return this.wrap(this.row.SkillTierID); }
     get ID() { return this.row.ID.get() }
 }
@@ -39,15 +40,15 @@ export class SkillRaceClassInfos extends MultiRowSystem<SkillRaceClassInfo,Skill
         return a.row.isDeleted();
     }
 
-    getNew() {
+    addGet() {
         const id = Ids.SkillRaceClassInfo.id();
         const row = DBC.SkillRaceClassInfo.add(id);
         row.SkillID.set(this.owner.ID);
         return new SkillRaceClassInfo(row);
     }
 
-    modNew(callback: (srci: SkillRaceClassInfo)=>void) {
-        callback(this.getNew());
+    addMod(callback: (srci: SkillRaceClassInfo)=>void) {
+        callback(this.addGet());
         return this.owner;
     }
 }

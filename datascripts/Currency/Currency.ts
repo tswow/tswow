@@ -5,13 +5,13 @@ import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
-import { CurrencyCategoryRef } from "./CurrencyCategory";
+import { CurrencyCategoryRegistry } from "./CurrencyCategory";
 
 export class Currency extends MainEntity<CurrencyTypesRow> {
     get BitIndex() { return this.row.BitIndex.get(); }
     get ID() { return this.row.ID.get(); }
     get Item() { return ItemTemplateRegistry.ref(this, this.row.ItemID); }
-    get Category() { return new CurrencyCategoryRef(this, this.row.CategoryID); }
+    get Category() { return CurrencyCategoryRegistry.ref(this, this.row.CategoryID); }
 }
 
 export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypesRow,CurrencyTypesQuery> {
@@ -36,7 +36,7 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
     protected ID(e: Currency): number {
         return e.ID
     }
-    protected Clear(entity: Currency, mod: string, id: string) {
+    Clear(entity: Currency, mod: string, id: string) {
         entity.Category.set(0)
          .Item.set(0)
         let item = ItemTemplateRegistry.create(mod,id)

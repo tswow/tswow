@@ -1,10 +1,13 @@
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { ZoneMusicRow } from "wotlkdata/dbc/types/ZoneMusic";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer, SoundEntryRegistry } from "./SoundEntry";
+import { ZoneMusicQuery, ZoneMusicRow } from "wotlkdata/dbc/types/ZoneMusic";
+import { Table } from "wotlkdata/table/Table";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RefStatic } from "../Refs/Ref";
+import { RegistryStaticNoRef } from "../Refs/Registry";
+import { SoundEntryRegistry } from "./SoundEntry";
 
 export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
     @Transient
@@ -22,48 +25,7 @@ export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
         return this.ownerWrapIndex(this.owner.row.SilenceintervalMax,this.index)
     }
     get Sound() {
-        return new SoundEntryPointer(this.owner,this.ownerWrapIndex(this.owner.row.Sounds,this.index));
-    }
-}
-
-export class ZoneMusicRef<T> extends Ref<T,ZoneMusic> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-
-    protected create(): ZoneMusic {
-        return ZoneMusicRegistry.create()
-    }
-
-    protected clone(): ZoneMusic {
-        return new ZoneMusic(this.resolve().row.clone(Ids.ZoneMusic.dynamicId()));
-    }
-
-    protected id(v: ZoneMusic): number {
-        return v.ID;
-    }
-    protected resolve(): ZoneMusic {
-        return ZoneMusicRegistry.load(this.cell.get());
-    }
-
-    setSimple(
-              directoryBase: string
-            , songs: string[]
-            , silenceIntervalMin: number = 0
-            , silenceIntervalMax: number = 0
-            , volume: number = 1
-            , frequency: number = 1
-        ) {
-            this.set(
-                ZoneMusicRegistry.create(
-                      directoryBase
-                    , songs
-                    , silenceIntervalMin
-                    , silenceIntervalMax
-                    , volume
-                    , frequency
-                    ).ID);
-            return this.owner;
+        return SoundEntryRegistry.ref(this.owner,this.ownerWrapIndex(this.owner.row.Sounds,this.index));
     }
 }
 
@@ -82,61 +44,88 @@ export class ZoneMusic extends CellSystemTop {
     get SetName() { return this.wrap(this.row.SetName); }
 }
 
-function createZoneMusic(id: number, directoryBase: string, songs: string[], silenceIntervalMin: number = 0, silenceIntervalMax: number = 0, volume: number = 1, frequency: number = 1) {
-    let sound = SoundEntryRegistry.create(directoryBase,songs,volume,frequency)
-    let zoneMusic = new ZoneMusic(DBC.ZoneMusic.add(id))
-    return zoneMusic
-        .SetName.set(`ZoneMusic-${zoneMusic.ID}`)
-        .SoundDay.SilenceIntervalMin.set(silenceIntervalMin)
-        .SoundDay.SilenceIntervalMax.set(silenceIntervalMax)
-        .SoundNight.SilenceIntervalMin.set(silenceIntervalMin)
-        .SoundNight.SilenceIntervalMax.set(silenceIntervalMax)
-        .SoundDay.Sound.set(sound.row.ID.get())
-        .SoundNight.Sound.set(sound.row.ID.get());
-}
-
-export const ZoneMusicRegistry = {
-    createStatic(
-          mod: string
-        , id: string
-        , directoryBase = ""
+export class ZoneMusicRef<T> extends RefStatic<T,ZoneMusic> {
+    setSimple
+    (
+          directoryBase = ""
         , songs: string[] = []
         , silenceMin = 0
         , silenceMax = 0
         , volume = 1
         , frequency = 1
     ) {
-        return createZoneMusic(
-          Ids.ZoneMusic.staticId(mod,id)
-        , directoryBase
-        , songs
-        , silenceMin
-        , silenceMax
-        , volume
-        , frequency
-        )
-    },
-
-    create(
-              directoryBase = ""
-            , songs: string[] = []
-            , silenceMin = 0
-            , silenceMax = 0
-            , volume = 1
-            , frequency = 1
-        ) {
-            return createZoneMusic(
-              Ids.ZoneMusic.dynamicId()
-            , directoryBase
-            , songs
-            , silenceMin
-            , silenceMax
-            , volume
-            , frequency
-            )
-    },
-
-    load(id: number) {
-        return new ZoneMusic(DBC.ZoneMusic.findById(id));
+        let music = ZoneMusicRegistry
+            .createSimple(
+                  directoryBase
+                , songs
+                , silenceMin
+                , silenceMax
+                , volume
+                , frequency
+                )
+        this.cell.set(music.ID)
+        return this.owner;
     }
 }
+
+export class ZoneMusicRegistryClass
+    extends RegistryStaticNoRef<ZoneMusic,ZoneMusicRow,ZoneMusicQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>): ZoneMusicRef<T> {
+        return new ZoneMusicRef(owner,cell,this);
+    }
+
+    protected Table(): Table<any, ZoneMusicQuery, ZoneMusicRow> & { add: (id: number) => ZoneMusicRow; } {
+        return DBC.ZoneMusic
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.ZoneMusic
+    }
+    Clear(r: ZoneMusic): void {
+        r.SetName.set('')
+         .SoundDay.SilenceIntervalMax.set(0)
+         .SoundDay.SilenceIntervalMin.set(0)
+         .SoundDay.Sound.set(0)
+         .SoundNight.SilenceIntervalMin.set(0)
+         .SoundNight.SilenceIntervalMax.set(0)
+    }
+    protected Clone(mod: string, name: string, r: ZoneMusic, parent: ZoneMusic): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: ZoneMusicRow): ZoneMusic {
+        return new ZoneMusic(r);
+    }
+    protected FindByID(id: number): ZoneMusicRow {
+        return DBC.ZoneMusic.findById(id);
+    }
+    protected EmptyQuery(): ZoneMusicQuery {
+        return {}
+    }
+    protected ID(e: ZoneMusic): number {
+        return e.ID;
+    }
+
+    createSimple
+    (
+          directoryBase = ""
+        , songs: string[] = []
+        , silenceMin = 0
+        , silenceMax = 0
+        , volume = 1
+        , frequency = 1
+    ) {
+        let sound = SoundEntryRegistry
+        .createSimpleLoop(directoryBase,songs,volume,frequency)
+        let zoneMusic =
+            new ZoneMusic(DBC.ZoneMusic.add(Ids.ZoneMusic.dynamicId()))
+        return zoneMusic
+            .SetName.set(`ZoneMusic-${zoneMusic.ID}`)
+            .SoundDay.SilenceIntervalMin.set(silenceMin)
+            .SoundDay.SilenceIntervalMax.set(silenceMax)
+            .SoundNight.SilenceIntervalMin.set(silenceMin)
+            .SoundNight.SilenceIntervalMax.set(silenceMax)
+            .SoundDay.Sound.set(sound.row.ID.get())
+            .SoundNight.Sound.set(sound.row.ID.get());
+    }
+}
+export const ZoneMusicRegistry = new ZoneMusicRegistryClass();

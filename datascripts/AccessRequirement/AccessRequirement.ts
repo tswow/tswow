@@ -3,7 +3,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { access_requirementQuery, access_requirementRow } from "wotlkdata/sql/types/access_requirement";
 import { AchievementRegistry } from "../Achievement/Achievement";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
-import { MapRefReadOnly } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { QuestRegistry } from "../Quest/Quests";
 
@@ -15,7 +15,7 @@ export class AccessRequirement<T> extends CellSystem<T> {
         this.row = row;
     }
 
-    get Map() { return new MapRefReadOnly(this.owner, this.row.mapId); }
+    get Map() { return MapRegistry.readOnlyRef(this.owner, this.row.mapId); }
     get Difficulty() { return this.row.difficulty.get(); }
     get Level() {
         return new MinMaxCell(

@@ -4,11 +4,11 @@ import { WMOAreaTableQuery, WMOAreaTableRow } from "wotlkdata/dbc/types/WMOAreaT
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefStatic } from "../Refs/RefOld";
-import { SoundAmbienceRef } from "../Sound/SoundAmbience";
+import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
-import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
-import { ZoneMusicRef } from "../Sound/ZoneMusic";
-import { AreaRef } from "./Area";
+import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
+import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
+import { AreaRegistry } from "./Area";
 
 export class WMOAreaSoundProviderPrefs extends CellSystem<WMOArea> {
     get Normal() {
@@ -30,10 +30,10 @@ export class WMOArea extends MainEntity<WMOAreaTableRow> {
     get SoundProviderPreferences() {
         return new WMOAreaSoundProviderPrefs(this);
     }
-    get Ambience() { return new SoundAmbienceRef(this, this.row.AmbienceID); }
-    get ZoneMusic() { return new ZoneMusicRef(this, this.row.ZoneMusic); }
-    get IntroSound() { return new ZoneIntroMusicRef(this, this.row.IntroSound); }
-    get AreaTable() { return new AreaRef(this, this.row.AreaTableID); }
+    get Ambience() { return SoundAmbienceRegistry.ref(this, this.row.AmbienceID); }
+    get ZoneMusic() { return ZoneMusicRegistry.ref(this, this.row.ZoneMusic); }
+    get IntroSound() { return ZoneIntroMusicRegistry.ref(this, this.row.IntroSound); }
+    get AreaTable() { return AreaRegistry.ref(this, this.row.AreaTableID); }
     get Name() { return this.wrapLoc(this.row.AreaName); }
 }
 

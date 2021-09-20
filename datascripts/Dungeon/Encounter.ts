@@ -6,7 +6,7 @@ import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/dbc/types/
 import { instance_encountersQuery, instance_encountersRow } from "wotlkdata/sql/types/instance_encounters";
 import { SQL } from "wotlkdata/wotlkdata";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { Ids } from "../Misc/Ids";
 import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
 import { SpellRegistry } from "../Spell/Spells";
@@ -76,7 +76,7 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
 
     get ID() { return this.id; }
     get Name() { return this.wrapLoc(this.GetDBC().Name); }
-    get Map() { return new MapRef(this, this.GetDBC().MapID); }
+    get Map() { return MapRegistry.ref(this, this.GetDBC().MapID); }
     get Difficulty() { return this.wrap(this.GetDBC().Difficulty); }
     get Index() { return new DungeonEncounterIndexCell(this); }
     get Type() {

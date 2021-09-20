@@ -43,7 +43,7 @@ export class QuestRegistryClass extends RegistryStatic<Quest,quest_templateRow,q
     protected ID(e: Quest): number {
         return e.ID;
     }
-    protected Clear(r: Quest) {
+    Clear(r: Quest) {
         r.row.AllowableRaces.set(0)
              .AreaDescription.set("")
              .Flags.set(0)

@@ -2,7 +2,7 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { GameObjectTemplates } from "../GameObject/GameObjects";
 import { GameObjectChest } from "../GameObject/GameObjectTemplate";
 import { Lock } from "../Locks/Lock";
-import { Locks } from "../Locks/Locks";
+import { LockRegistry } from "../Locks/Locks";
 import { Profession } from "./Profession";
 
 export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Profession> {
@@ -18,7 +18,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
     }
 
     add(mod: string, id: string, lockType: number, levelNeeded: number,itemsNeeded: number[], displayid: number) {
-        let lock = Locks.create()
+        let lock = LockRegistry.create()
             .addMod(i=>i
                 .Type.LockType.set()
                 .LockType.set(lockType)
@@ -46,7 +46,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
     }
 
     addGet(mod: string, id: string, lockType: number, level: number) {
-        let lock = Locks.create()
+        let lock = LockRegistry.create()
             .addMod(x=>x.Type.LockType.set()
                 .LockType.set(lockType)
                 .RequiredSkill.set(level)

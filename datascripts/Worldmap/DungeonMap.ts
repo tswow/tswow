@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { DungeonMapQuery, DungeonMapRow } from "wotlkdata/dbc/types/DungeonMap";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMax2DCell } from "../Misc/LimitCells";
@@ -9,7 +9,7 @@ import { Ref } from "../Refs/RefOld";
 export class DungeonMap extends MainEntity<DungeonMapRow> {
     get ID() { return this.row.ID.get(); }
 
-    get Map() { return new MapRef(this, this.row.MapID); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
 
     get FloorIndex() { return this.wrap(this.row.FloorIndex); }
 

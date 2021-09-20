@@ -17,7 +17,7 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MailTemplatePointer } from "../Mail/MailTemplate";
+import { MailTemplateRegistry } from "../Mail/MailTemplate";
 import { Quest } from "./Quest";
 
 export class QuestRequiredReputation extends CellSystem<Quest> {
@@ -76,7 +76,7 @@ export class QuestRewardMail extends CellSystem<Quest> {
         this.delayCell = delayCell;
     }
 
-    get MailTemplate() { return new MailTemplatePointer(this.owner, this.templateCell); }
+    get MailTemplate() { return MailTemplateRegistry.ref(this.owner, this.templateCell); }
     get Delay() { return this.ownerWrap(this.delayCell)}
 
     set(skill: number, points: number) {

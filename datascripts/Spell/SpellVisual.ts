@@ -27,7 +27,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";
 import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SoundEntryRegistry } from "../Sound/SoundEntry";
 import { SpellAnimation } from "./SpellAnimation";
 import { SpellCharacterProcedures } from "./SpellCharacterProcedure";
 import { SpellEffectCameraShakePointer } from "./SpellEffectCameraShakes";
@@ -102,7 +102,7 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     get CharProcedures() { return new SpellCharacterProcedures(this, this.row); }
     get Flags() { return this.wrap(this.row.Flags); }
     get CameraShake() { return new SpellEffectCameraShakePointer(this, this.row.ShakeID); }
-    get Sound() { return new SoundEntryPointer(this, this.row.SoundID); }
+    get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundID); }
     get StartAnimation() { return new SpellAnimation(this, this.row.StartAnimID); }
     get WorldEffect() { return new SpellVisualEffectPointer(this, this.row.WorldEffect); }
     get Animation() { return new SpellAnimation(this, this.row.AnimID); }
@@ -161,7 +161,7 @@ export class SpellVisualMissile extends CellSystem<SpellVisual> {
         return this.ownerWrap(this.owner.row.MissileDestinationAttachment);
     }
     get Sound() {
-        return new SoundEntryPointer(this.owner, this.owner.row.MissileSound);
+        return SoundEntryRegistry.ref(this.owner, this.owner.row.MissileSound);
     }
     get FollowGround() { return new MissileFollowGround(this.owner); }
     get HasMissile() { return this.ownerWrap(this.owner.row.HasMissile); }

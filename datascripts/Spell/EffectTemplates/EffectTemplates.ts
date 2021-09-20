@@ -1,15 +1,15 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTemplateRef } from "../../Creature/CreatureTemplate";
-import { EnchantmentRef } from "../../Enchant/Enchantment";
+import { EnchantmentRegistry } from "../../Enchant/Enchantment";
 import { LanguageRegistry } from "../../Languages/Languages";
 import { LockTypeRef } from "../../Locks/LockType";
 import { SchoolMask } from "../../Misc/School";
 import { QuestRef } from "../../Quest/Quest";
 import { RefUnknown } from "../../Refs/RefOld";
-import { SkillLineRef } from "../../SkillLines/SkillLine";
-import { SoundEntryPointer } from "../../Sound/SoundEntry";
-import { TaxiPathRef } from "../../Taxi/Taxi";
+import { SkillLineRegistry } from "../../SkillLines/SkillLines";
+import { SoundEntryRegistry } from "../../Sound/SoundEntry";
+import { TaxiPathRegistry } from "../../Taxi/Taxi";
 import { EffectClassSet } from "../SpellClassSet";
 import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
@@ -236,7 +236,7 @@ export class EnchantItem extends EffectTemplate {
 // 54
 export class EnchantItemTemp extends EffectTemplate {
     get EnchantingItem() { return this.wrap(this.owner.ItemType); }
-    get Enchant() { return new EnchantmentRef(this, this.owner.MiscValueA); }
+    get Enchant() { return EnchantmentRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 55
 // 56
@@ -406,7 +406,7 @@ export class KillCredit extends TargetBase {
 // 91
 // 92
 export class EnchantHeldItem extends EffectTemplate {
-    get Enchant() { return new EnchantmentRef(this, this.owner.MiscValueA); }
+    get Enchant() { return EnchantmentRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 93
 // 94
@@ -492,7 +492,7 @@ export class DurabilityDamagePercent extends DamageBasePct {
 // 117
 // 118
 export class Skill extends TargetBase {
-    get Skill() { return new SkillLineRef(this, this.owner.MiscValueA); }
+    get Skill() { return SkillLineRegistry.ref(this, this.owner.MiscValueA); }
     get SkillTier() { return this.wrap(this.owner.BasePoints); }
 }
 // 119
@@ -501,7 +501,7 @@ export class Skill extends TargetBase {
 // 122
 // 123
 export class SendTaxi extends TargetBase {
-    get Taxi() { return new TaxiPathRef(this, this.owner.MiscValueA); }
+    get Taxi() { return TaxiPathRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 124
 export class PullTowards extends TargetBase{
@@ -526,11 +526,11 @@ export class RedirectThreat extends TargetBase {
 }
 // 131
 export class PlaySound extends TargetBase {
-    get Sound() { return new SoundEntryPointer(this, this.owner.MiscValueA); }
+    get Sound() { return SoundEntryRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 132
 export class PlayMusic extends TargetBase {
-    get Sound() { return new SoundEntryPointer(this, this.owner.MiscValueA); }
+    get Sound() { return SoundEntryRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 133
 // 134
@@ -618,7 +618,7 @@ export class CanTitanGrip extends TargetBase {
 }
 // 156
 export class EnchantPrismaticItem extends EffectTemplate {
-    get Enchant() { return new EnchantmentRef(this, this.owner.MiscValueA); }
+    get Enchant() { return EnchantmentRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 157
 // 158

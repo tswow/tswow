@@ -18,12 +18,12 @@ import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
-import { AreaRef } from "../Area/Area";
+import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRef } from "../BroadcastText/BroadcastText";
 import { GossipPointer } from "../Gossip/Gossip";
 import { LockRef } from "../Locks/Lock";
 import { LootSetPointer } from "../Loot/Loot";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
@@ -31,7 +31,7 @@ import { PageTextRef } from "../PageText/PageText";
 import { QuestRegistry } from "../Quest/Quests";
 import { RefReadOnly, RefStatic, RefUnknown } from "../Refs/RefOld";
 import { SpellRegistry } from "../Spell/Spells";
-import { TaxiPathRef } from "../Taxi/Taxi";
+import { TaxiPathRegistry } from "../Taxi/Taxi";
 import { WorldStateRef } from "../WorldState/WorldState";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
 import { GameObjectDisplayPointer } from "./GameObjectDisplay";
@@ -391,7 +391,7 @@ export class GameObjectDungeonDifficulty extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Map() { return new MapRef(this, this.row.Data0); }
+    get Map() { return MapRegistry.ref(this, this.row.Data0); }
     get Difficulty() { return this.wrap(this.row.Data1); }
 }
 
@@ -515,7 +515,7 @@ export class GameObjectMeetingStone extends GameObjectTemplate {
     }
     get MinLevel() { return this.wrap(this.row.Data0); }
     get MaxLevel() { return this.wrap(this.row.Data1); }
-    get Area() { return new AreaRef(this, this.row.Data2); }
+    get Area() { return AreaRegistry.ref(this, this.row.Data2); }
 }
 
 export class GameObjectMinigame extends GameObjectTemplate {
@@ -529,7 +529,7 @@ export class GameObjectMoTransport extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get TaxiPath() { return new TaxiPathRef(this, this.row.Data0); }
+    get TaxiPath() { return TaxiPathRegistry.ref(this, this.row.Data0); }
     get MoveSpeed() { return this.wrap(this.row.Data1); }
     get AccelRate() { return this.wrap(this.row.Data2); }
     get StartEvent() { return new RefUnknown(this, this.row.Data3); }

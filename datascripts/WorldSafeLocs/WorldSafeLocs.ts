@@ -1,9 +1,12 @@
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { WorldSafelocsQuery, WorldSafelocsRow } from "wotlkdata/dbc/types/WorldSafelocs";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
-import { Ref } from "../Refs/RefOld";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class WorldSafeLoc extends MainEntity<WorldSafelocsRow> {
     get ID() { return this.row.ID.get(); }
@@ -11,55 +14,58 @@ export class WorldSafeLoc extends MainEntity<WorldSafelocsRow> {
     get Name() { return this.wrapLoc(this.row.AreaName); }
 }
 
-export const WorldSafeLocRegistry = {
-    create(parent: number = 0) {
-        if(parent > 0) {
-            return new WorldSafeLoc(DBC.WorldSafelocs
-                .findById(parent)
-                .clone(Ids.WorldSafelocs.id())
-            )
-        } else {
-            return new WorldSafeLoc(DBC.WorldSafelocs.add(Ids.WorldSafelocs.id()))
-                .Position.setSpread(0,0,0,0)
-                .Name.clear()
-        }
-    },
 
-    load(id: number) {
-        return new WorldSafeLoc(DBC.WorldSafelocs.findById(id));
-    },
-
-    filter(query: WorldSafelocsQuery) {
-        return DBC.WorldSafelocs
-            .filter(query)
-            .map(x=>new WorldSafeLoc(x))
-    },
-
-    find(query: WorldSafelocsQuery) {
-        return new WorldSafeLoc(DBC.WorldSafelocs.find(query))
-    }
-}
-
-export class WorldSafeLocRef<T> extends Ref<T,WorldSafeLoc> {
-    protected create(): WorldSafeLoc {
-        return WorldSafeLocRegistry.create();
-    }
-    protected clone(): WorldSafeLoc {
-        return WorldSafeLocRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: WorldSafeLoc): number {
-        return v.ID;
-    }
-    protected resolve(): WorldSafeLoc {
-        return WorldSafeLocRegistry.load(this.cell.get());
-    }
-
-    setSimple(map: number, x: number, y: number, z: number) {
-        this.getRefCopy()
-            .Position.setSpread(map,x,y,z)
+export class WorldSafeLocRef<T> extends RefDynamic<T,WorldSafeLoc>
+{
+    setSimple(obj: {map: number, x: number, y: number, z: number}) {
+        this.cell.set(WorldSafeLocRegistry.createSimple(obj).ID);
         return this.owner;
     }
 }
+
+export class WorldSafeLocsRegistryClass
+    extends RegistryDynamic<WorldSafeLoc,WorldSafelocsRow,WorldSafelocsQuery>
+{
+    ref<T>(owner: T, value: Cell<number,any>): WorldSafeLocRef<T> {
+        return new WorldSafeLocRef(owner,value,this);
+    }
+
+    protected Table(): Table<any, WorldSafelocsQuery, WorldSafelocsRow> & { add: (id: number) => WorldSafelocsRow; } {
+        return DBC.WorldSafelocs
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.WorldSafelocs
+    }
+    Clear(entity: WorldSafeLoc): void {
+        entity
+            .Name.clear()
+            .Position.setSpread(0,0,0,0)
+    }
+    protected Clone(entity: WorldSafeLoc, parent: WorldSafeLoc): void {
+        entity.Name.set(parent.Name.objectify())
+        entity.Position.setSpread(
+              parent.Position.X.get()
+            , parent.Position.Y.get()
+            , parent.Position.Z.get()
+            , parent.Position.Map.get()
+        )
+    }
+    protected Entity(r: WorldSafelocsRow): WorldSafeLoc {
+        return new WorldSafeLoc(r);
+    }
+    protected FindByID(id: number): WorldSafelocsRow {
+        return DBC.WorldSafelocs.findById(id);
+    }
+    protected EmptyQuery(): WorldSafelocsQuery {
+        return {}
+    }
+    protected ID(e: WorldSafeLoc): number {
+        return e.ID
+    }
+
+    createSimple(obj: {map: number, x: number, y: number, z: number}) {
+        return this.create().Position.set(obj);
+    }
+}
+
+export const WorldSafeLocRegistry = new WorldSafeLocsRegistryClass();

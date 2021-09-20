@@ -1,7 +1,9 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
 import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
@@ -13,7 +15,7 @@ import { ProfessionNameSystem } from "./ProfessionName";
 import { ProfessionRecipes } from "./ProfessionRecipe";
 import { ProfessionTier, resolveProfessionRank } from "./ProfessionType";
 
-export class Profession {
+export class Profession extends MainEntity<SkillLineRow> {
     readonly SkillLine: SkillLine;
     private _ApprenticeSpell: Spell|undefined;
 
@@ -31,8 +33,9 @@ export class Profession {
         return this;
     }
 
-    constructor(skillLine: SkillLine) {
-        this.SkillLine = skillLine;
+    constructor(row: SkillLineRow) {
+        super(row);
+        this.SkillLine = new SkillLine(row);
     }
 
     get Recipes() { return new ProfessionRecipes(this); }

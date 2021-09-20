@@ -16,9 +16,10 @@
  */
 import { DBC } from "wotlkdata";
 import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/RefOld";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
 import { FactionReputations } from "./FactionReputation";
 import { FactionTemplates } from "./FactionTemplates";
 
@@ -38,9 +39,19 @@ export class Faction extends MainEntity<FactionRow> {
     get Reputation() { return new FactionReputations(this); }
     get Name() { return this.wrapLoc(this.row.Name); }
     get Description() { return this.wrapLoc(this.row.Description); }
+}
 
-    clear() {
-        this.row
+export class FactionRegistryClass
+    extends RegistryStatic<Faction,FactionRow,FactionQuery>
+{
+    protected Table(): Table<any, FactionQuery, FactionRow> & { add: (id: number) => FactionRow; } {
+        return DBC.Faction
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.Faction
+    }
+    Clear(r: Faction): void {
+        r.row
             .ParentFactionCap.set([5,5])
             .ParentFactionID.set(0)
             .ParentFactionMod.set([1,1])
@@ -49,67 +60,51 @@ export class Faction extends MainEntity<FactionRow> {
             .ReputationFlags.set([0,0,0,0])
             .ReputationIndex.set(-1)
             .ReputationRaceMask.set([0,0,0,0])
-        return this;
     }
-}
+    protected Clone(mod: string, name: string, r: Faction, parent: Faction): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: FactionRow): Faction {
+        return new Faction(r);
+    }
+    protected FindByID(id: number): FactionRow {
+        return DBC.Faction.findById(id);
+    }
+    protected EmptyQuery(): FactionQuery {
+        return {}
+    }
+    protected ID(e: Faction): number {
+        return e.ID;
+    }
 
-export const Factions = {
-    create(mod: string, id: string) {
-        return new Faction(DBC.Faction.add(Ids.Faction.id(mod,id))).clear();
-    },
-
-    load(id: number) {
-        return new Faction(DBC.Faction.findById(id));
-    },
-
-    filter(query: FactionQuery) {
-        return DBC.Faction.filter(query).map(x=>new Faction(x));
-    },
-
-    createHorde(mod: string, id: string) {
-        return Factions.create(mod,id)
+    createHorde(mod: string, id: string, hostileToMonsters: boolean = false) {
+        return this.create(mod,id)
             .Templates.addMod(relation=>{
                 relation.addFriendGroups(['HORDE'])
                         .addEnemyGroup(['ALLIANCE'])
+                if(hostileToMonsters) {
+                    relation.addEnemyGroup(['MONSTERS'])
+                }
             })
-    },
+    }
 
-    createAlliance(mod: string, id: string) {
-        return Factions.create(mod,id)
+    createAlliance(mod: string, id: string, hostileToMonsters: boolean = false) {
+        return this.create(mod,id)
             .Templates.addMod(relation=>{
                 relation.addFriendGroups(['ALLIANCE'])
                         .addEnemyGroup(['HORDE'])
+                if(hostileToMonsters) {
+                    relation.addEnemyGroup(['MONSTERS'])
+                }
+            })
+    }
+
+    createNeutralHostile(mod: string, id: string) {
+        return this.create(mod,id)
+            .Templates.addMod(relation=>{
+                relation.addEnemyGroup(['ALLIANCE','HORDE'])
+                        .addFriendGroups(['MONSTERS'])
             })
     }
 }
-
-export class FactionRef<T> extends RefStatic<T,Faction> {
-    protected create(mod: string, id: string): Faction {
-        return Factions.create(mod,id)
-    }
-    protected clone(mod: string, id: string): Faction {
-        return new Faction(DBC.Faction
-            .findById(this.cell.get())
-            .clone(Ids.Faction.id(mod,id))
-        )
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: Faction): number {
-        return v.ID;
-    }
-    protected resolve(): Faction {
-        return Factions.load(this.cell.get());
-    }
-}
-
-export class FactionRefReadOnly<T> extends RefReadOnly<T,Faction> {
-    getRef(): Faction {
-        return Factions.load(this.cell.get());
-    }
-
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
+export const FactionRegistry = new FactionRegistryClass();

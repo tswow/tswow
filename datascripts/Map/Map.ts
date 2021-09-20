@@ -14,15 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { MainEntity } from "../Misc/Entity";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { MapInstanceType } from "./MapInstanceType";
-import { Maps } from "./Maps";
+import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
 
 export class Map extends MainEntity<MapRow> {
@@ -38,7 +36,7 @@ export class Map extends MainEntity<MapRow> {
     get LoadingScreen() { return this.wrap(this.row.LoadingScreenID); }
     get MinimapIconScale() { return this.wrap(this.row.MinimapIconScale); }
 
-    get CorpseMap() { return new MapRef(this, this.row.CorpseMapID); }
+    get CorpseMap() { return MapRegistry.ref(this, this.row.CorpseMapID); }
     get CorpsePos() { return new PositionXYCell(this, this.row.CorpseX, this.row.CorpseY); }
     get TimeofDayOverride() { return this.wrap(this.row.TimeOfDayOverride); }
     get Expansion() { return this.wrap(this.row.ExpansionID); }
@@ -58,31 +56,4 @@ export class Map extends MainEntity<MapRow> {
 
     get LFGDungeons() { return new LFGDungeons(this, this.ID); }
     get Encounters() { return new LFGDungeonEncounters(this, this.ID); }
-}
-
-export class MapRefReadOnly<T> extends RefReadOnly<T,Map> {
-    getRef(): Map {
-        return new Map(DBC.Map.findById(this.cell.get()));
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-}
-
-export class MapRef<T> extends RefStatic<T,Map> {
-    protected create(mod: string, id: string): Map {
-        return new Maps().create(mod,id)
-    }
-    protected clone(mod: string, id: string): Map {
-        return new Maps().create(mod,id,this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: Map): number {
-        return v.ID;
-    }
-    protected resolve(): Map {
-        return new Maps().load(this.cell.get());
-    }
 }

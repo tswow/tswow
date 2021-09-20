@@ -1,7 +1,10 @@
 import { DBC } from "wotlkdata";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
 import { SkillTiersQuery, SkillTiersRow } from "wotlkdata/dbc/types/SkillTiers";
-import { Ids } from "../Misc/Ids";
+import { Table } from "wotlkdata/table/Table";
+import { ArrayEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SkillTier extends ArrayEntry<SkillTiers> {
 
@@ -17,17 +20,9 @@ export class SkillTier extends ArrayEntry<SkillTiers> {
     }
 }
 
-export class SkillTiers extends ArraySystem<SkillTier,SkillTiers> {
-    readonly row: SkillTiersRow;
+export class SkillTiers extends ArrayEntity<SkillTiersRow,SkillTiers,SkillTier> {
     get(index: number): SkillTier {
         return new SkillTier(this, index);
-    }
-
-    constructor(row: SkillTiersRow) {
-        // TODO: hacky
-        super(undefined as any);
-        this.owner = this;
-        this.row = row;
     }
 
     get length(): number {
@@ -37,21 +32,33 @@ export class SkillTiers extends ArraySystem<SkillTier,SkillTiers> {
     get ID() { return this.row.ID.get(); }
 }
 
-export const SkillTiersRegistry = {
-    create() {
-        return new SkillTiers(DBC.SkillTiers.add(Ids.SkillTiers.id()))
-            .clearAll()
-    },
-
-    load(id: number) {
-        return new SkillTiers(DBC.SkillTiers.findById(id));
-    },
-
-    filter(query: SkillTiersQuery) {
-        return DBC.SkillTiers.filter(query).map(x=>new SkillTiers(x));
-    },
-
-    find(query: SkillTiersQuery) {
-        return new SkillTiers(DBC.SkillTiers.find(query));
+export class SkillTiersRegistryClass
+    extends RegistryDynamic<SkillTiers,SkillTiersRow,SkillTiersQuery>
+{
+    protected Table(): Table<any, SkillTiersQuery, SkillTiersRow> & { add: (id: number) => SkillTiersRow; } {
+        return DBC.SkillTiers
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SkillTiers
+    }
+    Clear(entity: SkillTiers): void {
+        entity.clearAll()
+    }
+    protected Clone(entity: SkillTiers, parent: SkillTiers): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: SkillTiersRow): SkillTiers {
+        return new SkillTiers(r);
+    }
+    protected FindByID(id: number): SkillTiersRow {
+        return DBC.SkillTiers.findById(id);
+    }
+    protected EmptyQuery(): SkillTiersQuery {
+        return {}
+    }
+    protected ID(e: SkillTiers): number {
+        return e.ID
     }
 }
+
+export const SkillTiersRegistry = new SkillTiersRegistryClass();

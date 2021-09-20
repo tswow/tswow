@@ -6,7 +6,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SoundEntryRegistry } from "../Sound/SoundEntry";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 
 export class VehicleSeatFlags extends MaskCell32<VehicleSeat> {
@@ -95,7 +95,7 @@ export class VehicleSeatEnter extends CellSystem<VehicleSeat> {
     get AnimStart() { return new SpellAnimation(this, this.owner.row.EnterAnimStart); }
     get AnimLoop() { return new SpellAnimation(this, this.owner.row.EnterAnimLoop); }
 
-    get UISound() { return new SoundEntryPointer(this, this.owner.row.EnterUISoundID)}
+    get UISound() { return SoundEntryRegistry.ref(this, this.owner.row.EnterUISoundID)}
 
     get CameraDelay() {
         return this.ownerWrap(this.owner.row.CameraEnteringDelay);
@@ -139,7 +139,7 @@ export class VehicleSeatExit extends CellSystem<VehicleSeat> {
 
     get AnimStart() { return new SpellAnimation(this, this.owner.row.ExitAnimStart); }
     get AnimLoop() { return new SpellAnimation(this, this.owner.row.ExitAnimLoop); }
-    get UISound() { return new SoundEntryPointer(this, this.owner.row.ExitUISoundID)}
+    get UISound() { return SoundEntryRegistry.ref(this, this.owner.row.ExitUISoundID)}
 
     get CameraDelay() {
         return this.ownerWrap(this.owner.row.CameraExitingDelay);

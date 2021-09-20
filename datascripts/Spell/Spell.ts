@@ -17,7 +17,7 @@
 import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
-import { Classes } from "../Class/Class";
+import { ClassRegistry } from "../Class/Class";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
@@ -179,7 +179,7 @@ export class Spell extends MainEntity<SpellRow> {
     get Script() { return new SpellScript(this); }
 
     addStartButton(clazz: number, button: number, races?: RaceType[]) {
-        Classes.load(clazz).StartButtons.addSpell(button, this.ID, races);
+        ClassRegistry.load(clazz).StartButtons.addSpell(button, this.ID, races);
         return this;
     }
 

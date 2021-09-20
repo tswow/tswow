@@ -15,9 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { LoadingScreensRow } from "wotlkdata/dbc/types/LoadingScreens";
+import { LoadingScreensQuery, LoadingScreensRow } from "wotlkdata/dbc/types/LoadingScreens";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class LoadingScreen extends MainEntity<LoadingScreensRow> {
     get ID() { return this.row.ID.get(); }
@@ -26,17 +28,43 @@ export class LoadingScreen extends MainEntity<LoadingScreensRow> {
     get HasWidescreen() { return this.wrap(this.row.HasWideScreen); }
 }
 
-export const LoadingScreens = {
-    load(id: number|string) {
-        if(typeof(id)==='string') {
-            return new LoadingScreen(DBC.LoadingScreens.find({FileName:id}))
-        } else {
-            return new LoadingScreen(DBC.LoadingScreens.findById(id));
-        }
-    },
+export class LoadingScreenRegistryClass
+    extends RegistryDynamic<LoadingScreen,LoadingScreensRow,LoadingScreensQuery>
+{
+    protected Table(): Table<any, LoadingScreensQuery, LoadingScreensRow> & { add: (id: number) => LoadingScreensRow; } {
+        return DBC.LoadingScreens
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.LoadingScreens
+    }
+    Clear(entity: LoadingScreen): void {
+        entity.FileName.set('')
+              .HasWidescreen.set(0)
+              .Name.set('')
+    }
+    protected Clone(entity: LoadingScreen, parent: LoadingScreen): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: LoadingScreensRow): LoadingScreen {
+        return new LoadingScreen(r);
+    }
+    protected FindByID(id: number): LoadingScreensRow {
+        return DBC.LoadingScreens.findById(id);
+    }
+    protected EmptyQuery(): LoadingScreensQuery {
+        return {}
+    }
+    protected ID(e: LoadingScreen): number {
+        return e.ID
+    }
 
-    create() {
-        return new LoadingScreen(
-            DBC.LoadingScreens.add(Ids.LoadingScreens.id()));
+    load(id: number|string) {
+        if(typeof(id) === 'number') {
+            return super.load(id);
+        }
+        let v = DBC.LoadingScreens.find({FileName:id})
+        return (v ? new LoadingScreen(v) : undefined) as LoadingScreen
     }
 }
+
+export const LoadingScreens = new LoadingScreenRegistryClass();

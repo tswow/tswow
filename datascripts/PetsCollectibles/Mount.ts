@@ -1,9 +1,14 @@
+import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
+import { Table } from "wotlkdata/table/Table";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
+import { RefNoCreate } from "../Refs/Ref";
 import { SelfRef } from "../Refs/RefOld";
+import { RegistryRowBase } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 
@@ -99,14 +104,36 @@ export class Mount extends MainEntity<SpellRow> {
     get Spell() { return new SelfRef(this, ()=>new Spell(this.row)); }
 }
 
-export const MountRegistry = {
+export class MountRegistryClass
+    extends RegistryRowBase<Mount,SpellRow,SpellQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner, cell, this);
+    }
+
+    protected Entity(r: SpellRow): Mount {
+        return new Mount(r);
+    }
+    protected FindByID(id: number): SpellRow {
+        return DBC.Spell.findById(id);
+    }
+    protected EmptyQuery(): SpellQuery {
+        return {}
+    }
+    protected ID(e: Mount): number {
+        return e.ID;
+    }
+    protected Table(): Table<any, SpellQuery, SpellRow> {
+        return DBC.Spell;
+    }
+
     createWithItem(mod: string, id: string, speed: number, flightSpeed = 0) {
-        let mount = this.create(mod,id,speed,flightSpeed);
+        let mount = this.createSimple(mod,id,speed,flightSpeed);
         mount.Items.add(mod,`${id}-item`)
         return mount;
-    },
+    }
 
-    create(mod: string, id: string, speed: number, flightSpeed = 0) {
+    createSimple(mod: string, id: string, speed: number, flightSpeed = 0) {
         let spell = SpellRegistry.create(mod,id)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.isAbility.set(true)
@@ -153,23 +180,7 @@ export const MountRegistry = {
             })
         }
         return new Mount(spell.row);
-    },
-
-    load(id: number) {
-        let spell = SpellRegistry.load(id)
-        if(!spell || spell.Effects.auraIndex(MOUNT_AURA_TYPE)<0) {
-            return undefined;
-        }
-        return new Mount(spell.row);
-    },
-
-    filter(query: SpellQuery) {
-        return SpellRegistry.queryAll({...query,EffectAura:MOUNT_AURA_TYPE})
-            .map(x=>new Mount(x.row))
-    },
-
-    find(query: SpellQuery) {
-        let spell = SpellRegistry.query({...query,EffectAura:MOUNT_AURA_TYPE})
-        return spell ? new Mount(spell.row) : undefined;
     }
 }
+
+export const MountRegistry = new MountRegistryClass();

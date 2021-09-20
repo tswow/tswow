@@ -18,7 +18,7 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
-import { FactionRef } from "../Faction/Faction";
+import { FactionRegistry } from "../Faction/Faction";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
@@ -204,7 +204,9 @@ export class ReputationReward<T> extends ArrayEntry<T> {
         this.row = row;
     }
 
-    get Faction() { return new FactionRef(this,this.wrap(FactionIds(this.row)[this.index]))}
+    get Faction() {
+        return FactionRegistry.ref(this,this.wrap(FactionIds(this.row)[this.index]))
+    }
     get Reputation() { return this.wrap(Reputation(this.row)[this.index])}
 
     clear() {

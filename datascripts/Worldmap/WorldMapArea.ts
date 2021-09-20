@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
 import { WorldMapAreaQuery, WorldMapAreaRow } from "wotlkdata/dbc/types/WorldMapArea";
-import { AreaRef } from "../Area/Area";
-import { MapRef } from "../Map/Map";
+import { AreaRegistry } from "../Area/Area";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
@@ -10,8 +10,8 @@ import { DungeonMapRef } from "./DungeonMap";
 
 export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
     get ID() { return this.row.ID.get(); }
-    get Map() { return new MapRef(this, this.row.MapID); }
-    get Area() { return new AreaRef(this, this.row.AreaID); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
+    get Area() { return AreaRegistry.ref(this, this.row.AreaID); }
     get Name() { return this.wrap(this.row.AreaName); }
     get Boundary() {
         return new Boundary(
@@ -22,7 +22,7 @@ export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
             , this.row.LocBottom
         );
     }
-    get DisplayMap() { return new MapRef(this, this.row.DisplayMapID); }
+    get DisplayMap() { return MapRegistry.ref(this, this.row.DisplayMapID); }
     get DefaultDungeonFloor() {
         return new DungeonMapRef(this, this.row.DefaultDungeonFloor);
     }

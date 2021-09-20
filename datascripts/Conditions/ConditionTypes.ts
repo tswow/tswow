@@ -2,21 +2,21 @@ import { EnumCellReadOnly, EnumCellTransformReadOnly } from "wotlkdata/cell/cell
 import { MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
 import { conditionsRow } from "wotlkdata/sql/types/conditions";
 import { AchievementRegistry } from "../Achievement/Achievement";
-import { AreaRefReadOnly } from "../Area/Area";
+import { AreaRegistry } from "../Area/Area";
 import { CreatureTemplateRefReadOnly } from "../Creature/CreatureTemplate";
 import { CreatureTypeEnumReadOnly } from "../Creature/CreatureType";
-import { FactionRefReadOnly } from "../Faction/Faction";
+import { FactionRegistry } from "../Faction/Faction";
 import { GameEventRefReadOnly } from "../GameEvent/GameEvent";
 import { GameObjectTemplateRefReadOnly } from "../GameObject/GameObjectTemplate";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
-import { MapRefReadOnly } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { ClassMaskReadOnly } from "../Misc/ClassMask";
 import { TransformedEntityReadOnly } from "../Misc/Entity";
 import { RaceMaskReadOnly } from "../Misc/RaceMask";
 import { ReputationRankMaskReadOnly } from "../Misc/ReputationRank";
 import { TeamEnumReadOnly } from "../Misc/TeamEnum";
 import { QuestRegistry } from "../Quest/Quests";
-import { SkillLineRefReadOnly } from "../SkillLines/SkillLine";
+import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { SpellRegistry } from "../Spell/Spells";
 import { TitleRegistry } from "../Title/Titles";
 import { ComparisonEnumReadOnly } from "./Settings/ComparisonType";
@@ -80,12 +80,16 @@ export class ConditionItemEquipped extends ConditionBase {
 }
 
 export class ConditionZone extends ConditionBase {
-    get Area() { return new AreaRefReadOnly(this, this.v1); }
+    get Area() { return AreaRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionReputationRank extends ConditionBase {
-    get Faction() { return new FactionRefReadOnly(this, this.v1); }
-    get Reputation() { return new ReputationRankMaskReadOnly(this, this.v2); }
+    get Faction() {
+        return FactionRegistry.readOnlyRef(this, this.v1);
+    }
+    get Reputation() {
+        return new ReputationRankMaskReadOnly(this, this.v2);
+    }
 }
 
 export class ConditionTeam extends ConditionBase {
@@ -93,8 +97,8 @@ export class ConditionTeam extends ConditionBase {
 }
 
 export class ConditionSkill extends ConditionBase {
-    get Skill() { return new SkillLineRefReadOnly(this, this.v1); }
-    get RankValue() { return new SkillLineRefReadOnly(this, this.v2); }
+    get Skill() { return SkillLineRegistry.readOnlyRef(this, this.v1); }
+    get RankValue() { return this.wrapReadOnly(this.v2); }
 }
 
 export class ConditionQuestRewarded extends ConditionBase {
@@ -166,11 +170,11 @@ export class ConditionUnitState extends ConditionBase {
 }
 
 export class ConditionMap extends ConditionBase {
-    get Map() { return new MapRefReadOnly(this, this.v1); }
+    get Map() { return MapRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionArea extends ConditionBase {
-    get Area() { return new AreaRefReadOnly(this, this.v1); }
+    get Area() { return AreaRegistry.readOnlyRef(this, this.v1); }
 }
 
 export class ConditionCreatureType extends ConditionBase {

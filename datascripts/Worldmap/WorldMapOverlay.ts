@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/dbc/types/WorldMapOverlay";
-import { AreaRef } from "../Area/Area";
+import { AreaRegistry } from "../Area/Area";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
@@ -26,8 +26,9 @@ export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
 export class WorldMapOverlay extends MainEntity<WorldMapOverlayRow> {
     get ID() { return this.row.ID.get(); }
     get MapArea() { return new WorldMapAreaRef(this, this.row.MapAreaID); }
+    // TODO: fixe
     get Areas() { return new ArrayRefSystemStatic(this, 0, 4,
-        (index)=>new AreaRef(this, this.wrapIndex(this.row.AreaID,index)))
+        (index)=>AreaRegistry.ref(this, this.wrapIndex(this.row.AreaID,index)))
     }
     get Texture() { return new WorldMapTexture(this); }
 

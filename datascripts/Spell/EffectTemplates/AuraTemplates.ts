@@ -3,7 +3,7 @@ import { CellWrapper } from "wotlkdata/cell/cells/Cell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTypeEnum, CreatureTypeMask } from "../../Creature/CreatureType";
-import { FactionRef } from "../../Faction/Faction";
+import { FactionRegistry } from "../../Faction/Faction";
 import { Ids } from "../../Misc/Ids";
 import { SchoolEnum, SchoolMask } from "../../Misc/School";
 import { RefUnknown } from "../../Refs/RefOld";
@@ -540,7 +540,9 @@ export class ModTotalStatPercentage extends PercentBase {
 export class ModMeleeHaste extends PercentBase {}
 // 139
 export class ForceReaction extends PointsBase {
-    get Faction() { return new FactionRef(this, this.owner.MiscValueA); }
+    get Faction() {
+        return FactionRegistry.ref(this, this.owner.MiscValueA);
+    }
 }
 // 140
 export class ModRangedHaste extends PercentBase {}

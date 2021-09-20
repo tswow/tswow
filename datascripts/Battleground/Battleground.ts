@@ -1,9 +1,10 @@
 import { finish } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
-import { MapRefReadOnly } from "../Map/Map";
-import { WorldSafeLocRef } from "../WorldSafeLocs/WorldSafeLocs";
+import { BattlemasterListQuery, BattlemasterListRow } from "wotlkdata/dbc/types/BattlemasterList";
+import { MapRegistry } from "../Map/Maps";
+import { RegistryStatic } from "../Refs/Registry";
+import { WorldSafeLocRef, WorldSafeLocRegistry } from "../WorldSafeLocs/WorldSafeLocs";
 import { BattlegroundBase, createBgBase, filterBgsBase } from "./BattlegroundBase";
 import { BattlegroundBrackets } from "./BattlegroundBracket";
 
@@ -20,29 +21,29 @@ export class BattlegroundSafeLoc extends CellSystem<Battleground> {
     get Loc() { return this.loc; }
     get O() { return this.o; }
 
-    set(x: number, y: number, z: number, o: number) {
-        this.loc.setSimple(this.owner.Map.get(),x,y,z);
+    setSpread(x: number, y: number, z: number, o: number) {
+        this.loc.setSimple({map:this.owner.Map.get(),x,y,z});
         this.o.set(o);
         return this.owner;
     }
 
-    setObject(obj: {map: number, x: number, y: number, z: number, o: number}) {
+    set(obj: {map?: number, x: number, y: number, z: number, o: number}) {
         if(obj.map !== undefined && this.owner.Map.get() !== obj.map) {
             throw new Error(
                   `Trying to set safe location on a different map `
                 + `than the battleground map.`
             )
         }
-        return this.set(obj.x,obj.y,obj.z,obj.o);
+        return this.setSpread(obj.x,obj.y,obj.z,obj.o);
     }
 }
 
 export class Battleground extends BattlegroundBase {
-    get Map() { return new MapRefReadOnly(this, this.wrapIndex(this.dbc_row.MapID,0)) }
+    get Map() { return MapRegistry.ref(this, this.wrapIndex(this.dbc_row.MapID,0)) }
     get HordeStart() {
         return new BattlegroundSafeLoc(
               this
-            , new WorldSafeLocRef(this, this.sql_row.HordeStartLoc)
+            , WorldSafeLocRegistry.ref(this, this.sql_row.HordeStartLoc)
             , this.sql_row.HordeStartO
         );
     }
@@ -50,7 +51,7 @@ export class Battleground extends BattlegroundBase {
     get AllianceStart() {
         return new BattlegroundSafeLoc(
               this
-            , new WorldSafeLocRef(this, this.sql_row.AllianceStartLoc)
+            , WorldSafeLocRegistry.ref(this, this.sql_row.AllianceStartLoc)
             , this.sql_row.AllianceStartO
         );
     }
@@ -71,6 +72,13 @@ function filterBgs(query: BattlemasterListQuery) {
         )
         .map(({dbc,sql})=>new Battleground(dbc,sql))
 }
+
+export class BattlegroundRegistryClass
+    extends RegistryStatic<
+          Battleground
+        , BattlemasterListRow
+        , BattlemasterListQuery
+    >
 
 export const BattlegroundRegistry = {
     create(mod: string, id: string, map: number) {

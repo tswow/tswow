@@ -1,10 +1,11 @@
 import { DBC } from "wotlkdata";
 import { SoundAmbienceQuery, SoundAmbienceRow } from "wotlkdata/dbc/types/SoundAmbience";
 import { all } from "wotlkdata/query/Relations";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer } from "./SoundEntry";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
+import { SoundEntryRegistry } from "./SoundEntry";
 
 export function pairToRow(id1: number, id2: number) {
     let old = DBC.SoundAmbience.filter({AmbienceID:all(id1,id2)})
@@ -28,6 +29,14 @@ export class SoundAmbience extends MainEntity<SoundAmbienceRow> {
         throw new Error(`Out of space: SoundAmbience only has room for 2 values`)
     }
 
+    clear(index: number) {
+        return this.get(index).set(0)
+    }
+
+    clearAll() {
+        return this.clear(0).clear(1);
+    }
+
     add(soundId: number) {
         return this.set(this.freeId(), soundId);
     }
@@ -38,7 +47,7 @@ export class SoundAmbience extends MainEntity<SoundAmbienceRow> {
     }
 
     get(id: number) {
-        return new SoundEntryPointer(this, this.wrapIndex(this.row.AmbienceID,id));
+        return SoundEntryRegistry.ref(this, this.wrapIndex(this.row.AmbienceID,id));
     }
 
     setSimple(id: number, directory: string, files: string[], volume?: number, frequency?: number) {
@@ -62,49 +71,34 @@ export class SoundAmbience extends MainEntity<SoundAmbienceRow> {
     }
 }
 
-export const SoundAmbienceRegistry = {
-    create() {
-        return new SoundAmbience(
-            DBC.SoundAmbience.add(Ids.SoundAmbience.id())
-        )
-            .set(0,0)
-            .set(1,0)
-    },
-
-    load(id: number) {
-        return new SoundAmbience(DBC.SoundAmbience.findById(id));
-    },
-
-    filter(query: SoundAmbienceQuery) {
+export class SoundAmbienceRegistryClass
+    extends RegistryDynamic<SoundAmbience,SoundAmbienceRow,SoundAmbienceQuery>
+{
+    protected Table(): Table<any, SoundAmbienceQuery, SoundAmbienceRow> & { add: (id: number) => SoundAmbienceRow; } {
         return DBC.SoundAmbience
-            .filter(query)
-            .map(x=>new SoundAmbience(x))
-    },
-
-    find(query: SoundAmbienceQuery) {
-        return new SoundAmbience(DBC.SoundAmbience
-            .find(query))
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SoundAmbience
+    }
+    Clear(entity: SoundAmbience): void {
+        entity.clearAll();
     }
 
+    protected Clone(entity: SoundAmbience, parent: SoundAmbience): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: SoundAmbienceRow): SoundAmbience {
+        return new SoundAmbience(r);
+    }
+    protected FindByID(id: number): SoundAmbienceRow {
+        return DBC.SoundAmbience.findById(id);
+    }
+    protected EmptyQuery(): SoundAmbienceQuery {
+        return {}
+    }
+    protected ID(e: SoundAmbience): number {
+        return e.ID
+    }
 }
 
-export class SoundAmbienceRef<T> extends Ref<T,SoundAmbience> {
-    protected create(): SoundAmbience {
-        return SoundAmbienceRegistry.create();
-    }
-    protected clone(): SoundAmbience {
-        return new SoundAmbience(
-            DBC.SoundAmbience
-                .findById(this.cell.get()).clone(Ids.SoundAmbience.id())
-        )
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: SoundAmbience): number {
-        return v.ID;
-    }
-    protected resolve(): SoundAmbience {
-        return SoundAmbienceRegistry.load(this.cell.get())
-    }
-}
+export const SoundAmbienceRegistry = new SoundAmbienceRegistryClass();

@@ -57,7 +57,7 @@ export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery
     protected ID(e: Spell): number {
         return e.ID;
     }
-    protected Clear(r: Spell) {
+    Clear(r: Spell) {
         r.row
             .ActiveIconID.set(0)
             .Attributes.set(0)

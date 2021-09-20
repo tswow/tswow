@@ -31,7 +31,7 @@ import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { RegistryStatic } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
-import { SkillLines } from "../SkillLines/SkillLines";
+import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
 import { SpellSkillLineAbilites, SpellSkillLineAbility } from "../Spell/SpellSkillLines";
 import { std } from "../tswow-stdlib-data";
@@ -109,7 +109,7 @@ export class LanguageSkills extends MultiRowSystem<SkillLine,WoWLanguage> {
         this.owner.Abilities.forEach((value)=>{
             let sl = value.SkillLine.get();
             if(!skills.find((x)=>x.ID == sl)) {
-                skills.push(SkillLines.load(sl));
+                skills.push(SkillLineRegistry.load(sl));
             }
         })
         return skills;
@@ -185,7 +185,7 @@ export class LanguageRegistryClass extends RegistryStatic<WoWLanguage,LanguagesR
         return e.ID;
     }
 
-    protected Clear(lang: WoWLanguage, mod: string, id: string) {
+    Clear(lang: WoWLanguage, mod: string, id: string) {
         lang.Name.clear()
         let sl = std.SkillLines.create(mod,id+'-skill')
         .Category.set(10)
@@ -193,7 +193,7 @@ export class LanguageRegistryClass extends RegistryStatic<WoWLanguage,LanguagesR
         .SkillCosts.set(0)
         .Icon.set('Interface\\Icons\\Trade_Engineering')
         .CanLink.set(0)
-        .RaceClassInfos.modNew(
+        .RaceClassInfos.addMod(
             x=>x.ClassMask.clearAll()
                 .RaceMask.set(0xffffffff)
                 .ClassMask.set(0xffffffff)

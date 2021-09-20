@@ -5,7 +5,7 @@ import { BoundingBox } from "../Misc/BoundingBox";
 import { ChildEntity, MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
+import { SoundEntryRegistry } from "../Sound/SoundEntry";
 
 export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameObjectDisplay> {
     get length(): number { return 10; }
@@ -36,7 +36,7 @@ export class GameObjectSounds extends ChildEntity<GameObjectDisplayInfoRow,GameO
     }
 
     get(index: number) {
-        return new SoundEntryPointer(this.owner, new CellIndexWrapper(this.owner, this.row.Sound, index));
+        return SoundEntryRegistry.ref(this.owner, new CellIndexWrapper(this.owner, this.row.Sound, index));
     }
 
     add() {

@@ -17,6 +17,7 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MapRegistry } from "../Map/Maps";
 import { Position } from "./Position";
 
 export class PositionXYZCell<T> extends CellSystem<T> {
@@ -80,7 +81,7 @@ export class PositionMapXYZCell<T> extends CellSystem<T> {
     get X() { return this.ownerWrap(this._x); }
     get Y() { return this.ownerWrap(this._y); }
     get Z() { return this.ownerWrap(this._z); }
-    get Map() { return this.ownerWrap(this._map); }
+    get Map() { return MapRegistry.ref(this.owner, this._map); }
 
     setSpread(map: number, x: number, y: number, z: number) {
         this.X.set(x);
@@ -177,11 +178,11 @@ export class PositionMapXYZOCell<T> extends CellSystem<T>{
         this._o = o;
     }
 
-    get X() { return this.ownerWrap(this._x); }
-    get Y() { return this.ownerWrap(this._y); }
-    get Z() { return this.ownerWrap(this._z); }
-    get O() { return this.ownerWrap(this._o); }
-    get Map() { return this.ownerWrap(this._o); }
+    get X()   { return this.ownerWrap(this._x); }
+    get Y()   { return this.ownerWrap(this._y); }
+    get Z()   { return this.ownerWrap(this._z); }
+    get O()   { return this.ownerWrap(this._o); }
+    get Map() { return MapRegistry.ref(this.owner, this._map); }
 
     setSpread(map: number, x: number,y: number, z: number, o: number) {
         this.Map.set(map);

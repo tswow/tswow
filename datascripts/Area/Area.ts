@@ -16,26 +16,29 @@
  */
 import { DBC } from "wotlkdata";
 import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
-import { MapRef } from "../Map/Map";
+import { Table } from "wotlkdata/table/Table";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/RefOld";
-import { SoundEntryPointer } from "../Sound/SoundEntry";
-import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
-import { ZoneMusicRef } from "../Sound/ZoneMusic";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
+import { SoundEntryRegistry } from "../Sound/SoundEntry";
+import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
+import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
 import { AreaFlags } from "./AreaFlags";
 import { AreaWorldStateSounds, AreaWorldStateUIs } from "./AreaWorldStates";
 
 export class Area extends MainEntity<AreaTableRow> {
     get ExploreBit() { return this.row.ExploreFlag.get(); }
     get ID() { return this.row.ID.get(); }
-    get Map() { return new MapRef(this, this.row.MapID) }
+    get Map() { return MapRegistry.ref(this, this.row.MapID) }
     get ParentArea() { return this.wrap(this.row.ParentAreaID); }
-    get Sound() { return new SoundEntryPointer(this, this.row.SoundProviderPref)}
-    get SoundUnderwater() { return new SoundEntryPointer(this, this.row.SoundProviderPrefUnderwater)}
-    get SoundAmbience() { return new SoundEntryPointer(this, this.row.AmbienceID)}
-    get ZoneMusic() { return new ZoneMusicRef(this, this.row.ZoneMusic); }
-    get IntroMusic() { return new ZoneIntroMusicRef(this, this.row.ZoneMusic)}
+    get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundProviderPref)}
+    get SoundUnderwater() { return SoundEntryRegistry.ref(this, this.row.SoundProviderPrefUnderwater)}
+    get SoundAmbience() { return SoundEntryRegistry.ref(this, this.row.AmbienceID)}
+    get ZoneMusic() { return ZoneMusicRegistry.ref(this, this.row.ZoneMusic); }
+    get IntroMusic() {
+        return ZoneIntroMusicRegistry.ref(this, this.row.IntroSound)
+    }
     get ExplorationLevel() { return this.wrap(this.row.ExplorationLevel); }
     get Name() { return this.wrapLoc(this.row.AreaName); }
     get MinElevation() { return this.wrap(this.row.MinElevation); }
@@ -46,50 +49,47 @@ export class Area extends MainEntity<AreaTableRow> {
     get Flags() { return new AreaFlags(this, this.row.Flags); }
 }
 
-export const AreaRegistry = {
-    load(id: number) {
-        return new Area(DBC.AreaTable.findById(id))
-    },
-
-    create(mod: string, name: string) {
-        return new Area(DBC.AreaTable
-            .add(Ids.Area.id(mod,name))
-                .ExploreFlag.set(Ids.AreaBit.id(mod,name+'_areabit')))
-    },
-
-    filter(query: AreaTableQuery) {
-        return DBC.AreaTable.filter(query).map(x=>new Area(x));
-    },
-
-    find(query: AreaTableQuery) {
-        return AreaRegistry.filter(query);
-    },
-}
-
-export class AreaRef<T> extends RefStatic<T,Area> {
-    protected create(mod: string, id: string): Area {
-        return AreaRegistry.create(mod,id);
+export class AreaRegistryClass
+    extends RegistryStatic<Area,AreaTableRow,AreaTableQuery>
+{
+    protected Table(): Table<any, AreaTableQuery, AreaTableRow> & { add: (id: number) => AreaTableRow; } {
+        return DBC.AreaTable
     }
-    protected clone(mod: string, id: string): Area {
-        return new Area(DBC.AreaTable.findById(this.cell.get())
-            .clone(Ids.Area.id(mod,id)))
+    protected IDs(): StaticIDGenerator {
+        return Ids.Area
     }
-    exists(): boolean {
-        return this.cell.get() > 0;
+    Clear(r: Area, mod: string, name: string): void {
+        r.row.ExploreFlag.set(Ids.AreaBit.id(mod,name))
+            .AmbienceID.set(0)
+            .Ambient_Multiplier.set(0)
+            .AreaName.clear()
+            .ExplorationLevel.set(0)
+            .FactionGroupMask.set(0)
+            .Flags.set(0)
+            .IntroSound.set(0)
+            .Lightid.set(0)
+            .LiquidTypeID.fill(0)
+            .MapID.set(0)
+            .MinElevation.set(0)
+            .ParentAreaID.set(0)
+            .SoundProviderPref.set(0)
+            .SoundProviderPrefUnderwater.set(0)
+            .ZoneMusic.set(0)
     }
-    protected id(v: Area): number {
-        return v.ID;
+    protected Clone(mod: string, name: string, r: Area, parent: Area): void {
+        throw new Error("Method not implemented.");
     }
-    protected resolve(): Area {
-        return AreaRegistry.load(this.cell.get());
+    protected Entity(r: AreaTableRow): Area {
+        return new Area(r);
     }
-}
-
-export class AreaRefReadOnly<T> extends RefReadOnly<T,Area> {
-    getRef(): Area {
-        return AreaRegistry.load(this.cell.get());
+    protected FindByID(id: number): AreaTableRow {
+        return DBC.AreaTable.findById(id);
     }
-    exists(): boolean {
-        return this.cell.get() > 0;
+    protected EmptyQuery(): AreaTableQuery {
+        return {}
+    }
+    protected ID(e: Area): number {
+        return e.ID;
     }
 }
+export const AreaRegistry = new AreaRegistryClass();

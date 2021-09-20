@@ -1,9 +1,10 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/dbc/types/CurrencyCategory";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class CurrencyCategoryFlags<T> extends MaskCell32<T> {
     get SortLast() { return this.bit(0); }
@@ -22,42 +23,38 @@ export class CurrencyCategory extends MainEntity<CurrencyCategoryRow> {
     }
 }
 
-export const CurrencyCategoryRegistry = {
-    create(parent = 0) {
-        return parent === 0 ?
-            new CurrencyCategory(DBC.CurrencyCategory.add(Ids.CurrencyCategory.id()))
-                .clear()
-            : new CurrencyCategory(DBC.CurrencyCategory.find({ID:parent}))
-    },
-
-    load(id: number) {
-        return new CurrencyCategory(DBC.CurrencyCategory.find({ID:id}));
-    },
-
-    filter(query: CurrencyCategoryQuery) {
-        return DBC.CurrencyCategory.filter(query)
-            .map(x=>new CurrencyCategory(x));
-    },
-
-    find(query: CurrencyCategoryQuery) {
-        return new CurrencyCategory(DBC.CurrencyCategory.find(query));
+export class CurrencyCategoryRegistryClass
+    extends RegistryDynamic<
+          CurrencyCategory
+        , CurrencyCategoryRow
+        , CurrencyCategoryQuery
+    >
+{
+    protected Table(): Table<any, CurrencyCategoryQuery, CurrencyCategoryRow> & { add: (id: number) => CurrencyCategoryRow; } {
+        return DBC.CurrencyCategory
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.CurrencyCategory
+    }
+    Clear(entity: CurrencyCategory): void {
+        entity.Flags.set(0)
+              .Name.clear()
+    }
+    protected Clone(entity: CurrencyCategory, parent: CurrencyCategory): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: CurrencyCategoryRow): CurrencyCategory {
+        return new CurrencyCategory(r);
+    }
+    protected FindByID(id: number): CurrencyCategoryRow {
+        return DBC.CurrencyCategory.find({ID:id});
+    }
+    protected EmptyQuery(): CurrencyCategoryQuery {
+        return {}
+    }
+    protected ID(e: CurrencyCategory): number {
+        return e.ID;
     }
 }
 
-export class CurrencyCategoryRef<T> extends Ref<T,CurrencyCategory> {
-    protected create(parent?: number): CurrencyCategory {
-        return CurrencyCategoryRegistry.create(parent);
-    }
-    protected clone(): CurrencyCategory {
-        return CurrencyCategoryRegistry.create(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: CurrencyCategory): number {
-        return v.ID;
-    }
-    protected resolve(): CurrencyCategory {
-        return CurrencyCategoryRegistry.load(this.cell.get());
-    }
-}
+export const CurrencyCategoryRegistry = new CurrencyCategoryRegistryClass();

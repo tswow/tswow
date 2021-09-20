@@ -17,14 +17,16 @@
 
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
+import { ChrClassesQuery, ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
 import { LUAXML } from "wotlkdata/luaxml/LUAXML";
 import { Edit } from "wotlkdata/luaxml/TextFile";
 import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryRowBase } from "../Refs/Registry";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
 import { ClassRaces } from "./ClassRaces";
@@ -90,19 +92,23 @@ const clsResolve = (f : ClassFinder) => {
     return DBC.ChrClasses.find({ID:f});
 }
 
-// TODO: temporary fix for 'Classes.load' for custom classes
+// needed to load custom classes once created,
+// it's too complicated to find all the lua/xml rows again
 const loadedClasses: {[key: number]: Class} = {}
 
-export const Classes = {
-
-    load : (finder: ClassType) => {
-        const finderId = resolveClassType(finder);
-        let loaded = loadedClasses[finderId];
-        if(loaded) {
+export class ClassRegistryClass extends RegistryRowBase<Class,ChrClassesRow,ChrClassesQuery> {
+    protected Table(): Table<any, ChrClassesQuery, ChrClassesRow> & { add: (id: number) => ChrClassesRow; } {
+        return DBC.ChrClasses
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.Class;
+    }
+    protected Entity(row: ChrClassesRow): Class {
+        let loaded = loadedClasses[row.ID.get()];
+        if(loaded)
+        {
             return loaded;
         }
-
-        const row = clsResolve(finderId);
         const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.lua');
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
         const xm = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');
@@ -124,7 +130,7 @@ export const Classes = {
             infoRows.push(gs.emptyReplace(i));
         }
         return new Class(
-            finderId,
+            row.ID.get(),
             row,
             tcoordscc,
             classColor,
@@ -135,9 +141,22 @@ export const Classes = {
             femaleDesc,
             infoRows
         );
-    },
+    }
+    protected FindByID(id: number): ChrClassesRow {
+        return DBC.ChrClasses.findById(id);
+    }
+    protected EmptyQuery(): ChrClassesQuery {
+        return {}
+    }
+    protected ID(e: Class): number {
+        return e.ID;
+    }
 
-    create : (mod : string, clsId : string, parentClass: ClassType) => {
+    load(cls: ClassType) {
+        return super.load(resolveClassType(cls));
+    }
+
+    create(mod: string, clsId: string, parentClass: ClassType) {
         for(let i=0;i<clsId.length;++i) {
             let cc = clsId.charCodeAt(i);
             if(!(cc>=97&&cc<=122) && !(cc>=48 && cc<=57) && !(cc>=65&&cc<=90)) {
@@ -258,7 +277,7 @@ export const Classes = {
         if(cls.ID == 14) cls.UI.ClassButton.setPos(-0,-420)
         if(cls.ID == 15) cls.UI.ClassButton.setPos(42,-420)
         if(cls.ID == 16) cls.UI.ClassButton.setPos(85,-420)
-
         return cls;
     }
 }
+export const ClassRegistry = new ClassRegistryClass();

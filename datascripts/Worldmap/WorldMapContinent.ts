@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { WorldMapContinentQuery, WorldMapContinentRow } from "wotlkdata/dbc/types/WorldMapContinent";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Boundary, MinMax2DCell } from "../Misc/LimitCells";
@@ -8,7 +8,7 @@ import { PositionXYCell } from "../Misc/PositionCell";
 import { Ref } from "../Refs/RefOld";
 
 export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
-    get Map() { return new MapRef(this, this.row.MapID); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
 
     /** 0 for outland, 1 for azeroth */
     get World() { return this.wrap(this.row.WorldMapID); }

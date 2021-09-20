@@ -3,7 +3,7 @@ import * as path from 'path';
 import { finish } from "wotlkdata";
 import { Settings } from "wotlkdata/Settings";
 import { TSImage, TSImages } from "../Images/Image";
-import { Classes } from "./Class";
+import { ClassRegistry } from './Class';
 
 const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
@@ -34,16 +34,16 @@ function setupImages() {
     stitchedSquares = resizeImage(stitchedSquares)
     stitchedCircles = resizeImage(stitchedCircles)
 
-    Classes.load('WARRIOR').UI.TCoords.set(0,0.125,0,0.125)
-    Classes.load('MAGE').UI.TCoords.set(0.125,0.25,0,0.125)
-    Classes.load('ROGUE').UI.TCoords.set(0.25,0.375,0,0.125)
-    Classes.load('DRUID').UI.TCoords.set(0.375,0.5,0,0.125)
-    Classes.load('HUNTER').UI.TCoords.set(0.5,0.625,0,0.125)
-    Classes.load('SHAMAN').UI.TCoords.set(0.625,0.75,0,0.125)
-    Classes.load('PRIEST').UI.TCoords.set(0.75,0.875,0,0.125)
-    Classes.load('WARLOCK').UI.TCoords.set(0.875,1,0,0.125)
-    Classes.load('PALADIN').UI.TCoords.set(0,0.125,0.125,0.25)
-    Classes.load('DEATH_KNIGHT').UI.TCoords.set(0.125,0.25,0.125,0.25)
+    ClassRegistry.load('WARRIOR').UI.TCoords.set(0,0.125,0,0.125)
+    ClassRegistry.load('MAGE').UI.TCoords.set(0.125,0.25,0,0.125)
+    ClassRegistry.load('ROGUE').UI.TCoords.set(0.25,0.375,0,0.125)
+    ClassRegistry.load('DRUID').UI.TCoords.set(0.375,0.5,0,0.125)
+    ClassRegistry.load('HUNTER').UI.TCoords.set(0.5,0.625,0,0.125)
+    ClassRegistry.load('SHAMAN').UI.TCoords.set(0.625,0.75,0,0.125)
+    ClassRegistry.load('PRIEST').UI.TCoords.set(0.75,0.875,0,0.125)
+    ClassRegistry.load('WARLOCK').UI.TCoords.set(0.875,1,0,0.125)
+    ClassRegistry.load('PALADIN').UI.TCoords.set(0,0.125,0.125,0.25)
+    ClassRegistry.load('DEATH_KNIGHT').UI.TCoords.set(0.125,0.25,0.125,0.25)
     return true;
 }
 

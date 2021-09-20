@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { WorldMapTransformsQuery, WorldMapTransformsRow } from "wotlkdata/dbc/types/WorldMapTransforms";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMax2DCell } from "../Misc/LimitCells";
@@ -10,8 +10,8 @@ import { DungeonMapRef } from "./DungeonMap";
 
 export class WorldMapTransform extends MainEntity<WorldMapTransformsRow> {
     get ID() { return this.row.ID.get(); }
-    get SourceMap() { return new MapRef(this, this.row.MapID); }
-    get DestinationMap() { return new MapRef(this, this.row.NewMapID); }
+    get SourceMap() { return MapRegistry.ref(this, this.row.MapID); }
+    get DestinationMap() { return MapRegistry.ref(this, this.row.NewMapID); }
     get Region() {
         return new MinMax2DCell(
               this

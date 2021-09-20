@@ -1,6 +1,8 @@
 import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Ref, RefStatic } from "../Refs/RefOld";
+import { RefStatic } from "../Refs/Ref";
+import { Ref } from "../Refs/RefOld";
+import { MainEntity } from "./Entity";
 
 export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
     protected readonly clearValue: number;
@@ -86,7 +88,7 @@ export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
     }
 }
 
-export class ArrayRefSystemStatic<T,V extends Objectified> extends CellSystem<T> {
+export class ArrayRefSystemStatic<T,V extends MainEntity<any>> extends CellSystem<T> {
     protected readonly clearValue: number;
     protected readonly length: number;
     protected readonly getter: (index: number)=>RefStatic<T,V>;
@@ -109,7 +111,7 @@ export class ArrayRefSystemStatic<T,V extends Objectified> extends CellSystem<T>
     forEachRef(callback: (ref: V)=>void) {
         for(let i=0;i<this.length;++i) {
             let ref = this.getter(i);
-            if(ref.exists()) callback(ref.getRef());
+            if(ref.get() > this.clearValue) callback(ref.getRef());
         }
         return this.owner;
     }
@@ -128,7 +130,7 @@ export class ArrayRefSystemStatic<T,V extends Objectified> extends CellSystem<T>
 
     addId(refId: number) {
         for(let i=0;i<this.length;++i) {
-            if(!this.getter(i).exists()) {
+            if(this.getter(i).get() <= this.clearValue) {
                 return this.setId(i,refId);
             }
         }
@@ -153,7 +155,7 @@ export class ArrayRefSystemStatic<T,V extends Objectified> extends CellSystem<T>
 
     addMod(mod: string, id: string, callback: (value: V)=>void = ()=>{}) {
         for(let i=0;i<this.length;++i) {
-            if(!this.getter(i).exists()) {
+            if(this.getter(i).get() <= this.clearValue) {
                 return this.getter(i).modRefCopy(mod,id,callback);
             }
         }
@@ -162,7 +164,7 @@ export class ArrayRefSystemStatic<T,V extends Objectified> extends CellSystem<T>
 
     addGet(mod: string, id: string) {
         for(let i=0;i<this.length;++i) {
-            if(!this.getter(i).exists()) {
+            if(this.getter(i).get() <= this.clearValue) {
                 return this.getter(i).getRefCopy(mod,id);
             }
         }

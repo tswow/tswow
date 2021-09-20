@@ -22,7 +22,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Table } from "wotlkdata/table/Table";
 import { HolidayRef } from "../GameEvent/Holiday";
-import { GemRef } from "../Gem/Gem";
+import { GemRegistry } from "../Gem/Gem";
 import { LockRef } from "../Locks/Lock";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
@@ -115,7 +115,15 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get FoodType() { return new ItemFoodType(this, this.row.FoodType); }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
     get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
-    get GemProperties() { return new GemRef(this, this.row.GemProperties); }
+
+    /**
+     * This is readonly, because changing the gem properties
+     * will also require changing the item id in the
+     * enchantment connected to the gem.
+     *
+     * To create a new gem, see `std.Gems.create(...)` and its parenting options.
+     */
+    get GemProperties() { return GemRegistry.readOnlyRef(this, this.row.GemProperties); }
 
     get DisplayInfo() {
         return new ItemDisplayInfoPointer(this
@@ -165,7 +173,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
     protected ID(e: ItemTemplate): number {
         return e.ID;
     }
-    protected Clear(r: ItemTemplate) {
+    Clear(r: ItemTemplate) {
         r.AmmoType.None.set()
          .Area.set(0)
          .Armor.set(0)
@@ -186,7 +194,6 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .FlagsCustom.clearAll()
          .FlagsExtra.clearAll()
          .FoodType.set(0)
-         .GemProperties.set(0)
          .Holiday.set(0)
          .InventoryType.set(0)
          .ItemLevel.set(0)
@@ -221,6 +228,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .StartQuest.set(0)
          .Stats.clearAll()
          .TotemCategory.set(0)
+         .row.GemProperties.set(0)
     }
 }
 

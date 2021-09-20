@@ -1,35 +1,37 @@
 import { DBC } from "wotlkdata";
-import { SkillLineQuery } from "wotlkdata/dbc/types/SkillLine";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { Ids } from "../Misc/Ids";
+import { SkillLineQuery, SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
+import { Table } from "wotlkdata/table/Table";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
 import { SkillLine } from "./SkillLine";
 
-export const SkillLines = {
-    load(id: number) {
-        return new SkillLine(DBC.SkillLine.findById(id));
-    },
-
-    filter(query: SkillLineQuery) {
-        return DBC.SkillLine.filter(query).map(x=>new SkillLine(x));
-    },
-
-    create(mod: string, id: string) {
-        return new SkillLine(DBC.SkillLine.add(Ids.SkillLine.id(mod, id)))
-    },
-
-    createClass(mod: string, id: string, cls: number) {
-        const sl = SkillLines.create(mod, id)
-            .Category.set(7)
-            .SkillCosts.set(0)
-            .CanLink.set(0)
-            .RaceClassInfos.modNew(rci=>{
-                rci.RaceMask.set(4294967295)
-                   .ClassMask.clearAll()
-                   .ClassMask.setBit(cls-1,true)
-                   .Flags.set(1040)
-            })
-        SQL.playercreateinfo_skills
-            .add(0, 1<<(cls-1),sl.ID).comment.set(`${cls} - ${id}`);
-        return sl;
+export class SkillLineRegistryClass extends RegistryStatic<SkillLine,SkillLineRow,SkillLineQuery> {
+    protected Table(): Table<any, SkillLineQuery, SkillLineRow> & { add: (id: number) => SkillLineRow; } {
+        return DBC.SkillLine
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.SkillLine
+    }
+    Clear(r: SkillLine, mod: string, name: string): void {
+            r.Category.set(7)
+             .SkillCosts.set(0)
+             .CanLink.set(0)
+    }
+    protected Clone(mod: string, name: string, r: SkillLine, parent: SkillLine): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: SkillLineRow): SkillLine {
+        return new SkillLine(r);
+    }
+    protected FindByID(id: number): SkillLineRow {
+        return DBC.SkillLine.findById(id);
+    }
+    protected EmptyQuery(): SkillLineQuery {
+        return {}
+    }
+    protected ID(e: SkillLine): number {
+        return e.ID;
     }
 }
+
+export const SkillLineRegistry = new SkillLineRegistryClass();

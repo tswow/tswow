@@ -1,15 +1,15 @@
 import { DBC } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { WorldStateZoneSoundsRow } from "wotlkdata/dbc/types/WorldStateZoneSounds";
-import { AreaRef } from "../Area/Area";
+import { AreaRegistry } from "../Area/Area";
 import { WMOAreaRef } from "../Area/WMOArea";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefBase, RefStatic } from "../Refs/RefOld";
-import { SoundAmbienceRef } from "../Sound/SoundAmbience";
+import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRef } from "../Sound/SoundProviderPreferences";
-import { ZoneIntroMusicRef } from "../Sound/ZoneIntroMusic";
-import { ZoneMusicRef } from "../Sound/ZoneMusic";
+import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
+import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
 
 // Note: There is no table containing WorldStates, so we just
 // pretend there is one.
@@ -17,16 +17,16 @@ import { ZoneMusicRef } from "../Sound/ZoneMusic";
 export class WorldStateSound extends MainEntity<WorldStateZoneSoundsRow> {
     get WorldState() { return this.row.WorldStateID.get(); }
     get TriggerValue() { return this.wrap(this.row.WorldStateValue); }
-    get Area() { return new AreaRef(this, this.row.AreaID); }
+    get Area() { return AreaRegistry.ref(this, this.row.AreaID); }
     get WMOArea() { return new WMOAreaRef(this, this.row.WMOAreaID) }
     get ZoneIntroMusic() {
-        return new ZoneIntroMusicRef(this, this.row.ZoneintroMusicID)
+        return ZoneIntroMusicRegistry.ref(this, this.row.ZoneintroMusicID)
     }
     get ZoneMusic() {
-        return new ZoneMusicRef(this, this.row.ZoneMusicID);
+        return ZoneMusicRegistry.ref(this, this.row.ZoneMusicID);
     }
     get SoundAmbience() {
-        return new SoundAmbienceRef(this, this.row.SoundAmbienceID);
+        return SoundAmbienceRegistry.ref(this, this.row.SoundAmbienceID);
     }
     get SoundProviderPreferences() {
         return new SoundProviderPreferenceRef(this,

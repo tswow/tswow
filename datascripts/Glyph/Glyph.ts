@@ -8,9 +8,11 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { GlyphPropertiesQuery, GlyphPropertiesRow } from "wotlkdata/dbc/types/GlyphProperties";
 import { loc_constructor } from "wotlkdata/primitives";
+import { Table } from "wotlkdata/table/Table";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SpellRegistry } from "../Spell/Spells";
@@ -154,30 +156,37 @@ export class Glyph extends MainEntity<GlyphPropertiesRow> {
     get Items() { return new GlyphItems(this); }
 }
 
-export const GlyphRegistry = {
-    create(spellId: number) {
-        return new Glyph(
-            DBC.GlyphProperties.add(Ids.GlyphSlot.id())
-               .GlyphSlotFlags.set(0)
-               .SpellID.set(spellId)
-               .SpellIconID.set(0)
-        )
-    },
+export class GlyphRegistryClass
+    extends RegistryDynamic<Glyph,GlyphPropertiesRow,GlyphPropertiesQuery>
+{
+    protected Table(): Table<any, GlyphPropertiesQuery, GlyphPropertiesRow> & { add: (id: number) => GlyphPropertiesRow; } {
+        return DBC.GlyphProperties
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.GlyphProperties
+    }
+    Clear(entity: Glyph): void {
+        entity
+            .Flags.set(0)
+            .Icon.set('')
+            .Spell.set(0)
+    }
 
-    createWithSpell(mod: string, id: string, parentSpell = 0) {
-        return this.create(SpellRegistry.create(mod,id,parentSpell).ID)
-    },
-
-    load(id: number) {
-        return new Glyph(DBC.GlyphProperties.find({ID:id}));
-    },
-
-    filter(query: GlyphPropertiesQuery) {
-        return DBC.GlyphProperties.filter(query)
-            .map(x=>new Glyph(x))
-    },
-
-    find(query: GlyphPropertiesQuery) {
-        return DBC.GlyphProperties.find(query);
+    protected Clone(entity: Glyph, parent: Glyph): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: GlyphPropertiesRow): Glyph {
+        return new Glyph(r);
+    }
+    protected FindByID(id: number): GlyphPropertiesRow {
+        return DBC.GlyphProperties.findById(id);
+    }
+    protected EmptyQuery(): GlyphPropertiesQuery {
+        return {}
+    }
+    protected ID(e: Glyph): number {
+        return e.ID
     }
 }
+
+export const GlyphRegistry = new GlyphRegistryClass();

@@ -1,9 +1,12 @@
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { TaxiPathQuery, TaxiPathRow } from "wotlkdata/dbc/types/TaxiPath";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { RefBase } from "../Refs/RefOld";
+import { RefNoCreate } from "../Refs/Ref";
+import { RegistryRowBase } from "../Refs/Registry";
 import { TaxiEndNode, TaxiEndNodeRef } from "./TaxiEndNode";
 import { TaxiPathNodes } from "./TaxiPathNode";
 
@@ -24,14 +27,47 @@ export type TaxiNodeConstructor = Position & {
     delay?: number,
 }
 
-export const TaxiPathRegistry = {
+export class TaxiPathRegistryClass
+    extends RegistryRowBase<TaxiPath,TaxiPathRow,TaxiPathQuery>
+{
+
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner, cell, this);
+    }
+
+    protected Entity(r: TaxiPathRow): TaxiPath {
+        return new TaxiPath(r);
+    }
+    protected FindByID(id: number): TaxiPathRow {
+        return DBC.TaxiPath.findById(id);
+    }
+    protected EmptyQuery(): TaxiPathQuery {
+        return {}
+    }
+    protected ID(e: TaxiPath): number {
+        return e.ID
+    }
+    protected Table(): Table<any, TaxiPathQuery, TaxiPathRow> & { add: (id: number) => TaxiPathRow; } {
+        return DBC.TaxiPath
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.TaxiPath
+    }
+
+    /**
+     * Connects a new path between two existing taxi endpoint nodes
+     */
     createStartEnd(mod: string, id: string, fromNode: number, toNode: number, cost = 0) {
         return new TaxiPath(DBC.TaxiPath.add(Ids.TaxiPath.id(mod,id))
             .FromTaxiNode.set(fromNode)
             .ToTaxiNode.set(toNode)
             .Cost.set(cost))
-    },
+    }
 
+    /**
+     * Creates a complee
+     * @returns
+     */
     createNewPath(mod: string, id: string, cost: number, mount: number|[number,number], vertices: TaxiNodeConstructor[]) {
         if(vertices.length < 2) {
             throw new Error(`Taxi paths must be made up of at least two vertices`);
@@ -55,13 +91,13 @@ export const TaxiPathRegistry = {
             .Mount.Horde.set(mount[0])
             .Mount.Alliance.set(mount[1])
 
-        let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID,0)
+        let path = this.createStartEnd(mod,id,start.ID,end.ID,0)
             .Cost.set(cost)
         vertices.forEach(x=>{
             path.Nodes.push(x)
         });
         return path;
-    },
+    }
 
     createPathFrom(mod: string, id: string, startNode: number, cost: number, endMount: number|[number,number], vertices: TaxiNodeConstructor[]) {
         let start = new TaxiEndNode(DBC.TaxiNodes.findById(startNode));
@@ -77,19 +113,19 @@ export const TaxiPathRegistry = {
             .Position.set(vertices[vertices.length-1])
             .Mount.Horde.set(endMount[0])
             .Mount.Alliance.set(endMount[1])
-        let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID)
+        let path = this.createStartEnd(mod,id,start.ID,end.ID)
             .Cost.set(cost)
         vertices.unshift(start.Position.toPosition())
         vertices.forEach(x=>{
             path.Nodes.push(x);
         })
         return path;
-    },
+    }
 
     createPathBetween(mod: string, id: string, startNode: number, endNode: number, cost: number, vertices: TaxiNodeConstructor[]) {
         let start = new TaxiEndNode(DBC.TaxiNodes.findById(startNode));
         let end = new TaxiEndNode(DBC.TaxiNodes.findById(endNode))
-        let path = TaxiPathRegistry.createStartEnd(mod,id,start.ID,end.ID)
+        let path = this.createStartEnd(mod,id,start.ID,end.ID)
             .Cost.set(cost)
         vertices.unshift(start.Position.toPosition())
         vertices.push(end.Position.toPosition())
@@ -97,31 +133,7 @@ export const TaxiPathRegistry = {
             path.Nodes.push(x);
         })
         return path;
-    },
-
-    load(id: number) {
-        return new TaxiPath(DBC.TaxiPath.findById(id));
-    },
-
-    filter(query: TaxiPathQuery) {
-        return DBC.TaxiPath
-            .filter(query)
-            .map(x=>new TaxiPath(x))
-    },
-
-    find(query: TaxiPathQuery) {
-        return new TaxiPath(DBC.TaxiPath.find(query))
     }
 }
 
-export class TaxiPathRef<T> extends RefBase<T,TaxiPath> {
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: TaxiPath): number {
-        return v.ID;
-    }
-    protected resolve(): TaxiPath {
-        return TaxiPathRegistry.load(this.cell.get());
-    }
-}
+export const TaxiPathRegistry = new TaxiPathRegistryClass();

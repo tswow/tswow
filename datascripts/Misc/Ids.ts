@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { GetId, GetIdRange, iterateIds } from "wotlkdata/ids/Ids";
+import { GetId, GetIdRange, GetTempId, iterateIds } from "wotlkdata/ids/Ids";
 
 // Swap this to check names in this file
 // type TableNameType = SQLNames | DBCNames
@@ -24,6 +24,12 @@ let highestReserved: {[key: string]: number} = {}
 iterateIds((idrange)=>{
     highestReserved[idrange.table] = Math.max(highestReserved[idrange.table]||0, idrange.high);
 });
+
+function randomString(size: number, charset: string) {
+    let str = '';
+    for(let i=0;i<size;++i) str+=charset[Math.floor(Math.random()*charset.length)]
+    return str;
+}
 
 export class IDGeneratorBase {
     readonly table: string;
@@ -43,6 +49,10 @@ export class StaticIDGenerator extends IDGeneratorBase {
     id(mod: string, name: string) {
         return GetId(this.table,mod,name,this.startId);
     }
+
+    dynamicId() {
+        return GetTempId(this.startId);
+    }
 }
 
 export class DynamicIDGenerator {
@@ -61,40 +71,6 @@ export class DynamicIDGenerator {
     }
 
     id() { return this.curid++; }
-}
-
-export class HybridIDGenerator {
-    readonly table: string;
-    readonly staticStartId: number;
-    protected curDynId: number;
-
-    constructor(table: string, staticStartId: number, dynamicStartId: number) {
-        this.table = table;
-        this.staticStartId = staticStartId;
-        this.curDynId = Math.max(((highestReserved[table]||(-1))+1),dynamicStartId)
-    }
-
-    dynamicRange(size: number) {
-        let old = this.curDynId;
-        this.curDynId+=size;
-        return old;
-    }
-
-    dynamicId() {
-        return this.curDynId++;
-    }
-
-    staticRange(mod: string, name: string, size: number) {
-        return GetIdRange(this.table,mod,name,size,this.staticStartId)
-    }
-
-    staticId(mod: string, name: string) {
-        let id = GetId(this.table,mod,name,this.staticStartId);
-        if(id>=this.curDynId) {
-            throw new Error(`Hybrid ID Generator out of ids: static ids overflowing into dynamic range`)
-        }
-        return id;
-    }
 }
 
 export const Ids = {
@@ -446,7 +422,7 @@ export const Ids = {
     /**
      * Starts at 20000, highest base value is 18019
      */
-    SoundEntries: new HybridIDGenerator('SoundEntries',20000,2000000),
+    SoundEntries: new StaticIDGenerator('SoundEntries',20000),
 
     /**
      * Starts at 187, highest base value is 186
@@ -501,7 +477,7 @@ export const Ids = {
     /**
      * Starts at 600, highest base value is 575
      */
-    ZoneMusic: new HybridIDGenerator('ZoneMusic',600,600000),
+    ZoneMusic: new StaticIDGenerator('ZoneMusic',600),
 
     /**
      * Starts at 300, highest base value is 291

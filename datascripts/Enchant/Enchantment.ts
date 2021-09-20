@@ -1,10 +1,11 @@
 import { DBC } from "wotlkdata";
 import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
+import { Table } from "wotlkdata/table/Table";
 import { ItemEffectsPointer } from "../Item/ItemVisualEffect";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { RefStatic } from "../Refs/RefOld";
-import { EnchantmentConditionRef } from "./EnchantmentCondition";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
+import { EnchantmentConditionRegistry } from "./EnchantmentCondition";
 import { EnchantmentEffects } from "./EnchantmentEffect";
 import { EnchantmentFlags } from "./EnchantmentFlags";
 import { EnchantmentSpells } from "./EnchantmentSpells";
@@ -21,65 +22,46 @@ export class Enchantment extends MainEntity<SpellItemEnchantmentRow> {
     get EnchantSpells() { return new EnchantmentSpells(this); }
     get ItemVisuals() { return new ItemEffectsPointer(this, this.row.ItemVisual); }
     get Flags() { return new EnchantmentFlags(this, this.row.Flags); }
-    get Condition() { return new EnchantmentConditionRef(this, this.row.Condition_Id); }
+    get Condition() { return EnchantmentConditionRegistry.ref(this, this.row.Condition_Id); }
     get Name() { return this.wrapLoc(this.row.Name); }
 }
 
-export const EnchantmentRegistry = {
-    create(mod: string, id: string, parent: number = 0) {
-        if(parent > 0) {
-            return new Enchantment(DBC.SpellItemEnchantment
-                .findById(parent)
-                .clone(Ids.SpellItemEnchantment.id(mod,id))
-            )
-        }
-        let ench = DBC.SpellItemEnchantment
-            .add(Ids.SpellItemEnchantment.id(mod,id))
-            .RequiredSkillID.set(0)
-            .RequiredSkillRank.set(0)
-            .Src_ItemID.set(0)
-            .Charges.set(0)
-            .Condition_Id.set(0)
-            .Effect.set([0,0,0])
-            .EffectArg.set([0,0,0])
-            .EffectPointsMax.set([0,0,0])
-            .EffectPointsMin.set([0,0,0])
-            .Flags.set(0)
-            .ItemVisual.set(0)
-            .MinLevel.set(0)
-        ench.Name.clear();
-        return new Enchantment(ench);
-    },
-
-    load(id: number) {
-        return new Enchantment(DBC.SpellItemEnchantment.findById(id))
-    },
-
-    filter(query: SpellItemEnchantmentQuery) {
+export class EnchantmentRegistryClass
+    extends RegistryStatic<
+          Enchantment
+        , SpellItemEnchantmentRow
+        , SpellItemEnchantmentQuery
+    >
+{
+    protected Table(): Table<any, SpellItemEnchantmentQuery, SpellItemEnchantmentRow> & { add: (id: number) => SpellItemEnchantmentRow; } {
         return DBC.SpellItemEnchantment
-            .filter(query)
-            .map(x=>new Enchantment(x))
-    },
-
-    find(query: SpellItemEnchantmentQuery) {
-        return new Enchantment(DBC.SpellItemEnchantment.find(query));
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.SpellItemEnchantment
+    }
+    Clear(r: Enchantment, mod: string, name: string): void {
+        r.Charges.set(0)
+         .Condition.set(0)
+         .Effects.clearAll()
+         .Flags.clearAll()
+         .ItemVisuals.set(0)
+         .Name.clear()
+    }
+    protected Clone(mod: string, name: string, r: Enchantment, parent: Enchantment): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: SpellItemEnchantmentRow): Enchantment {
+        return new Enchantment(r);
+    }
+    protected FindByID(id: number): SpellItemEnchantmentRow {
+        return DBC.SpellItemEnchantment.findById(id);
+    }
+    protected EmptyQuery(): SpellItemEnchantmentQuery {
+        return {}
+    }
+    protected ID(e: Enchantment): number {
+        return e.ID
     }
 }
 
-export class EnchantmentRef<T> extends RefStatic<T,Enchantment> {
-    protected create(mod: string, id: string): Enchantment {
-        return EnchantmentRegistry.create(mod,id);
-    }
-    protected clone(mod: string, id: string): Enchantment {
-        return EnchantmentRegistry.create(mod,id,this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: Enchantment): number {
-        return v.ID;
-    }
-    protected resolve(): Enchantment {
-        return EnchantmentRegistry.load(this.cell.get());
-    }
-}
+export const EnchantmentRegistry = new EnchantmentRegistryClass();

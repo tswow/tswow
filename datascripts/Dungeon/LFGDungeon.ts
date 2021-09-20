@@ -6,7 +6,7 @@ import { LfgDungeonsQuery, LfgDungeonsRow } from "wotlkdata/dbc/types/LfgDungeon
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { lfg_dungeon_templateQuery, lfg_dungeon_templateRow } from "wotlkdata/sql/types/lfg_dungeon_template";
 import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { FactionEnum } from "../Misc/FactionEnum";
 import { Ids } from "../Misc/Ids";
 import { SQLDBCChild, SQLDBCEntity } from "../Misc/SQLDBCEntity";
@@ -121,7 +121,7 @@ export class LFGDungeon extends SQLDBCEntity<LfgDungeonsRow, lfg_dungeon_templat
     // dbc fields always exist for LFGDungeon
     get Name() { return this.wrapLoc(this.GetDBC().Name); }
     get ID() { return this.GetDBC().ID.get(); }
-    get Map() { return new MapRef(this, this.GetDBC().MapID); }
+    get Map() { return MapRegistry.ref(this, this.GetDBC().MapID); }
     get Difficulty() { return this.wrap(this.GetDBC().Difficulty); }
     get Flags() { return new LFGFlags(this, this.GetDBC().Flags); }
     get Texture() { return this.wrap(this.GetDBC().TextureFilename); }

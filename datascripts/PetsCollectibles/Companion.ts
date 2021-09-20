@@ -1,9 +1,13 @@
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
+import { Table } from "wotlkdata/table/Table";
 import { CreatureTemplateRef } from "../Creature/CreatureTemplate";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SelfRef } from "../Refs/RefOld";
+import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 
@@ -92,9 +96,18 @@ export class Companion extends MainEntity<SpellRow> {
     get ID() { return this.row.ID.get(); }
 }
 
-export const CompanionRegistry = {
-    create(mod: string,id: string) {
-        let spell = SpellRegistry.create(mod,id)
+export class CompanionRegistryClass
+    extends RegistryStatic<Companion,SpellRow,SpellQuery>
+{
+    protected Table(): Table<any, SpellQuery, SpellRow> & { add: (id: number) => SpellRow; } {
+        return DBC.Spell
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.Spell
+    }
+    Clear(r: Companion): void {
+        SpellRegistry.Clear(r.Spell.get())
+        r.Spell.get()
             .Attributes.isAbility.set(true)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.sheatheUnchanged.set(true)
@@ -118,33 +131,31 @@ export const CompanionRegistry = {
                     .SummonedCreature.set(0)
                     .TargetA.DestCasterSummon.set()
             })
-        return new Companion(spell.row);
-    },
+    }
 
-    createWithItem(mod: string, id: string) {
-        return this.create(mod,id)
-            .Items.add(mod,`${id}-item`)
-    },
-
-    load(id: number) {
-        let spell = SpellRegistry.load(id)
-        if(!spell || spell.Effects.effectIndex(SUMMON_EFFECT_INDEX)<0) {
-            return undefined;
+    createWithItem(mod: string, name: string, itemCount = 1) {
+        let companion = this.create(mod,name);
+        for(let i=0;i<itemCount;++i) {
+            companion.Items.add(mod,`${name}-item-${i}`)
         }
-        return new Companion(spell.row);
-    },
+        return companion;
+    }
 
-    filter(query: SpellQuery) {
-        return SpellRegistry.queryAll({...query,Effect:SUMMON_EFFECT_INDEX})
-            .filter(x=>x.SkillLines
-                .filter(y=>y.SkillLine.get()===COMPANION_SKILLINE).length>0)
-            .map(x=>new Companion(x.row))
-    },
-
-    find(query: SpellQuery) {
-        let spell = SpellRegistry.queryAll({...query,EffectAura:SUMMON_EFFECT_INDEX})
-            .filter(x=>x.SkillLines
-                .filter(y=>y.SkillLine.get()===COMPANION_SKILLINE).length>0)
-        return spell.length>0 ? new Companion(spell[0].row) : undefined;
+    protected Clone(mod: string, name: string, r: Companion, parent: Companion): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: SpellRow): Companion {
+        return new Companion(r);
+    }
+    protected FindByID(id: number): SpellRow {
+        return DBC.Spell.findById(id);
+    }
+    protected EmptyQuery(): SpellQuery {
+        return {}
+    }
+    protected ID(e: Companion): number {
+        return e.ID;
     }
 }
+
+export const CompanionRegistry = new CompanionRegistryClass();

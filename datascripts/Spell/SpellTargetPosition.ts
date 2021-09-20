@@ -1,7 +1,7 @@
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { spell_target_positionRow } from "wotlkdata/sql/types/spell_target_position";
-import { MapRef } from "../Map/Map";
+import { MapRegistry } from "../Map/Maps";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
 import { SpellEffect } from "./SpellEffect";
@@ -38,7 +38,7 @@ export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target
     }
 
     get Map() {
-        return new MapRef(this.owner, this.wrapSQL(0, sql=>sql.MapID))
+        return MapRegistry.ref(this.owner, this.wrapSQL(0, sql=>sql.MapID))
     }
     get X() { return this.wrapSQL(0,sql=>sql.PositionX) }
     get Y() { return this.wrapSQL(0,sql=>sql.PositionY) }

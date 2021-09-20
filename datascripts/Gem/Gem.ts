@@ -1,11 +1,12 @@
 import { DBC } from "wotlkdata"
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
 import { GemPropertiesQuery, GemPropertiesRow } from "wotlkdata/dbc/types/GemProperties"
+import { Table } from "wotlkdata/table/Table"
 import { Enchantment, EnchantmentRegistry } from "../Enchant/Enchantment"
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
-import { RefStatic } from "../Refs/RefOld"
+import { RegistryRowBase } from "../Refs/Registry"
 import { colToId, GemColorType, GemType } from "./GemType"
 
 export class Gem extends MainEntity<GemPropertiesRow> {
@@ -78,76 +79,85 @@ export class GemEnchantmentRef extends CellSystem<Gem> {
     }
 }
 
-export const GemRegistry = {
-    create(
-          mod: string
-        , id: string
-        , color?: GemColorType
-        , parentId = 0
-        , enchantmentId = 0
-    ) {
-        let gemId = Ids.GemProperties.id()
-        let item = ItemTemplateRegistry.create(mod,id)
+export class GemRegistryClass
+    extends RegistryRowBase<Gem,GemPropertiesRow,GemPropertiesQuery>
+{
+    protected Entity(r: GemPropertiesRow): Gem {
+        return new Gem(r);
+    }
+    protected FindByID(id: number): GemPropertiesRow {
+        return DBC.GemProperties.findById(id);
+    }
+    protected EmptyQuery(): GemPropertiesQuery {
+        return {}
+    }
+    protected ID(e: Gem): number {
+        return e.ID
+    }
+    protected Table(): Table<any, GemPropertiesQuery, GemPropertiesRow> {
+        return DBC.GemProperties;
+    }
+
+    createFromEnchantment(mod: string, id: string, color?: GemColorType, enchantment = 0) {
+
+    }
+
+    /**
+     * @param mod
+     * @param id
+     * @param color
+     * @param parentGem - the gem whose properties should be cloned
+     * @param parentEnchantment - the enchantment whose properties should be cloned, uses the item in parentGem if set to 0.
+     * @param parentItem - the item whose properties should be cloned, uses the item in parentEnchantment if set to 0.
+     * @returns
+     */
+    create(mod: string, id: string, color?: GemColorType, parentGem = 0, parentEnchantment = 0, parentItem = 0) {
+        // Load parent
+        let parent = parentGem > 0
+            ? DBC.GemProperties.findById(parentGem)
+            : undefined;
+        let gemid = Ids.GemProperties.id()
+
+        // Build enchantment
+        if(parent && parentEnchantment === 0) {
+            parentEnchantment = parent?.Enchant_Id.get()
+        }
+        let enchantment = EnchantmentRegistry.create(
+              mod
+            , `${id}-enchantment`
+            , parentEnchantment
+            )
+
+        // Build item
+        if(parentItem === 0) {
+            parentItem = enchantment.row.Src_ItemID.get()
+        }
+        let item = ItemTemplateRegistry.create(mod,id,parentItem)
             .BagFamily.set(512)
             .ClassMask.set(-1)
             .RaceMask.set(-1)
             .Material.Liquid.set()
             .DisplayInfo.set(60325)
-            .GemProperties.set(gemId)
             .Quality.Green.set()
 
-        let parent = parentId > 0 ? DBC.GemProperties.findById(parentId) : undefined;
-        let enchantment = EnchantmentRegistry.create(
-              mod
-            , `${id}-enchantment`
-            , enchantmentId > 0
-                ? enchantmentId
-                : parent
-                ? parent.Enchant_Id.get()
-                : 0
-            )
-        enchantment.row.Src_ItemID.set(item.ID);
+        // Build gem
         let gem = (
-                parentId === 0 ?
-                      new Gem(DBC.GemProperties.add(gemId)).clear()
-                    : new Gem(DBC.GemProperties.findById(parentId)
-                        .clone(gemId))
+                parentGem === 0 ?
+                    new Gem(DBC.GemProperties.add(gemid)).clear()
+                    : new Gem(DBC.GemProperties.findById(parentGem)
+                        .clone(gemid))
                 )
-        gem.row.Enchant_Id.set(enchantment.ID);
         if(color) {
             gem.Type.set(colToId(color));
         }
+
+        // Connect everything
+        item.row.GemProperties.set(gemid)        // item -> gem
+        gem.row.Enchant_Id.set(enchantment.ID);  // gem  -> ench
+        enchantment.row.Src_ItemID.set(item.ID); // ench -> item
+
         return gem;
-    },
-
-    load(id: number) {
-        return new Gem(DBC.GemProperties.findById(id));
-    },
-
-    filter(query: GemPropertiesQuery) {
-        return DBC.GemProperties.filter(query)
-            .map(x=>new Gem(x))
-    },
-
-    find(query: GemPropertiesQuery) {
-        return new Gem(DBC.GemProperties.find(query))
     }
 }
 
-export class GemRef<T> extends RefStatic<T,Gem>{
-    protected create(mod: string, id: string): Gem {
-        return GemRegistry.create(mod,id);
-    }
-    protected clone(mod: string, id: string): Gem {
-        return GemRegistry.create(mod,id,undefined,this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: Gem): number {
-        return v.ID;
-    }
-    protected resolve(): Gem {
-        return GemRegistry.load(this.cell.get());
-    }
-}
+export const GemRegistry = new GemRegistryClass();

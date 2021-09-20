@@ -1,5 +1,4 @@
 import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkdata/cell/cells/EnumCell";
-import { ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LockRow } from "wotlkdata/dbc/types/Lock";
 import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template";
@@ -7,8 +6,9 @@ import { GameObjectTemplates } from "../GameObject/GameObjects";
 import { GameObjectAreaDamage, GameObjectButton, GameObjectCamera, GameObjectChest, GameObjectDoor, GameObjectFishingHole, GameObjectFlagDrop, GameObjectFlagStand, GameObjectGoober, GameObjectQuestGiver, GameObjectTemplate, GameObjectTrap, GameObjectType } from "../GameObject/GameObjectTemplate";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_TRAP } from "../GameObject/GameObjectTypes";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
+import { ArrayEntity } from "../Misc/Entity";
 import { Ref } from "../Refs/RefOld";
-import { Locks } from "./Locks";
+import { LockRegistry } from "./Locks";
 import { LockTypeRef } from "./LockType";
 
 export class LockIndexBase extends TransformedClass<LockIndexPlain> {
@@ -138,7 +138,7 @@ export abstract class LockGameObject<T extends GameObjectTemplate> extends Multi
         let query: gameobject_templateQuery = {type}
         query[lockIndex] = this.owner.ID
         return GameObjectTemplates
-            .filter(query)
+            .queryAll(query)
             .map(x=>transformer(x.Type).as())
     }
 
@@ -212,7 +212,7 @@ export class LockTraps extends LockGameObject<GameObjectTrap> {
 }
 
 // @ts-ignore -- hack, it's valid
-export class Lock extends ArraySystem<LockIndexPlain, Lock> {
+export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
     get ID() { return this.row.ID.get(); }
 
     get length(): number {
@@ -221,16 +221,6 @@ export class Lock extends ArraySystem<LockIndexPlain, Lock> {
 
     get(index: number): LockIndexPlain {
         return new LockIndexPlain(this, index);
-    }
-
-    readonly row: LockRow
-
-    constructor(row: LockRow) {
-        // @ts-ignore -- hack
-        super(undefined);
-        // @ts-ignore
-        this.owner = this;
-        this.row = row;
     }
 
     isOfType(lockType: number) {
@@ -262,10 +252,10 @@ export class Lock extends ArraySystem<LockIndexPlain, Lock> {
 
 export class LockRef<T> extends Ref<T,Lock> {
     protected create(): Lock {
-        return Locks.create();
+        return LockRegistry.create();
     }
     protected clone(): Lock {
-        return Locks.create(this.cell.get());
+        return LockRegistry.create(this.cell.get());
     }
     exists(): boolean {
         return this.cell.get() > 0;
@@ -274,6 +264,6 @@ export class LockRef<T> extends Ref<T,Lock> {
         return v.ID
     }
     protected resolve(): Lock {
-        return Locks.load(this.cell.get());
+        return LockRegistry.load(this.cell.get());
     }
 }

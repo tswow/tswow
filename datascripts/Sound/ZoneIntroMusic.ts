@@ -1,19 +1,98 @@
 import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ZoneintroMusicTableQuery, ZoneintroMusicTableRow } from "wotlkdata/dbc/types/ZoneintroMusicTable";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
-import { SoundEntryPointer, SoundEntryRegistry } from "./SoundEntry";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { SoundEntryRegistry } from "./SoundEntry";
 
 export class ZoneIntroMusic extends MainEntity<ZoneintroMusicTableRow> {
     get ID() { return this.row.ID.get(); }
     get Name() { return this.wrap(this.row.Name); }
-    get Sound() { return new SoundEntryPointer(this, this.row.SoundID); }
+    get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundID); }
     get Priority() { return this.wrap(this.row.Priority); }
     get MinDelayMinutes() { return this.wrap(this.row.MinDelayMinutes); }
 }
 
-export const ZoneIntroMusicRegistry = {
+export class ZoneIntroMusicRef<T> extends RefDynamic<T,ZoneIntroMusic>
+{
+    createSimple(
+        directoryBase: string = ""
+      , songs: string[] = []
+      , minDelay: number = 60
+      , volume: number = 1
+      , frequency: number = 1
+    ) {
+        let music = ZoneIntroMusicRegistry
+            .createSimple(directoryBase,songs,minDelay,volume,frequency);
+        this.cell.set(music.ID)
+        return this.owner;
+    }
+}
+
+export class ZoneIntroMusicRegistryClass
+    extends RegistryDynamicNoRef<
+                  ZoneIntroMusic
+                , ZoneintroMusicTableRow
+                , ZoneintroMusicTableQuery
+            >
+{
+    ref<T>(owner:T, cell: Cell<number,any>): ZoneIntroMusicRef<T> {
+        return new ZoneIntroMusicRef(owner,cell,this);
+    }
+
+    protected Table(): Table<any, ZoneintroMusicTableQuery, ZoneintroMusicTableRow> & { add: (id: number) => ZoneintroMusicTableRow; } {
+        return DBC.ZoneintroMusicTable;
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.ZoneintroMusicTable
+    }
+    Clear(entity: ZoneIntroMusic): void {
+        entity.MinDelayMinutes.set(0)
+            .Name.set('')
+            .Priority.set(0)
+            .Sound.set(0)
+    }
+    protected Clone(entity: ZoneIntroMusic, parent: ZoneIntroMusic): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: ZoneintroMusicTableRow): ZoneIntroMusic {
+        return new ZoneIntroMusic(r);
+    }
+    protected FindByID(id: number): ZoneintroMusicTableRow {
+        return DBC.ZoneintroMusicTable.findById(id);
+    }
+    protected EmptyQuery(): ZoneintroMusicTableQuery {
+        return {}
+    }
+    protected ID(e: ZoneIntroMusic): number {
+        return e.ID;
+    }
+
+    createSimple(
+        directoryBase: string = ""
+      , songs: string[] = []
+      , minDelay: number = 60
+      , volume: number = 1
+      , frequency: number = 1
+    ) {
+        let sound = SoundEntryRegistry
+            .createSimple(directoryBase,songs,volume,frequency)
+        let introMusic = this.create()
+        introMusic
+            .Name.set(`ZoneIntroMusic-${introMusic.ID}`)
+            .MinDelayMinutes.set(minDelay)
+            .Priority.set(1)
+            .Sound.set(sound.ID)
+        return introMusic;
+    }
+}
+
+export const ZoneIntroMusicRegistry = new ZoneIntroMusicRegistryClass();
+
+export const ZoneIntroMusicRegistryold = {
     create(
           directoryBase: string = ""
         , songs: string[] = []
@@ -21,7 +100,8 @@ export const ZoneIntroMusicRegistry = {
         , volume: number = 1
         , frequency: number = 1
     ) {
-        let sound = SoundEntryRegistry.create(directoryBase,songs,volume,frequency)
+        let sound = SoundEntryRegistry
+            .createSimple(directoryBase,songs,volume,frequency)
         let zoneMusic = new ZoneIntroMusic(
             DBC.ZoneintroMusicTable
                 .add(Ids.ZoneintroMusicTable.id())
@@ -46,43 +126,4 @@ export const ZoneIntroMusicRegistry = {
     find(query: ZoneintroMusicTableQuery) {
         return new ZoneIntroMusic(DBC.ZoneintroMusicTable.find(query))
     },
-}
-
-export class ZoneIntroMusicRef<T> extends Ref<T,ZoneIntroMusic> {
-    protected create(): ZoneIntroMusic {
-        return ZoneIntroMusicRegistry.create()
-    }
-    protected clone(): ZoneIntroMusic {
-        return new ZoneIntroMusic(
-            DBC.ZoneintroMusicTable.findById(this.cell.get())
-                .clone(Ids.ZoneintroMusicTable.id())
-        );
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: ZoneIntroMusic): number {
-        return v.ID;
-    }
-    protected resolve(): ZoneIntroMusic {
-        return ZoneIntroMusicRegistry.load(this.cell.get());
-    }
-
-    setSimple(
-        directoryBase: string
-      , songs: string[]
-      , minDelay: number = 60
-      , volume: number = 1
-      , frequency: number = 1
-    ) {
-        this.set(
-            ZoneIntroMusicRegistry.create(
-                    directoryBase
-                , songs
-                , minDelay
-                , volume
-                , frequency
-                ).ID);
-        return this.owner;
-    }
 }

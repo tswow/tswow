@@ -1,11 +1,13 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/dbc/types/SpellItemEnchantmentCondition";
-import { Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
+import { Table } from "wotlkdata/table/Table";
+import { ArrayEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class ConditionComparator extends EnumCell<EnchantmentCondition> {
     /** Enum Value = 2 */
@@ -37,8 +39,7 @@ export class Operand extends CellSystem<EnchantmentCondition> {
     }
 }
 
-export class ConditionLogic extends EnumCell<EnchantmentCondition> {
-}
+export class ConditionLogic extends EnumCell<EnchantmentCondition> {}
 
 export class EnchantmentCondition extends ArrayEntry<EnchantmentConditions> {
     static container(condition: EnchantmentCondition) {
@@ -91,16 +92,12 @@ export class EnchantmentCondition extends ArrayEntry<EnchantmentConditions> {
     }
 }
 
-export class EnchantmentConditions extends ArraySystem<EnchantmentCondition,EnchantmentConditions> {
-    readonly row: SpellItemEnchantmentConditionRow;
-
-    constructor(row: SpellItemEnchantmentConditionRow) {
-        // @ts-ignore TODO: bad not good
-        super(undefined);
-        this.owner = this;
-        this.row = row;
-    }
-
+export class EnchantmentConditions extends ArrayEntity<
+      SpellItemEnchantmentConditionRow
+    , EnchantmentConditions
+    , EnchantmentCondition
+    >
+{
     get length(): number {
         return 5;
     }
@@ -114,47 +111,37 @@ export class EnchantmentConditions extends ArraySystem<EnchantmentCondition,Ench
     }
 }
 
-export const EnchantmentConditionsRegistry = {
-    create() {
-        return new EnchantmentConditions(
-            DBC.SpellItemEnchantmentCondition.add(
-                Ids.SpellItemEnchantmentCondition.id()
-            )
-        )
-    },
-
-    load(id: number) {
-        return new EnchantmentConditions(
-            DBC.SpellItemEnchantmentCondition.findById(id)
-        )
-    },
-
-    filter(query: SpellItemEnchantmentConditionQuery) {
-        return DBC.SpellItemEnchantmentCondition.filter(query)
-            .map(x=>new EnchantmentConditions(x));
-    },
-
-    find(query: SpellItemEnchantmentConditionQuery) {
-        return new EnchantmentConditions(
-            DBC.SpellItemEnchantmentCondition.find(query)
-        )
+export class EnchantmentConditionRegistryClass
+    extends RegistryDynamic<
+          EnchantmentConditions
+        , SpellItemEnchantmentConditionRow
+        , SpellItemEnchantmentConditionQuery
+    >
+{
+    protected Table(): Table<any, SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow> & { add: (id: number) => SpellItemEnchantmentConditionRow; } {
+        return DBC.SpellItemEnchantmentCondition
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellItemEnchantmentCondition
+    }
+    Clear(entity: EnchantmentConditions): void {
+        entity.clearAll()
+    }
+    protected Clone(entity: EnchantmentConditions, parent: EnchantmentConditions): void {
+        throw new Error("Method not implemented.");
+    }
+    protected Entity(r: SpellItemEnchantmentConditionRow): EnchantmentConditions {
+        return new EnchantmentConditions(r);
+    }
+    protected FindByID(id: number): SpellItemEnchantmentConditionRow {
+        return DBC.SpellItemEnchantmentCondition.findById(id);
+    }
+    protected EmptyQuery(): SpellItemEnchantmentConditionQuery {
+        return {}
+    }
+    protected ID(e: EnchantmentConditions): number {
+        return e.ID;
     }
 }
 
-export class EnchantmentConditionRef<T> extends Ref<T,EnchantmentConditions> {
-    protected create(): EnchantmentConditions {
-        return EnchantmentConditionsRegistry.create();
-    }
-    protected clone(): EnchantmentConditions {
-        return new EnchantmentConditions(this.resolve().row.clone(Ids.SpellItemEnchantmentCondition.id()))
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
-    protected id(v: EnchantmentConditions): number {
-        return v.ID;
-    }
-    protected resolve(): EnchantmentConditions {
-        return EnchantmentConditionsRegistry.load(this.cell.get());
-    }
-}
+export const EnchantmentConditionRegistry = new EnchantmentConditionRegistryClass()

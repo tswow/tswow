@@ -15,29 +15,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
+import { MainEntity } from "../Misc/Entity";
+import { PositionMapXYZOCell } from "../Misc/PositionCell";
 import { RefReadOnly } from "../Refs/RefOld";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
-import { CreaturePosition } from "./CreaturePosition";
-import { CreatureInstances } from "./Creatures";
+import { CreatureInstanceRegistry } from "./Creatures";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
 
-export class CreatureInstance extends CellSystemTop {
-
-    @Transient
-    readonly row: creatureRow;
-
-    constructor(row: creatureRow) {
-        super();
-        this.row = row;
-    }
-
+export class CreatureInstance extends MainEntity<creatureRow> {
     get addonRow() {
         let row = SQL.creature_addon.find({guid: this.row.guid.get()});
         if(row===undefined) {
@@ -54,14 +44,22 @@ export class CreatureInstance extends CellSystemTop {
 
     get GUID() { return this.row.guid.get(); }
     get Template() { return this.wrap(this.row.id); }
-    get Map() { return this.wrap(this.row.map); }
     get SpawnMask() {
         return new CreatureSpawnMask(this, this.row.spawnMask);
     }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     /** If 0, use a random model from CreatureTemplate#Models */
     get Model() { return this.wrap(this.row.modelid); }
-    get Position() { return new CreaturePosition(this); }
+    get Position() {
+        return new PositionMapXYZOCell(
+              this
+            , this.row.map
+            , this.row.position_x
+            , this.row.position_y
+            , this.row.position_z
+            , this.row.orientation
+            )
+    }
     /** Respawn time in seconds */
     get SpawnTime() { return this.wrap(this.row.spawntimesecs); }
     get WanderDistance() { return this.wrap(this.row.wander_distance)}
@@ -107,7 +105,7 @@ export class CreatureInstance extends CellSystemTop {
 
 export class CreatureRefReadOnly<T> extends RefReadOnly<T,CreatureInstance> {
     getRef(): CreatureInstance {
-        return CreatureInstances.load(this.cell.get());
+        return CreatureInstanceRegistry.load(this.cell.get());
     }
     exists(): boolean {
         return this.cell.get() > 0;

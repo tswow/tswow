@@ -1,8 +1,8 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AreaPOIQuery, AreaPOIRow } from "wotlkdata/dbc/types/AreaPOI";
-import { AreaRef } from "../Area/Area";
-import { FactionRef } from "../Faction/Faction";
+import { AreaRegistry } from "../Area/Area";
+import { FactionRegistry } from "../Faction/Faction";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
@@ -32,16 +32,27 @@ export class AreaPOI extends MainEntity<AreaPOIRow> {
         )
     }
 
-    get Importance() { return this.wrap(this.row.Importance); }
-
-    get Icons() { return new SingleArraySystem(this, this.row.Icon, 0) }
-    get Faction() { return new FactionRef(this, this.row.FactionID); }
-    get Area() { return new AreaRef(this, this.row.AreaID); }
-
-    get Name() { return this.wrapLoc(this.row.Name); }
-    get Description() { return this.wrapLoc(this.row.Description); }
-
-    get WorldState() { return new WorldStateRef(this, this.row.WorldStateID)}
+    get Importance() {
+        return this.wrap(this.row.Importance);
+    }
+    get Icons() {
+        return new SingleArraySystem(this, this.row.Icon, 0)
+    }
+    get Faction() {
+        return FactionRegistry.ref(this, this.row.FactionID);
+    }
+    get Area() {
+        return AreaRegistry.ref(this, this.row.AreaID);
+    }
+    get Name() {
+        return this.wrapLoc(this.row.Name);
+    }
+    get Description() {
+        return this.wrapLoc(this.row.Description);
+    }
+    get WorldState() {
+        return new WorldStateRef(this, this.row.WorldStateID)
+    }
 }
 
 export const AreaPOIRegistry = {

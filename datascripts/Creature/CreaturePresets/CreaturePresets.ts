@@ -1,11 +1,11 @@
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CreatureTemplates } from "../Creatures";
+import { CreatureTemplateRegistry } from "../Creatures";
 
 export const CreaturePresets = {
     CreateClassTrainer(mod: string, id: string, classId: number) {
         let cls = DBC.ChrClasses.findById(classId);
         let trainerName = `${cls.Name.enGB.get()} Trainer`
-        return CreatureTemplates.create(mod,id)
+        return CreatureTemplateRegistry.create(mod,id)
             .Name.enGB.set(trainerName)
             .Subname.enGB.set(trainerName)
             .Gossip.set(0)

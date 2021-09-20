@@ -1,10 +1,11 @@
 import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
+import { MainEntity } from "../Misc/Entity";
 import { Ref } from "../Refs/RefOld";
 import { Lock } from "./Lock";
-import { Locks, LockTypes } from "./Locks";
+import { LockRegistry, LockTypeRegistry } from "./Locks";
 
 export type LockTypeCursorType = "FishingCursor"|"PickLock"|"GatherHerbs"|"Mine"|string
 export class LockTypeCursor extends CellSystem<LockType> {
@@ -40,7 +41,7 @@ export class LockTypeCursor extends CellSystem<LockType> {
 
 export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
     protected getAllRows(): Lock[] {
-        return Locks.filterCb(x=>x.isOfType(this.owner.ID))
+        return LockRegistry.filter(x=>x.isOfType(this.owner.ID))
     }
 
     protected isDeleted(value: Lock): boolean {
@@ -48,7 +49,7 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
     }
 
     add(requiredSkill: number, requiredItems: number[] = []) {
-        let locks = Locks.create()
+        let locks = LockRegistry.create()
             .addMod(i=>i
                 .Type.LockType.set()
                 .LockType.set(this.owner.ID)
@@ -68,13 +69,7 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
     }
 }
 
-export class LockType extends CellSystemTop {
-    readonly row: LockTypeRow;
-    constructor(row: LockTypeRow) {
-        super();
-        this.row = row;
-    }
-
+export class LockType extends MainEntity<LockTypeRow> {
     get ID() { return this.row.ID.get(); }
     get Name() { return this.wrapLoc(this.row.Name); }
     get ResourceName() { return this.wrapLoc(this.row.ResourceName); }
@@ -86,11 +81,11 @@ export class LockType extends CellSystemTop {
 
 export class LockTypeRef<T> extends Ref<T,LockType> {
     protected create(): LockType {
-        return LockTypes.create();
+        return LockTypeRegistry.create();
     }
 
     protected clone(): LockType {
-        return LockTypes.create(this.cell.get());
+        return LockTypeRegistry.create(this.cell.get());
     }
 
     exists(): boolean {
@@ -102,6 +97,6 @@ export class LockTypeRef<T> extends Ref<T,LockType> {
     }
 
     protected resolve(): LockType {
-        return LockTypes.load(this.cell.get());
+        return LockTypeRegistry.load(this.cell.get());
     }
 }
