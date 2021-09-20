@@ -6,7 +6,7 @@ import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { SelfRef } from "../Refs/RefOld";
+import { SelfRef } from "../Refs/Ref";
 import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";

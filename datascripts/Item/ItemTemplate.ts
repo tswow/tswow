@@ -24,10 +24,10 @@ import { Table } from "wotlkdata/table/Table";
 import { HolidayRegistry } from "../GameEvent/Holiday";
 import { GemRegistry } from "../Gem/Gem";
 import { LockRegistry } from "../Locks/Locks";
+import { Loot } from "../Loot/Loot";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RefUnknown } from "../Refs/RefOld";
 import { RegistryStatic } from "../Refs/Registry";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
@@ -86,7 +86,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Description() { return new ItemDescription(this); }
     get Quality() { return new ItemQuality(this); }
     get Durability() { return this.wrap(this.sqlRow.MaxDurability); }
-    get Disenchant() { return new RefUnknown(this, this.sqlRow.DisenchantID); }
+    get Disenchant() { return Loot.Disenchant.ref(this, this.sqlRow.DisenchantID); }
     get RequiredLevel() { return this.wrap(this.sqlRow.RequiredLevel); }
     get ItemLevel() { return this.wrap(this.sqlRow.ItemLevel); }
     get SkillRequirement() { return new ItemSkillRequirement(this); }

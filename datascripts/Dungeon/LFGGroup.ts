@@ -3,7 +3,6 @@ import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "wotlkdata/dbc/types/Lf
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { Ref } from "../Refs/RefOld";
 import { RegistryDynamic } from "../Refs/Registry";
 
 export class LFGDungeonGroup extends MainEntity<LfgDungeonGroupRow> {

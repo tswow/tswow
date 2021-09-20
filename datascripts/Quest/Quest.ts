@@ -21,8 +21,6 @@ import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
-import { RefReadOnly, RefStatic } from "../Refs/RefOld";
 import { SpellRegistry } from "../Spell/Spells";
 import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";

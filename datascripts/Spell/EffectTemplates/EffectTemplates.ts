@@ -6,7 +6,7 @@ import { LanguageRegistry } from "../../Languages/Languages";
 import { LockTypeRegistry } from "../../Locks/Locks";
 import { SchoolMask } from "../../Misc/School";
 import { QuestRegistry } from "../../Quest/Quests";
-import { RefUnknown } from "../../Refs/RefOld";
+import { RefUnknown } from "../../Refs/Ref";
 import { SkillLineRegistry } from "../../SkillLines/SkillLines";
 import { SoundEntryRegistry } from "../../Sound/SoundEntry";
 import { TaxiPathRegistry } from "../../Taxi/Taxi";

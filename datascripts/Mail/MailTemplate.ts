@@ -1,7 +1,7 @@
-import { DBC } from "wotlkdata";
+import { DBC, SQL } from "wotlkdata";
 import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/dbc/types/MailTemplate";
 import { Table } from "wotlkdata/table/Table";
-import { Loot } from "../Loot/Loot";
+import { LootSet } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
@@ -10,7 +10,7 @@ export class MailTemplate extends MainEntity<MailTemplateRow> {
     get Body() { return this.wrapLoc(this.row.Body); }
     get Subject() { return this.wrapLoc(this.row.Subject); }
     get ID() { return this.row.ID.get(); }
-    get Loot() { return Loot.Mail.load(this.ID)}
+    get Loot() { return new LootSet(this.ID,SQL.mail_loot_template) }
 }
 
 export class MailTemplateRegistryClass

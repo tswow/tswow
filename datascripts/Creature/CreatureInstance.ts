@@ -20,11 +20,9 @@ import { creatureRow } from "wotlkdata/sql/types/creature";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";
-import { RefReadOnly } from "../Refs/RefOld";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
-import { CreatureInstanceRegistry } from "./Creatures";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
 
 export class CreatureInstance extends MainEntity<creatureRow> {
@@ -101,13 +99,4 @@ export class CreatureInstance extends MainEntity<creatureRow> {
      *       creature/item pair for **multiple** game_events.
      */
     get GameEventVendor() { return new GameEventNPCVendorCreature(this); }
-}
-
-export class CreatureRefReadOnly<T> extends RefReadOnly<T,CreatureInstance> {
-    getRef(): CreatureInstance {
-        return CreatureInstanceRegistry.load(this.cell.get());
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
 }

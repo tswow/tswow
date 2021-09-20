@@ -3,8 +3,6 @@ import { AreaRegistry } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell, QuaternionCell } from "../Misc/PositionCell";
-import { RefReadOnly } from "../Refs/RefOld";
-import { GameObjectInstances } from "./GameObjects";
 
 export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get ID() { return this.row.guid.get(); }
@@ -34,13 +32,4 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get State() { return this.wrap(this.row.state); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get GameEvents() { return new GameObjectGameEventsForward(this); }
-}
-
-export class GameObjectInstanceRefReadOnly<T> extends RefReadOnly<T,GameObjectInstance> {
-    getRef(): GameObjectInstance {
-        return GameObjectInstances.load(this.cell.get())
-    }
-    exists(): boolean {
-        return this.cell.get() > 0;
-    }
 }

@@ -29,7 +29,7 @@ import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { PageTextRegistry } from "../PageText/PageText";
 import { QuestRegistry } from "../Quest/Quests";
-import { RefUnknown } from "../Refs/RefOld";
+import { RefUnknown } from "../Refs/Ref";
 import { SpellRegistry } from "../Spell/Spells";
 import { TaxiPathRegistry } from "../Taxi/Taxi";
 import { WorldStateRegistry } from "../WorldState/WorldState";

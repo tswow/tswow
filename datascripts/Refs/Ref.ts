@@ -1,6 +1,25 @@
 import { Cell, CellWrapper } from "wotlkdata/cell/cells/Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
 
+// TODO: move/rename this somewhere suitable
+export class SelfRef<T,V> {
+    protected owner: T
+    protected transformer: ()=>V
+    constructor(owner: T, transformer: ()=>V) {
+        this.owner = owner;
+        this.transformer = transformer;
+    }
+
+    get() {
+        return this.transformer();
+    }
+
+    mod(callback: (value: V)=>void) {
+        callback(this.get());
+        return this.owner;
+    }
+}
+
 export interface LoadRegistry<V> {
     load(id: number): V
     Exists(num: number): boolean

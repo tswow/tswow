@@ -114,6 +114,15 @@ export class LootSetPointer<T> extends CellWrapper<number,T>{
 
 export const Loot = {
     Fishing: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.fishing_loot_template
+                , Ids.fishing_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.fishing_loot_template.id(),SQL.fishing_loot_template);
         },
@@ -124,6 +133,15 @@ export const Loot = {
     },
 
     Creature: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.creature_loot_template
+                , Ids.creature_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.creature_loot_template.id(),SQL.creature_loot_template);
         },
@@ -134,6 +152,15 @@ export const Loot = {
     },
 
     GameObject: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.gameobject_loot_template
+                , Ids.gameobject_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.gameobject_loot_template.id(),SQL.gameobject_loot_template);
         },
@@ -144,6 +171,15 @@ export const Loot = {
     },
 
     Disenchant: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.disenchant_loot_template
+                , Ids.disenchant_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.disenchant_loot_template.id(),SQL.disenchant_loot_template);
         },
@@ -154,6 +190,15 @@ export const Loot = {
     },
 
     Pickpocket: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.pickpocketing_loot_template
+                , Ids.pickpocketing_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.pickpocketing_loot_template.id(),SQL.pickpocketing_loot_template);
         },
@@ -164,6 +209,15 @@ export const Loot = {
     },
 
     Skinning: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.skinning_loot_template
+                , Ids.skinning_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.skinning_loot_template.id(),SQL.skinning_loot_template);
         },
@@ -173,13 +227,16 @@ export const Loot = {
         }
     },
 
-    Mail: {
-        load(id: number) {
-            return new LootSet(id, SQL.mail_loot_template)
-        }
-    },
-
     Reference: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.reference_loot_template
+                , Ids.reference_loot_template
+            )
+        },
+
         create() {
             return new LootSet(Ids.reference_loot_template.id(),SQL.reference_loot_template);
         },

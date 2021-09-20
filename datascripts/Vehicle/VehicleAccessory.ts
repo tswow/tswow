@@ -2,8 +2,8 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { vehicle_accessoryRow } from "wotlkdata/sql/types/vehicle_accessory";
 import { vehicle_template_accessoryRow } from "wotlkdata/sql/types/vehicle_template_accessory";
-import { CreatureInstance, CreatureRefReadOnly } from "../Creature/CreatureInstance";
-import { CreatureTemplateRegistry } from "../Creature/Creatures";
+import { CreatureInstance } from "../Creature/CreatureInstance";
+import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "../Creature/Creatures";
 import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { SummonType } from "../Misc/SummonType";
@@ -27,7 +27,7 @@ export class VehicleTemplateAccessory extends VehicleAccessoryBase<vehicle_templ
 
 export class VehicleInstanceAccessory extends VehicleAccessoryBase<vehicle_accessoryRow> {
     get Creature() {
-        return new CreatureRefReadOnly(this, this.row.guid);
+        return CreatureInstanceRegistry.readOnlyRef(this, this.row.guid);
     }
 }
 

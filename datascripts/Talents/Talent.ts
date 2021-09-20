@@ -17,7 +17,7 @@
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { TalentRow } from "wotlkdata/dbc/types/Talent";
 import { MainEntity } from "../Misc/Entity";
-import { RefUnknown } from "../Refs/RefOld";
+import { RefUnknown } from "../Refs/Ref";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 import { TalentRequirements } from "./TalentRequirements";
