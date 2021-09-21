@@ -9,8 +9,8 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>
-                   x.Effects.find(y=>y.EffectType.OpenLock.is())
-                && x.Effects.find(y=>y.EffectType.Skill.is())
+                   x.Effects.find(y=>y.Type.OpenLock.is())
+                && x.Effects.find(y=>y.Type.Skill.is())
             )
     }
 
@@ -25,7 +25,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .Attributes.unk41.set(true)
         .SkillLines.addMod(this.owner.ID)
         .Effects.addMod((eff)=>{
-            eff.EffectType.OpenLock.set()
+            eff.Type.OpenLock.set()
             .TargetA.GameobjectTarget.set()
             .LockType.set(lockType)
             .AsRawEffect()
@@ -35,7 +35,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
             .ChainAmplitude.set(1)
         })
         .Effects.addMod((eff)=>{
-            eff.EffectType.Skill.set()
+            eff.Type.Skill.set()
             .AsRawEffect()
             .MiscValueA.set(this.owner.ID)
             .DieSides.set(1)

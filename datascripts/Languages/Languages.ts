@@ -206,7 +206,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
             .DefenseType.set(1)
             .PreventionType.set(1)
             .Effects.addMod(effect=>{
-                effect.EffectType.Language.set()
+                effect.Type.Language.set()
                     .Language.set(lang.ID)
                     .ChainAmplitude.set(1)
             })

@@ -97,7 +97,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .TargetType.GlyphSlot.set(true)
             .CastTime.set(6)
             .Effects.addMod(effect=>{
-                effect.EffectType.ApplyGlyph.set()
+                effect.Type.ApplyGlyph.set()
                       .Glyph.set(this.owner.ID)
             })
             .InterruptFlags.OnMovement.set(true)

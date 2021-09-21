@@ -208,10 +208,10 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .SchoolMask.Physical.set(true)
             .Visual.set(0)
             .Effects.addMod(eff=>{
-                eff.EffectType.TradeSkill.set()
+                eff.Type.TradeSkill.set()
             })
             .Effects.addMod(eff=>{
-                eff.EffectType.Skill.set()
+                eff.Type.Skill.set()
                     .SkillTier.set(newIndex)
                     .Skill.set(this.owner.ID)
                     .TargetA.set(0)
@@ -245,11 +245,11 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .TargetType.UnitAlly.set(true)
             .SchoolMask.Physical.set(true)
             .Effects.addMod(effect=>{
-                effect.EffectType.LearnSpell.set()
+                effect.Type.LearnSpell.set()
                     .LearntSpell.set(spell.ID)
             })
             .Effects.addMod(effect=>{
-                effect.EffectType.SkillStep.set()
+                effect.Type.SkillStep.set()
                         .Skill.set(this.owner.ID)
                         .Tier.set(newIndex)
                         .AsRawEffect()

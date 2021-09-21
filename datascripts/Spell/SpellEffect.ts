@@ -44,42 +44,13 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             .map(x=>x.objectifyPlain())
     }
 
-    auraIndex(auraType: number) {
-        if(this.isAuraType(0,auraType)) return 0;
-        if(this.isAuraType(1,auraType)) return 1;
-        if(this.isAuraType(2,auraType)) return 2;
-        return -1;
-    }
-
-    effectIndex(effectType: number) {
-        if(this.isEffectType(0,effectType)) return 0;
-        if(this.isEffectType(1,effectType)) return 1;
-        if(this.isEffectType(2,effectType)) return 2;
-        return -1;
-    }
-
-    hasEffectType(effectType: number) {
-        return this.isEffectType(0,effectType)
-            || this.isEffectType(1,effectType)
-            || this.isEffectType(2, effectType)
-            ;
-    }
-
-    isAuraType(index: number, auraType: number) {
-        return this.get(index).AuraType.get() === auraType;
-    }
-
-    isEffectType(index: number, effectType: number) {
-        return this.get(index).EffectType.get() === effectType;
-    }
-
     swap(index1: number, index2: number) {
         let e1 = this.get(index1);
         let e2 = this.get(index2);
         let r1 = e1.Radius.get()
         let i1 = e1.ItemType.get();
-        let a1 = e1.AuraType.get();
-        let t1 = e1.EffectType.get();
+        let a1 = e1.Aura.get();
+        let t1 = e1.Type.get();
         let m1 = e1.Mechanic.get();
         let bp1 = e1.BasePoints.get();
         let ds1 = e1.DieSides.get();
@@ -98,8 +69,8 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         e1.copyFrom(e2);
         e2.Radius.set(r1);
         e2.ItemType.set(i1);
-        e2.AuraType.set(a1);
-        e2.EffectType.set(t1);
+        e2.Aura.set(a1);
+        e2.Type.set(t1);
         e2.Mechanic.set(m1);
         e2.BasePoints.set(bp1);
         e2.DieSides.set(ds1);
@@ -116,37 +87,6 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         e2.ClassMask.B.set(cmb1);
         e2.ClassMask.C.set(cmc1);
         return this.owner;
-    }
-
-    filterAura(type: number, callback: (effects: SpellEffect[])=>void) {
-        callback([this.get(0),this.get(1),this.get(2)].filter(x=>x.AuraType.get()===type));
-        return this.owner;
-    }
-
-    filterType(type: number, callback: (effects: SpellEffect[])=>void) {
-        callback([this.get(0),this.get(1),this.get(2)].filter(x=>x.EffectType.get()===type));
-        return this.owner;
-    }
-
-    filter(callback: (effect: SpellEffect, index: number)=>boolean): SpellEffect[] {
-        return [this.get(0),this.get(1),this.get(2)]
-            .filter(callback);
-    }
-
-    find(callback: (effect: SpellEffect, index: number)=>boolean): SpellEffect|undefined {
-        return [this.get(0),this.get(1),this.get(2)].find(callback);
-    }
-
-    findEffect<T extends Objectified>(callback: (effect: SpellEffectType)=>EnumValueTransform<SpellEffect,T>): T {
-        let v1 = callback(this.get(0).EffectType);
-        if(v1.is()) return v1.as();
-
-        let v2 = callback(this.get(0).EffectType);
-        if(v2.is()) return v2.as();
-
-        let v3 = callback(this.get(0).EffectType);
-
-        return v3.as();
     }
 
     get(index: number) {
@@ -166,18 +106,70 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     addLearnSpells(spells: number[]) {
         for(const spell of spells) {
             this.addFreeEffect((eff)=>{
-                eff.EffectType.LearnSpell.set()
+                eff.Type.LearnSpell.set()
                    .LearntSpell.set(spell)
             })
         }
         return this.owner;
     }
 
+    addGetTriggerSpell(mod: string, id: string, parent = 0) {
+        let spell = SpellRegistry.create(mod,id,parent);
+        this.addGet().Type
+            .TriggerSpell.set()
+            .TriggerSpell.set(spell.ID)
+        return spell;
+    }
+
+    findType<T extends Objectified>(
+        callback:
+            (eff: SpellEffectType)=>EnumValueTransform<SpellEffect,T>)
+            : T
+    {
+        for(let i=0;i<this.length;++i) {
+            let eff = this.get(i);
+            let v = callback(eff.Type);
+            if(v.is()) return v.as();
+        }
+        return undefined as any as T;
+    }
+
+    findAura<T extends Objectified>(
+        callback:
+            (eff: AuraType)=>EnumValueTransform<SpellEffect,T>)
+            : T
+    {
+        for(let i=0;i<this.length;++i) {
+            let eff = this.get(i);
+            let v = callback(eff.Aura);
+            if(v.is()) return v.as();
+        }
+        return undefined as any as T;
+    }
+
+    /**
+     * @param parent set to 0 for no parent
+     */
+    addModTriggerSpell(mod: string, id: string, parent: number, callback: (spell: Spell)=>void) {
+        callback(this.addGetTriggerSpell(mod,id,parent));
+        return this.owner;
+    }
+
+    /**
+     * Adds an effect via this spell that may override
+     * and become a secondary triggered spell
+     * @note if this is a combat spell, the dynamic id will break
+     *       combat logs over time because the id can vary.
+     *
+     *       To set up static spell triggers that
+     *       work with combat logs, use "add*TriggerSpell"
+     *       instead.
+     */
     addFreeEffect(callback: (effect: SpellEffect)=>void) {
         const SPELL_CHAIN_TOKEN = '__tswow_spell_chain';
         function getNextSpell(spell: Spell) {
             for(let i=0;i<3;++i) {
-                if(!spell.Effects.get(i).EffectType.TriggerSpell.is()) {
+                if(!spell.Effects.get(i).Type.TriggerSpell.is()) {
                     continue;
                 }
                 let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());
@@ -197,7 +189,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             std.Spells.Clear(nex);
             nex.Icon.setFullPath(SPELL_CHAIN_TOKEN);
             spell.Effects.addMod((eff)=>{
-                eff.EffectType.TriggerSpell.set()
+                eff.Type.TriggerSpell.set()
                    .TriggerSpell.set((nex as Spell).ID);
             })
             return nex;
@@ -207,7 +199,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         while(true) {
             let free = getNextSpell(curSpell)!==undefined;
             for(let i=0;i<3;++i ){
-                if(curSpell.Effects.get(i).EffectType.get()===0) {
+                if(curSpell.Effects.get(i).Type.get()===0) {
                     if(!free) {
                         free = true;
                     } else {
@@ -223,7 +215,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
 
 export class SpellEffect extends ArrayEntry<Spell> {
     isClear(): boolean {
-        return this.EffectType.get() === 0;
+        return this.Type.get() === 0;
     }
 
     clear(): this {
@@ -241,8 +233,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
         this.PointsPerLevel.set(0);
         this.TriggerSpell.set(0);
         this.AuraPeriod.set(0);
-        this.AuraType.set(0);
-        this.EffectType.set(0);
+        this.Aura.set(0);
+        this.Type.set(0);
         this.Mechanic.set(0);
         return this;
     }
@@ -256,8 +248,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
 
     get Radius() { return SpellRadiusRegistry.ref(this, this.w(this.row.EffectRadiusIndex)); }
     get ItemType() { return this.w(this.row.EffectItemType); }
-    get AuraType(): AuraType { return new AuraType(this, this.index); }
-    get EffectType(): SpellEffectType { return new SpellEffectType(this, this.index); }
+    get Aura(): AuraType { return new AuraType(this, this.index); }
+    get Type(): SpellEffectType { return new SpellEffectType(this, this.index); }
     get Mechanic() { return new SpellEffectMechanicEnum(this, this.w(this.row.EffectMechanic)); }
     get BasePoints() { return this.w(this.row.EffectBasePoints)};
     get DieSides() { return this.w(this.row.EffectDieSides); }
@@ -281,9 +273,9 @@ export class SpellEffect extends ArrayEntry<Spell> {
     }
 
     objectify() {
-        let {cell:auraCell} = EnumCellTransform.getSelection(this.AuraType);
+        let {cell:auraCell} = EnumCellTransform.getSelection(this.Aura);
         if(auraCell !== undefined) return auraCell.as().objectifyPlain();
-        let {cell:effectCell} = EnumCellTransform.getSelection(this.EffectType);
+        let {cell:effectCell} = EnumCellTransform.getSelection(this.Type);
         if(effectCell !== undefined) return effectCell.as().objectifyPlain();
         return this.objectifyPlain();
     }
@@ -299,8 +291,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
     copyFrom(source: SpellEffect) {
         this.Radius.set(source.Radius.get());
         this.ItemType.set(source.ItemType.get());
-        this.AuraType.set(source.AuraType.get());
-        this.EffectType.set(source.EffectType.get());
+        this.Aura.set(source.Aura.get());
+        this.Type.set(source.Type.get());
         this.Mechanic.set(source.Mechanic.get());
         this.BasePoints.set(source.BasePoints.get());
         this.DieSides.set(source.DieSides.get());

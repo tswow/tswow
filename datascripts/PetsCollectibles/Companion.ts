@@ -11,7 +11,6 @@ import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 
-const SUMMON_EFFECT_INDEX = 28;
 const COMPANION_SKILLINE = 778
 const DEFAULT_COMPANION_VISUAL = 353
 
@@ -34,7 +33,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
         const spell = SpellRegistry.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
-                efffect.EffectType.LearnSpell.set()
+                efffect.Type.LearnSpell.set()
                     .LearntSpell.set(this.owner.ID)
                     .ImplicitTargetA.SrcCaster.set()
                     .ChainAmplitude.set(1)
@@ -78,11 +77,8 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
 export class Companion extends MainEntity<SpellRow> {
     protected mountIndex() {
         // only one mount index is valid
-        let index = this.Spell.get().Effects.effectIndex(SUMMON_EFFECT_INDEX)
-        if(index<0) {
-            throw new Error(`Invalid mount spell: ${this.ID} has no mount effect!`)
-        }
-        return index;
+        return this.Spell.get().Effects
+            .indexOf(x=>x.Type.Summon.is())
     }
 
     get Items() { return new CompanionItems(this); }
@@ -126,7 +122,7 @@ export class CompanionRegistryClass
                 sla.MinSkillRank.set(1)
             })
             .Effects.addMod(effects=>{
-                effects.EffectType.Summon.set()
+                effects.Type.Summon.set()
                     .SummonProperties.set(41)
                     .SummonedCreature.set(0)
                     .TargetA.DestCasterSummon.set()

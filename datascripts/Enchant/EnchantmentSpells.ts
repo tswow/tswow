@@ -38,7 +38,7 @@ export class EnchantmentSpell extends CellSystemTop {
     get Item() {
         return ItemTemplateRegistry.ref(this
             , this.spell.Effects.get(0)
-                .EffectType.EnchantItem.as().EnchantingItem
+                .Type.EnchantItem.as().EnchantingItem
         )
     }
 }
@@ -87,7 +87,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                 .DisplayInfo.set(811)
 
             spell.Effects.addMod(effect=>{
-                effect.EffectType.EnchantItem.set()
+                effect.Type.EnchantItem.set()
                     .Enchant.set(this.owner.ID)
                     .EnchantingItem.set(item.ID);
             });
@@ -95,7 +95,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
         }
 
         spell.Effects.addMod(effect=>{
-            effect.EffectType.EnchantItem.set()
+            effect.Type.EnchantItem.set()
                 .Enchant.set(this.owner.ID)
                 .EnchantingItem.set(itemId)
         });

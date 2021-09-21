@@ -83,9 +83,9 @@ export function getProfessionRank(rank: number) {
 
 export function isTradeskillSpell(spell: Spell) {
     const types = [
-          spell.Effects.get(0).EffectType.objectify()
-        , spell.Effects.get(1).EffectType.objectify()
-        , spell.Effects.get(2).EffectType.objectify()
+          spell.Effects.get(0).Type.objectify()
+        , spell.Effects.get(1).Type.objectify()
+        , spell.Effects.get(2).Type.objectify()
     ]
     return types.includes('Skill');
 }

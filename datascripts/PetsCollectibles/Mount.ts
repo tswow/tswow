@@ -34,7 +34,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
         const spell = SpellRegistry.create(mod,id)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
-                efffect.EffectType.LearnSpell.set()
+                efffect.Type.LearnSpell.set()
                     .LearntSpell.set(this.owner.ID)
                     .ImplicitTargetA.SrcCaster.set()
                     .ChainAmplitude.set(1)
@@ -77,12 +77,8 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
 
 export class Mount extends MainEntity<SpellRow> {
     protected mountIndex() {
-        // only one mount index is valid
-        let index = this.Spell.get().Effects.auraIndex(MOUNT_AURA_TYPE)
-        if(index<0) {
-            throw new Error(`Invalid mount spell: ${this.ID} has no mount effect!`)
-        }
-        return index;
+        return this.Spell.get().Effects
+            .indexOf(x=>x.Aura.Mounted.is())
     }
 
     get ID() { return this.row.ID.get(); }
@@ -154,15 +150,15 @@ export class MountRegistryClass
             .Levels.Spell.set(1)
             .Effects.addMod(effect=>{
                 effect
-                    .EffectType.ApplyAura.set()
-                    .AuraType.Mounted.set()
+                    .Type.ApplyAura.set()
+                    .Aura.Mounted.set()
                     .CreatureTemplate.set(0)
                     .TargetA.UnitCaster.set()
             })
             .Effects.addMod(effect=>{
                 effect
-                    .EffectType.ApplyAura.set()
-                    .AuraType.ModIncreaseMountedSpeed.set()
+                    .Type.ApplyAura.set()
+                    .Aura.ModIncreaseMountedSpeed.set()
                     .BasePercent.set(speed)
                     .TargetA.UnitCaster.set()
                     .RandomPercent.set(1)
@@ -171,8 +167,8 @@ export class MountRegistryClass
         if(flightSpeed>0) {
             spell.Effects.addMod(effect=>{
                 effect
-                    .EffectType.ApplyAura.set()
-                    .AuraType.ModIncreaseFlightSpeed.set()
+                    .Type.ApplyAura.set()
+                    .Aura.ModIncreaseFlightSpeed.set()
                     .BasePercent.set(flightSpeed)
                     .TargetA.UnitCaster.set()
                     .RandomPercent.set(1)

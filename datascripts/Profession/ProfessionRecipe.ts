@@ -85,7 +85,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
     protected getAllRows(): ProfessionRecipe[] {
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
-            .filter(x=>x.Effects.hasEffectType(23))
+            .filter(x=>x.Effects.find(eff=>eff.Type.CreateItem.is()))
             .map(x=>new ProfessionRecipe(this.owner, x))
     }
     protected isDeleted(value: ProfessionRecipe): boolean {
@@ -104,7 +104,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
                     .InterruptFlags.OnPushback.set(true)
                     .InterruptFlags.OnInterruptCast.set(true)
                     .Effects.addMod((effect)=>{
-                        effect.EffectType.CreateItem.set()
+                        effect.Type.CreateItem.set()
                               .TargetA.UnitCaster.set()
                     })
                     .SkillLines
