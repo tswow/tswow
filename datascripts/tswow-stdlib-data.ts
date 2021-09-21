@@ -56,7 +56,8 @@ import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
 import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
-import { SpellGroups, SpellRegistry } from "./Spell/Spells";
+import { SpellRegistry } from "./Spell/Spells";
+import { SpellStackGroupRegistry } from "./Spell/SpellStackGroup";
 import { TalentTreeRegistry } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TitleRegistry } from "./Title/Titles";
@@ -75,7 +76,6 @@ import { WorldStateUIRegistry } from "./WorldState/WorldStateUI";
 
 export const std = {
     Spells : SpellRegistry,
-    SpellGroups : SpellGroups,
     Languages : LanguageRegistry,
     Quests : QuestRegistry,
     Titles: TitleRegistry,
@@ -142,5 +142,6 @@ export const std = {
     Holidays: HolidayRegistry,
     GameEvents: GameEventRegistry,
     IDs: Ids,
-    AreaTriggers: AreaTriggerRegistry
+    AreaTriggers: AreaTriggerRegistry,
+    SpellStackGroups: SpellStackGroupRegistry
 }

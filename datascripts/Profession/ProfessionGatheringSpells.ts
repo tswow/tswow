@@ -9,8 +9,8 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>
-                   x.Effects.find(y=>y.EffectType.OpenLock.isSelected())
-                && x.Effects.find(y=>y.EffectType.Skill.isSelected())
+                   x.Effects.find(y=>y.EffectType.OpenLock.is())
+                && x.Effects.find(y=>y.EffectType.Skill.is())
             )
     }
 

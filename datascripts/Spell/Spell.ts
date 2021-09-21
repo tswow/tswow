@@ -37,7 +37,6 @@ import { SpellDescriptionVariableRegistry } from "./SpellDescriptionVariable";
 import { SpellDifficultyRegistry } from "./SpellDifficulty";
 import { SpellDurationRegistry } from "./SpellDuration";
 import { SpellEffects } from "./SpellEffect";
-import { SpellGroups } from "./SpellGroup";
 import { SpellIconCell } from "./SpellIcon";
 import { SpellItemEquips } from "./SpellItemEquips";
 import { SpellLevels } from "./SpellLevels";
@@ -52,6 +51,7 @@ import { SpellRecovery } from "./SpellRecovery";
 import { SpellReputation } from "./SpellReputation";
 import { SpellScript } from "./SpellScript";
 import { SpellSkillLineAbilites } from "./SpellSkillLines";
+import { SpellSpellStackGroups } from "./SpellStackGroup";
 import { SpellThreat } from "./SpellThreat";
 import { SpellVisualRegistry } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
@@ -161,7 +161,7 @@ export class Spell extends MainEntity<SpellRow> {
     get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
     get InterruptFlags() { return new InterruptFlags(this); }
     get Rank() { return new SpellRank(this, this.ID); }
-    get Groups() { return new SpellGroups(this, this.ID); }
+    get StackGroups() { return new SpellSpellStackGroups(this); }
 
     get AutoLearn() { return new SpellAutoLearns(this); }
 

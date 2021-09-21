@@ -16,24 +16,10 @@
  */
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
-import { SQL } from "wotlkdata/sql/SQLFiles";
 import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "./Spell";
-import { SpellGroup } from "./SpellGroup";
-
-export const SpellGroups = {
-    load(id: number) {
-        return new SpellGroup(id);
-    },
-
-    create() {
-        let nid = Ids.spell_group.id();
-        SQL.spell_group_stack_rules.add(nid,{stack_rule: 0});
-        return nid;
-    }
-}
 
 export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery> {
     create(mod: string, id: string, parent = 0, cloneServerData = true) {
