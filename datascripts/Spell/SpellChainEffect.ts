@@ -78,11 +78,7 @@ export class SpellChainEffectRegistryClass
         return Ids.SpellChainEffects
     }
     Clear(entity: SpellChainEffect): void {
-        // I have no idea
-        throw new Error("Method not implemented.");
-    }
-    protected Clone(entity: SpellChainEffect, parent: SpellChainEffect): void {
-        throw new Error("Method not implemented.");
+        // TODO: need to specify this
     }
     protected FindByID(id: number): SpellChainEffectsRow {
         return DBC.SpellChainEffects.findById(id);

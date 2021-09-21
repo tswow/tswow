@@ -15,20 +15,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { trainerQuery, trainerRow } from "wotlkdata/sql/types/trainer";
+import { trainer_spellRow } from "wotlkdata/sql/types/trainer_spell";
 import { Table } from "wotlkdata/table/Table";
-import { ClassType, resolveClassType } from "../Class/ClassType";
-import { MainEntity } from "../Misc/Entity";
+import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
+import { ClassEnum } from "../Misc/ClassMask";
+import { MainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RaceEnum } from "../Misc/RaceMask";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
-import { RaceType, resolveRaceType } from "../Race/RaceType";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
+import { SkillLineAbilityRegistry } from "../Spell/SpellSkillLines";
 
-export class TrainerLoc extends SQLLocSystem<Trainer> {
+export class TrainerLoc extends SQLLocSystem<TrainerBase> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.Greeting;
     }
@@ -42,50 +46,70 @@ export class TrainerLoc extends SQLLocSystem<Trainer> {
     }
 }
 
-export class TrainerType extends EnumCell<Trainer> {
+export class TrainerRequirementType extends EnumCellTransform<TrainerBase> {
+    private clearRow() {
+        return this.owner.row.Requirement.set(0)
+    }
+
     /** Enum Value:                             0 */
-    get ClassTrainer()      { return this.value(0) }
+    get ClassTrainer()      {
+        return this.value(0,()=>new TrainerClass(this.clearRow()))
+    }
     /** Enum Value:                             1 */
-    get MountTrainer()      { return this.value(1) }
+    get RaceTrainer()      {
+        return this.value(1,()=>new TrainerRace(this.clearRow()))
+    }
     /** Enum Value:                             2 */
-    get TradeskillTrainer() { return this.value(2) }
+    get SpellTrainer()      {
+        return this.value(2,()=>new TrainerSpellReq(this.clearRow()))
+    }
 }
 
-export class Trainer extends MainEntity<trainerRow> {
-    get ID() {
-        return this.row.Id.get();
+export class TrainerSpell extends MainEntity<trainer_spellRow> {
+    get Spell() { return SpellRegistry.readOnlyRef(this, this.row.SpellId); }
+    get Trainer() { return TrainerRegistry.readOnlyRef(this, this.row.TrainerId); }
+    get Cost() { return this.wrap(this.row.MoneyCost); }
+    get ReqLevel() { return this.wrap(this.row.ReqLevel); }
+    get ReqAbilities() {
+        return new ArrayRefSystem(this, 0, 3
+            , (i)=> {
+                if(i<0||i>2) {
+                    throw new Error(
+                          `Required ability index out of range:`
+                        + ` must be between 0 and 2`
+                    )
+                }
+                return SkillLineAbilityRegistry
+                    .ref(this
+                        ,     i==0
+                            ? this.row.ReqAbility1
+                            : i==1
+                            ? this.row.ReqAbility2
+                            : this.row.ReqAbility3
+                        )
+            }
+        )
+    }
+}
+
+export class TrainerSpells extends MultiRowSystem<TrainerSpell,TrainerBase> {
+    protected getAllRows(): TrainerSpell[] {
+        return SQL.trainer_spell
+            .filter({TrainerId:this.owner.ID})
+            .map(x=>new TrainerSpell(x))
+    }
+    protected isDeleted(value: TrainerSpell): boolean {
+        return value.row.isDeleted();
     }
 
-    get Greeting(): TrainerLoc { return new TrainerLoc(this); }
-    get Requirement() { return this.wrap(this.row.Requirement); }
-    get Type() { return new TrainerType(this,this.row.Type); }
-
-    setClassTrainer(cls: ClassType) {
-        this.Type.ClassTrainer.set()
-        this.Requirement.set(resolveClassType(cls));
-        return this;
-    }
-
-    setMountTrainer(race: RaceType) {
-        this.Type.MountTrainer.set()
-        this.Requirement.set(resolveRaceType(race));
-        return this;
-    }
-
-    setTradeskillTrainer(requiredSpell: number = 0) {
-        this.Type.TradeskillTrainer.set()
-        this.Requirement.set(requiredSpell);
-        return this;
-    }
-
-    addSpell(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
+    add(spellId: number,cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
         if(reqSkillLine===0) {
             const sla = SpellRegistry.load(spellId).SkillLines.getIndex(0);
             if(sla!==undefined) {
                 reqSkillLine = sla.SkillLine.get();
             }
         }
-        SQL.trainer_spell.add(this.ID, spellId)
+        SQL.trainer_spell.add(this.owner.ID, spellId)
             .MoneyCost.set(cost)
             .ReqLevel.set(reqLevel)
             .ReqSkillLine.set(reqSkillLine)
@@ -95,12 +119,65 @@ export class Trainer extends MainEntity<trainerRow> {
             .ReqAbility2.set(reqAbilities[1]||0)
             .ReqAbility3.set(reqAbilities[2]||0)
             .VerifiedBuild.set(17688);
-        return this;
+        return this.owner;
+    }
+
+    addGet(spellId: number) {
+        return new TrainerSpell(
+                SQL.trainer_spell.add(this.owner.ID,spellId)
+                   .VerifiedBuild.set(17688)
+            )
+            .Cost.set(0)
+            .ReqAbilities.clearAll()
+            .ReqLevel.set(0)
+    }
+
+    addMod(spellId: number, callback: (spells: TrainerSpell)=>void) {
+        callback(this.addGet(spellId));
+        return this.owner;
+    }
+}
+
+export class TrainerBase extends TransformedEntity<trainerRow,TrainerPlain> {
+    protected transformer(): EnumCellTransform<any> {
+        return this.Type;
+    }
+    protected default(): TrainerPlain {
+        return new TrainerPlain(this.row);
+    }
+
+    get ID() {
+        return this.row.Id.get();
+    }
+    get Greeting(): TrainerLoc { return new TrainerLoc(this); }
+    get Type() { return new TrainerRequirementType(this,this.row.Type); }
+    get Spells() { return new TrainerSpells(this); }
+}
+
+export class TrainerPlain extends TrainerBase {
+    get Requirement() { return this.wrap(this.row.Requirement); }
+}
+
+export class TrainerClass extends TrainerBase {
+    get RequiredClass() {
+        return new ClassEnum(this, this.row.Requirement);
+    }
+}
+
+export class TrainerRace extends TrainerBase {
+    get RequiredRace() {
+        return new RaceEnum(this, this.row.Requirement);
+    }
+}
+
+export class TrainerSpellReq extends TrainerBase {
+    get RequiredSpell() {
+        return SpellRegistry.ref(this, this.row.Requirement);
     }
 }
 
 export class TrainerRegistryClass
-    extends RegistryDynamic<Trainer,trainerRow,trainerQuery>
+    extends RegistryDynamic<TrainerPlain,trainerRow,trainerQuery>
 {
     protected Table(): Table<any, trainerQuery, trainerRow> & { add: (id: number) => trainerRow; } {
         return SQL.trainer
@@ -108,14 +185,15 @@ export class TrainerRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.Trainer
     }
-    Clear(entity: Trainer): void {
+    Clear(entity: TrainerPlain): void {
         entity
             .Greeting.clear()
-            .Requirement.set(0)
             .Type.set(0)
+            .row
+                .Requirement.set(0)
     }
-    protected Clone(entity: Trainer, parent: Trainer): void {
-        throw new Error("Method not implemented.");
+    protected Clone(entity: TrainerPlain, parent: TrainerPlain): void {
+        parent.Spells.forEach(x=>x.row.clone(entity.ID,x.Spell.get()))
     }
     protected FindByID(id: number): trainerRow {
         return SQL.trainer.find({Id:id});
@@ -123,11 +201,11 @@ export class TrainerRegistryClass
     protected EmptyQuery(): trainerQuery {
         return {}
     }
-    ID(e: Trainer): number {
+    ID(e: TrainerPlain): number {
         return e.ID
     }
-    protected Entity(r: trainerRow): Trainer {
-        return new Trainer(r);
+    protected Entity(r: trainerRow): TrainerPlain {
+        return new TrainerPlain(r);
     }
 }
 

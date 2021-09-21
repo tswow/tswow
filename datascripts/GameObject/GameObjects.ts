@@ -45,7 +45,9 @@ export class GameObjectInstanceRegistryClass
          .Zone.set(0)
     }
     protected Clone(mod: string, name: string, r: GameObjectInstance, parent: GameObjectInstance): void {
-        throw new Error("Method not implemented.")
+        if(parent.addonExists()) {
+            parent.addonRow().clone(r.ID);
+        }
     }
     protected Entity(r: gameobjectRow): GameObjectInstance {
         return new GameObjectInstance(r);
@@ -76,9 +78,6 @@ export class GameObejctDisplayRegistryClass
     }
     Clear(entity: GameObjectDisplay): void {
         entity.GeoBox.set({minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0})
-    }
-    protected Clone(entity: GameObjectDisplay, parent: GameObjectDisplay): void {
-        throw new Error("Method not implemented.")
     }
     protected Entity(r: GameObjectDisplayInfoRow): GameObjectDisplay {
         return new GameObjectDisplay(r);

@@ -29,7 +29,7 @@ import { ClassType, resolveClassType } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RaceType, resolveRaceType } from "../Race/RaceType";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
@@ -162,15 +162,12 @@ export class WoWLanguage extends MainEntity<LanguagesRow> {
     get Words() { return new LanguageWords(this); }
 }
 
-export class LanguageRegistryClass extends RegistryStatic<WoWLanguage,LanguagesRow,LanguagesQuery> {
+export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,LanguagesRow,LanguagesQuery> {
     protected Table(): Table<any, LanguagesQuery, LanguagesRow> & { add: (id: number) => LanguagesRow; } {
         return DBC.Languages
     }
     protected IDs(): StaticIDGenerator {
         return Ids.Language
-    }
-    protected Clone(mod: string, name: string, r: WoWLanguage, parent: WoWLanguage): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: LanguagesRow): WoWLanguage {
         return new WoWLanguage(r);

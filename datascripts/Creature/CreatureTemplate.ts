@@ -16,6 +16,7 @@
 */
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
+import { creature_template_addonRow } from "wotlkdata/sql/types/creature_template_addon";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { LootSetPointer } from "../Loot/Loot";
@@ -23,6 +24,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { SchoolMask } from "../Misc/School";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
 import { TrainerRegistry } from "../Trainer/Trainer";
@@ -54,17 +56,50 @@ import { NPCFlags } from "./NPCFlags";
 import { UnitClass } from "./UnitClass";
 import { UnitFlags } from "./UnitFlags";
 
+export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, creature_template_addonRow> {
+    protected createSQL(): creature_template_addonRow {
+        return SQL.creature_template_addon.add(this.owner.ID);
+    }
+    protected findSQL(): creature_template_addonRow {
+        return SQL.creature_template_addon.find({entry:this.owner.ID});
+    }
+    protected isValidSQL(sql: creature_template_addonRow): boolean {
+        return sql.entry.get() === this.owner.ID;
+    }
+
+    get Auras()  { return this.wrapSQL('',sql=>sql.auras); }
+    get Bytes1() { return this.wrapSQL(0,sql=>sql.bytes1); }
+    get Bytes2() { return this.wrapSQL(0,sql=>sql.bytes2); }
+    get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
+    get Mount()  { return this.wrapSQL(0,sql=>sql.mount); }
+    get Path()   { return this.wrapSQL(0,sql=>sql.path_id); }
+    get VisibilityDistanceType() { return this.wrapSQL(0,sql=>sql.visibilityDistanceType); }
+}
+
 export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
     get Subname() { return new CreatureSubname(this); }
-
     get Scripts() {
         return new AttachedScript(this, ()=>{
             this.row.AIName.set('SmartAI');
             return SmartScripts.creature(this.ID);
         })
     }
+
+    protected readonly Addon = new CreatureTemplateAddon(this);
+    addonExists() { return this.Addon.exists() }
+    addonRow()    { return this.Addon.sqlRow() }
+    get Auras()   { return this.Addon.Auras; }
+    get Bytes1()  { return this.Addon.Bytes1 }
+    get Bytes2()  { return this.Addon.Bytes2 }
+    get Emote()   { return this.Addon.Emote }
+    get Mount()   { return this.Addon.Mount }
+    get Path()    { return this.Addon.Path }
+    get VisibilityDistanceType() {
+        return this.Addon.VisibilityDistanceType
+    }
+
 
     /**
      * What expansion the creatures health is taken from, values are from 0-2
@@ -161,18 +196,6 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
 
     get VehicleAccessories() {
         return new VehicleTemplateAccessories(this)
-    }
-
-    addVendorItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
-        this.NPCFlags.Vendor.set(true);
-        this.Vendor.addItem(item,maxcount,incrTime,extendedCostId);
-        return this;
-    }
-
-    addTrainerSpell(spellId: number, cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
-        this.NPCFlags.Trainer.set(true);
-        this.Trainer.modRef((t=>t.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities)));
-        return this;
     }
 
     spawn(mod: string, id: string, pos: Position) {

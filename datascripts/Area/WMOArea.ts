@@ -4,7 +4,7 @@ import { WMOAreaTableQuery, WMOAreaTableRow } from "wotlkdata/dbc/types/WMOAreaT
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
@@ -39,7 +39,7 @@ export class WMOArea extends MainEntity<WMOAreaTableRow> {
 }
 
 export class WMOAreaRegistryClass
-    extends RegistryStatic<WMOArea,WMOAreaTableRow,WMOAreaTableQuery>
+    extends RegistryStaticNoClone<WMOArea,WMOAreaTableRow,WMOAreaTableQuery>
 {
     protected Table(): Table<any, WMOAreaTableQuery, WMOAreaTableRow> & { add: (id: number) => WMOAreaTableRow; } {
         return DBC.WMOAreaTable
@@ -58,9 +58,6 @@ export class WMOAreaRegistryClass
          .SoundProviderPreferences.Underwater.set(0)
          .WMO.set(0)
          .ZoneMusic.set(0)
-    }
-    protected Clone(mod: string, name: string, r: WMOArea, parent: WMOArea): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): WMOAreaTableRow {
         return DBC.WMOAreaTable.find({ID:id});

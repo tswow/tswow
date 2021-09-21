@@ -47,9 +47,6 @@ export class EnchantmentRegistryClass
          .ItemVisuals.set(0)
          .Name.clear()
     }
-    protected Clone(mod: string, name: string, r: Enchantment, parent: Enchantment): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: SpellItemEnchantmentRow): Enchantment {
         return new Enchantment(r);
     }

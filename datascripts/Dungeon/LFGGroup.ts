@@ -27,9 +27,6 @@ export class LFGDungeonGroupRegistryClass
             .OrderIndex.set(0)
             .Type.set(0)
     }
-    protected Clone(entity: LFGDungeonGroup, parent: LFGDungeonGroup): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): LfgDungeonGroupRow {
         return DBC.LfgDungeonGroup.find({ID:id})
     }

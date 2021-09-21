@@ -17,11 +17,14 @@
 import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
+import { SkillLineAbilityQuery, SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "./Spell";
+import { SpellRegistry } from "./Spells";
 
 export class TrivialSkillLineRank extends CellSystem<SpellSkillLineAbility> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }
@@ -34,6 +37,7 @@ export class TrivialSkillLineRank extends CellSystem<SpellSkillLineAbility> {
 }
 
 export class SpellSkillLineAbility extends MainEntity<SkillLineAbilityRow> {
+    get ID() { return this.row.ID.get(); }
     get RaceMask() { return this.wrap(this.row.RaceMask); }
     get ClassMask() { return this.wrap(this.row.ClassMask); }
     get ClassMaskForbidden() { return this.wrap(this.row.ClassMaskForbidden); }
@@ -46,12 +50,12 @@ export class SpellSkillLineAbility extends MainEntity<SkillLineAbilityRow> {
     get SkillLine() { return this.wrap(this.row.SkillLine); }
     get CharacterPoints() { return this.wrapArray(this.row.CharacterPoints); }
 
-    get Spell() { return this.row.Spell.get(); }
+    get Spell() { return SpellRegistry.ref(this, this.row.Spell); }
 
     setAutolearn() {
         this.AcquireMethod.set(1);
         SQL.playercreateinfo_spell_custom
-            .add(this.RaceMask.get(), this.ClassMask.get(), this.Spell)
+            .add(this.RaceMask.get(), this.ClassMask.get(), this.Spell.get())
             .Note.set('TSWoW')
         return this;
     }
@@ -114,3 +118,45 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility
         return sla;
     }
 }
+
+export class SkillLineAbilityRegistryClass
+    extends RegistryDynamic<
+          SpellSkillLineAbility
+        , SkillLineAbilityRow
+        , SkillLineAbilityQuery
+    >
+{
+    protected Table(): Table<any, SkillLineAbilityQuery, SkillLineAbilityRow> & { add: (id: number) => SkillLineAbilityRow; } {
+        return DBC.SkillLineAbility
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SkillLineAbility
+    }
+    Clear(entity: SpellSkillLineAbility): void {
+        entity.AcquireMethod.set(1)
+              .SkillLine.set(0)
+              .CharacterPoints.fill(0)
+              .ClassMask.set(0)
+              .ClassMaskForbidden.set(0)
+              .MinSkillRank.set(0)
+              .RaceMask.set(0)
+              .SkillLine.set(0)
+              .Spell.set(0)
+              .SupercededBy.set(0)
+              .TrivialRank.set(0,0)
+    }
+    protected FindByID(id: number): SkillLineAbilityRow {
+        return DBC.SkillLineAbility.find({ID:id});
+    }
+    protected EmptyQuery(): SkillLineAbilityQuery {
+        return {}
+    }
+    ID(e: SpellSkillLineAbility): number {
+        return e.ID
+    }
+    protected Entity(r: SkillLineAbilityRow): SpellSkillLineAbility {
+        return new SpellSkillLineAbility(r);
+    }
+}
+
+export const SkillLineAbilityRegistry = new SkillLineAbilityRegistryClass();

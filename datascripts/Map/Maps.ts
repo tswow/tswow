@@ -2,11 +2,11 @@ import { DBC } from "wotlkdata";
 import { MapQuery, MapRow } from "wotlkdata/dbc/types/Map";
 import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Map } from "./Map";
 
 export class MapRegistryClass
-    extends RegistryStatic<Map,MapRow,MapQuery>
+    extends RegistryStaticNoClone<Map,MapRow,MapQuery>
 {
     // map 0 is a real map
     protected nullID = ()=>-1;
@@ -35,9 +35,6 @@ export class MapRegistryClass
         .Name.clear()
         .RaidOffset.set(0)
         .TimeofDayOverride.set(0)
-    }
-    protected Clone(mod: string, name: string, r: Map, parent: Map): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: MapRow): Map {
         return new Map(r);

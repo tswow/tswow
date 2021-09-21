@@ -136,7 +136,9 @@ export class BroadcastTextRegistryClass
     }
 
     protected Clone(mod: string, name: string, r: BroadcastText, parent: BroadcastText): void {
-        throw new Error("Method not implemented.");
+        // copy over all localization
+        r.MaleText.set(parent.MaleText.objectify());
+        r.FemaleText.set(parent.FemaleText.objectify());
     }
     protected FindByID(id: number): broadcast_textRow {
         return SQL.broadcast_text.find({ID:id})

@@ -307,9 +307,6 @@ export class VehicleSeatRegistryClass
     Clear(entity: VehicleSeat): void {
         entity.clear();
     }
-    protected Clone(entity: VehicleSeat, parent: VehicleSeat): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): VehicleSeatRow {
         return DBC.VehicleSeat.findById(id);
     }

@@ -84,9 +84,6 @@ export class SoundAmbienceRegistryClass
         entity.clearAll();
     }
 
-    protected Clone(entity: SoundAmbience, parent: SoundAmbience): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: SoundAmbienceRow): SoundAmbience {
         return new SoundAmbience(r);
     }

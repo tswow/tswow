@@ -45,9 +45,6 @@ export class TaxiEndNodeRegistryClass
               .Name.clear()
               .Position.setSpread(0,0,0,0)
     }
-    protected Clone(entity: TaxiEndNode, parent: TaxiEndNode): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): TaxiNodesRow {
         return DBC.TaxiNodes.findById(id);
     }

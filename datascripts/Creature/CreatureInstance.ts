@@ -17,28 +17,53 @@
 
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
+import { creature_addonRow } from "wotlkdata/sql/types/creature_addon";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
 import { CreatureSpawnMask } from "./CreatureSpawnMask";
 
-export class CreatureInstance extends MainEntity<creatureRow> {
-    get addonRow() {
-        let row = SQL.creature_addon.find({guid: this.row.guid.get()});
-        if(row===undefined) {
-            row = SQL.creature_addon.add(this.GUID)
-                .auras.set('')
-                .bytes1.set(0)
-                .bytes2.set(0)
-                .emote.set(0)
-                .mount.set(0)
-                .path_id.set(0)
-        }
-        return row;
+export class CreatureInstanceAddon
+    extends MaybeSQLEntity<CreatureInstance,creature_addonRow>
+{
+    protected createSQL(): creature_addonRow{
+        return SQL.creature_addon.add(this.owner.GUID)
     }
+    protected findSQL(): creature_addonRow {
+        return SQL.creature_addon.find({guid:this.owner.GUID})
+    }
+    protected isValidSQL(sql: creature_addonRow): boolean {
+        return sql.guid.get() === this.owner.GUID;
+    }
+
+    get Auras()  { return this.wrapSQL('',sql=>sql.auras) }
+    get Path()   { return this.wrapSQL(0,sql=>sql.path_id); }
+    get Bytes1() { return this.wrapSQL(0,sql=>sql.bytes1); }
+    get Bytes2() { return this.wrapSQL(0,sql=>sql.bytes2); }
+    get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
+    get Mount()  { return this.wrapSQL(0,sql=>sql.mount); }
+    get VisibilityDistanceType() {
+        return this.wrapSQL(0,sql=>sql.visibilityDistanceType);
+    }
+}
+
+export class CreatureInstance extends MainEntity<creatureRow> {
+    protected readonly Addon = new CreatureInstanceAddon(this)
+
+    addonExists() { return this.Addon.exists(); }
+    addonRow() { return this.Addon.sqlRow(); }
+
+    get Auras() { return this.Addon.Auras; }
+    get Path() { return this.Addon.Path; }
+    get AddonBytes1() { return this.Addon.Bytes1; }
+    get AddonBytes2() { return this.Addon.Bytes2; }
+    get Emote() { return this.Addon.Emote; }
+    get Mount() { return this.Addon.Mount; }
+    get VisibilityDistanceType() { return this.Addon.VisibilityDistanceType; }
 
     get GUID() { return this.row.guid.get(); }
     get Template() { return this.wrap(this.row.id); }

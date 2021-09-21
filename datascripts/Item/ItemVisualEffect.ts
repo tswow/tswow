@@ -92,9 +92,6 @@ export class ItemEffectsRegistryClass
     Clear(entity: ItemEffects): void {
         entity.clearAll();
     }
-    protected Clone(entity: ItemEffects, parent: ItemEffects): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): ItemVisualsRow {
         return DBC.ItemVisuals.findById(id);
     }

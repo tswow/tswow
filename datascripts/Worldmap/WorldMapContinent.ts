@@ -63,9 +63,6 @@ export class WorldMapContinentRegistryClass
             .Taxi.set(0,0,0,0)
             .World.set(0)
     }
-    protected Clone(entity: WorldMapContinent, parent: WorldMapContinent): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): WorldMapContinentRow {
         return DBC.WorldMapContinent.findById(id);
     }

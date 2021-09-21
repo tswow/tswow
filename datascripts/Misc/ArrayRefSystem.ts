@@ -1,6 +1,6 @@
 import { Objectified } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { RefDynamic, RefStatic } from "../Refs/Ref";
+import { RefDynamic, RefNoCreate, RefStatic } from "../Refs/Ref";
 import { MainEntity } from "./Entity";
 
 export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
@@ -19,8 +19,8 @@ export class ArrayRefSystem<T,V extends Objectified> extends CellSystem<T> {
         return this.setId(index,this.clearValue);
     }
 
-    clearAll(index: number) {
-        return this.forEach(x=>x.set(index));
+    clearAll() {
+        return this.forEach(x=>x.set(this.clearValue));
     }
 
     forEachRef(callback: (ref: V)=>void) {
@@ -168,5 +168,64 @@ export class ArrayRefSystemStatic<T,V extends MainEntity<any>> extends CellSyste
             }
         }
         throw new Error(`Can't add more entries, array is full.`);
+    }
+}
+
+// TODO: Probably not needed with more generics
+export class ArrayRefSystemNoCreate<T,V extends MainEntity<any>> extends CellSystem<T> {
+    protected readonly clearValue: number;
+    protected readonly length: number;
+    protected readonly getter: (index: number)=>RefNoCreate<T,V>;
+
+    constructor(owner: T, clearValue: number, length: number, getter: (index: number)=>RefNoCreate<T,V>) {
+        super(owner);
+        this.clearValue = clearValue;
+        this.length = length;
+        this.getter = getter;
+    }
+
+    clear(index: number) {
+        return this.setId(index,this.clearValue);
+    }
+
+    clearAll() {
+        return this.forEach(x=>x.set(this.clearValue));
+    }
+
+    forEachRef(callback: (ref: V)=>void) {
+        for(let i=0;i<this.length;++i) {
+            let ref = this.getter(i);
+            if(ref.get() > this.clearValue) callback(ref.getRef());
+        }
+        return this.owner;
+    }
+
+    forEach(callback: (ref: RefNoCreate<T,V>)=>void) {
+        for(let i=0;i<this.length;++i) {
+            callback(this.getter(i));
+        }
+        return this.owner;
+    }
+
+    setId(index: number, ref: number) {
+        this.getter(index).set(ref);
+        return this.owner;
+    }
+
+    addId(refId: number) {
+        for(let i=0;i<this.length;++i) {
+            if(this.getter(i).get() <= this.clearValue) {
+                return this.setId(i,refId);
+            }
+        }
+        throw new Error(`Can't add more entries, array is full.`);
+    }
+
+    modRef(index: number, callback: (value: V)=>void) {
+        this.getter(index).modRef(callback);
+    }
+
+    getRef(index: number) {
+        return this.getter(index).getRef();
     }
 }

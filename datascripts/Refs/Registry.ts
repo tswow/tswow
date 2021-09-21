@@ -4,7 +4,7 @@ import { Row } from "wotlkdata/table/Row";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, StaticIDGenerator } from "../Misc/Ids";
-import { RefDynamic, RefReadOnly, RefStatic } from "./Ref";
+import { RefDynamic, RefNoCreate, RefReadOnly, RefStatic } from "./Ref";
 import { RegistryBase } from "./RegistryBase";
 
 export abstract class RegistryRowBase<
@@ -65,6 +65,28 @@ extends RegistryBase<E,R>
     }
 }
 
+export abstract class RegistryStaticNoClone<
+      E extends MainEntity<R> | TransformedEntity<R,any>
+    , R extends Row<any,Q> & {clone: (id: number)=>R}
+    , Q
+    >
+    extends RegistryRowBase<E,R,Q>
+{
+    protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
+    protected abstract IDs(): StaticIDGenerator
+    abstract Clear(r: E, mod: string, name: string): void;
+
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner, cell, this);
+    }
+
+    create(mod: string, name: string) {
+        let entity = this.Entity(this.Table().add(this.IDs().id(mod,name)));
+        this.Clear(entity,mod,name);
+        return entity;
+    }
+}
+
 export abstract class RegistryStaticNoRef<
       E extends MainEntity<R> | TransformedEntity<R,any>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
@@ -75,7 +97,7 @@ export abstract class RegistryStaticNoRef<
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
     protected abstract IDs(): StaticIDGenerator
     abstract Clear(r: E, mod: string, name: string): void;
-    protected abstract Clone(mod: string, name: string, r: E, parent: E): void;
+    protected Clone(mod: string, name: string, r: E, parent: E) {}
 
     create(mod: string, name: string, parent: number = 0) {
         let id = this.IDs().id(mod,name);
@@ -105,6 +127,29 @@ export abstract class RegistryStatic<
     }
 }
 
+export abstract class RegistryDynamicNoClone<
+      E extends MainEntity<R>
+    , R extends Row<any,Q> & {clone: (id: number)=>R}
+    , Q
+    >
+    extends RegistryRowBase<E,R,Q>
+{
+
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner, cell, this);
+    }
+
+    protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
+    protected abstract ids(): DynamicIDGenerator
+    abstract Clear(entity: E): void;
+
+    create() {
+        let entity = this.Entity(this.Table().add(this.ids().id()))
+        this.Clear(entity);
+        return entity;
+    }
+}
+
 export abstract class RegistryDynamicNoRef<
       E extends MainEntity<R>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
@@ -115,7 +160,7 @@ export abstract class RegistryDynamicNoRef<
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
     protected abstract ids(): DynamicIDGenerator
     abstract Clear(entity: E): void;
-    protected abstract Clone(entity: E, parent: E): void;
+    protected Clone(entity: E, parent: E) {}
 
     create(parent: number = 0) {
         let id = this.ids().id();

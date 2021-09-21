@@ -88,9 +88,12 @@ export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
         return this.GetSQL(entity) || (entity._cachedSQL = entity.createSQL());
     }
 
-    static HasSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>) {
+    static HasSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>): boolean {
         return this.GetSQL(entity) !== undefined;
     }
+
+    sqlRow(): SQL { return MaybeSQLEntity.GetSQL(this); }
+    exists(): boolean { return MaybeSQLEntity.HasSQL(this); }
 }
 
 export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMaybeDBCEntity<DBC> {

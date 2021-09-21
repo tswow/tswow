@@ -37,9 +37,6 @@ export class TalentTreeRegistryClass
          .Icon.set('')
     }
 
-    protected Clone(mod: string, name: string, r: TalentTree, parent: TalentTree): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: TalentTabRow): TalentTree {
         return new TalentTree(r);
     }

@@ -27,9 +27,6 @@ export class MailTemplateRegistryClass
             .Body.clear()
             .Subject.clear()
     }
-    protected Clone(entity: MailTemplate, parent: MailTemplate): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: MailTemplateRow): MailTemplate {
         return new MailTemplate(r);
     }

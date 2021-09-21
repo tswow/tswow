@@ -43,9 +43,6 @@ export class DungeonMapRegistryClass
             .Map.set(0)
             .ParentWorldMap.set(0)
     }
-    protected Clone(entity: DungeonMap, parent: DungeonMap): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): DungeonMapRow {
         return DBC.DungeonMap.find({ID:id})
     }

@@ -67,9 +67,6 @@ export class SpellDurationRegistryClass
               .DurationPerLevel.set(0)
               .MaxDuration.set(0)
     }
-    protected Clone(entity: SpellDuration, parent: SpellDuration): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellDurationRow {
         return DBC.SpellDuration.findById(id);
     }

@@ -69,10 +69,12 @@ export class VehiclePitch extends CellSystem<Vehicle> {
 
 export class VehicleMissileImpactModel extends ArrayEntry<Vehicle> {
     clear(): this {
-        throw new Error("Method not implemented.");
+        return this
+            .Model.set('')
+            .Radius.set(0)
     }
     isClear(): boolean {
-        throw new Error("Method not implemented.");
+        return this.Model.get() === ''
     }
 
     get Model() {
@@ -200,11 +202,7 @@ export class VehicleRegistryClass
         return Ids.Vehicle
     }
     Clear(entity: Vehicle): void {
-        // I have no idea
-        throw new Error("Method not implemented.");
-    }
-    protected Clone(entity: Vehicle, parent: Vehicle): void {
-        throw new Error("Method not implemented.");
+        // TODO: need to specify this
     }
     protected FindByID(id: number): VehicleRow {
         return DBC.Vehicle.findById(id);

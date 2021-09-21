@@ -7,7 +7,7 @@ import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SelfRef } from "../Refs/Ref";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 
@@ -97,7 +97,7 @@ export class Companion extends MainEntity<SpellRow> {
 }
 
 export class CompanionRegistryClass
-    extends RegistryStatic<Companion,SpellRow,SpellQuery>
+    extends RegistryStaticNoClone<Companion,SpellRow,SpellQuery>
 {
     protected Table(): Table<any, SpellQuery, SpellRow> & { add: (id: number) => SpellRow; } {
         return DBC.Spell
@@ -139,10 +139,6 @@ export class CompanionRegistryClass
             companion.Items.add(mod,`${name}-item-${i}`)
         }
         return companion;
-    }
-
-    protected Clone(mod: string, name: string, r: Companion, parent: Companion): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: SpellRow): Companion {
         return new Companion(r);

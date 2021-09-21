@@ -2,12 +2,12 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SkillLineQuery, SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
 import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillTiersRegistry } from "../SkillTiers/SkillTiers";
 import { Profession } from "./Profession";
 
 export class ProfessionRegistryClass
-    extends RegistryStatic<Profession,SkillLineRow,SkillLineQuery>
+    extends RegistryStaticNoClone<Profession,SkillLineRow,SkillLineQuery>
 {
     protected Table(): Table<any, SkillLineQuery, SkillLineRow> & { add: (id: number) => SkillLineRow; } {
         return DBC.SkillLine
@@ -25,9 +25,6 @@ export class ProfessionRegistryClass
                .Flags.IsClassLine.set(true)
                .SkillTier.set(SkillTiersRegistry.create().ID)
         })
-    }
-    protected Clone(mod: string, name: string, r: Profession, parent: Profession): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: SkillLineRow): Profession {
         return new Profession(r);

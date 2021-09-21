@@ -40,9 +40,6 @@ export class CurrencyCategoryRegistryClass
         entity.Flags.set(0)
               .Name.clear()
     }
-    protected Clone(entity: CurrencyCategory, parent: CurrencyCategory): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: CurrencyCategoryRow): CurrencyCategory {
         return new CurrencyCategory(r);
     }

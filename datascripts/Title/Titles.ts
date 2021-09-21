@@ -34,9 +34,6 @@ export class TitleRegistryClass extends RegistryStatic<Title,CharTitlesRow,CharT
     protected IDs(): StaticIDGenerator {
         return Ids.CharTitles
     }
-    protected Clone(mod: string, name: string, r: Title, parent: Title): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: CharTitlesRow): Title {
         return new Title(r);
     }

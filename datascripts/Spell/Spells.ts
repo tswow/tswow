@@ -36,9 +36,28 @@ export const SpellGroups = {
 }
 
 export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery> {
-    protected Clone(mod: string, name: string, r: Spell, parent: Spell): void {
-        throw new Error("Clone not implemented for spells.");
+    create(mod: string, id: string, parent = 0, cloneServerData = true) {
+        let v = super.create(mod,id,parent);
+
+        // it's on by default, so be nice
+        if(parent >= this.nullID() && cloneServerData) {
+            let parentEntity = this.load(parent);
+            if(parentEntity.BonusData.exists()) {
+                parentEntity.BonusData.sqlRow().clone(v.ID)
+            }
+
+            if(parentEntity.Threat.exists()) {
+                parentEntity.Threat.sqlRow().clone(v.ID);
+            }
+
+            if(parentEntity.CustomAttributes.exists()) {
+                parentEntity.CustomAttributes.sqlRow().clone(v.ID)
+            }
+            // note: we're never cloning spell_script_names, spell_scripts or spell_target_position
+        }
+        return v;
     }
+
     protected Table(): Table<any, SpellQuery, SpellRow> & { add: (id: number) => SpellRow; } {
         return DBC.Spell;
     }

@@ -77,9 +77,6 @@ export class SpellCastTimeRegistryClass
               .Minimum.set(0)
               .PerLevel.set(0)
     }
-    protected Clone(entity: SpellCastTime, parent: SpellCastTime): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellCastTimesRow {
         return DBC.SpellCastTimes.findById(id)
     }

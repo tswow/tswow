@@ -163,7 +163,7 @@ export class SpellVisualKitRegistryClass
               .WorldEffect.set(0)
     }
     protected Clone(entity: SpellVisualKit, parent: SpellVisualKit): void {
-        throw new Error("Method not implemented.");
+        parent.Models.forEach(x=>x.row.clone(entity.ID));
     }
     protected FindByID(id: number): SpellVisualKitRow {
         return DBC.SpellVisualKit.findById(id);
@@ -318,9 +318,7 @@ export class SpellVisualRegistryClass
     Clear(entity: SpellVisual): void {
         entity.clear();
     }
-    protected Clone(entity: SpellVisual, parent: SpellVisual): void {
-        throw new Error("Method not implemented.");
-    }
+    protected Clone(entity: SpellVisual, parent: SpellVisual): void {}
     protected FindByID(id: number): SpellVisualRow {
         return DBC.SpellVisual.findById(id);
     }

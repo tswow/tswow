@@ -17,8 +17,15 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { SQL } from "wotlkdata/sql/SQLFiles";
+import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
 import { MailTemplateRegistry } from "../Mail/MailTemplate";
+import { ClassMask } from "../Misc/ClassMask";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { SpellRegistry } from "../Spell/Spells";
 import { Quest } from "./Quest";
+import { QuestRegistry } from "./Quests";
+import { QuestSpecialFlags } from "./QuestSpecialFlags";
 
 export class QuestRequiredReputation extends CellSystem<Quest> {
     @Transient
@@ -83,5 +90,99 @@ export class QuestRewardMail extends CellSystem<Quest> {
         this.templateCell.set(skill);
         this.delayCell.set(points);
         return this.owner;
+    }
+}
+
+export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
+    protected createSQL(): quest_template_addonRow {
+        return SQL.quest_template_addon.add(this.owner.ID)
+            .AllowableClasses.set(0)
+            .SourceSpellID.set(0)
+            .PrevQuestID.set(0)
+            .ProvidedItemCount.set(0)
+            .RequiredMaxRepFaction.set(0)
+            .RequiredMaxRepValue.set(0)
+            .RequiredMinRepFaction.set(0)
+            .RequiredMinRepValue.set(0)
+            .RequiredSkillID.set(0)
+            .RequiredSkillPoints.set(0)
+            .RewardMailDelay.set(0)
+            .RewardMailTemplateID.set(0)
+            .SourceSpellID.set(0)
+            .SpecialFlags.set(0)
+    }
+    protected findSQL(): quest_template_addonRow {
+        return SQL.quest_template_addon.find({ID:this.owner.ID});
+    }
+    protected isValidSQL(sql: quest_template_addonRow): boolean {
+        return sql.ID.get() === this.owner.ID;
+    }
+
+    get ClassMask() {
+        return new ClassMask(this.owner, this.wrapSQL(0, sql=>sql.AllowableClasses))
+    }
+
+    get MaxLevel() {
+        return this.wrapSQL(0, sql=>sql.MaxLevel);
+    }
+
+    get SourceSpell() {
+        return SpellRegistry.ref(this.owner, this.wrapSQL(0, sql=>sql.SourceSpellID))
+    }
+
+    get PrevQuest() {
+        return this.wrapSQL(0,sql=>sql.PrevQuestID);
+    }
+
+    get NextQuest() {
+        return this.wrapSQL(0,sql=>sql.NextQuestID);
+    }
+
+    get ProvidedItemCount() {
+        return this.wrapSQL(0,sql=>sql.ProvidedItemCount);
+    }
+
+    get SpecialFlags() {
+        return new QuestSpecialFlags(this.owner,this.wrapSQL(0,sql=>sql.SpecialFlags));
+    }
+
+    get BreadcrumbForQuest() {
+        return QuestRegistry.ref(this,this.wrapSQL(0,sql=>sql.BreadcrumbForQuestId))
+    }
+
+    get ExclusiveGroup() {
+        return this.wrapSQL(0,sql=>sql.ExclusiveGroup);
+    }
+
+    get MinReputation() {
+        return new QuestRequiredReputation(
+              this.owner
+            , this.wrapSQL(0,sql=>sql.RequiredMinRepFaction)
+            , this.wrapSQL(0,sql=>sql.RequiredMinRepValue)
+        )
+    }
+
+    get MaxReputation() {
+        return new QuestRequiredReputation(
+              this.owner
+            , this.wrapSQL(0,sql=>sql.RequiredMaxRepFaction)
+            , this.wrapSQL(0,sql=>sql.RequiredMaxRepValue)
+        )
+    }
+
+    get RequiredSkill() {
+        return new QuestRequiredSkill(
+              this.owner
+            , this.wrapSQL(0,sql=>sql.RequiredSkillID)
+            , this.wrapSQL(0,sql=>sql.RequiredSkillPoints)
+        )
+    }
+
+    get RewardMail() {
+        return new QuestRewardMail(
+              this.owner
+            , this.wrapSQL(0,sql=>sql.RewardMailTemplateID)
+            , this.wrapSQL(0,sql=>sql.RewardMailDelay)
+        )
     }
 }

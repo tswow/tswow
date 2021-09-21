@@ -66,9 +66,6 @@ export class SpellEffectCameraShakesRegistryClass
     Clear(entity: SpellEffectCameraShakes): void {
         entity.clear();
     }
-    protected Clone(entity: SpellEffectCameraShakes, parent: SpellEffectCameraShakes): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellEffectCameraShakesRow {
         return DBC.SpellEffectCameraShakes.findById(id);
     }

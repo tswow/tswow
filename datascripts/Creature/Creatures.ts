@@ -76,7 +76,9 @@ export class CreatureTemplateRegistryClass
             .HoverHeight.set(0)
     }
     protected Clone(mod: string, name: string, r: CreatureTemplate, parent: CreatureTemplate): void {
-        throw new Error("Method not implemented.");
+        if(parent.addonExists()) {
+            parent.addonRow().clone(r.ID);
+        }
     }
     protected Entity(r: creature_templateRow): CreatureTemplate {
         return new CreatureTemplate(r);
@@ -116,7 +118,9 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, name: string, r: CreatureInstance, parent: CreatureInstance): void {
-        throw new Error("Method not implemented.");
+        if(parent.addonExists()) {
+            parent.addonRow().clone(r.GUID);
+        }
     }
     protected Entity(r: creatureRow): CreatureInstance {
         return new CreatureInstance(r);

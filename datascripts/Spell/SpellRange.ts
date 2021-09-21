@@ -103,9 +103,6 @@ export class SpellRangeRegistryClass
               .Name.clear()
               .NameShort.clear()
     }
-    protected Clone(entity: SpellRange, parent: SpellRange): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellRangeRow {
         return DBC.SpellRange.findById(id);
     }

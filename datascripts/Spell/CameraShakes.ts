@@ -45,11 +45,7 @@ export class CameraShakeRegistryClass
         return Ids.CameraShakes
     }
     Clear(entity: CameraShakes): void {
-        // No idea
-        throw new Error("Method not implemented.");
-    }
-    protected Clone(entity: CameraShakes, parent: CameraShakes): void {
-        throw new Error("Method not implemented.");
+        // TODO: need to specify this
     }
     protected FindByID(id: number): CameraShakesRow {
         return DBC.CameraShakes.findById(id)

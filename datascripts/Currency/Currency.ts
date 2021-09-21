@@ -21,9 +21,6 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
     protected IDs(): StaticIDGenerator {
         return Ids.CurrencyTypes
     }
-    protected Clone(mod: string, name: string, r: Currency, parent: Currency): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: CurrencyTypesRow): Currency {
         return new Currency(r);
     }

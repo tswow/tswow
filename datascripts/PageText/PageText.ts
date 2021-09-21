@@ -62,9 +62,6 @@ export class PageTextRegistryClass
     Clear(entity: PageText): void {
         entity.Text.clear()
     }
-    protected Clone(entity: PageText, parent: PageText): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): page_textRow {
         return SQL.page_text.find({ID:id});
     }

@@ -93,6 +93,7 @@ export class CriteriaPlain extends CriteriaBase {
 }
 
 export class AchievementCriteria extends MultiRowSystem<CriteriaPlain,Achievement> {
+
     protected getAllRows(): CriteriaPlain[] {
         return DBC.Achievement_Criteria.filter({Achievement_Id:this.owner.ID}).map(x=>new CriteriaPlain(x));
     }

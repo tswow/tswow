@@ -3,7 +3,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/dbc/types/WorldMapOverlay";
 import { Table } from "wotlkdata/table/Table";
 import { AreaRegistry } from "../Area/Area";
-import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
+import { ArrayRefSystemNoCreate } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
@@ -28,7 +28,7 @@ export class WorldMapOverlay extends MainEntity<WorldMapOverlayRow> {
     get ID() { return this.row.ID.get(); }
     get MapArea() { return WorldMapAreaRegistry.ref(this, this.row.MapAreaID); }
     // TODO: fixe
-    get Areas() { return new ArrayRefSystemStatic(this, 0, 4,
+    get Areas() { return new ArrayRefSystemNoCreate(this, 0, 4,
         (index)=>AreaRegistry.ref(this, this.wrapIndex(this.row.AreaID,index)))
     }
     get Texture() { return new WorldMapTexture(this); }
@@ -77,9 +77,6 @@ export class WorldMapOverlayRegistryClass
             .MapPoint.setSpread(0,0)
             .Offset.setSpread(0,0)
             .Texture.set('',0,0)
-    }
-    protected Clone(entity: WorldMapOverlay, parent: WorldMapOverlay): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): WorldMapOverlayRow {
         return DBC.WorldMapOverlay.findById(id);

@@ -76,9 +76,6 @@ export class ItemDisplayInfoRegistryClass
               .SpellVisual.set(0)
               .Texture.fill('')
     }
-    protected Clone(entity: ItemDisplayInfo, parent: ItemDisplayInfo): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): ItemDisplayInfoRow {
         return DBC.ItemDisplayInfo.findById(id);
     }

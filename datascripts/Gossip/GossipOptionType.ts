@@ -18,7 +18,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { Ids } from "../Misc/Ids";
-import { Trainer } from "../Trainer/Trainer";
+import { TrainerBase } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
 import { Gossip } from "./Gossip";
 import { GossipOption } from "./GossipOption";
@@ -69,12 +69,12 @@ export class GossipOptionType extends CellSystem<GossipOption> {
         return this.owner;
     }
 
-    setExistingTrainer(id: number, callback: (trainer: Trainer)=>void = ()=>{}) {
+    setExistingTrainer(id: number, callback: (trainer: TrainerBase)=>void = ()=>{}) {
         let defTrainer = SQL.creature_default_trainer.find({TrainerId:id})
         return this.setTrainer(defTrainer.CreatureId.get(),SQL.trainer.find({Id:id}),callback);
     }
 
-    setNewTrainer(callback: (trainer: Trainer)=>void = ()=>{}) {
+    setNewTrainer(callback: (trainer: TrainerBase)=>void = ()=>{}) {
         let row = SQL.trainer.add(Ids.Trainer.id());
         let creature = SQL.creature_template.add(Ids.TrainerCreature.id())
             .npcflag.set(16)
@@ -83,9 +83,9 @@ export class GossipOptionType extends CellSystem<GossipOption> {
         return this.setTrainer(creature.entry.get(),row,callback);
     }
 
-    private setTrainer(creatureId: number, trainer: trainerRow, callback: (trainer: Trainer)=>void) {
+    private setTrainer(creatureId: number, trainer: trainerRow, callback: (trainer: TrainerBase)=>void) {
         this.set(5,16,creatureId);
-        callback(new Trainer(trainer));
+        callback(new TrainerBase(trainer));
         return this.owner;
     }
 

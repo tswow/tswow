@@ -49,9 +49,6 @@ export class WorldMapAreaRegistryClass
             .Name.set('')
             .ParentWorldMap.set(0)
     }
-    protected Clone(entity: WorldMapArea, parent: WorldMapArea): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): WorldMapAreaRow {
         return DBC.WorldMapArea.findById(id);
     }

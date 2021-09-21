@@ -62,7 +62,7 @@ export class FactionRegistryClass
             .ReputationRaceMask.set([0,0,0,0])
     }
     protected Clone(mod: string, name: string, r: Faction, parent: Faction): void {
-        throw new Error("Method not implemented.");
+        parent.Templates.forEach(x=>x.row.clone(r.ID));
     }
     protected Entity(r: FactionRow): Faction {
         return new Faction(r);

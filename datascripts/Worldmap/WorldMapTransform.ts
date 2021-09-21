@@ -56,9 +56,6 @@ export class WorldMapTransformRegistryClass
               .Region.set(0,0,0,0)
               .SourceMap.set(0)
     }
-    protected Clone(entity: WorldMapTransform, parent: WorldMapTransform): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): WorldMapTransformsRow {
         return DBC.WorldMapTransforms.findById(id);
     }

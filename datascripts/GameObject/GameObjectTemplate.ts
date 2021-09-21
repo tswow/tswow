@@ -17,7 +17,6 @@
 import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
-import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
 import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { GossipRegistry } from "../Gossip/Gossips";
@@ -34,12 +33,12 @@ import { SpellRegistry } from "../Spell/Spells";
 import { TaxiPathRegistry } from "../Taxi/Taxi";
 import { WorldStateRegistry } from "../WorldState/WorldState";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
-import { GameObjectFlags } from "./GameObjectFlags";
 import { GameObjectID } from "./GameObjectID";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
 import { GORegistry } from "./GameObjectRegistries";
 import { GameObjectDisplayRegistry } from "./GameObjects";
+import { GameObjectTemplateAddon } from "./GameObjectTemplateAddon";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_AURA_GENERATOR, GAMEOBJECT_TYPE_BARBER_CHAIR, GAMEOBJECT_TYPE_BINDER, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CAPTURE_POINT, GAMEOBJECT_TYPE_CHAIR, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_DO_NOT_USE, GAMEOBJECT_TYPE_DO_NOT_USE_2, GAMEOBJECT_TYPE_DUEL_ARBITER, GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FISHINGNODE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GENERIC, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_GUARDPOST, GAMEOBJECT_TYPE_GUILD_BANK, GAMEOBJECT_TYPE_MAILBOX, GAMEOBJECT_TYPE_MAP_OBJECT, GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, GAMEOBJECT_TYPE_MEETINGSTONE, GAMEOBJECT_TYPE_MINI_GAME, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_RITUAL, GAMEOBJECT_TYPE_SPELLCASTER, GAMEOBJECT_TYPE_SPELL_FOCUS, GAMEOBJECT_TYPE_TEXT, GAMEOBJECT_TYPE_TRANSPORT, GAMEOBJECT_TYPE_TRAP, GAMEOBJECT_TYPE_TRAPDOOR } from "./GameObjectTypes";
 
 export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
@@ -48,50 +47,23 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
         return new GameObjectPlain(this.row);
     }
 
-    private _addon_row: gameobject_template_addonRow|undefined;
-
-    protected isCreature(): boolean {
-        return false;
-    }
-
-    protected isGameObject(): boolean {
-        return true;
-    }
-
-    get addon_row() {
-        if(this._addon_row) {
-            return this._addon_row;
-        }
-
-        let row = SQL.gameobject_template_addon.find({entry: this.ID});
-        if(row===undefined) {
-            row = SQL.gameobject_template_addon.add(this.ID)
-                .artkit0.set(0)
-                .artkit1.set(0)
-                .artkit2.set(0)
-                .artkit3.set(0)
-                .faction.set(0)
-                .flags.set(0)
-                .maxgold.set(0)
-                .mingold.set(0)
-        }
-        // ID is readonly, so it should never change
-        this._addon_row = row;
-        return row;
-    }
+    protected Addon = new GameObjectTemplateAddon(this);
+    addonExists() { return this.Addon.exists(); }
+    addonRow()    { return this.Addon.sqlRow(); }
+    get ArtKits() { return this.Addon.ArtKits; }
+    get Faction() { return this.Addon.Faction; }
+    get Flags()   { return this.Addon.Flags; }
+    get Gold()    { return this.Addon.Gold; }
 
     get Type() { return new GameObjectType(this, this.row.type); }
     get ID() { return this.row.entry.get(); }
-
-    get Display() {
-        return GameObjectDisplayRegistry.ref(this, this.row.displayId);
-    }
-
     get Name() { return new GameObjectName(this); }
     get Icon() { return this.wrap(this.row.IconName); }
     get CastBarCaption() { return this.wrap(this.row.castBarCaption); }
     get Size() { return this.wrap(this.row.size); }
-    get Flags() { return new GameObjectFlags(this, this.addon_row.flags); }
+    get Display() {
+        return GameObjectDisplayRegistry.ref(this, this.row.displayId);
+    }
 
     spawn(mod: string, id: string, position: Position) {
         return new GameObjectInstance(
@@ -113,16 +85,16 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
 }
 
 export class GameObjectPlain extends GameObjectTemplate {
-    get Data0() { return this.wrap(this.row.Data0); }
-    get Data1() { return this.wrap(this.row.Data1); }
-    get Data2() { return this.wrap(this.row.Data2); }
-    get Data3() { return this.wrap(this.row.Data3); }
-    get Data4() { return this.wrap(this.row.Data4); }
-    get Data5() { return this.wrap(this.row.Data5); }
-    get Data6() { return this.wrap(this.row.Data6); }
-    get Data7() { return this.wrap(this.row.Data7); }
-    get Data8() { return this.wrap(this.row.Data8); }
-    get Data9() { return this.wrap(this.row.Data9); }
+    get Data0()  { return this.wrap(this.row.Data0); }
+    get Data1()  { return this.wrap(this.row.Data1); }
+    get Data2()  { return this.wrap(this.row.Data2); }
+    get Data3()  { return this.wrap(this.row.Data3); }
+    get Data4()  { return this.wrap(this.row.Data4); }
+    get Data5()  { return this.wrap(this.row.Data5); }
+    get Data6()  { return this.wrap(this.row.Data6); }
+    get Data7()  { return this.wrap(this.row.Data7); }
+    get Data8()  { return this.wrap(this.row.Data8); }
+    get Data9()  { return this.wrap(this.row.Data9); }
     get Data10() { return this.wrap(this.row.Data10); }
     get Data11() { return this.wrap(this.row.Data11); }
     get Data12() { return this.wrap(this.row.Data12); }

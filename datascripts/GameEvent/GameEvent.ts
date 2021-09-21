@@ -7,7 +7,7 @@ import { Table } from "wotlkdata/table/Table";
 import { convertTime, DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { makeSQLDate, SQLDateCell } from "./Date";
 import { DayOfTheWeek, resolveDayOfTheWeek } from "./DayOfTheWeek";
 import { GameEventConditions } from "./GameEventCondition";
@@ -166,7 +166,7 @@ export class GameEvent extends MainEntity<game_eventRow> {
 }
 
 export class GameEventRegistryClass
-    extends RegistryStatic<GameEvent,game_eventRow,game_eventQuery>
+    extends RegistryStaticNoClone<GameEvent,game_eventRow,game_eventQuery>
 {
     protected Table(): Table<any, game_eventQuery, game_eventRow> & { add: (id: number) => game_eventRow; } {
         return SQL.game_event
@@ -178,9 +178,6 @@ export class GameEventRegistryClass
         r.Duration.set(1,'minutes')
          .Occurrence.setDaily(24,0)
          .Type.Normal.set()
-    }
-    protected Clone(mod: string, name: string, r: GameEvent, parent: GameEvent): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): game_eventRow {
         return SQL.game_event.find({eventEntry:id})

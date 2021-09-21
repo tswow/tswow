@@ -149,7 +149,9 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
 export class ItemTemplateRegistryClass
 extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
     protected Clone(mod: string, name: string, r: ItemTemplate, parent: ItemTemplate): void {
-        throw new Error("Method not implemented.");
+        if(parent.GemProperties.get() !== 0) {
+            throw new Error(`Tried cloning an item with GemProperties != 0, this is not supported!`);
+        }
     }
     protected Table(): Table<any, item_templateQuery, item_templateRow> & { add: (id: number) => item_templateRow; } {
         return SQL.item_template

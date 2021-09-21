@@ -88,9 +88,6 @@ export class SpellVisualEffectRegistryClass
               .Name.set('')
               .Scale.set(1,1,1)
     }
-    protected Clone(entity: SpellVisualEffect, parent: SpellVisualEffect): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellVisualEffectNameRow {
         return DBC.SpellVisualEffectName.findById(id);
     }

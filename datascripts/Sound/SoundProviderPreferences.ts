@@ -53,10 +53,7 @@ export class SoundProviderPreferenceRegistryClass
         return Ids.SoundProviderPreferences
     }
     Clear(entity: SoundProviderPreferences): void {
-        throw new Error("Method not implemented.");
-    }
-    protected Clone(entity: SoundProviderPreferences, parent: SoundProviderPreferences): void {
-        throw new Error("Method not implemented.");
+        // TODO: need to specify this
     }
     protected FindByID(id: number): SoundProviderPreferencesRow {
         return DBC.SoundProviderPreferences.findById(id);

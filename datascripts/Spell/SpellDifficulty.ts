@@ -71,9 +71,6 @@ export class SpellDifficultyRegistryClass
     Clear(entity: SpellDifficulty): void {
         entity.set(0,0,0,0)
     }
-    protected Clone(entity: SpellDifficulty, parent: SpellDifficulty): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellDifficultyRow {
         return DBC.SpellDifficulty.findById(id);
     }

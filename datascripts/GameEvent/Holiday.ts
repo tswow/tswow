@@ -4,7 +4,7 @@ import { HolidaysQuery, HolidaysRow } from "wotlkdata/dbc/types/Holidays";
 import { Table } from "wotlkdata/table/Table";
 import { TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RegistryDynamicNoClone } from "../Refs/Registry";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 import { HolidayDescription, HolidayName } from "./HolidayLoc";
 import { HolidayAnnualStages, HolidayPeriod, HolidayWeeklyStages } from "./HolidayStage";
@@ -79,7 +79,7 @@ export class HolidayCustomPeriod extends HolidayBase {
 export class HolidayPlain extends HolidayBase {}
 
 export class HolidayRegistryClass
-    extends RegistryDynamic<HolidayPlain,HolidaysRow,HolidaysQuery>
+    extends RegistryDynamicNoClone<HolidayPlain,HolidaysRow,HolidaysQuery>
 {
     protected Table(): Table<any, HolidaysQuery, HolidaysRow> & { add: (id: number) => HolidaysRow; } {
         return DBC.Holidays
@@ -99,9 +99,6 @@ export class HolidayRegistryClass
             .Priority.set(0)
             .Texture.set('')
             .Type.set(0)
-    }
-    protected Clone(entity: HolidayPlain, parent: HolidayPlain): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): HolidaysRow {
         return DBC.Holidays.findById(id);

@@ -59,9 +59,6 @@ export class ParticleColorRegistryClass
             .Mid.fill(0)
             .Start.fill(0)
     }
-    protected Clone(entity: ParticleColor, parent: ParticleColor): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): ParticleColorRow {
         return DBC.ParticleColor.findById(id);
     }

@@ -22,9 +22,6 @@ export class LockTypeRegistryClass
               .ResourceName.clear()
               .Verb.clear()
     }
-    protected Clone(entity: LockType, parent: LockType): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: LockTypeRow): LockType {
         return new LockType(r);
     }
@@ -51,9 +48,6 @@ export class LockRegistryClass
     }
     Clear(entity: Lock): void {
         entity.clearAll();
-    }
-    protected Clone(entity: Lock, parent: Lock): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: LockRow): Lock {
         return new Lock(r);

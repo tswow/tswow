@@ -55,9 +55,6 @@ export class ZoneIntroMusicRegistryClass
             .Priority.set(0)
             .Sound.set(0)
     }
-    protected Clone(entity: ZoneIntroMusic, parent: ZoneIntroMusic): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: ZoneintroMusicTableRow): ZoneIntroMusic {
         return new ZoneIntroMusic(r);
     }

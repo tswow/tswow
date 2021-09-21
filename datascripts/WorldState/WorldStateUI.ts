@@ -111,9 +111,6 @@ export class WorldStateUIRegistryClass
             .Type.Default.set()
             .Variable.set(0)
     }
-    protected Clone(entity: WorldStateUI, parent: WorldStateUI): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): WorldStateUIRow {
         return DBC.WorldStateUI.find({ID:id});
     }

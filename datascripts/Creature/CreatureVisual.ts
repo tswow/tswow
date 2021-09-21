@@ -142,9 +142,6 @@ export class CreatureModelRegistryClass
             .Sound.set(0)
             .WorldEffectScale.set(1)
     }
-    protected Clone(entity: CreatureModel, parent: CreatureModel): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): CreatureModelDataRow {
         return DBC.CreatureModelData.findById(id);
     }
@@ -186,9 +183,6 @@ export class CreatureVisualRegistryClass
             .ObjectEffectPackage.set(0)
             .row.SoundID.set(0)
             .NPCSoundID.set(0)
-    }
-    protected Clone(entity: CreatureVisual, parent: CreatureVisual): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): CreatureDisplayInfoRow {
         return DBC.CreatureDisplayInfo.findById(id);

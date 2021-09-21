@@ -44,11 +44,7 @@ export class SoundEntryAdvancedRegistryClass
         return Ids.SoundEntriesAdvanced
     }
     Clear(entity: SoundEntryAdvanced): void {
-        // I have no idea
-        throw new Error("Method not implemented.");
-    }
-    protected Clone(entity: SoundEntryAdvanced, parent: SoundEntryAdvanced): void {
-        throw new Error("Method not implemented.");
+        // TODO: need to specify this
     }
     protected FindByID(id: number): SoundEntriesAdvancedRow {
         return DBC.SoundEntriesAdvanced.findById(id);

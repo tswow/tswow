@@ -7,7 +7,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
-import { Trainer } from "../Trainer/Trainer";
+import { TrainerBase } from "../Trainer/Trainer";
 import { std } from "../tswow-stdlib-data";
 import { ProfessionGatheringNodes } from "./ProfessionGatheringNodes";
 import { ProfessionGatheringSpells } from "./ProfessionGatheringSpells";
@@ -115,7 +115,7 @@ export class Profession extends MainEntity<SkillLineRow> {
                 )
     }
 
-    addToTrainer(trainer: Trainer, tier: ProfessionTier, reqSkillValue: number, cost: number = 0, reqLevel: number = 0) {
+    addToTrainer(trainer: TrainerBase, tier: ProfessionTier, reqSkillValue: number, cost: number = 0, reqLevel: number = 0) {
         let index = resolveProfessionRank(tier);
         let len = this.Ranks.length;
         if(index > len) {
@@ -125,7 +125,7 @@ export class Profession extends MainEntity<SkillLineRow> {
             + `, but it only has ${len} ranks`
             )
         }
-        trainer.addSpell(
+        trainer.Spells.add(
               this.Ranks.get(index).LearnSpells()[0].ID
             , cost
             , reqLevel

@@ -91,9 +91,6 @@ export class SpellMissileRegistryClass
               .RandomizePitch.set(0,0)
               .RandomizeSpeed.set(0,0)
     }
-    protected Clone(entity: SpellMissile, parent: SpellMissile): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellMissileRow {
         return DBC.SpellMissile.findById(id)
     }

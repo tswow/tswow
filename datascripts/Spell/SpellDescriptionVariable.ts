@@ -76,9 +76,6 @@ export class SpellDescriptionVariableRegistryClass
     Clear(entity: SpellDescriptionVariable): void {
         entity.row.Variables.set('')
     }
-    protected Clone(entity: SpellDescriptionVariable, parent: SpellDescriptionVariable): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellDescriptionVariablesRow {
         return DBC.SpellDescriptionVariables.findById(id);
     }

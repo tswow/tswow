@@ -127,9 +127,6 @@ export class EnchantmentConditionRegistryClass
     Clear(entity: EnchantmentConditions): void {
         entity.clearAll()
     }
-    protected Clone(entity: EnchantmentConditions, parent: EnchantmentConditions): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: SpellItemEnchantmentConditionRow): EnchantmentConditions {
         return new EnchantmentConditions(r);
     }

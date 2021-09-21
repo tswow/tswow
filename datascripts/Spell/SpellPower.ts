@@ -106,9 +106,6 @@ export class SpellRuneCostRegistryClass
               .RunicPower.set(0)
               .Unholy.set(0)
     }
-    protected Clone(entity: SpellRuneCost, parent: SpellRuneCost): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellRuneCostRow {
         return DBC.SpellRuneCost.findById(id);
     }

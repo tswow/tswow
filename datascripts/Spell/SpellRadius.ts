@@ -75,9 +75,6 @@ export class SpellRadiusRegistryClass
     Clear(entity: SpellRadius): void {
         entity.set(0,0,0)
     }
-    protected Clone(entity: SpellRadius, parent: SpellRadius): void {
-        throw new Error("Method not implemented.");
-    }
     protected FindByID(id: number): SpellRadiusRow {
         return DBC.SpellRadius.findById(id);
     }

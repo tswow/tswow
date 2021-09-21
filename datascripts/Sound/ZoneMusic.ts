@@ -89,9 +89,6 @@ export class ZoneMusicRegistryClass
          .SoundNight.SilenceIntervalMin.set(0)
          .SoundNight.SilenceIntervalMax.set(0)
     }
-    protected Clone(mod: string, name: string, r: ZoneMusic, parent: ZoneMusic): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: ZoneMusicRow): ZoneMusic {
         return new ZoneMusic(r);
     }

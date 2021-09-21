@@ -89,9 +89,6 @@ export class SoundEntryRegistryClass
          .Volume.set(0)
          .Advanced.set(0)
     }
-    protected Clone(mod: string, name: string, r: SoundEntry, parent: SoundEntry): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: SoundEntriesRow): SoundEntry {
         return new SoundEntry(r);
     }

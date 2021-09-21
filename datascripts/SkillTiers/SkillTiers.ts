@@ -44,9 +44,6 @@ export class SkillTiersRegistryClass
     Clear(entity: SkillTiers): void {
         entity.clearAll()
     }
-    protected Clone(entity: SkillTiers, parent: SkillTiers): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: SkillTiersRow): SkillTiers {
         return new SkillTiers(r);
     }

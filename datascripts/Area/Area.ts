@@ -21,7 +21,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
@@ -67,7 +67,7 @@ export class Area extends MainEntity<AreaTableRow> {
 
 
 export class AreaRegistryClass
-    extends RegistryStatic<Area,AreaTableRow,AreaTableQuery>
+    extends RegistryStaticNoClone<Area,AreaTableRow,AreaTableQuery>
 {
     protected Table(): Table<any, AreaTableQuery, AreaTableRow> & { add: (id: number) => AreaTableRow; } {
         return DBC.AreaTable
@@ -92,9 +92,6 @@ export class AreaRegistryClass
             .SoundProviderPref.set(0)
             .SoundProviderPrefUnderwater.set(0)
             .ZoneMusic.set(0)
-    }
-    protected Clone(mod: string, name: string, r: Area, parent: Area): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: AreaTableRow): Area {
         return new Area(r);

@@ -5,7 +5,9 @@ import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { SkillLine } from "./SkillLine";
 
-export class SkillLineRegistryClass extends RegistryStatic<SkillLine,SkillLineRow,SkillLineQuery> {
+export class SkillLineRegistryClass
+    extends RegistryStatic<SkillLine,SkillLineRow,SkillLineQuery>
+{
     protected Table(): Table<any, SkillLineQuery, SkillLineRow> & { add: (id: number) => SkillLineRow; } {
         return DBC.SkillLine
     }
@@ -18,7 +20,7 @@ export class SkillLineRegistryClass extends RegistryStatic<SkillLine,SkillLineRo
              .CanLink.set(0)
     }
     protected Clone(mod: string, name: string, r: SkillLine, parent: SkillLine): void {
-        throw new Error("Method not implemented.");
+        parent.RaceClassInfos.forEach(x=>x.row.clone(r.ID))
     }
     protected Entity(r: SkillLineRow): SkillLine {
         return new SkillLine(r);

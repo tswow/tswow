@@ -47,8 +47,6 @@ export class LFGPos extends MaybeSQLEntity<LFGDungeon,lfg_dungeon_templateRow> {
         return this.owner;
     }
 
-    exists() { return MaybeSQLEntity.HasSQL(this); }
-
     set(obj: {x: number, y: number, z: number, o: number, map?: number}) {
         if((obj.map !== undefined) && (obj.map !== this.owner.Map.get())) {
             throw new Error(
@@ -163,9 +161,6 @@ export class LFGDungeonRegistryClass
             .Faction.None.set()
             .Flags.set(0)
             .Group.set(0)
-    }
-    protected Clone(entity: LFGDungeon, parent: LFGDungeon): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): LfgDungeonsRow {
         return DBC.LfgDungeons.find({ID:id});

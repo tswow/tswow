@@ -4,7 +4,7 @@ import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievemen
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { RegistryStaticNoClone } from "../Refs/Registry";
 import { iconToPath, pathToIcon } from "../Spell/SpellIcon";
 import { AchievementCriteria } from "./AchievementCriteria";
 import { AchievementReward } from "./AchievementReward";
@@ -34,15 +34,12 @@ export class Achievement extends MainEntity<AchievementRow> {
 }
 
 export class AchievementRegistryClass extends
-    RegistryStatic<Achievement,AchievementRow,AchievementQuery> {
+    RegistryStaticNoClone<Achievement,AchievementRow,AchievementQuery> {
     protected Table(): Table<any, AchievementQuery, AchievementRow> & { add: (id: number) => AchievementRow; } {
         return DBC.Achievement
     }
     protected IDs(): StaticIDGenerator {
         return Ids.Achievement
-    }
-    protected Clone(mod: string, name: string, r: Achievement, parent: Achievement): void {
-        throw new Error("Method not implemented.");
     }
     protected Entity(r: AchievementRow): Achievement {
         return new Achievement(r);

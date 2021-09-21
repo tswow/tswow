@@ -14,82 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
-import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
-import { SpellRegistry } from "../Spell/Spells";
-import { QuestRequiredReputation, QuestRequiredSkill } from "./QuestAddon";
+import { QuestAddon } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
 import { QuestGameEventCondition } from "./QuestGameEventPoints";
 import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";
 import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
-import { QuestRegistry } from "./Quests";
-import { QuestSpecialFlags } from "./QuestSpecialFlags";
 import { QuestText } from "./QuestText";
 
 export class Quest extends MainEntity<quest_templateRow> {
-    private _addonRow: quest_template_addonRow|undefined = undefined;
+    protected Addon = new QuestAddon(this);
 
-    @Transient
-    get addonRow() {
-        let addon = this._addonRow
-            || SQL.quest_template_addon.find({ID:this.ID})
-            || SQL.quest_template_addon.add(this.ID)
-            .MaxLevel.set(0)
-            .NextQuestID.set(0)
-            .PrevQuestID.set(0)
-            .ProvidedItemCount.set(0)
-            .RequiredMaxRepFaction.set(0)
-            .RequiredMaxRepValue.set(0)
-            .RequiredMinRepFaction.set(0)
-            .RequiredMinRepValue.set(0)
-            .RequiredSkillID.set(0)
-            .RequiredSkillPoints.set(0)
-            .RewardMailDelay.set(0)
-            .RewardMailTemplateID.set(0)
-            .SourceSpellID.set(0)
-            .SpecialFlags.set(0)
-            .AllowableClasses.set(0)
-            .BreadcrumbForQuestId.set(0)
-            .ExclusiveGroup.set(0)
-        this._addonRow = addon;
-        return addon;
+    addonExists() {
+        return this.Addon.exists();
     }
 
-    get SpecialFlags() { return new QuestSpecialFlags(this, this.addonRow.SpecialFlags); }
-    get MaxLevel() { return this.wrap(this.addonRow.MaxLevel); }
-    get NextQuest() { return QuestRegistry.ref(this, this.addonRow.NextQuestID); }
-    get PrevQuest() { return QuestRegistry.ref(this, this.addonRow.PrevQuestID); }
-    get ProvidedItemCount() { return this.wrap(this.addonRow.ProvidedItemCount); }
-
-    get SourceSpell() { return SpellRegistry.ref(this, this.addonRow.SourceSpellID); }
-    get AllowableClasses() { return new MaskCell32(this,this.addonRow.AllowableClasses); }
-    get BreadcrumbForQuest() { return QuestRegistry.ref(this, this.addonRow.BreadcrumbForQuestId); }
-    get ExclusiveGroup() { return this.wrap(this.addonRow.ExclusiveGroup); }
-
-    get RequiredMaxRep() {
-        return new QuestRequiredReputation(this
-            , this.addonRow.RequiredMaxRepFaction
-            , this.addonRow.RequiredMaxRepValue)
+    addonRow() {
+        return this.Addon.sqlRow();
     }
 
-    get RequiredMinRep() {
-        return new QuestRequiredReputation(this
-            , this.addonRow.RequiredMinRepFaction
-            , this.addonRow.RequiredMinRepValue)
-    }
-
-    get RequiredSKill() {
-        return new QuestRequiredSkill(this
-            , this.addonRow.RequiredSkillID
-            , this.addonRow.RequiredSkillPoints)
-    }
+    get SpecialFlags() { return this.Addon.SpecialFlags; }
+    get MaxLevel() { return this.Addon.MaxLevel; }
+    get NextQuest() { return this.Addon.NextQuest }
+    get PrevQuest() { return this.Addon.PrevQuest }
+    get ProvidedItemCount() { return this.Addon.ProvidedItemCount }
+    get SourceSpell() { return this.Addon.SourceSpell }
+    get ClassMask() { return this.Addon.ClassMask }
+    get BreadcrumbForQuest() { return this.Addon.BreadcrumbForQuest }
+    get ExclusiveGroup() { return this.Addon.ExclusiveGroup }
+    get RequiredMaxRep() { return this.Addon.MaxReputation; }
+    get RequiredMinRep() { return this.Addon.MinReputation; }
+    get RequiredSKill() { return this.Addon.RequiredSkill;}
 
     get ID() { return this.row.ID.get(); }
     get Questgiver() { return new QuestNPC(this); }

@@ -42,9 +42,6 @@ export class LoadingScreenRegistryClass
               .HasWidescreen.set(0)
               .Name.set('')
     }
-    protected Clone(entity: LoadingScreen, parent: LoadingScreen): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: LoadingScreensRow): LoadingScreen {
         return new LoadingScreen(r);
     }

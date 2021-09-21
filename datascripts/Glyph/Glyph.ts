@@ -12,7 +12,7 @@ import { Table } from "wotlkdata/table/Table";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RegistryDynamicNoClone } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SpellRegistry } from "../Spell/Spells";
@@ -157,7 +157,7 @@ export class Glyph extends MainEntity<GlyphPropertiesRow> {
 }
 
 export class GlyphRegistryClass
-    extends RegistryDynamic<Glyph,GlyphPropertiesRow,GlyphPropertiesQuery>
+    extends RegistryDynamicNoClone<Glyph,GlyphPropertiesRow,GlyphPropertiesQuery>
 {
     protected Table(): Table<any, GlyphPropertiesQuery, GlyphPropertiesRow> & { add: (id: number) => GlyphPropertiesRow; } {
         return DBC.GlyphProperties
@@ -172,9 +172,6 @@ export class GlyphRegistryClass
             .Spell.set(0)
     }
 
-    protected Clone(entity: Glyph, parent: Glyph): void {
-        throw new Error("Method not implemented.");
-    }
     protected Entity(r: GlyphPropertiesRow): Glyph {
         return new Glyph(r);
     }

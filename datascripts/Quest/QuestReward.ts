@@ -273,8 +273,8 @@ export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     /** The mail received upon */
     get Mail() {
         return new QuestRewardMail(this.owner
-            , this.owner.addonRow.RewardMailTemplateID
-            , this.owner.addonRow.RewardMailDelay)
+            , this.owner.addonRow().RewardMailTemplateID
+            , this.owner.addonRow().RewardMailDelay)
     }
 }
 
@@ -319,9 +319,6 @@ export class QuestRewardRegistryClass
     }
     Clear(r: QuestRewardStandalone): void {
         return QuestRegistry.Clear(new Quest(r.row));
-    }
-    protected Clone(mod: string, name: string, r: QuestRewardStandalone, parent: QuestRewardStandalone): void {
-        throw new Error("Method not implemented.");
     }
     protected FindByID(id: number): quest_templateRow {
         return SQL.quest_template.find({ID:id});

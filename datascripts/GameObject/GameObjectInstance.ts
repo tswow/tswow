@@ -1,8 +1,70 @@
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
+import { gameobject_addonRow } from "wotlkdata/sql/types/gameobject_addon";
 import { AreaRegistry } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell, QuaternionCell } from "../Misc/PositionCell";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+
+export enum InvisibilityTypes {
+    GENERAL = 0
+  , TRAP    = 3
+  , DRUNK   = 6
+}
+
+export type InvisibilityType = keyof typeof InvisibilityTypes
+
+export function resolveInvisibilityType(type: InvisibilityType) {
+  return InvisibilityTypes[type];
+}
+
+export class GameObjectInvisibilityEnum<T> extends EnumCell<T> {
+  get General() { return this.value(InvisibilityTypes.GENERAL); }
+  get Trap()    { return this.value(InvisibilityTypes.TRAP); }
+  get Drunk()   { return this.value(InvisibilityTypes.DRUNK); }
+
+  set(type: InvisibilityTypes|number)  {
+    return super.set(typeof(type)==='number'?type:resolveInvisibilityType(type));
+  }
+}
+
+export class GameObjectInstanceAddon extends MaybeSQLEntity<GameObjectInstance,gameobject_addonRow> {
+  protected createSQL(): gameobject_addonRow {
+    return SQL.gameobject_addon.add(this.owner.ID);
+  }
+  protected findSQL(): gameobject_addonRow {
+    return SQL.gameobject_addon.find({guid:this.owner.ID});
+  }
+  protected isValidSQL(sql: gameobject_addonRow): boolean {
+    return sql.guid.get() === this.owner.ID;
+  }
+
+  get Invisibility() {
+    let thiz = this;
+    return {
+        Type: new GameObjectInvisibilityEnum(this.owner, this.wrapSQL(0,sql=>sql.invisibilityType))
+      , Value: this.wrapSQL(0,sql=>sql.invisibilityValue)
+      , set(type: InvisibilityType, value: number) {
+        this.Type.set(resolveInvisibilityType(type));
+        this.Value.set(value);
+        return thiz.owner;
+      }
+    }
+  }
+
+  /** TODO: order */
+  get ParentRotation() {
+    return new QuaternionCell(
+        this.owner
+      , this.wrapSQL(0,sql=>sql.parent_rotation0)
+      , this.wrapSQL(0,sql=>sql.parent_rotation1)
+      , this.wrapSQL(0,sql=>sql.parent_rotation2)
+      , this.wrapSQL(0,sql=>sql.parent_rotation3)
+    )
+  }
+}
 
 export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get ID() { return this.row.guid.get(); }
@@ -32,4 +94,9 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get State() { return this.wrap(this.row.state); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get GameEvents() { return new GameObjectGameEventsForward(this); }
+    protected readonly Addon = new GameObjectInstanceAddon(this);
+    get Invisibility()   { return this.Addon.Invisibility; }
+    get ParentRotation() { return this.Addon.ParentRotation; }
+    addonExists() { return this.Addon.exists(); }
+    addonRow() { return this.Addon.sqlRow(); }
 }
