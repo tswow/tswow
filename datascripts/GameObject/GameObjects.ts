@@ -19,12 +19,12 @@ import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "wotlkdata/
 import { gameobjectQuery, gameobjectRow } from "wotlkdata/sql/types/gameobject"
 import { Table } from "wotlkdata/table/Table"
 import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids"
-import { RegistryDynamic, RegistryStatic } from "../Refs/Registry"
+import { RegistryDynamic, RegistryRowBase } from "../Refs/Registry"
 import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
 
 export class GameObjectInstanceRegistryClass
-    extends RegistryStatic<GameObjectInstance,gameobjectRow,gameobjectQuery>
+    extends RegistryRowBase<GameObjectInstance,gameobjectRow,gameobjectQuery>
 {
     protected Table(): Table<any, gameobjectQuery, gameobjectRow> & { add: (id: number) => gameobjectRow } {
         return SQL.gameobject
@@ -32,23 +32,41 @@ export class GameObjectInstanceRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.gameobject
     }
-    Clear(r: GameObjectInstance): void {
-        r.PhaseMask.set(0)
-         .Position.setSpread(0,0,0,0,0)
-         .Area.set(0)
-         .PhaseMask.set(0)
-         .Rotation.setSpread(0,0,0,0)
-         .ScriptName.set('')
-         .SpawnMask.set(0)
-         .SpawnTimeSecs.set(0)
-         .State.set(0)
-         .Zone.set(0)
-    }
-    protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
-        if(parent.addonExists()) {
-            parent.addonRow().clone(r.ID);
+
+    private create(id: number, parent: number, build: number) {
+        let row: gameobjectRow
+        if(parent > 0) {
+            let parentEntity = this.load(parent);
+            row = parentEntity.row.clone(id);
+            if(parentEntity.addonExists()) {
+                parentEntity.addonRow().clone(id)
+            }
+        } else {
+            row = SQL.gameobject.add(id)
+            new GameObjectInstance(row)
+                .PhaseMask.set(0)
+                .Position.setSpread(0,0,0,0,0)
+                .Area.set(0)
+                .PhaseMask.set(0)
+                .Rotation.setSpread(0,0,0,0)
+                .ScriptName.set('')
+                .SpawnMask.set(0)
+                .SpawnTimeSecs.set(0)
+                .State.set(0)
+                .Zone.set(0)
         }
+        row.VerifiedBuild.set(build);
+        return new GameObjectInstance(row);
     }
+
+    createStatic(mod: string, id: string, parent = 0) {
+        return this.create(Ids.gameobject.id(mod,id),parent,17688);
+    }
+
+    createDynamic(parent = 0) {
+        return this.create(Ids.gameobject.dynamicId(),parent,17689);
+    }
+
     protected Entity(r: gameobjectRow): GameObjectInstance {
         return new GameObjectInstance(r);
     }
