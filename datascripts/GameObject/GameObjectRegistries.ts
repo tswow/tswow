@@ -247,7 +247,7 @@ export class GOElevatorRegistryClass
             })
         });
         let template = this.createLocalTemplate(mod,id,keyframes)
-        let spawn = template.spawn(mod,id,Object.assign({x:0,y:0,z:0,map:0},origin))
+        let spawn = template.Spawns.add(mod,id,Object.assign({x:0,y:0,z:0,map:0},origin))
         return {Template: template,Spawn: spawn};
     }
 }
