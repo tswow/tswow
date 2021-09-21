@@ -119,7 +119,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
     }
     protected Clone(mod: string, name: string, r: CreatureInstance, parent: CreatureInstance): void {
         if(parent.addonExists()) {
-            parent.addonRow().clone(r.GUID);
+            parent.addonRow().clone(r.ID);
         }
     }
     protected Entity(r: creatureRow): CreatureInstance {
@@ -132,7 +132,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
         return {}
     }
     ID(e: CreatureInstance): number {
-        return e.GUID;
+        return e.ID;
     }
 }
 export const CreatureInstanceRegistry = new CreatureInstanceRegistryClass();

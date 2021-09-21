@@ -125,7 +125,7 @@ export class CreatureGameEvent extends GameEventRelationBase<game_event_creature
 export class CreatureGameEventsForward extends GameEventMultiRowSystem<CreatureGameEvent,CreatureInstance> {
     protected getAllRows(): CreatureGameEvent[] {
         return SQL.game_event_creature
-            .filter({guid:this.owner.GUID})
+            .filter({guid:this.owner.ID})
             .map(x=>new CreatureGameEvent(x))
     }
     add(event: number, type: SpawnType) {
@@ -133,7 +133,7 @@ export class CreatureGameEventsForward extends GameEventMultiRowSystem<CreatureG
               type==='SPAWNS'
                 ? event
                 : -event
-            , this.owner.GUID
+            , this.owner.ID
         );
         return this.owner;
     }
@@ -141,7 +141,7 @@ export class CreatureGameEventsForward extends GameEventMultiRowSystem<CreatureG
     remove(event: number, type: SpawnType) {
         let r = SQL.game_event_creature
             .find({
-                  guid:this.owner.GUID
+                  guid:this.owner.ID
                 , eventEntry:type==='SPAWNS'
                     ?event
                     :-event
@@ -398,18 +398,18 @@ export class GameObjectQuestGameEventsBackward extends GameEventMultiRowSystem<G
 
 export class GameEventModelEquipForward extends MaybeSQLEntity<CreatureInstance,game_event_model_equipRow>{
     protected createSQL(): game_event_model_equipRow {
-        return SQL.game_event_model_equip.add(this.owner.GUID)
+        return SQL.game_event_model_equip.add(this.owner.ID)
             .equipment_id.set(0)
             .eventEntry.set(0)
             .modelid.set(0)
     }
 
     protected findSQL(): game_event_model_equipRow {
-        return SQL.game_event_model_equip.find({guid:this.owner.GUID});
+        return SQL.game_event_model_equip.find({guid:this.owner.ID});
     }
 
     protected isValidSQL(sql: game_event_model_equipRow): boolean {
-        return sql.guid.get() === this.owner.GUID;
+        return sql.guid.get() === this.owner.ID;
     }
 
     get Event() { return GameEventRegistry.ref(this, this.wrapSQL(0,sql=>sql.eventEntry))}
@@ -449,17 +449,17 @@ export class GameEventNPCFlag extends GameEventRelationBase<game_event_npcflagRo
 export class GameEventNPCFlagForward extends GameEventMultiRowSystem<GameEventNPCFlag,CreatureInstance> {
     protected getAllRows(): GameEventNPCFlag[] {
         return SQL.game_event_npcflag
-            .filter({guid:this.owner.GUID})
+            .filter({guid:this.owner.ID})
             .map(x=>new GameEventNPCFlag(x))
     }
 
     add(event: number, flag: number) {
-        SQL.game_event_npcflag.add(event, this.owner.GUID).npcflag.set(flag);
+        SQL.game_event_npcflag.add(event, this.owner.ID).npcflag.set(flag);
         return this.owner;
     }
 
     addGet(event: number) {
-        return new GameEventNPCFlag(SQL.game_event_npcflag.add(event, this.owner.GUID))
+        return new GameEventNPCFlag(SQL.game_event_npcflag.add(event, this.owner.ID))
     }
 
     addMod(event: number, callback: (flag: GameEventNPCFlag)=>void) {
@@ -509,12 +509,12 @@ export class GameEventNPCVendor extends GameEventRelationBase<game_event_npc_ven
 export class GameEventNPCVendorCreature extends GameEventMultiRowSystem<GameEventNPCVendor,CreatureInstance> {
     protected getAllRows(): GameEventNPCVendor[] {
         return SQL.game_event_npc_vendor
-            .filter({guid:this.owner.GUID})
+            .filter({guid:this.owner.ID})
             .map(x=>new GameEventNPCVendor(x))
     }
 
     add(event: number, item: number, slot = 0, maxcount = 0, incrtime = 0, extendedCost = 0) {
-        SQL.game_event_npc_vendor.add(this.owner.GUID,item)
+        SQL.game_event_npc_vendor.add(this.owner.ID,item)
             .eventEntry.set(event)
             .slot.set(slot)
             .maxcount.set(maxcount)
@@ -525,7 +525,7 @@ export class GameEventNPCVendorCreature extends GameEventMultiRowSystem<GameEven
 
     addGet(event: number, item: number) {
         return new GameEventNPCVendor(SQL.game_event_npc_vendor
-            .add(this.owner.GUID,item).eventEntry.set(event))
+            .add(this.owner.ID,item).eventEntry.set(event))
     }
 
     addMod(event: number, item: number, callback: (event: GameEventNPCVendor)=>void) {

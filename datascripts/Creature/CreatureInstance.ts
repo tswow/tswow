@@ -31,13 +31,13 @@ export class CreatureInstanceAddon
     extends MaybeSQLEntity<CreatureInstance,creature_addonRow>
 {
     protected createSQL(): creature_addonRow{
-        return SQL.creature_addon.add(this.owner.GUID)
+        return SQL.creature_addon.add(this.owner.ID)
     }
     protected findSQL(): creature_addonRow {
-        return SQL.creature_addon.find({guid:this.owner.GUID})
+        return SQL.creature_addon.find({guid:this.owner.ID})
     }
     protected isValidSQL(sql: creature_addonRow): boolean {
-        return sql.guid.get() === this.owner.GUID;
+        return sql.guid.get() === this.owner.ID;
     }
 
     get Auras()  { return this.wrapSQL('',sql=>sql.auras) }
@@ -65,7 +65,7 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get Mount() { return this.Addon.Mount; }
     get VisibilityDistanceType() { return this.Addon.VisibilityDistanceType; }
 
-    get GUID() { return this.row.guid.get(); }
+    get ID() { return this.row.guid.get(); }
     get Template() { return this.wrap(this.row.id); }
     get SpawnMask() {
         return new CreatureSpawnMask(this, this.row.spawnMask);

@@ -61,7 +61,7 @@ export class VehicleTemplateAccessories extends MultiRowSystem<VehicleTemplateAc
 
 export class VehicleInstanceAccessories extends MultiRowSystem<VehicleInstanceAccessory, CreatureInstance> {
     protected getAllRows(): VehicleInstanceAccessory[] {
-        return SQL.vehicle_accessory.filter({guid:this.owner.GUID})
+        return SQL.vehicle_accessory.filter({guid:this.owner.ID})
             .map(x=> new VehicleInstanceAccessory(x))
     }
     protected isDeleted(value: VehicleInstanceAccessory): boolean {
@@ -71,9 +71,9 @@ export class VehicleInstanceAccessories extends MultiRowSystem<VehicleInstanceAc
     getSeat(seatIndex: number) {
         return new VehicleInstanceAccessory(
             SQL.vehicle_accessory
-                .find({guid:this.owner.GUID,seat_id:seatIndex})
+                .find({guid:this.owner.ID,seat_id:seatIndex})
             || SQL.vehicle_accessory
-                .add(this.owner.GUID,seatIndex)
+                .add(this.owner.ID,seatIndex)
                 .description.set('tswow')
                 .minion.set(0)
                 .summontimer.set(0)
