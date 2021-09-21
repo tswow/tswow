@@ -23,8 +23,7 @@ export function effectToPath(effect: number) {
     return DBC.ItemVisualEffects.findById(effect).Model;
 }
 
-// TODO: This should be called "ItemVisuals", not "ItemEffects"
-export class ItemEffects extends MainEntity<ItemVisualsRow> {
+export class ItemVisuals extends MainEntity<ItemVisualsRow> {
     get ID() { return this.row.ID.get(); }
 
     get length(): number {
@@ -80,8 +79,8 @@ export class ItemEffects extends MainEntity<ItemVisualsRow> {
     }
 }
 
-export class ItemEffectsRegistryClass
-    extends RegistryDynamic<ItemEffects,ItemVisualsRow,ItemVisualsQuery>
+export class ItemVisualsRegistryClass
+    extends RegistryDynamic<ItemVisuals,ItemVisualsRow,ItemVisualsQuery>
 {
     protected Table(): Table<any, ItemVisualsQuery, ItemVisualsRow> & { add: (id: number) => ItemVisualsRow; } {
         return DBC.ItemVisuals
@@ -89,7 +88,7 @@ export class ItemEffectsRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.ItemVisuals
     }
-    Clear(entity: ItemEffects): void {
+    Clear(entity: ItemVisuals): void {
         entity.clearAll();
     }
     protected FindByID(id: number): ItemVisualsRow {
@@ -98,12 +97,12 @@ export class ItemEffectsRegistryClass
     protected EmptyQuery(): ItemVisualsQuery {
         return {}
     }
-    ID(e: ItemEffects): number {
+    ID(e: ItemVisuals): number {
         return e.ID
     }
-    protected Entity(r: ItemVisualsRow): ItemEffects {
-        return new ItemEffects(r);
+    protected Entity(r: ItemVisualsRow): ItemVisuals {
+        return new ItemVisuals(r);
     }
 }
 
-export const ItemEffectsRegistry = new ItemEffectsRegistryClass();
+export const ItemVisualsRegistry = new ItemVisualsRegistryClass();

@@ -23,7 +23,7 @@ import { ParticleColorRegistry } from "../Misc/ParticleColor";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
-import { ItemEffectsRegistry } from "./ItemVisualEffect";
+import { ItemVisualsRegistry } from "./ItemVisualEffect";
 import { ItemVisualModels } from "./ItemVisualModels";
 
 export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
@@ -31,7 +31,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     get Flags() { return this.wrap(this.row.Flags); }
     get GeosetGroup() { return this.wrapArray(this.row.GeosetGroup); }
     get HelmGeosetVis() { return this.wrapArray(this.row.HelmetGeosetVis); }
-    get Effects() { return ItemEffectsRegistry.ref(this, this.row.ItemVisual); }
+    get Visuals() { return ItemVisualsRegistry.ref(this, this.row.ItemVisual); }
     get Models() { return new ItemVisualModels(this); }
     get ParticleColor() { return ParticleColorRegistry.ref(this, this.row.ParticleColorID); }
     get SpellVisual() { return SpellVisualRegistry.ref(this, this.row.SpellVisualID); }
@@ -66,7 +66,7 @@ export class ItemDisplayInfoRegistryClass
         return Ids.ItemDisplayInfo
     }
     Clear(entity: ItemDisplayInfo): void {
-        entity.Effects.set(0)
+        entity.Visuals.set(0)
               .Flags.set(0)
               .GeosetGroup.fill(0)
               .HelmGeosetVis.fill(0)

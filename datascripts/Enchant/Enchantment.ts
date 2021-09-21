@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
 import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
 import { Table } from "wotlkdata/table/Table";
-import { ItemEffectsRegistry } from "../Item/ItemVisualEffect";
+import { ItemVisualsRegistry } from "../Item/ItemVisualEffect";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
@@ -20,7 +20,7 @@ export class Enchantment extends MainEntity<SpellItemEnchantmentRow> {
      * For spells cast by the enchantment itself, see "Effects"
      */
     get EnchantSpells() { return new EnchantmentSpells(this); }
-    get ItemVisuals() { return ItemEffectsRegistry.ref(this, this.row.ItemVisual); }
+    get ItemVisuals() { return ItemVisualsRegistry.ref(this, this.row.ItemVisual); }
     get Flags() { return new EnchantmentFlags(this, this.row.Flags); }
     get Condition() { return EnchantmentConditionRegistry.ref(this, this.row.Condition_Id); }
     get Name() { return this.wrapLoc(this.row.Name); }
