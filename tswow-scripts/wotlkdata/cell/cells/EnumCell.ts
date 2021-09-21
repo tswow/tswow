@@ -11,7 +11,7 @@ export class EnumCellReadOnly<T> extends CellWrapperReadOnly<number,T> {
     objectify() {
         let enums = Objects.mapObject(this,['object'],(k,v)=>v.isEnum);
         for(const [key,value] of Object.entries(enums)) {
-            if(value.isSelected()) return key;
+            if(value.is()) return key;
         }
         return this.cell.get();
     }
@@ -29,7 +29,7 @@ export class EnumValueReadOnly<T> {
         this.index = index;
     }
 
-    isSelected() {
+    is() {
         return this.cell.get() === this.index;
     }
 
@@ -69,7 +69,7 @@ function enumCellTransformGetSelection(transform: any) {
             Objects.mapObject(transform, ['object'], (_,v)=>v.isEnum)
         )
         .map(([name,cell])=>({name,cell}))
-        .find(({name,cell})=>cell.isSelected())
+        .find(({name,cell})=>cell.is())
         || {name:undefined,cell:undefined}
 }
 
@@ -123,7 +123,7 @@ export class EnumValueTransform<T extends Objectified,V extends Objectified> {
         this.transformer = transformer;
     }
 
-    isSelected() {
+    is() {
         return this.cell.get() === this.index;
     }
 
@@ -196,7 +196,7 @@ export class EnumValueTransformReadOnly<T extends Objectified,V extends Objectif
         this.transformer = transformer;
     }
 
-    isSelected() {
+    is() {
         return this.cell.get() === this.index;
     }
 
