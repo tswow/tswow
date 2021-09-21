@@ -7,6 +7,7 @@ import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell, QuaternionCell } from "../Misc/PositionCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { GORegistry } from "./GameObjectRegistries";
 
 export enum InvisibilityTypes {
     GENERAL = 0
@@ -94,6 +95,7 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get State() { return this.wrap(this.row.state); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get GameEvents() { return new GameObjectGameEventsForward(this); }
+    get Template() { return GORegistry.Plain.ref(this, this.row.id); }
     protected readonly Addon = new GameObjectInstanceAddon(this);
     get Invisibility()   { return this.Addon.Invisibility; }
     get ParentRotation() { return this.Addon.ParentRotation; }

@@ -16,6 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
 import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
@@ -37,9 +38,38 @@ import { GameObjectID } from "./GameObjectID";
 import { GameObjectInstance } from "./GameObjectInstance";
 import { GameObjectName } from "./GameObjectName";
 import { GORegistry } from "./GameObjectRegistries";
-import { GameObjectDisplayRegistry } from "./GameObjects";
+import { GameObjectDisplayRegistry, GameObjectInstances } from "./GameObjects";
 import { GameObjectTemplateAddon } from "./GameObjectTemplateAddon";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_AURA_GENERATOR, GAMEOBJECT_TYPE_BARBER_CHAIR, GAMEOBJECT_TYPE_BINDER, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CAPTURE_POINT, GAMEOBJECT_TYPE_CHAIR, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_DO_NOT_USE, GAMEOBJECT_TYPE_DO_NOT_USE_2, GAMEOBJECT_TYPE_DUEL_ARBITER, GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FISHINGNODE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GENERIC, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_GUARDPOST, GAMEOBJECT_TYPE_GUILD_BANK, GAMEOBJECT_TYPE_MAILBOX, GAMEOBJECT_TYPE_MAP_OBJECT, GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, GAMEOBJECT_TYPE_MEETINGSTONE, GAMEOBJECT_TYPE_MINI_GAME, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_RITUAL, GAMEOBJECT_TYPE_SPELLCASTER, GAMEOBJECT_TYPE_SPELL_FOCUS, GAMEOBJECT_TYPE_TEXT, GAMEOBJECT_TYPE_TRANSPORT, GAMEOBJECT_TYPE_TRAP, GAMEOBJECT_TYPE_TRAPDOOR } from "./GameObjectTypes";
+
+export class GameObjectTemplateInstances
+    extends MultiRowSystem<GameObjectInstance,GameObjectTemplate>
+{
+    protected getAllRows(): GameObjectInstance[] {
+        return SQL.gameobject.filter({id:this.owner.ID})
+            .map(x=>new GameObjectInstance(x))
+    }
+    protected isDeleted(value: GameObjectInstance): boolean {
+        return value.row.isDeleted();
+    }
+
+    addGet(mod: string, id: string) {
+        return GameObjectInstances
+            .create(mod,id)
+            .Template.set(this.owner.ID)
+    }
+
+    addMod(mod: string, id: string, callback: (go: GameObjectInstance)=>void) {
+        callback(this.addGet(mod,id));
+        return this.owner;
+    }
+
+    add(mod: string, id: string, pos: Position) {
+        this.addGet(mod,id)
+            .Position.set(pos)
+        return this.owner;
+    }
+}
 
 export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
     protected transformer() { return this.Type; }
@@ -65,22 +95,8 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
         return GameObjectDisplayRegistry.ref(this, this.row.displayId);
     }
 
-    spawn(mod: string, id: string, position: Position) {
-        return new GameObjectInstance(
-            SQL.gameobject.add(Ids.gameobject.id(mod,id))
-                .spawnMask.set(1)
-                .spawntimesecs.set(1)
-                .state.set(1)
-                .ScriptName.set('')
-                .rotation0.set(0)
-                .rotation1.set(0)
-                .rotation2.set(0)
-                .rotation3.set(0)
-                .zoneId.set(0)
-                .areaId.set(0)
-                .id.set(this.ID)
-                .VerifiedBuild.set(17688)
-        ).Position.set(position)
+    get Spawns() {
+        return new GameObjectTemplateInstances(this);
     }
 }
 

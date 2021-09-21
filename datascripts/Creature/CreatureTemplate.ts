@@ -14,6 +14,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { creature_template_addonRow } from "wotlkdata/sql/types/creature_template_addon";
@@ -55,6 +56,34 @@ import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
 import { UnitClass } from "./UnitClass";
 import { UnitFlags } from "./UnitFlags";
+
+export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,CreatureTemplate>
+{
+    protected getAllRows(): CreatureInstance[] {
+        return SQL.creature.filter({id:this.owner.ID})
+            .map(x=>new CreatureInstance(x));
+    }
+    protected isDeleted(value: CreatureInstance): boolean {
+        return value.row.isDeleted();
+    }
+
+    add(mod: string, id: string, pos: Position, wanderDistance?: number) {
+        this.addGet(mod,id)
+            .Position.set(pos)
+            .WanderDistance.set(wanderDistance||0)
+        return this.owner;
+    }
+
+    addGet(mod: string, id: string) {
+        return CreatureInstanceRegistry.create(mod,id)
+            .Template.set(this.owner.ID)
+    }
+
+    addMod(mod: string, id: string, callback: (spawn: CreatureInstance)=>void) {
+        callback(this.addGet(mod,id));
+        return this.owner;
+    }
+}
 
 export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, creature_template_addonRow> {
     protected createSQL(): creature_template_addonRow {
@@ -198,20 +227,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
         return new VehicleTemplateAccessories(this)
     }
 
-    spawn(mod: string, id: string, pos: Position) {
-        return CreatureInstanceRegistry.create(mod, id, this.ID).Position.set(pos);
-    }
-
-    spawnMod(mod: string, id: string, pos: Position, callback: (instance: CreatureInstance)=>void = ()=>{}) {
-        callback(this.spawn(mod,id,pos));
-        return this;
-    }
-
-    protected isCreature(): boolean {
-        return true;
-    }
-
-    protected isGameObject(): boolean {
-        return false;
+    get Spawns() {
+        return new CreatureTemplateInstances(this);
     }
 }
