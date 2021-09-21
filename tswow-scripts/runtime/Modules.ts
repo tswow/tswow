@@ -92,8 +92,7 @@ const scripts_tsconfig_json =
 const patch_example_ts = (name: string) =>
 `import { std } from "tswow-stdlib";
 
-console.log("Hello from ${name} data script!");
-`;
+console.log("Hello from ${name} data script!");`;
 
 const gitignores =
 `*.blp
