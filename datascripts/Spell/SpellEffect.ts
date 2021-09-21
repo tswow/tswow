@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { DBC } from "wotlkdata";
 import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
 import { EnumCellTransform, EnumValueTransform } from "wotlkdata/cell/cells/EnumCell";
 import { Objectified, Objects } from "wotlkdata/cell/serialization/ObjectIteration";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { Ids } from "../Misc/Ids";
 import { std } from "../tswow-stdlib-data";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
@@ -27,7 +29,7 @@ import { EffectClassSet } from "./SpellClassSet";
 import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
-import { SpellRadius, SpellRadiusRef, SpellRadiusRegistry } from "./SpellRadius";
+import { SpellRadiusRegistry } from "./SpellRadius";
 import { SpellRegistry } from "./Spells";
 import { SpellTargetPosition } from "./SpellTargetPosition";
 
@@ -161,9 +163,9 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         return this.owner;
     }
 
-    addLearnSpells(mod: string, id: string, ...spells: number[]) {
+    addLearnSpells(spells: number[]) {
         for(const spell of spells) {
-            this.addFreeEffect(mod, id, (eff)=>{
+            this.addFreeEffect((eff)=>{
                 eff.EffectType.LearnSpell.set()
                    .LearntSpell.set(spell)
             })
@@ -171,12 +173,11 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         return this.owner;
     }
 
-    addFreeEffect(mod: string, id: string, callback: (effect: SpellEffect)=>void) {
-        let ctr = 0;
+    addFreeEffect(callback: (effect: SpellEffect)=>void) {
         const SPELL_CHAIN_TOKEN = '__tswow_spell_chain';
         function getNextSpell(spell: Spell) {
             for(let i=0;i<3;++i) {
-                if(spell.Effects.get(i).EffectType.get()!==64) {
+                if(!spell.Effects.get(i).EffectType.TriggerSpell.isSelected()) {
                     continue;
                 }
                 let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());
@@ -192,8 +193,9 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             if(nex!==undefined) {
                 return nex;
             }
-            nex = std.Spells.create(mod,`${id}-${ctr++}`)
-                .Icon.setFullPath(SPELL_CHAIN_TOKEN)
+            nex = new Spell(DBC.Spell.add(Ids.Spell.dynamicId()));
+            std.Spells.Clear(nex);
+            nex.Icon.setFullPath(SPELL_CHAIN_TOKEN);
             spell.Effects.addMod((eff)=>{
                 eff.EffectType.TriggerSpell.set()
                    .TriggerSpell.set((nex as Spell).ID);

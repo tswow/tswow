@@ -52,7 +52,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .Range.set(12)
         if(autoLearnAt>=0) {
             this.owner.Ranks.get(autoLearnAt).LearnSpells().forEach(x=>{
-                x.Effects.addLearnSpells(mod,`${id}-learn`,spl.ID)
+                x.Effects.addLearnSpells([spl.ID])
             })
         }
         return spl;

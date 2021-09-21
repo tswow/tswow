@@ -68,10 +68,10 @@ export class ProfessionRecipe extends CellSystemTop {
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
     get CastTime() { return SpellCastTimeRegistry.ref(this, this.spell.row.CastingTimeIndex); }
 
-    LearnOnRank(mod: string, id: string, rank: ProfessionTier) {
+    LearnOnRank(rank: ProfessionTier) {
         this.profession.Ranks.get(rank).LearnSpells().forEach(x=>
             {
-                x.Effects.addLearnSpells(mod, id, this.ID);
+                x.Effects.addLearnSpells([this.ID]);
             })
         return this;
     }
