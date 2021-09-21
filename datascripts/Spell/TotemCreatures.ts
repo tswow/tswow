@@ -102,7 +102,7 @@ export const TotemCreatures = {
                 const spell = SpellRegistry.create(mod, id+'_'+controller.toLowerCase())
                     .Effects.addMod(eff=>
                         eff.Type.ControlTotemCreature.set()
-                            .AsRawEffect()
+                            .AsEffect.get()
                             .MiscValueA.set(bitmask
                     ))
                 switch(controller) {

@@ -46,7 +46,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
             .InterruptFlags.setBit(3, true)
 
         ItemTemplateRegistry.create(mod,id)
-            .Name.set(this.owner.Spell.get().Name.objectify())
+            .Name.set(this.owner.AsSpell.get().Name.objectify())
             .Quality.Blue.set()
             .ClassMask.set(-1)
             .Bonding.BindsOnPickup.set()
@@ -77,7 +77,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
 
 export class Mount extends MainEntity<SpellRow> {
     protected mountIndex() {
-        return this.Spell.get().Effects
+        return this.AsSpell.get().Effects
             .indexOf(x=>x.Aura.Mounted.is())
     }
 
@@ -96,7 +96,7 @@ export class Mount extends MainEntity<SpellRow> {
         )
     }
 
-    get Spell() { return new SelfRef(this, ()=>new Spell(this.row)); }
+    get AsSpell() { return new SelfRef(this, ()=>new Spell(this.row)); }
 }
 
 export class MountRegistryClass

@@ -45,7 +45,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .InterruptFlags.setBit(3, true)
 
         ItemTemplateRegistry.create(mod,id)
-            .Name.set(this.owner.Spell.get().Name.objectify())
+            .Name.set(this.owner.AsSpell.get().Name.objectify())
             .Quality.Blue.set()
             .ClassMask.set(-1)
             .Bonding.BindsOnPickup.set()
@@ -77,7 +77,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
 export class Companion extends MainEntity<SpellRow> {
     protected mountIndex() {
         // only one mount index is valid
-        return this.Spell.get().Effects
+        return this.AsSpell.get().Effects
             .indexOf(x=>x.Type.Summon.is())
     }
 
@@ -88,7 +88,7 @@ export class Companion extends MainEntity<SpellRow> {
             , this.wrapIndex(this.row.EffectMiscValue,this.mountIndex())
         )
     }
-    get Spell() { return new SelfRef(this, ()=>new Spell(this.row)); }
+    get AsSpell() { return new SelfRef(this, ()=>new Spell(this.row)); }
     get ID() { return this.row.ID.get(); }
 }
 
@@ -102,8 +102,8 @@ export class CompanionRegistryClass
         return Ids.Spell
     }
     Clear(r: Companion): void {
-        SpellRegistry.Clear(r.Spell.get())
-        r.Spell.get()
+        SpellRegistry.Clear(r.AsSpell.get())
+        r.AsSpell.get()
             .Attributes.isAbility.set(true)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.sheatheUnchanged.set(true)

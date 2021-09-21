@@ -5,6 +5,7 @@ import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { SelfRef } from "../Refs/Ref";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
 import { TrainerBase } from "../Trainer/Trainer";
@@ -16,7 +17,9 @@ import { ProfessionRecipes } from "./ProfessionRecipe";
 import { ProfessionTier, resolveProfessionRank } from "./ProfessionType";
 
 export class Profession extends MainEntity<SkillLineRow> {
-    readonly SkillLine: SkillLine;
+    get AsSkillLine() {
+        return new SelfRef(this, ()=>new SkillLine(this.row))
+    }
     private _ApprenticeSpell: Spell|undefined;
 
     setHasCrafting(value: boolean) {
@@ -33,16 +36,11 @@ export class Profession extends MainEntity<SkillLineRow> {
         return this;
     }
 
-    constructor(row: SkillLineRow) {
-        super(row);
-        this.SkillLine = new SkillLine(row);
-    }
-
     get Recipes() { return new ProfessionRecipes(this); }
     get GatheringNodes() { return new ProfessionGatheringNodes(this); }
     get GatheringSpells() { return new ProfessionGatheringSpells(this); }
     get Name() { return new ProfessionNameSystem(this); }
-    get ID() { return this.SkillLine.ID; }
+    get ID() { return this.AsSkillLine.get().ID; }
     get Ranks() { return new ProfessionRanks(this); }
 
     static findApprenticeSpell(thiz: Profession) {
@@ -57,7 +55,7 @@ export class Profession extends MainEntity<SkillLineRow> {
         if(!spellRank) return undefined;
         let firstSpell = std.Spells.load(spellRank.first_spell_id.get());
         if(!firstSpell) {
-            throw new Error(`Profession ${thiz.SkillLine.Name.enGB.get()} has an invalid first spell rank in spell_ranks`);
+            throw new Error(`Profession ${thiz.AsSkillLine.get().Name.enGB.get()} has an invalid first spell rank in spell_ranks`);
         }
         return firstSpell;
     }
@@ -94,19 +92,19 @@ export class Profession extends MainEntity<SkillLineRow> {
         let spl = std.Spells.load(rank.spell_id.get());
 
         if(spl===undefined) {
-            throw new Error(`Spell ${profession.SkillLine.Name.enGB} has an invalid spell at rank ${index}`);
+            throw new Error(`Spell ${profession.AsSkillLine.get().Name.enGB} has an invalid spell at rank ${index}`);
         }
         return spl;
     }
 
     static getTiers(profession: Profession) {
         return DBC.SkillTiers.findById(
-            profession.SkillLine.RaceClassInfos.get()[0].SkillTier.get()
+            profession.AsSkillLine.get().RaceClassInfos.get()[0].SkillTier.get()
         )
     }
 
     static copyTiers(profession: Profession) {
-        profession.SkillLine.RaceClassInfos
+        profession.AsSkillLine.get().RaceClassInfos
             .get()[0].SkillTier.set
                 (
                     this.getTiers(profession)
@@ -197,9 +195,9 @@ export class ProfessionRanks extends CellSystem<Profession> {
     add(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
         let newIndex = this.length;
         let spell = std.Spells.create(modid,id)
-            .Name.set(this.owner.SkillLine.Name.objectify())
+            .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
-            .Description.set(this.owner.SkillLine.Description.objectify())
+            .Description.set(this.owner.AsSkillLine.get().Description.objectify())
             .Attributes.isAbility.set(true)
             .Attributes.notShapeshifted.set(true)
             .Attributes.castableWhileMounted.set(true)
@@ -217,7 +215,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
                     .TargetA.set(0)
                     .TargetB.set(0)
                     .ChainAmplitude.set(1)
-                    .AsRawEffect()
+                    .AsEffect.get()
                     .DieSides.set(1)
                     .BonusMultiplier.set(1)
             })
@@ -238,7 +236,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
         }
 
         std.Spells.create(modid,`${id}_learn`)
-            .Name.set(this.owner.SkillLine.Name.objectify())
+            .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.sheatheUnchanged.set(true)
@@ -252,7 +250,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
                 effect.Type.SkillStep.set()
                         .Skill.set(this.owner.ID)
                         .Tier.set(newIndex)
-                        .AsRawEffect()
+                        .AsEffect.get()
                         .DieSides.set(1)
             })
         Profession.getTiers(this.owner).Value.setIndex(newIndex,maxSkill);

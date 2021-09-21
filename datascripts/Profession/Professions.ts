@@ -16,7 +16,7 @@ export class ProfessionRegistryClass
         return Ids.SkillLine
     }
     Clear(r: Profession): void {
-        r.SkillLine.CanLink.set(1)
+        r.AsSkillLine.get().CanLink.set(1)
          .RaceClassInfos.addMod(rci=>{
             rci.ClassMask.set(0xffffff)
                .RaceMask.set(0xffffff)
