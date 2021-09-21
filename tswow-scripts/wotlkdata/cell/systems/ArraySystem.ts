@@ -38,7 +38,7 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
 
     find(callback: (value: A, index: number)=>any) {
         let index = this.indexOf(callback);
-        return index >= 0 ? this.get(index) : undefined;
+        return (index >= 0 ? this.get(index) : undefined) as A;
     }
 
     clear(index: number) {
