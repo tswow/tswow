@@ -174,7 +174,7 @@ export class GameEventRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.game_event
     }
-    Clear(r: GameEvent, mod: string, name: string): void {
+    Clear(r: GameEvent): void {
         r.Duration.set(1,'minutes')
          .Occurrence.setDaily(24,0)
          .Type.Normal.set()

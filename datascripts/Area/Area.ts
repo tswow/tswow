@@ -75,8 +75,8 @@ export class AreaRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.Area
     }
-    Clear(r: Area, mod: string, name: string): void {
-        r.row.ExploreFlag.set(Ids.AreaBit.id(mod,name))
+    Clear(r: Area, mod: string, id: string): void {
+        r.row.ExploreFlag.set(Ids.AreaBit.id(mod,id))
             .AmbienceID.set(0)
             .Ambient_Multiplier.set(0)
             .AreaName.clear()

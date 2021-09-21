@@ -13,16 +13,16 @@ export class ClassTalents extends MultiRowSystem<TalentTree,Class> {
         return value.row.isDeleted();
     }
 
-    add(mod: string, name: string, tabIndex: number, races?: RaceType[]) {
-        let tree = TalentTreeRegistry.create(mod,name)
+    add(mod: string, id: string, tabIndex: number, races?: RaceType[]) {
+        let tree = TalentTreeRegistry.create(mod,id)
         tree.row.OrderIndex.set(tabIndex)
                 .RaceMask.set(makeRacemask(races||[]))
                 .ClassMask.set(1<<(this.owner.ID-1))
         return tree;
     }
 
-    addMod(mod: string, name: string, tabIndex: number, callback: (tree: TalentTree)=>void = ()=>{}) {
-        callback(this.add(mod,name,tabIndex));
+    addMod(mod: string, id: string, tabIndex: number, callback: (tree: TalentTree)=>void = ()=>{}) {
+        callback(this.add(mod,id,tabIndex));
         return this.owner;
     }
 }

@@ -135,7 +135,7 @@ export class BroadcastTextRegistryClass
          .SoundEntry.set(0)
     }
 
-    protected Clone(mod: string, name: string, r: BroadcastText, parent: BroadcastText): void {
+    protected Clone(mod: string, id: string, r: BroadcastText, parent: BroadcastText): void {
         // copy over all localization
         r.MaleText.set(parent.MaleText.objectify());
         r.FemaleText.set(parent.FemaleText.objectify());

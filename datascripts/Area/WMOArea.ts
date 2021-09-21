@@ -47,7 +47,7 @@ export class WMOAreaRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.WMOAreaTable
     }
-    Clear(r: WMOArea, mod: string, name: string): void {
+    Clear(r: WMOArea): void {
         r.Ambience.set(0)
          .AreaTable.set(0)
          .Group.set(0)

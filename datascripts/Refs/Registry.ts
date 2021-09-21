@@ -74,15 +74,15 @@ export abstract class RegistryStaticNoClone<
 {
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
     protected abstract IDs(): StaticIDGenerator
-    abstract Clear(r: E, mod: string, name: string): void;
+    abstract Clear(r: E, mod: string, id: string): void;
 
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new RefNoCreate(owner, cell, this);
     }
 
-    create(mod: string, name: string) {
-        let entity = this.Entity(this.Table().add(this.IDs().id(mod,name)));
-        this.Clear(entity,mod,name);
+    create(mod: string, id: string) {
+        let entity = this.Entity(this.Table().add(this.IDs().id(mod,id)));
+        this.Clear(entity,mod,id);
         return entity;
     }
 }
@@ -96,19 +96,19 @@ export abstract class RegistryStaticNoRef<
 {
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
     protected abstract IDs(): StaticIDGenerator
-    abstract Clear(r: E, mod: string, name: string): void;
-    protected Clone(mod: string, name: string, r: E, parent: E) {}
+    abstract Clear(r: E, mod: string, id: string): void;
+    protected Clone(mod: string, id: string, r: E, parent: E) {}
 
-    create(mod: string, name: string, parent: number = this.nullID()) {
-        let id = this.IDs().id(mod,name);
+    create(mod: string, id: string, parent: number = this.nullID()) {
+        let nid = this.IDs().id(mod,id);
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
-            let entity = this.Entity(parentEntity.row.clone(id));
-            this.Clone(mod,name,entity,parentEntity);
+            let entity = this.Entity(parentEntity.row.clone(nid));
+            this.Clone(mod,id,entity,parentEntity);
             return entity;
         } else {
-            let entity = this.Entity(this.Table().add(id));
-            this.Clear(entity, mod, name);
+            let entity = this.Entity(this.Table().add(nid));
+            this.Clear(entity, mod, id);
             return entity;
         }
     }

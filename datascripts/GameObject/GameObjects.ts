@@ -44,7 +44,7 @@ export class GameObjectInstanceRegistryClass
          .State.set(0)
          .Zone.set(0)
     }
-    protected Clone(mod: string, name: string, r: GameObjectInstance, parent: GameObjectInstance): void {
+    protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
         if(parent.addonExists()) {
             parent.addonRow().clone(r.ID);
         }

@@ -75,7 +75,7 @@ export class CreatureTemplateRegistryClass
             .HealthExpansion.set(0)
             .HoverHeight.set(0)
     }
-    protected Clone(mod: string, name: string, r: CreatureTemplate, parent: CreatureTemplate): void {
+    protected Clone(mod: string, id: string, r: CreatureTemplate, parent: CreatureTemplate): void {
         if(parent.addonExists()) {
             parent.addonRow().clone(r.ID);
         }
@@ -117,7 +117,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .spawnMask.set(1)
          .VerifiedBuild.set(17688)
     }
-    protected Clone(mod: string, name: string, r: CreatureInstance, parent: CreatureInstance): void {
+    protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {
         if(parent.addonExists()) {
             parent.addonRow().clone(r.ID);
         }

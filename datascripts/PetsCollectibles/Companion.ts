@@ -129,10 +129,10 @@ export class CompanionRegistryClass
             })
     }
 
-    createWithItem(mod: string, name: string, itemCount = 1) {
-        let companion = this.create(mod,name);
+    createWithItem(mod: string, id: string, itemCount = 1) {
+        let companion = this.create(mod,id);
         for(let i=0;i<itemCount;++i) {
-            companion.Items.add(mod,`${name}-item-${i}`)
+            companion.Items.add(mod,`${id}-item-${i}`)
         }
         return companion;
     }

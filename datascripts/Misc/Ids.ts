@@ -42,12 +42,12 @@ export class IDGeneratorBase {
 }
 
 export class StaticIDGenerator extends IDGeneratorBase {
-    range(mod: string, name: string, size: number) {
-        return GetIdRange(this.table,mod,name,size,this.startId)
+    range(mod: string, id: string, size: number) {
+        return GetIdRange(this.table,mod,id,size,this.startId)
     }
 
-    id(mod: string, name: string) {
-        return GetId(this.table,mod,name,this.startId);
+    id(mod: string, id: string) {
+        return GetId(this.table,mod,id,this.startId);
     }
 
     dynamicId() {

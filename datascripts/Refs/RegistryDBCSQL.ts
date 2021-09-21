@@ -52,7 +52,7 @@ export abstract class DBCSQLRegistryBase<
 
 /**
  * Registry for entities defined in both DBC and SQL
- * 
+ *
  */
 export abstract class DBCSQLRegistryStatic<
       DBC extends Row<any,DBCQuery> & {clone: (id: number)=>DBC}
@@ -63,26 +63,26 @@ export abstract class DBCSQLRegistryStatic<
 > extends DBCSQLRegistryBase<DBC,SQL,DBCQuery,SQLQuery,E>{
     protected abstract DBCTable(): Table<any,DBCQuery,DBC> & { add: (id: number)=>DBC}
     protected abstract SQLTable(): Table<any,SQLQuery,SQL> & { add: (id: number)=>SQL}
-    protected abstract Clear(e: E, mod: string, name: string): void;
-    protected abstract Clone(e: E, parent: E, mod: string, name: string): void;
+    protected abstract Clear(e: E, mod: string, id: string): void;
+    protected abstract Clone(e: E, parent: E, mod: string, id: string): void;
     protected abstract IDs(): StaticIDGenerator;
 
-    create(mod: string, name: string, parent = this.nullID()) {
-        let id = this.IDs().id(mod,name);
+    create(mod: string, id: string, parent = this.nullID()) {
+        let nid = this.IDs().id(mod,id);
         if(parent !== this.nullID()) {
             let parentDbc = this.LoadDBC(parent);
             let parentSql = this.LoadSQL(parent);
             let parentEntity = this.EntityFromBoth(parentDbc,parentSql);
-            let dbcRow = parentDbc.clone(id);
-            let sqlRow = parentSql.clone(id);
+            let dbcRow = parentDbc.clone(nid);
+            let sqlRow = parentSql.clone(nid);
             let entity = this.EntityFromBoth(dbcRow,sqlRow);
-            this.Clone(entity,parentEntity,mod,name);
+            this.Clone(entity,parentEntity,mod,id);
             return entity;
         } else {
-            let dbcRow = this.DBCTable().add(id);
-            let sqlRow = this.SQLTable().add(id);
+            let dbcRow = this.DBCTable().add(nid);
+            let sqlRow = this.SQLTable().add(nid);
             let entity = this.EntityFromBoth(dbcRow,sqlRow);
-            this.Clear(entity,mod,name);
+            this.Clear(entity,mod,id);
             return entity;
         }
     }

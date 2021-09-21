@@ -39,7 +39,7 @@ export class EnchantmentRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.SpellItemEnchantment
     }
-    Clear(r: Enchantment, mod: string, name: string): void {
+    Clear(r: Enchantment): void {
         r.Charges.set(0)
          .Condition.set(0)
          .Effects.clearAll()
