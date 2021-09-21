@@ -1,9 +1,21 @@
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
 import { MainEntity } from "../Misc/Entity";
-import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
-import { SpellRegistry } from "../Spell/Spells";
+import { SkillLineAbility } from "../Spell/SpellSkillLines";
 import { SkillRaceClassInfos } from "./SkillRaceClassInfo";
+
+export class SkillLineAbilities extends MultiRowSystem<SkillLineAbility,SkillLine> {
+    protected getAllRows(): SkillLineAbility[] {
+        return DBC.SkillLineAbility
+            .filter({SkillLine:this.owner.ID})
+            .map(x=>new SkillLineAbility(x))
+    }
+    protected isDeleted(value: SkillLineAbility): boolean {
+        return value.row.isDeleted();
+    }
+}
 
 export class SkillLine extends MainEntity<SkillLineRow> {
     get AlternateVerb() { return this.wrapLoc(this.row.AlternateVerb); }
@@ -15,14 +27,5 @@ export class SkillLine extends MainEntity<SkillLineRow> {
     get SkillCosts() { return this.wrap(this.row.SkillCostsID); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get RaceClassInfos() { return new SkillRaceClassInfos(this); }
-
-    modCreateSpell(mod: string, id: string, autolearn: boolean, parent?: number, callback: (spell: Spell)=>void = ()=>{}) {
-        callback(this.getCreateSpell(mod,id,autolearn,parent));
-        return this;
-    }
-
-    getCreateSpell(mod: string, id: string, autolearn: boolean, parent?: number) {
-        return SpellRegistry.create(mod,id,parent)
-            .SkillLines.addMod(this.ID,autolearn)
-    }
+    get Abilities() { return new SkillLineAbilities(this); }
 }

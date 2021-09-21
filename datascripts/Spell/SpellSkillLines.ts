@@ -26,7 +26,7 @@ import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
 
-export class TrivialSkillLineRank extends CellSystem<SpellSkillLineAbility> {
+export class TrivialSkillLineRank extends CellSystem<SkillLineAbility> {
     get High() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankHigh); }
     get Low() { return this.ownerWrap(this.owner.row.TrivialSkillLineRankLow); }
     set(low: number, high: number) {
@@ -36,7 +36,7 @@ export class TrivialSkillLineRank extends CellSystem<SpellSkillLineAbility> {
     }
 }
 
-export class SpellSkillLineAbility extends MainEntity<SkillLineAbilityRow> {
+export class SkillLineAbility extends MainEntity<SkillLineAbilityRow> {
     get ID() { return this.row.ID.get(); }
     get RaceMask() { return this.wrap(this.row.RaceMask); }
     get ClassMask() { return this.wrap(this.row.ClassMask); }
@@ -61,18 +61,18 @@ export class SpellSkillLineAbility extends MainEntity<SkillLineAbilityRow> {
     }
 }
 
-export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility,Spell> {
+export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spell> {
     static getAllRows(slas: SpellSkillLineAbilites) {
         return slas.getAllRows();
     }
 
-    protected getAllRows(): SpellSkillLineAbility[] {
+    protected getAllRows(): SkillLineAbility[] {
         return DBC.SkillLineAbility
             .filter({Spell: this.owner.ID})
-            .map(x=>new SpellSkillLineAbility(x));
+            .map(x=>new SkillLineAbility(x));
     }
 
-    protected isDeleted(value: SpellSkillLineAbility): boolean {
+    protected isDeleted(value: SkillLineAbility): boolean {
         return value.row.isDeleted()
     }
 
@@ -83,7 +83,7 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility
     addMod(
         skillLine: number
       , autolearn: boolean = false
-      , callback: (sla: SpellSkillLineAbility)=>void = ()=>{}
+      , callback: (sla: SkillLineAbility)=>void = ()=>{}
       )
       {
         callback(this.addGet(skillLine,autolearn));
@@ -107,7 +107,7 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility
 
         let row = DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
 
-        let sla = new SpellSkillLineAbility(row
+        let sla = new SkillLineAbility(row
             .SkillLine.set(skillLine)
             .ClassMask.set(classmask)
             .RaceMask.set(racemask)
@@ -121,7 +121,7 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SpellSkillLineAbility
 
 export class SkillLineAbilityRegistryClass
     extends RegistryDynamic<
-          SpellSkillLineAbility
+          SkillLineAbility
         , SkillLineAbilityRow
         , SkillLineAbilityQuery
     >
@@ -132,7 +132,7 @@ export class SkillLineAbilityRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.SkillLineAbility
     }
-    Clear(entity: SpellSkillLineAbility): void {
+    Clear(entity: SkillLineAbility): void {
         entity.AcquireMethod.set(1)
               .SkillLine.set(0)
               .CharacterPoints.fill(0)
@@ -151,11 +151,11 @@ export class SkillLineAbilityRegistryClass
     protected EmptyQuery(): SkillLineAbilityQuery {
         return {}
     }
-    ID(e: SpellSkillLineAbility): number {
+    ID(e: SkillLineAbility): number {
         return e.ID
     }
-    protected Entity(r: SkillLineAbilityRow): SpellSkillLineAbility {
-        return new SpellSkillLineAbility(r);
+    protected Entity(r: SkillLineAbilityRow): SkillLineAbility {
+        return new SkillLineAbility(r);
     }
 }
 

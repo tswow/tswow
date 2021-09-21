@@ -33,7 +33,7 @@ import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
-import { SpellSkillLineAbilites, SpellSkillLineAbility } from "../Spell/SpellSkillLines";
+import { SpellSkillLineAbilites, SkillLineAbility } from "../Spell/SpellSkillLines";
 import { std } from "../tswow-stdlib-data";
 
 export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
@@ -119,15 +119,15 @@ export class LanguageSkills extends MultiRowSystem<SkillLine,WoWLanguage> {
     }
 }
 
-export class LanguageAbilities extends MultiRowSystem<SpellSkillLineAbility,WoWLanguage> {
-    protected getAllRows(): SpellSkillLineAbility[] {
-        let rows: SpellSkillLineAbility[] = [];
+export class LanguageAbilities extends MultiRowSystem<SkillLineAbility,WoWLanguage> {
+    protected getAllRows(): SkillLineAbility[] {
+        let rows: SkillLineAbility[] = [];
         this.owner.Spells.forEach(x=>{
             rows = rows.concat(SpellSkillLineAbilites.getAllRows(x.SkillLines))
         });
         return rows;
     }
-    protected isDeleted(value: SpellSkillLineAbility): boolean {
+    protected isDeleted(value: SkillLineAbility): boolean {
         return value.row.isDeleted();
     }
 }
