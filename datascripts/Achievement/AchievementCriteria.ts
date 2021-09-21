@@ -336,7 +336,7 @@ export class LootMoney extends CriteriaBase {
 }
 
 export class UseGameObject extends CriteriaBase {
-    get GameObjectTemplate() { return this.wrap(this.row.Asset_Id); }
+    get GOTemplate() { return this.wrap(this.row.Asset_Id); }
     get UseCount() { return this.wrap(this.row.Quantity); }
 }
 
@@ -345,7 +345,7 @@ export class SpecialPVPKill extends CriteriaBase {
 }
 
 export class FishInGameObject extends CriteriaBase {
-    get GameObjectEntry() { return this.wrap(this.row.Asset_Id); }
+    get GOTemplate() { return this.wrap(this.row.Asset_Id); }
     get LootCount() { return this.wrap(this.row.Quantity); }
 }
 

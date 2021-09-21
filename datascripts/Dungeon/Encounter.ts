@@ -110,7 +110,7 @@ export class DungeonEncounterPlain extends DungeonEncounter {
 }
 
 export class DungeonEncounterCreature extends DungeonEncounter {
-    get Creature() {
+    get CreatureTemplate() {
         return CreatureTemplateRegistry.ref(
               this
             , this.wrapSQL(0,sql=>sql.creditEntry)

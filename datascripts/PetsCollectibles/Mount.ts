@@ -89,7 +89,7 @@ export class Mount extends MainEntity<SpellRow> {
      * and an additional ~80 mounts that have seemingly no way to learn to learn it at all.
      */
     get Items() { return new MountItems(this); }
-    get Creature() {
+    get CreatureTemplate() {
         return CreatureTemplateRegistry.ref(
               this
             , this.wrapIndex(this.row.EffectMiscValue,this.mountIndex())

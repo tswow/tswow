@@ -228,7 +228,7 @@ export class TradeSkill extends EffectTemplate {
 // 49
 // 50
 export class TransDoor extends TargetBase {
-    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
+    get GOTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 51
 // 52
@@ -309,7 +309,7 @@ export class ApplyGlyph extends EffectTemplate {
 export class HealMechanical extends HealBase {}
 // 76
 export class SummonObjectWild extends TargetBase {
-    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
+    get GOTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 77
 export class ScriptEffect extends TargetBase {
@@ -405,7 +405,7 @@ export class SetGameObjectDestructibleState extends DamageBase {
 }
 // 90
 export class KillCredit extends TargetBase {
-    get Creature() { return CreatureTemplateRegistry.ref(this, this.owner.MiscValueA); }
+    get CreatureTemplate() { return CreatureTemplateRegistry.ref(this, this.owner.MiscValueA); }
 }
 // 91
 // 92
@@ -458,19 +458,19 @@ export class Reputation extends PointsBase {
 }
 // 104
 export class SummonObjectSlot1 extends TargetBase {
-    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
+    get GOTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 105
 export class SummonObjectSlot2 extends TargetBase {
-    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
+    get GOTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 106
 export class SummonObjectSlot3 extends TargetBase {
-    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
+    get GOTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 107
 export class SummonObjectSlot4 extends TargetBase {
-    get GameObjectTemplate() { return this.wrap(this.owner.MiscValueA); }
+    get GOTemplate() { return this.wrap(this.owner.MiscValueA); }
 }
 // 108
 export class DispelMechanic extends TargetBase {

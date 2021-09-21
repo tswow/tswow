@@ -18,6 +18,7 @@ import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { NPCFlags } from "../Creature/NPCFlags";
 import { GameObjectInstance } from "../GameObject/GameObjectInstance";
 import { GORegistry } from "../GameObject/GameObjectRegistries";
+import { GameObjectInstanceRegistryClass, GameObjectInstances } from "../GameObject/GameObjects";
 import { GameObjectTemplate } from "../GameObject/GameObjectTemplate";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
@@ -112,7 +113,7 @@ export type SpawnType = 'SPAWNS'|'DESPAWNS'
 
 export class CreatureGameEvent extends GameEventRelationBase<game_event_creatureRow>{
     get Event() { return new PositiveNegativeCell(this, this.row.eventEntry); }
-    get Creature() {
+    get CreatureInstance() {
         return CreatureInstanceRegistry
             .readOnlyRef(this, this.row.guid);
     }
@@ -187,7 +188,7 @@ export class CreatureGameEventsBackwards extends GameEventMultiRowSystem<Creatur
 
  export class CreatureQuestGameEvent extends GameEventRelationBase<game_event_creature_questRow>{
     get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
-    get Creature() { return CreatureTemplateRegistry.readOnlyRef(this, this.row.id); }
+    get CreatureInstance() { return CreatureTemplateRegistry.readOnlyRef(this, this.row.id); }
     get Quest() { return QuestRegistry.readOnlyRef(this, this.row.quest); }
 }
 
@@ -268,8 +269,8 @@ export class CreatureQuestGameEventsBackward extends GameEventMultiRowSystem<Cre
 
 export class GameObjectGameEvent extends GameEventRelationBase<game_event_gameobjectRow>{
     get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
-    get GameObject() {
-        return CreatureInstanceRegistry
+    get GOInstance() {
+        return GameObjectInstances
             .readOnlyRef(this, this.row.guid);
     }
 }
@@ -420,7 +421,7 @@ export class GameEventModelEquipBackward extends GameEventRelationBase<game_even
     get Event() { return GameEventRegistry.ref(this, this.row.eventEntry )}
     get Model() { return this.wrap(this.row.modelid); }
     get Equipment() { return this.wrap(this.row.equipment_id); }
-    get Creature() {
+    get CreatureInstance() {
         return CreatureInstanceRegistry
             .readOnlyRef(this, this.row.guid);
     }
@@ -438,7 +439,7 @@ export class GameEventModelEquipsBackward extends GameEventMultiRowSystem<GameEv
 
 export class GameEventNPCFlag extends GameEventRelationBase<game_event_npcflagRow> {
     get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
-    get Creature() {
+    get CreatureInstance() {
         return CreatureInstanceRegistry
             .readOnlyRef(this, this.row.guid);
     }
@@ -493,7 +494,7 @@ export class GameEventModelNPCFlagsBackward extends GameEventMultiRowSystem<Game
 
 export class GameEventNPCVendor extends GameEventRelationBase<game_event_npc_vendorRow> {
     get Event() { return GameEventRegistry.readOnlyRef(this, this.row.eventEntry)}
-    get Creature() {
+    get CreatureInstance() {
         return CreatureInstanceRegistry
             .readOnlyRef(this, this.row.guid);
     }

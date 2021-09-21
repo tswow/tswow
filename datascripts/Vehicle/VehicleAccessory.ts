@@ -20,13 +20,13 @@ export class VehicleAccessoryBase<
 }
 
 export class VehicleTemplateAccessory extends VehicleAccessoryBase<vehicle_template_accessoryRow> {
-    get Creature() {
+    get CreatureTemplate() {
         return CreatureTemplateRegistry.readOnlyRef(this, this.row.entry);
     }
 }
 
 export class VehicleInstanceAccessory extends VehicleAccessoryBase<vehicle_accessoryRow> {
-    get Creature() {
+    get CreatureTemplate() {
         return CreatureInstanceRegistry.readOnlyRef(this, this.row.guid);
     }
 }

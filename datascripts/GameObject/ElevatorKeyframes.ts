@@ -74,7 +74,7 @@ export class RotationRowCell extends MaybeCell<number,TransportRotationRow,Eleva
         }
         return DBC.TransportRotation.add(Ids.TransportRotation.id())
             .TimeIndex.set(this.owner.Time.get())
-            .GameObjectsID.set(this.owner.GameObject.get())
+            .GameObjectsID.set(this.owner.GOTemplate.get())
             .RotW.set(1)
             .RotX.set(0)
             .RotY.set(0)
@@ -114,7 +114,7 @@ export class TranslationRowCell extends MaybeCell<number,TransportAnimationRow,E
         }
         return DBC.TransportAnimation.add(Ids.TransportRotation.id())
             .TimeIndex.set(this.owner.Time.get())
-            .TransportID.set(this.owner.GameObject.get())
+            .TransportID.set(this.owner.GOTemplate.get())
             .PosX.set(0)
             .PosY.set(0)
             .PosZ.set(0)
@@ -136,7 +136,7 @@ export class ElevatorTranslation extends CellSystem<ElevatorKeyframe> {
 
 export class ElevatorSequenceKeyframe extends MainEntity<TransportAnimationRow> {
     get Sequence() { return this.wrap(this.row.SequenceID); }
-    get GameObject() { return this.wrap(this.row.TransportID); }
+    get GOTemplate() { return this.wrap(this.row.TransportID); }
     get Position() { return new PositionXYZCell(this, this.row.PosX, this.row.PosY,this.row.PosZ); }
     get Time() { return this.wrap(this.row.TimeIndex); }
 }
@@ -171,12 +171,12 @@ export class ElevatorKeyframe extends CellSystemTop {
     get rotation_row(): TransportRotationRow|undefined {
         return (this._rotation_row
             && this._rotation_row.TimeIndex.get() == this.time
-            && this._rotation_row.GameObjectsID.get() == this.GameObject.get()
+            && this._rotation_row.GameObjectsID.get() == this.GOTemplate.get()
             )
             ? this._rotation_row
             : ( this._rotation_row =
                     DBC.TransportRotation
-                        .find({GameObjectsID:this.GameObject.get(),TimeIndex:this.time})
+                        .find({GameObjectsID:this.GOTemplate.get(),TimeIndex:this.time})
             )
     }
 
@@ -190,11 +190,11 @@ export class ElevatorKeyframe extends CellSystemTop {
             ? this._translation_row
             : ( this._translation_row =
                     DBC.TransportAnimation
-                        .find({TransportID:this.GameObject.get(),TimeIndex:this.time,SequenceID:0})
+                        .find({TransportID:this.GOTemplate.get(),TimeIndex:this.time,SequenceID:0})
             )
     }
 
-    get GameObject() {
+    get GOTemplate() {
         return new CellBasic(this,()=>this.gameobject,(value)=>{
             this.gameobject = value;
             if(this.translation_row) {
@@ -433,7 +433,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
             new ElevatorSequenceKeyframe(row)
                 .Position.setSpread(frame.x||0,frame.y||0,frame.z||0)
                 .Time.set(frame.time)
-                .GameObject.set(this.owner.ID)
+                .GOTemplate.set(this.owner.ID)
                 .row.undelete();
         })
     }

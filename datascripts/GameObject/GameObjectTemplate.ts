@@ -465,7 +465,10 @@ export class GameObjectGuardPost extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Creature() { return new RefUnknown(this, this.row.Data0); }
+    /** Assume this is a template, but it's not used in tc */
+    get CreatureTemplateUnused() {
+        return new RefUnknown(this, this.row.Data0);
+    }
     get Charges() { return this.wrap(this.row.Data1); }
 }
 

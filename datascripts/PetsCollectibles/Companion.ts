@@ -82,7 +82,7 @@ export class Companion extends MainEntity<SpellRow> {
     }
 
     get Items() { return new CompanionItems(this); }
-    get Creature() {
+    get CreatureTemplate() {
         return CreatureTemplateRegistry.ref(
               this
             , this.wrapIndex(this.row.EffectMiscValue,this.mountIndex())

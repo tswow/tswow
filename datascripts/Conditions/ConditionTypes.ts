@@ -199,12 +199,12 @@ export class ConditionQuestComplete extends ConditionBase {
 }
 
 export class ConditionNearCreature extends ConditionBase {
-    get Creature() { return CreatureTemplateRegistry.readOnlyRef(this, this.v1); }
+    get CreatureTemplate() { return CreatureTemplateRegistry.readOnlyRef(this, this.v1); }
     get Distance() { return this.v2; }
 }
 
 export class ConditionNearGameObject extends ConditionBase {
-    get GameObject() {
+    get GOTemplate() {
         return GORegistry.Plain.readOnlyRef(this, this.v1);
     }
     get Distance() { return this.v2; }
