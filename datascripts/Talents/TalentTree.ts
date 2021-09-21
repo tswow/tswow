@@ -15,64 +15,75 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
-import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SpellRegistry } from "../Spell/Spells";
 import { Talent } from "./Talent";
+
+export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
+    protected getAllRows(): Talent[] {
+        return DBC.Talent.filter({TabID:this.owner.ID})
+            .map(x=>new Talent(x));
+    }
+    protected isDeleted(value: Talent): boolean {
+        return value.row.isDeleted();
+    }
+
+    getPos(row: number, column: number) {
+        return new Talent(DBC.Talent
+            .find({
+                  TabID:this.owner.ID
+                , ColumnIndex:column
+                , TierID:row
+            }))
+    }
+
+    modPos(row: number, column: number, callback: (talent: Talent)=>void) {
+        callback(this.getPos(row,column));
+        return this.owner;
+    }
+
+    addGet(mod: string, id: string, row: number, column: number, ranks: number, parentSpell = 0) {
+        let spellids: number[] = []
+        for(let i=0;i<ranks;++i) {
+            spellids.push(
+                SpellRegistry.create(
+                    mod,`${id}-spell-${i}`,parentSpell,true
+                ).ID
+            )
+        }
+        let talent = new Talent(
+            DBC.Talent.add(Ids.Talent.id(mod,id))
+                .TabID.set(this.owner.ID)
+                .PrereqTalent.set([0,0,0])
+                .PrereqRank.set([0,0,0])
+                .CategoryMask.set([0,0])
+                .SpellRank.set([0,0,0,0,0,0,0])
+        )
+        talent.Spells.add(spellids)
+        talent.row
+            .TierID.set(row)
+            .ColumnIndex.set(column)
+        return talent;
+    }
+
+    /**
+     * @param parentSpell set to 0 for no parent
+     * @returns
+     */
+    addMod(mod: string, id: string, row: number, column: number, ranks: number, parentSpell: number, callback: (talent: Talent)=>void) {
+        callback(this.addGet(mod,id,row,column,ranks,parentSpell));
+        return this.owner;
+    }
+}
 
 export class TalentTree extends MainEntity<TalentTabRow> {
     get ID() { return this.row.ID.get(); }
     get Name() { return this.wrapLoc(this.row.Name); }
     get BackgroundImage() { return this.wrap(this.row.BackgroundFile); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
-
-    forEach(callback: (talent: Talent)=>void) {
-        DBC.Talent.filter({TabID:this.ID})
-            .map(x=>new Talent(x))
-            .forEach(callback);
-        return this;
-    }
-
-    get(row: number, column: number) {
-        return new Talent(DBC.Talent.find({TierID:this.ID,ColumnIndex:column,TabID:row}));
-    }
-
-    mod(row: number, column: number, callback: (talent: Talent)=>void) {
-        callback(this.get(row,column));
-        return this;
-    }
-
-    addSpells(mod: string, id: string, spellCount: number, parentSpell = 0) {
-        let spells: Spell[] = [];
-        for(let i=0;i<spellCount;++i) {
-            spells.push(SpellRegistry.create(mod,`${id}-spell-rank-${i}`,parentSpell));
-        }
-        spells.forEach((x,i)=>{
-            x.Rank.set(spells[0].ID,i+1);
-        })
-        return this.add(mod,`${id}-talent`)
-            .Spells.add(...spells.map(x=>x.ID));
-    }
-
-    addSpellsMod(mod: string, id: string, spellCount: number, callback: (talent: Talent)=>void) {
-        callback(this.addSpells(mod,id,spellCount))
-        return this.owner;
-    }
-
-    addMod(mod: string, id: string, callback: (talent: Talent)=>void = ()=>{}) {
-        callback(this.add(mod,id))
-    }
-
-    add(mod: string, id: string) {
-        const talent = DBC.Talent.add(Ids.Talent.id(mod,id))
-            .TabID.set(this.ID)
-            .PrereqTalent.set([0,0,0])
-            .PrereqRank.set([0,0,0])
-            .CategoryMask.set([0,0])
-            .SpellRank.set([0,0,0,0,0,0,0])
-        return new Talent(talent);
-    }
+    get Talents() { return new TalentTreeTalents(this); }
 }

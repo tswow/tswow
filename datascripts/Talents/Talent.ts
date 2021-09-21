@@ -27,10 +27,6 @@ export class TalentSpells extends CellSystem<Talent> {
         return this.owner.row.SpellRank.length();
     }
 
-    isValid(index: number) {
-        return this.owner.row.SpellRank.getIndex(index) > 0;
-    }
-
     get(index: number) {
         return SpellRegistry.load(this.owner.row.SpellRank.getIndex(index));
     }
@@ -40,7 +36,7 @@ export class TalentSpells extends CellSystem<Talent> {
         return this.owner;
     }
 
-    add(...spellId: number[]) {
+    add(spellId: number[]) {
         for(let i=0;i<this.owner.row.SpellRank.length();++i) {
             if(spellId.length === 0) return this.owner;
             if(this.owner.row.SpellRank.getIndex(i) === 0) {
@@ -54,7 +50,7 @@ export class TalentSpells extends CellSystem<Talent> {
             );
     }
 
-    forEachSpell(callback: (spell: Spell, index: number)=>void) {
+    forEach(callback: (spell: Spell, index: number)=>void) {
         this.owner.row.SpellRank.get().forEach((x,i)=>{
             if(x>0) { callback(SpellRegistry.load(x),i); }
         })
