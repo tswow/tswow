@@ -48,7 +48,6 @@ import { ItemRequirements } from "./ItemRequirements";
 import { ItemResistance } from "./ItemResistances";
 import { ItemScalingStat } from "./ItemScalingStat";
 import { ItemSheath } from "./ItemSheath";
-import { ItemSkillRequirement } from "./ItemSkillRequirement";
 import { ItemSockets } from "./ItemSocket";
 import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
@@ -89,7 +88,6 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Disenchant() { return Loot.Disenchant.ref(this, this.sqlRow.DisenchantID); }
     get RequiredLevel() { return this.wrap(this.sqlRow.RequiredLevel); }
     get ItemLevel() { return this.wrap(this.sqlRow.ItemLevel); }
-    get SkillRequirement() { return new ItemSkillRequirement(this); }
     get RequiredSpell() { return this.wrap(this.sqlRow.requiredspell); }
     get RequiredHonorRank() { return this.wrap(this.sqlRow.requiredhonorrank); }
     get ClassMask() { return new ClassMask(this, this.sqlRow.AllowableClass, true); }
@@ -218,12 +216,12 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .RequiredHonorRank.set(0)
          .RequiredLevel.set(0)
          .RequiredSpell.set(0)
+         .Requirements.Skill.clear()
          .Requirements.clearAll()
          .Resistances.clearAll()
          .ScalingStats.set(0,0)
          .ScriptName.set('')
          .Sheath.None.set()
-         .SkillRequirement.set(0,0)
          .Socket.clearAll()
          .SoundOverride.set(0)
          .Spells.clearAll()
