@@ -136,6 +136,11 @@ export class EnumValueTransform<T extends Objectified,V extends Objectified> {
         verifyAs(this.index, this.cell.get())
         return this.transformer(this.owner);
     }
+
+    on(callback: (value: V)=>void) {
+        if(this.is()) callback(this.as());
+        return this.owner;
+    }
 }
 
 export abstract class TransformedClass<T> extends CellSystemTop {
