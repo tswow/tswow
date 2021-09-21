@@ -139,10 +139,10 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
 
     findEffect<T extends Objectified>(callback: (effect: SpellEffectType)=>EnumValueTransform<SpellEffect,T>): T {
         let v1 = callback(this.get(0).EffectType);
-        if(v1.isSelected()) return v1.as();
+        if(v1.is()) return v1.as();
 
         let v2 = callback(this.get(0).EffectType);
-        if(v2.isSelected()) return v2.as();
+        if(v2.is()) return v2.as();
 
         let v3 = callback(this.get(0).EffectType);
 
@@ -177,7 +177,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         const SPELL_CHAIN_TOKEN = '__tswow_spell_chain';
         function getNextSpell(spell: Spell) {
             for(let i=0;i<3;++i) {
-                if(!spell.Effects.get(i).EffectType.TriggerSpell.isSelected()) {
+                if(!spell.Effects.get(i).EffectType.TriggerSpell.is()) {
                     continue;
                 }
                 let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());

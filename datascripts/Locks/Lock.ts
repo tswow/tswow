@@ -223,14 +223,14 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
 
     isOfType(lockType: number) {
         return this.find(x=>
-               x.Type.LockType.isSelected()
+               x.Type.LockType.is()
             && x.Type.LockType.as().LockType.get() === lockType
         )
     }
 
     requiresItem(item: number) {
         return this.find(x=>
-               x.Type.ItemTemplate.isSelected()
+               x.Type.ItemTemplate.is()
             && x.Type.ItemTemplate.as().ItemTemplate.get() === item
         )
     }
