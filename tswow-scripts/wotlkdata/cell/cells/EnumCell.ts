@@ -141,6 +141,10 @@ export class EnumValueTransform<T extends Objectified,V extends Objectified> {
         if(this.is()) callback(this.as());
         return this.owner;
     }
+
+    if() {
+        return this.is() ? this.as() : undefined;
+    }
 }
 
 export abstract class TransformedClass<T> extends CellSystemTop {
