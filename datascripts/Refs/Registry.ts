@@ -99,7 +99,7 @@ export abstract class RegistryStaticNoRef<
     abstract Clear(r: E, mod: string, name: string): void;
     protected Clone(mod: string, name: string, r: E, parent: E) {}
 
-    create(mod: string, name: string, parent: number = 0) {
+    create(mod: string, name: string, parent: number = this.nullID()) {
         let id = this.IDs().id(mod,name);
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
@@ -162,7 +162,7 @@ export abstract class RegistryDynamicNoRef<
     abstract Clear(entity: E): void;
     protected Clone(entity: E, parent: E) {}
 
-    create(parent: number = 0) {
+    create(parent: number = this.nullID()) {
         let id = this.ids().id();
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
