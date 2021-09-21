@@ -49,7 +49,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .Quality.Blue.set()
             .ClassMask.set(-1)
             .Bonding.BindsOnPickup.set()
-            .Class.setMount()
+            .Class.Mount.set()
             .Material.Liquid.set()
             .InventoryType.NonEquippable.set()
             .Spells.addMod((ispell=>{

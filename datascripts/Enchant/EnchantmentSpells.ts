@@ -76,7 +76,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                         .Trigger.OnUse.set()
                         .Charges.set(-1)
                 })
-                .Class.setItemEnhancement()
+                .Class.ItemEnhancement.set()
                 .Material.Cloth.set()
                 .Flags.PlayerCast.set(true)
                 .Flags.IgnoreReagents.set(true)

@@ -181,7 +181,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .BagFamily.set(0)
          .BlockChance.set(0)
          .Bonding.NoBounds.set()
-         .Class.setJunk()
+         .Class.Junk.set()
          .ClassMask.clearAll()
          .ContainerSlots.set(0)
          .Damage.clearAll()

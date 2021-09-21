@@ -1,41 +1,66 @@
 /*
- * This file is part of tswow (https://github.com/tswow)
- *
- * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- */
+* This file is part of tswow (https://github.com/tswow)
+*
+* Copyright (C) 2020 tswow <https://github.com/tswow/>
+* This program is free software: you can redistribute it and/or
+* modify it under the terms of the GNU General Public License as
+* published by the Free Software Foundation, version 3.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+* See the GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
+import { Objects } from "wotlkdata/cell/serialization/ObjectIteration";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
-let itemClassFields : {[key: string]: string} = {}
-function indexKey(indexA: number, indexB: number) {
-    return `${indexA},${indexB}`
-}
+export class ItemClassEnumValue {
+    protected owner: ItemTemplate;
 
-function ItemClassField(indexA: number, indexB: number) {
-    return function(target: any, field: string) {
-        if(field.startsWith('set')) field = field.substring(3);
-        itemClassFields[indexKey(indexA,indexB)] = field
+    protected cls: number;
+    protected subclass: number;
+
+    constructor(owner: ItemTemplate, cls: number, subclass: number) {
+        this.owner    = owner;
+        this.cls      = cls;
+        this.subclass = subclass;
+    }
+
+    protected get isEnum() { return true; }
+
+    is() {
+        return this.owner.row.class.get() === this.cls
+        && this.owner.row.subclass.get() === this.subclass;
+    }
+
+    on(callback: (value: ItemTemplate)=>void) {
+        if(this.is()) callback(this.owner);
+        return this.owner;
+    }
+
+    set() {
+        this.owner.row
+            .class.set(this.cls)
+            .subclass.set(this.subclass)
+        return this.owner;
     }
 }
 
 export class ItemClass extends CellSystem<ItemTemplate> {
     objectify() {
-        let field = itemClassFields[indexKey(this.getClass(),this.getSubclass())]
-        if(field!==undefined) {
-            return field;
-        } else {
-            return {class: this.getClass(), subclass: this.getSubclass()};
+        let enums = Objects.mapObject(this,['object'],(k,v)=>v.isEnum);
+        for(const [key,value] of Object.entries(enums)) {
+            if(value.is()) {
+                return key;
+            }
+        }
+        return {
+              class:this.owner.row.class.get()
+            , subclass:this.owner.row.subclass.get()
         }
     }
 
@@ -44,7 +69,7 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     }
 
     getSubclass(): number {
-            return this.owner.row.subclass.get();
+        return this.owner.row.subclass.get();
     }
 
     set(cls: number, subclass: number): ItemTemplate {
@@ -56,250 +81,145 @@ export class ItemClass extends CellSystem<ItemTemplate> {
         return this.owner;
     }
 
+    protected value(cls: number, id: number) {
+        return new ItemClassEnumValue(this.owner,cls,id);
+    }
+
     // Consumables
-    @ItemClassField(0,0)
-    setConsumable() { return this.set(0,0) ;}
-    @ItemClassField(0,1)
-    setPotion() { return this.set(0,1)}
-    @ItemClassField(0,2)
-    setElixit() { return this.set(0,2)}
-    @ItemClassField(0,3)
-    setFlask() { return this.set(0,3)}
-    @ItemClassField(0,4)
-    setScroll() { return this.set(0,4)}
-    @ItemClassField(0,5)
-    setFoodDrink() { return this.set(0,5)}
-    @ItemClassField(0,6)
-    setItemEnhancement() { return this.set(0,6)}
-    @ItemClassField(0,7)
-    setBandage() { return this.set(0,7)}
-    @ItemClassField(0,8)
-    setOther() { return this.set(0,8)}
+    get Consumable()             { return this.value(0,0) }
+    get Potion()                 { return this.value(0,1) }
+    get Elixit()                 { return this.value(0,2) }
+    get Flask()                  { return this.value(0,3) }
+    get Scroll()                 { return this.value(0,4) }
+    get FoodDrink()              { return this.value(0,5) }
+    get ItemEnhancement()        { return this.value(0,6) }
+    get Bandage()                { return this.value(0,7) }
+    get Other()                  { return this.value(0,8) }
 
     // Containers
-    @ItemClassField(1,0)
-    setBag() { return this.set(1,0)}
-    @ItemClassField(1,1)
-    setSoulBag() { return this.set(1,1)}
-    @ItemClassField(1,2)
-    setHerbBag() { return this.set(1,2)}
-    @ItemClassField(1,3)
-    setEnchantingBag() { return this.set(1,3)}
-    @ItemClassField(1,4)
-    setEngineeringBag() { return this.set(1,4)}
-    @ItemClassField(1,5)
-    setGemBag() { return this.set(1,5)}
-    @ItemClassField(1,6)
-    setMiningBag() { return this.set(1,6)}
-    @ItemClassField(1,7)
-    setLeatherworkingBag() { return this.set(1,7)}
-    @ItemClassField(1,8)
-    setInscriptionBag() { return this.set(1,8)}
+    get Bag()                    { return this.value(1,0) }
+    get SoulBag()                { return this.value(1,1) }
+    get HerbBag()                { return this.value(1,2) }
+    get EnchantingBag()          { return this.value(1,3) }
+    get EngineeringBag()         { return this.value(1,4) }
+    get GemBag()                 { return this.value(1,5) }
+    get MiningBag()              { return this.value(1,6) }
+    get LeatherworkingBag()      { return this.value(1,7) }
+    get InscriptionBag()         { return this.value(1,8) }
 
     // Weapon
-    @ItemClassField(2,0)
-    setAxe1H() { return this.set(2,0)}
-    @ItemClassField(2,1)
-    setAxe2H() { return this.set(2,1)}
-    @ItemClassField(2,2)
-    setBow() { return this.set(2,2)}
-    @ItemClassField(2,3)
-    setGun() { return this.set(2,3)}
-    @ItemClassField(2,4)
-    setMace1H() { return this.set(2,4)}
-    @ItemClassField(2,5)
-    setMace2H() { return this.set(2,5)}
-    @ItemClassField(2,6)
-    setPolearm() { return this.set(2,6)}
-    @ItemClassField(2,7)
-    setSword1H() { return this.set(2,7)}
-    @ItemClassField(2,8)
-    setSword2H() { return this.set(2,8)}
-    @ItemClassField(2,9)
-    setObsolete() { return this.set(2,9)}
-    @ItemClassField(2,10)
-    setStaff() { return this.set(2,10)}
-    @ItemClassField(2,11)
-    setExotic() { return this.set(2,11)}
-    @ItemClassField(2,12)
-    setExotic2() { return this.set(2,12)}
-    @ItemClassField(2,13)
-    setFistWeapon() { return this.set(2,13)}
+    get Axe1H()                  { return this.value(2,0) }
+    get Axe2H()                  { return this.value(2,1) }
+    get Bow()                    { return this.value(2,2) }
+    get Gun()                    { return this.value(2,3) }
+    get Mace1H()                 { return this.value(2,4) }
+    get Mace2H()                 { return this.value(2,5) }
+    get Polearm()                { return this.value(2,6) }
+    get Sword1H()                { return this.value(2,7) }
+    get Sword2H()                { return this.value(2,8) }
+    get Obsolete()               { return this.value(2,9) }
+    get Staff()                  { return this.value(2,10) }
+    get Exotic()                 { return this.value(2,11) }
+    get Exotic2()                { return this.value(2,12) }
+    get FistWeapon()             { return this.value(2,13) }
     /** Blacksmith Hammer, Mining pick etc. */
-    @ItemClassField(2,14)
-    setMiscWeapon() { return this.set(2,14)}
-    @ItemClassField(2,15)
-    setDagger() { return this.set(2,15)}
-    @ItemClassField(2,16)
-    setThrown() { return this.set(2,16)}
-    @ItemClassField(2,17)
-    setSpear() { return this.set(2,17)}
-    @ItemClassField(2,18)
-    setCrossbow() { return this.set(2,18)}
-    @ItemClassField(2,19)
-    setWand() { return this.set(2,19)}
-    @ItemClassField(2,20)
-    setFishingPole() { return this.set(2,20)}
+    get MiscWeapon()             { return this.value(2,14) }
+    get Dagger()                 { return this.value(2,15) }
+    get Thrown()                 { return this.value(2,16) }
+    get Spear()                  { return this.value(2,17) }
+    get Crossbow()               { return this.value(2,18) }
+    get Wand()                   { return this.value(2,19) }
+    get FishingPole()            { return this.value(2,20) }
 
     // Gem
-    @ItemClassField(3,0)
-    setRedGem() { return this.set(3,0)}
-    @ItemClassField(3,1)
-    setBlueGem() { return this.set(3,1)}
-    @ItemClassField(3,2)
-    setYellowGem() { return this.set(3,2)}
-    @ItemClassField(3,3)
-    setPurpleGem() { return this.set(3,3)}
-    @ItemClassField(3,4)
-    setGreenGem() { return this.set(3,4)}
-    @ItemClassField(3,5)
-    setOrangeGem() { return this.set(3,5)}
-    @ItemClassField(3,6)
-    setMetaGem() { return this.set(3,6)}
-    @ItemClassField(3,7)
-    setSimpleGem() { return this.set(3,7)}
-    @ItemClassField(3,8)
-    setPrismaticGem() { return this.set(3,8)}
+    get RedGem()                 { return this.value(3,0) }
+    get BlueGem()                { return this.value(3,1) }
+    get YellowGem()              { return this.value(3,2) }
+    get PurpleGem()              { return this.value(3,3) }
+    get GreenGem()               { return this.value(3,4) }
+    get OrangeGem()              { return this.value(3,5) }
+    get MetaGem()                { return this.value(3,6) }
+    get SimpleGem()              { return this.value(3,7) }
+    get PrismaticGem()           { return this.value(3,8) }
 
     // Armor
-    @ItemClassField(4,0)
-    setMisc() { return this.set(4,0)}
-    @ItemClassField(4,1)
-    setClothEquip() { return this.set(4,1)}
-    @ItemClassField(4,2)
-    setLeatherEquip() { return this.set(4,2)}
-    @ItemClassField(4,3)
-    setMailEquip() { return this.set(4,3)}
-    @ItemClassField(4,4)
-    setPlateEquip() { return this.set(4,4)}
-    @ItemClassField(4,5)
-    setShieldEquip() { return this.set(4,5)}
-    @ItemClassField(4,6)
-    setLibramEquip() { return this.set(4,6)}
-    @ItemClassField(4,7)
-    setIdolEquip() { return this.set(4,7)}
-    @ItemClassField(4,8)
-    setTotemEquip() { return this.set(4,8)}
-    @ItemClassField(4,9)
-    setSigilEquip() { return this.set(4,9)}
+    get Misc()                   { return this.value(4,0) }
+    get ClothEquip()             { return this.value(4,1) }
+    get LeatherEquip()           { return this.value(4,2) }
+    get MailEquip()              { return this.value(4,3) }
+    get PlateEquip()             { return this.value(4,4) }
+    get ShieldEquip()            { return this.value(4,5) }
+    get LibramEquip()            { return this.value(4,6) }
+    get IdolEquip()              { return this.value(4,7) }
+    get TotemEquip()             { return this.value(4,8) }
+    get SigilEquip()             { return this.value(4,9) }
 
     // Reagent
-    @ItemClassField(5,0)
-    setReagentReagent() { return this.set(5,0)}
+    get ReagentReagent()         { return this.value(5,0) }
 
     // Projectiles
-    @ItemClassField(6,0)
-    setArrowEquip() { return this.set(6,0)}
-    @ItemClassField(6,1)
-    setBulletEquip() { return this.set(6,1)}
+    get ArrowEquip()             { return this.value(6,0) }
+    get BulletEquip()            { return this.value(6,1) }
 
     // TradeGoods
-    @ItemClassField(7,0)
-    setTradeGoods() { return this.set(7,0)}
-    @ItemClassField(7,1)
-    setTradeParts() { return this.set(7,1)}
-    @ItemClassField(7,2)
-    setTradeExplosives() { return this.set(7,2)}
-    @ItemClassField(7,3)
-    setTradeDevices() { return this.set(7,3)}
-    @ItemClassField(7,4)
-    setTradeJewelcrafting() { return this.set(7,4)}
-    @ItemClassField(7,5)
-    setTradeCloth() { return this.set(7,5)}
-    @ItemClassField(7,6)
-    setTradeLeather() { return this.set(7,6)}
-    @ItemClassField(7,7)
-    setTradeMetalStone() { return this.set(7,7)}
-    @ItemClassField(7,8)
-    setTradeMeat() { return this.set(7,8)}
-    @ItemClassField(7,9)
-    setTradeHerb() { return this.set(7,9)}
-    @ItemClassField(7,10)
-    setTradeElemental() { return this.set(7,10)}
-    @ItemClassField(7,11)
-    setTradeOther() { return this.set(7,11)}
-    @ItemClassField(7,12)
-    setTradeEnchanting() { return this.set(7,12)}
-    @ItemClassField(7,13)
-    setTradeMaterials() { return this.set(7,13)}
-    @ItemClassField(7,14)
-    setTradeArmorEnchantment() { return this.set(7,14)}
-    @ItemClassField(7,15)
-    setTradeWeaponEnchantment() { return this.set(7,15)}
+    get TradeGoods()             { return this.value(7,0) }
+    get TradeParts()             { return this.value(7,1) }
+    get TradeExplosives()        { return this.value(7,2) }
+    get TradeDevices()           { return this.value(7,3) }
+    get TradeJewelcrafting()     { return this.value(7,4) }
+    get TradeCloth()             { return this.value(7,5) }
+    get TradeLeather()           { return this.value(7,6) }
+    get TradeMetalStone()        { return this.value(7,7) }
+    get TradeMeat()              { return this.value(7,8) }
+    get TradeHerb()              { return this.value(7,9) }
+    get TradeElemental()         { return this.value(7,10) }
+    get TradeOther()             { return this.value(7,11) }
+    get TradeEnchanting()        { return this.value(7,12) }
+    get TradeMaterials()         { return this.value(7,13) }
+    get TradeArmorEnchantment()  { return this.value(7,14) }
+    get TradeWeaponEnchantment() { return this.value(7,15) }
 
     // Recipes
-    @ItemClassField(9,0)
-    setBook() { return this.set(9,0)}
-    @ItemClassField(9,1)
-    setLeatherworkingRecipe() { return this.set(9,1)}
-    @ItemClassField(9,2)
-    setTailoringRecipe() { return this.set(9,2)}
-    @ItemClassField(9,3)
-    setEngineeringRecipe() { return this.set(9,3)}
-    @ItemClassField(9,4)
-    setBlacksmithingRecipe() { return this.set(9,4)}
-    @ItemClassField(9,5)
-    setCookingRecipe() { return this.set(9,5)}
-    @ItemClassField(9,6)
-    setAlchemyRecipe() { return this.set(9,6)}
-    @ItemClassField(9,7)
-    setFirstAidRecipe() { return this.set(9,7)}
-    @ItemClassField(9,8)
-    setEnchantingRecipe() { return this.set(9,8)}
-    @ItemClassField(9,9)
-    setFishingRecipe() { return this.set(9,9)}
-    @ItemClassField(9,10)
-    setJewelcraftingRecipe() { return this.set(9,10)}
+    get Book()                   { return this.value(9,0) }
+    get LeatherworkingRecipe()   { return this.value(9,1) }
+    get TailoringRecipe()        { return this.value(9,2) }
+    get EngineeringRecipe()      { return this.value(9,3) }
+    get BlacksmithingRecipe()    { return this.value(9,4) }
+    get CookingRecipe()          { return this.value(9,5) }
+    get AlchemyRecipe()          { return this.value(9,6) }
+    get FirstAidRecipe()         { return this.value(9,7) }
+    get EnchantingRecipe()       { return this.value(9,8) }
+    get FishingRecipe()          { return this.value(9,9) }
+    get JewelcraftingRecipe()    { return this.value(9,10)}
 
     // Quiver
-    @ItemClassField(11,2)
-    setQuiver() { return this.set(11, 2)}
-    @ItemClassField(11,3)
-    setAmmoPouch() { return this.set(11, 3)}
+    get Quiver()                 { return this.value(11, 2) }
+    get AmmoPouch()              { return this.value(11, 3) }
 
     // Quest
-    @ItemClassField(12,0)
-    setQuest() { return this.set(12,0)}
+    get Quest()                  { return this.value(12,0) }
 
     // Key
-    @ItemClassField(13,0)
-    setKey() { return this.set(13,0);}
-    @ItemClassField(13,1)
-    setLockpick() { return this.set(13,1);}
+    get Key()                    { return this.value(13,0) }
+    get Lockpick()               { return this.value(13,1) }
 
     // Misc
-    @ItemClassField(15,0)
-    setJunk() { return this.set(15,0);}
-    @ItemClassField(15,1)
-    setReagent() { return this.set(15,1);}
-    @ItemClassField(15,2)
-    setPet() { return this.set(15,2);}
-    @ItemClassField(15,3)
-    setHoliday() { return this.set(15,3);}
-    @ItemClassField(15,4)
-    setOtherMisc() { return this.set(15,4);}
-    @ItemClassField(15,5)
-    setMount() { return this.set(15,5);}
+    get Junk()                   { return this.value(15,0) }
+    get Reagent()                { return this.value(15,1) }
+    get Pet()                    { return this.value(15,2) }
+    get Holiday()                { return this.value(15,3) }
+    get OtherMisc()              { return this.value(15,4) }
+    get Mount()                  { return this.value(15,5) }
 
     // Class
-    @ItemClassField(16,1)
-    setWarrior() { return this.set(16,1);}
-    @ItemClassField(16,2)
-    setPaladin() { return this.set(16,2);}
-    @ItemClassField(16,3)
-    setHunter() { return this.set(16,3);}
-    @ItemClassField(16,4)
-    setRogue() { return this.set(16,4);}
-    @ItemClassField(16,5)
-    setPriest() { return this.set(16,5);}
-    @ItemClassField(16,6)
-    setDeathKnight() { return this.set(16,6);}
-    @ItemClassField(16,7)
-    setShaman() { return this.set(16,7);}
-    @ItemClassField(16,8)
-    setMage() { return this.set(16,8);}
-    @ItemClassField(16,9)
-    setWarlock() { return this.set(16,9);}
-    @ItemClassField(16,11)
-    setDruid() { return this.set(16,11);}
+    get Warrior()                { return this.value(16,1) }
+    get Paladin()                { return this.value(16,2) }
+    get Hunter()                 { return this.value(16,3) }
+    get Rogue()                  { return this.value(16,4) }
+    get Priest()                 { return this.value(16,5) }
+    get DeathKnight()            { return this.value(16,6) }
+    get Shaman()                 { return this.value(16,7) }
+    get Mage()                   { return this.value(16,8) }
+    get Warlock()                { return this.value(16,9) }
+    get Druid()                  { return this.value(16,11)}
 }

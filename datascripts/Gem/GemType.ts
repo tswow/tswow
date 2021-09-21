@@ -13,14 +13,14 @@ const PRISMATIC = 14;
 export class GemType extends EnumCell<Gem> {
     writeToItem() {
         switch(this.get()) {
-            case META: this.owner.Item.get().Class.setMetaGem();
-            case RED: this.owner.Item.get().Class.setRedGem();
-            case YELLOW: this.owner.Item.get().Class.setYellowGem();
-            case ORANGE: this.owner.Item.get().Class.setOrangeGem();
-            case BLUE: this.owner.Item.get().Class.setBlueGem();
-            case PURPLE: this.owner.Item.get().Class.setPurpleGem();
-            case GREEN: this.owner.Item.get().Class.setGreenGem();
-            case PRISMATIC: this.owner.Item.get().Class.setPrismaticGem();
+            case META: this.owner.Item.get().Class.MetaGem.set();
+            case RED: this.owner.Item.get().Class.RedGem.set();
+            case YELLOW: this.owner.Item.get().Class.YellowGem.set();
+            case ORANGE: this.owner.Item.get().Class.OrangeGem.set();
+            case BLUE: this.owner.Item.get().Class.BlueGem.set();
+            case PURPLE: this.owner.Item.get().Class.PurpleGem.set();
+            case GREEN: this.owner.Item.get().Class.GreenGem.set();
+            case PRISMATIC: this.owner.Item.get().Class.PrismaticGem.set();
         }
         return this.owner;
     }

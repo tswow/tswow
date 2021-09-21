@@ -51,7 +51,7 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
             .ClassMask.set(-1)
             .Bonding.BindsOnPickup.set()
             .Requirements.Skill.set(MOUNT_SKILL,DEFAULT_MOUNT_RANK)
-            .Class.setMount()
+            .Class.Mount.set()
             .Material.Liquid.set()
             .InventoryType.NonEquippable.set()
             .Spells.addMod((ispell=>{
