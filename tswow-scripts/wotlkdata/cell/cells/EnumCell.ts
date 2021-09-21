@@ -143,7 +143,7 @@ export class EnumValueTransform<T extends Objectified,V extends Objectified> {
     }
 
     if() {
-        return this.is() ? this.as() : undefined;
+        return (this.is() ? this.as() : undefined) as V;
     }
 }
 
