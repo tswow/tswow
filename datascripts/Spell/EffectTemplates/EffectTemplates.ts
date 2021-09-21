@@ -104,7 +104,7 @@ export class ExtraAttacks extends DamageBase {}
 // 23
 // 24
 export class CreateItem extends TargetBase {
-    get ItemTemplate() { return this.wrap(this.owner.ItemType); }
+    get Item() { return this.wrap(this.owner.ItemType); }
 
     /**
      * Set to desired item count -1 (i.e. set to 199 for 200)

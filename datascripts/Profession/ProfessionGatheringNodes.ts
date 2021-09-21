@@ -32,8 +32,8 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
         }
         itemsNeeded.forEach(item=>{
             lock.addMod(lock=>{
-                lock.Type.ItemTemplate.set()
-                    .ItemTemplate.set(item)
+                lock.Type.Item.set()
+                    .Item.set(item)
             })
         })
         GORegistry.Chests.create(mod,id)

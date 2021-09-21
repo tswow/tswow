@@ -259,7 +259,7 @@ export class LootItem extends CriteriaBase {
 }
 
 export class EquipItem extends CriteriaBase {
-    get ItemTemplate() { return this.wrap(this.row.Asset_Id); }
+    get Item() { return this.wrap(this.row.Asset_Id); }
     get ItemCount() { return this.wrap(this.row.Quantity); }
 }
 

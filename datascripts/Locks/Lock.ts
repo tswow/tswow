@@ -74,7 +74,7 @@ export class LockIndexLockType extends LockIndexBase {
 }
 
 export class LockIndexItem extends LockIndexBase {
-    get ItemTemplate() {
+    get Item() {
         return ItemTemplateRegistry.ref(
               this
             , this.wrapIndex(this.container.row.Index, this.index)
@@ -87,7 +87,7 @@ export class LockIndexType extends EnumCellTransform<LockIndexBase> {
         return LockIndexBase.container(this.owner);
     }
 
-    get ItemTemplate() {
+    get Item() {
         return this.value(
               1
             , t=>new LockIndexItem(this.container,t.index)
@@ -230,8 +230,8 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
 
     requiresItem(item: number) {
         return this.find(x=>
-               x.Type.ItemTemplate.is()
-            && x.Type.ItemTemplate.as().ItemTemplate.get() === item
+               x.Type.Item.is()
+            && x.Type.Item.as().Item.get() === item
         )
     }
 

@@ -61,8 +61,8 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
             )
         }
         requiredItems.forEach(x=>locks.addGet()
-            .Type.ItemTemplate.set()
-            .ItemTemplate.set(x)
+            .Type.Item.set()
+            .Item.set(x)
         )
         return locks;
     }
