@@ -52,7 +52,7 @@ inline int16 ToInt16(TSString value)
 
 inline uint32 ToUInt32(TSString value)
 {
-  return uint32_t(std::stol(value.std_str()));
+  return uint32_t(std::stoul(value.std_str()));
 }
 
 inline int32 ToInt32(TSString value)
@@ -62,12 +62,12 @@ inline int32 ToInt32(TSString value)
 
 inline uint64 ToUInt64(TSString value)
 {
-  return uint64_t(std::stoul(value.std_str()));
+  return uint64_t(std::stoull(value.std_str()));
 }
 
 inline int64 ToInt64(TSString value)
 {
-  return int64_t(std::stol(value.std_str()));
+  return int64_t(std::stoll(value.std_str()));
 }
 
 inline double ToDouble(TSString value)
