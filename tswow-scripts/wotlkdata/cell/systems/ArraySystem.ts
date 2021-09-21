@@ -22,13 +22,13 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
         super(owner);
     }
 
-    filter(callback: (value: A, index: number)=>boolean) {
+    filter(callback: (value: A, index: number)=>any) {
         let out: A[] = [];
         this.forEach((x,i)=>callback(x,i)?out.push(x):undefined)
         return out;
     }
 
-    findIndex(callback: (value: A, index: number)=>boolean) {
+    indexOf(callback: (value: A, index: number)=>any) {
         for(let i = 0; i< this.length; ++i) {
             let v = this.get(i);
             if(!v.isClear() && callback(v,i)) return i;
@@ -36,8 +36,8 @@ export abstract class ArraySystem<A extends ArrayEntry<T>, T> extends CellSystem
         return -1;
     }
 
-    find(callback: (value: A, index: number)=>boolean) {
-        let index = this.findIndex(callback);
+    find(callback: (value: A, index: number)=>any) {
+        let index = this.indexOf(callback);
         return index >= 0 ? this.get(index) : undefined;
     }
 
