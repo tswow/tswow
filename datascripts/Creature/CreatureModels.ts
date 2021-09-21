@@ -16,7 +16,7 @@
  */
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
-import { CreatureDisplayInfoRegistry } from "./CreatureVisual";
+import { CreatureDisplayInfoRegistry } from "./CreatureDisplayInfo";
 
 function getModel(template: CreatureTemplate, index: number) {
     switch(index) {

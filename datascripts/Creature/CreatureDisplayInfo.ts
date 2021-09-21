@@ -55,7 +55,7 @@ export class CreatureModel extends MainEntity<CreatureModelDataRow> {
     get MissileCollisionRaise() { return this.wrap(this.row.MissileCollisionRaise); }
 }
 
-export class CreatureVisual extends MainEntity<CreatureDisplayInfoRow> {
+export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {
     @Transient
     protected _sql_row: creature_model_infoRow|undefined;
     get sql_row() {
@@ -157,9 +157,9 @@ export class CreatureModelRegistryClass
 }
 export const CreatureModelRegistry = new CreatureModelRegistryClass();
 
-export class CreatureVisualRegistryClass
+export class CreatureDisplayInfoRegistryClass
     extends RegistryDynamic<
-          CreatureVisual
+          CreatureDisplayInfo
         , CreatureDisplayInfoRow
         , CreatureDisplayInfoQuery
         >
@@ -170,7 +170,7 @@ export class CreatureVisualRegistryClass
     protected ids(): DynamicIDGenerator {
         return Ids.CreatureDisplayInfo
     }
-    Clear(entity: CreatureVisual): void {
+    Clear(entity: CreatureDisplayInfo): void {
         entity
             .ExtendedDisplay.set(0)
             .CreatureModelScale.set(0)
@@ -190,11 +190,11 @@ export class CreatureVisualRegistryClass
     protected EmptyQuery(): CreatureDisplayInfoQuery {
         return {}
     }
-    ID(e: CreatureVisual): number {
+    ID(e: CreatureDisplayInfo): number {
         return e.ID
     }
-    protected Entity(r: CreatureDisplayInfoRow): CreatureVisual {
-        return new CreatureVisual(r);
+    protected Entity(r: CreatureDisplayInfoRow): CreatureDisplayInfo {
+        return new CreatureDisplayInfo(r);
     }
 }
-export const CreatureDisplayInfoRegistry = new CreatureVisualRegistryClass();
+export const CreatureDisplayInfoRegistry = new CreatureDisplayInfoRegistryClass();
