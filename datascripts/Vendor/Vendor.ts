@@ -15,9 +15,32 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { npc_vendorRow } from "wotlkdata/sql/types/npc_vendor";
+import { CreatureTemplateRegistry } from "../Creature/Creatures";
+import { ExtendedCostRegistry } from "../ExtendedCost/ExtendedCost";
+import { MainEntity } from "../Misc/Entity";
 
-export class Vendor<T> extends CellSystem<T> {
+export class VendorItem extends MainEntity<npc_vendorRow> {
+    get CreatureTemplate() {
+        return CreatureTemplateRegistry.readOnlyRef(this, this.row.entry);
+    }
+
+    get ExtendedCost() {
+        return ExtendedCostRegistry.readOnlyRef(this, this.row.ExtendedCost);
+    }
+}
+
+export class Vendor<T> extends MultiRowSystem<VendorItem,T> {
+    protected getAllRows(): VendorItem[] {
+        return SQL.npc_vendor
+            .filter({entry:this.ID})
+            .map(x=>new VendorItem(x))
+    }
+    protected isDeleted(value: VendorItem): boolean {
+        return value.row.isDeleted();
+    }
+
     readonly ID: number;
 
     constructor(owner: T, id: number) {
@@ -25,11 +48,23 @@ export class Vendor<T> extends CellSystem<T> {
         this.ID = id;
     }
 
-    addItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
+    add(item: number, extendedCostId = 0, maxCount = 0, incrTime = 0) {
         SQL.npc_vendor.add(this.ID, item, extendedCostId)
-            .maxcount.set(maxcount)
+            .maxcount.set(maxCount)
             .incrtime.set(incrTime)
             .VerifiedBuild.set(17688)
-        return this;
+        return this.owner;
+    }
+
+    addGet(item: number, extendedCostId: number|'GENERATE' = 0) {
+        if(extendedCostId === 'GENERATE') {
+            extendedCostId = ExtendedCostRegistry.create().ID;
+        }
+        return new VendorItem(SQL.npc_vendor.add(this.ID,item,extendedCostId));
+    }
+
+    addMod(item: number, extendedCostId: number|'GENERATE', callback: (item: VendorItem)=>void) {
+        callback(this.addGet(item,extendedCostId));
+        return this.owner;
     }
 }
