@@ -60,6 +60,7 @@ import { SpellRegistry } from "./Spell/Spells";
 import { SpellStackGroupRegistry } from "./Spell/SpellStackGroup";
 import { TalentTreeRegistry } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
+import { TaxiEndNodeRegistry } from "./Taxi/TaxiEndNode";
 import { TitleRegistry } from "./Title/Titles";
 import { UI } from "./UI/UI";
 import { VehicleRegistry } from "./Vehicle/Vehicle";
@@ -124,6 +125,7 @@ export const std = {
     Currency: CurrencyRegistry,
     CurrencyCategory: CurrencyCategoryRegistry,
     Taxi: TaxiPathRegistry,
+    TaxiEndNodes: TaxiEndNodeRegistry,
     Mounts: MountRegistry,
     Companions: CompanionRegistry,
     WorldSafeLocs: WorldSafeLocRegistry,

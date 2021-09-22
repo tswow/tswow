@@ -286,7 +286,7 @@ export class GOShipRegistryClass
 
     createSimple(mod: string, id: string, points: TaxiNodeConstructor[]) {
         let nid = Ids.transports.id(mod,id)
-        let taxiPath = TaxiPathRegistry.createNewPath(mod,`${id}-path`,1,0,points);
+        let taxiPath = TaxiPathRegistry.createUni(mod,`${id}-path`,'PLAIN',1,0,points,false);
         let gameObject = this.create(mod,`${id}-gameobject`)
             .Type.Ship.set()
             .SpawnGroup.set(0)

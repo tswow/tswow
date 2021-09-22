@@ -473,9 +473,14 @@ export const Ids = {
     MailTemplate: new DynamicIDGenerator('MailTemplate', 300),
 
     /**
-     * Starts at 500, highest base value is 440
+     * Starts at 441, highest base value is 440. Max value is 2048
      */
-    TaxiNodes: new DynamicIDGenerator('TaxiNodes',500),
+    TaxiNodesFlightpath: new StaticIDGenerator('TaxiNodes',441),
+
+    /**
+     * Starts at 2048, lower limit is "TaxiNodes" upper limit
+     */
+    TaxiNodesPlain: new StaticIDGenerator('TaxiNodes',2048),
 
     /**
      * Starts at 2000, highest base value is 1978

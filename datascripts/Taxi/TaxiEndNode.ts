@@ -3,9 +3,10 @@ import { TaxiNodesQuery, TaxiNodesRow } from "wotlkdata/dbc/types/TaxiNodes";
 import { Table } from "wotlkdata/table/Table";
 import { DBC } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
-import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RegistryStatic } from "../Refs/Registry";
+import { TaxiPathRegistry } from "./Taxi";
 
 export class TaxiNodeMount extends CellSystem<TaxiEndNode> {
     get Horde() { return this.ownerWrapIndex(this.owner.row.MountCreatureID,0)}
@@ -29,16 +30,36 @@ export class TaxiEndNode extends MainEntity<TaxiNodesRow> {
     get Name() { return this.wrapLoc(this.row.Name); }
     get Mount() { return new TaxiNodeMount(this); }
     get ID() { return this.row.ID.get(); }
+
+    delete() {
+        if(this.isDeleted()) return;
+        this.row.delete();
+        TaxiPathRegistry
+            .filter(x=>x.Start.get() === this.ID || x.End.get() === this.ID)
+            .forEach(x=>{
+                x.delete();
+            })
+        return this;
+    }
+
+    isDeleted() {
+        return this.row.isDeleted();
+    }
+
+    undelete() {
+        this.row.undelete();
+    }
 }
 
+// we should never create stray taxi endnodes
 export class TaxiEndNodeRegistryClass
-    extends RegistryDynamic<TaxiEndNode,TaxiNodesRow,TaxiNodesQuery>
+    extends RegistryStatic<TaxiEndNode,TaxiNodesRow,TaxiNodesQuery>
 {
+    protected IDs(): StaticIDGenerator {
+        return Ids.TaxiNodesFlightpath
+    }
     protected Table(): Table<any, TaxiNodesQuery, TaxiNodesRow> & { add: (id: number) => TaxiNodesRow; } {
         return DBC.TaxiNodes
-    }
-    protected ids(): DynamicIDGenerator {
-        return Ids.TaxiNodes
     }
     Clear(entity: TaxiEndNode): void {
         entity.Mount.set(0)
