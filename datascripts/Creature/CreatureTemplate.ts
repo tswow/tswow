@@ -67,37 +67,20 @@ export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,C
         return value.row.isDeleted();
     }
 
-    add(pos: Position, wanderDistance = 0) {
-        this.addGet()
-            .Position.set(pos)
-            .WanderDistance.set(wanderDistance)
-        return this.owner;
-    }
-
-    addGet() {
-        return CreatureInstanceRegistry.createDynamic()
-            .Template.set(this.owner.ID);
-    }
-
-    addMod(callback: (creature: CreatureInstance)=>void) {
-        callback(this.addGet());
-        return this.owner;
-    }
-
-    addStatic(mod: string, id: string, pos: Position, wanderDistance?: number) {
-        this.addGetStatic(mod,id)
+    add(mod: string, id: string, pos: Position, wanderDistance?: number) {
+        this.addGet(mod,id)
             .Position.set(pos)
             .WanderDistance.set(wanderDistance||0)
         return this.owner;
     }
 
-    addGetStatic(mod: string, id: string) {
-        return CreatureInstanceRegistry.createStatic(mod,id)
+    addGet(mod: string, id: string) {
+        return CreatureInstanceRegistry.create(mod,id)
             .Template.set(this.owner.ID)
     }
 
-    addModStatic(mod: string, id: string, callback: (spawn: CreatureInstance)=>void) {
-        callback(this.addGetStatic(mod,id));
+    addMod(mod: string, id: string, callback: (spawn: CreatureInstance)=>void) {
+        callback(this.addGet(mod,id));
         return this.owner;
     }
 }

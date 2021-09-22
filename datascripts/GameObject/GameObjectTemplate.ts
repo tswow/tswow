@@ -53,36 +53,19 @@ export class GameObjectTemplateInstances
         return value.row.isDeleted();
     }
 
-    addGet() {
+    addGet(mod: string, id: string) {
         return GameObjectInstances
-            .createDynamic()
+            .create(mod,id)
             .Template.set(this.owner.ID)
     }
 
-    addMod(callback: (go: GameObjectInstance)=>void) {
-        callback(this.addGet());
+    addMod(mod: string, id: string, callback: (go: GameObjectInstance)=>void) {
+        callback(this.addGet(mod,id));
         return this.owner;
     }
 
-    add(pos: Position) {
-        this.addGet()
-            .Position.set(pos)
-        return this.owner;
-    }
-
-    addGetStatic(mod: string, id: string) {
-        return GameObjectInstances
-            .createStatic(mod,id)
-            .Template.set(this.owner.ID)
-    }
-
-    addModStatic(mod: string, id: string, callback: (go: GameObjectInstance)=>void) {
-        callback(this.addGetStatic(mod,id));
-        return this.owner;
-    }
-
-    addStatic(mod: string, id: string, pos: Position) {
-        this.addGetStatic(mod,id)
+    add(mod: string, id: string, pos: Position) {
+        this.addGet(mod,id)
             .Position.set(pos)
         return this.owner;
     }

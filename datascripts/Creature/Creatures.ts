@@ -14,14 +14,12 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/cell/cells/Cell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureQuery, creatureRow } from "wotlkdata/sql/types/creature";
 import { creature_templateQuery, creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RefNoCreate } from "../Refs/Ref";
-import { RegistryRowBase, RegistryStatic } from "../Refs/Registry";
+import { RegistryStatic } from "../Refs/Registry";
 import { CreatureInstance } from "./CreatureInstance";
 import { CreatureTemplate } from "./CreatureTemplate";
 
@@ -97,9 +95,36 @@ export class CreatureTemplateRegistryClass
 }
 export const CreatureTemplateRegistry = new CreatureTemplateRegistryClass()
 
-export class CreatureInstanceRegistryGreg
-    extends RegistryRowBase<CreatureInstance,creatureRow,creatureQuery>
-    {
+export class CreatureInstanceRegistryClass
+extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
+{
+    protected Table(): Table<any, creatureQuery, creatureRow> & { add: (id: number) => creatureRow; } {
+        return SQL.creature
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.creature_template
+    }
+    Clear(r: CreatureInstance): void {
+        r.Position.set({map:0,x:0,y:0,z:0,o:0})
+        r.row
+         .curhealth.set(1)
+         .curmana.set(0)
+         .currentwaypoint.set(0)
+         .MovementType.set(0)
+         .modelid.set(0)
+         .npcflag.set(0)
+         .wander_distance.set(0)
+         .spawnMask.set(1)
+         .VerifiedBuild.set(17688)
+    }
+    protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {
+        if(parent.addonExists()) {
+            parent.addonRow().clone(r.ID);
+        }
+    }
+    protected Entity(r: creatureRow): CreatureInstance {
+        return new CreatureInstance(r);
+    }
     protected FindByID(id: number): creatureRow {
         return SQL.creature.find({guid:id});
     }
@@ -107,45 +132,7 @@ export class CreatureInstanceRegistryGreg
         return {}
     }
     ID(e: CreatureInstance): number {
-        return e.ID
-    }
-    protected Table(): Table<any, creatureQuery, creatureRow> {
-        return SQL.creature
-    }
-    protected Entity(r: creatureRow): CreatureInstance {
-        return new CreatureInstance(r);
-    }
-
-    ref<T>(owner: T, cell: Cell<number,any>) {
-        return new RefNoCreate(owner, cell, this)
-    }
-
-    private create(id: number, parent: number, build: number) {
-        let row: creatureRow
-        if(parent > 0) {
-            row = SQL.creature.find({guid:parent}).clone(id)
-        } else {
-            row = SQL.creature.add(id)
-                .curhealth.set(1)
-                .curmana.set(0)
-                .currentwaypoint.set(0)
-                .MovementType.set(0)
-                .modelid.set(0)
-                .npcflag.set(0)
-                .wander_distance.set(0)
-                .spawnMask.set(1)
-                .VerifiedBuild.set(build)
-        }
-        return new CreatureInstance(row);
-    }
-
-    createStatic(mod: string, id: string, parent = 0) {
-        return this.create(Ids.CreatureInstance.id(mod,id),parent,17688);
-    }
-
-    createDynamic(parent = 0) {
-        return this.create(Ids.CreatureInstance.dynamicId(),parent,17689);
+        return e.ID;
     }
 }
-
-export const CreatureInstanceRegistry = new CreatureInstanceRegistryGreg();
+export const CreatureInstanceRegistry = new CreatureInstanceRegistryClass();
