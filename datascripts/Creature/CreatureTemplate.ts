@@ -67,20 +67,34 @@ export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,C
         return value.row.isDeleted();
     }
 
-    add(mod: string, id: string, pos: Position, wanderDistance?: number) {
-        this.addGet(mod,id)
-            .Position.set(pos)
-            .WanderDistance.set(wanderDistance||0)
+    add(mod: string, id: string, pos: Position|Position[], spawnTime?: number, wanderDistance?: number) {
+        this.addGet(mod,id,pos)
+            .forEach(x=>{
+                x.WanderDistance.set(wanderDistance||0)
+                 .SpawnTime.set(spawnTime||0)
+                if(wanderDistance !== undefined) {
+                    x.WanderDistance.set(wanderDistance)
+                     .MovementType.RandomMovement.set()
+                }
+            }
+        )
         return this.owner;
     }
 
-    addGet(mod: string, id: string) {
-        return CreatureInstanceRegistry.create(mod,id)
-            .Template.set(this.owner.ID)
+    addGet(mod: string, id: string, pos: Position|Position[]) {
+        if(!Array.isArray(pos)) {
+            pos = [pos];
+        }
+        return pos.map((x,i)=>
+            CreatureInstanceRegistry
+                .create(mod,`${id}-${i}`)
+                .Position.set(x)
+                .Template.set(this.owner.ID)
+        )
     }
 
-    addMod(mod: string, id: string, callback: (spawn: CreatureInstance)=>void) {
-        callback(this.addGet(mod,id));
+    addMod(mod: string, id: string, pos: Position|Position[], callback: (spawn: CreatureInstance)=>void) {
+        this.addGet(mod,id,pos).forEach(callback);
         return this.owner;
     }
 }

@@ -53,20 +53,28 @@ export class GameObjectTemplateInstances
         return value.row.isDeleted();
     }
 
-    addGet(mod: string, id: string) {
-        return GameObjectInstances
-            .create(mod,id)
-            .Template.set(this.owner.ID)
+    addGet(mod: string, id: string, pos: Position|Position[]) {
+        if(!Array.isArray(pos)) {
+            pos = [pos];
+        }
+        return pos.map((x,i)=>
+            GameObjectInstances.create(mod,`${id}-${i}`)
+                .Template.set(this.owner.ID)
+                .Position.set(x)
+        )
     }
 
-    addMod(mod: string, id: string, callback: (go: GameObjectInstance)=>void) {
-        callback(this.addGet(mod,id));
+    addMod(mod: string, id: string, pos: Position|Position[], callback: (go: GameObjectInstance)=>void) {
+        this.addGet(mod,id,pos).forEach(callback);
         return this.owner;
     }
 
-    add(mod: string, id: string, pos: Position) {
-        this.addGet(mod,id)
-            .Position.set(pos)
+    add(mod: string, id: string, pos: Position|Position[], spawnTime?: number, spawnMask?: number) {
+        this.addGet(mod,id,pos)
+            .forEach(x=>x
+                .SpawnTimeSecs.set(spawnTime||0)
+                .SpawnMask.set(spawnMask||0)
+        )
         return this.owner;
     }
 }

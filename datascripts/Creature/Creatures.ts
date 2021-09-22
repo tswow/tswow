@@ -115,6 +115,8 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .npcflag.set(0)
          .wander_distance.set(0)
          .spawnMask.set(1)
+         .map.set(0)
+         .id.set(0)
          .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {

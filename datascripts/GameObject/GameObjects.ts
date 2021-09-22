@@ -43,6 +43,8 @@ export class GameObjectInstanceRegistryClass
          .SpawnTimeSecs.set(0)
          .State.set(0)
          .Zone.set(0)
+         .row.id.set(0)
+         .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
         if(parent.addonExists()) {
