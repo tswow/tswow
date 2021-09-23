@@ -102,7 +102,10 @@ export const Ids = {
     quest_template: new StaticIDGenerator('quest_template',27000),
 
     /** Start at 178, Highest base value is 177 */
-    CharTitles: new StaticIDGenerator('CharTitles',178),
+    CharTitles: new DynamicIDGenerator('CharTitles',178),
+
+    /** Starts at 143, Highest base value is 142. */
+    CharTitleMask: new StaticIDGenerator('CharTitlesMask',143),
 
     /** Start at 5000, Highest base value is 4824 */
     Achievement: new StaticIDGenerator('Achievement',5000),

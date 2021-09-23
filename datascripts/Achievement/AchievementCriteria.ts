@@ -104,7 +104,7 @@ export class AchievementCriteria extends MultiRowSystem<CriteriaPlain,Achievemen
     protected addCriteria(mod : string,criteriaId: string, c?: Achievement_CriteriaCreator) {
         const crit = DBC.Achievement_Criteria
             .add(Ids.Achievement_Criteria.id(mod,criteriaId),c)
-        crit.Achievement_Id.set(this.owner.row.ID.get());
+        crit.Achievement_Id.set(this.owner.ID);
         return crit;
     }
 

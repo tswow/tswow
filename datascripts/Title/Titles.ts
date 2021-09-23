@@ -18,8 +18,8 @@ import { DBC } from "wotlkdata";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
-import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RegistryStatic } from "../Refs/Registry";
+import { Ids } from "../Misc/Ids";
+import { RegistryRowBase } from "../Refs/Registry";
 
 export class Title extends MainEntity<CharTitlesRow>{
     get ID() { return this.row.ID.get(); }
@@ -27,27 +27,35 @@ export class Title extends MainEntity<CharTitlesRow>{
     get FemaleText() { return this.wrapLoc(this.row.Name1); }
 }
 
-export class TitleRegistryClass extends RegistryStatic<Title,CharTitlesRow,CharTitlesQuery> {
+export class TitleRegistryClass extends RegistryRowBase<Title,CharTitlesRow,CharTitlesQuery> {
     protected Table(): Table<any, CharTitlesQuery, CharTitlesRow> & { add: (id: number) => CharTitlesRow; } {
         return DBC.CharTitles
     }
-    protected IDs(): StaticIDGenerator {
-        return Ids.CharTitles
-    }
+
     protected Entity(r: CharTitlesRow): Title {
         return new Title(r);
     }
+
     protected FindByID(id: number): CharTitlesRow {
         return DBC.CharTitles.findById(id);
     }
     protected EmptyQuery(): CharTitlesQuery {
         return {}
     }
+
+    create(mod: string, id: string) {
+        let nid = Ids.CharTitles.id()
+        let mid = Ids.CharTitleMask.id(mod,id);
+        let title = DBC.CharTitles.add(nid)
+            .Mask_ID.set(mid)
+            .Condition_ID.set(0)
+            .Name.clear()
+            .Name1.clear()
+        return new Title(title);
+    }
+
     ID(e: Title): number {
         return e.ID;
-    }
-    Clear(title: Title) {
-        title.MaleText.clear().FemaleText.clear()
     }
 }
 export const TitleRegistry = new TitleRegistryClass();
