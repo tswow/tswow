@@ -18,7 +18,6 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { creature_template_addonRow } from "wotlkdata/sql/types/creature_template_addon";
-import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { LootSetPointer } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
@@ -28,9 +27,9 @@ import { SchoolMask } from "../Misc/School";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
-import { TrainerRegistry } from "../Trainer/Trainer";
 import { VehicleRegistry } from "../Vehicle/Vehicle";
 import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
+import { Vendor } from "../Vendor/Vendor";
 import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
@@ -49,9 +48,9 @@ import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
+import { CreatureTrainerRef } from "./CreatureTrainer";
 import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
-import { CreatureVendor } from "./CreatureVendor";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
 import { UnitClass } from "./UnitClass";
@@ -196,19 +195,8 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get Movement() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
-    get Trainer() {
-        let ctrow = SQL.creature_default_trainer.find({CreatureId:this.ID});
-        let trainerRow : trainerRow;
-        if(ctrow === undefined) {
-            trainerRow = SQL.trainer.add(Ids.Trainer.id())
-            ctrow = SQL.creature_default_trainer.add(this.ID)
-                .TrainerId.set(trainerRow.Id.get());
-        } else {
-            trainerRow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
-        }
-        return TrainerRegistry.readOnlyRef(this,ctrow.TrainerId);
-    }
-    get Vendor() { return new CreatureVendor(this); }
+    get Trainer() { return new CreatureTrainerRef(this); }
+    get Vendor() { return new Vendor(this, this.ID); }
 
     get NormalLoot() {
         return new LootSetPointer(
