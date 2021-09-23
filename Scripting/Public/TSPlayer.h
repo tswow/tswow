@@ -168,7 +168,12 @@ public:
 	void SetArenaPoints(uint32 arenaP);
 	void SetHonorPoints(uint32 honorP);
 	void SetLifetimeKills(uint32 val);
-	void SetCoinage(uint32 amt);
+
+    void SetMoney(uint32 amt);
+    uint32 GetMoney();
+    bool GiveMoney(uint32 amt);
+    bool TakeMoney(uint32 amt);
+
 	void SetBindPoint(float x, float y, float z, uint32 mapId, uint32 areaId);
 	void SetKnownTitle(uint32 id);
 	void ResetPetTalents(int32 pType);

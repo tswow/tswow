@@ -1175,11 +1175,44 @@ declare interface TSPlayer extends TSUnit {
     SetLifetimeKills(val : uint32) : void
 
     /**
-     * Sets the [Player]s amount of money to copper specified
+     * Sets the [Player]s amount of money in copper
      *
      * @param uint32 copperAmt
      */
-    SetCoinage(amt : uint32) : void
+    SetMoney(amt : uint32) : void
+
+    /**
+     * Returns the [Player]s amount of money in copper
+     */
+    GetMoney() : uint32
+
+    /**
+     * Attempts to give [Player] money in copper.
+     *
+     * - If the given amount causes the players money to overflow,
+     *   their money remains unchanged and the function returns false
+     *
+     * - If the given amount does not cause overflow,
+     *   the money is added and the function returns true.
+     *
+     * @param amount
+     */
+    GiveMoney(amount: uint32) : bool
+
+    /**
+     * Attempts to take money from [Player] in copper.
+     *
+     * - If the taken amount is higher than the players current money,
+     *   their money remains unchanged and the function returns false.
+     *
+     * - If the taken amount is smaller than or equal to the players current
+     *   money, their money remains unchanged and the function returns true.
+     *
+     * @param amount
+     */
+    TakeMoney(amount: uint32) : bool
+
+
 
     /**
      * Sets the [Player]s home location to the location specified

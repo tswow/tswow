@@ -1793,9 +1793,31 @@ void TSPlayer::SetLifetimeKills(uint32 val)
  *
  * @param uint32 copperAmt
  */
-void TSPlayer::SetCoinage(uint32 amt) 
+void TSPlayer::SetMoney(uint32 amt)
 {
     player->SetMoney(amt);
+}
+
+uint32 TSPlayer::GetMoney()
+{
+    return player->GetMoney();
+}
+
+bool TSPlayer::GiveMoney(uint32 amt)
+{
+    uint32 old = player->GetMoney();
+    uint32 sum = amt + old;
+    if (amt >= INT_MAX || sum >= INT_MAX) return false;
+    player->SetMoney(sum);
+    return true;
+}
+
+bool TSPlayer::TakeMoney(uint32 amt)
+{
+    uint32 old = player->GetMoney();
+    if (amt > old) return false;
+    player->SetMoney(old - amt);
+    return true;
 }
     
 /**
