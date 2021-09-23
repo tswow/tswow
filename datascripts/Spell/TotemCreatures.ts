@@ -99,7 +99,7 @@ export const TotemCreatures = {
             const controlOut = new CreatureControllers();
 
             for(const controller of controllers) {
-                const spell = SpellRegistry.create(mod, id+'_'+controller.toLowerCase())
+                const spell = SpellRegistry.create(mod, id+'-'+controller.toLowerCase())
                     .Effects.addMod(eff=>
                         eff.Type.ControlTotemCreature.set()
                             .AsEffect.get()

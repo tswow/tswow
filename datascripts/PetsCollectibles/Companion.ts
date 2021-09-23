@@ -30,7 +30,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
     }
 
     add(mod: string, id: string) {
-        const spell = SpellRegistry.create(mod,id)
+        const spell = SpellRegistry.create(mod,`${id}-spell`)
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
                 efffect.Type.LearnSpell.set()
@@ -44,7 +44,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .InterruptFlags.OnInterruptCast.set(true)
             .InterruptFlags.setBit(3, true)
 
-        ItemTemplateRegistry.create(mod,id)
+        ItemTemplateRegistry.create(mod,`${id}-item`)
             .Name.set(this.owner.AsSpell.get().Name.objectify())
             .Quality.Blue.set()
             .ClassMask.set(-1)

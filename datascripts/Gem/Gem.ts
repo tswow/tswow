@@ -62,13 +62,6 @@ export class GemEnchantmentRef extends CellSystem<Gem> {
         return EnchantmentRegistry.load(this.owner.row.Enchant_Id.get());
     }
 
-    setCopy(mod: string, id: string, source: number) {
-        let enchantment = EnchantmentRegistry.create(mod,id,source)
-        enchantment.row.Src_ItemID.set(this.owner.Item.get().ID);
-        this.owner.row.Enchant_Id.set(enchantment.ID);
-        return this.owner;
-    }
-
     modRef(callback: (enchantment: Enchantment)=>void) {
         callback(this.getRef());
         return this.owner;
@@ -132,7 +125,7 @@ export class GemRegistryClass
         if(parentItem === 0) {
             parentItem = enchantment.row.Src_ItemID.get()
         }
-        let item = ItemTemplateRegistry.create(mod,id,parentItem)
+        let item = ItemTemplateRegistry.create(mod,`${id}-item`,parentItem)
             .BagFamily.set(512)
             .ClassMask.set(-1)
             .RaceMask.set(-1)

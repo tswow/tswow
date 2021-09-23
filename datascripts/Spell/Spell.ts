@@ -19,7 +19,6 @@ import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
 import { ClassRegistry } from "../Class/Class";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
@@ -181,18 +180,6 @@ export class Spell extends MainEntity<SpellRow> {
     addStartButton(clazz: number, button: number, races?: RaceType[]) {
         ClassRegistry.load(clazz).StartButtons.addSpell(button, this.ID, races);
         return this;
-    }
-
-    /**
-     * Creates a separate clone of this spell
-     * @param mod
-     * @param id
-     */
-    clone(mod: string, id: string) {
-        // TODO: not proper clone
-        const newId = Ids.Spell.id(mod, id);
-        let spell = new Spell(this.row.clone(newId));
-        return spell;
     }
 
     clear() {

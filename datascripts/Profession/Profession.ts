@@ -235,7 +235,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             })
         }
 
-        std.Spells.create(modid,`${id}_learn`)
+        std.Spells.create(modid,`${id}-learn`)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
             .Attributes.isHiddenFromLog.set(true)

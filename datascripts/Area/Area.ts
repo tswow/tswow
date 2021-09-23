@@ -76,7 +76,7 @@ export class AreaRegistryClass
         return Ids.Area
     }
     Clear(r: Area, mod: string, id: string): void {
-        r.row.ExploreFlag.set(Ids.AreaBit.id(mod,id))
+        r.row.ExploreFlag.set(Ids.AreaBit.id(mod,`${id}-bit`))
             .AmbienceID.set(0)
             .Ambient_Multiplier.set(0)
             .AreaName.clear()
