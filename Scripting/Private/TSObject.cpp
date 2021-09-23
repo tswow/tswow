@@ -70,7 +70,7 @@ bool TSObject::IsInWorld()
  * @param uint16 index
  * @return int32 value
  */
-int32 TSObject::GetInt32Value(uint16 index) 
+int32 TSObject::GetCoreInt32(uint16 index)
 {
     return obj->GetInt32Value(index);
 }
@@ -81,7 +81,7 @@ int32 TSObject::GetInt32Value(uint16 index)
  * @param uint16 index
  * @return uint32 value
  */
-uint32 TSObject::GetUInt32Value(uint16 index) 
+uint32 TSObject::GetCoreUInt32(uint16 index)
 {
     return obj->GetUInt32Value(index);
 }
@@ -92,7 +92,7 @@ uint32 TSObject::GetUInt32Value(uint16 index)
  * @param uint16 index
  * @return float value
  */
-float TSObject::GetFloatValue(uint16 index) 
+float TSObject::GetCoreFloat(uint16 index)
 {
     return obj->GetFloatValue(index);
 }
@@ -106,7 +106,7 @@ float TSObject::GetFloatValue(uint16 index)
  * @param uint8 offset : should be 0, 1, 2, or 3
  * @return uint8 value
  */
-uint8 TSObject::GetByteValue(uint16 index,uint8 offset) 
+uint8 TSObject::GetCoreByte(uint16 index,uint8 offset)
 {
     return obj->GetByteValue(index, offset);
 }
@@ -120,7 +120,7 @@ uint8 TSObject::GetByteValue(uint16 index,uint8 offset)
  * @param uint8 offset : should be 0 or 1
  * @return uint16 value
  */
-uint16 TSObject::GetUInt16Value(uint16 index,uint8 offset) 
+uint16 TSObject::GetCoreUInt16(uint16 index,uint8 offset)
 {
     return obj->GetUInt16Value(index, offset);
 }
@@ -218,7 +218,7 @@ uint8 TSObject::GetTypeId()
  * @param uint16 index
  * @return uint64 value
  */
-uint64 TSObject::GetUInt64Value(uint16 index) 
+uint64 TSObject::GetCoreUInt64(uint16 index)
 {
     return obj->GetUInt64Value(index);
 }
@@ -245,7 +245,7 @@ void TSObject::SetFlag(uint16 index,uint32 flag)
  * @param uint16 index
  * @param int32 value
  */
-void TSObject::SetInt32Value(uint16 index,int32 value) 
+void TSObject::SetCoreInt32(uint16 index,int32 value)
 {
     obj->SetInt32Value(index, value);
 }
@@ -256,7 +256,7 @@ void TSObject::SetInt32Value(uint16 index,int32 value)
  * @param uint16 index
  * @param uint32 value
  */
-void TSObject::SetUInt32Value(uint16 index,uint32 value) 
+void TSObject::SetCoreUInt32(uint16 index,uint32 value)
 {
     obj->SetUInt32Value(index, value);
 }
@@ -267,7 +267,7 @@ void TSObject::SetUInt32Value(uint16 index,uint32 value)
  * @param uint16 index
  * @param uint32 value
  */
-void TSObject::UpdateUInt32Value(uint16 index,uint32 value) 
+void TSObject::UpdateCoreUInt32(uint16 index,uint32 value)
 {
     obj->UpdateUInt32Value(index, value);
 }
@@ -278,7 +278,7 @@ void TSObject::UpdateUInt32Value(uint16 index,uint32 value)
  * @param uint16 index
  * @param float value
  */
-void TSObject::SetFloatValue(uint16 index,float value) 
+void TSObject::SetCoreFloat(uint16 index,float value)
 {
     
     obj->SetFloatValue(index, value);
@@ -291,7 +291,7 @@ void TSObject::SetFloatValue(uint16 index,float value)
  * @param uint8 offset : should be 0, 1, 2, or 3
  * @param uint8 value
  */
-void TSObject::SetByteValue(uint16 index,uint8 offset,uint8 value) 
+void TSObject::SetCoreByte(uint16 index,uint8 offset,uint8 value)
 {
     obj->SetByteValue(index, offset, value);
 }
@@ -303,7 +303,7 @@ void TSObject::SetByteValue(uint16 index,uint8 offset,uint8 value)
  * @param uint8 offset : should be 0 or 1
  * @param uint16 value
  */
-void TSObject::SetUInt16Value(uint16 index,uint8 offset,uint16 value) 
+void TSObject::SetCoreUInt16(uint16 index,uint8 offset,uint16 value)
 {
     obj->SetUInt16Value(index, offset, value);
 }
@@ -315,7 +315,7 @@ void TSObject::SetUInt16Value(uint16 index,uint8 offset,uint16 value)
  * @param uint8 offset : should be 0 or 1
  * @param int16 value
  */
-void TSObject::SetInt16Value(uint16 index,uint8 offset,int16 value) 
+void TSObject::SetCoreInt16(uint16 index,uint8 offset,int16 value)
 {
     obj->SetInt16Value(index, offset, value);
 }
@@ -337,7 +337,7 @@ void TSObject::SetScale(float size)
  * @param uint16 index
  * @param uint64 value
  */
-void TSObject::SetUInt64Value(uint16 index,uint64 value) 
+void TSObject::SetCoreUInt64(uint16 index,uint64 value)
 {
     obj->SetUInt64Value(index, value);
 }

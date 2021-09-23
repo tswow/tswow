@@ -4988,7 +4988,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return int32 value
      */
-    GetInt32Value(index : uint16) : int32
+    GetCoreInt32(index : uint16) : int32
 
     /**
      * Returns the data at the specified index, casted to a unsigned 32-bit integer.
@@ -4996,7 +4996,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return uint32 value
      */
-    GetUInt32Value(index : uint16) : uint32
+    GetCoreUInt32(index : uint16) : uint32
 
     /**
      * Returns the data at the specified index, casted to a single-precision floating point value.
@@ -5004,7 +5004,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return float value
      */
-    GetFloatValue(index : uint16) : float
+    GetCoreFloat(index : uint16) : float
 
     /**
      * Returns the data at the specified index and offset, casted to an unsigned 8-bit integer.
@@ -5015,7 +5015,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0, 1, 2, or 3
      * @return uint8 value
      */
-    GetByteValue(index : uint16,offset : uint8) : uint8
+    GetCoreByte(index : uint16,offset : uint8) : uint8
 
     /**
      * Returns the data at the specified index and offset, casted to a signed 16-bit integer.
@@ -5026,7 +5026,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @return uint16 value
      */
-    GetUInt16Value(index : uint16,offset : uint8) : uint16
+    GetCoreUInt16(index : uint16,offset : uint8) : uint16
 
     /**
      * Returns the scale/size of the [Object].
@@ -5098,7 +5098,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @return uint64 value
      */
-    GetUInt64Value(index : uint16) : uint64
+    GetCoreUInt64(index : uint16) : uint64
 
     /**
      * Sets the specified flag in the data value at the specified index.
@@ -5118,7 +5118,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param int32 value
      */
-    SetInt32Value(index : uint16,value : int32) : void
+    SetCoreInt32(index : uint16,value : int32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
@@ -5126,7 +5126,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint32 value
      */
-    SetUInt32Value(index : uint16,value : uint32) : void
+    SetCoreUInt32(index : uint16,value : uint32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
@@ -5134,7 +5134,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint32 value
      */
-    UpdateUInt32Value(index : uint16,value : uint32) : void
+    UpdateCoreUInt32(index : uint16,value : uint32) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to a single-precision floating point value.
@@ -5142,7 +5142,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param float value
      */
-    SetFloatValue(index : uint16,value : float) : void
+    SetCoreFloat(index : uint16,value : float) : void
 
     /**
      * Sets the data at the specified index and offset to the given value, converted to an unsigned 8-bit integer.
@@ -5151,7 +5151,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0, 1, 2, or 3
      * @param uint8 value
      */
-    SetByteValue(index : uint16,offset : uint8,value : uint8) : void
+    SetCoreByte(index : uint16,offset : uint8,value : uint8) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to an unsigned 16-bit integer.
@@ -5160,7 +5160,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @param uint16 value
      */
-    SetUInt16Value(index : uint16,offset : uint8,value : uint16) : void
+    SetCoreUInt16(index : uint16,offset : uint8,value : uint16) : void
 
     /**
      * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
@@ -5169,7 +5169,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint8 offset : should be 0 or 1
      * @param int16 value
      */
-    SetInt16Value(index : uint16,offset : uint8,value : int16) : void
+    SetCoreInt16(index : uint16,offset : uint8,value : int16) : void
 
     /**
      * Sets the [Object]'s scale/size to the given value.
@@ -5184,7 +5184,7 @@ declare interface TSObject extends TSEntityProvider {
      * @param uint16 index
      * @param uint64 value
      */
-    SetUInt64Value(index : uint16,value : uint64) : void
+    SetCoreUInt64(index : uint16,value : uint64) : void
 
     /**
      * Removes a flag from the value at the specified index.
