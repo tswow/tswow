@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { finish } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { ChrClassesQuery, ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
@@ -24,6 +25,7 @@ import { includes } from "wotlkdata/query/Relations";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
 import { Table } from "wotlkdata/table/Table";
+import { findGaps } from "../GapDetection/GapDetection";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryRowBase } from "../Refs/Registry";
@@ -281,3 +283,13 @@ export class ClassRegistryClass extends RegistryRowBase<Class,ChrClassesRow,ChrC
     }
 }
 export const ClassRegistry = new ClassRegistryClass();
+
+finish('class-gaps', ()=>{
+    findGaps(
+          'class'
+        , 'ChrClasses'
+        , 0
+        , DBC.ChrClasses.filter({}).map(x=>x.ID.get())
+        , (cur,last)=>cur===11&&last===9
+    )
+})
