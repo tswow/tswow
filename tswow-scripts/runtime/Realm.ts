@@ -89,13 +89,10 @@ export namespace Realm {
             });
         }
 
-        connect() {
-            return Promise.all([
-                this.set.connect(),
-                this.characters.isConnected ? undefined: this.characters.connect(),
-                // can this be concurrent with the connection?
-                mysql.installCharacters(this.characters)
-            ])
+        async connect() {
+            if(!this.characters.isConnected) await this.characters.connect()
+            await this.set.connect();
+            await mysql.installCharacters(this.characters);
         }
 
         sendWorldserverCommand(command: string, useNewline: boolean = true) {

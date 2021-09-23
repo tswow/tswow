@@ -321,7 +321,7 @@ export namespace mysql {
                 const contents = wfs.read(file);
                 try {
                     await cons.query(contents);
-                } catch(err) {
+                } catch(err: any) {
                     term.error(`SQL error from file ${file}`);
                     term.error(err.message);
                     // TODO: what do here?
@@ -334,13 +334,15 @@ export namespace mysql {
             if(!fp.endsWith('.sql')) return;
             files.push(fp);
         });
+        files.sort();
 
+        let customFiles: string[] = []
         wfs.iterate(ipaths.sqlCustomUpdateDir(type),(fp)=>{
             if(!fp.endsWith('.sql')) return;
-            files.push(fp);
+            customFiles.push(fp);
         })
-
-        files.sort();
+        customFiles.sort()
+        files = files.concat(customFiles);
 
         for(const filepath of files) {
             const filename = wfs.basename(filepath);
