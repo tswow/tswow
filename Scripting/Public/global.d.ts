@@ -2044,6 +2044,36 @@ declare interface TSEntityProvider {
     SetJsonArray(key: string, value: TSJsonArray): void;
     GetJsonArray(key: string, def?: TSJsonArray): TSJsonArray;
     HasJsonArray(key: string): boolean;
+
+    SetRawUInt8(offset: uint8, value: uint8): void
+    SetRawInt8(offset: uint8, value: int8): void
+
+    SetRawUInt16(offset: uint8, value: uint16): void
+    SetRawInt16(offset: uint8, value: int16): void
+
+    SetRawUInt32(offset: uint8, value: uint32): void
+    SetRawInt32(offset: uint8, value: int32): void
+
+    SetRawUInt64(offset: uint8, value: uint64): void
+    SetRawInt64(offset: uint8, value: int64): void
+
+    SetRawFloat(offset: uint8, value: float): void
+    SetRawDouble(offset: uint8, value: double): void
+
+    GetRawUInt8(offset: uint8): uint8
+    GetRawInt8(offset: uint8): int8
+
+    GetRawUInt16(offset: uint8): uint16
+    GetRawInt16(offset: uint8): int16
+
+    GetRawUInt32(offset: uint8): uint32
+    GetRawInt32(offset: uint8): int32
+
+    GetRawUInt64(offset: uint8): uint64
+    GetRawInt64(offset: uint8): int64
+
+    GetRawFloat(offset: uint8): float
+    GetRawDouble(offset: uint8): double
 }
 
 

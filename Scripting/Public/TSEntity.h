@@ -68,6 +68,7 @@ class TC_GAME_API TSEntity {
 public:
     TSCompiledClasses m_compiledClasses;
     TSJsonObject m_json;
+    uint8_t m_raw[128];
     TSEntity * operator->(){return this;}
 };
 
@@ -95,6 +96,106 @@ public:
     bool HasObject(uint32_t modid, TSString key)
     {
         return getData()->m_compiledClasses.HasObject(modid, key);
+    }
+
+    void SetRawUInt8(uint8 index, uint8 value)
+    {
+        *(uint8_t*)(m_entity->m_raw + index) = value;
+    }
+
+    uint8 GetRawUInt8(uint8 index)
+    {
+        return *(uint8*)(m_entity->m_raw + index);
+    }
+
+    void SetRawInt8(uint8 index, int8 value)
+    {
+        *(int8_t*)(m_entity->m_raw + index) = value;
+    }
+
+    uint8 GetRawInt8(uint8 index)
+    {
+        return *(int8*)(m_entity->m_raw + index);
+    }
+
+    void SetRawUInt16(uint8 index, uint16 value)
+    {
+        *(uint16_t*)(m_entity->m_raw + index) = value;
+    }
+
+    uint16 GetRawUInt16(uint8 index)
+    {
+        return *(uint16*)(m_entity->m_raw + index);
+    }
+
+    void SetRawInt16(uint8 index, int16 value)
+    {
+        *(int16_t*)(m_entity->m_raw + index) = value;
+    }
+
+    int16 GetRawInt16(uint8 index)
+    {
+        return *(int16*)(m_entity->m_raw + index);
+    }
+
+    void SetRawUInt32(uint8 index, uint32 value)
+    {
+        *(uint32_t*)(m_entity->m_raw + index) = value;
+    }
+
+    uint32 GetRawUInt32(uint8 index)
+    {
+        return *(uint32*)(m_entity->m_raw + index);
+    }
+
+    void SetRawInt32(uint8 index, int32 value)
+    {
+        *(int32_t*)(m_entity->m_raw + index) = value;
+    }
+
+    int32 GetRawInt32(uint8 index)
+    {
+        return *(int32*)(m_entity->m_raw + index);
+    }
+
+    void SetRawUInt64(uint8 index, uint64 value)
+    {
+        *(uint64_t*)(m_entity->m_raw + index) = value;
+    }
+
+    uint64 GetRawUInt64(uint8 index)
+    {
+        return *(uint64*)(m_entity->m_raw + index);
+    }
+
+    void SetRawInt64(uint8 index, int64 value)
+    {
+        *(int64_t*)(m_entity->m_raw + index) = value;
+    }
+
+    int64 GetRawInt64(uint8 index)
+    {
+        return *(int64*)(m_entity->m_raw + index);
+    }
+
+    void SetRawFloat(uint8 index, float value)
+    {
+        *(float*)(m_entity->m_raw + index) = value;
+    }
+
+    float GetRawFloat(uint8 index)
+    {
+        return *(float*)(m_entity->m_raw + index);
+    }
+
+    void SetRawDouble(uint8 index, double value)
+    {
+        *(double*)(m_entity->m_raw + index) = value;
+    }
+
+    double GetRawDouble(uint8 index)
+    {
+        return *(double*)(m_entity->m_raw + index);
     }
 
     void SetNumber(TSString key, double value) { getData()->m_json.setNumber(key, value); }
