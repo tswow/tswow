@@ -77,11 +77,8 @@ export const Ids = {
     /** Starts at 39 , Highest base value is 38 */
     Language: new StaticIDGenerator('Languages',39),
 
-    /** Start at 200000, Highest base value is 80864, capped at 1999999 */
-    Spell: new StaticIDGenerator('Spell',200000),
-
-    /** Starts at 20000 */
-    SpellAuto: new DynamicIDGenerator('Spell',2000000),
+    /** Start at 80900, Highest base value is 80864, capped at 1999999 */
+    Spell: new StaticIDGenerator('Spell',80900),
 
     /** Starts at 16680, Highest base value is 16679*/
     SpellVisual: new DynamicIDGenerator('SpellVisual',16680),
@@ -98,8 +95,8 @@ export const Ids = {
     /** Start at 971, Highest base value is 970 */
     SkillRaceClassInfo: new DynamicIDGenerator('SkillRaceClassInfo',971),
 
-    /** Start at 27000 , Highest base value is 26034 */
-    quest_template: new StaticIDGenerator('quest_template',27000),
+    /** Start at 26100, Highest base value is 26034 */
+    quest_template: new StaticIDGenerator('quest_template',26100),
 
     /** Start at 178, Highest base value is 177 */
     CharTitles: new DynamicIDGenerator('CharTitles',178),
@@ -107,14 +104,14 @@ export const Ids = {
     /** Starts at 143, Highest base value is 142. */
     CharTitleMask: new StaticIDGenerator('CharTitlesMask',143),
 
-    /** Start at 5000, Highest base value is 4824 */
-    Achievement: new StaticIDGenerator('Achievement',5000),
+    /** Start at 4900, Highest base value is 4824 */
+    Achievement: new StaticIDGenerator('Achievement',4900),
 
-    /** Start at 20000, Highest base value is 13470 */
-    Achievement_Criteria: new StaticIDGenerator('Achievement_Criteria',20000),
+    /** Start at 13500, Highest base value is 13470 */
+    Achievement_Criteria: new StaticIDGenerator('Achievement_Criteria',13500),
 
-    /** Starts at 16000, Highest base value is 15042 */
-    Achievement_Category: new DynamicIDGenerator('Achievement_Category',16000),
+    /** Starts at 15100, Highest base value is 15042 */
+    Achievement_Category: new DynamicIDGenerator('Achievement_Category',15100),
 
     /** Starts at 506, Highest base value is 505 */
     AnimationData: new DynamicIDGenerator('AnimationData',506),
@@ -122,26 +119,26 @@ export const Ids = {
     /** Start at 4376, Highest base value is 4375 */
     SpellIcon: new DynamicIDGenerator('SpellIcon',4376),
 
-    /** Starts at 1000000, Highest base value is 3479*/
-    fishing_loot_template: new DynamicIDGenerator('fishing_loot_template',1000000),
+    /** Starts at 3500, Highest base value is 3479*/
+    fishing_loot_template: new DynamicIDGenerator('fishing_loot_template',3500),
 
-    /** Starts at 1000000, Highest base value is 100006 */
-    creature_loot_template: new DynamicIDGenerator('creature_loot_template',1000000),
+    /** Starts at 200000, Highest base value is 100006 */
+    creature_loot_template: new DynamicIDGenerator('creature_loot_template',200000),
 
-    /** Starts at 1000000, Highest base value is 195672 */
-    gameobject_loot_template: new DynamicIDGenerator('gameobject_loot_template',1000000),
+    /** Starts at 200000, Highest base value is 195672 */
+    gameobject_loot_template: new DynamicIDGenerator('gameobject_loot_template',200000),
 
-    /** Starts at 1000000, Highest base value is 69 */
-    disenchant_loot_template: new DynamicIDGenerator('disenchant_loot_template',1000000),
+    /** Starts at 200, Highest base value is 69 */
+    disenchant_loot_template: new DynamicIDGenerator('disenchant_loot_template',200),
 
-    /** Starts at 1000000, Highest base value is 34839 */
-    pickpocketing_loot_template: new DynamicIDGenerator('pickpocketing_loot_template',1000000),
+    /** Starts at 35000, Highest base value is 34839 */
+    pickpocketing_loot_template: new DynamicIDGenerator('pickpocketing_loot_template',35000),
 
-    /** Starts at 1000000, Highest base value is 100014 */
-    skinning_loot_template: new DynamicIDGenerator('skinning_loot_template',1000000),
+    /** Starts at 200000, Highest base value is 100014 */
+    skinning_loot_template: new DynamicIDGenerator('skinning_loot_template',200000),
 
-    /** Starts at 1000000, Highest base value is 526760 */
-    reference_loot_template: new DynamicIDGenerator('reference_loot_template',1000000),
+    /** Starts at 600000, Highest base value is 526760 */
+    reference_loot_template: new DynamicIDGenerator('reference_loot_template',600000),
 
     /** Starts at 1161, Highest base value is 1160. */
     Faction: new StaticIDGenerator('Faction',1161),
@@ -153,28 +150,28 @@ export const Ids = {
     // @ts-ignore: ReputationIndex is not a real table
     ReputationIndex: new StaticIDGenerator('ReputationIndex',105),
 
-    /** Start at 100000 , Highest base value is 56807 */
-    item_template: new StaticIDGenerator('item_template',100000),
+    /** Start at 60000 , Highest base value is 56807 */
+    item_template: new StaticIDGenerator('item_template',60000),
 
     /** Starts at 12, Highest base value is 11 */
     Class: new StaticIDGenerator('ChrClasses',12),
 
-    /** Starts at 100000, Highest base value is 43282 */
-    creature_template: new StaticIDGenerator('creature_template',1000000),
+    /** Starts at 45000, Highest base value is 43282 */
+    creature_template: new StaticIDGenerator('creature_template',45000),
 
-    /** Starts at 1000000, Highest base value is 213824 */
-    CreatureInstance: new StaticIDGenerator('creature',1000000),
+    /** Starts at 220000, Highest base value is 213824 */
+    CreatureInstance: new StaticIDGenerator('creature',220000),
 
     /** Starts at 401, Highest base value is 400*/
     TalentTab: new StaticIDGenerator('TalentTab',401),
 
-    /** Starts at 500, Highest base value is ?? */
+    /** Starts at 400, Highest base value is ?? */
     CharStartOutfit: new DynamicIDGenerator('CharStartOutfit',400),
 
     /** Starts at 128, Highest base value is 127 */
     Trainer: new DynamicIDGenerator('trainer',128),
 
-    /** Starts at 16777215, Highest base value is 1000000 (Below highest) */
+    /** Starts at 1000000, Highest base value is 16777215 (above start) */
     NPCText: new DynamicIDGenerator('npc_text',1000000),
 
     /** Starts at 100000, Highest base value is 74294 */
@@ -183,7 +180,7 @@ export const Ids = {
     /** Starts at 58000, highest base value is 57019 */
     gossip_menu: new DynamicIDGenerator('gossip_menu',58000),
 
-    /** Starts at 80000, highest base value is 77865 */
+    /** Starts at 100000, highest base value is 77865 */
     BroadcastText: new StaticIDGenerator('broadcast_text',100000),
 
     /** Starts at 210, highest base value is 209 */
@@ -204,8 +201,8 @@ export const Ids = {
     /** Starts at 10000000, highest base value is 9541001 */
     Waypoints: new DynamicIDGenerator('waypoints',10000000),
 
-    /** Starts at 3000, highest base value is 2285*/
-    Talent: new StaticIDGenerator('Talent',3000),
+    /** Starts at 2300, highest base value is 2285*/
+    Talent: new StaticIDGenerator('Talent',2300),
 
     /** Starts at 603, highest base value is 602*/
     SpellDuration: new DynamicIDGenerator('SpellDuration',603),
@@ -216,8 +213,8 @@ export const Ids = {
     /** Starts at 66, highest base value is 65*/
     SpellRadius: new DynamicIDGenerator('SpellRadius',66),
 
-    /** Starts at 3000, highest base value is 2706 */
-    SpellMissile: new DynamicIDGenerator('SpellMissile',3000),
+    /** Starts at 2800, highest base value is 2706 */
+    SpellMissile: new DynamicIDGenerator('SpellMissile',2800),
 
     /** Starts at 182, highest base value is 181*/
     SpellDescriptionVariable: new DynamicIDGenerator('SpellDescriptionVariables',182),
@@ -231,8 +228,8 @@ export const Ids = {
     /** Starts at 70000, highest base value is 68742 */
     ItemDisplayInfo: new DynamicIDGenerator('ItemDisplayInfo',70000),
 
-    /** Starts at 8000, highest base value is 7087 */
-    SpellVisualEffectName: new DynamicIDGenerator('SpellVisualEffectName',8000),
+    /** Starts at 7100, highest base value is 7087 */
+    SpellVisualEffectName: new DynamicIDGenerator('SpellVisualEffectName',7100),
 
     /**
      * Starts at 5000000, highest base value is CreatureTemplate which grows up from 1000000.
@@ -380,8 +377,8 @@ export const Ids = {
     Map: new StaticIDGenerator('Map', 725),
     /** Starts at 250000, highest base value is 244605 */
     gameobject_template: new StaticIDGenerator('gameobject_template',250000),
-    /** Starts at 300000, highest base value is 165990 */
-    gameobject: new StaticIDGenerator('gameobject', 300000),
+    /** Starts at 200000, highest base value is 165990 */
+    gameobject: new StaticIDGenerator('gameobject', 200000),
     /** Starts at  10000, highest base value is 9624 */
     GameObjectDisplayInfo: new DynamicIDGenerator('GameObjectDisplayInfo',10000),
     /**
@@ -451,9 +448,9 @@ export const Ids = {
     spell_group: new DynamicIDGenerator('spell_group',100000),
 
     /**
-     * Starts at 1000000, highest base value is ~1000
+     * Starts at 2000, highest base value is ~1000
      */
-    game_tele: new DynamicIDGenerator('game_tele',1000000),
+    game_tele: new DynamicIDGenerator('game_tele',2000),
 
     /**
      * Starts at 22000, highest base value is 21381
@@ -564,8 +561,8 @@ export const Ids = {
     /** Starts at 800, highest base value is 798 */
     GroundEffectDoodad: new DynamicIDGenerator('GroundEffectDoodad',800),
 
-    /** Starts at 80000, highest base value is 73186 */
-    GroundEffectTexture: new DynamicIDGenerator('GroundEffectTexture',80000),
+    /** Starts at 74000, highest base value is 73186 */
+    GroundEffectTexture: new DynamicIDGenerator('GroundEffectTexture',74000),
 
     /** Starts at 400, highest base value is 376 */
     HelmetGeosetVisData: new DynamicIDGenerator('HelmetGeosetVisData',400),
