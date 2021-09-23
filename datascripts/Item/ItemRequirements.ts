@@ -64,7 +64,7 @@ export class SkillRequirement extends CellSystem<ItemTemplate> {
 
 
 export class ItemRequirements extends CellSystem<ItemTemplate> {
-    protected row() { return this.owner.sqlRow; }
+    protected row() { return this.owner.row; }
 
     get Level() { return this.ownerWrap(this.row().RequiredLevel); }
     get Spell() { return this.ownerWrap(this.row().requiredspell); }

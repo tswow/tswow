@@ -15,7 +15,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
 export enum InventoryType {
     NOT_EQUIPPABLE = 0,
@@ -47,21 +46,7 @@ export enum InventoryType {
     RELIC = 28
 }
 
-export class ItemInventoryType extends EnumCell<ItemTemplate> {
-    constructor(owner: ItemTemplate) {
-        super(owner, owner.row.InventoryType);
-    }
-
-    get(): number {
-        return this.owner.row.InventoryType.get()
-    }
-
-    set(value: number): ItemTemplate {
-        this.owner.row.InventoryType.set(value);
-        this.owner.dbcRow.InventoryType.set(value);
-        return this.owner;
-    }
-
+export class ItemInventoryType<T> extends EnumCell<T> {
     /** Enum Value:                         0 */
     get NonEquippable() { return this.value(0) }
     /** Enum Value:                         1 */

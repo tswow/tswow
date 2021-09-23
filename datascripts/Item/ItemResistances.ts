@@ -20,8 +20,8 @@ import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemResistance extends CellSystem<ItemTemplate> {
     @Transient
-    protected get row() { return this.owner.sqlRow; }
-    get Holy() { return this.ownerWrap(this.owner.sqlRow.holy_res); }
+    protected get row() { return this.owner.row; }
+    get Holy() { return this.ownerWrap(this.owner.row.holy_res); }
     get Fire() { return this.ownerWrap(this.row.fire_res); }
     get Nature() { return this.ownerWrap(this.row.nature_res); }
     get Frost() { return this.ownerWrap(this.row.frost_res); }

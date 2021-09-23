@@ -16,7 +16,6 @@
 */
 import { DBC } from "wotlkdata";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
@@ -28,6 +27,7 @@ import { Loot, LootSet } from "../Loot/Loot";
 import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
 import { RegistryStatic } from "../Refs/Registry";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
@@ -54,11 +54,31 @@ import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
 
+export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
+    protected createDBC(): ItemRow {
+        return DBC.Item.add(this.owner.ID)
+    }
+    protected findDBC(): ItemRow {
+        return DBC.Item.findById(this.owner.ID)
+    }
+    protected isValidDBC(dbc: ItemRow): boolean {
+        return dbc.ID.get() === this.owner.ID;
+    }
+
+    get ClassID()       { return this.wrapDBC(0,dbc=>dbc.ClassID)}
+    get SubclassID()    { return this.wrapDBC(0,dbc=>dbc.SubclassID)}
+    get SoundOverride() { return this.wrapDBC(0,dbc=>dbc.Sound_Override_Subclassid)}
+    get Material()      { return this.wrapDBC(0,dbc=>dbc.Material)}
+    get DisplayInfoID() { return this.wrapDBC(0,dbc=>dbc.DisplayInfoID)}
+    get InventoryType() { return this.wrapDBC(0,dbc=>dbc.InventoryType)}
+    get SheatheType()   { return this.wrapDBC(0,dbc=>dbc.SheatheType)}
+}
+
 export class ItemTemplate extends MainEntity<item_templateRow> {
-    @Transient
-    sqlRow : item_templateRow;
-    @Transient
-    dbcRow : ItemRow;
+    protected dbc = new ItemDBC(this);
+    dbcExists() { return this.dbc.HasDBC(); }
+    dbcRow() { return this.dbc.GetOrCreateDBC(); }
+    createDbc() { return this.dbc.GetOrCreateDBC(); }
 
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
@@ -84,26 +104,41 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get RangeMod() { return this.wrap(this.row.RangedModRange); }
     get Description() { return new ItemDescription(this); }
     get Quality() { return new ItemQuality(this); }
-    get Durability() { return this.wrap(this.sqlRow.MaxDurability); }
-    get Disenchant() { return Loot.Disenchant.ref(this, this.sqlRow.DisenchantID); }
-    get RequiredLevel() { return this.wrap(this.sqlRow.RequiredLevel); }
-    get ItemLevel() { return this.wrap(this.sqlRow.ItemLevel); }
-    get RequiredSpell() { return this.wrap(this.sqlRow.requiredspell); }
-    get RequiredHonorRank() { return this.wrap(this.sqlRow.requiredhonorrank); }
-    get ClassMask() { return new ClassMask(this, this.sqlRow.AllowableClass, true); }
-    get RaceMask() { return this.wrap(this.sqlRow.AllowableRace); }
-    get MaxCount() { return this.wrap(this.sqlRow.maxcount); }
-    get MaxStack() { return this.wrap(this.sqlRow.stackable); }
+    get Durability() { return this.wrap(this.row.MaxDurability); }
+    get Disenchant() { return Loot.Disenchant.ref(this, this.row.DisenchantID); }
+    get RequiredLevel() { return this.wrap(this.row.RequiredLevel); }
+    get ItemLevel() { return this.wrap(this.row.ItemLevel); }
+    get RequiredSpell() { return this.wrap(this.row.requiredspell); }
+    get RequiredHonorRank() { return this.wrap(this.row.requiredhonorrank); }
+    get ClassMask() { return new ClassMask(this, this.row.AllowableClass, true); }
+    get RaceMask() { return this.wrap(this.row.AllowableRace); }
+    get MaxCount() { return this.wrap(this.row.maxcount); }
+    get MaxStack() { return this.wrap(this.row.stackable); }
     get Bonding() { return new ItemBonding(this); }
     get Damage() { return new ItemDamages(this); }
     get Requirements() { return new ItemRequirements(this); }
     get Spells() { return new ItemSpells(this); }
     get Class() { return new ItemClass(this); }
-    get SoundOverride() { return this.wrap(this.row.SoundOverrideSubclass)}
+    get SoundOverride() {
+        return new MulticastCell(this,[
+              this.row.SoundOverrideSubclass
+            , this.dbc.SoundOverride
+        ])
+    }
     get Price() { return new ItemPrice(this); }
-    get Material() { return new ItemMaterial(this); }
+    get Material() {
+        return new ItemMaterial(this, new MulticastCell(this, [
+            this.row.Material, this.dbc.Material
+        ]));
+    }
     get Flags() { return new ItemFlags(this, this.row.Flags); }
-    get InventoryType() { return new ItemInventoryType(this); }
+    get InventoryType() {
+        return new ItemInventoryType(this, new MulticastCell(this,[
+            this.row.InventoryType, this.dbc.InventoryType
+        ]));
+    }
+
+    get SheatheType() { return this.dbc.SheatheType; }
     get RequiredFaction() { return new ItemRequiredFaction(this); }
     get ContainerSlots() { return this.wrap(this.row.ContainerSlots); }
     get RequiredDisenchantSkill() { return this.wrap(this.row.RequiredDisenchantSkill); }
@@ -126,7 +161,10 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
 
     get DisplayInfo() {
         return ItemDisplayinfoRegistry.ref(this
-            , new MulticastCell(this, [this.row.displayid, this.dbcRow.DisplayInfoID]))
+            , new MulticastCell(this, [
+                this.row.displayid, this.dbc.DisplayInfoID
+            ])
+        )
     }
 
     get AmmoType() { return new ItemAmmoTypes(this, this.row.ammo_type); }
@@ -134,14 +172,8 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
     get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
 
-    constructor(srow : item_templateRow, crow : ItemRow) {
-        super(srow);
-        this.sqlRow = srow;
-        this.dbcRow = crow;
-    }
-
     get ID() {
-        return this.sqlRow.entry.get();
+        return this.row.entry.get();
     }
 }
 
@@ -159,11 +191,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
         return Ids.item_template
     }
     protected Entity(r: item_templateRow): ItemTemplate {
-        return new ItemTemplate(
-               r
-            ,  DBC.Item.findById(r.entry.get())
-            || DBC.Item.add(r.entry.get())
-        )
+        return new ItemTemplate(r)
     }
     protected FindByID(id: number): item_templateRow {
         return SQL.item_template.find({entry:id});

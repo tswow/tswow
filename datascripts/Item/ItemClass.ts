@@ -75,9 +75,8 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     set(cls: number, subclass: number): ItemTemplate {
         this.owner.row.class.set(cls);
         this.owner.row.subclass.set(subclass);
-
-        this.owner.dbcRow.ClassID.set(cls)
-        this.owner.dbcRow.SubclassID.set(subclass);
+        this.owner.createDbc().ClassID.set(cls)
+        this.owner.createDbc().SubclassID.set(subclass);
         return this.owner;
     }
 

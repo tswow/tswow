@@ -18,7 +18,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemShop extends CellSystem<ItemTemplate> {
-    private row() { return this.owner.sqlRow; }
+    private row() { return this.owner.row; }
 
     set(buycount: number, buyprice: number, sellprice: number) {
         this.BuyCount.set(buycount);

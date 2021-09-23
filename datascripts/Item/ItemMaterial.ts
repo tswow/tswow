@@ -15,13 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemMaterial extends EnumCell<ItemTemplate> {
-    constructor(owner: ItemTemplate) {
-        super(owner,owner.row.Material)
-    }
-
+export class ItemMaterial<T> extends EnumCell<T> {
     /** Enum Value:                       -1 */
     get Consumables() { return this.value(-1) }
     /** Enum Value:                       0 */
