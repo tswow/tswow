@@ -7081,12 +7081,14 @@ declare namespace _hidden {
         OnCritFormula(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
         OnAuraCritFormula(callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
-        /** reflectCHance should be an integer between 0 and 10000 */
+        /** reflectChance should be an integer between 0 and 10000 */
         OnReflectFormula(callback : (attacker: TSWorldObject, victim: TSUnit, spell: TSSpellInfo, reflectChance: TSMutable<int32>)=>void)
         /** hitChance should be an integer between 0 and 10000 */
         OnHitFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
         /** resistChance should be an integer between 0 and 10000 */
         OnResistFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
+        /** penalty should be a float between 0 and 1 */
+        OnSpellPowerLevelPenalty(callback: (spellInfo: TSSpellInfo, attacker: TSUnit, penalty: TSMutable<float>)=>void)
     }
 
     export class CreatureID {

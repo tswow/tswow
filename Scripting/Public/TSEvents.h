@@ -248,6 +248,7 @@ EVENT_TYPE(SpellOnAuraCritFormula, TSAuraEffect, TSMutable<float>)
 EVENT_TYPE(SpellOnReflectFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
 EVENT_TYPE(SpellOnHitFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
 EVENT_TYPE(SpellOnResistFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
+EVENT_TYPE(SpellOnSpellPowerLevelPenalty, TSSpellInfo /*spell*/, TSUnit /*caster*/, TSMutable<float> /*penalty*/)
 
 struct TSSpellEvents {
      EVENT(SpellOnCast)
@@ -266,6 +267,7 @@ struct TSSpellEvents {
      EVENT(SpellOnReflectFormula)
      EVENT(SpellOnHitFormula)
      EVENT(SpellOnResistFormula)
+     EVENT(SpellOnSpellPowerLevelPenalty)
 };
 
 class TSSpellMap : public TSEventMap<TSSpellEvents> 
@@ -897,6 +899,7 @@ struct TSEvents
     EVENT(SpellOnReflectFormula)
     EVENT(SpellOnHitFormula)
     EVENT(SpellOnResistFormula)
+    EVENT(SpellOnSpellPowerLevelPenalty)
 
     // GameObjects
     EVENT(GameObjectOnUpdate)
@@ -1171,6 +1174,7 @@ public:
           EVENT_HANDLE(Spell,OnReflectFormula)
           EVENT_HANDLE(Spell,OnHitFormula)
           EVENT_HANDLE(Spell,OnResistFormula)
+          EVENT_HANDLE(Spell,OnSpellPowerLevelPenalty)
     } Spells;
 
     struct SpellIDEvents : public MappedEventHandler<TSSpellMap>
@@ -1192,6 +1196,7 @@ public:
           MAP_EVENT_HANDLE(Spell, OnReflectFormula)
           MAP_EVENT_HANDLE(Spell, OnHitFormula)
           MAP_EVENT_HANDLE(Spell, OnResistFormula)
+          MAP_EVENT_HANDLE(Spell, OnSpellPowerLevelPenalty)
     } SpellID;
 
      struct CreatureEvents: public EventHandler
