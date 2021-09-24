@@ -2270,7 +2270,15 @@ declare interface TSOutfit {
 }
 
 declare interface TSCreature extends TSUnit {
-    IsAIEnabled(): boolean
+    /**
+     * @param unit
+     * @param withGroup whether to include group, true by default
+     */
+    SetLootRecipient(unit: TSUnit, withGroup?: bool)
+
+    HasLootRecipient(): bool
+
+    IsAIEnabled(): bool
 
     GetLoot(): TSLoot;
 
