@@ -1325,12 +1325,7 @@ bool TSCreature::IsAIEnabled()
     return creature->IsAIEnabled();
 }
 
-bool TSCreature::HasLootRecipient()
-{
-    return creature->hasLootRecipient();
-}
-
-void TSCreature::SetLootRecipient(TSUnit unit, bool withGroup = true)
+void TSCreature::SetLootRecipient(TSUnit unit, bool withGroup)
 {
     creature->SetLootRecipient(unit.unit, withGroup);
 }

@@ -132,7 +132,6 @@ public:
 	uint32 GetGossipTextId(TSWorldObject obj);
 	TSUnit GetSelection();
 	uint32 GetGMRank();
-	uint32 GetMoney();
 	uint32 GetGuildId();
 	uint32 GetTeam();
 	uint32 GetItemCount(uint32 entry, bool checkinBank);

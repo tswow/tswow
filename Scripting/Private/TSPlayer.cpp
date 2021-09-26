@@ -1299,17 +1299,7 @@ uint32 TSPlayer::GetGMRank()
 {
     return player->GetSession()->GetSecurity();
 }
-    
-/**
- * Returns the [Player]s amount of money in copper
- *
- * @return uint32 money
- */
-uint32 TSPlayer::GetMoney() 
-{
-    return player->GetMoney();
-}
-    
+
 /**
  * Returns the [Player]s current [Guild] ID
  *
