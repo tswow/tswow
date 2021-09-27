@@ -265,6 +265,6 @@ export class PositionXYCell<T> extends CellSystem<T> {
     }
 
     set(obj: {x: number, y: number}) {
-        this.setSpread(obj.x,obj.y);
+        return this.setSpread(obj.x,obj.y);
     }
 }
