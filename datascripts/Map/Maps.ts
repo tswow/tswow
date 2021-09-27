@@ -34,7 +34,7 @@ export class MapRegistryClass
         .MinimapIconScale.set(0)
         .Name.clear()
         .RaidOffset.set(0)
-        .TimeofDayOverride.set(0)
+        .TimeofDayOverride.set(-1)
     }
     protected Entity(r: MapRow): Map {
         return new Map(r);

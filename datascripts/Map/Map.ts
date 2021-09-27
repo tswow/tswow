@@ -20,11 +20,13 @@ import path from "path";
 import { DBC, finish } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYCell } from "../Misc/PositionCell";
+import { LoadingScreens } from "./LoadingScreen";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
@@ -39,7 +41,9 @@ export class Map extends MainEntity<MapRow> {
     get HordeDescription() { return this.wrapLoc(this.row.MapDescription0); }
     get AllianceDescription() { return this.wrapLoc(this.row.MapDescription1); }
 
-    get LoadingScreen() { return this.wrap(this.row.LoadingScreenID); }
+    get LoadingScreen() {
+        return LoadingScreens.ref(this, this.row.LoadingScreenID);
+    }
     get MinimapIconScale() { return this.wrap(this.row.MinimapIconScale); }
 
     get CorpseMap() { return MapRegistry.ref(this, this.row.CorpseMapID); }
@@ -60,8 +64,8 @@ export class Map extends MainEntity<MapRow> {
 
         let transform = (v: number) => 17066.7 - (v*533.333);
 
-        let miny = transform(0);
-        let minx = transform(0);
+        let miny = transform(1);
+        let minx = transform(1);
         let maxx = transform(sizeX);
         let maxy = transform(sizeY);
 
@@ -84,10 +88,10 @@ export class Map extends MainEntity<MapRow> {
             );
 
         let files = fs.existsSync(mapdir) ? fs.readdirSync(mapdir) : []
+        files = files.filter(x=>x.endsWith('.adt'))
         if(files.length > 0) {
-            let files = fs.readdirSync(mapdir);
-            for(let x=0;x<=sizeX;++x) {
-                for(let y=0;y<=sizeY;++y) {
+            for(let x=1;x<=sizeX;++x) {
+                for(let y=1;y<=sizeY;++y) {
                     let filename = `${this.Directory.get()}_${x}_${y}.adt`
                     let index = files.indexOf(filename);
                     if(index < 0) {
@@ -96,14 +100,13 @@ export class Map extends MainEntity<MapRow> {
                     files.splice(index,1);
                 }
             }
-            let wdt = `${this.Directory.get()}.wdt`
-            if(files.length !== 1 || files[0] !== wdt) {
+            if(files.length > 0) {
                 throw new Error(
-                      `Trying to re-generate adts with unknown files in directory, `
+                      `Trying to re-generate adts with unknown adts in directory, `
                     + `please fix your map files manually: ${files.join(',')}`
                 )
             }
-            return;
+            return this;
         }
 
         child_process.execSync(
@@ -111,7 +114,7 @@ export class Map extends MainEntity<MapRow> {
             + ` ${path.join('bin','source.adt')}`
             + ` ${mapdir}`
             + ` ${this.Directory.get()}`
-            + ` 0 0 ${sizeX} ${sizeY}`
+            + ` 1 1 ${sizeX} ${sizeY}`
         );
         return this;
     }
@@ -131,14 +134,15 @@ export class Map extends MainEntity<MapRow> {
 }
 
 finish('build-maps',()=>{
-    // workaround to allow noggit workspaces in asset directories
-    fs.readdirSync('modules').forEach(x=>{
-        let assetsdir = path.join('modules',x,'assets')
+    fs.readdirSync('modules').forEach(mod=>{
+        // workaround to allow noggit workspaces in asset directories
+        let assetsdir = path.join('modules',mod,'assets')
         let mapsdir = path.join(assetsdir,'world','maps')
         let dbfilesdir = path.join(assetsdir,'DBFilesClient')
         if(fs.existsSync(mapsdir)) {
             fs.mkdirSync(dbfilesdir,{recursive:true});
             DBC.Map.write(path.join(dbfilesdir,'Map.dbc'))
+            DBC.AreaTable.write(path.join(dbfilesdir,'AreaTable.dbc'))
             DBC.Light.write(path.join(dbfilesdir,'Light.dbc'))
             DBC.LightParams.write(path.join(dbfilesdir,'LightParams.dbc'))
             DBC.LightSkybox.write(path.join(dbfilesdir,'LightSkybox.dbc'))
@@ -151,6 +155,122 @@ finish('build-maps',()=>{
                 + ` so you can safely leave them here and ignore them.`
                 + `\n\nSymlinks are also safe, so don't worry.`
             )
+            storeAreaMappings(mod,mapsdir);
         }
     })
 });
+
+/**
+ * This algorithm will create mod/id pair <-> area id mappings
+ * for all adts so that adts can be automatically updated / moved to projects
+ * with alternative id mappings.
+ */
+function storeAreaMappings(mod: string, mapsdir: string) {
+    let areasPath = path.join('modules',mod,'areas.json');
+    let adtAreaMap: {[key: string]: number} = fs.existsSync(areasPath)
+        ? JSON.parse(fs.readFileSync(areasPath,'utf-8'))
+        : {}
+
+    /**
+     * Before we start scanning adts, we need to find all existing id mappings
+     * and find the outdated ones
+     */
+    let replaces: {[key: number]: number}= {}
+    for(const identifier in adtAreaMap) {
+        const oldAreaId = adtAreaMap[identifier];
+        const newAreaId = registeredAreas[identifier];
+        if(newAreaId !== undefined && newAreaId !== oldAreaId) {
+            adtAreaMap[identifier] = replaces[oldAreaId] = newAreaId;
+        }
+    }
+
+    let anyChanges = false
+    if(Object.entries(replaces).length > 0) {
+        anyChanges = true
+        console.log(`ADT area inconsistent with id registry`)
+        console.log(
+              `The following adt areas will be replaced:`
+            + `${Object.entries(replaces)
+                    .map(([old,nu])=>`${old}->${nu}`).join(',')
+                }`
+        )
+    }
+
+    let cachedSkips: number[] = []
+    let stagedFiles: string[] = []
+    fs.readdirSync(mapsdir)
+        .map(x=>path.join(mapsdir,x))
+        .filter(x=>fs.statSync(x).isDirectory())
+        .reduce<string[]>(
+              (files,dir)=>files
+                .concat(fs.readdirSync(dir)
+                    .map(file=>path.join(dir,file))
+                    .filter(x=>x.endsWith('.adt') && fs.statSync(x).isFile())
+                )
+            , [])
+        .forEach(file=>{
+            const adt = fs.readFileSync(file);
+            const mcin = adt.readUInt32LE(0x10)+0x14;
+            let anyFileChanges = false;
+            for(let i=0;i<256;++i) {
+                const mcnk = adt.readUInt32LE(8+mcin+16*i)
+                // safety check for if this is even a valid adt
+                if(adt.toString('ascii',mcnk,mcnk+4) !== 'KNCM') {
+                    console.log(`Error reading adt ${file}, invalid mcnk pointer ${mcnk} at mcin index ${i}`)
+                    process.exit(-1)
+                }
+                const areaOffset = mcnk+0x3c;
+
+                // First, we see if this is already a known new mapping so we can skip it
+                const adtArea = adt.readUInt32LE(areaOffset);
+                if(cachedSkips.includes(adtArea)) {
+                    continue;
+                }
+
+                // Secondly, we see if we should replace the value in the adt
+                const replacement = replaces[adtArea];
+                if(replacement !== undefined) {
+                    adt.writeUInt32LE(replacement,areaOffset);
+                    anyFileChanges = true;
+                    continue;
+                }
+
+                // Finally, we check if this is a new unknown mapping
+                const areaMapping = Object.entries(registeredAreas).find(([key,value])=>value === adtArea);
+                if(areaMapping !== undefined) {
+                    const [identifier] = areaMapping;
+                    if(adtAreaMap[identifier] === undefined) {
+                        // we already know it's not out of date, so it's safe to just overwrite this
+                        // even if it previously existed.
+                        console.log(`Storing area mapping ${identifier}->${adtArea}`)
+                        adtAreaMap[areaMapping[0]] = adtArea;
+                        anyChanges = true;
+                    }
+                }
+                // we no longer need to check this area, since
+                // it's not a replacement and we already made the mapping
+                cachedSkips.push(adtArea);
+            }
+            if(anyFileChanges) {
+                stagedFiles.push(file);
+                fs.writeFileSync(file+'.tmp',adt);
+            }
+        })
+    if(!anyChanges) return;
+
+    // save to temporary file in case of failure
+    fs.writeFileSync(areasPath+'.tmp',JSON.stringify(adtAreaMap, null, 4));
+    stagedFiles.forEach(x=>{
+        try {
+            fs.renameSync(x+'.tmp',x)
+        } catch (error) {
+            console.log(
+                  `Failed to rename area patches:`
+                + `this is dangerous. Please manually review the remaining`
+                + ` '.tmp' files and decide what to keep`
+            )
+            process.exit(1)
+        }
+    })
+    fs.renameSync(areasPath+'.tmp',areasPath);
+}

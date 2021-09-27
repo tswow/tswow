@@ -66,6 +66,7 @@ export class Area extends MainEntity<AreaTableRow> {
 }
 
 
+export const registeredAreas: {[key: string]: number} = {}
 export class AreaRegistryClass
     extends RegistryStaticNoClone<Area,AreaTableRow,AreaTableQuery>
 {
@@ -76,6 +77,7 @@ export class AreaRegistryClass
         return Ids.Area
     }
     Clear(r: Area, mod: string, id: string): void {
+        registeredAreas[`${mod}:${id}`] = r.ID
         r.row.ExploreFlag.set(Ids.AreaBit.id(mod,`${id}-bit`))
             .AmbienceID.set(0)
             .Ambient_Multiplier.set(0)

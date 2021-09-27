@@ -853,13 +853,13 @@ export const Ids = {
     Weather: new StaticIDGenerator('Weather', 200),
 
     /** Starts at 700, highest base value is 609 */
-    WorldMapArea: new DynamicIDGenerator('WorldMapArea', 700),
+    WorldMapArea: new DynamicIDGenerator('WorldMapArea', 610),
 
     /** Starts at 5, highest base value is 4 (cont) */
     WorldMapContinent: new DynamicIDGenerator('WorldMapContinent', 5),
 
     /** Starts at 2000, highest base value is 1641 */
-    WorldMapOverlay: new DynamicIDGenerator('WorldMapOverlay', 2000),
+    WorldMapOverlay: new DynamicIDGenerator('WorldMapOverlay', 1642),
 
     /** Starts at 11, highest base value is 10 (cont) */
     WorldMapTransforms: new DynamicIDGenerator('WorldMapTransforms', 11),

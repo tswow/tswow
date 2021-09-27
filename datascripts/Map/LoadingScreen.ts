@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { LoadingScreensQuery, LoadingScreensRow } from "wotlkdata/dbc/types/LoadingScreens";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 
 export class LoadingScreen extends MainEntity<LoadingScreensRow> {
     get ID() { return this.row.ID.get(); }
@@ -28,9 +30,21 @@ export class LoadingScreen extends MainEntity<LoadingScreensRow> {
     get HasWidescreen() { return this.wrap(this.row.HasWideScreen); }
 }
 
+export class LoadingScreenRef<T> extends RefDynamic<T,LoadingScreen> {
+    setSimple(path: string, widescreen: boolean = false) {
+        this.getRefCopy()
+            .FileName.set(path)
+            .HasWidescreen.set(widescreen?1:0)
+        return this.owner;
+    }
+}
+
 export class LoadingScreenRegistryClass
-    extends RegistryDynamic<LoadingScreen,LoadingScreensRow,LoadingScreensQuery>
+    extends RegistryDynamicNoRef<LoadingScreen,LoadingScreensRow,LoadingScreensQuery>
 {
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new LoadingScreenRef(owner,cell,this);
+    }
     protected Table(): Table<any, LoadingScreensQuery, LoadingScreensRow> & { add: (id: number) => LoadingScreensRow; } {
         return DBC.LoadingScreens
     }
