@@ -166,6 +166,7 @@ finish('build-maps',()=>{
  * with alternative id mappings.
  */
 function storeAreaMappings(mod: string, mapsdir: string) {
+    if(process.argv.includes('--no-area-mapping')) return;
     let areasPath = path.join('modules',mod,'areas.json');
     let adtAreaMap: {[key: string]: number} = fs.existsSync(areasPath)
         ? JSON.parse(fs.readFileSync(areasPath,'utf-8'))
