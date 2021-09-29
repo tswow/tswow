@@ -67,7 +67,6 @@ import { UI } from "./UI/UI";
 import { VehicleRegistry } from "./Vehicle/Vehicle";
 import { ScriptPaths } from "./Waypoints/ScriptPaths";
 import { DungeonMapRegistry } from "./Worldmap/DungeonMap";
-import { WorldMapAreaRegistry } from "./Worldmap/WorldMapArea";
 import { WorldMapContinentRegistry } from "./Worldmap/WorldMapContinent";
 import { WorldMapOverlayRegistry } from "./Worldmap/WorldMapOverlay";
 import { WorldMapTransformRegistry } from "./Worldmap/WorldMapTransform";
@@ -135,7 +134,6 @@ export const std = {
     WorldStateUIs: WorldStateUIRegistry,
     WorldStates: WorldStateRegistry,
     WMOArea: WMOAreaRegistry,
-    WorldMapAreas: WorldMapAreaRegistry,
     WorldMapContinents: WorldMapContinentRegistry,
     WorldMapOverlays: WorldMapOverlayRegistry,
     WorldMapTransforms: WorldMapTransformRegistry,

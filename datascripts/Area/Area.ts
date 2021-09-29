@@ -28,6 +28,7 @@ import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferenc
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
 import { AreaFlags } from "./AreaFlags";
+import { AreaMap } from "./AreaMap";
 import { AreaWorldStateSounds, AreaWorldStateUIs } from "./AreaWorldStates";
 
 export class AreaSoundProviderPreferences extends CellSystem<Area> {
@@ -65,6 +66,8 @@ export class Area extends MainEntity<AreaTableRow> {
     get WorldStateSounds() { return new AreaWorldStateSounds(this); }
     get Flags() { return new AreaFlags(this, this.row.Flags); }
     get Children() { return new AreaChildren(this); }
+
+    get WorldMap() { return new AreaMap(this); }
 }
 
 export class AreaChildren extends MultiRowSystem<Area,Area> {

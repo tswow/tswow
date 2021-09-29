@@ -5,7 +5,7 @@ export abstract class RegistryBase<E,R> {
     protected abstract getAll(): E[];
     protected abstract Entity(r: R): E;
     abstract ID(e: E): number;
-    protected nullID = () => 0;
+    nullID = () => 0;
 
     Exists(entry: number) { return entry != this.nullID(); }
 

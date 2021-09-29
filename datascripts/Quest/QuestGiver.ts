@@ -16,6 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { AreaRegistry } from "../Area/Area";
 import { Quest } from "./Quest";
 
 export class QuestNPC extends CellSystem<Quest> {
@@ -32,10 +33,9 @@ export class QuestNPC extends CellSystem<Quest> {
      * Add a quest ender
      * @param npcId
      */
-    addEnder(npcId : number, addPoi = true) {
+    addEnder(npcId : number, poiArea = AreaRegistry.nullID()) {
         SQL.creature_questender.add(npcId,this.owner.ID)
-
-        if(addPoi) {
+        if(poiArea > AreaRegistry.nullID()) {
             let creatures = SQL.creature.filter({id:npcId})
             if(creatures.length === 0) {
                 throw new Error(
@@ -52,7 +52,7 @@ export class QuestNPC extends CellSystem<Quest> {
                 )
             }
 
-            this.owner.POIs.add(-1,[{
+            this.owner.POIs.add(-1, poiArea,[{
                   map:creatures[0].map.get()
                 , x:creatures[0].position_x.get()
                 , y:creatures[0].position_y.get()
@@ -68,9 +68,9 @@ export class QuestNPC extends CellSystem<Quest> {
      * Add both a quest starter and ender
      * @param npcId
      */
-    addBoth(npcId: number, addPoi = true) {
+    addBoth(npcId: number, poiArea = AreaRegistry.nullID()) {
         this.addStarter(npcId);
-        this.addEnder(npcId, addPoi);
+        this.addEnder(npcId, poiArea);
         return this.owner;
     }
 }
