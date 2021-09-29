@@ -43,6 +43,7 @@ import { Loot } from "./Loot/Loot";
 import { MailTemplateRegistry } from "./Mail/MailTemplate";
 import { LoadingScreens } from "./Map/LoadingScreen";
 import { MapRegistry } from "./Map/Maps";
+import { Colors } from "./Misc/Color";
 import { Compare } from "./Misc/Compare";
 import { Ids } from "./Misc/Ids";
 import { CompanionRegistry } from "./PetsCollectibles/Companion";
@@ -145,5 +146,6 @@ export const std = {
     GameEvents: GameEventRegistry,
     IDs: Ids,
     AreaTriggers: AreaTriggerRegistry,
-    SpellStackGroups: SpellStackGroupRegistry
+    SpellStackGroups: SpellStackGroupRegistry,
+    Colors: Colors
 }
