@@ -4,6 +4,9 @@ import * as path from 'path';
 import { PNG } from 'pngjs';
 import * as pureimage from 'pureimage';
 
+// 'PNG+BLP' is more futureproof than "both" if we ever need tga
+export type ExportFormat = 'PNG'|'BLP'|'PNG+BLP'
+
 export class TSImage {
     protected bitmap: any;
     protected get context() {
@@ -64,7 +67,7 @@ export class TSImage {
         return this;
     }
 
-    write(pathIn: string, keepPng: boolean = false) {
+    write(pathIn: string, format: ExportFormat = 'PNG+BLP') {
         let pathRaw = pathIn;
         if(pathIn.toLowerCase().endsWith('.blp') || pathIn.toLowerCase().endsWith('.png')) {
             pathRaw = pathIn.substring(0,pathIn.length-4);
@@ -78,17 +81,21 @@ export class TSImage {
         if(fs.existsSync(pathBlp)) {
             fs.rmSync(pathBlp);
         }
-        pureimage.encodePNGToStream(this.bitmap,fs.createWriteStream(pathPng))
+        return pureimage.encodePNGToStream(this.bitmap,fs.createWriteStream(pathPng))
             .then(()=>{
-                child_process.execSync(`"bin/BLPConverter/blpconverter.exe" ${pathPng}`)
-                if(!keepPng) {
-                    fs.rmSync(pathPng);
+                if(format !== 'PNG') {
+                    child_process.execSync(
+                        `"bin/BLPConverter/blpconverter.exe" ${pathPng}`
+                    )
+                    if(format !== 'PNG+BLP') {
+                        fs.rmSync(pathPng);
+                    }
                 }
         });
     }
 
-    writeToModule(mod: string, localPath: string, keepPng = false) {
-        this.write(path.join('modules',mod,localPath), keepPng);
+    writeToModule(mod: string, localPath: string, format: ExportFormat = 'PNG+BLP') {
+        return this.write(path.join('modules',mod,localPath), format);
     }
 
     static create(width: number, height: number) {
