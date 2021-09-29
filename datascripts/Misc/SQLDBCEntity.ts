@@ -123,6 +123,29 @@ export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMa
     }
 
     HasDBC() { return this.GetDBC() !== undefined; }
+
+    // todo: new syntax
+    exists() { return this.HasDBC(); }
+    force() { this.GetOrCreateDBC(); return this.owner; }
+
+    static wrapDBC<C extends CPrim,T,DBC,O extends MaybeDBCEntity<T,DBC>>(
+              owner: O
+            , def: C
+            , safegetter: (dbc: DBC)=>Cell<C,any>
+            )
+        : MaybeDBCCell<T,C,DBC,O>
+    {
+        return owner.wrapDBC(def,safegetter);
+    }
+
+    static wrapDBCLoc<T,DBC,O extends MaybeDBCEntity<T,DBC>>(
+              owner: O
+            , safegetter: (dbc: DBC)=>LocSystem<any>
+            )
+        : MaybeDBCLoc<T,DBC,O>
+    {
+            return owner.wrapDBCLoc(safegetter);
+    }
 }
 
 export abstract class SQLDBCEntity<DBC,SQL> extends CellSystemTop {

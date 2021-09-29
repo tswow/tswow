@@ -19,21 +19,42 @@ import fs from "fs";
 import path from "path";
 import { DBC, finish } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
+import { Settings } from "wotlkdata/Settings";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
+import { CellBasic } from "../GameObject/ElevatorKeyframes";
+import { TSImages } from "../Images/Image";
+import { Colors } from "../Misc/Color";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYCell } from "../Misc/PositionCell";
+import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { LoadingScreens } from "./LoadingScreen";
+import { MapContinent } from "./MapContinent";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
 
 export class Map extends MainEntity<MapRow> {
     get ID() { return this.row.ID.get(); }
-    get Directory() { return this.wrap(this.row.Directory); }
+
+    /**
+     * @note changing this will automatically update the AreaName
+     * of any WorldMapArea connected to this Map via a
+     * WorldMapContinent entry.
+     */
+    get Directory() {
+        return new CellBasic(this,()=>this.row.Directory.get(),(value)=>{
+            this.row.Directory.set(value);
+            // update the area name if we change the directory name
+            if(this.Continent.exists()) {
+                this.Continent.area_row.AreaName.set(value)
+            }
+            return this;
+        })
+    }
     get InstanceType() { return new MapInstanceType(this, this.row.InstanceType); }
 
     get Name() { return this.wrapLoc(this.row.MapName); }
@@ -53,6 +74,7 @@ export class Map extends MainEntity<MapRow> {
     get MaxPlayers() { return this.wrap(this.row.MaxPlayers); }
     get RaidOffset() { return this.wrap(this.row.RaidOffset); }
     get AreaTable() { return this.wrap(this.row.AreaTableID); }
+    get Continent() { return new MapContinent(this); }
 
     GenerateADT(sizeX: number, sizeY: number, module: string, createTeleport = true) {
         if(this.Directory.get() === '') {
@@ -134,38 +156,49 @@ export class Map extends MainEntity<MapRow> {
 }
 
 finish('build-maps',()=>{
-    fs.readdirSync('modules').forEach(mod=>{
+    let allMaps: string[] = []
+    Settings.PATCH_DIRECTORY.forEach((mod: string)=>{
         // workaround to allow noggit workspaces in asset directories
-        let assetsdir = path.join('modules',mod,'assets')
-        let mapsdir = path.join(assetsdir,'world','maps')
-        let dbfilesdir = path.join(assetsdir,'DBFilesClient')
-        if(fs.existsSync(mapsdir)) {
-            fs.mkdirSync(dbfilesdir,{recursive:true});
-            DBC.Map.write(path.join(dbfilesdir,'Map.dbc'))
-            DBC.AreaTable.write(path.join(dbfilesdir,'AreaTable.dbc'))
-            DBC.Light.write(path.join(dbfilesdir,'Light.dbc'))
-            DBC.LightParams.write(path.join(dbfilesdir,'LightParams.dbc'))
-            DBC.LightSkybox.write(path.join(dbfilesdir,'LightSkybox.dbc'))
-            DBC.LightfloatBand.write(path.join(dbfilesdir,'LightfloatBand.dbc'))
-            DBC.LightintBand.write(path.join(dbfilesdir,'LightintBand.dbc'))
-            fs.writeFileSync(path.join(dbfilesdir,'WHY_THESE_FILES_HERE.txt'),
-                  `These files are written here so you can set your`
-                + ` noggit project directory to your modules 'assets'.`
-                + `\n\nThey are updated any time datascripts build,`
-                + ` so you can safely leave them here and ignore them.`
-                + `\n\nSymlinks are also safe, so don't worry.`
+        let mapsDir = path.join('modules',mod,'assets','world','maps')
+        if(fs.existsSync(mapsDir)) {
+            storeAreaMappings(mod,mapsDir);
+            copyMapDBCs(mod);
+            allMaps = allMaps.concat(fs.readdirSync(mapsDir)
+                .filter(x=>!allMaps.includes(x))
             )
-            storeAreaMappings(mod,mapsdir);
         }
     })
+    allMaps.forEach(x=>{
+        generateZmp(x);
+    })
 });
+
+function copyMapDBCs(mod: string) {
+    let assetsdir = path.join('modules',mod,'assets')
+    let dbfilesdir = path.join(assetsdir,'DBFilesClient')
+    fs.mkdirSync(dbfilesdir,{recursive:true});
+    DBC.Map.write(path.join(dbfilesdir,'Map.dbc'))
+    DBC.AreaTable.write(path.join(dbfilesdir,'AreaTable.dbc'))
+    DBC.Light.write(path.join(dbfilesdir,'Light.dbc'))
+    DBC.LightParams.write(path.join(dbfilesdir,'LightParams.dbc'))
+    DBC.LightSkybox.write(path.join(dbfilesdir,'LightSkybox.dbc'))
+    DBC.LightfloatBand.write(path.join(dbfilesdir,'LightfloatBand.dbc'))
+    DBC.LightintBand.write(path.join(dbfilesdir,'LightintBand.dbc'))
+    fs.writeFileSync(path.join(dbfilesdir,'WHY_THESE_FILES_HERE.txt'),
+            `These files are written here so you can set your`
+        + ` noggit project directory to your modules 'assets'.`
+        + `\n\nThey are updated any time datascripts build,`
+        + ` so you can safely leave them here and ignore them.`
+        + `\n\nSymlinks are also safe, so don't worry.`
+    )
+}
 
 /**
  * This algorithm will create mod/id pair <-> area id mappings
  * for all adts so that adts can be automatically updated / moved to projects
  * with alternative id mappings.
  */
-function storeAreaMappings(mod: string, mapsdir: string) {
+function storeAreaMappings(mod: string, mapsDir: string) {
     if(process.argv.includes('--no-area-mapping')) return;
     let areasPath = path.join('modules',mod,'areas.json');
     let adtAreaMap: {[key: string]: number} = fs.existsSync(areasPath)
@@ -199,8 +232,8 @@ function storeAreaMappings(mod: string, mapsdir: string) {
 
     let cachedSkips: number[] = []
     let stagedFiles: string[] = []
-    fs.readdirSync(mapsdir)
-        .map(x=>path.join(mapsdir,x))
+    fs.readdirSync(mapsDir)
+        .map(x=>path.join(mapsDir,x))
         .filter(x=>fs.statSync(x).isDirectory())
         .reduce<string[]>(
               (files,dir)=>files
@@ -274,4 +307,118 @@ function storeAreaMappings(mod: string, mapsdir: string) {
         }
     })
     fs.renameSync(areasPath+'.tmp',areasPath);
+}
+
+function generateZmp(map: string) {
+    if(!process.argv.includes('--zmp')) return;
+
+    const mapObj = DBC.Map.find({Directory:map});
+    if(mapObj === undefined) {
+        // don't error, non-maps are allowed in that directory
+        return;
+    }
+
+    const mapId = mapObj.ID.get()
+    const areas = WorldMapAreaRegistry
+            .queryAll({MapID:mapId})
+            .map(x=>x.Area.getRef())
+            // no duplicate/null areas
+            .filter(x=>x)
+            .filter((x,index,arr)=>arr.findIndex(y=>x.ID===y.ID)===index)
+
+    // the area that should be written to zmp
+    const areaLookup: {[key: number]: number} = {}
+    const allChildren: number[] = []
+    areas.forEach(x=>{
+        areaLookup[x.ID] = x.ID
+        x.Children.get(0).forEach(y=>{
+            if(allChildren.indexOf(y.ID)>=0) {
+                throw new Error(
+                      `Area ${y.ID} is child to multiple zones in`
+                    + `${map}, this can happen if you have WorldMapArea`
+                    + ` entries for areas that have parents set`
+                )
+            }
+            allChildren.push(y.ID)
+            areaLookup[y.ID] = x.ID
+
+        });
+    });
+
+    let moduleOut: string|undefined
+    let adtPaths: string[] = []
+    const oldZmpPath = path.join(Settings.LUAXML_SOURCE,'Interface','WorldMap',map+'.zmp')
+    const zmp = fs.existsSync(oldZmpPath)
+        ? fs.readFileSync(oldZmpPath)
+        : Buffer.alloc(65536)
+
+    Settings.PATCH_DIRECTORY.forEach((mod: string)=>{
+        const mapsdir = path.join('modules',mod,'assets','world','maps',map)
+        if(fs.existsSync(mapsdir)) {
+            adtPaths = adtPaths.concat(fs.readdirSync(mapsdir)
+                .map(x=>path.join(mapsdir,x))
+                .filter(x=>x.endsWith('.adt') && fs.statSync(x).isFile()))
+            if(fs.existsSync(path.join(mapsdir,`${map}.wdt`))) {
+                moduleOut = mod;
+            }
+        }
+    });
+
+    if(moduleOut === undefined) {
+        throw new Error(`${map}.wdt not found in any modules!`)
+    }
+
+    // note: duplicate adts / modules should be handled by asset bundler
+
+    adtPaths.forEach(file=>{
+        const [_,x,y] = path
+            .basename(file)
+            .split('.')[0]
+            .split('_')
+            .map(x=>parseInt(x))
+        const adt = fs.readFileSync(file);
+        const mcin = adt.readUInt32LE(0x10)+0x14
+        const quads: {[key: number]: number}[] = [{},{},{},{}]
+        for(let i=0;i<256;++i){
+            const mcnk = adt.readUInt32LE(8+mcin+16*i);
+            const area = areaLookup[adt.readUInt32LE(mcnk+0x3c)]||0
+            const indexX = adt.readUInt32LE(mcnk+0xc);
+            const indexY = adt.readUInt32LE(mcnk+0x10);
+            const quad = quads[
+                (Math.round(indexX/15)) | (Math.round(indexY/15)) << 1
+            ]
+            if(quad[area] === undefined) quad[area] = 1;
+            else quad[area]++;
+        }
+        const sums = quads.map(x=>Object.entries(x)
+            .reduce(([pk,pv],[k,v])=>v>pv?[k,v]:[pk,pv],['0',0])
+        ).map(([k])=>parseInt(k))
+
+        zmp.writeUInt32LE((sums[0]),(y*128+x%128)*8);     // tl
+        zmp.writeUInt32LE((sums[1]),(y*128+x%128)*8+4);   // tr
+        zmp.writeUInt32LE((sums[2]),(y*128+x%128)*8+512); // bl
+        zmp.writeUInt32LE((sums[3]),(y*128+x%128)*8+516); // br
+    })
+
+    // create image so users can visualize how their zmp turns out
+    const image = TSImages.create(128,128);
+    const colorMap: {[areaID: number]: /*color:*/number} = {}
+    image.addFilter((_,x,y)=>{
+        let area = zmp.readUInt32LE((y*128+x%128)*4);
+        if(area === 0) return 0;
+        if(colorMap[area] === undefined) {
+            // take golden angle to make similar ids dissimilar
+            let hue = (2.39996322972865332*area)/6.28319;
+            if(hue > 1) hue = hue - Math.floor(hue);
+            return colorMap[area] = Colors.hsv(hue,1,1).asRGBA();
+        }
+        return colorMap[area];
+    });
+
+    const zmpPath = path.join(
+        'modules',moduleOut,'assets','Interface','WorldMap',`${map}.zmp`
+    )
+
+    image.write(zmpPath+'.png','PNG');
+    fs.writeFileSync(zmpPath,zmp);
 }
