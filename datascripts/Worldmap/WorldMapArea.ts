@@ -9,13 +9,54 @@ import { Boundary } from "../Misc/LimitCells";
 import { RegistryDynamic } from "../Refs/Registry";
 import { DungeonMapRegistry } from "./DungeonMap";
 
+export class WorldMapAreaBoundary extends Boundary<WorldMapArea> {
+
+    /**
+     * Specify the minimum and maximum adt tiles to automatically
+     * convert between minimap and world coordinates.
+     *
+     * This allows you to easier layout your map files on a large minimap texture
+     */
+    setMinimapCoords(
+          minAdtX: number
+        , minAdtY: number
+        , maxAdtX: number
+        , maxAdtY: number
+        , minX: number
+        , minY: number
+        , maxX: number
+        , maxY: number
+    ) {
+        let worldLeft   = (32-minAdtX) * 533.333333333;
+        let worldTop    = (32-minAdtY) * 533.333333333;
+        let worldRight  = (31-maxAdtX) * 533.333333333;
+        let worldBot    = (31-maxAdtY) * 533.333333333;
+
+        let worldSizeX = worldLeft-worldRight;
+        let worldSizeY = worldTop-worldBot;
+
+        let minimapSizeX = (maxAdtX-minAdtX+1)*256;
+        let minimapSizeY = (maxAdtY-minAdtY+1)*256;
+
+        // Note that, "minimum" points here will be LARGER than the maximum
+
+        let worldMinX = worldLeft-(minX/minimapSizeX)*worldSizeX;
+        let worldMinY = worldTop-(minY/minimapSizeY)*worldSizeY;
+
+        let worldMaxX = worldLeft-(maxX/minimapSizeX)*worldSizeX;
+        let worldMaxY = worldTop-(maxY/minimapSizeY)*worldSizeY;
+
+        return this.set(worldMinX,worldMinY,worldMaxX,worldMaxY);
+    }
+}
+
 export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
     get ID() { return this.row.ID.get(); }
     get Map() { return MapRegistry.ref(this, this.row.MapID); }
     get Area() { return AreaRegistry.ref(this, this.row.AreaID); }
     get Name() { return this.wrap(this.row.AreaName); }
     get Boundary() {
-        return new Boundary(
+        return new WorldMapAreaBoundary(
               this
             , this.row.LocLeft
             , this.row.LocTop
