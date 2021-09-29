@@ -24,7 +24,6 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
-import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { TSImages } from "../Images/Image";
 import { Colors } from "../Misc/Color";
 import { MainEntity } from "../Misc/Entity";
@@ -32,7 +31,6 @@ import { Ids } from "../Misc/Ids";
 import { PositionXYCell } from "../Misc/PositionCell";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { LoadingScreens } from "./LoadingScreen";
-import { MapContinent } from "./MapContinent";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
@@ -45,16 +43,7 @@ export class Map extends MainEntity<MapRow> {
      * of any WorldMapArea connected to this Map via a
      * WorldMapContinent entry.
      */
-    get Directory() {
-        return new CellBasic(this,()=>this.row.Directory.get(),(value)=>{
-            this.row.Directory.set(value);
-            // update the area name if we change the directory name
-            if(this.Continent.exists()) {
-                this.Continent.area_row.AreaName.set(value)
-            }
-            return this;
-        })
-    }
+    get Directory() { return this.wrap(this.row.Directory); }
     get InstanceType() { return new MapInstanceType(this, this.row.InstanceType); }
 
     get Name() { return this.wrapLoc(this.row.MapName); }
@@ -74,7 +63,6 @@ export class Map extends MainEntity<MapRow> {
     get MaxPlayers() { return this.wrap(this.row.MaxPlayers); }
     get RaidOffset() { return this.wrap(this.row.RaidOffset); }
     get AreaTable() { return this.wrap(this.row.AreaTableID); }
-    get Continent() { return new MapContinent(this); }
 
     GenerateADT(sizeX: number, sizeY: number, module: string, createTeleport = true) {
         if(this.Directory.get() === '') {

@@ -7,6 +7,37 @@ import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary, MinMax2DCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
 import { RegistryDynamic } from "../Refs/Registry";
+import { WorldMapAreaRegistry } from "./WorldMapArea";
+
+export class MapTaxiBoundary extends MinMax2DCell<WorldMapContinent> {
+    /**
+     * Sets the taxi boundary to match the adt boundary.
+     *
+     * You should set ADT boundary before using this function.
+     *
+     * @param padding how many yards to pad the resulting image
+     * @returns
+     */
+    matchADTBoundary(padding: number = 0) {
+        const boundary = this.owner.ADTBoundary
+        this.MaxX.set(32-boundary.Left.get()*533.3333333-padding)
+        this.MaxY.set(32-boundary.Top.get()*533.3333333-padding)
+        this.MinX.set(31-boundary.Right.get()*533.3333333+padding)
+        this.MinY.set(31-boundary.Bottom.get()*533.3333333+padding)
+        return this.owner;
+    }
+}
+
+export class WorldMapContinentAreaBoundary extends Boundary<WorldMapContinent> {
+    matchADTBoundary(padding: number = 0) {
+        const boundary = this.owner.ADTBoundary
+        this.Left.set(32-boundary.Left.get()*533.3333333-padding)
+        this.Top.set(32-boundary.Top.get()*533.3333333-padding)
+        this.Right.set(31-boundary.Right.get()*533.3333333+padding)
+        this.Bottom.set(31-boundary.Bottom.get()*533.3333333+padding)
+        return this.owner;
+    }
+}
 
 export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
     get Map() { return MapRegistry.ref(this, this.row.MapID); }
@@ -14,7 +45,7 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
     /** 0 for outland, 1 for azeroth */
     get World() { return this.wrap(this.row.WorldMapID); }
 
-    get Boundary() {
+    get ADTBoundary() {
         return new Boundary(
               this
             , this.row.LeftBoundary
@@ -30,7 +61,7 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
 
     get Scale() { return this.wrap(this.row.Scale); }
 
-    get Taxi() { return new MinMax2DCell(
+    get TaxiBoundary() { return new MapTaxiBoundary(
           this
         , this.row.TaxiMinX
         , this.row.TaxiMinY
@@ -38,6 +69,39 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
         , this.row.TaxiMaxY
         )}
 
+    get Directory() {
+        return this.wrap(this.Area().Directory);
+    }
+
+    protected Area() {
+        let wmas = WorldMapAreaRegistry.queryAll({AreaID:0,MapID:this.Map.get()})
+        if(wmas.length === 0) {
+            throw new Error(
+                  `No WorldMapArea matches continent ${this.ID},`
+                + ` this suggests something is wrong, please create a`
+                + ` WorldMapArea with MapID ${this.Map.get()}`
+                + ` and AreaID 0 manually`
+            )
+        }
+        if(wmas.length > 1) {
+            throw new Error(
+                  `Multiple WorldMapAreas match continent ${this.ID}`
+                + ` (map id ${this.Map.get()})`
+            )
+        }
+        return wmas[0]
+    }
+
+    get DisplayBoundary() {
+        const wma = this.Area();
+        return new WorldMapContinentAreaBoundary(
+              this
+            , wma.Boundary.Left
+            , wma.Boundary.Top
+            , wma.Boundary.Right
+            , wma.Boundary.Bottom
+        )
+    }
     get ID() { return this.row.ID.get(); }
 }
 
@@ -56,11 +120,11 @@ export class WorldMapContinentRegistryClass
     }
     Clear(entity: WorldMapContinent): void {
         entity
-            .Boundary.set(0,0,0,0)
+            .ADTBoundary.set(0,0,0,0)
             .ContinentOffset.setSpread(0,0)
             .Map.set(0)
             .Scale.set(0)
-            .Taxi.set(0,0,0,0)
+            .TaxiBoundary.set(0,0,0,0)
             .World.set(0)
     }
     protected FindByID(id: number): WorldMapContinentRow {

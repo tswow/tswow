@@ -54,7 +54,7 @@ export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
     get ID() { return this.row.ID.get(); }
     get Map() { return MapRegistry.ref(this, this.row.MapID); }
     get Area() { return AreaRegistry.ref(this, this.row.AreaID); }
-    get Name() { return this.wrap(this.row.AreaName); }
+    get Directory() { return this.wrap(this.row.AreaName); }
     get Boundary() {
         return new WorldMapAreaBoundary(
               this
@@ -87,7 +87,7 @@ export class WorldMapAreaRegistryClass
             .DefaultDungeonFloor.set(0)
             .DisplayMap.set(0)
             .Map.set(0)
-            .Name.set('')
+            .Directory.set('')
             .ParentWorldMap.set(0)
     }
     protected FindByID(id: number): WorldMapAreaRow {
