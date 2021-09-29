@@ -16,6 +16,7 @@
  */
 import { DBC } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
 import { Table } from "wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
@@ -63,8 +64,30 @@ export class Area extends MainEntity<AreaTableRow> {
     get WorldStateUIs() { return new AreaWorldStateUIs(this); }
     get WorldStateSounds() { return new AreaWorldStateSounds(this); }
     get Flags() { return new AreaFlags(this, this.row.Flags); }
+    get Children() { return new AreaChildren(this); }
 }
 
+export class AreaChildren extends MultiRowSystem<Area,Area> {
+    protected getAllRows(): Area[] {
+        return AreaRegistry.queryAll({ParentAreaID:this.owner.ID})
+    }
+    protected isDeleted(value: Area): boolean {
+        return value.row.isDeleted()
+    }
+
+    protected recurse(curDepth = 1, cur: Area[]) {
+        let nxt = (super.get().filter(x=>!cur.find(y=>y.ID===x.ID)));
+        cur = cur.concat(nxt);
+        if(curDepth !== 1) {
+            nxt.forEach(x=>cur = x.Children.recurse(curDepth-1,cur));
+        };
+        return cur;
+    }
+
+    get(depth = 1) {
+        return this.recurse(depth,[]);
+    }
+}
 
 export const registeredAreas: {[key: string]: number} = {}
 export class AreaRegistryClass
