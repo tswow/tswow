@@ -9,6 +9,7 @@ import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
 import { RegistryDynamic } from "../Refs/Registry";
+import { WorldMapAreaRegistry } from "./WorldMapArea";
 
 export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
     get Name() { return this.ownerWrap(this.owner.row.TextureName); }
@@ -25,7 +26,7 @@ export class WorldMapTexture extends CellSystem<WorldMapOverlay>{
 
 export class WorldMapOverlay extends MainEntity<WorldMapOverlayRow> {
     get ID() { return this.row.ID.get(); }
-    get MapArea() { return this.wrap(this.row.MapAreaID); }
+    get MapArea() { return WorldMapAreaRegistry.ref(this, this.row.MapAreaID); }
     // TODO: fixe
     get Areas() { return new ArrayRefSystemNoCreate(this, 0, 4,
         (index)=>AreaRegistry.ref(this, this.wrapIndex(this.row.AreaID,index)))

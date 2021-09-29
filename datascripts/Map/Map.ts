@@ -21,7 +21,7 @@ import { DBC, finish } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
 import { Settings } from "wotlkdata/Settings";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { AreaRegistry, registeredAreas } from "../Area/Area";
+import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
@@ -30,6 +30,7 @@ import { Colors } from "../Misc/Color";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYCell } from "../Misc/PositionCell";
+import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { LoadingScreens } from "./LoadingScreen";
 import { MapContinent } from "./MapContinent";
 import { MapInstanceType } from "./MapInstanceType";
@@ -318,9 +319,9 @@ function generateZmp(map: string) {
     }
 
     const mapId = mapObj.ID.get()
-    const areas = DBC.WorldMapArea
-            .filter({MapID:mapId})
-            .map(x=>AreaRegistry.load(x.AreaID.get()))
+    const areas = WorldMapAreaRegistry
+            .queryAll({MapID:mapId})
+            .map(x=>x.Area.getRef())
             // no duplicate/null areas
             .filter(x=>x)
             .filter((x,index,arr)=>arr.findIndex(y=>x.ID===y.ID)===index)

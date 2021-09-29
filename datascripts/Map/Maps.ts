@@ -9,7 +9,7 @@ export class MapRegistryClass
     extends RegistryStaticNoClone<Map,MapRow,MapQuery>
 {
     // map 0 is a real map
-    nullID = ()=>-1;
+    protected nullID = ()=>-1;
 
     protected Table(): Table<any, MapQuery, MapRow> & { add: (id: number) => MapRow; } {
         return DBC.Map
