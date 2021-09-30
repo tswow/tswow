@@ -45,6 +45,7 @@ export class TwoRowMainEntity<DBC,SQL> extends CellSystemTop {
 }
 
 export abstract class TransformedEntity<R,C> extends TransformedClass<C> {
+    @Transient
     readonly row: R;
     constructor(row: R) {
         super();
@@ -53,6 +54,7 @@ export abstract class TransformedEntity<R,C> extends TransformedClass<C> {
 }
 
 export abstract class TransformedEntityReadOnly<R,C> extends TransformedClassReadOnly<C> {
+    @Transient
     readonly row: R;
     constructor(row: R) {
         super();
