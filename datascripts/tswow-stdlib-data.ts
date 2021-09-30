@@ -33,6 +33,7 @@ import { GORegistry } from "./GameObject/GameObjectRegistries";
 import { GameObjectDisplayRegistry, GameObjectInstances } from "./GameObject/GameObjects";
 import { GemRegistry } from "./Gem/Gem";
 import { GlyphRegistry } from "./Glyph/Glyph";
+import { GMTeleportRegistry } from "./GMTeleport/GMTeleport";
 import { GossipRegistry } from "./Gossip/Gossips";
 import { TSImages } from "./Images/Image";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
@@ -147,5 +148,6 @@ export const std = {
     IDs: Ids,
     AreaTriggers: AreaTriggerRegistry,
     SpellStackGroups: SpellStackGroupRegistry,
+    GMTeleports: GMTeleportRegistry,
     Colors: Colors
 }
