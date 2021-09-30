@@ -1,10 +1,11 @@
-import { DBC } from "wotlkdata";
+import { DBC, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { WorldSafelocsQuery, WorldSafelocsRow } from "wotlkdata/dbc/types/WorldSafelocs";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
+import { Team } from "../Misc/TeamEnum";
 import { RefDynamic } from "../Refs/Ref";
 import { RegistryDynamic } from "../Refs/Registry";
 
@@ -33,14 +34,17 @@ export class WorldSafeLocsRegistryClass
     protected Table(): Table<any, WorldSafelocsQuery, WorldSafelocsRow> & { add: (id: number) => WorldSafelocsRow; } {
         return DBC.WorldSafelocs
     }
+
     protected ids(): DynamicIDGenerator {
         return Ids.WorldSafelocs
     }
+
     Clear(entity: WorldSafeLoc): void {
         entity
             .Name.clear()
             .Position.setSpread(0,0,0,0)
     }
+
     protected Clone(entity: WorldSafeLoc, parent: WorldSafeLoc): void {
         entity.Name.set(parent.Name.objectify())
         entity.Position.setSpread(
@@ -50,21 +54,34 @@ export class WorldSafeLocsRegistryClass
             , parent.Position.Map.get()
         )
     }
+
     protected Entity(r: WorldSafelocsRow): WorldSafeLoc {
         return new WorldSafeLoc(r);
     }
+
     protected FindByID(id: number): WorldSafelocsRow {
         return DBC.WorldSafelocs.findById(id);
     }
+
     protected EmptyQuery(): WorldSafelocsQuery {
         return {}
     }
+
     ID(e: WorldSafeLoc): number {
         return e.ID
     }
 
-    createSimple(obj: {map: number, x: number, y: number, z: number}) {
+    createSimple(obj: {map: number, x: number, y: number, z: number, o?: any}) {
         return this.create().Position.set(obj);
+    }
+
+    createGraveyard(area: number|number[], faction: Team, obj: {map: number, x: number, y: number, z: number, o?: any}) {
+        let wsl = this.create().Position.set(obj);
+        if(typeof(area) === 'number') area = [area]
+        area.forEach(x=>{
+            SQL.graveyard_zone.add(wsl.ID,x)
+                .Comment.set('tswow')
+        })
     }
 }
 
