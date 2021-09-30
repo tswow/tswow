@@ -101,7 +101,7 @@ export class PositionMapXYZCell<T> extends CellSystem<T> {
         }
     }
 
-    set(position: {x:number,y:number,z:number,map:number}) {
+    set(position: {x:number,y:number,z:number,map:number, o?:number}) {
         if(position.x) this.X.set(position.x);
         if(position.y) this.Y.set(position.y);
         if(position.z) this.Z.set(position.z);
@@ -141,7 +141,7 @@ export class PositionXYZOCell<T> extends CellSystem<T>{
         return this.owner;
     }
 
-    set(obj: {x:number,y:number,z:number,o:number}) {
+    set(obj: {x:number,y:number,z:number,o:number,map?: number}) {
         this.setSpread(obj.x,obj.y,obj.z,obj.o);
         return this.owner;
     }
