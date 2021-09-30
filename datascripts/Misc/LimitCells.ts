@@ -1,4 +1,5 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export class MinMaxCell<T> extends CellSystem<T> {
@@ -58,9 +59,13 @@ export class MinMax2DCell<T> extends CellSystem<T> {
 }
 
 export class Boundary<T> extends CellSystem<T> {
+    @Transient
     protected left: Cell<number,any>
+    @Transient
     protected top: Cell<number,any>
+    @Transient
     protected right: Cell<number,any>
+    @Transient
     protected bottom: Cell<number,any>
 
     constructor(
