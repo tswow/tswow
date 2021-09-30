@@ -1,5 +1,6 @@
 import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem, CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
@@ -97,6 +98,7 @@ export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
 }
 
 export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMaybeDBCEntity<DBC> {
+    @Transient
     private _cachedDBC: DBC | undefined;
     protected abstract createDBC(): DBC;
     protected abstract findDBC(): DBC;
