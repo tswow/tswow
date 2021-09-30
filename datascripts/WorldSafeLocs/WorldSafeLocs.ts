@@ -8,11 +8,13 @@ import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { Team } from "../Misc/TeamEnum";
 import { RefDynamic } from "../Refs/Ref";
 import { RegistryDynamic } from "../Refs/Registry";
+import { Graveyards } from "./Graveyard";
 
 export class WorldSafeLoc extends MainEntity<WorldSafelocsRow> {
     get ID() { return this.row.ID.get(); }
     get Position() { return new PositionMapXYZCell(this, this.row.Continent, this.row.LocX, this.row.LocY, this.row.LocZ); }
     get Name() { return this.wrapLoc(this.row.AreaName); }
+    get Graveyards() { return new Graveyards(this); }
 }
 
 
