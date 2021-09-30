@@ -37,6 +37,7 @@ import { GlyphRegistry } from "./Glyph/Glyph";
 import { GMTeleportRegistry } from "./GMTeleport/GMTeleport";
 import { GossipRegistry } from "./Gossip/Gossips";
 import { TSImages } from "./Images/Image";
+import { ItemDisplayinfoRegistry } from "./Item/ItemDisplayInfo";
 import { ItemSetRegistry } from "./Item/ItemSet";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
 import { LanguageRegistry } from "./Languages/Languages";
@@ -153,5 +154,6 @@ export const std = {
     GMTeleports: GMTeleportRegistry,
     Colors: Colors,
     AchievementCategory: AchievementCategoryRegistry,
-    ItemSet: ItemSetRegistry
+    ItemSet: ItemSetRegistry,
+    ItemDisplayInfo: ItemDisplayinfoRegistry
 }
