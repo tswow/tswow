@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { AchievementRegistry } from "./Achievement/Achievement";
+import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
 import { AreaRegistry } from "./Area/Area";
 import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
@@ -149,5 +150,6 @@ export const std = {
     AreaTriggers: AreaTriggerRegistry,
     SpellStackGroups: SpellStackGroupRegistry,
     GMTeleports: GMTeleportRegistry,
-    Colors: Colors
+    Colors: Colors,
+    AchievementCategory: AchievementCategoryRegistry
 }

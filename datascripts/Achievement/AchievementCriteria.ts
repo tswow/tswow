@@ -7,7 +7,7 @@ import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefUnknown } from "../Refs/Ref";
-import { Achievement } from "./Achievement";
+import { Achievement, AchievementRegistry } from "./Achievement";
 
 export class CriteriaTimer<T extends CriteriaBase> extends CellSystem<T> {
     get Asset() { return this.wrap(this.owner.row.Timer_Asset_Id); }
@@ -45,7 +45,9 @@ export class CriteriaBase extends TransformedEntity<Achievement_CriteriaRow,Crit
     }
 
     get Type() { return new CriteriaType(this, this.row.Type); }
-    get Achievement() { return this.row.Achievement_Id.get(); }
+    get Achievement() {
+        return AchievementRegistry.readOnlyRef(this, this.row.Achievement_Id);
+    }
     get Description() { return this.wrapLoc(this.row.Description); }
     get Flags() { return new CriteriaFlags(this, this.row.Flags); }
     get UIOrder() { return this.wrap(this.row.Ui_Order); }
@@ -57,7 +59,7 @@ export class CriteriaBase extends TransformedEntity<Achievement_CriteriaRow,Crit
             .Description.set({})
             .Fail_Event.set(0)
             .Flags.set(0)
-            .Quantity.set(0)
+            .Quantity.set(1)
             .Start_Asset.set(0)
             .Start_Event.set(0)
             .Ui_Order.set(0)
@@ -466,7 +468,7 @@ export class CriteriaType<T extends CriteriaBase> extends EnumCellTransform<T> {
     /** Enum Value:                                    42 */
     get  LootItem()                { return this.value(42, x=>new LootItem(x.row)) }
     /** Enum Value:                                    43 */
-    get  ExploreArea()             { return this.value(43, x=>new ExploreArea(x.row)) }
+    get  ExploreArea()             { return this.value(43, x=>new ExploreArea(x.row.Quantity.set(1))) }
     /** Enum Value:                                    44 */
     get  OwnRank()                 { return this.value(44, x=>new OwnRank(x.row)) }
     /** Enum Value:                                    45 */
