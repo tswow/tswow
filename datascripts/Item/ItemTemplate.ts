@@ -49,6 +49,7 @@ import { ItemRequiredFaction } from "./ItemRequiredFaction";
 import { ItemRequirements } from "./ItemRequirements";
 import { ItemResistance } from "./ItemResistances";
 import { ItemScalingStat } from "./ItemScalingStat";
+import { ItemSetRegistry } from "./ItemSet";
 import { ItemSheath } from "./ItemSheath";
 import { ItemSockets } from "./ItemSocket";
 import { ItemSpells } from "./ItemSpells";
@@ -99,7 +100,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
 
     /** Only applicable if item is a shield */
     get BlockChance() { return this.wrap(this.row.block); }
-    get ItemSet() { return this.wrap(this.row.itemset); }
+    get ItemSet() { return ItemSetRegistry.ref(this, this.row.itemset); }
     get Resistances() { return new ItemResistance(this); }
     get Stats() { return new ItemStats(this); }
     get Area() { return this.wrap(this.row.area); }

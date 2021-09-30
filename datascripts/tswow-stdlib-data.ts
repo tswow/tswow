@@ -37,6 +37,7 @@ import { GlyphRegistry } from "./Glyph/Glyph";
 import { GMTeleportRegistry } from "./GMTeleport/GMTeleport";
 import { GossipRegistry } from "./Gossip/Gossips";
 import { TSImages } from "./Images/Image";
+import { ItemSetRegistry } from "./Item/ItemSet";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
 import { LanguageRegistry } from "./Languages/Languages";
 import { Lights } from "./Light/Lights";
@@ -151,5 +152,6 @@ export const std = {
     SpellStackGroups: SpellStackGroupRegistry,
     GMTeleports: GMTeleportRegistry,
     Colors: Colors,
-    AchievementCategory: AchievementCategoryRegistry
+    AchievementCategory: AchievementCategoryRegistry,
+    ItemSet: ItemSetRegistry
 }

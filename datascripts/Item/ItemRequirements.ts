@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -35,18 +37,25 @@ export class ReputationRequirement extends CellSystem<ItemTemplate> {
     }
 }
 
-export class SkillRequirement extends CellSystem<ItemTemplate> {
+export class SkillRequirement<T> extends CellSystem<T> {
+    @Transient
+    private _skill: Cell<number,any>
+
+    @Transient
+    private _rank: Cell<number,any>
+
     get Skill() {
-        return this.owner.row.RequiredSkill;
+        return this._skill;
     }
 
     get Rank() {
-        return this.owner.row.RequiredSkillRank;
+        return this._rank;
     }
 
-
-    constructor(owner: ItemTemplate) {
+    constructor(owner: T , skill: Cell<number,any>, rank: Cell<number,any>) {
         super(owner);
+        this._skill = skill;
+        this._rank = rank;
     }
 
     set(skill: number, rank: number) {
@@ -71,7 +80,9 @@ export class ItemRequirements extends CellSystem<ItemTemplate> {
     get HonorRank() { return this.ownerWrap(this.row().requiredhonorrank); }
     get CityRank() { return this.ownerWrap(this.row().RequiredCityRank); }
     get Reputation() { return new ReputationRequirement(this.owner); }
-    get Skill() { return new SkillRequirement(this.owner); }
+    get Skill() {
+        return new SkillRequirement(this.owner, this.owner.row.RequiredSkill, this.owner.row.RequiredSkillRank);
+    }
 
     clearAll() {
         this.CityRank.set(0);
