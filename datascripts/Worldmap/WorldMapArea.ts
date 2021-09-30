@@ -1,4 +1,5 @@
 import { DBC } from "wotlkdata";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { WorldMapAreaQuery, WorldMapAreaRow } from "wotlkdata/dbc/types/WorldMapArea";
 import { Table } from "wotlkdata/table/Table";
 import { AreaRegistry } from "../Area/Area";
@@ -8,6 +9,27 @@ import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary } from "../Misc/LimitCells";
 import { RegistryDynamic } from "../Refs/Registry";
 import { DungeonMapRegistry } from "./DungeonMap";
+import { ADTBounds, setMinimapCoords } from "./MinimapCoords";
+import { WorldMapOverlay, WorldMapOverlayRegistry } from "./WorldMapOverlay";
+
+export class WorldMapAreaOverlays extends MultiRowSystem<WorldMapOverlay,WorldMapArea> {
+    protected getAllRows(): WorldMapOverlay[] {
+        return WorldMapOverlayRegistry.queryAll({MapAreaID:this.owner.ID})
+    }
+    protected isDeleted(value: WorldMapOverlay): boolean {
+        return value.row.isDeleted();
+    }
+
+    addGet() {
+        return WorldMapOverlayRegistry.create()
+            .MapArea.set(this.owner.ID)
+    }
+
+    addMod(callback: (overlay: WorldMapOverlay)=>void) {
+        callback(this.addGet());
+        return this.owner;
+    }
+}
 
 export class WorldMapAreaBoundary extends Boundary<WorldMapArea> {
 
@@ -18,34 +40,16 @@ export class WorldMapAreaBoundary extends Boundary<WorldMapArea> {
      * This allows you to easier layout your map files on a large minimap texture
      */
     setMinimapCoords(
-          minAdtX: number
-        , minAdtY: number
-        , maxAdtX: number
-        , maxAdtY: number
+          bounds: ADTBounds
         , minX: number
         , minY: number
         , maxX: number
         , maxY: number
     ) {
-        let worldLeft   = (32-minAdtX) * 533.333333333;
-        let worldTop    = (32-minAdtY) * 533.333333333;
-        let worldRight  = (31-maxAdtX) * 533.333333333;
-        let worldBot    = (31-maxAdtY) * 533.333333333;
-
-        let worldSizeX = worldLeft-worldRight;
-        let worldSizeY = worldTop-worldBot;
-
-        let minimapSizeX = (maxAdtX-minAdtX+1)*256;
-        let minimapSizeY = (maxAdtY-minAdtY+1)*256;
-
-        // Note that, "minimum" points here will be LARGER than the maximum
-
-        let worldMinX = worldLeft-(minX/minimapSizeX)*worldSizeX;
-        let worldMinY = worldTop-(minY/minimapSizeY)*worldSizeY;
-
-        let worldMaxX = worldLeft-(maxX/minimapSizeX)*worldSizeX;
-        let worldMaxY = worldTop-(maxY/minimapSizeY)*worldSizeY;
-
+        const {worldMinX,worldMaxX,worldMinY,worldMaxY} = setMinimapCoords
+            (
+                bounds,minX,minY,maxX,maxY
+            );
         return this.set(worldMinX,worldMinY,worldMaxX,worldMaxY);
     }
 }
@@ -69,6 +73,7 @@ export class WorldMapArea extends MainEntity<WorldMapAreaRow> {
         return DungeonMapRegistry.ref(this, this.row.DefaultDungeonFloor);
     }
     get ParentWorldMap() { return this.wrap(this.row.ParentWorldMapID) }
+    get Overlays() { return new WorldMapAreaOverlays(this); }
 }
 
 export class WorldMapAreaRegistryClass
@@ -85,8 +90,8 @@ export class WorldMapAreaRegistryClass
             .Area.set(0)
             .Boundary.set(0,0,0,0)
             .DefaultDungeonFloor.set(0)
-            .DisplayMap.set(0)
-            .Map.set(0)
+            .DisplayMap.set(-1)
+            .Map.set(-1)
             .Directory.set('')
             .ParentWorldMap.set(0)
     }

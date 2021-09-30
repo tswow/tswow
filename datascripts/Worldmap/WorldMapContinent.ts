@@ -6,10 +6,26 @@ import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Boundary, MinMax2DCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RegistryRowBase } from "../Refs/Registry";
+import { ADTBounds, setMinimapCoords } from "./MinimapCoords";
 import { WorldMapAreaRegistry } from "./WorldMapArea";
 
 export class MapTaxiBoundary extends MinMax2DCell<WorldMapContinent> {
+    setMinimapCoords(
+          map: ADTBounds
+        , minX: number
+        , minY: number
+        , maxX: number
+        , maxY: number
+    ) {
+        const {worldMinX,worldMaxX,worldMinY,worldMaxY} = setMinimapCoords
+        (
+              map
+            , minX, minY, maxX, maxY
+        );
+        return this.set(worldMinX,worldMinY,worldMaxX,worldMaxY);
+    }
+
     /**
      * Sets the taxi boundary to match the adt boundary.
      *
@@ -20,21 +36,30 @@ export class MapTaxiBoundary extends MinMax2DCell<WorldMapContinent> {
      */
     matchADTBoundary(padding: number = 0) {
         const boundary = this.owner.ADTBoundary
-        this.MaxX.set(32-boundary.Left.get()*533.3333333-padding)
-        this.MaxY.set(32-boundary.Top.get()*533.3333333-padding)
-        this.MinX.set(31-boundary.Right.get()*533.3333333+padding)
-        this.MinY.set(31-boundary.Bottom.get()*533.3333333+padding)
+        this.MaxX.set(((32-boundary.Left.get())*533.3333333)   -padding)
+        this.MaxY.set(((32-boundary.Top.get())*533.3333333)    -padding)
+        this.MinX.set(((31-boundary.Right.get())*533.3333333)  +padding)
+        this.MinY.set(((31-boundary.Bottom.get())*533.3333333) +padding)
         return this.owner;
     }
 }
 
 export class WorldMapContinentAreaBoundary extends Boundary<WorldMapContinent> {
+    setMinimapCoords(map: ADTBounds, minX: number, minY: number, maxX: number, maxY: number) {
+        const {worldMinX,worldMaxX,worldMinY,worldMaxY} = setMinimapCoords
+        (
+              map
+            , minX, minY, maxX, maxY
+        );
+        return this.set(worldMinX,worldMinY,worldMaxX,worldMaxY);
+    }
+
     matchADTBoundary(padding: number = 0) {
         const boundary = this.owner.ADTBoundary
-        this.Left.set(32-boundary.Left.get()*533.3333333-padding)
-        this.Top.set(32-boundary.Top.get()*533.3333333-padding)
-        this.Right.set(31-boundary.Right.get()*533.3333333+padding)
-        this.Bottom.set(31-boundary.Bottom.get()*533.3333333+padding)
+        this.Left.set(((32-boundary.Left.get())*533.3333333)     -padding)
+        this.Top.set(((32-boundary.Top.get())*533.3333333)       -padding)
+        this.Right.set(((31-boundary.Right.get())*533.3333333)   +padding)
+        this.Bottom.set(((31-boundary.Bottom.get())*533.3333333) +padding)
         return this.owner;
     }
 }
@@ -106,7 +131,7 @@ export class WorldMapContinent extends MainEntity<WorldMapContinentRow> {
 }
 
 export class WorldMapContinentRegistryClass
-    extends RegistryDynamic<
+    extends RegistryRowBase<
           WorldMapContinent
         , WorldMapContinentRow
         , WorldMapContinentQuery
@@ -126,6 +151,8 @@ export class WorldMapContinentRegistryClass
             .Scale.set(0)
             .TaxiBoundary.set(0,0,0,0)
             .World.set(0)
+
+        WorldMapAreaRegistry.create()
     }
     protected FindByID(id: number): WorldMapContinentRow {
         return DBC.WorldMapContinent.findById(id);
@@ -138,6 +165,22 @@ export class WorldMapContinentRegistryClass
     }
     protected Entity(r: WorldMapContinentRow): WorldMapContinent {
         return new WorldMapContinent(r);
+    }
+
+    create(map: number) {
+        const dbc = DBC.WorldMapContinent.add(Ids.WorldMapContinent.id())
+        let wmc = new WorldMapContinent(dbc)
+            .ADTBoundary.set(0,0,0,0)
+            .ContinentOffset.setSpread(0,0)
+            .Map.set(map)
+            .Scale.set(0.7)
+            .TaxiBoundary.set(0,0,0,0)
+            .World.set(1)
+
+        WorldMapAreaRegistry.create()
+            .Map.set(map)
+            .Area.set(0)
+        return wmc;
     }
 }
 
