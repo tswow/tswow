@@ -29,6 +29,13 @@ export class MaskMultiBit<T,D extends MaskCell<T>> {
         this.bits = bits;
     }
 
+    /**
+     * only for objectify
+     */
+    protected get() {
+        return this.get_all();
+    }
+
     get_all() {
         return this.bits.find(x=>this.owner.getBit(x)) !== undefined;
     }
