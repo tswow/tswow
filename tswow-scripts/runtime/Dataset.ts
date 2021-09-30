@@ -247,7 +247,7 @@ export namespace Datasets {
     }
 
     export function getDatasetsOrDefault(candidates: string[]) {
-        let res = Identifiers.getTypes('dataset',candidates);
+        let res = Identifiers.getTypes('dataset',candidates.filter(x=>x!==undefined));
         return (res.length > 0 ? res : [getDefault()]).map(x=>get(x));
     }
 
