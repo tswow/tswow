@@ -66,4 +66,13 @@ export class SpellIconCell<T> extends Cell<string, T> {
         }
         return this.setFullPath(value);
     }
+
+    getID() {
+        return this.id.get();
+    }
+
+    setID(id: number) {
+        this.id.set(id);
+        return this.owner;
+    }
 }
