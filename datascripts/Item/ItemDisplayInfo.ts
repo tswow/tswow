@@ -14,13 +14,15 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
 import { Table } from "wotlkdata/table/Table";
 import { DBC, SQL } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { ParticleColorRegistry } from "../Misc/ParticleColor";
-import { RegistryDynamic } from "../Refs/Registry";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamicNoRef } from "../Refs/Registry";
 import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
 import { ItemVisualsRegistry } from "./ItemVisualEffect";
@@ -52,13 +54,24 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     }
 }
 
+export class ItemDisplayInfoRef<T> extends RefDynamic<T,ItemDisplayInfo> {
+    setSimpleIcon(icon: string) {
+        this.getRefCopy().Icon.set(icon)
+        return this.owner;
+    }
+}
+
+
 export class ItemDisplayInfoRegistryClass
-    extends RegistryDynamic<
+    extends RegistryDynamicNoRef<
           ItemDisplayInfo
         , ItemDisplayInfoRow
         , ItemDisplayInfoQuery
         >
 {
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new ItemDisplayInfoRef(owner, cell, this);
+    }
     protected Table(): Table<any, ItemDisplayInfoQuery, ItemDisplayInfoRow> & { add: (id: number) => ItemDisplayInfoRow; } {
         return DBC.ItemDisplayInfo
     }
