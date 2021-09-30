@@ -46,6 +46,8 @@ export class ItemClassEnumValue {
         this.owner.row
             .class.set(this.cls)
             .subclass.set(this.subclass)
+        this.owner.createDbc().ClassID.set(this.cls);
+        this.owner.createDbc().SubclassID.set(this.subclass);
         return this.owner;
     }
 }
@@ -157,8 +159,8 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     get ReagentReagent()         { return this.value(5,0) }
 
     // Projectiles
-    get ArrowEquip()             { return this.value(6,0) }
-    get BulletEquip()            { return this.value(6,1) }
+    get ArrowEquip()             { return this.value(6,2) }
+    get BulletEquip()            { return this.value(6,3) }
 
     // TradeGoods
     get TradeGoods()             { return this.value(7,0) }

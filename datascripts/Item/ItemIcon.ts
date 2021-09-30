@@ -34,4 +34,8 @@ export class ItemIcon extends CellSystem<ItemDisplayInfo> {
     get() {
         return this.owner.row.InventoryIcon.getIndex(0);
     }
+
+    objectify() {
+        return this.owner.row.InventoryIcon.get();
+    }
 }

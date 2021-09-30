@@ -16,6 +16,7 @@
 */
 import { DBC } from "wotlkdata";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
@@ -29,6 +30,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
 import { RegistryStatic } from "../Refs/Registry";
+import { BagFamily } from "./BagFamily";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
@@ -57,6 +59,13 @@ import { ItemTotemCategory } from "./ItemTotemCategory";
 export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
     protected createDBC(): ItemRow {
         return DBC.Item.add(this.owner.ID)
+            .SheatheType.set(0)
+            .Material.set(0)
+            .Sound_Override_Subclassid.set(0)
+            .SubclassID.set(this.owner.row.subclass.get())
+            .ClassID.set(this.owner.row.class.get())
+            .DisplayInfoID.set(this.owner.row.displayid.get())
+            .InventoryType.set(this.owner.row.InventoryType.get())
     }
     protected findDBC(): ItemRow {
         return DBC.Item.findById(this.owner.ID)
@@ -75,6 +84,7 @@ export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
 }
 
 export class ItemTemplate extends MainEntity<item_templateRow> {
+    @Transient
     protected dbc = new ItemDBC(this);
     dbcExists() { return this.dbc.HasDBC(); }
     dbcRow() { return this.dbc.GetOrCreateDBC(); }
@@ -94,7 +104,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Stats() { return new ItemStats(this); }
     get Area() { return this.wrap(this.row.area); }
     get Map() { return this.wrap(this.row.Map); }
-    get BagFamily() { return this.wrap(this.row.BagFamily); }
+    get BagFamily() { return new BagFamily(this, this.row.BagFamily); }
     get TotemCategory() { return new ItemTotemCategory(this, this.row.TotemCategory); }
     get Sheath() { return new ItemSheath(this, this.row.sheath); }
     get ScalingStats() { return new ItemScalingStat(this); }
@@ -210,7 +220,8 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .BlockChance.set(0)
          .Bonding.NoBounds.set()
          .Class.Junk.set()
-         .ClassMask.clearAll()
+         .ClassMask.set(-1)
+         .RaceMask.set(-1)
          .ContainerSlots.set(0)
          .Damage.clearAll()
          .Delay.set(0)
@@ -236,14 +247,13 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .Name.clear()
          .Price.set(0,0,0)
          .Quality.set(0)
-         .RaceMask.set(0)
          .RandomProperty.set(0)
          .RandomSuffix.set(0)
          .RangeMod.set(0)
          .RequiredDisenchantSkill.set(0)
          .RequiredFaction.set(0,0)
          .RequiredHonorRank.set(0)
-         .RequiredLevel.set(0)
+         .RequiredLevel.set(1)
          .RequiredSpell.set(0)
          .Requirements.Skill.clear()
          .Requirements.clearAll()
