@@ -14,23 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import child_process from "child_process";
 import fs from "fs";
 import path from "path";
 import { DBC, finish } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
 import { Settings } from "wotlkdata/Settings";
-import { SQL } from "wotlkdata/sql/SQLFiles";
 import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { TSImages } from "../Images/Image";
 import { Colors } from "../Misc/Color";
 import { MainEntity } from "../Misc/Entity";
-import { Ids } from "../Misc/Ids";
 import { PositionXYCell } from "../Misc/PositionCell";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { LoadingScreens } from "./LoadingScreen";
+import { MapADT } from "./MapADT";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
@@ -63,72 +61,7 @@ export class Map extends MainEntity<MapRow> {
     get MaxPlayers() { return this.wrap(this.row.MaxPlayers); }
     get RaidOffset() { return this.wrap(this.row.RaidOffset); }
     get AreaTable() { return this.wrap(this.row.AreaTableID); }
-
-    GenerateADT(sizeX: number, sizeY: number, module: string, createTeleport = true) {
-        if(this.Directory.get() === '') {
-            throw new Error(
-                  `No valid directory set when generating adts,`
-                + `please set 'Directory' property before calling this`
-            )
-        }
-
-        let transform = (v: number) => 17066.7 - (v*533.333);
-
-        let miny = transform(1);
-        let minx = transform(1);
-        let maxx = transform(sizeX);
-        let maxy = transform(sizeY);
-
-        let cx = minx+(maxx-minx)/2
-        let cy = miny+(maxy-miny)/2
-
-        if(createTeleport) {
-            SQL.game_tele.add(Ids.game_tele.id())
-               .map.set(this.ID)
-               .position_x.set(cx)
-               .position_y.set(cy)
-               .position_z.set(500)
-               .name.set(`map:${this.Directory.get()}`)
-        }
-
-        let mapdir = path
-            .join(
-                'modules',module,'assets','world','maps'
-                , this.Directory.get()
-            );
-
-        let files = fs.existsSync(mapdir) ? fs.readdirSync(mapdir) : []
-        files = files.filter(x=>x.endsWith('.adt'))
-        if(files.length > 0) {
-            for(let x=1;x<=sizeX;++x) {
-                for(let y=1;y<=sizeY;++y) {
-                    let filename = `${this.Directory.get()}_${x}_${y}.adt`
-                    let index = files.indexOf(filename);
-                    if(index < 0) {
-                        throw new Error(`Missing map file: ${filename}`)
-                    }
-                    files.splice(index,1);
-                }
-            }
-            if(files.length > 0) {
-                throw new Error(
-                      `Trying to re-generate adts with unknown adts in directory, `
-                    + `please fix your map files manually: ${files.join(',')}`
-                )
-            }
-            return this;
-        }
-
-        child_process.execSync(
-              `${path.join('bin','adt-creator','adt-creator')}`
-            + ` ${path.join('bin','source.adt')}`
-            + ` ${mapdir}`
-            + ` ${this.Directory.get()}`
-            + ` 1 1 ${sizeX} ${sizeY}`
-        );
-        return this;
-    }
-
+    get MapFiles() { return new MapADT(this); }
 
     /**
      * TODO: Unknown flags, all flags on wowdev looks like wod+
