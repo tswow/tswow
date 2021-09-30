@@ -30,6 +30,7 @@ import { build_path, install_path } from './BuildConfig';
 import { Clean } from './Clean';
 import { CMake } from './Cmake';
 import { Config } from './Config';
+import { IMInstall } from './ImageMagick';
 import { MPQBuilder } from './MPQBuilder';
 import { MySQL } from './MySQL';
 import { OpenSSL } from './OpenSSL';
@@ -65,6 +66,7 @@ async function compile(type: string, compileArgs: string[]) {
     term.log(`Found MySQL at ${mysql}`);
     const boost = isWindows() ? await Boost.install() : 'boost';
     if (isWindows()) { await SevenZipInstall.install(); }
+    if (isWindows()) { await IMInstall.install() }
 
     if (types.includes('full') || types.includes('release')) {
         await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs.concat(['dynamic']));
@@ -125,7 +127,7 @@ async function main() {
         try {
             await compileAll(-1);
             term.success('No errors!');
-        } catch (error) {
+        } catch (error: any) {
             term.error(error.message);
         }
     });

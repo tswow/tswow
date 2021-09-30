@@ -421,6 +421,14 @@ export class InstallPaths {
         return isWindows() ? mpath(this.sevenZip, '7za.exe') : '7z';
     }
 
+    get im() { return mpath(this.bin, 'im'); }
+    get imConvert() {
+        return isWindows() ? mpath(this.im,'convert.exe') : 'convert'
+    }
+    get imMagick() {
+        return isWindows() ? mpath(this.im,'magick.exe') : 'convert'
+    }
+
     get startupSql() { return mpath(this.bin, 'sql'); }
 
 
@@ -824,6 +832,10 @@ export class BuildPaths {
     get tdbSql() { return mpath(this.base, tdbFilename()+'.sql'); }
 
     get sevenZip() {return mpath(this.base, '7zip')}
+
+    get im() { return mpath(this.base,'im')}
+    get imConvert() { return mpath(this.im, 'convert.exe')}
+    get imMagick() { return mpath(this.im, 'magick.exe')}
 
     mysqlLibs(mysqlRoot: string) {
         return ['libmysql.dll','libmysqld.dll']
