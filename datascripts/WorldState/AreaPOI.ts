@@ -3,6 +3,7 @@ import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AreaPOIQuery, AreaPOIRow } from "wotlkdata/dbc/types/AreaPOI";
 import { AreaRegistry } from "../Area/Area";
 import { FactionRegistry } from "../Faction/Faction";
+import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
@@ -13,7 +14,7 @@ export class AreaPOIFlags extends MaskCell32<AreaPOI> {
     get ShowMinimapArrow() { return this.bit(0); }
     get ShowMinimapIcon() { return this.bit(1); }
     /** Map Zoom (current map) */
-    get ShowOnMap() { return this.bit(2); }
+    get ShowOnMap() { return this.multibits([2,7]); }
     /** Continent zoom (Kalimdor, Eastern Kingdoms, Northrend) */
     get ShowOnContinent() { return this.bit(3); }
     /** Furthest zoom (Azeroth/Outland) */
@@ -52,6 +53,10 @@ export class AreaPOI extends MainEntity<AreaPOIRow> {
     }
     get WorldState() {
         return WorldStateRegistry.refCreate(this, this.row.WorldStateID)
+    }
+
+    get Map() {
+        return MapRegistry.ref(this, this.row.MapID);
     }
 }
 
