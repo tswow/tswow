@@ -601,7 +601,7 @@ export const Ids = {
     ItemRandomSuffix: new StaticIDGenerator('ItemRandomSuffix',100),
 
     /** Starts at 1000, highest base value is 901 */
-    ItemSet: new DynamicIDGenerator('ItemSet',901),
+    ItemSet: new DynamicIDGenerator('ItemSet',1000),
 
     /** Starts at 2000, highest base value is 1677 */
     LanguageWords: new DynamicIDGenerator('LanguageWords',2000),

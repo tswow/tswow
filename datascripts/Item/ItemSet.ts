@@ -2,11 +2,13 @@ import { DBC } from "wotlkdata";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemSetQuery, ItemSetRow } from "wotlkdata/dbc/types/ItemSet";
 import { Table } from "wotlkdata/table/Table";
+import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
 import { SkillRequirement } from "./ItemRequirements";
+import { ItemTemplateRegistry } from "./ItemTemplate";
 
 export class ItemSetSpell extends ArrayEntry<ItemSet> {
     get Spell() {
@@ -54,6 +56,15 @@ export class ItemSet extends MainEntity<ItemSetRow> {
     get SkillRequirement() {
         return new SkillRequirement(this, this.row.RequiredSkill, this.row.RequiredSkillRank)
     }
+    get Items() {
+        return new ArrayRefSystemStatic(
+              this
+            , 0
+            , 17
+            , (index)=>ItemTemplateRegistry
+                .ref(this, this.wrapIndex(this.row.ItemID,index))
+        )
+    }
 }
 
 export class ItemSetRegistryClass
@@ -69,6 +80,7 @@ export class ItemSetRegistryClass
         entity.Name.clear()
             .SkillRequirement.set(0,0)
             .Spells.clearAll()
+            .Items.clearAll()
     }
     protected FindByID(id: number): ItemSetRow {
         return DBC.ItemSet.findById(id);
