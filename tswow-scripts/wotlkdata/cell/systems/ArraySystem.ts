@@ -60,7 +60,7 @@ export abstract class ArraySystemBase<A extends Objectified, T> extends CellSyst
     forEach(callback: (value: A, index: number)=>void) {
         for(let i = 0; i < this.length; ++i) {
             let v = this.get(i);
-            if(this.isClearValue(v)) callback(v,i);
+            if(!this.isClearValue(v)) callback(v,i);
         }
         return this.owner;
     }
