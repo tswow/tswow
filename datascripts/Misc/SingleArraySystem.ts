@@ -36,12 +36,12 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
 
 export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArrayEntry<D,T>,T> {
     protected array: DBCArrayCell<D,any>;
-    protected clearValue: D;
+    protected _clearValue: D;
 
     constructor(owner: T, array: DBCArrayCell<D,any>, clearValue: D) {
         super(owner);
         this.array = array;
-        this.clearValue = clearValue;
+        this._clearValue = clearValue;
     }
 
     get length(): number {
@@ -58,12 +58,12 @@ export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArr
     }
 
     get(index: number): SingleArrayEntry<D,T> {
-        return new SingleArrayEntry(this.owner,index,this.array, this.clearValue);
+        return new SingleArrayEntry(this.owner,index,this.array, this._clearValue);
     }
 
     add(value: D) {
         for(let i=0;i<this.length;++i) {
-            if(this.getIndex(i)===this.clearValue) {
+            if(this.getIndex(i)===this._clearValue) {
                 this.setIndex(i,value);
                 return this.owner;
             }
