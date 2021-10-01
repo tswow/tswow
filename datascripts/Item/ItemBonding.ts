@@ -15,13 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemBonding extends EnumCell<ItemTemplate> {
-    constructor(owner: ItemTemplate) {
-        super(owner, owner.row.bonding);
-    }
-
+export class ItemBonding<T> extends EnumCell<T> {
     /** Enum Value:                         0 */
     get NoBounds()      { return this.value(0) }
     /** Enum Value:                         1 */

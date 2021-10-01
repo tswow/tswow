@@ -1,7 +1,9 @@
+import { LocSystem, MulticastLocCell } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Table } from "wotlkdata/table/Table";
+import { CreatureModels } from "../Creature/CreatureModels";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
@@ -9,7 +11,10 @@ import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SelfRef } from "../Refs/Ref";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Spell } from "../Spell/Spell";
+import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";
 import { SpellRegistry } from "../Spell/Spells";
+import { SpellVisualRegistry } from "../Spell/SpellVisual";
+import { CollectibleIcon } from "./CollectibleIcon";
 
 const COMPANION_SKILLINE = 778
 const DEFAULT_COMPANION_VISUAL = 353
@@ -17,11 +22,11 @@ const DEFAULT_COMPANION_VISUAL = 353
 export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
     protected getAllRows(): ItemTemplate[] {
         // TODO: inefficient query
-        return ItemTemplateRegistry.queryAll({spelltrigger_1:6,spellid_1:this.owner.ID})
-            .concat(ItemTemplateRegistry.queryAll({spelltrigger_2:6,spellid_2:this.owner.ID}))
-            .concat(ItemTemplateRegistry.queryAll({spelltrigger_3:6,spellid_3:this.owner.ID}))
-            .concat(ItemTemplateRegistry.queryAll({spelltrigger_4:6,spellid_4:this.owner.ID}))
-            .concat(ItemTemplateRegistry.queryAll({spelltrigger_5:6,spellid_5:this.owner.ID}))
+        return ItemTemplateRegistry.queryAll({spelltrigger_1:6,spellid_1:this.owner.SpellID})
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_2:6,spellid_2:this.owner.SpellID}))
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_3:6,spellid_3:this.owner.SpellID}))
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_4:6,spellid_4:this.owner.SpellID}))
+            .concat(ItemTemplateRegistry.queryAll({spelltrigger_5:6,spellid_5:this.owner.SpellID}))
             .filter((x,i,arr)=>arr.findIndex(y=>y.ID==x.ID)===i);
     }
 
@@ -34,7 +39,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .Icon.set('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
                 efffect.Type.LearnSpell.set()
-                    .LearntSpell.set(this.owner.ID)
+                    .LearntSpell.set(this.owner.SpellID)
                     .ImplicitTargetA.SrcCaster.set()
                     .ChainAmplitude.set(1)
             })
@@ -49,7 +54,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .Quality.Blue.set()
             .ClassMask.set(-1)
             .Bonding.BindsOnPickup.set()
-            .Class.Mount.set()
+            .Class.Pet.set()
             .Material.Liquid.set()
             .InventoryType.NonEquippable.set()
             .Spells.addMod((ispell=>{
@@ -62,7 +67,7 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
                      .CategoryCooldown.set(3000)
             }))
             .Spells.addMod((spell=>{
-                spell.Spell.set(this.owner.ID)
+                spell.Spell.set(this.owner.SpellID)
                     .Category.set(0)
                     .Trigger.OnLearn.set()
                     .Charges.set(0)
@@ -89,7 +94,36 @@ export class Companion extends MainEntity<SpellRow> {
         )
     }
     get AsSpell() { return new SelfRef(this, ()=>new Spell(this.row)); }
-    get ID() { return this.row.ID.get(); }
+    get SpellID() { return this.row.ID.get(); }
+    get Icon() {
+        return new CollectibleIcon(
+              this
+            , ()=>({spell:this.AsSpell.get(),items: this.Items.get()})
+        )
+    }
+    get Name() {
+        return new MulticastLocCell(
+            this
+            ,([this.AsSpell.get().Name] as LocSystem<any>[])
+                .concat(this.Items.map(x=>x.Name))
+                .concat(this.CreatureTemplate.exists()
+                    ? [this.CreatureTemplate.getRef().Name]
+                    :[]
+                )
+        )
+    }
+
+    get CastTime() {
+        return SpellCastTimeRegistry.ref(this, this.AsSpell.get().CastTime)
+    }
+
+    get Models() {
+        return new CreatureModels(this, this.CreatureTemplate.getRef().row)
+    }
+
+    get SpellVisual() {
+        return SpellVisualRegistry.ref(this, this.AsSpell.get().Visual);
+    }
 }
 
 export class CompanionRegistryClass
@@ -129,13 +163,13 @@ export class CompanionRegistryClass
             })
     }
 
-    createWithItem(mod: string, id: string, itemCount = 1) {
-        let companion = this.create(mod,id);
-        for(let i=0;i<itemCount;++i) {
-            companion.Items.add(mod,`${id}-item-${i}`)
-        }
-        return companion;
+    create(mod: string, id: string, createItem = true, createCreature = true) {
+        let companion = super.create(mod,id);
+        if(createItem) companion.Items.add(mod,`${id}-item`)
+        if(createCreature) companion.CreatureTemplate.getRefCopy(mod,`${id}-creature`)
+        return companion
     }
+
     protected Entity(r: SpellRow): Companion {
         return new Companion(r);
     }
@@ -146,7 +180,7 @@ export class CompanionRegistryClass
         return {}
     }
     ID(e: Companion): number {
-        return e.ID;
+        return e.SpellID;
     }
 }
 

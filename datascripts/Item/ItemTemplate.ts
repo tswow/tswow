@@ -128,7 +128,7 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get RaceMask() { return this.wrap(this.row.AllowableRace); }
     get MaxCount() { return this.wrap(this.row.maxcount); }
     get MaxStack() { return this.wrap(this.row.stackable); }
-    get Bonding() { return new ItemBonding(this); }
+    get Bonding() { return new ItemBonding(this, this.row.bonding); }
     get Damage() { return new ItemDamages(this); }
     get Requirements() { return new ItemRequirements(this); }
     get Spells() { return new ItemSpells(this); }

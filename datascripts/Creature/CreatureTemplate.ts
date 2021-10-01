@@ -172,7 +172,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get RaidNormal25() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_1); }
     get RaidHeroic10() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_2); }
     get RaidHeroic25() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_3); }
-    get Models() { return new CreatureModels(this); }
+    get Models() { return new CreatureModels(this, this.row); }
     get Icon() { return new CreatureIconNames(this); }
     get Gossip() {
         return GossipRegistry.ref(this, this.row.gossip_menu_id);
