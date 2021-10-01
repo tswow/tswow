@@ -210,3 +210,25 @@ export class WrappedLoc<T> extends LocSystem<T> {
         return this.wrapped.objectify();
     }
 }
+
+export class MulticastLocCell<T>  extends LocSystem<T> {
+    protected cells: LocSystem<any>[];
+
+    constructor(owner: T, cells: LocSystem<any>[]) {
+        super(owner);
+        this.cells = cells;
+    }
+
+    lang(lang: Language): Cell<string, T> & PendingCell {
+        return new MulticastCell(this.owner, this.cells.map(x=>x.lang(lang)))
+    }
+    get mask(): Cell<number, T> {
+        return new MulticastCell(this.owner, this.cells.map(x=>x.mask))
+    }
+    set(con: loc_constructor): T {
+        this.cells.forEach(x=>{
+            x.set(con);
+        })
+        return this.owner;
+    }
+}
