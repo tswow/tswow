@@ -89,7 +89,7 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     // Consumables
     get Consumable()             { return this.value(0,0) }
     get Potion()                 { return this.value(0,1) }
-    get Elixit()                 { return this.value(0,2) }
+    get Elixir()                 { return this.value(0,2) }
     get Flask()                  { return this.value(0,3) }
     get Scroll()                 { return this.value(0,4) }
     get FoodDrink()              { return this.value(0,5) }
