@@ -21,6 +21,7 @@ import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Table } from "wotlkdata/table/Table";
+import { EnchantmentRegistry } from "../Enchant/Enchantment";
 import { HolidayRegistry } from "../GameEvent/Holiday";
 import { GemRegistry } from "../Gem/Gem";
 import { LockRegistry } from "../Locks/Locks";
@@ -169,6 +170,8 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
      * To create a new gem, see `std.Gems.create(...)` and its parenting options.
      */
     get GemProperties() { return GemRegistry.readOnlyRef(this, this.row.GemProperties); }
+
+    get SocketBonus() { return EnchantmentRegistry.ref(this, this.row.socketBonus); }
 
     get DisplayInfo() {
         return ItemDisplayinfoRegistry.ref(this

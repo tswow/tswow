@@ -1,7 +1,8 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { EnumCellTransform, TransformedClass } from "wotlkdata/cell/cells/EnumCell";
+import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { ArraySystemBase } from "wotlkdata/cell/systems/ArraySystem";
+import { SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
 import { StatType } from "../Misc/StatTypes";
-import { Enchantment } from "./Enchantment";
 
 const all_effects : any = {}
 export function EnchantmentTypeID(id: number) {
@@ -10,53 +11,72 @@ export function EnchantmentTypeID(id: number) {
     }
 }
 
-export class EnchantmentType extends EnumCell<EnchantmentEffectBase> {
+export class EnchantmentType extends EnumCellTransform<EnchantmentEffectBase> {
     /** Enum Value = 0 */
-    get Misc()            { return this.value(0) }
+    get Misc()            { return this.plain_value(0) }
     /** Enum Value = 1 */
-    get Proc()            { return this.value(1) }
+    get Proc()            { return this.value(1,t=>new Proc(this.r(t),t.index)) }
     /** Enum Value = 2 */
-    get Damage()          { return this.value(2) }
+    get Damage()          { return this.value(2,t=>new Damage(this.r(t),t.index)) }
     /** Enum Value = 3 */
-    get BuffEquipped()    { return this.value(3) }
+    get BuffEquipped()    { return this.value(3,t=>new Buff(this.r(t),t.index)) }
     /** Enum Value = 4 */
-    get AddArmor()        { return this.value(4) }
+    get AddArmor()        { return this.value(4,t=>new Armor(this.r(t),t.index)) }
     /** Enum Value = 5 */
-    get Stat()            { return this.value(5) }
+    get Stat()            { return this.value(5,t=>new Stat(this.r(t),t.index)) }
     /** Enum Value = 6 */
-    get Totem()           { return this.value(6) }
+    get Totem()           { return this.value(6,t=>new Totem(this.r(t),t.index)) }
     /** Enum Value = 7 */
-    get UseSpell()        { return this.value(7) }
+    get UseSpell()        { return this.value(7,t=>new UseSpell(this.r(t),t.index)) }
     /** Enum Value = 8 */
-    get PrismaticSocket() { return this.value(8) }
-}
+    get PrismaticSocket() { return this.value(8,t=>new PrismaticSocket(this.r(t),t.index)) }
 
-export class EnchantmentEffectBase extends ArrayEntry<Enchantment> {
+    private r(t: EnchantmentEffectBase) {
+        return EnchantmentEffectBase.row(t)
+    }
+}
+export class EnchantmentEffectBase extends TransformedClass<EnchantmentEffectPlain> {
+    readonly index: number;
+    protected row: SpellItemEnchantmentRow;
+    static row(ench: EnchantmentEffectBase) {
+        return ench.row;
+    }
+
+    constructor(row: SpellItemEnchantmentRow, index: number) {
+        super();
+        this.row = row;
+        this.index = index;
+    }
+
+    protected transformer(): EnumCellTransform<any> {
+        return this.Type
+    }
+    protected default(): EnchantmentEffectPlain {
+        return new EnchantmentEffectPlain(this.row,this.index);
+    }
+
     get Type() {
         return new EnchantmentType(
           this
-        , this.wrapIndex(this.container.row.Effect,this.index)
+        , this.wrapIndex(this.row.Effect,this.index)
         )
     }
 
-    clear(): this {
-        this.container.row
+    clear() {
+        this.row
             .Effect.setIndex(this.index,0)
             .EffectArg.setIndex(this.index,0)
             .EffectPointsMin.setIndex(this.index,0)
             .EffectPointsMax.setIndex(this.index,0)
-        return this;
+        return new EnchantmentEffectPlain(this.row,this.index);
     }
 
     isClear(): boolean {
-        return this.container.row.Effect.getIndex(this.index) == 0
-            && this.container.row.EffectArg.getIndex(this.index) == 0
-            && this.container.row.EffectPointsMin.getIndex(this.index) == 0
-            && this.container.row.EffectPointsMax.getIndex(this.index) == 0
+        return this.row.Effect.getIndex(this.index) == 0
     }
 
     static container(base: EnchantmentEffectBase) {
-        return base.container;
+        return base.row;
     }
 
     objectifyPlain() {
@@ -65,9 +85,10 @@ export class EnchantmentEffectBase extends ArrayEntry<Enchantment> {
 }
 
 export class EnchantmentEffectPlain extends EnchantmentEffectBase {
-    get MinAmount() { return this.wrapIndex(this.container.row.EffectPointsMin,this.index); }
-    get MaxAmount() { return this.wrapIndex(this.container.row.EffectPointsMax,this.index); }
-    get Arg() { return this.wrapIndex(this.container.row.EffectArg,this.index); }
+    get MinAmount() { return this.wrapIndex(this.row.EffectPointsMin,this.index); }
+    /** @deprecated Not used in TrinityCore, use "MinAmount" as basevalue */
+    get MaxAmount() { return this.wrapIndex(this.row.EffectPointsMax,this.index); }
+    get Arg() { return this.wrapIndex(this.row.EffectArg,this.index); }
 
     objectify() {
         if(all_effects[this.Type.get()]) {
@@ -77,75 +98,69 @@ export class EnchantmentEffectPlain extends EnchantmentEffectBase {
     }
 }
 
-export class EnchantmentEffectWrap extends EnchantmentEffectBase {
-    constructor(owner: EnchantmentEffectBase) {
-        super(EnchantmentEffectBase.container(owner), owner.index)
-    }
-    ToPlain() { return new EnchantmentEffectPlain(this.container, this.index); }
-}
-
 @EnchantmentTypeID(1)
-export class Proc extends EnchantmentEffectWrap {
-    get Spell() { return this.wrapIndex(this.container.row.EffectArg, this.index); }
+export class Proc extends EnchantmentEffectBase {
+    get Spell() { return this.wrapIndex(this.row.EffectArg, this.index); }
 }
 
 @EnchantmentTypeID(2)
-export class Damage extends EnchantmentEffectWrap {
-    get MinDamage() { return this.wrapIndex(this.container.row.EffectPointsMin,this.index); }
-    get MaxDamage() { return this.wrapIndex(this.container.row.EffectPointsMax,this.index); }
+export class Damage extends EnchantmentEffectBase {
+    get MinDamage() { return this.wrapIndex(this.row.EffectPointsMin,this.index); }
+    /** @deprecated Not used in TrinityCore, use "MinDamage" as base */
+    get MaxDamage() { return this.wrapIndex(this.row.EffectPointsMax,this.index); }
 }
 
 @EnchantmentTypeID(3)
-export class Buff extends EnchantmentEffectWrap {
+export class Buff extends EnchantmentEffectBase {
 }
 
 @EnchantmentTypeID(4)
-export class Armor extends EnchantmentEffectWrap {
-    get MinArmor() { return this.wrapIndex(this.container.row.EffectPointsMin,this.index); }
-    get MaxArmor() { return this.wrapIndex(this.container.row.EffectPointsMax,this.index); }
+export class Armor extends EnchantmentEffectBase {
+    get MinArmor() { return this.wrapIndex(this.row.EffectPointsMin,this.index); }
+    /** @deprecated Not used in TrinityCore, use "MinArmor" as base value */
+    get MaxArmor() { return this.wrapIndex(this.row.EffectPointsMax,this.index); }
 }
 
 @EnchantmentTypeID(5)
-export class Stat extends EnchantmentEffectWrap {
-    get MinStat() { return this.wrapIndex(this.container.row.EffectPointsMin,this.index); }
-    get MaxStat() { return this.wrapIndex(this.container.row.EffectPointsMax,this.index); }
-    get Stat() { return new StatType(this, this.wrapIndex(this.container.row.EffectArg,this.index))}
+export class Stat extends EnchantmentEffectBase {
+    get MinStat() { return this.wrapIndex(this.row.EffectPointsMin,this.index); }
+    /** @deprecated Not used in TrinityCore, use "MinStat" as base value */
+    get MaxStat() { return this.wrapIndex(this.row.EffectPointsMax,this.index); }
+    get Stat() { return new StatType(this, this.wrapIndex(this.row.EffectArg,this.index))}
 }
 
 @EnchantmentTypeID(6)
-export class Totem extends EnchantmentEffectWrap {
+export class Totem extends EnchantmentEffectBase {
 }
 
 @EnchantmentTypeID(7)
-export class UseSpell extends EnchantmentEffectWrap {
-    get Spell() { return this.wrapIndex(this.container.row.EffectArg, this.index); }
+export class UseSpell extends EnchantmentEffectBase {
+    get Spell() { return this.wrapIndex(this.row.EffectArg, this.index); }
 }
 
 @EnchantmentTypeID(8)
-export class PrismaticSocket extends EnchantmentEffectWrap {
+export class PrismaticSocket extends EnchantmentEffectBase {
 }
 
-export class EnchantmentEffects extends ArraySystem<EnchantmentEffectPlain,Enchantment> {
+export class EnchantmentEffects<T> extends ArraySystemBase<EnchantmentEffectPlain,T> {
+    @Transient
+    protected row: SpellItemEnchantmentRow;
+
+    constructor(owner: T, row: SpellItemEnchantmentRow) {
+        super(owner);
+        this.row = row;
+    }
+
+    protected isClearValue(a: EnchantmentEffectPlain): boolean {
+        return a.isClear();
+    }
+    protected clearValue(a: EnchantmentEffectPlain): void {
+        a.clear();
+    }
     get length(): number {
         return 3;
     }
-
     get(index: number): EnchantmentEffectPlain {
-        return new EnchantmentEffectPlain(this.owner, index);
-    }
-
-    mod(index: number, callback: (effect: EnchantmentEffectPlain)=>void)  {
-        callback(this.get(index));
-        return this.owner;
-    }
-
-    addMod(callback: (effect: EnchantmentEffectPlain)=>void)  {
-        callback(this.addGet());
-        return this.owner;
-    }
-
-    objectifyPlain() {
-        return [this.get(0),this.get(1),this.get(2)]
-            .map(x=>x.objectifyPlain())
+        return new EnchantmentEffectPlain(this.row, index);
     }
 }

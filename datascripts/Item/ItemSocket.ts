@@ -36,20 +36,16 @@ function contents(owner: ItemTemplate) {
 
 
 export class ItemColor extends EnumCell<ItemSocket> {
+    get None() { return this.value(0,()=>this.owner.content.set(0))}
+
     /** Enum Value:                  0 */
-    get Meta()   { return this.value(0) }
-    /** Enum Value:                  1 */
-    get Red()    { return this.value(1) }
+    get Meta()   { return this.value(1,()=>this.owner.content.set(1)) }
     /** Enum Value:                  2 */
-    get Blue()   { return this.value(2) }
-    /** Enum Value:                  3 */
-    get Purple() { return this.value(3) }
-    /** Enum Value:                  4 */
-    get Orange() { return this.value(4) }
-    /** Enum Value:                  5 */
-    get Green()  { return this.value(5) }
-    /** Enum Value:                  6 */
-    get Yellow() { return this.value(6) }
+    get Red()    { return this.value(2,()=>this.owner.content.set(1)) }
+    /** Enum Value:                  1 */
+    get Yellow() { return this.value(4,()=>this.owner.content.set(1)) }
+    /** Enum Value:                  2 */
+    get Blue()   { return this.value(8,()=>this.owner.content.set(1)) }
 }
 
 export class ItemSocket extends ArrayEntry<ItemTemplate>{
@@ -81,20 +77,17 @@ export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
         return new ItemSocket(this.owner, index);
     }
 
-    protected add(col: number, amt: number) {
+    protected add(col: number) {
         const free = this.addGet();
         free.color.set(col);
-        free.content.set(amt);
+        free.content.set(1);
         return this.owner;
     }
 
     get Properties() { return this.ownerWrap(this.owner.row.GemProperties); }
 
-    addMeta(amount: number) {return this.add(0,amount)};
-    addRed(amount: number) {return this.add(1,amount)};
-    addBlue(amount: number) {return this.add(2,amount)};
-    addPurple(amount: number) {return this.add(3,amount)};
-    addOrange(amount: number) {return this.add(4,amount)};
-    addGreen(amount: number) {return this.add(5,amount)};
-    addYellow(amount: number) {return this.add(6,amount)};
+    addMeta() {return this.add(1)};
+    addRed() {return this.add(2)};
+    addYellow() {return this.add(4)};
+    addBlue() {return this.add(8)};
 }

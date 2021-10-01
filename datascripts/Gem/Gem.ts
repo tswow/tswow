@@ -3,6 +3,8 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
 import { GemPropertiesQuery, GemPropertiesRow } from "wotlkdata/dbc/types/GemProperties"
 import { Table } from "wotlkdata/table/Table"
 import { Enchantment, EnchantmentRegistry } from "../Enchant/Enchantment"
+import { EnchantmentEffects } from "../Enchant/EnchantmentEffect"
+import { ItemDisplayinfoRegistry } from "../Item/ItemDisplayInfo"
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
@@ -20,6 +22,14 @@ export class Gem extends MainEntity<GemPropertiesRow> {
 
     get Name() { return this.wrapLoc(this.Item.get().Name); }
     get Description() { return this.wrapLoc(this.Item.get().Description); }
+    get Effects() {
+        return new EnchantmentEffects(this, this.Enchantment.getRef().row)
+    }
+    get DisplayInfo() {
+        return ItemDisplayinfoRegistry.ref(this, this.Item.get().DisplayInfo)
+    }
+    get EffectDescription() { return this.wrapLoc(this.Enchantment.getRef().Name) }
+
     /**
      * @warn do **not** modify SourceItem in the Enchantment
      */
@@ -89,10 +99,6 @@ export class GemRegistryClass
     }
     protected Table(): Table<any, GemPropertiesQuery, GemPropertiesRow> {
         return DBC.GemProperties;
-    }
-
-    createFromEnchantment(mod: string, id: string, color?: GemColorType, enchantment = 0) {
-
     }
 
     /**

@@ -12,7 +12,7 @@ import { EnchantmentSpells } from "./EnchantmentSpells";
 
 export class Enchantment extends MainEntity<SpellItemEnchantmentRow> {
     get Charges() { return this.wrap(this.row.Charges); }
-    get Effects() { return new EnchantmentEffects(this); }
+    get Effects() { return new EnchantmentEffects(this, this.row); }
     get ID() { return this.row.ID.get(); }
     /**
      * All spells that are used to cast this enchantment.
