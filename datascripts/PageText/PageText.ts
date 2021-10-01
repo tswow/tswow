@@ -38,11 +38,12 @@ export class PageText extends MainEntity<page_textRow> {
 }
 
 export class PageTextRef<T> extends RefDynamic<T,PageText> {
-    setSimple(loc: loc_constructor, nextPage: number = 0) {
-        this.getRefCopy()
-            .Text.set(loc)
-            .NextPage.set(nextPage);
-        return this.owner;
+    setSimpleLoc(loc: loc_constructor|loc_constructor[], nextPage: number = 0) {
+        return this.set(PageTextRegistry.createSimpleLoc(loc,nextPage).ID);
+    }
+
+    setSimple(lang: Language, text: string|string[], nextPage: number = 0) {
+        return this.set(PageTextRegistry.createSimple(lang,text,nextPage).ID);
     }
 }
 
@@ -73,6 +74,36 @@ export class PageTextRegistryClass
     }
     protected Entity(r: page_textRow): PageText {
         return new PageText(r);
+    }
+
+    createSimpleLoc(loc: loc_constructor|loc_constructor[], nextPage: number = 0) {
+        if(!Array.isArray(loc)) {
+            loc = [loc];
+        }
+        let first = this.create();
+        let cur = first;
+        loc.forEach((x,i,arr)=>{
+            cur.Text.set(x)
+            if(i<arr.length-1) {
+                let next = this.create();
+                cur.NextPage.set(next.ID)
+                cur = next;
+            } else {
+                cur.NextPage.set(nextPage);
+            }
+        })
+        return first;
+    }
+
+    createSimple(lang: Language, texts: string[]|string, nextPage: number = 0) {
+        if(typeof(texts) === 'string') {
+            texts = [texts];
+        }
+        return this.createSimpleLoc(texts.map(x=>{
+            let obj: loc_constructor = {}
+            obj[lang] = x;
+            return obj;
+        }),nextPage)
     }
 }
 

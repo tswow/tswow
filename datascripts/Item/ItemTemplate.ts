@@ -30,6 +30,7 @@ import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
+import { PageTextRegistry } from "../PageText/PageText";
 import { RegistryStatic } from "../Refs/Registry";
 import { BagFamily } from "./BagFamily";
 import { ItemAmmoTypes } from "./ItemAmmoTypes";
@@ -57,6 +58,7 @@ import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
 import { ItemTotemCategory } from "./ItemTotemCategory";
+import { PageMaterialCell } from "./PageMaterial";
 
 export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
     protected createDBC(): ItemRow {
@@ -180,6 +182,9 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
             ])
         )
     }
+
+    get PageText() { return PageTextRegistry.ref(this, this.row.PageText)}
+    get PageMaterial() { return new PageMaterialCell(this, this.row.PageMaterial); }
 
     get AmmoType() { return new ItemAmmoTypes(this, this.row.ammo_type); }
 
