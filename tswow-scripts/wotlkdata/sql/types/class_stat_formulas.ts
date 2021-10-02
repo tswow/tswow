@@ -14,7 +14,7 @@
   */
 
 /* tslint:disable */
-import { mediumint, text } from '../../primitives'
+import { mediumint } from '../../primitives'
 import { Relation } from '../../query/Relations'
 import { PrimaryKey } from '../../table/PrimaryKey'
 import { SQLCell, SQLCellReadOnly } from '../SQLCell'
@@ -46,7 +46,7 @@ export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,cl
     /**
      * No comment (yet!)
      */
-    get formula() {return new SQLCell<text, this>(this, 'formula')}
+    get class_out() {return new SQLCell<mediumint, this>(this, 'class_out')}
 
     /**
      * Creates a clone of this row with new primary keys.
@@ -62,7 +62,7 @@ export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,cl
  * Used for object creation (Don't comment these)
  */
 export type class_stat_formulasCreator = {
-    formula: text,
+    class_out: mediumint,
 }
 
 /**
@@ -71,7 +71,7 @@ export type class_stat_formulasCreator = {
 export type class_stat_formulasQuery = {
     class?: Relation<mediumint>,
     stat_type?: Relation<mediumint>,
-    formula?: Relation<mediumint>
+    class_out?: Relation<mediumint>
 }
 
 /**
