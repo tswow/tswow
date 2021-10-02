@@ -6949,6 +6949,16 @@ declare namespace _hidden {
           , isRaw: boolean
           , value: TSMutable<float>)=>void
         )
+
+        OnAttackPower(callback: (
+              player: TSPlayer
+            , power: TSMutable<float>)=>void
+        )
+
+        OnRangedAttackPower(callback: (
+              player: TSPlayer
+            , power: TSMutable<float>)=>void
+        )
     }
 
     export class Item {
