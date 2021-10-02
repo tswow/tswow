@@ -16,7 +16,7 @@
  */
 import { Language, Languages } from '../../dbc/Localization';
 import { loc_constructor } from '../../primitives';
-import { Cell, CellWrapper, CPrim } from '../cells/Cell';
+import { Cell, CellUnlocker, CellWrapper, CPrim } from '../cells/Cell';
 import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
 import { CellReadOnly, CellWrapperReadOnly } from '../cells/CellReadOnly';
 import { MulticastCell } from '../cells/MulticastCell';
@@ -121,6 +121,18 @@ export class CellSystem<T> {
 
     protected wrapMulticast<D extends CPrim>(cells: Cell<D,any>[]) {
         return this.wrap(new MulticastCell(this,cells));
+    }
+
+    protected ownerWrapLocMulticast(cells: LocSystem<any>[]): LocSystem<T> {
+        return this.ownerWrapLoc(new MulticastLocCell(this, cells))
+    }
+
+    protected wrapLocMulticast(cells: LocSystem<any>[]): LocSystem<this> {
+        return this.wrapLoc(new MulticastLocCell(this, cells))
+    }
+
+    protected wrapUnlock(cell: CellReadOnly<number,any>) {
+        return new CellUnlocker(this, cell);
     }
 
     protected deserialize(json: any) {

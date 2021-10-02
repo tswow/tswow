@@ -68,5 +68,4 @@ export class CellWrapperReadOnly<D extends CPrim,T> extends CellReadOnly<D,T> {
         CellReadOnly.set(this.cell, value);
         return this.owner;
     }
-
 }
