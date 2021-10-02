@@ -1,6 +1,7 @@
 import { DBC } from "wotlkdata";
 import { CurrencyTypesQuery, CurrencyTypesRow } from "wotlkdata/dbc/types/CurrencyTypes";
 import { Table } from "wotlkdata/table/Table";
+import { ItemDisplayinfoRegistry } from "../Item/ItemDisplayInfo";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -12,6 +13,11 @@ export class Currency extends MainEntity<CurrencyTypesRow> {
     get ID() { return this.row.ID.get(); }
     get Item() { return ItemTemplateRegistry.ref(this, this.row.ItemID); }
     get Category() { return CurrencyCategoryRegistry.ref(this, this.row.CategoryID); }
+    get Name() { return this.wrapLoc(this.Item.getRef().Name); }
+    get Description() { return this.wrapLoc(this.Item.getRef().Description); }
+    get ItemDisplay() {
+        return ItemDisplayinfoRegistry.ref(this, this.Item.getRef().row.displayid);
+    }
 }
 
 export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypesRow,CurrencyTypesQuery> {
