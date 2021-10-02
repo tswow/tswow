@@ -1,11 +1,12 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { TaxiPathQuery, TaxiPathRow } from "wotlkdata/dbc/types/TaxiPath";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
-import { RefNoCreate } from "../Refs/Ref";
+import { RefNoCreate, SelfRef } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";
 import { TaxiEndNode, TaxiEndNodeRegistry } from "./TaxiEndNode";
 import { TaxiPathNodes } from "./TaxiPathNode";
@@ -43,6 +44,26 @@ export class TaxiPath extends MainEntity<TaxiPathRow> {
     }
 }
 
+export class TaxiBiPath extends CellSystemTop {
+    protected _forward: TaxiPath;
+    protected _backward: TaxiPath;
+
+    constructor(forward: TaxiPath, backward: TaxiPath) {
+        super()
+        this._forward = forward;
+        this._backward = backward;
+    }
+
+    get ForwardPath() { return new SelfRef(this, ()=>this._forward)}
+    get BackwardPath() { return new SelfRef(this, ()=>this._backward)}
+
+    get StartNode() { return new SelfRef(this, ()=>this._forward.Start.getRef()); }
+    get EndNode() { return new SelfRef(this, ()=>this._forward.End.getRef()); }
+
+    get StartName() { return this.wrapLoc(this.StartNode.get().Name)}
+    get EndName() { return this.wrapLoc(this.EndNode.get().Name)}
+}
+
 export type TaxiNodeConstructor = Position & {
     arrival_event?: number,
     departure_event?: number,
@@ -50,7 +71,6 @@ export type TaxiNodeConstructor = Position & {
 }
 
 type TaxiPathType = 'PLAIN'|'FLIGHTPATH'
-type TaxiPathDirection = 'UNIDIRECTIONAL' | 'BIDIRECTIONAL'
 
 export class TaxiPathRegistryClass
     extends RegistryRowBase<TaxiPath,TaxiPathRow,TaxiPathQuery>
@@ -123,7 +143,7 @@ export class TaxiPathRegistryClass
                 : new TaxiPath(
                     DBC.TaxiPath.add(Ids.TaxiPath.id(mod,`${id}-backwards`))
                         .FromTaxiNode.set(end)
-                        .ToTaxiNode.set(end)
+                        .ToTaxiNode.set(start)
                         .Cost.set(cost)
                 )
 
@@ -365,10 +385,11 @@ export class TaxiPathRegistryClass
         , vertices: TaxiNodeConstructor[]
         , sliceFirst = true
         ) {
-            return this.create
+            const {forward,backward} = this.create
             (
                 mod,id,type,costs,mounts,vertices,sliceFirst,true
-            ) as {forward:TaxiPath,backward:TaxiPath}
+            )
+            return new TaxiBiPath(forward,backward as TaxiPath);
         }
 
     /**
@@ -407,10 +428,11 @@ export class TaxiPathRegistryClass
         , vertices: TaxiNodeConstructor[]
         , sliceFirst: boolean = true
     ) {
-        return this.createFromNode
+        const {forward,backward} = this.createFromNode
         (
             mod,id,type,startNode,cost,endMount,vertices,sliceFirst,true
-        ) as {forward:TaxiPath,backward:TaxiPath}
+        )
+        return new TaxiBiPath(forward,backward as TaxiPath);
     }
 
     /**
@@ -439,10 +461,11 @@ export class TaxiPathRegistryClass
         , vertices: TaxiNodeConstructor[]
         , sliceFirst: boolean = true
     ) {
-        return this.createBetweenNodes
+        const {forward,backward} = this.createBetweenNodes
         (
             mod,id,startNode,endNode,cost,vertices,sliceFirst,true
         ) as {forward:TaxiPath,backward:TaxiPath}
+        return new TaxiBiPath(forward,backward as TaxiPath);
     }
 }
 
