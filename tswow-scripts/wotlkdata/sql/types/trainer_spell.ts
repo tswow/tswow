@@ -84,6 +84,16 @@ export class trainer_spellRow extends SqlRow<trainer_spellCreator,trainer_spellQ
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
 
     /**
+     * Custom tswow field
+     */
+    get raceMask() { return new SQLCell<int,this>(this, 'raceMask')}
+
+    /**
+     * Custom tswow field
+     */
+    get classMask() { return new SQLCell<int,this>(this, 'classMask')}
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.
@@ -107,6 +117,8 @@ export type trainer_spellCreator = {
     ReqAbility3? : int,
     ReqLevel? : tinyint,
     VerifiedBuild? : smallint,
+    raceMask?: int
+    classMask?: int
 }
 
 /**
@@ -123,6 +135,8 @@ export type trainer_spellQuery = {
     ReqAbility3? : Relation<int>,
     ReqLevel? : Relation<tinyint>,
     VerifiedBuild? : Relation<smallint>,
+    raceMask? : Relation<int>,
+    classMask? : Relation<int>,
 }
 
 /**

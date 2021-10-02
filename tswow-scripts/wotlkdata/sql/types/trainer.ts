@@ -56,6 +56,16 @@ export class trainerRow extends SqlRow<trainerCreator,trainerQuery> {
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
 
     /**
+     * Custom tswow field
+     */
+    get raceMask() { return new SQLCell<int,this>(this, 'raceMask')}
+
+    /**
+     * Custom tswow field
+     */
+    get classMask() { return new SQLCell<int,this>(this, 'classMask')}
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.
