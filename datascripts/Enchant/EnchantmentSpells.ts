@@ -23,7 +23,9 @@ export class EnchantmentSpell extends CellSystemTop {
     get Totems() { return new SingleArraySystem(this,this.spell.row.RequiredTotemCategoryID,0); }
     get CastTime() { return SpellCastTimeRegistry.ref(this, this.spell.row.CastingTimeIndex); }
     get SpellFocus() { return this.wrap(this.spell.RequiresSpellFocus); }
-    get Name() { return this.wrapLoc(this.spell.Name); }
+    get SpellName() { return this.wrapLoc(this.spell.Name); }
+    get SpellDescription() { return this.wrapLoc(this.spell.Description); }
+    get ItemName() { return this.wrapLoc(this.Item.getRef().Name)}
     get Subtext() { return this.wrapLoc(this.spell.Subtext); }
     get Visual() {
         return SpellVisualRegistry.ref(
@@ -36,9 +38,11 @@ export class EnchantmentSpell extends CellSystemTop {
 
     // TODO: Spell effect in other slot?
     get Item() {
-        return ItemTemplateRegistry.ref(this
+        return ItemTemplateRegistry.ref(
+              this
             , this.spell.Effects.get(0)
-                .Type.EnchantItem.as().EnchantingItem
+                .Type.EnchantItem.as()
+                     .EnchantingItem
         )
     }
 }
