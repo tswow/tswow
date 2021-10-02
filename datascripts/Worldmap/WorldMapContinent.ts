@@ -23,7 +23,8 @@ export class MapTaxiBoundary extends MinMax2DCell<WorldMapContinent> {
               map
             , minX, minY, maxX, maxY
         );
-        return this.set(worldMinX,worldMinY,worldMaxX,worldMaxY);
+        // taxi boundaries go from low->high, opposite from most measurements
+        return this.set(worldMaxX,worldMaxY,worldMinX,worldMinY);
     }
 
     /**
