@@ -7081,6 +7081,7 @@ declare namespace _hidden {
         OnHitFormula(spell: uint32, callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
         /** resistChance should be an integer between 0 and 10000 */
         OnResistFormula(spell: uint32, callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
+        OnTrainerSend(spell: uint32, callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
     }
 
     export class Spells {
@@ -7107,6 +7108,7 @@ declare namespace _hidden {
         OnResistFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
         /** penalty should be a float between 0 and 1 */
         OnSpellPowerLevelPenalty(callback: (spellInfo: TSSpellInfo, attacker: TSUnit, penalty: TSMutable<float>)=>void)
+        OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
     }
 
     export class CreatureID {
@@ -7157,6 +7159,7 @@ declare namespace _hidden {
          */
         OnGeneratePickPocketLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
         OnGenerateSkinningLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
+        OnSendVendorItem(creature: uint32, callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
     }
 
     export class Creatures {
@@ -7205,6 +7208,7 @@ declare namespace _hidden {
          */
         OnGeneratePickPocketLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
         OnGenerateSkinningLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
+        OnSendVendorItem(callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
     }
 
     export class Battlegrounds {

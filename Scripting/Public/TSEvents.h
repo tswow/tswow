@@ -251,6 +251,7 @@ EVENT_TYPE(SpellOnReflectFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<
 EVENT_TYPE(SpellOnHitFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
 EVENT_TYPE(SpellOnResistFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
 EVENT_TYPE(SpellOnSpellPowerLevelPenalty, TSSpellInfo /*spell*/, TSUnit /*caster*/, TSMutable<float> /*penalty*/)
+EVENT_TYPE(SpellOnTrainerSend, TSSpellInfo /*spell*/, uint32 /*trainerId*/, TSPlayer /*receiver*/, TSMutable<bool> /*allowTrain*/)
 
 struct TSSpellEvents {
      EVENT(SpellOnCast)
@@ -270,6 +271,7 @@ struct TSSpellEvents {
      EVENT(SpellOnHitFormula)
      EVENT(SpellOnResistFormula)
      EVENT(SpellOnSpellPowerLevelPenalty)
+     EVENT(SpellOnTrainerSend)
 };
 
 class TSSpellMap : public TSEventMap<TSSpellEvents> 
@@ -326,6 +328,7 @@ EVENT_TYPE(CreatureOnMaxMana, TSCreature, float /*baseMana*/, TSMutable<uint32> 
 EVENT_TYPE(CreatureOnBaseDamage, TSCreature, float /*baseDamageIn*/, TSMutable<float> /*baseMinDamage*/, TSMutable<float> /*baseMaxDamage*/)
 EVENT_TYPE(CreatureOnArmor, TSCreature, float /*baseArmor*/, TSMutable<float> /*armorOut*/)
 EVENT_TYPE(CreatureOnAttackPower, TSCreature, TSMutable<uint32> /*attackPower*/, TSMutable<uint32> /*rangedAttackPower*/)
+EVENT_TYPE(CreatureOnSendVendorItem, TSCreature /*vendor*/, TSItemTemplate /*item*/, TSPlayer /*player*/, TSMutable<bool> /*shouldSend*/)
 
 struct TSCreatureEvents {
      EVENT(CreatureOnMoveInLOS)
@@ -373,6 +376,7 @@ struct TSCreatureEvents {
      EVENT(CreatureOnBaseDamage)
      EVENT(CreatureOnArmor)
      EVENT(CreatureOnAttackPower)
+     EVENT(CreatureOnSendVendorItem)
 };
 
 class TSCreatureMap : public TSEventMap<TSCreatureEvents>
@@ -882,6 +886,7 @@ struct TSEvents
     EVENT(CreatureOnBaseDamage)
     EVENT(CreatureOnArmor)
     EVENT(CreatureOnAttackPower)
+    EVENT(CreatureOnSendVendorItem)
 
     // AreaTrigger
     EVENT(AreaTriggerOnTrigger)
@@ -904,6 +909,7 @@ struct TSEvents
     EVENT(SpellOnHitFormula)
     EVENT(SpellOnResistFormula)
     EVENT(SpellOnSpellPowerLevelPenalty)
+    EVENT(SpellOnTrainerSend)
 
     // GameObjects
     EVENT(GameObjectOnUpdate)
@@ -1181,6 +1187,7 @@ public:
           EVENT_HANDLE(Spell,OnHitFormula)
           EVENT_HANDLE(Spell,OnResistFormula)
           EVENT_HANDLE(Spell,OnSpellPowerLevelPenalty)
+          EVENT_HANDLE(Spell,OnTrainerSend)
     } Spells;
 
     struct SpellIDEvents : public MappedEventHandler<TSSpellMap>
@@ -1203,6 +1210,7 @@ public:
           MAP_EVENT_HANDLE(Spell, OnHitFormula)
           MAP_EVENT_HANDLE(Spell, OnResistFormula)
           MAP_EVENT_HANDLE(Spell, OnSpellPowerLevelPenalty)
+          MAP_EVENT_HANDLE(Spell, OnTrainerSend)
     } SpellID;
 
      struct CreatureEvents: public EventHandler
@@ -1247,6 +1255,7 @@ public:
           EVENT_HANDLE(Creature,OnBaseDamage)
           EVENT_HANDLE(Creature,OnArmor)
           EVENT_HANDLE(Creature,OnAttackPower)
+          EVENT_HANDLE(Creature,OnSendVendorItem)
 
           EVENT_HANDLE(Creature,OnGossipHello)
           EVENT_HANDLE(Creature,OnGossipSelect)
@@ -1297,6 +1306,7 @@ public:
           MAP_EVENT_HANDLE(Creature,OnBaseDamage)
           MAP_EVENT_HANDLE(Creature,OnArmor)
           MAP_EVENT_HANDLE(Creature,OnAttackPower)
+          MAP_EVENT_HANDLE(Creature,OnSendVendorItem)
 
           MAP_EVENT_HANDLE(Creature,OnGossipHello)
           MAP_EVENT_HANDLE(Creature,OnGossipSelect)
