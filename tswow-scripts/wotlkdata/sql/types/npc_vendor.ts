@@ -72,6 +72,16 @@ export class npc_vendorRow extends SqlRow<npc_vendorCreator,npc_vendorQuery> {
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
 
     /**
+     * Custom tswow field
+     */
+    get raceMask() { return new SQLCell<int,this>(this, 'raceMask')}
+
+    /**
+     * Custom tswow field
+     */
+    get classMask() { return new SQLCell<int,this>(this, 'classMask')}
+
+    /**
      * Creates a clone of this row with new primary keys.
      *
      * Cloned rows are automatically added to the SQL table.
@@ -92,6 +102,8 @@ export type npc_vendorCreator = {
     incrtime? : int,
     ExtendedCost? : mediumint,
     VerifiedBuild? : smallint,
+    raceMask?: int,
+    classMask?: int,
 }
 
 /**
@@ -105,6 +117,8 @@ export type npc_vendorQuery = {
     incrtime? : Relation<int>,
     ExtendedCost? : Relation<mediumint>,
     VerifiedBuild? : Relation<smallint>,
+    raceMask? : Relation<int>,
+    classMask? : Relation<int>,
 }
 
 /**
