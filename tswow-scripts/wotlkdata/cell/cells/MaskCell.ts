@@ -289,6 +289,10 @@ const MaskCell32Impl = {
     getBit(signed: boolean, no: number, oldValue: number) {
         return (signed && oldValue == -1)
             || ((oldValue) & ((1 << no))>>>0) !== 0;
+    },
+
+    flip(signed: boolean, oldValue: number) {
+        return (signed && oldValue === 0) ? -1 : ~oldValue>>>0
     }
 }
 
@@ -309,6 +313,10 @@ export class MaskCell32<T> extends MaskCell<T> {
         super(owner);
         this.cell = cell;
         this.signed = signed;
+    }
+
+    flip() {
+        return this.set(MaskCell32Impl.flip(this.signed, this.cell.get()))
     }
 
     toString() {
@@ -381,6 +389,10 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
     protected set(value: number) {
         CellReadOnly.set(this.cell, MaskCell32Impl.set(this.signed, value));
         return this.owner;
+    }
+
+    protected flip() {
+        return this.set(MaskCell32Impl.flip(this.signed, this.cell.get()))
     }
 
     protected setBit(no: number, value: boolean): T {
