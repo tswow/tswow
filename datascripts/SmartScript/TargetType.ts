@@ -448,37 +448,4 @@ export class TargetType {
         this.row.target_param2.set(maxDist)
         return this.main
     }
-
-    /**
-     * Sets the target to be a random point around the script owner
-     * @param range - How far away creatures can spawn
-     * @param amount - How many random points will be used (for summoning creatures)
-     * @note AzerothCore only
-     */
-    pointAroundOwner(range: number, amount: number = 0)  {
-        this.row.target_type.set(202)
-        this.row.target_param1.set(range)
-        this.row.target_param2.set(amount)
-        this.row.target_param3.set(1)
-        return this.main
-    }
-
-    /**
-     * Sets the target to be a random point around another point
-     * @param x
-     * @param y
-     * @param z
-     * @param range
-     * @note AzerothCore only
-     */
-    pointAround(x: number, y: number, z: number, range: number, amount: number = 0) {
-        this.row.target_type.set(202)
-        this.row.target_param1.set(range)
-        this.row.target_param2.set(amount)
-        this.row.target_param3.set(0)
-        this.row.target_x.set(x)
-        this.row.target_y.set(y)
-        this.row.target_z.set(z)
-        return this.main
-    }
 }
