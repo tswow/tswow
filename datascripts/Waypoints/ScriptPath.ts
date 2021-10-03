@@ -1,8 +1,27 @@
 import { SQL } from "wotlkdata";
+import { waypointsRow } from "wotlkdata/sql/types/waypoints";
+import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
+import { PositionXYZOCell } from "../Misc/PositionCell";
 
 export type ScriptPathPosition = Position & {
     delay?: number
+}
+
+export class Waypoint extends MainEntity<waypointsRow> {
+    get Position() {
+        return new PositionXYZOCell(
+              this
+            , this.row.position_x
+            , this.row.position_y
+            , this.row.position_z
+            , this.row.orientation
+        )
+    }
+
+    get index() {
+        return this.row.pointid.get();
+    }
 }
 
 export class ScriptPath {
@@ -16,8 +35,20 @@ export class ScriptPath {
 
     get length() { return SQL.waypoints.filter({entry:this.pathId}).length }
 
-    get(index: number) {
-        let waypoint = SQL.waypoints.filter({entry:this.pathId,pointid: index+1})[0];
+    get() {
+        return SQL.waypoints
+            .filter({entry:this.pathId})
+            .map(x=>new Waypoint(x))
+            .sort((a,b)=>a.index>b.index?1:-1)
+    }
+
+    first() {
+        return this.get()[0]
+    }
+
+    last() {
+        let v = this.get();
+        return v[v.length-1];
     }
 
     add(points: ScriptPathPosition|ScriptPathPosition[]) {
