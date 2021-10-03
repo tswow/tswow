@@ -8,7 +8,7 @@ export class RaceMask<T> extends MaskCell32<T> {
     setRace(raceId: RaceType, value: boolean) {
         return this.setBit(resolveRaceType(raceId)-1, value);
     }
-    getRace(raceId: number) {
+    getRace(raceId: RaceType) {
         return this.getBit(resolveRaceType(raceId)-1);
     }
 
