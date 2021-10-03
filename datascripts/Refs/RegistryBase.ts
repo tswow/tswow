@@ -28,4 +28,8 @@ export abstract class RegistryBase<E,R> {
     reduceRight<T>(callback: (last: T, cur: E, index: number, array: E[])=>T, initial: T) {
         return this.getAll().reduceRight(callback,initial);
     }
+
+    forEach(callback: (entity: E, index: number, array: E[])=>void) {
+        return this.getAll().forEach(callback);
+    }
 }

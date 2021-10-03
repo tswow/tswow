@@ -26,7 +26,7 @@ export class StartButtons extends MultiRowSystem<ClassAction,Class> {
 
     protected add(races: RaceType[]|undefined, button: number, action: number, type: number)
     {
-        if(!races) races = this.owner.Races.get();
+        if(!races) races = this.owner.Races.get().map(x=>x.Race.get());
         races.forEach(x=>{
             SQL.playercreateinfo_action.add(resolveRaceType(x),this.owner.ID,button)
                 .action.set(action)

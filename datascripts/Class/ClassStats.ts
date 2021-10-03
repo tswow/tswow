@@ -15,11 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCFile } from "wotlkdata/dbc/DBCFile";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/sql/SQLFiles";
+import { class_stat_formulasRow } from "wotlkdata/sql/types/class_stat_formulas";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";
+import { CLASS_TYPES } from "./ClassType";
 
 interface GtDBC {
     Data : Cell<number,any>;
@@ -80,33 +84,58 @@ export class BaseHpMana extends CellSystem<Class> {
     }
 }
 
-export class ClassFormula extends Cell<string,Class> {
-    protected type: number;
+export class RangedAttackPowerClasses<T> extends EnumCell<T> {
+    get Default() { return this.value(0); }
+    get Hunter()  { return this.value(CLASS_TYPES.HUNTER); }
+    get Rogue()   { return this.value(CLASS_TYPES.ROGUE); }
+    get Warrior() { return this.value(CLASS_TYPES.WARRIOR); }
+    get Druid()   { return this.value(CLASS_TYPES.DRUID); }
+}
 
-    constructor(owner: Class, type: number) {
+export class MeleeAttackPowerClasses<T> extends EnumCell<T> {
+    get Default()     { return this.value(0); }
+    get Warrior()     { return this.value(CLASS_TYPES.WARRIOR); }
+    get Paladin()     { return this.value(CLASS_TYPES.PALADIN); }
+    get DeathKnight() { return this.value(CLASS_TYPES.DEATH_KNIGHT); }
+    get Rogue()       { return this.value(CLASS_TYPES.ROGUE); }
+    get Hunter()      { return this.value(CLASS_TYPES.HUNTER); }
+    get Shaman()      { return this.value(CLASS_TYPES.SHAMAN); }
+    get Druid()       { return this.value(CLASS_TYPES.DRUID); }
+    get Mage()        { return this.value(CLASS_TYPES.MAGE); }
+    get Priest()      { return this.value(CLASS_TYPES.PRIEST); }
+    get Warlock()     { return this.value(CLASS_TYPES.WARLOCK); }
+}
+
+export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
+    private stat: number;
+
+    constructor(owner: Class, stat: number) {
         super(owner);
-        this.type = type;
+        this.stat = stat;
     }
 
-    get(): string {
-        const old = SQL.class_stat_formulas.find({class: this.owner.row.ID.get(), stat_type: this.type});
-        if(old!==undefined) {
-            return old.formula.get();
-        }
-        return "";
+    protected createSQL(): class_stat_formulasRow {
+        return SQL.class_stat_formulas
+            .add(this.owner.ID,this.stat)
+            .class_out.set(this.owner.ID)
+    }
+    protected findSQL(): class_stat_formulasRow {
+        return SQL.class_stat_formulas.find({class:this.owner.ID,stat_type:this.stat});
+    }
+    protected isValidSQL(sql: class_stat_formulasRow): boolean {
+        return sql.class.get() === this.owner.ID
+            && sql.stat_type.get() === this.stat;
     }
 
-    set(value: string): Class {
-        const old = SQL.class_stat_formulas.find({class: this.owner.row.ID.get(), stat_type: this.type});
-        if(old!==undefined) {
-            old.formula.set(value);
-        }
-        SQL.class_stat_formulas.add(this.owner.ID, this.type, {formula: value});
-        return this.owner;
+    get class_out() {
+        return this.wrapSQL(this.owner.ID,sql=>sql.class_out);
     }
 }
 
 export class ClassStats extends CellSystem<Class> {
+    protected _apFormula       = new StatFormula(this.owner, 1);
+    protected _rangedApFormula = new StatFormula(this.owner, 2);
+
     constructor(owner: Class) {
         super(owner);
     }
@@ -123,8 +152,19 @@ export class ClassStats extends CellSystem<Class> {
     get BaseHP() { return new BaseHpMana(this.owner, "basehp"); }
     get BaseMana() { return new BaseHpMana(this.owner, "basemana"); }
 
-    get MeleeAttackPower() { return new ClassFormula(this.owner, 1); }
-    get RangedAttackPower() { return new ClassFormula(this.owner, 2); }
+    get MeleePowerType() {
+        return new MeleeAttackPowerClasses(
+              this.owner
+            , this._apFormula.class_out
+        )
+    }
+
+    get RangedPowerType() {
+        return new RangedAttackPowerClasses(
+              this.owner
+            , this._rangedApFormula.class_out
+        )
+    }
     get MeleeCritBase() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }
     get SpellCritBase() { return this.f(1,DBC.GtChanceToSpellCritBase); }
     get MeleeCrit() { return this.f(100,DBC.GtChanceToMeleeCrit); }

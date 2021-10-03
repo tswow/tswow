@@ -16,6 +16,7 @@
  */
 import { DBC } from "wotlkdata";
 import { TalentTabQuery, TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
+import { lt } from "wotlkdata/query/Relations";
 import { Table } from "wotlkdata/table/Table";
 import { ClassType, resolveClassType } from "../Class/ClassType";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -35,6 +36,10 @@ export class TalentTreeRegistryClass
         r.Name.clear()
          .BackgroundImage.set('')
          .Icon.set('')
+         .ClassMask.set(0)
+         .OrderIndex.set(0)
+         .row
+         .RaceMask.set(0x7fffffff)
     }
 
     protected Entity(r: TalentTabRow): TalentTree {
@@ -48,6 +53,12 @@ export class TalentTreeRegistryClass
     }
     ID(e: TalentTree): number {
         return e.ID;
+    }
+
+    unlockRaces() {
+        DBC.TalentTab
+            .filter({ID:lt(Ids.TalentTab.startId)})
+            .forEach(x=>x.RaceMask.set(0x7fffffff))
     }
 
     forClass(cls: ClassType) {

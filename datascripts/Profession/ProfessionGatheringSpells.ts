@@ -23,7 +23,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .Attributes.isHiddenInSpellbook.set(true)
         .Attributes.isHiddenFromLog.set(true)
         .Attributes.unk41.set(true)
-        .SkillLines.addMod(this.owner.ID)
+        .SkillLines.addMod(this.owner.ID,undefined,undefined)
         .Effects.addMod((eff)=>{
             eff.Type.OpenLock.set()
             .TargetA.GameobjectTarget.set()

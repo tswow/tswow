@@ -16,17 +16,18 @@
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { trainerQuery, trainerRow } from "wotlkdata/sql/types/trainer";
 import { trainer_spellRow } from "wotlkdata/sql/types/trainer_spell";
 import { Table } from "wotlkdata/table/Table";
+import { ClassRegistry } from "../Class/Class";
+import { ClassRaceMaskSystemBase, IClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
-import { ClassEnum } from "../Misc/ClassMask";
+import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RaceEnum } from "../Misc/RaceMask";
+import { RaceEnum, RaceMask } from "../Misc/RaceMask";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
@@ -65,11 +66,15 @@ export class TrainerRequirementType extends EnumCellTransform<TrainerBase> {
     }
 }
 
-export class TrainerSpell extends MainEntity<trainer_spellRow> {
+export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClassRaceMaskEntry {
     get Spell() { return SpellRegistry.readOnlyRef(this, this.row.SpellId); }
     get Trainer() { return TrainerRegistry.readOnlyRef(this, this.row.TrainerId); }
     get Cost() { return this.wrap(this.row.MoneyCost); }
     get ReqLevel() { return this.wrap(this.row.ReqLevel); }
+
+    get ClassMask() { return new ClassMask(this, this.row.classMask); }
+    get RaceMask() { return new RaceMask(this, this.row.raceMask); }
+
     get ReqAbilities() {
         return new ArrayRefSystem(this, 0, 3
             , (i)=> {
@@ -92,7 +97,7 @@ export class TrainerSpell extends MainEntity<trainer_spellRow> {
     }
 }
 
-export class TrainerSpells extends MultiRowSystem<TrainerSpell,TrainerBase> {
+export class TrainerSpells extends ClassRaceMaskSystemBase<TrainerSpell,TrainerBase> {
     protected getAllRows(): TrainerSpell[] {
         return SQL.trainer_spell
             .filter({TrainerId:this.owner.ID})
@@ -146,12 +151,12 @@ export class TrainerBase extends TransformedEntity<trainerRow,TrainerPlain> {
         return new TrainerPlain(this.row);
     }
 
-    get ID() {
-        return this.row.Id.get();
-    }
+    get ID() { return this.row.Id.get(); }
     get Greeting(): TrainerLoc { return new TrainerLoc(this); }
     get Type() { return new TrainerRequirementType(this,this.row.Type); }
     get Spells() { return new TrainerSpells(this); }
+    get ClassMask() { return new ClassMask(this, this.row.classMask); }
+    get RaceMask() { return new ClassMask(this, this.row.raceMask); }
 }
 
 export class TrainerPlain extends TrainerBase {
@@ -160,7 +165,7 @@ export class TrainerPlain extends TrainerBase {
 
 export class TrainerClass extends TrainerBase {
     get RequiredClass() {
-        return new ClassEnum(this, this.row.Requirement);
+        return ClassRegistry.ref(this, this.row.Requirement);
     }
 }
 
@@ -188,7 +193,8 @@ export class TrainerRegistryClass
     Clear(entity: TrainerPlain): void {
         entity
             .Greeting.clear()
-            .Type.set(0)
+            .Type.SpellTrainer.set()
+            .RequiredSpell.set(0)
             .row
                 .Requirement.set(0)
     }

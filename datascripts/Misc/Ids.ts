@@ -163,7 +163,7 @@ export const Ids = {
     CreatureInstance: new StaticIDGenerator('creature',220000),
 
     /** Starts at 401, Highest base value is 400*/
-    TalentTab: new StaticIDGenerator('TalentTab',401),
+    TalentTab: new StaticIDGenerator('TalentTab',415),
 
     /** Starts at 400, Highest base value is ?? */
     CharStartOutfit: new DynamicIDGenerator('CharStartOutfit',400),

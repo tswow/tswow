@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
@@ -25,35 +24,20 @@ import { Language } from "wotlkdata/dbc/Localization";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { Table } from "wotlkdata/table/Table";
-import { ClassType, resolveClassType } from "../Class/ClassType";
+import { ClassMaskCon } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RaceType, resolveRaceType } from "../Race/RaceType";
+import { RaceMaskCon } from "../Race/RaceType";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
-import { SpellSkillLineAbilites, SkillLineAbility } from "../Spell/SpellSkillLines";
+import { SkillLineAbility, SpellSkillLineAbilites } from "../Spell/SpellSkillLines";
 import { std } from "../tswow-stdlib-data";
 
 export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
-    add(races: RaceType[], classes: ClassType[]) {
-        let classmask = 0;
-        let racemask = 0;
-
-        races.forEach(x=>{
-            racemask |= (1<<(resolveRaceType(x)-1));
-        })
-
-        classes.forEach(x=>{
-            classmask |= (1<<(resolveClassType(x)-1));
-        })
-
-        this.owner.Skills.forEach(x=>{
-            SQL.playercreateinfo_skills.add(racemask,classmask,x.ID)
-                .comment.set('tswow')
-        });
-
+    add(classes?: ClassMaskCon, races?: RaceMaskCon) {
+        this.owner.Skills.forEach(x=>x.enableAutolearn(classes,races,0))
         return this.owner;
     }
 }
@@ -190,10 +174,8 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
         .SkillCosts.set(0)
         .Icon.set('Interface\\Icons\\Trade_Engineering')
         .CanLink.set(0)
-        .RaceClassInfos.addMod(
-            x=>x.ClassMask.clearAll()
-                .RaceMask.set(0xffffffff)
-                .ClassMask.set(0xffffffff)
+        .RaceClassInfos.addMod(undefined,undefined,
+            x=>x
                 .Flags.clearAll()
                 .Flags.IsClassLine.set(true)
                 .SkillTier.set(0)
@@ -211,7 +193,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
                     .ChainAmplitude.set(1)
             })
             .SchoolMask.Physical.set(true)
-            .SkillLines.addMod(sl.ID,true,sla=>{
+            .SkillLines.addMod(sl.ID,undefined,undefined,sla=>{
                 sla.RaceMask.set(0xffffffff)
                     .AcquireMethod.set(2)
                     .ClassMask.set(0)

@@ -19,6 +19,8 @@ import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { npc_vendorRow } from "wotlkdata/sql/types/npc_vendor";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ExtendedCostRegistry } from "../ExtendedCost/ExtendedCost";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
+import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 
 export class VendorItem extends MainEntity<npc_vendorRow> {
@@ -26,8 +28,32 @@ export class VendorItem extends MainEntity<npc_vendorRow> {
         return CreatureTemplateRegistry.readOnlyRef(this, this.row.entry);
     }
 
+    get Slot() {
+        return this.wrap(this.row.slot)
+    }
+
+    get MaxCount() {
+        return this.wrap(this.row.maxcount);
+    }
+
+    get IncreaseTime() {
+        return this.wrap(this.row.incrtime);
+    }
+
+    get ClassMask() {
+        return new ClassMask(this, this.row.classMask)
+    }
+
+    get RaceMask() {
+        return new ClassMask(this, this.row.raceMask)
+    }
+
     get ExtendedCost() {
         return ExtendedCostRegistry.readOnlyRef(this, this.row.ExtendedCost);
+    }
+
+    get Item() {
+        return ItemTemplateRegistry.readOnlyRef(this, this.row.item);
     }
 }
 

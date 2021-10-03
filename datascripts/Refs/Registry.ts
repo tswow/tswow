@@ -7,25 +7,14 @@ import { DynamicIDGenerator, StaticIDGenerator } from "../Misc/Ids";
 import { RefDynamic, RefNoCreate, RefReadOnly, RefStatic } from "./Ref";
 import { RegistryBase } from "./RegistryBase";
 
-export abstract class RegistryRowBase<
-      E extends MainEntity<R>|TransformedEntity<R,any>
-    , R extends Row<any,Q>,Q
->
-extends RegistryBase<E,R>
+export abstract class RegistryQueryBase<
+      E
+    , R extends Row<any,Q>
+    , Q
+> extends RegistryBase<E,R>
 {
-    protected abstract FindByID(id: number): R;
-    protected abstract EmptyQuery(): Q;
-    abstract ID(e: E): number;
     protected abstract Table(): Table<any,Q,R>
-
-    protected getAll(): E[] {
-        return this.Table().filter(this.EmptyQuery()).map(x=>this.Entity(x));
-    }
-
-    load(id: number) {
-        let v = this.FindByID(id);
-        return (v ? this.Entity(v) : undefined) as E;
-    }
+    protected abstract EmptyQuery(): Q;
 
     queryAll(query: Q) {
         return this.Table().filter(query).map(x=>this.Entity(x));
@@ -33,6 +22,25 @@ extends RegistryBase<E,R>
 
     query(query: Q) {
         let v = this.Table().find(query);
+        return (v ? this.Entity(v) : undefined) as E;
+    }
+
+    protected getAll(): E[] {
+        return this.Table().filter(this.EmptyQuery()).map(x=>this.Entity(x));
+    }
+}
+
+export abstract class RegistryRowBase<
+      E extends MainEntity<R>|TransformedEntity<R,any>
+    , R extends Row<any,Q>,Q
+>
+extends RegistryQueryBase<E,R,Q>
+{
+    protected abstract FindByID(id: number): R;
+    abstract ID(e: E): number;
+
+    load(id: number) {
+        let v = this.FindByID(id);
         return (v ? this.Entity(v) : undefined) as E;
     }
 

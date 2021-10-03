@@ -17,9 +17,8 @@ export class ProfessionRegistryClass
     }
     Clear(r: Profession): void {
         r.AsSkillLine.get().CanLink.set(1)
-         .RaceClassInfos.addMod(rci=>{
-            rci.ClassMask.set(0xffffff)
-               .RaceMask.set(0xffffff)
+         .RaceClassInfos.addMod(undefined,undefined,rci=>{
+            rci
                .Flags.clearAll()
                .Flags.IsProfession.set(true)
                .Flags.IsClassLine.set(true)

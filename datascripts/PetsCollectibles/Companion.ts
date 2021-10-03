@@ -152,7 +152,7 @@ export class CompanionRegistryClass
             .InterruptFlags.setBit(3,true)
             .InterruptFlags.setBit(4,true)
             .Visual.set(DEFAULT_COMPANION_VISUAL)
-            .SkillLines.addMod(COMPANION_SKILLINE,false,sla=>{
+            .SkillLines.addMod(COMPANION_SKILLINE,undefined,undefined,sla=>{
                 sla.MinSkillRank.set(1)
             })
             .Effects.addMod(effects=>{

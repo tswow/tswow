@@ -14,14 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
+import { DBC, finish } from "wotlkdata";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
+import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SpellRegistry } from "../Spell/Spells";
 import { Talent } from "./Talent";
+import { TalentTreeRegistry } from "./Talents";
 
 export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
     protected getAllRows(): Talent[] {
@@ -62,6 +65,7 @@ export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
                 .PrereqRank.set([0,0,0])
                 .CategoryMask.set([0,0])
                 .SpellRank.set([0,0,0,0,0,0,0])
+                .RequiredSpellID.set(0)
         )
         talent.Spells.add(spellids)
         talent.row
@@ -86,4 +90,18 @@ export class TalentTree extends MainEntity<TalentTabRow> {
     get BackgroundImage() { return this.wrap(this.row.BackgroundFile); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get Talents() { return new TalentTreeTalents(this); }
+    // racemasks don't seem to work clientside for now
+    //get RaceMask() { return new RaceMask(this, this.row.RaceMask); }
+    get ClassMask() { return new ClassMask(this, this.row.ClassMask); }
+    get OrderIndex() { return this.wrap(this.row.OrderIndex); }
+    get PetTalentMask() { return new MaskCell32(this, this.row.PetTalentMask)}
+
 }
+
+finish('verify-talent-trees',()=>{
+    TalentTreeRegistry.forEach(x=>{
+        if(x.ClassMask.get() === 0 && !x.PetTalentMask.get()) {
+            throw new Error(`Talent Tab ${x.ID} has no classmask set, it will bug out talents for all classes`)
+        }
+    })
+})

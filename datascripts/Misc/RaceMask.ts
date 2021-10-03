@@ -1,39 +1,68 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32, MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
-import { RaceType, resolveRaceType } from "../Race/RaceType";
+import { RaceType, RACE_TYPES, resolveRaceType } from "../Race/RaceType";
 
 // Note: don't add the non-playable races here, it will just be confusing
 
 export class RaceMask<T> extends MaskCell32<T> {
-    enableRace(raceId: RaceType) {
-        return this.setBit(resolveRaceType(raceId)-1, true);
+    setRace(raceId: RaceType, value: boolean) {
+        return this.setBit(resolveRaceType(raceId)-1, value);
     }
-    disableRace(raceId: number) {
-        return this.setBit(resolveRaceType(raceId)-1, false);
+    getRace(raceId: number) {
+        return this.getBit(resolveRaceType(raceId)-1);
     }
-    get Human()    { return this.bit(0); }
-    get Orc()      { return this.bit(1); }
-    get Dwarf()    { return this.bit(2); }
-    get NightElf() { return this.bit(3); }
-    get Undead()   { return this.bit(4); }
-    get Tauren()   { return this.bit(5); }
-    get Gnome()    { return this.bit(6); }
-    get Troll()    { return this.bit(7); }
-    get BloodElf() { return this.bit(9); }
-    get Draenei()  { return this.bit(10); }
+
+    private raceBit(bit: number) { return this.bit(bit-1); }
+
+    forEach(callback: (cls: number)=>void) {
+        for(let i=1;i<=32;++i) {
+            if(this.getRace(i)) callback(i)
+        }
+    }
+
+    filter(callback: (cls: number)=>boolean) {
+        return this.map(x=>x)
+            .filter(callback);
+    }
+
+    map<T>(callback: (cls: number)=>T) {
+        let values: T[] = []
+        this.forEach(x=>values.push(callback(x)))
+        return values;
+    }
+
+    flip() {
+        return this.set((~this.get()>>>0)&0x7fffffff);
+    }
+
+    get Human()    { return this.raceBit(RACE_TYPES.HUMAN); }
+    get Orc()      { return this.raceBit(RACE_TYPES.ORC); }
+    get Dwarf()    { return this.raceBit(RACE_TYPES.DWARF); }
+    get NightElf() { return this.raceBit(RACE_TYPES.NIGHTELF); }
+    get Undead()   { return this.raceBit(RACE_TYPES.UNDEAD); }
+    get Tauren()   { return this.raceBit(RACE_TYPES.TAUREN); }
+    get Gnome()    { return this.raceBit(RACE_TYPES.GNOME); }
+    get Troll()    { return this.raceBit(RACE_TYPES.TROLL); }
+    get BloodElf() { return this.raceBit(RACE_TYPES.BLOODELF); }
+    get Draenei()  { return this.raceBit(RACE_TYPES.DRAENEI); }
 }
 
 export class RaceMaskReadOnly<T> extends MaskCell32ReadOnly<T> {
-    get Human()    { return this.bit(0); }
-    get Orc()      { return this.bit(1); }
-    get Dwarf()    { return this.bit(2); }
-    get NightElf() { return this.bit(3); }
-    get Undead()   { return this.bit(4); }
-    get Tauren()   { return this.bit(5); }
-    get Gnome()    { return this.bit(6); }
-    get Troll()    { return this.bit(7); }
-    get BloodElf() { return this.bit(9); }
-    get Draenei()  { return this.bit(10); }
+    getRace(raceId: RaceType) {
+        return this.getBit(resolveRaceType(raceId)-1);
+    }
+    private raceBit(bit: number) { return this.bit(bit-1); }
+
+    get Human()    { return this.raceBit(RACE_TYPES.HUMAN); }
+    get Orc()      { return this.raceBit(RACE_TYPES.ORC); }
+    get Dwarf()    { return this.raceBit(RACE_TYPES.DWARF); }
+    get NightElf() { return this.raceBit(RACE_TYPES.NIGHTELF); }
+    get Undead()   { return this.raceBit(RACE_TYPES.UNDEAD); }
+    get Tauren()   { return this.raceBit(RACE_TYPES.TAUREN); }
+    get Gnome()    { return this.raceBit(RACE_TYPES.GNOME); }
+    get Troll()    { return this.raceBit(RACE_TYPES.TROLL); }
+    get BloodElf() { return this.raceBit(RACE_TYPES.BLOODELF); }
+    get Draenei()  { return this.raceBit(RACE_TYPES.DRAENEI); }
 }
 
 export class RaceEnum<T> extends EnumCell<T> {

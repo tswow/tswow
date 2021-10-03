@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { Talent } from "./Talent";
@@ -70,5 +71,14 @@ export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
     add(talent: number, rank: number) {
         this.addGet().set(talent, rank);
         return this.owner;
+    }
+
+    addPos(row: number, column: number, rank: number) {
+        let talent = DBC.Talent.find({
+              TierID:row
+            , ColumnIndex:column
+            ,TabID:this.owner.Tab.get()
+        })
+        return this.add(talent.ID.get(),rank);
     }
 }

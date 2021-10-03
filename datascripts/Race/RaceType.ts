@@ -14,30 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export type RaceType = number
-    | 'HUMAN' | 'ORC' | 'DWARF' | 'NIGHTELF' | 'UNDEAD'
-    | 'TAUREN' | 'GNOME' | 'TROLL' | 'BLOODELF' | 'DRAENEI'
 
-export const ALL_RACES: RaceType[] = [
-      'HUMAN','ORC','DWARF','NIGHTELF','UNDEAD'
-    , 'TAUREN','GNOME','TROLL','BLOODELF','DRAENEI'
-]
+export const RACE_TYPES = {
+      HUMAN    : 1
+    , ORC      : 2
+    , DWARF    : 3
+    , NIGHTELF : 4
+    , UNDEAD   : 5
+    , TAUREN   : 6
+    , GNOME    : 7
+    , TROLL    : 8
+    , BLOODELF : 10
+    , DRAENEI  : 11
+} as const
 
-export function getRaceType(v: number): RaceType {
-    switch(v) {
-        case 1: return 'HUMAN'
-        case 2: return 'ORC'
-        case 3: return 'DWARF'
-        case 4: return 'NIGHTELF'
-        case 5: return 'UNDEAD'
-        case 6: return 'TAUREN'
-        case 7: return 'GNOME'
-        case 8: return 'TROLL'
-        case 10: return 'BLOODELF'
-        case 11: return 'DRAENEI'
-        default: return v;
-    }
-}
+export type RaceType = number | keyof typeof RACE_TYPES
 
 export function resolveRaceType(type: RaceType) {
     if(typeof(type)==='number') {
@@ -59,8 +50,11 @@ export function resolveRaceType(type: RaceType) {
     }
 }
 
-export function makeRacemask(races: RaceType[]) {
-    return races
-        .map(x=>resolveRaceType(x))
-        .reduce((p,c)=>p|(1<<(c-1)),0);
+export type RaceMaskCon = RaceType|RaceType[]|undefined
+export function makeRacemask(races: RaceMaskCon) {
+    return races === undefined
+        ? 0
+        : (!Array.isArray(races) ? [races]:races)
+            .map(x=>resolveRaceType(x))
+            .reduce((p,c)=>p|(1<<(c-1)),0);
 }

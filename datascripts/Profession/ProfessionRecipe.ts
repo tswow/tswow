@@ -108,7 +108,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
                               .TargetA.UnitCaster.set()
                     })
                     .SkillLines
-                    .addMod(this.owner.ID)
+                    .addMod(this.owner.ID,undefined,undefined)
             )
     }
 

@@ -33,6 +33,7 @@ import { Vendor } from "../Vendor/Vendor";
 import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
+import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
 import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureGold } from "./CreatureGold";
@@ -48,7 +49,6 @@ import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
-import { CreatureTrainerRef } from "./CreatureTrainer";
 import { CreatureTypeEnum } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { DynFlags } from "./DynFlags";
@@ -195,7 +195,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get Movement() { return this.wrap(this.row.movementId); }
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
-    get Trainer() { return new CreatureTrainerRef(this); }
+    get Trainer() { return new CreatureDefaultTrainer(this); }
     get Vendor() { return new Vendor(this, this.ID); }
 
     get NormalLoot() {

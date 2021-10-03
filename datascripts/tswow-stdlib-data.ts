@@ -27,6 +27,7 @@ import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 import { EnchantmentRegistry } from "./Enchant/Enchantment";
 import { EnchantmentConditionRegistry } from "./Enchant/EnchantmentCondition";
+import { ExtendedCostRegistry } from "./ExtendedCost/ExtendedCost";
 import { FactionRegistry } from "./Faction/Faction";
 import { GameEventRegistry } from "./GameEvent/GameEvent";
 import { HolidayRegistry } from "./GameEvent/Holiday";
@@ -54,6 +55,7 @@ import { CompanionRegistry } from "./PetsCollectibles/Companion";
 import { MountRegistry } from "./PetsCollectibles/Mount";
 import { ProfessionRegistry } from "./Profession/Professions";
 import { QuestRegistry } from "./Quest/Quests";
+import { EquipSkills } from "./SkillLines/EquipSkills";
 import { SkillLineRegistry } from "./SkillLines/SkillLines";
 import { SkillTiersRegistry } from "./SkillTiers/SkillTiers";
 import { SmartScripts } from "./SmartScript/SmartScript";
@@ -155,5 +157,7 @@ export const std = {
     Colors: Colors,
     AchievementCategory: AchievementCategoryRegistry,
     ItemSet: ItemSetRegistry,
-    ItemDisplayInfo: ItemDisplayinfoRegistry
+    ItemDisplayInfo: ItemDisplayinfoRegistry,
+    ExtendedCost: ExtendedCostRegistry,
+    EquipSkills: EquipSkills
 }

@@ -17,6 +17,7 @@
 
 import { finish } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { ChrClassesQuery, ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
 import { LUAXML } from "wotlkdata/luaxml/LUAXML";
@@ -31,15 +32,12 @@ import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryRowBase } from "../Refs/Registry";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
-import { ClassRaces } from "./ClassRaces";
-import { ClassSkillLines } from "./ClassSkillLines";
+import { ClassRaces } from "./ClassRaceData/ClassRaces";
 import { ClassStartInventory } from "./ClassStartInventory";
-import { ClassStartOutfits } from "./ClassStartOutfits";
 import { ClassStats } from "./ClassStats";
 import { ClassTalents } from "./ClassTalents";
-import { ClassType, resolveClassType } from "./ClassType";
+import { ClassType, CLASS_TYPES, getClassType, resolveClassType } from "./ClassType";
 import { ClassUISettings } from "./ClassUISettings";
-import { EquipSkills } from "./EquipSkills";
 import { StartButtons } from "./StartButtons";
 
 type ClassFinder = number;
@@ -73,8 +71,6 @@ export class Class extends MainEntity<ChrClassesRow> {
     }
 
     get Inventory() { return new ClassStartInventory(this); }
-    get EquipSkills() { return new EquipSkills(this); }
-    get StartGear() { return new ClassStartOutfits(this); }
     get Filename() { return this.row.Filename.get(); }
     get ID() { return this.row.ID.get(); }
     get Stats() { return new ClassStats(this); }
@@ -85,7 +81,6 @@ export class Class extends MainEntity<ChrClassesRow> {
     get DisplayPower() { return this.wrap(this.row.DisplayPower); }
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
     get Races() { return new ClassRaces(this); }
-    get SkillLines() { return new ClassSkillLines(this); }
     get StartButtons() { return new StartButtons(this); }
     get Talents() { return new ClassTalents(this); }
 }
@@ -98,7 +93,52 @@ const clsResolve = (f : ClassFinder) => {
 // it's too complicated to find all the lua/xml rows again
 const loadedClasses: {[key: number]: Class} = {}
 
+export class ClassRef<T> extends EnumCell<T> {
+    get Warrior()     { return this.value(CLASS_TYPES.WARRIOR); }
+    get Paladin()     { return this.value(CLASS_TYPES.PALADIN); }
+    get Hunter()      { return this.value(CLASS_TYPES.HUNTER); }
+    get Rogue()       { return this.value(CLASS_TYPES.ROGUE); }
+    get Priest()      { return this.value(CLASS_TYPES.PRIEST); }
+    get DeathKnight() { return this.value(CLASS_TYPES.DEATH_KNIGHT); }
+    get Shaman()      { return this.value(CLASS_TYPES.SHAMAN); }
+    get Mage()        { return this.value(CLASS_TYPES.MAGE); }
+    get Warlock()     { return this.value(CLASS_TYPES.WARLOCK); }
+    get Druid()       { return this.value(CLASS_TYPES.DRUID); }
+
+    is(cls: ClassType) {
+        return this.get() === resolveClassType(cls);
+    }
+
+    on(cls: ClassType, callback: (cls: Class)=>void) {
+        if(this.is(cls)) {
+            callback(this.getRef());
+        }
+        return this.owner;
+    }
+
+    set(cls: ClassType) {
+        return super.set(resolveClassType(cls));
+    }
+
+    getRef() {
+        return ClassRegistry.load(this.get());
+    }
+
+    modRef(callback: (cls: Class)=>void) {
+        callback(this.getRef());
+        return this.owner;
+    }
+
+    objectify() {
+        return getClassType(super.get());
+    }
+}
+
 export class ClassRegistryClass extends RegistryRowBase<Class,ChrClassesRow,ChrClassesQuery> {
+    ref<T>(owner: T, cell: Cell<number,any>): ClassRef<T> {
+        return new ClassRef(owner, cell);
+    }
+
     protected Table(): Table<any, ChrClassesQuery, ChrClassesRow> & { add: (id: number) => ChrClassesRow; } {
         return DBC.ChrClasses
     }

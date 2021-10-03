@@ -17,14 +17,15 @@
 import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
-import { ClassRegistry } from "../Class/Class";
+import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
 import { MainEntity } from "../Misc/Entity";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { RaceType } from "../Race/RaceType";
+import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
+import { CastSpells } from "./CastOnCreate";
 import { InterruptFlags } from "./InterruptFlags";
 import { SpellAttributes } from "./SpellAttributes";
 import { SpellAutoLearns } from "./SpellAutoLearn";
@@ -177,8 +178,31 @@ export class Spell extends MainEntity<SpellRow> {
      */
     get Script() { return new SpellScript(this); }
 
-    addStartButton(clazz: number, button: number, races?: RaceType[]) {
-        ClassRegistry.load(clazz).StartButtons.addSpell(button, this.ID, races);
+    get CastOnPlayerCreate() { return new CastSpells(this, this.ID); }
+
+    enable(cls: ClassMaskCon, race: RaceMaskCon) {
+        let classmask = makeClassmask(cls);
+        let racemask = makeRacemask(race);
+        this.SkillLines.forEach(x=>{
+            x.ClassMask.set(x.ClassMask.get()|classmask)
+            x.ClassMaskForbidden.set(x.ClassMaskForbidden.get()&(~classmask>>>0));
+            x.RaceMask.set(x.RaceMask.get()|racemask)
+        })
+    }
+
+    clearClass(cls: ClassMaskCon) {
+        let classmask = makeClassmask(cls);
+        this.SkillLines.forEach(x=>{
+            x.ClassMask.set(x.ClassMask.get()&(~classmask>>>0));
+        })
+        return this;
+    }
+
+    clearRace(race: RaceMaskCon) {
+        let racemask = makeRacemask(race);
+        this.SkillLines.forEach(x=>{
+            x.RaceMask.set(x.RaceMask.get()&(~racemask>>>0));
+        })
         return this;
     }
 

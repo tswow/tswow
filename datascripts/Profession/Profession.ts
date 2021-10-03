@@ -219,7 +219,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
                     .DieSides.set(1)
                     .BonusMultiplier.set(1)
             })
-            .SkillLines.addMod(this.owner.ID,false,sla=>{
+            .SkillLines.addMod(this.owner.ID,undefined,undefined,sla=>{
                 sla
                    .ClassMaskForbidden.set(0)
                    .MinSkillRank.set(1)

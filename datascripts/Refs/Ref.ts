@@ -109,6 +109,15 @@ export interface DynamicRegistry<T> extends LoadRegistry<T> {
 }
 
 export class RefDynamic<T,V> extends RefBase<T,V,DynamicRegistry<V>> {
+    getRef() {
+        let v = this.registry.load(this.cell.get());
+        if(v === undefined) {
+            v = this.registry.create();
+            this.cell.set(this.registry.ID(v));
+        }
+        return v;
+    }
+
     getRefCopy() {
         let v = this.registry.create(this.cell.get());
         this.cell.set(this.registry.ID(v));

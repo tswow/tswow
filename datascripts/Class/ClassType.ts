@@ -14,32 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export type ClassType =
-    'WARRIOR' | 'PALADIN' | 'HUNTER' | 'ROGUE' |
-    'PRIEST' | 'DEATH_KNIGHT' | 'SHAMAN' | 'MAGE' |
-    'WARLOCK' | 'DRUID' | number
+export const CLASS_TYPES = {
+      WARRIOR      : 1
+    , PALADIN      : 2
+    , HUNTER       : 3
+    , ROGUE        : 4
+    , PRIEST       : 5
+    , DEATH_KNIGHT : 6
+    , SHAMAN       : 7
+    , MAGE         : 8
+    , WARLOCK      : 9
+    , DRUID        : 11
+} as const
 
+export type ClassType = keyof typeof CLASS_TYPES | number
 export function resolveClassType(type: ClassType) {
-    if(typeof(type)==='number') {
-        return type;
-    }
-
-    switch(type) {
-        case 'WARRIOR': return 1;
-        case 'PALADIN': return 2;
-        case 'HUNTER': return 3;
-        case 'ROGUE': return 4;
-        case 'PRIEST': return 5;
-        case 'DEATH_KNIGHT': return 6;
-        case 'SHAMAN': return 7;
-        case 'MAGE': return 8;
-        case 'WARLOCK': return 9;
-        case 'DRUID': return 11;
-        default: throw new Error(`Invalid class type: ${type}`)
-    }
+    return typeof(type) === 'string' ? CLASS_TYPES[type] : type;
 }
 
 export function getClassType(type: ClassType): ClassType {
@@ -59,26 +50,11 @@ export function getClassType(type: ClassType): ClassType {
     }
 }
 
-export class ClassTypeCell<T> extends CellSystem<T> {
-    protected cell: Cell<number,any>;
-
-    constructor(owner: T, cell: Cell<number,any>) {
-        super(owner);
-        this.cell = cell;
-    }
-
-    set(value: ClassType) {
-        this.cell.set(resolveClassType(value));
-        return this.owner;
-    }
-
-    get() {
-        return getClassType(this.cell.get());
-    }
-}
-
-export function makeClassmask(races: ClassType[]) {
-    return races
-        .map(x=>resolveClassType(x))
-        .reduce((p,c)=>p|(1<<(c-1)),0);
+export type ClassMaskCon = ClassType|ClassType[]|undefined
+export function makeClassmask(classes: ClassMaskCon) {
+    return classes === undefined
+        ? 0
+        : (!Array.isArray(classes) ? [classes]:classes)
+            .map(x=>resolveClassType(x))
+            .reduce((p,c)=>p|(1<<(c-1)),0);
 }

@@ -1,43 +1,88 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MaskCell32, MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
+import { ClassType, CLASS_TYPES, getClassType, resolveClassType } from "../Class/ClassType";
 
 export class ClassMask<T> extends MaskCell32<T> {
-    enableClass(classId: number) { return this.setBit(classId-1, true); }
-    disableClass(classId: number) { return this.setBit(classId-1, false); }
-    get Warrior()     { return this.bit(0); }
-    get Paladin()     { return this.bit(1); }
-    get Hunter()      { return this.bit(2); }
-    get Rogue()       { return this.bit(3); }
-    get Priest()      { return this.bit(4); }
-    get DeathKnight() { return this.bit(5); }
-    get Shaman()      { return this.bit(6); }
-    get Mage()        { return this.bit(7); }
-    get Warlock()     { return this.bit(8); }
-    get Druid()       { return this.bit(10); }
+    protected permitZero: boolean;
+
+    constructor(owner: T, cell: Cell<number,any>, signed = false, permitZero = true) {
+        super(owner, cell, signed);
+        this.permitZero = permitZero;
+    }
+
+    setClass(classId: ClassType, value: boolean) {
+        return this.setBit(resolveClassType(classId)-1,value);
+    }
+    getClass(classId: ClassType) {
+        return (this.permitZero&&this.get() === 0) || this.getBit(resolveClassType(classId)-1)
+    }
+
+    private classBit(bit: number) {
+        return this.bit(bit-1);
+    }
+
+    forEach(callback: (cls: ClassType)=>void) {
+        for(let i=0;i<31;++i) {
+            if(this.getClass(i)) callback(getClassType(i+1))
+        }
+    }
+
+    filter(callback: (cls: ClassType)=>boolean): ClassType[] {
+        return this.map(x=>x)
+            .filter(callback);
+    }
+
+    map<T>(callback: (cls: ClassType)=>T) {
+        let values: T[] = []
+        this.forEach(x=>values.push(callback(x)))
+        return values;
+    }
+
+    get Warrior()     { return this.classBit(CLASS_TYPES.WARRIOR); }
+    get Paladin()     { return this.classBit(CLASS_TYPES.PALADIN); }
+    get Hunter()      { return this.classBit(CLASS_TYPES.HUNTER); }
+    get Rogue()       { return this.classBit(CLASS_TYPES.ROGUE); }
+    get Priest()      { return this.classBit(CLASS_TYPES.PRIEST); }
+    get DeathKnight() { return this.classBit(CLASS_TYPES.DEATH_KNIGHT); }
+    get Shaman()      { return this.classBit(CLASS_TYPES.SHAMAN); }
+    get Mage()        { return this.classBit(CLASS_TYPES.MAGE); }
+    get Warlock()     { return this.classBit(CLASS_TYPES.WARLOCK); }
+    get Druid()       { return this.classBit(CLASS_TYPES.DRUID); }
 }
 
 export class ClassMaskReadOnly<T> extends MaskCell32ReadOnly<T> {
-    get Warrior()     { return this.bit(0); }
-    get Paladin()     { return this.bit(1); }
-    get Hunter()      { return this.bit(2); }
-    get Rogue()       { return this.bit(3); }
-    get Priest()      { return this.bit(4); }
-    get DeathKnight() { return this.bit(5); }
-    get Shaman()      { return this.bit(6); }
-    get Mage()        { return this.bit(7); }
-    get Warlock()     { return this.bit(8); }
-    get Druid()       { return this.bit(10); }
-}
+    getClass(classId: number) {
+        return this.getBit(classId-1)
+    }
+    private classBit(bit: number) {
+        return this.bit(bit-1);
+    }
 
-export class ClassEnum<T> extends EnumCell<T> {
-    get Warrior()     { return this.value(1); }
-    get Paladin()     { return this.value(2); }
-    get Hunter()      { return this.value(3); }
-    get Rogue()       { return this.value(4); }
-    get Priest()      { return this.value(5); }
-    get DeathKnight() { return this.value(6); }
-    get Shaman()      { return this.value(7); }
-    get Mage()        { return this.value(8); }
-    get Warlock()     { return this.value(9); }
-    get Druid()       { return this.value(11); }
+    forEach(callback: (cls: number)=>void) {
+        for(let i=1;i<=32;++i) {
+            if(this.getClass(i)) callback(i)
+        }
+    }
+
+    filter(callback: (cls: number)=>boolean) {
+        return this.map(x=>x)
+            .filter(callback);
+    }
+
+    map<T>(callback: (cls: number)=>T) {
+        let values: T[] = []
+        this.forEach(x=>values.push(callback(x)))
+        return values;
+    }
+
+    get Warrior()     { return this.classBit(CLASS_TYPES.WARRIOR); }
+    get Paladin()     { return this.classBit(CLASS_TYPES.PALADIN); }
+    get Hunter()      { return this.classBit(CLASS_TYPES.HUNTER); }
+    get Rogue()       { return this.classBit(CLASS_TYPES.ROGUE); }
+    get Priest()      { return this.classBit(CLASS_TYPES.PRIEST); }
+    get DeathKnight() { return this.classBit(CLASS_TYPES.DEATH_KNIGHT); }
+    get Shaman()      { return this.classBit(CLASS_TYPES.SHAMAN); }
+    get Mage()        { return this.classBit(CLASS_TYPES.MAGE); }
+    get Warlock()     { return this.classBit(CLASS_TYPES.WARLOCK); }
+    get Druid()       { return this.classBit(CLASS_TYPES.DRUID); }
 }
