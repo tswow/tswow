@@ -16,13 +16,108 @@
  */
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { trainerRow } from "wotlkdata/sql/types/trainer";
 import { Ids } from "../Misc/Ids";
-import { TrainerBase } from "../Trainer/Trainer";
+import { TrainerPlain, TrainerRegistry } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
 import { Gossip } from "./Gossip";
 import { GossipOption } from "./GossipOption";
 import { GossipRegistry } from "./Gossips";
+
+export class OptionCellBase extends CellSystem<GossipOption> {
+    protected type: number;
+    protected flag: number;
+
+    constructor(owner: GossipOption, type: number, flag: number) {
+        super(owner)
+        this.type = type;
+        this.flag = flag;
+    }
+
+    is() {
+        return this.owner.row.OptionType.get() === this.type;
+    }
+
+    on(callback: (option: GossipOption)=>void) {
+        if(this.is()) callback(this.owner);
+        return this.owner;
+    }
+
+    protected _set() {
+        this.owner.row.OptionType.set(this.type);
+        this.owner.row.OptionNpcFlag.set(this.flag);
+        return this.owner;
+    }
+}
+
+export class VendorCell extends OptionCellBase {
+    set(creatureId: number, callback?: (vendor: Vendor)=>void) {
+        this._set();
+        this.owner.row.ActionMenuID.set(creatureId)
+        if(callback) callback(new Vendor(creatureId))
+        return this.owner;
+    }
+
+    setNew(callback: (vendor: Vendor)=>void) {
+        let c = SQL.creature_template.add(Ids.creature_template.dynamicId());
+        c.name.set('Dummy Vendor Creature')
+        return this.set(c.entry.get(), callback);
+    }
+}
+
+export class TrainerCell extends OptionCellBase {
+    private __set(trainerId: number, creatureId: number, callback?: (trainer: TrainerPlain)=>void) {
+        this._set();
+        this.owner.row.ActionMenuID.set(creatureId);
+        if(callback) callback(TrainerRegistry.load(trainerId));
+        return this.owner;
+    }
+
+    setOwner() {
+        this._set();
+        this.owner.row.ActionMenuID.set(0)
+        return this.owner;
+    }
+
+    set(trainerId: number, callback?: (trainer: TrainerPlain)=>void) {
+        return this.__set(
+              trainerId
+            , SQL.creature_default_trainer
+                .find({TrainerId:trainerId}).CreatureId.get()
+            , callback)
+    }
+
+    setNew(callback: (trainer: TrainerPlain)=>void) {
+        let creature = SQL.creature_template.add(Ids.creature_template.dynamicId());
+        creature.name.set('Dummy Trainer Creature').npcflag.set(16)
+        let trainer = TrainerRegistry.create()
+        SQL.creature_default_trainer.add(creature.entry.get())
+            .TrainerId.set(trainer.ID)
+        return this.__set(trainer.ID,creature.entry.get(),callback);
+    }
+}
+
+export class GossipLinkCell extends OptionCellBase {
+    setLink(id: number) {
+        this._set();
+        this.owner.row.ActionMenuID.set(id);
+        return this.owner;
+    }
+
+    setNew(callback: (gossip: Gossip)=>void) {
+        let gossip = GossipRegistry.create()
+        this.setLink(gossip.ID)
+        callback(gossip);
+        return this.owner;
+    }
+}
+
+export class OptionCellPlain extends OptionCellBase {
+    set() {
+        this._set();
+        this.owner.row.ActionMenuID.set(0)
+        return this.owner;
+    }
+}
 
 export class GossipOptionType extends CellSystem<GossipOption> {
     protected set(value: number, npcValue: number, action = 0) {
@@ -32,104 +127,23 @@ export class GossipOptionType extends CellSystem<GossipOption> {
         return this.owner;
     }
 
-    /**
-     * @deprecated Only use this for modifying blizzlike creatures,
-     * for custom creatures, use "setExistingVendor/setNewVendor"
-     */
-    setCreatureVendor(creatureId: number, callback: (vendor: Vendor<void>)=>void) {
-        this.set(3,128);
-        this.owner.row.ActionMenuID.set(0);
-        callback(new Vendor(undefined,creatureId));
-        return this.owner;
+    protected value(type: number, flag: number) {
+        return new OptionCellPlain(this.owner, type,flag);
     }
 
-    setExistingVendor(vendorId: number, callback: (vendor: Vendor<void>)=>void = ()=>{}) {
-        this.set(3,128);
-        if(vendorId < 0) {
-            vendorId = Ids.Vendor.id();
-        }
-        this.owner.row.ActionMenuID.set(vendorId);
-        callback(new Vendor(undefined, vendorId));
-    }
+    get Vendor()  { return new VendorCell(this.owner, 3, 128); }
+    get Gossip()  { return new GossipLinkCell(this.owner, 1, 1); }
+    get Trainer() { return new TrainerCell(this.owner, 5, 16); }
 
-    setNewVendor(callback: (vendor: Vendor<void>)=>void = ()=>{}) {
-        return this.setExistingVendor(Ids.Vendor.id(),callback);
-    }
-
-    setGossipLink(id: number) {
-        this.set(1,1);
-        this.owner.row.ActionMenuID.set(id);
-        return this.owner;
-    }
-
-    setNewGossip(callback: (gossip: Gossip)=>void) {
-        const gossip = GossipRegistry.create();
-        this.set(1,1,gossip.ID);
-        callback(gossip);
-        return this.owner;
-    }
-
-    setExistingTrainer(id: number, callback: (trainer: TrainerBase)=>void = ()=>{}) {
-        let defTrainer = SQL.creature_default_trainer.find({TrainerId:id})
-        return this.setTrainer(defTrainer.CreatureId.get(),SQL.trainer.find({Id:id}),callback);
-    }
-
-    setNewTrainer(callback: (trainer: TrainerBase)=>void = ()=>{}) {
-        let row = SQL.trainer.add(Ids.Trainer.id());
-        let creature = SQL.creature_template.add(Ids.TrainerCreature.id())
-            .npcflag.set(16)
-        SQL.creature_default_trainer.add(creature.entry.get())
-            .TrainerId.set(row.Id.get())
-        return this.setTrainer(creature.entry.get(),row,callback);
-    }
-
-    private setTrainer(creatureId: number, trainer: trainerRow, callback: (trainer: TrainerBase)=>void) {
-        this.set(5,16,creatureId);
-        callback(new TrainerBase(trainer));
-        return this.owner;
-    }
-
-    setSpiritHealer() {
-        return this.set(6,16384);
-    }
-
-    setSpiritGuide() {
-        return this.set(7,32768);
-    }
-
-    setInnkeeper() {
-        return this.set(8,65536);
-    }
-
-    setBanker() {
-        return this.set(9,131072);
-    }
-
-    setPetition() {
-        return this.set(10,262144);
-    }
-
-    setTabardDesigner() {
-        return this.set(11,524288);
-    }
-
-    setAuctioneer() {
-        return this.set(13,2097152);
-    }
-
-    setStableMaster() {
-        return this.set(14,4194304);
-    }
-
-    setUnlearnTalents() {
-        return this.set(16,16);
-    }
-
-    setUnlearnPetTalents() {
-        return this.set(17,16);
-    }
-
-    setLearnDualSpec() {
-        return this.set(18,16);
-    }
+    get SpiritHealer()      { return this.value(6,16384)}
+    get SpiritGuide()       { return this.value(7,32768)}
+    get Innkeeper()         { return this.value(8,65536)}
+    get Banker()            { return this.value(9,131072)}
+    get Petition()          { return this.value(10,262144)}
+    get TabardDesigner()    { return this.value(11,524288)}
+    get Auctioneer()        { return this.value(13,2097152)}
+    get StableMaster()      { return this.value(14,4194304)}
+    get UnlearnTalents()    { return this.value(16,16)}
+    get UnlearnPetTalents() { return this.value(17,16)}
+    get DualSpec()          { return this.value(18,16)}
 }

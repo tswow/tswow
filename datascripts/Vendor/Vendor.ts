@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
+import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { npc_vendorRow } from "wotlkdata/sql/types/npc_vendor";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
@@ -57,7 +58,7 @@ export class VendorItem extends MainEntity<npc_vendorRow> {
     }
 }
 
-export class Vendor<T> extends MultiRowSystem<VendorItem,T> {
+export class VendorItems<T> extends MultiRowSystem<VendorItem,T> {
     protected getAllRows(): VendorItem[] {
         return SQL.npc_vendor
             .filter({entry:this.ID})
@@ -92,5 +93,18 @@ export class Vendor<T> extends MultiRowSystem<VendorItem,T> {
     addMod(item: number, extendedCostId: number|'GENERATE', callback: (item: VendorItem)=>void) {
         callback(this.addGet(item,extendedCostId));
         return this.owner;
+    }
+}
+
+export class Vendor extends CellSystemTop {
+    protected id: number;
+
+    constructor(id: number) {
+        super();
+        this.id = id;
+    }
+
+    get Items() {
+        return new VendorItems(this, this.id);
     }
 }

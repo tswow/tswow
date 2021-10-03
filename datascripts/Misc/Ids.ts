@@ -178,10 +178,10 @@ export const Ids = {
     gossip_menu_option: new DynamicIDGenerator('gossip_menu_option',100000),
 
     /** Starts at 58000, highest base value is 57019 */
-    gossip_menu: new DynamicIDGenerator('gossip_menu',58000),
+    gossip_menu: new StaticIDGenerator('gossip_menu',58000),
 
     /** Starts at 100000, highest base value is 77865 */
-    BroadcastText: new StaticIDGenerator('broadcast_text',100000),
+    BroadcastText: new StaticIDGenerator('broadcast_text',78000),
 
     /** Starts at 210, highest base value is 209 */
     SpellCastTimes: new DynamicIDGenerator('SpellCastTimes',210),

@@ -29,7 +29,7 @@ import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
 import { VehicleRegistry } from "../Vehicle/Vehicle";
 import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
-import { Vendor } from "../Vendor/Vendor";
+import { VendorItems } from "../Vendor/Vendor";
 import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
@@ -196,7 +196,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
     get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
     get Trainer() { return new CreatureDefaultTrainer(this); }
-    get Vendor() { return new Vendor(this, this.ID); }
+    get Vendor() { return new VendorItems(this, this.ID); }
 
     get NormalLoot() {
         return new LootSetPointer(
