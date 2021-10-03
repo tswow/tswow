@@ -105,6 +105,7 @@ export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
         if(langFemale) {
             v.FemaleText.set(langFemale);
         }
+        this.cell.set(v.ID)
         return this.owner;
     }
 }
