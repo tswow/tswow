@@ -31,6 +31,7 @@ import { PageTextRegistry } from "../PageText/PageText";
 import { QuestRegistry } from "../Quest/Quests";
 import { RefUnknown } from "../Refs/Ref";
 import { SpellRegistry } from "../Spell/Spells";
+import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
 import { TaxiPathRegistry } from "../Taxi/Taxi";
 import { WorldStateRegistry } from "../WorldState/WorldState";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
@@ -574,7 +575,7 @@ export class GameObjectSpellFocus extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
     }
-    get Focus() { return new RefUnknown(this, this.row.Data0); }
+    get Focus() { return SpellFocusRegistry.ref(this, this.row.Data0); }
     get Distance() { return this.wrap(this.row.Data1); }
     get LinkedTrap() { return GORegistry.Traps.ref(this ,this.row.Data2); }
     get ServerOnly() { return this.wrap(this.row.Data3); }

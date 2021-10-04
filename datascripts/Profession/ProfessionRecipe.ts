@@ -6,6 +6,7 @@ import { Spell } from "../Spell/Spell";
 import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { SpellRegistry } from "../Spell/Spells";
+import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
 import { std } from "../tswow-stdlib-data";
 import { Profession } from "./Profession";
 import { ProfessionTier } from "./ProfessionType";
@@ -54,7 +55,9 @@ export class ProfessionRecipe extends CellSystemTop {
         this.spell = spell;
     }
 
-    get SpellFocus() { return this.wrap(this.spell.RequiresSpellFocus); }
+    get SpellFocus() {
+        return SpellFocusRegistry.ref(this, this.spell.RequiresSpellFocus);
+    }
     get ID() { return this.spell.ID; }
     get ProfessionID() { return this.profession.ID; }
 

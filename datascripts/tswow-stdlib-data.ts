@@ -65,6 +65,7 @@ import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
 import { SpellRegistry } from "./Spell/Spells";
 import { SpellStackGroupRegistry } from "./Spell/SpellStackGroup";
+import { SpellFocusRegistry } from "./SpellFocus/SpellFocus";
 import { TalentTreeRegistry } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TaxiEndNodeRegistry } from "./Taxi/TaxiEndNode";
@@ -159,5 +160,6 @@ export const std = {
     ItemSet: ItemSetRegistry,
     ItemDisplayInfo: ItemDisplayinfoRegistry,
     ExtendedCost: ExtendedCostRegistry,
-    EquipSkills: EquipSkills
+    EquipSkills: EquipSkills,
+    SpellFocus: SpellFocusRegistry,
 }

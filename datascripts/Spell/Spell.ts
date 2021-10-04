@@ -23,6 +23,7 @@ import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
+import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { CastSpells } from "./CastOnCreate";
@@ -78,8 +79,12 @@ export class Spell extends MainEntity<SpellRow> {
     get Totems() { return new SingleArraySystem(this,this.row.Totem,0); }
     get Reagents() { return new SpellReagents(this,this); }
 
-    get RequiresSpellFocus() { return this.wrap(this.row.RequiresSpellFocus); }
-    get FacingCasterFlags() { return new MaskCell32(this, this.row.FacingCasterFlags); }
+    get RequiresSpellFocus() {
+        return SpellFocusRegistry.ref(this,this.row.RequiresSpellFocus);
+    }
+    get FacingCasterFlags() {
+        return new MaskCell32(this, this.row.FacingCasterFlags);
+    }
 
     get CasterAuraState() : IncludeExclude<number, this> {
         return new IncludeExclude(this,
