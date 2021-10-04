@@ -232,6 +232,15 @@ export abstract class MaskCellReadOnly<T> extends CellRoot<T> {
 
 
 const MaskCell32Impl = {
+
+    unsign32(signed: boolean, old: number) {
+        return (signed && old === -1) ? 0xffffffff : old;
+    },
+
+    sign32(signed: boolean, old: number) {
+        return (signed && old === 0xffffffff) ? -1 : old;
+    },
+
     bits_from(mask: number, signed: boolean = false) {
         let bits: number[] = []
         for(let i=0;i<mask;++i) {
@@ -267,9 +276,7 @@ const MaskCell32Impl = {
     },
 
     set(signed: boolean, value: number) {
-        return signed && value == 0xffffffff
-            ? -1
-            : value
+        return this.sign32(signed,value);
     },
 
     setBit(signed: boolean, no: number, value: boolean, oldValue: number) {
@@ -293,6 +300,41 @@ const MaskCell32Impl = {
 
     flip(signed: boolean, oldValue: number) {
         return (signed && oldValue === 0) ? -1 : ~oldValue>>>0
+    },
+
+    or(signed: boolean, mask: number, oldValue: number) {
+        if(signed && oldValue === -1) return -1;
+        let v = oldValue | mask;
+        return this.sign32(signed,v);
+    },
+
+    not(signed: boolean, mask: number, oldValue: number) {
+        let v = this.unsign32(signed,oldValue);
+        v = v & (~mask>>>0)
+        return this.sign32(signed,v);
+    },
+
+    and(signed: boolean, mask: number, oldValue: number) {
+        let v = this.unsign32(signed,oldValue);
+        v = v & mask;
+        return this.sign32(signed,v);
+    },
+
+    xor(signed: boolean, mask: number, oldValue: number) {
+        let v = this.unsign32(signed,oldValue);
+        v = v ^ mask;
+        return this.sign32(signed,v);
+    },
+
+    nor(signed: boolean, mask: number, oldValue: number) {
+        let v = this.unsign32(signed,oldValue);
+        v = ~(mask|v)>>>0;
+        return this.sign32(signed,v);
+    },
+
+    mask(bits: number|number[]) {
+        if(!Array.isArray(bits)) bits = [bits];
+        return bits.reduce((p,c)=>(p|(1<<c)),0);
     }
 }
 
@@ -341,6 +383,34 @@ export class MaskCell32<T> extends MaskCell<T> {
 
     get(): number {
         return this.cell.get();
+    }
+
+    add(bits: number|number[]) {
+        return this.or(MaskCell32Impl.mask(bits));
+    }
+
+    remove(bits: number|number[]) {
+        return this.not(MaskCell32Impl.mask(bits));
+    }
+
+    or(mask: number) {
+        return this.set(MaskCell32Impl.or(this.signed,mask,this.cell.get()))
+    }
+
+    not(mask: number) {
+        return this.set(MaskCell32Impl.not(this.signed,mask,this.cell.get()))
+    }
+
+    and(mask: number) {
+        return this.set(MaskCell32Impl.and(this.signed,mask,this.cell.get()))
+    }
+
+    xor(mask: number) {
+        return this.set(MaskCell32Impl.xor(this.signed,mask,this.cell.get()))
+    }
+
+    nor(mask: number) {
+        return this.set(MaskCell32Impl.nor(this.signed,mask,this.cell.get()))
     }
 
     set(value: number) {
