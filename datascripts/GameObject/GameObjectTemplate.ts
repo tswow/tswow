@@ -69,11 +69,11 @@ export class GameObjectTemplateInstances
         return this.owner;
     }
 
-    add(mod: string, id: string, pos: Position|Position[], spawnTime?: number, spawnMask?: number) {
+    add(mod: string, id: string, pos: Position|Position[], spawnTime: number = 120, spawnMask: number = 1) {
         this.addGet(mod,id,pos)
             .forEach(x=>x
-                .SpawnTimeSecs.set(spawnTime||0)
-                .SpawnMask.set(spawnMask||0)
+                .SpawnTimeSecs.set(spawnTime)
+                .SpawnMask.set(spawnMask)
         )
         return this.owner;
     }

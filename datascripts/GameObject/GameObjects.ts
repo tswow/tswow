@@ -33,18 +33,19 @@ export class GameObjectInstanceRegistryClass
         return Ids.gameobject
     }
     Clear(r: GameObjectInstance): void {
-        r.PhaseMask.set(0)
+        r
          .Position.setSpread(0,0,0,0,0)
          .Area.set(0)
-         .PhaseMask.set(0)
          .Rotation.setSpread(0,0,0,0)
          .ScriptName.set('')
-         .SpawnMask.set(0)
-         .SpawnTimeSecs.set(0)
-         .State.set(0)
          .Zone.set(0)
-         .row.id.set(0)
-         .VerifiedBuild.set(17688)
+         .SpawnTimeSecs.set(120)
+         .PhaseMask.set(1)
+         .SpawnMask.set(1)
+         .State.set(1)
+         .row
+            .id.set(0)
+            .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
         if(parent.addonExists()) {
