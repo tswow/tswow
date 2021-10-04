@@ -1,47 +1,60 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { ClassType, makeClassmask } from "../Class/ClassType";
-import { Ids } from "../Misc/Ids";
-import { makeRacemask, RaceType } from "../Race/RaceType";
+import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
+import { ClassMask } from "../Misc/ClassMask";
+import { RaceMask } from "../Misc/RaceMask";
+import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
 import { Faction } from "./Faction";
 
-export class FactionReputationFlags extends MaskCell32<FactionReputation> {
-    get Visible() { return this.bit(0); }
-    get AtWar() { return this.bit(1); }
-    get Hidden() { return this.bit(2); }
-    get InvisibleForced() { return this.bit(3); }
-    get PeaceForced() { return this.bit(4); }
-    get Inactive() { return this.bit(5); }
-    get Rival() { return this.bit(6); }
-    get Special() { return this.bit(7); }
+export const REPUTATION_BITS = {
+      VISIBLE          : 0
+    , AT_WAR           : 1
+    , HIDDEN           : 2
+    , INVISIBLE_FORCED : 3
+    , PEACE_FORCED     : 4
+    , INACTIVE         : 5
+    , RIVAL            : 6
+    , SPECIAL          : 7
+} as const
+
+export type ReputationFlag = keyof typeof REPUTATION_BITS
+
+export function makeReputationFlag(flags: ReputationFlag|ReputationFlag[]) {
+    if(!Array.isArray(flags)) flags = [flags];
+    return flags.reduce((p,c)=>p|(1<<REPUTATION_BITS[c]),0)
 }
 
-type ReputationFlag = 'Visible'|'AtWar'|'Hidden'|'InvisibleForced'|'PeaceForced'|'Inactive'|'Rival'|'Special'
+export class FactionReputationFlags extends MaskCell32<FactionReputation> {
+    get Visible()         { return this.bit(REPUTATION_BITS.VISIBLE); }
+    get AtWar()           { return this.bit(REPUTATION_BITS.AT_WAR); }
+    get Hidden()          { return this.bit(REPUTATION_BITS.HIDDEN); }
+    get InvisibleForced() { return this.bit(REPUTATION_BITS.INVISIBLE_FORCED); }
+    get PeaceForced()     { return this.bit(REPUTATION_BITS.PEACE_FORCED); }
+    get Inactive()        { return this.bit(REPUTATION_BITS.INACTIVE); }
+    get Rival()           { return this.bit(REPUTATION_BITS.RIVAL); }
+    get Special()         { return this.bit(REPUTATION_BITS.SPECIAL); }
+}
 
 export class FactionReputation extends ArrayEntry<Faction> {
-    get RaceMask() { return this.wrapIndex(this.container.row.ReputationRaceMask, this.index); }
-    get ClassMask() { return this.wrapIndex(this.container.row.ReputationClassMask, this.index); }
-    get StartReputation() { return this.wrapIndex(this.container.row.ReputationBase, this.index); }
-    get Flags() { return new FactionReputationFlags(this, this.wrapIndex(this.container.row.ReputationFlags, this.index)); }
-
-    removeRaces(races: RaceType[]) {
-        this.RaceMask.set(this.RaceMask.get()&(~makeRacemask(races)));
-        return this;
+    get RaceMask() {
+        return new RaceMask(this,this.wrapIndex(
+              this.container.row.ReputationRaceMask
+            , this.index
+        ))
     }
 
-    removeClasses(classes: ClassType[]) {
-        this.ClassMask.set(this.ClassMask.get()&(~makeClassmask(classes)));
-        return this;
+    get ClassMask() {
+        return new ClassMask(this,this.wrapIndex(
+              this.container.row.ReputationClassMask
+            , this.index
+        ))
     }
 
-    addRaces(race: RaceType[]) {
-        this.RaceMask.set(this.RaceMask.get()|makeRacemask(race));
-        return this;
+    get StartReputation() {
+        return this.wrapIndex(this.container.row.ReputationBase, this.index);
     }
-
-    addClasses(classes: ClassType[]) {
-        this.ClassMask.set(this.ClassMask.get()|makeClassmask(classes));
-        return this;
+    get Flags() {
+        return new FactionReputationFlags(this, this.wrapIndex(this.container.row.ReputationFlags, this.index));
     }
 
     clear() {
@@ -65,14 +78,15 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         return new FactionReputation(this.owner, index);
     }
 
-    assignID(mod: string, id: string) {
-        if(this.owner.row.ReputationIndex.get() !== -1) {
-            throw new Error(`Faction ${this.owner.ID} already has a reputation ID`)
+    addGet() {
+        if(!this.owner.ReputationIndex.exists()) {
+            throw new Error(
+                  `Reputation is not enabled for faction`
+                + ` ${this.owner.ID}.`
+                + ` Please use Faction.ReputationIndex.assign`
+            )
         }
-
-        this.owner.row.ReputationIndex.set(Ids.ReputationIndex.id(mod, id));
-
-        return this.owner;
+        return super.addGet();
     }
 
     addMod(callback: (reputation: FactionReputation)=>void = ()=>{}) {
@@ -80,47 +94,13 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         return this.owner;
     }
 
-    addSimple(startReputation: number, races: RaceType[] = [], classes: ClassType[] = [], flags: ReputationFlag[] = []) {
-        if(this.owner.row.ReputationIndex.get() == -1) {
-            throw new Error(
-                  `Reputation is not enabled for faction ${this.owner.row.ID.get()}`
-                + `, use Faction.Reputation.assignID`
-                )
-        }
-
-        let rep = this.addGet()
+    addSimple(startReputation: number, races?: RaceMaskCon, classes?: ClassMaskCon, flags: ReputationFlag[] = []) {
+        this.addGet()
             .StartReputation.set(startReputation)
-            .addClasses(classes)
-            .addRaces(races)
+            .ClassMask.set(makeClassmask(classes))
+            .RaceMask.set(makeRacemask(races))
+            .Flags.set(makeReputationFlag(flags))
 
-        flags.forEach(x=>{
-            switch(x) {
-                case 'AtWar':
-                    rep.Flags.AtWar.set(true)
-                    break;
-                case 'Hidden':
-                    rep.Flags.Hidden.set(true)
-                    break;
-                case 'Inactive':
-                    rep.Flags.Inactive.set(true)
-                    break;
-                case 'InvisibleForced':
-                    rep.Flags.InvisibleForced.set(true)
-                    break;
-                case 'PeaceForced':
-                    rep.Flags.PeaceForced.set(true)
-                    break;
-                case 'Rival':
-                    rep.Flags.Rival.set(true)
-                    break;
-                case 'Special':
-                    rep.Flags.Special.set(true)
-                    break;
-                case 'Visible':
-                    rep.Flags.Visible.set(true)
-                    break;
-            }
-        })
         return this.owner;
     }
 }
