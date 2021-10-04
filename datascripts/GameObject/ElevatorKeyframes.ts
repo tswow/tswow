@@ -381,7 +381,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
             let o = (i-last.index)/(next.index-last.index)
 
             return Object.assign({},x,
-                {time:last.time+(next.time-last.time)*o})
+                {time:Math.round(last.time+(next.time-last.time)*o)})
         }) as (T&{time:number})[]
     }
 
