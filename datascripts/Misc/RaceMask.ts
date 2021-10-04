@@ -1,6 +1,6 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MaskCell32, MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
-import { RaceType, RACE_TYPES, resolveRaceType } from "../Race/RaceType";
+import { makeRacemask, RaceMaskCon, RaceType, RACE_TYPES, resolveRaceType } from "../Race/RaceType";
 
 // Note: don't add the non-playable races here, it will just be confusing
 
@@ -13,6 +13,14 @@ export class RaceMask<T> extends MaskCell32<T> {
     }
 
     private raceBit(bit: number) { return this.bit(bit-1); }
+
+    add(classes: RaceMaskCon) {
+        return this.or(makeRacemask(classes));
+    }
+
+    remove(classes: RaceMaskCon) {
+        return this.not(makeRacemask(classes));
+    }
 
     forEach(callback: (cls: number)=>void) {
         for(let i=1;i<=32;++i) {

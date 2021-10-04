@@ -1,6 +1,6 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MaskCell32, MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
-import { ClassType, CLASS_TYPES, getClassType, resolveClassType } from "../Class/ClassType";
+import { ClassMaskCon, ClassType, CLASS_TYPES, getClassType, makeClassmask, resolveClassType } from "../Class/ClassType";
 
 export class ClassMask<T> extends MaskCell32<T> {
     protected permitZero: boolean;
@@ -15,6 +15,14 @@ export class ClassMask<T> extends MaskCell32<T> {
     }
     getClass(classId: ClassType) {
         return (this.permitZero&&this.get() === 0) || this.getBit(resolveClassType(classId)-1)
+    }
+
+    add(classes: ClassMaskCon) {
+        return this.or(makeClassmask(classes));
+    }
+
+    remove(classes: ClassMaskCon) {
+        return this.not(makeClassmask(classes));
     }
 
     private classBit(bit: number) {
