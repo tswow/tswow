@@ -38,12 +38,13 @@ export class LockIndexBase extends TransformedClass<LockIndexPlain> {
         this.container.row
             .Type.setIndex(this.index,0)
             .Skill.setIndex(this.index,0)
+            .Index.setIndex(this.index,0)
             .Action.setIndex(this.index,0)
         return this;
     }
 
     isClear(): boolean {
-        return this.container.row.Type.getIndex(this.index) !== 0
+        return this.container.row.Type.getIndex(this.index) === 0
     }
 
     static container(index: LockIndexBase) {
@@ -232,7 +233,7 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
         return this.find(x=>
                x.Type.Item.is()
             && x.Type.Item.as().Item.get() === item
-        )
+        ) !== undefined
     }
 
     get Chests() { return new LockChests(this); }

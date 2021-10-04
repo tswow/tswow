@@ -18,7 +18,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         return value.row.isDeleted();
     }
 
-    add(mod: string, id: string, lockType: number, autoLearnAt: number = 0) {
+    addGet(mod: string, id: string, lockType: number, autoLearnAt: number = 0) {
         let spl = SpellRegistry.create(mod,id)
         .Attributes.isHiddenInSpellbook.set(true)
         .Attributes.isHiddenFromLog.set(true)
@@ -59,7 +59,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
     }
 
     addMod(mod: string, id: string, lockType: number, autoLearnAt: number = 0, callback: (spell: Spell)=>void = ()=>{}) {
-        callback(this.add(mod,id,lockType,autoLearnAt));
+        callback(this.addGet(mod,id,lockType,autoLearnAt));
         return this.owner;
     }
 }
