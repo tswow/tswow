@@ -70,6 +70,8 @@ import { TalentTreeRegistry } from "./Talents/Talents";
 import { TaxiPathRegistry } from "./Taxi/Taxi";
 import { TaxiEndNodeRegistry } from "./Taxi/TaxiEndNode";
 import { TitleRegistry } from "./Title/Titles";
+import { TotemCategoryRegistry } from "./TotemCategory/TotemCategory";
+import { TotemTypeRegistry } from "./TotemCategory/TotemType";
 import { UI } from "./UI/UI";
 import { VehicleRegistry } from "./Vehicle/Vehicle";
 import { ScriptPaths } from "./Waypoints/ScriptPaths";
@@ -162,4 +164,6 @@ export const std = {
     ExtendedCost: ExtendedCostRegistry,
     EquipSkills: EquipSkills,
     SpellFocus: SpellFocusRegistry,
+    TotemType: TotemTypeRegistry,
+    TotemCategory: TotemCategoryRegistry,
 }

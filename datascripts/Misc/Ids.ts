@@ -195,6 +195,9 @@ export const Ids = {
     /** Starts at 191, highest base value is 190 */
     TotemCategory: new DynamicIDGenerator('TotemCategory',191),
 
+    /** Starts at 25, highest base value is 24 */
+    TotemType: new DynamicIDGenerator('TotemType',25),
+
     /** Starts at 3000, highest base value is 2997 */
     ItemExtendedCost: new DynamicIDGenerator('ItemExtendedCost',3000),
 
