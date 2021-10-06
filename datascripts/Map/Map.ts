@@ -29,9 +29,12 @@ import { PositionXYCell } from "../Misc/PositionCell";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { LoadingScreens } from "./LoadingScreen";
 import { MapADT } from "./MapADT";
+import { MapInstance } from "./MapInstance";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
+import { PVEDifficulties } from "./PVEDifficulty";
+import { PVPDifficulties } from "./PVPDifficulty";
 
 export class Map extends MainEntity<MapRow> {
     get ID() { return this.row.ID.get(); }
@@ -63,11 +66,18 @@ export class Map extends MainEntity<MapRow> {
     get AreaTable() { return this.wrap(this.row.AreaTableID); }
     get MapFiles() { return new MapADT(this); }
 
+    get PVEDifficulty() { return new PVEDifficulties(this); }
+    get PVPDifficulty() { return new PVPDifficulties(this); }
+
     /**
      * TODO: Unknown flags, all flags on wowdev looks like wod+
      */
     get Flags() { return this.wrap(this.row.Flags); }
 
+    /**
+     * An entry that defines whether this map can be an instance.
+     */
+    get Instance() { return new MapInstance(this); }
     get IsPVP() { return this.wrap(this.row.PVP); }
 
     get WorldStateUIs() { return new MapWorldStateUIs(this); }
