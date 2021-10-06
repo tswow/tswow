@@ -19,6 +19,22 @@ export class MinMaxCell<T> extends CellSystem<T> {
     get Min() { return this.ownerWrap(this.minCell); }
     get Max() { return this.ownerWrap(this.maxCell); }
 
+    is(min: number, max: number) {
+        return this.Min.get() === min && this.Max.get() === max;
+    }
+
+    isWithin(lowerMin: number, upperMax: number) {
+        return this.isAbove(lowerMin) && this.isBelow(upperMax);
+    }
+
+    isAbove(lowerMin: number) {
+        return this.Min.get() >= lowerMin
+    }
+
+    isBelow(upperMax: number) {
+        return this.Max.get() <= upperMax;
+    }
+
     set(min: number, max: number) {
         this.Min.set(min);
         this.Max.set(max);
