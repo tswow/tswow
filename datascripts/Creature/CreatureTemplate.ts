@@ -14,6 +14,8 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
+import { Cell } from "wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
@@ -25,6 +27,7 @@ import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { SchoolMask } from "../Misc/School";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { RefStatic } from "../Refs/Ref";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
 import { VehicleRegistry } from "../Vehicle/Vehicle";
@@ -56,12 +59,55 @@ import { NPCFlags } from "./NPCFlags";
 import { UnitClass } from "./UnitClass";
 import { UnitFlags } from "./UnitFlags";
 
+export class CreatureDifficultyRef extends RefStatic<CreatureTemplate,CreatureTemplate> {
+    constructor(owner: CreatureTemplate, cell: Cell<number,any>) {
+        super(owner,cell,CreatureTemplateRegistry)
+    }
+
+    getRefCopyRoot(mod: string, id: string) {
+        this.cell.set(this.owner.ID);
+        return this.getRefCopy(mod,id)
+    }
+
+    modRefCopyRoot(mod: string, id: string, callback: (template: CreatureTemplate)=>void) {
+        callback(this.getRefCopyRoot(mod,id));
+        return this.owner;
+    }
+}
+
+export class CreatureDifficulties extends CellSystem<CreatureTemplate> {
+    get Heroic5Man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_1
+        )
+    }
+
+    get Normal25man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_1
+        )
+    }
+
+    get Heroic10Man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_2
+        )
+    }
+
+    get Heroic25Man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_3
+        )
+    }
+}
+
 export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,CreatureTemplate>
 {
     protected getAllRows(): CreatureInstance[] {
         return SQL.creature.filter({id:this.owner.ID})
             .map(x=>new CreatureInstance(x));
     }
+
     protected isDeleted(value: CreatureInstance): boolean {
         return value.row.isDeleted();
     }
@@ -168,10 +214,8 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
     get UnitClass() { return new UnitClass(this, this.row.unit_class); }
     get DynamicFlags() { return CreatureTemplateRegistry.ref(this, this.row.dynamicflags); }
-    get DungeonHeroic() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_1); }
-    get RaidNormal25() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_1); }
-    get RaidHeroic10() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_2); }
-    get RaidHeroic25() { return CreatureTemplateRegistry.ref(this, this.row.difficulty_entry_3); }
+    get Difficulty() { return new CreatureDifficulties(this); }
+
     get Models() { return new CreatureModels(this, this.row); }
     get Icon() { return new CreatureIconNames(this); }
     get Gossip() {
