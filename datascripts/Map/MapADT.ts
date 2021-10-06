@@ -100,7 +100,10 @@ export class MapADT extends CellSystem<Map> {
                     , this.owner.Directory.get()
                 );
 
-            let missing = false;
+            let missing = !fs.existsSync(
+                path.join(mapdir,this.owner.Directory.get()+'.wdt')
+            );
+
             outer:
             for(let x=minx;x<=maxx;++x) {
                 for(let y=miny;y<=maxy;++y) {
@@ -118,7 +121,7 @@ export class MapADT extends CellSystem<Map> {
                     + ` ${mapdir}`
                     + ` ${this.owner.Directory.get()}`
                     + ` ${minx} ${miny} ${maxx} ${maxy}`
-                );
+                    , {stdio:'inherit'});
             }
         }
         return this.owner;
