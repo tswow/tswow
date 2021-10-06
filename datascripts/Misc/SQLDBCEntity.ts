@@ -93,6 +93,7 @@ export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
         return this.GetSQL(entity) !== undefined;
     }
 
+    enable() { MaybeSQLEntity.GetOrCreateSQL(this); return this.owner; }
     sqlRow(): SQL { return MaybeSQLEntity.GetSQL(this); }
     exists(): boolean { return MaybeSQLEntity.HasSQL(this); }
 }
