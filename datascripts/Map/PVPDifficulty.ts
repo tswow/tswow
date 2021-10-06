@@ -7,9 +7,10 @@ import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { RegistryBase } from "../Refs/RegistryBase";
 import { Map } from "./Map";
+import { MapRegistry } from "./Maps";
 
 export class PVPDifficulty extends MainEntity<PvpDifficultyRow> {
-    //get Map() { return MapRegistry.ref(this, this.row.MapID); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
 
     get Levels() {
         return new MinMaxCell(this, this.row.MinLevel, this.row.MaxLevel)

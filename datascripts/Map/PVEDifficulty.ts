@@ -8,6 +8,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Map } from "./Map";
+import { MapRegistry } from "./Maps";
 
 // todo: not at all sure this is 100% correct
 
@@ -137,7 +138,7 @@ export class PVEDifficultyEnum extends CellSystem<PVEDifficulty> {
 export class PVEDifficulty extends MainEntity<MapDifficultyRow> {
     get ID() { return this.row.ID.get(); }
     get Difficulty () { return new PVEDifficultyEnum(this); }
-    //get Map() { return MapRegistry.ref(this, this.row.MapID); }
+    get Map() { return MapRegistry.ref(this, this.row.MapID); }
     get MaxPlayers() {
         return new CellBasic(this,
             ()=>{
@@ -213,7 +214,7 @@ export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,Map> {
               + ` it already has PVP difficulties`
             )
         }
-        let md = PVEDifficultyRegistry.create(mod,id);
+        let md = PVEDifficultyRegistry.create(mod,id)
         let type = DIFFICULTY_VALUES
             .find(x=>x.playerCount === playerCount && x.type === difficulty)
         type?.apply(md.row);
