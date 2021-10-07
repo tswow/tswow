@@ -133,7 +133,7 @@ class TC_GAME_API TSTimer {
     TSString m_name;
     uint32_t m_delay;
     uint32_t m_repeats;
-    uint32_t m_lastTick;
+    uint64_t m_lastTick;
     TimerCallback<T> m_callback;
 public:
     TSTimer(uint32_t modid, TSString name, uint32_t delay, uint32_t repeats, TimerCallback<T> callback)
