@@ -154,6 +154,7 @@ export namespace Build {
                 , findBuildType(args)
                 , args.includes('--trace')
                 , args.includes('--allow-globals')
+                , args
                 )))
             Datasets.getAll().forEach(x=>{
                 Livescripts.writeModuleText(x);

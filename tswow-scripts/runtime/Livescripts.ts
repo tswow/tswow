@@ -13,7 +13,7 @@ export namespace Livescripts {
      * Builds and reloads the server code for a specific module.
      * @param name - Name of the module to rebuild.
      */
-    export async function build(name: string, type: BuildType, trace?: boolean, allowGlobals?: boolean) {
+    export async function build(name: string, type: BuildType, trace?: boolean, allowGlobals?: boolean, args: string[] = []) {
         await Modules.refreshModules();
         const scriptsDir = ipaths.moduleScripts(name);
 
@@ -39,6 +39,7 @@ export namespace Livescripts {
                 + ` ${ipaths.transpilerEntry} ${name} ${type}`
                 + ` ${(trace||commands.trace)?'--trace':''}`
                 + ` ${(allowGlobals)?'--allow-globals':''}`
+                + ` ${args.join(' ')}`
                 ,'inherit');
         } catch(err) {
             throw new Error(`Failed to compile LiveScripts`)
