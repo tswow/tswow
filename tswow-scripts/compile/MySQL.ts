@@ -50,7 +50,7 @@ export namespace MySQL {
         // Install the necessary mysql files
         mysqlInstallFiles.forEach((x) => {
             const ip = mpath(ipaths.mysqlBin, x);
-            if (!wfs.exists(x)) {
+            if (!wfs.exists(ip)) {
                 wfs.copy(mpath(read[0], x), ip);
             }
         });
