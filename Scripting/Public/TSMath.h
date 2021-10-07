@@ -48,11 +48,11 @@ static struct MathClass {
     float log(float arg) { return ::log(arg); }
     double log(double arg) { return ::log(arg); }
 
-    float ceil(float arg) { return (int) ::ceil(arg); }
-    double ceil(double arg) { return (int) ::ceil(arg); }
+    float ceil(float arg) { return ::ceil(arg); }
+    double ceil(double arg) { return ::ceil(arg); }
 
-    float floor(float arg) { return (int) ::floor(arg); }
-    double floor(double arg) { return (int) ::floor(arg); }
+    float floor(float arg) { return ::floor(arg); }
+    double floor(double arg) { return ::floor(arg); }
 
     float exp(float arg) { return ::exp(arg); }
     double exp(double arg) { return ::exp(arg); }
@@ -125,5 +125,5 @@ static struct MathClass {
     int32_t abs(int32_t arg) { return ::abs(arg); }
     int64_t abs(int64_t arg) { return ::abs(arg); }
 
-    float random() { return dist(gen); }
+    float random() { return float(dist(gen)); }
 } Math;

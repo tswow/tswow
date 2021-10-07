@@ -6,8 +6,8 @@
 inline TSArray<TSString> TSString::split(TSString delim)
 {
   TSArray<TSString> arr;
-  auto start = 0U;
-  auto end = _value.find(delim._value);
+  size_t start = 0;
+  size_t end = _value.find(delim._value);
   while (end != std::string::npos)
   {
     if (end != start) {
