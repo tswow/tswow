@@ -16,6 +16,7 @@
 #pragma once
 
 #include "TSString.h"
+#include "TSMain.h"
 #include <memory>
 #include <string>
 
