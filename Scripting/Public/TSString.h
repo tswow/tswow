@@ -62,8 +62,8 @@ struct TSString {
     return os << val._value;
   }
 
-  int length() {
-    return _value.size();
+  uint32_t length() {
+    return uint32_t(_value.size());
   }
 
   TSString substring(uint32_t begin, uint32_t end)
@@ -183,7 +183,7 @@ struct TSString {
 
   uint32_t get_length()
   {
-    return _value.length();
+    return uint32_t(_value.length());
   }
 
   TSString charAt(int index)
