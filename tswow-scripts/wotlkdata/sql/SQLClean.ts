@@ -42,6 +42,8 @@ export function cleanSQL() {
     col('spell_autolearn')
     col('creature_queststarter')
     col('creature_questender')
+    col('gameobject_template')
+    col('areatrigger_teleport')
     q('DELETE FROM graveyard_zone WHERE comment = "tswow";');
     q('DELETE FROM spell_target_position WHERE VerifiedBuild = 17688;');
     q('DELETE FROM spell_bonus_data WHERE comments = "tswow";');
