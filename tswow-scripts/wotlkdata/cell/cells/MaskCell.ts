@@ -4,6 +4,12 @@ import { Cell } from "./Cell";
 import { CellReadOnly } from "./CellReadOnly";
 import { CellRoot } from "./CellRoot";
 
+export type Bit = boolean | 1 | 0
+
+function resolveBit(bit: Bit): boolean {
+    return typeof(bit) === 'number' ? bit===1 : bit;
+}
+
 export class MaskBit<T,D extends MaskCell<T>> {
     protected owner: D;
     protected bit: number;
@@ -16,7 +22,7 @@ export class MaskBit<T,D extends MaskCell<T>> {
     protected get isBit() { return true; }
 
     get() { return this.owner.getBit(this.bit); }
-    set(value: boolean) { return this.owner.setBit(this.bit,value)}
+    set(value: Bit) { return this.owner.setBit(this.bit,value)}
 }
 
 export class MaskMultiBit<T,D extends MaskCell<T>> {
@@ -44,7 +50,7 @@ export class MaskMultiBit<T,D extends MaskCell<T>> {
         return !this.bits.find(x=>!this.owner.getBit(x))
     }
 
-    set(value: boolean): T {
+    set(value: Bit): T {
         this.bits.forEach(x=>this.owner.setBit(x,value))
         return MaskCell.owner(this.owner);
     }
@@ -64,7 +70,7 @@ export abstract class MaskCell<T> extends CellRoot<T> {
     }
 
     abstract getBit(bit: number): boolean;
-    abstract setBit(bit: number, value: boolean): T;
+    abstract setBit(bit: number, value: Bit): T;
     abstract clearAll(): T;
     abstract toString(): string;
 
@@ -197,10 +203,10 @@ export abstract class MaskCellReadOnly<T> extends CellRoot<T> {
 
     abstract getBit(bit: number): boolean;
     abstract toString(): string;
-    protected abstract setBit(bit: number, value: boolean): T;
+    protected abstract setBit(bit: number, value: Bit): T;
     protected abstract clearAll(): T;
 
-    static setBit<T>(cell: MaskCellReadOnly<T>, bit: number, value: boolean) {
+    static setBit<T>(cell: MaskCellReadOnly<T>, bit: number, value: Bit) {
         return cell.setBit(bit,value);
     }
     static clearAll<T>(cell: MaskCellReadOnly<T>) {
@@ -370,9 +376,9 @@ export class MaskCell32<T> extends MaskCell<T> {
         return this.owner;
     }
 
-    setBit(no: number, value: boolean) {
+    setBit(no: number, value: Bit) {
         this.cell.set(
-            MaskCell32Impl.setBit(this.signed,no,value,this.cell.get())
+            MaskCell32Impl.setBit(this.signed,no,value as boolean,this.cell.get())
         )
         return this.owner;
     }
@@ -465,8 +471,8 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
         return this.set(MaskCell32Impl.flip(this.signed, this.cell.get()))
     }
 
-    protected setBit(no: number, value: boolean): T {
-        CellReadOnly.set(this.cell,MaskCell32Impl.setBit(this.signed,no,value,this.cell.get()))
+    protected setBit(no: number, value: Bit): T {
+        CellReadOnly.set(this.cell,MaskCell32Impl.setBit(this.signed,no,value as boolean,this.cell.get()))
         return this.owner;
     }
 
