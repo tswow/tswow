@@ -12,6 +12,7 @@ export function writeIdFile(outDir: string) {
     fs.writeFileSync(headerPath,header.getText());
 
     const cpp = new CodeWriter();
+    cpp.writeStringNewLine('#include "ModID.h"');
     cpp.writeStringNewLine('uint32_t id = 0;');
     cpp.writeStringNewLine('void SetID(uint32_t newId){id = newId;}');
     cpp.writeStringNewLine('uint32_t ModID(){return id;}')
