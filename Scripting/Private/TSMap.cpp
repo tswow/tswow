@@ -23,6 +23,7 @@
 #include "TSUnit.h"
 #include "TSCreature.h"
 #include "TSBattleground.h"
+#include "TSInstance.h"
 
 #include "ObjectMgr.h"
 #include "CreatureData.h"
@@ -414,4 +415,22 @@ TSGameObject TSMap::SpawnGameObject(uint32 entry, float x, float y, float z, flo
         object->SetRespawnTime(despawnTimer);
     map->AddToMap(object);
     return TSGameObject(object);
+}
+
+bool TSMap::HasInstanceScript()
+{
+    if (InstanceMap * inst = map->ToInstanceMap())
+    {
+        return inst->GetInstanceScript() != nullptr;
+    }
+    return false;
+}
+
+TSInstance TSMap::GetInstanceScript()
+{
+    if (InstanceMap* inst = map->ToInstanceMap())
+    {
+        return TSInstance(inst->GetInstanceScript());
+    }
+    return TSInstance(nullptr);
 }

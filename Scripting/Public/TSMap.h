@@ -24,6 +24,7 @@
 #include "TSWorldEntity.h"
 
 class TSBattleground;
+class TSInstance;
 
 class TC_GAME_API TSMap: public TSEntityProvider, public TSWorldEntityProvider<TSMap> {
 public:
@@ -45,6 +46,8 @@ public:
     uint32 GetInstanceId();
     uint32 GetPlayerCount();
     uint32 GetMapId();
+    bool HasInstanceScript();
+    TSInstance GetInstanceScript();
     TSArray<TSPlayer> GetPlayers(uint32 team = 2);
     TSArray<TSUnit> GetUnits();
     TSArray<TSGameObject> GetGameObjects(uint32 entry = 0);

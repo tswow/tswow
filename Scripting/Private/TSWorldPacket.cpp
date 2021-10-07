@@ -17,6 +17,7 @@
 #include <memory.h>
 #include "Object.h"
 #include "WorldPacket.h"
+#include "WorldStatePackets.h"
 
 #include "TSIncludes.h"
 #include "TSWorldPacket.h"
@@ -298,4 +299,39 @@ void TSWorldPacket::WriteFloat(float _val)
 void TSWorldPacket::WriteDouble(double _val) 
 {
     (*packet) << _val;
+}
+
+TSWorldStatePacket::TSWorldStatePacket(WorldPackets::WorldState::InitWorldStates* ws)
+    : m_ws(ws)
+{
+}
+
+void TSWorldStatePacket::push(int32 variableId, int32 value)
+{
+    m_ws->Worldstates.emplace_back(variableId, value);
+}
+
+uint32 TSWorldStatePacket::length()
+{
+    return m_ws->Worldstates.size();
+}
+
+int32 TSWorldStatePacket::GetVariable(uint32 index)
+{
+    return m_ws->Worldstates[index].VariableID;
+}
+
+int32 TSWorldStatePacket::GetValue(uint32 index)
+{
+    return m_ws->Worldstates[index].Value;
+}
+
+void TSWorldStatePacket::Remove(uint32 index)
+{
+    m_ws->Worldstates.erase(m_ws->Worldstates.begin() + index);
+}
+
+void TSWorldStatePacket::Clear()
+{
+    m_ws->Worldstates.clear();
 }

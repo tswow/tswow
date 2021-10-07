@@ -1,22 +1,24 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #pragma once
 
 #include "TSEvent.h"
+#include "TSWorldPacket.h"
+#include "TSInstance.h"
 #include "TSSmartScript.h"
 #include "TSPlayer.h"
 #include "TSMutable.h"
@@ -274,7 +276,7 @@ struct TSSpellEvents {
      EVENT(SpellOnTrainerSend)
 };
 
-class TSSpellMap : public TSEventMap<TSSpellEvents> 
+class TSSpellMap : public TSEventMap<TSSpellEvents>
 {
      void OnAdd(uint32_t,TSSpellEvents*);
      void OnRemove(uint32_t);
@@ -324,7 +326,7 @@ EVENT_TYPE(CreatureOnGenerateSkinningLoot,TSCreature,TSPlayer,TSLoot)
 
 EVENT_TYPE(CreatureOnMaxHealth, TSCreature, float /*rankHealthMod*/, uint32 /*basehp*/, TSMutable<uint32> /*maxHealth*/)
 // extension: add "ForceMana" mutable after maxMana for ignoring creature class (not sure it works well)
-EVENT_TYPE(CreatureOnMaxMana, TSCreature, float /*baseMana*/, TSMutable<uint32> /*maxMana*/) 
+EVENT_TYPE(CreatureOnMaxMana, TSCreature, float /*baseMana*/, TSMutable<uint32> /*maxMana*/)
 EVENT_TYPE(CreatureOnBaseDamage, TSCreature, float /*baseDamageIn*/, TSMutable<float> /*baseMinDamage*/, TSMutable<float> /*baseMaxDamage*/)
 EVENT_TYPE(CreatureOnArmor, TSCreature, float /*baseArmor*/, TSMutable<float> /*armorOut*/)
 EVENT_TYPE(CreatureOnAttackPower, TSCreature, TSMutable<uint32> /*attackPower*/, TSMutable<uint32> /*rangedAttackPower*/)
@@ -483,17 +485,17 @@ class TSGameObjectMap : public TSEventMap<TSGameObjectEvents>
     void OnRemove(uint32_t);
 };
 
-EVENT_TYPE(MapOnCreate,TSMap)
-EVENT_TYPE(MapOnReload,TSMap)
-EVENT_TYPE(MapOnUpdate,TSMap,uint32)
-EVENT_TYPE(MapOnPlayerEnter,TSMap,TSPlayer)
-EVENT_TYPE(MapOnPlayerLeave,TSMap,TSPlayer)
-EVENT_TYPE(MapOnCreatureCreate,TSMap,TSCreature,TSMutable<bool>)
-EVENT_TYPE(MapOnCreatureRemove,TSMap,TSCreature)
-EVENT_TYPE(MapOnGameObjectCreate,TSMap,TSGameObject,TSMutable<bool>)
-EVENT_TYPE(MapOnGameObjectRemove,TSMap,TSGameObject)
-EVENT_TYPE(MapOnCheckEncounter,TSMap,TSPlayer)
-EVENT_TYPE(MapOnMessage,TSMap,unsigned char channel,TSJsonObject)
+EVENT_TYPE(MapOnCreate, TSMap)
+EVENT_TYPE(MapOnReload, TSMap)
+EVENT_TYPE(MapOnUpdate, TSMap, uint32)
+EVENT_TYPE(MapOnPlayerEnter, TSMap, TSPlayer)
+EVENT_TYPE(MapOnPlayerLeave, TSMap, TSPlayer)
+EVENT_TYPE(MapOnCreatureCreate, TSMap, TSCreature, TSMutable<bool>)
+EVENT_TYPE(MapOnCreatureRemove, TSMap, TSCreature)
+EVENT_TYPE(MapOnGameObjectCreate, TSMap, TSGameObject, TSMutable<bool>)
+EVENT_TYPE(MapOnGameObjectRemove, TSMap, TSGameObject)
+EVENT_TYPE(MapOnCheckEncounter, TSMap, TSPlayer)
+EVENT_TYPE(MapOnMessage, TSMap, unsigned char channel, TSJsonObject)
 
 struct TSMapEvents {
      EVENT(MapOnCreate)
@@ -522,6 +524,7 @@ TC_GAME_API TSMapDataExtra* GetMapDataExtra(uint32_t);
 
 
 EVENT_TYPE(BattlegroundOnStart,TSBattleground)
+EVENT_TYPE(BattlegroundOnReload,TSBattleground)
 EVENT_TYPE(BattlegroundOnAddPlayer,TSBattleground,TSPlayer)
 EVENT_TYPE(BattlegroundOnPlayerLogin,TSBattleground,TSPlayer)
 EVENT_TYPE(BattlegroundOnPlayerLogout,TSBattleground,TSPlayer)
@@ -579,6 +582,7 @@ struct TSBattlegroundEvents
 {
     EVENT(BattlegroundOnSetup)
     EVENT(BattlegroundOnStart)
+    EVENT(BattlegroundOnReload)
     EVENT(BattlegroundOnReset)
     EVENT(BattlegroundOnOpenDoors)
     EVENT(BattlegroundOnCloseDoors)
@@ -609,6 +613,39 @@ class TSBattlegroundMap : public TSEventMap<TSBattlegroundEvents>
 };
 
 TSBattlegroundEvents * GetBattlegroundEvent(uint32_t id);
+
+EVENT_TYPE(InstanceOnCreate, TSInstance)
+EVENT_TYPE(InstanceOnReload, TSInstance)
+EVENT_TYPE(InstanceOnLoad, TSInstance)
+EVENT_TYPE(InstanceOnSave, TSInstance)
+EVENT_TYPE(InstanceOnUpdate, TSInstance, uint32 /*diff*/)
+EVENT_TYPE(InstanceOnPlayerEnter, TSInstance, TSPlayer)
+EVENT_TYPE(InstanceOnPlayerLeave, TSInstance, TSPlayer)
+EVENT_TYPE(InstanceOnBossStateChange, TSInstance, uint32 /*id*/, uint32 /*state*/)
+EVENT_TYPE(InstanceOnCanKillBoss, TSInstance, uint32 /*bossId*/, TSPlayer /*player*/, TSMutable<bool> /*canKill*/)
+EVENT_TYPE(InstanceOnFillInitialWorldStates, TSInstance, TSWorldStatePacket)
+
+struct TSInstanceEvents
+{
+     EVENT(InstanceOnCreate)
+     EVENT(InstanceOnReload)
+     EVENT(InstanceOnLoad)
+     EVENT(InstanceOnSave)
+     EVENT(InstanceOnUpdate)
+     EVENT(InstanceOnPlayerEnter)
+     EVENT(InstanceOnPlayerLeave)
+     EVENT(InstanceOnBossStateChange)
+     EVENT(InstanceOnCanKillBoss)
+     EVENT(InstanceOnFillInitialWorldStates)
+};
+
+class TSInstanceMap: public TSEventMap<TSInstanceEvents>
+{
+    void OnAdd(uint32_t, TSInstanceEvents*);
+    void OnRemove(uint32_t);
+};
+
+TC_GAME_API TSInstanceEvents* GetInstanceEvent(uint32_t id);
 
 // GameEvent
 EVENT_TYPE(GameEventOnStart,uint16 /*event_id*/)
@@ -690,6 +727,7 @@ struct TSEvents
     // BattlegroundScript
     EVENT(BattlegroundOnSetup)
     EVENT(BattlegroundOnStart)
+    EVENT(BattlegroundOnReload)
     EVENT(BattlegroundOnReset)
     EVENT(BattlegroundOnOpenDoors)
     EVENT(BattlegroundOnCloseDoors)
@@ -944,6 +982,17 @@ struct TSEvents
     EVENT(MapOnGameObjectRemove)
     EVENT(MapOnCheckEncounter)
     EVENT(MapOnMessage)
+    EVENT(InstanceOnCreate)
+    EVENT(InstanceOnReload)
+    EVENT(InstanceOnLoad)
+    EVENT(InstanceOnSave)
+    EVENT(InstanceOnUpdate)
+    EVENT(InstanceOnPlayerEnter)
+    EVENT(InstanceOnPlayerLeave)
+    EVENT(InstanceOnBossStateChange)
+    EVENT(InstanceOnCanKillBoss)
+    EVENT(InstanceOnFillInitialWorldStates)
+
 
     EVENT(AchievementOnUpdate)
     EVENT(AchievementOnComplete)
@@ -965,6 +1014,7 @@ struct TSEvents
     TSCreatureMap Creatures;
     TSGameObjectMap GameObjects;
     TSMapMap Maps;
+    TSInstanceMap Instances;
     TSItemMap Items;
     TSAreaTriggerMap AreaTriggers;
     TSBattlegroundMap Battlegrounds;
@@ -977,6 +1027,8 @@ TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
 TC_GAME_API void ReloadPlayer(PlayerOnReloadType fn, uint32 id);
 TC_GAME_API void ReloadCreature(CreatureOnReloadType fn, uint32 id);
 TC_GAME_API void ReloadMap(MapOnReloadType fn, uint32 id);
+TC_GAME_API void ReloadInstance(InstanceOnReloadType fn, uint32 id);
+TC_GAME_API void ReloadBattleground(BattlegroundOnReloadType fn, uint32 id);
 
 class TSEventHandlers
 {
@@ -1311,7 +1363,7 @@ public:
           MAP_EVENT_HANDLE(Creature,OnGossipHello)
           MAP_EVENT_HANDLE(Creature,OnGossipSelect)
           MAP_EVENT_HANDLE(Creature,OnGossipSelectCode)
-          MAP_EVENT_HANDLE(Creature,OnQuestAccept) 
+          MAP_EVENT_HANDLE(Creature,OnQuestAccept)
           MAP_EVENT_HANDLE(Creature,OnQuestReward)
     } CreatureID;
 
@@ -1373,8 +1425,8 @@ public:
           EVENT_HANDLE(Map,OnCreatureRemove)
           EVENT_HANDLE(Map,OnGameObjectCreate)
           EVENT_HANDLE(Map,OnGameObjectRemove)
-          EVENT_HANDLE(Map,OnCheckEncounter) 
-          EVENT_HANDLE(Map,OnMessage) 
+          EVENT_HANDLE(Map,OnCheckEncounter)
+          EVENT_HANDLE(Map,OnMessage)
     } Maps;
 
     struct MapIDEvents: public MappedEventHandler<TSMapMap>
@@ -1389,13 +1441,14 @@ public:
           MAP_EVENT_HANDLE(Map,OnCreatureRemove)
           MAP_EVENT_HANDLE(Map,OnGameObjectCreate)
           MAP_EVENT_HANDLE(Map,OnGameObjectRemove)
-          MAP_EVENT_HANDLE(Map,OnCheckEncounter) 
-          MAP_EVENT_HANDLE(Map,OnMessage) 
+          MAP_EVENT_HANDLE(Map,OnCheckEncounter)
+          MAP_EVENT_HANDLE(Map,OnMessage)
     } MapID;
 
     struct BattlegroundEvents : public EventHandler {
         BattlegroundEvents* operator->() { return this; }
         EVENT_HANDLE(Battleground,OnSetup)
+        EVENT_HANDLE_FN(Battleground,OnReload,ReloadBattleground)
         EVENT_HANDLE(Battleground,OnStart)
         EVENT_HANDLE(Battleground,OnReset)
         EVENT_HANDLE(Battleground,OnOpenDoors)
@@ -1423,6 +1476,7 @@ public:
     struct BattlegroundIDEvents : public MappedEventHandler<TSBattlegroundMap> {
         BattlegroundIDEvents* operator->() { return this; }
         MAP_EVENT_HANDLE(Battleground, OnSetup)
+        MAP_EVENT_HANDLE_FN(Battleground, OnReload, ReloadBattleground)
         MAP_EVENT_HANDLE(Battleground, OnStart)
         MAP_EVENT_HANDLE(Battleground, OnReset)
         MAP_EVENT_HANDLE(Battleground, OnOpenDoors)
@@ -1446,6 +1500,36 @@ public:
         MAP_EVENT_HANDLE(Battleground, OnDropFlag)
         MAP_EVENT_HANDLE(Battleground, OnClickFlag)
     } BattlegroundID;
+
+    struct InstanceEvents : public EventHandler
+    {
+        InstanceEvents* operator->() { return this; }
+        EVENT_HANDLE(Instance,OnCreate)
+        EVENT_HANDLE_FN(Instance,OnReload,ReloadInstance)
+        EVENT_HANDLE(Instance,OnLoad)
+        EVENT_HANDLE(Instance,OnSave)
+        EVENT_HANDLE(Instance,OnUpdate)
+        EVENT_HANDLE(Instance,OnPlayerEnter)
+        EVENT_HANDLE(Instance,OnPlayerLeave)
+        EVENT_HANDLE(Instance,OnBossStateChange)
+        EVENT_HANDLE(Instance,OnCanKillBoss)
+        EVENT_HANDLE(Instance,OnFillInitialWorldStates)
+    } Instances;
+
+    struct InstanceIDEvents : public MappedEventHandler<TSInstanceMap>
+    {
+        InstanceIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(Instance, OnCreate)
+        MAP_EVENT_HANDLE_FN(Instance,OnReload,ReloadInstance)
+        MAP_EVENT_HANDLE(Instance, OnLoad)
+        MAP_EVENT_HANDLE(Instance, OnSave)
+        MAP_EVENT_HANDLE(Instance, OnUpdate)
+        MAP_EVENT_HANDLE(Instance, OnPlayerEnter)
+        MAP_EVENT_HANDLE(Instance, OnPlayerLeave)
+        MAP_EVENT_HANDLE(Instance, OnBossStateChange)
+        MAP_EVENT_HANDLE(Instance, OnCanKillBoss)
+        MAP_EVENT_HANDLE(Instance, OnFillInitialWorldStates)
+    } InstanceID;
 
      struct ItemEvents: public EventHandler {
          ItemEvents* operator->(){return this;}
@@ -1606,6 +1690,8 @@ public:
         AreaTriggerID.LoadEvents(&events->AreaTriggers);
         Maps.LoadEvents(events);
         MapID.LoadEvents(&events->Maps);
+        Instances.LoadEvents(events);
+        InstanceID.LoadEvents(&events->Instances);
         Achievements.LoadEvents(events);
         AchievementID.LoadEvents(&events->Achievements);
         GameEvents.LoadEvents(events);
@@ -1647,6 +1733,8 @@ public:
          AreaTriggerID.Unload();
          Maps.Unload();
          MapID.Unload();
+         Instances.Unload();
+         InstanceID.Unload();
          Tests.Unload();
          GameEvents.Unload();
          GameEventID.Unload();

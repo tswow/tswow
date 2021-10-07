@@ -55,3 +55,21 @@ public:
     void WriteFloat(float _val);
     void WriteDouble(double _val);
 };
+
+namespace WorldPackets {
+    namespace WorldState {
+        class InitWorldStates;
+    }
+}
+class TC_GAME_API TSWorldStatePacket
+{
+public:
+    WorldPackets::WorldState::InitWorldStates* m_ws;
+    TSWorldStatePacket(WorldPackets::WorldState::InitWorldStates* ws);
+    void push(int32 variableId, int32 value);
+    uint32 length();
+    int32 GetVariable(uint32 index);
+    int32 GetValue(uint32 index);
+    void Remove(uint32 index);
+    void Clear();
+};

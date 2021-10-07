@@ -272,6 +272,41 @@ void ReloadMap(MapOnReloadType fn, uint32 id)
     });
 }
 
+void ReloadInstance(InstanceOnReloadType fn, uint32 id)
+{
+    sMapMgr->DoForAllMaps([&](Map * map) {
+        if (InstanceMap* inst = map->ToInstanceMap())
+        {
+            if (id == std::numeric_limits<uint32_t>::max() || id == map->GetId())
+            {
+                InstanceScript* script = inst->GetInstanceScript();
+                if (script)
+                {
+                    fn(TSInstance(script));
+                }
+            }
+        }
+    });
+}
+
+void ReloadBattleground(BattlegroundOnReloadType fn, uint32 id)
+{
+    sMapMgr->DoForAllMaps([&](Map* map) {
+        if (BattlegroundMap* bgmap = map->ToBattlegroundMap())
+        {
+            if (id == std::numeric_limits<uint32_t>::max() || id == map->GetId())
+            {
+                Battleground* bg = bgmap->GetBG();
+                if (bg)
+                {
+                    fn(TSBattleground(bg));
+                }
+            }
+        }
+    });
+}
+
+
 
 static std::map<uint32_t, TSMapDataExtra*> mapData;
 TSMapDataExtra* GetMapDataExtra(uint32_t id)

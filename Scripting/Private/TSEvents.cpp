@@ -351,6 +351,30 @@ void TSBattlegroundMap::OnRemove(uint32_t key)
 
 }
 
+static std::vector<TSInstanceEvents*> insData;
+void TSInstanceMap::OnAdd(uint32_t key, TSInstanceEvents* events)
+{
+    if (insData.size() <= key)
+    {
+        insData.resize(key + 1, nullptr);
+    }
+    insData[key] = events;
+}
+
+TSInstanceEvents* GetInstanceEvent(uint32_t id)
+{
+    if (id > insData.size())
+    {
+        return nullptr;
+    }
+    return insData[id];
+}
+
+void TSInstanceMap::OnRemove(uint32_t key)
+{
+
+}
+
 static std::vector<TSGameEventEvents*> geData;
 void TSGameEventMap::OnAdd(uint32_t key, TSGameEventEvents* events)
 {
