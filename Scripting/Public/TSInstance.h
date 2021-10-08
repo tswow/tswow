@@ -17,7 +17,6 @@ public:
     TSInstance* operator->() { return this; }
 
     bool IsNull();
-
     TSMap GetMap();
     void SaveToDB();
     bool IsEncounterInProgress();
@@ -36,7 +35,7 @@ public:
     uint32 GetBossState(uint32 id);
     void MarkAreaTriggerDone(uint32 id);
     void ResetAreaTriggerDone(uint32 id);
-
+    uint32 GetEncounterCount();
     void BindAllPlayers();
     bool HasPermBoundPlayers();
     uint32 GetMaxPlayers();

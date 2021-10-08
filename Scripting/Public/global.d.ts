@@ -4325,6 +4325,7 @@ declare interface TSInstance {
     GetMap(): TSMap;
     SaveToDB(): void;
     IsEncounterInProgress(): bool;
+    GetEncounterCount(): uint32;
     GetObjectGUID(type: uint32): uint64;
     DoUseDoorOrButton(guid: uint64, withRestoreTime?: uint32, useAlternativeState?: bool): void;
     DoCloseDoorOrButton(guid: uint64): void;

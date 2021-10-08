@@ -131,3 +131,8 @@ uint32 TSInstance::GetFactionInInstance()
 {
     return m_script->instance->GetTeamInInstance();
 }
+
+uint32 TSInstance::GetEncounterCount()
+{
+    return m_script->GetEncounterCount();
+}
