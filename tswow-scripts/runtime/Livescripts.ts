@@ -16,13 +16,6 @@ export namespace Livescripts {
      */
     export async function build(name: string, type: BuildType, trace?: boolean, allowGlobals?: boolean, args: string[] = []) {
         await Modules.refreshModules();
-
-        if(args.includes('--inline')) {
-            Datasets.getDatasetsOrDefault(args).forEach(x=>{
-                Datascripts.build(x,true,false,['--inline-only'])
-            })
-        }
-
         const scriptsDir = ipaths.moduleScripts(name);
 
         if(!wfs.exists(scriptsDir)) {

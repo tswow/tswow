@@ -148,18 +148,23 @@ export namespace Build {
             , 'module? --debug|release|relwithdebinfo --trace'
             , 'Build and loads the server scripts of a module'
             , async (args) => {
-            let modules = Modules.getModulesOrAll(args);
-            await Promise.all(modules.map(x=>Livescripts.build(
-                  x.id
-                , findBuildType(args)
-                , args.includes('--trace')
-                , args.includes('--allow-globals')
-                , args
-                )))
-            Datasets.getAll().forEach(x=>{
-                Livescripts.writeModuleText(x);
-            });
-            term.success(`Built scripts`);
+                if(args.includes('--inline')) {
+                    await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>{
+                        return Datascripts.build(x,true,false,['--inline-only'])
+                    }))
+                }
+                let modules = Modules.getModulesOrAll(args);
+                await Promise.all(modules.map(x=>Livescripts.build(
+                    x.id
+                    , findBuildType(args)
+                    , args.includes('--trace')
+                    , args.includes('--allow-globals')
+                    , args
+                    )))
+                Datasets.getAll().forEach(x=>{
+                    Livescripts.writeModuleText(x);
+                });
+                term.success(`Built scripts`);
         })
         .addAlias('scripts')
         .addAlias('script');
