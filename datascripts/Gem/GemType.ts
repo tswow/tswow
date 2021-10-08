@@ -14,13 +14,21 @@ export class GemType extends EnumCell<Gem> {
     writeToItem() {
         switch(this.get()) {
             case META: this.owner.Item.get().Class.MetaGem.set();
+                break;
             case RED: this.owner.Item.get().Class.RedGem.set();
+                break;
             case YELLOW: this.owner.Item.get().Class.YellowGem.set();
+                break;
             case ORANGE: this.owner.Item.get().Class.OrangeGem.set();
+                break;
             case BLUE: this.owner.Item.get().Class.BlueGem.set();
+                break;
             case PURPLE: this.owner.Item.get().Class.PurpleGem.set();
+                break;
             case GREEN: this.owner.Item.get().Class.GreenGem.set();
+                break;
             case PRISMATIC: this.owner.Item.get().Class.PrismaticGem.set();
+                break;
         }
         return this.owner;
     }
