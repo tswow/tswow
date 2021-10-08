@@ -5,6 +5,7 @@ import * as ts from 'typescript';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
 import { writeIdFile } from './tswow-idfile';
+import { writeLoader } from './tswow-loader';
 import { writeTableCreationFile } from './tswow-orm';
 import { writePacketCreationFile } from './tswow-packet';
 import { onFileOutdated, onMD5Changed } from './version';
@@ -296,6 +297,7 @@ export class Run {
         writeTableCreationFile(outDir);
         writePacketCreationFile(outDir);
         writeIdFile(outDir);
+        writeLoader(outDir);
     }
 
     public test(sources: string[], cmdLineOptions?: any, header?: string, footer?: string): string {

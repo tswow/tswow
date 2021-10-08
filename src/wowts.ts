@@ -65,7 +65,7 @@ try {
     process.exit(-1);
 }
 
-const SPECIAL_FILES = ['ModID','PacketCreator','TableCreator']
+const SPECIAL_FILES = ['ModID','PacketCreator','TableCreator','TCLoader']
 
 const tsRoot = path.join(process.cwd(),'livescripts');
 const transpiledRoot = path.join(process.cwd(),'livescripts','build','cpp','livescripts');
@@ -73,14 +73,17 @@ function removeOldCpp(curDir: string) {
     let items = fs.readdirSync(curDir);
     items.forEach(x=>{
         let full = path.join(curDir,x);
-        if(fs.statSync(full).isDirectory()) removeOldCpp(full);
-        const relName = path
-            .relative(transpiledRoot,full)
-            .replace(/\.[^/.]+$/, "")
-        if(SPECIAL_FILES.includes(relName)) return;
-        const tsName = path.join(tsRoot,relName+'.ts')
-        if(!fs.existsSync(tsName)) {
-            fs.rmSync(full);
+        if(fs.statSync(full).isDirectory()) {
+            removeOldCpp(full);
+        } else {
+            const relName = path
+                .relative(transpiledRoot,full)
+                .replace(/\.[^/.]+$/, "")
+            if(SPECIAL_FILES.includes(relName)) return;
+            const tsName = path.join(tsRoot,relName+'.ts')
+            if(!fs.existsSync(tsName)) {
+                fs.rmSync(full);
+            }
         }
     });
 }

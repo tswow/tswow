@@ -1,14 +1,13 @@
-import * as ts from 'typescript';
 import * as path from 'path';
-import * as fs from 'fs';
-import { IdentifierResolver } from './resolvers';
+import * as ts from 'typescript';
+import { CodeWriter } from './codewriter';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
-import { CodeWriter } from './codewriter';
+import { IdentifierResolver } from './resolvers';
 import { handleClass, setBaseClass } from './tswow-orm';
-import { generateStringify } from './tswow-stringify';
-import { handlePacketClass } from './tswow-packet';
 import { handleTSWoWOverride } from './tswow-override';
+import { handlePacketClass } from './tswow-packet';
+import { generateStringify } from './tswow-stringify';
 
 let mainFile: string = undefined;
 export class Emitter {
@@ -1712,13 +1711,13 @@ export class Emitter {
 
             // @tswow-begin: don't allow non-const non-literals outside of functions
             const type = this.resolver.getTypeAtLocation(firstInitializer);
-            if(    !autoAllowed 
+            if(    !autoAllowed
                 && !declarationList.getText().startsWith('const')
                 && process.argv.includes('--no-globals')
               ) {
                 this.error(`Non-const variable outside of function -> ${declarationList.getText()}`,declarationList);
             }
-            if(    !autoAllowed 
+            if(    !autoAllowed
                 && !type.isLiteral()
                 && process.argv.includes('--no-globals')
               ) {
@@ -2203,7 +2202,7 @@ export class Emitter {
                     this.error(
                         `Failed to write union type `
                       + `because 'auto' keyword is forbidden here.`
-                    , type); 
+                    , type);
                 }
                 this.writer.writeString('auto');
 
@@ -2236,7 +2235,7 @@ export class Emitter {
                     this.error(
                         `Failed to write union type `
                       + `because 'auto' keyword is forbidden here.`
-                    , type); 
+                    , type);
                 }
                 break;
         }
@@ -2319,7 +2318,7 @@ export class Emitter {
                 this.error(
                       `Cannot resolve type of default value, `
                     + `try writing it out explicitly.`
-                , type); 
+                , type);
                 break;
         }
     }
@@ -2353,54 +2352,8 @@ export class Emitter {
             }
 
             if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'TSEventHandlers') {
-                throw new Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
+                throw nnew Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
             }
-
-            // @tswow-begin
-            this.writer.writeStringNewLine(`void WritePackets();`);
-            this.writer.writeStringNewLine(`void WriteTables();`);
-
-            this.writer.writeStringNewLine(`extern "C" `);
-            this.writer.BeginBlock();
-            let exp = process.platform === 'win32' ? '__declspec(dllexport)' : '__attribute__((visibility("default")))'
-            this.writer.writeStringNewLine(`${exp} void Main(TSEventHandlers*);`);
-            this.writer.writeStringNewLine(`${exp} char const* GetScriptModuleRevisionHash();`);
-            this.writer.writeStringNewLine(`${exp} void AddTSScripts(TSEventHandlers* handlers);`);
-            this.writer.writeStringNewLine(`${exp} void AddScripts();`);
-            this.writer.writeStringNewLine(`${exp} char const* GetScriptModule();`);
-            this.writer.writeStringNewLine(`${exp} char const* GetBuildDirective();`);
-            this.writer.EndBlock();
-            // @tswow-end
-
-            return false;
-        }
-
-        if (!this.isHeader() && node.name && node.name.getFullText().replace(' ','') === 'Main') {
-            this.writer.writeStringNewLine(`char const* GetScriptModuleRevisionHash()`)
-            this.writer.BeginBlock();
-            this.writer.writeStringNewLine(
-                  `return `
-                + `"${fs.readFileSync('../../bin/revision/trinitycore')}";`)
-            this.writer.EndBlock();
-        
-            this.writer.writeStringNewLine(`void AddTSScripts(TSEventHandlers* handlers)`);
-            this.writer.BeginBlock();
-            this.writer.writeStringNewLine(`WriteTables();`);
-            this.writer.writeStringNewLine(`SetID(handlers->m_modid);`)
-            this.writer.writeStringNewLine(`WritePackets();`);
-            this.writer.writeStringNewLine(`Main(handlers);`);
-            this.writer.EndBlock();
-        
-            this.writer.writeStringNewLine(`void AddScripts(){}`);
-            this.writer.writeStringNewLine(`char const* GetScriptModule()`);
-            this.writer.BeginBlock();
-            this.writer.writeStringNewLine(`return "${path.basename(process.cwd())}";`);
-            this.writer.EndBlock();
-        
-            this.writer.writeStringNewLine(`char const* GetBuildDirective()`);
-            this.writer.BeginBlock();
-            this.writer.writeStringNewLine(`return "Release";`);
-            this.writer.EndBlock(); 
         }
 
         // @tswow-begin
@@ -2570,7 +2523,7 @@ export class Emitter {
                     if(index != -1) {
                         let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
                         let callDecl = this.resolver.getFirstDeclaration(type);
-                        // I think this isn't necessarily always CallSignatureDeclaration, 
+                        // I think this isn't necessarily always CallSignatureDeclaration,
                         // but at least they all seem to have the same "parameters" property
                         let tt = this.resolver.getTypeAtLocation((callDecl as any as ts.CallSignatureDeclaration).parameters[index]);
                         let decl = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
@@ -3754,7 +3707,7 @@ export class Emitter {
                 }
             }
         }
-        
+
         const isNew = node.kind === ts.SyntaxKind.NewExpression;
         const typeOfExpression = isNew && this.resolver.getOrResolveTypeOf(node.expression);
         const isArray = isNew && typeOfExpression && typeOfExpression.symbol && typeOfExpression.symbol.name === 'ArrayConstructor';
