@@ -16,7 +16,7 @@
  */
 import fs from "fs";
 import path from "path";
-import { DBC, finish } from "wotlkdata";
+import { DBC, finish, isReadOnly } from "wotlkdata";
 import { MapRow } from "wotlkdata/dbc/types/Map";
 import { Settings } from "wotlkdata/Settings";
 import { registeredAreas } from "../Area/Area";
@@ -87,6 +87,7 @@ export class Map extends MainEntity<MapRow> {
 }
 
 finish('build-maps',()=>{
+    if(isReadOnly()) return;
     let allMaps: string[] = []
     Settings.PATCH_DIRECTORY.forEach((mod: string)=>{
         // workaround to allow noggit workspaces in asset directories

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { isReadOnly } from "wotlkdata";
 import { AchievementRegistry } from "./Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
 import { AreaRegistry } from "./Area/Area";
@@ -167,5 +168,6 @@ export const std = {
     SpellFocus: SpellFocusRegistry,
     TotemType: TotemTypeRegistry,
     TotemCategory: TotemCategoryRegistry,
-    InlineScripts: InlineScript
+    InlineScripts: InlineScript,
+    isReadOnly: isReadOnly
 }

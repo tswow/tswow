@@ -1,4 +1,4 @@
-import { DBC, finish, LUAXML, SQL } from "wotlkdata";
+import { DBC, finish, isReadOnly, LUAXML, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
@@ -122,6 +122,7 @@ export function createBgBase(mod: string, id: string) {
 
 const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 finish('bg-descriptions',()=>{
+    if(isReadOnly()) return;
     LUAXML.file('Interface/FrameXML/PVPBattlegroundFrame.lua')
         .before(
             'function PVPBattleground_UpdateBattlegrounds'

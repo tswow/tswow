@@ -1,9 +1,10 @@
 import * as fs from 'fs';
-import { finish } from "wotlkdata";
+import { finish, isReadOnly } from "wotlkdata";
 import { iterateIds } from "wotlkdata/ids/Ids";
 
 // Patch ID files
 finish('build-idfiles',()=>{
+    if(isReadOnly()) return;
     if(process.argv.includes('--no-id-defs')) {
         return;
     }

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { finish } from "wotlkdata";
+import { finish, isReadOnly } from "wotlkdata";
 import { Settings } from "wotlkdata/Settings";
 import { TSImage, TSImages } from "../Images/Image";
 import { ClassRegistry } from './Class';
@@ -81,6 +81,7 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 }
 
 finish('build-class-icons',()=>{
+    if(isReadOnly()) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
             return;

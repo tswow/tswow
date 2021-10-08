@@ -1,4 +1,4 @@
-import { finish } from "wotlkdata";
+import { finish, isReadOnly } from "wotlkdata";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
@@ -20,6 +20,7 @@ let values: CastSpellRow[] = SQL.Databases.world_source
 SQL.Databases.world_dest.read(`DELETE FROM \`playercreateinfo_cast_spell\`;`)
 
 finish('playercreateinfo_cast_spell',()=>{
+    if(isReadOnly()) return;
     values.forEach(({classMask,note,raceMask,spell,deleted})=>{
         if(deleted) return;
         SQL.Databases.world_dest.write(

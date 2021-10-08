@@ -1,4 +1,4 @@
-import { finish } from "wotlkdata";
+import { finish, isReadOnly } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
@@ -93,6 +93,7 @@ export const BattlegroundRegistry = {
 }
 
 finish('bg-worldsafelocs',()=>{
+    if(isReadOnly()) return;
     BattlegroundRegistry.filter({})
         .forEach(x=>{
             if(x.HordeStart.Loc.get() === 0 ||x.AllianceStart.Loc.get() === 0) {

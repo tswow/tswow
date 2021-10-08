@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish } from "wotlkdata";
+import { finish, isReadOnly } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
@@ -325,6 +325,7 @@ export class ClassRegistryClass extends RegistryRowBase<Class,ChrClassesRow,ChrC
 export const ClassRegistry = new ClassRegistryClass();
 
 finish('class-gaps', ()=>{
+    if(isReadOnly()) return; // <-- class gaps are valid if we're in readonly mode
     findGaps(
           'class'
         , 'ChrClasses'
