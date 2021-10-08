@@ -215,6 +215,7 @@ export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,Map> {
             )
         }
         let md = PVEDifficultyRegistry.create(mod,id)
+            .Map.set(this.owner.ID)
         let type = DIFFICULTY_VALUES
             .find(x=>x.playerCount === playerCount && x.type === difficulty)
         type?.apply(md.row);
