@@ -6886,8 +6886,9 @@ declare interface TSManualTestBuilder {
     step(name: string, callback: (builder: TSManualStepBuilder)=>void): TSManualTestBuilder
 }
 
+// @hidden-begin (do NOT remove this tag!)
 declare namespace _hidden {
-    export class AchievementID {
+    export class AchievementID<T> {
         OnUpdate(entry: number, callback: (
               player: TSPlayer
             , achievement: TSAchievementEntry
@@ -6898,7 +6899,7 @@ declare namespace _hidden {
             )=>void)
         OnComplete(entry: number, callback: (player: TSPlayer, entry: TSAchievementEntry)=>void)
     }
-    export class Achievements {
+    export class Achievements<T> {
         OnUpdate(callback: (
               player: TSPlayer
             , achievement: TSAchievementEntry
@@ -6910,7 +6911,7 @@ declare namespace _hidden {
         OnComplete(callback: (player: TSPlayer, entry: TSAchievementEntry)=>void)
     }
 
-    export class World {
+    export class World<T> {
         OnOpenStateChange(callback: (open : bool)=>void);
         OnConfigLoad(callback: (reload : bool)=>void);
         OnMotdChange(callback: (newMotd : string)=>void);
@@ -6918,7 +6919,7 @@ declare namespace _hidden {
         OnUpdate(callback: (diff : uint32)=>void);
     }
 
-    export class Formula {
+    export class Formula<T> {
         OnHonorCalculation(callback: (honor : TSMutable<float>,level : uint8,multiplier : float)=>void);
         OnGrayLevelCalculation(callback: (grayLevel : TSMutable<uint8>,playerLevel : uint8)=>void);
         OnColorCodeCalculation(callback: (color : TSMutable<uint8>,playerLevel : uint8,mobLevel : uint8)=>void);
@@ -6990,8 +6991,7 @@ declare namespace _hidden {
             , power: TSMutable<float>)=>void
         )
     }
-
-    export class Item {
+    export class Item<T> {
         OnQuestAccept(callback: (player : TSPlayer,item : TSItem,quest : TSQuest)=>void);
         // TODO: OnItemUse
         OnExpire(callback: (player : TSPlayer,proto : TSItemTemplate)=>void);
@@ -6999,15 +6999,15 @@ declare namespace _hidden {
         OnCastItemCombatSpell(callback: (player : TSPlayer,victim : TSUnit,spellInfo : TSSpellInfo,item : TSItem)=>void);
     }
 
-    export class AreaTrigger {
+    export class AreaTrigger<T> {
         OnTrigger(callback: (trigge: TSAreaTriggerEntry, player : TSPlayer, cancel: TSMutable<boolean>)=>void);
     }
 
-    export class AreaTriggerID {
+    export class AreaTriggerID<T> {
         OnTrigger(areaTrigger: uint32, callback: (trigge: TSAreaTriggerEntry, player : TSPlayer, cancel: TSMutable<boolean>)=>void);
     }
 
-    export class Vehicle {
+    export class Vehicle<T> {
         OnInstall(callback: (veh : TSVehicle)=>void);
         OnUninstall(callback: (veh : TSVehicle)=>void);
         OnReset(callback: (veh : TSVehicle)=>void);
@@ -7016,7 +7016,7 @@ declare namespace _hidden {
         OnRemovePassenger(callback: (veh : TSVehicle,passenger : TSUnit)=>void);
     }
 
-    export class Player {
+    export class Player<T> {
         OnPVPKill(callback: (killer : TSPlayer,killed : TSPlayer)=>void);
         OnCreatureKill(callback: (killer : TSPlayer,killed : TSCreature)=>void);
         OnPlayerKilledByCreature(callback: (killer : TSCreature,killed : TSPlayer)=>void);
@@ -7060,7 +7060,7 @@ declare namespace _hidden {
         OnLootCorpse(callback: (player: TSPlayer, corpse: TSCorpse)=>void);
     }
 
-    export class Account {
+    export class Account<T> {
         OnAccountLogin(callback: (accountId : uint32)=>void);
         OnFailedAccountLogin(callback: (accountId : uint32)=>void);
         OnEmailChange(callback: (accountId : uint32)=>void);
@@ -7069,7 +7069,7 @@ declare namespace _hidden {
         OnFailedPasswordChange(callback: (accountId : uint32)=>void);
     }
 
-    export class Guild {
+    export class Guild<T> {
         OnAddMember(callback: (guild : TSGuild,player : TSPlayer,plRank : TSMutable<uint8>)=>void);
         OnRemoveMember(callback: (guild : TSGuild,player : TSPlayer,isDisbanding : bool,isKicked : bool)=>void);
         OnMOTDChanged(callback: (guild : TSGuild,newMotd : string)=>void);
@@ -7082,7 +7082,7 @@ declare namespace _hidden {
         OnBankEvent(callback: (guild : TSGuild,eventType : uint8,tabId : uint8,playerGuid : uint32,itemOrMoney : uint32,itemStackCount : uint16,destTabId : uint8)=>void);
     }
 
-    export class Group {
+    export class Group<T> {
         OnAddMember(callback: (group : TSGroup,guid : uint64)=>void);
         OnInviteMember(callback: (group : TSGroup,guid : uint64)=>void);
         OnRemoveMember(callback: (group : TSGroup,guid : uint64,method : uint32,kicker : uint64,reason : string)=>void);
@@ -7090,7 +7090,7 @@ declare namespace _hidden {
         OnDisband(callback: (group : TSGroup)=>void);
     }
 
-    export class SpellID {
+    export class SpellID<T> {
         OnCast(spell: uint32, callback : (spell: TSSpell)=>void);
         OnCheckCast(spell: uint32, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
         OnDispel(spell: uint32, callback: (spell: TSSpell, dispelType: uint32)=>void);
@@ -7114,7 +7114,7 @@ declare namespace _hidden {
         OnTrainerSend(spell: uint32, callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
     }
 
-    export class Spells {
+    export class Spells<T> {
         OnCast(callback : (spell: TSSpell)=>void);
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
         OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void);
@@ -7141,7 +7141,7 @@ declare namespace _hidden {
         OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
     }
 
-    export class CreatureID {
+    export class CreatureID<T> {
         OnGenerateLoot(creature: uint32, callback: (creature: TSCreature, killer: TSPlayer)=>void);
         OnMoveInLOS(creature: uint32, callback: (creature: TSCreature, seen: TSUnit)=>void);
         OnJustEnteredCombat(creature: uint32, callback: (creature: TSCreature, target: TSUnit)=>void);
@@ -7192,56 +7192,56 @@ declare namespace _hidden {
         OnSendVendorItem(creature: uint32, callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
     }
 
-    export class Creatures {
-        OnGenerateLoot(callback: (creature: TSCreature, killer: TSPlayer)=>void);
-        OnMoveInLOS(callback: (creature: TSCreature, seen: TSUnit)=>void);
-        OnJustEnteredCombat(callback: (creature: TSCreature, target: TSUnit)=>void);
-        OnDeath(callback: (creature: TSCreature, killer: TSUnit)=>void);
-        OnKilledUnit(callback: (creature: TSCreature, killed: TSUnit)=>void);
-        OnSummoned(callback: (creature: TSCreature, summon: TSCreature)=>void);
-        OnIsSummoned(callback: (creature: TSCreature, summoner: TSWorldObject)=>void);
-        OnSummonDespawn(callback: (creature: TSCreature, summon: TSCreature)=>void);
-        OnSummonDies(callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void);
-        OnHitBySpell(callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void);
-        OnSpellHitTarget(callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void);
-        OnSpellCastFinished(callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: uint32)=>void);
-        OnJustAppeared(callback: (creature: TSCreature)=>void);
-        OnCharmed(callback: (creature: TSCreature, isNew: boolean)=>void);
-        OnReachedHome(callback: (creature: TSCreature)=>void);
-        OnReceiveEmote(callback: (creature: TSCreature, player: TSPlayer, emote: uint32)=>void);
-        OnOwnerAttacked(callback: (creature: TSCreature, attacker: TSUnit)=>void);
-        OnOwnerAttacks(callback: (creature: TSCreature, target: TSUnit)=>void);
-        OnCorpseRemoved(callback: (creature: TSCreature, delay: uint32)=>void);
-        OnCreate(callback: (creature: TSCreature, cancel: TSMutable<bool>)=>void);
-        OnReload(callback: (creature: TSCreature)=>void)
-        OnWaypointStarted(callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
-        OnWaypointReached(callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
-        OnWaypointPathEnded(callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
-        OnPassengerBoarded(callback: (creature: TSCreature, passenger: TSUnit, seatId: int8, isFirst: boolean)=>void);
+    export class Creatures<T> {
+        OnGenerateLoot(callback: (creature: TSCreature, killer: TSPlayer)=>void): T;
+        OnMoveInLOS(callback: (creature: TSCreature, seen: TSUnit)=>void): T;
+        OnJustEnteredCombat(callback: (creature: TSCreature, target: TSUnit)=>void): T;
+        OnDeath(callback: (creature: TSCreature, killer: TSUnit)=>void): T;
+        OnKilledUnit(callback: (creature: TSCreature, killed: TSUnit)=>void): T;
+        OnSummoned(callback: (creature: TSCreature, summon: TSCreature)=>void): T;
+        OnIsSummoned(callback: (creature: TSCreature, summoner: TSWorldObject)=>void): T;
+        OnSummonDespawn(callback: (creature: TSCreature, summon: TSCreature)=>void): T;
+        OnSummonDies(callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
+        OnHitBySpell(callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
+        OnSpellHitTarget(callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
+        OnSpellCastFinished(callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: uint32)=>void): T;
+        OnJustAppeared(callback: (creature: TSCreature)=>void): T;
+        OnCharmed(callback: (creature: TSCreature, isNew: boolean)=>void): T;
+        OnReachedHome(callback: (creature: TSCreature)=>void): T;
+        OnReceiveEmote(callback: (creature: TSCreature, player: TSPlayer, emote: uint32)=>void): T;
+        OnOwnerAttacked(callback: (creature: TSCreature, attacker: TSUnit)=>void): T;
+        OnOwnerAttacks(callback: (creature: TSCreature, target: TSUnit)=>void): T;
+        OnCorpseRemoved(callback: (creature: TSCreature, delay: uint32)=>void): T;
+        OnCreate(callback: (creature: TSCreature, cancel: TSMutable<bool>)=>void): T;
+        OnReload(callback: (creature: TSCreature)=>void) : T
+        OnWaypointStarted(callback: (creature: TSCreature, id: uint32, path: uint32)=>void): T;
+        OnWaypointReached(callback: (creature: TSCreature, id: uint32, path: uint32)=>void): T;
+        OnWaypointPathEnded(callback: (creature: TSCreature, id: uint32, path: uint32)=>void): T;
+        OnPassengerBoarded(callback: (creature: TSCreature, passenger: TSUnit, seatId: int8, isFirst: boolean)=>void): T;
 
-        OnSpellClick(callback: (creature: TSCreature, clicker: TSUnit, isFirst: boolean)=>void);
-        OnUpdateAI(callback: (creature: TSCreature, diff: uint32)=>void);
+        OnSpellClick(callback: (creature: TSCreature, clicker: TSUnit, isFirst: boolean)=>void): T;
+        OnUpdateAI(callback: (creature: TSCreature, diff: uint32)=>void): T;
 
-        OnGossipHello(callback: (creature: TSCreature, player: TSPlayer, cancel: TSMutable<bool>)=>void)
-        OnGossipSelect(callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, cancel: TSMutable<bool>)=>void)
-        OnGossipSelectCode(callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, code: string, cancel: TSMutable<bool>)=>void)
+        OnGossipHello(callback: (creature: TSCreature, player: TSPlayer, cancel: TSMutable<bool>)=>void): T
+        OnGossipSelect(callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, cancel: TSMutable<bool>)=>void): T
+        OnGossipSelectCode(callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, code: string, cancel: TSMutable<bool>)=>void): T
 
-        OnQuestAccept(callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest)=>void)
-        OnQuestReward(callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest, selection: uint32)=>void)
+        OnQuestAccept(callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest)=>void): T
+        OnQuestReward(callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest, selection: uint32)=>void): T
         /**
          * NOTE: Only use this event to enable pickpocket loot
          * Use "CreatureOnGeneratePickPocketLoot" to actually generate loot
          */
-        OnCanGeneratePickPocketLoot(callback: (creature: TSCreature, player: TSPlayer, canGenerate: TSMutable<bool>)=>void)
+        OnCanGeneratePickPocketLoot(callback: (creature: TSCreature, player: TSPlayer, canGenerate: TSMutable<bool>)=>void): T
         /**
          * NOTE: You may need to also call "OnCanGeneratePickPocketLoot" if this doesn't fire for your specific creature
          */
-        OnGeneratePickPocketLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
-        OnGenerateSkinningLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
-        OnSendVendorItem(callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
+        OnGeneratePickPocketLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void): T
+        OnGenerateSkinningLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void): T
+        OnSendVendorItem(callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void): T
     }
 
-    export class Battlegrounds {
+    export class Battlegrounds<T> {
         OnStart(callback: (bg: TSBattleground)=>void)
         OnReload(callback: (bg: TSBattleground)=>void)
         OnAddPlayer(callback: (bg: TSBattleground,player: TSPlayer)=>void)
@@ -7279,7 +7279,7 @@ declare namespace _hidden {
         OnAreaTrigger(callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
     }
 
-    export class BattlegroundID {
+    export class BattlegroundID<T> {
         OnStart(id: uint32, callback: (bg: TSBattleground)=>void)
         OnReload(id: uint32, callback: (bg: TSBattleground)=>void)
         OnAddPlayer(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
@@ -7317,19 +7317,19 @@ declare namespace _hidden {
         OnAreaTrigger(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
     }
 
-    export class GameEvents {
+    export class GameEvents<T> {
         OnStart(callback: (event: uint16)=>void)
         OnUpdateState(callback: (event: uint16)=>void)
         OnEnd(callback: (event: uint16)=>void)
     }
 
-    export class GameEventID {
+    export class GameEventID<T> {
         OnStart(id: uint32, callback: (event: uint16)=>void)
         UpdateState(id: uint32, callback: (event: uint16)=>void)
         OnEnd(id: uint32, callback: (event: uint16)=>void)
     }
 
-    export class Items {
+    export class Items<T> {
         OnUse(callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
         OnExpire(callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
         OnRemove(callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
@@ -7349,7 +7349,7 @@ declare namespace _hidden {
         OnTakenAsLoot(callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
     }
 
-    export class ItemID {
+    export class ItemID<T> {
         OnUse(item: uint32, callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
         OnExpire(item: uint32, callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
         OnRemove(item: uint32, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
@@ -7369,7 +7369,7 @@ declare namespace _hidden {
         OnTakenAsLoot(item: uint32, callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
     }
 
-    export class GameObjects {
+    export class GameObjects<T> {
         OnUpdate(callback: (obj: TSGameObject, diff: uint32)=>void)
         OnDialogStatus(callback: (obj: TSGameObject, player: TSPlayer)=>void)
         OnDestroyed(callback: (obj: TSGameObject, destroyer: TSWorldObject)=>void)
@@ -7388,7 +7388,7 @@ declare namespace _hidden {
         OnGenerateFishLoot(callback: (obj: TSGameObject, player: TSPlayer, loot: TSLoot, isJunk: bool)=>void)
     }
 
-    export class GameObjectID {
+    export class GameObjectID<T> {
         OnUpdate(obj: uint32, callback: (obj: TSGameObject, diff: uint32)=>void)
         OnDialogStatus(obj: uint32, callback: (obj: TSGameObject, player: TSPlayer)=>void)
         OnDestroyed(obj: uint32, callback: (obj: TSGameObject, destroyer: TSWorldObject)=>void)
@@ -7404,7 +7404,7 @@ declare namespace _hidden {
         OnQuestAccept(obj: uint32, callback: (obj: TSGameObject, player: TSPlayer, quest: TSQuest)=>void)
     }
 
-    export class Maps {
+    export class Maps<T> {
         OnCreate(callback: (map: TSMap)=>void)
         OnReload(callback: (map: TSMap)=>void)
         OnUpdate(callback: (map: TSMap, diff: uint32)=>void)
@@ -7417,7 +7417,7 @@ declare namespace _hidden {
         OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void)
     }
 
-    export class MapID {
+    export class MapID<T> {
         OnCreate(map: uint32, callback: (map: TSMap)=>void)
         OnUpdate(map: uint32, callback: (map: TSMap, diff: uint32)=>void)
         OnPlayerEnter(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
@@ -7430,7 +7430,7 @@ declare namespace _hidden {
         OnCheckEncounter(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
     }
 
-    export class Instances {
+    export class Instances<T> {
         OnCreate(callback: (instance: TSInstance)=>void)
         OnReload(callback: (instance: TSInstance)=>void)
         OnLoad(callback: (instance: TSInstance)=>void)
@@ -7443,7 +7443,7 @@ declare namespace _hidden {
         OnFillInitialWorldStates(callback: (instance: TSInstance, TSWorldStatePacket)=>void)
     }
 
-    export class InstanceID {
+    export class InstanceID<T> {
         OnCreate(map: uint32, callback: (instance: TSInstance)=>void)
         OnReload(map: uint32, callback: (instance: TSInstance)=>void)
         OnLoad(map: uint32, callback: (instance: TSInstance)=>void)
@@ -7456,78 +7456,79 @@ declare namespace _hidden {
         OnFillInitialWorldStates(map: uint32, callback: (instance: TSInstance, TSWorldStatePacket)=>void)
     }
 
-    export class AuctionHouse {
+    export class AuctionHouse<T> {
         OnAuctionAdd(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
         OnAuctionRemove(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
         OnAuctionSuccessful(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
         OnAuctionExpire(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
     }
 
-    export class Conditions {
+    export class Conditions<T> {
         OnCheck(callback: (condition: TSCondition, sourceInfo: TSConditionSourceInfo, condMeets: TSMutable<bool>)=>void)
     }
 
-    export class ConditionID {
+    export class ConditionID<T> {
         OnCheck(type: uint32, callback: (condition: TSCondition, sourceInfo: TSConditionSourceInfo, condMeets: TSMutable<bool>)=>void)
     }
 
-    export class SmartActions {
+    export class SmartActions<T> {
         OnActivateEarly(callback: (script: TSSmartScriptValues, cancelAction: TSMutable<bool>, cancelLink: TSMutable<bool>)=>void)
         OnActivateLate(callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
     }
 
-    export class SmartActionID {
+    export class SmartActionID<T> {
         OnActivateEarly(actionType: uint32, callback: (script: TSSmartScriptValues, cancelAction: TSMutable<bool>, cancelLink: TSMutable<bool>)=>void)
         OnActivateLate(actionType: uint32, callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
     }
 
-    export class Addon {
+    export class Addon<T> {
         OnMessage(callback: (reader: any)=>void);
         OnMessageID<T>(cls: new()=>T, callback: (player: TSPlayer,message: T)=>void);
         OnLongMessage(callback: (player: TSPlayer, channel: uint16, message: string)=>void)
     }
 
-    export class Tests {
+    export class Tests<T> {
         ManualTest(name: string): TSManualTestBuilder
         AutomaticTest(name: string, callback: (player: TSPlayer, assert: TSAssert)=>void)
     }
 }
+// @hidden-end (do NOT remove this tag!)
 
 declare class TSEventHandlers {
-    World: _hidden.World;
-    Formula: _hidden.Formula;
-    Addon: _hidden.Addon;
-    AreaTriggers: _hidden.AreaTrigger;
-    AreaTriggerID: _hidden.AreaTrigger;
+    World: _hidden.World<void>;
+    Formula: _hidden.Formula<void>;
+    Addon: _hidden.Addon<void>;
+    AreaTriggers: _hidden.AreaTrigger<void>;
+    AreaTriggerID: _hidden.AreaTrigger<void>;
     //Vehicle: _hidden.Vehicle;
-    Achievements: _hidden.Achievements;
-    AchievementID: _hidden.AchievementID;
-    Player: _hidden.Player;
-    Account: _hidden.Account;
-    Guild: _hidden.Guild;
-    Group: _hidden.Group;
-    Spells: _hidden.Spells;
-    Creatures: _hidden.Creatures;
-    CreatureID: _hidden.CreatureID;
-    SpellID: _hidden.SpellID;
-    Auction: _hidden.AuctionHouse;
-    Maps: _hidden.Maps;
-    MapID: _hidden.MapID;
-    Items: _hidden.Items;
-    ItemID: _hidden.ItemID;
-    GameObjects: _hidden.GameObjects;
-    GameObjectID: _hidden.GameObjectID;
-    Tests: _hidden.Tests;
-    Battlegrounds: _hidden.Battlegrounds;
-    BattlegroundID: _hidden.BattlegroundID;
-    GameEvents: _hidden.GameEvents
-    GameEventID: _hidden.GameEventID
-    SmartActions: _hidden.SmartActions
-    SmartActionID: _hidden.SmartActionID
-    Conditions: _hidden.Conditions
-    ConditionID: _hidden.ConditionID
-    Instances: _hidden.Instances
-    InstanceID: _hidden.InstanceID
+    Achievements: _hidden.Achievements<void>;
+    AchievementID: _hidden.AchievementID<void>;
+    Player: _hidden.Player<void>;
+    Account: _hidden.Account<void>;
+    Guild: _hidden.Guild<void>;
+    Group: _hidden.Group<void>;
+    Spells: _hidden.Spells<void>;
+    Creatures: _hidden.Creatures<void>;
+    CreatureID: _hidden.CreatureID<void>;
+    SpellID: _hidden.SpellID<void>;
+    Auction: _hidden.AuctionHouse<void>;
+    Maps: _hidden.Maps<void>;
+    MapID: _hidden.MapID<void>;
+    Items: _hidden.Items<void>;
+    ItemID: _hidden.ItemID<void>;
+    GameObjects: _hidden.GameObjects<void>;
+    GameObjectID: _hidden.GameObjectID<void>;
+    Tests: _hidden.Tests<void>;
+    Battlegrounds: _hidden.Battlegrounds<void>;
+    BattlegroundID: _hidden.BattlegroundID<void>;
+    GameEvents: _hidden.GameEvents<void>;
+    GameEventID: _hidden.GameEventID<void>;
+    SmartActions: _hidden.SmartActions<void>;
+    SmartActionID: _hidden.SmartActionID<void>;
+    Conditions: _hidden.Conditions<void>;
+    ConditionID: _hidden.ConditionID<void>;
+    Instances: _hidden.Instances<void>;
+    InstanceID: _hidden.InstanceID<void>;
 }
 
 declare class TSDictionary<K,V> {
