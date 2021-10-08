@@ -46,6 +46,12 @@ class IdPublic extends IdPrivate {
     static writeFile = () => IdPrivate.writeFile(Settings.ID_FILE_PATH);
 }
 
+const INLINE_ONLY_FLAG = '--inline-only'
+
+function isReadOnly() {
+    return process.argv.includes(INLINE_ONLY_FLAG)
+}
+
 function patchSubdirs(dir: string) {
     if (!fs.existsSync(dir)) { return; }
 
@@ -71,7 +77,7 @@ function patchSubdirs(dir: string) {
             return fs.existsSync(tspath);
         })
         .filter(x=>
-            !process.argv.includes('--inline-only')
+            !process.argv.includes(INLINE_ONLY_FLAG)
             || fs.readFileSync(x).includes('InlineScripts')
         )
         .map(x => path.relative(__dirname, x))
@@ -163,31 +169,39 @@ async function main() {
     cur_stage = 'FINISH'
     await applyStage(finishes);
     cur_stage = 'SORT'
-    await applyStage(sorts);
+    if(!isReadOnly()) {
+        await applyStage(sorts);
+    }
     time(`Executed scripts`);
 
-    await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
-        Settings.SQL_WRITE_TO_FILE);
-
-
-    time(`Wrote SQL`);
-    saveDbc();
-    time(`Wrote DBC`);
-
-    await IdPublic.writeFile();
-
-    if (Settings.LUAXML_SOURCE.length === 0 || Settings.LUAXML_CLIENT.length === 0) {
-        console.log('No LUAXML settings, skipping LUAXML');
-    } else {
-        if (_DBC.ChrClasses.isLoaded()) {
-            _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
-                .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
-        }
-
-        _writeLUAXML(Settings.LUAXML_SOURCE, Settings.LUAXML_CLIENT);
+    if(!isReadOnly()) {
+        await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
+            Settings.SQL_WRITE_TO_FILE);
     }
 
-    time(`Wrote LUAXML`);
+    time(`Wrote SQL`);
+    if(!isReadOnly()) {
+        saveDbc();
+    }
+    time(`Wrote DBC`);
+
+    if(!isReadOnly()) {
+        await IdPublic.writeFile();
+    }
+
+    if(!isReadOnly()) {
+        if (Settings.LUAXML_SOURCE.length === 0 || Settings.LUAXML_CLIENT.length === 0) {
+            console.log('No LUAXML settings, skipping LUAXML');
+        } else {
+            if (_DBC.ChrClasses.isLoaded()) {
+                _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
+                    .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
+            }
+
+            _writeLUAXML(Settings.LUAXML_SOURCE, Settings.LUAXML_CLIENT);
+        }
+        time(`Wrote LUAXML`);
+    }
 }
 
 /**
