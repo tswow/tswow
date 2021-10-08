@@ -41,11 +41,25 @@ export class Gem extends MainEntity<GemPropertiesRow> {
      * @note A Gem can only be connected to a **single** item to work properly.
      * @warn do **not** modify GemProperties in the item.
      */
-    get Item() { return new GemItem(this); }
+    readonly Item = new GemItem(this);
 }
 
 export class GemItem extends CellSystem<Gem> {
+    private item?: ItemTemplate = undefined
+
+    static setCached(gem: GemItem, item: ItemTemplate) {
+        gem.item = item;
+    }
+
+    clearCache() {
+        this.item = undefined;
+    }
+
     get() {
+        if(this.item !== undefined && this.item.GemProperties.get() === this.owner.ID) {
+            return this.item;
+        }
+
         // It's not possible for a gem to have multiple items,
         // because the enchantment on the gem must reference
         // the item id
@@ -58,7 +72,7 @@ export class GemItem extends CellSystem<Gem> {
             throw new Error(`Multiple gem items for ${this.owner.ID}`)
         }
 
-        return items[0];
+        return this.item = items[0];
     }
 
     mod(callback: (item: ItemTemplate) => void) {
@@ -154,6 +168,7 @@ export class GemRegistryClass
         item.row.GemProperties.set(gemid)        // item -> gem
         gem.row.Enchant_Id.set(enchantment.ID);  // gem  -> ench
         enchantment.row.Src_ItemID.set(item.ID); // ench -> item
+        GemItem.setCached(gem.Item,item);
 
         return gem;
     }
