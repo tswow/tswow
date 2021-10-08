@@ -16,7 +16,7 @@ export namespace Datascripts {
           dataset: Datasets.Dataset
         , readonly: boolean
         , useTimer: boolean
-        , args?: string[]) {
+        , args: string[] = []) {
 
         term.log(`Building DataScripts for dataset ${dataset.id}`);
         await Modules.refreshModules();
@@ -32,12 +32,26 @@ export namespace Datascripts {
         dataset.installServerData();
         await dataset.installBoth(false);
 
+        const shouldProf = args.includes('--prof')
+
         try {
             wsys.exec(
-                `node -r source-map-support/register ${ipaths.wotlkdataIndex}`
+                `node -r source-map-support/register ${shouldProf?'--prof':''} ${ipaths.wotlkdataIndex}`
                 +` ${ChildProcessSettings(dataset,readonly,useTimer)}`
                 + ` ${(args ? args.join(' '):'')}`
                 , 'inherit');
+            if(shouldProf) {
+                wfs.readDir('./',true,'files')
+                    .filter(x=>x.startsWith('isolate-')
+                        && x.endsWith('-v8.log'))
+                    .forEach((x,i)=>{
+                        wsys.exec(
+                              `node --prof-process ${x}`
+                            + ` > node-profiling${i==0?'':`-${i}`}.txt`
+                        )
+                        wfs.remove(x)
+                    })
+            }
         } catch (error) {
             throw new Error(`Failed to rebuild patches`);
         }
