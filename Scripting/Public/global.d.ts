@@ -3349,7 +3349,7 @@ declare interface TSGroup {
     SetTargetIcon(icon : uint8,target : uint64,setter : uint64) : void
 }
 
-declare interface TSWorldPacket {
+declare class TSWorldPacket {
     constructor(opcode: uint32, size: uint16);
 
     IsNull() : bool
