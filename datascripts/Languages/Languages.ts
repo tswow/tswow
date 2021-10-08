@@ -18,9 +18,9 @@ import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
 import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Language } from "wotlkdata/dbc/Localization";
+import { Language, Languages } from "wotlkdata/dbc/Localization";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { Table } from "wotlkdata/table/Table";
@@ -72,6 +72,16 @@ export class LanguageName extends LocSystem<WoWLanguage> {
         ]);
     }
 
+    clear() {
+        Languages.forEach(x=>{
+            let c = this.lang(x);
+            if(c && c.get() && c.get().length>0) {
+                c.set('')
+            }
+        });
+        return this.owner;
+    }
+
     get mask(): Cell<number, WoWLanguage> {
         return new MulticastCell(this.owner,[
             ...this.owner.Skills.map(x=>x.Name.mask),
@@ -87,8 +97,11 @@ export class LanguageName extends LocSystem<WoWLanguage> {
     }
 }
 
-export class LanguageSkills extends MultiRowSystem<SkillLine,WoWLanguage> {
+export class LanguageSkills extends MultirowSystemCached<SkillLine,WoWLanguage> {
+    private cachedSkills?: SkillLine[] = undefined;
+
     protected getAllRows(): SkillLine[] {
+        if(this.cachedSkills) return this.cachedSkills;
         let skills: SkillLine[] = [];
         this.owner.Abilities.forEach((value)=>{
             let sl = value.SkillLine.get();
@@ -96,6 +109,7 @@ export class LanguageSkills extends MultiRowSystem<SkillLine,WoWLanguage> {
                 skills.push(SkillLineRegistry.load(sl));
             }
         })
+        this.cachedSkills = skills;
         return skills;
     }
     protected isDeleted(value: SkillLine): boolean {
@@ -103,7 +117,7 @@ export class LanguageSkills extends MultiRowSystem<SkillLine,WoWLanguage> {
     }
 }
 
-export class LanguageAbilities extends MultiRowSystem<SkillLineAbility,WoWLanguage> {
+export class LanguageAbilities extends MultirowSystemCached<SkillLineAbility,WoWLanguage> {
     protected getAllRows(): SkillLineAbility[] {
         let rows: SkillLineAbility[] = [];
         this.owner.Spells.forEach(x=>{
@@ -115,10 +129,13 @@ export class LanguageAbilities extends MultiRowSystem<SkillLineAbility,WoWLangua
         return value.row.isDeleted();
     }
 }
-export class LanguageSpells extends MultiRowSystem<Spell,WoWLanguage>  {
+export class LanguageSpells extends MultirowSystemCached<Spell,WoWLanguage>  {
     protected getAllRows(): Spell[] {
-        // TODO: possible false positives
-        return std.Spells.queryAll({Effect:39,EffectMiscValue:this.owner.ID})
+        return std.Spells
+            .filter(x=>x.Effects.find(eff=>
+                   eff.Type.Language.is()
+                && eff.MiscValueA.get() === this.owner.ID
+            ))
     }
     protected isDeleted(value: Spell): boolean {
         return value.row.isDeleted()
@@ -139,11 +156,11 @@ export class WoWLanguage extends MainEntity<LanguagesRow> {
     }
 
     get Name() {  return new LanguageName(this); }
-    get Spells() { return new LanguageSpells(this); }
-    get Abilities() { return new LanguageAbilities(this); }
-    get Skills() { return new LanguageSkills(this); }
-    get AutoLearn() { return new LanguageAutoLearn(this); }
-    get Words() { return new LanguageWords(this); }
+    readonly Spells = new LanguageSpells(this);
+    readonly Abilities = new LanguageAbilities(this)
+    readonly Skills = new LanguageSkills(this)
+    readonly AutoLearn = new LanguageAutoLearn(this)
+    readonly Words = new LanguageWords(this)
 }
 
 export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,LanguagesRow,LanguagesQuery> {
@@ -167,21 +184,23 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
     }
 
     Clear(lang: WoWLanguage, mod: string, id: string) {
-        lang.Name.clear()
         let sl = std.SkillLines.create(mod,id+'-skill')
-        .Category.set(10)
-        .CanLink.set(0)
-        .SkillCosts.set(0)
-        .Icon.set('Interface\\Icons\\Trade_Engineering')
-        .CanLink.set(0)
-        .RaceClassInfos.addMod(undefined,undefined,
-            x=>x
-                .Flags.clearAll()
-                .Flags.IsClassLine.set(true)
-                .SkillTier.set(0)
-        )
+            .Category.set(10)
+            .CanLink.set(0)
+            .SkillCosts.set(0)
+            .Icon.set('Interface\\Icons\\Trade_Engineering')
+            .CanLink.set(0)
+            .RaceClassInfos.addMod(undefined,undefined,
+                x=>x
+                    .Flags.clearAll()
+                    .Flags.IsClassLine.set(true)
+                    .SkillTier.set(0)
+            )
 
-        std.Spells.create(mod,id+'-spell')
+        lang.Skills.setCache([sl]);
+
+        const spell = std.Spells
+            .create(mod,id+'-spell')
             .Attributes.isPassive.set(true)
             .Attributes.isHiddenInSpellbook.set(true)
             .Proc.Chance.set(101)
@@ -194,11 +213,16 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
             })
             .SchoolMask.Physical.set(true)
             .SkillLines.addMod(sl.ID,undefined,undefined,sla=>{
+                lang.Abilities.setCache([sla]);
                 sla.RaceMask.set(0xffffffff)
                     .AcquireMethod.set(2)
                     .ClassMask.set(0)
                     .ClassMaskForbidden.set(0)
             })
+        lang.Spells.setCache([spell])
+
+        // clear name now that caches are all set up
+        lang.Name.clear()
     }
 }
 export const LanguageRegistry = new LanguageRegistryClass();
