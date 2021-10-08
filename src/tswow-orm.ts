@@ -1,12 +1,13 @@
 import ts = require("typescript");
-import { CodeWriter } from "./codewriter";
 import * as fs from 'fs';
 import * as path from 'path';
 import { InterfaceDeclaration } from "typescript";
+import { CodeWriter } from "./codewriter";
+import { onMD5Changed } from "./version";
 
 type DBType = 'world'|'auth'|'characters'
 
-const MethodTypes = 
+const MethodTypes =
 {
     'string': 0,
     'uint8': 1,
@@ -46,7 +47,7 @@ class Entry {
     className: string;
     databaseType: DBType;
     fields: Field[] = []
-    
+
     constructor(className: string, databaseType: DBType) {
         this.className = className;
         this.databaseType = databaseType;
@@ -64,7 +65,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     }
 
     const className = node.name.getText(node.getSourceFile());
-    
+
     let entry: Entry|undefined = undefined;
     node.decorators.forEach((x)=>{
         const ft = x.getText(x.getSourceFile());
@@ -81,18 +82,18 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
             default:
         }
     });
-    
+
     if(!entry) {
         return;
     }
-    
+
     node.members.forEach((memberRaw)=>{
         if(memberRaw.kind!==ts.SyntaxKind.PropertyDeclaration) {
             return;
         }
-        
+
         const member = memberRaw as ts.PropertyDeclaration;
-        
+
         let isField = false;
         let isPrimaryKey = false;
         if(member.decorators) {
@@ -107,11 +108,11 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
                 }
             });
         }
-        
+
         if(!isField) {
             return;
         }
-        
+
         const type = member.type.getText(member.getSourceFile()) as FieldType;
         if(!Object.keys(MethodTypes).includes(type)) {
             throw new Error(`Invalid type for database filed: ${type}`);
@@ -120,7 +121,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
         if(type=='string'&&isPrimaryKey) {
             throw new Error(`Strings cannot be primary keys (yet)`);
         }
-        
+
         const name = member.name.getText(member.getSourceFile());
         if(!member.initializer) {
             throw new Error(`Database fields must be initialized (= something in the declaration)`);
@@ -195,7 +196,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeString(';");');
     writer.EndBlock();
 
-    const queryType = entry.databaseType == 'world' ? 'QueryWorld' : 
+    const queryType = entry.databaseType == 'world' ? 'QueryWorld' :
         entry.databaseType == 'auth' ? 'QueryAuth' : 'QueryCharacters';
     writer.writeString(`void save() {${queryType}(saveQuery());}\n\n`);
     writer.writeString(`    void remove() {${queryType}(removeQuery());}\n\n`)
@@ -300,7 +301,6 @@ const getWriteSQLType = (field: Field)=>{
 
 export function writeTableCreationFile(outDir: string) {
     const writer = new CodeWriter();
-
     writer.writeStringNewLine('#include "TSDatabase.h"')
     writer.writeStringNewLine('#include <fstream>')
     writer.writeStringNewLine('#include <iostream>')
@@ -471,5 +471,9 @@ export function writeTableCreationFile(outDir: string) {
     writer.EndBlock();
 
     const tableFile = path.join(outDir,'livescripts','TableCreator.cpp');
-    fs.writeFileSync(tableFile,writer.getText());
+
+    let text = writer.getText();
+    onMD5Changed(tableFile,text,()=>{
+        fs.writeFileSync(tableFile,writer.getText());
+    })
 }

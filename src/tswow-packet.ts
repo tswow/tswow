@@ -1,25 +1,26 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2021 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import ts = require("typescript");
+import * as fs from 'fs';
+import * as path from 'path';
 import { CodeWriter } from "./codewriter";
 import { registerMessage } from "./tswow-packet-def";
 import { GetId, IdPrivate } from "./tswow/Ids";
-import * as path from 'path';
-import * as fs from 'fs';
+import { onMD5Changed } from "./version";
 
 class IdPublic extends IdPrivate {
     static writeFile(filename: string) { return super.writeFile(filename); }
@@ -30,7 +31,7 @@ const files : {[key:string]:string[]} = {}
 
 export function handlePacketClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     const wsnl = (str: string)=>writer.writeStringNewLine(str);
-    
+
     const message = registerMessage(node);
     if(!message) {
         return;
@@ -154,5 +155,9 @@ export function writePacketCreationFile(outDir: string) {
     writer.EndBlock();
 
     const tableFile = path.join(outDir,'livescripts','PacketCreator.cpp');
-    fs.writeFileSync(tableFile,writer.getText());
+    const text = writer.getText();
+
+    onMD5Changed(tableFile,text,()=>{
+        fs.writeFileSync(tableFile,text);
+    })
 }

@@ -1,12 +1,13 @@
-import * as ts from 'typescript';
+import { spawn } from 'cross-spawn';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { spawn } from 'cross-spawn';
+import * as ts from 'typescript';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
-import { writeTableCreationFile } from './tswow-orm';
 import { writeIdFile } from './tswow-idfile';
+import { writeTableCreationFile } from './tswow-orm';
 import { writePacketCreationFile } from './tswow-packet';
+import { onFileOutdated, onMD5Changed } from './version';
 
 export enum ForegroundColorEscapeSequences {
     Grey = '\u001b[90m',
@@ -227,16 +228,8 @@ export class Run {
         const sourceFiles = program.getSourceFiles();
 
         let outDir = cmdLineOptions.outDir || '';
-        if (outDir) {
-            const lastChar  = outDir[outDir.length - 1];
-            if (lastChar !== '/' && lastChar !== '\\') {
-                outDir += '/';
-            }
-
-            if (fs.pathExistsSync(outDir)) {
-                fs.rmdirSync(outDir, {recursive: true});
-            }
-
+        if(!outDir.endsWith('/') && !outDir.endsWith('\\')) outDir+='/'
+        if (outDir && !fs.existsSync(outDir)) {
             fs.mkdirSync(outDir, {recursive: true});
         }
 
@@ -250,82 +243,59 @@ export class Run {
             // track version
             const paths = sources.filter(sf => s.fileName.endsWith(sf));
             (<any>s).__path = paths[0];
-            const fileVersion = (<any>s).version;
-            if (fileVersion) {
-                const latestVersion = this.versions[s.fileName];
-                if (latestVersion && parseInt(latestVersion, 10) >= parseInt(fileVersion, 10)) {
-                    if (cmdLineOptions.trace) {
-                        console.log(
-                            'File: '
-                            + ForegroundColorEscapeSequences.White
-                            + s.fileName
-                            + resetEscapeSequence
-                            + ' current version:'
-                            + fileVersion
-                            + ', last version:'
-                            + latestVersion
-                            + '. '
-                            + ForegroundColorEscapeSequences.Red
-                            + 'Skipped.'
-                            + resetEscapeSequence);
-                    }
-                    return;
+
+            onFileOutdated(paths[0],()=>{
+                // @tswow-begin: hack: const enums
+                const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
+                emitterHeader.HeaderMode = true;
+                emitterHeader.processNode(s);
+                const emitterSource = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
+                // @tswow-end
+                emitterSource.SourceMode = true;
+                emitterSource.processNode(s);
+
+                let fileNameNoExt = s.fileName.endsWith('.ts') ? s.fileName.substr(0, s.fileName.length - 3) : s.fileName;
+                if (fileNameNoExt.startsWith(rootFolder)) {
+                    fileNameNoExt = fileNameNoExt.substring(rootFolder.length);
                 }
 
-                this.versions[s.fileName] = fileVersion;
-            }
+                const fileNameHeader = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'h'));
+                const fileNameCpp = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'cpp'));
 
-            if (cmdLineOptions.trace) {
-                console.log(
-                    ForegroundColorEscapeSequences.Cyan
-                    + 'Processing File: '
-                    + resetEscapeSequence
-                    + ForegroundColorEscapeSequences.White
-                    + s.fileName
-                    + resetEscapeSequence);
-            }
+                if (cmdLineOptions.trace) {
+                    console.log(
+                        ForegroundColorEscapeSequences.Cyan
+                        + 'Writing to file: '
+                        + resetEscapeSequence
+                        + ForegroundColorEscapeSequences.White
+                        + outDir + fileNameCpp
+                        + resetEscapeSequence);
+                }
 
-            // @tswow-begin: hack: const enums
-            const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
-            emitterHeader.HeaderMode = true;
-            emitterHeader.processNode(s);
-            const emitterSource = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
-            // @tswow-end
-            emitterSource.SourceMode = true;
-            emitterSource.processNode(s);
+                const dir = path.dirname(path.join(outDir, fileNameHeader));
+                fs.mkdirsSync(dir);
+                const headerPath = outDir + fileNameHeader;
+                const headerText = emitterHeader.writer.getText();
+                const cppPath = outDir + fileNameCpp;
+                const cppText = emitterSource.writer.getText();
 
-            let fileNameNoExt = s.fileName.endsWith('.ts') ? s.fileName.substr(0, s.fileName.length - 3) : s.fileName;
-            if (fileNameNoExt.startsWith(rootFolder)) {
-                fileNameNoExt = fileNameNoExt.substring(rootFolder.length);
-            }
+                onMD5Changed(headerPath,headerText,()=>{
+                    fs.writeFileSync(headerPath, headerText);
+                })
 
-            const fileNameHeader = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'h'));
-            const fileNameCpp = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'cpp'));
-
-            if (cmdLineOptions.trace) {
-                console.log(
-                    ForegroundColorEscapeSequences.Cyan
-                    + 'Writing to file: '
-                    + resetEscapeSequence
-                    + ForegroundColorEscapeSequences.White
-                    + outDir + fileNameCpp
-                    + resetEscapeSequence);
-            }
-            const dir = path.dirname(path.join(outDir, fileNameHeader));
-            fs.mkdirsSync(dir);
-            fs.writeFileSync(outDir + fileNameHeader, emitterHeader.writer.getText());
-            fs.writeFileSync(outDir + fileNameCpp, emitterSource.writer.getText());
+                onMD5Changed(cppPath,cppText,()=>{
+                    fs.writeFileSync(cppPath, cppText);
+                })
+            })
         });
 
         if (cmdLineOptions.trace) {
             console.log(ForegroundColorEscapeSequences.Pink + 'Binary files have been generated...' + resetEscapeSequence);
         }
 
-        // @tswow-begin
         writeTableCreationFile(outDir);
         writePacketCreationFile(outDir);
         writeIdFile(outDir);
-        // @tswow-end
     }
 
     public test(sources: string[], cmdLineOptions?: any, header?: string, footer?: string): string {

@@ -1,6 +1,6 @@
+import * as child_process from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as child_process from 'child_process';
 import { terminal } from './terminal';
 
 function isWindows() {
@@ -57,8 +57,7 @@ try {
     child_process.execSync(
         `node -r source-map-support/register`
         + ` ../../bin/scripts/transpiler/main.js tsconfig.json`
-        + (process.argv.includes('--silent')?' --silent':'')
-        + (process.argv.includes('--no-globals')?' --no-globals':'')
+        + ' ' + (process.argv.filter(x=>x.startsWith('--')).join(' '))
         , {stdio: 'inherit'}
     );
 } catch(error) {
@@ -66,81 +65,102 @@ try {
     process.exit(-1);
 }
 
+const SPECIAL_FILES = ['ModID','PacketCreator','TableCreator']
 
-let livescriptsDir = path.join(process.cwd(),'livescripts');
-function findSourceCpp(curDir: string) {
+const tsRoot = path.join(process.cwd(),'livescripts');
+const transpiledRoot = path.join(process.cwd(),'livescripts','build','cpp','livescripts');
+function removeOldCpp(curDir: string) {
     let items = fs.readdirSync(curDir);
     items.forEach(x=>{
         let full = path.join(curDir,x);
-        let stat = fs.statSync(full);
-        if(stat.isDirectory() && x != 'build') {
-            findSourceCpp(full);
-        }
-        if(    x.endsWith('.cpp') 
-            || x.endsWith('.hpp') 
-            || x.endsWith('.h') 
-            || x.endsWith('.c')
-        ) {
-            let target = path.join(livescriptsDir,'build','cpp','livescripts',path.relative(livescriptsDir, full));
-            fs.mkdirSync(path.dirname(target),{recursive:true});
-            fs.copyFileSync(full,target);
+        if(fs.statSync(full).isDirectory()) removeOldCpp(full);
+        const relName = path
+            .relative(transpiledRoot,full)
+            .replace(/\.[^/.]+$/, "")
+        if(SPECIAL_FILES.includes(relName)) return;
+        const tsName = path.join(tsRoot,relName+'.ts')
+        if(!fs.existsSync(tsName)) {
+            fs.rmSync(full);
         }
     });
 }
-findSourceCpp(livescriptsDir);
+if(fs.existsSync(transpiledRoot)) {
+    removeOldCpp(transpiledRoot)
+}
 
 fs.unlinkSync('./tsconfig.json');
 process.chdir(olddir);
 
-function join(...args: string[]) {
-    return args.filter(x => x.length > 0).join('/');
-}
-
-function findCpp(rootDir: string, dir: string) {
-    const cdir = path.join(rootDir, dir);
-    const items = fs.readdirSync(cdir);
-    let cpps = items.filter(x => x.endsWith('.cpp')).map(x => join(dir, x));
-    const folders = items.filter(x => fs.lstatSync(path.join(cdir, x)).isDirectory());
-
-    for (const folder of folders) {
-        cpps = cpps.concat(findCpp(rootDir, join(dir, folder)));
-    }
-
-    return cpps;
-}
-
-const itms = findCpp(path.join(modulePath, './livescripts/build/cpp'), '');
-
 fs.writeFileSync(path.join(modulePath, 'livescripts/build/cpp/CMakeLists.txt'),
 `cmake_minimum_required(VERSION 3.12)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
 ${!isWindows()?'set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")':''}
 
 project(${buildModule})
-include_directories(../../../../../bin/include)
-
-file (GLOB headers "../../../../../bin/include/*.h")
 
 ${isWindows()
     ? `file (GLOB libs "../../../../../bin/libraries/${buildType}/*.lib")`
     : `file (GLOB libs "../../../../../bin/libraries/${buildType}/*.so")`
 }
 
-add_library(${buildModule} SHARED ${itms.join(' ')})
-target_link_libraries(${buildModule} \${libs})
+# borrowed by tswow from https://stackoverflow.com/a/46003179
+function (filter_items aItems aRegEx)
+    # For each item in our list
+    foreach (item \${\${aItems}})
+        # Check if our items matches our regular expression
+        if ("\${item}" MATCHES \${aRegEx})
+            # Remove current item from our list
+            list (REMOVE_ITEM \${aItems} \${item})
+        endif ("\${item}" MATCHES \${aRegEx})
+    endforeach(item)
+    # Provide output parameter
+    set(\${aItems} \${\${aItems}} PARENT_SCOPE)
+endfunction (filter_items)
 
-target_precompile_headers(${buildModule}
-    PUBLIC
-        \${headers}
+file (GLOB_RECURSE transpiler_files
+    "livescripts/*.cpp"
+    "livescripts/*.h"
+)
+filter_items(transpiler_files "/../")
+file (GLOB_RECURSE source_files
+    "../../*.cpp"
+    "../../*.c"
+    "../../*.h"
+    "../../*.hpp"
+    "../../*.ipp"
+    "../../*.ts"
+)
+filter_items(source_files "build/cpp/../../build/cpp")
+filter_items(source_files "/lib/")
+
+add_library(${buildModule} SHARED \${transpiler_files} \${source_files})
+target_link_libraries(${buildModule} \${libs})
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+source_group("Transpiled" FILES \${transpiler_files})
+source_group("Source" FILES \${source_files})
+
+# core wrapper headers
+target_include_directories(${buildModule} PUBLIC ../../../../../bin/include)
+file (GLOB headers "../../../../../bin/include/*.h")
+
+# root livescript headers
+target_include_directories(${buildModule} PUBLIC ../../)
+file (GLOB headers "../../*.h")
+
+# ts livescript headers
+target_include_directories(${buildModule} PUBLIC ./livescripts)
+target_precompile_headers(${buildModule} PUBLIC \${headers})
+
+# disable dll warnings, users must build livescripts with same compiler as tc
+add_definitions(
+    -wd4251
+    -wd4275
 )
 
-include({CMAKE_CURRENT_SOURCE_DIR}/../../../CMakeLists.txt OPTIONAL)
-
-`
+include({CMAKE_CURRENT_SOURCE_DIR}/../../../CMakeLists.txt OPTIONAL)`
 );
 
 const cmake_generate =
@@ -164,7 +184,7 @@ const cmake_build =
 
 try {
     terminal.cyan(`Compiling C++ binary...`)
-    child_process.execSync(cmake_build, 
+    child_process.execSync(cmake_build,
         {
             stdio: !process.argv.includes('--silent') ? 'inherit' : 'ignore'
         });
