@@ -48,7 +48,7 @@ class IdPublic extends IdPrivate {
 
 const INLINE_ONLY_FLAG = '--inline-only'
 
-function isReadOnly() {
+export function isReadOnly() {
     return process.argv.includes(INLINE_ONLY_FLAG)
 }
 
