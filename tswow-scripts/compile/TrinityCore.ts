@@ -88,11 +88,13 @@ export namespace TrinityCore {
             if(wfs.exists(ipaths.moduleScripts(x))) {
                 wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
             }
-        });
 
-        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
             if(wfs.exists(ipaths.moduleAddons(x))) {
                 wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x))
+            }
+
+            if(wfs.exists(ipaths.moduleData(x))) {
+                wfs.copy(ipaths.binglobaldts,ipaths.moduleDataLiveGlobal(x))
             }
         });
     }

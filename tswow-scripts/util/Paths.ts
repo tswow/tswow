@@ -546,6 +546,10 @@ export class InstallPaths {
         return mpath(this.moduleData(mod), 'tsconfig.json');
     }
 
+    moduleDataLiveGlobal(mod: string) {
+        return mpath(this.moduleData(mod), 'global.d.ts')
+    }
+
     moduleAssets(mod: string) {
         return mpath(this.modules, mod, 'assets');
     }

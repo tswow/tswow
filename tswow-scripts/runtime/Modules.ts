@@ -147,6 +147,11 @@ export namespace Modules {
                     , patch_example_ts(this.id));
             }
 
+            wfs.copy(
+                  ipaths.binglobaldts
+                , ipaths.moduleDataLiveGlobal(this.id)
+            )
+
             wfs.write(
                   ipaths.moduleDataTsConfig(this.id)
                 , data_tsconfig
