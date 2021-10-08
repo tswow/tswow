@@ -52,8 +52,15 @@ export function isReadOnly() {
     return process.argv.includes(INLINE_ONLY_FLAG)
 }
 
-function patchSubdirs(dir: string) {
+function profileScripts() {
+    return process.argv.includes('--profile-scripts')
+}
+let profiling: {[key: string]: number} = {}
+
+function patchSubdirs(root: string, dir: string) {
     if (!fs.existsSync(dir)) { return; }
+
+    let buildDir = path.join(root,'build')
 
     const nodes = fs.readdirSync(dir).map(x => path.join(dir, x));
 
@@ -80,9 +87,18 @@ function patchSubdirs(dir: string) {
             !process.argv.includes(INLINE_ONLY_FLAG)
             || fs.readFileSync(x).includes('InlineScripts')
         )
-        .map(x => path.relative(__dirname, x))
         .forEach(x => {
-            require(x)
+            let v = Date.now();
+            require(path.relative(__dirname,x))
+            if(profileScripts()) {
+                let relFile = path.join(
+                      root
+                    , path.relative(buildDir,x)
+                    )
+                    .replace(/\.[^/.]+$/, "")
+                    + '.ts'
+                profiling[relFile] = Date.now()-v
+            }
             applyStage(setups);
         });
 
@@ -95,7 +111,7 @@ function patchSubdirs(dir: string) {
             fs.lstatSync(x).isDirectory());
 
     for (const subdir of dirs) {
-        patchSubdirs(subdir);
+        patchSubdirs(root, subdir);
     }
 }
 
@@ -153,7 +169,7 @@ async function main() {
         }
 
         try {
-            patchSubdirs(dir);
+            patchSubdirs(dir,dir);
         } catch (error) {
             console.error(`Error in patch ${dir}:`, error);
             process.exit(3);
@@ -199,6 +215,22 @@ async function main() {
             _writeLUAXML(Settings.LUAXML_SOURCE, Settings.LUAXML_CLIENT);
         }
         time(`Wrote LUAXML`);
+    }
+
+    if(profileScripts()) {
+        Object.entries(profiling)
+            .sort(([_,a],[__,b])=>
+                a > b ? 1 : -1
+            )
+            .forEach(([file,time])=>{
+                if(time === 0) return;
+                let color =
+                  time < 10   ? '\x1b[36m' // cyan
+                : time < 100  ? '\x1b[32m' // green
+                : time < 1000 ? '\x1b[33m' // yellow
+                : '\x1b[31m'               // red
+                console.log(`${file}: ${color}${time}ms\x1b[0m`)
+            })
     }
 }
 
