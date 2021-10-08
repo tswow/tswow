@@ -70,9 +70,13 @@ function patchSubdirs(dir: string) {
             tspath = tspath.substring(0,tspath.length-2)+'ts';
             return fs.existsSync(tspath);
         })
+        .filter(x=>
+            !process.argv.includes('--inline-only')
+            || fs.readFileSync(x).includes('InlineScripts')
+        )
         .map(x => path.relative(__dirname, x))
         .forEach(x => {
-            require(x);
+            require(x)
             applyStage(setups);
         });
 
