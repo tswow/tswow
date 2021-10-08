@@ -2352,7 +2352,7 @@ export class Emitter {
             }
 
             if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'TSEventHandlers') {
-                throw nnew Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
+                throw new Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
             }
         }
 
