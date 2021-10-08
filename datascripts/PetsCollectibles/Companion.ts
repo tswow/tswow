@@ -1,5 +1,5 @@
 import { LocSystem, MulticastLocCell } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Table } from "wotlkdata/table/Table";
@@ -19,7 +19,7 @@ import { CollectibleIcon } from "./CollectibleIcon";
 const COMPANION_SKILLINE = 778
 const DEFAULT_COMPANION_VISUAL = 353
 
-export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
+export class CompanionItems extends MultirowSystemCached<ItemTemplate,Companion> {
     protected getAllRows(): ItemTemplate[] {
         // TODO: inefficient query
         return ItemTemplateRegistry.queryAll({spelltrigger_1:6,spellid_1:this.owner.SpellID})
@@ -49,7 +49,8 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
             .InterruptFlags.OnInterruptCast.set(true)
             .InterruptFlags.setBit(3, true)
 
-        ItemTemplateRegistry.create(mod,`${id}-item`)
+        let item = ItemTemplateRegistry
+            .create(mod,`${id}-item`)
             .Name.set(this.owner.AsSpell.get().Name.objectify())
             .Quality.Blue.set()
             .ClassMask.set(-1)
@@ -75,6 +76,9 @@ export class CompanionItems extends MultiRowSystem<ItemTemplate,Companion> {
                     .Cooldown.set(0)
                     .CategoryCooldown.set(0)
             }))
+        if(this.cache !== undefined) {
+            this.cache.push(item);
+        }
         return this.owner;
     }
 }
@@ -86,7 +90,8 @@ export class Companion extends MainEntity<SpellRow> {
             .indexOf(x=>x.Type.Summon.is())
     }
 
-    get Items() { return new CompanionItems(this); }
+    readonly Items = new CompanionItems(this);
+
     get CreatureTemplate() {
         return CreatureTemplateRegistry.ref(
               this
@@ -165,8 +170,13 @@ export class CompanionRegistryClass
 
     create(mod: string, id: string, createItem = true, createCreature = true) {
         let companion = super.create(mod,id);
-        if(createItem) companion.Items.add(mod,`${id}-item`)
-        if(createCreature) companion.CreatureTemplate.getRefCopy(mod,`${id}-creature`)
+        if(createItem) {
+            companion.Items.setCache([])
+            companion.Items.add(mod,`${id}-item`)
+        }
+        if(createCreature) {
+            companion.CreatureTemplate.getRefCopy(mod,`${id}-creature`)
+        }
         return companion
     }
 

@@ -2,7 +2,7 @@ import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { LocSystem, MulticastLocCell } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
 import { Table } from "wotlkdata/table/Table";
 import { CreatureModels } from "../Creature/CreatureModels";
@@ -21,7 +21,7 @@ import { CollectibleIcon } from "./CollectibleIcon";
 
 const MOUNT_SKILL = 762;
 
-export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
+export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
     protected getAllRows(): ItemTemplate[] {
         return ItemTemplateRegistry
             .queryAll({spelltrigger_1:6,spellid_1:this.owner.SpellID})
@@ -80,6 +80,9 @@ export class MountItems extends MultiRowSystem<ItemTemplate,Mount> {
         if(mountSkillRank > 0) {
             item.Requirements.Skill.set(MOUNT_SKILL,mountSkillRank)
         }
+        if(this.cache !== undefined) {
+            this.cache.push(item)
+        }
     }
 }
 
@@ -97,7 +100,8 @@ export class Mount extends MainEntity<SpellRow> {
      * This misses ~20 mounts that have a real spell to learn it instead (which may or may not have an item to trigger it),
      * and an additional ~80 mounts that have seemingly no way to learn it at all.
      */
-    get Items() { return new MountItems(this); }
+    readonly Items = new MountItems(this);
+
     get CreatureTemplate() {
         return CreatureTemplateRegistry.ref(
               this
@@ -226,6 +230,7 @@ export class MountRegistryClass
         let mount = new Mount(spell.row);
 
         if(createItem) {
+            mount.Items.setCache([])
             mount.Items.add(mod,`${id}-item`)
         }
 
