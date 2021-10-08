@@ -73,13 +73,18 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         return this;
     }
 
-    push(pos: TaxiNodeConstructor) {
+    push(poses: TaxiNodeConstructor|TaxiNodeConstructor[]) {
+        if(!Array.isArray(poses)) poses = [poses]
         let old = this.getAllRows();
-        if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
-            old[old.length-1].Flags.MapChange.set(true)
-        }
-        this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
-            .NodeIndex.set(this.length-1)
+        poses.forEach((pos,i)=>{
+            if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
+                old[old.length-1].Flags.MapChange.set(true)
+            }
+            let newNode = this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
+                .NodeIndex.set(this.length-1)
+            old.push(new TaxiPathNode(newNode));
+        })
+
         return this;
     }
 

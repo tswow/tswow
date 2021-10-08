@@ -105,14 +105,14 @@ export class TaxiPathRegistryClass
         , sliceFirst: boolean
         , nodes: TaxiNodeConstructor[]
     ) {
-        for(let i= (sliceFirst ? 1 : 0); i<nodes.length; ++i) {
-            forward.Nodes.push(nodes[i]);
-        }
+        let fwdSliced = nodes
+        if(sliceFirst) fwdSliced = nodes.slice(1)
+        forward.Nodes.push(fwdSliced);
 
         if(backward) {
-            for(let i = nodes.length - (sliceFirst ? 2 : 1); i>=0; --i) {
-                backward.Nodes.push(nodes[i]);
-            }
+            let backSliced = nodes.reverse()
+            if(sliceFirst) backSliced.slice(1);
+            backward.Nodes.push(backSliced);
         }
     }
 
