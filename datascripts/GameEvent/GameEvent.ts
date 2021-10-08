@@ -4,6 +4,7 @@ import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { game_eventQuery, game_eventRow } from "wotlkdata/sql/types/game_event";
 import { Table } from "wotlkdata/table/Table";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { convertTime, DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
@@ -137,6 +138,14 @@ export class GameEvent extends MainEntity<game_eventRow> {
     }
 
     get Conditions() { return new GameEventConditions(this, this.ID); }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'GameEventID'
+        ) as _hidden.GameEvents<this>
+    }
 
     static checkHoliday(event: GameEvent) {
         if(event.row.holiday.get() !== 0) {

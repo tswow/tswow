@@ -2,6 +2,7 @@ import { finish, isReadOnly } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { MapRegistry } from "../Map/Maps";
 import { WorldSafeLocRef, WorldSafeLocRegistry } from "../WorldSafeLocs/WorldSafeLocs";
 import { BattlegroundBase, createBgBase, filterBgsBase } from "./BattlegroundBase";
@@ -45,6 +46,14 @@ export class Battleground extends BattlegroundBase {
             , WorldSafeLocRegistry.ref(this, this.sql_row.HordeStartLoc)
             , this.sql_row.HordeStartO
         );
+    }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'BattlegroundID'
+        ) as _hidden.Battlegrounds<this>
     }
 
     get AllianceStart() {

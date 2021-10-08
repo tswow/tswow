@@ -4,6 +4,7 @@ import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { Table } from "wotlkdata/table/Table";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
@@ -70,6 +71,13 @@ export class Achievement extends MainEntity<AchievementRow> {
     get Rewards() { return new AchievementReward(this); }
     get Faction() { return new AchievementFaction(this, this.row.Faction); }
     get Flags() { return new AchievementFlags(this, this.row.Flags); }
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'AchievementID'
+        ) as _hidden.Achievements<this>
+    }
 }
 
 export class AchievementRegistryClass extends

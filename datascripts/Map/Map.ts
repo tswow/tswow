@@ -23,6 +23,7 @@ import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { TSImages } from "../Images/Image";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { Colors } from "../Misc/Color";
 import { MainEntity } from "../Misc/Entity";
 import { PositionXYCell } from "../Misc/PositionCell";
@@ -84,6 +85,14 @@ export class Map extends MainEntity<MapRow> {
 
     get LFGDungeons() { return new LFGDungeons(this, this.ID); }
     get Encounters() { return new LFGDungeonEncounters(this, this.ID); }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'MapID'
+        ) as _hidden.Maps<this>
+    }
 }
 
 finish('build-maps',()=>{

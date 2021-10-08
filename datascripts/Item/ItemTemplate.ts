@@ -24,6 +24,7 @@ import { Table } from "wotlkdata/table/Table";
 import { EnchantmentRegistry } from "../Enchant/Enchantment";
 import { HolidayRegistry } from "../GameEvent/Holiday";
 import { GemRegistry } from "../Gem/Gem";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { Loot, LootSet } from "../Loot/Loot";
 import { ClassMask } from "../Misc/ClassMask";
@@ -100,6 +101,13 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Lock() { return LockRegistry.ref(this, this.row.lockid); }
     get RandomProperty() { return this.wrap(this.row.RandomProperty); }
     get RandomSuffix() { return this.wrap(this.row.RandomSuffix); }
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'ItemID'
+        ) as _hidden.Items<this>
+    }
 
     /** Only applicable if item is a shield */
     get BlockChance() { return this.wrap(this.row.block); }

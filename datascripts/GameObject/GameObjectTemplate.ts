@@ -21,6 +21,7 @@ import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template"
 import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { GossipRegistry } from "../Gossip/Gossips";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { LootSetPointer } from "../Loot/Loot";
 import { MapRegistry } from "../Map/Maps";
@@ -107,6 +108,14 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
     }
     get Spawns() {
         return new GameObjectTemplateInstances(this);
+    }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'GameObjectID'
+        ) as _hidden.GameObjects<this>
     }
 }
 

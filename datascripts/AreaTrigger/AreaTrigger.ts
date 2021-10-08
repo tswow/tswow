@@ -2,6 +2,7 @@ import { sort } from "wotlkdata";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AreaTriggerRow } from "wotlkdata/dbc/types/AreaTrigger";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { distance3d, Position } from "../Misc/Position";
@@ -21,6 +22,14 @@ export class AreaTriggerBase extends MainEntity<AreaTriggerRow> {
             , this.row.Y
             , this.row.Z
         )
+    }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'AreaTriggerID'
+        ) as _hidden.AreaTriggerID<this>
     }
 }
 

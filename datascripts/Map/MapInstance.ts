@@ -1,6 +1,7 @@
 import { CellWrapper } from "wotlkdata/cell/cells/Cell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { instance_templateRow } from "wotlkdata/sql/types/instance_template";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { BoolCell } from "../Misc/BoolCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Map } from "./Map";
@@ -40,6 +41,14 @@ export class MapInstance extends MaybeSQLEntity<Map,instance_templateRow> {
 
     get AllowMount() {
         return new BoolCell(this.owner, this.wrapSQL(0, sql=>sql.allowMount))
+    }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.owner.ID
+            , 'InstanceID'
+        ) as _hidden.Instances<this>
     }
 
     get Script() {

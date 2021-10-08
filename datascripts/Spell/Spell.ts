@@ -18,6 +18,7 @@ import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
 import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
@@ -193,6 +194,14 @@ export class Spell extends MainEntity<SpellRow> {
             x.ClassMaskForbidden.set(x.ClassMaskForbidden.get()&(~classmask>>>0));
             x.RaceMask.set(x.RaceMask.get()|racemask)
         })
+    }
+
+    get InlineScripts() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'SpellID'
+        ) as _hidden.Spells<this>
     }
 
     clearClass(cls: ClassMaskCon) {
