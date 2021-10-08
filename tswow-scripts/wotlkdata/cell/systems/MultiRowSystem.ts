@@ -8,6 +8,10 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
     protected abstract getAllRows(): A[];
     protected abstract isDeleted(value: A): boolean;
 
+    protected getAllRowsOrCached(): A[] {
+        return this.getAllRows();
+    }
+
     get length() { return this.get().length; }
 
     getIndex(index: number) {
@@ -15,11 +19,11 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
     }
 
     get() {
-        return this.getAllRows().filter(x=>!this.isDeleted(x));
+        return this.getAllRowsOrCached().filter(x=>!this.isDeleted(x));
     }
 
     getDeleted() {
-        return this.getAllRows().filter(x=>this.isDeleted(x));
+        return this.getAllRowsOrCached().filter(x=>this.isDeleted(x));
     }
 
     forEachDeleted(callback: (value: A, index: number) => void) {
@@ -47,5 +51,24 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
                 ? y.objectify()
                 : 'CANT_OBJECTIFY';
         });
+    }
+}
+
+export abstract class MultirowSystemCached<A,T> extends MultiRowSystem<A,T> {
+    private cache?: A[] = undefined;
+    protected getAllRowsOrCached(): A[] {
+        if(this.cache!==undefined) return this.cache;
+        this.cache = this.getAllRows();
+        return this.cache;
+    }
+
+    clearCache() {
+        this.cache = undefined;
+        return this.owner;
+    }
+
+    setCache(cache: A[]) {
+        this.cache = cache;
+        return this.owner;
     }
 }
