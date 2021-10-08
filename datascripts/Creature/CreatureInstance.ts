@@ -25,7 +25,7 @@ import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
-import { CreatureSpawnMask } from "./CreatureSpawnMask";
+import { SpawnMask } from "../Misc/SpawnMask";
 
 export class CreatureInstanceAddon
     extends MaybeSQLEntity<CreatureInstance,creature_addonRow>
@@ -68,7 +68,7 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get ID() { return this.row.guid.get(); }
     get Template() { return this.wrap(this.row.id); }
     get SpawnMask() {
-        return new CreatureSpawnMask(this, this.row.spawnMask);
+        return new SpawnMask(this, this.row.spawnMask);
     }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     /** If 0, use a random model from CreatureTemplate#Models */

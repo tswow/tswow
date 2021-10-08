@@ -54,15 +54,17 @@ export class GameObjectTemplateInstances
         return value.row.isDeleted();
     }
 
-    addGet(mod: string, id: string, pos: Position|Position[]) {
+    addGet(mod: string, id: string, pos: Position|Position[], callback?: (go: GameObjectInstance)=>void) {
         if(!Array.isArray(pos)) {
             pos = [pos];
         }
-        return pos.map((x,i)=>
-            GameObjectInstances.create(mod,`${id}-${i}`)
+        return pos.map((x,i)=>{
+            let v = GameObjectInstances.create(mod,`${id}-${i}`)
                 .Template.set(this.owner.ID)
                 .Position.set(x)
-        )
+            if(callback) callback(v);
+            return v;
+        })
     }
 
     addMod(mod: string, id: string, pos: Position|Position[], callback: (go: GameObjectInstance)=>void) {
@@ -103,7 +105,6 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
     get Display() {
         return GameObjectDisplayRegistry.ref(this, this.row.displayId);
     }
-
     get Spawns() {
         return new GameObjectTemplateInstances(this);
     }

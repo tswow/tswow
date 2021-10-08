@@ -1,4 +1,5 @@
 import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
 import { gameobject_addonRow } from "wotlkdata/sql/types/gameobject_addon";
@@ -6,6 +7,7 @@ import { AreaRegistry } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell, QuaternionCell } from "../Misc/PositionCell";
+import { SpawnMask } from "../Misc/SpawnMask";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { GORegistry } from "./GameObjectRegistries";
 
@@ -89,8 +91,8 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
 
     get Zone() { return AreaRegistry.ref(this, this.row.zoneId); }
     get Area() { return AreaRegistry.ref(this, this.row.areaId); }
-    get SpawnMask() { return this.wrap(this.row.spawnMask); }
-    get PhaseMask() { return this.wrap(this.row.phaseMask); }
+    get SpawnMask() { return new SpawnMask(this, this.row.spawnMask) }
+    get PhaseMask() { return new MaskCell32(this, this.row.phaseMask); }
     get SpawnTimeSecs() { return this.wrap(this.row.spawntimesecs); }
     get State() { return this.wrap(this.row.state); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }

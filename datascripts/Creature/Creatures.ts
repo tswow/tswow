@@ -48,7 +48,7 @@ export class CreatureTemplateRegistryClass
             .NPCFlags.clearAll()
             .PetSpells.set(0)
             .RacialLeader.set(0)
-            .Rank.setNormal()
+            .Rank.Normal.set()
             .RegenHealth.set(1)
             .Scale.set(1)
             .SpellSchoolImmunity.clearAll()

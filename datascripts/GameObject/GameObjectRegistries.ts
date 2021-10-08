@@ -70,7 +70,7 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
             .castBarCaption.set("")
             .displayId.set(0)
             .name.set("")
-            .size.set(0)
+            .size.set(1)
             .type.set(0)
             .unk1.set("")
     }

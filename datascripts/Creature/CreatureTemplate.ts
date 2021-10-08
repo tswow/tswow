@@ -101,6 +101,11 @@ export class CreatureDifficulties extends CellSystem<CreatureTemplate> {
     }
 }
 
+export interface CreatureInstancePosition extends Position {
+    spawnTime?: number
+    wander?: number
+}
+
 export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,CreatureTemplate>
 {
     protected getAllRows(): CreatureInstance[] {
@@ -112,30 +117,30 @@ export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,C
         return value.row.isDeleted();
     }
 
-    add(mod: string, id: string, pos: Position|Position[], spawnTime?: number, wanderDistance?: number) {
-        this.addGet(mod,id,pos)
-            .forEach(x=>{
-                x.WanderDistance.set(wanderDistance||0)
-                 .SpawnTime.set(spawnTime||0)
-                if(wanderDistance !== undefined) {
-                    x.WanderDistance.set(wanderDistance)
-                     .MovementType.RandomMovement.set()
-                }
-            }
-        )
+    add(mod: string, id: string, pos: CreatureInstancePosition|CreatureInstancePosition[], callback?: (spawn: CreatureInstance)=>void) {
+        this.addGet(mod,id,pos,callback)
         return this.owner;
     }
 
-    addGet(mod: string, id: string, pos: Position|Position[]) {
+    addGet(mod: string, id: string, pos: CreatureInstancePosition|CreatureInstancePosition[], callback?: (spawn: CreatureInstance)=>void) {
         if(!Array.isArray(pos)) {
             pos = [pos];
         }
-        return pos.map((x,i)=>
-            CreatureInstanceRegistry
+        return pos.map((x,i)=>{
+            const inst = CreatureInstanceRegistry
                 .create(mod,`${id}-${i}`)
                 .Position.set(x)
                 .Template.set(this.owner.ID)
-        )
+                .SpawnTime.set(x.spawnTime || 0)
+                .WanderDistance.set(x.wander||0)
+            if(x.wander) {
+                inst.MovementType.RandomMovement.set()
+            } else {
+                inst.MovementType.Idle.set()
+            }
+            if(callback) callback(inst);
+            return inst;
+        })
     }
 
     addMod(mod: string, id: string, pos: Position|Position[], callback: (spawn: CreatureInstance)=>void) {
@@ -224,7 +229,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
     get Scale() { return this.wrap(this.row.scale); }
-    get Rank() { return new CreatureRank(this); }
+    get Rank() { return new CreatureRank(this, this.row.rank); }
     get DamageSchool() { return new CreatureDamageSchool(this, this.row.dmgschool); }
     get AttackTime() { return new CreatureAttackTime(this); }
     get Family() { return new CreatureFamily(this, this.row.family); }
