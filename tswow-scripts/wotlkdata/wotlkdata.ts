@@ -174,10 +174,8 @@ async function main() {
     }
     time(`Executed scripts`);
 
-    if(!isReadOnly()) {
-        await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
-            Settings.SQL_WRITE_TO_FILE);
-    }
+    await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB&&!isReadOnly(),
+        Settings.SQL_WRITE_TO_FILE&&!isReadOnly());
 
     time(`Wrote SQL`);
     if(!isReadOnly()) {
