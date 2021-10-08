@@ -3630,7 +3630,8 @@ declare interface TSQuest {
 
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsNull() : bool
-
+    HasInstance(): bool
+    GetInstance(): TSInstance
     GetUnits(): TSArray<TSWorldObject>
     /**
      * @param entry only return gameobjects of this entry.
@@ -4317,6 +4318,34 @@ declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider
     IsHoliday(): bool;
     GetGameObject(type: uint32, logErrors?: bool): TSGameObject;
     GetCreature(type: uint32, logErrors?: bool): TSCreature;
+}
+
+declare interface TSInstance {
+    IsNull(): bool;
+    GetMap(): TSMap;
+    SaveToDB(): void;
+    IsEncounterInProgress(): bool;
+    GetObjectGUID(type: uint32): uint64;
+    DoUseDoorOrButton(guid: uint64, withRestoreTime?: uint32, useAlternativeState?: bool): void;
+    DoCloseDoorOrButton(guid: uint64): void;
+    DoRespawnGameObject(guid: uint64, seconds: uint32): void
+    DoUpdateWorldState(worldStateId: uint32, worldStateValue: uint32): void;
+    DoSendNotify(message: string): void;
+    DoUpdateAchievementCriteria(type: uint32, miscValue1?: uint32, miscValue2?: uint32, unit?: TSUnit): void;
+    DoStartTimedAchievement(type: uint32, entry: uint32): void;
+    DoStopTimedAchievement(type: uint32, entry: uint32): void;
+    DoRemoveAurasDueToSpellOnPlayers(spell: uint32, includePets?: bool, includeControlled?: bool): void;
+    DoCastSpellOnPlayers(spell: uint32, includePets: bool, includeControlled: bool): void;
+    SetBossState(id: uint32, encounterState: uint32): void;
+    GetBossState(id: uint32): uint32;
+    MarkAreaTriggerDone(id: uint32): void;
+    ResetAreaTriggerDone(id: uint32): void;
+    BindAllPlayers(): void;
+    HasPermBoundPlayers(): bool;
+    GetMaxPlayers(): uint32;
+    GetMaxResetDelay(): uint32;
+    GetTeamIDInInstance(): uint32;
+    GetFactionInInstance(): uint32;
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -7213,6 +7242,7 @@ declare namespace _hidden {
 
     export class Battlegrounds {
         OnStart(callback: (bg: TSBattleground)=>void)
+        OnReload(callback: (bg: TSBattleground)=>void)
         OnAddPlayer(callback: (bg: TSBattleground,player: TSPlayer)=>void)
         OnPlayerLogin(callback: (bg: TSBattleground,player: TSPlayer)=>void)
         OnPlayerLogout(callback: (bg: TSBattleground,player: TSPlayer)=>void)
@@ -7250,6 +7280,7 @@ declare namespace _hidden {
 
     export class BattlegroundID {
         OnStart(id: uint32, callback: (bg: TSBattleground)=>void)
+        OnReload(id: uint32, callback: (bg: TSBattleground)=>void)
         OnAddPlayer(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
         OnPlayerLogin(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
         OnPlayerLogout(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
@@ -7398,6 +7429,32 @@ declare namespace _hidden {
         OnCheckEncounter(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
     }
 
+    export class Instances {
+        OnCreate(callback: (instance: TSInstance)=>void)
+        OnReload(callback: (instance: TSInstance)=>void)
+        OnLoad(callback: (instance: TSInstance)=>void)
+        OnSave(callback: (instance: TSInstance)=>void)
+        OnUpdate(callback: (instance: TSInstance, diff: uint32)=>void)
+        OnPlayerEnter(callback: (instance: TSInstance, player: TSPlayer)=>void)
+        OnPlayerLeave(callback: (instance: TSInstance, player: TSPlayer)=>void)
+        OnBossStateChange(callback: (instance: TSInstance, id: uint32, state: uint32)=>void)
+        OnCanKillBoss(callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void)
+        OnFillInitialWorldStates(callback: (instance: TSInstance, TSWorldStatePacket)=>void)
+    }
+
+    export class InstanceID {
+        OnCreate(map: uint32, callback: (instance: TSInstance)=>void)
+        OnReload(map: uint32, callback: (instance: TSInstance)=>void)
+        OnLoad(map: uint32, callback: (instance: TSInstance)=>void)
+        OnSave(map: uint32, callback: (instance: TSInstance)=>void)
+        OnUpdate(map: uint32, callback: (instance: TSInstance, diff: uint32)=>void)
+        OnPlayerEnter(map: uint32, callback: (instance: TSInstance, player: TSPlayer)=>void)
+        OnPlayerLeave(map: uint32, callback: (instance: TSInstance, player: TSPlayer)=>void)
+        OnBossStateChange(map: uint32, callback: (instance: TSInstance, id: uint32, state: uint32)=>void)
+        OnCanKillBoss(map: uint32, callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void)
+        OnFillInitialWorldStates(map: uint32, callback: (instance: TSInstance, TSWorldStatePacket)=>void)
+    }
+
     export class AuctionHouse {
         OnAuctionAdd(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
         OnAuctionRemove(callback: (obj: TSAuctionHouseObject, entry: TSAuctionEntry)=>void);
@@ -7468,6 +7525,8 @@ declare class TSEventHandlers {
     SmartActionID: _hidden.SmartActionID
     Conditions: _hidden.Conditions
     ConditionID: _hidden.ConditionID
+    Instances: _hidden.Instances
+    InstanceID: _hidden.InstanceID
 }
 
 declare class TSDictionary<K,V> {
