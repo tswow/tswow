@@ -38,6 +38,7 @@ import { GlyphRegistry } from "./Glyph/Glyph";
 import { GMTeleportRegistry } from "./GMTeleport/GMTeleport";
 import { GossipRegistry } from "./Gossip/Gossips";
 import { TSImages } from "./Images/Image";
+import { InlineScript } from "./InlineScript/InlineScript";
 import { ItemDisplayinfoRegistry } from "./Item/ItemDisplayInfo";
 import { ItemSetRegistry } from "./Item/ItemSet";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
@@ -166,4 +167,5 @@ export const std = {
     SpellFocus: SpellFocusRegistry,
     TotemType: TotemTypeRegistry,
     TotemCategory: TotemCategoryRegistry,
+    InlineScripts: InlineScript
 }

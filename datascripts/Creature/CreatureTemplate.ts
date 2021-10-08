@@ -21,6 +21,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { creature_template_addonRow } from "wotlkdata/sql/types/creature_template_addon";
 import { GossipRegistry } from "../Gossip/Gossips";
+import { getInlineID } from "../InlineScript/InlineScript";
 import { LootSetPointer } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
@@ -203,6 +204,8 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
      * ID of the Faction template this creature belongs to
      */
     get FactionTemplate() { return new CreatureFactionTemplate(this, this.row.faction); }
+
+    get InlineScripts() { return getInlineID(this, this.ID, 'CreatureID') as _hidden.Creatures<this> }
 
     /**
      * - 0 = does not regenerate health
