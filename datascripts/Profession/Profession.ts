@@ -20,7 +20,10 @@ export class Profession extends MainEntity<SkillLineRow> {
     get AsSkillLine() {
         return new SelfRef(this, ()=>new SkillLine(this.row))
     }
-    private _ApprenticeSpell: Spell|undefined;
+    private _cachedApprenticeSpell: Spell|undefined = undefined;
+    private _cachedLearnSpells: Spell[]|undefined = undefined;
+    /** contains all except the apprentice spell */
+    private _cachedRanks: Spell[]|undefined = undefined;
 
     setHasCrafting(value: boolean) {
         this.Ranks.forEach(rank=>{
@@ -45,7 +48,7 @@ export class Profession extends MainEntity<SkillLineRow> {
 
     static findApprenticeSpell(thiz: Profession) {
         // cached because it's expensive to find, and shouldn't change
-        if(thiz._ApprenticeSpell!==undefined) return thiz._ApprenticeSpell;
+        if(thiz._cachedApprenticeSpell!==undefined) return thiz._cachedApprenticeSpell;
         let spell = DBC.SkillLineAbility.filter({SkillLine:thiz.ID})
             .map(x=>std.Spells.load(x.Spell.get()))
             [0]
@@ -57,10 +60,11 @@ export class Profession extends MainEntity<SkillLineRow> {
         if(!firstSpell) {
             throw new Error(`Profession ${thiz.AsSkillLine.get().Name.enGB.get()} has an invalid first spell rank in spell_ranks`);
         }
-        return firstSpell;
+        return thiz._cachedApprenticeSpell = firstSpell;
     }
 
     static getLearnSpells(profession: Profession, rank: number) {
+        if(profession._cachedLearnSpells) return profession._cachedLearnSpells;
         let rankSpell = this.getSkillRank(profession, rank);
         if(!rankSpell) return [];
         // TODO: false positive
@@ -68,12 +72,16 @@ export class Profession extends MainEntity<SkillLineRow> {
         if(spells.length === 0) {
             throw new Error(`Profession ${profession.ID} lacks a learn spell for rank ${rank}!`)
         }
-        return spells;
+        return profession._cachedLearnSpells = spells;
     }
 
     static getSkillRank(profession: Profession, index: number) {
         if(index==1) {
             return this.findApprenticeSpell(profession);
+        }
+
+        if(profession._cachedRanks !== undefined) {
+            return profession._cachedRanks[index-2];
         }
 
         let apprentice = this.findApprenticeSpell(profession);
@@ -95,6 +103,27 @@ export class Profession extends MainEntity<SkillLineRow> {
             throw new Error(`Spell ${profession.AsSkillLine.get().Name.enGB} has an invalid spell at rank ${index}`);
         }
         return spl;
+    }
+
+    static setCacheRanks(profession: Profession) {
+        profession._cachedRanks = []
+    }
+
+    static setCacheNonApprenticeSpell(profession: Profession, spell: Spell) {
+        if(profession._cachedRanks !== undefined) {
+            profession._cachedRanks.push(spell);
+        }
+    }
+
+    static setCacheApprenticeSpell(profession: Profession, spell: Spell) {
+        profession._cachedApprenticeSpell = spell;
+    }
+
+    static setCacheLearnSpells(profession: Profession) {
+        profession._cachedLearnSpells = [];
+    }
+    static addCachedLearnSpell(profession: Profession, spell: Spell) {
+        if(profession._cachedLearnSpells) profession._cachedLearnSpells.push(spell);
     }
 
     static getTiers(profession: Profession) {
@@ -243,6 +272,12 @@ export class ProfessionRanks extends CellSystem<Profession> {
                    .ClassMask.set(0)
             })
 
+        if(newIndex === 0) {
+            Profession.setCacheApprenticeSpell(this.owner, spell);
+        } else {
+            Profession.setCacheNonApprenticeSpell(this.owner, spell);
+        }
+
         spell.Rank.set(newIndex == 0 ? spell.ID : this.get(0).ProfessionSpell().ID,newIndex+1)
         if(newIndex > 0) {
             this.get(newIndex-1).ProfessionSpell().SkillLines.forEach(x=>{
@@ -250,7 +285,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             })
         }
 
-        std.Spells.create(modid,`${id}-learn`)
+        let learnSpell = std.Spells.create(modid,`${id}-learn`)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
             .Attributes.isHiddenFromLog.set(true)
@@ -268,6 +303,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
                         .AsEffect.get()
                         .DieSides.set(1)
             })
+        Profession.addCachedLearnSpell(this.owner, learnSpell);
         Profession.getTiers(this.owner).Value.setIndex(newIndex,maxSkill);
         return this.owner;
     }

@@ -25,6 +25,8 @@ export class ProfessionRegistryClass
                .SkillTier.set(SkillTiersRegistry.create().ID)
         })
         ProfessionRanks.setCached(r.Ranks,0);
+        Profession.setCacheLearnSpells(r);
+        Profession.setCacheRanks(r);
     }
     protected Entity(r: SkillLineRow): Profession {
         return new Profession(r);
