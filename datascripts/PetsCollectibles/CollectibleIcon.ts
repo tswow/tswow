@@ -24,7 +24,7 @@ export class CollectibleIcon<T> extends CellSystem<T> {
      */
     setCopy(str: string) {
         let v = this.values();
-        v.spell.Icon.set(str);
+        v.spell.Icon.setPath(str);
         v.items.map(x=>x.DisplayInfo)
             .filter((x,i,a)=>a.findIndex(y=>y.get()===x.get()) === i)
             .forEach(x=>x.getRefCopy().Icon.set(str))
@@ -37,7 +37,7 @@ export class CollectibleIcon<T> extends CellSystem<T> {
      */
     setNoCopy(str: string) {
         let v = this.values();
-        v.spell.Icon.set(str);
+        v.spell.Icon.setPath(str);
         v.items.map(x=>x.DisplayInfo)
             .filter((x,i,a)=>a.findIndex(y=>y.get()===x.get()) === i)
             .forEach(x=>x.getRef().Icon.set(str))

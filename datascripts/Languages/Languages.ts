@@ -188,7 +188,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
             .Category.set(10)
             .CanLink.set(0)
             .SkillCosts.set(0)
-            .Icon.set('Interface\\Icons\\Trade_Engineering')
+            .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .CanLink.set(0)
             .RaceClassInfos.addMod(undefined,undefined,
                 x=>x

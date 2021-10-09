@@ -93,7 +93,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
     add(mod: string, id: string) {
         let spell = SpellRegistry.create(mod,`${id}-spell`)
             .Attributes.cannotUseInCombat.set(true)
-            .Icon.set('Interface\\Icons\\INV_Inscription_Tradeskill01')
+            .Icon.setPath('Interface\\Icons\\INV_Inscription_Tradeskill01')
             .TargetType.GlyphSlot.set(true)
             .CastTime.set(6)
             .Effects.addMod(effect=>{
@@ -168,7 +168,7 @@ export class GlyphRegistryClass
     Clear(entity: Glyph): void {
         entity
             .Flags.set(0)
-            .Icon.set('')
+            .Icon.set(0)
             .Spell.set(0)
     }
 

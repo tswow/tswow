@@ -32,14 +32,14 @@ export function iconToPath(index: number): Cell<string,any> {
     return DBC.SpellIcon.findById(index).TextureFilename;
 }
 
-export class SpellIconCell<T> extends Cell<string, T> {
+export class SpellIconCell<T> extends Cell<number, T> {
     protected id: Cell<number,any>;
     constructor(owner: T, id: Cell<number,any>) {
         super(owner);
         this.id = id;
     }
 
-    get(): string {
+    getPath(): string {
         return iconToPath(this.id.get()).get();
     }
 
@@ -57,7 +57,7 @@ export class SpellIconCell<T> extends Cell<string, T> {
      *
      * @param value
      */
-    set(value: string): T {
+    setPath(value: string): T {
         if(value.endsWith('.blp')) {
             value = value.substring(0,value.length-4);
         }
@@ -67,11 +67,11 @@ export class SpellIconCell<T> extends Cell<string, T> {
         return this.setFullPath(value);
     }
 
-    getID() {
+    get() {
         return this.id.get();
     }
 
-    setID(id: number) {
+    set(id: number) {
         this.id.set(id);
         return this.owner;
     }

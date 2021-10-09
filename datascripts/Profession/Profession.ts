@@ -246,7 +246,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Attributes.notShapeshifted.set(true)
             .Attributes.castableWhileMounted.set(true)
             .Attributes.castableOnVehicle.set(true)
-            .Icon.set('Interface\\Icons\\Trade_BlackSmithing')
+            .Icon.setPath('Interface\\Icons\\Trade_BlackSmithing')
             .SchoolMask.Physical.set(true)
             .Visual.set(0)
             .Effects.addMod(eff=>{

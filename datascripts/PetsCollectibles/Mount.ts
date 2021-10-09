@@ -38,7 +38,7 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
 
     add(mod: string, id: string, mountSkillRank: number = 0) {
         const spell = SpellRegistry.create(mod,`${id}-spell`)
-            .Icon.set('Interface\\Icons\\Trade_Engineering')
+            .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
                 efffect.Type.LearnSpell.set()
                     .LearntSpell.set(this.owner.SpellID)
@@ -192,7 +192,7 @@ export class MountRegistryClass
             .Attributes.cannotUseInCombat.set(true)
             .Attributes.ignoreBonuses.set(true)
             .Attributes.unk79.set(true)
-            .Icon.set('Interface\\Icons\\Trade_Engineering')
+            .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .CastTime.set(16)
             .InterruptFlags.set(31)
             .Duration.set(21)

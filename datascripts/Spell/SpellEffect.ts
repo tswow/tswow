@@ -173,7 +173,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
                     continue;
                 }
                 let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());
-                if(nex.Icon.get()===SPELL_CHAIN_TOKEN) {
+                if(nex.Icon.getPath() === SPELL_CHAIN_TOKEN) {
                     return nex;
                 }
             }

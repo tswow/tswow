@@ -35,7 +35,7 @@ export class TalentTreeRegistryClass
     Clear(r: TalentTree): void {
         r.Name.clear()
          .BackgroundImage.set('')
-         .Icon.set('')
+         .Icon.set(0)
          .ClassMask.set(0)
          .OrderIndex.set(0)
          .row

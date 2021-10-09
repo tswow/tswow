@@ -36,7 +36,7 @@ export class CompanionItems extends MultirowSystemCached<ItemTemplate,Companion>
 
     add(mod: string, id: string) {
         const spell = SpellRegistry.create(mod,`${id}-spell`)
-            .Icon.set('Interface\\Icons\\Trade_Engineering')
+            .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
                 efffect.Type.LearnSpell.set()
                     .LearntSpell.set(this.owner.SpellID)
