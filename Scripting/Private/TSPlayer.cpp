@@ -2267,13 +2267,13 @@ void TSPlayer::LeaveBattleground(bool teleToEntryPoint)
  * @param bool guildBank = false
  * @return uint32 totalCost
  */
-uint32 TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod,bool guildBank) 
+uint32 TSPlayer::DurabilityRepair(uint16 position,bool cost,float discountMod) 
 {
     
 #ifdef CLASSIC
     return player->DurabilityRepair(position, cost, discountMod);
 #else
-    return player->DurabilityRepair(position, cost, discountMod, guildBank);
+    return player->DurabilityRepair(position, cost, discountMod);
 #endif
 }
     

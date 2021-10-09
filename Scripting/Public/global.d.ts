@@ -61,7 +61,7 @@ declare const enum Powers /**@realType:int8 */ {
 } /**@realType:int8 */
 declare const enum CreatureType {} /** SharedDefines.h:CreatureType */
 declare const enum LocaleConstant {} /** Common.h:LocaleConstant */
-declare const enum UnitMoveType {} /** Unit.h:UnitMoveType */
+declare const enum UnitMoveType {} /** UnitDefines.h:UnitMoveType */
 declare const enum MovementGeneratorType {} /** MovementDefines.h:MovementGeneratorType */
 declare const enum SheathState {} /** UnitDefines.h:SheathState */
 declare const enum SpellSchools {} /** SharedDefines.h:SpellSchools */
@@ -1404,10 +1404,9 @@ declare interface TSPlayer extends TSUnit {
      * @param uint16 position
      * @param bool cost = true
      * @param float discountMod
-     * @param bool guildBank = false
      * @return uint32 totalCost
      */
-    DurabilityRepair(position : uint16,cost : bool,discountMod : float,guildBank : bool) : uint32
+    DurabilityRepair(position : uint16,cost : bool,discountMod : float) : uint32
 
     /**
      * Repairs all [Item]s. Returns total repair cost

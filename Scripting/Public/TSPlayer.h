@@ -200,7 +200,7 @@ public:
 	void UnbindInstance(uint32 map, uint32 difficulty);
 	void UnbindAllInstances();
 	void LeaveBattleground(bool teleToEntryPoint);
-	uint32 DurabilityRepair(uint16 position, bool cost, float discountMod, bool guildBank);
+	uint32 DurabilityRepair(uint16 position, bool cost, float discountMod);
 	uint32 DurabilityRepairAll(bool cost, float discountMod, bool guildBank);
 	void DurabilityPointLossForEquipSlot(int32 slot);
 	void DurabilityPointsLossAll(int32 points, bool inventory);
