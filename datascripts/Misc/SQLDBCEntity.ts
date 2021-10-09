@@ -31,15 +31,15 @@ export class SQLDBCChild<O,DBC,SQL,T extends SQLDBCEntity<DBC,SQL>> extends Cell
 }
 
 export interface IMaybeSQLEntity<SQL> {
-    HasSQL(): boolean;
-    GetSQL(): SQL;
-    GetOrCreateSQL(): SQL;
+    hasSQL(): boolean;
+    getSQL(): SQL;
+    getOrCreateSQL(): SQL;
 }
 
 export interface IMaybeDBCEntity<DBC> {
-    HasDBC(): boolean;
-    GetDBC(): DBC;
-    GetOrCreateDBC(): DBC;
+    hasDBC(): boolean;
+    getDBC(): DBC;
+    getOrCreateDBC(): DBC;
 }
 
 export class MaybeSQLEntityPublic<T,SQL> extends CellSystem<T> implements IMaybeSQLEntity<SQL> {
@@ -50,15 +50,15 @@ export class MaybeSQLEntityPublic<T,SQL> extends CellSystem<T> implements IMaybe
         this.container = container;
     }
 
-    HasSQL(): boolean {
-        return MaybeSQLEntity.HasSQL(this.container);
+    hasSQL(): boolean {
+        return MaybeSQLEntity.hasSQL(this.container);
     }
 
-    GetSQL(): SQL {
-        return MaybeSQLEntity.GetSQL(this.container);
+    getSQL(): SQL {
+        return MaybeSQLEntity.getSQL(this.container);
     }
-    GetOrCreateSQL(): SQL {
-        return MaybeSQLEntity.GetOrCreateSQL(this.container);
+    getOrCreateSQL(): SQL {
+        return MaybeSQLEntity.getOrCreateSQL(this.container);
     }
 }
 export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
@@ -77,7 +77,7 @@ export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
         return new MaybeSQLLoc(this.owner, this.toPublic(), safegetter);
     }
 
-    static GetSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>) {
+    static getSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>) {
         if(entity._cachedSQL && entity.isValidSQL(entity._cachedSQL)) {
             return entity._cachedSQL;
         } else {
@@ -85,17 +85,17 @@ export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
         }
     }
 
-    static GetOrCreateSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>) {
-        return this.GetSQL(entity) || (entity._cachedSQL = entity.createSQL());
+    static getOrCreateSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>) {
+        return this.getSQL(entity) || (entity._cachedSQL = entity.createSQL());
     }
 
-    static HasSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>): boolean {
-        return this.GetSQL(entity) !== undefined;
+    static hasSQL<T,SQL>(entity: MaybeSQLEntity<T,SQL>): boolean {
+        return this.getSQL(entity) !== undefined;
     }
 
-    enable() { MaybeSQLEntity.GetOrCreateSQL(this); return this.owner; }
-    sqlRow(): SQL { return MaybeSQLEntity.GetSQL(this); }
-    exists(): boolean { return MaybeSQLEntity.HasSQL(this); }
+    enable() { MaybeSQLEntity.getOrCreateSQL(this); return this.owner; }
+    getSQL(): SQL { return MaybeSQLEntity.getSQL(this); }
+    exists(): boolean { return MaybeSQLEntity.hasSQL(this); }
 }
 
 export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMaybeDBCEntity<DBC> {
@@ -113,7 +113,7 @@ export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMa
         return new MaybeDBCLoc(this.owner, this, safegetter);
     }
 
-    GetDBC() {
+    getDBC() {
         if(this._cachedDBC && this.isValidDBC(this._cachedDBC)) {
             return this._cachedDBC;
         } else {
@@ -121,15 +121,13 @@ export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMa
         }
     }
 
-    GetOrCreateDBC() {
-        return this.GetDBC() || (this._cachedDBC = this.createDBC())
+    getOrCreateDBC() {
+        return this.getDBC() || (this._cachedDBC = this.createDBC())
     }
 
-    HasDBC() { return this.GetDBC() !== undefined; }
-
-    // todo: new syntax
-    exists() { return this.HasDBC(); }
-    force() { this.GetOrCreateDBC(); return this.owner; }
+    hasDBC() { return this.getDBC() !== undefined; }
+    exists() { return this.hasDBC(); }
+    enable() { this.getOrCreateDBC(); return this.owner; }
 
     static wrapDBC<C extends CPrim,T,DBC,O extends MaybeDBCEntity<T,DBC>>(
               owner: O
@@ -178,7 +176,7 @@ export abstract class SQLDBCEntity<DBC,SQL> extends CellSystemTop {
         return new MaybeSQLLoc(this,this, safegetter);
     }
 
-    GetDBC() {
+    getDBC() {
         if(this._cachedDBC && this.isValidDBC(this._cachedDBC)) {
             return this._cachedDBC;
         } else {
@@ -186,7 +184,7 @@ export abstract class SQLDBCEntity<DBC,SQL> extends CellSystemTop {
         }
     }
 
-    GetSQL() {
+    getSQL() {
         if(this._cachedSQL && this.isValidSQL(this._cachedSQL)) {
             return this._cachedSQL;
         } else {
@@ -194,16 +192,16 @@ export abstract class SQLDBCEntity<DBC,SQL> extends CellSystemTop {
         }
     }
 
-    GetOrCreateDBC() {
-        return this.GetDBC() || (this._cachedDBC = this.createDBC())
+    getOrCreateDBC() {
+        return this.getDBC() || (this._cachedDBC = this.createDBC())
     }
 
-    GetOrCreateSQL() {
-        return this.GetSQL() || (this._cachedSQL = this.createSQL())
+    getOrCreateSQL() {
+        return this.getSQL() || (this._cachedSQL = this.createSQL())
     }
 
-    HasSQL() { return this.GetSQL() !== undefined; }
-    HasDBC() { return this.GetDBC() !== undefined; }
+    hasSQL() { return this.getSQL() !== undefined; }
+    hasDBC() { return this.getDBC() !== undefined; }
 }
 
 export class MaybeDBCCell<O,C extends CPrim, DBC, T extends IMaybeDBCEntity<DBC>> extends Cell<C,O>{
@@ -218,18 +216,18 @@ export class MaybeDBCCell<O,C extends CPrim, DBC, T extends IMaybeDBCEntity<DBC>
         this.safeGetter = safeGetter;
     }
 
-    exists() { return this.container.HasDBC(); }
+    exists() { return this.container.hasDBC(); }
 
     get(): C {
-        if(!this.container.HasDBC()) {
+        if(!this.container.hasDBC()) {
             return this.defaultValue;
         } else {
-            return this.safeGetter(this.container.GetDBC()).get();
+            return this.safeGetter(this.container.getDBC()).get();
         }
     }
 
     set(value: C): O {
-        this.safeGetter(this.container.GetOrCreateDBC()).set(value);
+        this.safeGetter(this.container.getOrCreateDBC()).set(value);
         return this.owner;
     }
 }
@@ -263,7 +261,7 @@ export class MaybeDBCLoc<O,DBC,T extends IMaybeDBCEntity<DBC>> extends LocSystem
     }
 
     set(con: loc_constructor): O {
-        this.safeGetter(this.container.GetOrCreateDBC()).set(con);
+        this.safeGetter(this.container.getOrCreateDBC()).set(con);
         return this.owner;
     }
 }
@@ -281,19 +279,19 @@ export class MaybeSQLCell<O,C extends CPrim, SQL, T extends IMaybeSQLEntity<SQL>
     }
 
     exists() {
-        return this.container.HasSQL();
+        return this.container.hasSQL();
     }
 
     get(): C {
-        if(!this.container.HasSQL()) {
+        if(!this.container.hasSQL()) {
             return this.defaultValue;
         } else {
-            return this.safeGetter(this.container.GetSQL()).get();
+            return this.safeGetter(this.container.getSQL()).get();
         }
     }
 
     set(value: C): O {
-        this.safeGetter(this.container.GetOrCreateSQL()).set(value);
+        this.safeGetter(this.container.getOrCreateSQL()).set(value);
         return this.owner;
     }
 }
@@ -327,7 +325,7 @@ export class MaybeSQLLoc<O,SQL,T extends IMaybeSQLEntity<SQL>> extends LocSystem
     }
 
     set(con: loc_constructor): O {
-        this.safeGetter(this.container.GetOrCreateSQL()).set(con);
+        this.safeGetter(this.container.getOrCreateSQL()).set(con);
         return this.owner;
     }
 }

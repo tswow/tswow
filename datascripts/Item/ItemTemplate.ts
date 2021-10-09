@@ -91,9 +91,9 @@ export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
     protected dbc = new ItemDBC(this);
-    dbcExists() { return this.dbc.HasDBC(); }
-    dbcRow() { return this.dbc.GetOrCreateDBC(); }
-    createDbc() { return this.dbc.GetOrCreateDBC(); }
+    dbcExists() { return this.dbc.hasDBC(); }
+    dbcRow() { return this.dbc.getOrCreateDBC(); }
+    createDbc() { return this.dbc.getOrCreateDBC(); }
 
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }

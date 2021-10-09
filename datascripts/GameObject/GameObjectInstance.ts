@@ -102,5 +102,5 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get Invisibility()   { return this.Addon.Invisibility; }
     get ParentRotation() { return this.Addon.ParentRotation; }
     addonExists() { return this.Addon.exists(); }
-    addonRow() { return this.Addon.sqlRow(); }
+    addonRow() { return this.Addon.getSQL(); }
 }

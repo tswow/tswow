@@ -183,7 +183,7 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
 
     protected readonly Addon = new CreatureTemplateAddon(this);
     addonExists() { return this.Addon.exists() }
-    addonRow()    { return this.Addon.sqlRow() }
+    addonRow()    { return this.Addon.getSQL() }
     get Auras()   { return this.Addon.Auras; }
     get Bytes1()  { return this.Addon.Bytes1 }
     get Bytes2()  { return this.Addon.Bytes2 }

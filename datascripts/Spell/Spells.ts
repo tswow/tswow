@@ -29,11 +29,11 @@ export class SpellRegistryClass extends RegistryStatic<Spell,SpellRow,SpellQuery
         if(parent > this.nullID() && cloneServerData) {
             let parentEntity = this.load(parent);
             if(parentEntity.BonusData.exists()) {
-                parentEntity.BonusData.sqlRow().clone(v.ID)
+                parentEntity.BonusData.getSQL().clone(v.ID)
             }
 
             if(parentEntity.Threat.exists()) {
-                parentEntity.Threat.sqlRow().clone(v.ID);
+                parentEntity.Threat.getSQL().clone(v.ID);
             }
 
             if(parentEntity.CustomAttributes.exists()) {

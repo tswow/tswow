@@ -146,7 +146,7 @@ export class SQLMaybeWriteCell extends Cell<number,Spell>{
 
     get() {
         if(this.proc.HasSQL()) {
-            return this.sqlCell(MaybeSQLEntity.GetSQL(this.proc)).get();
+            return this.sqlCell(MaybeSQLEntity.getSQL(this.proc)).get();
         } else {
             return this.dbcCell.get();
         }
@@ -154,7 +154,7 @@ export class SQLMaybeWriteCell extends Cell<number,Spell>{
 
     set(value: number) {
         if(this.proc.HasSQL()) {
-            this.sqlCell(MaybeSQLEntity.GetSQL(this.proc)).set(value);
+            this.sqlCell(MaybeSQLEntity.getSQL(this.proc)).set(value);
         }
         this.dbcCell.set(value);
         return this.owner;
@@ -184,7 +184,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     HasSQL() {
-        return MaybeSQLEntity.HasSQL(this);
+        return MaybeSQLEntity.hasSQL(this);
     }
 
     protected findSQL(): spell_procRow {

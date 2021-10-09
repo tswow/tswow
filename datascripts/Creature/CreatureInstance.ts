@@ -55,7 +55,7 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     protected readonly Addon = new CreatureInstanceAddon(this)
 
     addonExists() { return this.Addon.exists(); }
-    addonRow() { return this.Addon.sqlRow(); }
+    addonRow() { return this.Addon.getSQL(); }
 
     get Auras() { return this.Addon.Auras; }
     get Path() { return this.Addon.Path; }

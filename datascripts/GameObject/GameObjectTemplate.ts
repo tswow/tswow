@@ -91,7 +91,7 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
 
     protected Addon = new GameObjectTemplateAddon(this);
     addonExists() { return this.Addon.exists(); }
-    addonRow()    { return this.Addon.sqlRow(); }
+    addonRow()    { return this.Addon.getSQL(); }
     get ArtKits() { return this.Addon.ArtKits; }
     get Faction() { return this.Addon.Faction; }
     get Flags()   { return this.Addon.Flags; }

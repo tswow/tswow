@@ -40,7 +40,7 @@ export class SpellCustomAttr extends MaskCell32<Spell> {
     }
 
     exists() { return this.sql.exists(); }
-    sqlRow() { return this.sql.sqlRow(); }
+    sqlRow() { return this.sql.getSQL(); }
 
     get EnchantProc()               { return this.bit(0); }
     get ConeBack()                  { return this.bit(1); }

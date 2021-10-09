@@ -21,7 +21,7 @@ export class DungeonEncounterCreditType extends EnumCell<DungeonEncounter> {
 
 export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<number,T>{
     get(): number {
-        return this.owner.GetDBC().OrderIndex.get();
+        return this.owner.getDBC().OrderIndex.get();
     }
 
     /**
@@ -30,7 +30,7 @@ export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<
      * @param value
      */
     set(value: number) {
-        this.owner.GetDBC().OrderIndex.set(value);
+        this.owner.getDBC().OrderIndex.set(value);
         return this.owner;
     }
 
@@ -75,9 +75,9 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
     }
 
     get ID() { return this.id; }
-    get Name() { return this.wrapLoc(this.GetDBC().Name); }
-    get Map() { return MapRegistry.ref(this, this.GetDBC().MapID); }
-    get Difficulty() { return this.wrap(this.GetDBC().Difficulty); }
+    get Name() { return this.wrapLoc(this.getDBC().Name); }
+    get Map() { return MapRegistry.ref(this, this.getDBC().MapID); }
+    get Difficulty() { return this.wrap(this.getDBC().Difficulty); }
     get Index() { return new DungeonEncounterIndexCell(this); }
     get Type() {
         return new DungeonEncounterCreditType(
@@ -155,7 +155,7 @@ export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounter,T> 
 
     protected isDeleted(value: DungeonEncounter): boolean {
         // TODO: sql row?
-        return value.GetDBC().isDeleted();
+        return value.getDBC().isDeleted();
     }
 }
 

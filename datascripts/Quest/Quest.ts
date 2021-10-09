@@ -34,7 +34,7 @@ export class Quest extends MainEntity<quest_templateRow> {
     }
 
     addonRow() {
-        return this.Addon.sqlRow();
+        return this.Addon.getSQL();
     }
 
     get SpecialFlags() { return this.Addon.SpecialFlags; }

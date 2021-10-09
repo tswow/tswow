@@ -26,8 +26,8 @@ export abstract class SQLDBCEntityStatic<DBC,SQL> extends CellSystemTop {
     private _cachedDBC: DBC | undefined;
     private _cachedSQL: SQL | undefined;
 
-    abstract CreateDBC(mod: string, id: string): this;
-    abstract CreateSQL(mod: string, id: string): this;
+    abstract createDBC(mod: string, id: string): this;
+    abstract createSQL(mod: string, id: string): this;
     protected abstract findDBC(): DBC;
     protected abstract findSQL(): SQL;
     protected abstract isValidDBC(dbc: DBC): boolean;
@@ -49,7 +49,7 @@ export abstract class SQLDBCEntityStatic<DBC,SQL> extends CellSystemTop {
         return new MaybeSQLLocStatic<SQL,this>(this, safegetter);
     }
 
-    GetDBC() {
+    getDBC() {
         if(this._cachedDBC && this.isValidDBC(this._cachedDBC)) {
             return this._cachedDBC;
         } else {
@@ -57,7 +57,7 @@ export abstract class SQLDBCEntityStatic<DBC,SQL> extends CellSystemTop {
         }
     }
 
-    GetSQL() {
+    getSQL() {
         if(this._cachedSQL && this.isValidSQL(this._cachedSQL)) {
             return this._cachedSQL;
         } else {
@@ -65,8 +65,8 @@ export abstract class SQLDBCEntityStatic<DBC,SQL> extends CellSystemTop {
         }
     }
 
-    HasSQL() { return this.GetDBC() !== undefined; }
-    HasDBC() { return this.GetSQL() !== undefined; }
+    hasSQL() { return this.getDBC() !== undefined; }
+    hasDBC() { return this.getSQL() !== undefined; }
 }
 
 export class MaybeDBCCellStatic<C extends CPrim, DBC, T extends SQLDBCEntityStatic<DBC,any>> extends Cell<C,T>{
@@ -79,21 +79,21 @@ export class MaybeDBCCellStatic<C extends CPrim, DBC, T extends SQLDBCEntityStat
         this.safeGetter = safeGetter;
     }
 
-    exists() { return this.owner.HasDBC(); }
+    exists() { return this.owner.hasDBC(); }
 
     get(): C {
-        if(!this.owner.HasDBC()) {
+        if(!this.owner.hasDBC()) {
             return this.defaultValue;
         } else {
-            return this.safeGetter(this.owner.GetDBC()).get();
+            return this.safeGetter(this.owner.getDBC()).get();
         }
     }
 
     set(value: C): T {
-        if(!this.owner.HasDBC()) {
+        if(!this.owner.hasDBC()) {
             throw new Error(`Missing DBC row, please call "CreateDBC" manually`)
         }
-        this.safeGetter(this.owner.GetDBC()).set(value);
+        this.safeGetter(this.owner.getDBC()).set(value);
         return this.owner;
     }
 }
@@ -122,10 +122,10 @@ export class MaybeDBCLocStatic<DBC,T extends SQLDBCEntityStatic<DBC,any>> extend
     }
 
     set(con: loc_constructor): T {
-        if(!this.owner.HasDBC()) {
+        if(!this.owner.hasDBC()) {
             throw new Error(`Missing DBC row, please call "CreateDBC" manually`)
         }
-        this.safeGetter(this.owner.GetDBC()).set(con);
+        this.safeGetter(this.owner.getDBC()).set(con);
         return this.owner;
     }
 }
@@ -141,18 +141,18 @@ export class MaybeSQLCellStatic<C extends CPrim, SQL, T extends SQLDBCEntityStat
     }
 
     get(): C {
-        if(!this.owner.HasSQL()) {
+        if(!this.owner.hasSQL()) {
             return this.defaultValue;
         } else {
-            return this.safeGetter(this.owner.GetSQL()).get();
+            return this.safeGetter(this.owner.getSQL()).get();
         }
     }
 
     set(value: C): T {
-        if(!this.owner.HasSQL()) {
+        if(!this.owner.hasSQL()) {
             throw new Error(`Missing SQL row: Please call "CreateSQL" manually`)
         }
-        this.safeGetter(this.owner.GetSQL()).set(value);
+        this.safeGetter(this.owner.getSQL()).set(value);
         return this.owner;
     }
 }
@@ -181,10 +181,10 @@ export class MaybeSQLLocStatic<SQL,T extends SQLDBCEntityStatic<any,SQL>> extend
     }
 
     set(con: loc_constructor): T {
-        if(!this.owner.HasSQL()) {
+        if(!this.owner.hasSQL()) {
             throw new Error(`Missing SQL row: Please call "CreatSQL" manually`)
         }
-        this.safeGetter(this.owner.GetSQL()).set(con);
+        this.safeGetter(this.owner.getSQL()).set(con);
         return this.owner;
     }
 }
