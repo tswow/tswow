@@ -6,8 +6,42 @@ import { CellRoot } from "./CellRoot";
 
 export type Bit = boolean | 1 | 0
 
-function resolveBit(bit: Bit): boolean {
-    return typeof(bit) === 'number' ? bit===1 : bit;
+export class MaskPartReadOnly<T,D extends MaskCell32ReadOnly<T>> {
+    protected owner: D;
+    protected mask: number;
+
+    constructor(owner: D, mask: number) {
+        this.owner = owner;
+        this.mask = mask;
+    }
+
+    protected get isMask() { return true; }
+
+    get() {
+        return (this.owner.get() & this.mask) === this.mask
+    }
+}
+
+export class MaskPart<T,D extends MaskCell32<T>> {
+    protected owner: D;
+    protected mask: number;
+
+    constructor(owner: D, mask: number) {
+        this.owner = owner;
+        this.mask = mask;
+    }
+
+    protected get isMask() { return true; }
+
+    get() {
+        return (this.owner.get() & this.mask) === this.mask
+    }
+
+    set(value: Bit) {
+        return value
+            ? this.owner.setOr(this.mask)
+            : this.owner.setNot(this.mask);
+    }
 }
 
 export class MaskBit<T,D extends MaskCell<T>> {
@@ -96,7 +130,6 @@ export abstract class MaskCell<T> extends CellRoot<T> {
         return thing;
     }
 }
-
 
 export class MaskCell64<T> extends MaskCell<T> {
     @Transient
@@ -392,31 +425,45 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     add(bits: number|number[]) {
-        return this.or(MaskCell32Impl.mask(bits));
+        return this.setOr(MaskCell32Impl.mask(bits));
     }
 
     remove(bits: number|number[]) {
-        return this.not(MaskCell32Impl.mask(bits));
+        return this.setNot(MaskCell32Impl.mask(bits));
     }
 
-    or(mask: number) {
-        return this.set(MaskCell32Impl.or(this.signed,mask,this.cell.get()))
+    getOr(mask: number) {
+        return MaskCell32Impl.or(this.signed,mask,this.cell.get());
+    }
+    setOr(mask: number) { return this.set(this.getOr(mask)); }
+
+    getNot(mask: number) {
+        return MaskCell32Impl.not(this.signed,mask,this.cell.get())
+    }
+    setNot(mask: number) { return this.set(this.getNot(mask)); }
+
+    getAnd(mask: number) {
+        return MaskCell32Impl.and(this.signed,mask,this.cell.get())
     }
 
-    not(mask: number) {
-        return this.set(MaskCell32Impl.not(this.signed,mask,this.cell.get()))
+    setAnd(mask: number) {
+        return this.set(this.getAnd(mask));
     }
 
-    and(mask: number) {
-        return this.set(MaskCell32Impl.and(this.signed,mask,this.cell.get()))
+    getXor(mask: number) {
+        return MaskCell32Impl.xor(this.signed,mask,this.cell.get())
     }
 
-    xor(mask: number) {
-        return this.set(MaskCell32Impl.xor(this.signed,mask,this.cell.get()))
+    setXor(mask: number) {
+        return this.set(this.getXor(mask));
     }
 
-    nor(mask: number) {
-        return this.set(MaskCell32Impl.nor(this.signed,mask,this.cell.get()))
+    getNor(mask: number) {
+        return MaskCell32Impl.nor(this.signed,mask,this.cell.get())
+    }
+
+    setNor(mask: number) {
+        return this.set(this.getNor(mask));
     }
 
     set(value: number) {
@@ -429,6 +476,7 @@ export class MaskCell32<T> extends MaskCell<T> {
     }
 
     protected bit(no: number): MaskBit<T,this> { return new MaskBit(this, no); }
+    protected mask(mask: number): MaskPart<T,this> { return new MaskPart(this, mask); }
 }
 
 export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
@@ -462,6 +510,41 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
         return this.bit(MaskCell32Impl.bit_from(mask));
     }
 
+    getOr(mask: number) {
+        return MaskCell32Impl.or(this.signed,mask,this.cell.get());
+    }
+    protected setOr(mask: number) { return this.set(this.getOr(mask)); }
+
+    getNot(mask: number) {
+        return MaskCell32Impl.not(this.signed,mask,this.cell.get())
+    }
+    protected setNot(mask: number) { return this.set(this.getNot(mask)); }
+
+    getAnd(mask: number) {
+        return MaskCell32Impl.and(this.signed,mask,this.cell.get())
+    }
+
+    protected setAnd(mask: number) {
+        return this.set(this.getAnd(mask));
+    }
+
+    getXor(mask: number) {
+        return MaskCell32Impl.xor(this.signed,mask,this.cell.get())
+    }
+
+    protected setXor(mask: number) {
+        return this.set(this.getXor(mask));
+    }
+
+    getNor(mask: number) {
+        return MaskCell32Impl.nor(this.signed,mask,this.cell.get())
+    }
+
+    protected setNor(mask: number) {
+        return this.set(this.getNor(mask));
+    }
+
+
     protected set(value: number) {
         CellReadOnly.set(this.cell, MaskCell32Impl.set(this.signed, value));
         return this.owner;
@@ -488,4 +571,69 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
     protected bit(no: number): MaskBitReadOnly<T,MaskCell32ReadOnly<T>> {
         return new MaskBitReadOnly(this, no);
     }
+
+    protected mask(mask: number): MaskPartReadOnly<T,this> {
+        return new MaskPartReadOnly(this, mask);
+    }
+}
+
+export type MaskCon<T> = T|(T|number)[]|number|undefined
+function makeMaskImpl(obj: any, value: MaskCon<any>): number {
+    if(value === undefined) return 0;
+    if(typeof(value) === 'number') return value;
+    if(typeof(value) === 'string') return obj[value];
+    if(Array.isArray(value)) return value
+        .reduce<number>((p,c)=>p|makeMaskImpl(obj,c),0)
+    throw new Error(`Unknown MaskCell value: ${value}`)
+}
+export abstract class MaskCell32T<T,Str> extends MaskCell32<T> {
+    protected abstract obj(): any;
+    protected mm(value: MaskCon<Str>) {
+        return makeMaskImpl(this.obj(),value);
+    }
+
+    set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
+    setOr(value: MaskCon<Str>)  { return super.setOr(this.mm(value)) }
+    getOr(value: MaskCon<Str>)  { return super.getOr(this.mm(value)) }
+    add(value: MaskCon<Str>)    { return super.setOr(this.mm(value)) }
+    hasAll(value: MaskCon<Str>) {
+        let v = this.mm(value);
+        return super.getAnd(v) === v;
+    }
+    hasAny(value: MaskCon<Str>) { return this.getOr(value) !== 0; }
+    remove(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
+    setNor(value: MaskCon<Str>) { return super.setNor(this.mm(value)) }
+    getNor(value: MaskCon<Str>) { return super.getNor(this.mm(value)) }
+    setXor(value: MaskCon<Str>) { return super.setXor(this.mm(value)) }
+    getXor(value: MaskCon<Str>) { return super.getXor(this.mm(value)) }
+    setAnd(value: MaskCon<Str>) { return super.setAnd(this.mm(value)) }
+    getAnd(value: MaskCon<Str>) { return super.getAnd(this.mm(value)) }
+    setNot(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
+    getNot(value: MaskCon<Str>) { return super.getNot(this.mm(value)) }
+}
+
+export abstract class MaskCell32TReadOnly<T,Str> extends MaskCell32ReadOnly<T> {
+    protected abstract obj(): any;
+    protected mm(value: MaskCon<Str>) {
+        return makeMaskImpl(this.obj(),value);
+    }
+
+    protected set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
+    protected setOr(value: MaskCon<Str>)  { return super.setOr(this.mm(value)) }
+    getOr(value: MaskCon<Str>)  { return super.getOr(this.mm(value)) }
+    protected add(value: MaskCon<Str>)    { return super.setOr(this.mm(value)) }
+    hasAll(value: MaskCon<Str>) {
+        let v = this.mm(value);
+        return super.getAnd(v) === v;
+    }
+    hasAny(value: MaskCon<Str>) { return this.getOr(value) !== 0; }
+    protected remove(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
+    protected setNor(value: MaskCon<Str>) { return super.setNor(this.mm(value)) }
+    getNor(value: MaskCon<Str>) { return super.getNor(this.mm(value)) }
+    protected setXor(value: MaskCon<Str>) { return super.setXor(this.mm(value)) }
+    getXor(value: MaskCon<Str>) { return super.getXor(this.mm(value)) }
+    protected setAnd(value: MaskCon<Str>) { return super.setAnd(this.mm(value)) }
+    getAnd(value: MaskCon<Str>) { return super.getAnd(this.mm(value)) }
+    protected setNot(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
+    getNot(value: MaskCon<Str>) { return super.getNot(this.mm(value)) }
 }
