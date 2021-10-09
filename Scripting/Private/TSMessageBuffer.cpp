@@ -48,7 +48,7 @@ TSMessageBuffer::TSMessageBuffer(TSPlayer player)
 
 TSBufferedMessage::TSBufferedMessage(unsigned char id, unsigned char channel, unsigned short fragments)
 	: m_id(id)
-	, m_fragment_ctr(std::max(fragments,unsigned short(1)))
+	, m_fragment_ctr(std::max(fragments,uint16_t(1)))
 {
 	m_fragments.resize(m_fragment_ctr);
 }
@@ -185,7 +185,7 @@ void TSMessageBuffer::onFinished(unsigned short channel, std::string const& str)
 
 void TSMessageBuffer::onError(unsigned long id, TSFragmentResult error)
 {
-    FIRE(AddonOnLongMessageError, m_player, unsigned char(error));
+    FIRE(AddonOnLongMessageError, m_player, uint8_t(error));
 }
 
 void TSMessageBuffer::sendFragment(unsigned len, const char* bytes)
