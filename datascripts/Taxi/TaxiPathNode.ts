@@ -1,5 +1,5 @@
 import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
+import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { TaxiPathNodeRow } from "wotlkdata/dbc/types/TaxiPathNode";
 import { DBC } from "wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
@@ -30,7 +30,7 @@ export class TaxiPathNode extends MainEntity<TaxiPathNodeRow> {
     get Delay() { return this.wrap(this.row.Delay); }
 }
 
-export class TaxiPathNodes extends MultirowSystemCached<TaxiPathNode,TaxiPath> {
+export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
     protected getAllRows(): TaxiPathNode[] {
         return DBC.TaxiPathNode
             .filter({PathID:this.owner.ID})
@@ -55,7 +55,7 @@ export class TaxiPathNodes extends MultirowSystemCached<TaxiPathNode,TaxiPath> {
     }
 
     insert(index: number, pos: TaxiNodeConstructor) {
-        let rows = this.getAllRowsOrCached();
+        let rows = this.getAllRows();
         let flag = pos.delay ? 2 : 0;
         if(rows.length > 0 && index > 0 && rows[index-1].Position.Map.get() != pos.map) {
             rows[index-1].Flags.MapChange.set(true)
@@ -68,15 +68,14 @@ export class TaxiPathNodes extends MultirowSystemCached<TaxiPathNode,TaxiPath> {
         }
 
         rows.slice(index).forEach(x=>x.row.NodeIndex.set(x.row.NodeIndex.get()+1));
-        let node = this.makeNode(pos,flag, pos.delay||0,pos.arrival_event||0,pos.departure_event||0)
+        this.makeNode(pos,flag, pos.delay||0,pos.arrival_event||0,pos.departure_event||0)
             .NodeIndex.set(index);
-        if(this.cache) this.cache.splice(index,0,new TaxiPathNode(node))
         return this;
     }
 
     push(poses: TaxiNodeConstructor|TaxiNodeConstructor[]) {
         if(!Array.isArray(poses)) poses = [poses]
-        let old = this.getAllRowsOrCached();
+        let old = this.getAllRows();
         poses.forEach((pos,i)=>{
             if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
                 old[old.length-1].Flags.MapChange.set(true)
@@ -84,8 +83,8 @@ export class TaxiPathNodes extends MultirowSystemCached<TaxiPathNode,TaxiPath> {
             let newNode = this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
                 .NodeIndex.set(this.length-1)
             old.push(new TaxiPathNode(newNode));
-            if(this.cache) this.cache.push(new TaxiPathNode(newNode));
         })
+
         return this;
     }
 

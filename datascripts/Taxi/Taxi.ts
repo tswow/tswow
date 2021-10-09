@@ -22,7 +22,7 @@ export class TaxiPath extends MainEntity<TaxiPathRow> {
     get End() {
         return TaxiEndNodeRegistry.readOnlyRef(this, this.row.ToTaxiNode);
     }
-    readonly Nodes = new TaxiPathNodes(this);
+    get Nodes(): TaxiPathNodes { return new TaxiPathNodes(this); }
     get Cost() {  return this.wrap(this.row.Cost) }
 
     delete() {
@@ -131,20 +131,22 @@ export class TaxiPathRegistryClass
                 + ` (you have next to unlimited non-flightpath node ids, just make extra!)`
             )
         }
+
         return {
               forward:
                 new TaxiPath(DBC.TaxiPath.add(Ids.TaxiPath.id(mod,id))
                     .FromTaxiNode.set(start)
                     .ToTaxiNode.set(end)
                     .Cost.set(cost)
-                ).Nodes.setCache([])
+                )
             , backward: !bidirectional ? undefined
                 : new TaxiPath(
                     DBC.TaxiPath.add(Ids.TaxiPath.id(mod,`${id}-backwards`))
                         .FromTaxiNode.set(end)
                         .ToTaxiNode.set(start)
                         .Cost.set(cost)
-                ).Nodes.setCache([])
+                )
+
         }
     }
 
