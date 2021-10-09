@@ -123,7 +123,7 @@ export namespace MPQ {
         if(clientWasStarted) {
             dataset.client.kill();
         }
-        await buildMpqFolder(dataset,dataset.config.mpq_path,useTimer, true,args);
+        await buildMpqFolder(dataset,dataset.config.dev_patch,useTimer, true,args);
 
         if(clientWasStarted || NodeConfig.autostart_client) {
             dataset.client.start();

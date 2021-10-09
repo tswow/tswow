@@ -115,7 +115,7 @@ export namespace Clean {
         let runningClients = dataset.filter(x=>x.client.isRunning());
         runningClients.forEach(x=>x.client.kill());
         dataset.forEach(ds=>{
-            let addonPath = mpath(ds.config.mpq_path,'Interface','FrameXML','TSAddons');
+            let addonPath = mpath(ds.config.dev_patch,'Interface','FrameXML','TSAddons');
             wfs.readDir(addonPath,true,'directories').forEach(x=>{
                 if(!Modules.isModule(x)) {
                     wfs.remove(mpath(addonPath,x))
@@ -159,7 +159,7 @@ export namespace Clean {
                     mod.linkModule();
                     clean.push(mod.id);
                     term.log(`Successfully compiled ${mod.id}`)
-                } catch(error) {
+                } catch(error: any) {
                     errors++;
                     term.log(`Failed to compile ${mod.id}: ${error.message}`)
                 }

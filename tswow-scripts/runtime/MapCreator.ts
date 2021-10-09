@@ -41,7 +41,7 @@ export namespace MapCreator {
             let sourceAdt = 'test.adt';
             let dataset = Datasets.getDatasetsOrDefault(args)[0];
             let mapName = args[0];
-            let dest = mpath(dataset.config.mpq_path,'world','maps',mapName);
+            let dest = mpath(dataset.config.dev_patch,'world','maps',mapName);
             let moduleName = util.stringArgument('--module=','',args);
             if(moduleName.length>0) {
                 if(Modules.exists(moduleName)) {
@@ -55,7 +55,7 @@ export namespace MapCreator {
             let highY = parseInt(args[4]);
             createMap(sourceAdt,dest,mapName,lowX,lowY,highX,highY);
             term.success('Created map successfully, now running datascripts to generate dbc...');
-            await MPQ.buildMpqFolder(dataset,dataset.config.mpq_path,false,true,args);
+            await MPQ.buildMpqFolder(dataset,dataset.config.dev_patch,false,true,args);
             term.success(`MPQ patches executed, you can now teleport to your map with the command ".tele map:${mapName}"`)
         });
     }

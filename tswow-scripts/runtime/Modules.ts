@@ -452,7 +452,7 @@ export namespace Modules {
 
         const nonSymlinked = data.filter(({symlinks})=>symlinks.length==0)
         const excess = data.filter(({symlinks})=>symlinks.length>1);
-        let symlinkLetters: string[] = [dataset.config.mpq_suffix]
+        let symlinkLetters: string[] = [dataset.config.dev_patch_letter]
         let helpString: string[] = []
 
         // clean these first so we have as many free modules as possible

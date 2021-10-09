@@ -66,20 +66,30 @@ export namespace Datasets {
             return val;
         }
 
-        get client_patch_path() {
-            return this.get<string>('client_patch_path',mpath(this.client_path,'Data'));
-        }
-
         get game_build() {
             return this.get<number>('game_build',12340);
         }
 
-        get mpq_suffix() {
-            let val = this.get<string>('mpq_suffix','a')
-            return val;
-        }
         get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
-        get mpq_path() { return mpath(this.client_patch_path,`patch-${this.mpq_suffix}.MPQ`)}
+
+        get dev_patch() {
+            return mpath(
+                  this.client_path
+                , 'Data'
+                , this.get<string>(
+                      'client_patch'
+                    , 'patch-a.MPQ'
+                )
+            );
+        }
+
+        get dev_patch_letter() {
+            return this.dev_patch.split('.').reverse()[1][0]
+        }
+
+        get dev_patch_directory() {
+            return wfs.dirname(this.dev_patch);
+        }
     }
 
     /**
