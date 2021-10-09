@@ -27,10 +27,6 @@ export namespace MPQ {
 
         let mods = dataset.config.modules.map(x=>Modules.getModule(x));
         if(!isPackage) {
-            Modules.checkSymlinks(
-                  dataset
-                , args!=undefined && args.includes('--trace')
-                , ...mods);
             mods = mods
                 .filter(x=>x.getSymlinks(dataset).length===0);
         }
