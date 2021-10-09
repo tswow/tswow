@@ -25,7 +25,7 @@ export class QuestNPC extends CellSystem<Quest> {
      */
     addStarter(npcId : number) {
         SQL.creature_queststarter.add(npcId,this.owner.ID);
-        return this.end;
+        return this.owner;
     }
 
     /**
