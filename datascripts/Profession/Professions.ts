@@ -4,7 +4,7 @@ import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillTiersRegistry } from "../SkillTiers/SkillTiers";
-import { Profession } from "./Profession";
+import { Profession, ProfessionRanks } from "./Profession";
 
 export class ProfessionRegistryClass
     extends RegistryStaticNoClone<Profession,SkillLineRow,SkillLineQuery>
@@ -24,6 +24,7 @@ export class ProfessionRegistryClass
                .Flags.IsClassLine.set(true)
                .SkillTier.set(SkillTiersRegistry.create().ID)
         })
+        ProfessionRanks.setCached(r.Ranks,0);
     }
     protected Entity(r: SkillLineRow): Profession {
         return new Profession(r);

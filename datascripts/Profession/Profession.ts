@@ -41,7 +41,7 @@ export class Profession extends MainEntity<SkillLineRow> {
     get GatheringSpells() { return new ProfessionGatheringSpells(this); }
     get Name() { return new ProfessionNameSystem(this); }
     get ID() { return this.AsSkillLine.get().ID; }
-    get Ranks() { return new ProfessionRanks(this); }
+    readonly Ranks = new ProfessionRanks(this);
 
     static findApprenticeSpell(thiz: Profession) {
         // cached because it's expensive to find, and shouldn't change
@@ -167,7 +167,21 @@ export class ProfessionRank extends CellSystem<Profession> {
 }
 
 export class ProfessionRanks extends CellSystem<Profession> {
+    private cachedLength?: number = undefined;
+
+    static setCached(ranks: ProfessionRanks, length: number) {
+        ranks.cachedLength = length;
+    }
+
+    clearCache() {
+        this.cachedLength = undefined;
+    }
+
     get length() {
+        if(this.cachedLength !== undefined) {
+            return this.cachedLength;
+        }
+
         let fst = Profession.findApprenticeSpell(this.owner);
         if(fst == undefined) {
             return 0;
@@ -181,7 +195,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             throw new Error(`Profession ${this.owner.ID} does not have any correct spell ranks`);
         }
 
-        return ranks[0];
+        return this.cachedLength = ranks[0];
     }
 
     forEach(callback: (rank: ProfessionRank)=>void) {
@@ -194,6 +208,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
 
     add(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
         let newIndex = this.length;
+        if(this.cachedLength!==undefined) this.cachedLength++;
         let spell = std.Spells.create(modid,id)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
