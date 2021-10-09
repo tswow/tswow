@@ -162,7 +162,7 @@ export class GlyphRegistryClass
     protected Table(): Table<any, GlyphPropertiesQuery, GlyphPropertiesRow> & { add: (id: number) => GlyphPropertiesRow; } {
         return DBC.GlyphProperties
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): DynamicIDGenerator {
         return Ids.GlyphProperties
     }
     Clear(entity: Glyph): void {

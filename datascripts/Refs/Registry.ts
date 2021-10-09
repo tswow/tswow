@@ -148,11 +148,11 @@ export abstract class RegistryDynamicNoClone<
     }
 
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
-    protected abstract ids(): DynamicIDGenerator
+    protected abstract IDs(): DynamicIDGenerator
     abstract Clear(entity: E): void;
 
     create() {
-        let entity = this.Entity(this.Table().add(this.ids().id()))
+        let entity = this.Entity(this.Table().add(this.IDs().id()))
         this.Clear(entity);
         return entity;
     }

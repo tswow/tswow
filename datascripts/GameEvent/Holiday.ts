@@ -84,7 +84,7 @@ export class HolidayRegistryClass
     protected Table(): Table<any, HolidaysQuery, HolidaysRow> & { add: (id: number) => HolidaysRow; } {
         return DBC.Holidays
     }
-    protected ids(): DynamicIDGenerator {
+    protected IDs(): DynamicIDGenerator {
         return Ids.Holidays
     }
     Clear(entity: HolidayPlain): void {
