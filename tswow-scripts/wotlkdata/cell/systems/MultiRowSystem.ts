@@ -55,7 +55,7 @@ export abstract class MultiRowSystem<A,T> extends CellSystem<T>{
 }
 
 export abstract class MultirowSystemCached<A,T> extends MultiRowSystem<A,T> {
-    private cache?: A[] = undefined;
+    protected cache?: A[] = undefined;
     protected getAllRowsOrCached(): A[] {
         if(this.cache!==undefined) return this.cache;
         this.cache = this.getAllRows();
