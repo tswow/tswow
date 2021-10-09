@@ -23,6 +23,7 @@ export class SelfRef<T,V> {
 export interface LoadRegistry<V> {
     load(id: number): V
     Exists(num: number): boolean
+    ID(entity: V): number;
 }
 
 /**
@@ -30,13 +31,18 @@ export interface LoadRegistry<V> {
  */
 export class RefReadOnly<T,V> extends CellWrapperReadOnly<number,T>{
     protected registry: LoadRegistry<V>;
+    protected cached?: V = undefined;
+
     constructor(owner: T, cell: CellReadOnly<number,any>, registry: LoadRegistry<V>) {
         super(owner,cell);
         this.registry = registry;
     }
 
     getRef() {
-        return this.registry.load(this.cell.get());
+        if(this.cached && this.registry.ID(this.cached) === this.cell.get()) {
+            return this.cached;
+        }
+        return this.cached = this.registry.load(this.cell.get());
     }
 
     modRef(callback: (value: V)=>void) {
@@ -55,6 +61,7 @@ export class RefUnknown<T> extends CellWrapper<number,T> {}
  */
 export class RefBase<T,V,R extends LoadRegistry<V>> extends CellWrapper<number,T> {
     protected registry: R;
+    protected cached?: V = undefined;
 
     constructor(owner: T, cell: Cell<number,any>, registry: R) {
         super(owner,cell);
@@ -62,7 +69,10 @@ export class RefBase<T,V,R extends LoadRegistry<V>> extends CellWrapper<number,T
     }
 
     getRef() {
-        return this.registry.load(this.cell.get());
+        if(this.cached && this.registry.ID(this.cached) === this.cell.get()) {
+            return this.cached;
+        }
+        return this.cached = this.registry.load(this.cell.get());
     }
 
     modRef(callback: (value: V)=>void) {
