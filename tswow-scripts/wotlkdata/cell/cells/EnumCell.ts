@@ -287,3 +287,8 @@ export abstract class EnumCellTReadOnly<T,V> extends EnumCellReadOnly<T> {
         );
     }
 }
+
+export function makeEnum(obj: any, v: any) {
+    if(typeof(v) === 'number') return v;
+    return obj[v] as number;
+}
