@@ -65,9 +65,6 @@ export class CellSystem<T> {
     }
 
     @Transient
-    get end() { return this.owner; }
-
-    @Transient
     protected get isSubsystem() { return true; }
 
     static isSystem(candidate: any) {
