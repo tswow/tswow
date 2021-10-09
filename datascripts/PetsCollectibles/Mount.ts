@@ -206,14 +206,14 @@ export class MountRegistryClass
                     .Type.ApplyAura.set()
                     .Aura.Mounted.set()
                     .CreatureTemplate.set(0)
-                    .TargetA.UnitCaster.set()
+                    .ImplicitTargetA.UnitCaster.set()
             })
             .Effects.addMod(effect=>{
                 effect
                     .Type.ApplyAura.set()
                     .Aura.ModIncreaseMountedSpeed.set()
                     .BasePercent.set(speed)
-                    .TargetA.UnitCaster.set()
+                    .ImplicitTargetA.UnitCaster.set()
                     .RandomPercent.set(1)
             })
 
@@ -223,7 +223,7 @@ export class MountRegistryClass
                     .Type.ApplyAura.set()
                     .Aura.ModIncreaseFlightSpeed.set()
                     .BasePercent.set(flightSpeed)
-                    .TargetA.UnitCaster.set()
+                    .ImplicitTargetA.UnitCaster.set()
                     .RandomPercent.set(1)
             })
         }

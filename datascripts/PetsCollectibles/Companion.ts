@@ -164,7 +164,7 @@ export class CompanionRegistryClass
                 effects.Type.Summon.set()
                     .SummonProperties.set(41)
                     .SummonedCreature.set(0)
-                    .TargetA.DestCasterSummon.set()
+                    .ImplicitTargetA.DestCasterSummon.set()
             })
     }
 

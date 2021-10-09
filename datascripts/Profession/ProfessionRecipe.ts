@@ -108,7 +108,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
                     .InterruptFlags.OnInterruptCast.set(true)
                     .Effects.addMod((effect)=>{
                         effect.Type.CreateItem.set()
-                              .TargetA.UnitCaster.set()
+                              .ImplicitTargetA.UnitCaster.set()
                     })
                     .SkillLines
                     .addMod(this.owner.ID,undefined,undefined)

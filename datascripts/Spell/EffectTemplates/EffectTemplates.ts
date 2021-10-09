@@ -55,8 +55,8 @@ export class HealthLeech extends DamageBase {}
 export class Heal extends HealBase {}
 // 11
 export class BindHome extends EffectTemplate {
-    get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
+    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
 // 12
 export class TotemCreatureTargetMask<T> extends MaskCell32<T> {
@@ -142,13 +142,13 @@ export class WeaponPercentDamage extends DamageBasePct {
     get Percentage() { return this.wrap(this.owner.BasePoints); }
 
     setSingleTarget() {
-        this.TargetA.UnitTargetEnemy.set()
-        this.TargetB.set(0);
+        this.ImplicitTargetA.UnitTargetEnemy.set()
+        this.ImplicitTargetB.set(0);
         return this.owner;
     }
 
     setAoE(radius: number, radiusPerLevel: number, radiusMax: number) {
-        this.TargetA.SrcCaster.set()
+        this.ImplicitTargetA.SrcCaster.set()
         this.Radius.modRefCopy(x=>x.set(radius,radiusPerLevel,radiusMax));
         return this.owner;
     }
@@ -294,8 +294,8 @@ export class InterruptCast extends TargetBase {
 // 70
 // 71
 export class Pickpocket extends EffectTemplate {
-    get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
+    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 }
 // 72
 export class AddFarsight extends TargetBase {}

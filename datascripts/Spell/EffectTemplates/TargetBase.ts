@@ -6,12 +6,12 @@ export class TargetBase extends EffectTemplate {
     /**
      * Generic Target type.
      */
-    get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
+    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
 
     /**
      * Generic Target type. Value depends on TargetA
      */
-    get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
 
     /**
      * Generic radius. Value depends on TargetA/TargetB
