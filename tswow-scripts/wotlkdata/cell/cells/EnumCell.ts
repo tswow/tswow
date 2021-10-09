@@ -4,8 +4,17 @@ import { Cell, CellWrapper } from "./Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "./CellReadOnly";
 
 export class EnumCellReadOnly<T> extends CellWrapperReadOnly<number,T> {
-    value(index: number): EnumValueReadOnly<T> {
+    protected value(index: number): EnumValueReadOnly<T> {
         return new EnumValueReadOnly(this.owner, this, index);
+    }
+
+    is(index: number) {
+        return this.get() === index;
+    }
+
+    on(index: number, callback: ()=>void) {
+        if(this.is(index)) callback();
+        return this.owner;
     }
 
     objectify() {
@@ -40,7 +49,7 @@ export class EnumValueReadOnly<T> {
 }
 
 export class EnumCell<T> extends EnumCellReadOnly<T> {
-    value(index: number, setCallback?: ()=>void): EnumValue<T> {
+    protected value(index: number, setCallback?: ()=>void): EnumValue<T> {
         return new EnumValue(this.owner, this, index, setCallback);
     }
 
@@ -229,5 +238,52 @@ export abstract class TransformedClassReadOnly<T> extends CellSystemTop {
             return this.objectifyParent();
         }
         return cell.as().objectifyParent();
+    }
+}
+
+export type EnumCon<T> = T|number
+export abstract class EnumCellT<T,V> extends EnumCell<T> {
+    protected abstract obj(): any;
+
+    set(value: EnumCon<V>) {
+        return super.set(typeof(value) === 'string'
+            ? this.obj()[value]
+            : value
+        );
+    }
+
+    on(value: EnumCon<V>, callback: ()=>void) {
+        if(this.is(value)) callback();
+        return this.owner;
+    }
+
+    is(value: EnumCon<V>) {
+        return super.is(typeof(value) === 'string'
+            ? this.obj()[value]
+            : value
+        );
+    }
+}
+
+export abstract class EnumCellTReadOnly<T,V> extends EnumCellReadOnly<T> {
+    protected abstract obj(): any;
+
+    protected set(value: EnumCon<V>) {
+        return super.set(typeof(value) === 'string'
+            ? this.obj()[value]
+            : value
+        );
+    }
+
+    on(value: EnumCon<V>, callback: ()=>void) {
+        if(this.is(value)) callback();
+        return this.owner;
+    }
+
+    is(value: EnumCon<V>) {
+        return super.is(typeof(value) === 'string'
+            ? this.obj()[value]
+            : value
+        );
     }
 }
