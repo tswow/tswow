@@ -578,18 +578,18 @@ export class MaskCell32ReadOnly<T> extends MaskCellReadOnly<T> {
 }
 
 export type MaskCon<T> = T|(T|number)[]|number|undefined
-function makeMaskImpl(obj: any, value: MaskCon<any>): number {
+export function makeMask(obj: any, value: MaskCon<any>): number {
     if(value === undefined) return 0;
     if(typeof(value) === 'number') return value;
     if(typeof(value) === 'string') return obj[value];
     if(Array.isArray(value)) return value
-        .reduce<number>((p,c)=>p|makeMaskImpl(obj,c),0)
+        .reduce<number>((p,c)=>p|makeMask(obj,c),0)
     throw new Error(`Unknown MaskCell value: ${value}`)
 }
 export abstract class MaskCell32T<T,Str> extends MaskCell32<T> {
     protected abstract obj(): any;
     protected mm(value: MaskCon<Str>) {
-        return makeMaskImpl(this.obj(),value);
+        return makeMask(this.obj(),value);
     }
 
     set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
@@ -615,7 +615,7 @@ export abstract class MaskCell32T<T,Str> extends MaskCell32<T> {
 export abstract class MaskCell32TReadOnly<T,Str> extends MaskCell32ReadOnly<T> {
     protected abstract obj(): any;
     protected mm(value: MaskCon<Str>) {
-        return makeMaskImpl(this.obj(),value);
+        return makeMask(this.obj(),value);
     }
 
     protected set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
