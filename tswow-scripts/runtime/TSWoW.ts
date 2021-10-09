@@ -27,7 +27,6 @@ import { Client } from './Client';
 import { commands } from './Commands';
 import { Datascripts } from './Datascripts';
 import { Datasets } from './Dataset';
-import { MapCreator } from './MapCreator';
 import { MapData } from './MapData';
 import { Modules } from './Modules';
 import { mysql } from './MySQL';
@@ -64,7 +63,6 @@ export async function main() {
         await Snippets.initialize();
         await PositionsFile.initialize();
         await MapData.initialize();
-        await MapCreator.Initialize();
         await term.Initialize();
 
         term.success(`Initialized tswow in ${timer.timeSec()}s`);
