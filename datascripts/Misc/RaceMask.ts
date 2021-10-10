@@ -15,11 +15,11 @@ export class RaceMask<T> extends MaskCell32<T> {
     private raceBit(bit: number) { return this.bit(bit-1); }
 
     add(classes: RaceMaskCon) {
-        return this.or(makeRacemask(classes));
+        return this.setOr(makeRacemask(classes));
     }
 
     remove(classes: RaceMaskCon) {
-        return this.not(makeRacemask(classes));
+        return this.setNot(makeRacemask(classes));
     }
 
     forEach(callback: (cls: number)=>void) {

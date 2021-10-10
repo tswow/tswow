@@ -18,11 +18,11 @@ export class ClassMask<T> extends MaskCell32<T> {
     }
 
     add(classes: ClassMaskCon) {
-        return this.or(makeClassmask(classes));
+        return this.setOr(makeClassmask(classes));
     }
 
     remove(classes: ClassMaskCon) {
-        return this.not(makeClassmask(classes));
+        return this.setNot(makeClassmask(classes));
     }
 
     private classBit(bit: number) {
