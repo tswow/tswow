@@ -30,7 +30,8 @@ export namespace Scripts {
                 target: 'es2018',
                 module: 'commonjs',
                 outDir: scrips_out_dir,
-                strict: true,
+                // TODO: https://github.com/tswow/tswow/issues/306
+                //strict: true,
                 esModuleInterop: true,
                 declaration: true,
                 sourceMap: true,

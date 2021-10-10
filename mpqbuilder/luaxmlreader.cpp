@@ -21,6 +21,12 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
+#include <vector>
+
+std::vector<std::string> special_files = {
+	  "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
+	, "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
+};
 
 HANDLE handle = NULL;
 
@@ -43,7 +49,8 @@ void handleFile(HANDLE hMpq, std::string const& file,std::string const& outputDi
 	if(
 		   boost::algorithm::ends_with(file,".xml")
 		|| boost::algorithm::ends_with(file,".lua")
-		|| boost::algorithm::ends_with(file,".toc"))
+		|| boost::algorithm::ends_with(file,".toc")
+		|| std::find(special_files.begin(),special_files.end(),file) != special_files.end())
 	{
 		auto f = file;
 		std::replace(f.begin(),f.end(),'\\','/');
