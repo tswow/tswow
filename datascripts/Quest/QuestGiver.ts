@@ -25,32 +25,60 @@ export class QuestNPC extends CellSystem<Quest> {
     }
 
     /**
-     * Add a quest starter
+     * Mark a Creature as the start of a Quest.
      * @param npcId 
      */
-    addStarter(npcId : number) {
+    addCreatureStarter(npcId : number) {
         this.mark(npcId);
         SQL.creature_queststarter.add(npcId,this.owner.ID);
         return this.end;
     }
 
     /**
-     * Add a quest ender
+     * Mark a Creature as the end of a Quest.
      * @param npcId 
      */
-    addEnder(npcId : number) {
+    addCreatureEnder(npcId : number) {
         this.mark(npcId);
         SQL.creature_questender.add(npcId,this.owner.ID)
         return this.end;
     }
 
     /**
-     * Add both a quest starter and ender
+     * Mark a Creature as both a Quest starter and ender
      * @param npcId 
      */
-    addBoth(npcId: number) {
-        this.addStarter(npcId);
-        this.addEnder(npcId);
+    addCreatureBoth(npcId: number) {
+        this.addCreatureStarter(npcId);
+        this.addCreatureEnder(npcId);
+        return this.end;
+    }
+
+    /**
+     * Mark a GameObject as the start of a Quest.
+     * @param goId 
+     */
+    addObjectStarter(goId : number) {
+        SQL.gameobject_queststarter.add(goId, this.owner.ID);
+        return this.end;
+    }
+
+    /**
+     * Mark a GameObject as the end of a Quest.
+     * @param goId 
+     */
+    addObjectEnder(goId : number) {
+        SQL.gameobject_questender.add(goId, this.owner.ID)
+        return this.end;
+    }
+
+    /**
+     * Mark a GameObject as both a Quest starter and ender
+     * @param goId 
+     */
+    addObjectBoth(goId: number) {
+        this.addObjectStarter(goId);
+        this.addObjectEnder(goId);
         return this.end;
     }
 }
