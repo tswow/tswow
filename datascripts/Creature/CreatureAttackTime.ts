@@ -26,7 +26,7 @@ export class CreatureAttackTime extends CellSystem<CreatureTemplate> {
         return this.owner;
     }
 
-    get MeleeBase() { return this.ownerWrap(this.owner.row.BaseVariance); }
+    get MeleeBase() { return this.ownerWrap(this.owner.row.BaseAttackTime); }
     get RangedBase() { return this.ownerWrap(this.owner.row.RangeAttackTime); }
     get MeleeVariance() { return this.ownerWrap(this.owner.row.BaseVariance); }
     get RangedVariance() { return this.ownerWrap(this.owner.row.RangeVariance); }
