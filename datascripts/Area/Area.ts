@@ -33,11 +33,11 @@ import { AreaWorldStateSounds, AreaWorldStateUIs } from "./AreaWorldStates";
 export class AreaSoundProviderPreferences extends CellSystem<Area> {
     get Normal() {
         return SoundProviderPreferenceRegistry
-            .ref(this, this.owner.row.SoundProviderPref)
+            .ref(this.owner, this.owner.row.SoundProviderPref)
     }
     get Underwater() {
         return SoundProviderPreferenceRegistry
-            .ref(this, this.owner.row.SoundProviderPrefUnderwater)
+            .ref(this.owner, this.owner.row.SoundProviderPrefUnderwater)
     }
 }
 
