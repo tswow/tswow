@@ -13034,6 +13034,8 @@ declare namespace WoWAPI {
          * @param inheritsFrom The name of a virtual font string, created in XML, to inherit from. if nil, the font string does not inherit any properties.
          */
         CreateFontString(name?: string, layer?: Layer, inheritsFrom?: string): FontString;
+		
+        RegisterForClicks(clickType:ClickType): void;	
 
         /**
          * Creates a Texture object within the specified widget.
@@ -13522,6 +13524,44 @@ declare namespace WoWAPI {
          * @param text The text that will be written on the Button
          */
         SetText(text: string): void;
+		
+        GetButtonState(): string;
+        GetDisabledFontObject(): string;
+        GetDisabledTexture(): string;		
+        GetFontString(): FontString;		
+        GetHighlightFontObject(): FontObject;		
+        GetHighlightTexture(): string;		
+        //GetMotionScriptsWhileDisabled() - Get whether the button is allowed to run its OnEnter and OnLeave scripts even while disabled - New in 3.3.		
+        GetNormalFontObject(): FontObject;		
+        GetNormalTexture(): string;	
+        //GetPushedTextOffset() - Get the text offset when this button is pushed (x, y) - New in 1.11.	
+        GetPushedTexture(): string;	
+        GetText(): string;	
+        GetTextHeight(): number;
+        GetTextWidth(): number;
+        IsEnabled(): bool;
+        LockHighlight(): void;
+        RegisterForClicks(clickType: ClickType): void;
+        RegisterForMouse(): void;		
+        SetButtonState(state: string): void;
+        SetDisabledAtlas(atlasName: string): void;		
+        SetDisabledFontObject(fontObject: FontObject): void;
+        SetDisabledTexture(texture: string): void;
+        SetEnabled(isEnable: bool): void;
+        SetFontString(fontString: string): void;
+        SetFormattedText(formatstring: string): void;
+        SetHighlightAtlas(atlasName: string): void;
+        SetHighlightFontObject(fontObject: FontObject): void;
+        SetHighlightTexture(texture: string): void;
+        SetMotionScriptsWhileDisabled(shouldFire: bool): void;
+        SetNormalAtlas(atlasName: string): void;
+        SetNormalFontObject(fontObject: FontObject): void;
+        SetNormalTexture(texture: string): void;
+        SetPushedAtlas(atlasName: string): void;
+        SetPushedTextOffset(x: number, y: number): void;
+        SetPushedTexture(texture: string): void;
+        SetText(textLabel:string): void;
+        UnlockHighlight(): void;
     }
 
     interface Model extends Frame {
@@ -13733,6 +13773,9 @@ declare function UIDropDownMenu_CreateInfo(): WoWAPI.UIDropdownInfo;
  */
 declare function UIDropDownMenu_AddButton(info: WoWAPI.UIDropdownInfo): void;
 
+declare function PlaySoundFile(path:string): void;
+declare function PlaySound(soundIndex:number): void;
+
 /**
  * comma separated list of enabled flags
  */
@@ -13741,6 +13784,7 @@ declare type LoopType = "NONE" | "REPEAT" | "BOUNCE";
 declare type LoopState = "NONE" | "FORWARD" | "REVERSE";
 declare type SmoothType = "IN" | "OUT" | "IN_OUT" | "OUT_IN";
 declare type CurveType = "SMOOTH" | "NONE";
+declare type ClickType = "LeftButtonUp" | "RightButtonUp" | "MiddleButtonUp" | "Button4Up" | "Button5Up" | "LeftButtonDown" | "RightButtonDown" | "MiddleButtonDown" | "Button4Down" | "Button5Down" | "AnyUp" | "AnyDown";
 
 /**
  * Creates a new UI frame.
