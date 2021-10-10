@@ -147,7 +147,7 @@ export class SpellPower<T> extends CellSystem<T> {
      * @param perSecondPerLevel {number} Increases the spell's mana cost per second for each level
      */
     setMana(baseCost: number, costPct: number = 0, perLevel: number = 0, perSecondBase: number = 0, perSecondPerLevel: number = 0) {
-        this.PowerType.set('MANA')
+        this.PowerType.set('MANA');
         this.spell.row.ManaCost.set(baseCost);
         this.spell.row.ManaCostPct.set(costPct);
         this.spell.row.ManaCostPerLevel.set(perLevel);
