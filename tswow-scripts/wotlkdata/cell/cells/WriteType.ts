@@ -1,0 +1,1 @@
+export type WriteType = 'READ'|'WRITE'

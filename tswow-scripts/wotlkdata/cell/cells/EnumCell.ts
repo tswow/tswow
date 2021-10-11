@@ -2,6 +2,8 @@ import { Objectified, Objects } from "../serialization/ObjectIteration";
 import { CellSystemTop } from "../systems/CellSystem";
 import { Cell, CellWrapper } from "./Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "./CellReadOnly";
+import { makePrototype } from "./PrototypeRegistry";
+import { WriteType } from "./WriteType";
 
 export class EnumCellReadOnly<T> extends CellWrapperReadOnly<number,T> {
     protected value(index: number): EnumValueReadOnly<T> {
@@ -242,53 +244,58 @@ export abstract class TransformedClassReadOnly<T> extends CellSystemTop {
 }
 
 export type EnumCon<T> = T|number
-export abstract class EnumCellT<T,V> extends EnumCell<T> {
-    protected abstract obj(): any;
 
-    set(value: EnumCon<V>) {
-        return super.set(typeof(value) === 'string'
-            ? this.obj()[value]
-            : value
-        );
+export class EnumCellT<T,V> extends EnumCell<T> {
+    protected obj: any;
+
+    constructor(owner: T, cell: Cell<number,any>, obj: any) {
+        super(owner, cell);
+        this.obj = obj;
     }
 
-    on(value: EnumCon<V>, callback: ()=>void) {
-        if(this.is(value)) callback();
-        return this.owner;
+    private res(con: EnumCon<V>) {
+        return typeof(con) === 'string' ? this.obj[con] : con
     }
 
-    is(value: EnumCon<V>) {
-        return super.is(typeof(value) === 'string'
-            ? this.obj()[value]
-            : value
-        );
-    }
-}
-
-export abstract class EnumCellTReadOnly<T,V> extends EnumCellReadOnly<T> {
-    protected abstract obj(): any;
-
-    protected set(value: EnumCon<V>) {
-        return super.set(typeof(value) === 'string'
-            ? this.obj()[value]
-            : value
-        );
+    set(con: EnumCon<V>) {
+        return super.set(this.res(con));
     }
 
-    on(value: EnumCon<V>, callback: ()=>void) {
-        if(this.is(value)) callback();
-        return this.owner;
+    is(con: EnumCon<V>) {
+        return super.is(this.res(con));
     }
 
-    is(value: EnumCon<V>) {
-        return super.is(typeof(value) === 'string'
-            ? this.obj()[value]
-            : value
-        );
+    on(con: EnumCon<V>, callback: ()=>void) {
+        return super.on(this.res(con),callback);
     }
 }
 
-export function makeEnum(obj: any, v: any) {
-    if(typeof(v) === 'number') return v;
-    return obj[v] as number;
+
+export interface EnumValueRead<T> {
+    is(): boolean
+    on(callback: ()=>void): T
+}
+
+export interface EnumValueWrite<T> extends EnumValueRead<T> {
+    set(): T
+}
+
+export type EnumCellWrite<T,Type> = {
+    [Property in keyof Omit<Type,'obj'>]: EnumValueWrite<T>;
+} & EnumCellT<T,keyof Type>
+
+export type EnumCellRead<T,Type> = {
+    [Property in keyof Omit<Type,'obj'>]: EnumValueRead<T>;
+} & Omit<EnumCellT<T,keyof Type>,'set'>
+
+export function makeEnumCell<T,Enum,WT extends WriteType>(obj: Enum, _: WT, owner: T, cell: Cell<number,any>) {
+    return makePrototype('enum',EnumCell.prototype,obj,{owner,cell},(p,k,v)=>{
+        Object.defineProperty(p,k,{
+            get: function() {
+                return this.value(v);
+            }
+        })
+    }) as WT extends 'WRITE'
+        ? EnumCellWrite<T,Enum>
+        : EnumCellRead<T,Enum>
 }

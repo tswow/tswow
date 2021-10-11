@@ -3,6 +3,8 @@ import { Transient } from "../serialization/Transient";
 import { Cell } from "./Cell";
 import { CellReadOnly } from "./CellReadOnly";
 import { CellRoot } from "./CellRoot";
+import { makePrototype } from "./PrototypeRegistry";
+import { WriteType } from "./WriteType";
 
 export type Bit = boolean | 1 | 0
 
@@ -42,6 +44,11 @@ export class MaskPart<T,D extends MaskCell32<T>> {
             ? this.owner.setOr(this.mask)
             : this.owner.setNot(this.mask);
     }
+
+    on(callback: ()=>void) {
+        if(this.get()) callback();
+        return this.owner;
+    }
 }
 
 export class MaskBit<T,D extends MaskCell<T>> {
@@ -57,6 +64,10 @@ export class MaskBit<T,D extends MaskCell<T>> {
 
     get() { return this.owner.getBit(this.bit); }
     set(value: Bit) { return this.owner.setBit(this.bit,value)}
+    on(callback: ()=>void) {
+        if(this.get()) callback();
+        return this.owner;
+    }
 }
 
 export class MaskMultiBit<T,D extends MaskCell<T>> {
@@ -88,6 +99,11 @@ export class MaskMultiBit<T,D extends MaskCell<T>> {
         this.bits.forEach(x=>this.owner.setBit(x,value))
         return MaskCell.owner(this.owner);
     }
+
+    on(callback: ()=>void) {
+        if(this.get()) callback();
+        return this.owner;
+    }
 }
 
 export abstract class MaskCell<T> extends CellRoot<T> {
@@ -112,10 +128,20 @@ export abstract class MaskCell<T> extends CellRoot<T> {
 
     objectify() {
         let usedIndices : number[] = []
+
         let thing = Object.keys(Objects.mapObject(this, ['object'],
             (k, v) => {
-                usedIndices.push(v.bit);
-                return v.isBit && v.get();
+                if(v.isBit) {
+                    usedIndices.push(v.bit);
+                    return v.get();
+                }
+
+                if(v.isMask) {
+                    MaskCell32Impl.bits_from(v.mask).forEach(x=>usedIndices.push(x))
+                    return v.get();
+                }
+
+                return false;
             },
             (k, v) => {
                 return k;
@@ -586,6 +612,7 @@ export function makeMask(obj: any, value: MaskCon<any>): number {
         .reduce<number>((p,c)=>p|makeMask(obj,c),0)
     throw new Error(`Unknown MaskCell value: ${value}`)
 }
+
 export abstract class MaskCell32T<T,Str> extends MaskCell32<T> {
     protected abstract obj(): any;
     protected mm(value: MaskCon<Str>) {
@@ -612,28 +639,31 @@ export abstract class MaskCell32T<T,Str> extends MaskCell32<T> {
     getNot(value: MaskCon<Str>) { return super.getNot(this.mm(value)) }
 }
 
-export abstract class MaskCell32TReadOnly<T,Str> extends MaskCell32ReadOnly<T> {
-    protected abstract obj(): any;
-    protected mm(value: MaskCon<Str>) {
-        return makeMask(this.obj(),value);
-    }
+interface MaskValueRead<T> {
+    get(): boolean
+    on(callback: ()=>void): T
+}
 
-    protected set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
-    protected setOr(value: MaskCon<Str>)  { return super.setOr(this.mm(value)) }
-    getOr(value: MaskCon<Str>)  { return super.getOr(this.mm(value)) }
-    protected add(value: MaskCon<Str>)    { return super.setOr(this.mm(value)) }
-    hasAll(value: MaskCon<Str>) {
-        let v = this.mm(value);
-        return super.getAnd(v) === v;
-    }
-    hasAny(value: MaskCon<Str>) { return this.getOr(value) !== 0; }
-    protected remove(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
-    protected setNor(value: MaskCon<Str>) { return super.setNor(this.mm(value)) }
-    getNor(value: MaskCon<Str>) { return super.getNor(this.mm(value)) }
-    protected setXor(value: MaskCon<Str>) { return super.setXor(this.mm(value)) }
-    getXor(value: MaskCon<Str>) { return super.getXor(this.mm(value)) }
-    protected setAnd(value: MaskCon<Str>) { return super.setAnd(this.mm(value)) }
-    getAnd(value: MaskCon<Str>) { return super.getAnd(this.mm(value)) }
-    protected setNot(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
-    getNot(value: MaskCon<Str>) { return super.getNot(this.mm(value)) }
+interface MaskValueWrite<T> extends MaskValueRead<T> {
+    set(val: Bit): T
+}
+
+type MaskCellWrite<T,Type> = {
+    [Property in keyof Type]: MaskValueWrite<T>;
+} & MaskCell32T<T,keyof Type>
+
+type MaskCellRead<T,Type> = {
+    [Property in keyof Type]: MaskValueRead<T>;
+} & Omit<MaskCell32T<T,keyof Type>,'set'>
+
+export function makeMaskCell32<T,Enum,WT extends WriteType>(obj: Enum, _: WT, owner: T, cell: Cell<number,any>) {
+    return makePrototype('mask',MaskCell32.prototype,obj,{owner,cell},(p,k,v)=>{
+        Object.defineProperty(p,k,{
+            get: function() {
+                return this.mask(v);
+            }
+        })
+    }) as WT extends 'WRITE'
+        ? MaskCellWrite<T,Enum>
+        : MaskCellRead<T,Enum>
 }
