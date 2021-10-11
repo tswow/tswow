@@ -47,10 +47,12 @@ function setupImages() {
     return true;
 }
 
+let hasStitched = false;
 export function stitchClassIcon(image: TSImage, index: number = -1) {
     if(index<0) {
         index = stitchIndex++;
     }
+    hasStitched = true;
 
     if(stitchedSquares===undefined || stitchedCircles===undefined) {
         if(!setupImages())
@@ -81,7 +83,7 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 }
 
 finish('build-class-icons',()=>{
-    if(isReadOnly()) return;
+    if(!hasStitched || isReadOnly()) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
             return;
