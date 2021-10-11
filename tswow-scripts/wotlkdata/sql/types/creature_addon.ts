@@ -48,6 +48,11 @@ export class creature_addonRow extends SqlRow<creature_addonCreator,creature_add
     /**
      * No comment (yet!)
      */
+    get MountCreatureID() { return new SQLCell<int,this>(this,'MountCreatureID')}
+
+    /**
+     * No comment (yet!)
+     */
     get bytes1() {return new SQLCell<int, this>(this, 'bytes1')}
 
     /**
@@ -87,6 +92,7 @@ export type creature_addonCreator = {
     guid? : int,
     path_id? : int,
     mount? : mediumint,
+    MountCreatureID? : int,
     bytes1? : int,
     bytes2? : int,
     emote? : int,
@@ -101,6 +107,7 @@ export type creature_addonQuery = {
     guid? : Relation<int>,
     path_id? : Relation<int>,
     mount? : Relation<mediumint>,
+    MountCreatureID? : Relation<mediumint>
     bytes1? : Relation<int>,
     bytes2? : Relation<int>,
     emote? : Relation<int>,
