@@ -21,7 +21,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class LoadingScreen extends MainEntity<LoadingScreensRow> {
     get ID() { return this.row.ID.get(); }
@@ -40,7 +40,7 @@ export class LoadingScreenRef<T> extends RefDynamic<T,LoadingScreen> {
 }
 
 export class LoadingScreenRegistryClass
-    extends RegistryDynamicNoRef<LoadingScreen,LoadingScreensRow,LoadingScreensQuery>
+    extends RegistryDynamic<LoadingScreen,LoadingScreensRow,LoadingScreensQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new LoadingScreenRef(owner,cell,this);

@@ -6,7 +6,7 @@ import { ZoneMusicQuery, ZoneMusicRow } from "wotlkdata/dbc/types/ZoneMusic";
 import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
-import { RegistryStaticNoRef } from "../Refs/Registry";
+import { RegistryStatic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "./SoundEntry";
 
 export class ZoneMusicEntry extends CellSystem<ZoneMusic> {
@@ -69,7 +69,7 @@ export class ZoneMusicRef<T> extends RefStatic<T,ZoneMusic> {
 }
 
 export class ZoneMusicRegistryClass
-    extends RegistryStaticNoRef<ZoneMusic,ZoneMusicRow,ZoneMusicQuery>
+    extends RegistryStatic<ZoneMusic,ZoneMusicRow,ZoneMusicQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>): ZoneMusicRef<T> {
         return new ZoneMusicRef(owner,cell,this);

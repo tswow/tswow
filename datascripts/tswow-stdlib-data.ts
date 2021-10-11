@@ -22,7 +22,7 @@ import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
 import { BattlegroundRegistry } from "./Battleground/Battleground";
 import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
-import { ClassRegistry } from "./Class/Class";
+import { ClassRegistry } from "./Class/ClassRegistry";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creature/Creatures";
 import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";

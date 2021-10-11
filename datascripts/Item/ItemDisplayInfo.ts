@@ -22,7 +22,7 @@ import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { ParticleColorRegistry } from "../Misc/ParticleColor";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
 import { ItemVisualsRegistry } from "./ItemVisualEffect";
@@ -63,7 +63,7 @@ export class ItemDisplayInfoRef<T> extends RefDynamic<T,ItemDisplayInfo> {
 
 
 export class ItemDisplayInfoRegistryClass
-    extends RegistryDynamicNoRef<
+    extends RegistryDynamic<
           ItemDisplayInfo
         , ItemDisplayInfoRow
         , ItemDisplayInfoQuery

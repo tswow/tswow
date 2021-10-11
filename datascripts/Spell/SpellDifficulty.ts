@@ -21,7 +21,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SpellDifficulty extends MainEntity<SpellDifficultyRow> {
     clear(): this {
@@ -57,7 +57,7 @@ export class SpellDifficultyRef<T> extends RefDynamic<T,SpellDifficulty>
 }
 
 export class SpellDifficultyRegistryClass
-    extends RegistryDynamicNoRef<SpellDifficulty,SpellDifficultyRow,SpellDifficultyQuery>
+    extends RegistryDynamic<SpellDifficulty,SpellDifficultyRow,SpellDifficultyQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new SpellDifficultyRef(owner, cell, this);

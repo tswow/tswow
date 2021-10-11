@@ -5,7 +5,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class AchievementCategory extends MainEntity<Achievement_CategoryRow> {
     get ID() { return this.row.ID.get(); }
@@ -45,7 +45,7 @@ export class AchievementCategoryRef<T> extends RefDynamic<T,AchievementCategory>
 }
 
 export class AchievementCategoryRegistryClass
-    extends RegistryDynamicNoRef<AchievementCategory,Achievement_CategoryRow,Achievement_CategoryQuery>
+    extends RegistryDynamic<AchievementCategory,Achievement_CategoryRow,Achievement_CategoryQuery>
 {
     nullID = () => -1
 

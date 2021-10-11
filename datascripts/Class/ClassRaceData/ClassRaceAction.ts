@@ -5,7 +5,7 @@ import { playercreateinfo_actionRow } from "wotlkdata/sql/types/playercreateinfo
 import { ItemTemplateRegistry } from "../../Item/ItemTemplate";
 import { TransformedEntity } from "../../Misc/Entity";
 import { SpellRegistry } from "../../Spell/Spells";
-import { ClassRegistry } from "../Class";
+import { ClassRegistry } from "../ClassRegistry";
 
 export class ActionEnum extends EnumCellTransform<ClassRaceActionBase> {
     get Macro() { return this.plain_value(64)}

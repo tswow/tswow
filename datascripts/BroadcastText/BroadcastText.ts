@@ -24,7 +24,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RefStatic } from "../Refs/Ref";
-import { RegistryStaticNoRef } from "../Refs/Registry";
+import { RegistryStatic } from "../Refs/Registry";
 
 function getLocRow(id: number, lang: Language) {
     const row = SQL.broadcast_text_locale.find({ID: id, locale: lang});
@@ -111,7 +111,7 @@ export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
 }
 
 export class BroadcastTextRegistryClass
-    extends RegistryStaticNoRef<BroadcastText,broadcast_textRow,broadcast_textQuery>
+    extends RegistryStatic<BroadcastText,broadcast_textRow,broadcast_textQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new BroadcastTextRef(owner, cell, this);

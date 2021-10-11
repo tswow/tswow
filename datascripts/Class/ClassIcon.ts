@@ -3,7 +3,7 @@ import * as path from 'path';
 import { finish, isReadOnly } from "wotlkdata";
 import { Settings } from "wotlkdata/Settings";
 import { TSImage, TSImages } from "../Images/Image";
-import { ClassRegistry } from './Class';
+import { ClassRegistry } from './ClassRegistry';
 
 const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"

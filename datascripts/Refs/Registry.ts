@@ -95,13 +95,18 @@ export abstract class RegistryStaticNoClone<
     }
 }
 
-export abstract class RegistryStaticNoRef<
-      E extends MainEntity<R> | TransformedEntity<R,any>
+export abstract class RegistryStatic<
+      E extends MainEntity<R>|TransformedEntity<R,any>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
     , Q
     >
     extends RegistryRowBase<E,R,Q>
 {
+    ref<T>(owner: T, cell: Cell<number,any>): RefStatic<T,E> {
+        // @ts-ignore TODO FIX
+        return new RefStatic(owner, cell, this);
+    }
+
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
     protected abstract IDs(): StaticIDGenerator
     abstract Clear(r: E, mod: string, id: string): void;
@@ -119,19 +124,6 @@ export abstract class RegistryStaticNoRef<
             this.Clear(entity, mod, id);
             return entity;
         }
-    }
-}
-
-export abstract class RegistryStatic<
-      E extends MainEntity<R>|TransformedEntity<R,any>
-    , R extends Row<any,Q> & {clone: (id: number)=>R}
-    , Q
-    >
-    extends RegistryStaticNoRef<E,R,Q>
-{
-    ref<T>(owner: T, cell: Cell<number,any>): RefStatic<T,E> {
-        // @ts-ignore TODO FIX
-        return new RefStatic(owner, cell, this);
     }
 }
 
@@ -158,13 +150,18 @@ export abstract class RegistryDynamicNoClone<
     }
 }
 
-export abstract class RegistryDynamicNoRef<
+export abstract class RegistryDynamic<
       E extends MainEntity<R>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
     , Q
     >
     extends RegistryRowBase<E,R,Q>
 {
+    ref<T>(owner: T, cell: Cell<number,any>): RefDynamic<T,E> {
+        // @ts-ignore fix
+        return new RefDynamic(owner, cell, this);
+    }
+
     protected abstract Table(): Table<any,Q,R> & { add: (id: number)=>R}
     protected abstract ids(): DynamicIDGenerator
     abstract Clear(entity: E): void;
@@ -182,18 +179,5 @@ export abstract class RegistryDynamicNoRef<
             this.Clear(entity);
             return entity;
         }
-    }
-}
-
-export abstract class RegistryDynamic<
-      E extends MainEntity<R>
-    , R extends Row<any,Q> & {clone: (id: number)=>R}
-    , Q
-    >
-    extends RegistryDynamicNoRef<E,R,Q>
-{
-    ref<T>(owner: T, cell: Cell<number,any>): RefDynamic<T,E> {
-        // @ts-ignore fix
-        return new RefDynamic(owner, cell, this);
     }
 }

@@ -21,7 +21,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SpellRadius extends MainEntity<SpellRadiusRow> {
     clear(): this {
@@ -61,7 +61,7 @@ export class SpellRadiusRef<T> extends RefDynamic<T,SpellRadius>
 }
 
 export class SpellRadiusRegistryClass
-    extends RegistryDynamicNoRef<SpellRadius,SpellRadiusRow,SpellRadiusQuery>
+    extends RegistryDynamic<SpellRadius,SpellRadiusRow,SpellRadiusQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new SpellRadiusRef(owner, cell, this);

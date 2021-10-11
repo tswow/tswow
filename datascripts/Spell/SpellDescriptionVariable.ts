@@ -21,7 +21,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SpellDescriptionVariable extends MainEntity<SpellDescriptionVariablesRow> {
     clear(): this {
@@ -58,7 +58,7 @@ export class SpellDescriptionVariableRef<T>
 }
 
 export class SpellDescriptionVariableRegistryClass
-    extends RegistryDynamicNoRef<
+    extends RegistryDynamic<
           SpellDescriptionVariable
         , SpellDescriptionVariablesRow
         , SpellDescriptionVariablesQuery

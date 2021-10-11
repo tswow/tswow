@@ -1,7 +1,7 @@
 import { Cell, CellWrapper } from "wotlkdata/cell/cells/Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
-import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { EnumCon, EnumValueRead, EnumValueWrite } from "wotlkdata/cell/cells/EnumCell";
+import { makePrototype } from "wotlkdata/cell/cells/PrototypeRegistry";
 
 // TODO: move/rename this somewhere suitable
 export class SelfRef<T,V> {
@@ -51,6 +51,10 @@ export class RefReadOnly<T,V> extends CellWrapperReadOnly<number,T>{
         callback(this.getRef());
     }
 
+    is(value: number) {
+        return this.get() === value;
+    }
+
     exists() { return this.registry.Exists(this.cell.get()); }
 
     objectify() { return this.cell.get(); }
@@ -83,6 +87,8 @@ export class RefBase<T,V,R extends LoadRegistry<V>> extends CellWrapper<number,T
     }
 
     exists() { return this.registry.Exists(this.cell.get()); }
+
+    is(value: number) { return this.get() === value; }
 
     objectify() { return this.cell.get(); }
 }
@@ -142,126 +148,121 @@ export class RefDynamic<T,V> extends RefBase<T,V,DynamicRegistry<V>> {
     }
 }
 
-interface RefEnumReadOnly {
-    get(): number;
-}
+export class RefValue<T> implements EnumValueWrite<T> {
+    protected owner: T;
+    protected cell: Cell<number,any>
+    protected index: number;
 
-interface RefEnum<T> extends RefEnumReadOnly {
-    set(value: number): T
-}
-
-export class RefEnumValueReadOnly<T> extends CellSystem<T> {
-    protected value: number;
-    protected container: RefEnumReadOnly
-
-    constructor(owner: T, container: RefEnumReadOnly, value: number) {
-        super(owner);
-        this.value = value;
-        this.container = container;
+    constructor(owner: T, cell: Cell<number,any>, index: number) {
+        this.owner = owner;
+        this.cell = cell;
+        this.index = index;
     }
 
-    is() {
-        return this.value === this.container.get();
-    }
+    is() { return this.cell.get() === this.index; }
 
     on(callback: ()=>void) {
         if(this.is()) callback();
         return this.owner;
     }
-}
-export class RefEnumValue<T> extends RefEnumValueReadOnly<T> {
-    protected container: RefEnum<T>
-
-    constructor(owner: T, container: RefEnum<T>, value: number) {
-        super(owner,container,value);
-        this.container = container;
-    }
 
     set() {
-        return this.container.set(this.value);
-    }
-}
-
-export abstract class RefDynamicEnum<T,V,S> extends RefDynamic<T,V> {
-    protected abstract obj(): any;
-
-    protected value(index: number) {
-        return new RefEnumValue(this.owner,this,index);
-    }
-
-    set(value: EnumCon<S>) {
-        return super.set(makeEnum(this.obj(),value))
-    }
-
-    is(value: EnumCon<S>) {
-        return this.get() === makeEnum(this.obj(),value)
-    }
-
-    on(value: EnumCon<S>, callback: ()=>void) {
-        if(this.is(value)) callback();
+        this.cell.set(this.index);
         return this.owner;
     }
 }
 
-export abstract class RefReadOnlyEnum<T,V,S> extends RefReadOnly<T,V> {
-    protected abstract obj(): any;
-
-    protected value(index: number) {
-        return new RefEnumValueReadOnly(this.owner,this,index);
-    }
-
-    set(value: EnumCon<S>) {
-        return super.set(makeEnum(this.obj(),value))
-    }
-
-    is(value: EnumCon<S>) {
-        return this.get() === makeEnum(this.obj(),value)
-    }
-
-    on(value: EnumCon<S>, callback: ()=>void) {
-        if(this.is(value)) callback();
-        return this.owner;
-    }
+function decon(obj: any, val: EnumCon<any>): number {
+    return typeof(val) === 'string' ? obj[val] : val;
 }
 
-export abstract class RefNoCreateEnum<T,V,S> extends RefNoCreate<T,V> {
-    protected abstract obj(): any;
-
-    protected value(index: number) {
-        return new RefEnumValue(this.owner,this,index);
-    }
-
-    set(value: EnumCon<S>) {
-        return super.set(makeEnum(this.obj(),value))
-    }
-
-    is(value: EnumCon<S>) {
-        return this.get() === makeEnum(this.obj(),value)
-    }
-
-    on(value: EnumCon<S>, callback: ()=>void) {
-        if(this.is(value)) callback();
-        return this.owner;
-    }
+function refProtoMaker(p: any, k: string, v: any) {
+    Object.defineProperty(p,k,{
+        get: function() {
+            return this.value(v);
+        }
+    })
 }
 
-export abstract class RefStaticEnum<T,V,S> extends RefDynamic<T,V> {
-    protected abstract obj(): any;
+export class RefDynamicT<T,V,Str> extends RefDynamic<T,V> {
+    protected value(index: number) { return new RefValue(this.owner, this.cell, index)}
+    private obj: any
+    set(val: EnumCon<Str>) { return super.set(decon(this.obj,val)); }
+    is(val: EnumCon<Str>) { return super.is(decon(this.obj,val)); }
+}
 
-    protected value(index: number) {
-        return new RefEnumValue(this.owner,this,index);
-    }
+export type RefDynamicTT<T,V,Str> = {
+    [Property in keyof Str]: EnumValueWrite<T>
+} & RefDynamicT<T,V,Str>
 
-    set(value: EnumCon<S>) {
-        return super.set(makeEnum(this.obj(),value))
-    }
+export function makeRefDynamic<T,V,Str>(s: Str, owner: T, cell: Cell<number,any>, registry: DynamicRegistry<V>) {
+    return makePrototype(
+          'refDynamic'
+        , RefDynamicT.prototype
+        , s
+        , {owner,cell,registry}
+        , refProtoMaker
+        ) as RefDynamicTT<T,V,Str>
+}
 
-    is(value: EnumCon<S>) {
-        return this.get() === makeEnum(this.obj(),value)
-    }
+export class RefStaticT<T,V,Str> extends RefStatic<T,V> {
+    protected value(index: number) { return new RefValue(this.owner, this.cell, index)}
+    private obj2: any
+    set(val: EnumCon<Str>) { return super.set(decon(this.obj2,val)); }
+    is(val: EnumCon<Str>) { return super.is(decon(this.obj2,val)); }
+}
 
-    on(value: EnumCon<S>, callback: ()=>void) {
-        if(this.is(value)) callback();
-        return this.owner;
-    }
+export type RefStaticTT<T,V,Str> = {
+    [Property in keyof Str]: EnumValueWrite<T>
+} & RefStaticT<T,V,Str>
+
+export function makeRefStatic<T,V,Str>(s: Str, owner: T, cell: Cell<number,any>, registry: StaticRegistry<V>) {
+    return makePrototype(
+          'refStatic'
+        , RefStaticT.prototype
+        , s
+        , {owner,cell,registry}
+        , refProtoMaker
+        ) as RefStaticTT<T,V,Str>
+}
+
+export class RefNoCreateT<T,V,Str> extends RefNoCreate<T,V> {
+    protected value(index: number) { return new RefValue(this.owner, this.cell, index)}
+    protected obj2: any
+    set(val: EnumCon<Str>) { return super.set(decon(this.obj2,val)); }
+    is(val: EnumCon<Str>) { return super.is(decon(this.obj2,val)); }
+}
+
+export type RefNoCreateTT<T,V,Str> = {
+    [Property in keyof Str]: EnumValueWrite<T>
+} & RefNoCreateT<T,V,Str>
+
+export function makeRefNoCreate<T,V,Str>(s: Str, owner: T, cell: Cell<number,any>, registry: LoadRegistry<V>) {
+    return makePrototype(
+          'refNoCreate'
+        , RefNoCreateT.prototype
+        , s
+        , {owner,cell,registry}
+        , refProtoMaker
+        ) as RefNoCreateTT<T,V,Str>
+}
+
+export class RefReadOnlyT<T,V,Str> extends RefReadOnly<T,V> {
+    // todo: cell hack
+    protected value(index: number) { return new RefValue(this.owner, this.cell as Cell<number,any>, index)}
+    private obj2: any
+    set(val: EnumCon<Str>) { return super.set(decon(this.obj2,val)); }
+    is(val: EnumCon<Str>) { return super.is(decon(this.obj2,val)); }
+}
+export type RefReadOnlyTT<T,V,Str> = {
+    [Property in keyof Str]: EnumValueRead<T>
+} & RefReadOnlyT<T,V,Str>
+export function makeRefReadOnly<T,V,Str>(s: Str, owner: T, cell: CellReadOnly<number,any>, registry: LoadRegistry<V>) {
+    return makePrototype(
+          'refReadOnly'
+        , RefReadOnlyT.prototype
+        , s
+        , {owner,cell,registry}
+        , refProtoMaker
+        ) as RefReadOnlyTT<T,V,Str>
 }

@@ -5,7 +5,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "./SoundEntry";
 
 export class ZoneIntroMusic extends MainEntity<ZoneintroMusicTableRow> {
@@ -33,7 +33,7 @@ export class ZoneIntroMusicRef<T> extends RefDynamic<T,ZoneIntroMusic>
 }
 
 export class ZoneIntroMusicRegistryClass
-    extends RegistryDynamicNoRef<
+    extends RegistryDynamic<
                   ZoneIntroMusic
                 , ZoneintroMusicTableRow
                 , ZoneintroMusicTableQuery

@@ -8,7 +8,7 @@ import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class PageTextContent extends SQLLocSystem<PageText> {
     protected getMain(): Cell<string, any> {
@@ -48,7 +48,7 @@ export class PageTextRef<T> extends RefDynamic<T,PageText> {
 }
 
 export class PageTextRegistryClass
-    extends RegistryDynamicNoRef<PageText,page_textRow,page_textQuery>
+    extends RegistryDynamic<PageText,page_textRow,page_textQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new PageTextRef(owner, cell, this);

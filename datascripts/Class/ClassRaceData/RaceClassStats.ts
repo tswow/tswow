@@ -2,7 +2,7 @@ import { SQL } from "wotlkdata";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { player_levelstatsRow } from "wotlkdata/sql/types/player_levelstats";
 import { MainEntity } from "../../Misc/Entity";
-import { ClassRegistry } from "../Class";
+import { ClassRegistry } from "../ClassRegistry";
 import { ClassRacePair } from "./ClassRaces";
 
 export class ClassRaceStatsEntry extends MainEntity<player_levelstatsRow> {

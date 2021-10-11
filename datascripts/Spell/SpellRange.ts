@@ -22,7 +22,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SpellRange extends MainEntity<SpellRangeRow> {
     clear(): this {
@@ -83,7 +83,7 @@ export class SpellRangeRef<T> extends RefDynamic<T,SpellRange>
 }
 
 export class SpellRangeRegistryClass
-    extends RegistryDynamicNoRef<SpellRange,SpellRangeRow,SpellRangeQuery>
+    extends RegistryDynamic<SpellRange,SpellRangeRow,SpellRangeQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new SpellRangeRef(owner,cell,this);

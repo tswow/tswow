@@ -6,7 +6,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";
-import { RegistryStaticNoRef } from "../Refs/Registry";
+import { RegistryStatic } from "../Refs/Registry";
 import { SoundEntryAdvancedRegistry } from "./SoundEntryAdvanced";
 import { SoundEntryFiles } from "./SoundEntryFile";
 import { SoundFlags } from "./SoundFlags";
@@ -68,7 +68,7 @@ export class SoundEntryRef<T> extends RefStatic<T,SoundEntry> {
     }
 }
 export class SoundEntryRegistryClass
-    extends RegistryStaticNoRef<SoundEntry,SoundEntriesRow,SoundEntriesQuery>
+    extends RegistryStatic<SoundEntry,SoundEntriesRow,SoundEntriesQuery>
 {
     ref<O>(owner: O, cell: Cell<number,any>): SoundEntryRef<O> {
         return new SoundEntryRef(owner, cell, this);

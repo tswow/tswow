@@ -21,7 +21,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class SpellDuration extends MainEntity<SpellDurationRow> {
     clear(): this {
@@ -51,7 +51,7 @@ export class SpellDurationRef<T> extends RefDynamic<T,SpellDuration>
 }
 
 export class SpellDurationRegistryClass
-    extends RegistryDynamicNoRef<SpellDuration,SpellDurationRow,SpellDurationQuery>
+    extends RegistryDynamic<SpellDuration,SpellDurationRow,SpellDurationQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new SpellDurationRef(owner,cell,this);

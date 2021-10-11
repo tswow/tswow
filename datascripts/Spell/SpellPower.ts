@@ -23,7 +23,7 @@ import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";
-import { RegistryDynamicNoRef } from "../Refs/Registry";
+import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "./Spell";
 
 export const PowerTypeMap = {
@@ -89,7 +89,7 @@ export class SpellRuneCostRef<T> extends RefDynamic<T,SpellRuneCost> {
 }
 
 export class SpellRuneCostRegistryClass
-    extends RegistryDynamicNoRef<SpellRuneCost,SpellRuneCostRow,SpellRuneCostQuery>
+    extends RegistryDynamic<SpellRuneCost,SpellRuneCostRow,SpellRuneCostQuery>
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
         return new SpellRuneCostRef(owner, cell, this);

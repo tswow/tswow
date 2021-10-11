@@ -9,7 +9,7 @@ import { MainEntity } from "../../Misc/Entity";
 import { Ids } from "../../Misc/Ids";
 import { SelfRef } from "../../Refs/Ref";
 import { RegistryQueryBase } from "../../Refs/Registry";
-import { ClassRegistry } from "../Class";
+import { ClassRegistry } from "../ClassRegistry";
 
 export class StartGearItem extends ArrayEntry<StartGear> {
     get Item() {
