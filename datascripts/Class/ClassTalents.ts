@@ -1,5 +1,6 @@
+import { makeMask, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { makeRacemask, RaceType } from "../Race/RaceType";
+import { RaceMask } from "../Race/RaceType";
 import { TalentTreeRegistry } from "../Talents/Talents";
 import { TalentTree } from "../Talents/TalentTree";
 import { Class } from "./Class";
@@ -13,10 +14,10 @@ export class ClassTalents extends MultiRowSystem<TalentTree,Class> {
         return value.row.isDeleted();
     }
 
-    add(mod: string, id: string, tabIndex: number, races?: RaceType[]) {
+    add(mod: string, id: string, tabIndex: number, races?: MaskCon<keyof typeof RaceMask>) {
         let tree = TalentTreeRegistry.create(mod,id)
         tree.row.OrderIndex.set(tabIndex)
-                .RaceMask.set(makeRacemask(races||[]))
+                .RaceMask.set(makeMask(RaceMask,races))
                 .ClassMask.set(1<<(this.owner.ID-1))
         return tree;
     }

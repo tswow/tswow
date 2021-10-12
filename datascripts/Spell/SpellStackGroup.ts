@@ -1,4 +1,4 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { spell_groupRow } from "wotlkdata/sql/types/spell_group";
@@ -10,17 +10,12 @@ import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
 
-export class SpellGroupType<T> extends EnumCell<T> {
-    /** Enum Value:                               0 */
-    get Default()             { return this.value(0) }
-    /** Enum Value:                               1 */
-    get Exclusive()           { return this.value(1) }
-    /** Enum Value:                               2 */
-    get ExclusiveSameCaster() { return this.value(2) }
-    /** Enum Value:                               3 */
-    get ExclusiveSameEffect() { return this.value(3) }
-    /** Enum Value:                               4 */
-    get ExclusiveHighest()    { return this.value(4) }
+export enum SpellGroupType {
+    DEFAULT               = 0,
+    EXCLUSIVE             = 1,
+    EXCLUSIVE_SAME_CASTER = 2,
+    EXCLUSIVE_SAME_EFFECT = 3,
+    EXCLUSIVE_HIGHEST     = 4,
 }
 
 export class SpellGroupMapping extends MainEntity<spell_groupRow> {
@@ -53,7 +48,9 @@ export class SpellSpellStackGroups extends MultiRowSystem<SpellGroupMapping,Spel
 // SpellGroups are defined by their stack rules
 export class SpellStackGroup extends MainEntity<spell_group_stack_rulesRow> {
     get ID() { return this.row.group_id.get(); }
-    get StackRule() { return new SpellGroupType(this, this.row.stack_rule)}
+    get StackRule() {
+        return makeEnumCell(SpellGroupType,this, this.row.stack_rule);
+    }
 }
 
 export class SpellGroupRegistryClass
@@ -70,7 +67,7 @@ export class SpellGroupRegistryClass
         return Ids.spell_group
     }
     Clear(entity: SpellStackGroup): void {
-        entity.StackRule.Default.set()
+        entity.StackRule.DEFAULT.set()
     }
     protected FindByID(id: number): spell_group_stack_rulesRow {
         return SQL.spell_group_stack_rules.find({group_id:id})

@@ -3,6 +3,7 @@
 import { DBC, LUAXML, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
+import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
 import { ChrClassesQuery, ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
 import { Edit } from "wotlkdata/luaxml/TextFile";
 import { includes } from "wotlkdata/query/Relations";
@@ -14,7 +15,6 @@ import { RegistryRowBase } from "../Refs/Registry";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
 import { Class } from "./Class";
-import { ClassType, resolveClassType } from "./ClassType";
 
 // it's too complicated to find all the lua/xml rows again
 const loadedClasses: {[key: number]: Class} = {}
@@ -114,11 +114,11 @@ export class ClassRegistryClass
         return e.ID;
     }
 
-    load(cls: ClassType) {
-        return super.load(resolveClassType(cls));
+    load(cls: EnumCon<keyof typeof ClassIDs>) {
+        return super.load(makeEnum(ClassIDs,cls));
     }
 
-    create(mod: string, clsId: string, parentClass: ClassType) {
+    create(mod: string, clsId: string, parentClass: EnumCon<keyof typeof ClassIDs>) {
         for(let i=0;i<clsId.length;++i) {
             let cc = clsId.charCodeAt(i);
             if(!(cc>=97&&cc<=122) && !(cc>=48 && cc<=57) && !(cc>=65&&cc<=90)) {
@@ -131,7 +131,7 @@ export class ClassRegistryClass
 
         let identifier = clsId.toUpperCase();
 
-        const parent = resolveClassType(parentClass);
+        const parent = makeEnum(ClassIDs,parentClass);
 
         // Set up parent buttons
         if(!created) {

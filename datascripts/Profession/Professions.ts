@@ -20,8 +20,8 @@ export class ProfessionRegistryClass
          .RaceClassInfos.addMod(undefined,undefined,rci=>{
             rci
                .Flags.clearAll()
-               .Flags.IsProfession.set(true)
-               .Flags.IsClassLine.set(true)
+               .Flags.IS_PROFESSION.set(true)
+               .Flags.IS_CLASS_LINE.set(true)
                .SkillTier.set(SkillTiersRegistry.create().ID)
         })
         ProfessionRanks.setCached(r.Ranks,0);

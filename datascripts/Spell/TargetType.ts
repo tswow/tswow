@@ -14,111 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class SpellTargetType<T> extends MaskCell32<T> {
-    /**
-     * No comment (yet!)
-     */
-    get Unused1() { return this.bit(0); }
-
-    /**
-     * No comment (yet!)
-     */
-    get Unit() { return this.bit(1); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitRaid() { return this.bit(2); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitParty() { return this.bit(3); }
-
-    /**
-     * No comment (yet!)
-     */
-    get Item() { return this.bit(4); }
-
-    /**
-     * No comment (yet!)
-     */
-    get SourceLocation() { return this.bit(5); }
-
-    /**
-     * No comment (yet!)
-     */
-    get DestLocation() { return this.bit(6); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitEnemy() { return this.bit(7); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitAlly() { return this.bit(8); }
-
-    /**
-     * No comment (yet!)
-     */
-    get CorpseEnemy() { return this.bit(9); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitDead() { return this.bit(10); }
-
-    /**
-     * No comment (yet!)
-     */
-    get GameObject() { return this.bit(11); }
-
-    /**
-     * No comment (yet!)
-     */
-    get TradeItem() { return this.bit(12); }
-
-    /**
-     * No comment (yet!)
-     */
-    get String() { return this.bit(13); }
-
-    /**
-     * No comment (yet!)
-     */
-    get GameObjectItem() { return this.bit(14); }
-
-    /**
-     * No comment (yet!)
-     */
-    get CorpseAlly() { return this.bit(15); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitMinipet() { return this.bit(16); }
-
-    /**
-     * No comment (yet!)
-     */
-    get GlyphSlot() { return this.bit(17); }
-
-    /**
-     * No comment (yet!)
-     */
-    get DestTarget() { return this.bit(18); }
-
-    /**
-     * No comment (yet!)
-     */
-    get Unused20() { return this.bit(19); }
-
-    /**
-     * No comment (yet!)
-     */
-    get UnitPassenger() { return this.bit(20); }
+export enum SpellTargetType {
+    UNUSED1          = 0x1,
+    UNIT             = 0x2,
+    UNIT_RAID        = 0x4,
+    UNIT_PARTY       = 0x8,
+    ITEM             = 0x10,
+    SOURCE_LOCATION  = 0x20,
+    DEST_LOCATION    = 0x40,
+    UNIT_ENEMY       = 0x80,
+    UNIT_ALLY        = 0x100,
+    CORPSE_ENEMY     = 0x200,
+    UNIT_DEAD        = 0x400,
+    GAME_OBJECT      = 0x800,
+    TRADE_ITEM       = 0x1000,
+    STRING           = 0x2000,
+    GAME_OBJECT_ITEM = 0x4000,
+    CORPSE_ALLY      = 0x8000,
+    UNIT_MINIPET     = 0x10000,
+    GLYPH_SLOT       = 0x20000,
+    DEST_TARGET      = 0x40000,
+    UNUSED20         = 0x80000,
+    UNIT_PASSENGER   = 0x100000,
 }

@@ -14,16 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { SmartScript } from "./SmartScript";
 
-export class EventFlags extends MaskCell32<SmartScript> {
-    get NonRepeatable() {return this.bit(0)};
-    get NormalDungeon(){return this.bit(1)};
-    get HeroicDungeon(){return this.bit(2)};
-    get NormalRaid(){return this.bit(3)};
-    get HeroicRaid(){return this.bit(4)};
-    get DebugOnly(){return this.bit(5)};
-    get DontReset(){return this.bit(6)};
-    get WorksCharmed(){return this.bit(7)};
+export enum EventFlags {
+    NON_REPEATABLE = 0x1,
+    NORMAL_DUNGEON = 0x2,
+    HEROIC_DUNGEON = 0x4,
+    NORMAL_RAID    = 0x8,
+    HEROIC_RAID    = 0x10,
+    DEBUG_ONLY     = 0x20,
+    DONT_RESET     = 0x40,
+    WORKS_CHARMED  = 0x80,
 }

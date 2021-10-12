@@ -1,33 +1,33 @@
-import { EnumCellReadOnly, EnumCellTransformReadOnly } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
+import { EnumCellReadOnly, EnumCellTransformReadOnly, makeEnumCellReadOnly } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32ReadOnly, MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
 import { conditionsRow } from "wotlkdata/sql/types/conditions";
 import { AchievementRegistry } from "../Achievement/Achievement";
 import { AreaRegistry } from "../Area/Area";
+import { ClassMask } from "../Class/ClassRegistry";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
-import { CreatureTypeEnumReadOnly } from "../Creature/CreatureType";
+import { CreatureType } from "../Creature/CreatureType";
 import { FactionRegistry } from "../Faction/Faction";
 import { GameEventRegistry } from "../GameEvent/GameEvent";
 import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MapRegistry } from "../Map/Maps";
-import { ClassMaskReadOnly } from "../Misc/ClassMask";
 import { TransformedEntityReadOnly } from "../Misc/Entity";
-import { RaceMaskReadOnly } from "../Misc/RaceMask";
-import { ReputationRankMaskReadOnly } from "../Misc/ReputationRank";
-import { TeamEnumReadOnly } from "../Misc/TeamEnum";
+import { ReputationRankMask } from "../Misc/ReputationRank";
+import { Team } from "../Misc/TeamEnum";
 import { QuestRegistry } from "../Quest/Quests";
+import { RaceMask } from "../Race/RaceType";
 import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { SpellRegistry } from "../Spell/Spells";
 import { TitleRegistry } from "../Title/Titles";
-import { ComparisonEnumReadOnly } from "./Settings/ComparisonType";
-import { DrunkenStateEnumReadOnly } from "./Settings/DrunkenState";
-import { GenderAllowNoneEnumReadOnly } from "./Settings/Gender";
+import { ComparisonTypes } from "./Settings/ComparisonType";
+import { DrunkenStates } from "./Settings/DrunkenState";
+import { GendersAllowNone } from "./Settings/Gender";
 import { PetTypeEnumReadOnly } from "./Settings/PetType";
 import { QuestStateMaskReadOnly } from "./Settings/QuestState";
 import { RelationTypeEnumReadOnly } from "./Settings/RelationType";
 import { StandStateEnumReadOnly } from "./Settings/StandState";
 import { StateTypeEnumReadOnly } from "./Settings/StateType";
-import { UnitStateMaskReadOnly } from "./Settings/UnitState";
+import { UnitStates } from "./Settings/UnitState";
 import { WorldObjectTypeEnumReadOnly, WorldObjectTypeMaskReadOnly } from "./Settings/WorldObjectType";
 
 export class ConditionBase extends TransformedEntityReadOnly<conditionsRow, ConditionPlain> {
@@ -88,12 +88,14 @@ export class ConditionReputationRank extends ConditionBase {
         return FactionRegistry.readOnlyRef(this, this.v1);
     }
     get Reputation() {
-        return new ReputationRankMaskReadOnly(this, this.v2);
+        return makeMaskCell32ReadOnly(ReputationRankMask,this,this.v2);
     }
 }
 
 export class ConditionTeam extends ConditionBase {
-    get Team() { return new TeamEnumReadOnly(this, this.v1); }
+    get Reputation() {
+        return makeEnumCellReadOnly(Team,this,this.v1);
+    }
 }
 
 export class ConditionSkill extends ConditionBase {
@@ -110,7 +112,9 @@ export class ConditionQuestTaken extends ConditionBase {
 }
 
 export class ConditionDrunkenState extends ConditionBase {
-    get DrunkenState() {return new DrunkenStateEnumReadOnly(this, this.v1); }
+    get DrunkenState() {
+        return makeEnumCellReadOnly(DrunkenStates,this,this.v1);
+    }
 }
 
 export class ConditionWorldState extends ConditionBase {
@@ -140,11 +144,11 @@ export class ConditionQuestNone extends ConditionBase {
 }
 
 export class ConditionClass extends ConditionBase {
-    get ClassMask() { return new ClassMaskReadOnly(this, this.v1) }
+    get ClassMask() { return makeMaskCell32ReadOnly(ClassMask, this, this.v1) }
 }
 
 export class ConditionRace extends ConditionBase {
-    get RaceMask() { return new RaceMaskReadOnly(this, this.v1) }
+    get RaceMask() { return makeMaskCell32ReadOnly(RaceMask, this, this.v1) }
 }
 
 export class ConditionAchievement extends ConditionBase {
@@ -162,11 +166,15 @@ export class ConditionSpawnMask extends ConditionBase {
 }
 
 export class ConditionGender extends ConditionBase {
-    get Gender() { return new GenderAllowNoneEnumReadOnly(this, this.v1) }
+    get Reputation() {
+        return makeEnumCellReadOnly(GendersAllowNone,this,this.v1);
+    }
 }
 
 export class ConditionUnitState extends ConditionBase {
-    get UnitState() { return new UnitStateMaskReadOnly(this, this.v1) }
+    get UnitState() {
+        return makeMaskCell32ReadOnly(UnitStates,this,this.v1);
+    }
 }
 
 export class ConditionMap extends ConditionBase {
@@ -178,7 +186,9 @@ export class ConditionArea extends ConditionBase {
 }
 
 export class ConditionCreatureType extends ConditionBase {
-    get CreatureType() { return new CreatureTypeEnumReadOnly(this, this.v1); }
+    get CreatureType() {
+        return makeEnumCellReadOnly(CreatureType,this,this.v1);
+    }
 }
 
 export class ConditionSpell extends ConditionBase {
@@ -191,7 +201,9 @@ export class ConditionPhaseMask extends ConditionBase {
 
 export class ConditionLevel extends ConditionBase {
     get Level() { return this.v1; }
-    get ComparisonType() { return new ComparisonEnumReadOnly(this, this.v2); }
+    get ComparisonType() {
+        return makeEnumCellReadOnly(ComparisonTypes,this,this.v2);
+    }
 }
 
 export class ConditionQuestComplete extends ConditionBase {
@@ -230,13 +242,17 @@ export class ConditionRelation extends ConditionBase {
 
 export class ConditionReaction extends ConditionBase {
     get Target() { return this.wrapReadOnly(this.v1); }
-    get Ranks() { return new ReputationRankMaskReadOnly(this, this.v1); }
+    get Ranks() {
+        return makeMaskCell32ReadOnly(ReputationRankMask,this,this.v2);
+    }
 }
 
 export class ConditionDistanceTo extends ConditionBase {
     get Target() { return this.wrapReadOnly(this.v1); }
     get Distance() { return this.wrapReadOnly(this.v2); }
-    get ComparisonType() { return new ComparisonEnumReadOnly(this, this.v3); }
+    get ComparisonType() {
+        return makeEnumCellReadOnly(ComparisonTypes,this,this.v3);
+    }
 }
 
 export class ConditionAlive extends ConditionBase {
@@ -244,12 +260,16 @@ export class ConditionAlive extends ConditionBase {
 
 export class ConditionHPValue extends ConditionBase {
     get HPValue() { return this.wrapReadOnly(this.v1); }
-    get ComparisonType() { return new ComparisonEnumReadOnly(this, this.v2); }
+    get ComparisonType() {
+        return makeEnumCellReadOnly(ComparisonTypes,this,this.v2);
+    }
 }
 
 export class ConditionHPPercent extends ConditionBase {
     get HPPercent() { return this.wrapReadOnly(this.v1); }
-    get ComparisonType() { return new ComparisonEnumReadOnly(this, this.v2); }
+    get ComparisonType() {
+        return makeEnumCellReadOnly(ComparisonTypes,this,this.v2);
+    }
 }
 
 export class ConditionRealmAchievement extends ConditionBase {

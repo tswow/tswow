@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
@@ -63,7 +64,9 @@ export class Area extends MainEntity<AreaTableRow> {
     get Light() { return this.wrap(this.row.Lightid); }
     get WorldStateUIs() { return new AreaWorldStateUIs(this); }
     get WorldStateSounds() { return new AreaWorldStateSounds(this); }
-    get Flags() { return new AreaFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(AreaFlags, this, this.row.Flags);
+    }
     get Children() { return new AreaChildren(this); }
 }
 

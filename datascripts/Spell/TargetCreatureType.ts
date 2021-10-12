@@ -14,21 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class SpellCreatureTarget<T> extends MaskCell32<T> {
-
-    get Beast() { return this.bit(0); }
-    get Dragonkin() { return this.bit(1); }
-    get Demon() { return this.bit(2); }
-    get Elemental() { return this.bit(3); }
-    get Giant() { return this.bit(4); }
-    get Undead() { return this.bit(5); }
-    get Humanoid() { return this.bit(6); }
-    get Critter() { return this.bit(7); }
-    get Mechanical() { return this.bit(8); }
-    get Unspecied() { return this.bit(9); }
-    get Totem() { return this.bit(10); }
-    get NonCombatPet() { return this.bit(11); }
-    get GasCloud() { return this.bit(12); }
+export enum SpellCreatureTarget {
+    BEAST          = 0x1,
+    DRAGONKIN      = 0x2,
+    DEMON          = 0x4,
+    ELEMENTAL      = 0x8,
+    GIANT          = 0x10,
+    UNDEAD         = 0x20,
+    HUMANOID       = 0x40,
+    CRITTER        = 0x80,
+    MECHANICAL     = 0x100,
+    UNSPECIED      = 0x200,
+    TOTEM          = 0x400,
+    NON_COMBAT_PET = 0x800,
+    GAS_CLOUD      = 0x1000,
 }

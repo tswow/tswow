@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 
-export class CreatureMovementType<T> extends EnumCell<T> {
-    get Idle()           { return this.value(0) }
-    get RandomMovement() { return this.value(1) }
-    get Waypoint()       { return this.value(2) }
+export enum CreatureMovementType {
+    IDLE            = 0,
+    RANDOM_MOVEMENT = 1,
+    WAYPOINT        = 2,
 }

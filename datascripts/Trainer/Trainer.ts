@@ -15,20 +15,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform, makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32, MaskCellWrite } from "wotlkdata/cell/cells/MaskCell";
 import { Language } from "wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { trainerQuery, trainerRow } from "wotlkdata/sql/types/trainer";
 import { trainer_spellRow } from "wotlkdata/sql/types/trainer_spell";
 import { Table } from "wotlkdata/table/Table";
 import { ClassRaceMaskSystemBase, IClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
-import { ClassRegistry } from "../Class/ClassRegistry";
+import { ClassMask, ClassRegistry } from "../Class/ClassRegistry";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
-import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RaceEnum, RaceMask } from "../Misc/RaceMask";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
+import { RaceIDs, RaceMask } from "../Race/RaceType";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
 import { SkillLineAbilityRegistry } from "../Spell/SpellSkillLines";
@@ -72,8 +72,12 @@ export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClass
     get Cost() { return this.wrap(this.row.MoneyCost); }
     get ReqLevel() { return this.wrap(this.row.ReqLevel); }
 
-    get ClassMask() { return new ClassMask(this, this.row.classMask); }
-    get RaceMask() { return new RaceMask(this, this.row.raceMask); }
+    get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
+        return makeMaskCell32(ClassMask, this,this.wrapUnlock(this.row.classMask));
+    }
+    get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
+        return makeMaskCell32(RaceMask, this,this.wrapUnlock(this.row.raceMask));
+    }
 
     get ReqAbilities() {
         return new ArrayRefSystem(this, 0, 3
@@ -155,8 +159,12 @@ export class TrainerBase extends TransformedEntity<trainerRow,TrainerPlain> {
     get Greeting(): TrainerLoc { return new TrainerLoc(this); }
     get Type() { return new TrainerRequirementType(this,this.row.Type); }
     get Spells() { return new TrainerSpells(this); }
-    get ClassMask() { return new ClassMask(this, this.row.classMask); }
-    get RaceMask() { return new ClassMask(this, this.row.raceMask); }
+    get ClassMask() {
+        return makeMaskCell32(ClassMask, this,this.row.classMask);
+    }
+    get RaceMask() {
+        return makeMaskCell32(RaceMask, this,this.row.raceMask);
+    }
 }
 
 export class TrainerPlain extends TrainerBase {
@@ -171,7 +179,7 @@ export class TrainerClass extends TrainerBase {
 
 export class TrainerRace extends TrainerBase {
     get RequiredRace() {
-        return new RaceEnum(this, this.row.Requirement);
+        return makeEnumCell(RaceIDs, this, this.row.Requirement);
     }
 }
 

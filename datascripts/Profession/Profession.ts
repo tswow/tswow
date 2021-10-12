@@ -247,7 +247,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Attributes.castableWhileMounted.set(true)
             .Attributes.castableOnVehicle.set(true)
             .Icon.setPath('Interface\\Icons\\Trade_BlackSmithing')
-            .SchoolMask.Physical.set(true)
+            .SchoolMask.PHYSICAL.set(true)
             .Visual.set(0)
             .Effects.addMod(eff=>{
                 eff.Type.TradeSkill.set()
@@ -290,8 +290,8 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Subtext.set(subtext)
             .Attributes.isHiddenFromLog.set(true)
             .Attributes.sheatheUnchanged.set(true)
-            .TargetType.UnitAlly.set(true)
-            .SchoolMask.Physical.set(true)
+            .TargetType.UNIT_ALLY.set(true)
+            .SchoolMask.PHYSICAL.set(true)
             .Effects.addMod(effect=>{
                 effect.Type.LearnSpell.set()
                     .LearntSpell.set(spell.ID)

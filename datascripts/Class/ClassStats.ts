@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBCFile } from "wotlkdata/dbc/DBCFile";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
@@ -23,7 +23,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { class_stat_formulasRow } from "wotlkdata/sql/types/class_stat_formulas";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";
-import { CLASS_TYPES } from "./ClassType";
+import { ClassIDs } from "./ClassRegistry";
 
 interface GtDBC {
     Data : Cell<number,any>;
@@ -84,26 +84,26 @@ export class BaseHpMana extends CellSystem<Class> {
     }
 }
 
-export class RangedAttackPowerClasses<T> extends EnumCell<T> {
-    get Default() { return this.value(0); }
-    get Hunter()  { return this.value(CLASS_TYPES.HUNTER); }
-    get Rogue()   { return this.value(CLASS_TYPES.ROGUE); }
-    get Warrior() { return this.value(CLASS_TYPES.WARRIOR); }
-    get Druid()   { return this.value(CLASS_TYPES.DRUID); }
+export enum RangedAttackPowerClass {
+      DEFAULT = 0,
+      HUNTER  = ClassIDs.HUNTER,
+      ROGUE   = ClassIDs.ROGUE,
+      WARRIOR = ClassIDs.WARRIOR,
+      DRUID   = ClassIDs.DRUID,
 }
 
-export class MeleeAttackPowerClasses<T> extends EnumCell<T> {
-    get Default()     { return this.value(0); }
-    get Warrior()     { return this.value(CLASS_TYPES.WARRIOR); }
-    get Paladin()     { return this.value(CLASS_TYPES.PALADIN); }
-    get DeathKnight() { return this.value(CLASS_TYPES.DEATH_KNIGHT); }
-    get Rogue()       { return this.value(CLASS_TYPES.ROGUE); }
-    get Hunter()      { return this.value(CLASS_TYPES.HUNTER); }
-    get Shaman()      { return this.value(CLASS_TYPES.SHAMAN); }
-    get Druid()       { return this.value(CLASS_TYPES.DRUID); }
-    get Mage()        { return this.value(CLASS_TYPES.MAGE); }
-    get Priest()      { return this.value(CLASS_TYPES.PRIEST); }
-    get Warlock()     { return this.value(CLASS_TYPES.WARLOCK); }
+export enum MeleeAttackPowerClass {
+    DEFAULT      = 0,
+    WARRIOR      = ClassIDs.WARRIOR,
+    PALADIN      = ClassIDs.PALADIN,
+    DEATH_KNIGHT = ClassIDs.DEATH_KNIGHT,
+    ROGUE        = ClassIDs.ROGUE,
+    HUNTER       = ClassIDs.HUNTER,
+    SHAMAN       = ClassIDs.SHAMAN,
+    DRUID        = ClassIDs.DRUID,
+    MAGE         = ClassIDs.MAGE,
+    PRIEST       = ClassIDs.PRIEST,
+    WARLOCK      = ClassIDs.WARLOCK
 }
 
 export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
@@ -153,17 +153,19 @@ export class ClassStats extends CellSystem<Class> {
     get BaseMana() { return new BaseHpMana(this.owner, "basemana"); }
 
     get MeleePowerType() {
-        return new MeleeAttackPowerClasses(
-              this.owner
+        return makeEnumCell(
+              MeleeAttackPowerClass
+            , this.owner
             , this._apFormula.class_out
         )
     }
 
     get RangedPowerType() {
-        return new RangedAttackPowerClasses(
-              this.owner
-            , this._rangedApFormula.class_out
-        )
+        return makeEnumCell(
+            RangedAttackPowerClass
+          , this.owner
+          , this._apFormula.class_out
+      )
     }
     get MeleeCritBase() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }
     get SpellCritBase() { return this.f(1,DBC.GtChanceToSpellCritBase); }

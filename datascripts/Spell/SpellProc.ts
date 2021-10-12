@@ -15,120 +15,115 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { spell_procRow } from "wotlkdata/sql/types/spell_proc";
 import { SchoolMask } from "../Misc/School";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
 
-export class DisableEffectsMask extends MaskCell32<Spell> {
-    /** explicitly disable aura proc effect 0 */
-    get Effect0() { return this.bit(0); }
-
-    /** explicitly disable aura proc effect 1 */
-    get Effect1() { return this.bit(1); }
-
-    /** explicitly disable aura proc effect 2 */
-    get Effect2() { return this.bit(2); }
+export enum DisableEffectsMask {
+    EFFECT0 = 0x1,
+    EFFECT1 = 0x2,
+    EFFECT2 = 0x4,
 }
 
-export class SpellAttributesMask extends MaskCell32<Spell> {
+export enum SpellAttributesMas {
     /** Requires target to give exp or honor */
-    get RequireExpOrHonor()    { return this.bit(0); }
+    REQUIRE_EXP_OR_HONOR     = 0x1,
     /** Can proc even if this spell is triggered by another spell */
-    get CanProcOnTriggered()   { return this.bit(1); }
+    CAN_PROC_ON_TRIGGERED    = 0x2,
     /** Requires the triggering spell to cost mana */
-    get RequireManaCost()      { return this.bit(2); }
+    REQUIRE_MANA_COST        = 0x4,
     /** Requires triggering spell to be affected by aura of this spell */
-    get RequireSpellMod()      { return this.bit(3); }
+    REQUIRE_SPELL_MOD        = 0x8,
     /** Aura has reduced chance to proc if actor is > level 60 */
-    get ReduceProc60()         { return this.bit(7); }
+    REDUCE_PROC60            = 0x80,
     /** Does not allow proc if proc is caused by spell cast by item */
-    get CantProcFromItemCast() { return this.bit(8); }
+    CANT_PROC_FROM_ITEM_CAST = 0x100,
 }
 
-export class SpellHitMask extends MaskCell32<Spell> {
-    get Normal()     { return this.bit(0); }
-    get Critical()   { return this.bit(1); }
-    get Miss()       { return this.bit(2); }
-    get FullResist() { return this.bit(3); }
-    get Dodge()      { return this.bit(4); }
-    get Parry()      { return this.bit(5); }
-    get Block()      { return this.bit(6); }
-    get Evade()      { return this.bit(7); }
-    get Immune()     { return this.bit(8); }
-    get Deflect()    { return this.bit(9); }
-    get Absorb()     { return this.bit(10); }
-    get Reflect()    { return this.bit(11); }
-    get Interrupt()  { return this.bit(12); }
-    get FullBlock()  { return this.bit(13); }
+export enum SpellAttributesMask {
+    REQUIRE_EXP_OR_HONOR     = 0x1,
+    CAN_PROC_ON_TRIGGERED    = 0x2,
+    REQUIRE_MANA_COST        = 0x4,
+    REQUIRE_SPELL_MOD        = 0x8,
+    REDUCE_PROC60            = 0x80,
+    CANT_PROC_FROM_ITEM_CAST = 0x100,
+
 }
 
-export class SpellPhaseMask extends MaskCell32<Spell> {
-    get Cast() { return this.bit(0); }
-    get Hit() { return this.bit(1); }
-    get Finish() { return this.bit(2); }
+export enum SpellHitMask {
+    NORMAL      = 0x1,
+    CRITICAL    = 0x2,
+    MISS        = 0x4,
+    FULL_RESIST = 0x8,
+    DODGE       = 0x10,
+    PARRY       = 0x20,
+    BLOCK       = 0x40,
+    EVADE       = 0x80,
+    IMMUNE      = 0x100,
+    DEFLECT     = 0x200,
+    ABSORB      = 0x400,
+    REFLECT     = 0x800,
+    INTERRUPT   = 0x1000,
+    FULL_BLOCK  = 0x2000,
 }
 
-export class SpellTypeMask extends MaskCell32<Spell> {
-    get Damage() { return this.bit(0); }
-    get Heal() { return this.bit(1); }
-    get Other() { return this.bit(2); }
+export enum SpellPhaseMask {
+    CAST   = 0x1,
+    HIT    = 0x2,
+    FINISH = 0x4,
+
 }
 
-export class SpellFamilyName extends EnumCell<Spell> {
-    /** Enum Value:                       0 */
-    get Generic()     { return this.value(0) }
-    /** Enum Value:                       3 */
-    get Mage()        { return this.value(3) }
-    /** Enum Value:                       4 */
-    get Warrior()     { return this.value(4) }
-    /** Enum Value:                       5 */
-    get Warlock()     { return this.value(5) }
-    /** Enum Value:                       6 */
-    get Priest()      { return this.value(6) }
-    /** Enum Value:                       7 */
-    get Druid()       { return this.value(7) }
-    /** Enum Value:                       8 */
-    get Rogue()       { return this.value(8) }
-    /** Enum Value:                       9 */
-    get Hunter()      { return this.value(9) }
-    /** Enum Value:                       10 */
-    get Paladin()     { return this.value(10) }
-    /** Enum Value:                       11 */
-    get Shaman()      { return this.value(11) }
-    /** Enum Value:                       13 */
-    get Potion()      { return this.value(13) }
-    /** Enum Value:                       15 */
-    get DeathKnight() { return this.value(15) }
+export enum SpellTypeMask {
+    DAMAGE = 0x1,
+    HEAL   = 0x2,
+    OTHER  = 0x4,
 }
 
-export class SpellProcFlags extends MaskCell32<Spell> {
-    get Killed()                            { return this.bit(0); }
-    get Kill()                              { return this.bit(1); }
-    get DoneMeleeAutoAttack()               { return this.bit(2); }
-    get TakenMeleeAutoAttack()              { return this.bit(3); }
-    get DoneSpellMeleeDmgClass()            { return this.bit(4); }
-    get TakenSpellMeleeDmgClass()           { return this.bit(5); }
-    get DoneRangedAutoAttack()              { return this.bit(6); }
-    get TakenRangedAutoAttack()             { return this.bit(7); }
-    get SpellRangedDamageClass()            { return this.bit(8); }
-    get TakenSpellRangedDamageClass()       { return this.bit(9); }
-    get DoneSpellNoneDamageClassPositive()  { return this.bit(10); }
-    get TakenSpellNoneDamageClassPositive() { return this.bit(11); }
-    get DoneSpellNoneDamageClassNegative()  { return this.bit(12); }
-    get TakenSpellNoneDamageClassNegative() { return this.bit(13); }
-    get DoneSpellMagicDamageClassPositive() { return this.bit(14); }
-    get DoneSpellMagicDamageClassNegative() { return this.bit(15); }
-    get DonePeriodic()                      { return this.bit(16); }
-    get TakenPeriodic()                     { return this.bit(17); }
-    get TakenDamage()                       { return this.bit(18); }
-    get DoneTrapActivation()                { return this.bit(19); }
-    get DoneMainhandAttack()                { return this.bit(20); }
-    get DoneOffhandAttack()                 { return this.bit(21); }
-    get Death()                             { return this.bit(22); }
+export enum SpellFamilyName {
+    GENERIC      = 0,
+    MAGE         = 3,
+    WARRIOR      = 4,
+    WARLOCK      = 5,
+    PRIEST       = 6,
+    DRUID        = 7,
+    ROGUE        = 8,
+    HUNTER       = 9,
+    PALADIN      = 10,
+    SHAMAN       = 11,
+    POTION       = 13,
+    DEATH_KNIGHT = 15,
+}
+
+export enum SpellProcFlags {
+    KILLED                                 = 0x1,
+    KILL                                   = 0x2,
+    DONE_MELEE_AUTO_ATTACK                 = 0x4,
+    TAKEN_MELEE_AUTO_ATTACK                = 0x8,
+    DONE_SPELL_MELEE_DMG_CLASS             = 0x10,
+    TAKEN_SPELL_MELEE_DMG_CLASS            = 0x20,
+    DONE_RANGED_AUTO_ATTACK                = 0x40,
+    TAKEN_RANGED_AUTO_ATTACK               = 0x80,
+    SPELL_RANGED_DAMAGE_CLASS              = 0x100,
+    TAKEN_SPELL_RANGED_DAMAGE_CLASS        = 0x200,
+    DONE_SPELL_NONE_DAMAGE_CLASS_POSITIVE  = 0x400,
+    TAKEN_SPELL_NONE_DAMAGE_CLASS_POSITIVE = 0x800,
+    DONE_SPELL_NONE_DAMAGE_CLASS_NEGATIVE  = 0x1000,
+    TAKEN_SPELL_NONE_DAMAGE_CLASS_NEGATIVE = 0x2000,
+    DONE_SPELL_MAGIC_DAMAGE_CLASS_POSITIVE = 0x4000,
+    DONE_SPELL_MAGIC_DAMAGE_CLASS_NEGATIVE = 0x8000,
+    DONE_PERIODIC                          = 0x10000,
+    TAKEN_PERIODIC                         = 0x20000,
+    TAKEN_DAMAGE                           = 0x40000,
+    DONE_TRAP_ACTIVATION                   = 0x80000,
+    DONE_MAINHAND_ATTACK                   = 0x100000,
+    DONE_OFFHAND_ATTACK                    = 0x200000,
+    DEATH                                  = 0x400000,
+
 }
 
 export class SQLMaybeWriteCell extends Cell<number,Spell>{
@@ -195,15 +190,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get TriggerMask() {
-        return new SpellProcFlags(
-              this.owner
-            , new SQLMaybeWriteCell(
-                  this.owner
-                , this
-                , this.owner.row.ProcTypeMask
-                ,(sql)=>sql.ProcFlags
-            )
-        )
+        return makeMaskCell32(SpellProcFlags,this, this.owner.row.ProcTypeMask);
     }
 
     get Chance() {
@@ -225,17 +212,11 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get SchoolMask() {
-        return new SchoolMask(
-              this.owner
-            , this.wrapSQL(0, sql=>sql.SchoolMask)
-        )
+        return makeMaskCell32(SchoolMask,this.owner, this.wrapSQL(0,sql=>sql.SchoolMask));
     }
 
     get SpellFamily() {
-        return new SpellFamilyName(
-              this.owner
-            , this.wrapSQL(0,sql=>sql.SpellFamilyName)
-        )
+        return makeEnumCell(SpellFamilyName,this.owner, this.wrapSQL(0,sql=>sql.SpellFamilyName));
     }
 
     get ClassMask() {
@@ -247,15 +228,17 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get TypeMask() {
-        return new SpellTypeMask(
-              this.owner
+        return makeMaskCell32(
+              SpellTypeMask
+            , this.owner
             , this.wrapSQL(0,sql=>sql.SpellTypeMask)
         )
     }
 
     get PhaseMask() {
-        return new SpellPhaseMask(
-              this.owner
+        return makeMaskCell32(
+              SpellPhaseMask
+            , this.owner
             , this.wrapSQL(0,sql=>sql.SpellPhaseMask)
         )
     }
@@ -266,22 +249,25 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
      * - if 0 and DONE:  will trigger on **normal** + **critical** + **absorb**
      */
     get HitMask() {
-        return new SpellHitMask(
-              this.owner
+        return makeMaskCell32(
+              SpellHitMask
+            , this.owner
             , this.wrapSQL(0,sql=>sql.HitMask)
         )
     }
 
     get AttributesMask() {
-        return new SpellAttributesMask(
-              this.owner
+        return makeMaskCell32(
+              SpellAttributesMask
+            , this.owner
             , this.wrapSQL(0,sql=>sql.AttributesMask)
         )
     }
 
     get DisableEffectsMask() {
-        return new DisableEffectsMask(
-            this.owner
+        return makeMaskCell32(
+            DisableEffectsMask
+          , this.owner
           , this.wrapSQL(0,sql=>sql.DisableEffectsMask)
       )
     }

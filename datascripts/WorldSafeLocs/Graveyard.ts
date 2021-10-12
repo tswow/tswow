@@ -1,9 +1,11 @@
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { graveyard_zoneRow } from "wotlkdata/sql/types/graveyard_zone";
+import { Faction } from "../Faction/Faction";
 import { MainEntity } from "../Misc/Entity";
 import { FactionEnum } from "../Misc/FactionEnum";
-import { resolveTeam, Team } from "../Misc/TeamEnum";
+import { Team } from "../Misc/TeamEnum";
 import { WorldSafeLoc, WorldSafeLocRegistry } from "./WorldSafeLocs";
 
 export class Graveyard extends MainEntity<graveyard_zoneRow> {
@@ -17,7 +19,7 @@ export class Graveyard extends MainEntity<graveyard_zoneRow> {
     }
 
     get Faction() {
-        return new FactionEnum(this, this.row.Faction);
+        return makeMaskCell32(Team,this, this.row.Faction)
     }
 }
 
@@ -32,7 +34,7 @@ export class Graveyards extends MultiRowSystem<Graveyard,WorldSafeLoc> {
 
     add(area: number, faction: Team) {
         SQL.graveyard_zone.add(this.owner.ID,area)
-            .Faction.set(resolveTeam(faction))
+            .Faction.set(faction)
             .Comment.set('tswow')
         return this.owner;
     }

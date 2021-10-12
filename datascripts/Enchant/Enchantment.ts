@@ -1,4 +1,5 @@
 import { DBC } from "wotlkdata";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
 import { Table } from "wotlkdata/table/Table";
 import { ItemVisualsRegistry } from "../Item/ItemVisualEffect";
@@ -21,7 +22,9 @@ export class Enchantment extends MainEntity<SpellItemEnchantmentRow> {
      */
     get EnchantSpells() { return new EnchantmentSpells(this); }
     get ItemVisuals() { return ItemVisualsRegistry.ref(this, this.row.ItemVisual); }
-    get Flags() { return new EnchantmentFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(EnchantmentFlags, this, this.row.Flags)
+    }
     get Condition() { return EnchantmentConditionRegistry.ref(this, this.row.Condition_Id); }
     get Name() { return this.wrapLoc(this.row.Name); }
 }

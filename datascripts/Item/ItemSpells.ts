@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { SpellRegistry } from "../Spell/Spells";
 import { ItemTemplate } from "./ItemTemplate";
@@ -89,19 +89,13 @@ function CCooldownRows(owner: ItemTemplate) {
     ]
 }
 
-export class ItemSpellTrigger extends EnumCell<ItemSpell> {
-    /** Enum Value:                       0 */
-    get OnUse()       { return this.value(0) }
-    /** Enum Value:                       1 */
-    get OnEquip()     { return this.value(1) }
-    /** Enum Value:                       2 */
-    get ChanceOnHit() { return this.value(2) }
-    /** Enum Value:                       4 */
-    get Soulstone()   { return this.value(4) }
-    /** Enum Value:                       5 */
-    get UseNoDelay()  { return this.value(5) }
-    /** Enum Value:                       6 */
-    get OnLearn()     { return this.value(6) }
+export enum ItemSpellTrigger {
+    ON_USE        = 0,
+    ON_EQUIP      = 1,
+    CHANCE_ON_HIT = 2,
+    SOULSTONE     = 4,
+    USE_NO_DELAY  = 5,
+    ON_LEARN      = 6,
 }
 
 export class ItemSpell extends ArrayEntry<ItemTemplate> {
@@ -121,7 +115,9 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
 
     get Spell() { return SpellRegistry.ref(this, IdRows(this.container)[this.index]); }
     get Category() { return this.wrap(CatRows(this.container)[this.index]); }
-    get Trigger() { return new ItemSpellTrigger(this, TriggerRows(this.container)[this.index]); }
+    get Trigger() {
+        return makeEnumCell(ItemSpellTrigger, this, TriggerRows(this.container)[this.index]);
+    }
     get Charges() { return this.wrap(ChargeRows(this.container)[this.index]); }
     get ProcsPerMinute() { return this.wrap(PPMRows(this.container)[this.index]); }
     get Cooldown () { return this.wrap(CooldownRows(this.container)[this.index]); }

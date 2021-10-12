@@ -1,5 +1,6 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { LocSystem, MulticastLocCell } from "wotlkdata/cell/systems/CellSystem";
 import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
@@ -42,27 +43,27 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
             .Effects.addMod(efffect=>{
                 efffect.Type.LearnSpell.set()
                     .LearntSpell.set(this.owner.SpellID)
-                    .ImplicitTargetA.SrcCaster.set()
+                    .ImplicitTargetA.SRC_CASTER.set()
                     .ChainAmplitude.set(1)
             })
             .StanceBarOrder.set(4294967295)
-            .InterruptFlags.OnMovement.set(true)
-            .InterruptFlags.OnPushback.set(true)
-            .InterruptFlags.OnInterruptCast.set(true)
+            .InterruptFlags.ON_MOVEMENT.set(true)
+            .InterruptFlags.ON_PUSHBACK.set(true)
+            .InterruptFlags.ON_INTERRUPT_CAST.set(true)
             .InterruptFlags.setBit(3, true)
 
         const item = ItemTemplateRegistry.create(mod,`${id}-item`)
             .Name.set(this.owner.AsSpell.get().Name.objectify())
-            .Quality.Blue.set()
+            .Quality.BLUE.set()
             .ClassMask.set(-1)
-            .Bonding.BindsOnPickup.set()
+            .Bonding.BINDS_ON_PICKUP.set()
             .Class.Mount.set()
-            .Material.Liquid.set()
-            .InventoryType.NonEquippable.set()
+            .Material.LIQUID.set()
+            .InventoryType.NON_EQUIPPABLE.set()
             .Spells.addMod((ispell=>{
                 ispell.Spell.set(spell.ID)
                      .Category.set(330)
-                     .Trigger.OnUse.set()
+                     .Trigger.ON_USE.set()
                      .Charges.set(-1)
                      .ProcsPerMinute.set(0)
                      .Cooldown.set(-1)
@@ -71,7 +72,7 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
             .Spells.addMod((spell=>{
                 spell.Spell.set(this.owner.SpellID)
                      .Category.set(0)
-                     .Trigger.OnLearn.set()
+                     .Trigger.ON_LEARN.set()
                      .Charges.set(0)
                      .ProcsPerMinute.set(0)
                      .Cooldown.set(0)
@@ -126,10 +127,9 @@ export class Mount extends MainEntity<SpellRow> {
     }
 
     get Bonding() {
-        return new ItemBonding(
-              this
-            , new MulticastCell(this, this.Items.map(x=>x.row.bonding))
-        )
+        return makeEnumCell(ItemBonding,this,
+            new MulticastCell(this, this.Items.map(x=>x.row.bonding))
+        );
     }
 
     get SkillRequirement() {
@@ -206,14 +206,14 @@ export class MountRegistryClass
                     .Type.ApplyAura.set()
                     .Aura.Mounted.set()
                     .CreatureTemplate.set(0)
-                    .ImplicitTargetA.UnitCaster.set()
+                    .ImplicitTargetA.UNIT_CASTER.set()
             })
             .Effects.addMod(effect=>{
                 effect
                     .Type.ApplyAura.set()
                     .Aura.ModIncreaseMountedSpeed.set()
                     .BasePercent.set(speed)
-                    .ImplicitTargetA.UnitCaster.set()
+                    .ImplicitTargetA.UNIT_CASTER.set()
                     .RandomPercent.set(1)
             })
 
@@ -223,7 +223,7 @@ export class MountRegistryClass
                     .Type.ApplyAura.set()
                     .Aura.ModIncreaseFlightSpeed.set()
                     .BasePercent.set(flightSpeed)
-                    .ImplicitTargetA.UnitCaster.set()
+                    .ImplicitTargetA.UNIT_CASTER.set()
                     .RandomPercent.set(1)
             })
         }

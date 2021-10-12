@@ -103,12 +103,12 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
                     .Attributes.isTradeSpell.set(true)
                     .Attributes.notShapeshifted.set(true)
                     .Attributes.noThreat.set(true)
-                    .InterruptFlags.OnMovement.set(true)
-                    .InterruptFlags.OnPushback.set(true)
-                    .InterruptFlags.OnInterruptCast.set(true)
+                    .InterruptFlags.ON_MOVEMENT.set(true)
+                    .InterruptFlags.ON_PUSHBACK.set(true)
+                    .InterruptFlags.ON_INTERRUPT_CAST.set(true)
                     .Effects.addMod((effect)=>{
                         effect.Type.CreateItem.set()
-                              .ImplicitTargetA.UnitCaster.set()
+                              .ImplicitTargetA.UNIT_CASTER.set()
                     })
                     .SkillLines
                     .addMod(this.owner.ID,undefined,undefined)

@@ -1,4 +1,5 @@
 import { DBC } from "wotlkdata"
+import { EnumCon } from "wotlkdata/cell/cells/EnumCell"
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem"
 import { GemPropertiesQuery, GemPropertiesRow } from "wotlkdata/dbc/types/GemProperties"
 import { Table } from "wotlkdata/table/Table"
@@ -9,7 +10,7 @@ import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate"
 import { MainEntity } from "../Misc/Entity"
 import { Ids } from "../Misc/Ids"
 import { RegistryRowBase } from "../Refs/Registry"
-import { colToId, GemColorType, GemType } from "./GemType"
+import { GemType, GemTypeCell } from "./GemType"
 
 export class Gem extends MainEntity<GemPropertiesRow> {
     clear() {
@@ -35,7 +36,7 @@ export class Gem extends MainEntity<GemPropertiesRow> {
      */
     get Enchantment() { return new GemEnchantmentRef(this); }
     get ID() { return this.row.ID.get(); }
-    get Type() { return new GemType(this, this.row.Type); }
+    get Type() { return new GemTypeCell(this, this.row.Type); }
 
     /**
      * @note A Gem can only be connected to a **single** item to work properly.
@@ -124,7 +125,7 @@ export class GemRegistryClass
      * @param parentItem - the item whose properties should be cloned, uses the item in parentEnchantment if set to 0.
      * @returns
      */
-    create(mod: string, id: string, color?: GemColorType, parentGem = 0, parentEnchantment = 0, parentItem = 0) {
+    create(mod: string, id: string, color?: EnumCon<keyof typeof GemType>, parentGem = 0, parentEnchantment = 0, parentItem = 0) {
         // Load parent
         let parent = parentGem > 0
             ? DBC.GemProperties.findById(parentGem)
@@ -149,9 +150,9 @@ export class GemRegistryClass
             .BagFamily.set(512)
             .ClassMask.set(-1)
             .RaceMask.set(-1)
-            .Material.Liquid.set()
+            .Material.LIQUID.set()
             .DisplayInfo.set(60325)
-            .Quality.Green.set()
+            .Quality.GREEN.set()
 
         // Build gem
         let gem = (
@@ -161,7 +162,7 @@ export class GemRegistryClass
                         .clone(gemid))
                 )
         if(color) {
-            gem.Type.set(colToId(color));
+            gem.Type.set(color);
         }
 
         // Connect everything

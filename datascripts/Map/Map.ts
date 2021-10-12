@@ -17,6 +17,7 @@
 import fs from "fs";
 import path from "path";
 import { DBC, finish, isReadOnly } from "wotlkdata";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MapRow } from "wotlkdata/dbc/types/Map";
 import { Settings } from "wotlkdata/Settings";
 import { registeredAreas } from "../Area/Area";
@@ -46,7 +47,9 @@ export class Map extends MainEntity<MapRow> {
      * WorldMapContinent entry.
      */
     get Directory() { return this.wrap(this.row.Directory); }
-    get InstanceType() { return new MapInstanceType(this, this.row.InstanceType); }
+    get InstanceType() {
+        return makeEnumCell(MapInstanceType,this, this.row.InstanceType);
+    }
 
     get Name() { return this.wrapLoc(this.row.MapName); }
 

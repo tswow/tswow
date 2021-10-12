@@ -1,9 +1,10 @@
 import { DBC, SQL } from "wotlkdata";
+import { getBits, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { CharBaseInfoRow } from "wotlkdata/dbc/types/CharBaseInfo";
 import { MainEntity } from "../../Misc/Entity";
 import { Ids } from "../../Misc/Ids";
-import { RaceType, resolveRaceType } from "../../Race/RaceType";
+import { RaceMask } from "../../Race/RaceType";
 import { Class } from "../Class";
 import { DefaultClassRaces, getDefaultClass, getDefaultRace } from "../ClassDefaultRaces";
 import { ClassRegistry } from "../ClassRegistry";
@@ -34,25 +35,18 @@ export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
         return value.row.isDeleted();
     }
 
-    delete(races: RaceType|RaceType[]) {
-        if(!Array.isArray(races)) {
-            races = [races];
-        }
-        races.forEach(x=>{
-            DBC.CharBaseInfo.find({ClassID:this.owner.ID,RaceID:resolveRaceType(x)})
+    delete(races: MaskCon<keyof typeof RaceMask>) {
+        getBits(RaceMask,races).forEach(x=>{
+            DBC.CharBaseInfo.find({ClassID:this.owner.ID,RaceID:x+1})
                 .delete();
         })
         return this.owner;
     }
 
-    add(races: RaceType|RaceType[]) {
-        if(!Array.isArray(races)) {
-            races = [races];
-        }
+    add(races: MaskCon<keyof typeof RaceMask>) {
         // Is base class
-        for(let raceType of races) {
-            const raceid = resolveRaceType(raceType);
-
+        getBits(RaceMask,races).forEach(raceid=>{
+            raceid = raceid + 1;
             if(this.owner.ID <= 11) {
                 let found = false;
                 for(const {race,cls} of Object.values(DefaultClassRaces)) {
@@ -62,7 +56,7 @@ export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
                     }
                 }
                 if(found) {
-                    continue;
+                    return;
                 }
             }
 
@@ -84,7 +78,8 @@ export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
                 .clone(raceid, this.owner.ID)
 
             DBC.CharBaseInfo.add(raceid,this.owner.ID);
-        }
+        })
+
         return this.owner;
     }
 };

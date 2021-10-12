@@ -15,11 +15,14 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
 import { creature_template_addonRow } from "wotlkdata/sql/types/creature_template_addon";
+import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LootSetPointer } from "../Loot/Loot";
@@ -38,7 +41,6 @@ import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
 import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
-import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
@@ -53,7 +55,7 @@ import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
-import { CreatureTypeEnum } from "./CreatureType";
+import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
@@ -135,9 +137,9 @@ export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,C
                 .SpawnTime.set(x.spawnTime || 0)
                 .WanderDistance.set(x.wander||0)
             if(x.wander) {
-                inst.MovementType.RandomMovement.set()
+                inst.MovementType.RANDOM_MOVEMENT.set()
             } else {
-                inst.MovementType.Idle.set()
+                inst.MovementType.IDLE.set()
             }
             if(callback) callback(inst);
             return inst;
@@ -203,7 +205,9 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     /**
      * ID of the Faction template this creature belongs to
      */
-    get FactionTemplate() { return new CreatureFactionTemplate(this, this.row.faction); }
+    get FactionTemplate() {
+        return FactionTemplateRegistry.ref(this, this.row.faction);
+    }
 
     get InlineScripts() { return getInlineID(this, this.ID, 'CreatureID') as _hidden.Creatures<this> }
 
@@ -214,13 +218,23 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get RegenHealth() { return this.wrap(this.row.RegenHealth); }
 
     get Questgiver() { return new CreatureQuestgiver(this);}
-    get NPCFlags() { return new NPCFlags(this, this.row.npcflag); }
-    get Type() { return new CreatureTypeEnum(this, this.row.type); }
-    get TypeFlags() { return new CreatureTypeFlags(this, this.row.type_flags); }
-    get DynFlags() { return new DynFlags(this, this.row.dynamicflags); }
+    get NPCFlags() {
+        return makeMaskCell32(NPCFlags,this, this.row.npcflag);
+    }
+    get Type() {
+        return makeEnumCell(CreatureType,this, this.row.type);
+    }
+    get TypeFlags() {
+        return makeMaskCell32(CreatureTypeFlags,this, this.row.type_flags);
+    }
+    get DynFlags() {
+        return makeMaskCell32(DynFlags,this, this.row.dynamicflags);
+    }
     get UnitFlags() { return new UnitFlags(this); }
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
-    get UnitClass() { return new UnitClass(this, this.row.unit_class); }
+    get UnitClass() {
+        return makeEnumCell(UnitClass,this, this.row.unit_class);
+    }
     get DynamicFlags() { return CreatureTemplateRegistry.ref(this, this.row.dynamicflags); }
     get Difficulty() { return new CreatureDifficulties(this); }
 
@@ -232,21 +246,33 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
     get Scale() { return this.wrap(this.row.scale); }
-    get Rank() { return new CreatureRank(this, this.row.rank); }
-    get DamageSchool() { return new CreatureDamageSchool(this, this.row.dmgschool); }
+    get Rank() {
+        return makeEnumCell(CreatureRank,this, this.row.rank);
+    }
+    get DamageSchool() {
+        return makeEnumCell(CreatureDamageSchool,this, this.row.dmgschool);
+    }
     get AttackTime() { return new CreatureAttackTime(this); }
-    get Family() { return new CreatureFamily(this, this.row.family); }
+    get Family() {
+        return makeEnumCell(CreatureFamily,this, this.row.family);
+    }
     get PetSpells() { return this.wrap(this.row.PetSpellDataId); }
     get Vehicle() { return VehicleRegistry.ref(this, this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }
     get AIName() { return new CreatureAI(this); }
-    get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
+    get MovementType() {
+        return makeEnumCell(CreatureMovementType,this, this.row.MovementType);
+    }
     get HoverHeight() { return this.wrap(this.row.HoverHeight); }
     get Stats() { return new CreatureStats(this); }
     get RacialLeader() { return this.wrap(this.row.RacialLeader); }
     get Movement() { return this.wrap(this.row.movementId); }
-    get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
-    get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
+    get MechanicImmunity() {
+        return makeMaskCell32(MechanicImmunity,this, this.row.mechanic_immune_mask);
+    }
+    get SchoolImmunity() {
+        return makeMaskCell32(SchoolMask,this, this.row.spell_school_immune_mask);
+    }
     get Trainer() { return new CreatureDefaultTrainer(this); }
     get Vendor() { return new VendorItems(this, this.ID); }
 

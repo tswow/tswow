@@ -34,22 +34,24 @@ function contents(owner: ItemTemplate) {
     ]
 }
 
+export enum ItemColorMask {
+      NONE   = 0
+    , META   = 1
+    , RED    = 2
+    , YELLOW = 4
+    , BLUE   = 8
+}
 
-export class ItemColor extends EnumCell<ItemSocket> {
-    get None() { return this.value(0,()=>this.owner.content.set(0))}
-
-    /** Enum Value:                  0 */
-    get Meta()   { return this.value(1,()=>this.owner.content.set(1)) }
-    /** Enum Value:                  2 */
-    get Red()    { return this.value(2,()=>this.owner.content.set(1)) }
-    /** Enum Value:                  1 */
-    get Yellow() { return this.value(4,()=>this.owner.content.set(1)) }
-    /** Enum Value:                  2 */
-    get Blue()   { return this.value(8,()=>this.owner.content.set(1)) }
+export class ItemColorCell extends EnumCell<ItemSocket> {
+    get NONE()   { return this.value(0,()=>this.owner.content.set(0))}
+    get META()   { return this.value(1,()=>this.owner.content.set(1)) }
+    get RED()    { return this.value(2,()=>this.owner.content.set(1)) }
+    get YELLOW() { return this.value(4,()=>this.owner.content.set(1)) }
+    get BLUE()   { return this.value(8,()=>this.owner.content.set(1)) }
 }
 
 export class ItemSocket extends ArrayEntry<ItemTemplate>{
-    get color() { return new ItemColor(this, colors(this.container)[this.index]); }
+    get color() { return new ItemColorCell(this, colors(this.container)[this.index]); }
     get content() { return this.wrap(contents(this.container)[this.index]); }
 
     clear() {

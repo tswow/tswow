@@ -1,6 +1,6 @@
 import { sort } from "wotlkdata";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AchievementQuery, AchievementRow } from "wotlkdata/dbc/types/Achievement";
 import { Table } from "wotlkdata/table/Table";
@@ -13,43 +13,43 @@ import { AchievementCategoryRegistry } from "./AchievementCategory";
 import { AchievementCriteria } from "./AchievementCriteria";
 import { AchievementReward } from "./AchievementReward";
 
-export class AchievementFaction extends EnumCell<Achievement> {
-    get Horde() { return this.value(0); }
-    get Alliance() { return this.value(1); }
-    get Both() { return this.value(-1); }
+export enum AchievementFaction {
+    Horde    = 0,
+    Alliance = 1,
+    Both     = -1,
 }
 
-export class AchievementFlags extends MaskCell32<Achievement> {
+export enum AchievementFlags {
     /** just count statistic (never stop and complete) */
-    Statistic()                { return this.bit(0); }
+    Statistic               = 0x000001,
     /** client side only */
-    Hidden()                   { return this.bit(0); }
+    Hidden                  = 0x000002,
     /** client does not play achievement earned visual */
-    NoToast()                  { return this.bit(0); }
+    Notoast                 = 0x000004,
     /** combine criteria from all requirements */
-    Cumulative()               { return this.bit(0); }
+    Cumulative              = 0x000008,
     /** show max criteria */
-    DisplayHighest()           { return this.bit(0); }
+    DisplayHighest          = 0x000010,
     /** use non-zero req count */
-    CriteriaCount()            { return this.bit(0); }
+    CriteriaCount           = 0x000020,
     /** show as average value (value / time_in_days) */
-    AvgPerDay()                { return this.bit(0); }
+    AvgPerDay               = 0x000040,
     /** show as progress bar (value / max value) */
-    HasProgressBar()           { return this.bit(0); }
-    ServerFirst()              { return this.bit(0); }
-    ServerFirstKill()          { return this.bit(0); }
-    HideNameInTie()            { return this.bit(0); }
+    HasProgressBar          = 0x000080,
+    ServerFirst             = 0x000100,
+    ServerFirstKill         = 0x000200,
+    HideNameInTie           = 0x000400,
     /** hide from ui if not completed */
-    HiddenTilAwarded()         { return this.bit(0); }
-    ShowInGuildNews()          { return this.bit(0); }
-    ShowInGuildHeader()        { return this.bit(0); }
-    Guild()                    { return this.bit(0); }
-    ShowGuildMembers()         { return this.bit(0); }
-    ShowCriteriaMembers()      { return this.bit(0); }
-    AccountBound()             { return this.bit(0); }
+    HiddenTillAwarded       = 0x000800,
+    ShowInGuildNews         = 0x001000,
+    ShowInGuildHeader       = 0x002000,
+    Guild                   = 0x004000,
+    ShowGuildMembers        = 0x008000,
+    ShowCriteriaMembers     = 0x010000,
+    AccountBound            = 0x020000,
     /** statistics are hidden from ui if no criteria value exists */
-    HideZeroCounter()          { return this.bit(0); }
-    TrackLocalUntilAwarded()   { return this.bit(0); }
+    HideZeroCounter         = 0x080000,
+    TrackLocalUntilAwarded  = 0x100000,
 }
 
 export class Achievement extends MainEntity<AchievementRow> {
@@ -69,8 +69,12 @@ export class Achievement extends MainEntity<AchievementRow> {
     get Name() { return this.wrapLoc(this.row.Title); }
     get UIOrder() { return this.wrap(this.row.Ui_Order); }
     get Rewards() { return new AchievementReward(this); }
-    get Faction() { return new AchievementFaction(this, this.row.Faction); }
-    get Flags() { return new AchievementFlags(this, this.row.Flags); }
+    get Faction() {
+        return makeEnumCell(AchievementFaction,this, this.row.Faction);
+    }
+    get Flags() {
+        return makeMaskCell32(AchievementFlags, this, this.row.Flags);
+    }
     get InlineScripts() {
         return getInlineID(
               this

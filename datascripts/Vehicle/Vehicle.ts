@@ -1,5 +1,5 @@
 import { DBC } from "wotlkdata";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { VehicleQuery, VehicleRow } from "wotlkdata/dbc/types/Vehicle";
@@ -13,18 +13,16 @@ import { RegistryDynamic } from "../Refs/Registry";
 import { VehicleSeatRegistry } from "./VehicleSeat";
 import { VehicleUIIndicatorCell } from "./VehicleUIIndicator";
 
-export class VehicleFlags extends MaskCell32<Vehicle> {
-    get NoStrafe() { return this.bit(0); }
-    get NoJumping() { return this.bit(1); }
-    get FullSpeedTurning() { return this.bit(2); }
-
-    get AllowPitch() { return this.bit(4); }
-    get FullSpeedPitching() { return this.bit(5); }
-    get CustomPitch() { return this.bit(6); }
-
-    get AdjustAimAngle() { return this.bit(10); }
-    get AdjustAimPower() { return this.bit(11); }
-    get FixedPosition() { return this.bit(21); }
+export enum VehicleFlags {
+    NO_STRAFE           = 0x1,
+    NO_JUMPING          = 0x2,
+    FULL_SPEED_TURNING  = 0x4,
+    ALLOW_PITCH         = 0x10,
+    FULL_SPEED_PITCHING = 0x20,
+    CUSTOM_PITCH        = 0x40,
+    ADJUST_AIM_ANGLE    = 0x400,
+    ADJUST_AIM_POWER    = 0x800,
+    FIXED_POSITION      = 0x200000,
 }
 
 export class VehicleCameraFadeDist extends CellSystem<Vehicle> {
@@ -158,7 +156,11 @@ export class VehicleMissile extends CellSystem<Vehicle> {
 
 export class Vehicle extends MainEntity<VehicleRow> {
     get ID() { return this.row.ID.get(); }
-    get Flags() { return new VehicleFlags(this, this.row.Flags)}
+
+    get Flags() {
+        return makeMaskCell32(VehicleFlags, this, this.row.Flags);
+    }
+
     get Seats() {
         return new ArrayRefSystem (
             this

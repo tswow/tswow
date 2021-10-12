@@ -1,3 +1,4 @@
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { vehicle_accessoryRow } from "wotlkdata/sql/types/vehicle_accessory";
@@ -15,7 +16,9 @@ export class VehicleAccessoryBase<
 {
     get Seat() { return this.row.seat_id.get() }
     get DiesWithVehicle() { return this.wrap(this.row.minion); }
-    get SummonType() { return new SummonType(this, this.row.summontype); }
+    get SummonType() {
+        return makeEnumCell(SummonType,this, this.row.summontype);
+    }
     get SummonTimer() { return this.wrap(this.row.summontimer); }
 }
 

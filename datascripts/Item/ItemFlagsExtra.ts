@@ -14,18 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlagsExtra extends MaskCell32<ItemTemplate> {
-    get HordeOnly() { return this.bit(0); }
-    get AllianceOnly() { return this.bit(0); }
-    /** "When item uses ExtendedCost in npc_vendor, gold is also required"(?) */
-    get GoldWithExtendedCost() { return this.bit(0); }
-    get NoNeedRolls() { return this.bit(0);}
-    get NeedRollsDisabled() { return this.bit(0);}
-    get HasNormalPrice() { return this.bit(0);}
-    get BattlenetAccountBound() { return this.bit(0);}
-    get CannotBeTransmogged() { return this.bit(0);}
-
+export enum ItemFlagsExtra {
+    HORDE_ONLY              = 0x1,
+    ALLIANCE_ONLY           = 0x2,
+    GOLD_WITH_EXTENDED_COST = 0x4,
+    NO_NEED_ROLLS           = 0x100,
+    NEED_ROLLS_DISABLED     = 0x200,
+    HAS_NORMAL_PRICE        = 0x4000,
 }

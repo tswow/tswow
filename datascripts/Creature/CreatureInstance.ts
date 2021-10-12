@@ -15,17 +15,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/sql/types/creature";
 import { creature_addonRow } from "wotlkdata/sql/types/creature_addon";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";
+import { SpawnMask } from "../Misc/SpawnMask";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
-import { SpawnMask } from "../Misc/SpawnMask";
 
 export class CreatureInstanceAddon
     extends MaybeSQLEntity<CreatureInstance,creature_addonRow>
@@ -68,7 +70,7 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get ID() { return this.row.guid.get(); }
     get Template() { return this.wrap(this.row.id); }
     get SpawnMask() {
-        return new SpawnMask(this, this.row.spawnMask);
+        return makeMaskCell32(SpawnMask,this, this.row.spawnMask);
     }
     get PhaseMask() { return this.wrap(this.row.phaseMask); }
     /** If 0, use a random model from CreatureTemplate#Models */
@@ -87,7 +89,9 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get SpawnTime() { return this.wrap(this.row.spawntimesecs); }
     get WanderDistance() { return this.wrap(this.row.wander_distance)}
 
-    get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
+    get MovementType() {
+        return makeEnumCell(CreatureMovementType,this, this.row.MovementType);
+    }
 
     get PatrolPath() {
         return new CreaturePatrolPath(this);

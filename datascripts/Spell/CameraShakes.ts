@@ -1,4 +1,3 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CameraShakesQuery, CameraShakesRow } from "wotlkdata/dbc/types/CameraShakes";
 import { Table } from "wotlkdata/table/Table";
@@ -6,11 +5,9 @@ import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 
-export class CameraShakeType<T> extends EnumCell<T> {
-    /** Enum Value:                       0 */
-    get Sine()        { return this.value(0) }
-    /** Enum Value:                       1 */
-    get DecayedSine() { return this.value(1) }
+export enum CameraShakeType {
+    SINE         = 0,
+    DECAYED_SINE = 1,
 }
 
 export class CameraShakes extends MainEntity<CameraShakesRow> {

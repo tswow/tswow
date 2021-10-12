@@ -18,7 +18,7 @@ export class MapRegistryClass
         return Ids.Map
     }
     Clear(r: Map): void {
-        r.InstanceType.None.set()
+        r.InstanceType.NONE.set()
         .AllianceDescription.clear()
         .AreaTable.set(0)
         .CorpseMap.set(-1)
@@ -27,7 +27,6 @@ export class MapRegistryClass
         .Expansion.set(0)
         .Flags.set(0)
         .HordeDescription.clear()
-        .InstanceType.None.set()
         .IsPVP.set(0)
         .LoadingScreen.set(0)
         .MaxPlayers.set(0)

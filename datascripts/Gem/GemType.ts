@@ -1,82 +1,60 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell, EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
 import { Gem } from "./Gem";
 
-const META = 1;
-const RED = 2;
-const YELLOW = 4;
-const ORANGE = 6;
-const BLUE = 8;
-const PURPLE = 10;
-const GREEN = 12;
-const PRISMATIC = 14;
+export enum GemType {
+    META = 1,
+    RED = 2,
+    YELLOW = 4,
+    ORANGE = 6,
+    BLUE = 8,
+    PURPLE = 10,
+    GREEN = 12,
+    PRISMATIC = 14
+}
 
-export class GemType extends EnumCell<Gem> {
+export class GemTypeCell extends EnumCell<Gem> {
     writeToItem() {
         switch(this.get()) {
-            case META: this.owner.Item.get().Class.MetaGem.set();
+            case GemType.META: this.owner.Item.get().Class.MetaGem.set();
                 break;
-            case RED: this.owner.Item.get().Class.RedGem.set();
+            case GemType.RED: this.owner.Item.get().Class.RedGem.set();
                 break;
-            case YELLOW: this.owner.Item.get().Class.YellowGem.set();
+            case GemType.YELLOW: this.owner.Item.get().Class.YellowGem.set();
                 break;
-            case ORANGE: this.owner.Item.get().Class.OrangeGem.set();
+            case GemType.ORANGE: this.owner.Item.get().Class.OrangeGem.set();
                 break;
-            case BLUE: this.owner.Item.get().Class.BlueGem.set();
+            case GemType.BLUE: this.owner.Item.get().Class.BlueGem.set();
                 break;
-            case PURPLE: this.owner.Item.get().Class.PurpleGem.set();
+            case GemType.PURPLE: this.owner.Item.get().Class.PurpleGem.set();
                 break;
-            case GREEN: this.owner.Item.get().Class.GreenGem.set();
+            case GemType.GREEN: this.owner.Item.get().Class.GreenGem.set();
                 break;
-            case PRISMATIC: this.owner.Item.get().Class.PrismaticGem.set();
+            case GemType.PRISMATIC: this.owner.Item.get().Class.PrismaticGem.set();
                 break;
         }
         return this.owner;
     }
 
-    set(value: number) {
-        super.set(value);
+    set(value: EnumCon<keyof typeof GemType>) {
+        super.set(makeEnum(GemType,value));
         this.writeToItem();
         return this.owner;
     }
 
     /** Enum Value = PRISMATIC */
-    get Prismatic() { return this.value(PRISMATIC) }
+    get PRISMATIC() { return this.value(GemType.PRISMATIC) }
     /** Enum Value = GREEN */
-    get Green()     { return this.value(GREEN) }
+    get GREEN()     { return this.value(GemType.GREEN) }
     /** Enum Value = PURPLE */
-    get Purple()    { return this.value(PURPLE) }
+    get PURPLE()    { return this.value(GemType.PURPLE) }
     /** Enum Value = BLUE */
-    get Blue()      { return this.value(BLUE) }
+    get BLUE()      { return this.value(GemType.BLUE) }
     /** Enum Value = ORANGE */
-    get Orange()    { return this.value(ORANGE) }
+    get ORANGE()    { return this.value(GemType.ORANGE) }
     /** Enum Value = YELLOW */
-    get Yellow()    { return this.value(YELLOW) }
+    get YELLOW()    { return this.value(GemType.YELLOW) }
     /** Enum Value = RED */
-    get Red()       { return this.value(RED) }
+    get RED()       { return this.value(GemType.RED) }
     /** Enum Value = META */
-    get Meta()      { return this.value(META) }
-}
-
-export type GemColorType =
-      'META'
-    | 'RED'
-    | 'YELLOW'
-    | 'ORANGE'
-    | 'BLUE'
-    | 'PURPLE'
-    | 'GREEN'
-    | 'PRISMATIC'
-
-export function colToId(color: GemColorType) {
-    switch(color) {
-        case 'META': return META;
-        case 'RED': return RED;
-        case 'YELLOW': return YELLOW;
-        case 'ORANGE': return ORANGE;
-        case 'BLUE': return BLUE;
-        case 'PURPLE': return PURPLE;
-        case 'GREEN': return GREEN;
-        case 'PRISMATIC': return PRISMATIC;
-        default: throw new Error(`Invalid gem color: ${color}`)
-    }
+    get META()      { return this.value(GemType.META) }
 }

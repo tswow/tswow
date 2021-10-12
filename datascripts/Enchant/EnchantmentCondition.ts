@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell, makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/dbc/types/SpellItemEnchantmentCondition";
@@ -9,13 +9,10 @@ import { ArrayEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 
-export class ConditionComparator extends EnumCell<EnchantmentCondition> {
-    /** Enum Value = 2 */
-    get LesserThan()         { return this.value(2) }
-    /** Enum Value = 3 */
-    get GreaterThan()        { return this.value(3) }
-    /** Enum Value = 5 */
-    get GreaterThanOrEqual() { return this.value(5) }
+export enum ConditionComparator {
+    LESSER_THAN        = 2,
+    GREATER_THAN       = 3,
+    GREATER_THAN_OR_EQ = 5,
 }
 
 export class Operand extends CellSystem<EnchantmentCondition> {
@@ -47,9 +44,7 @@ export class EnchantmentCondition extends ArrayEntry<EnchantmentConditions> {
     }
 
     get Comparator() {
-        return new ConditionComparator(
-            this, this.wrapIndex(this.container.row.Operator,this.index)
-        );
+        return makeEnumCell(ConditionComparator, this, this.wrapIndex(this.container.row.Operator,this.index));
     }
 
     get Left(): Operand {

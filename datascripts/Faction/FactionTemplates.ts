@@ -16,64 +16,91 @@
  */
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { FactionTemplateQuery, FactionTemplateRow } from "wotlkdata/dbc/types/FactionTemplate";
 import { Table } from "wotlkdata/table/Table";
 import { ArrayRefSystemNoCreate } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RefNoCreate } from "../Refs/Ref";
+import { makeRefNoCreate, RefNoCreate } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";
 import { Faction } from "./Faction";
 
-export const FACTION_GROUPS = {
-      PLAYERS  : 0
-    , ALLIANCE : 1
-    , HORDE    : 2
-    , MONSTERS : 3
-} as const
-
-export class FactionFlags extends MaskCell32<FactionTemplate> {
-
-    // Note: most of these are very recent, so tc hasn't implemented
-    // them. Don't enable them here without core support
-
-    //get RespondsToCallForHelp()  { return this.bit(0); }
-    //get BroadcastToEnemiesLow()  { return this.bit(1); }
-    //get BroadcastToEnemiesMed()  { return this.bit(2); }
-    //get BroadcastToEnemiesHigh() { return this.bit(3); }
-
-    //get SearchForEnemiesLow()    { return this.bit(4); }
-    //get SearchForEnemiesMed()    { return this.bit(5); }
-    //get SearchForEnemiesHigh()   { return this.bit(6); }
-
-    //get SearchForFriendsLow()    { return this.bit(7); }
-    //get SearchForFriendsMed()    { return this.bit(8); }
-    //get SearchForFriendsHigh()   { return this.bit(9); }
-
-    //get FleeFromCallToHelp()     { return this.bit(10); }
-
-    get AssistPlayers()          { return this.bit(11); }
-    get AttackPVPActive()        { return this.bit(12); }
-    get HatesAllExceptFriends()  { return this.bit(13); }
+export enum FactionGroups {
+      PLAYERS  = 0
+    , ALLIANCE = 1
+    , HORDE    = 2
+    , MONSTERS = 3
 }
 
-export class FactionTemplateGroup extends MaskCell32<FactionTemplate> {
-    get Players()  { return this.bit(0) }
-    get Alliance() { return this.bit(1); }
-    get Horde()    { return this.bit(2); }
-    get Monsters() { return this.bit(3); }
+export enum FactionFlags {
+    // note: most of these are very recent and not implemented in core
+    // do not add them until there is core support for them
+    //RESPONDS_TO_CALL_FOR_HELP = 0x1,
+    //BROADCAST_TO_ENEMIES_LOW  = 0x2,
+    //BROADCAST_TO_ENEMIES_MED  = 0x4,
+    //BROADCAST_TO_ENEMIES_HIGH = 0x8,
+    //SEARCH_FOR_ENEMIES_LOW    = 0x10,
+    //SEARCH_FOR_ENEMIES_MED    = 0x20,
+    //SEARCH_FOR_ENEMIES_HIGH   = 0x40,
+    //SEARCH_FOR_FRIENDS_LOW    = 0x80,
+    //SEARCH_FOR_FRIENDS_MED    = 0x100,
+    //SEARCH_FOR_FRIENDS_HIGH   = 0x200,
+    //FLEE_FROM_CALL_TO_HELP    = 0x400,
+    ASSIST_PLAYERS            = 0x800,
+    ATTACK_PVP_ACTIVE       = 0x1000,
+    HATES_ALL_EXCEPT_FRIENDS  = 0x2000,
+}
+
+export enum FactionTemplateValues {
+    NeutralNonAggressive = 7,
+    Stormwind            = 11,
+    NeutralHostile       = 21,
+    NeutralPassive       = 35,
+    Ironforge            = 57,
+    Gnomeregan           = 64,
+    Ratchet              = 69,
+    Undercity            = 71,
+    Darnassus            = 79,
+    Orgrimmar            = 85,
+    ThunderBluff         = 105,
+    BloodsailBuccaneers  = 119,
+    BootyBay             = 121,
+    DarkspearTrolls      = 126,
+    Gadgetzan            = 474,
+    CenarionCircle       = 994,
+    Silvermoon           = 1604,
+    Exodar               = 1639,
+    Shatar               = 1741,
+    KirinTor             = 2007,
+}
+
+export enum FactionTemplateGroupMask {
+    PLAYERS  = 0x1,
+    ALLIANCE = 0x2,
+    HORDE    = 0x4,
+    MONSTERS = 0x8,
 }
 
 export class FactionTemplate extends MainEntity<FactionTemplateRow> {
     get ID() { return this.row.ID.get() }
 
-    get Flags() { return new FactionFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(FactionFlags,this, this.row.Flags);
+    }
 
-    get FriendGroup() { return new FactionTemplateGroup(this, this.row.FriendGroup); }
-    get EnemyGroup() { return new FactionTemplateGroup(this, this.row.EnemyGroup); }
-    get FactionGroup() { return new FactionTemplateGroup(this, this.row.FactionGroup); }
+    get FriendGroup() {
+        return makeMaskCell32(FactionTemplateGroupMask,this, this.row.FriendGroup);
+    }
+
+    get EnemyGroup() {
+        return makeMaskCell32(FactionTemplateGroupMask,this, this.row.EnemyGroup);
+    }
+
+    get FactionGroup() {
+        return makeMaskCell32(FactionTemplateGroupMask,this, this.row.FactionGroup);
+    }
 
     get FriendFactions() {
         return new ArrayRefSystemNoCreate(this, 0, 4,
@@ -98,7 +125,7 @@ export class FactionTemplateRegistryClass
     >
 {
     ref<T>(owner: T, cell: Cell<number,any>) {
-        return new RefNoCreate(owner, cell, this);
+        return makeRefNoCreate(FactionTemplateValues,owner,cell,this);
     }
 
     protected Table(): Table<any, FactionTemplateQuery, FactionTemplateRow> & { add: (id: number) => FactionTemplateRow; } {
@@ -160,29 +187,29 @@ export class FactionTemplates extends MultiRowSystem<FactionTemplate,Faction> {
 
     addHordeGet(hostileToMonsters: boolean = true) {
         return this.addGet()
-            .FactionGroup.Horde.set(true)
-            .EnemyGroup.Alliance.set(true)
-            .EnemyGroup.Monsters.set(hostileToMonsters)
+            .FactionGroup.HORDE.set(true)
+            .EnemyGroup.ALLIANCE.set(true)
+            .EnemyGroup.MONSTERS.set(hostileToMonsters)
     }
 
     addAllianceGet(hostileToMonsters: boolean = true) {
         return this.addGet()
-            .FactionGroup.Alliance.set(true)
-            .EnemyGroup.Horde.set(true)
-            .EnemyGroup.Monsters.set(hostileToMonsters)
+            .FactionGroup.ALLIANCE.set(true)
+            .EnemyGroup.HORDE.set(true)
+            .EnemyGroup.MONSTERS.set(hostileToMonsters)
     }
 
     addNeutralPassiveGet() {
         return this.addGet()
-            .FriendGroup.Alliance.set(true)
-            .FriendGroup.Horde.set(true)
-            .FriendGroup.Players.set(true)
+            .FriendGroup.ALLIANCE.set(true)
+            .FriendGroup.HORDE.set(true)
+            .FriendGroup.PLAYERS.set(true)
     }
 
     addNeutralHostileGet() {
         return this.addGet()
-            .FactionGroup.Monsters.set(true)
-            .EnemyGroup.Horde.set(true)
-            .EnemyGroup.Alliance.set(true)
+            .FactionGroup.MONSTERS.set(true)
+            .EnemyGroup.HORDE.set(true)
+            .EnemyGroup.ALLIANCE.set(true)
     }
 }

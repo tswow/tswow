@@ -1,5 +1,5 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/dbc/types/DungeonEncounter";
@@ -12,13 +12,11 @@ import { SQLDBCEntity } from "../Misc/SQLDBCEntity";
 import { SpellRegistry } from "../Spell/Spells";
 import { LFGDungeonRegistry } from "./LFGDungeon";
 
-export class DungeonEncounterCreditType extends EnumCell<DungeonEncounter> {
-    /** Enum Value = 0 */
-    get KillCreature() { return this.value(0) }
-    /** Enum Value = 1 */
-    get CastSpell()    { return this.value(1) }
-}
+export enum DungeonEncounterCreditType {
+    KillCreature = 0,
+    CastSpell    = 1
 
+}
 export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<number,T>{
     get(): number {
         return this.owner.getDBC().OrderIndex.get();
@@ -34,13 +32,6 @@ export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<
         return this.owner;
     }
 
-}
-
-export class DungeonEncounterCredit extends EnumCell<DungeonEncounter> {
-    /** Enum Value = 0 */
-    get KillCreature() { return this.value(0) }
-    /** Enum Value = 1 */
-    get CastSpell()    { return this.value(1) }
 }
 
 export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance_encountersRow> {
@@ -80,10 +71,11 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
     get Difficulty() { return this.wrap(this.getDBC().Difficulty); }
     get Index() { return new DungeonEncounterIndexCell(this); }
     get Type() {
-        return new DungeonEncounterCreditType(
-              this
-            , this.wrapSQL(0,(sql)=>sql.creditType)
-        )
+        return makeEnumCell(
+              DungeonEncounterCreditType
+            , this
+            , this.wrapSQL(0,sql=>sql.creditType)
+        );
     }
 
     /**

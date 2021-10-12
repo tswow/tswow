@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBCIntCell } from "wotlkdata/dbc/DBCCell";
@@ -41,7 +42,10 @@ export class SpellVisualKitModelAttach extends CellSystemTop {
         this.row = row;
     }
 
-    get Attachment() { return new Attachment(this, this.row.AttachmentID); }
+    get Attachment() {
+        return makeEnumCell(Attachment,this, this.row.AttachmentID);
+    }
+
     get Offset() { return new PositionXYZCell(this, this.row.OffsetX, this.row.OffsetY, this.row.OffsetZ);}
     get Yaw() { return this.wrap(this.row.Yaw); }
     get Pitch() { return this.wrap(this.row.Pitch); }
@@ -107,12 +111,14 @@ export class SpellVisualKit extends MainEntity<SpellVisualKitRow> {
     }
     get Sound() { return SoundEntryRegistry.ref(this, this.row.SoundID); }
     get StartAnimation() {
-        return new SpellAnimation(this, this.row.StartAnimID);
+        return makeEnumCell(SpellAnimation,this, this.row.StartAnimID);
     }
     get WorldEffect() {
         return SpellVisualEffectRegistry.ref(this, this.row.WorldEffect);
     }
-    get Animation() { return new SpellAnimation(this, this.row.AnimID); }
+    get Animation() {
+        return makeEnumCell(SpellAnimation,this, this.row.AnimID);
+    }
     get ChestEffect() {
         return SpellVisualEffectRegistry.ref(this, this.row.ChestEffect)
     }

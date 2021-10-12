@@ -1,20 +1,22 @@
 import { DBC } from "wotlkdata";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "wotlkdata/dbc/types/SoundProviderPreferences";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 
-export class SoundProviderPreferencesFlags extends MaskCell32<SoundProviderPreferences> {
-    get Outdoors() { return this.bit(0); }
-    get Indoors() { return this.bit(1); }
-    get Underwater() { return this.bit(2); }
+export enum SoundProviderPreferencesFlags {
+    OUTDOORS   = 0x1,
+    INDOORS    = 0x2,
+    UNDERWATER = 0x4,
 }
 
 export class SoundProviderPreferences extends MainEntity<SoundProviderPreferencesRow> {
     get ID() { return this.row.ID.get(); }
-    get Flags() { return new SoundProviderPreferencesFlags(this,this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(SoundProviderPreferencesFlags, this, this.row.Flags)
+    }
 
     get EAXEnvironmentSelection() { return this.wrap(this.row.EAXEnvironmentSelection); }
     get EAXDecayTime() { return this.wrap(this.row.EAXDecayTime); }

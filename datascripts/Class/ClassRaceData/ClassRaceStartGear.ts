@@ -1,9 +1,10 @@
 import { DBC } from "wotlkdata";
+import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { CharStartOutfitQuery, CharStartOutfitRow } from "wotlkdata/dbc/types/CharStartOutfit";
 import { Table } from "wotlkdata/table/Table";
-import { InventoryType, resolveInventoryType } from "../../Item/ItemInventoryType";
+import { ItemInventoryType } from "../../Item/ItemInventoryType";
 import { ItemTemplateRegistry } from "../../Item/ItemTemplate";
 import { MainEntity } from "../../Misc/Entity";
 import { Ids } from "../../Misc/Ids";
@@ -43,7 +44,7 @@ export class StartGearItems extends ArraySystem<StartGearItem,StartGear> {
         return new StartGearItem(this.owner, index);
     }
 
-    add(item: number, displayId: number = 0, invTypeOverride?: InventoryType) {
+    add(item: number, displayId: number = 0, invTypeOverride?: EnumCon<keyof typeof ItemInventoryType>) {
         let template = ItemTemplateRegistry.load(item)
         if(displayId === 0) {
             displayId = template.DisplayInfo.get()
@@ -54,7 +55,7 @@ export class StartGearItems extends ArraySystem<StartGearItem,StartGear> {
                 .DisplayItem.set(displayId)
                 .InventoryType.set(invTypeOverride === undefined
                     ? template.InventoryType.get()
-                    : resolveInventoryType(invTypeOverride)
+                    : makeEnum(ItemInventoryType,invTypeOverride)
                 )
         })
     }

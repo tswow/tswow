@@ -1,10 +1,11 @@
 import { finish, isReadOnly } from "wotlkdata";
+import { makeMaskCell32, MaskCellWrite } from "wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
+import { ClassMask } from "../Class/ClassRegistry";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
-import { ClassMask } from "../Misc/ClassMask";
-import { RaceMask } from "../Misc/RaceMask";
+import { RaceMask } from "../Race/RaceType";
 import { SpellRegistry } from "./Spells";
 
 interface CastSpellRow {
@@ -45,19 +46,20 @@ export class CastSpell extends ClassRaceMaskEntry<CastSpellRow> {
             return this;
         })
     }
-    get ClassMask(): ClassMask<this> {
-        return new ClassMask(this, new CellBasic(this,
+    get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
+        // hack
+        return makeMaskCell32(ClassMask, this, new CellBasic(this,
             ()=>this.row.classMask,
             (value)=>{
                 this.row.classMask = value; return this;
             })
         )
     }
-    get RaceMask(): RaceMask<this> {
-        return new RaceMask(this, new CellBasic(this,
+    get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
+        return makeMaskCell32(RaceMask, this, new CellBasic(this,
             ()=>this.row.raceMask,
             (value)=>{
-                this.row.raceMask= value; return this;
+                this.row.raceMask = value; return this;
             })
         )
     }

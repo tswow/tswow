@@ -15,17 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMask, makeMaskCell32, MaskCellWrite, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { SkillLineAbilityQuery, SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
 import { Table } from "wotlkdata/table/Table";
 import { ClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
-import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
-import { ClassMask } from "../Misc/ClassMask";
+import { ClassMask } from "../Class/ClassRegistry";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
-import { RaceMask } from "../Misc/RaceMask";
-import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
+import { RaceMask } from "../Race/RaceType";
 import { RegistryDynamic } from "../Refs/Registry";
 import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
@@ -40,44 +39,29 @@ export class TrivialSkillLineRank extends CellSystem<SkillLineAbility> {
     }
 }
 
-export const ACQUIRE_METHOD = {
-      TRAINER          : 0
-    , LEARN_WITH_SKILL : 1
-    , LEARN_ON_CREATE  : 2
-} as const;
-
-export type AcquireMethodType = keyof typeof ACQUIRE_METHOD
-
-export class AcquireMethod<T> extends EnumCell<T> {
-    get Trainer()        {
-        return this.value(ACQUIRE_METHOD.TRAINER);
-    }
-    get LearnWithSkill() {
-        return this.value(ACQUIRE_METHOD.LEARN_WITH_SKILL);
-    }
-    get LearnOnCreate()  {
-        return this.value(ACQUIRE_METHOD.LEARN_ON_CREATE);
-    }
+export enum AcquireMethod {
+      TRAINER          = 0
+    , LEARN_WITH_SKILL = 1
+    , LEARN_ON_CREATE  = 2
 }
 
-
 export class SkillLineAbility extends ClassRaceMaskEntry<SkillLineAbilityRow> {
-    get ClassMask(): ClassMask<this> {
-        return new ClassMask(this, this.row.ClassMask);
+    get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
+        return makeMaskCell32(ClassMask, this, this.row.ClassMask);
     }
-    get RaceMask(): RaceMask<this> {
-        return new RaceMask(this, this.row.RaceMask);
+    get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
+        return makeMaskCell32(RaceMask, this, this.row.RaceMask);
     }
     get ID() { return this.row.ID.get(); }
     get ClassMaskForbidden() {
-        return this.wrap(this.row.ClassMaskForbidden);
+        return makeMaskCell32(ClassMask, this, this.row.ClassMaskForbidden);
     }
     get MinSkillRank() { return this.wrap(this.row.MinSkillLineRank); }
 
     /** The spell this spell is superceded by */
     get SupercededBy() { return this.wrap(this.row.SupercededBySpell); }
     get AcquireMethod() {
-        return new AcquireMethod(this, this.row.AcquireMethod)
+        return makeEnumCell(AcquireMethod, this, this.row.AcquireMethod)
     }
     get TrivialRank() { return new TrivialSkillLineRank(this); }
     get SkillLine() { return this.wrap(this.row.SkillLine); }
@@ -106,8 +90,8 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
 
     add(
           skillLine: number
-        , classes?: ClassMaskCon
-        , races?: RaceMaskCon
+        , classes?: MaskCon<keyof typeof ClassMask>
+        , races?: MaskCon<keyof typeof RaceMask>
     ) {
         this.addGet(skillLine,classes,races)
         return this.owner;
@@ -115,8 +99,8 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
 
     addMod(
         skillLine: number
-      , classes: ClassMaskCon
-      , races: RaceMaskCon
+      , classes: MaskCon<keyof typeof ClassMask>
+      , races: MaskCon<keyof typeof RaceMask>
       , callback: (sla: SkillLineAbility)=>void = ()=>{}
       )
       {
@@ -126,14 +110,14 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
 
     addGet(
           skillLine: number
-        , classes?: ClassMaskCon
-        , races?: RaceMaskCon
+        , classes?: MaskCon<keyof typeof ClassMask>
+        , races?: MaskCon<keyof typeof RaceMask>
     ) {
         let row = DBC.SkillLineAbility.add(Ids.SkillLineAbility.id())
         let sla = new SkillLineAbility(row
             .SkillLine.set(skillLine)
-            .ClassMask.set(makeClassmask(classes))
-            .RaceMask.set(makeRacemask(races))
+            .ClassMask.set(makeMask(ClassMask,classes))
+            .RaceMask.set(makeMask(RaceMask,races))
             .Spell.set(this.owner.ID));
         return sla;
     }

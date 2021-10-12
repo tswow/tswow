@@ -1,13 +1,12 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class GameObjectFlags<T> extends MaskCell32<T> {
-    get InUse()             { return this.bit(0); }
-    get Locked()            { return this.bit(1); }
-    get ConditionalSelect() { return this.bit(2); }
-    get Transport()         { return this.bit(3); }
-    get NotSelectable()     { return this.bit(4); }
-    get NoDespawn()         { return this.bit(5); }
-    get Triggered()         { return this.bit(6); }
-    get Damaged()           { return this.bit(9); }
-    get Destroyed()         { return this.bit(10); }
+export enum GameObjectFlags {
+    IN_USE             = 0x1,
+    LOCKED             = 0x2,
+    CONDITIONAL_SELECT = 0x4,
+    TRANSPORT          = 0x8,
+    NOT_SELECTABLE     = 0x10,
+    NO_DESPAWN         = 0x20,
+    TRIGGERED          = 0x40,
+    DAMAGED            = 0x200,
+    DESTROYED          = 0x400,
 }

@@ -1,47 +1,45 @@
+import { makeMask, MaskCellWrite, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { ClassMask } from "../../Misc/ClassMask";
 import { MainEntity } from "../../Misc/Entity";
-import { RaceMask } from "../../Misc/RaceMask";
-import { makeRacemask, RaceMaskCon, RaceType } from "../../Race/RaceType";
-import { ClassMaskCon, ClassType, makeClassmask } from "../ClassType";
+import { RaceMask } from "../../Race/RaceType";
+import { ClassMask } from "../ClassRegistry";
 
 export interface IClassRaceMaskEntry {
-    readonly ClassMask: ClassMask<this>
-    readonly RaceMask: RaceMask<this>
+    readonly ClassMask: MaskCellWrite<this,typeof ClassMask>
+    readonly RaceMask: MaskCellWrite<this,typeof RaceMask>
 }
 
 export abstract class ClassRaceMaskEntry<T>
 extends MainEntity<T>
 implements IClassRaceMaskEntry
 {
-    abstract get ClassMask(): ClassMask<this>
-    abstract get RaceMask(): RaceMask<this>
+    abstract get ClassMask(): MaskCellWrite<this,typeof ClassMask>
+    abstract get RaceMask(): MaskCellWrite<this,typeof RaceMask>
 }
 
 export abstract class ClassRaceMaskSystemBase<E extends IClassRaceMaskEntry,T>
     extends MultiRowSystem<E,T>
 {
-    clearClass(cls: ClassMaskCon) {
-        let cmask = makeClassmask(cls);
+    clearClass(cls: MaskCon<keyof typeof ClassMask>) {
         this.forEach(v=>{
-            v.ClassMask.set(v.ClassMask.get()&(~cmask>>>0));
+            v.ClassMask.setNot(cls)
         })
         return this.owner;
     }
 
-    clearRace(race: RaceMaskCon) {
-        let rmask = makeRacemask(race);
+    clearRace(race: MaskCon<keyof typeof RaceMask>) {
+        let rmask = makeMask(RaceMask,race);
         this.forEach(v=>{
             v.RaceMask.set(v.RaceMask.get()&(~rmask>>>0));
         })
         return this.owner;
     }
 
-    clearPair(cls: ClassType, race: RaceType) {
+    clearPair(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
         this.forEach(v=>{
-            if(v.ClassMask.getClass(cls) && v.RaceMask.getRace(race)) {
-                v.ClassMask.setClass(cls,false);
-                v.RaceMask.setRace(race,false);
+            if(v.ClassMask.hasAll(cls) && v.RaceMask.hasAll(race)) {
+                v.ClassMask.setNot(cls);
+                v.RaceMask.setNot(race);
             }
         })
         return this.owner;
@@ -50,11 +48,11 @@ export abstract class ClassRaceMaskSystemBase<E extends IClassRaceMaskEntry,T>
 
 export abstract class ClassRaceMaskSystem<E extends ClassRaceMaskEntry<R>,R,T> extends ClassRaceMaskSystemBase<E,T> {
     protected abstract _addGet(classmask: number, racemask: number): E;
-    addGet(classes: ClassMaskCon, races: RaceMaskCon) {
-        return this._addGet(makeClassmask(classes),makeRacemask(races));
+    addGet(classes: MaskCon<keyof typeof ClassMask>, races: MaskCon<keyof typeof RaceMask>) {
+        return this._addGet(makeMask(ClassMask,classes),makeMask(RaceMask,races));
     }
 
-    addMod(classes: ClassMaskCon, races: RaceMaskCon, callback: (entity: E)=>void) {
+    addMod(classes: MaskCon<keyof typeof ClassMask>, races: MaskCon<keyof typeof RaceMask>, callback: (entity: E)=>void) {
         callback(this.addGet(classes,races));
         return this.owner;
     }

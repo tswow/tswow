@@ -14,15 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureDamageSchool extends EnumCell<CreatureTemplate> {
-    get Normal() { return this.value(0)}
-    get Holy()   { return this.value(1)}
-    get Fire()   { return this.value(2)}
-    get Nature() { return this.value(3)}
-    get Frost()  { return this.value(4)}
-    get Shadow() { return this.value(5)}
-    get Arcane() { return this.value(6)}
+export enum CreatureDamageSchool {
+    Normal = 0,
+    Holy   = 1,
+    Fire   = 2,
+    Nature = 3,
+    Frost  = 4,
+    Shadow = 5,
+    Arcane = 6
 }

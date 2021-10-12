@@ -15,12 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { quest_template_addonRow } from "wotlkdata/sql/types/quest_template_addon";
+import { ClassMask } from "../Class/ClassRegistry";
 import { MailTemplateRegistry } from "../Mail/MailTemplate";
-import { ClassMask } from "../Misc/ClassMask";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { SpellRegistry } from "../Spell/Spells";
 import { Quest } from "./Quest";
@@ -119,7 +120,7 @@ export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
     }
 
     get ClassMask() {
-        return new ClassMask(this.owner, this.wrapSQL(0, sql=>sql.AllowableClasses))
+        return makeMaskCell32(ClassMask, this.owner, this.wrapSQL(0, sql=>sql.AllowableClasses))
     }
 
     get MaxLevel() {
@@ -143,7 +144,7 @@ export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
     }
 
     get SpecialFlags() {
-        return new QuestSpecialFlags(this.owner,this.wrapSQL(0,sql=>sql.SpecialFlags));
+        return makeMaskCell32(QuestSpecialFlags,this, this.wrapSQL(0,sql=>sql.SpecialFlags));
     }
 
     get BreadcrumbForQuest() {

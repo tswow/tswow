@@ -1,5 +1,6 @@
 import { DBC } from "wotlkdata";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/dbc/types/VehicleSeat";
 import { Table } from "wotlkdata/table/Table";
@@ -11,53 +12,53 @@ import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "../Sound/SoundEntry";
 import { SpellAnimation } from "../Spell/SpellAnimation";
 
-export class VehicleSeatFlags extends MaskCell32<VehicleSeat> {
-    get HasLowerAnimForEnter() { return this.bit(0); }
-    get HasLowerAnimForRide() { return this.bit(1); }
-    get UNK3() { return this.bit(2); }
-    get ShouldUseSeatAnimOnVoluntaryExit() { return this.bit(3); }
-    get UNK5() { return this.bit(4); }
-    get UNK6() { return this.bit(5); }
-    get UNK7() { return this.bit(6); }
-    get UNK8() { return this.bit(7); }
-    get UNK9() { return this.bit(8); }
-    get HidePassenger() { return this.bit(9); }
-    get AllowTurning() { return this.bit(10); }
-    get CanControl() { return this.bit(11); }
-    get CanCastMountSpell() { return this.bit(12); }
-    get Uncontrolled() { return this.bit(13); }
-    get CanAttack() { return this.bit(14); }
-    get ShouldUseSeatAnimOnForcedExit() { return this.bit(15); }
-    get UNK17() { return this.bit(16); }
-    /** related to permanent auras */
-    get UNK18() { return this.bit(17); }
-    get HasVoluntaryExitAnim() { return this.bit(18); }
-    get HasForcedExitAnim() { return this.bit(19); }
-    get PassengerNotSelectable() { return this.bit(20); }
-    get UNK22() { return this.bit(21); }
-    get HasVehicleEnterAnim() { return this.bit(22); }
-    get IsUsingVehicleControls() { return this.bit(23); }
-    get EnableVehicleZoom() { return this.bit(24); }
-    get CanEnterOrExit() { return this.bit(25); }
-    get CanSwitch() { return this.bit(26); }
-    get HasStartWaitingForAnimEnter() { return this.bit(27); }
-    get HasStartWaitingForAnimExit() { return this.bit(28); }
-    get CanCast() { return this.bit(29); }
-    get UNK2() { return this.bit(30); }
-    get AllowsInteraction() { return this.bit(31); }
+export enum VehicleSeatFlags {
+    HAS_LOWER_ANIM_FOR_ENTER               = 0x1,
+    HAS_LOWER_ANIM_FOR_RIDE                = 0x2,
+    UNK3                                   = 0x4,
+    SHOULD_USE_SEAT_ANIM_ON_VOLUNTARY_EXIT = 0x8,
+    UNK5                                   = 0x10,
+    UNK6                                   = 0x20,
+    UNK7                                   = 0x40,
+    UNK8                                   = 0x80,
+    UNK9                                   = 0x100,
+    HIDE_PASSENGER                         = 0x200,
+    ALLOW_TURNING                          = 0x400,
+    CAN_CONTROL                            = 0x800,
+    CAN_CAST_MOUNT_SPELL                   = 0x1000,
+    UNCONTROLLED                           = 0x2000,
+    CAN_ATTACK                             = 0x4000,
+    SHOULD_USE_SEAT_ANIM_ON_FORCED_EXIT    = 0x8000,
+    UNK17                                  = 0x10000,
+    /** Related to permanent auras */
+    UNK18                                  = 0x20000,
+    HAS_VOLUNTARY_EXIT_ANIM                = 0x40000,
+    HAS_FORCED_EXIT_ANIM                   = 0x80000,
+    PASSENGER_NOT_SELECTABLE               = 0x100000,
+    UNK22                                  = 0x200000,
+    HAS_VEHICLE_ENTER_ANIM                 = 0x400000,
+    IS_USING_VEHICLE_CONTROLS              = 0x800000,
+    ENABLE_VEHICLE_ZOOM                    = 0x1000000,
+    CAN_ENTER_OR_EXIT                      = 0x2000000,
+    CAN_SWITCH                             = 0x4000000,
+    HAS_START_WAITING_FOR_ANIM_ENTER       = 0x8000000,
+    HAS_START_WAITING_FOR_ANIM_EXIT        = 0x10000000,
+    CAN_CAST                               = 0x20000000,
+    UNK2                                   = 0x40000000,
+    ALLOWS_INTERACTION                     = 0x80000000,
 }
 
-export class VehicleSeatFlagsB extends MaskCell32<VehicleSeat> {
-    get UsableForced() { return this.bit(1); }
-    get TargetsInRadius() { return this.bit(3); }
-    get Ejectable() { return this.bit(5); }
-    get UsableForced2() { return this.bit(6); }
-    get UsableForced3() { return this.bit(8); }
-    get UNK7() { return this.bit(16); }
-    get KeepPet() { return this.bit(17); }
-    get UsableForced4() { return this.bit(25); }
-    get CanSwitch() { return this.bit(26); }
-    get VehiclePlayerFrameUI() { return this.bit(31); }
+export enum VehicleSeatFlagsB {
+    USABLE_FORCED            = 0x2,
+    TARGETS_IN_RADIUS        = 0x8,
+    EJECTABLE                = 0x20,
+    USABLE_FORCED2           = 0x40,
+    USABLE_FORCED3           = 0x100,
+    U_N_K7                   = 0x10000,
+    KEEP_PET                 = 0x20000,
+    USABLE_FORCED4           = 0x2000000,
+    CAN_SWITCH               = 0x4000000,
+    VEHICLE_PLAYER_FRAME_U_I = 0x80000000,
 }
 
 export class VehicleSeatAttachment extends CellSystem<VehicleSeat> {
@@ -99,8 +100,12 @@ export class VehicleSeatEnter extends CellSystem<VehicleSeat> {
           );
     }
 
-    get AnimStart() { return new SpellAnimation(this, this.owner.row.EnterAnimStart); }
-    get AnimLoop() { return new SpellAnimation(this, this.owner.row.EnterAnimLoop); }
+    get AnimStart() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.EnterAnimStart);
+    }
+    get AnimLoop() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.EnterAnimLoop);
+    }
 
     get UISound() { return SoundEntryRegistry.ref(this, this.owner.row.EnterUISoundID)}
 
@@ -133,11 +138,19 @@ export class VehicleSeatEnter extends CellSystem<VehicleSeat> {
 }
 
 export class VehicleSeatRide extends CellSystem<VehicleSeat> {
-    get AnimStart() { return new SpellAnimation(this, this.owner.row.RideAnimStart); }
-    get AnimLoop() { return new SpellAnimation(this, this.owner.row.RideAnimLoop); }
+    get AnimStart() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.RideAnimStart);
+    }
+    get AnimLoop() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.RideAnimLoop);
+    }
 
-    get UpperAnimStart() { return new SpellAnimation(this, this.owner.row.RideUpperAnimStart); }
-    get UpperAnimLoop() { return new SpellAnimation(this, this.owner.row.RideUpperAnimLoop); }
+    get UpperAnimStart() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.RideUpperAnimStart);
+    }
+    get UpperAnimLoop() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.RideUpperAnimLoop);
+    }
 
     clear() {
         this.AnimStart.set(0)
@@ -167,8 +180,12 @@ export class VehicleSeatExit extends CellSystem<VehicleSeat> {
           );
     }
 
-    get AnimStart() { return new SpellAnimation(this, this.owner.row.ExitAnimStart); }
-    get AnimLoop() { return new SpellAnimation(this, this.owner.row.ExitAnimLoop); }
+    get AnimStart() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.ExitAnimStart);
+    }
+    get AnimLoop() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.ExitAnimLoop);
+    }
     get UISound() { return SoundEntryRegistry.ref(this, this.owner.row.ExitUISoundID)}
 
     get CameraDelay() {
@@ -215,11 +232,17 @@ export class VehicleSeatPassenger extends CellSystem<VehicleSeat> {
 }
 
 export class VehicleSeatVehicle extends CellSystem<VehicleSeat> {
-    get EnterAnim() { return new SpellAnimation(this, this.owner.row.VehicleEnterAnim); }
+    get EnterAnim() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.VehicleEnterAnim);
+    }
     get EnterAnimBone() { return this.ownerWrap(this.owner.row.VehicleEnterAnimBone); }
-    get ExitAnim() { return new SpellAnimation(this, this.owner.row.VehicleExitAnim); }
+    get ExitAnim() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.VehicleExitAnim);
+    }
     get ExitAnimBone() { return this.ownerWrap(this.owner.row.VehicleExitAnimBone); }
-    get RideAnimLoop() { return new SpellAnimation(this, this.owner.row.VehicleRideAnimLoop); }
+    get RideAnimLoop() {
+        return makeEnumCell(SpellAnimation, this, this.owner.row.VehicleRideAnimLoop);
+    }
     get RideAnimLoopBone() { return this.ownerWrap(this.owner.row.VehicleRideAnimLoopBone); }
 
     get EnterAnimDelay() { return this.ownerWrap(this.owner.row.VehicleEnterAnimDelay); }
@@ -271,8 +294,12 @@ export class VehicleCamera extends CellSystem<VehicleSeat> {
 
 export class VehicleSeat extends MainEntity<VehicleSeatRow> {
     get ID() { return this.row.ID.get(); }
-    get FlagsA() { return new VehicleSeatFlags(this, this.row.Flags); }
-    get FlagsB() { return new VehicleSeatFlags(this, this.row.FlagsB); }
+    get FlagsA() {
+        return makeMaskCell32(VehicleSeatFlags, this, this.row.Flags);
+    }
+    get FlagsB() {
+        return makeMaskCell32(VehicleSeatFlagsB, this, this.row.FlagsB);
+    }
     get Attachment() { return new VehicleSeatAttachment(this); }
     get Enter() { return new VehicleSeatEnter(this); }
     get Ride() { return new VehicleSeatRide(this); }

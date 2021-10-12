@@ -14,44 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlags extends MaskCell32<ItemTemplate> {
+export enum ItemFlags {
+    NO_PICKUP            = 0x1,
+    CONJURED             = 0x2,
+    OPENABLE             = 0x4,
+    HEROIC               = 0x8,
+    DEPRECATED           = 0x10,
+    CANT_DESTROY         = 0x20,
+    PLAYER_CAST          = 0x40,
+    NO_EQUIP_COOLDOWN    = 0x80,
+    MULTI_LOOT_QUEST     = 0x100,
+    WRAPS_ITEMS          = 0x200,
+    USES_RESOURCES       = 0x400,
+    PARTY_LOOT           = 0x800,
+    REFUNDABLE           = 0x1000,
+    PETITION             = 0x2000,
+    HAS_TEXT             = 0x4000,
+    NO_DISENCHANT        = 0x8000,
+    REAL_DURATION        = 0x10000,
+    NO_CREATOR           = 0x20000,
+    CAN_BE_PROSPECTED    = 0x40000,
+    UNIQUE_EQUIPPED      = 0x80000,
+    IGNORE_FOR_AURAS     = 0x100000,
+    ARENA_ENABLED        = 0x200000,
+    NO_DURABILITY_LOSS   = 0x400000,
+    USABLE_IN_SHAPESHIFT = 0x800000,
+    HAS_QUEST_GLOW       = 0x1000000,
+    PROFESSION_RECIPE    = 0x2000000,
+    ARENA_DISABLED       = 0x4000000,
+    /** Also requires quality = 7 */
+    BIND_TO_ACCOUNT      = 0x8000000,
+    IGNORE_REAGENTS      = 0x10000000,
+    MILLABLE             = 0x20000000,
+    REPORT_TO_GUILD_CHAT = 0x40000000,
+    NO_PROGRESSIVE_LOOT  = 0x80000000,
 
-    get NoPickup() { return this.bit(0); }
-    get Conjured() { return this.bit(1); }
-    get Openable() { return this.bit(2); }
-    get Heroic() { return this.bit(3); }
-    get Deprecated() { return this.bit(4); }
-    get CantDestroy() { return this.bit(5); }
-    /** Not sure what this means */
-    get PlayerCast() { return this.bit(6); }
-    get NoEquipCooldown() { return this.bit(7); }
-    get MultiLootQuest() { return this.bit(8); }
-    get WrapsItems() { return this.bit(9); }
-    get UsesResources() { return this.bit(10); }
-    get PartyLoot() { return this.bit(11); }
-    get Refundable() { return this.bit(12); }
-    get Petition() { return this.bit(13); }
-    get HasText() { return this.bit(14); }
-    get NoDisenchant() { return this.bit(15); }
-    get RealDuration() { return this.bit(16); }
-    get NoCreator() { return this.bit(17); }
-    get CanBeProspected() { return this.bit(18); }
-    get UniqueEquipped() { return this.bit(19); }
-    get IgnoreForAuras() { return this.bit(20); }
-    get ArenaEnabled() { return this.bit(21); }
-    get NoDurabilityLoss() { return this.bit(22); }
-    get UsableInShapeshift() { return this.bit(23); }
-    get HasQuestGlow() { return this.bit(24); }
-    get ProfessionRecipe() { return this.bit(25); }
-    get ArenaDisabled() { return this.bit(26); }
-    /** Also needs Quality=7 */
-    get BindToAccount() { return this.bit(27); }
-    get IgnoreReagents() { return this.bit(28); }
-    get Millable() { return this.bit(29); }
-    get ReportToGuildChat() { return this.bit(30); }
-    /** Does this exist in wotlk? */
-    get NoProgressiveLoot() { return this.bit(31); }
 }

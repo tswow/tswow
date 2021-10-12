@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldStateUI";
 import { Table } from "wotlkdata/table/Table";
@@ -55,11 +55,9 @@ export class WorldStateUICapturePoint extends CellSystem<WorldStateUI> {
     }
 }
 
-export class WorldStateType extends EnumCell<WorldStateUI> {
-    /** Enum Value:                             0 */
-    get Default()           { return this.value(0) }
-    /** Enum Value:                             2 */
-    get BattlegroundField() { return this.value(2) }
+export enum WorldStateType {
+    DEFAULT            = 0,
+    BATTLEGROUND_FIELD = 2,
 }
 
 export class WorldStateUI extends MainEntity<WorldStateUIRow> {
@@ -74,7 +72,9 @@ export class WorldStateUI extends MainEntity<WorldStateUIRow> {
     get DynamicIcon() { return this.wrap(this.row.DynamicIcon); }
     get DynamicTooltip() { return this.wrapLoc(this.row.Tooltip); }
     get ExtendedUI() { return this.wrap(this.row.ExtendedUI); }
-    get Type() { return new WorldStateType(this, this.row.Type); }
+    get Type() {
+        return makeEnumCell(WorldStateType, this, this.row.Type);
+    }
     get Variable() { return this.wrap(this.row.StateVariable); }
     get Capture() { return new WorldStateUICapturePoint(this); }
 
@@ -108,7 +108,7 @@ export class WorldStateUIRegistryClass
             .PhaseShift.set(0)
             .String.clear()
             .Tooltip.clear()
-            .Type.Default.set()
+            .Type.DEFAULT.set()
             .Variable.set(0)
     }
     protected FindByID(id: number): WorldStateUIRow {

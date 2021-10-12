@@ -17,7 +17,7 @@
 import { DBC } from "wotlkdata";
 import { CPrim } from "wotlkdata/cell/cells/Cell";
 import { CellArray } from "wotlkdata/cell/cells/CellArray";
-import { EnumCellTransform, EnumValueTransform } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { Objectified, Objects } from "wotlkdata/cell/serialization/ObjectIteration";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
@@ -26,7 +26,7 @@ import { std } from "../tswow-stdlib-data";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
-import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
+import { SpellEffectMechanic } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
 import { SpellRadiusRegistry } from "./SpellRadius";
@@ -250,13 +250,19 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get ItemType() { return this.w(this.row.EffectItemType); }
     get Aura(): AuraType { return new AuraType(this, this.index); }
     get Type(): SpellEffectType { return new SpellEffectType(this, this.index); }
-    get Mechanic() { return new SpellEffectMechanicEnum(this, this.w(this.row.EffectMechanic)); }
+    get Mechanic() {
+        return makeEnumCell(SpellEffectMechanic, this, this.w(this.row.EffectMechanic));
+    }
     get BasePoints() { return this.w(this.row.EffectBasePoints)};
     get DieSides() { return this.w(this.row.EffectDieSides); }
     get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
     get PointsPerCombo() { return this.w(this.row.EffectPointsPerCombo); }
-    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() {
+        return makeEnumCell(SpellImplicitTarget, this, this.wrapIndex(this.row.ImplicitTargetA,this.index));
+    }
+    get ImplicitTargetB() {
+        return makeEnumCell(SpellImplicitTarget, this, this.wrapIndex(this.row.ImplicitTargetB,this.index));
+    }
     get AuraPeriod() { return this.w(this.row.EffectAuraPeriod); }
     get MultipleValue() { return this.w(this.row.EffectMultipleValue); }
     get ChainTarget() { return this.w(this.row.EffectChainTargets); }

@@ -26,7 +26,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         .SkillLines.addMod(this.owner.ID,undefined,undefined)
         .Effects.addMod((eff)=>{
             eff.Type.OpenLock.set()
-            .TargetA.GameobjectTarget.set()
+            .ImplicitTargetA.GAMEOBJECT_TARGET.set()
             .LockType.set(lockType)
             .AsEffect.get()
             .BasePoints.set(-1)
@@ -43,9 +43,9 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
             .BonusMultiplier.set(1)
         })
         .SchoolMask.setBit(0,true)
-        .InterruptFlags.OnMovement.set(true)
-        .InterruptFlags.OnPushback.set(true)
-        .InterruptFlags.OnInterruptCast.set(true)
+        .InterruptFlags.ON_MOVEMENT.set(true)
+        .InterruptFlags.ON_PUSHBACK.set(true)
+        .InterruptFlags.ON_INTERRUPT_CAST.set(true)
         .InterruptFlags.setBit(3,true)
         .InterruptFlags.setBit(4,true)
         // 12 is the one used by mining

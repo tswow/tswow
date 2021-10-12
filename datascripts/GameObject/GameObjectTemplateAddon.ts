@@ -1,4 +1,5 @@
 import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gameobject_template_addonRow } from "wotlkdata/sql/types/gameobject_template_addon";
@@ -74,7 +75,9 @@ export class GameObjectTemplateAddon<T extends GameObjectTemplate> extends Maybe
 
     get ArtKits(): ArtKits<T> { return new ArtKits(this); }
     get Faction() { return this.wrapSQL(0,sql=>sql.faction); }
-    get Flags() { return new GameObjectFlags(this.owner, this.wrapSQL(0,sql=>sql.flags)); }
+    get Flags() {
+        return makeMaskCell32(GameObjectFlags,this.owner, this.wrapSQL(0,sql=>sql.flags));
+    }
     get Gold() {
         return new MinMaxCell(
               this.owner

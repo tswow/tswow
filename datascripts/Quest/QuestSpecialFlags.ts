@@ -1,9 +1,5 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Quest } from "./Quest";
-
-export class QuestSpecialFlags extends MaskCell32<Quest> {
-    get Repeatable()      { return this.bit(0); }
-
+export enum QuestSpecialFlags {
+    REPEATABLE        = 0x1,
     /**
      * Makes quest only completable via some external event,
      *
@@ -11,13 +7,12 @@ export class QuestSpecialFlags extends MaskCell32<Quest> {
      * - entry in areatrigger_involvedrelation
      * - entry in spell_script with command 7
      */
-    get CustomComplete()  { return this.bit(1); }
-    get AutoAccept()      { return this.bit(2); }
-    get DungeonFinder()   { return this.bit(3); }
-    get Monthly()         { return this.bit(4); }
-
+    CUSTOM_COMPLETE   = 0x2,
+    AUTO_ACCEPT       = 0x4,
+    DUNGEON_FINDER    = 0x8,
+    MONTHLY           = 0x10,
     /**
      * usually involves killing invisible "bunny" npc with a spell
      */
-    get DummyKillCredit() { return this.bit(5); }
+    DUMMY_KILL_CREDIT = 0x20,
 }

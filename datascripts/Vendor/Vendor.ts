@@ -15,14 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { npc_vendorRow } from "wotlkdata/sql/types/npc_vendor";
+import { ClassMask } from "../Class/ClassRegistry";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ExtendedCostRegistry } from "../ExtendedCost/ExtendedCost";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
-import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
+import { RaceMask } from "../Race/RaceType";
 
 export class VendorItem extends MainEntity<npc_vendorRow> {
     get CreatureTemplate() {
@@ -42,11 +44,11 @@ export class VendorItem extends MainEntity<npc_vendorRow> {
     }
 
     get ClassMask() {
-        return new ClassMask(this, this.row.classMask)
+        return makeMaskCell32(ClassMask, this, this.row.classMask)
     }
 
     get RaceMask() {
-        return new ClassMask(this, this.row.raceMask)
+        return makeMaskCell32(RaceMask, this, this.row.raceMask)
     }
 
     get ExtendedCost() {

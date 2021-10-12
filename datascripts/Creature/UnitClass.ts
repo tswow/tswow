@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class UnitClass extends EnumCell<CreatureTemplate> {
-    get Warrior() { return this.value(1) }
-    get Paladin() { return this.value(2) }
-    get Rogue()   { return this.value(4) }
-    get Mage()    { return this.value(8) }
+export enum UnitClass {
+    WARRIOR = 1,
+    PALADIN = 2,
+    ROGUE   = 4,
+    MAGE    = 8,
 }

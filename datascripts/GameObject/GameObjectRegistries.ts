@@ -224,7 +224,7 @@ export class GOElevatorRegistryClass
     protected CloneGO(r: GameObjectElevator, parent: GameObjectElevator): void {}
     protected ClearGO(r: GameObjectPlain): void {
         r.Type.Elevator.set()
-         .Flags.Transport.set(true)
+         .Flags.TRANSPORT.set(true)
          .Display.set(455) // undercity elevator
     }
     protected GOEntity(plain: GameObjectPlain) {
@@ -233,7 +233,7 @@ export class GOElevatorRegistryClass
 
     createLocalTemplate(mod: string, id: string, keyframes: KeyFrameCon[]) {
         return this.create(mod,id)
-            .Flags.Transport.set(true)
+            .Flags.TRANSPORT.set(true)
             .Keyframes.addDefault(keyframes)
     }
 

@@ -1,5 +1,5 @@
 import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
@@ -22,15 +22,15 @@ export class CriteriaTimer<T extends CriteriaBase> extends CellSystem<T> {
     }
 }
 
-export class CriteriaFlags<T extends CriteriaBase> extends MaskCell32<T> {
-    get ProgressBar() { return this.bit(0); }
-    get Hidden() { return this.bit(1); }
-    get FailAchievement() { return this.bit(2); }
-    get ResetOnStart() { return this.bit(3); }
-    get IsDate() { return this.bit(4); }
-    get IsMoney() { return this.bit(5); }
-    get IsAchievementID() { return this.bit(6); }
-    get QuantityIsCapped() { return this.bit(7); }
+export enum CriteriaFlags {
+    PROGRESS_BAR       = 0x1,
+    HIDDEN             = 0x2,
+    FAIL_ACHIEVEMENT   = 0x4,
+    RESET_ON_START     = 0x8,
+    IS_DATE            = 0x10,
+    IS_MONEY           = 0x20,
+    IS_ACHIEVEMENT_I_D = 0x40,
+    QUANTITY_IS_CAPPED = 0x80,
 }
 
 export class CriteriaBase extends TransformedEntity<Achievement_CriteriaRow,CriteriaPlain> {
@@ -49,7 +49,9 @@ export class CriteriaBase extends TransformedEntity<Achievement_CriteriaRow,Crit
         return AchievementRegistry.readOnlyRef(this, this.row.Achievement_Id);
     }
     get Description() { return this.wrapLoc(this.row.Description); }
-    get Flags() { return new CriteriaFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(CriteriaFlags, this, this.row.Flags);
+    }
     get UIOrder() { return this.wrap(this.row.Ui_Order); }
     get ID() { return this.row.ID.get(); }
     clear() {

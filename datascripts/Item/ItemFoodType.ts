@@ -14,24 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFoodType extends EnumCell<ItemTemplate> {
-    /** Enum Value:                   1 */
-    get Meat()    { return this.value(1) }
-    /** Enum Value:                   2 */
-    get Fish()    { return this.value(2) }
-    /** Enum Value:                   3 */
-    get Cheese()  { return this.value(3) }
-    /** Enum Value:                   4 */
-    get Bread()   { return this.value(4) }
-    /** Enum Value:                   5 */
-    get Fungus()  { return this.value(5) }
-    /** Enum Value:                   6 */
-    get Fruit()   { return this.value(6) }
-    /** Enum Value:                   7 */
-    get RawMeat() { return this.value(7) }
-    /** Enum Value:                   8 */
-    get RawFish() { return this.value(8) }
+export enum ItemFoodType {
+    MEAT     = 1,
+    FISH     = 2,
+    CHEESE   = 3,
+    BREAD    = 4,
+    FUNGUS   = 5,
+    FRUIT    = 6,
+    RAW_MEAT = 7,
+    RAW_FISH = 8,
 }

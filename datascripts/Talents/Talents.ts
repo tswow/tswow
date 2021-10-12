@@ -15,10 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
+import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
 import { TalentTabQuery, TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
 import { lt } from "wotlkdata/query/Relations";
 import { Table } from "wotlkdata/table/Table";
-import { ClassType, resolveClassType } from "../Class/ClassType";
+import { ClassIDs } from "../Class/ClassRegistry";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { TalentTree } from "./TalentTree";
@@ -61,8 +62,8 @@ export class TalentTreeRegistryClass
             .forEach(x=>x.RaceMask.set(0x7fffffff))
     }
 
-    forClass(cls: ClassType) {
-        let classId = resolveClassType(cls);
+    forClass(cls: EnumCon<keyof typeof ClassIDs>) {
+        let classId = makeEnum(ClassIDs,cls);
         return this.filter(e=>e.row.OrderIndex.get() & (1<<(classId-1)))
     }
 }

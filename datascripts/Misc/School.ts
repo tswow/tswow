@@ -1,5 +1,3 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
 /*
  * This file is part of tswow (https://github.com/tswow)
@@ -17,29 +15,23 @@ import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export class SchoolMask<T> extends MaskCell32<T> {
-    get Physical() {return this.bit(0); }
-    get Holy() {return this.bit(1); }
-    get Fire() {return this.bit(2); }
-    get Nature() {return this.bit(3); }
-    get Frost() {return this.bit(4); }
-    get Shadow() {return this.bit(5); }
-    get Arcane() {return this.bit(6); }
+
+export enum SchoolTypes {
+    PHYSICAL = 0,
+    HOLY     = 1,
+    FIRE     = 2,
+    NATURE   = 3,
+    FROST    = 4,
+    SHADOW   = 5,
+    ARCANE   = 6,
 }
 
-export class SchoolEnum<T> extends EnumCell<T> {
-    /** Enum Value:                    0 */
-    get Physical() { return this.value(0) }
-    /** Enum Value:                    1 */
-    get Holy()     { return this.value(1) }
-    /** Enum Value:                    2 */
-    get Fire()     { return this.value(2) }
-    /** Enum Value:                    3 */
-    get Nature()   { return this.value(3) }
-    /** Enum Value:                    4 */
-    get Frost()    { return this.value(4) }
-    /** Enum Value:                    5 */
-    get Shadow()   { return this.value(5) }
-    /** Enum Value:                    6 */
-    get Arcane()   { return this.value(6) }
+export enum SchoolMask {
+    PHYSICAL = 0x0,
+    HOLY     = 0x2,
+    FIRE     = 0x4,
+    NATURE   = 0x8,
+    FROST    = 0x10,
+    SHADOW   = 0x20,
+    ARCANE   = 0x40,
 }

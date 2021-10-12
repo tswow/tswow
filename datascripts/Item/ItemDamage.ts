@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -39,19 +38,13 @@ function dmgMax(owner: ItemTemplate) {
     ]
 }
 
-export class DamageSchool<T> extends EnumCell<T> {
-    /** Enum Value:                    0 */
-    get Physical() { return this.value(0) }
-    /** Enum Value:                    1 */
-    get Holy()     { return this.value(1) }
-    /** Enum Value:                    3 */
-    get Nature()   { return this.value(3) }
-    /** Enum Value:                    4 */
-    get Frost()    { return this.value(4) }
-    /** Enum Value:                    5 */
-    get Shadow()   { return this.value(5) }
-    /** Enum Value:                    6 */
-    get Arcane()   { return this.value(6) }
+export enum DamageSchool {
+    PHYSICAL = 0,
+    HOLY     = 1,
+    NATURE   = 3,
+    FROST    = 4,
+    SHADOW   = 5,
+    ARCANE   = 6,
 }
 
 export class ItemDamage extends ArrayEntry<ItemTemplate> {

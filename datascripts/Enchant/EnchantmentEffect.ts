@@ -1,4 +1,4 @@
-import { EnumCellTransform, TransformedClass } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform, makeEnumCell, TransformedClass } from "wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ArraySystemBase } from "wotlkdata/cell/systems/ArraySystem";
 import { SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
@@ -126,7 +126,9 @@ export class Stat extends EnchantmentEffectBase {
     get MinStat() { return this.wrapIndex(this.row.EffectPointsMin,this.index); }
     /** @deprecated Not used in TrinityCore, use "MinStat" as base value */
     get MaxStat() { return this.wrapIndex(this.row.EffectPointsMax,this.index); }
-    get Stat() { return new StatType(this, this.wrapIndex(this.row.EffectArg,this.index))}
+    get Stat() {
+        return makeEnumCell(StatType, this, this.wrapIndex(this.row.EffectArg,this.index));
+    }
 }
 
 @EnchantmentTypeID(6)

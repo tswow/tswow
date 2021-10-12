@@ -1,3 +1,4 @@
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellRadiusRegistry } from "../SpellRadius";
 import { EffectTemplate } from "./EffectTemplate";
@@ -6,12 +7,16 @@ export class TargetBase extends EffectTemplate {
     /**
      * Generic Target type.
      */
-    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
+    get ImplicitTargetA() {
+        return makeEnumCell(SpellImplicitTarget, this, this.wrapIndex(this.owner.row.ImplicitTargetA,this.index));
+    }
 
     /**
      * Generic Target type. Value depends on TargetA
      */
-    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+     get ImplicitTargetB() {
+        return makeEnumCell(SpellImplicitTarget, this, this.wrapIndex(this.owner.row.ImplicitTargetB,this.index));
+    }
 
     /**
      * Generic radius. Value depends on TargetA/TargetB

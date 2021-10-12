@@ -1,5 +1,6 @@
 import { DBC } from "wotlkdata";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { LfgDungeonsQuery, LfgDungeonsRow } from "wotlkdata/dbc/types/LfgDungeons";
@@ -75,11 +76,9 @@ export class LFGLevels extends CellSystem<LFGDungeon> {
     }
 }
 
-export class LFGFlags extends MaskCell32<LFGDungeon> {
-    /** If this is not set, it's a raid */
-    get IsDungeon() { return this.multibits([0,1])}
-
-    get IsHoliday() { return this.multibits([2,3])}
+export enum LFGFlags {
+      IS_DUNGEON = 0x3
+    , IS_HOLIDAY = 0xC
 }
 
 export class LFGDungeon extends MainEntity<LfgDungeonsRow> {
@@ -88,14 +87,18 @@ export class LFGDungeon extends MainEntity<LfgDungeonsRow> {
     get ID() { return this.row.ID.get(); }
     get Map() { return MapRegistry.ref(this, this.row.MapID); }
     get Difficulty() { return this.wrap(this.row.Difficulty); }
-    get Flags() { return new LFGFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(LFGFlags,this, this.row.Flags);
+    }
     get Texture() { return this.wrap(this.row.TextureFilename); }
     get Description() { return this.wrapLoc(this.row.Description)}
     get Type() { return this.wrap(this.row.TypeID)}
     get SpawnPosOverride() { return new LFGPos(this); }
     get Rewards() { return new LFGDungeonRewards(this); }
     get Levels() { return new LFGLevels(this); }
-    get Faction() { return new FactionEnum(this, this.row.Faction); }
+    get Faction() {
+        return makeEnumCell(FactionEnum,this, this.row.Faction);
+    }
     get OrderIndex() { return this.wrap(this.row.Order_Index); }
     get ExpansionLevel() { return this.wrap(this.row.Order_Index); }
     get Group() { return LFGDungeonGroupRegistry.ref(this, this.row.Group_Id)}
@@ -158,7 +161,7 @@ export class LFGDungeonRegistryClass
             .Description.clear()
             .Difficulty.set(0)
             .ExpansionLevel.set(0)
-            .Faction.None.set()
+            .Faction.NONE.set()
             .Flags.set(0)
             .Group.set(0)
     }

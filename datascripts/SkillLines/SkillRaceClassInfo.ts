@@ -1,28 +1,29 @@
 import { DBC } from "wotlkdata";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32, MaskCellWrite, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
-import { ClassMaskCon } from "../Class/ClassType";
-import { ClassMask } from "../Misc/ClassMask";
+import { ClassMask } from "../Class/ClassRegistry";
 import { Ids } from "../Misc/Ids";
-import { RaceMask } from "../Misc/RaceMask";
-import { RaceMaskCon } from "../Race/RaceType";
+import { RaceMask } from "../Race/RaceType";
 import { SkillLine } from "./SkillLine";
 import { SkillLineRegistry } from "./SkillLines";
 
-export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
-    get IsProfession() { return this.bit(5); }
-    get IsClassLine() { return this.bit(7); }
+export enum SkillRaceClassFlags {
+    IS_PROFESSION = 0x20,
+    IS_CLASS_LINE = 0x80,
 }
 
 export class SkillRaceClassInfo extends ClassRaceMaskEntry<SkillRaceClassInfoRow> {
-    get ClassMask(): ClassMask<this> {
-        return new ClassMask(this, this.row.ClassMask);
+    get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
+        return makeMaskCell32(ClassMask, this,this.wrapUnlock(this.row.ClassMask));
     }
-    get RaceMask(): RaceMask<this> {
-        return new RaceMask(this, this.row.RaceMask);
+    get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
+        // hack
+        return makeMaskCell32(RaceMask, this,this.wrapUnlock(this.row.RaceMask));
     }
-    get Flags() { return new SkillRaceClassFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(SkillRaceClassFlags,this, this.row.Flags);
+    }
     get SkillCostIndex() { return this.wrap(this.row.SkillCostIndex); }
     get Skill() { return SkillLineRegistry.ref(this, this.row.SkillID); }
     get SkillTier() { return this.wrap(this.row.SkillTierID); }
@@ -45,7 +46,7 @@ export class SkillRaceClassInfos extends ClassRaceMaskSystem<SkillRaceClassInfo,
         return a.row.isDeleted();
     }
 
-    add(classes?: ClassMaskCon, races?: RaceMaskCon) {
+    add(classes?: MaskCon<keyof typeof ClassMask>, races?: MaskCon<keyof typeof RaceMask>) {
         this.addGet(classes,races);
         return this.owner;
     }

@@ -1,5 +1,4 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { gameobjectRow } from "wotlkdata/sql/types/gameobject";
 import { gameobject_addonRow } from "wotlkdata/sql/types/gameobject_addon";
@@ -17,22 +16,6 @@ export enum InvisibilityTypes {
   , DRUNK   = 6
 }
 
-export type InvisibilityType = keyof typeof InvisibilityTypes
-
-export function resolveInvisibilityType(type: InvisibilityType) {
-  return InvisibilityTypes[type];
-}
-
-export class GameObjectInvisibilityEnum<T> extends EnumCell<T> {
-  get General() { return this.value(InvisibilityTypes.GENERAL); }
-  get Trap()    { return this.value(InvisibilityTypes.TRAP); }
-  get Drunk()   { return this.value(InvisibilityTypes.DRUNK); }
-
-  set(type: InvisibilityTypes|number)  {
-    return super.set(typeof(type)==='number'?type:resolveInvisibilityType(type));
-  }
-}
-
 export class GameObjectInstanceAddon extends MaybeSQLEntity<GameObjectInstance,gameobject_addonRow> {
   protected createSQL(): gameobject_addonRow {
     return SQL.gameobject_addon.add(this.owner.ID);
@@ -47,10 +30,10 @@ export class GameObjectInstanceAddon extends MaybeSQLEntity<GameObjectInstance,g
   get Invisibility() {
     let thiz = this;
     return {
-        Type: new GameObjectInvisibilityEnum(this.owner, this.wrapSQL(0,sql=>sql.invisibilityType))
+        Type: makeMaskCell32(InvisibilityTypes, this.owner, this.wrapSQL(0,sql=>sql.invisibilityType))
       , Value: this.wrapSQL(0,sql=>sql.invisibilityValue)
-      , set(type: InvisibilityType, value: number) {
-        this.Type.set(resolveInvisibilityType(type));
+      , set(type: InvisibilityTypes, value: number) {
+        this.Type.set(type);
         this.Value.set(value);
         return thiz.owner;
       }
@@ -91,7 +74,9 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
 
     get Zone() { return AreaRegistry.ref(this, this.row.zoneId); }
     get Area() { return AreaRegistry.ref(this, this.row.areaId); }
-    get SpawnMask() { return new SpawnMask(this, this.row.spawnMask) }
+    get SpawnMask() {
+      return makeMaskCell32(SpawnMask,this, this.row.spawnMask);
+    }
     get PhaseMask() { return new MaskCell32(this, this.row.phaseMask); }
     get SpawnTimeSecs() { return this.wrap(this.row.spawntimesecs); }
     get State() { return this.wrap(this.row.state); }

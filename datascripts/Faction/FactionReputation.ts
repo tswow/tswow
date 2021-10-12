@@ -1,50 +1,30 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMask, makeMaskCell32, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
-import { ClassMask } from "../Misc/ClassMask";
-import { RaceMask } from "../Misc/RaceMask";
-import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
+import { ClassMask } from "../Class/ClassRegistry";
+import { RaceMask } from "../Race/RaceType";
 import { Faction } from "./Faction";
 
-export const REPUTATION_BITS = {
-      VISIBLE          : 0
-    , AT_WAR           : 1
-    , HIDDEN           : 2
-    , INVISIBLE_FORCED : 3
-    , PEACE_FORCED     : 4
-    , INACTIVE         : 5
-    , RIVAL            : 6
-    , SPECIAL          : 7
-} as const
-
-export type ReputationFlag = keyof typeof REPUTATION_BITS
-
-export function makeReputationFlag(flags: ReputationFlag|ReputationFlag[]) {
-    if(!Array.isArray(flags)) flags = [flags];
-    return flags.reduce((p,c)=>p|(1<<REPUTATION_BITS[c]),0)
-}
-
-export class FactionReputationFlags extends MaskCell32<FactionReputation> {
-    get Visible()         { return this.bit(REPUTATION_BITS.VISIBLE); }
-    get AtWar()           { return this.bit(REPUTATION_BITS.AT_WAR); }
-    get Hidden()          { return this.bit(REPUTATION_BITS.HIDDEN); }
-    get InvisibleForced() { return this.bit(REPUTATION_BITS.INVISIBLE_FORCED); }
-    get PeaceForced()     { return this.bit(REPUTATION_BITS.PEACE_FORCED); }
-    get Inactive()        { return this.bit(REPUTATION_BITS.INACTIVE); }
-    get Rival()           { return this.bit(REPUTATION_BITS.RIVAL); }
-    get Special()         { return this.bit(REPUTATION_BITS.SPECIAL); }
+export enum FactionReputationFlags {
+    VISIBLE          = 0x1,
+    AT_WAR           = 0x2,
+    HIDDEN           = 0x4,
+    INVISIBLE_FORCED = 0x8,
+    PEACE_FORCED     = 0x10,
+    INACTIVE         = 0x20,
+    RIVAL            = 0x40,
+    SPECIAL          = 0x80,
 }
 
 export class FactionReputation extends ArrayEntry<Faction> {
     get RaceMask() {
-        return new RaceMask(this,this.wrapIndex(
+        return makeMaskCell32(RaceMask,this,this.wrapIndex(
               this.container.row.ReputationRaceMask
             , this.index
         ))
     }
 
     get ClassMask() {
-        return new ClassMask(this,this.wrapIndex(
+        return makeMaskCell32(ClassMask,this,this.wrapIndex(
               this.container.row.ReputationClassMask
             , this.index
         ))
@@ -54,7 +34,7 @@ export class FactionReputation extends ArrayEntry<Faction> {
         return this.wrapIndex(this.container.row.ReputationBase, this.index);
     }
     get Flags() {
-        return new FactionReputationFlags(this, this.wrapIndex(this.container.row.ReputationFlags, this.index));
+        return makeMaskCell32(FactionReputationFlags,this, this.wrapIndex(this.container.row.ReputationFlags, this.index));
     }
 
     clear() {
@@ -94,13 +74,12 @@ export class FactionReputations extends ArraySystem<FactionReputation,Faction>{
         return this.owner;
     }
 
-    addSimple(startReputation: number, races?: RaceMaskCon, classes?: ClassMaskCon, flags: ReputationFlag[] = []) {
+    addSimple(startReputation: number, races?: MaskCon<keyof typeof RaceMask>, classes?: MaskCon<keyof typeof ClassMask>, flags: MaskCon<keyof typeof FactionReputationFlags> = []) {
         this.addGet()
             .StartReputation.set(startReputation)
-            .ClassMask.set(makeClassmask(classes))
-            .RaceMask.set(makeRacemask(races))
-            .Flags.set(makeReputationFlag(flags))
-
+            .ClassMask.set(makeMask(ClassMask,classes))
+            .RaceMask.set(makeMask(RaceMask,races))
+            .Flags.set(makeMask(FactionReputationFlags,flags))
         return this.owner;
     }
 }

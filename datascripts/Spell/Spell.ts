@@ -14,16 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32, MaskCell64 } from "wotlkdata/cell/cells/MaskCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32, MaskCell32, MaskCell64, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/dbc/types/Spell";
-import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
+import { ClassMask } from "../Class/ClassRegistry";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
+import { RaceMask } from "../Race/RaceType";
 import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
@@ -70,12 +71,18 @@ export class Spell extends MainEntity<SpellRow> {
     get Subtext() { return this.wrapLoc(this.row.NameSubtext); }
     get Description() { return this.wrapLoc(this.row.Description); }
     get AuraDescription() { return this.wrapLoc(this.row.AuraDescription); }
-    get PowerDisplay() { return new SpellPowerDisplay(this, this.row.PowerDisplayID); }
+    get PowerDisplay() {
+        return makeEnumCell(SpellPowerDisplay,this, this.row.PowerDisplayID);
+    }
 
     get ID() { return this.row.ID.get(); }
 
-    get TargetType() { return new SpellTargetType(this, this.row.Targets); }
-    get CreatureTargets() { return new SpellCreatureTarget(this, this.row.TargetCreatureType); }
+    get TargetType() {
+        return makeMaskCell32(SpellTargetType,this, this.row.Targets);
+    }
+    get CreatureTargets() {
+        return makeMaskCell32(SpellCreatureTarget,this, this.row.TargetCreatureType);
+    }
 
     get Totems() { return new SingleArraySystem(this,this.row.Totem,0); }
     get Reagents() { return new SpellReagents(this,this); }
@@ -150,7 +157,9 @@ export class Spell extends MainEntity<SpellRow> {
 
     /** Points to a WorldMapArea */
     get RequiredArea() { return WorldMapAreaRegistry.ref(this, this.row.RequiredAreasID); }
-    get SchoolMask() { return new SchoolMask(this, this.row.SchoolMask); }
+    get SchoolMask() {
+        return makeMaskCell32(SchoolMask,this, this.row.SchoolMask);
+    }
     get DispelType() { return this.wrap(this.row.DispelType); }
     get Mechanic() { return this.wrap(this.row.Mechanic); }
     get Missile() { return SpellMissileRegistry.ref(this, this.row.SpellMissileID) }
@@ -164,8 +173,12 @@ export class Spell extends MainEntity<SpellRow> {
     get SpellDescriptionVariable() { return SpellDescriptionVariableRegistry.ref(this, this.row.SpellDescriptionVariableID) }
     get Difficulty() { return SpellDifficultyRegistry.ref(this, this.row.SpellDifficultyID); }
     get ChannelInterruptFlags() { return new MaskCell32(this, this.row.ChannelInterruptFlags); }
-    get AuraInterruptFlags() { return new AuraInterruptFlags(this); }
-    get InterruptFlags() { return new InterruptFlags(this); }
+    get AuraInterruptFlags() {
+        return makeMaskCell32(AuraInterruptFlags,this, this.row.AuraInterruptFlags);
+    }
+    get InterruptFlags() {
+        return makeMaskCell32(InterruptFlags,this, this.row.InterruptFlags);
+    }
     get Rank() { return new SpellRank(this, this.ID); }
     get StackGroups() { return new SpellSpellStackGroups(this); }
 
@@ -186,13 +199,11 @@ export class Spell extends MainEntity<SpellRow> {
 
     get CastOnPlayerCreate() { return new CastSpells(this, this.ID); }
 
-    enable(cls: ClassMaskCon, race: RaceMaskCon) {
-        let classmask = makeClassmask(cls);
-        let racemask = makeRacemask(race);
+    enable(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
         this.SkillLines.forEach(x=>{
-            x.ClassMask.set(x.ClassMask.get()|classmask)
-            x.ClassMaskForbidden.set(x.ClassMaskForbidden.get()&(~classmask>>>0));
-            x.RaceMask.set(x.RaceMask.get()|racemask)
+            x.ClassMask.set(cls)
+            x.ClassMaskForbidden.setNot(cls)
+            x.RaceMask.set(race)
         })
     }
 
@@ -204,18 +215,16 @@ export class Spell extends MainEntity<SpellRow> {
         ) as _hidden.Spells<this>
     }
 
-    clearClass(cls: ClassMaskCon) {
-        let classmask = makeClassmask(cls);
+    clearClass(cls: MaskCon<keyof typeof ClassMask>) {
         this.SkillLines.forEach(x=>{
-            x.ClassMask.set(x.ClassMask.get()&(~classmask>>>0));
+            x.ClassMask.setNot(cls)
         })
         return this;
     }
 
-    clearRace(race: RaceMaskCon) {
-        let racemask = makeRacemask(race);
+    clearRace(race: MaskCon<keyof typeof RaceMask>) {
         this.SkillLines.forEach(x=>{
-            x.RaceMask.set(x.RaceMask.get()&(~racemask>>>0));
+            x.RaceMask.setNot(race)
         })
         return this;
     }

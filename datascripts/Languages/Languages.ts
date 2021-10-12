@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
 import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
@@ -24,10 +25,10 @@ import { Language, Languages } from "wotlkdata/dbc/Localization";
 import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
 import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
 import { Table } from "wotlkdata/table/Table";
-import { ClassMaskCon } from "../Class/ClassType";
+import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
-import { RaceMaskCon } from "../Race/RaceType";
+import { RaceMask } from "../Race/RaceType";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLineRegistry } from "../SkillLines/SkillLines";
@@ -36,7 +37,7 @@ import { SkillLineAbility, SpellSkillLineAbilites } from "../Spell/SpellSkillLin
 import { std } from "../tswow-stdlib-data";
 
 export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
-    add(classes?: ClassMaskCon, races?: RaceMaskCon) {
+    add(classes?: MaskCon<keyof typeof ClassMask>, races?: MaskCon<keyof typeof RaceMask>) {
         this.owner.Skills.forEach(x=>x.enableAutolearn(classes,races,0))
         return this.owner;
     }
@@ -193,7 +194,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
             .RaceClassInfos.addMod(undefined,undefined,
                 x=>x
                     .Flags.clearAll()
-                    .Flags.IsClassLine.set(true)
+                    .Flags.IS_CLASS_LINE.set(true)
                     .SkillTier.set(0)
             )
 
@@ -211,7 +212,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
                     .Language.set(lang.ID)
                     .ChainAmplitude.set(1)
             })
-            .SchoolMask.Physical.set(true)
+            .SchoolMask.PHYSICAL.set(true)
             .SkillLines.addMod(sl.ID,undefined,undefined,sla=>{
                 lang.Abilities.setCache([sla]);
                 sla.RaceMask.set(0xffffffff)

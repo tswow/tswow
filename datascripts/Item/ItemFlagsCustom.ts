@@ -14,16 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemFlagsCustom extends MaskCell32<ItemTemplate> {
-    /** Item duration will tick even if player is offline */
-    get RealtimeDuration() { return this.bit(0) ;}
-
-    /** Quest status will not be checked when item is dropped */
-    get QuestStatus() { return this.bit(1) ;}
-
-    /** Item will always follow group/master/need before greed looting rules */
-    get FollowLootRules() { return this.bit(2) ;}
+export enum ItemFlagsCustom {
+    REALTIME_DURATION = 0x1,
+    QUEST_STATUS      = 0x2,
+    FOLLOW_LOOT_RULES = 0x4
 }

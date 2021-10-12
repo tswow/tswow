@@ -1,4 +1,4 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { TaxiPathNodeRow } from "wotlkdata/dbc/types/TaxiPathNode";
 import { DBC } from "wotlkdata/wotlkdata";
@@ -9,9 +9,9 @@ import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { RefUnknown } from "../Refs/Ref";
 import { TaxiNodeConstructor, TaxiPath } from "./Taxi";
 
-export class TaxiPathNodeFlags extends MaskCell32<TaxiPathNode> {
-    get MapChange() { return this.bit(0); }
-    get ShouldStop() { return this.bit(1); }
+export enum TaxiPathNodeFlags {
+    MAP_CHANGE  = 0x1,
+    SHOULD_STOP = 0x2,
 }
 
 export class TaxiPathNode extends MainEntity<TaxiPathNodeRow> {
@@ -26,7 +26,9 @@ export class TaxiPathNode extends MainEntity<TaxiPathNodeRow> {
 
     get ArrivalEvent() { return new RefUnknown(this, this.row.ArrivalEventID); }
     get DepartureEvent() { return new RefUnknown(this, this.row.DepartureEventID); }
-    get Flags() { return new TaxiPathNodeFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(TaxiPathNodeFlags, this, this.row.Flags)
+    }
     get Delay() { return this.wrap(this.row.Delay); }
 }
 
@@ -58,7 +60,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         let rows = this.getAllRows();
         let flag = pos.delay ? 2 : 0;
         if(rows.length > 0 && index > 0 && rows[index-1].Position.Map.get() != pos.map) {
-            rows[index-1].Flags.MapChange.set(true)
+            rows[index-1].Flags.MAP_CHANGE.set(true)
         }
 
         if(rows.length > 0) {
@@ -78,7 +80,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         let old = this.getAllRows();
         poses.forEach((pos,i)=>{
             if(old.length > 0 && old[old.length-1].Position.Map.get() != pos.map) {
-                old[old.length-1].Flags.MapChange.set(true)
+                old[old.length-1].Flags.MAP_CHANGE.set(true)
             }
             let newNode = this.makeNode(pos,pos.delay ? 2 : 0,pos.delay || 0,pos.arrival_event || 0,pos.departure_event || 0)
                 .NodeIndex.set(this.length-1)

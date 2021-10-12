@@ -1,5 +1,5 @@
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CreatureTemplateRegistry } from "../../Creature/Creatures";
 import { EnchantmentRegistry } from "../../Enchant/Enchantment";
 import { LanguageRegistry } from "../../Languages/Languages";
@@ -11,9 +11,8 @@ import { SkillLineRegistry } from "../../SkillLines/SkillLines";
 import { SoundEntryRegistry } from "../../Sound/SoundEntry";
 import { TaxiPathRegistry } from "../../Taxi/Taxi";
 import { EffectClassSet } from "../SpellClassSet";
-import { SpellEffectMechanicEnum } from "../SpellEffectMechanics";
+import { SpellEffectMechanic } from "../SpellEffectMechanics";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
-import { SpellPowerType } from "../SpellPowerType";
 import { SpellRadiusRegistry } from "../SpellRadius";
 import { SpellRegistry } from "../Spells";
 import { EffectTemplate } from "./EffectTemplate";
@@ -27,14 +26,14 @@ export class SchoolDamage extends DamageBase {}
 // 4
 // 5
 export class TeleportUnits extends EffectTemplate {
-    get TeleportedUnit() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get TeleportTarget() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get TeleportedUnit() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
+    get TeleportedTarget() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
 }
 // 6
 // 7
 export class EnvironmentalDamage extends EffectTemplate {
-    get Source() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get AreaType() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get Source() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
+    get AreaType() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
     get BaseDamage() { return this.wrap(this.owner.BasePoints); }
     get DieSides() { return this.wrap(this.owner.DieSides); }
     get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
@@ -55,30 +54,24 @@ export class HealthLeech extends DamageBase {}
 export class Heal extends HealBase {}
 // 11
 export class BindHome extends EffectTemplate {
-    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
+    get ImplicitTargetB() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
 }
 // 12
-export class TotemCreatureTargetMask<T> extends MaskCell32<T> {
-    get Summon1() { return this.bit(0); }
-    get Summon2() { return this.bit(1); }
-    get Summon3() { return this.bit(2); }
-    get Summon4() { return this.bit(3); }
+export enum TotemCreatureTargetMask {
+    SUMMON1 = 0x1,
+    SUMMON2 = 0x2,
+    SUMMON3 = 0x4,
+    SUMMON4 = 0x8,
 }
 
-export class TotemCreatureCommand<T> extends EnumCell<T> {
-    /** Enum Value:                           0 */
-    get ReactPassive()    { return this.value(0) }
-    /** Enum Value:                           1 */
-    get ReactDefensive()  { return this.value(1) }
-    /** Enum Value:                           2 */
-    get ReactAggressive() { return this.value(2) }
-    /** Enum Value:                           3 */
-    get Stay()            { return this.value(3) }
-    /** Enum Value:                           4 */
-    get Follow()          { return this.value(4) }
-    /** Enum Value:                           5 */
-    get Attack()          { return this.value(5) }
+export enum TotemCreatureCommand {
+    REACT_PASSIVE    = 0,
+    REACT_DEFENSIVE  = 1,
+    REACT_AGGRESSIVE = 2,
+    STAY             = 3,
+    FOLLOW           = 4,
+    ATTACK           = 5,
 }
 
 export class CommandTotemCreature extends EffectTemplate {
@@ -130,9 +123,7 @@ export class Summon extends TargetBase {
 // 29
 export class Leap extends TargetBase {}
 // 30
-export class Energize extends PowerBase {
-    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueA); }
-}
+export class Energize extends PowerBase {}
 // 31
 export class WeaponPercentDamage extends DamageBasePct {
 
@@ -142,13 +133,13 @@ export class WeaponPercentDamage extends DamageBasePct {
     get Percentage() { return this.wrap(this.owner.BasePoints); }
 
     setSingleTarget() {
-        this.ImplicitTargetA.UnitTargetEnemy.set()
+        this.ImplicitTargetA.UNIT_TARGET_ENEMY.set()
         this.ImplicitTargetB.set(0);
         return this.owner;
     }
 
     setAoE(radius: number, radiusPerLevel: number, radiusMax: number) {
-        this.ImplicitTargetA.SrcCaster.set()
+        this.ImplicitTargetA.SRC_CASTER.set()
         this.Radius.modRefCopy(x=>x.set(radius,radiusPerLevel,radiusMax));
         return this.owner;
     }
@@ -162,20 +153,13 @@ export class OpenLock extends EffectTemplate {
     get LockType() { return LockTypeRegistry.ref(this, this.owner.MiscValueA); }
     get SkillValue() { return this.wrap(this.owner.PointsPerLevel); }
 
-    /**
-     * Generic Target type.
-     */
-    get TargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-
-    /**
-     * Generic Target type. Value depends on TargetA
-     */
-    get TargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
+    get ImplicitTargetB() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
 
     setGameObject(lockType: number) {
         this.LockType.set(lockType);
-        this.TargetA.GameobjectTarget.set()
-        this.TargetB.set(0)
+        this.ImplicitTargetA.GAMEOBJECT_TARGET.set()
+        this.ImplicitTargetB.set(0)
         return this.owner;
     }
 }
@@ -188,7 +172,7 @@ export class LearnSpell extends TargetBase {
 // 37
 // 38
 export class Dispel extends TargetBase {
-    get SchoolMask() { return new SchoolMask(this, this.owner.MiscValueA); }
+    get SchoolMask() { return makeMaskCell32(SchoolMask,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 39
 export class Language extends TargetBase {
@@ -210,8 +194,8 @@ export class JumpDest extends TargetBase {
 }
 // 43
 export class TeleportUnitFaceCaster extends EffectTemplate {
-    get TeleportedUnit() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get TeleportTarget() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get TeleportedUnit() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
+    get TeleportedTarget() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
 }
 // 44
 export class SkillStep extends TargetBase {
@@ -288,14 +272,14 @@ export class CreateManaGem extends TargetBase {
 export class HealMaxHealth extends TargetBase {}
 // 68
 export class InterruptCast extends TargetBase {
-    get Mechanic() { return new SpellEffectMechanicEnum(this, this.wrapIndex(this.row.EffectMechanic,this.index))}
+    get Mechanic() { return makeEnumCell(SpellEffectMechanic,this, this.wrapIndex(this.row.EffectMechanic, this.index)); }
 }
 // 69
 // 70
 // 71
 export class Pickpocket extends EffectTemplate {
-    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
+    get ImplicitTargetB() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
 }
 // 72
 export class AddFarsight extends TargetBase {}
@@ -326,59 +310,35 @@ export class AddComboPoints extends CountBase {}
 // 85
 
 // 86
-export class GameObjectActions<T> extends EnumCell<T> {
-    /** Enum Value:                         0 */
-    get None()          { return this.value(0) }
-    /** Enum Value:                         1 */
-    get AnimCustom0()   { return this.value(1) }
-    /** Enum Value:                         2 */
-    get AnimCustom1()   { return this.value(2) }
-    /** Enum Value:                         3 */
-    get AnimCustom2()   { return this.value(3) }
-    /** Enum Value:                         4 */
-    get AnimCustom3()   { return this.value(4) }
-    /** Enum Value:                         5 */
-    get Disturb()       { return this.value(5) }
-    /** Enum Value:                         6 */
-    get Unlock()        { return this.value(6) }
-    /** Enum Value:                         7 */
-    get Lock()          { return this.value(7) }
-    /** Enum Value:                         8 */
-    get Open()          { return this.value(8) }
-    /** Enum Value:                         9 */
-    get OpenAndUnlock() { return this.value(9) }
-    /** Enum Value:                         10 */
-    get Close()         { return this.value(10) }
-    /** Enum Value:                         11 */
-    get ToggleOpen()    { return this.value(11) }
-    /** Enum Value:                         12 */
-    get Destroy()       { return this.value(12) }
-    /** Enum Value:                         13 */
-    get Rebuild()       { return this.value(13) }
-    /** Enum Value:                         14 */
-    get Creation()      { return this.value(14) }
-    /** Enum Value:                         15 */
-    get Despawn()       { return this.value(15) }
-    /** Enum Value:                         16 */
-    get MakeInert()     { return this.value(16) }
-    /** Enum Value:                         17 */
-    get MakeActive()    { return this.value(17) }
-    /** Enum Value:                         18 */
-    get CloseAndLock()  { return this.value(18) }
-    /** Enum Value:                         19 */
-    get UseArtKit0()    { return this.value(19) }
-    /** Enum Value:                         20 */
-    get UseArtKit1()    { return this.value(20) }
-    /** Enum Value:                         21 */
-    get UseArtKit2()    { return this.value(21) }
-    /** Enum Value:                         22 */
-    get UseArtKit3()    { return this.value(22) }
-    /** Enum Value:                         23 */
-    get SetTapList()    { return this.value(23) }
+export enum GameObjectActions {
+    NONE            = 0,
+    ANIM_CUSTOM0    = 1,
+    ANIM_CUSTOM1    = 2,
+    ANIM_CUSTOM2    = 3,
+    ANIM_CUSTOM3    = 4,
+    DISTURB         = 5,
+    UNLOCK          = 6,
+    LOCK            = 7,
+    OPEN            = 8,
+    OPEN_AND_UNLOCK = 9,
+    CLOSE           = 10,
+    TOGGLE_OPEN     = 11,
+    DESTROY         = 12,
+    REBUILD         = 13,
+    CREATION        = 14,
+    DESPAWN         = 15,
+    MAKE_INERT      = 16,
+    MAKE_ACTIVE     = 17,
+    CLOSE_AND_LOCK  = 18,
+    USE_ART_KIT0    = 19,
+    USE_ART_KIT1    = 20,
+    USE_ART_KIT2    = 21,
+    USE_ART_KIT3    = 22,
+    SET_TAP_LIST    = 23,
 }
 
 export class ActivateObject extends TargetBase {
-    get Action() { return new GameObjectActions(this, this.owner.MiscValueA); }
+    get Action() { return makeEnumCell(GameObjectActions,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 87
 export class GameObjectDamage extends DamageBase {}
@@ -390,18 +350,14 @@ export class GameObjectRepair extends PointsRoot {
     get RepairPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
 }
 // 89
-export class GameObjectDestructibleState<T> extends EnumCell<T> {
-    /** Enum Value:                      0 */
-    get Intact()     { return this.value(0) }
-    /** Enum Value:                      1 */
-    get Damaged()    { return this.value(1) }
-    /** Enum Value:                      2 */
-    get Destroyed()  { return this.value(2) }
-    /** Enum Value:                      3 */
-    get Rebuilding() { return this.value(3) }
+export enum GameObjectDestructibleState {
+    INTACT     = 0,
+    DAMAGED    = 1,
+    DESTROYED  = 2,
+    REBUILDING = 3,
 }
 export class SetGameObjectDestructibleState extends DamageBase {
-    get State() { return new GameObjectDestructibleState(this, this.owner.MiscValueA); }
+    get State() { return makeEnumCell(GameObjectDestructibleState,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 90
 export class KillCredit extends TargetBase {
@@ -474,7 +430,7 @@ export class SummonObjectSlot4 extends TargetBase {
 }
 // 108
 export class DispelMechanic extends TargetBase {
-    get SchoolMask() { return new SchoolMask(this, this.owner.MiscValueA); }
+    get SchoolMask() { return makeMaskCell32(SchoolMask,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 109
 // 110
@@ -518,7 +474,7 @@ export class ModifyThreatPercent extends TargetBase {
 }
 // 126
 export class StealBeneficialBuff extends CountBase {
-    get DispelMask() { return new SchoolMask(this, this.owner.MiscValueA); }
+    get DispelMask() { return makeMaskCell32(SchoolMask,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 127
 // 128
@@ -542,9 +498,7 @@ export class PlayMusic extends TargetBase {
 // 136
 export class HealPercent extends HealBasePct {}
 // 137
-export class EnergizePercent extends PowerBasePct {
-    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueA); }
-}
+export class EnergizePercent extends PowerBasePct {}
 // 138
 export class LeapBack extends TargetBase {}
 // 139
@@ -554,12 +508,12 @@ export class ClearQuest extends TargetBase {
 // 140
 export class ForceCast extends EffectTemplate {
     get TriggerSpell() { return this.wrap(this.owner.TriggerSpell); }
-    get Mechanic() { return new SpellEffectMechanicEnum(this, this.wrapIndex(this.row.EffectMechanic,this.index)); }
+    get Mechanic() { return makeEnumCell(SpellEffectMechanic,this, this.wrapIndex(this.row.EffectMechanic, this.index)); }
 }
 // 141
 export class ForceCastWithValue extends PointsBase {
     get TriggerSpell() { return this.wrap(this.owner.TriggerSpell); }
-    get Mechanic() { return new SpellEffectMechanicEnum(this, this.wrapIndex(this.row.EffectMechanic,this.index)); }
+    get Mechanic() { return makeEnumCell(SpellEffectMechanic,this, this.wrapIndex(this.row.EffectMechanic, this.index)); }
 }
 // 142
 export class TriggerSpellWithValue extends PointsBase {
@@ -578,19 +532,15 @@ export class PullTowardsDest extends TargetBase{
     get SpeedZ() { return this.wrap(this.owner.MiscValueA); }
 }
 // 146
-export class RuneType<T> extends EnumCell<T> {
-    /** Enum Value:                  0 */
-    get Blood()  { return this.value(0) }
-    /** Enum Value:                  1 */
-    get Unholy() { return this.value(1) }
-    /** Enum Value:                  2 */
-    get Frost()  { return this.value(2) }
-    /** Enum Value:                  3 */
-    get Death()  { return this.value(3) }
+export enum RuneType {
+    BLOOD  = 0,
+    UNHOLY = 1,
+    FROST  = 2,
+    DEATH  = 3,
 }
 
 export class ActivateRune extends CountBase {
-    get RuneType() { return new RuneType(this, this.owner.MiscValueA); }
+    get RuneType() { return makeEnumCell(RuneType,this, this.wrapIndex(this.row.EffectMiscValue, this.index)); }
 }
 // 147
 export class FailQuest extends TargetBase {

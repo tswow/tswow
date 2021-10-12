@@ -1,3 +1,4 @@
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { SpellPowerType } from "../SpellPowerType";
 import { TargetBase } from "./TargetBase";
 
@@ -66,7 +67,9 @@ export class HealBasePct extends PointsRoot {
 }
 
 export class PowerBase extends PointsRoot {
-    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueA); }
+    get PowerType() {
+        return makeEnumCell(SpellPowerType,this, this.owner.MiscValueA);
+    }
     get BasePower() { return this.wrap(this.owner.BasePoints); }
     get RandomPower() { return this.wrap(this.owner.DieSides); }
     get PowerPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
@@ -81,7 +84,9 @@ export class ManaBase extends PointsRoot {
 }
 
 export class PowerBasePct extends PointsRoot {
-    get PowerType() { return new SpellPowerType(this, this.owner.MiscValueA); }
+    get PowerType() {
+        return makeEnumCell(SpellPowerType,this, this.owner.MiscValueA);
+    }
     get BasePowerPct() { return this.wrap(this.owner.BasePoints); }
     get RandomPowerPct() { return this.wrap(this.owner.DieSides); }
     get PowerPerLevelPct() {return this.wrap(this.owner.PointsPerLevel); }

@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
 import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
@@ -17,8 +17,8 @@ import { Spell } from "../Spell/Spell";
 import { SpellIconCell } from "../Spell/SpellIcon";
 import { SpellRegistry } from "../Spell/Spells";
 
-export class GlyphFlags extends MaskCell32<Glyph> {
-    get IsMinor() { return this.bit(0); }
+export enum GlyphFlags {
+    IS_MINOR = 0x1
 }
 
 export class GlyphItemName extends LocSystem<GlyphItem> {
@@ -94,30 +94,30 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
         let spell = SpellRegistry.create(mod,`${id}-spell`)
             .Attributes.cannotUseInCombat.set(true)
             .Icon.setPath('Interface\\Icons\\INV_Inscription_Tradeskill01')
-            .TargetType.GlyphSlot.set(true)
+            .TargetType.GLYPH_SLOT.set(true)
             .CastTime.set(6)
             .Effects.addMod(effect=>{
                 effect.Type.ApplyGlyph.set()
                       .Glyph.set(this.owner.ID)
             })
-            .InterruptFlags.OnMovement.set(true)
-            .InterruptFlags.OnPushback.set(true)
-            .InterruptFlags.OnInterruptCast.set(true)
+            .InterruptFlags.ON_MOVEMENT.set(true)
+            .InterruptFlags.ON_PUSHBACK.set(true)
+            .InterruptFlags.ON_INTERRUPT_CAST.set(true)
             .InterruptFlags.setBit(3, true)
             .InterruptFlags.setBit(4, true)
             .InterruptFlags.setBit(5, true)
 
         let item = ItemTemplateRegistry.create(mod,`${id}-item`)
             .BagFamily.set(16)
-            .Quality.White.set()
+            .Quality.WHITE.set()
             .Spells.addMod(ispell=>{
                 ispell.Spell.set(spell.ID)
-                    .Trigger.OnUse.set()
+                    .Trigger.ON_USE.set()
                     .Charges.set(-1)
             })
-            .Material.Liquid.set()
-            .Flags.PlayerCast.set(true)
-            .InventoryType.NonEquippable.set()
+            .Material.LIQUID.set()
+            .Flags.PLAYER_CAST.set(true)
+            .InventoryType.NON_EQUIPPABLE.set()
             .DisplayInfo.set(58841)
             .ClassMask.clearAll()
 
@@ -152,7 +152,9 @@ export class Glyph extends MainEntity<GlyphPropertiesRow> {
     get ID() { return this.row.ID.get(); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get Spell() { return SpellRegistry.ref(this, this.row.SpellID); }
-    get Flags() { return new GlyphFlags(this, this.row.GlyphSlotFlags); }
+    get Flags() {
+        return makeMaskCell32(GlyphFlags,this, this.row.GlyphSlotFlags);
+    }
     get Items() { return new GlyphItems(this); }
 }
 

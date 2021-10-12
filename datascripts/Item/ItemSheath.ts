@@ -14,30 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemSheath extends EnumCell<ItemTemplate> {
-    get(): number {
-        return this.owner.row.sheath.get();
-    }
-    set(value: number): ItemTemplate {
-        this.owner.row.sheath.set(value);
-        return this.owner;
-    }
-
-    /** Enum Value:                           0 */
-    get None()            { return this.value(0) }
-    /** Enum Value:                           1 */
-    get TwoHandedWeapon() { return this.value(1) }
-    /** Enum Value:                           2 */
-    get Staff()           { return this.value(2) }
-    /** Enum Value:                           3 */
-    get OneHanded()       { return this.value(3) }
-    /** Enum Value:                           4 */
-    get Shield()          { return this.value(4) }
-    /** Enum Value:                           5 */
-    get EnchantersRod()   { return this.value(5) }
-    /** Enum Value:                           6 */
-    get Offhand()         { return this.value(6) }
+export enum ItemSheath {
+    NONE              = 0,
+    TWO_HANDED_WEAPON = 1,
+    STAFF             = 2,
+    ONE_HANDED        = 3,
+    SHIELD            = 4,
+    ENCHANTERS_ROD    = 5,
+    OFFHAND           = 6,
 }

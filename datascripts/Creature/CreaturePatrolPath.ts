@@ -13,7 +13,7 @@ export class CreaturePatrolPath extends CellSystem<CreatureInstance> {
             pos = [pos];
         }
 
-        this.owner.MovementType.Waypoint.set();
+        this.owner.MovementType.WAYPOINT.set();
         this.owner.Path.set(this.owner.ID*10);
 
         const prev = SQL.waypoint_data.filter({id:this.owner.ID*10});

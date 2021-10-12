@@ -9,7 +9,7 @@ export const CreaturePresets = {
             .Name.enGB.set(trainerName)
             .Subname.enGB.set(trainerName)
             .Gossip.set(0)
-            .NPCFlags.Trainer.set(true)
+            .NPCFlags.TRAINER.set(true)
             .Trainer.modRef((trainer)=>{
                 trainer
                     .Greeting.enGB.set(

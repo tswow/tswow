@@ -15,13 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
 import { Gossip } from "./Gossip";
-import { GossipIconCell } from "./GossipIcon";
+import { GossipIcon } from "./GossipIcon";
 import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
 export class GossipOption extends CellSystemTop {
@@ -32,8 +33,9 @@ export class GossipOption extends CellSystemTop {
         this.row = row;
         this.Condition = new Condition(this, 15, this.row.MenuID.get(),this.row.OptionID.get(),0);
     }
-
-    get Icon(){return new GossipIconCell(this, this.row.OptionIcon); }
+    get Icon() {
+        return makeEnumCell(GossipIcon, this, this.row.OptionIcon);
+    }
     get Action(){return new GossipOptionAction(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
     get Gossip() { return this.wrap(this.row.ActionMenuID); }

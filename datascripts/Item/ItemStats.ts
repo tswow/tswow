@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -48,99 +49,58 @@ function b(owner: ItemTemplate) {
     ]
 }
 
-export class Stat extends EnumCell<ItemStat> {
-    /** Enum Value:                                  0 */
-    get Mana()                   { return this.value(0) }
-    /** Enum Value:                                  1 */
-    get Health()                 { return this.value(1) }
-    /** Enum Value:                                  2 */
-    get Agility()                { return this.value(2) }
-    /** Enum Value:                                  3 */
-    get Strength()               { return this.value(3) }
-    /** Enum Value:                                  4 */
-    get Intellect()              { return this.value(4) }
-    /** Enum Value:                                  5 */
-    get Spirit()                 { return this.value(5) }
-    /** Enum Value:                                  6 */
-    get Stamina()                { return this.value(6) }
-    /** Enum Value:                                  7 */
-    get DefenseSkillRating()     { return this.value(7) }
-    /** Enum Value:                                  8 */
-    get DodgeRating()            { return this.value(8) }
-    /** Enum Value:                                  9 */
-    get ParryRating()            { return this.value(9) }
-    /** Enum Value:                                  10 */
-    get BlockRating()            { return this.value(10) }
-    /** Enum Value:                                  11 */
-    get HitMeleeRating()         { return this.value(11) }
-    /** Enum Value:                                  12 */
-    get HitRangedRating()        { return this.value(12) }
-    /** Enum Value:                                  13 */
-    get HitSpellRating()         { return this.value(13) }
-    /** Enum Value:                                  14 */
-    get CritMeleeRating()        { return this.value(14) }
-    /** Enum Value:                                  15 */
-    get CritRangedRating()       { return this.value(15) }
-    /** Enum Value:                                  16 */
-    get CritSpellRating()        { return this.value(16) }
-    /** Enum Value:                                  17 */
-    get HitTakenMeleeRating()    { return this.value(17) }
-    /** Enum Value:                                  18 */
-    get HitTakenRangedRating()   { return this.value(18) }
-    /** Enum Value:                                  19 */
-    get HitTakenSpellRating()    { return this.value(19) }
-    /** Enum Value:                                  20 */
-    get CritTakenMeleeRating()   { return this.value(20) }
-    /** Enum Value:                                  21 */
-    get CritTakenRangedRating()  { return this.value(21) }
-    /** Enum Value:                                  22 */
-    get CritTakenSpellRating()   { return this.value(22) }
-    /** Enum Value:                                  23 */
-    get HasteMeleeRating()       { return this.value(23) }
-    /** Enum Value:                                  24 */
-    get HasteRangedRating()      { return this.value(24) }
-    /** Enum Value:                                  25 */
-    get HasteSpellRating()       { return this.value(25) }
-    /** Enum Value:                                  26 */
-    get HitRating()              { return this.value(26) }
-    /** Enum Value:                                  27 */
-    get CritRating()             { return this.value(27) }
-    /** Enum Value:                                  28 */
-    get HitTakenRating()         { return this.value(28) }
-    /** Enum Value:                                  29 */
-    get CritTakenRating()        { return this.value(29) }
-    /** Enum Value:                                  30 */
-    get ResilienceRating()       { return this.value(30) }
-    /** Enum Value:                                  31 */
-    get HasteRating()            { return this.value(31) }
-    /** Enum Value:                                  32 */
-    get ExpertiseRating()        { return this.value(32) }
-    /** Enum Value:                                  33 */
-    get AttackPower()            { return this.value(33) }
-    /** Enum Value:                                  34 */
-    get RangedAttackPower()      { return this.value(34) }
-    /** Enum Value:                                  35 */
-    get FeralAttackPower()       { return this.value(35) }
-    /** Enum Value:                                  36 */
-    get SpellHealingDone()       { return this.value(36) }
-    /** Enum Value:                                  37 */
-    get SpellDamageDone()        { return this.value(37) }
-    /** Enum Value:                                  38 */
-    get ManaRegeneration()       { return this.value(38) }
-    /** Enum Value:                                  39 */
-    get ArmorPenetrationRating() { return this.value(39) }
-    /** Enum Value:                                  40 */
-    get SpellPower()             { return this.value(40) }
-    /** Enum Value:                                  41 */
-    get HealthRegen()            { return this.value(41) }
-    /** Enum Value:                                  42 */
-    get SpellPenetration()       { return this.value(42) }
-    /** Enum Value:                                  43 */
-    get BlockValue()             { return this.value(43) }
+export enum Stat {
+    MANA                     = 0,
+    HEALTH                   = 1,
+    AGILITY                  = 2,
+    STRENGTH                 = 3,
+    INTELLECT                = 4,
+    SPIRIT                   = 5,
+    STAMINA                  = 6,
+    DEFENSE_SKILL_RATING     = 7,
+    DODGE_RATING             = 8,
+    PARRY_RATING             = 9,
+    BLOCK_RATING             = 10,
+    HIT_MELEE_RATING         = 11,
+    HIT_RANGED_RATING        = 12,
+    HIT_SPELL_RATING         = 13,
+    CRIT_MELEE_RATING        = 14,
+    CRIT_RANGED_RATING       = 15,
+    CRIT_SPELL_RATING        = 16,
+    HIT_TAKEN_MELEE_RATING   = 17,
+    HIT_TAKEN_RANGED_RATING  = 18,
+    HIT_TAKEN_SPELL_RATING   = 19,
+    CRIT_TAKEN_MELEE_RATING  = 20,
+    CRIT_TAKEN_RANGED_RATING = 21,
+    CRIT_TAKEN_SPELL_RATING  = 22,
+    HASTE_MELEE_RATING       = 23,
+    HASTE_RANGED_RATING      = 24,
+    HASTE_SPELL_RATING       = 25,
+    HIT_RATING               = 26,
+    CRIT_RATING              = 27,
+    HIT_TAKEN_RATING         = 28,
+    CRIT_TAKEN_RATING        = 29,
+    RESILIENCE_RATING        = 30,
+    HASTE_RATING             = 31,
+    EXPERTISE_RATING         = 32,
+    ATTACK_POWER             = 33,
+    RANGED_ATTACK_POWER      = 34,
+    FERAL_ATTACK_POWER       = 35,
+    SPELL_HEALING_DONE       = 36,
+    SPELL_DAMAGE_DONE        = 37,
+    MANA_REGENERATION        = 38,
+    ARMOR_PENETRATION_RATING = 39,
+    SPELL_POWER              = 40,
+    HEALTH_REGEN             = 41,
+    SPELL_PENETRATION        = 42,
+    BLOCK_VALUE              = 43,
+
 }
 
 export class ItemStat extends ArrayEntry<ItemTemplate> {
-    get Type() { return new Stat(this, a(this.container)[this.index])}
+    get Type() {
+        return makeEnumCell(Stat,this, a(this.container)[this.index]);
+    }
     get Value() { return b(this.container)[this.index]; }
 
     clear() {

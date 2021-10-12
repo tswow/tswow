@@ -1,5 +1,6 @@
 import { SQL } from "wotlkdata";
 import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { any } from "wotlkdata/query/Relations";
@@ -18,7 +19,7 @@ import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { NPCFlags } from "../Creature/NPCFlags";
 import { GameObjectInstance } from "../GameObject/GameObjectInstance";
 import { GORegistry } from "../GameObject/GameObjectRegistries";
-import { GameObjectInstanceRegistryClass, GameObjectInstances } from "../GameObject/GameObjects";
+import { GameObjectInstances } from "../GameObject/GameObjects";
 import { GameObjectTemplate } from "../GameObject/GameObjectTemplate";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
@@ -443,7 +444,9 @@ export class GameEventNPCFlag extends GameEventRelationBase<game_event_npcflagRo
         return CreatureInstanceRegistry
             .readOnlyRef(this, this.row.guid);
     }
-    get NPCFlag() { return new NPCFlags(this, this.row.npcflag); }
+    get NPCFlag() {
+        return makeMaskCell32(NPCFlags,this, this.row.npcflag);
+    }
 }
 
 export class GameEventNPCFlagForward extends GameEventMultiRowSystem<GameEventNPCFlag,CreatureInstance> {

@@ -1,9 +1,10 @@
+import { makeMaskCell32, MaskCellWrite } from "wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { SqlRow } from "wotlkdata/sql/SQLRow";
 import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
-import { ClassMask } from "../Misc/ClassMask";
-import { RaceMask } from "../Misc/RaceMask";
+import { ClassMask } from "../Class/ClassRegistry";
+import { RaceMask } from "../Race/RaceType";
 import { SkillLineRegistry } from "./SkillLines";
 
 // Always rewrite this table entirely so masks work
@@ -16,11 +17,11 @@ SQL.playercreateinfo_skills.filter({})
 
 export class SkillAutolearn extends ClassRaceMaskEntry<playercreateinfo_skillsRow>
 {
-    get ClassMask(): ClassMask<this> {
-        return new ClassMask(this,this.wrapUnlock(this.row.classMask));
+    get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
+        return makeMaskCell32(ClassMask, this,this.wrapUnlock(this.row.classMask));
     }
-    get RaceMask(): RaceMask<this> {
-        return new RaceMask(this, this.wrapUnlock(this.row.raceMask));
+    get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
+        return makeMaskCell32(RaceMask, this,this.wrapUnlock(this.row.raceMask));
     }
     get Skill() {
         return SkillLineRegistry.readOnlyRef(this, this.row.skill);

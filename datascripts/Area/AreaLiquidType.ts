@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { Area } from "./Area";
 
-export class AreaLiquidType extends EnumCell<Area> {
-    get Water() { return this.value(0); }
-    get Ocean() { return this.value(1); }
-    get Magma() { return this.value(2); }
-    get Slime() { return this.value(3); }
+export enum AreaLiquidType {
+    Water = 0,
+    Ocean = 1,
+    Magma = 2,
+    Slime = 3,
 }

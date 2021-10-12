@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC, finish, isReadOnly } from "wotlkdata";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
-import { ClassMask } from "../Misc/ClassMask";
+import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SpellIconCell } from "../Spell/SpellIcon";
@@ -92,7 +92,7 @@ export class TalentTree extends MainEntity<TalentTabRow> {
     get Talents() { return new TalentTreeTalents(this); }
     // racemasks don't seem to work clientside for now
     //get RaceMask() { return new RaceMask(this, this.row.RaceMask); }
-    get ClassMask() { return new ClassMask(this, this.row.ClassMask); }
+    get ClassMask() { return makeMaskCell32(ClassMask, this, this.row.ClassMask); }
     get OrderIndex() { return this.wrap(this.row.OrderIndex); }
     get PetTalentMask() { return new MaskCell32(this, this.row.PetTalentMask)}
 

@@ -26,7 +26,6 @@ import { ClassStartInventory } from "./ClassStartInventory";
 import { ClassStats } from "./ClassStats";
 import { ClassTalents } from "./ClassTalents";
 import { ClassUISettings } from "./ClassUISettings";
-import { StartButtons } from "./StartButtons";
 
 export type LevelStats = { str: number, agi: number, sta: number, inte: number, spi: number};
 
@@ -63,7 +62,6 @@ export class Class extends MainEntity<ChrClassesRow> {
     get DisplayPower() { return this.wrap(this.row.DisplayPower); }
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
     get Races() { return new ClassRaces(this); }
-    get StartButtons() { return new StartButtons(this); }
     get Talents() { return new ClassTalents(this); }
 }
 

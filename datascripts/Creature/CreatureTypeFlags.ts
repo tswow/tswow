@@ -14,33 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureTypeFlags extends MaskCell32<CreatureTemplate> {
-    get Tameable() { return this.bit(0); }
-    get Ghost() { return this.bit(1); }
-    get Boss() { return this.bit(2); }
-    get NoParryAnimation() { return this.bit(3); }
-    get HideFactionTooltip() { return this.bit(4); }
-    get Unk6() { return this.bit(5); }
-    get SpellAttackable() { return this.bit(6); }
-    get DeadInteract() { return this.bit(7); }
-    get HerbLoot() { return this.bit(8); }
-    get MiningLoot() { return this.bit(9); }
-    get DontLogDeath() { return this.bit(10); }
-    get MountedCombat() { return this.bit(11); }
-    get AidPlayers() { return this.bit(12); }
-    get IsPetBarUsed() { return this.bit(13); }
-    get MaskUID() { return this.bit(14); }
-    get EngineerLoot() { return this.bit(15); }
-    get ExoticPet() { return this.bit(16); }
-    get UseDeafultCollision() { return this.bit(17); }
-    get IsSiegeWeapon() { return this.bit(18); }
-    get ProjectileCollision() { return this.bit(19); }
-    get HideNameplate() { return this.bit(20); }
-    get NoMountedAnimations() { return this.bit(21); }
-    get IsLinkAll() { return this.bit(22); }
-    get InteractOnlyWithCreator() { return this.bit(23); }
-    get ForceGossip() { return this.bit(24); }
+export enum CreatureTypeFlags {
+    TAMEABLE                   = 0x1,
+    GHOST                      = 0x2,
+    BOSS                       = 0x4,
+    NO_PARRY_ANIMATION         = 0x8,
+    HIDE_FACTION_TOOLTIP       = 0x10,
+    UNK6                       = 0x20,
+    SPELL_ATTACKABLE           = 0x40,
+    DEAD_INTERACT              = 0x80,
+    HERB_LOOT                  = 0x100,
+    MINING_LOOT                = 0x200,
+    DONT_LOG_DEATH             = 0x400,
+    MOUNTED_COMBAT             = 0x800,
+    AID_PLAYERS                = 0x1000,
+    IS_PET_BAR_USED            = 0x2000,
+    MASK_U_I_D                 = 0x4000,
+    ENGINEER_LOOT              = 0x8000,
+    EXOTIC_PET                 = 0x10000,
+    USE_DEAFULT_COLLISION      = 0x20000,
+    IS_SIEGE_WEAPON            = 0x40000,
+    PROJECTILE_COLLISION       = 0x80000,
+    HIDE_NAMEPLATE             = 0x100000,
+    NO_MOUNTED_ANIMATIONS      = 0x200000,
+    IS_LINK_ALL                = 0x400000,
+    INTERACT_ONLY_WITH_CREATOR = 0x800000,
+    FORCE_GOSSIP               = 0x1000000,
 }

@@ -45,10 +45,10 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
         let item = ItemTemplateRegistry.create(mod,id)
             .Name.enGB.set('Currency')
             .BagFamily.set(8192)
-            .Quality.White.set()
+            .Quality.WHITE.set()
             .MaxStack.set(2147483647)
             .Class.set(10,0)
-            .Material.Liquid.set()
+            .Material.LIQUID.set()
             .DisplayInfo.set(32278)
        entity.row
            .BitIndex.set(Ids.CurrencyTypesBitIndex.id(mod,id))

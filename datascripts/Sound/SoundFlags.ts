@@ -1,9 +1,7 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { SoundEntry } from "./SoundEntry";
 
-export class SoundFlags extends MaskCell32<SoundEntry> {
-    get NoDuplicates() { return this.bit(5); }
-    get Looping() { return this.bit(9); }
-    get VaryPitch() { return this.bit(10); }
-    get VaryVolume() { return this.bit(11); }
+export enum SoundFlags {
+    NO_DUPLICATES = 0x20,
+    LOOPING       = 0x200,
+    VARY_PITCH    = 0x400,
+    VARY_VOLUME   = 0x800,
 }

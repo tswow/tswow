@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
@@ -59,7 +60,9 @@ export class Quest extends MainEntity<quest_templateRow> {
     get MinLevel() { return this.wrap(this.row.MinLevel); }
     get QuestLevel() { return this.wrap(this.row.QuestLevel); }
     get StartItem() { return this.wrap(this.row.StartItem); }
-    get Flags() { return new QuestFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(QuestFlags,this, this.row.Flags);
+    }
     get POIs() { return new QuestPOIs(this); }
     get GameEvents() { return new QuestGameEventsForward(this); }
     readonly GameEventPoints = new QuestGameEventCondition(this);

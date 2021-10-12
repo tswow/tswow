@@ -15,60 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { EnumCell, EnumCellReadOnly } from "wotlkdata/cell/cells/EnumCell";
-
-export const Genders = [
-      'MALE'
-    , 'FEMALE'
-] as const
-
-export const GendersAllowNone = [
-      'MALE'
-    , 'FEMALE'
-    , 'NONE'
-] as const
-
-export type Gender = typeof Genders[number]
-export type GenderAllowNone = typeof GendersAllowNone[number]
-
-export function resolveGender(gender: Gender) {
-    let index = (typeof(gender) === 'string')
-        ? Genders.indexOf(gender)
-        : gender;
-    if(index < 0 || index >= Genders.length) {
-        throw new Error(`Invalid gender: ${gender}`);
-    }
-    return index;
+export enum Genders {
+    Male   = 0,
+    Female = 1,
 }
 
-export function resolveGenderAllowNone(gender: GenderAllowNone) {
-    let index = (typeof(gender) === 'string')
-        ? GendersAllowNone.indexOf(gender)
-        : gender;
-    if(index < 0 || index >= GendersAllowNone.length) {
-        throw new Error(`Invalid gender: ${gender}`);
-    }
-    return index;
-}
-
-export class GenderReadOnly<T> extends EnumCellReadOnly<T> {
-    get Male()   { return this.value(0); }
-    get Female() { return this.value(1); }
-}
-
-export class GenderAllowNoneEnumReadOnly<T> extends EnumCellReadOnly<T> {
-    get Male()   { return this.value(0); }
-    get Female() { return this.value(1); }
-    get None()   { return this.value(2); }
-}
-
-export class GenderEnum<T> extends EnumCell<T> {
-    get Male()   { return this.value(0); }
-    get Female() { return this.value(1); }
-}
-
-export class GenderAllowNoneEnum<T> extends EnumCell<T> {
-    get Male()   { return this.value(0); }
-    get Female() { return this.value(1); }
-    get None()   { return this.value(2); }
+export enum GendersAllowNone {
+    Male   = 0,
+    Female = 1,
+    None   = 2
 }

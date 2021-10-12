@@ -14,31 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class NPCFlags<T> extends MaskCell32<T> {
-    get Gossip() { return this.bit(0); }
-    get QuestGiver() { return this.bit(1); }
-    get Trainer() { return this.bit(4); }
-    get ClassTrainer() { return this.bit(5); }
-    get ProfessionTrainer() { return this.bit(6); }
-    get Vendor() { return this.bit(7); }
-    get VendorAmmo() { return this.bit(8); }
-    get VendorFood() { return this.bit(9); }
-    get VendorPoison() { return this.bit(10); }
-    get VendorReagent() { return this.bit(11); }
-    get Repairer() { return this.bit(12); }
-    get FlightMaster() { return this.bit(13); }
-    get SpiritHealer() { return this.bit(14); }
-    get SpiritGuide() { return this.bit(15); }
-    get Innkeeper() { return this.bit(16); }
-    get Banker() { return this.bit(17); }
-    get Petitioner() { return this.bit(18); }
-    get TabardDesigner() { return this.bit(19); }
-    get Battlemaster() { return this.bit(20); }
-    get Auctioneer() { return this.bit(21); }
-    get StableMaster() { return this.bit(22); }
-    get GuildBanker() { return this.bit(23); }
-    get Spellclick() { return this.bit(24); }
-    get Mailbox() { return this.bit(26); }
+export enum NPCFlags {
+    GOSSIP             = 0x1,
+    QUEST_GIVER        = 0x2,
+    TRAINER            = 0x10,
+    CLASS_TRAINER      = 0x20,
+    PROFESSION_TRAINER = 0x40,
+    VENDOR             = 0x80,
+    VENDOR_AMMO        = 0x100,
+    VENDOR_FOOD        = 0x200,
+    VENDOR_POISON      = 0x400,
+    VENDOR_REAGENT     = 0x800,
+    REPAIRER           = 0x1000,
+    FLIGHT_MASTER      = 0x2000,
+    SPIRIT_HEALER      = 0x4000,
+    SPIRIT_GUIDE       = 0x8000,
+    INNKEEPER          = 0x10000,
+    BANKER             = 0x20000,
+    PETITIONER         = 0x40000,
+    TABARD_DESIGNER    = 0x80000,
+    BATTLEMASTER       = 0x100000,
+    AUCTIONEER         = 0x200000,
+    STABLE_MASTER      = 0x400000,
+    GUILD_BANKER       = 0x800000,
+    SPELLCLICK         = 0x1000000,
+    MAILBOX            = 0x4000000,
+
 }

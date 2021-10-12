@@ -1,4 +1,6 @@
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { SoundEntriesQuery, SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
@@ -30,8 +32,12 @@ export class SoundEntry extends MainEntity<SoundEntriesRow>{
         return SoundEntryAdvancedRegistry.ref(
             this, this.row.SoundEntriesAdvancedID);
     }
-    get Flags() { return new SoundFlags(this, this.row.Flags); }
-    get SoundType() { return new SoundType(this, this.row.SoundType); }
+    get Flags() {
+        return makeMaskCell32(SoundFlags,this, this.row.Flags);
+    }
+    get SoundType() {
+        return makeEnumCell(SoundType,this, this.row.SoundType);
+    }
     get Name() { return this.wrap(this.row.Name); }
     get Files(): SoundEntryFiles { return new SoundEntryFiles(this); }
     get DirectoryBase() { return this.wrap(this.row.DirectoryBase); }
@@ -117,7 +123,7 @@ export class SoundEntryRegistryClass
             .Files.addAll(files,frequency)
             .DistanceCutoff.set(40)
             .MinDistance.set(8)
-            .Flags.Looping.set(false);
+            .Flags.LOOPING.set(false);
     }
 
     createSimpleLoop(
@@ -127,7 +133,7 @@ export class SoundEntryRegistryClass
         , frequency: number = 1
     ) {
         return this.makeDynEntry(directoryBase, sounds, volume, frequency)
-            .Flags.Looping.set(true)
+            .Flags.LOOPING.set(true)
     }
 
     createSimple(
@@ -137,7 +143,7 @@ export class SoundEntryRegistryClass
         , frequency: number = 1
     ) {
         return this.makeDynEntry(directoryBase, sounds, volume, frequency)
-            .Flags.Looping.set(false)
+            .Flags.LOOPING.set(false)
     }
 }
 

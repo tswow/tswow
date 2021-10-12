@@ -1,4 +1,4 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { AreaPOIQuery, AreaPOIRow } from "wotlkdata/dbc/types/AreaPOI";
 import { AreaRegistry } from "../Area/Area";
@@ -10,19 +10,16 @@ import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { WorldStateRegistry } from "./WorldState";
 
-export class AreaPOIFlags extends MaskCell32<AreaPOI> {
-    get ShowMinimapArrow() { return this.bit(0); }
-    get ShowMinimapIcon() { return this.bit(1); }
-    /** Map Zoom (current map) */
-    get ShowOnMap() { return this.multibits([2,7]); }
-    /** Continent zoom (Kalimdor, Eastern Kingdoms, Northrend) */
-    get ShowOnContinent() { return this.bit(3); }
-    /** Furthest zoom (Azeroth/Outland) */
-    get ShowOnWorld() { return this.bit(4); }
+export enum AreaPOIFlags {
+    SHOW_MINIMAP_ARROW = 0x1,
+    SHOW_MINIMAP_ICON  = 0x2,
+    SHOW_ON_CONTINENT  = 0x8,
+    SHOW_ON_WORLD      = 0x10,
+    SHOW_ON_MAP        = 0x84,
 }
 
 export class AreaPOI extends MainEntity<AreaPOIRow> {
-    get Flags() { return new AreaPOIFlags(this, this.row.Flags); }
+    get Flags() { return makeMaskCell32(AreaPOIFlags, this, this.row.Flags); }
     get Position() {
         return new PositionMapXYZCell(
               this

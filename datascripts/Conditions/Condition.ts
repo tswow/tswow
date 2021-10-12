@@ -15,15 +15,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
+import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
+import { makeMask, MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
 import { conditionsCreator, conditionsQuery } from "wotlkdata/sql/types/conditions";
-import { ClassType, makeClassmask } from "../Class/ClassType";
+import { ClassMask } from "../Class/ClassRegistry";
 import { DrunkState, resolveDrunkState } from "../Misc/DrunkState";
-import { makeReputationRankMask, ReputationRank } from "../Misc/ReputationRank";
-import { makeRacemask, RaceType } from "../Race/RaceType";
+import { ReputationRank, ReputationRankMask } from "../Misc/ReputationRank";
+import { RaceMask } from "../Race/RaceType";
 import { ConditionPlain } from "./ConditionTypes";
-import { ComparisonType, resolveComparison } from "./Settings/ComparisonType";
-import { GenderAllowNone, resolveGenderAllowNone } from "./Settings/Gender";
+import { ComparisonTypes } from "./Settings/ComparisonType";
+import { GendersAllowNone } from "./Settings/Gender";
 import { makeQuestStateMask, QuestState } from "./Settings/QuestState";
 import { RelationType, resolveRelation } from "./Settings/RelationType";
 import { resolveStandState, StandState } from "./Settings/StandState";
@@ -126,8 +128,8 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(4,group,zone);
     }
 
-    addReputationRank(factionTemplate: number, ranks: ReputationRank[], group = this.defElse) {
-        return this.addRow(5, group, factionTemplate, makeReputationRankMask(ranks));
+    addReputationRank(factionTemplate: number, ranks: MaskCon<keyof typeof ReputationRank>, group = this.defElse) {
+        return this.addRow(5, group, factionTemplate, makeMask(ReputationRank,ranks));
     }
 
     addIsTeam(team: 'HORDE'|'ALLIANCE', group = this.defElse) {
@@ -173,12 +175,12 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(14, group, quest);
     }
 
-    addIsClass(cls: ClassType[], group = this.defElse) {
-        return this.addRow(15, group, makeClassmask(cls))
+    addIsClass(cls: MaskCon<keyof typeof ClassMask>, group = this.defElse) {
+        return this.addRow(15, group, makeMask(ClassMask,cls))
     }
 
-    addIsRace(races: RaceType[], group = this.defElse) {
-        return this.addRow(16, group, makeRacemask(races));
+    addIsRace(races: MaskCon<keyof typeof RaceMask>, group = this.defElse) {
+        return this.addRow(16, group, makeMask(ClassMask,races));
     }
 
     /**
@@ -202,8 +204,8 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(18, group, spawnMask);
     }
 
-    addGender(gender: GenderAllowNone, group = this.defElse) {
-        return this.addRow(20, group, resolveGenderAllowNone(gender));
+    addGender(gender: EnumCon<GendersAllowNone>, group = this.defElse) {
+        return this.addRow(20, group, makeEnum(GendersAllowNone,gender));
     }
 
     /**
@@ -237,8 +239,8 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(26, group, phaseMask);
     }
 
-    addLevel(level: number, comparison: ComparisonType, group = this.defElse) {
-        return this.addRow(27, group, level, resolveComparison(comparison));
+    addLevel(level: number, comparison: EnumCon<ComparisonTypes>, group = this.defElse) {
+        return this.addRow(27, group, level, makeEnum(ComparisonTypes,comparison));
     }
 
     addQuestComplete(questId: number, group = this.defElse) {
@@ -265,24 +267,24 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(33, group, target, resolveRelation(relationType));
     }
 
-    addReactionTo(target: number, rankMask: ReputationRank[], group = this.defElse) {
-        return this.addRow(34, group, target, makeReputationRankMask(rankMask));
+    addReactionTo(target: number, rankMask: MaskCon<keyof typeof ReputationRankMask>, group = this.defElse) {
+        return this.addRow(34, group, target, makeMask(ReputationRankMask,rankMask));
     }
 
-    addDistanceTo(target: number, distance: number, comparison: ComparisonType,group = this.defElse) {
-        return this.addRow(35, group, target, distance, resolveComparison(comparison));
+    addDistanceTo(target: number, distance: number, comparison: EnumCon<ComparisonTypes>,group = this.defElse) {
+        return this.addRow(35, group, target, distance, makeEnum(ComparisonTypes,comparison));
     }
 
     addAlive(group = this.defElse) {
         return this.addRow(36, group);
     }
 
-    addHpValue(hpValue: number, comparison: ComparisonType, group = this.defElse) {
-        return this.addRow(37, group, hpValue, resolveComparison(comparison));
+    addHpValue(hpValue: number, comparison: EnumCon<ComparisonTypes>, group = this.defElse) {
+        return this.addRow(37, group, hpValue, makeEnum(ComparisonTypes,comparison));
     }
 
-    addHpPercentage(hpPercentage: number, comparison: ComparisonType, group = this.defElse) {
-        return this.addRow(38, group, hpPercentage, resolveComparison(comparison));
+    addHpPercentage(hpPercentage: number, comparison: EnumCon<ComparisonTypes>, group = this.defElse) {
+        return this.addRow(38, group, hpPercentage, makeEnum(ComparisonTypes,comparison));
     }
 
     addRealmAchievement(achievementID: number, group = this.defElse) {

@@ -1,6 +1,7 @@
+import { MaskCon } from "wotlkdata/cell/cells/MaskCell";
 import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { ClassMaskCon, makeClassmask } from "../Class/ClassType";
-import { makeRacemask, RaceMaskCon } from "../Race/RaceType";
+import { ClassMask } from "../Class/ClassRegistry";
+import { RaceMask } from "../Race/RaceType";
 import { SelfRef } from "../Refs/Ref";
 import { SkillLineAbility, SkillLineAbilityRegistry } from "../Spell/SpellSkillLines";
 import { SkillLine } from "./SkillLine";
@@ -19,30 +20,30 @@ export class EquipSkill extends CellSystemTop {
     get Skill() { return new SelfRef(this, ()=>this._skill)}
     get Ability() { return new SelfRef(this, ()=>this._ability)}
 
-    private enableAbil(cls: ClassMaskCon, race: RaceMaskCon) {
+    private enableAbil(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
         let a = this.Ability.get();
-            a.ClassMask.set(a.ClassMask.get()|makeClassmask(cls))
-            .RaceMask.set(a.RaceMask.get()|makeRacemask(race))
-            .ClassMaskForbidden.set(a.ClassMaskForbidden.get()&(~makeClassmask(cls)>>>0))
+            a.ClassMask.setOr(cls)
+             .RaceMask.setOr(race)
+             .ClassMaskForbidden.setNot(cls)
     }
 
-    enable(cls?: ClassMaskCon, race?: RaceMaskCon) {
+    enable(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>) {
         this.Skill.get().enable(cls,race);
         this.enableAbil(cls,race);
         return this;
     }
 
-    enableAutolearn(cls?: ClassMaskCon, race?: RaceMaskCon, rank?: number) {
+    enableAutolearn(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>, rank?: number) {
         this.Skill.get().enableAutolearn(cls,race,rank);
         this.enableAbil(cls,race);
         return this;
     }
 
-    clearClass(cls: ClassMaskCon) {
+    clearClass(cls: MaskCon<keyof typeof ClassMask>) {
         this.Skill.get().clearClass(cls);
     }
 
-    clearRace(race: RaceMaskCon) {
+    clearRace(race: MaskCon<keyof typeof RaceMask>) {
         this.Skill.get().clearRace(race);
     }
 }

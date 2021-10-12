@@ -1,7 +1,7 @@
 import { DBC, finish, isReadOnly, LUAXML, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
 import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
 import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
@@ -13,9 +13,9 @@ import { battleground_templateRow } from "wotlkdata/sql/types/battleground_templ
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 
-export class BattlegroundType<T> extends EnumCell<T> {
-    get Battleground() { return this.value(3)}
-    get Arena()        { return this.value(4)}
+export enum BattlegroundType {
+    Battleground = 3,
+    Arena        = 4
 }
 
 export class DescriptionCell<T extends BattlegroundBase> extends Cell<string,T> {
@@ -67,7 +67,9 @@ export class BattlegroundBase extends CellSystemTop {
     get ID() { return this.sql_row.ID.get(); }
     get Name() { return this.wrapLoc(this.dbc_row.Name); }
     get Description() { return new BattlegroundDescription(this); }
-    get Type() { return new BattlegroundType(this, this.dbc_row.InstanceType); }
+    get Type() {
+        return makeEnumCell(BattlegroundType, this, this.dbc_row.InstanceType);
+    }
     get MaxGroupSize() { return this.wrap(this.dbc_row.MaxGroupSize); }
     get HolidayWorldState() { return this.wrap(this.dbc_row.HolidayWorldState); }
     get Weight() { return this.wrap(this.sql_row.Weight); }

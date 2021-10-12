@@ -14,13 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureRank extends EnumCell<CreatureTemplate> {
-    get Normal()    { return this.value(0); }
-    get Elite()     { return this.value(1); }
-    get RareElite() { return this.value(2); }
-    get Boss()      { return this.value(3); }
-    get Rare()      { return this.value(4); }
+export enum CreatureRank {
+    NORMAL     = 0,
+    ELITE      = 1,
+    RARE_ELITE = 2,
+    BOSS       = 3,
+    RARE       = 4,
 }

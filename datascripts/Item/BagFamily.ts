@@ -14,24 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class BagFamily extends MaskCell32<ItemTemplate> {
-    None() { return this.bit(0); }
-    Arrows() { return this.bit(1); }
-    Bullets() { return this.bit(2); }
-    SoulShards() { return this.bit(3); }
-    Leatherworking() { return this.bit(4); }
-    InscriptionSupplies() { return this.bit(5); }
-    Herbs() { return this.bit(6); }
-    EnchantingSupplies() { return this.bit(0); }
-    EngineeringSupplies() { return this.bit(0); }
-    Keys() { return this.bit(0); }
-    Gems() { return this.bit(0); }
-    MiningSupplies() { return this.bit(0); }
-    SoulboundEquipment() { return this.bit(0); }
-    VanityPets() { return this.bit(0); }
-    CurrencyTokens() { return this.bit(0); }
-    QuestItems() { return this.bit(0); }
+export enum BagFamily {
+    NONE                 = 0x1,
+    ARROWS               = 0x2,
+    BULLETS              = 0x4,
+    SOUL_SHARDS          = 0x8,
+    LEATHERWORKING       = 0x10,
+    INSCRIPTION_SUPPLIES = 0x20,
+    HERBS                = 0x40,
+    ENCHANTING_SUPPLIES  = 0x80,
+    ENGINEERING_SUPPLIES = 0x100,
+    KEYS                 = 0x200,
+    GEMS                 = 0x400,
+    MINING_SUPPLIES      = 0x800,
+    SOULBOUND_EQUIPMENT  = 0x1000,
+    VANITY_PETS          = 0x2000,
+    CURRENCY_TOKENS      = 0x4000,
+    QUEST_ITEMS          = 0x8000,
 }

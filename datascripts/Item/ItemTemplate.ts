@@ -15,26 +15,29 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { DBC } from "wotlkdata";
+import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
 import { Transient } from "wotlkdata/cell/serialization/Transient";
 import { ItemRow } from "wotlkdata/dbc/types/Item";
 import { SQL } from "wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/sql/types/item_template";
 import { Table } from "wotlkdata/table/Table";
+import { ClassMask } from "../Class/ClassRegistry";
 import { EnchantmentRegistry } from "../Enchant/Enchantment";
 import { HolidayRegistry } from "../GameEvent/Holiday";
 import { GemRegistry } from "../Gem/Gem";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { Loot, LootSet } from "../Loot/Loot";
-import { ClassMask } from "../Misc/ClassMask";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
 import { PageTextRegistry } from "../PageText/PageText";
 import { RegistryStatic } from "../Refs/Registry";
+import { TotemCategoryRegistry } from "../TotemCategory/TotemCategory";
 import { BagFamily } from "./BagFamily";
-import { ItemAmmoTypes } from "./ItemAmmoTypes";
+import { ItemAmmoType } from "./ItemAmmoTypes";
 import { ItemBonding } from "./ItemBonding";
 import { ItemClass } from "./ItemClass";
 import { ItemDamages } from "./ItemDamage";
@@ -58,7 +61,6 @@ import { ItemSockets } from "./ItemSocket";
 import { ItemSpells } from "./ItemSpells";
 import { ItemStats } from "./ItemStats";
 import { ItemDescription, ItemName } from "./ItemText";
-import { ItemTotemCategory } from "./ItemTotemCategory";
 import { PageMaterialCell } from "./PageMaterial";
 
 export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
@@ -116,27 +118,37 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Stats() { return new ItemStats(this); }
     get Area() { return this.wrap(this.row.area); }
     get Map() { return this.wrap(this.row.Map); }
-    get BagFamily() { return new BagFamily(this, this.row.BagFamily); }
-    get TotemCategory() { return new ItemTotemCategory(this, this.row.TotemCategory); }
-    get Sheath() { return new ItemSheath(this, this.row.sheath); }
+    get BagFamily() {
+        return makeMaskCell32(BagFamily,this, this.row.BagFamily);
+    }
+    get TotemCategory() {
+        return TotemCategoryRegistry.ref(this, this.row.TotemCategory);
+    }
+    get Sheath() {
+        return makeEnumCell(ItemSheath,this, this.row.sheath);
+    }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
     /** Delay in MILLISECONDS */
     get Delay() { return this.wrap(this.row.delay); }
     get RangeMod() { return this.wrap(this.row.RangedModRange); }
     get Description() { return new ItemDescription(this); }
-    get Quality() { return new ItemQuality(this); }
+    get Quality() {
+        return makeEnumCell(ItemQuality,this, this.row.Quality);
+    }
     get Durability() { return this.wrap(this.row.MaxDurability); }
     get Disenchant() { return Loot.Disenchant.ref(this, this.row.DisenchantID); }
     get RequiredLevel() { return this.wrap(this.row.RequiredLevel); }
     get ItemLevel() { return this.wrap(this.row.ItemLevel); }
     get RequiredSpell() { return this.wrap(this.row.requiredspell); }
     get RequiredHonorRank() { return this.wrap(this.row.requiredhonorrank); }
-    get ClassMask() { return new ClassMask(this, this.row.AllowableClass, true); }
+    get ClassMask() { return makeMaskCell32(ClassMask, this, this.row.AllowableClass, true); }
     get RaceMask() { return this.wrap(this.row.AllowableRace); }
     get MaxCount() { return this.wrap(this.row.maxcount); }
     get MaxStack() { return this.wrap(this.row.stackable); }
-    get Bonding() { return new ItemBonding(this, this.row.bonding); }
+    get Bonding() {
+        return makeEnumCell(ItemBonding,this, this.row.bonding);
+    }
     get Damage() { return new ItemDamages(this); }
     get Requirements() { return new ItemRequirements(this); }
     get Spells() { return new ItemSpells(this); }
@@ -149,17 +161,18 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     }
     get Price() { return new ItemPrice(this); }
     get Material() {
-        return new ItemMaterial(this, new MulticastCell(this, [
-            this.row.Material, this.dbc.Material
-        ]));
+        return makeEnumCell(ItemMaterial,this
+            , new MulticastCell(this, [this.row.Material,this.dbc.Material])
+        );
     }
-    get Flags() { return new ItemFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(ItemFlags,this, this.row.Flags);
+    }
     get InventoryType() {
-        return new ItemInventoryType(this, new MulticastCell(this,[
-            this.row.InventoryType, this.dbc.InventoryType
-        ]));
+        return makeEnumCell(ItemInventoryType,this
+            , new MulticastCell(this, [this.row.InventoryType,this.dbc.InventoryType])
+        );
     }
-
     get SheatheType() { return this.dbc.SheatheType; }
     get RequiredFaction() { return new ItemRequiredFaction(this); }
     get ContainerSlots() { return this.wrap(this.row.ContainerSlots); }
@@ -167,9 +180,13 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get Duration() { return this.wrap(this.row.duration); }
     get Holiday() { return HolidayRegistry.ref(this, this.row.HolidayId); }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
-    get FoodType() { return new ItemFoodType(this, this.row.FoodType); }
+    get FoodType() {
+        return makeEnumCell(ItemFoodType,this, this.row.FoodType);
+    }
     get MoneyLoot() { return new ItemMoneyLoot(this); }
-    get FlagsCustom() { return new ItemFlagsCustom(this, this.row.flagsCustom); }
+    get FlagsCustom() {
+        return makeMaskCell32(ItemFlagsCustom,this, this.row.flagsCustom);
+    }
     get Loot() { return new LootSet(this.ID, SQL.item_loot_template); }
 
     /**
@@ -194,10 +211,14 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     get PageText() { return PageTextRegistry.ref(this, this.row.PageText)}
     get PageMaterial() { return new PageMaterialCell(this, this.row.PageMaterial); }
 
-    get AmmoType() { return new ItemAmmoTypes(this, this.row.ammo_type); }
+    get AmmoType() {
+        return makeEnumCell(ItemAmmoType,this, this.row.ammo_type);
+    }
 
     /** Note: This field seem to have loads of data for >cata in the docs, so it can be very wrong. */
-    get FlagsExtra() { return new ItemFlagsExtra(this, this.row.FlagsExtra); }
+    get FlagsExtra() {
+        return makeMaskCell32(ItemFlagsExtra,this, this.row.FlagsExtra);
+    }
 
     get ID() {
         return this.row.entry.get();
@@ -230,12 +251,12 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
         return e.ID;
     }
     Clear(r: ItemTemplate) {
-        r.AmmoType.None.set()
+        r.AmmoType.NONE.set()
          .Area.set(0)
          .Armor.set(0)
          .BagFamily.set(0)
          .BlockChance.set(0)
-         .Bonding.NoBounds.set()
+         .Bonding.NO_BOUNDS.set()
          .Class.Junk.set()
          .ClassMask.set(-1)
          .RaceMask.set(-1)
@@ -277,7 +298,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .Resistances.clearAll()
          .ScalingStats.set(0,0)
          .ScriptName.set('')
-         .Sheath.None.set()
+         .Sheath.NONE.set()
          .Socket.clearAll()
          .SoundOverride.set(0)
          .Spells.clearAll()

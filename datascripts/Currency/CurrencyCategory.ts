@@ -1,4 +1,4 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { DBC } from "wotlkdata/dbc/DBCFiles";
 import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/dbc/types/CurrencyCategory";
 import { Table } from "wotlkdata/table/Table";
@@ -6,13 +6,15 @@ import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 
-export class CurrencyCategoryFlags<T> extends MaskCell32<T> {
-    get SortLast() { return this.bit(0); }
-    get PlayerItemAssignment() { return this.bit(1); }
+export enum CurrencyCategoryFlags {
+    SortedLast           = 0x1,
+    PlayerItemAssignment = 0x2,
 }
 
 export class CurrencyCategory extends MainEntity<CurrencyCategoryRow> {
-    get Flags() { return new CurrencyCategoryFlags(this, this.row.Flags); }
+    get Flags() {
+        return makeMaskCell32(CurrencyCategoryFlags, this, this.row.Flags);
+    }
     get Name() { return this.wrapLoc(this.row.Name); }
     get ID() { return this.row.ID.get(); }
 
