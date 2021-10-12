@@ -19,7 +19,7 @@ import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
 import { TalentTabQuery, TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
 import { lt } from "wotlkdata/query/Relations";
 import { Table } from "wotlkdata/table/Table";
-import { ClassIDs } from "../Class/ClassRegistry";
+import { ClassIDs } from "../Class/ClassIDs";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { TalentTree } from "./TalentTree";

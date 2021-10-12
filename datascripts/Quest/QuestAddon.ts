@@ -144,11 +144,11 @@ export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
     }
 
     get SpecialFlags() {
-        return makeMaskCell32(QuestSpecialFlags,this, this.wrapSQL(0,sql=>sql.SpecialFlags));
+        return makeMaskCell32(QuestSpecialFlags,this.owner, this.wrapSQL(0,sql=>sql.SpecialFlags));
     }
 
     get BreadcrumbForQuest() {
-        return QuestRegistry.ref(this,this.wrapSQL(0,sql=>sql.BreadcrumbForQuestId))
+        return QuestRegistry.ref(this.owner,this.wrapSQL(0,sql=>sql.BreadcrumbForQuestId))
     }
 
     get ExclusiveGroup() {

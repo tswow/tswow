@@ -15,24 +15,12 @@ import { RegistryRowBase } from "../Refs/Registry";
 import { CharacterCreationUI } from "../UI/CharacterCreation";
 import { BaseClassData } from "./BaseClassData";
 import { Class } from "./Class";
+import { ClassIDs } from "./ClassIDs";
 
 // it's too complicated to find all the lua/xml rows again
 const loadedClasses: {[key: number]: Class} = {}
 let created = false;
 let languages : playercreateinfo_skillsRow[] = []
-
-export enum ClassIDs {
-      WARRIOR      = 1
-    , PALADIN      = 2
-    , HUNTER       = 3
-    , ROGUE        = 4
-    , PRIEST       = 5
-    , DEATH_KNIGHT = 6
-    , SHAMAN       = 7
-    , MAGE         = 8
-    , WARLOCK      = 9
-    , DRUID        = 11
-}
 
 export enum ClassMask {
       WARRIOR      = 0x1

@@ -23,7 +23,7 @@ import { SQL } from "wotlkdata/sql/SQLFiles";
 import { class_stat_formulasRow } from "wotlkdata/sql/types/class_stat_formulas";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";
-import { ClassIDs } from "./ClassRegistry";
+import { ClassIDs } from "./ClassIDs";
 
 interface GtDBC {
     Data : Cell<number,any>;
