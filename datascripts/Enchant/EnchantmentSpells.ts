@@ -41,7 +41,7 @@ export class EnchantmentSpell extends CellSystemTop {
         return ItemTemplateRegistry.ref(
               this
             , this.spell.Effects.get(0)
-                .Type.EnchantItem.as()
+                .Type.ENCHANT_ITEM.as()
                      .EnchantingItem
         )
     }
@@ -60,9 +60,9 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
 
     add(mod: string, id: string, createItem = true) {
         let spell = SpellRegistry.create(mod,`${id}-spell`)
-            .Attributes.isTradeSpell.set(true)
-            .Attributes.notShapeshifted.set(true)
-            .Attributes.noThreat.set(true)
+            .Attributes.IS_TRADE_SPELL.set(true)
+            .Attributes.NOT_SHAPESHIFTED.set(true)
+            .Attributes.NO_THREAT.set(true)
             .Attributes.setBit(25, true)
             .TargetType.ITEM.set(true)
             .InterruptFlags.ON_MOVEMENT.set(true)
@@ -91,7 +91,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                 .DisplayInfo.set(811)
 
             spell.Effects.addMod(effect=>{
-                effect.Type.EnchantItem.set()
+                effect.Type.ENCHANT_ITEM.set()
                     .Enchant.set(this.owner.ID)
                     .EnchantingItem.set(item.ID);
             });
@@ -99,7 +99,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
         }
 
         spell.Effects.addMod(effect=>{
-            effect.Type.EnchantItem.set()
+            effect.Type.ENCHANT_ITEM.set()
                 .Enchant.set(this.owner.ID)
                 .EnchantingItem.set(itemId)
         });

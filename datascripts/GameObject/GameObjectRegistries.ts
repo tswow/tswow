@@ -110,7 +110,7 @@ export class GOPlainRegistryClsas
     // Do not change the type
     protected ClearGO(r: GameObjectPlain): void {
         // Default type
-        r.Type.MapObject.set()
+        r.Type.MAP_OBJECT.set()
     }
     protected CloneGO(r: GameObjectPlain, parent: GameObjectPlain): void {}
     protected GOEntity(plain: GameObjectPlain): GameObjectPlain {
@@ -124,10 +124,10 @@ export class GODoorRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectDoor> {
     protected CloneGO(r: GameObjectDoor, parent: GameObjectDoor): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Door.set()
+        r.Type.DOOR.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Door.as();
+        return plain.Type.DOOR.as();
     }
 }
 
@@ -135,10 +135,10 @@ export class GOButtonRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectButton> {
     protected CloneGO(r: GameObjectButton, parent: GameObjectButton): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Button.set()
+        r.Type.BUTTON.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Button.as();
+        return plain.Type.BUTTON.as();
     }
 }
 
@@ -146,10 +146,10 @@ export class GOQuestGiverRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectQuestGiver> {
     protected CloneGO(r: GameObjectQuestGiver, parent: GameObjectQuestGiver): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Questgiver.set()
+        r.Type.QUESTGIVER.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Questgiver.as();
+        return plain.Type.QUESTGIVER.as();
     }
 }
 
@@ -157,10 +157,10 @@ export class GOChestRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectChest> {
     protected CloneGO(r: GameObjectChest, parent: GameObjectChest): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Chest.set()
+        r.Type.CHEST.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Chest.as();
+        return plain.Type.CHEST.as();
     }
 }
 
@@ -168,10 +168,10 @@ export class GOTrapRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectTrap> {
     protected CloneGO(r: GameObjectTrap, parent: GameObjectTrap): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Trap.set()
+        r.Type.TRAP.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Trap.as();
+        return plain.Type.TRAP.as();
     }
 }
 
@@ -179,10 +179,10 @@ export class GOChairRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectChair> {
     protected CloneGO(r: GameObjectChair, parent: GameObjectChair): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Chair.set()
+        r.Type.CHAIR.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Chair.as();
+        return plain.Type.CHAIR.as();
     }
 }
 
@@ -190,10 +190,10 @@ export class GOSpellFocusRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectSpellFocus> {
     protected CloneGO(r: GameObjectSpellFocus, parent: GameObjectSpellFocus): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.SpellFocus.set()
+        r.Type.SPELL_FOCUS.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.SpellFocus.as();
+        return plain.Type.SPELL_FOCUS.as();
     }
 }
 
@@ -201,10 +201,10 @@ export class GOTextRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectText> {
     protected CloneGO(r: GameObjectText, parent: GameObjectText): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Text.set()
+        r.Type.TEXT.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Text.as();
+        return plain.Type.TEXT.as();
     }
 }
 
@@ -212,10 +212,10 @@ export class GOGooberRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectGoober> {
     protected CloneGO(r: GameObjectGoober, parent: GameObjectGoober): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Goober.set()
+        r.Type.GOOBER.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Goober.as();
+        return plain.Type.GOOBER.as();
     }
 }
 
@@ -223,12 +223,12 @@ export class GOElevatorRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectElevator> {
     protected CloneGO(r: GameObjectElevator, parent: GameObjectElevator): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Elevator.set()
+        r.Type.ELEVATOR.set()
          .Flags.TRANSPORT.set(true)
          .Display.set(455) // undercity elevator
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Elevator.as();
+        return plain.Type.ELEVATOR.as();
     }
 
     createLocalTemplate(mod: string, id: string, keyframes: KeyFrameCon[]) {
@@ -256,10 +256,10 @@ export class GOAreaDamageRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectAreaDamage> {
     protected CloneGO(r: GameObjectAreaDamage, parent: GameObjectAreaDamage): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.AreaDamage.set()
+        r.Type.AREA_DAMAGE.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.AreaDamage.as();
+        return plain.Type.AREA_DAMAGE.as();
     }
 }
 
@@ -267,10 +267,10 @@ export class GOCameraRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectCamera> {
     protected CloneGO(r: GameObjectCamera, parent: GameObjectCamera): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Camera.set()
+        r.Type.CAMERA.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Camera.as();
+        return plain.Type.CAMERA.as();
     }
 }
 
@@ -278,17 +278,17 @@ export class GOShipRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectShip> {
     protected CloneGO(r: GameObjectShip, parent: GameObjectShip): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Ship.set()
+        r.Type.SHIP.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Ship.as();
+        return plain.Type.SHIP.as();
     }
 
     createSimple(mod: string, id: string, points: TaxiNodeConstructor[]) {
         let nid = Ids.transports.id(mod,id)
         let taxiPath = TaxiPathRegistry.createUni(mod,`${id}-path`,'PLAIN',1,0,points,false);
         let gameObject = this.create(mod,`${id}-gameobject`)
-            .Type.Ship.set()
+            .Type.SHIP.set()
             .SpawnGroup.set(0)
             .Display.set(3015) // generic boat
             .Size.set(1)
@@ -311,10 +311,10 @@ export class GORitualRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectSummoningRitual> {
     protected CloneGO(r: GameObjectSummoningRitual, parent: GameObjectSummoningRitual): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Ritual.set()
+        r.Type.RITUAL.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Ritual.as();
+        return plain.Type.RITUAL.as();
     }
 }
 
@@ -322,10 +322,10 @@ export class GOMailboxRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectMailbox> {
     protected CloneGO(r: GameObjectMailbox, parent: GameObjectMailbox): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Mailbox.set()
+        r.Type.MAILBOX.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Mailbox.as();
+        return plain.Type.MAILBOX.as();
     }
 }
 
@@ -334,10 +334,10 @@ export class GOGuardPostRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectGuardPost> {
     protected CloneGO(r: GameObjectGuardPost, parent: GameObjectGuardPost): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.GuardPost.set()
+        r.Type.GUARD_POST.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.GuardPost.as();
+        return plain.Type.GUARD_POST.as();
     }
 }
 
@@ -346,10 +346,10 @@ export class GOSpellCasterRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectSpellCaster> {
     protected CloneGO(r: GameObjectSpellCaster, parent: GameObjectSpellCaster): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.SpellCaster.set()
+        r.Type.SPELL_CASTER.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.SpellCaster.as();
+        return plain.Type.SPELL_CASTER.as();
     }
 }
 
@@ -357,10 +357,10 @@ export class GOMeetingStoneRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectMeetingStone> {
     protected CloneGO(r: GameObjectMeetingStone, parent: GameObjectMeetingStone): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.MeetingStone.set()
+        r.Type.MEETING_STONE.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.MeetingStone.as();
+        return plain.Type.MEETING_STONE.as();
     }
 }
 
@@ -368,10 +368,10 @@ export class GOFlagStandRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectFlagStand> {
     protected CloneGO(r: GameObjectFlagStand, parent: GameObjectFlagStand): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.FlagStand.set()
+        r.Type.FLAG_STAND.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.FlagStand.as();
+        return plain.Type.FLAG_STAND.as();
     }
 }
 
@@ -379,10 +379,10 @@ export class GOFishingHoleRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectFishingHole> {
     protected CloneGO(r: GameObjectFishingHole, parent: GameObjectFishingHole): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.FishingHole.set()
+        r.Type.FISHING_HOLE.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.FishingHole.as();
+        return plain.Type.FISHING_HOLE.as();
     }
 }
 
@@ -390,10 +390,10 @@ export class GOFlagDropRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectFlagDrop> {
     protected CloneGO(r: GameObjectFlagDrop, parent: GameObjectFlagDrop): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.FlagDrop.set()
+        r.Type.FLAG_DROP.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.FlagDrop.as();
+        return plain.Type.FLAG_DROP.as();
     }
 }
 
@@ -401,10 +401,10 @@ export class GOMinigameRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectMinigame> {
     protected CloneGO(r: GameObjectMinigame, parent: GameObjectMinigame): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Minigame.set()
+        r.Type.MINIGAME.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Minigame.as();
+        return plain.Type.MINIGAME.as();
     }
 }
 
@@ -412,10 +412,10 @@ export class GOCapturePointRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectCapturePoint> {
     protected CloneGO(r: GameObjectCapturePoint, parent: GameObjectCapturePoint): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.CapturePoint.set()
+        r.Type.CAPTURE_POINT.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.CapturePoint.as();
+        return plain.Type.CAPTURE_POINT.as();
     }
 }
 
@@ -423,10 +423,10 @@ export class GOAuraGeneratorRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectAuraGenerator> {
     protected CloneGO(r: GameObjectAuraGenerator, parent: GameObjectAuraGenerator): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.AuraGenerator.set()
+        r.Type.AURA_GENERATOR.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.AuraGenerator.as();
+        return plain.Type.AURA_GENERATOR.as();
     }
 }
 
@@ -434,10 +434,10 @@ export class GODungeonDifficultyRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectDungeonDifficulty> {
     protected CloneGO(r: GameObjectDungeonDifficulty, parent: GameObjectDungeonDifficulty): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.DungeonDifficulty.set()
+        r.Type.DUNGEON_DIFFICULTY.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.DungeonDifficulty.as();
+        return plain.Type.DUNGEON_DIFFICULTY.as();
     }
 }
 
@@ -445,10 +445,10 @@ export class GOBarberChairRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectBarberChair> {
     protected CloneGO(r: GameObjectBarberChair, parent: GameObjectBarberChair): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.BarberChair.set()
+        r.Type.BARBER_CHAIR.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.BarberChair.as();
+        return plain.Type.BARBER_CHAIR.as();
     }
 }
 
@@ -456,10 +456,10 @@ export class GODestructibleBuildingRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectDestructibleBuilding> {
     protected CloneGO(r: GameObjectDestructibleBuilding, parent: GameObjectDestructibleBuilding): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.DestructibleBuilding.set()
+        r.Type.DESTRUCTIBLE_BUILDING.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.DestructibleBuilding.as();
+        return plain.Type.DESTRUCTIBLE_BUILDING.as();
     }
 }
 
@@ -467,10 +467,10 @@ export class GOGuildBankRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectGuildBank> {
     protected CloneGO(r: GameObjectGuildBank, parent: GameObjectGuildBank): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.GuildBank.set()
+        r.Type.GUILD_BANK.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.GuildBank.as();
+        return plain.Type.GUILD_BANK.as();
     }
 }
 
@@ -478,10 +478,10 @@ export class GOTrapdoorRegistryClass
     extends GameObjectRegistryBaseClass<GameObjectTrapdoor> {
     protected CloneGO(r: GameObjectTrapdoor, parent: GameObjectTrapdoor): void {}
     protected ClearGO(r: GameObjectPlain): void {
-        r.Type.Trapdoor.set()
+        r.Type.TRAPDOOR.set()
     }
     protected GOEntity(plain: GameObjectPlain) {
-        return plain.Type.Trapdoor.as();
+        return plain.Type.TRAPDOOR.as();
     }
 }
 

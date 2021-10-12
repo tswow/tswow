@@ -41,7 +41,7 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
         const spell = SpellRegistry.create(mod,`${id}-spell`)
             .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
-                efffect.Type.LearnSpell.set()
+                efffect.Type.LEARN_SPELL.set()
                     .LearntSpell.set(this.owner.SpellID)
                     .ImplicitTargetA.SRC_CASTER.set()
                     .ChainAmplitude.set(1)
@@ -90,7 +90,7 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
 export class Mount extends MainEntity<SpellRow> {
     protected mountIndex() {
         return this.AsSpell.get().Effects
-            .indexOf(x=>x.Aura.Mounted.is())
+            .indexOf(x=>x.Aura.MOUNTED.is())
     }
 
     get SpellID() { return this.row.ID.get(); }
@@ -183,15 +183,15 @@ export class MountRegistryClass
 
     create(mod: string, id: string, speed = 59, flightSpeed = 0, createItem = true, createCreature = true) {
         let spell = SpellRegistry.create(mod,id)
-            .Attributes.isHiddenFromLog.set(true)
-            .Attributes.isAbility.set(true)
-            .Attributes.outdoorsOnly.set(true)
-            .Attributes.notShapeshifted.set(true)
-            .Attributes.sheatheUnchanged.set(true)
-            .Attributes.stopAttacking.set(true)
-            .Attributes.cannotUseInCombat.set(true)
-            .Attributes.ignoreBonuses.set(true)
-            .Attributes.unk79.set(true)
+            .Attributes.IS_HIDDEN_FROM_LOG.set(true)
+            .Attributes.IS_ABILITY.set(true)
+            .Attributes.OUTDOORS_ONLY.set(true)
+            .Attributes.NOT_SHAPESHIFTED.set(true)
+            .Attributes.SHEATHE_UNCHANGED.set(true)
+            .Attributes.STOP_ATTACKING.set(true)
+            .Attributes.CANNOT_USE_IN_COMBAT.set(true)
+            .Attributes.IGNORE_BONUSES.set(true)
+            .Attributes.UNK79.set(true)
             .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .CastTime.set(16)
             .InterruptFlags.set(31)
@@ -203,15 +203,15 @@ export class MountRegistryClass
             .Levels.Spell.set(1)
             .Effects.addMod(effect=>{
                 effect
-                    .Type.ApplyAura.set()
-                    .Aura.Mounted.set()
+                    .Type.APPLY_AURA.set()
+                    .Aura.MOUNTED.set()
                     .CreatureTemplate.set(0)
                     .ImplicitTargetA.UNIT_CASTER.set()
             })
             .Effects.addMod(effect=>{
                 effect
-                    .Type.ApplyAura.set()
-                    .Aura.ModIncreaseMountedSpeed.set()
+                    .Type.APPLY_AURA.set()
+                    .Aura.MOD_INCREASE_MOUNTED_SPEED.set()
                     .BasePercent.set(speed)
                     .ImplicitTargetA.UNIT_CASTER.set()
                     .RandomPercent.set(1)
@@ -220,8 +220,8 @@ export class MountRegistryClass
         if(flightSpeed>0) {
             spell.Effects.addMod(effect=>{
                 effect
-                    .Type.ApplyAura.set()
-                    .Aura.ModIncreaseFlightSpeed.set()
+                    .Type.APPLY_AURA.set()
+                    .Aura.MOD_INCREASE_FLIGHT_SPEED.set()
                     .BasePercent.set(flightSpeed)
                     .ImplicitTargetA.UNIT_CASTER.set()
                     .RandomPercent.set(1)

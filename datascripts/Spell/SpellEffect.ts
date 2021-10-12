@@ -106,7 +106,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     addLearnSpells(spells: number[]) {
         for(const spell of spells) {
             this.addFreeEffect((eff)=>{
-                eff.Type.LearnSpell.set()
+                eff.Type.LEARN_SPELL.set()
                    .LearntSpell.set(spell)
             })
         }
@@ -116,7 +116,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     addGetTriggerSpell(mod: string, id: string, parent = 0) {
         let spell = SpellRegistry.create(mod,id,parent);
         this.addGet().Type
-            .TriggerSpell.set()
+            .TRIGGER_SPELL.set()
             .TriggerSpell.set(spell.ID)
         return spell;
     }
@@ -169,7 +169,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         const SPELL_CHAIN_TOKEN = '__tswow_spell_chain';
         function getNextSpell(spell: Spell) {
             for(let i=0;i<3;++i) {
-                if(!spell.Effects.get(i).Type.TriggerSpell.is()) {
+                if(!spell.Effects.get(i).Type.TRIGGER_SPELL.is()) {
                     continue;
                 }
                 let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());
@@ -189,7 +189,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
             std.Spells.Clear(nex);
             nex.Icon.setFullPath(SPELL_CHAIN_TOKEN);
             spell.Effects.addMod((eff)=>{
-                eff.Type.TriggerSpell.set()
+                eff.Type.TRIGGER_SPELL.set()
                    .TriggerSpell.set((nex as Spell).ID);
             })
             return nex;

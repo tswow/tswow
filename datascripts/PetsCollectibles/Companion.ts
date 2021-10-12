@@ -38,7 +38,7 @@ export class CompanionItems extends MultirowSystemCached<ItemTemplate,Companion>
         const spell = SpellRegistry.create(mod,`${id}-spell`)
             .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
-                efffect.Type.LearnSpell.set()
+                efffect.Type.LEARN_SPELL.set()
                     .LearntSpell.set(this.owner.SpellID)
                     .ImplicitTargetA.SRC_CASTER.set()
                     .ChainAmplitude.set(1)
@@ -87,7 +87,7 @@ export class Companion extends MainEntity<SpellRow> {
     protected mountIndex() {
         // only one mount index is valid
         return this.AsSpell.get().Effects
-            .indexOf(x=>x.Type.Summon.is())
+            .indexOf(x=>x.Type.SUMMON.is())
     }
 
     readonly Items = new CompanionItems(this);
@@ -143,10 +143,10 @@ export class CompanionRegistryClass
     Clear(r: Companion): void {
         SpellRegistry.Clear(r.AsSpell.get())
         r.AsSpell.get()
-            .Attributes.isAbility.set(true)
-            .Attributes.isHiddenFromLog.set(true)
-            .Attributes.sheatheUnchanged.set(true)
-            .Attributes.ignoreBonuses.set(true)
+            .Attributes.IS_ABILITY.set(true)
+            .Attributes.IS_HIDDEN_FROM_LOG.set(true)
+            .Attributes.SHEATHE_UNCHANGED.set(true)
+            .Attributes.IGNORE_BONUSES.set(true)
             .Duration.set(21)
             .Range.set(1)
             .Cooldown.set(0,0,1500,133)
@@ -161,7 +161,7 @@ export class CompanionRegistryClass
                 sla.MinSkillRank.set(1)
             })
             .Effects.addMod(effects=>{
-                effects.Type.Summon.set()
+                effects.Type.SUMMON.set()
                     .SummonProperties.set(41)
                     .SummonedCreature.set(0)
                     .ImplicitTargetA.DEST_CASTER_SUMMON.set()

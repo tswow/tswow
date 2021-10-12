@@ -9,8 +9,8 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>
-                   x.Effects.find(y=>y.Type.OpenLock.is())
-                && x.Effects.find(y=>y.Type.Skill.is())
+                   x.Effects.find(y=>y.Type.OPEN_LOCK.is())
+                && x.Effects.find(y=>y.Type.SKILL.is())
             )
     }
 
@@ -20,12 +20,12 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
 
     addGet(mod: string, id: string, lockType: number, autoLearnAt: number = 0) {
         let spl = SpellRegistry.create(mod,id)
-        .Attributes.isHiddenInSpellbook.set(true)
-        .Attributes.isHiddenFromLog.set(true)
-        .Attributes.unk41.set(true)
+        .Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true)
+        .Attributes.IS_HIDDEN_FROM_LOG.set(true)
+        .Attributes.UNK41.set(true)
         .SkillLines.addMod(this.owner.ID,undefined,undefined)
         .Effects.addMod((eff)=>{
-            eff.Type.OpenLock.set()
+            eff.Type.OPEN_LOCK.set()
             .ImplicitTargetA.GAMEOBJECT_TARGET.set()
             .LockType.set(lockType)
             .AsEffect.get()
@@ -35,7 +35,7 @@ export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> 
             .ChainAmplitude.set(1)
         })
         .Effects.addMod((eff)=>{
-            eff.Type.Skill.set()
+            eff.Type.SKILL.set()
             .AsEffect.get()
             .MiscValueA.set(this.owner.ID)
             .DieSides.set(1)

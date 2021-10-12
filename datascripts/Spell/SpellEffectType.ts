@@ -33,7 +33,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         3 */
     get DUMMY()                         { return this.value(3, x=>x) }
     /** Enum Value:                                         4 */
-    get PORTAL_TELEPORT_()              { return this.value(4, x=>x) }
+    get PORTAL_TELEPORT()              { return this.value(4, x=>x) }
     /** Enum Value:                                         5 */
     get TELEPORT_UNITS()                { return this.value(5, x=>new TeleportUnits(x)) }
     /** Enum Value:                                         6 */
@@ -51,11 +51,11 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         12 */
     get CONTROL_TOTEM_CREATURE()        { return this.value(12, x=>new CommandTotemCreature(x)) }
     /** Enum Value:                                         13 */
-    get RITUAL_BASE_()                  { return this.value(13, x=>x) }
+    get RITUAL_BASE()                  { return this.value(13, x=>x) }
     /** Enum Value:                                         14 */
-    get RITUAL_SPECIALIZE_()            { return this.value(14, x=>x) }
+    get RITUAL_SPECIALIZE()            { return this.value(14, x=>x) }
     /** Enum Value:                                         15 */
-    get RITUAL_ACTIVATE_PORTAL_()       { return this.value(15, x=>x) }
+    get RITUAL_ACTIVATE_PORTAL()       { return this.value(15, x=>x) }
     /** Enum Value:                                         16 */
     get QUEST_COMPLETE()                { return this.value(16, x=>new CompleteQuest(x)) }
     /** Enum Value:                                         17 */
@@ -65,19 +65,19 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         19 */
     get ADD_EXTRA_ATTACKS()             { return this.value(19, x=>x) }
     /** Enum Value:                                         20 */
-    get DODGE_()                        { return this.value(20, x=>new ExtraAttacks(x)) }
+    get DODGE()                        { return this.value(20, x=>new ExtraAttacks(x)) }
     /** Enum Value:                                         21 */
-    get EVADE_()                        { return this.value(21, x=>x) }
+    get EVADE()                        { return this.value(21, x=>x) }
     /** Enum Value:                                         22 */
     get PARRY()                         { return this.value(22, x=>x) }
     /** Enum Value:                                         23 */
-    get BLOCK_()                        { return this.value(23, x=>x) }
+    get BLOCK()                        { return this.value(23, x=>x) }
     /** Enum Value:                                         24 */
     get CREATE_ITEM()                   { return this.value(24, x=>new CreateItem(x)) }
     /** Enum Value:                                         25 */
     get WEAPON()                        { return this.value(25, x=>new Weapon(x)) }
     /** Enum Value:                                         26 */
-    get DEFENSE_()                      { return this.value(26, x=>x) }
+    get DEFENSE()                      { return this.value(26, x=>x) }
     /** Enum Value:                                         27 */
     get PERSISTENT_AREA_AURA()          { return this.value(27, x=>x) }
     /** Enum Value:                                         28 */
@@ -99,7 +99,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         36 */
     get LEARN_SPELL()                   { return this.value(36, x=>new LearnSpell(x)) }
     /** Enum Value:                                         37 */
-    get SPELL_DEFENSE_()                { return this.value(37, x=>x) }
+    get SPELL_DEFENSE()                { return this.value(37, x=>x) }
     /** Enum Value:                                         38 */
     get DISPEL()                        { return this.value(38, x=>new Dispel(x)) }
     /** Enum Value:                                         39 */
@@ -117,19 +117,19 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         45 */
     get ADD_HONOR()                     { return this.value(45, x=>new AddHonor(x)) }
     /** Enum Value:                                         46 */
-    get SPAWN_()                        { return this.value(46, x=>x) }
+    get SPAWN()                        { return this.value(46, x=>x) }
     /** Enum Value:                                         47 */
     get TRADE_SKILL()                   { return this.value(47, x=>new TradeSkill(x)) }
     /** Enum Value:                                         48 */
-    get STEALTH_()                      { return this.value(48, x=>x) }
+    get STEALTH()                      { return this.value(48, x=>x) }
     /** Enum Value:                                         49 */
-    get DETECT_()                       { return this.value(49, x=>x) }
+    get DETECT()                       { return this.value(49, x=>x) }
     /** Enum Value:                                         50 */
     get TRANS_DOOR()                    { return this.value(50, x=>new TransDoor(x)) }
     /** Enum Value:                                         51 */
-    get FORCE_CRITICAL_HIT_()           { return this.value(51, x=>x) }
+    get FORCE_CRITICAL_HIT()           { return this.value(51, x=>x) }
     /** Enum Value:                                         52 */
-    get GUARANTEE_HIT_()                { return this.value(52, x=>x) }
+    get GUARANTEE_HIT()                { return this.value(52, x=>x) }
     /** Enum Value:                                         53 */
     get ENCHANT_ITEM()                  { return this.value(53, x=>new EnchantItem(x)) }
     /** Enum Value:                                         54 */
@@ -143,7 +143,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         58 */
     get WEAPON_DAMAGE()                 { return this.value(58, x=>new WeaponDamage(x)) }
     /** Enum Value:                                         59 */
-    get CREATE_RANDOM_ITEM_()           { return this.value(59, x=>new CreateRandomItem(x)) }
+    get CREATE_RANDOM_ITEM()           { return this.value(59, x=>new CreateRandomItem(x)) }
     /** Enum Value:                                         60 */
     get PROFICIENCY()                   { return this.value(60, x=>x) }
     /** Enum Value:                                         61 */
@@ -157,7 +157,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         65 */
     get APPLY_AREA_AURA_RAID()          { return this.value(65, x=>x) }
     /** Enum Value:                                         66 */
-    get CREATE_MANA_GEM_()              { return this.value(66, x=>new CreateManaGem(x)) }
+    get CREATE_MANA_GEM()              { return this.value(66, x=>new CreateManaGem(x)) }
     /** Enum Value:                                         67 */
     get HEAL_MAX_HEALTH()               { return this.value(67, x=>new HealMaxHealth(x)) }
     /** Enum Value:                                         68 */
@@ -165,7 +165,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         69 */
     get DISTRACT()                      { return this.value(69, x=>x) }
     /** Enum Value:                                         70 */
-    get PULL_()                         { return this.value(70, x=>x) }
+    get PULL()                         { return this.value(70, x=>x) }
     /** Enum Value:                                         71 */
     get PICKPOCKET()                    { return this.value(71, x=>new Pickpocket(x)) }
     /** Enum Value:                                         72 */
@@ -175,7 +175,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         74 */
     get APPLY_GLYPH()                   { return this.value(74, x=>new ApplyGlyph(x)) }
     /** Enum Value:                                         75 */
-    get HEAL_MECHANICAL_()              { return this.value(75, x=>new HealMechanical(x)) }
+    get HEAL_MECHANICAL()              { return this.value(75, x=>new HealMechanical(x)) }
     /** Enum Value:                                         76 */
     get SUMMON_OBJECT_WILD()            { return this.value(76, x=>new SummonObjectWild(x)) }
     /** Enum Value:                                         77 */
@@ -187,7 +187,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         80 */
     get ADD_COMBO_POINTS()              { return this.value(80, x=>new AddComboPoints(x)) }
     /** Enum Value:                                         81 */
-    get CREATE_HOUSE_()                 { return this.value(81, x=>x) }
+    get CREATE_HOUSE()                 { return this.value(81, x=>x) }
     /** Enum Value:                                         82 */
     get BIND_SIGHT()                    { return this.value(82, x=>x) }
     /** Enum Value:                                         83 */
@@ -205,9 +205,9 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         89 */
     get GAMEOBJECT_SET_DESTRUCTION_STATE() { return this.value(89, x=>new SetGameObjectDestructibleState(x)) }
     /** Enum Value:                                         90 */
-    get KILL_CREDIT_()                  { return this.value(90, x=>new KillCredit(x)) }
+    get KILL_CREDIT()                  { return this.value(90, x=>new KillCredit(x)) }
     /** Enum Value:                                         91 */
-    get THREAT_ALL_()                   { return this.value(91, x=>x) }
+    get THREAT_ALL()                   { return this.value(91, x=>x) }
     /** Enum Value:                                         92 */
     get ENCHANT_HELD_ITEM()             { return this.value(92, x=>new EnchantHeldItem(x)) }
     /** Enum Value:                                         93 */
@@ -219,7 +219,7 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         96 */
     get CHARGE()                        { return this.value(96, x=>new Charge(x)) }
     /** Enum Value:                                         97 */
-    get CAST_BUTTON_()                  { return this.value(97, x=>new CastButtons(x)) }
+    get CAST_BUTTON()                  { return this.value(97, x=>new CastButtons(x)) }
     /** Enum Value:                                         98 */
     get KNOCK_BACK()                    { return this.value(98, x=>new Knockback(x)) }
     /** Enum Value:                                         99 */
@@ -257,29 +257,29 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         115 */
     get DURABILITY_DAMAGE_PCT()         { return this.value(115, x=>new DurabilityDamagePercent(x)) }
     /** Enum Value:                                         116 */
-    get SKIN_PLAYER_CORPSE_()           { return this.value(116, x=>x) }
+    get SKIN_PLAYER_CORPSE()           { return this.value(116, x=>x) }
     /** Enum Value:                                         117 */
-    get SPIRIT_HEAL_()                  { return this.value(117, x=>x) }
+    get SPIRIT_HEAL()                  { return this.value(117, x=>x) }
     /** Enum Value:                                         118 */
-    get SKILL_()                        { return this.value(118, x=>new Skill(x)) }
+    get SKILL()                        { return this.value(118, x=>new Skill(x)) }
     /** Enum Value:                                         119 */
     get APPLY_AREA_AURA_PET()           { return this.value(119, x=>x) }
     /** Enum Value:                                         120 */
-    get TELEPORT_GRAVEYARD_()           { return this.value(120, x=>x) }
+    get TELEPORT_GRAVEYARD()           { return this.value(120, x=>x) }
     /** Enum Value:                                         121 */
     get NORMALIZED_WEAPON_DMG()         { return this.value(121, x=>x) }
     /** Enum Value:                                         122 */
-    get SPELL_EFFECT122_()              { return this.value(122, x=>x) }
+    get SPELL_EFFECT122()              { return this.value(122, x=>x) }
     /** Enum Value:                                         123 */
-    get SEND_TAXI_()                    { return this.value(123, x=>new SendTaxi(x)) }
+    get SEND_TAXI()                    { return this.value(123, x=>new SendTaxi(x)) }
     /** Enum Value:                                         124 */
     get PULL_TOWARDS()                  { return this.value(124, x=>new PullTowards(x)) }
     /** Enum Value:                                         125 */
     get MODIFY_THREAT_PERCENT()         { return this.value(125, x=>new ModifyThreatPercent(x)) }
     /** Enum Value:                                         126 */
-    get STEAL_BENEFICIAL_BUFF_()        { return this.value(126, x=>new StealBeneficialBuff(x)) }
+    get STEAL_BENEFICIAL_BUFF()        { return this.value(126, x=>new StealBeneficialBuff(x)) }
     /** Enum Value:                                         127 */
-    get PROSPECTING_()                  { return this.value(127, x=>x) }
+    get PROSPECTING()                  { return this.value(127, x=>x) }
     /** Enum Value:                                         128 */
     get APPLY_AREA_AURA_FRIEND()        { return this.value(128, x=>x) }
     /** Enum Value:                                         129 */
@@ -287,13 +287,13 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         130 */
     get REDIRECT_THREAT()               { return this.value(130, x=>new RedirectThreat(x)) }
     /** Enum Value:                                         131 */
-    get PLAYER_NOTIFICATION_()          { return this.value(131, x=>new PlaySound(x)) }
+    get PLAYER_NOTIFICATION()          { return this.value(131, x=>new PlaySound(x)) }
     /** Enum Value:                                         132 */
-    get PLAY_MUSIC_()                   { return this.value(132, x=>new PlayMusic(x)) }
+    get PLAY_MUSIC()                   { return this.value(132, x=>new PlayMusic(x)) }
     /** Enum Value:                                         133 */
-    get UNLEARN_SPECIALIZATION_()       { return this.value(133, x=>x) }
+    get UNLEARN_SPECIALIZATION()       { return this.value(133, x=>x) }
     /** Enum Value:                                         134 */
-    get KILL_CREDIT2_()                 { return this.value(134, x=>x) }
+    get KILL_CREDIT2()                 { return this.value(134, x=>x) }
     /** Enum Value:                                         135 */
     get CALL_PET()                      { return this.value(135, x=>x) }
     /** Enum Value:                                         136 */
@@ -301,9 +301,9 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         137 */
     get ENERGIZE_PCT()                  { return this.value(137, x=>new EnergizePercent(x)) }
     /** Enum Value:                                         138 */
-    get LEAP_BACK_()                    { return this.value(138, x=>new LeapBack(x)) }
+    get LEAP_BACK()                    { return this.value(138, x=>new LeapBack(x)) }
     /** Enum Value:                                         139 */
-    get CLEAR_QUEST_()                  { return this.value(139, x=>new ClearQuest(x)) }
+    get CLEAR_QUEST()                  { return this.value(139, x=>new ClearQuest(x)) }
     /** Enum Value:                                         140 */
     get FORCE_CAST()                    { return this.value(140, x=>new ForceCast(x)) }
     /** Enum Value:                                         141 */
@@ -315,11 +315,11 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         144 */
     get KNOCK_BACK_DEST()               { return this.value(144, x=>new KnockbackDest(x)) }
     /** Enum Value:                                         145 */
-    get PULL_TOWARDS_DEST_()            { return this.value(145, x=>new PullTowardsDest(x)) }
+    get PULL_TOWARDS_DEST()            { return this.value(145, x=>new PullTowardsDest(x)) }
     /** Enum Value:                                         146 */
     get ACTIVATE_RUNE()                 { return this.value(146, x=>new ActivateRune(x)) }
     /** Enum Value:                                         147 */
-    get QUEST_FAIL_()                   { return this.value(147, x=>new FailQuest(x)) }
+    get QUEST_FAIL()                   { return this.value(147, x=>new FailQuest(x)) }
     /** Enum Value:                                         148 */
     get TRIGGER_MISSILE_SPELL_WITH_VALUE()  { return this.value(148, x=>new TriggerMissileWithValue(x)) }
     /** Enum Value:                                         149 */
@@ -329,25 +329,25 @@ export class SpellEffectType extends EnumCellTransform<SpellEffect> {
     /** Enum Value:                                         151 */
     get TRIGGER_SPELL2()                { return this.value(151, x=>x) }
     /** Enum Value:                                         152 */
-    get SUMMON_RAF_FRIEND_()            { return this.value(152, x=>x) }
+    get SUMMON_RAF_FRIEND()            { return this.value(152, x=>x) }
     /** Enum Value:                                         153 */
-    get CREATE_TAMED_PET_()             { return this.value(153, x=>x) }
+    get CREATE_TAMED_PET()             { return this.value(153, x=>x) }
     /** Enum Value:                                         154 */
     get DISCOVER_TAXI()                 { return this.value(154, x=>x) }
     /** Enum Value:                                         155 */
-    get TITAN_GRIP_()                   { return this.value(155, x=>new CanTitanGrip(x)) }
+    get TITAN_GRIP()                   { return this.value(155, x=>new CanTitanGrip(x)) }
     /** Enum Value:                                         156 */
     get ENCHANT_ITEM_PRISMATIC()        { return this.value(156, x=>new EnchantPrismaticItem(x)) }
     /** Enum Value:                                         157 */
-    get CREATE_ITEM2_()                 { return this.value(157, x=>x) }
+    get CREATE_ITEM2()                 { return this.value(157, x=>x) }
     /** Enum Value:                                         158 */
     get MILLING()                       { return this.value(158, x=>x) }
     /** Enum Value:                                         159 */
-    get ALLOW_RENAME_PET_()             { return this.value(159, x=>x) }
+    get ALLOW_RENAME_PET()             { return this.value(159, x=>x) }
     /** Enum Value:                                         160 */
     get SPELL_EFFECT160()               { return this.value(160, x=>x) }
     /** Enum Value:                                         161 */
-    get TALENT_SPEC_COUNT_()            { return this.value(161, x=>x) }
+    get TALENT_SPEC_COUNT()            { return this.value(161, x=>x) }
     /** Enum Value:                                         162 */
     get TALENT_SPEC_SELECT()            { return this.value(162, x=>x) }
     /** Enum Value:                                         163 */

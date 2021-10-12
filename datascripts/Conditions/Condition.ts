@@ -27,9 +27,9 @@ import { ConditionPlain } from "./ConditionTypes";
 import { ComparisonTypes } from "./Settings/ComparisonType";
 import { GendersAllowNone } from "./Settings/Gender";
 import { makeQuestStateMask, QuestState } from "./Settings/QuestState";
-import { RelationType, resolveRelation } from "./Settings/RelationType";
-import { resolveStandState, StandState } from "./Settings/StandState";
-import { resolveWorldObjectTypeEnum, resolveWorldObjectTypeMask, WorldObjectTypeEnum, WorldObjectTypeMask } from "./Settings/WorldObjectType";
+import { RelationTypes } from "./Settings/RelationType";
+import { StandStates } from "./Settings/StandState";
+import { WorldObjectTypes, WorldObjectTypesMask } from "./Settings/WorldObjectType";
 
 /**
  * TODO: Add missing type transforms
@@ -255,16 +255,16 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(30, group, gameObjectId);
     }
 
-    addObjectEntry(typeId:WorldObjectTypeEnum, id: number, group = this.defElse) {
-        return this.addRow(31, group, resolveWorldObjectTypeEnum(typeId), id);
+    addObjectEntry(typeId:EnumCon<WorldObjectTypes>, id: number, group = this.defElse) {
+        return this.addRow(31, group, makeEnum(WorldObjectTypes,typeId), id);
     }
 
-    addTypeMask(typeMask: WorldObjectTypeMask, group = this.defElse) {
-        return this.addRow(32, group, resolveWorldObjectTypeMask(typeMask));
+    addTypeMask(typeMask: MaskCon<WorldObjectTypesMask>, group = this.defElse) {
+        return this.addRow(32, group, makeMask(WorldObjectTypesMask,typeMask));
     }
 
-    addRelationTo(target: number, relationType: RelationType, group = this.defElse) {
-        return this.addRow(33, group, target, resolveRelation(relationType));
+    addRelationTo(target: number, relationType: EnumCon<RelationTypes>, group = this.defElse) {
+        return this.addRow(33, group, target, makeEnum(RelationTypes,relationType));
     }
 
     addReactionTo(target: number, rankMask: MaskCon<keyof typeof ReputationRankMask>, group = this.defElse) {
@@ -295,8 +295,8 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         return this.addRow(40, group);
     }
 
-    addStandState(stateType: number, standState: StandState, group = this.defElse) {
-        return this.addRow(42, group, stateType, resolveStandState(standState));
+    addStandState(stateType: number, standState: EnumCon<StandStates>, group = this.defElse) {
+        return this.addRow(42, group, stateType, makeEnum(StandStates,standState));
     }
 
     addDailyQuestDone(questId: number, group = this.defElse) {

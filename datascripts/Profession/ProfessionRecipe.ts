@@ -88,7 +88,7 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
     protected getAllRows(): ProfessionRecipe[] {
         return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
-            .filter(x=>x.Effects.find(eff=>eff.Type.CreateItem.is()))
+            .filter(x=>x.Effects.find(eff=>eff.Type.CREATE_ITEM.is()))
             .map(x=>new ProfessionRecipe(this.owner, x))
     }
     protected isDeleted(value: ProfessionRecipe): boolean {
@@ -99,15 +99,15 @@ export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Professio
         return new ProfessionRecipe(
               this.owner
             , SpellRegistry.create(mod,id)
-                    .Attributes.isAbility.set(true)
-                    .Attributes.isTradeSpell.set(true)
-                    .Attributes.notShapeshifted.set(true)
-                    .Attributes.noThreat.set(true)
+                    .Attributes.IS_ABILITY.set(true)
+                    .Attributes.IS_TRADE_SPELL.set(true)
+                    .Attributes.NOT_SHAPESHIFTED.set(true)
+                    .Attributes.NO_THREAT.set(true)
                     .InterruptFlags.ON_MOVEMENT.set(true)
                     .InterruptFlags.ON_PUSHBACK.set(true)
                     .InterruptFlags.ON_INTERRUPT_CAST.set(true)
                     .Effects.addMod((effect)=>{
-                        effect.Type.CreateItem.set()
+                        effect.Type.CREATE_ITEM.set()
                               .ImplicitTargetA.UNIT_CASTER.set()
                     })
                     .SkillLines

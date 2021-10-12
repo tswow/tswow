@@ -29,11 +29,11 @@ export class Profession extends MainEntity<SkillLineRow> {
         this.Ranks.forEach(rank=>{
             let spell = rank.ProfessionSpell();
             if(value) {
-                spell.Attributes.isHiddenInSpellbook.set(false);
-                spell.Attributes.unk41.set(false);
+                spell.Attributes.IS_HIDDEN_IN_SPELLBOOK.set(false);
+                spell.Attributes.UNK41.set(false);
             } else {
-                spell.Attributes.unk41.set(true);
-                spell.Attributes.isHiddenInSpellbook.set(true);
+                spell.Attributes.UNK41.set(true);
+                spell.Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true);
             }
         })
         return this;
@@ -242,18 +242,18 @@ export class ProfessionRanks extends CellSystem<Profession> {
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
             .Description.set(this.owner.AsSkillLine.get().Description.objectify())
-            .Attributes.isAbility.set(true)
-            .Attributes.notShapeshifted.set(true)
-            .Attributes.castableWhileMounted.set(true)
-            .Attributes.castableOnVehicle.set(true)
+            .Attributes.IS_ABILITY.set(true)
+            .Attributes.NOT_SHAPESHIFTED.set(true)
+            .Attributes.CASTABLE_WHILE_MOUNTED.set(true)
+            .Attributes.CASTABLE_ON_VEHICLE.set(true)
             .Icon.setPath('Interface\\Icons\\Trade_BlackSmithing')
             .SchoolMask.PHYSICAL.set(true)
             .Visual.set(0)
             .Effects.addMod(eff=>{
-                eff.Type.TradeSkill.set()
+                eff.Type.TRADE_SKILL.set()
             })
             .Effects.addMod(eff=>{
-                eff.Type.Skill.set()
+                eff.Type.SKILL.set()
                     .SkillTier.set(newIndex)
                     .Skill.set(this.owner.ID)
                     .ImplicitTargetA.set(0)
@@ -288,16 +288,16 @@ export class ProfessionRanks extends CellSystem<Profession> {
         let learnSpell = std.Spells.create(modid,`${id}-learn`)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
-            .Attributes.isHiddenFromLog.set(true)
-            .Attributes.sheatheUnchanged.set(true)
+            .Attributes.IS_HIDDEN_FROM_LOG.set(true)
+            .Attributes.SHEATHE_UNCHANGED.set(true)
             .TargetType.UNIT_ALLY.set(true)
             .SchoolMask.PHYSICAL.set(true)
             .Effects.addMod(effect=>{
-                effect.Type.LearnSpell.set()
+                effect.Type.LEARN_SPELL.set()
                     .LearntSpell.set(spell.ID)
             })
             .Effects.addMod(effect=>{
-                effect.Type.SkillStep.set()
+                effect.Type.SKILL_STEP.set()
                         .Skill.set(this.owner.ID)
                         .Tier.set(newIndex)
                         .AsEffect.get()

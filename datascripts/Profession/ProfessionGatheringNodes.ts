@@ -8,7 +8,7 @@ import { Profession } from "./Profession";
 export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Profession> {
     protected getAllRows(): GameObjectChest[] {
         return this.owner.GatheringSpells.get()
-            .map(x=>x.Effects.findType(y=>y.OpenLock))
+            .map(x=>x.Effects.findType(y=>y.OPEN_LOCK))
             .map(x=>x.LockType.getRef())
             .reduce<Lock[]>((p,c)=>p.concat(c?.Locks.get()),[])
             .reduce<GameObjectChest[]>((p,c)=>p.concat(c.Chests.get()),[])

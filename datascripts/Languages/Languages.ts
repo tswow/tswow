@@ -134,7 +134,7 @@ export class LanguageSpells extends MultirowSystemCached<Spell,WoWLanguage>  {
     protected getAllRows(): Spell[] {
         return std.Spells
             .filter(x=>x.Effects.find(eff=>
-                   eff.Type.Language.is()
+                   eff.Type.LANGUAGE.is()
                 && eff.MiscValueA.get() === this.owner.ID
             ))
     }
@@ -202,13 +202,13 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
 
         const spell = std.Spells
             .create(mod,id+'-spell')
-            .Attributes.isPassive.set(true)
-            .Attributes.isHiddenInSpellbook.set(true)
+            .Attributes.IS_PASSIVE.set(true)
+            .Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true)
             .Proc.Chance.set(101)
             .DefenseType.set(1)
             .PreventionType.set(1)
             .Effects.addMod(effect=>{
-                effect.Type.Language.set()
+                effect.Type.LANGUAGE.set()
                     .Language.set(lang.ID)
                     .ChainAmplitude.set(1)
             })
