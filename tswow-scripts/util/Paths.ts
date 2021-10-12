@@ -517,6 +517,14 @@ export class InstallPaths {
         return mpath(this.modules, mod, 'datascripts');
     }
 
+    moduleSwcRc(mod: string) {
+        return mpath(this.moduleRoot(mod),'.swcrc')
+    }
+
+    moduleDataYaml(mod: string) {
+        return mpath(this.moduleData(mod),'datascripts.yaml')
+    }
+
     /**
      * Name of the main data file for a module.
      * @param mod

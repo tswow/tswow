@@ -41,3 +41,5 @@ export function install_path (...values: string[]): string {
     }
     return mpath.apply(undefined, [install_directory].concat(values));
 }
+
+export const isInteractive = process.argv.includes("--interactive")

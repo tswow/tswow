@@ -34,16 +34,16 @@ export type DatabaseType = 'world' | 'auth' | 'characters' | 'world_source';
  * Safely read a yaml setting from disk
  * @param path
  * @param defaultValue
- * @param fpath
+ * @param settingsPath
  */
-export function yaml<T>(path: string, defaultValue: T, fpath: string[]|string): T {
-    if(!Array.isArray(fpath)) {
-        fpath = [fpath];
+export function yaml<T>(path: string, defaultValue: T, settingsPath: string[]|string): T {
+    if(!Array.isArray(settingsPath)) {
+        settingsPath = [settingsPath];
     }
 
     try {
         let cur: any = jsyaml.safeLoad(wfs.readOr(path, '')) || {};
-        for (const part of fpath) {
+        for (const part of settingsPath) {
             if (cur[part] === undefined) {
                 return defaultValue;
             }

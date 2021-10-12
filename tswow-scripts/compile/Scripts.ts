@@ -14,9 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { watchTsc } from '../util/CompileTS';
 import { mpath, rpath, wfs } from '../util/FileSystem';
 import { ipaths, spaths } from '../util/Paths';
-import { getTSWatcher } from '../util/TSWatcher';
+import { wsys } from '../util/System';
+import { isInteractive } from './BuildConfig';
 
 export namespace Scripts {
     export async function build(buildLine: string, installLine: string) {
@@ -47,6 +49,10 @@ export namespace Scripts {
         wfs.write(mpath(buildLine, scripts_config_dir, 'tsconfig.json'),
             JSON.stringify(scripts_tsconfig, null, 4));
 
-        await (await getTSWatcher(scripts_config_dir)).compile(-1);
+        if(!isInteractive) {
+            wsys.execIn(scripts_config_dir,'tsc','inherit')
+        } else {
+            watchTsc(scripts_config_dir,'tswow-scripts')
+        }
     }
 }

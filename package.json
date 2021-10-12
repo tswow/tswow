@@ -17,7 +17,6 @@
     "@types/terminal-kit": "^1.28.2",
     "@types/xml2js": "^0.4.5",
     "adm-zip": "^0.4.16",
-    "chokidar": "^3.4.3",
     "clipboardy": "^2.3.0",
     "cross-spawn": "^7.0.3",
     "deasync": "^0.1.21",
@@ -56,5 +55,10 @@
   "bugs": {
     "url": "https://github.com/tswow/tswow/issues"
   },
-  "homepage": "https://github.com/tswow/tswow#readme"
+  "homepage": "https://github.com/tswow/tswow#readme",
+  "devDependencies": {
+    "@swc/cli": "^0.1.51",
+    "@swc/core": "^1.2.95",
+    "chokidar": "^3.5.2"
+  }
 }

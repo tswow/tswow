@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { watchTsc } from '../util/CompileTS';
 import { mpath, wfs } from '../util/FileSystem';
 import { spaths } from '../util/Paths';
 import { wsys } from '../util/System';
-import { getTSWatcher } from '../util/TSWatcher';
+import { isInteractive } from './BuildConfig';
 import path = require('path');
 
 export namespace Transpiler {
@@ -53,6 +54,10 @@ export namespace Transpiler {
             JSON.stringify(transpiler_tsconfig, null, 4));
 
         wsys.execIn(spaths.typeScript2Cxx,'npm i','inherit');
-        await (await getTSWatcher(mpath(transpiler_config_dir))).compile(-1);
+        if(!isInteractive) {
+            wsys.execIn(transpiler_config_dir,'tsc','inherit')
+        } else {
+            watchTsc(transpiler_config_dir,'TypeScript2Cxx')
+        }
     }
 }

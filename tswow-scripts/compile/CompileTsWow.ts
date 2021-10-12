@@ -20,13 +20,12 @@ import { BuildPaths, InstallPaths, ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
-import { compileAll, destroyAllWatchers } from '../util/TSWatcher';
 import { setContext } from '../util/TSWoWContext';
 import { SevenZipInstall } from './7Zip';
 import { ADTCreator } from './ADTCreator';
 import { BLPConverter } from './BLPConverter';
 import { Boost } from './Boost';
-import { build_path, install_path } from './BuildConfig';
+import { build_path, install_path, isInteractive } from './BuildConfig';
 import { Clean } from './Clean';
 import { CMake } from './Cmake';
 import { Config } from './Config';
@@ -82,11 +81,6 @@ async function compile(type: string, compileArgs: string[]) {
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
     if (isType('adtcreator')) { await ADTCreator.create(cmake); }
 
-    if (types.includes('release')) {
-        await destroyAllWatchers();
-        buildingScripts = false;
-    }
-
     if (!buildingScripts && isType('scripts')) {
         if(!wfs.exists(ipaths.tsc)) {
             wsys.execIn(ipaths.base, `npm i typescript`);
@@ -123,15 +117,6 @@ async function main() {
 
     build.addCommand('base', '', 'Builds only base dependencies', async(args) => await compile('', args));
 
-    commands.addCommand('errorcheck', '', '', async () => {
-        try {
-            await compileAll(-1);
-            term.success('No errors!');
-        } catch (error: any) {
-            term.error(error.message);
-        }
-    });
-
     commands.addCommand('headers','','',async()=>{
         TrinityCore.headers();
     });
@@ -139,7 +124,7 @@ async function main() {
     commands.enterLoop();
 }
 
-if(process.argv.includes("--interactive")) {
+if(isInteractive) {
     main();
 } else {
     (async function(){

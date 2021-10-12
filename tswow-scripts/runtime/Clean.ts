@@ -14,16 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { clearTscWatchers } from "../util/CompileTS";
 import { mpath, wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { destroyAllWatchers } from "../util/TSWatcher";
 import { commands } from "./Commands";
+import { Datascripts } from "./Datascripts";
 import { Datasets } from "./Dataset";
 import { Identifiers } from "./Identifiers";
-import { data_tsconfig, Modules } from "./Modules";
+import { Modules } from "./Modules";
 import { mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 
@@ -78,18 +79,40 @@ export namespace Clean {
         await mysql.startProcess();
     }
 
-    export async function cleanDataBuild(mod?: string) {
-        await destroyAllWatchers();
-        if(!mod) {
-            Modules.getModules().forEach((x)=>{
-                wfs.remove(ipaths.moduleDataBuild(x.id));
-                wfs.remove(ipaths.moduleNoEdit(x.id));
-            });
-        } else {
-            wfs.remove(ipaths.moduleDataBuild(mod));
-            wfs.remove(ipaths.moduleNoEdit(mod));
+    export async function cleanDataBuild() {
+        await clearTscWatchers();
+        term.log('Cleaning datascripts')
+        const mods = Modules.getModules()
+            .filter(x=>x.getDatascriptDeclarationType() !== 'none')
+            .sort(x=>x.id === 'tswow-stdlib' ? 1 : 0)
+        mods.forEach(x=>wfs.remove(ipaths.moduleDataBuild(x.id)))
+        const dfs = (
+              mods: Modules.Module[]
+            , cb: (mod: Modules.Module)=>void
+            , stack: string[] = []
+            , visited: string[] = []
+        ) => {
+            mods.forEach(x=>{
+                if(visited.includes(x.id)) return;
+                if(stack.includes(x.id)) {
+                    throw new Error(
+                          `Circular datascript dependency:`
+                        + `${stack.slice(stack.indexOf(x.id)).join(',')}`
+                    )
+                }
+                stack.push(x.id)
+                dfs(x.getDependencies(),cb,stack,visited);
+                cb(x)
+                stack.pop()
+                visited.push(x.id);
+            })
         }
-        await cleanTypescript();
+        // check for errors first
+        dfs(mods,()=>{})
+        dfs(mods,(mod)=>{
+            Datascripts.compileTypes(mod.id, true)
+        })
+        await Modules.refreshModules();
     }
 
     export async function cleanIds(dataset: string, useBackups: boolean) {
@@ -138,46 +161,6 @@ export namespace Clean {
         })
     }
 
-    export async function cleanTypescript() {
-        await destroyAllWatchers();
-        const modules = Modules.getModules().filter(x=>wfs.exists(ipaths.moduleData(x.id)))
-
-        let clean : string[] = [];
-        let lastErrors = 0;
-        let errors = 0;
-        let pass = 0;
-        while(true) {
-            term.log(`TypeScript Cleaning Pass ${pass++} (Expect error messages about not finding modules)`);
-            errors = 0;
-            for(const mod of modules) {
-                wfs.write(ipaths.moduleDataTsConfig(mod.id),data_tsconfig);
-                if(clean.includes(mod.id))  {
-                    continue;
-                }
-                try {
-                    wsys.execIn(ipaths.moduleData(mod.id),'tsc','inherit');
-                    mod.linkModule();
-                    clean.push(mod.id);
-                    term.log(`Successfully compiled ${mod.id}`)
-                } catch(error: any) {
-                    errors++;
-                    term.log(`Failed to compile ${mod.id}: ${error.message}`)
-                }
-            }
-
-            if(errors===0) {
-                break;
-            }
-
-            if(errors===lastErrors) {
-                throw new Error(`You have non-dependency-related errors in the following modules: [${modules.filter(x=>!clean.includes(x.id)).map(x=>x.id)}]`);
-            }
-            lastErrors = errors;
-        }
-
-        await Modules.refreshModules();
-    }
-
     export function cleanClientData(dataset: string) {
         const ds = Datasets.get(dataset);
         wfs.remove(mpath(ds.client.path,'dbc'));
@@ -218,11 +201,10 @@ export namespace Clean {
 
         Clean.command.addCommand(
               'datascripts'
-            , 'module?'
+            , ''
             , 'Removes data script build files'
-            , async (args)=>{
-
-            await cleanDataBuild(args[0]);
+            , async ()=>{
+            await cleanDataBuild();
         });
 
         Clean.command.addCommand(
@@ -249,15 +231,6 @@ export namespace Clean {
             , 'Cleans all client data for a single dataset'
             , async(args)=>{
             await cleanClientData(args[0]);
-        });
-
-        Clean.command.addCommand(
-              'typescript'
-            , ''
-            , 'Cleans all TypeScript data'
-            , async(args)=>{
-
-            await cleanTypescript();
         });
 
         Clean.command.addCommand(

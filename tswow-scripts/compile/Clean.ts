@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { clearTscWatchers } from '../util/CompileTS';
 import { wfs } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { term } from '../util/Terminal';
-import { destroyAllWatchers } from '../util/TSWatcher';
 import { build_path, install_directory } from './BuildConfig';
 
 export namespace Clean {
     export async function cleanBuild() {
-        await destroyAllWatchers();
+        await clearTscWatchers();
         term.log('Cleaning build directory...');
         wfs.remove(build_path());
         term.success('Cleaned build directory, please restart this build script');
@@ -31,7 +31,7 @@ export namespace Clean {
 
     export async function cleanInstall() {
         term.log('Cleaning install directory...');
-        await destroyAllWatchers();
+        await clearTscWatchers();
 
         if (wfs.readDir(ipaths.modules, true, 'both').length > 0) {
             let ctr = 0;

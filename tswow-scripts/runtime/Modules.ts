@@ -15,12 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { BUILD_TYPES } from '../util/BuildType';
+import { destroyTSWatcher, watchTsc } from '../util/CompileTS';
 import { mpath, wfs } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { Timer } from '../util/Timer';
-import { destroyTSWatcher, getTSWatcher } from '../util/TSWatcher';
+import { yaml } from '../util/Yaml';
 import { Addon } from './Addon';
 import { commands } from './Commands';
 import { Datasets } from './Dataset';
@@ -29,7 +30,7 @@ import { Identifiers } from './Identifiers';
 /**
  * The default package.json that will be written to 'datalib' directory of new modules.
  */
-const lib_package_json =
+export const lib_package_json =
 (name: string) => JSON.stringify({
   'name': name,
   'version': '1.0.0',
@@ -52,6 +53,7 @@ export const data_tsconfig =
     "module": "commonjs",
     "outDir": "./build",
     "rootDir": "./",
+    "emitDeclarationOnly": true,
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
@@ -85,6 +87,43 @@ const scripts_tsconfig_json =
     "include":["./","../Ids.ts","../shared"],
     "exclude":["../data","../addons"]
 }`;
+
+export const datascripts_swcrc =
+{
+    "module": {
+        "type":"commonjs"
+    },
+    "exclude":[".*.js$",".*\\.d.ts$"],
+    "jsc": {
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "decorators": true,
+            "dynamicImport": true
+        },
+        "transform":null,
+        "target":"es2016",
+        "loose":false
+    },
+    "sourceMaps": true
+}
+
+const datascripts_yaml =
+`# Allows specifying whether to automatically output type files
+# for this module, needed to reference it externally.
+# possible values:
+# - startup: will build type files on startup (used by stdlib)
+# - watch: will use a tswatcher to build declaration files incrementally
+# - none: will only build type files with "build types" command
+# default: none
+type_generation: none
+
+# Allows specifying modules whose types this module depends on.
+# Mostly this isn't necessary to fill in, but doing so might
+# fix issues with build type declarations.
+dependencies:
+    - none
+`
 
 /**
  * The example patch file that will be written to the 'datascripts' directory of new modules.
@@ -139,7 +178,7 @@ export namespace Modules {
             return files;
         }
 
-        createDataDir() {
+        createDatascripts() {
             wfs.mkDirs(ipaths.moduleData(this.id));
             if(!wfs.exists(ipaths.moduleDataMain(this.id))) {
                 wfs.write(
@@ -156,6 +195,15 @@ export namespace Modules {
                   ipaths.moduleDataTsConfig(this.id)
                 , data_tsconfig
             )
+
+            wfs.write(
+                  ipaths.moduleSwcRc(this.id)
+                , JSON.stringify(datascripts_swcrc,null,4)
+            )
+
+            if(!wfs.exists(ipaths.moduleDataYaml(this.id))) {
+                wfs.write(ipaths.moduleDataYaml(this.id),datascripts_yaml);
+            }
         }
 
         /**
@@ -207,36 +255,6 @@ export namespace Modules {
             Addon.initializeModule(this.id);
         }
 
-        setEditable(editable: boolean) {
-            if (editable) {
-                wfs.remove(ipaths.moduleNoEdit(this.id));
-                wfs.remove(ipaths.moduleData(this.id));
-            } else {
-                if (wfs.exists(ipaths.moduleData(this.id))) {
-                    try {
-                        wfs.write(
-                              ipaths.moduleDataTsConfig(this.id)
-                            , data_tsconfig);
-                        wsys.execIn(
-                              ipaths.moduleData(this.id)
-                            , `node ../../../${ipaths.tsc}`);
-                    } catch (error: any) {
-                        term.error(error.message);
-                        term.error(
-                              `Can't noedit ${this.id}`
-                            + `, there are compiler errors in it.`);
-                        return;
-                    }
-                    destroyTSWatcher(ipaths.moduleData(this.id));
-                    wfs.write(ipaths.moduleNoEdit(this.id), '');
-                }
-            }
-        }
-
-        isEditable() {
-            return !wfs.exists(ipaths.moduleNoEdit(this.id));
-        }
-
         async update() {
             if (!wfs.exists(ipaths.moduleGit(this.id))) {
                 return;
@@ -263,11 +281,6 @@ export namespace Modules {
                 return;
             }
 
-            if (!this.isEditable()) {
-                wsys.execIn(
-                      ipaths.moduleData(this.id)
-                    , `node ../../../${ipaths.tsc}`);
-            }
             wfs.remove(ipaths.moduleNodeModule(this.id));
             await refreshModules(false);
         }
@@ -279,6 +292,18 @@ export namespace Modules {
             if(!wfs.exists(ipaths.moduleDataLink(this.id))) {
                 wsys.exec(`npm i -S ${ipaths.moduleDataBuild(this.id)}`);
             }
+        }
+
+        getDependencies() {
+            return yaml<string[]>(ipaths.moduleDataYaml(this.id),[],'dependencies')
+                .filter(x=>isModule(x)
+                    && getModule(x).getDatascriptDeclarationType() !== 'none'
+                )
+                .map(x=>getModule(x))
+        }
+
+        getDatascriptDeclarationType(): 'startup'|'watch'|'none' {
+            return yaml(ipaths.moduleDataYaml(this.id),'none','type_generation')
         }
     }
 
@@ -328,7 +353,7 @@ export namespace Modules {
         let mod = getModule(name);
 
         if(addData) {
-            mod.createDataDir();
+            mod.createDatascripts();
         }
 
         if(addAssets) {
@@ -373,11 +398,25 @@ export namespace Modules {
         for (const mod of wfs.readDir(ipaths.modules, true)) {
             if (wfs.isDirectory(ipaths.moduleData(mod))) {
                 wfs.write(ipaths.moduleDataTsConfig(mod), data_tsconfig);
+                wfs.write(
+                      ipaths.moduleSwcRc(mod)
+                    , JSON.stringify(datascripts_swcrc,null,4));
 
-                if (!wfs.exists(ipaths.moduleNoEdit(mod))) {
-                    await getTSWatcher(ipaths.moduleData(mod));
+                if(!wfs.exists(ipaths.moduleDataYaml(mod))) {
+                    wfs.write(ipaths.moduleDataYaml(mod),datascripts_yaml)
                 }
-                getModule(mod).linkModule();
+
+                let bt = new Module(mod).getDatascriptDeclarationType();
+                if(bt === 'watch') {
+                    watchTsc(ipaths.moduleData(mod),mod);
+                }
+                if(bt !== 'none') {
+                    wfs.write(
+                          ipaths.moduleDataPackagePath(mod)
+                        , lib_package_json(mod)
+                    )
+                    getModule(mod).linkModule();
+                }
             }
 
             if(wfs.isDirectory(ipaths.moduleShared(mod))) {
@@ -565,22 +604,6 @@ export namespace Modules {
         });
 
         Modules.command.addCommand(
-              'editable'
-            , 'module true|false'
-            , 'Sets a data library to not compile its data'
-            , async(args) => {
-
-            switch (args[1]) {
-                case 'true':
-                    return getModule(args[0]).setEditable(true);
-                case 'false':
-                    return getModule(args[0]).setEditable(false);
-                default:
-                    term.error('This commands needs to specify true/false');
-            }
-        });
-
-        Modules.command.addCommand(
               'refresh'
             , ''
             , 'Run this is your ts watchers wont start'
@@ -602,19 +625,6 @@ export namespace Modules {
         });
 
         Modules.command.addCommand(
-              'clear'
-            , 'module'
-            , 'Clears all built data for a module'
-            , async(args) => {
-
-            const result = await destroyTSWatcher(ipaths.moduleData(args[0]));
-            wfs.remove(ipaths.moduleDataBuild(args[0]));
-            if (result) {
-                getTSWatcher(ipaths.moduleData(args[0]));
-            }
-        });
-
-        Modules.command.addCommand(
               'add-feature'
             , 'module --livescripts --datascripts --addon --assets'
             , 'Adds a new feature to a module'
@@ -623,7 +633,7 @@ export namespace Modules {
                     let mod = getModule(x);
                     if(args.includes('--snippets')) mod.createSnippets();
                     if(args.includes('--livescripts')) mod.createLivescripts();
-                    if(args.includes('--datascripts')) mod.createDataDir();
+                    if(args.includes('--datascripts')) mod.createDatascripts();
                     if(args.includes('--addon')) mod.createAddon();
                     if(args.includes('--assets')) mod.createAssets();
                 });
