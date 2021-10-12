@@ -19,13 +19,13 @@ export class HolidayType extends EnumCellTransform<HolidayBase> {
     }
 
     /** Enum Value = -1 */
-    get Yearly()       { return this.value(-1, x=>new HolidayAnnual(x.row)) }
+    get YEARLY()       { return this.value(-1, x=>new HolidayAnnual(x.row)) }
 
     /** Enum Value = 0 */
-    get Weekly()       { return this.value(0, x=>new HolidayWeekly(x.row)) }
+    get WEEKLY()       { return this.value(0, x=>new HolidayWeekly(x.row)) }
 
     /** Enum Value = 1 */
-    get DefinedDates() { return this.value(1, x=>new HolidayAnnual(x.row)) }
+    get DEFIND_DATES() { return this.value(1, x=>new HolidayAnnual(x.row)) }
 
     // todo: The hourly events don't seem to appear in the calendar,
     // so we'll enable them when we have a workflow up for

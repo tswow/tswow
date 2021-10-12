@@ -15,9 +15,9 @@ export function makeQuestStateMask(states: QuestState[]) {
 }
 
 export class QuestStateMaskReadOnly<T> extends MaskCell32ReadOnly<T> {
-  get NotTaken()   { return this.extract_bit(QuestStates.NOT_TAKEN);   }
-  get Completed()  { return this.extract_bit(QuestStates.COMPLETED);   }
-  get InProgress() { return this.extract_bit(QuestStates.IN_PROGRESS); }
-  get Failed()     { return this.extract_bit(QuestStates.FAILED);      }
-  get Rewarded()   { return this.extract_bit(QuestStates.REWARDED);    }
+  get NOT_TAKEN()   { return this.extract_bit(QuestStates.NOT_TAKEN);   }
+  get COMPLETED()  { return this.extract_bit(QuestStates.COMPLETED);   }
+  get IN_PROGRESS() { return this.extract_bit(QuestStates.IN_PROGRESS); }
+  get FAILED()     { return this.extract_bit(QuestStates.FAILED);      }
+  get REWARDED()   { return this.extract_bit(QuestStates.REWARDED);    }
 }

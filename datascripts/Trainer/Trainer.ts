@@ -51,17 +51,16 @@ export class TrainerRequirementType extends EnumCellTransform<TrainerBase> {
     private clearRow() {
         return this.owner.row.Requirement.set(0)
     }
-
-    /** Enum Value:                             0 */
-    get ClassTrainer()      {
+    get CLASS()      {
         return this.value(0,()=>new TrainerClass(this.clearRow()))
     }
-    /** Enum Value:                             1 */
-    get RaceTrainer()      {
+    /**
+     * Used for mounts. Sometimes referred to as "Mount" trainers.
+     */
+    get RACE()      {
         return this.value(1,()=>new TrainerRace(this.clearRow()))
     }
-    /** Enum Value:                             2 */
-    get SpellTrainer()      {
+    get SPELL()      {
         return this.value(2,()=>new TrainerSpellReq(this.clearRow()))
     }
 }
@@ -149,7 +148,7 @@ export class TrainerSpells extends ClassRaceMaskSystemBase<TrainerSpell,TrainerB
 
 export class TrainerBase extends TransformedEntity<trainerRow,TrainerPlain> {
     protected transformer(): EnumCellTransform<any> {
-        return this.Type;
+        return this.RequirementType;
     }
     protected default(): TrainerPlain {
         return new TrainerPlain(this.row);
@@ -157,7 +156,13 @@ export class TrainerBase extends TransformedEntity<trainerRow,TrainerPlain> {
 
     get ID() { return this.row.Id.get(); }
     get Greeting(): TrainerLoc { return new TrainerLoc(this); }
-    get Type() { return new TrainerRequirementType(this,this.row.Type); }
+    /**
+     * What type of primary requirement this trainer has. None by defualt.
+     *
+     * - Note that ClassMask/RaceMask fields can be used and
+     *   will be applied regardless of trainer type.
+     */
+    get RequirementType() { return new TrainerRequirementType(this,this.row.Type); }
     get Spells() { return new TrainerSpells(this); }
     get ClassMask() {
         return makeMaskCell32(ClassMask, this,this.row.classMask);
@@ -201,7 +206,7 @@ export class TrainerRegistryClass
     Clear(entity: TrainerPlain): void {
         entity
             .Greeting.clear()
-            .Type.SpellTrainer.set()
+            .RequirementType.SPELL.set()
             .RequiredSpell.set(0)
             .row
                 .Requirement.set(0)

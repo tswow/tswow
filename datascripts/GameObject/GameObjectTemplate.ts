@@ -673,76 +673,40 @@ export class GameObjectTrapdoor extends GameObjectTemplate {
 }
 
 export class GameObjectType extends EnumCellTransform<GameObjectTemplate> {
-    /** Enum Value = 0 */
-    get Door()                 { return this.value(GAMEOBJECT_TYPE_DOOR, x=>new GameObjectDoor(x.row)) }
-    /** Enum Value = 1 */
-    get Button()               { return this.value(GAMEOBJECT_TYPE_BUTTON, x=>new GameObjectButton(x.row)) }
-    /** Enum Value = 2 */
-    get Questgiver()           { return this.value(GAMEOBJECT_TYPE_QUESTGIVER, x=>new GameObjectQuestGiver(x.row)) }
-    /** Enum Value = 3 */
-    get Chest()                { return this.value(GAMEOBJECT_TYPE_CHEST, x=>new GameObjectChest(x.row)) }
-    /** Enum Value = 4 */
-    get Binder()               { return this.plain_value(GAMEOBJECT_TYPE_BINDER) }
-    /** Enum Value = 5 */
-    get Generic()              { return this.plain_value(GAMEOBJECT_TYPE_GENERIC) }
-    /** Enum Value = 6 */
-    get Trap()                 { return this.value(GAMEOBJECT_TYPE_TRAP, x=>new GameObjectTrap(x.row)) }
-    /** Enum Value = 7 */
-    get Chair()                { return this.value(GAMEOBJECT_TYPE_CHAIR, x=>new GameObjectChair(x.row)) }
-    /** Enum Value = 8 */
-    get SpellFocus()           { return this.value(GAMEOBJECT_TYPE_SPELL_FOCUS, x=>new GameObjectSpellFocus(x.row)) }
-    /** Enum Value = 9 */
-    get Text()                 { return this.value(GAMEOBJECT_TYPE_TEXT, x=>new GameObjectText(x.row)) }
-    /** Enum Value = 10 */
-    get Goober()               { return this.value(GAMEOBJECT_TYPE_GOOBER, x=>new GameObjectGoober(x.row)) }
-    /** Enum Value = 11 */
-    get Elevator()            { return this.value(GAMEOBJECT_TYPE_TRANSPORT, x=>new GameObjectElevator(x.row)) }
-    /** Enum Value = 12 */
-    get AreaDamage()           { return this.value(GAMEOBJECT_TYPE_AREADAMAGE, x=>new GameObjectAreaDamage(x.row)) }
-    /** Enum Value = 13 */
-    get Camera()               { return this.value(GAMEOBJECT_TYPE_CAMERA, x=>new GameObjectCamera(x.row)) }
-    /** Enum Value = 14 */
-    get MapObject()            { return this.plain_value(GAMEOBJECT_TYPE_MAP_OBJECT) }
-    /** Enum Value = 15 */
-    get Ship()                 { return this.value(GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, x=>new GameObjectShip(x.row)) }
-    /** Enum Value = 16 */
-    get DuelArbiter()          { return this.plain_value(GAMEOBJECT_TYPE_DUEL_ARBITER) }
-    /** Enum Value = 17 */
-    get Fishingnode()          { return this.plain_value(GAMEOBJECT_TYPE_FISHINGNODE) }
-    /** Enum Value = 18 */
-    get Ritual()               { return this.value(GAMEOBJECT_TYPE_RITUAL, x=>new GameObjectSummoningRitual(x.row)) }
-    /** Enum Value = 19 */
-    get Mailbox()              { return this.value(GAMEOBJECT_TYPE_MAILBOX, x=>new GameObjectMailbox(x.row)) }
-    /** Enum Value = 20 */
-    get Auctionhouse()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE) }
-    /** Enum Value = 21 */
-    get GuardPost()            { return this.value(GAMEOBJECT_TYPE_GUARDPOST, x=>new GameObjectGuardPost(x.row)) }
-    /** Enum Value = 22 */
-    get SpellCaster()          { return this.value(GAMEOBJECT_TYPE_SPELLCASTER, x=>new GameObjectSpellCaster(x.row)) }
-    /** Enum Value = 23 */
-    get MeetingStone()         { return this.value(GAMEOBJECT_TYPE_MEETINGSTONE, x=>new GameObjectMeetingStone(x.row)) }
-    /** Enum Value = 24 */
-    get FlagStand()            { return this.value(GAMEOBJECT_TYPE_FLAGSTAND, x=>new GameObjectFlagStand(x.row)) }
-    /** Enum Value = 25 */
-    get FishingHole()          { return this.value(GAMEOBJECT_TYPE_FISHINGHOLE, x=>new GameObjectFishingHole(x.row)) }
-    /** Enum Value = 26 */
-    get FlagDrop()             { return this.value(GAMEOBJECT_TYPE_FLAGDROP, x=>new GameObjectFlagDrop(x.row)) }
-    /** Enum Value = 27 */
-    get Minigame()             { return this.value(GAMEOBJECT_TYPE_MINI_GAME, x=>new GameObjectMinigame(x.row)) }
-    /** Enum Value = 28 */
-    get LotteryKiosk()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE_2) }
-    /** Enum Value = 29 */
-    get CapturePoint()         { return this.value(GAMEOBJECT_TYPE_CAPTURE_POINT, x=>new GameObjectCapturePoint(x.row)) }
-    /** Enum Value = 30 */
-    get AuraGenerator()        { return this.value(GAMEOBJECT_TYPE_AURA_GENERATOR, x=>new GameObjectAuraGenerator(x.row)) }
-    /** Enum Value = 31 */
-    get DungeonDifficulty()    { return this.value(GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, x=>new GameObjectDungeonDifficulty(x.row)) }
-    /** Enum Value = 32 */
-    get BarberChair()          { return this.value(GAMEOBJECT_TYPE_BARBER_CHAIR, x=>new GameObjectBarberChair(x.row)) }
-    /** Enum Value = 33 */
-    get DestructibleBuilding() { return this.value(GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, x=>new GameObjectDestructibleBuilding(x.row)) }
-    /** Enum Value = 34 */
-    get GuildBank()            { return this.value(GAMEOBJECT_TYPE_GUILD_BANK, x=>new GameObjectGuildBank(x.row)) }
-    /** Enum Value = 35 */
-    get Trapdoor()             { return this.value(GAMEOBJECT_TYPE_TRAPDOOR, x=>new GameObjectTrapdoor(x.row)) }
+    get DOOR()                  { return this.value(GAMEOBJECT_TYPE_DOOR, x=>new GameObjectDoor(x.row)) }
+    get BUTTON()                { return this.value(GAMEOBJECT_TYPE_BUTTON, x=>new GameObjectButton(x.row)) }
+    get QUESTGIVER()            { return this.value(GAMEOBJECT_TYPE_QUESTGIVER, x=>new GameObjectQuestGiver(x.row)) }
+    get CHEST()                 { return this.value(GAMEOBJECT_TYPE_CHEST, x=>new GameObjectChest(x.row)) }
+    get BINDER()                { return this.plain_value(GAMEOBJECT_TYPE_BINDER) }
+    get GENERIC()               { return this.plain_value(GAMEOBJECT_TYPE_GENERIC) }
+    get TRAP()                  { return this.value(GAMEOBJECT_TYPE_TRAP, x=>new GameObjectTrap(x.row)) }
+    get CHAIR()                 { return this.value(GAMEOBJECT_TYPE_CHAIR, x=>new GameObjectChair(x.row)) }
+    get SPELL_FOCUS()           { return this.value(GAMEOBJECT_TYPE_SPELL_FOCUS, x=>new GameObjectSpellFocus(x.row)) }
+    get TEXT()                  { return this.value(GAMEOBJECT_TYPE_TEXT, x=>new GameObjectText(x.row)) }
+    get GOOBER()                { return this.value(GAMEOBJECT_TYPE_GOOBER, x=>new GameObjectGoober(x.row)) }
+    get ELEVATOR()              { return this.value(GAMEOBJECT_TYPE_TRANSPORT, x=>new GameObjectElevator(x.row)) }
+    get AREA_DAMAGE()           { return this.value(GAMEOBJECT_TYPE_AREADAMAGE, x=>new GameObjectAreaDamage(x.row)) }
+    get CAMERA()                { return this.value(GAMEOBJECT_TYPE_CAMERA, x=>new GameObjectCamera(x.row)) }
+    get MAP_OBJECT()            { return this.plain_value(GAMEOBJECT_TYPE_MAP_OBJECT) }
+    get SHIP()                  { return this.value(GAMEOBJECT_TYPE_MAP_OBJ_TRANSPORT, x=>new GameObjectShip(x.row)) }
+    get DUEL_ARBITER()          { return this.plain_value(GAMEOBJECT_TYPE_DUEL_ARBITER) }
+    get FISHINGNODE()           { return this.plain_value(GAMEOBJECT_TYPE_FISHINGNODE) }
+    get RITUAL()                { return this.value(GAMEOBJECT_TYPE_RITUAL, x=>new GameObjectSummoningRitual(x.row)) }
+    get MAILBOX()               { return this.value(GAMEOBJECT_TYPE_MAILBOX, x=>new GameObjectMailbox(x.row)) }
+    get AUCTIONHOUSE()          { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE) }
+    get GUARD_POST()            { return this.value(GAMEOBJECT_TYPE_GUARDPOST, x=>new GameObjectGuardPost(x.row)) }
+    get SPELL_CASTER()          { return this.value(GAMEOBJECT_TYPE_SPELLCASTER, x=>new GameObjectSpellCaster(x.row)) }
+    get MEETING_STONE()         { return this.value(GAMEOBJECT_TYPE_MEETINGSTONE, x=>new GameObjectMeetingStone(x.row)) }
+    get FLAG_STAND()            { return this.value(GAMEOBJECT_TYPE_FLAGSTAND, x=>new GameObjectFlagStand(x.row)) }
+    get FISHING_HOLE()          { return this.value(GAMEOBJECT_TYPE_FISHINGHOLE, x=>new GameObjectFishingHole(x.row)) }
+    get FLAG_DROP()             { return this.value(GAMEOBJECT_TYPE_FLAGDROP, x=>new GameObjectFlagDrop(x.row)) }
+    get MINIGAME()              { return this.value(GAMEOBJECT_TYPE_MINI_GAME, x=>new GameObjectMinigame(x.row)) }
+    get LOTTERY_KIOSK()         { return this.plain_value(GAMEOBJECT_TYPE_DO_NOT_USE_2) }
+    get CAPTURE_POINT()         { return this.value(GAMEOBJECT_TYPE_CAPTURE_POINT, x=>new GameObjectCapturePoint(x.row)) }
+    get AURA_GENERATOR()        { return this.value(GAMEOBJECT_TYPE_AURA_GENERATOR, x=>new GameObjectAuraGenerator(x.row)) }
+    get DUNGEON_DIFFICULTY()    { return this.value(GAMEOBJECT_TYPE_DUNGEON_DIFFICULTY, x=>new GameObjectDungeonDifficulty(x.row)) }
+    get BARBER_CHAIR()          { return this.value(GAMEOBJECT_TYPE_BARBER_CHAIR, x=>new GameObjectBarberChair(x.row)) }
+    get DESTRUCTIBLE_BUILDING() { return this.value(GAMEOBJECT_TYPE_DESTRUCTIBLE_BUILDING, x=>new GameObjectDestructibleBuilding(x.row)) }
+    get GUILD_BANK()            { return this.value(GAMEOBJECT_TYPE_GUILD_BANK, x=>new GameObjectGuildBank(x.row)) }
+    get TRAPDOOR()              { return this.value(GAMEOBJECT_TYPE_TRAPDOOR, x=>new GameObjectTrapdoor(x.row)) }
 }

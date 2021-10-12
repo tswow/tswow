@@ -24,11 +24,11 @@ import { DrunkenStates } from "./Settings/DrunkenState";
 import { GendersAllowNone } from "./Settings/Gender";
 import { PetTypeEnumReadOnly } from "./Settings/PetType";
 import { QuestStateMaskReadOnly } from "./Settings/QuestState";
-import { RelationTypeEnumReadOnly } from "./Settings/RelationType";
-import { StandStateEnumReadOnly } from "./Settings/StandState";
-import { StateTypeEnumReadOnly } from "./Settings/StateType";
+import { RelationTypes } from "./Settings/RelationType";
+import { StandStates } from "./Settings/StandState";
+import { StateTypes } from "./Settings/StateType";
 import { UnitStates } from "./Settings/UnitState";
-import { WorldObjectTypeEnumReadOnly, WorldObjectTypeMaskReadOnly } from "./Settings/WorldObjectType";
+import { WorldObjectTypes, WorldObjectTypesMask } from "./Settings/WorldObjectType";
 
 export class ConditionBase extends TransformedEntityReadOnly<conditionsRow, ConditionPlain> {
     protected default(): ConditionPlain {
@@ -46,7 +46,7 @@ export class ConditionBase extends TransformedEntityReadOnly<conditionsRow, Cond
     get IsNegative() { return this.wrap(this.row.NegativeCondition); }
     get ErrorType() { return this.wrap(this.row.ErrorType); }
     get ErrorText() { return this.wrap(this.row.ErrorTextId); }
-    get Type() { return new ConditionType(this, this.row.ConditionTypeOrReference); }
+    get Type() { return new ConditionTypeCell(this, this.row.ConditionTypeOrReference); }
 
     delete() {
         this.row.delete();
@@ -127,10 +127,10 @@ export class ConditionActiveEvent extends ConditionBase {
 }
 
 export class ConditionInstanceInfoType extends EnumCellReadOnly<ConditionInstanceInfo> {
-    get Data()      { return this.value(0) }
-    get GUIDData()  { return this.value(1) }
-    get BossState() { return this.value(2) }
-    get Data64()    { return this.value(3) }
+    get DATA()       { return this.value(0) }
+    get GUID_DATA()  { return this.value(1) }
+    get BOSS_STATE() { return this.value(2) }
+    get DATA_64()    { return this.value(3) }
 }
 
 export class ConditionInstanceInfo extends ConditionBase {
@@ -224,20 +224,22 @@ export class ConditionNearGameObject extends ConditionBase {
 
 export class ConditionWorldObjectType extends ConditionBase {
     get WorldObjectType() {
-        return new WorldObjectTypeEnumReadOnly(this, this.v1);
+        return makeEnumCellReadOnly(WorldObjectTypes,this, this.v1);
     }
     get Template() { return this.wrapReadOnly(this.v2); }
 }
 
 export class ConditionTypeMask extends ConditionBase {
     get WorldObjectTypes() {
-        return new WorldObjectTypeMaskReadOnly(this, this.v1)
+        return makeMaskCell32ReadOnly(WorldObjectTypesMask, this, this.v1)
     }
 }
 
 export class ConditionRelation extends ConditionBase {
     get Target() { return this.wrapReadOnly(this.v1); }
-    get RelationType() { return new RelationTypeEnumReadOnly(this, this.v2)}
+    get RelationType() {
+        return makeEnumCellReadOnly(RelationTypes,this, this.v2)
+    }
 }
 
 export class ConditionReaction extends ConditionBase {
@@ -281,8 +283,8 @@ export class ConditionRealmAchievement extends ConditionBase {
 export class ConditionInWater extends ConditionBase {}
 
 export class ConditionStandState extends ConditionBase {
-    get StateType() { return new StateTypeEnumReadOnly(this, this.v1); }
-    get StandState() { return new StandStateEnumReadOnly(this, this.v1); }
+    get StateType() { return makeEnumCellReadOnly(StateTypes,this, this.v1); }
+    get StandState() { return makeEnumCellReadOnly(StandStates,this, this.v1); }
 }
 
 export class ConditionDailyQuestDone extends ConditionBase {
@@ -315,61 +317,62 @@ export class ConditionDifficulty extends ConditionBase {
 
 export class ConditionObjectEntryOrGUID extends ConditionBase {
     get WorldObjectType() {
-        return new WorldObjectTypeEnumReadOnly(this, this.v1);
+        return makeEnumCellReadOnly(WorldObjectTypes,this, this.v1);
     }
 
     get Template() { return this.wrapReadOnly(this.v2); }
     get GUID() { return this.wrapReadOnly(this.v3); }
 }
 
-export class ConditionType extends EnumCellTransformReadOnly<ConditionBase> {
-    get Aura()               { return this.value(1, x=>new ConditionAura(x.row))}
-    get Item()               { return this.value(2, x=>new ConditionItem(x.row))}
-    get ItemEquipped()       { return this.value(3, x=>new ConditionItemEquipped(x.row))}
-    get Zone()               { return this.value(4, x=>new ConditionZone(x.row))}
-    get ReputationRank()     { return this.value(5, x=>new ConditionReputationRank(x.row))}
-    get Team()               { return this.value(6, x=>new ConditionTeam(x.row))}
-    get Skill()              { return this.value(7, x=>new ConditionSkill(x.row))}
-    get QuestRewarded()      { return this.value(8, x=>new ConditionQuestRewarded(x.row))}
-    get QuestTaken()         { return this.value(9, x=>new ConditionQuestTaken(x.row))}
-    get DrunkenState()       { return this.value(10, x=>new ConditionDrunkenState(x.row))}
-    get WorldState()         { return this.value(11, x=>new ConditionWorldState(x.row))}
-    get ActiveEvent()        { return this.value(12, x=>new ConditionActiveEvent(x.row))}
-    get InstanceInfo()       { return this.value(13, x=>new ConditionInstanceInfo(x.row))}
-    get QuestNone()          { return this.value(14, x=>new ConditionQuestNone(x.row))}
-    get Class()              { return this.value(15, x=>new ConditionClass(x.row))}
-    get Race()               { return this.value(16, x=>new ConditionRace(x.row))}
-    get Achievement()        { return this.value(17, x=>new ConditionAchievement(x.row))}
-    get Title()              { return this.value(18, x=>new ConditionTitle(x.row))}
-    get SpawnMask()          { return this.value(19, x=>new ConditionSpawnMask(x.row))}
-    get Gender()             { return this.value(20, x=>new ConditionGender(x.row))}
-    get UnitState()          { return this.value(21, x=>new ConditionUnitState(x.row))}
-    get Map()                { return this.value(22, x=>new ConditionMap(x.row))}
-    get Area()               { return this.value(23, x=>new ConditionArea(x.row))}
-    get CreatureType()       { return this.value(24, x=>new ConditionCreatureType(x.row))}
-    get Spell()              { return this.value(25, x=>new ConditionSpell(x.row))}
-    get PhaseMask()          { return this.value(26, x=>new ConditionPhaseMask(x.row))}
-    get Level()              { return this.value(27, x=>new ConditionLevel(x.row))}
-    get QuestComplete()      { return this.value(28, x=>new ConditionQuestComplete(x.row))}
-    get NearCreature()       { return this.value(29, x=>new ConditionNearCreature(x.row))}
-    get NearGameObject()     { return this.value(30, x=>new ConditionNearGameObject(x.row))}
-    get WorldObjectType()    { return this.value(31, x=>new ConditionWorldObjectType(x.row))}
-    get TypeMask()           { return this.value(32, x=>new ConditionTypeMask(x.row))}
-    get Relation()           { return this.value(33, x=>new ConditionRelation(x.row))}
-    get Reaction()           { return this.value(34, x=>new ConditionReaction(x.row))}
-    get DistanceTo()         { return this.value(35, x=>new ConditionDistanceTo(x.row))}
-    get Alive()              { return this.value(36, x=>new ConditionAlive(x.row))}
-    get HPValue()            { return this.value(37, x=>new ConditionHPValue(x.row))}
-    get HPPercent()          { return this.value(38, x=>new ConditionHPPercent(x.row))}
-    get RealmAchievement()   { return this.value(39, x=>new ConditionRealmAchievement(x.row))}
-    get InWater()            { return this.value(40, x=>new ConditionInWater(x.row))}
-    get StandState()         { return this.value(42, x=>new ConditionStandState(x.row))}
-    get DailyQuestDone()     { return this.value(43, x=>new ConditionDailyQuestDone(x.row))}
-    get Charmed()            { return this.value(44, x=>new ConditionCharmed(x.row))}
-    get PetType()            { return this.value(45, x=>new ConditionPetType(x.row))}
-    get Taxi()               { return this.value(46, x=>new ConditionTaxi(x.row))}
-    get QuestState()         { return this.value(47, x=>new ConditionQuestStateMask(x.row))}
-    get QuestObjective()     { return this.value(48, x=>new ConditionQuestObjective(x.row))}
-    get Difficulty()         { return this.value(49, x=>new ConditionDifficulty(x.row))}
-    get ObjectEntryOrGUID()  { return this.value(51, x=>new ConditionObjectEntryOrGUID(x.row))}
+
+export class ConditionTypeCell extends EnumCellTransformReadOnly<ConditionBase> {
+    get AURA()                  { return this.value(1, x=>new ConditionAura(x.row))}
+    get ITEM()                  { return this.value(2, x=>new ConditionItem(x.row))}
+    get ITEM_EQUIPPED()         { return this.value(3, x=>new ConditionItemEquipped(x.row))}
+    get ZONE()                  { return this.value(4, x=>new ConditionZone(x.row))}
+    get REPUTATION_RANK()       { return this.value(5, x=>new ConditionReputationRank(x.row))}
+    get TEAM()                  { return this.value(6, x=>new ConditionTeam(x.row))}
+    get SKILL()                 { return this.value(7, x=>new ConditionSkill(x.row))}
+    get QUEST_REWARDED()        { return this.value(8, x=>new ConditionQuestRewarded(x.row))}
+    get QUEST_TAKEN()           { return this.value(9, x=>new ConditionQuestTaken(x.row))}
+    get DRUNKEN_STATE()         { return this.value(10, x=>new ConditionDrunkenState(x.row))}
+    get WORLD_STATE()           { return this.value(11, x=>new ConditionWorldState(x.row))}
+    get ACTIVE_EVENT()          { return this.value(12, x=>new ConditionActiveEvent(x.row))}
+    get INSTANCE_INFO()         { return this.value(13, x=>new ConditionInstanceInfo(x.row))}
+    get QUEST_NONE()            { return this.value(14, x=>new ConditionQuestNone(x.row))}
+    get CLASS()                 { return this.value(15, x=>new ConditionClass(x.row))}
+    get RACE()                  { return this.value(16, x=>new ConditionRace(x.row))}
+    get ACHIEVEMENT()           { return this.value(17, x=>new ConditionAchievement(x.row))}
+    get TITLE()                 { return this.value(18, x=>new ConditionTitle(x.row))}
+    get SPAWN_MASK()            { return this.value(19, x=>new ConditionSpawnMask(x.row))}
+    get GENDER()                { return this.value(20, x=>new ConditionGender(x.row))}
+    get UNIT_STATE()            { return this.value(21, x=>new ConditionUnitState(x.row))}
+    get MAP()                   { return this.value(22, x=>new ConditionMap(x.row))}
+    get AREA()                  { return this.value(23, x=>new ConditionArea(x.row))}
+    get CREATURE_TYPE()         { return this.value(24, x=>new ConditionCreatureType(x.row))}
+    get SPELL()                 { return this.value(25, x=>new ConditionSpell(x.row))}
+    get PHASE_MASK()            { return this.value(26, x=>new ConditionPhaseMask(x.row))}
+    get LEVEL()                 { return this.value(27, x=>new ConditionLevel(x.row))}
+    get QUEST_COMPLETE()        { return this.value(28, x=>new ConditionQuestComplete(x.row))}
+    get NEAR_CREATURE()         { return this.value(29, x=>new ConditionNearCreature(x.row))}
+    get NEAR_GAME_OBJECT()      { return this.value(30, x=>new ConditionNearGameObject(x.row))}
+    get WORLD_OBJECT_TYPE()     { return this.value(31, x=>new ConditionWorldObjectType(x.row))}
+    get TYPE_MASK()             { return this.value(32, x=>new ConditionTypeMask(x.row))}
+    get RELATION()              { return this.value(33, x=>new ConditionRelation(x.row))}
+    get REACTION()              { return this.value(34, x=>new ConditionReaction(x.row))}
+    get DISTANCE_TO()           { return this.value(35, x=>new ConditionDistanceTo(x.row))}
+    get ALIVE()                 { return this.value(36, x=>new ConditionAlive(x.row))}
+    get HP_VALUE()              { return this.value(37, x=>new ConditionHPValue(x.row))}
+    get HP_PERCENT()            { return this.value(38, x=>new ConditionHPPercent(x.row))}
+    get REALM_ACHIEVEMENT()     { return this.value(39, x=>new ConditionRealmAchievement(x.row))}
+    get IN_WATER()              { return this.value(40, x=>new ConditionInWater(x.row))}
+    get STAND_STATE()           { return this.value(42, x=>new ConditionStandState(x.row))}
+    get DAILY_QUEST_DONE()      { return this.value(43, x=>new ConditionDailyQuestDone(x.row))}
+    get CHARMED()               { return this.value(44, x=>new ConditionCharmed(x.row))}
+    get PET_TYPE()              { return this.value(45, x=>new ConditionPetType(x.row))}
+    get TAXI()                  { return this.value(46, x=>new ConditionTaxi(x.row))}
+    get QUEST_STATE()           { return this.value(47, x=>new ConditionQuestStateMask(x.row))}
+    get QUEST_OBJECTIVE()       { return this.value(48, x=>new ConditionQuestObjective(x.row))}
+    get DIFFICULTY()            { return this.value(49, x=>new ConditionDifficulty(x.row))}
+    get OBJECT_ENTRY_OR_GUID()  { return this.value(51, x=>new ConditionObjectEntryOrGUID(x.row))}
 }

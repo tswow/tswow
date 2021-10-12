@@ -12,24 +12,15 @@ export function EnchantmentTypeID(id: number) {
 }
 
 export class EnchantmentType extends EnumCellTransform<EnchantmentEffectBase> {
-    /** Enum Value = 0 */
-    get Misc()            { return this.plain_value(0) }
-    /** Enum Value = 1 */
-    get Proc()            { return this.value(1,t=>new Proc(this.r(t),t.index)) }
-    /** Enum Value = 2 */
-    get Damage()          { return this.value(2,t=>new Damage(this.r(t),t.index)) }
-    /** Enum Value = 3 */
-    get BuffEquipped()    { return this.value(3,t=>new Buff(this.r(t),t.index)) }
-    /** Enum Value = 4 */
-    get AddArmor()        { return this.value(4,t=>new Armor(this.r(t),t.index)) }
-    /** Enum Value = 5 */
-    get Stat()            { return this.value(5,t=>new Stat(this.r(t),t.index)) }
-    /** Enum Value = 6 */
-    get Totem()           { return this.value(6,t=>new Totem(this.r(t),t.index)) }
-    /** Enum Value = 7 */
-    get UseSpell()        { return this.value(7,t=>new UseSpell(this.r(t),t.index)) }
-    /** Enum Value = 8 */
-    get PrismaticSocket() { return this.value(8,t=>new PrismaticSocket(this.r(t),t.index)) }
+    get MISC()             { return this.plain_value(0) }
+    get PROC()             { return this.value(1,t=>new Proc(this.r(t),t.index)) }
+    get DAMAGE()           { return this.value(2,t=>new Damage(this.r(t),t.index)) }
+    get BUFF_EQUIPPED()    { return this.value(3,t=>new Buff(this.r(t),t.index)) }
+    get ADD_ARMOR()        { return this.value(4,t=>new Armor(this.r(t),t.index)) }
+    get STAT()             { return this.value(5,t=>new Stat(this.r(t),t.index)) }
+    get TOTEM()            { return this.value(6,t=>new Totem(this.r(t),t.index)) }
+    get USE_SPELL()        { return this.value(7,t=>new UseSpell(this.r(t),t.index)) }
+    get PRISMATIC_SOCKET() { return this.value(8,t=>new PrismaticSocket(this.r(t),t.index)) }
 
     private r(t: EnchantmentEffectBase) {
         return EnchantmentEffectBase.row(t)

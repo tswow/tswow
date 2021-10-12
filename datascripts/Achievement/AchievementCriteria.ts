@@ -44,7 +44,7 @@ export class CriteriaBase extends TransformedEntity<Achievement_CriteriaRow,Crit
         super(row);
     }
 
-    get Type() { return new CriteriaType(this, this.row.Type); }
+    get Type() { return new CriteriaTypeCell(this, this.row.Type); }
     get Achievement() {
         return AchievementRegistry.readOnlyRef(this, this.row.Achievement_Id);
     }
@@ -404,137 +404,71 @@ export class RandomDungeonPlayerCount extends CriteriaBase {
     get PlayerCount() { return this.wrap(this.row.Quantity); }
 }
 
-export class CriteriaType<T extends CriteriaBase> extends EnumCellTransform<T> {
-    /** Enum Value:                                    0 */
-    get  KillCreature()            { return this.value(0, x=>new KillCreature(x.row)) }
-    /** Enum Value:                                    1 */
-    get  WinBG()                   { return this.value(1, x=>new WinBG(x.row)) }
-    /** Enum Value:                                    5 */
-    get  ReachLevel()              { return this.value(5, x=>new ReachLevel(x.row)) }
-    /** Enum Value:                                    7 */
-    get  ReachSkillLevel()         { return this.value(7, x=>new ReachSkillLevel(x.row)) }
-    /** Enum Value:                                    8 */
-    get  CompleteAchievement()     { return this.value(8, x=>new CompleteAchievement(x.row)) }
-    /** Enum Value:                                    9 */
-    get  CompleteQuestCount()      { return this.value(9, x=>new CompleteQuestCount(x.row)) }
-    /** Enum Value:                                    10 */
-    get  CompleteQuestCountDaily() { return this.value(10, x=>new CompleteDailyQuestDay(x.row)) }
-    /** Enum Value:                                    11 */
-    get  CompleteQuestInZone()     { return this.value(11, x=>new CompleteQuestsInZone(x.row)) }
-    /** Enum Value:                                    13 */
-    get  DamageDone()              { return this.value(13, x=>new DamageDone(x.row)) }
-    /** Enum Value:                                    14 */
-    get  CompleteDailyQuest()      { return this.value(14, x=>new CompleteDailyQuest(x.row)) }
-    /** Enum Value:                                    15 */
-    get  CompleteBattleGround()    { return this.value(15, x=>new CompleteBattleGround(x.row)) }
-    /** Enum Value:                                    16 */
-    get  DeathAtMap()              { return this.value(16, x=>new DeathAtMap(x.row)) }
-    /** Enum Value:                                    18 */
-    get  DeathInDungeon()          { return this.value(18, x=>new DeathInDungeon(x.row)) }
-    /** Enum Value:                                    19 */
-    get  CompleteRaid()            { return this.value(19, x=>new CompleteRaid(x.row)) }
-    /** Enum Value:                                    20 */
-    get  KilledByCreature()        { return this.value(20, x=>new KilledByCreature(x.row)) }
-    /** Enum Value:                                    24 */
-    get  FallWithoutDying()        { return this.value(24, x=>new FallWithoutDying(x.row)) }
-    /** Enum Value:                                    26 */
-    get  DeathsFrom()              { return this.value(26, x=>new DeathsFrom(x.row)) }
-    /** Enum Value:                                    27 */
-    get  CompleteQuest()           { return this.value(27, x=>new CompleteQuest(x.row)) }
-    /** Enum Value:                                    28 */
-    get  BeSpellTarget()           { return this.value(28, x=>new BeSpellTarget1(x.row)) }
-    /** Enum Value:                                    29 */
-    get  CastSpell()               { return this.value(29, x=>new CastSpell(x.row)) }
-    /** Enum Value:                                    30 */
-    get  BgObjectiveCapture()      { return this.value(30, x=>new BgObjectiveCapture(x.row)) }
-    /** Enum Value:                                    31 */
-    get  HonorableKillAtArea()     { return this.value(31, x=>new HonorableKillAtArea(x.row)) }
-    /** Enum Value:                                    32 */
-    get  WinArena()                { return this.value(32, x=>new WinArena(x.row)) }
-    /** Enum Value:                                    33 */
-    get  PlayArena()               { return this.value(33, x=>new PlayArena(x.row)) }
-    /** Enum Value:                                    34 */
-    get  LearnSpell()              { return this.value(34, x=>new LearnSpell(x.row)) }
-    /** Enum Value:                                    36 */
-    get  OwnItem()                 { return this.value(36, x=>new OwnItem(x.row)) }
-    /** Enum Value:                                    37 */
-    get  WinRatedArena()           { return this.value(37, x=>new WinRatedArena(x.row)) }
-    /** Enum Value:                                    38 */
-    get  HighestTeamRating()       { return this.value(38, x=>new HighestTeamRating(x.row)) }
-    /** Enum Value:                                    39 */
-    get  ReachTeamRating()         { return this.value(39, x=>new ReachTeamRating(x.row)) }
-    /** Enum Value:                                    40 */
-    get  LearnSkillLevel()         { return this.value(40, x=>new LearnSkillLevel(x.row)) }
-    /** Enum Value:                                    41 */
-    get  UseItem()                 { return this.value(41, x=>new UseItem(x.row)) }
-    /** Enum Value:                                    42 */
-    get  LootItem()                { return this.value(42, x=>new LootItem(x.row)) }
-    /** Enum Value:                                    43 */
-    get  ExploreArea()             { return this.value(43, x=>new ExploreArea(x.row.Quantity.set(1))) }
-    /** Enum Value:                                    44 */
-    get  OwnRank()                 { return this.value(44, x=>new OwnRank(x.row)) }
-    /** Enum Value:                                    45 */
-    get  BuyBankSlot()             { return this.value(45, x=>new BuyBankSlot(x.row)) }
-    /** Enum Value:                                    46 */
-    get  GainReputation()          { return this.value(46, x=>new GainReputation(x.row)) }
-    /** Enum Value:                                    47 */
-    get  GainExaltedReputation()   { return this.value(47, x=>new GainExaltedReputation(x.row)) }
-    /** Enum Value:                                    48 */
-    get  VisitBarberShop()         { return this.value(48, x=>new VisitBarberShop(x.row)) }
-    /** Enum Value:                                    49 */
-    get  EquipEpicItem()           { return this.value(49, x=>new EquipEpicItem(x.row)) }
-    /** Enum Value:                                    50 */
-    get  RollNeedOnLoot()          { return this.value(50, x=>new RollNeedOnLoot(x.row)) }
-    /** Enum Value:                                    51 */
-    get  RollGreedOnLoot()         { return this.value(51, x=>new RollGreedOnLoot(x.row)) }
-    /** Enum Value:                                    52 */
-    get  HonorableKillClass()      { return this.value(52, x=>new HonorableKillClass(x.row)) }
-    /** Enum Value:                                    53 */
-    get  HonorableKillRace()       { return this.value(53, x=>new HonorableKillRace(x.row)) }
-    /** Enum Value:                                    54 */
-    get  DoEmote()                 { return this.value(54, x=>new DoEmote(x.row)) }
-    /** Enum Value:                                    55 */
-    get  HealingDone()             { return this.value(55, x=>new HealingDone(x.row)) }
-    /** Enum Value:                                    56 */
-    get  KillingBlows()            { return this.value(56, x=>new GetKillingBlows(x.row)) }
-    /** Enum Value:                                    57 */
-    get  EquipItem()               { return this.value(57, x=>new EquipItem(x.row)) }
-    /** Enum Value:                                    62 */
-    get  MoneyFromQuestReward()    { return this.value(62, x=>new MoneyFromQuestReward(x.row)) }
-    /** Enum Value:                                    67 */
-    get  LootMoney()               { return this.value(67, x=>new LootMoney(x.row)) }
-    /** Enum Value:                                    68 */
-    get  UseGameObject()           { return this.value(68, x=>new UseGameObject(x.row)) }
-    /** Enum Value:                                    69 */
-    get  BeSpellTarget2()          { return this.value(69, x=>new BeSpellTarget2(x.row)) }
-    /** Enum Value:                                    70 */
-    get  SpecialPVPKill()          { return this.value(70, x=>new SpecialPVPKill(x.row)) }
-    /** Enum Value:                                    72 */
-    get  FishInGameObject()        { return this.value(72, x=>new FishInGameObject(x.row)) }
-    /** Enum Value:                                    75 */
-    get  LearnSkillineSpells()     { return this.value(75, x=>new LearnSkillLineSpells(x.row)) }
-    /** Enum Value:                                    76 */
-    get  WinDuel()                 { return this.value(76, x=>new WinDuel(x.row)) }
-    /** Enum Value:                                    96 */
-    get  HighestPower()            { return this.value(96, x=>new HighestPower(x.row)) }
-    /** Enum Value:                                    97 */
-    get  HighestStat()             { return this.value(97, x=>new HighestStat(x.row)) }
-    /** Enum Value:                                    98 */
-    get  HighestSpellPower()       { return this.value(98, x=>new HighestSpellPower(x.row)) }
-    /** Enum Value:                                    100 */
-    get  HighestRating()           { return this.value(100, x=>new HighestRating(x.row)) }
-    /** Enum Value:                                    109 */
-    get  LootType()                { return this.value(109, x=>new LootType(x.row)) }
-    /** Enum Value:                                    110 */
-    get  CastSpell2()              { return this.value(110, x=>new CastSpell2(x.row)) }
-    /** Enum Value:                                    112 */
-    get  LearnSkillLine()          { return this.value(112, x=>new LearnSkillLine(x.row)) }
-    /** Enum Value:                                    113 */
-    get  EarnHonorableKill()       { return this.value(113, x=>new EarnHonorableKill(x.row)) }
-    /** Enum Value:                                    114 */
-    get  AcceptedSummons()         { return this.value(114, x=>new AcceptedSummons(x.row)) }
-    /** Enum Value:                                    115 */
-    get  AchievementPointsReached(){ return this.value(115, x=>new AchievementPointsReached(x.row)) }
-    /** Enum Value:                                    119 */
-    get  RandomDungeonPlayerCount(){ return this.value(119, x=>new RandomDungeonPlayerCount(x.row)) }
+export class CriteriaTypeCell<T extends CriteriaBase> extends EnumCellTransform<T> {
+    get  KILL_CREATURE()              { return this.value(0, x=>new KillCreature(x.row)) }
+    get  WIN_BG()                     { return this.value(1, x=>new WinBG(x.row)) }
+    get  REACH_LEVEL()                { return this.value(5, x=>new ReachLevel(x.row)) }
+    get  REACH_SKILL_LEVEL()          { return this.value(7, x=>new ReachSkillLevel(x.row)) }
+    get  COMPLETE_ACHIEVEMENT()       { return this.value(8, x=>new CompleteAchievement(x.row)) }
+    get  COMPLETE_QUEST_COUNT()       { return this.value(9, x=>new CompleteQuestCount(x.row)) }
+    get  COMPLETE_QUEST_COUNT_DAILY() { return this.value(10, x=>new CompleteDailyQuestDay(x.row)) }
+    get  COMPLETE_QUEST_IN_ZONE()     { return this.value(11, x=>new CompleteQuestsInZone(x.row)) }
+    get  DAMAGE_DONE()                { return this.value(13, x=>new DamageDone(x.row)) }
+    get  COMPLETE_DAILY_QUEST()       { return this.value(14, x=>new CompleteDailyQuest(x.row)) }
+    get  COMPLETE_BATTLE_GROUND()     { return this.value(15, x=>new CompleteBattleGround(x.row)) }
+    get  DEATH_AT_MAP()               { return this.value(16, x=>new DeathAtMap(x.row)) }
+    get  DEATH_IN_DUNGEON()           { return this.value(18, x=>new DeathInDungeon(x.row)) }
+    get  COMPLETE_RAID()              { return this.value(19, x=>new CompleteRaid(x.row)) }
+    get  KILLED_BY_CREATURE()         { return this.value(20, x=>new KilledByCreature(x.row)) }
+    get  FALL_WITHOUT_DYING()         { return this.value(24, x=>new FallWithoutDying(x.row)) }
+    get  DEATHS_FROM()                { return this.value(26, x=>new DeathsFrom(x.row)) }
+    get  COMPLETE_QUEST()             { return this.value(27, x=>new CompleteQuest(x.row)) }
+    get  BE_SPELL_TARGET()            { return this.value(28, x=>new BeSpellTarget1(x.row)) }
+    get  CAST_SPELL()                 { return this.value(29, x=>new CastSpell(x.row)) }
+    get  BG_OBJECTIVE_CAPTURE()       { return this.value(30, x=>new BgObjectiveCapture(x.row)) }
+    get  HONORABLE_KILL_AT_AREA()     { return this.value(31, x=>new HonorableKillAtArea(x.row)) }
+    get  WIN_ARENA()                  { return this.value(32, x=>new WinArena(x.row)) }
+    get  PLAY_ARENA()                 { return this.value(33, x=>new PlayArena(x.row)) }
+    get  LEARN_SPELL()                { return this.value(34, x=>new LearnSpell(x.row)) }
+    get  OWN_ITEM()                   { return this.value(36, x=>new OwnItem(x.row)) }
+    get  WIN_RATED_ARENA()            { return this.value(37, x=>new WinRatedArena(x.row)) }
+    get  HIGHEST_TEAM_RATING()        { return this.value(38, x=>new HighestTeamRating(x.row)) }
+    get  REACH_TEAM_RATING()          { return this.value(39, x=>new ReachTeamRating(x.row)) }
+    get  LEARN_SKILL_LEVEL()          { return this.value(40, x=>new LearnSkillLevel(x.row)) }
+    get  USE_ITEM()                   { return this.value(41, x=>new UseItem(x.row)) }
+    get  LOOT_ITEM()                  { return this.value(42, x=>new LootItem(x.row)) }
+    get  EXPLORE_AREA()               { return this.value(43, x=>new ExploreArea(x.row.Quantity.set(1))) }
+    get  OWN_RANK()                   { return this.value(44, x=>new OwnRank(x.row)) }
+    get  BUY_BANK_SLOT()              { return this.value(45, x=>new BuyBankSlot(x.row)) }
+    get  GAIN_REPUTATION()            { return this.value(46, x=>new GainReputation(x.row)) }
+    get  GAIN_EXALTED_REPUTATION()    { return this.value(47, x=>new GainExaltedReputation(x.row)) }
+    get  VISIT_BARBER_SHOP()          { return this.value(48, x=>new VisitBarberShop(x.row)) }
+    get  EQUIP_EPIC_ITEM()            { return this.value(49, x=>new EquipEpicItem(x.row)) }
+    get  ROLL_NEED_ON_LOOT()          { return this.value(50, x=>new RollNeedOnLoot(x.row)) }
+    get  ROLL_GREED_ON_LOOT()         { return this.value(51, x=>new RollGreedOnLoot(x.row)) }
+    get  HONORABLE_KILL_CLASS()       { return this.value(52, x=>new HonorableKillClass(x.row)) }
+    get  HONORABLE_KILL_RACE()        { return this.value(53, x=>new HonorableKillRace(x.row)) }
+    get  DO_EMOTE()                   { return this.value(54, x=>new DoEmote(x.row)) }
+    get  HEALING_DONE()               { return this.value(55, x=>new HealingDone(x.row)) }
+    get  KILLING_BLOWS()              { return this.value(56, x=>new GetKillingBlows(x.row)) }
+    get  EQUIP_ITEM()                 { return this.value(57, x=>new EquipItem(x.row)) }
+    get  MONEY_FROM_QUEST_REWARD()    { return this.value(62, x=>new MoneyFromQuestReward(x.row)) }
+    get  LOOT_MONEY()                 { return this.value(67, x=>new LootMoney(x.row)) }
+    get  USE_GAME_OBJECT()            { return this.value(68, x=>new UseGameObject(x.row)) }
+    get  BE_SPELL_TARGET2()           { return this.value(69, x=>new BeSpellTarget2(x.row)) }
+    get  SPECIAL_PVP_KILL()           { return this.value(70, x=>new SpecialPVPKill(x.row)) }
+    get  FISH_IN_GAME_OBJECT()        { return this.value(72, x=>new FishInGameObject(x.row)) }
+    get  LEARN_SKILLINE_SPELLS()      { return this.value(75, x=>new LearnSkillLineSpells(x.row)) }
+    get  WIN_DUEL()                   { return this.value(76, x=>new WinDuel(x.row)) }
+    get  HIGHEST_POWER()              { return this.value(96, x=>new HighestPower(x.row)) }
+    get  HIGHEST_STAT()               { return this.value(97, x=>new HighestStat(x.row)) }
+    get  HIGHEST_SPELL_POWER()        { return this.value(98, x=>new HighestSpellPower(x.row)) }
+    get  HIGHEST_RATING()             { return this.value(100, x=>new HighestRating(x.row)) }
+    get  LOOT_TYPE()                  { return this.value(109, x=>new LootType(x.row)) }
+    get  CAST_SPELL2()                { return this.value(110, x=>new CastSpell2(x.row)) }
+    get  LEARN_SKILL_LINE()           { return this.value(112, x=>new LearnSkillLine(x.row)) }
+    get  EARN_HONORABLE_KILL()        { return this.value(113, x=>new EarnHonorableKill(x.row)) }
+    get  ACCEPTED_SUMMONS()           { return this.value(114, x=>new AcceptedSummons(x.row)) }
+    get  ACHIEVEMENT_POINTS_REACHED() { return this.value(115, x=>new AchievementPointsReached(x.row)) }
+    get  RANDOM_DUNGEON_PLAYER_COUNT(){ return this.value(119, x=>new RandomDungeonPlayerCount(x.row)) }
 }

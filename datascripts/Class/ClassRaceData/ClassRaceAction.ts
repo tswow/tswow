@@ -8,9 +8,9 @@ import { SpellRegistry } from "../../Spell/Spells";
 import { ClassRegistry } from "../ClassRegistry";
 
 export class ActionEnum extends EnumCellTransform<ClassRaceActionBase> {
-    get Macro() { return this.plain_value(64)}
-    get Spell() { return this.value(0,x=>new ClassRaceActionSpell(x.row))}
-    get Item()  { return this.value(128,x=>new ClassRaceActionItem(x.row))}
+    get MACRO() { return this.plain_value(64)}
+    get SPELL() { return this.value(0,x=>new ClassRaceActionSpell(x.row))}
+    get ITEM()  { return this.value(128,x=>new ClassRaceActionItem(x.row))}
 }
 
 export class ClassRaceActionBase extends TransformedEntity<playercreateinfo_actionRow,ClassRaceActionPlain>

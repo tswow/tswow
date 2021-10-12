@@ -12,6 +12,6 @@ export function resolvePetType(type: PetType) {
 }
 
 export class PetTypeEnumReadOnly<T> extends EnumCellReadOnly<T> {
-    get SummonPet() { return this.value(PetTypes.SUMMON_PET); }
-    get HunterPet() { return this.value(PetTypes.HUNTER_PET); }
+    get SUMMON_PET() { return this.value(PetTypes.SUMMON_PET); }
+    get HUNTER_PET() { return this.value(PetTypes.HUNTER_PET); }
 }

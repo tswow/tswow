@@ -97,11 +97,9 @@ export class GameEventState extends EnumCell<GameEvent> {
         return super.set(value);
     }
 
-    /** Enum Value = 0 */
-    get Normal() { return this.value(0); }
+    get NORMAL() { return this.value(0); }
 
-    /** Enum Value = 1 */
-    get WorldEvent() {
+    get WORLD_EVENT() {
         return this.value(1,()=>{
             this.owner.row.start_time.set(null as any);
             this.owner.row.end_time.set(null as any);
@@ -110,8 +108,7 @@ export class GameEventState extends EnumCell<GameEvent> {
         });
     }
 
-    /** Enum Value = 5 */
-    get Internal() { return this.value(5); }
+    get INTERNAL() { return this.value(5); }
 }
 
 export class GameEvent extends MainEntity<game_eventRow> {
@@ -186,7 +183,7 @@ export class GameEventRegistryClass
     Clear(r: GameEvent): void {
         r.Duration.set(1,'minutes')
          .Occurrence.setDaily(24,0)
-         .Type.Normal.set()
+         .Type.NORMAL.set()
     }
     protected FindByID(id: number): game_eventRow {
         return SQL.game_event.find({eventEntry:id})

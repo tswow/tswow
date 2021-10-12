@@ -88,14 +88,14 @@ export class LockIndexType extends EnumCellTransform<LockIndexBase> {
         return LockIndexBase.container(this.owner);
     }
 
-    get Item() {
+    get ITEM() {
         return this.value(
               1
             , t=>new LockIndexItem(this.container,t.index)
         )
     }
 
-    get LockType() {
+    get LOCK_TYPE() {
         return this.value(
               2
             , t=>new LockIndexLockType(this.container,t.index)
@@ -146,67 +146,67 @@ export abstract class LockGameObject<T extends GameObjectTemplate> extends Multi
 
 export class LockChests extends LockGameObject<GameObjectChest> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectChest>] {
-        return ['Data0',GAMEOBJECT_TYPE_CHEST,x=>x.Chest]
+        return ['Data0',GAMEOBJECT_TYPE_CHEST,x=>x.CHEST]
     }
 }
 
 export class LockAreaDamages extends LockGameObject<GameObjectAreaDamage> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectAreaDamage>] {
-        return ['Data0',GAMEOBJECT_TYPE_AREADAMAGE,x=>x.AreaDamage]
+        return ['Data0',GAMEOBJECT_TYPE_AREADAMAGE,x=>x.AREA_DAMAGE]
     }
 }
 
 export class LockButtons extends LockGameObject<GameObjectButton> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectButton>] {
-        return ['Data1',GAMEOBJECT_TYPE_BUTTON,x=>x.Button]
+        return ['Data1',GAMEOBJECT_TYPE_BUTTON,x=>x.BUTTON]
     }
 }
 
 export class LockCameras extends LockGameObject<GameObjectCamera> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectCamera>] {
-        return ['Data0',GAMEOBJECT_TYPE_CAMERA,x=>x.Camera]
+        return ['Data0',GAMEOBJECT_TYPE_CAMERA,x=>x.CAMERA]
     }
 }
 
 export class LockDoors extends LockGameObject<GameObjectDoor> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectDoor>] {
-        return ['Data0',GAMEOBJECT_TYPE_DOOR,x=>x.Door]
+        return ['Data0',GAMEOBJECT_TYPE_DOOR,x=>x.DOOR]
     }
 }
 
 export class LockFishingHoles extends LockGameObject<GameObjectFishingHole> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectFishingHole>] {
-        return ['Data4', GAMEOBJECT_TYPE_FISHINGHOLE,x=>x.FishingHole]
+        return ['Data4', GAMEOBJECT_TYPE_FISHINGHOLE,x=>x.FISHING_HOLE]
     }
 }
 
 export class LockFlagDrops extends LockGameObject<GameObjectFlagDrop> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectFlagDrop>] {
-        return ['Data0',GAMEOBJECT_TYPE_FLAGDROP,x=>x.FlagDrop]
+        return ['Data0',GAMEOBJECT_TYPE_FLAGDROP,x=>x.FLAG_DROP]
     }
 }
 
 export class LockFlagStands extends LockGameObject<GameObjectFlagStand> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectFlagStand>] {
-        return ['Data0',GAMEOBJECT_TYPE_FLAGSTAND,x=>x.FlagStand]
+        return ['Data0',GAMEOBJECT_TYPE_FLAGSTAND,x=>x.FLAG_STAND]
     }
 }
 
 export class LockGoobers extends LockGameObject<GameObjectGoober> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectGoober>] {
-        return ['Data0',GAMEOBJECT_TYPE_GOOBER,x=>x.Goober]
+        return ['Data0',GAMEOBJECT_TYPE_GOOBER,x=>x.GOOBER]
     }
 }
 
 export class LockQuestGivers extends LockGameObject<GameObjectQuestGiver> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectQuestGiver>] {
-        return ['Data0',GAMEOBJECT_TYPE_QUESTGIVER,x=>x.Questgiver]
+        return ['Data0',GAMEOBJECT_TYPE_QUESTGIVER,x=>x.QUESTGIVER]
     }
 }
 
 export class LockTraps extends LockGameObject<GameObjectTrap> {
     protected values(): [QueryKey, number, (gobj: GameObjectType) => EnumValueTransform<GameObjectTemplate, GameObjectTrap>] {
-        return ['Data0',GAMEOBJECT_TYPE_TRAP,x=>x.Trap]
+        return ['Data0',GAMEOBJECT_TYPE_TRAP,x=>x.TRAP]
     }
 }
 
@@ -224,15 +224,15 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
 
     isOfType(lockType: number) {
         return this.find(x=>
-               x.Type.LockType.is()
-            && x.Type.LockType.as().LockType.get() === lockType
+               x.Type.LOCK_TYPE.is()
+            && x.Type.LOCK_TYPE.as().LockType.get() === lockType
         )
     }
 
     requiresItem(item: number) {
         return this.find(x=>
-               x.Type.Item.is()
-            && x.Type.Item.as().Item.get() === item
+               x.Type.ITEM.is()
+            && x.Type.ITEM.as().Item.get() === item
         ) !== undefined
     }
 

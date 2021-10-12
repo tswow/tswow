@@ -15,27 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { EnumCellReadOnly } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32ReadOnly } from "wotlkdata/cell/cells/MaskCell";
-
-export enum WorldObjectTypesEnum {
+export enum WorldObjectTypes {
       UNIT          = 3
     , PLAYER        = 4
     , GAMEOBJECT    = 5
     , PLAYER_CORPSE = 7
-}
-
-export type WorldObjectTypeEnum = keyof typeof WorldObjectTypesEnum
-
-export function resolveWorldObjectTypeEnum(type: WorldObjectTypeEnum) {
-    return WorldObjectTypesEnum[type];
-}
-
-export class WorldObjectTypeEnumReadOnly<T> extends EnumCellReadOnly<T> {
-    get Unit()         { return this.value(WorldObjectTypesEnum.UNIT); }
-    get Player()       { return this.value(WorldObjectTypesEnum.PLAYER); }
-    get GameObject()   { return this.value(WorldObjectTypesEnum.GAMEOBJECT); }
-    get PlayerCorpse() { return this.value(WorldObjectTypesEnum.PLAYER_CORPSE); }
 }
 
 export enum WorldObjectTypesMask {
@@ -43,17 +27,4 @@ export enum WorldObjectTypesMask {
     , PLAYER        = 0x10
     , GAMEOBJECT    = 0x20
     , PLAYER_CORPSE = 0x80
-}
-
-export type WorldObjectTypeMask = keyof typeof WorldObjectTypesMask
-
-export function resolveWorldObjectTypeMask(type: WorldObjectTypeMask) {
-    return WorldObjectTypesMask[type];
-}
-
-export class WorldObjectTypeMaskReadOnly<T> extends MaskCell32ReadOnly<T> {
-    get Unit()         { return this.extract_bit(WorldObjectTypesMask.UNIT); }
-    get Player()       { return this.extract_bit(WorldObjectTypesMask.PLAYER); }
-    get GameObject()   { return this.extract_bit(WorldObjectTypesMask.GAMEOBJECT); }
-    get PlayerCorpse() { return this.extract_bit(WorldObjectTypesMask.PLAYER_CORPSE); }
 }

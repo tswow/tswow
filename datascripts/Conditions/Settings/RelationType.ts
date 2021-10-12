@@ -1,4 +1,3 @@
-import { EnumCellReadOnly } from "wotlkdata/cell/cells/EnumCell";
 
 /*
  * This file is part of tswow (https://github.com/tswow)
@@ -22,18 +21,4 @@ export enum RelationTypes {
     , OWNED_BY     = 2
     , PASSANGER_OF = 3
     , CREATED_BY   = 4
-}
-
-export type RelationType = keyof typeof RelationTypes;
-
-export function resolveRelation(type: RelationType) {
-    return RelationTypes[type];
-}
-
-export class RelationTypeEnumReadOnly<T> extends EnumCellReadOnly<T> {
-    get Self()        { return this.value(RelationTypes.SELF); }
-    get Party()       { return this.value(RelationTypes.PARTY); }
-    get OwnedBy()     { return this.value(RelationTypes.OWNED_BY); }
-    get PassangerOf() { return this.value(RelationTypes.PASSANGER_OF); }
-    get CreatedBy()   { return this.value(RelationTypes.CREATED_BY); }
 }

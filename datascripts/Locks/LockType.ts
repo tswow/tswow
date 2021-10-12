@@ -50,7 +50,7 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
     add(requiredSkill: number, requiredItems: number[] = []) {
         let locks = LockRegistry.create()
             .addMod(i=>i
-                .Type.LockType.set()
+                .Type.LOCK_TYPE.set()
                 .LockType.set(this.owner.ID)
                 .RequiredSkill.set(requiredSkill)
             )
@@ -61,7 +61,7 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
             )
         }
         requiredItems.forEach(x=>locks.addGet()
-            .Type.Item.set()
+            .Type.ITEM.set()
             .Item.set(x)
         )
         return locks;
