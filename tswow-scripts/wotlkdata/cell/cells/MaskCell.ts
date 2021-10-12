@@ -4,7 +4,6 @@ import { Cell } from "./Cell";
 import { CellReadOnly } from "./CellReadOnly";
 import { CellRoot } from "./CellRoot";
 import { makePrototype } from "./PrototypeRegistry";
-import { WriteType } from "./WriteType";
 
 export type Bit = boolean | 1 | 0
 
@@ -613,10 +612,10 @@ export function makeMask(obj: any, value: MaskCon<any>): number {
     throw new Error(`Unknown MaskCell value: ${value}`)
 }
 
-export abstract class MaskCell32T<T,Str> extends MaskCell32<T> {
-    protected abstract obj(): any;
+export class MaskCell32T<T,Str> extends MaskCell32<T> {
+    protected obj: any;
     protected mm(value: MaskCon<Str>) {
-        return makeMask(this.obj(),value);
+        return makeMask(this.obj,value);
     }
 
     set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
@@ -648,22 +647,35 @@ interface MaskValueWrite<T> extends MaskValueRead<T> {
     set(val: Bit): T
 }
 
-type MaskCellWrite<T,Type> = {
+export type MaskCellWrite<T,Type> = {
     [Property in keyof Type]: MaskValueWrite<T>;
 } & MaskCell32T<T,keyof Type>
 
-type MaskCellRead<T,Type> = {
+export type MaskCellRead<T,Type> = {
     [Property in keyof Type]: MaskValueRead<T>;
 } & Omit<MaskCell32T<T,keyof Type>,'set'>
 
-export function makeMaskCell32<T,Enum,WT extends WriteType>(obj: Enum, _: WT, owner: T, cell: Cell<number,any>) {
-    return makePrototype('mask',MaskCell32.prototype,obj,{owner,cell},(p,k,v)=>{
+export function makeMaskCell32<T,Enum>(obj: Enum, owner: T, cell: Cell<number,any>, signed = false) {
+    return makePrototype('mask',MaskCell32.prototype,obj,{owner,cell,signed},(p,k,v)=>{
         Object.defineProperty(p,k,{
             get: function() {
                 return this.mask(v);
             }
         })
-    }) as WT extends 'WRITE'
-        ? MaskCellWrite<T,Enum>
-        : MaskCellRead<T,Enum>
+    }) as MaskCellWrite<T,Enum>
+}
+
+export function makeMaskCell32ReadOnly<T,Enum>(obj: Enum, owner: T, cell: CellReadOnly<number,any>, signed = false) {
+    return makePrototype('mask',MaskCell32.prototype,obj,{owner,cell,signed},(p,k,v)=>{
+        Object.defineProperty(p,k,{
+            get: function() {
+                return this.mask(v);
+            }
+        })
+    }) as MaskCellRead<T,Enum>
+}
+
+export function getBits<T>(obj: any, mask: MaskCon<T>, signed = false) {
+    let numMask = makeMask(obj,mask);
+    return MaskCell32Impl.bits_from(numMask,signed);
 }

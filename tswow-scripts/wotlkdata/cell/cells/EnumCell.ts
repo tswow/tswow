@@ -3,7 +3,6 @@ import { CellSystemTop } from "../systems/CellSystem";
 import { Cell, CellWrapper } from "./Cell";
 import { CellReadOnly, CellWrapperReadOnly } from "./CellReadOnly";
 import { makePrototype } from "./PrototypeRegistry";
-import { WriteType } from "./WriteType";
 
 export class EnumCellReadOnly<T> extends CellWrapperReadOnly<number,T> {
     protected value(index: number): EnumValueReadOnly<T> {
@@ -243,7 +242,7 @@ export abstract class TransformedClassReadOnly<T> extends CellSystemTop {
     }
 }
 
-export type EnumCon<T> = T|number
+export type EnumCon<T> = T | number
 
 export class EnumCellT<T,V> extends EnumCell<T> {
     protected obj: any;
@@ -288,14 +287,26 @@ export type EnumCellRead<T,Type> = {
     [Property in keyof Omit<Type,'obj'>]: EnumValueRead<T>;
 } & Omit<EnumCellT<T,keyof Type>,'set'>
 
-export function makeEnumCell<T,Enum,WT extends WriteType>(obj: Enum, _: WT, owner: T, cell: Cell<number,any>) {
+export function makeEnumCell<T,Enum>(obj: Enum, owner: T, cell: Cell<number,any>) {
     return makePrototype('enum',EnumCell.prototype,obj,{owner,cell},(p,k,v)=>{
         Object.defineProperty(p,k,{
             get: function() {
                 return this.value(v);
             }
         })
-    }) as WT extends 'WRITE'
-        ? EnumCellWrite<T,Enum>
-        : EnumCellRead<T,Enum>
+    }) as EnumCellWrite<T,Enum>
+}
+
+export function makeEnumCellReadOnly<T,Enum>(obj: Enum, owner: T, cell: CellReadOnly<number,any>) {
+    return makePrototype('enum',EnumCell.prototype,obj,{owner,cell},(p,k,v)=>{
+        Object.defineProperty(p,k,{
+            get: function() {
+                return this.value(v);
+            }
+        })
+    }) as EnumCellRead<T,Enum>
+}
+
+export function makeEnum<T>(obj: any, con: EnumCon<T>): number {
+    return typeof(con) ==='number' ? con : (obj[con] as any as number);
 }
