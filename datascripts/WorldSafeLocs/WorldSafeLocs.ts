@@ -1,5 +1,6 @@
 import { DBC, SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/cell/cells/Cell";
+import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
 import { WorldSafelocsQuery, WorldSafelocsRow } from "wotlkdata/dbc/types/WorldSafelocs";
 import { Table } from "wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
@@ -77,12 +78,13 @@ export class WorldSafeLocsRegistryClass
         return this.create().Position.set(obj);
     }
 
-    createGraveyard(area: number|number[], faction: Team, obj: {map: number, x: number, y: number, z: number, o?: any}) {
+    createGraveyard(area: number|number[], faction: EnumCon<Team>|'BOTH', obj: {map: number, x: number, y: number, z: number, o?: any}) {
         let wsl = this.create().Position.set(obj);
         if(typeof(area) === 'number') area = [area]
         area.forEach(x=>{
             SQL.graveyard_zone.add(wsl.ID,x)
                 .Comment.set('tswow')
+                .Faction.set(faction === 'BOTH' ? 0 : makeEnum(Team,faction))
         })
     }
 }
