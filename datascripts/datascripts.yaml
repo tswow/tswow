@@ -1,0 +1,8 @@
+# Allows specifying whether to automatically output type files
+# for this module, needed to reference it externally.
+# possible values:
+# - startup: will build type files on startup (used by stdlib)
+# - watch: will use a tswatcher to build declaration files incrementally
+# - none: will only build type files with "build types" command
+# default: none
+type_generation: watch
