@@ -11,7 +11,7 @@
       "dynamicImport": false
     },
     "transform":null,
-    "target":"es5",
+    "target":"es2016",
     "loose":false
   },
   "sourceMaps": true
