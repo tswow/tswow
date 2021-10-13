@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "TSDatabase.h"
 #include "TSNull.h"
 #include "TSLoot.h"
 #include "TSArray.h"
