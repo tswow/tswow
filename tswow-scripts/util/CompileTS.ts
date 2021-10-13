@@ -23,8 +23,8 @@ import { term, termc } from './Terminal';
 // tsc
 const tscWatchers: {[key: string]: Process} = {}
 export function watchTsc(dir: string, name: string) {
-    console.log(`Starting TSC watcher in ${dir}`)
     if(tscWatchers[dir]) return;
+    console.log(`Starting TSC watcher in ${dir}`)
     let watcher = tscWatchers[dir] = new Process()
     watcher
         .showOutput(false)
