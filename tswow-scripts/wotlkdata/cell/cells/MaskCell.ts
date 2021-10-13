@@ -307,7 +307,7 @@ const MaskCell32Impl = {
 
     bits_from(mask: number, signed: boolean = false) {
         let bits: number[] = []
-        for(let i=0;i<mask;++i) {
+        for(let i=0;i<32;++i) {
             if((signed && mask === -1) || (mask&(1<<i))) {
                 bits.push(i)
             }
