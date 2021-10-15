@@ -190,9 +190,9 @@ export namespace commands {
             const args = splitArgs(com);
             try {
                 await rootCommand.handle(args);
-            } catch (error) {
+            } catch (error: any) {
                 if (error && error.message) {
-                    if (trace) {
+                    if (commands.trace) {
                         term.error(error, error.stack);
                     } else {
                         term.error(error);
