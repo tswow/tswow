@@ -51,7 +51,7 @@ export class StaticIDGenerator extends IDGeneratorBase {
     }
 
     dynamicId() {
-        return GetTempId(this.startId);
+        return GetTempId(this.table, this.startId);
     }
 }
 
