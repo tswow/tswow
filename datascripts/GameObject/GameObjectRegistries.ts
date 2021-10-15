@@ -518,4 +518,5 @@ export const GORegistry = {
     , GuildBanks: new GOGuildBankRegistryClass()
     , Trapdoors: new GOTrapdoorRegistryClass()
     , Plain: new GOPlainRegistryClsas()
+    , Generic: new GOPlainRegistryClsas()
 }
