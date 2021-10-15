@@ -23,7 +23,6 @@ const file = './testids.txt';
 
 class IdPublic extends IdPrivate {
     static flushMemory = IdPrivate.flushMemory;
-    static idAllocator = IdPrivate.idAllocator;
     static getMappings = IdPrivate.getMappings;
     static readFile = () => IdPrivate.readFile(file);
     static writeFile = () => IdPrivate.writeFile(file);
@@ -51,7 +50,7 @@ function SimpleRange(name: string, range: number, startid: number = 10000) {
 }
 
 function TempID(startid: number = 10000) {
-    return GetTempId(startid);
+    return GetTempId('item_template',startid);
 }
 
 describe('Ids', function() {

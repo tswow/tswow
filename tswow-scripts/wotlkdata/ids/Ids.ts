@@ -63,7 +63,11 @@ class Table {
 }
 
 let mappings: {[table: string]: Table} = {};
-let allocator: Allocator = new Allocator();
+let allocators: {[table: string]: Allocator} = {}
+
+function getAllocator(table: string) {
+    return allocators[table] || (allocators[table] = new Allocator());
+}
 
 function fullName(mod: string, name: string) {
     return `${mod}:${name}`;
@@ -80,7 +84,7 @@ export function iterateIds(callback: (range: IdRange) => any) {
 export class IdPrivate {
     protected static flushMemory() {
         mappings = {};
-        allocator = new Allocator();
+        allocators = {};
     }
 
     protected static async writeFile(filename: string) {
@@ -127,16 +131,12 @@ export class IdPrivate {
                     if (map === undefined) { map = mappings[table] = new Table(); }
                     const [mod, iname] = name.split(':');
                     const range = map.entries[name] = new IdRange(false, table, mod, iname, parseInt(low, 10), parseInt(curstr, 10));
-                    allocator.add(range.low, (range.high - range.low) + 1);
+                    getAllocator(table).add(range.low, (range.high - range.low) + 1);
                     stage = -1;
             }
             ++stage;
             curstr = '';
         }
-    }
-
-    protected static idAllocator() {
-        return allocator;
     }
 
     protected static getMappings() {
@@ -158,12 +158,12 @@ export function GetIdRange(table: string, mod: string, name: string, size: numbe
     }
 
     if (forward.entries[fullname]) { return forward.entries[fullname]; }
-    const id = allocator.add(startid, size);
+    const id = getAllocator(table).add(startid, size);
     const entry = new IdRange(true, table, mod, name, id, id + size - 1);
     forward.entries[fullname] = entry;
     return entry;
 }
 
-export function GetTempId(startId: number) {
-    return allocator.add(startId,1);
+export function GetTempId(table: string, startId: number) {
+    return getAllocator(table).add(startId,1);
 }
