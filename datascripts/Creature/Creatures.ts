@@ -98,7 +98,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
         return SQL.creature
     }
     protected IDs(): StaticIDGenerator {
-        return Ids.creature_template
+        return Ids.creature
     }
     Clear(r: CreatureInstance): void {
         r.Position.set({map:0,x:0,y:0,z:0,o:0})
