@@ -74,9 +74,9 @@ export class UnitFlags extends MaskCell<CreatureTemplate> {
     get UNK6() { return this.bit(6); }
     get NON_ATTACKABLE1() { return this.bit(7); }
     /** Disables combat/assistance with Players */
-    get IMMUNE_TO_P_C() { return this.bit(8); }
+    get IMMUNE_TO_PC() { return this.bit(8); }
     /** Disables combat/assistance with NPCs */
-    get IMMUNE_TO_N_P_C() { return this.bit(9); }
+    get IMMUNE_TO_NPC() { return this.bit(9); }
     /** Show loot animation */
     get LOOTING() { return this.bit(10); }
     get PET_IN_COMBAT() { return this.bit(11); }
