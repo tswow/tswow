@@ -6,23 +6,45 @@
 #include <map>
 
 namespace {
-	std::map<read_msg_ptr, MessageRead> readMsgs;
 	std::map<write_msg_ptr, MessageWrite> writeMsgs;
 
-	read_msg_ptr curRead = 0;
 	write_msg_ptr curWrite = 0;
+	size_t fragmentSize = 0;
+	MessageRead curRead;
+}
+
+void InitializeMessageStore(size_t fragmentSizeIn)
+{
+	fragmentSize = fragmentSizeIn;
+	curWrite = 0;
+	writeMsgs.clear();
 }
 
 write_msg_ptr MakeWriteMessage(uint32_t size = 0)
 {
-	write_msg_ptr ptr = curWrite++;
-	writeMsgs[curWrite] = MessageWrite(size);
+	write_msg_ptr ptr = ++curWrite;
+	writeMsgs[curWrite] = MessageWrite(fragmentSize,size);
 	return ptr;
 }
 
-void DestroyReadMessage(read_msg_ptr ptr)
+void StageRead(MessageRead read)
 {
-	readMsgs.erase(ptr);
+	curRead = read;
+}
+
+MessageRead* GetRead()
+{
+	return &curRead;
+}
+
+void UnstageRead()
+{
+	curRead.Destroy();
+}
+
+MessageWrite* GetLastWrite()
+{
+	return &writeMsgs[curWrite];
 }
 
 void DestroyWriteMessage(write_msg_ptr ptr)
@@ -33,9 +55,4 @@ void DestroyWriteMessage(write_msg_ptr ptr)
 MessageWrite* GetWriteMessage(write_msg_ptr ptr)
 {
 	return &writeMsgs[ptr];
-}
-
-MessageRead* GetReadMessage(read_msg_ptr ptr)
-{
-	return &readMsgs[ptr];
 }

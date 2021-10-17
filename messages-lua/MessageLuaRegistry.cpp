@@ -27,70 +27,64 @@ int MakeWriteMessageL(lua_State* L)
 // todo: accept custom default value
 #define read_num(type,fn)                         \
 	lua_pushnumber(L,lua_Number(                    \
-		GetReadMessage(size_t(luaL_checknumber(L,1))) \
+		GetRead()                                     \
 			->##fn##())                                 \
 	);                                              \
 	return 1
 
 extern "C" {
-	int DestroyReadMessageL(lua_State* L)
-	{
-		DestroyReadMessage(size_t(luaL_checknumber(L, 1)));
-		return 0;
-	}
-
 	int DestroyWriteMessageL(lua_State* L)
 	{
 		DestroyWriteMessage(size_t(luaL_checknumber(L, 1)));
 		return 0;
 	}
 
-	int WriteUInt8(lua_State* L) { write_num(uint8_t, WriteUInt8); }
-	int WriteInt8(lua_State* L) { write_num(int8_t, WriteInt8); }
+	int _WriteUInt8(lua_State* L) { write_num(uint8_t, WriteUInt8); }
+	int _WriteInt8(lua_State* L) { write_num(int8_t, WriteInt8); }
 
-	int WriteUInt16(lua_State* L) { write_num(uint16_t, WriteUInt16); }
-	int WriteInt16(lua_State* L) { write_num(int16_t, WriteInt16); }
+	int _WriteUInt16(lua_State* L) { write_num(uint16_t, WriteUInt16); }
+	int _WriteInt16(lua_State* L) { write_num(int16_t, WriteInt16); }
 
-	int WriteUInt32(lua_State* L) { write_num(uint32_t, WriteUInt32); }
-	int WriteInt32(lua_State* L) { write_num(int32_t, WriteInt32); }
+	int _WriteUInt32(lua_State* L) { write_num(uint32_t, WriteUInt32); }
+	int _WriteInt32(lua_State* L) { write_num(int32_t, WriteInt32); }
 
-	int WriteUInt64(lua_State* L) { write_num(uint64_t, WriteUInt64); }
-	int WriteInt64(lua_State* L) { write_num(int64_t, WriteInt64); }
+	int _WriteUInt64(lua_State* L) { write_num(uint64_t, WriteUInt64); }
+	int _WriteInt64(lua_State* L) { write_num(int64_t, WriteInt64); }
 
-	int WriteFloat(lua_State* L) { write_num(float, WriteFloat); }
-	int WriteDouble(lua_State* L) { write_num(double, WriteDouble); }
+	int _WriteFloat(lua_State* L) { write_num(float, WriteFloat); }
+	int _WriteDouble(lua_State* L) { write_num(double, WriteDouble); }
 
-	int WriteString(lua_State* L)
+	int _WriteString(lua_State* L)
 	{
 		GetWriteMessage(size_t(luaL_checknumber(L, 1)))
 			->WriteString(luaL_checkstring(L, 2));
 		return 0;
 	}
-	int WriteStringNullTerm(lua_State* L)
+	int _WriteStringNullTerm(lua_State* L)
 	{
 		GetWriteMessage(size_t(luaL_checknumber(L, 1)))
 			->WriteStringNullTerm(luaL_checkstring(L, 2));
 		return 0;
 	}
 
-	int ReadUInt8(lua_State* L) { read_num(uint8_t, ReadUInt8); }
-	int ReadInt8(lua_State* L) { read_num(int8_t, ReadInt8); };
+	int _ReadUInt8(lua_State* L) { read_num(uint8_t, ReadUInt8); }
+	int _ReadInt8(lua_State* L) { read_num(int8_t, ReadInt8); };
 
-	int ReadUInt16(lua_State* L) { read_num(uint16_t, ReadUInt16); };
-	int ReadInt16(lua_State* L) { read_num(int16_t, ReadInt16); };
+	int _ReadUInt16(lua_State* L) { read_num(uint16_t, ReadUInt16); };
+	int _ReadInt16(lua_State* L) { read_num(int16_t, ReadInt16); };
 
-	int ReadUInt32(lua_State* L) { read_num(uint32_t, ReadUInt32); };
-	int ReadInt32(lua_State* L) { read_num(int32_t, ReadInt32); };
+	int _ReadUInt32(lua_State* L) { read_num(uint32_t, ReadUInt32); };
+	int _ReadInt32(lua_State* L) { read_num(int32_t, ReadInt32); };
 
-	int ReadUInt64(lua_State* L) { read_num(uint64_t, ReadUInt64); };
-	int ReadInt64(lua_State* L) { read_num(int64_t, ReadInt64); };
+	int _ReadUInt64(lua_State* L) { read_num(uint64_t, ReadUInt64); };
+	int _ReadInt64(lua_State* L) { read_num(int64_t, ReadInt64); };
 
-	int ReadFloat(lua_State* L) { read_num(float, ReadFloat); };
-	int ReadDouble(lua_State* L) { read_num(double, ReadDouble); };
+	int _ReadFloat(lua_State* L) { read_num(float, ReadFloat); };
+	int _ReadDouble(lua_State* L) { read_num(double, ReadDouble); };
 
-	int ReadString(lua_State* L)
+	int _ReadString(lua_State* L)
 	{
-		std::string str = GetReadMessage(write_msg_ptr(luaL_checknumber(L, 1)))->ReadString();
+		std::string str = GetRead()->ReadString();
 		lua_pushstring(L, str.c_str());
 		return 1;
 	}
@@ -106,36 +100,36 @@ void RegisterMessages(std::function<void(const char*, lua_CFunction)> callback)
 	callback("MakeWriteMessage", MakeWriteMessageL);
 	callback("DestroyWriteMessage", DestroyWriteMessageL);
 
-	callback("WriteUInt8", WriteUInt8);
-	callback("WriteInt8", WriteInt8);
+	callback("_WriteUInt8", _WriteUInt8);
+	callback("_WriteInt8", _WriteInt8);
 
-	callback("WriteUInt16", WriteUInt16);
-	callback("WriteInt16", WriteInt16);
+	callback("_WriteUInt16", _WriteUInt16);
+	callback("_WriteInt16", _WriteInt16);
 
-	callback("WriteUInt32", WriteUInt32);
-	callback("WriteInt32", WriteInt32);
+	callback("_WriteUInt32", _WriteUInt32);
+	callback("_WriteInt32", _WriteInt32);
 
-	callback("WriteUInt64", WriteUInt64);
-	callback("WriteInt64", WriteInt64);
+	callback("_WriteUInt64", _WriteUInt64);
+	callback("_WriteInt64", _WriteInt64);
 
-	callback("WriteFloat", WriteFloat);
-	callback("WriteDouble", WriteDouble);
+	callback("_WriteFloat", _WriteFloat);
+	callback("_WriteDouble", _WriteDouble);
 
-	callback("WriteString", WriteString);
-	callback("WriteStringNullTerm", WriteStringNullTerm);
+	callback("_WriteString", _WriteString);
+	callback("_WriteStringNullTerm", _WriteStringNullTerm);
 
-	callback("ReadUInt8", ReadUInt8);
-	callback("ReadInt8", ReadInt8);
+	callback("_ReadUInt8", _ReadUInt8);
+	callback("_ReadInt8", _ReadInt8);
 
-	callback("ReadUInt16", ReadUInt16);
-	callback("ReadInt16", ReadInt16);
+	callback("_ReadUInt16", _ReadUInt16);
+	callback("_ReadInt16", _ReadInt16);
 
-	callback("ReadUInt32", ReadUInt32);
-	callback("ReadInt32", ReadInt32);
+	callback("_ReadUInt32", _ReadUInt32);
+	callback("_ReadInt32", _ReadInt32);
 
-	callback("ReadUInt64", ReadUInt64);
-	callback("ReadInt64", ReadInt64);
+	callback("_ReadUInt64", _ReadUInt64);
+	callback("_ReadInt64", _ReadInt64);
 
-	callback("ReadFloat", ReadFloat);
-	callback("ReadDouble", ReadDouble);
+	callback("_ReadFloat", _ReadFloat);
+	callback("_ReadDouble", _ReadDouble);
 }
