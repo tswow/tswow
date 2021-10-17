@@ -417,6 +417,8 @@ export namespace Modules {
                     )
                     getModule(mod).linkModule();
                 }
+
+                wfs.copy(ipaths.binglobaldts,ipaths.moduleDataLiveGlobal(mod))
             }
 
             if(wfs.isDirectory(ipaths.moduleShared(mod))) {

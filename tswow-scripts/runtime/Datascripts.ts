@@ -63,6 +63,7 @@ export namespace Datascripts {
 
         dataset.config.modules.forEach(x=>{
             compile(x);
+            wfs.copy(ipaths.binglobaldts,ipaths.moduleDataLiveGlobal(x))
         })
 
         try {
@@ -84,7 +85,7 @@ export namespace Datascripts {
                     })
             }
         } catch (error) {
-            throw new Error(`Failed to rebuild patches`);
+            throw new Error(`Failed to rebuild patches: ${error}`);
         }
 
         term.success(`Finished building DataScripts for dataset ${dataset.id}`);
