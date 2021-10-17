@@ -19,7 +19,7 @@ end
 
 -- todo: not sure if we can do real callbacks,
 -- so we will just cheat a little and
--- execute the string "__FireMessage()" whenever
+-- execute the string '__FireMessage()' whenever
 -- we receive a message in c++
 
 __callbacks = {}
