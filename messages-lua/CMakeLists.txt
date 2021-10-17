@@ -1,12 +1,14 @@
 set(MESSAGES_LUA_H
     MessageStore.h
     MessageLuaRegistry.h
+    Arguments.h
     messages.lua.h
 )
 
 set(MESSAGES_LUA_CPP
     MessageStore.cpp
     MessageLuaRegistry.cpp
+    Arguments.cpp
 )
 
 set(MESSAGES_LUA_LUA
