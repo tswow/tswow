@@ -14,6 +14,6 @@ void main(int argc, char* argv[])
 	output << "#define MESSAGES_LUA \\\n";
 	for (std::string line; std::getline(input, line); )
 	{
-		output << "\"" << line << "\" \\\n";
+		output << "\"" << line << "\\n\" \\\n";
 	}
 }
