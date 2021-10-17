@@ -96,7 +96,8 @@ extern "C" {
 	}
 }
 
-void RegisterMessagePolyfill(std::function<void(const char*)> callback) {
+void RegisterMessagePolyfill(std::function<void(const char*)> callback)
+{
 	callback(MESSAGES_LUA);
 }
 
