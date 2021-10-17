@@ -9,7 +9,11 @@ set(MESSAGES_LUA_CPP
     MessageLuaRegistry.cpp
 )
 
-add_library(messages-lua STATIC ${MESSAGES_LUA_H} ${MESSAGES_LUA_CPP})
+set(MESSAGES_LUA_LUA
+    messages.lua
+)
+
+add_library(messages-lua STATIC ${MESSAGES_LUA_H} ${MESSAGES_LUA_CPP} ${MESSAGES_LUA_LUA})
 target_link_libraries(messages-lua lua messages)
 target_include_directories(messages-lua PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
