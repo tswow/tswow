@@ -3,7 +3,6 @@
 #include <string>
 
 namespace ClientArguments {
-	std::vector<std::string> const& GetArguments();
 	bool Has(std::string const& name);
 	std::string GetString(std::string const& name, std::string const& def);
 	float GetFloat(std::string const& name, float def);

@@ -94,9 +94,4 @@ namespace ClientArguments {
 	{
 		return argIndex(arg) != std::string::npos;
 	}
-
-	std::vector<std::string> const& GetArguments()
-	{
-		return arguments;
-	}
 }
