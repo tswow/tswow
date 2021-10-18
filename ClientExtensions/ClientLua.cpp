@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <windows.h>
 
+#include "luafiles.generated.h"
+
 // This segment has over 56kb of 0s
 // that's space for over 11k lua functions
 CLIENT_ADDR(void,CAVE_START,0x6ddf80)
@@ -41,6 +43,7 @@ namespace
 		if (b != 11334016) return FrameScriptReloaded(a, b, c);
 
 		LOG_DEBUG << "Reloading Lua";
+
 		if (lastCave > 0)
 		{
 			DWORD old;
@@ -74,6 +77,12 @@ namespace
 		DWORD dummy;
 		VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry.size(), old, &dummy);
 		lastCave = luaRegistry.size();
+
+		for (std::string const& lua : LUA_FILES)
+		{
+			ClientLua::DoString(lua.c_str(), *_state);
+		}
+
 		return FrameScriptReloaded(a, b, c);
 	}
 }

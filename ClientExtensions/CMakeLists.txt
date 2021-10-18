@@ -77,3 +77,13 @@ else()
     message( SEND_ERROR "Invalid LOG_LEVEL ${LOG_LEVEL}" )
 endif()
 
+add_executable(luabuilder-client lua_builder_client.cpp)
+add_custom_target(luabuilder-client-run
+    COMMAND luabuilder-client
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Generating client lua headers"
+    SOURCES lua_builder_client.cpp
+)
+add_dependencies(ClientExtensions luabuilder-client-run)
+add_dependencies(luabuilder-client-run luabuilder-client)
+set_property(TARGET luabuilder-client PROPERTY CXX_STANDARD 17)

@@ -1,0 +1,3 @@
+function SayHiFromMe()
+	luainject()
+end
