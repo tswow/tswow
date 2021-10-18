@@ -3,6 +3,7 @@ set(MESSAGES_LUA_H
     MessageLuaRegistry.h
     Arguments.h
     messages.lua.h
+    lua.hpp
 )
 
 set(MESSAGES_LUA_CPP
