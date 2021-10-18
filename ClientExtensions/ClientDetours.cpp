@@ -1,10 +1,11 @@
-#include <vector>
 #include "ClientDetours.h"
 #include "Logger.h"
 #include "FSRoot.h"
 
 #include "windows.h"
 #include "detours.h"
+
+#include <vector>
 
 static std::vector<ClientDetours::Detour> detours;
 
