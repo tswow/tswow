@@ -11982,7 +11982,7 @@ declare function GetRealmName(): string;
 /// <reference path="../auction.d.ts" />
 
 declare namespace WoWAPI {
-    interface GameTooltip {
+    interface GameTooltip extends UIObject {
 
         /**
          * Adds Line to tooltip with textLeft on left side of line and textRight on right side
