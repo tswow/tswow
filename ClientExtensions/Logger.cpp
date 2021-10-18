@@ -4,6 +4,7 @@
 #include "logger.h"
 #include <windows.h>
 #include <filesystem>
+#include "FSRoot.h"
 
 namespace {
   Logger logger;
@@ -23,7 +24,7 @@ Logger& log(const char* type, const char* file, size_t line)
   auto t = std::time(nullptr);
   auto tm = *std::localtime(&t);
 
-  std::string filename = std::filesystem::path(std::string(file)).filename().string();
+  std::string filename = relProjectPath(file);
 
   if (isFirst)
   {
@@ -33,7 +34,16 @@ Logger& log(const char* type, const char* file, size_t line)
   {
     logger << "\n";
   }
-  logger << "[" << type << "][" << std::put_time(&tm, "%H:%M:%S") << "][" << filename << ":" << line << "] ";
+  logger
+    << "["
+    << type
+    << "]["
+    << std::put_time(&tm, "%H:%M:%S")
+    << "]["
+    << relProjectPath(file)
+    << ":"
+    << line
+    << "] ";
 #endif
   return logger;
 }

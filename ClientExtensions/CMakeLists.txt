@@ -21,13 +21,21 @@ target_include_directories(detours PUBLIC ${detours_SOURCE_DIR})
 FILE(GLOB ClientExtenisons ${CMAKE_CURRENT_SOURCE_DIR}/*)
 SET(CLIENT_EXTENSIONS_H
     Logger.h
-    DetourRegistry.h
+    ClientDetours.h
+    ClientMacros.h
+    ClientLua.h
+    ClientArguments.h
+    FSRoot.h
 )
 
 SET(CLIENT_EXTENSIONS_CPP
     Main.cpp
-    DetourRegistry.cpp
+    ClientDetours.cpp
     Logger.cpp
+    ClientLua.cpp
+    ClientArguments.cpp
+    FSRoot.cpp
+    TestModule.cpp
 )
 
 add_library(ClientExtensions SHARED ${CLIENT_EXTENSIONS_H} ${CLIENT_EXTENSIONS_CPP})
