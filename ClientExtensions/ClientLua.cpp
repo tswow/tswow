@@ -29,7 +29,8 @@ namespace
 	};
 	std::vector<LuaFunction> luaRegistry;
 	size_t lastCave = 0;
-	lua_State** _state = (lua_State**)0x00D3F78C;
+
+	CLIENT_ADDR(lua_State*, _state, 0x00d3f78c);
 	bool isInitialized = false;
 
 	CLIENT_FUNC(UnregisterGlobal,0x00817FD0,void,(char const* name))
@@ -88,9 +89,32 @@ namespace
 }
 
 namespace ClientLua {
+	lua_State* State()
+	{
+		return *_state;
+	}
+
+	void RegisterLua(std::string const& lua)
+	{
+		LUA_FILES.push_back(lua);
+	}
+
 	int AddFunction(char const* name, lua_CFunction fn, std::string const& file, size_t line)
 	{
 		luaRegistry.push_back({ name, fn, file, line });
 		return 0;
+	}
+
+	CLIENT_FUNC(_GetString, 0x0084E0E0, char const*, (lua_State* L, int32_t, int32_t))
+	CLIENT_FUNC(_GetNumber, 0x0084E030, double, (lua_State* L, int32_t))
+
+	std::string GetString(lua_State* L, int32_t offset, std::string const& defValue)
+	{
+		return IsString(L, offset) ? _GetString(L, offset, 0) : defValue;
+	}
+
+	double GetNumber(lua_State* L, int32_t offset, double defValue)
+	{
+		return IsNumber(L, offset) ? _GetNumber(L, offset) : defValue;
 	}
 }
