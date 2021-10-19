@@ -45,9 +45,7 @@ MessageResult MessageBuffer::ReceivePacket(size_t size, char* data)
 		return _onError(MessageResult::INVALID_FRAG_COUNT, data);
 	case 1:
 		m_cur.Push(chnk);
-		OnPacket(m_cur);
-		m_cur.Destroy();
-		return MessageResult::HANDLED_MESSAGE;
+		return _onSuccess();
 	default:
 		if (m_cur.ChunkCount() == 0)
 		{
@@ -81,11 +79,9 @@ MessageResult MessageBuffer::ReceivePacket(size_t size, char* data)
 		if (
 			m_cur.ChunkCount() > 0
 			&& hdr->fragmentId == m_cur.Chunk(0)->Header()->totalFrags - 1
-			) {
+		) {
 			m_cur.Push(chnk);
-			OnPacket(m_cur);
-			m_cur.Destroy();
-			return MessageResult::HANDLED_MESSAGE;
+			return _onSuccess();
 		}
 		else
 		{
@@ -108,3 +104,9 @@ MessageResult MessageBuffer::_onError(MessageResult error, char* data)
 	return error;
 }
 
+MessageResult MessageBuffer::_onSuccess()
+{
+	OnPacket(&m_cur);
+	m_cur.Clear();;
+	return MessageResult::HANDLED_MESSAGE;
+}

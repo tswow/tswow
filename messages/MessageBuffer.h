@@ -32,12 +32,17 @@ public:
 	MessageBuffer(size_t minFragmentSize, size_t quota, size_t bufferSize);
 	MessageResult ReceivePacket(size_t size, char* data);
 protected:
-	virtual void OnPacket(MessageRead& value) {}
+	// Note: it is your own responsibility to destroy
+	// the message chunks, the buffer only destroys
+	// the message itself!
+	virtual void OnPacket(MessageRead * value) {}
 	virtual void OnError(MessageResult error) {}
+	virtual void StorePersistent(MessageRead value) {}
 private:
 	size_t m_quota;
 	size_t m_minFragmentSize;
 	size_t m_maxFragmentSize;
 	MessageRead m_cur;
 	MessageResult _onError(MessageResult error, char* data);
+	MessageResult _onSuccess();
 };
