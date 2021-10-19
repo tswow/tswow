@@ -7,7 +7,11 @@
 
 #include <vector>
 
-static std::vector<ClientDetours::Detour> detours;
+std::vector<ClientDetours::Detour> & detours()
+{
+	static std::vector<ClientDetours::Detour> _detours;
+	return _detours;
+}
 
 int ClientDetours::Add(
 	  std::string const& name
@@ -16,7 +20,7 @@ int ClientDetours::Add(
 	, std::string const& filename
 	, size_t lineno
 ) {
-	detours.push_back({
+	detours().push_back({
 			name
 		, clientFun
 		, yourFun
@@ -30,7 +34,7 @@ void ClientDetours::Apply()
 {
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	for (Detour const& detour : detours)
+	for (Detour const& detour : detours())
 	{
 		LOG_INFO
 			<< "Detour: "
@@ -44,6 +48,6 @@ void ClientDetours::Apply()
 			;
 		DetourAttach((PVOID*)detour.m_oldFn, detour.m_newFn);
 	}
-	detours.clear();
+	detours().clear();
 	DetourTransactionCommit();
 }

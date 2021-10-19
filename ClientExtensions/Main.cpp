@@ -4,6 +4,7 @@
 #include "ClientDetours.h"
 #include "Logger.h"
 #include "Arguments.h"
+#include "scripts.generated.h"
 
 class Main
 {
@@ -26,6 +27,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{
 		DisableThreadLibraryCalls(hinstDLL);
+		// gets this from scripts.generated.ih
+		__init_scripts();
 		Main::startup();
 	}
 	return TRUE;

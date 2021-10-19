@@ -2,7 +2,7 @@
 #include "ClientDetours.h"
 #include "Logger.h"
 
-CLIENT_LUA(luainject) {
+LUA_FUNCTION(luainject) {
 	LOG_DEBUG << "Hi from lua ping";
 	return 0;
 }

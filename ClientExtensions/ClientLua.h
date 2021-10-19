@@ -21,7 +21,16 @@ namespace ClientLua {
 	double GetNumber(lua_State* L, int32_t offset, double defValue = 0);
 }
 
-#define CLIENT_LUA(name) \
-	int name##Fn(lua_State * L);\
-	int name##Dummy = ClientLua::AddFunction(#name,name##Fn,__FILE__,__LINE__);\
-	int name##Fn(lua_State * L)
+// do NOT refactor this name
+// without also changing the name in client_header_builder.cpp
+
+#define LUA_FUNCTION(__lua_function_name) \
+	int __lua_function_name##Fn(lua_State * L);\
+	int __lua_function_name##__Result = \
+		ClientLua::AddFunction(\
+			#__lua_function_name\
+			,__lua_function_name##Fn\
+			,__FILE__\
+			,__LINE__\
+			);\
+	int __lua_function_name##Fn(lua_State * L)
