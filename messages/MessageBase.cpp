@@ -221,3 +221,19 @@ char* MessageBase::ReadBytes(size_t size, bool padStr)
 	}
 	return c;
 }
+
+void MessageBase::Clear()
+{
+	m_chunks.clear();
+	Reset();
+}
+
+bool MessageBase::IsPersistent()
+{
+	return m_persistent;
+}
+
+void MessageBase::SetPersistent()
+{
+	m_persistent = true;
+}

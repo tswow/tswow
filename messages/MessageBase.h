@@ -13,6 +13,11 @@ public:
 
 	void Reset();
 	void Destroy();
+	void Clear();
+
+	bool IsPersistent();
+	void SetPersistent();
+
 	void Push(MessageChunk& chnk);
 	size_t Size();
 	MessageChunk* Chunk(size_t index);
@@ -104,4 +109,6 @@ private:
 
 	size_t m_idx; // chunk read index
 	size_t m_chunk; // chunk to read
+
+	bool m_persistent;
 };
