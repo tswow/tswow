@@ -16,10 +16,10 @@ class ClientMessageWrite : public MessageWrite
 {
 public:
 	ClientMessageWrite()
-		: MessageWrite(0, MAXIMUM_PACKET_SIZE,0)
+		: MessageWrite(0, MAX_FRAGMENT_SIZE,0)
 	{}
 	ClientMessageWrite(PACKET_OPCODE_TYPE opcode, size_t size)
-		: MessageWrite(opcode, MAXIMUM_PACKET_SIZE,size)
+		: MessageWrite(opcode, MAX_FRAGMENT_SIZE,size)
 	{}
 
 	void Send()
