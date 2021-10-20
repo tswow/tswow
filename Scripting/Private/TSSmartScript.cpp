@@ -1,0 +1,343 @@
+#include "TSSmartScript.h"
+
+#include "ConditionMgr.h"
+#include "Unit.h"
+#include "GameObject.h"
+#include "SpellInfo.h"
+#include "SmartScript.h"
+#include "SmartScriptMgr.h"
+
+TSSmartScriptValues::TSSmartScriptValues (
+      SmartScriptHolder * holder
+    , SmartScript* script
+    , Unit* unit
+    , uint32 var0
+    , uint32 var1
+    , bool bvar
+    , SpellInfo const* spell
+    , GameObject* gameObject
+    , ObjectVector* targets
+)
+    : m_holder(holder)
+    , m_script(script)
+    , m_unit(unit)
+    , m_var0(var0)
+    , m_var1(var1)
+    , m_bvar(bvar)
+    , m_spell(spell)
+    , m_gameObject(gameObject)
+    , m_targets(targets)
+{}
+
+int32  TSSmartScriptValues::GetEntryOrGUID()
+{
+    return m_holder->entryOrGuid;
+}
+uint32 TSSmartScriptValues::GetSourceType()
+{
+    return m_holder->source_type;
+}
+uint32 TSSmartScriptValues::GetEventID()
+{
+    return m_holder->event_id;
+}
+uint32 TSSmartScriptValues::GetLink()
+{
+    return m_holder->link;
+}
+uint32 TSSmartScriptValues::GetEventPhaseMask()
+{
+    return m_holder->event.event_phase_mask;
+}
+uint32 TSSmartScriptValues::GetEventChance()
+{
+    return m_holder->event.event_chance;
+}
+uint32 TSSmartScriptValues::GetEventFlags()
+{
+    return m_holder->event.event_flags;
+}
+
+uint32 TSSmartScriptValues::GetActionArgument1()
+{
+    return m_holder->action.raw.param1;
+}
+
+uint32 TSSmartScriptValues::GetActionArgument2()
+{
+    return m_holder->action.raw.param2;
+}
+
+uint32 TSSmartScriptValues::GetActionArgument3()
+{
+    return m_holder->action.raw.param3;
+}
+
+uint32 TSSmartScriptValues::GetActionArgument4()
+{
+    return m_holder->action.raw.param4;
+}
+
+uint32 TSSmartScriptValues::GetActionArgument5()
+{
+    return m_holder->action.raw.param5;
+}
+
+uint32 TSSmartScriptValues::GetActionArgument6()
+{
+    return m_holder->action.raw.param6;
+}
+
+uint32 TSSmartScriptValues::GetEventArgument1()
+{
+    return m_holder->event.raw.param1;
+}
+
+uint32 TSSmartScriptValues::GetEventArgument2()
+{
+    return m_holder->event.raw.param2;
+}
+
+uint32 TSSmartScriptValues::GetEventArgument3()
+{
+    return m_holder->event.raw.param3;
+}
+
+uint32 TSSmartScriptValues::GetEventArgument4()
+{
+    return m_holder->event.raw.param4;
+}
+
+uint32 TSSmartScriptValues::GetEventArgument5()
+{
+    return m_holder->event.raw.param5;
+}
+
+uint32 TSSmartScriptValues::GetTargetParam1()
+{
+    return m_holder->target.raw.param1;
+}
+
+uint32 TSSmartScriptValues::GetTargetParam2()
+{
+    return m_holder->target.raw.param2;
+}
+
+uint32 TSSmartScriptValues::GetTargetParam3()
+{
+    return m_holder->target.raw.param3;
+}
+uint32 TSSmartScriptValues::GetTargetParam4()
+{
+    return m_holder->target.raw.param4;
+}
+
+float TSSmartScriptValues::GetTargetX()
+{
+    return m_holder->target.x;
+}
+float TSSmartScriptValues::GetTargetY()
+{
+    return m_holder->target.y;
+}
+float TSSmartScriptValues::GetTargetZ()
+{
+    return m_holder->target.z;
+}
+
+uint32 TSSmartScriptValues::GetTimer()
+{
+    return m_holder->timer;
+}
+uint32 TSSmartScriptValues::GetPriority()
+{
+    return m_holder->priority;
+}
+
+TSUnit TSSmartScriptValues::GetLastInvoker()
+{
+    return TSUnit(m_unit);
+}
+
+TSArray<TSWorldObject> TSSmartScriptValues::GetTargets()
+{
+    if (!m_targets)
+    {
+        return TSArray<TSWorldObject>();
+    }
+
+    TSArray<TSWorldObject> out(m_targets->size());
+    for (size_t i = 0; i < m_targets->size(); ++i)
+    {
+        out[i] = TSWorldObject((*m_targets)[i]);
+    }
+    return out;
+}
+
+void TSSmartScriptValues::StoreTargetList(TSArray<TSWorldObject> objects, uint32 id)
+{
+    ObjectVector objectsOut(objects.get_length());
+    for (size_t i = 0; i < objects.get_length(); ++i)
+    {
+        objectsOut[i] = objects[i].obj;
+    }
+    m_script->StoreTargetList(objectsOut, id);
+}
+
+TSArray<TSWorldObject> TSSmartScriptValues::GetTargetList(uint32 id, TSWorldObject ref)
+{
+    ObjectVector const* vec = m_script->GetStoredTargetVector(id, *ref.obj);
+    TSArray<TSWorldObject> out(vec->size());
+    for (int i = 0; i < vec->size(); ++i) {
+        out[i] = TSWorldObject((*vec)[i]);
+    }
+    return out;
+}
+
+void TSSmartScriptValues::StoreCounter(uint32 id, uint32 value, uint32 reset)
+{
+    m_script->StoreCounter(id, value, reset);
+}
+
+uint32 TSSmartScriptValues::GetCounterValue(uint32 id)
+{
+    return m_script->GetCounterValue(id);
+}
+
+TSUnit TSSmartScriptValues::GetUnitArg()
+{
+    return TSUnit(m_unit);
+}
+
+uint32 TSSmartScriptValues::GetUIntArg1()
+{
+    return m_var0;
+}
+
+uint32 TSSmartScriptValues::GetUIntArg2()
+{
+    return m_var1;
+}
+
+bool TSSmartScriptValues::GetBoolArg()
+{
+    return m_bvar;
+}
+
+TSSpellInfo TSSmartScriptValues::GetSpellArg()
+{
+    return TSSpellInfo(m_spell);
+}
+
+TSGameObject TSSmartScriptValues::GetGameObjectArg()
+{
+    return TSGameObject(m_gameObject);
+}
+
+TSWorldObject TSSmartScriptValues::GetSelf()
+{
+    return TSWorldObject(m_script->GetBaseObjectOrPlayerTrigger());
+}
+
+TSCondition::TSCondition(Condition* condition)
+    : m_condition(condition)
+{}
+
+uint32 TSCondition::GetSourceType()
+{
+    return m_condition->SourceType;
+}
+
+uint32 TSCondition::GetSourceGroup()
+{
+    return m_condition->SourceGroup;
+}
+
+uint32 TSCondition::GetSouceEntry()
+{
+    return m_condition->SourceEntry;
+}
+
+uint32 TSCondition::GetSourceID()
+{
+    return m_condition->SourceId;
+}
+
+uint32 TSCondition::GetElseGroup()
+{
+    return m_condition->ElseGroup;
+}
+
+uint32 TSCondition::GetConditionType()
+{
+    return m_condition->ConditionType;
+}
+
+uint32 TSCondition::GetConditionValue1()
+{
+    return m_condition->ConditionValue1;
+}
+
+uint32 TSCondition::GetConditionValue2()
+{
+    return m_condition->ConditionValue2;
+}
+
+uint32 TSCondition::GetConditionValue3()
+{
+    return m_condition->ConditionValue3;
+}
+
+uint32 TSCondition::GetErrorType()
+{
+    return m_condition->ErrorType;
+}
+
+uint32 TSCondition::GetErrorTextID()
+{
+    return m_condition->ErrorTextId;
+}
+
+uint32 TSCondition::GetReferenceID()
+{
+    return m_condition->ReferenceId;
+}
+
+uint32 TSCondition::GetScriptID()
+{
+    return m_condition->ScriptId;
+}
+
+uint8 TSCondition::GetConditionTarget()
+{
+    return m_condition->ConditionTarget;
+}
+
+bool TSCondition::IsNegativeCondition()
+{
+    return m_condition->NegativeCondition;
+}
+
+TSString TSCondition::ToString(bool ext)
+{
+    return TSString(m_condition->ToString());
+}
+
+bool TSCondition::IsNull()
+{
+    return m_condition == nullptr;
+}
+
+TSConditionSourceInfo::TSConditionSourceInfo(ConditionSourceInfo * info)
+    : m_info(info)
+{}
+
+TSWorldObject TSConditionSourceInfo::GetTarget(uint32 index)
+{
+    return m_info->mConditionTargets[index];
+}
+
+TSCondition TSConditionSourceInfo::GetLastFailedCondition()
+{
+    return TSCondition(const_cast<Condition*>(m_info->mLastFailedCondition));
+}
