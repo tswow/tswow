@@ -40,10 +40,9 @@ SET(CLIENT_EXTENSIONS_CPP
 
 add_library(ClientExtensions SHARED ${CLIENT_EXTENSIONS_H} ${CLIENT_EXTENSIONS_CPP})
 set_property(TARGET ClientExtensions PROPERTY CXX_STANDARD 17)
-target_link_libraries(ClientExtensions messages-lua detours)
+target_link_libraries(ClientExtensions detours)
 target_include_directories(ClientExtensions PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
-    ${CMAKE_SOURCE_DIR}/messages-lua
     ${CMAKE_SOURCE_DIR}/messages
     ${detours_SOURCE_DIR}/src
 )

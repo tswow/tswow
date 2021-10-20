@@ -13,6 +13,5 @@ add_library(lua STATIC ${lua-sources})
 target_compile_options(lua PRIVATE -w)
 
 add_subdirectory(messages)
-add_subdirectory(messages-lua)
 add_subdirectory(tests)
 add_subdirectory(ClientExtensions)
