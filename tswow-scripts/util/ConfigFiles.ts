@@ -4,7 +4,8 @@ export function datasetYaml(id: string) {
 use_mmaps: false
 
 # The client directory to use for development with this dataset
-client_path: c:\\path\\to\\my\\client
+# Can be used to override the setting in "node.yaml"
+# client_path: c:\\path\\to\\my\\client
 
 # What modules this dataset uses
 modules:
