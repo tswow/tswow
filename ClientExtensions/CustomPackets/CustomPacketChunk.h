@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MessageDefines.h"
+#include "CustomPacketDefines.h"
 
 #include <cstdint>
 #include <functional>

@@ -9,8 +9,8 @@ FetchContent_MakeAvailable(Catch2)
 # unit tests
 FILE(GLOB tests-sources ${CMAKE_CURRENT_SOURCE_DIR}/*)
 add_executable(tests ${tests-sources})
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain messages)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain CustomPackets)
 target_include_directories(tests PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
-    ${CMAKE_SOURCE_DIR}/messages
+    ${CMAKE_SOURCE_DIR}/CustomPackets
 )

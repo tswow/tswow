@@ -2,7 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_all.hpp>
 
-#include "MessageBuffer.h"
+#include "CustomPacketBuffer.h"
 
 std::vector<MessageChunk> makePacket(uint16_t packetId, size_t chunkSize, size_t size)
 {

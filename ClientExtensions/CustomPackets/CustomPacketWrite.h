@@ -1,7 +1,7 @@
 #pragma once
 
-#include "MessageDefines.h"
-#include "MessageBase.h"
+#include "CustomPacketDefines.h"
+#include "CustomPacketBase.h"
 
 #include <string>
 

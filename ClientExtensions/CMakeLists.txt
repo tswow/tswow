@@ -12,6 +12,6 @@ FILE(GLOB lua-sources lua-5.1/src/*.h lua-5.1/src/*.c)
 add_library(lua STATIC ${lua-sources})
 target_compile_options(lua PRIVATE -w)
 
-add_subdirectory(messages)
+add_subdirectory(CustomPackets)
 add_subdirectory(tests)
 add_subdirectory(ClientExtensions)

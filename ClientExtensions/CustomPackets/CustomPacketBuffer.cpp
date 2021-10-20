@@ -1,4 +1,4 @@
-#include "MessageBuffer.h"
+#include "CustomPacketBuffer.h"
 
 MessageBuffer::MessageBuffer(size_t minFragmentSize, size_t quota, size_t bufferSize)
 	: m_minFragmentSize(minFragmentSize)

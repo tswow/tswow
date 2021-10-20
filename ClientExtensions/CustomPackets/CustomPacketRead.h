@@ -1,9 +1,9 @@
 #pragma once
 
-#include "MessageDefines.h"
+#include "CustomPacketDefines.h"
 
-#include "MessageBase.h"
-#include "MessageWrite.h"
+#include "CustomPacketBase.h"
+#include "CustomPacketWrite.h"
 
 class MessageRead : public MessageBase {
 public:

@@ -1,10 +1,10 @@
 #include "ClientNetwork.h"
 
-#include "MessageBuffer.h"
+#include "CustomPacketBuffer.h"
 #include "Logger.h"
 #include "ClientLua.h"
 
-#include "MessageDefines.h"
+#include "CustomPacketDefines.h"
 
 #include <map>
 #include <sstream>
@@ -110,7 +110,7 @@ int WriteNum(lua_State* L)
 extern "C" {
 	int _WriteMessage(lua_State* L)
 	{
-		uint32_t opcode(ClientLua::GetNumber(L, 1, 0));
+		PACKET_OPCODE_TYPE opcode(ClientLua::GetNumber(L, 1, 0));
 		uint32_t size(ClientLua::GetNumber(L, 2, 0));
 		uint32_t id = writes.freeId();
 		writes.m_map[id] = ClientMessageWrite{opcode, size};

@@ -1,21 +1,21 @@
-SET(MESSAGES_CPP
-    MessageBuffer.cpp
-    MessageChunk.cpp
-    MessageRead.cpp
-    MessageWrite.cpp
-    MessageBase.cpp
+SET(CUSTOM_PACKETS_CPP
+    CustomPacketBuffer.cpp
+    CustomPacketChunk.cpp
+    CustomPacketRead.cpp
+    CustomPacketWrite.cpp
+    CustomPacketBase.cpp
 )
 
-SET(MESSAGES_H
-    MessageRead.h
-    MessageWrite.h
-    MessageBase.h
-    MessageBuffer.h
-    MessageChunk.h
-    MessageDefines.h
+SET(CUSTOM_PACKETS_H
+    CustomPacketRead.h
+    CustomPacketWrite.h
+    CustomPacketBase.h
+    CustomPacketBuffer.h
+    CustomPacketChunk.h
+    CustomPacketDefines.h
 )
 
-add_library(messages STATIC
-    ${MESSAGES_CPP}
-    ${MESSAGES_H}
+add_library(CustomPackets STATIC
+    ${CUSTOM_PACKETS_CPP}
+    ${CUSTOM_PACKETS_H}
 )

@@ -1,4 +1,4 @@
-#include "MessageBase.h"
+#include "CustomPacketBase.h"
 
 #include <string>
 #include <stdexcept>

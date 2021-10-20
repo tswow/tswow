@@ -1,4 +1,4 @@
-#include "MessageWrite.h"
+#include "CustomPacketWrite.h"
 
 MessageWrite::MessageWrite(
 	  PACKET_OPCODE_TYPE opcode

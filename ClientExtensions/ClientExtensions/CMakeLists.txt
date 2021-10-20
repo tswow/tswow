@@ -57,10 +57,10 @@ add_library(ClientExtensions SHARED
     ${CLIENT_EXTENSIONS_SCRIPTS}
 )
 set_property(TARGET ClientExtensions PROPERTY CXX_STANDARD 17)
-target_link_libraries(ClientExtensions detours messages)
+target_link_libraries(ClientExtensions detours CustomPackets)
 target_include_directories(ClientExtensions PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
-    ${CMAKE_SOURCE_DIR}/messages
+    ${CMAKE_SOURCE_DIR}/CustomPackets
     ${detours_SOURCE_DIR}/src
 )
 

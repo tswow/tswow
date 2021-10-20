@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_all.hpp >
 
-#include "MessageChunk.h"
+#include "CustomPacketChunk.h"
 
 TEST_CASE("[MessageChunk] construction") {
 	MessageChunk chunk(10);
