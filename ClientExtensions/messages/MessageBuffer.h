@@ -30,6 +30,7 @@ enum class MessageResult {
 class MessageBuffer {
 public:
 	MessageBuffer(size_t minFragmentSize, size_t quota, size_t bufferSize);
+	~MessageBuffer();
 	MessageResult ReceivePacket(size_t size, char* data);
 protected:
 	// Note: it is your own responsibility to destroy

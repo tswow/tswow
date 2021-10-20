@@ -7,6 +7,12 @@ MessageBuffer::MessageBuffer(size_t minFragmentSize, size_t quota, size_t buffer
 	, m_cur(0,bufferSize)
 {}
 
+MessageBuffer::~MessageBuffer()
+{
+	// needed on server
+	m_cur.Destroy();
+}
+
 MessageResult MessageBuffer::ReceivePacket(size_t size, char* data)
 {
 	// Check sizes
