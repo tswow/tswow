@@ -1,5 +1,7 @@
 #include "Logger.h"
 #include "FSRoot.h"
+#include "lua.hpp"
+#include "ClientLua.h"
 
 #include <fstream>
 #include <ctime>
@@ -47,4 +49,32 @@ Logger& log(const char* type, const char* file, size_t line)
     << "] ";
 #endif
   return logger;
+}
+
+LUA_FUNCTION(_LOG_DEBUG) {
+#ifdef LUA_LOGGING
+  LOG_DEBUG << ClientLua::GetString(L, 1);
+#endif
+  return 0;
+}
+
+LUA_FUNCTION(_LOG_INFO) {
+#ifdef LUA_LOGGING
+  LOG_INFO << ClientLua::GetString(L, 1);
+#endif
+  return 0;
+}
+
+LUA_FUNCTION(_LOG_WARN) {
+#ifdef LUA_LOGGING
+  LOG_WARN << ClientLua::GetString(L, 1);
+#endif
+  return 0;
+}
+
+LUA_FUNCTION(_LOG_ERROR) {
+#ifdef LUA_LOGGING
+  LOG_ERROR << ClientLua::GetString(L, 1);
+#endif
+  return 0;
 }
