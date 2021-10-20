@@ -4,6 +4,7 @@
 #include "ClientDetours.h"
 #include "Logger.h"
 #include "ClientArguments.h"
+#include "ClientNetwork.h"
 #include "scripts.generated.h"
 
 class Main
@@ -14,6 +15,7 @@ public:
 		LOG_INFO << "Client starting up";
 		// gets this from scripts.generated.ih
 		__init_scripts();
+		ClientNetwork::initialize();
 		ClientArguments::initialize(GetCommandLineA());
 		ClientDetours::Apply();
 	}

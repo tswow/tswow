@@ -1,8 +1,13 @@
 function WriteMessage(size)
-	local writer = { id = MakeWriteMessage(size) }
+	local writer = { id = _WriteMessage(size) }
 
 	function writer:WriteUInt8(value)
-		_WriteUInt8(self.id,value)
+	 _WriteUInt8(self.id,value)
+		return self
+	end
+
+	function writer:Send()
+		_SendMessage(self.id)
 		return self
 	end
 
