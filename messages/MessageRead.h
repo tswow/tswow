@@ -25,4 +25,12 @@ public:
 
 	float ReadFloat(float def = 0);
 	double ReadDouble(double def = 0);
+
+	template<typename T>
+	T Read(T def)
+	{
+		return MessageBase::Read(def);
+	}
+
+	char* ReadBytes(size_t size, bool padStr = false);
 };

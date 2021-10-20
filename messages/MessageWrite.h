@@ -40,6 +40,14 @@ public:
 
 	MessageWrite* WriteFloat(float value);
 	MessageWrite* WriteDouble(double value);
+
+	template <typename T>
+	MessageWrite* Write(T value)
+	{
+		MessageBase::Write(value);
+		return this;
+	}
+	MessageWrite* WriteBytes(size_t size, char const* bytes);
 private:
 	size_t _strlen(const char* chr, size_t length);
 };

@@ -93,3 +93,9 @@ size_t MessageWrite::_strlen(const char* chr, size_t length)
 {
 	return length == std::string::npos ? strlen(chr) : length;
 }
+
+MessageWrite* MessageWrite::WriteBytes(size_t size, char const* bytes)
+{
+	MessageBase::WriteBytes(size, bytes);
+	return this;
+}
