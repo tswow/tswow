@@ -26,6 +26,7 @@ SET(CLIENT_EXTENSIONS_H
     ClientLua.h
     ClientArguments.h
     FSRoot.h
+    lua.hpp
 )
 
 SET(CLIENT_EXTENSIONS_CPP
@@ -38,14 +39,35 @@ SET(CLIENT_EXTENSIONS_CPP
     TestModule.cpp
 )
 
-add_library(ClientExtensions SHARED ${CLIENT_EXTENSIONS_H} ${CLIENT_EXTENSIONS_CPP})
+SET(CLIENT_EXTENSIONS_LUA
+    Logger.lua
+)
+
+FILE(GLOB_RECURSE CLIENT_EXTENSIONS_SCRIPTS
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripts/*
+)
+
+add_library(ClientExtensions SHARED
+    ${CLIENT_EXTENSIONS_H}
+    ${CLIENT_EXTENSIONS_CPP}
+    ${CLIENT_EXTENSIONS_LUA}
+    ${CLIENT_EXTENSIONS_SCRIPTS}
+)
 set_property(TARGET ClientExtensions PROPERTY CXX_STANDARD 17)
-target_link_libraries(ClientExtensions detours)
+target_link_libraries(ClientExtensions detours messages)
 target_include_directories(ClientExtensions PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
     ${CMAKE_SOURCE_DIR}/messages
     ${detours_SOURCE_DIR}/src
 )
+
+set_property(TARGET ClientExtensions PROPERTY USE_FOLDERS true)
+source_group(Scripts FILES ${CLIENT_EXTENSIONS_SCRIPTS})
+
+set(LUA_LOGGING true CACHE BOOL "Allow logging from client lua")
+if(LUA_LOGGING)
+    target_compile_definitions(ClientExtensions PRIVATE LUA_LOGGING)
+endif()
 
 set(CLIENT_PATH "" CACHE FILEPATH "Path to your wow client")
 if(NOT CLIENT_PATH STREQUAL "")
