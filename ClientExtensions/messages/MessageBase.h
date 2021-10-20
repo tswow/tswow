@@ -14,7 +14,7 @@ public:
 		, size_t maxChunkSize
 		, size_t initialSize
 	);
-	std::vector<MessageChunk> const& buildMessages(uint16_t messageId);
+	std::vector<MessageChunk> & buildMessages(uint16_t messageId);
 
 	void Reset();
 	void Destroy();

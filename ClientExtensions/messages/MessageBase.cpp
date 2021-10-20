@@ -48,7 +48,7 @@ MessageBase::MessageBase(
 	}
 }
 
-std::vector<MessageChunk> const& MessageBase::buildMessages(uint16_t messageId)
+std::vector<MessageChunk> & MessageBase::buildMessages(uint16_t messageId)
 {
 	for (uint16_t i = 0; i < m_chunks.size(); ++i)
 	{
