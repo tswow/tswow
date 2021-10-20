@@ -68,7 +68,6 @@ void MessageBase::Reset()
 	m_idx = 0;
 }
 
-
 void MessageBase::Destroy()
 {
 	for (auto& chunk : m_chunks)
@@ -244,4 +243,9 @@ bool MessageBase::IsPersistent()
 void MessageBase::SetPersistent()
 {
 	m_persistent = true;
+}
+
+PACKET_OPCODE_TYPE MessageBase::Opcode()
+{
+	return m_opcode;
 }

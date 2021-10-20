@@ -29,6 +29,8 @@ public:
 	size_t ChunkSize(size_t index);
 	size_t ChunkCount();
 
+	PACKET_OPCODE_TYPE Opcode();
+
 	void Print(
 		std::function<void(std::ostream&, uint8_t)> cb
 		, std::ostream& stream = std::cout
