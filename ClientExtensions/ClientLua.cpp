@@ -53,9 +53,9 @@ namespace ClientLua {
 		return *_state;
 	}
 
-	void RegisterLua(std::string const& lua)
+	void RegisterLua(std::string const& lua, std::string const& filename, size_t line)
 	{
-		LUA_FILES.push_back(lua);
+		LUA_FILES.push_back({filename+":"+std::to_string(line),lua});
 	}
 
 	int AddFunction(char const* name, lua_CFunction fn, std::string const& file, size_t line)
@@ -81,7 +81,6 @@ namespace ClientLua {
 CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, int, (int a, int b, int c)) {
 	if (b != 11334016) return FrameScriptReloaded(a, b, c);
 	LOG_DEBUG << "Reloading Lua";
-
 	if (lastCave > 0)
 	{
 		DWORD old;
@@ -99,7 +98,7 @@ CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, int, (int a, int b, int c)) {
 		size_t cur_cave = uint32_t(CAVE_START) + i * JMP_SIZE;
 		LuaFunction& fn = luaRegistry()[i];
 		LOG_DEBUG
-			<< "Lua: "
+			<< "Registering Lua function: "
 			<< fn.name
 			<< "@"
 			<< fn.func
@@ -116,9 +115,10 @@ CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, int, (int a, int b, int c)) {
 	VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), old, &dummy);
 	lastCave = luaRegistry().size();
 
-	for (std::string const& lua : LUA_FILES)
+	for (auto const& pair : LUA_FILES)
 	{
-		ClientLua::DoString(lua.c_str(), *_state);
+		LOG_DEBUG << "Running lua file " << pair.first;
+		ClientLua::DoString(pair.second.c_str(), *_state);
 	}
 
 	return FrameScriptReloaded(a, b, c);

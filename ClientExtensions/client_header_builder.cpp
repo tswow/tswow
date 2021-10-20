@@ -35,11 +35,7 @@ static bool endsWith(const std::string& str, const std::string& suffix)
 
 int main()
 {
-	std::stringstream lua_header;
-	lua_header << "inline std::vector<std::string> LUA_FILES = {";
-
-	std::vector<std::string> luaFunctions;
-	std::vector<std::string> clientDetours;
+	std::vector<std::string> luaFiles;
 
 	for (auto& p : fs::recursive_directory_iterator(fs::current_path()))
 	{
@@ -56,7 +52,7 @@ int main()
 			for (Registry& reg : registries)
 			{
 				std::string::const_iterator search(sourceFile.cbegin());
-				std::regex exp(reg.m_name + "\s*\\( *(.+?)\s*,");
+				std::regex exp(reg.m_name + "\\s*\\( *(.+?)\\s*,");
 				std::smatch res;
 				while (std::regex_search(search, sourceFile.cend(), res, exp))
 				{
@@ -73,39 +69,53 @@ int main()
 		// Generate lua scripts
 		if (endsWith(path, ".lua"))
 		{
+			luaFiles.push_back(path);
 			std::ifstream luafile = std::ifstream(path);
-			lua_header << "\"";
-			char byte;
-			while (luafile.get(byte))
-			{
-				if (byte == '\\')
-				{
-					lua_header << "\\\\";
-				}
-				else if (byte == '"')
-				{
-					lua_header << "\\\"";
-				}
-				else if (byte == '\n')
-				{
-					lua_header << "\\n";
-				}
-				else if (byte == '\r')
-				{}
-				else
-				{
-					lua_header << byte;
-				}
-			}
-			lua_header << "\",";
 		}
 	}
 
-	lua_header << "};";
-	std::ofstream luafilesGenerated("luafiles.generated.h");
-	luafilesGenerated << lua_header.str();
+	std::sort(luaFiles.begin(), luaFiles.end(), [](auto const& a, auto const& b) {
+		size_t aDirs = std::count(
+				a.begin()
+			, a.end(), '\\') + std::count(a.begin(), a.end(), '/'
+			);
+		size_t bDirs = std::count(
+				b.begin()
+			, b.end(), '\\') + std::count(b.begin(), b.end(), '/'
+			);
+		return (aDirs != bDirs) ? aDirs < bDirs : a < b;
+	});
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::ofstream luafilesGenerated("luafiles.generated.h");
+	luafilesGenerated << "#include <vector>\n";
+	luafilesGenerated << "std::vector<std::pair<std::string,std::string>> LUA_FILES = {\n";
+	for (std::string const& path : luaFiles)
+	{
+		std::ifstream luafile = std::ifstream(path);
+		luafilesGenerated << "    {\"";
+		auto relPath = std::filesystem::relative
+			(path,std::filesystem::path(__FILE__).parent_path()).string();
+		for (char c : relPath)
+		{
+			if (c == '\\')
+			{
+				luafilesGenerated << "\\\\";
+			}
+			else
+			{
+				luafilesGenerated << c;
+			}
+		}
+		luafilesGenerated << "\", {";
+
+		char byte;
+		while (luafile.get(byte))
+		{
+			luafilesGenerated << "0x" << std::hex << uint32_t(byte) << ",";
+		}
+		luafilesGenerated << "}},\n";
+	}
+	luafilesGenerated << "};";
 
 	// Generate scripts header
 	std::ofstream scriptsGenerated("scripts.generated.h");

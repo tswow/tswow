@@ -11,11 +11,14 @@ namespace ClientLua {
 	lua_State* State();
 	// Registers lua that will fire on reload
 	void RegisterLua(std::string const& lua);
+
 	CLIENT_FUNC(DoString, 0x00819210, void, (char const* code, lua_State* L))
 	CLIENT_FUNC(GetTop, 0x0084DBD0, int, (lua_State* L))
 
 	CLIENT_FUNC(IsString, 0x0084DF60, uint32_t, (lua_State* L, int32_t))
 	CLIENT_FUNC(IsNumber, 0x0084DF20, int32_t, (lua_State* L, int32_t))
+
+	CLIENT_FUNC(PushNumber, 0x0084E2A0, int, (lua_State* L, double value))
 
 	std::string GetString(lua_State* L, int32_t offset, std::string const& defValue = "");
 	double GetNumber(lua_State* L, int32_t offset, double defValue = 0);
