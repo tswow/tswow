@@ -7,7 +7,7 @@
 #include <iostream>
 
 #pragma pack(push,1)
-struct MessageHeader {
+struct CustomPacketHeader {
 	uint16_t msgId;
 	uint16_t fragmentId;
 	uint16_t totalFrags;
@@ -15,15 +15,15 @@ struct MessageHeader {
 };
 #pragma pack(pop)
 
-struct MessageChunk {
+struct CustomPacketChunk {
 public:
-	MessageChunk(MessageChunk const& other);
-	MessageChunk(size_t size, char* chunk);
-	MessageChunk(size_t size);
-	MessageChunk();
+	CustomPacketChunk(CustomPacketChunk const& other);
+	CustomPacketChunk(size_t size, char* chunk);
+	CustomPacketChunk(size_t size);
+	CustomPacketChunk();
 	void Destroy();
 	char* Data();
-	MessageHeader* Header();
+	CustomPacketHeader* Header();
 	void Increase(size_t size);
 	size_t FullSize();
 	size_t Size();

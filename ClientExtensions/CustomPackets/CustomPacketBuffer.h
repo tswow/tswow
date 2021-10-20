@@ -2,7 +2,7 @@
 
 #include "CustomPacketRead.h"
 
-enum class MessageResult {
+enum class CustomPacketResult {
 	NO_HEADER            = 0x1,   // 1
 	HEADER_MISMATCH      = 0x2,   // 2
 	INVALID_FRAG_COUNT   = 0x4,   // 4
@@ -27,22 +27,22 @@ enum class MessageResult {
 						| INVALID_FIRST_FRAG
 };
 
-class MessageBuffer {
+class CustomPacketBuffer {
 public:
-	MessageBuffer(size_t minFragmentSize, size_t quota, size_t bufferSize);
-	~MessageBuffer();
-	MessageResult ReceivePacket(size_t size, char* data);
+	CustomPacketBuffer(size_t minFragmentSize, size_t quota, size_t bufferSize);
+	~CustomPacketBuffer();
+	CustomPacketResult ReceivePacket(size_t size, char* data);
 protected:
 	// Note: it is your own responsibility to destroy
 	// the message chunks, the buffer only destroys
 	// the message itself!
-	virtual void OnPacket(MessageRead * value) {}
-	virtual void OnError(MessageResult error) {}
+	virtual void OnPacket(CustomPacketRead * value) {}
+	virtual void OnError(CustomPacketResult error) {}
 private:
 	size_t m_quota;
 	size_t m_minFragmentSize;
 	size_t m_maxFragmentSize;
-	MessageRead m_cur;
-	MessageResult _onError(MessageResult error, char* data);
-	MessageResult _onSuccess();
+	CustomPacketRead m_cur;
+	CustomPacketResult _onError(CustomPacketResult error, char* data);
+	CustomPacketResult _onSuccess();
 };

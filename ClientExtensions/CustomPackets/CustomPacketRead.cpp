@@ -1,20 +1,20 @@
 #include "CustomPacketRead.h"
 
-MessageRead::MessageRead()
-	: MessageBase()
+CustomPacketRead::CustomPacketRead()
+	: CustomPacketBase()
 {}
 
-MessageRead::MessageRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize)
-	: MessageBase(opcode, chunkSize, 0)
+CustomPacketRead::CustomPacketRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize)
+	: CustomPacketBase(opcode, chunkSize, 0)
 {}
 
-MessageRead::MessageRead(MessageWrite const& write)
-	: MessageBase(write)
+CustomPacketRead::CustomPacketRead(CustomPacketWrite const& write)
+	: CustomPacketBase(write)
 {}
 
-MessageRead* MessageRead::operator->() { return this; }
+CustomPacketRead* CustomPacketRead::operator->() { return this; }
 
-std::string MessageRead::ReadString(std::string const& def)
+std::string CustomPacketRead::ReadString(std::string const& def)
 {
 	uint32_t size = ReadUInt32(std::string::npos);
 	if (size == std::string::npos) return def;
@@ -27,55 +27,55 @@ std::string MessageRead::ReadString(std::string const& def)
 	return str;
 }
 
-uint8_t MessageRead::ReadUInt8(uint8_t def)
+uint8_t CustomPacketRead::ReadUInt8(uint8_t def)
 {
 	return Read<uint8_t>(def);
 }
-int8_t MessageRead::ReadInt8(int8_t def)
+int8_t CustomPacketRead::ReadInt8(int8_t def)
 {
 	return Read<int8_t>(def);
 }
 
-uint16_t MessageRead::ReadUInt16(uint16_t def)
+uint16_t CustomPacketRead::ReadUInt16(uint16_t def)
 {
 	return Read<uint16_t>(def);
 }
-int16_t MessageRead::ReadInt16(int16_t def)
+int16_t CustomPacketRead::ReadInt16(int16_t def)
 {
 	return Read<int16_t>(def);
 }
 
-uint32_t MessageRead::ReadUInt32(uint32_t def)
+uint32_t CustomPacketRead::ReadUInt32(uint32_t def)
 {
 	return Read<uint32_t>(def);
 }
-int32_t MessageRead::ReadInt32(int32_t def)
+int32_t CustomPacketRead::ReadInt32(int32_t def)
 {
 	return Read<int32_t>(def);
 }
 
-uint64_t MessageRead::ReadUInt64(uint64_t def)
+uint64_t CustomPacketRead::ReadUInt64(uint64_t def)
 {
 	return Read<uint64_t>(def);
 }
 
-int64_t MessageRead::ReadInt64(int64_t def)
+int64_t CustomPacketRead::ReadInt64(int64_t def)
 {
 	return Read<int64_t>(def);
 }
 
-float MessageRead::ReadFloat(float def)
+float CustomPacketRead::ReadFloat(float def)
 {
 	return Read<float>(def);
 }
 
-double MessageRead::ReadDouble(double def)
+double CustomPacketRead::ReadDouble(double def)
 {
 	return Read<double>(def);
 }
 
-char* MessageRead::ReadBytes(size_t size, bool padStr)
+char* CustomPacketRead::ReadBytes(size_t size, bool padStr)
 {
-	return MessageBase::ReadBytes(size, padStr);
+	return CustomPacketBase::ReadBytes(size, padStr);
 }
 

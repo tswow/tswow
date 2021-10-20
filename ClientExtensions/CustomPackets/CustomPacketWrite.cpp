@@ -1,27 +1,27 @@
 #include "CustomPacketWrite.h"
 
-MessageWrite::MessageWrite(
+CustomPacketWrite::CustomPacketWrite(
 	  PACKET_OPCODE_TYPE opcode
 	, size_t chunkSize
 	, size_t size
 )
-	: MessageBase(opcode, chunkSize, size)
+	: CustomPacketBase(opcode, chunkSize, size)
 {}
 
-MessageWrite::MessageWrite()
-	: MessageBase()
+CustomPacketWrite::CustomPacketWrite()
+	: CustomPacketBase()
 {}
 
-MessageWrite* MessageWrite::operator->() { return this; }
+CustomPacketWrite* CustomPacketWrite::operator->() { return this; }
 
-MessageWrite* MessageWrite::WriteString(
+CustomPacketWrite* CustomPacketWrite::WriteString(
 	  std::string const& str
 	, uint32_t length
 ) {
 	return WriteString(str.c_str(), length);
 }
 
-MessageWrite* MessageWrite::WriteString(
+CustomPacketWrite* CustomPacketWrite::WriteString(
 	  const char* chr
 	, uint32_t length
 ) {
@@ -31,14 +31,14 @@ MessageWrite* MessageWrite::WriteString(
 	return this;
 }
 
-MessageWrite* MessageWrite::WriteStringNullTerm(
+CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
 	  std::string const& str
 	, uint32_t length
 ) {
 	return WriteStringNullTerm(str.c_str(), length);
 }
 
-MessageWrite* MessageWrite::WriteStringNullTerm(
+CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
 	  const char* chr
 	, uint32_t length
 ) {
@@ -48,58 +48,58 @@ MessageWrite* MessageWrite::WriteStringNullTerm(
 	return this;
 }
 
-MessageWrite* MessageWrite::WriteUInt8(uint8_t value) {
+CustomPacketWrite* CustomPacketWrite::WriteUInt8(uint8_t value) {
 	Write(value);
 	return this;
 }
-MessageWrite* MessageWrite::WriteInt8(int8_t value) {
-	Write(value);
-	return this;
-}
-
-MessageWrite* MessageWrite::WriteUInt16(uint16_t value) {
-	Write(value);
-	return this;
-}
-MessageWrite* MessageWrite::WriteInt16(int16_t value) {
+CustomPacketWrite* CustomPacketWrite::WriteInt8(int8_t value) {
 	Write(value);
 	return this;
 }
 
-MessageWrite* MessageWrite::WriteUInt32(uint32_t value) {
+CustomPacketWrite* CustomPacketWrite::WriteUInt16(uint16_t value) {
 	Write(value);
 	return this;
 }
-MessageWrite* MessageWrite::WriteInt32(int32_t value) {
-	Write(value);
-	return this;
-}
-
-MessageWrite* MessageWrite::WriteUInt64(uint64_t value) {
-	Write(value);
-	return this;
-}
-MessageWrite* MessageWrite::WriteInt64(int64_t value) {
+CustomPacketWrite* CustomPacketWrite::WriteInt16(int16_t value) {
 	Write(value);
 	return this;
 }
 
-MessageWrite* MessageWrite::WriteFloat(float value) {
+CustomPacketWrite* CustomPacketWrite::WriteUInt32(uint32_t value) {
 	Write(value);
 	return this;
 }
-MessageWrite* MessageWrite::WriteDouble(double value) {
+CustomPacketWrite* CustomPacketWrite::WriteInt32(int32_t value) {
 	Write(value);
 	return this;
 }
 
-size_t MessageWrite::_strlen(const char* chr, size_t length)
+CustomPacketWrite* CustomPacketWrite::WriteUInt64(uint64_t value) {
+	Write(value);
+	return this;
+}
+CustomPacketWrite* CustomPacketWrite::WriteInt64(int64_t value) {
+	Write(value);
+	return this;
+}
+
+CustomPacketWrite* CustomPacketWrite::WriteFloat(float value) {
+	Write(value);
+	return this;
+}
+CustomPacketWrite* CustomPacketWrite::WriteDouble(double value) {
+	Write(value);
+	return this;
+}
+
+size_t CustomPacketWrite::_strlen(const char* chr, size_t length)
 {
 	return length == std::string::npos ? strlen(chr) : length;
 }
 
-MessageWrite* MessageWrite::WriteBytes(size_t size, char const* bytes)
+CustomPacketWrite* CustomPacketWrite::WriteBytes(size_t size, char const* bytes)
 {
-	MessageBase::WriteBytes(size, bytes);
+	CustomPacketBase::WriteBytes(size, bytes);
 	return this;
 }

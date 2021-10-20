@@ -5,51 +5,51 @@
 
 #include <string>
 
-class MessageWrite : public MessageBase {
+class CustomPacketWrite : public CustomPacketBase {
 public:
-	MessageWrite(PACKET_OPCODE_TYPE opcode, size_t chunkSize, size_t size = 0);
-	MessageWrite();
-	MessageWrite* operator->();
+	CustomPacketWrite(PACKET_OPCODE_TYPE opcode, size_t chunkSize, size_t size = 0);
+	CustomPacketWrite();
+	CustomPacketWrite* operator->();
 
-	MessageWrite* WriteString(
+	CustomPacketWrite* WriteString(
 		  std::string const& str
 		, uint32_t length = std::string::npos
 	);
-	MessageWrite* WriteString(
+	CustomPacketWrite* WriteString(
 		const char* chr
 		, uint32_t length = std::string::npos
 	);
-	MessageWrite* WriteStringNullTerm(
+	CustomPacketWrite* WriteStringNullTerm(
 		  std::string const& str
 		, uint32_t length = std::string::npos
 	);
-	MessageWrite* WriteStringNullTerm(
+	CustomPacketWrite* WriteStringNullTerm(
 		  const char* chr
 		, uint32_t length = std::string::npos
 	);
 
-	MessageWrite* WriteUInt8(uint8_t value);
-	MessageWrite* WriteInt8(int8_t value);
+	CustomPacketWrite* WriteUInt8(uint8_t value);
+	CustomPacketWrite* WriteInt8(int8_t value);
 
-	MessageWrite* WriteUInt16(uint16_t value);
-	MessageWrite* WriteInt16(int16_t value);
+	CustomPacketWrite* WriteUInt16(uint16_t value);
+	CustomPacketWrite* WriteInt16(int16_t value);
 
-	MessageWrite* WriteUInt32(uint32_t value);
-	MessageWrite* WriteInt32(int32_t value);
+	CustomPacketWrite* WriteUInt32(uint32_t value);
+	CustomPacketWrite* WriteInt32(int32_t value);
 
-	MessageWrite* WriteUInt64(uint64_t value);
-	MessageWrite* WriteInt64(int64_t value);
+	CustomPacketWrite* WriteUInt64(uint64_t value);
+	CustomPacketWrite* WriteInt64(int64_t value);
 
-	MessageWrite* WriteFloat(float value);
-	MessageWrite* WriteDouble(double value);
+	CustomPacketWrite* WriteFloat(float value);
+	CustomPacketWrite* WriteDouble(double value);
 
 	template <typename T>
-	MessageWrite* Write(T value)
+	CustomPacketWrite* Write(T value)
 	{
-		MessageBase::Write(value);
+		CustomPacketBase::Write(value);
 		return this;
 	}
-	MessageWrite* WriteBytes(size_t size, char const* bytes);
+	CustomPacketWrite* WriteBytes(size_t size, char const* bytes);
 private:
 	size_t _strlen(const char* chr, size_t length);
 };

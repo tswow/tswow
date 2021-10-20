@@ -3,7 +3,7 @@
 #include <string>
 #include <stdexcept>
 
-MessageBase::MessageBase(MessageBase const& base)
+CustomPacketBase::CustomPacketBase(CustomPacketBase const& base)
 	: m_size(base.m_size)
 	, m_maxChunkSize(base.m_maxChunkSize)
 	, m_idx(0)
@@ -12,7 +12,7 @@ MessageBase::MessageBase(MessageBase const& base)
 	, m_opcode(base.m_opcode)
 {}
 
-MessageBase::MessageBase()
+CustomPacketBase::CustomPacketBase()
 	: m_size(0)
 	, m_maxChunkSize(0)
 	, m_idx(0)
@@ -20,7 +20,7 @@ MessageBase::MessageBase()
 	, m_opcode(0)
 {}
 
-MessageBase::MessageBase(
+CustomPacketBase::CustomPacketBase(
 	  PACKET_OPCODE_TYPE opcode
 	, size_t maxChunkSize
 	, size_t initialSize
@@ -31,13 +31,13 @@ MessageBase::MessageBase(
 	, m_maxChunkSize(maxChunkSize)
 	, m_opcode(opcode)
 {
-	if (maxChunkSize <= sizeof(MessageHeader))
+	if (maxChunkSize <= sizeof(CustomPacketHeader))
 	{
 		throw std::runtime_error(
 			"Maximum chunk size ("
 			+ std::to_string(maxChunkSize)
 			+ ") is <= message header size ("
-			+ std::to_string(sizeof(MessageHeader))
+			+ std::to_string(sizeof(CustomPacketHeader))
 			+ "), you can't send any messages!"
 		);
 	}
@@ -48,12 +48,12 @@ MessageBase::MessageBase(
 	}
 }
 
-std::vector<MessageChunk> & MessageBase::buildMessages(uint16_t messageId)
+std::vector<CustomPacketChunk> & CustomPacketBase::buildMessages(uint16_t messageId)
 {
 	for (uint16_t i = 0; i < m_chunks.size(); ++i)
 	{
-		MessageChunk& chnk = m_chunks[i];
-		MessageHeader* hdr = chnk.Header();
+		CustomPacketChunk& chnk = m_chunks[i];
+		CustomPacketHeader* hdr = chnk.Header();
 		hdr->opcode = m_opcode;
 		hdr->msgId = messageId;
 		hdr->fragmentId = i;
@@ -62,13 +62,13 @@ std::vector<MessageChunk> & MessageBase::buildMessages(uint16_t messageId)
 	return m_chunks;
 }
 
-void MessageBase::Reset()
+void CustomPacketBase::Reset()
 {
 	m_chunk = 0;
 	m_idx = 0;
 }
 
-void MessageBase::Destroy()
+void CustomPacketBase::Destroy()
 {
 	for (auto& chunk : m_chunks)
 	{
@@ -78,58 +78,58 @@ void MessageBase::Destroy()
 	Reset();
 }
 
-void MessageBase::Push(MessageChunk& chnk)
+void CustomPacketBase::Push(CustomPacketChunk& chnk)
 {
 	m_size += chnk.Size();
 	m_chunks.push_back(chnk);
 }
 
 
-size_t MessageBase::Size()
+size_t CustomPacketBase::Size()
 {
 	return m_size;
 }
 
 
-MessageChunk* MessageBase::Chunk(size_t index)
+CustomPacketChunk* CustomPacketBase::Chunk(size_t index)
 {
 	return &m_chunks[index];
 }
 
 
-size_t MessageBase::ChunkSize(size_t index)
+size_t CustomPacketBase::ChunkSize(size_t index)
 {
 	return m_chunks[index].Size();
 }
 
 
-size_t MessageBase::ChunkCount()
+size_t CustomPacketBase::ChunkCount()
 {
 	return m_chunks.size();
 }
 
-void MessageBase::Print(
+void CustomPacketBase::Print(
 	std::function<void(std::ostream&, uint8_t)> cb
 	, std::ostream& stream
 ) {
 	stream << "message [\n";
 	for (size_t chnkCtr = 0; chnkCtr < m_chunks.size(); ++chnkCtr)
 	{
-		MessageChunk& chnk = m_chunks[chnkCtr];
+		CustomPacketChunk& chnk = m_chunks[chnkCtr];
 		chnk.Print(cb, stream, 2);
 	}
 	stream << "]\n";
 }
 
 
-void MessageBase::PrintAscii(std::ostream& stream)
+void CustomPacketBase::PrintAscii(std::ostream& stream)
 {
 	Print([](auto& stream, uint8_t byte) {
 		stream << char(byte);
 	}, stream);
 }
 
-void MessageBase::PrintBytes(std::ostream& stream)
+void CustomPacketBase::PrintBytes(std::ostream& stream)
 {
 	Print([](auto& stream, uint8_t byte) {
 		stream << "0x" << std::hex << uint32_t(byte);
@@ -139,17 +139,17 @@ void MessageBase::PrintBytes(std::ostream& stream)
 
 
 
-size_t MessageBase::MaxWritableChunkSize()
+size_t CustomPacketBase::MaxWritableChunkSize()
 {
-	return m_maxChunkSize - sizeof(MessageHeader);
+	return m_maxChunkSize - sizeof(CustomPacketHeader);
 }
 
-void MessageBase::Increase(size_t increase)
+void CustomPacketBase::Increase(size_t increase)
 {
 	// increase size
 	if (m_chunks.size() > 0)
 	{
-		MessageChunk& chnk = m_chunks[m_chunks.size() - 1];
+		CustomPacketChunk& chnk = m_chunks[m_chunks.size() - 1];
 		size_t inc = std::min(chnk.Size() + increase, MaxWritableChunkSize());
 		if (inc > 0)
 		{
@@ -169,20 +169,20 @@ void MessageBase::Increase(size_t increase)
 			? remInc
 			: MaxWritableChunkSize();
 		remInc -= size;
-		m_chunks[i] = MessageChunk(size);
+		m_chunks[i] = CustomPacketChunk(size);
 	}
 	m_size = newSize;
 }
 
-void MessageBase::WriteBytes(size_t size, char const* bytes)
+void CustomPacketBase::WriteBytes(size_t size, char const* bytes)
 {
 	while (size > 0)
 	{
 		if (m_chunk >= m_chunks.size())
 		{
-			m_chunks.push_back(MessageChunk(std::min(size, MaxWritableChunkSize())));
+			m_chunks.push_back(CustomPacketChunk(std::min(size, MaxWritableChunkSize())));
 		}
-		MessageChunk& chnk = m_chunks[m_chunk];
+		CustomPacketChunk& chnk = m_chunks[m_chunk];
 		size_t written = std::min(chnk.RemBytes(m_idx), size);
 		chnk.WriteBytes(m_idx, written, bytes);
 		bytes += written;
@@ -199,7 +199,7 @@ void MessageBase::WriteBytes(size_t size, char const* bytes)
 	}
 }
 
-char* MessageBase::ReadBytes(size_t size, bool padStr)
+char* CustomPacketBase::ReadBytes(size_t size, bool padStr)
 {
 	if (m_chunk >= m_chunks.size())
 	{
@@ -211,7 +211,7 @@ char* MessageBase::ReadBytes(size_t size, bool padStr)
 	while (size > 0)
 	{
 		if (m_chunk >= m_chunks.size()) break;
-		MessageChunk& chunk = m_chunks[m_chunk];
+		CustomPacketChunk& chunk = m_chunks[m_chunk];
 		size_t read = std::min(size, chunk.RemBytes(m_idx));
 		chunk.ReadBytes(m_idx, read, c + offset);
 		size -= read;
@@ -229,23 +229,23 @@ char* MessageBase::ReadBytes(size_t size, bool padStr)
 	return c;
 }
 
-void MessageBase::Clear()
+void CustomPacketBase::Clear()
 {
 	m_chunks.clear();
 	Reset();
 }
 
-bool MessageBase::IsPersistent()
+bool CustomPacketBase::IsPersistent()
 {
 	return m_persistent;
 }
 
-void MessageBase::SetPersistent()
+void CustomPacketBase::SetPersistent()
 {
 	m_persistent = true;
 }
 
-PACKET_OPCODE_TYPE MessageBase::Opcode()
+PACKET_OPCODE_TYPE CustomPacketBase::Opcode()
 {
 	return m_opcode;
 }

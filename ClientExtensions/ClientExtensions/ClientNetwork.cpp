@@ -12,14 +12,14 @@
 // note: most of the mess here is because I didn't
 // figure out how to register userdata yet
 
-class ClientMessageWrite : public MessageWrite
+class ClientMessageWrite : public CustomPacketWrite
 {
 public:
 	ClientMessageWrite()
-		: MessageWrite(0, MAX_FRAGMENT_SIZE,0)
+		: CustomPacketWrite(0, MAX_FRAGMENT_SIZE,0)
 	{}
 	ClientMessageWrite(PACKET_OPCODE_TYPE opcode, size_t size)
-		: MessageWrite(opcode, MAX_FRAGMENT_SIZE,size)
+		: CustomPacketWrite(opcode, MAX_FRAGMENT_SIZE,size)
 	{}
 
 	void Send()
@@ -67,10 +67,10 @@ public:
 };
 
 MessageRegistry<ClientMessageWrite> writes;
-MessageRegistry<MessageRead> reads;
+MessageRegistry<CustomPacketRead> reads;
 
-class ClientMessageBuffer : public MessageBuffer {
-	virtual void OnPacket(MessageRead* value) override final
+class ClientMessageBuffer : public CustomPacketBuffer {
+	virtual void OnPacket(CustomPacketRead* value) override final
 	{
 		uint32_t msg = reads.add(*value,&value);
 		ClientLua::DoString(
@@ -84,7 +84,7 @@ class ClientMessageBuffer : public MessageBuffer {
 		}
 	}
 
-	virtual void OnError(MessageResult error) override final
+	virtual void OnError(CustomPacketResult error) override final
 	{
 		LOG_ERROR << "Packet reading error " << uint32_t(error);
 	}

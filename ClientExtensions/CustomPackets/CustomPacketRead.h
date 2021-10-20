@@ -5,12 +5,12 @@
 #include "CustomPacketBase.h"
 #include "CustomPacketWrite.h"
 
-class MessageRead : public MessageBase {
+class CustomPacketRead : public CustomPacketBase {
 public:
-	MessageRead();
-	MessageRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize);
-	MessageRead(MessageWrite const& write);
-	MessageRead* operator->();
+	CustomPacketRead();
+	CustomPacketRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize);
+	CustomPacketRead(CustomPacketWrite const& write);
+	CustomPacketRead* operator->();
 
 	std::string ReadString(std::string const& def = "");
 
@@ -32,7 +32,7 @@ public:
 	template<typename T>
 	T Read(T def)
 	{
-		return MessageBase::Read(def);
+		return CustomPacketBase::Read(def);
 	}
 
 	char* ReadBytes(size_t size, bool padStr = false);

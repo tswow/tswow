@@ -7,7 +7,7 @@
 
 TEST_CASE("[MessageBase] initialize") {
   SECTION("with chunkSize=1 and size=0") {
-    MessageWrite message(0, sizeof(MessageHeader) + 1, 0);
+    CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 1, 0);
     SECTION("has size of 0") {
       REQUIRE(message.Size() == 0);
     }
@@ -18,7 +18,7 @@ TEST_CASE("[MessageBase] initialize") {
   }
 
   SECTION("with chunkSize=1 and size=1") {
-    MessageWrite message(0, sizeof(MessageHeader) + 1, 1);
+    CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 1, 1);
     SECTION("has size of 1") {
       REQUIRE(message.Size() == 1);
     }
@@ -29,7 +29,7 @@ TEST_CASE("[MessageBase] initialize") {
   }
 
   SECTION("with chunkSize=1 and size=2") {
-    MessageWrite message(0, sizeof(MessageHeader) + 1, 2);
+    CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 1, 2);
     SECTION("has size of 2") {
       REQUIRE(message.Size() == 2);
     }
@@ -43,18 +43,18 @@ TEST_CASE("[MessageBase] initialize") {
 TEST_CASE("[MessageBase] read/write") {
   SECTION("pre-allocated") {
     SECTION("single chunk") {
-      MessageWrite message(0, sizeof(MessageHeader) + 16, 10);
+      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 16, 10);
       REQUIRE(message.ChunkCount() == 1); // sanity
 
       SECTION("single value") {
         message.WriteUInt16(1768);
-        REQUIRE(MessageRead(message).ReadUInt16() == 1768);
+        REQUIRE(CustomPacketRead(message).ReadUInt16() == 1768);
       }
 
       SECTION("multiple values") {
         message.WriteUInt16(1768);
         message.WriteUInt16(8671);
-        MessageRead read(message);
+        CustomPacketRead read(message);
         REQUIRE(read.ReadUInt16() == 1768);
         REQUIRE(read.ReadUInt16() == 8671);
       }
@@ -62,7 +62,7 @@ TEST_CASE("[MessageBase] read/write") {
       SECTION("single string") {
         message.WriteString("abcd");
         REQUIRE_THAT(
-            MessageRead(message).ReadString()
+            CustomPacketRead(message).ReadString()
           , Catch::Matchers::Equals("abcd")
         );
       }
@@ -70,41 +70,41 @@ TEST_CASE("[MessageBase] read/write") {
       SECTION("multiple strings") {
         message.WriteString("abcd");
         message.WriteString("efgh");
-        MessageRead read(message);
+        CustomPacketRead read(message);
         REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("abcd"));
         REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("efgh"));
       }
     }
 
     SECTION("multiple chunks (aligned)") {
-      MessageWrite message(0, sizeof(MessageHeader) + 2, 4);
+      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 2, 4);
       SECTION("single value") {
         message.WriteUInt16(1768);
-        REQUIRE(MessageRead(message).ReadUInt16() == 1768);
+        REQUIRE(CustomPacketRead(message).ReadUInt16() == 1768);
       }
 
       SECTION("multiple values") {
         message.WriteUInt16(1768);
         message.WriteUInt16(8671);
-        MessageRead read(message);
+        CustomPacketRead read(message);
         REQUIRE(message.ChunkCount() == 2); // sanity
         REQUIRE(read.ReadUInt16() == 1768);
         REQUIRE(read.ReadUInt16() == 8671);
       }
 
       SECTION("single string") {
-        MessageWrite strMessage(0, sizeof(MessageHeader) + 8, 16);
+        CustomPacketWrite strMessage(0, sizeof(CustomPacketHeader) + 8, 16);
         strMessage.WriteString("abcdefgh");
-        MessageRead read(strMessage);
+        CustomPacketRead read(strMessage);
         REQUIRE(message.ChunkCount() == 2); // sanity
         REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("abcdefgh"));
       }
 
       SECTION("multiple strings") {
-        MessageWrite strMessage(0, sizeof(MessageHeader) + 8, 16);
+        CustomPacketWrite strMessage(0, sizeof(CustomPacketHeader) + 8, 16);
         strMessage.WriteString("abcd");
         strMessage.WriteString("efgh");
-        MessageRead read(strMessage);
+        CustomPacketRead read(strMessage);
         REQUIRE(message.ChunkCount() == 2); // sanity
         REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("abcd"));
         REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("efgh"));
@@ -113,11 +113,11 @@ TEST_CASE("[MessageBase] read/write") {
 
     SECTION("multiple chunks (misaligned)") {
       SECTION("multiple values") {
-        MessageWrite message(0, sizeof(MessageHeader) + 2, 6);
+        CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 2, 6);
         message.WriteUInt8(25);
         message.WriteUInt16(1768);
         message.WriteUInt16(8671);
-        MessageRead read(message);
+        CustomPacketRead read(message);
         REQUIRE(message.ChunkCount() == 3); // sanity
         REQUIRE(read.ReadUInt8() == 25);
         REQUIRE(read.ReadUInt16() == 1768);
@@ -125,12 +125,12 @@ TEST_CASE("[MessageBase] read/write") {
       }
 
       SECTION("single string") {
-        MessageWrite strMessage(0, sizeof(MessageHeader) + 8, 16);
+        CustomPacketWrite strMessage(0, sizeof(CustomPacketHeader) + 8, 16);
         strMessage.WriteUInt32(0);
         strMessage.WriteUInt8(0); // forces string to start on chunk 2
         strMessage.WriteString("abcd");
 
-        MessageRead read(strMessage);
+        CustomPacketRead read(strMessage);
         read.ReadUInt32();
         read.ReadUInt8();
         REQUIRE(read.ChunkCount() == 2); // sanity
@@ -141,10 +141,10 @@ TEST_CASE("[MessageBase] read/write") {
 
   SECTION("partial allocation") {
     SECTION("single chunk") {
-      MessageWrite message(0, sizeof(MessageHeader) + 10, 1);
+      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 10, 1);
       SECTION("single value") {
         message.WriteUInt16(1768);
-        MessageRead read = MessageRead(message);
+        CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 1); // sanity
         REQUIRE(read.ReadUInt16() == 1768);
       }
@@ -155,7 +155,7 @@ TEST_CASE("[MessageBase] read/write") {
         message.WriteUInt8(25);
         // skips the second one
         message.WriteUInt16(8671);
-        MessageRead read = MessageRead(message);
+        CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 1); // sanity
         REQUIRE(read.ReadUInt16() == 1768);
         REQUIRE(read.ReadUInt8() == 25);
@@ -164,14 +164,14 @@ TEST_CASE("[MessageBase] read/write") {
     }
 
     SECTION("multiple chunks") {
-      MessageWrite message(0, sizeof(MessageHeader) + 2, 1);
+      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 2, 1);
       SECTION("multiple values") {
         // skips the first one
         message.WriteUInt16(1768);
         message.WriteUInt8(25);
         // skips the second one
         message.WriteUInt16(8671);
-        MessageRead read = MessageRead(message);
+        CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 3); // sanity
         REQUIRE(read.ReadUInt16() == 1768);
         REQUIRE(read.ReadUInt8() == 25);

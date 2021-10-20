@@ -6,25 +6,25 @@
 
 #define INT_TEST(writeFn,readFn,name,min,max,norm)     \
 TEST_CASE(#name,"[MessageBase]") {                     \
-  MessageWrite write;                                  \
+  CustomPacketWrite write;                                  \
   SECTION("writes upper boundary") {                   \
     write.writeFn(max);                                \
-    REQUIRE(MessageRead(write).readFn() == max);       \
+    REQUIRE(CustomPacketRead(write).readFn() == max);       \
   }                                                    \
                                                        \
   SECTION("writes lower boundary") {                   \
     write.writeFn(min);                                \
-    REQUIRE(MessageRead(write).readFn() == min);       \
+    REQUIRE(CustomPacketRead(write).readFn() == min);       \
   }                                                    \
                                                        \
   SECTION("writes zero") {                             \
     write.writeFn(0);                                  \
-    REQUIRE(MessageRead(write).readFn() == 0);         \
+    REQUIRE(CustomPacketRead(write).readFn() == 0);         \
   }                                                    \
                                                        \
   SECTION("writes normal value") {                     \
     write.writeFn(norm);                               \
-    REQUIRE(MessageRead(write).readFn() == norm);      \
+    REQUIRE(CustomPacketRead(write).readFn() == norm);      \
   }                                                    \
 }
 
@@ -41,41 +41,41 @@ INT_TEST(WriteUInt64, ReadUInt64, uint64, 0, UINT64_MAX, 10076880000)
 INT_TEST(WriteInt64, ReadInt64, int64, INT64_MIN,INT64_MAX, -10076880000)
 
 TEST_CASE("[MessageBase] floats") {
-  MessageWrite write;
+  CustomPacketWrite write;
   SECTION("writes high value") {
     write.WriteFloat(1007688);
-    REQUIRE(MessageRead(write).ReadFloat() == 1007688);
+    REQUIRE(CustomPacketRead(write).ReadFloat() == 1007688);
   }
 
   SECTION("writes low value") {
     write.WriteFloat(-1007688);
-    REQUIRE(MessageRead(write).ReadFloat() == -1007688);
+    REQUIRE(CustomPacketRead(write).ReadFloat() == -1007688);
   }
 
   SECTION("writes normal fractions") {
     write.WriteFloat(1.5);
     REQUIRE_THAT(
-      MessageRead(write).ReadFloat(),Catch::Matchers::WithinAbs(1.5f,0.001)
+      CustomPacketRead(write).ReadFloat(),Catch::Matchers::WithinAbs(1.5f,0.001)
     );
   }
 }
 
 TEST_CASE("[MessageBase] doubles") {
-  MessageWrite write;
+  CustomPacketWrite write;
   SECTION("writes high value") {
     write.WriteDouble(10076881007688);
-    REQUIRE(MessageRead(write).ReadDouble() == 10076881007688);
+    REQUIRE(CustomPacketRead(write).ReadDouble() == 10076881007688);
   }
 
   SECTION("writes low value") {
     write.WriteDouble(-10076881007688);
-    REQUIRE(MessageRead(write).ReadDouble() == -10076881007688);
+    REQUIRE(CustomPacketRead(write).ReadDouble() == -10076881007688);
   }
 
   SECTION("writes big fractions") {
     write.WriteDouble(1007688.1007688);
     REQUIRE_THAT(
-        MessageRead(write).ReadDouble()
+        CustomPacketRead(write).ReadDouble()
       , Catch::Matchers::WithinAbs(1007688.1007688, 0.0001)
     );
   }

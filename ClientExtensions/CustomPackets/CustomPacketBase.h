@@ -5,16 +5,16 @@
 
 #include <vector>
 
-class MessageBase {
+class CustomPacketBase {
 public:
-	MessageBase(MessageBase const& base);
-	MessageBase();
-	MessageBase(
+	CustomPacketBase(CustomPacketBase const& base);
+	CustomPacketBase();
+	CustomPacketBase(
 		  PACKET_OPCODE_TYPE opcode
 		, size_t maxChunkSize
 		, size_t initialSize
 	);
-	std::vector<MessageChunk> & buildMessages(uint16_t messageId);
+	std::vector<CustomPacketChunk> & buildMessages(uint16_t messageId);
 
 	void Reset();
 	void Destroy();
@@ -23,9 +23,9 @@ public:
 	bool IsPersistent();
 	void SetPersistent();
 
-	void Push(MessageChunk& chnk);
+	void Push(CustomPacketChunk& chnk);
 	size_t Size();
-	MessageChunk* Chunk(size_t index);
+	CustomPacketChunk* Chunk(size_t index);
 	size_t ChunkSize(size_t index);
 	size_t ChunkCount();
 
@@ -51,10 +51,10 @@ protected:
 	{
 		if (m_chunks.size() == 0)
 		{
-			m_chunks.push_back(MessageChunk(sizeof(T)));
+			m_chunks.push_back(CustomPacketChunk(sizeof(T)));
 		}
 
-		MessageChunk* chnk = &m_chunks[m_chunk];
+		CustomPacketChunk* chnk = &m_chunks[m_chunk];
 
 		// we have space
 		if (chnk->RemBytes(m_idx) >= sizeof(T))
@@ -76,7 +76,7 @@ protected:
 		{
 			if (m_chunk == m_chunks.size() - 1)
 			{
-				m_chunks.push_back(MessageChunk(sizeof(T)));
+				m_chunks.push_back(CustomPacketChunk(sizeof(T)));
 				m_size += sizeof(T);
 			}
 			++m_chunk;
@@ -91,7 +91,7 @@ protected:
 	{
 		if (m_chunk >= m_chunks.size()) return def;
 
-		MessageChunk& chnk = m_chunks[m_chunk];
+		CustomPacketChunk& chnk = m_chunks[m_chunk];
 
 		// there is space left to read here
 		if (chnk.RemBytes(m_idx) >= sizeof(T))
@@ -110,7 +110,7 @@ protected:
 	char* ReadBytes(size_t size, bool padStr = false);
 
 private:
-	std::vector<MessageChunk> m_chunks;
+	std::vector<CustomPacketChunk> m_chunks;
 	size_t m_size;
 	size_t m_maxChunkSize; // including header
 
