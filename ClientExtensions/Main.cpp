@@ -3,7 +3,7 @@
 #include <vector>
 #include "ClientDetours.h"
 #include "Logger.h"
-#include "Arguments.h"
+#include "ClientArguments.h"
 #include "scripts.generated.h"
 
 class Main
@@ -12,6 +12,8 @@ public:
 	static void startup()
 	{
 		LOG_INFO << "Client starting up";
+		// gets this from scripts.generated.ih
+		__init_scripts();
 		ClientArguments::initialize(GetCommandLineA());
 		ClientDetours::Apply();
 	}
@@ -27,8 +29,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	if (fdwReason == DLL_PROCESS_ATTACH)
 	{
 		DisableThreadLibraryCalls(hinstDLL);
-		// gets this from scripts.generated.ih
-		__init_scripts();
 		Main::startup();
 	}
 	return TRUE;
