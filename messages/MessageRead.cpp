@@ -74,7 +74,7 @@ double MessageRead::ReadDouble(double def)
 	return Read<double>(def);
 }
 
-char* MessageRead::ReadBytes(size_t size, bool padStr = false)
+char* MessageRead::ReadBytes(size_t size, bool padStr)
 {
 	return MessageBase::ReadBytes(size, padStr);
 }
