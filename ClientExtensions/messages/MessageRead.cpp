@@ -4,8 +4,8 @@ MessageRead::MessageRead()
 	: MessageBase()
 {}
 
-MessageRead::MessageRead(size_t chunkSize)
-	: MessageBase(chunkSize, 0)
+MessageRead::MessageRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize)
+	: MessageBase(opcode, chunkSize, 0)
 {}
 
 MessageRead::MessageRead(MessageWrite const& write)

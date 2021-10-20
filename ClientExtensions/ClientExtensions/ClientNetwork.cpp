@@ -4,6 +4,8 @@
 #include "Logger.h"
 #include "ClientLua.h"
 
+#include "MessageDefines.h"
+
 #include <map>
 #include <sstream>
 
@@ -14,10 +16,10 @@ class ClientMessageWrite : public MessageWrite
 {
 public:
 	ClientMessageWrite()
-		: MessageWrite(MESSAGE_FRAGMENT_SIZE,0)
+		: MessageWrite(0, MAXIMUM_PACKET_SIZE,0)
 	{}
-	ClientMessageWrite(size_t size)
-		: MessageWrite(MESSAGE_FRAGMENT_SIZE,size)
+	ClientMessageWrite(PACKET_OPCODE_TYPE opcode, size_t size)
+		: MessageWrite(opcode, MAXIMUM_PACKET_SIZE,size)
 	{}
 
 	void Send()
@@ -108,9 +110,10 @@ int WriteNum(lua_State* L)
 extern "C" {
 	int _WriteMessage(lua_State* L)
 	{
-		uint32_t size(ClientLua::GetNumber(L, 1, 0));
+		uint32_t opcode(ClientLua::GetNumber(L, 1, 0));
+		uint32_t size(ClientLua::GetNumber(L, 2, 0));
 		uint32_t id = writes.freeId();
-		writes.m_map[id] = ClientMessageWrite{size};
+		writes.m_map[id] = ClientMessageWrite{opcode, size};
 		ClientLua::PushNumber(L, id);
 		return 1;
 	}

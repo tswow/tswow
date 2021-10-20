@@ -37,7 +37,6 @@ protected:
 	// the message itself!
 	virtual void OnPacket(MessageRead * value) {}
 	virtual void OnError(MessageResult error) {}
-	virtual void StorePersistent(MessageRead value) {}
 private:
 	size_t m_quota;
 	size_t m_minFragmentSize;

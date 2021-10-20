@@ -1,7 +1,11 @@
 #include "MessageWrite.h"
 
-MessageWrite::MessageWrite(size_t chunkSize, size_t size)
-	: MessageBase(chunkSize, size)
+MessageWrite::MessageWrite(
+	  PACKET_OPCODE_TYPE opcode
+	, size_t chunkSize
+	, size_t size
+)
+	: MessageBase(opcode, chunkSize, size)
 {}
 
 MessageWrite::MessageWrite()

@@ -4,7 +4,7 @@ MessageBuffer::MessageBuffer(size_t minFragmentSize, size_t quota, size_t buffer
 	: m_minFragmentSize(minFragmentSize)
 	, m_maxFragmentSize(bufferSize)
 	, m_quota(quota)
-	, m_cur(bufferSize)
+	, m_cur(0,bufferSize)
 {}
 
 MessageResult MessageBuffer::ReceivePacket(size_t size, char* data)

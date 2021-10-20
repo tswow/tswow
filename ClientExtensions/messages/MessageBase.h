@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MessageChunk.h"
+#include "MessageDefines.h"
 
 #include <vector>
 
@@ -8,7 +9,11 @@ class MessageBase {
 public:
 	MessageBase(MessageBase const& base);
 	MessageBase();
-	MessageBase(size_t maxChunkSize, size_t initialSize);
+	MessageBase(
+		  PACKET_OPCODE_TYPE opcode
+		, size_t maxChunkSize
+		, size_t initialSize
+	);
 	std::vector<MessageChunk> const& buildMessages(uint16_t messageId);
 
 	void Reset();
@@ -109,6 +114,8 @@ private:
 
 	size_t m_idx; // chunk read index
 	size_t m_chunk; // chunk to read
+
+	PACKET_OPCODE_TYPE m_opcode;
 
 	bool m_persistent;
 };

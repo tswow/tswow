@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MessageDefines.h"
+
 #include <cstdint>
 #include <functional>
 #include <iostream>
@@ -9,6 +11,7 @@ struct MessageHeader {
 	uint16_t msgId;
 	uint16_t fragmentId;
 	uint16_t totalFrags;
+	PACKET_OPCODE_TYPE opcode;
 };
 #pragma pack(pop)
 

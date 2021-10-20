@@ -1,0 +1,2 @@
+#define PACKET_OPCODE_TYPE uint32_t
+#define MAXIMUM_PACKET_SIZE 8000

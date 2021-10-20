@@ -1,11 +1,13 @@
 #pragma once
+
+#include "MessageDefines.h"
 #include "MessageBase.h"
 
 #include <string>
 
 class MessageWrite : public MessageBase {
 public:
-	MessageWrite(size_t chunkSize, size_t size = 0);
+	MessageWrite(PACKET_OPCODE_TYPE opcode, size_t chunkSize, size_t size = 0);
 	MessageWrite();
 	MessageWrite* operator->();
 

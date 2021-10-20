@@ -67,8 +67,6 @@ target_include_directories(ClientExtensions PUBLIC
 set_property(TARGET ClientExtensions PROPERTY USE_FOLDERS true)
 source_group(Scripts FILES ${CLIENT_EXTENSIONS_SCRIPTS})
 
-set(MESSAGE_FRAGMENT_SIZE 5000 CACHE INTEGER "How many bytes can fit in a message fragment")
-target_compile_definitions(ClientExtensions PRIVATE MESSAGE_FRAGMENT_SIZE=${MESSAGE_FRAGMENT_SIZE})
 set(LUA_LOGGING true CACHE BOOL "Allow logging from client lua")
 if(LUA_LOGGING)
     target_compile_definitions(ClientExtensions PRIVATE LUA_LOGGING)

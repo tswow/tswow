@@ -1,11 +1,14 @@
 #pragma once
+
+#include "MessageDefines.h"
+
 #include "MessageBase.h"
 #include "MessageWrite.h"
 
 class MessageRead : public MessageBase {
 public:
 	MessageRead();
-	MessageRead(size_t chunkSize);
+	MessageRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize);
 	MessageRead(MessageWrite const& write);
 	MessageRead* operator->();
 

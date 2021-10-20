@@ -6,7 +6,7 @@
 
 std::vector<MessageChunk> makePacket(uint16_t packetId, size_t chunkSize, size_t size)
 {
-	MessageWrite write(sizeof(MessageHeader)+chunkSize,size);
+	MessageWrite write(0, sizeof(MessageHeader)+chunkSize,size);
 	return write.buildMessages(packetId);
 }
 

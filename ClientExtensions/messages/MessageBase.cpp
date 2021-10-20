@@ -9,6 +9,7 @@ MessageBase::MessageBase(MessageBase const& base)
 	, m_idx(0)
 	, m_chunk(0)
 	, m_chunks(base.m_chunks)
+	, m_opcode(base.m_opcode)
 {}
 
 MessageBase::MessageBase()
@@ -16,13 +17,19 @@ MessageBase::MessageBase()
 	, m_maxChunkSize(0)
 	, m_idx(0)
 	, m_chunk(0)
+	, m_opcode(0)
 {}
 
-MessageBase::MessageBase(size_t maxChunkSize, size_t initialSize)
+MessageBase::MessageBase(
+	  PACKET_OPCODE_TYPE opcode
+	, size_t maxChunkSize
+	, size_t initialSize
+	)
 	: m_size(0)
 	, m_idx(0)
 	, m_chunk(0)
 	, m_maxChunkSize(maxChunkSize)
+	, m_opcode(opcode)
 {
 	if (maxChunkSize <= sizeof(MessageHeader))
 	{
@@ -47,6 +54,7 @@ std::vector<MessageChunk> const& MessageBase::buildMessages(uint16_t messageId)
 	{
 		MessageChunk& chnk = m_chunks[i];
 		MessageHeader* hdr = chnk.Header();
+		hdr->opcode = m_opcode;
 		hdr->msgId = messageId;
 		hdr->fragmentId = i;
 		hdr->totalFrags = m_chunks.size();

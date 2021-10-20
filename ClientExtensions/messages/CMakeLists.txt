@@ -12,6 +12,7 @@ SET(MESSAGES_H
     MessageBase.h
     MessageBuffer.h
     MessageChunk.h
+    MessageDefines.h
 )
 
 add_library(messages STATIC
