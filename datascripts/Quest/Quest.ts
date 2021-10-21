@@ -18,6 +18,7 @@ import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
+import { RaceMask } from "../Race/RaceType";
 import { QuestAddon } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
 import { QuestGameEventCondition } from "./QuestGameEventPoints";
@@ -65,5 +66,10 @@ export class Quest extends MainEntity<quest_templateRow> {
     }
     get POIs() { return new QuestPOIs(this); }
     get GameEvents() { return new QuestGameEventsForward(this); }
+
+    get RaceMask() {
+        return makeMaskCell32(RaceMask, this, this.row.AllowableRaces, false);
+    }
+
     readonly GameEventPoints = new QuestGameEventCondition(this);
 }
