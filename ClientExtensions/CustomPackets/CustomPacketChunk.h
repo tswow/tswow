@@ -8,7 +8,6 @@
 
 #pragma pack(push,1)
 struct CUSTOM_PACKET_API CustomPacketHeader {
-	uint16_t firstOpcode;
 	uint16_t msgId;
 	uint16_t fragmentId;
 	uint16_t totalFrags;

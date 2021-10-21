@@ -12,26 +12,35 @@
 // note: most of the mess here is because I didn't
 // figure out how to register userdata yet
 
-// The raw client packet
-struct ClientPacket {
-	uint32_t m_padding;
-	char* m_buffer;
-	uint32_t m_base;
-	uint32_t m_alloc;
-	uint32_t m_size;
-	uint32_t m_read;
-	ClientPacket(char* buffer, size_t size)
-		: m_buffer(buffer)
-		, m_size(size)
-		, m_alloc(size)
-		, m_base(0)
-		, m_read(0)
-	{}
-};
+struct ClientPacket;
 
 CLIENT_METHOD(InitializePacket, 0x00401050, void, (ClientPacket* packet))
 CLIENT_METHOD(FinalizePacket, 0x00401130, void, (ClientPacket* packet))
 CLIENT_FUNC(SendPacket, 0x006B0B50, void, (ClientPacket* packet))
+
+// The raw client packet
+struct ClientPacket {
+	uint32_t m_padding;
+	uint8_t* m_buffer;
+	uint32_t m_base;
+	uint32_t m_alloc;
+	uint32_t m_size;
+	uint32_t m_read;
+	ClientPacket(uint8_t* buffer, size_t size)
+		: m_padding(0)
+		, m_buffer(0)
+		, m_size(0)
+		, m_alloc(0)
+		, m_base(0)
+		, m_read(0)
+	{
+		InitializePacket(this);
+		m_buffer = buffer;
+		m_size = size;
+		m_alloc = size;
+	}
+};
+
 
 class ClientMessageWrite : public CustomPacketWrite
 {
@@ -45,17 +54,24 @@ public:
 
 	void Send()
 	{
-		std::stringstream str;
-		PrintBytes(str);
-		LOG_DEBUG << "Sending message:" << str.str();
 		std::vector<CustomPacketChunk>& chunks = buildMessages(1);
 		for (auto& chunk : chunks)
 		{
-			std::stringstream cstr;
-			chunk.PrintBytes(cstr);
-			LOG_DEBUG << "Sending chunk:" << cstr.str();
-			ClientPacket * p = new ClientPacket(chunk.Data(), chunk.FullSize());
-			InitializePacket(p);
+
+			// the API assumes the opcode is not a part of the payload,
+			// because TrinityCore WorldPackets do not include it.
+			//
+			// This means just a single copy on the client.
+			// Getting rid of it would be very cumbersome to almost no benefit.
+
+			size_t fullSize = sizeof(uint32_t) + chunk.FullSize();
+			char* c = new char[fullSize];
+#pragma warning(push)
+#pragma warning(disable: 6001)
+			(*(uint32_t*)c[0]) = CLIENT_TO_SERVER_OPCODE;
+#pragma warning(pop)
+			memcpy(c + sizeof(uint32_t), chunk.Data(), chunk.FullSize());
+			ClientPacket* p = new ClientPacket((uint8_t*)c, fullSize);
 			FinalizePacket(p);
 			SendPacket(p);
 		}
