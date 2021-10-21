@@ -16,7 +16,7 @@ export function generateStringify(node: ts.ClassDeclaration, writer: CodeWriter)
 
         const normalTypes = [
             'uint8','uint16','uint32','uint64',
-            'int8','int16','int32','int64',
+            'int8','int16','int32','int64','bool','boolean',
             'float','double','string','TSString','TSArray','TSDictionary'];
 
         let isNormal = type === 'int';
