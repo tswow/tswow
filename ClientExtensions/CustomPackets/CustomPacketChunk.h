@@ -8,6 +8,7 @@
 
 #pragma pack(push,1)
 struct CustomPacketHeader {
+	uint16_t firstOpcode;
 	uint16_t msgId;
 	uint16_t fragmentId;
 	uint16_t totalFrags;

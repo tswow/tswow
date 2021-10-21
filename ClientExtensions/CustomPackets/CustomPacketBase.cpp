@@ -54,6 +54,7 @@ std::vector<CustomPacketChunk> & CustomPacketBase::buildMessages(uint16_t messag
 	{
 		CustomPacketChunk& chnk = m_chunks[i];
 		CustomPacketHeader* hdr = chnk.Header();
+		hdr->firstOpcode = CLIENT_TO_SERVER_OPCODE;
 		hdr->opcode = m_opcode;
 		hdr->msgId = messageId;
 		hdr->fragmentId = i;

@@ -1,5 +1,5 @@
-function WriteMessage(size)
-	local writer = { id = _WriteMessage(size) }
+function WriteMessage(opcode,size)
+	local writer = { id = _WriteMessage(opcode,size) }
 
 	function writer:WriteUInt8(value)
 	 _WriteUInt8(self.id,value)

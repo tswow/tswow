@@ -12,6 +12,27 @@
 // note: most of the mess here is because I didn't
 // figure out how to register userdata yet
 
+// The raw client packet
+struct ClientPacket {
+	uint32_t m_padding;
+	char* m_buffer;
+	uint32_t m_base;
+	uint32_t m_alloc;
+	uint32_t m_size;
+	uint32_t m_read;
+	ClientPacket(char* buffer, size_t size)
+		: m_buffer(buffer)
+		, m_size(size)
+		, m_alloc(size)
+		, m_base(0)
+		, m_read(0)
+	{}
+};
+
+CLIENT_METHOD(InitializePacket, 0x00401050, void, (ClientPacket* packet))
+CLIENT_METHOD(FinalizePacket, 0x00401130, void, (ClientPacket* packet))
+CLIENT_FUNC(SendPacket, 0x006B0B50, void, (ClientPacket* packet))
+
 class ClientMessageWrite : public CustomPacketWrite
 {
 public:
@@ -27,6 +48,18 @@ public:
 		std::stringstream str;
 		PrintBytes(str);
 		LOG_DEBUG << "Sending message:" << str.str();
+		std::vector<CustomPacketChunk>& chunks = buildMessages(1);
+		for (auto& chunk : chunks)
+		{
+			std::stringstream cstr;
+			chunk.PrintBytes(cstr);
+			LOG_DEBUG << "Sending chunk:" << cstr.str();
+			ClientPacket * p = new ClientPacket(chunk.Data(), chunk.FullSize());
+			InitializePacket(p);
+			FinalizePacket(p);
+			SendPacket(p);
+		}
+
 		if (!IsPersistent())
 		{
 			Destroy();
@@ -134,6 +167,7 @@ extern "C" {
 		{
 			writes.m_map.erase(id);
 		}
+		return 0;
 	}
 }
 
