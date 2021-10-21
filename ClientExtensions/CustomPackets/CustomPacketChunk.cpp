@@ -112,7 +112,7 @@ void CustomPacketChunk::PrintBytes(
 	, size_t indent
 ) {
 	return Print([](auto& stream, uint8_t byte) {
-		stream << std::hex << uint32_t(byte);
+		stream << "0x" << std::hex << uint32_t(byte);
 	}, stream, indent);
 }
 
