@@ -235,16 +235,6 @@ void CustomPacketBase::Clear()
 	Reset();
 }
 
-bool CustomPacketBase::IsPersistent()
-{
-	return m_persistent;
-}
-
-void CustomPacketBase::SetPersistent()
-{
-	m_persistent = true;
-}
-
 PACKET_OPCODE_TYPE CustomPacketBase::Opcode()
 {
 	return m_opcode;

@@ -20,9 +20,6 @@ public:
 	void Destroy();
 	void Clear();
 
-	bool IsPersistent();
-	void SetPersistent();
-
 	void Push(CustomPacketChunk& chnk);
 	size_t Size();
 	CustomPacketChunk* Chunk(size_t index);
@@ -118,6 +115,4 @@ private:
 	size_t m_chunk; // chunk to read
 
 	PACKET_OPCODE_TYPE m_opcode;
-
-	bool m_persistent;
 };

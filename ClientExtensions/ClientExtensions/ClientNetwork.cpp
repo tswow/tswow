@@ -75,11 +75,7 @@ public:
 			FinalizePacket(p);
 			SendPacket(p);
 		}
-
-		if (!IsPersistent())
-		{
-			Destroy();
-		}
+		Destroy();
 	}
 };
 
@@ -126,11 +122,7 @@ class ClientMessageBuffer : public CustomPacketBuffer {
 			  ("__FireMessage(" + std::to_string(msg) + ")").c_str()
 			, ClientLua::State()
 		);
-		if (!value->IsPersistent())
-		{
-			value->Destroy();
-			reads.m_map.erase(msg);
-		}
+		value->Destroy();
 	}
 
 	virtual void OnError(CustomPacketResult error) override final
@@ -179,10 +171,7 @@ extern "C" {
 			return 0;
 		}
 		write->Send();
-		if (!write->IsPersistent())
-		{
-			writes.m_map.erase(id);
-		}
+		writes.m_map.erase(id);
 		return 0;
 	}
 }
