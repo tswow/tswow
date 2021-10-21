@@ -16,3 +16,8 @@
 //
 #define SERVER_TO_CLIENT_OPCODE 0x102
 #define CLIENT_TO_SERVER_OPCODE 0x51f
+
+// no linking by default
+#ifndef CUSTOM_PACKET_API
+#define CUSTOM_PACKET_API
+#endif

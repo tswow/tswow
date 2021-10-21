@@ -7,7 +7,7 @@
 #include <iostream>
 
 #pragma pack(push,1)
-struct CustomPacketHeader {
+struct CUSTOM_PACKET_API CustomPacketHeader {
 	uint16_t firstOpcode;
 	uint16_t msgId;
 	uint16_t fragmentId;
@@ -16,7 +16,7 @@ struct CustomPacketHeader {
 };
 #pragma pack(pop)
 
-struct CustomPacketChunk {
+struct CUSTOM_PACKET_API CustomPacketChunk {
 public:
 	CustomPacketChunk(CustomPacketChunk const& other);
 	CustomPacketChunk(size_t size, char* chunk);

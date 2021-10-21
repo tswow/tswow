@@ -5,7 +5,7 @@
 #include "CustomPacketBase.h"
 #include "CustomPacketWrite.h"
 
-class CustomPacketRead : public CustomPacketBase {
+class CUSTOM_PACKET_API CustomPacketRead : public CustomPacketBase {
 public:
 	CustomPacketRead();
 	CustomPacketRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize);

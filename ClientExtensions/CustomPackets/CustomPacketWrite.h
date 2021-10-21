@@ -5,7 +5,7 @@
 
 #include <string>
 
-class CustomPacketWrite : public CustomPacketBase {
+class CUSTOM_PACKET_API CustomPacketWrite : public CustomPacketBase {
 public:
 	CustomPacketWrite(PACKET_OPCODE_TYPE opcode, size_t chunkSize, size_t size = 0);
 	CustomPacketWrite();

@@ -2,7 +2,7 @@
 
 #include "CustomPacketRead.h"
 
-enum class CustomPacketResult {
+enum class CUSTOM_PACKET_API CustomPacketResult {
 	NO_HEADER            = 0x1,   // 1
 	HEADER_MISMATCH      = 0x2,   // 2
 	INVALID_FRAG_COUNT   = 0x4,   // 4

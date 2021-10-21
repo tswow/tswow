@@ -5,7 +5,7 @@
 
 #include <vector>
 
-class CustomPacketBase {
+class CUSTOM_PACKET_API CustomPacketBase {
 public:
 	CustomPacketBase(CustomPacketBase const& base);
 	CustomPacketBase();
