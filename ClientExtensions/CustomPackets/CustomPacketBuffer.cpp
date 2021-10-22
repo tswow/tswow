@@ -121,6 +121,8 @@ void CustomPacketBuffer::AppendFragment(CustomPacketChunk & chunk, bool isLast)
 	// buffer entries need to be made persistent
 	if (isLast)
 	{
+		// todo: probably should happen elsewhere
+		m_cur->m_opcode = chunk.Header()->opcode;
 		m_cur.Push(chunk);
 	}
 	else

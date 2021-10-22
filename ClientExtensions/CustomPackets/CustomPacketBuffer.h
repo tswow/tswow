@@ -30,13 +30,14 @@ enum class CUSTOM_PACKET_API CustomPacketResult {
 
 class CustomPacketBuffer {
 public:
-	CustomPacketBuffer(chunkSize_t minFragmentSize, totalSize_t quota, chunkSize_t bufferSize);
+	CustomPacketBuffer(
+			chunkSize_t minFragmentSize
+		, totalSize_t quota
+		, chunkSize_t bufferSize
+		);
 	~CustomPacketBuffer();
 	CustomPacketResult ReceivePacket(chunkSize_t size, char* data);
 protected:
-	// Note: it is your own responsibility to destroy
-	// the message chunks, the buffer only destroys
-	// the message itself!
 	virtual void OnPacket(CustomPacketRead * value) {}
 	virtual void OnError(CustomPacketResult error) {}
 private:

@@ -28,12 +28,18 @@ end
 -- we receive a message in c++
 
 __callbacks = {}
-function OnMessage(cb)
-	table.insert(__callbacks,cb)
+function OnMessage(opcode,cb)
+	if(__callbacks[opcode] == nil) then
+		__callbacks[opcode] = {}
+	end
+	table.insert(__callbacks[opcode],cb)
 end
 
-function __FireMessage()
-	for k,v in pairs(__callbacks) do
+function __FireMessage(opcode)
+	if(__callbacks[opcode] == nil) then return end
+	for _,v in pairs(__callbacks[opcode]) do
 		v(__ReadMessage(v))
+		-- if we have multiple consumers
+		_ResetMessage()
 	end
 end
