@@ -107,6 +107,7 @@ export class LootSetPointer<T> extends CellWrapper<number,T>{
         this.cell.set(nu);
         this.table.filter({Entry:old}).forEach(x=>{
             x.clone(nu,x.Item.get())
+                .Comment.set('tswow')
         })
         return this.getRef();
     }
