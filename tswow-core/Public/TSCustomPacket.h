@@ -108,5 +108,5 @@ public:
 
 TC_GAME_API TSPacketWrite MakeCustomPacket(
 		opcode_t opcode
-	, uint32_t size
+	, totalSize_t size
 );

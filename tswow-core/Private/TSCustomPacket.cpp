@@ -92,7 +92,7 @@ void TSServerBuffer::OnError(CustomPacketResult error)
 
 TSPacketWrite MakeCustomPacket(
 		opcode_t opcode
-	, uint32_t size
+	, totalSize_t size
 )
 {
 	// can we avoid heap allocation here?
