@@ -72,10 +72,13 @@ export class CreatureTemplateRegistryClass
             .HealthExpansion.set(0)
             .HoverHeight.set(0)
     }
-    protected Clone(mod: string, id: string, r: CreatureTemplate, parent: CreatureTemplate): void {
+    protected Clone(mod: string, id: string, child: CreatureTemplate, parent: CreatureTemplate): void {
         if(parent.addonExists()) {
-            parent.addonRow().clone(r.ID);
+            parent.addonRow().clone(child.ID);
         }
+        parent.Vendor.forEach((item)=>{
+            item.row.clone(child.ID,item.Item.get(),item.ExtendedCost.get())
+        })
     }
     protected Entity(r: creature_templateRow): CreatureTemplate {
         return new CreatureTemplate(r);
