@@ -902,12 +902,22 @@ export class SourcePaths {
         return './TrinityCore';
     }
 
+    get clientExtensions()
+    {
+        return './ClientExtensions'
+    }
+
     get trinityCoreSources() {
         return mpath(this.trinityCore,'src');
     }
 
     get liveScriptHeaders() {
-        return mpath(this.trinityCore,'src','server','game','Tswow','Scripting','Public');
+        return mpath('tswow-core','Public')
+    }
+
+    get messagesSources()
+    {
+        return mpath(this.clientExtensions, 'CustomPackets');
     }
 
     get buildYaml() {
@@ -988,5 +998,3 @@ export class SourcePaths {
 }
 
 export const spaths = new SourcePaths();
-
-
