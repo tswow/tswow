@@ -7937,6 +7937,13 @@ declare class TSPacketWrite {
     WriteDouble(value: double): TSPacketWrite;
 
     WriteString(value: string): TSPacketWrite;
+
+    SendToPlayer(player: TSPlayer): void;
+    BroadcastMap(map: TSMap, teamOnly: uint32): void;
+    /**
+     * @param self default: true
+     */
+    BroadcastAround(obj: TSWorldObject, range: float, self?: boolean)
 }
 
 declare class TSPacketRead {
@@ -7984,7 +7991,7 @@ declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>v
 declare function MsgString(size: number): (field: any, name: any)=>void
 declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void
 
-declare function MakeCustomPacket(opcode: uint32, size: uint32);
+declare function MakeCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
 
 // Null values
 declare function NULL_UNIT(): TSUnit;
