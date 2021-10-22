@@ -27,7 +27,13 @@ import { term } from '../util/Terminal';
 
 export namespace TrinityCore {
     export function headers() {
+        // todo: duplicate from
         wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude, true);
+        wfs.readDir(spaths.messagesSources,true,'files')
+            .filter(x=>x.endsWith('.h'))
+            .forEach(x=>{
+                wfs.copy(mpath(spaths.messagesSources,x),mpath(ipaths.binInclude,x))
+            })
 
         // write enums
         let gdts = wfs.read(spaths.tcGlobaldts)

@@ -20,6 +20,7 @@ import { ipaths, spaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { install_path } from './BuildConfig';
+import { TrinityCore } from './TrinityCore';
 
 export namespace Config {
     export async function create() {
@@ -51,7 +52,7 @@ export namespace Config {
         wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
         wfs.copy(spaths.sqlCustom,ipaths.sqlCustom);
         wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
-        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
+        TrinityCore.headers();
         wfs.copy(spaths.snippetExample,ipaths.snippetExampleBin);
 
         wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
