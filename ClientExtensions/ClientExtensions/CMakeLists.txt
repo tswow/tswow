@@ -26,6 +26,7 @@ SET(CLIENT_EXTENSIONS_H
     ClientLua.h
     ClientArguments.h
     ClientNetwork.h
+    ClientMPQ.h
     FSRoot.h
     lua.hpp
 )
@@ -39,7 +40,7 @@ SET(CLIENT_EXTENSIONS_CPP
     FSRoot.cpp
     TestModule.cpp
     ClientNetwork.cpp
-)
+    ClientMPQ.cpp)
 
 SET(CLIENT_EXTENSIONS_LUA
     ClientNetwork.lua
