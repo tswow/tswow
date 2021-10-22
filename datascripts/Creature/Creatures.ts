@@ -20,6 +20,7 @@ import { creature_templateQuery, creature_templateRow } from "wotlkdata/sql/type
 import { Table } from "wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
+import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
 import { CreatureInstance } from "./CreatureInstance";
 import { CreatureTemplate } from "./CreatureTemplate";
 
@@ -113,6 +114,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .spawnMask.set(1)
          .map.set(0)
          .id.set(0)
+         .spawntimesecs.set(CREATURE_DEFAULT_SPAWNTIME)
          .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {

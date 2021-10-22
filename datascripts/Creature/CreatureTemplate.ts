@@ -41,6 +41,7 @@ import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
 import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
+import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
@@ -134,7 +135,7 @@ export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,C
                 .create(mod,`${id}-${i}`)
                 .Position.set(x)
                 .Template.set(this.owner.ID)
-                .SpawnTime.set(x.spawnTime || 0)
+                .SpawnTime.set(x.spawnTime || CREATURE_DEFAULT_SPAWNTIME)
                 .WanderDistance.set(x.wander||0)
             if(x.wander) {
                 inst.MovementType.RANDOM_MOVEMENT.set()
