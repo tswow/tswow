@@ -102,7 +102,12 @@ export class LootSetPointer<T> extends CellWrapper<number,T>{
     }
 
     getRefCopy() {
-        this.cell.set(this.gen.id());
+        let old = this.cell.get();
+        let nu = this.gen.id();
+        this.cell.set(nu);
+        this.table.filter({Entry:old}).forEach(x=>{
+            x.clone(nu,x.Item.get())
+        })
         return this.getRef();
     }
 
