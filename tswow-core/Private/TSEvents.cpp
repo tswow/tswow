@@ -1,17 +1,17 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "ScriptMgr.h"
@@ -257,7 +257,7 @@ void TSSpellMap::OnAdd(uint32_t key, TSSpellEvents* events)
 
 void TSSpellMap::OnRemove(uint32_t key)
 {
-    
+
 }
 
 void TSCreatureMap::OnAdd(uint32_t key, TSCreatureEvents* events)
@@ -276,7 +276,7 @@ void TSCreatureMap::OnAdd(uint32_t key, TSCreatureEvents* events)
 
 void TSCreatureMap::OnRemove(uint32_t key)
 {
-    
+
 }
 
 void TSGameObjectMap::OnAdd(uint32_t key, TSGameObjectEvents* events)
@@ -324,7 +324,7 @@ void TSMapMap::OnAdd(uint32_t key, TSMapEvents* events)
 
 void TSMapMap::OnRemove(uint32_t key)
 {
-    
+
 }
 
 static std::vector<TSBattlegroundEvents*> bgData;
@@ -465,6 +465,32 @@ void TSAreaTriggerMap::OnRemove(uint32_t key)
 {
 
 }
+
+static std::vector<TSPacketEvents*> packetData;
+void TSPacketMap::OnAdd(uint32_t key, TSPacketEvents* events)
+{
+  if (key >= packetData.size())
+  {
+    packetData.resize(key + 1);
+  }
+  packetData[key] = events;
+}
+
+void TSPacketMap::OnRemove(uint32_t key)
+{
+}
+
+TSPacketEvents* GetPacketEvent(uint32_t id)
+{
+  if (id >= packetData.size())
+  {
+    return nullptr;
+  }
+  return packetData[id];
+}
+
+
+
 
 void TSLoadEvents()
 {

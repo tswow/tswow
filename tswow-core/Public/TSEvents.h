@@ -37,11 +37,31 @@
 #include "TSAchievementTemplate.h"
 #include "TSBattleground.h"
 #include <cstdint>
+#include "TSCustomPacket.h"
 
 // Addon
 EVENT_TYPE(AddonOnMessage,BinReader<uint8>)
 EVENT_TYPE(AddonOnLongMessage,TSPlayer,uint16,TSString)
 EVENT_TYPE(AddonOnLongMessageError,TSPlayer,uint8)
+
+EVENT_TYPE(PacketOnCustom
+  , uint32       /*opcode*/
+  , TSPacketRead /*packet*/
+  , TSPlayer     /*sender*/
+)
+
+struct TSPacketEvents {
+  EVENT(PacketOnCustom)
+};
+
+class TSPacketMap : public TSEventMap<TSPacketEvents>
+{
+  void OnAdd(uint32_t, TSPacketEvents*);
+  void OnRemove(uint32_t);
+};
+
+TSPacketEvents* GetPacketEvent(uint32_t id);
+
 
 // WorldScript
 EVENT_TYPE(WorldOnOpenStateChange,bool)
@@ -1009,6 +1029,9 @@ struct TSEvents
     // Conditions
     EVENT(ConditionOnCheck)
 
+    // Packets
+    EVENT(PacketOnCustom)
+
     TSAchievementMap Achievements;
     TSSpellMap Spells;
     TSCreatureMap Creatures;
@@ -1021,6 +1044,7 @@ struct TSEvents
     TSGameEventMap GameEvents;
     TSSmartActionMap SmartActions;
     TSConditionMap Conditions;
+    TSPacketMap Packets;
 };
 
 TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
@@ -1622,6 +1646,17 @@ public:
         MAP_EVENT_HANDLE(Condition,OnCheck)
     } ConditionID;
 
+    struct PacketEvents : public EventHandler {
+      PacketEvents* operator->() { return this; }
+      EVENT_HANDLE(Packet, OnCustom)
+    } Packets;
+
+    struct PacketIDEvents : public MappedEventHandler<TSPacketMap>
+    {
+      PacketIDEvents* operator->() { return this; }
+      MAP_EVENT_HANDLE(Packet,OnCustom)
+    } PacketID;
+
     struct AddonEvents: public EventHandler {
          AddonEvents* operator->(){return this;}
          EVENT_HANDLE(Addon,OnMessage)
@@ -1700,6 +1735,8 @@ public:
         SmartActionID.LoadEvents(&events->SmartActions);
         Conditions.LoadEvents(events);
         ConditionID.LoadEvents(&events->Conditions);
+        Packets.LoadEvents(events);
+        PacketID.LoadEvents(&events->Packets);
     }
 
     void Unload()
@@ -1742,6 +1779,8 @@ public:
          SmartActionID.Unload();
          Conditions.Unload();
          ConditionID.Unload();
+         Packets.Unload();
+         PacketID.Unload();
     }
 };
 

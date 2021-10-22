@@ -7316,6 +7316,24 @@ declare namespace _hidden {
         OnAreaTrigger(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
     }
 
+    export class Packets {
+        OnCustom(callback: (
+              opcode: uint32
+            , packet: TSPacketRead
+            , player: TSPlayer
+            ) => void
+        )
+    }
+
+    export class PacketID {
+        OnCustom(opcode: uint32, callback: (
+              opcode: uint32
+            , packet: TSPacketRead
+            , player: TSPlayer
+            ) => void
+        )
+    }
+
     export class GameEvents<T> {
         OnStart(callback: (event: uint16)=>void)
         OnUpdateState(callback: (event: uint16)=>void)
@@ -7528,6 +7546,8 @@ declare class TSEventHandlers {
     ConditionID: _hidden.ConditionID<void>;
     Instances: _hidden.Instances<void>;
     InstanceID: _hidden.InstanceID<void>;
+    Packets: _hidden.Packets;
+    PacketID: _hidden.PacketID;
 }
 
 declare class TSDictionary<K,V> {
@@ -7897,6 +7917,47 @@ declare class TSSpellDamageInfo {
     GetFullBlock(): bool;
 }
 
+declare class TSPacketWrite {
+    WriteUInt8(value: uint8): TSPacketWrite;
+    WriteInt8(value: int8): TSPacketWrite;
+
+    WriteUInt16(value: uint16): TSPacketWrite;
+    WriteInt16(value: int16): TSPacketWrite;
+
+    WriteUInt16(value: uint16): TSPacketWrite;
+    WriteInt16(value: int16): TSPacketWrite;
+
+    WriteUInt32(value: uint32): TSPacketWrite;
+    WriteInt32(value: int32): TSPacketWrite;
+
+    WriteUInt64(value: uint64): TSPacketWrite;
+    WriteInt64(value: int64): TSPacketWrite;
+
+    WriteFloat(value: float): TSPacketWrite;
+    WriteDouble(value: double): TSPacketWrite;
+
+    WriteString(value: string): TSPacketWrite;
+}
+
+declare class TSPacketRead {
+    ReadUInt8(def?: uint8): uint8;
+    ReadInt8(def?: int8): int8;
+
+    ReadUInt16(def?: uint16): uint16;
+    ReadInt16(def?: int16): int16;
+
+    ReadUInt32(def?: uint32): uint32;
+    ReadInt32(def?: int32): int32;
+
+    ReadUInt64(def?: uint64): uint64;
+    ReadInt64(def?: int64): int64;
+
+    ReadFloat(def?: float): float;
+    ReadDouble(def?: double): double;
+
+    ReadString(def?: string): string;
+}
+
 declare function WorldDatabaseInfo(): TSDatabaseConnectionInfo
 declare function CharacterDatabaseInfo(): TSDatabaseConnectionInfo
 declare function AuthDatabaseInfo(): TSDatabaseConnectionInfo
@@ -7922,6 +7983,8 @@ declare function MsgPrimitive(classTarget: any, name: string)
 declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>void;
 declare function MsgString(size: number): (field: any, name: any)=>void
 declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void
+
+declare function MakeCustomPacket(opcode: uint32, size: uint32);
 
 // Null values
 declare function NULL_UNIT(): TSUnit;
