@@ -7,7 +7,7 @@
 
 TEST_CASE("[MessageBase] initialize") {
   SECTION("with chunkSize=1 and size=0") {
-    CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 1, 0);
+    CustomPacketWrite message(0, CustomHeaderSize + 1, 0);
     SECTION("has size of 0") {
       REQUIRE(message.Size() == 0);
     }
@@ -18,7 +18,7 @@ TEST_CASE("[MessageBase] initialize") {
   }
 
   SECTION("with chunkSize=1 and size=1") {
-    CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 1, 1);
+    CustomPacketWrite message(0, CustomHeaderSize + 1, 1);
     SECTION("has size of 1") {
       REQUIRE(message.Size() == 1);
     }
@@ -29,7 +29,7 @@ TEST_CASE("[MessageBase] initialize") {
   }
 
   SECTION("with chunkSize=1 and size=2") {
-    CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 1, 2);
+    CustomPacketWrite message(0, CustomHeaderSize + 1, 2);
     SECTION("has size of 2") {
       REQUIRE(message.Size() == 2);
     }
@@ -43,7 +43,7 @@ TEST_CASE("[MessageBase] initialize") {
 TEST_CASE("[MessageBase] read/write") {
   SECTION("pre-allocated") {
     SECTION("single chunk") {
-      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 16, 10);
+      CustomPacketWrite message(0, CustomHeaderSize + 16, 10);
       REQUIRE(message.ChunkCount() == 1); // sanity
 
       SECTION("single value") {
@@ -77,7 +77,7 @@ TEST_CASE("[MessageBase] read/write") {
     }
 
     SECTION("multiple chunks (aligned)") {
-      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 2, 4);
+      CustomPacketWrite message(0, CustomHeaderSize + 2, 4);
       SECTION("single value") {
         message.WriteUInt16(1768);
         REQUIRE(CustomPacketRead(message).ReadUInt16() == 1768);
@@ -93,7 +93,7 @@ TEST_CASE("[MessageBase] read/write") {
       }
 
       SECTION("single string") {
-        CustomPacketWrite strMessage(0, sizeof(CustomPacketHeader) + 8, 16);
+        CustomPacketWrite strMessage(0, CustomHeaderSize + 8, 16);
         strMessage.WriteString("abcdefgh");
         CustomPacketRead read(strMessage);
         REQUIRE(message.ChunkCount() == 2); // sanity
@@ -101,7 +101,7 @@ TEST_CASE("[MessageBase] read/write") {
       }
 
       SECTION("multiple strings") {
-        CustomPacketWrite strMessage(0, sizeof(CustomPacketHeader) + 8, 16);
+        CustomPacketWrite strMessage(0, CustomHeaderSize + 8, 16);
         strMessage.WriteString("abcd");
         strMessage.WriteString("efgh");
         CustomPacketRead read(strMessage);
@@ -113,7 +113,7 @@ TEST_CASE("[MessageBase] read/write") {
 
     SECTION("multiple chunks (misaligned)") {
       SECTION("multiple values") {
-        CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 2, 6);
+        CustomPacketWrite message(0, CustomHeaderSize + 2, 6);
         message.WriteUInt8(25);
         message.WriteUInt16(1768);
         message.WriteUInt16(8671);
@@ -125,7 +125,7 @@ TEST_CASE("[MessageBase] read/write") {
       }
 
       SECTION("single string") {
-        CustomPacketWrite strMessage(0, sizeof(CustomPacketHeader) + 8, 16);
+        CustomPacketWrite strMessage(0, CustomHeaderSize + 8, 16);
         strMessage.WriteUInt32(0);
         strMessage.WriteUInt8(0); // forces string to start on chunk 2
         strMessage.WriteString("abcd");
@@ -141,7 +141,7 @@ TEST_CASE("[MessageBase] read/write") {
 
   SECTION("partial allocation") {
     SECTION("single chunk") {
-      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 10, 1);
+      CustomPacketWrite message(0, CustomHeaderSize + 10, 1);
       SECTION("single value") {
         message.WriteUInt16(1768);
         CustomPacketRead read = CustomPacketRead(message);
@@ -164,7 +164,7 @@ TEST_CASE("[MessageBase] read/write") {
     }
 
     SECTION("multiple chunks") {
-      CustomPacketWrite message(0, sizeof(CustomPacketHeader) + 2, 1);
+      CustomPacketWrite message(0, CustomHeaderSize + 2, 1);
       SECTION("multiple values") {
         // skips the first one
         message.WriteUInt16(1768);

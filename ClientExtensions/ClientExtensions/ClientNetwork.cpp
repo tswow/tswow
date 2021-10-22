@@ -48,13 +48,13 @@ public:
 	ClientMessageWrite()
 		: CustomPacketWrite(0, MAX_FRAGMENT_SIZE,0)
 	{}
-	ClientMessageWrite(PACKET_OPCODE_TYPE opcode, size_t size)
+	ClientMessageWrite(opcode_t opcode, totalSize_t size)
 		: CustomPacketWrite(opcode, MAX_FRAGMENT_SIZE,size)
 	{}
 
 	void Send()
 	{
-		std::vector<CustomPacketChunk>& chunks = buildMessages(1);
+		std::vector<CustomPacketChunk>& chunks = buildMessages();
 		for (auto& chunk : chunks)
 		{
 
@@ -68,14 +68,14 @@ public:
 			char* c = new char[fullSize];
 #pragma warning(push)
 #pragma warning(disable: 6001)
-			(*(uint32_t*)c[0]) = CLIENT_TO_SERVER_OPCODE;
+			(*(uint32_t*)c) = CLIENT_TO_SERVER_OPCODE;
 #pragma warning(pop)
 			memcpy(c + sizeof(uint32_t), chunk.Data(), chunk.FullSize());
 			ClientPacket* p = new ClientPacket((uint8_t*)c, fullSize);
 			FinalizePacket(p);
 			SendPacket(p);
 		}
-		Destroy();
+		//Destroy();
 	}
 };
 
@@ -151,8 +151,8 @@ int WriteNum(lua_State* L)
 extern "C" {
 	int _WriteMessage(lua_State* L)
 	{
-		PACKET_OPCODE_TYPE opcode(ClientLua::GetNumber(L, 1, 0));
-		uint32_t size(ClientLua::GetNumber(L, 2, 0));
+		opcode_t opcode{opcode_t(ClientLua::GetNumber(L, 1, 0))};
+		totalSize_t size{totalSize_t(ClientLua::GetNumber(L, 2, 0))};
 		uint32_t id = writes.freeId();
 		writes.m_map[id] = ClientMessageWrite{opcode, size};
 		ClientLua::PushNumber(L, id);
@@ -162,7 +162,7 @@ extern "C" {
 	int _WriteUInt8(lua_State* L) { return WriteNum<uint8_t>(L); }
 
 	int _SendMessage(lua_State* L) {
-		uint32_t id( ClientLua::GetNumber(L, 1) );
+		uint32_t id{ uint32_t(ClientLua::GetNumber(L, 1)) };
 		LOG_DEBUG << "Message being sent " << id;
 		ClientMessageWrite* write = writes.get(id);
 		if (write == nullptr)

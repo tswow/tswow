@@ -1,9 +1,9 @@
 #include "CustomPacketWrite.h"
 
 CustomPacketWrite::CustomPacketWrite(
-	  PACKET_OPCODE_TYPE opcode
-	, size_t chunkSize
-	, size_t size
+	  opcode_t opcode
+	, chunkSize_t chunkSize
+	, totalSize_t size
 )
 	: CustomPacketBase(opcode, chunkSize, size)
 {}
@@ -16,31 +16,31 @@ CustomPacketWrite* CustomPacketWrite::operator->() { return this; }
 
 CustomPacketWrite* CustomPacketWrite::WriteString(
 	  std::string const& str
-	, uint32_t length
+	, totalSize_t length
 ) {
 	return WriteString(str.c_str(), length);
 }
 
 CustomPacketWrite* CustomPacketWrite::WriteString(
 	  const char* chr
-	, uint32_t length
+	, totalSize_t length
 ) {
 	length = _strlen(chr, length);
-	WriteUInt32(length);
+	Write<totalSize_t>(length);
 	WriteBytes(length, chr);
 	return this;
 }
 
 CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
 	  std::string const& str
-	, uint32_t length
+	, totalSize_t length
 ) {
 	return WriteStringNullTerm(str.c_str(), length);
 }
 
 CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
 	  const char* chr
-	, uint32_t length
+	, totalSize_t length
 ) {
 	length = _strlen(chr, length);
 	WriteBytes(length, chr);
@@ -93,12 +93,14 @@ CustomPacketWrite* CustomPacketWrite::WriteDouble(double value) {
 	return this;
 }
 
-size_t CustomPacketWrite::_strlen(const char* chr, size_t length)
+totalSize_t CustomPacketWrite::_strlen(const char* chr, totalSize_t length)
 {
-	return length == std::string::npos ? strlen(chr) : length;
+	return length == TotalSizeNpos ?
+			totalSize_t(std::min(size_t(BUFFER_QUOTA), strlen(chr)))
+		: length;
 }
 
-CustomPacketWrite* CustomPacketWrite::WriteBytes(size_t size, char const* bytes)
+CustomPacketWrite* CustomPacketWrite::WriteBytes(totalSize_t size, char const* bytes)
 {
 	CustomPacketBase::WriteBytes(size, bytes);
 	return this;

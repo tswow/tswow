@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CustomPacketRead.h"
+#include "CustomPacketDefines.h"
 
 enum class CUSTOM_PACKET_API CustomPacketResult {
 	NO_HEADER            = 0x1,   // 1
@@ -20,18 +21,18 @@ enum class CUSTOM_PACKET_API CustomPacketResult {
 	ANY_ERROR = NO_HEADER
 						| HEADER_MISMATCH
 						| INVALID_FRAG_COUNT
+						| INVALID_FIRST_FRAG
 						| INVALID_FRAG_ID
 						| TOO_SMALL_FRAGMENT
 						| TOO_BIG_FRAGMENT
 						| OUT_OF_SPACE
-						| INVALID_FIRST_FRAG
 };
 
 class CustomPacketBuffer {
 public:
-	CustomPacketBuffer(size_t minFragmentSize, size_t quota, size_t bufferSize);
+	CustomPacketBuffer(chunkSize_t minFragmentSize, totalSize_t quota, chunkSize_t bufferSize);
 	~CustomPacketBuffer();
-	CustomPacketResult ReceivePacket(size_t size, char* data);
+	CustomPacketResult ReceivePacket(chunkSize_t size, char* data);
 protected:
 	// Note: it is your own responsibility to destroy
 	// the message chunks, the buffer only destroys
@@ -39,10 +40,11 @@ protected:
 	virtual void OnPacket(CustomPacketRead * value) {}
 	virtual void OnError(CustomPacketResult error) {}
 private:
-	size_t m_quota;
-	size_t m_minFragmentSize;
-	size_t m_maxFragmentSize;
+	totalSize_t m_quota;
+	chunkSize_t m_minFragmentSize;
+	chunkSize_t m_maxFragmentSize;
 	CustomPacketRead m_cur;
 	CustomPacketResult _onError(CustomPacketResult error, char* data);
 	CustomPacketResult _onSuccess();
+	void AppendFragment(CustomPacketChunk & chunk, bool isLast);
 };

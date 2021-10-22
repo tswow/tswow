@@ -4,7 +4,7 @@ CustomPacketRead::CustomPacketRead()
 	: CustomPacketBase()
 {}
 
-CustomPacketRead::CustomPacketRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize)
+CustomPacketRead::CustomPacketRead(opcode_t opcode, chunkSize_t chunkSize)
 	: CustomPacketBase(opcode, chunkSize, 0)
 {}
 
@@ -16,8 +16,8 @@ CustomPacketRead* CustomPacketRead::operator->() { return this; }
 
 std::string CustomPacketRead::ReadString(std::string const& def)
 {
-	uint32_t size = ReadUInt32(std::string::npos);
-	if (size == std::string::npos) return def;
+	totalSize_t size = Read<totalSize_t>(TotalSizeNpos);
+	if (size == TotalSizeNpos) return def;
 	if (size == 0) return "";
 	char* chr = ReadBytes(size, true);
 	if (chr == nullptr) return def;
@@ -74,7 +74,7 @@ double CustomPacketRead::ReadDouble(double def)
 	return Read<double>(def);
 }
 
-char* CustomPacketRead::ReadBytes(size_t size, bool padStr)
+char* CustomPacketRead::ReadBytes(totalSize_t size, bool padStr)
 {
 	return CustomPacketBase::ReadBytes(size, padStr);
 }

@@ -7,26 +7,28 @@
 
 class CUSTOM_PACKET_API CustomPacketBase {
 public:
-	CustomPacketBase(CustomPacketBase const& base);
+	CustomPacketBase(
+		CustomPacketBase const& base
+	);
 	CustomPacketBase();
 	CustomPacketBase(
-		  PACKET_OPCODE_TYPE opcode
-		, size_t maxChunkSize
-		, size_t initialSize
+		  opcode_t opcode
+		, chunkSize_t maxChunkSize
+		, totalSize_t initialSize
 	);
-	std::vector<CustomPacketChunk> & buildMessages(uint16_t messageId);
+	std::vector<CustomPacketChunk> & buildMessages();
 
 	void Reset();
 	void Destroy();
 	void Clear();
 
 	void Push(CustomPacketChunk& chnk);
-	size_t Size();
-	CustomPacketChunk* Chunk(size_t index);
-	size_t ChunkSize(size_t index);
-	size_t ChunkCount();
+	totalSize_t Size();
+	CustomPacketChunk* Chunk(chunkCount_t index);
+	chunkSize_t ChunkSize(chunkCount_t index);
+	chunkCount_t ChunkCount();
 
-	PACKET_OPCODE_TYPE Opcode();
+	opcode_t Opcode();
 
 	void Print(
 		std::function<void(std::ostream&, uint8_t)> cb
@@ -37,15 +39,20 @@ public:
 	void PrintBytes(std::ostream& stream = std::cout);
 
 protected:
-	size_t MaxWritableChunkSize();
+	chunkSize_t MaxWritableChunkSize();
 
 	// called by constructor and raw byte allocations
-	void Increase(size_t increase);
+	void Increase(totalSize_t increase);
 
 	// invariant: sizeof(T) < m_maxMessageSize
 	template <typename T>
 	void Write(T value)
 	{
+		if (sizeof(T) >= sizeof(chunkSize_t) - CustomHeaderSize)
+		{
+			return;
+		}
+
 		if (m_chunks.size() == 0)
 		{
 			m_chunks.push_back(CustomPacketChunk(sizeof(T)));
@@ -86,6 +93,11 @@ protected:
 	template <typename T>
 	T Read(T def)
 	{
+		if (sizeof(T) >= sizeof(chunkSize_t) - CustomHeaderSize)
+		{
+			return def;
+		}
+
 		if (m_chunk >= m_chunks.size()) return def;
 
 		CustomPacketChunk& chnk = m_chunks[m_chunk];
@@ -93,8 +105,8 @@ protected:
 		// there is space left to read here
 		if (chnk.RemBytes(m_idx) >= sizeof(T))
 		{
-			size_t old = m_idx;
-			m_idx += sizeof(T);
+			chunkCount_t old = m_idx;
+			m_idx += chunkCount_t(sizeof(T));
 			return chnk.Read<T>(old);
 		}
 
@@ -103,16 +115,18 @@ protected:
 		return Read(def);
 	}
 
-	void WriteBytes(size_t size, char const* bytes);
-	char* ReadBytes(size_t size, bool padStr = false);
+	void WriteBytes(totalSize_t size, char const* bytes);
+	char* ReadBytes(totalSize_t size, bool padStr = false);
 
 private:
 	std::vector<CustomPacketChunk> m_chunks;
-	size_t m_size;
-	size_t m_maxChunkSize; // including header
+	totalSize_t m_size;
+	chunkSize_t m_maxChunkSize; // including header
 
-	size_t m_idx; // chunk read index
-	size_t m_chunk; // chunk to read
+	chunkSize_t m_idx; // chunk read index
+	chunkCount_t m_chunk; // chunk to read
 
-	PACKET_OPCODE_TYPE m_opcode;
+	opcode_t m_opcode;
+
+	friend class CustomPacketBuffer;
 };

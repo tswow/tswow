@@ -7,25 +7,29 @@
 
 class CUSTOM_PACKET_API CustomPacketWrite : public CustomPacketBase {
 public:
-	CustomPacketWrite(PACKET_OPCODE_TYPE opcode, size_t chunkSize, size_t size = 0);
+	CustomPacketWrite(
+		  opcode_t opcode
+		, chunkSize_t chunkSize
+		, totalSize_t size = 0
+	);
 	CustomPacketWrite();
 	CustomPacketWrite* operator->();
 
 	CustomPacketWrite* WriteString(
 		  std::string const& str
-		, uint32_t length = std::string::npos
+		, totalSize_t length = TotalSizeNpos
 	);
 	CustomPacketWrite* WriteString(
 		const char* chr
-		, uint32_t length = std::string::npos
+		, totalSize_t length = TotalSizeNpos
 	);
 	CustomPacketWrite* WriteStringNullTerm(
 		  std::string const& str
-		, uint32_t length = std::string::npos
+		, totalSize_t length = TotalSizeNpos
 	);
 	CustomPacketWrite* WriteStringNullTerm(
 		  const char* chr
-		, uint32_t length = std::string::npos
+		, totalSize_t length = TotalSizeNpos
 	);
 
 	CustomPacketWrite* WriteUInt8(uint8_t value);
@@ -49,7 +53,7 @@ public:
 		CustomPacketBase::Write(value);
 		return this;
 	}
-	CustomPacketWrite* WriteBytes(size_t size, char const* bytes);
+	CustomPacketWrite* WriteBytes(totalSize_t size, char const* bytes);
 private:
-	size_t _strlen(const char* chr, size_t length);
+	totalSize_t _strlen(const char* chr, totalSize_t length);
 };

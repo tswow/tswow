@@ -21,9 +21,9 @@ CustomPacketBase::CustomPacketBase()
 {}
 
 CustomPacketBase::CustomPacketBase(
-	  PACKET_OPCODE_TYPE opcode
-	, size_t maxChunkSize
-	, size_t initialSize
+	  opcode_t opcode
+	, chunkSize_t maxChunkSize
+	, totalSize_t initialSize
 	)
 	: m_size(0)
 	, m_idx(0)
@@ -31,13 +31,13 @@ CustomPacketBase::CustomPacketBase(
 	, m_maxChunkSize(maxChunkSize)
 	, m_opcode(opcode)
 {
-	if (maxChunkSize <= sizeof(CustomPacketHeader))
+	if (maxChunkSize <= CustomHeaderSize)
 	{
 		throw std::runtime_error(
 			"Maximum chunk size ("
 			+ std::to_string(maxChunkSize)
 			+ ") is <= message header size ("
-			+ std::to_string(sizeof(CustomPacketHeader))
+			+ std::to_string(CustomHeaderSize)
 			+ "), you can't send any messages!"
 		);
 	}
@@ -48,16 +48,15 @@ CustomPacketBase::CustomPacketBase(
 	}
 }
 
-std::vector<CustomPacketChunk> & CustomPacketBase::buildMessages(uint16_t messageId)
+std::vector<CustomPacketChunk> & CustomPacketBase::buildMessages()
 {
-	for (uint16_t i = 0; i < m_chunks.size(); ++i)
+	for (chunkCount_t i = 0; i < m_chunks.size(); ++i)
 	{
 		CustomPacketChunk& chnk = m_chunks[i];
 		CustomPacketHeader* hdr = chnk.Header();
 		hdr->opcode = m_opcode;
-		hdr->msgId = messageId;
 		hdr->fragmentId = i;
-		hdr->totalFrags = m_chunks.size();
+		hdr->totalFrags = chunkCount_t(m_chunks.size());
 	}
 	return m_chunks;
 }
@@ -85,27 +84,27 @@ void CustomPacketBase::Push(CustomPacketChunk& chnk)
 }
 
 
-size_t CustomPacketBase::Size()
+totalSize_t CustomPacketBase::Size()
 {
 	return m_size;
 }
 
 
-CustomPacketChunk* CustomPacketBase::Chunk(size_t index)
+CustomPacketChunk* CustomPacketBase::Chunk(chunkCount_t index)
 {
 	return &m_chunks[index];
 }
 
 
-size_t CustomPacketBase::ChunkSize(size_t index)
+chunkSize_t CustomPacketBase::ChunkSize(chunkCount_t index)
 {
 	return m_chunks[index].Size();
 }
 
 
-size_t CustomPacketBase::ChunkCount()
+chunkCount_t CustomPacketBase::ChunkCount()
 {
-	return m_chunks.size();
+	return chunkCount_t(m_chunks.size());
 }
 
 void CustomPacketBase::Print(
@@ -139,33 +138,36 @@ void CustomPacketBase::PrintBytes(std::ostream& stream)
 
 
 
-size_t CustomPacketBase::MaxWritableChunkSize()
+chunkSize_t CustomPacketBase::MaxWritableChunkSize()
 {
-	return m_maxChunkSize - sizeof(CustomPacketHeader);
+	return m_maxChunkSize - CustomHeaderSize;
 }
 
-void CustomPacketBase::Increase(size_t increase)
+void CustomPacketBase::Increase(totalSize_t increase)
 {
 	// increase size
 	if (m_chunks.size() > 0)
 	{
 		CustomPacketChunk& chnk = m_chunks[m_chunks.size() - 1];
-		size_t inc = std::min(chnk.Size() + increase, MaxWritableChunkSize());
+		chunkSize_t inc = std::min(
+			  uint32_t(chnk.Size() + increase)
+			, uint32_t(MaxWritableChunkSize())
+		);
 		if (inc > 0)
 		{
 			chnk.Increase(inc);
 		}
 	}
 
-	size_t newSize = m_size + increase;
-	size_t firstNewChunk = m_chunks.size();
+	totalSize_t newSize = m_size + increase;
+	chunkCount_t firstNewChunk = chunkCount_t(m_chunks.size());
 	m_chunks.resize(
-		size_t(std::ceil(float(newSize) / float(MaxWritableChunkSize())))
+		chunkCount_t(std::ceil(float(newSize) / float(MaxWritableChunkSize())))
 	);
-	size_t remInc = newSize;
-	for (size_t i = firstNewChunk; i < m_chunks.size(); ++i)
+	chunkCount_t remInc = newSize;
+	for (chunkCount_t i = firstNewChunk; i < m_chunks.size(); ++i)
 	{
-		size_t size = i == (m_chunks.size() - 1)
+		chunkSize_t size = i == (m_chunks.size() - 1)
 			? remInc
 			: MaxWritableChunkSize();
 		remInc -= size;
@@ -174,16 +176,24 @@ void CustomPacketBase::Increase(size_t increase)
 	m_size = newSize;
 }
 
-void CustomPacketBase::WriteBytes(size_t size, char const* bytes)
+void CustomPacketBase::WriteBytes(totalSize_t size, char const* bytes)
 {
 	while (size > 0)
 	{
 		if (m_chunk >= m_chunks.size())
 		{
-			m_chunks.push_back(CustomPacketChunk(std::min(size, MaxWritableChunkSize())));
+			m_chunks.push_back(CustomPacketChunk(
+				chunkSize_t(
+					std::min(uint32_t(size)
+						, uint32_t(MaxWritableChunkSize()))
+					)
+				)
+			);
 		}
 		CustomPacketChunk& chnk = m_chunks[m_chunk];
-		size_t written = std::min(chnk.RemBytes(m_idx), size);
+		totalSize_t written = chunkSize_t(
+			std::min(totalSize_t(chnk.RemBytes(m_idx)), size)
+		);
 		chnk.WriteBytes(m_idx, written, bytes);
 		bytes += written;
 		size -= written;
@@ -199,7 +209,7 @@ void CustomPacketBase::WriteBytes(size_t size, char const* bytes)
 	}
 }
 
-char* CustomPacketBase::ReadBytes(size_t size, bool padStr)
+char* CustomPacketBase::ReadBytes(totalSize_t size, bool padStr)
 {
 	if (m_chunk >= m_chunks.size())
 	{
@@ -207,12 +217,15 @@ char* CustomPacketBase::ReadBytes(size_t size, bool padStr)
 	}
 
 	char* c = new char[size + (padStr ? 1 : 0)];
-	size_t offset = 0;
+	totalSize_t offset = 0;
 	while (size > 0)
 	{
 		if (m_chunk >= m_chunks.size()) break;
 		CustomPacketChunk& chunk = m_chunks[m_chunk];
-		size_t read = std::min(size, chunk.RemBytes(m_idx));
+		chunkSize_t read = chunkSize_t(std::min(
+				size
+			, totalSize_t(chunk.RemBytes(m_idx))
+		));
 		chunk.ReadBytes(m_idx, read, c + offset);
 		size -= read;
 		offset += read;
@@ -235,7 +248,7 @@ void CustomPacketBase::Clear()
 	Reset();
 }
 
-PACKET_OPCODE_TYPE CustomPacketBase::Opcode()
+opcode_t CustomPacketBase::Opcode()
 {
 	return m_opcode;
 }

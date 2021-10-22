@@ -8,7 +8,7 @@
 class CUSTOM_PACKET_API CustomPacketRead : public CustomPacketBase {
 public:
 	CustomPacketRead();
-	CustomPacketRead(PACKET_OPCODE_TYPE opcode, size_t chunkSize);
+	CustomPacketRead(opcode_t opcode, chunkSize_t chunkSize);
 	CustomPacketRead(CustomPacketWrite const& write);
 	CustomPacketRead* operator->();
 
@@ -35,5 +35,5 @@ public:
 		return CustomPacketBase::Read(def);
 	}
 
-	char* ReadBytes(size_t size, bool padStr = false);
+	char* ReadBytes(totalSize_t size, bool padStr = false);
 };

@@ -43,11 +43,11 @@ TEST_CASE("[MessageChunk] read/write") {
 TEST_CASE("[MessageChunk] offset") {
 	CustomPacketChunk chunk(1);
 	SECTION("zero argument") {
-		REQUIRE(chunk.Offset(0) == chunk.Data() + sizeof(CustomPacketHeader));
+		REQUIRE(chunk.Offset(0) == chunk.Data() + CustomHeaderSize);
 	}
 
 	SECTION("non-zero argument") {
-		REQUIRE(chunk.Offset(1) == chunk.Data() + 1 + sizeof(CustomPacketHeader));
+		REQUIRE(chunk.Offset(1) == chunk.Data() + 1 + CustomHeaderSize);
 	}
 	chunk.Destroy();
 }

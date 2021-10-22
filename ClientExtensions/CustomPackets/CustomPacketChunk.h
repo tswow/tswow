@@ -8,31 +8,30 @@
 
 #pragma pack(push,1)
 struct CUSTOM_PACKET_API CustomPacketHeader {
-	uint16_t msgId;
-	uint16_t fragmentId;
-	uint16_t totalFrags;
-	PACKET_OPCODE_TYPE opcode;
+	chunkCount_t fragmentId;
+	chunkCount_t totalFrags;
+	opcode_t opcode;
 };
 #pragma pack(pop)
 
 struct CUSTOM_PACKET_API CustomPacketChunk {
 public:
 	CustomPacketChunk(CustomPacketChunk const& other);
-	CustomPacketChunk(size_t size, char* chunk);
-	CustomPacketChunk(size_t size);
+	CustomPacketChunk(chunkSize_t size, char* chunk);
+	CustomPacketChunk(chunkSize_t size);
 	CustomPacketChunk();
 	void Destroy();
 	char* Data();
 	CustomPacketHeader* Header();
-	void Increase(size_t size);
-	size_t FullSize();
-	size_t Size();
+	void Increase(chunkSize_t size);
+	chunkSize_t FullSize();
+	chunkSize_t Size();
 	// how many bytes we have left to write
-	size_t RemBytes(size_t idx);
+	chunkSize_t RemBytes(chunkSize_t idx);
 	// The offset from the writable part of this chunk
-	char* Offset(size_t offset);
-	void WriteBytes(size_t idx, size_t size, char const* value);
-	void ReadBytes(size_t idx, size_t size, char* out);
+	char* Offset(chunkSize_t offset);
+	void WriteBytes(chunkSize_t idx, chunkSize_t size, char const* value);
+	void ReadBytes(chunkSize_t idx, chunkSize_t size, char* out);
 
 	void Print(
 		std::function<void(std::ostream&, uint8_t)> fn
@@ -49,17 +48,21 @@ public:
 	);
 
 	template<typename T>
-	void Write(size_t index, T value)
+	void Write(chunkSize_t index, T value)
 	{
 		*((T*)(Offset(index))) = value;
 	}
 
 	template<typename T>
-	T Read(size_t index)
+	T Read(chunkSize_t index)
 	{
 		return *((T*)(Offset(index)));
 	}
 private:
-	size_t m_size;
+	chunkSize_t m_size;
 	char* m_chunk;
+
+	void Copy();
+
+	friend class CustomPacketBuffer;
 };

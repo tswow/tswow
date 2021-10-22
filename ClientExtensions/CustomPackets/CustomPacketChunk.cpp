@@ -7,14 +7,14 @@ CustomPacketChunk::CustomPacketChunk(CustomPacketChunk const& other)
 	, m_chunk(other.m_chunk)
 {}
 
-CustomPacketChunk::CustomPacketChunk(size_t size, char* chunk)
+CustomPacketChunk::CustomPacketChunk(chunkSize_t size, char* chunk)
 	: m_size(size)
 	, m_chunk(chunk)
 {}
 
-CustomPacketChunk::CustomPacketChunk(size_t size)
+CustomPacketChunk::CustomPacketChunk(chunkSize_t size)
 	: m_size(size)
-	, m_chunk(new char[size + sizeof(CustomPacketHeader)])
+	, m_chunk(new char[size + CustomHeaderSize])
 {}
 
 CustomPacketChunk::CustomPacketChunk() : CustomPacketChunk(0, nullptr)
@@ -35,49 +35,49 @@ CustomPacketHeader* CustomPacketChunk::Header()
 	return (CustomPacketHeader*)m_chunk;
 }
 
-void CustomPacketChunk::Increase(size_t size)
+void CustomPacketChunk::Increase(chunkSize_t size)
 {
 	if (m_chunk == nullptr)
 	{
-		m_chunk = new char[size + sizeof(CustomPacketHeader)];
+		m_chunk = new char[size + CustomHeaderSize];
 	}
 	else
 	{
 		char* old = m_chunk;
-		m_chunk = new char[m_size + size + sizeof(CustomPacketHeader)];
-		memcpy(m_chunk, old, m_size + sizeof(CustomPacketHeader));
+		m_chunk = new char[m_size + size + CustomHeaderSize];
+		memcpy(m_chunk, old, m_size + CustomHeaderSize);
 		m_size = m_size + size;
 		delete old;
 	}
 }
 
-size_t CustomPacketChunk::FullSize()
+chunkSize_t CustomPacketChunk::FullSize()
 {
-	return Size() + sizeof(CustomPacketHeader);
+	return Size() + CustomHeaderSize;
 }
 
-size_t CustomPacketChunk::Size()
+chunkSize_t CustomPacketChunk::Size()
 {
 	return m_size;
 }
 
 // how many bytes we have left to write
-size_t CustomPacketChunk::RemBytes(size_t idx)
+chunkSize_t CustomPacketChunk::RemBytes(chunkSize_t idx)
 {
 	return m_size - idx;
 }
 
-char* CustomPacketChunk::Offset(size_t offset)
+char* CustomPacketChunk::Offset(chunkSize_t offset)
 {
-	return m_chunk + sizeof(CustomPacketHeader) + offset;
+	return m_chunk + CustomHeaderSize + offset;
 }
 
-void CustomPacketChunk::WriteBytes(size_t idx, size_t size, char const* value)
+void CustomPacketChunk::WriteBytes(chunkSize_t idx, chunkSize_t size, char const* value)
 {
 	memcpy(Offset(idx), value, size);
 }
 
-void CustomPacketChunk::ReadBytes(size_t idx, size_t size, char* out)
+void CustomPacketChunk::ReadBytes(chunkSize_t idx, chunkSize_t size, char* out)
 {
 	memcpy(out, Offset(idx), size);
 }
@@ -87,22 +87,23 @@ void CustomPacketChunk::Print(
 	, std::ostream& stream
 	, size_t indent
 ) {
-	std::string spaces = std::string(' ', indent);
+	std::string spaces = std::string(indent, ' ');
 	for (size_t i = 0; i < indent; ++i)
 	{
 		stream << ' ';
 	}
 	stream << "chunk [ header (";
-	for (size_t i = 0; i < sizeof(CustomPacketHeader); ++i)
+	for (size_t i = 0; i < CustomHeaderSize; ++i)
 	{
 		fn(stream, m_chunk[i]);
-		if (i < sizeof(CustomPacketHeader) - 1) stream << ",";
+		if (i < CustomHeaderSize - 1) stream << ",";
 	}
 	stream << "), ";
-	for (size_t i = 0; i < m_size; ++i)
+	for (chunkSize_t i = 0; i < m_size; ++i)
 	{
 		fn(stream, Offset(i)[0]);
-		if (i < m_size - 1) stream << ",";
+		// cast: loop already ensures it won't be negative
+		if (i < chunkSize_t(m_size - 1)) stream << ",";
 	}
 	stream << "]\n";
 }
@@ -125,3 +126,9 @@ void CustomPacketChunk::PrintAscii(
 	}, stream, indent);
 }
 
+void CustomPacketChunk::Copy()
+{
+	char* old = m_chunk;
+	m_chunk = new char[FullSize()];
+	memcpy(m_chunk, old, FullSize());
+}
