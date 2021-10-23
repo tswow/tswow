@@ -144,14 +144,18 @@ TEST_CASE("[MessageBuffer] Memory") {
 
 TEST_CASE("[MessageBuffer] Quota") {
 	CustomPacketBuffer b = buffer(CustomHeaderSize+1,CustomHeaderSize*10+10,0);
-	std::cout << b.Size() << " \n";
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
+		REQUIRE(b.Size() == 0);
 		auto g = makePacket(1,5);
-		for (auto& part : g)
+		for (size_t i = 0; i < g.size() - 1; ++i)
 		{
-			std::cout << b.Size() << " \n";
-			b.ReceivePacket(part.FullSize(), part.Data());
+				REQUIRE(
+					b.ReceivePacket(g[i].FullSize(), g[i].Data())
+						== CustomPacketResult::HANDLED_FRAGMENT
+				); // sanity
+				REQUIRE(b.Size() > 0);
 		}
+		b.ReceivePacket(g[g.size() - 1].FullSize(), g[g.size() - 1].Data());
 	}
 }
