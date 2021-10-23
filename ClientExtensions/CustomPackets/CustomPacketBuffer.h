@@ -37,6 +37,7 @@ public:
 		);
 	~CustomPacketBuffer();
 	CustomPacketResult ReceivePacket(chunkSize_t size, char* data);
+	totalSize_t Size();
 protected:
 	virtual void OnPacket(CustomPacketRead * value) {}
 	virtual void OnError(CustomPacketResult error) {}

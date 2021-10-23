@@ -65,6 +65,7 @@ void CustomPacketBase::Reset()
 {
 	m_chunk = 0;
 	m_idx = 0;
+	m_size = 0;
 }
 
 void CustomPacketBase::Destroy()

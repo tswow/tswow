@@ -132,3 +132,8 @@ void CustomPacketBuffer::AppendFragment(CustomPacketChunk & chunk, bool isLast)
 		m_cur.Push(cpy);
 	}
 }
+
+totalSize_t CustomPacketBuffer::Size()
+{
+	return m_cur.Size();
+}
