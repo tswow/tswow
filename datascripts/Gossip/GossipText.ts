@@ -45,7 +45,30 @@ function getNpcText(id: number) {
 function getNpcLocaleText(id: number, loc: Language) {
     let text = SQL.npc_text_locale.find({ID: id, Locale: loc});
     if(text===undefined) {
-        text = SQL.npc_text_locale.add(Ids.NPCText.id(), loc);
+        text = SQL.npc_text_locale.add(Ids.NPCText.id(), loc)
+            .Text0_0.set(null as any)
+            .Text0_1.set(null as any)
+
+            .Text1_0.set(null as any)
+            .Text1_1.set(null as any)
+
+            .Text2_0.set(null as any)
+            .Text2_1.set(null as any)
+
+            .Text3_0.set(null as any)
+            .Text3_1.set(null as any)
+
+            .Text4_0.set(null as any)
+            .Text4_1.set(null as any)
+
+            .Text5_0.set(null as any)
+            .Text5_1.set(null as any)
+
+            .Text6_0.set(null as any)
+            .Text6_1.set(null as any)
+
+            .Text7_0.set(null as any)
+            .Text7_1.set(null as any)
     }
     return text;
 }
