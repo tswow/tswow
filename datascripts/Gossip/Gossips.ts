@@ -80,6 +80,108 @@ function makeGossip(id: number) {
     const gossipRow = SQL.gossip_menu.add(id, text)
         .VerifiedBuild.set(17688)
     SQL.npc_text.add(text)
+        .text0_0.set('')
+        .text0_1.set('')
+
+        .text1_0.set('')
+        .text1_1.set('')
+
+        .text2_0.set('')
+        .text2_1.set('')
+
+        .text3_0.set('')
+        .text3_1.set('')
+
+        .text4_0.set('')
+        .text4_1.set('')
+
+        .text5_0.set('')
+        .text5_1.set('')
+
+        .text6_0.set('')
+        .text6_1.set('')
+
+        .text7_0.set('')
+        .text7_1.set('')
+
+        .Emote0_0.set(0)
+        .Emote0_1.set(0)
+        .Emote0_2.set(0)
+
+        .Emote1_0.set(0)
+        .Emote1_1.set(0)
+        .Emote1_2.set(0)
+
+        .Emote2_0.set(0)
+        .Emote2_1.set(0)
+        .Emote2_2.set(0)
+
+        .Emote3_0.set(0)
+        .Emote3_1.set(0)
+        .Emote3_2.set(0)
+
+        .Emote4_0.set(0)
+        .Emote4_1.set(0)
+        .Emote4_2.set(0)
+
+        .Emote5_0.set(0)
+        .Emote5_1.set(0)
+        .Emote5_2.set(0)
+
+        .Emote6_0.set(0)
+        .Emote6_1.set(0)
+        .Emote6_2.set(0)
+
+        .Emote7_0.set(0)
+        .Emote7_1.set(0)
+        .Emote7_2.set(0)
+
+        .EmoteDelay0_0.set(0)
+        .EmoteDelay0_1.set(0)
+        .EmoteDelay0_2.set(0)
+
+        .EmoteDelay1_0.set(0)
+        .EmoteDelay1_1.set(0)
+        .EmoteDelay1_2.set(0)
+
+        .EmoteDelay2_0.set(0)
+        .EmoteDelay2_1.set(0)
+        .EmoteDelay2_2.set(0)
+
+        .EmoteDelay3_0.set(0)
+        .EmoteDelay3_1.set(0)
+        .EmoteDelay3_2.set(0)
+
+        .EmoteDelay4_0.set(0)
+        .EmoteDelay4_1.set(0)
+        .EmoteDelay4_2.set(0)
+
+        .EmoteDelay5_0.set(0)
+        .EmoteDelay5_1.set(0)
+        .EmoteDelay5_2.set(0)
+
+        .EmoteDelay6_0.set(0)
+        .EmoteDelay6_1.set(0)
+        .EmoteDelay6_2.set(0)
+
+        .Probability0.set(0)
+        .Probability1.set(0)
+        .Probability2.set(0)
+        .Probability3.set(0)
+        .Probability4.set(0)
+        .Probability5.set(0)
+        .Probability6.set(0)
+        .Probability7.set(0)
+
+        .lang0.set(0)
+        .lang1.set(0)
+        .lang2.set(0)
+        .lang3.set(0)
+        .lang4.set(0)
+        .lang5.set(0)
+        .lang6.set(0)
+        .lang7.set(0)
+
         .BroadcastTextID0.set(0)
         .BroadcastTextID1.set(0)
         .BroadcastTextID2.set(0)
@@ -88,6 +190,7 @@ function makeGossip(id: number) {
         .BroadcastTextID5.set(0)
         .BroadcastTextID6.set(0)
         .BroadcastTextID7.set(0)
+
         .VerifiedBuild.set(17688)
     return new Gossip(gossipRow);
 }
