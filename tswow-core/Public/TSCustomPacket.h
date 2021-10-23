@@ -44,12 +44,7 @@ public:
 		return this;
 	}
 
-	void Destroy()
-	{
-		write->Destroy();
-		delete write;
-		write = nullptr;
-	}
+	uint32_t Size() { return write->Size(); }
 
 	void SendToPlayer(TSPlayer player);
 	void BroadcastMap(TSMap map, uint32_t teamOnly = 0);
@@ -89,12 +84,7 @@ public:
 		return TSString(read->ReadString(def.std_str()));
 	}
 
-	void Destroy()
-	{
-		read->Destroy();
-		delete read;
-		read = nullptr;
-	}
+	uint32_t Size() { return read->Size(); }
 };
 
 class TSServerBuffer : public CustomPacketBuffer

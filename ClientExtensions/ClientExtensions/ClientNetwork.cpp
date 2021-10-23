@@ -199,6 +199,7 @@ extern "C" {
 		ClientMessageWrite* write = writes.get(id);
 		if (write == nullptr)
 		{
+			LOG_ERROR << "Failed to send message: no such write message";
 			// todo error message
 			return 0;
 		}
@@ -237,10 +238,6 @@ CLIENT_DETOUR(
 				SERVER_TO_CLIENT_OPCODE
 			, [](void* a, uint32_t b, int time, ClientPacket* c) {
 					if (c->m_size <= 2) return true; // can this ever happen?
-					LOG_DEBUG << "Client received package fragment " << c->m_size;
-					std::stringstream ss;
-					CustomPacketChunk(c->m_size-2, (char*)c->m_buffer+2).PrintBytes(ss);
-					LOG_DEBUG << ss.str();
 					// -2 is ok, we already safety checked
 					clientBuffer.ReceivePacket(c->m_size - 2, (char*)c->m_buffer + 2);
 					return true;

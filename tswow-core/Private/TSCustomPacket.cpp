@@ -25,8 +25,8 @@ void TSPacketWrite::SendToPlayer(TSPlayer player)
 		packet.append((uint8_t*)chunk.Data(), chunk.FullSize());
 		player.player->SendDirectMessage(&packet);
 	}
-	// remove if we start injecting directly into worldpacket
-	Destroy();
+	// remove this line if we start sending a raw pointer to worldpacket
+	write->Destroy();
 }
 
 void TSPacketWrite::BroadcastMap(TSMap map, uint32_t teamOnly)
@@ -45,8 +45,8 @@ void TSPacketWrite::BroadcastMap(TSMap map, uint32_t teamOnly)
 			}
 		}
 	}
-	// remove if we start injecting directly into worldpacket
-	Destroy();
+	// remove this line if we start sending a raw pointer to worldpacket
+	write->Destroy();
 }
 
 void TSPacketWrite::BroadcastAround(TSWorldObject obj, float range, bool self)
@@ -58,8 +58,8 @@ void TSPacketWrite::BroadcastAround(TSWorldObject obj, float range, bool self)
 		packet.append((uint8_t*)chunk.Data(), chunk.FullSize());
 		obj.obj->SendMessageToSetInRange(&packet, range, self);
 	}
-	// remove if we start injecting directly into worldpacket
-	Destroy();
+	// remove this line if we start sending a raw pointer to worldpacket
+	write->Destroy();
 }
 
 TSServerBuffer::TSServerBuffer(TSPlayer player)
@@ -74,20 +74,36 @@ TSServerBuffer::TSServerBuffer(TSPlayer player)
 
 void TSServerBuffer::OnPacket(CustomPacketRead* value)
 {
-	TSPacketRead read(new CustomPacketRead(*value));
-	FIRE_MAP(
-			GetPacketEvent(value->Opcode())
-		, PacketOnCustom
-		, value->Opcode()
-		, read
-		, player
-		);
-	// do not destroy, we're pointing directly at a worldpacket!
+	// Expanded FIRE_MAP macro because we need to reset the packet
+	// reading head between every invocation.
+	// Please do not change this to some auto-resetting macro abuse,
+	// it would NOT be guaranteed to work in the long term.
+
+	TSPlayer player(player);
+	TSPacketRead read(value);
+	opcode_t opcode = value->Opcode();
+
+	for (size_t i = 0; i < GetTSEvents()->PacketOnCustom.GetSize(); ++i)
+	{
+		GetTSEvents()->PacketOnCustom.Get(i)(opcode, read, player);
+		value->Reset();
+	}
+
+	TSPacketEvents* events = GetPacketEvent(value->Opcode());
+	if (!events)
+	{
+		return;
+	}
+	for (size_t i = 0; i < events->PacketOnCustom.GetSize(); ++i)
+	{
+		events->PacketOnCustom.Get(i)(opcode, read, player);
+		value->Reset();
+	}
 }
 
 void TSServerBuffer::OnError(CustomPacketResult error)
 {
-
+	player.player->GetSession()->KickPlayer("Custom packet error: "+std::to_string(uint32_t(error)));
 }
 
 TSPacketWrite MakeCustomPacket(
