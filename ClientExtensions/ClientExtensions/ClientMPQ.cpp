@@ -1,5 +1,6 @@
 #include "Logger.h"
 #include "CustompacketChunk.h"
+#include "ClientMacros.h"
 
 #include "windows.h"
 

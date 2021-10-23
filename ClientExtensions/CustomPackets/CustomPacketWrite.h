@@ -32,21 +32,6 @@ public:
 		, totalSize_t length = TotalSizeNpos
 	);
 
-	CustomPacketWrite* WriteUInt8(uint8_t value);
-	CustomPacketWrite* WriteInt8(int8_t value);
-
-	CustomPacketWrite* WriteUInt16(uint16_t value);
-	CustomPacketWrite* WriteInt16(int16_t value);
-
-	CustomPacketWrite* WriteUInt32(uint32_t value);
-	CustomPacketWrite* WriteInt32(int32_t value);
-
-	CustomPacketWrite* WriteUInt64(uint64_t value);
-	CustomPacketWrite* WriteInt64(int64_t value);
-
-	CustomPacketWrite* WriteFloat(float value);
-	CustomPacketWrite* WriteDouble(double value);
-
 	template <typename T>
 	CustomPacketWrite* Write(T value)
 	{

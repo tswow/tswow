@@ -47,16 +47,16 @@ TEST_CASE("[MessageBase] read/write") {
       REQUIRE(message.ChunkCount() == 1); // sanity
 
       SECTION("single value") {
-        message.WriteUInt16(1768);
-        REQUIRE(CustomPacketRead(message).ReadUInt16() == 1768);
+        message.Write<uint16_t>(1768);
+        REQUIRE(CustomPacketRead(message).Read<uint16_t>(0) == 1768);
       }
 
       SECTION("multiple values") {
-        message.WriteUInt16(1768);
-        message.WriteUInt16(8671);
+        message.Write<uint16_t>(1768);
+        message.Write<uint16_t>(8671);
         CustomPacketRead read(message);
-        REQUIRE(read.ReadUInt16() == 1768);
-        REQUIRE(read.ReadUInt16() == 8671);
+        REQUIRE(read.Read<uint16_t>(0) == 1768);
+        REQUIRE(read.Read<uint16_t>(0) == 8671);
       }
 
       SECTION("single string") {
@@ -79,17 +79,17 @@ TEST_CASE("[MessageBase] read/write") {
     SECTION("multiple chunks (aligned)") {
       CustomPacketWrite message(0, CustomHeaderSize + 2, 4);
       SECTION("single value") {
-        message.WriteUInt16(1768);
-        REQUIRE(CustomPacketRead(message).ReadUInt16() == 1768);
+        message.Write<uint16_t>(1768);
+        REQUIRE(CustomPacketRead(message).Read<uint16_t>(0) == 1768);
       }
 
       SECTION("multiple values") {
-        message.WriteUInt16(1768);
-        message.WriteUInt16(8671);
+        message.Write<uint16_t>(1768);
+        message.Write<uint16_t>(8671);
         CustomPacketRead read(message);
         REQUIRE(message.ChunkCount() == 2); // sanity
-        REQUIRE(read.ReadUInt16() == 1768);
-        REQUIRE(read.ReadUInt16() == 8671);
+        REQUIRE(read.Read<uint16_t>(0) == 1768);
+        REQUIRE(read.Read<uint16_t>(0) == 8671);
       }
 
       SECTION("single string") {
@@ -114,25 +114,25 @@ TEST_CASE("[MessageBase] read/write") {
     SECTION("multiple chunks (misaligned)") {
       SECTION("multiple values") {
         CustomPacketWrite message(0, CustomHeaderSize + 2, 6);
-        message.WriteUInt8(25);
-        message.WriteUInt16(1768);
-        message.WriteUInt16(8671);
+        message.Write<uint8_t>(25);
+        message.Write<uint16_t>(1768);
+        message.Write<uint16_t>(8671);
         CustomPacketRead read(message);
         REQUIRE(message.ChunkCount() == 3); // sanity
-        REQUIRE(read.ReadUInt8() == 25);
-        REQUIRE(read.ReadUInt16() == 1768);
-        REQUIRE(read.ReadUInt16() == 8671);
+        REQUIRE(read.Read<uint8_t>(0) == 25);
+        REQUIRE(read.Read<uint16_t>(0) == 1768);
+        REQUIRE(read.Read<uint16_t>(0) == 8671);
       }
 
       SECTION("single string") {
         CustomPacketWrite strMessage(0, CustomHeaderSize + 8, 16);
-        strMessage.WriteUInt32(0);
-        strMessage.WriteUInt8(0); // forces string to start on chunk 2
+        strMessage.Write<uint32_t>(0);
+        strMessage.Write<uint8_t>(0); // forces string to start on chunk 2
         strMessage.WriteString("abcd");
 
         CustomPacketRead read(strMessage);
-        read.ReadUInt32();
-        read.ReadUInt8();
+        read.Read<uint32_t>(0);
+        read.Read<uint8_t>(0);
         REQUIRE(read.ChunkCount() == 2); // sanity
         REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("abcd"));
       }
@@ -143,23 +143,23 @@ TEST_CASE("[MessageBase] read/write") {
     SECTION("single chunk") {
       CustomPacketWrite message(0, CustomHeaderSize + 10, 1);
       SECTION("single value") {
-        message.WriteUInt16(1768);
+        message.Write<uint16_t>(1768);
         CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 1); // sanity
-        REQUIRE(read.ReadUInt16() == 1768);
+        REQUIRE(read.Read<uint16_t>(0) == 1768);
       }
 
       SECTION("multiple values") {
         // skips the first one
-        message.WriteUInt16(1768);
-        message.WriteUInt8(25);
+        message.Write<uint16_t>(1768);
+        message.Write<uint8_t>(25);
         // skips the second one
-        message.WriteUInt16(8671);
+        message.Write<uint16_t>(8671);
         CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 1); // sanity
-        REQUIRE(read.ReadUInt16() == 1768);
-        REQUIRE(read.ReadUInt8() == 25);
-        REQUIRE(read.ReadUInt16() == 8671);
+        REQUIRE(read.Read<uint16_t>(0) == 1768);
+        REQUIRE(read.Read<uint8_t>(0) == 25);
+        REQUIRE(read.Read<uint16_t>(0) == 8671);
       }
     }
 
@@ -167,15 +167,15 @@ TEST_CASE("[MessageBase] read/write") {
       CustomPacketWrite message(0, CustomHeaderSize + 2, 1);
       SECTION("multiple values") {
         // skips the first one
-        message.WriteUInt16(1768);
-        message.WriteUInt8(25);
+        message.Write<uint16_t>(1768);
+        message.Write<uint8_t>(25);
         // skips the second one
-        message.WriteUInt16(8671);
+        message.Write<uint16_t>(8671);
         CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 3); // sanity
-        REQUIRE(read.ReadUInt16() == 1768);
-        REQUIRE(read.ReadUInt8() == 25);
-        REQUIRE(read.ReadUInt16() == 8671);
+        REQUIRE(read.Read<uint16_t>(0) == 1768);
+        REQUIRE(read.Read<uint8_t>(0) == 25);
+        REQUIRE(read.Read<uint16_t>(0) == 8671);
       }
     }
   }

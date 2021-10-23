@@ -27,53 +27,6 @@ std::string CustomPacketRead::ReadString(std::string const& def)
 	return str;
 }
 
-uint8_t CustomPacketRead::ReadUInt8(uint8_t def)
-{
-	return Read<uint8_t>(def);
-}
-int8_t CustomPacketRead::ReadInt8(int8_t def)
-{
-	return Read<int8_t>(def);
-}
-
-uint16_t CustomPacketRead::ReadUInt16(uint16_t def)
-{
-	return Read<uint16_t>(def);
-}
-int16_t CustomPacketRead::ReadInt16(int16_t def)
-{
-	return Read<int16_t>(def);
-}
-
-uint32_t CustomPacketRead::ReadUInt32(uint32_t def)
-{
-	return Read<uint32_t>(def);
-}
-int32_t CustomPacketRead::ReadInt32(int32_t def)
-{
-	return Read<int32_t>(def);
-}
-
-uint64_t CustomPacketRead::ReadUInt64(uint64_t def)
-{
-	return Read<uint64_t>(def);
-}
-
-int64_t CustomPacketRead::ReadInt64(int64_t def)
-{
-	return Read<int64_t>(def);
-}
-
-float CustomPacketRead::ReadFloat(float def)
-{
-	return Read<float>(def);
-}
-
-double CustomPacketRead::ReadDouble(double def)
-{
-	return Read<double>(def);
-}
-
 char* CustomPacketRead::ReadBytes(totalSize_t size, bool padStr)
 {
 	return CustomPacketBase::ReadBytes(size, padStr);

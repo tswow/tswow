@@ -44,52 +44,7 @@ CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
 ) {
 	length = _strlen(chr, length);
 	WriteBytes(length, chr);
-	WriteUInt8(0);
-	return this;
-}
-
-CustomPacketWrite* CustomPacketWrite::WriteUInt8(uint8_t value) {
-	Write(value);
-	return this;
-}
-CustomPacketWrite* CustomPacketWrite::WriteInt8(int8_t value) {
-	Write(value);
-	return this;
-}
-
-CustomPacketWrite* CustomPacketWrite::WriteUInt16(uint16_t value) {
-	Write(value);
-	return this;
-}
-CustomPacketWrite* CustomPacketWrite::WriteInt16(int16_t value) {
-	Write(value);
-	return this;
-}
-
-CustomPacketWrite* CustomPacketWrite::WriteUInt32(uint32_t value) {
-	Write(value);
-	return this;
-}
-CustomPacketWrite* CustomPacketWrite::WriteInt32(int32_t value) {
-	Write(value);
-	return this;
-}
-
-CustomPacketWrite* CustomPacketWrite::WriteUInt64(uint64_t value) {
-	Write(value);
-	return this;
-}
-CustomPacketWrite* CustomPacketWrite::WriteInt64(int64_t value) {
-	Write(value);
-	return this;
-}
-
-CustomPacketWrite* CustomPacketWrite::WriteFloat(float value) {
-	Write(value);
-	return this;
-}
-CustomPacketWrite* CustomPacketWrite::WriteDouble(double value) {
-	Write(value);
+	Write<uint8_t>(0);
 	return this;
 }
 

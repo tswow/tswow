@@ -126,7 +126,7 @@ public:
 		LOG_DEBUG << "Client receive full packet with opcode" << value->Opcode();
 		curRead = value;
 		ClientLua::DoString(
-			  ("__FireMessage(" + std::to_string(value->Opcode()) + ")").c_str()
+			  ("__FireCustomPacket(" + std::to_string(value->Opcode()) + ")").c_str()
 			, ClientLua::State()
 		);
 		curRead = nullptr;
@@ -172,29 +172,122 @@ int ReadNum(lua_State* L)
 	return 1;
 }
 
-// See lua polyfill in messages.lua
-extern "C" {
-	int _WriteMessage(lua_State* L)
-	{
-		opcode_t opcode{opcode_t(ClientLua::GetNumber(L, 1, 0))};
-		totalSize_t size{totalSize_t(ClientLua::GetNumber(L, 2, 0))};
+void ClientNetwork::initialize()
+{
+	ClientLua::AddFunction("_WriteUInt8"
+		, [](lua_State* L) {
+		return WriteNum<uint8_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteInt8"
+		, [](lua_State* L) {
+		return WriteNum<int8_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteUInt16"
+		, [](lua_State* L) {
+		return WriteNum<uint16_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteInt16"
+		, [](lua_State* L) {
+		return WriteNum<int16_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteUInt32"
+		, [](lua_State* L) {
+		return WriteNum<uint32_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteInt32"
+		, [](lua_State* L) {
+		return WriteNum<int32_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteFloat"
+		, [](lua_State* L) {
+		return WriteNum<float>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteDouble"
+		, [](lua_State* L) {
+		return WriteNum<double>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_WriteString"
+		, [](lua_State* L) {
+		uint32_t id = uint32_t(ClientLua::GetNumber(L, 1, 0));
+		std::string str = ClientLua::GetString(L, 2, "");
+		auto itr = writes.m_map.find(id);
+		if (itr == writes.m_map.end())
+		{
+			// todo: error message
+			return 0;
+		}
+		itr->second.WriteString(str);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadUInt8"
+		, [](lua_State* L) {
+		return ReadNum<uint8_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadInt8"
+		, [](lua_State* L) {
+		return ReadNum<int8_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadUInt16"
+		, [](lua_State* L) {
+		return ReadNum<uint16_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadInt16"
+		, [](lua_State* L) {
+		return ReadNum<int16_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadUInt32"
+		, [](lua_State* L) {
+		return ReadNum<uint32_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadInt32"
+		, [](lua_State* L) {
+		return ReadNum<int32_t>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadFloat"
+		, [](lua_State* L) {
+		return ReadNum<float>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadDouble"
+		, [](lua_State* L) {
+		return ReadNum<double>(L);
+	}, __FILE__, __LINE__);
+
+	ClientLua::AddFunction("_ReadString"
+		, [](lua_State* L) {
+			ClientLua::PushString(L, curRead == nullptr
+				? ""
+				: curRead->ReadString().c_str());
+			return 1;
+	}, __FILE__, __LINE__);
+
+
+	ClientLua::AddFunction("_MakeCustomPacket"
+		, [](lua_State* L) {
+		opcode_t opcode{ opcode_t(ClientLua::GetNumber(L, 1, 0)) };
+		totalSize_t size{ totalSize_t(ClientLua::GetNumber(L, 2, 0)) };
 		uint32_t id = writes.freeId();
-		writes.m_map[id] = ClientMessageWrite{opcode, size};
+		writes.m_map[id] = ClientMessageWrite{ opcode, size };
 		ClientLua::PushNumber(L, id);
 		return 1;
-	}
+	}, __FILE__, __LINE__);
 
-	int _ResetMessage(lua_State* L)
-	{
-		if (curRead == nullptr) return 0;
-		curRead->Reset();
-		return 0;
-	}
-
-	int _WriteUInt8(lua_State* L) { return WriteNum<uint8_t>(L); }
-	int _ReadUInt8(lua_State* L) { return ReadNum<uint8_t>(L); }
-
-	int _SendMessage(lua_State* L) {
+	ClientLua::AddFunction("_SendCustomPacket"
+		, [](lua_State* L) {
 		uint32_t id{ uint32_t(ClientLua::GetNumber(L, 1)) };
 		ClientMessageWrite* write = writes.get(id);
 		if (write == nullptr)
@@ -206,15 +299,14 @@ extern "C" {
 		write->Send();
 		writes.m_map.erase(id);
 		return 0;
-	}
-}
+	}, __FILE__, __LINE__);
 
-void ClientNetwork::initialize()
-{
-	ClientLua::AddFunction("_WriteUInt8", _WriteUInt8, __FILE__, __LINE__);
-	ClientLua::AddFunction("_WriteMessage", _WriteMessage, __FILE__, __LINE__);
-	ClientLua::AddFunction("_SendMessage", _SendMessage, __FILE__, __LINE__);
-	ClientLua::AddFunction("_ResetMessage", _ResetMessage, __FILE__, __LINE__);
+	ClientLua::AddFunction("_ResetCustomPacket"
+		, [](lua_State* L) {
+		if (curRead == nullptr) return 0;
+		curRead->Reset();
+		return 0;
+	}, __FILE__, __LINE__);
 }
 
 typedef bool(* ClientPacketHandler)
