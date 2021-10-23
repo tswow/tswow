@@ -31,33 +31,33 @@ end
 
 local function stringify(...)
     local arg = {...}
-	local str = ""
-	for i,v in ipairs(arg) do
-		if type(v) == "string" then
-			str = str .. v
-		elseif type(v) == "number" or type(v) == "boolean" then
-			str = str .. tostring(v)
-		elseif type(v) == "table" then
+    local str = ""
+    for i,v in ipairs(arg) do
+        if type(v) == "string" then
+            str = str .. v
+        elseif type(v) == "number" or type(v) == "boolean" then
+            str = str .. tostring(v)
+        elseif type(v) == "table" then
             str = str .. serializeTable(v,nil,true)
-		else
-			str = str .. type(v)
-		end
-	end
-	return str
+        else
+            str = str .. type(v)
+        end
+    end
+    return str
 end
 
 function LOG_DEBUG(...)
-	_LOG_DEBUG(stringify(select(1,...)))
+    _LOG_DEBUG(stringify(select(1,...)))
 end
 
 function LOG_INFO(...)
-	_LOG_INFO(stringify(select(1,...)))
+    _LOG_INFO(stringify(select(1,...)))
 end
 
 function LOG_WARN(...)
-	_LOG_WARN(stringify(select(1,...)))
+    _LOG_WARN(stringify(select(1,...)))
 end
 
 function LOG_ERROR(...)
-	_LOG_ERROR(stringify(select(1,...)))
+    _LOG_ERROR(stringify(select(1,...)))
 end

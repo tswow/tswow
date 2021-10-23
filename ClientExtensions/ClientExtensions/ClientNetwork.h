@@ -4,6 +4,6 @@ class ClientNetwork {
 public:
 
 private:
-	static void initialize();
-	friend class Main;
+    static void initialize();
+    friend class Main;
 };

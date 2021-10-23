@@ -6,7 +6,7 @@
 
 
 #define DETOURED(name,addrp,addr,retp,retval,argp,...) \
-	typedef retval (__cdecl *name##Type)(__VA_ARGS__);\
-	name##Type name = (name##Type)(addr);
+    typedef retval (__cdecl *name##Type)(__VA_ARGS__);\
+    name##Type name = (name##Type)(addr);
 
 #define REGISTER_DETOUR(a,b) {&a,b},

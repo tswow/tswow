@@ -10,28 +10,28 @@
 class Main
 {
 public:
-	static void startup()
-	{
-		LOG_INFO << "Client starting up";
-		// gets this from scripts.generated.ih
-		__init_scripts();
-		ClientNetwork::initialize();
-		ClientArguments::initialize(GetCommandLineA());
-		ClientDetours::Apply();
-	}
+    static void startup()
+    {
+        LOG_INFO << "Client starting up";
+        // gets this from scripts.generated.ih
+        __init_scripts();
+        ClientNetwork::initialize();
+        ClientArguments::initialize(GetCommandLineA());
+        ClientDetours::Apply();
+    }
 };
 
 extern "C" {
-	// The function we register in the exe to load this dll
-	__declspec(dllexport) void ClientExtensionsDummy() {}
+    // The function we register in the exe to load this dll
+    __declspec(dllexport) void ClientExtensionsDummy() {}
 }
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
-	if (fdwReason == DLL_PROCESS_ATTACH)
-	{
-		DisableThreadLibraryCalls(hinstDLL);
-		Main::startup();
-	}
-	return TRUE;
+    if (fdwReason == DLL_PROCESS_ATTACH)
+    {
+        DisableThreadLibraryCalls(hinstDLL);
+        Main::startup();
+    }
+    return TRUE;
 }
