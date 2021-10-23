@@ -21,7 +21,7 @@ import { WrappedLoc } from "wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/primitives";
 import { SQL } from "wotlkdata/sql/SQLFiles";
-import { npc_textRow } from "../../../../bin/scripts/tswow/wotlkdata/sql/types/npc_text";
+import { npc_textRow } from "wotlkdata/sql/types/npc_text";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Gossip } from "./Gossip";
