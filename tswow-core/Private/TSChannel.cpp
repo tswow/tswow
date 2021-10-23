@@ -1,17 +1,17 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "TSChannel.h"
@@ -48,9 +48,9 @@ bool TSChannel::CheckPassword(TSString password) { return channel->CheckPassword
 uint32 TSChannel::GetNumPlayers() { return channel->GetNumPlayers(); }
 uint8 TSChannel::GetFlags() { return channel->GetFlags(); }
 bool TSChannel::HasFlag(uint8 flag) { return channel->HasFlag(flag); }
-void TSChannel::JoinChannel(TSPlayer player, TSString password) 
+void TSChannel::JoinChannel(TSPlayer player, TSString password)
 {
-    channel->JoinChannel(player->player, password.std_str()); 
+    channel->JoinChannel(player->player, password.std_str());
 }
 
 void TSChannel::LeaveChannel(TSPlayer player, bool send)

@@ -12,7 +12,7 @@ int32 TotemCreatureAI::Permissible(Creature const* creature)
         if (reinterpret_cast<TotemCreature const*>(creature)->GetOwner()->GetTypeId() == TYPEID_PLAYER) {
             return PERMIT_BASE_PROACTIVE+1;
         }
-        return PERMIT_BASE_REACTIVE+1; 
+        return PERMIT_BASE_REACTIVE+1;
     }
     return PERMIT_BASE_NO;
 }

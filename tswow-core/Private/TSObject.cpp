@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include <memory.h>
@@ -49,21 +49,21 @@ TSObject::TSObject()
  * @param uint32 flag : the flag to check for in the flags data
  * @return bool hasFlag
  */
-bool TSObject::HasFlag(uint16 index,uint32 flag) 
+bool TSObject::HasFlag(uint16 index,uint32 flag)
 {
     return obj->HasFlag(index, flag);
 }
-    
+
 /**
  * Returns `true` if the [Object] has been added to its [Map], otherwise `false`.
  *
  * @return bool inWorld
  */
-bool TSObject::IsInWorld() 
+bool TSObject::IsInWorld()
 {
     return obj->IsInWorld();
 }
-    
+
 /**
  * Returns the data at the specified index, casted to a signed 32-bit integer.
  *
@@ -74,7 +74,7 @@ int32 TSObject::GetCoreInt32(uint16 index)
 {
     return obj->GetInt32Value(index);
 }
-    
+
 /**
  * Returns the data at the specified index, casted to a unsigned 32-bit integer.
  *
@@ -85,7 +85,7 @@ uint32 TSObject::GetCoreUInt32(uint16 index)
 {
     return obj->GetUInt32Value(index);
 }
-    
+
 /**
  * Returns the data at the specified index, casted to a single-precision floating point value.
  *
@@ -96,7 +96,7 @@ float TSObject::GetCoreFloat(uint16 index)
 {
     return obj->GetFloatValue(index);
 }
-    
+
 /**
  * Returns the data at the specified index and offset, casted to an unsigned 8-bit integer.
  *
@@ -110,7 +110,7 @@ uint8 TSObject::GetCoreByte(uint16 index,uint8 offset)
 {
     return obj->GetByteValue(index, offset);
 }
-    
+
 /**
  * Returns the data at the specified index and offset, casted to a signed 16-bit integer.
  *
@@ -124,7 +124,7 @@ uint16 TSObject::GetCoreUInt16(uint16 index,uint8 offset)
 {
     return obj->GetUInt16Value(index, offset);
 }
-    
+
 /**
  * Returns the scale/size of the [Object].
  *
@@ -132,7 +132,7 @@ uint16 TSObject::GetCoreUInt16(uint16 index,uint8 offset)
  *
  * @return float scale
  */
-float TSObject::GetScale() 
+float TSObject::GetScale()
 {
 #ifndef AZEROTHCORE
     return obj->GetObjectScale();
@@ -140,7 +140,7 @@ float TSObject::GetScale()
     return obj->GetFloatValue(OBJECT_FIELD_SCALE_X);
 #endif
 }
-    
+
 /**
  * Returns the entry of the [Object].
  *
@@ -148,41 +148,41 @@ float TSObject::GetScale()
  *
  * @return uint32 entry
  */
-uint32 TSObject::GetEntry() 
+uint32 TSObject::GetEntry()
 {
     return obj->GetEntry();
 }
-    
+
 /**
  * Returns the GUID of the [Object].
- * 
+ *
  * GUID is an unique identifier for the object.
- * 
+ *
  * However on MaNGOS and cMangos creatures and gameobjects inside different maps can share
  * the same GUID but not on the same map.
- * 
+ *
  * On TrinityCore this value is unique across all maps
  *
  * @return uint64 guid
  */
-uint64 TSObject::GetGUID() 
+uint64 TSObject::GetGUID()
 {
     return obj->TS_GET_GUID();
 }
-    
+
 /**
  * Returns the low-part of the [Object]'s GUID.
- * 
+ *
  * On TrinityCore all low GUIDs are different for all objects of the same type.
  * For example creatures in instances are assigned new GUIDs when the Map is created.
- * 
+ *
  * On MaNGOS and cMaNGOS low GUIDs are unique only on the same map.
  * For example creatures in instances use the same low GUID assigned for that spawn in the database.
  * This is why to identify a creature you have to know the instanceId and low GUID. See [Map:GetIntstanceId]
  *
  * @return uint32 guidLow
  */
-uint32 TSObject::GetGUIDLow() 
+uint32 TSObject::GetGUIDLow()
 {
 #ifdef TRINITY
     return obj->GetGUID().GetCounter();
@@ -190,7 +190,7 @@ uint32 TSObject::GetGUIDLow()
     return obj->GetGUIDLow();
 #endif
 }
-    
+
 /**
  * Returns the TypeId of the [Object].
  *
@@ -207,11 +207,11 @@ uint32 TSObject::GetGUIDLow()
  *
  * @return uint8 typeID
  */
-uint8 TSObject::GetTypeId() 
+uint8 TSObject::GetTypeId()
 {
     return obj->GetTypeId();
 }
-    
+
 /**
  * Returns the data at the specified index, casted to an unsigned 64-bit integer.
  *
@@ -222,7 +222,7 @@ uint64 TSObject::GetCoreUInt64(uint16 index)
 {
     return obj->GetUInt64Value(index);
 }
-    
+
 /**
  * Sets the specified flag in the data value at the specified index.
  *
@@ -233,12 +233,12 @@ uint64 TSObject::GetCoreUInt64(uint16 index)
  * @param uint16 index
  * @param uint32 value
  */
-void TSObject::SetFlag(uint16 index,uint32 flag) 
+void TSObject::SetFlag(uint16 index,uint32 flag)
 {
-    
+
     obj->SetFlag(index, flag);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to a signed 32-bit integer.
  *
@@ -249,7 +249,7 @@ void TSObject::SetCoreInt32(uint16 index,int32 value)
 {
     obj->SetInt32Value(index, value);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
  *
@@ -260,7 +260,7 @@ void TSObject::SetCoreUInt32(uint16 index,uint32 value)
 {
     obj->SetUInt32Value(index, value);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to an unsigned 32-bit integer.
  *
@@ -271,7 +271,7 @@ void TSObject::UpdateCoreUInt32(uint16 index,uint32 value)
 {
     obj->UpdateUInt32Value(index, value);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to a single-precision floating point value.
  *
@@ -280,10 +280,10 @@ void TSObject::UpdateCoreUInt32(uint16 index,uint32 value)
  */
 void TSObject::SetCoreFloat(uint16 index,float value)
 {
-    
+
     obj->SetFloatValue(index, value);
 }
-    
+
 /**
  * Sets the data at the specified index and offset to the given value, converted to an unsigned 8-bit integer.
  *
@@ -295,7 +295,7 @@ void TSObject::SetCoreByte(uint16 index,uint8 offset,uint8 value)
 {
     obj->SetByteValue(index, offset, value);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to an unsigned 16-bit integer.
  *
@@ -307,7 +307,7 @@ void TSObject::SetCoreUInt16(uint16 index,uint8 offset,uint16 value)
 {
     obj->SetUInt16Value(index, offset, value);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to a signed 16-bit integer.
  *
@@ -319,18 +319,18 @@ void TSObject::SetCoreInt16(uint16 index,uint8 offset,int16 value)
 {
     obj->SetInt16Value(index, offset, value);
 }
-    
+
 /**
  * Sets the [Object]'s scale/size to the given value.
  *
  * @param float scale
  */
-void TSObject::SetScale(float size) 
+void TSObject::SetScale(float size)
 {
-    
+
     obj->SetObjectScale(size);
 }
-    
+
 /**
  * Sets the data at the specified index to the given value, converted to an unsigned 64-bit integer.
  *
@@ -341,16 +341,16 @@ void TSObject::SetCoreUInt64(uint16 index,uint64 value)
 {
     obj->SetUInt64Value(index, value);
 }
-    
+
 /**
  * Removes a flag from the value at the specified index.
  *
  * @param uint16 index
  * @param uint32 flag
  */
-void TSObject::RemoveFlag(uint16 index,uint32 flag) 
+void TSObject::RemoveFlag(uint16 index,uint32 flag)
 {
-    
+
     obj->RemoveFlag(index, flag);
 }
 

@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include <memory.h>
@@ -36,7 +36,7 @@ TSCorpse::TSCorpse() : TSWorldObject()
  *
  * @return uint64 ownerGUID
  */
-uint64 TSCorpse::GetOwnerGUID() 
+uint64 TSCorpse::GetOwnerGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return corpse->GetOwnerGUID();
@@ -44,17 +44,17 @@ uint64 TSCorpse::GetOwnerGUID()
     return corpse->GetOwnerGuid();
 #endif
 }
-    
+
 /**
  * Returns the time when the [Player] became a ghost and spawned this [Corpse].
  *
  * @return uint32 ghostTime
  */
-uint32 TSCorpse::GetGhostTime() 
+uint32 TSCorpse::GetGhostTime()
 {
     return corpse->GetGhostTime();
 }
-    
+
 /**
  * Returns the [CorpseType] of a [Corpse].
  *
@@ -66,25 +66,25 @@ uint32 TSCorpse::GetGhostTime()
  *
  * @return [CorpseType] corpseType
  */
-uint32 TSCorpse::GetType() 
+uint32 TSCorpse::GetType()
 {
     return corpse->GetType();
 }
-    
+
 /**
  * Sets the "ghost time" to the current time.
  *
  * See [Corpse:GetGhostTime].
  */
-void TSCorpse::ResetGhostTime() 
+void TSCorpse::ResetGhostTime()
 {
     corpse->ResetGhostTime();
 }
-    
+
 /**
  * Saves the [Corpse] to the database.
  */
-void TSCorpse::SaveToDB() 
+void TSCorpse::SaveToDB()
 {
     corpse->SaveToDB();
 }

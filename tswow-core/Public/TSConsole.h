@@ -64,11 +64,11 @@ static struct Console
 {
   Console()
   {
-#ifdef UNICODE        
+#ifdef UNICODE
     std::wcout << std::boolalpha;
-#else        
+#else
     std::cout << std::boolalpha;
-#endif        
+#endif
   }
 
   constexpr Console* operator->()

@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -59,24 +59,24 @@ TSString TSWorldObject::GetName()
 {
      return TSString(obj->GetName());
 }
-    
+
 /**
  * Returns the current [Map] object of the [WorldObject]
  *
  * @return [Map] mapObject
  */
-TSMap  TSWorldObject::GetMap() 
+TSMap  TSWorldObject::GetMap()
 {
      return TSMap(obj->GetMap());
 }
-    
+
 #if (!defined(TBC) && !defined(CLASSIC))
 /**
  * Returns the current phase of the [WorldObject]
  *
  * @return uint32 phase
  */
-uint32 TSWorldObject::GetPhaseMask() 
+uint32 TSWorldObject::GetPhaseMask()
 {
     return obj->GetPhaseMask();
 }
@@ -85,7 +85,7 @@ uint64 TSWorldObject::GetPhaseID()
 {
     return uint32(obj->m_phase_id);
 }
-    
+
 /**
 * Sets the [WorldObject]'s phase mask.
 *
@@ -97,83 +97,83 @@ void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
     obj->SetPhaseMask(phaseMask, update, id);
 }
 #endif
-    
+
 /**
  * Returns the current instance ID of the [WorldObject]
  *
  * @return uint32 instanceId
  */
-uint32 TSWorldObject::GetInstanceId() 
+uint32 TSWorldObject::GetInstanceId()
 {
     return obj->GetInstanceId();
 }
-    
+
 /**
  * Returns the current area ID of the [WorldObject]
  *
  * @return uint32 areaId
  */
-uint32 TSWorldObject::GetAreaId() 
+uint32 TSWorldObject::GetAreaId()
 {
     return obj->GetAreaId();
 }
-    
+
 /**
  * Returns the current zone ID of the [WorldObject]
  *
  * @return uint32 zoneId
  */
-uint32 TSWorldObject::GetZoneId() 
+uint32 TSWorldObject::GetZoneId()
 {
     return obj->GetZoneId();
 }
-    
+
 /**
  * Returns the current map ID of the [WorldObject]
  *
  * @return uint32 mapId
  */
-uint32 TSWorldObject::GetMapId() 
+uint32 TSWorldObject::GetMapId()
 {
     return obj->GetMapId();
 }
-    
+
 /**
  * Returns the current X coordinate of the [WorldObject]
  *
  * @return float x
  */
-float TSWorldObject::GetX() 
+float TSWorldObject::GetX()
 {
     return obj->GetPositionX();
 }
-    
+
 /**
  * Returns the current Y coordinate of the [WorldObject]
  *
  * @return float y
  */
-float TSWorldObject::GetY() 
+float TSWorldObject::GetY()
 {
     return obj->GetPositionY();
 }
-    
+
 /**
  * Returns the current Z coordinate of the [WorldObject]
  *
  * @return float z
  */
-float TSWorldObject::GetZ() 
+float TSWorldObject::GetZ()
 {
     return obj->GetPositionZ();
 }
-    
+
 /**
  * Returns the current orientation of the [WorldObject]
  *
  * @return float orientation / facing
  */
-float TSWorldObject::GetO() 
+float TSWorldObject::GetO()
 {
     return obj->GetOrientation();
 }
@@ -198,7 +198,7 @@ float TSWorldObject::GetDistanceToPoint(float X, float Y, float Z)
 {
     return obj->GetDistance(X, Y, Z);
 }
-    
+
 /**
  * Returns the distance from this [WorldObject] to another [WorldObject]
  *
@@ -235,7 +235,7 @@ TSPosition TSWorldObject::GetRelativePoint(float dist,float rad) {
     obj->GetClosePoint(x, y, z, 0.0f, dist, rad);
     return TSPosition(GetMap()->GetMapId(), x,y,z,0);
 }
-    
+
 /**
  * Returns the angle between this [WorldObject] and another [WorldObject] or a point.
  *
@@ -274,7 +274,7 @@ void TSWorldObject::SendPacket(std::shared_ptr<TSWorldPacket> _data)
 {
     SendPacket(*_data);
 }
-    
+
 /**
  * Sends a [WorldPacket] to [Player]s in sight of the [WorldObject].
  *
@@ -289,7 +289,7 @@ void TSWorldObject::SendPacket(TSWorldPacket _data)
     obj->SendMessageToSet(data, true);
 #endif
 }
-    
+
 /**
  * Spawns a [GameObject] at specified location.
  *
@@ -301,7 +301,7 @@ void TSWorldObject::SendPacket(TSWorldPacket _data)
  * @param uint32 respawnDelay = 30 : respawn time in seconds
  * @return [GameObject] gameObject
  */
-TSGameObject  TSWorldObject::SummonGameObject(uint32 entry,float x,float y,float z,float o,uint32 respawnDelay) 
+TSGameObject  TSWorldObject::SummonGameObject(uint32 entry,float x,float y,float z,float o,uint32 respawnDelay)
 {
 #ifdef TRINITY
     QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
@@ -312,7 +312,7 @@ TSGameObject  TSWorldObject::SummonGameObject(uint32 entry,float x,float y,float
     return TSGameObject(obj->SummonGameObject(entry, x, y, z, o, std::chrono::seconds(respawnDelay)));
 #endif
 }
-    
+
 /**
  * Spawns the creature at specified location.
  *
@@ -338,9 +338,9 @@ TSGameObject  TSWorldObject::SummonGameObject(uint32 entry,float x,float y,float
  * @param uint32 despawnTimer = 0 : despawn time in milliseconds
  * @return [Creature] spawnedCreature
  */
-TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,float o,uint32 spawnType,uint32 despawnTimer) 
+TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,float o,uint32 spawnType,uint32 despawnTimer)
 {
-    
+
     TempSummonType type;
     switch (spawnType)
     {
@@ -384,7 +384,7 @@ TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,fl
     auto c = (Creature*) (obj->SummonCreature(entry, x, y, z, o, type, std::chrono::milliseconds(despawnTimer)));
     return TSCreature(c);
 }
-    
+
 /**
  * Returns true if the given [WorldObject] or coordinates are in the [WorldObject]'s line of sight
  *
@@ -400,7 +400,7 @@ TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,fl
 bool TSWorldObject::IsWithinLoS(TSWorldObject _target,float x,float y,float z)
 {
     auto target = _target.obj;
-    
+
     if (target)
         return obj->IsWithinLOSInMap(target);
     else
@@ -408,7 +408,7 @@ bool TSWorldObject::IsWithinLoS(TSWorldObject _target,float x,float y,float z)
         return obj->IsWithinLOS(x, y, z);
     }
 }
-    
+
 /**
  * Returns true if the [WorldObject]s are on the same map
  *
@@ -420,7 +420,7 @@ bool TSWorldObject::IsInMap(TSWorldObject _target)
     auto target = _target.obj;
     return obj->IsInMap(target);
 }
-    
+
 /**
  * Returns true if the point is in the given distance of the [WorldObject]
  *
@@ -432,11 +432,11 @@ bool TSWorldObject::IsInMap(TSWorldObject _target)
  * @param float distance
  * @return bool isInDistance
  */
-bool TSWorldObject::IsWithinDist3d(float x,float y,float z,float dist) 
+bool TSWorldObject::IsWithinDist3d(float x,float y,float z,float dist)
 {
     return obj->IsWithinDist3d(x, y, z, dist);
 }
-    
+
 /**
  * Returns true if the point is in the given distance of the [WorldObject]
  *
@@ -448,11 +448,11 @@ bool TSWorldObject::IsWithinDist3d(float x,float y,float z,float dist)
  * @param float distance
  * @return bool isInDistance
  */
-bool TSWorldObject::IsWithinDist2d(float x,float y,float dist) 
+bool TSWorldObject::IsWithinDist2d(float x,float y,float dist)
 {
     return obj->IsWithinDist2d(x, y, dist);
 }
-    
+
 /**
  * Returns true if the target is in the given distance of the [WorldObject]
  *
@@ -468,7 +468,7 @@ bool TSWorldObject::IsWithinDist(TSWorldObject _target,float distance,bool is3D)
     auto target = _target.obj;
     return obj->IsWithinDist(target, distance, is3D);
 }
-    
+
 /**
  * Returns true if the [WorldObject] is on the same map and within given distance
  *
@@ -484,7 +484,7 @@ bool TSWorldObject::IsWithinDistInMap(TSWorldObject _target,float distance,bool 
     auto target = _target.obj;
     return obj->IsWithinDistInMap(target, distance, is3D);
 }
-    
+
 /**
  * Returns true if the target is within given range
  *
@@ -501,7 +501,7 @@ bool TSWorldObject::IsInRange(TSWorldObject _target,float minrange,float maxrang
     auto target = _target.obj;
     return obj->IsInRange(target, minrange, maxrange, is3D);
 }
-    
+
 /**
  * Returns true if the point is within given range
  *
@@ -513,11 +513,11 @@ bool TSWorldObject::IsInRange(TSWorldObject _target,float minrange,float maxrang
  * @param float maxrange
  * @return bool isInDistance
  */
-bool TSWorldObject::IsInRange2d(float x,float y,float minrange,float maxrange) 
+bool TSWorldObject::IsInRange2d(float x,float y,float minrange,float maxrange)
 {
     return obj->IsInRange2d(x, y, minrange, maxrange);
 }
-    
+
 /**
  * Returns true if the point is within given range
  *
@@ -530,11 +530,11 @@ bool TSWorldObject::IsInRange2d(float x,float y,float minrange,float maxrange)
  * @param float maxrange
  * @return bool isInDistance
  */
-bool TSWorldObject::IsInRange3d(float x,float y,float z,float minrange,float maxrange) 
+bool TSWorldObject::IsInRange3d(float x,float y,float z,float minrange,float maxrange)
 {
     return obj->IsInRange3d(x, y, z, minrange, maxrange);
 }
-    
+
 /**
  * Returns true if the target is in the given arc in front of the [WorldObject]
  *
@@ -545,14 +545,14 @@ bool TSWorldObject::IsInRange3d(float x,float y,float z,float minrange,float max
 bool TSWorldObject::IsInFront(TSWorldObject _target,float arc)
 {
     auto target = _target.obj;
-    
+
 #ifdef MANGOS
     return obj->IsInFront(target, arc);
 #else
     return obj->isInFront(target, arc);
 #endif
 }
-    
+
 /**
  * Returns true if the target is in the given arc behind the [WorldObject]
  *
@@ -563,14 +563,14 @@ bool TSWorldObject::IsInFront(TSWorldObject _target,float arc)
 bool TSWorldObject::IsInBack(TSWorldObject _target,float arc)
 {
     auto target = _target.obj;
-    
+
 #ifdef MANGOS
     return obj->IsInBack(target, arc);
 #else
     return obj->isInBack(target, arc);
 #endif
 }
-    
+
 /**
  * The [WorldObject] plays music to a [Player]
  *
@@ -585,7 +585,7 @@ bool TSWorldObject::IsInBack(TSWorldObject _target,float arc)
 void TSWorldObject::PlayMusic(uint32 musicid,TSPlayer _player)
 {
     auto player = _player.player;
-    
+
 WorldPacket data(SMSG_PLAY_MUSIC, 4);
     data << uint32(musicid);
 #ifdef CMANGOS
@@ -600,7 +600,7 @@ WorldPacket data(SMSG_PLAY_MUSIC, 4);
         obj->SendMessageToSet(&data, true);
 #endif
 }
-    
+
 /**
  * The [WorldObject] plays a sound to a [Player]
  *
@@ -615,13 +615,13 @@ WorldPacket data(SMSG_PLAY_MUSIC, 4);
 void TSWorldObject::PlayDirectSound(uint32 soundId,TSPlayer _player)
 {
     auto player = _player.player;
-    
+
     if (player)
         obj->PlayDirectSound(soundId, player);
     else
         obj->PlayDirectSound(soundId);
 }
-    
+
 /**
  * The [WorldObject] plays a sound to a [Player]
  *
@@ -637,7 +637,7 @@ void TSWorldObject::PlayDirectSound(uint32 soundId,TSPlayer _player)
 void TSWorldObject::PlayDistanceSound(uint32 soundId,TSPlayer _player)
 {
     auto player = _player.player;
-    
+
     if (player)
         obj->PlayDistanceSound(soundId, player);
     else
@@ -917,7 +917,7 @@ bool TSCollisionEntry::Tick(TSWorldObject value, bool force)
     }
 
     uint64_t now = std::chrono::duration_cast<std::chrono::milliseconds>
-    (std::chrono::high_resolution_clock::now().time_since_epoch()).count(); 
+    (std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 
     if(!force && now-lastHit < minDelay)
     {

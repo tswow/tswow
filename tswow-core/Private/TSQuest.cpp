@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -48,7 +48,7 @@ TSQuest::TSQuest()
  *     QUEST_FLAGS_RAID                    = 0x40,      // Not used currently
  *     QUEST_FLAGS_TBC                     = 0x80,      // Not used currently: Available if TBC expansion enabled only
  *     QUEST_FLAGS_NO_MONEY_FROM_XP        = 0x100,     // Not used currently: Experience is not converted to gold at max level
-bool TSQuest::log() 
+bool TSQuest::log()
  *     QUEST_FLAGS_TRACKING                = 0x400,     // These quests are automatically rewarded on quest complete and they will never appear in quest log client side.
  *     QUEST_FLAGS_DEPRECATE_REPUTATION    = 0x800,     // Not used currently
  *     QUEST_FLAGS_DAILY                   = 0x1000,    // Used to know quest is Daily one
@@ -66,7 +66,7 @@ bool TSQuest::log()
  * @param [QuestFlags] flag : all available flags can be seen above
  * @return bool hasFlag
  */
-bool TSQuest::HasFlag(uint32 flag) 
+bool TSQuest::HasFlag(uint32 flag)
 {
 #if defined TRINITY || AZEROTHCORE
     return quest->HasFlag(flag);
@@ -74,95 +74,95 @@ bool TSQuest::HasFlag(uint32 flag)
     return quest->HasQuestFlag((QuestFlags)flag);
 #endif
 }
-    
+
 #ifndef CLASSIC
 /**
  * Returns 'true' if the [Quest] is a daily quest, false otherwise.
  *
  * @return bool isDaily
  */
-bool TSQuest::IsDaily() 
+bool TSQuest::IsDaily()
 {
     return quest->IsDaily();
 }
 #endif
-    
+
 /**
  * Returns 'true' if the [Quest] is repeatable, false otherwise.
  *
  * @return bool isRepeatable
  */
-bool TSQuest::IsRepeatable() 
+bool TSQuest::IsRepeatable()
 {
     return quest->IsRepeatable();
 }
-    
+
 /**
  * Returns entry ID of the [Quest].
  *
  * @return uint32 entryId
  */
-uint32 TSQuest::GetId() 
+uint32 TSQuest::GetId()
 {
     return quest->GetQuestId();
 }
-    
+
 /**
  * Returns the [Quest]'s level.
  *
  * @return uint32 level
  */
-uint32 TSQuest::GetLevel() 
+uint32 TSQuest::GetLevel()
 {
     return quest->GetQuestLevel();
 }
-    
+
 /**
  * Returns the minimum level required to pick up the [Quest].
  *
  * @return uint32 minLevel
  */
-uint32 TSQuest::GetMinLevel() 
+uint32 TSQuest::GetMinLevel()
 {
     return quest->GetMinLevel();
 }
-    
+
 /**
  * Returns the next [Quest] entry ID.
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetNextQuestId() 
+int32 TSQuest::GetNextQuestId()
 {
     return quest->GetNextQuestId();
 }
-    
+
 /**
  * Returns the previous [Quest] entry ID.
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetPrevQuestId() 
+int32 TSQuest::GetPrevQuestId()
 {
     return quest->GetPrevQuestId();
 }
-    
+
 /**
  * Returns the next [Quest] entry ID in the specific [Quest] chain.
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetNextQuestInChain() 
+int32 TSQuest::GetNextQuestInChain()
 {
     return quest->GetNextQuestInChain();
 }
-    
+
 /**
  * Returns the [Quest]'s flags.
  *
  * @return [QuestFlags] flags
  */
-uint32 TSQuest::GetFlags() 
+uint32 TSQuest::GetFlags()
 {
 #if defined TRINITY || AZEROTHCORE
     return quest->GetFlags();
@@ -170,7 +170,7 @@ uint32 TSQuest::GetFlags()
     return quest->GetQuestFlags();
 #endif
 }
-    
+
 /**
  * Returns the [Quest]'s type.
  *
@@ -178,11 +178,11 @@ uint32 TSQuest::GetFlags()
  *
  * @return uint32 type
  */
-uint32 TSQuest::GetType() 
+uint32 TSQuest::GetType()
 {
     return quest->GetType();
 }
-    
+
 /*int TSQuest::GetMaxLevel(lua_State* L, Quest* quest)
 {
     return quest->GetMaxLevel();

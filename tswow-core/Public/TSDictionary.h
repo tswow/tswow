@@ -121,7 +121,7 @@ public:
     }
   }
 
-  TSString stringify(int indention = 0) 
+  TSString stringify(int indention = 0)
   {
     TSString str = JSTR("{");
     if (get_length() > 0)

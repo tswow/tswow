@@ -762,7 +762,7 @@ namespace http
                                 if (removeCrlfAfterChunk)
                                 {
                                     if (responseData.size() < 2) break;
-                                    
+
                                     if (!std::equal(crlf.begin(), crlf.end(), responseData.begin()))
                                         throw ResponseError("Invalid chunk");
 

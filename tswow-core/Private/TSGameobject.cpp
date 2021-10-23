@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -43,61 +43,61 @@ TSGameObject::TSGameObject() : TSWorldObject()
  * @param uint32 questId : quest entry Id to check
  * @return bool hasQuest
  */
-bool TSGameObject::HasQuest(uint32 questId) 
+bool TSGameObject::HasQuest(uint32 questId)
 {
-    
+
 #if defined TRINITY || AZEROTHCORE
     return go->hasQuest(questId);
 #else
     return go->HasQuest(questId);
 #endif
 }
-    
+
 /**
  * Returns 'true' if the [GameObject] is spawned
  *
  * @return bool isSpawned
  */
-bool TSGameObject::IsSpawned() 
+bool TSGameObject::IsSpawned()
 {
     return go->isSpawned();
 }
-    
+
 /**
  * Returns 'true' if the [GameObject] is a transport
  *
  * @return bool isTransport
  */
-bool TSGameObject::IsTransport() 
+bool TSGameObject::IsTransport()
 {
     return go->IsTransport();
 }
-    
+
 /**
  * Returns 'true' if the [GameObject] is active
  *
  * @return bool isActive
  */
-bool TSGameObject::IsActive() 
+bool TSGameObject::IsActive()
 {
     return go->isActiveObject();
 }
-    
+
 /*int TSGameObject::IsDestructible(lua_State* L, GameObject* go) // TODO: Implementation core side
 {
     return go->IsDestructibleBuilding();
 }*/
-    
+
 /**
  * Returns display ID of the [GameObject]
  *
  * @return uint32 displayId
  */
-uint32 TSGameObject::GetDisplayId() 
+uint32 TSGameObject::GetDisplayId()
 {
     return go->GetDisplayId();
 }
-    
+
 /**
  * Returns the state of a [GameObject]
  * Below are client side [GOState]s off of 3.3.5a
@@ -112,11 +112,11 @@ uint32 TSGameObject::GetDisplayId()
  *
  * @return [GOState] goState
  */
-uint32 TSGameObject::GetGoState() 
+uint32 TSGameObject::GetGoState()
 {
     return go->GetGoState();
 }
-    
+
 /**
  * Returns the [LootState] of a [GameObject]
  * Below are [LootState]s off of 3.3.5a
@@ -132,11 +132,11 @@ uint32 TSGameObject::GetGoState()
  *
  * @return [LootState] lootState
  */
-uint32 TSGameObject::GetLootState() 
+uint32 TSGameObject::GetLootState()
 {
     return go->getLootState();
 }
-    
+
 /**
  * Returns the [Player] that can loot the [GameObject]
  *
@@ -144,11 +144,11 @@ uint32 TSGameObject::GetLootState()
  *
  * @return [Player] player
  */
-TSPlayer  TSGameObject::GetLootRecipient() 
+TSPlayer  TSGameObject::GetLootRecipient()
 {
      return TSPlayer(go->GetLootRecipient());
 }
-    
+
 /**
  * Returns the [Group] that can loot the [GameObject]
  *
@@ -156,7 +156,7 @@ TSPlayer  TSGameObject::GetLootRecipient()
  *
  * @return [Group] group
  */
-TSGroup  TSGameObject::GetLootRecipientGroup() 
+TSGroup  TSGameObject::GetLootRecipientGroup()
 {
 #if defined TRINITY || AZEROTHCORE
      return TSGroup(go->GetLootRecipientGroup());
@@ -164,13 +164,13 @@ TSGroup  TSGameObject::GetLootRecipientGroup()
      return TSGroup(go->GetGroupLootRecipient());
 #endif
 }
-    
+
 /**
  * Returns the guid of the [GameObject] that is used as the ID in the database
  *
  * @return uint32 dbguid
  */
-uint32 TSGameObject::GetDBTableGUIDLow() 
+uint32 TSGameObject::GetDBTableGUIDLow()
 {
 #ifdef TRINITY
     return go->GetSpawnId();
@@ -181,7 +181,7 @@ uint32 TSGameObject::GetDBTableGUIDLow()
     return go->GetGUIDLow();
 #endif
 }
-    
+
 /**
  * Sets the state of a [GameObject]
  *
@@ -195,9 +195,9 @@ uint32 TSGameObject::GetDBTableGUIDLow()
  *
  * @param [GOState] state : all available go states can be seen above
  */
-void TSGameObject::SetGoState(uint32 state) 
+void TSGameObject::SetGoState(uint32 state)
 {
-    
+
     if (state == 0)
         go->SetGoState(GO_STATE_ACTIVE);
     else if (state == 1)
@@ -210,9 +210,9 @@ void TSGameObject::SetGoState(uint32 state)
         go->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
 #endif
     }
-    
+
 }
-    
+
 /**
  * Sets the [LootState] of a [GameObject]
  * Below are [LootState]s off of 3.3.5a
@@ -228,9 +228,9 @@ void TSGameObject::SetGoState(uint32 state)
  *
  * @param [LootState] state : all available loot states can be seen above
  */
-void TSGameObject::SetLootState(uint32 state) 
+void TSGameObject::SetLootState(uint32 state)
 {
-    
+
     if (state == 0)
         go->SetLootState(GO_NOT_READY);
     else if (state == 1)
@@ -239,18 +239,18 @@ void TSGameObject::SetLootState(uint32 state)
         go->SetLootState(GO_ACTIVATED);
     else if (state == 3)
         go->SetLootState(GO_JUST_DEACTIVATED);
-    
+
 }
-    
+
 /**
  * Saves [GameObject] to the database
  *
  */
-void TSGameObject::SaveToDB() 
+void TSGameObject::SaveToDB()
 {
     go->SaveToDB();
 }
-    
+
 /**
  * Removes [GameObject] from the world
  *
@@ -258,9 +258,9 @@ void TSGameObject::SaveToDB()
  *
  * @param bool deleteFromDB : if true, it will delete the [GameObject] from the database
  */
-void TSGameObject::RemoveFromWorld(bool deldb) 
+void TSGameObject::RemoveFromWorld(bool deldb)
 {
-    
+
     // cs_gobject.cpp copy paste
 #if defined TRINITY || AZEROTHCORE
     ObjectGuid ownerGuid = go->GetOwnerGUID();
@@ -270,10 +270,10 @@ void TSGameObject::RemoveFromWorld(bool deldb)
     if (ownerGuid)
     {
         Unit* owner = eObjectAccessor()GetUnit(*go, ownerGuid);
-    
+
         owner->RemoveGameObject(go, false);
     }
-    
+
     if (deldb)
     {
 #ifdef TRINITY
@@ -282,41 +282,41 @@ void TSGameObject::RemoveFromWorld(bool deldb)
         go->DeleteFromDB();
 #endif
     }
-    
+
     go->SetRespawnTime(0);
     go->Delete();
-    
+
 }
-    
+
 /**
  * Activates a door or a button/lever
  *
  * @param uint32 delay = 0 : cooldown time in seconds to restore the [GameObject] back to normal. 0 for infinite duration
  */
-void TSGameObject::UseDoorOrButton(uint32 delay) 
+void TSGameObject::UseDoorOrButton(uint32 delay)
 {
-    
+
     go->UseDoorOrButton(delay);
 }
-    
+
 /**
  * Despawns a [GameObject]
  *
  * The gameobject may be automatically respawned by the core
  */
-void TSGameObject::Despawn() 
+void TSGameObject::Despawn()
 {
     go->SetLootState(GO_JUST_DEACTIVATED);
 }
-    
+
 /**
  * Respawns a [GameObject]
  */
-void TSGameObject::Respawn() 
+void TSGameObject::Respawn()
 {
     go->Respawn();
 }
-    
+
 /**
  * Sets the respawn or despawn time for the gameobject.
  *
@@ -324,9 +324,9 @@ void TSGameObject::Respawn()
  *
  * @param int32 delay = 0 : cooldown time in seconds to respawn or despawn the object. 0 means never
  */
-void TSGameObject::SetRespawnTime(int32 respawn) 
+void TSGameObject::SetRespawnTime(int32 respawn)
 {
-    
+
     go->SetRespawnTime(respawn);
 }
 

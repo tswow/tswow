@@ -268,7 +268,7 @@ static void reportFail(
         "Failed test "
         + modName + ":"
         + testName + ":"
-        + stepName 
+        + stepName
         + " (reason = " + reason + ")"
     );
     PreparedStatementBase params(0,6);

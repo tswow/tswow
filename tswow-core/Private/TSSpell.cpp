@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -44,57 +44,57 @@ TSSpell::TSSpell()
  *
  * @return bool isAutoRepeating
  */
-bool TSSpell::IsAutoRepeat() 
+bool TSSpell::IsAutoRepeat()
 {
     return spell->IsAutoRepeat();
 }
-    
+
 /**
  * Returns the [Unit] that casted the [Spell].
  *
  * @return [Unit] caster
  */
-TSWorldObject TSSpell::GetCaster() 
+TSWorldObject TSSpell::GetCaster()
 {
     return TSWorldObject(spell->GetCaster());
 }
-    
+
 /**
  * Returns the cast time of the [Spell].
  *
  * @return int32 castTime
  */
-int32 TSSpell::GetCastTime() 
+int32 TSSpell::GetCastTime()
 {
     return spell->GetCastTime();
 }
-    
+
 /**
  * Returns the entry ID of the [Spell].
  *
  * @return uint32 entryId
  */
-uint32 TSSpell::GetEntry() 
+uint32 TSSpell::GetEntry()
 {
     return spell->m_spellInfo->Id;
 }
-    
+
 /**
  * Returns the power cost of the [Spell].
  *
  * @return uint32 powerCost
  */
-uint32 TSSpell::GetPowerCost() 
+uint32 TSSpell::GetPowerCost()
 {
     return spell->GetPowerCost();
 }
-    
+
 /**
  * Returns the spell duration of the [Spell].
  *
  * @return int32 duration
  */
-int32 TSSpell::GetDuration() 
+int32 TSSpell::GetDuration()
 {
 #if defined TRINITY || AZEROTHCORE
     return spell->GetSpellInfo()->GetDuration();
@@ -102,7 +102,7 @@ int32 TSSpell::GetDuration()
     return GetSpellDuration(spell->m_spellInfo);
 #endif
 }
-    
+
 /**
  * Returns the target destination coordinates of the [Spell].
  *
@@ -110,7 +110,7 @@ int32 TSSpell::GetDuration()
  * @return float y : y coordinate of the [Spell]
  * @return float z : z coordinate of the [Spell]
  */
-TSPosition TSSpell::GetTargetDest() 
+TSPosition TSSpell::GetTargetDest()
 {
 #if defined TRINITY || AZEROTHCORE
     float x, y, z;
@@ -121,7 +121,7 @@ TSPosition TSSpell::GetTargetDest()
 #endif
     return TSPosition(0,x,y,z,0);
 }
-    
+
 /**
  * Returns the target [Object] of the [Spell].
  *
@@ -134,7 +134,7 @@ TSPosition TSSpell::GetTargetDest()
  *
  * @return [Object] target
  */
-TSObject  TSSpell::GetTarget() 
+TSObject  TSSpell::GetTarget()
 {
 #if defined TRINITY || AZEROTHCORE
     if (GameObject* target = spell->m_targets.GetGOTarget())
@@ -164,39 +164,39 @@ TSSpellInfo TSSpell::GetSpellInfo()
 {
     return TSSpellInfo(spell->GetSpellInfo());
 }
-    
+
 /**
  * Sets the [Spell] to automatically repeat.
  *
  * @param bool repeat : set variable to 'true' for spell to automatically repeat
  */
-void TSSpell::SetAutoRepeat(bool repeat) 
+void TSSpell::SetAutoRepeat(bool repeat)
 {
     spell->SetAutoRepeat(repeat);
 }
-    
+
 /**
  * Casts the [Spell].
  *
  * @param bool skipCheck = false : skips initial checks to see if the [Spell] can be casted or not, this is optional
  */
-void TSSpell::Cast(bool skipCheck) 
+void TSSpell::Cast(bool skipCheck)
 {
     spell->cast(skipCheck);
 }
-    
+
 /**
  * Cancels the [Spell].
  */
-void TSSpell::Cancel() 
+void TSSpell::Cancel()
 {
     spell->cancel();
 }
-    
+
 /**
  * Finishes the [Spell].
  */
-void TSSpell::Finish() 
+void TSSpell::Finish()
 {
     spell->finish();
 }

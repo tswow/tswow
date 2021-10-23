@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -50,13 +50,13 @@ bool TSVehicle::IsOnBoard(TSUnit _passenger)
     return vehicle->HasOnBoard(passenger);
 #endif
 }
-    
+
 /**
  * Returns the [Vehicle]'s owner
  *
  * @return [Unit] owner
  */
-TSUnit  TSVehicle::GetOwner() 
+TSUnit  TSVehicle::GetOwner()
 {
 #if defined TRINITY || AZEROTHCORE
      return TSUnit(vehicle->GetBase());
@@ -64,13 +64,13 @@ TSUnit  TSVehicle::GetOwner()
      return TSUnit(vehicle->GetOwner());
 #endif
 }
-    
+
 /**
  * Returns the [Vehicle]'s entry
  *
  * @return uint32 entry
  */
-uint32 TSVehicle::GetEntry() 
+uint32 TSVehicle::GetEntry()
 {
 #if defined TRINITY || AZEROTHCORE
     return vehicle->GetVehicleInfo()->ID;
@@ -78,18 +78,18 @@ uint32 TSVehicle::GetEntry()
     return vehicle->GetVehicleEntry()->m_ID;
 #endif
 }
-    
+
 /**
  * Returns the [Vehicle]'s passenger in the specified seat
  *
  * @param int8 seat
  * @return [Unit] passenger
  */
-TSUnit  TSVehicle::GetPassenger(int8 seatId) 
+TSUnit  TSVehicle::GetPassenger(int8 seatId)
 {
      return TSUnit(vehicle->GetPassenger(seatId));
 }
-    
+
 /**
  * Adds [Unit] passenger to a specified seat in the [Vehicle]
  *
@@ -106,7 +106,7 @@ void TSVehicle::AddPassenger(TSUnit _passenger,int8 seatId)
         vehicle->Board(passenger, seatId);
 #endif
 }
-    
+
 /**
  * Removes [Unit] passenger from the [Vehicle]
  *
@@ -121,7 +121,7 @@ void TSVehicle::RemovePassenger(TSUnit _passenger)
     vehicle->UnBoard(passenger, false);
 #endif
 }
-    
-    
+
+
 #endif // CLASSIC
 #endif // TBC

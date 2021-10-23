@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -55,43 +55,43 @@ bool TSUnit::Attack(TSUnit _who,bool meleeAttack)
     auto who = _who.unit;
     return unit->Attack(who, meleeAttack);
 }
-    
+
 /**
  * The [Unit] stops attacking its target
  *
  * @return bool isAttacking : if the [Unit] wasn't attacking already
  */
-bool TSUnit::AttackStop() 
+bool TSUnit::AttackStop()
 {
     return unit->AttackStop();
 }
-    
+
 /**
  * Returns true if the [Unit] is standing.
  *
  * @return bool isStanding
  */
-bool TSUnit::IsStandState() 
+bool TSUnit::IsStandState()
 {
     return unit->IsStandState();
 }
-    
+
 /**
  * Returns true if the [Unit] is mounted.
  *
  * @return bool isMounted
  */
-bool TSUnit::IsMounted() 
+bool TSUnit::IsMounted()
 {
     return unit->IsMounted();
 }
-    
+
 /**
  * Returns true if the [Unit] is rooted.
  *
  * @return bool isRooted
  */
-bool TSUnit::IsRooted() 
+bool TSUnit::IsRooted()
 {
 #ifdef AZEROTHCORE
     return unit->isInRoots() || unit->HasUnitMovementFlag(MOVEMENTFLAG_ROOT);
@@ -106,17 +106,17 @@ bool TSUnit::IsRooted()
     return unit->IsInRoots() || unit->IsRooted();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] has full health.
  *
  * @return bool hasFullHealth
  */
-bool TSUnit::IsFullHealth() 
+bool TSUnit::IsFullHealth()
 {
     return unit->IsFullHealth();
 }
-    
+
 /**
  * Returns true if the [Unit] is in an accessible place for the given [Creature].
  *
@@ -127,20 +127,20 @@ bool TSUnit::IsFullHealth()
 bool TSUnit::IsInAccessiblePlaceFor(TSCreature _creature)
 {
     auto creature = _creature.creature;
-    
+
 #if defined TRINITY || AZEROTHCORE
     return unit->isInAccessiblePlaceFor(creature);
 #else
     return unit->isInAccessablePlaceFor(creature);
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] an auctioneer.
  *
  * @return bool isAuctioneer
  */
-bool TSUnit::IsAuctioneer() 
+bool TSUnit::IsAuctioneer()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->IsAuctioner();
@@ -148,13 +148,13 @@ bool TSUnit::IsAuctioneer()
     return unit->isAuctioner();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] a guild master.
  *
  * @return bool isGuildMaster
  */
-bool TSUnit::IsGuildMaster() 
+bool TSUnit::IsGuildMaster()
 {
 #ifdef CMANGOS
     return unit->isGuildMaster();
@@ -162,13 +162,13 @@ bool TSUnit::IsGuildMaster()
     return unit->IsGuildMaster();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] an innkeeper.
  *
  * @return bool isInnkeeper
  */
-bool TSUnit::IsInnkeeper() 
+bool TSUnit::IsInnkeeper()
 {
 #ifdef CMANGOS
     return unit->isInnkeeper();
@@ -176,13 +176,13 @@ bool TSUnit::IsInnkeeper()
     return unit->IsInnkeeper();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] a trainer.
  *
  * @return bool isTrainer
  */
-bool TSUnit::IsTrainer() 
+bool TSUnit::IsTrainer()
 {
 #ifdef CMANGOS
     return unit->isTrainer();
@@ -190,13 +190,13 @@ bool TSUnit::IsTrainer()
     return unit->IsTrainer();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is able to show a gossip window.
  *
  * @return bool hasGossip
  */
-bool TSUnit::IsGossip() 
+bool TSUnit::IsGossip()
 {
 #ifdef CMANGOS
     return unit->isGossip();
@@ -204,13 +204,13 @@ bool TSUnit::IsGossip()
     return unit->IsGossip();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a taxi master.
  *
  * @return bool isTaxi
  */
-bool TSUnit::IsTaxi() 
+bool TSUnit::IsTaxi()
 {
 #ifdef CMANGOS
     return unit->isTaxi();
@@ -218,13 +218,13 @@ bool TSUnit::IsTaxi()
     return unit->IsTaxi();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a spirit healer.
  *
  * @return bool isSpiritHealer
  */
-bool TSUnit::IsSpiritHealer() 
+bool TSUnit::IsSpiritHealer()
 {
 #ifdef CMANGOS
     return unit->isSpiritHealer();
@@ -232,13 +232,13 @@ bool TSUnit::IsSpiritHealer()
     return unit->IsSpiritHealer();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a spirit guide.
  *
  * @return bool isSpiritGuide
  */
-bool TSUnit::IsSpiritGuide() 
+bool TSUnit::IsSpiritGuide()
 {
 #ifdef CMANGOS
     return unit->isSpiritGuide();
@@ -246,13 +246,13 @@ bool TSUnit::IsSpiritGuide()
     return unit->IsSpiritGuide();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a tabard designer.
  *
  * @return bool isTabardDesigner
  */
-bool TSUnit::IsTabardDesigner() 
+bool TSUnit::IsTabardDesigner()
 {
 #ifdef CMANGOS
     return unit->isTabardDesigner();
@@ -260,13 +260,13 @@ bool TSUnit::IsTabardDesigner()
     return unit->IsTabardDesigner();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] provides services like vendor, training and auction.
  *
  * @return bool isTabardDesigner
  */
-bool TSUnit::IsServiceProvider() 
+bool TSUnit::IsServiceProvider()
 {
 #ifdef CMANGOS
     return unit->isServiceProvider();
@@ -274,13 +274,13 @@ bool TSUnit::IsServiceProvider()
     return unit->IsServiceProvider();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a spirit guide or spirit healer.
  *
  * @return bool isSpiritService
  */
-bool TSUnit::IsSpiritService() 
+bool TSUnit::IsSpiritService()
 {
 #ifdef CMANGOS
     return unit->isSpiritService();
@@ -288,13 +288,13 @@ bool TSUnit::IsSpiritService()
     return unit->IsSpiritService();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is alive.
  *
  * @return bool isAlive
  */
-bool TSUnit::IsAlive() 
+bool TSUnit::IsAlive()
 {
 #ifdef CMANGOS
     return unit->isAlive();
@@ -302,13 +302,13 @@ bool TSUnit::IsAlive()
     return unit->IsAlive();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is dead.
  *
  * @return bool isDead
  */
-bool TSUnit::IsDead() 
+bool TSUnit::IsDead()
 {
 #ifdef MANGOS
     return unit->IsDead();
@@ -316,13 +316,13 @@ bool TSUnit::IsDead()
     return unit->isDead();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is dying.
  *
  * @return bool isDying
  */
-bool TSUnit::IsDying() 
+bool TSUnit::IsDying()
 {
 #ifdef MANGOS
     return unit->IsDying();
@@ -330,13 +330,13 @@ bool TSUnit::IsDying()
     return unit->isDying();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a banker.
  *
  * @return bool isBanker
  */
-bool TSUnit::IsBanker() 
+bool TSUnit::IsBanker()
 {
 #ifdef CMANGOS
     return unit->isBanker();
@@ -344,13 +344,13 @@ bool TSUnit::IsBanker()
     return unit->IsBanker();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a vendor.
  *
  * @return bool isVendor
  */
-bool TSUnit::IsVendor() 
+bool TSUnit::IsVendor()
 {
 #ifdef CMANGOS
     return unit->isVendor();
@@ -358,13 +358,13 @@ bool TSUnit::IsVendor()
     return unit->IsVendor();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a battle master.
  *
  * @return bool isBattleMaster
  */
-bool TSUnit::IsBattleMaster() 
+bool TSUnit::IsBattleMaster()
 {
 #ifdef CMANGOS
     return unit->isBattleMaster();
@@ -372,13 +372,13 @@ bool TSUnit::IsBattleMaster()
     return unit->IsBattleMaster();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is a charmed.
  *
  * @return bool isCharmed
  */
-bool TSUnit::IsCharmed() 
+bool TSUnit::IsCharmed()
 {
 #ifdef CMANGOS
     return unit->isCharmed();
@@ -386,13 +386,13 @@ bool TSUnit::IsCharmed()
     return unit->IsCharmed();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is an armorer and can repair equipment.
  *
  * @return bool isArmorer
  */
-bool TSUnit::IsArmorer() 
+bool TSUnit::IsArmorer()
 {
 #ifdef CMANGOS
     return unit->isArmorer();
@@ -400,34 +400,34 @@ bool TSUnit::IsArmorer()
     return unit->IsArmorer();
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] is attacking a player.
  *
  * @return bool isAttackingPlayer
  */
-bool TSUnit::IsAttackingPlayer() 
+bool TSUnit::IsAttackingPlayer()
 {
     return unit->isAttackingPlayer();
 }
-    
+
 /**
  * Returns true if the [Unit] flagged for PvP.
  *
  * @return bool isPvP
  */
-bool TSUnit::IsPvPFlagged() 
+bool TSUnit::IsPvPFlagged()
 {
     return unit->IsPvP();
 }
-    
+
 #ifndef CLASSIC
 /**
  * Returns true if the [Unit] is on a [Vehicle].
  *
  * @return bool isOnVehicle
  */
-bool TSUnit::IsOnVehicle() 
+bool TSUnit::IsOnVehicle()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetVehicle();
@@ -442,7 +442,7 @@ bool TSUnit::IsOnVehicle()
  *
  * @return bool inCombat
  */
-bool TSUnit::IsInCombat() 
+bool TSUnit::IsInCombat()
 {
 #ifdef CMANGOS
     return unit->isInCombat();
@@ -456,7 +456,7 @@ bool TSUnit::IsInCombat()
  *
  * @return bool underWater
  */
-bool TSUnit::IsUnderWater() 
+bool TSUnit::IsUnderWater()
 {
     return unit->IsUnderWater();
 }
@@ -466,7 +466,7 @@ bool TSUnit::IsUnderWater()
  *
  * @return bool inWater
  */
-bool TSUnit::IsInWater() 
+bool TSUnit::IsInWater()
 {
     return unit->IsInWater();
 }
@@ -476,7 +476,7 @@ bool TSUnit::IsInWater()
  *
  * @return bool notMoving
  */
-bool TSUnit::IsStopped() 
+bool TSUnit::IsStopped()
 {
     return unit->IsStopped();
 }
@@ -486,7 +486,7 @@ bool TSUnit::IsStopped()
  *
  * @return bool questGiver
  */
-bool TSUnit::IsQuestGiver() 
+bool TSUnit::IsQuestGiver()
 {
 #ifdef CMANGOS
     return unit->isQuestGiver();
@@ -501,7 +501,7 @@ bool TSUnit::IsQuestGiver()
  * @param int32 healthpct : percentage in integer from
  * @return bool isBelow
  */
-bool TSUnit::HealthBelowPct(int32 pct) 
+bool TSUnit::HealthBelowPct(int32 pct)
 {
     return unit->HealthBelowPct(pct);
 }
@@ -512,7 +512,7 @@ bool TSUnit::HealthBelowPct(int32 pct)
  * @param int32 healthpct : percentage in integer from
  * @return bool isAbove
  */
-bool TSUnit::HealthAbovePct(int32 pct) 
+bool TSUnit::HealthAbovePct(int32 pct)
 {
     return unit->HealthAbovePct(pct);
 }
@@ -523,17 +523,17 @@ bool TSUnit::HealthAbovePct(int32 pct)
  * @param uint32 spell : entry of the aura spell
  * @return bool hasAura
  */
-bool TSUnit::HasAura(uint32 spell) 
+bool TSUnit::HasAura(uint32 spell)
 {
     return unit->HasAura(spell);
 }
-    
+
 /**
  * Returns true if the [Unit] is casting a spell
  *
  * @return bool isCasting
  */
-bool TSUnit::IsCasting() 
+bool TSUnit::IsCasting()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->HasUnitState(UNIT_STATE_CASTING);
@@ -541,14 +541,14 @@ bool TSUnit::IsCasting()
     return unit->IsNonMeleeSpellCasted(false);
 #endif
 }
-    
+
 /**
  * Returns true if the [Unit] has the given unit state.
  *
  * @param [UnitState] state : an unit state
  * @return bool hasState
  */
-bool TSUnit::HasUnitState(uint32 state) 
+bool TSUnit::HasUnitState(uint32 state)
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->HasUnitState(state);
@@ -556,17 +556,17 @@ bool TSUnit::HasUnitState(uint32 state)
     return unit->hasUnitState(state);
 #endif
 }
-    
+
 /*int TSUnit::IsVisible(lua_State* L, Unit* unit)
 {
     return unit->IsVisible();
 }*/
-    
+
 /*int TSUnit::IsMoving(lua_State* L, Unit* unit)
 {
     return unit->isMoving();
 }*/
-    
+
 /*int TSUnit::IsFlying(lua_State* L, Unit* unit)
 {
     return unit->IsFlying();
@@ -577,7 +577,7 @@ bool TSUnit::HasUnitState(uint32 state)
  *
  * @return [Unit] owner
  */
-TSUnit  TSUnit::GetOwner() 
+TSUnit  TSUnit::GetOwner()
 {
      return TSUnit(unit->GetOwner());
 }
@@ -587,7 +587,7 @@ TSUnit  TSUnit::GetOwner()
  *
  * @return uint64 ownerGUID
  */
-uint64 TSUnit::GetOwnerGUID() 
+uint64 TSUnit::GetOwnerGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetOwnerGUID();
@@ -601,7 +601,7 @@ uint64 TSUnit::GetOwnerGUID()
  *
  * @return uint32 mountId : displayId of the mount
  */
-uint32 TSUnit::GetMountId() 
+uint32 TSUnit::GetMountId()
 {
     return unit->GetMountID();
 }
@@ -611,7 +611,7 @@ uint32 TSUnit::GetMountId()
  *
  * @return uint64 creatorGUID
  */
-uint64 TSUnit::GetCreatorGUID() 
+uint64 TSUnit::GetCreatorGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetCreatorGUID();
@@ -625,7 +625,7 @@ uint64 TSUnit::GetCreatorGUID()
  *
  * @return uint64 charmerGUID
  */
-uint64 TSUnit::GetCharmerGUID() 
+uint64 TSUnit::GetCharmerGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetCharmerGUID();
@@ -639,7 +639,7 @@ uint64 TSUnit::GetCharmerGUID()
  *
  * @return uint64 charmedGUID
  */
-uint64 TSUnit::GetCharmGUID() 
+uint64 TSUnit::GetCharmGUID()
 {
 #if defined AZEROTHCORE
     return unit->GetCharmGUID();
@@ -655,7 +655,7 @@ uint64 TSUnit::GetCharmGUID()
  *
  * @return uint64 petGUID
  */
-uint64 TSUnit::GetPetGUID(uint32 summonSlot) 
+uint64 TSUnit::GetPetGUID(uint32 summonSlot)
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->m_SummonSlot[summonSlot];
@@ -669,7 +669,7 @@ uint64 TSUnit::GetPetGUID(uint32 summonSlot)
  *
  * @return uint64 controllerGUID
  */
-uint64 TSUnit::GetControllerGUID() 
+uint64 TSUnit::GetControllerGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetCharmerOrOwnerGUID();
@@ -683,7 +683,7 @@ uint64 TSUnit::GetControllerGUID()
  *
  * @return uint64 controllerGUID
  */
-uint64 TSUnit::GetControllerGUIDS() 
+uint64 TSUnit::GetControllerGUIDS()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetCharmerOrOwnerOrOwnGUID();
@@ -691,28 +691,28 @@ uint64 TSUnit::GetControllerGUIDS()
     return unit->GetCharmerOrOwnerOrOwnGuid();
 #endif
 }
-    
+
 /**
  * Returns [Unit]'s specified stat
  *
  * @param uint32 statType
  * @return float stat
  */
-float TSUnit::GetStat(uint32 stat) 
+float TSUnit::GetStat(uint32 stat)
 {
-    
+
     return unit->GetStat((Stats)stat);
 }
-    
+
 /**
  * Returns the [Unit]'s base spell power
  *
  * @param uint32 spellSchool
  * @return uint32 spellPower
  */
-uint32 TSUnit::GetBaseSpellPower(uint32 spellschool) 
+uint32 TSUnit::GetBaseSpellPower(uint32 spellschool)
 {
-    
+
     return unit->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS + spellschool);
 }
 
@@ -721,7 +721,7 @@ uint32 TSUnit::GetBaseSpellPower(uint32 spellschool)
  *
  * @return [Unit] victim
  */
-TSUnit  TSUnit::GetVictim() 
+TSUnit  TSUnit::GetVictim()
 {
 #if defined TRINITY || AZEROTHCORE
      return TSUnit(unit->GetVictim());
@@ -729,7 +729,7 @@ TSUnit  TSUnit::GetVictim()
      return TSUnit(unit->getVictim());
 #endif
 }
-    
+
 /**
  * Returns the currently casted [Spell] of given type or nil.
  *
@@ -745,7 +745,7 @@ TSUnit  TSUnit::GetVictim()
  * @param [CurrentSpellTypes] spellType
  * @return [Spell] castedSpell
  */
-TSSpell  TSUnit::GetCurrentSpell(uint32 type) 
+TSSpell  TSUnit::GetCurrentSpell(uint32 type)
 {
      return TSSpell(unit->GetCurrentSpell(type));
 }
@@ -755,7 +755,7 @@ TSSpell  TSUnit::GetCurrentSpell(uint32 type)
  *
  * @return uint8 standState
  */
-uint8 TSUnit::GetStandState() 
+uint8 TSUnit::GetStandState()
 {
 #ifdef TRINITY
     return unit->GetStandState();
@@ -769,7 +769,7 @@ uint8 TSUnit::GetStandState()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetDisplayId() 
+uint32 TSUnit::GetDisplayId()
 {
     return unit->GetDisplayId();
 }
@@ -779,7 +779,7 @@ uint32 TSUnit::GetDisplayId()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetNativeDisplayId() 
+uint32 TSUnit::GetNativeDisplayId()
 {
     return unit->GetNativeDisplayId();
 }
@@ -789,7 +789,7 @@ uint32 TSUnit::GetNativeDisplayId()
  *
  * @return uint8 level
  */
-uint8 TSUnit::GetLevel() 
+uint8 TSUnit::GetLevel()
 {
 #ifdef TRINITY
     return unit->GetLevel();
@@ -803,12 +803,12 @@ uint8 TSUnit::GetLevel()
  *
  * @return uint32 healthAmount
  */
-uint32 TSUnit::GetHealth() 
+uint32 TSUnit::GetHealth()
 {
     return unit->GetHealth();
 }
-    
-uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType) 
+
+uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
 {
 #ifdef TRINITY
     if (powerType == -1)
@@ -824,7 +824,7 @@ uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
 
     return (Powers)powerType;
 }
-    
+
 /**
  * Returns the [Unit]'s power amount for given power type.
  *
@@ -844,12 +844,12 @@ uint32 TSUnit::PowerSelectorHelper(TSUnit unit, int powerType)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return uint32 powerAmount
  */
-uint32 TSUnit::GetPower(int type) 
+uint32 TSUnit::GetPower(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     return unit->GetPower(power);
 }
-    
+
 /**
  * Returns the [Unit]'s max power amount for given power type.
  *
@@ -869,12 +869,12 @@ uint32 TSUnit::GetPower(int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return uint32 maxPowerAmount
  */
-uint32 TSUnit::GetMaxPower(int type) 
+uint32 TSUnit::GetMaxPower(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     return unit->GetMaxPower(power);
 }
-    
+
 /**
  * Returns the [Unit]'s power percent for given power type.
  *
@@ -894,10 +894,10 @@ uint32 TSUnit::GetMaxPower(int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @return float powerPct
  */
-float TSUnit::GetPowerPct(int type) 
+float TSUnit::GetPowerPct(int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
-    
+
 #if (!defined(TRINITY) && defined(WOTLK))
     float percent = ((float)unit->GetPower(power) / (float)unit->GetMaxPower(power)) * 100.0f;
 #else
@@ -905,7 +905,7 @@ float TSUnit::GetPowerPct(int type)
 #endif
     return percent;
 }
-    
+
 /**
  * Returns the [Unit]'s current power type.
  *
@@ -924,7 +924,7 @@ float TSUnit::GetPowerPct(int type)
  *
  * @return [Powers] powerType
  */
-uint32 TSUnit::GetPowerType() 
+uint32 TSUnit::GetPowerType()
 {
 #ifdef TRINITY
     return unit->GetPowerType();
@@ -934,23 +934,23 @@ uint32 TSUnit::GetPowerType()
     return unit->GetPowerType();
 #endif
 }
-    
+
 /**
  * Returns the [Unit]'s max health.
  *
  * @return uint32 maxHealth
  */
-uint32 TSUnit::GetMaxHealth() 
+uint32 TSUnit::GetMaxHealth()
 {
     return unit->GetMaxHealth();
 }
-    
+
 /**
  * Returns the [Unit]'s health percent.
  *
  * @return float healthPct
  */
-float TSUnit::GetHealthPct() 
+float TSUnit::GetHealthPct()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetHealthPct();
@@ -958,13 +958,13 @@ float TSUnit::GetHealthPct()
     return unit->GetHealthPercent();
 #endif
 }
-    
+
 /**
  * Returns the [Unit]'s gender.
  *
  * @return uint8 gender : 0 for male, 1 for female and 2 for none
  */
-uint8 TSUnit::GetGender() 
+uint8 TSUnit::GetGender()
 {
 #ifdef TRINITY
     return unit->GetGender();
@@ -972,13 +972,13 @@ uint8 TSUnit::GetGender()
     return unit->getGender();
 #endif
 }
-    
+
 /**
  * Returns the [Unit]'s race ID.
  *
  * @return [Races] race
  */
-uint32 TSUnit::GetRace() 
+uint32 TSUnit::GetRace()
 {
 #ifdef TRINITY
     return unit->GetRace();
@@ -986,13 +986,13 @@ uint32 TSUnit::GetRace()
     return (Races) unit->getRace();
 #endif
 }
-    
+
 /**
  * Returns the [Unit]'s class ID.
  *
  * @return [Classes] class
  */
-uint32 TSUnit::GetClass() 
+uint32 TSUnit::GetClass()
 {
 #ifdef TRINITY
     return unit->GetClass();
@@ -1000,13 +1000,13 @@ uint32 TSUnit::GetClass()
     return unit->getClass();
 #endif
 }
-    
+
 /**
 * Returns the race mask
 *
 * @return uint32 racemask
 */
-uint32 TSUnit::GetRaceMask() 
+uint32 TSUnit::GetRaceMask()
 {
 #ifdef TRINITY
     return unit->GetRaceMask();
@@ -1014,13 +1014,13 @@ uint32 TSUnit::GetRaceMask()
     return unit->getRaceMask();
 #endif
 }
-    
+
 /**
 * Returns the class mask
 *
 * @return uint32 classmask
 */
-uint32 TSUnit::GetClassMask() 
+uint32 TSUnit::GetClassMask()
 {
 #ifdef TRINITY
     return unit->GetClassMask();
@@ -1028,7 +1028,7 @@ uint32 TSUnit::GetClassMask()
     return unit->getClassMask();
 #endif
 }
-    
+
 /**
  * Returns the [Unit]'s creature type ID (enumerated in CreatureType.dbc).
  *
@@ -1046,17 +1046,17 @@ uint32 TSUnit::GetClassMask()
  *     CREATURE_TYPE_MECHANICAL       = 9,
  *     CREATURE_TYPE_NOT_SPECIFIED    = 10,
  *     CREATURE_TYPE_TOTEM            = 11,
- *     CREATURE_TYPE_NON_COMBAT_PET   = 12,     // This and below is TBC+ 
+ *     CREATURE_TYPE_NON_COMBAT_PET   = 12,     // This and below is TBC+
  *     CREATURE_TYPE_GAS_CLOUD        = 13
  * </pre>
  *
  * @return [CreatureType] creatureType
  */
-uint32 TSUnit::GetCreatureType() 
+uint32 TSUnit::GetCreatureType()
 {
     return unit->GetCreatureType();
 }
-    
+
 /**
  * Returns the [Unit]'s class' name in given or default locale or nil.
  *
@@ -1079,7 +1079,7 @@ uint32 TSUnit::GetCreatureType()
  */
 TSString TSUnit::GetClassAsString(uint8 locale)
 {
-    
+
 #ifdef TRINITY
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
 #else
@@ -1087,7 +1087,7 @@ TSString TSUnit::GetClassAsString(uint8 locale)
 #endif
      return TSString(entry->Name[locale]);
 }
-    
+
 /**
  * Returns the [Unit]'s race's name in given or default locale or nil.
  *
@@ -1110,7 +1110,7 @@ TSString TSUnit::GetClassAsString(uint8 locale)
  */
 TSString TSUnit::GetRaceAsString(uint8 locale)
 {
-    
+
 #ifdef TRINITY
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
 #else
@@ -1118,13 +1118,13 @@ TSString TSUnit::GetRaceAsString(uint8 locale)
 #endif
      return TSString(entry->Name[locale]);
 }
-    
+
 /**
  * Returns the [Unit]'s faction ID.
  *
  * @return uint32 faction
  */
-uint32 TSUnit::GetFaction() 
+uint32 TSUnit::GetFaction()
 {
 #ifdef TRINITY
     return unit->GetFaction();
@@ -1132,14 +1132,14 @@ uint32 TSUnit::GetFaction()
     return unit->getFaction();
 #endif
 }
-    
+
 /**
  * Returns the [Aura] of the given spell entry on the [Unit] or nil.
  *
  * @param uint32 spellID : entry of the aura spell
  * @return [Aura] aura : aura object or nil
  */
-TSAura  TSUnit::GetAura(uint32 spellID) 
+TSAura  TSUnit::GetAura(uint32 spellID)
 {
 #if defined TRINITY || AZEROTHCORE
      return TSAura(unit->GetAura(spellID));
@@ -1147,38 +1147,38 @@ TSAura  TSUnit::GetAura(uint32 spellID)
      return TSAura(unit->GetAura(spellID, EFFECT_INDEX_0));
 #endif
 }
-    
+
 /**
  * Returns a table containing friendly [Unit]'s within given range of the [Unit].
  *
  * @param float range = 533.333 : search radius
  * @return table friendyUnits : table filled with friendly units
  */
-TSArray<TSUnit> TSUnit::GetFriendlyUnitsInRange(float range) 
+TSArray<TSUnit> TSUnit::GetFriendlyUnitsInRange(float range)
 {
     // TODO: Fix this
     return TSArray<TSUnit>();
 }
-    
+
 /**
  * Returns a table containing unfriendly [Unit]'s within given range of the [Unit].
  *
  * @param float range = 533.333 : search radius
  * @return table unfriendyUnits : table filled with unfriendly units
  */
-TSArray<TSUnit> TSUnit::GetUnfriendlyUnitsInRange(float range) 
+TSArray<TSUnit> TSUnit::GetUnfriendlyUnitsInRange(float range)
 {
     // TODO: Fix this
     return TSArray<TSUnit>();
 }
-    
+
 #if (!defined(TBC) && !defined(CLASSIC))
 /**
  * Returns [Unit]'s [Vehicle] methods
  *
  * @return [Vehicle] vehicle
  */
-TSVehicle  TSUnit::GetVehicleKit() 
+TSVehicle  TSUnit::GetVehicleKit()
 {
 #if defined TRINITY || AZEROTHCORE
      return TSVehicle(unit->GetVehicleKit());
@@ -1186,18 +1186,18 @@ TSVehicle  TSUnit::GetVehicleKit()
      return TSVehicle(unit->GetVehicleInfo());
 #endif
 }
-    
-TSVehicle TSUnit::GetVehicle() 
+
+TSVehicle TSUnit::GetVehicle()
 {
     return TSVehicle(unit->GetVehicle());
 }
-    
+
 /**
  * Returns the Critter Guid
  *
  * @return uint64 critterGuid
  */
-uint64 TSUnit::GetCritterGUID() 
+uint64 TSUnit::GetCritterGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return unit->GetCritterGUID();
@@ -1206,7 +1206,7 @@ uint64 TSUnit::GetCritterGUID()
 #endif
 }
 #endif
-    
+
 /**
  * Returns the [Unit]'s speed of given [UnitMoveType].
  *
@@ -1227,16 +1227,16 @@ uint64 TSUnit::GetCritterGUID()
  * @param [UnitMoveType] type
  * @return float speed
  */
-float TSUnit::GetSpeed(uint32 type) 
+float TSUnit::GetSpeed(uint32 type)
 {
-    
+
 #ifndef TRINITY
     return unit->GetSpeedRate((UnitMoveType)type);
 #else
     return unit->GetSpeed((UnitMoveType)type);
 #endif
 }
-    
+
 /**
  * Returns the current movement type for this [Unit].
  *
@@ -1248,7 +1248,7 @@ float TSUnit::GetSpeed(uint32 type)
  *     WAYPOINT_MOTION_TYPE            = 2,
  *     MAX_DB_MOTION_TYPE              = 3,
  *     ANIMAL_RANDOM_MOTION_TYPE       = 3, // TC
- * 
+ *
  *     CONFUSED_MOTION_TYPE            = 4,
  *     CHASE_MOTION_TYPE               = 5,
  *     HOME_MOTION_TYPE                = 6,
@@ -1257,7 +1257,7 @@ float TSUnit::GetSpeed(uint32 type)
  *     FLEEING_MOTION_TYPE             = 9,
  *     DISTRACT_MOTION_TYPE            = 10,
  *     ASSISTANCE_MOTION_TYPE          = 11,
- *     ASSISTANCE_DISTRACT_MOTION_TYPE = 12,          
+ *     ASSISTANCE_DISTRACT_MOTION_TYPE = 12,
  *     TIMED_FLEEING_MOTION_TYPE       = 13,
  *     FOLLOW_MOTION_TYPE              = 14,
  *     EFFECT_MOTION_TYPE              = 15, // mangos
@@ -1268,37 +1268,37 @@ float TSUnit::GetSpeed(uint32 type)
  *
  * @return [MovementGeneratorType] movementType
  */
-uint32 TSUnit::GetMovementType() 
+uint32 TSUnit::GetMovementType()
 {
     return unit->GetMotionMaster()->GetCurrentMovementGeneratorType();
 }
-    
+
 /**
  * Sets the [Unit]'s owner GUID to given GUID.
  *
  * @param uint64 guid : new owner guid
  */
-void TSUnit::SetOwnerGUID(uint64 guid) 
+void TSUnit::SetOwnerGUID(uint64 guid)
 {
-    
+
 #if defined TRINITY || AZEROTHCORE
     unit->SetOwnerGUID(ObjectGuid(guid));
 #else
     unit->SetOwnerGuid(ObjectGuid(guid));
 #endif
 }
-    
+
 /**
  * Sets the [Unit]'s PvP on or off.
  *
  * @param bool apply = true : true if set on, false if off
  */
-void TSUnit::SetPvP(bool apply) 
+void TSUnit::SetPvP(bool apply)
 {
-    
+
     unit->SetPvP(apply);
 }
-    
+
 /**
  * Sets the [Unit]'s sheath state.
  *
@@ -1310,23 +1310,23 @@ void TSUnit::SetPvP(bool apply)
  *
  * @param [SheathState] sheathState : valid SheathState
  */
-void TSUnit::SetSheath(uint32 sheathed) 
+void TSUnit::SetSheath(uint32 sheathed)
 {
-    
+
     unit->SetSheath((SheathState)sheathed);
 }
-    
+
 /**
  * Sets the [Unit]'s name internally.
  *
  * @param string name : new name
  */
-void TSUnit::SetName(TSString name) 
+void TSUnit::SetName(TSString name)
 {
     if (name.length() > 0)
         unit->SetName(name.c_str());
 }
-    
+
 /**
  * Sets the [Unit]'s speed of given [UnitMoveType] to given rate.
  * If forced, packets sent to clients forcing the visual change.
@@ -1349,7 +1349,7 @@ void TSUnit::SetName(TSString name)
  * @param float rate
  * @param bool forced = false
  */
-void TSUnit::SetSpeed(uint32 type,float rate,bool forced) 
+void TSUnit::SetSpeed(uint32 type,float rate,bool forced)
 {
     (void)forced; // ensure that the variable is referenced in order to pass compiler checks
 #if defined TRINITY || AZEROTHCORE
@@ -1358,13 +1358,13 @@ void TSUnit::SetSpeed(uint32 type,float rate,bool forced)
     unit->SetSpeedRate((UnitMoveType)type, rate, forced);
 #endif
 }
-    
+
 /**
  * Sets the [Unit]'s faction.
  *
  * @param uint32 faction : new faction ID
  */
-void TSUnit::SetFaction(uint32 factionId) 
+void TSUnit::SetFaction(uint32 factionId)
 {
 #ifdef TRINITY
     unit->SetFaction(factionId);
@@ -1372,19 +1372,19 @@ void TSUnit::SetFaction(uint32 factionId)
     unit->setFaction(factionId);
 #endif
 }
-    
+
 /**
  * Sets the [Unit]'s level.
  *
  * @param uint8 level : new level
  */
-void TSUnit::SetLevel(uint8 newlevel) 
+void TSUnit::SetLevel(uint8 newlevel)
 {
-    
-    
+
+
     if (newlevel > STRONG_MAX_LEVEL)
         newlevel = STRONG_MAX_LEVEL;
-    
+
     if (Player* player = unit->ToPlayer())
     {
         player->GiveLevel(newlevel);
@@ -1393,29 +1393,29 @@ void TSUnit::SetLevel(uint8 newlevel)
     }
     else
         unit->SetLevel(newlevel);
-    
+
 }
-    
+
 /**
  * Sets the [Unit]'s health.
  *
  * @param uint32 health : new health
  */
-void TSUnit::SetHealth(uint32 amt) 
+void TSUnit::SetHealth(uint32 amt)
 {
     unit->SetHealth(amt);
 }
-    
+
 /**
  * Sets the [Unit]'s max health.
  *
  * @param uint32 maxHealth : new max health
  */
-void TSUnit::SetMaxHealth(uint32 amt) 
+void TSUnit::SetMaxHealth(uint32 amt)
 {
     unit->SetMaxHealth(amt);
 }
-    
+
 /**
  * Sets the [Unit]'s power amount for the given power type.
  *
@@ -1435,12 +1435,12 @@ void TSUnit::SetMaxHealth(uint32 amt)
  * @param uint32 amount : new power amount
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  */
-void TSUnit::SetPower(uint32 amt,int type) 
+void TSUnit::SetPower(uint32 amt,int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     unit->SetPower(power, amt);
 }
-    
+
 /**
  * modifies the [Unit]'s power amount for the given power type.
  *
@@ -1460,12 +1460,12 @@ void TSUnit::SetPower(uint32 amt,int type)
  * @param int32 amount : amount to modify
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  */
-void TSUnit::ModifyPower(int32 amt,int type) 
+void TSUnit::ModifyPower(int32 amt,int type)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     unit->ModifyPower(power, amt);
 }
-    
+
 /**
  * Sets the [Unit]'s max power amount for the given power type.
  *
@@ -1485,12 +1485,12 @@ void TSUnit::ModifyPower(int32 amt,int type)
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  * @param uint32 maxPower : new max power amount
  */
-void TSUnit::SetMaxPower(int type,uint32 amt) 
+void TSUnit::SetMaxPower(int type,uint32 amt)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     unit->SetMaxPower(power, amt);
 }
-    
+
 /**
  * Sets the [Unit]'s power type.
  *
@@ -1509,9 +1509,9 @@ void TSUnit::SetMaxPower(int type,uint32 amt)
  *
  * @param [Powers] type : a valid power type
  */
-void TSUnit::SetPowerType(uint32 type) 
+void TSUnit::SetPowerType(uint32 type)
 {
-    
+
 #ifdef TRINITY
     unit->SetPowerType((Powers)type);
 #elif AZEROTHCORE
@@ -1520,37 +1520,37 @@ void TSUnit::SetPowerType(uint32 type)
     unit->SetPowerType((Powers)type);
 #endif
 }
-    
+
 /**
  * Sets the [Unit]'s modelID.
  *
  * @param uint32 displayId
  */
-void TSUnit::SetDisplayId(uint32 model) 
+void TSUnit::SetDisplayId(uint32 model)
 {
     unit->SetDisplayId(model);
 }
-    
+
 /**
  * Sets the [Unit]'s native/default modelID.
  *
  * @param uint32 displayId
  */
-void TSUnit::SetNativeDisplayId(uint32 model) 
+void TSUnit::SetNativeDisplayId(uint32 model)
 {
     unit->SetNativeDisplayId(model);
 }
-    
+
 /**
  * Sets the [Unit]'s facing/orientation.
  *
  * @param uint32 orientation
  */
-void TSUnit::SetFacing(float o) 
+void TSUnit::SetFacing(float o)
 {
     unit->SetFacingTo(o);
 }
-    
+
 /**
  * Sets the [Unit] to face the given [WorldObject]'s direction.
  *
@@ -1561,13 +1561,13 @@ void TSUnit::SetFacingToObject(TSWorldObject _obj)
     auto obj = _obj.obj;
     unit->SetFacingToObject(obj);
 }
-    
+
 /**
  * Sets creator GUID
  *
  * @param uint64 guid
  */
-void TSUnit::SetCreatorGUID(uint64 guid) 
+void TSUnit::SetCreatorGUID(uint64 guid)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetCreatorGUID(ObjectGuid(guid));
@@ -1575,13 +1575,13 @@ void TSUnit::SetCreatorGUID(uint64 guid)
     unit->SetCreatorGuid(ObjectGuid(guid));
 #endif
 }
-    
+
 /**
  * Sets pet GUID
  *
  * @param uint64 guid
  */
-void TSUnit::SetPetGUID(uint64 guid) 
+void TSUnit::SetPetGUID(uint64 guid)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetPetGUID(ObjectGuid(guid));
@@ -1589,13 +1589,13 @@ void TSUnit::SetPetGUID(uint64 guid)
     unit->SetPetGuid(ObjectGuid(guid));
 #endif
 }
-    
+
 /**
  * Toggles (Sets) [Unit]'s water walking
  *
  * @param bool enable = true
  */
-void TSUnit::SetWaterWalk(bool enable) 
+void TSUnit::SetWaterWalk(bool enable)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetWaterWalking(enable);
@@ -1603,26 +1603,26 @@ void TSUnit::SetWaterWalk(bool enable)
     unit->SetWaterWalk(enable);
 #endif
 }
-    
+
 /**
  * Sets the [Unit]'s stand state
  *
  * @param uint8 state : stand state
  */
-void TSUnit::SetStandState(uint8 state) 
+void TSUnit::SetStandState(uint8 state)
 {
     unit->SetStandState(state);
 }
-    
+
 #if (!defined(TBC) && !defined(CLASSIC))
 /**
  * Sets the [Unit]'s FFA flag on or off.
  *
  * @param bool apply = true
  */
-void TSUnit::SetFFA(bool apply) 
+void TSUnit::SetFFA(bool apply)
 {
-    
+
 #ifdef TRINITY
     if (apply)
     {
@@ -1653,15 +1653,15 @@ void TSUnit::SetFFA(bool apply)
     unit->SetFFAPvP(apply);
 #endif
 }
-    
+
 /**
  * Sets the [Unit]'s sanctuary flag on or off.
  *
  * @param bool apply = true
  */
-void TSUnit::SetSanctuary(bool apply) 
+void TSUnit::SetSanctuary(bool apply)
 {
-    
+
     if (apply)
     {
         unit->SetByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SANCTUARY);
@@ -1670,10 +1670,10 @@ void TSUnit::SetSanctuary(bool apply)
     }
     else
         unit->RemoveByteFlag(UNIT_FIELD_BYTES_2, 1, UNIT_BYTE2_FLAG_SANCTUARY);
-    
+
 }
-    
-void TSUnit::SetCritterGUID(uint64 guid) 
+
+void TSUnit::SetCritterGUID(uint64 guid)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetCritterGUID(ObjectGuid(guid));
@@ -1682,18 +1682,18 @@ void TSUnit::SetCritterGUID(uint64 guid)
 #endif
 }
 #endif
-    
+
 /*int TSUnit::SetStunned(lua_State* L, Unit* unit)
 {
 unit->SetControlled(apply, UNIT_STATE_STUNNED);
 }*/
-    
+
 /**
  * Roots the [Unit] to the ground, if 'false' specified, unroots the [Unit].
  *
  * @param bool apply = true
  */
-void TSUnit::SetRooted(bool apply) 
+void TSUnit::SetRooted(bool apply)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetControlled(apply, UNIT_STATE_ROOT);
@@ -1701,13 +1701,13 @@ void TSUnit::SetRooted(bool apply)
     unit->SetRoot(apply);
 #endif
 }
-    
+
 /**
  * Confuses the [Unit], if 'false' specified, the [Unit] is no longer confused.
  *
  * @param bool apply = true
  */
-void TSUnit::SetConfused(bool apply) 
+void TSUnit::SetConfused(bool apply)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetControlled(apply, UNIT_STATE_CONFUSED);
@@ -1715,13 +1715,13 @@ void TSUnit::SetConfused(bool apply)
     unit->SetConfused(apply);
 #endif
 }
-    
+
 /**
  * Fears the [Unit], if 'false' specified, the [Unit] is no longer feared.
  *
  * @param bool apply = true
  */
-void TSUnit::SetFeared(bool apply) 
+void TSUnit::SetFeared(bool apply)
 {
 #if defined TRINITY || AZEROTHCORE
     unit->SetControlled(apply, UNIT_STATE_FLEEING);
@@ -1729,21 +1729,21 @@ void TSUnit::SetFeared(bool apply)
     unit->SetFeared(apply);
 #endif
 }
-    
+
 /*int TSUnit::SetCanFly(lua_State* L, Unit* unit)
 {
     unit->SetCanFly(apply);
 }*/
-    
+
 /*int TSUnit::SetVisible(lua_State* L, Unit* unit)
 {
     unit->SetVisible(x);
 }*/
-    
+
 /**
  * Clears the [Unit]'s threat list.
  */
-void TSUnit::ClearThreatList(bool apply,bool x) 
+void TSUnit::ClearThreatList(bool apply,bool x)
 {
 #ifdef TRINITY
     unit->GetThreatManager().ClearAllThreat();
@@ -1759,16 +1759,16 @@ void TSUnit::ClearThreatList(bool apply,bool x)
  *
  * @param uint32 displayId
  */
-void TSUnit::Mount(uint32 displayId) 
+void TSUnit::Mount(uint32 displayId)
 {
-    
+
     unit->Mount(displayId);
 }
 
 /**
  * Dismounts the [Unit].
  */
-void TSUnit::Dismount() 
+void TSUnit::Dismount()
 {
     if (unit->IsMounted())
     {
@@ -1780,7 +1780,7 @@ void TSUnit::Dismount()
         unit->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED);
 #endif
     }
-    
+
 }
 
 /**
@@ -1788,42 +1788,42 @@ void TSUnit::Dismount()
  *
  * @param uint32 emoteId
  */
-void TSUnit::PerformEmote(uint32 emoteId) 
+void TSUnit::PerformEmote(uint32 emoteId)
 {
     unit->HandleEmoteCommand(static_cast<Emote>(emoteId));
 }
-    
+
 /**
  * Makes the [Unit] perform the given emote continuously.
  *
  * @param uint32 emoteId
  */
-void TSUnit::EmoteState(uint32 emoteId) 
+void TSUnit::EmoteState(uint32 emoteId)
 {
-    
+
     unit->SetUInt32Value(UNIT_NPC_EMOTESTATE, emoteId);
 }
-    
+
 /**
  * Returns calculated percentage from Health
  *
  * @return int32 percentage
  */
-int32 TSUnit::CountPctFromCurHealth(int32 health) 
+int32 TSUnit::CountPctFromCurHealth(int32 health)
 {
     return unit->CountPctFromCurHealth(health);
 }
-    
+
 /**
  * Returns calculated percentage from Max Health
  *
  * @return int32 percentage
  */
-int32 TSUnit::CountPctFromMaxHealth(int32 health) 
+int32 TSUnit::CountPctFromMaxHealth(int32 health)
 {
     return unit->CountPctFromMaxHealth(health);
 }
-    
+
 /**
  * Sends chat message to [Player]
  *
@@ -1836,8 +1836,8 @@ void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang,TSString _msg,TSPlay
 {
     auto target = _target.player;
     auto msg = _msg._value;
-    
-    
+
+
     WorldPacket data;
 #if defined TRINITY || AZEROTHCORE
     ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
@@ -1850,21 +1850,21 @@ void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang,TSString _msg,TSPlay
     target->GetSession()->SendPacket(&data);
 #endif
 }
-    
+
 /**
  * Stops the [Unit]'s movement
  */
-void TSUnit::MoveStop() 
+void TSUnit::MoveStop()
 {
     unit->StopMoving();
 }
-    
+
 /**
  * The [Unit]'s movement expires and clears movement
  *
  * @param bool reset = true : cleans movement
  */
-void TSUnit::MoveExpire(bool reset) 
+void TSUnit::MoveExpire(bool reset)
 {
 #ifdef TRINITY
      // ensure that the variable is referenced in order to pass compiler checks
@@ -1873,13 +1873,13 @@ void TSUnit::MoveExpire(bool reset)
     unit->GetMotionMaster()->MovementExpired(reset);
 #endif
 }
-    
+
 /**
  * Clears the [Unit]'s movement
  *
  * @param bool reset = true : clean movement
  */
-void TSUnit::MoveClear(bool reset) 
+void TSUnit::MoveClear(bool reset)
 {
 #ifdef TRINITY
      // ensure that the variable is referenced in order to pass compiler checks
@@ -1888,21 +1888,21 @@ void TSUnit::MoveClear(bool reset)
     unit->GetMotionMaster()->Clear(reset);
 #endif
 }
-    
+
 /**
  * The [Unit] will be idle
  */
-void TSUnit::MoveIdle() 
+void TSUnit::MoveIdle()
 {
     unit->GetMotionMaster()->MoveIdle();
 }
-    
+
 /**
  * The [Unit] will move at random
  *
  * @param float radius : limit on how far the [Unit] will move at random
  */
-void TSUnit::MoveRandom(float radius) 
+void TSUnit::MoveRandom(float radius)
 {
     float x, y, z;
     unit->GetPosition(x, y, z);
@@ -1912,15 +1912,15 @@ void TSUnit::MoveRandom(float radius)
     unit->GetMotionMaster()->MoveRandomAroundPoint(x, y, z, radius);
 #endif
 }
-    
+
 /**
  * The [Unit] will move to its set home location
  */
-void TSUnit::MoveHome() 
+void TSUnit::MoveHome()
 {
     unit->GetMotionMaster()->MoveTargetedHome();
 }
-    
+
 /**
  * The [Unit] will follow the target
  *
@@ -1933,7 +1933,7 @@ void TSUnit::MoveFollow(TSUnit _target,float dist,float angle)
     auto target = _target.unit;
     unit->GetMotionMaster()->MoveFollow(target, dist, angle);
 }
-    
+
 /**
  * The [Unit] will chase the target
  *
@@ -1946,15 +1946,15 @@ void TSUnit::MoveChase(TSUnit _target,float dist,float angle)
     auto target = _target.unit;
     unit->GetMotionMaster()->MoveChase(target, dist, angle);
 }
-    
+
 /**
  * The [Unit] will move confused
  */
-void TSUnit::MoveConfused() 
+void TSUnit::MoveConfused()
 {
     unit->GetMotionMaster()->MoveConfused();
 }
-    
+
 /**
  * The [Unit] will flee
  *
@@ -1966,7 +1966,7 @@ void TSUnit::MoveFleeing(TSUnit _target,uint32 time)
     auto target = _target.unit;
     unit->GetMotionMaster()->MoveFleeing(target, time);
 }
-    
+
 /**
  * The [Unit] will move to the coordinates
  *
@@ -1976,11 +1976,11 @@ void TSUnit::MoveFleeing(TSUnit _target,uint32 time)
  * @param float z
  * @param bool genPath = true : if true, generates path
  */
-void TSUnit::MoveTo(uint32 id,float x,float y,float z,bool genPath) 
+void TSUnit::MoveTo(uint32 id,float x,float y,float z,bool genPath)
 {
     unit->GetMotionMaster()->MovePoint(id, x, y, z, genPath);
 }
-    
+
 #if (!defined(TBC) && !defined(CLASSIC))
 /**
  * Makes the [Unit] jump to the coordinates
@@ -1992,9 +1992,9 @@ void TSUnit::MoveTo(uint32 id,float x,float y,float z,bool genPath)
  * @param float maxHeight : maximum height
  * @param uint32 id = 0 : unique movement Id
  */
-void TSUnit::MoveJump(float x,float y,float z,float zSpeed,float maxHeight,uint32 id) 
+void TSUnit::MoveJump(float x,float y,float z,float zSpeed,float maxHeight,uint32 id)
 {
-    
+
 #if (defined(CMANGOS) || defined(MANGOS)) && defined(WOTLK)
     unit->GetMotionMaster()->MoveJump(x, y, z, zSpeed, maxHeight, id);
 #else
@@ -2003,7 +2003,7 @@ Position pos(x, y, z);
 #endif
 }
 #endif
-    
+
 /**
  * The [Unit] will whisper the message to a [Player]
  *
@@ -2022,7 +2022,7 @@ void TSUnit::SendUnitWhisper(TSString msg,uint32 lang,TSPlayer _receiver,bool bo
         unit->MonsterWhisper(msg._value.c_str(), receiver, bossWhisper);
 #endif
 }
-    
+
 /**
  * The [Unit] will emote the message
  *
@@ -2040,14 +2040,14 @@ void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
         unit->MonsterTextEmote(msg.c_str(), receiver, bossEmote);
 #endif
 }
-    
+
 /**
  * The [Unit] will say the message
  *
  * @param string msg : message for the [Unit] to say
  * @param uint32 language : language for the [Unit] to speak
  */
-void TSUnit::SendUnitSay(TSString msg,uint32 language) 
+void TSUnit::SendUnitSay(TSString msg,uint32 language)
 {
     if (msg.length() > 0)
 #ifdef TRINITY
@@ -2056,14 +2056,14 @@ void TSUnit::SendUnitSay(TSString msg,uint32 language)
         unit->MonsterSay(msg.c_str(), language, unit);
 #endif
 }
-    
+
 /**
  * The [Unit] will yell the message
  *
  * @param string msg : message for the [Unit] to yell
  * @param uint32 language : language for the [Unit] to speak
  */
-void TSUnit::SendUnitYell(TSString msg,uint32 language) 
+void TSUnit::SendUnitYell(TSString msg,uint32 language)
 {
     if (msg.length() > 0)
 #ifdef TRINITY
@@ -2072,15 +2072,15 @@ void TSUnit::SendUnitYell(TSString msg,uint32 language)
         unit->MonsterYell(msg.c_str(), language, unit);
 #endif
 }
-    
+
 /**
  * Unmorphs the [Unit] setting it's display ID back to the native display ID.
  */
-void TSUnit::DeMorph() 
+void TSUnit::DeMorph()
 {
     unit->DeMorph();
 }
-    
+
 /**
  * Makes the [Unit] cast the spell on the target.
  *
@@ -2100,14 +2100,14 @@ void TSUnit::CastSpell(TSUnit _target,uint32 spell,bool triggered)
 #if defined TRINITY || AZEROTHCORE
     SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
 #endif
-    
+
 #ifdef CMANGOS
     unit->CastSpell(target, spell, TRIGGERED_OLD_TRIGGERED);
 #else
     unit->CastSpell(target, spell, triggered);
 #endif
 }
-    
+
 /**
  * Casts the [Spell] at target [Unit] with custom basepoints or casters.
  * See also [Unit:CastSpell].
@@ -2128,7 +2128,7 @@ void TSUnit::CastCustomSpell(TSUnit _target,uint32 spell,bool triggered,int32 bp
     bool has_bp0 = bp0 != 0;
     bool has_bp1 = bp1 != 0;
     bool has_bp2 = bp2 != 0;
-    
+
 #ifdef TRINITY
     CastSpellExtraArgs args;
     if (has_bp0)
@@ -2158,7 +2158,7 @@ void TSUnit::CastCustomSpell(TSUnit _target,uint32 spell,bool triggered,int32 bp
  * @param uint32 spell : entry of a spell
  * @param bool triggered = false : if true the spell is instant and has no cost
  */
-void TSUnit::CastSpellAoF(float _x,float _y,float _z,uint32 spell,bool triggered) 
+void TSUnit::CastSpellAoF(float _x,float _y,float _z,uint32 spell,bool triggered)
 {
 #ifdef CMANGOS
     unit->CastSpell(_x, _y, _z, spell, TRIGGERED_OLD_TRIGGERED);
@@ -2176,25 +2176,25 @@ void TSUnit::CastSpellAoF(float _x,float _y,float _z,uint32 spell,bool triggered
     unit->CastSpell(Position(_x, _y, _z), spell, args);
 #endif
 }
-    
+
 /**
  * Clears the [Unit]'s combat
  */
-void TSUnit::ClearInCombat() 
+void TSUnit::ClearInCombat()
 {
     unit->ClearInCombat();
 }
-    
+
 /**
  * Stops the [Unit]'s current spell cast
  *
  * @param uint32 spell = 0 : entry of a spell
  */
-void TSUnit::StopSpellCast(uint32 spellId) 
+void TSUnit::StopSpellCast(uint32 spellId)
 {
     unit->CastStop(spellId);
 }
-    
+
 /**
  * Interrupts [Unit]'s spell state, casting, etc.
  *
@@ -2203,7 +2203,7 @@ void TSUnit::StopSpellCast(uint32 spellId)
  * @param int32 spellType : type of spell to interrupt
  * @param bool delayed = true : skips if the spell is delayed
  */
-void TSUnit::InterruptSpell(int spellType,bool delayed) 
+void TSUnit::InterruptSpell(int spellType,bool delayed)
 {
     switch (spellType)
     {
@@ -2221,7 +2221,7 @@ void TSUnit::InterruptSpell(int spellType,bool delayed)
             break;
         // TODO: Error on default
     }
-    
+
     unit->InterruptSpell((CurrentSpellTypes)spellType, delayed);
 }
 
@@ -2248,13 +2248,13 @@ TSAura TSUnit::AddAura(uint32 spell,TSUnit _target)
 #ifdef AZEROTHCORE
     SpellInfo const* spellEntry = sSpellMgr->GetSpellInfo(spell);
 #endif
-    
+
 #if defined TRINITY || AZEROTHCORE
      return TSAura(unit->AddAura(spell, target));
 #else
-    
+
     SpellAuraHolder* holder = CreateSpellAuraHolder(spellEntry, target, unit);
-    
+
     for (uint32 i = 0; i < MAX_EFFECT_INDEX; ++i)
     {
         uint8 eff = spellEntry->Effect[i];
@@ -2277,7 +2277,7 @@ TSAura TSUnit::AddAura(uint32 spell,TSUnit _target)
  *
  * @param uint32 spell : entry of a spell
  */
-void TSUnit::RemoveAura(uint32 spellId) 
+void TSUnit::RemoveAura(uint32 spellId)
 {
     unit->RemoveAurasDueToSpell(spellId);
 }
@@ -2287,7 +2287,7 @@ void TSUnit::RemoveAura(uint32 spellId)
  *
  *     Note: talents and racials are also auras, use with caution
  */
-void TSUnit::RemoveAllAuras() 
+void TSUnit::RemoveAllAuras()
 {
     unit->RemoveAllAuras();
 }
@@ -2297,9 +2297,9 @@ void TSUnit::RemoveAllAuras()
  *
  * @param [UnitState] state
  */
-void TSUnit::AddUnitState(uint32 state) 
+void TSUnit::AddUnitState(uint32 state)
 {
-    
+
 #if defined TRINITY || AZEROTHCORE
     unit->AddUnitState(state);
 #else
@@ -2312,9 +2312,9 @@ void TSUnit::AddUnitState(uint32 state)
  *
  * @param [UnitState] state
  */
-void TSUnit::ClearUnitState(uint32 state) 
+void TSUnit::ClearUnitState(uint32 state)
 {
-    
+
 #if defined TRINITY || AZEROTHCORE
     unit->ClearUnitState(state);
 #else
@@ -2330,12 +2330,12 @@ void TSUnit::ClearUnitState(uint32 state)
  * @param float z
  * @param float o : orientation
  */
-void TSUnit::NearTeleport(float x,float y,float z,float o) 
+void TSUnit::NearTeleport(float x,float y,float z,float o)
 {
-    
+
     unit->NearTeleportTo(x, y, z, o);
 }
-    
+
 /**
  * Makes the [Unit] damage the target [Unit]
  *
@@ -2361,7 +2361,7 @@ void TSUnit::NearTeleport(float x,float y,float z,float o)
 void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 school,uint32 spell)
 {
     auto target = _target.unit;
-    
+
     // flat melee damage without resistence/etc reduction
     if (school == MAX_SPELL_SCHOOL)
     {
@@ -2373,9 +2373,9 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
         unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
 #endif
     }
-    
+
     SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
-    
+
 #if defined TRINITY || AZEROTHCORE
     if (Unit::IsDamageReducedByArmor(schoolmask))
         damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
@@ -2383,19 +2383,19 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
     if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
         damage = unit->CalcArmorReducedDamage(target, damage);
 #endif
-    
+
 #ifdef TRINITY
     // melee damage by specific school
     if (!spell)
     {
 DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
         unit->CalcAbsorbResist(dmgInfo);
-    
+
         if (!dmgInfo.GetDamage())
             damage = 0;
         else
             damage = dmgInfo.GetDamage();
-    
+
         uint32 absorb = dmgInfo.GetAbsorb();
         uint32 resist = dmgInfo.GetResist();
         unit->DealDamageMods(target, damage, &absorb);
@@ -2406,10 +2406,10 @@ DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAG
 #endif
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
     }
-    
-    
+
+
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
-    
+
 SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
 #ifdef TRINITY
     Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
@@ -2419,7 +2419,7 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
     unit->CalculateSpellDamageTaken(&dmgInfo, damage, spellInfo);
     unit->DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
 #endif
-    
+
     unit->SendSpellNonMeleeDamageLog(&dmgInfo);
     unit->DealSpellDamage(&dmgInfo, true);
 #elif AZEROTHCORE
@@ -2432,15 +2432,15 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
             damage = 0;
         else
             damage -= absorb + resist;
-    
+
         unit->DealDamageMods(target, damage, &absorb);
         Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
     }
-    
-    
+
+
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
-    
+
 SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
     Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
     unit->SendSpellNonMeleeDamageLog(&dmgInfo);
@@ -2452,22 +2452,22 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
         uint32 absorb = 0;
         uint32 resist = 0;
         target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-    
+
         if (damage <= absorb + resist)
             damage = 0;
         else
             damage -= absorb + resist;
-    
+
         unit->DealDamageMods(target, damage, &absorb);
         unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
         unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
     }
-    
+
     // non-melee damage
     unit->SpellNonMeleeDamageLog(target, spell, damage);
 #endif
 }
-    
+
 /**
  * Makes the [Unit] heal the target [Unit] with given spell
  *
@@ -2479,7 +2479,7 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
 void TSUnit::DealHeal(TSUnit _target,uint32 spell,uint32 amount,bool critical)
 {
     auto target = _target.unit;
-    
+
 #ifdef TRINITY
     if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
     {
@@ -2501,7 +2501,7 @@ HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
         unit->DealHeal(target, amount, spellEntry, critical);
 #endif
 }
-    
+
 /**
  * Makes the [Unit] kill the target [Unit]
  *
@@ -2511,14 +2511,14 @@ HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
 void TSUnit::Kill(TSUnit _target,bool durLoss)
 {
     auto target = _target.unit;
-    
+
 #if defined TRINITY || AZEROTHCORE
     Unit::Kill(unit, target, durLoss);
 #else
     unit->DealDamage(target, target->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durLoss);
 #endif
 }
-    
+
 /**
  * Adds threat to the [Unit] from the victim.
  *
@@ -2544,7 +2544,7 @@ void TSUnit::Kill(TSUnit _target,bool durLoss)
 void TSUnit::AddThreat(TSUnit _victim,float threat,uint32 spell,uint32 schoolMask, bool ignoreModifiers, bool ignoreRedirects, bool raw)
 {
     auto victim = _victim.unit;
-    
+
 #ifdef TRINITY
     unit->GetThreatManager().AddThreat(victim, threat, spell ? sSpellMgr->GetSpellInfo(spell) : NULL, ignoreModifiers, ignoreRedirects, raw);
 #elif AZEROTHCORE
@@ -2596,43 +2596,43 @@ void TSUnit::SetArmor(int32 val)
 {
     unit->RestoreDisplayId();
 }*/
-    
+
 /*int TSUnit::RestoreFaction(lua_State* L, Unit* unit)
 {
     unit->RestoreFaction();
 }*/
-    
+
 /*int TSUnit::RemoveBindSightAuras(lua_State* L, Unit* unit)
 {
     unit->RemoveBindSightAuras();
 }*/
-    
+
 /*int TSUnit::RemoveCharmAuras(lua_State* L, Unit* unit)
 {
     unit->RemoveCharmAuras();
 }*/
-    
+
 /*int TSUnit::DisableMelee(lua_State* L, Unit* unit)
 {
-    
+
 if (apply)
 unit->AddUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
 else
 unit->ClearUnitState(UNIT_STATE_CANNOT_AUTOATTACK);
 }*/
-    
+
 /*int TSUnit::SummonGuardian(lua_State* L, Unit* unit)
 {
-    
+
 SummonPropertiesEntry const* properties = sSummonPropertiesStore.LookupEntry(61);
 Position pos;
 pos.Relocate(x,y,z,o);
 TempSummon* summon = unit->GetMap()->SummonCreature(entry, pos, properties, desp, unit);
-    
-    
+
+
 if (summon->HasUnitTypeMask(UNIT_MASK_GUARDIAN))
 ((Guardian*)summon)->InitStatsForLevel(unit->getLevel());
-    
+
 if (properties && properties->Category == SUMMON_CATEGORY_ALLY)
 summon->setFaction(unit->getFaction());
 if (summon->GetEntry() == 27893)

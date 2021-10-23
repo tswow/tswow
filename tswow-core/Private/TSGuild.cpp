@@ -1,17 +1,17 @@
 /*
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * Copyright (C) 2010 - 2016 Eluna Lua Engine <http://emudevs.com/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
@@ -41,17 +41,17 @@ TSGuild::TSGuild()
  *
  * @return table guildPlayers : table of [Player]s
  */
-TSArray<TSPlayer> TSGuild::GetMembers() 
+TSArray<TSPlayer> TSGuild::GetMembers()
 {
     return TSArray<TSPlayer>();
 }
-    
+
 /**
  * Returns the member count of this [Guild]
  *
  * @return uint32 memberCount
  */
-uint32 TSGuild::GetMemberCount() 
+uint32 TSGuild::GetMemberCount()
 {
 #if defined TRINITY || AZEROTHCORE
     return guild->GetMemberCount();
@@ -59,13 +59,13 @@ uint32 TSGuild::GetMemberCount()
     return guild->GetMemberSize();
 #endif
 }
-    
+
 /**
  * Finds and returns the [Guild] leader by their GUID if logged in
  *
  * @return [Player] leader
  */
-TSPlayer  TSGuild::GetLeader() 
+TSPlayer  TSGuild::GetLeader()
 {
 #if defined TRINITY || AZEROTHCORE
      return TSPlayer(eObjectAccessor()FindPlayer(guild->GetLeaderGUID()));
@@ -73,13 +73,13 @@ TSPlayer  TSGuild::GetLeader()
      return TSPlayer(eObjectAccessor()FindPlayer(guild->GetLeaderGuid()));
 #endif
 }
-    
+
 /**
  * Returns [Guild] leader GUID
  *
  * @return uint64 leaderGUID
  */
-uint64 TSGuild::GetLeaderGUID() 
+uint64 TSGuild::GetLeaderGUID()
 {
 #if defined TRINITY || AZEROTHCORE
     return guild->GetLeaderGUID();
@@ -87,17 +87,17 @@ uint64 TSGuild::GetLeaderGUID()
     return guild->GetLeaderGuid();
 #endif
 }
-    
+
 /**
  * Returns the [Guild]s entry ID
  *
  * @return uint32 entryId
  */
-uint32 TSGuild::GetId() 
+uint32 TSGuild::GetId()
 {
     return guild->GetId();
 }
-    
+
 /**
  * Returns the [Guild]s name
  *
@@ -107,7 +107,7 @@ TSString TSGuild::GetName()
 {
      return TSString(guild->GetName());
 }
-    
+
 /**
  * Returns the [Guild]s current Message Of The Day
  *
@@ -117,7 +117,7 @@ TSString TSGuild::GetMOTD()
 {
      return TSString(guild->GetMOTD());
 }
-    
+
 /**
  * Returns the [Guild]s current info
  *
@@ -131,7 +131,7 @@ TSString TSGuild::GetInfo()
      return TSString(guild->GetGINFO());
 #endif
 }
-    
+
 #if defined(CLASSIC) || defined(TBC) || defined(WOTLK)
 /**
  * Sets the leader of this [Guild]
@@ -141,7 +141,7 @@ TSString TSGuild::GetInfo()
 void TSGuild::SetLeader(TSPlayer _player)
 {
     auto player = _player.player;
-    
+
 #if defined TRINITY || AZEROTHCORE
     guild->HandleSetLeader(player->GetSession(), player->GetName());
 #else
@@ -149,7 +149,7 @@ void TSGuild::SetLeader(TSPlayer _player)
 #endif
 }
 #endif
-    
+
 #ifndef CLASSIC
 /**
  * Sets the information of the bank tab specified
@@ -157,7 +157,7 @@ void TSGuild::SetLeader(TSPlayer _player)
  * @param uint8 tabId : the ID of the tab specified
  * @param string info : the information to be set to the bank tab
  */
-void TSGuild::SetBankTabText(uint8 tabId,TSString text) 
+void TSGuild::SetBankTabText(uint8 tabId,TSString text)
 {
 #if defined TRINITY || AZEROTHCORE
     guild->SetBankTabText(tabId, text._value);
@@ -171,7 +171,7 @@ void TSGuild::SendPacket(std::shared_ptr<TSWorldPacket> _data)
 {
     SendPacket(*_data);
 }
-    
+
 // SendPacketToGuild(packet)
 /**
  * Sends a [WorldPacket] to all the [Player]s in the [Guild]
@@ -181,7 +181,7 @@ void TSGuild::SendPacket(std::shared_ptr<TSWorldPacket> _data)
 void TSGuild::SendPacket(TSWorldPacket _data)
 {
     auto data = _data.packet;
-    
+
 #ifdef CMANGOS
     guild->BroadcastPacket(*data);
 #else
@@ -193,7 +193,7 @@ void TSGuild::SendPacketToRanked(std::shared_ptr<TSWorldPacket> _data,uint8 rank
 {
     SendPacketToRanked(*_data,ranked);
 }
-    
+
 // SendPacketToRankedInGuild(packet, rankId)
 /**
  * Sends a [WorldPacket] to all the [Player]s at the specified rank in the [Guild]
@@ -204,22 +204,22 @@ void TSGuild::SendPacketToRanked(std::shared_ptr<TSWorldPacket> _data,uint8 rank
 void TSGuild::SendPacketToRanked(TSWorldPacket _data,uint8 ranked)
 {
     auto data = _data.packet;
-    
+
 #ifdef CMANGOS
     guild->BroadcastPacketToRank(*data, ranked);
 #else
     guild->BroadcastPacketToRank(data, ranked);
 #endif
 }
-    
+
 /**
  * Disbands the [Guild]
  */
-void TSGuild::Disband() 
+void TSGuild::Disband()
 {
     guild->Disband();
 }
-    
+
 /**
  * Adds the specified [Player] to the [Guild] at the specified rank.
  *
@@ -231,7 +231,7 @@ void TSGuild::Disband()
 void TSGuild::AddMember(TSPlayer _player,uint8 rankId)
 {
     auto player = _player.player;
-    
+
 #ifdef TRINITY
 CharacterDatabaseTransaction trans(nullptr);
     guild->AddMember(trans, player->TS_GET_GUID(), rankId);
@@ -239,7 +239,7 @@ CharacterDatabaseTransaction trans(nullptr);
     guild->AddMember(player->TS_GET_GUID(), rankId);
 #endif
 }
-    
+
 /**
  * Removes the specified [Player] from the [Guild].
  *
@@ -249,7 +249,7 @@ CharacterDatabaseTransaction trans(nullptr);
 void TSGuild::DeleteMember(TSPlayer _player,bool isDisbanding)
 {
     auto player = _player.player;
-    
+
 #if defined TRINITY
 CharacterDatabaseTransaction trans(nullptr);
     guild->DeleteMember(trans, player->TS_GET_GUID(), isDisbanding);
@@ -260,7 +260,7 @@ SQLTransaction trans(nullptr);
     guild->DelMember(player->TS_GET_GUID(), isDisbanding);
 #endif
 }
-    
+
 /**
  * Promotes/demotes the [Player] to the specified rank.
  *
@@ -270,7 +270,7 @@ SQLTransaction trans(nullptr);
 void TSGuild::SetMemberRank(TSPlayer _player,uint8 newRank)
 {
     auto player = _player.player;
-    
+
 #ifdef TRINITY
 CharacterDatabaseTransaction trans(nullptr);
     guild->ChangeMemberRank(trans, player->TS_GET_GUID(), newRank);
@@ -278,4 +278,3 @@ CharacterDatabaseTransaction trans(nullptr);
     guild->ChangeMemberRank(player->TS_GET_GUID(), newRank);
 #endif
 }
-    
