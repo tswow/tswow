@@ -13,7 +13,9 @@ function MakeCustomPacket(opcode,size)
     function writer:WriteFloat(value) _WriteFloat(self.id,value); return self end
     function writer:WriteDouble(value) _WriteDouble(self.id,value); return self end
 
-    function writer:WriteString(value) _WriteString(id,value); return self end
+    function writer:WriteString(value) _WriteString(self.id,value); return self end
+
+    function writer:Size() return _WriteSize(self.id) end
 
     function writer:Send()
         _SendCustomPacket(self.id)
@@ -38,6 +40,8 @@ function __ReadCustomPacket()
     function reader:ReadDouble() return _ReadDouble() end
 
     function reader:ReadString() return _ReadString() end
+
+    function reader:Size() return _ReadSize() end
 
     return reader
 end

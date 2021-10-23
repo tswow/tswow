@@ -7938,6 +7938,8 @@ declare class TSPacketWrite {
 
     WriteString(value: string): TSPacketWrite;
 
+    Size(): uint32
+
     SendToPlayer(player: TSPlayer): void;
     BroadcastMap(map: TSMap, teamOnly: uint32): void;
     /**
@@ -7963,6 +7965,8 @@ declare class TSPacketRead {
     ReadDouble(def?: double): double;
 
     ReadString(def?: string): string;
+
+    Size(): uint32
 }
 
 declare function WorldDatabaseInfo(): TSDatabaseConnectionInfo

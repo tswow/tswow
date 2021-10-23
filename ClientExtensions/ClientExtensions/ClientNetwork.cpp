@@ -174,6 +174,21 @@ int ReadNum(lua_State* L)
 
 void ClientNetwork::initialize()
 {
+    ClientLua::AddFunction(
+        "_WriteSize"
+      , [](lua_State* L) {
+        auto itr = writes.m_map.find(ClientLua::GetNumber(L, 1, 0));
+        ClientLua::PushNumber(L, itr == writes.m_map.end() ? 0 : itr->second.Size());
+        return 1;
+      }, __FILE__, __LINE__);
+
+    ClientLua::AddFunction(
+        "_ReadSize"
+      , [](lua_State* L) {
+        ClientLua::PushNumber(L, curRead ? curRead->Size() : 0);
+        return 1;
+    }, __FILE__, __LINE__);
+
     ClientLua::AddFunction("_WriteUInt8"
         , [](lua_State* L) {
         return WriteNum<uint8_t>(L);
