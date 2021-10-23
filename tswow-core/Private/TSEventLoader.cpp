@@ -1,17 +1,17 @@
 /*
  * This file is part of tswow (https://github.com/tswow/).
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
- * 
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License as 
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 3.
- * 
- * This program is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "ScriptMgr.h"
@@ -47,7 +47,6 @@
 #include "MapManager.h"
 #include "base64.h"
 #include "Config.h"
-#include "TSMessageBuffer.h"
 
 #include <fstream>
 #include <map>
@@ -169,7 +168,7 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
     }
 
     // Unload events
-    std::map<std::string,TSEventHandlers>::iterator iter 
+    std::map<std::string,TSEventHandlers>::iterator iter
         = eventHandlers.find(sname);
     if(iter!=eventHandlers.end())
     {
@@ -400,79 +399,10 @@ bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msgIn)
     return false;
 }
 
-bool handleAddonNetworkMessage(Player* player,uint32 type,uint32 lang,std::string& msg,Player* receiver)
-{
-    if(player!=receiver) {
-        return false;
-    }
-
-    if(player->m_message_buffer.receiveFragment(msg.size(),msg.c_str()))
-    {
-        return true;
-    }
-
-    char * carr = const_cast<char*>(msg.c_str());
-    int offset = 0;
-    for(int i=0;i<msg.size();++i)
-    {
-        if(carr[i] == '\t' || carr[i] == ' ') offset++;
-        else break;
-    }
-
-    if((msg.size()-offset)<=4) {
-        return false;
-    }
-
-    auto preDecodeHeader = ((uint32_t*)(carr+offset))[0];
-    if(preDecodeHeader != 0x50414753)
-    {
-        return false;
-    }
-
-    uint8_t outarr[250];
-
-    int outlen = decodeBase64((uint8_t*)(carr+offset),msg.size()-offset,outarr);
-
-    BinReader<uint8_t> reader(outarr,outlen);
-    FIRE(AddonOnMessage,reader);
-
-    if(outlen<=6) {
-        TC_LOG_DEBUG("tswow.addonmessage","AddOnMessage: Message too short");
-        return false;
-    }
-
-    if(reader.Read<uint32_t>(0)!=1007688) {
-        TC_LOG_ERROR("tswow.addonmessage","AddOnMessage: Incorrect header (after decode) %x (expected 1007688)",reader.Read<uint32>(0));
-        return false;
-    }
-
-    uint16_t opcode = reader.Read<uint16_t>(4);
-    if(opcode>=getMessageMap().size()) {
-        TC_LOG_DEBUG("tswow.addonmessage","AddOnMessage: Received invalid opcode %u",opcode);
-        return true;
-    }
-
-    auto handler = &getMessageMap()[opcode];
-    if(handler->size!=(outlen-6) || !handler->enabled) {
-        TC_LOG_DEBUG("tswow.addonmessage","AddOnMessage: Received invalid message size %u for opcode %u (expected %u)",outlen,opcode,handler->size+6);
-        return true;
-    }
-
-    handler->fire(TSPlayer(player),outarr+6);
-    return true;
-}
-
-void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer,std::shared_ptr<void>))
-{
-    if(opcode>=messageMap.size()) { return; }
-    (&messageMap[opcode])->listeners.push_back(func);
-}
-
 void AddSC_tswow_commandscript();
 void TSInitializeEvents()
 {
     TSLoadEvents();
     LoadIDs();
-    InitializeMessages();
     AddSC_tswow_commandscript();
 };

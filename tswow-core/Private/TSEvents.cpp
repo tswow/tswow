@@ -166,20 +166,13 @@ public:
     void OnDuelEnd(Player* winner,Player* loser,DuelCompleteType type) FIRE(PlayerOnDuelEnd,TSPlayer(winner),TSPlayer(loser),type)
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg) FIRE(PlayerOnSay,TSPlayer(player),type,lang,TSMutableString(&msg))
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Player* receiver) {
+        // needs to happen here, because we want to be sure
+        // successful messages do not reach the normal OnWhisper events.
         if(handleTSWoWGMMessage(player,receiver,msg))
         {
             TC_LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW GM Message");
             return;
         }
-
-        // needs to happen here, because we want to be sure
-        // successful messages do not reach the normal OnWhisper events.
-        if(handleAddonNetworkMessage(player,type,lang,msg,receiver))
-        {
-            TC_LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW AddOn Message");
-            return;
-        }
-
         FIRE(PlayerOnWhisper,TSPlayer(player),type,lang,TSMutableString(&msg),TSPlayer(receiver))
     }
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Group* group) FIRE(PlayerOnChatGroup,TSPlayer(player),type,lang,TSMutableString(&msg),TSGroup(group))

@@ -117,10 +117,6 @@ export namespace Clean {
 
     export async function cleanIds(dataset: string, useBackups: boolean) {
         term.log(`Cleaning ids for dataset ${dataset} (useBackups=${useBackups})`);
-        if(useBackups && wfs.exists(ipaths.messageIds)) {
-            wfs.makeBackup(ipaths.messageIds);
-        }
-        wfs.remove(ipaths.messageIds);
 
         if(useBackups && wfs.exists(ipaths.datasetIds(dataset))) {
             wfs.makeBackup(ipaths.datasetIds(dataset));

@@ -445,7 +445,6 @@ export class InstallPaths {
     /** Config paths */
     get config() { return mpath(installBase, 'config'); }
     get nodeYaml() { return mpath(installBase, 'node.yaml'); }
-    get messageIds() { return mpath('ids.txt'); }
 
     /** Realm paths */
     get realms() {

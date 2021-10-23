@@ -11,11 +11,3 @@ type bool = boolean;
 type double = number;
 type TSArray<T> = T[];
 type TSString = string;
-
-declare function Message(classTarget: any): any
-declare function MsgClass(classTarget: any, name: string): any
-declare function MsgClassArray(size: number): (field: any, name: any)=>void
-declare function MsgPrimitive(classTarget: any, name: string): any
-declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>void;
-declare function MsgString(size: number): (field: any, name: any)=>void
-declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void

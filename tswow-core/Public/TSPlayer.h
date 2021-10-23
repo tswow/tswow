@@ -244,7 +244,7 @@ public:
 	void AddLifetimeKills(uint32 val);
 	TSItem AddItem(uint32 itemId, uint32 itemCount, int32 propertyId = -1);
 	void AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 count, int32 propertyId = -1);
-    void RemoveItem(TSItem item, uint32 itemCount = 1);
+  void RemoveItem(TSItem item, uint32 itemCount = 1);
 	void RemoveItemByEntry(uint32 entry, uint32 itemCount = 1);
 	void RemoveLifetimeKills(uint32 val);
 	void ResetSpellCooldown(uint32 spellId, bool update);
@@ -281,42 +281,24 @@ public:
 	void SendMovieStart(uint32 MovieId);
 	void SendMail(uint8 senderType, uint64 from, TSString subject, TSString body, uint32 money = 0, uint32 cod = 0, uint32 delay = 0, TSArray<TSItem> items = TSArray<TSItem>());
 
-    uint8 GetHairStyle();
-    void SetHairStyle(uint8 style);
+  uint8 GetHairStyle();
+  void SetHairStyle(uint8 style);
 
-    uint8 GetHairColor();
-    void SetHairColor(uint8 color);
+  uint8 GetHairColor();
+  void SetHairColor(uint8 color);
 
-    uint8 GetFacialStyle();
-    void SetFacialStyle(uint8 style);
+  uint8 GetFacialStyle();
+  void SetFacialStyle(uint8 style);
 
-    uint8 GetSkinColor();
-    void SetSkinColor(uint8 color);
+  uint8 GetSkinColor();
+  void SetSkinColor(uint8 color);
 
-    uint8 GetFace();
-    void SetFace(uint8 face);
+  uint8 GetFace();
+  void SetFace(uint8 face);
 
-    void SendUpdateWorldState(uint32 worldState, uint32 value);
+  void SendUpdateWorldState(uint32 worldState, uint32 value);
 
-    void SendUpdateEventStates(uint32 eventId);
-
-	template <typename T>
-	void SendData(std::shared_ptr<T> value)
-	{
-		uint8_t arr[250];
-		BinReader<uint8_t> bin(arr,250);
-		bin.Write<uint32_t>(0,17688);
-		bin.Write<uint16_t>(4,value->opcode());
-		value->Write(arr+6);
-		char *carr = (char*)arr;
-		uint8_t b85arr[250];
-
-		int b85len = encodeBase64((uint8_t*)carr,value->GetSize()+6,b85arr);
-		std::string outstr((char*)b85arr,b85len);
-		SendAddonMessage(JSTR(""),TSString(outstr),7,*this);
-	}
-
-	void SendLongAddonMessage(unsigned short channel, TSString str);
+  void SendUpdateEventStates(uint32 eventId);
 
 	TSArray<TSMail> GetMails();
 	void RemoveMail(uint32 id);

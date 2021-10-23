@@ -36,13 +36,9 @@
 #include "TSAreaTrigger.h"
 #include "TSAchievementTemplate.h"
 #include "TSBattleground.h"
-#include <cstdint>
 #include "TSCustomPacket.h"
 
-// Addon
-EVENT_TYPE(AddonOnMessage,BinReader<uint8>)
-EVENT_TYPE(AddonOnLongMessage,TSPlayer,uint16,TSString)
-EVENT_TYPE(AddonOnLongMessageError,TSPlayer,uint8)
+#include <cstdint>
 
 EVENT_TYPE(PacketOnCustom
   , uint32       /*opcode*/
@@ -716,11 +712,6 @@ TSConditionEvents* GetConditionEvent(uint32_t id);
 
 struct TSEvents
 {
-    // AddonScript
-    EVENT(AddonOnMessage)
-    EVENT(AddonOnLongMessage)
-    EVENT(AddonOnLongMessageError)
-
     // WorldScript
     EVENT(WorldOnOpenStateChange)
     EVENT(WorldOnConfigLoad)
@@ -1657,19 +1648,6 @@ public:
       MAP_EVENT_HANDLE(Packet,OnCustom)
     } PacketID;
 
-    struct AddonEvents: public EventHandler {
-         AddonEvents* operator->(){return this;}
-         EVENT_HANDLE(Addon,OnMessage)
-         EVENT_HANDLE(Addon,OnLongMessage)
-         EVENT_HANDLE(Addon,OnLongMessageError)
-
-         template <typename T>
-         void _OnMessageID(uint16_t opcode, void (*func)(TSPlayer,std::shared_ptr<T>))
-         {
-              AddMessageListener(opcode,(void(*)(TSPlayer,std::shared_ptr<void>))func);
-         }
-    } Addon;
-
     struct TestEvents {
         uint32_t m_modid;
         std::string m_modName;
@@ -1698,7 +1676,6 @@ public:
 
     void LoadEvents(TSEvents* events)
     {
-        Addon.LoadEvents(events);
         Server.LoadEvents(events);
         World.LoadEvents(events);
         Formula.LoadEvents(events);
@@ -1741,7 +1718,6 @@ public:
 
     void Unload()
     {
-         Addon.Unload();
          Server.Unload();
          World.Unload();
          Formula.Unload();

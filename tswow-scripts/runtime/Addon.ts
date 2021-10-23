@@ -282,30 +282,6 @@ export namespace Addon {
             });
             wfs.writeLines(name,rows);
         });
-
-        if(wfs.exists(ipaths.moduleAddonClasses(mod))) {
-            const messages = JSON.parse(wfs.read(ipaths.moduleAddonClasses(mod)));
-            for(let path in messages) {
-                let message= messages[path];
-                let luapath = wfs.relative(ipaths.moduleRoot(mod),path);
-                luapath = luapath.substring(0,luapath.length-2)+'lua'
-                luapath = mpath(ipaths.addonBuild(mod),luapath);
-                let luatext = wfs.read(luapath).split('\n');
-
-                for(let cname in message) {
-                    let cls = message[cname];
-                    let line = luatext.findIndex(
-                        x=>x.includes(`function ${cname}.prototype.____constructor`))
-                    luatext[line] = cls+'\n'+luatext[line];
-                    if(line === -1) {
-                        throw new Error(`Cannot find constructor for message class ${cname}`);
-                    }
-                }
-                wfs.write(luapath,luatext.join('\n'));
-            }
-        }
-
-        wfs.remove(ipaths.moduleAddonClasses(mod));
         wfs.remove(ipaths.addonLualibGarbage(mod));
         wfs.remove(ipaths.addonBuildLib(mod));
         updateAddons(dataset);
