@@ -12,7 +12,7 @@
 
 // This segment has over 56kb of 0s
 // that's space for over 11k lua functions
-CLIENT_ADDR(void,CAVE_START,0x6ddf80)
+CLIENT_ADDRESS(void,CAVE_START,0x6ddf80)
 
 #define JMP_SIZE 5
 #define NOP 0x90
@@ -36,11 +36,11 @@ namespace
 
     size_t lastCave = 0;
 
-    CLIENT_ADDR(lua_State*, _state, 0x00d3f78c);
+    CLIENT_ADDRESS(lua_State*, _state, 0x00d3f78c);
     bool isInitialized = false;
 
-    CLIENT_FUNC(UnregisterGlobal,0x00817FD0, __cdecl,void,(char const* name))
-    CLIENT_FUNC(FrameScriptRegisterFunction
+    CLIENT_FUNCTION(UnregisterGlobal,0x00817FD0, __cdecl,void,(char const* name))
+    CLIENT_FUNCTION(FrameScriptRegisterFunction
         , 0x00817F90
         , __cdecl
         , void
@@ -65,8 +65,8 @@ namespace ClientLua {
         return 0;
     }
 
-    CLIENT_FUNC(_GetString, 0x0084E0E0, __cdecl, char const*, (lua_State* L, int32_t, int32_t))
-    CLIENT_FUNC(_GetNumber, 0x0084E030, __cdecl, double, (lua_State* L, int32_t))
+    CLIENT_FUNCTION(_GetString, 0x0084E0E0, __cdecl, char const*, (lua_State* L, int32_t, int32_t))
+    CLIENT_FUNCTION(_GetNumber, 0x0084E030, __cdecl, double, (lua_State* L, int32_t))
 
     std::string GetString(lua_State* L, int32_t offset, std::string const& defValue)
     {

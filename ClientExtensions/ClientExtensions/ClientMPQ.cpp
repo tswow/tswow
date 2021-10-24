@@ -4,7 +4,7 @@
 
 #include "windows.h"
 
-CLIENT_FUNC(
+CLIENT_FUNCTION(
       SFileOpenFile
     , 0x00424F80
     , __stdcall
@@ -15,7 +15,7 @@ CLIENT_FUNC(
         )
 )
 
-CLIENT_FUNC(
+CLIENT_FUNCTION(
       SFileGetFileSize
     , 0x004218C0
     , __stdcall
@@ -26,7 +26,7 @@ CLIENT_FUNC(
         )
 )
 
-CLIENT_FUNC(
+CLIENT_FUNCTION(
         SFileReadFile
     , 0x00422530
     , __stdcall
@@ -41,7 +41,7 @@ CLIENT_FUNC(
         )
 )
 
-CLIENT_FUNC(
+CLIENT_FUNCTION(
       SFileCloseFile
     , 0x00422910
     , __stdcall
