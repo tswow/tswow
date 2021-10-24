@@ -51,28 +51,28 @@ Logger& log(const char* type, const char* file, size_t line)
   return logger;
 }
 
-LUA_FUNCTION(_LOG_DEBUG) {
+LUA_FUNCTION(_LOG_DEBUG, (lua_State* L)) {
 #ifdef LUA_LOGGING
   LOG_DEBUG << ClientLua::GetString(L, 1);
 #endif
   return 0;
 }
 
-LUA_FUNCTION(_LOG_INFO) {
+LUA_FUNCTION(_LOG_INFO, (lua_State* L)) {
 #ifdef LUA_LOGGING
   LOG_INFO << ClientLua::GetString(L, 1);
 #endif
   return 0;
 }
 
-LUA_FUNCTION(_LOG_WARN) {
+LUA_FUNCTION(_LOG_WARN, (lua_State* L)) {
 #ifdef LUA_LOGGING
   LOG_WARN << ClientLua::GetString(L, 1);
 #endif
   return 0;
 }
 
-LUA_FUNCTION(_LOG_ERROR) {
+LUA_FUNCTION(_LOG_ERROR, (lua_State* L)) {
 #ifdef LUA_LOGGING
   LOG_ERROR << ClientLua::GetString(L, 1);
 #endif
