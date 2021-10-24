@@ -1435,7 +1435,7 @@ void TSUnit::SetMaxHealth(uint32 amt)
  * @param uint32 amount : new power amount
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  */
-void TSUnit::SetPower(uint32 amt,int type)
+void TSUnit::SetPower(int type, uint32 amt)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     unit->SetPower(power, amt);
@@ -1460,7 +1460,7 @@ void TSUnit::SetPower(uint32 amt,int type)
  * @param int32 amount : amount to modify
  * @param int type = -1 : a valid power type from [Powers] or -1 for the [Unit]'s current power type
  */
-void TSUnit::ModifyPower(int32 amt,int type)
+void TSUnit::ModifyPower(int type, int32 amt)
 {
     Powers power = (Powers) PowerSelectorHelper(TSUnit(unit), type);
     unit->ModifyPower(power, amt);

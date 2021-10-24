@@ -119,8 +119,8 @@ public:
     void SetLevel(uint8 newlevel);
     void SetHealth(uint32 amt);
     void SetMaxHealth(uint32 amt);
-    void SetPower(uint32 amt, int type);
-    void ModifyPower(int32 amt, int type);
+    void SetPower(int type, uint32 amt);
+    void ModifyPower(int type, int32 amt);
     void SetMaxPower(int type, uint32 amt);
     void SetPowerType(uint32 type);
     void SetDisplayId(uint32 model);
