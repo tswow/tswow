@@ -39,9 +39,10 @@ namespace
     CLIENT_ADDR(lua_State*, _state, 0x00d3f78c);
     bool isInitialized = false;
 
-    CLIENT_FUNC(UnregisterGlobal,0x00817FD0,void,(char const* name))
+    CLIENT_FUNC(UnregisterGlobal,0x00817FD0, __cdecl,void,(char const* name))
     CLIENT_FUNC(FrameScriptRegisterFunction
         , 0x00817F90
+        , __cdecl
         , void
         , (char const* name, lua_CFunction fn)
     )
@@ -64,8 +65,8 @@ namespace ClientLua {
         return 0;
     }
 
-    CLIENT_FUNC(_GetString, 0x0084E0E0, char const*, (lua_State* L, int32_t, int32_t))
-    CLIENT_FUNC(_GetNumber, 0x0084E030, double, (lua_State* L, int32_t))
+    CLIENT_FUNC(_GetString, 0x0084E0E0, __cdecl, char const*, (lua_State* L, int32_t, int32_t))
+    CLIENT_FUNC(_GetNumber, 0x0084E030, __cdecl, double, (lua_State* L, int32_t))
 
     std::string GetString(lua_State* L, int32_t offset, std::string const& defValue)
     {

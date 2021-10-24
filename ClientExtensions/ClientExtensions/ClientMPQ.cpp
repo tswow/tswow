@@ -4,9 +4,10 @@
 
 #include "windows.h"
 
-CLIENT_FUNC_STDCALL(
-        SFileOpenFile
+CLIENT_FUNC(
+      SFileOpenFile
     , 0x00424F80
+    , __stdcall
     , int
     , (
           char const* filename
@@ -14,9 +15,10 @@ CLIENT_FUNC_STDCALL(
         )
 )
 
-CLIENT_FUNC_STDCALL(
-        SFileGetFileSize
+CLIENT_FUNC(
+      SFileGetFileSize
     , 0x004218C0
+    , __stdcall
     , DWORD /*lowest 32 bits in size*/
     , (
             HANDLE handle
@@ -24,9 +26,10 @@ CLIENT_FUNC_STDCALL(
         )
 )
 
-CLIENT_FUNC_STDCALL(
+CLIENT_FUNC(
         SFileReadFile
     , 0x00422530
+    , __stdcall
     , int
     , (
           HANDLE handle // likely a handle
@@ -38,9 +41,10 @@ CLIENT_FUNC_STDCALL(
         )
 )
 
-CLIENT_FUNC_STDCALL(
+CLIENT_FUNC(
       SFileCloseFile
     , 0x00422910
+    , __stdcall
     , int
     , (
             HANDLE a1

@@ -15,9 +15,9 @@
 
 struct ClientPacket;
 
-CLIENT_METHOD(InitializePacket, 0x00401050, void, (ClientPacket* packet))
-CLIENT_METHOD(FinalizePacket, 0x00401130, void, (ClientPacket* packet))
-CLIENT_FUNC(SendPacket, 0x006B0B50, void, (ClientPacket* packet))
+CLIENT_FUNC(InitializePacket, 0x00401050, __thiscall, void, (ClientPacket* packet))
+CLIENT_FUNC(FinalizePacket, 0x00401130, __thiscall, void, (ClientPacket* packet))
+CLIENT_FUNC(SendPacket, 0x006B0B50, __cdecl, void, (ClientPacket* packet))
 
 // The raw client packet
 struct ClientPacket {
