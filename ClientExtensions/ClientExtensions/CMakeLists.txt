@@ -63,6 +63,7 @@ target_include_directories(ClientExtensions PUBLIC
     ${CMAKE_SOURCE_DIR}/lua-5.1/src
     ${CMAKE_SOURCE_DIR}/CustomPackets
     ${detours_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR} # so "Scripts" can include it
 )
 
 set_property(TARGET ClientExtensions PROPERTY USE_FOLDERS true)
