@@ -52,7 +52,7 @@ int main()
             for (Registry& reg : registries)
             {
                 std::string::const_iterator search(sourceFile.cbegin());
-                std::regex exp(reg.m_name + "\\s*\\( *(.+?)\\s*,");
+                std::regex exp(reg.m_name + "[ \t\n\r]*\\([ \t\n\r]*(.+?)[ \t\n\r]*,");
                 std::smatch res;
                 while (std::regex_search(search, sourceFile.cend(), res, exp))
                 {
