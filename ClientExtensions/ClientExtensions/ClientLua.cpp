@@ -78,7 +78,7 @@ namespace ClientLua {
     }
 }
 
-CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, int, (int a, int b, int c)) {
+CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, __cdecl, int, (int a, int b, int c)) {
     if (b != 11334016) return FrameScriptReloaded(a, b, c);
     LOG_DEBUG << "Reloading Lua";
     if (lastCave > 0)

@@ -7,7 +7,7 @@ LUA_FUNCTION(luainject) {
     return 0;
 }
 
-CLIENT_DETOUR(GameObjectInitialize, 0x007140A0, int, ()) {
+CLIENT_DETOUR(GameObjectInitialize, 0x007140A0, __cdecl, int, ()) {
     LOG_DEBUG << "GameObject Initialization";
     return GameObjectInitialize();
 }

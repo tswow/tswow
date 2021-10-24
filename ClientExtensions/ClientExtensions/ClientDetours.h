@@ -32,8 +32,8 @@ private:
 // do NOT refactor this name
 // without also changing the name in client_header_builder.cpp
 
-#define CLIENT_DETOUR(__detour_name,addr,retval,...) \
-    typedef retval (__cdecl *__detour_name##Type)__VA_ARGS__;\
+#define CLIENT_DETOUR(__detour_name,addr,calltype,retval,...) \
+    typedef retval (calltype *__detour_name##Type)__VA_ARGS__;\
     inline __detour_name##Type __detour_name = (__detour_name##Type)(addr);\
     retval __detour_name##Detour __VA_ARGS__; \
     int __detour_name##__Result = ClientDetours::Add(#__detour_name,&__detour_name,__detour_name##Detour,__FILE__,__LINE__);\

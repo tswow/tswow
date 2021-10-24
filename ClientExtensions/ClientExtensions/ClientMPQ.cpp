@@ -50,7 +50,7 @@ CLIENT_FUNC_STDCALL(
 namespace ClientMPQ {
     // todo: it looks like normal GetLastError isn't working here,
     //       so we need to find the address the client uses. Until then,
-    //       we cannot specify exactly what read errors occurred if any.
+    //       we cannot specify exactly what read errors have occurred if we get them.
 
     size_t readFile(std::string const& filename, char** buf)
     {

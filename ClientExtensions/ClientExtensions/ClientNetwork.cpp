@@ -333,8 +333,9 @@ typedef bool(* ClientPacketHandler)
 );
 
 CLIENT_DETOUR(
-        OnSetMessageHandler
+      OnSetMessageHandler
     , 0x006B0B80
+    , __cdecl
     , int
     , (uint32_t opcode, ClientPacketHandler handler, void* param)
 ) {
