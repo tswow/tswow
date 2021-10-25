@@ -102,9 +102,21 @@ export class YamlFile {
         return yaml(this.filepath, defValue,path);
     }
 
-    protected getArray<T>(path: string, defValue: T): T {
+    protected getArray<T>(path: string, defValue: T[]): T[] {
         let v = this.get<any>(path,defValue);
-        return (Array.isArray(v) ? v : [v]) as any as T;
+        return (Array.isArray(v) ? v : [v]);
+    }
+
+    protected getArrayAll(path: string, defValues: string[], allValues: string[]): string[] {
+        let arr = this.getArray<string>(path,defValues);
+        if(arr.includes('all')) {
+            arr = arr.concat(allValues);
+        }
+        arr = arr.filter(x=> x != 'all'
+            && !x.startsWith('!')
+            && !arr.includes('!'+x)
+        );
+        return arr;
     }
 
     constructor(filepath: string) {

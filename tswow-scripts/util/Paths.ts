@@ -51,6 +51,10 @@ export class InstallPaths {
         return mpath(this.revisions,'tswow');
     }
 
+    get clientExtensionDll() {
+        return mpath(this.bin, 'ClientExtensions.dll');
+    }
+
     get positionsFile() {
         return mpath(this.coredata,'positions.txt')
     }
@@ -754,6 +758,10 @@ export class BuildPaths {
 
     get stormlibBuild() {
         return mpath(this.base, 'StormLibBuild');
+    }
+
+    get clientExtensionsDll() {
+        return mpath(this.base, 'ClientExtensions.dll');
     }
 
     get stormLibBuildRelease() {

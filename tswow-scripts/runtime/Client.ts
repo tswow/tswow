@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as crypto from 'crypto';
 import { mpath, wfs } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
@@ -24,7 +25,7 @@ import { commands } from './Commands';
 import { Datasets } from './Dataset';
 import { NodeConfig } from './NodeConfig';
 
-interface ClientPatch {
+ interface ClientPatch {
     address: number
     values: number[]
 }
@@ -44,6 +45,9 @@ function patch(name: string, patches: [number,number[]][])
  * Contains functions for managing World of Warcraft clients
  */
 export namespace Client {
+    export const EXTENSION_DLL_PATCH_NAME = 'client-extensions'
+    export const CLEAN_CLIENT_MD5 = '45892bdedd0ad70aed4ccd22d9fb5984'
+
     /**
      * Manages a single World of Warcraft process
      */
@@ -97,8 +101,8 @@ export namespace Client {
                     [0xe03a3,[0x88]],
                     [0xe03c3,[0x88]],
                 ]),
-                // generated with https://www.cgsoftlabs.ro/dl.html
-                patch('client-extensions',[
+                // generated with Stud_PE: https://www.cgsoftlabs.ro/dl.html
+                patch(EXTENSION_DLL_PATCH_NAME,[
                     [0x40,[
                         0x50,0x45,0x00,0x00,0x4C,0x01,0x07,0x00,0xFE,0x52,0x24,0x4C,0x00,0x00,0x00,0x00,
                         0x00,0x00,0x00,0x00,0xE0,0x00,0x23,0x01,0x0B,0x01,0x08,0x00,0x00,0xD4,0x5D,0x00,
@@ -428,6 +432,10 @@ export namespace Client {
             return dirs[0];
         }
 
+        get cleanPath() {
+            return mpath(this.path, 'wow.exe.clean');
+        }
+
         get exePath() {
             if(wfs.exists(mpath(this.path,'Wow.exe'))) {
                 return mpath(this.path,'Wow.exe');
@@ -476,39 +484,59 @@ export namespace Client {
          * @param clientPath
          */
         patchBinary() {
-            let wowbin = wfs.readBin(this.exePath).slice(0,0x758c00);
-            let maxlen = wowbin.length;
-            let changeFound = false;
-            this.patches().forEach(x=>{
-                x.patches.forEach(y=>{
-                    y.values.forEach((z,i)=>{
-                        let newAddress = y.address+i;
-                        if(newAddress >= wowbin.length) {
-                            if(newAddress >= maxlen) {
-                                maxlen = newAddress
-                            }
-                            changeFound = true;
-                        } else if(wowbin.readUInt8(newAddress) != z) {
-                            changeFound = true;
-                        }
-                    })
-                })
-            })
-
-            if(!changeFound) {
-                return;
+            term.log(`Applying client patches...`);
+            if(!wfs.exists(this.cleanPath)) {
+                wfs.copy(this.exePath,this.cleanPath)
             }
 
-            if(maxlen >= wowbin.length) {
-                wowbin = Buffer.concat([
-                      wowbin
-                    , Buffer.alloc(maxlen-wowbin.length,0)
-                ])
+            let wowbin = wfs.readBin(this.cleanPath)
+
+            const md5 = (value: Buffer) => crypto
+                .createHash('md5')
+                .update(value)
+                .digest('hex')
+
+            let hash = md5(wowbin)
+            if(hash !== CLEAN_CLIENT_MD5) {
+                let exebin = wfs.readBin(this.exePath);
+                if(md5(exebin) == CLEAN_CLIENT_MD5) {
+                    // user placed a new exe that's actually clean
+                    wowbin = exebin;
+                    hash = CLEAN_CLIENT_MD5
+                    wfs.writeBin(this.cleanPath,wowbin);
+                } else {
+                    term.warn(
+                          `Unclean source wow.exe detected. Consider `
+                        + `replacing it with a clean 3.3.5a client`
+                    )
+                }
             }
 
-            wfs.makeBackup(this.exePath);
+            if(hash == CLEAN_CLIENT_MD5) {
+                term.success(`Source wow client hash is ${hash} (clean!)`);
+            } else {
+                term.success(`Source wow client hash is ${hash}`);
+            }
 
-            this.patches().forEach(cat=>{
+            if(this.set.config.client_dll) {
+                if(!wfs.exists(ipaths.clientExtensionDll)) {
+                    throw new Error(
+                          `Dataset ${this.set.id} has client-extensions enabled,`
+                        + ` but file ${ipaths.clientExtensionDll} is missing.`
+                    )
+                }
+                wowbin = wowbin.slice(0,0x758c00);
+                wfs.copy(
+                      ipaths.clientExtensionDll
+                    , mpath(this.path,'ClientExtensions.dll')
+                )
+            }
+
+            let usedPatchNames = this.set.config.client_patches;
+            let usedPatches = this.patches()
+                .filter(x=>usedPatchNames.includes(x.name));
+
+            usedPatches.forEach(cat=>{
                 cat.patches.forEach(patch=>{
                     patch.values.forEach((value,offset)=>{
                         wowbin.writeUInt8(value,patch.address+offset);

@@ -28,15 +28,29 @@ export namespace Datasets {
             this.set = set;
         }
 
-        get modules() {
-            let mods = this.getArray<string[]>('modules',[]);
-            if(mods.includes('all')) {
-                return wfs.readDir(ipaths.modules,true,'directories');
-            } else {
-                return mods;
-            }
+        get client_dll() {
+            return this.client_patches
+                .includes(Client.EXTENSION_DLL_PATCH_NAME)
         }
+
+        get client_patches() {
+            return this.getArrayAll(
+                  'client_patches'
+                , ['all',`!${Client.EXTENSION_DLL_PATCH_NAME}`]
+                , new Client.Client(this.set).patches().map(x=>x.name)
+            )
+        }
+
+        get modules() {
+            return this.getArrayAll(
+                  'modules'
+                , ['all']
+                , wfs.readDir(ipaths.modules,true,'directories')
+            )
+        }
+
         get use_mmaps() { return this.get<bool>('use_mmaps',false); }
+
         get client_path() {
             let val: string;
             try {

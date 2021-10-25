@@ -11,6 +11,12 @@ use_mmaps: false
 modules:
   - all
 
+# What client patches should be applied
+# Lines starting with "!" are excluded if previously included
+client_patches:
+  - all
+  - !client-extensions
+
 # What extensions to ignore when building assets
 ignore_assets:
   - .png
