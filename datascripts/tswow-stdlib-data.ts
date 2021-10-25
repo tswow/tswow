@@ -24,6 +24,7 @@ import { BattlegroundRegistry } from "./Battleground/Battleground";
 import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
 import { ClassRegistry } from "./Class/ClassRegistry";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creature/Creatures";
+import { CreatureOutfitsRegistry } from "./CreatureOutfits/CreatureOutfitsRegistry";
 import { CurrencyRegistry } from "./Currency/Currency";
 import { CurrencyCategoryRegistry } from "./Currency/CurrencyCategory";
 import { EnchantmentRegistry } from "./Enchant/Enchantment";
@@ -103,6 +104,7 @@ export const std = {
     CreatureTemplates: CreatureTemplateRegistry,
     /** Individual creatures placed in the world */
     CreatureInstances: CreatureInstanceRegistry,
+    CreatureOutfits: CreatureOutfitsRegistry,
     TalentTrees: TalentTreeRegistry,
     Factions: FactionRegistry,
     Scripts: SmartScripts,
