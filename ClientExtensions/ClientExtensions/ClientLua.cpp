@@ -10,9 +10,8 @@
 
 #include "luafiles.generated.h"
 
-// This segment has over 56kb of 0s
-// that's space for over 11k lua functions
-CLIENT_ADDRESS(void,CAVE_START,0x6ddf80)
+// space for ~700 functions
+CLIENT_ADDRESS(void,CAVE_START,0x757de0)
 
 #define JMP_SIZE 5
 #define NOP 0x90
