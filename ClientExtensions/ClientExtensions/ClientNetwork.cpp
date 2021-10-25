@@ -115,6 +115,8 @@ public:
 MessageRegistry<ClientMessageWrite> writes;
 CustomPacketRead* curRead = nullptr;
 
+std::map < opcode_t, std::vector<std::function<void(CustomPacketRead*)>>> cppListeners;
+
 class ClientMessageBuffer : public CustomPacketBuffer {
 public:
     ClientMessageBuffer()
@@ -130,6 +132,14 @@ public:
             , ClientLua::State()
         );
         curRead = nullptr;
+        auto itr = cppListeners.find(value->Opcode());
+        if (itr != cppListeners.end())
+        {
+            for (auto const& cb : itr->second)
+            {
+                cb(value);
+            }
+        }
     }
 
     virtual void OnError(CustomPacketResult error) override final
@@ -137,6 +147,24 @@ public:
         LOG_ERROR << "Packet reading error " << uint32_t(error);
     }
 };
+
+int ClientNetwork::OnCustomPacket(
+      opcode_t opcode
+    , std::function<void(CustomPacketRead*)> callback
+) {
+    auto itr = cppListeners.find(opcode);
+    if (itr != cppListeners.end())
+    {
+        itr->second.push_back(callback);
+        return 1;
+    }
+    else
+    {
+        cppListeners[opcode] = { callback };
+        return 2;
+    }
+}
+
 
 namespace
 {

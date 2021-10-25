@@ -22,6 +22,9 @@ std::vector<Registry> registries = {
 
         // do NOT change this without also refactoring the macro in ClientLua.h
     , { "LUA_FUNCTION" , "__lua_function_name", "__Result" }
+
+        // do NOT change this without also refactoring the macro in ClientNetwork.h
+    , { "ON_CUSTOM_PACKET" , "__listener_name", "__Result" }
 };
 
 std::vector<std::string> cppSourceFiles = {
