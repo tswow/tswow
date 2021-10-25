@@ -49,19 +49,92 @@ int main()
         {
             std::string sourceFile = (std::stringstream() << std::ifstream(path).rdbuf()).str();
 
+            std::vector<std::pair<size_t, size_t>> invalidRanges;
+            enum class State {
+                IN_COMMENT,
+                IN_ML_COMMENT,
+                IN_STRING,
+                STRING_ESCAPE,
+                OUTSIDE
+            };
+            State cur = State::OUTSIDE;
+            size_t curStart = 0;
+            for (size_t i = 0; i < sourceFile.size(); ++i)
+            {
+                switch (cur)
+                {
+                case State::OUTSIDE:
+                    if (i < sourceFile.size() - 1 && sourceFile[i] == '/' && sourceFile[i + 1] == '/')
+                    {
+                        cur = State::IN_COMMENT;
+                        curStart = i;
+                    }
+                    else if (i < sourceFile.size() - 1 && sourceFile[i] == '/' && sourceFile[i + 1] == '*')
+                    {
+                        cur = State::IN_ML_COMMENT;
+                        curStart = i;
+                    }
+                    else if (sourceFile[i] == '"')
+                    {
+                        cur = State::IN_STRING;
+                        curStart = i;
+                    }
+                    break;
+                case State::STRING_ESCAPE:
+                    cur = State::IN_STRING;
+                    break;
+                case State::IN_STRING:
+                    if (sourceFile[i] == '\\')
+                    {
+                        cur = State::STRING_ESCAPE;
+                    }
+                    else if (sourceFile[i] == '"')
+                    {
+                        invalidRanges.push_back({ curStart,i });
+                        cur = State::OUTSIDE;
+                    }
+                    break;
+                case State::IN_COMMENT:
+                    if (sourceFile[i] == '\n')
+                    {
+                        invalidRanges.push_back({ curStart, i });
+                        cur = State::OUTSIDE;
+                    }
+                    break;
+                case State::IN_ML_COMMENT:
+                    if (i < sourceFile.size() - 1 && sourceFile[i] == '*' && sourceFile[i + 1] == '/')
+                    {
+                        invalidRanges.push_back({ curStart, i });
+                        cur = State::OUTSIDE;
+                    }
+                    break;
+                }
+            }
+
             for (Registry& reg : registries)
             {
-                std::string::const_iterator search(sourceFile.cbegin());
+                std::string cur = sourceFile;
                 std::regex exp(reg.m_name + "[ \t\n\r]*\\([ \t\n\r]*(.+?)[ \t\n\r]*,");
                 std::smatch res;
-                while (std::regex_search(search, sourceFile.cend(), res, exp))
+                size_t totalPos = 0;
+                while (std::regex_search(cur, res, exp))
                 {
                     std::string r1 = res[1];
-                    if (r1.compare(reg.m_macroIdentifier))
+                    auto find = std::find_if(invalidRanges.begin(), invalidRanges.end(), [&](std::pair<size_t, size_t> const& v) {
+                        return v.first <= totalPos+res.position() && v.second >= totalPos+res.position();
+                    });
+
+                    if (find == invalidRanges.end())
                     {
-                        reg.m_values.push_back(r1 + reg.m_suffix);
+                        if (r1.compare(reg.m_macroIdentifier))
+                        {
+                            reg.m_values.push_back(r1 + reg.m_suffix);
+                        }
                     }
-                    search = res.suffix().first;
+                    // i just gave up, position() just won't work with iterators
+                    size_t offset = res.position() + res[0].length();
+                    totalPos += offset;
+                    cur = cur.substr(offset);
                 }
             }
         }
