@@ -79,18 +79,8 @@ namespace ClientLua {
     }
 }
 
-CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, __cdecl, int, (int a, int b, int c)) {
-    if (b != 11334016) return FrameScriptReloaded(a, b, c);
-    LOG_DEBUG << "Reloading Lua";
-    if (lastCave > 0)
-    {
-        DWORD old;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, PAGE_EXECUTE_READWRITE, &old);
-        memset(CAVE_START, NOP, JMP_SIZE * lastCave);
-        DWORD dummy;
-        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, old, &dummy);
-    }
-
+CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
+    LOG_DEBUG << "Loading script functions";
     DWORD old;
     VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), PAGE_EXECUTE_READWRITE, &old);
     memset(CAVE_START, NOP, JMP_SIZE * luaRegistry().size());
@@ -116,11 +106,26 @@ CLIENT_DETOUR(FrameScriptReloaded, 0x008167E0, __cdecl, int, (int a, int b, int 
     VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), old, &dummy);
     lastCave = luaRegistry().size();
 
+    // so we have them available in the scripts below
+    int funcs = LoadScriptFunctions();
+
     for (auto const& pair : LUA_FILES)
     {
         LOG_DEBUG << "Running lua file " << pair.first;
         ClientLua::DoString(pair.second.c_str(), *_state);
     }
 
-    return FrameScriptReloaded(a, b, c);
+    return funcs;
+}
+
+CLIENT_DETOUR(UnloadScriptFunctions, 0x00512280, __cdecl, int, ()) {
+    if (lastCave > 0)
+    {
+        DWORD old;
+        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, PAGE_EXECUTE_READWRITE, &old);
+        memset(CAVE_START, NOP, JMP_SIZE * lastCave);
+        DWORD dummy;
+        VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * lastCave, old, &dummy);
+    }
+    return UnloadScriptFunctions();
 }
