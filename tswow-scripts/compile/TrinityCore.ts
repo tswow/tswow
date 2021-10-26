@@ -41,6 +41,9 @@ export namespace TrinityCore {
         wfs.iterate(spaths.trinityCoreSources,(name)=>{
             tcFiles.push(name);
         });
+        wfs.iterate(spaths.tswowCore,name=>{
+            tcFiles.push(name);
+        })
 
         let readFiles: {[key: string]: string} = {}
         let missingEnums: string[] = []

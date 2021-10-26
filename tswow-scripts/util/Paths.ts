@@ -909,6 +909,10 @@ export class SourcePaths {
         return './TrinityCore';
     }
 
+    get tswowCore() {
+        return './tswow-core'
+    }
+
     get clientExtensions()
     {
         return './ClientExtensions'
