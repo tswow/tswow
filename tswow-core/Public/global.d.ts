@@ -30,6 +30,40 @@ type bool = boolean;
 type TSArray<T> = T[];
 type TSString = string;
 
+declare const enum Gender /**@realType:uint8 */ {
+    MALE   = 0,
+    FEMALE = 1
+}
+
+declare const enum Race /** @realType: uint8 */ {
+    HUMAN    = 1,
+    ORC      = 2,
+    DWARF    = 3,
+    NIGHTELF = 4,
+    UNDEAD   = 5,
+    TAUREN   = 6,
+    GNOME    = 7,
+    TROLL    = 8,
+    BLOODELF = 10,
+    DRAENEI  = 11,
+}
+declare type RaceID = Race | uint8
+
+declare const enum Class /** @realType: uint8 */ {
+    WARRIOR = 1,
+    PALADIN = 2,
+    HUNTER = 3,
+    ROGUE = 4,
+    PRIEST = 5,
+    DEATH_KNIGHT = 6,
+    SHAMAN = 7,
+    MAGE = 8,
+    WARLOCK = 9,
+    DRUID = 10,
+}
+declare type ClassID = Class | uint8
+
+declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
 declare const enum InventorySlots /**@realType:uint32*/{
@@ -76,19 +110,6 @@ declare const enum SpellSchoolMask /**@realType:uint32 */ {
     SPELL_SCHOOL_MASK_ARCANE  = 64,
 }
 declare const enum GossipOptionIcon {} /** GossipDef.h:GossipOptionIcon */
-declare const enum OutfitSlots /**@realType:uint8*/{
-    EQUIPMENT_SLOT_HEAD = 0,
-    EQUIPMENT_SLOT_SHOULDERS = 2,
-    EQUIPMENT_SLOT_BODY = 3,
-    EQUIPMENT_SLOT_CHEST = 4,
-    EQUIPMENT_SLOT_WAIST = 5,
-    EQUIPMENT_SLOT_LEGS = 6,
-    EQUIPMENT_SLOT_FEET = 7,
-    EQUIPMENT_SLOT_WRISTS = 8,
-    EQUIPMENT_SLOT_HANDS = 9,
-    EQUIPMENT_SLOT_BACK = 14,
-    EQUIPMENT_SLOT_TABARD = 18
-}
 declare const enum ProgressType {} /** AchievementMgr.h:ProgressType */
 
 declare interface TSMutable<T> {
@@ -178,6 +199,18 @@ declare interface TSPlayer extends TSUnit {
 
     GetBattleground(): TSBattleground
     GetBattlegroundPlayer(): TSBattlegroundPlayer
+
+    /**
+     * Generates a creature outfit from this player.
+     *
+     * - If no race/gender is provided, the players race, gender and
+     * appearance is automatically copied to the creature.
+     *
+     * @param settings - bitmask of components that should be included in the copy
+     * @param race - player race by default
+     * @param gender - player gender by default
+     */
+    GetOutfitCopy(settings?: Outfit, race?: RaceID, gender?: Gender): TSOutfit;
 
     IsNull() : bool
 
@@ -2238,35 +2271,65 @@ declare interface TSCreatureTemplate extends TSEntityProvider {
 }
 
 declare interface TSOutfit {
-    SetClass(Class: uint8): void;
+    SetClass(Class: ClassID): TSOutfit;
     GetClass(): uint8;
 
-    SetFace(face: uint8);
+    SetFace(face: uint8): TSOutfit;
     GetFace(): uint8;
 
-    SetSkin(face: uint8);
+    SetSkin(face: uint8): TSOutfit;
     GetSkin(): uint8;
 
-    SetHair(hair: uint8);
-    GetHair(): uint8;
+    SetHairStyle(hair: uint8): TSOutfit;
+    GetHairStyle(): uint8;
 
-    SetHairColor(color: uint8);
+    SetHairColor(color: uint8): TSOutfit;
     GetHairColor(): uint8;
 
-    SetSoundID(soundId: uint32);
+    SetSoundID(soundId: uint32): TSOutfit;
     GetSoundID(): uint32;
 
-    SetGuild(guild: uint64);
+    SetGuild(guild: uint64): TSOutfit;
     GetGuild(): uint64;
 
-    GetGender(): uint8;
+    GetGender(): Gender;
     GetRace(): uint8;
     GetDisplayID(): uint32;
 
-    SetItemByEntry(slot: OutfitSlots, entry: uint32);
-    SetItemByDisplayID(slot: OutfitSlots, displayId: uint32);
-    GetDisplayID(slot: OutfitSlots): uint32;
+    SetMainhand(mainhand: uint32): TSOutfit
+    SetOffhand(offhand: uint32): TSOutfit
+    SetRanged(ranged: uint32): TSOutfit
+
+    ClearMainhand(): TSOutfit
+    ClearOffhand(): TSOutfit
+    ClearRanged(): TSOutfit
+
+    GetMainhand(): uint32
+    GetOffhand(): uint32
+    GetRanged(): uint32
+
+    SetItem(slot: EquipmentSlots, entry: uint32): TSOutfit;
+    SetItemByDisplayID(slot: EquipmentSlots, displayId: uint32): TSOutfit;
+
+    /**
+     * @note Does not work for mainhand/offhand/ranged slots
+     */
+    GetDisplayID(slot: EquipmentSlots): uint32;
+
+    Apply(creature: TSCreature): void;
+
+    /**
+     * Applies a copy of this outfit to the target creature
+     */
+    ApplyCopy(
+          creature: TSCreature
+        , settings?: Outfit
+        , race?: RaceID
+        , gender?: Gender
+    )
 }
+
+declare function CreateOutfit(race: Race, gender: Gender): TSOutfit
 
 declare interface TSCreature extends TSUnit {
     /**
@@ -2286,6 +2349,19 @@ declare interface TSCreature extends TSUnit {
     FireSmartEvent(id: uint32, unit: TSUnit, var0: uint32, var1: uint32, bvar: bool, spell: TSSpellInfo, obj: TSGameObject);
 
     IsNull() : bool
+
+    SetOutfit(outfit: TSOutfit): void
+
+    GetOutfit(): TSOutfit
+    GetOutfitCopy(settings?: Outfit, race?: int32, gender?: int32): TSOutfit
+
+    GetMainhand(): uint32
+    GetOffhand(): uint32
+    GetRanged(): uint32
+
+    SetMainhand(mainhand: uint32): void
+    SetOffhand(offhand: uint32): void
+    SetRanged(ranged: uint32): void
 
     /**
      * Returns `true` if the [Creature] is set to not give reputation when killed,
@@ -2339,6 +2415,8 @@ declare interface TSCreature extends TSUnit {
      * @return bool tapped
      */
     IsTappedBy(player : TSPlayer) : bool
+
+
 
     /**
      * Returns `true` if the [Creature] will give its loot to a [Player] or [Group],
@@ -2847,6 +2925,10 @@ declare interface TSCreature extends TSUnit {
      * @param uint16 lootMode
      */
     AddLootMode(lootMode : uint16) : void
+
+    SetMainhand(mainhand: uint32): void
+    SetOffhand(offhand: uint32): void
+    SetRanged(ranged: uint32): void
 
     /**
      * Returns the [Creature]'s creature family ID (enumerated in CreatureFamily.dbc).

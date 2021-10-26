@@ -28,6 +28,9 @@ export type creature_template_outfitsConstructor = {
     back? : int,
     tabard? : int,
     guildid? : int,
+    mainhand?: int
+    offhand?: int
+    ranged?: int
     description? : text,
 }
 
@@ -54,6 +57,9 @@ export type creature_template_outfitsQuery = {
     back? : Relation<int>,
     tabard? : Relation<int>,
     guildid? : Relation<int>,
+    mainhand? : Relation<int>,
+    offhand? : Relation<int>,
+    ranged? : Relation<int>,
     description? : Relation<text>,
 }
 
@@ -170,6 +176,21 @@ export class creature_template_outfitsRow extends SqlRow<creature_template_outfi
      * No comment (yet!)
      */
     get guildid() {return new SQLCell<int, this>(this, 'guildid')}
+
+    /**
+     * No comment (yet!)
+     */
+    get mainhand() { return new SQLCell<int, this>(this, 'mainhand')}
+
+    /**
+     * No comment (yet!)
+     */
+    get offhand() { return new SQLCell<int, this>(this, 'offhand')}
+
+    /**
+     * No comment (yet!)
+     */
+    get ranged() { return new SQLCell<int, this>(this, 'ranged')}
 
     /**
      * No comment (yet!)

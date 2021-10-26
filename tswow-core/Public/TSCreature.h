@@ -25,6 +25,7 @@
 #include "TSClasses.h"
 #include "TSPosition.h"
 #include "TSCreatureTemplate.h"
+#include "TSOutfit.h"
 
 class TSOutfit;
 
@@ -118,7 +119,21 @@ public:
     TSLoot GetLoot();
     TSCreatureTemplate GetTemplate();
     void SetOutfit(TSOutfit const& outfit);
+    TSOutfit GetOutfit();
+    TSOutfit GetOutfitCopy(
+          Outfit settings = Outfit::EVERYTHING
+        , int32_t race = -1, int32_t gender = -1
+    );
+
     void FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj);
     bool IsAIEnabled();
     void SetLootRecipient(TSUnit unit, bool withGroup = true);
+
+    uint32_t GetMainhand();
+    uint32_t GetOffhand();
+    uint32_t GetRanged();
+
+    void SetMainhand(uint32_t mainhand);
+    void SetOffhand(uint32_t offhand);
+    void SetRanged(uint32_t ranged);
 };

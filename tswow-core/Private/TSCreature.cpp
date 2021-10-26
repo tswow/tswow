@@ -1329,3 +1329,43 @@ void TSCreature::SetLootRecipient(TSUnit unit, bool withGroup)
 {
     creature->SetLootRecipient(unit.unit, withGroup);
 }
+
+void TSCreature::SetMainhand(uint32_t mainhand)
+{
+    creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, mainhand);
+}
+
+void TSCreature::SetOffhand(uint32_t offhand)
+{
+    creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, offhand);
+}
+
+void TSCreature::SetRanged(uint32_t ranged)
+{
+    creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
+}
+
+uint32_t TSCreature::GetMainhand()
+{
+    return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0);
+}
+
+uint32_t TSCreature::GetOffhand()
+{
+    return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1);
+}
+
+uint32_t TSCreature::GetRanged()
+{
+    return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2);
+}
+
+TSOutfit TSCreature::GetOutfit()
+{
+    return creature->GetOutfit();
+}
+
+TSOutfit TSCreature::GetOutfitCopy(Outfit settings, int32_t race, int32_t gender)
+{
+    return TSOutfit(GetOutfit(), settings, race, gender);
+}

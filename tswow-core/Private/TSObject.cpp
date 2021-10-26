@@ -150,6 +150,7 @@ float TSObject::GetScale()
  */
 uint32 TSObject::GetEntry()
 {
+    if (obj == nullptr) return 0;
     return obj->GetEntry();
 }
 

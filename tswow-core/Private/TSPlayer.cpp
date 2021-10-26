@@ -3845,6 +3845,11 @@ TSBattlegroundPlayer TSPlayer::GetBattlegroundPlayer()
     return GetMap().GetBattleground().GetPlayer(GetGUID());
 }
 
+TSOutfit TSPlayer::GetOutfitCopy(uint32_t settings, int32_t race, int32_t gender)
+{
+    return TSOutfit(*this, settings, race, gender);
+}
+
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
 player->BindToInstance();

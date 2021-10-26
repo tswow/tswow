@@ -22,7 +22,7 @@
 #include "TSString.h"
 #include "TSClasses.h"
 #include "TSUnit.h"
-#include "base64.h"
+#include "TSOutfit.h"
 
 class TSJsonObject;
 class TSJsonArray;
@@ -302,4 +302,6 @@ public:
 
 	TSArray<TSMail> GetMails();
 	void RemoveMail(uint32 id);
+
+	TSOutfit GetOutfitCopy(uint32_t settings = Outfit::EVERYTHING, int32_t race = -1, int32_t gender = -1);
 };
