@@ -45,7 +45,6 @@
 #include "TSWorldEntity.h"
 #include "DBCStores.h"
 #include "MapManager.h"
-#include "base64.h"
 #include "Config.h"
 
 #include <fstream>
