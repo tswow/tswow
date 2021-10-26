@@ -551,6 +551,43 @@ EVENT_TYPE(BattlegroundOnKillPlayer,TSBattleground,TSPlayer /*victim*/,TSPlayer 
 EVENT_TYPE(BattlegroundOnEndEarly,TSBattleground,TSMutable<uint32> /*winner*/)
 EVENT_TYPE(BattlegroundOnEndLate,TSBattleground,uint32 /*winner*/)
 
+EVENT_TYPE(BattlegroundOnAddGameObject
+    , TSBattleground
+    , uint32 /*type*/
+    , TSMutable<uint32> /*entry*/
+    , TSMutable<uint8> /* goState */
+    , TSMutable<float> /* x */
+    , TSMutable<float> /* y */
+    , TSMutable<float> /* z */
+    , TSMutable<float> /* o */
+    , TSMutable<float> /* rot0 */
+    , TSMutable<float> /* rot1 */
+    , TSMutable<float> /* rot2 */
+    , TSMutable<float> /* rot3 */
+)
+
+EVENT_TYPE(BattlegroundOnAddCreature
+    , TSBattleground
+    , uint32 /* type */
+    , TSMutable<uint32> /* entry */
+    , TSMutable<float> /* x */
+    , TSMutable<float> /* y */
+    , TSMutable<float> /* z */
+    , TSMutable<float> /* o */
+    , TSMutable<uint32_t> /* respawnTime */
+)
+
+EVENT_TYPE(BattlegroundOnAddSpiritGuide
+    , TSBattleground
+    , uint32 /* type */
+    , TSMutable<uint32> /* entry */
+    , TSMutable<uint8> /* teamId */
+    , TSMutable<float> /* x */
+    , TSMutable<float> /* y */
+    , TSMutable<float> /* z */
+    , TSMutable<float> /* o */
+)
+
 // need to be call explicitly from subclasses
 
 // HandleKillUnit (check)
@@ -616,6 +653,9 @@ struct TSBattlegroundEvents
     EVENT(BattlegroundOnRemovePlayer)
     EVENT(BattlegroundOnKillPlayer)
     EVENT(BattlegroundOnKillCreature)
+    EVENT(BattlegroundOnAddCreature)
+    EVENT(BattlegroundOnAddGameObject)
+    EVENT(BattlegroundOnAddSpiritGuide)
     EVENT(BattlegroundOnAreaTrigger)
     EVENT(BattlegroundOnGenericEvent)
     EVENT(BattlegroundOnDropFlag)
@@ -756,6 +796,9 @@ struct TSEvents
     EVENT(BattlegroundOnRemovePlayer)
     EVENT(BattlegroundOnKillPlayer)
     EVENT(BattlegroundOnKillCreature)
+    EVENT(BattlegroundOnAddCreature)
+    EVENT(BattlegroundOnAddGameObject)
+    EVENT(BattlegroundOnAddSpiritGuide)
     EVENT(BattlegroundOnAreaTrigger)
     EVENT(BattlegroundOnGenericEvent)
     EVENT(BattlegroundOnDropFlag)
@@ -1481,6 +1524,9 @@ public:
         EVENT_HANDLE(Battleground,OnRemovePlayer)
         EVENT_HANDLE(Battleground,OnKillPlayer)
         EVENT_HANDLE(Battleground,OnKillCreature)
+        EVENT_HANDLE(Battleground,OnAddCreature)
+        EVENT_HANDLE(Battleground,OnAddGameObject)
+        EVENT_HANDLE(Battleground,OnAddSpiritGuide)
         EVENT_HANDLE(Battleground,OnAreaTrigger)
         EVENT_HANDLE(Battleground,OnGenericEvent)
         EVENT_HANDLE(Battleground,OnDropFlag)
@@ -1510,6 +1556,9 @@ public:
         MAP_EVENT_HANDLE(Battleground, OnRemovePlayer)
         MAP_EVENT_HANDLE(Battleground, OnKillPlayer)
         MAP_EVENT_HANDLE(Battleground, OnKillCreature)
+        MAP_EVENT_HANDLE(Battleground, OnAddCreature)
+        MAP_EVENT_HANDLE(Battleground, OnAddGameObject)
+        MAP_EVENT_HANDLE(Battleground, OnAddSpiritGuide)
         MAP_EVENT_HANDLE(Battleground, OnAreaTrigger)
         MAP_EVENT_HANDLE(Battleground, OnGenericEvent)
         MAP_EVENT_HANDLE(Battleground, OnDropFlag)
