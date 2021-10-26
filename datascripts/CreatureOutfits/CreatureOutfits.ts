@@ -7,6 +7,12 @@ import { Genders } from "../Conditions/Settings/Gender";
 import { MainEntity } from "../Misc/Entity";
 import { RaceIDs } from "../Race/RaceType";
 
+export type RangedType =
+    'MAINHAND_RANGED_ONLY' |
+    'OFFHAND_RANGED_ONLY' |
+    'MAINHAND_RANGED_AND_MAINHAND' |
+    'OFFHAND_RANGED_AND_OFFHAND' |
+    'NO_RANGED'
 export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
     get ID() { return this.row.entry.get(); }
 
@@ -32,15 +38,37 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
     get Tabard() { return this.wrap(this.row.tabard); }
     get Guild() { return this.wrap(this.row.guildid); }
 
-    fromFile(filepath: string) {
-        return this.fromString(fs.readFileSync(filepath,'utf-8'))
+    get Mainhand() { return this.wrap(this.row.mainhand); }
+    get Offhand() { return this.wrap(this.row.offhand); }
+    get Ranged() { return this.wrap(this.row.ranged); }
+
+    fromFile(
+          filepath: string
+        , ranged: RangedType = 'NO_RANGED'
+        , emptyWeaponOverride = true
+    ) {
+        return this.fromString(
+              fs.readFileSync(filepath,'utf-8')
+            , ranged
+            , emptyWeaponOverride
+        )
     }
 
-    fromModuleFile(mod: string, filepath: string) {
-        return this.fromFile(path.join('modules',mod,filepath));
+    fromModuleFile(
+          mod: string, filepath: string
+        , ranged: RangedType = 'NO_RANGED'
+        , emptyWeaponOverride = true
+    ) {
+        return this.fromFile(
+              path.join('modules',mod,filepath)
+            , ranged
+            , emptyWeaponOverride
+        );
     }
 
     write(filepath: string) {
+        let mh = this.Mainhand.get();
+        let oh = this.Offhand.get();
         let str =
             `${this.row.description}\n`
         +   `${this.Race.get()} ${this.Gender.get()}\n`
@@ -55,14 +83,24 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
         +   `${this.Chest.get()}\n`
         +   `${this.Wrists.get()}\n`
         +   `${this.Hands.get()}\n`
-        +   `0\n`
+        +   `${mh<0?0:mh}\n`
+        +   `${oh<0?0:oh}\n`
         +   `${this.Back.get()}\j`
         +   `${this.Tabard.get()}\n`
         fs.writeFileSync(filepath,str);
         return this;
     }
 
-    protected fromString(charStr: string) {
+    /**
+     * @param charStr
+     * @param emptyWeaponOverride if true, an empty weapon will
+     * @returns
+     */
+    fromString(
+          charStr: string
+        , ranged: RangedType = 'NO_RANGED'
+        , emptyWeaponOverride = true
+    ) {
         const lines = charStr
             .split('\n')
             .map(x=>x.trimLeft().trimRight())
@@ -86,9 +124,36 @@ export class CreatureOutfit extends MainEntity<creature_template_outfitsRow> {
             .Chest.set       (nums[9][0])
             .Wrists.set      (nums[10][0])
             .Hands.set       (nums[11][0])
+            .Mainhand.set    (nums[12][0])
+            .Offhand.set     (nums[13][0])
             .Back.set        (nums[14][0])
             .Tabard.set      (nums[15][0])
             .row.description.set(lines[0])
+
+        let mainhand = nums[12][0];
+        let offhand = nums[13][0]
+        switch(ranged) {
+            case 'MAINHAND_RANGED_AND_MAINHAND':
+                this.Ranged.set(mainhand)
+                break;
+            case 'MAINHAND_RANGED_ONLY':
+                this.Ranged.set(mainhand);
+                mainhand = 0
+                break;
+            case 'OFFHAND_RANGED_AND_OFFHAND':
+                this.Ranged.set(offhand)
+                break;
+            case 'OFFHAND_RANGED_ONLY':
+                this.Ranged.set(offhand)
+                offhand = 0
+                break;
+            default:
+                this.Ranged.set(!emptyWeaponOverride ? -1 : 0);
+        }
+        this.Mainhand.set(
+            mainhand === 0 && !emptyWeaponOverride ? -1 : mainhand);
+        this.Offhand.set(
+            offhand === 0 && !emptyWeaponOverride ? -1 : offhand);
         return this;
     }
 }
