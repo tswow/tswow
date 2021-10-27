@@ -1,0 +1,11 @@
+{
+    "files.exclude": {
+        "**/node_modules/*/**": true,
+        "**/*.lua": {
+            "when": "$(basename).ts"
+        },
+        "**/*.lua.map": true
+    },
+
+    "clang-format.executable": "clang-format.exe"
+}
