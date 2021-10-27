@@ -34,7 +34,6 @@ import { MPQBuilder } from './MPQBuilder';
 import { MySQL } from './MySQL';
 import { OpenSSL } from './OpenSSL';
 import { Scripts } from './Scripts';
-import { Transpiler } from './Transpiler';
 import { TrinityCore } from './TrinityCore';
 setContext('build');
 InstallPaths.setInstallBase(install_path());
@@ -85,7 +84,6 @@ async function compile(type: string, compileArgs: string[]) {
         if(!wfs.exists(ipaths.tsc)) {
             wsys.execIn(ipaths.base, `npm i typescript`);
         }
-        await Transpiler.buildTranspiler(build_path(), install_path());
         await Scripts.build(build_path(), install_path());
         buildingScripts = true;
     }

@@ -1000,7 +1000,7 @@ export class SourcePaths {
     }
 
     get typeScript2Cxx() {
-        return mpath('./TypeScript2Cxx');
+        return mpath(this.scripts, './TypeScript2Cxx');
     }
 
     get snippetExample() {

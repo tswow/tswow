@@ -259,6 +259,7 @@ export class IdentifierResolver {
     }
 
     public typeToTypeNode(type: ts.Type): ts.TypeNode {
+        // @ts-ignore (??)
         return this.typeChecker.typeToTypeNode(type);
     }
 
