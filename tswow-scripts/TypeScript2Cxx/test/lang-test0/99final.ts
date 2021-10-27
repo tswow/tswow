@@ -1,2 +1,0 @@
-clean()
-msg("test OK!")
