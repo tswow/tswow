@@ -2,3 +2,6 @@
 	path = TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
+[submodule "tools/adt-creator"]
+	path = tools/adt-creator
+	url = https://github.com/tswow/adt-creator.git
