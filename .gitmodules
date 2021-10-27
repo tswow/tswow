@@ -1,7 +1,3 @@
-[submodule "TypeScript2Cxx"]
-	path = TypeScript2Cxx
-	url = https://github.com/tswow/TypeScript2Cxx.git
-    branch = tswow
 [submodule "TrinityCore"]
 	path = TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
