@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from '../util/FileSystem';
-import { ipaths } from '../util/Paths';
 import { term } from '../util/Terminal';
-import yaml = require('js-yaml');
 
+export let trace = process.argv.includes('trace');
 
 /**
 * Functions concerning the tswow interactive prompts.
@@ -168,8 +166,6 @@ export namespace commands {
 
     const rootCommand = new Command('', '', '');
 
-    export let trace = process.argv.includes('trace');
-
     export function getRootCommand() {
         return rootCommand;
     }
@@ -192,7 +188,7 @@ export namespace commands {
                 await rootCommand.handle(args);
             } catch (error: any) {
                 if (error && error.message) {
-                    if (commands.trace) {
+                    if (trace) {
                         term.error(error, error.stack);
                     } else {
                         term.error(error);
@@ -243,17 +239,6 @@ export namespace commands {
     });
 
     addCommand(
-          'revision'
-        , ''
-        , 'Prints out revision data for tswow and TrinityCore'
-        , (args) => {
-
-        term.log('Revisions:')
-        term.log('TSWoW: '+wfs.read(ipaths.tswowRevision))
-        term.log('TrinityCore: '+wfs.read(ipaths.tcRevision))
-    });
-
-    addCommand(
           'trace'
         , 'true|false'
         , 'Enables or disables stack traces in command error'
@@ -270,36 +255,6 @@ export namespace commands {
                 throw new Error(`This command needs true|false`);
         }
     });
-
-    // Custom commands
-    let customCommands: {[key: string]: string} = {};
-    export function addCustomCommand(name: string, args: string[]) {
-        customCommands[name] = args.join(' ');
-        wfs.write(ipaths.commandFile,
-            yaml.dump(customCommands));
-        rootCommand.removeCommand(name);
-        rootCommand.addCommand(name, '', '', async (runArgs) => {
-            await sendCommand(args.concat(runArgs).join(' '));
-        });
-    }
-
-    addCommand(
-          'command'
-        , 'alias command'
-        , 'Creates a command alias'
-        , (args) => {
-        addCustomCommand(args[0], args.slice(1));
-    });
-
-    if (wfs.exists(ipaths.commandFile)) {
-        customCommands = yaml.load(
-            wfs.read(ipaths.commandFile));
-        for (const key in customCommands) {
-            if (customCommands[key] !== undefined) {
-                addCustomCommand(key, customCommands[key].split(' '));
-            }
-        }
-    }
 
     // Help command
     addCommand(
