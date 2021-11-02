@@ -14,10 +14,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
-import { Table } from "wotlkdata/table/Table";
-import { DBC, SQL } from "wotlkdata/wotlkdata";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "wotlkdata/wotlkdata/dbc/types/ItemDisplayInfo";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC, SQL } from "wotlkdata/wotlkdata/wotlkdata";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { ParticleColorRegistry } from "../Misc/ParticleColor";

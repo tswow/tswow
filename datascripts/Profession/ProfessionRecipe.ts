@@ -1,6 +1,6 @@
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
 import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";

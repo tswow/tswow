@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureQuestgiver extends CellSystem<CreatureTemplate> {

@@ -1,5 +1,5 @@
 import { DBC } from "wotlkdata";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 import { Profession } from "./Profession";

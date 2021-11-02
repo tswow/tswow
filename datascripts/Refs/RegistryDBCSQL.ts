@@ -1,5 +1,5 @@
-import { Row } from "wotlkdata/table/Row";
-import { Table } from "wotlkdata/table/Table";
+import { Row } from "wotlkdata/wotlkdata/table/Row";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { TwoRowMainEntity } from "../Misc/Entity";
 import { StaticIDGenerator } from "../Misc/Ids";
 import { RegistryBase } from "./RegistryBase";

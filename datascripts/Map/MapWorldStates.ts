@@ -1,4 +1,4 @@
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { WorldStateUI, WorldStateUIRegistry } from "../WorldState/WorldStateUI";
 import { Map } from "./Map";
 

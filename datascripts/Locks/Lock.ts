@@ -1,7 +1,7 @@
-import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkdata/cell/cells/EnumCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { LockRow } from "wotlkdata/dbc/types/Lock";
-import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template";
+import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { LockRow } from "wotlkdata/wotlkdata/dbc/types/Lock";
+import { gameobject_templateQuery } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
 import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { GameObjectAreaDamage, GameObjectButton, GameObjectCamera, GameObjectChest, GameObjectDoor, GameObjectFishingHole, GameObjectFlagDrop, GameObjectFlagStand, GameObjectGoober, GameObjectQuestGiver, GameObjectTemplate, GameObjectTrap, GameObjectType } from "../GameObject/GameObjectTemplate";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_TRAP } from "../GameObject/GameObjectTypes";

@@ -16,10 +16,10 @@
  */
 import fs from "fs";
 import path from "path";
-import { DBC, finish, isReadOnly } from "wotlkdata";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MapRow } from "wotlkdata/dbc/types/Map";
-import { Settings } from "wotlkdata/Settings";
+import { DBC, finish } from "wotlkdata";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MapRow } from "wotlkdata/wotlkdata/dbc/types/Map";
+import { AllModules, BuildArgs, dataset } from "wotlkdata/wotlkdata/Settings";
 import { registeredAreas } from "../Area/Area";
 import { LFGDungeonEncounters } from "../Dungeon/Encounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
@@ -99,17 +99,15 @@ export class Map extends MainEntity<MapRow> {
 }
 
 finish('build-maps',()=>{
-    if(isReadOnly()) return;
+    if(BuildArgs.NO_CLIENT) return;
     let allMaps: string[] = []
-    Settings.PATCH_DIRECTORY.forEach((mod: string)=>{
+    AllModules.forEach((mod)=>{
         // workaround to allow noggit workspaces in asset directories
-        let mapsDir = path.join('modules',mod,'assets','world','maps')
-        if(fs.existsSync(mapsDir)) {
-            storeAreaMappings(mod,mapsDir);
-            copyMapDBCs(mod);
-            allMaps = allMaps.concat(fs.readdirSync(mapsDir)
+        let mapsdir = mod.join('assets','world','maps')
+        if(mapsdir.exists()) {
+            storeAreaMappings(mod.get(),mapsdir.get())
+            allMaps = allMaps.concat(fs.readdirSync(mapsdir.get()))
                 .filter(x=>!allMaps.includes(x))
-            )
         }
     })
     allMaps.forEach(x=>{
@@ -143,8 +141,8 @@ function copyMapDBCs(mod: string) {
  * with alternative id mappings.
  */
 function storeAreaMappings(mod: string, mapsDir: string) {
-    if(process.argv.includes('--no-area-mapping')) return;
-    let areasPath = path.join('modules',mod,'areas.json');
+    if(!fs.existsSync(mapsDir) || process.argv.includes('--no-area-mapping')) return;
+    let areasPath = path.join(mod,'areas.json');
     let adtAreaMap: {[key: string]: number} = fs.existsSync(areasPath)
         ? JSON.parse(fs.readFileSync(areasPath,'utf-8'))
         : {}
@@ -291,19 +289,19 @@ function generateZmp(map: string) {
 
     let moduleOut: string|undefined
     let adtPaths: string[] = []
-    const oldZmpPath = path.join(Settings.LUAXML_SOURCE,'Interface','WorldMap',map+'.zmp')
+    const oldZmpPath = path.join(dataset.luaxml_source.get(),'Interface','WorldMap',map+'.zmp')
     const zmp = fs.existsSync(oldZmpPath)
         ? fs.readFileSync(oldZmpPath)
         : Buffer.alloc(65536)
 
-    Settings.PATCH_DIRECTORY.forEach((mod: string)=>{
-        const mapsdir = path.join('modules',mod,'assets','world','maps',map)
+    AllModules.forEach((mod)=>{
+        const mapsdir = path.join(mod.get(),'assets','world','maps',map)
         if(fs.existsSync(mapsdir)) {
             adtPaths = adtPaths.concat(fs.readdirSync(mapsdir)
                 .map(x=>path.join(mapsdir,x))
                 .filter(x=>x.endsWith('.adt') && fs.statSync(x).isFile()))
             if(fs.existsSync(path.join(mapsdir,`${map}.wdt`))) {
-                moduleOut = mod;
+                moduleOut = mod.get();
             }
         }
     });
@@ -359,8 +357,7 @@ function generateZmp(map: string) {
         return colorMap[area];
     });
 
-    const zmpPath = path.join(
-        'modules',moduleOut,'assets','Interface','WorldMap',`${map}.zmp`
+    const zmpPath = path.join(moduleOut,'assets','Interface','WorldMap',`${map}.zmp`
     )
 
     image.write(zmpPath+'.png','PNG');

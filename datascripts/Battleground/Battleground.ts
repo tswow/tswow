@@ -1,7 +1,8 @@
-import { finish, isReadOnly } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
+import { finish } from "wotlkdata";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { BattlemasterListQuery } from "wotlkdata/wotlkdata/dbc/types/BattlemasterList";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MapRegistry } from "../Map/Maps";
 import { WorldSafeLocRef, WorldSafeLocRegistry } from "../WorldSafeLocs/WorldSafeLocs";
@@ -102,7 +103,7 @@ export const BattlegroundRegistry = {
 }
 
 finish('bg-worldsafelocs',()=>{
-    if(isReadOnly()) return;
+    if(BuildArgs.READ_ONLY) return;
     BattlegroundRegistry.filter({})
         .forEach(x=>{
             if(x.HordeStart.Loc.get() === 0 ||x.AllianceStart.Loc.get() === 0) {

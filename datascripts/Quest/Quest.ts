@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { quest_templateRow } from "wotlkdata/sql/types/quest_template";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { quest_templateRow } from "wotlkdata/wotlkdata/sql/types/quest_template";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { RaceMask } from "../Race/RaceType";

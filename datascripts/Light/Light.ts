@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { LightRow } from "wotlkdata/dbc/types/Light";
+import { LightRow } from "wotlkdata/wotlkdata/dbc/types/Light";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { LightFalloff } from "./LightFalloff";

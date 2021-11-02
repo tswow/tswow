@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/dbc/types/WorldMapOverlay";
-import { Table } from "wotlkdata/table/Table";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { WorldMapOverlayQuery, WorldMapOverlayRow } from "wotlkdata/wotlkdata/dbc/types/WorldMapOverlay";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { AreaRegistry } from "../Area/Area";
 import { ArrayRefSystemNoCreate } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";

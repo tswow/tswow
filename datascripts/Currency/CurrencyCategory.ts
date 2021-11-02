@@ -1,7 +1,7 @@
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/dbc/types/CurrencyCategory";
-import { Table } from "wotlkdata/table/Table";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { CurrencyCategoryQuery, CurrencyCategoryRow } from "wotlkdata/wotlkdata/dbc/types/CurrencyCategory";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

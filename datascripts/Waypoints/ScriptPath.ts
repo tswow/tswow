@@ -1,5 +1,5 @@
 import { SQL } from "wotlkdata";
-import { waypointsRow } from "wotlkdata/sql/types/waypoints";
+import { waypointsRow } from "wotlkdata/wotlkdata/sql/types/waypoints";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";
 import { PositionXYZOCell } from "../Misc/PositionCell";

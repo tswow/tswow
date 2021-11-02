@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { SpellRegistry } from "../Spell/Spells";
 import { ItemTemplate } from "./ItemTemplate";
 

@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { ItemVisualsQuery, ItemVisualsRow } from "wotlkdata/dbc/types/ItemVisuals";
-import { Table } from "wotlkdata/table/Table";
+import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
+import { ItemVisualsQuery, ItemVisualsRow } from "wotlkdata/wotlkdata/dbc/types/ItemVisuals";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

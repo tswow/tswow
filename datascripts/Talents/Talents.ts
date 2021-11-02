@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
-import { TalentTabQuery, TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
-import { lt } from "wotlkdata/query/Relations";
-import { Table } from "wotlkdata/table/Table";
+import { EnumCon, makeEnum } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { TalentTabQuery, TalentTabRow } from "wotlkdata/wotlkdata/dbc/types/TalentTab";
+import { lt } from "wotlkdata/wotlkdata/query/Relations";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ClassIDs } from "../Class/ClassIDs";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";

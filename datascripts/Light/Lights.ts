@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { LightQuery } from "wotlkdata/dbc/types/Light";
+import { LightQuery } from "wotlkdata/wotlkdata/dbc/types/Light";
 import { Ids } from "../Misc/Ids";
 import { Light } from "./Light";
 import { FLOAT_BAND_COUNT, getFloatBandIndex, getIntBandIndex, INT_BAND_COUNT } from "./LightIndex";

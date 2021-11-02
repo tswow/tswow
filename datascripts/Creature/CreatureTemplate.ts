@@ -14,14 +14,14 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
-import { creature_template_addonRow } from "wotlkdata/sql/types/creature_template_addon";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { creature_templateRow } from "wotlkdata/wotlkdata/sql/types/creature_template";
+import { creature_template_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_template_addon";
 import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";

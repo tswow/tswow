@@ -1,11 +1,11 @@
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { LocSystem, MulticastLocCell } from "wotlkdata/cell/systems/CellSystem";
-import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
+import { LocSystem, MulticastLocCell } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultirowSystemCached } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { SpellQuery, SpellRow } from "wotlkdata/wotlkdata/dbc/types/Spell";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { CreatureModels } from "../Creature/CreatureModels";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemBonding } from "../Item/ItemBonding";

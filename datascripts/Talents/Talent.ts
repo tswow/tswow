@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { TalentRow } from "wotlkdata/dbc/types/Talent";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { TalentRow } from "wotlkdata/wotlkdata/dbc/types/Talent";
 import { MainEntity } from "../Misc/Entity";
 import { RefUnknown } from "../Refs/Ref";
 import { Spell } from "../Spell/Spell";

@@ -1,7 +1,7 @@
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { lfg_dungeon_rewardsRow } from "wotlkdata/sql/types/lfg_dungeon_rewards";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { lfg_dungeon_rewardsRow } from "wotlkdata/wotlkdata/sql/types/lfg_dungeon_rewards";
 import { MainEntity } from "../Misc/Entity";
 import { QuestRewardRegistry } from "../Quest/QuestReward";
 import { LFGDungeon, LFGDungeonRegistry } from "./LFGDungeon";

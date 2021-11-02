@@ -1,6 +1,6 @@
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { spell_target_positionRow } from "wotlkdata/sql/types/spell_target_position";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { spell_target_positionRow } from "wotlkdata/wotlkdata/sql/types/spell_target_position";
 import { MapRegistry } from "../Map/Maps";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";

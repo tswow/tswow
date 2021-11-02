@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
-import { Table } from "wotlkdata/table/Table";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SpellQuery, SpellRow } from "wotlkdata/wotlkdata/dbc/types/Spell";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "./Spell";

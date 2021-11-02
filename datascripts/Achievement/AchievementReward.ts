@@ -1,7 +1,7 @@
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/dbc/Localization";
-import { SQL } from "wotlkdata/sql/SQLFiles";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Achievement } from "./Achievement";
 

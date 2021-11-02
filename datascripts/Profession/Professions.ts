@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SkillLineQuery, SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
-import { Table } from "wotlkdata/table/Table";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SkillLineQuery, SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillTiersRegistry } from "../SkillTiers/SkillTiers";

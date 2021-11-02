@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Language } from "wotlkdata/dbc/Localization";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { GameObjectTemplate } from "./GameObjectTemplate";
 

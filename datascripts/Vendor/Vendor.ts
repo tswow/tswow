@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { npc_vendorRow } from "wotlkdata/sql/types/npc_vendor";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { npc_vendorRow } from "wotlkdata/wotlkdata/sql/types/npc_vendor";
 import { ClassMask } from "../Class/ClassRegistry";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ExtendedCostRegistry } from "../ExtendedCost/ExtendedCost";

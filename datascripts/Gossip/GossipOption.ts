@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { gossip_menu_optionRow } from "wotlkdata/wotlkdata/sql/types/gossip_menu_option";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
 import { Gossip } from "./Gossip";

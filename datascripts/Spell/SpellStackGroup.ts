@@ -1,9 +1,9 @@
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { spell_groupRow } from "wotlkdata/sql/types/spell_group";
-import { spell_group_stack_rulesQuery, spell_group_stack_rulesRow } from "wotlkdata/sql/types/spell_group_stack_rules";
-import { Table } from "wotlkdata/table/Table";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { spell_groupRow } from "wotlkdata/wotlkdata/sql/types/spell_group";
+import { spell_group_stack_rulesQuery, spell_group_stack_rulesRow } from "wotlkdata/wotlkdata/sql/types/spell_group_stack_rules";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

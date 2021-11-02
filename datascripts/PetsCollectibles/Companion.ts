@@ -1,8 +1,8 @@
-import { LocSystem, MulticastLocCell } from "wotlkdata/cell/systems/CellSystem";
-import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SpellQuery, SpellRow } from "wotlkdata/dbc/types/Spell";
-import { Table } from "wotlkdata/table/Table";
+import { LocSystem, MulticastLocCell } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultirowSystemCached } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SpellQuery, SpellRow } from "wotlkdata/wotlkdata/dbc/types/Spell";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { CreatureModels } from "../Creature/CreatureModels";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";

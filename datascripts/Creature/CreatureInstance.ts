@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { creatureRow } from "wotlkdata/sql/types/creature";
-import { creature_addonRow } from "wotlkdata/sql/types/creature_addon";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { creatureRow } from "wotlkdata/wotlkdata/sql/types/creature";
+import { creature_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_addon";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";

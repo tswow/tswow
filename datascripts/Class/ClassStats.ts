@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { DBCFile } from "wotlkdata/dbc/DBCFile";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { class_stat_formulasRow } from "wotlkdata/sql/types/class_stat_formulas";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { DBCFile } from "wotlkdata/wotlkdata/dbc/DBCFile";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { class_stat_formulasRow } from "wotlkdata/wotlkdata/sql/types/class_stat_formulas";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";
 import { ClassIDs } from "./ClassIDs";

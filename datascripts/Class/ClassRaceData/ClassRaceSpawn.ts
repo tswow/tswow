@@ -1,5 +1,5 @@
 import { SQL } from "wotlkdata";
-import { playercreateinfoRow } from "wotlkdata/sql/types/playercreateinfo";
+import { playercreateinfoRow } from "wotlkdata/wotlkdata/sql/types/playercreateinfo";
 import { Position } from "../../Misc/Position";
 import { MaybeSQLEntity } from "../../Misc/SQLDBCEntity";
 import { ClassRacePair } from "./ClassRaces";

@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { SpellDescriptionVariablesQuery, SpellDescriptionVariablesRow } from "wotlkdata/dbc/types/SpellDescriptionVariables";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { SpellDescriptionVariablesQuery, SpellDescriptionVariablesRow } from "wotlkdata/wotlkdata/dbc/types/SpellDescriptionVariables";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

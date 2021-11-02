@@ -1,9 +1,9 @@
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/dbc/types/WorldStateUI";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { WorldStateUIQuery, WorldStateUIRow } from "wotlkdata/wotlkdata/dbc/types/WorldStateUI";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";

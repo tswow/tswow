@@ -1,15 +1,16 @@
-import { DBC, finish, isReadOnly, LUAXML, SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { CellSystemTop, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language, Languages } from "wotlkdata/dbc/Localization";
-import { BattlemasterListQuery, BattlemasterListRow } from "wotlkdata/dbc/types/BattlemasterList";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
-import { all, gt, neq } from "wotlkdata/query/Relations";
-import { battleground_templateRow } from "wotlkdata/sql/types/battleground_template";
+import { DBC, finish, LUAXML, SQL } from "wotlkdata";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { CellSystemTop, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language, Languages } from "wotlkdata/wotlkdata/dbc/Localization";
+import { BattlemasterListQuery, BattlemasterListRow } from "wotlkdata/wotlkdata/dbc/types/BattlemasterList";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { all, gt, neq } from "wotlkdata/wotlkdata/query/Relations";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
+import { battleground_templateRow } from "wotlkdata/wotlkdata/sql/types/battleground_template";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 
@@ -124,7 +125,7 @@ export function createBgBase(mod: string, id: string) {
 
 const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 finish('bg-descriptions',()=>{
-    if(isReadOnly()) return;
+    if(BuildArgs.NO_CLIENT) return;
     LUAXML.file('Interface/FrameXML/PVPBattlegroundFrame.lua')
         .before(
             'function PVPBattleground_UpdateBattlegrounds'

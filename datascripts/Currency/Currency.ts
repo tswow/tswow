@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
-import { CurrencyTypesQuery, CurrencyTypesRow } from "wotlkdata/dbc/types/CurrencyTypes";
-import { Table } from "wotlkdata/table/Table";
+import { CurrencyTypesQuery, CurrencyTypesRow } from "wotlkdata/wotlkdata/dbc/types/CurrencyTypes";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ItemDisplayinfoRegistry } from "../Item/ItemDisplayInfo";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";

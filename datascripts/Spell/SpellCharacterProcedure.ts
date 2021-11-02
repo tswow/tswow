@@ -1,7 +1,7 @@
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { MultiFloatWrapper, MultiIntWrapper, MultiUIntWrapper } from "wotlkdata/dbc/DBCCell";
-import { SpellVisualKitRow } from "wotlkdata/dbc/types/SpellVisualKit";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiFloatWrapper, MultiIntWrapper, MultiUIntWrapper } from "wotlkdata/wotlkdata/dbc/DBCCell";
+import { SpellVisualKitRow } from "wotlkdata/wotlkdata/dbc/types/SpellVisualKit";
 import { SpellChainEffectRegistry } from "./SpellChainEffect";
 
 export class SpellCharacterProcedure extends CellSystemTop {

@@ -1,8 +1,8 @@
 import { SQL } from "wotlkdata";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { gt, lt } from "wotlkdata/query/Relations";
-import { quest_poiRow } from "wotlkdata/sql/types/quest_poi";
-import { quest_poi_pointsRow } from "wotlkdata/sql/types/quest_poi_points";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { gt, lt } from "wotlkdata/wotlkdata/query/Relations";
+import { quest_poiRow } from "wotlkdata/wotlkdata/sql/types/quest_poi";
+import { quest_poi_pointsRow } from "wotlkdata/wotlkdata/sql/types/quest_poi_points";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";

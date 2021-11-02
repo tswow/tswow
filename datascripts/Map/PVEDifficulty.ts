@@ -1,8 +1,8 @@
 import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { MapDifficultyQuery, MapDifficultyRow } from "wotlkdata/dbc/types/MapDifficulty";
-import { Table } from "wotlkdata/table/Table";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { MapDifficultyQuery, MapDifficultyRow } from "wotlkdata/wotlkdata/dbc/types/MapDifficulty";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

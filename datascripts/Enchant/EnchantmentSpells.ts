@@ -1,5 +1,5 @@
-import { CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";

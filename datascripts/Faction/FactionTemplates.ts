@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { FactionTemplateQuery, FactionTemplateRow } from "wotlkdata/dbc/types/FactionTemplate";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { FactionTemplateQuery, FactionTemplateRow } from "wotlkdata/wotlkdata/dbc/types/FactionTemplate";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ArrayRefSystemNoCreate } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

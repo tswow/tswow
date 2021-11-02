@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultirowSystemCached } from "wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Language, Languages } from "wotlkdata/dbc/Localization";
-import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { CellSystem, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultirowSystemCached } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { Language, Languages } from "wotlkdata/wotlkdata/dbc/Localization";
+import { LanguagesQuery, LanguagesRow } from "wotlkdata/wotlkdata/dbc/types/Languages";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

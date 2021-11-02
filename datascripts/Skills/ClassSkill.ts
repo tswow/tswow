@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
+import { SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SpellIconCell } from "../Spell/SpellIcon";

@@ -1,7 +1,7 @@
 import { DBC, SQL } from "wotlkdata";
-import { getBits, MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { CharBaseInfoRow } from "wotlkdata/dbc/types/CharBaseInfo";
+import { getBits, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { CharBaseInfoRow } from "wotlkdata/wotlkdata/dbc/types/CharBaseInfo";
 import { MainEntity } from "../../Misc/Entity";
 import { Ids } from "../../Misc/Ids";
 import { RaceMask } from "../../Race/RaceType";

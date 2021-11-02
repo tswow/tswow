@@ -1,4 +1,4 @@
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { SpellPowerType } from "../SpellPowerType";
 import { TargetBase } from "./TargetBase";
 

@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { ItemSetQuery, ItemSetRow } from "wotlkdata/dbc/types/ItemSet";
-import { Table } from "wotlkdata/table/Table";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { ItemSetQuery, ItemSetRow } from "wotlkdata/wotlkdata/dbc/types/ItemSet";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

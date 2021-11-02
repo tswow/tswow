@@ -1,5 +1,5 @@
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
 export class TrivialSkill<T> extends CellSystem<T> {
     lowCell: Cell<number,any>

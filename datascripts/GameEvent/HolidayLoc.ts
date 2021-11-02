@@ -1,9 +1,9 @@
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/primitives";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
 import { Ids } from "../Misc/Ids";
 import { HolidayBase } from "./Holiday";
 

@@ -1,6 +1,6 @@
 import { DBC } from "wotlkdata";
-import { DungeonMapQuery, DungeonMapRow } from "wotlkdata/dbc/types/DungeonMap";
-import { Table } from "wotlkdata/table/Table";
+import { DungeonMapQuery, DungeonMapRow } from "wotlkdata/wotlkdata/dbc/types/DungeonMap";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

@@ -1,7 +1,8 @@
-import { finish, isReadOnly } from "wotlkdata";
-import { makeMaskCell32, MaskCellWrite } from "wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { SQL } from "wotlkdata/sql/SQLFiles";
+import { finish } from "wotlkdata";
+import { makeMaskCell32, MaskCellWrite } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
@@ -21,7 +22,7 @@ let values: CastSpellRow[] = SQL.Databases.world_source
 SQL.Databases.world_dest.read(`DELETE FROM \`playercreateinfo_cast_spell\`;`)
 
 finish('playercreateinfo_cast_spell',()=>{
-    if(isReadOnly()) return;
+    if(BuildArgs.READ_ONLY) return;
     values.forEach(({classMask,note,raceMask,spell,deleted})=>{
         if(deleted) return;
         SQL.Databases.world_dest.write(

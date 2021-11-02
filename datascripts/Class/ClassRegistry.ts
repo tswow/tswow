@@ -1,14 +1,14 @@
 // needed to load custom classes once created,
 
 import { DBC, LUAXML, SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellReadOnly } from "wotlkdata/cell/cells/CellReadOnly";
-import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
-import { ChrClassesQuery, ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
-import { Edit } from "wotlkdata/luaxml/TextFile";
-import { includes } from "wotlkdata/query/Relations";
-import { playercreateinfo_skillsRow } from "wotlkdata/sql/types/playercreateinfo_skills";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellReadOnly } from "wotlkdata/wotlkdata/cell/cells/CellReadOnly";
+import { EnumCon, makeEnum } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ChrClassesQuery, ChrClassesRow } from "wotlkdata/wotlkdata/dbc/types/ChrClasses";
+import { Edit } from "wotlkdata/wotlkdata/luaxml/TextFile";
+import { includes } from "wotlkdata/wotlkdata/query/Relations";
+import { playercreateinfo_skillsRow } from "wotlkdata/wotlkdata/sql/types/playercreateinfo_skills";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { makeRefNoCreate, makeRefReadOnly } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";

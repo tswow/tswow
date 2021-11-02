@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { ZoneintroMusicTableQuery, ZoneintroMusicTableRow } from "wotlkdata/dbc/types/ZoneintroMusicTable";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ZoneintroMusicTableQuery, ZoneintroMusicTableRow } from "wotlkdata/wotlkdata/dbc/types/ZoneintroMusicTable";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

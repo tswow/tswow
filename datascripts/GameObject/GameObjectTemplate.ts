@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { EnumCellTransform } from "wotlkdata/cell/cells/EnumCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { gameobject_templateRow } from "wotlkdata/sql/types/gameobject_template";
+import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { gameobject_templateRow } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
 import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { GossipRegistry } from "../Gossip/Gossips";

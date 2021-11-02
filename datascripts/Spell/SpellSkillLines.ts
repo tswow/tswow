@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMask, makeMaskCell32, MaskCellWrite, MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { SkillLineAbilityQuery, SkillLineAbilityRow } from "wotlkdata/dbc/types/SkillLineAbility";
-import { Table } from "wotlkdata/table/Table";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMask, makeMaskCell32, MaskCellWrite, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { SkillLineAbilityQuery, SkillLineAbilityRow } from "wotlkdata/wotlkdata/dbc/types/SkillLineAbility";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

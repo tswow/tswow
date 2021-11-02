@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32, MaskCell32, MaskCell64, MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { SpellRow } from "wotlkdata/dbc/types/Spell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32, MaskCell32, MaskCell64, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { SpellRow } from "wotlkdata/wotlkdata/dbc/types/Spell";
 import { ClassMask } from "../Class/ClassRegistry";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";

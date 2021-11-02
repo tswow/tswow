@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
-import { Table } from "wotlkdata/table/Table";
+import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/wotlkdata/dbc/types/CharTitles";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RegistryRowBase } from "../Refs/Registry";

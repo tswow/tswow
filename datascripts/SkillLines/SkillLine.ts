@@ -1,8 +1,8 @@
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SkillLineRow } from "wotlkdata/dbc/types/SkillLine";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
 import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { RaceMask } from "../Race/RaceType";

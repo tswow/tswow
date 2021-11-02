@@ -1,6 +1,6 @@
-import { CellWrapper } from "wotlkdata/cell/cells/Cell";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { instance_templateRow } from "wotlkdata/sql/types/instance_template";
+import { CellWrapper } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { instance_templateRow } from "wotlkdata/wotlkdata/sql/types/instance_template";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { BoolCell } from "../Misc/BoolCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";

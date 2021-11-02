@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { AreaTableQuery, AreaTableRow } from "wotlkdata/dbc/types/AreaTable";
-import { Table } from "wotlkdata/table/Table";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { AreaTableQuery, AreaTableRow } from "wotlkdata/wotlkdata/dbc/types/AreaTable";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

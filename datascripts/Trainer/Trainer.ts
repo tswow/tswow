@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellTransform, makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32, MaskCellWrite } from "wotlkdata/cell/cells/MaskCell";
-import { Language } from "wotlkdata/dbc/Localization";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { trainerQuery, trainerRow } from "wotlkdata/sql/types/trainer";
-import { trainer_spellRow } from "wotlkdata/sql/types/trainer_spell";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { EnumCellTransform, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32, MaskCellWrite } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { trainerQuery, trainerRow } from "wotlkdata/wotlkdata/sql/types/trainer";
+import { trainer_spellRow } from "wotlkdata/wotlkdata/sql/types/trainer_spell";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ClassRaceMaskSystemBase, IClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask, ClassRegistry } from "../Class/ClassRegistry";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";

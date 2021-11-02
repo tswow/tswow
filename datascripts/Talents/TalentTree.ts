@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC, finish, isReadOnly } from "wotlkdata";
-import { makeMaskCell32, MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { TalentTabRow } from "wotlkdata/dbc/types/TalentTab";
+import { DBC, finish } from "wotlkdata";
+import { makeMaskCell32, MaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { TalentTabRow } from "wotlkdata/wotlkdata/dbc/types/TalentTab";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
@@ -99,7 +100,7 @@ export class TalentTree extends MainEntity<TalentTabRow> {
 }
 
 finish('verify-talent-trees',()=>{
-    if(isReadOnly()) return;
+    if(BuildArgs.READ_ONLY) return;
     TalentTreeRegistry.forEach(x=>{
         if(x.ClassMask.get() === 0 && !x.PetTalentMask.get()) {
             throw new Error(`Talent Tab ${x.ID} has no classmask set, it will bug out talents for all classes`)

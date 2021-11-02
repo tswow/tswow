@@ -15,10 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish, isReadOnly } from "wotlkdata";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { ChrClassesRow } from "wotlkdata/dbc/types/ChrClasses";
-import { Edit } from "wotlkdata/luaxml/TextFile";
+import { finish } from "wotlkdata";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { ChrClassesRow } from "wotlkdata/wotlkdata/dbc/types/ChrClasses";
+import { Edit } from "wotlkdata/wotlkdata/luaxml/TextFile";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { findGaps } from "../GapDetection/GapDetection";
 import { MainEntity } from "../Misc/Entity";
 import { ClassRaces } from "./ClassRaceData/ClassRaces";
@@ -67,7 +68,7 @@ export class Class extends MainEntity<ChrClassesRow> {
 
 
 finish('class-gaps', ()=>{
-    if(isReadOnly()) return; // <-- class gaps are valid if we're in readonly mode
+    if(BuildArgs.READ_ONLY) return; // <-- class gaps are valid if we're in readonly mode
     findGaps(
           'class'
         , 'ChrClasses'

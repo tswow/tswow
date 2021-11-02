@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Language } from "wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/primitives";
-import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/wotlkdata/sql/types/broadcast_text";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";

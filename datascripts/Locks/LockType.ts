@@ -1,7 +1,7 @@
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { LockTypeRow } from "wotlkdata/dbc/types/LockType";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { LockTypeRow } from "wotlkdata/wotlkdata/dbc/types/LockType";
 import { MainEntity } from "../Misc/Entity";
 import { Lock } from "./Lock";
 import { LockRegistry } from "./Locks";

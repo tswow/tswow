@@ -1,5 +1,5 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata/sql/SQLFiles";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { Position } from "../Misc/Position";
 import { CreatureInstance } from "./CreatureInstance";
 

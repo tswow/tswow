@@ -1,5 +1,5 @@
-import { makeMask, MaskCellWrite, MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
+import { makeMask, MaskCellWrite, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { MainEntity } from "../../Misc/Entity";
 import { RaceMask } from "../../Race/RaceType";
 import { ClassMask } from "../ClassRegistry";

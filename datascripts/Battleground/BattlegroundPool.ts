@@ -1,5 +1,6 @@
-import { finish, isReadOnly } from "wotlkdata";
-import { BattlemasterListQuery } from "wotlkdata/dbc/types/BattlemasterList";
+import { finish } from "wotlkdata";
+import { BattlemasterListQuery } from "wotlkdata/wotlkdata/dbc/types/BattlemasterList";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { BattlegroundBase, createBgBase, filterBgsBase } from "./BattlegroundBase";
 
@@ -50,7 +51,7 @@ export const BattlegroundPoolRegistry = {
 }
 
 finish('bgpool-worldsafelocs',()=>{
-    if(isReadOnly()) return;
+    if(BuildArgs.READ_ONLY) return;
     BattlegroundPoolRegistry.filter({})
         .forEach(x=>{
             if(x.sql_row.HordeStartLoc.get() !== 0 || x.sql_row.AllianceStartLoc.get() !== 0) {

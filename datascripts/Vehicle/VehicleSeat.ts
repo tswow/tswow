@@ -1,9 +1,9 @@
 import { DBC } from "wotlkdata";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/dbc/types/VehicleSeat";
-import { Table } from "wotlkdata/table/Table";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { VehicleSeatQuery, VehicleSeatRow } from "wotlkdata/wotlkdata/dbc/types/VehicleSeat";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";

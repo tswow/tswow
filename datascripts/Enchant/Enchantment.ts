@@ -1,7 +1,7 @@
 import { DBC } from "wotlkdata";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/dbc/types/SpellItemEnchantment";
-import { Table } from "wotlkdata/table/Table";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "wotlkdata/wotlkdata/dbc/types/SpellItemEnchantment";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ItemVisualsRegistry } from "../Item/ItemVisualEffect";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

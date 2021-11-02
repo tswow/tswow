@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { Talent } from "./Talent";
 
 export class TalentRankWrap extends Cell<number, Talent> {

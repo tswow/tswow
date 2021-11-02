@@ -1,10 +1,10 @@
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SoundEntriesQuery, SoundEntriesRow } from "wotlkdata/dbc/types/SoundEntries";
-import { Table } from "wotlkdata/table/Table";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SoundEntriesQuery, SoundEntriesRow } from "wotlkdata/wotlkdata/dbc/types/SoundEntries";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RefStatic } from "../Refs/Ref";

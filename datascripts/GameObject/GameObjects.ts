@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC, SQL } from "wotlkdata"
-import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "wotlkdata/dbc/types/GameObjectDisplayInfo"
-import { gameobjectQuery, gameobjectRow } from "wotlkdata/sql/types/gameobject"
-import { Table } from "wotlkdata/table/Table"
+import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "wotlkdata/wotlkdata/dbc/types/GameObjectDisplayInfo"
+import { gameobjectQuery, gameobjectRow } from "wotlkdata/wotlkdata/sql/types/gameobject"
+import { Table } from "wotlkdata/wotlkdata/table/Table"
 import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids"
 import { RegistryDynamic, RegistryStatic } from "../Refs/Registry"
 import { GameObjectDisplay } from "./GameObjectDisplay"

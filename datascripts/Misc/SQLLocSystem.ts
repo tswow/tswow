@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/dbc/Localization";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
 
 export abstract class SQLLocSystem<T> extends LocSystem<T> {
     protected abstract getMain() : Cell<string, any>;

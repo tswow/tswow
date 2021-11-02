@@ -2,8 +2,8 @@ import child_process from "child_process";
 import fs from "fs";
 import path from "path";
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Settings } from "wotlkdata/Settings";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Settings } from "wotlkdata/wotlkdata/Settings";
 import { Ids } from "../Misc/Ids";
 import { Map } from "./Map";
 

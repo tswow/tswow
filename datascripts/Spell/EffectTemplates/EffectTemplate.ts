@@ -1,7 +1,7 @@
-import { CPrim } from "wotlkdata/cell/cells/Cell";
-import { CellArray, CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellArray, CellIndexWrapper } from "wotlkdata/wotlkdata/cell/cells/CellArray";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SelfRef } from "../../Refs/Ref";
 import { SpellEffect } from "../SpellEffect";
 

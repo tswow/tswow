@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { finish, isReadOnly } from "wotlkdata";
-import { Settings } from "wotlkdata/Settings";
+import { finish } from "wotlkdata";
+import { BuildArgs, dataset } from 'wotlkdata/wotlkdata/Settings';
 import { TSImage, TSImages } from "../Images/Image";
 import { ClassRegistry } from './ClassRegistry';
 
 const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
-const SQUARES_PATH = path.join(Settings.LUAXML_SOURCE,SQUARES_LOCAL)
-const CIRCLES_PATH = path.join(Settings.LUAXML_SOURCE,CIRCLES_LOCAL)
+const SQUARES_PATH = dataset.luaxml_source.join(SQUARES_LOCAL)
+const CIRCLES_PATH = dataset.luaxml_source.join(CIRCLES_LOCAL)
 
 let stitchedSquares: TSImage;
 let stitchedCircles: TSImage;
@@ -16,15 +16,15 @@ let stitchedCircles: TSImage;
 let stitchIndex = 10;
 
 function setupImages() {
-    let sqBlpExist = fs.existsSync(SQUARES_PATH);
-    let crBlpExist = fs.existsSync(CIRCLES_PATH);
+    let sqBlpExist = fs.existsSync(SQUARES_PATH.get());
+    let crBlpExist = fs.existsSync(CIRCLES_PATH.get());
 
     if(!sqBlpExist || !crBlpExist) {
         return false;
     }
 
-    stitchedSquares = TSImages.read(SQUARES_PATH)
-    stitchedCircles = TSImages.read(CIRCLES_PATH)
+    stitchedSquares = TSImages.read(SQUARES_PATH.get())
+    stitchedCircles = TSImages.read(CIRCLES_PATH.get())
 
     const resizeImage = (image: TSImage) =>
         TSImages.create(512,512)
@@ -83,7 +83,7 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 }
 
 finish('build-class-icons',()=>{
-    if(!hasStitched || isReadOnly()) return;
+    if(!hasStitched || BuildArgs.NO_CLIENT) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
             return;

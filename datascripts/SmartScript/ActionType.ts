@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives"
-import { SQL } from "wotlkdata/sql/SQLFiles"
-import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives"
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles"
+import { smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts"
 import { b2i } from "../Misc/BasicConversion"
 import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { SmartScript } from "./SmartScript"

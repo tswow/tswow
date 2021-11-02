@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { EnumCon, makeEnum } from "wotlkdata/cell/cells/EnumCell";
-import { makeMask, MaskCon } from "wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/cell/systems/MultiRowSystem";
-import { conditionsCreator, conditionsQuery } from "wotlkdata/sql/types/conditions";
+import { EnumCon, makeEnum } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMask, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { conditionsCreator, conditionsQuery } from "wotlkdata/wotlkdata/sql/types/conditions";
 import { ClassMask } from "../Class/ClassRegistry";
 import { DrunkState, resolveDrunkState } from "../Misc/DrunkState";
 import { ReputationRank, ReputationRankMask } from "../Misc/ReputationRank";

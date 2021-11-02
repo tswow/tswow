@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { CPrim } from "wotlkdata/cell/cells/Cell";
-import { CellArray } from "wotlkdata/cell/cells/CellArray";
-import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/cell/cells/EnumCell";
-import { Objectified, Objects } from "wotlkdata/cell/serialization/ObjectIteration";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellArray } from "wotlkdata/wotlkdata/cell/cells/CellArray";
+import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Objectified, Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { Ids } from "../Misc/Ids";
 import { std } from "../tswow-stdlib-data";
 import { AuraType } from "./AuraType";

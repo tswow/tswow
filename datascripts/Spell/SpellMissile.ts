@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { SpellMissileQuery, SpellMissileRow } from "wotlkdata/dbc/types/SpellMissile";
-import { Table } from "wotlkdata/table/Table";
+import { SpellMissileQuery, SpellMissileRow } from "wotlkdata/wotlkdata/dbc/types/SpellMissile";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";

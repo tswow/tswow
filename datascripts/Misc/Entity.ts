@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { TransformedClass, TransformedClassReadOnly } from "wotlkdata/cell/cells/EnumCell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
-import { CellSystem, CellSystemTop } from "wotlkdata/cell/systems/CellSystem";
+import { TransformedClass, TransformedClassReadOnly } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { ArrayEntry } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
 export class MainEntity<T> extends CellSystemTop {
     @Transient

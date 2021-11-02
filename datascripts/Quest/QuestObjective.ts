@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { CellSystem, LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/dbc/Localization";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { CellSystem, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { Quest } from "./Quest";
 
