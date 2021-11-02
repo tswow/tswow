@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { SQL } from "wotlkdata";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { Settings } from "wotlkdata/wotlkdata/Settings";
+import { AllModules } from "wotlkdata/wotlkdata/Settings";
 import { Ids } from "../Misc/Ids";
 import { Map } from "./Map";
 
@@ -12,8 +12,7 @@ export type MapBounds = {minX: number, minY: number, maxX: number, maxY: number}
 export class MapADT extends CellSystem<Map> {
     private mapsdir(mod: string) {
         return path.join(
-              'modules'
-            , mod
+              mod
             , 'assets'
             , 'world'
             , 'maps'
@@ -23,8 +22,7 @@ export class MapADT extends CellSystem<Map> {
 
     private mapname(mod: string, x: number, y: number) {
         return path.join(
-              'modules'
-            , mod
+               mod
             , 'assets'
             , 'world'
             , 'maps'
@@ -34,8 +32,9 @@ export class MapADT extends CellSystem<Map> {
     }
 
     hasTile(x: number, y: number) {
-        let mods: string[] = Settings.PATCH_DIRECTORY
-            .filter((x: string)=>
+        let mods: string[] = AllModules
+            .map(x=>x.get())
+            .filter((x)=>
                 fs.existsSync(this.mapsdir(x))
             );
         if(mods.length === 0) return false;
@@ -52,7 +51,8 @@ export class MapADT extends CellSystem<Map> {
     }
 
     getBoundary(): MapBounds {
-        let mods: string[] = Settings.PATCH_DIRECTORY
+        let mods: string[] = AllModules
+            .map(x=>x.get())
             .filter((x: string)=>fs.existsSync(this.mapsdir(x)))
 
         let adts = mods

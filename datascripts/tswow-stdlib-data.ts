@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC, isReadOnly, SQL } from "wotlkdata";
+import { DBC, SQL } from "wotlkdata";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { AchievementRegistry } from "./Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
 import { AreaRegistry } from "./Area/Area";
@@ -171,7 +172,7 @@ export const std = {
     TotemType: TotemTypeRegistry,
     TotemCategory: TotemCategoryRegistry,
     InlineScripts: InlineScript,
-    isReadOnly: isReadOnly,
+    isReadOnly: BuildArgs.READ_ONLY,
     DBC: DBC,
     SQL: SQL,
 }
