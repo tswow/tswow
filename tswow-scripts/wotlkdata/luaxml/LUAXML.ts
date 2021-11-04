@@ -16,7 +16,8 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { Settings } from '../Settings';
+import { wfs } from '../../util/FileSystem';
+import { dataset } from '../Settings';
 import { LUAXMLFiles } from './LUAXMLFiles';
 import { TextFile } from './TextFile';
 
@@ -31,7 +32,7 @@ export class LUAXML {
      */
     static anyfile(filepath: string): TextFile {
         if (files[filepath] !== undefined) { return files[filepath]; }
-        const fullpath = path.join(Settings.LUAXML_SOURCE, filepath);
+        const fullpath = path.join(dataset.luaxml_source.get(), filepath);
         const tf = new TextFile(filepath, fs.readFileSync(fullpath).toString());
         files[filepath] = tf;
         return tf;
@@ -60,44 +61,26 @@ export function _clearLUAXML() {
  * @param outdir
  * @warn indiscriminately removes anything previously in the target directory
  */
-export function _writeLUAXML(indir = Settings.LUAXML_SOURCE, outdir = Settings.LUAXML_CLIENT) {
-    function copydir(cur: string) {
-        const incur = path.join(indir, cur);
-        const outcur = path.join(outdir, cur);
-        if (fs.existsSync(outcur)) {
-            fs.rmdirSync(outcur, {recursive: true});
-        }
-        fs.mkdirSync(outcur, {recursive: true});
+export function _writeLUAXML() {
+    const indir = dataset.luaxml_source;
+    const outdir = dataset.luaxml
 
-        const read = fs.readdirSync(incur);
-        const lxmlfiles: string[] = [];
-        const folders: string[] = [];
-        read.forEach(x => {
-            if (fs.lstatSync(path.join(incur, x)).isFile()) {
-                lxmlfiles.push(x);
-            } else {
-                folders.push(x);
-            }
-        });
-
-        lxmlfiles.forEach(x => {
-            const infile = path.join(incur, x);
-            const outfile = path.join(outcur, x);
-            fs.copyFileSync(infile, outfile);
-        });
-
-        folders.forEach(x => {
-            copydir(path.join(cur, x));
-        });
+    let tocPath = outdir.Interface.FrameXML.framexml_toc;
+    let tocValue = undefined;
+    if(tocPath.exists()) {
+        tocValue = tocPath.readString();
     }
-    copydir('');
+    wfs.copy(indir,outdir,false);
+    if(tocValue !== undefined) {
+        tocPath.write(tocValue);
+    }
 
     for (const fname in files) {
         if (files[fname] === undefined) {
             throw new Error(`Internal error: filename ${fname} points at undefined value`);
         } else {
             const file = files[fname];
-            TextFile._write(file, path.join(outdir, fname));
+            TextFile._write(file, outdir.join(fname).get());
         }
     }
 }

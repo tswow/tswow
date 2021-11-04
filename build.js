@@ -3,10 +3,18 @@
  */
 const child_process = require('child_process');
 const path = require('path');
+const fs = require('fs')
+
+const buildConf = fs.readFileSync('./build.conf','utf-8')
+
+const buildDir = buildConf.match(/BuildDirectory *= *"(.+?)"/)[1]
+const installDir = buildConf.match(/InstallDirectory *= *"(.+?)"/)[1]
+
+const bootstrapDir = path.join(buildDir,'bootstrap')
 
 const buildScripts = ()=>
     child_process.execSync(
-          'npx swc tswow-scripts -d build'
+          `npx swc tswow-scripts -d ${bootstrapDir}`
         , {stdio:'inherit'}
     )
 try { buildScripts() }
@@ -21,7 +29,9 @@ catch(error) {
 
 child_process.execSync(
       `node -r source-map-support/register`
-    + ` ${path.join('build','compile','CompileTsWow.js')}`
+    + ` ${path.join(bootstrapDir,'compile','CompileTsWow.js')}`
     + ` ${process.argv.slice(2).join(' ')}`
     + ` --ignore **/wotlkdata/**`
+    + ` --ipaths=${installDir}`
+    + ` --bpaths=${buildDir}`
 ,{stdio:'inherit'});

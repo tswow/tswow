@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as fs from 'fs';
-import * as path from 'path';
+
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
 import { DBC as _DBC } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from './ids/Ids';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
-import { Settings } from './Settings';
+import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
 import { SqlConnection } from './sql/SQLConnection';
 import { SQL as _SQL } from './sql/SQLFiles';
@@ -42,78 +41,14 @@ export function GetStage() {
 }
 
 class IdPublic extends IdPrivate {
-    static readFile = () => IdPrivate.readFile(Settings.ID_FILE_PATH);
-    static writeFile = () => IdPrivate.writeFile(Settings.ID_FILE_PATH);
-}
-
-const INLINE_ONLY_FLAG = '--inline-only'
-
-export function isReadOnly() {
-    return process.argv.includes(INLINE_ONLY_FLAG)
+    static readFile = () => IdPrivate.readFile(dataset.ids_txt.get());
+    static writeFile = () => IdPrivate.writeFile(dataset.ids_txt.get());
 }
 
 function profileScripts() {
     return process.argv.includes('--profile-scripts')
 }
 let profiling: {[key: string]: number} = {}
-
-function patchSubdirs(root: string, dir: string) {
-    if (!fs.existsSync(dir)) { return; }
-
-    let buildDir = path.join(root,'build')
-
-    const nodes = fs.readdirSync(dir).map(x => path.join(dir, x));
-
-    nodes.filter(x => {
-            if(!x.endsWith('js') || !fs.statSync(x).isFile()) {
-                return false;
-            }
-
-            // Check that the corresponding .ts file isn't deleted.
-            let p = x.split(path.sep);
-            let dindex = p.indexOf('build');
-            // not in a build directory, or build is somehow the root
-            if(dindex <= 0 || dindex == p.length-1) {
-                return;
-            }
-            let relpath = p.slice(dindex+1);
-            let tspath = p.slice(0,dindex)
-                .concat(relpath)
-                .join(path.sep)
-            tspath = tspath.substring(0,tspath.length-2)+'ts';
-            return fs.existsSync(tspath);
-        })
-        .filter(x=>
-            !process.argv.includes(INLINE_ONLY_FLAG)
-            || fs.readFileSync(x).includes('InlineScripts')
-        )
-        .forEach(x => {
-            let v = Date.now();
-            require(path.relative(__dirname,x))
-            if(profileScripts()) {
-                let relFile = path.join(
-                      root
-                    , path.relative(buildDir,x)
-                    )
-                    .replace(/\.[^/.]+$/, "")
-                    + '.ts'
-                profiling[relFile] = Date.now()-v
-            }
-            applyStage(setups);
-        });
-
-    const dirs = nodes
-        .filter(x =>
-            !x.endsWith('.d.ts') &&
-            !x.endsWith('.js') &&
-            !x.endsWith('node_modules') &&
-            !x.endsWith('.map') &&
-            fs.lstatSync(x).isDirectory());
-
-    for (const subdir of dirs) {
-        patchSubdirs(root, subdir);
-    }
-}
 
 async function applyStage(collection: PatchCollection) {
     for (const {name, callback} of collection) {
@@ -129,7 +64,7 @@ async function applyStage(collection: PatchCollection) {
 
 let ctime: number = 0;
 function time(msg: string) {
-    if(Settings.USE_TIMER) {
+    if(BuildArgs.USE_TIMER) {
         let diff = Date.now()-ctime;
         console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
         ctime = Date.now();
@@ -162,16 +97,28 @@ async function main() {
     time(`Loaded/Cleaned SQL`);
 
     // Find all patch subdirectories
-    for (let dir of Settings.PATCH_DIRECTORY) {
-        dir = path.join('./modules',dir,'datascripts');
-        if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
-            continue;
-        }
-
+    for (let dir of DatascriptModules) {
         try {
-            patchSubdirs(dir,dir);
+            dir.datascripts.build.toDirectory()
+                .iterate('RECURSE','FILES','FULL',node=>{
+                    if(!node.endsWith('.js') || !node.isFile()) {
+                        return;
+                    }
+                    let ts = dir.datascripts.join(node.relativeTo(dir.datascripts.build))
+                        .toFile().withExtension('.ts')
+                    if(!ts.exists()) {
+                        return;
+                    }
+                    let v = Date.now();
+                    require(node.relativeTo(__dirname).get());
+                    if(profileScripts()) {
+                        profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
+                    }
+                    applyStage(setups);
+
+                })
         } catch (error) {
-            console.error(`Error in patch ${dir}:`, error);
+            console.error(`Error in patch ${dir.get()}:`, error);
             process.exit(3);
         }
     }
@@ -185,35 +132,35 @@ async function main() {
     cur_stage = 'FINISH'
     await applyStage(finishes);
     cur_stage = 'SORT'
-    if(!isReadOnly()) {
+    if(!BuildArgs.READ_ONLY) {
         await applyStage(sorts);
     }
     time(`Executed scripts`);
 
-    await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB&&!isReadOnly(),
-        Settings.SQL_WRITE_TO_FILE&&!isReadOnly());
+    await SqlConnection.finish(
+          !BuildArgs.NO_SERVER
+        , false
+    );
 
     time(`Wrote SQL`);
-    if(!isReadOnly()) {
+    if(!BuildArgs.NO_CLIENT) {
         saveDbc();
     }
     time(`Wrote DBC`);
 
-    if(!isReadOnly()) {
+    if(!BuildArgs.READ_ONLY) {
         await IdPublic.writeFile();
     }
 
-    if(!isReadOnly()) {
-        if (Settings.LUAXML_SOURCE.length === 0 || Settings.LUAXML_CLIENT.length === 0) {
-            console.log('No LUAXML settings, skipping LUAXML');
-        } else {
-            if (_DBC.ChrClasses.isLoaded()) {
-                _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
-                    .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
-            }
 
-            _writeLUAXML(Settings.LUAXML_SOURCE, Settings.LUAXML_CLIENT);
+    if(!BuildArgs.READ_ONLY) {
+        // todo: move to stdlib
+        if (_DBC.ChrClasses.isLoaded()) {
+            _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
+                .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
         }
+
+        _writeLUAXML();
         time(`Wrote LUAXML`);
     }
 

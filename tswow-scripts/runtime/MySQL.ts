@@ -15,15 +15,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as mysql_lib from 'mysql2';
+import path from 'path';
 import { start } from 'repl';
-import { wfs, wfsa } from '../util/FileSystem';
+import { commands } from '../util/Commands';
+import { wfs } from '../util/FileSystem';
+import { WDirectory } from '../util/FileTree';
+import { DatabaseSettings, DatabaseType } from '../util/NodeConfig';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { Process } from '../util/Process';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
-import { databaseSettings, DatabaseSettings, DatabaseType } from '../util/Yaml';
-import { commands } from './Commands';
 import { NodeConfig } from './NodeConfig';
 
 /**
@@ -72,7 +74,7 @@ export class Connection {
      */
     async query(query: string) {
         await this.connect();
-        return (await new Promise<any>((res,rej)=>{
+        return new Promise<any>((res,rej)=>{
             (this.con as mysql_lib.Pool).query(query,(err,value)=>{
                 if(err) {
                     rej(err);
@@ -80,7 +82,20 @@ export class Connection {
                     res(value);
                 }
             });
-        }));
+        });
+    }
+
+    async queryPrepared(query: string, args: any[]) {
+        await this.connect();
+        return new Promise<any>((res,rej)=>{
+            (this.con as mysql_lib.Pool).execute(query,args,(err,value)=>{
+                if(err) {
+                    rej(err);
+                } else {
+                    res(value);
+                }
+            });
+        });
     }
 
     /**
@@ -145,7 +160,7 @@ export class Connection {
         await this.disconnect();
         await new Promise<void>((res,rej)=>{
             let con = mysql_lib.createConnection(this.configWithoutDb());
-            con.query(`DROP DATABASE IF EXISTS ${this.config().database};`,(err)=>{
+            con.query(`DROP DATABASE IF EXISTS \`${this.config().database}\`;`,(err)=>{
                 if(err) {
                     rej(err);
                 } else {
@@ -165,7 +180,7 @@ export namespace mysql {
 
     export function dump(connection: Connection, outputFile: string) {
         wsys.exec(
-            `"${ipaths.mysqlDumpExe}"`
+            `"${ipaths.bin.mysql.mysqldump_exe.get()}"`
             + ` --port ${connection.cfg.port}`
             + ` -u root ${connection.cfg.database}`
             + ` > ${wfs.absPath(outputFile)}`)
@@ -173,35 +188,51 @@ export namespace mysql {
 
     export async function startProcess() {
         term.log('Starting mysql...');
-        if (!wfs.exists(ipaths.databaseDir)) {
+        ipaths.coredata.mkdir()
+        if(!ipaths.coredata.database.exists()) {
             term.log("No mysql database found, creating it...");
             wsys.exec(
-                  `${ipaths.mysqldExe}`
+                  `${ipaths.bin.mysql.mysqld_exe.get()}`
                 + ` --initialize`
                 + ` --log_syslog=0`
-                + ` --datadir=${wfs.absPath(ipaths.databaseDir)}`);
+                + ` --datadir=${ipaths.coredata.database.abs()}`);
             term.success('Created mysql database');
         }
 
-        const user = databaseSettings('world').user;
-        const pass = databaseSettings('world').password;
+        const settings : DatabaseSettings[] = [
+            NodeConfig.DatabaseSettings('auth'),
+            NodeConfig.DatabaseSettings('characters'),
+            NodeConfig.DatabaseSettings('world'),
+            NodeConfig.DatabaseSettings('world_source'),
+        ].filter(x=>
+            x.port === NodeConfig.DatabaseHostedPort
+                && (x.host === 'localhost' || x.host === '127.0.0.1')
+        )
 
-        wfs.write(ipaths.mysqlStartup,
+        const users: {[key: string]: /*password:*/ string} = {}
+        settings.forEach(x=>{
+            if(users[x.user] !== undefined && users[x.user] !== x.password) {
+                throw new Error(`Multiple passwords defined for MySQL user ${x.user}`)
+            }
+            users[x.user] = x.password
+        })
+        const [user,pass] = Object.entries(users).find(()=>true);
+
+        wfs.write(ipaths.bin.mysql_startup.get(),
               `CREATE USER IF NOT EXISTS`
             + ` '${user}'@'localhost'`
             + ` IDENTIFIED BY '${pass}';`
             + `\nGRANT ALL ON *.* TO '${user}'@'localhost';`
             + `\nALTER USER '${user}'@'localhost' IDENTIFIED BY '${pass}';`);
         await disconnect();
-        mysqlprocess.start(ipaths.mysqldExe,
+        mysqlprocess.start(ipaths.bin.mysql.mysqld_exe.get(),
             [
-                // assume that if we start mysql, database_all is being used.
-                `--port=${databaseSettings('world').port}`,
+                `--port=${NodeConfig.DatabaseHostedPort}`,
                 '--log_syslog=0',
                 '--console',
                 '--wait-timeout=2147483',
-                `--init-file=${wfs.absPath(ipaths.mysqlStartup)}`,
-                `--datadir=${wfs.absPath(ipaths.databaseDir)}`
+                `--init-file=${wfs.absPath(ipaths.bin.mysql_startup.get())}`,
+                `--datadir=${wfs.absPath(ipaths.coredata.database.get())}`
             ]);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
         let val = await Promise.race([
@@ -221,7 +252,7 @@ export namespace mysql {
             // easier for newbies to not get the spam output
             process.exit(0);
         }
-        wfs.remove(ipaths.mysqlStartup);
+        ipaths.bin.mysql_startup.remove();
         term.success('Mysql process started');
     }
 
@@ -230,8 +261,7 @@ export namespace mysql {
      */
     export function hasOwnProcess() {
         return isWindows()
-            && (process.argv.includes('own-mysql')
-            || NodeConfig.mysql_executable === undefined);
+            && NodeConfig.DatabaseHostedPort !== 0;
     }
 
     /**
@@ -260,7 +290,7 @@ export namespace mysql {
      * Extracts the TDB file in bin and returns the filepath
      */
     export async function extractTdb() {
-        const search = ()=> wfs.readDir(ipaths.bin,false,'files')
+        const search = ()=> wfs.readDir(ipaths.bin.get(),false,'files')
             .filter(x=>x.endsWith('.sql'));
         const search1 = search();
         if(search1.length==1) {
@@ -289,14 +319,13 @@ export namespace mysql {
           con: Connection
         , sqlFilePath: string)
         {
-
-        term.log(`Beginning to rebuild ${con.name()}`);
+        term.log(`Rebuilding database ${con.name()}`);
         await con.clean();
 
         const mysqlCommand = mysql.hasOwnProcess() ?
-            `"${ipaths.mysqlExe}"` :
-                NodeConfig.mysql_executable != undefined ?
-            `"${NodeConfig.mysql_executable}"`:
+            `"${ipaths.bin.mysql.mysql_exe.get()}"` :
+                NodeConfig.MySQLExecutable != '' ?
+            `"${NodeConfig.MySQLExecutable}"`:
                 `sudo mysql`;
 
         await wsys.execAsync(
@@ -313,48 +342,37 @@ export namespace mysql {
 
     export async function applySQLFiles(
           cons: Connection
-        , type: 'world'|'auth'|'characters') {
-
-        // Apply 'startup' files (TODO: these should be made into updates)
-        await wfsa.iterate(ipaths.startupSqlDir(type), async (file) => {
-            if (file.endsWith('.sql')) {
-                const contents = wfs.read(file);
-                try {
-                    await cons.query(contents);
-                } catch(err: any) {
-                    term.error(`SQL error from file ${file}`);
-                    term.error(err.message);
-                    // TODO: what do here?
+        , type: 'world'|'auth'|'characters'
+    ) {
+        let total = 0;
+        const makeUpdate = async (node: WDirectory) => {
+            let files: string[] = []
+            node.iterate('FLAT','FILES','FULL',node=>{
+                if(!node.endsWith('.sql')) return;
+                files.push(node.get())
+            })
+            for(const file of files.sort()) {
+                const bn = path.basename(file);
+                const applied = await cons.query(
+                    `SELECT * from \`updates\` WHERE \`name\` = "${bn}";`
+                )
+                if(applied.length === 0) {
+                    term.log(`Applying SQL update ${bn}`)
+                    ++total;
+                    await cons.query(wfs.read(file))
+                    await cons.query(
+                        `INSERT INTO updates (name,hash,speed)`
+                      + ` VALUES ("${bn}", "tswow",0);`)
                 }
             }
-        });
+        }
+        await makeUpdate(
+            ipaths.bin.sql.updates.type.pick(type)._335.toDirectory())
+        await makeUpdate(
+            ipaths.bin.sql.custom.type.pick(type).toDirectory())
 
-        let files : string[] = [];
-        wfs.iterate(ipaths.sqlUpdateDir(type),(fp)=>{
-            if(!fp.endsWith('.sql')) return;
-            files.push(fp);
-        });
-        files.sort();
-
-        let customFiles: string[] = []
-        wfs.iterate(ipaths.sqlCustomUpdateDir(type),(fp)=>{
-            if(!fp.endsWith('.sql')) return;
-            customFiles.push(fp);
-        })
-        customFiles.sort()
-        files = files.concat(customFiles);
-
-        for(const filepath of files) {
-            const filename = wfs.basename(filepath);
-            const applied = await cons.query(
-                'SELECT * from `updates` WHERE `name` = "'+filename+'"');
-            if(applied.length===0) {
-                term.log(`Applying sql update ${filepath}`)
-                await cons.query(wfs.read(filepath));
-                await cons.query(
-                      `INSERT INTO updates (name,hash,speed)`
-                    + ` VALUES ("${filename}", "tswow",0);`)
-            }
+        if(total > 0) {
+            term.success(`Applied ${total} updates for ${cons.name()}`)
         }
     }
 
@@ -372,7 +390,7 @@ export namespace mysql {
             term.log(
                  `No character tables found for ${connection.cfg.database},`
                + ` creating them...`);
-            await connection.query(wfs.read(ipaths.createCharactersSql));
+            await connection.query(ipaths.bin.sql.characters_create_sql.readString());
         }
         await applySQLFiles(connection,'characters');
     }
@@ -385,7 +403,7 @@ export namespace mysql {
               `No auth tables found for ${connection.cfg.database},`
             + ` creating them...`);
 
-            await connection.query(wfs.read(ipaths.createAuthSql));
+            await connection.query(wfs.read(ipaths.bin.sql.auth_create_sql.get()));
         }
         await applySQLFiles(connection,'auth');
     }

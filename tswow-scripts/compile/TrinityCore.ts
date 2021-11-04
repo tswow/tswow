@@ -14,35 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as fs from 'fs';
-import request from 'request';
-import progress from 'request-progress';
-import { SevenZip } from '../util/7zip';
 import { BuildType } from '../util/BuildType';
-import { mpath, wfs } from '../util/FileSystem';
-import { bpaths, ipaths, spaths, TDB_URL } from '../util/Paths';
+import { wfs } from '../util/FileSystem';
+import { ipaths, TDB_URL } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
+import { bpaths, spaths } from './CompilePaths';
 
 export namespace TrinityCore {
     export function headers() {
         // todo: duplicate from
-        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude, true);
-        wfs.readDir(spaths.messagesSources,true,'files')
+        spaths.tswow_core.Public.copy(ipaths.bin.include, true)
+
+        spaths.client_extensions.CustomPackets
+            .readDir('ABSOLUTE')
             .filter(x=>x.endsWith('.h'))
-            .forEach(x=>{
-                wfs.copy(mpath(spaths.messagesSources,x),mpath(ipaths.binInclude,x))
-            })
+            .forEach(x=>x.copy(ipaths.bin.include.join(x.basename())))
 
         // write enums
-        let gdts = wfs.read(spaths.tcGlobaldts)
+        let gdts = spaths.tswow_core.Public.global_d_ts.read('utf-8')
         let tcFiles: string[] = []
-        wfs.iterate(spaths.trinityCoreSources,(name)=>{
-            tcFiles.push(name);
-        });
-        wfs.iterate(spaths.tswowCore,name=>{
-            tcFiles.push(name);
+        spaths.TrinityCore.src.iterate('RECURSE','FILES','FULL',name=>{
+            tcFiles.push(name.get());
+        })
+        spaths.tswow_core.iterate('RECURSE','FILES','FULL',name=>{
+            tcFiles.push(name.get());
         })
 
         let readFiles: {[key: string]: string} = {}
@@ -89,29 +86,36 @@ export namespace TrinityCore {
         if(missingEnums.length>0) {
             throw new Error(`Missing enum declarations: ${missingEnums.join(',')}`)
         }
-        wfs.write(ipaths.binglobaldts,gdts);
 
-        wfs.copy(spaths.installAddonInclude, ipaths.addonInclude, true);
+        ipaths.bin.include.global_d_ts.write(gdts);
 
-        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
-            if(wfs.exists(ipaths.moduleScripts(x))) {
-                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
-            }
+        // why is this done in TrinityCore?
+        spaths.install_config.include_addon.copy(ipaths.bin.include_addon);
 
-            if(wfs.exists(ipaths.moduleAddons(x))) {
-                wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x))
-            }
+        ipaths.modules.module.all().forEach(mod=>{
+            mod.endpoints().forEach(ep=>{
+                if(ep.livescripts.exists()) {
+                    ipaths.bin.include_addon.global_d_ts
+                        .copy(ep.livescripts.global_d_ts)
+                }
 
-            if(wfs.exists(ipaths.moduleData(x))) {
-                wfs.copy(ipaths.binglobaldts,ipaths.moduleDataLiveGlobal(x))
-            }
-        });
+                if(ep.addon.exists()) {
+                    ipaths.bin.include_addon.global_d_ts
+                        .copy(ep.addon.global_d_ts)
+                }
+
+                if(ep.datascripts.exists()) {
+                    ipaths.bin.include.global_d_ts
+                        .copy(ep.datascripts.global_d_ts)
+                }
+            })
+        })
     }
 
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
+        term.log("MYSQL IS ",mysql);
         term.log('Building TrinityCore');
-
-        wfs.mkDirs(bpaths.trinitycore);
+        bpaths.TrinityCore.mkdir()
 
         // We no longer make non-dynamic builds.
         const compileType = 'dynamic';
@@ -132,104 +136,79 @@ export namespace TrinityCore {
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                 +` -DOPENSSL_INCLUDE_DIR="${openssl}/include"`
                 +` -DOPENSSL_ROOT_DIR="${openssl}"`
-                +` -S "${spaths.trinityCore}"`
-                +` -B "${bpaths.trinitycore}"`;
-                buildCommand = `${cmake} --build ${bpaths.trinitycore} --config ${type}`;
+                +` -S "${spaths.TrinityCore.get()}"`
+                +` -B "${bpaths.TrinityCore.get()}"`;
+                buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
                 wsys.exec(setupCommand, 'inherit');
                 wsys.exec(buildCommand, 'inherit');
             } else {
-                wfs.mkDirs(bpaths.trinitycore);
-                const relativeSourcePath = wfs.relative(
-                    bpaths.trinitycore,
-                    spaths.trinityCore);
-                const relativeInstallPath = wfs.relative(
-                    bpaths.trinitycore,
-                    mpath(bpaths.trinitycore, 'install/trinitycore'));
+                bpaths.TrinityCore.mkdir();
+                const relSource = bpaths.TrinityCore
+                    .relativeFrom(spaths.TrinityCore)
+                const relInstall = bpaths.TrinityCore
+                    .relativeFrom(bpaths.TrinityCore.join('install','trinitycore'))
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
-                setupCommand = `cmake ${relativeSourcePath}`
-                +` -DCMAKE_INSTALL_PREFIX=${relativeInstallPath}`
+                setupCommand = `cmake ${relSource}`
+                +` -DCMAKE_INSTALL_PREFIX=${relInstall}`
                 +` -DCMAKE_C_COMPILER=/usr/bin/clang`
                 +` -DCMAKE_CXX_COMPILER=/usr/bin/clang++`
                 +` -DWITH_WARNINGS=1`
                 +` -DSCRIPTS=${scripts}`;
                 buildCommand = 'make -j 4';
-                await wsys.inDirectory(bpaths.trinitycore, () => {
+                await bpaths.TrinityCore.doIn(() => {
                     wsys.exec(setupCommand, 'inherit');
                     wsys.exec(buildCommand, 'inherit');
                     wsys.exec('make install', 'inherit');
-                });
+                })
             }
         }
 
-        // Copy TrinityCore Binaries
-        if (!wfs.exists(bpaths.trinitycoreBin(type))) {
-            return;
-        }
+        bpaths.TrinityCore.bin(type).scripts
+            .copy(ipaths.bin.trinitycore.build.pick(type).scripts)
 
-        // copy static libraries
-        bpaths.tcStaticLibraries(type)
-            .forEach(x => wfs.copy(x,mpath(ipaths.binLibraries(type),wfs.basename(x))));
+        bpaths.TrinityCore.configs(type).iterate('FLAT','FILES','FULL',node=>{
+            if(node.endsWith('.dll') || node.endsWith('.conf.dist') || node.endsWith('.pdb') || node.endsWith('.exe')) {
+                node.copy(ipaths.bin.trinitycore.build.pick(type).configs.join(node.basename()))
+            }
+        })
 
-        // copy executables
-        wfs.copy(bpaths.trinitycoreBin(type), ipaths.tc(type), true);
-
-        // copy conf files
-        if(!isWindows()) {
-            wfs.copy(bpaths.trinitycoreConf(type),ipaths.tc(type),false)
-        }
+        bpaths.TrinityCore.libraries(type).forEach(x=>{
+            x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))
+        })
 
         // Copy mysql/ssl/cmake libraries
         if (isWindows()) {
-            bpaths.mysqlLibs(mysql)
-                .forEach(x=>wfs.copy(x,mpath(ipaths.tc(type),wfs.basename(x))))
-            wfs.copy(bpaths.libcrypto(openssl),
-                mpath(ipaths.tc(type),wfs.basename(bpaths.libcrypto(openssl))))
+            [
+                bpaths.mysql.find_subdir().lib.libmysql_dll,
+                bpaths.mysql.find_subdir().lib.libmysqld_dll
+            ].forEach(x=>{
+                x.copy(ipaths.bin.trinitycore.build.pick(type).join(x.basename()))
+            })
+
+            bpaths.openssl.libcrypto
+                .copy(ipaths.bin.trinitycore.build.pick(type).libcrypto)
         }
 
         // Move ts-module header files
         headers();
 
-        const rev = wsys.execIn(spaths.trinityCore,'git rev-parse HEAD','pipe').split('\n').join('');
-        wfs.write(ipaths.tcRevision,rev);
+        const rev = wsys.execIn(
+              spaths.TrinityCore.get()
+            , 'git rev-parse HEAD','pipe').split('\n').join('');
+        ipaths.bin.revisions.trinitycore.write(rev)
 
-        wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
-        wfs.copy(spaths.sqlCustom,ipaths.sqlCustom)
+        spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
+        spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
-        if(wfs.exists(ipaths.tdb)) {
-            return;
-        }
-
-        if(!wfs.exists(bpaths.tdbSql)) {
-            if(!wfs.exists(bpaths.tdb7z)) {
-                term.log(`Downloading tdb from ${TDB_URL}...`);
-                await new Promise<void>((res,rej)=>{
-                progress(request(TDB_URL))
-                    .on('progress',function(data: any){
-                        term.log(`Download progress: ${(data.percent*100).toFixed(2)}%`);
-                    })
-
-                    .on('error', function(err: any){
-                        rej(err);
-                    })
-
-                    .on('end', function() {
-                        // TODO: workaround because the download doesn't release the file handle in time
-                        term.success('Finished download, sleeping for 2 seconds to fix file handles (workaround)')
-                        setTimeout((x)=>{
-                            res();
-                        },2000);
-                    })
-                    .pipe(fs.createWriteStream(bpaths.tdb7z));
-                });
+        if(!ipaths.bin.tdb.exists()) {
+            while(!bpaths.tdb.exists()) {
+                await wsys.userInput(
+                    `Could not find valid tdb.`
+                    + `Please download it from ${TDB_URL}\n`
+                    + `and place it in ${bpaths.tdb.get()}`
+                )
             }
-            term.log("Extracting tdb");
-            SevenZip.extract(bpaths.tdb7z,bpaths.base);
-            if(!wfs.exists(bpaths.tdbSql)) {
-                throw new Error(`Failed to extract tdb from 7z`);
-            }
+            bpaths.tdb.copy(ipaths.bin.tdb);
         }
-
-        term.log("Copying tdb");
-        wfs.copy(bpaths.tdbSql,ipaths.tdb);
     }
 }

@@ -15,14 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import termkit = require('terminal-kit');
-import { NodeConfig } from '../runtime/NodeConfig';
 import { wfs } from './FileSystem';
-import { bpaths, ipaths } from './Paths';
-import { getContext } from './TSWoWContext';
-
-function historyPath() {
-    return getContext() == 'build' ? bpaths.terminalHistory : ipaths.terminalHistory;
-}
 
 const t = termkit.terminal;
 t.on('key', (name: string, data: any) => {
@@ -71,6 +64,9 @@ const logStream = wfs.writeStream('./log.txt');
  * Contains functions for handling console output
  */
 export namespace term {
+    let historyPath: string = undefined;
+    let historyCount: number = 100;
+
     let history: string[] = [];
     let historyCounter = -1;
     let inputBuffer = '';
@@ -117,7 +113,6 @@ export namespace term {
         let text = texts.join(' ');
         text = text.split('\r').join('');
         if (!text.endsWith('\n')) { text = text + '\n'; }
-
 
         text.split('\n').forEach((x) => {
             const filterText = x.toLowerCase();
@@ -184,8 +179,10 @@ export namespace term {
                     t.color(inputColor, '>');
                 }
 
-                history.splice(0,Math.max(0,history.length - NodeConfig.terminal_history))
-                wfs.write(historyPath(),history.join('\n'));
+                history.splice(0,Math.max(0,history.length - historyCount))
+                if(historyPath !== undefined) {
+                    wfs.write(historyPath,history.join('\n'));
+                }
                 break;
             case 'BACKSPACE':
                 if (inputBuffer.length === 0 || xpos === 0) {
@@ -370,10 +367,14 @@ export namespace term {
         callback = callbackIn;
     }
 
-    export function Initialize() {
+    export function Initialize(historyPathIn: string, historyCountIn: number) {
+        historyPath = historyPathIn
+        historyCount = historyCountIn
         // load history file
-        history = wfs.readOr(historyPath(),'')
-            .split('\n')
-            .filter(x=>x.length>0)
+        if(historyPath !== undefined) {
+            history = wfs.readOr(historyPath,'')
+                .split('\n')
+                .filter(x=>x.length>0)
+        }
     }
 }

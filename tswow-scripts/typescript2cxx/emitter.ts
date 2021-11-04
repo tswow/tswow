@@ -878,7 +878,7 @@ export class Emitter {
     fixupParentReferences<T extends ts.Node>(rootNode: T, setParent?: ts.Node): T {
         let parent: ts.Node = rootNode;
         if (setParent) {
-            rootNode.parent = setParent;
+            (rootNode as any).parent = setParent;
         }
 
         ts.forEachChild(rootNode, visitNode);
@@ -890,7 +890,7 @@ export class Emitter {
             // allows us to quickly bail out of setting parents for sub-trees during incremental
             // parsing
             if (n.parent !== parent) {
-                n.parent = parent;
+                (n as any).parent = parent;
 
                 const saveParent = parent;
                 parent = n;
@@ -1860,7 +1860,7 @@ export class Emitter {
             case ts.SyntaxKind.TupleType:
                 const tupleType = <ts.TupleTypeNode>type;
 
-                tupleType.elementTypes.forEach(element => {
+                (tupleType as any).elementTypes.forEach(element => {
                     this.processPredefineType(element, false);
                 });
 
@@ -1983,7 +1983,7 @@ export class Emitter {
                 this.writer.writeString('std::tuple<');
 
                 next = false;
-                tupleType.elementTypes.forEach(element => {
+                (tupleType as any).elementTypes.forEach(element => {
                     if (next) {
                         this.writer.writeString(', ');
                     }
@@ -2300,7 +2300,7 @@ export class Emitter {
                 this.writer.writeString('{');
 
                 let next = false;
-                tupleType.elementTypes.forEach(element => {
+                (tupleType as any).elementTypes.forEach(element => {
                     if (next) {
                         this.writer.writeString(', ');
                     }
@@ -2841,7 +2841,7 @@ export class Emitter {
     processArrowFunction(node: ts.ArrowFunction): void {
         if (node.body.kind !== ts.SyntaxKind.Block) {
             // create body
-            node.body = ts.createBlock([ts.createReturn(<ts.Expression>node.body)]);
+            (node as any).body = ts.createBlock([ts.createReturn(<ts.Expression>node.body)]);
         }
 
         this.processFunctionExpression(<any>node);

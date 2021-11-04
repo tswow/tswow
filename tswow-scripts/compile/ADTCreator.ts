@@ -1,18 +1,19 @@
-import { wfs } from "../util/FileSystem";
-import { bpaths, ipaths } from "../util/Paths";
+import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
+import { bpaths } from "./CompilePaths";
 
 export namespace ADTCreator {
     export async function create(cmake: string) {
         if(isWindows()) {
             wsys.exec(`${cmake} `
                 + ` -S "tools/adt-creator" `
-                + ` -B "${bpaths.adtCreator}"`, 'inherit');
+                + ` -B "${bpaths.adtcreator.get()}"`, 'inherit');
             wsys.exec(`${cmake}`
-                + ` --build "${bpaths.adtCreator}"`
+                + ` --build "${bpaths.adtcreator.get()}"`
                 + ` --config Release`, 'inherit');
-            wfs.copy(bpaths.adtCreatorExe,ipaths.adtCreatorExe)
+            bpaths.adtcreator.Release.adt_creator_exe
+                .copy(ipaths.bin.adtcreator.adtcreator_exe)
         } else {
             // TODO: linux
         }

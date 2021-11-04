@@ -1,17 +1,18 @@
 import { BuildType, findBuildType } from "../util/BuildType";
-import { mpath, wfs } from "../util/FileSystem";
+import { commands } from "../util/Commands";
+import { patchTCConfig } from "../util/ConfigFile";
+import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
-import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
-import { commands } from "./Commands";
-import { Datasets } from "./Dataset";
+import { term } from "../util/Terminal";
+import { Dataset } from "./Dataset";
 import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 
 export namespace AuthServer {
-    const authserver = new Process().showOutput(true);
-    let connection: Connection|undefined = undefined;
+    const authserver = new Process()
+    export let connection: Connection|undefined = undefined;
 
     export function query(sql: string) {
         if(!connection) {
@@ -29,40 +30,54 @@ export namespace AuthServer {
         return authserver.stop();
     }
 
-    export async function start(type: BuildType = NodeConfig.default_build_type) {
+    export async function start(type: BuildType = NodeConfig.DefaultBuildType) {
         await stop();
         if(authserver.isRunning()) {
             throw new Error(`Something else started the auth server while it was stopping`);
         }
 
-        wfs.copy(ipaths.tcAuthserverDist(type),ipaths.authConfig+'.dist');
+        ipaths.bin.trinitycore.build.pick(type).authserver_conf_dist
+            .copy(ipaths.coredata.authserver.authserver_conf.get()+'.dist')
 
-        if(!wfs.exists(ipaths.authConfig)) {
-            wfs.copy(ipaths.tcAuthserverDist(type),ipaths.authConfig);
-        }
-
-        writeYamlToConf(ipaths.nodeYaml,ipaths.authConfig,{
-            // authserver executes in coredata, so we need the .. prefix
-            'MySQLExecutable':mpath('..',ipaths.rel(ipaths.mysqldExe))
-        });
+        ipaths.bin.trinitycore.build.pick(type).authserver_conf_dist
+            .copyOnNoTarget(ipaths.coredata.authserver.authserver_conf)
 
         await query('DELETE FROM realmlist;');
-        await Promise.all(Realm.getRealms().map(x=>query(x.realmListSql())));
-        await Promise.all(Datasets.getAll().map(x=>query(x.gamebuildSql())));
-        copyLibraryFiles(type);
+        await Promise.all(Realm.all().map(x=>query(x.realmlistSQL())));
+        await Promise.all(Dataset.all().map(x=>query(x.gamebuildSQL())));
 
-        authserver.startIn(ipaths.authRoot,
-            wfs.absPath(ipaths.tcAuthServer(type)),[`-c${wfs.absPath(ipaths.authConfig)}`]);
+        patchTCConfig(
+              ipaths.coredata.authserver.authserver_conf.get()
+            ,'LoginDatabaseInfo',NodeConfig.DatabaseString('auth')
+        )
+
+        // hackfix to stop the newline stuff
+        let bfr = "";
+        authserver.listenSimple(msg=>{
+            if(msg.endsWith('\n')) {
+                term.log(bfr+msg);
+                bfr = ""
+            } else {
+                bfr+=msg;
+            }
+        })
+
+        authserver.startIn(ipaths.coredata.authserver.get(),
+            wfs.absPath(
+                  ipaths.bin.trinitycore.build.pick(type).authserver.get())
+                , [`-c${wfs.absPath(
+                    ipaths.coredata.authserver.authserver_conf.get()
+                )}`]
+            );
     }
 
     export const command = commands.addCommand('auth');
 
     export async function initialize() {
-        connection = new Connection(NodeConfig.database_settings('auth'),'auth');
-        await mysql.installAuth(connection);
-
-        if(NodeConfig.autostart_authserver) {
-            await start(NodeConfig.default_build_type);
+        if(NodeConfig.AutoStartAuthServer) {
+            connection = new Connection(NodeConfig.DatabaseSettings('auth'),'auth');
+            await mysql.installAuth(connection);
+            await start(NodeConfig.DefaultBuildType);
         }
 
         AuthServer.command.addCommand(

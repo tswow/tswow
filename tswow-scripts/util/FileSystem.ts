@@ -16,22 +16,23 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import { FilePath, resfp } from './FileTree';
 
 /**
  * Async file system access using promises
  */
 export namespace wfsa {
-    export function exists(fpath: string) {
+    export function exists(fpath: FilePath) {
         return new Promise<boolean>((res, rej) => {
-            fs.access(fpath, (err) => {
+            fs.access(resfp(fpath), (err) => {
                 return res(!err);
             });
         });
     }
 
-    export function mkDirs(dname: string, clear: boolean = false) {
+    export function mkDirs(dname: FilePath, clear: boolean = false) {
         return new Promise<void>(async (res, rej) => {
-            if (await wfsa.isFile(dname)) {
+            if (await wfsa.isFile(resfp(dname))) {
                 return rej(new Error(`${dname} is not a directory!`));
             }
 
@@ -40,7 +41,7 @@ export namespace wfsa {
             }
 
             if (! await wfsa.exists(dname)) {
-                fs.mkdir(dname, {recursive: true}, (err) => {
+                fs.mkdir(resfp(dname), {recursive: true}, (err) => {
                     if (err) {
                         return rej(err);
                     } else {
@@ -53,13 +54,13 @@ export namespace wfsa {
         });
     }
 
-    export async function read(fpath: string) {
+    export async function read(fpath: FilePath) {
         return (await readBin(fpath)).toString();
     }
 
-    export async function write(fpath: string, text: string) {
+    export async function write(fpath: FilePath, text: string) {
         return new Promise<void>((res, rej) => {
-            fs.writeFile(fpath, text, (error) => {
+            fs.writeFile(resfp(fpath), text, (error) => {
                 if (error) {
                     rej(error);
                 } else {
@@ -69,14 +70,14 @@ export namespace wfsa {
         });
     }
 
-    export function move(source: string, target: string, flushFolders: boolean = false) {
+    export function move(source: FilePath, target: FilePath, flushFolders: boolean = false) {
         return new Promise<void>(async (res, rej) => {
             if (!wfsa.exists(source)) {
                 return;
             }
             await remove(target);
-            await mkDirs(path.dirname(target));
-            fs.rename(source, target, (error) => {
+            await mkDirs(path.dirname(resfp(target)));
+            fs.rename(resfp(source), resfp(target), (error) => {
                 if (error) {
                     rej(error);
                 } else {
@@ -86,7 +87,7 @@ export namespace wfsa {
         });
     }
 
-    export function copy(source: string, target: string, flushFolders: boolean = false, ignored: string[] = []) {
+    export function copy(source: FilePath, target: FilePath, flushFolders: boolean = false, ignored: string[] = []) {
         return new Promise<void>(async (res, rej) => {
             if (!await wfsa.exists(source)) {
                 return rej(new Error(`Attempt to copy from non-existent source ${source}`));
@@ -97,13 +98,13 @@ export namespace wfsa {
             }
 
 
-            function copyFile(sourceFile: string, targetFile: string) {
+            function copyFile(sourceFile: FilePath, targetFile: FilePath) {
                 return new Promise<void>(async (fres, frej) => {
-                    if (ignored.includes(sourceFile)) {
+                    if (ignored.includes(resfp(sourceFile))) {
                         return fres();
                     }
-                    await wfsa.mkDirs(path.dirname(targetFile));
-                    return fs.copyFile(sourceFile, targetFile, (err) => {
+                    await wfsa.mkDirs(path.dirname(resfp(targetFile)));
+                    return fs.copyFile(resfp(sourceFile), resfp(targetFile), (err) => {
                         if (err) {
                             frej(err);
                         } else {
@@ -118,8 +119,8 @@ export namespace wfsa {
                 return res();
             }
 
-            async function copyFolder(sourceDir: string, targetDir: string) {
-                if (ignored.includes(sourceDir)) {
+            async function copyFolder(sourceDir: FilePath, targetDir: FilePath) {
+                if (ignored.includes(resfp(sourceDir))) {
                     return;
                 }
                 await wfsa.mkDirs(targetDir);
@@ -140,22 +141,22 @@ export namespace wfsa {
         });
     }
 
-    export function readDir(dir: string, isRelative = false, accepted: 'files'|'directories'|'both' = 'both'): Promise<string[]> {
+    export function readDir(dir: FilePath, isRelative = false, accepted: 'files'|'directories'|'both' = 'both'): Promise<string[]> {
         return new Promise<string[]>((res, rej) => {
             if (!wfsa.exists(dir)) {
                 return res([]);
             }
 
-            fs.readdir(dir, (err, files) => {
+            fs.readdir(resfp(dir), (err, files) => {
                 if (err) {
                     rej(err);
                 } else {
-                    files = files.map(x => isRelative ? x : path.join(dir, x));
+                    files = files.map(x => isRelative ? x : path.join(resfp(dir), x));
                     // TODO: Remove lstatsync
                     if (accepted === 'files') {
-                        files = files.filter(x => fs.lstatSync(isRelative ? path.join(dir, x) : x).isFile());
+                        files = files.filter(x => fs.lstatSync(isRelative ? path.join(resfp(dir), x) : x).isFile());
                     } else if (accepted === 'directories') {
-                        files = files.filter(x => fs.lstatSync(isRelative ? path.join(dir, x) : x).isDirectory());
+                        files = files.filter(x => fs.lstatSync(isRelative ? path.join(resfp(dir), x) : x).isDirectory());
                     }
                     res(files);
                 }
@@ -163,9 +164,9 @@ export namespace wfsa {
         });
     }
 
-    export function readBin(fpath: string) {
+    export function readBin(fpath: FilePath) {
         return new Promise<Buffer>((res, rej) => {
-            fs.readFile(fpath, (err, data) => {
+            fs.readFile(resfp(fpath), (err, data) => {
                 if (err) {
                     rej(err);
                 } else {
@@ -175,14 +176,14 @@ export namespace wfsa {
         });
     }
 
-    export function remove(fpath: string) {
+    export function remove(fpath: FilePath) {
         return new Promise<void>(async (res, rej) => {
             if (!await wfsa.exists(fpath)) {
                 res();
             }
 
             if (await wfsa.isFile(fpath)) {
-                fs.unlink(fpath, (err) => {
+                fs.unlink(resfp(fpath), (err) => {
                     if (err) {
                         rej(err);
                     } else {
@@ -190,7 +191,7 @@ export namespace wfsa {
                     }
                 });
             } else if (await wfsa.isDirectory(fpath)) {
-                fs.rmdir(fpath, {recursive: true}, (err) => {
+                fs.rmdir(resfp(fpath), {recursive: true}, (err) => {
                     if (err) {
                         rej(err);
                     } else {
@@ -201,9 +202,9 @@ export namespace wfsa {
         });
     }
 
-    export function isFile(fpath: string) {
+    export function isFile(fpath: FilePath) {
         return new Promise<boolean>((res, rej) => {
-            fs.lstat(fpath, (err, stats) => {
+            fs.lstat(resfp(fpath), (err, stats) => {
                 if (err) {
                     return res(false);
                 }
@@ -212,9 +213,9 @@ export namespace wfsa {
         });
     }
 
-    export function isDirectory(fpath: string) {
+    export function isDirectory(fpath: FilePath) {
         return new Promise<boolean>((res, rej) => {
-            fs.lstat(fpath, (err, stats) => {
+            fs.lstat(resfp(fpath), (err, stats) => {
                 if (err) {
                     return res(false);
                 }
@@ -230,10 +231,10 @@ export namespace wfsa {
      *             If this path doesn't exist, the function does nothing.
      * @param cb The function to call for the file(s) found at or from `path`
      */
-    export async function iterate(iterPath: string, cb: (name: string) => any) {
+    export async function iterate(iterPath: FilePath, cb: (name: string) => any) {
         if (! (await exists(iterPath))) { return; }
         if (await isFile(iterPath)) {
-            await cb(iterPath);
+            await cb(resfp(iterPath));
         } else {
             const files = await readDir(iterPath, false);
             for (const file of files) {
@@ -255,8 +256,8 @@ export namespace wfs {
      * Creates the parent directory to a file or folder.
      * @param file The file or folder to create a parent directory to.
      */
-    function makeParentDir(file: string) {
-        const pdir = path.dirname(file);
+    function makeParentDir(file: FilePath) {
+        const pdir = path.dirname(resfp(file));
         if (!fs.existsSync(pdir)) {
             fs.mkdirSync(pdir, {recursive: true});
         }
@@ -269,14 +270,14 @@ export namespace wfs {
      * @param accepted Whether to accept files, directories or both.
      * @returns List of files in dir, with or without `dir` prepended depending on the value of `relative`.
      */
-    export function readDir(dir: string, isRelative = false, accepted: 'files'|'directories'|'both' = 'both'): string[] {
-        if (!fs.existsSync(dir)) { return []; }
+    export function readDir(dir: FilePath, isRelative = false, accepted: 'files'|'directories'|'both' = 'both'): string[] {
+        if (!fs.existsSync(resfp(dir))) { return []; }
 
-        let items = fs.readdirSync(dir).map(x => isRelative ? x : path.join(dir, x));
+        let items = fs.readdirSync(resfp(dir)).map(x => isRelative ? x : path.join(resfp(dir), x));
         if (accepted === 'files') {
-            items = items.filter(x => fs.lstatSync(isRelative ? path.join(dir, x) : x).isFile());
+            items = items.filter(x => fs.lstatSync(isRelative ? path.join(resfp(dir), x) : x).isFile());
         } else if (accepted === 'directories') {
-            items = items.filter(x => fs.lstatSync(isRelative ? path.join(dir, x) : x).isDirectory());
+            items = items.filter(x => fs.lstatSync(isRelative ? path.join(resfp(dir), x) : x).isDirectory());
         }
         return items;
     }
@@ -288,8 +289,8 @@ export namespace wfs {
      * @param dname The directory path to create
      * @param clear Whether to clear out the directory at `dname`
      */
-    export function mkDirs(dname: string, clear: boolean = false) {
-        if (isFile(dname)) {
+    export function mkDirs(dname: FilePath, clear: boolean = false) {
+        if (isFile(resfp(dname))) {
             throw new Error(`${dname} is not a directory!`);
         }
 
@@ -297,8 +298,8 @@ export namespace wfs {
             remove(dname);
         }
 
-        if (!fs.existsSync(dname)) {
-            fs.mkdirSync(dname, {recursive: true});
+        if (!fs.existsSync(resfp(dname))) {
+            fs.mkdirSync(resfp(dname), {recursive: true});
         }
     }
 
@@ -307,9 +308,9 @@ export namespace wfs {
      * @param paths Paths to be checked.
      * @returns True if all `paths` exists on the file system, false otherwise.
      */
-    export function exists(...paths: string[]) {
+    export function exists(...paths: FilePath[]) {
         for (const p of paths) {
-            if (!fs.existsSync(p)) { return false; }
+            if (!fs.existsSync(resfp(p))) { return false; }
         }
         return true;
     }
@@ -321,10 +322,10 @@ export namespace wfs {
      *             If this path doesn't exist, the function does nothing.
      * @param cb The function to call for the file(s) found at or from `path`
      */
-    export function iterate(iterPath: string, cb: (name: string) => any) {
+    export function iterate(iterPath: FilePath, cb: (name: string) => any) {
         if (!wfs.exists(iterPath)) { return; }
         if (isFile(iterPath)) {
-            cb(iterPath);
+            cb(resfp(iterPath));
         } else {
             const files = readDir(iterPath, false);
             for (const file of files) {
@@ -337,15 +338,15 @@ export namespace wfs {
      * Removes a file or folder (with all its contents) from the file system.
      * @param removedPath Path to the file or folder to remove. If this path doesn't exist, the function does nothing.
      */
-    export function remove(removedPath: string) {
-        if (!fs.existsSync(removedPath)) {
+    export function remove(removedPath: FilePath) {
+        if (!fs.existsSync(resfp(removedPath))) {
             return;
         }
 
-        if (fs.lstatSync(removedPath).isFile()) {
-            fs.unlinkSync(removedPath);
+        if (fs.lstatSync(resfp(removedPath)).isFile()) {
+            fs.unlinkSync(resfp(removedPath));
         } else {
-            fs.rmdirSync(removedPath, {recursive: true});
+            fs.rmdirSync(resfp(removedPath), {recursive: true});
         }
     }
 
@@ -354,9 +355,9 @@ export namespace wfs {
      * @param filePath The path to check
      * @returns true if `path` points to an (existing) file, false otherwise.
      */
-    export function isFile(filePath: string) {
-        if (!fs.existsSync(filePath)) { return false; }
-        return fs.lstatSync(filePath).isFile();
+    export function isFile(filePath: FilePath) {
+        if (!fs.existsSync(resfp(filePath))) { return false; }
+        return fs.lstatSync(resfp(filePath)).isFile();
     }
 
     /**
@@ -364,10 +365,14 @@ export namespace wfs {
      * @param dirPath The path to check
      * @returns true if `path` points to an (existing) directory, false otherwise.
      */
-    export function isDirectory(dirPath: string) {
-        if (!fs.existsSync(dirPath)) { return false; }
-        return fs.lstatSync(dirPath).isDirectory();
+    export function isDirectory(dirPath: FilePath) {
+        if (!fs.existsSync(resfp(dirPath))) { return false; }
+        return fs.lstatSync(resfp(dirPath)).isDirectory();
     }
+
+
+    export function write(file: FilePath, data: Buffer, encoding?: BufferEncoding)
+    export function write(file: FilePath, data: string);
 
     /**
      * Write a text file to the file system.
@@ -375,9 +380,9 @@ export namespace wfs {
      * @param data Text data to write
      * @throws if `file` points at an existing directory.
      */
-    export function write(file: string, data: string) {
-        mkDirs(path.dirname(file));
-        fs.writeFileSync(file, data);
+    export function write(file: FilePath, data: string|Buffer, encoding?: BufferEncoding) {
+        mkDirs(path.dirname(resfp(file)));
+        fs.writeFileSync(resfp(file), data, encoding);
     }
 
     /**
@@ -386,13 +391,13 @@ export namespace wfs {
      * @param data Buffer to write
      * @throws if `file` points at an existing directory.
      */
-    export function writeBin(file: string, data: Buffer) {
-        mkDirs(path.dirname(file));
-        fs.writeFileSync(file, data);
+    export function writeBin(file: FilePath, data: Buffer) {
+        mkDirs(path.dirname(resfp(file)));
+        fs.writeFileSync(resfp(file), data);
     }
 
-    export function writeStream(file: string) {
-        return fs.createWriteStream(file, {flags: 'a'});
+    export function writeStream(file: FilePath) {
+        return fs.createWriteStream(resfp(file), {flags: 'a'});
     }
 
     /**
@@ -401,8 +406,8 @@ export namespace wfs {
      * @throws if `path` doesn't point at a file
      * @returns Text contents of the file at `path`
      */
-    export function read(filePath: string) {
-        return fs.readFileSync(filePath).toString();
+    export function read(filePath: FilePath) {
+        return fs.readFileSync(resfp(filePath)).toString();
     }
 
     /**
@@ -411,7 +416,7 @@ export namespace wfs {
      * @throws if `path` doesn't point at a file
      * @returns Text contents of the file at `path` split by lines
      */
-    export function readLines(filepath: string) {
+    export function readLines(filepath: FilePath) {
         return read(filepath)
             .split('\r')
             .join('')
@@ -423,7 +428,7 @@ export namespace wfs {
      * @param filepath
      * @param lines
      */
-    export function writeLines(filepath: string, lines: string[]) {
+    export function writeLines(filepath: FilePath, lines: string[]) {
         write(filepath, lines.join('\n'));
     }
 
@@ -433,12 +438,12 @@ export namespace wfs {
      * @param filePath
      * @param backupBase
      */
-    export function makeBackup(filePath: string, backupBase = filePath+'.backup') {
+    export function makeBackup(filePath: FilePath, backupBase = filePath+'.backup') {
         let i = 1;
         while(wfs.exists(`${backupBase}_${i}`)) {
             ++i;
         }
-        wfs.copy(filePath,`${backupBase}_${i}`);
+        wfs.copy(resfp(filePath),`${backupBase}_${i}`);
     }
 
     /**
@@ -446,8 +451,8 @@ export namespace wfs {
      * @throws if `path` doesn't point at a file
      * @returns Buffer containing the file at `path`
      */
-    export function readBin(filePath: string) {
-        return fs.readFileSync(filePath);
+    export function readBin(filePath: FilePath) {
+        return fs.readFileSync(resfp(filePath));
     }
 
     /**
@@ -455,12 +460,12 @@ export namespace wfs {
      * @param filePath Path to the file to read
      * @param def Default string to use if the file system contains no file at `path`
      */
-    export function readOr(filePath?: string, def: string = '') {
+    export function readOr(filePath?: FilePath, def: string = '') {
         if (filePath === undefined) {
             return def;
         }
-        if (fs.existsSync(filePath)) {
-            return fs.readFileSync(filePath).toString();
+        if (fs.existsSync(resfp(filePath))) {
+            return fs.readFileSync(resfp(filePath)).toString();
         } else {
             return def;
         }
@@ -471,7 +476,7 @@ export namespace wfs {
      * @param dir The path to create the new clean directory at
      * @deprecated Use wfs#mkDirs
      */
-    export function clearDir(dir: string) {
+    export function clearDir(dir: FilePath) {
         remove(dir);
         mkDirs(dir);
     }
@@ -482,13 +487,13 @@ export namespace wfs {
      * @param source Path to the file/folder to move. If this path does not exist on the file system, the function does nothing.
      * @param target Path to move the file/folder
      */
-    export function move(source: string, target: string) {
+    export function move(source: FilePath, target: FilePath) {
         if (!wfs.exists(source)) {
             return;
         }
         remove(target);
-        mkDirs(path.dirname(target));
-        fs.renameSync(source, target);
+        mkDirs(path.dirname(resfp(target)));
+        fs.renameSync(resfp(source), resfp(target));
     }
 
     /**
@@ -498,8 +503,8 @@ export namespace wfs {
      * @param from
      * @param to
      */
-    export function relative(from: string, to: string) {
-        return path.relative(from, to);
+    export function relative(from: FilePath, to: FilePath) {
+        return path.relative(resfp(from), resfp(to));
     }
 
     /**
@@ -507,16 +512,16 @@ export namespace wfs {
      * @param pathIn Path to find the absolute path to.
      * @returns Absolute path to `pathIn`
      */
-    export function absPath(pathIn: string) {
-        return path.resolve(pathIn);
+    export function absPath(pathIn: FilePath) {
+        return path.resolve(resfp(pathIn));
     }
 
-    export function basename(pathIn: string) {
-        return path.basename(pathIn);
+    export function basename(pathIn: FilePath) {
+        return path.basename(resfp(pathIn));
     }
 
-    export function dirname(pathIn: string) {
-        return path.dirname(pathIn);
+    export function dirname(pathIn: FilePath) {
+        return path.dirname(resfp(pathIn));
     }
 
     /**
@@ -525,7 +530,7 @@ export namespace wfs {
      * @param target The target folder to copy to
      * @param flushFolders Whether to clear out any previous contents at `target`
      */
-    export function copy(source: string, target: string, flushFolders: boolean = false, ignored: string[] = []) {
+    export function copy(source: FilePath, target: FilePath, flushFolders: boolean = false, ignored: string[] = []) {
         if (!wfs.exists(source)) {
             throw new Error(`Attempted to copy from non-existent source:'${source}'`);
         }
@@ -533,15 +538,15 @@ export namespace wfs {
             remove(target);
         }
 
-        if (isFile(source) && !ignored.includes(source)) {
+        if (isFile(source) && !ignored.includes(resfp(source))) {
             makeParentDir(target);
             remove(target);
-            fs.copyFileSync(source, target);
+            fs.copyFileSync(resfp(source), resfp(target));
             return;
         }
 
-        function copyFolder(sourceDir: string, targetDir: string) {
-            if (ignored.includes(sourceDir)) { return; }
+        function copyFolder(sourceDir: FilePath, targetDir: FilePath) {
+            if (ignored.includes(resfp(sourceDir))) { return; }
             mkDirs(targetDir);
 
             const items = wfs.readDir(sourceDir, true);
@@ -560,16 +565,16 @@ export namespace wfs {
         copyFolder(source, target);
     }
 
-    export function removeDot(pathIn: string) {
+    export function removeDot(pathIn: FilePath) {
         return pathIn.startsWith('./') ? pathIn.substring(2) : pathIn;
     }
 
-    export function symlink(pathFrom: string, pathTo: string) {
+    export function symlink(pathFrom: FilePath, pathTo: FilePath) {
         fs.symlinkSync(absPath(pathFrom), absPath(pathTo), wfs.isDirectory(pathFrom) ? 'dir':'file');
     }
 
-    export function watch(file: string, callback: (event: any,filename: string)=>void) {
-        fs.watch(file,callback);
+    export function watch(file: FilePath, callback: (event: any,filename: string)=>void) {
+        fs.watch(resfp(file),callback);
     }
 }
 
@@ -578,13 +583,13 @@ export namespace wfs {
  * @param str Paths to combine
  * @returns All arguments joined together as a path.
  */
-export function mpath(...str: string[]) {
-    return path.join.apply(path, str);
+export function mpath(...str: FilePath[]) {
+    return path.join.apply(path, str.map(x=>resfp(x)));
 }
 
 /**
  * Makes a relative path
  */
-export function rpath(from: string, to: string) {
-    return path.relative.apply(path, [from, to]);
+export function rpath(from: FilePath, to: FilePath) {
+    return path.relative.apply(path, [resfp(from), resfp(to)]);
 }

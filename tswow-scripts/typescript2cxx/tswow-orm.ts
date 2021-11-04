@@ -1,9 +1,8 @@
 import ts = require("typescript");
-import * as fs from 'fs';
 import * as path from 'path';
 import { InterfaceDeclaration } from "typescript";
 import { CodeWriter } from "./codewriter";
-import { onMD5Changed } from "./version";
+import { TRANSPILER_CHANGES } from "./version";
 
 type DBType = 'world'|'auth'|'characters'
 
@@ -471,9 +470,8 @@ export function writeTableCreationFile(outDir: string) {
     writer.EndBlock();
 
     const tableFile = path.join(outDir,'livescripts','TableCreator.cpp');
-
-    let text = writer.getText();
-    onMD5Changed(tableFile,text,()=>{
-        fs.writeFileSync(tableFile,writer.getText());
-    })
+    TRANSPILER_CHANGES.writeIfChanged(
+        tableFile
+      , writer.getText()
+    )
 }

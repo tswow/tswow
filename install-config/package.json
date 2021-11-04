@@ -46,7 +46,7 @@
     "xml2js": "^0.4.23"
   },
   "scripts": {
-    "start": "node -r source-map-support/register ./bin/scripts/tswow/runtime/TSWoW.js",
+    "start": "node -r source-map-support/register ./bin/scripts/runtime/TSWoW.js",
     "test": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test",
     "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep "
   },

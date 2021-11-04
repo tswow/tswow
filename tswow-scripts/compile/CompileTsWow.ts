@@ -14,20 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { commands } from '../runtime/Commands';
-import { wfs } from '../util/FileSystem';
-import { BuildPaths, InstallPaths, ipaths } from '../util/Paths';
+import { commands } from '../util/Commands';
+import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { setContext } from '../util/TSWoWContext';
 import { SevenZipInstall } from './7Zip';
 import { ADTCreator } from './ADTCreator';
 import { BLPConverter } from './BLPConverter';
 import { Boost } from './Boost';
-import { build_path, install_path, isInteractive } from './BuildConfig';
-import { Clean } from './Clean';
+import { isInteractive } from './BuildConfig';
 import { CMake } from './Cmake';
+import { bpaths } from './CompilePaths';
 import { Config } from './Config';
 import { IMInstall } from './ImageMagick';
 import { MPQBuilder } from './MPQBuilder';
@@ -36,8 +34,6 @@ import { OpenSSL } from './OpenSSL';
 import { Scripts } from './Scripts';
 import { TrinityCore } from './TrinityCore';
 setContext('build');
-InstallPaths.setInstallBase(install_path());
-BuildPaths.setBuildBase(build_path());
 
 let buildingScripts = false;
 
@@ -48,17 +44,9 @@ async function compile(type: string, compileArgs: string[]) {
         return types.includes('full') || types.includes('release') || types.includes(check);
     }
 
-    if (type == 'clean-install') {
-        await Clean.cleanInstall();
-    }
-
-    if (types.includes('clean-build')) {
-        return await Clean.cleanBuild();
-    }
-
-    const cmake = isWindows() ? await CMake.find() : 'cmake';
+    const cmake = isWindows() ? (await CMake.find()).get() : 'cmake';
     term.log(`Found cmake at ${cmake}`);
-    const openssl = isWindows() ? await OpenSSL.find() : 'openssl';
+    const openssl = isWindows() ? (await OpenSSL.find()).get() : 'openssl';
     term.log(`Found OpenSSL at ${openssl}`);
     const mysql = isWindows() ? await MySQL.find() : 'mysql';
     term.log(`Found MySQL at ${mysql}`);
@@ -81,10 +69,7 @@ async function compile(type: string, compileArgs: string[]) {
     if (isType('adtcreator')) { await ADTCreator.create(cmake); }
 
     if (!buildingScripts && isType('scripts')) {
-        if(!wfs.exists(ipaths.tsc)) {
-            wsys.execIn(ipaths.base, `npm i typescript`);
-        }
-        await Scripts.build(build_path(), install_path());
+        await Scripts.build();
         buildingScripts = true;
     }
 
@@ -93,17 +78,18 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (types.includes('release')) {
-        term.log(`Creating ${build_path('release.7z')}`);
-        SevenZipInstall.makeArchive(wfs.absPath(build_path('release.7z')), wfs.absPath(install_path()));
+        term.log(`Creating ${bpaths.release_7z.get()}`);
+        SevenZipInstall.makeArchive(bpaths.release_7z.abs(), ipaths.abs());
     }
 
     term.log('Installation successful!');
 }
 
 async function main() {
-    term.Initialize();
+    term.Initialize(bpaths.terminal_history.get(),100);
     const build = commands.addCommand('build');
     await compile('scripts', []);
+    //process.exit(0)
 
     const installedPrograms =
         ['trinitycore','trinitycore-release', 'trinitycore-relwithdebinfo', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',

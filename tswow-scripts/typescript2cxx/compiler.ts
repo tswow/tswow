@@ -8,7 +8,7 @@ import { writeIdFile } from './tswow-idfile';
 import { writeLoader } from './tswow-loader';
 import { writeTableCreationFile } from './tswow-orm';
 import { writePacketCreationFile } from './tswow-packet';
-import { onFileOutdated, onMD5Changed } from './version';
+import { TRANSPILER_CHANGES } from './version';
 
 export enum ForegroundColorEscapeSequences {
     Grey = '\u001b[90m',
@@ -171,9 +171,7 @@ export class Run {
     }
 
     private reportDiagnostic(diagnostic: ts.Diagnostic) {
-
         const category = ts.DiagnosticCategory[diagnostic.category];
-
         let action;
         let color;
         switch (<ts.DiagnosticCategory>diagnostic.category) {
@@ -194,7 +192,6 @@ export class Run {
                 color = resetEscapeSequence;
                 break;
         }
-
         action(category, this.formatHost.getNewLine());
         action(
             category,
@@ -208,8 +205,11 @@ export class Run {
     }
 
     private generateBinary(
-        program: ts.Program, sources: string[], options: ts.CompilerOptions, cmdLineOptions: any) {
-
+          program: ts.Program
+        , sources: string[]
+        , options: ts.CompilerOptions
+        , cmdLineOptions: any
+    ) {
         // @tswow-begin: hack: const enums
         let enumTypes: {[key: string]: string} = {}
         sources.filter(file=>file.endsWith('global.d.ts'))
@@ -245,7 +245,16 @@ export class Run {
             const paths = sources.filter(sf => s.fileName.endsWith(sf));
             (<any>s).__path = paths[0];
 
-            onFileOutdated(paths[0],()=>{
+            let fileNameNoExt = s.fileName.endsWith('.ts') ? s.fileName.substr(0, s.fileName.length - 3) : s.fileName;
+            if (fileNameNoExt.startsWith(rootFolder)) {
+                fileNameNoExt = fileNameNoExt.substring(rootFolder.length);
+            }
+            const fileNameHeader = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'h'));
+            const fileNameCpp = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'cpp'));
+            const headerPath = outDir + fileNameHeader;
+            const cppPath = outDir + fileNameCpp;
+            TRANSPILER_CHANGES.onChanged(paths[0], [headerPath,cppPath],()=>{
+                console.log(`Transpiling ${paths[0]}`)
                 // @tswow-begin: hack: const enums
                 const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
                 emitterHeader.HeaderMode = true;
@@ -254,14 +263,6 @@ export class Run {
                 // @tswow-end
                 emitterSource.SourceMode = true;
                 emitterSource.processNode(s);
-
-                let fileNameNoExt = s.fileName.endsWith('.ts') ? s.fileName.substr(0, s.fileName.length - 3) : s.fileName;
-                if (fileNameNoExt.startsWith(rootFolder)) {
-                    fileNameNoExt = fileNameNoExt.substring(rootFolder.length);
-                }
-
-                const fileNameHeader = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'h'));
-                const fileNameCpp = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'cpp'));
 
                 if (cmdLineOptions.trace) {
                     console.log(
@@ -275,18 +276,11 @@ export class Run {
 
                 const dir = path.dirname(path.join(outDir, fileNameHeader));
                 fs.mkdirsSync(dir);
-                const headerPath = outDir + fileNameHeader;
                 const headerText = emitterHeader.writer.getText();
-                const cppPath = outDir + fileNameCpp;
                 const cppText = emitterSource.writer.getText();
 
-                onMD5Changed(headerPath,headerText,()=>{
-                    fs.writeFileSync(headerPath, headerText);
-                })
-
-                onMD5Changed(cppPath,cppText,()=>{
-                    fs.writeFileSync(cppPath, cppText);
-                })
+                TRANSPILER_CHANGES.writeIfChanged(headerPath,headerText);
+                TRANSPILER_CHANGES.writeIfChanged(cppPath,cppText);
             })
         });
 

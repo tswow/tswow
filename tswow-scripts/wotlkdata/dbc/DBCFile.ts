@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { inMemory } from '../query/Query';
-import { Settings } from '../Settings';
+import { dataset } from '../Settings';
 import { Table } from '../table/Table';
 import { GetStage } from '../wotlkdata';
 import { DBCBuffer } from './DBCBuffer';
@@ -148,7 +148,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     private defaultPath() {
-        return path.join(Settings.DBC_SOURCE, this.name + '.dbc');
+        return path.join(dataset.dbc_source.get(), this.name + '.dbc');
     }
 
     first(): R {

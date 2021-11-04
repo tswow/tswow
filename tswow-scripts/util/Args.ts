@@ -18,40 +18,20 @@
 /**
  * Contains functions for parsing command-line arguments.
  */
-export namespace args {
-    /**
-     * Checks if any of the provided flags were sent as command-line arguments.
-     * @param flagnames The flags to check for
-     */
-    export function hasAnyFlag(...flagnames: string[]) {
-        for (const flagname of flagnames) {
-            if (process.argv.includes(flagname) || process.argv.includes(`-${flagname}`) || process.argv.includes(`--${flagname}`)) {
-                return true;
-            }
-        }
-        return false;
+export namespace Arguments {
+    export function hasFlag(flagname: string, args: string[] = process.argv) {
+        args.forEach(x=>{
+            if(x.startsWith(flagname)) return true;
+        })
     }
 
-    /**
-     * Returns the assignment of a command-line argument.
-     *
-     * Valid assignments have the form `flagname=value`
-     * @param flagname Left-hand side of the assignment.
-     */
-    export function getValue(flagname: string): string {
-        const matches = process.argv.filter(x => x.split(' ').join('').startsWith(`${flagname}=`));
-        if (matches.length === 0) { return ''; }
-        const match = matches[0];
-        return match.split('=')[1];
+    export function getString(flagname: string, defVal: string, args: string[] = process.argv) {
+        let v = args.find(x=>x.startsWith(flagname));
+        if(!v) return defVal
+        return v.match(/.+?\= *(.+?)/)[1]
     }
 
-    /**
-     * Returns the numeric assignment of a command-line argument.
-     *
-     * Valid numeric assignments have the form `flagname=number`
-     * @param flagname Left-hand side of the assignment.
-     */
-    export function getNumber(flagname: string) {
-        return parseInt(getValue(flagname).split(' ').join(''), 10);
+    export function getNumber(flagname: string, defVal: number, args: string[] = process.argv) {
+        return parseInt(getString(flagname,defVal.toString(),args));
     }
 }

@@ -14,10 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath, wfs } from '../util/FileSystem';
-import { bpaths, ipaths } from '../util/Paths';
+import { mpath } from '../util/FileSystem';
+import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
+import { bpaths } from './CompilePaths';
 
 export namespace IMInstall {
     export async function install() {
@@ -25,20 +26,15 @@ export namespace IMInstall {
             return;
         }
 
-        while(!wfs.exists(bpaths.imConvert) && !wfs.exists(bpaths.imMagick)) {
+        while(!bpaths.im.exists()) {
             await wsys.userInput(`ImageMagick is not installed:\n\t`
             + `1. Download https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-7.1.0-portable-Q16-x64.zip\n\t`
-            + `2.Extract it to ${bpaths.imConvert} `
-            + `(${mpath(bpaths.imConvert)} and ${mpath(bpaths.imMagick)} should exist)\n\t`
+            + `2.Extract it to ${bpaths.im.get()} `
+            + `(${mpath(bpaths.im.convert_exe.get())} and ${mpath(bpaths.im.magic_exe.get())} should exist)\n\t`
             + `3.Press enter in this prompt`);
         }
 
-        if(!wfs.exists(ipaths.imConvert)) {
-            wfs.copy(bpaths.imConvert,ipaths.imConvert);
-        }
-
-        if(!wfs.exists(ipaths.imMagick)) {
-            wfs.copy(bpaths.imConvert,ipaths.imMagick);
-        }
+        bpaths.im.convert_exe.copy(ipaths.bin.im.convert)
+        bpaths.im.magic_exe.copy(ipaths.bin.im.magick)
     }
 }

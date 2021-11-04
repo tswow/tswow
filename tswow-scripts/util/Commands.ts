@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { term } from '../util/Terminal';
+import { term } from './Terminal';
 
 export let trace = process.argv.includes('trace');
 

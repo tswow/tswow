@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ChildProcessWithoutNullStreams } from 'child_process';
+import { FilePath } from './FileTree';
 import { isWindows } from './Platform';
 import { wsys } from './System';
 import { term } from './Terminal';
@@ -165,7 +166,7 @@ export class Process {
      * @param program Program the process will execute
      * @param args Arguments to the new process
      */
-    async startIn(directory: string, program: string, args: string[] = []) {
+    async startIn(directory: FilePath, program: string, args: string[] = []) {
         await this.stop();
         let proc = wsys.spawnIn(directory, program, args);
         this.process = proc;

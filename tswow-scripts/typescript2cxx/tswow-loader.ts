@@ -1,6 +1,7 @@
 import * as fs from 'fs';
+import { ipaths } from '../util/Paths';
 import { CodeWriter } from "./codewriter";
-import { onMD5Changed } from './version';
+import { TRANSPILER_CHANGES } from './version';
 import path = require('path');
 
 export function writeLoader(outDir: string) {
@@ -17,11 +18,10 @@ export function writeLoader(outDir: string) {
     header.writeStringNewLine(`${exp} char const* GetBuildDirective();`);
     header.EndBlock()
 
-    const headerText = header.getText()
-    const headerPath = path.join(outDir,'livescripts','TCLoader.h')
-    onMD5Changed(headerPath,headerText,()=>{
-        fs.writeFileSync(headerPath,headerText);
-    })
+    TRANSPILER_CHANGES.writeIfChanged(
+          path.join(outDir,'livescripts','TCLoader.h')
+        , header.getText()
+    )
 
     const mainHeader = `${path.basename(process.cwd())}-scripts.h`
     const livescripts = path.join(process.cwd(),'livescripts');
@@ -47,7 +47,7 @@ export function writeLoader(outDir: string) {
     cpp.BeginBlock();
     cpp.writeStringNewLine(
           `return `
-        + `"${fs.readFileSync('../../bin/revision/trinitycore')}";`)
+        + `"${ipaths.bin.revisions.trinitycore.readString()}";`)
     cpp.EndBlock();
 
     cpp.writeStringNewLine(`void AddTSScripts(TSEventHandlers* handlers)`);
@@ -75,9 +75,8 @@ export function writeLoader(outDir: string) {
     cpp.writeStringNewLine(`return "Release";`); // <-- ??
     cpp.EndBlock();
 
-    const cppText = cpp.getText()
-    const cppPath = path.join(outDir,'livescripts','TCLoader.cpp')
-    onMD5Changed(cppPath,cppText,()=>{
-        fs.writeFileSync(cppPath,cppText);
-    })
+    TRANSPILER_CHANGES.writeIfChanged(
+        path.join(outDir,'livescripts','TCLoader.cpp')
+      , cpp.getText()
+    )
 }

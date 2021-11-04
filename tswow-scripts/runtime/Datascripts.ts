@@ -1,101 +1,294 @@
+import { watchTsc } from "../util/CompileTS";
+import { ConfigFile, Property, Section } from "../util/ConfigFile";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { ChildProcessSettings } from "./ChildProcessSettings";
-import { commands } from "./Commands";
-import { Datasets } from "./Dataset";
-import { datascripts_swcrc, lib_package_json, Modules } from "./Modules";
+import { BuildCommand, ListCommand } from "./CommandActions";
+import { Dataset } from "./Dataset";
+import { Identifier } from "./Identifiers";
+import { Module, ModuleEndpoint } from "./Modules";
+import { NodeConfig } from "./NodeConfig";
 
-export namespace Datascripts {
-    export function compile(mod: string) {
-        wfs.write(ipaths.moduleSwcRc(mod),JSON.stringify(datascripts_swcrc))
-        try {
-            wsys.execIn(ipaths.moduleRoot(mod),`swc datascripts -d datascripts/build`,'inherit')
-        } catch(error) {
-            // error printed by swc
-        }
-        wfs.remove(ipaths.moduleSwcRc(mod));
+/**
+ * The example patch file that will be written to the 'datascripts' directory of new modules.
+ */
+const patch_example_ts = (name: string) =>
+`import { std } from "tswow-stdlib";
+
+console.log("Hello from ${name} data script!");`;
+
+/**
+ * The default package.json that will be written to datascript build directory of new modules.
+ */
+const lib_package_json =
+    (name: string) => ({
+    'name': name,
+    'version': '1.0.0',
+    'description': '',
+    'main': `${name}-data.js`,
+    'types': `${name}-data.d.ts`,
+    'dependencies': {
+    },
+    'devDependencies': {},
+    'scripts': {},
+});
+
+/**
+ * The tsconfig.json that will be used to compile 'datascript' directories
+ */
+const data_tsconfig =
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "outDir": "./build",
+    "rootDir": "./",
+    "emitDeclarationOnly": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "sourceMap": true
+  },
+  "exclude":["**/build/**","**/tswow/wotlkdata/**"]
+};
+
+const datascripts_swcrc = {
+    "module": {
+        "type":"commonjs"
+    },
+    "exclude":[".*.js$",".*\\.d.ts$"],
+    "jsc": {
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "decorators": true,
+            "dynamicImport": true
+        },
+        "transform":null,
+        "target":"es2016",
+        "loose":false
+    },
+    "sourceMaps": true
+}
+
+type TypeGeneration = 'none'|'startup'|'watch'
+export class DatascriptsConfig extends ConfigFile {
+    protected description(): string {
+        return "Datascript settings"
     }
 
-    export function compileTypes(mod: string, declare: boolean) {
-        console.log(`Compiling types for ${mod}...`)
+    @Section('Datascripts')
+
+    @Property({
+          name: 'Datascript.Dependencies'
+        , description: ''
+        , examples: [
+            [[],'No dependencies'],
+            [['other-module'],'other-module will be built before this one']
+        ]
+    })
+    protected _dependencies: string[] = this.undefined()
+    get Dependencies() {
+        return this.getArrayAll(this._dependencies, [])
+    }
+
+    @Property({
+          name: 'Datascript.TypeGeneration'
+        , description:''
+        , examples: [
+              ['none','']
+            , ['startup','']
+            , ['watch','']
+        ]
+    })
+    TypeGeneration: TypeGeneration = this.undefined();
+}
+
+export class Datascripts {
+    mod: ModuleEndpoint
+    config: DatascriptsConfig;
+    get path() {
+        return this.mod.path.datascripts
+    }
+
+    initialize() {
+        this.path.mkdir();
+        if(!this.path.index.exists()) {
+            this.path.index.write(patch_example_ts(this.mod.subId))
+        }
+        ipaths.bin.include.global_d_ts.copy(this.path.global_d_ts)
+        this.path.tsconfig_json.writeJson(data_tsconfig);
+        if(!this.path.datascripts_conf.exists()) {
+            this.config.generateIfNotExists();
+        }
+        if(this.config.TypeGeneration === 'startup') {
+            this.compileTypes(true);
+        }
+        if(this.config.TypeGeneration === 'watch') {
+            watchTsc(
+                  ipaths.node_modules.typescript_js.abs().get()
+                , this.path.abs().get()
+                , this.mod.fullName
+            );
+            this.path.build.package_json
+                .writeJson(lib_package_json(this.mod.fullName))
+            if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
+                wsys.exec(`npm i -S ${this.path.build.abs()}`)
+            }
+        }
+        return this;
+    }
+
+    constructor(mod: ModuleEndpoint) {
+        this.mod = mod;
+        this.config = new DatascriptsConfig(this.path.datascripts_conf.get())
+    }
+
+    symlink() {
+        this.path.build.package_json.writeJson(lib_package_json(this.mod.fullName))
+        if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
+            wsys.exec(`npm i -S ${this.path.build.get()}`)
+        }
+    }
+
+    compile() {
+        this.path.swcrc.writeJson(datascripts_swcrc)
         try {
-            wsys.execIn(ipaths.moduleData(mod),'tsc','inherit')
+            wsys.execIn(
+                  this.path.dirname().get()
+                , `swc datascripts -d datascripts/build`,'inherit'
+            )
+        } catch(error) {
+            // error is printed by swc
+        }
+        this.path.swcrc.remove();
+    }
+
+    compileTypes(declare: boolean) {
+        term.log(`Compiling types for ${this.path}`)
+        try {
+            wsys.execIn(this.path.get(),'tsc','inherit');
         } catch(error) {
             // error printed by tsc
         }
-        compile(mod);
+        this.compile(); // ensure all sources exist
         if(declare) {
-            wfs.write(
-                ipaths.moduleDataPackagePath(mod)
-            , lib_package_json(mod)
+            this.symlink();
+            this.path.build.package_json.writeJson(
+                lib_package_json(this.mod.fullName)
             )
-            if(!wfs.exists(ipaths.moduleDataLink(mod))) {
-                wsys.exec(`npm i -S ${ipaths.moduleDataBuild(mod)}`);
-            }
         }
     }
 
-    /**
-     * Builds dbc and sql data for all modules.
-     */
-    export async function build(
-          dataset: Datasets.Dataset
-        , readonly: boolean
-        , useTimer: boolean
-        , args: string[] = []) {
-
-        term.log(`Building DataScripts for dataset ${dataset.id}`);
-        await Modules.refreshModules();
-        const ct = Date.now();
-
-        if(useTimer) {
-            term.log(`Compiled scripts in ${((Date.now()-ct)/1000).toFixed(2)} seconds.`)
-        }
-
-        wfs.mkDirs(ipaths.datasetDBC(dataset.id), false);
-
-        dataset.installServerData();
-        await dataset.installBoth(false);
-
-        const shouldProf = args.includes('--prof')
-
-        dataset.config.modules.forEach(x=>{
-            compile(x);
-            wfs.copy(ipaths.binglobaldts,ipaths.moduleDataLiveGlobal(x))
-        })
-
-        try {
-            wsys.exec(
-                `node -r source-map-support/register ${shouldProf?'--prof':''} ${ipaths.wotlkdataIndex}`
-                +` ${ChildProcessSettings(dataset,readonly,useTimer)}`
-                + ` ${(args ? args.join(' '):'')}`
-                , 'inherit');
-            if(shouldProf) {
-                wfs.readDir('./',true,'files')
-                    .filter(x=>x.startsWith('isolate-')
-                        && x.endsWith('-v8.log'))
-                    .forEach((x,i)=>{
-                        wsys.exec(
-                              `node --prof-process ${x}`
-                            + ` > node-profiling${i==0?'':`-${i}`}.txt`
-                        )
-                        wfs.remove(x)
-                    })
-            }
-        } catch (error) {
-            throw new Error(`Failed to rebuild patches: ${error}`);
-        }
-
-        term.success(`Finished building DataScripts for dataset ${dataset.id}`);
+    static all() {
+        return Module.endpoints()
+            .filter(x=>x.path.datascripts.exists())
+            .map(x=>new Datascripts(x))
     }
 
-    export function initialize() {
-        commands.addCommand('check','dataset','',async (args: any[])=>{
-            await Promise.all(Datasets.getDatasetsOrDefault(args).map(x=>{
-                return build(x,true,args.includes('--use-timer'),args);
-            }));
+    static create(mod: ModuleEndpoint) {
+        return new Datascripts(mod).initialize();
+    }
+
+    static initialize() {
+        if(!ipaths.node_modules.wotlkdata.exists()) {
+            term.log('Linking wotlkdata...');
+            wsys.exec(`npm i -S ${ipaths.bin.scripts.wotlkdata.get()}`)
+        }
+
+        BuildCommand.addCommand(
+              'datascripts'
+            , 'dataset'
+            , ''
+            , args => {
+                Identifier.getDatasets(
+                      args
+                    , 'MATCH_ANY'
+                    , NodeConfig.DefaultDataset
+                ).forEach(x=>{
+                    this.build(x,args)
+                })
+            }
+        )
+        .addAlias('datascript')
+        .addAlias('data')
+
+        ListCommand.addCommand(
+            'datascripts'
+            , 'dataset?'
+            , ''
+            , args => {
+                let isDataset = Identifier.isDataset(args[0])
+                let eps = isDataset
+                    ? Dataset.all()
+                        .find(x=>x.name === args[0])
+                        .modules()
+                    : Module.endpoints()
+                eps.forEach(x=>{
+                    term.log(x.path.get())
+                })
+            }
+        )
+        .addAlias('datascript')
+    }
+
+    static async build(
+          dataset: Dataset
+        , args: string[] = []
+    ) {
+        await dataset.setupClientData();
+        await dataset.setupDatabases('BOTH', false);
+        dataset.modules().forEach(endpoint=>{
+            if(endpoint.datascripts.path.exists()) {
+                endpoint.datascripts.compile();
+                ipaths.bin.include.global_d_ts
+                    .copy(endpoint.datascripts.path.global_d_ts)
+            }
         });
+
+        let clientCount = 0;
+        if(!args.includes('--skip-client')) {
+            clientCount = await dataset.client.kill();
+        }
+
+        let runningWorldservers = args.includes('--skip-server') ? []
+            : dataset.realms().filter(x=>x.worldserver.isRunning())
+
+        await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
+
+        wsys.exec(
+                `node -r source-map-support/register`
+              + ` ${ipaths.bin.scripts.wotlkdata.wotlkdata.index.get()}`
+              + ` --ipaths=./`
+              + ` --dataset=${dataset.path.get()}`
+              + ` --datasetName=${dataset.fullName}`
+              + ` ${args.join(' ')}`
+            , 'inherit'
+        )
+
+        if(args.includes('--prof')) {
+            wfs.readDir('./',true,'files')
+            .filter(x=>x.startsWith('isolate-')
+                && x.endsWith('-v8.log'))
+            .forEach((x,i)=>{
+                wsys.exec(
+                      `node --prof-process ${x}`
+                    + ` > node-profiling${i==0?'':`-${i}`}.txt`
+                )
+                wfs.remove(x)
+            })
+        }
+
+        if(clientCount > 0) {
+            dataset.client.startup(clientCount);
+        }
+        runningWorldservers.forEach(x=>x.start(x.lastBuildType))
+        term.success(`Finished building DataScripts for dataset ${dataset.name}`);
     }
 }

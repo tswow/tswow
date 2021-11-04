@@ -17,6 +17,7 @@
 import * as child_process from 'child_process';
 import * as readline from 'readline';
 import { wfs } from './FileSystem';
+import { FilePath, resfp } from './FileTree';
 
 /**
  * Contains functions for running external programs and managing processes and working directories.
@@ -117,7 +118,7 @@ export namespace wsys {
      *               'pipe' will return output as a string instead)
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
-    export function execIn(dirname: string, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
+    export function execIn(dirname: FilePath, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
         let str = '';
         const data = child_process.execSync(program,
             {stdio: stdio, cwd: wfs.absPath(dirname)});
@@ -135,8 +136,8 @@ export namespace wsys {
      * @param args Arguments to the child process
      * @returns Child process handle
      */
-    export function spawnIn(dirname: string, program: string, args: string[] = []) {
-        return child_process.spawn(program, args, {stdio: 'pipe', cwd: dirname});
+    export function spawnIn(dirname: FilePath, program: string, args: string[] = []) {
+        return child_process.spawn(program, args, {stdio: 'pipe', cwd: resfp(dirname)});
     }
 
     /**

@@ -14,64 +14,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { InstallPaths } from '../util/Paths';
-import { term } from '../util/Terminal';
-import { Timer } from '../util/Timer';
-import { setContext } from '../util/TSWoWContext';
-import { Addon } from './Addon';
-import { Assets } from './Assets';
-import { AuthServer } from './AuthServer';
-import { Build } from './Build';
-import { Clean } from './Clean';
-import { Client } from './Client';
-import { commands } from './Commands';
-import { Datascripts } from './Datascripts';
-import { Datasets } from './Dataset';
-import { MapData } from './MapData';
-import { Modules } from './Modules';
-import { mysql } from './MySQL';
-import { PositionsFile } from './PositionsFile';
-import { Realm } from './Realm';
-import { Snippets } from './Snippets';
-import { Test } from './Test';
-setContext('install');
-InstallPaths.setInstallBase('./');
+process.argv.push('--ipaths=./')
+import { commands } from "../util/Commands";
+import { ipaths } from "../util/Paths";
+import { term } from "../util/Terminal";
+import { Timer } from "../util/Timer";
+import { Addon } from "./Addon";
+import { AuthServer } from "./AuthServer";
+import { Client } from "./Client";
+import { Crashes } from "./Crashes";
+import { Datascripts } from "./Datascripts";
+import { Dataset } from "./Dataset";
+import { Livescripts } from "./Livescripts";
+import { MapData } from "./MapData";
+import { Module } from "./Modules";
+import { mysql } from "./MySQL";
+import { NodeConfig } from "./NodeConfig";
+import { Package } from "./Package";
+import { Realm } from "./Realm";
 
 export async function main() {
-    try {
-        term.log('~tswow starting up~');
-        const timer = Timer.start();
-
-        await mysql.initialize();
-        await Addon.initialize();
-
-        if(!process.argv.includes('minimal')) {
-            await Modules.initialize();
-            await Build.initialize();
-            await Client.initialize();
-            await Assets.initialize();
-            await Test.initialize();
-        }
-
-        await Datascripts.initialize();
-        await Datasets.initialize();
-        await AuthServer.initialize();
-        await Realm.initialize();
-
-        await Clean.initialize();
-
-        await Snippets.initialize();
-        await PositionsFile.initialize();
-        await MapData.initialize();
-        await term.Initialize();
-
-        term.success(`Initialized tswow in ${timer.timeSec()}s`);
-    } catch (error) {
-        console.error('Failed to start tswow:', error);
-    }
-
-    if(!process.argv.includes('minimal')) {
-        await commands.enterLoop();
-    }
+    term.log(`TSWoW Starting Up`)
+    const timer = Timer.start();
+    await mysql.initialize();
+    await AuthServer.initialize()
+    await Dataset.initialize()
+    await Client.initialize();
+    await Module.initialize();
+    await Realm.initialize()
+    await Datascripts.initialize();
+    await Livescripts.initialize();
+    await Addon.initialize();
+    await MapData.initialize();
+    await Package.initialize();
+    await Crashes.initialize();
+    await term.Initialize(
+        ipaths.coredata.terminal_history_txt.get(),
+        NodeConfig.TerminalHistory,
+    )
+    term.log(`TSWoW started up in ${timer.timeSec()}s`)
+    await commands.enterLoop();
 }
 main();

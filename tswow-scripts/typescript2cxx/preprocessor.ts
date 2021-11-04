@@ -1,7 +1,6 @@
 import * as ts from 'typescript';
-import { IdentifierResolver } from './resolvers';
-import { toASCII } from 'punycode';
 import { Emitter } from './emitter';
+import { IdentifierResolver } from './resolvers';
 
 export class Preprocessor {
 
@@ -172,7 +171,7 @@ export class Preprocessor {
     private fixupParentReferences<T extends ts.Node>(rootNode: T, setParent?: ts.Node): T {
         let parent: ts.Node = rootNode;
         if (setParent) {
-            rootNode.parent = setParent;
+            (rootNode as any).parent = setParent;
         }
 
         ts.forEachChild(rootNode, visitNode);
@@ -184,7 +183,7 @@ export class Preprocessor {
             // allows us to quickly bail out of setting parents for sub-trees during incremental
             // parsing
             if (n.parent !== parent) {
-                n.parent = parent;
+                (n as any).parent = parent;
 
                 const saveParent = parent;
                 parent = n;

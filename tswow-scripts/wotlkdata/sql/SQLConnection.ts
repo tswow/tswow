@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as fs from 'fs';
 import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
-import { getDatabase, Settings } from '../Settings';
+import { datasetName, NodeConfig } from '../Settings';
 import { SQLTables } from './SQLFiles';
 import { SqlRow } from './SQLRow';
 import { SqlTable } from './SQLTable';
@@ -38,7 +37,7 @@ export class Connection {
 
     static connect(connection: Connection) {
         this.end(connection);
-        if(Settings.USE_POOLING) {
+        if(NodeConfig.UsePooling) {
             connection.async = mysql.createPool(connection.settings);
             connection.sync = mysql.createPool(connection.settings);
         } else {
@@ -124,16 +123,6 @@ export class Connection {
     }
 }
 
-    function getDefaultSettings(dbType: string) {
-    return {
-        database: getDatabase(dbType).database,
-        host: getDatabase(dbType).host,
-        user: getDatabase(dbType).user,
-        password: getDatabase(dbType).password,
-        port: getDatabase(dbType).port
-    }
-}
-
 /**
  * Represents the global SQL connection.
  *
@@ -144,10 +133,10 @@ export class Connection {
 export class SqlConnection {
     static additional: Connection[] = [];
 
-    static auth = new Connection(getDefaultSettings('auth'));
+    static auth = new Connection(NodeConfig.DatabaseSettings('auth'));
     //static characters = new Connection(getDefaultSettings('characters'));
-    static world_dst = new Connection(getDefaultSettings('world'));
-    static world_src = new Connection(getDefaultSettings('world_source'))
+    static world_dst = new Connection(NodeConfig.DatabaseSettings('world',datasetName));
+    static world_src = new Connection(NodeConfig.DatabaseSettings('world_source',datasetName))
 
     protected static endConnection() {
         Connection.end(this.auth);
@@ -188,12 +177,7 @@ export class SqlConnection {
         let sqlfile = ``;
 
         // @TODO fix writeToFile. Disabled for now.
-        if (writeFile && false) {
-            sqlfile = SQLTables
-                // @ts-ignore
-                .reduce((file, table) => table.writeToFile(file), sqlfile);
-            fs.writeFileSync(Settings.SQL_FILE_PATH, sqlfile);
-        }
+        if (writeFile && false) {}
 
         if (writeDb) {
             SQLTables.map(x=>SqlTable.writeSQL(x));

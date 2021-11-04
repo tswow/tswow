@@ -2,8 +2,8 @@
   "name": "wotlkdata",
   "version": "1.0.0",
   "description": "",
-  "main": "wotlkdata.js",
-  "types": "wotlkdata.d.ts",
+  "main": "wotlkdata/wotlkdata.js",
+  "types": "wotlkdata/wotlkdata.d.ts",
   "dependencies": {
     "@types/crypto-js": "^3.1.47",
     "@types/deasync": "^0.1.1",

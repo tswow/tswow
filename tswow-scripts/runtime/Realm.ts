@@ -1,359 +1,495 @@
-import { BuildType, DEFAULT_BUILD_TYPE, findBuildType } from "../util/BuildType";
-import { realmYaml } from "../util/ConfigFiles";
-import { mpath, wfs } from "../util/FileSystem";
+import * as crypto from "crypto";
+import { BuildType, DEFAULT_BUILD_TYPE } from "../util/BuildType";
+import { commands } from "../util/Commands";
+import { ConfigFile, patchTCConfig, Property, Section } from "../util/ConfigFile";
+import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
-import { copyLibraryFiles, writeYamlToConf } from "../util/TCConfig";
 import { term } from "../util/Terminal";
-import { yaml } from "../util/Yaml";
-import { commands } from "./Commands";
-import { Datasets } from "./Dataset";
-import { Identifiers } from "./Identifiers";
+import { AuthServer } from "./AuthServer";
+import { CreateCommand, ListCommand, StartCommand } from "./CommandActions";
+import { Identifier } from "./Identifiers";
+import { Module, ModuleEndpoint } from "./Modules";
 import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 
+const REALM_NAME_FIELD = 'Realm.Name'
+export class RealmConfig extends ConfigFile {
+    protected description(): string {
+        return "Configuration for your realm. A single realm is managed by a single worldserver process."
+    }
 
-export namespace Realm {
+    constructor(filename: string, name: string) {
+        super(filename);
+        if(this.RealmName.length === 0) {
+            patchTCConfig(this.filename,REALM_NAME_FIELD,name);
+        }
+    }
 
-    /**
-     * Generates realm ids for all realms
-     */
-    function generateIds() {
-        const used_ids : {[key: string]: boolean}= {}
-        let generated: Realm[] = [];
+    @Section("Realm")
+    @Property({
+          name: 'Realm.Dataset'
+        , description: 'What dataset to use for this realm'
+        , examples: [
+            ['default.dataset','']
+        ]
+        , note: 'The first part of the path is a module id, '
+              + 'and the last is a dataset id'
+    })
+    private _Dataset: string = this.undefined()
+    get Dataset() {
+        return Identifier.getDataset(this._Dataset);
+    }
 
-        getRealms().forEach(x=>{
-            if(!wfs.exists(ipaths.realmId(x.identifier))) {
-                generated.push(x);
+    @Property({
+          name: REALM_NAME_FIELD
+        , description: 'The displayed name of this realm'
+        , examples: [
+            ['TSWoW Realm','']
+        ]
+    })
+    RealmName: string = this.undefined();
+
+    @Property({
+        name: 'Realm.PublicAddress'
+      , description: 'The public IP of this realm'
+      , examples: [
+            ['127.0.0.1','Localhost']
+          , ['192.168.0.5','Local area network']
+          , ['17.5.7.8','Public IP (google "what is my ip" for yours)']
+      ]
+      , important: 'This is **not** a hostname/DNS'
+    })
+    PublicAddress: string = this.undefined();
+
+    @Property({
+          name: 'Realm.LocalAddress'
+        , description: 'The local address of this realm'
+        , examples: [
+              ['127.0.0.1','Localhost']
+            , ['25.4.23.9','Hamachi IP']
+        ]
+        , important: 'If using reverse tunnelling or a VPN,'
+            + 'this must be the IP your friends connect to, not localhost'
+    })
+    LocalAddress: string = this.undefined()
+
+    @Property({
+          name: 'Realm.LocalSubnetMask'
+        , description: 'The subnet mask of the local address'
+        , examples: [
+            ['255.0.0.0','Localhost subnet mask']
+        ]
+        , important: 'Must match the IP in Realm.LocalAddress'
+    })
+    LocalSubnetMask: string = this.undefined()
+
+    @Property({
+        name: 'Realm.Port'
+      , description: 'The port used to host the worldserver of this realm'
+      , examples: [
+          [8085,'Default port']
+        , [8095,"Try this is the above doesn't work"]
+      ]
+      , important: 'Must match the IP in Realm.LocalAddress'
+    })
+    Port: number = this.undefined()
+
+    @Property({
+          name: 'Realm.Type'
+        , description: 'The type of realm'
+        , examples: [
+              [0,'PvE']
+            , [4,'PvP']
+            , [6,'RP']
+            , [8,'RP PvP']
+        ]
+    })
+    Type: number = this.undefined()
+
+    @Property({
+        name: 'Realm.RequiredSecurityLevel'
+      , description: 'What type of account is required to log in to this realm'
+      , examples: [
+            [0,'Any account']
+          , [1,'Moderators']
+          , [2,'GM']
+          , [3,'Super GM']
+      ]
+    })
+    RequiredSecurityLevel: number = this.undefined()
+
+    @Property({
+          name: 'Realm.Recommended'
+        , description: 'Whether to list this realm as "Recommended"'
+        , examples: [[true,'']]
+    })
+    Recommended: boolean = this.undefined()
+
+    @Property({
+        name: 'Realm.Full'
+      , description: 'Whether to list this realm as "Full"'
+      , examples: [[true,'']]
+    })
+    Full: boolean = this.undefined()
+
+    @Property({
+        name: 'Realm.Offline'
+      , description: 'Whether to list this realm as "Offline"'
+      , examples: [[true,'']]
+    })
+    Offline: boolean = this.undefined()
+
+    @Property({
+        name: 'Realm.NewPlayers'
+      , description: 'Whether to list this realm as "New Players"'
+      , examples: [[true,'']]
+    })
+    NewPlayers: boolean = this.undefined()
+
+    @Property({
+          name: 'Timezone'
+        , description: 'The realm timezone, specifies what realmlist tab to use'
+        , examples: [[1,'Development']]
+        , note: 'See possible values here: https://trinitycore.atlassian.net/wiki/spaces/tc/pages/2130016/realmlist#realmlist-timezone'
+    })
+    TimeZone: number = this.undefined()
+}
+
+class RealmManager {
+    characters: Connection;
+    worldserver: Process;
+    constructor(name: string) {
+        this.characters = new Connection(
+              NodeConfig.DatabaseSettings('characters',name)
+            , 'characters'
+        )
+        this.worldserver = new Process();
+        this.worldserver.showOutput(false);
+        this.worldserver.setOnFail((err)=>{
+            term.error(err.message)
+        })
+        let buffer = "";
+        this.worldserver.listenSimple(msg=>{
+            // naive to assume \n always comes at the end?
+            if(msg.endsWith('\n')) {
+                term.log(buffer+msg);
+                buffer = ""
             } else {
-                used_ids[x.realm_id] = true;
+                buffer+=msg
             }
-        });
+        })
+    }
+}
 
+export class Realm {
+    private static managers: {[key: string]: RealmManager} = {};
+
+    readonly mod: ModuleEndpoint
+    readonly name: string
+    lastBuildType: BuildType = DEFAULT_BUILD_TYPE
+    readonly config: RealmConfig
+
+    private manager() {
+        return Realm.managers[this.fullName]
+           || (Realm.managers[this.fullName] = new RealmManager(this.fullName))
+    }
+
+    get characters() {
+        return this.manager().characters;
+    }
+
+    get worldserver() {
+        return this.manager().worldserver;
+    }
+
+    get fullName() {
+        return this.mod.fullName+'.'+this.name;
+    }
+
+    get path() {
+        if(this._path) return this._path;
+        return ( this._path as any) = this.mod.path.realms.realm.pick(this.name);
+    }
+    private _path: never;
+
+    hasID() {
+        return this.path.realm_id.exists()
+    }
+
+    getID() {
+        if(this.path.realm_id.exists()) {
+            return parseInt(this.path.realm_id.readString())
+        }
+        let used: {[key: string]: boolean} = {}
+        Realm.all().forEach(x=>{
+            if(x.hasID()) {
+                used[x.getID()] = true;
+            }
+        })
         let i = 1;
-        while(used_ids[i] !== undefined) ++i;
-        generated.forEach(x=>{
-            wfs.write(ipaths.realmId(x.identifier),`${i++}`);
-        });
+        while(used[i] !== undefined) ++i;
+        this.path.realm_id.write(`${i}`);
+        return i;
     }
 
-    export class RealmConfig {
-        constructor(realm: Realm) {
-            this.realm = realm;
-        }
-        protected realm: Realm;
-        protected ryaml<T>(path: string, defValue: T) {
-            return yaml(ipaths.realmYaml(this.realm.identifier), defValue,path);
-        }
+    realmlistSQL() {
+        let flag = 0;
+        if(this.config.Offline) flag |=0x2
+        if(this.config.NewPlayers) flag |= 0x10;
+        if(this.config.Recommended) flag |= 0x20;
+        if(this.config.Full) flag |= 0x40
 
-        get dataset() { return this.ryaml('dataset','default')}
-        get realm_name() { return this.ryaml("realm_name","TSWoW"); }
-        get address() { return this.ryaml("address","127.0.0.1")}
-        get local_address() { return this.ryaml("local_address","127.0.0.1")}
-        get local_subnet_mask() { return this.ryaml("local_subnet_mask","255.255.255.0")}
-        get port() { return this.ryaml("port",8085); }
-        get icon() { return this.ryaml("icon",0); }
-        get flag() { return this.ryaml("flag",0); }
-        get security_level() { return this.ryaml("security_level",0); }
-        get timezone() { return this.ryaml("timezone",1); }
-        get modules(): string[] {
-            if(this.dataset=='default') {
-                return wfs.readDir(ipaths.modules);
-            }
-            if(this.dataset=='define') {
-                return this.ryaml<string[]>("modules",[]);
-            }
-            return getRealm(this.dataset).config.modules;
-        }
+        let values = [
+            ['id',this.getID()],
+            ['name',`"${this.config.RealmName}"`],
+            ['address',`"${this.config.PublicAddress}"`],
+            ['localAddress',`"${this.config.LocalAddress}"`],
+            ['localSubnetMask',`"${this.config.LocalSubnetMask}"`],
+            ['port',this.config.Port],
+            ['icon',this.config.Type],
+            ['flag',flag],
+            ['timezone', this.config.TimeZone],
+            ['allowedSecurityLevel', this.config.RequiredSecurityLevel],
+            ['population', 0],
+            ['game_build', this.config.Dataset.config.DatasetGameBuild ]
+        ]
+
+        return (
+            `INSERT INTO realmlist VALUES (${values.map(x=>x[1])
+                .join(',')});`
+        );
     }
 
-    export class Realm {
-        readonly identifier: string;
-        characters: Connection;
-        worldserver: Process;
-        config: RealmConfig;
-        set: Datasets.Dataset;
-        lastBuildType: BuildType = DEFAULT_BUILD_TYPE;
+    constructor(mod: ModuleEndpoint, name: string) {
+        this.mod = mod;
+        this.name = name;
+        this.config = new RealmConfig(this.path.config.get(),name)
+    }
 
-        constructor(name: string) {
-            this.identifier = name;
-            this.config = new RealmConfig(this);
-            this.set = Datasets.get(this.config.dataset)
+    async start(type: BuildType) {
+        term.log(`Starting worlserver for realm ${this.config.RealmName}...`)
+        this.lastBuildType = type;
+        await this.connect();
+        await this.config.Dataset.setupDatabases('BOTH',false);
+        await this.config.Dataset.setupClientData()
 
-            this.characters = new Connection(
-                NodeConfig.database_settings('characters',this.identifier),'characters');
-            this.worldserver = new Process().showOutput(true);
-            this.worldserver.showOutput(true);
-            this.worldserver.setOnFail((err)=>{
-                term.error(err.message);
-            });
-        }
-
-        async connect() {
-            if(!this.characters.isConnected) await this.characters.connect()
-            await this.set.connect();
-            await mysql.installCharacters(this.characters);
-        }
-
-        sendWorldserverCommand(command: string, useNewline: boolean = true) {
-            if(this.worldserver.isRunning()) {
-                this.worldserver.send(command,useNewline);
-            }
-        }
-
-        isWorldserverRunning() {
-            return this.worldserver.isRunning();
-        }
-
-        stopWorldserver() {
-            return this.worldserver.stop();
-        }
-
-        async startWorldserver(type: BuildType) {
-            term.log(`Starting worlserver for realm ${this.config.realm_name}...`)
-            this.lastBuildType = type;
-            await this.connect();
-            copyLibraryFiles(type);
-            await this.set.installBoth(false);
-            this.set.installServerData();
-
-            // Generate .conf files
-            wfs.readDir(ipaths.tc(type),false,'files').forEach(x=>{
-                if(!x.endsWith('.conf.dist')) return;
-                if(x.endsWith('authserver.conf.dist')) {
+        // Generate .conf files
+        ipaths.bin.trinitycore.build.pick(type)
+            .iterate('FLAT','FILES','FULL',node=>{
+                if(!node.endsWith('.conf.dist')) return;
+                if(node.endsWith('authserver.conf.dist')) {
                     return;
                 }
-
-                const fname = wfs.basename(x);
-                const targetDist  = mpath(ipaths.wsWorkingDir(this.identifier),fname);
-                const targetConf = targetDist.replace('.conf.dist','.conf');
-
-                wfs.copy(x,targetDist);
-                if(!wfs.exists(targetConf)) {
-                    wfs.copy(x,targetConf);
-                }
-
-
-                writeYamlToConf(ipaths.realmYaml(this.identifier),targetConf,
-                    {
-                        'RealmID': this.realm_id,
-                        'DataDir':wfs.absPath(ipaths.datasetDir(this.config.dataset)),
-                        'HotSwap.Enabled': 1,
-                        'HotSwap.EnableReCompiler': 0,
-                        'MySQLExecutable': '../../bin/mysql/bin/mysqld.exe',
-                        'Updates.EnableDatabases': 0,
-                        'Updates.AutoSetup': 0,
-                        'Updates.Redundancy': 0,
-                        'WorldServerPort': this.config.port
-                    },{characters: this.identifier, world: this.set.id});
+                const fname = node.basename()
+                node.copy(this.path.join(fname))
+                node.copyOnNoTarget(this.path.join(fname.substring(0,fname.length-'.dist'.length)))
             });
 
-            this.worldserver.startIn(ipaths.wsWorkingDir(this.identifier),
-                wfs.absPath(ipaths.tcWorldserver(type)),
-                    [`-c${wfs.absPath(ipaths.realmWorldserverConf(this.identifier))}`]);
+        patchTCConfig(
+              this.path.worldserver_conf.get()
+            , 'LoginDatabaseInfo'
+            , NodeConfig.DatabaseString('auth')
+        )
+
+        patchTCConfig(
+            this.path.worldserver_conf.get()
+          , 'CharacterDatabaseInfo'
+          , NodeConfig.DatabaseString('characters',this.fullName)
+        )
+
+        patchTCConfig(
+            this.path.worldserver_conf.get()
+          , 'WorldDatabaseInfo'
+          , NodeConfig.DatabaseString('world',this.config.Dataset.fullName)
+        )
+
+        patchTCConfig(
+              this.path.worldserver_conf.get()
+            , 'MySQLExecutable'
+            , NodeConfig.MySQLExecutable.length === 0
+                ? ipaths.bin.mysql.mysql_exe.abs().get()
+                : '"NodeConfig.MySQLExecutable"'
+        )
+
+        patchTCConfig(this.path.worldserver_conf.get(), 'Updates.EnableDatabases', 0)
+        patchTCConfig(this.path.worldserver_conf.get(), 'Updates.AutoSetup', 0)
+        patchTCConfig(this.path.worldserver_conf.get(), 'Updates.Redundancy', 0)
+        patchTCConfig(this.path.worldserver_conf.get(), 'WorldServerPort',this.config.Port)
+        patchTCConfig(this.path.worldserver_conf.get(), 'RealmID',this.getID())
+        patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',1)
+        patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableReCompiler',0)
+        patchTCConfig(this.path.worldserver_conf.get(), 'DataDir',this.config.Dataset.path.abs().get())
+
+        this.worldserver.startIn(this.path.get(),
+            wfs.absPath(ipaths.bin.trinitycore.build.pick(type).worldserver.get()),
+                [`-c${wfs.absPath(this.path.worldserver_conf.get())}`]);
+    }
+
+    async connect() {
+        if(!this.characters.isConnected) await this.characters.connect()
+        await this.config.Dataset.connect();
+        await mysql.installCharacters(this.characters);
+    }
+
+    sendWorldserverCommand(command: string, useNewline: boolean = true) {
+        if(this.worldserver.isRunning()) {
+            this.worldserver.send(command,useNewline);
+        }
+    }
+
+    initialize() {
+        ipaths.bin.trinitycore.build.pick(NodeConfig.DefaultBuildType)
+            .worldserver_conf_dist.copy(this.path.worldserver_conf_dist)
+        this.path.worldserver_conf_dist
+            .copyOnNoTarget(this.path.worldserver_conf)
+        this.config.generateIfNotExists()
+        return this;
+    }
+
+    static create(mod: ModuleEndpoint, name: string, displayname: string = name) {
+        const realm = new Realm(mod, name).initialize();
+        patchTCConfig(realm.config.filename,REALM_NAME_FIELD,displayname);
+        return realm;
+    }
+
+    static all() {
+        return Module.endpoints()
+            .filter(x=>x.path.realms.exists())
+            .reduce<Realm[]>((p,c)=>p.concat(c.realms.all()),[])
+    }
+
+    static initialize() {
+        if(
+               !process.argv.includes('noac')
+            && !process.argv.includes('norealm')
+        ) {
+            NodeConfig.AutoStartRealms
+                .forEach(x=>Identifier.getRealm(x)
+                    .start(NodeConfig.DefaultBuildType))
         }
 
-        get realm_id() {
-            let rif = ipaths.realmId(this.identifier);
-            if(!wfs.exists(rif)) {
-                generateIds();
+        CreateCommand.addCommand(
+              'realm'
+            , 'module realmname displayname?'
+            , ''
+            , args => {
+                const module = Identifier.getModule(args[0])
+                const realmname = Identifier.assertUnused(args[1],'realmname');
+                const displayname = args[2];
+                this.create(module,realmname,displayname);
             }
+        ).addAlias('realms')
 
-            let id = parseInt(wfs.read(rif));
-
-            if(isNaN(id)) {
-                throw new Error(
-                      `Realm ${this.identifier} has an invalid realm id,`
-                    + ` please fix your the file ${rif}.`)
+        StartCommand.addCommand(
+              'realm'
+            , ''
+            , ''
+            , args => {
+                Identifier.getRealms(args,'MATCH_ANY',NodeConfig.DefaultRealm)
+                    .forEach(x=>{
+                        x.start(Identifier.getBuildType(args,NodeConfig.DefaultBuildType))
+                    })
             }
-            return id;
-        }
+        ).addAlias('realms')
 
-        realmListSql() {
-            let values = [
-                ['id',this.realm_id],
-                ['name',`"${this.config.realm_name}"`],
-                ['address',`"${this.config.address}"`],
-                ['localAddress',`"${this.config.local_address}"`],
-                ['localSubnetMask',`"${this.config.local_subnet_mask}"`],
-                ['port',this.config.port],
-                ['icon',this.config.icon],
-                ['flag',this.config.flag],
-                ['timezone', this.config.timezone],
-                ['allowedSecurityLevel', this.config.security_level],
-                ['population', 0],
-                ['game_build', this.set.config.game_build ]
-            ]
-
-            return (
-                `INSERT INTO realmlist VALUES (${values.map(x=>x[1])
-                    .join(',')});`
-            );
-        }
-    }
-
-    const realms : {[key:string]: Realm}= {};
-
-    export function getDatasets(): {[key:string]:Realm[]} {
-        let ds : {[key:string]: Realm[]}= {}
-        getRealms().forEach(x=>{
-            if(ds[x.config.dataset]===undefined) {
-                ds[x.config.dataset] = []
-            }
-            ds[x.config.dataset].push(x);
-        });
-        return ds;
-    }
-
-    export function getDataSet(realm: string) {
-        return new Realm(realm).config.dataset;
-    }
-
-    export function getRealms() {
-        return wfs.readDir(ipaths.realms,true,'directories')
-            .map(x=>getRealm(x))
-    }
-
-    export function getRealm(name: string) {
-        if(realms[name]!==undefined) return realms[name];
-
-        if(!wfs.exists(ipaths.realmDir(name))) {
-            throw new Error(`No such realm: ${name}`);
-        }
-
-        return realms[name] = new Realm(name);
-    }
-
-    export async function removeRealm(name: string) {
-        if(!wfs.exists(ipaths.realmDir(name))) {
-            return;
-        }
-        await getRealm(name).stopWorldserver();
-        wfs.remove(ipaths.realmDir(name));
-    }
-
-    export function createRealm(name: string) {
-        Identifiers.assertUnused(name);
-        wfs.write(ipaths.realmYaml(name),realmYaml(name));
-    }
-
-    export function exists(identifier: string) {
-        return wfs.exists(ipaths.realmDir(identifier));
-    }
-
-    /**
-     * Returns the candidates that are existing realm names,
-     * or the default realm configured in node.yaml
-     *
-     * @param candidates
-     */
-    export function getRealmsOrDefault(candidates: string[]) {
-        if(candidates.includes('all')) {
-            return getRealms();
-        }
-        let realms = Identifiers.getTypes('realm',candidates);
-        if(wfs.readDir(ipaths.realms,true,'directories').length === 0) {
-            createRealm(NodeConfig.default_realm);
-        }
-        return (realms.length > 0 ? realms : [NodeConfig.default_realm])
-            .map(x=>getRealm(x));
-    }
-
-    export function getRealmsOrAll(candidates: string[]) {
-        let realms = Identifiers.getTypes('realm',candidates);
-        if(realms.length === 0) {
-            return getRealms();
-        } else {
-            return realms.map(x=>getRealm(x));
-        }
-    }
-
-    export async function initialize() {
-        const realm = commands.addCommand('realm');
-
-        realm.addCommand(
-              'send'
-            , 'realm? command'
-            , 'Sends a command to the realms worldserver'
-            , async(args)=>{
-
-            let realms : Realm[] = [];
-            while(getRealms().find(x=>x.identifier==args[0])) {
-                realms.push(getRealm(args.shift() as string));
-            }
-            let cmd = args.join(' ')
-            realms.forEach(x=>x.sendWorldserverCommand(cmd,true));
-        });
-
-        realm.addCommand(
-              'start'
-            , 'debug|release|relwithdebinfo?, realmnames[] | all'
-            , 'Starts one, multiple or all realms'
-            , async (args)=>{
-
-            let type = findBuildType(args,NodeConfig.default_build_type);
-
-            let realms = getRealmsOrDefault(args);
-            await Promise.all(
-                realms.map(x=>x.startWorldserver(type)));
-        });
-
-        realm.addCommand(
-              'stop'
-            , 'realmnames[]|all'
-            , 'Stops one, multiple or all realms'
-            , async(args)=>{
-
-            let realms = Identifiers.assertType('realm',args)
-                .map(x=>getRealm(x));
-            await Promise.all(realms.map(x=>x.stopWorldserver()));
-        });
-
-        realm.addCommand(
-              'status'
-            , 'realmnames...'
-            , 'Checks if the provided realms are online'
-            , async(args)=>{
-
-            getRealmsOrDefault(args).forEach(x=>{
-                if(x.worldserver.isRunning()) {
-                    term.success(`Realm ${x.identifier} is running (${x.lastBuildType})`);
-                } else {
-                    term.error(`Realm ${x.identifier} is not running`);
-                }
+        commands.addCommand('realm')
+            .addCommand('send','','',args=>{
+                let realm = Identifier.getRealm(args[0]);
+                let message = args.slice(1);
+                realm.worldserver.send(message.join(' '),true);
             });
-        });
 
-        realm.addCommand(
-              'create'
-            , 'name'
-            , 'Creates a new realm'
-            , async(args)=>{
+        ListCommand.addCommand(
+              'realm'
+            , ''
+            , ''
+            , args => {
+                let isModule = Identifier.isModule(args[0])
+                Realm.all()
+                    .sort((a,b)=>{
+                        let ar = a.worldserver.isRunning();
+                        let br = b.worldserver.isRunning();
+                        return ar === br ? 0 : ar ? 1 : -1;
+                    })
+                    .filter(x=> !isModule || x.mod.mod.id === args[0])
+                    .forEach(x=>{
+                        if(x.worldserver.isRunning()) {
+                            term.success(x.name+': '+x.path.get()+' (running)')
+                        } else {
+                            term.error(x.name+': '+x.path.get()+' (not running)')
+                        }
+                    })
+          }
+        ).addAlias('realms')
 
-            if(args.length==0 || args[0].length===0) {
-                throw new Error(`Must provide a valid realm name`);
+        CreateCommand.addCommand(
+              'account'
+            , 'accountName password gmLevel=0 email=""'
+            , 'Creates a new account for the specified realm'
+            , async args => {
+                if(args.length < 2) {
+                    throw new Error(`This command requires at least an account name and password.`)
+                }
+                const srp = require('./SRP6')
+                let gmlevel = parseInt(args[2]||'0')
+                const salt = Buffer.from(crypto.randomBytes(32));
+                const username = args[0].toUpperCase();
+                const password = args[1].toUpperCase();
+                const email = args[3] || ""
+                const verifier = (srp.computeVerifier(
+                      srp.params.trinitycore
+                    , salt
+                    , username
+                    , password
+                ) as Buffer)
+
+                let oldId = await AuthServer.connection.queryPrepared(`SELECT id from account where username = ?;`,[username])
+                if(oldId.length > 0) {
+                    throw new Error(`Username "${username}" already exists`)
+                }
+
+                await AuthServer.connection.queryPrepared(
+                      `INSERT INTO account (username,salt,verifier,reg_mail,email,joindate)`
+                    + ` VALUES (?,?,?,?,?,NOW());`
+                    , [username,salt,verifier,email,email]
+                )
+
+                if(gmlevel > 0) {
+                    let id = (await AuthServer.connection.queryPrepared(`SELECT id from account where username = ?;`,[username]))[0].id
+                    await AuthServer.connection.queryPrepared(
+                        `INSERT INTO account_access VALUES (?,?,-1,NULL);`,
+                        [id,gmlevel]
+                    )
+                }
+
+                term.success(`Created account ${username} with gm level ${gmlevel}`)
             }
-            createRealm(args[0]);
-        });
+        )
+    }
+}
 
-        realm.addCommand(
-              'remove'
-            , 'name...'
-            , 'Removes one or multiple existing realms'
-            , async(args)=>{
+export class Realms {
+    readonly mod: ModuleEndpoint;
 
-            await Promise.all(args.map(x=>removeRealm(x)));
-        });
+    get path() {
+        return this.mod.path.realms
+    }
 
-        if(!wfs.exists(ipaths.realms)) {
-            wfs.mkDirs(ipaths.realms);
-        }
+    constructor(mod: ModuleEndpoint) {
+        this.mod = mod;
+    }
 
-        if(!process.argv.includes('noac')) {
-            await Promise.all(NodeConfig.autostart_realms
-                .map(x=>getRealm(x))
-                .map(x=>x.startWorldserver(NodeConfig.default_build_type)))
-        }
+    pick(name: string) {
+        return new Realm(this.mod,this.path.realm.pick(name).get())
+    }
 
+    all() {
+        return this.path.realm.all()
+            .map(x=>new Realm(this.mod, x.basename().get()))
+    }
+
+    create(name: string) {
+        return Realm.create(this.mod,name)
     }
 }

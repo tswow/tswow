@@ -16,6 +16,8 @@
  */
 import * as fs from "fs";
 import path from "path";
+import { wfs } from "./FileSystem";
+import { wsys } from "./System";
 
 type NodeType =
       'DIR'
@@ -23,8 +25,8 @@ type NodeType =
     | 'DYNAMIC_FILE'
     | 'FILE'
     | 'DYNAMIC_DIR'
-    | 'DIR_RECURSIVE'
     | 'CUSTOM'
+    | 'DYNAMIC_CUSTOM'
 
 abstract class TreeConstructor {
     type: NodeType
@@ -75,29 +77,146 @@ class DynamicDir extends TreeConstructor {
     }
 }
 
-class RecursiveDir extends TreeConstructor {
-    callback: (strIn: string)=>any
-    excludedNames: string[]
-    constructor(excludedNames: string[], callback: (strIn: string)=>any) {
-        super('DIR_RECURSIVE')
-        this.callback = callback;
-        this.excludedNames = excludedNames;
-    }
-}
-
 class Custom extends TreeConstructor {
-    value: any;
-    constructor(value: any) {
+    callback: (pathIn: string, nameIn: string)=>any;
+    constructor(callback: (pathIn: string, nameIn: string)=>any) {
         super('CUSTOM');
-        this.value = value;
+        this.callback = callback;
     }
 }
 
-class GeneratedNode {
-    protected path: string;
-    constructor(path: string) {
-        this.path = path;
+class DynamicCustom extends TreeConstructor {
+    callback: (pathIn: string, nameIn: string)=>any;
+    constructor(callback: (pathIn: string, nameIn: string)=>any) {
+        super('DYNAMIC_CUSTOM');
+        this.callback = callback;
     }
+}
+
+function toStr(path: string|WNode) {
+    return typeof(path) === 'object' ? path.get() : path;
+}
+
+export type FilePath = WNode|string
+export function resfp(pathIn: FilePath) {
+    return typeof(pathIn) === 'string' ? pathIn : pathIn.get()
+}
+
+export class WNode {
+    protected path: string;
+    constructor(path: string|WNode) {
+        this.path = typeof(path) === 'string' ? path : path.path;
+    }
+
+    protected construct(pathIn: string): this {
+        return new WNode(pathIn) as this;
+    }
+
+    filter(callback: (v: WNode)=>void) {
+        return fs.readdirSync(this.path)
+            .map(x=>this.join(x))
+            .filter(callback)
+    }
+
+    ctime() {
+        return fs.statSync(this.path).ctime;
+    }
+
+    mtime() {
+        return fs.statSync(this.path).mtime;
+    }
+
+    mtimeMs() {
+        return fs.statSync(this.path).mtimeMs;
+    }
+
+    abs(slashType: 'UNCHANGED'|'FORWARD'|'BACKWARD' = 'UNCHANGED') {
+        let abs = wfs.absPath(this.path);
+        switch(slashType) {
+            case 'BACKWARD':
+                abs = abs.split('/').join('\\')
+                break;
+            case 'FORWARD':
+                abs = abs.split('\\').join('/')
+                break;
+        }
+        return this.construct(abs);
+    }
+
+    substring(start: number, end?: number) {
+        return this.path.substring(start,end);
+    }
+
+    toLowerCase() {
+        return this.construct(this.path.toLowerCase())
+    }
+
+    toUpperCase() {
+        return this.construct(this.path.toUpperCase())
+    }
+
+    match(regex: RegExp) {
+        return this.path.match(regex);
+    }
+
+    get length() {
+        return this.path.length
+    }
+
+    split(str: string|RegExp) {
+        return this.path.split(str);
+    }
+
+    startsWith(start: string) {
+        return this.path.startsWith(start);
+    }
+
+    endsWith(ending: string) {
+        return this.path.endsWith(ending);
+    }
+
+    relativeTo(pathIn: string|WNode) {
+        return this.construct(wfs.relative(toStr(pathIn),this.path));
+    }
+
+    relativeFrom(pathIn: string|WNode) {
+        return this.construct(wfs.relative(this.path,toStr(pathIn)));
+    }
+
+    dirname() {
+        return new WDirectory(wfs.dirname(this.path));
+    }
+
+    doIn(callback: (pathIn: this)=>any) {
+        return wsys.inDirectory(this.path,()=>callback(this));
+    }
+
+    join(...paths: (WNode|string)[]) {
+        paths = paths.map(x=>typeof(x) === 'object' ? x.get() : x)
+        paths.unshift(this.path);
+        return this.construct(path.join.apply(path,paths));
+    }
+
+    basename(parent: number = 0) {
+        let p = this.path;
+        for(let i=0;i<parent;++i) {
+            p = wfs.dirname(p);
+        }
+        return this.construct(wfs.basename(p));
+    }
+
+    copy(dest: WNode|string, flushFolders?: boolean) {
+        wfs.copy(this.get(),toStr(dest),flushFolders);
+        return this;
+    }
+
+    copyOnNoTarget(dest: WNode) {
+        if(!dest.exists()) {
+            wfs.copy(this.get(), dest.get())
+        }
+        return this;
+    }
+
     get() { return this.path; }
     exists() { return fs.existsSync(this.path); }
 
@@ -109,29 +228,94 @@ class GeneratedNode {
     }
 
     toFile() {
-        return new GeneratedFile(this.path);
+        return new WFile(this.path);
     }
 
     toDirectory() {
-        return new GeneratedDirectory(this.path);
+        return new WDirectory(this.path);
+    }
+
+    remove() {
+        if(fs.existsSync(this.path)) {
+            fs.rmSync(this.path,{recursive:true,force:true,maxRetries:1});
+            return true;
+        }
+        return false;
+    }
+
+    protected toString() {
+        return this.path;
+    }
+
+    protected toJson() {
+        return this.path;
     }
 }
 
-class GeneratedFile extends GeneratedNode {
-    write(text: string): void;
-    write(buffer: Buffer, encoding?: BufferEncoding): void;
-    write(bufferOrText: string|Buffer, encoding?: BufferEncoding) {
-        if(!fs.existsSync(this.path)) {
-            fs.mkdirSync(path.dirname(this.path),{recursive:true});
+export type Overwrite = 'OVERWRITE'|'DONT_OVERWRITE'
+export class WFile extends WNode {
+    protected construct(pathIn: string): this {
+        return new WFile(pathIn) as this;
+    }
+
+    extension() {
+        return this.path.split('.').pop();
+    }
+
+    writeBuffer(buffer: Buffer, encoding?: BufferEncoding, overwrite: Overwrite = 'OVERWRITE') {
+        wfs.mkDirs(this.dirname().get());
+        if(overwrite === 'OVERWRITE' || ! this.exists() ) {
+            fs.writeFileSync(this.path,buffer,encoding);
+            return true;
         }
-        if(typeof(bufferOrText) == 'string') {
-            fs.writeFileSync(this.path, bufferOrText);
+        return false;
+    }
+
+    write(text: string, overwrite: Overwrite = 'OVERWRITE') {
+        wfs.mkDirs(this.dirname());
+        if(overwrite === 'OVERWRITE' || ! this.exists()) {
+            fs.writeFileSync(this.path,text)
+            return true;
+        }
+        return false;
+    }
+    writeJson(obj: any, indents: number = 4, overwrite: Overwrite = 'OVERWRITE') {
+        wfs.mkDirs(this.dirname());
+        if(overwrite === 'OVERWRITE' || ! this.exists()) {
+            fs.writeFileSync(this.path,JSON.stringify(obj,null,indents));
+            return true;
+        }
+        return false;
+    }
+
+    withExtension(newExtension: string) {
+        return this.construct(this.path.replace(/\.[^/.]+$/,newExtension));
+    }
+
+    readBuffer(def?: Buffer) {
+        if(!this.exists()) {
+            return def;
         } else {
-            fs.writeFileSync(this.path, encoding
-                ? bufferOrText.toString(encoding)
-                : bufferOrText);
+            return fs.readFileSync(this.path);
         }
     }
+
+    readString(def?: string) {
+        if(!this.exists()) {
+            return def;
+        } else {
+            return fs.readFileSync(this.path,'utf-8')
+        }
+    }
+
+    readJson(def: any) {
+        if(!this.exists()) {
+            return def;
+        } else {
+            return JSON.parse(fs.readFileSync(this.path,'utf-8'))
+        }
+    }
+
     read(): Buffer;
     read(encoding: BufferEncoding): string;
     read(encoding?: BufferEncoding) {
@@ -141,19 +325,21 @@ class GeneratedFile extends GeneratedNode {
             return fs.readFileSync(this.path);
         }
     }
-    remove() {
-        if(fs.existsSync(this.path)) {
-            fs.rmSync(this.path);
-            return true;
-        }
-        return false;
-    }
     lastEdited() {
         return fs.statSync(this.path).mtime;
     }
 }
 
-class GeneratedDirectory extends GeneratedNode {
+export class WDirectory extends WNode {
+    protected construct(pathIn: string): this {
+        return new WDirectory(pathIn) as this;
+    }
+    readDir(rel: 'RELATIVE'|'ABSOLUTE' = 'RELATIVE') {
+        return fs.readdirSync(this.path)
+            .map(x=>rel === 'ABSOLUTE' ? path.join(this.path,x) : x)
+            .map(x=>new WNode(x))
+    }
+
     remove() {
         if(fs.existsSync(this.path)) {
             fs.rmSync(this.path,{recursive:true,force:true});
@@ -166,12 +352,17 @@ class GeneratedDirectory extends GeneratedNode {
         return fs.statSync((this.path)).mtime;
     }
 
+    mkdir() {
+        return wfs.mkDirs(this.path,false);
+    }
+
     iterate(
           rec: 'RECURSE'|'FLAT'
         , targets: 'FILES'|'DIRECTORIES'|'BOTH'
         , pathType: 'RELATIVE'|'FULL'|'ABSOLUTE'
-        , callback: (node: GeneratedNode)=>'HALT'|'ENDPOINT'|void
+        , callback: (node: WNode)=>'HALT'|'ENDPOINT'|void
     ) {
+        if(!this.exists()) return;
         const cbPath = (node: string) => {
             return pathType == 'RELATIVE'
                 ? node
@@ -190,13 +381,13 @@ class GeneratedDirectory extends GeneratedNode {
 
                 if(stat.isDirectory()) {
                     if(targets == 'DIRECTORIES' || targets == 'BOTH') {
-                        switch(callback(new GeneratedNode(cbPath(node)))) {
+                        switch(callback(new WNode(cbPath(node)))) {
                             case 'HALT': {
                                 halt = true;
                                 return true;
                             }
                             case 'ENDPOINT': {
-                                return true;
+                                return false;
                             }
                         }
                     }
@@ -208,7 +399,7 @@ class GeneratedDirectory extends GeneratedNode {
 
                 if(stat.isFile()) {
                     if(targets == 'FILES' || targets == 'BOTH') {
-                        if(callback(new GeneratedNode(cbPath(node))) == 'HALT') {
+                        if(callback(new WNode(cbPath(node))) == 'HALT') {
                             halt = true;
                             return true;
                         }
@@ -221,31 +412,57 @@ class GeneratedDirectory extends GeneratedNode {
     }
 }
 
-export function custom<T>(value: T): T {
-    return new Custom(value) as any;
+export class WDynDirectory<T> {
+    protected path: string;
+    protected callback: (p: string)=>any;
+
+    constructor(path: string, callback: (p: string)=>any) {
+        this.path = path;
+        this.callback = callback;
+    }
+
+    pick(name: string): WDirectory & T {
+        const pout = path.join(this.path,name);
+        return generateTree(pout,dir(this.callback(name)));
+    }
+
+    all(): (WNode&T)[] {
+        return fs.readdirSync(this.path).map(x=>this.pick(x))
+    }
 }
 
-export function dir<T>(value: T): T & GeneratedNode {
+export function custom<T>(callback: (value: string)=>T): T {
+    return new Custom(callback) as any;
+}
+
+export function dynCustom<T>(callback: (pathIn: string, nameIn: string)=>T): WDynDirectory<T> {
+    return new DynamicCustom(callback) as any;
+}
+
+export function dir<T>(value: T): T & WDirectory {
     return new Dir(value) as any;
 }
 
-export function dirn<T>(name: string, value: T): T & GeneratedNode {
+export function dirn<T>(name: string, value: T): T & WDirectory {
     return new DirName(name, value) as any;
 }
 
-export function dynfile(callback: (name: string)=>string): (name: string)=> GeneratedNode {
+export function dynfile(callback: (name: string)=>string): (name: string)=> WFile {
     return new DynamicFile(callback) as any;
 }
 
-export function file(name: string): GeneratedNode {
+// TODO: fix
+export function multifile(names: string[]): WFile[] {
+    return undefined;
+}
+
+export function file(name: string): WFile {
     return new File(name) as any;
 }
 
-export function recursive<T>(excludedNames: string[], callback: (key: string)=>T): ()=>(T&GeneratedNode)[] {
-    return new RecursiveDir(excludedNames, callback) as any
-}
-
-export function dyndir<T>(callback: (key: string) => T): (key: string)=>(T&GeneratedNode) {
+export function dyndir<T>(callback: (key: string) => T)
+    : WDynDirectory<T>
+{
     return new DynamicDir(callback) as any;
 }
 
@@ -253,51 +470,40 @@ export type EnumType<T,Type> = {
     [Property in keyof Type]: T
 }
 
-export function enumDir<T,S,U extends keyof EnumType<T,S>>(key: S, child: T): (index: U)=>(T&GeneratedNode) {
-    return new DynamicDir((key: string)=>dirn(key,child)) as any;
+export function enumDir<T,S,U extends keyof EnumType<T,S>>(key: S, callback: (key: U) => T)
+    : WDynDirectory<T> {
+    return new DynamicDir(callback as any) as any
 }
 
 export function generateTree<T>(pathIn: string, tree: T, nameIn: string = ''): T {
     const con = tree as any as TreeConstructor;
+    if(typeof(con) !== 'object' || con.type === undefined) {
+        return con as any;
+    }
+
     switch(con.type) {
         case 'DIR':
         case 'DIR_NAME':
             pathIn = path.join(pathIn,con.type == 'DIR_NAME' ? (con as DirName).dir : nameIn);
-            const out = new GeneratedNode(pathIn) as any;
+            const out = new WDirectory(pathIn) as any;
             Object.entries((con as Dir).child).forEach(([k,v])=>{
                 out[k] = generateTree(pathIn,v,k);
             });
             out.get = ()=>pathIn;
             return out;
         case 'DYNAMIC_DIR':
-            return ((name: string) => generateTree(
-                  path.join(pathIn,name)
-                , dir((con as DynamicDir).callback(name))
-            )) as any
+            return new WDynDirectory(
+                pathIn,(con as DynamicDir).callback) as any;
         case 'DYNAMIC_FILE':
-            return ((str: string) => (con as DynamicFile).callback(path.join(pathIn,str))) as any
+            return ((str: string) => new WFile((con as DynamicFile).callback(path.join(pathIn,str)))) as any
         case 'FILE':
-            return new GeneratedNode(path.join(pathIn, (con as File).name)) as any
-        case 'DIR_RECURSIVE':
-            return (() => {
-                const rec = con as RecursiveDir;
-                let dirs: any[] = []
-                const recurse = (cur: string) => {
-                    dirs.push(generateTree(cur,dir(rec.callback(path.basename(cur)))))
-                    fs.readdirSync(cur)
-                        .filter(x=>!rec.excludedNames.includes(x))
-                        .map(x=>path.join(cur,x))
-                        .filter(x=>fs.statSync(x).isDirectory()
-                            && fs.readdirSync(x).find(y=>rec.excludedNames.includes(y))
-                        )
-                        .forEach(x=>recurse(x))
-                }
-                recurse(pathIn);
-                return dirs
-            })  as any
+            return new WFile(path.join(pathIn, (con as File).name)) as any
         case 'CUSTOM':
             // todo: fix this
-            return (con as Custom).value
+            return (con as Custom).callback(pathIn, nameIn)
+        case 'DYNAMIC_CUSTOM':
+            return new WDynDirectory(
+                pathIn,(nameIn: string)=>(con as DynamicCustom).callback(pathIn,nameIn)) as any
         default:
             throw new Error(`Invalid tree constructor type: ${con.type} in path ${path.join(pathIn,nameIn)}`);
     }

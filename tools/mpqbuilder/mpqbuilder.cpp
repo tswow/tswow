@@ -1,6 +1,6 @@
 /*
  * This file is part of tswow (https://github.com/tswow)
- * 
+ *
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,95 +15,124 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include <StormLib.h>
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string/predicate.hpp>
 #include <iostream>
-#include <functional>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdio>
 
-namespace fs = boost::filesystem;
+inline bool exists(std::string const& name) {
+    std::ifstream f(name.c_str());
+    return f.good();
+}
 
-HANDLE handle = NULL;
-
-void writeDir(fs::path basePath, fs::path curDir)
+bool clearFile(std::string const& file, const char* errorMsg)
 {
-	fs::directory_iterator end;
-	for (fs::directory_iterator itr(curDir); itr != end; ++itr)
-	{
-		if (fs::is_directory(itr->path()))
-		{
-			writeDir(basePath, itr->path());
-		}
-		else
-		{
-			auto relative = itr->path().string().substr(basePath.string().length(), itr->path().string().length());
-			if (relative.rfind("/", 0) == 0 || relative.rfind("\\", 0) == 0)
-			{
-				relative = relative.substr(1, relative.length());
-			}
-			if (boost::algorithm::ends_with(relative, ".blend"))
-			{
-				return;
-			}
-			if (boost::algorithm::ends_with(relative, ".dbc"))
-			{
-				relative = "DBFilesclient/" + relative;
-			}
-			SFileAddFile(handle, itr->path().string().c_str(), relative.c_str(), 0);
-		}
-	}
+    if (exists(file))
+    {
+        remove(file.c_str());
+        if (exists(file))
+        {
+            std::cout << errorMsg << file << "\n";
+            return false;
+        }
+    }
+    return true;
 }
 
 int main(int argc, char **argv)
 {
-	if (argc < 3)
-	{
-		std::cout << "Usage: mpqbuilder outputFile inputDir1 (inputDir2...)";
-		return -1;
-	}
+    if (argc < 3)
+    {
+        std::cout << "Usage: mpqbuilder filelist outputfile";
+        return -1;
+    }
 
-	auto outputFile = fs::path(argv[1]);
-	if (fs::exists((outputFile)))
-	{
-		if (!fs::remove((outputFile)))
-		{
-			std::cout << "Failed to remove old mpq file " << outputFile << "\n";
-			return -1;
-		}
-	}
+    // 1. Read input file
+    std::string fileList = argv[1];
+    if (!exists(fileList))
+    {
+       std::cerr << "File list " << fileList << " does not exist\n";
+    }
+    std::ifstream is(fileList);
+    std::string line;
+    std::vector<std::pair<std::string,std::string>> files;
+    std::vector<std::string> errors;
+    while (std::getline(is, line))
+    {
+        size_t fst = line.find_first_of('\t');
+        if (fst == std::string::npos)
+        {
+            errors.push_back("Malformed line:" + line);
+            continue;
+        }
 
-	if (fs::exists(outputFile))
-	{
-		if (!fs::remove((outputFile)))
-		{
-			std::cout << "Failed to remove old mpq file " << outputFile << "\n";
-			return -1;
-		}
-	}
+        std::string src = line.substr(0, fst);
+        std::string dst = line.substr(fst + 1);
 
-	if (!SFileCreateArchive(outputFile.string().c_str(), 0, 1024, &handle))
-	{
-		std::cout << "Failed to create output mpq file " << outputFile << "\n";
-		return -1;
-	}
+        if (!exists(src))
+        {
+            errors.push_back("Missing file:" + src);
+            continue;
+        }
+        files.push_back(std::make_pair(src,dst));
+    }
 
-	for (int i = 2; i < argc; ++i)
-	{
-		fs::path inputDir = fs::path(argv[i]);
-		if (!fs::exists(fs::path(inputDir)))
-		{
-			std::cout << "No such directory " << inputDir << std::endl;
-			return -1;
-		}
+    if (errors.size() > 0)
+    {
+        std::cerr << "Errors encountered when reading file list:\n";
+        for (std::string const& error : errors)
+        {
+           std::cerr << error << "\n";
+        }
+        return -1;
+    }
 
-		if (!fs::is_directory(fs::path(inputDir)))
-		{
-			std::cout << "Not a directory: " << inputDir << std::endl;
-			return -1;
-		}
+    if(files.size() == 0)
+    {
+        std::cerr << "Tried creating an MPQ with no files\n";
+        return -1;
+    }
 
-		writeDir(inputDir, inputDir);
-	}
+    if (files.size() > 0x80000)
+    {
+        std::cerr << "Tried to create an MPQ with more than the maximum supported " << 0x80000 << " files\n";
+        return -1;
+    }
 
-	SFileFlushArchive(handle);
-	return 0;
+    // 2. Write MPQ
+    struct TempFile {
+       std::string m_file;
+       TempFile(std::string const& file): m_file(file){}
+       ~TempFile() {
+           clearFile(m_file, "Failed to remove temp file ");
+       }
+    } temp(std::string(argv[2])+".temp");
+
+    if (!clearFile(temp.m_file, "Failed to remove old temp file ")) return -1;
+
+    HANDLE handle = NULL;
+    size_t power = 4;
+    while (power < files.size()) power <<= 1;
+    if (!SFileCreateArchive(temp.m_file.c_str(), 0, power, &handle))
+    {
+        std::cerr << "Failed to create output mpq file " << temp.m_file << "\n";
+        return -1;
+    }
+
+    for (auto const& pair : files)
+    {
+        SFileAddFile(handle, pair.first.c_str(), pair.second.c_str(), 0);
+    }
+    SFileFlushArchive(handle);
+    SFileCloseArchive(handle);
+
+    // 3. Save to real output file
+    std::string outputFile = argv[2];
+    if (!clearFile(outputFile, "Failed to remove old mpq file "));
+
+    std::ifstream  src(temp.m_file, std::ios::binary);
+    std::ofstream  dst(outputFile, std::ios::binary);
+    dst << src.rdbuf();
+    return 0;
 }

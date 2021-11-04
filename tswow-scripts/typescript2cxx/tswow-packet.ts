@@ -15,12 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import ts = require("typescript");
-import * as fs from 'fs';
 import * as path from 'path';
 import { CodeWriter } from "./codewriter";
 import { registerMessage } from "./tswow-packet-def";
 import { GetId, IdPrivate } from "./tswow/Ids";
-import { onMD5Changed } from "./version";
+import { TRANSPILER_CHANGES } from "./version";
 
 class IdPublic extends IdPrivate {
     static writeFile(filename: string) { return super.writeFile(filename); }
@@ -154,10 +153,8 @@ export function writePacketCreationFile(outDir: string) {
     }
     writer.EndBlock();
 
-    const tableFile = path.join(outDir,'livescripts','PacketCreator.cpp');
-    const text = writer.getText();
-
-    onMD5Changed(tableFile,text,()=>{
-        fs.writeFileSync(tableFile,text);
-    })
+    TRANSPILER_CHANGES.writeIfChanged(
+        path.join(outDir,'livescripts','PacketCreator.cpp')
+      , writer.getText()
+    )
 }

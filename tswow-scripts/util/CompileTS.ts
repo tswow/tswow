@@ -14,18 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from './FileSystem';
-import { ipaths } from './Paths';
+import { FilePath, resfp } from './FileTree';
 import { Process } from './Process';
 import { wsys } from './System';
 import { term, termc } from './Terminal';
 
 // tsc
 const tscWatchers: {[key: string]: Process} = {}
-export function watchTsc(dir: string, name: string) {
-    if(tscWatchers[dir]) return;
+export function watchTsc(tscEntry: string, dir: FilePath, name: string) {
+    if(tscWatchers[resfp(dir)]) return;
     console.log(`Starting TSC watcher in ${dir}`)
-    let watcher = tscWatchers[dir] = new Process()
+    let watcher = tscWatchers[resfp(dir)] = new Process()
     watcher
         .showOutput(false)
         .listenSimple(output=>{
@@ -60,7 +59,7 @@ export function watchTsc(dir: string, name: string) {
                     }
                 })
         })
-        .startIn(dir,'node',[wfs.absPath(ipaths.tsc),'--w'])
+        .startIn(dir,'node',[tscEntry,'--w'])
 }
 
 export async function destroyTSWatcher(dir: string) {

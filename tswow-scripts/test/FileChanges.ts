@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+
+/*
 import * as assert from 'assert';
 import { FileChanges } from '../util/FileChanges';
 import { wfs } from '../util/FileSystem';
@@ -156,3 +158,4 @@ describe('FileChanges', function() {
         assert.strictEqual(FileChanges.isChanged(exampleFile2, 'tag2'), true);
     });
 });
+*/

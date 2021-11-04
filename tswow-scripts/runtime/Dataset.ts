@@ -1,368 +1,237 @@
-import { datasetYaml } from "../util/ConfigFiles";
-import { mpath, wfs } from "../util/FileSystem";
-import { ipaths } from "../util/Paths";
+import { patchTCConfig } from "../util/ConfigFile";
+import { DatasetConfig, GAME_BUILD_FIELD } from "../util/DatasetConfig";
+import { collectSubmodules, ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
-import { DatabaseType, YamlFile } from "../util/Yaml";
-import { bool } from "../wotlkdata/primitives";
-import { Build } from "./Build";
 import { Client } from "./Client";
-import { commands } from "./Commands";
-import { Identifiers } from "./Identifiers";
+import { CreateCommand, InitializeCommand, ListCommand } from "./CommandActions";
+import { Identifier } from "./Identifiers";
 import { MapData } from "./MapData";
+import { Module, ModuleEndpoint } from "./Modules";
 import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 
-/**
- * Contains functions for managing TSWoW datasets
- */
-export namespace Datasets {
-    /**
-     * Represents the configuration file of a single dataset
-     */
-    export class DatasetConfig extends YamlFile {
-        private set: Dataset;
+export class Dataset {
+    readonly mod: ModuleEndpoint
+    readonly name: string;
+    readonly worldSource: Connection;
+    readonly worldDest: Connection;
+    readonly client: Client = new Client(this)
 
-        constructor(set: Dataset) {
-            super(ipaths.datasetYaml(set.id));
-            this.set = set;
+    get fullName() {
+        return this.mod.fullName+'.'+this.name
+    }
+
+    get config() {
+        return new DatasetConfig(this.path.config.get());
+    }
+
+    get path() {
+        if(this._path) return this._path
+        return (this._path as any) = this.mod.path.datasets.dataset.pick(this.name)
+    }
+    private _path: never = undefined as never;
+
+    constructor(mod: ModuleEndpoint, name: string) {
+        this.mod = mod;
+        this.name = name;
+        this.worldSource = new Connection(
+              NodeConfig.DatabaseSettings('world_source',this.fullName)
+            , 'world_source'
+        )
+        this.worldDest = new Connection(
+            NodeConfig.DatabaseSettings('world',this.fullName)
+          , 'world'
+      )
+    }
+
+    realms() {
+        return Realm.all().filter(x=>x.config.Dataset.path.get() === this.path.get());
+    }
+
+    initialize() {
+        this.config.generateIfNotExists();
+        return this;
+    }
+
+    async shutdown() {
+        let realms = this.realms();
+        realms.filter(x=>x.worldserver.isRunning());
+        await Promise.all(realms.map(x=>x.worldserver.stop()))
+        return realms;
+    }
+
+    gamebuildSQL() {
+        return `INSERT INTO build_info VALUES`
+            +  ` (${this.config.DatasetGameBuild}, 3, 3, 5,"a",NULL,NULL,NULL,`
+            +  ` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
+            +  ` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
+            +  ` ON DUPLICATE KEY UPDATE`
+            +  ` majorVersion=3,`
+            +  ` minorVersion=3,`
+            +  ` bugfixVersion=5,`
+            +  ` hotfixVersion="a",`
+            +  ` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
+            +  ` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
+            +  `;`
+    }
+
+    async setupClientData() {
+        let anyChange: boolean = false;
+        if(!this.path.luaxml_source.exists()) {
+            MapData.luaxml(this);
+            anyChange = true;
         }
 
-        get client_dll() {
-            return this.client_patches
-                .includes(Client.EXTENSION_DLL_PATCH_NAME)
+        this.path.luaxml_source.copyOnNoTarget(this.path.luaxml)
+
+        if(!this.path.dbc_source.exists()) {
+            MapData.dbc(this);
         }
 
-        get client_patches() {
-            return this.getArrayAll(
-                  'client_patches'
-                , ['all',`!${Client.EXTENSION_DLL_PATCH_NAME}`]
-                , new Client.Client(this.set).patches().map(x=>x.name)
-            )
+        if(!this.path.maps.exists()) {
+            MapData.map(this);
+            anyChange = true;
         }
 
-        get modules() {
-            return this.getArrayAll(
-                  'modules'
-                , ['all']
-                , wfs.readDir(ipaths.modules,true,'directories')
-            )
+        if(!this.path.vmaps.exists()) {
+            MapData.vmap_extract(this);
+            MapData.vmap_assemble(this)
+            anyChange = true;
         }
 
-        get use_mmaps() { return this.get<bool>('use_mmaps',false); }
-
-        get client_path() {
-            let val: string;
-            try {
-                val = this.get<string>('client_path','');
-                if(val.length === 0) { throw ""; }
-            } catch(err) {
-                val = NodeConfig.client_path;
-            }
-            // use the one in node.yaml if this one is empty
-
-            if(val.includes(' ')) {
-                throw new Error(
-                      `The client path for dataset ${this.set.id}`
-                    + ` contains spaces somewhere in its pathname`
-                    + `, please move it somewhere without spaces.`
-                )
-            }
-
-            // don't use ipaths here, they will recurse
-            // don't use wow.exe for validation, it's sometimes named Wow.exe and sometimes wow.exe
-            if(!wfs.exists(mpath(val,'Data'))) {
-                throw new Error(
-                      `No valid client at: ${val}`
-                    + `\n(check your client_path settings in`
-                    + ` ${ipaths.datasetYaml(this.set.id)})`);
-            }
-            return val;
-        }
-
-        get game_build() {
-            return this.get<number>('game_build',12340);
-        }
-
-        get ignore_assets() { return this.get<string[]>('ignore_assets',['.png','.blend'])}
-
-        get dev_patch() {
-            return mpath(
-                  this.client_path
-                , 'Data'
-                , this.get<string>(
-                      'client_patch'
-                    , 'patch-a.MPQ'
-                )
-            );
-        }
-
-        get dev_patch_letter() {
-            return this.dev_patch.split('.').reverse()[1][0]
-        }
-
-        get dev_patch_directory() {
-            return wfs.dirname(this.dev_patch);
+        if(anyChange) {
+            term.success('Finished installing server data');
         }
     }
 
-    /**
-     * Represents a single TSWoW dataset.
-     *
-     * These objects are unique for each dataset in memory.
-     */
-    export class Dataset {
-        readonly id: string;
-        readonly worldSource: Connection;
-        readonly worldDest: Connection;
-        readonly client: Client.Client;
-        config: DatasetConfig;
+    protected async setupDatabase(db: Connection, force: boolean) {
+        await this.connect();
+        if(force || !await mysql.isWorldInstalled([db])) {
+            await mysql.rebuildDatabase(db,ipaths.bin.tdb.get());
+        }
+        await mysql.applySQLFiles(db,'world');
+    }
 
-        private database_settings(database: DatabaseType) {
-            return NodeConfig.database_settings(database,this.id);
+    async setupDatabases(type: 'DEST'|'SOURCE'|'BOTH', force: boolean) {
+        if(type === 'SOURCE' || type === 'BOTH') {
+            await this.setupDatabase(this.worldSource, force);
         }
 
-        constructor(id: string) {
-            this.id = id;
-            this.config = new DatasetConfig(this);
-            this.worldSource = new Connection(
-                this.database_settings('world_source'),'world_source')
-            this.worldDest = new Connection(
-                this.database_settings('world'),'world');
-            this.client = new Client.Client(this);
+        if(type === 'DEST' || type === 'BOTH') {
+            await this.setupDatabase(this.worldDest , force);
         }
+    }
 
-        realms() {
-            return Realm.getRealms().filter(x=>x.set === this);
-        }
+    connect() {
+        return Promise.all([
+            this.worldSource,
+            this.worldDest
+        ].filter(x=>!x.isConnected).map(x=>x.connect()));
+    }
 
-        async shutdownRealms() {
-            let realms = this.realms().filter(x=>x.isWorldserverRunning());
-            await Promise.all(realms.map(x=>x.stopWorldserver()));
-            return realms;
-        }
+    modules() {
+        return collectSubmodules(this.config.modules)
+            .map(x=>ModuleEndpoint.fromPath(x.get()))
+    }
 
-        gamebuildSql() {
-            return `INSERT INTO build_info VALUES`
-                +  ` (${this.config.game_build}, 3, 3, 5,"a",NULL,NULL,NULL,`
-                +  ` "CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-                +  ` "B706D13FF2F4018839729461E3F8A0E2B5FDC034")`
-                +  ` ON DUPLICATE KEY UPDATE`
-                +  ` majorVersion=3,`
-                +  ` minorVersion=3,`
-                +  ` bugfixVersion=5,`
-                +  ` hotfixVersion="a",`
-                +  ` winChecksumSeed="CDCBBD5188315E6B4D19449D492DBCFAF156A347",`
-                +  ` macChecksumSeed="B706D13FF2F4018839729461E3F8A0E2B5FDC034"`
-                +  `;`
-        }
-
-        installServerData() {
-            let anyChange: boolean = false;
-            if(!wfs.exists(ipaths.datasetLuaxmlSource(this.id))) {
-                MapData.luaxml(this);
-                anyChange = true;
-            }
-
-            if(!wfs.exists(ipaths.datasetLuaxml(this.id))) {
-                wfs.copy(
-                      ipaths.datasetLuaxmlSource(this.id)
-                    , ipaths.datasetLuaxml(this.id));
-            }
-
-            if(!wfs.exists(ipaths.datasetDBCSource(this.id))) {
-                MapData.dbc(this);
-            }
-
-            if(! wfs.exists(ipaths.datasetMaps(this.id))) {
-                MapData.map(this);
-                anyChange = true;
-            }
-
-            if(!wfs.exists(ipaths.datasetDBC(this.id))) {
-                wfs.copy(
-                      ipaths.datasetDBCSource(this.id)
-                    , ipaths.datasetDBC(this.id));
-                anyChange = true;
-            }
-
-            if(!wfs.exists(ipaths.datasetVmaps(this.id))) {
-                MapData.vmap_extract(this);
-                MapData.vmap_assemble(this);
-                anyChange = true;
-            }
-
-            if(this.config.use_mmaps
-                && !wfs.exists(ipaths.datasetMmaps(this.id))) {
-                MapData.mmaps(this);
-                anyChange = true;
-            }
-
-            if(wfs.exists(ipaths.datasetMmaps(this.id))
-                && ! this.config.use_mmaps) {
-                term.warn(`Dataset ${this.id} has mmap data, but is not configured to use it (use_mmaps: false)`);
-            }
-
-            if(anyChange) {
-                term.success('Finished installing server data');
-            }
-        }
-
-        async dumpReleaseDatabase() {
-                term.log(`Dumping release database`
-                +` ${this.worldDest.cfg.database}`
-                +` to ${ipaths.datasetSqlDump}...`)
-
-                await mysql.rebuildDatabase(
-                      this.worldDest
-                    , await mysql.extractTdb());
-
-            await mysql.dump(
-                  this.worldDest
-                , ipaths.datasetSqlDump(this.id));
-        }
-
-        protected async installDb(db: Connection, force: boolean) {
-            await this.connect();
-            if(force || !await mysql.isWorldInstalled([db])) {
-                const tdb = await mysql.extractTdb();
-                await mysql.rebuildDatabase(db,tdb);
-            }
-            await mysql.applySQLFiles(db,'world');
-        }
-
-        async installSource(force: boolean) {
-            return this.installDb(this.worldSource,force);
-        }
-
-        async installDest(force: boolean) {
-            return this.installDb(this.worldDest,force);
-        }
-
-        async installBoth(force: boolean) {
-            await this.installSource(force);
-            await this.installDest(force);
-        }
-
-        connect() {
-            return Promise.all([
-                this.worldSource,
+    async dumpDatabase(outFile: string) {
+        term.log(`Dumping database`
+        +` ${this.worldDest.cfg.database}`
+        +` to ${outFile}...`)
+        await mysql.rebuildDatabase(
                 this.worldDest
-            ].filter(x=>!x.isConnected).map(x=>x.connect()));
-        }
+            , await mysql.extractTdb());
+
+        await mysql.dump(
+                this.worldDest
+            , outFile);
     }
 
-    const datasets : {[key:string]: Dataset} = {}
-
-    export function defaultName(dataset: string | undefined ) {
-        if(dataset != undefined) {
-            return dataset;
-        }
-        return getDefault();
+    static all() {
+        return Module.endpoints()
+            .filter(x=>x.path.datasets.exists())
+            .reduce<Dataset[]>((p,c)=>p.concat(c.datasets.all()),[])
     }
 
-    export function getAll() {
-        return wfs.readDir(ipaths.datasets,true,'directories')
-            .map(x=>get(x));
+    static create(mod: ModuleEndpoint, name: string, gamebuild: number = 12340) {
+        const dataset = new Dataset(mod,name).initialize();
+        patchTCConfig(dataset.config.filename,GAME_BUILD_FIELD,`${gamebuild}`);
+        return dataset;
     }
 
-    export function getDefault() {
-        return NodeConfig.default_dataset;
-    }
-
-    export function getDatasetsOrDefault(candidates: string[]) {
-        let res = Identifiers.getTypes('dataset',candidates.filter(x=>x!==undefined));
-        return (res.length > 0 ? res : [getDefault()]).map(x=>get(x));
-    }
-
-    export function get(dataset: string) {
-        if(datasets[dataset] !== undefined) {
-            return datasets[dataset];
-        }
-
-        if(!wfs.exists(ipaths.datasetRoot(dataset))) {
-            try {
-                return Realm.getRealm(dataset).set;
-            } catch(err) {
-                throw new Error(`No such dataset or realm: ${dataset}`)
+    static initialize() {
+        CreateCommand.addCommand(
+            'dataset'
+          , 'module dataset clientPatch=12340'
+          , ''
+          , args => {
+              const module = Identifier.getModule(args[0])
+              const dataset = Identifier.assertUnused(args[1],'dataset');
+              const gamebuild = parseInt(args[2]||'12340');
+              if(isNaN(gamebuild)) {
+                  throw new Error(`Invalid gamebuild: ${args[2]}`)
+              }
+              this.create(module,dataset,gamebuild);
             }
-        }
+        ).addAlias('datasets')
 
-        return datasets[dataset] = new Dataset(dataset);
-    }
-
-    export function create(name: string) {
-        Identifiers.assertUnused(name);
-        wfs.write(ipaths.datasetYaml(name),datasetYaml(name));
-    }
-
-    export const command = commands.addCommand('dataset');
-
-    export function initialize() {
-        if (
-            ! wfs.exists(ipaths.datasets)
-            || wfs.readDir(ipaths.datasets,false,'directories').length == 0
-           )
-        {
-            create('default');
-        }
-
-        command.addCommand(
-              'install'
-            , 'name --skip-data --skip-database'
-            , 'Installs missing server data for a dataset'
-            , async (args: any[])=>{
-
-            await Promise.all(getDatasetsOrDefault(args).map(x=>{
-                if(!args.includes('--skip-data')) {
-                    x.installServerData();
-                }
-
-                if(!args.includes('--skip-database')) {
-                    return x.installBoth(false);
-                }
-            }));
-        });
-
-        Build.command.addCommand(
-              'luaxml'
-            , '...dataset'
-            , 'Rebuilds luaxml data'
-            , async(args: any[])=>{
-
-            await Promise.all(getDatasetsOrDefault(args).map(x=>{
-                return MapData.luaxml(x);
-            }));
-        });
-
-        Build.command.addCommand(
+        InitializeCommand.addCommand(
               'database'
-            , '...dataset'
-            , 'Rebuilds databases'
-            , async(args: any[])=>{
-            await Promise.all(getDatasetsOrDefault(args).map(x=>{
-                return x.installBoth(true);
-            }));
-        });
-
-        command.addCommand(
-              'create'
-            , 'name'
-            , 'Creates a new dataset with the provided id'
-            , (args: any[])=>{
-
-            if(args.length<1) {
-                throw new Error(`Must provide an id for the created dataset`);
+            , 'dataset = node.conf:Default.Dataset, --source? --dest?'
+            , 'Creates base tables'
+            , async args => {
+                return Promise.all(Identifier
+                    .getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
+                    .map(x=>{
+                        return x.setupDatabases(
+                              args.includes('--source') && args.includes('--dest')
+                            ? 'BOTH'
+                            : args.includes('--source')
+                            ? 'SOURCE'
+                            : args.includes('--dest')
+                            ? 'DEST'
+                            : 'BOTH'
+                        , true)
+                    }));
             }
-            create(args[0]);
-        });
+        )
 
-        if(NodeConfig.autostart_client && ! process.argv.includes('noclient')) {
-            let datasets : {[key: string]: Dataset} = {}
-            NodeConfig.autostart_realms
-                .map(x=>Realm.getRealm(x))
-                .forEach(x=>datasets[x.set.id] = x.set)
-            Object.values(datasets).forEach(x=>x.client.start())
-        }
+        ListCommand.addCommand(
+              'dataset'
+            , 'module?'
+            , 'lists all available datasets'
+            , args => {
+                let isModule = Identifier.isModule(args[0])
+                Dataset.all()
+                    .filter(x=> !isModule || x.mod.mod.id === args[0])
+                    .forEach(x=>term.log(x.fullName +': '+x.path.get()))
+            }
+        ).addAlias('datasets')
+    }
+}
+
+export class Datasets {
+    readonly mod: ModuleEndpoint;
+
+    get path() {
+        return this.mod.path.datasets
+    }
+
+    constructor(mod: ModuleEndpoint) {
+        this.mod = mod;
+    }
+
+    pick(name: string) {
+        return new Realm(this.mod,this.path.dataset.pick(name).get())
+    }
+
+    all() {
+        return this.path.dataset.all()
+            .map(x=>new Dataset(this.mod, x.basename().get()))
+    }
+
+    create(name: string, gamebuild: number = 12340) {
+        return Dataset.create(this.mod,name,gamebuild)
     }
 }
