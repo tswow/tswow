@@ -152,6 +152,13 @@ export function EndpointDirectory(inPath: string) {
             realm: dynCustom((pathIn,nameIn)=>RealmDirectory(pathIn,nameIn))
         }),
         assets: dir({
+            Interface: dir({
+                WorldMap: dir({})
+            }),
+
+            textures: dir({
+                minimap: dir({})
+            })
         }),
         livescript_tsconfig_temp: file('tsconfig.json'),
     }));
