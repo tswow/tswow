@@ -253,11 +253,13 @@ export class Datascripts {
         });
 
         let clientCount = 0;
-        if(!args.includes('--skip-client')) {
+        if(!args.includes('--skip-client') && !args.includes('--readonly')) {
             clientCount = await dataset.client.kill();
         }
 
-        let runningWorldservers = args.includes('--skip-server') ? []
+        let runningWorldservers =
+            (args.includes('--skip-server')||args.includes('--readonly'))
+            ? []
             : dataset.realms().filter(x=>x.worldserver.isRunning())
 
         await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
