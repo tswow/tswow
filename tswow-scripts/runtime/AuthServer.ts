@@ -5,6 +5,7 @@ import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { term } from "../util/Terminal";
+import { StartCommand, StopCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
@@ -80,22 +81,24 @@ export namespace AuthServer {
             await start(NodeConfig.DefaultBuildType);
         }
 
-        AuthServer.command.addCommand(
-             'stop'
+        StopCommand.addCommand(
+             'authserver'
             , ''
             , 'Stops the local authserver'
             , async (args)=>{
+                if(!authserver.isRunning()) {
+                    throw new Error(`Authserver isn't running`)
+                }
+                await authserver.stop();
+                term.success('authserver was stopped')
+        }).addAlias('auth');
 
-            await stop();
-        });
-
-        AuthServer.command.addCommand(
-             'start'
+        StartCommand.addCommand(
+             'authserver'
             ,'debug|release?'
             ,'Starts the local authserver'
-            ,async (args)=>{
-
-            await start(findBuildType(args));
-        });
+            , (args)=>{
+            return start(findBuildType(args));
+        }).addAlias('auth');
     }
 }

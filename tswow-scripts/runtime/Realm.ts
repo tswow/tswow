@@ -7,7 +7,7 @@ import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { term } from "../util/Terminal";
 import { AuthServer } from "./AuthServer";
-import { CreateCommand, ListCommand, StartCommand } from "./CommandActions";
+import { CreateCommand, ListCommand, StartCommand, StopCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
 import { Connection, mysql } from "./MySQL";
@@ -169,15 +169,8 @@ class RealmManager {
         this.worldserver.setOnFail((err)=>{
             term.error(err.message)
         })
-        let buffer = "";
         this.worldserver.listenSimple(msg=>{
-            // naive to assume \n always comes at the end?
-            if(msg.endsWith('\n')) {
-                term.log(buffer+msg);
-                buffer = ""
-            } else {
-                buffer+=msg
-            }
+            term.log(msg);
         })
     }
 }
@@ -368,6 +361,37 @@ export class Realm {
                 .forEach(x=>Identifier.getRealm(x)
                     .start(NodeConfig.DefaultBuildType))
         }
+
+        StopCommand.addCommand(
+              'realm'
+            , 'relamnames time'
+            , ''
+            , args => {
+                let delay = args.map(x=>parseInt(x)).find(x=>x!==NaN) || 0
+                let realms = Identifier.getRealms(
+                        args
+                    , 'MATCH_ANY'
+                    , NodeConfig.DefaultRealm
+                )
+
+                let runningRealms = realms.filter(x=>x.worldserver.isRunning())
+                if(runningRealms.length === 0) {
+                    throw new Error(`None of the specified realms are started: ${realms.map(x=>x.fullName).join(' ')}`)
+                }
+
+                return Promise.all(runningRealms.map(x=>{
+                    x.worldserver.send(`server shutdown force ${delay}`)
+                    return new Promise<void>((res,rej)=>{
+                        let interval = setInterval(()=>{
+                            if(!x.worldserver.isRunning()) {
+                                clearInterval(interval);
+                                res();
+                            }
+                        },100)
+                    })
+                }))
+            }
+        )
 
         CreateCommand.addCommand(
               'realm'
