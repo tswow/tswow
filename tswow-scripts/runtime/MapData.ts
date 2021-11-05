@@ -17,7 +17,8 @@
 import { BuildType } from '../util/BuildType';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
-import { InitializeCommand } from './CommandActions';
+import { util } from '../util/Util';
+import { BuildCommand } from './CommandActions';
 import { Dataset } from './Dataset';
 import { Identifier } from './Identifiers';
 import { NodeConfig } from './NodeConfig';
@@ -108,13 +109,67 @@ export namespace MapData {
     }
 
     export function initialize() {
-        InitializeCommand.addCommand(
+        BuildCommand.addCommand(
               'luaxml'
             , 'dataset'
             , 'builds luaxml data for the specified datasets'
             , args => {
                 Identifier.getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
                     .forEach(x=>luaxml(x))
+            }
+        )
+
+        BuildCommand.addCommand(
+              'maps'
+            , 'dataset --maps=map1,map2.. --tiles=tile1x,tile1y,tile2x,tile2y..'
+            , 'Extracts mapfiles for the selected dataset'
+            , (args) => {
+                let maps = util.intListArgument('--maps=',args);
+                let tiles = util.intListArgument('--tiles=',args);
+                Identifier.getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
+                    .forEach(x=>
+                        map(
+                            x
+                            , Identifier.getBuildType(args,NodeConfig.DefaultBuildType)
+                            , maps
+                            , tiles
+                        ))
+            }
+        )
+
+        BuildCommand.addCommand('vmaps','','Extracts and assembles vmaps into the selected datasets',(args)=>{
+            const bt = Identifier.getBuildType(args,NodeConfig.DefaultBuildType);
+            Identifier.getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
+                .forEach(x=>{
+                    if(!args.includes('--assemble-only'))
+                        vmap_extract(x, bt)
+
+                    if(!args.includes('--extract-only'))
+                        vmap_assemble(x, bt)
+                });
+            }
+        )
+
+        BuildCommand.addCommand(
+                'mmaps'
+              , '--maps=map1,map2.. --tiles=tile1x,tile1y,tile2x,tile2y..'
+              , 'Extracts mmaps into the selected dataset'
+              , args => {
+                let maps = util.intListArgument('--maps=',args);
+                let tiles = util.intListArgument('--tiles=',args);
+                const bt = Identifier.getBuildType(args, NodeConfig.DefaultBuildType)
+                Identifier.getDatasets(
+                      args
+                    , 'MATCH_ANY'
+                    , NodeConfig.DefaultDataset
+                ).forEach(x=>{
+                    mmaps(
+                          x
+                        , bt
+                        , maps
+                        , tiles
+                    )
+                })
             }
         )
     }
