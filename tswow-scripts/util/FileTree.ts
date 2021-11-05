@@ -108,6 +108,15 @@ export class WNode {
         this.path = typeof(path) === 'string' ? path : path.path;
     }
 
+    withExtension(newExtension: string, removeOld = true) {
+        if(removeOld && this.path.indexOf('.') > 0) {
+            return this.construct(this.path.replace(/\.[^/.]+$/,newExtension));
+        } else {
+            return this.construct(this.path+newExtension);
+        }
+    }
+
+
     protected construct(pathIn: string): this {
         return new WNode(pathIn) as this;
     }
@@ -286,10 +295,6 @@ export class WFile extends WNode {
             return true;
         }
         return false;
-    }
-
-    withExtension(newExtension: string) {
-        return this.construct(this.path.replace(/\.[^/.]+$/,newExtension));
     }
 
     readBuffer(def?: Buffer) {
