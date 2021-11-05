@@ -4,6 +4,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import { wfs } from "./FileSystem";
 import { FilePath, resfp, WNode } from "./FileTree";
+import { ipaths } from "./Paths";
 
 function md5 (value: Buffer|string) {
     return crypto
@@ -77,7 +78,7 @@ export class FileChangeModule {
     protected modifies: ChangeMap<number>;
 
     constructor(name: string) {
-        this.filepath = name;
+        this.filepath = ipaths.bin.changes.join(name).get()
         this.hashes = new ChangeMap(this.filepath+'.hashes');
         this.modifies = new ChangeMap(this.filepath+'.modifies');
     }
