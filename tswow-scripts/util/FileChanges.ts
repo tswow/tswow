@@ -3,7 +3,7 @@
 import * as crypto from "crypto";
 import * as fs from "fs";
 import { wfs } from "./FileSystem";
-import { WNode } from "./FileTree";
+import { FilePath, resfp, WNode } from "./FileTree";
 
 function md5 (value: Buffer|string) {
     return crypto
@@ -102,9 +102,9 @@ export class FileChangeModule {
 
     // primarily used by transpiler
 
-    writeIfChanged(filepath: string, value: Buffer, encoding?: BufferEncoding);
-    writeIfChanged(filepath: string, value: string)
-    writeIfChanged(filepath: string, value: string|Buffer, encoding?: BufferEncoding) {
+    writeIfChanged(filepath: FilePath, value: Buffer, encoding?: BufferEncoding);
+    writeIfChanged(filepath: FilePath, value: string)
+    writeIfChanged(filepath: FilePath, value: string|Buffer, encoding?: BufferEncoding) {
         filepath = wfs.absPath(filepath);
         let oldHash = this.hashes.read(filepath);
         let newHash = md5(value);
@@ -118,7 +118,16 @@ export class FileChangeModule {
         }
     }
 
-    onChanged(input: string, outputs: string[], callback: (filepath: WNode)=>void) {
+    isChanged(input: FilePath) {
+        return !fs.existsSync(resfp(input))
+            || fs.statSync(resfp(input)).mtimeMs !== this.modifies.read(resfp(input))
+    }
+
+    markChanged(input: FilePath) {
+        this.modifies.write(resfp(input), fs.statSync(resfp(input)).mtimeMs);
+    }
+
+    onChanged(input: FilePath, outputs: string[], callback: (filepath: WNode)=>void) {
         input = wfs.absPath(input);
         let newMtime = fs.statSync(input).mtimeMs;
         let oldMtime = this.modifies.read(input);
