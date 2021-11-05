@@ -51,7 +51,7 @@ export namespace MapData {
         , type: BuildType = NodeConfig.DefaultBuildType
         , maps: number[] = []
         , tiles: number[] = []
-        ) {
+    ) {
         wsys.exec(
           `${ipaths.bin.trinitycore.build.pick(type).mapextractor.get()}`
             + ` -e 1`
@@ -79,7 +79,7 @@ export namespace MapData {
     export function vmap_assemble(
         dataset: Dataset
       , type: BuildType = NodeConfig.DefaultBuildType
-      ) {
+    ) {
         let prog = `${ipaths.bin.trinitycore.build.pick(type).vmap4assembler.get()}`
           + ` ${dataset.path.Buildings.get()} ${dataset.path.vmaps.get()}`
         wsys.exec(prog,'inherit');
