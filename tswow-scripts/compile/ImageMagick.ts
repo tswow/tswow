@@ -36,5 +36,6 @@ export namespace IMInstall {
 
         bpaths.im.convert_exe.copy(ipaths.bin.im.convert)
         bpaths.im.magic_exe.copy(ipaths.bin.im.magick)
+        bpaths.im.identify_exe.copy(ipaths.bin.im.identify)
     }
 }

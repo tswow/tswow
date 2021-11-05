@@ -281,7 +281,8 @@ export function InstallPath(pathIn: string, tdb: string) {
             /** imagemagick binaries */
             im: dir({
                 convert: file('convert.exe'),
-                magick: file('magick.exe')
+                magick: file('magick.exe'),
+                identify: file('identify.exe'),
             }),
             tdb: file(tdb),
             cmake: dir({
@@ -438,6 +439,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         im: dir({
             convert_exe: file('convert.exe'),
             magic_exe: file('magick.exe'),
+            identify_exe: file('identify.exe'),
         }),
 
         TrinityCore: dir({
