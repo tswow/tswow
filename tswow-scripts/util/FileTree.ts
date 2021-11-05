@@ -121,6 +121,10 @@ export class WNode {
         return new WNode(pathIn) as this;
     }
 
+    includes(value: string) {
+        return this.path.includes(value);
+    }
+
     filter(callback: (v: WNode)=>void) {
         return fs.readdirSync(this.path)
             .map(x=>this.join(x))
