@@ -139,6 +139,10 @@ export class ModuleEndpoint {
     }
     private _path: never;
 
+    static fromName(name: string) {
+        return this.fromPath(ipaths.modules.join(name.split('.').join('/')).get())
+    }
+
     static fromPath(pathIn: string) {
         let parts = wfs.relative(ipaths.modules.get(),pathIn).split(/\\|\//)
         if(parts[0] === '.') parts = parts.slice(1);

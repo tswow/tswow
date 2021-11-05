@@ -19,7 +19,7 @@ import { FilePath } from "../util/FileTree";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { BuildCommand, CreateCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, ClearCommand, CreateCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -309,6 +309,24 @@ export class Addon {
         await this.updateAddons(dataset);
     }
 
+    static clearDevBuild() {
+        Dataset.all().forEach(x=>{
+            const tsaddons = x.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+            x.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+                .iterate('RECURSE','DIRECTORIES','FULL',node=>{
+                    if(node.basename().get() === 'addon' || node.basename().get() === 'shared')
+                    {
+                        return 'ENDPOINT'
+                    }
+                    let rel = node.relativeTo(tsaddons).get()
+                    if(ModuleEndpoint.fromPath(rel) === undefined) {
+                        node.remove();
+                        return 'ENDPOINT'
+                    }
+                })
+        })
+    }
+
     static initialize() {
         ListCommand.addCommand(
             'addon'
@@ -336,6 +354,7 @@ export class Addon {
             , 'dataset? module?'
             , 'Creates addon data in the specified module(s)'
             , args => {
+                this.clearDevBuild();
                 return Promise.all(Identifier.getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
                     .map(async dataset=>{
                         let mods = Identifier.getModules(args,'ALLOW_NONE')
@@ -347,5 +366,22 @@ export class Addon {
                     }))
             }
         )
+
+        ClearCommand.addCommand(
+            'addon'
+          , 'modules'
+          , ''
+          , args => {
+                this.clearDevBuild();
+                const modules = args.length === 0 ? Module.endpoints()
+                    : Identifier.getModules(args,'MATCH_ALL')
+                modules.forEach(mod=>{
+                    mod.addon.path.build.remove();
+                    Dataset.all().forEach(dataset=>{
+                        dataset.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+                            .join(mod.fullName.split('.').join('/')).remove();
+                    })
+                })
+        })
     }
 }

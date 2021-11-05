@@ -177,7 +177,13 @@ export function ClientPath(pathIn: string, devPatch: string) {
         /** The wow.exe without any patches applied */
         wow_exe_clean: file('wow.exe.clean'),
         Data: dir({
-            devPatch: file(devPatch),
+            devPatch: dir({
+                Interface: dir({
+                    FrameXML: dir({
+                        TSAddons: dir({})
+                    })
+                })
+            }),
             locale: function(){
                 const self = new WDirectory(this.get())
                 if(!self.exists()) {

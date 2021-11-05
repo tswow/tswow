@@ -229,6 +229,11 @@ export class Identifier {
             .map(x=>x.asModule())
     }
 
+    static getModulesOrAll(identifiers: string[]) {
+        let modules = this.getModules(identifiers,'ALLOW_NONE');
+        return modules.length > 0 ? modules : Module.endpoints()
+    }
+
     static getRealms(identifiers: string[], mode: CollectMode, def?: string): Realm[];
     static getRealms(identifiers: string[], mode: CollectModeMatchAll): Realm[];
     static getRealms(identifiers: string[], mode: CollectModeMatchAll, def?: string): Realm[] {

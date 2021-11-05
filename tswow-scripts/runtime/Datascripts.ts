@@ -4,7 +4,7 @@ import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { BuildCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -235,7 +235,18 @@ export class Datascripts {
                 })
             }
         )
-        .addAlias('datascript')
+        .addAlias('datascript').addAlias('data')
+
+        ClearCommand.addCommand(
+              'datascripts'
+            , 'modules'
+            , ''
+            , args => {
+                return Promise.all(Identifier.getModules(args,'MATCH_ALL').map(x=>{
+                    x.path.datascripts.build.remove();
+                }))
+            }
+        ).addAlias('datascript').addAlias('data')
     }
 
     static async build(

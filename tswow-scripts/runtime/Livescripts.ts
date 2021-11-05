@@ -5,7 +5,7 @@ import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { Timer } from "../util/Timer";
-import { BuildCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { getLivescriptCMakeLists } from "./LivescriptsCMakeLists";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -203,6 +203,17 @@ export class Livescripts {
                     return x.livescripts.build(buildType,args);
                 })
             }
+        ).addAlias('scripts').addAlias('script').addAlias('livescript')
+
+        ClearCommand.addCommand(
+            'livescripts'
+          , 'modules'
+          , ''
+          , args => {
+              return Promise.all(Identifier.getModules(args,'MATCH_ALL').map(x=>{
+                  x.path.livescripts.build.remove();
+              }))
+          }
         ).addAlias('scripts').addAlias('script').addAlias('livescript')
     }
 }
