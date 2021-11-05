@@ -1,6 +1,6 @@
 /*
  * This file is part of tswow (https://github.com/tswow)
- * 
+ *
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -26,6 +26,7 @@
 std::vector<std::string> special_files = {
 	  "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 	, "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
+	, "textures\\Minimap\\md5translate.trs"
 };
 
 HANDLE handle = NULL;
@@ -72,6 +73,14 @@ int main(int argc, char **argv) {
 	fs::path mainfile;
 	std::vector<fs::path> patches;
 
+	// todo: hack for md5translate.trs, do this properly!
+	patches.push_back(fs::path(argv[2]) / "common.MPQ");
+	patches.push_back(fs::path(argv[2]) / "common-2.MPQ");
+	patches.push_back(fs::path(argv[2]) / "expansion.MPQ");
+	patches.push_back(fs::path(argv[2]) / "lichking.MPQ");
+	patches.push_back(fs::path(argv[2]) / "patch.MPQ");
+	patches.push_back(fs::path(argv[2]) / "patch-2.MPQ");
+	patches.push_back(fs::path(argv[2]) / "patch-3.MPQ");
 	fs::directory_iterator end;
 
 	for(fs::directory_iterator itr(langdir); itr != end; ++itr)
