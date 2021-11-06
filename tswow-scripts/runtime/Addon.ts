@@ -226,6 +226,7 @@ export class Addon {
                     }
                     x = x.replace(m[1],p);
                 }
+                return x;
             }).join('\n')
             node.toFile().write(lines)
         })
