@@ -40,8 +40,10 @@ finish('worldmaps', () => {
     ipaths.modules.module.all().forEach(basemod=>{
         basemod.endpoints().forEach(mod=>{
             if(!mod.assets.Interface.WorldMap.exists()) return;
+            if(mod.assets.Interface.WorldMap.toDirectory().containsFile('noconvert')) return;
             mod.assets.Interface.WorldMap.readDir('ABSOLUTE').forEach(worldmapdir=>{
                 if(!worldmapdir.isDirectory()) return;
+                if(worldmapdir.toDirectory().containsFile('noconvert')) return;
                 let zonefile = worldmapdir.join('zone')
                 onDirtyPNG(zonefile.toFile(),mapsChanges,missingBlps(worldmapdir.get(),worldmapdir.basename().get()),png=>{
                     splitPng(png, 256,256, `${png.basename(1)}%01d.png`)
@@ -63,7 +65,7 @@ finish('worldmaps', () => {
                         let noext = overlay.toFile().withExtension('')
                         const file = getEffectiveFile(noext);
                         if(!file) {
-                            throw new Error(`Internal error: ${noext} has no effective file`);
+                            return; // it's not a texture file
                         }
                         const ident = wsys.exec(
                               ` ${ipaths.bin.im.identify.abs().get()}`

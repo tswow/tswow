@@ -28,12 +28,19 @@ finish('minimaps', () => {
         basemod.endpoints().forEach(mod=>{
             if(!mod.assets.textures.minimap.exists()) return;
             mod.assets.textures.minimap
-                .iterate('FLAT','FILES','FULL',node=>{
+                .iterate('FLAT','BOTH','FULL',node=>{
+                    if(node.isDirectory()) {
+                        if(node.toDirectory().containsFile('noconvert')) {
+                            return 'ENDPOINT'
+                        } else {
+                            return;
+                        }
+                    }
                     if(node.basename().match(/[0-9]/)) return;
                     let noext = node.toFile().withExtension('')
                     const file = getEffectiveFile(noext);
                     if(!file) {
-                        throw new Error(`Internal error: ${noext} has no effective file`);
+                        return; // it's not a texture file
                     }
                     const ident = wsys.exec(
                           ` ${ipaths.bin.im.identify.abs().get()}`

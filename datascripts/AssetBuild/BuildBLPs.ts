@@ -29,7 +29,14 @@ finish('blps', () => {
             if(!mod.assets.exists()) {
                 return;
             }
-            mod.assets.iterate('RECURSE','FILES','FULL',node=>{
+            mod.assets.iterate('RECURSE','BOTH','FULL',node=>{
+                if(node.isDirectory()) {
+                    if(node.toDirectory().containsFile('noconvert')) {
+                        return 'ENDPOINT'
+                    } else {
+                        return;
+                    }
+                }
                 if(node.basename(2).toLowerCase().get() === 'worldmap') {
                     // worldmap file
                     if(node.basename().toFile().withExtension('').toLowerCase() === node.basename(1).toLowerCase()) {
