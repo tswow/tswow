@@ -91,7 +91,6 @@ export function onDirtyPNG(
 }
 
 export function splitPng(pngPath: FilePath, xTiles: number, yTiles: number, outputFormat: string) {
-    console.log("Splittin png",pngPath)
     wsys.execIn(
         wfs.dirname(pngPath)
       , `${MAGICK} ${pngPath}`
