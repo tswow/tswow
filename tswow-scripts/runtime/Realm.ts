@@ -352,14 +352,14 @@ export class Realm {
             .reduce<Realm[]>((p,c)=>p.concat(c.realms.all()),[])
     }
 
-    static initialize() {
+    static async initialize() {
         if(
                !process.argv.includes('noac')
             && !process.argv.includes('norealm')
         ) {
-            NodeConfig.AutoStartRealms
-                .forEach(x=>Identifier.getRealm(x)
-                    .start(NodeConfig.DefaultBuildType))
+            await Promise.all(NodeConfig.AutoStartRealms
+                .map(x=>Identifier.getRealm(x)
+                    .start(NodeConfig.DefaultBuildType)))
         }
 
         StopCommand.addCommand(
