@@ -77,7 +77,7 @@ export class Connection {
         return new Promise<any>((res,rej)=>{
             (this.con as mysql_lib.Pool).query(query,(err,value)=>{
                 if(err) {
-                    rej(err);
+                    rej(`${err.code}: ${err.message} (for query ${query})`);
                 } else {
                     res(value);
                 }
@@ -340,37 +340,39 @@ export namespace mysql {
         term.success(`Rebuilt database ${con.name()}`);
     }
 
+    async function makeUpdate(cons: Connection, node: WDirectory) {
+        let files: string[] = []
+        let total = 0
+        node.iterate('FLAT','FILES','FULL',node=>{
+            if(!node.endsWith('.sql')) return;
+            files.push(node.get())
+        })
+
+        for(const file of files.sort()) {
+            const bn = path.basename(file);
+            const applied = await cons.query(
+                `SELECT * from \`updates\` WHERE \`name\` = "${bn}";`
+            )
+            if(applied.length === 0) {
+                term.log(`Applying SQL update ${bn}`)
+                ++total;
+                await cons.query(
+                        `START TRANSACTION;`
+                    + `${wfs.read(file)}`
+                    + `INSERT INTO updates (name,hash,speed) VALUES ("${bn}","tswow",0);`
+                    + `COMMIT;`
+                )
+            }
+        }
+        return total;
+    }
+
     export async function applySQLFiles(
           cons: Connection
         , type: 'world'|'auth'|'characters'
     ) {
-        let total = 0;
-        const makeUpdate = async (node: WDirectory) => {
-            let files: string[] = []
-            node.iterate('FLAT','FILES','FULL',node=>{
-                if(!node.endsWith('.sql')) return;
-                files.push(node.get())
-            })
-            for(const file of files.sort()) {
-                const bn = path.basename(file);
-                const applied = await cons.query(
-                    `SELECT * from \`updates\` WHERE \`name\` = "${bn}";`
-                )
-                if(applied.length === 0) {
-                    term.log(`Applying SQL update ${bn}`)
-                    ++total;
-                    await cons.query(wfs.read(file))
-                    await cons.query(
-                        `INSERT INTO updates (name,hash,speed)`
-                      + ` VALUES ("${bn}", "tswow",0);`)
-                }
-            }
-        }
-        await makeUpdate(
-            ipaths.bin.sql.updates.type.pick(type)._335.toDirectory())
-        await makeUpdate(
-            ipaths.bin.sql.custom.type.pick(type).toDirectory())
-
+        let total = await makeUpdate(cons, ipaths.bin.sql.updates.type.pick(type)._335.toDirectory())
+        total += await makeUpdate(cons, ipaths.bin.sql.custom.type.pick(type).toDirectory())
         if(total > 0) {
             term.success(`Applied ${total} updates for ${cons.name()}`)
         }
