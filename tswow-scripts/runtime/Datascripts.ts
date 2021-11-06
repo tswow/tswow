@@ -206,14 +206,14 @@ export class Datascripts {
               'datascripts'
             , 'dataset'
             , ''
-            , args => {
-                Identifier.getDatasets(
+            , async args => {
+                for(const value of Identifier.getDatasets(
                       args
                     , 'MATCH_ANY'
                     , NodeConfig.DefaultDataset
-                ).forEach(x=>{
-                    this.build(x,args)
-                })
+                )) {
+                    await this.build(value,args)
+                }
             }
         )
         .addAlias('datascript')
