@@ -20,7 +20,7 @@ import { DBCFiles } from './DBCFiles';
 import fs = require('fs');
 
 export function saveDbc() {
-    if (BuildArgs.NO_CLIENT) { return; }
+    if (BuildArgs.READ_ONLY) { return; }
     for (const file of DBCFiles) {
         const srcpath = dataset.dbc_source.join(file.name + '.dbc');
         const spath = dataset.dbc.join(file.name + '.dbc')
