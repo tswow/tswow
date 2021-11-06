@@ -22,7 +22,6 @@ import { Objectified, Objects } from "wotlkdata/wotlkdata/cell/serialization/Obj
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { Ids } from "../Misc/Ids";
-import { std } from "../tswow-stdlib-data";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
@@ -186,7 +185,7 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
                 return nex;
             }
             nex = new Spell(DBC.Spell.add(Ids.Spell.dynamicId()));
-            std.Spells.Clear(nex);
+            SpellRegistry.Clear(nex);
             nex.Icon.setFullPath(SPELL_CHAIN_TOKEN);
             spell.Effects.addMod((eff)=>{
                 eff.Type.TRIGGER_SPELL.set()

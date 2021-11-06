@@ -8,8 +8,8 @@ import { Ids } from "../Misc/Ids";
 import { SelfRef } from "../Refs/Ref";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
+import { SpellRegistry } from "../Spell/Spells";
 import { TrainerBase } from "../Trainer/Trainer";
-import { std } from "../tswow-stdlib-data";
 import { ProfessionGatheringNodes } from "./ProfessionGatheringNodes";
 import { ProfessionGatheringSpells } from "./ProfessionGatheringSpells";
 import { ProfessionNameSystem } from "./ProfessionName";
@@ -50,13 +50,13 @@ export class Profession extends MainEntity<SkillLineRow> {
         // cached because it's expensive to find, and shouldn't change
         if(thiz._cachedApprenticeSpell!==undefined) return thiz._cachedApprenticeSpell;
         let spell = DBC.SkillLineAbility.filter({SkillLine:thiz.ID})
-            .map(x=>std.Spells.load(x.Spell.get()))
+            .map(x=>SpellRegistry.load(x.Spell.get()))
             [0]
 
         if(!spell) return undefined;
         let spellRank = SQL.spell_ranks.find({spell_id:spell.ID});
         if(!spellRank) return undefined;
-        let firstSpell = std.Spells.load(spellRank.first_spell_id.get());
+        let firstSpell = SpellRegistry.load(spellRank.first_spell_id.get());
         if(!firstSpell) {
             throw new Error(`Profession ${thiz.AsSkillLine.get().Name.enGB.get()} has an invalid first spell rank in spell_ranks`);
         }
@@ -68,7 +68,7 @@ export class Profession extends MainEntity<SkillLineRow> {
         let rankSpell = this.getSkillRank(profession, rank);
         if(!rankSpell) return [];
         // TODO: false positive
-        let spells = std.Spells.queryAll({Effect:36,EffectTriggerSpell:rankSpell.ID})
+        let spells = SpellRegistry.queryAll({Effect:36,EffectTriggerSpell:rankSpell.ID})
         if(spells.length === 0) {
             throw new Error(`Profession ${profession.ID} lacks a learn spell for rank ${rank}!`)
         }
@@ -97,7 +97,7 @@ export class Profession extends MainEntity<SkillLineRow> {
         if(rank===undefined) {
             return undefined;
         }
-        let spl = std.Spells.load(rank.spell_id.get());
+        let spl = SpellRegistry.load(rank.spell_id.get());
 
         if(spl===undefined) {
             throw new Error(`Spell ${profession.AsSkillLine.get().Name.enGB} has an invalid spell at rank ${index}`);
@@ -238,7 +238,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
     add(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
         let newIndex = this.length;
         if(this.cachedLength!==undefined) this.cachedLength++;
-        let spell = std.Spells.create(modid,id)
+        let spell = SpellRegistry.create(modid,id)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
             .Description.set(this.owner.AsSkillLine.get().Description.objectify())
@@ -285,7 +285,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             })
         }
 
-        let learnSpell = std.Spells.create(modid,`${id}-learn`)
+        let learnSpell = SpellRegistry.create(modid,`${id}-learn`)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
             .Subtext.set(subtext)
             .Attributes.IS_HIDDEN_FROM_LOG.set(true)

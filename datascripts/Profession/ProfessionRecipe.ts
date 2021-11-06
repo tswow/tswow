@@ -1,13 +1,13 @@
 import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
 import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { SpellRegistry } from "../Spell/Spells";
 import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
-import { std } from "../tswow-stdlib-data";
 import { Profession } from "./Profession";
 import { ProfessionTier } from "./ProfessionType";
 
@@ -36,7 +36,7 @@ export class RecipeOutputItem extends CellSystem<ProfessionRecipe> {
 
     set(item: number) {
         this.owner.AsSpell().Effects.mod(0,eff=>eff.ItemType.set(item))
-        this.owner.AsSpell().Name.enGB.set(std.Items.load(item).Name.enGB.get());
+        this.owner.AsSpell().Name.enGB.set(ItemTemplateRegistry.load(item).Name.enGB.get());
         return this.owner;
     }
 

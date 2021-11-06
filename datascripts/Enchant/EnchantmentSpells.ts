@@ -8,7 +8,6 @@ import { SpellItemEquips } from "../Spell/SpellItemEquips";
 import { SpellReagents } from "../Spell/SpellReagents";
 import { SpellRegistry } from "../Spell/Spells";
 import { SpellVisualRegistry } from "../Spell/SpellVisual";
-import { std } from "../tswow-stdlib-data";
 import { Enchantment } from "./Enchantment";
 
 export class EnchantmentSpell extends CellSystemTop {
@@ -50,7 +49,7 @@ export class EnchantmentSpell extends CellSystemTop {
 export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantment> {
     protected getAllRows(): EnchantmentSpell[] {
         // TODO: false positives
-        return std.Spells
+        return SpellRegistry
             .queryAll({Effect:53,EffectMiscValue:this.owner.ID})
             .map(x=>new EnchantmentSpell(x))
     }

@@ -33,8 +33,8 @@ import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { Spell } from "../Spell/Spell";
+import { SpellRegistry } from "../Spell/Spells";
 import { SkillLineAbility, SpellSkillLineAbilites } from "../Spell/SpellSkillLines";
-import { std } from "../tswow-stdlib-data";
 
 export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
     add(classes?: MaskCon<keyof typeof ClassMask>, races?: MaskCon<keyof typeof RaceMask>) {
@@ -132,7 +132,7 @@ export class LanguageAbilities extends MultirowSystemCached<SkillLineAbility,WoW
 }
 export class LanguageSpells extends MultirowSystemCached<Spell,WoWLanguage>  {
     protected getAllRows(): Spell[] {
-        return std.Spells
+        return SpellRegistry
             .filter(x=>x.Effects.find(eff=>
                    eff.Type.LANGUAGE.is()
                 && eff.MiscValueA.get() === this.owner.ID
@@ -185,7 +185,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
     }
 
     Clear(lang: WoWLanguage, mod: string, id: string) {
-        let sl = std.SkillLines.create(mod,id+'-skill')
+        let sl = SkillLineRegistry.create(mod,id+'-skill')
             .Category.set(10)
             .CanLink.set(0)
             .SkillCosts.set(0)
@@ -200,7 +200,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
 
         lang.Skills.setCache([sl]);
 
-        const spell = std.Spells
+        const spell = SpellRegistry
             .create(mod,id+'-spell')
             .Attributes.IS_PASSIVE.set(true)
             .Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true)
