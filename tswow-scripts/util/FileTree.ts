@@ -116,7 +116,6 @@ export class WNode {
         }
     }
 
-
     protected construct(pathIn: string): this {
         return new WNode(pathIn) as this;
     }
@@ -343,6 +342,12 @@ export class WDirectory extends WNode {
     protected construct(pathIn: string): this {
         return new WDirectory(pathIn) as this;
     }
+
+    containsFile(file: string) {
+        return this.readDir('ABSOLUTE')
+            .find(x=>x.basename().get() === file) !== undefined;
+    }
+
     readDir(rel: 'RELATIVE'|'ABSOLUTE' = 'RELATIVE') {
         return fs.readdirSync(this.path)
             .map(x=>rel === 'ABSOLUTE' ? path.join(this.path,x) : x)
