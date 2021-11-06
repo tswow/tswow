@@ -52,9 +52,10 @@ export class Client {
     }
 
     patchDir() {
-        return this.dataset.config.ClientPatchUseLocale
+        return (this.dataset.config.ClientPatchUseLocale
             ? this.path.Data.locale()
             : this.path.Data
+            ) as WDirectory
     }
 
     locale() {
@@ -225,16 +226,28 @@ export class Client {
 
     freePatches() {
         const ids: WNode[] = []
-        const range = (low: number, high: number) => {
-            for(let i=low;i<=high;++i) {
-                let path = this.patchPath(String.fromCharCode(i));
-                if(!path.exists()) {
-                    ids.push(path)
-                }
+
+        const order: string[] = []
+        for(let i=4;i<9;++i) order.push(`${i}`)
+        for(let i='A'.charCodeAt(0);i<'Z'.charCodeAt(0);++i) {
+            order.push(`${String.fromCharCode(i)}`)
+        }
+
+        let start = order.indexOf(this.dataset.config.ClientDevPatchLetter.toUpperCase())
+        if(start === -1) {
+            throw new Error(
+                  `Invalid patch letter: ${this.dataset.config.ClientDevPatchLetter}`
+                + ` (in dataset ${this.dataset.fullName})`
+            )
+        }
+
+        for(let i=start;i<order.length;++i) {
+            let path = this.patchPath(order[i]);
+            if(!path.exists()) {
+                ids.push(path)
             }
         }
-        range('4'.charCodeAt(0),'9'.charCodeAt(0))
-        range('A'.charCodeAt(0),'Z'.charCodeAt(0))
+
         return ids;
     }
 

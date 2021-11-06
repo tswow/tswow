@@ -1,5 +1,6 @@
 import { patchTCConfig } from "../util/ConfigFile";
 import { DatasetConfig, GAME_BUILD_FIELD } from "../util/DatasetConfig";
+import { wfs } from "../util/FileSystem";
 import { collectSubmodules, ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
 import { Client } from "./Client";
@@ -51,6 +52,7 @@ export class Dataset {
 
     initialize() {
         this.config.generateIfNotExists();
+        this.refreshSymlinks();
         return this;
     }
 
@@ -146,6 +148,22 @@ export class Dataset {
         await mysql.dump(
                 this.worldDest
             , outFile);
+    }
+
+    refreshSymlinks() {
+        this.client.patchDir().readDir('ABSOLUTE').forEach(x=>{
+            if(x.isSymlink()) x.remove();
+        })
+        this.modules().filter(x=>x.path.assets.exists()).forEach(x=>{
+            let patches = this.client.freePatches()
+            if(patches.length === 0) {
+                throw new Error(`Client has no more free patches to symlink: ${this.client.path}`)
+            }
+            wfs.symlink(x.assets.path.abs().get(),patches[0].abs().get());
+            term.success(
+                `Created a symlink from ${this.path.get()} to ${patches[0].get()}`
+            )
+        })
     }
 
     static all() {

@@ -108,6 +108,10 @@ export class WNode {
         this.path = typeof(path) === 'string' ? path : path.path;
     }
 
+    isSymlink() {
+        return wfs.isSymlink(this.path);
+    }
+
     withExtension(newExtension: string, removeOld = true) {
         if(removeOld && this.path.indexOf('.') > 0) {
             return this.construct(this.path.replace(/\.[^/.]+$/,newExtension));

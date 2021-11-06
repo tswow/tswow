@@ -334,6 +334,10 @@ export namespace wfs {
         }
     }
 
+    export function isSymlink(path: FilePath) {
+        return fs.lstatSync(resfp(path)).isSymbolicLink();
+    }
+
     /**
      * Removes a file or folder (with all its contents) from the file system.
      * @param removedPath Path to the file or folder to remove. If this path doesn't exist, the function does nothing.
@@ -569,8 +573,11 @@ export namespace wfs {
         return pathIn.startsWith('./') ? pathIn.substring(2) : pathIn;
     }
 
-    export function symlink(pathFrom: FilePath, pathTo: FilePath) {
-        fs.symlinkSync(absPath(pathFrom), absPath(pathTo), wfs.isDirectory(pathFrom) ? 'dir':'file');
+    export function symlink(from: FilePath, to: FilePath) {
+        if(!exists(from)) {
+            throw new Error(`Cannot create symlink to non-existing path ${from}`);
+        }
+        fs.symlinkSync(resfp(from),resfp(to),isDirectory(from) ? 'junction' : 'file')
     }
 
     export function watch(file: FilePath, callback: (event: any,filename: string)=>void) {

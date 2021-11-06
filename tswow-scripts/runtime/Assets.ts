@@ -14,12 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as fs from 'fs';
-import { term } from '../util/Terminal';
-import { Client } from './Client';
 import { ModuleEndpoint } from './Modules';
-
-const SYMLINK_FILE = '____symlinked'
 
 export class Assets {
     mod: ModuleEndpoint
@@ -43,39 +38,5 @@ export class Assets {
 
     static create(mod: ModuleEndpoint) {
         return new Assets(mod).initialize()
-    }
-
-    getSymlink(client: Client) {
-        let patches = client.mpqPatches()
-            .filter(x=>x.isDirectory())
-            .map(x=>x.join(SYMLINK_FILE).toFile())
-        patches
-            .forEach(x=>{
-                x.remove()
-            })
-        this.path.join(SYMLINK_FILE).toFile().write('')
-        patches = patches.filter(x=>{
-            if(x.exists()) return true;
-        })
-        if(patches.length > 1) {
-            throw new Error(
-                  `asset directory at ${this.path.get()}`
-                + ` has multiple symlinks:\n\n${patches.join('\n')}\n`
-            )
-        }
-        patches.forEach(x=>x.remove())
-        return patches[0]
-    }
-
-    createSymlink(client: Client) {
-        if(this.getSymlink(client)) return;
-        let patches = client.freePatches()
-        if(patches.length === 0) {
-            throw new Error(`Client has no free patches: ${client.path}`)
-        }
-        fs.symlinkSync(patches[0].get(),this.path.get());
-        term.success(
-            `Created a symlink from ${this.path.get()} to ${patches[0].get()}`
-        )
     }
 }

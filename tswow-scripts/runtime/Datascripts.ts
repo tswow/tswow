@@ -262,6 +262,7 @@ export class Datascripts {
     ) {
         await dataset.setupClientData();
         await dataset.setupDatabases('BOTH', false);
+        dataset.refreshSymlinks();
         dataset.modules().forEach(endpoint=>{
             if(endpoint.datascripts.path.exists()) {
                 endpoint.datascripts.compile();

@@ -1,6 +1,7 @@
 import { BuildType, BUILD_TYPES } from "../util/BuildType";
 import { Dataset } from "./Dataset";
 import { Module, ModuleEndpoint } from "./Modules";
+import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 
 export type IdentifierType =
@@ -246,6 +247,11 @@ export class Identifier {
     static getDatasets(identifiers: string[], mode: CollectModeMatchAll, def?: string): Dataset[] {
         return this.find(identifiers,'DATASET',mode,def)
             .map(x=>x.asDataset())
+    }
+
+    static getDatasetsOrDefault(identifiers: string[], collectMode: CollectModeMatchAll) {
+        if(identifiers.length === 0) return [this.getDataset(NodeConfig.DefaultDataset)]
+        else return this.getDatasets(identifiers,collectMode);
     }
 
     static getModule(identifier: string) {
