@@ -260,6 +260,7 @@ export class Datascripts {
           dataset: Dataset
         , args: string[] = []
     ) {
+        // 1. Prepare dataset
         await dataset.setupClientData();
         await dataset.setupDatabases('BOTH', false);
         dataset.refreshSymlinks();
@@ -272,17 +273,19 @@ export class Datascripts {
             }
         });
 
-        if(args.includes('--skip-client') && !args.includes('--readonly')) {
-            await dataset.client.kill();
-        }
-
-        let runningWorldservers =
-            (args.includes('--skip-server')||args.includes('--readonly'))
-            ? []
-            : dataset.realms()
-
+        // 2. Shutdown server/client
+        let skipsClient = args.includes('--inline-only')
+            || args.includes('--skip-client')
+            || args.includes('--readonly')
+        let skipsServer = args.includes('--inline-only')
+            || args.includes('--skip-server')
+            || args.includes('--readonly')
+        let runningClients = skipsClient ? [] : [dataset.client]
+        let runningWorldservers = skipsServer ? [] : dataset.realms()
         await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
+        await Promise.all(runningClients.map(x=>x.kill()));
 
+        // 3. Run datascripts
         wsys.exec(
                 `node -r source-map-support/register`
               + ` ${ipaths.bin.scripts.wotlkdata.wotlkdata.index.get()}`
@@ -293,9 +296,11 @@ export class Datascripts {
             , 'inherit'
         )
 
+        // 4. Copy results
         wfs.copy(dataset.path.dbc,dataset.client.path.Data.devPatch.DBFilesClient)
         wfs.copy(dataset.path.luaxml,dataset.client.path.Data.devPatch)
 
+        // 5. Present profiling
         if(args.includes('--prof')) {
             wfs.readDir('./',true,'files')
             .filter(x=>x.startsWith('isolate-')
@@ -309,9 +314,8 @@ export class Datascripts {
             })
         }
 
-        if(!args.includes('--skip-client') && !args.includes('--readonly')) {
-            dataset.client.startup(NodeConfig.AutoStartClient);
-        }
+        // 6. Restore server/client
+        runningClients.forEach(x=>x.startup(NodeConfig.AutoStartClient))
         runningWorldservers.forEach(x=>x.start(x.lastBuildType))
         term.success(`Finished building DataScripts for dataset ${dataset.name}`);
     }
