@@ -117,6 +117,17 @@ export class Datascripts {
         return this.mod.path.datascripts
     }
 
+    installLibrary() {
+        if(this.config.TypeGeneration !== 'none') {
+            this.path.build.package_json
+                .writeJson(lib_package_json(this.mod.fullName))
+            if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
+                term.log(`Installing ${this.mod.fullName} datascript library...`)
+                wsys.exec(`npm i -S ${this.path.build.abs()}`)
+            }
+        }
+    }
+
     initialize() {
         this.path.mkdir();
         if(!this.path.index.exists()) {
@@ -136,12 +147,8 @@ export class Datascripts {
                 , this.path.abs().get()
                 , this.mod.fullName
             );
-            this.path.build.package_json
-                .writeJson(lib_package_json(this.mod.fullName))
-            if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
-                wsys.exec(`npm i -S ${this.path.build.abs()}`)
-            }
         }
+        this.installLibrary();
         return this;
     }
 
@@ -258,20 +265,18 @@ export class Datascripts {
         dataset.modules().forEach(endpoint=>{
             if(endpoint.datascripts.path.exists()) {
                 endpoint.datascripts.compile();
+                endpoint.datascripts.installLibrary()
                 ipaths.bin.include.global_d_ts
                     .copy(endpoint.datascripts.path.global_d_ts)
             }
         });
 
-        let clientCount = 0;
-        if(!args.includes('--skip-client') && !args.includes('--readonly')) {
-            clientCount = await dataset.client.kill();
-        }
+        await dataset.client.kill();
 
         let runningWorldservers =
             (args.includes('--skip-server')||args.includes('--readonly'))
             ? []
-            : dataset.realms().filter(x=>x.worldserver.isRunning())
+            : dataset.realms()
 
         await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
 
@@ -284,6 +289,9 @@ export class Datascripts {
               + ` ${args.join(' ')}`
             , 'inherit'
         )
+
+        wfs.copy(dataset.path.dbc,dataset.client.path.Data.devPatch.DBFilesClient)
+        wfs.copy(dataset.path.luaxml,dataset.client.path.Data.devPatch)
 
         if(args.includes('--prof')) {
             wfs.readDir('./',true,'files')
@@ -298,8 +306,8 @@ export class Datascripts {
             })
         }
 
-        if(clientCount > 0) {
-            dataset.client.startup(clientCount);
+        if(!args.includes('--skip-client') && !args.includes('--readonly')) {
+            dataset.client.startup(NodeConfig.AutoStartClient);
         }
         runningWorldservers.forEach(x=>x.start(x.lastBuildType))
         term.success(`Finished building DataScripts for dataset ${dataset.name}`);
