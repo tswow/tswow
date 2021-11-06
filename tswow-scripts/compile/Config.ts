@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { NodeConfigClass } from '../util/NodeConfig';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
@@ -53,6 +54,8 @@ export namespace Config {
 
         spaths.install_config.vscode_install
             .copy(ipaths.vscode)
+
+        new NodeConfigClass(ipaths.node_conf.get()).generateIfNotExists();
 
         spaths.install_config.addons.copy(ipaths.bin.addons);
         spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)

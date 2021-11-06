@@ -13,7 +13,7 @@ export type DatabaseType = 'world' | 'auth' | 'characters' | 'world_source';
 
 export class NodeConfigClass extends ConfigFile {
     protected description(): string {
-        return "l"
+        return "Settings for this installation of TSWoW"
     }
 
     @Section('Defaults')
@@ -29,7 +29,7 @@ export class NodeConfigClass extends ConfigFile {
     @Property({
           name: 'Default.Realm'
         , description: 'The realm automatically selected in commands if none other is specified'
-        , examples: [['tswow','']]
+        , examples: [['default.realm','']]
     })
     DefaultRealm!: string
 
@@ -68,10 +68,17 @@ export class NodeConfigClass extends ConfigFile {
     AutoStartAuthServer!: boolean
 
     @Property({
+      name: 'AutoStart.LauncherServer'
+    , description: 'Whether the launcher server should be automatically started'
+    , examples: [[true,'']]
+    })
+    AutoStartLauncherServer!: boolean
+
+    @Property({
         name: 'AutoStart.Realms'
       , description: 'What clients should be automatically started'
       , examples: [
-          [['tswow'],'Default realm'],
+          [['default.realm'],'Default realm'],
           [[],'no realm']
         ]
     })

@@ -230,7 +230,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             wotlkdata: dir({}),
         }),
 
-        node_yaml: file('node.conf'),
+        node_conf: file('node.conf'),
 
         Crashes: dir({}),
 

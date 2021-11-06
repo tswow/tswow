@@ -4,7 +4,7 @@ import { NodeConfigClass } from "../util/NodeConfig";
 import { collectSubmodules, DatasetDirectory, InstallPath, tdbFilename } from "../util/Paths";
 
 export const ipaths = InstallPath('./',tdbFilename())
-export const NodeConfig = new NodeConfigClass(ipaths.node_yaml.get())
+export const NodeConfig = new NodeConfigClass(ipaths.node_conf.get())
 
 export const dataset = function() {
     let datasetArg = process.argv.find(x=>x.startsWith('--dataset='));
