@@ -262,14 +262,14 @@ export class Client {
             , ''
             , ''
             , args => {
-                return Identifier.getDatasets(
+                return Promise.all(Identifier.getDatasets(
                       args
                     , 'MATCH_ANY'
                     , NodeConfig.DefaultDataset
                 ).map(x=>{
                     return x.client
                         .startup(Arguments.getNumber('--count',1,args));
-                })
+                }))
             }
         )
     }
