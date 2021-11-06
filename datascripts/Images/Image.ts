@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PNG } from 'pngjs';
 import * as pureimage from 'pureimage';
+import { ipaths } from 'wotlkdata/wotlkdata/Settings';
 
 // 'PNG+BLP' is more futureproof than "both" if we ever need tga
 export type ExportFormat = 'PNG'|'BLP'|'PNG+BLP'
@@ -84,9 +85,11 @@ export class TSImage {
         return pureimage.encodePNGToStream(this.bitmap,fs.createWriteStream(pathPng))
             .then(()=>{
                 if(format !== 'PNG') {
+                    /*
                     child_process.execSync(
-                        `"bin/BLPConverter/blpconverter.exe" ${pathPng}`
+                        `"${ipaths.bin.BLPConverter.blpconverter.get()}" ${pathPng}`
                     )
+                    */
                     if(format !== 'PNG+BLP') {
                         fs.rmSync(pathPng);
                     }
@@ -105,7 +108,7 @@ export class TSImage {
     static read(str: string) {
         if(str.toLowerCase().endsWith('.blp')) {
             child_process.execSync(
-                `"bin/BLPConverter/blpconverter.exe" ${str}`)
+                `"${ipaths.bin.BLPConverter.blpconverter.get()}" ${str}`)
             str = str.substring(0,str.length-4)+'.png'
         }
 

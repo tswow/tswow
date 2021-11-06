@@ -1,7 +1,8 @@
 import * as fs from 'fs';
-import * as path from 'path';
+import path from 'path';
 import { finish } from "wotlkdata";
-import { BuildArgs, dataset } from 'wotlkdata/wotlkdata/Settings';
+import { wfs } from 'wotlkdata/util/FileSystem';
+import { BuildArgs, dataset, ipaths } from 'wotlkdata/wotlkdata/Settings';
 import { TSImage, TSImages } from "../Images/Image";
 import { ClassRegistry } from './ClassRegistry';
 
@@ -83,12 +84,15 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 }
 
 finish('build-class-icons',()=>{
+    console.log('Writing class icon whatever');
     if(!hasStitched || BuildArgs.NO_CLIENT) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
             return;
         }
     }
+
+    wfs.write(ipaths.modules.module.pick('tswow-stdlib').join('assets','Interface','noconvert'),'')
     stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL))
     stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL))
 })
