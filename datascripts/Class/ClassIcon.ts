@@ -84,7 +84,6 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 }
 
 finish('build-class-icons',()=>{
-    console.log('Writing class icon whatever');
     if(!hasStitched || BuildArgs.NO_CLIENT) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
