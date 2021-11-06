@@ -272,7 +272,9 @@ export class Datascripts {
             }
         });
 
-        await dataset.client.kill();
+        if(args.includes('--skip-client') && !args.includes('--readonly')) {
+            await dataset.client.kill();
+        }
 
         let runningWorldservers =
             (args.includes('--skip-server')||args.includes('--readonly'))
