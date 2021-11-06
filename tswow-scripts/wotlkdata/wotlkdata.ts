@@ -110,11 +110,13 @@ async function main() {
                         return;
                     }
                     let v = Date.now();
-                    require(node.relativeTo(__dirname).get());
-                    if(profileScripts()) {
-                        profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
+                    if((!BuildArgs.INLINE_ONLY) || node.toFile().readString().includes('InlineScripts')) {
+                        require(node.relativeTo(__dirname).get());
+                        if(profileScripts()) {
+                            profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
+                        }
+                        applyStage(setups);
                     }
-                    applyStage(setups);
 
                 })
         } catch (error) {
