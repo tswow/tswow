@@ -32,6 +32,7 @@ import { Module } from "./Modules";
 import { mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 import { Package } from "./Package";
+import { PositionsFile } from "./PositionsFile";
 import { Realm } from "./Realm";
 
 export async function main() {
@@ -49,6 +50,7 @@ export async function main() {
     await MapData.initialize();
     await Package.initialize();
     await Crashes.initialize();
+    await PositionsFile.initialize();
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,
