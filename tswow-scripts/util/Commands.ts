@@ -187,12 +187,14 @@ export namespace commands {
             try {
                 await rootCommand.handle(args);
             } catch (error: any) {
-                if (error && error.message) {
+                if (error) {
                     if (trace) {
                         term.error(error, error.stack);
                     } else {
                         term.error(error);
                     }
+                } else {
+                    term.error(`Unspecified error in ${input}`)
                 }
             }
         }
