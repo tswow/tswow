@@ -6,6 +6,8 @@ import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { Timer } from "../util/Timer";
 import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
+import { Datascripts } from "./Datascripts";
+import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { getLivescriptCMakeLists } from "./LivescriptsCMakeLists";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -78,9 +80,17 @@ export class Livescripts {
         return this;
     }
 
-    build(buildType: BuildType, args: string[] = []) {
+    async build(buildType: BuildType, args: string[] = []) {
         const timer = Timer.start();
         this.initialize();
+
+        if(!args.includes('--no-inline')) {
+            await Promise.all(Dataset.all()
+                .filter(x=>x.modules().find(x=>x.fullName === this.mod.fullName))
+                .map(x=>{
+                    return Datascripts.build(x,['--inline-only'])
+                }))
+        }
 
         this.mod.path.livescript_tsconfig_temp.writeJson(temp_config)
         try {
@@ -199,9 +209,9 @@ export class Livescripts {
                         .filter(x=>x.livescripts.exists());
                 }
 
-                return modules.map(x=>{
+                return Promise.all(modules.map(x=>{
                     return x.livescripts.build(buildType,args);
-                })
+                }))
             }
         ).addAlias('scripts').addAlias('script').addAlias('livescript')
 
