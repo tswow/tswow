@@ -160,9 +160,6 @@ export class Dataset {
                 throw new Error(`Client has no more free patches to symlink: ${this.client.path}`)
             }
             wfs.symlink(x.assets.path.abs().get(),patches[0].abs().get());
-            term.success(
-                `Created a symlink from ${this.path.get()} to ${patches[0].get()}`
-            )
         })
     }
 
