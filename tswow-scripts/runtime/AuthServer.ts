@@ -52,15 +52,8 @@ export namespace AuthServer {
             ,'LoginDatabaseInfo',NodeConfig.DatabaseString('auth')
         )
 
-        // hackfix to stop the newline stuff
-        let bfr = "";
         authserver.listenSimple(msg=>{
-            if(msg.endsWith('\n')) {
-                term.log(bfr+msg);
-                bfr = ""
-            } else {
-                bfr+=msg;
-            }
+            term.log(msg);
         })
 
         authserver.startIn(ipaths.coredata.authserver.get(),
