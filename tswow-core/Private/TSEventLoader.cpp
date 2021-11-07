@@ -84,7 +84,7 @@ bool TSShouldLoadEventHandler(boost::filesystem::path const& name)
         return false;
     }
     auto name_offset = name_str.find("scripts_tswow_")+strlen("scripts_tswow_");
-    name_str = name_str.substr(name_offset,name_str.find(".")-name_offset);
+    name_str = name_str.substr(name_offset,name_str.rfind(".")-name_offset);
     std::string data_dir =
         sConfigMgr->GetStringDefault("DataDir","../../datasets/default");
     auto modulesfile =
