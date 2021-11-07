@@ -266,6 +266,7 @@ export class Realm {
         await this.connect();
         await this.config.Dataset.setupDatabases('BOTH',false);
         await this.config.Dataset.setupClientData()
+        this.config.Dataset.writeModulesTxt()
 
         // Generate .conf files
         ipaths.bin.trinitycore.build.pick(type)

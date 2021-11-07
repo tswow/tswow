@@ -53,7 +53,14 @@ export class Dataset {
     initialize() {
         this.config.generateIfNotExists();
         this.refreshSymlinks();
+        this.writeModulesTxt()
         return this;
+    }
+
+    writeModulesTxt() {
+        this.path.modules_txt.write(
+            this.modules().reduce((p,c)=>p+c.fullName+'\n','')
+        )
     }
 
     async shutdown() {

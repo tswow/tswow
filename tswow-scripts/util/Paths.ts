@@ -62,7 +62,8 @@ export function DatasetDirectory(inPath: string, inName: string) {
         mmaps: dir({}),
         vmaps: dir({}),
         config: file(`${inName}.dataset.conf`),
-        ids_txt: file('ids.txt')
+        ids_txt: file('ids.txt'),
+        modules_txt: file('modules.txt')
     }))
 }
 
