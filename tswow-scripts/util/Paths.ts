@@ -51,7 +51,13 @@ export function DatasetDirectory(inPath: string, inName: string) {
                 })
             })
         }),
-        luaxml_source: dir({}),
+        luaxml_source: dir({
+            Interface: dir({
+                FrameXML: dir({
+                    framexml_toc: file('FrameXML.toc')
+                })
+            })
+        }),
         maps: dir({}),
         mmaps: dir({}),
         vmaps: dir({}),

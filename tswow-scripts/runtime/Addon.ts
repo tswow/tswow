@@ -145,7 +145,7 @@ export class Addon {
         before = fixToc(before);
         after = fixToc(after);
 
-        let names: string[] = before.concat([`TSAddons\\${modPath}\\addon\\${this.mod.fullName}-addon.lua`]);
+        let names: string[] = before.concat([`TSAddons\\${modPath}\\addon\\${this.mod.subId}-addon.lua`]);
         wfs.iterate(this.path.build,(name)=>{
             let relative = wfs.relative(this.path.build.join('addon'),name)
             relative = relative.split('/').join('\\');
@@ -160,9 +160,9 @@ export class Addon {
                 return;
             }
 
-            if(wfs.basename(name)!=`${this.mod.fullName}-addon.lua`) {
+            if(wfs.basename(name)!=`${this.mod.subId}-addon.lua`) {
                 names.unshift(
-                      `TSAddons\\${this.mod.fullName}\\`
+                      `TSAddons\\${modPath}\\`
                     + `${wfs.relative(this.path.build,name)
                             .split('/').join('\\')}`);
             }
@@ -282,12 +282,8 @@ export class Addon {
             if(fname==='lualib_bundle.lua') return;
             wfs.copy(fpath,mpath(dataset.path.luaxml.Interface.FrameXML,fname));
         });
-        let tocfile = wfs.readLines(dataset.path.luaxml.Interface.FrameXML.framexml_toc);
+        let tocfile = wfs.readLines(dataset.path.luaxml_source.Interface.FrameXML.framexml_toc);
         Module.endpoints()
-            .map(x=>{
-                //console.log(x.addon.path.build.get())
-                return x
-            })
             .filter(mod=>mod.addon.path.build.exists())
             .forEach(mod=>{
                 mod.addon.addFilelistToToc(tocfile);
@@ -298,6 +294,7 @@ export class Addon {
                 )
             })
         wfs.writeLines(dataset.path.luaxml.Interface.FrameXML.framexml_toc, tocfile);
+        dataset.path.luaxml.copy(dataset.client.path.Data.devPatch)
     }
 
     static async build(dataset: Dataset) {
