@@ -222,7 +222,7 @@ export class Addon {
                     if(p.startsWith('addon.lib')) {
                         p = `${p.substring('addon.lib.'.length)}`;
                     } else {
-                        p = `TSAddons.${this.mod.fullName.split('.').join('_')}.${p}`;
+                        p = `TSAddons.${this.mod.fullName}.${p}`;
                     }
                     x = x.replace(m[1],p);
                 }

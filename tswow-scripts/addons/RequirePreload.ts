@@ -57,17 +57,29 @@ export const RequirePreload: Plugin = {
         let moduleName: string = "";
         let fullName = context.sourceFile.fileName.split('\\').join('/');
         let libName = fullName.split('/include-addon/')[1]
+
         if(libName!==undefined) {
           moduleName = libName;
         } else {
+          let modulesRoot = fullName
+          while(true) {
+            if(path.basename(modulesRoot) == 'modules') {
+              break;
+            }
+            if(path.dirname(modulesRoot) === modulesRoot) {
+              throw new Error(`Could not find "modules" part of pathname`)
+            }
+            modulesRoot = path.dirname(modulesRoot);
+          }
+
           let splitAddon = fullName.split('addon');
           if(splitAddon.length>1) {
-            let modName = path.basename(splitAddon[0]);
+            let modName = path.relative(modulesRoot,splitAddon[0]).split('\\').join('/')
             let addonName = splitAddon.slice(1).join('addon');
             moduleName = `TSAddons/${modName}/addon${addonName}`
           } else {
-            let splitShared =fullName.split('shared');
-            let modName = path.basename(splitShared[0]);
+            let splitShared = fullName.split('shared');
+            let modName = path.relative(modulesRoot,splitShared[0]).split('\\').join('/');
             let sharedName = splitShared[1];
             moduleName = `TSAddons/${modName}/shared${sharedName}`
           }
