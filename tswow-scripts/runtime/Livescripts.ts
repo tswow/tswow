@@ -23,7 +23,7 @@ const livescript_example =
  * See "TypeScript2Cxx/src/wowts.ts" for the tsconfig actually used for compiling.
  */
 const scripts_tsconfig_json =
-`{
+{
     "compilerOptions": {
       "target": "es5",
       "module": "commonjs",
@@ -37,7 +37,7 @@ const scripts_tsconfig_json =
     },
     "include":["./","../Ids.ts","../shared"],
     "exclude":["../data","../addons"]
-}`;
+};
 
 const temp_config = {
     'compilerOptions': {
