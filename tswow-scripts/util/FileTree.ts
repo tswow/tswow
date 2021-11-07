@@ -445,6 +445,7 @@ export class WDynDirectory<T> {
     }
 
     all(): (WNode&T)[] {
+        if(!fs.existsSync(this.path)) return []
         return fs.readdirSync(this.path).map(x=>this.pick(x))
     }
 }
