@@ -91,7 +91,8 @@ finish('build-class-icons',()=>{
         }
     }
 
+    // don't know load order, so we'll handle the conversion here
     wfs.write(ipaths.modules.module.pick('tswow-stdlib').join('assets','Interface','noconvert'),'')
-    stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL))
-    stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL))
+    stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL),'BLP')
+    stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL),'BLP')
 })

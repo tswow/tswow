@@ -85,11 +85,9 @@ export class TSImage {
         return pureimage.encodePNGToStream(this.bitmap,fs.createWriteStream(pathPng))
             .then(()=>{
                 if(format !== 'PNG') {
-                    /*
                     child_process.execSync(
                         `"${ipaths.bin.BLPConverter.blpconverter.get()}" ${pathPng}`
                     )
-                    */
                     if(format !== 'PNG+BLP') {
                         fs.rmSync(pathPng);
                     }
