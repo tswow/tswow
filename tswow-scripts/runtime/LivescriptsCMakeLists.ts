@@ -30,6 +30,8 @@ endfunction (filter_items)
 file (GLOB_RECURSE transpiler_files
     "livescripts/*.cpp"
     "livescripts/*.h"
+    "shared/*.cpp"
+    "shared/*.h"
 )
 filter_items(transpiler_files "/../")
 file (GLOB_RECURSE source_files
@@ -39,6 +41,7 @@ file (GLOB_RECURSE source_files
     "../../*.hpp"
     "../../*.ipp"
     "../../*.ts"
+    "../../../shared/*.ts"
 )
 filter_items(source_files "build/cpp/../../build/cpp")
 filter_items(source_files "/lib/")
