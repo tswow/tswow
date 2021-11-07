@@ -262,7 +262,12 @@ export class Datascripts {
     ) {
         // 1. Prepare dataset
         await dataset.setupClientData();
-        await dataset.setupDatabases('BOTH', false);
+        if(args.includes('--rebuild')) {
+            await dataset.setupDatabases('SOURCE',false);
+            await dataset.setupDatabases('DEST',true);
+        } else {
+            await dataset.setupDatabases('BOTH', false);
+        }
         dataset.refreshSymlinks();
         dataset.modules().forEach(endpoint=>{
             if(endpoint.datascripts.path.exists()) {
