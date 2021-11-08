@@ -351,7 +351,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                             ? `${wfs.dirname(mod)}/scripts_tswow_${wfs.basename(mod)}.dll`
                             : `${wfs.dirname(mod)}/libscripts_tswow_${wfs.basename(mod)}.so`
                         ),
-                        modulePdb: dynfile(mod=>`scripts_tswow_${mod}.pdb`)
+                        modulePdb: dynfile(mod=>`${wfs.dirname(mod)}/scripts_tswow_${wfs.basename(mod)}.pdb`)
                     }),
                     worldserver: file(`worldserver${isWindows()?'.exe':''}`),
                     mapextractor: file(`mapextractor${isWindows()?'.exe':''}`),
