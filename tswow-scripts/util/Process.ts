@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as child_process from "child_process";
 import { ChildProcessWithoutNullStreams } from 'child_process';
-import { FilePath } from './FileTree';
+import { FilePath, resfp } from './FileTree';
 import { isWindows } from './Platform';
-import { wsys } from './System';
 import { term } from './Terminal';
 
 const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
@@ -42,34 +42,35 @@ if(!isWindows())
  * Represents a concurrently running child process.
  */
 export class Process {
-    private process: ChildProcessWithoutNullStreams | undefined;
-    private stopPromise: Promise<void> | undefined;
-    private curString = '';
-    private color = 'white';
-    private outputShown = true;
-    private waiters: {[key: string]: (message: string) => void} = {};
-    private bufferSize = 2048;
-    private listeners: ((message: string) => void)[] = [];
-    private onFail: ((err: Error)=>void)|undefined = undefined;
+    private _process: ChildProcessWithoutNullStreams | undefined;
+    private _stopPromise: Promise<void> | undefined;
+    private _curString = '';
+    private _color = 'white';
+    private _outputShown = true;
+    private _waiters: {[key: string]: (message: string) => void} = {};
+    private _bufferSize = 2048;
+    private _listeners: ((message: string) => void)[] = [];
+    private _onFail: ((err: Error)=>void)|undefined = undefined;
 
     /**
-     * Creates a new process instance. Call Process#start or Process#startIn to start it.
+     * Creates a new process instance.
+     * Call Process#start or Process#startIn to start it.
      * @param bufferSize
      */
     constructor(bufferSize: number =  1024) {
-        this.bufferSize = bufferSize;
+        this._bufferSize = bufferSize;
     }
 
     isRunning() {
-        return this.process !== undefined;
+        return this._process !== undefined;
     }
 
-    setOnFail(onFail: (message: Error)=>void){
-        this.onFail = onFail;
+    onFail(onFail: (message: Error)=>void){
+        this._onFail = onFail;
     }
 
-    listenSimple(listener: (message: string) => void ) {
-        this.listeners.push(listener);
+    onMessage(listener: (message: string) => void ) {
+        this._listeners.push(listener);
         return this;
     }
 
@@ -78,19 +79,19 @@ export class Process {
      * @param message Message that will be listened for.
      * @param useWildcard Whether to use * for wildcards.
      */
-    waitFor(match: string, useWildcard: boolean = true) {
+    waitForMessage(match: string, useWildcard: boolean = true) {
         const matches = !useWildcard ? [match] : match.split('*');
         let id = 0;
-        while (this.waiters[id]) {
+        while (this._waiters[id]) {
             ++id;
         }
 
         return new Promise<string>((res) => {
-            this.waiters[id] = (message) => {
+            this._waiters[id] = (message) => {
                 for (const matchedString of matches) {
                     if (!message.includes(matchedString)) { return; }
                 }
-                delete this.waiters[id];
+                delete this._waiters[id];
                 res(message);
             };
         });
@@ -102,8 +103,8 @@ export class Process {
      * @param color
      */
     showOutput(show: boolean, color?: string) {
-        this.outputShown = show;
-        this.color = color || this.color;
+        this._outputShown = show;
+        this._color = color || this._color;
         return this;
     }
 
@@ -114,19 +115,20 @@ export class Process {
      * @throws If the process is starting, stopping or stopped.
      */
     send(command: string, useNewline: boolean = true) {
-        if (this.stopPromise) {
+        if (this._stopPromise) {
             throw new Error('Attempted to send message to a stopping process');
         }
 
-        if (!this.process) {
+        if (!this._process) {
             throw new Error('Attempted to send message to a stopped process');
         }
 
-        if (useNewline) {
-            this.process.stdin.write(Buffer.from(command + String.fromCharCode(10), 'ascii'));
-        } else {
-            this.process.stdin.write(Buffer.from(command, 'ascii'));
-        }
+        this._process.stdin.write(Buffer.from(
+            command + useNewline
+                ? String.fromCharCode(10)
+                : ''
+            , 'ascii'
+        ));
         return this;
     }
 
@@ -135,14 +137,14 @@ export class Process {
      * Does nothing if the process is not started.
      */
     async stop() {
-        this.curString = '';
+        this._curString = '';
 
-        if (this.process === undefined) {
+        if (this._process === undefined) {
             return;
         }
 
-        this.process.kill();
-        return this.stopPromise;
+        this._process.kill();
+        return this._stopPromise;
     }
 
     /**
@@ -151,25 +153,32 @@ export class Process {
      * @param program Program the process will execute
      * @param args Arguments to the new process
      */
-    async startIn(directory: FilePath, program: string, args: string[] = []) {
+    async startIn(
+          directory: FilePath
+        , program: string
+        , args: string[] = []
+    ) {
         await this.stop();
-        const proc = wsys.spawnIn(directory,program,args)
-        this.process = proc;
-        processes[proc.pid] = proc;
-        this.process.stdout.on('data', (data) => {
+        const proc = child_process.spawn(
+              program
+            , args
+            , {stdio:'pipe',cwd:resfp(directory)}
+        )
+        this._process = processes[proc.pid] = proc;
+        this._process.stdout.on('data', (data) => {
             this.handleOutput(data, false);
         });
-        this.process.stderr.on('data', (data) => {
+        this._process.stderr.on('data', (data) => {
             this.handleOutput(data, true);
         });
 
         const nullProcess = ()=>{
-            if(this.process!==undefined
-                && proc.pid === this.process.pid) {
-                    this.process = undefined;
+            if(this._process!==undefined
+                && proc.pid === this._process.pid) {
+                    this._process = undefined;
             }
         }
-        return this.stopPromise = new Promise<void>((res) => {
+        return this._stopPromise = new Promise<void>((res) => {
             let killed = false;
             const onDestroyed = () => {
                 if(!killed) {
@@ -192,24 +201,21 @@ export class Process {
      * Handles output from the running process
      */
     private handleOutput(data: any, isError: boolean) {
-        if (this.outputShown) {
-            term.pipe(isError ? 'red' : this.color, [data.toString()]);
+        if (this._outputShown) {
+            term.pipe(isError ? 'red' : this._color, [data.toString()]);
         }
 
         const strData = data.toString();
-        const removedCharacters = (this.curString.length + strData.length) - this.bufferSize;
+        const removedCharacters =
+            (this._curString.length + strData.length) - this._bufferSize;
         if (removedCharacters > 0) {
-            this.curString = this.curString.substring(removedCharacters, this.curString.length);
+            this._curString = this._curString
+                .substring(removedCharacters, this._curString.length);
         }
-        this.curString = this.curString + strData;
+        this._curString = this._curString + strData;
 
-        for (const listener of this.listeners) {
-            listener(strData);
-        }
-
-        for (const listener of Object.values(this.waiters)) {
-            listener(this.curString);
-        }
+        this._listeners.forEach(x=>x(strData))
+        Object.values(this._waiters).forEach(x=>x(this._curString))
     }
 
     /**

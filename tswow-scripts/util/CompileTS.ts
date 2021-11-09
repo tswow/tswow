@@ -27,7 +27,7 @@ export function watchTsc(tscEntry: string, dir: FilePath, name: string) {
     let watcher = tscWatchers[resfp(dir)] = new Process()
     watcher
         .showOutput(false)
-        .listenSimple(output=>{
+        .onMessage(output=>{
             output
                 .split('\r').join('')
                 .split('\n')
