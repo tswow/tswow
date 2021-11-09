@@ -95,7 +95,7 @@ export namespace TrinityCore {
         ipaths.modules.module.all().forEach(mod=>{
             mod.endpoints().forEach(ep=>{
                 if(ep.livescripts.exists()) {
-                    ipaths.bin.include_addon.global_d_ts
+                    ipaths.bin.include.global_d_ts
                         .copy(ep.livescripts.global_d_ts)
                 }
 
