@@ -51,6 +51,7 @@ export class Process {
     private _bufferSize = 2048;
     private _listeners: ((message: string) => void)[] = [];
     private _onFail: ((err: Error)=>void)|undefined = undefined;
+    private _isStopping: boolean = false;
 
     /**
      * Creates a new process instance.
@@ -115,7 +116,7 @@ export class Process {
      * @throws If the process is starting, stopping or stopped.
      */
     send(command: string, useNewline: boolean = true) {
-        if (this._stopPromise) {
+        if (this._isStopping) {
             throw new Error('Attempted to send message to a stopping process');
         }
 
@@ -144,6 +145,7 @@ export class Process {
         }
 
         this._process.kill();
+        this._isStopping = true;
         return this._stopPromise;
     }
 
@@ -159,6 +161,7 @@ export class Process {
         , args: string[] = []
     ) {
         await this.stop();
+        this._isStopping = false;
         const proc = child_process.spawn(
               program
             , args
