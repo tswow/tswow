@@ -62,7 +62,7 @@
   "homepage": "https://github.com/tswow/tswow#readme",
   "devDependencies": {
     "@swc/cli": "^0.1.51",
-    "@swc/core": "^1.2.95",
+    "@swc/core": "^1.2.107",
     "chokidar": "^3.5.2"
   }
 }
