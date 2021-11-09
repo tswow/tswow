@@ -17,7 +17,6 @@
 #pragma once
 
 #include <memory>
-#include "BinReader.h"
 #include "TSMain.h"
 #include "TSString.h"
 #include "TSClasses.h"
@@ -33,8 +32,8 @@ class TC_GAME_API TSPlayer : public TSUnit {
 public:
 	Player* player;
 	TSPlayer(Player* player);
-    TSPlayer();
-    TSPlayer* operator->() { return this;}
+  TSPlayer();
+  TSPlayer* operator->() { return this;}
 	bool IsNull() { return player == nullptr; };
 	bool CanTitanGrip();
 	bool HasTalent(uint32 spellId, uint8 spec);
@@ -92,8 +91,8 @@ public:
 	uint32 GetLatency();
 	uint32 GetChampioningFaction();
 	uint8 GetOriginalSubGroup();
-	TSGroup  GetOriginalGroup();
-	TSPlayer  GetNextRandomRaidMember(float radius);
+	TSGroup GetOriginalGroup();
+	TSPlayer GetNextRandomRaidMember(float radius);
 	uint8 GetSubGroup();
 	TSGroup GetGroupInvite();
 	uint32 GetXPRestBonus(uint32 xp);

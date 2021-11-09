@@ -32,6 +32,7 @@
 #include "TSMutableString.h"
 #include "ItemTemplate.h"
 #include "TSItemTemplate.h"
+#include "TSMapManager.h"
 #include "TSSpellInfo.h"
 #include "Group.h"
 #include "TSGroup.h"
@@ -60,7 +61,7 @@ public:
     void OnConfigLoad(bool reload) FIRE(WorldOnConfigLoad,reload)
     void OnMotdChange(std::string& newMotd) FIRE(WorldOnMotdChange,TSString(newMotd))
     void OnShutdownInitiate(ShutdownExitCode code,ShutdownMask mask) FIRE(WorldOnShutdownInitiate,code,mask)
-    void OnUpdate(uint32 diff) FIRE(WorldOnUpdate,diff)
+    void OnUpdate(uint32 diff) FIRE(WorldOnUpdate,diff, TSMapManager())
 };
 
 class TSFormulaScript : public FormulaScript

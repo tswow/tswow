@@ -997,3 +997,13 @@ void TSCollisions::Tick(TSWorldObject obj)
 bool TSWorldObject::operator< (const TSWorldObject& e) const {
     return obj < e.obj;
 }
+
+void TSWorldObject::SetActive(bool active)
+{
+    obj->setActive(active);
+}
+
+bool TSWorldObject::IsActive()
+{
+    return obj->isActiveObject();
+}

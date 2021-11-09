@@ -30,13 +30,13 @@
 #include "TSMail.h"
 #include "TSAuction.h"
 #include "TSDamageInfo.h"
-#include "BinReader.h"
 #include "TSJson.h"
 #include "TSTests.h"
 #include "TSAreaTrigger.h"
 #include "TSAchievementTemplate.h"
 #include "TSBattleground.h"
 #include "TSCustomPacket.h"
+#include "TSMapManager.h"
 
 #include <cstdint>
 
@@ -64,7 +64,7 @@ EVENT_TYPE(WorldOnOpenStateChange,bool)
 EVENT_TYPE(WorldOnConfigLoad,bool)
 EVENT_TYPE(WorldOnMotdChange,TSString)
 EVENT_TYPE(WorldOnShutdownInitiate,uint32,uint32)
-EVENT_TYPE(WorldOnUpdate,uint32)
+EVENT_TYPE(WorldOnUpdate,uint32, TSMapManager)
 
 // FormulaScript
 EVENT_TYPE(FormulaOnHonorCalculation,TSMutable<float>,uint8,float)
@@ -504,6 +504,7 @@ class TSGameObjectMap : public TSEventMap<TSGameObjectEvents>
 EVENT_TYPE(MapOnCreate, TSMap)
 EVENT_TYPE(MapOnReload, TSMap)
 EVENT_TYPE(MapOnUpdate, TSMap, uint32)
+EVENT_TYPE(MapOnUpdateDelayed, TSMap, uint32, TSMapManager)
 EVENT_TYPE(MapOnPlayerEnter, TSMap, TSPlayer)
 EVENT_TYPE(MapOnPlayerLeave, TSMap, TSPlayer)
 EVENT_TYPE(MapOnCreatureCreate, TSMap, TSCreature, TSMutable<bool>)
@@ -517,6 +518,7 @@ struct TSMapEvents {
      EVENT(MapOnCreate)
      EVENT(MapOnReload)
      EVENT(MapOnUpdate)
+     EVENT(MapOnUpdateDelayed)
      EVENT(MapOnPlayerEnter)
      EVENT(MapOnPlayerLeave)
      EVENT(MapOnCreatureCreate)
@@ -1028,6 +1030,7 @@ struct TSEvents
     EVENT(MapOnCreate)
     EVENT(MapOnReload)
     EVENT(MapOnUpdate)
+    EVENT(MapOnUpdateDelayed)
     EVENT(MapOnPlayerEnter)
     EVENT(MapOnPlayerLeave)
     EVENT(MapOnCreatureCreate)
@@ -1477,6 +1480,7 @@ public:
           EVENT_HANDLE(Map,OnCreate)
           EVENT_HANDLE_FN(Map,OnReload,ReloadMap)
           EVENT_HANDLE(Map,OnUpdate)
+          EVENT_HANDLE(Map,OnUpdateDelayed)
           EVENT_HANDLE(Map,OnPlayerEnter)
           EVENT_HANDLE(Map,OnPlayerLeave)
           EVENT_HANDLE(Map,OnCreatureCreate)
@@ -1493,6 +1497,7 @@ public:
           MAP_EVENT_HANDLE(Map,OnCreate)
           MAP_EVENT_HANDLE_FN(Map,OnReload,ReloadMap)
           MAP_EVENT_HANDLE(Map,OnUpdate)
+          MAP_EVENT_HANDLE(Map,OnUpdateDelayed)
           MAP_EVENT_HANDLE(Map,OnPlayerEnter)
           MAP_EVENT_HANDLE(Map,OnPlayerLeave)
           MAP_EVENT_HANDLE(Map,OnCreatureCreate)

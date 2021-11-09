@@ -108,6 +108,9 @@ public:
     TSCollisionEntry * GetCollision(TSString id);
     TSCollisions* GetCollisions();
 
+    void SetActive(bool active);
+    bool IsActive();
+
     void AddedByGroup(TSWorldObjectGroup* group);
     void RemovedByGroup(TSWorldObjectGroup* group);
 };

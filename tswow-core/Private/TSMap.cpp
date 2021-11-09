@@ -434,3 +434,8 @@ TSInstance TSMap::GetInstanceScript()
     }
     return TSInstance(nullptr);
 }
+
+void TSMap::DoDelayed(std::function<void(TSMap, TSMapManager)> callback)
+{
+    map->m_delayCallbacks.push_back(callback);
+}

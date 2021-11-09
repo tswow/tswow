@@ -18,7 +18,6 @@
 
 #include "TSBase.h"
 
-// TODO: posix
 #ifndef TC_GAME_API
 #if defined(_MSC_VER)
 #define TC_GAME_API __declspec(dllexport)

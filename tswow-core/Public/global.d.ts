@@ -3709,11 +3709,18 @@ declare interface TSQuest {
     GetType() : uint32
 }
 
+declare interface TSMapManager {
+    GetPlayer(guid: uint64): TSPlayer
+    GetPlayer(name: string): TSPlayer
+    GetMap(mapid: uint32, instanceId?: uint32): TSMap
+}
+
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsNull() : bool
     HasInstance(): bool
     GetInstance(): TSInstance
     GetUnits(): TSArray<TSWorldObject>
+    DoDelayed(callback: (map: TSMap, mgr: TSMapManager)=>void): void;
     /**
      * @param entry only return gameobjects of this entry.
      * Leave out to select all gameobjects.
@@ -7507,6 +7514,7 @@ declare namespace _hidden {
         OnCreate(callback: (map: TSMap)=>void)
         OnReload(callback: (map: TSMap)=>void)
         OnUpdate(callback: (map: TSMap, diff: uint32)=>void)
+        OnUpdateDelayed(callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void)
         OnPlayerEnter(callback: (map: TSMap, player: TSPlayer)=>void)
         OnPlayerLeave(callback: (map: TSMap, player: TSPlayer)=>void)
         OnCreatureCreate(callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void)
@@ -7519,6 +7527,7 @@ declare namespace _hidden {
     export class MapID<T> {
         OnCreate(map: uint32, callback: (map: TSMap)=>void)
         OnUpdate(map: uint32, callback: (map: TSMap, diff: uint32)=>void)
+        OnUpdateDelayed(map: uint32, callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void)
         OnPlayerEnter(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
         OnPlayerLeave(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
         OnCreatureCreate(map: uint32, callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void)

@@ -23,8 +23,11 @@
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 
+#include <functional>
+
 class TSBattleground;
 class TSInstance;
+class TSMapManager;
 
 class TC_GAME_API TSMap: public TSEntityProvider, public TSWorldEntityProvider<TSMap> {
 public:
@@ -60,4 +63,5 @@ public:
     TSWorldObject GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
     TSEntity * GetData();
+    void DoDelayed(std::function<void(TSMap, TSMapManager)> callback);
 };

@@ -84,44 +84,6 @@ public:
 };
 
 template <typename T>
-class TC_GAME_API TSMessageQueue {
-    std::mutex m_jsonMessageLock;
-    std::vector<JsonMessage<T>> m_jsonMessages;
-public:
-    TSMessageQueue() = default;
-
-    // Note: for Battlegrounds
-    TSMessageQueue(TSMessageQueue const& queue)
-        : m_jsonMessages(queue.m_jsonMessages)
-    {}
-
-    void queue(uint8_t channel, TSJsonObject obj, JsonMessageCallback<T> callback)
-    {
-        const std::lock_guard<std::mutex> lock(m_jsonMessageLock);
-        m_jsonMessages.push_back(JsonMessage(channel, obj, callback));
-    }
-
-    void fire(T ctx)
-    {
-        // avoid deadlock: do not fire arbitrary code when locked
-        m_jsonMessageLock.lock();
-        std::vector<JsonMessage<T>> copiedMessages(m_jsonMessages);
-        m_jsonMessages.clear();
-        m_jsonMessageLock.unlock();
-        for (auto& msg : copiedMessages)
-        {
-            msg.fire(ctx);
-        }
-    }
-
-    void clear()
-    {
-        const std::lock_guard<std::mutex> lock(m_jsonMessageLock);
-        m_jsonMessages.clear();
-    }
-};
-
-template <typename T>
 class TSTimer;
 
 template <typename T>
@@ -238,18 +200,15 @@ public:
 template <typename T>
 struct TSWorldEntity {
     TSWorldObjectGroups m_groups;
-    TSMessageQueue<T> m_messages;
     TSTimers<T> m_timers;
 
     void tick(T ctx)
     {
-        m_messages.fire(ctx);
         m_timers.tick(ctx);
     }
 
     void clear()
     {
-        m_messages.clear();
         m_timers.clear();
     }
 };
@@ -285,10 +244,5 @@ public:
     void ClearEntityGroup()
     {
         m_entity->m_groups.ClearGroups();
-    }
-
-    void QueueMessage(uint8_t channel, TSJsonObject obj, JsonMessageCallback<T> callback)
-    {
-        m_entity->m_messages.queue(channel, obj, callback);
     }
 };
