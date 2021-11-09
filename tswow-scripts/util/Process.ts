@@ -137,27 +137,12 @@ export class Process {
     async stop() {
         this.curString = '';
 
-        if (this.stopPromise) {
-            return this.stopPromise;
-        }
-
         if (this.process === undefined) {
             return;
         }
 
-        return this.stopPromise = new Promise<void>((res) => {
-            if (this.process !== undefined) {
-                (<ChildProcessWithoutNullStreams>this.process).on('exit', () => {
-                    this.process = undefined;
-                    this.stopPromise = undefined;
-                    res();
-                });
-
-                this.process.kill();
-            } else {
-                res();
-            }
-        });
+        this.process.kill();
+        return this.stopPromise;
     }
 
     /**
@@ -168,19 +153,14 @@ export class Process {
      */
     async startIn(directory: FilePath, program: string, args: string[] = []) {
         await this.stop();
-        let proc = wsys.spawnIn(directory, program, args);
+        const proc = wsys.spawnIn(directory,program,args)
         this.process = proc;
         processes[proc.pid] = proc;
-
         this.process.stdout.on('data', (data) => {
             this.handleOutput(data, false);
         });
         this.process.stderr.on('data', (data) => {
             this.handleOutput(data, true);
-        });
-
-        this.process.on('close',(code)=>{
-            delete processes[proc.pid];
         });
 
         const nullProcess = ()=>{
@@ -189,17 +169,22 @@ export class Process {
                     this.process = undefined;
             }
         }
-
-        this.process.on('error', (message)=>{
-            delete processes[proc.pid];
-            if(this.onFail!==undefined) {
-                this.onFail(message);
+        return this.stopPromise = new Promise<void>((res) => {
+            let killed = false;
+            const onDestroyed = () => {
+                if(!killed) {
+                    nullProcess();
+                    res();
+                    delete processes[proc.pid]
+                    killed = true;
+                }
             }
-            nullProcess();
-        });
-        this.process.on('exit', () => {
-            delete processes[proc.pid];
-            nullProcess();
+            proc.on('error', () => {
+                onDestroyed();
+            });
+            proc.on('exit', () => {
+                onDestroyed()
+            });
         });
     }
 
