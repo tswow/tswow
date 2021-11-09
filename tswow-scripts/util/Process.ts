@@ -188,10 +188,14 @@ export class Process {
                     killed = true;
                 }
             }
-            proc.on('error', () => {
+            proc.on('error', (err) => {
+                if(this._onFail) this._onFail(err)
                 onDestroyed();
             });
-            proc.on('exit', () => {
+            proc.on('exit', (code) => {
+                if(code !== 0) {
+                    this._onFail(new Error('Process error code '+code))
+                }
                 onDestroyed()
             });
         });
