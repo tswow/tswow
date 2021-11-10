@@ -329,8 +329,13 @@ export class Datascripts {
         }
 
         // 6. Restore server/client
-        runningClients.forEach(x=>x.startup(NodeConfig.AutoStartClient))
-        runningWorldservers.forEach(x=>x.start(x.lastBuildType))
+        runningClients
+            .forEach(x=>x.startup(NodeConfig.AutoStartClient))
+        let autorealms = NodeConfig.AutoStartRealms
+            .map(x=>Identifier.getRealm(x))
+        runningWorldservers
+            .filter(x=>autorealms.find(y=>y.fullName===x.fullName))
+            .forEach(x=>x.start(x.lastBuildType))
         term.success('datascripts',`Finished building DataScripts for dataset ${dataset.name}`);
     }
 }
