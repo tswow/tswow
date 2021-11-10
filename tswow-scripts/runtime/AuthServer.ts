@@ -12,7 +12,7 @@ import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 
 export namespace AuthServer {
-    const authserver = new Process()
+    const authserver = new Process('auth')
     export let connection: Connection|undefined = undefined;
 
     export function query(sql: string) {

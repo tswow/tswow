@@ -116,7 +116,7 @@ export class Client {
 
         for(let i=0;i<count;++i) {
             term.log('client',`Starting client for dataset ${this.dataset.name}`)
-            let process = new Process().showOutput(false);
+            let process = new Process('client').showOutput(false);
             if(isWindows()) {
                 process.start(this.path.wow_exe.get())
             } else {

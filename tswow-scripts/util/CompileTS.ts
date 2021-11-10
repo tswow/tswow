@@ -18,14 +18,14 @@ import { FilePath, resfp } from './FileTree';
 import { Process } from './Process';
 import { wsys } from './System';
 import { term } from './Terminal';
-import { TerminalCategory } from './TerminalCategories';
+import { getTerminalCategory, TerminalCategory } from './TerminalCategories';
 
 // tsc
 const tscWatchers: {[key: string]: Process} = {}
 export function watchTsc(tscEntry: string, dir: FilePath, name: TerminalCategory) {
     if(tscWatchers[resfp(dir)]) return;
     term.log(name,`Starting TSC watcher in ${dir}`)
-    let watcher = tscWatchers[resfp(dir)] = new Process()
+    let watcher = tscWatchers[resfp(dir)] = new Process(getTerminalCategory(name))
     watcher
         .showOutput(false)
         .onMessage(output=>{

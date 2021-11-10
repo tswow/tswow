@@ -19,6 +19,7 @@ import { ChildProcessWithoutNullStreams } from 'child_process';
 import { FilePath, resfp } from './FileTree';
 import { isWindows } from './Platform';
 import { term } from './Terminal';
+import { termCustom } from "./TerminalCategories";
 
 const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
 function cleanup() {
@@ -42,6 +43,7 @@ if(!isWindows())
  * Represents a concurrently running child process.
  */
 export class Process {
+    private _name: string;
     private _process: ChildProcessWithoutNullStreams | undefined;
     private _stopPromise: Promise<void> | undefined;
     private _curString = '';
@@ -58,8 +60,9 @@ export class Process {
      * Call Process#start or Process#startIn to start it.
      * @param bufferSize
      */
-    constructor(bufferSize: number =  1024) {
+    constructor(name: string, bufferSize: number =  1024) {
         this._bufferSize = bufferSize;
+        this._name = name;
     }
 
     isRunning() {
@@ -209,12 +212,13 @@ export class Process {
      */
     private handleOutput(data: any, isError: boolean) {
         if (this._outputShown) {
-            // todo: add name
-            if(isError) {
-                term.error('process',data.toString())
-            } else {
-                term.log('process',data.toString())
-            }
+            data.toString().split('\n').forEach(x=>{
+                if(isError) {
+                    term.error(termCustom(this._name),x)
+                } else {
+                    term.log(this._name as any,x)
+                }
+            })
         }
 
         const strData = data.toString();

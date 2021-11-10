@@ -176,7 +176,7 @@ export class Connection {
  * Contains functions and fields for managing the mysql server that tswow handles.
  */
 export namespace mysql {
-    const mysqlprocess: Process = new Process();
+    const mysqlprocess: Process = new Process('mysql');
 
     export function dump(connection: Connection, outputFile: string) {
         wsys.exec(
