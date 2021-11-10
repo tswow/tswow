@@ -76,6 +76,11 @@ export class Process {
 
     onFail(onFail: (message: Error)=>void){
         this._onFail = onFail;
+        return this;
+    }
+
+    stopPromise() {
+        return this._stopPromise
     }
 
     onMessage(listener: (message: string) => void ) {
@@ -183,20 +188,17 @@ export class Process {
             this.handleOutput(data, true);
         });
 
-        const nullProcess = ()=>{
-            if(this._process!==undefined
-                && proc.pid === this._process.pid) {
-                    this._process = undefined;
-            }
-        }
         return this._stopPromise = new Promise<void>((res) => {
             let killed = false;
             const onDestroyed = () => {
                 if(!killed) {
-                    nullProcess();
-                    res();
-                    delete processes[proc.pid]
                     killed = true;
+                    if(this._process!==undefined
+                        && proc.pid === this._process.pid) {
+                            this._process = undefined;
+                        res();
+                        delete processes[proc.pid]
+                    }
                 }
             }
             proc.on('error', (err) => {
@@ -204,7 +206,7 @@ export class Process {
                 onDestroyed();
             });
             proc.on('exit', (code) => {
-                if(code !== 0 && this._onFail) {
+                if(code !== 0 && code !== null && this._onFail) {
                     this._onFail(new Error('Process error code '+code))
                 }
                 onDestroyed()

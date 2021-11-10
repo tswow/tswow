@@ -166,7 +166,10 @@ class RealmManager {
             , 'characters'
         )
         this.worldserver = new Process(`realm/${name}`)
-            .showOutput(true);
+            .showOutput(true)
+            .onFail(err=>{
+                term.error(termCustom('realm',name),err.message)
+            })
     }
 }
 
@@ -364,8 +367,8 @@ export class Realm {
 
         StopCommand.addCommand(
               'realm'
-            , 'relamnames time'
-            , ''
+            , 'relamnames time --force'
+            , 'Shuts down the specified realms. If the --force flag is supplied, time is ignored.'
             , args => {
                 let delay = args.map(x=>parseInt(x)).find(x=>x!==NaN) || 0
                 let realms = Identifier.getRealms(
@@ -380,15 +383,12 @@ export class Realm {
                 }
 
                 return Promise.all(runningRealms.map(x=>{
-                    x.worldserver.send(`server shutdown force ${delay}`)
-                    return new Promise<void>((res,rej)=>{
-                        let interval = setInterval(()=>{
-                            if(!x.worldserver.isRunning()) {
-                                clearInterval(interval);
-                                res();
-                            }
-                        },100)
-                    })
+                    if(args.includes('--force')) {
+                        return x.worldserver.stop();
+                    } else {
+                        x.worldserver.send(`server shutdown force ${delay}`)
+                        return x.worldserver.stopPromise()
+                    }
                 }))
             }
         )
