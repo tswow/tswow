@@ -64,7 +64,7 @@ export const EquipSkills = {
     , get Axes1H()      { return equipSkill(44,196)}
     , get Axes2H()      { return equipSkill(172,197)}
     , get Polearms()    { return equipSkill(229,200)}
-    , get FistWeapons() { return equipSkill(0,15590)}
+    , get FistWeapons() { return equipSkill(473,15590)}
     , get Bows()        { return equipSkill(45,264)}
     , get Crossbows()   { return equipSkill(226,5011)}
     , get Guns()        { return equipSkill(46,266)}
