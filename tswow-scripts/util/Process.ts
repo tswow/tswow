@@ -116,12 +116,12 @@ export class Process {
      * @throws If the process is starting, stopping or stopped.
      */
     send(command: string, useNewline: boolean = true) {
-        if (this._isStopping) {
-            throw new Error('Attempted to send message to a stopping process');
-        }
-
         if (!this._process) {
             throw new Error('Attempted to send message to a stopped process');
+        }
+
+        if (this._isStopping) {
+            throw new Error('Attempted to send message to a stopping process');
         }
 
         this._process.stdin.write(Buffer.from(
