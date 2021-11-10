@@ -16,6 +16,7 @@
  */
 
 #include "TSDatabase.h"
+#include "TSGlobal.h"
 #include "TSNull.h"
 #include "TSLoot.h"
 #include "TSArray.h"
