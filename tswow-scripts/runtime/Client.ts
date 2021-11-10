@@ -115,7 +115,7 @@ export class Client {
             || (processMap[this.dataset.fullName] = []);
 
         for(let i=0;i<count;++i) {
-            term.log(`Starting client for dataset ${this.dataset.name}`)
+            term.log('client',`Starting client for dataset ${this.dataset.name}`)
             let process = new Process().showOutput(false);
             if(isWindows()) {
                 process.start(this.path.wow_exe.get())
@@ -140,7 +140,7 @@ export class Client {
     }
 
     applyExePatches() {
-        term.log(`Applying client patches...`)
+        term.log('client',`Applying client patches...`)
         this.path.wow_exe.copyOnNoTarget(this.path.wow_exe_clean)
 
         let wowbin = this.path.wow_exe_clean.read()
@@ -158,16 +158,16 @@ export class Client {
                 console.log("Write the new buffer");
                 this.path.wow_exe_clean.writeBuffer(wowbin);
             } else {
-                term.warn(
+                term.warn('client',
                     `Unclean wow.exe detected. Consider `
                 + `replacing it with a clean 3.3.5a client`)
             }
         }
 
         if(hash == CLEAN_CLIENT_MD5) {
-            term.success(`Source wow client hash is ${hash} (clean!)`);
+            term.success('client',`Source wow client hash is ${hash} (clean!)`);
         } else {
-            term.success(`Source wow client hash is ${hash}`);
+            term.success('client',`Source wow client hash is ${hash}`);
         }
 
         if(this.dataset.config.client_patches.includes(EXTENSION_DLL_PATCH_NAME)) {

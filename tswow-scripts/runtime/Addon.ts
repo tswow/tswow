@@ -19,6 +19,7 @@ import { FilePath } from "../util/FileTree";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
+import { termCustom } from "../util/TerminalCategories";
 import { BuildCommand, ClearCommand, CreateCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
@@ -174,6 +175,10 @@ export class Addon {
         tocFile.splice(begin,0,...names);
     }
 
+    logName() {
+        return termCustom('addon',this.mod.fullName)
+    }
+
     async build(dataset: Dataset) {
         // 1. Verify and set up environment
         if(!this.path.exists()) {
@@ -182,7 +187,7 @@ export class Addon {
         this.path.build.remove();
         this.initialize();
         await dataset.setupClientData();
-        term.log(`Building addon ${this.mod.fullName} for dataset ${dataset.name}`)
+        term.log(this.logName(),`Building addon for dataset ${dataset.name}`)
 
         // 2. Patch tstl to allow any kind of decorators (no longer needed?)
         let decoText = ipaths.node_modules.tstl_decorators.read('utf-8')
@@ -251,7 +256,7 @@ export class Addon {
         })
         ipaths.bin.include_addon.global_d_ts.copy(this.path.global_d_ts)
         if(!exists) {
-            term.success(`Created addon component for module ${this.mod.fullName}`)
+            term.success(this.logName(),`Created addon component`)
         }
         return this;
     }
@@ -334,7 +339,7 @@ export class Addon {
               let isModule = Identifier.isModule(args[0])
               Addon.all()
                   .filter(x=> !isModule || x.mod.mod.id === args[0])
-                  .forEach(x=>term.log(x.path.get()))
+                  .forEach(x=>term.log('addon',x.path.get()))
           }
         ).addAlias('addons')
 

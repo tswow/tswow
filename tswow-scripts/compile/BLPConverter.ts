@@ -23,10 +23,10 @@ import { bpaths } from './CompilePaths';
 export namespace BLPConverter {
     export async function install(cmake: string) {
         while(bpaths.blpconverter.exists()) {
-            term.error(`blpconverter.exe not found`);
-            term.error(`Built from source (BLPConverter/BLPConverter.sln)`);
-            term.error(`OR download: https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe`);
-            term.error(`Then place it here: ${wfs.absPath(bpaths.blpconverter.get())}`);
+            term.error('build',`blpconverter.exe not found`);
+            term.error('build',`Build from source (BLPConverter/BLPConverter.sln)`);
+            term.error('build',`OR download: https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe`);
+            term.error('build',`Then place it here: ${wfs.absPath(bpaths.blpconverter.get())}`);
             await wsys.userInput(`Press any key to try again:`);
         }
         bpaths.blpconverter.copy(ipaths.bin.BLPConverter.blpconverter)

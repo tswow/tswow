@@ -195,6 +195,20 @@ export class NodeConfigClass extends ConfigFile {
     TerminalHistory!: number
 
     @Property({
+          name: 'Terminal.DisplayTimestamps'
+        , description: 'Whether terminal output should include timestamps'
+        , examples: [[true,'']]
+    })
+    TerminalTimestamps!: boolean
+
+    @Property({
+      name: 'Terminal.DisplayNames'
+    , description: 'Whether terminal output should include submodule names'
+    , examples: [[true,'']]
+    })
+    TerminalNames!: boolean
+
+    @Property({
           name: 'Positions.WriteToClipboard'
         , description: 'Whether .at command output is written to the clipboard'
         , examples: [[true,'']]

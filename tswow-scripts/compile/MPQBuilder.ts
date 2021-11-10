@@ -31,7 +31,7 @@ export namespace MPQBuilder {
         } else {
             bpaths.mpqbuilder.mkdir()
             const relativeMpqSource = bpaths.mpqbuilder.relativeFrom('./mpqbuilder');
-            await wsys.inDirectory(bpaths.mpqbuilder.relativeFrom('./mpqbuilder')
+            await wsys.inDirectory(bpaths.mpqbuilder.relativeFrom('./mpqbuilder').get()
                 , () => {
                     wsys.exec(
                         `${cmake} "${relativeMpqSource}"`

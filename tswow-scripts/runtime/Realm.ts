@@ -6,6 +6,7 @@ import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
 import { term } from "../util/Terminal";
+import { termCustom } from "../util/TerminalCategories";
 import { AuthServer } from "./AuthServer";
 import { CreateCommand, ListCommand, StartCommand, StopCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
@@ -166,12 +167,6 @@ class RealmManager {
         )
         this.worldserver = new Process();
         this.worldserver.showOutput(false);
-        this.worldserver.setOnFail((err)=>{
-            term.error(err.message)
-        })
-        this.worldserver.listenSimple(msg=>{
-            term.log(msg);
-        })
     }
 }
 
@@ -260,8 +255,12 @@ export class Realm {
         this.config = new RealmConfig(this.path.config.get(),name)
     }
 
+    logName() {
+        return termCustom('realm',this.fullName)
+    }
+
     async start(type: BuildType) {
-        term.log(`Starting worlserver for realm ${this.config.RealmName}...`)
+        term.log(this.logName(),`Starting worlserver for ${this.config.RealmName}...`)
         this.lastBuildType = type;
         await this.connect();
         await this.config.Dataset.setupDatabases('BOTH',false);
@@ -440,9 +439,9 @@ export class Realm {
                     .filter(x=> !isModule || x.mod.mod.id === args[0])
                     .forEach(x=>{
                         if(x.worldserver.isRunning()) {
-                            term.success(x.name+': '+x.path.get()+' (running)')
+                            term.success('realm',x.name+': '+x.path.get()+' (running)')
                         } else {
-                            term.error(x.name+': '+x.path.get()+' (not running)')
+                            term.error('realm',x.name+': '+x.path.get()+' (not running)')
                         }
                     })
           }
@@ -488,7 +487,7 @@ export class Realm {
                     )
                 }
 
-                term.success(`Created account ${username} with gm level ${gmlevel}`)
+                term.success('misc',`Created account ${username} with gm level ${gmlevel}`)
             }
         )
     }

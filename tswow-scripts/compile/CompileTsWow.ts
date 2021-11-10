@@ -45,11 +45,11 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     const cmake = isWindows() ? (await CMake.find()).get() : 'cmake';
-    term.log(`Found cmake at ${cmake}`);
+    term.log('build',`Found cmake at ${cmake}`);
     const openssl = isWindows() ? (await OpenSSL.find()).get() : 'openssl';
-    term.log(`Found OpenSSL at ${openssl}`);
+    term.log('build',`Found OpenSSL at ${openssl}`);
     const mysql = isWindows() ? await MySQL.find() : 'mysql';
-    term.log(`Found MySQL at ${mysql}`);
+    term.log('build',`Found MySQL at ${mysql}`);
     const boost = isWindows() ? await Boost.install() : 'boost';
     if (isWindows()) { await SevenZipInstall.install(); }
     if (isWindows()) { await IMInstall.install() }
@@ -78,15 +78,20 @@ async function compile(type: string, compileArgs: string[]) {
     }
 
     if (types.includes('release')) {
-        term.log(`Creating ${bpaths.release_7z.get()}`);
+        term.log('build',`Creating ${bpaths.release_7z.get()}`);
         SevenZipInstall.makeArchive(bpaths.release_7z.abs().get(), ipaths.abs().get());
     }
 
-    term.log('Installation successful!');
+    term.log('build','Installation successful!');
 }
 
 async function main() {
-    term.Initialize(bpaths.terminal_history.get(),100);
+    term.Initialize(
+          bpaths.terminal_history.get()
+        , 100
+        , process.argv.includes('--displayTimestamps')
+        , process.argv.includes('--displayNames')
+        );
     const build = commands.addCommand('build');
     await compile('scripts', []);
     //process.exit(0)

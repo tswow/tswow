@@ -3,6 +3,7 @@ import { DatasetConfig, GAME_BUILD_FIELD } from "../util/DatasetConfig";
 import { wfs } from "../util/FileSystem";
 import { collectSubmodules, ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
+import { termCustom } from "../util/TerminalCategories";
 import { Client } from "./Client";
 import { CreateCommand, InitializeCommand, ListCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
@@ -48,6 +49,10 @@ export class Dataset {
 
     realms() {
         return Realm.all().filter(x=>x.config.Dataset.path.get() === this.path.get());
+    }
+
+    logName() {
+        return termCustom('dataset',this.fullName)
     }
 
     initialize() {
@@ -110,7 +115,7 @@ export class Dataset {
         }
 
         if(anyChange) {
-            term.success('Finished installing server data');
+            term.success(this.logName(),'Finished installing server data');
         }
     }
 
@@ -145,7 +150,7 @@ export class Dataset {
     }
 
     async dumpDatabase(outFile: string) {
-        term.log(`Dumping database`
+        term.log(this.logName(),`Dumping database`
         +` ${this.worldDest.cfg.database}`
         +` to ${outFile}...`)
         await mysql.rebuildDatabase(
@@ -227,7 +232,7 @@ export class Dataset {
                 let isModule = Identifier.isModule(args[0])
                 Dataset.all()
                     .filter(x=> !isModule || x.mod.mod.id === args[0])
-                    .forEach(x=>term.log(x.fullName +': '+x.path.get()))
+                    .forEach(x=>term.log('dataset',x.fullName +': '+x.path.get()))
             }
         ).addAlias('datasets')
     }

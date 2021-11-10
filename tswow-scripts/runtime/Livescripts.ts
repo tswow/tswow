@@ -4,6 +4,7 @@ import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
+import { termCustom } from "../util/TerminalCategories";
 import { Timer } from "../util/Timer";
 import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
 import { Datascripts } from "./Datascripts";
@@ -69,6 +70,10 @@ export class Livescripts {
         return new Livescripts(mod).initialize()
     }
 
+    logName() {
+        return termCustom('livescripts',this.mod.fullName)
+    }
+
     initialize() {
         if(!this.path.exists()) {
             this.path.mkdir();
@@ -132,10 +137,10 @@ export class Livescripts {
             + ` -S ${this.path.build.cpp.abs()}`
             + ` -B ${this.path.build.lib.abs()}`
         try {
-            term.cyan(`Generating CMake project...`)
+            term.log(this.logName(),`Generating CMake project...`)
             wsys.exec(cmake_generate, !process.argv.includes('--silent')?'inherit':'ignore');
         } catch(err) {
-            term.error(`Failed to generate CMake files, please report this error`);
+            term.error(this.logName(),`Failed to generate CMake files, please report this error`);
         }
         const cmake_build =
             (isWindows()
@@ -145,10 +150,10 @@ export class Livescripts {
             + ` --config ${buildType}`;
 
         try {
-            term.cyan(`Compiling C++ binary...`)
+            term.log(this.logName(),`Compiling C++ binary...`)
             wsys.exec(cmake_build,!process.argv.includes('--silent') ? 'inherit' : 'ignore')
         } catch (error) {
-            term.error(`Failed to compile library, please report this error`);
+            term.error(this.logName(),`Failed to compile library, please report this error`);
         }
 
         this.path.built_libs.pick(buildType).library
@@ -159,9 +164,7 @@ export class Livescripts {
                 .copy(ipaths.bin.trinitycore.build.pick(buildType).scripts.modulePdb(this.mod.fullName))
         }
 
-        term.log(ipaths.bin.trinitycore.build.pick(buildType).scripts.moduleLib(this.mod.fullName).get())
-
-        term.log(`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)
+        term.log(this.logName(),`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)
     }
 
     exists() {
@@ -183,7 +186,7 @@ export class Livescripts {
                 let isModule = Identifier.isModule(args[0])
                 Livescripts.all()
                     .filter(x=> !isModule || x.mod.mod.id === args[0])
-                    .forEach(x=>term.log(x.path.get()))
+                    .forEach(x=>term.log('livescripts',x.path.get()))
             }
         ).addAlias('livescript')
          .addAlias('script')

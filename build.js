@@ -7,12 +7,19 @@ const fs = require('fs')
 
 const buildConf = fs.readFileSync('./build.conf','utf-8')
 
-const buildDir = buildConf.match(/BuildDirectory *= *"(.+?)"/)[1]
-const installDir = buildConf.match(/InstallDirectory *= *"(.+?)"/)[1]
+const buildDir = buildConf.match(/^BuildDirectory *= *"(.+?)"/m)[1]
+const installDir = buildConf.match(/^InstallDirectory *= *"(.+?)"/m)[1]
+const displayNames = (buildConf.match(/^Terminal\.DisplayNames *= *(.+)/m)||['','true'])[1]
+const displayTimestamps = (buildConf.match(/^Terminal\.DisplayTimestamps *= *(.+)/m)||['','true'])[1]
+
+const shouldDisplayNames = displayNames === 'true'
+    || displayNames === '1'
+const shouldDisplayTimestamps = displayTimestamps === 'true'
+    || displayTimestamps === '1'
 
 const bootstrapDir = path.join(buildDir,'bootstrap')
 
-const buildScripts = ()=>
+const buildScripts = () =>
     child_process.execSync(
           `npx swc tswow-scripts -d ${bootstrapDir}`
         , {stdio:'inherit'}
@@ -34,4 +41,6 @@ child_process.execSync(
     + ` --ignore **/wotlkdata/**`
     + ` --ipaths=${installDir}`
     + ` --bpaths=${buildDir}`
+    + ` ${shouldDisplayNames?'--displayNames':''}`
+    + ` ${shouldDisplayTimestamps?'--displayTimestamps':''}`
 ,{stdio:'inherit'});

@@ -209,7 +209,12 @@ export class Process {
      */
     private handleOutput(data: any, isError: boolean) {
         if (this._outputShown) {
-            term.pipe(isError ? 'red' : this._color, [data.toString()]);
+            // todo: add name
+            if(isError) {
+                term.error('process',data.toString())
+            } else {
+                term.log('process',data.toString())
+            }
         }
 
         const strData = data.toString();

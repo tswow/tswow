@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { term } from './Terminal';
+import { termc } from './TerminalColors';
 
 export let trace = process.argv.includes('trace');
 
@@ -189,12 +190,12 @@ export namespace commands {
             } catch (error: any) {
                 if (error) {
                     if (trace) {
-                        term.error(error, error.stack);
+                        term.error('commands',error.stack)
                     } else {
-                        term.error(error);
+                        term.error('commands',error);
                     }
                 } else {
-                    term.error(`Unspecified error in ${input}`)
+                    term.error('commands',`Unspecified error in ${input}`)
                 }
             }
         }
@@ -230,15 +231,6 @@ export namespace commands {
 
         return rootCommand.addCommand(name, argDesc, help, callback);
     }
-
-    addCommand(
-          'print'
-        , 'messages'
-        , 'Prints out messages to the screen'
-        , (args) => {
-
-        term.log(args.join(' '));
-    });
 
     addCommand(
           'trace'
@@ -278,7 +270,7 @@ export namespace commands {
                 }
 
                 if(!found) {
-                    return term.warn(`${cpd.fullname} has no child command ${arg}`);
+                    return term.error('commands',`${cpd.fullname} has no child command ${arg}`);
                 }
             } else {
                 cur = cpd.children[arg];
@@ -287,11 +279,11 @@ export namespace commands {
 
         let spaces = 0;
         function printCommand(curPrint: Command) {
-            if (curPrint.handler) { term.magenta(`${' '.repeat(spaces * 2)}${
+            if (curPrint.handler) { term.raw(termc.magenta(`${' '.repeat(spaces * 2)}${
                 curPrint.name}${curPrint.argDesc && curPrint.argDesc.length > 0 ? ` (${curPrint.argDesc})` : ''}${
-                    curPrint.description && curPrint.description.length > 0 ? ` - ${curPrint.description}` : ''}`);
+                    curPrint.description && curPrint.description.length > 0 ? ` - ${curPrint.description}` : ''}`));
             } else if (curPrint.parent !== undefined) {
-                term.magenta(`${' '.repeat(spaces * 2)}${curPrint.name}`);
+                term.raw(termc.magenta(`${' '.repeat(spaces * 2)}${curPrint.name}`));
             } else {
                 --spaces;
             }

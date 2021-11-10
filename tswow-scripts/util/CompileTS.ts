@@ -17,13 +17,14 @@
 import { FilePath, resfp } from './FileTree';
 import { Process } from './Process';
 import { wsys } from './System';
-import { term, termc } from './Terminal';
+import { term } from './Terminal';
+import { TerminalCategory } from './TerminalCategories';
 
 // tsc
 const tscWatchers: {[key: string]: Process} = {}
-export function watchTsc(tscEntry: string, dir: FilePath, name: string) {
+export function watchTsc(tscEntry: string, dir: FilePath, name: TerminalCategory) {
     if(tscWatchers[resfp(dir)]) return;
-    console.log(`Starting TSC watcher in ${dir}`)
+    term.log(name,`Starting TSC watcher in ${dir}`)
     let watcher = tscWatchers[resfp(dir)] = new Process()
     watcher
         .showOutput(false)
@@ -42,20 +43,11 @@ export function watchTsc(tscEntry: string, dir: FilePath, name: string) {
                     }
 
                     if(x.includes('Found 0 errors')) {
-                        term.log(
-                              `${termc.fgmagenta}${name}:`
-                            + ` ${termc.fggreen}${x}${termc.reset}`
-                        )
+                        term.success(name,x)
                     } else if(x.includes('error')) {
-                        term.log(
-                            `${termc.fgmagenta}${name}:`
-                          + ` ${termc.fgred}${x}${termc.reset}`
-                      )
+                        term.error(name,x)
                     } else {
-                        term.log(
-                            `${termc.fgmagenta}${name}:`
-                          + ` ${termc.fgwhite}${x}${termc.reset}`
-                      )
+                        term.log(name,x)
                     }
                 })
         })

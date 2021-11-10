@@ -36,7 +36,7 @@ import { PositionsFile } from "./PositionsFile";
 import { Realm } from "./Realm";
 
 export async function main() {
-    term.log(`TSWoW Starting Up`)
+    term.log('mysql',`TSWoW Starting Up`)
     const timer = Timer.start();
     await mysql.initialize();
     await AuthServer.initialize()
@@ -54,11 +54,13 @@ export async function main() {
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,
+        NodeConfig.TerminalTimestamps,
+        NodeConfig.TerminalNames,
     )
-    term.log(`TSWoW started up in ${timer.timeSec()}s`)
+    term.log('mysql',`TSWoW started up in ${timer.timeSec()}s`)
     ClearCommand.addCommand('filecache','','',args=>{
         ipaths.bin.changes.remove();
-        term.log(`Removed ${ipaths.bin.changes.abs().get()}`)
+        term.log('mysql',`Removed ${ipaths.bin.changes.abs().get()}`)
     });
     await commands.enterLoop();
 }

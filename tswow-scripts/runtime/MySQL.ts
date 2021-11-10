@@ -187,16 +187,16 @@ export namespace mysql {
     }
 
     export async function startProcess() {
-        term.log('Starting mysql...');
+        term.log('mysql','Starting mysql...');
         ipaths.coredata.mkdir()
         if(!ipaths.coredata.database.exists()) {
-            term.log("No mysql database found, creating it...");
+            term.log('mysql',"No mysql database found, creating it...");
             wsys.exec(
                   `${ipaths.bin.mysql.mysqld_exe.get()}`
                 + ` --initialize`
                 + ` --log_syslog=0`
                 + ` --datadir=${ipaths.coredata.database.abs()}`);
-            term.success('Created mysql database');
+            term.success('mysql','Created mysql database');
         }
 
         const settings : DatabaseSettings[] = [
@@ -236,24 +236,24 @@ export namespace mysql {
             ]);
         mysqlprocess.showOutput(process.argv.includes('logmysql'));
         let val = await Promise.race([
-            mysqlprocess.waitFor('Execution of init_file*ended.', true),
-            mysqlprocess.waitFor('Can\'t start server', true),
+            mysqlprocess.waitForMessage('Execution of init_file*ended.', true),
+            mysqlprocess.waitForMessage('Can\'t start server', true),
         ]);
         if(val.includes('Can\'t start server')) {
             if(val.includes('Bind on TCP/IP')) {
-                term.error(
+                term.error('mysql',
                       `Failed to start MySQL: You already have an instance of MySQL running on this port.\n`
                     + `Try changing your port setting under database_all in node.yaml\n`
                     + `or shut down your existing MySQL instance.\n`
                     )
             } else {
-                term.error(`Failed to start MySQL with the following error (see log ): ${val}`)
+                term.error('mysql',`Failed to start MySQL with the following error (see log ): ${val}`)
             }
             // easier for newbies to not get the spam output
             process.exit(0);
         }
         ipaths.bin.mysql_startup.remove();
-        term.success('Mysql process started');
+        term.success('mysql','Mysql process started');
     }
 
     /**
@@ -319,7 +319,7 @@ export namespace mysql {
           con: Connection
         , sqlFilePath: string)
         {
-        term.log(`Rebuilding database ${con.name()}`);
+        term.log('mysql',`Rebuilding database ${con.name()}`);
         await con.clean();
 
         const mysqlCommand = mysql.hasOwnProcess() ?
@@ -337,7 +337,7 @@ export namespace mysql {
                 : '')
             + ` --port ${con.cfg.port}`
             + ` ${con.name()} < ${sqlFilePath}`);
-        term.success(`Rebuilt database ${con.name()}`);
+        term.success('mysql',`Rebuilt database ${con.name()}`);
     }
 
     async function makeUpdate(cons: Connection, node: WDirectory) {
@@ -354,7 +354,7 @@ export namespace mysql {
                 `SELECT * from \`updates\` WHERE \`name\` = "${bn}";`
             )
             if(applied.length === 0) {
-                term.log(`Applying SQL update ${bn}`)
+                term.log('mysql',`Applying SQL update ${bn}`)
                 ++total;
                 await cons.query(
                         `START TRANSACTION;`
@@ -374,7 +374,7 @@ export namespace mysql {
         let total = await makeUpdate(cons, ipaths.bin.sql.updates.type.pick(type)._335.toDirectory())
         total += await makeUpdate(cons, ipaths.bin.sql.custom.type.pick(type).toDirectory())
         if(total > 0) {
-            term.success(`Applied ${total} updates for ${cons.name()}`)
+            term.success('mysql',`Applied ${total} updates for ${cons.name()}`)
         }
     }
 
@@ -389,7 +389,7 @@ export namespace mysql {
         let charRowCount =
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(charRowCount[1][0]['FOUND_ROWS()']===0) {
-            term.log(
+            term.log('mysql',
                  `No character tables found for ${connection.cfg.database},`
                + ` creating them...`);
             await connection.query(ipaths.bin.sql.characters_create_sql.readString());
@@ -401,7 +401,7 @@ export namespace mysql {
         let authRowCount =
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
         if(authRowCount[1][0]['FOUND_ROWS()']===0) {
-            term.log(
+            term.log('mysql',
               `No auth tables found for ${connection.cfg.database},`
             + ` creating them...`);
 

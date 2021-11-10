@@ -4,6 +4,7 @@ import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
+import { termCustom } from "../util/TerminalCategories";
 import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
@@ -117,12 +118,19 @@ export class Datascripts {
         return this.mod.path.datascripts
     }
 
+    logName() {
+        return termCustom('datascripts',this.mod.fullName)
+    }
+
     installLibrary() {
         if(this.config.TypeGeneration !== 'none') {
             this.path.build.package_json
                 .writeJson(lib_package_json(this.mod.fullName))
             if(!ipaths.node_modules.join(this.mod.fullName).exists()) {
-                term.log(`Installing ${this.mod.fullName} datascript library...`)
+                term.log(
+                      this.logName()
+                    , `Installing ${this.mod.fullName} datascript library...`
+                )
                 wsys.exec(`npm i -S ${this.path.build.abs()}`)
             }
         }
@@ -145,7 +153,7 @@ export class Datascripts {
             watchTsc(
                   ipaths.node_modules.typescript_js.abs().get()
                 , this.path.abs().get()
-                , this.mod.fullName
+                , this.logName()
             );
         }
         this.installLibrary();
@@ -178,7 +186,7 @@ export class Datascripts {
     }
 
     compileTypes(declare: boolean) {
-        term.log(`Compiling types for ${this.path}`)
+        term.log(this.logName(),`Compiling types for ${this.path}`)
         try {
             wsys.execIn(this.path.get(),'tsc','inherit');
         } catch(error) {
@@ -205,7 +213,7 @@ export class Datascripts {
 
     static initialize() {
         if(!ipaths.node_modules.wotlkdata.exists()) {
-            term.log('Linking wotlkdata...');
+            term.log('datascripts','Linking wotlkdata...');
             wsys.exec(`npm i -S ${ipaths.bin.scripts.wotlkdata.get()}`)
         }
 
@@ -238,7 +246,7 @@ export class Datascripts {
                         .modules()
                     : Module.endpoints()
                 eps.forEach(x=>{
-                    term.log(x.path.get())
+                    term.log('datascripts',x.path.get())
                 })
             }
         )
@@ -322,6 +330,6 @@ export class Datascripts {
         // 6. Restore server/client
         runningClients.forEach(x=>x.startup(NodeConfig.AutoStartClient))
         runningWorldservers.forEach(x=>x.start(x.lastBuildType))
-        term.success(`Finished building DataScripts for dataset ${dataset.name}`);
+        term.success('datascripts',`Finished building DataScripts for dataset ${dataset.name}`);
     }
 }

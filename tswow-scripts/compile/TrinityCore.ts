@@ -113,8 +113,7 @@ export namespace TrinityCore {
     }
 
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
-        term.log("MYSQL IS ",mysql);
-        term.log('Building TrinityCore');
+        term.log('build','Building TrinityCore');
         bpaths.TrinityCore.mkdir()
 
         // We no longer make non-dynamic builds.

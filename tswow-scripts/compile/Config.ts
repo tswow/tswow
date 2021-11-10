@@ -24,7 +24,7 @@ import { TrinityCore } from './TrinityCore';
 export namespace Config {
 
     export async function create() {
-        term.log('Creating config files');
+        term.log('build','Creating config files');
 
         // Create node package
         const package_json = {

@@ -19,6 +19,7 @@ import { mpath, wfs } from '../util/FileSystem';
 import { FilePath, resfp } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
+import { termCustom } from '../util/TerminalCategories';
 import { isInteractive } from './BuildConfig';
 import { bpaths, spaths } from './CompilePaths';
 
@@ -51,7 +52,7 @@ export namespace Scripts {
             } else {
                 watchTsc(
                       spaths.node_modules.typescript_js.abs().get()
-                    , buildDir,wfs.basename(buildDir)
+                    , buildDir,termCustom('build',wfs.basename(buildDir))
                 )
             }
         }

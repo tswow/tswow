@@ -240,7 +240,7 @@ export class Module {
     static initialize() {
         ListCommand.addCommand('module','','',_=>{
             this.endpoints()
-                .filter(x=>term.log(`${x.fullName}: ${x.path.get()}`))
+                .filter(x=>term.log('modules',`${x.fullName}: ${x.path.get()}`))
         })
         .addAlias('modules')
 

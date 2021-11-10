@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { GeneratedNode } from '../util/FileTree';
+import { WNode } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
@@ -30,7 +30,7 @@ export namespace CMake {
             +`3. Press enter in this command prompt\n`);
     }
 
-    export async function find(): Promise<GeneratedNode> {
+    export async function find(): Promise<WNode> {
         while(!bpaths.cmake.exists()) {
             await query('CMake not found');
         }

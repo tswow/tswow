@@ -52,10 +52,6 @@ export namespace AuthServer {
             ,'LoginDatabaseInfo',NodeConfig.DatabaseString('auth')
         )
 
-        authserver.listenSimple(msg=>{
-            term.log(msg);
-        })
-
         authserver.startIn(ipaths.coredata.authserver.get(),
             wfs.absPath(
                   ipaths.bin.trinitycore.build.pick(type).authserver.get())
@@ -83,7 +79,7 @@ export namespace AuthServer {
                     throw new Error(`Authserver isn't running`)
                 }
                 await authserver.stop();
-                term.success('authserver was stopped')
+                term.success('auth','authserver was stopped')
         }).addAlias('auth');
 
         StartCommand.addCommand(
