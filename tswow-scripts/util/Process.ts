@@ -204,7 +204,7 @@ export class Process {
                 onDestroyed();
             });
             proc.on('exit', (code) => {
-                if(code !== 0) {
+                if(code !== 0 && this._onFail) {
                     this._onFail(new Error('Process error code '+code))
                 }
                 onDestroyed()
