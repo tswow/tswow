@@ -482,8 +482,28 @@ TSPacketEvents* GetPacketEvent(uint32_t id)
   return packetData[id];
 }
 
+static std::vector<TSWorldPacketEvents*> worldPacketData;
+void TSWorldPacketMap::OnAdd(uint32_t key, TSWorldPacketEvents* events)
+{
+    if (key >= worldPacketData.size())
+    {
+        worldPacketData.resize(key + 1);
+    }
+    worldPacketData[key] = events;
+}
 
+void TSWorldPacketMap::OnRemove(uint32_t key)
+{
+}
 
+TSWorldPacketEvents* GetWorldPacketEvent(uint32_t id)
+{
+    if (id >= worldPacketData.size())
+    {
+        return nullptr;
+    }
+    return worldPacketData[id];
+}
 
 void TSLoadEvents()
 {

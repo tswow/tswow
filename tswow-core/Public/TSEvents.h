@@ -58,6 +58,19 @@ class TSPacketMap : public TSEventMap<TSPacketEvents>
 
 TSPacketEvents* GetPacketEvent(uint32_t id);
 
+// WorldPacket
+EVENT_TYPE(WorldPacketOnReceive, TSWorldPacket, TSPlayer)
+EVENT_TYPE(WorldPacketOnSend, TSWorldPacket, TSPlayer)
+struct TSWorldPacketEvents {
+    EVENT(WorldPacketOnReceive)
+    EVENT(WorldPacketOnSend)
+};
+class TSWorldPacketMap : public TSEventMap<TSWorldPacketEvents>
+{
+    void OnAdd(uint32, TSWorldPacketEvents*);
+    void OnRemove(uint32_t);
+};
+TSWorldPacketEvents* GetWorldPacketEvent(uint32_t id);
 
 // WorldScript
 EVENT_TYPE(WorldOnOpenStateChange,bool)
@@ -1069,6 +1082,10 @@ struct TSEvents
     // Packets
     EVENT(PacketOnCustom)
 
+    // WorldPackets
+    EVENT(WorldPacketOnSend)
+    EVENT(WorldPacketOnReceive)
+
     TSAchievementMap Achievements;
     TSSpellMap Spells;
     TSCreatureMap Creatures;
@@ -1082,6 +1099,7 @@ struct TSEvents
     TSSmartActionMap SmartActions;
     TSConditionMap Conditions;
     TSPacketMap Packets;
+    TSWorldPacketMap WorldPackets;
 };
 
 TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
@@ -1702,6 +1720,19 @@ public:
       MAP_EVENT_HANDLE(Packet,OnCustom)
     } PacketID;
 
+    struct WorldPacketEvents : public EventHandler {
+        WorldPacketEvents* operator->() { return this; }
+        EVENT_HANDLE(WorldPacket, OnReceive)
+        EVENT_HANDLE(WorldPacket, OnSend)
+    } WorldPackets;
+
+    struct WorldPacketIDEvents : public MappedEventHandler<TSWorldPacketMap>
+    {
+        WorldPacketIDEvents* operator->() { return this; }
+        MAP_EVENT_HANDLE(WorldPacket, OnReceive)
+        MAP_EVENT_HANDLE(WorldPacket, OnSend)
+    } WorldPacketID;
+
     struct TestEvents {
         uint32_t m_modid;
         std::string m_modName;
@@ -1768,6 +1799,8 @@ public:
         ConditionID.LoadEvents(&events->Conditions);
         Packets.LoadEvents(events);
         PacketID.LoadEvents(&events->Packets);
+        WorldPackets.LoadEvents(events);
+        WorldPacketID.LoadEvents(&events->WorldPackets);
     }
 
     void Unload()
@@ -1811,6 +1844,8 @@ public:
          ConditionID.Unload();
          Packets.Unload();
          PacketID.Unload();
+         WorldPackets.Unload();
+         WorldPacketID.Unload();
     }
 };
 

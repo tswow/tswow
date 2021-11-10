@@ -7338,6 +7338,16 @@ declare namespace _hidden {
         )
     }
 
+    export class WorldPackets {
+        OnReceive(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnSend(callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+    }
+
+    export class WorldPacketID {
+        OnReceive(opcode: uint32, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnSend(opcode: uint32, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+    }
+
     export class GameEvents<T> {
         OnStart(callback: (event: uint16)=>void)
         OnUpdateState(callback: (event: uint16)=>void)
@@ -7554,6 +7564,8 @@ declare class TSEventHandlers {
     InstanceID: _hidden.InstanceID<void>;
     Packets: _hidden.Packets;
     PacketID: _hidden.PacketID;
+    WorldPackets: _hidden.WorldPackets;
+    WorldPacketID: _hidden.WorldPacketID;
 }
 
 declare class TSDictionary<K,V> {
