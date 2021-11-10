@@ -12,7 +12,7 @@ import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 
 export namespace AuthServer {
-    const authserver = new Process('auth')
+    const authserver = new Process('authserver')
     export let connection: Connection|undefined = undefined;
 
     export function query(sql: string) {
@@ -61,7 +61,7 @@ export namespace AuthServer {
             );
     }
 
-    export const command = commands.addCommand('auth');
+    export const command = commands.addCommand('authserver');
 
     export async function initialize() {
         if(NodeConfig.AutoStartAuthServer) {
@@ -79,7 +79,7 @@ export namespace AuthServer {
                     throw new Error(`Authserver isn't running`)
                 }
                 await authserver.stop();
-                term.success('auth','authserver was stopped')
+                term.success('authserver','authserver was stopped')
         }).addAlias('auth');
 
         StartCommand.addCommand(

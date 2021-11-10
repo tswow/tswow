@@ -16,7 +16,7 @@ export class CustomCategory {
 
 export type TerminalCategory =
       'mysql'
-    | 'auth'
+    | 'authserver'
     | 'addon'
     | 'realm'
     | 'dataset'
