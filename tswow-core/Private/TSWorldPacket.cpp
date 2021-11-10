@@ -80,226 +80,230 @@ void TSWorldPacket::SetOpcode(uint32 opcode)
     packet->SetOpcode(opcode);
 }
 
-/**
- * Reads and returns a signed 8-bit integer value from the [WorldPacket].
- *
- * @return int8 value
- */
-int8 TSWorldPacket::ReadByte()
+int8 TSWorldPacket::ReadInt8(uint32 index)
 {
-    int8 _byte;
-    (*packet) >> _byte;
-    return _byte;
+    return packet->read<int8>(index);
+}
+int8 TSWorldPacket::ReadInt8()
+{
+    int8 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteInt8(uint32 index, int8 value)
+{
+    packet->put<int8>(index, value);
+}
+void TSWorldPacket::WriteInt8(int8 value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns an unsigned 8-bit integer value from the [WorldPacket].
- *
- * @return uint8 value
- */
-uint8 TSWorldPacket::ReadUByte()
+uint8 TSWorldPacket::ReadUInt8(uint32 index)
 {
-    uint8 _ubyte;
-    (*packet) >> _ubyte;
-    return _ubyte;
+    return packet->read<uint8>(index);
+}
+uint8 TSWorldPacket::ReadUInt8()
+{
+    uint8 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteUInt8(uint32 index, uint8 value)
+{
+    packet->put<uint8>(index, value);
+}
+void TSWorldPacket::WriteUInt8(uint8 value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns a signed 16-bit integer value from the [WorldPacket].
- *
- * @return int16 value
- */
-int16 TSWorldPacket::ReadShort()
+int16 TSWorldPacket::ReadInt16(uint32 index)
 {
-    int16 _short;
-    (*packet) >> _short;
-    return _short;
+    return packet->read<int16>(index);
+}
+int16 TSWorldPacket::ReadInt16()
+{
+    int16 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteInt16(uint32 index, int16 value)
+{
+    packet->put<int16>(index, value);
+}
+void TSWorldPacket::WriteInt16(int16 value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns an unsigned 16-bit integer value from the [WorldPacket].
- *
- * @return uint16 value
- */
-uint16 TSWorldPacket::ReadUShort()
+uint16 TSWorldPacket::ReadUInt16(uint32 index)
 {
-    uint16 _ushort;
-    (*packet) >> _ushort;
-    return _ushort;
+    return packet->read<uint16>(index);
+}
+uint16 TSWorldPacket::ReadUInt16()
+{
+    uint16 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteUInt16(uint32 index, uint16 value)
+{
+    packet->put<uint16>(index, value);
+}
+void TSWorldPacket::WriteUInt16(uint16 value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns a signed 32-bit integer value from the [WorldPacket].
- *
- * @return int32 value
- */
-int32 TSWorldPacket::ReadLong()
+int32 TSWorldPacket::ReadInt32(uint32 index)
 {
-    int32 _long;
-    (*packet) >> _long;
-    return _long;
+    return packet->read<int32>(index);
+}
+int32 TSWorldPacket::ReadInt32()
+{
+    int32 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteInt32(uint32 index, int32 value)
+{
+    packet->put<int32>(index, value);
+}
+void TSWorldPacket::WriteInt32(int32 value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns an unsigned 32-bit integer value from the [WorldPacket].
- *
- * @return uint32 value
- */
-uint32 TSWorldPacket::ReadULong()
+uint32 TSWorldPacket::ReadUInt32(uint32 index)
 {
-    uint32 _ulong;
-    (*packet) >> _ulong;
-    return _ulong;
+    return packet->read<uint32>(index);
+}
+uint32 TSWorldPacket::ReadUInt32()
+{
+    uint32 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteUInt32(uint32 index, uint32 value)
+{
+    packet->put<uint32>(index, value);
+}
+void TSWorldPacket::WriteUInt32(uint32 value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns a single-precision floating-point value from the [WorldPacket].
- *
- * @return float value
- */
+int64 TSWorldPacket::ReadInt64(uint32 index)
+{
+    return packet->read<int64>(index);
+}
+int64 TSWorldPacket::ReadInt64()
+{
+    int64 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteInt64(uint32 index, int64 value)
+{
+    packet->put<int64>(index, value);
+}
+void TSWorldPacket::WriteInt64(int64 value)
+{
+    (*packet) << value;
+}
+
+uint64 TSWorldPacket::ReadUInt64(uint32 index)
+{
+    return packet->read<uint64>(index);
+}
+uint64 TSWorldPacket::ReadUInt64()
+{
+    uint64 value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteUInt64(uint32 index, uint64 value)
+{
+    packet->put<uint64>(index, value);
+}
+void TSWorldPacket::WriteUInt64(uint64 value)
+{
+    (*packet) << value;
+}
+
+float TSWorldPacket::ReadFloat(uint32 index)
+{
+    return packet->read<float>(index);
+}
 float TSWorldPacket::ReadFloat()
 {
-    float _val;
-    (*packet) >> _val;
-    return _val;
+    float value;
+    (*packet) >> value;
+    return value;
+}
+void TSWorldPacket::WriteFloat(float value)
+{
+    (*packet) << value;
+}
+void TSWorldPacket::WriteFloat(uint32 index, float value)
+{
+    packet->put<float>(index, value);
 }
 
-/**
- * Reads and returns a double-precision floating-point value from the [WorldPacket].
- *
- * @return double value
- */
+double TSWorldPacket::ReadDouble(uint32 index)
+{
+    return packet->read<double>(index);
+}
 double TSWorldPacket::ReadDouble()
 {
-    double _val;
-    (*packet) >> _val;
-    return _val;
+    double value;
+    (*packet) >> value;
+    return value;
 }
-
-/**
- * Reads and returns an unsigned 64-bit integer value from the [WorldPacket].
- *
- * @return uint64 value : value returned as string
- */
-uint64 TSWorldPacket::ReadGUID()
+void TSWorldPacket::WriteDouble(uint32 index, double value)
 {
-    uint64 guid;
-    (*packet) >> guid;
-    return guid;
+    packet->put<double>(index, value);
+}
+void TSWorldPacket::WriteDouble(double value)
+{
+    (*packet) << value;
 }
 
-/**
- * Reads and returns a string value from the [WorldPacket].
- *
- * @return string value
- */
 TSString TSWorldPacket::ReadString()
 {
     std::string _val;
     (*packet) >> _val;
-     return TSString(_val);
+    return TSString(_val);
+}
+TSString TSWorldPacket::ReadString(uint32 index)
+{
+    std::string value = "";
+    for (int i = index; i < packet->size(); ++i)
+    {
+        uint8 byte = packet->read<uint8>(i);
+        if (byte == 0)
+        {
+            return TSString(value);
+        }
+    }
+    throw std::runtime_error(
+        "string at "+std::to_string(index)+" is never terminated"
+    );
+}
+void TSWorldPacket::WriteString(TSString value)
+{
+    (*packet) << value.std_str();
+}
+void TSWorldPacket::WriteString(uint32 index, TSString value)
+{
+    for (int i = 0; i < value.length(); ++i)
+    {
+        packet->put<uint8>(index + i, value.c_str()[i]);
+    }
+    packet->put<uint8>(index + value.length(), 0);
 }
 
-/**
- * Writes an unsigned 64-bit integer value to the [WorldPacket].
- *
- * @param uint64 value : the value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteGUID(uint64 guid)
-{
-    (*packet) << guid;
-}
-
-/**
- * Writes a string to the [WorldPacket].
- *
- * @param string value : the string to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteString(TSString __val)
-{
-    auto _val = __val._value;
-    (*packet) << _val;
-}
-
-/**
- * Writes a signed 8-bit integer value to the [WorldPacket].
- *
- * @param int8 value : the int8 value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteByte(int8 byte)
-{
-    (*packet) << byte;
-}
-
-/**
- * Writes an unsigned 8-bit integer value to the [WorldPacket].
- *
- * @param uint8 value : the uint8 value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteUByte(uint8 byte)
-{
-    (*packet) << byte;
-}
-
-/**
- * Writes a signed 16-bit integer value to the [WorldPacket].
- *
- * @param int16 value : the int16 value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteShort(int16 _short)
-{
-    (*packet) << _short;
-}
-
-/**
- * Writes an unsigned 16-bit integer value to the [WorldPacket].
- *
- * @param uint16 value : the uint16 value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteUShort(uint16 _ushort)
-{
-    (*packet) << _ushort;
-}
-
-/**
- * Writes a signed 32-bit integer value to the [WorldPacket].
- *
- * @param int32 value : the int32 value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteLong(int32 _long)
-{
-    (*packet) << _long;
-}
-
-/**
- * Writes an unsigned 32-bit integer value to the [WorldPacket].
- *
- * @param uint32 value : the uint32 value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteULong(uint32 _ulong)
-{
-    (*packet) << _ulong;
-}
-
-/**
- * Writes a 32-bit floating-point value to the [WorldPacket].
- *
- * @param float value : the float value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteFloat(float _val)
-{
-    (*packet) << _val;
-}
-
-/**
- * Writes a 64-bit floating-point value to the [WorldPacket].
- *
- * @param double value : the double value to be written to the [WorldPacket]
- */
-void TSWorldPacket::WriteDouble(double _val)
-{
-    (*packet) << _val;
-}
 
 TSWorldStatePacket::TSWorldStatePacket(WorldPackets::WorldState::InitWorldStates* ws)
     : m_ws(ws)

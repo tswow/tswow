@@ -3456,145 +3456,60 @@ declare class TSWorldPacket {
      */
     SetOpcode(opcode : uint32) : void
 
-    /**
-     * Reads and returns a signed 8-bit integer value from the [WorldPacket].
-     *
-     * @return int8 value
-     */
-    ReadByte() : int8
+    ReadInt8(): int8
+    ReadInt8(index: uint32): int8
+    WriteInt8(value: int8): void
+    WriteInt8(index: uint32, value: int8): void
 
-    /**
-     * Reads and returns an unsigned 8-bit integer value from the [WorldPacket].
-     *
-     * @return uint8 value
-     */
-    ReadUByte() : uint8
+    ReadUInt8(): uint8
+    ReadUInt8(index: uint32): uint8
+    WriteUInt8(value: uint8): void
+    WriteUInt8(index: uint32, value: uint8): void
 
-    /**
-     * Reads and returns a signed 16-bit integer value from the [WorldPacket].
-     *
-     * @return int16 value
-     */
-    ReadShort() : int16
+    ReadInt16(): int16
+    ReadInt16(index: uint32): int16
+    WriteInt16(value: int16): void
+    WriteInt16(index: int32, value: int16): void
 
-    /**
-     * Reads and returns an unsigned 16-bit integer value from the [WorldPacket].
-     *
-     * @return uint16 value
-     */
-    ReadUShort() : uint16
+    ReadUInt16(): uint16
+    ReadUInt16(index: uint32): uint16
+    WriteUInt16(value: uint16): void
+    WriteUInt16(index: uint32, value: uint16): void
 
-    /**
-     * Reads and returns a signed 32-bit integer value from the [WorldPacket].
-     *
-     * @return int32 value
-     */
-    ReadLong() : int32
+    ReadInt32(): int32
+    ReadInt32(index: uint32): int32
+    WriteInt16(value: int32): void
+    WriteInt16(index: int32, value: int32): void
 
-    /**
-     * Reads and returns an unsigned 32-bit integer value from the [WorldPacket].
-     *
-     * @return uint32 value
-     */
-    ReadULong() : uint32
+    ReadUInt32(): uint32
+    ReadUInt32(index: uint32): uint32
+    WriteUInt32(value: uint32): void
+    WriteUInt32(index: uint32, value: uint32): void
 
-    /**
-     * Reads and returns a single-precision floating-point value from the [WorldPacket].
-     *
-     * @return float value
-     */
-    ReadFloat() : float
+    ReadInt64(): int64
+    ReadInt64(index: uint64): int64
+    WriteInt16(value: int64): void
+    WriteInt16(index: int32, value: int64): void
 
-    /**
-     * Reads and returns a double-precision floating-point value from the [WorldPacket].
-     *
-     * @return double value
-     */
-    ReadDouble() : double
+    ReadUInt64(): uint64
+    ReadUInt64(index: uint32): uint64
+    WriteUInt64(value: uint64): void
+    WriteUInt64(index: uint32, value: uint64): void
 
-    /**
-     * Reads and returns an unsigned 64-bit integer value from the [WorldPacket].
-     *
-     * @return uint64 value : value returned as string
-     */
-    ReadGUID() : uint64
+    ReadFloat(): float
+    ReadFloat(index: uint32): float
+    WriteFloat(value: float): void
+    WriteFloat(index: uint32, value: float): void
 
-    /**
-     * Reads and returns a string value from the [WorldPacket].
-     *
-     * @return string value
-     */
-    ReadString() : string
+    ReadDouble(): double
+    ReadDouble(index: uint32): double
+    WriteDouble(value: double): void
+    WriteDouble(index: uint32, value: double): void
 
-    /**
-     * Writes an unsigned 64-bit integer value to the [WorldPacket].
-     *
-     * @param uint64 value : the value to be written to the [WorldPacket]
-     */
-    WriteGUID(guid : uint64) : void
-
-    /**
-     * Writes a string to the [WorldPacket].
-     *
-     * @param string value : the string to be written to the [WorldPacket]
-     */
-    WriteString(_val : string) : void
-
-    /**
-     * Writes a signed 8-bit integer value to the [WorldPacket].
-     *
-     * @param int8 value : the int8 value to be written to the [WorldPacket]
-     */
-    WriteByte(byte : int8) : void
-
-    /**
-     * Writes an unsigned 8-bit integer value to the [WorldPacket].
-     *
-     * @param uint8 value : the uint8 value to be written to the [WorldPacket]
-     */
-    WriteUByte(byte : uint8) : void
-
-    /**
-     * Writes a signed 16-bit integer value to the [WorldPacket].
-     *
-     * @param int16 value : the int16 value to be written to the [WorldPacket]
-     */
-    WriteShort(_short : int16) : void
-
-    /**
-     * Writes an unsigned 16-bit integer value to the [WorldPacket].
-     *
-     * @param uint16 value : the uint16 value to be written to the [WorldPacket]
-     */
-    WriteUShort(_ushort : uint16) : void
-
-    /**
-     * Writes a signed 32-bit integer value to the [WorldPacket].
-     *
-     * @param int32 value : the int32 value to be written to the [WorldPacket]
-     */
-    WriteLong(_long : int32) : void
-
-    /**
-     * Writes an unsigned 32-bit integer value to the [WorldPacket].
-     *
-     * @param uint32 value : the uint32 value to be written to the [WorldPacket]
-     */
-    WriteULong(_ulong : uint32) : void
-
-    /**
-     * Writes a 32-bit floating-point value to the [WorldPacket].
-     *
-     * @param float value : the float value to be written to the [WorldPacket]
-     */
-    WriteFloat(_val : float) : void
-
-    /**
-     * Writes a 64-bit floating-point value to the [WorldPacket].
-     *
-     * @param double value : the double value to be written to the [WorldPacket]
-     */
-    WriteDouble(_val : double) : void
+    ReadString(): string
+    ReadString(index: uint32): string
+    WriteString(value: string): void
+    WriteString(index: uint32, value: string): void
 }
 
 declare interface TSQuest {
