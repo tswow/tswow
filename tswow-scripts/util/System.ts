@@ -17,7 +17,7 @@
 import * as child_process from 'child_process';
 import * as readline from 'readline';
 import { wfs } from './FileSystem';
-import { FilePath, resfp } from './FileTree';
+import { FilePath } from './FileTree';
 
 /**
  * Contains functions for running external programs and managing processes and working directories.
@@ -126,28 +126,6 @@ export namespace wsys {
             str = data.toString();
         }
         return str;
-    }
-
-    /**
-     * Spawns a new child process in a specific working directory.
-     * Use this for long-running processes such as `tsc --w`.
-     * @param dirname Working directory to spawn the child process in
-     * @param program Command the child process should execute
-     * @param args Arguments to the child process
-     * @returns Child process handle
-     */
-    export function spawnIn(dirname: FilePath, program: string, args: string[] = []) {
-        return child_process.spawn(program, args, {stdio: 'pipe', cwd: resfp(dirname)});
-    }
-
-    /**
-     * Spawns a new child process.
-     * Use this for long-running processes such as `tsc --w`
-     * @param program Command the child process should execute
-     * @param args Arguments to the child process
-     */
-    export function spawn(program: string, args: string[] = []) {
-        return child_process.spawn(program, args, {stdio: 'pipe'});
     }
 
     /**
