@@ -7280,6 +7280,42 @@ declare namespace _hidden {
             , handled: TSMutable<bool>
         )=>void)
         OnAreaTrigger(callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
+        OnAddGameObject(callback: (
+              bg: TSBattleground
+            , type: uint32
+            , entry: TSMutable<uint32>
+            , goState: TSMutable<uint8>
+            , x: TSMutable<float>
+            , y: TSMutable<float>
+            , z: TSMutable<float>
+            , o: TSMutable<float>
+            , rot0: TSMutable<float>
+            , rot1: TSMutable<float>
+            , rot2: TSMutable<float>
+            , rot3: TSMutable<float>
+        )=>void);
+
+        OnAddCreature(callback: (
+              bg: TSBattleground
+            , type: uint32
+            , entry: TSMutable<uint32>
+            , x: TSMutable<float>
+            , y: TSMutable<float>
+            , z: TSMutable<float>
+            , o: TSMutable<float>
+            , respawnTime: TSMutable<uint32>
+        )=>void);
+
+        OnAddSpiritGuide(callback: (
+              bg: TSBattleground
+            , type: uint32
+            , entry: TSMutable<uint32>
+            , teamId: TSMutable<uint8>
+            , x: TSMutable<float>
+            , y: TSMutable<float>
+            , z: TSMutable<float>
+            , o: TSMutable<float>
+        )=>void);
     }
 
     export class BattlegroundID<T> {
@@ -7318,6 +7354,42 @@ declare namespace _hidden {
             , handled: TSMutable<bool>
         )=>void)
         OnAreaTrigger(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
+        OnAddGameObject(id: uint32, callback: (
+            bg: TSBattleground
+          , type: uint32
+          , entry: TSMutable<uint32>
+          , goState: TSMutable<uint8>
+          , x: TSMutable<float>
+          , y: TSMutable<float>
+          , z: TSMutable<float>
+          , o: TSMutable<float>
+          , rot0: TSMutable<float>
+          , rot1: TSMutable<float>
+          , rot2: TSMutable<float>
+          , rot3: TSMutable<float>
+      )=>void);
+
+      OnAddCreature(id: uint32, callback: (
+            bg: TSBattleground
+          , type: uint32
+          , entry: TSMutable<uint32>
+          , x: TSMutable<float>
+          , y: TSMutable<float>
+          , z: TSMutable<float>
+          , o: TSMutable<float>
+          , respawnTime: TSMutable<uint32>
+      )=>void);
+
+      OnAddSpiritGuide(id: uint32, callback: (
+            bg: TSBattleground
+          , type: uint32
+          , entry: TSMutable<uint32>
+          , teamId: TSMutable<uint8>
+          , x: TSMutable<float>
+          , y: TSMutable<float>
+          , z: TSMutable<float>
+          , o: TSMutable<float>
+      )=>void);
     }
 
     export class Packets {
