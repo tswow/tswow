@@ -268,7 +268,19 @@ export class Datascripts {
           dataset: Dataset
         , args: string[] = []
     ) {
-        // 1. Prepare dataset
+        // 1. Shutdown server/client
+        let skipsClient = args.includes('--inline-only')
+            || args.includes('--skip-client')
+            || args.includes('--readonly')
+        let skipsServer = (args.includes('--inline-only')
+            || args.includes('--skip-server')
+            || args.includes('--readonly')) && !args.includes('--rebuild')
+        let runningClients = skipsClient ? [] : [dataset.client]
+        let runningWorldservers = skipsServer ? [] : dataset.realms()
+        await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
+        await Promise.all(runningClients.map(x=>x.kill()));
+
+        // 2. Prepare dataset
         await dataset.setupClientData();
         if(args.includes('--rebuild')) {
             await dataset.setupDatabases('SOURCE',false);
@@ -286,17 +298,6 @@ export class Datascripts {
             }
         });
 
-        // 2. Shutdown server/client
-        let skipsClient = args.includes('--inline-only')
-            || args.includes('--skip-client')
-            || args.includes('--readonly')
-        let skipsServer = args.includes('--inline-only')
-            || args.includes('--skip-server')
-            || args.includes('--readonly')
-        let runningClients = skipsClient ? [] : [dataset.client]
-        let runningWorldservers = skipsServer ? [] : dataset.realms()
-        await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
-        await Promise.all(runningClients.map(x=>x.kill()));
 
         // 3. Run datascripts
         wsys.exec(
