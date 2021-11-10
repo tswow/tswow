@@ -70,6 +70,18 @@ export class Process {
         this._name = name;
     }
 
+    static spawn(name: string, program: string, args: string[], bufferSize: number = 1024) {
+        return new Process(name,bufferSize)
+            .showOutput(true)
+            .start(program,args)
+    }
+
+    static spawnIn(name: string, directory: string, program: string, args: string[], bufferSize: number = 1024) {
+        return new Process(name,bufferSize)
+            .showOutput(true)
+            .startIn(directory,program,args)
+    }
+
     isRunning() {
         return this._process !== undefined;
     }
