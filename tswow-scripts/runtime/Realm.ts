@@ -165,8 +165,8 @@ class RealmManager {
               NodeConfig.DatabaseSettings('characters',name)
             , 'characters'
         )
-        this.worldserver = new Process(`realm/${name}`);
-        this.worldserver.showOutput(false);
+        this.worldserver = new Process(`realm/${name}`)
+            .showOutput(true);
     }
 }
 

@@ -55,6 +55,11 @@ export class Process {
     private _onFail: ((err: Error)=>void)|undefined = undefined;
     private _isStopping: boolean = false;
 
+    private _lineBuffers = {
+        stderr: {value: '', idx: 0},
+        stdout: {value: '', idx: 0},
+    }
+
     /**
      * Creates a new process instance.
      * Call Process#start or Process#startIn to start it.
@@ -207,31 +212,71 @@ export class Process {
         });
     }
 
-    /**
-     * Handles output from the running process
-     */
-    private handleOutput(data: any, isError: boolean) {
-        if (this._outputShown) {
-            data.toString().split('\n').forEach(x=>{
-                if(isError) {
-                    term.error(termCustom(this._name),x)
-                } else {
-                    term.log(this._name as any,x)
-                }
-            })
+    private receiveLine(line: string, isError: boolean) {
+        if(this._outputShown) {
+            if(isError) {
+                term.error(termCustom(this._name),line)
+            } else {
+                term.log(termCustom(this._name),line)
+            }
         }
 
-        const strData = data.toString();
         const removedCharacters =
-            (this._curString.length + strData.length) - this._bufferSize;
+            (this._curString.length + line.length) - this._bufferSize;
         if (removedCharacters > 0) {
             this._curString = this._curString
                 .substring(removedCharacters, this._curString.length);
         }
-        this._curString = this._curString + strData;
-
-        this._listeners.forEach(x=>x(strData))
+        this._curString = this._curString + line;
+        this._listeners.forEach(x=>x(line))
         Object.values(this._waiters).forEach(x=>x(this._curString))
+    }
+
+    /**
+     * Handles output from the running process
+     */
+    private handleOutput(data: any, isError: boolean) {
+        // Separate newlined and non-newlined chunks
+        let str = (data.toString() as string).split('\r').join('');
+        let chunks = str.split('\n')
+        let newlinedChunks = chunks
+            .slice(0,chunks.length-1)
+            .filter(x=>x.split(/[ \t]/).join('').length>0);
+        // only the last chunk can be non-newlined
+        let lastChunk = chunks[chunks.length-1];
+        let hasLastChunk = lastChunk.split(/[ \t]/).join('').length > 0
+        // if the output contains no data, do not update the buffer counter
+        if(newlinedChunks.length == 0 && !hasLastChunk) {
+            return;
+        }
+
+        const buffer = this._lineBuffers[isError?'stderr':'stdout']
+        // we know we have data now, buffer will change so update idx
+        buffer.idx++;
+        if(newlinedChunks.length > 0) {
+            newlinedChunks[0] = buffer.value+newlinedChunks[0]
+            buffer.value = ''
+        }
+        newlinedChunks.forEach(x=>this.receiveLine(x, isError));
+
+        if(hasLastChunk) {
+            buffer.value+=lastChunk;
+
+            // if we don't receive more updates within 100ms,
+            // empty the buffer so the user doesn't miss out on any
+            // information
+
+            // keep idx, we only flush from here if no new updates were
+            // received
+
+            const curIdx = buffer.idx;
+            setTimeout(()=>{
+                if(buffer.idx === curIdx) {
+                    this.receiveLine(buffer.value,isError);
+                    buffer.value = ""
+                }
+            },100)
+        }
     }
 
     /**
