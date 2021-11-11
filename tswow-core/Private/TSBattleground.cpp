@@ -314,6 +314,7 @@ TSBattlegroundPlayer TSBattleground::GetPlayer(uint64 guid)
             );
         }
     }
+    return TSBattlegroundPlayer(*this,0,0,0);
 }
 
 void TSBattleground::SetStartPosition(uint32 teamid, float x, float y, float z, float o)
@@ -449,7 +450,7 @@ uint32 TSBattleground::GetPlayerCount(uint32 team)
     }
     else
     {
-        bg->GetPlayersCountByTeam(team);
+        return bg->GetPlayersCountByTeam(team);
     }
 }
 uint32 TSBattleground::GetAlivePlayerCount(uint32 team)
@@ -461,7 +462,7 @@ uint32 TSBattleground::GetAlivePlayerCount(uint32 team)
     }
     else
     {
-        bg->GetAlivePlayersCountByTeam(team);
+        return bg->GetAlivePlayersCountByTeam(team);
     }
 }
 TSCreature TSBattleground::AddCreature(uint32 entry, uint32 type, float x, float y, float z, float o, uint32 respawnTime, uint32 teamId)
