@@ -1726,7 +1726,7 @@ export class Emitter {
             // @tswow-end
 
             const effectiveType = firstType || this.resolver.getOrResolveTypeOfAsTypeNode(firstInitializer);
-            const useAuto = autoAllowed && !!(firstInitializer);
+            const useAuto = false;
             this.processPredefineType(effectiveType);
             if (!forceCaptureRequired) {
                 this.processType(effectiveType, useAuto);
