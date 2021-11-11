@@ -3076,7 +3076,17 @@ export class Emitter {
         const isTheSameTypes = caseExpressions.every(
             ce => this.resolver.typesAreTheSame(this.resolver.getOrResolveTypeOfAsTypeNode(ce), firstTypeNode));
 
+        const areBothNumbers = caseExpressions.every(
+            ce => this.resolver.getOrResolveTypeOf(ce).flags === firstType.flags
+        )
+
         if (isTheSameTypes && isAllStatic && !this.resolver.isStringType(firstType)) {
+            this.processSwitchStatementForBasicTypesInternal(node);
+            return;
+        }
+
+        // hack: this could be a more serious issue with the type resolver
+        if(areBothNumbers) {
             this.processSwitchStatementForBasicTypesInternal(node);
             return;
         }
