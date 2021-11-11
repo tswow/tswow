@@ -1730,11 +1730,14 @@ export class Emitter {
                 && !!(firstInitializer)
                 && !firstType
             let dictMatch = firstInitializer.getText().match(/^MakeDictionary(<.+>) *\(/)
+            let arrMatch = firstInitializer.getText().match(/^MakeArray(<.+>) *\(/)
             if(declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
             }
             if(!useAuto && dictMatch) {
                 this.writer.writeString(`TSDictionary${dictMatch[1]} `)
+            } else if(arrMatch) {
+                this.writer.writeString(`TSArray${arrMatch[1]} `)
             } else {
                 this.processPredefineType(effectiveType);
                 if (!forceCaptureRequired) {
@@ -3427,17 +3430,19 @@ export class Emitter {
         }
 
         if (!isTuple) {
-            this.writer.writeString('TSArray<');
-            if (elementsType) {
-                this.processType(elementsType, false);
-            } else {
-                this.error(
-                      `Cannot resolve TSArray type parameter, `
-                    + `try writing it out explicitly`
-                ,node);
+            let isMakeArray = node.parent.getText().startsWith('MakeArray')
+            if(!isMakeArray) {
+                this.writer.writeString('TSArray<');
+                if (elementsType) {
+                    this.processType(elementsType, false);
+                } else {
+                    this.error(
+                        `Cannot resolve TSArray type parameter, `
+                        + `try writing it out explicitly`
+                    ,node);
+                }
+                this.writer.writeString('>');
             }
-
-            this.writer.writeString('>');
         } else {
             this.processType(type);
         }

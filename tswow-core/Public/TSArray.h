@@ -313,3 +313,5 @@ public:
     return str + JSTR("]");
   }
 };
+
+#define MakeArray TSArray

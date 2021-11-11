@@ -7893,6 +7893,7 @@ declare function StopGameEvent(event_id: uint16): void
 // end of Global.h
 
 declare function MakeDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
+declare function MakeArray<T>(obj: T[]): TSArray<T>
 
 declare function GetID(table: string, mod: string, name: string);
 declare function GetIDRange(table: string, mod: string, name: string);
