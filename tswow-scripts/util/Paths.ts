@@ -392,6 +392,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                     let paths: WDirectory[] = [self]
                     self.iterate('RECURSE','DIRECTORIES','FULL',node=>{
                         if(node.endsWith('.git')) return 'ENDPOINT'
+                        if(node.basename().get() === 'build') return 'ENDPOINT'
                         if(endpoints.includes(node.basename().get())) return 'ENDPOINT'
                         if(node.toDirectory()
                                .readDir('ABSOLUTE')
