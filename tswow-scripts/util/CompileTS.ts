@@ -26,6 +26,7 @@ export function watchTsc(tscEntry: string, dir: FilePath, name: TerminalCategory
     if(tscWatchers[resfp(dir)]) return;
     term.log(name,`Starting TSC watcher in ${dir}`)
     let watcher = tscWatchers[resfp(dir)] = new Process(getTerminalCategory(name))
+    let last = "";
     watcher
         .showOutput(false)
         .onMessage(output=>{
@@ -35,12 +36,15 @@ export function watchTsc(tscEntry: string, dir: FilePath, name: TerminalCategory
                 // massive hack but tsc outputs bizarre
                 // invisible characters that can't be regex'd
                 // causing empty lines
-                .filter(x=>x.length>10)
+                .filter(x=>x.length>10 && ! x.includes('File change detected'))
                 .forEach(x=>{
                     // remove time header, nobody cares
                     if(x.match(/\d+:\d+:\d+ .+? - /)) {
                         x = x.split('- ').slice(1).join('- ')
                     }
+
+                    if(x == last) return;
+                    last = x;
 
                     if(x.includes('Found 0 errors')) {
                         term.success(name,x)
