@@ -5,7 +5,7 @@ import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
-import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -256,7 +256,7 @@ export class Datascripts {
         )
         .addAlias('datascript').addAlias('data')
 
-        ClearCommand.addCommand(
+        CleanCommand.addCommand(
               'datascripts'
             , 'modules'
             , ''

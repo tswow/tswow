@@ -6,7 +6,7 @@ import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
 import { Timer } from "../util/Timer";
-import { BuildCommand, ClearCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
 import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
@@ -234,7 +234,7 @@ export class Livescripts {
             }
         ).addAlias('scripts').addAlias('script').addAlias('livescript')
 
-        ClearCommand.addCommand(
+        CleanCommand.addCommand(
             'livescripts'
           , 'modules'
           , ''

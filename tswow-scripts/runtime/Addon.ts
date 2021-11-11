@@ -20,7 +20,7 @@ import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
-import { BuildCommand, ClearCommand, CreateCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, CleanCommand, CreateCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -370,7 +370,7 @@ export class Addon {
             }
         )
 
-        ClearCommand.addCommand(
+        CleanCommand.addCommand(
             'addon'
           , 'modules'
           , ''

@@ -22,7 +22,7 @@ import { Timer } from "../util/Timer";
 import { Addon } from "./Addon";
 import { AuthServer } from "./AuthServer";
 import { Client } from "./Client";
-import { ClearCommand } from "./CommandActions";
+import { CleanCommand } from "./CommandActions";
 import { Crashes } from "./Crashes";
 import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
@@ -58,7 +58,7 @@ export async function main() {
         NodeConfig.TerminalNames,
     )
     term.log('mysql',`TSWoW started up in ${timer.timeSec()}s`)
-    ClearCommand.addCommand('filecache','','',args=>{
+    CleanCommand.addCommand('filecache','','',args=>{
         ipaths.bin.changes.remove();
         term.log('mysql',`Removed ${ipaths.bin.changes.abs().get()}`)
     });
