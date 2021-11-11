@@ -1726,22 +1726,28 @@ export class Emitter {
             // @tswow-end
 
             const effectiveType = firstType || this.resolver.getOrResolveTypeOfAsTypeNode(firstInitializer);
-            const useAuto = false;
-            this.processPredefineType(effectiveType);
-            if (!forceCaptureRequired) {
-                this.processType(effectiveType, useAuto);
+            const useAuto = autoAllowed
+                && !!(firstInitializer)
+                && !firstType
+            let dictMatch = firstInitializer.getText().match(/^MakeDictionary(<.+>) *\(/)
+            if(!useAuto && dictMatch) {
+                this.writer.writeString(`TSDictionary${dictMatch[1]} `)
             } else {
-                // TODO: Not sure if something needs to be done here
-                if (useAuto||true) {
-                    this.writer.writeString('auto');
-                } else {
-                    this.writer.writeString('shared<');
+                this.processPredefineType(effectiveType);
+                if (!forceCaptureRequired) {
                     this.processType(effectiveType, useAuto);
-                    this.writer.writeString('>');
+                } else {
+                    // TODO: Not sure if something needs to be done here
+                    if (useAuto) {
+                        this.writer.writeString('auto');
+                    } else {
+                        this.writer.writeString('shared<');
+                        this.processType(effectiveType, useAuto);
+                        this.writer.writeString('>');
+                    }
                 }
+                this.writer.writeString(' ');
             }
-
-            this.writer.writeString(' ');
         }
 
 
