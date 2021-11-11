@@ -66,6 +66,7 @@ export namespace AuthServer {
     export async function initialize() {
         if(NodeConfig.AutoStartAuthServer) {
             connection = new Connection(NodeConfig.DatabaseSettings('auth'),'auth');
+            await connection.connect();
             await mysql.installAuth(connection);
             await start(NodeConfig.DefaultBuildType);
         }

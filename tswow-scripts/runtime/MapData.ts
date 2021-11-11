@@ -93,7 +93,7 @@ export namespace MapData {
     ) {
       wsys.execIn(
           dataset.path.get()
-        ,   ipaths.bin.trinitycore.build.pick(type).mmaps_generator.get()
+        ,   ipaths.bin.trinitycore.build.pick(type).mmaps_generator.abs().get()
           + (maps.length>0?` --maps=${maps.join(',')}`:'')
           + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
         , 'inherit'

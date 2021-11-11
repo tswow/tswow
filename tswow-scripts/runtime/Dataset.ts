@@ -132,6 +132,7 @@ export class Dataset {
     }
 
     async setupDatabases(type: 'DEST'|'SOURCE'|'BOTH', force: boolean) {
+        await this.connect();
         if(type === 'SOURCE' || type === 'BOTH') {
             await this.setupDatabase(this.worldSource, force);
         }

@@ -44,7 +44,6 @@ export class Connection {
      */
     constructor(cfg: DatabaseSettings, type: DatabaseType) {
         this.cfg = cfg;
-        this.connect();
         this.type = type;
     }
 

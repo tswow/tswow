@@ -323,7 +323,7 @@ export class Realm {
     }
 
     async connect() {
-        if(!this.characters.isConnected) await this.characters.connect()
+        await this.characters.connect()
         await this.config.Dataset.connect();
         await mysql.installCharacters(this.characters);
     }
