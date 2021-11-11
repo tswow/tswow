@@ -1730,6 +1730,9 @@ export class Emitter {
                 && !!(firstInitializer)
                 && !firstType
             let dictMatch = firstInitializer.getText().match(/^MakeDictionary(<.+>) *\(/)
+            if(declarationList.getText().startsWith('const')) {
+                this.writer.writeString('const ')
+            }
             if(!useAuto && dictMatch) {
                 this.writer.writeString(`TSDictionary${dictMatch[1]} `)
             } else {
