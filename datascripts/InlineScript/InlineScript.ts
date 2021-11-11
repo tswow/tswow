@@ -3,6 +3,7 @@ import md5 from "md5";
 import path from "path";
 import ts from "typescript";
 import { finish } from "wotlkdata";
+import { datasetName } from "wotlkdata/wotlkdata/Settings";
 import { getEventName, getEventNames } from "./InlineEventNames";
 import { getTSChildren } from "./InlineTSHelpers";
 
@@ -134,7 +135,7 @@ export function getAny(owner: any, prefix: string,type: string) {
 
 finish('inline-scripts',()=>{
     Object.entries(files).forEach(([mod,files])=>{
-        let inlinePath = path.join(mod,'livescripts','build','inline');
+        let inlinePath = path.join(mod,'livescripts','build',datasetName,'inline');
         // update deleted scripts
         if(fs.existsSync(inlinePath)) {
             fs.readdirSync(inlinePath).forEach(file=>{
