@@ -165,6 +165,10 @@ export class Datascripts {
         this.config = new DatascriptsConfig(this.path.datascripts_conf.get())
     }
 
+    exists() {
+        return this.path.exists()
+    }
+
     symlink() {
         this.path.build.package_json.writeJson(lib_package_json(this.mod.fullName))
         if(!ipaths.node_modules.join(this.mod.fullName).exists()) {

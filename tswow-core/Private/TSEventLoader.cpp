@@ -76,6 +76,33 @@ uint32_t GetReloads(uint32_t modid)
     return reloads[modid];
 }
 
+namespace {
+    std::string getDatasetName(std::string const& dataDir)
+    {
+        boost::filesystem::path dataDirPath = dataDir;
+        std::string curName = dataDirPath.filename().string();
+        dataDirPath = dataDirPath.parent_path();
+        while (dataDirPath.has_parent_path())
+        {
+            dataDirPath = dataDirPath.parent_path();
+            std::string curDir = dataDirPath.filename().string();
+            if (curDir == "modules") {
+                return curName;
+            }
+            else {
+                curName = curDir + std::string(".") + curName;
+            }
+        }
+        throw std::runtime_error("DataDir is not in a valid submodule: " + dataDir);
+    }
+
+    std::string getLibraryDataset(std::string const& libName)
+    {
+        size_t name_offset = libName.find("scripts_tswow_") + strlen("scripts_tswow_");
+        return libName.substr(name_offset, libName.find("_", name_offset) - name_offset);
+    }
+}
+
 bool TSShouldLoadEventHandler(boost::filesystem::path const& name)
 {
     std::string name_str = name.filename().string();
@@ -83,26 +110,10 @@ bool TSShouldLoadEventHandler(boost::filesystem::path const& name)
     {
         return false;
     }
-    auto name_offset = name_str.find("scripts_tswow_")+strlen("scripts_tswow_");
-    name_str = name_str.substr(name_offset,name_str.rfind(".")-name_offset);
-    std::string data_dir =
-        sConfigMgr->GetStringDefault("DataDir","../../datasets/default");
-    auto modulesfile =
-        boost::filesystem::path(data_dir) / boost::filesystem::path("modules.txt");
-    std::ifstream f(modulesfile.string().c_str());
-    if(!f)
-    {
-        return true;
-    }
-    std::string line;
-    while (std::getline(f, line))
-    {
-        if(line == name_str)
-        {
-            return true;
-        }
-    }
-    return false;
+    auto res = getLibraryDataset(name_str) == getDatasetName(
+        sConfigMgr->GetStringDefault("DataDir", "")
+    );
+    return res;
 }
 
 TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName)

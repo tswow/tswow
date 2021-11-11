@@ -35,13 +35,13 @@ file (GLOB_RECURSE transpiler_files
 )
 filter_items(transpiler_files "/../")
 file (GLOB_RECURSE source_files
-    "../../*.cpp"
-    "../../*.c"
-    "../../*.h"
-    "../../*.hpp"
-    "../../*.ipp"
-    "../../*.ts"
-    "../../../shared/*.ts"
+    "../../../*.cpp"
+    "../../../*.c"
+    "../../../*.h"
+    "../../../*.hpp"
+    "../../../*.ipp"
+    "../../../*.ts"
+    "../../../../shared/*.ts"
 )
 filter_items(source_files "build/cpp/../../build/cpp")
 filter_items(source_files "/lib/")
@@ -58,8 +58,8 @@ target_include_directories(${buildModule} PUBLIC ${ipaths.bin.include.abs('FORWA
 file (GLOB headers "${ipaths.bin.include.abs('FORWARD')}/*.h")
 
 # root livescript headers
-target_include_directories(${buildModule} PUBLIC ../../)
-file (GLOB headers "../../*.h")
+target_include_directories(${buildModule} PUBLIC ../../../)
+file (GLOB headers "../../../*.h")
 
 # ts livescript headers
 target_include_directories(${buildModule} PUBLIC ./livescripts)
@@ -70,5 +70,5 @@ add_definitions(
     -wd4251
     -wd4275
 )
-include({CMAKE_CURRENT_SOURCE_DIR}/../../../CMakeLists.txt OPTIONAL)`
+include({CMAKE_CURRENT_SOURCE_DIR}/../../../../CMakeLists.txt OPTIONAL)`
 }

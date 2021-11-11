@@ -107,19 +107,23 @@ export function LivescriptsDirectory(inPath: string) {
         tsconfig: file('tsconfig.json'),
         /** @todo: how to handle these names? */
         entry: file(`${modname}-scripts.ts`),
-        built_libs: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(type)=>({
-            // todo: linux
-            library: custom((value)=>new WFile(mpath(wfs.dirname(value),'build','lib',type,fullModName+'.dll'))),
-            pdb: custom((value)=>new WFile(mpath(wfs.dirname(value),'build','lib',type,fullModName+'.pdb'))),
-        })),
         built_library: file(``),
         built_pdb: file(``),
         build: dir({
-            cpp: dir({
-                livescripts: dir({}),
-                cmakelists_txt: file('CMakeLists.txt'),
-            }),
-            lib: dir({})
+            dataset: dyndir(dataset=>({
+                built_libs: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(type)=>({
+                    // todo: linux
+                    library: custom((value)=>
+                        new WFile(mpath(wfs.dirname(value),'lib',type,fullModName+'.dll'))),
+                    pdb: custom((value)=>
+                        new WFile(mpath(wfs.dirname(value),'lib',type,fullModName+'.pdb'))),
+                })),
+                cpp: dir({
+                    livescripts: dir({}),
+                    cmakelists_txt: file('CMakeLists.txt'),
+                }),
+                lib: dir({})
+            })),
         })
     }));
 }

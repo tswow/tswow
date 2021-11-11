@@ -4,8 +4,12 @@ import { CodeWriter } from "./codewriter";
 import { TRANSPILER_CHANGES } from './version';
 import path = require('path');
 
+const datasetName = process.argv.find(x=>x.startsWith('--dataset=')).substring('--dataset='.length)
+
 export function writeLoader(outDir: string) {
     const header = new CodeWriter();
+    header.writeStringNewLine(`#include "TSAll.h"`)
+    header.writeStringNewLine(`#include "ModID.h"`)
     header.writeStringNewLine(`void WritePackets();`)
     header.writeStringNewLine(`void WriteTables();`)
     header.writeStringNewLine(`extern "C"`)
@@ -26,9 +30,9 @@ export function writeLoader(outDir: string) {
     const mainHeader = `${path.basename(process.cwd())}-scripts.h`
     const livescripts = path.join(process.cwd(),'livescripts');
     const loc1 = path.join(livescripts,mainHeader)
-    const loc2 = path.join(livescripts,'build','cpp','livescripts',mainHeader)
+    const loc2 = path.join(livescripts,'build',datasetName,'cpp','livescripts',mainHeader)
     const mainExists = fs.existsSync(loc1) || fs.existsSync(loc2)
-    const inlinePath = path.join(livescripts,'build','inline');
+    const inlinePath = path.join(livescripts,'build',datasetName,'inline');
 
     let inlines: string[] = fs.existsSync(inlinePath)
         ?  fs.readdirSync(inlinePath)
@@ -40,7 +44,7 @@ export function writeLoader(outDir: string) {
         cpp.writeStringNewLine(`#include "${mainHeader}"`)
     }
     inlines.forEach(x=>{
-        cpp.writeStringNewLine(`#include "build/inline/${x}.h"`)
+        cpp.writeStringNewLine(`#include "build/${datasetName}/inline/${x}.h"`)
     })
     cpp.writeStringNewLine(`#include "TCLoader.h"`);
     cpp.writeStringNewLine(`char const* GetScriptModuleRevisionHash()`)
