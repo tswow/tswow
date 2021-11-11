@@ -75,6 +75,18 @@ public:
     return this;
   }
 
+  template <typename M>
+  TSDictionary<K,M> map(std::function<M(K,V,TSDictionary<K,V>&)> p)
+  {
+    TSDictionary<K,M> dict;
+    typename std::map<K, V>::iterator it;
+    for (it = _map->begin(); it != _map->end(); ++it)
+    {
+      dict[it->first] = p(it->first, it->second, *this);
+    }
+    return dict;
+  }
+
   TSArray<K> keys()
   {
     TSArray<K> array;

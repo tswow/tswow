@@ -7654,6 +7654,8 @@ declare class TSDictionary<K,V> {
     reduce<T>(callback: (previous: T,key: K, value: V)=>T, initial: T) : T;
     // @ts-ignore
     filter(callback: (key: K, value: V)=>boolean): TSDictionary<K,V>
+    // @ts-ignore
+    map<M>(callback: (key: K, value: V, self: TSDictionary<K,V>)=>M)
 }
 
 declare class TSDBDict<K,V> {

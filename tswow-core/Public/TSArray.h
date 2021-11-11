@@ -199,6 +199,18 @@ public:
     (*vec)[index] = value;
   }
 
+  template<typename M>
+  TSArray<M> map(std::function<M(T, size_t, TSArray<T>&)> p)
+  {
+    std::vector<M> result;
+    result.resize(get_length());
+    for(int i=0; i < get_length(); ++i)
+    {
+      result[i] = p((*vec)[i], i, *this);
+    }
+    return TSArray<M>(result);
+  }
+
   TSArray<T> filter(std::function<bool(T, size_t, TSArray<T> &)> p)
   {
     std::vector<T> result;
