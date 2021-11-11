@@ -122,6 +122,10 @@ export class Dataset {
     protected async setupDatabase(db: Connection, force: boolean) {
         await this.connect();
         if(force || !await mysql.isWorldInstalled([db])) {
+            if(db === this.worldDest) {
+                await this.realms()
+                    .map(x=>x.worldserver.isRunning() ? x.worldserver.stop() : undefined)
+            }
             await mysql.rebuildDatabase(db,ipaths.bin.tdb.get());
         }
         await mysql.applySQLFiles(db,'world');
@@ -133,8 +137,6 @@ export class Dataset {
         }
 
         if(type === 'DEST' || type === 'BOTH') {
-            await this.realms()
-                .map(x=>x.worldserver.isRunning() ? x.worldserver.stop() : undefined)
             await this.setupDatabase(this.worldDest , force);
         }
     }
