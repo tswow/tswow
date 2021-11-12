@@ -90,4 +90,13 @@ export class DatasetConfig extends ConfigFile {
         ]
     })
     ClientPatchUseLocale: boolean = this.undefined()
+
+    @Property({
+          name: 'Emulator.Core'
+        , description: 'What emulator base to use for this dataset'
+        , examples: [
+            ['trinitycore','']
+        ]
+    })
+    EmulatorCore: string = this.undefined()
 }
