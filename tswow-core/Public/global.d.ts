@@ -7944,6 +7944,35 @@ declare class TSDatabaseResult {
     IsValid(): boolean;
 }
 
+declare interface TSPreparedStatementBase {
+    SetNull(index: uint8): this
+    SetUInt8(index: uint8, value: uint8): this
+    SetInt8(index: uint8, value: int8): this
+
+    SetUInt16(index: uint8, value: uint16): this
+    SetInt16(index: uint8, value: int16): this
+
+    SetUInt32(index: uint8, value: uint32): this
+    SetInt32(index: uint8, value: int32): this
+
+    SetUInt64(index: uint8, value: uint64): this
+    SetInt64(index: uint8, value: int64): this
+
+    SetFloat(index: uint8, value: float): this
+    SetDouble(index: uint8, value: double): this
+
+    SetString(index: uint8, value: float): this
+    Send(): TSDatabaseResult
+}
+
+declare interface TSPreparedStatement {
+    Query(): TSPreparedStatementBase;
+}
+
+declare interface TSPreparedStatementWorld extends TSPreparedStatement {}
+declare interface TSPreparedStatementCharacters extends TSPreparedStatement {}
+declare interface TSPreparedStatementAuth extends TSPreparedStatement {}
+
 declare class DBTable {
     saveQuery(): string;
     loadQuery(): string;
@@ -7963,6 +7992,10 @@ declare function CreateItem(entry: uint32, count: uint32): TSItem;
 declare function QueryWorld(query: string): TSDatabaseResult;
 declare function QueryCharacters(query: string): TSDatabaseResult;
 declare function QueryAuth(query: string): TSDatabaseResult;
+
+declare function PrepareWorldQuery(query: string): TSPreparedStatementWorld
+declare function PrepareCharactersQuery(query: string): TSPreparedStatementCharacters
+declare function PrepareAuthQuery(query: string): TSPreparedStatementAuth
 
 declare class TSDatabaseConnectionInfo {
     User(): string
