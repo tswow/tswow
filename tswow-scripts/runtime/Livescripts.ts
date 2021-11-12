@@ -108,6 +108,11 @@ export class Livescripts {
             // the error has already been printed
             throw new Error(`Failed to compile LiveScripts`);
         }
+
+        if(args.includes('--transpile-only')) {
+            return;
+        }
+
         this.mod.path.livescript_tsconfig_temp.remove();
 
         const SPECIAL_FILES = ['ModID','PacketCreator','TableCreator','TCLoader']
@@ -192,7 +197,7 @@ export class Livescripts {
 
         BuildCommand.addCommand(
               'livescripts'
-            , '(module|dataset)[]?'
+            , '(module|dataset)[]? --transpile-only'
             , 'Comiles and hotswaps livescripts for select modules or'
             + 'modules within a dataset'
             , args => {
