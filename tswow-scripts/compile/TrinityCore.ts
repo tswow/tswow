@@ -163,11 +163,11 @@ export namespace TrinityCore {
         }
 
         bpaths.TrinityCore.bin(type).scripts
-            .copy(ipaths.bin.trinitycore.build.pick(type).scripts)
+            .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).scripts)
 
         bpaths.TrinityCore.configs(type).iterate('FLAT','FILES','FULL',node=>{
             if(node.endsWith('.dll') || node.endsWith('.conf.dist') || node.endsWith('.pdb') || node.endsWith('.exe')) {
-                node.copy(ipaths.bin.trinitycore.build.pick(type).configs.join(node.basename()))
+                node.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).configs.join(node.basename()))
             }
         })
 
@@ -181,11 +181,11 @@ export namespace TrinityCore {
                 bpaths.mysql.find_subdir().lib.libmysql_dll,
                 bpaths.mysql.find_subdir().lib.libmysqld_dll
             ].forEach(x=>{
-                x.copy(ipaths.bin.trinitycore.build.pick(type).join(x.basename()))
+                x.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).join(x.basename()))
             })
 
             bpaths.openssl.libcrypto
-                .copy(ipaths.bin.trinitycore.build.pick(type).libcrypto)
+                .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).libcrypto)
         }
 
         // Move ts-module header files

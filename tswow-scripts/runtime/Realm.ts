@@ -271,7 +271,7 @@ export class Realm {
         this.config.Dataset.writeModulesTxt()
 
         // Generate .conf files
-        ipaths.bin.trinitycore.build.pick(type)
+        ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type)
             .iterate('FLAT','FILES','FULL',node=>{
                 if(!node.endsWith('.conf.dist')) return;
                 if(node.endsWith('authserver.conf.dist')) {
@@ -318,7 +318,7 @@ export class Realm {
         patchTCConfig(this.path.worldserver_conf.get(), 'DataDir',this.config.Dataset.path.abs().get())
 
         this.worldserver.startIn(this.path.get(),
-            wfs.absPath(ipaths.bin.trinitycore.build.pick(type).worldserver.get()),
+            wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()),
                 [`-c${wfs.absPath(this.path.worldserver_conf.get())}`]);
     }
 
@@ -335,7 +335,7 @@ export class Realm {
     }
 
     initialize() {
-        ipaths.bin.trinitycore.build.pick(NodeConfig.DefaultBuildType)
+        ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(NodeConfig.DefaultBuildType)
             .worldserver_conf_dist.copy(this.path.worldserver_conf_dist)
         this.path.worldserver_conf_dist
             .copyOnNoTarget(this.path.worldserver_conf)

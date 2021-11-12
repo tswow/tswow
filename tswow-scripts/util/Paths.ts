@@ -348,7 +348,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                 RequireStub_lua: file('RequireStub.lua'),
                 tsconfig_json: file('tsconfig.json')
             }),
-            trinitycore: dir({
+            core: dyndir(key=>({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({
                     scripts: dir({
                         moduleLib: dynfile((mod)=>isWindows()
@@ -368,7 +368,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                     libcrypto: file('libcrypto-1_1-x64.dll'),
                     configs: custom((i)=>generateTree(i,dir({}))),
                 }))
-            }),
+            })),
         }),
         coredata: dir({
             positions_txt: file('positions.txt'),

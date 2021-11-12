@@ -160,11 +160,12 @@ export class Livescripts {
         }
 
         builddir.built_libs.pick(buildType).library
-            .copy(ipaths.bin.trinitycore.build.pick(buildType).scripts.moduleLib(dataset.fullName+'_'+this.mod.fullName))
+            .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore)
+                .build.pick(buildType).scripts.moduleLib(dataset.fullName+'_'+this.mod.fullName))
 
         if(isWindows()) {
             builddir.built_libs.pick(buildType).pdb
-                .copy(ipaths.bin.trinitycore.build.pick(buildType).scripts.modulePdb(dataset.fullName+'_'+this.mod.fullName))
+                .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(buildType).scripts.modulePdb(dataset.fullName+'_'+this.mod.fullName))
         }
 
         term.log(this.logName(),`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)

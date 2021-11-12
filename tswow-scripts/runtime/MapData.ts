@@ -35,7 +35,7 @@ export namespace MapData {
     ) {
       dataset.path.dbc_temp.mkdir();
       wsys.exec(
-        `${ipaths.bin.trinitycore.build.pick(type).mapextractor.get()}`
+        `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).mapextractor.get()}`
           + ` -e 2`
           + ` -d 0`
           + ` -o ${dataset.path.dbc_temp.abs()}`
@@ -53,7 +53,7 @@ export namespace MapData {
         , tiles: number[] = []
     ) {
         wsys.exec(
-          `${ipaths.bin.trinitycore.build.pick(type).mapextractor.get()}`
+          `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).mapextractor.get()}`
             + ` -e 1`
             + ` -o ${dataset.path.abs()}`
             + ` -i ${dataset.client.path.abs()}`
@@ -70,7 +70,7 @@ export namespace MapData {
       //, maps: number[] = []
       //, tiles: number[] = []
     ) {
-      let prog = `${ipaths.bin.trinitycore.build.pick(type).vmap4extractor.get()}`
+      let prog = `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).vmap4extractor.get()}`
         + ` -o ${dataset.path.Buildings.abs()}`
         + ` -i ${dataset.client.path.Data.abs()}/`
       wsys.exec(prog,'inherit')
@@ -80,7 +80,7 @@ export namespace MapData {
         dataset: Dataset
       , type: BuildType = NodeConfig.DefaultBuildType
     ) {
-        let prog = `${ipaths.bin.trinitycore.build.pick(type).vmap4assembler.get()}`
+        let prog = `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).vmap4assembler.get()}`
           + ` ${dataset.path.Buildings.get()} ${dataset.path.vmaps.get()}`
         wsys.exec(prog,'inherit');
     }
@@ -93,7 +93,7 @@ export namespace MapData {
     ) {
       wsys.execIn(
           dataset.path.get()
-        ,   ipaths.bin.trinitycore.build.pick(type).mmaps_generator.abs().get()
+        ,   ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).mmaps_generator.abs().get()
           + (maps.length>0?` --maps=${maps.join(',')}`:'')
           + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
         , 'inherit'

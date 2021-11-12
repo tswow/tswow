@@ -37,10 +37,10 @@ export namespace AuthServer {
             throw new Error(`Something else started the auth server while it was stopping`);
         }
 
-        ipaths.bin.trinitycore.build.pick(type).authserver_conf_dist
+        ipaths.bin.core.pick('trinitycore').build.pick(type).authserver_conf_dist
             .copy(ipaths.coredata.authserver.authserver_conf.get()+'.dist')
 
-        ipaths.bin.trinitycore.build.pick(type).authserver_conf_dist
+        ipaths.bin.core.pick('trinitycore').build.pick(type).authserver_conf_dist
             .copyOnNoTarget(ipaths.coredata.authserver.authserver_conf)
 
         await query('DELETE FROM realmlist;');
@@ -54,7 +54,7 @@ export namespace AuthServer {
 
         authserver.startIn(ipaths.coredata.authserver.get(),
             wfs.absPath(
-                  ipaths.bin.trinitycore.build.pick(type).authserver.get())
+                  ipaths.bin.core.pick('trinitycore').build.pick(type).authserver.get())
                 , [`-c${wfs.absPath(
                     ipaths.coredata.authserver.authserver_conf.get()
                 )}`]
