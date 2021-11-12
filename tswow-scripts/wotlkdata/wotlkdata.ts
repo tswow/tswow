@@ -53,9 +53,7 @@ let profiling: {[key: string]: number} = {}
 async function applyStage(collection: PatchCollection) {
     for (const {name, callback} of collection) {
         try {
-            console.log("DOing name ",name)
             await callback();
-            console.log("Did name ",name)
         } catch (error) {
             console.error(`Error in patch ${name}:`, error);
             process.exit(4);
