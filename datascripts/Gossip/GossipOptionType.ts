@@ -109,6 +109,13 @@ export class GossipLinkCell extends OptionCellBase {
         callback(gossip);
         return this.owner;
     }
+
+    setNewStatic(mod: string, id: string, callback: (gossip: Gossip)=>void) {
+        let gossip = GossipRegistry.createStatic(mod,id);
+        this.setLink(gossip.ID)
+        callback(gossip);
+        return this.owner;
+    }
 }
 
 export class OptionCellPlain extends OptionCellBase {
