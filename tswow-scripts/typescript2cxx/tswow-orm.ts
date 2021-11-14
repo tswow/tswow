@@ -92,7 +92,16 @@ type TableType = typeof TableTypes[number]
 type FieldType = keyof typeof DBFiledTypes
 
 class Field {
-    name: string;
+    private name: string;
+
+    dbName() {
+        return this.name.toLowerCase()
+    }
+
+    memoryName() {
+        return this.name;
+    }
+
     type: FieldType;
     initialization: string;
     isPrimaryKey: boolean;
@@ -148,7 +157,7 @@ class Entry {
     }
 
     pks() { return this.fields.filter(x=>x.isPrimaryKey)}
-    pksNoIndex() { return this.pks().filter(x=>x.name !== '__index')}
+    pksNoIndex() { return this.pks().filter(x=>x.memoryName() !== '__index')}
     nonPks() { return this.fields.filter(x=>!x.isPrimaryKey)}
 
     get tableName() { return this.className.toLowerCase()}
@@ -180,12 +189,12 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             `static ${statementName} LoadStatement = ${queryName}(JSTR(`)
         writer.IncreaseIntent()
         writer.writeStringNewLine(
-            `" SELECT ${entry.fields.map(x=>`\`${x.name}\``).join(',')}"`)
+            `" SELECT ${entry.fields.map(x=>`\`${x.dbName()}\``).join(',')}"`)
         writer.writeStringNewLine(
             `" FROM \`${entry.tableName}\`"`)
         writer.writeStringNewLine(
             `" WHERE ${entry
-                .pksNoIndex().map(x=>`\`${x.name}\` = ?`).join(' AND ')
+                .pksNoIndex().map(x=>`\`${x.dbName()}\` = ?`).join(' AND ')
             };"`)
         writer.DecreaseIntent()
         writer.writeStringNewLine("));")
@@ -198,7 +207,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         writer.IncreaseIntent()
         writer.writeStringNewLine(`" INSERT INTO \`${entry.tableName}\`"`)
         writer.writeStringNewLine(
-            `" (${entry.fields.map(x=>`\`${x.name}\``).join(',')})"`)
+            `" (${entry.fields.map(x=>`\`${x.dbName()}\``).join(',')})"`)
         writer.writeStringNewLine(`" VALUES "`)
         writer.writeStringNewLine(
             `" (${entry.fields.map(x=>'?').join(',')})"`)
@@ -206,7 +215,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         writer.writeStringNewLine(
             `" ${entry.fields
                     .filter(x=>!x.isPrimaryKey)
-                    .map(x=>`\`${x.name}\` = ?`)
+                    .map(x=>`\`${x.dbName()}\` = ?`)
                     .join(' , ')
                 };"`)
         writer.DecreaseIntent()
@@ -221,7 +230,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         writer.writeStringNewLine(`" DELETE FROM ${entry.tableName}"`)
         writer.writeStringNewLine(`" WHERE "`)
         writer.writeStringNewLine(
-            `" ${entry.pks().map(x=>`${x.name} = ?`).join(' AND ')}"`)
+            `" ${entry.pks().map(x=>`${x.dbName()} = ?`).join(' AND ')}"`)
         writer.DecreaseIntent()
         writer.writeStringNewLine(`));`);
     }
@@ -234,28 +243,28 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             `auto res = LoadStatement.Query()`)
         writer.IncreaseIntent()
         entry.pks().forEach((x,i)=>writer.writeStringNewLine(
-            `->${x.settings().setMethod}(${i},this->${x.name})`
+            `->${x.settings().setMethod}(${i},this->${x.memoryName()})`
         ))
         writer.writeStringNewLine(`->Send();`)
         writer.DecreaseIntent()
         writer.writeStringNewLine(`if(!res->GetRow()) return;`)
         entry.fields.forEach((x,i)=>{
             writer.writeStringNewLine(
-                `this->${x.name} = res->${x.settings().getMethod}(${i});`)
+                `this->${x.memoryName()} = res->${x.settings().getMethod}(${i});`)
         })
         writer.EndBlock();
         writer.writeStringNewLine()
     } else {
         writer.writeStringNewLine(
               `std::shared_ptr<DBContainer<${entry.className}>> ${entry.className}::Load`
-            + `(${entry.pksNoIndex().map(x=>`${x.type} ${x.name}`).join(', ')})`
+            + `(${entry.pksNoIndex().map(x=>`${x.type} ${x.memoryName()}`).join(', ')})`
         )
         writer.BeginBlock()
         loadStmnt()
         writer.writeStringNewLine(`auto res = LoadStatement.Query()`)
         writer.IncreaseIntent()
         entry.pksNoIndex().forEach((x,i)=>{
-            writer.writeStringNewLine(`->${x.settings().setMethod}(${i},${x.name})`)
+            writer.writeStringNewLine(`->${x.settings().setMethod}(${i},${x.memoryName()})`)
         })
         writer.writeStringNewLine(`->Send();`)
         writer.DecreaseIntent()
@@ -271,7 +280,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         )
         writer.writeStringNewLine(`value->m_isDirty = false;`)
         entry.fields.forEach((x,i)=>{
-            writer.writeStringNewLine(`value->${x.name} = res->${x.settings().getMethod}(${i});`)
+            writer.writeStringNewLine(`value->${x.memoryName()} = res->${x.settings().getMethod}(${i});`)
         })
         writer.writeStringNewLine(`container->Add(value);`)
         writer.EndBlock()
@@ -295,7 +304,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeStringNewLine(`auto res = Query${entry.dbCallName()}(`)
     writer.IncreaseIntent()
     writer.writeStringNewLine(`" SELECT "`)
-    writer.writeStringNewLine(`" ${entry.fields.map(x=>`\`${x.name}\``).join(',')}"`)
+    writer.writeStringNewLine(`" ${entry.fields.map(x=>`\`${x.dbName()}\``).join(',')}"`)
     writer.writeStringNewLine(`" FROM \`${entry.tableName}\`"`)
     writer.writeStringNewLine(`" " + sql.std_str() + ";"`)
     writer.DecreaseIntent()
@@ -320,7 +329,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.writeStringNewLine(`std::shared_ptr<${entry.className}> value = std::make_shared<${entry.className}>();`)
     entry.fields.forEach((x,i)=>{
         writer.writeStringNewLine(
-            `value->${x.name} = res->${x.settings().getMethod}(${i});`
+            `value->${x.memoryName()} = res->${x.settings().getMethod}(${i});`
         )
     })
     switch(entry.tableType) {
@@ -360,10 +369,10 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         entry.fields.forEach((x,i)=>{
             if(x.varCharSize > 0) {
                 writer.writeStringNewLine(
-                    `->${x.settings().setMethod}(${i},this->${x.name}.substring(0,${x.varCharSize}))`)
+                    `->${x.settings().setMethod}(${i},this->${x.memoryName()}.substring(0,${x.varCharSize}))`)
             } else {
                 writer.writeStringNewLine(
-                    `->${x.settings().setMethod}(${i},this->${x.name})`)
+                    `->${x.settings().setMethod}(${i},this->${x.memoryName()})`)
             }
         })
         // necessary for duplicate things
@@ -371,10 +380,10 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
             i = i+entry.fields.length
             if(x.varCharSize > 0) {
                 writer.writeStringNewLine(
-                    `->${x.settings().setMethod}(${i},this->${x.name}.substring(0,${x.varCharSize}))`)
+                    `->${x.settings().setMethod}(${i},this->${x.memoryName()}.substring(0,${x.varCharSize}))`)
             } else {
                 writer.writeStringNewLine(
-                    `->${x.settings().setMethod}(${i},this->${x.name})`)
+                    `->${x.settings().setMethod}(${i},this->${x.memoryName()})`)
             }
         })
         writer.writeStringNewLine(`->${lastCall};`)
@@ -419,7 +428,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.IncreaseIntent()
     entry.pks().forEach((x,i)=>
         writer.writeStringNewLine(
-            `->${x.settings().setMethod}(${i},this->${x.name})`)
+            `->${x.settings().setMethod}(${i},this->${x.memoryName()})`)
     )
     writer.writeStringNewLine(`->Send();`)
     writer.DecreaseIntent()
@@ -440,7 +449,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.BeginBlock()
     entry.fields.forEach(x=>{
         writer.writeStringNewLine(
-            `{"${x.name}","${x.dbType()}",${x.isPrimaryKey},${x.isAuto}},`)
+            `{"${x.dbName()}","${x.dbType()}",${x.isPrimaryKey},${x.isAuto}},`)
     })
     writer.EndBlock()
     writer.EndBlock()
@@ -570,7 +579,7 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     } else {
         writer.writeStringNewLine(
               `static std::shared_ptr<DBContainer<${entry.className}>> Load`
-            + `(${entry.pksNoIndex().map(x=>`${x.type} ${x.name}`).join(', ')});`
+            + `(${entry.pksNoIndex().map(x=>`${x.type} ${x.memoryName()}`).join(', ')});`
         )
     }
     if(entry.tableType === 'DBEntry') {
