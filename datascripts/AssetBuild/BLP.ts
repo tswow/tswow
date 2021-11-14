@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { FilePath } from "wotlkdata/util/FileTree";
+import { FilePath, resfp } from "wotlkdata/util/FileTree";
 import { wsys } from "wotlkdata/util/System";
 
 // linux?
@@ -23,5 +23,6 @@ export const BLP_EXE = process.platform === 'win32'
     : 'bin/BLPConverter/blpconverter.exe'
 
 export function generateBLP(png: FilePath) {
-    wsys.exec(`${BLP_EXE} "${png}"`,'inherit')
+    console.log(`Generating BLP for ${resfp(png)}`)
+    wsys.exec(`${BLP_EXE} "${png}"`,'ignore')
 }
