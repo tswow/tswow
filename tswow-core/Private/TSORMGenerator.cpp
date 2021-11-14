@@ -275,9 +275,9 @@ void DatabaseSpec::update()
                 + m_dbName +
                 "`.`"
                 + m_name +
-                "` CHANGE "
-                + eff.m_name + " " + eff.m_name +
-                " "
+                "` MODIFY `"
+                + eff.m_name +
+                "` "
                 + eff.m_typeName +
                 ( eff.m_autoIncrements ? " AUTO_INCREMENT" : "") +
                 " "
