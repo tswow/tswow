@@ -20,6 +20,10 @@
 #include "TSString.h"
 #include "TSConsole.h"
 #include "PreparedStatement.h"
+#include "WorldDatabase.h"
+#include "LoginDatabase.h"
+#include "CharacterDatabase.h"
+#include "QueryResult.h"
 #include <memory>
 #include <algorithm>
 
@@ -126,20 +130,19 @@ public:
     TSString GetString(int index) final { return TSString(field[index].GetString()); }
 };
 
-
 std::shared_ptr<TSDatabaseResult> QueryWorld(TSString query)
 {
-    return std::make_shared<TSDatabaseImpl>(WorldDatabase.Query(query.std_str().c_str()));
+    return std::make_shared<TSDatabaseImpl>(WorldDatabase.Query(query.c_str()));
 }
 
 std::shared_ptr<TSDatabaseResult> QueryCharacters(TSString query)
 {
-    return std::make_shared<TSDatabaseImpl>(CharacterDatabase.Query(query.std_str().c_str()));
+    return std::make_shared<TSDatabaseImpl>(CharacterDatabase.Query(query.c_str()));
 }
 
 std::shared_ptr<TSDatabaseResult> QueryAuth(TSString query)
 {
-    return std::make_shared<TSDatabaseImpl>(LoginDatabase.Query(query.std_str().c_str()));
+    return std::make_shared<TSDatabaseImpl>(LoginDatabase.Query(query.c_str()));
 }
 
 TSDatabaseConnectionInfo::TSDatabaseConnectionInfo(MySQLConnectionInfo const* info)
@@ -179,6 +182,22 @@ std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send()
 {
     return m_holder->Send(this);
 }
+
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send(TSWorldDatabaseConnection & con)
+{
+    return con.Query(this);
+}
+
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send(TSAuthDatabaseConnection & con)
+{
+    return con.Query(this);
+}
+
+std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send(TSCharactersDatabaseConnection & con)
+{
+    return con.Query(this);
+}
+
 TSPreparedStatementBase* TSPreparedStatementBase::SetNull(const uint8 index)
 {
     m_statement->setNull(index);
@@ -309,4 +328,116 @@ TC_GAME_API TSPreparedStatementCharacters PrepareCharactersQuery(TSString query)
 TC_GAME_API TSPreparedStatementAuth PrepareAuthQuery(TSString query)
 {
     return TSPreparedStatementAuth(query.std_str());
+}
+
+static QueryResult ResultFromSet(ResultSet* res)
+{
+    if (!res || !res->GetRowCount() || !res->NextRow())
+    {
+        delete res;
+        return QueryResult(nullptr);
+    }
+    return QueryResult(res);
+}
+
+static PreparedQueryResult PreparedResultFromSet(PreparedResultSet* res)
+{
+    if (!res || !res->GetRowCount())
+    {
+        delete res;
+        return PreparedQueryResult(nullptr);
+    }
+    return PreparedQueryResult(res);
+}
+
+// WorldDBConnection
+
+TSWorldDatabaseConnection::TSWorldDatabaseConnection(WorldDatabaseConnection* connection)
+    : m_connection(connection) {}
+
+std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::Query(TSString sql)
+{
+    return std::make_shared<TSDatabaseImpl>(ResultFromSet(m_connection->Query(sql.c_str())));
+}
+
+std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::Query(TSPreparedStatementBase * stmnt)
+{
+    auto res = std::make_shared<TSDatabaseResultPrepared>(
+        WorldDatabase.QueryCustomStatement(
+            stmnt->m_holder->m_id, stmnt->m_statement, m_connection
+        ));
+    delete stmnt->m_statement;
+    return res;
+}
+
+void TSWorldDatabaseConnection::Unlock()
+{
+    m_connection->Unlock();
+}
+
+
+// AuthDBConnection
+
+TSAuthDatabaseConnection::TSAuthDatabaseConnection(LoginDatabaseConnection* connection)
+    : m_connection(connection) {}
+
+std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSString sql)
+{
+    return std::make_shared<TSDatabaseImpl>(ResultFromSet(m_connection->Query(sql.c_str())));
+}
+
+std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSPreparedStatementBase* stmnt)
+{
+    auto res = std::make_shared<TSDatabaseResultPrepared>(
+        LoginDatabase.QueryCustomStatement(
+            stmnt->m_holder->m_id, stmnt->m_statement, m_connection
+        ));
+    delete stmnt->m_statement;
+    return res;
+}
+
+void TSAuthDatabaseConnection::Unlock()
+{
+    m_connection->Unlock();
+}
+
+
+// CharDBConnection
+
+TSCharactersDatabaseConnection::TSCharactersDatabaseConnection(CharacterDatabaseConnection* connection)
+    : m_connection(connection) {}
+
+std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::Query(TSString sql)
+{
+    return std::make_shared<TSDatabaseImpl>(ResultFromSet(m_connection->Query(sql.c_str())));
+}
+
+std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::Query(TSPreparedStatementBase* stmnt)
+{
+    auto res = std::make_shared<TSDatabaseResultPrepared>(
+        CharacterDatabase.QueryCustomStatement(
+            stmnt->m_holder->m_id, stmnt->m_statement, m_connection
+        ));
+    delete stmnt->m_statement;
+    return res;
+}
+
+void TSCharactersDatabaseConnection::Unlock()
+{
+    m_connection->Unlock();
+}
+
+TC_GAME_API TSWorldDatabaseConnection GetWorldDBConnection()
+{
+    return TSWorldDatabaseConnection(WorldDatabase.GetFreeConnection());
+}
+
+TC_GAME_API TSAuthDatabaseConnection GetAuthDBConnection()
+{
+    return TSAuthDatabaseConnection(LoginDatabase.GetFreeConnection());
+}
+
+TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
+{
+    return TSCharactersDatabaseConnection(CharacterDatabase.GetFreeConnection());
 }

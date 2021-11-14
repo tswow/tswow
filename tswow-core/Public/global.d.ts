@@ -7963,6 +7963,7 @@ declare interface TSPreparedStatementBase {
 
     SetString(index: uint8, value: float): this
     Send(): TSDatabaseResult
+    Send(connection: TSDatabaseConnection): TSDatabaseResult
 }
 
 declare interface TSPreparedStatement {
@@ -7973,12 +7974,108 @@ declare interface TSPreparedStatementWorld extends TSPreparedStatement {}
 declare interface TSPreparedStatementCharacters extends TSPreparedStatement {}
 declare interface TSPreparedStatementAuth extends TSPreparedStatement {}
 
-declare class DBTable {
-    saveQuery(): string;
-    loadQuery(): string;
-    save(): void;
-    load(): boolean;
+declare class DBEntry {
+    /**
+     * Writes this entry to the database
+     */
+    Save(): void;
+
+    /**
+     * Reads this entry from the database.
+     *
+     * If it does not yet exist in the database,
+     * this function does nothing.
+     */
+    Load(): boolean;
+
+    /**
+     * Removes this entry from the database immediately.
+     */
+    Delete(): void;
 }
+
+declare class DBArrayEntry {
+    /**
+     * Marks this entry to be saved to the database for the next
+     * call to DBContainer#Save on its owner.
+     */
+    MarkDirty();
+
+    /**
+     * Returns true if this entry will be saved to database on the
+     * next call to DBContainer#Save on its owner.
+     */
+    IsDirty();
+
+    /**
+     * Marks this entry for deletion. A deleted entry cannot
+     * be added to any other container.
+     */
+    Delete();
+
+    /**
+     * Returns true if this entry has been deleted from its owner.
+     */
+    IsDeleted();
+
+    /**
+     * Returns the internal Index used by this array entry.
+     *
+     * These cannot be controlled by the programmer at all,
+     * and should only be used for debugging.
+     */
+    Index(): uint64;
+}
+
+declare class DBContainer<T extends DBArrayEntry> {
+    /**
+     * Adds a new value to be owned by this container.
+     *
+     * - Adding a value belonging to another container is invalid and
+     *   will cause an exception. This applies even if the object
+     *   has been deleted from the old collection.
+     *
+     * @param value
+     */
+    Add(value: T);
+
+    /**
+     * Writes all dirty array members to the database, and
+     * removes all marked for deletion.
+     */
+    Save();
+    forEach(callback: (value: T)=>void)
+    reduce<M>(callback: (old: M, cur: T)=>M, init: M);
+    find(callback: (value: T)=>bool): T;
+
+    /**
+     * Converts this container into an array.
+     *
+     * - The generated array holds no ownership of the items contained
+     */
+    ToArray(): TSArray<T>
+    /**
+     * Counts all active (non-removed) entries currently in this container.
+     */
+    Size(): uint32
+    /**
+     * Counts all entries currently in memory, including those scheduled
+     * to be removed
+     *
+     * - Removed entries are freed from memory on "DBContainer#Save()"
+     */
+    TotalSize(): uint32
+}
+
+declare interface TSDatabaseConnection {
+    Query(sql: string): TSDatabaseResult
+    Query(stmnt: TSPreparedStatementBase)
+    Unlock();
+}
+
+declare interface TSWorldDatabaseConnection extends TSDatabaseConnection {}
+declare interface TSAuthDatabaseConnection extends TSDatabaseConnection {}
+declare interface TSCharactersDatabaseConnection extends TSDatabaseConnection {}
 
 declare class TSClass {
     stringify(indention?: int): string;
@@ -8103,7 +8200,9 @@ declare function WorldTable(classTarget: any)
 declare function CharactersTable(classTarget: any)
 declare function AuthTable(classTarget: any)
 declare function Field(fieldTarget: any, name: any)
+declare function FieldVarChar(chars: number): (target: any, name: any)=>void
 declare function PrimaryKey(pkTarget: any, name: any)
+declare function PrimaryKeyVarChar(chars: number): (target: any, name: any)=>void
 
 // File system functions
 declare function ReadFile(file: string, def?: string): string
@@ -8148,7 +8247,16 @@ declare function ToDouble(val: string): double;
 declare function ToFloat(val: string): float;
 
 declare function ModID(): uint32;
-declare function LoadRows<T extends DBTable>(cls: {new (...args: any[]): T}, query: string): TSArray<T>
+declare function LoadDBEntry<T extends DBEntry>(value: T): T
+declare function LoadDBArrayEntry<T extends DBArrayEntry>(cons: new(...args: any[])=>T, ...pks: any[]): DBContainer<T>
+declare function QueryDBEntry<T extends DBEntry>(con: new(...args: any[])=>T, sql: string): TSArray<T>
+declare function QueryDBArrayEntry<T extends DBArrayEntry>(cons: new(...args: any[])=>T): DBContainer<T>
+declare function DeleteDBEntry<T extends DBEntry>(con: new(...args: any[])=>T, sql: string): void
+declare function DeleteDBArrayEntry<T extends DBArrayEntry>(con: new(...args: any[])=>T, sql: string): void
+
+declare function GetWorldDBConnection(): TSWorldDatabaseConnection
+declare function GetAuthDBConnection(): TSAuthDatabaseConnection
+declare function GetCharactersDBConnection(): TSCharactersDatabaseConnection
 
 declare function GetSpellInfo(entry: uint32): TSSpellInfo
 declare function GetItemTemplate(entry: uint32): TSItemTemplate

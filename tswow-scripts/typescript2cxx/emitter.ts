@@ -4,7 +4,7 @@ import { CodeWriter } from './codewriter';
 import { Helpers } from './helpers';
 import { Preprocessor } from './preprocessor';
 import { IdentifierResolver } from './resolvers';
-import { handleClass, setBaseClass } from './tswow-orm';
+import { handleClass, handleClassImpl } from './tswow-orm';
 import { handleTSWoWOverride } from './tswow-override';
 import { handlePacketClass } from './tswow-packet';
 import { generateStringify } from './tswow-stringify';
@@ -865,6 +865,9 @@ export class Emitter {
     }
 
     processClassImplementationInternal(node: ts.ClassDeclaration, template?: boolean) {
+        if(this.isSource()) {
+            handleClassImpl(node,this.writer)
+        }
         for (const member of node.members) {
             this.processImplementation(member, template);
         }
@@ -1321,7 +1324,6 @@ export class Emitter {
                         }
 
                         this.writer.writeString('public ');
-                        setBaseClass(node, identifier.text);
                         this.writer.writeString(identifier.text);
                         this.processTemplateArguments(type, true);
                         // @tswow-end
@@ -1334,7 +1336,6 @@ export class Emitter {
                 });
             });
         } else {
-            setBaseClass(node, 'TSClass');
             this.writer.writeString(' : public TSClass');
         }
 
@@ -2013,6 +2014,7 @@ export class Emitter {
                 let start = type.pos == -1 ? 0 : Math.max(0,typeReference.getStart(typeReference.getSourceFile()));
                 const getObjectPre = type.pos == -1 ? "" : typeReference.getSourceFile().text.substring(start-10,start-1);
                 const onMessageIdPre = type.pos == -1 ? "" : typeReference.getSourceFile().text.substring(start-12,start-1);
+                const DBContainerPre = type.pos == -1 ? "" : typeReference.getSourceFile().text.substring(start-12,start-1);
 
                 const typeInfo = this.resolver.getOrResolveTypeOf(type);
                 const isTypeAlias = ((typeInfo && this.resolver.checkTypeAlias(typeInfo.aliasSymbol))
@@ -2048,6 +2050,7 @@ export class Emitter {
                     || isPrimitive
                     || getObjectPre == 'GetObject'
                     || onMessageIdPre == 'OnMessageID'
+                    || DBContainerPre == 'DBContainer'
                     || typeText.startsWith('TS')
 
                 if(!skipPointerIf) {

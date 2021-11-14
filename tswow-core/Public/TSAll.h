@@ -62,3 +62,5 @@
 #include "TSMutex.h"
 #include "TSJson.h"
 #include "TSOutfit.h"
+#include "TSORM.h"
+#include "TSORMGenerator.h"
