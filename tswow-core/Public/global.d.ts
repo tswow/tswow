@@ -2102,7 +2102,7 @@ declare interface TSCorpse extends TSWorldObject {
     SaveToDB() : void
 }
 
-declare interface TSEntityProvider {
+declare class TSEntityProvider {
     SetObject<T>(key: string, obj: T): T;
     HasObject(key: string): boolean;
     GetObject<T>(key: string, value: T): T;
@@ -3823,7 +3823,9 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     SetWeather(zoneId : uint32,weatherType : WeatherType,grade : float) : void
 }
 
-declare interface TSItem extends TSObject {
+declare class TSItem extends TSObject {
+    constructor();
+
     IsNull() : bool
 
     /**
@@ -5089,7 +5091,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     GetPlayer(guid: uint64): TSPlayer
 }
 
-declare interface TSObject extends TSEntityProvider {
+declare class TSObject extends TSEntityProvider {
     IsNull() : bool
     IsUnit() : bool
     IsCreature() : bool
