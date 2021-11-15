@@ -463,42 +463,52 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
 
 export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
     // 1. Check if it's a table class
-    if(!node.decorators) {
-        return;
-    }
-
+    let decorators = node.decorators || []
     const className = node.name.getText(node.getSourceFile());
     let entry: Entry|undefined = undefined;
-    node.decorators.forEach((x)=>{
+    decorators.forEach((x)=>{
         const ft = x.getText(x.getSourceFile());
         switch(ft) {
             case '@WorldTable':
-            entry = new Entry(className,'world');
-            break;
+                entry = new Entry(className,'world');
+                break;
             case '@AuthTable':
-            entry = new Entry(className,'auth');
-            break;
+                entry = new Entry(className,'auth');
+                break;
             case '@CharactersTable':
-            entry = new Entry(className,'characters');
-            break;
-            default:
+                entry = new Entry(className,'characters');
+                break;
         }
     });
-    if(!entry) {
-        return;
-    }
-    entries.push(entry);
 
     // 2. Figure out the type
     let tableType: TableType = TableTypes
-        .find(x=>node.heritageClauses[0].getText().endsWith(x));
-    if(!tableType) {
+        .find(x=>{
+            if(node.heritageClauses === undefined) {
+                return false;
+            }
+            return node.heritageClauses[0].getText().endsWith(x)
+        });
+    if(entry && !tableType) {
         throw new Error(
               `Database class ${node.name.getText()}`
             + ` does not extend either of ${TableTypes.join(' or ')}`
         )
     }
+    if(tableType && !entry) {
+        throw new Error(
+              `Database class ${node.name.getText()}`
+            + ` does not specify a valid database`
+            + ` (add @WorldTable/@AuthTable/@CharactersTable decorator)`
+        )
+    }
+
+    if(!tableType && !entry) {
+        return;
+    }
+
     entry.tableType = tableType
+    entries.push(entry);
 
     // 3. Write default constructor
     const constructor = node.members.find((x)=>x.kind==ts.SyntaxKind.Constructor) as ts.ConstructorDeclaration;
