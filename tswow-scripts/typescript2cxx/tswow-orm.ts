@@ -520,16 +520,16 @@ export function handleClass(node: ts.ClassDeclaration, writer: CodeWriter) {
         const member = memberRaw as ts.PropertyDeclaration;
 
         let varCharField = member.decorators
-            .map(x=>x.getText().match(/\@(FieldVarChar|PrimaryKeyVarChar)\((\d+)\)/))
+            .map(x=>x.getText().match(/\@(DBFieldVarChar|DBPrimaryKeyVarChar)\((\d+)\)/))
             .find(x=>x)
 
         let isVarChar = varCharField !== undefined;
-        let isPKString = varCharField && varCharField[1] == 'PrimaryKeyVarChar'
+        let isPKString = varCharField && varCharField[1] == 'DBPrimaryKeyVarChar'
 
         let isField = member.decorators
-            .find(x=>x.getText()=='@Field') !== undefined;
+            .find(x=>x.getText()=='@DBField') !== undefined;
         let isPK = isPKString || member.decorators
-            .find(x=>x.getText()=='@PrimaryKey') !== undefined;
+            .find(x=>x.getText()=='@DBPrimaryKey') !== undefined;
 
         if(!isField && !isPK && !isVarChar) {
             return;

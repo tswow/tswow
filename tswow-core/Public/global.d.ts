@@ -8228,10 +8228,10 @@ declare function AuthDatabaseInfo(): TSDatabaseConnectionInfo
 declare function WorldTable(classTarget: any)
 declare function CharactersTable(classTarget: any)
 declare function AuthTable(classTarget: any)
-declare function Field(fieldTarget: any, name: any)
-declare function FieldVarChar(chars: number): (target: any, name: any)=>void
-declare function PrimaryKey(pkTarget: any, name: any)
-declare function PrimaryKeyVarChar(chars: number): (target: any, name: any)=>void
+declare function DBField(fieldTarget: any, name: any)
+declare function DBFieldVarChar(chars: number): (target: any, name: any)=>void
+declare function DBPrimaryKey(pkTarget: any, name: any)
+declare function DBPrimaryKeyVarChar(chars: number): (target: any, name: any)=>void
 
 // File system functions
 declare function ReadFile(file: string, def?: string): string
