@@ -145,7 +145,7 @@ async function main() {
     );
 
     time(`Wrote SQL`);
-    if(!BuildArgs.NO_CLIENT) {
+    if(!BuildArgs.READ_ONLY) {
         saveDbc();
     }
     time(`Wrote DBC`);
