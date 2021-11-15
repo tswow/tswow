@@ -3453,6 +3453,73 @@ void TSPlayer::GossipSendMenu(uint32 npc_text,TSObject _sender,uint32 menu_id)
     player->PlayerTalkClass->SendGossipMenu(npc_text, sender->TS_GET_GUID());
 }
 
+void TSPlayer::GossipSendTextMenu(
+      TSString text
+    , TSObject sender
+    , uint32 language
+    , uint32 emote0
+    , uint32 emote0Delay
+    , uint32 emote1
+    , uint32 emote1Delay
+    , uint32 emote2
+    , uint32 emote2Delay
+    , uint32 menu_id
+) {
+    GossipSendTextMenuGendered(
+          text
+        , JSTR("")
+        , sender
+        , language
+        , emote0, emote0Delay
+        , emote1, emote1Delay
+        , emote2, emote2Delay
+        , menu_id
+    );
+}
+
+void TSPlayer::GossipSendTextMenuGendered(
+      TSString male
+    , TSString female
+    , TSObject sender
+    , uint32 language
+    , uint32 emote0
+    , uint32 emote0Delay
+    , uint32 emote1
+    , uint32 emote1Delay
+    , uint32 emote2
+    , uint32 emote2Delay
+    , uint32 menu_id
+) {
+    constexpr uint32 CUSTOM_GOSSIP_TEXT = 0x7fffffff;
+    WorldPacket packet(SMSG_NPC_TEXT_UPDATE
+        , 4                                   // text id
+        + (8*4*MAX_GOSSIP_TEXT_OPTIONS)       // emotes/languages
+        + ((MAX_GOSSIP_TEXT_OPTIONS-1)*2)     // empty strings
+        + male.get_length() + 1               // male message + null
+        + female.get_length() + 1             // female message + null
+    );
+    packet << CUSTOM_GOSSIP_TEXT;
+    packet << uint32(100);
+    packet << male.std_str();
+    packet << female.std_str();
+    packet << language;
+    packet << emote0;
+    packet << emote0Delay;
+    packet << emote1;
+    packet << emote1Delay;
+    packet << emote2;
+    packet << emote2Delay;
+    for (size_t i = 0; i < MAX_GOSSIP_TEXT_OPTIONS - 1; ++i)
+    {
+        packet << 0;
+        packet << "";
+        packet << "";
+        for (size_t j = 0; j < 7; ++j) packet << uint32(0);
+    }
+    player->GetSession()->SendPacket(&packet);
+    GossipSendMenu(CUSTOM_GOSSIP_TEXT, sender, menu_id);
+}
+
 /**
  * Clears the [Player]s current gossip item list.
  *

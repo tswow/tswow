@@ -264,6 +264,35 @@ public:
 	void GossipMenuAddItem(uint32 _icon, TSString msg, uint32 _sender = 0, uint32 _intid = 0, bool _code = false, TSString _promptMsg = JSTR(""), uint32 _money = 0);
 	void GossipComplete();
 	void GossipSendMenu(uint32 npc_text, TSObject sender, uint32 menu_id = 0);
+	void GossipSendTextMenu(
+			  TSString str
+			, TSObject sender
+			, uint32 language = 0
+			, uint32 emote0 = 0
+			, uint32 emote0Delay = 0
+			, uint32 emote1 = 0
+			, uint32 emote1Delay = 0
+			, uint32 emote2 = 0
+			, uint32 emote2Delay = 0
+			, uint32 menu_id = 0
+	);
+
+	void GossipSendTextMenuGendered(
+			  TSString male
+			, TSString female
+			, TSObject sender
+			, uint32 language = 0
+			, uint32 emote0 = 0
+			, uint32 emote0Delay = 0
+			, uint32 emote1 = 0
+			, uint32 emote1Delay = 0
+			, uint32 emote2 = 0
+			, uint32 emote2Delay = 0
+			, uint32 menu_id = 0
+	);
+
+
+
 	void GossipClearMenu();
 	void StartTaxi(uint32 pathId);
 	void GossipSendPOI(float x, float y, uint32 icon, uint32 flags, uint32 data, TSString iconText);

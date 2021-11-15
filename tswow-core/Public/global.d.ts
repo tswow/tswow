@@ -1916,6 +1916,33 @@ declare interface TSPlayer extends TSUnit {
      */
     GossipSendMenu(npc_text : uint32,sender : TSObject,menu_id : uint32) : void
 
+    GossipSendTextMenuGendered(
+        maleText: string
+      , femaleText: string
+      , sender: TSObject
+      , language?: uint32
+      , emote0?: uint32
+      , emote0Delay?: uint32
+      , emote1?: uint32
+      , emote1Delay?: uint32
+      , emote2?: uint32
+      , emote2Delay?: uint32
+      , menuId?: uint32
+    )
+
+    GossipSendTextMenu(
+          text: string
+        , sender: TSObject
+        , language?: uint32
+        , emote0?: uint32
+        , emote0Delay?: uint32
+        , emote1?: uint32
+        , emote1Delay?: uint32
+        , emote2?: uint32
+        , emote2Delay?: uint32
+        , menuId?: uint32
+    )
+
     /**
      * Clears the [Player]s current gossip item list.
      *
