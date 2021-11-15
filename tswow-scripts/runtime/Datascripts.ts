@@ -261,9 +261,14 @@ export class Datascripts {
             , 'modules'
             , ''
             , args => {
-                return Promise.all(Identifier.getModules(args,'MATCH_ALL').map(x=>{
-                    x.path.datascripts.build.remove();
-                }))
+                let mods = args.length === 0
+                    ? Module.endpoints().filter(x=>x.datascripts.exists())
+                    : Identifier.getModules(args,'MATCH_ALL')
+                mods.forEach(x=>{
+                    term.log('datascripts',`Removing ${x.path.livescripts.build}`)
+                    x.path.datascripts.build.remove()
+                })
+                term.log('datascripts',`Removed ${mods.length} datascript builds`)
             }
         ).addAlias('datascript').addAlias('data')
     }

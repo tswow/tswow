@@ -244,10 +244,59 @@ export class Livescripts {
             'livescripts'
           , 'modules'
           , ''
-          , args => {
-              return Promise.all(Identifier.getModules(args,'MATCH_ALL').map(x=>{
-                  x.path.livescripts.build.remove();
-              }))
+          , async args => {
+            let mods = args.length === 0
+                ? Module.endpoints().filter(x=>x.livescripts.exists())
+                : Identifier.getModules(args,'MATCH_ALL')
+
+            mods.forEach(mod=>{
+                // First, at least try to remove the cpp builds
+                const builddir = mod.path.livescripts.build;
+
+                builddir.dataset.all().forEach(x=>{
+                    if(x.cpp.exists()) {
+                        term.log('livescripts',`Removing ${x.cpp.get()}`)
+                    }
+                    x.cpp.remove();
+                })
+
+                try {
+                    if(builddir.exists()) {
+                        term.log('livescripts',`Removing ${mod.path.livescripts.build}`)
+                    }
+                    builddir.remove()
+                } catch(err) {
+                    term.error(
+                          'livescripts'
+                        , `Failed to remove lib for ${mod.fullName},`
+                        + ` do you have the project open in visual studio?`
+                        + ` code files were still cleaned, so this might not matter.`
+                    )
+                }
+                ipaths.bin.core.all().filter(x=>x.basename().get() === 'trinitycore').forEach(core=>{
+                    core.build.all().forEach(build=>{
+                        Dataset.all().forEach(dataset=>{
+                            build.scripts
+                                .modulePdb(dataset.fullName+ '_'+ mod.fullName)
+                                .remove()
+                            build.scripts
+                                .moduleLib(dataset.fullName+ '_'+mod.fullName)
+                                .remove()
+                        })
+
+                        // delete all files if we gave no args
+                        // (will include deleted modules)
+                        if(args.length === 0) {
+                            build.scripts.iterate('FLAT','FILES','FULL',node=>{
+                                if(node.basename().includes('scripts_tswow'))
+                                {
+                                    node.remove();
+                                }
+                            })
+                        }
+                    })
+                })
+            })
           }
         ).addAlias('scripts').addAlias('script').addAlias('livescript')
     }

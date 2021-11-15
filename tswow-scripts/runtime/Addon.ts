@@ -376,13 +376,19 @@ export class Addon {
           , ''
           , args => {
                 this.clearDevBuild();
-                const modules = args.length === 0 ? Module.endpoints()
-                    : Identifier.getModules(args,'MATCH_ALL')
+                const modules = Identifier.getModulesOrAll(args);
                 modules.forEach(mod=>{
+                    if(mod.addon.path.build.exists()) {
+                        term.log('addon',`Removing ${mod.addon.path.build.get()}`)
+                    }
                     mod.addon.path.build.remove();
                     Dataset.all().forEach(dataset=>{
-                        dataset.client.path.Data.devPatch.Interface.FrameXML.TSAddons
-                            .join(mod.fullName.split('.').join('/')).remove();
+                        let p = dataset.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+                            .join(mod.fullName.split('.').join('/'))
+                        if(p.exists()) {
+                            term.log('addon',`Removing ${p.get()}`)
+                        }
+                        p.remove();
                     })
                 })
         })
