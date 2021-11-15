@@ -363,12 +363,12 @@ const MaskCell32Impl = {
     },
 
     flip(signed: boolean, oldValue: number) {
-        return (signed && oldValue === 0) ? -1 : ~oldValue>>>0
+        return (signed && oldValue === 0) ? -1 : (~oldValue)>>>0
     },
 
     or(signed: boolean, mask: number, oldValue: number) {
         if(signed && oldValue === -1) return -1;
-        let v = oldValue | mask;
+        let v = (oldValue | mask)>>>0;
         return this.sign32(signed,v);
     },
 
@@ -380,13 +380,13 @@ const MaskCell32Impl = {
 
     and(signed: boolean, mask: number, oldValue: number) {
         let v = this.unsign32(signed,oldValue);
-        v = v & mask;
+        v = (v & mask)>>>0;
         return this.sign32(signed,v);
     },
 
     xor(signed: boolean, mask: number, oldValue: number) {
         let v = this.unsign32(signed,oldValue);
-        v = v ^ mask;
+        v = (v ^ mask)>>>0;
         return this.sign32(signed,v);
     },
 
