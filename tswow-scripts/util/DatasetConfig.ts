@@ -7,7 +7,7 @@ export const GAME_BUILD_FIELD = 'Dataset.GameBuild';
 
 export class DatasetConfig extends ConfigFile {
     protected description(): string {
-        return "Settings for managing a dataset"
+        return "Dataset Configurations"
     }
 
     @Section('Dataset')
@@ -83,7 +83,9 @@ export class DatasetConfig extends ConfigFile {
 
     @Property({
            name: 'Client.Patch.UseLocale'
-        ,  description: 'woeflfwe'
+        ,  description:
+              'Whether to use the locale directory when applying '
+            + 'development patches'
         , examples: [
               [false,'Almost always used with enUS clients']
             , [true, 'Common with chinese clients']

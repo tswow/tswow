@@ -17,7 +17,7 @@ import { NodeConfig } from "./NodeConfig";
 const REALM_NAME_FIELD = 'Realm.Name'
 export class RealmConfig extends ConfigFile {
     protected description(): string {
-        return "Configuration for your realm. A single realm is managed by a single worldserver process."
+        return "Realm Configuration"
     }
 
     constructor(filename: string, name: string) {

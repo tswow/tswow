@@ -13,7 +13,7 @@ export type DatabaseType = 'world' | 'auth' | 'characters' | 'world_source';
 
 export class NodeConfigClass extends ConfigFile {
     protected description(): string {
-        return "Settings for this installation of TSWoW"
+        return "Installation Configuration"
     }
 
     @Section('Defaults')
