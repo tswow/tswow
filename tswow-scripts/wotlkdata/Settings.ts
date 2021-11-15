@@ -36,7 +36,7 @@ export const AllModules = collectSubmodules(config.modules)
 export const BuildArgs = new class BuildArgsClass {
     USE_TIMER = process.argv.includes('--use-timer')
     INLINE_ONLY = process.argv.includes('--inline-only')
-    READ_ONLY = this.INLINE_ONLY || process.argv.includes('--inline-only')
+    READ_ONLY = this.INLINE_ONLY || process.argv.includes('--readonly')
     NO_CLIENT = this.READ_ONLY || process.argv.includes('--skip-client')
     NO_SERVER = this.READ_ONLY || process.argv.includes('--skip-server')
 }();
