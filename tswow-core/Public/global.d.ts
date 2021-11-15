@@ -1914,7 +1914,7 @@ declare interface TSPlayer extends TSUnit {
      * @param [Object] sender : object acting as the source of the sent gossip menu
      * @param uint32 menu_id : if sender is a [Player] then menu_id is mandatory
      */
-    GossipSendMenu(npc_text : uint32,sender : TSObject,menu_id : uint32) : void
+    GossipSendMenu(npc_text : uint32,sender : TSObject,menu_id? : uint32) : void
 
     GossipSendTextMenuGendered(
         maleText: string
