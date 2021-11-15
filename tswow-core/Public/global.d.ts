@@ -1891,7 +1891,7 @@ declare interface TSPlayer extends TSUnit {
      * @param string popup = nil : if non empty string, a popup with given text shown on click
      * @param uint32 money = 0 : required money in copper
      */
-    GossipMenuAddItem(icon : GossipOptionIcon,msg : string,sender : uint32,id : uint32,code : bool,promptMsg : string,moneyRequired : uint32) : void
+    GossipMenuAddItem(icon : GossipOptionIcon,msg : string,sender? : uint32,id? : uint32,code? : bool,promptMsg? : string,moneyRequired? : uint32) : void
 
     /**
      * Closes the [Player]s currently open Gossip Menu.
