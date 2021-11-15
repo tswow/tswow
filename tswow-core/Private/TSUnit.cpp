@@ -2121,8 +2121,14 @@ void TSUnit::CastSpell(TSUnit _target,uint32 spell,bool triggered)
  * @param [Item] castItem = nil
  * @param uint64 originalCaster = 0
  */
-void TSUnit::CastCustomSpell(TSUnit _target,uint32 spell,bool triggered,int32 bp0,int32 bp1,int32 bp2,TSItem _castItem,uint64 originalCaster)
-{
+void TSUnit::CastCustomSpell(TSUnit _target,uint32 spell
+    , bool triggered
+    , int32 bp0 = 0
+    , int32 bp1 = 0
+    , int32 bp2 = 0
+    , TSItem _castItem = TSItem()
+    , uint64 originalCaster = 0
+) {
     auto target = _target.unit;
     auto castItem = _castItem.item;
     bool has_bp0 = bp0 != 0;

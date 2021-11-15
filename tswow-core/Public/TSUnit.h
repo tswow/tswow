@@ -163,7 +163,16 @@ public:
     void SendUnitYell(TSString msg, uint32 language);
     void DeMorph();
     void CastSpell(TSUnit target, uint32 spell, bool triggered);
-    void CastCustomSpell(TSUnit target, uint32 spell, bool triggered, int32 bp0, int32 bp1, int32 bp2, TSItem castItem, uint64 originalCaster);
+    void CastCustomSpell(
+          TSUnit target
+        , uint32 spell
+        , bool triggered
+        , int32 bp0
+        , int32 bp1
+        , int32 bp2
+        , TSItem castItem
+        , uint64 originalCaster
+    );
     void CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
     void ClearInCombat();
     void StopSpellCast(uint32 spellId);
