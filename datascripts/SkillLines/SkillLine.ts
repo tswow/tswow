@@ -10,7 +10,7 @@ import { SpellIconCell } from "../Spell/SpellIcon";
 import { SkillLineAbility } from "../Spell/SpellSkillLines";
 import { SkillsAutolearn } from "./SkillAutolearn";
 import { SkillCategory } from "./SkillCategory";
-import { SkillRaceClassInfos } from "./SkillRaceClassInfo";
+import { SkillRaceClassInfo, SkillRaceClassInfos } from "./SkillRaceClassInfo";
 
 export class SkillLineAbilities extends MultiRowSystem<SkillLineAbility,SkillLine> {
     protected getAllRows(): SkillLineAbility[] {
@@ -50,14 +50,17 @@ export class SkillLine extends MainEntity<SkillLineRow> {
         return this;
     }
 
-    enableAutolearn(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>, rank: number = 0) {
-        this.enable(cls,race);
+    enableAutolearn(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>, rank: number = 0, callback?: (value: SkillRaceClassInfo)=>void) {
+        this.enable(cls,race,callback);
         this.Autolearn.addGet(cls,race).Rank.set(rank);
         return this;
     }
 
-    enable(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>) {
-        this.RaceClassInfos.addGet(cls,race)
+    enable(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>, callback?: (value: SkillRaceClassInfo)=>void) {
+        let rci = this.RaceClassInfos.addGet(cls,race)
+        if(callback) {
+            callback(rci);
+        }
         return this;
     }
 }

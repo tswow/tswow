@@ -1,4 +1,4 @@
-import { MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MaskCell32, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { RaceMask } from "../Race/RaceType";
@@ -27,14 +27,18 @@ export class EquipSkill extends CellSystemTop {
              .ClassMaskForbidden.setNot(cls)
     }
 
-    enable(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>) {
-        this.Skill.get().enable(cls,race);
+    enable(cls?: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits) {
+        this.Skill.get().enable(cls,race,(rci)=>{
+            rci.Flags.IS_CLASS_LINE.set(true)
+        });
         this.enableAbil(cls,race);
         return this;
     }
 
-    enableAutolearn(cls?: MaskCon<keyof typeof ClassMask>, race?: MaskCon<keyof typeof RaceMask>, rank?: number) {
-        this.Skill.get().enableAutolearn(cls,race,rank);
+    enableAutolearn(cls?: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits, rank?: number) {
+        this.Skill.get().enableAutolearn(cls,race,rank,(rci)=>{
+            rci.Flags.IS_CLASS_LINE.set(true)
+        });
         this.enableAbil(cls,race);
         return this;
     }

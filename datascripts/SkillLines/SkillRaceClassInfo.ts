@@ -37,6 +37,7 @@ export class SkillRaceClassInfos extends ClassRaceMaskSystem<SkillRaceClassInfo,
         row.SkillID.set(this.owner.ID);
         row.ClassMask.set(classmask);
         row.RaceMask.set(racemask);
+        row.Flags.set(0);
         return new SkillRaceClassInfo(row);
     }
     protected getAllRows(): SkillRaceClassInfo[] {
