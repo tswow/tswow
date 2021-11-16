@@ -14,22 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { BuildArgs, dataset } from '../Settings';
+import { dataset } from '../Settings';
 import { DBCFile } from './DBCFile';
 import { DBCFiles } from './DBCFiles';
-import fs = require('fs');
 
 export function saveDbc() {
-    if (BuildArgs.READ_ONLY) { return; }
     for (const file of DBCFiles) {
         const srcpath = dataset.dbc_source.join(file.name + '.dbc');
         const spath = dataset.dbc.join(file.name + '.dbc')
         if (file.isLoaded()) {
-            const buf = DBCFile.getBuffer(file).write();
-            fs.writeFileSync(spath.get(), buf);
+            spath.toFile().writeBuffer(DBCFile.getBuffer(file).write())
         } else {
-            if (fs.existsSync(spath.get())) { fs.unlinkSync(spath.get()); }
-            fs.copyFileSync(srcpath.get(), spath.get());
+            srcpath.copy(spath)
         }
     }
 }
