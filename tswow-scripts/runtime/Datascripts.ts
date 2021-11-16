@@ -386,16 +386,15 @@ export class Datascripts {
         // 7. Restore servers/clients
 
         if(restartsClient) {
-            runningClients
-                .forEach(x=>x.startup(NodeConfig.AutoStartClient))
+            await Promise.all(runningClients.map(x=>x.startup(NodeConfig.AutoStartClient)))
         }
 
         if(restartsServer) {
             let autorealms = NodeConfig.AutoStartRealms
                 .map(x=>Identifier.getRealm(x))
-            runningWorldservers
+            await Promise.all(runningWorldservers
                 .filter(x=>autorealms.find(y=>y.fullName===x.fullName))
-                .forEach(x=>x.start(x.lastBuildType))
+                .map(x=>x.start(x.lastBuildType)))
         }
 
         term.success('datascripts',`Finished building DataScripts for dataset ${dataset.name}`);
