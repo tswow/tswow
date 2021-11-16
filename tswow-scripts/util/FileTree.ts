@@ -108,6 +108,19 @@ export class WNode {
         this.path = typeof(path) === 'string' ? path : path.path;
     }
 
+    relativeToParent(parent: string) {
+        let cur = this as WNode;
+        while(cur.dirname().get() !== cur.get()) {
+            if(cur.basename(1).get() === parent) {
+                return this.relativeTo(cur.dirname());
+            }
+            cur = cur.dirname()
+        }
+        throw new Error(
+            `${this.abs().get()} has no parent directory called ${parent}`
+        )
+    }
+
     isSymlink() {
         return wfs.isSymlink(this.path);
     }
