@@ -42,5 +42,5 @@ export const BuildArgs = new class BuildArgsClass {
     WRITE_SERVER = process.argv.includes('--__writes-server')
     CLIENT_PATCH_DIR = new WDirectory(process.argv
         .find(x=>x.startsWith('--clientPatch='))
-        .substring(0,'--clientPatch='.length))
+        .substring('--clientPatch='.length))
 }();
