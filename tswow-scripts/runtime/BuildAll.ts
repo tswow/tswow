@@ -3,10 +3,15 @@ import { BuildCommand } from "./CommandActions";
 
 export class BuildAll {
     static initialize() {
-        BuildCommand.addCommand('all','','ok',async args=>{
+        BuildCommand.addCommand(
+              'all'
+            , '(see arguments to build datscripts/addon/livescripts)'
+            , 'Builds datascripts/addons/livescripts'
+        , async args=>{
             await commands.sendCommand(`build data ${args}`);
             await commands.sendCommand(`build addon ${args}`)
-            await commands.sendCommand(`build scripts ${args}`)
+            // we've already built inlinescripts, skip them
+            await commands.sendCommand(`build scripts ${args} --no-inline`)
         })
     }
 }
