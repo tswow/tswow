@@ -243,7 +243,9 @@ export class Client {
 
         for(let i=start;i<order.length;++i) {
             let path = this.patchPath(order[i]);
-            if(!path.exists()) {
+            if( !path.exists()
+                && path.abs().get() !== this.path.Data.devPatch.abs().get()
+            ) {
                 ids.push(path)
             }
         }
