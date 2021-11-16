@@ -658,23 +658,27 @@ export type MaskCellRead<T,Type> = {
 } & Omit<MaskCell32T<T,keyof Type>,'set'>
 
 export function makeMaskCell32<T,Enum>(obj: Enum, owner: T, cell: Cell<number,any>, signed = false) {
-    return makePrototype('mask',MaskCell32.prototype,obj,{owner,cell,signed},(p,k,v)=>{
+    let mask = makePrototype('mask',MaskCell32T.prototype,obj,{owner,cell,signed},(p,k,v)=>{
         Object.defineProperty(p,k,{
             get: function() {
                 return this.mask(v);
             }
         })
-    }) as MaskCellWrite<T,Enum>
+    })
+    mask.obj = obj;
+    return mask as MaskCellWrite<T,Enum>;
 }
 
 export function makeMaskCell32ReadOnly<T,Enum>(obj: Enum, owner: T, cell: CellReadOnly<number,any>, signed = false) {
-    return makePrototype('mask',MaskCell32.prototype,obj,{owner,cell,signed},(p,k,v)=>{
+    let mask = makePrototype('mask',MaskCell32.prototype,obj,{owner,cell,signed},(p,k,v)=>{
         Object.defineProperty(p,k,{
             get: function() {
                 return this.mask(v);
             }
         })
-    }) as MaskCellRead<T,Enum>
+    })
+    mask.obj = obj;
+    return mask as MaskCellRead<T,Enum>
 }
 
 export function getBits<T>(obj: any, mask: MaskCon<T>, signed = false) {
