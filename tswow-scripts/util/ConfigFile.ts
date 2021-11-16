@@ -334,6 +334,6 @@ export function patchTCConfig(file: string, property: string, value: any) {
     }
     wfs.write(
           file
-        , `${v.substring(0,start)}\n${property} = ${JSON.stringify(value)}\n${v.substring(end)}`
+        , `${v.substring(0,start)}\n${property} = ${JSON.stringify(value)}${v.substring(end)}`
     )
 }
