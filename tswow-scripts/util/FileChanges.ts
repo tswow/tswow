@@ -128,6 +128,27 @@ export class FileChangeModule {
         this.modifies.write(resfp(input), fs.statSync(resfp(input)).mtimeMs);
     }
 
+    onChangedAny(input: FilePath[], outputs: string[], callback: (inputs: FilePath[])=>void) {
+        let files = input.map(x=>{
+            let abs = wfs.absPath(x);
+            return {
+                  path:abs
+                , newMtime:fs.statSync(abs).mtimeMs
+                , oldMtime:this.modifies.read(abs)
+            }
+        })
+        let hasChanged =
+               files.find(x=>x.newMtime !== x.oldMtime)
+            || outputs.find(x=>!wfs.exists(x))
+
+        if(hasChanged) {
+            callback(input)
+            files.forEach(x=>{
+                this.modifies.write(x.path,x.newMtime)
+            })
+        }
+    }
+
     onChanged(input: FilePath, outputs: string[], callback: (filepath: WNode)=>void) {
         input = wfs.absPath(input);
         let newMtime = fs.statSync(input).mtimeMs;
