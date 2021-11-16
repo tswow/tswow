@@ -1,4 +1,5 @@
 import { makeMaskCell32, MaskCellWrite } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { SqlRow } from "wotlkdata/wotlkdata/sql/SQLRow";
 import { playercreateinfo_skillsRow } from "wotlkdata/wotlkdata/sql/types/playercreateinfo_skills";
@@ -8,8 +9,9 @@ import { RaceMask } from "../Race/RaceType";
 import { SkillLineRegistry } from "./SkillLines";
 
 // Always rewrite this table entirely so masks work
-
-SQL.Databases.world_dest.read(`DELETE from \`playercreateinfo_skills\`;`)
+if(BuildArgs.WRITE_SERVER) {
+    SQL.Databases.world_dest.read(`DELETE from \`playercreateinfo_skills\`;`)
+}
 SQL.playercreateinfo_skills.filter({})
    .forEach(x=>{
         SqlRow.markDirty(x)
