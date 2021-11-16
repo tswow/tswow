@@ -132,8 +132,7 @@ finish('build-maps',()=>{
 });
 
 function copyMapDBCs(mod: string) {
-    let assetsdir = path.join('modules',mod,'assets')
-    let dbfilesdir = path.join(assetsdir,'DBFilesClient')
+    let dbfilesdir = path.join(mod,'assets','DBFilesClient')
     fs.mkdirSync(dbfilesdir,{recursive:true});
     DBC.Map.write(path.join(dbfilesdir,'Map.dbc'))
     DBC.AreaTable.write(path.join(dbfilesdir,'AreaTable.dbc'))
