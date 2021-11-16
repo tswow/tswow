@@ -13,9 +13,9 @@ if(BuildArgs.WRITE_SERVER) {
     SQL.Databases.world_dest.read(`DELETE from \`playercreateinfo_skills\`;`)
 }
 SQL.playercreateinfo_skills.filter({})
-   .forEach(x=>{
+    .forEach(x=>{
         SqlRow.markDirty(x)
-   })
+    })
 
 export class SkillAutolearn extends ClassRaceMaskEntry<playercreateinfo_skillsRow>
 {
