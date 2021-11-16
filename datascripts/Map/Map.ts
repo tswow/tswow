@@ -17,6 +17,7 @@
 import fs from "fs";
 import path from "path";
 import { DBC, finish } from "wotlkdata";
+import { FileChangeModule } from "wotlkdata/util/FileChanges";
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { MapRow } from "wotlkdata/wotlkdata/dbc/types/Map";
 import { AllModules, BuildArgs, dataset } from "wotlkdata/wotlkdata/Settings";
@@ -100,18 +101,33 @@ export class Map extends MainEntity<MapRow> {
 
 finish('build-maps',()=>{
     if(!BuildArgs.WRITE_CLIENT) return;
-    let allMaps: string[] = []
+    let wdtMods: {[key: string]: /*module: */string} = {}
     AllModules.forEach((mod)=>{
         // workaround to allow noggit workspaces in asset directories
         let mapsdir = mod.join('assets','world','maps')
-        if(mapsdir.exists()) {
-            storeAreaMappings(mod.get(),mapsdir.get())
-            allMaps = allMaps.concat(fs.readdirSync(mapsdir.get()))
-                .filter(x=>!allMaps.includes(x))
+        if(!mapsdir.exists()) {
+            return;
         }
-    })
-    allMaps.forEach(x=>{
-        generateZmp(x);
+        storeAreaMappings(mod.get(),mapsdir.get())
+        mapsdir.iterate('FLAT','DIRECTORIES','FULL',mapdir=>{
+            const mapname = mapdir.basename().get()
+            copyMapDBCs(mod.get())
+            mapdir.toDirectory().iterate('FLAT','FILES','FULL',node=>{
+                if(node.endsWith('.wdt')) {
+                    if(wdtMods[mapname] !== undefined) {
+                        throw new Error(
+                              `Map ${mapname} has wdt defined in`
+                            + ` multiple modules, please only place the wdt in`
+                            + ` one module.`
+                        )
+                    }
+                    wdtMods[mapname] = mod.abs().get()
+                }
+            });
+        })
+        Object.entries(wdtMods).forEach(([map,mod])=>{
+            generateZmp(map,mod);
+        })
     })
 });
 
@@ -251,9 +267,8 @@ function storeAreaMappings(mod: string, mapsDir: string) {
     fs.renameSync(areasPath+'.tmp',areasPath);
 }
 
-function generateZmp(map: string) {
-    if(!process.argv.includes('--zmp')) return;
-
+export const ZMP_CHANGES = new FileChangeModule('zmp')
+function generateZmp(map: string, moduleOut: string) {
     const mapObj = DBC.Map.find({Directory:map});
     if(mapObj === undefined) {
         // don't error, non-maps are allowed in that directory
@@ -287,79 +302,78 @@ function generateZmp(map: string) {
         });
     });
 
-    let moduleOut: string|undefined
     let adtPaths: string[] = []
+    AllModules.forEach((mod)=>{
+        const mapsdir = mod.join('assets','world','maps',map)
+        if(mapsdir.exists()) {
+            adtPaths = adtPaths.concat(mapsdir.readDir()
+                .map(x=>mapsdir.join(x).abs())
+                .filter(x=>x.endsWith('.adt') && x.isFile())
+                .map(x=>x.abs().get())
+            )
+        }
+    });
+
     const oldZmpPath = path.join(dataset.luaxml_source.get(),'Interface','WorldMap',map+'.zmp')
     const zmp = fs.existsSync(oldZmpPath)
         ? fs.readFileSync(oldZmpPath)
         : Buffer.alloc(65536)
 
-    AllModules.forEach((mod)=>{
-        const mapsdir = path.join(mod.get(),'assets','world','maps',map)
-        if(fs.existsSync(mapsdir)) {
-            adtPaths = adtPaths.concat(fs.readdirSync(mapsdir)
-                .map(x=>path.join(mapsdir,x))
-                .filter(x=>x.endsWith('.adt') && fs.statSync(x).isFile()))
-            if(fs.existsSync(path.join(mapsdir,`${map}.wdt`))) {
-                moduleOut = mod.get();
-            }
-        }
-    });
-
-    if(moduleOut === undefined) {
-        throw new Error(`${map}.wdt not found in any modules!`)
-    }
-
-    // note: duplicate adts / modules should be handled by asset bundler
-
-    adtPaths.forEach(file=>{
-        const [_,x,y] = path
-            .basename(file)
-            .split('.')[0]
-            .split('_')
-            .map(x=>parseInt(x))
-        const adt = fs.readFileSync(file);
-        const mcin = adt.readUInt32LE(0x10)+0x14
-        const quads: {[key: number]: number}[] = [{},{},{},{}]
-        for(let i=0;i<256;++i){
-            const mcnk = adt.readUInt32LE(8+mcin+16*i);
-            const area = areaLookup[adt.readUInt32LE(mcnk+0x3c)]||0
-            const indexX = adt.readUInt32LE(mcnk+0xc);
-            const indexY = adt.readUInt32LE(mcnk+0x10);
-            const quad = quads[
-                (Math.round(indexX/15)) | (Math.round(indexY/15)) << 1
-            ]
-            if(quad[area] === undefined) quad[area] = 1;
-            else quad[area]++;
-        }
-        const sums = quads.map(x=>Object.entries(x)
-            .reduce(([pk,pv],[k,v])=>v>pv?[k,v]:[pk,pv],['0',0])
-        ).map(([k])=>parseInt(k))
-
-        zmp.writeUInt32LE((sums[0]),(y*128+x%128)*8);     // tl
-        zmp.writeUInt32LE((sums[1]),(y*128+x%128)*8+4);   // tr
-        zmp.writeUInt32LE((sums[2]),(y*128+x%128)*8+512); // bl
-        zmp.writeUInt32LE((sums[3]),(y*128+x%128)*8+516); // br
-    })
-
-    // create image so users can visualize how their zmp turns out
-    const image = TSImages.create(128,128);
-    const colorMap: {[areaID: number]: /*color:*/number} = {}
-    image.addFilter((_,x,y)=>{
-        let area = zmp.readUInt32LE((y*128+x%128)*4);
-        if(area === 0) return 0;
-        if(colorMap[area] === undefined) {
-            // take golden angle to make similar ids dissimilar
-            let hue = (2.39996322972865332*area)/6.28319;
-            if(hue > 1) hue = hue - Math.floor(hue);
-            return colorMap[area] = Colors.hsv(hue,1,1).asRGBA();
-        }
-        return colorMap[area];
-    });
-
-    const zmpPath = path.join(moduleOut,'assets','Interface','WorldMap',`${map}.zmp`
+    const zmpPath = path.join(
+          moduleOut
+        , 'assets'
+        , 'Interface'
+        , 'WorldMap'
+        , `${map}.zmp`
     )
 
-    image.write(zmpPath+'.png','PNG');
-    fs.writeFileSync(zmpPath,zmp);
+    ZMP_CHANGES.onChangedAny(adtPaths,[zmpPath],()=>{
+        console.log(`Building ZMP files for ${map} to module ${moduleOut}`)
+        adtPaths.forEach(file=>{
+            const [_,x,y] = path
+                .basename(file)
+                .split('.')[0]
+                .split('_')
+                .map(x=>parseInt(x))
+            const adt = fs.readFileSync(file);
+            const mcin = adt.readUInt32LE(0x10)+0x14
+            const quads: {[key: number]: number}[] = [{},{},{},{}]
+            for(let i=0;i<256;++i){
+                const mcnk = adt.readUInt32LE(8+mcin+16*i);
+                const area = areaLookup[adt.readUInt32LE(mcnk+0x3c)]||0
+                const indexX = adt.readUInt32LE(mcnk+0xc);
+                const indexY = adt.readUInt32LE(mcnk+0x10);
+                const quad = quads[
+                    (Math.round(indexX/15)) | (Math.round(indexY/15)) << 1
+                ]
+                if(quad[area] === undefined) quad[area] = 1;
+                else quad[area]++;
+            }
+            const sums = quads.map(x=>Object.entries(x)
+                .reduce(([pk,pv],[k,v])=>v>pv?[k,v]:[pk,pv],['0',0])
+            ).map(([k])=>parseInt(k))
+
+            zmp.writeUInt32LE((sums[0]),(y*128+x%128)*8);     // tl
+            zmp.writeUInt32LE((sums[1]),(y*128+x%128)*8+4);   // tr
+            zmp.writeUInt32LE((sums[2]),(y*128+x%128)*8+512); // bl
+            zmp.writeUInt32LE((sums[3]),(y*128+x%128)*8+516); // br
+        })
+
+        // create image so users can visualize how their zmp turns out
+        const image = TSImages.create(128,128);
+        const colorMap: {[areaID: number]: /*color:*/number} = {}
+        image.addFilter((_,x,y)=>{
+            let area = zmp.readUInt32LE((y*128+x%128)*4);
+            if(area === 0) return 0;
+            if(colorMap[area] === undefined) {
+                // take golden angle to make similar ids dissimilar
+                let hue = (2.39996322972865332*area)/6.28319;
+                if(hue > 1) hue = hue - Math.floor(hue);
+                return colorMap[area] = Colors.hsv(hue,1,1).asRGBA();
+            }
+            return colorMap[area];
+        });
+        image.write(zmpPath+'.png','PNG');
+        fs.writeFileSync(zmpPath,zmp);
+    })
 }
