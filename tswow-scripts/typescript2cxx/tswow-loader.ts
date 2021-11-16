@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { WDirectory, WNode } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
 import { CodeWriter } from "./codewriter";
 import { TRANSPILER_CHANGES } from './version';
@@ -34,10 +35,10 @@ export function writeLoader(outDir: string) {
     const mainExists = fs.existsSync(loc1) || fs.existsSync(loc2)
     const inlinePath = path.join(livescripts,'build',datasetName,'inline');
 
-    let inlines: string[] = fs.existsSync(inlinePath)
-        ?  fs.readdirSync(inlinePath)
-            .map(x=>x.replace(/\.[^/.]+$/, ""))
-        : []
+    let inlines: WNode[] = []
+    new WDirectory(inlinePath).iterate('RECURSE','FILES','FULL',node=>{
+       inlines.push(node.withExtension('').relativeTo(inlinePath));
+    })
 
     const cpp = new CodeWriter();
     if(mainExists) {
@@ -64,7 +65,7 @@ export function writeLoader(outDir: string) {
     }
 
     inlines.forEach(x=>{
-        cpp.writeStringNewLine(`__inline_${x}(handlers);`)
+        cpp.writeStringNewLine(`__inline_${x.split('/').join('_').split('\\').join('_').split('.').join('_').split('-').join('_')}(handlers);`)
     })
 
     cpp.EndBlock();
