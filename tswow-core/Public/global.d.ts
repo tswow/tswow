@@ -67,10 +67,10 @@ declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
 declare const enum InventorySlots /**@realType:uint32*/{
-    INVENTORY_SLOT_BAG_1 = 19,
-    INVENTORY_SLOT_BAG_2 = 20,
-    INVENTORY_SLOT_BAG_3 = 21,
-    INVENTORY_SLOT_BAG_4 = 22
+    BAG_1 = 19,
+    BAG_2 = 20,
+    BAG_3 = 21,
+    BAG_4 = 22
 }
 declare const enum CorpseType {} /** Corpse.h:CorpseType */
 declare const enum CreatureFamily {} /** SharedDefines.h:CreatureFamily */
@@ -84,14 +84,14 @@ declare const enum TempSummonType {} /** ObjectDefines.h:TempSummonType */
 declare const enum TypeID {} /** ObjectGuid.h:TypeID */
 declare const enum CurrentSpellTypes {} /** Unit.h:CurrentSpellTypes */
 declare const enum Powers /**@realType:int8 */ {
-    POWER_HEALTH                        = -2,
-    POWER_MANA                          = 0,
-    POWER_RAGE                          = 1,
-    POWER_FOCUS                         = 2,
-    POWER_ENERGY                        = 3,
-    POWER_HAPPINESS                     = 4,
-    POWER_RUNE                          = 5,
-    POWER_RUNIC_POWER                   = 6,
+    HEALTH                        = -2,
+    MANA                          = 0,
+    RAGE                          = 1,
+    FOCUS                         = 2,
+    ENERGY                        = 3,
+    HAPPINESS                     = 4,
+    RUNE                          = 5,
+    RUNIC_POWER                   = 6,
 } /**@realType:int8 */
 declare const enum CreatureType {} /** SharedDefines.h:CreatureType */
 declare const enum LocaleConstant {} /** Common.h:LocaleConstant */
@@ -100,14 +100,14 @@ declare const enum MovementGeneratorType {} /** MovementDefines.h:MovementGenera
 declare const enum SheathState {} /** UnitDefines.h:SheathState */
 declare const enum SpellSchools {} /** SharedDefines.h:SpellSchools */
 declare const enum SpellSchoolMask /**@realType:uint32 */ {
-    SPELL_SCHOOL_MASK_NONE    = 0,
-    SPELL_SCHOOL_MASK_NORMAL  = 1,
-    SPELL_SCHOOL_MASK_HOLY    = 2,
-    SPELL_SCHOOL_MASK_FIRE    = 4,
-    SPELL_SCHOOL_MASK_NATURE  = 8,
-    SPELL_SCHOOL_MASK_FROST   = 16,
-    SPELL_SCHOOL_MASK_SHADOW  = 32,
-    SPELL_SCHOOL_MASK_ARCANE  = 64,
+    NONE    = 0,
+    NORMAL  = 1,
+    HOLY    = 2,
+    FIRE    = 4,
+    NATURE  = 8,
+    FROST   = 16,
+    SHADOW  = 32,
+    ARCANE  = 64,
 }
 declare const enum GossipOptionIcon {} /** GossipDef.h:GossipOptionIcon */
 declare const enum ProgressType {} /** AchievementMgr.h:ProgressType */
@@ -6612,14 +6612,14 @@ declare interface TSUnit extends TSWorldObject {
      *
      *     enum SpellSchoolMask
      *     {
-     *         SPELL_SCHOOL_MASK_NONE    = 0,
-     *         SPELL_SCHOOL_MASK_NORMAL  = 1,
-     *         SPELL_SCHOOL_MASK_HOLY    = 2,
-     *         SPELL_SCHOOL_MASK_FIRE    = 4,
-     *         SPELL_SCHOOL_MASK_NATURE  = 8,
-     *         SPELL_SCHOOL_MASK_FROST   = 16,
-     *         SPELL_SCHOOL_MASK_SHADOW  = 32,
-     *         SPELL_SCHOOL_MASK_ARCANE  = 64,
+     *         NONE    = 0,
+     *         NORMAL  = 1,
+     *         HOLY    = 2,
+     *         FIRE    = 4,
+     *         NATURE  = 8,
+     *         FROST   = 16,
+     *         SHADOW  = 32,
+     *         ARCANE  = 64,
      *     }
      *
      * @param [Unit] victim : [Unit] that caused the threat
