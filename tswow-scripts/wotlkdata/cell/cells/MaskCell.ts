@@ -403,6 +403,8 @@ const MaskCell32Impl = {
 }
 
 export class MaskCell32<T> extends MaskCell<T> {
+    static AllBits = 0xffffffff;
+
     extract_bits(mask: number, signed: boolean = false) {
         return this.multibits(MaskCell32Impl.bits_from(mask,signed));
     }
