@@ -99,7 +99,7 @@ export class Map extends MainEntity<MapRow> {
 }
 
 finish('build-maps',()=>{
-    if(BuildArgs.NO_CLIENT) return;
+    if(!BuildArgs.WRITE_CLIENT) return;
     let allMaps: string[] = []
     AllModules.forEach((mod)=>{
         // workaround to allow noggit workspaces in asset directories

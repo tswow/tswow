@@ -125,7 +125,7 @@ export function createBgBase(mod: string, id: string) {
 
 const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 finish('bg-descriptions',()=>{
-    if(BuildArgs.NO_CLIENT) return;
+    if(!BuildArgs.WRITE_CLIENT) return;
     LUAXML.file('Interface/FrameXML/PVPBattlegroundFrame.lua')
         .before(
             'function PVPBattleground_UpdateBattlegrounds'
