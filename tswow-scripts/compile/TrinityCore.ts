@@ -22,6 +22,23 @@ import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { bpaths, spaths } from './CompilePaths';
 
+// https://stackoverflow.com/a/68703218/17188274
+function prefix(words: string[]){
+    // check border cases size 1 array and empty first word)
+    if (!words[0] || words.length ==  1) return words[0] || "";
+    let i = 0;
+    // while all words have the same character at position i, increment i
+    while(words[0][i] && words.every(w => w[i] === words[0][i]))
+      i++;
+
+    // prefix is the substring from the beginning to the last successfully checked i
+    return words[0].substr(0, i);
+}
+
+function suffix(words: string[]) {
+    return prefix(words.map(x=>x.split('').reverse().join(''))).split('').reverse().join('')
+}
+
 export namespace TrinityCore {
     export function headers() {
         // todo: duplicate from
@@ -74,6 +91,27 @@ export namespace TrinityCore {
                                 }
                             }
                             content = `${match[2]}`;
+                            let cs = content.split('\n')
+                                .map(x=>x.match(/^ *([a-zA-Z0-9_]+) *(= *(\d+)|)(?:,|) *(\/\/.+|)/))
+                                .filter(x=>x!=null)
+                                .map(x=>({name:x[1],num:x[2]||'',comment:x[4]}))
+                            if(cs.length === 0) {
+                                throw new Error(`Broken enum: can't parse ${realname} in file ${x}`)
+                            }
+
+                            let last = cs[cs.length-1].name
+                            let end: {name: string, num: string, comment: string}[] = []
+                            if(last.startsWith('MAX') || last.startsWith('TOTAL')) {
+                                end.push(cs.pop());
+                            }
+                            let longestPrefix = prefix(cs.map(x=>x.name))
+                            let longestSuffix = suffix(cs.map(x=>x.name))
+                            if(longestPrefix.length>0) {
+                                content = content.split(longestPrefix).join('')
+                            }
+                            if(longestSuffix.length > 0) {
+                                content = content.split(longestSuffix).join('')
+                            }
                         }
                     });
                 if(!found) {
