@@ -82,19 +82,19 @@ async function mainWrap() {
 
 async function main() {
     if(process.argv.includes('bin/scripts/tswow/test')) return;
-
     ctime = Date.now();
     await IdPublic.readFile();
     SqlConnection.connect();
 
-    try{
-        await cleanSQL();
-    } catch(err: any) {
-        console.error(err.stack);
-        process.exit(2);
+    if(BuildArgs.WRITE_SERVER) {
+        try{
+            await cleanSQL();
+        } catch(err: any) {
+            console.error(err.stack);
+            process.exit(2);
+        }
+        time(`Loaded/Cleaned SQL`);
     }
-
-    time(`Loaded/Cleaned SQL`);
 
     // Find all patch subdirectories
     for (let dir of DatascriptModules) {
@@ -139,23 +139,24 @@ async function main() {
     }
     time(`Executed scripts`);
 
-    await SqlConnection.finish(
-          !BuildArgs.NO_SERVER
-        , false
-    );
+    if(BuildArgs.WRITE_SERVER) {
+        await SqlConnection.finish(true, false);
+        time(`Wrote SQL`);
+    } else {
+        await SqlConnection.finish(false,false)
+    }
 
-    time(`Wrote SQL`);
     if(!BuildArgs.READ_ONLY) {
         saveDbc();
+        time(`Wrote DBC`);
     }
-    time(`Wrote DBC`);
 
     if(!BuildArgs.READ_ONLY) {
         await IdPublic.writeFile();
+        time(`Wrote IDs`)
     }
 
-
-    if(!BuildArgs.READ_ONLY) {
+    if(BuildArgs.WRITE_CLIENT) {
         // todo: move to stdlib
         if (_DBC.ChrClasses.isLoaded()) {
             _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')

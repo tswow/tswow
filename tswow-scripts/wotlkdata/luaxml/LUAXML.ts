@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { wfs } from '../../util/FileSystem';
-import { dataset } from '../Settings';
+import { BuildArgs, dataset } from '../Settings';
 import { LUAXMLFiles } from './LUAXMLFiles';
 import { TextFile } from './TextFile';
 
@@ -77,10 +77,15 @@ export function _writeLUAXML() {
 
     for (const fname in files) {
         if (files[fname] === undefined) {
-            throw new Error(`Internal error: filename ${fname} points at undefined value`);
+            throw new Error(
+                  `Internal error:`
+                + ` filename ${fname} points at undefined value`
+            );
         } else {
             const file = files[fname];
             TextFile._write(file, outdir.join(fname).get());
         }
     }
+
+    outdir.copy(BuildArgs.CLIENT_PATCH_DIR,false);
 }

@@ -1,5 +1,6 @@
 import { DatasetConfig } from "../util/DatasetConfig";
 import { wfs } from "../util/FileSystem";
+import { WDirectory } from "../util/FileTree";
 import { NodeConfigClass } from "../util/NodeConfig";
 import { collectSubmodules, DatasetDirectory, InstallPath, tdbFilename } from "../util/Paths";
 
@@ -37,6 +38,9 @@ export const BuildArgs = new class BuildArgsClass {
     USE_TIMER = process.argv.includes('--use-timer')
     INLINE_ONLY = process.argv.includes('--inline-only')
     READ_ONLY = this.INLINE_ONLY || process.argv.includes('--readonly')
-    NO_CLIENT = this.READ_ONLY || process.argv.includes('--skip-client')
-    NO_SERVER = this.READ_ONLY || process.argv.includes('--skip-server')
+    WRITE_CLIENT = process.argv.includes('--__writes-client')
+    WRITE_SERVER = process.argv.includes('--__writes-server')
+    CLIENT_PATCH_DIR = new WDirectory(process.argv
+        .find(x=>x.startsWith('--clientPatch='))
+        .substring(0,'--clientPatch='.length))
 }();

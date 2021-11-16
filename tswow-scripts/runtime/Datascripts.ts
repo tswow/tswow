@@ -5,6 +5,7 @@ import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
+import { termc } from "../util/TerminalColors";
 import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
 import { Dataset } from "./Dataset";
 import { Identifier } from "./Identifiers";
@@ -223,8 +224,13 @@ export class Datascripts {
 
         BuildCommand.addCommand(
               'datascripts'
-            , 'dataset'
-            , ''
+            , 'dataset '
+            + '--(client|server|inline)-only'
+            + ' --readonly'
+            + ' --rebuild'
+            + ' --no-shutdown(-server|-client|)'
+            + ' --no-restart(-server|-client|)'
+            , 'Builds datascripts for the selected dataset'
             , async args => {
                 for(const value of Identifier.getDatasets(
                       args
@@ -277,19 +283,52 @@ export class Datascripts {
           dataset: Dataset
         , args: string[] = []
     ) {
-        // 1. Shutdown server/client
-        let skipsClient = args.includes('--inline-only')
-            || args.includes('--skip-client')
-            || args.includes('--readonly')
-        let skipsServer = (args.includes('--inline-only')
-            || args.includes('--skip-server')
-            || args.includes('--readonly')) && !args.includes('--rebuild')
-        let runningClients = skipsClient ? [] : [dataset.client]
-        let runningWorldservers = skipsServer ? [] : dataset.realms()
+        // 1. Parse exclusion arguments
+        const isInlineOnly = args.includes('--inline-only');
+        const isReadonlyArg = args.includes('--readonly')
+        const isReadOnly = isInlineOnly || isReadonlyArg
+        const isRebuild = args.includes('--rebuild')
+        const serverOnly = args.includes('--server-only')
+        const clientOnly = args.includes('--client-only')
+
+        const noShutdownAnyArg = args.includes('--no-shutdown')
+        const noShutdownServerArg = noShutdownAnyArg
+            || args.includes('--no-shutdown-server')
+        const noShutdownClientArg = noShutdownAnyArg
+            || args.includes('--no-shutdown-client')
+        const noRestartAnyArg = args.includes('--no-restart')
+        const noRestartServerArg = noRestartAnyArg
+            || args.includes('--no-restarts-server')
+        const noRestartsClientArg = noRestartAnyArg
+            || args.includes('--no-restarts-client')
+
+        const writesServer = !clientOnly && !isReadOnly;
+        const writesClient = !serverOnly && !isReadOnly;
+
+        const shutdownsServer = !noShutdownServerArg && writesServer
+        const shutdownsClient = !noShutdownClientArg && writesClient
+
+        const restartsServer = shutdownsServer && !noRestartServerArg
+        const restartsClient = shutdownsClient && !noRestartsClientArg
+
+        // 2. Detect invalid arguments
+        if(isRebuild && !shutdownsServer) {
+            throw new Error(
+                  `Incompatible arguments:`
+                + ` --rebuild requires the server to be shutdown,`
+                + ` so it cannot be combined with any of the following arguments: `
+                + ` --inline-only, --readonly, --client-only,`
+                + ` --no-shutdown, --no-shutdown-server`
+            );
+        }
+
+        // 3. Shutdown clients and servers
+        let runningClients = shutdownsClient ? [dataset.client] : []
+        let runningWorldservers = shutdownsServer ? dataset.realms() : []
         await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
         await Promise.all(runningClients.map(x=>x.kill()));
 
-        // 2. Prepare dataset
+        // 4. Prepare dataset
         await dataset.setupClientData();
         if(args.includes('--rebuild')) {
             await dataset.setupDatabases('SOURCE',false);
@@ -307,23 +346,30 @@ export class Datascripts {
             }
         });
 
+        // 5. Run datascripts
+        term.log('datascripts',
+            `Building datascripts`
+            + ` {`
+            + ` server: ${termc.magenta(`${writesServer}`)},`
+            + ` client: ${termc.magenta(`${writesClient}`)}`
+            + ` }`
+        )
 
-        // 3. Run datascripts
         wsys.exec(
                 `node -r source-map-support/register`
               + ` ${ipaths.bin.scripts.wotlkdata.wotlkdata.index.get()}`
               + ` --ipaths=./`
               + ` --dataset=${dataset.path.get()}`
               + ` --datasetName=${dataset.fullName}`
+              + ` --clientPatch=${dataset.client.path.Data.devPatch}`
               + ` ${args.join(' ')}`
+              // Please don't pass these two manually
+              + ` ${writesServer?'--__writes-server':''}`
+              + ` ${writesClient?'--__writes-client':''}`
             , 'inherit'
         )
 
-        // 4. Copy results
-        wfs.copy(dataset.path.dbc,dataset.client.path.Data.devPatch.DBFilesClient)
-        wfs.copy(dataset.path.luaxml,dataset.client.path.Data.devPatch)
-
-        // 5. Present profiling
+        // 6. Present profiling
         if(args.includes('--prof')) {
             wfs.readDir('./',true,'files')
             .filter(x=>x.startsWith('isolate-')
@@ -337,14 +383,21 @@ export class Datascripts {
             })
         }
 
-        // 6. Restore server/client
-        runningClients
-            .forEach(x=>x.startup(NodeConfig.AutoStartClient))
-        let autorealms = NodeConfig.AutoStartRealms
-            .map(x=>Identifier.getRealm(x))
-        runningWorldservers
-            .filter(x=>autorealms.find(y=>y.fullName===x.fullName))
-            .forEach(x=>x.start(x.lastBuildType))
+        // 7. Restore servers/clients
+
+        if(restartsClient) {
+            runningClients
+                .forEach(x=>x.startup(NodeConfig.AutoStartClient))
+        }
+
+        if(restartsServer) {
+            let autorealms = NodeConfig.AutoStartRealms
+                .map(x=>Identifier.getRealm(x))
+            runningWorldservers
+                .filter(x=>autorealms.find(y=>y.fullName===x.fullName))
+                .forEach(x=>x.start(x.lastBuildType))
+        }
+
         term.success('datascripts',`Finished building DataScripts for dataset ${dataset.name}`);
     }
 }
