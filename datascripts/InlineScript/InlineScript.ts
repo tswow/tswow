@@ -1,8 +1,9 @@
 import fs from "fs";
-import md5 from "md5";
 import path from "path";
 import ts from "typescript";
 import { finish } from "wotlkdata";
+import { mpath } from "wotlkdata/util/FileSystem";
+import { WDirectory, WNode } from "wotlkdata/util/FileTree";
 import { datasetName } from "wotlkdata/wotlkdata/Settings";
 import { getEventName, getEventNames } from "./InlineEventNames";
 import { getTSChildren } from "./InlineTSHelpers";
@@ -90,11 +91,11 @@ export function getAny(owner: any, prefix: string,type: string) {
             }
 
             const fullText = `    events.${type}.${x}(${prefix}${func.getText()})`;
+
+            const relativeFilename = new WNode(filename).relativeToParent('datascripts')
             const modname = findModulePath(filename);
-            const hash = `${md5(filename)}.ts`;
             const modobj = (files[modname]||(files[modname] = {}));
-            // md5 collisions will just (rarely) cause module-local files to be merged
-            (modobj[hash]||(modobj[hash]=[])).push(fullText);
+            (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
 
             // find all GetID declarations
             // temporarily disabled
@@ -135,21 +136,30 @@ export function getAny(owner: any, prefix: string,type: string) {
 
 finish('inline-scripts',()=>{
     Object.entries(files).forEach(([mod,files])=>{
-        let inlinePath = path.join(mod,'livescripts','build',datasetName,'inline');
+        let inlinePath = new WDirectory(
+            mpath(mod,'livescripts','build',datasetName,'inline')
+        );
+
         // update deleted scripts
-        if(fs.existsSync(inlinePath)) {
-            fs.readdirSync(inlinePath).forEach(file=>{
-                if(files[file] === undefined) {
-                    fs.rmSync(path.join(inlinePath,file))
+        if(inlinePath.exists()) {
+            inlinePath.iterate('RECURSE','FILES','FULL',(node)=>{
+                let rel = node.relativeTo(inlinePath)
+                if(files[rel.get()] === undefined) {
+                    node.remove();
                 }
             })
         }
-        fs.mkdirSync(inlinePath,{recursive:true})
         Object.entries(files).forEach(([file,funcs])=>{
             let content =
-                    `export function __inline_${file.substr(0,file.length-3)}(events: TSEventHandlers){\n`
+                    `export function __inline_${file
+                            .substr(0,file.length-3)
+                            .split('-').join('_')
+                            .split('\\').join('_')
+                            .split('/').join('_')
+                            .split('.').join('_')
+                        }(events: TSEventHandlers){\n`
                 + `${funcs.join('\n\n')}\n}`
-            fs.writeFileSync(path.join(inlinePath,file),content);
+            inlinePath.join(file).toFile().write(content)
         })
     });
 })
