@@ -167,7 +167,7 @@ void CustomPacketBase::Increase(totalSize_t increase)
     totalSize_t newSize = m_size + increase;
     chunkCount_t firstNewChunk = chunkCount_t(m_chunks.size());
     m_chunks.resize(
-        chunkCount_t(std::ceil(float(newSize) / float(MaxWritableChunkSize())))
+        chunkCount_t(std::ceil(double(newSize) / double(MaxWritableChunkSize())))
     );
     chunkCount_t remInc = newSize;
     for (chunkCount_t i = firstNewChunk; i < m_chunks.size(); ++i)
