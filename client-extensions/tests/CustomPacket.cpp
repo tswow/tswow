@@ -253,7 +253,7 @@ TEST_CASE("[MessageBase] Size") {
             write.Write<uint32_t>(1007688);
             REQUIRE(write.Size() == 5);
             write.Write<uint32_t>(1007688);
-            REQUIRE(write.Size() == 5 + 4);
+            REQUIRE(write.Size() == 4 + 4);
         }
 
         SECTION("Single chunk WriteString") {
@@ -274,9 +274,10 @@ TEST_CASE("[MessageBase] Size") {
                 CustomPacketWrite write = CustomPacketWrite(0, 5 + CustomHeaderSize, 5);
                 write.Write<uint32_t>(1007688);
                 write.WriteString(str);
-                REQUIRE(write.Size() == str.size() + 4 + 5);
+                REQUIRE(write.Size() == str.size() + 4 + 4);
                 str += "a";
             }
         }
     }
 }
+
