@@ -231,6 +231,10 @@ void CustomPacketBase::WriteBytes(totalSize_t size, char const* bytes)
 
 void CustomPacketBase::ReadBytes(totalSize_t size, char* bytes)
 {
+    if (m_size - m_global_idx < size)
+    {
+        return;
+    }
     totalSize_t offset = 0;
     while (size > 0)
     {
@@ -257,7 +261,7 @@ void CustomPacketBase::ReadBytes(totalSize_t size, char* bytes)
 
 char* CustomPacketBase::ReadBytes(totalSize_t size, bool padStr)
 {
-    if (m_chunk >= m_chunks.size())
+    if (m_size - m_global_idx < size)
     {
         return nullptr;
     }
