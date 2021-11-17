@@ -37,6 +37,19 @@ export function convertTime(num: number, from: TimeUnit, to: TimeUnit): number {
     return num;
 }
 
+export type TimeUnitConstructor = {
+    [Property in typeof TimeUnits[number]]?: number
+}
+
+export function applyTimeConstructor(targetType: TimeUnit, con: TimeUnitConstructor) {
+    return Object.entries(con)
+        .filter(([_,value])=>value!==undefined)
+        .reduce((p,[unit,value])=>{
+            return p+convertTime(value as number,unit as TimeUnit,targetType)
+        },0)
+}
+
+
 export class DurationCell<T> extends CellSystem<T> {
     readonly unit: TimeUnit;
     protected cell: Cell<number,any>
@@ -58,9 +71,11 @@ export class DurationCell<T> extends CellSystem<T> {
         return this.cell.get();
     }
 
-    set(value: number, type = this.unit): T {
-        value = convertTime(value,type,this.unit);
-        this.cell.set(this.isRounded ? Math.round(value) : value);
+    set(value: number, type: TimeUnit|TimeUnitConstructor = this.unit): T {
+        value = typeof(type) === 'object'
+            ? applyTimeConstructor(this.unit,type)
+            : convertTime(value,type,this.unit)
+        this.cell.set(this.isRounded ? Math.round(value) : value)
         return this.owner;
     }
 
