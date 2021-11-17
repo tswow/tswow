@@ -32,9 +32,9 @@ export class GameEventOccurrence extends CellSystem<GameEvent> {
         return this.owner;
     }
 
-    set(startHour: number, startMinute: number, waitTime: number, unit: TimeUnit = 'minutes') {
+    set(startHour: number, startMinute: number, waitTime: number, unit: TimeUnit = 'MINUTES') {
         GameEvent.checkHoliday(this.owner);
-        this.owner.row.occurence.set(BigInt(convertTime(waitTime,unit,'minutes')));
+        this.owner.row.occurence.set(BigInt(convertTime(waitTime,unit,'MINUTES')));
         this.owner.row.start_time.set(
             makeSQLDate(2016,10,28,startHour,startMinute)
         );
@@ -62,7 +62,7 @@ export class GameEventOccurrence extends CellSystem<GameEvent> {
     get Period() {
         return new DurationCell(
               this.owner
-            , 'minutes'
+            , 'MINUTES'
             , true
             , new GameEventBigIntCell(this.owner, this.owner.row.occurence)
         );
@@ -120,7 +120,7 @@ export class GameEvent extends MainEntity<game_eventRow> {
     get Duration() {
         return new DurationCell(
               this
-            , 'minutes'
+            , 'MINUTES'
             , true
             , new GameEventBigIntCell(this, this.row.length)
         );
@@ -181,7 +181,7 @@ export class GameEventRegistryClass
         return Ids.game_event
     }
     Clear(r: GameEvent): void {
-        r.Duration.set(1,'minutes')
+        r.Duration.set(1,'MINUTES')
          .Occurrence.setDaily(24,0)
          .Type.NORMAL.set()
     }

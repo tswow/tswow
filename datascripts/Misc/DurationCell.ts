@@ -2,13 +2,13 @@ import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
 export const TimeUnits = [
-    'milliseconds',
-    'seconds',
-    'minutes',
-    'hours',
-    'days',
-    'weeks',
-    'years', // <-- counted as 365 days
+    'MILLISECONDS',
+    'SECONDS',
+    'MINUTES',
+    'HOURS',
+    'DAYS',
+    'WEEKS',
+    'YEARS', // <-- counted as 365 days
     /** Automatically uses the source (getters) or target (setters) type */
     'AUTO'
 ] as const
@@ -17,15 +17,15 @@ const conversionTable = [1,1000,60,60,24,7]
 export type TimeUnit = typeof TimeUnits[number]
 export function convertTime(num: number, from: TimeUnit, to: TimeUnit): number {
     if(from === to || from === 'AUTO' || to === 'AUTO') return num;
-    if(from === 'years') {
-        return (to === 'weeks')
+    if(from === 'YEARS') {
+        return (to === 'WEEKS')
             ? num * 52.14285714285714
-            : convertTime(num*365,'days',to)
+            : convertTime(num*365,'DAYS',to)
     }
-    if(to === 'years') {
-        return (from === 'weeks')
+    if(to === 'YEARS') {
+        return (from === 'WEEKS')
             ? num / 52.14285714285714
-            : convertTime(num/365,from,'days')
+            : convertTime(num/365,from,'DAYS')
     }
     let fromIndex = TimeUnits.indexOf(from);
     let toIndex = TimeUnits.indexOf(to);
@@ -65,55 +65,55 @@ export class DurationCell<T> extends CellSystem<T> {
     }
 
     setMilliseconds(ms: number) {
-        return this.set(convertTime(ms,'milliseconds',this.unit))
+        return this.set(convertTime(ms,'MILLISECONDS',this.unit))
     }
 
     setSeconds(s: number) {
-        return this.set(convertTime(s,'seconds',this.unit))
+        return this.set(convertTime(s,'SECONDS',this.unit))
     }
 
     setMinutes(m: number) {
-        return this.set(convertTime(m,'minutes',this.unit))
+        return this.set(convertTime(m,'MINUTES',this.unit))
     }
 
     setHours(h: number) {
-        return this.set(convertTime(h,'hours',this.unit))
+        return this.set(convertTime(h,'HOURS',this.unit))
     }
 
     setDays(h: number) {
-        return this.set(convertTime(h,'days',this.unit))
+        return this.set(convertTime(h,'DAYS',this.unit))
     }
 
     setWeeks(h: number) {
-        return this.set(convertTime(h,'weeks',this.unit))
+        return this.set(convertTime(h,'WEEKS',this.unit))
     }
 
     setYears(h: number) {
-        return this.set(convertTime(h,'years',this.unit))
+        return this.set(convertTime(h,'YEARS',this.unit))
     }
 
     getMilliseconds() {
-        return convertTime(this.get(),this.unit,'milliseconds');
+        return convertTime(this.get(),this.unit,'MILLISECONDS');
     }
 
     getSeconds() {
-        return convertTime(this.get(),this.unit,'seconds');
+        return convertTime(this.get(),this.unit,'SECONDS');
     }
 
     getMinutes() {
-        return convertTime(this.get(),this.unit,'minutes');
+        return convertTime(this.get(),this.unit,'MINUTES');
     }
 
     getHours() {
-        return convertTime(this.get(),this.unit,'hours');
+        return convertTime(this.get(),this.unit,'HOURS');
     }
 
     getWeeks() {
-        return convertTime(this.get(),this.unit,'weeks');
+        return convertTime(this.get(),this.unit,'WEEKS');
     }
 
     getYears() {
-        return convertTime(this.get(),this.unit,'years');
+        return convertTime(this.get(),this.unit,'YEARS');
     }
 
     objectify() {

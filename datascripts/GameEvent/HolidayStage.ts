@@ -100,7 +100,7 @@ export class HolidayStageBase<T extends HolidayBase> extends ArrayEntry<T> {
     get Duration() {
         return new DurationCell(
               this
-            , 'hours'
+            , 'HOURS'
             , true
             , new MulticastCell(this,
                 [
@@ -291,7 +291,7 @@ export class HolidayPeriod extends HolidayStageBase<HolidayCustomPeriod> {
     get Period() {
         return new DurationCell(
               this.container
-            , 'hours'
+            , 'HOURS'
             , true
             , new CellBasic(null,
                   ()=>this.container.row.Duration.getIndex(1)
