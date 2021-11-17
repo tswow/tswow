@@ -22,6 +22,7 @@ import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem"
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { creature_templateRow } from "wotlkdata/wotlkdata/sql/types/creature_template";
 import { creature_template_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_template_addon";
+import { CreatureTextRegistry } from "../BroadcastText/CreatureText";
 import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";
@@ -276,6 +277,8 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     }
     get Trainer() { return new CreatureDefaultTrainer(this); }
     get Vendor() { return new VendorItems(this, this.ID); }
+
+    get Texts() { return CreatureTextRegistry.load(this.ID); }
 
     get NormalLoot() {
         return new LootSetPointer(
