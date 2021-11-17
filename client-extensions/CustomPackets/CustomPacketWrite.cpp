@@ -14,6 +14,16 @@ CustomPacketWrite::CustomPacketWrite()
 
 CustomPacketWrite* CustomPacketWrite::operator->() { return this; }
 
+CustomPacketWrite* CustomPacketWrite::WriteString(std::string const& str)
+{
+    return WriteString(str, str.size());
+}
+
+CustomPacketWrite* CustomPacketWrite::WriteString(const char* str)
+{
+    return WriteString(str, strlen(str));
+}
+
 CustomPacketWrite* CustomPacketWrite::WriteString(
       std::string const& str
     , totalSize_t length
@@ -25,7 +35,6 @@ CustomPacketWrite* CustomPacketWrite::WriteString(
       const char* chr
     , totalSize_t length
 ) {
-    length = _strlen(chr, length);
     Write<totalSize_t>(length);
     WriteBytes(length, chr);
     return this;
@@ -42,17 +51,23 @@ CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
       const char* chr
     , totalSize_t length
 ) {
-    length = _strlen(chr, length);
     WriteBytes(length, chr);
     Write<uint8_t>(0);
     return this;
 }
 
-totalSize_t CustomPacketWrite::_strlen(const char* chr, totalSize_t length)
+CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
+    std::string const& str
+)
 {
-    return length == TotalSizeNpos ?
-            totalSize_t(std::min(size_t(BUFFER_QUOTA), strlen(chr)))
-        : length;
+    return WriteStringNullTerm(str, str.size());
+}
+
+CustomPacketWrite* CustomPacketWrite::WriteStringNullTerm(
+    const char* chr
+)
+{
+    return WriteStringNullTerm(chr, strlen(chr));
 }
 
 CustomPacketWrite* CustomPacketWrite::WriteBytes(totalSize_t size, char const* bytes)

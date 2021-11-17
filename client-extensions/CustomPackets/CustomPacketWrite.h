@@ -17,19 +17,37 @@ public:
 
     CustomPacketWrite* WriteString(
           std::string const& str
-        , totalSize_t length = TotalSizeNpos
+        , totalSize_t length
     );
+
+    CustomPacketWrite* WriteString(
+        std::string const& str
+    );
+
+    CustomPacketWrite* WriteString(
+        const char* str
+    );
+
     CustomPacketWrite* WriteString(
         const char* chr
-        , totalSize_t length = TotalSizeNpos
+        , totalSize_t length
     );
+
+    CustomPacketWrite* WriteStringNullTerm(
+        std::string const& str
+    );
+
+    CustomPacketWrite* WriteStringNullTerm(
+        const char* chr
+    );
+
     CustomPacketWrite* WriteStringNullTerm(
           std::string const& str
-        , totalSize_t length = TotalSizeNpos
+        , totalSize_t length
     );
     CustomPacketWrite* WriteStringNullTerm(
           const char* chr
-        , totalSize_t length = TotalSizeNpos
+        , totalSize_t length
     );
 
     template <typename T>
@@ -39,6 +57,4 @@ public:
         return this;
     }
     CustomPacketWrite* WriteBytes(totalSize_t size, char const* bytes);
-private:
-    totalSize_t _strlen(const char* chr, totalSize_t length);
 };
