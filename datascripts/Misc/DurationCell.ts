@@ -64,55 +64,55 @@ export class DurationCell<T> extends CellSystem<T> {
         return this.owner;
     }
 
-    setMilliseconds(ms: number) {
+    setAsMilliseconds(ms: number) {
         return this.set(convertTime(ms,'MILLISECONDS',this.unit))
     }
 
-    setSeconds(s: number) {
+    setAsSeconds(s: number) {
         return this.set(convertTime(s,'SECONDS',this.unit))
     }
 
-    setMinutes(m: number) {
+    setAsMinutes(m: number) {
         return this.set(convertTime(m,'MINUTES',this.unit))
     }
 
-    setHours(h: number) {
+    setAsHours(h: number) {
         return this.set(convertTime(h,'HOURS',this.unit))
     }
 
-    setDays(h: number) {
+    setAsDays(h: number) {
         return this.set(convertTime(h,'DAYS',this.unit))
     }
 
-    setWeeks(h: number) {
+    setAsWeeks(h: number) {
         return this.set(convertTime(h,'WEEKS',this.unit))
     }
 
-    setYears(h: number) {
+    setAsYears(h: number) {
         return this.set(convertTime(h,'YEARS',this.unit))
     }
 
-    getMilliseconds() {
+    getAsMilliseconds() {
         return convertTime(this.get(),this.unit,'MILLISECONDS');
     }
 
-    getSeconds() {
+    getAsSeconds() {
         return convertTime(this.get(),this.unit,'SECONDS');
     }
 
-    getMinutes() {
+    getAsMinutes() {
         return convertTime(this.get(),this.unit,'MINUTES');
     }
 
-    getHours() {
+    getAsHours() {
         return convertTime(this.get(),this.unit,'HOURS');
     }
 
-    getWeeks() {
+    getAsWeeks() {
         return convertTime(this.get(),this.unit,'WEEKS');
     }
 
-    getYears() {
+    getAsYears() {
         return convertTime(this.get(),this.unit,'YEARS');
     }
 
