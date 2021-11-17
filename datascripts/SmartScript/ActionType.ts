@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell"
 import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives"
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts"
@@ -353,14 +354,12 @@ export class ActionType {
      * @param callback creature_text constructor
      * @param unk
      */
-    setTalkGroup(duration: number, callback: (group: CreatureTextGroup)=>void, unk = 0) {
+    setTalkGroup(callback: (group: CreatureTextGroup,duration: Cell<number,any>, unk: Cell<number,any>)=>void) {
         this.row.action_type.set(1)
         const group = CreatureTextRegistry.load(this.row.entryorguid.get())
             .addGet();
-        callback(group);
+        callback(group,this.row.action_param2,this.row.action_param3);
         this.row.action_param1.set(group.Group)
-        this.row.action_param2.set(duration)
-        this.row.action_param3.set(unk)
         return this.main
     }
 
