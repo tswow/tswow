@@ -25,6 +25,7 @@ import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { LanguageRegistry } from "../Languages/Languages";
 import { MainEntity } from "../Misc/Entity";
+import { ProbabilityCell } from "../Misc/ProbabilityCell";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { BroadcastTextRegistry } from "./BroadcastText";
 
@@ -65,7 +66,9 @@ export class CreatureText extends MainEntity<creature_textRow> {
     get Index() {
         return this.row.ID.get();
     }
-    get Probability() { return this.wrap(this.row.Probability); }
+    get Probability() {
+        return new ProbabilityCell(this, '[0-100]', this.row.Probability)
+    }
     get Language() { return LanguageRegistry.ref(this, this.row.Language); }
     get BroadcastText() {
         return BroadcastTextRegistry.ref(this, this.row.BroadcastTextId)

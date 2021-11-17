@@ -1,4 +1,5 @@
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ProbabilityCell } from "../../Misc/ProbabilityCell";
 import { SpellPowerType } from "../SpellPowerType";
 import { TargetBase } from "./TargetBase";
 
@@ -11,7 +12,7 @@ export class PointsRoot extends TargetBase {
 }
 
 export class ChanceBase extends PointsRoot {
-    get BaseChance() { return this.wrap(this.owner.BasePoints); }
+    get BaseChance() { return new ProbabilityCell(this,'[0-99]',this.owner.BasePoints); }
     get RandomChance() { return this.wrap(this.owner.DieSides); }
     get ChancePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get ChancePerCombo() { return this.wrap(this.owner.PointsPerCombo); }

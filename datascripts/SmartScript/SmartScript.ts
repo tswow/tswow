@@ -20,6 +20,7 @@ import { SQLCellReadOnly } from "wotlkdata/wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts";
 import { Condition } from "../Conditions/Condition";
+import { ProbabilityCell } from "../Misc/ProbabilityCell";
 import { ActionType } from "./ActionType";
 import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
@@ -61,7 +62,9 @@ export class SmartScript extends CellSystemTop {
         )
     }
 
-    get Chance() { return this.wrap(this.row.event_chance); }
+    get Chance() {
+        return new ProbabilityCell(this,'[0-100]',this.wrap(this.row.event_chance));
+    }
     get Action() { return new ActionType(this, this.row); }
     get Target() { return new TargetType(this, this.row); }
     get Event() { return new EventType(this, this.row); }

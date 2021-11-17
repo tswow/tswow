@@ -19,6 +19,7 @@ import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SQLCell, SQLCellReadOnly } from "wotlkdata/wotlkdata/sql/SQLCell";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { convertProbability, ProbabilityUnit } from "../Misc/ProbabilityCell";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;
@@ -38,6 +39,10 @@ export interface LootTable {
     add(id: number, item: number) : LootRowBase;
 }
 
+function convChanceTuple(tuple: [number,ProbabilityUnit]) {
+    return convertProbability(tuple[0],tuple[1],'[0-100]')
+}
+
 export class LootSet extends CellSystemTop {
     protected table: LootTable;
     protected id: number;
@@ -45,9 +50,10 @@ export class LootSet extends CellSystemTop {
     get ID() { return this.id; }
     get rows() { return this.table.filter({Entry:this.id})}
 
-    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
+    addItem(item: number, chance: number|[number,ProbabilityUnit], minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
         this.table.add(this.id,item)
-            .Chance.set(chance)
+            .Chance.set(Array.isArray(chance)
+                ? convChanceTuple(chance): chance)
             .MinCount.set(minCount)
             .MaxCount.set(maxCount)
             .QuestRequired.set(quest ? 1 : 0)
@@ -57,9 +63,10 @@ export class LootSet extends CellSystemTop {
         return this;
     }
 
-    addReference(table: number, chance: number, lootMode: number = 1) {
+    addReference(table: number, chance: number|[number,ProbabilityUnit], lootMode: number = 1) {
         this.table.add(this.id,table)
-            .Chance.set(chance)
+            .Chance.set(Array.isArray(chance)
+                ? convChanceTuple(chance): chance)
             .MinCount.set(1)
             .MaxCount.set(1)
             .QuestRequired.set(0)
