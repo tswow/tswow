@@ -369,17 +369,24 @@ export class ActionType {
      *  @param Duration to wait before SMART_EVENT_TEXT_OVER is triggered.
      *  @param 0 It will try to trigger talk of the target1 Set target as talk target (used for $vars in texts and whisper target)
      */
-    setTalk(texts : loc_constructor|loc_constructor[], Duration : number, unk : number = 0) {
+    setTalk(textsOrGroupId: number|loc_constructor|loc_constructor[], Duration : number, unk : number = 0) {
+        this.row.action_type.set(1)
+        this.row.action_param2.set(Duration)
+        this.row.action_param3.set(unk)
+        if(typeof(textsOrGroupId) === 'number') {
+            this.row.action_param1.set(textsOrGroupId)
+            return this.main;
+        }
         const rows = SQL.creature_text.filter({CreatureID:this.row.entryorguid.get()})
         const id = rows.length===0 ? 0 :
             rows.sort((a,b)=>b.GroupID>a.GroupID?1:-1)[0].GroupID.get()+1
 
-        if(!Array.isArray(texts)) {
-            texts = [texts]
+        if(!Array.isArray(textsOrGroupId)) {
+            textsOrGroupId = [textsOrGroupId]
         }
 
-        for(let i=0;i<texts.length;++i) {
-            iterLocConstructor(texts[i],(lang, value) => {
+        for(let i=0;i<textsOrGroupId.length;++i) {
+            iterLocConstructor(textsOrGroupId[i],(lang, value) => {
                 if(lang === 'enGB' || lang === 'enCN' || lang === 'enTW') {
                     SQL.creature_text.add(this.row.entryorguid.get(),id,i,
                         {
@@ -395,11 +402,7 @@ export class ActionType {
                 }
             })
         }
-
-        this.row.action_type.set(1)
         this.row.action_param1.set(id)
-        this.row.action_param2.set(Duration)
-        this.row.action_param3.set(unk)
         return this.main
     }
 
