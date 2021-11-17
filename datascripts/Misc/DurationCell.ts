@@ -8,13 +8,15 @@ export const TimeUnits = [
     'hours',
     'days',
     'weeks',
-    'years' // <-- counted as 365 days
+    'years', // <-- counted as 365 days
+    /** Automatically uses the source (getters) or target (setters) type */
+    'AUTO'
 ] as const
 
 const conversionTable = [1,1000,60,60,24,7]
 export type TimeUnit = typeof TimeUnits[number]
 export function convertTime(num: number, from: TimeUnit, to: TimeUnit): number {
-    if(from === to) return num;
+    if(from === to || from === 'AUTO' || to === 'AUTO') return num;
     if(from === 'years') {
         return (to === 'weeks')
             ? num * 52.14285714285714

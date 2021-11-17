@@ -26,6 +26,8 @@ export const ProbabilityUnits = [
     '[1-101]',
     /** Probability between 0 and 99 (used by some blizzard fields) */
     '[0-99]',
+    /** Automatically uses the source (getters) or target (setters) type */
+    'AUTO'
 ] as const
 
 export type ProbabilityUnit = typeof ProbabilityUnits[number]
@@ -35,7 +37,7 @@ export function convertProbability(
     , from: ProbabilityUnit
     , to: ProbabilityUnit
 ): number {
-    if(from === to) return num;
+    if(from === to || from === 'AUTO' || to === 'AUTO') return num;
     switch(from) {
         case '[0-1]':
             switch(to) {
