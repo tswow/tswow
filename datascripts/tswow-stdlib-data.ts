@@ -23,6 +23,7 @@ import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
 import { BattlegroundRegistry } from "./Battleground/Battleground";
 import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
+import { BroadcastTextRegistry } from "./BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./BroadcastText/CreatureText";
 import { ClassRegistry } from "./Class/ClassRegistry";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creature/Creatures";
@@ -172,6 +173,7 @@ export const std = {
     SpellFocus: SpellFocusRegistry,
     TotemType: TotemTypeRegistry,
     TotemCategory: TotemCategoryRegistry,
+    BroadcastTexts: BroadcastTextRegistry,
     CreatureTexts: CreatureTextRegistry,
     InlineScripts: InlineScript,
     isReadOnly: BuildArgs.READ_ONLY,
