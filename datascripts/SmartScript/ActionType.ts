@@ -17,6 +17,7 @@
 import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives"
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles"
 import { smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts"
+import { CreatureTextGroup, CreatureTextRegistry } from "../BroadcastText/CreatureText"
 import { b2i } from "../Misc/BasicConversion"
 import { ReactState, resolveReactState } from "../Misc/ReactState"
 import { SmartScript } from "./SmartScript"
@@ -342,6 +343,24 @@ export class ActionType {
      */
     setNone() {
         this.row.action_type.set(0)
+        return this.main
+    }
+
+    /**
+     * More configurable version of setTalk
+     *
+     * @param duration how long to wait before SMART_EVENT_TEXT_OVER is triggered
+     * @param callback creature_text constructor
+     * @param unk
+     */
+    setTalkGroup(duration: number, callback: (group: CreatureTextGroup)=>void, unk = 0) {
+        this.row.action_type.set(1)
+        const group = CreatureTextRegistry.load(this.row.entryorguid.get())
+            .addGet();
+        callback(group);
+        this.row.action_param1.set(group.Group)
+        this.row.action_param2.set(duration)
+        this.row.action_param3.set(unk)
         return this.main
     }
 
