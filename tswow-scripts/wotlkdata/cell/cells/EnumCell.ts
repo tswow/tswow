@@ -288,23 +288,27 @@ export type EnumCellRead<T,Type> = {
 } & Omit<EnumCellT<T,keyof Type>,'set'>
 
 export function makeEnumCell<T,Enum>(obj: Enum, owner: T, cell: Cell<number,any>) {
-    return makePrototype('enum',EnumCell.prototype,obj,{owner,cell},(p,k,v)=>{
+    let value = makePrototype('enum',EnumCellT.prototype,obj,{owner,cell},(p,k,v)=>{
         Object.defineProperty(p,k,{
             get: function() {
                 return this.value(v);
             }
         })
-    }) as EnumCellWrite<T,Enum>
+    })
+    value.obj = obj;
+    return value as EnumCellWrite<T,Enum>
 }
 
 export function makeEnumCellReadOnly<T,Enum>(obj: Enum, owner: T, cell: CellReadOnly<number,any>) {
-    return makePrototype('enum',EnumCell.prototype,obj,{owner,cell},(p,k,v)=>{
+    let value = makePrototype('enum',EnumCellT.prototype,obj,{owner,cell},(p,k,v)=>{
         Object.defineProperty(p,k,{
             get: function() {
                 return this.value(v);
             }
         })
-    }) as EnumCellRead<T,Enum>
+    })
+    value.obj = obj;
+    return value as EnumCellRead<T,Enum>
 }
 
 export function makeEnum<T>(obj: any, con: EnumCon<T>): number {
