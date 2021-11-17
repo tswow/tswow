@@ -141,12 +141,19 @@ TEST_CASE("[MessageBase] read/write") {
 
   SECTION("partial allocation") {
     SECTION("single chunk") {
-      CustomPacketWrite message(0, CustomHeaderSize + 10, 1);
+      CustomPacketWrite message(0, MAX_FRAGMENT_SIZE, 1);
       SECTION("single value") {
         message.Write<uint16_t>(1768);
         CustomPacketRead read = CustomPacketRead(message);
         REQUIRE(read.ChunkCount() == 1); // sanity
         REQUIRE(read.Read<uint16_t>(0) == 1768);
+      }
+
+      SECTION("string") {
+          message.WriteString("test",4);
+          REQUIRE(message.Size() == 8);
+          CustomPacketRead read = CustomPacketRead(message);
+          REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("test"));
       }
 
       SECTION("multiple values") {
@@ -177,6 +184,99 @@ TEST_CASE("[MessageBase] read/write") {
         REQUIRE(read.Read<uint8_t>(0) == 25);
         REQUIRE(read.Read<uint16_t>(0) == 8671);
       }
+
+      SECTION("string") {
+          message.WriteString("hello world everyone!");
+          CustomPacketRead read = CustomPacketRead(message);
+          REQUIRE_THAT(read.ReadString(), Catch::Matchers::Equals("hello world everyone!"));
+      }
     }
   }
+}
+
+TEST_CASE("[MessageBase] Size") {
+    SECTION("Aligned") {
+        SECTION("Single chunk Write") {
+            CustomPacketWrite write = CustomPacketWrite(0, MAX_FRAGMENT_SIZE, 0);
+            REQUIRE(write.Size() == 0);
+            write.Write<uint32_t>(0);
+            REQUIRE(write.Size() == 4);
+            write.Write<uint64_t>(0);
+            REQUIRE(write.Size() == 12);
+        }
+
+        SECTION("Single chunk WriteString") {
+            std::string str = "";
+            for (size_t i = 0; i < 100; ++i)
+            {
+                CustomPacketWrite write = CustomPacketWrite(0, MAX_FRAGMENT_SIZE, 0);
+                REQUIRE(write.Size() == 0);
+                write.WriteString(str);
+                REQUIRE(write.Size() == str.size() + 4);
+                str += "a";
+            }
+        }
+
+        SECTION("Multiple chunks Write") {
+            CustomPacketWrite write = CustomPacketWrite(0, 8, 0);
+            REQUIRE(write.Size() == 0);
+            write.Write<uint64_t>(0);
+            REQUIRE(write.Size() == 8);
+            write.Write<uint64_t>(0);
+            REQUIRE(write.Size() == 16);
+        }
+
+        SECTION("Multiple chunks WriteString") {
+            std::string str = "";
+            for (size_t i = 0; i < 100; ++i)
+            {
+                CustomPacketWrite write = CustomPacketWrite(0, 8, 0);
+                write.WriteString(str);
+                REQUIRE(write.Size() == str.size() + 4);
+            }
+        }
+    }
+
+    SECTION("Misaligned") {
+        SECTION("Single chunk write") {
+            CustomPacketWrite write = CustomPacketWrite(0, 5+CustomHeaderSize, 0);
+            REQUIRE(write.Size() == 0);
+            write.Write<uint32_t>(1007688);
+            REQUIRE(write.Size() == 4);
+            write.Write<uint32_t>(1007688);
+            REQUIRE(write.Size() == 4+4);
+        }
+
+        SECTION("Single chunk preloaded Write") {
+            CustomPacketWrite write = CustomPacketWrite(0, 5 + CustomHeaderSize, 5);
+            REQUIRE(write.Size() == 5);
+            write.Write<uint32_t>(1007688);
+            REQUIRE(write.Size() == 5);
+            write.Write<uint32_t>(1007688);
+            REQUIRE(write.Size() == 5 + 4);
+        }
+
+        SECTION("Single chunk WriteString") {
+            std::string str = "";
+            for (size_t i = 0; i < 100; ++i)
+            {
+                CustomPacketWrite write = CustomPacketWrite(0, 5 + CustomHeaderSize, 0);
+                write.WriteString(str);
+                REQUIRE(write.Size() == str.size() + 4);
+                str += "a";
+            }
+        }
+
+        SECTION("Single chunk preloaded WriteString") {
+            std::string str = "";
+            for (size_t i = 0; i < 100; ++i)
+            {
+                CustomPacketWrite write = CustomPacketWrite(0, 5 + CustomHeaderSize, 5);
+                write.Write<uint32_t>(1007688);
+                write.WriteString(str);
+                REQUIRE(write.Size() == str.size() + 4 + 5);
+                str += "a";
+            }
+        }
+    }
 }

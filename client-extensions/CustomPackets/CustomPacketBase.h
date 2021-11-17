@@ -56,6 +56,7 @@ protected:
         if (m_chunks.size() == 0)
         {
             m_chunks.push_back(CustomPacketChunk(sizeof(T)));
+            m_size += sizeof(T);
         }
 
         CustomPacketChunk* chnk = &m_chunks[m_chunk];
@@ -70,7 +71,9 @@ protected:
         // we can increase the current chunk
         else if ((m_idx + sizeof(value)) <= MaxWritableChunkSize())
         {
-            chnk->Increase(sizeof(T) - chnk->RemBytes(m_idx));
+            uint32_t increase = sizeof(T) - chnk->RemBytes(m_idx);
+            m_size += increase;
+            chnk->Increase(increase);
             chnk->Write(m_idx, value);
             m_idx += sizeof(T);
         }

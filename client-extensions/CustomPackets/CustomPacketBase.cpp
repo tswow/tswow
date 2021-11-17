@@ -183,18 +183,34 @@ void CustomPacketBase::WriteBytes(totalSize_t size, char const* bytes)
     {
         if (m_chunk >= m_chunks.size())
         {
-            m_chunks.push_back(CustomPacketChunk(
-                chunkSize_t(
-                    std::min(uint32_t(size)
-                        , uint32_t(MaxWritableChunkSize()))
-                    )
-                )
+            chunkSize_t inc = chunkSize_t(
+                std::min(uint32_t(size)
+                    , uint32_t(MaxWritableChunkSize()))
             );
+            m_size += inc;
+            m_chunks.push_back(CustomPacketChunk(inc));
         }
         CustomPacketChunk& chnk = m_chunks[m_chunk];
+        if (m_idx == MaxWritableChunkSize())
+        {
+            m_chunk++;
+            m_idx = 0;
+            continue;
+        }
+        if (size >= chnk.RemBytes(m_idx))
+        {
+            totalSize_t inc = std::min(
+                  uint32_t(size-chnk.RemBytes(m_idx))
+                , uint32_t(MaxWritableChunkSize()-chnk.Size())
+            );
+            chnk.Increase(inc);
+            m_size += inc;
+        }
+
         totalSize_t written = chunkSize_t(
             std::min(totalSize_t(chnk.RemBytes(m_idx)), size)
         );
+
         chnk.WriteBytes(m_idx, written, bytes);
         bytes += written;
         size -= written;
