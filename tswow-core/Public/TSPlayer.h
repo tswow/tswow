@@ -265,8 +265,8 @@ public:
 	void GossipComplete();
 	void GossipSendMenu(uint32 npc_text, TSObject sender, uint32 menu_id = 0);
 	void GossipSendTextMenu(
-			  TSString str
-			, TSObject sender
+			  TSObject sender
+			, TSString str
 			, uint32 language = 0
 			, uint32 emote0 = 0
 			, uint32 emote0Delay = 0
@@ -278,9 +278,9 @@ public:
 	);
 
 	void GossipSendTextMenuGendered(
-			  TSString male
+			  TSObject sender
+			, TSString male
 			, TSString female
-			, TSObject sender
 			, uint32 language = 0
 			, uint32 emote0 = 0
 			, uint32 emote0Delay = 0

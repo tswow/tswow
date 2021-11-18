@@ -3454,8 +3454,8 @@ void TSPlayer::GossipSendMenu(uint32 npc_text,TSObject _sender,uint32 menu_id)
 }
 
 void TSPlayer::GossipSendTextMenu(
-      TSString text
-    , TSObject sender
+      TSObject sender
+    , TSString text
     , uint32 language
     , uint32 emote0
     , uint32 emote0Delay
@@ -3466,9 +3466,9 @@ void TSPlayer::GossipSendTextMenu(
     , uint32 menu_id
 ) {
     GossipSendTextMenuGendered(
-          text
+          sender
+        , text
         , JSTR("")
-        , sender
         , language
         , emote0, emote0Delay
         , emote1, emote1Delay
@@ -3478,9 +3478,9 @@ void TSPlayer::GossipSendTextMenu(
 }
 
 void TSPlayer::GossipSendTextMenuGendered(
-      TSString male
+      TSObject sender
+    , TSString male
     , TSString female
-    , TSObject sender
     , uint32 language
     , uint32 emote0
     , uint32 emote0Delay

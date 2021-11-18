@@ -1917,9 +1917,9 @@ declare interface TSPlayer extends TSUnit {
     GossipSendMenu(npc_text : uint32,sender : TSObject,menu_id? : uint32) : void
 
     GossipSendTextMenuGendered(
-        maleText: string
+        sender: TSObject
+      , maleText: string
       , femaleText: string
-      , sender: TSObject
       , language?: uint32
       , emote0?: uint32
       , emote0Delay?: uint32
@@ -1931,8 +1931,8 @@ declare interface TSPlayer extends TSUnit {
     )
 
     GossipSendTextMenu(
-          text: string
-        , sender: TSObject
+          sender: TSObject
+        , text: string
         , language?: uint32
         , emote0?: uint32
         , emote0Delay?: uint32
