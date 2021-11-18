@@ -53,15 +53,15 @@ DBErrors.log
 *.anim
 
 # Extracted client data
-dbc_source/
-dbc/
-maps/
-mmaps/
-vmaps/
-Buildings/
-Cameras/
-luaxml/
-luaxml_source/`;
+**/datasets/*/dbc_source
+**/datasets/*/dbc
+**/datasets/*/maps
+**/datasets/*/mmaps
+**/datasets/*/vmaps
+**/datasets/*/Buildings
+**/datasets/*/Cameras
+**/datasets/*/luaxml
+**/datasets/*/luaxml_source`;
 
 const initializedEndpoints = [
     'datascripts'
