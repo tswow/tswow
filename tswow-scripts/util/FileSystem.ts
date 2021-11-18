@@ -16,7 +16,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { FilePath, resfp } from './FileTree';
+import { FilePath, resfp, WDirectory } from './FileTree';
 
 /**
  * Async file system access using promises
@@ -442,12 +442,27 @@ export namespace wfs {
      * @param filePath
      * @param backupBase
      */
-    export function makeBackup(filePath: FilePath, backupBase = filePath+'.backup') {
-        let i = 1;
-        while(wfs.exists(`${backupBase}_${i}`)) {
-            ++i;
+    export function makeBackup(filePath: FilePath) {
+        let basename = wfs.basename(filePath)
+        let backupDir = new WDirectory(wfs.dirname(resfp(filePath)))
+            .join(`${basename}.backup`)
+        const time = new Date();
+        let si = `0`;
+        const backupFile = ()=>
+            backupDir.join(
+                  `${basename}.`
+                + `${time.getFullYear()}-${time.getMonth()}-${time.getDate()}`
+                + `.${time.getHours()}-${time.getMinutes()}-${time.getSeconds()}`
+                + `${si}`
+            );
+        if(backupFile().exists()) {
+            let i = 0;
+            do {
+                si = `_${i}`
+                ++i;
+            } while(backupFile().exists())
         }
-        wfs.copy(resfp(filePath),`${backupBase}_${i}`);
+        wfs.copy(filePath,backupFile())
     }
 
     /**
