@@ -136,7 +136,17 @@ export class BroadcastTextRegistryClass
          .SoundEntry.set(0)
     }
 
-    createSimple(parent: number) {
+    createSimple(
+          maleText: loc_constructor
+        , femaleText?: loc_constructor
+    ) {
+        let v = this.createDynamic()
+            .MaleText.set(maleText)
+        if(femaleText) v.FemaleText.set(femaleText)
+        return v;
+    }
+
+    createDynamic(parent: number = this.nullID()) {
         let nid = this.IDs().dynamicId()
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
