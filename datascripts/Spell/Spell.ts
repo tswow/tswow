@@ -260,7 +260,7 @@ export class Spell extends MainEntity<SpellRow> {
             .EffectBasePoints.set([0,0,0])
             .EffectChainAmplitude.set([1,1,1])
             .EffectChainTargets.set([0,0,0])
-            .EffectDieSides.set([0,0,0])
+            .EffectDieSides.set([1,1,1])
             .EffectItemType.set([0,0,0])
             .EffectMechanic.set([0,0,0])
             .EffectMiscValue.set([0,0,0])
