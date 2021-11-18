@@ -17,7 +17,7 @@
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
-export const ProbabilityUnits = [
+export const PercentUnits = [
     /** Probability between 0 and 1 */
     '[0-1]',
     /** Probability between 0 and 100 */
@@ -30,12 +30,12 @@ export const ProbabilityUnits = [
     'AUTO'
 ] as const
 
-export type ProbabilityUnit = typeof ProbabilityUnits[number]
+export type PercentUnit = typeof PercentUnits[number]
 
-export function convertProbability(
+export function convertPercent(
       num: number
-    , from: ProbabilityUnit
-    , to: ProbabilityUnit
+    , from: PercentUnit
+    , to: PercentUnit
 ): number {
     if(from === to || from === 'AUTO' || to === 'AUTO') return num;
     switch(from) {
@@ -69,15 +69,15 @@ export function convertProbability(
     throw new Error(`Invalid probability conversion: ${from}->${to}`)
 }
 
-export class ProbabilityCell<T> extends CellSystem<T> {
+export class PercentCell<T> extends CellSystem<T> {
     protected cell: Cell<number,any>
-    protected unit: ProbabilityUnit|(()=>ProbabilityUnit)
+    protected unit: PercentUnit|(()=>PercentUnit)
     protected getUnit() {
         return typeof(this.unit) === 'function' ? this.unit() : this.unit;
     }
     protected isRounded: boolean;
 
-    constructor(owner: T, unit: ProbabilityUnit | (()=>ProbabilityUnit), isRounded: boolean, cell: Cell<number,any>) {
+    constructor(owner: T, unit: PercentUnit | (()=>PercentUnit), isRounded: boolean, cell: Cell<number,any>) {
         super(owner);
         this.cell = cell;
         this.unit = unit;
@@ -86,18 +86,18 @@ export class ProbabilityCell<T> extends CellSystem<T> {
 
     get IsRounded() { return this.isRounded; }
 
-    get(type: ProbabilityUnit = this.getUnit()): number {
-        return convertProbability(this.cell.get(), this.getUnit(), type);
+    get(type: PercentUnit = this.getUnit()): number {
+        return convertPercent(this.cell.get(), this.getUnit(), type);
     }
 
-    set(value: number, type: ProbabilityUnit = this.getUnit()): T {
-        value = (convertProbability(value, type,this.getUnit()))
+    set(value: number, type: PercentUnit = this.getUnit()): T {
+        value = (convertPercent(value, type,this.getUnit()))
         if(this.isRounded) value = Math.round(value);
         this.cell.set(value);
         return this.owner;
     }
 
     objectify() {
-        return `${convertProbability(this.cell.get(),this.getUnit(),'[0-100]')}%`
+        return `${convertPercent(this.cell.get(),this.getUnit(),'[0-100]')}%`
     }
 }

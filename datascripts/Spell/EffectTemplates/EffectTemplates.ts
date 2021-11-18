@@ -4,7 +4,7 @@ import { CreatureTemplateRegistry } from "../../Creature/Creatures";
 import { EnchantmentRegistry } from "../../Enchant/Enchantment";
 import { LanguageRegistry } from "../../Languages/Languages";
 import { LockTypeRegistry } from "../../Locks/Locks";
-import { ProbabilityCell } from "../../Misc/ProbabilityCell";
+import { PercentCell } from "../../Misc/PercentCell";
 import { SchoolMask } from "../../Misc/School";
 import { ShiftedNumberCell } from "../../Misc/ShiftedNumberCell";
 import { QuestRegistry } from "../../Quest/Quests";
@@ -133,7 +133,7 @@ export class WeaponPercentDamage extends DamageBasePct {
      * Percentage (in whole percentage, i.e. value of "200" = 200%)
      */
     get Percentage() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this,()=>this.owner.DieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
@@ -536,7 +536,7 @@ export class PullTowards extends TargetBase{
 // 125
 export class ModifyThreatPercent extends TargetBase {
     get ThreatPercentAmount() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , ()=>this.DieSides.get() > 0 ? '[0-99]' : '[0-100]'
           , true

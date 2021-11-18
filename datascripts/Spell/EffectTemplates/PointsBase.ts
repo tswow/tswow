@@ -1,6 +1,6 @@
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { ShiftedNumberCell } from "../../Misc/ShiftedNumberCell";
-import { ProbabilityCell } from "../../Misc/ProbabilityCell";
+import { PercentCell } from "../../Misc/PercentCell";
 import { SpellPowerType } from "../SpellPowerType";
 import { TargetBase } from "./TargetBase";
 
@@ -14,7 +14,7 @@ export class PointsRoot extends TargetBase {
 
 export class ChanceBase extends PointsRoot {
     get BaseChance() {
-        return new ProbabilityCell(
+        return new PercentCell(
               this,()=>this.owner.DieSides.get() > 0
                     ? '[0-99]'
                     : '[0-100]'
@@ -23,7 +23,7 @@ export class ChanceBase extends PointsRoot {
         );
     }
     get RandomChance() {
-        return new ProbabilityCell(
+        return new PercentCell(
               this
             , '[0-100]'
             , true
@@ -31,7 +31,7 @@ export class ChanceBase extends PointsRoot {
         );
     }
     get ChancePerLevel() {
-        return new ProbabilityCell(
+        return new PercentCell(
               this
             , '[0-100]'
             , true
@@ -39,7 +39,7 @@ export class ChanceBase extends PointsRoot {
         )
     }
     get ChancePerCombo() {
-        return new ProbabilityCell(
+        return new PercentCell(
               this
             , '[0-100]'
             , true
@@ -50,7 +50,7 @@ export class ChanceBase extends PointsRoot {
 
 export class PercentBase extends PointsRoot {
     get BasePercent() {
-        return new ProbabilityCell(
+        return new PercentCell(
               this
             , ()=>this.owner.DieSides.get() > 0 ? '[0-99]' : '[0-100]'
             , true
@@ -58,7 +58,7 @@ export class PercentBase extends PointsRoot {
         )
     }
     get RandomPercent() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -66,7 +66,7 @@ export class PercentBase extends PointsRoot {
         )
     }
     get PercentPerLevel() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -74,7 +74,7 @@ export class PercentBase extends PointsRoot {
         )
     }
     get PercentPerCombo() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -136,7 +136,7 @@ export class DamageBase extends PointsRoot {
 
 export class DamageBasePct extends PointsRoot {
     get BaseDamagePct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this,()=>this.owner.DieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
@@ -145,7 +145,7 @@ export class DamageBasePct extends PointsRoot {
         );
     }
     get RandomDamagePct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -153,7 +153,7 @@ export class DamageBasePct extends PointsRoot {
         );
     }
     get DamagePctPerLevel() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -161,7 +161,7 @@ export class DamageBasePct extends PointsRoot {
         );
     }
     get DamagePctPerCombo() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -187,7 +187,7 @@ export class HealBase extends PointsRoot {
 
 export class HealBasePct extends PointsRoot {
     get BaseHealPct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this,()=>this.owner.DieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
@@ -196,7 +196,7 @@ export class HealBasePct extends PointsRoot {
         );
     }
     get RandomHealPct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -204,7 +204,7 @@ export class HealBasePct extends PointsRoot {
         );
     }
     get HealPctPerLevel() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -212,7 +212,7 @@ export class HealBasePct extends PointsRoot {
         );
     }
     get HealPctPerCombo() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -259,7 +259,7 @@ export class PowerBasePct extends PointsRoot {
         return makeEnumCell(SpellPowerType,this, this.owner.MiscValueA);
     }
     get BasePowerPct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this,()=>this.owner.DieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
@@ -268,7 +268,7 @@ export class PowerBasePct extends PointsRoot {
         );
     }
     get RandomPowerPct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -276,7 +276,7 @@ export class PowerBasePct extends PointsRoot {
         );
     }
     get PowerPerLevelPct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true
@@ -284,7 +284,7 @@ export class PowerBasePct extends PointsRoot {
         );
     }
     get PowerPerComboPct() {
-        return new ProbabilityCell(
+        return new PercentCell(
             this
           , '[0-100]'
           , true

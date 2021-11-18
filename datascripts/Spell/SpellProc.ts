@@ -19,7 +19,7 @@ import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { spell_procRow } from "wotlkdata/wotlkdata/sql/types/spell_proc";
-import { ProbabilityCell } from "../Misc/ProbabilityCell";
+import { PercentCell } from "../Misc/PercentCell";
 import { SchoolMask } from "../Misc/School";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
@@ -195,7 +195,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get Chance() {
-        return new ProbabilityCell(this.owner,'[1-101]', false, new SQLMaybeWriteCell(
+        return new PercentCell(this.owner,'[1-101]', false, new SQLMaybeWriteCell(
               this.owner
             , this
             , this.owner.row.ProcChance
