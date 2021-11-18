@@ -56,6 +56,7 @@ protected:
     TSPreparedStatement(std::string const& sql, uint32 id);
 public:
     TSPreparedStatementBase Query();
+    TSPreparedStatement* operator->() { return this; }
     friend class TSPreparedStatementBase;
     friend struct TSWorldDatabaseConnection;
     friend struct TSAuthDatabaseConnection;
