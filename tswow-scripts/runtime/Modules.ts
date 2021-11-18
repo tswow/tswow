@@ -45,13 +45,6 @@ DBErrors.log
 *.conf.dist
 *_backup/
 
-# Assets
-*.blp
-*.m2
-*.wmo
-*.skin
-*.anim
-
 # Extracted client data
 **/datasets/*/dbc_source
 **/datasets/*/dbc
