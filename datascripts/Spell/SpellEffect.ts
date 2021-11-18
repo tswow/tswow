@@ -21,6 +21,7 @@ import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/w
 import { Objectified, Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { Ids } from "../Misc/Ids";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
@@ -221,7 +222,7 @@ export class SpellEffect extends ArrayEntry<Spell> {
         this.BasePoints.set(0);
         this.ChainAmplitude.set(1);
         this.ChainTarget.set(0);
-        this.DieSides.set(0);
+        this.DieSides.set(1);
         this.ImplicitTargetA.set(0);
         this.ImplicitTargetB.set(0);
         this.Mechanic.set(0);
@@ -252,7 +253,16 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get Mechanic() {
         return makeEnumCell(SpellEffectMechanic, this, this.w(this.row.EffectMechanic));
     }
-    get BasePoints() { return this.w(this.row.EffectBasePoints)};
+
+    get BasePoints() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.w(this.row.EffectBasePoints)
+        )
+    };
     get DieSides() { return this.w(this.row.EffectDieSides); }
     get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
     get PointsPerCombo() { return this.w(this.row.EffectPointsPerCombo); }

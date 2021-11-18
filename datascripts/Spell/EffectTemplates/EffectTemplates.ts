@@ -4,7 +4,9 @@ import { CreatureTemplateRegistry } from "../../Creature/Creatures";
 import { EnchantmentRegistry } from "../../Enchant/Enchantment";
 import { LanguageRegistry } from "../../Languages/Languages";
 import { LockTypeRegistry } from "../../Locks/Locks";
+import { ProbabilityCell } from "../../Misc/ProbabilityCell";
 import { SchoolMask } from "../../Misc/School";
+import { ShiftedNumberCell } from "../../Misc/ShiftedNumberCell";
 import { QuestRegistry } from "../../Quest/Quests";
 import { RefUnknown } from "../../Refs/Ref";
 import { SkillLineRegistry } from "../../SkillLines/SkillLines";
@@ -31,13 +33,9 @@ export class TeleportUnits extends EffectTemplate {
 }
 // 6
 // 7
-export class EnvironmentalDamage extends EffectTemplate {
+export class EnvironmentalDamage extends DamageBase {
     get Source() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetA, this.index)); }
     get AreaType() { return makeEnumCell(SpellImplicitTarget,this, this.wrapIndex(this.row.ImplicitTargetB, this.index)); }
-    get BaseDamage() { return this.wrap(this.owner.BasePoints); }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
-    get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
-    get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
     get Radius() {
         return SpellRadiusRegistry.ref(
@@ -98,11 +96,15 @@ export class ExtraAttacks extends DamageBase {}
 // 24
 export class CreateItem extends TargetBase {
     get Item() { return this.wrap(this.owner.ItemType); }
-
-    /**
-     * Set to desired item count -1 (i.e. set to 199 for 200)
-     */
-    get ItemCount() { return this.wrap(this.owner.BasePoints); }
+    get ItemCount() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
 }
 // 25
 export class Weapon extends EffectTemplate {}
@@ -130,7 +132,15 @@ export class WeaponPercentDamage extends DamageBasePct {
     /**
      * Percentage (in whole percentage, i.e. value of "200" = 200%)
      */
-    get Percentage() { return this.wrap(this.owner.BasePoints); }
+    get Percentage() {
+        return new ProbabilityCell(
+            this,()=>this.owner.DieSides.get() > 0
+                  ? '[0-99]'
+                  : '[0-100]'
+          , true
+          , this.owner.BasePoints.AsCell()
+        );
+    }
 
     setSingleTarget() {
         this.ImplicitTargetA.UNIT_TARGET_ENEMY.set()
@@ -199,7 +209,15 @@ export class TeleportUnitFaceCaster extends EffectTemplate {
 }
 // 44
 export class SkillStep extends TargetBase {
-    get Tier() { return this.wrap(this.owner.BasePoints); }
+    get Tier() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get Skill() { return this.wrap(this.owner.MiscValueA); }
 }
 // 45
@@ -256,7 +274,15 @@ export class PowerBurn extends PowerBase {}
 // 63
 export class Threat extends TargetBase {
 
-    get ThreatAmount() { return this.wrap(this.owner.BasePoints); }
+    get ThreatAmount() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 64
@@ -344,7 +370,15 @@ export class ActivateObject extends TargetBase {
 export class GameObjectDamage extends DamageBase {}
 // 88
 export class GameObjectRepair extends PointsRoot {
-    get BaseRepair() { return this.wrap(this.owner.BasePoints); }
+    get BaseRepair() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get RandomRepair() { return this.wrap(this.owner.DieSides); }
     get RepairPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get RepairPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
@@ -371,7 +405,15 @@ export class EnchantHeldItem extends EffectTemplate {
 // 93
 // 94
 export class ResurrectSelf extends EffectTemplate {
-    get BaseHealth() { return this.wrap(this.owner.BasePoints); }
+    get BaseHealth() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
     get HealthPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get HealthPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
@@ -393,7 +435,15 @@ export class CastButtons extends EffectTemplate {
 }
 // 98
 export class Knockback extends TargetBase {
-    get Height() { return this.wrap(this.owner.BasePoints); }
+    get Height() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
     get HeightPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get KnockbackAmount() { return this.wrap(this.owner.MiscValueA); }
@@ -401,7 +451,15 @@ export class Knockback extends TargetBase {
 // 99
 // 100
 export class MakeDrunk extends PointsRoot {
-    get BaseDrunkness() { return this.wrap(this.owner.BasePoints); }
+    get BaseDrunkness() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
     get DrunknessPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get DrunknessPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
@@ -453,7 +511,15 @@ export class DurabilityDamagePercent extends DamageBasePct {
 // 118
 export class Skill extends TargetBase {
     get Skill() { return SkillLineRegistry.ref(this, this.owner.MiscValueA); }
-    get SkillTier() { return this.wrap(this.owner.BasePoints); }
+    get SkillTier() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
 }
 // 119
 // 120
@@ -469,7 +535,14 @@ export class PullTowards extends TargetBase{
 }
 // 125
 export class ModifyThreatPercent extends TargetBase {
-    get ThreatPercentAmount() { return this.wrap(this.owner.BasePoints); }
+    get ThreatPercentAmount() {
+        return new ProbabilityCell(
+            this
+          , ()=>this.DieSides.get() > 0 ? '[0-99]' : '[0-100]'
+          , true
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 126
@@ -481,7 +554,15 @@ export class StealBeneficialBuff extends CountBase {
 // 129
 // 130
 export class RedirectThreat extends TargetBase {
-    get ThreatAmount() { return this.wrap(this.owner.BasePoints); }
+    get ThreatAmount() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
 }
 // 131
@@ -522,7 +603,15 @@ export class TriggerSpellWithValue extends PointsBase {
 // 143
 // 144
 export class KnockbackDest extends TargetBase {
-    get Height() { return this.wrap(this.owner.BasePoints); }
+    get Height() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get DieSides() { return this.wrap(this.owner.DieSides); }
     get HeightPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get KnockbackAmount() { return this.wrap(this.owner.MiscValueA); }
@@ -549,7 +638,15 @@ export class FailQuest extends TargetBase {
 // 148
 export class TriggerMissileWithValue extends TargetBase {
     get MissileSpell() { return this.wrap(this.owner.TriggerSpell); }
-    get BasePoints() { return this.wrap(this.owner.BasePoints); }
+    get BasePoints() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.owner.DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.owner.BasePoints.AsCell()
+        )
+    }
     get PointsPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get PointsPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get DieSides() { return this.wrap(this.owner.DieSides); }

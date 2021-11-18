@@ -67,7 +67,7 @@ export class CreatureText extends MainEntity<creature_textRow> {
         return this.row.ID.get();
     }
     get Probability() {
-        return new ProbabilityCell(this, '[0-100]', this.row.Probability)
+        return new ProbabilityCell(this, '[0-100]', false, this.row.Probability)
     }
     get Language() { return LanguageRegistry.ref(this, this.row.Language); }
     get BroadcastText() {

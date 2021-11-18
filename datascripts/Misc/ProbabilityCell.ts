@@ -71,24 +71,33 @@ export function convertProbability(
 
 export class ProbabilityCell<T> extends CellSystem<T> {
     protected cell: Cell<number,any>
-    protected unit: ProbabilityUnit
+    protected unit: ProbabilityUnit|(()=>ProbabilityUnit)
+    protected getUnit() {
+        return typeof(this.unit) === 'function' ? this.unit() : this.unit;
+    }
+    protected isRounded: boolean;
 
-    constructor(owner: T, unit: ProbabilityUnit, cell: Cell<number,any>) {
+    constructor(owner: T, unit: ProbabilityUnit | (()=>ProbabilityUnit), isRounded: boolean, cell: Cell<number,any>) {
         super(owner);
         this.cell = cell;
         this.unit = unit;
+        this.isRounded = isRounded;
     }
 
-    get(type: ProbabilityUnit = this.unit): number {
-        return convertProbability(this.cell.get(), this.unit, type);
+    get IsRounded() { return this.isRounded; }
+
+    get(type: ProbabilityUnit = this.getUnit()): number {
+        return convertProbability(this.cell.get(), this.getUnit(), type);
     }
 
-    set(value: number, type: ProbabilityUnit = this.unit): T {
-        this.cell.set(convertProbability(value, type,this.unit))
+    set(value: number, type: ProbabilityUnit = this.getUnit()): T {
+        value = (convertProbability(value, type,this.getUnit()))
+        if(this.isRounded) value = Math.round(value);
+        this.cell.set(value);
         return this.owner;
     }
 
     objectify() {
-        return `${convertProbability(this.cell.get(),this.unit,'[0-100]')}%`
+        return `${convertProbability(this.cell.get(),this.getUnit(),'[0-100]')}%`
     }
 }

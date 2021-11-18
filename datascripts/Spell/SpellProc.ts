@@ -195,7 +195,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     get Chance() {
-        return new ProbabilityCell(this.owner,'[1-101]', new SQLMaybeWriteCell(
+        return new ProbabilityCell(this.owner,'[1-101]', false, new SQLMaybeWriteCell(
               this.owner
             , this
             , this.owner.row.ProcChance

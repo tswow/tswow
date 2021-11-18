@@ -2,6 +2,7 @@ import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/Cell
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
+import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { Spell } from "../Spell/Spell";
 import { SpellCastTimeRegistry } from "../Spell/SpellCastTime";
@@ -64,7 +65,15 @@ export class ProfessionRecipe extends CellSystemTop {
     /**
      * Set to desired item count -1 (i.e. set to 199 for 200, or 0 for 1)
      */
-    get OutputCount() { return this.wrap(this.spell.Effects.get(0).BasePoints); }
+    get OutputCount() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.spell.Effects.get(0).DieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.spell.Effects.get(0).BasePoints.AsCell()
+        )
+    }
     get OutputItem() { return new RecipeOutputItem(this); }
     get Ranks() { return new RecipeRank(this, this.spell); }
     get Reagents() { return new SpellReagents(this, this.spell); }
