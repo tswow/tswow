@@ -136,6 +136,21 @@ export class BroadcastTextRegistryClass
          .SoundEntry.set(0)
     }
 
+    createSimple(parent: number) {
+        let nid = this.IDs().dynamicId()
+        if(parent !== this.nullID()) {
+            let parentEntity = this.Entity(this.FindByID(parent));
+            let entity = this.Entity(parentEntity.row.clone(nid));
+            entity.MaleText.set(parentEntity.MaleText.objectify());
+            entity.FemaleText.set(parentEntity.FemaleText.objectify());
+            return entity;
+        } else {
+            let entity = this.Entity(this.Table().add(nid));
+            this.Clear(entity);
+            return entity;
+        }
+    }
+
     protected Clone(mod: string, id: string, r: BroadcastText, parent: BroadcastText): void {
         // copy over all localization
         r.MaleText.set(parent.MaleText.objectify());
