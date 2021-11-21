@@ -89,11 +89,15 @@ export class IdPrivate {
 
     protected static async writeFile(filename: string) {
         let str = ``;
-        for (const table of Object.values(mappings)) {
-            for (const entry of Object.values(table.entries)) {
-                str += `${entry.table}|${entry.fullName}|${entry.low}|${entry.high}|\n`;
-            }
-        }
+        Object.entries(mappings)
+            .sort(([ta],[tb])=>ta>tb ? 1 : -1)
+            .forEach(([_,table])=>{
+                Object.values(table.entries)
+                    .sort((a,b)=>a.fullName > b.fullName ? 1 : -1)
+                    .forEach(entry=>{
+                        str += (`${entry.table}|${entry.fullName}|${entry.low}|${entry.high}|\n`);
+                    })
+            })
         fs.writeFileSync(filename, str);
     }
 
