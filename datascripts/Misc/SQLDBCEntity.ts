@@ -62,6 +62,7 @@ export class MaybeSQLEntityPublic<T,SQL> extends CellSystem<T> implements IMaybe
     }
 }
 export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
+    @Transient
     private _cachedSQL: SQL | undefined;
     protected abstract createSQL(): SQL;
     protected abstract findSQL(): SQL;
