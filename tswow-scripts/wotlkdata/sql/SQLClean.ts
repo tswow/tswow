@@ -61,6 +61,7 @@ export function cleanSQL() {
     q('DELETE FROM playercreateinfo_spell_custom WHERE Note = "tswow";')
     q('DELETE FROM mail_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM creature_loot_template WHERE Comment = "tswow";')
+    q('DELETE FROM fishing_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM disenchant_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM gameobject_loot_template WHERE Comment = "tswow";')
     q('DELETE FROM item_loot_template WHERE Comment = "tswow";')
