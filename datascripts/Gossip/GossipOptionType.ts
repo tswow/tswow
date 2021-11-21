@@ -153,4 +153,26 @@ export class GossipOptionType extends CellSystem<GossipOption> {
     get UnlearnTalents()    { return this.value(16,16)}
     get UnlearnPetTalents() { return this.value(17,16)}
     get DualSpec()          { return this.value(18,16)}
+
+    get() { return this.owner.row.OptionType.get()}
+
+    objectify() {
+        switch(this.owner.row.OptionType.get()) {
+            case 1:  return 'Vendor'
+            case 3:  return 'Gossip'
+            case 5:  return 'Trainer'
+            case 6:  return 'SpiritHealer'
+            case 7:  return 'SpiritGuide'
+            case 8:  return 'Innkeeper'
+            case 9:  return 'Banker'
+            case 10: return 'Petition'
+            case 11: return 'TabardDesigner'
+            case 13: return 'Auctioneer'
+            case 14: return 'StableMaster'
+            case 16: return 'UnlearnTalents'
+            case 17: return 'UnlearnPetTalents'
+            case 18: return 'DualSpecs'
+            default: return 'INVALID'
+        }
+    }
 }
