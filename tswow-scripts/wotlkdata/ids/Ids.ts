@@ -111,6 +111,7 @@ export class IdPrivate {
 
         for (let i = 0; i < str.length; ++i) {
             const chr = str.charAt(i);
+            if(chr === '\n') continue;
             if (chr !== '|') {
                 curstr += chr;
                 continue;
