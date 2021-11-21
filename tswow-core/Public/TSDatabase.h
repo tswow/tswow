@@ -55,7 +55,7 @@ protected:
     virtual std::shared_ptr<TSDatabaseResult> Send(TSPreparedStatementBase* stmnt) = 0;
     TSPreparedStatement(std::string const& sql, uint32 id);
 public:
-    TSPreparedStatementBase Query();
+    TSPreparedStatementBase Create();
     TSPreparedStatement* operator->() { return this; }
     friend class TSPreparedStatementBase;
     friend struct TSWorldDatabaseConnection;

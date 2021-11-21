@@ -270,7 +270,7 @@ TSPreparedStatementBase* TSPreparedStatementBase::SetString(const uint8 index, T
     return this;
 }
 
-TSPreparedStatementBase TSPreparedStatement::Query()
+TSPreparedStatementBase TSPreparedStatement::Create()
 {
     return TSPreparedStatementBase(new PreparedStatementBase(0,m_paramCount), this);
 }

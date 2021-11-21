@@ -7996,7 +7996,7 @@ declare interface TSPreparedStatementBase {
 }
 
 declare interface TSPreparedStatement {
-    Query(): TSPreparedStatementBase;
+    Create(): TSPreparedStatementBase;
 }
 
 declare interface TSPreparedStatementWorld extends TSPreparedStatement {}

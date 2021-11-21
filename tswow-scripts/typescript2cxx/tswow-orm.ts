@@ -240,7 +240,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         writer.BeginBlock()
         loadStmnt()
         writer.writeStringNewLine(
-            `auto res = LoadStatement.Query()`)
+            `auto res = LoadStatement.Create()`)
         writer.IncreaseIntent()
         entry.pks().forEach((x,i)=>writer.writeStringNewLine(
             `->${x.settings().setMethod}(${i},this->${x.memoryName()})`
@@ -261,7 +261,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
         )
         writer.BeginBlock()
         loadStmnt()
-        writer.writeStringNewLine(`auto res = LoadStatement.Query()`)
+        writer.writeStringNewLine(`auto res = LoadStatement.Create()`)
         writer.IncreaseIntent()
         entry.pksNoIndex().forEach((x,i)=>{
             writer.writeStringNewLine(`->${x.settings().setMethod}(${i},${x.memoryName()})`)
@@ -364,7 +364,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     writer.BeginBlock()
     saveStmnt();
     const saveCall = (lastCall: string) => {
-        writer.writeStringNewLine(`SaveStatement.Query()`)
+        writer.writeStringNewLine(`SaveStatement.Create()`)
         writer.IncreaseIntent()
         entry.fields.forEach((x,i)=>{
             if(x.varCharSize > 0) {
@@ -424,7 +424,7 @@ export function handleClassImpl(node: ts.ClassDeclaration, writer: CodeWriter) {
     }
     writer.BeginBlock()
     deleteStmnt()
-    writer.writeStringNewLine(`DeleteStatement.Query()`)
+    writer.writeStringNewLine(`DeleteStatement.Create()`)
     writer.IncreaseIntent()
     entry.pks().forEach((x,i)=>
         writer.writeStringNewLine(
