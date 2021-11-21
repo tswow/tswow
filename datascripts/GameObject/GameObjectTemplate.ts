@@ -16,6 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { gameobject_templateRow } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
 import { AreaRegistry } from "../Area/Area";
@@ -89,6 +90,7 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
         return new GameObjectPlain(this.row);
     }
 
+    @Transient
     protected Addon = new GameObjectTemplateAddon(this);
     addonExists() { return this.Addon.exists(); }
     addonRow()    { return this.Addon.getSQL(); }
@@ -106,6 +108,8 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
     get Display() {
         return GameObjectDisplayRegistry.ref(this, this.row.displayId);
     }
+
+    @Transient
     get Spawns() {
         return new GameObjectTemplateInstances(this);
     }
