@@ -68,6 +68,7 @@ export class LootSet extends CellSystemTop {
         this.table.add(this.id,table)
             .Chance.set(Array.isArray(chance)
                 ? convChanceTuple(chance): chance)
+            .Reference.set(table)
             .MinCount.set(1)
             .MaxCount.set(1)
             .QuestRequired.set(0)
