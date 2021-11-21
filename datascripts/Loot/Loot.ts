@@ -129,15 +129,6 @@ export class LootSetPointer<T> extends CellWrapper<number,T>{
 
 export const Loot = {
     Fishing: {
-        ref<T>(owner: T, cell: Cell<number,any>) {
-            return new LootSetPointer(
-                  owner
-                , cell
-                , SQL.fishing_loot_template
-                , Ids.fishing_loot_template
-            )
-        },
-
         create(area: number) {
             return new LootSet(area,SQL.fishing_loot_template);
         },
