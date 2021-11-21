@@ -56,7 +56,12 @@ export class GameObjectGeoBox extends ChildEntity<GameObjectDisplayInfoRow,GameO
     get MinZ() { return this.ownerWrap(this.row.GeoBoxMinZ); }
     get MaxZ() { return this.ownerWrap(this.row.GeoBoxMaxZ); }
 
-    set(box: BoundingBox) {
+    set(box: BoundingBox|number): GameObjectDisplay {
+        if(typeof(box) === 'number') {
+            return this.set(
+                {minX:-box,minY:-box,minZ:-box,maxX:box,maxY:box,maxZ:box}
+            )
+        }
         this.MinX.set(box.minX);
         this.MinY.set(box.minY);
         this.MinZ.set(box.minZ);
