@@ -59,6 +59,7 @@ export class LootSet extends CellSystemTop {
             .QuestRequired.set(quest ? 1 : 0)
             .GroupId.set(groupId)
             .Comment.set("tswow")
+            .Reference.set(0)
             .LootMode.set(lootMode)
         return this;
     }
