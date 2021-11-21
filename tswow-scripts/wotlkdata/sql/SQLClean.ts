@@ -49,6 +49,7 @@ export function cleanSQL() {
     q('DELETE FROM spell_bonus_data WHERE comments = "tswow";');
     q('DELETE FROM smart_scripts WHERE comment = "tswow";');
     q('DELETE FROM gossip_menu_option WHERE VerifiedBuild = 17688;')
+    q('DELETE FROM gossip_menu WHERE VerifiedBuild = 17688;')
     q('DELETE FROM trainer_spell WHERE VerifiedBuild = 17688;')
     q('DELETE FROM waypoints WHERE point_comment = "tswow";')
     q('DELETE FROM npc_vendor WHERE VerifiedBuild = 17688;')
