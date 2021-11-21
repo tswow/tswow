@@ -1,4 +1,5 @@
 import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { LockRow } from "wotlkdata/wotlkdata/dbc/types/Lock";
 import { gameobject_templateQuery } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
@@ -10,6 +11,7 @@ import { ArrayEntity } from "../Misc/Entity";
 import { LockTypeRegistry } from "./Locks";
 
 export class LockIndexBase extends TransformedClass<LockIndexPlain> {
+    @Transient
     protected container: Lock;
     readonly index: number;
 
@@ -24,6 +26,10 @@ export class LockIndexBase extends TransformedClass<LockIndexPlain> {
             this
           , this.wrapIndex(this.container.row.Type,this.index)
       )
+    }
+
+    get Action() {
+        return this.wrapIndex(this.container.row.Action, this.index)
     }
 
     protected transformer(): EnumCellTransform<any> {
@@ -216,6 +222,29 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
 
     get length(): number {
         return 8;
+    }
+
+    addItem(item: number, action = 1) {
+        this.addGet()
+            .Type.ITEM.set()
+            .Item.set(item)
+            .Action.set(action)
+        return this;
+    }
+
+    /**
+     * Adds a LockType ref requirement to this Lock
+     * @param lockType ID of the referenced lock type
+     * @param reqSkill Skill point requirement (if lockType is a skill).
+     *                 Default = 0
+     */
+    addLockType(lockType: number, reqSkill: number = 0, action = 1) {
+        this.addGet()
+            .Type.LOCK_TYPE.set()
+            .LockType.set(lockType)
+            .RequiredSkill.set(reqSkill)
+            .Action.set(action)
+        return this;
     }
 
     get(index: number): LockIndexPlain {
