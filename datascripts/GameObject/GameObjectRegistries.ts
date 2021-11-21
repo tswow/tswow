@@ -110,7 +110,7 @@ export class GOPlainRegistryClsas
     // Do not change the type
     protected ClearGO(r: GameObjectPlain): void {
         // Default type
-        r.Type.MAP_OBJECT.set()
+        r.Type.GENERIC.set()
     }
     protected CloneGO(r: GameObjectPlain, parent: GameObjectPlain): void {}
     protected GOEntity(plain: GameObjectPlain): GameObjectPlain {
