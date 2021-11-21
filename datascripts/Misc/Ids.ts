@@ -119,9 +119,6 @@ export const Ids = {
     /** Start at 4376, Highest base value is 4375 */
     SpellIcon: new DynamicIDGenerator('SpellIcon',4376),
 
-    /** Starts at 3500, Highest base value is 3479*/
-    fishing_loot_template: new DynamicIDGenerator('fishing_loot_template',3500),
-
     /** Starts at 200000, Highest base value is 100006 */
     creature_loot_template: new DynamicIDGenerator('creature_loot_template',200000),
 

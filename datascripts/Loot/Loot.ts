@@ -136,8 +136,8 @@ export const Loot = {
             )
         },
 
-        create() {
-            return new LootSet(Ids.fishing_loot_template.id(),SQL.fishing_loot_template);
+        create(area: number) {
+            return new LootSet(area,SQL.fishing_loot_template);
         },
 
         load(id: number) {
