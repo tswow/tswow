@@ -118,6 +118,13 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .map.set(0)
          .id.set(0)
          .spawntimesecs.set(CREATURE_DEFAULT_SPAWNTIME)
+         .unit_flags.set(0)
+         .dynamicflags.set(0)
+         .zoneId.set(0)
+         .areaId.set(0)
+         .ScriptName.set('')
+         .phaseMask.set(0)
+         .equipment_id.set(0)
          .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {
