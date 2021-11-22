@@ -6949,6 +6949,9 @@ declare namespace _hidden {
         OnMotdChange(callback: (newMotd : string)=>void);
         OnShutdownInitiate(callback: (code : uint32,mask : uint32)=>void);
         OnUpdate(callback: (diff : uint32)=>void);
+        OnStartup(callback: ()=>void);
+        OnShutdownCancel(callback: ()=>void);
+        OnShutdown(callback: ()=>void);
     }
 
     export class Formula<T> {

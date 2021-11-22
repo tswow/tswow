@@ -78,6 +78,9 @@ EVENT_TYPE(WorldOnConfigLoad,bool)
 EVENT_TYPE(WorldOnMotdChange,TSString)
 EVENT_TYPE(WorldOnShutdownInitiate,uint32,uint32)
 EVENT_TYPE(WorldOnUpdate,uint32, TSMapManager)
+EVENT_TYPE(WorldOnStartup)
+EVENT_TYPE(WorldOnShutdownCancel)
+EVENT_TYPE(WorldOnShutdown)
 
 // FormulaScript
 EVENT_TYPE(FormulaOnHonorCalculation,TSMutable<float>,uint8,float)
@@ -769,6 +772,9 @@ struct TSEvents
 {
     // WorldScript
     EVENT(WorldOnOpenStateChange)
+    EVENT(WorldOnStartup)
+    EVENT(WorldOnShutdown)
+    EVENT(WorldOnShutdownCancel)
     EVENT(WorldOnConfigLoad)
     EVENT(WorldOnMotdChange)
     EVENT(WorldOnShutdownInitiate)
@@ -1133,6 +1139,9 @@ public:
     {
          WorldEvents* operator->() { return this;}
          EVENT_HANDLE(World,OnOpenStateChange)
+         EVENT_HANDLE(World,OnStartup)
+         EVENT_HANDLE(World,OnShutdown)
+         EVENT_HANDLE(World,OnShutdownCancel)
          EVENT_HANDLE(World,OnConfigLoad)
          EVENT_HANDLE(World,OnMotdChange)
          EVENT_HANDLE(World,OnShutdownInitiate)

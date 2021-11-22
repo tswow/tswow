@@ -59,6 +59,9 @@ public:
     TSWorldScript() : WorldScript("TSWorldScript"){}
     void OnOpenStateChange(bool open) FIRE(WorldOnOpenStateChange,open)
     void OnConfigLoad(bool reload) FIRE(WorldOnConfigLoad,reload)
+    void OnStartup() FIRE(WorldOnStartup)
+    void OnShutdown() FIRE(WorldOnShutdown)
+    void OnShutdownCancel() FIRE(WorldOnShutdownCancel)
     void OnMotdChange(std::string& newMotd) FIRE(WorldOnMotdChange,TSString(newMotd))
     void OnShutdownInitiate(ShutdownExitCode code,ShutdownMask mask) FIRE(WorldOnShutdownInitiate,code,mask)
     void OnUpdate(uint32 diff) FIRE(WorldOnUpdate,diff, TSMapManager())
