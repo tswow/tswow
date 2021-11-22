@@ -28,6 +28,7 @@ import { SoundAmbienceRegistry } from "../Sound/SoundAmbience";
 import { SoundProviderPreferenceRegistry } from "../Sound/SoundProviderPreferences";
 import { ZoneIntroMusicRegistry } from "../Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "../Sound/ZoneMusic";
+import { AreaFishingSkill } from "./AreaFishingSkill";
 import { AreaFlags } from "./AreaFlags";
 import { AreaWorldStateSounds, AreaWorldStateUIs } from "./AreaWorldStates";
 
@@ -68,6 +69,7 @@ export class Area extends MainEntity<AreaTableRow> {
         return makeMaskCell32(AreaFlags, this, this.row.Flags);
     }
     get Children() { return new AreaChildren(this); }
+    get Fishing() { return new AreaFishingSkill(this); }
 }
 
 export class AreaChildren extends MultiRowSystem<Area,Area> {
