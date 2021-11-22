@@ -184,8 +184,9 @@ export class Datascripts {
                   this.path.dirname().get()
                 , `swc datascripts -d datascripts/build`,'inherit'
             )
-        } catch(error) {
-            // error is printed by swc
+        } catch(err) {
+            this.path.swcrc.remove();
+            throw new Error(`Failed to compile datascripts`)
         }
         this.path.swcrc.remove();
     }
