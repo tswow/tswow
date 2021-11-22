@@ -149,11 +149,14 @@ export class FileChangeModule {
         }
     }
 
-    onChanged(input: FilePath, outputs: string[], callback: (filepath: WNode)=>void) {
+    onChanged(input: FilePath, outputs: (string|(()=>boolean))[], callback: (filepath: WNode)=>void) {
         input = wfs.absPath(input);
         let newMtime = fs.statSync(input).mtimeMs;
         let oldMtime = this.modifies.read(input);
-        if(newMtime !== oldMtime || outputs.find(x=>!wfs.exists(x))) {
+        if(newMtime !== oldMtime || outputs.find(x=>
+            typeof(x) === 'function'
+                ? x() : !wfs.exists(x))
+        ) {
             callback(new WNode(input));
             this.modifies.write(input,newMtime);
         }
