@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
 import { DBC as _DBC } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
-import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from './ids/Ids';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
