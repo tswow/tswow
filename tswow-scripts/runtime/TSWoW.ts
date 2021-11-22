@@ -21,7 +21,7 @@ import { term } from "../util/Terminal";
 import { Timer } from "../util/Timer";
 import { Addon } from "./Addon";
 import { AuthServer } from "./AuthServer";
-import { BuildAll } from "./BuildAll";
+import { MiscCommands } from "./MiscCommands";
 import { Client } from "./Client";
 import { CleanCommand } from "./CommandActions";
 import { Crashes } from "./Crashes";
@@ -52,7 +52,7 @@ export async function main() {
     await Package.initialize();
     await Crashes.initialize();
     await PositionsFile.initialize();
-    await BuildAll.initialize();
+    await MiscCommands.initialize();
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,

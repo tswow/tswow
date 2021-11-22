@@ -1,7 +1,7 @@
 import { commands } from "../util/Commands";
 import { BuildCommand } from "./CommandActions";
 
-export class BuildAll {
+export class MiscCommands {
     static initialize() {
         BuildCommand.addCommand(
               'all'
