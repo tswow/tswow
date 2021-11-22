@@ -21,7 +21,7 @@
 #include "TSEvents.h"
 
 void TSInitializeEvents();
-TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName);
+TSEvents* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName);
 bool TSShouldLoadEventHandler(boost::filesystem::path const& name);
 void TSUnloadEventHandler(boost::filesystem::path const& name);
 TSEventStore* GetTSEvents();

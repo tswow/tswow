@@ -17,7 +17,7 @@ export function writeLoader(outDir: string) {
     header.BeginBlock()
     let exp = process.platform === 'win32' ? '__declspec(dllexport)' : '__attribute__((visibility("default")))'
     header.writeStringNewLine(`${exp} char const* GetScriptModuleRevisionHash();`);
-    header.writeStringNewLine(`${exp} void AddTSScripts(TSEventHandlers* handlers);`);
+    header.writeStringNewLine(`${exp} void AddTSScripts(TSEvents* handlers);`);
     header.writeStringNewLine(`${exp} void AddScripts();`);
     header.writeStringNewLine(`${exp} char const* GetScriptModule();`);
     header.writeStringNewLine(`${exp} char const* GetBuildDirective();`);
@@ -55,7 +55,7 @@ export function writeLoader(outDir: string) {
         + `"${ipaths.bin.revisions.trinitycore.readString()}";`)
     cpp.EndBlock();
 
-    cpp.writeStringNewLine(`void AddTSScripts(TSEventHandlers* handlers)`);
+    cpp.writeStringNewLine(`void AddTSScripts(TSEvents* handlers)`);
     cpp.BeginBlock();
     cpp.writeStringNewLine(`WriteTables();`);
     cpp.writeStringNewLine(`SetID(handlers->m_modid);`)

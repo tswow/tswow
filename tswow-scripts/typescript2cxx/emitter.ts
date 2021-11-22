@@ -2025,7 +2025,7 @@ export class Emitter {
                 const isArray = this.resolver.isArrayType(typeInfo);
 
                 const typeText = type.pos == -1 ? (type as any).typeName.escapedText : typeReference.getText();
-                const isEventsStruct = typeText === 'TSEventHandlers';
+                const isEventsStruct = typeText === 'TSEvents';
 
                 const primitives = [
                     'uint8', 'uint16', 'uint32', 'uint64',
@@ -2366,8 +2366,8 @@ export class Emitter {
                 throw new Error('"Main" function cannot have type parameters!');
             }
 
-            if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'TSEventHandlers') {
-                throw new Error('"Main" function must take a single argument "TSEventHandlers" (globally defined!)');
+            if ( node.parameters.length !== 1 || node.parameters[0].type.getFullText().replace(' ', '') !== 'TSEvents') {
+                throw new Error('"Main" function must take a single argument "TSEvents" (globally defined!)');
             }
         }
 
@@ -2392,7 +2392,7 @@ export class Emitter {
             let fsChild = pare.expression.getChildAt(0).getChildAt(0);
             let type = this.resolver.getTypeAtLocation(fsChild);
             let callDecl = this.resolver.getFirstDeclaration(type) as ts.ClassDeclaration;
-            if(callDecl.name && callDecl.name.getText() === 'TSEventHandlers') {
+            if(callDecl.name && callDecl.name.getText() === 'TSEvents') {
                 isEvent = true;
             }
         } catch(err) {}

@@ -1115,20 +1115,20 @@ TC_GAME_API void ReloadMap(MapOnReloadType fn, uint32 id);
 TC_GAME_API void ReloadInstance(InstanceOnReloadType fn, uint32 id);
 TC_GAME_API void ReloadBattleground(BattlegroundOnReloadType fn, uint32 id);
 
-class TSEventHandlers
+class TSEvents
 {
 public:
      uint32_t m_modid;
      std::string m_modName;
 
-     TSEventHandlers(uint32_t modid, std::string const& modName)
+     TSEvents(uint32_t modid, std::string const& modName)
          : m_modid(modid)
          , m_modName(modName)
          , Tests(modid,modName)
      {
      }
 
-     TSEventHandlers() = default;
+     TSEvents() = default;
 
     struct ServerEvents: public EventHandler
     {

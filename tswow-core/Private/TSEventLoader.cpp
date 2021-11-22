@@ -52,7 +52,7 @@
 #include <limits>
 
 TSEventStore tsEvents;
-std::map<std::string,TSEventHandlers> eventHandlers;
+std::map<std::string,TSEvents> eventHandlers;
 
 std::map<std::string,uint32_t> modIds;
 std::vector<uint32_t> reloads;
@@ -116,7 +116,7 @@ bool TSShouldLoadEventHandler(boost::filesystem::path const& name)
     return res;
 }
 
-TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName)
+TSEvents* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName)
 {
     std::string spath = modulePath.string();
     uint32_t modid = 0;
@@ -130,7 +130,7 @@ TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& modulePath, s
         reloads.push_back(0);
     }
 
-    auto handler = &(eventHandlers[spath] = TSEventHandlers(modid,moduleName));
+    auto handler = &(eventHandlers[spath] = TSEvents(modid,moduleName));
     handler->LoadEvents(&tsEvents);
     return handler;
 }
@@ -178,7 +178,7 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
     }
 
     // Unload events
-    std::map<std::string,TSEventHandlers>::iterator iter
+    std::map<std::string,TSEvents>::iterator iter
         = eventHandlers.find(sname);
     if(iter!=eventHandlers.end())
     {

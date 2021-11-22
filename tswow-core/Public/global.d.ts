@@ -7631,7 +7631,7 @@ declare namespace _hidden {
 }
 // @hidden-end (do NOT remove this tag!)
 
-declare class TSEventHandlers {
+declare class TSEvents {
     World: _hidden.World<void>;
     Formula: _hidden.Formula<void>;
     Addon: _hidden.Addon<void>;
