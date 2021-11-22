@@ -81,6 +81,7 @@ export class MapADT extends CellSystem<Map> {
     }
 
     add(mod: string, blobs: [minx: number, miny: number, maxx: number, maxy: number, teleportName?: string][]) {
+        mod = mod.split('.').join(path.sep)
         if(this.owner.Directory.get().split(/[\n \r\t]/).join('').length === 0) {
             throw new Error(
                   `Tried creating map files without a valid directory name,`
