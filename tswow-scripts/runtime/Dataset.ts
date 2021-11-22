@@ -13,12 +13,36 @@ import { Connection, mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
 import { Realm } from "./Realm";
 
+class DatasetManager {
+    worldSource: Connection;
+    worldDest: Connection;
+
+    constructor(name: string) {
+        this.worldSource = new Connection(
+              NodeConfig.DatabaseSettings('world_source',name)
+            , 'world_source'
+        )
+        this.worldDest = new Connection(
+            NodeConfig.DatabaseSettings('world',name)
+          , 'world'
+        )
+    }
+}
+
 export class Dataset {
+    private static managers: {[key: string]: DatasetManager} = {}
+
+    private manager() {
+        return Dataset.managers[this.fullName]
+           || (Dataset.managers[this.fullName] = new DatasetManager(this.fullName))
+    }
+
     readonly mod: ModuleEndpoint
     readonly name: string;
-    readonly worldSource: Connection;
-    readonly worldDest: Connection;
     readonly client: Client = new Client(this)
+
+    get worldSource() { return this.manager().worldSource; }
+    get worldDest() { return this.manager().worldDest; }
 
     get fullName() {
         return this.mod.fullName+'.'+this.name
@@ -37,14 +61,6 @@ export class Dataset {
     constructor(mod: ModuleEndpoint, name: string) {
         this.mod = mod;
         this.name = name;
-        this.worldSource = new Connection(
-              NodeConfig.DatabaseSettings('world_source',this.fullName)
-            , 'world_source'
-        )
-        this.worldDest = new Connection(
-            NodeConfig.DatabaseSettings('world',this.fullName)
-          , 'world'
-      )
     }
 
     realms() {
