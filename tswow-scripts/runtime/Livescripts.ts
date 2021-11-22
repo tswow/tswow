@@ -101,7 +101,8 @@ export class Livescripts {
                 + ` ${ipaths.bin.scripts.typescript2cxx.typescript2cxx.main_js.abs()} tsconfig.json`
                 + ` ${(args.join(' '))}`
                 + ` --ipaths=${ipaths.abs()}`
-                + ` --dataset=${dataset.fullName}`
+                + ` --datasetName=${dataset.fullName}`
+                + ` --datasetPath=${dataset.path.abs().get()}`
                 , 'inherit'
             )
         } catch(err) {

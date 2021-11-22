@@ -5,7 +5,7 @@ import { CodeWriter } from "./codewriter";
 import { TRANSPILER_CHANGES } from './version';
 import path = require('path');
 
-const datasetName = process.argv.find(x=>x.startsWith('--dataset=')).substring('--dataset='.length)
+const datasetName = process.argv.find(x=>x.startsWith('--datasetName=')).substring('--datasetName='.length)
 
 export function writeLoader(outDir: string) {
     const header = new CodeWriter();
