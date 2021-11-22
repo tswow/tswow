@@ -16,6 +16,7 @@
  */
 import { mpath, wfs } from "../util/FileSystem";
 import { FilePath } from "../util/FileTree";
+import { GetExistingId, IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
@@ -218,9 +219,29 @@ export class Addon {
             node.relativeTo(this.path)
         })
 
-        // 5. Hack to write correct require paths
+        // 5. Hack to write correct require paths and GetID calls
+        // (currently requires transpilation to _always_ be done)
+
+        class IdPublic extends IdPrivate {
+            static readFile = () => IdPrivate.readFile(dataset.path.ids_txt.get());
+            static writeFile = () => IdPrivate.writeFile(dataset.path.ids_txt.get());
+            static flushMemory = () => IdPrivate.flushMemory();
+        }
+        IdPublic.readFile()
         this.path.build.iterate('RECURSE','FILES','FULL',node=>{
-            let lines = node.toFile().readString().split('\n').map(x=>{
+            let str = node.toFile().readString()
+            let m: RegExpMatchArray
+            do {
+                m = str.match(
+                    /GetID\( *"(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/)
+                if(m) {
+                    const [_,table,mod,name] = m;
+                    let id = GetExistingId(table,mod,name);
+                    str = str.replace(m[0],`${id}`)
+                }
+            } while(m != null);
+
+            str = str.split('\n').map(x=>{
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
                     let p = m[1];
@@ -233,8 +254,9 @@ export class Addon {
                 }
                 return x;
             }).join('\n')
-            node.toFile().write(lines)
+            node.toFile().write(str)
         })
+        IdPublic.flushMemory()
 
         this.path.build.lib.remove();
         wsys.execIn(ipaths.bin.include_addon.get(),'tstl','inherit')

@@ -14056,3 +14056,5 @@ declare class TSPacketRead {
 
     Size(): uint32
 }
+
+declare function GetID(table: string, mod: string, name: string): number;
