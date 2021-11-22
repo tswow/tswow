@@ -77,7 +77,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                 .Spells.addMod(ispell=>{
                     ispell.Spell.set(spell.ID)
                         .Trigger.ON_USE.set()
-                        .Charges.set(-1)
+                        .Charges.set(1,'DELETE_ITEM')
                 })
                 .Class.ItemEnhancement.set()
                 .Material.CLOTH.set()

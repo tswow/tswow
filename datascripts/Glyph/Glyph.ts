@@ -113,7 +113,7 @@ export class GlyphItems extends MultiRowSystem<GlyphItem,Glyph> {
             .Spells.addMod(ispell=>{
                 ispell.Spell.set(spell.ID)
                     .Trigger.ON_USE.set()
-                    .Charges.set(-1)
+                    .Charges.set(1,'DELETE_ITEM')
             })
             .Material.LIQUID.set()
             .Flags.PLAYER_CAST.set(true)
