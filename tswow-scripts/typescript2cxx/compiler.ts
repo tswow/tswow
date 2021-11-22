@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as ts from 'typescript';
 import { Emitter } from './emitter';
 import { Helpers } from './helpers';
+import { loadIDFile, postprocess } from './postprocessor';
 import { writeIdFile } from './tswow-idfile';
 import { writeLoader } from './tswow-loader';
 import { writeTableCreationFile } from './tswow-orm';
@@ -100,7 +101,8 @@ export class Run {
         return files.length === 1 ? files[0] : files;
     }
 
-    public run(sourcesOrConfigFile: string[] | string, cmdLineOptions: any): void {
+    public async run(sourcesOrConfigFile: string[] | string, cmdLineOptions: any) {
+        await loadIDFile()
         if (typeof (sourcesOrConfigFile) === 'string') {
             if (sourcesOrConfigFile.endsWith('.json')) {
                 const configPath = ts.findConfigFile('./', ts.sys.fileExists, sourcesOrConfigFile);
@@ -253,35 +255,33 @@ export class Run {
             const fileNameCpp = Helpers.correctFileNameForCxx(fileNameNoExt.concat('.', 'cpp'));
             const headerPath = outDir + fileNameHeader;
             const cppPath = outDir + fileNameCpp;
-            TRANSPILER_CHANGES.onChanged(paths[0], [headerPath,cppPath],()=>{
-                console.log(`Transpiling ${paths[0]}`)
-                // @tswow-begin: hack: const enums
-                const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
-                emitterHeader.HeaderMode = true;
-                emitterHeader.processNode(s);
-                const emitterSource = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
-                // @tswow-end
-                emitterSource.SourceMode = true;
-                emitterSource.processNode(s);
 
-                if (cmdLineOptions.trace) {
-                    console.log(
-                        ForegroundColorEscapeSequences.Cyan
-                        + 'Writing to file: '
-                        + resetEscapeSequence
-                        + ForegroundColorEscapeSequences.White
-                        + outDir + fileNameCpp
-                        + resetEscapeSequence);
-                }
+            // @tswow-begin: hack: const enums
+            const emitterHeader = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
+            emitterHeader.HeaderMode = true;
+            emitterHeader.processNode(s);
+            const emitterSource = new Emitter(program.getTypeChecker(), options, cmdLineOptions, false, enumTypes, program.getCurrentDirectory());
+            // @tswow-end
+            emitterSource.SourceMode = true;
+            emitterSource.processNode(s);
 
-                const dir = path.dirname(path.join(outDir, fileNameHeader));
-                fs.mkdirsSync(dir);
-                const headerText = emitterHeader.writer.getText();
-                const cppText = emitterSource.writer.getText();
+            if (cmdLineOptions.trace) {
+                console.log(
+                    ForegroundColorEscapeSequences.Cyan
+                    + 'Writing to file: '
+                    + resetEscapeSequence
+                    + ForegroundColorEscapeSequences.White
+                    + outDir + fileNameCpp
+                    + resetEscapeSequence);
+            }
 
-                TRANSPILER_CHANGES.writeIfChanged(headerPath,headerText);
-                TRANSPILER_CHANGES.writeIfChanged(cppPath,cppText);
-            })
+            const dir = path.dirname(path.join(outDir, fileNameHeader));
+            fs.mkdirsSync(dir);
+            const headerText = postprocess(emitterHeader.writer.getText());
+            const cppText = postprocess(emitterSource.writer.getText());
+
+            TRANSPILER_CHANGES.writeIfChanged(headerPath,headerText);
+            TRANSPILER_CHANGES.writeIfChanged(cppPath,cppText);
         });
 
         if (cmdLineOptions.trace) {
