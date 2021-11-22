@@ -81,6 +81,13 @@ export class MapADT extends CellSystem<Map> {
     }
 
     add(mod: string, blobs: [minx: number, miny: number, maxx: number, maxy: number, teleportName?: string][]) {
+        if(this.owner.Directory.get().split(/[\n \r\t]/).join('').length === 0) {
+            throw new Error(
+                  `Tried creating map files without a valid directory name,`
+                + ` please call 'map.Directory.set(...)' before you call this function`
+            )
+        }
+
         // todo: this should make a single call to adtcreator
         for(let [minx,miny,maxx,maxy,teleportName] of blobs) {
             if(teleportName !== undefined) {
