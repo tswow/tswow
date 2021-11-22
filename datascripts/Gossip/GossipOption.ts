@@ -16,6 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { gossip_menu_optionRow } from "wotlkdata/wotlkdata/sql/types/gossip_menu_option";
@@ -27,6 +28,7 @@ import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
 export class GossipOption extends CellSystemTop {
     readonly Condition: Condition<this>;
+    @Transient
     readonly row: gossip_menu_optionRow;
     constructor(row: gossip_menu_optionRow) {
         super();
