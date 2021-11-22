@@ -153,20 +153,40 @@ export function GetId(table: string, mod: string, name: string, startid: number 
     return GetIdRange(table, mod, name, 1, startid).low;
 }
 
-export function GetIdRange(table: string, mod: string, name: string, size: number, startid: number = 10000) {
-    let forward = mappings[table];
-    if (!forward) { forward = mappings[table] = new Table(); }
-    const fullname = mod + ':' + name;
-    if (mod.includes(':') || name.includes(':') ||
-        fullname.includes('.') || fullname.includes(';') || fullname.includes('|')) {
-            throw new Error('Identifiers cannot include any of the characters : . ; |');
+function GetIdRangeInternal(table: Table, fullname: string) {
+    if(fullname.split(':').length > 2) {
+        throw new Error(
+            `ID ${fullname} is invalid, mod/name cannot include the character ':'`
+        )
     }
+    if (table.entries[fullname]) { return table.entries[fullname]; }
+}
 
-    if (forward.entries[fullname]) { return forward.entries[fullname]; }
+export function GetIdRange(table: string, mod: string, name: string, size: number, startid: number = 10000) {
+    let forward = mappings[table] || (mappings[table] = new Table());
+    const fullname = mod + ':' + name;
+    let fwd = GetIdRangeInternal(forward,`${mod}:${name}`);
+    if(fwd) return fwd;
     const id = getAllocator(table).add(startid, size);
     const entry = new IdRange(true, table, mod, name, id, id + size - 1);
     forward.entries[fullname] = entry;
     return entry;
+}
+
+export function GetExistingIdRange(table: string, mod: string, name: string) {
+    let forward = mappings[table] || (mappings[table] = new Table());
+    const range = GetIdRangeInternal(forward,`${mod}:${name}`)
+    if(range === undefined) {
+        throw new Error(
+              `No such entry: ${table}:${mod}:${name}`
+            + ` (did you forget to 'build data' first?)`
+        )
+    }
+    return range;
+}
+
+export function GetExistingId(table: string, mod: string, name: string) {
+    return GetExistingIdRange(table,mod,name).low
 }
 
 export function GetTempId(table: string, startId: number) {
