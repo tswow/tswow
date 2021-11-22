@@ -420,8 +420,8 @@ export class GameObjectFishingHole extends GameObjectTemplate {
         return new LootSetPointer(
               this
             , this.row.Data1
-            , SQL.fishing_loot_template
-            , Ids.fishing_loot_template
+            , SQL.gameobject_loot_template
+            , Ids.gameobject_loot_template
         );
     }
     get MinSuccessOpens() { return this.wrap(this.row.Data2); }
