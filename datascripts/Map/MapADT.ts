@@ -116,7 +116,7 @@ export class MapADT extends CellSystem<Map> {
 
             if(missing) {
                 child_process.execSync(
-                    `${path.join('bin','adt-creator','adt-creator')}`
+                    `"${path.join('bin','adt-creator','adtcreator.exe')}"`
                     + ` ${path.join('bin','source.adt')}`
                     + ` ${mapdir}`
                     + ` ${this.owner.Directory.get()}`
