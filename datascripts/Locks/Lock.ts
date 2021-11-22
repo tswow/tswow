@@ -224,6 +224,14 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
         return 8;
     }
 
+    addEmpty() {
+        const index = this.addGet().index;
+        this.row.Action.setIndex(index,0)
+        this.row.Index.setIndex(index,0)
+        this.row.Skill.setIndex(index,0)
+        return this;
+    }
+
     addItem(item: number, action = 1) {
         this.addGet()
             .Type.ITEM.set()
