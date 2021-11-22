@@ -34,7 +34,7 @@ export function getInline(owner: any, type: string) {
     return getAny(owner,'',type);
 }
 
-export const InlineScript: TSEventHandlers = {} as any
+export const InlineScript: TSEvents = {} as any
 Object.keys(getEventNames()).forEach(cls=>{
     (InlineScript as any)[cls] = getInline(InlineScript,cls)
 })
@@ -157,7 +157,7 @@ finish('inline-scripts',()=>{
                             .split('\\').join('_')
                             .split('/').join('_')
                             .split('.').join('_')
-                        }(events: TSEventHandlers){\n`
+                        }(events: TSEvents){\n`
                 + `${funcs.join('\n\n')}\n}`
             inlinePath.join(file).toFile().write(content)
         })
