@@ -50,7 +50,6 @@
 #include "TSWorldObject.h"
 #include "TSWorldPacket.h"
 #include "TSWorldSocket.h"
-#include "TSIDs.h"
 #include "TSPosition.h"
 #include "TSClass.h"
 #include "TSMath.h"

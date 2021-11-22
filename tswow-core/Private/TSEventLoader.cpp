@@ -40,7 +40,6 @@
 #include "TSGuild.h"
 #include "SpellMgr.h"
 #include "SpellInfo.h"
-#include "TSIDs.h"
 #include "TSChannel.h"
 #include "TSWorldEntity.h"
 #include "DBCStores.h"
@@ -413,6 +412,5 @@ void AddSC_tswow_commandscript();
 void TSInitializeEvents()
 {
     TSLoadEvents();
-    LoadIDs();
     AddSC_tswow_commandscript();
 };

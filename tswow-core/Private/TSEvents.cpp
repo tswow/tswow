@@ -40,7 +40,6 @@
 #include "TSGuild.h"
 #include "SpellMgr.h"
 #include "SpellInfo.h"
-#include "TSIDs.h"
 #include "TSChannel.h"
 #include "DBCStores.h"
 #include "MapManager.h"
