@@ -14,8 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SpellRegistry } from "../Spell/Spells";
 import { ItemTemplate } from "./ItemTemplate";
 
@@ -98,12 +100,76 @@ export enum ItemSpellTrigger {
     ON_LEARN      = 6,
 }
 
+export class ChargesSystem<T> extends CellSystem<T> {
+    protected cell: Cell<number,any>
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    get Raw() { return this.ownerWrap(this.cell); }
+
+    objectify() {
+        if(this.cell.get() === 0) return 'UNLIMITED';
+        if(this.cell.get() < 0) {
+            return {charges:-this.cell.get(),type:'DELETE_ITEM'}
+        }
+        if(this.cell.get() > 0) {
+            return {charges:this.cell.get(),type:'NO_DELETE_ITEM'}
+        }
+    }
+
+    getRawCount() {
+        return this.cell.get();
+    }
+
+    getAbsCount() {
+        return Math.abs(this.cell.get())
+    }
+
+    getType() {
+        if(this.cell.get() === 0) return 'UNLIMITED'
+        if(this.cell.get() < 0) return 'DELETE_ITEM'
+        return 'NO_DELETE_ITEM'
+    }
+
+    set(value: 'UNLIMITED'): T;
+    set(value: number, type: 'DELETE_ITEM'|'NO_DELETE_ITEM'): T;
+    set(value: 'UNLIMITED'|number, type?: 'DELETE_ITEM'|'NO_DELETE_ITEM') {
+        if(value === 0 && type !== undefined) {
+            throw new Error(
+                  `Trying to set item delete type (${type})`
+                + `with unlimited (0) charges`
+            )
+        }
+
+        if(value < 0 && type !== undefined) {
+            throw new Error(
+                  `Attempting to set item delete type with multiple methods:`
+                + ` value is both negative`
+                + ` and type is specified as ${type}`
+            )
+        }
+
+        if(value === 'UNLIMITED') {
+            this.cell.set(0)
+            return this.owner;
+        } else if(type === 'DELETE_ITEM') {
+            this.cell.set(-value);
+        } else {
+            this.cell.set(value);
+        }
+        return this.owner;
+    }
+}
+
 export class ItemSpell extends ArrayEntry<ItemTemplate> {
     clear() {
         this.Spell.set(0);
         this.Category.set(0);
         this.Trigger.set(0);
-        this.Charges.set(0);
+        this.Charges.Raw.set(0);
         this.ProcsPerMinute.set(0);
         this.Cooldown.set(-1);
         this.CategoryCooldown.set(-1);
@@ -118,7 +184,7 @@ export class ItemSpell extends ArrayEntry<ItemTemplate> {
     get Trigger() {
         return makeEnumCell(ItemSpellTrigger, this, TriggerRows(this.container)[this.index]);
     }
-    get Charges() { return this.wrap(ChargeRows(this.container)[this.index]); }
+    get Charges() { return new ChargesSystem(this, ChargeRows(this.container)[this.index]); }
     get ProcsPerMinute() { return this.wrap(PPMRows(this.container)[this.index]); }
     get Cooldown () { return this.wrap(CooldownRows(this.container)[this.index]); }
     get CategoryCooldown() { return this.wrap(CCooldownRows(this.container)[this.index]); }
