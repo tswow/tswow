@@ -768,7 +768,7 @@ class TSConditionMap : public TSEventMap<TSConditionEvents> {
 
 TSConditionEvents* GetConditionEvent(uint32_t id);
 
-struct TSEvents
+struct TSEventStore
 {
     // WorldScript
     EVENT(WorldOnOpenStateChange)
@@ -1768,7 +1768,7 @@ public:
         }
     } Tests;
 
-    void LoadEvents(TSEvents* events)
+    void LoadEvents(TSEventStore* events)
     {
         Server.LoadEvents(events);
         World.LoadEvents(events);
@@ -1860,6 +1860,6 @@ public:
 
 #define OnMessageID(type,func) _OnMessageID<type>(type::GetID(),func)
 
-TC_GAME_API TSEvents* GetTSEvents();
+TC_GAME_API TSEventStore* GetTSEvents();
 
 void TSLoadEvents();

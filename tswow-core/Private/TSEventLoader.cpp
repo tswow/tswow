@@ -51,7 +51,7 @@
 #include <map>
 #include <limits>
 
-TSEvents tsEvents;
+TSEventStore tsEvents;
 std::map<std::string,TSEventHandlers> eventHandlers;
 
 std::map<std::string,uint32_t> modIds;
@@ -66,7 +66,7 @@ std::vector<MessageHandle<void>> & getMessageMap()
     return messageMap;
 }
 
-TSEvents* GetTSEvents()
+TSEventStore* GetTSEvents()
 {
     return &tsEvents;
 }

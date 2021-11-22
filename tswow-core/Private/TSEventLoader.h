@@ -24,6 +24,6 @@ void TSInitializeEvents();
 TSEventHandlers* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName);
 bool TSShouldLoadEventHandler(boost::filesystem::path const& name);
 void TSUnloadEventHandler(boost::filesystem::path const& name);
-TSEvents* GetTSEvents();
+TSEventStore* GetTSEvents();
 bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msg);
 #endif

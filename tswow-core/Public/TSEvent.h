@@ -164,14 +164,14 @@ public:
    }
 };
 
-struct TSEvents;
+struct TSEventStore;
 class EventHandler {
 protected:
 	std::vector<TSEventHandle*> handles;
 	void Add(TSEventHandle* listener) { handles.push_back(listener); }
-	TSEvents* events = nullptr;
+	TSEventStore* events = nullptr;
 public:
-	void LoadEvents(TSEvents* events)
+	void LoadEvents(TSEventStore* events)
 	{
 		this->events = events;
 	}
