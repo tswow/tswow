@@ -47,6 +47,7 @@ import { InlineScript } from "./InlineScript/InlineScript";
 import { ItemDisplayinfoRegistry } from "./Item/ItemDisplayInfo";
 import { ItemSetRegistry } from "./Item/ItemSet";
 import { ItemTemplateRegistry } from "./Item/ItemTemplate";
+import { KeyRegistry } from "./Key/Key";
 import { LanguageRegistry } from "./Languages/Languages";
 import { Lights } from "./Light/Lights";
 import { LockRegistry, LockTypeRegistry } from "./Locks/Locks";
@@ -175,6 +176,7 @@ export const std = {
     TotemCategory: TotemCategoryRegistry,
     BroadcastTexts: BroadcastTextRegistry,
     CreatureTexts: CreatureTextRegistry,
+    Keys: KeyRegistry,
     InlineScripts: InlineScript,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: DBC,
