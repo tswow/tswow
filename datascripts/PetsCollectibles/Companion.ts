@@ -35,6 +35,17 @@ export class CompanionItems extends MultirowSystemCached<ItemTemplate,Companion>
     }
 
     add(mod: string, id: string) {
+        this.addGet(mod,id);
+        return this.owner;
+    }
+
+    addMod(mod: string, id: string, callback: (spell: Spell, item: ItemTemplate)=>void) {
+        const {spell,item} = this.addGet(mod,id);
+        callback(spell,item);
+        return this.owner;
+    }
+
+    addGet(mod: string, id: string) {
         const spell = SpellRegistry.create(mod,`${id}-spell`)
             .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
@@ -79,7 +90,7 @@ export class CompanionItems extends MultirowSystemCached<ItemTemplate,Companion>
         if(this.cache !== undefined) {
             this.cache.push(item);
         }
-        return this.owner;
+        return {spell,item}
     }
 }
 

@@ -38,6 +38,17 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
     }
 
     add(mod: string, id: string, mountSkillRank: number = 0) {
+        this.addGet(mod,id,mountSkillRank);
+        return this.owner;
+    }
+
+    addMod(mod: string, id: string, callback: (spell: Spell, item: ItemTemplate)=>void) {
+        const {spell,item} = this.addGet(mod,id,0);
+        callback(spell,item);
+        return this.owner;
+    }
+
+    addGet(mod: string, id: string, mountSkillRank: number = 0) {
         const spell = SpellRegistry.create(mod,`${id}-spell`)
             .Icon.setPath('Interface\\Icons\\Trade_Engineering')
             .Effects.addMod(efffect=>{
@@ -84,6 +95,7 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
         if(this.cache !== undefined) {
             this.cache.push(item)
         }
+        return {spell,item};
     }
 }
 
