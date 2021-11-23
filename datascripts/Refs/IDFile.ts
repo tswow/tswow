@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { finish } from "wotlkdata";
-import { iterateIds } from "wotlkdata/wotlkdata/ids/Ids";
+import { iterateIds } from "wotlkdata/util/ids/Ids";
 import { BuildArgs } from 'wotlkdata/wotlkdata/Settings';
 
 // Patch ID files

@@ -1,5 +1,5 @@
+import { GetIdRange } from "wotlkdata/util/ids/Ids";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { GetIdRange } from "wotlkdata/wotlkdata/ids/Ids";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { game_event_conditionRow } from "wotlkdata/wotlkdata/sql/types/game_event_condition";
 import { MainEntity } from "../Misc/Entity";
