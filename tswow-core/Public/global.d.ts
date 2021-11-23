@@ -112,6 +112,10 @@ declare const enum SpellSchoolMask /**@realType:uint32 */ {
 declare const enum GossipOptionIcon {} /** GossipDef.h:GossipOptionIcon */
 declare const enum ProgressType {} /** AchievementMgr.h:ProgressType */
 
+declare const enum WeaponAttackType {} /** SharedDefines.h:WeaponAttackType */
+
+declare const enum RuneType {} /** Player.h:RuneType */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -7093,6 +7097,23 @@ declare namespace _hidden {
         OnSendMail(callback: (player: TSPlayer, draft: TSMailDraft, delay: TSMutable<uint32>)=>void);
         OnGenerateItemLoot(callback: (player: TSPlayer, item: TSItem, loot: TSLoot, type: uint32)=>void);
         OnLootCorpse(callback: (player: TSPlayer, corpse: TSCorpse)=>void);
+
+        OnUpdateDodgePercentage(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateBlockPercentage(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateParryPercentage(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateArmor(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateMeleeHitChance(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateRuneRegen(callback: (player: TSPlayer, runteType: RuneType /*runeType*/, value: TSMutable<float>)=>void)
+        OnUpdateExpertise(callback: (player: TSPlayer, type: WeaponAttackType, item: TSItem, value: TSMutable<int32>)=>void)
+        OnUpdateSpellCrit(callback: (player: TSPlayer, school: SpellSchools, value: TSMutable<float>)=>void)
+        OnUpdateArmor(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateArmorPenetration(callback: (player: TSPlayer, value: TSMutable<int32>)=>void)
+        OnUpdateMeleeHitChances(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateRangedHitChances(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateSpellHitChances(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
+        OnUpdateResistance(callback: (player: TSPlayer, school: SpellSchools, value: TSMutable<float>)=>void)
+        OnUpdateShieldBlock(callback: (player: TSPlayer, value: TSMutable<uint32>)=>void)
+        OnUpdateCrit(callback: (player: TSPlayer, attackType: WeaponAttackType, value: TSMutable<float>)=>void)
     }
 
     export class Account<T> {
@@ -7225,6 +7246,20 @@ declare namespace _hidden {
         OnGeneratePickPocketLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
         OnGenerateSkinningLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
         OnSendVendorItem(creature: uint32, callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
+
+        OnUpdateResistance(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, school: SpellSchools, value: TSMutable<float>)=>void)
+        OnUpdateArmor(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
+        OnUpdateMaxHealth(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
+        OnUpdateMaxPower(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, powerType: Powers, value: TSMutable<float>)=>void)
+        OnUpdateAttackPowerDamage(creature: uint32, callback:(
+              creature: TSCreature
+            , isGuardian: bool /*isGuardian*/
+            , ranged: bool /*ranged*/
+            , base: TSMutable<float> /*base*/
+            , mod: TSMutable<float> /*mod*/
+            , multiplier: TSMutable<float> /*multiplier*/
+        )=>void)
+        OnUpdateDamagePhysical(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, attType: uint8, min: TSMutable<float>, max: TSMutable<float>)=>void)
     }
 
     export class Creatures<T> {
@@ -7274,6 +7309,20 @@ declare namespace _hidden {
         OnGeneratePickPocketLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void): T
         OnGenerateSkinningLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void): T
         OnSendVendorItem(callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void): T
+
+        OnUpdateResistance(callback: (creature: TSCreature, isGuardian: bool, school: SpellSchools, value: TSMutable<float>)=>void)
+        OnUpdateArmor(callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
+        OnUpdateMaxHealth(callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
+        OnUpdateMaxPower(callback: (creature: TSCreature, isGuardian: bool, powerType: Powers, value: TSMutable<float>)=>void)
+        OnUpdateAttackPowerDamage(callback:(
+              creature: TSCreature
+            , isGuardian: bool /*isGuardian*/
+            , ranged: bool /*ranged*/
+            , base: TSMutable<float> /*base*/
+            , mod: TSMutable<float> /*mod*/
+            , multiplier: TSMutable<float> /*multiplier*/
+        )=>void)
+        OnUpdateDamagePhysical(callback: (creature: TSCreature, isGuardian: bool, attType: uint8, min: TSMutable<float>, max: TSMutable<float>)=>void)
     }
 
     export class Battlegrounds<T> {

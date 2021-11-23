@@ -142,6 +142,7 @@ EVENT_TYPE(FormulaOnQuestXP
 
 // UnitScript
 //EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
+EVENT_TYPE(UnitOnMissChance, TSUnit, TSMutable<float>)
 
 // WeatherScript
 //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
@@ -228,6 +229,22 @@ EVENT_TYPE(PlayerOnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uin
 
 EVENT_TYPE(PlayerOnGossipSelect, TSPlayer, TSPlayer, uint32_t, uint32_t, TSMutable<bool>)
 EVENT_TYPE(PlayerOnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, TSString, TSMutable<bool>)
+
+EVENT_TYPE(PlayerOnUpdateDodgePercentage, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateBlockPercentage, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateParryPercentage, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateArmor, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateMeleeHitChance, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateRuneRegen, TSPlayer, uint32 /*runeType*/, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateExpertise, TSPlayer, uint32 /*attackType*/, TSItem, TSMutable<int32>)
+EVENT_TYPE(PlayerOnUpdateSpellCrit, TSPlayer, uint32 /*school*/, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateArmorPenetration, TSPlayer, TSMutable<int32>)
+EVENT_TYPE(PlayerOnUpdateMeleeHitChances, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateRangedHitChances, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateSpellHitChances, TSPlayer, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateResistance, TSPlayer, uint32 /*school*/, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateShieldBlock, TSPlayer, TSMutable<uint32>)
+EVENT_TYPE(PlayerOnUpdateCrit, TSPlayer, uint32 /*attackType*/, TSMutable<float>)
 
 // AccountScript
 EVENT_TYPE(AccountOnAccountLogin,uint32)
@@ -364,6 +381,21 @@ EVENT_TYPE(CreatureOnArmor, TSCreature, float /*baseArmor*/, TSMutable<float> /*
 EVENT_TYPE(CreatureOnAttackPower, TSCreature, TSMutable<uint32> /*attackPower*/, TSMutable<uint32> /*rangedAttackPower*/)
 EVENT_TYPE(CreatureOnSendVendorItem, TSCreature /*vendor*/, TSItemTemplate /*item*/, TSPlayer /*player*/, TSMutable<bool> /*shouldSend*/)
 
+EVENT_TYPE(CreatureOnUpdateResistance, TSCreature, bool /*isGuardian*/, uint32 /*school*/, TSMutable<float>)
+EVENT_TYPE(CreatureOnUpdateArmor, TSCreature, bool /*isGuardian*/, TSMutable<float>)
+EVENT_TYPE(CreatureOnUpdateMaxHealth, TSCreature, bool /*isGuardian*/, TSMutable<float>)
+EVENT_TYPE(CreatureOnUpdateMaxPower, TSCreature, bool /*isGuardian*/, int8 /*powerType*/, TSMutable<float>)
+EVENT_TYPE(
+      CreatureOnUpdateAttackPowerDamage
+    , TSCreature
+    , bool /*isGuardian*/
+    , bool /*ranged*/
+    , TSMutable<float> /*base*/
+    , TSMutable<float> /*mod*/
+    , TSMutable<float> /*multiplier*/
+)
+EVENT_TYPE(CreatureOnUpdateDamagePhysical, TSCreature, bool /*isGuardian*/, uint8 /*attType*/, TSMutable<float>, TSMutable<float>)
+
 struct TSCreatureEvents {
      EVENT(CreatureOnMoveInLOS)
      EVENT(CreatureOnJustEnteredCombat)
@@ -411,6 +443,13 @@ struct TSCreatureEvents {
      EVENT(CreatureOnArmor)
      EVENT(CreatureOnAttackPower)
      EVENT(CreatureOnSendVendorItem)
+
+     EVENT(CreatureOnUpdateResistance)
+     EVENT(CreatureOnUpdateArmor)
+     EVENT(CreatureOnUpdateMaxHealth)
+     EVENT(CreatureOnUpdateMaxPower)
+     EVENT(CreatureOnUpdateAttackPowerDamage)
+     EVENT(CreatureOnUpdateDamagePhysical)
 };
 
 class TSCreatureMap : public TSEventMap<TSCreatureEvents>
@@ -927,6 +966,22 @@ struct TSEventStore
     EVENT(PlayerOnLootCorpse)
     EVENT(PlayerOnLearnTalent)
 
+    EVENT(PlayerOnUpdateDodgePercentage)
+    EVENT(PlayerOnUpdateBlockPercentage)
+    EVENT(PlayerOnUpdateParryPercentage)
+    EVENT(PlayerOnUpdateArmor)
+    EVENT(PlayerOnUpdateMeleeHitChance)
+    EVENT(PlayerOnUpdateRuneRegen)
+    EVENT(PlayerOnUpdateExpertise)
+    EVENT(PlayerOnUpdateSpellCrit)
+    EVENT(PlayerOnUpdateArmorPenetration)
+    EVENT(PlayerOnUpdateMeleeHitChances)
+    EVENT(PlayerOnUpdateRangedHitChances)
+    EVENT(PlayerOnUpdateSpellHitChances)
+    EVENT(PlayerOnUpdateResistance)
+    EVENT(PlayerOnUpdateShieldBlock)
+    EVENT(PlayerOnUpdateCrit)
+
     // AccountScript
     EVENT(AccountOnAccountLogin)
     EVENT(AccountOnFailedAccountLogin)
@@ -953,6 +1008,9 @@ struct TSEventStore
     EVENT(GroupOnRemoveMember)
     EVENT(GroupOnChangeLeader)
     EVENT(GroupOnDisband)
+
+    // UnitScript
+    EVENT(UnitOnMissChance)
 
     // CreatureScript
     EVENT(CreatureOnMoveInLOS)
@@ -1000,6 +1058,13 @@ struct TSEventStore
     EVENT(CreatureOnArmor)
     EVENT(CreatureOnAttackPower)
     EVENT(CreatureOnSendVendorItem)
+
+    EVENT(CreatureOnUpdateResistance)
+    EVENT(CreatureOnUpdateArmor)
+    EVENT(CreatureOnUpdateMaxHealth)
+    EVENT(CreatureOnUpdateMaxPower)
+    EVENT(CreatureOnUpdateAttackPowerDamage)
+    EVENT(CreatureOnUpdateDamagePhysical)
 
     // AreaTrigger
     EVENT(AreaTriggerOnTrigger)
@@ -1177,11 +1242,6 @@ public:
          EVENT_HANDLE(Formula,OnQuestXP);
     } Formula;
 
-    struct UnitEvents: public EventHandler
-    {
-         UnitEvents* operator->() { return this;}
-    } Unit;
-
     struct WeatherEvents: public EventHandler
     {
          WeatherEvents* operator->() { return this;}
@@ -1269,6 +1329,22 @@ public:
          EVENT_HANDLE(Player,OnGenerateItemLoot)
          EVENT_HANDLE(Player,OnLearnTalent)
          EVENT_HANDLE(Player,OnLootCorpse)
+
+         EVENT_HANDLE(Player,OnUpdateDodgePercentage)
+         EVENT_HANDLE(Player,OnUpdateBlockPercentage)
+         EVENT_HANDLE(Player,OnUpdateParryPercentage)
+         EVENT_HANDLE(Player,OnUpdateArmor)
+         EVENT_HANDLE(Player,OnUpdateMeleeHitChance)
+         EVENT_HANDLE(Player,OnUpdateRuneRegen)
+         EVENT_HANDLE(Player,OnUpdateExpertise)
+         EVENT_HANDLE(Player,OnUpdateSpellCrit)
+         EVENT_HANDLE(Player,OnUpdateArmorPenetration)
+         EVENT_HANDLE(Player,OnUpdateMeleeHitChances)
+         EVENT_HANDLE(Player,OnUpdateRangedHitChances)
+         EVENT_HANDLE(Player,OnUpdateSpellHitChances)
+         EVENT_HANDLE(Player,OnUpdateResistance)
+         EVENT_HANDLE(Player,OnUpdateShieldBlock)
+         EVENT_HANDLE(Player,OnUpdateCrit)
     } Player;
 
     struct AccountEvents : public EventHandler
@@ -1306,6 +1382,12 @@ public:
          EVENT_HANDLE(Group,OnChangeLeader)
          EVENT_HANDLE(Group,OnDisband)
     } Group;
+
+    struct UnitEvents : public EventHandler
+    {
+        UnitEvents* operator->() { return this; }
+        EVENT_HANDLE(Unit,OnMissChance)
+    } Unit;
 
      struct SpellEvents : public EventHandler
     {
@@ -1402,6 +1484,13 @@ public:
           EVENT_HANDLE(Creature,OnGossipSelectCode)
           EVENT_HANDLE(Creature,OnQuestAccept)
           EVENT_HANDLE(Creature,OnQuestReward)
+
+          EVENT_HANDLE(Creature,OnUpdateResistance)
+          EVENT_HANDLE(Creature,OnUpdateArmor)
+          EVENT_HANDLE(Creature,OnUpdateMaxHealth)
+          EVENT_HANDLE(Creature,OnUpdateMaxPower)
+          EVENT_HANDLE(Creature,OnUpdateAttackPowerDamage)
+          EVENT_HANDLE(Creature,OnUpdateDamagePhysical)
     } Creatures;
 
     struct CreatureIDEvents : public MappedEventHandler<TSCreatureMap>
@@ -1453,6 +1542,13 @@ public:
           MAP_EVENT_HANDLE(Creature,OnGossipSelectCode)
           MAP_EVENT_HANDLE(Creature,OnQuestAccept)
           MAP_EVENT_HANDLE(Creature,OnQuestReward)
+
+          MAP_EVENT_HANDLE(Creature, OnUpdateResistance)
+          MAP_EVENT_HANDLE(Creature, OnUpdateArmor)
+          MAP_EVENT_HANDLE(Creature, OnUpdateMaxHealth)
+          MAP_EVENT_HANDLE(Creature, OnUpdateMaxPower)
+          MAP_EVENT_HANDLE(Creature, OnUpdateAttackPowerDamage)
+          MAP_EVENT_HANDLE(Creature, OnUpdateDamagePhysical)
     } CreatureID;
 
     struct GameObjectEvents: public EventHandler {
