@@ -7195,15 +7195,15 @@ declare namespace _hidden {
         OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
 
         OnDamageEarly(spell: uint32, callback : (
-              damage: TSMutable<int32>
-            , spell: TSSpell
+              spell: TSSpell
+            , damage: TSMutable<int32>
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
         )=>void)
         OnDamageLate(spell: uint32, callback : (
-            damage: TSMutable<int32>
-          , spell: TSSpell
+            spell: TSSpell
+          , damage: TSMutable<int32>
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
