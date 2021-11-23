@@ -167,8 +167,8 @@ export class ClassStats extends CellSystem<Class> {
           , this._apFormula.class_out
       )
     }
-    get MeleeCritBase() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }
-    get SpellCritBase() { return this.f(1,DBC.GtChanceToSpellCritBase); }
+    get BaseMeleeCrit() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }
+    get BaseSpellCrit() { return this.f(1,DBC.GtChanceToSpellCritBase); }
     get MeleeCrit() { return this.f(100,DBC.GtChanceToMeleeCrit); }
     get SpellCrit() { return this.f(100,DBC.GtChanceToSpellCrit); }
     get CombatRatings() { return this.f(100,DBC.GtCombatRatings); }
@@ -176,9 +176,9 @@ export class ClassStats extends CellSystem<Class> {
         return this.f(32, DBC.GtOCTClassCombatRatingScalar);
     }
 
-    get RegenHp() { return this.f(100, DBC.GtOCTRegenHP); }
-    get RegenMp() { return this.f(100, DBC.GtOCTRegenMP); }
+    get RegenHP() { return this.f(100, DBC.GtOCTRegenHP); }
+    get RegenMP() { return this.f(100, DBC.GtOCTRegenMP); }
 
-    get RegenHpPerSpt() { return this.f(100, DBC.GtRegenHPPerSpt); }
-    get RegenMpPerSpt() { return this.f(100, DBC.GtRegenMPPerSpt); }
+    get RegenHPPerSpt() { return this.f(100, DBC.GtRegenHPPerSpt); }
+    get RegenMPPerSpt() { return this.f(100, DBC.GtRegenMPPerSpt); }
 }
