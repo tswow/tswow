@@ -66,26 +66,13 @@ public:
     void OnUpdate(uint32 diff) FIRE(WorldOnUpdate,diff, TSMapManager())
 };
 
-class TSFormulaScript : public FormulaScript
-{
-public:
-    TSFormulaScript() : FormulaScript("TSFormulaScript"){}
-    void OnHonorCalculation(float& honor,uint8 level,float multiplier) FIRE(FormulaOnHonorCalculation,TSMutable<float>(&honor),level,multiplier)
-    void OnGrayLevelCalculation(uint8& grayLevel,uint8 playerLevel) FIRE(FormulaOnGrayLevelCalculation,TSMutable<uint8>(&grayLevel),playerLevel)
-    void OnColorCodeCalculation(XPColorChar& color,uint8 playerLevel,uint8 mobLevel) FIRE(FormulaOnColorCodeCalculation,TSMutable<uint8>(&((uint8&)color)),playerLevel,mobLevel)
-    void OnZeroDifferenceCalculation(uint8& diff,uint8 playerLevel) FIRE(FormulaOnZeroDifferenceCalculation,TSMutable<uint8>(&diff),playerLevel)
-    void OnBaseGainCalculation(uint32& gain,uint8 playerLevel,uint8 mobLevel,ContentLevels content) FIRE(FormulaOnBaseGainCalculation,TSMutable<uint32>(&gain),playerLevel,mobLevel,content)
-    void OnGainCalculation(uint32& gain,Player* player,Unit* unit) FIRE(FormulaOnGainCalculation,TSMutable<uint32>(&gain),TSPlayer(player),TSUnit(unit))
-    void OnGroupRateCalculation(float& rate,uint32 count,bool isRaid) FIRE(FormulaOnGroupRateCalculation,TSMutable<float>(&rate),count,isRaid)
-};
-
 class TSUnitScript : public UnitScript
 {
 public:
     TSUnitScript() : UnitScript("TSUnitScript"){}
     void OnHeal(Unit* healer, Unit* reciever, uint32& gain) {
         FIRE(
-              FormulaOnHeal
+              UnitOnCalcHeal
             , TSUnit(healer)
             , TSUnit(reciever)
             , TSMutable<uint32>(&gain)
@@ -192,7 +179,17 @@ public:
     void OnBindToInstance(Player* player,Difficulty difficulty,uint32 mapId,bool permanent,uint8 extendState) FIRE(PlayerOnBindToInstance,TSPlayer(player),difficulty,mapId,permanent,extendState)
     void OnUpdateZone(Player* player,uint32 newZone,uint32 newArea) FIRE(PlayerOnUpdateZone,TSPlayer(player),newZone,newArea)
     void OnMapChanged(Player* player) FIRE(PlayerOnMapChanged,TSPlayer(player))
-    void OnQuestObjectiveProgress(Player* player,Quest const* quest,uint32 objectiveIndex,uint16 progress) FIRE(PlayerOnQuestObjectiveProgress,TSPlayer(player),quest,objectiveIndex,progress)
+    void OnQuestObjectiveProgress(Player* player, Quest const* quest, uint32 objectiveIndex, uint16 progress) {
+        FIRE(PlayerOnQuestObjectiveProgress, TSPlayer(player), quest, objectiveIndex, progress)
+        FIRE_MAP(
+              quest->events
+            , QuestOnObjectiveProgress
+            , TSQuest(quest)
+            , TSPlayer(player)
+            , objectiveIndex
+            , progress
+        );
+    }
     void OnQuestStatusChange(Player* player,uint32 questId) FIRE(PlayerOnQuestStatusChange,TSPlayer(player),questId)
     void OnMovieComplete(Player* player,uint32 movieId) FIRE(PlayerOnMovieComplete,TSPlayer(player),movieId)
     void OnPlayerRepop(Player* player) FIRE(PlayerOnPlayerRepop,TSPlayer(player))
@@ -273,6 +270,26 @@ void TSCreatureMap::OnRemove(uint32_t key)
 {
 
 }
+
+void TSQuestMap::OnAdd(uint32_t key, TSQuestEvents* events)
+{
+    auto questTemplate = sObjectMgr->GetQuestTemplate(key);
+    if (questTemplate == nullptr)
+    {
+        throw std::runtime_error(
+            "Tried registering event for invalid quest entry: "
+            + std::to_string(key)
+            + "(did you remember to build your datascripts?)"
+        );
+    }
+    const_cast<Quest*>(questTemplate)->events = events;
+}
+
+void TSQuestMap::OnRemove(uint32_t key)
+{
+
+}
+
 
 void TSGameObjectMap::OnAdd(uint32_t key, TSGameObjectEvents* events)
 {
@@ -511,7 +528,6 @@ void TSLoadEvents()
 {
     new TSServerScript();
     new TSWorldScript();
-    new TSFormulaScript();
     new TSUnitScript();
     //new TSAreaTriggerScript();
     //new TSWeatherScript();

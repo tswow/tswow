@@ -6956,80 +6956,9 @@ declare namespace _hidden {
         OnStartup(callback: ()=>void);
         OnShutdownCancel(callback: ()=>void);
         OnShutdown(callback: ()=>void);
+        OnCalcHonor(callback: (honor: TSMutable<float>, level: uint8, multiplier: float)=>void)
     }
 
-    export class Formula<T> {
-        OnHonorCalculation(callback: (honor : TSMutable<float>,level : uint8,multiplier : float)=>void);
-        OnGrayLevelCalculation(callback: (grayLevel : TSMutable<uint8>,playerLevel : uint8)=>void);
-        OnColorCodeCalculation(callback: (color : TSMutable<uint8>,playerLevel : uint8,mobLevel : uint8)=>void);
-        OnZeroDifferenceCalculation(callback: (diff : TSMutable<uint8>,playerLevel : uint8)=>void);
-        OnBaseGainCalculation(callback: (gain : TSMutable<uint32>,playerLevel : uint8,mobLevel : uint8,content : uint32)=>void);
-        OnGainCalculation(callback: (gain : TSMutable<uint32>,player : TSPlayer,unit : TSUnit)=>void);
-        OnGroupRateCalculation(callback: (rate : TSMutable<float>,count : uint32,isRaid : bool)=>void);
-        OnMeleeDamageEarly(callback: (melee: TSMeleeDamageInfo, type: uint32, index: uint32, damage: TSMutable<uint32>)=>void);
-        OnMeleeDamageLate(callback: (melee: TSMeleeDamageInfo, type: uint32, index: uint32, damage: TSMutable<uint32>)=>void);
-        OnSpellDamageEarly(callback: (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<int32>)=>void);
-        OnSpellDamageLate(callback: (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<uint32>)=>void);
-        OnPeriodicDamage(callback: (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void);
-        OnHeal(callback: (healer : TSUnit,reciever : TSUnit,gain : TSMutable<uint32>)=>void);
-
-        /**
-         * - missChance should be between 0 and 1
-         * - critChance should be between 0 and 100
-         * - dodgeChance should be between 0 and 100
-         * - parryChance should be between 0 and 100
-         */
-        OnMeleeOutcome(callback: (
-              attacker: TSUnit
-            , victim: TSUnit
-            , attackType: uint32
-            , missChance: TSMutable<float>
-            , critChance: TSMutable<float>
-            , dodgeChance: TSMutable<float>
-            , blockChance : TSMutable<float>
-            , parryChance: TSMutable<float>
-            )=>void)
-
-        OnStaminaHealthBonus(callback: (player: TSPlayer,baseStam: float,bonusStam: float,maxhp: TSMutable<float>)=>void);
-        OnIntellectManaBonus(callback: (player: TSPlayer,baseInt: float,bonusInt: float,maxMana: TSMutable<float>)=>void);
-        OnMaxHealth(callback: (player: TSPlayer,health: TSMutable<float>)=>void);
-        OnMaxPower(callback: (player: TSPlayer,power:uint32,bonus: float, value: TSMutable<float>)=>void);
-        OnManaRegen(callback: (player: TSPlayer,power_regen: TSMutable<float>,power_regen_mp5: TSMutable<float>,manaRegenInterrupt: TSMutable<int32>)=>void);
-        OnSkillGainChance(callback: (player: TSPlayer, skillId: uint32, value: uint32, grayLevel: uint32, greenLevel: uint32, yellowLevel: uint32, chance: TSMutable<float>)=>void)
-
-        OnAddThreatEarly(callback: (
-              owner: TSUnit
-            , target: TSUnit
-            , spell: TSSpellInfo
-            , isRaw: boolean
-            , value: TSMutable<float>)=>void
-        )
-
-        OnAddThreatLate(callback: (
-            owner: TSUnit
-          , target: TSUnit
-          , spell: TSSpellInfo
-          , isRaw: boolean
-          , value: TSMutable<float>)=>void
-        )
-
-        OnScaleThreat(callback: (
-            owner: TSUnit
-          , target: TSUnit
-          , isRaw: boolean
-          , value: TSMutable<float>)=>void
-        )
-
-        OnAttackPower(callback: (
-              player: TSPlayer
-            , power: TSMutable<float>)=>void
-        )
-
-        OnRangedAttackPower(callback: (
-              player: TSPlayer
-            , power: TSMutable<float>)=>void
-        )
-    }
     export class Item<T> {
         OnQuestAccept(callback: (player : TSPlayer,item : TSItem,quest : TSQuest)=>void);
         // TODO: OnItemUse
@@ -7098,22 +7027,133 @@ declare namespace _hidden {
         OnGenerateItemLoot(callback: (player: TSPlayer, item: TSItem, loot: TSLoot, type: uint32)=>void);
         OnLootCorpse(callback: (player: TSPlayer, corpse: TSCorpse)=>void);
 
-        OnUpdateDodgePercentage(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateBlockPercentage(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateParryPercentage(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateArmor(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateMeleeHitChance(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateRuneRegen(callback: (player: TSPlayer, runteType: RuneType /*runeType*/, value: TSMutable<float>)=>void)
-        OnUpdateExpertise(callback: (player: TSPlayer, type: WeaponAttackType, item: TSItem, value: TSMutable<int32>)=>void)
-        OnUpdateSpellCrit(callback: (player: TSPlayer, school: SpellSchools, value: TSMutable<float>)=>void)
-        OnUpdateArmor(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateArmorPenetration(callback: (player: TSPlayer, value: TSMutable<int32>)=>void)
-        OnUpdateMeleeHitChances(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateRangedHitChances(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateSpellHitChances(callback: (player: TSPlayer, value: TSMutable<float>)=>void)
-        OnUpdateResistance(callback: (player: TSPlayer, school: SpellSchools, value: TSMutable<float>)=>void)
-        OnUpdateShieldBlock(callback: (player: TSPlayer, value: TSMutable<uint32>)=>void)
-        OnUpdateCrit(callback: (player: TSPlayer, attackType: WeaponAttackType, value: TSMutable<float>)=>void)
+        OnUpdateDodgePercentage(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateBlockPercentage(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateParryPercentage(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateArmor(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateMaxHealth(callback: (
+              player: TSPlayer
+            , health: TSMutable<float>
+        )=>void)
+        OnUpdateMaxPower(callback: (
+              player: TSPlayer
+            , power: TSMutable<float>
+            , type: Powers
+            , bonus: float
+        )=>void)
+        OnUpdateManaRegen(callback: (
+              player: TSPlayer
+            , power: TSMutable<float>
+            , mp5: TSMutable<float>
+            , manaRegen: TSMutable<float>
+        )=>void)
+        OnUpdateMeleeHitChance(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateRuneRegen(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+            , runteType: RuneType /*runeType*/
+        )=>void)
+        OnUpdateExpertise(callback: (
+              player: TSPlayer
+            , value: TSMutable<int32>
+            , type: WeaponAttackType
+            , item: TSItem
+        )=>void)
+        OnUpdateSpellCrit(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+            , school: SpellSchools
+        )=>void)
+        OnUpdateArmorPenetration(callback: (
+              player: TSPlayer
+            , value: TSMutable<int32>
+        )=>void)
+        OnUpdateMeleeHitChances(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateRangedHitChances(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateSpellHitChances(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+        )=>void)
+        OnUpdateResistance(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+            , school: SpellSchools
+        )=>void)
+        OnUpdateShieldBlock(callback: (
+              player: TSPlayer
+            , value: TSMutable<uint32>
+        )=>void)
+        OnUpdateCrit(callback: (
+              player: TSPlayer
+            , value: TSMutable<float>
+            , attackType: WeaponAttackType
+        )=>void)
+
+        OnCalcGreyLevel(callback: (
+              player: TSPlayer
+            , level: TSMutable<uint8>
+        )=>void)
+        OnCalcZeroDiff(callback: (
+              player: TSPlayer
+            , zeroDiff: TSMutable<uint8>
+        )=>void)
+        OnCalcGroupGain(callback: (
+              killer: TSPlayer
+            , groupRate: TSMutable<float>
+            , count: uint32
+            , isRaid: bool
+        )=>void)
+        OnCalcStaminaHealthBonus(callback: (
+              player: TSPlayer
+            , bonus: TSMutable<float>
+            , baseStam: float
+            , bonusStam: float
+        )=>void)
+        OnCalcIntellectManaBonus(
+            callback: (
+                  player: TSPlayer
+                , bonus: TSMutable<float>
+                , baseInt: float
+                , bonusInt: float
+            )=>void)
+        OnCalcSkillGainChance(callback: (
+              player: TSPlayer
+            , chance: TSMutable<int>
+            , skillId: int
+            , value: int
+            , grayLevel: int
+            , greenLevel: int
+            , yellowLevel: int
+        )=>void)
+        OnUpdateAttackPower(callback: (
+              player: TSPlayer
+            , attackPower: TSMutable<float>
+        )=>void)
+        OnUpdateRangedAttackPower(callback: (
+              player: TSPlayer
+            , attackPower: TSMutable<float>
+        )=>void)
     }
 
     export class Account<T> {
@@ -7154,20 +7194,58 @@ declare namespace _hidden {
         OnTick(spell: uint32, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
 
-        OnDamageEarly(spell: uint32, callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<int32>)=>void)
-        OnDamageLate(spell: uint32, callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<uint32>)=>void)
+        OnDamageEarly(spell: uint32, callback : (
+              damage: TSMutable<int32>
+            , spell: TSSpell
+            , info: TSSpellDamageInfo
+            , type: uint32
+            , isCrit: bool
+        )=>void)
+        OnDamageLate(spell: uint32, callback : (
+            damage: TSMutable<int32>
+          , spell: TSSpell
+          , info: TSSpellDamageInfo
+          , type: uint32
+          , isCrit: bool
+        )=>void)
         OnPeriodicDamage(spell: uint32, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
         /** critChance should be between 0 and 1 */
-        OnCritFormula(spell: uint32, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
+        OnCalcCrit(spell: uint32, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
-        OnAuraCritFormula(spell: uint32, callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
+        OnCalcAuraCrit(spell: uint32, callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
         /** reflectCHance should be an integer between 0 and 10000 */
-        OnReflectFormula(spell: uint32, callback : (attacker: TSWorldObject, victim: TSUnit, spell: TSSpellInfo, reflectChance: TSMutable<int32>)=>void)
+        OnCalcReflect(spell: uint32, callback : (
+              spell: TSSpellInfo
+            , reflectChance: TSMutable<int32>
+            , attacker: TSWorldObject
+            , victim: TSUnit
+        )=>void)
         /** hitChance should be an integer between 0 and 10000 */
-        OnHitFormula(spell: uint32, callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
+        OnCalcHit(spell: uint32, callback : (
+              spell: TSSpellInfo
+            , hitChance: TSMutable<int32>
+            , attacker: TSWorldObject
+            , defender: TSUnit
+        )=>void)
         /** resistChance should be an integer between 0 and 10000 */
-        OnResistFormula(spell: uint32, callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
-        OnTrainerSend(spell: uint32, callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
+        OnCalcResist(spell: uint32, callback : (
+              spell: TSSpellInfo
+            , resistChance: TSMutable<int32>
+            , attacker: TSWorldObject
+            , defender: TSUnit
+        )=>void)
+        OnCalcSpellPowerLevelPenalty(spell: uint32, callback: (
+              spell: TSSpellInfo
+            , penalty: TSMutable<float>
+            , caster: TSUnit
+        )=>void)
+
+        OnTrainerSend(spell: uint32, callback: (
+              spell: TSSpellInfo
+            , trainerId: uint32
+            , receiver: TSPlayer
+            , allow: TSMutable<bool>
+        )=>void)
     }
 
     export class Spells<T> {
@@ -7179,21 +7257,51 @@ declare namespace _hidden {
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
         OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
 
-        OnDamageEarly(callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<int32>)=>void)
-        OnDamageLate(callback : (info: TSSpellDamageInfo, spell: TSSpell, type: uint32, isCrit: bool, damage: TSMutable<uint32>)=>void)
+        OnDamageEarly(callback : (
+            damage: TSMutable<int32>
+          , spell: TSSpell
+          , info: TSSpellDamageInfo
+          , type: uint32
+          , isCrit: bool
+        )=>void)
+        OnDamageLate(callback : (
+            damage: TSMutable<int32>
+            , spell: TSSpell
+            , info: TSSpellDamageInfo
+            , type: uint32
+            , isCrit: bool
+        )=>void)
         OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
         /** critChance should be between 0 and 1 */
-        OnCritFormula(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
+        OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
-        OnAuraCritFormula(callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
-        /** reflectChance should be an integer between 0 and 10000 */
-        OnReflectFormula(callback : (attacker: TSWorldObject, victim: TSUnit, spell: TSSpellInfo, reflectChance: TSMutable<int32>)=>void)
+        OnCalcAuraCrit(callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
+        /** reflectCHance should be an integer between 0 and 10000 */
+        OnCalcReflect(callback : (
+                spell: TSSpellInfo
+            , reflectChance: TSMutable<int32>
+            , attacker: TSWorldObject
+            , victim: TSUnit
+        )=>void)
         /** hitChance should be an integer between 0 and 10000 */
-        OnHitFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, hitChance: TSMutable<int32>)=>void)
+        OnCalcHit(callback : (
+                spell: TSSpellInfo
+            , hitChance: TSMutable<int32>
+            , attacker: TSWorldObject
+            , defender: TSUnit
+        )=>void)
         /** resistChance should be an integer between 0 and 10000 */
-        OnResistFormula(callback : (attacker: TSWorldObject, defender: TSUnit, spell: TSSpellInfo, resistChance: TSMutable<int32>)=>void)
-        /** penalty should be a float between 0 and 1 */
-        OnSpellPowerLevelPenalty(callback: (spellInfo: TSSpellInfo, attacker: TSUnit, penalty: TSMutable<float>)=>void)
+        OnCalcResist(callback : (
+                spell: TSSpellInfo
+            , resistChance: TSMutable<int32>
+            , attacker: TSWorldObject
+            , defender: TSUnit
+        )=>void)
+        OnCalcSpellPowerLevelPenalty(callback: (
+                spell: TSSpellInfo
+            , penalty: TSMutable<float>
+            , caster: TSUnit
+        )=>void)
         OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
     }
 
@@ -7247,19 +7355,179 @@ declare namespace _hidden {
         OnGenerateSkinningLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
         OnSendVendorItem(creature: uint32, callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
 
-        OnUpdateResistance(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, school: SpellSchools, value: TSMutable<float>)=>void)
-        OnUpdateArmor(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
-        OnUpdateMaxHealth(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
-        OnUpdateMaxPower(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, powerType: Powers, value: TSMutable<float>)=>void)
+        OnUpdateResistance(creature: uint32, callback: (
+              creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+            , school: SpellSchools
+        )=>void)
+        OnUpdateArmor(creature: uint32, callback: (
+              creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+        )=>void)
+        OnUpdateMaxHealth(creature: uint32, callback: (
+            creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+        )=>void)
+        OnUpdateMaxPower(creature: uint32, callback: (
+            creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+            , powerType: Powers
+        )=>void)
         OnUpdateAttackPowerDamage(creature: uint32, callback:(
               creature: TSCreature
-            , isGuardian: bool /*isGuardian*/
-            , ranged: bool /*ranged*/
             , base: TSMutable<float> /*base*/
             , mod: TSMutable<float> /*mod*/
             , multiplier: TSMutable<float> /*multiplier*/
+            , isGuardian: bool /*isGuardian*/
+            , ranged: bool /*ranged*/
         )=>void)
-        OnUpdateDamagePhysical(creature: uint32, callback: (creature: TSCreature, isGuardian: bool, attType: uint8, min: TSMutable<float>, max: TSMutable<float>)=>void)
+        OnUpdateDamagePhysical(creature: uint32, callback: (
+              creature: TSCreature
+            , min: TSMutable<float>
+            , max: TSMutable<float>
+            , isGuardian: bool
+            , attType: WeaponAttackType
+        )=>void)
+
+        OnUpdateLvlDepMaxHealth(creature: uint32, callback: (
+            creature: TSCreature
+          , maxHealth: TSMutable<uint32>
+          , rankHealthMod: float
+          , baseHp: uint32
+        )=>void)
+
+        OnUpdateLvlDepMaxMana(creature: uint32, callback: (
+              creature: TSCreature
+            , maxMana: TSMutable<uint32>
+            , baseMana: float
+        )=>void)
+
+        OnUpdateLvlDepBaseDamage(creature: uint32, callback: (
+              creature: TSCreature
+            , baseMinDamage: TSMutable<uint32>
+            , baseMaxDamage: TSMutable<uint32>
+            , baseDamageIn: float
+        )=>void)
+
+        OnUpdateLvlDepArmor(creature: uint32, callback: (
+            creature: TSCreature
+          , armorOut: TSMutable<uint32>
+          , baseArmor: float
+        )=>void)
+
+        OnUpdateLvlDepAttackPower(creature: uint32, callback: (
+            creature: TSCreature
+          , attackPower: TSMutable<uint32>
+          , rangedAttackPower: TSMutable<uint32>
+        )=>void)
+
+        OnCalcColorCode(creature: uint32, callback: (
+              creature: TSCreature
+            , code: TSMutable<uint8>
+            , player: TSPlayer
+            , playerLevel: uint32
+            , creatureLevel: uint32
+        )=>void)
+
+        OnCalcGain(creature: uint32, callback: (
+            victim: TSCreature
+          , gain: TSMutable<uint32>
+          , killer: TSPlayer
+        )=>void)
+
+        OnCalcBaseGain(creature: uint32, callback: (
+            victim: TSCreature
+          , gain: TSMutable<uint32>
+          , killer: TSPlayer
+        )=>void)
+
+        OnUpdateResistance(creature: uint32, callback: (
+            creature: TSCreature
+          , value: TSMutable<float>
+          , isGuardian: bool
+          , school: SpellSchools
+        )=>void)
+
+        OnUpdateArmor(creature: uint32, callback: (
+              creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+        )=>void)
+        OnUpdateMaxHealth(creature: uint32, callback: (
+            creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+        )=>void)
+        OnUpdateMaxPower(creature: uint32, callback: (
+            creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+            , powerType: Powers
+        )=>void)
+        OnUpdateAttackPowerDamage(creature: uint32, callback:(
+              creature: TSCreature
+            , base: TSMutable<float> /*base*/
+            , mod: TSMutable<float> /*mod*/
+            , multiplier: TSMutable<float> /*multiplier*/
+            , isGuardian: bool /*isGuardian*/
+            , ranged: bool /*ranged*/
+        )=>void)
+        OnUpdateDamagePhysical(creature: uint32, callback: (
+              creature: TSCreature
+            , min: TSMutable<float>
+            , max: TSMutable<float>
+            , isGuardian: bool
+            , attType: uint8
+        )=>void)
+
+        OnUpdateLvlDepMana(creature: uint32, callback: (
+                creature: TSCreature
+            , maxMana: TSMutable<uint32>
+            , baseMana: float
+        )=>void)
+
+        OnUpdateLvlDepBaseDamage(creature: uint32, callback: (
+                creature: TSCreature
+            , baseMinDamage: TSMutable<uint32>
+            , baseMaxDamage: TSMutable<uint32>
+            , baseDamageIn: float
+        )=>void)
+
+        OnUpdateLvlDepArmor(creature: uint32, callback: (
+            creature: TSCreature
+            , armorOut: TSMutable<uint32>
+            , baseArmor: float
+        )=>void)
+
+        OnUpdateLvlDepAttackPower(creature: uint32, callback: (
+            creature: TSCreature
+            , attackPower: TSMutable<uint32>
+            , rangedAttackPower: TSMutable<uint32>
+        )=>void)
+
+        OnCalcColorCode(creature: uint32, callback: (
+                creature: TSCreature
+            , code: TSMutable<uint8>
+            , player: TSPlayer
+            , playerLevel: uint32
+            , creatureLevel: uint32
+        )=>void)
+
+        OnCalcGain(creature: uint32, callback: (
+            victim: TSCreature
+            , gain: TSMutable<uint32>
+            , killer: TSPlayer
+        )=>void)
+
+        OnCalcBaseGain(creature: uint32, callback: (
+            victim: TSCreature
+            , gain: TSMutable<uint32>
+            , killer: TSPlayer
+        )=>void)
     }
 
     export class Creatures<T> {
@@ -7310,19 +7578,232 @@ declare namespace _hidden {
         OnGenerateSkinningLoot(callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void): T
         OnSendVendorItem(callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void): T
 
-        OnUpdateResistance(callback: (creature: TSCreature, isGuardian: bool, school: SpellSchools, value: TSMutable<float>)=>void)
-        OnUpdateArmor(callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
-        OnUpdateMaxHealth(callback: (creature: TSCreature, isGuardian: bool, value: TSMutable<float>)=>void)
-        OnUpdateMaxPower(callback: (creature: TSCreature, isGuardian: bool, powerType: Powers, value: TSMutable<float>)=>void)
+        OnUpdateResistance(callback: (
+              creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+            , school: SpellSchools
+        )=>void)
+        OnUpdateArmor(callback: (
+              creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+        )=>void)
+        OnUpdateMaxHealth(callback: (
+            creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+        )=>void)
+        OnUpdateMaxPower(callback: (
+            creature: TSCreature
+            , value: TSMutable<float>
+            , isGuardian: bool
+            , powerType: Powers
+        )=>void)
         OnUpdateAttackPowerDamage(callback:(
               creature: TSCreature
-            , isGuardian: bool /*isGuardian*/
-            , ranged: bool /*ranged*/
             , base: TSMutable<float> /*base*/
             , mod: TSMutable<float> /*mod*/
             , multiplier: TSMutable<float> /*multiplier*/
+            , isGuardian: bool /*isGuardian*/
+            , ranged: bool /*ranged*/
         )=>void)
-        OnUpdateDamagePhysical(callback: (creature: TSCreature, isGuardian: bool, attType: uint8, min: TSMutable<float>, max: TSMutable<float>)=>void)
+        OnUpdateDamagePhysical(callback: (
+              creature: TSCreature
+            , min: TSMutable<float>
+            , max: TSMutable<float>
+            , isGuardian: bool
+            , attType: WeaponAttackType
+        )=>void)
+
+        OnUpdateLvlDepMaxHealth(callback: (
+            creature: TSCreature
+          , maxHealth: TSMutable<uint32>
+          , rankHealthMod: float
+          , baseHp: uint32
+        )=>void)
+
+        OnUpdateLvlDepMaxMana(callback: (
+              creature: TSCreature
+            , maxMana: TSMutable<uint32>
+            , baseMana: float
+        )=>void)
+
+        OnUpdateLvlDepBaseDamage(callback: (
+              creature: TSCreature
+            , baseMinDamage: TSMutable<uint32>
+            , baseMaxDamage: TSMutable<uint32>
+            , baseDamageIn: float
+        )=>void)
+
+        OnUpdateLvlDepArmor(callback: (
+            creature: TSCreature
+          , armorOut: TSMutable<uint32>
+          , baseArmor: float
+        )=>void)
+
+        OnUpdateLvlDepAttackPower(callback: (
+            creature: TSCreature
+          , attackPower: TSMutable<uint32>
+          , rangedAttackPower: TSMutable<uint32>
+        )=>void)
+
+        OnCalcColorCode(callback: (
+              creature: TSCreature
+            , code: TSMutable<uint8>
+            , player: TSPlayer
+            , playerLevel: uint32
+            , creatureLevel: uint32
+        )=>void)
+
+        OnCalcGain(callback: (
+            victim: TSCreature
+          , gain: TSMutable<uint32>
+          , killer: TSPlayer
+        )=>void)
+
+        OnCalcBaseGain(callback: (
+            victim: TSCreature
+          , gain: TSMutable<uint32>
+          , killer: TSPlayer
+        )=>void)
+    }
+
+    export class Quests<T> {
+        OnAccept(callback: (
+              quest: TSQuest
+            , player: TSPlayer
+            , questgiver: TSObject
+        )=>void)
+
+        OnReward(callback: (
+              quest: TSQuest
+            , player: TSPlayer
+            , questgiver: TSObject
+            , value: uint32
+        )=>void)
+
+        OnSpellFinish(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , questgiver: TSSpell
+        )=>void)
+
+        OnObjectiveProgress(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , index: uint32
+          , progress: uint16
+        )=>void)
+
+        OnStatusChanged(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+        )=>void)
+
+        OnRewardXP(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , reward: TSMutable<uint32>
+        )=>void)
+    }
+
+    export class QuestID<T> {
+        OnAccept(callback: (
+              quest: TSQuest
+            , player: TSPlayer
+            , questgiver: TSObject
+        )=>void)
+
+        OnReward(callback: (
+              quest: TSQuest
+            , player: TSPlayer
+            , questgiver: TSObject
+            , value: uint32
+        )=>void)
+
+        OnSpellFinish(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , questgiver: TSSpell
+        )=>void)
+
+        OnObjectiveProgress(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , index: uint32
+          , progress: uint16
+        )=>void)
+
+        OnStatusChanged(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+        )=>void)
+
+        OnRewardXP(callback: (
+            quest: TSQuest
+          , player: TSPlayer
+          , reward: TSMutable<uint32>
+        )=>void)
+    }
+
+    export class Unit {
+        OnCalcMissChance(callback: (unit: TSUnit, chance: TSMutable<float>)=>void)
+        OnCalcHeal(callback: (healer: TSUnit, target: TSUnit, heal: TSMutable<uint32>)=>void)
+        OnMeleeDamageEarly(callback: (
+              info: TSMeleeDamageInfo
+            , damage: TSMutable<uint32>
+            , type: uint32
+            , index: uint32
+            )=>void
+        )
+        OnMeleeDamageLate(callback: (
+              info: TSMeleeDamageInfo
+            , damage: TSMutable<uint32>
+            , type: uint32
+            , index: uint32
+        )=>void)
+
+        OnCalcMeleeCrit(callback: (
+              attacker: TSUnit
+            , victim: TSUnit
+            , crit: TSMutable<float>
+            , attackType: WeaponAttackType
+        )=>void)
+
+        OnCalcMeleeOutcome(callback: (
+              attacker: TSUnit
+            , victim: TSUnit
+            , missChance: TSMutable<float>
+            , critChance: TSMutable<float>
+            , dodgeChance: TSMutable<float>
+            , blockChance : TSMutable<float>
+            , parryChance: TSMutable<float>
+            , attackType: WeaponAttackType
+        )=>void)
+
+        OnCalcThreatEarly(callback: (
+              owner: TSUnit
+            , target: TSUnit
+            , value: TSMutable<float>
+            , spell: TSSpellInfo
+            , raw: bool
+        )=>void)
+
+        OnCalcThreatLate(callback: (
+            owner: TSUnit
+          , target: TSUnit
+          , value: TSMutable<float>
+          , spell: TSSpellInfo
+          , raw: bool
+        )=>void)
+
+        OnCalcScaleThreat(callback: (
+              owner: TSUnit
+            , target: TSUnit
+            , value: TSMutable<float>
+            , raw: boolean
+        )=>void)
     }
 
     export class Battlegrounds<T> {
@@ -7682,7 +8163,6 @@ declare namespace _hidden {
 
 declare class TSEvents {
     World: _hidden.World<void>;
-    Formula: _hidden.Formula<void>;
     Addon: _hidden.Addon<void>;
     AreaTriggers: _hidden.AreaTrigger<void>;
     AreaTriggerID: _hidden.AreaTrigger<void>;
@@ -7719,6 +8199,9 @@ declare class TSEvents {
     PacketID: _hidden.PacketID;
     WorldPackets: _hidden.WorldPackets;
     WorldPacketID: _hidden.WorldPacketID;
+    Unit: _hidden.Unit;
+    Quests: _hidden.Quests<void>;
+    QuestID: _hidden.QuestID<void>;
 }
 
 declare class TSDictionary<K,V> {

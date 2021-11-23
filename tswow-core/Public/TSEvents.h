@@ -81,68 +81,73 @@ EVENT_TYPE(WorldOnUpdate,uint32, TSMapManager)
 EVENT_TYPE(WorldOnStartup)
 EVENT_TYPE(WorldOnShutdownCancel)
 EVENT_TYPE(WorldOnShutdown)
-
-// FormulaScript
-EVENT_TYPE(FormulaOnHonorCalculation,TSMutable<float>,uint8,float)
-EVENT_TYPE(FormulaOnGrayLevelCalculation,TSMutable<uint8>,uint8)
-EVENT_TYPE(FormulaOnColorCodeCalculation,TSMutable<uint8>,uint8,uint8)
-EVENT_TYPE(FormulaOnZeroDifferenceCalculation,TSMutable<uint8>,uint8)
-EVENT_TYPE(FormulaOnBaseGainCalculation,TSMutable<uint32>,uint8,uint8,uint32)
-EVENT_TYPE(FormulaOnGainCalculation,TSMutable<uint32>,TSPlayer,TSUnit)
-EVENT_TYPE(FormulaOnGroupRateCalculation,TSMutable<float>,uint32,bool)
-EVENT_TYPE(FormulaOnMeleeDamageEarly,TSMeleeDamageInfo,uint32,uint32,TSMutable<uint32>)
-EVENT_TYPE(FormulaOnMeleeDamageLate,TSMeleeDamageInfo,uint32,uint32,TSMutable<uint32>)
-EVENT_TYPE(FormulaOnMeleeCrit,TSUnit,TSUnit,uint32,TSMutable<float>)
-EVENT_TYPE(FormulaOnMeleeOutcome
-     , TSUnit
-     , TSUnit
-     , uint32
-     , TSMutable<float>
-     , TSMutable<float>
-     , TSMutable<float>
-     , TSMutable<float>
-     , TSMutable<float>);
-EVENT_TYPE(FormulaOnAddThreatEarly
-     , TSUnit
-     , TSUnit
-     , TSSpellInfo
-     , bool
-     , TSMutable<float>
-     );
-
-EVENT_TYPE(FormulaOnAddThreatLate
-     , TSUnit
-     , TSUnit
-     , TSSpellInfo
-     , bool
-     , TSMutable<float>
-     );
-
-EVENT_TYPE(FormulaOnScaleThreat
-     , TSUnit
-     , TSUnit
-     , bool
-     , TSMutable<float>
-     );
-
-EVENT_TYPE(FormulaOnHeal,TSUnit,TSUnit,TSMutable<uint32>)
-EVENT_TYPE(FormulaOnStaminaHealthBonus,TSPlayer,float,float,TSMutable<float>);
-EVENT_TYPE(FormulaOnIntellectManaBonus,TSPlayer,float,float,TSMutable<float>);
-EVENT_TYPE(FormulaOnMaxHealth,TSPlayer,TSMutable<float>);
-EVENT_TYPE(FormulaOnMaxPower,TSPlayer,uint32,float,TSMutable<float>);
-EVENT_TYPE(FormulaOnManaRegen,TSPlayer,TSMutable<float>,TSMutable<float>,TSMutable<int32>);
-EVENT_TYPE(FormulaOnSkillGainChance, TSPlayer, int, int, int, int, int, TSMutable<int>)
-EVENT_TYPE(FormulaOnAttackPower, TSPlayer, TSMutable<float>)
-EVENT_TYPE(FormulaOnRangedAttackPower, TSPlayer, TSMutable<float>)
-
-EVENT_TYPE(FormulaOnQuestXP
-    , TSPlayer
-    , TSQuest
-    , TSMutable<uint32>)
+EVENT_TYPE(WorldOnCalcHonor
+    , TSMutable<float> /*honor*/
+    , uint8 /*level*/
+    , float /*multiplier*/
+)
 
 // UnitScript
 //EVENT_TYPE(UnitModifyVehiclePassengerExitPos,TSUnit,TSVehicle,TSMutable<Position>)
-EVENT_TYPE(UnitOnMissChance, TSUnit, TSMutable<float>)
+EVENT_TYPE(UnitOnCalcMissChance
+    , TSUnit
+    , TSMutable<float>
+)
+EVENT_TYPE(UnitOnCalcHeal
+    , TSUnit
+    , TSUnit
+    , TSMutable<uint32>
+)
+EVENT_TYPE(UnitOnMeleeDamageEarly
+    , TSMeleeDamageInfo
+    , TSMutable<uint32>
+    , uint32
+    , uint32
+)
+EVENT_TYPE(UnitOnMeleeDamageLate
+    , TSMeleeDamageInfo
+    , TSMutable<uint32>
+    , uint32
+    , uint32
+)
+EVENT_TYPE(UnitOnCalcMeleeCrit
+    , TSUnit
+    , TSUnit
+    , TSMutable<float>
+    , uint32
+)
+EVENT_TYPE(UnitOnCalcMeleeOutcome
+    , TSUnit
+    , TSUnit
+    , TSMutable<float>
+    , TSMutable<float>
+    , TSMutable<float>
+    , TSMutable<float>
+    , TSMutable<float>
+    , uint32
+);
+EVENT_TYPE(UnitOnCalcThreatEarly
+    , TSUnit
+    , TSUnit
+    , TSMutable<float>
+    , TSSpellInfo
+    , bool
+);
+
+EVENT_TYPE(UnitOnCalcThreatLate
+    , TSUnit
+    , TSUnit
+    , TSMutable<float>
+    , TSSpellInfo
+    , bool
+);
+
+EVENT_TYPE(UnitOnCalcScaleThreat
+    , TSUnit
+    , TSUnit
+    , TSMutable<float>
+    , bool
+);
 
 // WeatherScript
 //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
@@ -230,21 +235,133 @@ EVENT_TYPE(PlayerOnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uin
 EVENT_TYPE(PlayerOnGossipSelect, TSPlayer, TSPlayer, uint32_t, uint32_t, TSMutable<bool>)
 EVENT_TYPE(PlayerOnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, TSString, TSMutable<bool>)
 
-EVENT_TYPE(PlayerOnUpdateDodgePercentage, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateBlockPercentage, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateParryPercentage, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateArmor, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateMeleeHitChance, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateRuneRegen, TSPlayer, uint32 /*runeType*/, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateExpertise, TSPlayer, uint32 /*attackType*/, TSItem, TSMutable<int32>)
-EVENT_TYPE(PlayerOnUpdateSpellCrit, TSPlayer, uint32 /*school*/, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateArmorPenetration, TSPlayer, TSMutable<int32>)
-EVENT_TYPE(PlayerOnUpdateMeleeHitChances, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateRangedHitChances, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateSpellHitChances, TSPlayer, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateResistance, TSPlayer, uint32 /*school*/, TSMutable<float>)
-EVENT_TYPE(PlayerOnUpdateShieldBlock, TSPlayer, TSMutable<uint32>)
-EVENT_TYPE(PlayerOnUpdateCrit, TSPlayer, uint32 /*attackType*/, TSMutable<float>)
+EVENT_TYPE(PlayerOnUpdateDodgePercentage
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateBlockPercentage
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateParryPercentage
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateArmor
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateMaxHealth
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateMaxPower
+    , TSPlayer
+    , TSMutable<float>
+    , int8 /*power*/
+    , float/*bonus*/
+)
+EVENT_TYPE(PlayerOnUpdateManaRegen
+    , TSPlayer
+    , TSMutable<float>
+    , TSMutable<float>
+    , TSMutable<int32>
+);
+EVENT_TYPE(PlayerOnUpdateMeleeHitChance
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateRuneRegen
+    , TSPlayer
+    , TSMutable<float>
+    , uint32 /*runeType*/
+)
+EVENT_TYPE(PlayerOnUpdateExpertise
+    , TSPlayer
+    , TSMutable<int32>
+    , uint32 /*attackType*/
+    , TSItem
+)
+EVENT_TYPE(PlayerOnUpdateSpellCrit
+    , TSPlayer
+    , TSMutable<float>
+    , uint32 /*school*/
+)
+EVENT_TYPE(PlayerOnUpdateArmorPenetration
+    , TSPlayer
+    , TSMutable<int32>
+)
+EVENT_TYPE(PlayerOnUpdateMeleeHitChances
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateRangedHitChances
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateSpellHitChances
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateResistance
+    , TSPlayer
+    , TSMutable<float>
+    , uint32 /*school*/
+)
+EVENT_TYPE(PlayerOnUpdateShieldBlock
+    , TSPlayer
+    , TSMutable<uint32>
+)
+EVENT_TYPE(PlayerOnUpdateCrit
+    , TSPlayer
+    , TSMutable<float>
+    , uint32 /*attackType*/
+)
+EVENT_TYPE(PlayerOnCalcGreyLevel
+    , TSPlayer /*killer*/
+    , TSMutable<uint8> /*greyLevel*/
+)
+EVENT_TYPE(PlayerOnCalcZeroDiff
+    , TSPlayer /*killer*/
+    , TSMutable<uint8> /*zeroDiff*/
+)
+EVENT_TYPE(PlayerOnCalcGroupGain
+    , TSPlayer /*killer*/
+    , TSMutable<float> /*groupRate*/
+    , uint32 /*count*/
+    , bool /*isRaid*/
+)
+
+EVENT_TYPE(PlayerOnCalcStaminaHealthBonus
+    , TSPlayer
+    , TSMutable<float>
+    , float
+    , float
+);
+EVENT_TYPE(PlayerOnCalcIntellectManaBonus
+    , TSPlayer
+    , TSMutable<float>
+    , float
+    , float
+);
+EVENT_TYPE(PlayerOnCalcSkillGainChance
+    , TSPlayer
+    , TSMutable<int>
+    , int
+    , int
+    , int
+    , int
+    , int
+)
+
+EVENT_TYPE(PlayerOnUpdateAttackPower
+    , TSPlayer
+    , TSMutable<float>
+)
+EVENT_TYPE(PlayerOnUpdateRangedAttackPower
+    , TSPlayer
+    , TSMutable<float>
+)
 
 // AccountScript
 EVENT_TYPE(AccountOnAccountLogin,uint32)
@@ -293,16 +410,21 @@ EVENT_TYPE(SpellOnTick,TSAuraEffect)
 EVENT_TYPE(SpellOnRemove,TSAuraEffect,TSAuraApplication, uint32)
 EVENT_TYPE(SpellOnApply,TSAuraEffect,TSAuraApplication, uint32)
 
-EVENT_TYPE(SpellOnDamageEarly, TSSpellDamageInfo, TSSpell, uint32, bool, TSMutable<int32>)
-EVENT_TYPE(SpellOnDamageLate, TSSpellDamageInfo, TSSpell, uint32, bool, TSMutable<uint32>)
+EVENT_TYPE(SpellOnDamageEarly, TSSpell, TSMutable<int32>, TSSpellDamageInfo, uint32, bool)
+EVENT_TYPE(SpellOnDamageLate, TSSpell, TSMutable<uint32>, TSSpellDamageInfo, uint32, bool)
 EVENT_TYPE(SpellOnPeriodicDamage, TSAuraEffect, TSMutable<uint32>)
-EVENT_TYPE(SpellOnCritFormula, TSSpell, TSMutable<float>)
-EVENT_TYPE(SpellOnAuraCritFormula, TSAuraEffect, TSMutable<float>)
-EVENT_TYPE(SpellOnReflectFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
-EVENT_TYPE(SpellOnHitFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
-EVENT_TYPE(SpellOnResistFormula, TSWorldObject, TSUnit, TSSpellInfo, TSMutable<int32>)
-EVENT_TYPE(SpellOnSpellPowerLevelPenalty, TSSpellInfo /*spell*/, TSUnit /*caster*/, TSMutable<float> /*penalty*/)
+EVENT_TYPE(SpellOnCalcSpellPowerLevelPenalty
+    , TSSpellInfo /*spell*/
+    , TSMutable<float> /*penalty*/
+    , TSUnit /*caster*/
+)
 EVENT_TYPE(SpellOnTrainerSend, TSSpellInfo /*spell*/, uint32 /*trainerId*/, TSPlayer /*receiver*/, TSMutable<bool> /*allowTrain*/)
+
+EVENT_TYPE(SpellOnCalcCrit, TSSpell, TSMutable<float>)
+EVENT_TYPE(SpellOnCalcAuraCrit, TSAuraEffect, TSMutable<float>)
+EVENT_TYPE(SpellOnCalcReflect, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
+EVENT_TYPE(SpellOnCalcHit, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
+EVENT_TYPE(SpellOnCalcResist, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
 
 struct TSSpellEvents {
      EVENT(SpellOnCast)
@@ -316,12 +438,12 @@ struct TSSpellEvents {
      EVENT(SpellOnDamageEarly)
      EVENT(SpellOnDamageLate)
      EVENT(SpellOnPeriodicDamage)
-     EVENT(SpellOnCritFormula)
-     EVENT(SpellOnAuraCritFormula)
-     EVENT(SpellOnReflectFormula)
-     EVENT(SpellOnHitFormula)
-     EVENT(SpellOnResistFormula)
-     EVENT(SpellOnSpellPowerLevelPenalty)
+     EVENT(SpellOnCalcCrit)
+     EVENT(SpellOnCalcAuraCrit)
+     EVENT(SpellOnCalcReflect)
+     EVENT(SpellOnCalcHit)
+     EVENT(SpellOnCalcResist)
+     EVENT(SpellOnCalcSpellPowerLevelPenalty)
      EVENT(SpellOnTrainerSend)
 };
 
@@ -373,28 +495,93 @@ EVENT_TYPE(CreatureOnCanGeneratePickPocketLoot,TSCreature,TSPlayer,TSMutable<boo
 EVENT_TYPE(CreatureOnGeneratePickPocketLoot,TSCreature,TSPlayer,TSLoot)
 EVENT_TYPE(CreatureOnGenerateSkinningLoot,TSCreature,TSPlayer,TSLoot)
 
-EVENT_TYPE(CreatureOnMaxHealth, TSCreature, float /*rankHealthMod*/, uint32 /*basehp*/, TSMutable<uint32> /*maxHealth*/)
+EVENT_TYPE(CreatureOnUpdateLvlDepMaxHealth
+    , TSCreature
+    , TSMutable<uint32> /*maxHealth*/
+    , float /*rankHealthMod*/
+    , uint32 /*basehp*/
+)
 // extension: add "ForceMana" mutable after maxMana for ignoring creature class (not sure it works well)
-EVENT_TYPE(CreatureOnMaxMana, TSCreature, float /*baseMana*/, TSMutable<uint32> /*maxMana*/)
-EVENT_TYPE(CreatureOnBaseDamage, TSCreature, float /*baseDamageIn*/, TSMutable<float> /*baseMinDamage*/, TSMutable<float> /*baseMaxDamage*/)
-EVENT_TYPE(CreatureOnArmor, TSCreature, float /*baseArmor*/, TSMutable<float> /*armorOut*/)
-EVENT_TYPE(CreatureOnAttackPower, TSCreature, TSMutable<uint32> /*attackPower*/, TSMutable<uint32> /*rangedAttackPower*/)
+EVENT_TYPE(CreatureOnUpdateLvlDepMaxMana
+    , TSCreature
+    , TSMutable<uint32> /*maxMana*/
+    , float /*baseMana*/
+)
+EVENT_TYPE(CreatureOnUpdateLvlDepBaseDamage
+    , TSCreature
+    , TSMutable<float> /*baseMinDamage*/
+    , TSMutable<float> /*baseMaxDamage*/
+    , float /*baseDamageIn*/
+)
+EVENT_TYPE(CreatureOnUpdateLvlDepArmor
+    , TSCreature
+    , TSMutable<float> /*armorOut*/
+    , float /*baseArmor*/
+)
+EVENT_TYPE(CreatureOnUpdateLvlDepAttackPower
+    , TSCreature
+    , TSMutable<uint32> /*attackPower*/
+    , TSMutable<uint32> /*rangedAttackPower*/
+)
 EVENT_TYPE(CreatureOnSendVendorItem, TSCreature /*vendor*/, TSItemTemplate /*item*/, TSPlayer /*player*/, TSMutable<bool> /*shouldSend*/)
 
-EVENT_TYPE(CreatureOnUpdateResistance, TSCreature, bool /*isGuardian*/, uint32 /*school*/, TSMutable<float>)
-EVENT_TYPE(CreatureOnUpdateArmor, TSCreature, bool /*isGuardian*/, TSMutable<float>)
-EVENT_TYPE(CreatureOnUpdateMaxHealth, TSCreature, bool /*isGuardian*/, TSMutable<float>)
-EVENT_TYPE(CreatureOnUpdateMaxPower, TSCreature, bool /*isGuardian*/, int8 /*powerType*/, TSMutable<float>)
+EVENT_TYPE(CreatureOnUpdateResistance
+    , TSCreature
+    , TSMutable<float>
+    , bool /*isGuardian*/
+    , uint32 /*school*/
+)
+EVENT_TYPE(CreatureOnUpdateArmor
+    , TSCreature
+    , TSMutable<float>
+    , bool /*isGuardian*/
+)
+EVENT_TYPE(CreatureOnUpdateMaxHealth
+    , TSCreature
+    , TSMutable<float>
+    , bool /*isGuardian*/
+)
+EVENT_TYPE(CreatureOnUpdateMaxPower
+    , TSCreature
+    , TSMutable<float>
+    , bool /*isGuardian*/
+    , int8 /*powerType*/
+)
 EVENT_TYPE(
       CreatureOnUpdateAttackPowerDamage
     , TSCreature
-    , bool /*isGuardian*/
-    , bool /*ranged*/
     , TSMutable<float> /*base*/
     , TSMutable<float> /*mod*/
     , TSMutable<float> /*multiplier*/
+    , bool /*isGuardian*/
+    , bool /*ranged*/
 )
-EVENT_TYPE(CreatureOnUpdateDamagePhysical, TSCreature, bool /*isGuardian*/, uint8 /*attType*/, TSMutable<float>, TSMutable<float>)
+EVENT_TYPE(
+    CreatureOnUpdateDamagePhysical
+    , TSCreature
+    , TSMutable<float>
+    , TSMutable<float>
+    , bool /*isGuardian*/
+    , uint8 /*attType*/
+)
+EVENT_TYPE(CreatureOnCalcColorCode
+    , TSCreature
+    , TSMutable<uint8> /*code*/
+    , TSPlayer
+    , uint32 /*playerLevel*/
+    , uint32 /*creatureLevel*/
+)
+EVENT_TYPE(
+    CreatureOnCalcGain
+    , TSCreature /*victim*/
+    , TSMutable<uint32>
+    , TSPlayer /*killer*/
+)
+EVENT_TYPE(CreatureOnCalcBaseGain
+    , TSCreature /*victim*/
+    , TSMutable<uint32>
+    , TSPlayer /*killer*/
+)
 
 struct TSCreatureEvents {
      EVENT(CreatureOnMoveInLOS)
@@ -437,11 +624,11 @@ struct TSCreatureEvents {
      EVENT(CreatureOnGeneratePickPocketLoot)
      EVENT(CreatureOnGenerateSkinningLoot)
 
-     EVENT(CreatureOnMaxHealth)
-     EVENT(CreatureOnMaxMana)
-     EVENT(CreatureOnBaseDamage)
-     EVENT(CreatureOnArmor)
-     EVENT(CreatureOnAttackPower)
+     EVENT(CreatureOnUpdateLvlDepMaxHealth)
+     EVENT(CreatureOnUpdateLvlDepMaxMana)
+     EVENT(CreatureOnUpdateLvlDepBaseDamage)
+     EVENT(CreatureOnUpdateLvlDepArmor)
+     EVENT(CreatureOnUpdateLvlDepAttackPower)
      EVENT(CreatureOnSendVendorItem)
 
      EVENT(CreatureOnUpdateResistance)
@@ -450,6 +637,10 @@ struct TSCreatureEvents {
      EVENT(CreatureOnUpdateMaxPower)
      EVENT(CreatureOnUpdateAttackPowerDamage)
      EVENT(CreatureOnUpdateDamagePhysical)
+
+     EVENT(CreatureOnCalcColorCode)
+     EVENT(CreatureOnCalcGain)
+     EVENT(CreatureOnCalcBaseGain)
 };
 
 class TSCreatureMap : public TSEventMap<TSCreatureEvents>
@@ -553,6 +744,28 @@ struct TSGameObjectEvents {
 class TSGameObjectMap : public TSEventMap<TSGameObjectEvents>
 {
     void OnAdd(uint32_t, TSGameObjectEvents*);
+    void OnRemove(uint32_t);
+};
+
+EVENT_TYPE(QuestOnAccept,TSQuest,TSPlayer, TSObject /*questgiver*/)
+EVENT_TYPE(QuestOnReward,TSQuest,TSPlayer, TSObject /*questgiver*/, uint32 /*value?*/)
+EVENT_TYPE(QuestOnSpellFinish,TSQuest, TSPlayer, TSSpell)
+EVENT_TYPE(QuestOnObjectiveProgress, TSQuest, TSPlayer, uint32, uint16)
+EVENT_TYPE(QuestOnStatusChanged, TSQuest, TSPlayer)
+EVENT_TYPE(QuestOnRewardXP, TSQuest, TSPlayer, TSMutable<uint32>)
+
+struct TSQuestEvents {
+    EVENT(QuestOnAccept)
+    EVENT(QuestOnReward)
+    EVENT(QuestOnRewardXP)
+    EVENT(QuestOnObjectiveProgress)
+    EVENT(QuestOnStatusChanged)
+    EVENT(QuestOnSpellFinish)
+};
+
+class TSQuestMap : public TSEventMap<TSQuestEvents>
+{
+    void OnAdd(uint32_t, TSQuestEvents*);
     void OnRemove(uint32_t);
 };
 
@@ -818,22 +1031,7 @@ struct TSEventStore
     EVENT(WorldOnMotdChange)
     EVENT(WorldOnShutdownInitiate)
     EVENT(WorldOnUpdate)
-
-    // FormulaScript
-    EVENT(FormulaOnHonorCalculation)
-    EVENT(FormulaOnGrayLevelCalculation)
-    EVENT(FormulaOnColorCodeCalculation)
-    EVENT(FormulaOnZeroDifferenceCalculation)
-    EVENT(FormulaOnBaseGainCalculation)
-    EVENT(FormulaOnGainCalculation)
-    EVENT(FormulaOnGroupRateCalculation)
-    EVENT(FormulaOnMeleeDamageEarly)
-    EVENT(FormulaOnMeleeDamageLate)
-    EVENT(FormulaOnMeleeCrit)
-    EVENT(FormulaOnMeleeOutcome)
-    EVENT(FormulaOnAddThreatEarly)
-    EVENT(FormulaOnAddThreatLate)
-    EVENT(FormulaOnScaleThreat)
+    EVENT(WorldOnCalcHonor)
 
     // BattlegroundScript
     EVENT(BattlegroundOnSetup)
@@ -884,19 +1082,6 @@ struct TSEventStore
     EVENT(ItemOnLFGRollEarly)
     EVENT(ItemOnDestroyEarly)
     EVENT(ItemOnTakenAsLoot)
-
-    // UnitScript
-    EVENT(FormulaOnHeal);
-    EVENT(FormulaOnStaminaHealthBonus);
-    EVENT(FormulaOnIntellectManaBonus);
-    EVENT(FormulaOnMaxHealth);
-    EVENT(FormulaOnMaxPower);
-    EVENT(FormulaOnManaRegen);
-    EVENT(FormulaOnSkillGainChance);
-    EVENT(FormulaOnAttackPower);
-    EVENT(FormulaOnRangedAttackPower);
-    EVENT(FormulaOnQuestXP);
-    //EVENT(UnitModifyVehiclePassengerExitPos)
 
     // WeatherScript
     //EVENT(WeatherOnChange)
@@ -970,6 +1155,9 @@ struct TSEventStore
     EVENT(PlayerOnUpdateBlockPercentage)
     EVENT(PlayerOnUpdateParryPercentage)
     EVENT(PlayerOnUpdateArmor)
+    EVENT(PlayerOnUpdateMaxHealth)
+    EVENT(PlayerOnUpdateMaxPower)
+    EVENT(PlayerOnUpdateManaRegen)
     EVENT(PlayerOnUpdateMeleeHitChance)
     EVENT(PlayerOnUpdateRuneRegen)
     EVENT(PlayerOnUpdateExpertise)
@@ -981,6 +1169,14 @@ struct TSEventStore
     EVENT(PlayerOnUpdateResistance)
     EVENT(PlayerOnUpdateShieldBlock)
     EVENT(PlayerOnUpdateCrit)
+    EVENT(PlayerOnCalcGreyLevel)
+    EVENT(PlayerOnCalcZeroDiff)
+    EVENT(PlayerOnCalcGroupGain)
+    EVENT(PlayerOnCalcStaminaHealthBonus)
+    EVENT(PlayerOnCalcIntellectManaBonus)
+    EVENT(PlayerOnCalcSkillGainChance)
+    EVENT(PlayerOnUpdateAttackPower)
+    EVENT(PlayerOnUpdateRangedAttackPower)
 
     // AccountScript
     EVENT(AccountOnAccountLogin)
@@ -1010,7 +1206,15 @@ struct TSEventStore
     EVENT(GroupOnDisband)
 
     // UnitScript
-    EVENT(UnitOnMissChance)
+    EVENT(UnitOnCalcMissChance)
+    EVENT(UnitOnCalcHeal)
+    EVENT(UnitOnMeleeDamageEarly)
+    EVENT(UnitOnMeleeDamageLate)
+    EVENT(UnitOnCalcMeleeCrit)
+    EVENT(UnitOnCalcMeleeOutcome)
+    EVENT(UnitOnCalcThreatEarly)
+    EVENT(UnitOnCalcThreatLate)
+    EVENT(UnitOnCalcScaleThreat)
 
     // CreatureScript
     EVENT(CreatureOnMoveInLOS)
@@ -1052,11 +1256,11 @@ struct TSEventStore
     EVENT(CreatureOnGeneratePickPocketLoot)
     EVENT(CreatureOnGenerateSkinningLoot)
 
-    EVENT(CreatureOnMaxHealth)
-    EVENT(CreatureOnMaxMana)
-    EVENT(CreatureOnBaseDamage)
-    EVENT(CreatureOnArmor)
-    EVENT(CreatureOnAttackPower)
+    EVENT(CreatureOnUpdateLvlDepMaxHealth)
+    EVENT(CreatureOnUpdateLvlDepMaxMana)
+    EVENT(CreatureOnUpdateLvlDepBaseDamage)
+    EVENT(CreatureOnUpdateLvlDepArmor)
+    EVENT(CreatureOnUpdateLvlDepAttackPower)
     EVENT(CreatureOnSendVendorItem)
 
     EVENT(CreatureOnUpdateResistance)
@@ -1065,6 +1269,9 @@ struct TSEventStore
     EVENT(CreatureOnUpdateMaxPower)
     EVENT(CreatureOnUpdateAttackPowerDamage)
     EVENT(CreatureOnUpdateDamagePhysical)
+    EVENT(CreatureOnCalcColorCode)
+    EVENT(CreatureOnCalcGain)
+    EVENT(CreatureOnCalcBaseGain)
 
     // AreaTrigger
     EVENT(AreaTriggerOnTrigger)
@@ -1081,12 +1288,12 @@ struct TSEventStore
     EVENT(SpellOnDamageEarly)
     EVENT(SpellOnDamageLate)
     EVENT(SpellOnPeriodicDamage)
-    EVENT(SpellOnCritFormula)
-    EVENT(SpellOnAuraCritFormula)
-    EVENT(SpellOnReflectFormula)
-    EVENT(SpellOnHitFormula)
-    EVENT(SpellOnResistFormula)
-    EVENT(SpellOnSpellPowerLevelPenalty)
+    EVENT(SpellOnCalcCrit)
+    EVENT(SpellOnCalcAuraCrit)
+    EVENT(SpellOnCalcReflect)
+    EVENT(SpellOnCalcHit)
+    EVENT(SpellOnCalcResist)
+    EVENT(SpellOnCalcSpellPowerLevelPenalty)
     EVENT(SpellOnTrainerSend)
 
     // GameObjects
@@ -1109,6 +1316,13 @@ struct TSEventStore
     EVENT(GameObjectOnQuestReward)
     EVENT(GameObjectOnGenerateLoot)
     EVENT(GameObjectOnGenerateFishLoot)
+
+    EVENT(QuestOnAccept)
+    EVENT(QuestOnReward)
+    EVENT(QuestOnRewardXP)
+    EVENT(QuestOnObjectiveProgress)
+    EVENT(QuestOnStatusChanged)
+    EVENT(QuestOnSpellFinish)
 
     // Maps
     EVENT(MapOnCreate)
@@ -1171,6 +1385,7 @@ struct TSEventStore
     TSConditionMap Conditions;
     TSPacketMap Packets;
     TSWorldPacketMap WorldPackets;
+    TSQuestMap Quests;
 };
 
 TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
@@ -1211,36 +1426,8 @@ public:
          EVENT_HANDLE(World,OnMotdChange)
          EVENT_HANDLE(World,OnShutdownInitiate)
          EVENT_HANDLE(World,OnUpdate)
+         EVENT_HANDLE(World,OnCalcHonor)
     } World;
-
-    struct FormulaEvents: public EventHandler
-    {
-         FormulaEvents* operator->() { return this;}
-         EVENT_HANDLE(Formula,OnHonorCalculation)
-         EVENT_HANDLE(Formula,OnGrayLevelCalculation)
-         EVENT_HANDLE(Formula,OnColorCodeCalculation)
-         EVENT_HANDLE(Formula,OnZeroDifferenceCalculation)
-         EVENT_HANDLE(Formula,OnBaseGainCalculation)
-         EVENT_HANDLE(Formula,OnGainCalculation)
-         EVENT_HANDLE(Formula,OnGroupRateCalculation)
-         EVENT_HANDLE(Formula,OnMeleeDamageEarly)
-         EVENT_HANDLE(Formula,OnMeleeDamageLate)
-         EVENT_HANDLE(Formula,OnMeleeCrit)
-         EVENT_HANDLE(Formula,OnMeleeOutcome)
-         EVENT_HANDLE(Formula,OnAddThreatEarly)
-         EVENT_HANDLE(Formula,OnAddThreatLate)
-         EVENT_HANDLE(Formula,OnScaleThreat)
-         EVENT_HANDLE(Formula,OnHeal)
-         EVENT_HANDLE(Formula,OnStaminaHealthBonus);
-         EVENT_HANDLE(Formula,OnIntellectManaBonus);
-         EVENT_HANDLE(Formula,OnMaxHealth);
-         EVENT_HANDLE(Formula,OnMaxPower);
-         EVENT_HANDLE(Formula,OnManaRegen);
-         EVENT_HANDLE(Formula,OnSkillGainChance);
-         EVENT_HANDLE(Formula,OnAttackPower);
-         EVENT_HANDLE(Formula,OnRangedAttackPower);
-         EVENT_HANDLE(Formula,OnQuestXP);
-    } Formula;
 
     struct WeatherEvents: public EventHandler
     {
@@ -1334,6 +1521,9 @@ public:
          EVENT_HANDLE(Player,OnUpdateBlockPercentage)
          EVENT_HANDLE(Player,OnUpdateParryPercentage)
          EVENT_HANDLE(Player,OnUpdateArmor)
+         EVENT_HANDLE(Player,OnUpdateMaxHealth)
+         EVENT_HANDLE(Player,OnUpdateMaxPower)
+         EVENT_HANDLE(Player,OnUpdateManaRegen)
          EVENT_HANDLE(Player,OnUpdateMeleeHitChance)
          EVENT_HANDLE(Player,OnUpdateRuneRegen)
          EVENT_HANDLE(Player,OnUpdateExpertise)
@@ -1345,6 +1535,15 @@ public:
          EVENT_HANDLE(Player,OnUpdateResistance)
          EVENT_HANDLE(Player,OnUpdateShieldBlock)
          EVENT_HANDLE(Player,OnUpdateCrit)
+
+         EVENT_HANDLE(Player,OnCalcGreyLevel)
+         EVENT_HANDLE(Player,OnCalcZeroDiff)
+         EVENT_HANDLE(Player,OnCalcGroupGain)
+         EVENT_HANDLE(Player,OnCalcStaminaHealthBonus)
+         EVENT_HANDLE(Player,OnCalcIntellectManaBonus)
+         EVENT_HANDLE(Player,OnCalcSkillGainChance)
+         EVENT_HANDLE(Player,OnUpdateAttackPower)
+         EVENT_HANDLE(Player,OnUpdateRangedAttackPower)
     } Player;
 
     struct AccountEvents : public EventHandler
@@ -1386,7 +1585,15 @@ public:
     struct UnitEvents : public EventHandler
     {
         UnitEvents* operator->() { return this; }
-        EVENT_HANDLE(Unit,OnMissChance)
+        EVENT_HANDLE(Unit,OnCalcMissChance)
+        EVENT_HANDLE(Unit,OnCalcHeal)
+        EVENT_HANDLE(Unit,OnMeleeDamageEarly)
+        EVENT_HANDLE(Unit,OnMeleeDamageLate)
+        EVENT_HANDLE(Unit,OnCalcMeleeCrit)
+        EVENT_HANDLE(Unit,OnCalcMeleeOutcome)
+        EVENT_HANDLE(Unit,OnCalcThreatEarly)
+        EVENT_HANDLE(Unit,OnCalcThreatLate)
+        EVENT_HANDLE(Unit,OnCalcScaleThreat)
     } Unit;
 
      struct SpellEvents : public EventHandler
@@ -1403,12 +1610,12 @@ public:
           EVENT_HANDLE(Spell,OnDamageEarly)
           EVENT_HANDLE(Spell,OnDamageLate)
           EVENT_HANDLE(Spell,OnPeriodicDamage)
-          EVENT_HANDLE(Spell,OnCritFormula)
-          EVENT_HANDLE(Spell,OnAuraCritFormula)
-          EVENT_HANDLE(Spell,OnReflectFormula)
-          EVENT_HANDLE(Spell,OnHitFormula)
-          EVENT_HANDLE(Spell,OnResistFormula)
-          EVENT_HANDLE(Spell,OnSpellPowerLevelPenalty)
+          EVENT_HANDLE(Spell,OnCalcCrit)
+          EVENT_HANDLE(Spell,OnCalcAuraCrit)
+          EVENT_HANDLE(Spell,OnCalcReflect)
+          EVENT_HANDLE(Spell,OnCalcHit)
+          EVENT_HANDLE(Spell,OnCalcResist)
+          EVENT_HANDLE(Spell,OnCalcSpellPowerLevelPenalty)
           EVENT_HANDLE(Spell,OnTrainerSend)
     } Spells;
 
@@ -1426,12 +1633,12 @@ public:
           MAP_EVENT_HANDLE(Spell, OnDamageEarly)
           MAP_EVENT_HANDLE(Spell, OnDamageLate)
           MAP_EVENT_HANDLE(Spell, OnPeriodicDamage)
-          MAP_EVENT_HANDLE(Spell, OnCritFormula)
-          MAP_EVENT_HANDLE(Spell, OnAuraCritFormula)
-          MAP_EVENT_HANDLE(Spell, OnReflectFormula)
-          MAP_EVENT_HANDLE(Spell, OnHitFormula)
-          MAP_EVENT_HANDLE(Spell, OnResistFormula)
-          MAP_EVENT_HANDLE(Spell, OnSpellPowerLevelPenalty)
+          MAP_EVENT_HANDLE(Spell, OnCalcCrit)
+          MAP_EVENT_HANDLE(Spell, OnCalcAuraCrit)
+          MAP_EVENT_HANDLE(Spell, OnCalcReflect)
+          MAP_EVENT_HANDLE(Spell, OnCalcHit)
+          MAP_EVENT_HANDLE(Spell, OnCalcResist)
+          MAP_EVENT_HANDLE(Spell, OnCalcSpellPowerLevelPenalty)
           MAP_EVENT_HANDLE(Spell, OnTrainerSend)
     } SpellID;
 
@@ -1472,11 +1679,11 @@ public:
           EVENT_HANDLE(Creature,OnGeneratePickPocketLoot)
           EVENT_HANDLE(Creature,OnGenerateSkinningLoot)
 
-          EVENT_HANDLE(Creature,OnMaxHealth)
-          EVENT_HANDLE(Creature,OnMaxMana)
-          EVENT_HANDLE(Creature,OnBaseDamage)
-          EVENT_HANDLE(Creature,OnArmor)
-          EVENT_HANDLE(Creature,OnAttackPower)
+          EVENT_HANDLE(Creature,OnUpdateLvlDepMaxHealth)
+          EVENT_HANDLE(Creature,OnUpdateLvlDepMaxMana)
+          EVENT_HANDLE(Creature,OnUpdateLvlDepBaseDamage)
+          EVENT_HANDLE(Creature,OnUpdateLvlDepArmor)
+          EVENT_HANDLE(Creature,OnUpdateLvlDepAttackPower)
           EVENT_HANDLE(Creature,OnSendVendorItem)
 
           EVENT_HANDLE(Creature,OnGossipHello)
@@ -1491,6 +1698,9 @@ public:
           EVENT_HANDLE(Creature,OnUpdateMaxPower)
           EVENT_HANDLE(Creature,OnUpdateAttackPowerDamage)
           EVENT_HANDLE(Creature,OnUpdateDamagePhysical)
+          EVENT_HANDLE(Creature,OnCalcColorCode)
+          EVENT_HANDLE(Creature,OnCalcGain)
+          EVENT_HANDLE(Creature,OnCalcBaseGain)
     } Creatures;
 
     struct CreatureIDEvents : public MappedEventHandler<TSCreatureMap>
@@ -1530,11 +1740,11 @@ public:
           MAP_EVENT_HANDLE(Creature,OnGeneratePickPocketLoot)
           MAP_EVENT_HANDLE(Creature,OnGenerateSkinningLoot)
 
-          MAP_EVENT_HANDLE(Creature,OnMaxHealth)
-          MAP_EVENT_HANDLE(Creature,OnMaxMana)
-          MAP_EVENT_HANDLE(Creature,OnBaseDamage)
-          MAP_EVENT_HANDLE(Creature,OnArmor)
-          MAP_EVENT_HANDLE(Creature,OnAttackPower)
+          MAP_EVENT_HANDLE(Creature,OnUpdateLvlDepMaxHealth)
+          MAP_EVENT_HANDLE(Creature,OnUpdateLvlDepMaxMana)
+          MAP_EVENT_HANDLE(Creature,OnUpdateLvlDepBaseDamage)
+          MAP_EVENT_HANDLE(Creature,OnUpdateLvlDepArmor)
+          MAP_EVENT_HANDLE(Creature,OnUpdateLvlDepAttackPower)
           MAP_EVENT_HANDLE(Creature,OnSendVendorItem)
 
           MAP_EVENT_HANDLE(Creature,OnGossipHello)
@@ -1549,6 +1759,10 @@ public:
           MAP_EVENT_HANDLE(Creature, OnUpdateMaxPower)
           MAP_EVENT_HANDLE(Creature, OnUpdateAttackPowerDamage)
           MAP_EVENT_HANDLE(Creature, OnUpdateDamagePhysical)
+
+          MAP_EVENT_HANDLE(Creature, OnCalcColorCode)
+          MAP_EVENT_HANDLE(Creature, OnCalcGain)
+          MAP_EVENT_HANDLE(Creature, OnCalcBaseGain)
     } CreatureID;
 
     struct GameObjectEvents: public EventHandler {
@@ -1768,6 +1982,24 @@ public:
          MAP_EVENT_HANDLE(Item,OnTakenAsLoot)
     } ItemID;
 
+    struct QuestEvents : public EventHandler {
+        EVENT_HANDLE(Quest,OnAccept)
+        EVENT_HANDLE(Quest,OnReward)
+        EVENT_HANDLE(Quest,OnRewardXP)
+        EVENT_HANDLE(Quest,OnObjectiveProgress)
+        EVENT_HANDLE(Quest,OnStatusChanged)
+        EVENT_HANDLE(Quest,OnSpellFinish)
+    } Quests;
+
+    struct QuestIDEvents : public MappedEventHandler<TSQuestMap> {
+        MAP_EVENT_HANDLE(Quest,OnAccept)
+        MAP_EVENT_HANDLE(Quest,OnReward)
+        MAP_EVENT_HANDLE(Quest,OnRewardXP)
+        MAP_EVENT_HANDLE(Quest,OnObjectiveProgress)
+        MAP_EVENT_HANDLE(Quest,OnStatusChanged)
+        MAP_EVENT_HANDLE(Quest,OnSpellFinish)
+    } QuestID;
+
     struct AreaTriggerEvents : public EventHandler {
         AreaTriggerEvents* operator->() { return this; }
         EVENT_HANDLE(AreaTrigger,OnTrigger)
@@ -1868,7 +2100,6 @@ public:
     {
         Server.LoadEvents(events);
         World.LoadEvents(events);
-        Formula.LoadEvents(events);
         Unit.LoadEvents(events);
         AreaTriggers.LoadEvents(events);
         Weather.LoadEvents(events);
@@ -1888,6 +2119,8 @@ public:
         BattlegroundID.LoadEvents(&events->Battlegrounds);
         Items.LoadEvents(events);
         ItemID.LoadEvents(&events->Items);
+        Quests.LoadEvents(events);
+        QuestID.LoadEvents(&events->Quests);
         AreaTriggers.LoadEvents(events);
         AreaTriggerID.LoadEvents(&events->AreaTriggers);
         Maps.LoadEvents(events);
@@ -1912,7 +2145,6 @@ public:
     {
          Server.Unload();
          World.Unload();
-         Formula.Unload();
          Unit.Unload();
          AreaTriggers.Unload();
          Weather.Unload();
@@ -1934,6 +2166,8 @@ public:
          BattlegroundID.Unload();
          Items.Unload();
          ItemID.Unload();
+         Quests.Unload();
+         QuestID.Unload();
          AreaTriggers.Unload();
          AreaTriggerID.Unload();
          Maps.Unload();
