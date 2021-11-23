@@ -21,6 +21,7 @@ import { DBCFile } from "wotlkdata/wotlkdata/dbc/DBCFile";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { class_stat_formulasRow } from "wotlkdata/wotlkdata/sql/types/class_stat_formulas";
+import { class_stat_valuesRow } from "wotlkdata/wotlkdata/sql/types/class_stat_values";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";
 import { ClassIDs } from "./ClassIDs";
@@ -106,10 +107,24 @@ export enum MeleeAttackPowerClass {
     WARLOCK      = ClassIDs.WARLOCK
 }
 
-export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
-    private stat: number;
+export enum ClassStatFormulaTypes{
+    MELEE =  1,
+    RANGED = 2,
+};
 
-    constructor(owner: Class, stat: number) {
+export enum ClassStatValueTypes {
+    DIMINISHING_K = 1,
+    MISS_CAP      = 2,
+    PARRY_CAP     = 3,
+    DODGE_CAP     = 4,
+    DODGE_BASE    = 5,
+    CRIT_TO_DODGE = 6,
+};
+
+export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
+    private stat: ClassStatFormulaTypes;
+
+    constructor(owner: Class, stat: ClassStatFormulaTypes) {
         super(owner);
         this.stat = stat;
     }
@@ -130,6 +145,43 @@ export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
     get class_out() {
         return this.wrapSQL(this.owner.ID,sql=>sql.class_out);
     }
+}
+
+export class ClassStatValueRow extends MaybeSQLEntity<Class,class_stat_valuesRow> {
+    private stat: ClassStatValueTypes;
+
+    constructor(owner: Class,stat: ClassStatValueTypes) {
+        super(owner)
+        this.stat = stat;
+    }
+
+    protected createSQL(): class_stat_valuesRow {
+        return SQL.class_stat_values
+            .add(this.owner.ID,this.stat)
+            .value.set(0)
+    }
+
+    protected findSQL(): class_stat_valuesRow {
+        return SQL.class_stat_values.find({class:this.owner.ID, stat_type:this.stat})
+    }
+    protected isValidSQL(sql: class_stat_valuesRow): boolean {
+        return sql.class.get() === this.owner.ID
+            && sql.stat_type.get() === this.stat;
+    }
+
+    protected value() {
+        return this.wrapSQL(0,(sql)=>sql.value);
+    }
+
+    set(value: number) {
+        return this.value().set(value);
+    }
+
+    get() {
+        return this.value().get();
+    }
+
+    objectify() { return this.get(); }
 }
 
 export class ClassStats extends CellSystem<Class> {
@@ -181,4 +233,28 @@ export class ClassStats extends CellSystem<Class> {
 
     get RegenHPPerSpt() { return this.f(100, DBC.GtRegenHPPerSpt); }
     get RegenMPPerSpt() { return this.f(100, DBC.GtRegenMPPerSpt); }
+
+    get DiminishingK() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.DIMINISHING_K)
+    }
+
+    get MissCap() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.MISS_CAP)
+    }
+
+    get ParryCap() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.PARRY_CAP)
+    }
+
+    get DodgeCap() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.DODGE_CAP)
+    }
+
+    get DodgeBase() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.DODGE_BASE)
+    }
+
+    get CritToDodge() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.CRIT_TO_DODGE)
+    }
 }
