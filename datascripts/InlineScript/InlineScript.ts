@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import ts from "typescript";
 import { finish } from "wotlkdata";
-import { mpath } from "wotlkdata/util/FileSystem";
+import { mpath, wfs } from "wotlkdata/util/FileSystem";
 import { WDirectory, WNode } from "wotlkdata/util/FileTree";
 import { datasetName } from "wotlkdata/wotlkdata/Settings";
 import { getEventName, getEventNames } from "./InlineEventNames";
@@ -49,11 +49,27 @@ export function getAny(owner: any, prefix: string,type: string) {
                 .split(')')[0]
                 .trimLeft()
                 .trimRight()
-            let filename = ident?.substring(0,ident.lastIndexOf('.ts')+3)
+
+            let filename: string;
+            if(ident.endsWith('.js')) {
+                let relpath = new WNode(ident).relativeToParent('build')
+                let pardir = new WNode(ident);
+                while(pardir.basename().get() !== 'datascripts'
+                    && pardir.dirname().get() !== pardir.get()
+                ) {
+                    pardir = pardir.dirname()
+                }
+                filename = pardir.join(relpath).withExtension('.ts').get();
+            } else {
+                filename = ident?.substring(0,ident.lastIndexOf('.ts')+3)
+            }
             const [_,line,col] = ident
                 .substring(ident.lastIndexOf('.ts'))
                 .split(':')
                 .map(x=>parseInt(x)) as [number,number,number]
+            if(!wfs.exists(filename) || !wfs.isFile(filename)) {
+                throw new Error(`Internal error: ${filename} is not a valid file`)
+            }
             let file = fs.readFileSync(filename,'utf-8')
                 .split('\n')
                 .slice(line-1)
