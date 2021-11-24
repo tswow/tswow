@@ -8601,7 +8601,7 @@ declare class DBContainer<T extends DBArrayEntry> {
      *
      * @param value
      */
-    Add(value: T);
+    Add(value: T): T;
 
     /**
      * Writes all dirty array members to the database, and

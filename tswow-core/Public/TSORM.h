@@ -57,7 +57,7 @@ public:
         return m_values.size();
     }
 
-    void Add(std::shared_ptr<T> value)
+    std::shared_ptr<T> Add(std::shared_ptr<T> value)
     {
         if (value->m_container != nullptr && reinterpret_cast<DBContainer<T>*>(value->m_container) != this)
         {
@@ -68,6 +68,7 @@ public:
         value->m_isRemoved = false;
         value->m_container = reinterpret_cast<DBContainer<DBArrayEntry>*>(this);
         m_values.push_back(value);
+        return value;
     }
 
     void Save()
