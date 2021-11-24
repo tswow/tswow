@@ -51,9 +51,11 @@ export function getAny(owner: any, prefix: string,type: string) {
                 .trimRight()
 
             let filename: string;
-            if(ident.endsWith('.js')) {
-                let relpath = new WNode(ident).relativeToParent('build')
-                let pardir = new WNode(ident);
+            // todo: this is terrible but will work unless stacktrace is completely fucked
+            if(ident.split('\\').join('/').split('/').pop()?.match(/\.js:\d+:\d+/)) {
+                filename = ident?.substring(0,ident.lastIndexOf('.js')+3)
+                let relpath = new WNode(filename).relativeToParent('build')
+                let pardir = new WNode(filename);
                 while(pardir.basename().get() !== 'datascripts'
                     && pardir.dirname().get() !== pardir.get()
                 ) {
@@ -68,7 +70,7 @@ export function getAny(owner: any, prefix: string,type: string) {
                 .split(':')
                 .map(x=>parseInt(x)) as [number,number,number]
             if(!wfs.exists(filename) || !wfs.isFile(filename)) {
-                throw new Error(`Internal error: ${filename} is not a valid file`)
+                throw new Error(`Internal error: ${filename} is not a valid file (from ${ident})`)
             }
             let file = fs.readFileSync(filename,'utf-8')
                 .split('\n')
