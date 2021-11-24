@@ -1730,8 +1730,12 @@ export class Emitter {
             const useAuto = autoAllowed
                 && !!(firstInitializer)
                 && !firstType
-            let dictMatch = firstInitializer.getText().match(/^MakeDictionary(<.+>) *\(/)
-            let arrMatch = firstInitializer.getText().match(/^MakeArray(<.+>) *\(/)
+            let dictMatch = firstInitializer
+                ? firstInitializer.getText().match(/^MakeDictionary(<.+>) *\(/)
+                : undefined
+            let arrMatch = firstInitializer
+                ? firstInitializer.getText().match(/^MakeArray(<.+>) *\(/)
+                : undefined
             if(declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
             }
