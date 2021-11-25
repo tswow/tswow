@@ -7878,6 +7878,16 @@ declare namespace _hidden {
             , z: TSMutable<float>
             , o: TSMutable<float>
         )=>void);
+
+        OnWeight(callback: (
+              bgType: uint32
+            , weight: TSMutable<float>
+            , origType: uint32
+        )=>void)
+
+        OnSelect(callback: (
+              bgType: TSMutable<uint32>
+        )=>void)
     }
 
     export class BattlegroundID<T> {

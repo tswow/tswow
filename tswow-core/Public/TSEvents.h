@@ -901,6 +901,18 @@ EVENT_TYPE(BattlegroundOnAchievementCriteria
 )
 EVENT_TYPE(BattlegroundOnAreaTrigger,TSBattleground,TSPlayer,uint32 /*trigger*/, TSMutable<bool> handled)
 
+EVENT_TYPE(
+      BattlegroundOnWeight
+    , uint32 /*bgType*/
+    , TSMutable<float> /*weight*/
+    , uint32 /*origType*/
+)
+
+EVENT_TYPE(
+      BattlegroundOnSelect
+    , TSMutable<uint32> /*bgType*/
+)
+
 struct TSBattlegroundEvents
 {
     EVENT(BattlegroundOnSetup)
@@ -930,6 +942,8 @@ struct TSBattlegroundEvents
     EVENT(BattlegroundOnGenericEvent)
     EVENT(BattlegroundOnDropFlag)
     EVENT(BattlegroundOnClickFlag)
+    EVENT(BattlegroundOnWeight)
+    EVENT(BattlegroundOnSelect)
 };
 
 class TSBattlegroundMap : public TSEventMap<TSBattlegroundEvents>
@@ -1061,6 +1075,9 @@ struct TSEventStore
     EVENT(BattlegroundOnGenericEvent)
     EVENT(BattlegroundOnDropFlag)
     EVENT(BattlegroundOnClickFlag)
+    EVENT(BattlegroundOnWeight)
+    EVENT(BattlegroundOnSelect)
+
 
     // ItemScript
     EVENT(ItemOnUse)
@@ -1874,6 +1891,8 @@ public:
         EVENT_HANDLE(Battleground,OnDropFlag)
         EVENT_HANDLE(Battleground,OnClickFlag)
         EVENT_HANDLE(Battleground,OnPlayerUnderMap)
+        EVENT_HANDLE(Battleground,OnWeight)
+        EVENT_HANDLE(Battleground,OnSelect)
     } Battlegrounds;
 
     struct BattlegroundIDEvents : public MappedEventHandler<TSBattlegroundMap> {
@@ -1905,6 +1924,8 @@ public:
         MAP_EVENT_HANDLE(Battleground, OnGenericEvent)
         MAP_EVENT_HANDLE(Battleground, OnDropFlag)
         MAP_EVENT_HANDLE(Battleground, OnClickFlag)
+        MAP_EVENT_HANDLE(Battleground, OnWeight)
+        MAP_EVENT_HANDLE(Battleground, OnSelect)
     } BattlegroundID;
 
     struct InstanceEvents : public EventHandler
