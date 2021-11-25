@@ -58,7 +58,7 @@ export class SpellAttributes<T> extends MaskCell<T> {
     setBit(no: number, value: boolean)  {
         if(value) {
             const cell = this.cell(no);
-            cell.set(cell.get()|1<<this.bitno(no));
+            cell.set((cell.get()|1<<this.bitno(no))>>>0);
         } else {
             const cell = this.cell(no);
             cell.set((cell.get()&~1<<this.bitno(no))>>>0);
