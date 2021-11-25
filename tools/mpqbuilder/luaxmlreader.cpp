@@ -26,6 +26,7 @@
 std::vector<std::string> special_files = {
 	  "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 	, "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
+	, "Interface\\WorldStateFrame\\ICONS-CLASSES.BLP"
 	, "textures\\Minimap\\md5translate.trs"
 };
 
