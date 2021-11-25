@@ -22,7 +22,6 @@ import { AreaRegistry } from "./Area/Area";
 import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
 import { BattlegroundRegistry } from "./Battleground/Battleground";
-import { BattlegroundPoolRegistry } from "./Battleground/BattlegroundPool";
 import { BroadcastTextRegistry } from "./BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./BroadcastText/CreatureText";
 import { ClassRegistry } from "./Class/ClassRegistry";
@@ -148,7 +147,6 @@ export const std = {
     Companions: CompanionRegistry,
     WorldSafeLocs: WorldSafeLocRegistry,
     Battlegrounds: BattlegroundRegistry,
-    BattlegroundPools: BattlegroundPoolRegistry,
     WorldStateUIs: WorldStateUIRegistry,
     WorldStates: WorldStateRegistry,
     WMOArea: WMOAreaRegistry,
