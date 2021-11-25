@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish, LUAXML } from "wotlkdata";
+import { finish, LUAXML, sort } from "wotlkdata";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { ChrClassesRow } from "wotlkdata/wotlkdata/dbc/types/ChrClasses";
 import { Edit } from "wotlkdata/wotlkdata/luaxml/TextFile";
@@ -67,8 +67,11 @@ export class Class extends MainEntity<ChrClassesRow> {
 }
 
 
-finish('class-gaps', ()=>{
+sort('ChrClasses', ()=>{
     if(BuildArgs.READ_ONLY) return; // <-- class gaps are valid if we're in readonly mode
+
+    DBC.ChrClasses.binarySort(0,(row=>row.ID.get()))
+
     findGaps(
           'class'
         , 'ChrClasses'
