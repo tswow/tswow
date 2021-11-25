@@ -6302,7 +6302,8 @@ declare interface TSUnit extends TSWorldObject {
      * Dismounts the [Unit].
      */
     Dismount() : void
-    Emote(emoteId : uint32) : void
+
+    PerformEmote(emoteId : uint32) : void
 
     /**
      * Makes the [Unit] perform the given emote continuously.
