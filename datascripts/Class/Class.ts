@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish } from "wotlkdata";
+import { finish, LUAXML } from "wotlkdata";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { ChrClassesRow } from "wotlkdata/wotlkdata/dbc/types/ChrClasses";
 import { Edit } from "wotlkdata/wotlkdata/luaxml/TextFile";
@@ -76,4 +76,14 @@ finish('class-gaps', ()=>{
         , DBC.ChrClasses.filter({}).map(x=>x.ID.get())
         , (cur,last)=>cur===11&&last===9
     )
+})
+
+// todo: i'm not entirely sure what this solves,
+//       but it seems to at least make the raid ui usable
+finish('class-raid-ui-workaround', ()=> {
+    LUAXML.anyfile('Interface/AddOns/Blizzard_RaidUI/Blizzard_RaidUI.lua')
+        .replace('classes[i]:Hide()','         if(classes[i]~=nil) then classes[i]:Hide() end')
+
+    LUAXML.anyfile('Interface/AddOns/Blizzard_RaidUI/Blizzard_RaidUI.lua')
+        .replace('classes[i]:Show()','         if(classes[i]~=nil) then classes[i]:Show() end')
 })
