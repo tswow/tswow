@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as crypto from 'crypto';
+import { sleep } from 'deasync';
 import { Arguments } from '../util/Args';
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from '../util/ClientPatches';
 import { wfs } from '../util/FileSystem';
@@ -123,6 +124,7 @@ export class Client {
                 process.start('wine',[this.path.wow_exe.get()])
             }
             processes.push(process);
+            sleep(200)
         }
     }
 
