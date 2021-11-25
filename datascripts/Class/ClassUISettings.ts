@@ -40,17 +40,20 @@ function unfloat(str : string) {
 class TCoordSystem extends CellSystem<Class> {
     private _tCoordsCCEdit: Edit;
     private _tCoordsEdit: Edit;
+    private _tCoordsWSEdit: Edit;
 
-    constructor(owner: Class, tcoords: Edit, tcoordsCC: Edit) {
+    constructor(owner: Class, tcoords: Edit, tcoordsCC: Edit, tcoordsWS: Edit) {
         super(owner);
         this._tCoordsCCEdit = tcoordsCC;
         this._tCoordsEdit = tcoords;
+        this._tCoordsWSEdit = tcoordsWS;
     }
 
     set(x1: number, y1: number, x2: number, y2: number) {
         const txt = `["${this.owner.Filename}"] = {${[x1,y1,x2,y2].join(', ')}},`
         this._tCoordsCCEdit.text = txt;
         this._tCoordsEdit.text = txt;
+        this._tCoordsWSEdit.text = txt;
         return this.owner;
     }
 
@@ -167,9 +170,9 @@ export class ClassUISettings extends CellSystem<Class> {
         return this.owner;
     }
 
-    constructor(cls : Class,tCoordsCC : Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
+    constructor(cls : Class,tCoordsCC : Edit, tCoordsWS: Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
         super(cls);
-        this.TCoords = new TCoordSystem(cls, tCoords, tCoordsCC);
+        this.TCoords = new TCoordSystem(cls, tCoords, tCoordsCC, tCoordsWS);
         this.Color = new ClassColor(cls, classColor);
         this.ClassButton = new AnchorRow(cls, xmlEdit);
         this.Description = new ClassDescription(cls, maleDescription, femaleDescription )

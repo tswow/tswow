@@ -36,6 +36,7 @@ export class Class extends MainEntity<ChrClassesRow> {
 
     constructor(baseClass: number, row : ChrClassesRow,
         tCoordsCCEdit : Edit,
+        tCoordsWSEdit : Edit,
         classColorEdit : Edit,
         sortOrderEdit : Edit,
         tCoordsEdit : Edit,
@@ -45,7 +46,7 @@ export class Class extends MainEntity<ChrClassesRow> {
         infoRows : Edit[]) {
             super(row);
             this.UI = new ClassUISettings(this,
-                tCoordsCCEdit,classColorEdit,sortOrderEdit,
+                tCoordsCCEdit,tCoordsWSEdit,classColorEdit,sortOrderEdit,
                 tCoordsEdit,xmlEdit,maleDescription,
                 femaleDescription,infoRows);
             this.BaseClass = baseClass;

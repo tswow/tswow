@@ -8,24 +8,29 @@ import { ClassRegistry } from './ClassRegistry';
 
 const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
+const WORLDSTATE_LOCAL = "Interface\\WorldStateFrame\\ICONS-CLASSES.BLP"
 const SQUARES_PATH = dataset.luaxml_source.join(SQUARES_LOCAL)
 const CIRCLES_PATH = dataset.luaxml_source.join(CIRCLES_LOCAL)
+const WORLDSTATE_PATH = dataset.luaxml_source.join(WORLDSTATE_LOCAL)
 
 let stitchedSquares: TSImage;
 let stitchedCircles: TSImage;
+let stitchedWorldstates: TSImage
 
 let stitchIndex = 10;
 
 function setupImages() {
     let sqBlpExist = fs.existsSync(SQUARES_PATH.get());
     let crBlpExist = fs.existsSync(CIRCLES_PATH.get());
+    let wsBlpExists = fs.existsSync(WORLDSTATE_PATH.get());
 
-    if(!sqBlpExist || !crBlpExist) {
+    if(!sqBlpExist || !crBlpExist || !wsBlpExists) {
         return false;
     }
 
     stitchedSquares = TSImages.read(SQUARES_PATH.get())
     stitchedCircles = TSImages.read(CIRCLES_PATH.get())
+    stitchedWorldstates = TSImages.read(WORLDSTATE_PATH.get())
 
     const resizeImage = (image: TSImage) =>
         TSImages.create(512,512)
@@ -34,6 +39,7 @@ function setupImages() {
             .drawImage(image,0,64,256,64,0,128,256,64)
     stitchedSquares = resizeImage(stitchedSquares)
     stitchedCircles = resizeImage(stitchedCircles)
+    stitchedWorldstates = resizeImage(stitchedWorldstates)
 
     ClassRegistry.load('WARRIOR').UI.TCoords.set(0,0.125,0,0.125)
     ClassRegistry.load('MAGE').UI.TCoords.set(0.125,0.25,0,0.125)
@@ -70,6 +76,7 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 
     stitchedSquares?.drawImage(image,xpos,ypos,64,64)
     stitchedCircles?.drawImage(image,xpos,ypos,64,64)
+    stitchedWorldstates?.drawImage(image,xpos,ypos,64,64)
     // carve out the circle shape
     stitchedCircles?.addFilter((c,x,y)=>{
         if(x>=xpos && y >= ypos && x <= xpos+64 && y <= ypos+64) {
@@ -80,6 +87,16 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
         }
         return c;
     });
+    stitchedWorldstates?.addFilter((c,x,y)=>{
+        if(x>=xpos && y >= ypos && x <= xpos+64 && y <= ypos+64) {
+            if(x>=xpos+4 && x<=xpos+64-4 && y>=ypos+4 && y<=ypos+64-4) {
+                return c
+            } else {
+                return 0;
+            }
+        }
+        return c
+    })
     return index;
 }
 
@@ -95,4 +112,5 @@ finish('build-class-icons',()=>{
     wfs.write(ipaths.modules.module.pick('tswow-stdlib').join('assets','Interface','noconvert'),'')
     stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL),'BLP')
     stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL),'BLP')
+    stitchedWorldstates?.writeToModule('tswow-stdlib',path.join('assets',WORLDSTATE_LOCAL),'BLP')
 })

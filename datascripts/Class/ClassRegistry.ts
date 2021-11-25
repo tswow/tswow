@@ -61,9 +61,11 @@ export class ClassRegistryClass
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
         const xm = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');
         const gs = LUAXML.file('Interface/GlueXML/GlueStrings.lua');
+        const ws = LUAXML.file('Interface/FrameXML/WorldStateFrame.lua')
 
         const fn = row.Filename.get()
         const tcoordscc = cc.emptyReplace(BaseClassData.CHARACTERCREATE_ICON_TCOORD_ROWS[fn]);
+        const tcoordsws = ws.emptyReplace(BaseClassData.WORLDSTATEFRAME_TCOORDS_ROWS[fn]);
         const tcoords = co.emptyReplace(BaseClassData.CONSTANT_ICON_TCOORDS_ROWS[fn]);
         const classColor = co.emptyReplace(BaseClassData.CLASS_COLOR_ROWS[fn]);
         const sortOrder = co.emptyReplace(BaseClassData.CLASS_SORT_ORDER_ROWS[fn]);
@@ -83,6 +85,7 @@ export class ClassRegistryClass
                 row.ID.get(),
                 row,
                 tcoordscc,
+                tcoordsws,
                 classColor,
                 sortOrder,
                 tcoords,
@@ -192,8 +195,10 @@ export class ClassRegistryClass
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
         const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.lua');
         const gs = LUAXML.file('Interface/GlueXML/GlueStrings.lua');
+        const ws = LUAXML.file('Interface/FrameXML/WorldStateFrame.lua');
 
         const tCoordsCC = cc.after(52,`["${identifier}"] = {0, 0.25, 0, 0.25},`)
+        const tCoordsWS = ws.after(43,`["${identifier}"] = {0, 0.25, 0, 0.25},`)
         const classColor = co.after(54,`\t["${identifier}"] = { r = 0.67, g = 0.83, b = 0.45 },`)
         const sortOrder = co.after(71,`\t"${identifier}",`)
         const tCoords = co.after(91,`\t["${identifier}"] = {0,0,0,0},`);
@@ -213,6 +218,7 @@ export class ClassRegistryClass
             parent,
             rParent.clone(id,{Filename:identifier}),
             tCoordsCC,
+            tCoordsWS,
             classColor,
             sortOrder,
             tCoords,
