@@ -3465,10 +3465,12 @@ void TSPlayer::GossipSendTextMenu(
     , uint32 emote2Delay
     , uint32 menu_id
 ) {
+    bool isFemale = sender->IsUnit() && sender->ToUnit()->GetGender() ==
+        Gender::GENDER_FEMALE;
     GossipSendTextMenuGendered(
           sender
-        , text
-        , JSTR("")
+        , isFemale ? JSTR("") : text
+        , isFemale ? text : JSTR("")
         , language
         , emote0, emote0Delay
         , emote1, emote1Delay
