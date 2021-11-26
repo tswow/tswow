@@ -268,13 +268,18 @@ function storeAreaMappings(mod: string, mapsDir: string) {
 
 export const ZMP_CHANGES = new FileChangeModule('zmp')
 function generateZmp(map: string, moduleOut: string) {
-    const mapObj = DBC.Map.find({Directory:map});
+    const mapObj = MapRegistry.query({Directory:map})
     if(mapObj === undefined) {
         // don't error, non-maps are allowed in that directory
         return;
     }
 
-    const mapId = mapObj.ID.get()
+    // only generate zmp for non-dungeons
+    if(!mapObj.InstanceType.NONE.is()) {
+        return;
+    }
+
+    const mapId = mapObj.ID
     const areas = WorldMapAreaRegistry
             .queryAll({MapID:mapId})
             .map(x=>x.Area.getRef())
