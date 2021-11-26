@@ -1,13 +1,15 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Cell, CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { achievement_rewardRow } from "wotlkdata/wotlkdata/sql/types/achievement_reward";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Achievement } from "./Achievement";
 
 export class AchievementMailSubject extends SQLLocSystem<Achievement> {
     protected getMain(): Cell<string, any> {
-        return this.owner.Rewards.row.Subject;
+        return AchievementReward.wrap(this.owner,'',sql=>sql.Subject)
     }
     protected getLoc(loc: Language): Cell<string, any> {
         return this.owner.Rewards.localeRow(loc).Subject;
@@ -16,7 +18,7 @@ export class AchievementMailSubject extends SQLLocSystem<Achievement> {
 
 export class AchievementMailBody extends SQLLocSystem<Achievement> {
     protected getMain(): Cell<string, any> {
-        return this.owner.Rewards.row.Body;
+        return AchievementReward.wrap(this.owner,'',sql=>sql.Body)
     }
     protected getLoc(loc: Language): Cell<string, any> {
         return this.owner.Rewards.localeRow(loc).Body;
@@ -24,15 +26,27 @@ export class AchievementMailBody extends SQLLocSystem<Achievement> {
 }
 
 export class AchievementRewardMail extends CellSystem<Achievement> {
-    get Sender() { return this.ownerWrap(this.owner.Rewards.row.Sender); }
-    get Subject() { return new AchievementMailSubject(this.owner) };
-    get Body() { return new AchievementMailSubject(this.owner) };
-    get MailTemplate() { return this.ownerWrap(this.owner.Rewards.row.MailTemplateID); }
+    get Sender() {
+        return AchievementReward.wrap(this.owner,0,sql=>sql.Sender)
+    }
+    get Subject() {
+        return new AchievementMailSubject(this.owner)
+    };
+    get Body() {
+        return new AchievementMailSubject(this.owner)
+    };
+    get MailTemplate() {
+        return AchievementReward.wrap(this.owner,0,sql=>sql.MailTemplateID)
+    }
 }
 
 export class AchievementRewardTitle extends CellSystem<Achievement> {
-    get Horde() { return this.ownerWrap(this.owner.Rewards.row.TitleH); }
-    get Alliance() { return this.ownerWrap(this.owner.Rewards.row.TitleA); }
+    get Horde() {
+        return AchievementReward.wrap(this.owner,0,sql=>sql.TitleH)
+    }
+    get Alliance() {
+        return AchievementReward.wrap(this.owner,0,sql=>sql.TitleA)
+    }
 
     set(both: number) {
         this.Horde.set(both)
@@ -41,19 +55,25 @@ export class AchievementRewardTitle extends CellSystem<Achievement> {
     }
 }
 
-export class AchievementReward extends CellSystem<Achievement> {
-    get row() {
-        let row = SQL.achievement_reward.find({ID:this.owner.ID});
-        if(!row) {
-            row = SQL.achievement_reward.add(this.owner.ID)
-                .ItemID.set(0)
-                .MailTemplateID.set(0)
-                .Sender.set(0)
-                .Subject.set('')
-                .TitleA.set(0)
-                .TitleH.set(0)
-        }
-        return row;
+export class AchievementReward extends MaybeSQLEntity<Achievement,achievement_rewardRow> {
+    static wrap<T extends CPrim>(achievement: Achievement, def: T, callback: (row: achievement_rewardRow)=>Cell<T,any>) {
+        return achievement.Rewards.wrapSQL(def,callback);
+    }
+
+    protected createSQL(): achievement_rewardRow {
+        return SQL.achievement_reward.add(this.owner.ID)
+            .ItemID.set(0)
+            .MailTemplateID.set(0)
+            .Sender.set(0)
+            .Subject.set('')
+            .TitleA.set(0)
+            .TitleH.set(0)
+    }
+    protected findSQL(): achievement_rewardRow {
+        return SQL.achievement_reward.find({ID:this.owner.ID})
+    }
+    protected isValidSQL(sql: achievement_rewardRow): boolean {
+        return sql.ID.get() === this.owner.ID
     }
 
     localeRow(language: Language) {
@@ -66,8 +86,7 @@ export class AchievementReward extends CellSystem<Achievement> {
         return row;
     }
 
-    get Description() { return this.ownerWrapLoc(this.owner.row.Reward); }
     get Mail() { return new AchievementRewardMail(this.owner); }
-    get Item() { return this.ownerWrap(this.row.ItemID)}
+    get Item() { return this.wrapSQL(0,sql=>sql.ItemID)}
     get Title() { return new AchievementRewardTitle(this.owner); }
 }
