@@ -292,16 +292,16 @@ export class Datascripts {
         const serverOnly = args.includes('--server-only')
         const clientOnly = args.includes('--client-only')
 
-        const noShutdownAnyArg = args.includes('--no-shutdown')
+        const noShutdownAnyArg = args.includes('--no-shutdown') || args.includes('--no-shutdowns')
         const noShutdownServerArg = noShutdownAnyArg
-            || args.includes('--no-shutdown-server')
+            || args.includes('--no-shutdown-server') || args.includes('--no-shutdowns-server')
         const noShutdownClientArg = noShutdownAnyArg
-            || args.includes('--no-shutdown-client')
-        const noRestartAnyArg = args.includes('--no-restart')
+            || args.includes('--no-shutdown-client') || args.includes('--no-shutdowns-client')
+        const noRestartAnyArg = args.includes('--no-restart') || args.includes('--no-restarts')
         const noRestartServerArg = noRestartAnyArg
-            || args.includes('--no-restarts-server')
+            || args.includes('--no-restarts-server') || args.includes('--no-restart-server')
         const noRestartsClientArg = noRestartAnyArg
-            || args.includes('--no-restarts-client')
+            || args.includes('--no-restarts-client') || args.includes('--no-restart-client')
 
         const writesServer = !clientOnly && !isReadOnly;
         const writesClient = !serverOnly && !isReadOnly;
