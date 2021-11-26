@@ -10,8 +10,9 @@
 
 #include "luafiles.generated.h"
 
-// space for ~700 functions
-CLIENT_ADDRESS(void,CAVE_START,0x757de0)
+// new custom range
+CLIENT_ADDRESS(void, CAVE_START, 0x7743d2)
+constexpr int CAVE_SIZE = 0x26; // space for 7 functions
 
 #define JMP_SIZE 5
 #define NOP 0x90
@@ -83,9 +84,14 @@ CLIENT_DETOUR(LoadScriptFunctions, 0x5120E0, __cdecl, int, ()) {
     DWORD old;
     VirtualProtect((LPVOID)CAVE_START, JMP_SIZE * luaRegistry().size(), PAGE_EXECUTE_READWRITE, &old);
     memset(CAVE_START, NOP, JMP_SIZE * luaRegistry().size());
+
+    // write a jmp
+    *((unsigned char*)CAVE_START    ) = 0xed;
+    *((unsigned char*)CAVE_START + 1) = 0x26;
+
     for (size_t i = 0; i < luaRegistry().size(); ++i)
     {
-        size_t cur_cave = uint32_t(CAVE_START) + i * JMP_SIZE;
+        size_t cur_cave = uint32_t(CAVE_START) + 2 + i * JMP_SIZE;
         LuaFunction& fn = luaRegistry()[i];
         LOG_DEBUG
             << "Registering Lua function: "

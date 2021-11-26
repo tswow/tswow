@@ -51,30 +51,31 @@ Logger& log(const char* type, const char* file, size_t line)
   return logger;
 }
 
-LUA_FUNCTION(_LOG_DEBUG, (lua_State* L)) {
-#ifdef LUA_LOGGING
-  LOG_DEBUG << ClientLua::GetString(L, 1);
-#endif
-  return 0;
-}
+enum class LuaLoggingOpcode {
+    LUA_DEBUG = 0,
+    LUA_INFO  = 1,
+    LUA_WARN  = 2,
+    LUA_ERROR = 3,
+};
 
-LUA_FUNCTION(_LOG_INFO, (lua_State* L)) {
+LUA_FUNCTION(_LUA_LOG, (lua_State* L)) {
 #ifdef LUA_LOGGING
-  LOG_INFO << ClientLua::GetString(L, 1);
+    switch (LuaLoggingOpcode(ClientLua::GetNumber(L, 1))) {
+    case LuaLoggingOpcode::LUA_DEBUG:
+        LOG_DEBUG << ClientLua::GetString(L, 2);
+        break;
+    case LuaLoggingOpcode::LUA_INFO:
+        LOG_INFO << ClientLua::GetString(L, 2);
+        break;
+    case LuaLoggingOpcode::LUA_WARN:
+        LOG_WARN << ClientLua::GetString(L, 2);
+        break;
+    case LuaLoggingOpcode::LUA_ERROR:
+        LOG_ERROR << ClientLua::GetString(L, 2);
+        break;
+    default:
+        break;
+    }
+    return 0;
 #endif
-  return 0;
-}
-
-LUA_FUNCTION(_LOG_WARN, (lua_State* L)) {
-#ifdef LUA_LOGGING
-  LOG_WARN << ClientLua::GetString(L, 1);
-#endif
-  return 0;
-}
-
-LUA_FUNCTION(_LOG_ERROR, (lua_State* L)) {
-#ifdef LUA_LOGGING
-  LOG_ERROR << ClientLua::GetString(L, 1);
-#endif
-  return 0;
 }

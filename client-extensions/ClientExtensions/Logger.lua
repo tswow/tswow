@@ -47,17 +47,17 @@ local function stringify(...)
 end
 
 function LOG_DEBUG(...)
-    _LOG_DEBUG(stringify(select(1,...)))
+    _LUA_LOG(0, stringify(select(1,...)))
 end
 
 function LOG_INFO(...)
-    _LOG_INFO(stringify(select(1,...)))
+    _LUA_LOG(1, stringify(select(1,...)))
 end
 
 function LOG_WARN(...)
-    _LOG_WARN(stringify(select(1,...)))
+    _LUA_LOG(2, stringify(select(1,...)))
 end
 
 function LOG_ERROR(...)
-    _LOG_ERROR(stringify(select(1,...)))
+    _LUA_LOG(3, stringify(select(1,...)))
 end
