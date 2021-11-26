@@ -24,6 +24,7 @@ export class IdRange {
     readonly mod: string;
     readonly table: string;
     readonly isNew: boolean;
+    touched: boolean = false;
 
     constructor(isNew: boolean, table: string, mod: string, name: string, low: number, high: number) {
         this.isNew = isNew;
@@ -166,10 +167,20 @@ export function GetIdRange(table: string, mod: string, name: string, size: numbe
     let forward = mappings[table] || (mappings[table] = new Table());
     const fullname = mod + ':' + name;
     let fwd = GetIdRangeInternal(forward,`${mod}:${name}`);
-    if(fwd) return fwd;
+    if(fwd) {
+        if(fwd.touched) {
+            throw new Error(
+                `Multiple definitions for ${mod}:${name} in table ${table}!`
+                + `Double-check the name if you copypasted lines between datascripts`
+            )
+        }
+        fwd.touched = true;
+        return fwd;
+    }
     const id = getAllocator(table).add(startid, size);
     const entry = new IdRange(true, table, mod, name, id, id + size - 1);
     forward.entries[fullname] = entry;
+    entry.touched = true;
     return entry;
 }
 
