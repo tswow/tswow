@@ -20,6 +20,10 @@ import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { ArrayEntry } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
+export interface IMainEntity<T> {
+    readonly row: T
+}
+
 export class MainEntity<T> extends CellSystemTop {
     @Transient
     readonly row: T;

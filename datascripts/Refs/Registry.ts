@@ -2,7 +2,7 @@ import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { CellReadOnly } from "wotlkdata/wotlkdata/cell/cells/CellReadOnly";
 import { Row } from "wotlkdata/wotlkdata/table/Row";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
-import { MainEntity, TransformedEntity } from "../Misc/Entity";
+import { IMainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, StaticIDGenerator } from "../Misc/Ids";
 import { RefDynamic, RefNoCreate, RefReadOnly, RefStatic } from "./Ref";
 import { RegistryBase } from "./RegistryBase";
@@ -31,7 +31,7 @@ export abstract class RegistryQueryBase<
 }
 
 export abstract class RegistryRowBase<
-      E extends MainEntity<R>|TransformedEntity<R,any>
+      E extends IMainEntity<R>|TransformedEntity<R,any>
     , R extends Row<any,Q>,Q
 >
 extends RegistryQueryBase<E,R,Q>
@@ -64,7 +64,7 @@ extends RegistryQueryBase<E,R,Q>
         return this.queryAll(this.EmptyQuery()).reduceRight(callback,initial);
     }
 
-    static id<E extends MainEntity<any>|TransformedEntity<any,any>>(registry: RegistryRowBase<E,any,any>, e: E) {
+    static id<E extends IMainEntity<any>|TransformedEntity<any,any>>(registry: RegistryRowBase<E,any,any>, e: E) {
         return registry.ID(e);
     }
 
@@ -74,7 +74,7 @@ extends RegistryQueryBase<E,R,Q>
 }
 
 export abstract class RegistryStaticNoClone<
-      E extends MainEntity<R> | TransformedEntity<R,any>
+      E extends IMainEntity<R> | TransformedEntity<R,any>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
     , Q
     >
@@ -96,7 +96,7 @@ export abstract class RegistryStaticNoClone<
 }
 
 export abstract class RegistryStatic<
-      E extends MainEntity<R>|TransformedEntity<R,any>
+      E extends IMainEntity<R> |TransformedEntity<R,any>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
     , Q
     >
@@ -128,7 +128,7 @@ export abstract class RegistryStatic<
 }
 
 export abstract class RegistryDynamicNoClone<
-      E extends MainEntity<R>
+      E extends IMainEntity<R>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
     , Q
     >
@@ -151,7 +151,7 @@ export abstract class RegistryDynamicNoClone<
 }
 
 export abstract class RegistryDynamic<
-      E extends MainEntity<R>
+      E extends IMainEntity<R>
     , R extends Row<any,Q> & {clone: (id: number)=>R}
     , Q
     >

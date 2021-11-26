@@ -41,6 +41,7 @@ import { GemRegistry } from "./Gem/Gem";
 import { GlyphRegistry } from "./Glyph/Glyph";
 import { GMTeleportRegistry } from "./GMTeleport/GMTeleport";
 import { GossipRegistry } from "./Gossip/Gossips";
+import { NPCTextRegistry } from "./Gossip/NPCTextRegistry";
 import { TSImages } from "./Images/Image";
 import { InlineScript } from "./InlineScript/InlineScript";
 import { ItemDisplayinfoRegistry } from "./Item/ItemDisplayInfo";
@@ -112,6 +113,7 @@ export const std = {
     Factions: FactionRegistry,
     Scripts: SmartScripts,
     Gossip: GossipRegistry,
+    NPCText: NPCTextRegistry,
     Lights: Lights,
     ScriptPaths: ScriptPaths,
     Areas: AreaRegistry,

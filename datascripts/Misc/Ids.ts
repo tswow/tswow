@@ -169,7 +169,7 @@ export const Ids = {
     Trainer: new DynamicIDGenerator('trainer',128),
 
     /** Starts at 1000000, Highest base value is 16777215 (above start) */
-    NPCText: new DynamicIDGenerator('npc_text',1000000),
+    NPCText: new StaticIDGenerator('npc_text',1000000),
 
     /** Starts at 100000, Highest base value is 74294 */
     gossip_menu_option: new DynamicIDGenerator('gossip_menu_option',100000),

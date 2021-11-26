@@ -76,7 +76,7 @@ export class GossipRef<T> extends CellSystem<T> {
 }
 
 function makeGossip(id: number) {
-    const text = Ids.NPCText.id();
+    const text = Ids.NPCText.dynamicId();
     const gossipRow = SQL.gossip_menu.add(id, text)
         .VerifiedBuild.set(17688)
     SQL.npc_text.add(text)
