@@ -44,6 +44,12 @@ export function cleanSQL() {
     col('creature_questender')
     col('gameobject_template')
     col('areatrigger_teleport')
+    col('instance_addon')
+    col('instance_boss_boundary')
+    col('instance_boss_creature')
+    col('instance_encounter_achievement')
+    col('instance_door_object')
+
     q('DELETE FROM graveyard_zone WHERE comment = "tswow";');
     q('DELETE FROM spell_target_position WHERE VerifiedBuild = 17688;');
     q('DELETE FROM spell_bonus_data WHERE comments = "tswow";');

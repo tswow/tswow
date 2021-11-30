@@ -1,8 +1,10 @@
 #include "TSInstance.h"
 #include "TSMap.h"
 
+#include "AreaBoundary.h"
 #include "Map.h"
 #include "InstanceScript.h"
+#include "ScriptedCreature.h"
 
 TSInstance::TSInstance(InstanceScript* script)
     : m_script(script)
@@ -135,4 +137,78 @@ uint32 TSInstance::GetFactionInInstance()
 uint32 TSInstance::GetEncounterCount()
 {
     return m_script->GetEncounterCount();
+}
+
+TSBossInfo TSInstance::GetBossInfo(uint32 id)
+{
+    return TSBossInfo(&m_script->bosses[id]);
+}
+
+TSGuidSet::TSGuidSet(std::set<ObjectGuid>* set)
+    : m_set(set)
+{}
+
+bool TSGuidSet::Contains(uint64 value)
+{
+    return m_set->find(ObjectGuid(value)) == m_set->end();
+}
+
+void TSGuidSet::Add(uint64 value)
+{
+    m_set->insert(ObjectGuid(value));
+}
+
+void TSGuidSet::Remove(uint64 value)
+{
+    m_set->erase(ObjectGuid(value));
+}
+
+TSBossInfo::TSBossInfo(BossInfo* info)
+    : m_info(info)
+{}
+
+uint32 TSBossInfo::GetBossState()
+{
+    return m_info->state;
+}
+
+TSGuidSet TSBossInfo::GetMinionGUIDs()
+{
+    return TSGuidSet(&m_info->minion);
+}
+
+TSGuidSet TSBossInfo::GetDoorsClosedDuringEncounter()
+{
+    return TSGuidSet(&m_info->door[DoorType::DOOR_TYPE_ROOM]);
+}
+
+TSGuidSet TSBossInfo::GetDoorsOpenDuringEncounter()
+{
+    return TSGuidSet(&m_info->door[DoorType::DOOR_TYPE_SPAWN_HOLE]);
+}
+
+TSGuidSet TSBossInfo::GetDoorsOpenAfterEncounter()
+{
+    return TSGuidSet(&m_info->door[DoorType::DOOR_TYPE_PASSAGE]);
+}
+
+bool TSBossInfo::IsWithinBoundary(float x, float y, float z)
+{
+    for (auto part : m_info->boundary)
+    {
+        if (!part->IsWithinBoundary(Position(x, y, z))) return false;
+    }
+    return true;
+}
+
+bool TSBossInfo::IsWithinBoundary(TSWorldObject obj)
+{
+    for (auto part : m_info->boundary)
+    {
+        if (!part->IsWithinBoundary(obj.obj))
+        {
+            return false;
+        }
+    }
+    return true;
 }

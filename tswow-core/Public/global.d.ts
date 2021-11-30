@@ -3543,6 +3543,15 @@ declare class TSWorldPacket {
     WriteString(index: uint32, value: string): void
 }
 
+declare interface TSWorldStatePacket {
+    push(worldstate: uint32, value: int32): void
+    length(): uint32
+    GetVariable(index: uint32): int32
+    GetValue(index: uint32): int32
+    Remove(index: uint32): void
+    Clear(): void
+}
+
 declare interface TSQuest {
     IsNull() : bool
 
@@ -4356,6 +4365,22 @@ declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider
     GetCreature(type: uint32, logErrors?: bool): TSCreature;
 }
 
+declare interface TSGuidSet {
+    Contains(id: uint64): bool
+    Add(id: uint64): void
+    Remove(id: uint64): void
+}
+
+declare interface TSBossInfo {
+    GetBossState(): uint32
+    GetMinionGUIDs(): TSGuidSet
+    GetDoorsOpenDuringEncounter(): TSGuidSet
+    GetDoorsClosedDuringEncounter(): TSGuidSet
+    GetDoorsOpenAfterEncounter(): TSGuidSet
+    IsWithinBoundary(x: float, y: float, z: float): bool
+    IsWithinBoundary(obj: TSWorldObject): bool
+}
+
 declare interface TSInstance {
     IsNull(): bool;
     GetMap(): TSMap;
@@ -4383,6 +4408,7 @@ declare interface TSInstance {
     GetMaxResetDelay(): uint32;
     GetTeamIDInInstance(): uint32;
     GetFactionInInstance(): uint32;
+    GetBossInfo(id: uint32): TSBossInfo
 }
 
 declare interface TSGameObject extends TSWorldObject {
@@ -8109,16 +8135,20 @@ declare namespace _hidden {
     }
 
     export class Instances<T> {
-        OnCreate(callback: (instance: TSInstance)=>void)
-        OnReload(callback: (instance: TSInstance)=>void)
-        OnLoad(callback: (instance: TSInstance)=>void)
-        OnSave(callback: (instance: TSInstance)=>void)
-        OnUpdate(callback: (instance: TSInstance, diff: uint32)=>void)
-        OnPlayerEnter(callback: (instance: TSInstance, player: TSPlayer)=>void)
-        OnPlayerLeave(callback: (instance: TSInstance, player: TSPlayer)=>void)
-        OnBossStateChange(callback: (instance: TSInstance, id: uint32, state: uint32)=>void)
-        OnCanKillBoss(callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void)
-        OnFillInitialWorldStates(callback: (instance: TSInstance, TSWorldStatePacket)=>void)
+        OnCreate(callback: (instance: TSInstance)=>void): T
+        OnReload(callback: (instance: TSInstance)=>void): T
+        OnLoad(callback: (instance: TSInstance)=>void): T
+        OnSave(callback: (instance: TSInstance)=>void): T
+        OnUpdate(callback: (instance: TSInstance, diff: uint32)=>void): T
+        OnPlayerEnter(callback: (instance: TSInstance, player: TSPlayer)=>void): T
+        OnPlayerLeave(callback: (instance: TSInstance, player: TSPlayer)=>void): T
+        OnBossStateChange(callback: (instance: TSInstance, id: uint32, state: uint32)=>void): T
+        OnCanKillBoss(callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void) : T
+        OnFillInitialWorldStates(callback: (instance: TSInstance, packet: TSWorldStatePacket)=>void): T
+        OnSetBossNumber(callback: (instance: TSInstance, num: TSMutable<uint32>)=>void): T
+        OnLoadMinionData(callback: (instance: TSInstance)=>void): T
+        OnLoadDoorData(callback: (instance: TSInstance)=>void): T
+        OnLoadObjectData(callback: (instance: TSInstance)=>void): T
     }
 
     export class InstanceID<T> {
@@ -8131,7 +8161,11 @@ declare namespace _hidden {
         OnPlayerLeave(map: uint32, callback: (instance: TSInstance, player: TSPlayer)=>void)
         OnBossStateChange(map: uint32, callback: (instance: TSInstance, id: uint32, state: uint32)=>void)
         OnCanKillBoss(map: uint32, callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void)
-        OnFillInitialWorldStates(map: uint32, callback: (instance: TSInstance, TSWorldStatePacket)=>void)
+        OnFillInitialWorldStates(map: uint32, callback: (instance: TSInstance, packet: TSWorldStatePacket)=>void)
+        OnSetBossNumber(map: uint32, callback: (instance: TSInstance, num: TSMutable<uint32>)=>void)
+        OnLoadMinionData(map: uint32, callback: (instance: TSInstance)=>void)
+        OnLoadDoorData(map: uint32, callback: (instance: TSInstance)=>void)
+        OnLoadObjectData(map: uint32, callback: (instance: TSInstance)=>void)
     }
 
     export class AuctionHouse<T> {

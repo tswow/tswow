@@ -9,6 +9,30 @@ class TSUnit;
 class TSMap;
 class InstanceScript;
 
+class ObjectGuid;
+class TC_GAME_API TSGuidSet {
+    std::set<ObjectGuid>* m_set;
+public:
+    TSGuidSet(std::set<ObjectGuid>* set);
+    bool Contains(uint64);
+    void Add(uint64);
+    void Remove(uint64);
+};
+
+struct BossInfo;
+class TC_GAME_API TSBossInfo {
+    BossInfo* m_info;
+public:
+    TSBossInfo(BossInfo* info);
+    uint32 GetBossState();
+    TSGuidSet GetMinionGUIDs();
+    TSGuidSet GetDoorsOpenDuringEncounter();
+    TSGuidSet GetDoorsClosedDuringEncounter();
+    TSGuidSet GetDoorsOpenAfterEncounter();
+    bool IsWithinBoundary(float x, float y, float z);
+    bool IsWithinBoundary(TSWorldObject obj);
+};
+
 class TC_GAME_API TSInstance {
 public:
     InstanceScript* m_script;
@@ -42,4 +66,6 @@ public:
     uint32 GetMaxResetDelay();
     uint32 GetTeamIDInInstance();
     uint32 GetFactionInInstance();
+    TSBossInfo GetBossInfo(uint32 id);
 };
+

@@ -964,6 +964,11 @@ EVENT_TYPE(InstanceOnPlayerLeave, TSInstance, TSPlayer)
 EVENT_TYPE(InstanceOnBossStateChange, TSInstance, uint32 /*id*/, uint32 /*state*/)
 EVENT_TYPE(InstanceOnCanKillBoss, TSInstance, uint32 /*bossId*/, TSPlayer /*player*/, TSMutable<bool> /*canKill*/)
 EVENT_TYPE(InstanceOnFillInitialWorldStates, TSInstance, TSWorldStatePacket)
+EVENT_TYPE(InstanceOnSetBossNumber, TSInstance, TSMutable<uint32>)
+EVENT_TYPE(InstanceOnLoadBossBoundaries, TSInstance)
+EVENT_TYPE(InstanceOnLoadMinionData, TSInstance)
+EVENT_TYPE(InstanceOnLoadDoorData, TSInstance)
+EVENT_TYPE(InstanceOnLoadObjectData, TSInstance)
 
 struct TSInstanceEvents
 {
@@ -977,6 +982,11 @@ struct TSInstanceEvents
      EVENT(InstanceOnBossStateChange)
      EVENT(InstanceOnCanKillBoss)
      EVENT(InstanceOnFillInitialWorldStates)
+     EVENT(InstanceOnSetBossNumber)
+     EVENT(InstanceOnLoadBossBoundaries)
+     EVENT(InstanceOnLoadMinionData)
+     EVENT(InstanceOnLoadDoorData)
+     EVENT(InstanceOnLoadObjectData)
 };
 
 class TSInstanceMap: public TSEventMap<TSInstanceEvents>
@@ -1364,6 +1374,12 @@ struct TSEventStore
     EVENT(InstanceOnBossStateChange)
     EVENT(InstanceOnCanKillBoss)
     EVENT(InstanceOnFillInitialWorldStates)
+    EVENT(InstanceOnSetBossNumber)
+    EVENT(InstanceOnLoadBossBoundaries)
+    EVENT(InstanceOnLoadMinionData)
+    EVENT(InstanceOnLoadDoorData)
+    EVENT(InstanceOnLoadObjectData)
+
 
 
     EVENT(AchievementOnUpdate)
@@ -1941,6 +1957,12 @@ public:
         EVENT_HANDLE(Instance,OnBossStateChange)
         EVENT_HANDLE(Instance,OnCanKillBoss)
         EVENT_HANDLE(Instance,OnFillInitialWorldStates)
+        EVENT_HANDLE(Instance,OnSetBossNumber)
+        EVENT_HANDLE(Instance,OnLoadBossBoundaries)
+        EVENT_HANDLE(Instance,OnLoadMinionData)
+        EVENT_HANDLE(Instance,OnLoadDoorData)
+        EVENT_HANDLE(Instance,OnLoadObjectData)
+
     } Instances;
 
     struct InstanceIDEvents : public MappedEventHandler<TSInstanceMap>
@@ -1956,6 +1978,11 @@ public:
         MAP_EVENT_HANDLE(Instance, OnBossStateChange)
         MAP_EVENT_HANDLE(Instance, OnCanKillBoss)
         MAP_EVENT_HANDLE(Instance, OnFillInitialWorldStates)
+        MAP_EVENT_HANDLE(Instance, OnSetBossNumber)
+        MAP_EVENT_HANDLE(Instance, OnLoadBossBoundaries)
+        MAP_EVENT_HANDLE(Instance, OnLoadMinionData)
+        MAP_EVENT_HANDLE(Instance, OnLoadDoorData)
+        MAP_EVENT_HANDLE(Instance, OnLoadObjectData)
     } InstanceID;
 
      struct ItemEvents: public EventHandler {

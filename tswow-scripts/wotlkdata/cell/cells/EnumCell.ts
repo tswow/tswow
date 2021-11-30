@@ -97,6 +97,13 @@ export class EnumCellTransform<T extends Objectified> extends CellWrapper<number
         return new EnumValueTransform(this.owner, this, index, transformer);
     }
 
+    value_static<V extends Objectified>(
+          index: number
+        , transformer: (t: T, mod: string, value: string)=>V): EnumValueTransformStatic<T,V>
+    {
+        return new EnumValueTransformStatic(this.owner,this, index, transformer);
+    }
+
     plain_value(index: number) {
         return new EnumValueTransform(this.owner, this, index, (t)=>t);
     }
@@ -154,6 +161,35 @@ export class EnumValueTransform<T extends Objectified,V extends Objectified> {
 
     if() {
         return (this.is() ? this.as() : undefined) as V;
+    }
+}
+
+export class EnumValueTransformStatic<T extends Objectified,V extends Objectified> {
+    private owner: T;
+    private cell: Cell<number,any>
+    private index: number;
+    protected get isEnum() { return true; }
+    protected transformer: (t: T, mod: string, name: string)=>V;
+
+    constructor(
+          owner: T
+        , cell: EnumCellTransform<T>
+        , index: number
+        , transformer: (t: T, mod: string, name: string)=>V
+    ) {
+        this.owner = owner;
+        this.cell = cell;
+        this.index = index;
+        this.transformer = transformer;
+    }
+
+    is() {
+        return this.cell.get() === this.index;
+    }
+
+    set(mod: string, name: string) {
+        this.cell.set(this.index);
+        return this.transformer(this.owner,mod,name);
     }
 }
 
