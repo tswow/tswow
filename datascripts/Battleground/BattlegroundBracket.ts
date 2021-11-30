@@ -1,10 +1,10 @@
-import { DBC } from "wotlkdata";
+import { DBC, finish } from "wotlkdata";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { PvpDifficultyRow } from "wotlkdata/wotlkdata/dbc/types/PvpDifficulty";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
-import { Battleground } from "./Battleground";
 
 export class BattlegroundBracket extends MainEntity<PvpDifficultyRow> {
     get ID() { return this.row.ID.get(); }
@@ -18,10 +18,17 @@ export class BattlegroundBracket extends MainEntity<PvpDifficultyRow> {
     }
 }
 
-export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Battleground> {
+export class BattlegroundBrackets<T> extends MultiRowSystem<BattlegroundBracket,T> {
+    protected mapCell: Cell<number,any>
+
+    constructor(owner: T, mapCell: Cell<number,any>) {
+        super(owner);
+        this.mapCell = mapCell;
+    }
+
     protected getAllRows(): BattlegroundBracket[] {
         return DBC.PvpDifficulty
-            .filter({MapID:this.owner.Map.get()})
+            .filter({MapID:this.mapCell.get()})
             .map(x=>new BattlegroundBracket(x))
             .sort((a,b)=>a.RangeIndex.get() > b.RangeIndex.get() ? -1 : 1)
     }
@@ -43,7 +50,7 @@ export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Bat
         return new BattlegroundBracket(
                 DBC.PvpDifficulty.add(Ids.PvpDifficulty.id())
             )
-            .Map.set(this.owner.Map.get())
+            .Map.set(this.mapCell.get())
             .RangeIndex.set(
                 rows.length === 0
                     ? 0
@@ -56,3 +63,19 @@ export class BattlegroundBrackets extends MultiRowSystem<BattlegroundBracket,Bat
         return this.owner;
     }
 }
+
+finish('verify-brackets', ()=> {
+    DBC.BattlemasterList
+        .filter({})
+        .forEach(x=>{
+            if(x.MapID.get().filter(x=>x>=0).length > 1) return;
+            const map = x.MapID.getIndex(0)
+            const idString = `{bg=${x.ID.get()},map=${map}}`
+            if(DBC.PvpDifficulty.filter({MapID:map}).length === 0) {
+                throw new Error(
+                      `Battleground ${idString} has no level brackets registered,`
+                    + ` please add at least one level bracket`
+                )
+            }
+        })
+})

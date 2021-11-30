@@ -3,11 +3,12 @@ import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { MapDifficultyQuery, MapDifficultyRow } from "wotlkdata/wotlkdata/dbc/types/MapDifficulty";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
-import { Map } from "./Map";
+import { DungeonMap } from "./Map";
 import { MapRegistry } from "./Maps";
 
 // todo: not at all sure this is 100% correct
@@ -160,6 +161,17 @@ export class PVEDifficulty extends MainEntity<MapDifficultyRow> {
     }
     get ErrorMessage() { return this.wrapLoc(this.row.Message); }
     get ResetDuration() { return this.wrap(this.row.RaidDuration); }
+
+    get Requirements() {
+        return new AccessRequirement(
+            this
+          , AccessRequirementRegistry.get(
+                this.Map.get()
+              , this.row.Difficulty.get()
+          )
+          .row
+      )
+    }
 }
 
 export class PVEDifficultyRegistryClass extends
@@ -197,7 +209,7 @@ export class PVEDifficultyRegistryClass extends
 
 export const PVEDifficultyRegistry = new PVEDifficultyRegistryClass()
 
-export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,Map> {
+export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,DungeonMap> {
     protected getAllRows(): PVEDifficulty[] {
         return DBC.MapDifficulty
             .filter({MapID:this.owner.ID})
@@ -207,15 +219,26 @@ export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,Map> {
         return value.row.isDeleted()
     }
 
-    add(mod: string, id: string, playerCount: number, difficulty: DifficultyType, lockout?: number) {
+    addGet(mod: string, id: string) {
         if(DBC.PvpDifficulty.find({MapID:this.owner.ID}) !== undefined) {
             throw new Error(
                 `Cannot add PVE difficulty to ${this.owner.ID},`
               + ` it already has PVP difficulties`
             )
         }
-        let md = PVEDifficultyRegistry.create(mod,id)
+        return PVEDifficultyRegistry.create(mod,id)
             .Map.set(this.owner.ID)
+            .Difficulty.Normal.set()
+            .MaxPlayers.set(5)
+    }
+
+    addMod(mod: string, id: string, callback: (difficulty: PVEDifficulty)=>void) {
+        callback(this.addGet(mod,id))
+        return this.owner;
+    }
+
+    add(mod: string, id: string, playerCount: number, difficulty: DifficultyType, lockout?: number) {
+        const md = this.addGet(mod,id);
         let type = DIFFICULTY_VALUES
             .find(x=>x.playerCount === playerCount && x.type === difficulty)
         type?.apply(md.row);

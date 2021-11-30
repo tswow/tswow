@@ -8,6 +8,7 @@ import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell, QuaternionCell } from "../Misc/PositionCell";
 import { SpawnMask } from "../Misc/SpawnMask";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { implicitGameObjectState } from "../SpawnGroup/ImplicitBossGroup";
 import { GORegistry } from "./GameObjectRegistries";
 
 export enum InvisibilityTypes {
@@ -80,6 +81,7 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get PhaseMask() { return new MaskCell32(this, this.row.phaseMask); }
     get SpawnTimeSecs() { return this.wrap(this.row.spawntimesecs); }
     get State() { return this.wrap(this.row.state); }
+    get EncounterSpawn() { return implicitGameObjectState(this) }
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get GameEvents() { return new GameObjectGameEventsForward(this); }
     get Template() { return GORegistry.Plain.ref(this, this.row.id); }

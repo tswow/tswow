@@ -14,32 +14,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import fs from "fs";
-import path from "path";
-import { DBC, finish } from "wotlkdata";
-import { FileChangeModule } from "wotlkdata/util/FileChanges";
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { SQL } from "wotlkdata";
+import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { BattlemasterListRow } from "wotlkdata/wotlkdata/dbc/types/BattlemasterList";
 import { MapRow } from "wotlkdata/wotlkdata/dbc/types/Map";
-import { AllModules, BuildArgs, dataset } from "wotlkdata/wotlkdata/Settings";
-import { registeredAreas } from "../Area/Area";
-import { LFGDungeonEncounters } from "../Dungeon/Encounter";
+import { battleground_templateRow } from "wotlkdata/wotlkdata/sql/types/battleground_template";
+import { instance_addonRow } from "wotlkdata/wotlkdata/sql/types/instance_addon";
+import { instance_templateRow } from "wotlkdata/wotlkdata/sql/types/instance_template";
+import { createBgBase } from "../Battleground/BattlegroundBase";
+import { BattlegroundBrackets } from "../Battleground/BattlegroundBracket";
+import { BattlegroundSafeLoc } from "../Battleground/BattlegroundSafeLocs";
+import { BattlegroundDescription } from "../Battleground/BattleroundDescriptions";
+import { LFGDungeonEncounters } from "../Dungeon/LFGEncounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
-import { TSImages } from "../Images/Image";
 import { getInlineID } from "../InlineScript/InlineScript";
-import { Colors } from "../Misc/Color";
-import { MainEntity } from "../Misc/Entity";
+import { BoolCell } from "../Misc/BoolCell";
+import { TransformedEntity } from "../Misc/Entity";
+import { MinMaxCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
-import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { WorldSafeLocRegistry } from "../WorldSafeLocs/WorldSafeLocs";
 import { LoadingScreens } from "./LoadingScreen";
 import { MapADT } from "./MapADT";
-import { MapInstance } from "./MapInstance";
+import { MapBossBoundaries } from "./MapBossBoundary";
+import { CUSTOM_SCRIPT_NAME, MapInstanceScriptCell } from "./MapInstance";
 import { MapInstanceType } from "./MapInstanceType";
 import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
 import { PVEDifficulties } from "./PVEDifficulty";
-import { PVPDifficulties } from "./PVPDifficulty";
 
-export class Map extends MainEntity<MapRow> {
+export class Map extends TransformedEntity<MapRow,MapPlain> {
+    protected transformer(): EnumCellTransform<any> {
+        return new MapInstanceTypee(this, this.row.InstanceType)
+    }
+    protected default(): MapPlain {
+        return new MapPlain(this.row);
+    }
+
     get ID() { return this.row.ID.get(); }
 
     /**
@@ -48,9 +61,8 @@ export class Map extends MainEntity<MapRow> {
      * WorldMapContinent entry.
      */
     get Directory() { return this.wrap(this.row.Directory); }
-    get InstanceType() {
-        return makeEnumCell(MapInstanceType,this, this.row.InstanceType);
-    }
+
+    get Type() { return new MapInstanceTypee(this, this.row.InstanceType)}
 
     get Name() { return this.wrapLoc(this.row.MapName); }
 
@@ -71,23 +83,13 @@ export class Map extends MainEntity<MapRow> {
     get AreaTable() { return this.wrap(this.row.AreaTableID); }
     get MapFiles() { return new MapADT(this); }
 
-    get PVEDifficulty() { return new PVEDifficulties(this); }
-    get PVPDifficulty() { return new PVPDifficulties(this); }
-
     /**
      * TODO: Unknown flags, all flags on wowdev looks like wod+
      */
     get Flags() { return this.wrap(this.row.Flags); }
 
-    /**
-     * An entry that defines whether this map can be an instance.
-     */
-    get Instance() { return new MapInstance(this); }
-    get IsPVP() { return this.wrap(this.row.PVP); }
-
     get WorldStateUIs() { return new MapWorldStateUIs(this); }
 
-    get LFGDungeons() { return new LFGDungeons(this, this.ID); }
     get Encounters() { return new LFGDungeonEncounters(this, this.ID); }
 
     get InlineScripts() {
@@ -99,285 +101,196 @@ export class Map extends MainEntity<MapRow> {
     }
 }
 
-finish('build-maps',()=>{
-    if(!BuildArgs.WRITE_CLIENT) return;
-    let wdtMods: {[key: string]: /*module: */string} = {}
-    AllModules.forEach((mod)=>{
-        // workaround to allow noggit workspaces in asset directories
-        let mapsdir = mod.join('assets','world','maps')
-        if(!mapsdir.exists()) {
-            return;
-        }
-        storeAreaMappings(mod.get(),mapsdir.get())
-        mapsdir.iterate('FLAT','DIRECTORIES','FULL',mapdir=>{
-            const mapname = mapdir.basename().get()
-            copyMapDBCs(mod.get())
-            mapdir.toDirectory().iterate('FLAT','FILES','FULL',node=>{
-                if(node.endsWith('.wdt')) {
-                    if(wdtMods[mapname] !== undefined) {
-                        throw new Error(
-                              `Map ${mapname} has wdt defined in`
-                            + ` multiple modules, please only place the wdt in`
-                            + ` one module.`
-                        )
-                    }
-                    wdtMods[mapname] = mod.abs().get()
-                }
-            });
-        })
-        Object.entries(wdtMods).forEach(([map,mod])=>{
-            generateZmp(map,mod);
-        })
-    })
-});
+export class MapPlain extends Map {}
 
-function copyMapDBCs(mod: string) {
-    let dbfilesdir = path.join(mod,'assets','DBFilesClient')
-    fs.mkdirSync(dbfilesdir,{recursive:true});
-    DBC.Map.write(path.join(dbfilesdir,'Map.dbc'))
-    DBC.AreaTable.write(path.join(dbfilesdir,'AreaTable.dbc'))
-    DBC.Light.write(path.join(dbfilesdir,'Light.dbc'))
-    DBC.LightParams.write(path.join(dbfilesdir,'LightParams.dbc'))
-    DBC.LightSkybox.write(path.join(dbfilesdir,'LightSkybox.dbc'))
-    DBC.LightfloatBand.write(path.join(dbfilesdir,'LightfloatBand.dbc'))
-    DBC.LightintBand.write(path.join(dbfilesdir,'LightintBand.dbc'))
-    fs.writeFileSync(path.join(dbfilesdir,'WHY_THESE_FILES_HERE.txt'),
-            `These files are written here so you can set your`
-        + ` noggit project directory to your modules 'assets'.`
-        + `\n\nThey are updated any time datascripts build,`
-        + ` so you can safely leave them here and ignore them.`
-        + `\n\nSymlinks are also safe, so don't worry.`
-    )
+export class BattlegroundMap extends Map {
+    protected bg_dbc: BattlemasterListRow;
+    protected bg_sql: battleground_templateRow;
+
+    constructor(
+          row: MapRow
+        , bgDbc: BattlemasterListRow
+        , bgSql: battleground_templateRow
+    ) {
+        super(row)
+        this.bg_dbc = bgDbc
+        this.bg_sql = bgSql
+    }
+
+    get Description() {
+        return new BattlegroundDescription(this);
+    }
+
+    get BattlegroundID() {
+        return this.bg_sql.ID.get();
+    }
+
+    get HolidayWorldstate() {
+        return this.wrap(this.bg_dbc.HolidayWorldState);
+    }
+
+    get Level() {
+        return new MinMaxCell(this,
+            new MulticastCell(this,
+              [this.bg_sql.MinLvl, this.bg_dbc.Minlevel])
+          , new MulticastCell(this,
+              [this.bg_sql.MaxLvl, this.bg_dbc.Maxlevel])
+          );
+    }
+
+    get PlayersPerTeam() {
+        return new MinMaxCell(this,
+            this.bg_sql.MinPlayersPerTeam,
+            new MulticastCell(this,[
+                this.bg_sql.MaxPlayersPerTeam,
+                this.bg_dbc.MaxGroupSize
+            ])
+        );
+    }
+
+    get HordeStart() {
+        return new BattlegroundSafeLoc(
+            this
+          , WorldSafeLocRegistry.ref(this, this.bg_sql.HordeStartLoc)
+          , this.wrapIndex(this.bg_dbc.MapID,0)
+          , this.bg_sql.HordeStartO
+        );
+    }
+
+    get AllianceStart() {
+        return new BattlegroundSafeLoc(
+            this
+          , WorldSafeLocRegistry.ref(this, this.bg_sql.AllianceStartLoc)
+          , this.wrapIndex(this.bg_dbc.MapID,0)
+          , this.bg_sql.AllianceStartO
+        );
+    }
+
+    get StartMaxDist() {
+        return this.wrap(this.bg_sql.StartMaxDist)
+    }
+
+    get Brackets() {
+        return new BattlegroundBrackets(this, this.wrapIndex(this.bg_dbc.MapID,0))
+    }
+
+    get InlineScriptsBG() {
+        return getInlineID(
+              this
+            , this.BattlegroundID
+            , 'BattlegroundID'
+        ) as _hidden.Battlegrounds<this>
+    }
 }
 
-/**
- * This algorithm will create mod/id pair <-> area id mappings
- * for all adts so that adts can be automatically updated / moved to projects
- * with alternative id mappings.
- */
-function storeAreaMappings(mod: string, mapsDir: string) {
-    if(!fs.existsSync(mapsDir) || process.argv.includes('--no-area-mapping')) return;
-    let areasPath = path.join(mod,'areas.json');
-    let adtAreaMap: {[key: string]: number} = fs.existsSync(areasPath)
-        ? JSON.parse(fs.readFileSync(areasPath,'utf-8'))
-        : {}
-
-    /**
-     * Before we start scanning adts, we need to find all existing id mappings
-     * and find the outdated ones
-     */
-    let replaces: {[key: number]: number}= {}
-    for(const identifier in adtAreaMap) {
-        const oldAreaId = adtAreaMap[identifier];
-        const newAreaId = registeredAreas[identifier];
-        if(newAreaId !== undefined && newAreaId !== oldAreaId) {
-            adtAreaMap[identifier] = replaces[oldAreaId] = newAreaId;
-        }
+export class DungeonAddon extends MaybeSQLEntity<DungeonMap,instance_addonRow> {
+    protected createSQL(): instance_addonRow {
+        return SQL.instance_addon.add(this.owner.ID)
+            .boss_count.set(0)
+    }
+    protected findSQL(): instance_addonRow {
+        return SQL.instance_addon.find({map:this.owner.ID})
+    }
+    protected isValidSQL(sql: instance_addonRow): boolean {
+        return sql.map.get() === this.owner.ID
     }
 
-    let anyChanges = false
-    if(Object.entries(replaces).length > 0) {
-        anyChanges = true
-        console.log(`ADT area inconsistent with id registry`)
-        console.log(
-              `The following adt areas will be replaced:`
-            + `${Object.entries(replaces)
-                    .map(([old,nu])=>`${old}->${nu}`).join(',')
-                }`
-        )
-    }
-
-    let cachedSkips: number[] = []
-    let stagedFiles: string[] = []
-    fs.readdirSync(mapsDir)
-        .map(x=>path.join(mapsDir,x))
-        .filter(x=>fs.statSync(x).isDirectory())
-        .reduce<string[]>(
-              (files,dir)=>files
-                .concat(fs.readdirSync(dir)
-                    .map(file=>path.join(dir,file))
-                    .filter(x=>x.endsWith('.adt') && fs.statSync(x).isFile())
-                )
-            , [])
-        .forEach(file=>{
-            const adt = fs.readFileSync(file);
-            const mcin = adt.readUInt32LE(0x10)+0x14;
-            let anyFileChanges = false;
-            for(let i=0;i<256;++i) {
-                const mcnk = adt.readUInt32LE(8+mcin+16*i)
-                // safety check for if this is even a valid adt
-                if(adt.toString('ascii',mcnk,mcnk+4) !== 'KNCM') {
-                    console.log(`Error reading adt ${file}, invalid mcnk pointer ${mcnk} at mcin index ${i}`)
-                    process.exit(-1)
-                }
-                const areaOffset = mcnk+0x3c;
-
-                // First, we see if this is already a known new mapping so we can skip it
-                const adtArea = adt.readUInt32LE(areaOffset);
-                if(cachedSkips.includes(adtArea)) {
-                    continue;
-                }
-
-                // Secondly, we see if we should replace the value in the adt
-                const replacement = replaces[adtArea];
-                if(replacement !== undefined) {
-                    adt.writeUInt32LE(replacement,areaOffset);
-                    anyFileChanges = true;
-                    continue;
-                }
-
-                // Finally, we check if this is a new unknown mapping
-                const areaMapping = Object.entries(registeredAreas).find(([key,value])=>value === adtArea);
-                if(areaMapping !== undefined) {
-                    const [identifier] = areaMapping;
-                    if(adtAreaMap[identifier] === undefined) {
-                        // we already know it's not out of date, so it's safe to just overwrite this
-                        // even if it previously existed.
-                        console.log(`Storing area mapping ${identifier}->${adtArea}`)
-                        adtAreaMap[areaMapping[0]] = adtArea;
-                        anyChanges = true;
-                    }
-                }
-                // we no longer need to check this area, since
-                // it's not a replacement and we already made the mapping
-                cachedSkips.push(adtArea);
-            }
-            if(anyFileChanges) {
-                stagedFiles.push(file);
-                fs.writeFileSync(file+'.tmp',adt);
-            }
-        })
-    if(!anyChanges) return;
-
-    // save to temporary file in case of failure
-    fs.writeFileSync(areasPath+'.tmp',JSON.stringify(adtAreaMap, null, 4));
-    stagedFiles.forEach(x=>{
-        try {
-            fs.renameSync(x+'.tmp',x)
-        } catch (error) {
-            console.log(
-                  `Failed to rename area patches:`
-                + `this is dangerous. Please manually review the remaining`
-                + ` '.tmp' files and decide what to keep`
-            )
-            process.exit(1)
-        }
-    })
-    fs.renameSync(areasPath+'.tmp',areasPath);
+    get BossCount() { return this.wrapSQL(0,sql=>sql.boss_count)}
 }
 
-export const ZMP_CHANGES = new FileChangeModule('zmp')
-function generateZmp(map: string, moduleOut: string) {
-    const mapObj = MapRegistry.query({Directory:map})
-    if(mapObj === undefined) {
-        // don't error, non-maps are allowed in that directory
-        return;
+export class Boundaries<T extends Map> extends CellSystem<T> {
+    get(boss: number) {
+        return new MapBossBoundaries(this.owner.ID,boss)
     }
 
-    // only generate zmp for non-dungeons
-    if(!mapObj.InstanceType.NONE.is()) {
-        return;
+    mod(boss: number, callback: (boundaries: MapBossBoundaries)=>void) {
+        callback(this.get(boss));
+        return this.owner;
+    }
+}
+
+export class DungeonMap extends Map {
+    protected sql: instance_templateRow
+    protected addon() {
+        return new DungeonAddon(this);
     }
 
-    const mapId = mapObj.ID
-    const areas = WorldMapAreaRegistry
-            .queryAll({MapID:mapId})
-            .map(x=>x.Area.getRef())
-            // no duplicate/null areas
-            .filter(x=>x)
-            .filter((x,index,arr)=>arr.findIndex(y=>x.ID===y.ID)===index)
+    get BossCount() { return this.addon().BossCount }
+    get Boundaries() { return new Boundaries(this); }
 
-    // the area that should be written to zmp
-    const areaLookup: {[key: number]: number} = {}
-    const allChildren: number[] = []
-    areas.forEach(x=>{
-        areaLookup[x.ID] = x.ID
-        x.Children.get(0).forEach(y=>{
-            if(allChildren.indexOf(y.ID)>=0) {
-                throw new Error(
-                      `Area ${y.ID} is child to multiple zones in`
-                    + `${map}, this can happen if you have WorldMapArea`
-                    + ` entries for areas that have parents set`
-                )
-            }
-            allChildren.push(y.ID)
-            areaLookup[y.ID] = x.ID
+    constructor(row: MapRow, sql: instance_templateRow) {
+        super(row);
+        this.sql = sql;
+    }
 
-        });
-    });
+    get AllowMount() {
+        return new BoolCell(this, this.sql.allowMount)
+    }
 
-    let adtPaths: string[] = []
-    AllModules.forEach((mod)=>{
-        const mapsdir = mod.join('assets','world','maps',map)
-        if(mapsdir.exists()) {
-            adtPaths = adtPaths.concat(mapsdir.readDir()
-                .map(x=>mapsdir.join(x).abs())
-                .filter(x=>x.endsWith('.adt') && x.isFile())
-                .map(x=>x.abs().get())
-            )
-        }
-    });
+    get Difficulties() { return new PVEDifficulties(this); }
 
-    const oldZmpPath = path.join(dataset.luaxml_source.get(),'Interface','WorldMap',map+'.zmp')
-    const zmp = fs.existsSync(oldZmpPath)
-        ? fs.readFileSync(oldZmpPath)
-        : Buffer.alloc(65536)
+    get InlineScriptsDungeon() {
+        return getInlineID(
+            this
+          , this.ID
+          , 'InstanceID'
+      ) as _hidden.Instances<this>
+    }
 
-    const zmpPath = path.join(
-          moduleOut
-        , 'assets'
-        , 'Interface'
-        , 'WorldMap'
-        , `${map}.zmp`
-    )
+    get Script() {
+        return new MapInstanceScriptCell(
+              this
+            , this.sql.script
+        );
+    }
 
-    ZMP_CHANGES.onChangedAny(adtPaths,[zmpPath],()=>{
-        console.log(`Building ZMP files for ${map} to module ${moduleOut}`)
-        adtPaths.forEach(file=>{
-            const [_,x,y] = path
-                .basename(file)
-                .split('.')[0]
-                .split('_')
-                .map(x=>parseInt(x))
-            const adt = fs.readFileSync(file);
-            const mcin = adt.readUInt32LE(0x10)+0x14
-            const quads: {[key: number]: number}[] = [{},{},{},{}]
-            for(let i=0;i<256;++i){
-                const mcnk = adt.readUInt32LE(8+mcin+16*i);
-                const area = areaLookup[adt.readUInt32LE(mcnk+0x3c)]||0
-                const indexX = adt.readUInt32LE(mcnk+0xc);
-                const indexY = adt.readUInt32LE(mcnk+0x10);
-                const quad = quads[
-                    (Math.round(indexX/15)) | (Math.round(indexY/15)) << 1
-                ]
-                if(quad[area] === undefined) quad[area] = 1;
-                else quad[area]++;
-            }
-            const sums = quads.map(x=>Object.entries(x)
-                .reduce(([pk,pv],[k,v])=>v>pv?[k,v]:[pk,pv],['0',0])
-            ).map(([k])=>parseInt(k))
+    get LFGDungeons() { return new LFGDungeons(this, this.ID); }
+}
 
-            zmp.writeUInt32LE((sums[0]),(y*128+x%128)*8);     // tl
-            zmp.writeUInt32LE((sums[1]),(y*128+x%128)*8+4);   // tr
-            zmp.writeUInt32LE((sums[2]),(y*128+x%128)*8+512); // bl
-            zmp.writeUInt32LE((sums[3]),(y*128+x%128)*8+516); // br
+export class MapInstanceTypee<T extends Map> extends EnumCellTransform<T> {
+    get PLAIN() {
+        return this.value(MapInstanceType.NONE,(owner)=>{
+            owner.row.PVP.set(0)
+            return new MapPlain(owner.row)
         })
+    }
 
-        // create image so users can visualize how their zmp turns out
-        const image = TSImages.create(128,128);
-        const colorMap: {[areaID: number]: /*color:*/number} = {}
-        image.addFilter((_,x,y)=>{
-            let area = zmp.readUInt32LE((y*128+x%128)*4);
-            if(area === 0) return 0;
-            if(colorMap[area] === undefined) {
-                // take golden angle to make similar ids dissimilar
-                let hue = (2.39996322972865332*area)/6.28319;
-                if(hue > 1) hue = hue - Math.floor(hue);
-                return colorMap[area] = Colors.hsv(hue,1,1).asRGBA();
-            }
-            return colorMap[area];
-        });
-        image.write(zmpPath+'.png','PNG');
-        fs.writeFileSync(zmpPath,zmp);
-    })
+    get ARENA() {
+        return this.value_static(MapInstanceType.ARENA,(owner,mod,name)=>{
+            const bg = createBgBase(mod,name);
+            bg.dbc.MapID.setIndex(0,owner.ID)
+            owner.row.PVP.set(1)
+            return new BattlegroundMap(owner.row,bg.dbc,bg.sql);
+        })
+    }
+
+    get BATTLEGROUND() {
+        return this.value_static(MapInstanceType.PVP,(owner,mod,name)=>{
+            const bg = createBgBase(mod,name);
+            bg.dbc.MapID.setIndex(0,owner.ID)
+            owner.row.PVP.set(1)
+            return new BattlegroundMap(owner.row,bg.dbc,bg.sql);
+        })
+    }
+
+    private instance(owner: T) {
+        return SQL.instance_template.add(owner.ID)
+            .allowMount.set(0)
+            .parent.set(0)
+            .script.set(CUSTOM_SCRIPT_NAME)
+    }
+
+    get DUNGEON() {
+        return this.value_static(MapInstanceType.PARTY,(owner,mod,name)=>{
+            owner.row.PVP.set(0)
+            return new DungeonMap(owner.row,this.instance(owner))
+        })
+    }
+
+    get RAID() {
+        return this.value_static(MapInstanceType.RAID,(owner,mod,name)=>{
+            owner.row.PVP.set(0)
+            return new DungeonMap(owner.row,this.instance(owner))
+        })
+    }
 }

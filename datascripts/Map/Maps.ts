@@ -17,8 +17,8 @@ export class MapRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.Map
     }
-    Clear(r: Map): void {
-        r.InstanceType.NONE.set()
+    Clear(r: Map): void{
+        r.Type.PLAIN.set()
         .AllianceDescription.clear()
         .AreaTable.set(0)
         .CorpseMap.set(-1)
@@ -27,13 +27,13 @@ export class MapRegistryClass
         .Expansion.set(0)
         .Flags.set(0)
         .HordeDescription.clear()
-        .IsPVP.set(0)
         .LoadingScreen.set(0)
         .MaxPlayers.set(0)
         .MinimapIconScale.set(0)
         .Name.clear()
         .RaidOffset.set(0)
         .TimeofDayOverride.set(-1)
+        .row.PVP.set(0)
     }
     protected Entity(r: MapRow): Map {
         return new Map(r);
@@ -46,6 +46,26 @@ export class MapRegistryClass
     }
     ID(e: Map): number {
         return e.ID;
+    }
+
+    createBattleground(mod: string, id: string) {
+        return this.create(mod,id)
+            .Type.BATTLEGROUND.set(mod,`${id}-battleground`)
+    }
+
+    createArena(mod: string, id: string) {
+        return this.create(mod,id)
+            .Type.ARENA.set(mod,`${id}-arena`)
+    }
+
+    createDungeon(mod: string, id: string) {
+        return this.create(mod,id)
+            .Type.DUNGEON.set(mod,`${id}-dungeon`)
+    }
+
+    createRaid(mod: string, id: string) {
+        return this.create(mod,id)
+            .Type.RAID.set(mod,`${id}-raid`)
     }
 }
 

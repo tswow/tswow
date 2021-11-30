@@ -15,16 +15,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { finish } from "wotlkdata";
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/wotlkdata/sql/types/creature";
 import { creature_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_addon";
+import { instance_boss_creatureRow } from "wotlkdata/wotlkdata/sql/types/instance_boss_creature";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";
 import { SpawnMask } from "../Misc/SpawnMask";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { implicitCreatureState } from "../SpawnGroup/ImplicitBossGroup";
 import { VehicleInstanceAccessories } from "../Vehicle/VehicleAccessory";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreaturePatrolPath } from "./CreaturePatrolPath";
@@ -53,6 +56,37 @@ export class CreatureInstanceAddon
     }
 }
 
+export class CreatureInstanceBoss
+    extends MaybeSQLEntity<CreatureInstance,instance_boss_creatureRow>
+{
+    protected createSQL(): instance_boss_creatureRow {
+        return SQL.instance_boss_creature.add(this.owner.ID)
+    }
+    protected findSQL(): instance_boss_creatureRow {
+        return SQL.instance_boss_creature.find({guid:this.owner.ID})
+    }
+    protected isValidSQL(sql: instance_boss_creatureRow): boolean {
+        return sql.guid.get() === this.owner.ID
+    }
+
+    get Boss() { return this.wrapSQL(-1,sql=>sql.boss)}
+
+    set(boss: number) {
+        if(!this.exists()) {
+            this.createSQL()
+                .boss.set(boss)
+                .map.set(-1) // <-- means we will set it later
+        } else {
+            this.getSQL()
+                .boss.set(boss);
+        }
+    }
+
+    get() {
+        return this.wrapSQL(-1,sql=>sql.boss).get()
+    }
+}
+
 export class CreatureInstance extends MainEntity<creatureRow> {
     protected readonly Addon = new CreatureInstanceAddon(this)
 
@@ -66,7 +100,7 @@ export class CreatureInstance extends MainEntity<creatureRow> {
     get Emote() { return this.Addon.Emote; }
     get Mount() { return this.Addon.Mount; }
     get VisibilityDistanceType() { return this.Addon.VisibilityDistanceType; }
-
+    get EncounterSpawn() { return implicitCreatureState(this) }
     get ID() { return this.row.guid.get(); }
     get Template() { return this.wrap(this.row.id); }
     get SpawnMask() {
@@ -128,4 +162,21 @@ export class CreatureInstance extends MainEntity<creatureRow> {
      *       creature/item pair for **multiple** game_events.
      */
     get GameEventVendor() { return new GameEventNPCVendorCreature(this); }
+
+    /**
+     * The boss id of this creature in the instance it belongs to
+     */
+    get Boss() { return new CreatureInstanceBoss(this); }
 }
+
+// write boss maps once we're done writing, since the map could change before then
+finish('boss_maps',()=>{
+    SQL.instance_boss_creature.filter({})
+        .forEach(x=>{
+            // only set maps set to be "unset"
+            if(x.map.get() !== -1) return;
+            const c = SQL.creature.find({guid:x.guid.get()})
+            if(!c) return;
+            x.map.set(c.map.get());
+        })
+});

@@ -15,6 +15,7 @@ import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { RegistryDynamic } from "../Refs/Registry";
 import { LFGDungeonRewards } from "./LFGDungeonRewards";
+import { LFGDungeonEncounters } from "./LFGEncounter";
 import { LFGDungeonGroupRegistry } from "./LFGGroup";
 
 export class LFGPos extends MaybeSQLEntity<LFGDungeon,lfg_dungeon_templateRow> {
@@ -90,6 +91,9 @@ export class LFGDungeon extends MainEntity<LfgDungeonsRow> {
     get Flags() {
         return makeMaskCell32(LFGFlags,this, this.row.Flags);
     }
+
+    get Encounters() { return new LFGDungeonEncounters(this, this.Map.get())}
+
     get Texture() { return this.wrap(this.row.TextureFilename); }
     get Description() { return this.wrapLoc(this.row.Description)}
     get Type() { return this.wrap(this.row.TypeID)}

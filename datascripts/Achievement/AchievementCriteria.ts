@@ -4,6 +4,7 @@ import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/wotlkdata/dbc/types/Achievement_Criteria";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { RefUnknown } from "../Refs/Ref";
@@ -404,6 +405,30 @@ export class RandomDungeonPlayerCount extends CriteriaBase {
     get PlayerCount() { return this.wrap(this.row.Quantity); }
 }
 
+export class CompleteEncounter extends CriteriaBase {
+    protected mapRow() {
+        return SQL.instance_encounter_achievement
+            .find({entry:this.row.Asset_Id.get()})
+    }
+
+    get Map() { return this.mapRow().map.get()}
+    get Boss() { return this.mapRow().boss.get()}
+
+    set(map: number, boss: number) {
+        let old = SQL.instance_encounter_achievement.find({map,boss})
+        if(old !== undefined) {
+            this.row.Asset_Id.set(old.entry.get());
+        } else {
+            let id = Ids.instance_encounter_achievement.id()
+            SQL.instance_encounter_achievement.add(id)
+                .map.set(map)
+                .boss.set(boss)
+            this.row.Asset_Id.set(id)
+        }
+        return this;
+    }
+}
+
 export class CriteriaTypeCell<T extends CriteriaBase> extends EnumCellTransform<T> {
     get  KILL_CREATURE()              { return this.value(0, x=>new KillCreature(x.row)) }
     get  WIN_BG()                     { return this.value(1, x=>new WinBG(x.row)) }
@@ -471,4 +496,5 @@ export class CriteriaTypeCell<T extends CriteriaBase> extends EnumCellTransform<
     get  ACCEPTED_SUMMONS()           { return this.value(114, x=>new AcceptedSummons(x.row)) }
     get  ACHIEVEMENT_POINTS_REACHED() { return this.value(115, x=>new AchievementPointsReached(x.row)) }
     get  RANDOM_DUNGEON_PLAYER_COUNT(){ return this.value(119, x=>new RandomDungeonPlayerCount(x.row)) }
+    get  COMPLETE_ENCOUNTER()         { return this.value(120, x=>new CompleteEncounter(x.row))}
 }

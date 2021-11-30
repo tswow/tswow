@@ -9,7 +9,7 @@ import { Map } from "./Map";
 
 export type MapBounds = {minX: number, minY: number, maxX: number, maxY: number}
 
-export class MapADT extends CellSystem<Map> {
+export class MapADT<T extends Map> extends CellSystem<T> {
     private mapsdir(mod: string) {
         return path.join(
               mod

@@ -913,6 +913,16 @@ export const Ids = {
     smart_events: new StaticIDGenerator('smart_events',300),
 
     /**
+     * Starts at 0, no base values
+     */
+    instance_encounter_achievement: new DynamicIDGenerator('instance_encounter_achievement',0),
+
+    /**
+     * Starts at 105, highest base value is 104
+     */
+    spawn_group_templates: new StaticIDGenerator('spawn_group_template', 105),
+
+    /**
      * Starts at 100, highest base value is 52
      * - value is hardcoded in server, see TSSmartScripts.h
      */

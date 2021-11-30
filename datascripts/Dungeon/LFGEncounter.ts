@@ -1,5 +1,5 @@
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/wotlkdata/dbc/types/DungeonEncounter";
@@ -13,9 +13,9 @@ import { SpellRegistry } from "../Spell/Spells";
 import { LFGDungeonRegistry } from "./LFGDungeon";
 
 export enum DungeonEncounterCreditType {
-    KillCreature = 0,
-    CastSpell    = 1
-
+    KILL_CREATURE = 0,
+    CAST_SPELL    = 1,
+    COMPLETE_ENCOUNTER = 2,
 }
 export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<number,T>{
     get(): number {
@@ -23,15 +23,35 @@ export class DungeonEncounterIndexCell<T extends DungeonEncounter> extends Cell<
     }
 
     /**
-     * @deprecated changing this value manually will corrupt `lfg_data`
-     * in the characters database.
      * @param value
      */
     set(value: number) {
         this.owner.getDBC().OrderIndex.set(value);
         return this.owner;
     }
+}
 
+export class DungeonEncounterType<T extends DungeonEncounter> extends EnumCellTransform<T> {
+    get KILL_CREATURE() {
+        return this.value(
+              DungeonEncounterCreditType.KILL_CREATURE
+            , (t)=>new DungeonEncounterCreature(t.ID)
+        )
+    }
+
+    get CAST_SPELL() {
+        return this.value(
+              DungeonEncounterCreditType.CAST_SPELL
+            , (t)=>new DungeonEncounterSpell(t.ID)
+        )
+    }
+
+    get COMPLETE_ENCOUNTER() {
+        return this.value(
+              DungeonEncounterCreditType.COMPLETE_ENCOUNTER
+            , (t)=>new DungeonEncounterBoss(t.ID)
+        )
+    }
 }
 
 export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance_encountersRow> {
@@ -71,11 +91,7 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
     get Difficulty() { return this.wrap(this.getDBC().Difficulty); }
     get Index() { return new DungeonEncounterIndexCell(this); }
     get Type() {
-        return makeEnumCell(
-              DungeonEncounterCreditType
-            , this
-            , this.wrapSQL(0,sql=>sql.creditType)
-        );
+        return new DungeonEncounterType(this,this.wrapSQL(-1,sql=>sql.creditType))
     }
 
     /**
@@ -119,7 +135,13 @@ export class DungeonEncounterSpell extends DungeonEncounter {
     }
 }
 
-export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounter,T> {
+export class DungeonEncounterBoss extends DungeonEncounter {
+    get Boss() {
+        return this.wrapSQL(-1,sql=>sql.creditEntry);
+    }
+}
+
+export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounterPlain,T> {
     protected readonly mapId: number;
 
     constructor(owner: T, mapId: number) {
@@ -127,7 +149,7 @@ export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounter,T> 
         this.mapId = mapId;
     }
 
-    protected getAllRows(): DungeonEncounter[] {
+    protected getAllRows(): DungeonEncounterPlain[] {
         return DungeonEncounterRegistry.filterDBC({
               MapID:this.mapId
         })
@@ -140,12 +162,12 @@ export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounter,T> 
         return DungeonEncounterRegistry.create(this.mapId,newId)
     }
 
-    addMod(callback: (encounter: DungeonEncounter)=>void) {
+    addMod(callback: (encounter: DungeonEncounterPlain)=>void) {
         callback(this.addGet());
         return this.owner;
     }
 
-    protected isDeleted(value: DungeonEncounter): boolean {
+    protected isDeleted(value: DungeonEncounterPlain): boolean {
         // TODO: sql row?
         return value.getDBC().isDeleted();
     }
@@ -153,17 +175,29 @@ export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounter,T> 
 
 export const DungeonEncounterRegistry = {
     create(map: number, index: number) {
-        return new DungeonEncounterPlain(Ids.DungeonEncounter.id())
+        const id = Ids.DungeonEncounter.id();
+        DBC.DungeonEncounter.add(id)
+            .MapID.set(map)
+            .Name.clear()
+            .OrderIndex.set(0)
+            .SpellIconID.set(0)
+            .Bit.set(0)
+            .Difficulty.set(0)
+        SQL.instance_encounters.add(id)
+            .creditType.set(0)
+            .creditEntry.set(0)
+            .lastEncounterDungeon.set(0)
+        return new DungeonEncounterPlain(id)
             .Map.set(map)
             .Index.set(index)
     },
 
     createCreature(map: number, index: number) {
-        return this.create(map,index).Type.KillCreature.set()
+        return this.create(map,index).Type.KILL_CREATURE.set()
     },
 
     createSpell(map: number, index: number) {
-        return this.create(map,index).Type.CastSpell.set()
+        return this.create(map,index).Type.CAST_SPELL.set()
     },
 
     load(id: number) {

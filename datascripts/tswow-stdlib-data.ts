@@ -21,7 +21,6 @@ import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
 import { AreaRegistry } from "./Area/Area";
 import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
-import { BattlegroundRegistry } from "./Battleground/Battleground";
 import { BroadcastTextRegistry } from "./BroadcastText/BroadcastText";
 import { CreatureTextRegistry } from "./BroadcastText/CreatureText";
 import { ClassRegistry } from "./Class/ClassRegistry";
@@ -70,6 +69,7 @@ import { SoundAmbienceRegistry } from "./Sound/SoundAmbience";
 import { SoundEntryRegistry } from "./Sound/SoundEntry";
 import { ZoneIntroMusicRegistry } from "./Sound/ZoneIntroMusic";
 import { ZoneMusicRegistry } from "./Sound/ZoneMusic";
+import { SpawnGroupRegistry } from "./SpawnGroup/SpawnGroupRegistry";
 import { SpellRegistry } from "./Spell/Spells";
 import { SpellStackGroupRegistry } from "./Spell/SpellStackGroup";
 import { SpellFocusRegistry } from "./SpellFocus/SpellFocus";
@@ -148,7 +148,6 @@ export const std = {
     Mounts: MountRegistry,
     Companions: CompanionRegistry,
     WorldSafeLocs: WorldSafeLocRegistry,
-    Battlegrounds: BattlegroundRegistry,
     WorldStateUIs: WorldStateUIRegistry,
     WorldStates: WorldStateRegistry,
     WMOArea: WMOAreaRegistry,
@@ -177,6 +176,7 @@ export const std = {
     BroadcastTexts: BroadcastTextRegistry,
     CreatureTexts: CreatureTextRegistry,
     Keys: KeyRegistry,
+    SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: DBC,

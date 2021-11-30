@@ -1,31 +1,37 @@
-import { finish } from "wotlkdata";
+import { DBC, finish } from "wotlkdata";
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { WorldSafeLocRef } from "../WorldSafeLocs/WorldSafeLocs";
-import { Battleground, BattlegroundRegistry } from "./Battleground";
 
-export class BattlegroundSafeLoc extends CellSystem<Battleground> {
-    protected loc: WorldSafeLocRef<Battleground>
+export class BattlegroundSafeLoc<T> extends CellSystem<T> {
+    protected loc: WorldSafeLocRef<T>
     protected o: Cell<number,any>
+    protected map: Cell<number,any>
 
-    constructor(owner: Battleground, loc: WorldSafeLocRef<Battleground>, o: Cell<number,any>) {
+    constructor(
+          owner: T
+        , loc: WorldSafeLocRef<T>
+        , map: Cell<number,any>
+        , o: Cell<number,any>
+    ) {
         super(owner);
         this.loc = loc;
         this.o = o;
+        this.map = map;
     }
 
     get Loc() { return this.loc; }
     get O() { return this.o; }
 
     setSpread(x: number, y: number, z: number, o: number) {
-        this.loc.setSimple({map:this.owner.Map.get(),x,y,z});
+        this.loc.setSimple({map:this.map.get(),x,y,z});
         this.o.set(o);
         return this.owner;
     }
 
     set(obj: {map?: number, x: number, y: number, z: number, o: number}) {
-        if(obj.map !== undefined && this.owner.Map.get() !== obj.map) {
+        if(obj.map !== undefined && this.map.get() !== obj.map) {
             throw new Error(
                   `Trying to set safe location on a different map `
                 + `than the battleground map.`
@@ -36,41 +42,61 @@ export class BattlegroundSafeLoc extends CellSystem<Battleground> {
 }
 
 finish('bg-worldsafelocs',()=>{
-    if(BuildArgs.READ_ONLY) return;
-    BattlegroundRegistry.filter({})
-        .forEach(x=>{
-            if(x.HordeStart.Loc.get() === 0 ||x.AllianceStart.Loc.get() === 0) {
+    SQL.battleground_template
+        .filter({})
+        .forEach(sql=>{
+            const dbc = DBC.BattlemasterList.findById(sql.ID.get())
+            if(dbc.MapID.get().filter(x=>x>=0).length>1) {
+                return;
+            }
+
+            const bgMap = dbc.MapID.getIndex(0)
+            const bgId = sql.ID.get()
+            const idString = `{bg=${bgId},map=${bgMap}}`
+
+            if(sql.HordeStartLoc.get() === 0 || sql.AllianceStartLoc.get() === 0) {
                 throw new Error(
-                      `Battlemaster ${x.ID} only has one map registered, `
+                      `Battlemaster ${idString} only has one map registered, `
                     + `but doesn't specify starting locations for both Horde and Alliance.`
                     + `Single battlegrounds must specify starting locations`
                 )
             }
 
-            let hordemap = x.HordeStart.Loc.getRef().Position.Map.get();
-            let allymap = x.AllianceStart.Loc.getRef().Position.Map.get();
-            let map = x.Map.get()
+            const hordeLocId = sql.HordeStartLoc.get()
+            const allyLocId = sql.AllianceStartLoc.get()
+            const hordeLoc = DBC.WorldSafelocs.findById(hordeLocId);
+            const allyLoc = DBC.WorldSafelocs.findById(allyLocId);
 
-            if(hordemap !== map) {
+            if(hordeLoc === undefined) {
                 throw new Error(
-                      `Battlemaster ${x.ID} is registered for map ${map}, `
-                    + `but the horde starting location is on map ${hordemap}`
+                    `Invalid battleground horde location ${hordeLocId}`
+                  + ` in battleground ${idString}`
+              )
+            }
+
+            if(allyLoc === undefined) {
+                throw new Error(
+                    `Invalid battleground alliance location ${allyLocId}`
+                  + ` in battleground ${idString}`
                 )
             }
 
-            if(allymap !== map) {
+            const map = dbc.MapID.getIndex(0)
+            const hordeMap = hordeLoc.Continent.get()
+            const allyMap = allyLoc.Continent.get()
+
+            if(hordeMap !== map) {
                 throw new Error(
-                      `Battlemaster ${x.ID} is registered for map ${map}, `
-                    + `but the alliance starting location is on map ${hordemap}`
-                )
+                    `Battlemaster ${idString} is registered for map ${map}, `
+                  + `but the horde starting location is on map ${hordeMap}`
+              )
             }
 
-            if(x.Brackets.length === 0) {
+            if(allyMap !== map) {
                 throw new Error(
-                      `Battlemaster ${x.ID} has no difficulties `
-                    + `registered for its map (${map}). `
-                    + `Please add at least one difficulty bracket`
-                )
+                    `Battlemaster ${idString} is registered for map ${map}, `
+                  + `but the alliance starting location is on map ${allyMap}`
+              )
             }
-        });
+        })
 })
