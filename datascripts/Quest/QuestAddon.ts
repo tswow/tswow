@@ -101,6 +101,7 @@ export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
             .AllowableClasses.set(0)
             .SourceSpellID.set(0)
             .PrevQuestID.set(0)
+            .NextQuestID.set(0)
             .ProvidedItemCount.set(0)
             .RequiredMaxRepFaction.set(0)
             .RequiredMaxRepValue.set(0)
