@@ -21,8 +21,8 @@ import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/w
 import { Objectified, Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
-import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { Ids } from "../Misc/Ids";
+import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
@@ -288,11 +288,24 @@ export class SpellEffect extends ArrayEntry<Spell> {
     }
 
     objectify() {
-        let {cell:auraCell} = EnumCellTransform.getSelection(this.Aura);
-        if(auraCell !== undefined) return auraCell.as().objectifyPlain();
-        let {cell:effectCell} = EnumCellTransform.getSelection(this.Type);
-        if(effectCell !== undefined) return effectCell.as().objectifyPlain();
-        return this.objectifyPlain();
+        if(this.Aura.get() > 0) {
+            return {
+                Type: this.Type.objectify()
+              , Aura: this.Aura.objectify()
+              , ...Objects.objectifyObj(
+                  EnumCellTransform.getSelection(this.Aura).cell.as())
+          }
+        }
+        if(this.Type.get() > 0) {
+            return {
+                  Type: this.Type.objectify()
+                , Aura: this.Aura.objectify()
+                , ...Objects.objectifyObj(
+                    EnumCellTransform.getSelection(this.Type).cell.as())
+            }
+        } else {
+            return this.objectifyPlain();
+        }
     }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
