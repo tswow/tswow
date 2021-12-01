@@ -66,6 +66,17 @@ export class ShiftedNumberCell<T> extends CellSystem<T> {
 
     get Type() { return this.numberType; }
 
+    objectify() {
+        if(this.get('EFFECTIVE') !== this.get('STORED')) {
+            return {
+                  effective: this.get('EFFECTIVE')
+                , stored: this.get('STORED')
+            }
+        } else {
+            return this.get();
+        }
+    }
+
     set(value: number, conversion: ShiftedNumberConversion = 'STORED') {
         if(conversion === 'STORED') {
             this.cell.set(value)
