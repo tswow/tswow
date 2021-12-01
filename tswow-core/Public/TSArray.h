@@ -102,6 +102,11 @@ public:
     return str;
   }
 
+  void reserve(size_t size)
+  {
+      vec->reserve(size);
+  }
+
   auto pop() {
     auto value = (*vec)[vec->size() - 1];
     vec->pop_back();
