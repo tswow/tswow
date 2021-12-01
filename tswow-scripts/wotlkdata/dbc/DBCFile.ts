@@ -173,12 +173,12 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     highest(callback: (row: R) => number) {
-        return this.filter({} as any)
+        return this.queryAll({} as any)
             .sort((a, b) => callback(b) > callback(a) ? 1 : -1)[0];
     }
 
     lowest(callback: (row: R) => number) {
-        return this.filter({} as any)
+        return this.queryAll({} as any)
             .sort((a, b) => callback(a) > callback(b) ? 1 : -1)[0];
     }
 
@@ -231,7 +231,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         return this.rowMaker(this, this.buffer, index);
     }
 
-    filter(predicate: Q): R[] {
+    queryAll(predicate: Q): R[] {
         this.load();
         const arr: R[] = [];
         const row = this.getRow(0);
