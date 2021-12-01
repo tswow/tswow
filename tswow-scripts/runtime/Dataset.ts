@@ -5,7 +5,7 @@ import { collectSubmodules, ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
 import { Client } from "./Client";
-import { CreateCommand, InitializeCommand, ListCommand } from "./CommandActions";
+import { BuildCommand, CreateCommand, ListCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { MapData } from "./MapData";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -224,7 +224,7 @@ export class Dataset {
             }
         ).addAlias('datasets')
 
-        InitializeCommand.addCommand(
+        BuildCommand.addCommand(
               'database'
             , 'dataset = node.conf:Default.Dataset, --source? --dest?'
             , 'Creates base tables'
