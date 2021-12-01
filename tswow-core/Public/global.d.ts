@@ -3677,8 +3677,8 @@ declare interface TSMapManager {
 
 declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsNull() : bool
-    HasInstance(): bool
-    GetInstance(): TSInstance
+    HasInstanceScript(): bool
+    GetInstanceScript(): TSInstance
     GetUnits(): TSArray<TSWorldObject>
     DoDelayed(callback: (map: TSMap, mgr: TSMapManager)=>void): void;
     /**

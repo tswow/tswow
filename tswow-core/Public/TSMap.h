@@ -52,8 +52,6 @@ public:
     uint32 GetMapId();
     bool HasInstanceScript();
     TSInstance GetInstanceScript();
-    TSInstance GetInstance() { return GetInstanceScript(); }
-    bool HasInstance() { return HasInstanceScript(); }
     TSArray<TSPlayer> GetPlayers(uint32 team = 2);
     TSArray<TSUnit> GetUnits();
     TSArray<TSGameObject> GetGameObjects(uint32 entry = 0);
