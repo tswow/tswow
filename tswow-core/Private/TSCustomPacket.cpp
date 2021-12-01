@@ -106,7 +106,7 @@ void TSServerBuffer::OnError(CustomPacketResult error)
 	player.player->GetSession()->KickPlayer("Custom packet error: "+std::to_string(uint32_t(error)));
 }
 
-TSPacketWrite MakeCustomPacket(
+TSPacketWrite CreateCustomPacket(
 		opcode_t opcode
 	, totalSize_t size
 )

@@ -96,7 +96,7 @@ public:
 	virtual void OnError(CustomPacketResult error) override final;
 };
 
-TC_GAME_API TSPacketWrite MakeCustomPacket(
+TC_GAME_API TSPacketWrite CreateCustomPacket(
 		opcode_t opcode
 	, totalSize_t size
 );

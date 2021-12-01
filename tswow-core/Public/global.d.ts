@@ -8509,8 +8509,8 @@ declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 // end of Global.h
 
-declare function MakeDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
-declare function MakeArray<T>(obj: T[]): TSArray<T>
+declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
+declare function CreateArray<T>(obj: T[]): TSArray<T>
 
 declare function GetID(table: string, mod: string, name: string);
 declare function GetIDRange(table: string, mod: string, name: string);
@@ -8835,7 +8835,7 @@ declare function MsgPrimitiveArray(capacity: number): (field: any, name: any)=>v
 declare function MsgString(size: number): (field: any, name: any)=>void
 declare function MsgStringArray(arrSize: number, stringSize: number): (field: any, name: any)=>void
 
-declare function MakeCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
+declare function CreateCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
 
 // Null values
 declare function NULL_UNIT(): TSUnit;

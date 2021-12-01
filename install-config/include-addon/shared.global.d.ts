@@ -57,4 +57,4 @@ declare class TSPacketRead {
     Size(): uint32
 }
 
-declare function MakeCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
+declare function CreateCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;

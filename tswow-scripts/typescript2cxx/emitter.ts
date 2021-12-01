@@ -1731,10 +1731,10 @@ export class Emitter {
                 && !!(firstInitializer)
                 && !firstType
             let dictMatch = firstInitializer
-                ? firstInitializer.getText().match(/^MakeDictionary(<.+>) *\(/)
+                ? firstInitializer.getText().match(/^CreateDictionary(<.+>) *\(/)
                 : undefined
             let arrMatch = firstInitializer
-                ? firstInitializer.getText().match(/^MakeArray(<.+>) *\(/)
+                ? firstInitializer.getText().match(/^CreateArray(<.+>) *\(/)
                 : undefined
             if(declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
@@ -3170,7 +3170,7 @@ export class Emitter {
         }
 
         this.writer.writeString(`TSDictionary<TSString,uint32>`
-            +` ${switchName} = MakeDictionary<TSString,uint32>(`);
+            +` ${switchName} = CreateDictionary<TSString,uint32>(`);
         this.writer.BeginBlock();
 
         let caseNumber = 0;
@@ -3437,8 +3437,8 @@ export class Emitter {
         }
 
         if (!isTuple) {
-            let isMakeArray = node.parent.getText().startsWith('MakeArray')
-            if(!isMakeArray) {
+            let isCreateArray = node.parent.getText().startsWith('CreateArray')
+            if(!isCreateArray) {
                 this.writer.writeString('TSArray<');
                 if (elementsType) {
                     this.processType(elementsType, false);

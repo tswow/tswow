@@ -14008,7 +14008,7 @@ declare const TSJSON: {
 
 
 
-declare function MakeCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
+declare function CreateCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
 declare function OnCustomPacket(opcode: uint32, callback: (packet: TSPacketRead)=>void)
 declare class TSPacketWrite {
     WriteUInt8(value: uint8): TSPacketWrite;

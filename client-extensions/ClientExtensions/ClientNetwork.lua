@@ -25,7 +25,7 @@ local LuaNetworkOpcode = {
     ["RESET_CUSTOM_PACKET"] = 22,
 };
 
-function MakeCustomPacket(opcode,size)
+function CreateCustomPacket(opcode,size)
     local writer = { id = _CLIENT_NETWORK(LuaNetworkOpcode.MAKE_CUSTOM_PACKET,opcode,size) }
 
     function writer:WriteUInt8(value) _CLIENT_NETWORK(LuaNetworkOpcode.WRITE_UINT8,self.id,value); return self end
