@@ -23,6 +23,7 @@ import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { findGaps } from "../GapDetection/GapDetection";
 import { MainEntity } from "../Misc/Entity";
 import { ClassRaces } from "./ClassRaceData/ClassRaces";
+import { ClassRoles } from "./ClassRoles";
 import { ClassStartInventory } from "./ClassStartInventory";
 import { ClassStats } from "./ClassStats";
 import { ClassTalents } from "./ClassTalents";
@@ -65,6 +66,7 @@ export class Class extends MainEntity<ChrClassesRow> {
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
     get Races() { return new ClassRaces(this); }
     get Talents() { return new ClassTalents(this); }
+    get Roles() { return new ClassRoles(this); }
 }
 
 

@@ -24,7 +24,13 @@ export interface IMainEntity<T> {
     readonly row: T
 }
 
-export class MainEntity<T> extends CellSystemTop {
+export interface IDeletable {
+    isDeleted(): boolean;
+    delete(): void;
+    undelete(): void;
+}
+
+export class MainEntity<T extends IDeletable> extends CellSystemTop {
     @Transient
     readonly row: T;
 
@@ -32,9 +38,23 @@ export class MainEntity<T> extends CellSystemTop {
         super();
         this.row = row;
     }
+
+    delete() {
+        this.row.delete();
+        return this;
+    }
+
+    isDeleted() {
+        return this.row.isDeleted();
+    }
+
+    undelete() {
+        this.row.undelete();
+        return this;
+    }
 }
 
-export class TwoRowMainEntity<DBC,SQL> extends CellSystemTop {
+export class TwoRowMainEntity<DBC extends IDeletable,SQL extends IDeletable> extends CellSystemTop {
     @Transient
     readonly dbc_row: DBC;
 
@@ -46,32 +66,83 @@ export class TwoRowMainEntity<DBC,SQL> extends CellSystemTop {
         this.dbc_row = dbc;
         this.sql_row = sql;
     }
+
+    delete() {
+        this.dbc_row.delete();
+        this.sql_row.delete();
+        return this;
+    }
+
+    isDeleted() {
+        if(this.dbc_row.isDeleted() !== this.sql_row.isDeleted()) {
+            throw new Error(
+                  `Cannot get isDeleted status of sql/dbc entity:`
+                + ` {sql: {deleted: ${this.sql_row.isDeleted()}},`
+                + ` dbc: {deleted: ${this.dbc_row.isDeleted()}}}`
+            )
+        }
+        return this.dbc_row.isDeleted() && this.sql_row.isDeleted();
+    }
+
+    undelete() {
+        this.dbc_row.undelete();
+        this.sql_row.undelete();
+        return this;
+    }
 }
 
-export abstract class TransformedEntity<R,C> extends TransformedClass<C> {
+export abstract class TransformedEntity<R extends IDeletable,C> extends TransformedClass<C> {
     @Transient
     readonly row: R;
     constructor(row: R) {
         super();
         this.row = row;
     }
+
+    delete() {
+        this.row.delete();
+        return this;
+    }
+
+    isDeleted() {
+        return this.row.isDeleted();
+    }
+
+    undelete() {
+        this.row.undelete();
+        return this;
+    }
 }
 
-export abstract class TransformedEntityReadOnly<R,C> extends TransformedClassReadOnly<C> {
+export abstract class TransformedEntityReadOnly<R extends IDeletable,C> extends TransformedClassReadOnly<C> {
     @Transient
     readonly row: R;
     constructor(row: R) {
         super();
         this.row = row;
     }
+
+    delete() {
+        this.row.delete();
+        return this;
+    }
+
+    isDeleted() {
+        return this.row.isDeleted();
+    }
+
+    undelete() {
+        this.row.undelete();
+        return this;
+    }
 }
 
-export class ChildEntity<R,T extends MainEntity<R>> extends CellSystem<T> {
+export class ChildEntity<R extends IDeletable,T extends MainEntity<R>> extends CellSystem<T> {
     @Transient
     get row() { return this.owner.row; }
 }
 
-export abstract class ArrayEntity<R,O,A extends ArrayEntry<O>> extends MainEntity<R> {
+export abstract class ArrayEntity<R extends IDeletable,O,A extends ArrayEntry<O>> extends MainEntity<R> {
     filter(callback: (value: A, index: number)=>boolean) {
         let out: A[] = [];
         this.forEach((x,i)=>callback(x,i)?out.push(x):undefined)

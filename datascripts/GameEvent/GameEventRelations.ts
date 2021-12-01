@@ -28,16 +28,7 @@ import { Quest } from "../Quest/Quest";
 import { QuestRegistry } from "../Quest/Quests";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 
-export class GameEventRelationBase<T extends SqlRow<any,any>> extends MainEntity<T> {
-    delete() {
-        this.row.delete();
-        return this;
-    }
-
-    isDeleted() {
-        return this.row.isDeleted();
-    }
-}
+export class GameEventRelationBase<T extends SqlRow<any,any>> extends MainEntity<T> {}
 
 export abstract class GameEventMultiRowSystem<T extends GameEventRelationBase<any>,V> extends MultiRowSystem<T,V> {
     protected isDeleted(value: T): boolean {

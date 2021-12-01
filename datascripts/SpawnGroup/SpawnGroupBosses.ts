@@ -42,20 +42,6 @@ export class SpawnGroupBossEntry extends MainEntity<instance_spawn_groupsRow> {
     get Flags() {
         return makeMaskCell32(SpawnGroupBossFlags,this,this.row.flags);
     }
-
-    isDeleted() {
-        return this.row.isDeleted();
-    }
-
-    delete() {
-        this.row.delete();
-        return this;
-    }
-
-    undelete() {
-        this.row.undelete();
-        return this;
-    }
 }
 
 export class SpawnGroupBosses extends MultiRowSystem<SpawnGroupBossEntry,SpawnGroup> {

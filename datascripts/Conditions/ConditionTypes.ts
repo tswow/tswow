@@ -47,15 +47,6 @@ export class ConditionBase extends TransformedEntityReadOnly<conditionsRow, Cond
     get ErrorType() { return this.wrap(this.row.ErrorType); }
     get ErrorText() { return this.wrap(this.row.ErrorTextId); }
     get Type() { return new ConditionTypeCell(this, this.row.ConditionTypeOrReference); }
-
-    delete() {
-        this.row.delete();
-        return this;
-    }
-
-    isDeleted() {
-        return this.row.isDeleted();
-    }
 }
 
 export class ConditionPlain extends ConditionBase {

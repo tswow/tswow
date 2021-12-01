@@ -32,20 +32,6 @@ export class SpawnGroupEntry extends MainEntity<spawn_groupRow> {
     get GameObject() {
         return GameObjectInstances.readOnlyRef(this, this.row.spawnId)
     }
-
-    isDeleted() {
-        return this.row.isDeleted()
-    }
-
-    delete() {
-        this.row.delete();
-        return this;
-    }
-
-    undelete() {
-        this.row.undelete();
-        return this;
-    }
 }
 
 export class SpawnGroupCreatureEntries extends MultiRowSystem<SpawnGroupEntry,SpawnGroup> {

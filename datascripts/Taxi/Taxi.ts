@@ -26,9 +26,10 @@ export class TaxiPath extends MainEntity<TaxiPathRow> {
     get Cost() {  return this.wrap(this.row.Cost) }
 
     delete() {
-        if(this.isDeleted()) return;
+        if(this.isDeleted()) return this;
         this.row.delete();
         this.Nodes.forEach(x=>x.row.delete());
+        return this;
     }
 
     undelete() {
@@ -37,6 +38,7 @@ export class TaxiPath extends MainEntity<TaxiPathRow> {
         this.Start.getRef().undelete();
         this.End.getRef().undelete();
         this.Nodes.forEach(x=>x.row.undelete());
+        return this;
     }
 
     isDeleted() {

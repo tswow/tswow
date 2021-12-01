@@ -20,10 +20,6 @@ export class PVPDifficulty extends MainEntity<PvpDifficultyRow> {
     // This should just be sorted by map and level brackets
     //get RangeIndex() { return this.wrap(this.row.RangeIndex); }
     //get ID()
-
-    delete() { this.row.delete(); return this; }
-    isDeleted() { return this.row.isDeleted(); }
-    undelete() { this.row.undelete(); return this; }
 }
 
 export class PVPDifficultyRegistryClass

@@ -6,15 +6,16 @@ import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
+import { IDeletable } from "../Misc/Entity";
 import { RaceMask } from "../Race/RaceType";
 import { SpellRegistry } from "./Spells";
 
-interface CastSpellRow {
+interface CastSpellRow extends IDeletable {
     raceMask : number
     classMask : number
     spell : number
     note: string
-    deleted?: boolean
+    deleted: boolean
 }
 
 let values: CastSpellRow[] = SQL.Databases.world_source
@@ -76,7 +77,22 @@ export class CastSpells<T> extends ClassRaceMaskSystem<CastSpell,CastSpellRow,T>
     }
 
     protected _addGet(classMask: number, raceMask: number): CastSpell {
-        let v: CastSpellRow = {classMask,raceMask,note:'',spell:0}
+        let v: CastSpellRow = {
+              classMask
+            , raceMask
+            , note:''
+            , spell:0
+            , deleted: false
+            , isDeleted: function() {
+                return this.deleted;
+            }
+            , delete: function() {
+                this.deleted = true;
+            }
+            , undelete: function() {
+                this.deleted = false;
+            }
+        }
         values.push(v);
         return new CastSpell(v);
     }

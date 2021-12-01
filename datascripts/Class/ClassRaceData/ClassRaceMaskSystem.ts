@@ -1,6 +1,6 @@
 import { makeMask, MaskCellWrite, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { MainEntity } from "../../Misc/Entity";
+import { IDeletable, MainEntity } from "../../Misc/Entity";
 import { RaceMask } from "../../Race/RaceType";
 import { ClassMask } from "../ClassRegistry";
 
@@ -9,7 +9,7 @@ export interface IClassRaceMaskEntry {
     readonly RaceMask: MaskCellWrite<this,typeof RaceMask>
 }
 
-export abstract class ClassRaceMaskEntry<T>
+export abstract class ClassRaceMaskEntry<T extends IDeletable>
 extends MainEntity<T>
 implements IClassRaceMaskEntry
 {
@@ -46,7 +46,7 @@ export abstract class ClassRaceMaskSystemBase<E extends IClassRaceMaskEntry,T>
     }
 }
 
-export abstract class ClassRaceMaskSystem<E extends ClassRaceMaskEntry<R>,R,T> extends ClassRaceMaskSystemBase<E,T> {
+export abstract class ClassRaceMaskSystem<E extends ClassRaceMaskEntry<R>,R extends IDeletable,T> extends ClassRaceMaskSystemBase<E,T> {
     protected abstract _addGet(classmask: number, racemask: number): E;
     addGet(classes: MaskCon<keyof typeof ClassMask>, races: MaskCon<keyof typeof RaceMask>) {
         return this._addGet(makeMask(ClassMask,classes),makeMask(RaceMask,races));

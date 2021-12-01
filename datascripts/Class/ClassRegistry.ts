@@ -156,6 +156,9 @@ export class ClassRegistryClass
             x.ClassMask.set(mask);
         });
 
+        // Copy class roles
+        SQL.player_class_roles.find({class:parent}).clone(id);
+
         interface GtItem {
             index: number;
             Data: Cell<number, any>

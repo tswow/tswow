@@ -32,7 +32,7 @@ export class TaxiEndNode extends MainEntity<TaxiNodesRow> {
     get ID() { return this.row.ID.get(); }
 
     delete() {
-        if(this.isDeleted()) return;
+        if(this.isDeleted()) return this;
         this.row.delete();
         TaxiPathRegistry
             .filter(x=>x.Start.get() === this.ID || x.End.get() === this.ID)
@@ -48,6 +48,7 @@ export class TaxiEndNode extends MainEntity<TaxiNodesRow> {
 
     undelete() {
         this.row.undelete();
+        return this;
     }
 }
 

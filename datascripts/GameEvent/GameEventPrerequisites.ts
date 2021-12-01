@@ -11,15 +11,6 @@ export class GameEventPrerequisite extends MainEntity<game_event_prerequisiteRow
     get Prerequisite() {
         return GameEventRegistry.readOnlyRef(this, this.row.prerequisite_event);
     }
-
-    isDeleted() {
-        return this.row.isDeleted();
-    }
-
-    delete() {
-        this.row.delete();
-        return this;
-    }
 }
 
 export class GameEventPrerequisitesForward extends MultiRowSystem<GameEventPrerequisite,GameEvent>{
