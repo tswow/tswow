@@ -97,6 +97,7 @@ export class QuestRewardMail extends CellSystem<Quest> {
 export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
     protected createSQL(): quest_template_addonRow {
         return SQL.quest_template_addon.add(this.owner.ID)
+            .ExclusiveGroup.set(0)
             .AllowableClasses.set(0)
             .SourceSpellID.set(0)
             .PrevQuestID.set(0)
