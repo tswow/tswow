@@ -20,6 +20,7 @@
 #include "TSString.h"
 #include "TSArray.h"
 #include "TSWorldObject.h"
+#include "TSItem.h"
 #include "TSClasses.h"
 
 class TC_GAME_API TSUnit : public TSWorldObject {
@@ -166,12 +167,12 @@ public:
     void CastCustomSpell(
           TSUnit target
         , uint32 spell
-        , bool triggered
-        , int32 bp0
-        , int32 bp1
-        , int32 bp2
-        , TSItem castItem
-        , uint64 originalCaster
+        , bool triggered = false
+        , int32 bp0 = 0
+        , int32 bp1 = 0
+        , int32 bp2 = 0
+        , TSItem castItem = TSItem()
+        , uint64 originalCaster = 0
     );
     void CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
     void ClearInCombat();
