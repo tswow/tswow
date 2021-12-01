@@ -128,6 +128,7 @@ import { SQL_playercreateinfo_item } from './types/playercreateinfo_item'
 import { SQL_playercreateinfo_skills } from './types/playercreateinfo_skills'
 import { SQL_playercreateinfo_spell_custom } from './types/playercreateinfo_spell_custom'
 import { SQL_player_classlevelstats } from './types/player_classlevelstats'
+import { SQL_player_class_roles } from './types/player_class_roles'
 import { SQL_player_factionchange_achievement } from './types/player_factionchange_achievement'
 import { SQL_player_factionchange_items } from './types/player_factionchange_items'
 import { SQL_player_factionchange_quests } from './types/player_factionchange_quests'
@@ -751,6 +752,11 @@ export const SQL = {
      * No comment (yet!)
      */
     player_classlevelstats : SQL_player_classlevelstats,
+
+    /**
+     * No comment (yet!)
+     */
+    player_class_roles : SQL_player_class_roles,
 
     /**
      * No comment (yet!)

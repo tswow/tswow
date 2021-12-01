@@ -201,6 +201,11 @@ declare interface TSPlayer extends TSUnit {
     SetBankBagSlotCount(count: uint8)
     AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32, propertyId?: int32)
 
+    CanBeTank(): bool
+    CanBeHealer(): bool
+    CanBeDPS(): bool
+    CanBeLeader(): bool
+
     GetBattleground(): TSBattleground
     GetBattlegroundPlayer(): TSBattlegroundPlayer
 

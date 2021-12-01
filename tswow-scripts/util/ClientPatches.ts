@@ -8,15 +8,25 @@ export interface ClientPatchCat {
     patches: ClientPatch[]
 }
 
-export function patch(name: string, patches: [number,number[]][])
-    : ClientPatchCat
+export function patch(name: string, patches: [number,number[]][]): ClientPatchCat
 {
     return {name,patches:patches.map(x=>({address:x[0],values:x[1]}))}
 }
 
 export const EXTENSION_DLL_PATCH_NAME = 'client-extensions'
 
-export function ClientPatches(gamebuild: number) {
+export function ClientPatches(
+    gamebuild: number
+    , roles: {class:number,tank:number,healer:number,damage:number,leader:number}[]
+    ) {
+        let rolemask: number[] = new Array(32).fill(0)
+        roles.forEach(x=>{
+            rolemask[x.class-1] =
+              (x.leader ? 1 : 0)
+            | (x.tank   ? 2 : 0)
+            | (x.healer ? 4 : 0)
+            | (x.damage ? 8 : 0)
+        })
         return [
             patch('large-address-aware',[
                 [0x000126,[0x23]]
@@ -48,6 +58,16 @@ export function ClientPatches(gamebuild: number) {
                 [0xe038e,[0x88]],
                 [0xe03a3,[0x88]],
                 [0xe03c3,[0x88]],
+            ]),
+            patch('class roles',[
+                // role mask cave
+                [0x005E1A37,[0,...rolemask]],
+                // xrefs
+                [0x151d48,[0x37,0x32,0x9E,0x00]],
+                [0x152f7d,[0x37,0x32,0x9E,0x00]],
+                [0x152f94,[0x37,0x32,0x9E,0x00]],
+                [0x1531e7,[0x37,0x32,0x9E,0x00]],
+                [0x153d22,[0x37,0x32,0x9E,0x00]],
             ]),
             // generated with Stud_PE: https://www.cgsoftlabs.ro/dl.html
             patch(EXTENSION_DLL_PATCH_NAME,[

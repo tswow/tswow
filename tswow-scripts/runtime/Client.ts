@@ -130,18 +130,48 @@ export class Client {
 
     async startup(count: number = 1, ip: string = '127.0.0.1') {
         await this.kill();
-        this.applyExePatches();
+        await this.applyExePatches();
         this.installAddons();
         this.clearCache();
         this.writeRealmlist();
         this.start(count);
     }
 
-    exePatches() {
-        return ClientPatches(this.dataset.config.DatasetGameBuild)
+    async exePatches() {
+        await this.dataset.worldDest.connect();
+        // default roles
+        let values = [
+            { class: 1, tank: 1, healer: 0, damage: 1, leader: 1},
+            { class: 2, tank: 1, healer: 1, damage: 1, leader: 1},
+            { class: 3, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 4, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 5, tank: 0, healer: 1, damage: 1, leader: 1},
+            { class: 6, tank: 1, healer: 0, damage: 1, leader: 1},
+            { class: 7, tank: 0, healer: 1, damage: 1, leader: 1},
+            { class: 8, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 9, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 11, tank: 1, healer: 1, damage: 1, leader: 1},
+        ]
+        try {
+            values = await this.dataset.worldDest.query(
+                `SELECT \`class\`,\`tank\`,\`healer\`,\`damage\`,\`leader\``
+                + `FROM \`player_class_roles\``
+            )
+        // table might not exist yet, ignore errors
+        } catch(err) {
+            term.log('client'
+                , `Could not load class roles, using default values.`
+                + ` This usually just means you haven't built your`
+                + ` database yet.`
+            )
+        }
+        return ClientPatches(
+              this.dataset.config.DatasetGameBuild
+            , values
+            )
     }
 
-    applyExePatches() {
+    async applyExePatches() {
         term.log('client',`Applying client patches...`)
         this.path.wow_exe.copyOnNoTarget(this.path.wow_exe_clean)
 
@@ -187,7 +217,7 @@ export class Client {
         }
 
         const usedPatchNames = this.dataset.config.client_patches
-        const usedPatches = this.exePatches()
+        const usedPatches = (await this.exePatches())
             .filter(x=>usedPatchNames.includes(x.name));
         usedPatches.forEach(cat=>{
             cat.patches.forEach(patch=>{

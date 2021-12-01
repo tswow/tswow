@@ -308,6 +308,10 @@ public:
 	void SendCinematicStart(uint32 CinematicSequenceId);
 	void SendMovieStart(uint32 MovieId);
 	void SendMail(uint8 senderType, uint64 from, TSString subject, TSString body, uint32 money = 0, uint32 cod = 0, uint32 delay = 0, TSArray<TSItem> items = TSArray<TSItem>());
+	bool CanBeTank();
+	bool CanBeHealer();
+	bool CanBeDPS();
+	bool CanBeLeader();
 
   uint8 GetHairStyle();
   void SetHairStyle(uint8 style);

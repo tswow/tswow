@@ -3919,6 +3919,30 @@ TSOutfit TSPlayer::GetOutfitCopy(uint32_t settings, int32_t race, int32_t gender
     return TSOutfit(*this, settings, race, gender);
 }
 
+bool TSPlayer::CanBeTank()
+{
+    return sObjectMgr->GetPlayerClassRoleMask(GetClass())
+        & lfg::LfgRoles::PLAYER_ROLE_TANK;
+}
+
+bool TSPlayer::CanBeHealer()
+{
+    return sObjectMgr->GetPlayerClassRoleMask(GetClass())
+        & lfg::LfgRoles::PLAYER_ROLE_HEALER;
+}
+
+bool TSPlayer::CanBeDPS()
+{
+    return sObjectMgr->GetPlayerClassRoleMask(GetClass())
+        & lfg::LfgRoles::PLAYER_ROLE_DAMAGE;
+}
+
+bool TSPlayer::CanBeLeader()
+{
+    return sObjectMgr->GetPlayerClassRoleMask(GetClass())
+        & lfg::LfgRoles::PLAYER_ROLE_LEADER;
+}
+
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
 player->BindToInstance();
