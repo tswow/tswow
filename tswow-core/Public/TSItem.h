@@ -84,4 +84,4 @@ public:
     void SaveToDB();
 };
 
-TC_GAME_API TSItem CreateItem(uint32 entry, uint32 count = 0);
+TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);

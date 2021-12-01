@@ -677,7 +677,9 @@ void TSItem::SaveToDB()
 
 TSItem CreateItem(uint32 entry, uint32 count)
 {
-    return TSItem(Item::CreateItem(entry,count,nullptr));
+    return entry > 0
+        ? TSItem(Item::CreateItem(entry, count, nullptr))
+        : TSItem(nullptr);
 }
 
 TSItemTemplate TSItem::GetTemplate()
