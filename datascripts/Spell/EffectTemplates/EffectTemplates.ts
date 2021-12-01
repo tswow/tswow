@@ -379,7 +379,7 @@ export class GameObjectRepair extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomRepair() { return this.wrap(this.owner.DieSides); }
+    get RepairDieSides() { return this.wrap(this.owner.DieSides); }
     get RepairPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get RepairPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
 }

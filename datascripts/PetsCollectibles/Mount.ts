@@ -226,7 +226,7 @@ export class MountRegistryClass
                     .Aura.MOD_INCREASE_MOUNTED_SPEED.set()
                     .BasePercent.set(speed)
                     .ImplicitTargetA.UNIT_CASTER.set()
-                    .RandomPercent.set(1)
+                    .PercentDieSides.set(1)
             })
 
         if(flightSpeed>0) {
@@ -236,7 +236,7 @@ export class MountRegistryClass
                     .Aura.MOD_INCREASE_FLIGHT_SPEED.set()
                     .BasePercent.set(flightSpeed)
                     .ImplicitTargetA.UNIT_CASTER.set()
-                    .RandomPercent.set(1)
+                    .PercentDieSides.set(1)
             })
         }
         let mount = new Mount(spell.row);

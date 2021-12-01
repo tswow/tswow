@@ -1,6 +1,6 @@
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { ShiftedNumberCell } from "../../Misc/ShiftedNumberCell";
 import { PercentCell } from "../../Misc/PercentCell";
+import { ShiftedNumberCell } from "../../Misc/ShiftedNumberCell";
 import { SpellPowerType } from "../SpellPowerType";
 import { TargetBase } from "./TargetBase";
 
@@ -22,7 +22,7 @@ export class ChanceBase extends PointsRoot {
             , this.owner.BasePoints.AsCell()
         );
     }
-    get RandomChance() {
+    get ChanceDieSides() {
         return new PercentCell(
               this
             , '[0-100]'
@@ -57,7 +57,7 @@ export class PercentBase extends PointsRoot {
             , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomPercent() {
+    get PercentDieSides() {
         return new PercentCell(
             this
           , '[0-100]'
@@ -93,7 +93,7 @@ export class PointsBase extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomPoints() {
+    get PointsDieSides() {
         return this.wrap(this.owner.DieSides);
     }
     get PointsPerLevel() {
@@ -114,7 +114,7 @@ export class CountBase extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomCount() { return this.wrap(this.owner.DieSides); }
+    get CountDieSides() { return this.wrap(this.owner.DieSides); }
     get CountPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get CountPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
@@ -129,7 +129,7 @@ export class DamageBase extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomDamage() { return this.wrap(this.owner.DieSides); }
+    get DamageDieSides() { return this.wrap(this.owner.DieSides); }
     get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
@@ -144,7 +144,7 @@ export class DamageBasePct extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         );
     }
-    get RandomDamagePct() {
+    get DamagePctDieSides() {
         return new PercentCell(
             this
           , '[0-100]'
@@ -180,7 +180,7 @@ export class HealBase extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomHeal() { return this.wrap(this.owner.DieSides); }
+    get HealDieSides() { return this.wrap(this.owner.DieSides); }
     get HealPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get HealPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
@@ -195,7 +195,7 @@ export class HealBasePct extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         );
     }
-    get RandomHealPct() {
+    get HealPctDieSides() {
         return new PercentCell(
             this
           , '[0-100]'
@@ -234,7 +234,7 @@ export class PowerBase extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomPower() { return this.wrap(this.owner.DieSides); }
+    get PowerDieSides() { return this.wrap(this.owner.DieSides); }
     get PowerPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get PowerPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
@@ -249,7 +249,7 @@ export class ManaBase extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         )
     }
-    get RandomMana() { return this.wrap(this.owner.DieSides); }
+    get ManaDieSides() { return this.wrap(this.owner.DieSides); }
     get ManaPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get ManaPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
@@ -267,7 +267,7 @@ export class PowerBasePct extends PointsRoot {
           , this.owner.BasePoints.AsCell()
         );
     }
-    get RandomPowerPct() {
+    get PowerPctDieSides() {
         return new PercentCell(
             this
           , '[0-100]'
