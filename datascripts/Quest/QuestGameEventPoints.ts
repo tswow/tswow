@@ -22,7 +22,7 @@ export class GameEventConditionRef<T> extends CellSystem<T> {
 
     getRef(): GameEventCondition {
         return new GameEventCondition(
-            SQL.game_event_condition.find(
+            SQL.game_event_condition.query(
                 {
                       eventEntry:this.eventCell.get()
                     , condition_id:this.conditionCell.get()
@@ -51,7 +51,7 @@ export class QuestGameEventCondition extends MaybeSQLEntity<Quest,game_event_que
             .num.set(0)
     }
     protected findSQL(): game_event_quest_conditionRow {
-        return SQL.game_event_quest_condition.find({quest:this.owner.ID})
+        return SQL.game_event_quest_condition.query({quest:this.owner.ID})
     }
     protected isValidSQL(sql: game_event_quest_conditionRow): boolean {
         return sql.quest.get() === this.owner.ID;

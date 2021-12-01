@@ -44,9 +44,9 @@ export class BattlegroundBase extends CellSystemTop {
 
 export function filterBgsBase(query: BattlemasterListQuery) {
     return DBC.BattlemasterList
-        .filter(query)
+        .queryAll(query)
         .map(dbc=>
-            ({dbc,sql:SQL.battleground_template.find({ID:dbc.ID.get()})})
+            ({dbc,sql:SQL.battleground_template.query({ID:dbc.ID.get()})})
         )
         .filter(({sql,dbc})=>sql!==undefined)
 }

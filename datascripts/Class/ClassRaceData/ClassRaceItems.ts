@@ -15,7 +15,7 @@ export class ClassRaceItem extends MainEntity<playercreateinfo_itemRow> {
 
 export class ClassRaceItems extends MultiRowSystem<ClassRaceItem,ClassRacePair> {
     protected getAllRows(): ClassRaceItem[] {
-        return SQL.playercreateinfo_item.filter(
+        return SQL.playercreateinfo_item.queryAll(
             {
                   race:this.owner.Race.get()
                 , class:this.owner.Class.get()

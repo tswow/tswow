@@ -56,7 +56,7 @@ export class SpellVisualKitModelAttach extends CellSystemTop {
 export class SpellVisualKitModels extends MultiRowSystem<SpellVisualKitModelAttach,SpellVisualKit> {
     protected getAllRows(): SpellVisualKitModelAttach[] {
         return DBC.SpellVisualKitModelAttach
-            .filter({ParentSpellVisualKitID:this.owner.row.ID.get()})
+            .queryAll({ParentSpellVisualKitID:this.owner.row.ID.get()})
             .map(x=>new SpellVisualKitModelAttach(x))
     }
     protected isDeleted(value: SpellVisualKitModelAttach): boolean {

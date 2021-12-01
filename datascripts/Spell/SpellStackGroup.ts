@@ -26,7 +26,7 @@ export class SpellGroupMapping extends MainEntity<spell_groupRow> {
 export class SpellStackGroupSpells extends MultiRowSystem<SpellGroupMapping,SpellStackGroup> {
     protected getAllRows(): SpellGroupMapping[] {
         return SQL.spell_group
-            .filter({id:this.owner.ID})
+            .queryAll({id:this.owner.ID})
             .map(x=>new SpellGroupMapping(x))
     }
     protected isDeleted(value: SpellGroupMapping): boolean {
@@ -37,7 +37,7 @@ export class SpellStackGroupSpells extends MultiRowSystem<SpellGroupMapping,Spel
 export class SpellSpellStackGroups extends MultiRowSystem<SpellGroupMapping,Spell> {
     protected getAllRows(): SpellGroupMapping[] {
         return SQL.spell_group
-            .filter({spell_id:this.owner.ID})
+            .queryAll({spell_id:this.owner.ID})
             .map(x=>new SpellGroupMapping(x))
     }
     protected isDeleted(value: SpellGroupMapping): boolean {
@@ -70,7 +70,7 @@ export class SpellGroupRegistryClass
         entity.StackRule.DEFAULT.set()
     }
     protected FindByID(id: number): spell_group_stack_rulesRow {
-        return SQL.spell_group_stack_rules.find({group_id:id})
+        return SQL.spell_group_stack_rules.query({group_id:id})
     }
     protected EmptyQuery(): spell_group_stack_rulesQuery {
         return {}

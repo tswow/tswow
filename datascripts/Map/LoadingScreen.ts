@@ -73,7 +73,7 @@ export class LoadingScreenRegistryClass
         if(typeof(id) === 'number') {
             return super.load(id);
         }
-        let v = DBC.LoadingScreens.find({FileName:id})
+        let v = DBC.LoadingScreens.query({FileName:id})
         return (v ? new LoadingScreen(v) : undefined) as LoadingScreen
     }
 }

@@ -34,7 +34,7 @@ export class CreatureTextLoc extends SQLLocSystem<CreatureText> {
         return this.owner.row.Text
     }
     protected getLoc(loc: Language): Cell<string, any> {
-        return SQL.creature_text_locale.find({
+        return SQL.creature_text_locale.query({
               CreatureID:this.owner.CreatureTemplate.get()
             , GroupID:this.owner.Group
             , ID: this.owner.Index
@@ -207,7 +207,7 @@ export class CreatureTextRegistryClass {
         let group = cachedGroups[creature];
         if(group !== undefined) return group;
         const split = SQL.creature_text
-            .filter({CreatureID:creature})
+            .queryAll({CreatureID:creature})
             .reduce<{[c: number]: creature_textRow[]}>((p,c)=>{
                 (p[c.GroupID.get()]||(p[c.GroupID.get()] = [])).push(c)
                 return p;

@@ -6,7 +6,7 @@ import { BattlegroundBase } from "./BattlegroundBase";
 
 export class SetEntries extends MultiRowSystem<battleground_setsRow,BattlegroundSet> {
     protected getAllRows(): battleground_setsRow[] {
-        return SQL.battleground_sets.filter({set:this.owner.ID})
+        return SQL.battleground_sets.queryAll({set:this.owner.ID})
     }
     protected isDeleted(value: battleground_setsRow): boolean {
         return value.isDeleted()
@@ -32,11 +32,11 @@ export class Battleground extends BattlegroundBase {
 const ALL_ARENA_ID = 6
 export const ALL_ARENAS = new BattlegroundSet(
       DBC.BattlemasterList.findById(ALL_ARENA_ID)
-    , SQL.battleground_template.find({ID:ALL_ARENA_ID})
+    , SQL.battleground_template.query({ID:ALL_ARENA_ID})
 )
 
 const ALL_BGS_ID = 32;
 export const ALL_BATTLEGROUNDS = new BattlegroundSet(
       DBC.BattlemasterList.findById(ALL_BGS_ID)
-    , SQL.battleground_template.find({ID:ALL_BGS_ID})
+    , SQL.battleground_template.query({ID:ALL_BGS_ID})
 )

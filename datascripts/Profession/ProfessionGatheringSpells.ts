@@ -6,7 +6,7 @@ import { Profession } from "./Profession";
 
 export class ProfessionGatheringSpells extends MultiRowSystem<Spell,Profession> {
     protected getAllRows(): Spell[] {
-        return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
+        return DBC.SkillLineAbility.queryAll({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>
                    x.Effects.find(y=>y.Type.OPEN_LOCK.is())

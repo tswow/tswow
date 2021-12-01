@@ -22,7 +22,7 @@ export class GameObjectInstanceAddon extends MaybeSQLEntity<GameObjectInstance,g
     return SQL.gameobject_addon.add(this.owner.ID);
   }
   protected findSQL(): gameobject_addonRow {
-    return SQL.gameobject_addon.find({guid:this.owner.ID});
+    return SQL.gameobject_addon.query({guid:this.owner.ID});
   }
   protected isValidSQL(sql: gameobject_addonRow): boolean {
     return sql.guid.get() === this.owner.ID;

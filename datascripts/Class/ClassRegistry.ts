@@ -140,13 +140,13 @@ export class ClassRegistryClass
 
         // Copy all languages
         if(languages.length == 0) {
-            languages = SQL.playercreateinfo_skills.filter({comment:includes("Language")})
+            languages = SQL.playercreateinfo_skills.queryAll({comment:includes("Language")})
         }
         languages.forEach(x=>x.clone(x.raceMask.get(),(x.classMask.get()|1<<(id-1)>>>0),x.skill.get()));
 
         // Setup RaceClassInfos
-        DBC.SkillRaceClassInfo.find({});
-        const parentRCI = DBC.SkillRaceClassInfo.filter({})
+        DBC.SkillRaceClassInfo.query({});
+        const parentRCI = DBC.SkillRaceClassInfo.queryAll({})
             .filter(x=>x.RaceMask.get() !== 4294967295 && x.ClassMask.get()&((1<<(parent-1))>>>0));
         parentRCI.forEach(x=>{
             let mask = x.ClassMask.get();
@@ -157,7 +157,7 @@ export class ClassRegistryClass
         });
 
         // Copy class roles
-        SQL.player_class_roles.find({class:parent}).clone(id);
+        SQL.player_class_roles.query({class:parent}).clone(id);
 
         interface GtItem {
             index: number;
@@ -167,12 +167,12 @@ export class ClassRegistryClass
 
         interface GTFile {
             add(c: {Data:number}): any;
-            filter(g: any): GtItem[];
+            queryAll(g: any): GtItem[];
         }
 
         // Copy over stats
         const p = (size: number, dbc: GTFile) =>
-            dbc.filter({})
+            dbc.queryAll({})
             .filter((x,i)=>x.index>=parent*size && x.index<parent*size+size)
         const g = (size: number, dbc: GTFile) =>
             p(size,dbc).forEach((x)=>x.clone().Data.set(x.Data.get()))
@@ -186,14 +186,14 @@ export class ClassRegistryClass
         g(1,DBC.GtChanceToMeleeCritBase)
         g(1,DBC.GtChanceToSpellCritBase)
         g(320,DBC.GtCombatRatings)
-        DBC.GtOCTClassCombatRatingScalar.filter({})
+        DBC.GtOCTClassCombatRatingScalar.queryAll({})
             .filter((x)=>x.index>=parent*32 && x.index < parent*32+32)
             .forEach((x,i)=>{
                 const g = x.clone({ID: (classIndex+1)*32+i})
             });
 
         SQL.player_classlevelstats
-            .filter({class:rParent.ID.get()}).map(x=>x.clone(id,x.level.get()));
+            .queryAll({class:rParent.ID.get()}).map(x=>x.clone(id,x.level.get()));
 
         const co = LUAXML.file('Interface/FrameXML/Constants.lua');
         const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.lua');

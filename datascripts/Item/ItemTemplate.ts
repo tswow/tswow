@@ -246,7 +246,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
         return new ItemTemplate(r)
     }
     protected FindByID(id: number): item_templateRow {
-        return SQL.item_template.find({entry:id});
+        return SQL.item_template.query({entry:id});
     }
     protected EmptyQuery(): item_templateQuery {
         return {}

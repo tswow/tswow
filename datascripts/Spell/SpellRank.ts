@@ -12,11 +12,11 @@ export class SpellRank<T> extends CellSystem<T>{
     }
 
     protected getRow() {
-        return SQL.spell_ranks.find({spell_id: this.spellId});
+        return SQL.spell_ranks.query({spell_id: this.spellId});
     }
 
     exists() {
-        return SQL.spell_ranks.filter({spell_id: this.spellId}).length != 0;
+        return SQL.spell_ranks.queryAll({spell_id: this.spellId}).length != 0;
     }
 
     set(firstSpell: number, rank: number) {

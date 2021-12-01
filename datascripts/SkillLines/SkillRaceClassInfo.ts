@@ -41,7 +41,7 @@ export class SkillRaceClassInfos extends ClassRaceMaskSystem<SkillRaceClassInfo,
         return new SkillRaceClassInfo(row);
     }
     protected getAllRows(): SkillRaceClassInfo[] {
-        return DBC.SkillRaceClassInfo.filter({SkillID: this.owner.ID}).map(x=>new SkillRaceClassInfo(x))
+        return DBC.SkillRaceClassInfo.queryAll({SkillID: this.owner.ID}).map(x=>new SkillRaceClassInfo(x))
     }
     protected isDeleted(a: SkillRaceClassInfo): boolean {
         return a.row.isDeleted();

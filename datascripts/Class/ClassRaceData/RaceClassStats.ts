@@ -19,7 +19,7 @@ export class ClassRaceStatsEntry extends MainEntity<player_levelstatsRow> {
 export class ClassRaceStats extends MultiRowSystem<ClassRaceStatsEntry,ClassRacePair> {
     protected getAllRows(): ClassRaceStatsEntry[] {
         return SQL.player_levelstats
-            .filter({race:this.owner.Race.get(),class:this.owner.Class.get()})
+            .queryAll({race:this.owner.Race.get(),class:this.owner.Class.get()})
             .map(x=>new ClassRaceStatsEntry(x))
     }
     protected isDeleted(value: ClassRaceStatsEntry): boolean {

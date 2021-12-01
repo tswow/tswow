@@ -46,7 +46,7 @@ export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
 export class LanguageWords extends CellSystem<WoWLanguage> {
     add(words: string[]) {
         // word ids are never used, so their ids can just be incremented.
-        let highest = DBC.LanguageWords.filter({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
+        let highest = DBC.LanguageWords.queryAll({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
         for(const word of words) {
             DBC.LanguageWords.add(++highest,
                 {LanguageID:this.owner.ID,Word:word});
@@ -56,7 +56,7 @@ export class LanguageWords extends CellSystem<WoWLanguage> {
 
     get() {
         return DBC.LanguageWords
-            .filter({LanguageID:this.owner.ID})
+            .queryAll({LanguageID:this.owner.ID})
     }
 
     getText() {
@@ -175,7 +175,7 @@ export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,Lan
         return new WoWLanguage(r);
     }
     protected FindByID(id: number): LanguagesRow {
-        return this.Table().find({ID:id})
+        return this.Table().query({ID:id})
     }
     protected EmptyQuery(): LanguagesQuery {
         return {}

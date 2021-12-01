@@ -28,7 +28,7 @@ export class Gossip extends MainEntity<gossip_menuRow> {
     }
 
     get Text() {
-        return new GossipTextArray(this, SQL.npc_text.find({ID:this.row.TextID.get()}));
+        return new GossipTextArray(this, SQL.npc_text.query({ID:this.row.TextID.get()}));
     }
 
     get Options() : GossipOptions {

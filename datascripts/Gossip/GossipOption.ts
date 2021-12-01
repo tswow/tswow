@@ -48,7 +48,7 @@ export class GossipOption extends CellSystemTop {
 
 export class GossipOptions extends MultiRowSystem<GossipOption,Gossip> {
     protected getAllRows(): GossipOption[] {
-        return SQL.gossip_menu_option.filter({MenuID:this.owner.ID})
+        return SQL.gossip_menu_option.queryAll({MenuID:this.owner.ID})
             .sort((a,b)=>a.OptionID.get()>b.OptionID.get() ? 1 : -1)
             .map(x=>new GossipOption(x));
     }

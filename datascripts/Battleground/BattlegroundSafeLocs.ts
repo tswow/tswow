@@ -43,7 +43,7 @@ export class BattlegroundSafeLoc<T> extends CellSystem<T> {
 
 finish('bg-worldsafelocs',()=>{
     SQL.battleground_template
-        .filter({})
+        .queryAll({})
         .forEach(sql=>{
             const dbc = DBC.BattlemasterList.findById(sql.ID.get())
             if(dbc.MapID.get().filter(x=>x>=0).length>1) {

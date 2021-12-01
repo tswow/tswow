@@ -39,7 +39,7 @@ export class CreatureInstanceAddon
         return SQL.creature_addon.add(this.owner.ID)
     }
     protected findSQL(): creature_addonRow {
-        return SQL.creature_addon.find({guid:this.owner.ID})
+        return SQL.creature_addon.query({guid:this.owner.ID})
     }
     protected isValidSQL(sql: creature_addonRow): boolean {
         return sql.guid.get() === this.owner.ID;
@@ -63,7 +63,7 @@ export class CreatureInstanceBoss
         return SQL.instance_boss_creature.add(this.owner.ID)
     }
     protected findSQL(): instance_boss_creatureRow {
-        return SQL.instance_boss_creature.find({guid:this.owner.ID})
+        return SQL.instance_boss_creature.query({guid:this.owner.ID})
     }
     protected isValidSQL(sql: instance_boss_creatureRow): boolean {
         return sql.guid.get() === this.owner.ID
@@ -171,11 +171,11 @@ export class CreatureInstance extends MainEntity<creatureRow> {
 
 // write boss maps once we're done writing, since the map could change before then
 finish('boss_maps',()=>{
-    SQL.instance_boss_creature.filter({})
+    SQL.instance_boss_creature.queryAll({})
         .forEach(x=>{
             // only set maps set to be "unset"
             if(x.map.get() !== -1) return;
-            const c = SQL.creature.find({guid:x.guid.get()})
+            const c = SQL.creature.query({guid:x.guid.get()})
             if(!c) return;
             x.map.set(c.map.get());
         })

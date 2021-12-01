@@ -67,7 +67,7 @@ export class GameObjectTemplateAddon<T extends GameObjectTemplate> extends Maybe
         return SQL.gameobject_template_addon.add(this.owner.ID);
     }
     protected findSQL(): gameobject_template_addonRow {
-        return SQL.gameobject_template_addon.find({entry:this.owner.ID});
+        return SQL.gameobject_template_addon.query({entry:this.owner.ID});
     }
     protected isValidSQL(sql: gameobject_template_addonRow): boolean {
         return sql.entry.get() === this.owner.ID;

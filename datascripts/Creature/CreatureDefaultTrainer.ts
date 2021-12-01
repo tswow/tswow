@@ -12,7 +12,7 @@ export class CreatureDefaultTrainer extends MaybeSQLEntity
             .TrainerId.set(0)
     }
     protected findSQL(): creature_default_trainerRow {
-        return SQL.creature_default_trainer.find({CreatureId:this.owner.ID})
+        return SQL.creature_default_trainer.query({CreatureId:this.owner.ID})
     }
     protected isValidSQL(sql: creature_default_trainerRow): boolean {
         return sql.CreatureId.get() === this.owner.ID

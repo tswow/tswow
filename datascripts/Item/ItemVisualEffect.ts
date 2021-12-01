@@ -8,7 +8,7 @@ import { RegistryDynamic } from "../Refs/Registry";
 
 export function pathToEffect(effectPath: string) {
     effectPath = effectPath.split('/').join('\\');
-    let old = DBC.ItemVisualEffects.find({Model:effectPath});
+    let old = DBC.ItemVisualEffects.query({Model:effectPath});
     if(old===undefined) {
         return DBC.ItemVisualEffects.add(
             Ids.ItemVisualEffects.id(),

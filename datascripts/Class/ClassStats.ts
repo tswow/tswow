@@ -37,7 +37,7 @@ class StatFile<D extends GtDBC> extends CellSystem<Class>{
     constructor(cls: Class, classId : number,size : number, dbc: DBCFile<any,any,any>) {
         super(cls);
         let start = (classId-1)*size;
-        this.dbc = dbc.filter({} as any)
+        this.dbc = dbc.queryAll({} as any)
             .sort((a,b)=>a.index>b.index?1:-1)
             .slice(start,start+size);
     }
@@ -63,7 +63,7 @@ export class ClassAttribute extends CellSystem<Class>{
     }
 
     set(callback: (old: number, race: number, level: number)=>number) {
-        SQL.player_levelstats.filter({class:this.owner.ID})
+        SQL.player_levelstats.queryAll({class:this.owner.ID})
             .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.race.get(),x.level.get())));
         return this.owner;
     }
@@ -79,7 +79,7 @@ export class BaseHpMana extends CellSystem<Class> {
 
 
     set(callback: (old: number, level: number)=>number) {
-        SQL.player_classlevelstats.filter({class:this.owner.ID})
+        SQL.player_classlevelstats.queryAll({class:this.owner.ID})
             .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.level.get())));
         return this.owner;
     }
@@ -135,7 +135,7 @@ export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
             .class_out.set(this.owner.ID)
     }
     protected findSQL(): class_stat_formulasRow {
-        return SQL.class_stat_formulas.find({class:this.owner.ID,stat_type:this.stat});
+        return SQL.class_stat_formulas.query({class:this.owner.ID,stat_type:this.stat});
     }
     protected isValidSQL(sql: class_stat_formulasRow): boolean {
         return sql.class.get() === this.owner.ID
@@ -162,7 +162,7 @@ export class ClassStatValueRow extends MaybeSQLEntity<Class,class_stat_valuesRow
     }
 
     protected findSQL(): class_stat_valuesRow {
-        return SQL.class_stat_values.find({class:this.owner.ID, stat_type:this.stat})
+        return SQL.class_stat_values.query({class:this.owner.ID, stat_type:this.stat})
     }
     protected isValidSQL(sql: class_stat_valuesRow): boolean {
         return sql.class.get() === this.owner.ID

@@ -20,7 +20,7 @@ import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { Ids } from "../Misc/Ids";
 
 export function pathToIcon(path: string) {
-    let old = DBC.SpellIcon.find({TextureFilename:path})
+    let old = DBC.SpellIcon.query({TextureFilename:path})
     if(old===undefined) {
         return DBC.SpellIcon.add(Ids.SpellIcon.id(),{TextureFilename:path});
     }

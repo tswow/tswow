@@ -26,7 +26,7 @@ export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target
             .VerifiedBuild.set(17688)
     }
     protected findSQL(): spell_target_positionRow {
-        return SQL.spell_target_position.find({
+        return SQL.spell_target_position.query({
               ID:this.spell.ID
             , EffectIndex:this.owner.index
         });

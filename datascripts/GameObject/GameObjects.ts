@@ -56,7 +56,7 @@ export class GameObjectInstanceRegistryClass
         return new GameObjectInstance(r);
     }
     protected FindByID(id: number): gameobjectRow {
-        return SQL.gameobject.find({guid:id});
+        return SQL.gameobject.query({guid:id});
     }
     protected EmptyQuery(): gameobjectQuery {
         return {}

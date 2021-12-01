@@ -15,7 +15,7 @@ export class PageTextContent extends SQLLocSystem<PageText> {
         return this.owner.row.Text;
     }
     protected getLoc(loc: Language): Cell<string, any> {
-        const row = SQL.page_text_locale.find({ID:this.owner.ID});
+        const row = SQL.page_text_locale.query({ID:this.owner.ID});
         return (
                row
             || SQL.page_text_locale.add(this.owner.ID,loc).Text.set('')
@@ -31,7 +31,7 @@ export class PageText extends MainEntity<page_textRow> {
     clone() {
         let id = Ids.page_text.id()
         let r = this.row.clone(id).Text.set('')
-        SQL.page_text_locale.filter({ID:this.ID})
+        SQL.page_text_locale.queryAll({ID:this.ID})
            .forEach(x=>x.clone(id,x.locale.get()))
         return new PageText(r);
     }
@@ -64,7 +64,7 @@ export class PageTextRegistryClass
         entity.Text.clear()
     }
     protected FindByID(id: number): page_textRow {
-        return SQL.page_text.find({ID:id});
+        return SQL.page_text.query({ID:id});
     }
     protected EmptyQuery(): page_textQuery {
         return {}

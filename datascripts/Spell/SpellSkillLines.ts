@@ -76,7 +76,7 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
 
     protected getAllRows(): SkillLineAbility[] {
         return DBC.SkillLineAbility
-            .filter({Spell: this.owner.ID})
+            .queryAll({Spell: this.owner.ID})
             .map(x=>new SkillLineAbility(x));
     }
 
@@ -150,7 +150,7 @@ export class SkillLineAbilityRegistryClass
               .TrivialRank.set(0,0)
     }
     protected FindByID(id: number): SkillLineAbilityRow {
-        return DBC.SkillLineAbility.find({ID:id});
+        return DBC.SkillLineAbility.query({ID:id});
     }
     protected EmptyQuery(): SkillLineAbilityQuery {
         return {}

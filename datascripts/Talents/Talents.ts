@@ -47,7 +47,7 @@ export class TalentTreeRegistryClass
         return new TalentTree(r);
     }
     protected FindByID(id: number): TalentTabRow {
-        return DBC.TalentTab.find({ID:id})
+        return DBC.TalentTab.query({ID:id})
     }
     protected EmptyQuery(): TalentTabQuery {
         return {}
@@ -58,7 +58,7 @@ export class TalentTreeRegistryClass
 
     unlockRaces() {
         DBC.TalentTab
-            .filter({ID:lt(Ids.TalentTab.startId)})
+            .queryAll({ID:lt(Ids.TalentTab.startId)})
             .forEach(x=>x.RaceMask.set(0x7fffffff))
     }
 

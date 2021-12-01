@@ -218,7 +218,7 @@ export const GossipRegistry = {
     },
 
     load(id: number) {
-        let value = SQL.gossip_menu.find({MenuID:id});
+        let value = SQL.gossip_menu.query({MenuID:id});
         return (value ? new Gossip(value) : undefined) as Gossip;
     }
 }

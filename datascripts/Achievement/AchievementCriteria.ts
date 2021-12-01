@@ -100,7 +100,7 @@ export class CriteriaPlain extends CriteriaBase {
 export class AchievementCriteria extends MultiRowSystem<CriteriaPlain,Achievement> {
 
     protected getAllRows(): CriteriaPlain[] {
-        return DBC.Achievement_Criteria.filter({Achievement_Id:this.owner.ID}).map(x=>new CriteriaPlain(x));
+        return DBC.Achievement_Criteria.queryAll({Achievement_Id:this.owner.ID}).map(x=>new CriteriaPlain(x));
     }
     protected isDeleted(value: CriteriaPlain): boolean {
         return value.row.isDeleted();
@@ -408,14 +408,14 @@ export class RandomDungeonPlayerCount extends CriteriaBase {
 export class CompleteEncounter extends CriteriaBase {
     protected mapRow() {
         return SQL.instance_encounter_achievement
-            .find({entry:this.row.Asset_Id.get()})
+            .query({entry:this.row.Asset_Id.get()})
     }
 
     get Map() { return this.mapRow().map.get()}
     get Boss() { return this.mapRow().boss.get()}
 
     set(map: number, boss: number) {
-        let old = SQL.instance_encounter_achievement.find({map,boss})
+        let old = SQL.instance_encounter_achievement.query({map,boss})
         if(old !== undefined) {
             this.row.Asset_Id.set(old.entry.get());
         } else {

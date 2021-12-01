@@ -30,13 +30,13 @@ interface QuestEmote {
 
 function requestRow(id: number, lang: Language) {
     if(lang==='enGB') {
-        let row = SQL.quest_request_items.find({ID:id});
+        let row = SQL.quest_request_items.query({ID:id});
         if(row!==undefined) {
             return row;
         }
         return SQL.quest_request_items.add(id)
     } else {
-        let localeRow = SQL.quest_request_items_locale.find({ID:id, locale: lang});
+        let localeRow = SQL.quest_request_items_locale.query({ID:id, locale: lang});
         if(localeRow!==undefined) {
             return localeRow;
         }
@@ -46,13 +46,13 @@ function requestRow(id: number, lang: Language) {
 
 function rewardRow(id: number, lang: Language) {
     if(lang==='enGB') {
-        let row = SQL.quest_offer_reward.find({ID:id});
+        let row = SQL.quest_offer_reward.query({ID:id});
         if(row!==undefined) {
             return row;
         }
         return SQL.quest_offer_reward.add(id);
     } else {
-        let localeRow = SQL.quest_offer_reward_locale.find({ID:id, locale:lang});
+        let localeRow = SQL.quest_offer_reward_locale.query({ID:id, locale:lang});
         if(localeRow!==undefined)  {
             return localeRow;
         }
@@ -61,7 +61,7 @@ function rewardRow(id: number, lang: Language) {
 }
 
 function localeRow(id: number, lang: Language) {
-    let row = SQL.quest_template_locale.find({ID:id,locale:lang});
+    let row = SQL.quest_template_locale.query({ID:id,locale:lang});
     if(row!==undefined) return row;
     return SQL.quest_template_locale.add(id, lang);
 }

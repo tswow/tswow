@@ -194,7 +194,7 @@ export class PVEDifficultyRegistryClass extends
                 .Difficultystring.set('')
     }
     protected FindByID(id: number): MapDifficultyRow {
-        return DBC.MapDifficulty.find({ID:id})
+        return DBC.MapDifficulty.query({ID:id})
     }
     ID(e: PVEDifficulty): number {
         return e.ID
@@ -212,7 +212,7 @@ export const PVEDifficultyRegistry = new PVEDifficultyRegistryClass()
 export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,DungeonMap> {
     protected getAllRows(): PVEDifficulty[] {
         return DBC.MapDifficulty
-            .filter({MapID:this.owner.ID})
+            .queryAll({MapID:this.owner.ID})
             .map(x=> new PVEDifficulty(x))
     }
     protected isDeleted(value: PVEDifficulty): boolean {
@@ -220,7 +220,7 @@ export class PVEDifficulties extends MultiRowSystem<PVEDifficulty,DungeonMap> {
     }
 
     addGet(mod: string, id: string) {
-        if(DBC.PvpDifficulty.find({MapID:this.owner.ID}) !== undefined) {
+        if(DBC.PvpDifficulty.query({MapID:this.owner.ID}) !== undefined) {
             throw new Error(
                 `Cannot add PVE difficulty to ${this.owner.ID},`
               + ` it already has PVP difficulties`

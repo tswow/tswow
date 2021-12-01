@@ -21,7 +21,7 @@ import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function getLocale(id: number, lang: Language) {
-    const old = SQL.item_template_locale.find({ID:id, locale: lang});
+    const old = SQL.item_template_locale.query({ID:id, locale: lang});
     if(old) return old;
     return SQL.item_template_locale.add(id,lang);
 }

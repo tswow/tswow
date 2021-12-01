@@ -96,7 +96,7 @@ export class AchievementRegistryClass extends
         return new Achievement(r);
     }
     protected FindByID(id: number): AchievementRow {
-        return DBC.Achievement.find({ID:id});
+        return DBC.Achievement.query({ID:id});
     }
     protected EmptyQuery(): AchievementQuery {
         return {}

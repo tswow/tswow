@@ -176,7 +176,7 @@ export class ElevatorKeyframe extends CellSystemTop {
             ? this._rotation_row
             : ( this._rotation_row =
                     DBC.TransportRotation
-                        .find({GameObjectsID:this.GOTemplate.get(),TimeIndex:this.time})
+                        .query({GameObjectsID:this.GOTemplate.get(),TimeIndex:this.time})
             )
     }
 
@@ -190,7 +190,7 @@ export class ElevatorKeyframe extends CellSystemTop {
             ? this._translation_row
             : ( this._translation_row =
                     DBC.TransportAnimation
-                        .find({TransportID:this.GOTemplate.get(),TimeIndex:this.time,SequenceID:0})
+                        .query({TransportID:this.GOTemplate.get(),TimeIndex:this.time,SequenceID:0})
             )
     }
 
@@ -276,7 +276,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
         } = {}
 
         DBC.TransportAnimation
-            .filter({TransportID:this.owner.ID, SequenceID:0})
+            .queryAll({TransportID:this.owner.ID, SequenceID:0})
             .forEach(x=>{
                 if(times[x.TimeIndex.get()] == undefined) {
                     times[x.TimeIndex.get()] = {
@@ -288,7 +288,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
             })
 
         DBC.TransportRotation
-            .filter({GameObjectsID:this.owner.ID})
+            .queryAll({GameObjectsID:this.owner.ID})
             .forEach(x=>{
                 if(times[x.TimeIndex.get()] == undefined) {
                     times[x.TimeIndex.get()] = {
@@ -309,10 +309,10 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
 
     clear() {
         DBC.TransportAnimation
-            .filter({TransportID:this.owner.ID})
+            .queryAll({TransportID:this.owner.ID})
             .forEach(x=>x.delete())
         DBC.TransportRotation
-            .filter({GameObjectsID:this.owner.ID})
+            .queryAll({GameObjectsID:this.owner.ID})
             .forEach(x=>x.delete())
         return this.owner;
     }
@@ -324,18 +324,18 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
     clearSequence(sequenceId: number) {
         if(sequenceId===0) {
             DBC.TransportRotation
-                .filter({GameObjectsID:this.owner.ID})
+                .queryAll({GameObjectsID:this.owner.ID})
                 .forEach(x=>x.delete())
         }
         DBC.TransportAnimation
-            .filter({TransportID:this.owner.ID,SequenceID:sequenceId})
+            .queryAll({TransportID:this.owner.ID,SequenceID:sequenceId})
             .forEach(x=>x.delete())
         return this.owner;
     }
 
     getSequence(sequenceId: number) {
         return DBC.TransportAnimation
-            .filter({TransportID:this.owner.ID,SequenceID:sequenceId})
+            .queryAll({TransportID:this.owner.ID,SequenceID:sequenceId})
             .filter(x=>!x.isDeleted())
             .map(x=>new ElevatorSequenceKeyframe(x))
             .sort((a,b)=>a.Time.get()<b.Time.get()?1:-1)
@@ -389,7 +389,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
         return {
               default: this.getDefault()
             , sequences: DBC.TransportAnimation
-                .filter({TransportID:this.owner.ID})
+                .queryAll({TransportID:this.owner.ID})
                 .reduce((p,c)=>{
                     let sid = c.SequenceID.get()
                     if(!p[sid]) {
@@ -422,7 +422,7 @@ export class ElevatorKeyframes extends CellSystem<GameObjectElevator> {
     addToSequence(sequenceId: number, frames: SeqKeyFrameCon[]) {
         frames = this.addTimestamps(frames);
         this.addTimestamps(frames).forEach(frame=>{
-            let row = DBC.TransportAnimation.find({
+            let row = DBC.TransportAnimation.query({
                   TransportID:this.owner.ID
                 , SequenceID:sequenceId
                 , TimeIndex:frame.time

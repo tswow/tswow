@@ -23,7 +23,7 @@ export class SpawnGroupRegistryClass
          .Name.set('')
     }
     protected FindByID(id: number): spawn_group_templateRow {
-        return SQL.spawn_group_template.find({groupId:id})
+        return SQL.spawn_group_template.query({groupId:id})
     }
     ID(e: SpawnGroup): number {
         return e.ID

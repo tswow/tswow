@@ -377,7 +377,7 @@ export class ActionType {
             this.row.action_param1.set(textsOrGroupId)
             return this.main;
         }
-        const rows = SQL.creature_text.filter({CreatureID:this.row.entryorguid.get()})
+        const rows = SQL.creature_text.queryAll({CreatureID:this.row.entryorguid.get()})
         const id = rows.length===0 ? 0 :
             rows.sort((a,b)=>b.GroupID>a.GroupID?1:-1)[0].GroupID.get()+1
 

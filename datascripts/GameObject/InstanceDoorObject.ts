@@ -27,7 +27,7 @@ export class InstanceDoorObjects extends MultiRowSystem<InstanceDoorObject,GameO
     protected getAllRows(): InstanceDoorObject[] {
         return SQL
             .instance_door_object
-            .filter({entry:this.owner.ID})
+            .queryAll({entry:this.owner.ID})
             .map(x=>new InstanceDoorObject(x))
     }
     protected isDeleted(value: InstanceDoorObject): boolean {

@@ -15,7 +15,7 @@ import { SkillRaceClassInfo, SkillRaceClassInfos } from "./SkillRaceClassInfo";
 export class SkillLineAbilities extends MultiRowSystem<SkillLineAbility,SkillLine> {
     protected getAllRows(): SkillLineAbility[] {
         return DBC.SkillLineAbility
-            .filter({SkillLine:this.owner.ID})
+            .queryAll({SkillLine:this.owner.ID})
             .map(x=>new SkillLineAbility(x))
     }
     protected isDeleted(value: SkillLineAbility): boolean {

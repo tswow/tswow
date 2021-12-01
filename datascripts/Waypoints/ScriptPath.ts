@@ -33,11 +33,11 @@ export class ScriptPath {
 
     get ID() { return this.pathId; }
 
-    get length() { return SQL.waypoints.filter({entry:this.pathId}).length }
+    get length() { return SQL.waypoints.queryAll({entry:this.pathId}).length }
 
     get() {
         return SQL.waypoints
-            .filter({entry:this.pathId})
+            .queryAll({entry:this.pathId})
             .map(x=>new Waypoint(x))
             .sort((a,b)=>a.index>b.index?1:-1)
     }
@@ -55,7 +55,7 @@ export class ScriptPath {
         if(!Array.isArray(points)) {
             points = [points];
         }
-        const oldPoints = SQL.waypoints.filter({entry:this.pathId});
+        const oldPoints = SQL.waypoints.queryAll({entry:this.pathId});
         points.forEach((x,i)=>
             SQL.waypoints.add(this.pathId,oldPoints.length+1+i)
                 .position_x.set(x.x)

@@ -32,7 +32,7 @@ export class AreaWorldStateUIs extends MultiRowSystem<WorldStateUI,Area> {
 export class AreaWorldStateSounds extends MultiRowSystem<WorldStateSound,Area> {
     protected getAllRows(): WorldStateSound[] {
         return DBC.WorldStateZoneSounds
-            .filter({AreaID:this.owner.ID})
+            .queryAll({AreaID:this.owner.ID})
             .map(x=>new WorldStateSound(x))
     }
     protected isDeleted(value: WorldStateSound): boolean {

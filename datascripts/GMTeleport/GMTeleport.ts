@@ -36,7 +36,7 @@ export class GMTeleportRegistryClass
               .Name.set('')
     }
     protected FindByID(id: number): game_teleRow {
-        return SQL.game_tele.find({id})
+        return SQL.game_tele.query({id})
     }
     protected EmptyQuery(): game_teleQuery {
         return {}

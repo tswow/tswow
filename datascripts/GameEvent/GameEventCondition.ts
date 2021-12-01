@@ -32,7 +32,7 @@ export class GameEventConditions<T> extends MultiRowSystem<GameEventCondition,T>
 
     protected getAllRows(): GameEventCondition[] {
         return SQL.game_event_condition
-        .filter({eventEntry:this.event})
+        .queryAll({eventEntry:this.event})
         .map(x=>new GameEventCondition(x))
         .sort((a,b)=>a.Index < b.Index ? 1 : -1)
     }

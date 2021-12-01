@@ -13,7 +13,7 @@ export class SpellBonusData extends MaybeSQLEntity<Spell,spell_bonus_dataRow> {
             .comments.set('tswow')
     }
     protected findSQL(): spell_bonus_dataRow {
-        return SQL.spell_bonus_data.find({entry:this.owner.ID});
+        return SQL.spell_bonus_data.query({entry:this.owner.ID});
     }
     protected isValidSQL(sql: spell_bonus_dataRow): boolean {
         return sql.entry.get() === this.owner.ID;

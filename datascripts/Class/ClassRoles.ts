@@ -25,7 +25,7 @@ export class ClassRoles extends MaybeSQLEntity<Class,player_class_rolesRow> {
         return SQL.player_class_roles.add(this.owner.ID)
     }
     protected findSQL(): player_class_rolesRow {
-        return SQL.player_class_roles.find({class:this.owner.ID})
+        return SQL.player_class_roles.query({class:this.owner.ID})
     }
     protected isValidSQL(sql: player_class_rolesRow): boolean {
         return sql.class.get() === this.owner.ID

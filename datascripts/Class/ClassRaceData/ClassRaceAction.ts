@@ -51,7 +51,7 @@ export class ClassRaceActions<T> extends MultiRowSystem<ClassRaceActionPlain,T> 
     }
 
     protected getAllRows(): ClassRaceActionPlain[] {
-        return SQL.playercreateinfo_action.filter({class:this.cls,race:this.race})
+        return SQL.playercreateinfo_action.queryAll({class:this.cls,race:this.race})
             .map(x=>new ClassRaceActionPlain(x))
     }
     protected isDeleted(value: ClassRaceActionPlain): boolean {

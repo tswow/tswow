@@ -42,7 +42,7 @@ export class CreatureOutfitsRegistryClass
             .Wrists.set(0)
     }
     protected FindByID(id: number): creature_template_outfitsRow {
-        return SQL.creature_template_outfits.find({entry: id})
+        return SQL.creature_template_outfits.query({entry: id})
     }
     ID(e: CreatureOutfit): number {
         return e.ID

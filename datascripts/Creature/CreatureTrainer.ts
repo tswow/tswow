@@ -7,14 +7,14 @@ import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureTrainerRef extends CellSystem<CreatureTemplate> {
     getRef() {
-        let ctrow = SQL.creature_default_trainer.find({CreatureId:this.owner.ID});
+        let ctrow = SQL.creature_default_trainer.query({CreatureId:this.owner.ID});
         let trow : trainerRow;
         if(ctrow === undefined) {
             trow = SQL.trainer.add(Ids.Trainer.id())
             ctrow = SQL.creature_default_trainer.add(this.owner.ID)
                 .TrainerId.set(trow.Id.get());
         } else {
-            trow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
+            trow = SQL.trainer.query({Id: ctrow.TrainerId.get()});
         }
         return new TrainerPlain(trow);
     }

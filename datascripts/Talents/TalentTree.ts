@@ -29,7 +29,7 @@ import { TalentTreeRegistry } from "./Talents";
 
 export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
     protected getAllRows(): Talent[] {
-        return DBC.Talent.filter({TabID:this.owner.ID})
+        return DBC.Talent.queryAll({TabID:this.owner.ID})
             .map(x=>new Talent(x));
     }
     protected isDeleted(value: Talent): boolean {
@@ -38,7 +38,7 @@ export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
 
     getPos(row: number, column: number) {
         return new Talent(DBC.Talent
-            .find({
+            .query({
                   TabID:this.owner.ID
                 , ColumnIndex:column
                 , TierID:row

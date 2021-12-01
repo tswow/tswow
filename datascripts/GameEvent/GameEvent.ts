@@ -186,7 +186,7 @@ export class GameEventRegistryClass
          .Type.NORMAL.set()
     }
     protected FindByID(id: number): game_eventRow {
-        return SQL.game_event.find({eventEntry:id})
+        return SQL.game_event.query({eventEntry:id})
     }
     protected EmptyQuery(): game_eventQuery {
         return {}

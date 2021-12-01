@@ -24,7 +24,7 @@ export class AreaFishingSkill extends MaybeSQLEntity<Area,skill_fishing_base_lev
         return SQL.skill_fishing_base_level.add(this.owner.ID)
     }
     protected findSQL(): skill_fishing_base_levelRow {
-        return SQL.skill_fishing_base_level.find({entry:this.owner.ID})
+        return SQL.skill_fishing_base_level.query({entry:this.owner.ID})
     }
     protected isValidSQL(sql: skill_fishing_base_levelRow): boolean {
         return sql.entry.get() === this.owner.ID

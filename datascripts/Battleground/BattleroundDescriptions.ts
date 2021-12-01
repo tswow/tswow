@@ -61,7 +61,7 @@ finish('bg-descriptions',()=>{
         ,
 `local custom_battlegrounds = {
     ${
-        DBC.BattlemasterList.filter({ID:all(neq(30),neq(32),gt(11)),InstanceType:3})
+        DBC.BattlemasterList.queryAll({ID:all(neq(30),neq(32),gt(11)),InstanceType:3})
            .map(x=>
                 `[${x.ID.get()}]={`
                 + `["description"]={${Languages.map(lang=>

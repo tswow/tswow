@@ -22,7 +22,7 @@ export class LFGDungeonReward extends MainEntity<lfg_dungeon_rewardsRow> {
 export class LFGDungeonRewards extends MultiRowSystem<LFGDungeonReward,LFGDungeon> {
     protected getAllRows(): LFGDungeonReward[] {
         return SQL.lfg_dungeon_rewards
-            .filter({dungeonId:this.owner.ID})
+            .queryAll({dungeonId:this.owner.ID})
             .map(x=> new LFGDungeonReward(x))
     }
 
@@ -32,7 +32,7 @@ export class LFGDungeonRewards extends MultiRowSystem<LFGDungeonReward,LFGDungeo
 
     getLevel(maxLevel: number) {
         return new LFGDungeonReward(
-               SQL.lfg_dungeon_rewards.find({dungeonId:this.owner.ID,maxLevel})
+               SQL.lfg_dungeon_rewards.query({dungeonId:this.owner.ID,maxLevel})
             || SQL.lfg_dungeon_rewards.add(this.owner.ID,maxLevel)
         )
     }

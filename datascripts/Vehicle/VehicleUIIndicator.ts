@@ -19,7 +19,7 @@ export class VehicleUIIndicatorCell<T> extends Cell<string,T> {
     }
 
     set(value: string) {
-        let row = DBC.VehicleUIIndicator.find({BackgroundTexture:value})
+        let row = DBC.VehicleUIIndicator.query({BackgroundTexture:value})
         if(row) {
             this.id.set(row.ID.get())
         } else {

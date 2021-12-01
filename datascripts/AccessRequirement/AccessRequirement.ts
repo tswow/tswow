@@ -48,7 +48,7 @@ export const AccessRequirementRegistry = {
     get(map: number, difficulty: number) {
         return new AccessRequirementStandalone(
             (SQL.access_requirement
-                .find({mapId:map,difficulty:difficulty}))
+                .query({mapId:map,difficulty:difficulty}))
             ||
             SQL.access_requirement
                 .add(map,difficulty)
@@ -67,12 +67,12 @@ export const AccessRequirementRegistry = {
 
     filter(query: access_requirementQuery) {
         return SQL.access_requirement
-            .filter(query)
+            .queryAll(query)
             .map(x=>new AccessRequirementStandalone(x))
     },
 
     find(query: access_requirementQuery) {
-        let res = SQL.access_requirement.find(query);
+        let res = SQL.access_requirement.query(query);
         return (res ? new AccessRequirementStandalone(res) : undefined) as AccessRequirementStandalone
     }
 }

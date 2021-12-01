@@ -61,7 +61,7 @@ export const AreaPOIRegistry = {
     create(parent?: number) {
         return new AreaPOI(
             parent
-            ? DBC.AreaPOI.find({ID:parent}).clone(Ids.AreaPOI.id())
+            ? DBC.AreaPOI.query({ID:parent}).clone(Ids.AreaPOI.id())
             : DBC.AreaPOI.add(Ids.AreaPOI.id())
         )
         .Area.set(0)
@@ -76,14 +76,14 @@ export const AreaPOIRegistry = {
     },
 
     load(id: number) {
-        return new AreaPOI(DBC.AreaPOI.find({ID:id}));
+        return new AreaPOI(DBC.AreaPOI.query({ID:id}));
     },
 
     filter(query: AreaPOIQuery) {
-        return DBC.AreaPOI.filter(query).map(x=>new AreaPOI(x))
+        return DBC.AreaPOI.queryAll(query).map(x=>new AreaPOI(x))
     },
 
     find(query: AreaPOIQuery) {
-        return new AreaPOI(DBC.AreaPOI.find(query))
+        return new AreaPOI(DBC.AreaPOI.query(query))
     },
 }

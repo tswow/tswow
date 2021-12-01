@@ -176,7 +176,7 @@ export class ReputationObjectives extends ArraySystem<ReputationObjective,Quest>
 
 export class Scripted extends LocSystem<Quest> {
     protected localeRow(language: Language) {
-        let oldRow = SQL.quest_template_locale.find({ID: this.owner.ID, locale: language});
+        let oldRow = SQL.quest_template_locale.query({ID: this.owner.ID, locale: language});
         if(oldRow) return oldRow;
         return SQL.quest_template_locale.add(this.owner.ID,language);
     }

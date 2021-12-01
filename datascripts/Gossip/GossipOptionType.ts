@@ -82,7 +82,7 @@ export class TrainerCell extends OptionCellBase {
         return this.__set(
               trainerId
             , SQL.creature_default_trainer
-                .find({TrainerId:trainerId}).CreatureId.get()
+                .query({TrainerId:trainerId}).CreatureId.get()
             , callback)
     }
 

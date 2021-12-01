@@ -36,7 +36,7 @@ export class VehicleInstanceAccessory extends VehicleAccessoryBase<vehicle_acces
 
 export class VehicleTemplateAccessories extends MultiRowSystem<VehicleTemplateAccessory, CreatureTemplate> {
     protected getAllRows(): VehicleTemplateAccessory[] {
-        return SQL.vehicle_template_accessory.filter({entry:this.owner.ID})
+        return SQL.vehicle_template_accessory.queryAll({entry:this.owner.ID})
             .map(x=> new VehicleTemplateAccessory(x))
     }
     protected isDeleted(value: VehicleTemplateAccessory): boolean {
@@ -46,7 +46,7 @@ export class VehicleTemplateAccessories extends MultiRowSystem<VehicleTemplateAc
     getSeat(seatIndex: number) {
         return new VehicleTemplateAccessory(
             SQL.vehicle_template_accessory
-                .find({entry:this.owner.ID,seat_id:seatIndex})
+                .query({entry:this.owner.ID,seat_id:seatIndex})
             || SQL.vehicle_template_accessory
                 .add(this.owner.ID,seatIndex)
                 .description.set('tswow')
@@ -64,7 +64,7 @@ export class VehicleTemplateAccessories extends MultiRowSystem<VehicleTemplateAc
 
 export class VehicleInstanceAccessories extends MultiRowSystem<VehicleInstanceAccessory, CreatureInstance> {
     protected getAllRows(): VehicleInstanceAccessory[] {
-        return SQL.vehicle_accessory.filter({guid:this.owner.ID})
+        return SQL.vehicle_accessory.queryAll({guid:this.owner.ID})
             .map(x=> new VehicleInstanceAccessory(x))
     }
     protected isDeleted(value: VehicleInstanceAccessory): boolean {
@@ -74,7 +74,7 @@ export class VehicleInstanceAccessories extends MultiRowSystem<VehicleInstanceAc
     getSeat(seatIndex: number) {
         return new VehicleInstanceAccessory(
             SQL.vehicle_accessory
-                .find({guid:this.owner.ID,seat_id:seatIndex})
+                .query({guid:this.owner.ID,seat_id:seatIndex})
             || SQL.vehicle_accessory
                 .add(this.owner.ID,seatIndex)
                 .description.set('tswow')

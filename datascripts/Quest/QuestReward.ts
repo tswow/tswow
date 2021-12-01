@@ -321,7 +321,7 @@ export class QuestRewardRegistryClass
         return QuestRegistry.Clear(new Quest(r.row));
     }
     protected FindByID(id: number): quest_templateRow {
-        return SQL.quest_template.find({ID:id});
+        return SQL.quest_template.query({ID:id});
     }
     protected EmptyQuery(): quest_templateQuery {
         return {}

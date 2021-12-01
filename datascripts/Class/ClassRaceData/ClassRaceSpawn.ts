@@ -15,7 +15,7 @@ export class ClassRaceSpawn extends MaybeSQLEntity<ClassRacePair,playercreateinf
     }
     protected findSQL(): playercreateinfoRow {
         return SQL.playercreateinfo
-            .find({
+            .query({
                   class:this.owner.row.ClassID.get()
                 , race:this.owner.row.RaceID.get()
             })

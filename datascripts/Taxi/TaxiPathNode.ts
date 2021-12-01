@@ -35,7 +35,7 @@ export class TaxiPathNode extends MainEntity<TaxiPathNodeRow> {
 export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
     protected getAllRows(): TaxiPathNode[] {
         return DBC.TaxiPathNode
-            .filter({PathID:this.owner.ID})
+            .queryAll({PathID:this.owner.ID})
             .sort((a,b)=>a.NodeIndex.get() > b.NodeIndex.get() ? 1 : -1)
             .map(x=>new TaxiPathNode(x))
     }

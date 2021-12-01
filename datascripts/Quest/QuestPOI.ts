@@ -26,7 +26,7 @@ export class QuestPOIPoint extends MainEntity<quest_poi_pointsRow> {
 export class QuestPOIPoints extends MultiRowSystem<QuestPOIPoint,QuestPOI> {
     protected getAllRows(): QuestPOIPoint[] {
         return SQL.quest_poi_points
-            .filter({QuestID:this.owner.Index, Idx1: this.owner.Index})
+            .queryAll({QuestID:this.owner.Index, Idx1: this.owner.Index})
             .map(x=>new QuestPOIPoint(x))
             .sort((a,b)=>a.Index > b.Index ? 1 : -1)
     }
@@ -67,7 +67,7 @@ export class QuestPOI extends MainEntity<quest_poiRow> {
 
 export class QuestPOIs extends MultiRowSystem<QuestPOI,Quest> {
     protected getAllRows(): QuestPOI[] {
-        return SQL.quest_poi.filter(
+        return SQL.quest_poi.queryAll(
             {QuestID:this.owner.ID})
         .map(x=>new QuestPOI(x))
         .sort((a,b)=>a.Index>b.Index?1:-1)

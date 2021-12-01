@@ -18,7 +18,7 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
     }
 
     protected FindByID(id: number): gameobject_templateRow {
-        return SQL.gameobject_template.find({entry:id});
+        return SQL.gameobject_template.query({entry:id});
     }
 
     protected EmptyQuery(): gameobject_templateQuery {
@@ -84,7 +84,7 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
     create(mod: string, id: string, parent = 0) {
         let nid = Ids.gameobject_template.id(mod,id);
         if(parent !== 0) {
-            let parentRow = SQL.gameobject_template.find({entry:parent});
+            let parentRow = SQL.gameobject_template.query({entry:parent});
             let parentEntity = this.Entity(parentRow);
             // we should use ".Entity" now because we got the type from the parent
             let entity = this.Entity(parentRow.clone(nid))

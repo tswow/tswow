@@ -21,7 +21,7 @@ import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 function creatureLoc(id: number, lang: Language) {
-    const old = SQL.creature_template_locale.find({entry:id, locale:lang});
+    const old = SQL.creature_template_locale.query({entry:id, locale:lang});
     if(old) {
         return old;
     }

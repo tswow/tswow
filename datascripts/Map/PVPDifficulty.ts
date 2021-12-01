@@ -26,7 +26,7 @@ export class PVPDifficultyRegistryClass
     extends RegistryBase<PVPDifficulty,PvpDifficultyRow>
 {
     protected getAll(): PVPDifficulty[] {
-        return DBC.PvpDifficulty.filter({}).map(x=>new PVPDifficulty(x))
+        return DBC.PvpDifficulty.queryAll({}).map(x=>new PVPDifficulty(x))
     }
     protected Entity(r: PvpDifficultyRow): PVPDifficulty {
         return new PVPDifficulty(r);
@@ -61,7 +61,7 @@ export const PVPDifficultyRegistry = new PVPDifficultyRegistryClass();
 
 export class PVPDifficulties extends MultiRowSystem<PVPDifficulty,Map> {
     protected getAllRows(): PVPDifficulty[] {
-        return DBC.PvpDifficulty.filter({MapID:this.owner.ID})
+        return DBC.PvpDifficulty.queryAll({MapID:this.owner.ID})
             .map(x=>new PVPDifficulty(x))
     }
     protected isDeleted(value: PVPDifficulty): boolean {
@@ -69,7 +69,7 @@ export class PVPDifficulties extends MultiRowSystem<PVPDifficulty,Map> {
     }
 
     addGet() {
-        if(DBC.MapDifficulty.find({MapID:this.owner.ID}) !== undefined) {
+        if(DBC.MapDifficulty.query({MapID:this.owner.ID}) !== undefined) {
             throw new Error(
                   `Cannot add PVP difficulty to ${this.owner.ID},`
                 + ` it already has PVE difficulties`
@@ -115,7 +115,7 @@ sort('PvpDifficulty',()=>{
     });
 
     let perMap: {[key: number]: PvpDifficultyRow[]} = {}
-    DBC.PvpDifficulty.filter({})
+    DBC.PvpDifficulty.queryAll({})
         .forEach((x,i)=>{
             CellReadOnly.set(x.ID,i+1);
             ((perMap[x.MapID.get()])||(perMap[x.MapID.get()] = []))

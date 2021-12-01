@@ -28,7 +28,7 @@ export class BattlegroundBrackets<T> extends MultiRowSystem<BattlegroundBracket,
 
     protected getAllRows(): BattlegroundBracket[] {
         return DBC.PvpDifficulty
-            .filter({MapID:this.mapCell.get()})
+            .queryAll({MapID:this.mapCell.get()})
             .map(x=>new BattlegroundBracket(x))
             .sort((a,b)=>a.RangeIndex.get() > b.RangeIndex.get() ? -1 : 1)
     }
@@ -66,12 +66,12 @@ export class BattlegroundBrackets<T> extends MultiRowSystem<BattlegroundBracket,
 
 finish('verify-brackets', ()=> {
     DBC.BattlemasterList
-        .filter({})
+        .queryAll({})
         .forEach(x=>{
             if(x.MapID.get().filter(x=>x>=0).length > 1) return;
             const map = x.MapID.getIndex(0)
             const idString = `{bg=${x.ID.get()},map=${map}}`
-            if(DBC.PvpDifficulty.filter({MapID:map}).length === 0) {
+            if(DBC.PvpDifficulty.queryAll({MapID:map}).length === 0) {
                 throw new Error(
                       `Battleground ${idString} has no level brackets registered,`
                     + ` please add at least one level bracket`

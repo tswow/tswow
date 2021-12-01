@@ -79,7 +79,7 @@ sort('ChrClasses', ()=>{
           'class'
         , 'ChrClasses'
         , 0
-        , DBC.ChrClasses.filter({}).map(x=>x.ID.get())
+        , DBC.ChrClasses.queryAll({}).map(x=>x.ID.get())
         , (cur,last)=>cur===11&&last===9
     )
 })

@@ -26,7 +26,7 @@ import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
 
 function findId(type: number, entry: number) {
-    let oldest = SQL.smart_scripts.filter(
+    let oldest = SQL.smart_scripts.queryAll(
         {source_type:type,entryorguid:entry}
     ).sort((a,b)=>b.id>a.id ? 1 : -1)[0];
     if(oldest===undefined) return 0;
@@ -75,7 +75,7 @@ export class SmartScript extends CellSystemTop {
         // Find the last part of the existing chain and append to it
         let cur = this.row;
         while(cur.link.get()!==0) {
-            cur = SQL.smart_scripts.find({
+            cur = SQL.smart_scripts.query({
                 entryorguid: this.row.entryorguid.get(),
                 source_type: this.row.source_type.get(),
                 id: cur.link.get()
@@ -164,7 +164,7 @@ export const SmartScripts = {
     },
 
     loadCreature(creature: number) {
-        return SQL.smart_scripts.filter({entryorguid:creature,source_type:0}).map(x=>new SmartScript(x));
+        return SQL.smart_scripts.queryAll({entryorguid:creature,source_type:0}).map(x=>new SmartScript(x));
     },
 
     printCreature(creature: number) {

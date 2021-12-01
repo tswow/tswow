@@ -16,7 +16,7 @@ export class NPCTextRegistryClass extends RegistryStatic<NPCText,npc_textRow,npc
         r.clearAll();
     }
     protected FindByID(id: number): npc_textRow {
-        return SQL.npc_text.find({ID:id})
+        return SQL.npc_text.query({ID:id})
     }
     ID(e: NPCText): number {
         return e.ID

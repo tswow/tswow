@@ -114,7 +114,7 @@ export interface CreatureInstancePosition extends Position {
 export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,CreatureTemplate>
 {
     protected getAllRows(): CreatureInstance[] {
-        return SQL.creature.filter({id:this.owner.ID})
+        return SQL.creature.queryAll({id:this.owner.ID})
             .map(x=>new CreatureInstance(x));
     }
 
@@ -159,7 +159,7 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
         return SQL.creature_template_addon.add(this.owner.ID);
     }
     protected findSQL(): creature_template_addonRow {
-        return SQL.creature_template_addon.find({entry:this.owner.ID});
+        return SQL.creature_template_addon.query({entry:this.owner.ID});
     }
     protected isValidSQL(sql: creature_template_addonRow): boolean {
         return sql.entry.get() === this.owner.ID;

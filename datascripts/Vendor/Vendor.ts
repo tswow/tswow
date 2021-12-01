@@ -63,7 +63,7 @@ export class VendorItem extends MainEntity<npc_vendorRow> {
 export class VendorItems<T> extends MultiRowSystem<VendorItem,T> {
     protected getAllRows(): VendorItem[] {
         return SQL.npc_vendor
-            .filter({entry:this.ID})
+            .queryAll({entry:this.ID})
             .map(x=>new VendorItem(x))
     }
     protected isDeleted(value: VendorItem): boolean {

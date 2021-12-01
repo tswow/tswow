@@ -84,7 +84,7 @@ export class CreatureTemplateRegistryClass
         return new CreatureTemplate(r);
     }
     protected FindByID(id: number): creature_templateRow {
-        return SQL.creature_template.find({entry:id});
+        return SQL.creature_template.query({entry:id});
     }
     protected EmptyQuery(): creature_templateQuery {
         return {}
@@ -136,7 +136,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
         return new CreatureInstance(r);
     }
     protected FindByID(id: number): creatureRow {
-        return SQL.creature.find({guid:id});
+        return SQL.creature.query({guid:id});
     }
     protected EmptyQuery(): creatureQuery {
         return {}

@@ -60,7 +60,7 @@ export class WMOAreaRegistryClass
          .ZoneMusic.set(0)
     }
     protected FindByID(id: number): WMOAreaTableRow {
-        return DBC.WMOAreaTable.find({ID:id});
+        return DBC.WMOAreaTable.query({ID:id});
     }
     protected EmptyQuery(): WMOAreaTableQuery {
         return {}

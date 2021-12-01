@@ -108,7 +108,7 @@ export class StartGearRegistryClass<E,R> extends RegistryQueryBase<StartGear,Cha
     }
 
     load(race: number, cls: number, gender: number, createIfNotExists = true) {
-        let old = DBC.CharStartOutfit.find({
+        let old = DBC.CharStartOutfit.query({
               ClassID:cls
             , RaceID:race
             , SexID:gender

@@ -27,25 +27,25 @@ export abstract class DBCSQLRegistryBase<
 
     getAll() {
         return this.DBCTable()
-            .filter(this.EmptyQuery())
+            .queryAll(this.EmptyQuery())
             .map(x=>this.EntityFromDBC(x))
     }
 
     queryAllDBC(query: DBCQuery) {
-        return this.DBCTable().filter(query).map(x=>this.EntityFromDBC(x));
+        return this.DBCTable().queryAll(query).map(x=>this.EntityFromDBC(x));
     }
 
     queryDBC(query: DBCQuery) {
-        let v = this.DBCTable().find(query);
+        let v = this.DBCTable().query(query);
         return (v ? this.EntityFromDBC(v) : undefined) as E;
     }
 
     queryAllSQL(query: SQLQuery) {
-        return this.SQLTable().filter(query).map(x=>this.EntityFromSQL(x));
+        return this.SQLTable().queryAll(query).map(x=>this.EntityFromSQL(x));
     }
 
     querySQL(query: SQLQuery) {
-        let v = this.SQLTable().find(query);
+        let v = this.SQLTable().query(query);
         return (v ? this.EntityFromSQL(v) : undefined) as E;
     }
 }

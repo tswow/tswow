@@ -148,7 +148,7 @@ export class MapBossBoundaryType<T extends MapBossBoundary> extends EnumCellTran
 export class MapBossBoundaries extends MultiRowSystem<MapBossBoundary,MapBossBoundaries> {
     protected getAllRows(): MapBossBoundary[] {
         return SQL.instance_boss_boundary
-            .filter({map:this.instanceMap,boss:this.boss})
+            .queryAll({map:this.instanceMap,boss:this.boss})
             .map(x=>new MapBossBoundary(x))
     }
     protected isDeleted(value: MapBossBoundary): boolean {

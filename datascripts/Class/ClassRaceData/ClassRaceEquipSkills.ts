@@ -10,7 +10,7 @@ const playerCreateInfos: {
     }
 } = {}
 
-SQL.playercreateinfo_skills.filter({})
+SQL.playercreateinfo_skills.queryAll({})
     .forEach(x=>{
         let classes: number[] = []
         let races: number[] = []

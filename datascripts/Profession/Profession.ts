@@ -49,12 +49,12 @@ export class Profession extends MainEntity<SkillLineRow> {
     static findApprenticeSpell(thiz: Profession) {
         // cached because it's expensive to find, and shouldn't change
         if(thiz._cachedApprenticeSpell!==undefined) return thiz._cachedApprenticeSpell;
-        let spell = DBC.SkillLineAbility.filter({SkillLine:thiz.ID})
+        let spell = DBC.SkillLineAbility.queryAll({SkillLine:thiz.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
             [0]
 
         if(!spell) return undefined;
-        let spellRank = SQL.spell_ranks.find({spell_id:spell.ID});
+        let spellRank = SQL.spell_ranks.query({spell_id:spell.ID});
         if(!spellRank) return undefined;
         let firstSpell = SpellRegistry.load(spellRank.first_spell_id.get());
         if(!firstSpell) {
@@ -89,7 +89,7 @@ export class Profession extends MainEntity<SkillLineRow> {
             return undefined;
         }
 
-        let rank = SQL.spell_ranks.find({
+        let rank = SQL.spell_ranks.query({
               first_spell_id:apprentice.ID
             , rank:index
         });
@@ -216,7 +216,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             return 0;
         }
         let ranks = SQL.spell_ranks
-            .filter({first_spell_id:fst.ID})
+            .queryAll({first_spell_id:fst.ID})
             .sort((a,b)=>a.rank.get()>b.rank.get() ? -1 : 1)
             .map(x=>x.rank.get())
 

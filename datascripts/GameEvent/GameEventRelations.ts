@@ -48,7 +48,7 @@ export class QuestGameEvent extends GameEventRelationBase<game_event_seasonal_qu
 export class QuestGameEventsForward extends GameEventMultiRowSystem<QuestGameEvent,Quest> {
     protected getAllRows(): QuestGameEvent[] {
         return SQL.game_event_seasonal_questrelation
-            .filter({questId:this.owner.ID})
+            .queryAll({questId:this.owner.ID})
             .map(x=>new QuestGameEvent(x))
     }
     add(event: number) {
@@ -58,7 +58,7 @@ export class QuestGameEventsForward extends GameEventMultiRowSystem<QuestGameEve
 
     remove(event: number) {
         let r = SQL.game_event_seasonal_questrelation
-            .find({questId:this.owner.ID,eventEntry:event});
+            .query({questId:this.owner.ID,eventEntry:event});
         if(r) r.delete();
         return this.owner;
     }
@@ -67,7 +67,7 @@ export class QuestGameEventsForward extends GameEventMultiRowSystem<QuestGameEve
 export class QuestGameEventsBackward extends GameEventMultiRowSystem<QuestGameEvent,GameEvent> {
     protected getAllRows(): QuestGameEvent[] {
         return SQL.game_event_seasonal_questrelation
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new QuestGameEvent(x))
     }
     add(quest: number) {
@@ -77,7 +77,7 @@ export class QuestGameEventsBackward extends GameEventMultiRowSystem<QuestGameEv
 
     remove(quest: number) {
         let r = SQL.game_event_seasonal_questrelation
-            .find({eventEntry:this.owner.ID,questId:quest});
+            .query({eventEntry:this.owner.ID,questId:quest});
         if(r) r.delete();
         return this.owner;
     }
@@ -117,7 +117,7 @@ export class CreatureGameEvent extends GameEventRelationBase<game_event_creature
 export class CreatureGameEventsForward extends GameEventMultiRowSystem<CreatureGameEvent,CreatureInstance> {
     protected getAllRows(): CreatureGameEvent[] {
         return SQL.game_event_creature
-            .filter({guid:this.owner.ID})
+            .queryAll({guid:this.owner.ID})
             .map(x=>new CreatureGameEvent(x))
     }
     add(event: number, type: SpawnType) {
@@ -132,7 +132,7 @@ export class CreatureGameEventsForward extends GameEventMultiRowSystem<CreatureG
 
     remove(event: number, type: SpawnType) {
         let r = SQL.game_event_creature
-            .find({
+            .query({
                   guid:this.owner.ID
                 , eventEntry:type==='SPAWNS'
                     ?event
@@ -146,7 +146,7 @@ export class CreatureGameEventsForward extends GameEventMultiRowSystem<CreatureG
 export class CreatureGameEventsBackwards extends GameEventMultiRowSystem<CreatureGameEvent,GameEvent> {
     protected getAllRows(): CreatureGameEvent[] {
         return SQL.game_event_creature
-            .filter({eventEntry:any(this.owner.ID,-this.owner.ID)})
+            .queryAll({eventEntry:any(this.owner.ID,-this.owner.ID)})
             .map(x=>new CreatureGameEvent(x))
     }
 
@@ -163,7 +163,7 @@ export class CreatureGameEventsBackwards extends GameEventMultiRowSystem<Creatur
 
     remove(guid: number, type: SpawnType) {
         let r = SQL.game_event_creature
-            .find({
+            .query({
                   guid
                 , eventEntry:type ==='SPAWNS'
                     ? this.owner.ID
@@ -187,7 +187,7 @@ export class CreatureGameEventsBackwards extends GameEventMultiRowSystem<Creatur
 export class CreatureQuestGameEventsForwardCreature extends GameEventMultiRowSystem<CreatureQuestGameEvent,CreatureTemplate> {
     protected getAllRows(): CreatureQuestGameEvent[] {
         return SQL.game_event_creature_quest
-            .filter({id:this.owner.ID})
+            .queryAll({id:this.owner.ID})
             .map(x=>new CreatureQuestGameEvent(x))
     }
     add(quest: number, event: number) {
@@ -202,7 +202,7 @@ export class CreatureQuestGameEventsForwardCreature extends GameEventMultiRowSys
         if(quest !== undefined) obj.quest = quest;
         if(event !== undefined) obj.eventEntry = event;
         SQL.game_event_creature_quest
-            .filter(obj)
+            .queryAll(obj)
             .forEach(x=>x.delete());
         return this.owner;
     }
@@ -211,7 +211,7 @@ export class CreatureQuestGameEventsForwardCreature extends GameEventMultiRowSys
 export class CreatureQuestGameEventsForwardQuest extends GameEventMultiRowSystem<CreatureQuestGameEvent,Quest> {
     protected getAllRows(): CreatureQuestGameEvent[] {
         return SQL.game_event_creature_quest
-            .filter({quest:this.owner.ID})
+            .queryAll({quest:this.owner.ID})
             .map(x=>new CreatureQuestGameEvent(x))
     }
     add(creature: number, event: number) {
@@ -226,7 +226,7 @@ export class CreatureQuestGameEventsForwardQuest extends GameEventMultiRowSystem
         if(creature !== undefined) obj.id = creature;
         if(event !== undefined) obj.eventEntry = event;
         SQL.game_event_creature_quest
-            .filter(obj)
+            .queryAll(obj)
             .forEach(x=>x.delete());
         return this.owner;
     }
@@ -235,7 +235,7 @@ export class CreatureQuestGameEventsForwardQuest extends GameEventMultiRowSystem
 export class CreatureQuestGameEventsBackward extends GameEventMultiRowSystem<CreatureQuestGameEvent,GameEvent> {
     protected getAllRows(): CreatureQuestGameEvent[] {
         return SQL.game_event_creature_quest
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new CreatureQuestGameEvent(x))
     }
 
@@ -251,7 +251,7 @@ export class CreatureQuestGameEventsBackward extends GameEventMultiRowSystem<Cre
         if(creature !== undefined) obj.id = creature;
         if(quest !== undefined) obj.quest = quest;
         SQL.game_event_creature_quest
-            .filter(obj)
+            .queryAll(obj)
             .forEach(x=>x.delete());
         return this.owner;
     }
@@ -270,7 +270,7 @@ export class GameObjectGameEvent extends GameEventRelationBase<game_event_gameob
 export class GameObjectGameEventsForward extends GameEventMultiRowSystem<GameObjectGameEvent,GameObjectInstance> {
     protected getAllRows(): GameObjectGameEvent[] {
         return SQL.game_event_gameobject
-            .filter({guid:this.owner.ID})
+            .queryAll({guid:this.owner.ID})
             .map(x=>new GameObjectGameEvent(x))
     }
     add(event: number) {
@@ -280,7 +280,7 @@ export class GameObjectGameEventsForward extends GameEventMultiRowSystem<GameObj
 
     remove(event: number) {
         let r = SQL.game_event_gameobject
-            .find({guid:this.owner.ID,eventEntry:event});
+            .query({guid:this.owner.ID,eventEntry:event});
         if(r) r.delete();
         return this.owner;
     }
@@ -289,7 +289,7 @@ export class GameObjectGameEventsForward extends GameEventMultiRowSystem<GameObj
 export class GameObjectGameEventsBackward extends GameEventMultiRowSystem<GameObjectGameEvent,GameEvent> {
     protected getAllRows(): GameObjectGameEvent[] {
         return SQL.game_event_gameobject
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new GameObjectGameEvent(x))
     }
     add(guid: number) {
@@ -298,7 +298,7 @@ export class GameObjectGameEventsBackward extends GameEventMultiRowSystem<GameOb
     }
     remove(guid: number) {
         let r = SQL.game_event_gameobject
-            .find({guid:guid,eventEntry:this.owner.ID});
+            .query({guid:guid,eventEntry:this.owner.ID});
         if(r) r.delete();
         return this.owner;
     }
@@ -318,7 +318,7 @@ export class GameObjectQuestGameEvent extends GameEventRelationBase<game_event_g
 export class GameObejctQuestGameEventsForwardGameObject extends GameEventMultiRowSystem<GameObjectQuestGameEvent,GameObjectTemplate> {
     protected getAllRows(): GameObjectQuestGameEvent[] {
         return SQL.game_event_gameobject_quest
-            .filter({id:this.owner.ID})
+            .queryAll({id:this.owner.ID})
             .map(x=>new GameObjectQuestGameEvent(x))
     }
     add(quest: number, event: number) {
@@ -333,7 +333,7 @@ export class GameObejctQuestGameEventsForwardGameObject extends GameEventMultiRo
         if(quest !== undefined) obj.quest = quest;
         if(event !== undefined) obj.eventEntry = event;
         SQL.game_event_gameobject_quest
-            .filter(obj)
+            .queryAll(obj)
             .forEach(x=>x.delete());
         return this.owner;
     }
@@ -342,7 +342,7 @@ export class GameObejctQuestGameEventsForwardGameObject extends GameEventMultiRo
 export class GameObjectQuestGameEventsForwardQuest extends GameEventMultiRowSystem<GameObjectQuestGameEvent,Quest> {
     protected getAllRows(): GameObjectQuestGameEvent[] {
         return SQL.game_event_gameobject_quest
-            .filter({quest:this.owner.ID})
+            .queryAll({quest:this.owner.ID})
             .map(x=>new GameObjectQuestGameEvent(x))
     }
     add(gobj: number, event: number) {
@@ -357,7 +357,7 @@ export class GameObjectQuestGameEventsForwardQuest extends GameEventMultiRowSyst
         if(gobj !== undefined) obj.id = gobj;
         if(event !== undefined) obj.eventEntry = event;
         SQL.game_event_gameobject_quest
-            .filter(obj)
+            .queryAll(obj)
             .forEach(x=>x.delete());
         return this.owner;
     }
@@ -366,7 +366,7 @@ export class GameObjectQuestGameEventsForwardQuest extends GameEventMultiRowSyst
 export class GameObjectQuestGameEventsBackward extends GameEventMultiRowSystem<GameObjectQuestGameEvent,GameEvent> {
     protected getAllRows(): GameObjectQuestGameEvent[] {
         return SQL.game_event_gameobject_quest
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new GameObjectQuestGameEvent(x))
     }
 
@@ -382,7 +382,7 @@ export class GameObjectQuestGameEventsBackward extends GameEventMultiRowSystem<G
         if(gobj !== undefined) obj.id = gobj;
         if(quest !== undefined) obj.quest = quest;
         SQL.game_event_gameobject_quest
-            .filter(obj)
+            .queryAll(obj)
             .forEach(x=>x.delete());
         return this.owner;
     }
@@ -397,7 +397,7 @@ export class GameEventModelEquipForward extends MaybeSQLEntity<CreatureInstance,
     }
 
     protected findSQL(): game_event_model_equipRow {
-        return SQL.game_event_model_equip.find({guid:this.owner.ID});
+        return SQL.game_event_model_equip.query({guid:this.owner.ID});
     }
 
     protected isValidSQL(sql: game_event_model_equipRow): boolean {
@@ -422,7 +422,7 @@ export class GameEventModelEquipBackward extends GameEventRelationBase<game_even
 export class GameEventModelEquipsBackward extends GameEventMultiRowSystem<GameEventModelEquipBackward,GameEvent> {
     protected getAllRows(): GameEventModelEquipBackward[] {
         return SQL.game_event_model_equip
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new GameEventModelEquipBackward(x))
     }
 }
@@ -443,7 +443,7 @@ export class GameEventNPCFlag extends GameEventRelationBase<game_event_npcflagRo
 export class GameEventNPCFlagForward extends GameEventMultiRowSystem<GameEventNPCFlag,CreatureInstance> {
     protected getAllRows(): GameEventNPCFlag[] {
         return SQL.game_event_npcflag
-            .filter({guid:this.owner.ID})
+            .queryAll({guid:this.owner.ID})
             .map(x=>new GameEventNPCFlag(x))
     }
 
@@ -465,7 +465,7 @@ export class GameEventNPCFlagForward extends GameEventMultiRowSystem<GameEventNP
 export class GameEventModelNPCFlagsBackward extends GameEventMultiRowSystem<GameEventNPCFlag,GameEvent> {
     protected getAllRows(): GameEventNPCFlag[] {
         return SQL.game_event_npcflag
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new GameEventNPCFlag(x))
     }
 
@@ -503,7 +503,7 @@ export class GameEventNPCVendor extends GameEventRelationBase<game_event_npc_ven
 export class GameEventNPCVendorCreature extends GameEventMultiRowSystem<GameEventNPCVendor,CreatureInstance> {
     protected getAllRows(): GameEventNPCVendor[] {
         return SQL.game_event_npc_vendor
-            .filter({guid:this.owner.ID})
+            .queryAll({guid:this.owner.ID})
             .map(x=>new GameEventNPCVendor(x))
     }
 
@@ -531,7 +531,7 @@ export class GameEventNPCVendorCreature extends GameEventMultiRowSystem<GameEven
 export class GameEventNPCVendorItem extends GameEventMultiRowSystem<GameEventNPCVendor,ItemTemplate> {
     protected getAllRows(): GameEventNPCVendor[] {
         return SQL.game_event_npc_vendor
-            .filter({item:this.owner.ID})
+            .queryAll({item:this.owner.ID})
             .map(x=>new GameEventNPCVendor(x))
     }
 
@@ -559,7 +559,7 @@ export class GameEventNPCVendorItem extends GameEventMultiRowSystem<GameEventNPC
 export class GameEventNPCVendorBackward extends GameEventMultiRowSystem<GameEventNPCVendor,GameEvent> {
     protected getAllRows(): GameEventNPCVendor[] {
         return SQL.game_event_npc_vendor
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new GameEventNPCVendor(x))
     }
 

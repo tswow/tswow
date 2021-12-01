@@ -46,7 +46,7 @@ export class CurrencyCategoryRegistryClass
         return new CurrencyCategory(r);
     }
     protected FindByID(id: number): CurrencyCategoryRow {
-        return DBC.CurrencyCategory.find({ID:id});
+        return DBC.CurrencyCategory.query({ID:id});
     }
     protected EmptyQuery(): CurrencyCategoryQuery {
         return {}

@@ -93,14 +93,14 @@ export class AchievementReward extends MaybeSQLEntity<Achievement,achievement_re
             .TitleH.set(0)
     }
     protected findSQL(): achievement_rewardRow {
-        return SQL.achievement_reward.find({ID:this.owner.ID})
+        return SQL.achievement_reward.query({ID:this.owner.ID})
     }
     protected isValidSQL(sql: achievement_rewardRow): boolean {
         return sql.ID.get() === this.owner.ID
     }
 
     localeRow(language: Language) {
-        let row = SQL.achievement_reward_locale.find({ID:this.owner.ID});
+        let row = SQL.achievement_reward_locale.query({ID:this.owner.ID});
         if(!row) {
             row = SQL.achievement_reward_locale.add(this.owner.ID,language)
                 .Body.set('')

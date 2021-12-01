@@ -116,11 +116,11 @@ export const ZoneIntroMusicRegistryold = {
 
     filter(query: ZoneintroMusicTableQuery) {
         return DBC.ZoneintroMusicTable
-            .filter(query)
+            .queryAll(query)
             .map(x=>new ZoneIntroMusic(x))
     },
 
     find(query: ZoneintroMusicTableQuery) {
-        return new ZoneIntroMusic(DBC.ZoneintroMusicTable.find(query))
+        return new ZoneIntroMusic(DBC.ZoneintroMusicTable.query(query))
     },
 }

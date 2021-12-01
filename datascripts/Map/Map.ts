@@ -27,8 +27,8 @@ import { createBgBase } from "../Battleground/BattlegroundBase";
 import { BattlegroundBrackets } from "../Battleground/BattlegroundBracket";
 import { BattlegroundSafeLoc } from "../Battleground/BattlegroundSafeLocs";
 import { BattlegroundDescription } from "../Battleground/BattleroundDescriptions";
-import { LFGDungeonEncounters } from "../Dungeon/LFGEncounter";
 import { LFGDungeons } from "../Dungeon/LFGDungeon";
+import { LFGDungeonEncounters } from "../Dungeon/LFGEncounter";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { BoolCell } from "../Misc/BoolCell";
 import { TransformedEntity } from "../Misc/Entity";
@@ -189,7 +189,7 @@ export class DungeonAddon extends MaybeSQLEntity<DungeonMap,instance_addonRow> {
             .boss_count.set(0)
     }
     protected findSQL(): instance_addonRow {
-        return SQL.instance_addon.find({map:this.owner.ID})
+        return SQL.instance_addon.query({map:this.owner.ID})
     }
     protected isValidSQL(sql: instance_addonRow): boolean {
         return sql.map.get() === this.owner.ID

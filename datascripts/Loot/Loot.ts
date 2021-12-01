@@ -35,7 +35,7 @@ export interface LootRowBase {
 }
 
 export interface LootTable {
-    filter(search: {Entry: number}): LootRowBase[];
+    queryAll(search: {Entry: number}): LootRowBase[];
     add(id: number, item: number) : LootRowBase;
 }
 
@@ -48,7 +48,7 @@ export class LootSet extends CellSystemTop {
     protected id: number;
 
     get ID() { return this.id; }
-    get rows() { return this.table.filter({Entry:this.id})}
+    get rows() { return this.table.queryAll({Entry:this.id})}
 
     addItem(item: number, chance: number|[number,PercentUnit], minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
         this.table.add(this.id,item)
@@ -114,7 +114,7 @@ export class LootSetPointer<T> extends CellWrapper<number,T>{
         let old = this.cell.get();
         let nu = this.gen.id();
         this.cell.set(nu);
-        this.table.filter({Entry:old}).forEach(x=>{
+        this.table.queryAll({Entry:old}).forEach(x=>{
             x.clone(nu,x.Item.get())
                 .Comment.set('tswow')
         })

@@ -28,7 +28,7 @@ export class LFGDungeonGroupRegistryClass
             .Type.set(0)
     }
     protected FindByID(id: number): LfgDungeonGroupRow {
-        return DBC.LfgDungeonGroup.find({ID:id})
+        return DBC.LfgDungeonGroup.query({ID:id})
     }
     protected EmptyQuery(): LfgDungeonGroupQuery {
         return {}

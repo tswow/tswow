@@ -27,7 +27,7 @@ import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Gossip } from "./Gossip";
 
 function getNpcLocaleText(id: number, loc: Language) {
-    let text = SQL.npc_text_locale.find({ID: id, Locale: loc});
+    let text = SQL.npc_text_locale.query({ID: id, Locale: loc});
     if(text===undefined) {
         text = SQL.npc_text_locale.add(Ids.NPCText.dynamicId(), loc)
             .Text0_0.set(null as any)

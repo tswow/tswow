@@ -60,7 +60,7 @@ export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {
     protected _sql_row: creature_model_infoRow|undefined;
     get sql_row() {
         return this._sql_row = this._sql_row
-            || SQL.creature_model_info.find({DisplayID:this.row.ID.get()})
+            || SQL.creature_model_info.query({DisplayID:this.row.ID.get()})
             || (SQL.creature_model_info.add(this.row.ID.get())
                 .BoundingRadius.set(0)
                 .CombatReach.set(0)
@@ -71,7 +71,7 @@ export class CreatureDisplayInfo extends MainEntity<CreatureDisplayInfoRow> {
 
     hasSql() {
         if(this._sql_row) return true;
-        return this.sql_row || SQL.creature_model_info.find({DisplayID:this.row.ID.get()});
+        return this.sql_row || SQL.creature_model_info.query({DisplayID:this.row.ID.get()});
     }
 
     get ID() { return this.row.ID.get(); }

@@ -9,7 +9,7 @@ import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
 
 SQL.Databases.world_dest.read(`DELETE FROM \`spell_autolearn\`;`);
-SQL.spell_autolearn.filter({})
+SQL.spell_autolearn.queryAll({})
     .forEach(x=>{
         SqlRow.markDirty(x);
     })
@@ -34,7 +34,7 @@ export class SpellAutoLearns extends ClassRaceMaskSystem<SpellAutoLearn,spell_au
     }
 
     protected getAllRows(): SpellAutoLearn[] {
-        return SQL.spell_autolearn.filter({spell:this.owner.ID})
+        return SQL.spell_autolearn.queryAll({spell:this.owner.ID})
             .map(x=>new SpellAutoLearn(x));
     }
     protected isDeleted(value: SpellAutoLearn): boolean {

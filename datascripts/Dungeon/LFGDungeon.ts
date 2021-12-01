@@ -29,7 +29,7 @@ export class LFGPos extends MaybeSQLEntity<LFGDungeon,lfg_dungeon_templateRow> {
             .VerifiedBuild.set(17688)
     }
     protected findSQL(): lfg_dungeon_templateRow {
-        return SQL.lfg_dungeon_template.find({dungeonId:this.owner.ID})
+        return SQL.lfg_dungeon_template.query({dungeonId:this.owner.ID})
     }
 
     protected isValidSQL(sql: lfg_dungeon_templateRow): boolean {
@@ -170,7 +170,7 @@ export class LFGDungeonRegistryClass
             .Group.set(0)
     }
     protected FindByID(id: number): LfgDungeonsRow {
-        return DBC.LfgDungeons.find({ID:id});
+        return DBC.LfgDungeons.query({ID:id});
     }
     protected EmptyQuery(): LfgDungeonsQuery {
         return {}

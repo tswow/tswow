@@ -49,7 +49,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
 
     copyFromTemplate(templateId: number) {
         this.copyFromDisplay(
-            SQL.item_template.find({entry:templateId}).displayid.get())
+            SQL.item_template.query({entry:templateId}).displayid.get())
         return this;
     }
 }

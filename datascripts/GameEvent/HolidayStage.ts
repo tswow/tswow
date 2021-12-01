@@ -75,7 +75,7 @@ export class HolidayStageBase<T extends HolidayBase> extends ArrayEntry<T> {
             && this._sql.date_id.get() === this.index
         ) return this._sql;
         return this._sql = SQL.holiday_dates
-            .find({id:this.container.ID,date_id:this.index})
+            .query({id:this.container.ID,date_id:this.index})
             || SQL.holiday_dates.add(this.container.ID,this.index)
                   .date_value.set(this.DBCDate().get())
                   .holiday_duration.set(this.DBCDuration().get())

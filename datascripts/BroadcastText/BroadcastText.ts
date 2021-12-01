@@ -27,7 +27,7 @@ import { RefStatic } from "../Refs/Ref";
 import { RegistryStatic } from "../Refs/Registry";
 
 function getLocRow(id: number, lang: Language) {
-    const row = SQL.broadcast_text_locale.find({ID: id, locale: lang});
+    const row = SQL.broadcast_text_locale.query({ID: id, locale: lang});
     if(row!==undefined) {
         return row;
     } else {
@@ -167,7 +167,7 @@ export class BroadcastTextRegistryClass
         r.FemaleText.set(parent.FemaleText.objectify());
     }
     protected FindByID(id: number): broadcast_textRow {
-        return SQL.broadcast_text.find({ID:id})
+        return SQL.broadcast_text.query({ID:id})
     }
     protected EmptyQuery(): broadcast_textQuery {
         return {}

@@ -65,7 +65,7 @@ export class AchievementCategoryRegistryClass
             .Parent.set(this.nullID())
     }
     protected FindByID(id: number): Achievement_CategoryRow {
-        return DBC.Achievement_Category.find({ID:id})
+        return DBC.Achievement_Category.query({ID:id})
     }
     protected EmptyQuery(): Achievement_CategoryQuery {
         return {}

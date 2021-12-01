@@ -39,7 +39,7 @@ export class TrainerLoc extends SQLLocSystem<TrainerBase> {
     }
 
     protected getLoc(loc: Language): Cell<string, any> {
-        const old = SQL.trainer_locale.find({Id: this.owner.ID, locale: loc})
+        const old = SQL.trainer_locale.query({Id: this.owner.ID, locale: loc})
         if(old!==undefined) {
             return old.Greeting_lang;
         }
@@ -103,7 +103,7 @@ export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClass
 export class TrainerSpells extends ClassRaceMaskSystemBase<TrainerSpell,TrainerBase> {
     protected getAllRows(): TrainerSpell[] {
         return SQL.trainer_spell
-            .filter({TrainerId:this.owner.ID})
+            .queryAll({TrainerId:this.owner.ID})
             .map(x=>new TrainerSpell(x))
     }
     protected isDeleted(value: TrainerSpell): boolean {
@@ -215,7 +215,7 @@ export class TrainerRegistryClass
         parent.Spells.forEach(x=>x.row.clone(entity.ID,x.Spell.get()))
     }
     protected FindByID(id: number): trainerRow {
-        return SQL.trainer.find({Id:id});
+        return SQL.trainer.query({Id:id});
     }
     protected EmptyQuery(): trainerQuery {
         return {}

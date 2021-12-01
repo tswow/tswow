@@ -31,7 +31,7 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
         return new Currency(r);
     }
     protected FindByID(id: number): CurrencyTypesRow {
-        return this.Table().find({ID:id});
+        return this.Table().query({ID:id});
     }
     protected EmptyQuery(): CurrencyTypesQuery {
         return {}
@@ -56,7 +56,7 @@ export class CurrencyRegistryClass extends RegistryStatic<Currency,CurrencyTypes
     }
 
     loadFromBitIndex(bitIndex: number) {
-        let v = DBC.CurrencyTypes.find({BitIndex:bitIndex});
+        let v = DBC.CurrencyTypes.query({BitIndex:bitIndex});
         return (v ? new Currency(v) : undefined) as Currency;
     }
 }

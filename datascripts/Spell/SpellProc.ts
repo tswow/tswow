@@ -184,7 +184,7 @@ export class SpellProc extends MaybeSQLEntity<Spell, spell_procRow> {
     }
 
     protected findSQL(): spell_procRow {
-        return SQL.spell_proc.find({SpellId:this.owner.ID})
+        return SQL.spell_proc.query({SpellId:this.owner.ID})
     }
     protected isValidSQL(sql: spell_procRow): boolean {
         return sql.SpellId.get() === this.owner.ID

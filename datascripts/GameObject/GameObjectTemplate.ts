@@ -50,7 +50,7 @@ export class GameObjectTemplateInstances<T extends GameObjectTemplate>
     extends MultiRowSystem<GameObjectInstance,T>
 {
     protected getAllRows(): GameObjectInstance[] {
-        return SQL.gameobject.filter({id:this.owner.ID})
+        return SQL.gameobject.queryAll({id:this.owner.ID})
             .map(x=>new GameObjectInstance(x))
     }
     protected isDeleted(value: GameObjectInstance): boolean {

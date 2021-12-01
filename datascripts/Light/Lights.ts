@@ -28,7 +28,7 @@ export const Lights = {
     },
 
     filter(query: LightQuery) {
-        return DBC.Light.filter(query).map(x=>new Light(x));
+        return DBC.Light.queryAll(query).map(x=>new Light(x));
     },
 
     create(pos: LightPosition, parent: number) {

@@ -11,7 +11,7 @@ export class SpellThreat extends MaybeSQLEntity<Spell,spell_threatRow> {
             .apPctMod.set(0)
     }
     protected findSQL(): spell_threatRow {
-        return SQL.spell_threat.find({entry:this.owner.ID})
+        return SQL.spell_threat.query({entry:this.owner.ID})
     }
 
     protected isValidSQL(sql: spell_threatRow ): boolean {

@@ -21,7 +21,7 @@ import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { GameObjectTemplate } from "./GameObjectTemplate";
 
 function gobjectLoc(id: number, lang: Language) {
-    const old = SQL.gameobject_template_locale.find({entry: id,locale: lang})
+    const old = SQL.gameobject_template_locale.query({entry: id,locale: lang})
     if(old) {
         return old;
     }

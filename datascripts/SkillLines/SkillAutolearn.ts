@@ -12,7 +12,7 @@ import { SkillLineRegistry } from "./SkillLines";
 if(BuildArgs.WRITE_SERVER) {
     SQL.Databases.world_dest.read(`DELETE from \`playercreateinfo_skills\`;`)
 }
-SQL.playercreateinfo_skills.filter({})
+SQL.playercreateinfo_skills.queryAll({})
     .forEach(x=>{
         SqlRow.markDirty(x)
     })
@@ -46,7 +46,7 @@ export class SkillsAutolearn<T> extends ClassRaceMaskSystem<SkillAutolearn,playe
         )
     }
     protected getAllRows(): SkillAutolearn[] {
-        return SQL.playercreateinfo_skills.filter({skill:this.skill})
+        return SQL.playercreateinfo_skills.queryAll({skill:this.skill})
             .map(x=>new SkillAutolearn(x))
     }
     protected isDeleted(value: SkillAutolearn): boolean {

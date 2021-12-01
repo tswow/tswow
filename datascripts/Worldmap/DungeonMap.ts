@@ -44,7 +44,7 @@ export class DungeonMapRegistryClass
             .ParentWorldMap.set(0)
     }
     protected FindByID(id: number): DungeonMapRow {
-        return DBC.DungeonMap.find({ID:id})
+        return DBC.DungeonMap.query({ID:id})
     }
     protected EmptyQuery(): DungeonMapQuery {
         return {}

@@ -95,7 +95,7 @@ export class ProfessionRecipe extends CellSystemTop {
 
 export class ProfessionRecipes extends MultiRowSystem<ProfessionRecipe,Profession> {
     protected getAllRows(): ProfessionRecipe[] {
-        return DBC.SkillLineAbility.filter({SkillLine:this.owner.ID})
+        return DBC.SkillLineAbility.queryAll({SkillLine:this.owner.ID})
             .map(x=>SpellRegistry.load(x.Spell.get()))
             .filter(x=>x.Effects.find(eff=>eff.Type.CREATE_ITEM.is()))
             .map(x=>new ProfessionRecipe(this.owner, x))

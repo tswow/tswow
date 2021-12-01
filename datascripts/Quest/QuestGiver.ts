@@ -36,7 +36,7 @@ export class QuestNPC extends CellSystem<Quest> {
         SQL.creature_questender.add(npcId,this.owner.ID)
 
         if(addPoi) {
-            let creatures = SQL.creature.filter({id:npcId})
+            let creatures = SQL.creature.queryAll({id:npcId})
             if(creatures.length === 0) {
                 throw new Error(
                       `No spawn for creature template ${npcId}, `

@@ -113,7 +113,7 @@ export class QuestAddon extends MaybeSQLEntity<Quest,quest_template_addonRow> {
             .SpecialFlags.set(0)
     }
     protected findSQL(): quest_template_addonRow {
-        return SQL.quest_template_addon.find({ID:this.owner.ID});
+        return SQL.quest_template_addon.query({ID:this.owner.ID});
     }
     protected isValidSQL(sql: quest_template_addonRow): boolean {
         return sql.ID.get() === this.owner.ID;

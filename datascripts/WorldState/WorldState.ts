@@ -38,7 +38,7 @@ export class WorldStateSound extends MainEntity<WorldStateZoneSoundsRow> {
 export class WorldStateSounds extends MultiRowSystem<WorldStateSound,WorldState> {
     protected getAllRows(): WorldStateSound[] {
         return DBC.WorldStateZoneSounds
-            .filter({WorldStateID:this.owner.ID})
+            .queryAll({WorldStateID:this.owner.ID})
             .map(x=>new WorldStateSound(x))
     }
     protected isDeleted(value: WorldStateSound): boolean {

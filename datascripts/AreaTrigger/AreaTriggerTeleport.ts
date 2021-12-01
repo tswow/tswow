@@ -16,7 +16,7 @@ export class AreaTriggerTeleport<T extends AreaTriggerBase> extends MaybeSQLEnti
     }
 
     protected findSQL(): areatrigger_teleportRow {
-        return SQL.areatrigger_teleport.find({ID:this.owner.ID})
+        return SQL.areatrigger_teleport.query({ID:this.owner.ID})
     }
     protected isValidSQL(sql: areatrigger_teleportRow): boolean {
         return sql.ID.get() === this.owner.ID

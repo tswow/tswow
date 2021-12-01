@@ -16,7 +16,7 @@ export class GameEventPrerequisite extends MainEntity<game_event_prerequisiteRow
 export class GameEventPrerequisitesForward extends MultiRowSystem<GameEventPrerequisite,GameEvent>{
     protected getAllRows(): GameEventPrerequisite[] {
         return SQL.game_event_prerequisite
-            .filter({eventEntry:this.owner.ID})
+            .queryAll({eventEntry:this.owner.ID})
             .map(x=>new GameEventPrerequisite(x));
     }
 
@@ -33,7 +33,7 @@ export class GameEventPrerequisitesForward extends MultiRowSystem<GameEventPrere
 export class GameEventPrerequisitesBackward extends MultiRowSystem<GameEventPrerequisite,GameEvent>{
     protected getAllRows(): GameEventPrerequisite[] {
         return SQL.game_event_prerequisite
-            .filter({prerequisite_event:this.owner.ID})
+            .queryAll({prerequisite_event:this.owner.ID})
             .map(x=>new GameEventPrerequisite(x));
     }
 

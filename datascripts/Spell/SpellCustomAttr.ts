@@ -12,7 +12,7 @@ export class SpellCustomAttrSQL extends MaybeSQLEntity<Spell,spell_custom_attrRo
             .attributes.set(0)
     }
     protected findSQL(): spell_custom_attrRow {
-        return SQL.spell_custom_attr.find({entry:this.owner.ID});
+        return SQL.spell_custom_attr.query({entry:this.owner.ID});
     }
     protected isValidSQL(sql: spell_custom_attrRow): boolean {
         return sql.entry.get() === this.owner.ID;

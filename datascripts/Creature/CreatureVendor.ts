@@ -21,7 +21,7 @@ import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureVendor extends CellSystem<CreatureTemplate> {
     protected rows() {
-        return SQL.npc_vendor.filter({entry: this.owner.ID});
+        return SQL.npc_vendor.queryAll({entry: this.owner.ID});
     }
 
     get length() { return this.rows().length; }
@@ -39,7 +39,7 @@ export class CreatureVendor extends CellSystem<CreatureTemplate> {
     copyFrom(creatureTemplate: number, filter?: (row: npc_vendorRow)=>boolean) {
         // We must always have vendor flag if we sell items
         this.owner.NPCFlags.VENDOR.set(true);
-        SQL.npc_vendor.filter({entry: creatureTemplate}).forEach((x)=>{
+        SQL.npc_vendor.queryAll({entry: creatureTemplate}).forEach((x)=>{
             if(filter && !filter(x)) {
                 return;
             }

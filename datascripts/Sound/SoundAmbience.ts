@@ -8,7 +8,7 @@ import { RegistryDynamic } from "../Refs/Registry";
 import { SoundEntryRegistry } from "./SoundEntry";
 
 export function pairToRow(id1: number, id2: number) {
-    let old = DBC.SoundAmbience.filter({AmbienceID:all(id1,id2)})
+    let old = DBC.SoundAmbience.queryAll({AmbienceID:all(id1,id2)})
     return old || DBC.SoundAmbience.add(Ids.SoundAmbience.id())
         .AmbienceID.setIndex(0,id1)
         .AmbienceID.setIndex(1,id2);

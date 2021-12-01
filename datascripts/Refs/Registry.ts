@@ -17,16 +17,16 @@ export abstract class RegistryQueryBase<
     protected abstract EmptyQuery(): Q;
 
     queryAll(query: Q) {
-        return this.Table().filter(query).map(x=>this.Entity(x));
+        return this.Table().queryAll(query).map(x=>this.Entity(x));
     }
 
     query(query: Q) {
-        let v = this.Table().find(query);
+        let v = this.Table().query(query);
         return (v ? this.Entity(v) : undefined) as E;
     }
 
     protected getAll(): E[] {
-        return this.Table().filter(this.EmptyQuery()).map(x=>this.Entity(x));
+        return this.Table().queryAll(this.EmptyQuery()).map(x=>this.Entity(x));
     }
 }
 

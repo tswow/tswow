@@ -28,7 +28,7 @@ export class ClassRacePair extends MainEntity<CharBaseInfoRow> {
 
 export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
     protected getAllRows(): ClassRacePair[] {
-        return DBC.CharBaseInfo.filter({ClassID:this.owner.ID})
+        return DBC.CharBaseInfo.queryAll({ClassID:this.owner.ID})
             .map(x=>new ClassRacePair(x))
     }
     protected isDeleted(value: ClassRacePair): boolean {
@@ -37,7 +37,7 @@ export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
 
     delete(races: MaskCon<keyof typeof RaceMask>) {
         getBits(RaceMask,races).forEach(x=>{
-            DBC.CharBaseInfo.find({ClassID:this.owner.ID,RaceID:x+1})
+            DBC.CharBaseInfo.query({ClassID:this.owner.ID,RaceID:x+1})
                 .delete();
         })
         return this.owner;
@@ -63,18 +63,18 @@ export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
             const {race: oldRace,cls} = getDefaultRace(raceid,this.owner.BaseClass);
 
             SQL.player_levelstats
-                .filter({class: cls, race: oldRace})
+                .queryAll({class: cls, race: oldRace})
                 .forEach(x=>x.clone(raceid,this.owner.ID,x.level.get()));
 
             DBC.CharStartOutfit
-                .filter({ClassID: cls, RaceID: oldRace})
+                .queryAll({ClassID: cls, RaceID: oldRace})
                 .forEach(x=>x.clone(Ids.CharStartOutfit.id())
                     .ClassID.set(this.owner.ID)
                     .RaceID.set(raceid))
 
             // By default, the classes should come from here.
             const defaultClass = getDefaultClass(raceid);
-            SQL.playercreateinfo.find({race: raceid, class: defaultClass})
+            SQL.playercreateinfo.query({race: raceid, class: defaultClass})
                 .clone(raceid, this.owner.ID)
 
             DBC.CharBaseInfo.add(raceid,this.owner.ID);

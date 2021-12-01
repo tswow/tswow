@@ -36,7 +36,7 @@ export class SpawnGroupEntry extends MainEntity<spawn_groupRow> {
 
 export class SpawnGroupCreatureEntries extends MultiRowSystem<SpawnGroupEntry,SpawnGroup> {
     protected getAllRows(): SpawnGroupEntry[] {
-        return SQL.spawn_group.filter({groupId:this.owner.ID})
+        return SQL.spawn_group.queryAll({groupId:this.owner.ID})
             .map(x=>new SpawnGroupEntry(x))
     }
     protected isDeleted(value: SpawnGroupEntry): boolean {

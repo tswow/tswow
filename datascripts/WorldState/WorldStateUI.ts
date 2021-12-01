@@ -112,7 +112,7 @@ export class WorldStateUIRegistryClass
             .Variable.set(0)
     }
     protected FindByID(id: number): WorldStateUIRow {
-        return DBC.WorldStateUI.find({ID:id});
+        return DBC.WorldStateUI.query({ID:id});
     }
     protected EmptyQuery(): WorldStateUIQuery {
         return {}

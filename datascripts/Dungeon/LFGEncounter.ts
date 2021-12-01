@@ -70,11 +70,11 @@ export class DungeonEncounter extends SQLDBCEntity<DungeonEncounterRow, instance
     }
 
     protected findDBC(): DungeonEncounterRow {
-        return DBC.DungeonEncounter.find({ID:this.id})
+        return DBC.DungeonEncounter.query({ID:this.id})
     }
 
     protected findSQL(): instance_encountersRow {
-        return SQL.instance_encounters.find({entry:this.id})
+        return SQL.instance_encounters.query({entry:this.id})
     }
 
     protected isValidDBC(dbc: DungeonEncounterRow): boolean {
@@ -150,7 +150,7 @@ export class LFGDungeonEncounters<T> extends MultiRowSystem<DungeonEncounterPlai
     }
 
     protected getAllRows(): DungeonEncounterPlain[] {
-        return DungeonEncounterRegistry.filterDBC({
+        return DungeonEncounterRegistry.queryAllDBC({
               MapID:this.mapId
         })
         .sort((a,b)=>a.Index.get() < b.Index.get() ? 1 : -1)
@@ -201,30 +201,30 @@ export const DungeonEncounterRegistry = {
     },
 
     load(id: number) {
-        return DBC.DungeonEncounter.find({ID:id})
+        return DBC.DungeonEncounter.query({ID:id})
             ? new DungeonEncounter(id)
             : undefined
     },
 
-    filterDBC(query: DungeonEncounterQuery) {
+    queryAllDBC(query: DungeonEncounterQuery) {
         return DBC.DungeonEncounter
-            .filter(query)
+            .queryAll(query)
             .map(x=>new DungeonEncounterPlain(x.ID.get()))
     },
 
-    filterSQL(query: instance_encountersQuery) {
+    queryAllSQL(query: instance_encountersQuery) {
         return SQL.instance_encounters
-            .filter(query)
+            .queryAll(query)
             .map(x=>new DungeonEncounterPlain(x.entry.get()))
     },
 
-    findDBC(query: DungeonEncounterQuery) {
-        let res = DBC.DungeonEncounter.find(query);
+    queryDBC(query: DungeonEncounterQuery) {
+        let res = DBC.DungeonEncounter.query(query);
         return res ? new DungeonEncounterPlain(res.ID.get()) : undefined;
     },
 
-    findSQL(query: instance_encountersQuery) {
-        let res = SQL.instance_encounters.find(query);
+    querySQL(query: instance_encountersQuery) {
+        let res = SQL.instance_encounters.query(query);
         return res ? new DungeonEncounterPlain(res.entry.get()) : undefined;
     },
 }

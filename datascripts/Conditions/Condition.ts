@@ -61,7 +61,7 @@ export class Condition<T> extends MultiRowSystem<ConditionPlain, T> {
         if(this.sourceEntry)  condition.SourceEntry     = this.sourceEntry;
         if(this.sourceId)     condition.SourceId        = this.sourceId;
         if(this.sourceTarget) condition.ConditionTarget = this.sourceTarget;
-        return SQL.conditions.filter(condition)
+        return SQL.conditions.queryAll(condition)
             .map(x=>new ConditionPlain(x))
     }
 

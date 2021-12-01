@@ -74,7 +74,7 @@ export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
     }
 
     addPos(row: number, column: number, rank: number) {
-        let talent = DBC.Talent.find({
+        let talent = DBC.Talent.query({
               TierID:row
             , ColumnIndex:column
             ,TabID:this.owner.Tab.get()
