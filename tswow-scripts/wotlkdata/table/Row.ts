@@ -45,6 +45,10 @@ export abstract class Row<C, Q> extends CellSystemTop {
         return Row.primaryKeyFields(this).map((x: any) => (this as any)[x].get());
     }
 
+    abstract isDeleted(): boolean
+    abstract delete(): void
+    abstract undelete(): void
+
     copyTo(targetRow: this) {
         const pks = targetRow.primaryKeys();
         CellSystem.cloneFrom(targetRow, this);
