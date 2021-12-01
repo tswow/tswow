@@ -99,10 +99,10 @@ export class CreateItem extends TargetBase {
     get ItemCount() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
 }
@@ -134,11 +134,11 @@ export class WeaponPercentDamage extends DamageBasePct {
      */
     get Percentage() {
         return new PercentCell(
-            this,()=>this.owner.DieSides.get() > 0
+            this,()=>this.owner.PointsDieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
           , true
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         );
     }
 
@@ -212,10 +212,10 @@ export class SkillStep extends TargetBase {
     get Tier() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
     get Skill() { return this.wrap(this.owner.MiscValueA); }
@@ -274,16 +274,16 @@ export class PowerBurn extends PowerBase {}
 // 63
 export class Threat extends TargetBase {
 
-    get ThreatAmount() {
+    get ThreatBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get ThreatDieSides() { return this.wrap(this.owner.PointsDieSides); }
 }
 // 64
 export class TriggerSpell extends EffectTemplate {
@@ -370,16 +370,16 @@ export class ActivateObject extends TargetBase {
 export class GameObjectDamage extends DamageBase {}
 // 88
 export class GameObjectRepair extends PointsRoot {
-    get BaseRepair() {
+    get RepairBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get RepairDieSides() { return this.wrap(this.owner.DieSides); }
+    get RepairDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get RepairPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get RepairPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
 }
@@ -405,16 +405,16 @@ export class EnchantHeldItem extends EffectTemplate {
 // 93
 // 94
 export class ResurrectSelf extends EffectTemplate {
-    get BaseHealth() {
+    get HealthBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get HealthDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get HealthPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get HealthPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
     get BonusMultiplier() { return this.wrap(this.owner.BonusMultiplier); }
@@ -435,32 +435,32 @@ export class CastButtons extends EffectTemplate {
 }
 // 98
 export class Knockback extends TargetBase {
-    get Height() {
+    get HeightBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get HeightDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get HeightPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get KnockbackAmount() { return this.wrap(this.owner.MiscValueA); }
 }
 // 99
 // 100
 export class MakeDrunk extends PointsRoot {
-    get BaseDrunkness() {
+    get DrunknessBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get DrunknessDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get DrunknessPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get DrunknessPerCombo() { return this.wrap(this.owner.PointsPerLevel); }
 }
@@ -514,10 +514,10 @@ export class Skill extends TargetBase {
     get SkillTier() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
 }
@@ -535,15 +535,15 @@ export class PullTowards extends TargetBase{
 }
 // 125
 export class ModifyThreatPercent extends TargetBase {
-    get ThreatPercentAmount() {
+    get ThreatPercentBase() {
         return new PercentCell(
             this
-          , ()=>this.DieSides.get() > 0 ? '[0-99]' : '[0-100]'
+          , ()=>this.ThreatPercentDieSides.get() > 0 ? '[0-99]' : '[0-100]'
           , true
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get ThreatPercentDieSides() { return this.wrap(this.owner.PointsDieSides); }
 }
 // 126
 export class StealBeneficialBuff extends CountBase {
@@ -554,16 +554,16 @@ export class StealBeneficialBuff extends CountBase {
 // 129
 // 130
 export class RedirectThreat extends TargetBase {
-    get ThreatAmount() {
+    get ThreatBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get ThreatDieSides() { return this.wrap(this.owner.PointsDieSides); }
 }
 // 131
 export class PlaySound extends TargetBase {
@@ -603,16 +603,16 @@ export class TriggerSpellWithValue extends PointsBase {
 // 143
 // 144
 export class KnockbackDest extends TargetBase {
-    get Height() {
+    get HeightBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get HeightDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get HeightPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get KnockbackAmount() { return this.wrap(this.owner.MiscValueA); }
 }
@@ -638,18 +638,18 @@ export class FailQuest extends TargetBase {
 // 148
 export class TriggerMissileWithValue extends TargetBase {
     get MissileSpell() { return this.wrap(this.owner.TriggerSpell); }
-    get BasePoints() {
+    get PointsBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
     get PointsPerLevel() { return this.wrap(this.owner.PointsPerLevel); }
     get PointsPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
-    get DieSides() { return this.wrap(this.owner.DieSides); }
+    get PointsDieSides() { return this.wrap(this.owner.PointsDieSides); }
 }
 // 149
 export class ChargeDest extends TargetBase {}

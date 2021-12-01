@@ -224,7 +224,7 @@ export class MountRegistryClass
                 effect
                     .Type.APPLY_AURA.set()
                     .Aura.MOD_INCREASE_MOUNTED_SPEED.set()
-                    .BasePercent.set(speed)
+                    .PercentBase.set(speed)
                     .ImplicitTargetA.UNIT_CASTER.set()
                     .PercentDieSides.set(1)
             })
@@ -234,7 +234,7 @@ export class MountRegistryClass
                 effect
                     .Type.APPLY_AURA.set()
                     .Aura.MOD_INCREASE_FLIGHT_SPEED.set()
-                    .BasePercent.set(flightSpeed)
+                    .PercentBase.set(flightSpeed)
                     .ImplicitTargetA.UNIT_CASTER.set()
                     .PercentDieSides.set(1)
             })

@@ -260,7 +260,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
                     .ImplicitTargetB.set(0)
                     .ChainAmplitude.set(1)
                     .AsEffect.get()
-                    .DieSides.set(1)
+                    .PointsDieSides.set(1)
                     .BonusMultiplier.set(1)
             })
             .SkillLines.addMod(this.owner.ID,undefined,undefined,sla=>{
@@ -301,7 +301,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
                         .Skill.set(this.owner.ID)
                         .Tier.set(newIndex)
                         .AsEffect.get()
-                        .DieSides.set(1)
+                        .PointsDieSides.set(1)
             })
         Profession.addCachedLearnSpell(this.owner, learnSpell);
         Profession.getTiers(this.owner).Value.setIndex(newIndex,maxSkill);

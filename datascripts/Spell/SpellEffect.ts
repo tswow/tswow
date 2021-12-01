@@ -52,8 +52,8 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         let a1 = e1.Aura.get();
         let t1 = e1.Type.get();
         let m1 = e1.Mechanic.get();
-        let bp1 = e1.BasePoints.get();
-        let ds1 = e1.DieSides.get();
+        let bp1 = e1.PointsBase.get();
+        let ds1 = e1.PointsDieSides.get();
         let ppl1 = e1.PointsPerLevel.get();
         let ppc1 = e1.PointsPerCombo.get();
         let ita1 = e1.ImplicitTargetA.get();
@@ -72,8 +72,8 @@ export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
         e2.Aura.set(a1);
         e2.Type.set(t1);
         e2.Mechanic.set(m1);
-        e2.BasePoints.set(bp1);
-        e2.DieSides.set(ds1);
+        e2.PointsBase.set(bp1);
+        e2.PointsDieSides.set(ds1);
         e2.PointsPerLevel.set(ppl1);
         e2.PointsPerCombo.set(ppc1);
         e2.ImplicitTargetA.set(ita1);
@@ -219,10 +219,10 @@ export class SpellEffect extends ArrayEntry<Spell> {
     }
 
     clear(): this {
-        this.BasePoints.set(0);
+        this.PointsBase.set(0);
         this.ChainAmplitude.set(1);
         this.ChainTarget.set(0);
-        this.DieSides.set(1);
+        this.PointsDieSides.set(1);
         this.ImplicitTargetA.set(0);
         this.ImplicitTargetB.set(0);
         this.Mechanic.set(0);
@@ -254,16 +254,16 @@ export class SpellEffect extends ArrayEntry<Spell> {
         return makeEnumCell(SpellEffectMechanic, this, this.w(this.row.EffectMechanic));
     }
 
-    get BasePoints() {
+    get PointsBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.DieSides.get() > 0
+          , ()=>this.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
           , this.w(this.row.EffectBasePoints)
         )
     };
-    get DieSides() { return this.w(this.row.EffectDieSides); }
+    get PointsDieSides() { return this.w(this.row.EffectDieSides); }
     get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
     get PointsPerCombo() { return this.w(this.row.EffectPointsPerCombo); }
     get ImplicitTargetA() {
@@ -309,8 +309,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
     }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
-        this.BasePoints.set(base);
-        this.DieSides.set(dieSides);
+        this.PointsBase.set(base);
+        this.PointsDieSides.set(dieSides);
         this.PointsPerLevel.set(pointsPerLevel);
         this.PointsPerCombo.set(pointsPerCombo);
         return this.owner;
@@ -322,8 +322,8 @@ export class SpellEffect extends ArrayEntry<Spell> {
         this.Aura.set(source.Aura.get());
         this.Type.set(source.Type.get());
         this.Mechanic.set(source.Mechanic.get());
-        this.BasePoints.set(source.BasePoints.get());
-        this.DieSides.set(source.DieSides.get());
+        this.PointsBase.set(source.PointsBase.get());
+        this.PointsDieSides.set(source.PointsDieSides.get());
         this.PointsPerLevel.set(source.PointsPerLevel.get());
         this.PointsPerCombo.set(source.PointsPerCombo.get());
         this.ImplicitTargetA.set(source.ImplicitTargetA.get());

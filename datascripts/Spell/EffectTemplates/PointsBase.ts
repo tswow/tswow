@@ -13,13 +13,13 @@ export class PointsRoot extends TargetBase {
 }
 
 export class ChanceBase extends PointsRoot {
-    get BaseChance() {
+    get ChanceBase() {
         return new PercentCell(
-              this,()=>this.owner.DieSides.get() > 0
+              this,()=>this.owner.PointsDieSides.get() > 0
                     ? '[0-99]'
                     : '[0-100]'
             , true
-            , this.owner.BasePoints.AsCell()
+            , this.owner.PointsBase.AsCell()
         );
     }
     get ChanceDieSides() {
@@ -27,7 +27,7 @@ export class ChanceBase extends PointsRoot {
               this
             , '[0-100]'
             , true
-            , this.wrap(this.owner.DieSides)
+            , this.wrap(this.owner.PointsDieSides)
         );
     }
     get ChancePerLevel() {
@@ -49,12 +49,12 @@ export class ChanceBase extends PointsRoot {
 }
 
 export class PercentBase extends PointsRoot {
-    get BasePercent() {
+    get PercentBase() {
         return new PercentCell(
               this
-            , ()=>this.owner.DieSides.get() > 0 ? '[0-99]' : '[0-100]'
+            , ()=>this.owner.PointsDieSides.get() > 0 ? '[0-99]' : '[0-100]'
             , true
-            , this.owner.BasePoints.AsCell()
+            , this.owner.PointsBase.AsCell()
         )
     }
     get PercentDieSides() {
@@ -62,7 +62,7 @@ export class PercentBase extends PointsRoot {
             this
           , '[0-100]'
           , true
-          , this.owner.DieSides
+          , this.owner.PointsDieSides
         )
     }
     get PercentPerLevel() {
@@ -84,17 +84,17 @@ export class PercentBase extends PointsRoot {
 }
 
 export class PointsBase extends PointsRoot {
-    get BasePoints() {
+    get PointsBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
     get PointsDieSides() {
-        return this.wrap(this.owner.DieSides);
+        return this.wrap(this.owner.PointsDieSides);
     }
     get PointsPerLevel() {
         return this.wrap(this.owner.PointsPerLevel);
@@ -105,43 +105,43 @@ export class PointsBase extends PointsRoot {
 }
 
 export class CountBase extends PointsRoot {
-    get BaseCount() {
+    get CountBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get CountDieSides() { return this.wrap(this.owner.DieSides); }
+    get CountDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get CountPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get CountPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
 
 export class DamageBase extends PointsRoot {
-    get BaseDamage() {
+    get DamageBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get DamageDieSides() { return this.wrap(this.owner.DieSides); }
+    get DamageDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get DamagePerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get DamagePerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
 
 export class DamageBasePct extends PointsRoot {
-    get BaseDamagePct() {
+    get DamagePctBase() {
         return new PercentCell(
-            this,()=>this.owner.DieSides.get() > 0
+            this,()=>this.owner.PointsDieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
           , true
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         );
     }
     get DamagePctDieSides() {
@@ -149,7 +149,7 @@ export class DamageBasePct extends PointsRoot {
             this
           , '[0-100]'
           , true
-          , this.wrap(this.owner.DieSides)
+          , this.wrap(this.owner.PointsDieSides)
         );
     }
     get DamagePctPerLevel() {
@@ -171,28 +171,28 @@ export class DamageBasePct extends PointsRoot {
 }
 
 export class HealBase extends PointsRoot {
-    get BaseHeal() {
+    get HealBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get HealDieSides() { return this.wrap(this.owner.DieSides); }
+    get HealDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get HealPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get HealPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
 
 export class HealBasePct extends PointsRoot {
-    get BaseHealPct() {
+    get HealPctBase() {
         return new PercentCell(
-            this,()=>this.owner.DieSides.get() > 0
+            this,()=>this.owner.PointsDieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
           , true
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         );
     }
     get HealPctDieSides() {
@@ -200,7 +200,7 @@ export class HealBasePct extends PointsRoot {
             this
           , '[0-100]'
           , true
-          , this.wrap(this.owner.DieSides)
+          , this.wrap(this.owner.PointsDieSides)
         );
     }
     get HealPctPerLevel() {
@@ -225,31 +225,31 @@ export class PowerBase extends PointsRoot {
     get PowerType() {
         return makeEnumCell(SpellPowerType,this, this.owner.MiscValueA);
     }
-    get BasePower() {
+    get PowerBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get PowerDieSides() { return this.wrap(this.owner.DieSides); }
+    get PowerDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get PowerPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get PowerPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
 
 export class ManaBase extends PointsRoot {
-    get BaseMana() {
+    get ManaBase() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.owner.DieSides.get() > 0
+          , ()=>this.owner.PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         )
     }
-    get ManaDieSides() { return this.wrap(this.owner.DieSides); }
+    get ManaDieSides() { return this.wrap(this.owner.PointsDieSides); }
     get ManaPerLevel() {return this.wrap(this.owner.PointsPerLevel); }
     get ManaPerCombo() { return this.wrap(this.owner.PointsPerCombo); }
 }
@@ -258,13 +258,13 @@ export class PowerBasePct extends PointsRoot {
     get PowerType() {
         return makeEnumCell(SpellPowerType,this, this.owner.MiscValueA);
     }
-    get BasePowerPct() {
+    get PowerPctBase() {
         return new PercentCell(
-            this,()=>this.owner.DieSides.get() > 0
+            this,()=>this.owner.PointsDieSides.get() > 0
                   ? '[0-99]'
                   : '[0-100]'
           , true
-          , this.owner.BasePoints.AsCell()
+          , this.owner.PointsBase.AsCell()
         );
     }
     get PowerPctDieSides() {
@@ -272,7 +272,7 @@ export class PowerBasePct extends PointsRoot {
             this
           , '[0-100]'
           , true
-          , this.wrap(this.owner.DieSides)
+          , this.wrap(this.owner.PointsDieSides)
         );
     }
     get PowerPerLevelPct() {

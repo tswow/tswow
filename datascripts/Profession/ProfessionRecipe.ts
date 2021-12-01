@@ -68,10 +68,10 @@ export class ProfessionRecipe extends CellSystemTop {
     get OutputCount() {
         return new ShiftedNumberCell(
             this
-          , ()=>this.spell.Effects.get(0).DieSides.get() > 0
+          , ()=>this.spell.Effects.get(0).PointsDieSides.get() > 0
                 ? 'STORED_AS_MINUS_ONE'
                 : 'NO_CHANGE'
-          , this.spell.Effects.get(0).BasePoints.AsCell()
+          , this.spell.Effects.get(0).PointsBase.AsCell()
         )
     }
     get OutputItem() { return new RecipeOutputItem(this); }

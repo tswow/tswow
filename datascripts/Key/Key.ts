@@ -90,7 +90,7 @@ export const KeyRegistry = {
             .Effects.addMod(eff=>{
                 eff.Type
                     .OPEN_LOCK.set()
-                    .AsEffect.mod(eff=>eff.BasePoints.set(-1))
+                    .AsEffect.mod(eff=>eff.PointsBase.set(-1))
                     .ImplicitTargetA.GAMEOBJECT_TARGET.set()
             })
 
