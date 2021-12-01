@@ -235,6 +235,16 @@ EVENT_TYPE(PlayerOnLearnTalent, TSPlayer, uint32_t tabId, uint32_t talentId, uin
 EVENT_TYPE(PlayerOnGossipSelect, TSPlayer, TSPlayer, uint32_t, uint32_t, TSMutable<bool>)
 EVENT_TYPE(PlayerOnGossipSelectCode, TSPlayer, TSPlayer, uint32_t, uint32_t, TSString, TSMutable<bool>)
 
+EVENT_TYPE(
+      PlayerOnTradeCompleted
+    , TSPlayer /* me */
+    , TSPlayer /* him */
+    , TSArray<TSItem> /* myItems */
+    , TSArray<TSItem> /* hisItems*/
+    , uint32 /* myMoney */
+    , uint32 /* hisMoney*/
+);
+
 EVENT_TYPE(PlayerOnUpdateDodgePercentage
     , TSPlayer
     , TSMutable<float>
@@ -1177,6 +1187,7 @@ struct TSEventStore
     EVENT(PlayerOnGenerateItemLoot)
     EVENT(PlayerOnLootCorpse)
     EVENT(PlayerOnLearnTalent)
+    EVENT(PlayerOnTradeCompleted)
 
     EVENT(PlayerOnUpdateDodgePercentage)
     EVENT(PlayerOnUpdateBlockPercentage)
@@ -1549,6 +1560,7 @@ public:
          EVENT_HANDLE(Player,OnGenerateItemLoot)
          EVENT_HANDLE(Player,OnLearnTalent)
          EVENT_HANDLE(Player,OnLootCorpse)
+         EVENT_HANDLE(Player,OnTradeCompleted)
 
          EVENT_HANDLE(Player,OnUpdateDodgePercentage)
          EVENT_HANDLE(Player,OnUpdateBlockPercentage)
