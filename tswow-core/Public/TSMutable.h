@@ -16,6 +16,8 @@
  */
 #pragma once
 
+#include "TSStringConvert.h"
+
 template <typename T>
 class TSMutable
 {
@@ -37,5 +39,10 @@ public:
     T get()
     {
         return *(this->value);
+    }
+
+    TSString stringify()
+    {
+        return ToStr(value);
     }
 };
