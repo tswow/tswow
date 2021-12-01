@@ -167,10 +167,10 @@ public:
 	void SetHonorPoints(uint32 honorP);
 	void SetLifetimeKills(uint32 val);
 
-    void SetMoney(uint32 amt);
-    uint32 GetMoney();
-    bool GiveMoney(uint32 amt);
-    bool TakeMoney(uint32 amt);
+  void SetMoney(uint32 amt);
+  uint32 GetMoney();
+  bool GiveMoney(uint32 amt);
+  bool TakeMoney(uint32 amt);
 
 	void SetBindPoint(float x, float y, float z, uint32 mapId, uint32 areaId);
 	void SetKnownTitle(uint32 id);
@@ -291,8 +291,6 @@ public:
 			, uint32 menu_id = 0
 	);
 
-
-
 	void GossipClearMenu();
 	void StartTaxi(uint32 pathId);
 	void GossipSendPOI(float x, float y, uint32 icon, uint32 flags, uint32 data, TSString iconText);
@@ -300,8 +298,8 @@ public:
 	void SendQuestTemplate(uint32 questId, bool activateAccept);
 	void SpawnBones();
 	void RemovedInsignia(TSPlayer looter);
-    TSBattlegroundPlayer GetBattlegroundPlayer();
-    TSBattleground GetBattleground();
+  TSBattlegroundPlayer GetBattlegroundPlayer();
+  TSBattleground GetBattleground();
 
 	bool GroupInvite(TSPlayer invited);
 	TSGroup GroupCreate(TSPlayer invited);
