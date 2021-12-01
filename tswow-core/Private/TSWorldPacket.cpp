@@ -297,7 +297,7 @@ void TSWorldPacket::WriteString(TSString value)
 }
 void TSWorldPacket::WriteString(uint32 index, TSString value)
 {
-    for (int i = 0; i < value.length(); ++i)
+    for (uint32 i = 0; i < value.length(); ++i)
     {
         packet->put<uint8>(index + i, value.c_str()[i]);
     }
