@@ -37,6 +37,14 @@ export class CreatureInstanceAddon
 {
     protected createSQL(): creature_addonRow{
         return SQL.creature_addon.add(this.owner.ID)
+            .MountCreatureID.set(0)
+            .auras.set('')
+            .bytes1.set(0)
+            .bytes2.set(0)
+            .emote.set(0)
+            .mount.set(0)
+            .path_id.set(0)
+            .visibilityDistanceType.set(0)
     }
     protected findSQL(): creature_addonRow {
         return SQL.creature_addon.query({guid:this.owner.ID})
@@ -61,6 +69,8 @@ export class CreatureInstanceBoss
 {
     protected createSQL(): instance_boss_creatureRow {
         return SQL.instance_boss_creature.add(this.owner.ID)
+            .boss.set(0)
+            .map.set(-1)
     }
     protected findSQL(): instance_boss_creatureRow {
         return SQL.instance_boss_creature.query({guid:this.owner.ID})
