@@ -53,6 +53,7 @@ export class ClassRoles extends MaybeSQLEntity<Class,player_class_rolesRow> {
         this.Healer.set(healer);
         this.Damage.set(damage);
         this.Leader.set(1)
+        return this.owner;
     }
 
     clear() {
@@ -60,5 +61,6 @@ export class ClassRoles extends MaybeSQLEntity<Class,player_class_rolesRow> {
         this.Healer.set(0)
         this.Damage.set(0)
         this.Leader.set(1) // not yet implemented
+        return this.owner;
     }
 }
