@@ -10,7 +10,7 @@ import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 
 export const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 
-export class DescriptionCell<T extends { ID: number }> extends Cell<string,T> {
+export class DescriptionCell<T extends { BattlegroundID: number }> extends Cell<string,T> {
     protected lang: Language;
 
     constructor(owner: T, lang: Language) {
@@ -19,26 +19,26 @@ export class DescriptionCell<T extends { ID: number }> extends Cell<string,T> {
     }
 
     exists() {
-        let descs = descriptions[this.owner.ID];
+        let descs = descriptions[this.owner.BattlegroundID];
         return descs !== undefined && descs[this.lang] !== undefined;
     }
     get(): string {
-        let descs = descriptions[this.owner.ID];
+        let descs = descriptions[this.owner.BattlegroundID];
         if(!descs) return '';
         let localized = descs[this.lang];
         return localized || '';
     }
 
     set(value: string) {
-        if(!descriptions[this.owner.ID]) {
-            descriptions[this.owner.ID] = {}
+        if(!descriptions[this.owner.BattlegroundID]) {
+            descriptions[this.owner.BattlegroundID] = {}
         }
-        descriptions[this.owner.ID][this.lang] = value;
+        descriptions[this.owner.BattlegroundID][this.lang] = value;
         return this.owner;
     }
 }
 
-export class BattlegroundDescription<T extends { ID: number }> extends LocSystem<T> {
+export class BattlegroundDescription<T extends { BattlegroundID: number }> extends LocSystem<T> {
     lang(lang: Language): Cell<string, T> & PendingCell {
         return new DescriptionCell(this.owner, lang);
     }

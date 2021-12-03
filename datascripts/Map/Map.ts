@@ -17,7 +17,7 @@
 import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellSystem, LocSystem, MulticastLocCell } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { BattlemasterListRow } from "wotlkdata/wotlkdata/dbc/types/BattlemasterList";
 import { MapRow } from "wotlkdata/wotlkdata/dbc/types/Map";
 import { battleground_templateRow } from "wotlkdata/wotlkdata/sql/types/battleground_template";
@@ -64,7 +64,9 @@ export class Map extends TransformedEntity<MapRow,MapPlain> {
 
     get Type() { return new MapInstanceTypee(this, this.row.InstanceType)}
 
-    get Name() { return this.wrapLoc(this.row.MapName); }
+    get Name(): LocSystem<this> {
+        return this.wrapLoc(this.row.MapName);
+    }
 
     get HordeDescription() { return this.wrapLoc(this.row.MapDescription0); }
     get AllianceDescription() { return this.wrapLoc(this.row.MapDescription1); }
@@ -115,6 +117,13 @@ export class BattlegroundMap extends Map {
         super(row)
         this.bg_dbc = bgDbc
         this.bg_sql = bgSql
+    }
+
+    get Name() {
+        return new MulticastLocCell(
+              this
+            , [this.row.MapName,this.bg_dbc.Name]
+        )
     }
 
     get Description() {
