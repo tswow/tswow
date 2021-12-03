@@ -26,6 +26,7 @@ import { SQL_areatrigger_involvedrelation } from './types/areatrigger_involvedre
 import { SQL_areatrigger_scripts } from './types/areatrigger_scripts'
 import { SQL_areatrigger_tavern } from './types/areatrigger_tavern'
 import { SQL_areatrigger_teleport } from './types/areatrigger_teleport'
+import { SQL_battleground_door_object } from './types/battleground_door_object'
 import { SQL_battleground_sets } from './types/battleground_sets'
 import { SQL_battleground_template } from './types/battleground_template'
 import { SQL_battlemaster_entry } from './types/battlemaster_entry'
@@ -267,6 +268,11 @@ export const SQL = {
      * No comment (yet!)
      */
     areatrigger_teleport : SQL_areatrigger_teleport,
+
+    /**
+     * No comment (yet!)
+     */
+    battleground_door_object : SQL_battleground_door_object,
 
     /**
      * No comment (yet!)
