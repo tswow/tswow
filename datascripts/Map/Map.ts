@@ -259,6 +259,7 @@ export class MapInstanceTypee<T extends Map> extends EnumCellTransform<T> {
         return this.value_static(MapInstanceType.ARENA,(owner,mod,name)=>{
             const bg = createBgBase(mod,name);
             bg.dbc.MapID.setIndex(0,owner.ID)
+            bg.dbc.InstanceType.set(MapInstanceType.ARENA)
             owner.row.PVP.set(1)
             return new BattlegroundMap(owner.row,bg.dbc,bg.sql);
         })
@@ -268,6 +269,7 @@ export class MapInstanceTypee<T extends Map> extends EnumCellTransform<T> {
         return this.value_static(MapInstanceType.PVP,(owner,mod,name)=>{
             const bg = createBgBase(mod,name);
             bg.dbc.MapID.setIndex(0,owner.ID)
+            bg.dbc.InstanceType.set(MapInstanceType.PVP)
             owner.row.PVP.set(1)
             return new BattlegroundMap(owner.row,bg.dbc,bg.sql);
         })
