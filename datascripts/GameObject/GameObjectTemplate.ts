@@ -36,6 +36,7 @@ import { SpellRegistry } from "../Spell/Spells";
 import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
 import { TaxiPathRegistry } from "../Taxi/Taxi";
 import { WorldStateRegistry } from "../WorldState/WorldState";
+import { BattlegroundDoorObjects } from "./BattlegroundDoorObject";
 import { ElevatorKeyframes } from "./ElevatorKeyframes";
 import { GameObjectID } from "./GameObjectID";
 import { GameObjectInstance } from "./GameObjectInstance";
@@ -399,6 +400,10 @@ export class GameObjectDoor extends GameObjectTemplate {
     get IgnoredByPathfinding() { return BroadcastTextRegistry.ref(this, this.row.Data6); }
 
     get BossStates() { return new InstanceDoorObjects(this); }
+
+    get BattlegroundStates() {
+        return new BattlegroundDoorObjects(this);
+    }
 
     get Condition1() { return new RefUnknown(this, this.row.Data7); }
 }
