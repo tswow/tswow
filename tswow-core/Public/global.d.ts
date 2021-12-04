@@ -7997,8 +7997,8 @@ declare namespace _hidden {
       )=>void);
     }
 
-    export class Packets {
-        OnCustom(callback: (
+    export class CustomPackets {
+        OnReceive(callback: (
               opcode: uint32
             , packet: TSPacketRead
             , player: TSPlayer
@@ -8006,8 +8006,8 @@ declare namespace _hidden {
         )
     }
 
-    export class PacketID {
-        OnCustom(opcode: uint32, callback: (
+    export class CustomPacketID {
+        OnReceive(opcode: uint32, callback: (
               opcode: uint32
             , packet: TSPacketRead
             , player: TSPlayer
@@ -8246,8 +8246,8 @@ declare class TSEvents {
     ConditionID: _hidden.ConditionID<void>;
     Instances: _hidden.Instances<void>;
     InstanceID: _hidden.InstanceID<void>;
-    Packets: _hidden.Packets;
-    PacketID: _hidden.PacketID;
+    CustomPackets: _hidden.CustomPackets;
+    CustomPacketID: _hidden.CustomPacketID;
     WorldPackets: _hidden.WorldPackets;
     WorldPacketID: _hidden.WorldPacketID;
     Unit: _hidden.Unit;

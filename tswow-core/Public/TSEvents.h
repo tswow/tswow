@@ -40,14 +40,14 @@
 
 #include <cstdint>
 
-EVENT_TYPE(PacketOnCustom
+EVENT_TYPE(CustomPacketOnReceive
   , uint32       /*opcode*/
   , TSPacketRead /*packet*/
   , TSPlayer     /*sender*/
 )
 
 struct TSPacketEvents {
-  EVENT(PacketOnCustom)
+  EVENT(CustomPacketOnReceive)
 };
 
 class TSPacketMap : public TSEventMap<TSPacketEvents>
@@ -1409,7 +1409,7 @@ struct TSEventStore
     EVENT(ConditionOnCheck)
 
     // Packets
-    EVENT(PacketOnCustom)
+    EVENT(CustomPacketOnReceive)
 
     // WorldPackets
     EVENT(WorldPacketOnSend)
@@ -2106,16 +2106,16 @@ public:
         MAP_EVENT_HANDLE(Condition,OnCheck)
     } ConditionID;
 
-    struct PacketEvents : public EventHandler {
-      PacketEvents* operator->() { return this; }
-      EVENT_HANDLE(Packet, OnCustom)
-    } Packets;
+    struct CustomPacketEvents : public EventHandler {
+      CustomPacketEvents* operator->() { return this; }
+      EVENT_HANDLE(CustomPacket, OnReceive)
+    } CustomPackets;
 
-    struct PacketIDEvents : public MappedEventHandler<TSPacketMap>
+    struct CustomPacketIDEvents : public MappedEventHandler<TSPacketMap>
     {
-      PacketIDEvents* operator->() { return this; }
-      MAP_EVENT_HANDLE(Packet,OnCustom)
-    } PacketID;
+      CustomPacketIDEvents* operator->() { return this; }
+      MAP_EVENT_HANDLE(CustomPacket,OnReceive)
+    } CustomPacketID;
 
     struct WorldPacketEvents : public EventHandler {
         WorldPacketEvents* operator->() { return this; }
@@ -2195,8 +2195,8 @@ public:
         SmartActionID.LoadEvents(&events->SmartActions);
         Conditions.LoadEvents(events);
         ConditionID.LoadEvents(&events->Conditions);
-        Packets.LoadEvents(events);
-        PacketID.LoadEvents(&events->Packets);
+        CustomPackets.LoadEvents(events);
+        CustomPacketID.LoadEvents(&events->Packets);
         WorldPackets.LoadEvents(events);
         WorldPacketID.LoadEvents(&events->WorldPackets);
     }
@@ -2241,8 +2241,8 @@ public:
          SmartActionID.Unload();
          Conditions.Unload();
          ConditionID.Unload();
-         Packets.Unload();
-         PacketID.Unload();
+         CustomPackets.Unload();
+         CustomPacketID.Unload();
          WorldPackets.Unload();
          WorldPacketID.Unload();
     }

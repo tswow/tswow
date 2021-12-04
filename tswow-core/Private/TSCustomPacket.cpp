@@ -83,9 +83,9 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	TSPacketRead read(value);
 	opcode_t opcode = value->Opcode();
 
-	for (size_t i = 0; i < GetTSEvents()->PacketOnCustom.GetSize(); ++i)
+	for (size_t i = 0; i < GetTSEvents()->CustomPacketOnReceive.GetSize(); ++i)
 	{
-		GetTSEvents()->PacketOnCustom.Get(i)(opcode, read, player);
+		GetTSEvents()->CustomPacketOnReceive.Get(i)(opcode, read, player);
 		value->Reset();
 	}
 
@@ -94,9 +94,9 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	{
 		return;
 	}
-	for (size_t i = 0; i < events->PacketOnCustom.GetSize(); ++i)
+	for (size_t i = 0; i < events->CustomPacketOnReceive.GetSize(); ++i)
 	{
-		events->PacketOnCustom.Get(i)(opcode, read, player);
+		events->CustomPacketOnReceive.Get(i)(opcode, read, player);
 		value->Reset();
 	}
 }
