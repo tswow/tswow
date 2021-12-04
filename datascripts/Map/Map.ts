@@ -127,7 +127,7 @@ export class BattlegroundMap extends Map {
     }
 
     get Description() {
-        return new BattlegroundDescription(this);
+        return new BattlegroundDescription(this, this.bg_sql.ID);
     }
 
     get BattlegroundID() {

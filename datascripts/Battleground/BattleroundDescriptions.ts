@@ -1,5 +1,6 @@
 import { DBC, finish, LUAXML } from "wotlkdata";
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellReadOnly } from "wotlkdata/wotlkdata/cell/cells/CellReadOnly";
 import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
 import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
 import { LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
@@ -10,37 +11,45 @@ import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 
 export const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 
-export class DescriptionCell<T extends { BattlegroundID: number }> extends Cell<string,T> {
+export class DescriptionCell<T> extends Cell<string,T> {
     protected lang: Language;
+    protected idCell: CellReadOnly<number,any>
 
-    constructor(owner: T, lang: Language) {
+    constructor(owner: T, idCell: CellReadOnly<number,any>, lang: Language) {
         super(owner);
         this.lang = lang;
+        this.idCell = idCell;
     }
 
     exists() {
-        let descs = descriptions[this.owner.BattlegroundID];
+        let descs = descriptions[this.idCell.get()];
         return descs !== undefined && descs[this.lang] !== undefined;
     }
     get(): string {
-        let descs = descriptions[this.owner.BattlegroundID];
+        let descs = descriptions[this.idCell.get()];
         if(!descs) return '';
         let localized = descs[this.lang];
         return localized || '';
     }
 
     set(value: string) {
-        if(!descriptions[this.owner.BattlegroundID]) {
-            descriptions[this.owner.BattlegroundID] = {}
+        if(!descriptions[this.idCell.get()]) {
+            descriptions[this.idCell.get()] = {}
         }
-        descriptions[this.owner.BattlegroundID][this.lang] = value;
+        descriptions[this.idCell.get()][this.lang] = value;
         return this.owner;
     }
 }
 
-export class BattlegroundDescription<T extends { BattlegroundID: number }> extends LocSystem<T> {
+export class BattlegroundDescription<T> extends LocSystem<T> {
+    protected idCell: CellReadOnly<number,any>;
+    constructor(owner: T, idCell: CellReadOnly<number,any>) {
+        super(owner);
+        this.idCell = idCell;
+    }
+
     lang(lang: Language): Cell<string, T> & PendingCell {
-        return new DescriptionCell(this.owner, lang);
+        return new DescriptionCell(this.owner, this.idCell, lang);
     }
     get mask(): Cell<number, T> {
         return new DummyCell(this.owner,0);

@@ -13,7 +13,7 @@ export class BattlegroundBase extends CellSystemTop {
     sql_row: battleground_templateRow;
     get ID() { return this.sql_row.ID.get(); }
     get Name() { return this.wrapLoc(this.dbc_row.Name); }
-    get Description() { return new BattlegroundDescription(this); }
+    get Description() { return new BattlegroundDescription(this, this.sql_row.ID); }
     get MaxGroupSize() { return this.wrap(this.dbc_row.MaxGroupSize); }
     get HolidayWorldState() { return this.wrap(this.dbc_row.HolidayWorldState); }
     get Weight() { return this.wrap(this.sql_row.Weight); }
