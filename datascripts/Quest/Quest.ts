@@ -29,7 +29,7 @@ import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";
 import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
-import { QuestText } from "./QuestText";
+import { Description, LogTitle, ObjectiveDescription, QuestText, RequestItems, Reward } from "./QuestText";
 
 export class QuestAddonRow extends CellSystem<Quest> {
     protected readonly Addon = new QuestAddon(this.owner);
@@ -53,6 +53,12 @@ export class Quest extends MainEntity<quest_templateRow> {
     @Transient
     readonly AddonRow = new QuestAddonRow(this);
 
+    get Name() { return new LogTitle(this); }
+    get PickupText() { return new Description(this); }
+    get IncompleteText() { return new RequestItems(this); }
+    get CompleteText() { return new Reward(this); }
+    get ObjectiveText() { return new ObjectiveDescription(this); }
+
     get SpecialFlags() { return this.Addon.SpecialFlags; }
     get MaxLevel() { return this.Addon.MaxLevel; }
     get NextQuest() { return this.Addon.NextQuest }
@@ -70,6 +76,8 @@ export class Quest extends MainEntity<quest_templateRow> {
     get Questgiver() { return new QuestNPC(this); }
     get Rewards() { return new QuestReward(this); }
     get Objectives() { return new QuestObjective(this); }
+
+    /** @deprecated use fields directly on Quest */
     get Text() { return new QuestText(this); }
     get AreaSort() { return this.wrap(this.row.QuestSortID); }
     get MinLevel() { return this.wrap(this.row.MinLevel); }
