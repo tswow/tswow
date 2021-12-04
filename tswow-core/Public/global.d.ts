@@ -4745,7 +4745,7 @@ declare interface TSCollisionEntry {
     Tick(value: TSWorldObject, force?: boolean)
 }
 
-declare type TSCollisionCallback = (entry: TSCollisionEntry, self: TSWorldObject, collided: TSWorldObject, cancel: TSMutable<uint32>)=>void
+declare type TSCollisionCallback = (self: TSWorldObject, collided: TSWorldObject, cancel: TSMutable<uint32>, entry: TSCollisionEntry)=>void
 
 declare interface TSCollisions {
     Add(modid: uint32, id: string, range: float, minDelay: uint32, maxHits: uint32, callback: TSCollisionCallback)

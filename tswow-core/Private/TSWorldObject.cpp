@@ -950,7 +950,7 @@ bool TSCollisionEntry::Tick(TSWorldObject value, bool force)
 
         if(maxHits == 0 || hits < maxHits)
         {
-            callback(this,value,unit,TSMutable<uint32_t>(&cancelMode));
+            callback(value,unit,TSMutable<uint32_t>(&cancelMode), this);
             if(cancelMode == 2)
             {
                 return true;
