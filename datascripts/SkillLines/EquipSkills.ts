@@ -22,9 +22,9 @@ export class EquipSkill extends CellSystemTop {
 
     private enableAbil(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
         let a = this.Ability.get();
-            a.ClassMask.setOr(cls)
-             .RaceMask.setOr(race)
-             .ClassMaskForbidden.setNot(cls)
+            a.ClassMask.set(cls,'OR')
+             .RaceMask.set(race,'OR')
+             .ClassMaskForbidden.set(cls,'NOT')
     }
 
     enable(cls?: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask> = MaskCell32.AllBits) {

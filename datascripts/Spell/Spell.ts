@@ -202,7 +202,7 @@ export class Spell extends MainEntity<SpellRow> {
     enable(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
         this.SkillLines.forEach(x=>{
             x.ClassMask.set(cls)
-            x.ClassMaskForbidden.setNot(cls)
+            x.ClassMaskForbidden.set(cls,'NOT')
             x.RaceMask.set(race)
         })
     }
@@ -217,14 +217,14 @@ export class Spell extends MainEntity<SpellRow> {
 
     clearClass(cls: MaskCon<keyof typeof ClassMask>) {
         this.SkillLines.forEach(x=>{
-            x.ClassMask.setNot(cls)
+            x.ClassMask.set(cls,'NOT')
         })
         return this;
     }
 
     clearRace(race: MaskCon<keyof typeof RaceMask>) {
         this.SkillLines.forEach(x=>{
-            x.RaceMask.setNot(race)
+            x.RaceMask.set(race,'NOT')
         })
         return this;
     }

@@ -22,7 +22,7 @@ export abstract class ClassRaceMaskSystemBase<E extends IClassRaceMaskEntry,T>
 {
     clearClass(cls: MaskCon<keyof typeof ClassMask>) {
         this.forEach(v=>{
-            v.ClassMask.setNot(cls)
+            v.ClassMask.set(cls,'NOT')
         })
         return this.owner;
     }
@@ -38,8 +38,8 @@ export abstract class ClassRaceMaskSystemBase<E extends IClassRaceMaskEntry,T>
     clearPair(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
         this.forEach(v=>{
             if(v.ClassMask.hasAll(cls) && v.RaceMask.hasAll(race)) {
-                v.ClassMask.setNot(cls);
-                v.RaceMask.setNot(race);
+                v.ClassMask.set(cls,'NOT');
+                v.RaceMask.set(race,'NOT');
             }
         })
         return this.owner;
