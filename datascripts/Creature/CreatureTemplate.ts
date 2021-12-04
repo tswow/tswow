@@ -157,7 +157,15 @@ export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,C
 
 export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, creature_template_addonRow> {
     protected createSQL(): creature_template_addonRow {
-        return SQL.creature_template_addon.add(this.owner.ID);
+        return SQL.creature_template_addon.add(this.owner.ID)
+            .MountCreatureID.set(0)
+            .auras.set('')
+            .bytes1.set(0)
+            .bytes2.set(0)
+            .emote.set(0)
+            .mount.set(0)
+            .path_id.set(0)
+            .visibilityDistanceType.set(0)
     }
     protected findSQL(): creature_template_addonRow {
         return SQL.creature_template_addon.query({entry:this.owner.ID});
