@@ -16,15 +16,57 @@
  */
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { FactionQuery, FactionRow } from "wotlkdata/wotlkdata/dbc/types/Faction";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { PercentCell } from "../Misc/PercentCell";
+import { ReputationRank } from "../Misc/ReputationRank";
 import { RefNoCreate } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";
 import { FactionReputations } from "./FactionReputation";
 import { FactionReputationIndex } from "./FactionReputationIndex";
 import { FactionTemplates } from "./FactionTemplates";
+
+export class FactionRepGain extends CellSystem<Faction> {
+    protected index: number;
+
+    constructor(owner: Faction, index: number) {
+        super(owner);
+        this.index = index;
+    }
+
+    get Rate() {
+        return new PercentCell(
+              this.owner
+            , '[0-1]'
+            , false
+            , this.wrapIndex(this.owner.row.ParentFactionMod,this.index)
+        );
+    }
+
+    /**
+     * The maximum rank at which spillover can occur
+     */
+    get Cap() {
+        return makeEnumCell(
+              ReputationRank
+            , this.owner
+            , this.wrapIndex(
+                  this.owner.row.ParentFactionCap
+                , this.index
+            )
+        )
+    }
+
+    set(rate: number, cap: number) {
+        this.Rate.set(rate);
+        this.Cap.set(cap);
+        return this.owner;
+    }
+}
 
 export class Faction extends MainEntity<FactionRow> {
     get Parent() {
@@ -32,30 +74,19 @@ export class Faction extends MainEntity<FactionRow> {
     }
 
     /**
-     * How much of the parents reputation gains spills over
-     * to this faction
+     * How much of this factions reputation spills over to its children
      */
-    get DownRepGainRate() {
-        return this.wrapIndex(this.row.ParentFactionMod,0)
+    get RepSpilloverDown() {
+        return new FactionRepGain(this, 0);
     }
 
     /**
-     * How much of the this reputations gains spills over
-     * to the parent
+     * How much of this factions reputation spills over to its parent
+     * @note The "Cap" here is not used by TrinityCore
      */
-    get UpRepGainRate() {
-        return this.wrapIndex(this.row.ParentFactionMod,1)
+    get RepSpilloverUp() {
+        return new FactionRepGain(this, 1);
     }
-
-    /**
-     * The maximum rank at which this faction gains
-     * reputation spillover from its parent
-     */
-    get DownRepGainCap() {
-        return this.wrapIndex(this.row.ParentFactionCap,0)
-    }
-
-    // parentFactionCap[1] is unused in trinitycore
 
     constructor(row: FactionRow) {
         super(row);
@@ -113,10 +144,9 @@ export class FactionRegistryClass
             )
             .Name.clear()
             .Description.clear()
-            .DownRepGainCap.set(0)
-            .DownRepGainRate.set(0)
+            .RepSpilloverDown.set(0,0)
+            .RepSpilloverUp.set(0,0)
             .Reputation.clearAll()
-            .UpRepGainRate.set(0)
         if(hasReputation) {
             v.ReputationIndex.assign(mod,`${id}-rep`);
         }
