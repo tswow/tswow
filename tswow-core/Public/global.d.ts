@@ -2178,7 +2178,7 @@ declare class TSEntityProvider {
 }
 
 
-declare type TimerCallback<T> = (timer: TSTimer,owner: T, delay: uint32, cancel: TSMutable<bool>)=>void
+declare type TimerCallback<T> = (owner: T, delay: uint32, cancel: TSMutable<bool>, timer: TSTimer)=>void
 declare type JsonMessageCallback<T> = (channel: uint8, obj: TSJsonObject, owner: T)=>void
 declare interface TSWorldEntityProvider<T> {
     AddTimer(name: string, time: uint32, repeats: uint32, callback: TimerCallback<T>);

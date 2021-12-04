@@ -87,7 +87,7 @@ template <typename T>
 class TSTimer;
 
 template <typename T>
-using TimerCallback = std::function<void(TSTimer<T>*,T,unsigned,TSMutable<bool>)>;
+using TimerCallback = std::function<void(T,unsigned,TSMutable<bool>, TSTimer<T>* )>;
 
 template <typename T>
 class TC_GAME_API TSTimer {
@@ -125,7 +125,7 @@ public:
 
         for (uint64_t loop = 0; loop < loops; ++loop)
         {
-            m_callback(this, ctx, diff, TSMutable<bool>(&stop));
+            m_callback(ctx, diff, TSMutable<bool>(&stop), this);
             m_lastTick = n;
             if (stop)
             {
