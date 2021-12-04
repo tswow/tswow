@@ -1,5 +1,6 @@
 import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { LockRow } from "wotlkdata/wotlkdata/dbc/types/Lock";
 import { gameobject_templateQuery } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
@@ -216,6 +217,20 @@ export class LockTraps extends LockGameObject<GameObjectTrap> {
     }
 }
 
+export class LockReferences extends CellSystem<Lock> {
+    get Chests() { return new LockChests(this.owner); }
+    get AreaDamages() { return new LockAreaDamages(this.owner); }
+    get Buttons() { return new LockButtons(this.owner); }
+    get Cameras() { return new LockCameras(this.owner); }
+    get Doors() { return new LockDoors(this.owner); }
+    get FishingHoles() { return new LockFishingHoles(this.owner); }
+    get FlagDrops() { return new LockFlagDrops(this.owner); }
+    get FlagStands() { return new LockFlagStands(this.owner); }
+    get Goobers() { return new LockGoobers(this.owner); }
+    get QuestGivers() { return new LockQuestGivers(this.owner); }
+    get Traps() { return new LockTraps(this.owner); }
+}
+
 // @ts-ignore -- hack, it's valid
 export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
     get ID() { return this.row.ID.get(); }
@@ -273,15 +288,5 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
         ) !== undefined
     }
 
-    get Chests() { return new LockChests(this); }
-    get AreaDamages() { return new LockAreaDamages(this); }
-    get Buttons() { return new LockButtons(this); }
-    get Cameras() { return new LockCameras(this); }
-    get Doors() { return new LockDoors(this); }
-    get FishingHoles() { return new LockFishingHoles(this); }
-    get FlagDrops() { return new LockFlagDrops(this); }
-    get FlagStands() { return new LockFlagStands(this); }
-    get Goobers() { return new LockGoobers(this); }
-    get QuestGivers() { return new LockQuestGivers(this); }
-    get Traps() { return new LockTraps(this); }
+    get References() { return new LockReferences(this); }
 }
