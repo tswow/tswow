@@ -23,8 +23,8 @@ import { Quest } from "./Quest";
 
 export class QuestRegistryClass extends RegistryStatic<Quest,quest_templateRow,quest_templateQuery> {
     protected Clone(mod: string, name: string, r: Quest, parent: Quest): void {
-        if(parent.addonExists()) {
-            parent.addonRow().clone(r.ID);
+        if(parent.AddonRow.exists()) {
+            parent.AddonRow.get().clone(r.ID);
         }
     }
     protected Table(): Table<any, quest_templateQuery, quest_templateRow> & { add: (id: number) => quest_templateRow; } {

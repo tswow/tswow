@@ -1,4 +1,6 @@
 import { makeMaskCell32, MaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { gameobjectRow } from "wotlkdata/wotlkdata/sql/types/gameobject";
 import { gameobject_addonRow } from "wotlkdata/wotlkdata/sql/types/gameobject_addon";
@@ -53,6 +55,22 @@ export class GameObjectInstanceAddon extends MaybeSQLEntity<GameObjectInstance,g
   }
 }
 
+export class GameObjectAddonRow extends CellSystem<GameObjectInstance> {
+  protected readonly Addon = new GameObjectInstanceAddon(this.owner);
+
+  get() { return this.Addon.getSQL(); }
+
+  mod(callback: (row: gameobject_addonRow)=>void) {
+      callback(this.get());
+  }
+
+  exists() { return this.Addon.exists(); }
+
+  static addon(template: GameObjectInstance) {
+      return template.AddonRow.Addon
+  }
+}
+
 export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get ID() { return this.row.guid.get(); }
     get Position() { return new PositionMapXYZOCell(
@@ -85,9 +103,10 @@ export class GameObjectInstance extends MainEntity<gameobjectRow> {
     get ScriptName() { return this.wrap(this.row.ScriptName); }
     get GameEvents() { return new GameObjectGameEventsForward(this); }
     get Template() { return GORegistry.Plain.ref(this, this.row.id); }
-    protected readonly Addon = new GameObjectInstanceAddon(this);
+    @Transient
+    protected get Addon() { return GameObjectAddonRow.addon(this); }
+    @Transient
+    readonly AddonRow = new GameObjectAddonRow(this);
     get Invisibility()   { return this.Addon.Invisibility; }
     get ParentRotation() { return this.Addon.ParentRotation; }
-    addonExists() { return this.Addon.exists(); }
-    addonRow() { return this.Addon.getSQL(); }
 }

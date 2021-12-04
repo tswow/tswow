@@ -73,8 +73,8 @@ export class CreatureTemplateRegistryClass
             .HoverHeight.set(0)
     }
     protected Clone(mod: string, id: string, child: CreatureTemplate, parent: CreatureTemplate): void {
-        if(parent.addonExists()) {
-            parent.addonRow().clone(child.ID);
+        if(parent.AddonRow.exists()) {
+            parent.AddonRow.get().clone(child.ID);
         }
         parent.Vendor.forEach((item)=>{
             item.row.clone(child.ID,item.Item.get(),item.ExtendedCost.get())
@@ -128,8 +128,8 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: CreatureInstance, parent: CreatureInstance): void {
-        if(parent.addonExists()) {
-            parent.addonRow().clone(r.ID);
+        if(parent.AddonRow.exists()) {
+            parent.AddonRow.get().clone(r.ID);
         }
     }
     protected Entity(r: creatureRow): CreatureInstance {

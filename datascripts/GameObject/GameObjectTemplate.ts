@@ -17,8 +17,10 @@
 import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { gameobject_templateRow } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
+import { gameobject_template_addonRow } from "wotlkdata/wotlkdata/sql/types/gameobject_template_addon";
 import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { GossipRegistry } from "../Gossip/Gossips";
@@ -86,6 +88,24 @@ export class GameObjectTemplateInstances<T extends GameObjectTemplate>
     }
 }
 
+export class GameObjectTemplateAddonRow<T extends GameObjectTemplate>
+    extends CellSystem<T>
+{
+    protected readonly Addon = new GameObjectTemplateAddon(this.owner);
+
+    get() { return this.Addon.getSQL(); }
+
+    mod(callback: (row: gameobject_template_addonRow)=>void) {
+        callback(this.get());
+    }
+
+    exists() { return this.Addon.exists(); }
+
+    static addon<T extends GameObjectTemplate>(template: T) {
+        return template.AddonRow.Addon
+    }
+}
+
 export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
     protected transformer() { return this.Type; }
     protected default(): GameObjectPlain {
@@ -93,9 +113,10 @@ export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow
     }
 
     @Transient
-    protected Addon = new GameObjectTemplateAddon(this);
-    addonExists() { return this.Addon.exists(); }
-    addonRow()    { return this.Addon.getSQL(); }
+    protected get Addon() { return GameObjectTemplateAddonRow.addon(this); }
+    @Transient
+    readonly AddonRow = new GameObjectTemplateAddonRow(this);
+
     get ArtKits() { return this.Addon.ArtKits; }
     get Faction() { return this.Addon.Faction; }
     get Flags()   { return this.Addon.Flags; }

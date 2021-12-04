@@ -273,8 +273,8 @@ export class QuestReward extends ChildEntity<quest_templateRow,Quest> {
     /** The mail received upon */
     get Mail() {
         return new QuestRewardMail(this.owner
-            , this.owner.addonRow().RewardMailTemplateID
-            , this.owner.addonRow().RewardMailDelay)
+            , this.owner.AddonRow.get().RewardMailTemplateID
+            , this.owner.AddonRow.get().RewardMailDelay)
     }
 }
 

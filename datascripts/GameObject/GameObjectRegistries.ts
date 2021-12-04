@@ -88,8 +88,8 @@ export abstract class GameObjectRegistryBaseClass<T extends GameObjectTemplate>
             let parentEntity = this.Entity(parentRow);
             // we should use ".Entity" now because we got the type from the parent
             let entity = this.Entity(parentRow.clone(nid))
-            if(parentEntity.addonExists()) {
-                parentEntity.addonRow().clone(entity.ID)
+            if(parentEntity.AddonRow.exists()) {
+                parentEntity.AddonRow.get().clone(entity.ID)
             }
             this.CloneGO(entity,parentEntity,mod,id);
             return entity;

@@ -15,7 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { quest_templateRow } from "wotlkdata/wotlkdata/sql/types/quest_template";
+import { quest_template_addonRow } from "wotlkdata/wotlkdata/sql/types/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { RaceMask } from "../Race/RaceType";
@@ -28,16 +31,27 @@ import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
 import { QuestText } from "./QuestText";
 
+export class QuestAddonRow extends CellSystem<Quest> {
+    protected readonly Addon = new QuestAddon(this.owner);
+
+    get() { return this.Addon.getSQL(); }
+
+    mod(callback: (row: quest_template_addonRow)=>void) {
+        callback(this.get());
+    }
+
+    exists() { return this.Addon.exists(); }
+
+    static addon(template: Quest) {
+        return template.AddonRow.Addon
+    }
+}
+
 export class Quest extends MainEntity<quest_templateRow> {
-    protected Addon = new QuestAddon(this);
-
-    addonExists() {
-        return this.Addon.exists();
-    }
-
-    addonRow() {
-        return this.Addon.getSQL();
-    }
+    @Transient
+    protected get Addon() { return QuestAddonRow.addon(this); }
+    @Transient
+    readonly AddonRow = new QuestAddonRow(this);
 
     get SpecialFlags() { return this.Addon.SpecialFlags; }
     get MaxLevel() { return this.Addon.MaxLevel; }

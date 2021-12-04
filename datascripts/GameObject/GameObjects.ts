@@ -48,8 +48,8 @@ export class GameObjectInstanceRegistryClass
             .VerifiedBuild.set(17688)
     }
     protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
-        if(parent.addonExists()) {
-            parent.addonRow().clone(r.ID);
+        if(parent.AddonRow.exists()) {
+            parent.AddonRow.get().clone(r.ID);
         }
     }
     protected Entity(r: gameobjectRow): GameObjectInstance {

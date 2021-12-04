@@ -18,6 +18,8 @@
 import { finish } from "wotlkdata";
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { creatureRow } from "wotlkdata/wotlkdata/sql/types/creature";
 import { creature_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_addon";
@@ -97,12 +99,25 @@ export class CreatureInstanceBoss
     }
 }
 
+export class CreatureInstanceAddonRow extends CellSystem<CreatureInstance> {
+    protected readonly Addon = new CreatureInstanceAddon(this.owner)
+    exists() { return this.Addon.exists(); }
+    get() { return this.Addon.getSQL(); }
+    mod(callback: (row: creature_addonRow)=>void) {
+        callback(this.get());
+        return this.owner;
+    }
+
+    static addon(inst: CreatureInstance) {
+        return inst.AddonRow.Addon;
+    }
+}
+
 export class CreatureInstance extends MainEntity<creatureRow> {
-    protected readonly Addon = new CreatureInstanceAddon(this)
-
-    addonExists() { return this.Addon.exists(); }
-    addonRow() { return this.Addon.getSQL(); }
-
+    @Transient
+    protected get Addon() { return CreatureInstanceAddonRow.addon(this); }
+    @Transient
+    readonly AddonRow = new CreatureInstanceAddonRow(this);
     get Auras() { return this.Addon.Auras; }
     get Path() { return this.Addon.Path; }
     get AddonBytes1() { return this.Addon.Bytes1; }

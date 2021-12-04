@@ -17,6 +17,7 @@
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
@@ -174,6 +175,22 @@ export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, crea
     get VisibilityDistanceType() { return this.wrapSQL(0,sql=>sql.visibilityDistanceType); }
 }
 
+export class CreatureTemplateAddonRow extends CellSystem<CreatureTemplate> {
+    protected readonly Addon = new CreatureTemplateAddon(this.owner);
+
+    get() { return this.Addon.getSQL(); }
+
+    mod(callback: (row: creature_template_addonRow)=>void) {
+        callback(this.get());
+    }
+
+    exists() { return this.Addon.exists(); }
+
+    static addon(template: CreatureTemplate) {
+        return template.AddonRow.Addon
+    }
+}
+
 export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
@@ -185,9 +202,10 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
         })
     }
 
-    protected readonly Addon = new CreatureTemplateAddon(this);
-    addonExists() { return this.Addon.exists() }
-    addonRow()    { return this.Addon.getSQL() }
+    @Transient
+    protected get Addon() { return CreatureTemplateAddonRow.addon(this); }
+    @Transient
+    readonly AddonRow = new CreatureTemplateAddonRow(this);
     get Auras()   { return this.Addon.Auras; }
     get Bytes1()  { return this.Addon.Bytes1 }
     get Bytes2()  { return this.Addon.Bytes2 }
