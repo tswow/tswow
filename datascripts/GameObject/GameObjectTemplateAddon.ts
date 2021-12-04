@@ -8,7 +8,6 @@ import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { GameObjectFlags } from "./GameObjectFlags";
 import { GameObjectTemplate } from "./GameObjectTemplate";
 
-
 export class ArtKits<T extends GameObjectTemplate> extends CellSystem<GameObjectTemplateAddon<T>> {
     add(id: number) {
         for(let i=0;i<this.length;++i) {
@@ -64,7 +63,15 @@ export class GameObjectTemplateAddon<T extends GameObjectTemplate> extends Maybe
     }
 
     protected createSQL(): gameobject_template_addonRow {
-        return SQL.gameobject_template_addon.add(this.owner.ID);
+        return SQL.gameobject_template_addon.add(this.owner.ID)
+            .artkit0.set(0)
+            .artkit1.set(0)
+            .artkit2.set(0)
+            .artkit3.set(0)
+            .faction.set(0)
+            .flags.set(0)
+            .maxgold.set(0)
+            .mingold.set(0)
     }
     protected findSQL(): gameobject_template_addonRow {
         return SQL.gameobject_template_addon.query({entry:this.owner.ID});
