@@ -7840,32 +7840,32 @@ declare namespace _hidden {
     }
 
     export class Battlegrounds<T> {
-        OnStart(callback: (bg: TSBattleground)=>void)
-        OnReload(callback: (bg: TSBattleground)=>void)
-        OnAddPlayer(callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnPlayerLogin(callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnPlayerLogout(callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnUpdateScore(callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
-        OnUpdateEarly(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
-        OnUpdateLate(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
-        OnKillPlayer(callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
-        OnEndEarly(callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
+        OnStart(callback: (bg: TSBattleground)=>void): T
+        OnReload(callback: (bg: TSBattleground)=>void): T
+        OnAddPlayer(callback: (bg: TSBattleground,player: TSPlayer)=>void): T
+        OnPlayerLogin(callback: (bg: TSBattleground,player: TSPlayer)=>void): T
+        OnPlayerLogout(callback: (bg: TSBattleground,player: TSPlayer)=>void): T
+        OnUpdateScore(callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void): T
+        OnUpdateEarly(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void): T
+        OnUpdateLate(callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void): T
+        OnKillPlayer(callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void): T
+        OnEndEarly(callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void): T
         /**
          * Note that "winner" can no longer be changed at this stage,
          * for that, use "OnEndEarly"
          */
-        OnEndLate(callback: (bg: TSBattleground,winner: uint32)=>void)
-        OnKillCreature(callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
-        OnRemovePlayer(callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
-        OnPlayerUnderMap(callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
-        OnGenericEvent(callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
-        OnClickFlag(callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
-        OnDropFlag(callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnDestroyGate(callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
-        OnOpenDoors(callback: (bg: TSBattleground)=>void)
-        OnCloseDoors(callback: (bg: TSBattleground)=>void)
-        OnReset(callback: (bg: TSBattleground)=>void)
-        OnSetup(callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
+        OnEndLate(callback: (bg: TSBattleground,winner: uint32)=>void): T
+        OnKillCreature(callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void): T
+        OnRemovePlayer(callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void): T
+        OnPlayerUnderMap(callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void): T
+        OnGenericEvent(callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void): T
+        OnClickFlag(callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void): T
+        OnDropFlag(callback: (bg: TSBattleground,player: TSPlayer)=>void): T
+        OnDestroyGate(callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void): T
+        OnOpenDoors(callback: (bg: TSBattleground)=>void): T
+        OnCloseDoors(callback: (bg: TSBattleground)=>void): T
+        OnReset(callback: (bg: TSBattleground)=>void): T
+        OnSetup(callback: (bg: TSBattleground,success: TSMutable<bool>)=>void): T
         OnAchievementCriteria( callback: (
               bg: TSBattleground
             , criteria: uint32
@@ -7873,8 +7873,8 @@ declare namespace _hidden {
             , target: TSUnit
             , miscValueA: uint32
             , handled: TSMutable<bool>
-        )=>void)
-        OnAreaTrigger(callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
+        )=>void): T
+        OnAreaTrigger(callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void): T
         OnAddGameObject(callback: (
               bg: TSBattleground
             , type: uint32
@@ -7888,7 +7888,7 @@ declare namespace _hidden {
             , rot1: TSMutable<float>
             , rot2: TSMutable<float>
             , rot3: TSMutable<float>
-        )=>void);
+        )=>void): T;
 
         OnAddCreature(callback: (
               bg: TSBattleground
@@ -7899,7 +7899,7 @@ declare namespace _hidden {
             , z: TSMutable<float>
             , o: TSMutable<float>
             , respawnTime: TSMutable<uint32>
-        )=>void);
+        )=>void): T;
 
         OnAddSpiritGuide(callback: (
               bg: TSBattleground
@@ -7910,17 +7910,17 @@ declare namespace _hidden {
             , y: TSMutable<float>
             , z: TSMutable<float>
             , o: TSMutable<float>
-        )=>void);
+        )=>void): T;
 
         OnWeight(callback: (
               bgType: uint32
             , weight: TSMutable<float>
             , origType: uint32
-        )=>void)
+        )=>void): T
 
         OnSelect(callback: (
               bgType: TSMutable<uint32>
-        )=>void)
+        )=>void): T
     }
 
     export class BattlegroundID<T> {
@@ -8113,17 +8113,17 @@ declare namespace _hidden {
     }
 
     export class Maps<T> {
-        OnCreate(callback: (map: TSMap)=>void)
-        OnReload(callback: (map: TSMap)=>void)
-        OnUpdate(callback: (map: TSMap, diff: uint32)=>void)
-        OnUpdateDelayed(callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void)
-        OnPlayerEnter(callback: (map: TSMap, player: TSPlayer)=>void)
-        OnPlayerLeave(callback: (map: TSMap, player: TSPlayer)=>void)
-        OnCreatureCreate(callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void)
-        OnCreatureRemove(callback: (map: TSMap, creature: TSCreature)=>void)
-        OnGameObjectCreate(callback: (map: TSMap, obj: TSGameObject, cancel: TSMutable<bool>)=>void)
-        OnGameObjectRemove(callback: (map: TSMap, obj: TSGameObject)=>void)
-        OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void)
+        OnCreate(callback: (map: TSMap)=>void): T
+        OnReload(callback: (map: TSMap)=>void): T
+        OnUpdate(callback: (map: TSMap, diff: uint32)=>void): T
+        OnUpdateDelayed(callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void): T
+        OnPlayerEnter(callback: (map: TSMap, player: TSPlayer)=>void): T
+        OnPlayerLeave(callback: (map: TSMap, player: TSPlayer)=>void): T
+        OnCreatureCreate(callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void): T
+        OnCreatureRemove(callback: (map: TSMap, creature: TSCreature)=>void): T
+        OnGameObjectCreate(callback: (map: TSMap, obj: TSGameObject, cancel: TSMutable<bool>)=>void): T
+        OnGameObjectRemove(callback: (map: TSMap, obj: TSGameObject)=>void): T
+        OnCheckEncounter(callback: (map: TSMap, player: TSPlayer)=>void): T
     }
 
     export class MapID<T> {
