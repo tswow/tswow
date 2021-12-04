@@ -40,8 +40,8 @@ export class MaskPart<T,D extends MaskCell32<T>> {
 
     set(value: Bit) {
         return value
-            ? this.owner.setOr(this.mask)
-            : this.owner.setNot(this.mask);
+            ? this.owner.set(this.mask,'OR')
+            : this.owner.set(this.mask,'NOT');
     }
 
     on(callback: ()=>void) {
@@ -402,6 +402,9 @@ const MaskCell32Impl = {
     }
 }
 
+export type MaskMode =
+    'OR'|'XOR'|'AND'|'OR'|'NOR'|'NOT'
+
 export class MaskCell32<T> extends MaskCell<T> {
     static AllBits = 0xffffffff;
 
@@ -447,54 +450,40 @@ export class MaskCell32<T> extends MaskCell<T> {
         return MaskCell32Impl.getBit(this.signed, no, this.cell.get());
     }
 
-    get(): number {
-        return this.cell.get();
+    get(): number;
+    get(num: number, mode: MaskMode): number
+
+    get(num?: number, mode?: MaskMode): number {
+        switch(mode) {
+            case 'AND':
+                return MaskCell32Impl.and(this.signed,this.cell.get(),num);
+            case 'NOR':
+                return MaskCell32Impl.nor(this.signed,this.cell.get(),num);
+            case 'NOT':
+                return MaskCell32Impl.not(this.signed,this.cell.get(),num);
+            case 'OR':
+                return MaskCell32Impl.or(this.signed,this.cell.get(),num);
+            case 'XOR':
+                return MaskCell32Impl.xor(this.signed,this.cell.get(),num);
+            default:
+                return this.cell.get();
+        }
     }
 
     add(bits: number|number[]) {
-        return this.setOr(MaskCell32Impl.mask(bits));
+        return this.set(MaskCell32Impl.mask(bits),'OR');
     }
 
     remove(bits: number|number[]) {
-        return this.setNot(MaskCell32Impl.mask(bits));
+        return this.set(MaskCell32Impl.mask(bits),'NOT');
     }
 
-    getOr(mask: number) {
-        return MaskCell32Impl.or(this.signed,mask,this.cell.get());
-    }
-    setOr(mask: number) { return this.set(this.getOr(mask)); }
-
-    getNot(mask: number) {
-        return MaskCell32Impl.not(this.signed,mask,this.cell.get())
-    }
-    setNot(mask: number) { return this.set(this.getNot(mask)); }
-
-    getAnd(mask: number) {
-        return MaskCell32Impl.and(this.signed,mask,this.cell.get())
-    }
-
-    setAnd(mask: number) {
-        return this.set(this.getAnd(mask));
-    }
-
-    getXor(mask: number) {
-        return MaskCell32Impl.xor(this.signed,mask,this.cell.get())
-    }
-
-    setXor(mask: number) {
-        return this.set(this.getXor(mask));
-    }
-
-    getNor(mask: number) {
-        return MaskCell32Impl.nor(this.signed,mask,this.cell.get())
-    }
-
-    setNor(mask: number) {
-        return this.set(this.getNor(mask));
-    }
-
-    set(value: number) {
-        this.cell.set(MaskCell32Impl.set(this.signed,value));
+    set(value: number, mode?: MaskMode) {
+        if(!mode) {
+            this.cell.set(MaskCell32Impl.set(this.signed,value));
+        } else {
+            this.cell.set(this.get(value,mode));
+        }
         return this.owner;
     }
 
@@ -620,24 +609,14 @@ export class MaskCell32T<T,Str> extends MaskCell32<T> {
         return makeMask(this.obj,value);
     }
 
-    set(value: MaskCon<Str>)    { return super.set(this.mm(value)) }
-    setOr(value: MaskCon<Str>)  { return super.setOr(this.mm(value)) }
-    getOr(value: MaskCon<Str>)  { return super.getOr(this.mm(value)) }
-    add(value: MaskCon<Str>)    { return super.setOr(this.mm(value)) }
+    set(value: MaskCon<Str>, mode: MaskMode)    { return super.set(this.mm(value),mode) }
+    add(value: MaskCon<Str>)    { return super.set(this.mm(value),'OR') }
     hasAll(value: MaskCon<Str>) {
         let v = this.mm(value);
-        return super.getAnd(v) === v;
+        return super.get(v,'AND') === v;
     }
-    hasAny(value: MaskCon<Str>) { return this.getOr(value) !== 0; }
-    remove(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
-    setNor(value: MaskCon<Str>) { return super.setNor(this.mm(value)) }
-    getNor(value: MaskCon<Str>) { return super.getNor(this.mm(value)) }
-    setXor(value: MaskCon<Str>) { return super.setXor(this.mm(value)) }
-    getXor(value: MaskCon<Str>) { return super.getXor(this.mm(value)) }
-    setAnd(value: MaskCon<Str>) { return super.setAnd(this.mm(value)) }
-    getAnd(value: MaskCon<Str>) { return super.getAnd(this.mm(value)) }
-    setNot(value: MaskCon<Str>) { return super.setNot(this.mm(value)) }
-    getNot(value: MaskCon<Str>) { return super.getNot(this.mm(value)) }
+    hasAny(value: MaskCon<Str>) { return this.get(this.mm(value),'OR') !== 0; }
+    remove(value: MaskCon<Str>) { return super.set(this.mm(value),'NOT') }
 }
 
 interface MaskValueRead<T> {
