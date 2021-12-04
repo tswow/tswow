@@ -50,7 +50,24 @@ export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
         return this.owner;
     }
 
-    addGet(mod: string, id: string, row: number, column: number, ranks: number, parentSpell = 0) {
+    addGet(mod: string, id: string) {
+        return new Talent(
+            DBC.Talent.add(Ids.Talent.id(mod,id))
+                .TabID.set(this.owner.ID)
+                .PrereqTalent.set([0,0,0])
+                .PrereqRank.set([0,0,0])
+                .CategoryMask.set([0,0])
+                .SpellRank.set([0,0,0,0,0,0,0])
+                .RequiredSpellID.set(0)
+        )
+    }
+
+    addMod(mod: string, id: string, callback: (talent: Talent)=>void) {
+        callback(this.addGet(mod,id));
+        return this.owner;
+    }
+
+    addSpellsGet(mod: string, id: string, ranks: number, parentSpell = 0) {
         let spellids: number[] = []
         for(let i=0;i<ranks;++i) {
             spellids.push(
@@ -69,9 +86,6 @@ export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
                 .RequiredSpellID.set(0)
         )
         talent.Spells.add(spellids)
-        talent.row
-            .TierID.set(row)
-            .ColumnIndex.set(column)
         return talent;
     }
 
@@ -79,8 +93,8 @@ export class TalentTreeTalents extends MultiRowSystem<Talent,TalentTree> {
      * @param parentSpell set to 0 for no parent
      * @returns
      */
-    addMod(mod: string, id: string, row: number, column: number, ranks: number, parentSpell: number, callback: (talent: Talent)=>void) {
-        callback(this.addGet(mod,id,row,column,ranks,parentSpell));
+    addSpellsMod(mod: string, id: string, ranks: number, parentSpell: number, callback: (talent: Talent)=>void) {
+        callback(this.addSpellsGet(mod,id,ranks,parentSpell));
         return this.owner;
     }
 }
