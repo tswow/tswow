@@ -12,7 +12,7 @@ TSInstance::TSInstance(Map* map, InstanceScript* script)
 
 bool TSInstance::IsNull()
 {
-    return m_script == nullptr;
+    return m_script == nullptr || map == nullptr;
 }
 
 void TSInstance::SaveInstanceToDB()

@@ -48,7 +48,7 @@ public:
     Battleground* bg;
     TSBattleground(Map*, Battleground* bg);
     TSBattleground();
-    bool IsNull() { return bg == nullptr; };
+    bool IsNull() { return bg == nullptr || map == nullptr; };
     TSBattleground* operator->() { return this;}
     uint32 GetBracketId();
     TSString GetBGName();
