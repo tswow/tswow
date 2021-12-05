@@ -71,7 +71,7 @@ TSBattleground::TSBattleground()
  *
  * @return string name
  */
-TSString TSBattleground::GetName()
+TSString TSBattleground::GetBGName()
 {
      return TSString(bg->GetName());
 }
@@ -153,16 +153,6 @@ uint32 TSBattleground::GetFreeSlotsForTeam(uint32 team)
 uint32 TSBattleground::GetInstanceId()
 {
     return bg->GetInstanceID();
-}
-
-/**
- * Returns the map ID of the [BattleGround].
- *
- * @return uint32 mapId
- */
-uint32 TSBattleground::GetMapId()
-{
-    return bg->GetMapId();
 }
 
 /**
@@ -287,7 +277,7 @@ TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
     return players;
 }
 
-TSBattlegroundPlayer TSBattleground::GetPlayer(uint64 guid)
+TSBattlegroundPlayer TSBattleground::GetBGPlayer(uint64 guid)
 {
     for (auto& player : bg->GetPlayers())
     {
@@ -418,17 +408,17 @@ void TSBattleground::UpdateWorldState(uint32 variable, uint32 value)
     bg->UpdateWorldState(variable, value);
 }
 
-void TSBattleground::EndBattleground(uint32 winnerTeam)
+void TSBattleground::EndBG(uint32 winnerTeam)
 {
     bg->EndBattleground(winnerTeam);
 }
 
-TSGroup TSBattleground::GetRaid(uint32 faction)
+TSGroup TSBattleground::GetBGRaid(uint32 faction)
 {
     return TSGroup(bg->GetBgRaid(faction));
 }
 
-uint32 TSBattleground::GetPlayerCount(uint32 team)
+uint32 TSBattleground::GetBGPlayerCount(uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
@@ -440,7 +430,7 @@ uint32 TSBattleground::GetPlayerCount(uint32 team)
         return bg->GetPlayersCountByTeam(team);
     }
 }
-uint32 TSBattleground::GetAlivePlayerCount(uint32 team)
+uint32 TSBattleground::GetBGAlivePlayerCount(uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
@@ -477,7 +467,7 @@ void TSBattleground::CloseDoor(uint32 type)
     bg->DoorClose(type);
 }
 
-bool TSBattleground::IsPlayerInBattleground(uint64 guid)
+bool TSBattleground::IsPlayerInBG(uint64 guid)
 {
     return bg->IsPlayerInBattleground(ObjectGuid(guid));
 }
@@ -541,12 +531,12 @@ bool TSBattleground::IsHoliday()
     return bg->m_HonorMode == BG_HOLIDAY;
 }
 
-TSGameObject TSBattleground::GetGameObject(uint32 type, bool logErrors)
+TSGameObject TSBattleground::GetBGGameObject(uint32 type, bool logErrors)
 {
     return TSGameObject(bg->GetBGObject(type, logErrors));
 }
 
-TSCreature TSBattleground::GetCreature(uint32 type, bool logErrors)
+TSCreature TSBattleground::GetBGCreature(uint32 type, bool logErrors)
 {
     return TSCreature(bg->GetBGCreature(type, logErrors));
 }

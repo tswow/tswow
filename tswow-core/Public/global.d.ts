@@ -4209,7 +4209,7 @@ declare interface TSBattleground extends TSMap {
      *
      * @return string name
      */
-    GetName() : string
+    GetBGName() : string
 
     /**
      * Returns the amount of alive players in the [BattleGround] by the team ID.
@@ -4218,13 +4218,6 @@ declare interface TSBattleground extends TSMap {
      * @return uint32 count
      */
     GetAlivePlayersCountByTeam(team : TeamId) : uint32
-
-    /**
-     * Returns the [Map] of the [BattleGround].
-     *
-     * @return [Map] map
-     */
-    GetMap() : TSMap
 
     /**
      * Returns the bonus honor given by amount of kills in the specific [BattleGround].
@@ -4255,13 +4248,6 @@ declare interface TSBattleground extends TSMap {
      * @return uint32 instanceId
      */
     GetInstanceId() : uint32
-
-    /**
-     * Returns the map ID of the [BattleGround].
-     *
-     * @return uint32 mapId
-     */
-    GetMapId() : uint32
 
     /**
      * Returns the type ID of the [BattleGround].
@@ -4327,6 +4313,7 @@ declare interface TSBattleground extends TSMap {
     GetStatus() : uint32
 
     IsRandom(): bool;
+    GetBGPlayer(guid: uint64): TSBattlegroundPlayer;
     GetBGPlayers(): TSArray<TSBattlegroundPlayer>;
     SetStartPosition(teamId: uint32, x: float, y: float, z: float, o: float): void;
     GetStartX(teamid: TeamId): float;
@@ -4342,16 +4329,16 @@ declare interface TSBattleground extends TSMap {
     RewardHonor(honor: uint32, team?: uint32): void;
     RewardReputation(faction: uint32, reputation: uint32, team?: TeamId): void;
     UpdateWorldState(variable: uint32, value: uint32): void;
-    EndBattleground(winnerTeam?: TeamId): void;
-    GetRaid(faction: TeamId): TSGroup;
-    GetPlayerCount(team?: TeamId): uint32;
-    GetAlivePlayerCount(team?: TeamId): uint32;
+    EndBG(winnerTeam?: TeamId): void;
+    GetBGRaid(faction: TeamId): TSGroup;
+    GetBGPlayerCount(team?: TeamId): uint32;
+    GetBGAlivePlayerCount(team?: TeamId): uint32;
     AddCreature(entry: uint32, type: uint32, x: float, y: float, z: float, o: float, respawnTime?: uint32, teamId?: TeamId): TSCreature;
     AddObject(type: uint32, entry:uint32, x: float, y: float, z: float, o: float, rot0: float, rot1: float, rot2: float, rot3: float, respawnTime?: uint32, goState?: uint32): bool;
     AddSpiritGuide(type: uint32, x: float, y: float, z: float, o: float, teamId?: TeamId): void;
     OpenDoor(type: uint32): void;
     CloseDoor(type: uint32): void;
-    IsPlayerInBattleground(guid: uint64): bool;
+    IsPlayerInBG(guid: uint64): bool;
     GetTeamScore(team: TeamId): uint32;
     SendMessage(entry: uint32, type: uint8, source?: TSPlayer): void;
     GetUniqueBracketID(): uint32;
@@ -4366,8 +4353,8 @@ declare interface TSBattleground extends TSMap {
     GetObjectType(guid: uint64): int32;
     SetHoliday(isHoliday: bool): void;
     IsHoliday(): bool;
-    GetGameObject(type: uint32, logErrors?: bool): TSGameObject;
-    GetCreature(type: uint32, logErrors?: bool): TSCreature;
+    GetBGGameObject(type: uint32, logErrors?: bool): TSGameObject;
+    GetBGCreature(type: uint32, logErrors?: bool): TSCreature;
 }
 
 declare interface TSGuidSet {
