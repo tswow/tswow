@@ -206,8 +206,8 @@ declare interface TSPlayer extends TSUnit {
     CanBeDPS(): bool
     CanBeLeader(): bool
 
-    GetBattleground(): TSBattleground
-    GetBattlegroundPlayer(): TSBattlegroundPlayer
+    GetBG(): TSBattleground
+    GetBGPlayer(): TSBattlegroundPlayer
 
     /**
      * Generates a creature outfit from this player.
@@ -536,7 +536,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return bool inBattlegroundQueue
      */
-    InBattlegroundQueue() : bool
+    InBGQueue() : bool
 
     /**
      * Returns 'true' if the [Player] is currently in an arena, 'false' otherwise.
@@ -550,7 +550,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return bool inBattleGround
      */
-    InBattleground() : bool
+    InBG() : bool
 
     /**
      * Returns 'true' if the [Player] can block incomming attacks, 'false' otherwise.
@@ -679,7 +679,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return [BattleGroundTypeId] typeId
      */
-    GetBattlegroundTypeId() : uint32
+    GetBGTypeID() : uint32
 
     /**
      * Returns the [Player]s current [BattleGround] ID
@@ -1416,7 +1416,7 @@ declare interface TSPlayer extends TSUnit {
     /**
      * Forcefully removes the [Player] from a [BattleGround] raid group
      */
-    RemoveFromBattlegroundRaid() : void
+    RemoveFromBGRaid() : void
 
     /**
      * Unbinds the [Player] from his instances except the one he currently is in.
@@ -1438,7 +1438,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @param bool teleToEntry = true
      */
-    LeaveBattleground(teleToEntryPoint : bool) : void
+    LeaveBG(teleToEntryPoint : bool) : void
 
     /**
      * Repairs [Item] at specified position. Returns total repair cost

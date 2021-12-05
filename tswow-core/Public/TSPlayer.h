@@ -78,9 +78,9 @@ public:
 	bool IsGMChat();
 	bool IsAcceptingWhispers();
 	bool IsRested();
-	bool InBattlegroundQueue();
+	bool InBGQueue();
 	bool InArena();
-	bool InBattleground();
+	bool InBG();
 	bool CanBlock();
 	bool CanParry();
 	uint8 GetSpecsCount(uint32 entry, uint32 mapid, uint32 zone);
@@ -98,7 +98,7 @@ public:
 	uint8 GetSubGroup();
 	TSGroup GetGroupInvite();
 	uint32 GetXPRestBonus(uint32 xp);
-	uint32 GetBattlegroundTypeId();
+	uint32 GetBGTypeId();
 	uint32 GetBattlegroundId();
 	uint32 GetReputationRank(uint32 faction);
 	uint16 GetDrunkValue();
@@ -197,10 +197,10 @@ public:
 	void SendTrainerList(TSCreature obj);
 	void SendGuildInvite(TSPlayer plr);
 	void LogoutPlayer(bool save);
-	void RemoveFromBattlegroundRaid();
+	void RemoveFromBGRaid();
 	void UnbindInstance(uint32 map, uint32 difficulty);
 	void UnbindAllInstances();
-	void LeaveBattleground(bool teleToEntryPoint);
+	void LeaveBG(bool teleToEntryPoint);
 	uint32 DurabilityRepair(uint16 position, bool cost, float discountMod);
 	uint32 DurabilityRepairAll(bool cost, float discountMod, bool guildBank);
 	void DurabilityPointLossForEquipSlot(int32 slot);
@@ -300,8 +300,8 @@ public:
 	void SendQuestTemplate(uint32 questId, bool activateAccept);
 	void SpawnBones();
 	void RemovedInsignia(TSPlayer looter);
-  TSBattlegroundPlayer GetBattlegroundPlayer();
-  TSBattleground GetBattleground();
+  TSBattlegroundPlayer GetBGPlayer();
+  TSBattleground GetBG();
 	TSInstance GetInstance();
 
 	bool GroupInvite(TSPlayer invited);

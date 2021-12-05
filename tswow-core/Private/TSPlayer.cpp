@@ -618,7 +618,7 @@ bool TSPlayer::IsRested()
  *
  * @return bool inBattlegroundQueue
  */
-bool TSPlayer::InBattlegroundQueue()
+bool TSPlayer::InBGQueue()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->InBattlegroundQueue();
@@ -644,7 +644,7 @@ bool TSPlayer::InArena()
  *
  * @return bool inBattleGround
  */
-bool TSPlayer::InBattleground()
+bool TSPlayer::InBG()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->InBattleground();
@@ -893,7 +893,7 @@ uint32 TSPlayer::GetXPRestBonus(uint32 xp)
  *
  * @return [BattleGroundTypeId] typeId
  */
-uint32 TSPlayer::GetBattlegroundTypeId()
+uint32 TSPlayer::GetBGTypeId()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundTypeId();
@@ -2170,7 +2170,7 @@ void TSPlayer::LogoutPlayer(bool save)
 /**
  * Forcefully removes the [Player] from a [BattleGround] raid group
  */
-void TSPlayer::RemoveFromBattlegroundRaid()
+void TSPlayer::RemoveFromBGRaid()
 {
 #if defined TRINITY || AZEROTHCORE
     player->RemoveFromBattlegroundOrBattlefieldRaid();
@@ -2249,7 +2249,7 @@ void TSPlayer::UnbindAllInstances()
  *
  * @param bool teleToEntry = true
  */
-void TSPlayer::LeaveBattleground(bool teleToEntryPoint)
+void TSPlayer::LeaveBG(bool teleToEntryPoint)
 {
 
 #ifndef AZEROTHCORE
@@ -3905,7 +3905,7 @@ void TSPlayer::SendUpdateEventStates(uint32 eventId)
     sGameEventMgr->SendWorldStateUpdate(player, eventId);
 }
 
-TSBattleground TSPlayer::GetBattleground()
+TSBattleground TSPlayer::GetBG()
 {
     return GetMap().ToBattleground();
 }
@@ -3915,7 +3915,7 @@ TSInstance TSPlayer::GetInstance()
     return GetMap().ToInstance();
 }
 
-TSBattlegroundPlayer TSPlayer::GetBattlegroundPlayer()
+TSBattlegroundPlayer TSPlayer::GetBGPlayer()
 {
     return GetMap().ToBattleground().GetPlayer(GetGUID());
 }
