@@ -3710,9 +3710,9 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      *
      * @return bool isBattleGround
      */
-    IsBattleground() : bool
+    IsBG() : bool
 
-    GetBattleground(): TSBattleground
+    ToBG(): TSBattleground
 
     /**
      * Returns `true` if the [Map] is a dungeon, `false` otherwise.

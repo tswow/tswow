@@ -62,7 +62,7 @@ bool TSMap::IsArena()
  *
  * @return bool isBattleGround
  */
-bool TSMap::IsBattleground()
+bool TSMap::IsBG()
 {
 #if defined TRINITY || AZEROTHCORE
     return map->IsBattleground();
@@ -71,7 +71,7 @@ bool TSMap::IsBattleground()
 #endif
 }
 
-TSBattleground TSMap::ToBattleground()
+TSBattleground TSMap::ToBG()
 {
     return TSBattleground(map, map->ToBattlegroundMap()->GetBG());
 }

@@ -38,8 +38,8 @@ public:
     TSMap* operator->() { return this;}
     bool IsNull() { return map == nullptr; };
     bool IsArena();
-    bool IsBattleground();
-    TSBattleground ToBattleground();
+    bool IsBG();
+    TSBattleground ToBG();
     bool IsDungeon();
     bool IsEmpty();
     bool IsHeroic();
