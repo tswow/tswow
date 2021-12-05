@@ -3907,7 +3907,7 @@ void TSPlayer::SendUpdateEventStates(uint32 eventId)
 
 TSBattleground TSPlayer::GetBG()
 {
-    return GetMap().ToBattleground();
+    return GetMap().ToBG();
 }
 
 TSInstance TSPlayer::GetInstance()
@@ -3917,7 +3917,7 @@ TSInstance TSPlayer::GetInstance()
 
 TSBattlegroundPlayer TSPlayer::GetBGPlayer()
 {
-    return GetMap().ToBattleground().GetPlayer(GetGUID());
+    return GetMap().ToBG().GetBGPlayer(GetGUID());
 }
 
 TSOutfit TSPlayer::GetOutfitCopy(uint32_t settings, int32_t race, int32_t gender)
