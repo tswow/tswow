@@ -47,9 +47,9 @@ public:
     TSString GetName();
     float GetHeight(float x, float y, uint32 phasemask);
     int32 GetDifficulty();
-    uint32 GetInstanceId();
+    uint32 GetInstanceID();
     uint32 GetPlayerCount();
-    uint32 GetMapId();
+    uint32 GetMapID();
 
     bool IsInstance();
     TSInstance ToInstance();
@@ -62,7 +62,7 @@ public:
     TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
     TSCreature SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
     TSGameObject SpawnGameObject(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);
-    uint32 GetAreaId(float x, float y, float z, float phasemask);
+    uint32 GetAreaID(float x, float y, float z, float phasemask);
     TSWorldObject GetWorldObject(uint64 guid);
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
     TSEntity * GetData();

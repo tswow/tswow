@@ -32,7 +32,7 @@ public:
     uint32 GetMemberCount();
     TSPlayer GetLeader();
     uint64 GetLeaderGUID();
-    uint32 GetId();
+    uint32 GetID();
     TSString GetName();
     TSString GetMOTD();
     TSString GetInfo();

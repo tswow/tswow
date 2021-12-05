@@ -167,7 +167,7 @@ int32 TSMap::GetDifficulty()
  *
  * @return uint32 instanceId
  */
-uint32 TSMap::GetInstanceId()
+uint32 TSMap::GetInstanceID()
 {
     return map->GetInstanceId();
 }
@@ -187,7 +187,7 @@ uint32 TSMap::GetPlayerCount()
  *
  * @return uint32 mapId
  */
-uint32 TSMap::GetMapId()
+uint32 TSMap::GetMapID()
 {
     return map->GetId();
 }
@@ -201,7 +201,7 @@ uint32 TSMap::GetMapId()
  * @param uint32 phasemask = PHASEMASK_NORMAL
  * @return uint32 areaId
  */
-uint32 TSMap::GetAreaId(float x,float y,float z,float phasemask)
+uint32 TSMap::GetAreaID(float x,float y,float z,float phasemask)
 {
 #if defined TRINITY
     return map->GetAreaId(phasemask, x, y, z);

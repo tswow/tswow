@@ -67,14 +67,14 @@ public:
     float GetWanderRadius();
     void UpdateLevelDependantStats();
     uint32 GetWaypointPath();
-    uint32 GetCurrentWaypointId();
+    uint32 GetCurrentWaypointID();
     uint32 GetDefaultMovementType();
     float GetAggroRange(TSUnit target);
     TSGroup GetLootRecipientGroup();
     TSPlayer GetLootRecipient();
     TSString GetScriptName();
     TSString GetAIName();
-    uint32 GetScriptId();
+    uint32 GetScriptID();
     uint32 GetCreatureSpellCooldownDelay(uint32 spell);
     uint32 GetCorpseDelay();
     TSPosition GetHomePosition();

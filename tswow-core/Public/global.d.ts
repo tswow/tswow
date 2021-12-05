@@ -686,7 +686,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return uint32 battleGroundId
      */
-    GetBattlegroundId() : uint32
+    GetBattlegroundID() : uint32
 
     /**
      * Returns the [Player]s reputation rank of faction specified
@@ -938,7 +938,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return uint32 textId : key to npc_text database table
      */
-    GetGossipTextId(obj : TSWorldObject) : uint32
+    GetGossipTextID(obj : TSWorldObject) : uint32
 
     /**
      * Returns the [Player]s currently selected [Unit] object
@@ -966,7 +966,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return uint32 guildId
      */
-    GetGuildId() : uint32
+    GetGuildID() : uint32
 
     /**
      * Returns the [Player]s [TeamId]
@@ -1031,7 +1031,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return uint32 accountId
      */
-    GetAccountId() : uint32
+    GetAccountID() : uint32
 
     /**
      * Returns the [Player]s account name
@@ -2641,7 +2641,7 @@ declare interface TSCreature extends TSUnit {
      *
      * @return uint32 wpId
      */
-    GetCurrentWaypointId() : uint32
+    GetCurrentWaypointID() : uint32
 
     /**
      * Returns the default movement type for this [Creature].
@@ -2702,7 +2702,7 @@ declare interface TSCreature extends TSUnit {
      *
      * @return uint32 scriptID
      */
-    GetScriptId() : uint32
+    GetScriptID() : uint32
 
     /**
      * Returns the [Creature]'s cooldown for `spellID`.
@@ -3068,7 +3068,7 @@ declare interface TSAura {
      *
      * @return uint32 aura_id
      */
-    GetAuraId() : uint32
+    GetAuraID() : uint32
 
     /**
      * Returns the amount of time this [Aura] lasts when applied.
@@ -3201,7 +3201,7 @@ declare interface TSGuild {
      *
      * @return uint32 entryId
      */
-    GetId() : uint32
+    GetID() : uint32
 
     /**
      * Returns the [Guild]s name
@@ -3615,7 +3615,7 @@ declare interface TSQuest {
      *
      * @return uint32 entryId
      */
-    GetId() : uint32
+    GetID() : uint32
 
     /**
      * Returns the [Quest]'s level.
@@ -3636,14 +3636,14 @@ declare interface TSQuest {
      *
      * @return int32 entryId
      */
-    GetNextQuestId() : int32
+    GetNextQuestID() : int32
 
     /**
      * Returns the previous [Quest] entry ID.
      *
      * @return int32 entryId
      */
-    GetPrevQuestId() : int32
+    GetPrevQuestID() : int32
 
     /**
      * Returns the next [Quest] entry ID in the specific [Quest] chain.
@@ -3774,7 +3774,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      *
      * @return uint32 instanceId
      */
-    GetInstanceId() : uint32
+    GetInstanceID() : uint32
 
     /**
      * Returns the player count currently on the [Map] (excluding GMs).
@@ -3788,7 +3788,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      *
      * @return uint32 mapId
      */
-    GetMapId() : uint32
+    GetMapID() : uint32
 
     /**
     * Returns a table with all the current [Player]s in the map
@@ -3813,7 +3813,7 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
      * @param uint32 phasemask = PHASEMASK_NORMAL
      * @return uint32 areaId
      */
-    GetAreaId(x : float,y : float,z : float,phasemask : float) : uint32
+    GetAreaID(x : float,y : float,z : float,phasemask : float) : uint32
 
     /**
      * Returns a [WorldObject] by its GUID from the map if it is spawned.
@@ -4019,7 +4019,7 @@ declare class TSItem extends TSObject {
      * @param [EnchantmentSlot] enchantSlot : the enchant slot specified
      * @return uint32 enchantId : the id of the enchant slot specified
      */
-    GetEnchantmentId(enchant_slot : uint32) : uint32
+    GetEnchantmentID(enchant_slot : uint32) : uint32
 
     /**
      * Returns the spell ID tied to the [Item] by spell index
@@ -4027,7 +4027,7 @@ declare class TSItem extends TSObject {
      * @param uint32 spellIndex : the spell index specified
      * @return uint32 spellId : the id of the spell
      */
-    GetSpellId(index : uint32) : uint32
+    GetSpellID(index : uint32) : uint32
 
     /**
      * Returns the spell trigger tied to the [Item] by spell index
@@ -4063,7 +4063,7 @@ declare class TSItem extends TSObject {
      *
      * @return uint32 displayId
      */
-    GetDisplayId() : uint32
+    GetDisplayID() : uint32
 
     /**
      * Returns the quality of the [Item]
@@ -4204,6 +4204,8 @@ declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityPr
 declare interface TSBattleground extends TSMap {
     IsNull() : bool
 
+    GetBracketID(): uint32
+
     /**
      * Returns the name of the [BattleGround].
      *
@@ -4247,14 +4249,14 @@ declare interface TSBattleground extends TSMap {
      *
      * @return uint32 instanceId
      */
-    GetInstanceId() : uint32
+    GetInstanceID() : uint32
 
     /**
      * Returns the type ID of the [BattleGround].
      *
      * @return [BattleGroundTypeId] typeId
      */
-    GetTypeId() : uint32
+    GetTypeID() : uint32
 
     /**
      * Returns the max allowed [Player] level of the specific [BattleGround].
@@ -4445,7 +4447,7 @@ declare interface TSGameObject extends TSWorldObject {
      *
      * @return uint32 displayId
      */
-    GetDisplayId() : uint32
+    GetDisplayID() : uint32
 
     /**
      * Returns the state of a [GameObject]
@@ -4792,28 +4794,28 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      *
      * @return uint32 instanceId
      */
-    GetInstanceId() : uint32
+    GetInstanceID() : uint32
 
     /**
      * Returns the current area ID of the [WorldObject]
      *
      * @return uint32 areaId
      */
-    GetAreaId() : uint32
+    GetAreaID() : uint32
 
     /**
      * Returns the current zone ID of the [WorldObject]
      *
      * @return uint32 zoneId
      */
-    GetZoneId() : uint32
+    GetZoneID() : uint32
 
     /**
      * Returns the current map ID of the [WorldObject]
      *
      * @return uint32 mapId
      */
-    GetMapId() : uint32
+    GetMapID() : uint32
 
     /**
      * Returns the current X coordinate of the [WorldObject]
@@ -5244,7 +5246,7 @@ declare class TSObject extends TSEntityProvider {
      *
      * @return uint8 typeID
      */
-    GetTypeId() : TypeID
+    GetTypeID() : TypeID
 
     /**
      * Returns the data at the specified index, casted to an unsigned 64-bit integer.
@@ -5661,7 +5663,7 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return uint32 mountId : displayId of the mount
      */
-    GetMountId() : uint32
+    GetMountID() : uint32
 
     /**
      * Returns the [Unit]'s creator's GUID.
@@ -5756,14 +5758,14 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @return uint32 displayId
      */
-    GetDisplayId() : uint32
+    GetDisplayID() : uint32
 
     /**
      * Returns the [Unit]'s native/original display ID.
      *
      * @return uint32 displayId
      */
-    GetNativeDisplayId() : uint32
+    GetNativeDisplayID() : uint32
 
     /**
      * Returns the [Unit]'s level.
@@ -6216,14 +6218,14 @@ declare interface TSUnit extends TSWorldObject {
      *
      * @param uint32 displayId
      */
-    SetDisplayId(model : uint32) : void
+    SetDisplayID(model : uint32) : void
 
     /**
      * Sets the [Unit]'s native/default modelID.
      *
      * @param uint32 displayId
      */
-    SetNativeDisplayId(model : uint32) : void
+    SetNativeDisplayID(model : uint32) : void
 
     /**
      * Sets the [Unit]'s facing/orientation.
@@ -6727,8 +6729,8 @@ declare interface TSItemTemplate extends TSEntityProvider {
     ArmorDamageModifier(): float;
     Duration(): uint32;
     ItemLimitCategory(): uint32;
-    HolidayId(): uint32;
-    ScriptId(): uint32;
+    HolidayID(): uint32;
+    ScriptID(): uint32;
     DisenchantID(): uint32;
     FoodType(): uint32;
     MinMoneyLoot(): uint32;
@@ -6756,7 +6758,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	BaseLevel() : uint32
 	DmgClass() : uint32
 	ActiveIconID() : uint32
-	AreaGroupId() : uint32
+	AreaGroupID() : uint32
 	Attributes() : uint32
 	AttributesCu() : uint32
 	AttributesEx() : uint32

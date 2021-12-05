@@ -98,8 +98,8 @@ public:
 	uint8 GetSubGroup();
 	TSGroup GetGroupInvite();
 	uint32 GetXPRestBonus(uint32 xp);
-	uint32 GetBGTypeId();
-	uint32 GetBattlegroundId();
+	uint32 GetBGTypeID();
+	uint32 GetBattlegroundID();
 	uint32 GetReputationRank(uint32 faction);
 	uint16 GetDrunkValue();
 	int16 GetSkillTempBonusValue(uint32 skill);
@@ -130,10 +130,10 @@ public:
 	TSItem GetItemByPos(uint8 bag, uint8 slot);
 	TSItem GetItemByGUID(uint64 guid);
 	TSItem GetItemByEntry(uint32 entry);
-	uint32 GetGossipTextId(TSWorldObject obj);
+	uint32 GetGossipTextID(TSWorldObject obj);
 	TSUnit GetSelection();
 	uint32 GetGMRank();
-	uint32 GetGuildId();
+	uint32 GetGuildID();
 	uint32 GetTeam();
 	uint32 GetItemCount(uint32 entry, bool checkinBank);
 	uint32 GetLifetimeKills();
@@ -142,7 +142,7 @@ public:
 	uint32 GetTotalPlayedTime();
 	TSGuild GetGuild();
 	TSGroup GetGroup();
-	uint32 GetAccountId();
+	uint32 GetAccountID();
 	TSString GetAccountName();
 	TSCorpse GetCorpse();
 	int GetDbLocaleIndex();

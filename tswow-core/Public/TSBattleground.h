@@ -50,14 +50,14 @@ public:
     TSBattleground();
     bool IsNull() { return bg == nullptr || map == nullptr; };
     TSBattleground* operator->() { return this;}
-    uint32 GetBracketId();
+    uint32 GetBracketID();
     TSString GetBGName();
     uint32 GetAlivePlayersCountByTeam(uint32 team);
     uint32 GetBonusHonorFromKillCount(uint32 kills);
     uint32 GetEndTime();
     uint32 GetFreeSlotsForTeam(uint32 team);
-    uint32 GetInstanceId();
-    uint32 GetTypeId();
+    uint32 GetInstanceID();
+    uint32 GetTypeID();
     uint32 GetMaxLevel();
     uint32 GetMinLevel();
     uint32 GetMaxPlayers();

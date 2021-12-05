@@ -266,7 +266,7 @@ int32 TSAura::GetDuration()
  *
  * @return uint32 aura_id
  */
-uint32 TSAura::GetAuraId()
+uint32 TSAura::GetAuraID()
 {
     return aura->GetId();
 }

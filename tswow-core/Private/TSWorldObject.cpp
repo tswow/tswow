@@ -103,7 +103,7 @@ void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
  *
  * @return uint32 instanceId
  */
-uint32 TSWorldObject::GetInstanceId()
+uint32 TSWorldObject::GetInstanceID()
 {
     return obj->GetInstanceId();
 }
@@ -113,7 +113,7 @@ uint32 TSWorldObject::GetInstanceId()
  *
  * @return uint32 areaId
  */
-uint32 TSWorldObject::GetAreaId()
+uint32 TSWorldObject::GetAreaID()
 {
     return obj->GetAreaId();
 }
@@ -123,7 +123,7 @@ uint32 TSWorldObject::GetAreaId()
  *
  * @return uint32 zoneId
  */
-uint32 TSWorldObject::GetZoneId()
+uint32 TSWorldObject::GetZoneID()
 {
     return obj->GetZoneId();
 }
@@ -133,7 +133,7 @@ uint32 TSWorldObject::GetZoneId()
  *
  * @return uint32 mapId
  */
-uint32 TSWorldObject::GetMapId()
+uint32 TSWorldObject::GetMapID()
 {
     return obj->GetMapId();
 }
@@ -233,7 +233,7 @@ float TSWorldObject::GetDistanceToPoint2d(float X, float Y)
 TSPosition TSWorldObject::GetRelativePoint(float dist,float rad) {
     float x, y, z;
     obj->GetClosePoint(x, y, z, 0.0f, dist, rad);
-    return TSPosition(GetMap()->GetMapId(), x,y,z,0);
+    return TSPosition(GetMap()->GetMapID(), x,y,z,0);
 }
 
 /**
@@ -841,7 +841,7 @@ TSPlayer TSWorldObject::GetPlayer(uint64 guid)
 
 TSPosition TSWorldObject::GetPosition()
 {
-    return TSPosition(GetMap()->GetMapId(),GetX(),GetY(),GetZ(),GetO());
+    return TSPosition(GetMap()->GetMapID(),GetX(),GetY(),GetZ(),GetO());
 }
 
 void TSWorldObject::RemovedByGroup(TSWorldObjectGroup * group)

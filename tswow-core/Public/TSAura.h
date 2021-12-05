@@ -78,7 +78,7 @@ public:
     uint64 GetCasterGUID();
     uint32 GetCasterLevel();
     int32 GetDuration();
-    uint32 GetAuraId();
+    uint32 GetAuraID();
     int32 GetMaxDuration();
     uint32 GetStackAmount();
     TSWorldObject GetOwner();

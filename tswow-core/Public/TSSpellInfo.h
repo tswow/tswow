@@ -30,7 +30,7 @@ public:
     uint32 BaseLevel();
     uint32 DmgClass();
     uint32 ActiveIconID();
-    uint32 AreaGroupId();
+    uint32 AreaGroupID();
     uint32 Attributes();
     uint32 AttributesCu();
     uint32 AttributesEx();

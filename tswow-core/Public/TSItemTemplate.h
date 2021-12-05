@@ -103,8 +103,8 @@ public:
     float  ArmorDamageModifier();
     uint32 Duration();
     uint32 ItemLimitCategory();
-    uint32 HolidayId();
-    uint32 ScriptId();
+    uint32 HolidayID();
+    uint32 ScriptID();
     uint32 DisenchantID();
     uint32 FoodType();
     uint32 MinMoneyLoot();

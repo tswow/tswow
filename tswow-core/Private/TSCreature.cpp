@@ -440,7 +440,7 @@ uint32 TSCreature::GetWaypointPath()
  *
  * @return uint32 wpId
  */
-uint32 TSCreature::GetCurrentWaypointId()
+uint32 TSCreature::GetCurrentWaypointID()
 {
 #ifdef TRINITY
     return creature->GetCurrentWaypointInfo().first;
@@ -557,7 +557,7 @@ TSString TSCreature::GetAIName()
  *
  * @return uint32 scriptID
  */
-uint32 TSCreature::GetScriptId()
+uint32 TSCreature::GetScriptID()
 {
     return creature->GetScriptId();
 }
@@ -613,7 +613,7 @@ TSPosition TSCreature::GetHomePosition()
 #else
     creature->GetRespawnCoord(x, y, z, &o);
 #endif
-    return TSPosition(GetMap()->GetMapId(),x,y,z,o);
+    return TSPosition(GetMap()->GetMapID(),x,y,z,o);
 }
 
 /**

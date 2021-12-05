@@ -97,8 +97,8 @@ uint32 TSItemTemplate::RequiredDisenchantSkill(){ return info->RequiredDisenchan
 float  TSItemTemplate::ArmorDamageModifier() { return info->ArmorDamageModifier; };
 uint32 TSItemTemplate::Duration() { return info->Duration; };
 uint32 TSItemTemplate::ItemLimitCategory() { return info->ItemLimitCategory; };
-uint32 TSItemTemplate::HolidayId() { return info->HolidayId; };
-uint32 TSItemTemplate::ScriptId() { return info->ScriptId; };
+uint32 TSItemTemplate::HolidayID() { return info->HolidayId; };
+uint32 TSItemTemplate::ScriptID() { return info->ScriptId; };
 uint32 TSItemTemplate::DisenchantID() { return info->DisenchantID; };
 uint32 TSItemTemplate::FoodType() { return info->FoodType; };
 uint32 TSItemTemplate::MinMoneyLoot() { return info->MinMoneyLoot; };

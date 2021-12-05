@@ -55,13 +55,13 @@ public:
     uint32 GetMaxStackCount();
     uint8 GetSlot();
     uint8 GetBagSlot();
-    uint32 GetEnchantmentId(uint32 enchant_slot);
-    uint32 GetSpellId(uint32 index);
+    uint32 GetEnchantmentID(uint32 enchant_slot);
+    uint32 GetSpellID(uint32 index);
     uint32 GetSpellTrigger(uint32 index);
     uint32 GetClass();
     uint32 GetSubClass();
     TSString GetName();
-    uint32 GetDisplayId();
+    uint32 GetDisplayID();
     uint32 GetQuality();
     uint32 GetBuyCount();
     uint32 GetBuyPrice();

@@ -109,7 +109,7 @@ uint32 TSBattleground::GetBonusHonorFromKillCount(uint32 kills)
  *
  * @return [BattleGroundBracketId] bracketId
  */
-uint32 TSBattleground::GetBracketId()
+uint32 TSBattleground::GetBracketID()
 {
     return bg->GetBracketId();
 }
@@ -150,7 +150,7 @@ uint32 TSBattleground::GetFreeSlotsForTeam(uint32 team)
  *
  * @return uint32 instanceId
  */
-uint32 TSBattleground::GetInstanceId()
+uint32 TSBattleground::GetInstanceID()
 {
     return bg->GetInstanceID();
 }
@@ -160,7 +160,7 @@ uint32 TSBattleground::GetInstanceId()
  *
  * @return [BattleGroundTypeId] typeId
  */
-uint32 TSBattleground::GetTypeId()
+uint32 TSBattleground::GetTypeID()
 {
 #ifndef AZEROTHCORE
     return bg->GetTypeID();

@@ -194,7 +194,7 @@ TSOutfit::TSOutfit(TSPlayer p, uint32_t s, int32_t race, int32_t gender)
 
     if (s & Outfit::GUILD)
     {
-        SetGuild(p.GetGuildId());
+        SetGuild(p.GetGuildID());
     }
 
     if (s & Outfit::CLASS)

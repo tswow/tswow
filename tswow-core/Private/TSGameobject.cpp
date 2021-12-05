@@ -93,7 +93,7 @@ bool TSGameObject::IsActive()
  *
  * @return uint32 displayId
  */
-uint32 TSGameObject::GetDisplayId()
+uint32 TSGameObject::GetDisplayID()
 {
     return go->GetDisplayId();
 }

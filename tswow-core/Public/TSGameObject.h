@@ -32,7 +32,7 @@ public:
     bool IsSpawned();
     bool IsTransport();
     bool IsActive();
-    uint32 GetDisplayId();
+    uint32 GetDisplayID();
     uint32 GetGoState();
     uint32 GetLootState();
     TSPlayer GetLootRecipient();

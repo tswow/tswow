@@ -893,7 +893,7 @@ uint32 TSPlayer::GetXPRestBonus(uint32 xp)
  *
  * @return [BattleGroundTypeId] typeId
  */
-uint32 TSPlayer::GetBGTypeId()
+uint32 TSPlayer::GetBGTypeID()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundTypeId();
@@ -907,7 +907,7 @@ uint32 TSPlayer::GetBGTypeId()
  *
  * @return uint32 battleGroundId
  */
-uint32 TSPlayer::GetBattlegroundId()
+uint32 TSPlayer::GetBattlegroundID()
 {
 #if defined TRINITY || AZEROTHCORE
     return player->GetBattlegroundId();
@@ -1271,7 +1271,7 @@ TSItem  TSPlayer::GetItemByEntry(uint32 entry)
  *
  * @return uint32 textId : key to npc_text database table
  */
-uint32 TSPlayer::GetGossipTextId(TSWorldObject _obj)
+uint32 TSPlayer::GetGossipTextID(TSWorldObject _obj)
 {
     auto obj = _obj.obj;
     return player->GetGossipTextId(obj);
@@ -1306,7 +1306,7 @@ uint32 TSPlayer::GetGMRank()
  *
  * @return uint32 guildId
  */
-uint32 TSPlayer::GetGuildId()
+uint32 TSPlayer::GetGuildID()
 {
     return player->GetGuildId();
 }
@@ -1398,7 +1398,7 @@ TSGroup  TSPlayer::GetGroup()
  *
  * @return uint32 accountId
  */
-uint32 TSPlayer::GetAccountId()
+uint32 TSPlayer::GetAccountID()
 {
     return player->GetSession()->GetAccountId();
 }

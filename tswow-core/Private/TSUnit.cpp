@@ -601,7 +601,7 @@ uint64 TSUnit::GetOwnerGUID()
  *
  * @return uint32 mountId : displayId of the mount
  */
-uint32 TSUnit::GetMountId()
+uint32 TSUnit::GetMountID()
 {
     return unit->GetMountID();
 }
@@ -769,7 +769,7 @@ uint8 TSUnit::GetStandState()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetDisplayId()
+uint32 TSUnit::GetDisplayID()
 {
     return unit->GetDisplayId();
 }
@@ -779,7 +779,7 @@ uint32 TSUnit::GetDisplayId()
  *
  * @return uint32 displayId
  */
-uint32 TSUnit::GetNativeDisplayId()
+uint32 TSUnit::GetNativeDisplayID()
 {
     return unit->GetNativeDisplayId();
 }
@@ -1526,7 +1526,7 @@ void TSUnit::SetPowerType(uint32 type)
  *
  * @param uint32 displayId
  */
-void TSUnit::SetDisplayId(uint32 model)
+void TSUnit::SetDisplayID(uint32 model)
 {
     unit->SetDisplayId(model);
 }
@@ -1536,7 +1536,7 @@ void TSUnit::SetDisplayId(uint32 model)
  *
  * @param uint32 displayId
  */
-void TSUnit::SetNativeDisplayId(uint32 model)
+void TSUnit::SetNativeDisplayID(uint32 model)
 {
     unit->SetNativeDisplayId(model);
 }

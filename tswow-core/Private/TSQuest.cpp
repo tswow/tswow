@@ -102,7 +102,7 @@ bool TSQuest::IsRepeatable()
  *
  * @return uint32 entryId
  */
-uint32 TSQuest::GetId()
+uint32 TSQuest::GetID()
 {
     return quest->GetQuestId();
 }
@@ -132,7 +132,7 @@ uint32 TSQuest::GetMinLevel()
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetNextQuestId()
+int32 TSQuest::GetNextQuestID()
 {
     return quest->GetNextQuestId();
 }
@@ -142,7 +142,7 @@ int32 TSQuest::GetNextQuestId()
  *
  * @return int32 entryId
  */
-int32 TSQuest::GetPrevQuestId()
+int32 TSQuest::GetPrevQuestID()
 {
     return quest->GetPrevQuestId();
 }

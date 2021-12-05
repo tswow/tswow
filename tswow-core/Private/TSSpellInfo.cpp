@@ -54,7 +54,7 @@ uint32 TSSpellInfo::ActiveIconID()
     return info->ActiveIconID;
 }
 
-uint32 TSSpellInfo::AreaGroupId()
+uint32 TSSpellInfo::AreaGroupID()
 {
     return info->AreaGroupId;
 }

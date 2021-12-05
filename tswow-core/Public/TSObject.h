@@ -55,7 +55,7 @@ public:
     uint32 GetEntry();
     uint64 GetGUID();
     uint32 GetGUIDLow();
-    uint8 GetTypeId();
+    uint8 GetTypeID();
     void SetScale(float size);
 
     void SetFlag(uint16 index, uint32 flag);

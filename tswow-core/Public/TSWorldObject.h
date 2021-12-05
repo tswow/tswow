@@ -79,10 +79,10 @@ public:
     uint32 GetPhaseMask();
     uint64 GetPhaseID();
     void SetPhaseMask(uint32 phaseMask, bool update, uint64 id = 0);
-    uint32 GetInstanceId();
-    uint32 GetAreaId();
-    uint32 GetZoneId();
-    uint32 GetMapId();
+    uint32 GetInstanceID();
+    uint32 GetAreaID();
+    uint32 GetZoneID();
+    uint32 GetMapID();
     float GetAngle(TSWorldObject target,float x,float y);
     float GetX();
     float GetY();

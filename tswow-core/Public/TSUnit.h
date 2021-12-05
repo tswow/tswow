@@ -71,7 +71,7 @@ public:
     bool HasUnitState(uint32 state);
     TSUnit  GetOwner();
     uint64 GetOwnerGUID();
-    uint32 GetMountId();
+    uint32 GetMountID();
     uint64 GetCreatorGUID();
     uint64 GetCharmerGUID();
     uint64 GetCharmGUID();
@@ -83,8 +83,8 @@ public:
     TSUnit  GetVictim();
     TSSpell  GetCurrentSpell(uint32 type);
     uint8 GetStandState();
-    uint32 GetDisplayId();
-    uint32 GetNativeDisplayId();
+    uint32 GetDisplayID();
+    uint32 GetNativeDisplayID();
     uint8 GetLevel();
     uint32 GetHealth();
     uint32 PowerSelectorHelper(TSUnit unit, int powerType = -1);
@@ -124,8 +124,8 @@ public:
     void ModifyPower(int type, int32 amt);
     void SetMaxPower(int type, uint32 amt);
     void SetPowerType(uint32 type);
-    void SetDisplayId(uint32 model);
-    void SetNativeDisplayId(uint32 model);
+    void SetDisplayID(uint32 model);
+    void SetNativeDisplayID(uint32 model);
     void SetFacing(float o);
     void SetFacingToObject(TSWorldObject obj);
     void SetCreatorGUID(uint64 guid);

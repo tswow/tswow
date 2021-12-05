@@ -93,7 +93,7 @@ uint64 TSGuild::GetLeaderGUID()
  *
  * @return uint32 entryId
  */
-uint32 TSGuild::GetId()
+uint32 TSGuild::GetID()
 {
     return guild->GetId();
 }

@@ -208,7 +208,7 @@ uint32 TSObject::GetGUIDLow()
  *
  * @return uint8 typeID
  */
-uint8 TSObject::GetTypeId()
+uint8 TSObject::GetTypeID()
 {
     return obj->GetTypeId();
 }

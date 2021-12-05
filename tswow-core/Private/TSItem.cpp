@@ -363,7 +363,7 @@ uint8 TSItem::GetBagSlot()
  * @param [EnchantmentSlot] enchantSlot : the enchant slot specified
  * @return uint32 enchantId : the id of the enchant slot specified
  */
-uint32 TSItem::GetEnchantmentId(uint32 enchant_slot)
+uint32 TSItem::GetEnchantmentID(uint32 enchant_slot)
 {
 
     return item->GetEnchantmentId(EnchantmentSlot(enchant_slot));
@@ -375,7 +375,7 @@ uint32 TSItem::GetEnchantmentId(uint32 enchant_slot)
  * @param uint32 spellIndex : the spell index specified
  * @return uint32 spellId : the id of the spell
  */
-uint32 TSItem::GetSpellId(uint32 index)
+uint32 TSItem::GetSpellID(uint32 index)
 {
     return item->GetTemplate()->Spells[index].SpellId;
 }
@@ -426,7 +426,7 @@ TSString TSItem::GetName()
  *
  * @return uint32 displayId
  */
-uint32 TSItem::GetDisplayId()
+uint32 TSItem::GetDisplayID()
 {
     return item->GetTemplate()->DisplayInfoID;
 }
