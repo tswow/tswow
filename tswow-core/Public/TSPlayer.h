@@ -27,6 +27,8 @@ class TSJsonObject;
 class TSJsonArray;
 class TSBattleground;
 class TSBattlegroundPlayer;
+class TSInstance;
+
 struct TSMail;
 class TC_GAME_API TSPlayer : public TSUnit {
 public:
@@ -300,6 +302,7 @@ public:
 	void RemovedInsignia(TSPlayer looter);
   TSBattlegroundPlayer GetBattlegroundPlayer();
   TSBattleground GetBattleground();
+	TSInstance GetInstance();
 
 	bool GroupInvite(TSPlayer invited);
 	TSGroup GroupCreate(TSPlayer invited);

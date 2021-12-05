@@ -4201,7 +4201,7 @@ declare interface TSBattlegroundPlayer extends TSEntityProvider, TSWorldEntityPr
     GetOfflineRemovalTime(): uint64;
 }
 
-declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider<TSBattleground> {
+declare interface TSBattleground extends TSMap {
     IsNull() : bool
 
     /**
@@ -4327,7 +4327,7 @@ declare interface TSBattleground extends TSEntityProvider, TSWorldEntityProvider
     GetStatus() : uint32
 
     IsRandom(): bool;
-    GetPlayers(): TSArray<TSBattlegroundPlayer>;
+    GetBGPlayers(): TSArray<TSBattlegroundPlayer>;
     SetStartPosition(teamId: uint32, x: float, y: float, z: float, o: float): void;
     GetStartX(teamid: TeamId): float;
     GetStartY(teamid: TeamId): float;
@@ -4386,9 +4386,8 @@ declare interface TSBossInfo {
     IsWithinBoundary(obj: TSWorldObject): bool
 }
 
-declare interface TSInstance {
+declare interface TSInstance extends TSMap {
     IsNull(): bool;
-    GetMap(): TSMap;
     SaveToDB(): void;
     IsEncounterInProgress(): bool;
     GetEncounterCount(): uint32;

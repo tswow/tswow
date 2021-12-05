@@ -6,8 +6,8 @@
 #include "InstanceScript.h"
 #include "ScriptedCreature.h"
 
-TSInstance::TSInstance(InstanceScript* script)
-    : m_script(script)
+TSInstance::TSInstance(Map* map, InstanceScript* script)
+    : TSMap(map),  m_script(script)
 {}
 
 bool TSInstance::IsNull()
@@ -15,12 +15,7 @@ bool TSInstance::IsNull()
     return m_script == nullptr;
 }
 
-TSMap TSInstance::GetMap()
-{
-    return TSMap(m_script->instance);
-}
-
-void TSInstance::SaveToDB()
+void TSInstance::SaveInstanceToDB()
 {
     m_script->SaveToDB();
 }

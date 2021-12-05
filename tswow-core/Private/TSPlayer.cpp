@@ -44,6 +44,7 @@
 #include "TSBattleground.h"
 #include "TSMap.h"
 
+#include "TSInstance.h"
 #include "TSJson.h"
 #include "TSUnit.h"
 #include "TSItem.h"
@@ -3906,12 +3907,17 @@ void TSPlayer::SendUpdateEventStates(uint32 eventId)
 
 TSBattleground TSPlayer::GetBattleground()
 {
-    return GetMap().GetBattleground();
+    return GetMap().ToBattleground();
+}
+
+TSInstance TSPlayer::GetInstance()
+{
+    return GetMap().ToInstance();
 }
 
 TSBattlegroundPlayer TSPlayer::GetBattlegroundPlayer()
 {
-    return GetMap().GetBattleground().GetPlayer(GetGUID());
+    return GetMap().ToBattleground().GetPlayer(GetGUID());
 }
 
 TSOutfit TSPlayer::GetOutfitCopy(uint32_t settings, int32_t race, int32_t gender)

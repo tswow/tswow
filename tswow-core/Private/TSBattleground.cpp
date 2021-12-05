@@ -55,19 +55,16 @@ int64 TSBattlegroundPlayer::GetOfflineRemoveTime()
     return m_offlineRemoveTime;
 }
 
-TSBattleground::TSBattleground(Battleground *bg)
-    : TSEntityProvider(&bg->m_tsEntity)
-    , TSWorldEntityProvider(&bg->m_tsWorldEntity)
+TSBattleground::TSBattleground(Map* map, Battleground *bg)
+    : TSMap(map)
+    , bg(bg)
 {
-    this->bg = bg;
 }
 
 TSBattleground::TSBattleground()
-    : TSEntityProvider(nullptr)
-    , TSWorldEntityProvider(nullptr)
-{
-    this->bg = nullptr;
-}
+    : TSMap(nullptr)
+    , bg(nullptr)
+{}
 
 /**
  * Returns the name of the [BattleGround].
@@ -93,16 +90,6 @@ uint32 TSBattleground::GetAlivePlayersCountByTeam(uint32 team)
 #else
     return bg->GetAlivePlayersCountByTeam((TeamId)team);
 #endif
-}
-
-/**
- * Returns the [Map] of the [BattleGround].
- *
- * @return [Map] map
- */
-TSMap  TSBattleground::GetMap()
-{
-     return TSMap(bg->GetBgMap());
 }
 
 /**
@@ -285,7 +272,7 @@ bool TSBattleground::IsRandom()
     return bg->IsRandom();
 }
 
-TSArray<TSBattlegroundPlayer> TSBattleground::GetPlayers()
+TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
 {
     TSArray<TSBattlegroundPlayer> players;
     for (auto& player : bg->GetPlayers())

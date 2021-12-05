@@ -71,9 +71,9 @@ bool TSMap::IsBattleground()
 #endif
 }
 
-TSBattleground TSMap::GetBattleground()
+TSBattleground TSMap::ToBattleground()
 {
-    return TSBattleground(map->ToBattlegroundMap()->GetBG());
+    return TSBattleground(map, map->ToBattlegroundMap()->GetBG());
 }
 
 /**
@@ -417,7 +417,7 @@ TSGameObject TSMap::SpawnGameObject(uint32 entry, float x, float y, float z, flo
     return TSGameObject(object);
 }
 
-bool TSMap::HasInstanceScript()
+bool TSMap::IsInstance()
 {
     if (InstanceMap * inst = map->ToInstanceMap())
     {
@@ -426,13 +426,13 @@ bool TSMap::HasInstanceScript()
     return false;
 }
 
-TSInstance TSMap::GetInstanceScript()
+TSInstance TSMap::ToInstance()
 {
     if (InstanceMap* inst = map->ToInstanceMap())
     {
-        return TSInstance(inst->GetInstanceScript());
+        return TSInstance(map,inst->GetInstanceScript());
     }
-    return TSInstance(nullptr);
+    return TSInstance(nullptr,nullptr);
 }
 
 void TSMap::DoDelayed(std::function<void(TSMap, TSMapManager)> callback)

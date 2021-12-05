@@ -4,9 +4,9 @@
 #include "TSBase.h"
 #include "TSString.h"
 #include "TSUnit.h"
+#include "TSMap.h"
 
 class TSUnit;
-class TSMap;
 class InstanceScript;
 
 class ObjectGuid;
@@ -33,16 +33,14 @@ public:
     bool IsWithinBoundary(TSWorldObject obj);
 };
 
-class TC_GAME_API TSInstance {
+class TC_GAME_API TSInstance : public TSMap {
 public:
     InstanceScript* m_script;
-
-    TSInstance(InstanceScript* script);
+    TSInstance(Map* map, InstanceScript* script);
     TSInstance* operator->() { return this; }
 
     bool IsNull();
-    TSMap GetMap();
-    void SaveToDB();
+    void SaveInstanceToDB();
     bool IsEncounterInProgress();
     uint64 GetObjectGUID(uint32 type);
     void DoUseDoorOrButton(uint64 guid, uint32 withRestoreTime = 0, bool useAlternativeState = false);

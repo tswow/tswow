@@ -21,6 +21,7 @@
 #include "TSString.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
+#include "TSMap.h"
 
 class TSPlayer;
 class TSWorldPacket;
@@ -41,18 +42,17 @@ public:
 #define TS_TEAM_HORDE 1
 #define TS_TEAM_NEUTRAL 2
 
-class TC_GAME_API TSBattleground: public TSEntityProvider, public TSWorldEntityProvider<TSBattleground> {
+class TC_GAME_API TSBattleground: public TSMap {
 public:
     friend class TSBattlegroundPlayer;
     Battleground* bg;
-    TSBattleground(Battleground* bg);
+    TSBattleground(Map*, Battleground* bg);
     TSBattleground();
     bool IsNull() { return bg == nullptr; };
     TSBattleground* operator->() { return this;}
     uint32 GetBracketId();
     TSString GetName();
     uint32 GetAlivePlayersCountByTeam(uint32 team);
-    TSMap GetMap();
     uint32 GetBonusHonorFromKillCount(uint32 kills);
     uint32 GetEndTime();
     uint32 GetFreeSlotsForTeam(uint32 team);
@@ -70,7 +70,7 @@ public:
 
     bool IsRandom();
     TSBattlegroundPlayer GetPlayer(uint64 guid);
-    TSArray<TSBattlegroundPlayer> GetPlayers();
+    TSArray<TSBattlegroundPlayer> GetBGPlayers();
     void SetStartPosition(uint32 teamid, float x, float y, float z, float o);
     float GetStartX(uint32 teamid);
     float GetStartY(uint32 teamid);

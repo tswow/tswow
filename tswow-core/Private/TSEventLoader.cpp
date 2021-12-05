@@ -290,7 +290,7 @@ void ReloadInstance(InstanceOnReloadType fn, uint32 id)
                 InstanceScript* script = inst->GetInstanceScript();
                 if (script)
                 {
-                    fn(TSInstance(script));
+                    fn(TSInstance(inst,script));
                 }
             }
         }
@@ -307,7 +307,7 @@ void ReloadBattleground(BattlegroundOnReloadType fn, uint32 id)
                 Battleground* bg = bgmap->GetBG();
                 if (bg)
                 {
-                    fn(TSBattleground(bg));
+                    fn(TSBattleground(bgmap,bg));
                 }
             }
         }

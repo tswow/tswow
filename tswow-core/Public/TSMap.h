@@ -39,7 +39,7 @@ public:
     bool IsNull() { return map == nullptr; };
     bool IsArena();
     bool IsBattleground();
-    TSBattleground GetBattleground();
+    TSBattleground ToBattleground();
     bool IsDungeon();
     bool IsEmpty();
     bool IsHeroic();
@@ -50,8 +50,10 @@ public:
     uint32 GetInstanceId();
     uint32 GetPlayerCount();
     uint32 GetMapId();
-    bool HasInstanceScript();
-    TSInstance GetInstanceScript();
+
+    bool IsInstance();
+    TSInstance ToInstance();
+
     TSArray<TSPlayer> GetPlayers(uint32 team = 2);
     TSArray<TSUnit> GetUnits();
     TSArray<TSGameObject> GetGameObjects(uint32 entry = 0);
