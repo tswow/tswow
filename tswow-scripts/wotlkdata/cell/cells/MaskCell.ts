@@ -609,7 +609,7 @@ export class MaskCell32T<T,Str> extends MaskCell32<T> {
         return makeMask(this.obj,value);
     }
 
-    set(value: MaskCon<Str>, mode: MaskMode)    { return super.set(this.mm(value),mode) }
+    set(value: MaskCon<Str>, mode?: MaskMode)    { return super.set(this.mm(value),mode) }
     add(value: MaskCon<Str>)    { return super.set(this.mm(value),'OR') }
     hasAll(value: MaskCon<Str>) {
         let v = this.mm(value);
