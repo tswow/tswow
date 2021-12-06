@@ -8194,7 +8194,7 @@ declare namespace _hidden {
     }
 
     export class Tests<T> {
-        ManualTest(name: string): TSManualTestBuilder
+        //ManualTest(name: string): TSManualTestBuilder
         AutomaticTest(name: string, callback: (player: TSPlayer, assert: TSAssert)=>void)
     }
 }
