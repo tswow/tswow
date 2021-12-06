@@ -19,6 +19,7 @@ import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { ItemRow } from "wotlkdata/wotlkdata/dbc/types/Item";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { item_templateQuery, item_templateRow } from "wotlkdata/wotlkdata/sql/types/item_template";
@@ -91,12 +92,24 @@ export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
     get SheatheType()   { return this.wrapDBC(0,dbc=>dbc.SheatheType)}
 }
 
+export class ItemDBCRow extends CellSystem<ItemTemplate> {
+    protected readonly DBC = new ItemDBC(this.owner)
+    exists() { return this.DBC.exists(); }
+    get() { return this.DBC.getDBC(); }
+    mod(callback: (row: ItemRow)=>void) {
+        callback(this.get());
+        return this.owner;
+    }
+
+    static dbc(inst: ItemTemplate) {
+        return inst.DBCRow.DBC;
+    }
+}
+
 export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
-    protected dbc = new ItemDBC(this);
-    dbcExists() { return this.dbc.hasDBC(); }
-    dbcRow() { return this.dbc.getOrCreateDBC(); }
-    createDbc() { return this.dbc.getOrCreateDBC(); }
+    protected get dbc() { return ItemDBCRow.dbc(this); }
+    readonly DBCRow = new ItemDBCRow(this);
 
     get Name() { return new ItemName(this); }
     get Socket() { return new ItemSockets(this); }
