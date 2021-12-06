@@ -1239,7 +1239,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @param amount
      */
-    GiveMoney(amount: uint32) : bool
+    TryAddMoney(amount: uint32) : bool
 
     /**
      * Attempts to take money from [Player] in copper.
@@ -1252,7 +1252,7 @@ declare interface TSPlayer extends TSUnit {
      *
      * @param amount
      */
-    TakeMoney(amount: uint32) : bool
+    TryReduceMoney(amount: uint32) : bool
 
 
 

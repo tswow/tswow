@@ -1794,7 +1794,7 @@ uint32 TSPlayer::GetMoney()
     return player->GetMoney();
 }
 
-bool TSPlayer::GiveMoney(uint32 amt)
+bool TSPlayer::TryAddMoney(uint32 amt)
 {
     uint32 old = player->GetMoney();
     uint32 sum = amt + old;
@@ -1803,7 +1803,7 @@ bool TSPlayer::GiveMoney(uint32 amt)
     return true;
 }
 
-bool TSPlayer::TakeMoney(uint32 amt)
+bool TSPlayer::TryReduceMoney(uint32 amt)
 {
     uint32 old = player->GetMoney();
     if (amt > old) return false;
