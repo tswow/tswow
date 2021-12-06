@@ -41,16 +41,16 @@ function setupImages() {
     stitchedCircles = resizeImage(stitchedCircles)
     stitchedWorldstates = resizeImage(stitchedWorldstates)
 
-    ClassRegistry.load('WARRIOR').UI.TCoords.set(0,0.125,0,0.125)
-    ClassRegistry.load('MAGE').UI.TCoords.set(0.125,0.25,0,0.125)
-    ClassRegistry.load('ROGUE').UI.TCoords.set(0.25,0.375,0,0.125)
-    ClassRegistry.load('DRUID').UI.TCoords.set(0.375,0.5,0,0.125)
-    ClassRegistry.load('HUNTER').UI.TCoords.set(0.5,0.625,0,0.125)
-    ClassRegistry.load('SHAMAN').UI.TCoords.set(0.625,0.75,0,0.125)
-    ClassRegistry.load('PRIEST').UI.TCoords.set(0.75,0.875,0,0.125)
-    ClassRegistry.load('WARLOCK').UI.TCoords.set(0.875,1,0,0.125)
-    ClassRegistry.load('PALADIN').UI.TCoords.set(0,0.125,0.125,0.25)
-    ClassRegistry.load('DEATH_KNIGHT').UI.TCoords.set(0.125,0.25,0.125,0.25)
+    ClassRegistry.load('WARRIOR').UI.ButtonTCoords.set(0,0.125,0,0.125)
+    ClassRegistry.load('MAGE').UI.ButtonTCoords.set(0.125,0.25,0,0.125)
+    ClassRegistry.load('ROGUE').UI.ButtonTCoords.set(0.25,0.375,0,0.125)
+    ClassRegistry.load('DRUID').UI.ButtonTCoords.set(0.375,0.5,0,0.125)
+    ClassRegistry.load('HUNTER').UI.ButtonTCoords.set(0.5,0.625,0,0.125)
+    ClassRegistry.load('SHAMAN').UI.ButtonTCoords.set(0.625,0.75,0,0.125)
+    ClassRegistry.load('PRIEST').UI.ButtonTCoords.set(0.75,0.875,0,0.125)
+    ClassRegistry.load('WARLOCK').UI.ButtonTCoords.set(0.875,1,0,0.125)
+    ClassRegistry.load('PALADIN').UI.ButtonTCoords.set(0,0.125,0.125,0.25)
+    ClassRegistry.load('DEATH_KNIGHT').UI.ButtonTCoords.set(0.125,0.25,0.125,0.25)
     return true;
 }
 

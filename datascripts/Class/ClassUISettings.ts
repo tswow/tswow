@@ -157,7 +157,15 @@ class ClassDescription extends CellSystem<Class> {
 // TODO: Fix sort order
 export class ClassUISettings extends CellSystem<Class> {
     readonly Color: ClassColor;
-    readonly TCoords: TCoordSystem;
+
+    /**
+     * Texture coordinates for this class button
+     * on the character creation screen.
+     *
+     * @deprecated - don't modify this directly, use
+     *               'setIcon' to set an image instead.
+     */
+    readonly ButtonTCoords: TCoordSystem;
 
     /**
      * The position of this class button on the
@@ -171,13 +179,13 @@ export class ClassUISettings extends CellSystem<Class> {
         let index = stitchClassIcon(image,oldIndex);
         let x1 = (index%8)/8
         let y1 = Math.floor(index/8)/8;
-        this.TCoords.set(x1,x1+0.125,y1,y1+0.125);
+        this.ButtonTCoords.set(x1,x1+0.125,y1,y1+0.125);
         return this.owner;
     }
 
     constructor(cls : Class,tCoordsCC : Edit, tCoordsWS: Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
         super(cls);
-        this.TCoords = new TCoordSystem(cls, tCoords, tCoordsCC, tCoordsWS);
+        this.ButtonTCoords = new TCoordSystem(cls, tCoords, tCoordsCC, tCoordsWS);
         this.Color = new ClassColor(cls, classColor);
         this.ButtonPos = new AnchorRow(cls, xmlEdit);
         this.Description = new ClassDescription(cls, maleDescription, femaleDescription )
