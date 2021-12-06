@@ -1,11 +1,11 @@
 import { DBC } from "wotlkdata";
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { EnumCell, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/wotlkdata/dbc/types/SpellItemEnchantmentCondition";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
-import { ArrayEntity } from "../Misc/Entity";
+import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 
@@ -87,22 +87,27 @@ export class EnchantmentCondition extends ArrayEntry<EnchantmentConditions> {
     }
 }
 
-export class EnchantmentConditions extends ArrayEntity<
-      SpellItemEnchantmentConditionRow
+export class EnchantmentConditionConditions extends ArraySystem<
+      EnchantmentCondition
     , EnchantmentConditions
-    , EnchantmentCondition
-    >
-{
+>{
     get length(): number {
         return 5;
     }
 
     get(index: number): EnchantmentCondition {
-        return new EnchantmentCondition(this, index);
+        return new EnchantmentCondition(this.owner, index);
     }
+}
 
+export class EnchantmentConditions extends MainEntity<SpellItemEnchantmentConditionRow>
+{
     get ID() {
         return this.row.ID.get();
+    }
+
+    get Conditions() {
+        return new EnchantmentConditionConditions(this)
     }
 }
 
@@ -120,7 +125,7 @@ export class EnchantmentConditionRegistryClass
         return Ids.SpellItemEnchantmentCondition
     }
     Clear(entity: EnchantmentConditions): void {
-        entity.clearAll()
+        entity.Conditions.clearAll()
     }
     protected Entity(r: SpellItemEnchantmentConditionRow): EnchantmentConditions {
         return new EnchantmentConditions(r);
