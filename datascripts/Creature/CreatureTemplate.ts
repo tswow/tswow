@@ -215,8 +215,8 @@ export class CreatureTemplate extends MainEntity<creature_templateRow> {
     @Transient
     readonly AddonRow = new CreatureTemplateAddonRow(this);
     get Auras()   { return this.Addon.Auras; }
-    get Bytes1()  { return this.Addon.Bytes1 }
-    get Bytes2()  { return this.Addon.Bytes2 }
+    get AddonBytes1()  { return this.Addon.Bytes1 }
+    get AddonBytes2()  { return this.Addon.Bytes2 }
     get Emote()   { return this.Addon.Emote }
     get Mount()   { return this.Addon.Mount }
     get Path()    { return this.Addon.Path }
