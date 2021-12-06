@@ -30,6 +30,7 @@ import { GemRegistry } from "../Gem/Gem";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { Loot, LootSet } from "../Loot/Loot";
+import { DurationCell } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
@@ -129,8 +130,11 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     }
     get ScalingStats() { return new ItemScalingStat(this); }
     get Armor() { return this.wrap(this.row.armor); }
-    /** Delay in MILLISECONDS */
-    get Delay() { return this.wrap(this.row.delay); }
+    get Delay() {
+        return new DurationCell(
+            this, 'MILLISECONDS', false, this.row.delay
+        )
+    }
     get RangeMod() { return this.wrap(this.row.RangedModRange); }
     get Description() { return new ItemDescription(this); }
     get Quality() {
