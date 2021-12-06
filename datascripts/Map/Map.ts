@@ -83,7 +83,7 @@ export class Map extends TransformedEntity<MapRow,MapPlain> {
     get MaxPlayers() { return this.wrap(this.row.MaxPlayers); }
     get RaidOffset() { return this.wrap(this.row.RaidOffset); }
     get AreaTable() { return this.wrap(this.row.AreaTableID); }
-    get MapFiles() { return new MapADT(this); }
+    get Tiles() { return new MapADT(this); }
 
     /**
      * TODO: Unknown flags, all flags on wowdev looks like wod+
