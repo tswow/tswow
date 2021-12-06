@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-
+import * as fs from 'fs';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
+import { ipaths } from '../util/Paths';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
 import { DBC as _DBC } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
@@ -82,6 +83,11 @@ async function mainWrap() {
 
 async function main() {
     if(process.argv.includes('bin/scripts/tswow/test')) return;
+    ipaths.coredata.last_datascript.remove();
+    if(BuildArgs.LOG_SQL) {
+        SqlConnection.logFile = fs.openSync(ipaths.coredata.last_datascript.get(),'a');
+    }
+
     ctime = Date.now();
     await IdPublic.readFile();
     SqlConnection.connect();

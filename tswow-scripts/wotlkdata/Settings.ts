@@ -43,4 +43,5 @@ export const BuildArgs = new class BuildArgsClass {
     CLIENT_PATCH_DIR = new WDirectory(process.argv
         .find(x=>x.startsWith('--clientPatch='))
         .substring('--clientPatch='.length))
+    LOG_SQL = process.argv.includes('--log-sql')
 }();

@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as fs from 'fs';
 import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
-import { datasetName, NodeConfig } from '../Settings';
+import { BuildArgs, datasetName, NodeConfig } from '../Settings';
 import { SQLTables } from './SQLFiles';
 import { SqlRow } from './SQLRow';
 import { SqlTable } from './SQLTable';
@@ -82,6 +83,7 @@ export class Connection {
         if(this.sync===undefined) {
             throw new Error(`Tried to read from a disconnected adapter`);
         }
+        SqlConnection.log(this.settings.database,query);
         return this.syncQuery(query);
     }
 
@@ -103,6 +105,8 @@ export class Connection {
                 if(this.async===undefined) {
                     return rej(`Tried to apply while async adapter was disconnected`);
                 }
+
+                SqlConnection.log(this.settings.database,x);
 
                 this.async.query(x,(err)=>{
                         if(err){
@@ -132,6 +136,12 @@ export class Connection {
  */
 export class SqlConnection {
     static additional: Connection[] = [];
+    static logFile: number;
+    static log(db: string, sql: string) {
+        if(BuildArgs.LOG_SQL) {
+            fs.writeSync(this.logFile,`[${db}]: ${sql}\n`);
+        }
+    }
 
     static auth = new Connection(NodeConfig.DatabaseSettings('auth'));
     //static characters = new Connection(getDefaultSettings('characters'));
