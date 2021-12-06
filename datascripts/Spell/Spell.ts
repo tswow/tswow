@@ -15,16 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32, MaskCell32, MaskCell64, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { makeMaskCell32, MaskCell32, MaskCell64 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/wotlkdata/dbc/types/Spell";
-import { ClassMask } from "../Class/ClassRegistry";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
-import { RaceMask } from "../Race/RaceType";
 import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
 import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
@@ -199,34 +197,12 @@ export class Spell extends MainEntity<SpellRow> {
 
     get CastOnPlayerCreate() { return new CastSpells(this, this.ID); }
 
-    enable(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
-        this.SkillLines.forEach(x=>{
-            x.ClassMask.set(cls)
-            x.ClassMaskForbidden.set(cls,'NOT')
-            x.RaceMask.set(race)
-        })
-    }
-
     get InlineScripts() {
         return getInlineID(
               this
             , this.ID
             , 'SpellID'
         ) as _hidden.Spells<this>
-    }
-
-    clearClass(cls: MaskCon<keyof typeof ClassMask>) {
-        this.SkillLines.forEach(x=>{
-            x.ClassMask.set(cls,'NOT')
-        })
-        return this;
-    }
-
-    clearRace(race: MaskCon<keyof typeof RaceMask>) {
-        this.SkillLines.forEach(x=>{
-            x.RaceMask.set(race,'NOT')
-        })
-        return this;
     }
 
     clear() {

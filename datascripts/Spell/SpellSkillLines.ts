@@ -88,6 +88,28 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
         super(owner);
     }
 
+    enable(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
+        this.forEach(x=>{
+            x.ClassMask.set(cls)
+            x.ClassMaskForbidden.set(cls,'NOT')
+            x.RaceMask.set(race)
+        })
+    }
+
+    clearClass(cls: MaskCon<keyof typeof ClassMask>) {
+        this.forEach(x=>{
+            x.ClassMask.set(cls,'NOT')
+        })
+        return this;
+    }
+
+    clearRace(race: MaskCon<keyof typeof RaceMask>) {
+        this.forEach(x=>{
+            x.RaceMask.set(race,'NOT')
+        })
+        return this;
+    }
+
     add(
           skillLine: number
         , classes?: MaskCon<keyof typeof ClassMask>
