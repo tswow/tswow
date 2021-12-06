@@ -1,8 +1,8 @@
 import { DBC } from "wotlkdata";
-import { ArrayEntry } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { SkillTiersQuery, SkillTiersRow } from "wotlkdata/wotlkdata/dbc/types/SkillTiers";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
-import { ArrayEntity } from "../Misc/Entity";
+import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 
@@ -20,15 +20,17 @@ export class SkillTier extends ArrayEntry<SkillTiers> {
     }
 }
 
-export class SkillTiers extends ArrayEntity<SkillTiersRow,SkillTiers,SkillTier> {
-    get(index: number): SkillTier {
-        return new SkillTier(this, index);
-    }
-
+export class SkillTiersTiers extends ArraySystem<SkillTier,SkillTiers> {
     get length(): number {
         return 16;
     }
+    get(index: number): SkillTier {
+        return new SkillTier(this.owner, index);
+    }
+}
 
+export class SkillTiers extends MainEntity<SkillTiersRow> {
+    get Tiers() { return new SkillTiersTiers(this); }
     get ID() { return this.row.ID.get(); }
 }
 
@@ -42,7 +44,7 @@ export class SkillTiersRegistryClass
         return Ids.SkillTiers
     }
     Clear(entity: SkillTiers): void {
-        entity.clearAll()
+        entity.Tiers.clearAll()
     }
     protected Entity(r: SkillTiersRow): SkillTiers {
         return new SkillTiers(r);
