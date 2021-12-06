@@ -24,6 +24,9 @@ public:
     TSSpellInfo(SpellInfo const* info);
     TSSpellInfo();
     TSSpellInfo* operator->() { return this;}
+    operator bool() const { return info != nullptr; }
+    bool operator==(TSSpellInfo const& rhs) { return info == rhs.info; }
+
     bool IsNull() { return info == nullptr; }
     uint32 ID();
     uint32 School();

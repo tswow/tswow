@@ -29,6 +29,7 @@ public:
     TSUnit(Unit* unit);
     TSUnit();
     TSUnit* operator->() { return this;}
+    operator Unit* () const { return unit; }
     bool IsNull() { return unit == nullptr; }
     bool Attack(TSUnit who, bool meleeAttack);
     bool AttackStop();

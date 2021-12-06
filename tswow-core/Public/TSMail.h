@@ -29,6 +29,9 @@ struct TC_GAME_API TSMailItemInfo {
     TSMailItemInfo() { info = nullptr; }
     TSMailItemInfo(MailItemInfo* info);
     TSMailItemInfo* operator->(){return this;}
+    operator bool() const { return info != nullptr; }
+    bool operator==(TSMailItemInfo const& rhs) { return info == rhs.info; }
+
     uint64 GetGUID();
     uint32 GetItemTemplate();
 };
@@ -36,10 +39,11 @@ struct TC_GAME_API TSMailItemInfo {
 struct Mail;
 struct TC_GAME_API TSMail {
     Mail* mail;
-
     TSMail(Mail* mail);
     TSMail* operator->(){return this;}
     TSMail() { mail = nullptr;  }
+    operator bool() const { return mail != nullptr; }
+    bool operator==(TSMail const& rhs) { return mail == rhs.mail; }
     uint32 GetID();
     uint8 GetType();
     uint16 GetTemplateID();
@@ -73,6 +77,8 @@ struct TC_GAME_API TSMailDraft {
     TSMailDraft() { draft = nullptr; }
     TSMailDraft(MailDraft* draft);
     TSMailDraft* operator->(){return this;}
+    operator bool() const { return draft != nullptr; }
+    bool operator==(TSMailDraft const& rhs) { return draft == rhs.draft; }
 
     uint16 GetTemplateID();
     TSString GetSubject();

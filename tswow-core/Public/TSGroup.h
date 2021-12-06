@@ -26,6 +26,9 @@ public:
     TSGroup(Group* group);
     TSGroup();
     TSGroup* operator->() { return this;}
+    operator bool() const { return group != nullptr; }
+    bool operator==(TSGroup const& rhs) { return group == rhs.group; }
+
     bool IsNull() { return group == nullptr; };
     bool IsLeader(uint64 guid);
     bool IsFull();

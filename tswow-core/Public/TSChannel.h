@@ -26,6 +26,8 @@ public:
     TSChannel(Channel* channel);
     TSChannel();
     TSChannel* operator->() { return this;}
+    operator bool() const { return channel != nullptr; }
+    bool operator==(TSChannel const& rhs) { return channel == rhs.channel; }
     TSString GetName(uint32 locale = 0);
     uint32 GetID();
     bool IsConstant();

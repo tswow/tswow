@@ -27,6 +27,10 @@ class TC_GAME_API TSAreaTriggerEntry {
 public:
     TSAreaTriggerEntry(AreaTriggerEntry* entry);
     TSAreaTriggerEntry* operator->() { return this; }
+    operator bool() const { return m_entry != nullptr; }
+    bool operator==(TSAreaTriggerEntry const& rhs) {
+        return m_entry == rhs.m_entry;
+    }
     uint32 GetEntry();
     uint32 GetContinentID();
     float GetX();

@@ -35,6 +35,9 @@ public:
     Map *map;
     TSMap(Map *map);
     TSMap();
+    operator bool() const { return map != nullptr; }
+    bool operator==(TSMap const& rhs) { return map == rhs.map; }
+
     TSMap* operator->() { return this;}
     bool IsNull() { return map == nullptr; };
     bool IsArena();

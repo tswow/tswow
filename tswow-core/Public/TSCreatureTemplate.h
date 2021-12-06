@@ -29,6 +29,9 @@ public:
     CreatureTemplate * ct;
     TSCreatureTemplate(CreatureTemplate * ct);
     TSCreatureTemplate * operator->(){ return this; }
+    operator bool() const { return ct != nullptr; }
+    bool operator==(TSCreatureTemplate const& rhs) { return ct == rhs.ct; }
+
 
     uint32   GetEntry();
     uint32   GetDifficultyEntryA();

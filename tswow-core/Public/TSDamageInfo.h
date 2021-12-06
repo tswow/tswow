@@ -27,6 +27,8 @@ public:
     CalcDamageInfo * _info;
     TSMeleeDamageInfo(CalcDamageInfo * info);
     TSMeleeDamageInfo * operator->() { return this;}
+    operator bool() const { return _info != nullptr; }
+    bool operator==(TSMeleeDamageInfo const& rhs) { return _info == rhs._info; }
 
     TSUnit GetAttacker();
     TSUnit GetTarget();
@@ -60,6 +62,8 @@ public:
     SpellNonMeleeDamage * _info;
     TSSpellDamageInfo(SpellNonMeleeDamage * info);
     TSSpellDamageInfo* operator->() { return this; }
+    operator bool() const { return _info != nullptr; }
+    bool operator==(TSSpellDamageInfo const& rhs) { return _info == rhs._info; }
     TSUnit GetAttacker();
     TSUnit GetTarget();
     uint32 GetSpellID();

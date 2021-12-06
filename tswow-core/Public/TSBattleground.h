@@ -33,6 +33,8 @@ class TC_GAME_API TSBattlegroundPlayer: public TSEntityProvider {
 public:
     TSBattlegroundPlayer();
     TSBattlegroundPlayer(TSBattleground bg, uint64 guid, uint32 team, int64 offlineRemoveTime);
+    operator bool() const { return m_guid > 0; }
+    bool operator==(TSBattlegroundPlayer const& rhs) { return m_guid == rhs.m_guid; }
     uint64 GetGUID();
     uint32 GetTeam();
     int64 GetOfflineRemoveTime();
@@ -49,6 +51,7 @@ public:
     TSBattleground(Map*, Battleground* bg);
     TSBattleground();
     bool IsNull() { return bg == nullptr || map == nullptr; };
+    operator bool() const { return map != nullptr && bg != nullptr; }
     TSBattleground* operator->() { return this;}
     uint32 GetBracketID();
     TSString GetBGName();

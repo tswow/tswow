@@ -30,6 +30,8 @@ class TC_GAME_API TSAchievementEntry
 public:
     TSAchievementEntry(AchievementEntry * achievement);
     TSAchievementEntry* operator->();
+    operator bool() const { return m_achievement != nullptr; }
+    bool operator==(TSAchievementEntry const& rhs) { return m_achievement == rhs.m_achievement; }
     uint32 GetEntry();
     int32 GetFaction();
     int32 GetInstanceID();
@@ -48,6 +50,8 @@ class TC_GAME_API TSAchievementCriteriaEntry
 public:
     TSAchievementCriteriaEntry(AchievementCriteriaEntry* criteria);
     TSAchievementCriteriaEntry* operator->();
+    operator bool() const { return m_criteria != nullptr; }
+    bool operator==(TSAchievementCriteriaEntry const& rhs) { return m_criteria == rhs.m_criteria; }
     uint32 GetEntry();
     uint32 GetAchievementEntry();
     uint32 GetType();

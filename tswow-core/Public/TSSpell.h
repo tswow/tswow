@@ -27,6 +27,8 @@ public:
     TSSpell(Spell *spell);
     TSSpell();
     TSSpell* operator->() { return this;}
+    operator bool() const { return spell != nullptr; }
+    bool operator==(TSSpell const& rhs) { return spell == rhs.spell; }
     bool IsNull() { return spell == nullptr; };
     bool IsAutoRepeat();
     TSWorldObject GetCaster();

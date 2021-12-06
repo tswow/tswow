@@ -29,6 +29,9 @@ public:
     TSItemTemplate(ItemTemplate const* info);
     TSItemTemplate();
     TSItemTemplate* operator->() { return this;}
+    operator bool() const { return info != nullptr; }
+    bool operator==(TSItemTemplate const& rhs) { return info == rhs.info; }
+
     uint32 ID();
 
     float DamageMinA();

@@ -12,6 +12,8 @@ public:
     GameObjectTemplate * gt;
     TSGameObjectTemplate(GameObjectTemplate * gt);
     TSGameObjectTemplate * operator->(){ return this; }
+    operator bool() const { return gt != nullptr; }
+    bool operator==(TSGameObjectTemplate const& rhs) { return gt == rhs.gt; }
 
     uint32 GetEntry();
     uint32 GetType();

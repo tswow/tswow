@@ -29,6 +29,9 @@ public:
     TSWorldPacket(uint16 opcode, uint32 res = 200);
     TSWorldPacket(WorldPacket *packet);
     TSWorldPacket* operator->() { return this;}
+    operator bool() const { return packet != nullptr; }
+    bool operator==(TSWorldPacket const& rhs) { return packet == rhs.packet; }
+
     ~TSWorldPacket();
     bool IsNull() { return packet == nullptr; }
     uint16 GetOpcode();
@@ -101,6 +104,8 @@ class TC_GAME_API TSWorldStatePacket
 public:
     WorldPackets::WorldState::InitWorldStates* m_ws;
     TSWorldStatePacket(WorldPackets::WorldState::InitWorldStates* ws);
+    operator bool() const { return m_ws != nullptr; }
+    bool operator==(TSWorldStatePacket const& rhs) { return m_ws == rhs.m_ws; }
     void push(int32 variableId, int32 value);
     uint32 length();
     int32 GetVariable(uint32 index);

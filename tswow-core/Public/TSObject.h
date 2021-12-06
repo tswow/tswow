@@ -49,6 +49,8 @@ public:
     TSObject(Object* obj);
     TSObject();
     TSObject* operator->() { return this;}
+    operator bool() const { return obj != nullptr; }
+    bool operator==(TSObject const& rhs) { return obj == rhs.obj; }
     bool IsNull() { return obj == nullptr; };
     bool IsInWorld();
     float GetScale();

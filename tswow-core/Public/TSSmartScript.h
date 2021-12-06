@@ -19,6 +19,8 @@ struct TC_GAME_API TSCondition {
     Condition * m_condition;
     TSCondition(Condition* condition);
     TSCondition* operator->() { return this; }
+    operator bool() const { return m_condition != nullptr; }
+    bool operator==(TSCondition const& rhs) { return m_condition == rhs.m_condition; }
     uint32 GetSourceType();
     uint32 GetSourceGroup();
     uint32 GetSouceEntry();
@@ -44,8 +46,13 @@ struct TC_GAME_API TSConditionSourceInfo
     ConditionSourceInfo* m_info;
     TSConditionSourceInfo(ConditionSourceInfo* info);
     TSConditionSourceInfo * operator->() { return this; }
+    operator bool() const { return m_info != nullptr; }
+    bool operator==(TSConditionSourceInfo const& rhs) {
+        return m_info == rhs.m_info;
+    }
     TSWorldObject GetTarget(uint32 index);
     TSCondition GetLastFailedCondition();
+
 };
 
 class SmartScript;

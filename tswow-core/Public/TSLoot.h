@@ -25,6 +25,9 @@ struct TC_GAME_API TSLootItem {
     LootItem* item;
     TSLootItem(LootItem* item);
     TSLootItem* operator->() {return this;}
+    operator bool() const { return item != nullptr; }
+    bool operator==(TSLootItem const& rhs) { return item == rhs.item; }
+
     uint32 GetItemID();
     uint32 GetRandomSuffix();
     int32 GetRandomPropertyID();
@@ -43,6 +46,9 @@ class TC_GAME_API TSLoot {
         TSLoot(Loot *loot);
         TSLoot();
         TSLoot* operator->() {return this;}
+        operator bool() const { return loot != nullptr; }
+        bool operator==(TSLoot const& rhs) { return loot == rhs.loot; }
+
         bool IsNull() { return loot == nullptr; }
         void Clear();
         bool IsLooted();

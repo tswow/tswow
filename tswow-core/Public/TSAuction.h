@@ -28,6 +28,8 @@ struct TC_GAME_API TSAuctionEntry {
     TSAuctionEntry(AuctionEntry* entry);
 
     TSAuctionEntry* operator->() {return this;}
+    operator bool() const { return entry != nullptr; }
+    bool operator==(TSAuctionEntry const& rhs) { return entry == rhs.entry; }
 
     uint32 GetID();
     uint8 GetHouseID();
@@ -63,7 +65,8 @@ struct TC_GAME_API TSAuctionHouseObject {
     AuctionHouseObject* obj;
     TSAuctionHouseObject(AuctionHouseObject* obj) { this->obj = obj;};
     TSAuctionHouseObject* operator->(){return this;}
-
+    operator bool() const { return obj != nullptr; }
+    bool operator==(TSAuctionHouseObject const& rhs) { return obj == rhs.obj; }
     TSArray<uint32> GetKeys();
     TSAuctionEntry GetEntry(uint32 key);
     bool RemoveAuction(uint32 key);
