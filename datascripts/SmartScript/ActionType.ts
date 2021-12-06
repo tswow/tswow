@@ -357,7 +357,7 @@ export class ActionType {
     setTalkGroup(callback: (group: CreatureTextGroup,duration: Cell<number,any>, unk: Cell<number,any>)=>void) {
         this.row.action_type.set(1)
         const group = CreatureTextRegistry.load(this.row.entryorguid.get())
-            .addGet();
+            .Texts.addGet();
         callback(group,this.row.action_param2,this.row.action_param3);
         this.row.action_param1.set(group.Group)
         return this.main
