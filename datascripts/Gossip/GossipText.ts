@@ -17,11 +17,11 @@
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
-import { WrappedLoc } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { npc_textRow } from "wotlkdata/wotlkdata/sql/types/npc_text";
+import { GenderedText } from "../Misc/GenderedText";
 import { Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Gossip } from "./Gossip";
@@ -215,8 +215,7 @@ export class GossipTextEntry<T> extends ArrayEntry<T> {
 
     clear() {
         this.Probability.set(0);
-        this.MaleText.clear();
-        this.FemaleText.clear();
+        this.Text.clear();
         this.Emote.set(0);
         this.EmoteDelay.set(0);
         this.Probability.set(0);
@@ -227,8 +226,14 @@ export class GossipTextEntry<T> extends ArrayEntry<T> {
         return this.Probability.get() === 0;
     }
 
-    get MaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.row, this.index, false)); }
-    get FemaleText() : WrappedLoc<this> { return this.wrapLoc(new GossipText(this, this.row, this.index, true)); }
+    get Text() {
+        return new GenderedText(
+              this
+            , 'WRITE_MALE'
+            , this.wrapLoc(new GossipText(this, this.row, this.index, false))
+            , this.wrapLoc(new GossipText(this, this.row, this.index, true))
+        )
+    }
     get Lang() { return this.wrap(lang(this.row, this.index)); }
     get Probability() { return this.wrap(probability(this.row, this.index)); }
     get Emote() { return this.wrap(emote(this.row, this.index)); }
@@ -256,8 +261,8 @@ export class GossipTextArray extends ArraySystem<GossipTextEntry<Gossip>, Gossip
 
     addGendered(male: loc_constructor, female: loc_constructor, lang: number, emote = 0, emoteDelay = 0) {
         this.addGet()
-            .MaleText.set(male)
-            .FemaleText.set(female)
+            .Text.Male.set(male)
+            .Text.Female.set(female)
             .Lang.set(lang)
             .Emote.set(emote)
             .EmoteDelay.set(emoteDelay)
@@ -295,8 +300,8 @@ export class NPCText extends ArraySystem<
 
     addGendered(male: loc_constructor, female: loc_constructor, lang: number, emote = 0, emoteDelay = 0) {
         this.addGet()
-            .MaleText.set(male)
-            .FemaleText.set(female)
+            .Text.Male.set(male)
+            .Text.Female.set(female)
             .Lang.set(lang)
             .Emote.set(emote)
             .EmoteDelay.set(emoteDelay)
