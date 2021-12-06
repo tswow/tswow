@@ -17,7 +17,7 @@
 import { SQL } from "wotlkdata";
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { EnumCon, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
 import { creature_textRow } from "wotlkdata/wotlkdata/sql/types/creature_text";
@@ -127,11 +127,12 @@ export class CreatureTextGroup {
     }
 }
 
-export class CreatureTexts {
+export class CreatureTextsTexts extends CellSystem<CreatureTexts> {
+    private groups: CreatureTextGroup[];
     private creature: number;
-    private groups: CreatureTextGroup[] = []
 
-    constructor(creature: number, groups: CreatureTextGroup[]) {
+    constructor(owner: CreatureTexts, creature: number, groups: CreatureTextGroup[]) {
+        super(owner);
         this.creature = creature;
         this.groups = groups;
     }
@@ -160,17 +161,22 @@ export class CreatureTexts {
         callback(this.get(index));
         return this;
     }
+}
 
-    objectify() {
-        return this.groups.map(x=>x.objectify())
+export class CreatureTexts extends CellSystemTop {
+    constructor(creature: number, groups: CreatureTextGroup[]) {
+        super();
+        this.Texts = new CreatureTextsTexts(this, creature,groups);
     }
+
+    readonly Texts: CreatureTextsTexts;
 }
 
 export class CreatureTextsAttached extends CellSystem<CreatureTemplate> {
-    private texts: CreatureTexts;
+    private texts: CreatureTextsTexts;
     constructor(owner: CreatureTemplate) {
         super(owner);
-        this.texts = CreatureTextRegistry.load(owner.ID)
+        this.texts = CreatureTextRegistry.load(owner.ID).Texts
     }
 
     get(index: number) {
