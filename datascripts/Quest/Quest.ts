@@ -21,6 +21,7 @@ import { quest_templateRow } from "wotlkdata/wotlkdata/sql/types/quest_template"
 import { quest_template_addonRow } from "wotlkdata/wotlkdata/sql/types/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
+import { MinMaxTargetCell } from "../Misc/LimitCells";
 import { RaceMask } from "../Race/RaceType";
 import { QuestAddon } from "./QuestAddon";
 import { QuestFlags } from "./QuestFlags";
@@ -60,7 +61,20 @@ export class Quest extends MainEntity<quest_templateRow> {
     get ObjectiveText() { return new ObjectiveDescription(this); }
 
     get SpecialFlags() { return this.Addon.SpecialFlags; }
+
+    get Level() {
+        return new MinMaxTargetCell(
+              this
+            , this.row.MinLevel
+            , this.Addon.MaxLevel
+            , this.QuestLevel
+        )
+    }
+
     get MaxLevel() { return this.Addon.MaxLevel; }
+    get MinLevel() { return this.wrap(this.row.MinLevel); }
+    get QuestLevel() { return this.wrap(this.row.QuestLevel); }
+
     get NextQuest() { return this.Addon.NextQuest }
     get PrevQuest() { return this.Addon.PrevQuest }
     get ProvidedItemCount() { return this.Addon.ProvidedItemCount }
@@ -80,8 +94,6 @@ export class Quest extends MainEntity<quest_templateRow> {
     /** @deprecated use fields directly on Quest */
     get Text() { return new QuestText(this); }
     get AreaSort() { return this.wrap(this.row.QuestSortID); }
-    get MinLevel() { return this.wrap(this.row.MinLevel); }
-    get QuestLevel() { return this.wrap(this.row.QuestLevel); }
     get StartItem() { return this.wrap(this.row.StartItem); }
     get Flags() {
         return makeMaskCell32(QuestFlags,this, this.row.Flags);

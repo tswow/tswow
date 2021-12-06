@@ -42,6 +42,48 @@ export class MinMaxCell<T> extends CellSystem<T> {
     }
 }
 
+export class MinMaxTargetCell<T> extends CellSystem<T> {
+    @Transient
+    protected minCell: Cell<number,any>;
+
+    @Transient
+    protected targetCell: Cell<number,any>;
+
+    @Transient
+    protected maxCell: Cell<number,any>;
+
+
+    constructor(owner: T,minCell: Cell<number,any>, targetCell: Cell<number,any>, maxCell: Cell<number,any>) {
+        super(owner);
+        this.minCell = minCell;
+        this.targetCell = targetCell;
+        this.maxCell = maxCell;
+    }
+
+    get Min() { return this.ownerWrap(this.minCell); }
+    get Target() { return this.ownerWrap(this.targetCell); }
+    get Max() { return this.ownerWrap(this.maxCell); }
+
+    isWithin(lowerMin: number, upperMax: number) {
+        return this.isAbove(lowerMin) && this.isBelow(upperMax);
+    }
+
+    isAbove(lowerMin: number) {
+        return this.Min.get() >= lowerMin
+    }
+
+    isBelow(upperMax: number) {
+        return this.Max.get() <= upperMax;
+    }
+
+    set(min: number, target: number, max: number) {
+        this.Min.set(min);
+        this.Target.set(target);
+        this.Max.set(max);
+        return this.owner;
+    }
+}
+
 export class MinMax2DCell<T> extends CellSystem<T> {
     @Transient
     protected minX: Cell<number,any>
