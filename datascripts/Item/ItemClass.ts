@@ -46,8 +46,8 @@ export class ItemClassEnumValue {
         this.owner.row
             .class.set(this.cls)
             .subclass.set(this.subclass)
-        this.owner.createDbc().ClassID.set(this.cls);
-        this.owner.createDbc().SubclassID.set(this.subclass);
+        this.owner.DBCRow.get().ClassID.set(this.cls);
+        this.owner.DBCRow.get().SubclassID.set(this.subclass);
         return this.owner;
     }
 }
@@ -77,8 +77,8 @@ export class ItemClass extends CellSystem<ItemTemplate> {
     set(cls: number, subclass: number): ItemTemplate {
         this.owner.row.class.set(cls);
         this.owner.row.subclass.set(subclass);
-        this.owner.createDbc().ClassID.set(cls)
-        this.owner.createDbc().SubclassID.set(subclass);
+        this.owner.DBCRow.get().ClassID.set(cls)
+        this.owner.DBCRow.get().SubclassID.set(subclass);
         return this.owner;
     }
 
