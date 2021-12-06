@@ -195,7 +195,7 @@ export class Spell extends MainEntity<SpellRow> {
      * Does **not** support setting this attribute,
      * please use TSWoW Spell events instead.
      */
-    get Script() { return new SpellScript(this); }
+    get CoreScript() { return new SpellScript(this); }
 
     get CastOnPlayerCreate() { return new CastSpells(this, this.ID); }
 
