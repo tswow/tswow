@@ -6899,11 +6899,11 @@ declare interface TSSmartScriptValues {
 }
 
 declare interface TSAssert {
-    isTrue(expression: boolean, reason?: string): void;
-    isFalse(expression: boolean, reason?: string): void;
-    hasSpell(player: TSPlayer, spell: uint32, reason?: string): void;
-    hasItem(player: TSPlayer, item: uint32, count?: uint32, checkBank?: boolean, reason?: string): void;
-    equals<T>(a: T, b: T, reason?: string): void;
+    IsTrue(expression: boolean, reason?: string): void;
+    IsFalse(expression: boolean, reason?: string): void;
+    HasSpell(player: TSPlayer, spell: uint32, reason?: string): void;
+    HasItem(player: TSPlayer, item: uint32, count?: uint32, checkBank?: boolean, reason?: string): void;
+    Equals<T>(a: T, b: T, reason?: string): void;
 }
 
 declare interface TSManualStepBuilder {

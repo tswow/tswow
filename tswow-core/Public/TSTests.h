@@ -37,12 +37,12 @@ public:
 class TC_GAME_API TSAssert {
 public:
     TSAssert * operator->() { return this; }
-    void isTrue(bool expression, TSString message = JSTR(""));
-    void isFalse(bool expression, TSString message = JSTR(""));
-    void hasSpell(TSPlayer player, uint32_t spellId, TSString message = JSTR(""));
-    void hasItem(TSPlayer player, uint32_t itemId, uint32_t count = 1, bool checkBank = false, TSString message = JSTR(""));
+    void IsTrue(bool expression, TSString message = JSTR(""));
+    void IsFalse(bool expression, TSString message = JSTR(""));
+    void HasSpell(TSPlayer player, uint32_t spellId, TSString message = JSTR(""));
+    void HasItem(TSPlayer player, uint32_t itemId, uint32_t count = 1, bool checkBank = false, TSString message = JSTR(""));
     template <typename T>
-    void equals(T a, T b, TSString message = JSTR(""))
+    void Equals(T a, T b, TSString message = JSTR(""))
     {
         if (a != b)
         {

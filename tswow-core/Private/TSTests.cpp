@@ -155,7 +155,7 @@ std::pair<bool,std::string> TSAutomaticTest::run(Player * player) const
     }
 }
 
-void TSAssert::isTrue(bool expression, TSString message)
+void TSAssert::IsTrue(bool expression, TSString message)
 {
     if (!expression)
     {
@@ -163,7 +163,7 @@ void TSAssert::isTrue(bool expression, TSString message)
     }
 }
 
-void TSAssert::isFalse(bool expression, TSString message)
+void TSAssert::IsFalse(bool expression, TSString message)
 {
     if (expression)
     {
@@ -171,7 +171,7 @@ void TSAssert::isFalse(bool expression, TSString message)
     }
 }
 
-void TSAssert::hasItem(TSPlayer player, uint32_t itemId, uint32_t count, bool checkBank, TSString message)
+void TSAssert::HasItem(TSPlayer player, uint32_t itemId, uint32_t count, bool checkBank, TSString message)
 {
     if (!player.HasItem(itemId, count, checkBank))
     {
@@ -186,7 +186,7 @@ void TSAssert::hasItem(TSPlayer player, uint32_t itemId, uint32_t count, bool ch
     }
 }
 
-void TSAssert::hasSpell(TSPlayer player, uint32_t spellId, TSString message)
+void TSAssert::HasSpell(TSPlayer player, uint32_t spellId, TSString message)
 {
     if (!player.HasSpell(spellId))
     {
