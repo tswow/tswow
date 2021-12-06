@@ -158,7 +158,12 @@ class ClassDescription extends CellSystem<Class> {
 export class ClassUISettings extends CellSystem<Class> {
     readonly Color: ClassColor;
     readonly TCoords: TCoordSystem;
-    readonly ClassButton: AnchorRow<Class>;
+
+    /**
+     * The position of this class button on the
+     * character creation screen.
+     */
+    readonly ButtonPos: AnchorRow<Class>;
     readonly Info: ClassInfoRows;
     readonly Description: ClassDescription;
 
@@ -174,7 +179,7 @@ export class ClassUISettings extends CellSystem<Class> {
         super(cls);
         this.TCoords = new TCoordSystem(cls, tCoords, tCoordsCC, tCoordsWS);
         this.Color = new ClassColor(cls, classColor);
-        this.ClassButton = new AnchorRow(cls, xmlEdit);
+        this.ButtonPos = new AnchorRow(cls, xmlEdit);
         this.Description = new ClassDescription(cls, maleDescription, femaleDescription )
         this.Info = new ClassInfoRows(cls, infoRows);
     }

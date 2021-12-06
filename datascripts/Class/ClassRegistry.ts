@@ -232,10 +232,10 @@ export class ClassRegistryClass
         );
 
         // Set up first classes automatically
-        if(cls.ID == 13) cls.UI.ClassButton.setPos(-46,-420)
-        if(cls.ID == 14) cls.UI.ClassButton.setPos(-0,-420)
-        if(cls.ID == 15) cls.UI.ClassButton.setPos(42,-420)
-        if(cls.ID == 16) cls.UI.ClassButton.setPos(85,-420)
+        if(cls.ID == 13) cls.UI.ButtonPos.setPos(-46,-420)
+        if(cls.ID == 14) cls.UI.ButtonPos.setPos(-0,-420)
+        if(cls.ID == 15) cls.UI.ButtonPos.setPos(42,-420)
+        if(cls.ID == 16) cls.UI.ButtonPos.setPos(85,-420)
         loadedClasses[cls.ID] = cls;
         return cls;
     }
