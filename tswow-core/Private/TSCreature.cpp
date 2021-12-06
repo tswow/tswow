@@ -1330,32 +1330,32 @@ void TSCreature::SetLootRecipient(TSUnit unit, bool withGroup)
     creature->SetLootRecipient(unit.unit, withGroup);
 }
 
-void TSCreature::SetMainhand(uint32_t mainhand)
+void TSCreature::EquipMainhand(uint32_t mainhand)
 {
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID, mainhand);
 }
 
-void TSCreature::SetOffhand(uint32_t offhand)
+void TSCreature::EquipOffhand(uint32_t offhand)
 {
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1, offhand);
 }
 
-void TSCreature::SetRanged(uint32_t ranged)
+void TSCreature::EquipRanged(uint32_t ranged)
 {
     creature->SetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2, ranged);
 }
 
-uint32_t TSCreature::GetMainhand()
+uint32_t TSCreature::GetMainhandEquip()
 {
     return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 0);
 }
 
-uint32_t TSCreature::GetOffhand()
+uint32_t TSCreature::GetOffhandEquip()
 {
     return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 1);
 }
 
-uint32_t TSCreature::GetRanged()
+uint32_t TSCreature::GetRangedEquip()
 {
     return creature->GetUInt32Value(UNIT_VIRTUAL_ITEM_SLOT_ID + 2);
 }

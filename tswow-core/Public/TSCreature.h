@@ -129,11 +129,11 @@ public:
     bool IsAIEnabled();
     void SetLootRecipient(TSUnit unit, bool withGroup = true);
 
-    uint32_t GetMainhand();
-    uint32_t GetOffhand();
-    uint32_t GetRanged();
+    uint32_t GetMainhandEquip();
+    uint32_t GetOffhandEquip();
+    uint32_t GetRangedEquip();
 
-    void SetMainhand(uint32_t mainhand);
-    void SetOffhand(uint32_t offhand);
-    void SetRanged(uint32_t ranged);
+    void EquipMainhand(uint32_t mainhand);
+    void EquipOffhand(uint32_t offhand);
+    void EquipRanged(uint32_t ranged);
 };
