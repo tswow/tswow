@@ -65,7 +65,7 @@ export class Class extends MainEntity<ChrClassesRow> {
     get DisplayPower() { return this.wrap(this.row.DisplayPower); }
     get PetNameToken() { return this.wrap(this.row.PetNameToken); }
     get Races() { return new ClassRaces(this); }
-    get Talents() { return new ClassTalents(this); }
+    get TalentTrees() { return new ClassTalents(this); }
     get Roles() { return new ClassRoles(this); }
 }
 
