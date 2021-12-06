@@ -170,7 +170,7 @@ export class Spell extends MainEntity<SpellRow> {
     )}
 
     get Levels() { return new SpellLevels(this); }
-    get SpellDescriptionVariable() { return SpellDescriptionVariableRegistry.ref(this, this.row.SpellDescriptionVariableID) }
+    get DescriptionVariable() { return SpellDescriptionVariableRegistry.ref(this, this.row.SpellDescriptionVariableID) }
     get Difficulty() { return SpellDifficultyRegistry.ref(this, this.row.SpellDifficultyID); }
     get ChannelInterruptFlags() { return new MaskCell32(this, this.row.ChannelInterruptFlags); }
     get AuraInterruptFlags() {
