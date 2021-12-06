@@ -100,7 +100,6 @@ export const std = {
     Achievements: AchievementRegistry,
     Loot: Loot,
     Items: ItemTemplateRegistry,
-    Creatures: CreatureInstanceRegistry,
     Classes: ClassRegistry,
     UI: UI,
     SkillLines: SkillLineRegistry,
