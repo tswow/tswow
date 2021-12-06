@@ -14,7 +14,7 @@ export class ClassTalents extends MultiRowSystem<TalentTree,Class> {
         return value.row.isDeleted();
     }
 
-    add(mod: string, id: string, tabIndex: number, races?: MaskCon<keyof typeof RaceMask>) {
+    addGet(mod: string, id: string, tabIndex: number, races?: MaskCon<keyof typeof RaceMask>) {
         let tree = TalentTreeRegistry.create(mod,id)
         tree.row.OrderIndex.set(tabIndex)
                 .RaceMask.set(makeMask(RaceMask,races))
@@ -23,7 +23,7 @@ export class ClassTalents extends MultiRowSystem<TalentTree,Class> {
     }
 
     addMod(mod: string, id: string, tabIndex: number, callback: (tree: TalentTree)=>void = ()=>{}) {
-        callback(this.add(mod,id,tabIndex));
+        callback(this.addGet(mod,id,tabIndex));
         return this.owner;
     }
 }
