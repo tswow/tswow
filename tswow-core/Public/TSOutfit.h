@@ -119,7 +119,7 @@ public:
 
     uint32_t GetDisplayID(uint8_t slot);
 
-    TSOutfit& Apply(TSCreature creature);
+    TSOutfit& ApplyRef(TSCreature creature);
 
     TSOutfit& ApplyCopy(
           TSCreature creature

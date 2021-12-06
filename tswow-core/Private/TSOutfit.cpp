@@ -170,7 +170,7 @@ TSOutfit& TSOutfit::ApplyCopy(
     return *this;
 }
 
-TSOutfit& TSOutfit::Apply(TSCreature creature)
+TSOutfit& TSOutfit::ApplyRef(TSCreature creature)
 {
     creature.SetOutfit(*this);
     return *this;

@@ -2352,7 +2352,7 @@ declare interface TSOutfit {
      */
     GetDisplayID(slot: EquipmentSlots): uint32;
 
-    Apply(creature: TSCreature): void;
+    ApplyRef(creature: TSCreature): void;
 
     /**
      * Applies a copy of this outfit to the target creature
