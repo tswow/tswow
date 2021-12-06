@@ -18,15 +18,22 @@ import { DBC } from "wotlkdata";
 import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/wotlkdata/dbc/types/CharTitles";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
+import { GenderedText } from "../Misc/GenderedText";
 import { Ids } from "../Misc/Ids";
 import { RegistryRowBase } from "../Refs/Registry";
 
 export class Title extends MainEntity<CharTitlesRow>{
     get ID() { return this.row.ID.get(); }
-    get MaleText() { return this.wrapLoc(this.row.Name); }
-    get FemaleText() { return this.wrapLoc(this.row.Name1); }
-}
 
+    get Text() {
+        return new GenderedText(
+              this
+            , 'WRITE_MALE'
+            , this.row.Name
+            , this.row.Name1
+        )
+    }
+}
 export class TitleRegistryClass extends RegistryRowBase<Title,CharTitlesRow,CharTitlesQuery> {
     protected Table(): Table<any, CharTitlesQuery, CharTitlesRow> & { add: (id: number) => CharTitlesRow; } {
         return DBC.CharTitles
