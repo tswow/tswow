@@ -6657,7 +6657,7 @@ declare interface TSUnit extends TSWorldObject {
 
 declare interface TSItemTemplate extends TSEntityProvider {
     IsNull() : bool
-    ID() : uint32;
+    GetEntry() : uint32;
     GetDamageMinA(): float;
     GetDamageMinB(): float;
 
@@ -6753,7 +6753,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
 
 declare interface TSSpellInfo extends TSEntityProvider {
 	IsNull() : bool
-    ID() : uint32
+    GetEntry() : uint32
 	GetSchool() : uint32
 	GetBaseLevel() : uint32
 	GetDmgClass() : uint32

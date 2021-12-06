@@ -28,7 +28,7 @@ public:
     bool operator==(TSSpellInfo const& rhs) { return info == rhs.info; }
 
     bool IsNull() { return info == nullptr; }
-    uint32 ID();
+    uint32 GetEntry();
     uint32 GetSchool();
     uint32 GetBaseLevel();
     uint32 GetDmgClass();

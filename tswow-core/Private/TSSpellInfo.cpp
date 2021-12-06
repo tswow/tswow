@@ -31,7 +31,7 @@ TSSpellInfo::TSSpellInfo()
     , info(nullptr)
 {}
 
-uint32 TSSpellInfo::ID()  {
+uint32 TSSpellInfo::GetEntry()  {
     return info->Id;
 }
 

@@ -30,7 +30,7 @@ TSItemTemplate::TSItemTemplate()
     , info(nullptr)
 {}
 
-uint32 TSItemTemplate::ID()  {
+uint32 TSItemTemplate::GetEntry()  {
     return info->ItemId;
 }
 

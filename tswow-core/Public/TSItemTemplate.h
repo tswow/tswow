@@ -32,7 +32,7 @@ public:
     operator bool() const { return info != nullptr; }
     bool operator==(TSItemTemplate const& rhs) { return info == rhs.info; }
 
-    uint32 ID();
+    uint32 GetEntry();
 
     float GetDamageMinA();
     float GetDamageMinB();
