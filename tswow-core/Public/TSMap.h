@@ -22,7 +22,6 @@
 #include "TSClasses.h"
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
-#include "TSInstance.h"
 
 #include <functional>
 
