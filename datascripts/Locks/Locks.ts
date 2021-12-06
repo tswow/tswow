@@ -47,7 +47,7 @@ export class LockRegistryClass
         return Ids.Lock
     }
     Clear(entity: Lock): void {
-        entity.clearAll()
+        entity.Requirements.clearAll()
     }
     protected Entity(r: LockRow): Lock {
         return new Lock(r);

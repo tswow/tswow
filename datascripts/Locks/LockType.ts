@@ -40,7 +40,7 @@ export class LockTypeCursor extends CellSystem<LockType> {
 
 export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
     protected getAllRows(): Lock[] {
-        return LockRegistry.filter(x=>x.isOfType(this.owner.ID))
+        return LockRegistry.filter(x=>x.Requirements.requiresType(this.owner.ID))
     }
 
     protected isDeleted(value: Lock): boolean {
@@ -48,7 +48,7 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
     }
 
     add(requiredSkill: number, requiredItems: number[] = []) {
-        let locks = LockRegistry.create()
+        let locks = LockRegistry.create().Requirements
             .addMod(i=>i
                 .Type.LOCK_TYPE.set()
                 .LockType.set(this.owner.ID)
@@ -60,7 +60,7 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
                 + `: can only add ${locks.length-1}`
             )
         }
-        requiredItems.forEach(x=>locks.addGet()
+        requiredItems.forEach(x=>locks.Requirements.addGet()
             .Type.ITEM.set()
             .Item.set(x)
         )

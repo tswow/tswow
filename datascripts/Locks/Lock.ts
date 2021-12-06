@@ -1,5 +1,6 @@
 import { EnumCellTransform, EnumValueTransform, TransformedClass } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
 import { LockRow } from "wotlkdata/wotlkdata/dbc/types/Lock";
@@ -8,7 +9,7 @@ import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { GameObjectAreaDamage, GameObjectButton, GameObjectCamera, GameObjectChest, GameObjectDoor, GameObjectFishingHole, GameObjectFlagDrop, GameObjectFlagStand, GameObjectGoober, GameObjectQuestGiver, GameObjectTemplate, GameObjectTrap, GameObjectType } from "../GameObject/GameObjectTemplate";
 import { GAMEOBJECT_TYPE_AREADAMAGE, GAMEOBJECT_TYPE_BUTTON, GAMEOBJECT_TYPE_CAMERA, GAMEOBJECT_TYPE_CHEST, GAMEOBJECT_TYPE_DOOR, GAMEOBJECT_TYPE_FISHINGHOLE, GAMEOBJECT_TYPE_FLAGDROP, GAMEOBJECT_TYPE_FLAGSTAND, GAMEOBJECT_TYPE_GOOBER, GAMEOBJECT_TYPE_QUESTGIVER, GAMEOBJECT_TYPE_TRAP } from "../GameObject/GameObjectTypes";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
-import { ArrayEntity } from "../Misc/Entity";
+import { MainEntity } from "../Misc/Entity";
 import { LockTypeRegistry } from "./Locks";
 
 export class LockIndexBase extends TransformedClass<LockIndexPlain> {
@@ -231,19 +232,13 @@ export class LockReferences extends CellSystem<Lock> {
     get Traps() { return new LockTraps(this.owner); }
 }
 
-// @ts-ignore -- hack, it's valid
-export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
-    get ID() { return this.row.ID.get(); }
-
-    get length(): number {
-        return 8;
-    }
-
+// @ts-ignore - hack, it's valid
+export class LockRequirements extends ArraySystem<LockIndexBase,Lock> {
     addEmpty() {
         const index = this.addGet().index;
-        this.row.Action.setIndex(index,0)
-        this.row.Index.setIndex(index,0)
-        this.row.Skill.setIndex(index,0)
+        this.owner.row.Action.setIndex(index,0)
+        this.owner.row.Index.setIndex(index,0)
+        this.owner.row.Skill.setIndex(index,0)
         return this;
     }
 
@@ -271,10 +266,10 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
     }
 
     get(index: number): LockIndexPlain {
-        return new LockIndexPlain(this, index);
+        return new LockIndexPlain(this.owner, index);
     }
 
-    isOfType(lockType: number) {
+    requiresType(lockType: number) {
         return this.find(x=>
                x.Type.LOCK_TYPE.is()
             && x.Type.LOCK_TYPE.as().LockType.get() === lockType
@@ -287,6 +282,15 @@ export class Lock extends ArrayEntity<LockRow, Lock, LockIndexPlain> {
             && x.Type.ITEM.as().Item.get() === item
         ) !== undefined
     }
+}
 
+export class Lock extends MainEntity<LockRow> {
+    get ID() { return this.row.ID.get(); }
+
+    get length(): number {
+        return 8;
+    }
+
+    get Requirements() { return new LockRequirements(this); }
     get References() { return new LockReferences(this); }
 }

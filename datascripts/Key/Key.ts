@@ -29,7 +29,7 @@ import { SpellRegistry } from "../Spell/Spells";
 export class KeyLocks extends MultirowSystemCached<Lock,Key> {
     protected getAllRows(): Lock[] {
         return LockRegistry
-            .filter(x=>x.find(y=>
+            .filter(x=>x.Requirements.find(y=>
                 y.Type.ITEM.is()
                 && this.owner.ItemID === y.Type.ITEM.as().Item.get()
             ))
@@ -39,7 +39,7 @@ export class KeyLocks extends MultirowSystemCached<Lock,Key> {
     }
 
     addGet(lockType: number = 5, lockSkill = 0) {
-        return LockRegistry.create()
+        return LockRegistry.create().Requirements
             .addItem(this.owner.ItemID,1)
             .addLockType(lockType,lockSkill,0)
     }

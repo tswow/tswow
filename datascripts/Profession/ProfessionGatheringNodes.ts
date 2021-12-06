@@ -18,7 +18,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
     }
 
     add(mod: string, id: string, lockType: number, levelNeeded: number,itemsNeeded: number[], displayid: number) {
-        let lock = LockRegistry.create()
+        let lock = LockRegistry.create().Requirements
             .addMod(i=>i
                 .Type.LOCK_TYPE.set()
                 .LockType.set(lockType)
@@ -31,7 +31,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
                 )
         }
         itemsNeeded.forEach(item=>{
-            lock.addMod(lock=>{
+            lock.Requirements.addMod(lock=>{
                 lock.Type.ITEM.set()
                     .Item.set(item)
             })
@@ -46,7 +46,7 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
 
     addGet(mod: string, id: string, lockType: number, level: number) {
         let lock = LockRegistry
-            .create()
+            .create().Requirements
             .addMod(x=>x.Type.LOCK_TYPE.set()
                 .LockType.set(lockType)
                 .RequiredSkill.set(level)
