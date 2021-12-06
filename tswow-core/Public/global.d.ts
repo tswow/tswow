@@ -8407,74 +8407,74 @@ declare interface TSAreaTriggerEntry {
 
 // Json
 declare class TSJsonObject {
-    setBool(key: string, value: boolean): this;
-    getBool(key: string, def?: boolean): boolean;
-    hasBool(key: string): boolean;
+    SetBool(key: string, value: boolean): this;
+    GetBool(key: string, def?: boolean): boolean;
+    HasBool(key: string): boolean;
 
-    setNumber(key: string, value: double): this;
-    getNumber(key: string, def?: double): double;
-    hasNumber(key: string): boolean;
+    SetNumber(key: string, value: double): this;
+    GetNumber(key: string, def?: double): double;
+    HasNumber(key: string): boolean;
 
-    setString(key: string, value: string): this;
-    getString(key: string, def?: string): string;
-    hasString(key: string): boolean;
+    SetString(key: string, value: string): this;
+    GetString(key: string, def?: string): string;
+    HasString(key: string): boolean;
 
-    setObject(key: string, value: TSJsonObject): this;
-    getObject(key: string, def?: TSJsonObject): TSJsonObject;
-    hasObject(key: string): boolean;
+    SetObject(key: string, value: TSJsonObject): this;
+    GetObject(key: string, def?: TSJsonObject): TSJsonObject;
+    HasObject(key: string): boolean;
 
-    setArray(key: string, value: TSJsonArray): this;
-    getArray(key: string, def?: TSJsonArray): TSJsonArray;
-    hasArray(key: string): boolean;
+    SetArray(key: string, value: TSJsonArray): this;
+    GetArray(key: string, def?: TSJsonArray): TSJsonArray;
+    HasArray(key: string): boolean;
 
-    setNull(key: string): this;
-    hasNull(key: string): bool
+    SetNull(key: string): this;
+    HasNull(key: string): bool
 
-    remove(key: string): this;
+    Remove(key: string): this;
     toString(indents?: uint32): string;
-    isValid(): bool
+    IsValid(): bool
     get length(): uint32
 }
 
 declare class TSJsonArray {
-    setBool(index: uint32, value: bool): this;
-    getBool(index: uint32, def?: bool): bool;
-    hasBool(index: uint32): bool;
-    insertBool(index: uint32, value: bool): this;
-    pushBool(value: bool): this;
+    SetBool(index: uint32, value: bool): this;
+    GetBool(index: uint32, def?: bool): bool;
+    HasBool(index: uint32): bool;
+    InsertBool(index: uint32, value: bool): this;
+    PushBool(value: bool): this;
 
-    setNumber(index: uint32, value: double): this;
-    getNumber(index: uint32, def?: double): double;
-    hasNumber(index: uint32): bool;
-    insertNumber(index: uint32, value: double): this;
-    pushNumber(value: double): this;
+    SetNumber(index: uint32, value: double): this;
+    GetNumber(index: uint32, def?: double): double;
+    HasNumber(index: uint32): bool;
+    InsertNumber(index: uint32, value: double): this;
+    PushNumber(value: double): this;
 
-    setString(index: uint32, value: string): this;
-    getString(index: uint32, def?: string): string;
-    hasString(index: uint32): bool;
-    insertString(index: uint32, value: string): this;
-    pushString(value: string): this;
+    SetString(index: uint32, value: string): this;
+    GetString(index: uint32, def?: string): string;
+    HasString(index: uint32): bool;
+    InsertString(index: uint32, value: string): this;
+    PushString(value: string): this;
 
-    setObject(index: uint32, value: TSJsonObject): this;
-    getObject(index: uint32, def?: TSJsonObject): TSJsonObject;
-    hasObject(index: uint32): bool;
-    insertObject(index: uint32, value: TSJsonObject): this;
-    pushObject(value: TSJsonObject): this;
+    SetObject(index: uint32, value: TSJsonObject): this;
+    GetObject(index: uint32, def?: TSJsonObject): TSJsonObject;
+    HasObject(index: uint32): bool;
+    InsertObject(index: uint32, value: TSJsonObject): this;
+    PushObject(value: TSJsonObject): this;
 
-    setArray(index: uint32, value: TSJsonArray): this;
-    getArray(index: uint32, def?: TSJsonArray): TSJsonArray;
-    hasArray(index: uint32): bool;
-    insertArray(index: uint32, value: TSJsonArray): this;
-    pushArray(value: TSJsonArray): this;
+    SetArray(index: uint32, value: TSJsonArray): this;
+    GetArray(index: uint32, def?: TSJsonArray): TSJsonArray;
+    HasArray(index: uint32): bool;
+    InsertArray(index: uint32, value: TSJsonArray): this;
+    PushArray(value: TSJsonArray): this;
 
-    setNull(index: uint32): this;
-    hasNull(index: uint32): bool
-    insertNull(index: uint32): this
-    pushNull(index: uint32): this
+    SetNull(index: uint32): this;
+    HasNull(index: uint32): bool
+    InsertNull(index: uint32): this
+    PushNull(index: uint32): this
 
-    remove(index: uint32): this;
+    Remove(index: uint32): this;
     toString(indents?: uint32): string;
-    isValid(): bool
+    IsValid(): bool
     get length(): uint32;
 }
 

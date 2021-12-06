@@ -44,35 +44,35 @@ public:
     std::shared_ptr<std::map<std::string, JsonTag>> m_tags;
     TSJsonObject();
     TSJsonObject(TSJsonObject const& map);
-    bool isValid();
+    bool IsValid();
 
-    TSJsonObject setBool(TSString key, bool value);
+    TSJsonObject SetBool(TSString key, bool value);
     TSJsonObject* operator->() { return this; }
-    bool hasBool(TSString key);
-    bool getBool(TSString key, bool def = false);
+    bool HasBool(TSString key);
+    bool GetBool(TSString key, bool def = false);
 
-    TSJsonObject setNumber(TSString key, double number);
-    bool hasNumber(TSString key);
-    double getNumber(TSString key, double def = 0);
+    TSJsonObject SetNumber(TSString key, double number);
+    bool HasNumber(TSString key);
+    double GetNumber(TSString key, double def = 0);
 
-    TSJsonObject setString(TSString key, TSString number);
-    bool hasString(TSString key);
-    TSString getString(TSString key, TSString def = JSTR(""));
+    TSJsonObject SetString(TSString key, TSString number);
+    bool HasString(TSString key);
+    TSString GetString(TSString key, TSString def = JSTR(""));
 
-    TSJsonObject setNull(TSString key);
-    bool hasNull(TSString key);
+    TSJsonObject SetNull(TSString key);
+    bool HasNull(TSString key);
 
-    TSJsonObject setObject(TSString key, TSJsonObject value = TSJsonObject());
-    bool hasObject(TSString key);
-    TSJsonObject getObject(TSString key, TSJsonObject value = TSJsonObject());
+    TSJsonObject SetObject(TSString key, TSJsonObject value = TSJsonObject());
+    bool HasObject(TSString key);
+    TSJsonObject GetObject(TSString key, TSJsonObject value = TSJsonObject());
 
-    TSJsonObject setArray(TSString key, TSJsonArray arr);
-    bool hasArray(TSString key);
-    TSJsonArray getArray(TSString key, TSJsonArray value);
+    TSJsonArray GetArray(TSString key, TSJsonArray arr);
+    bool HasArray(TSString key);
+    TSJsonObject SetArray(TSString key, TSJsonArray value);
     TSString toString(int indents = -1);
-    TSJsonObject remove(TSString key);
+    TSJsonObject Remove(TSString key);
     unsigned get_length();
-    void parse(TSString json);
+    void Parse(TSString json);
 };
 
 class TC_GAME_API TSJsonArray {
@@ -92,43 +92,43 @@ public:
     TSJsonArray(TSJsonArray const& other);
     TSJsonArray* operator->() { return this; }
     bool isValid();
-    TSJsonArray setBool(unsigned key, bool value);
-    bool hasBool(unsigned key);
-    bool getBool(unsigned key, bool def = false);
-    TSJsonArray insertBool(unsigned key, bool value);
-    TSJsonArray pushBool(bool value);
+    TSJsonArray SetBool(unsigned key, bool value);
+    bool HasBool(unsigned key);
+    bool GetBool(unsigned key, bool def = false);
+    TSJsonArray InsertBool(unsigned key, bool value);
+    TSJsonArray PushBool(bool value);
 
-    TSJsonArray setNumber(unsigned key, double number);
-    bool hasNumber(unsigned key);
-    double getNumber(unsigned key, double def = 0);
-    TSJsonArray insertNumber(unsigned key, double value);
-    TSJsonArray pushNumber(double value);
+    TSJsonArray SetNumber(unsigned key, double number);
+    bool HasNumber(unsigned key);
+    double GetNumber(unsigned key, double def = 0);
+    TSJsonArray InsertNumber(unsigned key, double value);
+    TSJsonArray PushNumber(double value);
 
-    TSJsonArray setString(unsigned key, TSString number);
-    bool hasString(unsigned key);
-    TSString getString(unsigned key, TSString def = JSTR(""));
-    TSJsonArray insertString(unsigned key, TSString value);
-    TSJsonArray pushString(TSString value);
+    TSJsonArray SetString(unsigned key, TSString number);
+    bool HasString(unsigned key);
+    TSString GetString(unsigned key, TSString def = JSTR(""));
+    TSJsonArray InsertString(unsigned key, TSString value);
+    TSJsonArray PushString(TSString value); 
 
-    TSJsonArray setNull(unsigned key);
-    bool hasNull(unsigned key);
-    TSJsonArray insertNull(unsigned key);
-    TSJsonArray pushNull();
+    TSJsonArray SetNull(unsigned key);
+    bool HasNull(unsigned key);
+    TSJsonArray InsertNull(unsigned key);
+    TSJsonArray PushNull();
 
-    TSJsonArray setObject(unsigned key, TSJsonObject value = TSJsonObject());
-    bool hasObject(unsigned key);
-    TSJsonObject getObject(unsigned key, TSJsonObject value = TSJsonObject());
-    TSJsonArray insertObject(unsigned key, TSJsonObject value = TSJsonObject());
-    TSJsonArray pushObject(TSJsonObject value = TSJsonObject());
+    TSJsonArray SetObject(unsigned key, TSJsonObject value = TSJsonObject());
+    bool HasObject(unsigned key);
+    TSJsonObject GetObject(unsigned key, TSJsonObject value = TSJsonObject());
+    TSJsonArray InsertObject(unsigned key, TSJsonObject value = TSJsonObject());
+    TSJsonArray PushObject(TSJsonObject value = TSJsonObject());
 
-    TSJsonArray setArray(unsigned key, TSJsonArray arr = TSJsonArray());
-    bool hasArray(unsigned key);
-    TSJsonArray getArray(unsigned key, TSJsonArray value = TSJsonArray());
-    TSJsonArray insertArray(unsigned key, TSJsonArray value = TSJsonArray());
-    TSJsonArray pushArray(TSJsonArray value = TSJsonArray());
+    TSJsonArray SetArray(unsigned key, TSJsonArray arr = TSJsonArray());
+    bool HasArray(unsigned key);
+    TSJsonArray GetArray(unsigned key, TSJsonArray value = TSJsonArray());
+    TSJsonArray InsertArray(unsigned key, TSJsonArray value = TSJsonArray());
+    TSJsonArray PushArray(TSJsonArray value = TSJsonArray());
 
-    TSJsonArray remove(unsigned key);
-    void parse(TSString json);
+    TSJsonArray Remove(unsigned key);
+    void Parse(TSString json);
     TSString toString(int indents = -1);
     unsigned get_length();
 };
@@ -143,16 +143,16 @@ struct JsonTag {
 static struct TSJSON
 {
     TSJSON* operator->() { return this; }
-    TSJsonObject parseObject(TSString json)
+    TSJsonObject ParseObject(TSString json)
     {
         TSJsonObject map;
-        map.parse(json);
+        map.Parse(json);
         return map;
     }
-    TSJsonArray parseArray(TSString json)
+    TSJsonArray ParseArray(TSString json)
     {
         TSJsonArray arr;
-        arr.parse(json);
+        arr.Parse(json);
         return arr;
     }
 

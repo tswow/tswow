@@ -198,36 +198,36 @@ public:
         return *(double*)(m_entity->m_raw + index);
     }
 
-    void SetNumber(TSString key, double value) { getData()->m_json.setNumber(key, value); }
-    bool HasNumber(TSString key) { return getData()->m_json.hasNumber(key); }
-    double GetNumber(TSString key, double def = 0) { return getData()->m_json.getNumber(key, def); }
+    void SetNumber(TSString key, double value) { getData()->m_json.SetNumber(key, value); }
+    bool HasNumber(TSString key) { return getData()->m_json.HasNumber(key); }
+    double GetNumber(TSString key, double def = 0) { return getData()->m_json.GetNumber(key, def); }
 
-    void SetBool(TSString key, bool value) { getData()->m_json.setBool(key, value); }
-    bool HasBool(TSString key) { return getData()->m_json.hasBool(key); }
-    bool GetBool(TSString key, bool def = false) { return getData()->m_json.getBool(key, def); }
+    void SetBool(TSString key, bool value) { getData()->m_json.SetBool(key, value); }
+    bool HasBool(TSString key) { return getData()->m_json.HasBool(key); }
+    bool GetBool(TSString key, bool def = false) { return getData()->m_json.GetBool(key, def); }
 
-    void SetString(TSString key, TSString value) { getData()->m_json.setString(key, value); }
-    bool HasString(TSString key) { return getData()->m_json.hasString(key); }
-    TSString GetString(TSString key, TSString def = JSTR("")) { return getData()->m_json.getString(key, def); }
+    void SetString(TSString key, TSString value) { getData()->m_json.SetString(key, value); }
+    bool HasString(TSString key) { return getData()->m_json.HasString(key); }
+    TSString GetString(TSString key, TSString def = JSTR("")) { return getData()->m_json.GetString(key, def); }
 
-    void SetJsonObject(TSString key, TSJsonObject value) { getData()->m_json.setObject(key, value); }
-    bool HasJsonObject(TSString key) { return getData()->m_json.hasObject(key); }
-    TSJsonObject GetJsonObject(TSString key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.getObject(key, def); }
+    void SetJsonObject(TSString key, TSJsonObject value) { getData()->m_json.SetObject(key, value); }
+    bool HasJsonObject(TSString key) { return getData()->m_json.HasObject(key); }
+    TSJsonObject GetJsonObject(TSString key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.GetObject(key, def); }
 
-    void SetJsonArray(TSString key, TSJsonArray value) { getData()->m_json.setArray(key, value); }
-    bool HasJsonArray(TSString key) { return getData()->m_json.hasArray(key); }
-    TSJsonArray GetJsonArray(TSString key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.getArray(key, def); }
+    void SetJsonArray(TSString key, TSJsonArray value) { getData()->m_json.SetArray(key, value); }
+    bool HasJsonArray(TSString key) { return getData()->m_json.HasArray(key); }
+    TSJsonArray GetJsonArray(TSString key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.GetArray(key, def); }
 
     // backwards compatibility
-    void SetUInt(TSString key, uint32_t value) { getData()->m_json.setNumber(key, value); }
-    bool HasUInt(TSString key) { return getData()->m_json.hasNumber(key); }
-    uint32_t GetUInt(TSString key, uint32_t def = 0) { return uint32_t(getData()->m_json.getNumber(key, def)); }
+    void SetUInt(TSString key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
+    bool HasUInt(TSString key) { return getData()->m_json.HasNumber(key); }
+    uint32_t GetUInt(TSString key, uint32_t def = 0) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
 
-    void SetInt(TSString key, int32_t value) { getData()->m_json.setNumber(key, value); }
-    bool HasInt(TSString key) { return getData()->m_json.hasNumber(key); }
-    int32_t GetInt(TSString key, int32_t def = 0) { return int32_t(getData()->m_json.getNumber(key, def)); }
+    void SetInt(TSString key, int32_t value) { getData()->m_json.SetNumber(key, value); }
+    bool HasInt(TSString key) { return getData()->m_json.HasNumber(key); }
+    int32_t GetInt(TSString key, int32_t def = 0) { return int32_t(getData()->m_json.GetNumber(key, def)); }
 
-    void SetFloat(TSString key, float value) { getData()->m_json.setNumber(key, value); }
-    bool HasFloat(TSString key) { return getData()->m_json.hasNumber(key); }
-    float GetFloat(TSString key, float def = 0) { return float(getData()->m_json.getNumber(key, def)); }
+    void SetFloat(TSString key, float value) { getData()->m_json.SetNumber(key, value); }
+    bool HasFloat(TSString key) { return getData()->m_json.HasNumber(key); }
+    float GetFloat(TSString key, float def = 0) { return float(getData()->m_json.GetNumber(key, def)); }
 };
