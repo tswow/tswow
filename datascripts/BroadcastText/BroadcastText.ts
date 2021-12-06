@@ -23,6 +23,7 @@ import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/wotlkdata/sql/
 import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
+import { GenderedText } from "../Misc/GenderedText";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RefStatic } from "../Refs/Ref";
@@ -126,12 +127,13 @@ export class BroadcastText extends MainEntity<broadcast_textRow> {
 
     get ID() { return this.row.ID.get(); }
 
-    get MaleText() {
-        return new BroadcastTextContent(this, false);
-    }
-
-    get FemaleText() {
-        return new BroadcastTextContent(this, true);
+    get Text() {
+        return new GenderedText(
+              this
+            , 'WRITE_MALE'
+            , new BroadcastTextContent(this, false)
+            , new BroadcastTextContent(this, true)
+        )
     }
 
     get SoundEntry() { return this.wrap(this.row.SoundEntriesID); }
@@ -146,8 +148,8 @@ export class BroadcastText extends MainEntity<broadcast_textRow> {
         , emoteDelay: number = 0
         , emoteFmt: TimeUnit = 'MILLISECONDS'
     ) {
-        this.MaleText.set(maleText);
-        this.FemaleText.set(femaleText);
+        this.Text.Male.set(maleText)
+        this.Text.Female.set(maleText)
         this.Emotes.add(emote,emoteDelay,emoteFmt)
         return this.owner;
     }
@@ -167,9 +169,9 @@ export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
         let v = new BroadcastText(
                     SQL.broadcast_text.add(Ids.BroadcastText.dynamicId())
                 )
-        v.MaleText.set(langMale);
+        v.Text.Male.set(langMale)
         if(langFemale) {
-            v.FemaleText.set(langFemale);
+            v.Text.Female.set(langFemale)
         }
         this.cell.set(v.ID)
         return this.owner;
@@ -191,9 +193,8 @@ export class BroadcastTextRegistryClass
 
     Clear(r: BroadcastText): void {
         r.Emotes.clearAll()
-         .FemaleText.clear()
+         .Text.clear()
          .Flags.set(0)
-         .MaleText.clear()
          .SoundEntry.set(0)
     }
 
@@ -202,8 +203,8 @@ export class BroadcastTextRegistryClass
         , femaleText?: loc_constructor
     ) {
         let v = this.createDynamic()
-            .MaleText.set(maleText)
-        if(femaleText) v.FemaleText.set(femaleText)
+            .Text.Male.set(maleText)
+        if(femaleText) v.Text.Female.set(femaleText)
         return v;
     }
 
@@ -212,8 +213,8 @@ export class BroadcastTextRegistryClass
         if(parent !== this.nullID()) {
             let parentEntity = this.Entity(this.FindByID(parent));
             let entity = this.Entity(parentEntity.row.clone(nid));
-            entity.MaleText.set(parentEntity.MaleText.objectify());
-            entity.FemaleText.set(parentEntity.FemaleText.objectify());
+            entity.Text.Male.set(parentEntity.Text.Male.objectify());
+            entity.Text.Female.set(parentEntity.Text.Female.objectify());
             return entity;
         } else {
             let entity = this.Entity(this.Table().add(nid));
@@ -224,8 +225,8 @@ export class BroadcastTextRegistryClass
 
     protected Clone(mod: string, id: string, r: BroadcastText, parent: BroadcastText): void {
         // copy over all localization
-        r.MaleText.set(parent.MaleText.objectify());
-        r.FemaleText.set(parent.FemaleText.objectify());
+        r.Text.Male.set(parent.Text.Male.objectify())
+        r.Text.Female.set(parent.Text.Female.objectify())
     }
     protected FindByID(id: number): broadcast_textRow {
         return SQL.broadcast_text.query({ID:id})
