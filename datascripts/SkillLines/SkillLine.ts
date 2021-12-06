@@ -35,7 +35,7 @@ export class SkillLine extends MainEntity<SkillLineRow> {
     get SkillCosts() { return this.wrap(this.row.SkillCostsID); }
     get Icon() { return new SpellIconCell(this, this.row.SpellIconID); }
     get RaceClassInfos() { return new SkillRaceClassInfos(this); }
-    get Abilities() { return new SkillLineAbilities(this); }
+    get Spells() { return new SkillLineAbilities(this); }
     get Autolearn() { return new SkillsAutolearn(this, this.ID); }
 
     clearClass(cls: MaskCon<keyof typeof ClassMask>) {
