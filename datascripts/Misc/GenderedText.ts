@@ -40,6 +40,12 @@ export class GenderedText<T> extends CellSystem<T> {
     get Male() { return this.ownerWrapLoc(this.male); }
     get Female() { return this.ownerWrapLoc(this.female); }
 
+    clear() {
+        this.Male.clear();
+        this.Female.clear();
+        return this.owner;
+    }
+
     set(con: loc_constructor) {
         switch(this.defaultMode) {
             case 'WRITE_BOTH':
