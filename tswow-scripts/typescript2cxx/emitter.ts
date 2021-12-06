@@ -630,6 +630,12 @@ export class Emitter {
             return;
         }
 
+        // special null/undefined handler, sometimes read as "Identifier"
+        if(node.getText() === 'undefined' || node.getText() == 'null') {
+            this.writer.writeString('TSNull()')
+            return;
+        }
+
         // we need to process it for statements only
         //// this.functionContext.code.setNodeToTrackDebugInfo(node, this.sourceMapGenerator);
 
@@ -651,7 +657,6 @@ export class Emitter {
             case ts.SyntaxKind.VariableDeclarationList: this.processVariableDeclarationList(<ts.VariableDeclarationList><any>node); return;
             case ts.SyntaxKind.TrueKeyword:
             case ts.SyntaxKind.FalseKeyword: this.processBooleanLiteral(<ts.BooleanLiteral>node); return;
-            case ts.SyntaxKind.NullKeyword: this.processNullLiteral(<ts.NullLiteral>node); return;
             case ts.SyntaxKind.NumericLiteral: this.processNumericLiteral(<ts.NumericLiteral>node); return;
             case ts.SyntaxKind.StringLiteral: this.processStringLiteral(<ts.StringLiteral>node); return;
             case ts.SyntaxKind.NoSubstitutionTemplateLiteral:
@@ -2173,10 +2178,8 @@ export class Emitter {
                     , type);
                 break;
             case ts.SyntaxKind.NullKeyword:
-                this.writer.writeString('std::nullptr_t');
-                break;
             case ts.SyntaxKind.UndefinedKeyword:
-                this.writer.writeString('undefined_t');
+                this.writer.writeString('TSNull')
                 break;
             case ts.SyntaxKind.UnionType:
 
@@ -3238,10 +3241,6 @@ export class Emitter {
         // find if you need to box value
         const boxing = (<any>node).__boxing;
         this.writer.writeString(`${node.kind === ts.SyntaxKind.TrueKeyword ? ('true' + (boxing ? '_t' : '')) : ('false' + (boxing ? '_t' : ''))}`);
-    }
-
-    processNullLiteral(node: ts.NullLiteral): void {
-        this.writer.writeString(node && node.parent.kind === ts.SyntaxKind.TypeAssertionExpression ? 'nullptr' : 'null');
     }
 
     isInt(valAsString: string) {
