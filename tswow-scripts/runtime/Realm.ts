@@ -311,7 +311,6 @@ export class Realm {
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.EnableDatabases', 0)
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.AutoSetup', 0)
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.Redundancy', 0)
-        patchTCConfig(this.path.worldserver_conf.get(), 'WorldServerPort',this.config.Port)
         patchTCConfig(this.path.worldserver_conf.get(), 'RealmID',this.getID())
         patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',1)
         patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableReCompiler',0)
