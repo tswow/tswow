@@ -247,7 +247,7 @@ export class LockRequirements extends ArraySystem<LockIndexBase,Lock> {
             .Type.ITEM.set()
             .Item.set(item)
             .Action.set(action)
-        return this;
+        return this.owner;
     }
 
     /**
@@ -262,7 +262,7 @@ export class LockRequirements extends ArraySystem<LockIndexBase,Lock> {
             .LockType.set(lockType)
             .RequiredSkill.set(reqSkill)
             .Action.set(action)
-        return this;
+        return this.owner;
     }
 
     get(index: number): LockIndexPlain {

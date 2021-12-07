@@ -39,9 +39,9 @@ export class KeyLocks extends MultirowSystemCached<Lock,Key> {
     }
 
     addGet(lockType: number = 5, lockSkill = 0) {
-        return LockRegistry.create().Requirements
-            .addItem(this.owner.ItemID,1)
-            .addLockType(lockType,lockSkill,0)
+        return LockRegistry.create()
+            .Requirements.addItem(this.owner.ItemID,1)
+            .Requirements.addLockType(lockType,lockSkill,0)
     }
 }
 
