@@ -7828,7 +7828,7 @@ declare namespace _hidden {
     }
 
     export class Battlegrounds<T> {
-        OnStart(callback: (bg: TSBattleground)=>void): T
+        OnCreate(callback: (bg: TSBattleground)=>void): T
         OnReload(callback: (bg: TSBattleground)=>void): T
         OnAddPlayer(callback: (bg: TSBattleground,player: TSPlayer)=>void): T
         OnPlayerLogin(callback: (bg: TSBattleground,player: TSPlayer)=>void): T
@@ -7853,7 +7853,7 @@ declare namespace _hidden {
         OnOpenDoors(callback: (bg: TSBattleground)=>void): T
         OnCloseDoors(callback: (bg: TSBattleground)=>void): T
         OnReset(callback: (bg: TSBattleground)=>void): T
-        OnSetup(callback: (bg: TSBattleground,success: TSMutable<bool>)=>void): T
+        OnCanCreate(callback: (bg: TSBattleground,success: TSMutable<bool>)=>void): T
         OnAchievementCriteria( callback: (
               bg: TSBattleground
             , criteria: uint32
@@ -7912,7 +7912,7 @@ declare namespace _hidden {
     }
 
     export class BattlegroundID<T> {
-        OnStart(id: uint32, callback: (bg: TSBattleground)=>void)
+        OnCreate(id: uint32, callback: (bg: TSBattleground)=>void)
         OnReload(id: uint32, callback: (bg: TSBattleground)=>void)
         OnAddPlayer(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
         OnPlayerLogin(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
@@ -7937,7 +7937,7 @@ declare namespace _hidden {
         OnOpenDoors(id: uint32, callback: (bg: TSBattleground)=>void)
         OnCloseDoors(id: uint32, callback: (bg: TSBattleground)=>void)
         OnReset(id: uint32, callback: (bg: TSBattleground)=>void)
-        OnSetup(id: uint32, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
+        OnCanCreate(id: uint32, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
         OnAchievementCriteria(id: uint32, callback: (
               bg: TSBattleground
             , criteria: uint32

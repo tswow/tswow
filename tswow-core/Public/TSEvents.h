@@ -819,7 +819,9 @@ struct TSMapDataExtra {
 TC_GAME_API TSMapDataExtra* GetMapDataExtra(uint32_t);
 
 
-EVENT_TYPE(BattlegroundOnStart,TSBattleground)
+// SetupBattleground
+EVENT_TYPE(BattlegroundOnCanCreate,TSBattleground,TSMutable<bool>)
+EVENT_TYPE(BattlegroundOnCreate,TSBattleground)
 EVENT_TYPE(BattlegroundOnReload,TSBattleground)
 EVENT_TYPE(BattlegroundOnAddPlayer,TSBattleground,TSPlayer)
 EVENT_TYPE(BattlegroundOnPlayerLogin,TSBattleground,TSPlayer)
@@ -897,8 +899,6 @@ EVENT_TYPE(BattlegroundOnOpenDoors,TSBattleground)
 EVENT_TYPE(BattlegroundOnCloseDoors,TSBattleground)
 // Reset
 EVENT_TYPE(BattlegroundOnReset,TSBattleground)
-// SetupBattleground
-EVENT_TYPE(BattlegroundOnSetup,TSBattleground,TSMutable<bool>)
 
 // requires special handling functions
 EVENT_TYPE(BattlegroundOnAchievementCriteria
@@ -925,8 +925,8 @@ EVENT_TYPE(
 
 struct TSBattlegroundEvents
 {
-    EVENT(BattlegroundOnSetup)
-    EVENT(BattlegroundOnStart)
+    EVENT(BattlegroundOnCanCreate)
+    EVENT(BattlegroundOnCreate)
     EVENT(BattlegroundOnReload)
     EVENT(BattlegroundOnReset)
     EVENT(BattlegroundOnOpenDoors)
@@ -1068,8 +1068,8 @@ struct TSEventStore
     EVENT(WorldOnCalcHonor)
 
     // BattlegroundScript
-    EVENT(BattlegroundOnSetup)
-    EVENT(BattlegroundOnStart)
+    EVENT(BattlegroundOnCanCreate)
+    EVENT(BattlegroundOnCreate)
     EVENT(BattlegroundOnReload)
     EVENT(BattlegroundOnReset)
     EVENT(BattlegroundOnOpenDoors)
@@ -1892,9 +1892,9 @@ public:
 
     struct BattlegroundEvents : public EventHandler {
         BattlegroundEvents* operator->() { return this; }
-        EVENT_HANDLE(Battleground,OnSetup)
+        EVENT_HANDLE(Battleground,OnCanCreate)
         EVENT_HANDLE_FN(Battleground,OnReload,ReloadBattleground)
-        EVENT_HANDLE(Battleground,OnStart)
+        EVENT_HANDLE(Battleground,OnCreate)
         EVENT_HANDLE(Battleground,OnReset)
         EVENT_HANDLE(Battleground,OnOpenDoors)
         EVENT_HANDLE(Battleground,OnCloseDoors)
@@ -1925,9 +1925,9 @@ public:
 
     struct BattlegroundIDEvents : public MappedEventHandler<TSBattlegroundMap> {
         BattlegroundIDEvents* operator->() { return this; }
-        MAP_EVENT_HANDLE(Battleground, OnSetup)
+        MAP_EVENT_HANDLE(Battleground, OnCanCreate)
         MAP_EVENT_HANDLE_FN(Battleground, OnReload, ReloadBattleground)
-        MAP_EVENT_HANDLE(Battleground, OnStart)
+        MAP_EVENT_HANDLE(Battleground, OnCreate)
         MAP_EVENT_HANDLE(Battleground, OnReset)
         MAP_EVENT_HANDLE(Battleground, OnOpenDoors)
         MAP_EVENT_HANDLE(Battleground, OnCloseDoors)
