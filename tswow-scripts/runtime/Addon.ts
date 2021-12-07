@@ -147,7 +147,7 @@ export class Addon {
         before = fixToc(before);
         after = fixToc(after);
 
-        let names: string[] = before.concat([`TSAddons\\${modPath}\\addon\\${this.mod.subId}-addon.lua`]);
+        let names: string[] = before.concat([`TSAddons\\${modPath}\\addon\\addon.lua`]);
         wfs.iterate(this.path.build,(name)=>{
             let relative = wfs.relative(this.path.build.join('addon'),name)
             relative = relative.split('/').join('\\');
@@ -162,7 +162,7 @@ export class Addon {
                 return;
             }
 
-            if(wfs.basename(name)!=`${this.mod.subId}-addon.lua`) {
+            if(wfs.basename(name)!=`addon.lua`) {
                 names.unshift(
                       `TSAddons\\${modPath}\\`
                     + `${wfs.relative(this.path.build,name)

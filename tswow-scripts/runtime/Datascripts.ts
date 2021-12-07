@@ -28,8 +28,8 @@ const lib_package_json =
     'name': name,
     'version': '1.0.0',
     'description': '',
-    'main': `${name}-data.js`,
-    'types': `${name}-data.d.ts`,
+    'main': `datascripts.js`,
+    'types': `datascripts.d.ts`,
     'dependencies': {
     },
     'devDependencies': {},

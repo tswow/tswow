@@ -61,7 +61,7 @@ export function DatasetDirectory(inPath: string, inName: string) {
         maps: dir({}),
         mmaps: dir({}),
         vmaps: dir({}),
-        config: file(`${inName}.dataset.conf`),
+        config: file(`dataset.conf`),
         ids_txt: file('ids.txt'),
         modules_txt: file('modules.txt')
     }))
@@ -71,7 +71,7 @@ export function RealmDirectory(inPath: string, inName: string) {
     return generateTree(path.join(inPath,inName),dir({
         worldserver_conf: file('worldserver.conf'),
         worldserver_conf_dist: file('worldserver.conf.dist'),
-        config: file(`${inName}.realm.conf`),
+        config: file(`realm.conf`),
         realm_id: file(`realm.id`),
         core_config: dynfile(type=>{
             type = type.replace('.conf.dist','.conf')
@@ -84,9 +84,9 @@ export function RealmDirectory(inPath: string, inName: string) {
 export function DatascriptsDirectory(inPath: string) {
     return generateTree(inPath,dir({
         global_d_ts: file('global.d.ts'),
-        index: file(`${wfs.basename(wfs.dirname(inPath))}-data.ts`),
+        index: file(`datascripts.ts`),
         tsconfig_json: file('tsconfig.json'),
-        datascripts_conf: file(`${wfs.basename(wfs.dirname(inPath))}-datascripts.conf`),
+        datascripts_conf: file(`datascripts.conf`),
         build: dir({
             package_json: file('package.json')
         }),
@@ -106,7 +106,7 @@ export function LivescriptsDirectory(inPath: string) {
         global_d_ts: file('global.d.ts'),
         tsconfig: file('tsconfig.json'),
         /** @todo: how to handle these names? */
-        entry: file(`${modname}-scripts.ts`),
+        entry: file(`livescripts.ts`),
         built_library: file(``),
         built_pdb: file(``),
         build: dir({
@@ -133,8 +133,8 @@ export function AddonDirectory(inPath: string) {
         beforelib_toc: file('beforelib.toc'),
         before_toc: file('before.toc'),
         after_toc: file('after.toc'),
-        module_toc: file(`${wfs.basename(wfs.dirname(inPath))}.toc`),
-        index_ts: file(`${wfs.basename(wfs.dirname(inPath))}-addon.ts`),
+        module_toc: file(`addon.toc`),
+        index_ts: file(`addon.ts`),
         tsconfig_json: file('tsconfig.json'),
         global_d_ts: file('global.d.ts'),
         lib: dir({

@@ -76,6 +76,10 @@ export const RequirePreload: Plugin = {
           if(splitAddon.length>1) {
             let modName = path.relative(modulesRoot,splitAddon[0]).split('\\').join('/')
             let addonName = splitAddon.slice(1).join('addon');
+
+            // ignore entrypoint
+            if(addonName === '/addon.ts') return fileContent;
+
             moduleName = `TSAddons/${modName}/addon${addonName}`
           } else {
             let splitShared = fullName.split('shared');
@@ -90,11 +94,6 @@ export const RequirePreload: Plugin = {
         if (moduleName.endsWith(".ts")) moduleName = moduleName.substring(0, moduleName.length - 3);
         moduleName = moduleName.split("/").join(".");
         moduleName = moduleName.replace(".index", "");
-        // Skip init.lua so it can be the entry-point
-        let tswowModuleName = path.basename(path.dirname(process.cwd()))
-        if (moduleName.endsWith(tswowModuleName+'-addon')) {
-          return fileContent;
-        }
 
         // Generates:
         // tstl_register_module("module/name", function() ... end)

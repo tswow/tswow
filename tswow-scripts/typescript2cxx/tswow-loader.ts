@@ -28,7 +28,7 @@ export function writeLoader(outDir: string) {
         , header.getText()
     )
 
-    const mainHeader = `${path.basename(process.cwd())}-scripts.h`
+    const mainHeader = `livescripts.h`
     const livescripts = path.join(process.cwd(),'livescripts');
     const loc1 = path.join(livescripts,mainHeader)
     const loc2 = path.join(livescripts,'build',datasetName,'cpp','livescripts',mainHeader)
