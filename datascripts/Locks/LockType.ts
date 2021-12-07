@@ -54,10 +54,10 @@ export class LockTypeLocks extends MultiRowSystem<Lock,LockType> {
                 .LockType.set(this.owner.ID)
                 .RequiredSkill.set(requiredSkill)
             )
-        if(requiredItems.length >= locks.length-1) {
+        if(requiredItems.length >= locks.Requirements.length-1) {
             throw new Error(
                   `Adding too many item to lock (${requiredItems.length})`
-                + `: can only add ${locks.length-1}`
+                + `: can only add ${locks.Requirements.length-1}`
             )
         }
         requiredItems.forEach(x=>locks.Requirements.addGet()

@@ -24,10 +24,10 @@ export class ProfessionGatheringNodes extends MultiRowSystem<GameObjectChest, Pr
                 .LockType.set(lockType)
                 .RequiredSkill.set(levelNeeded)
             )
-        if(itemsNeeded.length >= lock.length-1) {
+        if(itemsNeeded.length >= lock.Requirements.length-1) {
             throw new Error(
                   `Too many items needed:`
-                + ` can only have ${lock.length-1}`
+                + ` can only have ${lock.Requirements.length-1}`
                 )
         }
         itemsNeeded.forEach(item=>{

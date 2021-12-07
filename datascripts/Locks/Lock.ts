@@ -282,14 +282,14 @@ export class LockRequirements extends ArraySystem<LockIndexBase,Lock> {
             && x.Type.ITEM.as().Item.get() === item
         ) !== undefined
     }
-}
-
-export class Lock extends MainEntity<LockRow> {
-    get ID() { return this.row.ID.get(); }
 
     get length(): number {
         return 8;
     }
+}
+
+export class Lock extends MainEntity<LockRow> {
+    get ID() { return this.row.ID.get(); }
 
     get Requirements() { return new LockRequirements(this); }
     get References() { return new LockReferences(this); }
