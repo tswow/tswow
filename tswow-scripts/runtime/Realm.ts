@@ -86,17 +86,6 @@ export class RealmConfig extends ConfigFile {
     LocalSubnetMask: string = this.undefined()
 
     @Property({
-        name: 'Realm.Port'
-      , description: 'The port used to host the worldserver of this realm'
-      , examples: [
-          [8085,'Default port']
-        , [8095,"Try this is the above doesn't work"]
-      ]
-      , important: 'Must match the IP in Realm.LocalAddress'
-    })
-    Port: number = this.undefined()
-
-    @Property({
           name: 'Realm.Type'
         , description: 'The type of realm'
         , examples: [
@@ -231,13 +220,24 @@ export class Realm {
         if(this.config.Recommended) flag |= 0x20;
         if(this.config.Full) flag |= 0x40
 
+        let port: number;
+        if(!this.path.worldserver_conf.exists()) {
+            port = 8085;
+        } else {
+            let portMatch = this.path.worldserver_conf.readString()
+                .match(/WorldServerPort *= *(\d+)/)
+            if(portMatch) {
+                port = parseInt(portMatch[1]);
+            }
+        }
+
         let values = [
             ['id',this.getID()],
             ['name',`"${this.config.RealmName}"`],
             ['address',`"${this.config.PublicAddress}"`],
             ['localAddress',`"${this.config.LocalAddress}"`],
             ['localSubnetMask',`"${this.config.LocalSubnetMask}"`],
-            ['port',this.config.Port],
+            ['port',port],
             ['icon',this.config.Type],
             ['flag',flag],
             ['timezone', this.config.TimeZone],
