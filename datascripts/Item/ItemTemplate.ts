@@ -95,7 +95,7 @@ export class ItemDBC extends MaybeDBCEntity<ItemTemplate,ItemRow> {
 export class ItemDBCRow extends CellSystem<ItemTemplate> {
     protected readonly DBC = new ItemDBC(this.owner)
     exists() { return this.DBC.exists(); }
-    get() { return this.DBC.getDBC(); }
+    get() { return this.DBC.getOrCreateDBC(); }
     mod(callback: (row: ItemRow)=>void) {
         callback(this.get());
         return this.owner;
