@@ -422,3 +422,28 @@ bool TSObject::operator==(TSObject& rhs)
 
     return GetGUID() == rhs.GetGUID();
 }
+
+TSUnit TSObject::GetEffectiveOwner()
+{
+    if (!IsUnit()) return TSUnit(nullptr);
+    std::set<ObjectGuid> guids;
+    TSUnit cur = ToUnit();
+    guids.insert(cur->unit->GetGUID());
+
+    // todo: it should be more performant to access directly,
+    // but this is what the internal functions seem to do.
+
+    while (ObjectGuid guid = cur->unit->GetCharmerOrOwnerGUID())
+    {
+        cur->unit->GetCharmerOrOwner();
+        if(!guids.insert(guid).second)
+        {
+            // it's loop
+            return TSUnit(nullptr);
+        }
+        Unit* found = ObjectAccessor::GetUnit(*cur->unit, guid);
+        if (!found) return TSUnit(nullptr);
+        cur = TSUnit(found);
+    }
+    return cur;
+}

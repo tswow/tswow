@@ -5122,6 +5122,8 @@ declare class TSObject extends TSEntityProvider {
     IsPlayer() : bool
     IsCorpse() : bool
 
+    GetEffectiveOwner(): TSUnit
+
     /**
      * Returns `true` if the specified flag is set, otherwise `false`.
      *

@@ -86,6 +86,7 @@ public:
     TSWorldObject ToWorldObject();
     TSGameObject ToGameObject();
     TSCorpse ToCorpse();
+    TSUnit GetEffectiveOwner();
 
     bool IsPlayer();
     bool IsGameObject();
