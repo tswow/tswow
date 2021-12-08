@@ -408,7 +408,7 @@ export class SpellAttributes<T> extends MaskCell<T> {
     /**
      * No comment (yet!)
      */
-    get CAN_TARGET_NOT_IN_L_O_S() { return this.bit(66); }
+    get CAN_TARGET_NOT_IN_LOS() { return this.bit(66); }
 
     /**
      * No comment (yet!)

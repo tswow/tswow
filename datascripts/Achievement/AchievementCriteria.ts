@@ -30,7 +30,7 @@ export enum CriteriaFlags {
     RESET_ON_START     = 0x8,
     IS_DATE            = 0x10,
     IS_MONEY           = 0x20,
-    IS_ACHIEVEMENT_I_D = 0x40,
+    IS_ACHIEVEMENT_ID = 0x40,
     QUANTITY_IS_CAPPED = 0x80,
 }
 

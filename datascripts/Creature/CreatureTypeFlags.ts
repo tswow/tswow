@@ -30,7 +30,7 @@ export enum CreatureTypeFlags {
     MOUNTED_COMBAT             = 0x800,
     AID_PLAYERS                = 0x1000,
     IS_PET_BAR_USED            = 0x2000,
-    MASK_U_I_D                 = 0x4000,
+    MASK_UID                 = 0x4000,
     ENGINEER_LOOT              = 0x8000,
     EXOTIC_PET                 = 0x10000,
     USE_DEAFULT_COLLISION      = 0x20000,

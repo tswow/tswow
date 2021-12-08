@@ -54,11 +54,11 @@ export enum VehicleSeatFlagsB {
     EJECTABLE                = 0x20,
     USABLE_FORCED2           = 0x40,
     USABLE_FORCED3           = 0x100,
-    U_N_K7                   = 0x10000,
+    UNK7                   = 0x10000,
     KEEP_PET                 = 0x20000,
     USABLE_FORCED4           = 0x2000000,
     CAN_SWITCH               = 0x4000000,
-    VEHICLE_PLAYER_FRAME_U_I = 0x80000000,
+    VEHICLE_PLAYER_FRAME_UI = 0x80000000,
 }
 
 export class VehicleSeatAttachment extends CellSystem<VehicleSeat> {

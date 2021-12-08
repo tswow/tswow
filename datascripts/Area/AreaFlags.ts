@@ -31,7 +31,7 @@ export enum AreaFlags {
     NEEDS_FLYING              = 0x800,
     AMBIENT_ON_PLAYER         = 0x1000,
     IS_OUTLAND                = 0x2000,
-    IS_PV_P_OBJECTIVE         = 0x4000,
+    IS_PVP_OBJECTIVE         = 0x4000,
     IS_ARENA                  = 0x8000,
     UNUSED2                   = 0x10000,
     IS_CONTESTED              = 0x20000,
