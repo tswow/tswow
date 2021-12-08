@@ -281,7 +281,9 @@ export class SpellEffect extends ArrayEntry<Spell> {
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
     get ClassMask(): EffectClassSet<this> { return new EffectClassSet(this, this); }
-    get TargetPosition() { return new SpellTargetPosition(this, this.container); }
+    get TargetPosition() {
+        return new SpellTargetPosition(this, this.row.ID.get(), this.index);
+    }
 
     objectifyPlain(){
         return Objects.objectifyObj(this);

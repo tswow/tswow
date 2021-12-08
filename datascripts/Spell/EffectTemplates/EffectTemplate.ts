@@ -6,6 +6,7 @@ import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { SelfRef } from "../../Refs/Ref";
 import { SpellEffect } from "../SpellEffect";
+import { SpellTargetPosition } from "../SpellTargetPosition";
 
 export class EffectTemplate extends CellSystem<SpellEffect> {
     protected w<T extends CPrim>(arr: CellArray<T,any>): CellIndexWrapper<T,this> {
@@ -17,6 +18,10 @@ export class EffectTemplate extends CellSystem<SpellEffect> {
     get index() { return this.owner.index; }
     @Transient
     get AsEffect() { return new SelfRef(this, ()=>this.owner); }
+
+    get TargetPosition() {
+        return new SpellTargetPosition(this, this.row.ID.get(), this.owner.index)
+    }
 
     objectify() {
         const eff = this.AsEffect.get();

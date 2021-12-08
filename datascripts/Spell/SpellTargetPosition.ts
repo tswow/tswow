@@ -1,23 +1,21 @@
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { spell_target_positionRow } from "wotlkdata/wotlkdata/sql/types/spell_target_position";
 import { MapRegistry } from "../Map/Maps";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
-import { Spell } from "./Spell";
-import { SpellEffect } from "./SpellEffect";
 
-export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target_positionRow> {
-    @Transient
-    private spell: Spell;
+export class SpellTargetPosition<T> extends MaybeSQLEntity<T,spell_target_positionRow> {
+    protected spell: number;
+    protected effect: number;
 
-    constructor(owner: SpellEffect, spell: Spell) {
+    constructor(owner: T, spell: number, effect: number) {
         super(owner);
         this.spell = spell;
+        this.effect = effect;
     }
 
     protected createSQL(): spell_target_positionRow {
         return SQL.spell_target_position
-            .add(this.spell.ID,this.owner.index)
+            .add(this.spell,this.effect)
             .MapID.set(0)
             .Orientation.set(0)
             .PositionX.set(0)
@@ -27,14 +25,14 @@ export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target
     }
     protected findSQL(): spell_target_positionRow {
         return SQL.spell_target_position.query({
-              ID:this.spell.ID
-            , EffectIndex:this.owner.index
+              ID:this.spell
+            , EffectIndex:this.effect
         });
     }
 
     protected isValidSQL(sql: spell_target_positionRow): boolean {
-        return sql.ID.get() === this.spell.ID
-            && sql.EffectIndex.get() === this.owner.index;
+        return sql.ID.get() === this.spell
+            && sql.EffectIndex.get() === this.effect
     }
 
     get Map() {
@@ -46,15 +44,15 @@ export class SpellTargetPosition extends MaybeSQLEntity<SpellEffect,spell_target
     get O() { return this.wrapSQL(0,sql=>sql.Orientation) }
 
     setSpread(map: number, x: number, y: number, z: number, o: number) {
-        this.X.set(x);
-        this.Y.set(y);
-        this.Z.set(z);
-        this.O.set(o);
-        this.Map.set(map);
-        return this.owner;
+        return this.set({x,y,z,o,map});
     }
 
     set(obj: {x: number, y: number, z: number, o: number, map: number}) {
-        return this.setSpread(obj.x,obj.y,obj.z,obj.o,obj.map);
+        this.X.set(obj.x);
+        this.Y.set(obj.y);
+        this.Z.set(obj.z);
+        this.O.set(obj.o);
+        this.Map.set(obj.map);
+        return this.owner;
     }
 }
