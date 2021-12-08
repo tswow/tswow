@@ -16,6 +16,7 @@
  */
 import { SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
@@ -500,6 +501,12 @@ export class GameObjectGeneric extends GameObjectTemplate {
     get Condition() { return new RefUnknown(this, this.row.Data6); }
 }
 
+export enum SpellFlags {
+    USER_CAST   = 0x1,
+    TARGET_GOBJ = 0x2,
+    TRIGGERED   = 0x4,
+};
+
 export class GameObjectGoober extends GameObjectTemplate {
     constructor(row: gameobject_templateRow) {
         super(row);
@@ -527,6 +534,9 @@ export class GameObjectGoober extends GameObjectTemplate {
     get WorldStateSetsState() { return this.wrap(this.row.Data20); }
     get FloatOnWater() { return this.wrap(this.row.Data21); }
     get Condition() { return new RefUnknown(this, this.row.Data22); }
+    get SpellFlags() {
+        return makeMaskCell32(SpellFlags, this, this.row.Data23);
+    }
 }
 
 export class GameObjectGuardPost extends GameObjectTemplate {
