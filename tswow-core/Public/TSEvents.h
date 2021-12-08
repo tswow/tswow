@@ -952,8 +952,6 @@ struct TSBattlegroundEvents
     EVENT(BattlegroundOnGenericEvent)
     EVENT(BattlegroundOnDropFlag)
     EVENT(BattlegroundOnClickFlag)
-    EVENT(BattlegroundOnWeight)
-    EVENT(BattlegroundOnSelect)
 };
 
 class TSBattlegroundMap : public TSEventMap<TSBattlegroundEvents>
@@ -1952,8 +1950,6 @@ public:
         MAP_EVENT_HANDLE(Battleground, OnGenericEvent)
         MAP_EVENT_HANDLE(Battleground, OnDropFlag)
         MAP_EVENT_HANDLE(Battleground, OnClickFlag)
-        MAP_EVENT_HANDLE(Battleground, OnWeight)
-        MAP_EVENT_HANDLE(Battleground, OnSelect)
     } BattlegroundID;
 
     struct InstanceEvents : public EventHandler
