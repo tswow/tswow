@@ -153,7 +153,7 @@ public:
     void OnDuelRequest(Player* target,Player* challenger) FIRE(PlayerOnDuelRequest,TSPlayer(target),TSPlayer(challenger))
     void OnDuelStart(Player* player1,Player* player2) FIRE(PlayerOnDuelStart,TSPlayer(player1),TSPlayer(player2))
     void OnDuelEnd(Player* winner,Player* loser,DuelCompleteType type) FIRE(PlayerOnDuelEnd,TSPlayer(winner),TSPlayer(loser),type)
-    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg) FIRE(PlayerOnSay,TSPlayer(player),type,lang,TSMutableString(&msg))
+    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg) FIRE(PlayerOnSay,TSPlayer(player), TSMutableString(&msg),type,lang)
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Player* receiver) {
         // needs to happen here, because we want to be sure
         // successful messages do not reach the normal OnWhisper events.
@@ -162,11 +162,11 @@ public:
             TC_LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW GM Message");
             return;
         }
-        FIRE(PlayerOnWhisper,TSPlayer(player),type,lang,TSMutableString(&msg),TSPlayer(receiver))
+        FIRE(PlayerOnWhisper, TSPlayer(player), TSPlayer(receiver), TSMutableString(&msg), type, lang);
     }
-    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Group* group) FIRE(PlayerOnChatGroup,TSPlayer(player),type,lang,TSMutableString(&msg),TSGroup(group))
-    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Guild* guild) FIRE(PlayerOnChatGuild,TSPlayer(player),type,lang,TSMutableString(&msg),TSGuild(guild))
-    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Channel* channel) FIRE(PlayerOnChat,TSPlayer(player),type,lang,TSMutableString(&msg),TSChannel(channel))
+    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Group* group) FIRE(PlayerOnChatGroup,TSPlayer(player), TSGroup(group), TSMutableString(&msg),type,lang)
+    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Guild* guild) FIRE(PlayerOnChatGuild,TSPlayer(player), TSGuild(guild), TSMutableString(&msg),type,lang)
+    void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Channel* channel) FIRE(PlayerOnChat,TSPlayer(player), TSChannel(channel), TSMutableString(&msg),type,lang)
     void OnEmote(Player* player,Emote emote) FIRE(PlayerOnEmote,TSPlayer(player),emote)
     void OnTextEmote(Player* player,uint32 textEmote,uint32 emoteNum,ObjectGuid guid) FIRE(PlayerOnTextEmote,TSPlayer(player),textEmote,emoteNum,guid.GetRawValue())
     void OnSpellCast(Player* player,Spell* spell,bool skipCheck) FIRE(PlayerOnSpellCast,TSPlayer(player),TSSpell(spell),skipCheck)

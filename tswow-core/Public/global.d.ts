@@ -7021,11 +7021,11 @@ declare namespace _hidden {
         OnDuelRequest(callback: (target : TSPlayer,challenger : TSPlayer)=>void);
         OnDuelStart(callback: (player1 : TSPlayer,player2 : TSPlayer)=>void);
         OnDuelEnd(callback: (winner : TSPlayer,loser : TSPlayer,type : uint32)=>void);
-        OnSay(callback: (player : TSPlayer,type : uint32,lang : uint32,msg : TSMutableString)=>void);
-        OnWhisper(callback: (player : TSPlayer,type : uint32,lang : uint32,msg : TSMutableString,receiver : TSPlayer)=>void);
-        OnChatGroup(callback: (player : TSPlayer,type : uint32,lang : uint32,msg : TSMutableString,group : TSGroup)=>void);
-        OnChatGuild(callback: (player : TSPlayer,type : uint32,lang : uint32,msg : TSMutableString,guild : TSGuild)=>void);
-        OnChat(callback: (player : TSPlayer,type : uint32,lang : uint32,msg : TSMutableString,channel : TSChatChannel)=>void);
+        OnSay(callback: (player : TSPlayer, msg: TSMutableString,type : uint32,lang : uint32)=>void);
+        OnWhisper(callback: (sender: TSPlayer, receiver: TSPlayer, message: TSMutableString,type : uint32,lang : uint32)=>void);
+        OnChatGroup(callback: (player : TSPlayer, group: TSGroup, message: TSMutableString,type : uint32,lang : uint32)=>void);
+        OnChatGuild(callback: (player : TSPlayer, guild: TSGuild, message: TSMutableString,type : uint32,lang : uint32)=>void);
+        OnChat(callback: (player : TSPlayer, channel: TSChannel, msg: TSMutableString,type : uint32,lang : uint32)=>void);
         OnCommand(callback: (player: TSPlayer, command: TSMutableString, found: TSMutable<bool>)=>void)
         OnEmote(callback: (player : TSPlayer,emote : uint32)=>void);
         OnTextEmote(callback: (player : TSPlayer,textEmote : uint32,emoteNum : uint32,guid : uint64)=>void);
