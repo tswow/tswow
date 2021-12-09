@@ -331,4 +331,4 @@ public:
   }
 };
 
-#define MakeArray TSArray
+#define CreateArray TSArray

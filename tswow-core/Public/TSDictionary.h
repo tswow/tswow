@@ -170,4 +170,4 @@ public:
 
 };
 
-#define MakeDictionary TSDictionary
+#define CreateDictionary TSDictionary
