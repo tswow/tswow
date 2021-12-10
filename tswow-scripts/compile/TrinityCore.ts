@@ -106,10 +106,10 @@ export namespace TrinityCore {
                             }
                             let longestPrefix = prefix(cs.map(x=>x.name))
                             let longestSuffix = suffix(cs.map(x=>x.name))
-                            if(longestPrefix.length>0) {
+                            if(longestPrefix.length>0 && longestPrefix.includes('_')) {
                                 content = content.split(longestPrefix).join('')
                             }
-                            if(longestSuffix.length > 0) {
+                            if(longestSuffix.length > 0 && longestPrefix.includes('_')) {
                                 content = content.split(longestSuffix).join('')
                             }
                         }
