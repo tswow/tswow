@@ -17,6 +17,7 @@
 import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
 import { EnumCellTransform, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32, MaskCellWrite } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { trainerQuery, trainerRow } from "wotlkdata/wotlkdata/sql/types/trainer";
@@ -30,6 +31,7 @@ import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RaceIDs, RaceMask } from "../Race/RaceType";
 import { RegistryDynamic } from "../Refs/Registry";
+import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { SpellRegistry } from "../Spell/Spells";
 import { SkillLineAbilityRegistry } from "../Spell/SpellSkillLines";
 
@@ -65,6 +67,22 @@ export class TrainerRequirementType extends EnumCellTransform<TrainerBase> {
     }
 }
 
+export class SkillRequirement extends CellSystem<TrainerSpell> {
+    get Skill() {
+        return SkillLineRegistry.ref(this.owner, this.owner.row.ReqSkillLine)
+    }
+
+    get Rank() {
+        return this.ownerWrap(this.owner.row.ReqSkillRank);
+    }
+
+    set(skill: number, rank: number = 0) {
+        this.Skill.set(skill);
+        this.Rank.set(rank);
+        return this.owner;
+    }
+}
+
 export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClassRaceMaskEntry {
     get Spell() { return SpellRegistry.readOnlyRef(this, this.row.SpellId); }
     get Trainer() { return TrainerRegistry.readOnlyRef(this, this.row.TrainerId); }
@@ -76,6 +94,10 @@ export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClass
     }
     get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
         return makeMaskCell32(RaceMask, this,this.wrapUnlock(this.row.raceMask));
+    }
+
+    get RequiredSkill() {
+        return new SkillRequirement(this);
     }
 
     get ReqAbilities() {
