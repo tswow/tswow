@@ -2192,6 +2192,26 @@ declare class TSTimer {
     SetDelay(delay: uint32): void;
 }
 
+declare class TSChannel {
+    GetName(locale?: uint32): string;
+    GetID(): uint32;
+    IsConstant(): bool;
+    IsLFG(): bool;
+    IsAnnounce(): bool;
+    SetAnnounce(announce: bool): void;
+    SetDirty(): void;
+    SetPassword(password: string): void;
+    CheckPassword(password: string): bool;
+    GetNumPlayers(): uint32;
+    GetFlags(): uint8;
+    HasFlag(flag: uint8): bool;
+    JoinChannel(player: TSPlayer, password?: string): void;
+    LeaveChannel(player: TSPlayer, send?: bool): void;
+    SetInvisible(player: TSPlayer, on: bool): void;
+    SetOwner(guid: uint64, exclaim?: bool): void;
+    Say(guid: uint64, what: string, lang: uint32): void;
+}
+
 declare type JsonMessageCallback<T> = (channel: uint8, obj: TSJsonObject, owner: T)=>void
 declare interface TSWorldEntityProvider<T> {
     AddNamedTimer(name: string, delay: uint32, repeats: uint32, flags: uint32, callback: (owner: T, timer: TSTimer)=>void);
