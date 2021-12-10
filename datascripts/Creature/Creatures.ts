@@ -65,7 +65,7 @@ export class CreatureTemplateRegistryClass
             .DamageSchool.Normal.set()
             .DynFlags.clearAll()
             .DynamicFlags.set(0)
-            .FactionTemplate.NeutralPassive.set()
+            .FactionTemplate.NEUTRAL_PASSIVE.set()
             .Family.set(0)
             .FlagsExtra.set(0)
             .Gold.set(0)
