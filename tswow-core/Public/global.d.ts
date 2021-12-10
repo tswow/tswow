@@ -63,6 +63,8 @@ declare const enum Class /** @realType: uint8 */ {
 }
 declare type ClassID = Class | uint8
 
+declare const enum TimerFlags {} /** TSWorldEntity.h:TimerFlags */
+declare const enum TimerLoops {} /** TSWorldEntity.h:TimerLoops */
 declare const enum Outfit {} /** TSOutfit.h:Outfit */
 declare const enum SpellCastResult {} /** SharedDefines.h:SpellCastResult */
 declare const enum EquipmentSlots {} /** Player.h:EquipmentSlots */
@@ -2177,11 +2179,29 @@ declare class TSEntityProvider {
     GetRawDouble(offset: uint8): double
 }
 
+declare class TSTimer {
+    Stop(): void;
+    GetDiff(): uint64;
+    GetFlags(): uint32;
+    SetFlags(): uint32;
+    GetRepeats(): int32;
+    SetRepeats(repeats: int32): void;
+    GetName(): string;
 
-declare type TimerCallback<T> = (owner: T, delay: uint32, cancel: TSMutable<bool>, timer: TSTimer)=>void
+    GetDelay(): uint32;
+    SetDelay(delay: uint32): void;
+}
+
 declare type JsonMessageCallback<T> = (channel: uint8, obj: TSJsonObject, owner: T)=>void
 declare interface TSWorldEntityProvider<T> {
-    AddTimer(name: string, time: uint32, repeats: uint32, callback: TimerCallback<T>);
+    AddNamedTimer(name: string, delay: uint32, repeats: uint32, flags: uint32, callback: (owner: T, timer: TSTimer)=>void);
+    AddNamedTimer(name: string, delay: uint32, repeats: uint32, callback: (owner: T, timer: TSTimer)=>void);
+    AddNamedTimer(name: string, delay: uint32, callback: (owner: T, timer: TSTimer)=>void);
+
+    AddTimer(delay: uint32, repeats: uint32, flags: uint32, callback: (owner: T, timer: TSTimer)=>void);
+    AddTimer(delay: uint32, repeats: uint32, callback: (owner: T, timer: TSTimer)=>void);
+    AddTimer(delay: uint32, callback: (owner: T, timer: TSTimer)=>void);
+
     RemoveTimer(name: string);
     GetGroup(name: string);
     RemoveGroup(name: string);
@@ -8504,12 +8524,6 @@ declare function CreateArray<T>(obj: T[]): TSArray<T>
 
 declare function GetID(table: string, mod: string, name: string);
 declare function GetIDRange(table: string, mod: string, name: string);
-
-declare class TSTimer {
-    delay: uint32;
-    repeats: uint32;
-    readonly name: string;
-}
 
 declare class BinReader<L extends number> {
     Read<T extends number>(offset: L) : T;

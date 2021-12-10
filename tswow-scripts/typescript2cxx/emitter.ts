@@ -2543,13 +2543,22 @@ export class Emitter {
                         }
                     });
                     if(index != -1) {
-                        let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
-                        let callDecl = this.resolver.getFirstDeclaration(type);
-                        // I think this isn't necessarily always CallSignatureDeclaration,
-                        // but at least they all seem to have the same "parameters" property
-                        let tt = this.resolver.getTypeAtLocation((callDecl as any as ts.CallSignatureDeclaration).parameters[index]);
-                        let decl = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
-                        let paramLength = decl.parameters.length;
+                        let text = node.parent.getChildAt(0).getText();
+                        let paramLength: number;
+
+                        // AddTimer hack: transpiler doesn't like that there are multiple AddTimer
+                        //                versions, so we hardcode this
+                        if(text.endsWith('AddTimer') || text.endsWith('AddNamedTimer')) {
+                            paramLength = 2;
+                        } else {
+                            let type = this.resolver.getTypeAtLocation(node.parent.getChildAt(0));
+                            let callDecl = this.resolver.getFirstDeclaration(type);
+                            // I think this isn't necessarily always CallSignatureDeclaration,
+                            // but at least they all seem to have the same "parameters" property
+                            let tt = this.resolver.getTypeAtLocation((callDecl as any as ts.CallSignatureDeclaration).parameters[index]);
+                            let decl = this.resolver.getFirstDeclaration(tt) as ts.FunctionTypeNode;
+                            paramLength = decl.parameters.length;
+                        }
                         if(paramLength > argsLength) extraArgs = paramLength - argsLength;
                     }
                 } catch(error) {
