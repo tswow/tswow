@@ -87,7 +87,7 @@ export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClass
     get Spell() { return SpellRegistry.readOnlyRef(this, this.row.SpellId); }
     get Trainer() { return TrainerRegistry.readOnlyRef(this, this.row.TrainerId); }
     get Cost() { return this.wrap(this.row.MoneyCost); }
-    get ReqLevel() { return this.wrap(this.row.ReqLevel); }
+    get RequiredLevel() { return this.wrap(this.row.ReqLevel); }
 
     get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
         return makeMaskCell32(ClassMask, this,this.wrapUnlock(this.row.classMask));
@@ -159,7 +159,7 @@ export class TrainerSpells extends ClassRaceMaskSystemBase<TrainerSpell,TrainerB
             )
             .Cost.set(0)
             .ReqAbilities.clearAll()
-            .ReqLevel.set(0)
+            .RequiredLevel.set(0)
     }
 
     addMod(spellId: number, callback: (spells: TrainerSpell)=>void) {
