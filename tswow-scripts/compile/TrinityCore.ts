@@ -76,7 +76,7 @@ export namespace TrinityCore {
                     .forEach(x=>{
                         let file = readFiles[x] === undefined ? (readFiles[x] = wfs.read(x)) : readFiles[x]
                         // TODO: will break on comments containing "{", "}" or anything between ":" and a type specifier
-                        let match = file.match(new RegExp(`enum +${realname} *((?:.|[\r\n])*?){((?:.|[\r\n])*?)};`))
+                        let match = file.match(new RegExp(`enum +(?:class +|)${realname} *((?:.|[\r\n])*?){((?:.|[\r\n])*?)};`))
                         if(match) {
                             if(found) {
                                 throw new Error(`Multiple definitions of ${realname}, specified to search in filenames ${filename}`)
