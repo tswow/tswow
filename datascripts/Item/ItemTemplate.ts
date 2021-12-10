@@ -304,7 +304,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .MaxStack.set(0)
          .MoneyLoot.set(0,0)
          .Name.clear()
-         .Price.set(0,0,0)
+         .Price.set(0,0,1)
          .Quality.set(0)
          .RandomProperty.set(0)
          .RandomSuffix.set(0)
