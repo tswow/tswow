@@ -14,42 +14,85 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellWrapper } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Bit, MaskCell, MaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { DBCUIntArrayCell } from "wotlkdata/wotlkdata/dbc/DBCCell";
+import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { Spell } from "./Spell";
 import { SpellEffect } from "./SpellEffect";
+import { SpellRegistry } from "./Spells";
 
-export abstract class ClassSet<T> extends CellSystem<T> {
+export abstract class ClassSet<T> extends MaskCell<T> {
 
-    constructor(owner: T) {
-        super(owner);
+    protected getPart(bit: number) {
+        return [this.A,this.B,this.C][Math.floor(bit/32)];
     }
 
-    abstract get A() : Cell<number,T> ;
-    abstract get B() : Cell<number,T> ;
-    abstract get C() : Cell<number,T> ;
+    getBit(bit: number): boolean {
+        return this.getPart(bit).getBit(bit%32);
+    }
+    setBit(bit: number, value: Bit): T {
+        return this.getPart(bit).setBit(bit%32, value);
+    }
+    clearAll(): T {
+        this.A.clearAll();
+        this.B.clearAll();
+        this.C.clearAll();
+        return this.owner;
+    }
+    toString(): string {
+        return this.A.toString() + this.B.toString() + this.C.toString();
+    }
+    protected deserialize(value: any): void {
+        throw new Error("Method not implemented.");
+    }
+
+    abstract get A() : MaskCell32<T> ;
+    abstract get B() : MaskCell32<T> ;
+    abstract get C() : MaskCell32<T> ;
 
     set(a: number, b: number, c: number) {
         this.A.set(a);
         this.B.set(b);
-        return this.C.set(c);
+        this.C.set(c);
+        return this.owner;
+    }
+
+    objectify() {
+        let values: string[] = []
+        for(let i=0;i<96;++i) {
+            if(this.getBit(i)) values.push(i.toString())
+        }
+        return values;
     }
 }
 
+
 export class BaseClassSet extends ClassSet<Spell> {
-    get A(): Cell<number, Spell> {
-        return this.ownerWrapIndex(this.owner.row.SpellClassMask,0);
+    private makeCell(index: number) {
+        return new MaskCell32(this.owner, new CellBasic(
+              this.owner
+            , ()=>this.owner.row.SpellClassMask
+                .getIndex(index)
+            , (val)=>this.owner.row.SpellClassMask
+                .setIndex(index,val)
+        ));
     }
 
-    get B(): Cell<number, Spell> {
-        return this.ownerWrapIndex(this.owner.row.SpellClassMask,1);
+    get A(): MaskCell32<Spell> { return this.makeCell(0); }
+    get B(): MaskCell32<Spell> { return this.makeCell(1); }
+    get C(): MaskCell32<Spell> { return this.makeCell(2); }
+
+    get Family() {
+        return new CellWrapper(this.owner,this.owner.row.SpellClassSet);
     }
 
-    get C(): Cell<number, Spell> {
-        return this.ownerWrapIndex(this.owner.row.SpellClassMask,2);
+    objectify() {
+        return {
+              Family: this.Family.get()
+            , Mask: super.objectify()
+        } as any
     }
-
-    get Set() { return this.ownerWrap(this.owner.row.SpellClassSet); }
 
     /**
      * Sets this spells ClassSets to match this spell effect
@@ -65,26 +108,43 @@ export class BaseClassSet extends ClassSet<Spell> {
         if(matches.includes('C')) {
             this.C.set(effect.ClassMask.C.get())
         }
-        this.Set.set(effect.row.SpellClassSet.get());
+        this.Family.set(effect.row.SpellClassSet.get());
         return this.owner;
     }
 }
 
 export class EffectClassSet<T> extends ClassSet<T> {
     protected effect: SpellEffect;
+    protected makeCell(cell: DBCUIntArrayCell<any>) {
+        return new MaskCell32(this.owner, new CellBasic(
+              this.owner
+            , ()=>cell.getIndex(this.effect.index)
+            , (val)=>cell.setIndex(this.effect.index, val)
+        ))
+    }
+
     constructor(owner: T, effect: SpellEffect) {
         super(owner);
         this.effect = effect;
     }
 
-    get A(): Cell<number, T> {
-        return this.ownerWrapIndex(this.effect.row.EffectSpellClassMaskA,this.effect.index);
-    }
-    get B(): Cell<number, T> {
-        return this.ownerWrapIndex(this.effect.row.EffectSpellClassMaskB,this.effect.index);
-    }
-    get C(): Cell<number, T> {
-        return this.ownerWrapIndex(this.effect.row.EffectSpellClassMaskC,this.effect.index);
+    get A() { return this.makeCell(this.effect.row.EffectSpellClassMaskA)};
+    get B() { return this.makeCell(this.effect.row.EffectSpellClassMaskB)};
+    get C() { return this.makeCell(this.effect.row.EffectSpellClassMaskC)};
+
+    matches(spell: Spell|number) {
+        if(typeof(spell) === 'number') {
+            spell = SpellRegistry.load(spell)
+        }
+
+        return this.effect.row.SpellClassSet.get()
+            === spell.row.SpellClassSet.get()
+            &&
+            (
+                   (this.A.get() & spell.row.SpellClassMask.getIndex(0))
+                || (this.B.get() & spell.row.SpellClassMask.getIndex(1))
+                || (this.C.get() & spell.row.SpellClassMask.getIndex(2))
+            )
     }
 
     copyFrom(set: EffectClassSet<any>) {
