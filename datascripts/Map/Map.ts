@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata";
+import { DBC, finish, SQL } from "wotlkdata";
 import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
 import { CellSystem, LocSystem, MulticastLocCell } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
@@ -32,6 +32,7 @@ import { LFGDungeonEncounters } from "../Dungeon/LFGEncounter";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { BoolCell } from "../Misc/BoolCell";
 import { TransformedEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
@@ -305,3 +306,20 @@ export class MapInstanceTypee<T extends Map> extends EnumCellTransform<T> {
         })
     }
 }
+
+// add a default difficulty for overworld maps with no difficulties
+finish('map-default-difficulty',()=>{
+    DBC.Map
+        .queryAll({})
+        .forEach(x=>{
+            if(!DBC.MapDifficulty.query({MapID:x.ID.get()})) {
+                DBC.MapDifficulty.add(Ids.MapDifficulty.dynamicId())
+                   .MapID.set(x.ID.get())
+                   .MaxPlayers.set(0)
+                   .Message.clear()
+                   .RaidDuration.set(0)
+                   .Difficulty.set(0)
+                   .Difficultystring.set('')
+            }
+        })
+})
