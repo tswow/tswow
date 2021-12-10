@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC, SQL } from "wotlkdata";
+import { DBC, LUAXML, SQL } from "wotlkdata";
 import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { AchievementRegistry } from "./Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
@@ -180,4 +180,5 @@ export const std = {
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: DBC,
     SQL: SQL,
+    LUAXML: LUAXML
 }
