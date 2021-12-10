@@ -94,7 +94,7 @@ export abstract class MaybeSQLEntity<T,SQL> extends CellSystem<T> {
         return this.getSQL(entity) !== undefined;
     }
 
-    enable() { MaybeSQLEntity.getOrCreateSQL(this); return this.owner; }
+    create() { MaybeSQLEntity.getOrCreateSQL(this); return this.owner; }
     getSQL(): SQL { return MaybeSQLEntity.getSQL(this); }
     exists(): boolean { return MaybeSQLEntity.hasSQL(this); }
 }
@@ -128,7 +128,7 @@ export abstract class MaybeDBCEntity<T,DBC> extends CellSystem<T> implements IMa
 
     hasDBC() { return this.getDBC() !== undefined; }
     exists() { return this.hasDBC(); }
-    enable() { this.getOrCreateDBC(); return this.owner; }
+    create() { this.getOrCreateDBC(); return this.owner; }
 
     static wrapDBC<C extends CPrim,T,DBC,O extends MaybeDBCEntity<T,DBC>>(
               owner: O
