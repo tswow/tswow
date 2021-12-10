@@ -61,7 +61,7 @@ export class CreatureTemplateRegistryClass
             .UnitFlags.clearAll()
             .Vehicle.set(0)
             .AIName.ReactorAI()
-            .AttackTime.set(1,1,1,1)
+            .AttackTime.set(2000,2000,1,1)
             .DamageSchool.Normal.set()
             .DynFlags.clearAll()
             .DynamicFlags.set(0)
