@@ -1,14 +1,15 @@
-import { DBC } from "wotlkdata";
+import { DBC, finish } from "wotlkdata";
 import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { ItemSetQuery, ItemSetRow } from "wotlkdata/wotlkdata/dbc/types/ItemSet";
 import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 import { SpellRegistry } from "../Spell/Spells";
 import { SkillRequirement } from "./ItemRequirements";
-import { ItemTemplateRegistry } from "./ItemTemplate";
+import { ItemTemplate, ItemTemplateRegistry } from "./ItemTemplate";
 
 export class ItemSetSpell extends ArrayEntry<ItemSet> {
     get Spell() {
@@ -49,6 +50,8 @@ export class ItemSetSpells extends ArraySystem<ItemSetSpell,ItemSet> {
     }
 }
 
+// used to write item_set_names later
+let itemSetItems: number[] = []
 export class ItemSet extends MainEntity<ItemSetRow> {
     get Name() { return this.wrapLoc(this.row.Name) }
     get ID() { return this.row.ID.get(); }
@@ -62,7 +65,19 @@ export class ItemSet extends MainEntity<ItemSetRow> {
             , 0
             , 17
             , (index)=>ItemTemplateRegistry
-                .ref(this, this.wrapIndex(this.row.ItemID,index))
+                .ref(
+                      this
+                    , new CellBasic(
+                          this
+                        , ()=>this.row.ItemID.getIndex(index)
+                        , (value)=>{
+                            if(value > 0 && !itemSetItems.includes(value)) {
+                                itemSetItems.push(value);
+                            }
+                            this.row.ItemID.setIndex(index,value)
+                        }
+                    )
+                )
         )
     }
 }
@@ -96,3 +111,12 @@ export class ItemSetRegistryClass
     }
 }
 export const ItemSetRegistry = new ItemSetRegistryClass();
+
+finish('item-set-names',()=>{
+    itemSetItems.forEach(x=>{
+        let item = ItemTemplateRegistry.load(x)
+        if(!ItemTemplate.ItemSetNameRow(item).exists()) {
+            item.ItemSetName.set(item.Name.objectify())
+        }
+    })
+});

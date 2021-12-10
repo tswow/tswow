@@ -27,6 +27,7 @@ import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { ClassMask } from "../Class/ClassRegistry";
 import { EnchantmentRegistry } from "../Enchant/Enchantment";
 import { HolidayRegistry } from "../GameEvent/Holiday";
+import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { GemRegistry } from "../Gem/Gem";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
@@ -58,6 +59,7 @@ import { ItemRequirements } from "./ItemRequirements";
 import { ItemResistance } from "./ItemResistances";
 import { ItemScalingStat } from "./ItemScalingStat";
 import { ItemSetRegistry } from "./ItemSet";
+import { ItemSetName, ItemSetNameRow } from "./ItemSetName";
 import { ItemSheath } from "./ItemSheath";
 import { ItemSockets } from "./ItemSocket";
 import { ItemSpells } from "./ItemSpells";
@@ -110,8 +112,13 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     @Transient
     protected get dbc() { return ItemDBCRow.dbc(this); }
     readonly DBCRow = new ItemDBCRow(this);
+    protected ItemSetNameRow = new ItemSetNameRow(this);
+    static ItemSetNameRow(template: ItemTemplate) {
+        return template.ItemSetNameRow;
+    }
 
     get Name() { return new ItemName(this); }
+    get ItemSetName() { return new ItemSetName(this); }
     get Socket() { return new ItemSockets(this); }
     get StartQuest() { return this.wrap(this.row.startquest); }
     get Lock() { return LockRegistry.ref(this, this.row.lockid); }
@@ -187,7 +194,15 @@ export class ItemTemplate extends MainEntity<item_templateRow> {
     }
     get InventoryType() {
         return makeEnumCell(ItemInventoryType,this
-            , new MulticastCell(this, [this.row.InventoryType,this.dbc.InventoryType])
+            , new MulticastCell(this, [
+                  this.row.InventoryType
+                , this.dbc.InventoryType
+                , new CellBasic(this,()=>0,(value)=>{
+                    if(this.ItemSetNameRow.exists()) {
+                        this.ItemSetNameRow.InventoryType.set(value);
+                    }
+                })
+            ])
         );
     }
     get SheatheType() { return this.dbc.SheatheType; }
