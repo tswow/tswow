@@ -123,7 +123,7 @@ extends RegistryStatic<CreatureInstance,creatureRow,creatureQuery>
          .zoneId.set(0)
          .areaId.set(0)
          .ScriptName.set('')
-         .phaseMask.set(0)
+         .phaseMask.set(1)
          .equipment_id.set(0)
          .VerifiedBuild.set(17688)
     }
