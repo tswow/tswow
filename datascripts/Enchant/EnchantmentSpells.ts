@@ -79,7 +79,7 @@ export class EnchantmentSpells extends MultiRowSystem<EnchantmentSpell,Enchantme
                         .Trigger.ON_USE.set()
                         .Charges.set(1,'DELETE_ITEM')
                 })
-                .Class.ItemEnhancement.set()
+                .Class.ITEM_ENHANCEMENT.set()
                 .Material.CLOTH.set()
                 .Flags.PLAYER_CAST.set(true)
                 .Flags.IGNORE_REAGENTS.set(true)

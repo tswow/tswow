@@ -96,7 +96,7 @@ export const KeyRegistry = {
 
         const KEY_ITEM = ItemTemplateRegistry.create(mod,id)
             .Quality.WHITE.set()
-            .Class.Key.set()
+            .Class.KEY.set()
             .RequiredLevel.set(0)
             .ItemLevel.set(1)
             .MaxStack.set(1)

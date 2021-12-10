@@ -68,7 +68,7 @@ export class MountItems extends MultirowSystemCached<ItemTemplate,Mount> {
             .Quality.BLUE.set()
             .ClassMask.set(-1)
             .Bonding.BINDS_ON_PICKUP.set()
-            .Class.Mount.set()
+            .Class.MOUNT.set()
             .Material.LIQUID.set()
             .InventoryType.NON_EQUIPPABLE.set()
             .Spells.addMod((ispell=>{

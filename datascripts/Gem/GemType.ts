@@ -15,21 +15,21 @@ export enum GemType {
 export class GemTypeCell extends EnumCell<Gem> {
     writeToItem() {
         switch(this.get()) {
-            case GemType.META: this.owner.Item.get().Class.MetaGem.set();
+            case GemType.META: this.owner.Item.get().Class.META_GEM.set();
                 break;
-            case GemType.RED: this.owner.Item.get().Class.RedGem.set();
+            case GemType.RED: this.owner.Item.get().Class.RED_GEM.set();
                 break;
-            case GemType.YELLOW: this.owner.Item.get().Class.YellowGem.set();
+            case GemType.YELLOW: this.owner.Item.get().Class.YELLOW_GEM.set();
                 break;
-            case GemType.ORANGE: this.owner.Item.get().Class.OrangeGem.set();
+            case GemType.ORANGE: this.owner.Item.get().Class.ORANGE_GEM.set();
                 break;
-            case GemType.BLUE: this.owner.Item.get().Class.BlueGem.set();
+            case GemType.BLUE: this.owner.Item.get().Class.BLUE_GEM.set();
                 break;
-            case GemType.PURPLE: this.owner.Item.get().Class.PurpleGem.set();
+            case GemType.PURPLE: this.owner.Item.get().Class.PURPLE_GEM.set();
                 break;
-            case GemType.GREEN: this.owner.Item.get().Class.GreenGem.set();
+            case GemType.GREEN: this.owner.Item.get().Class.GREEN_GEM.set();
                 break;
-            case GemType.PRISMATIC: this.owner.Item.get().Class.PrismaticGem.set();
+            case GemType.PRISMATIC: this.owner.Item.get().Class.PRISMATIC_GEM.set();
                 break;
         }
         return this.owner;

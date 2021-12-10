@@ -66,7 +66,7 @@ export class CompanionItems extends MultirowSystemCached<ItemTemplate,Companion>
             .Quality.BLUE.set()
             .ClassMask.set(-1)
             .Bonding.BINDS_ON_PICKUP.set()
-            .Class.Pet.set()
+            .Class.PET.set()
             .Material.LIQUID.set()
             .InventoryType.NON_EQUIPPABLE.set()
             .Spells.addMod((ispell=>{

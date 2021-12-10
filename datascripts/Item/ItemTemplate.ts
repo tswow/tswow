@@ -293,7 +293,7 @@ extends RegistryStatic<ItemTemplate,item_templateRow,item_templateQuery> {
          .BagFamily.set(0)
          .BlockChance.set(0)
          .Bonding.NO_BOUNDS.set()
-         .Class.Junk.set()
+         .Class.JUNK.set()
          .ClassMask.set(-1)
          .RaceMask.set(-1)
          .ContainerSlots.set(0)
