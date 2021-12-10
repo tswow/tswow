@@ -131,7 +131,7 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
       }
 
     addGet(
-          skillLine: number
+          skillLine: number = 0
         , classes?: MaskCon<keyof typeof ClassMask>
         , races?: MaskCon<keyof typeof RaceMask>
     ) {
