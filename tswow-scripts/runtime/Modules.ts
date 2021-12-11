@@ -269,8 +269,8 @@ export class Module {
             module.asEndpoint().datasets.create('dataset')
         }
 
-        chokidar
-            .watch(ipaths.modules.get(),{
+        if(!process.argv.includes('--nowatch')) {
+            chokidar.watch(ipaths.modules.get(),{
                 ignored: [
                       /build$/
                     , /Buildings$/
@@ -308,5 +308,6 @@ export class Module {
                     }
                 }
             })
+        }
     }
 }
