@@ -343,8 +343,11 @@ export class Realm {
     }
 
     static create(mod: ModuleEndpoint, name: string, displayname: string = name) {
+        let existed = new Realm(mod,name).path.config.exists()
         const realm = new Realm(mod, name).initialize();
-        patchTCConfig(realm.config.filename,REALM_NAME_FIELD,displayname);
+        if(!existed) {
+            patchTCConfig(realm.config.filename,REALM_NAME_FIELD,displayname);
+        }
         return realm;
     }
 
