@@ -269,7 +269,7 @@ export class Module {
             module.asEndpoint().datasets.create('dataset')
         }
 
-        if(!process.argv.includes('--nowatch')) {
+        if(!process.argv.includes('nowatch')) {
             chokidar.watch(ipaths.modules.get(),{
                 ignored: [
                       /build$/
