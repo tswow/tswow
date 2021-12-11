@@ -15,7 +15,7 @@ import { Module, ModuleEndpoint } from "./Modules";
 import { NodeConfig } from "./NodeConfig";
 
 const livescript_example =
-`export function Main(events: TSEventHandlers) {
+`export function Main(events: TSEvents) {
     // Register your events here!
 }`;
 
