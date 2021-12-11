@@ -291,20 +291,33 @@ export class Module {
                     .find(x=>x === dir.basename().get())
                 if(endpointType) {
                     let endpoint = this.getEndpoint(dir.dirname().get());
-                    if(!endpoint) return;
-                    switch(endpointType) {
-                        case 'datascripts':
-                            Datascripts.create(endpoint)
-                            break;
-                        case 'livescripts':
-                            Livescripts.create(endpoint)
-                            break;
-                        case 'addon':
-                            Addon.create(endpoint)
-                            break;
-                        case 'shared':
-                            Shared.create(endpoint)
-                            break;
+                    if(endpoint) {
+                        switch(endpointType) {
+                            case 'datascripts':
+                                Datascripts.create(endpoint)
+                                break;
+                            case 'livescripts':
+                                Livescripts.create(endpoint)
+                                break;
+                            case 'addon':
+                                Addon.create(endpoint)
+                                break;
+                            case 'shared':
+                                Shared.create(endpoint)
+                                break;
+                        }
+                    }
+                } else {
+                    let endpoint = this.getEndpoint(dir.dirname().dirname().get());
+                    if(endpoint) {
+                        switch(dir.basename(1).get()) {
+                            case 'datasets':
+                                Dataset.create(endpoint,dir.basename().get())
+                                break;
+                            case 'realms':
+                                Realm.create(endpoint,dir.basename().get(),dir.basename().get())
+                                break;
+                        }
                     }
                 }
             })
