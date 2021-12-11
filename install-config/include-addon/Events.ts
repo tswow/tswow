@@ -36,11 +36,7 @@ const eventHolders : {[key:string]:EventHolder}= {}
 
 const messageHolders: {[id: number]:new ()=> any} = {};
 
-export function addConstructor(con: any) {
-    messageHolders[con.GetID()] = con;
-}
-
-export function addEvent(frame: any, name: string, callback: (...args: any[])=>void) {
+function addEvent(frame: any, name: string, callback: (...args: any[])=>void) {
     if(eventHolders[frame.GetName()]===undefined) {
         let holder = eventHolders[frame.GetName()] = new EventHolder();
         frame.SetScript('OnEvent',(frameInner: any,eventName: any,...args: any[])=>{
@@ -58,7 +54,7 @@ export function addEvent(frame: any, name: string, callback: (...args: any[])=>v
     holder.events[name].push(callback);
 }
 
-export const Events = {
+const Events = {
     AchievementInfo: {
         /**
          *

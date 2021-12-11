@@ -127,19 +127,11 @@ export namespace TrinityCore {
 
         ipaths.bin.include.global_d_ts.write(gdts);
 
-        // why is this done in TrinityCore?
-        spaths.install_config.include_addon.copy(ipaths.bin.include_addon);
-
         ipaths.modules.module.all().forEach(mod=>{
             mod.endpoints().forEach(ep=>{
                 if(ep.livescripts.exists()) {
                     ipaths.bin.include.global_d_ts
                         .copy(ep.livescripts.global_d_ts)
-                }
-
-                if(ep.addon.exists()) {
-                    ipaths.bin.include_addon.global_d_ts
-                        .copy(ep.addon.global_d_ts)
                 }
 
                 if(ep.datascripts.exists()) {

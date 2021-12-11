@@ -18,7 +18,7 @@ import { NodeConfigClass } from '../util/NodeConfig';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
-import { spaths } from './CompilePaths';
+import { bpaths, spaths } from './CompilePaths';
 import { TrinityCore } from './TrinityCore';
 
 export namespace Config {
@@ -60,7 +60,38 @@ export namespace Config {
         spaths.install_config.addons.copy(ipaths.bin.addons);
         spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
         spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
+
+        // Addon includes
         spaths.install_config.include_addon.copy(ipaths.bin.include_addon)
+        ipaths.bin.include_addon.join('Events.ts').remove();
+        spaths.install_config.include_addon.Events_ts
+            .copy(bpaths.lua_events.events_ts)
+        spaths.install_config.include_addon.global_d_ts
+            .copy(bpaths.lua_events.global_d_ts)
+        bpaths.lua_events.tsconfig_json.writeJson({
+            "compilerOptions": {
+                "target": "es5",
+                "module": "commonjs",
+                "strict": true,
+                "esModuleInterop": true,
+                "skipLibCheck": true,
+                "forceConsistentCasingInFileNames": true,
+                "declaration": true
+            } , "tstl": {
+                "luaTarget": "5.1",
+                "noImplicitSelf": true,
+            }
+        })
+        wsys.execIn(bpaths.lua_events, 'tstl')
+        bpaths.lua_events.events_lua.copy(
+            ipaths.bin.include_addon.Events_lua)
+
+        ipaths.bin.include_addon.global_d_ts.toFile().write(
+            bpaths.lua_events.global_d_ts.readString()
+            + '\n' +
+            bpaths.lua_events.events_d_ts.readString()
+        )
+
         ipaths.bin.include_addon.tsconfig_json.writeJson({
             "compilerOptions": {
               "target": "esnext",
@@ -95,7 +126,7 @@ export namespace Config {
         ipaths.modules.module.all().forEach(x=>{
             x.endpoints().forEach(x=>{
                 if(x.addon.exists()) {
-                    spaths.install_config.include_addon.global_d_ts
+                    ipaths.bin.include_addon.global_d_ts
                         .copy(x.addon.global_d_ts)
                 }
             })

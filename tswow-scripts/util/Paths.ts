@@ -137,9 +137,6 @@ export function AddonDirectory(inPath: string) {
         index_ts: file(`addon.ts`),
         tsconfig_json: file('tsconfig.json'),
         global_d_ts: file('global.d.ts'),
-        lib: dir({
-            Events_ts: file('Events.ts'),
-        }),
         build: dir({
             lualib_bundle_lua: file('lualib_bundle.lua'),
             lib: dir({}),
@@ -342,7 +339,8 @@ export function InstallPath(pathIn: string, tdb: string) {
             }),
             include_addon: dirn('include-addon',{
                 global_d_ts: file('global.d.ts'),
-                Events: file('Events.'),
+                Events_ts: file('Events.ts'),
+                Events_lua: file('Events.lua'),
                 shared_global_d_ts: file('shared.global.d.ts'),
                 LualibBundle_lua: file('LualibBundle.lua'),
                 RequireStub_lua: file('RequireStub.lua'),
@@ -428,6 +426,13 @@ export function BuildPaths(pathIn: string, tdb: string) {
             wotlkdata: dir({}),
             runtime: dir({}),
             addons: dir({})
+        }),
+        lua_events: dir({
+            events_ts: file('Events.ts'),
+            events_d_ts: file('Events.d.ts'),
+            events_lua: file('Events.lua'),
+            global_d_ts: file('global.d.ts'),
+            tsconfig_json: file('tsconfig.json'),
         }),
         zlib: dir({
             include: dir({}),
@@ -561,7 +566,7 @@ export function SourcePaths(pathIn: string) {
         install_config: dirn('install-config',{
             include_addon: dirn('include-addon',{
                 global_d_ts: file('global.d.ts'),
-                Events: file('Events.'),
+                Events_ts: file('Events.ts'),
                 shared_global_d_ts: file('shared.global.d.ts'),
                 LualibBundle_lua: file('LualibBundle.lua'),
                 RequireStub_lua: file('RequireStub.lua'),

@@ -259,7 +259,6 @@ export class Addon {
         IdPublic.flushMemory()
 
         this.path.build.lib.remove();
-        wsys.execIn(ipaths.bin.include_addon.get(),'tstl','inherit')
         // todo: copy to dataset directory
         ipaths.bin.include_addon.iterate('RECURSE','FILES','RELATIVE',file=>{
             if(!file.endsWith('.lua')) return;
@@ -271,11 +270,6 @@ export class Addon {
         let exists = this.path.exists();
         this.path.tsconfig_json.writeJson(defaultTsConfig(this),4,'OVERWRITE')
         this.path.index_ts.write(addon_example_ts(this.mod.fullName),'DONT_OVERWRITE')
-        ipaths.bin.include_addon.iterate('RECURSE','FILES','FULL',node=>{
-            if(node.endsWith('.ts') && ! node.endsWith('.d.ts')) {
-                node.copy(this.path.lib.join(node.basename()));
-            }
-        })
         ipaths.bin.include_addon.global_d_ts.copy(this.path.global_d_ts)
         if(!exists) {
             term.success(this.logName(),`Created addon component`)
@@ -302,7 +296,6 @@ export class Addon {
     }
 
     static updateAddons(dataset: Dataset) {
-        wsys.execIn(ipaths.bin.include_addon,'tstl','inherit');
         wfs.iterate(ipaths.bin.include_addon,(fpath)=>{
             if(!fpath.endsWith('.lua')) return;
             const fname = wfs.basename(fpath);
