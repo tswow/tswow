@@ -26,6 +26,7 @@ import { ClassMask } from "../Class/ClassRegistry";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RaceMask } from "../Race/RaceType";
 import { RegistryDynamic } from "../Refs/Registry";
+import { SkillLineRegistry } from "../SkillLines/SkillLines";
 import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
 
@@ -89,10 +90,23 @@ export class SpellSkillLineAbilites extends MultiRowSystem<SkillLineAbility,Spel
     }
 
     enable(cls: MaskCon<keyof typeof ClassMask>, race: MaskCon<keyof typeof RaceMask>) {
+        let skills: number[] = []
+
         this.forEach(x=>{
-            x.ClassMask.set(cls)
-            x.ClassMaskForbidden.set(cls,'NOT')
-            x.RaceMask.set(race)
+            x.ClassMask.add(cls)
+            x.ClassMaskForbidden.remove(cls)
+            x.RaceMask.add(race)
+            if(!skills.includes(x.SkillLine.get())) {
+                skills.push(x.SkillLine.get())
+            }
+        })
+
+        skills.forEach(x=>{
+            SkillLineRegistry.load(x)
+                .RaceClassInfos.forEach(x=>{
+                    x.ClassMask.add(cls)
+                     .RaceMask.add(race)
+                })
         })
     }
 
