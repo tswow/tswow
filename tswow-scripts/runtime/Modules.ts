@@ -278,6 +278,14 @@ export class Module {
                     , /vmaps$/
                     , /mmaps$/
                     , /dbc$/
+                    , /dbc_source$/
+                    , /luaxml$/
+                    , /luaxml_source$/
+                    , /datascripts.+?/
+                    , /livescripts.+?/
+                    , /addon.+?$/
+                    , /shared.+?$/
+                    , /assets$/
                     , /(^|[\/\\])\../
                 ]
             })
