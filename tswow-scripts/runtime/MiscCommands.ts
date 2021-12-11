@@ -13,5 +13,9 @@ export class MiscCommands {
             // we've already built inlinescripts, skip them
             await commands.sendCommand(`build scripts ${args} --no-inline`)
         })
+
+        commands.addCommand('check','','',()=>{
+            return commands.sendCommand(`build data --readonly`)
+        });
     }
 }
