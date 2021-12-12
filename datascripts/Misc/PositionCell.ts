@@ -219,7 +219,7 @@ export class QuaternionCell<T> extends CellSystem<T> {
     @Transient
     protected readonly _w: Cell<number,any>;
 
-    constructor(owner: T,w: Cell<number,any>,x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>) {
+    constructor(owner: T, x: Cell<number,any>, y: Cell<number,any>, z: Cell<number,any>, w: Cell<number,any>) {
         super(owner);
         this._x = x;
         this._y = y;
