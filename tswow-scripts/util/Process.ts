@@ -150,10 +150,10 @@ export class Process {
         }
 
         this._process.stdin.write(Buffer.from(
-            command + useNewline
+            command + (useNewline
                 ? String.fromCharCode(10)
-                : ''
-            , 'ascii'
+                : '')
+            , 'utf-8'
         ));
         return this;
     }
