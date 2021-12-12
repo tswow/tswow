@@ -456,15 +456,15 @@ export class MaskCell32<T> extends MaskCell<T> {
     get(num?: number, mode?: MaskMode): number {
         switch(mode) {
             case 'AND':
-                return MaskCell32Impl.and(this.signed,this.cell.get(),num);
+                return MaskCell32Impl.and(this.signed,num,this.cell.get());
             case 'NOR':
-                return MaskCell32Impl.nor(this.signed,this.cell.get(),num);
+                return MaskCell32Impl.nor(this.signed,num,this.cell.get());
             case 'NOT':
-                return MaskCell32Impl.not(this.signed,this.cell.get(),num);
+                return MaskCell32Impl.not(this.signed,num,this.cell.get());
             case 'OR':
-                return MaskCell32Impl.or(this.signed,this.cell.get(),num);
+                return MaskCell32Impl.or(this.signed,num,this.cell.get());
             case 'XOR':
-                return MaskCell32Impl.xor(this.signed,this.cell.get(),num);
+                return MaskCell32Impl.xor(this.signed,num,this.cell.get());
             default:
                 return this.cell.get();
         }
