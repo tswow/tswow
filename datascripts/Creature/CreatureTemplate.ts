@@ -14,18 +14,40 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Language } from "wotlkdata/dbc/Localization";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { creature_templateRow } from "wotlkdata/sql/types/creature_template";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { creature_templateRow } from "wotlkdata/wotlkdata/sql/types/creature_template";
+import { creature_template_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_template_addon";
+import { CreatureTextRegistry } from "../BroadcastText/CreatureText";
+import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
+import { GossipRegistry } from "../Gossip/Gossips";
+import { getInlineID } from "../InlineScript/InlineScript";
+import { LootSetPointer } from "../Loot/Loot";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
+import { SchoolMask } from "../Misc/School";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
+import { RefStatic } from "../Refs/Ref";
 import { AttachedScript } from "../SmartScript/AttachedScript";
 import { SmartScripts } from "../SmartScript/SmartScript";
+import { VehicleRegistry } from "../Vehicle/Vehicle";
+import { VehicleTemplateAccessories } from "../Vehicle/VehicleAccessory";
+import { VendorItems } from "../Vendor/Vendor";
 import { CreatureAI } from "./CreatureAI";
 import { CreatureAttackTime } from "./CreatureAttackTime";
 import { CreatureDamageSchool } from "./CreatureDamageSchool";
+import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
+import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
 import { CreatureFamily } from "./CreatureFamily";
 import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
+import { CreatureInstance } from "./CreatureInstance";
 import { CreatureLevel } from "./CreatureLevel";
 import { CreatureName, CreatureSubname } from "./CreatureLoc";
 import { MechanicImmunity } from "./CreatureMechanicImmunity";
@@ -34,159 +56,288 @@ import { CreatureMovementSpeed } from "./CreatureMovementSpeed";
 import { CreatureMovementType } from "./CreatureMovementType";
 import { CreatureQuestgiver } from "./CreatureQuestGiver";
 import { CreatureRank } from "./CreatureRank";
-import { CreatureInstances } from "./Creatures";
+import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./Creatures";
 import { CreatureStats } from "./CreatureStats";
-import { CreatureTypeEnum } from "./CreatureType";
+import { CreatureType } from "./CreatureType";
 import { CreatureTypeFlags } from "./CreatureTypeFlags";
 import { DynFlags } from "./DynFlags";
 import { NPCFlags } from "./NPCFlags";
-import { Trainer, TrainerLoc } from "../Trainer/Trainer";
 import { UnitClass } from "./UnitClass";
-import { CreatureVendor } from "./CreatureVendor";
-import { GOCreature } from "../Misc/GOorCreature";
-import { trainerRow } from "wotlkdata/sql/types/trainer";
-import { Ids } from "../Misc/Ids";
-import { Gossips } from "../Gossip/Gossips";
 import { UnitFlags } from "./UnitFlags";
-import { SchoolMask } from "../Misc/School";
-import { CreatureFactionTemplate } from "./CreatureFactionTemplate";
-import { SharedRefs } from "../Refs/SharedRefs";
-import { AttachedLootSet } from "../Loot/Loot";
-import { CreatureInstance } from "./CreatureInstance";
-import { Gossip } from "../Gossip/Gossip";
 
-function creatureLoc(id: number, lang: Language) {
-    const old = SQL.creature_template_locale.find({entry:id, locale:lang});
-    if(old) {
-        return old;
+export class CreatureDifficultyRef extends RefStatic<CreatureTemplate,CreatureTemplate> {
+    constructor(owner: CreatureTemplate, cell: Cell<number,any>) {
+        super(owner,cell,CreatureTemplateRegistry)
     }
-    return SQL.creature_template_locale.add(id, lang);
+
+    getRefCopyRoot(mod: string, id: string) {
+        this.cell.set(this.owner.ID);
+        return this.getRefCopy(mod,id)
+    }
+
+    modRefCopyRoot(mod: string, id: string, callback: (template: CreatureTemplate)=>void) {
+        callback(this.getRefCopyRoot(mod,id));
+        return this.owner;
+    }
 }
 
-export class CreatureTemplate extends GOCreature<creature_templateRow> {
+export class CreatureDifficulties extends CellSystem<CreatureTemplate> {
+    get Heroic5Man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_1
+        )
+    }
+
+    get Normal25man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_1
+        )
+    }
+
+    get Heroic10Man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_2
+        )
+    }
+
+    get Heroic25Man() {
+        return new CreatureDifficultyRef(
+            this.owner, this.owner.row.difficulty_entry_3
+        )
+    }
+}
+
+export interface CreatureInstancePosition extends Position {
+    spawnTime?: number
+    wander?: number
+}
+
+export class CreatureTemplateInstances extends MultiRowSystem<CreatureInstance,CreatureTemplate>
+{
+    protected getAllRows(): CreatureInstance[] {
+        return SQL.creature.queryAll({id:this.owner.ID})
+            .map(x=>new CreatureInstance(x));
+    }
+
+    protected isDeleted(value: CreatureInstance): boolean {
+        return value.row.isDeleted();
+    }
+
+    add(mod: string, id: string, pos: CreatureInstancePosition|CreatureInstancePosition[], callback?: (spawn: CreatureInstance)=>void) {
+        this.addGet(mod,id,pos,callback)
+        return this.owner;
+    }
+
+    addGet(mod: string, id: string, pos: CreatureInstancePosition|CreatureInstancePosition[], callback?: (spawn: CreatureInstance)=>void) {
+        if(!Array.isArray(pos)) {
+            pos = [pos];
+        }
+        return pos.map((x,i)=>{
+            const inst = CreatureInstanceRegistry
+                .create(mod,`${id}-${i}`)
+                .Position.set(x)
+                .Template.set(this.owner.ID)
+                .SpawnTime.set(x.spawnTime || CREATURE_DEFAULT_SPAWNTIME)
+                .WanderDistance.set(x.wander||0)
+            if(x.wander) {
+                inst.MovementType.RANDOM_MOVEMENT.set()
+            } else {
+                inst.MovementType.IDLE.set()
+            }
+            if(callback) callback(inst);
+            return inst;
+        })
+    }
+
+    addMod(mod: string, id: string, pos: Position|Position[], callback: (spawn: CreatureInstance)=>void) {
+        this.addGet(mod,id,pos).forEach(callback);
+        return this.owner;
+    }
+}
+
+export class CreatureTemplateAddon extends MaybeSQLEntity<CreatureTemplate, creature_template_addonRow> {
+    protected createSQL(): creature_template_addonRow {
+        return SQL.creature_template_addon.add(this.owner.ID)
+            .MountCreatureID.set(0)
+            .auras.set('')
+            .bytes1.set(0)
+            .bytes2.set(0)
+            .emote.set(0)
+            .mount.set(0)
+            .path_id.set(0)
+            .visibilityDistanceType.set(0)
+    }
+    protected findSQL(): creature_template_addonRow {
+        return SQL.creature_template_addon.query({entry:this.owner.ID});
+    }
+    protected isValidSQL(sql: creature_template_addonRow): boolean {
+        return sql.entry.get() === this.owner.ID;
+    }
+
+    get Auras()  { return this.wrapSQL('',sql=>sql.auras); }
+    get Bytes1() { return this.wrapSQL(0,sql=>sql.bytes1); }
+    get Bytes2() { return this.wrapSQL(0,sql=>sql.bytes2); }
+    get Emote()  { return this.wrapSQL(0,sql=>sql.emote); }
+    get Mount()  { return this.wrapSQL(0,sql=>sql.mount); }
+    get Path()   { return this.wrapSQL(0,sql=>sql.path_id); }
+    get VisibilityDistanceType() { return this.wrapSQL(0,sql=>sql.visibilityDistanceType); }
+}
+
+export class CreatureTemplateAddonRow extends CellSystem<CreatureTemplate> {
+    protected readonly Addon = new CreatureTemplateAddon(this.owner);
+
+    get() { return this.Addon.getSQL(); }
+
+    mod(callback: (row: creature_template_addonRow)=>void) {
+        callback(this.get());
+    }
+
+    exists() { return this.Addon.exists(); }
+
+    static addon(template: CreatureTemplate) {
+        return template.AddonRow.Addon
+    }
+}
+
+export class CreatureTemplate extends MainEntity<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
     get Subname() { return new CreatureSubname(this); }
-
-    get Scripts() { 
-        return new AttachedScript(()=>{
+    get Scripts() {
+        return new AttachedScript(this, ()=>{
             this.row.AIName.set('SmartAI');
-            return SmartScripts.creature(this.ID, this);
+            return SmartScripts.creature(this.ID);
         })
     }
-    
+
+    @Transient
+    protected get Addon() { return CreatureTemplateAddonRow.addon(this); }
+    @Transient
+    readonly AddonRow = new CreatureTemplateAddonRow(this);
+    get Auras()   { return this.Addon.Auras; }
+    get AddonBytes1()  { return this.Addon.Bytes1 }
+    get AddonBytes2()  { return this.Addon.Bytes2 }
+    get Emote()   { return this.Addon.Emote }
+    get Mount()   { return this.Addon.Mount }
+    get Path()    { return this.Addon.Path }
+    get VisibilityDistanceType() {
+        return this.Addon.VisibilityDistanceType
+    }
+
+
     /**
      * What expansion the creatures health is taken from, values are from 0-2
      */
     get HealthExpansion() { return this.wrap(this.row.exp); }
 
-    /** 
+    /**
      * ID of the Faction template this creature belongs to
      */
-    get FactionTemplate() { return new CreatureFactionTemplate(this, this.row.faction); }
+    get FactionTemplate() {
+        return FactionTemplateRegistry.ref(this, this.row.faction);
+    }
 
-    /** 
+    get InlineScripts() { return getInlineID(this, this.ID, 'CreatureID') as _hidden.Creatures<this> }
+
+    /**
      * - 0 = does not regenerate health
-     * - 1 = regenerates health 
+     * - 1 = regenerates health
      */
     get RegenHealth() { return this.wrap(this.row.RegenHealth); }
 
     get Questgiver() { return new CreatureQuestgiver(this);}
-    get NPCFlags() { return new NPCFlags(this, this.row.npcflag); }
-    get Type() { return new CreatureTypeEnum(this, this.row.type); }
-    get TypeFlags() { return new CreatureTypeFlags(this, this.row.type_flags); }
-    get DynFlags() { return new DynFlags(this, this.row.dynamicflags); }
+    get NPCFlags() {
+        return makeMaskCell32(NPCFlags,this, this.row.npcflag);
+    }
+    get Type() {
+        return makeEnumCell(CreatureType,this, this.row.type);
+    }
+    get TypeFlags() {
+        return makeMaskCell32(CreatureTypeFlags,this, this.row.type_flags);
+    }
+    get DynFlags() {
+        return makeMaskCell32(DynFlags,this, this.row.dynamicflags);
+    }
     get UnitFlags() { return new UnitFlags(this); }
     get FlagsExtra() { return this.wrap(this.row.flags_extra); }
-    get UnitClass() { return new UnitClass(this, this.row.unit_class); }
-    get DynamicFlags() { return this.wrap(this.row.dynamicflags); }
-    get DungeonHeroicID() { return this.wrap(this.row.difficulty_entry_1); }
-    get RaidNormal25ID() { return this.wrap(this.row.difficulty_entry_1); }
-    get RaidHeroic10ID() { return this.wrap(this.row.difficulty_entry_2); }
-    get RaidHeroic25ID() { return this.wrap(this.row.difficulty_entry_3); }
-    get Models() { return new CreatureModels(this); }
+    get UnitClass() {
+        return makeEnumCell(UnitClass,this, this.row.unit_class);
+    }
+    get DynamicFlags() { return CreatureTemplateRegistry.ref(this, this.row.dynamicflags); }
+    get Difficulty() { return new CreatureDifficulties(this); }
+
+    get Models() { return new CreatureModels(this, this.row); }
     get Icon() { return new CreatureIconNames(this); }
-    get Gossip() { 
-        return new Gossip(this, this, this.row.gossip_menu_id);
+    get Gossip() {
+        return GossipRegistry.ref(this, this.row.gossip_menu_id);
     }
     get Level() { return new CreatureLevel(this);}
     get MovementSpeed() { return new CreatureMovementSpeed(this); }
     get Scale() { return this.wrap(this.row.scale); }
-    get Rank() { return new CreatureRank(this); }
-    get DamageSchool() { return new CreatureDamageSchool(this, this.row.dmgschool); }
+    get Rank() {
+        return makeEnumCell(CreatureRank,this, this.row.rank);
+    }
+    get DamageSchool() {
+        return makeEnumCell(CreatureDamageSchool,this, this.row.dmgschool);
+    }
     get AttackTime() { return new CreatureAttackTime(this); }
-    get Family() { return new CreatureFamily(this, this.row.family); }
+    get Family() {
+        return makeEnumCell(CreatureFamily,this, this.row.family);
+    }
     get PetSpells() { return this.wrap(this.row.PetSpellDataId); }
-    get VehicleID() { return this.wrap(this.row.VehicleId); }
+    get Vehicle() { return VehicleRegistry.ref(this, this.row.VehicleId); }
     get Gold() { return new CreatureGold(this); }
     get AIName() { return new CreatureAI(this); }
-    get MovementType() { return new CreatureMovementType(this, this.row.MovementType); }
+    get MovementType() {
+        return makeEnumCell(CreatureMovementType,this, this.row.MovementType);
+    }
     get HoverHeight() { return this.wrap(this.row.HoverHeight); }
     get Stats() { return new CreatureStats(this); }
     get RacialLeader() { return this.wrap(this.row.RacialLeader); }
-    get MovementID() { return this.wrap(this.row.movementId); }
-    get MechanicImmunity() { return new MechanicImmunity(this, this.row.mechanic_immune_mask); }
-    get SpellSchoolImmunity() { return new SchoolMask(this,this.row.spell_school_immune_mask); }
-    get Trainer() { 
-        let ctrow = SQL.creature_default_trainer.find({CreatureId:this.ID});
-        let trainerRow : trainerRow;
-        if(ctrow === undefined) {
-            trainerRow = SQL.trainer.add(Ids.Trainer.id())
-            ctrow = SQL.creature_default_trainer.add(this.ID)
-                .TrainerId.set(trainerRow.Id.get());
-        } else {
-            trainerRow = SQL.trainer.find({Id: ctrow.TrainerId.get()});
-        }
-        return new Trainer(this,trainerRow, ctrow); 
+    get Movement() { return this.wrap(this.row.movementId); }
+    get MechanicImmunity() {
+        return makeMaskCell32(MechanicImmunity,this, this.row.mechanic_immune_mask);
     }
-    get Vendor() { return new CreatureVendor(this); }
+    get SchoolImmunity() {
+        return makeMaskCell32(SchoolMask,this, this.row.spell_school_immune_mask);
+    }
+    get Trainer() { return new CreatureDefaultTrainer(this); }
+    get Vendor() { return new VendorItems(this, this.ID); }
 
-    get NormalLoot() { return SharedRefs.getOrCreateLoot(this, 
-        new AttachedLootSet(this, 
-            this.row.lootid, 
-            Ids.CreatureLoot, 
-            SQL.creature_loot_template))
+    get Texts() { return CreatureTextRegistry.load(this.ID); }
+
+    get NormalLoot() {
+        return new LootSetPointer(
+              this
+            , this.row.lootid
+            , SQL.creature_loot_template
+            , Ids.creature_loot_template
+            )
     }
 
-    get PickpocketLoot() { return SharedRefs.getOrCreateLoot(this,
-        new AttachedLootSet(this,
-            this.row.pickpocketloot,
-            Ids.PickPocketLoot,
-            SQL.pickpocketing_loot_template))
+    get PickpocketLoot() {
+        return new LootSetPointer(
+            this
+          , this.row.pickpocketloot
+          , SQL.pickpocketing_loot_template
+          , Ids.pickpocketing_loot_template
+          )
     }
 
-    get SkinningLoot() { return SharedRefs.getOrCreateLoot(this,
-        new AttachedLootSet(this, 
-            this.row.skinloot, 
-            Ids.SkinningLoot, 
-            SQL.skinning_loot_template))
+    get SkinningLoot() {
+        return new LootSetPointer(
+            this
+          , this.row.skinloot
+          , SQL.skinning_loot_template
+          , Ids.skinning_loot_template
+          )
     }
 
-    addVendorItem(item: number, maxcount = 0, incrTime = 0, extendedCostId = 0) {
-        this.NPCFlags.Vendor.mark();
-        this.Vendor.addItem(item,maxcount,incrTime,extendedCostId);
-        return this;
+    get VehicleAccessories() {
+        return new VehicleTemplateAccessories(this)
     }
 
-    addTrainerSpell(spellId: number, cost = 0, reqLevel = 0, reqSkillLine = 0, reqSkillRank = 0, reqAbilities: number[] = []) {
-        this.NPCFlags.Trainer.mark();
-        this.Trainer.addSpell(spellId,cost,reqLevel,reqSkillLine,reqSkillRank,reqAbilities);
-        return this;
-    }
-
-    get TrainerClass() { return this.wrap(this.Trainer.trainerRow.Requirement); }
-    get TrainerType() { return this.wrap(this.Trainer.trainerRow.Type); }
-    get TrainerGreeting() { return new TrainerLoc<this>(this, this.Trainer); }
-
-    spawn(mod: string, id: string, pos: Position) {
-        return new CreatureInstance(this, CreatureInstances.create(mod, id, this.ID, pos).row);
-    }
-
-    protected isCreature(): boolean {
-        return true;
-    }
-
-    protected isGameObject(): boolean {
-        return false;
+    get Spawns() {
+        return new CreatureTemplateInstances(this);
     }
 }

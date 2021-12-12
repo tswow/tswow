@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Language } from "wotlkdata/dbc/Localization";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function getLocale(id: number, lang: Language) {
-    const old = SQL.item_template_locale.find({ID:id, locale: lang});
+    const old = SQL.item_template_locale.query({ID:id, locale: lang});
     if(old) return old;
     return SQL.item_template_locale.add(id,lang);
 }

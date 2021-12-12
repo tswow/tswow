@@ -14,37 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export type RaceType = number 
-    | 'HUMAN' | 'ORC' | 'DWARF' | 'NIGHTELF' | 'UNDEAD' 
-    | 'TAUREN' | 'GNOME' | 'TROLL' | 'BLOODELF' | 'DRAENEI'
 
-export const ALL_RACES: RaceType[] = [
-      'HUMAN','ORC','DWARF','NIGHTELF','UNDEAD'
-    , 'TAUREN','GNOME','TROLL','BLOODELF','DRAENEI'
-]
-
-export function resolveRaceType(type: RaceType) {
-    if(typeof(type)==='number') {
-        return type;
-    }
-
-    switch(type) {
-        case 'HUMAN': return 1;
-        case 'ORC': return 2;
-        case 'DWARF': return 3;
-        case 'NIGHTELF': return 4;
-        case 'UNDEAD': return 5;
-        case 'TAUREN': return 6;
-        case 'GNOME': return 7;
-        case 'TROLL': return 8;
-        case 'BLOODELF': return 10;
-        case 'DRAENEI': return 11;
-            default: throw new Error(`Invalid race type ${type}`);
-    }
+export enum RaceIDs {
+      HUMAN    = 1
+    , ORC      = 2
+    , DWARF    = 3
+    , NIGHTELF = 4
+    , UNDEAD   = 5
+    , TAUREN   = 6
+    , GNOME    = 7
+    , TROLL    = 8
+    //
+    , BLOODELF = 10
+    , DRAENEI  = 11
 }
 
-export function makeRacemask(races: RaceType[]) {
-    return races
-        .map(x=>resolveRaceType(x))
-        .reduce((p,c)=>p|(1<<(c-1)),0);
+export enum RaceMask {
+      HUMAN    = 0x1
+    , ORC      = 0x2
+    , DWARF    = 0x4
+    , NIGHTELF = 0x8
+    , UNDEAD   = 0x10
+    , TAUREN   = 0x20
+    , GNOME    = 0x40
+    , TROLL    = 0x80
+    //
+    , BLOODELF = 0x200
+    , DRAENEI  = 0x400
 }

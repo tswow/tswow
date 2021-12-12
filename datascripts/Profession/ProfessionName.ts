@@ -1,30 +1,28 @@
-import { Profession } from "./Profession";
-import { Language } from "wotlkdata/dbc/Localization";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { loc_constructor } from "wotlkdata/primitives";
-import { Spell } from "../Spell/Spell";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
 import { SkillLine } from "../SkillLines/SkillLine";
-import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { MulticastCell } from "wotlkdata/cell/cells/MulticastCell";
+import { Spell } from "../Spell/Spell";
+import { Profession } from "./Profession";
 
 export abstract class ProfessionLocSystem extends LocSystem<Profession> {
     protected abstract forSpell(spell: Spell): LocSystem<any>
     protected abstract main(skillLine: SkillLine): LocSystem<any>
 
     protected allSystems() {
-        let systems = [this.main(this.owner.skillLine)];
-
-        for(let i=1;i<this.owner.GetHighestRank();++i) {
-            systems.push(this.forSpell(this.owner.getSkillRank(i)));
-        }
-        if(this.owner.GetHighestRank()>0) {
-            systems.push(this.forSpell(this.owner.ApprenticeLearnSpell));
-        }
-
+        let systems = [this.main(this.owner.AsSkillLine.get())];
+        this.owner.Ranks.forEach(el=>{
+            systems.push(this.forSpell(el.ProfessionSpell()));
+            el.LearnSpells().forEach(x=>{
+                systems.push(this.forSpell(x))
+            });
+        });
         return systems;
     }
-    
+
     lang(lang: Language): Cell<string, Profession> & PendingCell {
         return new MulticastCell<string,Profession>(this.owner,this.allSystems().map(x=>x.lang(lang)));
     }

@@ -15,9 +15,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { LightRow } from "wotlkdata/dbc/types/Light";
-import { MainEntity } from "../Misc/MainEntity";
-import { PositionXYZCell } from "../Misc/PositionCell";
+import { LightRow } from "wotlkdata/wotlkdata/dbc/types/Light";
+import { MainEntity } from "../Misc/Entity";
+import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { LightFalloff } from "./LightFalloff";
 import { LightFloatBand } from "./LightFloatBand";
 import { FLOAT_BAND_COUNT, getFloatBandIndex, getIntBandIndex, INT_BAND_COUNT } from "./LightIndex";
@@ -25,7 +25,7 @@ import { LightIntBand } from "./LightIntBand";
 import { LightParam } from "./LightParam";
 
 export class Light extends MainEntity<LightRow> {
-    get Position() { return new PositionXYZCell(this, this.row.MapID,this.row.X,this.row.Y,this.row.Z); }
+    get Position() { return new PositionMapXYZCell(this, this.row.MapID,this.row.X,this.row.Y,this.row.Z); }
     get Falloff() { return new LightFalloff(this); }
 
     constructor(row: LightRow) {
@@ -62,35 +62,35 @@ export class Light extends MainEntity<LightRow> {
     get UnknownFloat4() { return new LightFloatBand(this, 4); }
     get UnknownFloat5() { return new LightFloatBand(this, 5); }
 
-    get HighlightSky() { 
+    get HighlightSky() {
         return new LightParam(this,(x)=>this.paramRow(x).HighlightSky)
     }
 
-    get Skybox() { 
+    get Skybox() {
         return new LightParam(this,(x)=>this.paramRow(x).LightSkyboxID)
     }
 
-    get CloudType() { 
+    get CloudType() {
         return new LightParam(this,(x)=>this.paramRow(x).CloudTypeID)
     }
 
-    get Glow() { 
+    get Glow() {
         return new LightParam(this,(x)=>this.paramRow(x).Glow)
     }
 
-    get WaterShallowAlpha() { 
+    get WaterShallowAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).WaterShallowAlpha)
     }
 
-    get WaterDeepAlpha() { 
+    get WaterDeepAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).WaterDeepAlpha)
     }
 
-    get OceanShallowAlpha() { 
+    get OceanShallowAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).OceanShallowAlpha)
     }
 
-    get OceanDeepAlpha() { 
+    get OceanDeepAlpha() {
         return new LightParam(this,(x)=>this.paramRow(x).OceanDeepAlpha)
     }
 

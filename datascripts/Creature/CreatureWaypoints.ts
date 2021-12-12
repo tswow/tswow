@@ -1,12 +1,12 @@
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { Position } from "../Misc/Position";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureWaypoints extends CellSystem<CreatureTemplate> {
 
     get(){
-        return SQL.waypoints.filter({entry: this.owner.ID})
+        return SQL.waypoints.queryAll({entry: this.owner.ID})
             .sort((a,b)=>a.pointid.get()>b.pointid.get() ? 1 : -1)
     }
 

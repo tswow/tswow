@@ -1,6 +1,6 @@
 import { Spell } from "../Spell/Spell";
 
-export type DefaultProfession = 
+export type DefaultProfession =
         'SKINNING' | 'HERBALISM' | 'MINING' | 'FISHING' | 'JEWELCRAFTING'
     |   'COOKING' | 'ALCHEMY' | 'LEATHERWORKING' | 'INSCRIPTION' | 'ENGINEERING'
     |   'TAILORING' | 'BLACKSMITHING' | 'ENCHANTING' | 'FISHING' | 'FIRSTAID'
@@ -48,32 +48,44 @@ export function resolveProfession(type: DefaultProfession|number) {
     }
 }
 
-export type ProfessionTier = 
-    'Apprentice' | 
-    'Journeyman' | 
-    'Expert' | 
-    'Artisan' | 
-    'Master' | 
-    'Grand Master'
+export type ProfessionTier =
+    'Apprentice' |
+    'Journeyman' |
+    'Expert' |
+    'Artisan' |
+    'Master' |
+    'Grand Master' | number
 
-export function resolveProfessionTier(tier: ProfessionTier|number) {
+export function resolveProfessionRank(tier: ProfessionTier|number) {
     if(typeof(tier)=='number') return tier;
     switch(tier) {
-        case 'Apprentice': return 1;
-        case 'Journeyman': return 2;
-        case 'Expert': return 3;
-        case 'Artisan': return 4;
-        case 'Master': return 5;
-        case 'Grand Master': return 6;
+        case 'Apprentice': return 0;
+        case 'Journeyman': return 1;
+        case 'Expert': return 2;
+        case 'Artisan': return 3;
+        case 'Master': return 4;
+        case 'Grand Master': return 5;
         default: throw new Error(`Invalid profession tier: ${tier}`)
+    }
+}
+
+export function getProfessionRank(rank: number) {
+    switch(rank) {
+        case 1: return 'Apprentice';
+        case 2: return 'Journeyman';
+        case 3: return 'Expert';
+        case 4: return 'Artisan';
+        case 5: return 'Master';
+        case 6: return 'Grand Master';
+        default: throw new Error(`Invalid profession tier: ${rank}`)
     }
 }
 
 export function isTradeskillSpell(spell: Spell) {
     const types = [
-        spell.Effects.get(0).EffectType.objectify(),
-        spell.Effects.get(1).EffectType.objectify(),
-        spell.Effects.get(2).EffectType.objectify(),
+          spell.Effects.get(0).Type.objectify()
+        , spell.Effects.get(1).Type.objectify()
+        , spell.Effects.get(2).Type.objectify()
     ]
     return types.includes('Skill');
 }

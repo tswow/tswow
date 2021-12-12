@@ -1,30 +1,36 @@
-import { Settings } from "wotlkdata/Settings";
-import { TSImage, TSImages } from "../Images/Image";
-import { finish } from "wotlkdata";
-import { Classes } from "./Class";
-import * as path from 'path'
 import * as fs from 'fs';
+import path from 'path';
+import { finish } from "wotlkdata";
+import { wfs } from 'wotlkdata/util/FileSystem';
+import { BuildArgs, dataset, ipaths } from 'wotlkdata/wotlkdata/Settings';
+import { TSImage, TSImages } from "../Images/Image";
+import { ClassRegistry } from './ClassRegistry';
 
 const SQUARES_LOCAL = "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
 const CIRCLES_LOCAL = "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
-const SQUARES_PATH = path.join(Settings.LUAXML_SOURCE,SQUARES_LOCAL)
-const CIRCLES_PATH = path.join(Settings.LUAXML_SOURCE,CIRCLES_LOCAL)
+const WORLDSTATE_LOCAL = "Interface\\WorldStateFrame\\ICONS-CLASSES.BLP"
+const SQUARES_PATH = dataset.luaxml_source.join(SQUARES_LOCAL)
+const CIRCLES_PATH = dataset.luaxml_source.join(CIRCLES_LOCAL)
+const WORLDSTATE_PATH = dataset.luaxml_source.join(WORLDSTATE_LOCAL)
 
 let stitchedSquares: TSImage;
 let stitchedCircles: TSImage;
+let stitchedWorldstates: TSImage
 
 let stitchIndex = 10;
 
 function setupImages() {
-    let sqBlpExist = fs.existsSync(SQUARES_PATH);
-    let crBlpExist = fs.existsSync(CIRCLES_PATH);
+    let sqBlpExist = fs.existsSync(SQUARES_PATH.get());
+    let crBlpExist = fs.existsSync(CIRCLES_PATH.get());
+    let wsBlpExists = fs.existsSync(WORLDSTATE_PATH.get());
 
-    if(!sqBlpExist || !crBlpExist) {
+    if(!sqBlpExist || !crBlpExist || !wsBlpExists) {
         return false;
     }
 
-    stitchedSquares = TSImages.read(SQUARES_PATH)
-    stitchedCircles = TSImages.read(CIRCLES_PATH)
+    stitchedSquares = TSImages.read(SQUARES_PATH.get())
+    stitchedCircles = TSImages.read(CIRCLES_PATH.get())
+    stitchedWorldstates = TSImages.read(WORLDSTATE_PATH.get())
 
     const resizeImage = (image: TSImage) =>
         TSImages.create(512,512)
@@ -33,24 +39,27 @@ function setupImages() {
             .drawImage(image,0,64,256,64,0,128,256,64)
     stitchedSquares = resizeImage(stitchedSquares)
     stitchedCircles = resizeImage(stitchedCircles)
+    stitchedWorldstates = resizeImage(stitchedWorldstates)
 
-    Classes.load('WARRIOR').UI.TCoords.set(0,0.125,0,0.125)
-    Classes.load('MAGE').UI.TCoords.set(0.125,0.25,0,0.125)
-    Classes.load('ROGUE').UI.TCoords.set(0.25,0.375,0,0.125)
-    Classes.load('DRUID').UI.TCoords.set(0.375,0.5,0,0.125)
-    Classes.load('HUNTER').UI.TCoords.set(0.5,0.625,0,0.125)
-    Classes.load('SHAMAN').UI.TCoords.set(0.625,0.75,0,0.125)
-    Classes.load('PRIEST').UI.TCoords.set(0.75,0.875,0,0.125)
-    Classes.load('WARLOCK').UI.TCoords.set(0.875,1,0,0.125)
-    Classes.load('PALADIN').UI.TCoords.set(0,0.125,0.125,0.25)
-    Classes.load('DEATH_KNIGHT').UI.TCoords.set(0.125,0.25,0.125,0.25)
+    ClassRegistry.load('WARRIOR').UI.ButtonTCoords.set(0,0.125,0,0.125)
+    ClassRegistry.load('MAGE').UI.ButtonTCoords.set(0.125,0.25,0,0.125)
+    ClassRegistry.load('ROGUE').UI.ButtonTCoords.set(0.25,0.375,0,0.125)
+    ClassRegistry.load('DRUID').UI.ButtonTCoords.set(0.375,0.5,0,0.125)
+    ClassRegistry.load('HUNTER').UI.ButtonTCoords.set(0.5,0.625,0,0.125)
+    ClassRegistry.load('SHAMAN').UI.ButtonTCoords.set(0.625,0.75,0,0.125)
+    ClassRegistry.load('PRIEST').UI.ButtonTCoords.set(0.75,0.875,0,0.125)
+    ClassRegistry.load('WARLOCK').UI.ButtonTCoords.set(0.875,1,0,0.125)
+    ClassRegistry.load('PALADIN').UI.ButtonTCoords.set(0,0.125,0.125,0.25)
+    ClassRegistry.load('DEATH_KNIGHT').UI.ButtonTCoords.set(0.125,0.25,0.125,0.25)
     return true;
 }
 
+let hasStitched = false;
 export function stitchClassIcon(image: TSImage, index: number = -1) {
     if(index<0) {
         index = stitchIndex++;
     }
+    hasStitched = true;
 
     if(stitchedSquares===undefined || stitchedCircles===undefined) {
         if(!setupImages())
@@ -67,6 +76,7 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
 
     stitchedSquares?.drawImage(image,xpos,ypos,64,64)
     stitchedCircles?.drawImage(image,xpos,ypos,64,64)
+    stitchedWorldstates?.drawImage(image,xpos,ypos,64,64)
     // carve out the circle shape
     stitchedCircles?.addFilter((c,x,y)=>{
         if(x>=xpos && y >= ypos && x <= xpos+64 && y <= ypos+64) {
@@ -77,15 +87,30 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
         }
         return c;
     });
+    stitchedWorldstates?.addFilter((c,x,y)=>{
+        if(x>=xpos && y >= ypos && x <= xpos+64 && y <= ypos+64) {
+            if(x>=xpos+4 && x<=xpos+64-4 && y>=ypos+4 && y<=ypos+64-4) {
+                return c
+            } else {
+                return 0;
+            }
+        }
+        return c
+    })
     return index;
 }
 
 finish('build-class-icons',()=>{
+    if(!hasStitched || !BuildArgs.WRITE_CLIENT) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
             return;
         }
     }
-    stitchedSquares?.writeToAssets('tswow-stdlib',SQUARES_LOCAL)
-    stitchedCircles?.writeToAssets('tswow-stdlib',CIRCLES_LOCAL)
+
+    // don't know load order, so we'll handle the conversion here
+    wfs.write(ipaths.modules.module.pick('tswow-stdlib').join('assets','Interface','noconvert'),'')
+    stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL),'BLP')
+    stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL),'BLP')
+    stitchedWorldstates?.writeToModule('tswow-stdlib',path.join('assets',WORLDSTATE_LOCAL),'BLP')
 })

@@ -1,32 +1,43 @@
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellArray, CellIndexWrapper } from "wotlkdata/wotlkdata/cell/cells/CellArray";
+import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { SelfRef } from "../../Refs/Ref";
 import { SpellEffect } from "../SpellEffect";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CPrim } from "wotlkdata/cell/cells/Cell";
-import { CellArray, CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
+import { SpellTargetPosition } from "../SpellTargetPosition";
 
-export const all_effects : any = {}
-export function EffectID(id: number) {
-    return function(target: any) {
-        all_effects[id] = target;
-    }
-}
-
-export class EffectTemplate<T> extends CellSystem<T> {
+export class EffectTemplate extends CellSystem<SpellEffect> {
     protected w<T extends CPrim>(arr: CellArray<T,any>): CellIndexWrapper<T,this> {
         return this.wrapIndex(arr, this.index);
     }
-
     @Transient
-    readonly effect: SpellEffect<any>;
-    
+    protected get row() { return this.owner.row; }
     @Transient
-    protected get row() { return this.effect.row; }
-
+    get index() { return this.owner.index; }
     @Transient
-    get index() { return this.effect.index; }
+    get AsEffect() { return new SelfRef(this, ()=>this.owner); }
 
-    constructor(owner: T, effect: SpellEffect<any>) {
-        super(owner);
-        this.effect = effect;
+    get TargetPosition() {
+        return new SpellTargetPosition(this, this.row.ID.get(), this.owner.index)
+    }
+
+    objectify() {
+        const eff = this.AsEffect.get();
+        if(eff.Aura.get() > 0) {
+            let {cell:auraCell} = EnumCellTransform.getSelection(eff.Aura);
+            return {
+                  Type: this.AsEffect.get().Type.objectify()
+                , Aura: this.AsEffect.get().Aura.objectify()
+                , ...Objects.objectifyObj(auraCell.as())
+            }
+        } else {
+            return {
+                  Type: this.AsEffect.get().Type.objectify()
+                , Aura: 'NONE'
+                , ...Objects.objectifyObj(this)
+            }
+        }
     }
 }

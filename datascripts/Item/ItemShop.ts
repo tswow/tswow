@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemShop extends CellSystem<ItemTemplate> {
-    private row() { return this.owner.sqlRow; }
+    private row() { return this.owner.row; }
 
     set(buycount: number, buyprice: number, sellprice: number) {
         this.BuyCount.set(buycount);

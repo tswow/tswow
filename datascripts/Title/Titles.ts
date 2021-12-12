@@ -14,31 +14,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/dbc/types/CharTitles";
-import { loc_constructor } from "wotlkdata/primitives";
+import { DBC } from "wotlkdata";
+import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/wotlkdata/dbc/types/CharTitles";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { MainEntity } from "../Misc/Entity";
+import { GenderedText } from "../Misc/GenderedText";
 import { Ids } from "../Misc/Ids";
-import { MainEntity } from "../Misc/MainEntity";
+import { RegistryRowBase } from "../Refs/Registry";
 
 export class Title extends MainEntity<CharTitlesRow>{
-    get Id() {
-        return this.row.ID;
+    get ID() { return this.row.ID.get(); }
+
+    get Text() {
+        return new GenderedText(
+              this
+            , 'WRITE_MALE'
+            , this.row.Name
+            , this.row.Name1
+        )
     }
 }
+export class TitleRegistryClass extends RegistryRowBase<Title,CharTitlesRow,CharTitlesQuery> {
+    protected Table(): Table<any, CharTitlesQuery, CharTitlesRow> & { add: (id: number) => CharTitlesRow; } {
+        return DBC.CharTitles
+    }
 
-export const Titles = {
-    create : (mod : string, id : string, name: loc_constructor, femaleName: loc_constructor) => {
-        const genid = Ids.Title.id(mod,id);
-        const highest = DBC.CharTitles.filter({}).sort((a,b)=>b.Mask_ID>a.Mask_ID?1:-1)[0].Mask_ID.get();
-        const row = DBC.CharTitles.add(genid,{Mask_ID:highest+1, Name:name,Name1:femaleName});
-        return new Title(row);
-    },
+    protected Entity(r: CharTitlesRow): Title {
+        return new Title(r);
+    }
 
-    load : (id : number) => {
-        return new Title(DBC.CharTitles.findById(id));
-    },
+    protected FindByID(id: number): CharTitlesRow {
+        return DBC.CharTitles.findById(id);
+    }
+    protected EmptyQuery(): CharTitlesQuery {
+        return {}
+    }
 
-    filter (query: CharTitlesQuery) {
-        return DBC.CharTitles.filter(query).map(x=>new Title(x));
+    create(mod: string, id: string) {
+        let nid = Ids.CharTitles.id()
+        let mid = Ids.CharTitleMask.id(mod,id);
+        let title = DBC.CharTitles.add(nid)
+            .Mask_ID.set(mid)
+            .Condition_ID.set(0)
+            .Name.clear()
+            .Name1.clear()
+        return new Title(title);
+    }
+
+    ID(e: Title): number {
+        return e.ID;
     }
 }
+export const TitleRegistry = new TitleRegistryClass();

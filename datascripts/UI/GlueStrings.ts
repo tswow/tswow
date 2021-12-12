@@ -28,7 +28,7 @@ export class GlueStrings {
     get ABILITY_INFO_BLOODELF2() {return this.prop(4); }
     get ABILITY_INFO_BLOODELF3() {return this.prop(5); }
     get ABILITY_INFO_BLOODELF4() {return this.prop(6); }
-    get ABILITY_INFO_DRAENEI1() {return this.prop(7); } 
+    get ABILITY_INFO_DRAENEI1() {return this.prop(7); }
     get ABILITY_INFO_DRAENEI2() {return this.prop(8); }
     get ABILITY_INFO_DRAENEI3() {return this.prop(9); }
     get ABILITY_INFO_DRAENEI4() {return this.prop(10); }

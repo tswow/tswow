@@ -15,20 +15,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { Language } from "wotlkdata/dbc/Localization";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { GameObjectTemplate } from "./GameObjectTemplate";
 
 function gobjectLoc(id: number, lang: Language) {
-    const old = SQL.gameobject_template_locale.find({entry: id,locale: lang})
+    const old = SQL.gameobject_template_locale.query({entry: id,locale: lang})
     if(old) {
         return old;
     }
     return SQL.gameobject_template_locale.add(id, lang);
 }
 
-export class GameObjectName<T extends GameObjectTemplate<T>> extends SQLLocSystem<T> {
+export class GameObjectName<T extends GameObjectTemplate> extends SQLLocSystem<T> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.name;
     }

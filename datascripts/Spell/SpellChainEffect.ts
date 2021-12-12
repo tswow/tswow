@@ -1,17 +1,11 @@
-import { SpellChainEffectsRow } from "wotlkdata/dbc/types/SpellChainEffects";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SpellChainEffectsQuery, SpellChainEffectsRow } from "wotlkdata/wotlkdata/dbc/types/SpellChainEffects";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
-export class SpellChainEffect<T> extends SharedRef<T, SpellChainEffectsRow>  {
-    table(): SharedRefTable<SpellChainEffectsRow> {
-        return DBC.SpellChainEffects;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellChainEffects
-    }
-
+export class SpellChainEffect extends MainEntity<SpellChainEffectsRow>  {
     clear(): this {
         // TODO: Implement!!
         return this;
@@ -66,4 +60,38 @@ export class SpellChainEffect<T> extends SharedRef<T, SpellChainEffectsRow>  {
 
     get TextureLength() { return this.wrap(this.row.TextureLength)}
     get WavePhase() { return this.wrap(this.row.WavePhase)}
+
+    get ID() { return this.row.ID.get(); }
 }
+
+export class SpellChainEffectRegistryClass
+    extends RegistryDynamic<
+          SpellChainEffect
+        , SpellChainEffectsRow
+        , SpellChainEffectsQuery
+    >
+{
+    protected Table(): Table<any, SpellChainEffectsQuery, SpellChainEffectsRow> & { add: (id: number) => SpellChainEffectsRow; } {
+        return DBC.SpellChainEffects
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellChainEffects
+    }
+    Clear(entity: SpellChainEffect): void {
+        // TODO: need to specify this
+    }
+    protected FindByID(id: number): SpellChainEffectsRow {
+        return DBC.SpellChainEffects.findById(id);
+    }
+    protected EmptyQuery(): SpellChainEffectsQuery {
+        return {}
+    }
+    ID(e: SpellChainEffect): number {
+        return e.ID
+    }
+    protected Entity(r: SpellChainEffectsRow): SpellChainEffect {
+        return new SpellChainEffect(r);
+    }
+}
+
+export const SpellChainEffectRegistry = new SpellChainEffectRegistryClass();

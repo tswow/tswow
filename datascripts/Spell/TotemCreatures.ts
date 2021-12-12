@@ -18,14 +18,14 @@ import { DBC } from "wotlkdata";
 import { Ids } from "../Misc/Ids";
 import { resolveTotemType, TotemType } from "../Totem/TotemType";
 import { Spell } from "./Spell";
-import { Spells } from "./Spells"
+import { SpellRegistry } from "./Spells";
 
 const created = [0,0,0,0];
 
 export type CreatureControlType =
     'Attack'|'Stay'|'Follow'|'Aggressive'|'Passive'|'Defensive'
 
-const ControllerValues : CreatureControlType[] = 
+const ControllerValues : CreatureControlType[] =
     ['Attack','Stay','Follow','Aggressive','Passive','Defensive']
 
 export class CreatureControllers {
@@ -79,17 +79,17 @@ export const TotemCreatures = {
                 .Flags.set(512)
         }
 
-        const spell = Spells.create(mod, id, 2484)
-            .Effects.get(0)
-                .MiscValueA.set(creature)
-                .MiscValueB.set(created[slot])
-                .ImplicitTargetA.set(41+slot)
-                .end
+        const spell = SpellRegistry.create(mod, id, 2484)
+            .Effects.mod(0,eff=>{
+                eff.MiscValueA.set(creature)
+                   .MiscValueB.set(created[slot])
+                   .ImplicitTargetA.set(41+slot)
+            })
             .RequiredTotems.setIndex(0,resolveTotemType(totem))
         return spell;
     },
 
-    createControllers(mod: string, id: string, slots: number[], 
+    createControllers(mod: string, id: string, slots: number[],
         controllers: CreatureControlType[] = ControllerValues) {
             let bitmask = 0;
             slots.forEach((x)=>{
@@ -99,41 +99,42 @@ export const TotemCreatures = {
             const controlOut = new CreatureControllers();
 
             for(const controller of controllers) {
-                const spell = Spells.create(mod, id+'_'+controller.toLowerCase())
-                    .Effects.add()
-                    .EffectType.setControlTotemCreature().effect
-                    .MiscValueA.set(bitmask).end
-
+                const spell = SpellRegistry.create(mod, id+'-'+controller.toLowerCase())
+                    .Effects.addMod(eff=>
+                        eff.Type.CONTROL_TOTEM_CREATURE.set()
+                            .AsEffect.get()
+                            .MiscValueA.set(bitmask
+                    ))
                 switch(controller) {
                     case 'Aggressive':
-                        controlOut.Aggressive = 
-                            spell.Effects.get(0).MiscValueB.set(2).end
-                            .Icon.set('Interface\\Icons\\Ability_Racial_BloodRage.blp')
+                        spell.Effects.get(0).MiscValueB.set(2)
+                        controlOut.Aggressive =
+                            spell.Icon.setPath('Interface\\Icons\\Ability_Racial_BloodRage.blp')
                         break
                     case 'Attack':
-                        controlOut.Attack = 
-                            spell.Effects.get(0).MiscValueB.set(5).end
-                            .Icon.set('Interface\\Icons\\Ability_GhoulFrenzy.blp')
+                        spell.Effects.get(0).MiscValueB.set(5)
+                        controlOut.Attack =
+                            spell.Icon.setPath('Interface\\Icons\\Ability_GhoulFrenzy.blp')
                         break
                     case 'Defensive':
-                        controlOut.Defensive = 
-                            spell.Effects.get(0).MiscValueB.set(1).end
-                            .Icon.set('Interface\\Icons\\Ability_Defend.blp')
+                        spell.Effects.get(0).MiscValueB.set(1)
+                        controlOut.Defensive =
+                            spell.Icon.setPath('Interface\\Icons\\Ability_Defend.blp')
                         break
                     case 'Follow':
-                        controlOut.Follow = 
-                            spell.Effects.get(0).MiscValueB.set(4).end
-                            .Icon.set('Interface\\Icons\\Ability_Tracking.blp')
+                        spell.Effects.get(0).MiscValueB.set(4)
+                        controlOut.Follow =
+                            spell.Icon.setPath('Interface\\Icons\\Ability_Tracking.blp')
                         break
                     case 'Passive':
-                        controlOut.Passive = 
-                            spell.Effects.get(0).MiscValueB.set(0).end
-                            .Icon.set('Interface\\Icons\\AbilitySeal.blp')
+                        spell.Effects.get(0).MiscValueB.set(0)
+                        controlOut.Passive =
+                            spell.Icon.setPath('Interface\\Icons\\AbilitySeal.blp')
                         break
                     case 'Stay':
-                        controlOut.Stay = 
-                            spell.Effects.get(0).MiscValueB.set(3).end
-                            .Icon.set('Interface\\Icons\\Spell_Nature_TimeStop.blp')
+                        spell.Effects.get(0).MiscValueB.set(3)
+                        controlOut.Stay =
+                            spell.Icon.setPath('Interface\\Icons\\Spell_Nature_TimeStop.blp')
                         break
                 }
             }

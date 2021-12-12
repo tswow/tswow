@@ -14,43 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureDamageSchool extends EnumCellWrapper<CreatureTemplate> {
-    get(): number {
-        return this.owner.row.dmgschool.get();
-    }
-
-    objectify() {
-        return [
-            'Normal','Holy','Fire','Nature',
-            'Frost','Shadow','Arcane'][this.get()];
-    }
-
-    set(value: number): CreatureTemplate {
-        this.owner.row.dmgschool.set(value);
-        return this.owner;
-    }
-
-    @EnumField(0)
-    setNormal() { return this.set(0); }
-
-    @EnumField(1)
-    setHoly() { return this.set(1); }
-
-    @EnumField(2)
-    setFire() { return this.set(2); }
-
-    @EnumField(3)
-    setNature() { return this.set(3); }
-
-    @EnumField(4)
-    setFrost() { return this.set(4); }
-
-    @EnumField(5)
-    setShadow() { return this.set(5); }
-
-    @EnumField(6)
-    setArcane() { return this.set(6); }
+export enum CreatureDamageSchool {
+    Normal = 0,
+    Holy   = 1,
+    Fire   = 2,
+    Nature = 3,
+    Frost  = 4,
+    Shadow = 5,
+    Arcane = 6
 }

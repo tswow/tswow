@@ -15,41 +15,57 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { TalentTabQuery } from "wotlkdata/dbc/types/TalentTab";
-import { Ids } from "../Misc/Ids";
+import { EnumCon, makeEnum } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { TalentTabQuery, TalentTabRow } from "wotlkdata/wotlkdata/dbc/types/TalentTab";
+import { lt } from "wotlkdata/wotlkdata/query/Relations";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { ClassIDs } from "../Class/ClassIDs";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStatic } from "../Refs/Registry";
 import { TalentTree } from "./TalentTree";
 
-export const TalentTrees = {
-    create(mod: string, name: string, tabIndex: 0|1|2, classes: number[]) {
-        return new TalentTree(DBC.TalentTab.add(Ids.TalentTab.id(mod, name))
-            .OrderIndex.set(tabIndex)
-            .ClassMask.set(classes.reduce((p,c)=>p|(1<<(c-1)),0)))
-    },
-
-    get(id: number) {
-        return new TalentTree(DBC.TalentTab.find({ID: id}));
-    },
-
-    find(classId: number, tabIndex: number) {
-        const talents = TalentTrees.findAll(classId, tabIndex);
-        if(talents.length===0) {
-            throw new Error(`Could not find a talent tree for class ${classId} at index ${tabIndex}`);
-        }
-
-        if(talents.length>0) {
-            throw new Error(`Found multiple talent trees for class ${classId} at index ${tabIndex}. Use findAll and select one manually.`);
-        }
-
-        return talents;
-    },
-
-    filter(query: TalentTabQuery) {
-        return DBC.TalentTab.filter(query).map(x=>new TalentTree(x));
-    },
-
-    findAll(classId: number, tabIndex: number) {
+export class TalentTreeRegistryClass
+    extends RegistryStatic<TalentTree,TalentTabRow,TalentTabQuery>
+{
+    protected Table(): Table<any, TalentTabQuery, TalentTabRow> & { add: (id: number) => TalentTabRow; } {
         return DBC.TalentTab
-            .filter({OrderIndex: tabIndex})
-            .filter((x)=>x.ClassMask.get()&(1<<(classId-1)))
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.TalentTab
+    }
+    Clear(r: TalentTree): void {
+        r.Name.clear()
+         .BackgroundImage.set('')
+         .Icon.set(0)
+         .ClassMask.set(0)
+         .OrderIndex.set(0)
+         .row
+         .RaceMask.set(0x7fffffff)
+    }
+
+    protected Entity(r: TalentTabRow): TalentTree {
+        return new TalentTree(r);
+    }
+    protected FindByID(id: number): TalentTabRow {
+        return DBC.TalentTab.query({ID:id})
+    }
+    protected EmptyQuery(): TalentTabQuery {
+        return {}
+    }
+    ID(e: TalentTree): number {
+        return e.ID;
+    }
+
+    unlockRaces() {
+        DBC.TalentTab
+            .queryAll({ID:lt(Ids.TalentTab.startId)})
+            .forEach(x=>x.RaceMask.set(0x7fffffff))
+    }
+
+    forClass(cls: EnumCon<keyof typeof ClassIDs>) {
+        let classId = makeEnum(ClassIDs,cls);
+        return this.filter(e=>e.row.OrderIndex.get() & (1<<(classId-1)))
     }
 }
+
+export const TalentTreeRegistry = new TalentTreeRegistryClass();

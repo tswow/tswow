@@ -14,74 +14,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
 
-export class CreatureTypeEnum<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setNone() { return this.set(0); }
+export enum CreatureType {
+    NONE           = 0,
+    BEAST          = 1,
+    DRAGONKIN      = 2,
+    DEMON          = 3,
+    ELEMENTAL      = 4,
+    GIANT          = 5,
+    UNDEAD         = 6,
+    HUMANOID       = 7,
+    CRITTER        = 8,
+    MECHANICAL     = 9,
+    NOT_SPECIFIED  = 10,
+    TOTEM          = 11,
+    NON_COMBAT_PET = 12,
+    GAS_CLOUD      = 13,
+    WILD_PET       = 14,
+    ABERRATION     = 15,
 
-    @EnumField(1)
-    setBeast() { return this.set(1); }
-
-    @EnumField(2)
-    setDragonkin() { return this.set(2); }
-
-    @EnumField(3)
-    setDemon() { return this.set(3); }
-
-    @EnumField(4)
-    setElemental() { return this.set(4); }
-
-    @EnumField(5)
-    setGiant() { return this.set(5); }
-
-    @EnumField(6)
-    setUndead() { return this.set(6); }
-
-    @EnumField(7)
-    setHumanoid() { return this.set(7); }
-
-    @EnumField(8)
-    setCritter() { return this.set(8); }
-
-    @EnumField(9)
-    setMechanical() { return this.set(9); }
-
-    @EnumField(10)
-    setNotSpecified() { return this.set(10); }
-
-    @EnumField(11)
-    setTotem() { return this.set(11); }
-
-    @EnumField(12)
-    setNonCombatPet() { return this.set(12); }
-
-    @EnumField(13)
-    setGasCloud() { return this.set(13); }
-
-    @EnumField(14)
-    setWildPet() { return this.set(14); }
-
-    @EnumField(15)
-    setAberration() { return this.set(15); }
 }
 
-export class CreatureTypeMask<T> extends MaskCell32<T> {
-    get None() { return this.bit(0); }
-    get Beast() { return this.bit(1); }
-    get Dragonkin() { return this.bit(2); }
-    get Demon() { return this.bit(3); }
-    get Elemental() { return this.bit(4); }
-    get Giant() { return this.bit(5); }
-    get Undead() { return this.bit(6); }
-    get Humanoid() { return this.bit(7); }
-    get Critter() { return this.bit(8); }
-    get Mechanical() { return this.bit(9); }
-    get NotSpecified() { return this.bit(10); }
-    get Totem() { return this.bit(11); }
-    get NonCombatPet() { return this.bit(12); }
-    get GasCloud() { return this.bit(13); }
-    get WildPet() { return this.bit(14); }
-    get Aberration() { return this.bit(15); }
+export enum CreatureTypeMask {
+    NONE           = 0x1,
+    BEAST          = 0x2,
+    DRAGONKIN      = 0x4,
+    DEMON          = 0x8,
+    ELEMENTAL      = 0x10,
+    GIANT          = 0x20,
+    UNDEAD         = 0x40,
+    HUMANOID       = 0x80,
+    CRITTER        = 0x100,
+    MECHANICAL     = 0x200,
+    NOT_SPECIFIED  = 0x400,
+    TOTEM          = 0x800,
+    NON_COMBAT_PET = 0x1000,
+    GAS_CLOUD      = 0x2000,
+    WILD_PET       = 0x4000,
+    ABERRATION     = 0x8000,
 }

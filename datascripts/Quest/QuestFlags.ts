@@ -1,40 +1,38 @@
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Quest } from "./Quest";
-
 /**
  * Note that some flags may not be supported by the core
  * TODO: I read these from my phone screen, so they might be inaccurate.
  */
-export class QuestFlags extends MaskCell32<Quest> {
-    get StayAlive() { return this.bit(0); }
-    get PartyAccept() { return this.bit(1); }
-    get Exploration() { return this.bit(2); }
-    get HasCondition() { return this.bit(3); }
-    get HideRewardPOI() { return this.bit(4); }
-    get Raid() { return this.bit(5); }
-    get TBC() { return this.bit(6); }
-    get NoMoneyFromXP() { return this.bit(7); }
-    get HiddenRewards() { return this.bit(8); }
-    get Tracking() { return this.bit(9); }
-    get DeprecateReputation() { return this.bit(10); }
-    get Daily() { return this.bit(11); }
-    get PvP() { return this.bit(12); }
-    get Unavailable() { return this.bit(13); }
-    get Weekly() { return this.bit(14); }
-    get Autocomplete() { return this.bit(15); }
-    get ShowItemInTracker() { return this.bit(16); }
-    get ObjText() { return this.bit(17); }
-    get AutoAccept() { return this.bit(18); }
-    get CastOnAccept() { return this.bit(19); }
-    get CastOnComplete() { return this.bit(20); }
-    get UpdatePhaseShift() { return this.bit(21); }
-    get SORWhitelist() { return this.bit(22); }
-    get LaunchGossipComplete() { return this.bit(23); }
-    get RemoveExtraGetItems() { return this.bit(24); }
-    get HideUntilDiscovered() { return this.bit(25); }
-    get PortraitInQuestLog() { return this.bit(26); }
-    get ShowItemWhenCompleted() { return this.bit(27); }
-    get LaunchGossipAccept() { return this.bit(28); }
-    get ItemsGlowWhenDone() { return this.bit(29); }
-    get FailOnLogout() { return this.bit(30); }
+export enum QuestFlags {
+    STAY_ALIVE               = 0x1,
+    PARTY_ACCEPT             = 0x2,
+    EXPLORATION              = 0x4,
+    SHARABLE                 = 0x8,
+    HAS_CONDITION            = 0x10,
+    HIDE_REWARD_POI        = 0x20,
+    RAID                     = 0x40,
+    TBC                    = 0x80,
+    NO_MONEY_FROM_XP        = 0x100,
+    HIDDEN_REWARDS           = 0x200,
+    TRACKING                 = 0x400,
+    DEPRECATE_REPUTATION     = 0x800,
+    DAILY                    = 0x1000,
+    PVP                     = 0x2000,
+    UNAVAILABLE              = 0x4000,
+    WEEKLY                   = 0x8000,
+    AUTOCOMPLETE             = 0x10000,
+    SHOW_ITEM_IN_TRACKER     = 0x20000,
+    OBJ_TEXT                 = 0x40000,
+    AUTO_ACCEPT              = 0x80000,
+    CAST_ON_ACCEPT           = 0x100000,
+    CAST_ON_COMPLETE         = 0x200000,
+    UPDATE_PHASE_SHIFT       = 0x400000,
+    SOR_WHITELIST            = 0x800000,
+    LAUNCH_GOSSIP_COMPLETE   = 0x1000000,
+    REMOVE_EXTRA_GET_ITEMS   = 0x2000000,
+    HIDE_UNTIL_DISCOVERED    = 0x4000000,
+    PORTRAIT_IN_QUEST_LOG    = 0x8000000,
+    SHOW_ITEM_WHEN_COMPLETED = 0x10000000,
+    LAUNCH_GOSSIP_ACCEPT     = 0x20000000,
+    ITEMS_GLOW_WHEN_DONE     = 0x40000000,
+    FAIL_ON_LOGOUT           = 0x80000000,
 }

@@ -14,21 +14,119 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { creature_default_trainerRow } from "wotlkdata/sql/types/creature_default_trainer";
-import { trainerRow } from "wotlkdata/sql/types/trainer";
-import { GOCreature } from "../Misc/GOorCreature";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { Ids } from "../Misc/Ids";
-import { CreatureTemplate } from "../Creature/CreatureTemplate";
-import { GameObjectTemplate } from "../GameObject/GameObjectTemplate";
-import { Trainer } from "../Trainer/Trainer";
+import { TrainerPlain, TrainerRegistry } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";
-import { getGossipLabel } from "./GossipLabels";
+import { Gossip } from "./Gossip";
 import { GossipOption } from "./GossipOption";
-import { Gossips } from "./Gossips";
+import { GossipRegistry } from "./Gossips";
 
-export class GossipOptionType<S,G,T extends GOCreature<G>> extends CellSystem<GossipOption<S,G,T>> {
+export class OptionCellBase extends CellSystem<GossipOption> {
+    protected type: number;
+    protected flag: number;
+
+    constructor(owner: GossipOption, type: number, flag: number) {
+        super(owner)
+        this.type = type;
+        this.flag = flag;
+    }
+
+    is() {
+        return this.owner.row.OptionType.get() === this.type;
+    }
+
+    on(callback: (option: GossipOption)=>void) {
+        if(this.is()) callback(this.owner);
+        return this.owner;
+    }
+
+    protected _set() {
+        this.owner.row.OptionType.set(this.type);
+        this.owner.row.OptionNpcFlag.set(this.flag);
+        return this.owner;
+    }
+}
+
+export class VendorCell extends OptionCellBase {
+    set(creatureId: number, callback?: (vendor: Vendor)=>void) {
+        this._set();
+        this.owner.row.ActionMenuID.set(creatureId)
+        if(callback) callback(new Vendor(creatureId))
+        return this.owner;
+    }
+
+    setNew(callback: (vendor: Vendor)=>void) {
+        let c = SQL.creature_template.add(Ids.creature_template.dynamicId());
+        c.name.set('Dummy Vendor Creature')
+        return this.set(c.entry.get(), callback);
+    }
+}
+
+export class TrainerCell extends OptionCellBase {
+    private __set(trainerId: number, creatureId: number, callback?: (trainer: TrainerPlain)=>void) {
+        this._set();
+        this.owner.row.ActionMenuID.set(creatureId);
+        if(callback) callback(TrainerRegistry.load(trainerId));
+        return this.owner;
+    }
+
+    setOwner() {
+        this._set();
+        this.owner.row.ActionMenuID.set(0)
+        return this.owner;
+    }
+
+    set(trainerId: number, callback?: (trainer: TrainerPlain)=>void) {
+        return this.__set(
+              trainerId
+            , SQL.creature_default_trainer
+                .query({TrainerId:trainerId}).CreatureId.get()
+            , callback)
+    }
+
+    setNew(callback: (trainer: TrainerPlain)=>void) {
+        let creature = SQL.creature_template.add(Ids.creature_template.dynamicId());
+        creature.name.set('Dummy Trainer Creature').npcflag.set(16)
+        let trainer = TrainerRegistry.create()
+        SQL.creature_default_trainer.add(creature.entry.get())
+            .TrainerId.set(trainer.ID)
+        return this.__set(trainer.ID,creature.entry.get(),callback);
+    }
+}
+
+export class GossipLinkCell extends OptionCellBase {
+    setLink(id: number) {
+        this._set();
+        this.owner.row.ActionMenuID.set(id);
+        return this.owner;
+    }
+
+    setNew(callback: (gossip: Gossip)=>void) {
+        let gossip = GossipRegistry.create()
+        this.setLink(gossip.ID)
+        callback(gossip);
+        return this.owner;
+    }
+
+    setNewStatic(mod: string, id: string, callback: (gossip: Gossip)=>void) {
+        let gossip = GossipRegistry.createStatic(mod,id);
+        this.setLink(gossip.ID)
+        callback(gossip);
+        return this.owner;
+    }
+}
+
+export class OptionCellPlain extends OptionCellBase {
+    set() {
+        this._set();
+        this.owner.row.ActionMenuID.set(0)
+        return this.owner;
+    }
+}
+
+export class GossipOptionType extends CellSystem<GossipOption> {
     protected set(value: number, npcValue: number, action = 0) {
         this.owner.row.OptionType.set(value);
         this.owner.row.OptionNpcFlag.set(npcValue);
@@ -36,193 +134,45 @@ export class GossipOptionType<S,G,T extends GOCreature<G>> extends CellSystem<Go
         return this.owner;
     }
 
-    protected topOwner() {
-        return this.end.end.topOwner;
+    protected value(type: number, flag: number) {
+        return new OptionCellPlain(this.owner, type,flag);
     }
 
-    protected onCreature(callback: (c: CreatureTemplate)=>any) {
-        const owner = this.topOwner();
-        if(GOCreature.isCreature(owner)) {
-            callback(owner);
+    get VENDOR()  { return new VendorCell(this.owner, 3, 128); }
+    get GOSSIP()  { return new GossipLinkCell(this.owner, 1, 1); }
+    get TRAINER() { return new TrainerCell(this.owner, 5, 16); }
+
+    get SPIRIT_HEALER()      { return this.value(6,16384)}
+    get SPIRIT_GUIDE()       { return this.value(7,32768)}
+    get INNKEEPER()         { return this.value(8,65536)}
+    get BANKER()            { return this.value(9,131072)}
+    get PETITION()          { return this.value(10,262144)}
+    get TABARD_DESIGNER()    { return this.value(11,524288)}
+    get AUCTIONEER()        { return this.value(13,2097152)}
+    get STABLE_MASTER()      { return this.value(14,4194304)}
+    get UNLEARN_TALENTS()    { return this.value(16,16)}
+    get UNLEARN_PET_TALENTS() { return this.value(17,16)}
+    get DUAL_SPEC()          { return this.value(18,16)}
+
+    get() { return this.owner.row.OptionType.get()}
+
+    objectify() {
+        switch(this.owner.row.OptionType.get()) {
+            case 1:  return 'VENDOR'
+            case 3:  return 'GOSSIP'
+            case 5:  return 'TRAINER'
+            case 6:  return 'SPIRIT_HEALER'
+            case 7:  return 'SPIRIT_GUIDE'
+            case 8:  return 'INNKEEPER'
+            case 9:  return 'BANKER'
+            case 10: return 'PETITION'
+            case 11: return 'TABARD_DESIGNER'
+            case 13: return 'AUCTIONEER'
+            case 14: return 'STABLE_MASTER'
+            case 16: return 'UNLEARN_TALENTS'
+            case 17: return 'UNLEARN_PET_TALENTS'
+            case 18: return 'DUAL_SPECS'
+            default: return 'INVALID'
         }
     }
-
-    protected onGameObject(callback: (c: GameObjectTemplate<any>)=>any) {
-        const owner = this.topOwner();
-        if(GOCreature.isGameObject(owner)) {
-            callback(owner);
-        }
-    }
-
-    setOwnVendor() : Vendor<GossipOption<S,G,T>> { 
-        this.set(3,128);
-        this.owner.row.ActionMenuID.set(0);
-        this.onCreature((x)=>{
-            x.NPCFlags.Vendor.mark()
-        });
-        // TODO: onGameObject
-        return new Vendor(this.owner, this.end.end.topOwner.ID);
-    }
-
-    setMultivendor(vendorId: number = -1) : Vendor<GossipOption<S,G,T>> {
-        if(vendorId===-1) {
-            vendorId = Ids.Vendor.id();
-        }
-        this.set(3,128);
-        this.owner.row.ActionMenuID.set(vendorId);
-        this.onCreature((x)=>{
-            x.NPCFlags.Vendor.mark();
-        });
-        // TODO: onGameObject
-        return new Vendor(this.owner, vendorId)
-    }
-
-    setGossipLinkLabel(mod: string, label: string) {
-        let labeledGossip = getGossipLabel(mod, label);
-        if(labeledGossip===undefined) {
-            throw new Error(`Missing gossip label: ${mod}:${label}`)
-        }
-        this.set(1,1,labeledGossip.ID);
-        return this.owner;
-    }
-
-    setGossipLinkID(id: number) {
-        this.set(1,1);
-        this.owner.row.ActionMenuID.set(id);
-        return this.owner;
-    }
-
-    setNewGossip() {
-        const gossip = Gossips.create(this.owner, this.end.end.topOwner);
-        this.set(1,1,gossip.ID);
-        return gossip;
-    }
-
-    setOwnTrainer() {
-        this.set(5,16,0);
-        let trainer : Trainer<GossipOption<S,G,T>>|undefined = undefined;
-        const x = this.end.end.topOwner
-        if(GOCreature.isCreature(x)) {
-            x.NPCFlags.Trainer.mark();
-            const ctrainer = x.Trainer;
-            trainer = new Trainer<GossipOption<S,G,T>>
-                (this.owner, ctrainer.trainerRow, ctrainer.creatureRow);
-        }
-
-        if(trainer===undefined) {
-            throw new Error(`GameObject trainers not supported`);
-        }
-
-        return trainer;
-    }
-
-    setMultitrainer(creatureId = -1) {
-        this.onCreature((x)=>{
-            x.NPCFlags.Trainer.mark();
-        });
-
-        let trainerRow : trainerRow;
-        let creatureRow : creature_default_trainerRow;
-
-        if(creatureId == -1){
-            creatureId = Ids.TrainerCreature.id();
-
-            // MultiTrainers don't work if there isn't a creature backing it
-            SQL.creature_template.add(creatureId)
-                .npcflag.set(16)
-
-            trainerRow = SQL.trainer.add(Ids.Trainer.id());
-            creatureRow = SQL.creature_default_trainer.add(creatureId);
-            creatureRow.TrainerId.set(trainerRow.Id.get());
-        } else {
-            creatureRow = SQL.creature_default_trainer.find({CreatureId: creatureId})
-            trainerRow = SQL.trainer.find({Id:creatureRow.TrainerId.get()});
-        }
-        this.set(5,16,creatureId);
-        return new Trainer(this.owner, trainerRow, creatureRow);
-    }
-
-    setSpiritHealer() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.SpiritHealer.mark();
-        });
-        return this.set(6,16384); 
-    }
-
-    setSpiritGuide() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.SpiritGuide.mark();
-        });
-        return this.set(7,32768); 
-    }
-    
-    //setQuestgiver() { return this.set(2,2); }
-    //setTaxiVendor() { return this.set(4,8192); }
-    setInnkeeper() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Innkeeper.mark();
-        });
-        return this.set(8,65536); 
-    }
-
-    setBanker() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Banker.mark();
-        });
-        return this.set(9,131072); 
-    }
-
-    setPetition() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Petitioner.mark();
-        });
-        return this.set(10,262144); 
-    }
-
-    setTabardDesigner() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.TabardDesigner.mark();
-        });
-        return this.set(11,524288); 
-    }
-    //setBattlefield() { return this.set(12,1048576); }
-
-    setAuctioneer() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Auctioneer.mark();
-        })
-        return this.set(13,2097152); 
-    }
-
-    setStableMaster() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.StableMaster.mark();
-        });
-        return this.set(14,4194304); 
-    }
-
-    //setArmorer() { return this.set(15,4096); }
-
-    setUnlearnTalents() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Trainer.mark();
-        });
-        return this.set(16,16); 
-    }
-
-    setUnlearnPetTalents() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Trainer.mark();
-        });
-        return this.set(17,16); 
-    }
-
-    setLearnDualSpec() { 
-        this.onCreature((x)=>{
-            x.NPCFlags.Trainer.mark();
-        });
-        return this.set(18,16); 
-    }
-
-    //setOutdoorPVP() { return this.set(19,0); }
 }

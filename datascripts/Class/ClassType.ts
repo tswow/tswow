@@ -14,33 +14,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export type ClassType = 
-    'WARRIOR' | 'PALADIN' | 'HUNTER' | 'ROGUE' | 
-    'PRIEST' | 'DEATH_KNIGHT' | 'SHAMAN' | 'MAGE' | 
-    'WARLOCK' | 'DRUID' | number
 
+export const CLASS_TYPES = {
+      WARRIOR      : 1
+    , PALADIN      : 2
+    , HUNTER       : 3
+    , ROGUE        : 4
+    , PRIEST       : 5
+    , DEATH_KNIGHT : 6
+    , SHAMAN       : 7
+    , MAGE         : 8
+    , WARLOCK      : 9
+    , DRUID        : 11
+} as const
+
+export type ClassType = keyof typeof CLASS_TYPES | number
 export function resolveClassType(type: ClassType) {
-    if(typeof(type)==='number') {
-        return type;
-    }
+    return typeof(type) === 'string' ? CLASS_TYPES[type] : type;
+}
 
+export function getClassType(type: ClassType): ClassType {
+    if(typeof(type) == 'string') return type;
     switch(type) {
-        case 'WARRIOR': return 1;
-        case 'PALADIN': return 2;
-        case 'HUNTER': return 3;
-        case 'ROGUE': return 4;
-        case 'PRIEST': return 5;
-        case 'DEATH_KNIGHT': return 6;
-        case 'SHAMAN': return 7;
-        case 'MAGE': return 8;
-        case 'WARLOCK': return 9;
-        case 'DRUID': return 11;
-        default: throw new Error(`Invalid class type: ${type}`)
+        case 1: return 'WARRIOR';
+        case 2: return 'PALADIN';
+        case 3: return 'HUNTER';
+        case 4: return 'ROGUE';
+        case 5: return 'PRIEST';
+        case 6: return 'DEATH_KNIGHT'
+        case 7: return 'SHAMAN';
+        case 8: return 'MAGE';
+        case 9: return 'WARLOCK';
+        case 11: return 'DRUID';
+        default: return type;
     }
 }
 
-export function makeClassmask(races: ClassType[]) {
-    return races
-        .map(x=>resolveClassType(x))
-        .reduce((p,c)=>p|(1<<(c-1)),0);
+export type ClassMaskCon = ClassType|ClassType[]|undefined
+export function makeClassmask(classes: ClassMaskCon) {
+    return classes === undefined
+        ? 0
+        : (!Array.isArray(classes) ? [classes]:classes)
+            .map(x=>resolveClassType(x))
+            .reduce((p,c)=>p|(1<<(c-1)),0);
 }

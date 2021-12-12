@@ -1,13 +1,12 @@
 import { Gossip } from "./Gossip";
-import { GossipOption } from "./GossipOption";
 
-const gossipLabels : {[key: string] : Gossip<any,any,any>} = {}
+const gossipLabels : {[key: string] : Gossip} = {}
 
 function makeLabel(mod: string, label: string) {
     return `${mod}:${label}`;
 }
 
-export function addGossipLabel(mod: string, label: string, gossip: Gossip<any,any,any>) {
+export function addGossipLabel(mod: string, label: string, gossip: Gossip) {
     gossipLabels[makeLabel(mod,label)] = gossip;
 }
 

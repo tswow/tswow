@@ -15,94 +15,230 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/primitives";
-import { broadcast_textRow } from "wotlkdata/sql/types/broadcast_text";
-import { Ids } from "../Misc/Ids";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { broadcast_textQuery, broadcast_textRow } from "wotlkdata/wotlkdata/sql/types/broadcast_text";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DurationCell, TimeUnit } from "../Misc/DurationCell";
+import { MainEntity } from "../Misc/Entity";
+import { GenderedText } from "../Misc/GenderedText";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
+import { RefStatic } from "../Refs/Ref";
+import { RegistryStatic } from "../Refs/Registry";
 
 function getLocRow(id: number, lang: Language) {
-    const row = SQL.broadcast_text_locale.find({ID: id});
+    const row = SQL.broadcast_text_locale.query({ID: id, locale: lang});
     if(row!==undefined) {
         return row;
     } else {
-        return SQL.broadcast_text_locale.add(id, lang);
+        return SQL.broadcast_text_locale.add(id, lang)
+            .Text.set('')
+            .Text1.set('')
     }
 }
 
-export class BroadcastTextContent<T> extends SQLLocSystem<T> {
+export class BroadcastTextContent extends SQLLocSystem<BroadcastText> {
     protected isFemale: boolean;
-    protected text: BroadcastText<T>;
 
-    constructor(owner: T, text: BroadcastText<T>, isFemale: boolean){
+    constructor(owner: BroadcastText, isFemale: boolean){
         super(owner);
         this.isFemale = isFemale;
-        this.text = text;
     }
 
     protected getMain(): Cell<string, any> {
-        return this.isFemale ? 
-            this.text.row.Text1 : this.text.row.Text
+        return this.isFemale ?
+            this.owner.row.Text1 : this.owner.row.Text
     }
 
     protected getLoc(loc: Language): Cell<string, any> {
-        return this.isFemale ? 
-            getLocRow(this.text.row.ID.get(),loc).Text1 :
-            getLocRow(this.text.row.ID.get(),loc).Text
+        return this.isFemale ?
+            getLocRow(this.owner.row.ID.get(),loc).Text1 :
+            getLocRow(this.owner.row.ID.get(),loc).Text
     }
-
 }
 
-export class BroadcastText<T> extends CellSystem<T> {
-    readonly row: broadcast_textRow;
+export function emote(row: broadcast_textRow, index: number) {
+    switch(index) {
+        case 0: return row.EmoteID1;
+        case 1: return row.EmoteID2;
+        case 2: return row.EmoteID3;
+        default: throw new Error(`Invalid emote index: ${index}`)
+    }
+}
 
-    constructor(owner: T, row: broadcast_textRow) {
-        super(owner);
-        this.row = row;
+export function emoteDelay(row: broadcast_textRow, index: number) {
+    switch(index) {
+        case 0: return row.EmoteDelay1;
+        case 1: return row.EmoteDelay2;
+        case 2: return row.EmoteDelay3;
+        default: throw new Error(`Invalid emote delay index: ${index}`)
+    }
+}
+
+export class BroadcastTextEmote extends ArrayEntry<BroadcastText> {
+    clear(): this {
+        this.Emote.set(0);
+        this.Delay.set(0)
+        return this;
+    }
+    isClear(): boolean {
+        return this.Emote.get() === 0;
     }
 
-    get MaleText() {
-        return new BroadcastTextContent<T>(this.owner, this, false);
+    get Emote() { return this.wrap(emote(this.container.row, this.index)); }
+    get Delay() {
+        return new DurationCell(
+              this
+            , 'MILLISECONDS'
+            , false
+            , emoteDelay(this.container.row, this.index)
+        );
     }
 
-    get FemaleText() {
-        return new BroadcastTextContent<T>(this.owner, this, true); 
+    set(emote: number, delay: number, fmt: TimeUnit = 'MILLISECONDS') {
+        this.Emote.set(emote)
+        this.Delay.set(delay,fmt);
+        return this;
+    }
+}
+
+export class BroadcastTextEmotes extends ArraySystem<BroadcastTextEmote,BroadcastText> {
+    get length(): number {
+        return 3;
+    }
+    get(index: number): BroadcastTextEmote {
+        return new BroadcastTextEmote(this.owner,index);
     }
 
-    get Emote1() { return this.wrap(this.row.EmoteID1); }
-    get Emote2() { return this.wrap(this.row.EmoteID2); }
-    get Emote3() { return this.wrap(this.row.EmoteID3); }
+    add(emote: number, delay: number, fmt: TimeUnit = 'MILLISECONDS') {
+        this.addGet()
+            .Emote.set(emote)
+            .Delay.set(delay,fmt);
+    }
+}
 
-    get EmoteDelay1() { return this.wrap(this.row.EmoteDelay1); }
-    get EmoteDelay2() { return this.wrap(this.row.EmoteDelay2); }
-    get EmoteDelay3() { return this.wrap(this.row.EmoteDelay3); }
+export class BroadcastText extends MainEntity<broadcast_textRow> {
+    constructor(row: broadcast_textRow) {
+        super(row);
+    }
+
+    get ID() { return this.row.ID.get(); }
+
+    get Text() {
+        return new GenderedText(
+              this
+            , 'WRITE_MALE'
+            , new BroadcastTextContent(this, false)
+            , new BroadcastTextContent(this, true)
+        )
+    }
 
     get SoundEntry() { return this.wrap(this.row.SoundEntriesID); }
     get Flags() { return this.wrap(this.row.Flags); }
 
-    setGendered(maleText: loc_constructor, femaleText: loc_constructor, emote: number, emoteDelay: number) {
-        this.MaleText.set(maleText);
-        this.FemaleText.set(femaleText);
-        this.Emote1.set(emote);
-        this.EmoteDelay1.set(emoteDelay);
+    get Emotes() { return new BroadcastTextEmotes(this); }
+
+    setGendered(
+          maleText: loc_constructor
+        , femaleText: loc_constructor
+        , emote: number = 0
+        , emoteDelay: number = 0
+        , emoteFmt: TimeUnit = 'MILLISECONDS'
+    ) {
+        this.Text.Male.set(maleText)
+        this.Text.Female.set(maleText)
+        this.Emotes.add(emote,emoteDelay,emoteFmt)
         return this.owner;
     }
 
-    set(text: loc_constructor, emote = 0, emoteDelay = 0) {
-        return this.setGendered(text,text,emote,emoteDelay);
+    set(
+          text: loc_constructor
+        , emote = 0
+        , emoteDelay = 0
+        , emoteFmt: TimeUnit = 'MILLISECONDS'
+    ) {
+        return this.setGendered(text,text,emote,emoteDelay,emoteFmt);
     }
 }
 
-export function getBroadcast<T>(owner: T, cell: Cell<number,any>) {
-    let row: broadcast_textRow;
-    if(cell.get()<=0) {
-        cell.set(Ids.BroadcastText.id());
-        row = SQL.broadcast_text.add(cell.get());
-    } else {
-        row = SQL.broadcast_text.find({ID: cell.get()});
+export class BroadcastTextRef<T> extends RefStatic<T,BroadcastText> {
+    setSimple(langMale: loc_constructor, langFemale?: loc_constructor) {
+        let v = new BroadcastText(
+                    SQL.broadcast_text.add(Ids.BroadcastText.dynamicId())
+                )
+        v.Text.Male.set(langMale)
+        if(langFemale) {
+            v.Text.Female.set(langFemale)
+        }
+        this.cell.set(v.ID)
+        return this.owner;
+    }
+}
+
+export class BroadcastTextRegistryClass
+    extends RegistryStatic<BroadcastText,broadcast_textRow,broadcast_textQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new BroadcastTextRef(owner, cell, this);
+    }
+    protected Table(): Table<any, broadcast_textQuery, broadcast_textRow> & { add: (id: number) => broadcast_textRow; } {
+        return SQL.broadcast_text
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.BroadcastText
     }
 
-    return new BroadcastText(owner, row);
+    Clear(r: BroadcastText): void {
+        r.Emotes.clearAll()
+         .Text.clear()
+         .Flags.set(0)
+         .SoundEntry.set(0)
+    }
+
+    createSimple(
+          maleText: loc_constructor
+        , femaleText?: loc_constructor
+    ) {
+        let v = this.createDynamic()
+            .Text.Male.set(maleText)
+        if(femaleText) v.Text.Female.set(femaleText)
+        return v;
+    }
+
+    createDynamic(parent: number = this.nullID()) {
+        let nid = this.IDs().dynamicId()
+        if(parent !== this.nullID()) {
+            let parentEntity = this.Entity(this.FindByID(parent));
+            let entity = this.Entity(parentEntity.row.clone(nid));
+            entity.Text.Male.set(parentEntity.Text.Male.objectify());
+            entity.Text.Female.set(parentEntity.Text.Female.objectify());
+            return entity;
+        } else {
+            let entity = this.Entity(this.Table().add(nid));
+            this.Clear(entity);
+            return entity;
+        }
+    }
+
+    protected Clone(mod: string, id: string, r: BroadcastText, parent: BroadcastText): void {
+        // copy over all localization
+        r.Text.Male.set(parent.Text.Male.objectify())
+        r.Text.Female.set(parent.Text.Female.objectify())
+    }
+    protected FindByID(id: number): broadcast_textRow {
+        return SQL.broadcast_text.query({ID:id})
+    }
+    protected EmptyQuery(): broadcast_textQuery {
+        return {}
+    }
+    ID(e: BroadcastText): number {
+        return e.ID
+    }
+    protected Entity(r: broadcast_textRow): BroadcastText {
+        return new BroadcastText(r);
+    }
 }
+export const BroadcastTextRegistry = new BroadcastTextRegistryClass();

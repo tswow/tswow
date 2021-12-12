@@ -1,55 +1,54 @@
 import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { SkillRaceClassInfoRow } from "wotlkdata/dbc/types/SkillRaceClassInfo";
+import { makeMaskCell32, MaskCellWrite, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { SkillRaceClassInfoRow } from "wotlkdata/wotlkdata/dbc/types/SkillRaceClassInfo";
+import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
+import { ClassMask } from "../Class/ClassRegistry";
 import { Ids } from "../Misc/Ids";
+import { RaceMask } from "../Race/RaceType";
 import { SkillLine } from "./SkillLine";
+import { SkillLineRegistry } from "./SkillLines";
 
-export class SkillRaceClassFlags extends MaskCell32<SkillRaceClassInfo> {
-    get IsProfession() { return this.bit(5); }
-    get IsClassLine() { return this.bit(7); }
+export enum SkillRaceClassFlags {
+    IS_PROFESSION = 0x20,
+    IS_CLASS_LINE = 0x80,
 }
 
-export class SkillRaceClassInfo extends CellSystem<SkillLine> {
-    readonly row: SkillRaceClassInfoRow;
-
-    constructor(owner: SkillLine, row: SkillRaceClassInfoRow) {
-        super(owner);
-        this.row = row;
+export class SkillRaceClassInfo extends ClassRaceMaskEntry<SkillRaceClassInfoRow> {
+    get ClassMask(): MaskCellWrite<this,typeof ClassMask> {
+        return makeMaskCell32(ClassMask, this,this.wrapUnlock(this.row.ClassMask));
     }
-
-    get ClassMask() { return new MaskCell32(this, this.row.ClassMask); }
-    get Flags() { return new SkillRaceClassFlags(this, this.row.Flags); }
-    get RaceMask() { return new MaskCell32(this, this.row.RaceMask); }
-
+    get RaceMask(): MaskCellWrite<this,typeof RaceMask> {
+        // hack
+        return makeMaskCell32(RaceMask, this,this.wrapUnlock(this.row.RaceMask));
+    }
+    get Flags() {
+        return makeMaskCell32(SkillRaceClassFlags,this, this.row.Flags);
+    }
     get SkillCostIndex() { return this.wrap(this.row.SkillCostIndex); }
-    get SkillID() { return this.wrap(this.row.SkillID); }
-    get SkillTierID() { return this.wrap(this.row.SkillTierID); }
+    get Skill() { return SkillLineRegistry.ref(this, this.row.SkillID); }
+    get SkillTier() { return this.wrap(this.row.SkillTierID); }
     get ID() { return this.row.ID.get() }
 }
 
-export class SkillRaceClassInfos extends CellSystem<SkillLine> {
-    protected rows() { 
-        return DBC.SkillRaceClassInfo.filter({SkillID: this.owner.ID})
-    }
-
-    get length() { return this.rows().length; }
-
-    forEach(callback: (srci: SkillRaceClassInfo, index: number) => any) {
-        const rows = this.rows();
-        for(let i=0;i<rows.length; ++i) {
-            callback(new SkillRaceClassInfo(this.owner, rows[i]),i);
-        }
-    }
-
-    add() {
+export class SkillRaceClassInfos extends ClassRaceMaskSystem<SkillRaceClassInfo,SkillRaceClassInfoRow,SkillLine> {
+    protected _addGet(classmask: number, racemask: number): SkillRaceClassInfo {
         const id = Ids.SkillRaceClassInfo.id();
         const row = DBC.SkillRaceClassInfo.add(id);
         row.SkillID.set(this.owner.ID);
-        return new SkillRaceClassInfo(this.owner, row);
+        row.ClassMask.set(classmask);
+        row.RaceMask.set(racemask);
+        row.Flags.set(0);
+        return new SkillRaceClassInfo(row);
+    }
+    protected getAllRows(): SkillRaceClassInfo[] {
+        return DBC.SkillRaceClassInfo.queryAll({SkillID: this.owner.ID}).map(x=>new SkillRaceClassInfo(x))
+    }
+    protected isDeleted(a: SkillRaceClassInfo): boolean {
+        return a.row.isDeleted();
     }
 
-    getIndex(index: number) {
-        return this.rows()[index];
+    add(classes?: MaskCon<keyof typeof ClassMask>, races?: MaskCon<keyof typeof RaceMask>) {
+        this.addGet(classes,races);
+        return this.owner;
     }
 }

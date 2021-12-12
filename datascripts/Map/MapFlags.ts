@@ -14,19 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Map } from "./Map";
 
 /**
  * TODO: Don't think these are at all applicable to WotLK
  */
-export class MapFlags extends MaskCell32<Map> {
-    get CanToggleDifficulty() { return this.bit(8); }
-
-    /**
-     * TODO: Probably not valid for wotlk...
-     */
-    get FlexLocking() { return this.bit(15); }
-
-
+export enum MapFlags {
+    CAN_TOGGLE_DIFFICULTY = 0x100,
+    FLEX_LOCKING          = 0x8000,
 }

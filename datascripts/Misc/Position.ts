@@ -21,9 +21,35 @@ export interface Position {
     y: number;
     z: number;
     o: number;
-    delay?: number;
 }
 
 export function Pos(map: number, x: number, y: number, z: number, o: number) {
     return {map,x,y,z,o,delay:0}
+}
+
+export function distance2d(pos1: Position, pos2: Position) {
+    if(pos1.map !== pos1.map) {
+        throw new Error(
+              `Trying to take distance of positions on different maps:`
+            + `${pos1.map},${pos2.map}`
+        )
+    }
+    return Math.sqrt(
+          Math.pow(pos1.x-pos2.x,2)
+        + Math.pow(pos1.y-pos2.y,2)
+    )
+}
+
+export function distance3d(pos1: Position, pos2: Position) {
+    if(pos1.map !== pos1.map) {
+        throw new Error(
+              `Trying to take distance of positions on different maps:`
+            + `${pos1.map},${pos2.map}`
+        )
+    }
+    return Math.sqrt(
+          Math.pow(pos1.x-pos2.x,2)
+        + Math.pow(pos1.y-pos2.y,2)
+        + Math.pow(pos1.z-pos2.z,2)
+    )
 }

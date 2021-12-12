@@ -14,90 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Area } from "./Area";
 
-export class AreaFlags extends MaskCell32<Area> {
-    
-    /**
-     * Whether there are breath particles in this area
-     */
-    get HasBreathParticles() { return this.bit(0); }
-
-    /**
-     * Whether breath particles overrides the parent
-     */
-    get ParticlesOverride() { return this.bit(1); }
-
-    get UNK2() { return this.bit(2); }
-
-    get IsCapital() { return this.bit(3); }
-
-    get UNK3() { return this.bit(4); }
-
-    get IsCapital2() { return this.bit(4); }
-
-    get AllowDuels() { return this.bit(5); }
-
-    get Arena() { return this.bit(6); }
-
-    get IsCapital3() { return this.bit(7); }
-
-    get LinkedChatArea() { return this.bit(8); }
-
-    get IsOutlandBattleground() { return this.bit(9); }
-
-    get IsSanctuary() { return this.bit(10); }
-
-    get NeedsFlying() { return this.bit(11); }
-
-    /**
-     * Whether ambient multiplier should be applied to the player
-     * (Unused in 3.0.3)
-     */
-    get AmbientOnPlayer() { return this.bit(12); }
-
-    get IsOutland() { return this.bit(13); }
-
-    get IsPvPObjective() { return this.bit(14); }
-
-    get IsArena() { return this.bit(15); }
-
-    get Unused2() { return this.bit(16); }
-
-    get IsContested() { return this.bit(17); }
-
-    get Unk6() { return this.bit(18); }
-
-    get IsStartingArea() { return this.bit(19); }
-
-    get IsTown() { return this.bit(20); }
-
-    get Unk7() { return this.bit(21); }
-
-    get Unk8() { return this.bit(22); }
-
-    /**
-     * Used by wintergrasp
-     */
-    get UseCombatState() { return this.bit(23); }
-
-    get IsInside() { return this.bit(24); }
-    get IsOutside() { return this.bit(25); }
-
-    /**
-     * Used by wintergrasp
-     */
-    get CanHearthAndResurrect() { return this.bit(26); }
-
-    /**
-     * Used by Dalaran
-     */
-    get NoFlying() { return this.bit(27); }
-
-
-    /**
-     * "Use parent for world defense visibility check"
-     */
-    get UseParentForVisibility() { return this.bit(28); }
+export enum AreaFlags {
+    HAS_BREATH_PARTICLES      = 0x1,
+    PARTICLES_OVERRIDE        = 0x2,
+    UNK2                      = 0x4,
+    IS_CAPITAL                = 0x8,
+    UNK3                      = 0x10,
+    IS_CAPITAL2               = 0x10,
+    ALLOW_DUELS               = 0x20,
+    ARENA                     = 0x40,
+    IS_CAPITAL3               = 0x80,
+    LINKED_CHAT_AREA          = 0x100,
+    IS_OUTLAND_BATTLEGROUND   = 0x200,
+    IS_SANCTUARY              = 0x400,
+    NEEDS_FLYING              = 0x800,
+    AMBIENT_ON_PLAYER         = 0x1000,
+    IS_OUTLAND                = 0x2000,
+    IS_PVP_OBJECTIVE         = 0x4000,
+    IS_ARENA                  = 0x8000,
+    UNUSED2                   = 0x10000,
+    IS_CONTESTED              = 0x20000,
+    UNK6                      = 0x40000,
+    IS_STARTING_AREA          = 0x80000,
+    IS_TOWN                   = 0x100000,
+    UNK7                      = 0x200000,
+    UNK8                      = 0x400000,
+    /** Used by wintergrasp */
+    USE_COMBAT_STATE          = 0x800000,
+    IS_INSIDE                 = 0x1000000,
+    IS_OUTSIDE                = 0x2000000,
+    CAN_HEARTH_AND_RESURRECT  = 0x4000000,
+    NO_FLYING                 = 0x8000000,
+    USE_PARENT_FOR_VISIBILITY = 0x10000000,
 }

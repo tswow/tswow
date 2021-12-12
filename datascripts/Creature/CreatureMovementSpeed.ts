@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureMovementSpeed extends CellSystem<CreatureTemplate> {
@@ -28,7 +28,7 @@ export class CreatureMovementSpeed extends CellSystem<CreatureTemplate> {
         return this.owner.row.speed_walk.get();
     }
 
-    getRun() { 
+    getRun() {
         return this.owner.row.speed_run.get();
     }
 

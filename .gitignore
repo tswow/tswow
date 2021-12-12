@@ -2,3 +2,5 @@ build/
 tsconfig.json
 schemas
 assets
+global.d.ts
+.swcrc

@@ -14,48 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CPrim } from "wotlkdata/cell/cells/Cell";
+import { DBC } from "wotlkdata";
+import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellArray } from "wotlkdata/wotlkdata/cell/cells/CellArray";
+import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Objectified, Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { Ids } from "../Misc/Ids";
+import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { AuraType } from "./AuraType";
 import { Spell } from "./Spell";
 import { EffectClassSet } from "./SpellClassSet";
-import { SpellEffectMechanicEnum } from "./SpellEffectMechanics";
+import { SpellEffectMechanic } from "./SpellEffectMechanics";
 import { SpellEffectType } from "./SpellEffectType";
 import { SpellImplicitTarget } from "./SpellImplicitTarget";
-import { std } from "../tswow-stdlib-data";
-import { Spells } from "./Spells";
-import { all_auras } from "./EffectTemplates/AuraTemplates";
-import { all_effects } from "./EffectTemplates/EffectTemplate";
-import { SpellRadius } from "./SpellRadius";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellArray } from "wotlkdata/cell/cells/CellArray";
+import { SpellRadiusRegistry } from "./SpellRadius";
+import { SpellRegistry } from "./Spells";
+import { SpellTargetPosition } from "./SpellTargetPosition";
 
-export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {
-    @Transient
-    protected spell: Spell;
-
-    constructor(owner: T, spell: Spell) {
-        super(owner);
-        this.spell = spell;
-    }
-
+export class SpellEffects extends ArraySystem<SpellEffect,Spell> {
     get length() {
         return 3;
+    }
+
+    objectifyPlain() {
+        return [this.get(0),this.get(1),this.get(2)]
+            .filter(x=>!x.isClear())
+            .map(x=>x.objectifyPlain())
     }
 
     swap(index1: number, index2: number) {
         let e1 = this.get(index1);
         let e2 = this.get(index2);
-    
-        let r1 = e1.Radius.Radius.get();
-        let rmax1 = e1.Radius.RadiusMax.get();
-        let rlev = e1.Radius.RadiusPerLevel.get();
+        let r1 = e1.Radius.get()
         let i1 = e1.ItemType.get();
-        let a1 = e1.AuraType.get();
-        let t1 = e1.EffectType.get();
+        let a1 = e1.Aura.get();
+        let t1 = e1.Type.get();
         let m1 = e1.Mechanic.get();
-        let bp1 = e1.BasePoints.get();
-        let ds1 = e1.DieSides.get();
+        let bp1 = e1.PointsBase.get();
+        let ds1 = e1.PointsDieSides.get();
         let ppl1 = e1.PointsPerLevel.get();
         let ppc1 = e1.PointsPerCombo.get();
         let ita1 = e1.ImplicitTargetA.get();
@@ -69,13 +67,13 @@ export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {
         let cmb1 = e1.ClassMask.B.get();
         let cmc1 = e1.ClassMask.C.get();
         e1.copyFrom(e2);
-        e2.Radius.set(r1,rmax1,rlev);
+        e2.Radius.set(r1);
         e2.ItemType.set(i1);
-        e2.AuraType.set(a1);
-        e2.EffectType.set(t1);
+        e2.Aura.set(a1);
+        e2.Type.set(t1);
         e2.Mechanic.set(m1);
-        e2.BasePoints.set(bp1);
-        e2.DieSides.set(ds1);
+        e2.PointsBase.set(bp1);
+        e2.PointsDieSides.set(ds1);
         e2.PointsPerLevel.set(ppl1);
         e2.PointsPerCombo.set(ppc1);
         e2.ImplicitTargetA.set(ita1);
@@ -88,50 +86,94 @@ export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {
         e2.ClassMask.A.set(cma1);
         e2.ClassMask.B.set(cmb1);
         e2.ClassMask.C.set(cmc1);
-    }
-
-    filterAura(type: number) {
-        return [this.get(0),this.get(1),this.get(2)].filter(x=>x.AuraType.get()===type);
-    }
-
-    filterType(type: number) {
-        return [this.get(0),this.get(1),this.get(2)].filter(x=>x.EffectType.get()===type);
+        return this.owner;
     }
 
     get(index: number) {
-        return new SpellEffect(this.owner, index, this.spell);
+        return new SpellEffect(this.owner, index);
     }
 
-    getTemplate(index: number) {
-        return this.get(index).EffectType;
+    mod(index: number, callback: (eff: SpellEffect)=>void) {
+        callback(this.get(index));
+        return this.owner;
     }
 
-    addTemplate() {
-        return this.getFree().EffectType;
+    addMod(callback: (eff: SpellEffect)=>void) {
+        callback(this.addGet());
+        return this.owner;
     }
 
-    add() {
-        return this.getFree();
-    }
-
-    addLearnSpells(...spells: number[]) {
+    addLearnSpells(spells: number[]) {
         for(const spell of spells) {
-            this.addFreeEffect()
-                .EffectType.setLearnSpell()
-                .LearntSpell.set(spell)
+            this.addFreeEffect((eff)=>{
+                eff.Type.LEARN_SPELL.set()
+                   .LearntSpell.set(spell)
+            })
         }
         return this.owner;
     }
 
-    addFreeEffect() {
+    addGetTriggerSpell(mod: string, id: string, parent = 0) {
+        let spell = SpellRegistry.create(mod,id,parent);
+        this.addGet().Type
+            .TRIGGER_SPELL.set()
+            .TriggerSpell.set(spell.ID)
+        return spell;
+    }
+
+    findType<T extends Objectified>(
+        callback:
+            (eff: SpellEffectType)=>EnumValueTransform<SpellEffect,T>)
+            : T
+    {
+        for(let i=0;i<this.length;++i) {
+            let eff = this.get(i);
+            let v = callback(eff.Type);
+            if(v.is()) return v.as();
+        }
+        return undefined as any as T;
+    }
+
+    findAura<T extends Objectified>(
+        callback:
+            (eff: AuraType)=>EnumValueTransform<SpellEffect,T>)
+            : T
+    {
+        for(let i=0;i<this.length;++i) {
+            let eff = this.get(i);
+            let v = callback(eff.Aura);
+            if(v.is()) return v.as();
+        }
+        return undefined as any as T;
+    }
+
+    /**
+     * @param parent set to 0 for no parent
+     */
+    addModTriggerSpell(mod: string, id: string, parent: number, callback: (spell: Spell)=>void) {
+        callback(this.addGetTriggerSpell(mod,id,parent));
+        return this.owner;
+    }
+
+    /**
+     * Adds an effect via this spell that may override
+     * and become a secondary triggered spell
+     * @note if this is a combat spell, the dynamic id will break
+     *       combat logs over time because the id can vary.
+     *
+     *       To set up static spell triggers that
+     *       work with combat logs, use "add*TriggerSpell"
+     *       instead.
+     */
+    addFreeEffect(callback: (effect: SpellEffect)=>void) {
         const SPELL_CHAIN_TOKEN = '__tswow_spell_chain';
         function getNextSpell(spell: Spell) {
             for(let i=0;i<3;++i) {
-                if(spell.Effects.get(i).EffectType.get()!==64) {
+                if(!spell.Effects.get(i).Type.TRIGGER_SPELL.is()) {
                     continue;
                 }
-                let nex = Spells.load(spell.Effects.get(i).TriggerSpell.get());
-                if(nex.Icon.get()===SPELL_CHAIN_TOKEN) {
+                let nex = SpellRegistry.load(spell.Effects.get(i).TriggerSpell.get());
+                if(nex.Icon.getPath() === SPELL_CHAIN_TOKEN) {
                     return nex;
                 }
             }
@@ -143,23 +185,26 @@ export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {
             if(nex!==undefined) {
                 return nex;
             }
-            nex = std.Spells.createAuto()
-                .Icon.setFullPath(SPELL_CHAIN_TOKEN)
-            spell.Effects.add()
-                .EffectType.setTriggerSpell()
-                .TriggerSpell.set(nex.ID);
+            nex = new Spell(DBC.Spell.add(Ids.Spell.dynamicId()));
+            SpellRegistry.Clear(nex);
+            nex.Icon.setFullPath(SPELL_CHAIN_TOKEN);
+            spell.Effects.addMod((eff)=>{
+                eff.Type.TRIGGER_SPELL.set()
+                   .TriggerSpell.set((nex as Spell).ID);
+            })
             return nex;
         }
 
-        let curSpell = getOrCreateNextSpell(this.spell);
+        let curSpell = getOrCreateNextSpell(this.owner);
         while(true) {
             let free = getNextSpell(curSpell)!==undefined;
             for(let i=0;i<3;++i ){
-                if(curSpell.Effects.get(i).EffectType.get()===0) {
+                if(curSpell.Effects.get(i).Type.get()===0) {
                     if(!free) {
                         free = true;
                     } else {
-                        return curSpell.Effects.get(i);
+                        callback(curSpell.Effects.get(i));
+                        return this.owner;
                     }
                 }
             }
@@ -168,23 +213,16 @@ export class SpellEffects<T> extends ArraySystem<SpellEffect<T>,T> {
     }
 }
 
-export class SpellEffect<T> extends ArrayEntry<T> {
-    protected spell: Spell;
-
-    constructor(owner: T, index: number, spell: Spell) {
-        super(owner, index);
-        this.spell = spell;
-    }
-
+export class SpellEffect extends ArrayEntry<Spell> {
     isClear(): boolean {
-        return this.EffectType.get() === 0;
+        return this.Type.get() === 0;
     }
 
-    clear(): T {
-        this.BasePoints.set(0);
-        this.ChainAmplitude.set(0);
+    clear(): this {
+        this.PointsBase.set(0);
+        this.ChainAmplitude.set(1);
         this.ChainTarget.set(0);
-        this.DieSides.set(0);
+        this.PointsDieSides.set(1);
         this.ImplicitTargetA.set(0);
         this.ImplicitTargetB.set(0);
         this.Mechanic.set(0);
@@ -195,29 +233,45 @@ export class SpellEffect<T> extends ArrayEntry<T> {
         this.PointsPerLevel.set(0);
         this.TriggerSpell.set(0);
         this.AuraPeriod.set(0);
-        this.AuraType.set(0);
-        this.EffectType.set(0);
+        this.Aura.set(0);
+        this.Type.set(0);
         this.Mechanic.set(0);
-        return this.owner;
+        return this;
     }
 
     private w<T extends CPrim>(arr: CellArray<T,any>) {
         return this.wrapIndex(arr, this.index);
     }
 
-    get row() { return this.spell.row; }
+    @Transient
+    get row() { return this.container.row; }
 
-    get Radius() { return new SpellRadius(this, [this.w(this.row.EffectRadiusIndex)]); }
+    get Radius() { return SpellRadiusRegistry.ref(this, this.w(this.row.EffectRadiusIndex)); }
     get ItemType() { return this.w(this.row.EffectItemType); }
-    get AuraType(): AuraType<T> { return new AuraType(this, this.index); }
-    get EffectType(): SpellEffectType<T> { return new SpellEffectType(this, this.index); }
-    get Mechanic() { return new SpellEffectMechanicEnum(this, this.w(this.row.EffectMechanic)); }
-    get BasePoints() { return this.w(this.row.EffectBasePoints)};
-    get DieSides() { return this.w(this.row.EffectDieSides); }
+    get Aura(): AuraType { return new AuraType(this, this.index); }
+    get Type(): SpellEffectType { return new SpellEffectType(this, this.index); }
+    get Mechanic() {
+        return makeEnumCell(SpellEffectMechanic, this, this.w(this.row.EffectMechanic));
+    }
+
+    get PointsBase() {
+        return new ShiftedNumberCell(
+            this
+          , ()=>this.PointsDieSides.get() > 0
+                ? 'STORED_AS_MINUS_ONE'
+                : 'NO_CHANGE'
+          , this.w(this.row.EffectBasePoints)
+        )
+    };
+    get PointsDieSides() { return this.w(this.row.EffectDieSides); }
     get PointsPerLevel() { return this.w(this.row.EffectRealPointsPerLevel); }
     get PointsPerCombo() { return this.w(this.row.EffectPointsPerCombo); }
-    get ImplicitTargetA() { return new SpellImplicitTarget(this, this.row.ImplicitTargetA, this.index); }
-    get ImplicitTargetB() { return new SpellImplicitTarget(this, this.row.ImplicitTargetB, this.index); }
+    get ImplicitTargetA() {
+        return makeEnumCell(SpellImplicitTarget, this, this.wrapIndex(this.row.ImplicitTargetA,this.index));
+    }
+    get ImplicitTargetB() {
+        return makeEnumCell(SpellImplicitTarget, this, this.wrapIndex(this.row.ImplicitTargetB,this.index));
+    }
     get AuraPeriod() { return this.w(this.row.EffectAuraPeriod); }
     get MultipleValue() { return this.w(this.row.EffectMultipleValue); }
     get ChainTarget() { return this.w(this.row.EffectChainTargets); }
@@ -227,36 +281,51 @@ export class SpellEffect<T> extends ArrayEntry<T> {
     get ChainAmplitude() { return this.w(this.row.EffectChainAmplitude); }
     get BonusMultiplier() { return this.w(this.row.EffectBonusMultiplier); }
     get ClassMask(): EffectClassSet<this> { return new EffectClassSet(this, this); }
+    get TargetPosition() {
+        return new SpellTargetPosition(this, this.row.ID.get(), this.index);
+    }
+
+    objectifyPlain(){
+        return Objects.objectifyObj(this);
+    }
 
     objectify() {
-        if(all_auras[this.AuraType.get()]) {
-            return Object.assign({
-                AuraType:this.AuraType.objectify(),
-                EffectType:this.EffectType.objectify()
-            },new all_auras[this.AuraType.get()](this,this).objectify())
-        } else if(all_effects[this.EffectType.get()]){
-            return Object.assign({
-                EffectType:this.EffectType.objectify()
-            },new all_effects[this.EffectType.get()](this,this).objectify())
+        if(this.Aura.get() > 0) {
+            return {
+                Type: this.Type.objectify()
+              , Aura: this.Aura.objectify()
+              , ...Objects.objectifyObj(
+                  EnumCellTransform.getSelection(this.Aura).cell.as())
+          }
+        }
+        if(this.Type.get() > 0) {
+            return {
+                  Type: this.Type.objectify()
+                , Aura: this.Aura.objectify()
+                , ...Objects.objectifyObj(
+                    EnumCellTransform.getSelection(this.Type).cell.as())
+            }
+        } else {
+            return this.objectifyPlain();
         }
     }
 
     setPoints(base: number, dieSides: number, pointsPerLevel: number, pointsPerCombo: number) {
-        this.BasePoints.set(base);
-        this.DieSides.set(dieSides);
+        this.PointsBase.set(base);
+        this.PointsDieSides.set(dieSides);
         this.PointsPerLevel.set(pointsPerLevel);
         this.PointsPerCombo.set(pointsPerCombo);
         return this.owner;
     }
 
-    copyFrom(source: SpellEffect<any>) {
-        this.Radius.copyFrom(source.Radius);
+    copyFrom(source: SpellEffect) {
+        this.Radius.set(source.Radius.get());
         this.ItemType.set(source.ItemType.get());
-        this.AuraType.set(source.AuraType.get());
-        this.EffectType.set(source.EffectType.get());
+        this.Aura.set(source.Aura.get());
+        this.Type.set(source.Type.get());
         this.Mechanic.set(source.Mechanic.get());
-        this.BasePoints.set(source.BasePoints.get());
-        this.DieSides.set(source.DieSides.get());
+        this.PointsBase.set(source.PointsBase.get());
+        this.PointsDieSides.set(source.PointsDieSides.get());
         this.PointsPerLevel.set(source.PointsPerLevel.get());
         this.PointsPerCombo.set(source.PointsPerCombo.get());
         this.ImplicitTargetA.set(source.ImplicitTargetA.get());

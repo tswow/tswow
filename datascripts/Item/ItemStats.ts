@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { EnumCon, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function a(owner: ItemTemplate) {
@@ -48,148 +48,64 @@ function b(owner: ItemTemplate) {
     ]
 }
 
-export class Stat extends EnumCellWrapper<ItemTemplate> {
-    @EnumField(0)
-    setMana() { return this.set(0)}
-    
-    @EnumField(1)
-    setHealth() { return this.set(1)}
-    
-    @EnumField(2)
-    setAgility() { return this.set(2)}
-    
-    @EnumField(3)
-    setStrength() { return this.set(3)}
-    
-    @EnumField(4)
-    setIntellect() { return this.set(4)}
-    
-    @EnumField(5)
-    setSpirit() { return this.set(5)}
-    
-    @EnumField(6)
-    setStamina() { return this.set(6)}
-    
-    @EnumField(7)  
-    setDefenseSkillRating() { return this.set(7)}
-    
-    @EnumField(8)
-    setDodgeRating() { return this.set(8)}
-    
-    @EnumField(9)
-    setParryRating() { return this.set(9)}
-    
-    @EnumField(10)
-    setBlockRating() { return this.set(10)}
-    
-    @EnumField(11)     
-    setHitMeleeRating() { return this.set(11)}
-    
-    @EnumField(12)    
-    setHitRangedRating() { return this.set(12)}
-    
-    @EnumField(13)     
-    setHitSpellRating() { return this.set(13)}
-    
-    @EnumField(14)    
-    setCritMeleeRating() { return this.set(14)}
-    
-    @EnumField(15)   
-    setCritRangedRating() { return this.set(15)}
-    
-    @EnumField(16)    
-    setCritSpellRating() { return this.set(16)}
-    
-    @EnumField(17)
-    setHitTakenMeleeRating() { return this.set(17)}
-    
-    @EnumField(18)
-    setHitTakenRangedRating() { return this.set(18)}
-    
-    @EnumField(19)
-    setHitTakenSpellRating() { return this.set(19)}
-    
-    @EnumField(20)
-    setCritTakenMeleeRating() { return this.set(20)}
-    
-    @EnumField(21)
-    setCritTakenRangedRating() { return this.set(21)}        
-    
-    @EnumField(22)
-    setCritTakenSpellRating() { return this.set(22)}
-    
-    @EnumField(23)   
-    setHasteMeleeRating() { return this.set(23)}
-    
-    @EnumField(24)  
-    setHasteRangedRating() { return this.set(24)}
-    
-    @EnumField(25)   
-    setHasteSpellRating() { return this.set(25)}
-    
-    @EnumField(26)
-    setHitRating() { return this.set(26)}
-    
-    @EnumField(27)
-    setCritRating() { return this.set(27)}
-    
-    @EnumField(28)     
-    setHitTakenRating() { return this.set(28)}
-    
-    @EnumField(29)    
-    setCritTakenRating() { return this.set(29)}
-    
-    @EnumField(30)    
-    setResilienceRating() { return this.set(30)}
-    
-    @EnumField(31)
-    setHasteRating() { return this.set(31)}
-    
-    @EnumField(32)     
-    setExpertiseRating() { return this.set(32)}
-    
-    @EnumField(33)
-    setAttackPower() { return this.set(33)}
-    
-    @EnumField(34)  
-    setRangedAttackPower() { return this.set(34)}
-    
-    @EnumField(35)   
-    setFeralAttackPower() { return this.set(35)}
-    
-    @EnumField(36)   
-    setSpellHealingDone() { return this.set(36)}
-    
-    @EnumField(37)    
-    setSpellDamageDone() { return this.set(37)}
-    
-    @EnumField(38)    
-    setManaRegeneration() { return this.set(38)}
-    
-    @EnumField(39)
-    setArmorPenetrationRating() { return this.set(39)}       
-    
-    @EnumField(40)
-    setSpellPower() { return this.set(40)}
-    
-    @EnumField(41)
-    setHealthRegen() { return this.set(41)}
-    
-    @EnumField(42)    
-    setSpellPenetration() { return this.set(42)}
-    
-    @EnumField(43)
-    setBlockValue() { return this.set(43)}    
+export enum Stat {
+    MANA                     = 0,
+    HEALTH                   = 1,
+    AGILITY                  = 2,
+    STRENGTH                 = 3,
+    INTELLECT                = 4,
+    SPIRIT                   = 5,
+    STAMINA                  = 6,
+    DEFENSE_SKILL_RATING     = 7,
+    DODGE_RATING             = 8,
+    PARRY_RATING             = 9,
+    BLOCK_RATING             = 10,
+    HIT_MELEE_RATING         = 11,
+    HIT_RANGED_RATING        = 12,
+    HIT_SPELL_RATING         = 13,
+    CRIT_MELEE_RATING        = 14,
+    CRIT_RANGED_RATING       = 15,
+    CRIT_SPELL_RATING        = 16,
+    HIT_TAKEN_MELEE_RATING   = 17,
+    HIT_TAKEN_RANGED_RATING  = 18,
+    HIT_TAKEN_SPELL_RATING   = 19,
+    CRIT_TAKEN_MELEE_RATING  = 20,
+    CRIT_TAKEN_RANGED_RATING = 21,
+    CRIT_TAKEN_SPELL_RATING  = 22,
+    HASTE_MELEE_RATING       = 23,
+    HASTE_RANGED_RATING      = 24,
+    HASTE_SPELL_RATING       = 25,
+    HIT_RATING               = 26,
+    CRIT_RATING              = 27,
+    HIT_TAKEN_RATING         = 28,
+    CRIT_TAKEN_RATING        = 29,
+    RESILIENCE_RATING        = 30,
+    HASTE_RATING             = 31,
+    EXPERTISE_RATING         = 32,
+    ATTACK_POWER             = 33,
+    RANGED_ATTACK_POWER      = 34,
+    FERAL_ATTACK_POWER       = 35,
+    SPELL_HEALING_DONE       = 36,
+    SPELL_DAMAGE_DONE        = 37,
+    MANA_REGENERATION        = 38,
+    ARMOR_PENETRATION_RATING = 39,
+    SPELL_POWER              = 40,
+    HEALTH_REGEN             = 41,
+    SPELL_PENETRATION        = 42,
+    BLOCK_VALUE              = 43,
+
 }
 
 export class ItemStat extends ArrayEntry<ItemTemplate> {
-    get Type() { return new Stat(this.owner, a(this.owner)[this.index])}
-    get Value() { return b(this.owner)[this.index]; }
+    get Type() {
+        return makeEnumCell(Stat,this, a(this.container)[this.index]);
+    }
+    get Value() { return b(this.container)[this.index]; }
 
-    clear(): ItemTemplate {
+    clear() {
         this.Type.set(0);
         this.Value.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -207,8 +123,8 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
         return new ItemStat(this.owner, index);
     }
 
-    private add(stat: number, value: number) {
-        const free = this.getFree();
+    add(stat: EnumCon<keyof typeof Stat>, value: number) {
+        const free = this.addGet();
         free.Type.set(stat);
         free.Value.set(value);
         // Needs to be updated with the amount of used stats
@@ -264,7 +180,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
 
     addCritTakenMeleeRating(value: number) { return this.add(25, value)}
 
-    addCritTakenRangedRating(value: number) { return this.add(26, value)}        
+    addCritTakenRangedRating(value: number) { return this.add(26, value)}
 
     addCritTakenSpellRating(value: number) { return this.add(27, value)}
 
@@ -300,7 +216,7 @@ export class ItemStats extends ArraySystem<ItemStat,ItemTemplate> {
 
     addManaRegeneration(value: number) { return this.add(43, value)}
 
-    addArmorPenetrationRating(value: number) { return this.add(44, value)}       
+    addArmorPenetrationRating(value: number) { return this.add(44, value)}
 
     addSpellPower(value: number) { return this.add(45, value)}
 

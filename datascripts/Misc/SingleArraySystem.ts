@@ -1,6 +1,6 @@
-import { ArraySystem, ArrayEntry } from "wotlkdata/cell/systems/ArraySystem";
-import { DBCArrayCell } from "wotlkdata/dbc/DBCCell";
-import { CPrim } from "wotlkdata/cell/cells/Cell";
+import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { DBCArrayCell } from "wotlkdata/wotlkdata/dbc/DBCCell";
 
 export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
     protected array: DBCArrayCell<D,any>;
@@ -12,9 +12,9 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
         this.clearValue = clearValue;
     }
 
-    clear(): T {
+    clear() {
         this.array.setIndex(this.index, this.clearValue);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -29,19 +29,19 @@ export class SingleArrayEntry<D extends CPrim,T> extends ArrayEntry<T> {
         return this.array.getIndex(this.index);
     }
 
-    objectify() { 
+    objectify() {
         return this.array.getIndex(this.index);
     }
 }
 
 export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArrayEntry<D,T>,T> {
     protected array: DBCArrayCell<D,any>;
-    protected clearValue: D;
+    protected _clearValue: D;
 
     constructor(owner: T, array: DBCArrayCell<D,any>, clearValue: D) {
         super(owner);
         this.array = array;
-        this.clearValue = clearValue;
+        this._clearValue = clearValue;
     }
 
     get length(): number {
@@ -58,12 +58,12 @@ export class SingleArraySystem<D extends CPrim, T> extends ArraySystem<SingleArr
     }
 
     get(index: number): SingleArrayEntry<D,T> {
-        return new SingleArrayEntry(this.owner,index,this.array, this.clearValue);
+        return new SingleArrayEntry(this.owner,index,this.array, this._clearValue);
     }
 
     add(value: D) {
         for(let i=0;i<this.length;++i) {
-            if(this.getIndex(i)===this.clearValue) {
+            if(this.getIndex(i)===this._clearValue) {
                 this.setIndex(i,value);
                 return this.owner;
             }

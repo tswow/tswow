@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { Spell } from "./Spell";
 export class SpellReagentEntry<T> extends ArrayEntry<T> {
     protected spell: Spell;
@@ -26,10 +26,10 @@ export class SpellReagentEntry<T> extends ArrayEntry<T> {
         this.spell = spell;
     }
 
-    clear(): T {
+    clear() {
         this.Reagent.set(0);
         this.ReagentCount.set(0);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
         return this.Reagent.get()===0;
@@ -38,7 +38,7 @@ export class SpellReagentEntry<T> extends ArrayEntry<T> {
     set(reagent: number, count: number) {
         this.Reagent.set(reagent);
         this.ReagentCount.set(count);
-        return this.owner;
+        return this;
     }
 }
 
@@ -59,6 +59,7 @@ export class SpellReagents<T> extends ArraySystem<SpellReagentEntry<T>, T> {
     }
 
     add(reagent: number, count: number) {
-        return this.getFree().set(reagent, count);
+        this.addGet().set(reagent, count);
+        return this.owner;
     }
 }

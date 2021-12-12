@@ -14,11 +14,12 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { SQLCell, SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
+import { Cell, CellWrapper } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { SQLCell, SQLCellReadOnly } from "wotlkdata/wotlkdata/sql/SQLCell";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { convertPercent, PercentUnit } from "../Misc/PercentCell";
 
 export interface LootRowBase {
     readonly Entry: SQLCellReadOnly<number,any>;
@@ -31,230 +32,223 @@ export interface LootRowBase {
     MinCount: SQLCell<number,any>;
     MaxCount: SQLCell<number,any>;
     clone(id: number, item: number): any;
-} 
+}
 
 export interface LootTable {
-    filter(search: {Entry: number}): LootRowBase[];
+    queryAll(search: {Entry: number}): LootRowBase[];
     add(id: number, item: number) : LootRowBase;
 }
 
-export abstract class LootSetBase<T> extends CellSystem<T> {
+function convChanceTuple(tuple: [number,PercentUnit]) {
+    return convertPercent(tuple[0],tuple[1],'[0-100]')
+}
+
+export class LootSet extends CellSystemTop {
     protected table: LootTable;
-    get rows() { return this.table.filter({Entry:this.ID})}
-    
-    abstract get ID() : number
-    
-    protected _addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this.table.add(this.ID,item)
-        .Chance.set(chance)
-        .MinCount.set(minCount)
-        .MaxCount.set(maxCount)
-        .QuestRequired.set(quest ? 1 : 0)
-        .GroupId.set(groupId)
-        .LootMode.set(lootMode)
+    protected id: number;
+
+    get ID() { return this.id; }
+    get rows() { return this.table.queryAll({Entry:this.id})}
+
+    addItem(item: number, chance: number|[number,PercentUnit], minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
+        this.table.add(this.id,item)
+            .Chance.set(Array.isArray(chance)
+                ? convChanceTuple(chance): chance)
+            .MinCount.set(minCount)
+            .MaxCount.set(maxCount)
+            .QuestRequired.set(quest ? 1 : 0)
+            .GroupId.set(groupId)
+            .Comment.set("tswow")
+            .Reference.set(0)
+            .LootMode.set(lootMode)
         return this;
     }
-    
-    protected _addReference(table: number, chance: number, lootMode: number = 1) {
-        this.table.add(this.ID,table)
-        .Chance.set(chance)
-        .MinCount.set(1)
-        .MaxCount.set(1)
-        .QuestRequired.set(0)
-        .GroupId.set(0)
-        .Comment.set('tswow')
-        .LootMode.set(lootMode)
+
+    addReference(table: number, chance: number|[number,PercentUnit], lootMode: number = 1) {
+        this.table.add(this.id,table)
+            .Chance.set(Array.isArray(chance)
+                ? convChanceTuple(chance): chance)
+            .Reference.set(table)
+            .MinCount.set(1)
+            .MaxCount.set(1)
+            .QuestRequired.set(0)
+            .GroupId.set(0)
+            .Comment.set('tswow')
+            .LootMode.set(lootMode)
         return this;
     }
-    
-    constructor(owner: T, table: LootTable) {
-        super(owner);
+
+    constructor(id: number, table: LootTable) {
+        super();
+        this.id = id;
         this.table = table;
     }
 }
 
-export class LootSet<T> extends LootSetBase<T> {
-    protected _id: number;
-    get ID(): number {
-        return this._id;
-    }
-    
-    constructor(owner: T, id: number, table: LootTable) {
-        super(owner, table);
-        this._id = id;
+export class LootSetPointer<T> extends CellWrapper<number,T>{
+    protected table: LootTable;
+    protected gen: DynamicIDGenerator;
+    constructor(owner: T, cell: Cell<number,any>, table: LootTable, gen: DynamicIDGenerator) {
+        super(owner, cell);
+        this.table = table;
+        this.gen = gen;
     }
 
-    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this._addItem(item,chance,minCount,maxCount,quest,groupId,lootMode);
-        return this;
+    exists(): boolean {
+        return this.cell.get() > 0;
     }
 
-    addReference(table: number, chance: number, lootMode: number = 1) {
-        this._addReference(table,chance,lootMode);
-        return this;
-    }
-}
-
-export class AttachedLootSet<T> extends LootSetBase<T> {
-    get ID(): number {
-        return this._cell.get();
-    }
-
-    static cell(set: AttachedLootSet<any>) {
-        return set._cell;
-    }
-
-    static idgen(set: AttachedLootSet<any>) {
-        return set._idgen;
-    }
-    
-    protected _cell: Cell<number,any>;
-    protected _idgen: AutoIdGenerator;
-    constructor(owner: T, cell: Cell<number,any>, idGen: AutoIdGenerator, table: LootTable) {
-        super(owner,table);
-        this._cell = cell;
-        this._idgen = idGen;
-    }
-    
-    makeUnique(keepRows: boolean = false) {
-        let oldid = this._cell.get();
-        let nuid = this._idgen.id();
-        this._cell.set(nuid);
-        if(keepRows) {
-            this.copyFrom(oldid);
+    getRef() {
+        if(!this.exists()) {
+            this.cell.set(this.gen.id());
         }
+        return new LootSet(this.cell.get(),this.table);
+    }
+
+    modRef(callback: (table: LootSet)=>void) {
+        callback(this.getRef());
         return this.owner;
     }
 
-    copyFrom(id: number) {
-        this.table.filter({Entry: id}).forEach(x=>x.clone(this._cell.get(), x.Item.get()));
+    getRefCopy() {
+        let old = this.cell.get();
+        let nu = this.gen.id();
+        this.cell.set(nu);
+        this.table.queryAll({Entry:old}).forEach(x=>{
+            x.clone(nu,x.Item.get())
+                .Comment.set('tswow')
+        })
+        return this.getRef();
     }
 
-    addItem(item: number, chance: number, minCount: number, maxCount: number, quest: boolean = false, groupId: number = 0, lootMode: number = 1) {
-        this._addItem(item,chance,minCount,maxCount,quest,groupId,lootMode);
-        return this.owner;
-    }
-
-    addReference(table: number, chance: number, lootMode: number = 1) {
-        this._addReference(table,chance,lootMode);
+    modRefCopy(callback: (table: LootSet)=>void) {
+        callback(this.getRefCopy());
         return this.owner;
     }
 }
 
 export const Loot = {
     Fishing: {
-        create() {
-            return new LootSet(undefined, Ids.CreatureLoot.id(),SQL.fishing_loot_template);
+        create(area: number) {
+            return new LootSet(area,SQL.fishing_loot_template);
         },
-        
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.fishing_loot_template)
+            return new LootSet(id, SQL.fishing_loot_template);
         }
     },
-    
+
     Creature: {
-        create() {
-            return new LootSet(undefined, Ids.CreatureLoot.id(),SQL.creature_loot_template);
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.creature_loot_template
+                , Ids.creature_loot_template
+            )
         },
-        
+
+        create() {
+            return new LootSet(Ids.creature_loot_template.id(),SQL.creature_loot_template);
+        },
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.creature_loot_template)
+            return new LootSet(id, SQL.creature_loot_template)
         }
     },
-    
+
     GameObject: {
-        create() {
-            return new LootSet(undefined, Ids.GameObjectLoot.id(),SQL.gameobject_loot_template);
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.gameobject_loot_template
+                , Ids.gameobject_loot_template
+            )
         },
-        
-        load(id: number) {
-            return new LootSet(undefined, id, SQL.gameobject_loot_template)
-        } 
-    },
-    
-    Item: {
+
         create() {
-            return new LootSet(undefined, Ids.ItemLoot.id(),SQL.item_loot_template);
+            return new LootSet(Ids.gameobject_loot_template.id(),SQL.gameobject_loot_template);
         },
-        
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.item_loot_template)
-        } 
+            return new LootSet(id, SQL.gameobject_loot_template)
+        }
     },
-    
+
     Disenchant: {
-        create() {
-            return new LootSet(undefined, Ids.DisenchantLoot.id(),SQL.disenchant_loot_template);
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.disenchant_loot_template
+                , Ids.disenchant_loot_template
+            )
         },
-        
-        load(id: number) {
-            return new LootSet(undefined, id, SQL.disenchant_loot_template)
-        } 
-    },
-    
-    Prospecting: {
+
         create() {
-            return new LootSet(undefined, Ids.ProspectingLoot.id(),SQL.prospecting_loot_template);
+            return new LootSet(Ids.disenchant_loot_template.id(),SQL.disenchant_loot_template);
         },
-        
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.prospecting_loot_template)
-        } 
+            return new LootSet(id, SQL.disenchant_loot_template)
+        }
     },
-    
-    Milling: {
-        create() {
-            return new LootSet(undefined, Ids.MillingLoot.id(),SQL.milling_loot_template);
-        },
-        
-        load(id: number) {
-            return new LootSet(undefined, id, SQL.milling_loot_template)
-        } 
-    },
-    
+
     Pickpocket: {
-        create() {
-            return new LootSet(undefined, Ids.PickPocketLoot.id(),SQL.pickpocketing_loot_template);
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.pickpocketing_loot_template
+                , Ids.pickpocketing_loot_template
+            )
         },
-        
+
+        create() {
+            return new LootSet(Ids.pickpocketing_loot_template.id(),SQL.pickpocketing_loot_template);
+        },
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.pickpocketing_loot_template)
-        } 
+            return new LootSet(id, SQL.pickpocketing_loot_template)
+        }
     },
-    
+
     Skinning: {
-        create() {
-            return new LootSet(undefined, Ids.SkinningLoot.id(),SQL.skinning_loot_template);
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.skinning_loot_template
+                , Ids.skinning_loot_template
+            )
         },
-        
+
+        create() {
+            return new LootSet(Ids.skinning_loot_template.id(),SQL.skinning_loot_template);
+        },
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.skinning_loot_template)
-        } 
+            return new LootSet(id, SQL.skinning_loot_template)
+        }
     },
-    
-    Mail: {
-        load(id: number) {
-            return new LootSet(undefined, id, SQL.mail_loot_template)
-        } 
-    },
-    
+
     Reference: {
+        ref<T>(owner: T, cell: Cell<number,any>) {
+            return new LootSetPointer(
+                  owner
+                , cell
+                , SQL.reference_loot_template
+                , Ids.reference_loot_template
+            )
+        },
+
         create() {
-            return new LootSet(undefined, Ids.ReferenceLoot.id(),SQL.reference_loot_template);
+            return new LootSet(Ids.reference_loot_template.id(),SQL.reference_loot_template);
         },
-        
+
         load(id: number) {
-            return new LootSet(undefined, id, SQL.reference_loot_template)
-        } 
-    },
-    
-    Spell: {
-        create() {
-            return new LootSet(undefined, Ids.SpellLoot.id(),SQL.spell_loot_template);
-        },
-        
-        load(id: number) {
-            return new LootSet(undefined, id, SQL.spell_loot_template)
-        },
+            return new LootSet(id, SQL.reference_loot_template)
+        }
     },
 }

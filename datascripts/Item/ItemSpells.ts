@@ -14,7 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { SpellRegistry } from "../Spell/Spells";
 import { ItemTemplate } from "./ItemTemplate";
 
 function IdRows(owner: ItemTemplate) {
@@ -24,7 +28,7 @@ function IdRows(owner: ItemTemplate) {
         owner.row.spellid_3,
         owner.row.spellid_4,
         owner.row.spellid_5,
-    ] 
+    ]
 }
 
 function CatRows(owner: ItemTemplate) {
@@ -34,7 +38,7 @@ function CatRows(owner: ItemTemplate) {
         owner.row.spellcategory_3,
         owner.row.spellcategory_4,
         owner.row.spellcategory_5,
-    ] 
+    ]
 }
 
 function TriggerRows(owner: ItemTemplate) {
@@ -44,7 +48,7 @@ function TriggerRows(owner: ItemTemplate) {
         owner.row.spelltrigger_3,
         owner.row.spelltrigger_4,
         owner.row.spelltrigger_5,
-    ] 
+    ]
 }
 
 function ChargeRows(owner: ItemTemplate) {
@@ -54,7 +58,7 @@ function ChargeRows(owner: ItemTemplate) {
         owner.row.spellcharges_3,
         owner.row.spellcharges_4,
         owner.row.spellcharges_5,
-    ] 
+    ]
 }
 
 function PPMRows(owner: ItemTemplate) {
@@ -64,7 +68,7 @@ function PPMRows(owner: ItemTemplate) {
         owner.row.spellppmRate_3,
         owner.row.spellppmRate_4,
         owner.row.spellppmRate_5,
-    ] 
+    ]
 }
 
 function CooldownRows(owner: ItemTemplate) {
@@ -74,7 +78,7 @@ function CooldownRows(owner: ItemTemplate) {
         owner.row.spellcooldown_3,
         owner.row.spellcooldown_4,
         owner.row.spellcooldown_5,
-    ] 
+    ]
 }
 
 function CCooldownRows(owner: ItemTemplate) {
@@ -84,31 +88,106 @@ function CCooldownRows(owner: ItemTemplate) {
         owner.row.spellcategorycooldown_3,
         owner.row.spellcategorycooldown_4,
         owner.row.spellcategorycooldown_5,
-    ] 
+    ]
+}
+
+export enum ItemSpellTrigger {
+    ON_USE        = 0,
+    ON_EQUIP      = 1,
+    CHANCE_ON_HIT = 2,
+    SOULSTONE     = 4,
+    USE_NO_DELAY  = 5,
+    ON_LEARN      = 6,
+}
+
+export class ChargesSystem<T> extends CellSystem<T> {
+    protected cell: Cell<number,any>
+
+    constructor(owner: T, cell: Cell<number,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    get Raw() { return this.ownerWrap(this.cell); }
+
+    objectify() {
+        if(this.cell.get() === 0) return 'UNLIMITED';
+        if(this.cell.get() < 0) {
+            return {charges:-this.cell.get(),type:'DELETE_ITEM'}
+        }
+        if(this.cell.get() > 0) {
+            return {charges:this.cell.get(),type:'NO_DELETE_ITEM'}
+        }
+    }
+
+    getRawCount() {
+        return this.cell.get();
+    }
+
+    getAbsCount() {
+        return Math.abs(this.cell.get())
+    }
+
+    getType() {
+        if(this.cell.get() === 0) return 'UNLIMITED'
+        if(this.cell.get() < 0) return 'DELETE_ITEM'
+        return 'NO_DELETE_ITEM'
+    }
+
+    set(value: 'UNLIMITED'): T;
+    set(value: number, type: 'DELETE_ITEM'|'NO_DELETE_ITEM'): T;
+    set(value: 'UNLIMITED'|number, type?: 'DELETE_ITEM'|'NO_DELETE_ITEM') {
+        if(value === 0 && type !== undefined) {
+            throw new Error(
+                  `Trying to set item delete type (${type})`
+                + `with unlimited (0) charges`
+            )
+        }
+
+        if(value < 0 && type !== undefined) {
+            throw new Error(
+                  `Attempting to set item delete type with multiple methods:`
+                + ` value is both negative`
+                + ` and type is specified as ${type}`
+            )
+        }
+
+        if(value === 'UNLIMITED') {
+            this.cell.set(0)
+            return this.owner;
+        } else if(type === 'DELETE_ITEM') {
+            this.cell.set(-value);
+        } else {
+            this.cell.set(value);
+        }
+        return this.owner;
+    }
 }
 
 export class ItemSpell extends ArrayEntry<ItemTemplate> {
-    clear(): ItemTemplate {
-        this.ID.set(0);
+    clear() {
+        this.Spell.set(0);
         this.Category.set(0);
         this.Trigger.set(0);
-        this.Charges.set(0);
+        this.Charges.Raw.set(0);
         this.ProcsPerMinute.set(0);
         this.Cooldown.set(-1);
         this.CategoryCooldown.set(-1);
-        return this.owner;
+        return this;
     }
     isClear(): boolean {
-        return this.ID.get() === 0;
+        return this.Spell.get() === 0;
     }
 
-    get ID() { return IdRows(this.owner)[this.index]; }
-    get Category() { return CatRows(this.owner)[this.index]; }
-    get Trigger() { return TriggerRows(this.owner)[this.index]; }
-    get Charges() { return ChargeRows(this.owner)[this.index]; }
-    get ProcsPerMinute() { return PPMRows(this.owner)[this.index]; }
-    get Cooldown () { return CooldownRows(this.owner)[this.index]; }
-    get CategoryCooldown() { return CCooldownRows(this.owner)[this.index]; }
+    get Spell() { return SpellRegistry.ref(this, IdRows(this.container)[this.index]); }
+    get Category() { return this.wrap(CatRows(this.container)[this.index]); }
+    get Trigger() {
+        return makeEnumCell(ItemSpellTrigger, this, TriggerRows(this.container)[this.index]);
+    }
+    get Charges() { return new ChargesSystem(this, ChargeRows(this.container)[this.index]); }
+    get ProcsPerMinute() { return this.wrap(PPMRows(this.container)[this.index]); }
+    get Cooldown () { return this.wrap(CooldownRows(this.container)[this.index]); }
+    get CategoryCooldown() { return this.wrap(CCooldownRows(this.container)[this.index]); }
 }
 
 export class ItemSpells extends ArraySystem<ItemSpell, ItemTemplate> {
@@ -120,15 +199,8 @@ export class ItemSpells extends ArraySystem<ItemSpell, ItemTemplate> {
         return 5;
     }
 
-    add(id: number, category?: number, trigger?: number, charges?: number, procsPerMinute?: number, cooldown?: number, categoryCooldown?: number) {
-        let free = this.getFree();
-        free.ID.set(id);
-        if(category!==undefined) free.Category.set(category);
-        if(trigger!==undefined) free.Trigger.set(trigger);
-        if(charges!==undefined) free.Charges.set(charges);
-        if(procsPerMinute!==undefined) free.ProcsPerMinute.set(procsPerMinute);
-        if(cooldown!==undefined) free.Cooldown.set(cooldown);
-        if(categoryCooldown!==undefined) free.CategoryCooldown.set(categoryCooldown);
-        return free;
+    addMod(callback: (itemSpell: ItemSpell)=>void) {
+        callback(this.addGet());
+        return this.owner;
     }
 }

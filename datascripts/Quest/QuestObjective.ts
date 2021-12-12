@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { PendingCell } from "wotlkdata/cell/cells/PendingCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { LocSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/dbc/Localization";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/primitives";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { CellSystem, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { Quest } from "./Quest";
 
 function ItemIds(owner: Quest) {
@@ -48,16 +48,17 @@ function RequiredItemCounts(owner: Quest) {
 }
 
 export class ItemObjective extends ArrayEntry<Quest> {
-    get ItemID() { return ItemIds(this.owner)[this.index]}
-    get Count() { return RequiredItemCounts(this.owner)[this.index]; }
+    get Item() { return ItemTemplateRegistry.ref(this, this.wrap(ItemIds(this.container)[this.index]))}
+    get Count() { return this.wrap(RequiredItemCounts(this.container)[this.index]); }
 
-    clear(): Quest {
-        this.ItemID.set(0);
+    clear() {
+        this.Item.set(0);
         this.Count.set(0);
-        return this.owner;
+        return this;
     }
+
     isClear(): boolean {
-        return this.ItemID.get() === 0;
+        return this.Item.get() === 0;
     }
 }
 
@@ -71,8 +72,8 @@ export class ItemObjectives extends ArraySystem<ItemObjective, Quest> {
     }
 
     add(item: number, count: number) {
-        let free = this.getFree();
-        free.ItemID.set(item);
+        let free = this.addGet();
+        free.Item.set(item);
         free.Count.set(count);
         return this.owner;
     }
@@ -97,12 +98,12 @@ function NPCGOCounts(owner: Quest) {
 }
 
 export class NpcGoObjective extends ArrayEntry<Quest> {
-    get ID() { return NPCGOIds(this.owner)[this.index]}
-    get Count() { return NPCGOCounts(this.owner)[this.index]}
-    clear(): Quest {
+    get ID() { return this.wrap(NPCGOIds(this.container)[this.index])}
+    get Count() { return this.wrap(NPCGOCounts(this.container)[this.index])}
+    clear() {
         this.ID.set(0);
         this.Count.set(0);
-        return this.owner
+        return this
     }
     isClear(): boolean {
         return this.ID.get() === 0;
@@ -120,7 +121,7 @@ export class NpcGoObjectives extends ArraySystem<NpcGoObjective,Quest> {
 
     // TODO: Split npc/go?
     add(id: number, count: number) {
-        const free = this.getFree();
+        const free = this.addGet();
         free.ID.set(id);
         free.Count.set(count);
         return this.owner;
@@ -142,13 +143,13 @@ function Reputation(owner: Quest) {
 }
 
 export class ReputationObjective extends ArrayEntry<Quest> {
-    get Faction() { return FactionIds(this.owner)[this.index]; }
-    get Reputation() { return Reputation(this.owner)[this.index]; }
+    get Faction() { return this.wrap(FactionIds(this.container)[this.index]); }
+    get Reputation() { return this.wrap(Reputation(this.container)[this.index]); }
 
-    clear(): Quest {
+    clear() {
         this.Faction.set(0);
         this.Reputation.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -164,11 +165,18 @@ export class ReputationObjectives extends ArraySystem<ReputationObjective,Quest>
     get(index: number): ReputationObjective {
         return new ReputationObjective(this.owner, index);
     }
+
+    add(faction: number, reputation: number) {
+        this.addGet()
+            .Faction.set(faction)
+            .Reputation.set(reputation);
+        return this.owner;
+    }
 }
 
 export class Scripted extends LocSystem<Quest> {
     protected localeRow(language: Language) {
-        let oldRow = SQL.quest_template_locale.find({ID: this.owner.ID, locale: language});
+        let oldRow = SQL.quest_template_locale.query({ID: this.owner.ID, locale: language});
         if(oldRow) return oldRow;
         return SQL.quest_template_locale.add(this.owner.ID,language);
     }
@@ -186,12 +194,10 @@ export class Scripted extends LocSystem<Quest> {
 
     constructor(owner: Quest) {
         super(owner);
-        this.owner.SpecialFlags.mark(1);
     }
 
     clear() {
         this.owner.row.AreaDescription.set("");
-        this.owner.SpecialFlags.clear(1);
         return this.owner;
     }
 

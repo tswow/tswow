@@ -1,53 +1,66 @@
-import { LockType } from "./LockType"
-import { DBC } from "wotlkdata"
-import { Ids } from "../Misc/Ids"
-import { SimpleLock } from "./SimpleLock"
-import { TopCell } from "../Refs/SharedRef";
+import { DBC } from "wotlkdata";
+import { LockQuery, LockRow } from "wotlkdata/wotlkdata/dbc/types/Lock";
+import { LockTypeQuery, LockTypeRow } from "wotlkdata/wotlkdata/dbc/types/LockType";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
+import { Lock } from "./Lock";
+import { LockType } from "./LockType";
 
-function makeLock() {
-    let lock = DBC.Lock.add(Ids.Lock.id());
-    for(let i=0;i<6;++i) {
-        lock.Action.setIndex(i,0);
-        lock.Index.setIndex(i,0);
-        lock.Skill.setIndex(i,0);
-        lock.Type.setIndex(i,0);
+export class LockTypeRegistryClass
+    extends RegistryDynamic<LockType,LockTypeRow,LockTypeQuery>
+{
+    protected Table(): Table<any, LockTypeQuery, LockTypeRow> & { add: (id: number) => LockTypeRow; } {
+        return DBC.LockType
     }
-    return lock;
+    protected ids(): DynamicIDGenerator {
+        return Ids.LockType
+    }
+    Clear(entity: LockType): void {
+        entity.Cursor.set('')
+              .Name.clear()
+              .ResourceName.clear()
+              .Verb.clear()
+    }
+    protected Entity(r: LockTypeRow): LockType {
+        return new LockType(r);
+    }
+    protected FindByID(id: number): LockTypeRow {
+        return DBC.LockType.findById(id);
+    }
+    protected EmptyQuery(): LockTypeQuery {
+        return {}
+    }
+    ID(e: LockType): number {
+        return e.ID;
+    }
+}
+export const LockTypeRegistry = new LockTypeRegistryClass();
+
+export class LockRegistryClass
+    extends RegistryDynamic<Lock,LockRow,LockQuery>
+{
+    protected Table(): Table<any, LockQuery, LockRow> & { add: (id: number) => LockRow; } {
+        return DBC.Lock
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.Lock
+    }
+    Clear(entity: Lock): void {
+        entity.Requirements.clearAll()
+    }
+    protected Entity(r: LockRow): Lock {
+        return new Lock(r);
+    }
+    protected FindByID(id: number): LockRow {
+        return DBC.Lock.findById(id);
+    }
+    protected EmptyQuery(): LockQuery {
+        return {}
+    }
+    ID(e: Lock): number {
+        return e.ID;
+    }
 }
 
-export const Locks = {
-
-    
-
-    loadLock(id: number) {
-        return new SimpleLock(DBC.Lock.findById(id),[new TopCell(id)]);
-    },
-
-    loadType(id: number) {
-        return new LockType(DBC.LockType.findById(id));
-    },
-
-    createType() {
-        return new LockType(DBC.LockType.add(Ids.LockType.id()))
-    },
-
-    createItem(item: number) {
-        let lock = makeLock();
-        return new SimpleLock(lock,[new TopCell(lock.ID.get())])
-            .Type.setItem()
-            .Index.set(item)
-    },
-
-    createEmpty() {
-        let lock = makeLock();
-        return new SimpleLock(lock,[new TopCell(lock.ID.get())])
-    },
-    
-    createTypeInstance(type: number, skill: number = 0) {
-        let lock = makeLock();
-        return new SimpleLock(lock,[new TopCell(lock.ID.get())])
-            .Type.setLockType()
-            .Index.set(type)
-            .Skill.set(skill)
-    },
-}
+export const LockRegistry = new LockRegistryClass();

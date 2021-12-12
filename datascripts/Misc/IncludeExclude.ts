@@ -1,6 +1,6 @@
-import { Cell, CPrim } from "wotlkdata/cell/cells/Cell";
-import { MaskCell } from "wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { Cell, CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { MaskCell } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
 export class IncludeExcludeMask<T,M extends MaskCell<T>> extends CellSystem<T> {
     readonly Include: M;

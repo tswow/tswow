@@ -14,26 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemBonding extends EnumCellWrapper<ItemTemplate> {
-    constructor(owner: ItemTemplate) {
-        super(owner, owner.row.bonding);
-    }
-
-    @EnumField(0)
-    setNoBounds() { return this.set(0); }
-
-    @EnumField(1)
-    setBindsOnPickup() { return this.set(1); }
-
-    @EnumField(2)
-    setBindsOnEquip() { return this.set(2); }
-
-    @EnumField(3)
-    setBindsOnUse() { return this.set(3); }
-
-    @EnumField(4)
-    setQuestItem() { return this.set(4); }
+export enum ItemBonding {
+    NO_BOUNDS       = 0,
+    BINDS_ON_PICKUP = 1,
+    BINDS_ON_EQUIP  = 2,
+    BINDS_ON_USE    = 3,
+    QUEST_ITEM      = 4,
 }

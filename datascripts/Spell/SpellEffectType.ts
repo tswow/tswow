@@ -14,678 +14,344 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { CellIndexWrapper } from "wotlkdata/wotlkdata/cell/cells/CellArray";
+import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ActivateObject, ActivateRune, AddComboPoints, AddFarsight, AddHonor, ApplyGlyph, BindHome, CanTitanGrip, CastButtons, Charge, ChargeDest, ClearQuest, CommandTotemCreature, CompleteQuest, CreateItem, CreateManaGem, CreateRandomItem, DestroyAllTotems, Dispel, DispelMechanic, DurabilityDamage, DurabilityDamagePercent, EnchantHeldItem, EnchantItem, EnchantItemTemp, EnchantPrismaticItem, Energize, EnergizePercent, EnvironmentalDamage, ExtraAttacks, FailQuest, ForceCast, ForceCastWithValue, GameObjectDamage, GameObjectRepair, Heal, HealMaxHealth, HealMechanical, HealPercent, HealthLeech, InterruptCast, Jump, JumpDest, KillCredit, Knockback, KnockbackDest, Language, Leap, LeapBack, LearnPetSpell, LearnSpell, MakeDrunk, ModifyThreatPercent, OpenLock, Pickpocket, PlayMusic, PlaySound, PowerBurn, PowerDrain, PullTowards, PullTowardsDest, RedirectThreat, RemoveAura, Reputation, Resurrect, ResurrectSelf, Sanctuary, SchoolDamage, ScriptEffect, SendEvent, SendTaxi, SetGameObjectDestructibleState, Skill, SkillStep, StartQuest, StealBeneficialBuff, Summon, SummonObjectSlot1, SummonObjectSlot2, SummonObjectSlot3, SummonObjectSlot4, SummonObjectWild, SummonPet, TeleportUnitFaceCaster, TeleportUnits, Threat, TradeSkill, TransDoor, TriggerMissile, TriggerMissileWithValue, TriggerSpell, TriggerSpellWithValue, Weapon, WeaponDamage, WeaponDamageNoSchool, WeaponPercentDamage } from "./EffectTemplates/EffectTemplates";
 import { SpellEffect } from "./SpellEffect";
-import { SchoolDamage, TeleportUnits, EnvironmentalDamage, PowerDrain, HealthLeech, Heal, BindHome, CommandTotemCreature, CompleteQuest, WeaponDamageNoSchool, Resurrect, ExtraAttacks, CreateItem, Weapon, Summon, Leap, Energize, WeaponPercentDamage, TriggerMissile, OpenLock, LearnSpell, Dispel, Language, Jump, JumpDest, TeleportUnitFaceCaster, SkillStep, AddHonor, TradeSkill, TransDoor, EnchantItem, EnchantItemTemp, SummonPet, LearnPetSpell, WeaponDamage, CreateRandomItem, SendEvent, PowerBurn, Threat, TriggerSpell, CreateManaGem, HealMaxHealth, InterruptCast, Pickpocket, AddFarsight, ApplyGlyph, HealMechanical, SummonObjectWild, ScriptEffect, Sanctuary, AddComboPoints, ActivateObject, GameObjectDamage, GameObjectRepair, SetGameObjectDestructibleState, KillCredit, EnchantHeldItem, ResurrectSelf, Charge, CastButtons, Knockback, MakeDrunk, Reputation, SummonObjectSlot1, SummonObjectSlot2, SummonObjectSlot3, SummonObjectSlot4, DispelMechanic, DestroyAllTotems, DurabilityDamage, DurabilityDamagePercent, Skill, SendTaxi, PullTowards, ModifyThreatPercent, StealBeneficialBuff, RedirectThreat, PlaySound, PlayMusic, HealPercent, EnergizePercent, LeapBack, ClearQuest, ForceCast, ForceCastWithValue, TriggerSpellWithValue, KnockbackDest, PullTowardsDest, ActivateRune, FailQuest, TriggerMissileWithValue, ChargeDest, StartQuest, CanTitanGrip, EnchantPrismaticItem, RemoveAura } from "./EffectTemplates/EffectTemplates";
-import { AuraType } from "./AuraType";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
 
-export class SpellEffectType<T> extends EnumCellWrapper<SpellEffect<T>> {
-    constructor(owner: SpellEffect<T>, index: number) {
+export class SpellEffectType extends EnumCellTransform<SpellEffect> {
+    constructor(owner: SpellEffect, index: number) {
         super(owner, new CellIndexWrapper(undefined, owner.row.Effect, index));
     }
 
-    /** */
-    @EnumField(0)
-    setNull() { return this.set(0);  };
-
-    /** */
-    @EnumField(1)
-    setInstakill() { return this.set(1);  };
-
-    /** */
-    @EnumField(2)
-    setSchoolDamage(): SchoolDamage<T> { 
-        return new SchoolDamage(this.end.end, this.set(2))
-    };
-
-    /** */
-    @EnumField(3)
-    setDummy() { return this.set(3);  };
-
-    /** */
-    @EnumField(4)
-    setPortalTeleport () { return this.set(4);  };
-
-    /** */
-    @EnumField(5)
-    setTeleportUnits(): TeleportUnits<T> { return new TeleportUnits(this.end.end, this.set(5));  };
-
-    /** */
-    @EnumField(6)
-    setApplyAura(): AuraType<T> { return new AuraType(this.set(6),this.owner.index);  };
-
-    /** */
-    @EnumField(7)
-    setEnvironmentalDamage(): EnvironmentalDamage<T> { return new EnvironmentalDamage(this.end.end,this.set(7));  };
-
-    /** */
-    @EnumField(8)
-    setPowerDrain(): PowerDrain<T> { return new PowerDrain(this.end.end,this.set(8));  };
-
-    /** */
-    @EnumField(9)
-    setHealthLeech(): HealthLeech<T> { return new HealthLeech(this.end.end,this.set(9));  };
-
-    /** */
-    @EnumField(10)
-    setHeal(): Heal<T> { return new Heal(this.end.end,this.set(10));  };
-
-    /** */
-    @EnumField(11)
-    setBind(): BindHome<T> { return new BindHome(this.end.end,this.set(11));  };
-
-    /** */
-    @EnumField(12)
-    setControlTotemCreature(): CommandTotemCreature<T> { return new CommandTotemCreature(this.end.end,this.set(12)); };
-
-    /** */
-    @EnumField(13)
-    setRitualBase () { return this.set(13);  };
-
-    /** */
-    @EnumField(14)
-    setRitualSpecialize () { return this.set(14);  };
-
-    /** */
-    @EnumField(15)
-    setRitualActivatePortal () { return this.set(15);  };
-
-    /** */
-    @EnumField(16)
-    setQuestComplete(): CompleteQuest<T> { return new CompleteQuest(this.end.end, this.set(16));  };
-
-    /** */
-    @EnumField(17)
-    setWeaponDamageNoschool(): WeaponDamageNoSchool<T> { return new WeaponDamageNoSchool(this.end.end,this.set(17));  };
-
-    /** */
-    @EnumField(18)
-    setResurrect(): Resurrect<T> { return new Resurrect(this.end.end,this.set(18));  };
-
-    /** */
-    @EnumField(19)
-    setAddExtraAttacks() { return this.set(19);  };
-
-    /** */
-    @EnumField(20)
-    setDodge (): ExtraAttacks<T> { return new ExtraAttacks(this.end.end,this.set(20));  };
-
-    /** */
-    @EnumField(21)
-    setEvade () { return this.set(21);  };
-
-    /** */
-    @EnumField(22)
-    setParry() { return this.set(22);  };
-
-    /** */
-    @EnumField(23)
-    setBlock () { return this.set(23);  };
-
-    /** */
-    @EnumField(24)
-    setCreateItem(): CreateItem<T> { return new CreateItem(this.end.end,this.set(24));  };
-
-    /** */
-    @EnumField(25)
-    setWeapon(): Weapon<T> { return new Weapon(this.end.end,this.set(25));  };
-
-    /** */
-    @EnumField(26)
-    setDefense () { return this.set(26);  };
-
-    /** */
-    @EnumField(27)
-    setPersistentAreaAura(): AuraType<T> { return new AuraType(this.set(27), this.owner.index);  };
-
-    /** */
-    @EnumField(28)
-    setSummon(): Summon<T> { return new Summon(this.end.end, this.set(28));  };
-
-    /** */
-    @EnumField(29)
-    setLeap(): Leap<T> { return new Leap(this.end.end,this.set(29));  };
-
-    /** */
-    @EnumField(30)
-    setEnergize(): Energize<T> { return new Energize(this.end.end,this.set(30));  };
-
-    /** */
-    @EnumField(31)
-    setWeaponPercentDamage(): WeaponPercentDamage<T> { return new WeaponPercentDamage(this.end.end,this.set(31));  };
-
-    /** */
-    @EnumField(32)
-    setTriggerMissile(): TriggerMissile<T> { return new TriggerMissile(this.end.end,this.set(32));  };
-
-    /** */
-    @EnumField(33)
-    setOpenLock(): OpenLock<T> { return new OpenLock(this.end.end,this.set(33));  };
-
-    /** */
-    @EnumField(34)
-    setSummonChangeItem() { return this.set(34);  };
-
-    /** */
-    @EnumField(35)
-    setApplyAreaAuraParty(): AuraType<T> { return new AuraType(this.set(35), this.owner.index);  };
-
-    /** */
-    @EnumField(36)
-    setLearnSpell(): LearnSpell<T> { return new LearnSpell(this.end.end, this.set(36));  };
-
-    /** */
-    @EnumField(37)
-    setSpellDefense () { return this.set(37);  };
-
-    /** */
-    @EnumField(38)
-    setDispel(): Dispel<T> { return new Dispel(this.end.end, this.set(38));  };
-
-    /** */
-    @EnumField(39)
-    setLanguage(): Language<T> { return new Language(this.end.end,this.set(39));  };
-
-    /** */
-    @EnumField(40)
-    setDualWield() { return this.set(40);  };
-
-    /** */
-    @EnumField(41)
-    setJump(): Jump<T> { return new Jump(this.end.end,this.set(41));  };
-
-    /** */
-    @EnumField(42)
-    setJumpDest(): JumpDest<T> { return new JumpDest(this.end.end,this.set(42));  };
-
-    /** */
-    @EnumField(43)
-    setTeleportUnitsFaceCaster(): TeleportUnitFaceCaster<T> { return new TeleportUnitFaceCaster(this.end.end,this.set(43));  };
-
-    /** */
-    @EnumField(44)
-    setSkillStep(): SkillStep<T> { return new SkillStep(this.end.end,this.set(44));  };
-
-    /** 
-     * Comment test
-     */
-    @EnumField(45)
-    setAddHonor(): AddHonor<T> { return new AddHonor(this.end.end,this.set(45));  };
-
-    /** */
-    @EnumField(46)
-    setSpawn () { return this.set(46);  };
-
-    /** */
-    @EnumField(47)
-    setTradeSkill(): TradeSkill<T> { return new TradeSkill(this.end.end,this.set(47));  };
-
-    /** Singleton */
-    @EnumField(48)
-    setStealth () { return this.set(48);  };
-
-    /** Singleton */
-    @EnumField(49)
-    setDetect () { return this.set(49);  };
-
-    /** */
-    @EnumField(50)
-    setTransDoor(): TransDoor<T> { return new TransDoor(this.end.end,this.set(50));  };
-
-    /** Unused */
-    @EnumField(51)
-    setForceCriticalHit () { return this.set(51);  };
-
-    /** Unused */
-    @EnumField(52)
-    setGuaranteeHit () { return this.set(52);  };
-
-    /** */
-    @EnumField(53)
-    setEnchantItem(): EnchantItem<T> { return new EnchantItem(this.end.end,this.set(53));  };
-
-    /** */
-    @EnumField(54)
-    setEnchantItemTemporary(): EnchantItemTemp<T> { return new EnchantItemTemp(this.end.end,this.set(54));  };
-
-    /** Singleton */
-    @EnumField(55)
-    setTamecreature() { return this.set(55);  };
-
-    /** */
-    @EnumField(56)
-    setSummonPet(): SummonPet<T> { return new SummonPet(this.end.end,this.set(56)) };
-
-    /** */
-    @EnumField(57)
-    setLearnPetSpell(): LearnPetSpell<T> { return new LearnPetSpell(this.end.end,this.set(57));  };
-
-    /** */
-    @EnumField(58)
-    setWeaponDamage(): WeaponDamage<T> { return new WeaponDamage(this.end.end,this.set(58));  };
-
-    /** */
-    @EnumField(59)
-    setCreateRandomItem (): CreateRandomItem<T> { return new CreateRandomItem(this.end.end,this.set(59));  };
-
-    /** Weapon skills, no arguments */
-    @EnumField(60)
-    setProficiency() { return this.set(60);  };
-
-    /** */
-    @EnumField(61)
-    setSendEvent(): SendEvent<T> { return new SendEvent(this.end.end,this.set(61));  };
-
-    /** */
-    @EnumField(62)
-    setPowerBurn(): PowerBurn<T> { return new PowerBurn(this.end.end,this.set(62));  };
-
-    /** */
-    @EnumField(63)
-    setThreat(): Threat<T> { return new Threat(this.end.end,this.set(63));  };
-
-    /** */
-    @EnumField(64)
-    setTriggerSpell(): TriggerSpell<T> { return new TriggerSpell(this.end.end,this.set(64));  };
-
-    /** */
-    @EnumField(65)
-    setApplyAreaAuraRaid(): AuraType<T> { return new AuraType(this.set(65), this.owner.index);  };
-
-    /** */
-    @EnumField(66)
-    setCreateManaGem (): CreateManaGem<T> { return new CreateManaGem(this.end.end, this.set(66));  };
-
-    /** */
-    @EnumField(67)
-    setHealMaxHealth(): HealMaxHealth<T> { return new HealMaxHealth(this.end.end,this.set(67));  };
-
-    /** Has no arguments, see spells SchoolMask instead */
-    @EnumField(68)
-    setInterruptCast(): InterruptCast<T> { return new InterruptCast(this.end.end,this.set(68));  };
-
-    /** */
-    @EnumField(69)
-    setDistract() { return this.set(69);  };
-
-    /** singleton */
-    @EnumField(70)
-    setPull () { return this.set(70);  };
-
-    /** */
-    @EnumField(71)
-    setPickpocket(): Pickpocket<T> { return new Pickpocket(this.end.end,this.set(71));  };
-
-    /** */
-    @EnumField(72)
-    setAddFarsight(): AddFarsight<T> { return new AddFarsight(this.end.end,this.set(72));  };
-
-    /** Singleton */
-    @EnumField(73)
-    setUntrainTalents() { return this.set(73);  };
-
-    /** */
-    @EnumField(74)
-    setApplyGlyph(): ApplyGlyph<T> { return new ApplyGlyph(this.end.end,this.set(74));  };
-
-    /** */
-    @EnumField(75)
-    setHealMechanical (): HealMechanical<T> { return new HealMechanical(this.end.end,this.set(75));  };
-
-    /** */
-    @EnumField(76)
-    setSummonObjectWild(): SummonObjectWild<T> { return new SummonObjectWild(this.end.end,this.set(76));  };
-
-    /** */
-    @EnumField(77)
-    setScriptEffect(): ScriptEffect<T> { return new ScriptEffect(this.end.end,this.set(77));  };
-
-    /** Singleton */
-    @EnumField(78)
-    setAttack() { return this.set(78);  };
-
-    /** */
-    @EnumField(79)
-    setSanctuary(): Sanctuary<T> { return new Sanctuary(this.end.end,this.set(79));  };
-
-    /** */
-    @EnumField(80)
-    setAddComboPoints(): AddComboPoints<T> { return new AddComboPoints(this.end.end,this.set(80));  };
-
-    /** Singleton */
-    @EnumField(81)
-    setCreateHouse () { return this.set(81);  };
-
-    /** Unused? */
-    @EnumField(82)
-    setBindSight() { return this.set(82);  };
-
-    /** Scripted */
-    @EnumField(83)
-    setDuel() { return this.set(83);  };
-
-    /** Singleton */
-    @EnumField(84)
-    setStuck() { return this.set(84);  };
-
-    /** Scripted */
-    @EnumField(85)
-    setSummonPlayer() { return this.set(85);  };
-
-    /** */
-    @EnumField(86)
-    setActivateObject(): ActivateObject<T> { return new ActivateObject(this.end.end,this.set(86));  };
-
-    /** */
-    @EnumField(87)
-    setGameobjectDamage(): GameObjectDamage<T> { return new GameObjectDamage(this.end.end,this.set(87));  };
-
-    /** */
-    @EnumField(88)
-    setGameobjectRepair(): GameObjectRepair<T> { return new GameObjectRepair(this.end.end,this.set(88));  };
-
-    /** */
-    @EnumField(89)
-    setGameobjectSetDestructionState(): SetGameObjectDestructibleState<T> { return new SetGameObjectDestructibleState(this.end.end,this.set(89));  };
-
-    /** */
-    @EnumField(90)
-    setKillCredit (): KillCredit<T> { return new KillCredit(this.end.end,this.set(90));  };
-
-    /** Unused */
-    @EnumField(91)
-    setThreatAll () { return this.set(91);  };
-
-    /** */
-    @EnumField(92)
-    setEnchantHeldItem(): EnchantHeldItem<T> { return new EnchantHeldItem(this.end.end,this.set(92));  };
-
-    /** no parameters, target is always null or caster */
-    @EnumField(93)
-    setForceDeselect() { return this.set(93);  };
-
-    /** */
-    @EnumField(94)
-    setSelfResurrect(): ResurrectSelf<T> { return new ResurrectSelf(this.end.end,this.set(94));  };
-
-    /** ? */
-    @EnumField(95)
-    setSkinning() { return this.set(95);  };
-
-    /** */
-    @EnumField(96)
-    setCharge(): Charge<T> { return new Charge(this.end.end,this.set(96));  };
-
-    /** */
-    @EnumField(97)
-    setCastButton (): CastButtons<T> { return new CastButtons(this.end.end,this.set(97));  };
-
-    /** */
-    @EnumField(98)
-    setKnockBack(): Knockback<T> { return new Knockback(this.end.end,this.set(98));  };
-
-    /** singleton */
-    @EnumField(99)
-    setDisenchant() { return this.set(99);  };
-
-    /** */
-    @EnumField(100)
-    setInebriate(): MakeDrunk<T> { return new MakeDrunk(this.end.end,this.set(100));  };
-
-    /** singleton */
-    @EnumField(101)
-    setFeedPet() { return this.set(101);  };
-
-    /** singleton */
-    @EnumField(102)
-    setDismissPet() { return this.set(102);  };
-
-    /** */
-    @EnumField(103)
-    setReputation(): Reputation<T> { return new Reputation(this.end.end,this.set(103));  };
-
-    /** */
-    @EnumField(104)
-    setSummonObjectSlot1(): SummonObjectSlot1<T> { return new SummonObjectSlot1(this.end.end,this.set(104));  };
-
-    /** */
-    @EnumField(105)
-    setSummonObjectSlot2(): SummonObjectSlot2<T> { return new SummonObjectSlot2(this.end.end,this.set(105));  };
-
-    /** */
-    @EnumField(106)
-    setSummonObjectSlot3(): SummonObjectSlot3<T> { return new SummonObjectSlot3(this.end.end, this.set(106));  };
-
-    /** */
-    @EnumField(107)
-    setSummonObjectSlot4(): SummonObjectSlot4<T> { return new SummonObjectSlot4(this.end.end, this.set(107));  };
-
-    /** */
-    @EnumField(108)
-    setDispelMechanic(): DispelMechanic<T> { return new DispelMechanic(this.end.end,this.set(108));  };
-
-    /** singleton */
-    @EnumField(109)
-    setSummonDeadPet() { return this.set(109);  };
-
-    /** */
-    @EnumField(110)
-    setDestroyAllTotems(): DestroyAllTotems<T> { return new DestroyAllTotems(this.end.end,this.set(110));  };
-
-    /** */
-    @EnumField(111)
-    setDurabilityDamage(): DurabilityDamage<T> { return new DurabilityDamage(this.end.end,this.set(111));  };
-
-    /** */
-    @EnumField(112)
-    setSpellEffect112() { return this.set(112);  };
-
-    /** */
-    @EnumField(113)
-    setResurrectNew() { return this.set(113);  };
-
-    /** no parameters */
-    @EnumField(114)
-    setAttackMe() { return this.set(114);  };
-
-    /** */
-    @EnumField(115)
-    setDurabilityDamagePct(): DurabilityDamagePercent<T> { return new DurabilityDamagePercent(this.end.end,this.set(115));  };
-
-    /** singleton */
-    @EnumField(116)
-    setSkinPlayerCorpse () { return this.set(116);  };
-
-    /** singleton */
-    @EnumField(117)
-    setSpiritHeal () { return this.set(117);  };
-
-    /** */
-    @EnumField(118)
-    setSkill (): Skill<T> { return new Skill(this.end.end,this.set(118));  };
-
-    /** */
-    @EnumField(119)
-    setApplyAreaAuraPet(): AuraType<T> { return new AuraType(this.set(119), this.owner.index);  };
-
-    /** singleton */
-    @EnumField(120)
-    setTeleportGraveyard () { return this.set(120);  };
-
-    /** */
-    @EnumField(121)
-    setNormalizedWeaponDmg() { return this.set(121);  };
-
-    /** */
-    @EnumField(122)
-    setSpellEffect122 () { return this.set(122);  };
-
-    /** */
-    @EnumField(123)
-    setSendTaxi (): SendTaxi<T> { return new SendTaxi(this.end.end,this.set(123));  };
-
-    /** */
-    @EnumField(124)
-    setPullTowards(): PullTowards<T> { return new PullTowards(this.end.end,this.set(124));  };
-
-    /** */
-    @EnumField(125)
-    setModifyThreatPercent(): ModifyThreatPercent<T> { return new ModifyThreatPercent(this.end.end,this.set(125));  };
-
-    /** */
-    @EnumField(126)
-    setStealBeneficialBuff (): StealBeneficialBuff<T> { return new StealBeneficialBuff(this.end.end,this.set(126));  };
-
-    /** singleton */
-    @EnumField(127)
-    setProspecting () { return this.set(127);  };
-
-    /** */
-    @EnumField(128)
-    setApplyAreaAuraFriend(): AuraType<T> { return new AuraType(this.set(128), this.owner.index) ;  };
-
-    /** */
-    @EnumField(129)
-    setApplyAreaAuraEnemy(): AuraType<T> { return new AuraType(this.set(129), this.owner.index);  };
-
-    /** */
-    @EnumField(130)
-    setRedirectThreat(): RedirectThreat<T> { return new RedirectThreat(this.end.end,this.set(130));  };
-
-    /** */
-    @EnumField(131)
-    setPlayerNotification (): PlaySound<T> { return new PlaySound(this.end.end,this.set(131));  };
-
-    /** */
-    @EnumField(132)
-    setPlayMusic (): PlayMusic<T> { return new PlayMusic(this.end.end,this.set(132));  };
-
-    /** don't use this */
-    @EnumField(133)
-    setUnlearnSpecialization () { return this.set(133);  };
-
-    /** Duplicate of setKillCredit(?)*/
-    @EnumField(134)
-    setKillCredit2 () { return this.set(134);  };
-
-    /** singleton */
-    @EnumField(135)
-    setCallPet() { return this.set(135);  };
-
-    /** */
-    @EnumField(136)
-    setHealPct(): HealPercent<T> { return new HealPercent(this.end.end,this.set(136));  };
-
-    /** */
-    @EnumField(137)
-    setEnergizePct(): EnergizePercent<T> { return new EnergizePercent(this.end.end,this.set(137));  };
-
-    /** */
-    @EnumField(138)
-    setLeapBack (): LeapBack<T> { return new LeapBack(this.end.end,this.set(138));  };
-
-    /** */
-    @EnumField(139)
-    setClearQuest (): ClearQuest<T> { return new ClearQuest(this.end.end,this.set(139));  };
-
-    /** */
-    @EnumField(140)
-    setForceCast(): ForceCast<T> { return new ForceCast(this.end.end,this.set(140));  };
-
-    /** */
-    @EnumField(141)
-    setForceCastWithValue(): ForceCastWithValue<T> { return new ForceCastWithValue(this.end.end,this.set(141));  };
-
-    /** */
-    @EnumField(142)
-    setTriggerSpellWithValue(): TriggerSpellWithValue<T> { return new TriggerSpellWithValue(this.end.end,this.set(142));  };
-
-    /** */
-    @EnumField(143)
-    setApplyAreaAuraOwner(): AuraType<T> { return new AuraType(this.set(143), this.owner.index);  };
-
-    /** */
-    @EnumField(144)
-    setKnockBackDest(): KnockbackDest<T> { return new KnockbackDest(this.end.end,this.set(144));  };
-
-    /** */
-    @EnumField(145)
-    setPullTowardsDest (): PullTowardsDest<T> { return new PullTowardsDest(this.end.end,this.set(145));  };
-
-    /** */
-    @EnumField(146)
-    setActivateRune(): ActivateRune<T> { return new ActivateRune(this.end.end,this.set(146));  };
-
-    /** */
-    @EnumField(147)
-    setQuestFail (): FailQuest<T> { return new FailQuest(this.end.end,this.set(147));  };
-
-    /** */
-    @EnumField(148)
-    setTriggerMissileSpellWithValue(): TriggerMissileWithValue<T> { return new TriggerMissileWithValue(this.end.end,this.set(148));  };
-
-    /** */
-    @EnumField(149)
-    setChargeDest(): ChargeDest<T> { return new ChargeDest(this.end.end,this.set(149));  };
-
-    /** */
-    @EnumField(150)
-    setQuestStart(): StartQuest<T> { return new StartQuest(this.end.end,this.set(150));  };
-
-    /** */
-    @EnumField(151)
-    setTriggerSpell2() { return this.set(151);  };
-
-    /** don't use */
-    @EnumField(152)
-    setSummonRafFriend () { return this.set(152);  };
-
-    /** TODO: should this be used? */
-    @EnumField(153)
-    setCreateTamedPet () { return this.set(153);  };
-
-    /** singleton */
-    @EnumField(154)
-    setDiscoverTaxi() { return this.set(154);  };
-
-    /** */
-    @EnumField(155)
-    setTitanGrip (): CanTitanGrip<T> { return new CanTitanGrip(this.end.end,this.set(155));  };
-
-    /** */
-    @EnumField(156)
-    setEnchantItemPrismatic(): EnchantPrismaticItem<T> { return new EnchantPrismaticItem(this.end.end,this.set(156));  };
-
-    /** duplicate */
-    @EnumField(157)
-    setCreateItem2 () { return this.set(157);  };
-
-    /** singleton */
-    @EnumField(158)
-    setMilling() { return this.set(158);  };
-
-    /** singleton */
-    @EnumField(159)
-    setAllowRenamePet () { return this.set(159);  };
-
-    /** */
-    @EnumField(160)
-    setSpellEffect160() { return this.set(160);  };
-
-    /** singleton */
-    @EnumField(161)
-    setTalentSpecCount () { return this.set(161);  };
-
-    /** singleton */
-    @EnumField(162)
-    setTalentSpecSelect() { return this.set(162);  };
-
-    /** */
-    @EnumField(163)
-    setUnused() { return this.set(163);  };
-
-    /** */
-    @EnumField(164)
-    setRemoveAura(): RemoveAura<T> { return new RemoveAura(this.end.end,this.set(164));  };
+    /** Enum Value:                                         0 */
+    get NULL()                          { return this.value(0, x=>x) }
+    /** Enum Value:                                         1 */
+    get INSTAKILL()                     { return this.value(1, x=>x) }
+    /** Enum Value:                                         2 */
+    get SCHOOL_DAMAGE()                 { return this.value(2, x=>new SchoolDamage(x)) }
+    /** Enum Value:                                         3 */
+    get DUMMY()                         { return this.value(3, x=>x) }
+    /** Enum Value:                                         4 */
+    get PORTAL_TELEPORT()              { return this.value(4, x=>x) }
+    /** Enum Value:                                         5 */
+    get TELEPORT_UNITS()                { return this.value(5, x=>new TeleportUnits(x)) }
+    /** Enum Value:                                         6 */
+    get APPLY_AURA()                    { return this.value(6, x=>x) }
+    /** Enum Value:                                         7 */
+    get ENVIRONMENTAL_DAMAGE()          { return this.value(7, x=>new EnvironmentalDamage(x)) }
+    /** Enum Value:                                         8 */
+    get POWER_DRAIN()                   { return this.value(8, x=>new PowerDrain(x)) }
+    /** Enum Value:                                         9 */
+    get HEALTH_LEECH()                  { return this.value(9, x=>new HealthLeech(x)) }
+    /** Enum Value:                                         10 */
+    get HEAL()                          { return this.value(10, x=>new Heal(x)) }
+    /** Enum Value:                                         11 */
+    get BIND()                          { return this.value(11, x=>new BindHome(x)) }
+    /** Enum Value:                                         12 */
+    get CONTROL_TOTEM_CREATURE()        { return this.value(12, x=>new CommandTotemCreature(x)) }
+    /** Enum Value:                                         13 */
+    get RITUAL_BASE()                  { return this.value(13, x=>x) }
+    /** Enum Value:                                         14 */
+    get RITUAL_SPECIALIZE()            { return this.value(14, x=>x) }
+    /** Enum Value:                                         15 */
+    get RITUAL_ACTIVATE_PORTAL()       { return this.value(15, x=>x) }
+    /** Enum Value:                                         16 */
+    get QUEST_COMPLETE()                { return this.value(16, x=>new CompleteQuest(x)) }
+    /** Enum Value:                                         17 */
+    get WEAPON_DAMAGE_NOSCHOOL()        { return this.value(17, x=>new WeaponDamageNoSchool(x)) }
+    /** Enum Value:                                         18 */
+    get RESURRECT()                     { return this.value(18, x=>new Resurrect(x)) }
+    /** Enum Value:                                         19 */
+    get ADD_EXTRA_ATTACKS()             { return this.value(19, x=>x) }
+    /** Enum Value:                                         20 */
+    get DODGE()                        { return this.value(20, x=>new ExtraAttacks(x)) }
+    /** Enum Value:                                         21 */
+    get EVADE()                        { return this.value(21, x=>x) }
+    /** Enum Value:                                         22 */
+    get PARRY()                         { return this.value(22, x=>x) }
+    /** Enum Value:                                         23 */
+    get BLOCK()                        { return this.value(23, x=>x) }
+    /** Enum Value:                                         24 */
+    get CREATE_ITEM()                   { return this.value(24, x=>new CreateItem(x)) }
+    /** Enum Value:                                         25 */
+    get WEAPON()                        { return this.value(25, x=>new Weapon(x)) }
+    /** Enum Value:                                         26 */
+    get DEFENSE()                      { return this.value(26, x=>x) }
+    /** Enum Value:                                         27 */
+    get PERSISTENT_AREA_AURA()          { return this.value(27, x=>x) }
+    /** Enum Value:                                         28 */
+    get SUMMON()                        { return this.value(28, x=>new Summon(x)) }
+    /** Enum Value:                                         29 */
+    get LEAP()                          { return this.value(29, x=>new Leap(x)) }
+    /** Enum Value:                                         30 */
+    get ENERGIZE()                      { return this.value(30, x=>new Energize(x)) }
+    /** Enum Value:                                         31 */
+    get WEAPON_PERCENT_DAMAGE()         { return this.value(31, x=>new WeaponPercentDamage(x)) }
+    /** Enum Value:                                         32 */
+    get TRIGGER_MISSILE()               { return this.value(32, x=>new TriggerMissile(x)) }
+    /** Enum Value:                                         33 */
+    get OPEN_LOCK()                     { return this.value(33, x=>new OpenLock(x)) }
+    /** Enum Value:                                         34 */
+    get SUMMON_CHANGE_ITEM()            { return this.value(34, x=>x) }
+    /** Enum Value:                                         35 */
+    get APPLY_AREA_AURA_PARTY()         { return this.value(35, x=>x) }
+    /** Enum Value:                                         36 */
+    get LEARN_SPELL()                   { return this.value(36, x=>new LearnSpell(x)) }
+    /** Enum Value:                                         37 */
+    get SPELL_DEFENSE()                { return this.value(37, x=>x) }
+    /** Enum Value:                                         38 */
+    get DISPEL()                        { return this.value(38, x=>new Dispel(x)) }
+    /** Enum Value:                                         39 */
+    get LANGUAGE()                      { return this.value(39, x=>new Language(x)) }
+    /** Enum Value:                                         40 */
+    get DUAL_WIELD()                    { return this.value(40, x=>x) }
+    /** Enum Value:                                         41 */
+    get JUMP()                          { return this.value(41, x=>new Jump(x)) }
+    /** Enum Value:                                         42 */
+    get JUMP_DEST()                     { return this.value(42, x=>new JumpDest(x)) }
+    /** Enum Value:                                         43 */
+    get TELEPORT_UNITS_FACE_CASTER()    { return this.value(43, x=>new TeleportUnitFaceCaster(x)) }
+    /** Enum Value:                                         44 */
+    get SKILL_STEP()                    { return this.value(44, x=>new SkillStep(x)) }
+    /** Enum Value:                                         45 */
+    get ADD_HONOR()                     { return this.value(45, x=>new AddHonor(x)) }
+    /** Enum Value:                                         46 */
+    get SPAWN()                        { return this.value(46, x=>x) }
+    /** Enum Value:                                         47 */
+    get TRADE_SKILL()                   { return this.value(47, x=>new TradeSkill(x)) }
+    /** Enum Value:                                         48 */
+    get STEALTH()                      { return this.value(48, x=>x) }
+    /** Enum Value:                                         49 */
+    get DETECT()                       { return this.value(49, x=>x) }
+    /** Enum Value:                                         50 */
+    get TRANS_DOOR()                    { return this.value(50, x=>new TransDoor(x)) }
+    /** Enum Value:                                         51 */
+    get FORCE_CRITICAL_HIT()           { return this.value(51, x=>x) }
+    /** Enum Value:                                         52 */
+    get GUARANTEE_HIT()                { return this.value(52, x=>x) }
+    /** Enum Value:                                         53 */
+    get ENCHANT_ITEM()                  { return this.value(53, x=>new EnchantItem(x)) }
+    /** Enum Value:                                         54 */
+    get ENCHANT_ITEM_TEMPORARY()        { return this.value(54, x=>new EnchantItemTemp(x)) }
+    /** Enum Value:                                         55 */
+    get TAMECREATURE()                  { return this.value(55, x=>x) }
+    /** Enum Value:                                         56 */
+    get SUMMON_PET()                    { return this.value(56, x=>new SummonPet(x)) }
+    /** Enum Value:                                         57 */
+    get LEARN_PET_SPELL()               { return this.value(57, x=>new LearnPetSpell(x)) }
+    /** Enum Value:                                         58 */
+    get WEAPON_DAMAGE()                 { return this.value(58, x=>new WeaponDamage(x)) }
+    /** Enum Value:                                         59 */
+    get CREATE_RANDOM_ITEM()           { return this.value(59, x=>new CreateRandomItem(x)) }
+    /** Enum Value:                                         60 */
+    get PROFICIENCY()                   { return this.value(60, x=>x) }
+    /** Enum Value:                                         61 */
+    get SEND_EVENT()                    { return this.value(61, x=>new SendEvent(x)) }
+    /** Enum Value:                                         62 */
+    get POWER_BURN()                    { return this.value(62, x=>new PowerBurn(x)) }
+    /** Enum Value:                                         63 */
+    get THREAT()                        { return this.value(63, x=>new Threat(x)) }
+    /** Enum Value:                                         64 */
+    get TRIGGER_SPELL()                 { return this.value(64, x=>new TriggerSpell(x)) }
+    /** Enum Value:                                         65 */
+    get APPLY_AREA_AURA_RAID()          { return this.value(65, x=>x) }
+    /** Enum Value:                                         66 */
+    get CREATE_MANA_GEM()              { return this.value(66, x=>new CreateManaGem(x)) }
+    /** Enum Value:                                         67 */
+    get HEAL_MAX_HEALTH()               { return this.value(67, x=>new HealMaxHealth(x)) }
+    /** Enum Value:                                         68 */
+    get INTERRUPT_CAST()                { return this.value(68, x=>new InterruptCast(x)) }
+    /** Enum Value:                                         69 */
+    get DISTRACT()                      { return this.value(69, x=>x) }
+    /** Enum Value:                                         70 */
+    get PULL()                         { return this.value(70, x=>x) }
+    /** Enum Value:                                         71 */
+    get PICKPOCKET()                    { return this.value(71, x=>new Pickpocket(x)) }
+    /** Enum Value:                                         72 */
+    get ADD_FARSIGHT()                  { return this.value(72, x=>new AddFarsight(x)) }
+    /** Enum Value:                                         73 */
+    get UNTRAIN_TALENTS()               { return this.value(73, x=>x) }
+    /** Enum Value:                                         74 */
+    get APPLY_GLYPH()                   { return this.value(74, x=>new ApplyGlyph(x)) }
+    /** Enum Value:                                         75 */
+    get HEAL_MECHANICAL()              { return this.value(75, x=>new HealMechanical(x)) }
+    /** Enum Value:                                         76 */
+    get SUMMON_OBJECT_WILD()            { return this.value(76, x=>new SummonObjectWild(x)) }
+    /** Enum Value:                                         77 */
+    get SCRIPT_EFFECT()                 { return this.value(77, x=>new ScriptEffect(x)) }
+    /** Enum Value:                                         78 */
+    get ATTACK()                        { return this.value(78, x=>x) }
+    /** Enum Value:                                         79 */
+    get SANCTUARY()                     { return this.value(79, x=>new Sanctuary(x)) }
+    /** Enum Value:                                         80 */
+    get ADD_COMBO_POINTS()              { return this.value(80, x=>new AddComboPoints(x)) }
+    /** Enum Value:                                         81 */
+    get CREATE_HOUSE()                 { return this.value(81, x=>x) }
+    /** Enum Value:                                         82 */
+    get BIND_SIGHT()                    { return this.value(82, x=>x) }
+    /** Enum Value:                                         83 */
+    get DUEL()                          { return this.value(83, x=>x) }
+    /** Enum Value:                                         84 */
+    get STUCK()                         { return this.value(84, x=>x) }
+    /** Enum Value:                                         85 */
+    get SUMMON_PLAYER()                 { return this.value(85, x=>x) }
+    /** Enum Value:                                         86 */
+    get ACTIVATE_OBJECT()               { return this.value(86, x=>new ActivateObject(x)) }
+    /** Enum Value:                                         87 */
+    get GAMEOBJECT_DAMAGE()             { return this.value(87, x=>new GameObjectDamage(x)) }
+    /** Enum Value:                                         88 */
+    get GAMEOBJECT_REPAIR()             { return this.value(88, x=>new GameObjectRepair(x)) }
+    /** Enum Value:                                         89 */
+    get GAMEOBJECT_SET_DESTRUCTION_STATE() { return this.value(89, x=>new SetGameObjectDestructibleState(x)) }
+    /** Enum Value:                                         90 */
+    get KILL_CREDIT()                  { return this.value(90, x=>new KillCredit(x)) }
+    /** Enum Value:                                         91 */
+    get THREAT_ALL()                   { return this.value(91, x=>x) }
+    /** Enum Value:                                         92 */
+    get ENCHANT_HELD_ITEM()             { return this.value(92, x=>new EnchantHeldItem(x)) }
+    /** Enum Value:                                         93 */
+    get FORCE_DESELECT()                { return this.value(93, x=>x) }
+    /** Enum Value:                                         94 */
+    get SELF_RESURRECT()                { return this.value(94, x=>new ResurrectSelf(x)) }
+    /** Enum Value:                                         95 */
+    get SKINNING()                      { return this.value(95, x=>x) }
+    /** Enum Value:                                         96 */
+    get CHARGE()                        { return this.value(96, x=>new Charge(x)) }
+    /** Enum Value:                                         97 */
+    get CAST_BUTTON()                  { return this.value(97, x=>new CastButtons(x)) }
+    /** Enum Value:                                         98 */
+    get KNOCK_BACK()                    { return this.value(98, x=>new Knockback(x)) }
+    /** Enum Value:                                         99 */
+    get DISENCHANT()                    { return this.value(99, x=>x) }
+    /** Enum Value:                                         100 */
+    get INEBRIATE()                     { return this.value(100, x=>new MakeDrunk(x)) }
+    /** Enum Value:                                         101 */
+    get FEED_PET()                      { return this.value(101, x=>x) }
+    /** Enum Value:                                         102 */
+    get DISMISS_PET()                   { return this.value(102, x=>x) }
+    /** Enum Value:                                         103 */
+    get REPUTATION()                    { return this.value(103, x=>new Reputation(x)) }
+    /** Enum Value:                                         104 */
+    get SUMMON_OBJECT_SLOT1()           { return this.value(104, x=>new SummonObjectSlot1(x)) }
+    /** Enum Value:                                         105 */
+    get SUMMON_OBJECT_SLOT2()           { return this.value(105, x=>new SummonObjectSlot2(x)) }
+    /** Enum Value:                                         106 */
+    get SUMMON_OBJECT_SLOT3()           { return this.value(106, x=>new SummonObjectSlot3(x)) }
+    /** Enum Value:                                         107 */
+    get SUMMON_OBJECT_SLOT4()           { return this.value(107, x=>new SummonObjectSlot4(x)) }
+    /** Enum Value:                                         108 */
+    get DISPEL_MECHANIC()               { return this.value(108, x=>new DispelMechanic(x)) }
+    /** Enum Value:                                         109 */
+    get SUMMON_DEAD_PET()               { return this.value(109, x=>x) }
+    /** Enum Value:                                         110 */
+    get DESTROY_ALL_TOTEMS()            { return this.value(110, x=>new DestroyAllTotems(x)) }
+    /** Enum Value:                                         111 */
+    get DURABILITY_DAMAGE()             { return this.value(111, x=>new DurabilityDamage(x)) }
+    /** Enum Value:                                         112 */
+    get SPELL_EFFECT112()               { return this.value(112, x=>x) }
+    /** Enum Value:                                         113 */
+    get RESURRECT_NEW()                 { return this.value(113, x=>x) }
+    /** Enum Value:                                         114 */
+    get ATTACK_ME()                     { return this.value(114, x=>x) }
+    /** Enum Value:                                         115 */
+    get DURABILITY_DAMAGE_PCT()         { return this.value(115, x=>new DurabilityDamagePercent(x)) }
+    /** Enum Value:                                         116 */
+    get SKIN_PLAYER_CORPSE()           { return this.value(116, x=>x) }
+    /** Enum Value:                                         117 */
+    get SPIRIT_HEAL()                  { return this.value(117, x=>x) }
+    /** Enum Value:                                         118 */
+    get SKILL()                        { return this.value(118, x=>new Skill(x)) }
+    /** Enum Value:                                         119 */
+    get APPLY_AREA_AURA_PET()           { return this.value(119, x=>x) }
+    /** Enum Value:                                         120 */
+    get TELEPORT_GRAVEYARD()           { return this.value(120, x=>x) }
+    /** Enum Value:                                         121 */
+    get NORMALIZED_WEAPON_DMG()         { return this.value(121, x=>x) }
+    /** Enum Value:                                         122 */
+    get SPELL_EFFECT122()              { return this.value(122, x=>x) }
+    /** Enum Value:                                         123 */
+    get SEND_TAXI()                    { return this.value(123, x=>new SendTaxi(x)) }
+    /** Enum Value:                                         124 */
+    get PULL_TOWARDS()                  { return this.value(124, x=>new PullTowards(x)) }
+    /** Enum Value:                                         125 */
+    get MODIFY_THREAT_PERCENT()         { return this.value(125, x=>new ModifyThreatPercent(x)) }
+    /** Enum Value:                                         126 */
+    get STEAL_BENEFICIAL_BUFF()        { return this.value(126, x=>new StealBeneficialBuff(x)) }
+    /** Enum Value:                                         127 */
+    get PROSPECTING()                  { return this.value(127, x=>x) }
+    /** Enum Value:                                         128 */
+    get APPLY_AREA_AURA_FRIEND()        { return this.value(128, x=>x) }
+    /** Enum Value:                                         129 */
+    get APPLY_AREA_AURA_ENEMY()         { return this.value(129, x=>x) }
+    /** Enum Value:                                         130 */
+    get REDIRECT_THREAT()               { return this.value(130, x=>new RedirectThreat(x)) }
+    /** Enum Value:                                         131 */
+    get PLAYER_NOTIFICATION()          { return this.value(131, x=>new PlaySound(x)) }
+    /** Enum Value:                                         132 */
+    get PLAY_MUSIC()                   { return this.value(132, x=>new PlayMusic(x)) }
+    /** Enum Value:                                         133 */
+    get UNLEARN_SPECIALIZATION()       { return this.value(133, x=>x) }
+    /** Enum Value:                                         134 */
+    get KILL_CREDIT2()                 { return this.value(134, x=>x) }
+    /** Enum Value:                                         135 */
+    get CALL_PET()                      { return this.value(135, x=>x) }
+    /** Enum Value:                                         136 */
+    get HEAL_PCT()                      { return this.value(136, x=>new HealPercent(x)) }
+    /** Enum Value:                                         137 */
+    get ENERGIZE_PCT()                  { return this.value(137, x=>new EnergizePercent(x)) }
+    /** Enum Value:                                         138 */
+    get LEAP_BACK()                    { return this.value(138, x=>new LeapBack(x)) }
+    /** Enum Value:                                         139 */
+    get CLEAR_QUEST()                  { return this.value(139, x=>new ClearQuest(x)) }
+    /** Enum Value:                                         140 */
+    get FORCE_CAST()                    { return this.value(140, x=>new ForceCast(x)) }
+    /** Enum Value:                                         141 */
+    get FORCE_CAST_WITH_VALUE()         { return this.value(141, x=>new ForceCastWithValue(x)) }
+    /** Enum Value:                                         142 */
+    get TRIGGER_SPELL_WITH_VALUE()      { return this.value(142, x=>new TriggerSpellWithValue(x)) }
+    /** Enum Value:                                         143 */
+    get APPLY_AREA_AURA_OWNER()         { return this.value(143, x=>x) }
+    /** Enum Value:                                         144 */
+    get KNOCK_BACK_DEST()               { return this.value(144, x=>new KnockbackDest(x)) }
+    /** Enum Value:                                         145 */
+    get PULL_TOWARDS_DEST()            { return this.value(145, x=>new PullTowardsDest(x)) }
+    /** Enum Value:                                         146 */
+    get ACTIVATE_RUNE()                 { return this.value(146, x=>new ActivateRune(x)) }
+    /** Enum Value:                                         147 */
+    get QUEST_FAIL()                   { return this.value(147, x=>new FailQuest(x)) }
+    /** Enum Value:                                         148 */
+    get TRIGGER_MISSILE_SPELL_WITH_VALUE()  { return this.value(148, x=>new TriggerMissileWithValue(x)) }
+    /** Enum Value:                                         149 */
+    get CHARGE_DEST()                   { return this.value(149, x=>new ChargeDest(x)) }
+    /** Enum Value:                                         150 */
+    get QUEST_START()                   { return this.value(150, x=>new StartQuest(x)) }
+    /** Enum Value:                                         151 */
+    get TRIGGER_SPELL2()                { return this.value(151, x=>x) }
+    /** Enum Value:                                         152 */
+    get SUMMON_RAF_FRIEND()            { return this.value(152, x=>x) }
+    /** Enum Value:                                         153 */
+    get CREATE_TAMED_PET()             { return this.value(153, x=>x) }
+    /** Enum Value:                                         154 */
+    get DISCOVER_TAXI()                 { return this.value(154, x=>x) }
+    /** Enum Value:                                         155 */
+    get TITAN_GRIP()                   { return this.value(155, x=>new CanTitanGrip(x)) }
+    /** Enum Value:                                         156 */
+    get ENCHANT_ITEM_PRISMATIC()        { return this.value(156, x=>new EnchantPrismaticItem(x)) }
+    /** Enum Value:                                         157 */
+    get CREATE_ITEM2()                 { return this.value(157, x=>x) }
+    /** Enum Value:                                         158 */
+    get MILLING()                       { return this.value(158, x=>x) }
+    /** Enum Value:                                         159 */
+    get ALLOW_RENAME_PET()             { return this.value(159, x=>x) }
+    /** Enum Value:                                         160 */
+    get SPELL_EFFECT160()               { return this.value(160, x=>x) }
+    /** Enum Value:                                         161 */
+    get TALENT_SPEC_COUNT()            { return this.value(161, x=>x) }
+    /** Enum Value:                                         162 */
+    get TALENT_SPEC_SELECT()            { return this.value(162, x=>x) }
+    /** Enum Value:                                         163 */
+    get UNUSED()                        { return this.value(163, x=>x) }
+    /** Enum Value:                                         164 */
+    get REMOVE_AURA()                   { return this.value(164, x=>new RemoveAura(x)) }
 }

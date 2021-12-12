@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { DBC } from "wotlkdata";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { Talent } from "./Talent";
 
 export class TalentRankWrap extends Cell<number, Talent> {
@@ -38,23 +39,23 @@ export class TalentRankWrap extends Cell<number, Talent> {
 
 export class TalentRequirement extends ArrayEntry<Talent> {
 
-    clear(): Talent {
-        this.owner.row.PrereqTalent.setIndex(this.index, 0);
-        this.owner.row.PrereqRank.setIndex(this.index, 0);
-        return this.owner;
+    clear() {
+        this.container.row.PrereqTalent.setIndex(this.index, 0);
+        this.container.row.PrereqRank.setIndex(this.index, 0);
+        return this;
     }
 
     isClear(): boolean {
-        return this.owner.row.PrereqTalent.getIndex(this.index) === 0;
+        return this.container.row.PrereqTalent.getIndex(this.index) === 0;
     }
 
-    get Talent() { return this.ownerWrapIndex(this.owner.row.PrereqTalent, this.index); }
-    get Rank() { return new TalentRankWrap(this.owner, this.index); }
+    get Talent() { return this.wrapIndex(this.container.row.PrereqTalent, this.index); }
+    get Rank() { return this.wrap(new TalentRankWrap(this.container, this.index)); }
 
     set(talent: number, rank: number) {
         this.Talent.set(talent);
         this.Rank.set(rank);
-        return this.owner;
+        return this;
     }
 }
 
@@ -68,7 +69,16 @@ export class TalentRequirements extends ArraySystem<TalentRequirement, Talent> {
     }
 
     add(talent: number, rank: number) {
-        this.getFree().set(talent, rank);
+        this.addGet().set(talent, rank);
         return this.owner;
+    }
+
+    addPos(row: number, column: number, rank: number) {
+        let talent = DBC.Talent.query({
+              TierID:row
+            , ColumnIndex:column
+            ,TabID:this.owner.Tab.get()
+        })
+        return this.add(talent.ID.get(),rank);
     }
 }

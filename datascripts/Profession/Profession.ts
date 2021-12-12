@@ -1,279 +1,323 @@
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
+import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { MainEntity } from "../Misc/Entity";
+import { Ids } from "../Misc/Ids";
+import { SelfRef } from "../Refs/Ref";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { std } from "../tswow-stdlib-data";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { ProfessionTier, resolveProfessionTier, isTradeskillSpell } from "./ProfessionType";
+import { SpellRegistry } from "../Spell/Spells";
+import { TrainerBase } from "../Trainer/Trainer";
+import { ProfessionGatheringNodes } from "./ProfessionGatheringNodes";
+import { ProfessionGatheringSpells } from "./ProfessionGatheringSpells";
 import { ProfessionNameSystem } from "./ProfessionName";
-import { ProfessionRecipe } from "./ProfessionRecipe";
-import { GatheringSpell } from "./GatheringSpell";
-import { Locks } from "../Locks/Locks";
-import { LockType } from "../Locks/LockType";
-import { GameObjectTemplates } from "../GameObject/GameObjects";
+import { ProfessionRecipes } from "./ProfessionRecipe";
+import { ProfessionTier, resolveProfessionRank } from "./ProfessionType";
 
-let BS_SPELLS = [
-    2018,
-    3100,
-    3538,
-    9785,
-    29844,
-    51300
-]
+export class Profession extends MainEntity<SkillLineRow> {
+    get AsSkillLine() {
+        return new SelfRef(this, ()=>new SkillLine(this.row))
+    }
+    private _cachedApprenticeSpell: Spell|undefined = undefined;
+    private _cachedLearnSpells: Spell[]|undefined = undefined;
+    /** contains all except the apprentice spell */
+    private _cachedRanks: Spell[]|undefined = undefined;
 
-export class Profession {
-    skillLine: SkillLine;
-
-    private _ApprenticeSpell: Spell|undefined;
-    private _ApprenticeLearnSpell: Spell|undefined;
-    private _LockType: LockType|undefined;
-
-    private getSpells() {
-        return DBC.SkillLineAbility.filter({SkillLine:this.skillLine.ID})
-            .map(x=>std.Spells.load(x.Spell.get()))
+    setHasCrafting(value: boolean) {
+        this.Ranks.forEach(rank=>{
+            let spell = rank.ProfessionSpell();
+            if(value) {
+                spell.Attributes.IS_HIDDEN_IN_SPELLBOOK.set(false);
+                spell.Attributes.UNK41.set(false);
+            } else {
+                spell.Attributes.UNK41.set(true);
+                spell.Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true);
+            }
+        })
+        return this;
     }
 
-    private getSkillSpells() {
-        return this.getSpells().filter(x=>isTradeskillSpell(x));
-    }
+    get Recipes() { return new ProfessionRecipes(this); }
+    get GatheringNodes() { return new ProfessionGatheringNodes(this); }
+    get GatheringSpells() { return new ProfessionGatheringSpells(this); }
+    get Name() { return new ProfessionNameSystem(this); }
+    get ID() { return this.AsSkillLine.get().ID; }
+    readonly Ranks = new ProfessionRanks(this);
 
-    getSkillRank(index: number) {
-        if(index<=0) {
-            throw new Error(`Invalid skill rank argument: ${index}`);
+    static findApprenticeSpell(thiz: Profession) {
+        // cached because it's expensive to find, and shouldn't change
+        if(thiz._cachedApprenticeSpell!==undefined) return thiz._cachedApprenticeSpell;
+        let spell = DBC.SkillLineAbility.queryAll({SkillLine:thiz.ID})
+            .map(x=>SpellRegistry.load(x.Spell.get()))
+            [0]
+
+        if(!spell) return undefined;
+        let spellRank = SQL.spell_ranks.query({spell_id:spell.ID});
+        if(!spellRank) return undefined;
+        let firstSpell = SpellRegistry.load(spellRank.first_spell_id.get());
+        if(!firstSpell) {
+            throw new Error(`Profession ${thiz.AsSkillLine.get().Name.enGB.get()} has an invalid first spell rank in spell_ranks`);
         }
+        return thiz._cachedApprenticeSpell = firstSpell;
+    }
+
+    static getLearnSpells(profession: Profession, rank: number) {
+        if(profession._cachedLearnSpells) return profession._cachedLearnSpells;
+        let rankSpell = this.getSkillRank(profession, rank);
+        if(!rankSpell) return [];
+        // TODO: false positive
+        let spells = SpellRegistry.queryAll({Effect:36,EffectTriggerSpell:rankSpell.ID})
+        if(spells.length === 0) {
+            throw new Error(`Profession ${profession.ID} lacks a learn spell for rank ${rank}!`)
+        }
+        return profession._cachedLearnSpells = spells;
+    }
+
+    static getSkillRank(profession: Profession, index: number) {
         if(index==1) {
-            return this.ApprenticeSpell;
+            return this.findApprenticeSpell(profession);
         }
-        let rank = SQL.spell_ranks.find({first_spell_id:this.ApprenticeSpell.ID,rank:index});
+
+        if(profession._cachedRanks !== undefined) {
+            return profession._cachedRanks[index-2];
+        }
+
+        let apprentice = this.findApprenticeSpell(profession);
+        if(!apprentice) {
+            return undefined;
+        }
+
+        let rank = SQL.spell_ranks.query({
+              first_spell_id:apprentice.ID
+            , rank:index
+        });
+
         if(rank===undefined) {
-            throw new Error(`Spell ${this.skillLine.Name.enGB} has no spell rank ${index}`);
+            return undefined;
         }
-        let spl = std.Spells.load(rank.spell_id.get());
+        let spl = SpellRegistry.load(rank.spell_id.get());
+
         if(spl===undefined) {
-            throw new Error(`Spell ${this.skillLine.Name.enGB} has an invalid spell at rank ${index}`);
+            throw new Error(`Spell ${profession.AsSkillLine.get().Name.enGB} has an invalid spell at rank ${index}`);
         }
         return spl;
     }
 
-    setHasCrafting(value: boolean) {
-        loop1:
-        for(let i=1;i<this.GetHighestRank();++i) {
-            let ef = this.getSkillRank(i);
-            if(value) {
-                ef.Attributes.isHiddenInSpellbook.clear();
-                ef.Attributes.unk41.clear();
-            } else {
-                ef.Attributes.unk41.mark();
-                ef.Attributes.isHiddenInSpellbook.mark();
-            }
+    static setCacheRanks(profession: Profession) {
+        profession._cachedRanks = []
+    }
 
-            for(let j=0;j<3;++j) {
-                if(ef.Effects.get(j).EffectType.get() == 47) {
-                    if(!value) {
-                        ef.Effects.get(j).EffectType.set(0);
-                        break;
-                    } else {
-                        continue loop1;
-                    }
-                }
-            }
+    static setCacheNonApprenticeSpell(profession: Profession, spell: Spell) {
+        if(profession._cachedRanks !== undefined) {
+            profession._cachedRanks.push(spell);
         }
+    }
+
+    static setCacheApprenticeSpell(profession: Profession, spell: Spell) {
+        profession._cachedApprenticeSpell = spell;
+    }
+
+    static setCacheLearnSpells(profession: Profession) {
+        profession._cachedLearnSpells = [];
+    }
+    static addCachedLearnSpell(profession: Profession, spell: Spell) {
+        if(profession._cachedLearnSpells) profession._cachedLearnSpells.push(spell);
+    }
+
+    static getTiers(profession: Profession) {
+        return DBC.SkillTiers.findById(
+            profession.AsSkillLine.get().RaceClassInfos.get()[0].SkillTier.get()
+        )
+    }
+
+    static copyTiers(profession: Profession) {
+        profession.AsSkillLine.get().RaceClassInfos
+            .get()[0].SkillTier.set
+                (
+                    this.getTiers(profession)
+                        .clone(Ids.SkillTiers.id())
+                        .ID.get()
+                )
+    }
+
+    addToTrainer(trainer: TrainerBase, tier: ProfessionTier, reqSkillValue: number, cost: number = 0, reqLevel: number = 0) {
+        let index = resolveProfessionRank(tier);
+        let len = this.Ranks.length;
+        if(index > len) {
+            throw new Error(
+              `Attempted to add rank ${resolveProfessionRank(index)}`
+            + ` for profession ${this.ID} to a trainer`
+            + `, but it only has ${len} ranks`
+            )
+        }
+        trainer.Spells.add(
+              this.Ranks.get(index).LearnSpells()[0].ID
+            , cost
+            , reqLevel
+            , this.ID
+            , reqSkillValue
+            , index == 0 ? [] : [this.Ranks.get(resolveProfessionRank(index)-1).ProfessionSpell().ID]
+            )
         return this;
     }
+}
 
-    constructor(skillLine: SkillLine) {
-        this.skillLine = skillLine;
-        this.skillLine.CanLink.set(1);
+export class ProfessionRankNumber extends CellSystem<Profession> {
+    private readonly index: number;
+
+    constructor(owner: Profession, index: number) {
+        super(owner);
+        this.index = index;
     }
 
-    get LockType() {
-        if(this._LockType!==undefined) {
-            return this._LockType;
-        }
-        this._LockType = Locks.createType()
-            .Name.enGB.set(this.Name.enGB.get())
-        return this._LockType;
+    set(value: number) {
+        Profession.getTiers(this.owner).Value.setIndex(this.index,value);
+        return this.owner;
     }
 
-    addRecipe(mod: string, id: string) {
-        return new ProfessionRecipe(this,std.Spells.create(mod,id,3492)
-                .SkillLines.add(this.ID).end)
-            .SpellFocus.set(0)
-            .Reagents.clearAll()
-            .Totems.clearAll()
+    copyTiersAndSet(value: number) {
+        Profession.copyTiers(this.owner);
+        return this.set(value);
+    }
+}
+
+export class ProfessionRank extends CellSystem<Profession> {
+    private readonly rank;
+    constructor(owner: Profession, rank: number) {
+        super(owner);
+        this.rank = rank;
     }
 
-    addGatheringNode(mod: string, name: string, levelNeeded: number) {
-        return GameObjectTemplates.create(mod,name).setChest()
-            .IsConsumable.set(1)
-            .Lock
-                .Index.set(this.LockType.ID)
-                .Type.setLockType()
-                .Skill.set(levelNeeded)
-                .Action.set(0)
-            .end
+    get SkillLevel() { return new ProfessionRankNumber(this.owner,this.rank); }
+    LearnSpells() { return Profession.getLearnSpells(this.owner, this.rank) }
+    ProfessionSpell() { return Profession.getSkillRank(this.owner, this.rank) as any as Spell; }
+}
+
+export class ProfessionRanks extends CellSystem<Profession> {
+    private cachedLength?: number = undefined;
+
+    static setCached(ranks: ProfessionRanks, length: number) {
+        ranks.cachedLength = length;
     }
 
-    addSkillsTo(modid: string, id: string, rank: ProfessionTier) {
-        let rnk = resolveProfessionTier(rank);
-        try {
-            this.ApprenticeSpell;
-        } catch(err) {
-            this._ApprenticeSpell = std.Spells.create(modid,`${id}_spell_1`,BS_SPELLS[0])
-                .Name.enGB.set(this.skillLine.Name.enGB.get())
-                .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                .Visual.clear().end
-                .SkillLines.add(this.skillLine.ID)
-                    .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
-                    .ClassMaskForbidden.set(0)
-                    .MinSkillRank.set(1)
-                    .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
-                .end
+    clearCache() {
+        this.cachedLength = undefined;
+    }
 
-            this._ApprenticeLearnSpell = std.Spells.create(modid,`${id}_learn_spell`,2020)
-                .Name.enGB.set(this.skillLine.Name.enGB.get())
-                .Description.enGB.set(this.skillLine.Description.enGB.get())
-                .Effects.get(0).TriggerSpell.set((this._ApprenticeSpell as Spell).ID).end
-                .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-
-            SQL.spell_ranks.add((this._ApprenticeSpell as Spell).ID,1,
-                {spell_id: (this._ApprenticeSpell as Spell).ID})
+    get length() {
+        if(this.cachedLength !== undefined) {
+            return this.cachedLength;
         }
 
-        for(let i=2;i<rnk;++i) {
-            try { this.getSkillRank(i);}
-            catch(err) {
-                let spl = std.Spells.create(modid,`${id}_spell_${i}`,BS_SPELLS[i-1])
-                    .Name.enGB.set(this.skillLine.Name.enGB.get())
-                    .Effects.get(1).MiscValueA.set(this.skillLine.ID).end
-                    .Visual.clear().end
-                    .SkillLines.add(this.skillLine.ID)
-                        .RaceMask.set(this.skillLine.RaceClassInfos.getIndex(0).RaceMask.get())
-                        .ClassMaskForbidden.set(0)
-                        .MinSkillRank.set(1)
-                        .ClassMask.set(this.skillLine.RaceClassInfos.getIndex(0).ClassMask.get())
-                    .end
-                SQL.spell_ranks.add(this.ApprenticeSpell.ID,i,{spell_id:spl.ID})
-            }
+        let fst = Profession.findApprenticeSpell(this.owner);
+        if(fst == undefined) {
+            return 0;
+        }
+        let ranks = SQL.spell_ranks
+            .queryAll({first_spell_id:fst.ID})
+            .sort((a,b)=>a.rank.get()>b.rank.get() ? -1 : 1)
+            .map(x=>x.rank.get())
+
+        if(ranks.length == 0) {
+            throw new Error(`Profession ${this.owner.ID} does not have any correct spell ranks`);
         }
 
-        for(let i=1;i<rnk-1;++i) {
-            this.getSkillRank(i)
-                .SkillLines.getIndex(0)
-                .SupercededBySpell.set(this.getSkillRank(i+1).ID)
+        return this.cachedLength = ranks[0];
+    }
+
+    forEach(callback: (rank: ProfessionRank)=>void) {
+        let len = this.length;
+        for(let i=0;i<len; ++i) {
+            callback(this.get(i));
+        }
+        return this.owner;
+    }
+
+    add(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
+        let newIndex = this.length;
+        if(this.cachedLength!==undefined) this.cachedLength++;
+        let spell = SpellRegistry.create(modid,id)
+            .Name.set(this.owner.AsSkillLine.get().Name.objectify())
+            .Subtext.set(subtext)
+            .Description.set(this.owner.AsSkillLine.get().Description.objectify())
+            .Attributes.IS_ABILITY.set(true)
+            .Attributes.NOT_SHAPESHIFTED.set(true)
+            .Attributes.CASTABLE_WHILE_MOUNTED.set(true)
+            .Attributes.CASTABLE_ON_VEHICLE.set(true)
+            .Icon.setPath('Interface\\Icons\\Trade_BlackSmithing')
+            .SchoolMask.PHYSICAL.set(true)
+            .Visual.set(0)
+            .Effects.addMod(eff=>{
+                eff.Type.TRADE_SKILL.set()
+            })
+            .Effects.addMod(eff=>{
+                eff.Type.SKILL.set()
+                    .SkillTier.set(newIndex)
+                    .Skill.set(this.owner.ID)
+                    .ImplicitTargetA.set(0)
+                    .ImplicitTargetB.set(0)
+                    .ChainAmplitude.set(1)
+                    .AsEffect.get()
+                    .PointsDieSides.set(1)
+                    .BonusMultiplier.set(1)
+            })
+            .SkillLines.addMod(this.owner.ID,undefined,undefined,sla=>{
+                sla
+                   .ClassMaskForbidden.set(0)
+                   .MinSkillRank.set(1)
+                   .AcquireMethod.set(0)
+                   .RaceMask.set(0)
+                   .ClassMask.set(0)
+            })
+
+        if(newIndex === 0) {
+            Profession.setCacheApprenticeSpell(this.owner, spell);
+        } else {
+            Profession.setCacheNonApprenticeSpell(this.owner, spell);
         }
 
-        return this;
-    }
-
-    AddGatheringSpell(mod: string, id: string, lockType: number, speed: number = 0, maxRange: number = 5, totem: number = 0) {
-        let spl = std.Spells.create(mod,id)
-            .Attributes.isHiddenInSpellbook.mark()
-            .Attributes.isHiddenFromLog.mark()
-            .Attributes.unk41.mark()
-            .Range.set(0,maxRange,0,maxRange)
-            .SkillLines.add(this.ID).end
-            .CastTime.set(speed,0,speed)
-            .RequiredTotems.setIndex(0,totem)
-            .Effects.add()
-                .EffectType.setOpenLock()
-                .TargetA.setGameobjectTarget()
-                .LockType.set(lockType)
-                .effect
-                .BasePoints.set(-1)
-                .PointsPerLevel.set(5)
-                .Radius.set(2,0,2)
-                .ChainAmplitude.set(1)
-            .end
-            .Effects.add()
-                .EffectType.setSkill().effect
-                .MiscValueA.set(this.ID)
-                .DieSides.set(1)
-                .ChainAmplitude.set(1)
-                .BonusMultiplier.set(1)
-            .end
-            .SchoolMask.mark(0)
-            .InterruptFlags.OnMovement.mark()
-            .InterruptFlags.OnPushback.mark()
-            .InterruptFlags.OnInterruptCast.mark()
-            .InterruptFlags.mark(3)
-            .InterruptFlags.mark(4)
-            .Visual.makeUnique().end
-            
-        this.ApprenticeLearnSpell.Effects.addLearnSpells(spl.ID)
-        return new GatheringSpell(spl);
-    }
-
-    GetHighestRank() {
-        for(let i=1;i<=6;++i) {
-            try { this.getSkillRank(i); }
-            catch(err) { return i-1; }
+        spell.Rank.set(newIndex == 0 ? spell.ID : this.get(0).ProfessionSpell().ID,newIndex+1)
+        if(newIndex > 0) {
+            this.get(newIndex-1).ProfessionSpell().SkillLines.forEach(x=>{
+                x.SupercededBy.set(spell.ID);
+            })
         }
-        return 6;
+
+        let learnSpell = SpellRegistry.create(modid,`${id}-learn`)
+            .Name.set(this.owner.AsSkillLine.get().Name.objectify())
+            .Subtext.set(subtext)
+            .Attributes.IS_HIDDEN_FROM_LOG.set(true)
+            .Attributes.SHEATHE_UNCHANGED.set(true)
+            .TargetType.UNIT_ALLY.set(true)
+            .SchoolMask.PHYSICAL.set(true)
+            .Effects.addMod(effect=>{
+                effect.Type.LEARN_SPELL.set()
+                    .LearntSpell.set(spell.ID)
+            })
+            .Effects.addMod(effect=>{
+                effect.Type.SKILL_STEP.set()
+                        .Skill.set(this.owner.ID)
+                        .Tier.set(newIndex)
+                        .AsEffect.get()
+                        .PointsDieSides.set(1)
+            })
+        Profession.addCachedLearnSpell(this.owner, learnSpell);
+        Profession.getTiers(this.owner).Value.setIndex(newIndex,maxSkill);
+        return this.owner;
     }
 
-    SetCastTime(base: number, perLevel: number = 0, minimum: number = base) {
-        for(let i=1;i<this.GetHighestRank();++i) {
-            this.getSkillRank(i).CastTime.set(base,perLevel,minimum);
-        }
-        return this;
+    copyTiersAndAdd(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
+        Profession.copyTiers(this.owner);
+        this.add(modid,id,maxSkill,subtext);
+        return this.owner;
     }
 
-    get Name() { return new ProfessionNameSystem(this); }
-
-    get ApprenticeLearnSpell(): Spell {
-        if(this._ApprenticeLearnSpell !== undefined) {
-            return this._ApprenticeLearnSpell;
-        }
-        this._ApprenticeLearnSpell = std.Spells.filter({EffectTriggerSpell:this.ApprenticeSpell.ID})[0];
-
-        if(this._ApprenticeLearnSpell === undefined) {
-            throw new Error(`Profession ${this.skillLine.Name.enGB.get()} has no Apprentice learn spell`)
-        }
-        return this._ApprenticeLearnSpell;
-    }
-
-    get ApprenticeSpell(): Spell {
-        if(this._ApprenticeSpell!==undefined) return this._ApprenticeSpell;
-        let spell = this.getSkillSpells().find(x=>isTradeskillSpell(x));
-        if(spell===undefined) {
-            // No apprentice spell!
-            throw Error(`Profession ${this.skillLine.Name.enGB.get()} has no TradeSkill spells!`);
-        }
-        let spellRank = SQL.spell_ranks.find({spell_id:spell.ID});
-
-        if(!spellRank) {
-            throw new Error(`Profession ${this.skillLine.Name.enGB.get()} has no valid spell ranks for profession spells!`);
-        }
-        let firstSpell = std.Spells.load(spellRank.first_spell_id.get());
-
-        if(!firstSpell) {
-            throw new Error(`Profession ${this.skillLine.Name.enGB.get()} has an invalid first spell rank in spell_ranks`);
-        }
-        return firstSpell;
-    }
-
-    get ID() {
-        return this.skillLine.ID;
-    }
-
-    get JourneymanSpell(): Spell {
-        return this.getSkillRank(2);
-    }
-
-    get ExpertSpell(): Spell {
-        return this.getSkillRank(3);
-    }
-
-    get ArtisanSpell(): Spell {
-        return this.getSkillRank(4);
-    }
-
-    get MasterSpell(): Spell {
-        return this.getSkillRank(5);
-    }
-
-    get GrandMasterSpell(): Spell {
-        return this.getSkillRank(6);
+    get(index: ProfessionTier) {
+        return new ProfessionRank(
+              this.owner
+            , resolveProfessionRank(index)+1
+            );
     }
 }

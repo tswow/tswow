@@ -1,165 +1,57 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell"
 
-export class Attachment<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setShield() { return this.set(0); }
-
-    @EnumField(1)
-    setHandRight() { return this.set(1); }
-
-    @EnumField(2)
-    setHandLeft() { return this.set(2); }
-
-    @EnumField(3)
-    setElbowRight() { return this.set(3); }
-
-    @EnumField(4)
-    setElbowLeft() { return this.set(4); }
-
-    @EnumField(5)
-    setShoulderRight() { return this.set(5); }
-
-    @EnumField(6)
-    setShoulderLeft() { return this.set(6); }
-
-    @EnumField(7)
-    setKneeRight() { return this.set(7); }
-
-    @EnumField(8)
-    setKneeLeft() { return this.set(8); }
-
-    @EnumField(9)
-    setHipRight() { return this.set(9); }
-
-    @EnumField(10)
-    setHipLeft() { return this.set(10); }
-
-    @EnumField(11)
-    setHelm() { return this.set(11); }
-
-    @EnumField(12)
-    setBack() { return this.set(12); }
-
-    @EnumField(13)
-    setShoulderFlapRight() { return this.set(13); }
-
-    @EnumField(14)
-    setShoulderFlapLeft() { return this.set(14); }
-
-    @EnumField(15)
-    setChestBloodFront() { return this.set(15); }
-
-    @EnumField(16)
-    setChestBloodBack() { return this.set(16); }
-
-    @EnumField(17)
-    setBreath() { return this.set(17); }
-
-    @EnumField(18)
-    setPlayerName() { return this.set(18); }
-
-    @EnumField(19)
-    setBase() { return this.set(19); }
-
-    @EnumField(20)
-    setHead() { return this.set(20); }
-
-    @EnumField(21)
-    setSpellLeftHand() { return this.set(21); }
-
-    @EnumField(22)
-    setSpellRightHand() { return this.set(22); }
-
-    @EnumField(23)
-    setSpecial1() { return this.set(23); }
-
-    @EnumField(24)
-    setSpecial2() { return this.set(24); }
-
-    @EnumField(25)
-    setSpecial3() { return this.set(25); }
-
-    @EnumField(26)
-    setSheathMainHand() { return this.set(26); }
-
-    @EnumField(27)
-    setSheathOffHand() { return this.set(27); }
-
-    @EnumField(28)
-    setSheathShield() { return this.set(28); }
-
-    @EnumField(29)
-    setPlayerNameMounted() { return this.set(29); }
-
-    @EnumField(30)
-    setLargeWeaponLeft() { return this.set(30); }
-
-    @EnumField(31)
-    setLargeWeaponRight() { return this.set(31); }
-
-    @EnumField(32)
-    setHipWeaponLeft() { return this.set(32); }
-
-    @EnumField(33)
-    setHipWeaponRight() { return this.set(33); }
-
-    @EnumField(34)
-    setChest() { return this.set(34); }
-
-    @EnumField(35)
-    setHandArrow() { return this.set(35); }
-
-    @EnumField(36)
-    setBullet() { return this.set(36); }
-
-    @EnumField(37)
-    setSpellHandOmni() { return this.set(37); }
-
-    @EnumField(38)
-    setSpellHandDirected() { return this.set(38); }
-
-    @EnumField(39)
-    setVehicleSeat1() { return this.set(39); }
-
-    @EnumField(40)
-    setVehicleSeat2() { return this.set(40); }
-
-    @EnumField(41)
-    setVehicleSeat3() { return this.set(41); }
-
-    @EnumField(42)
-    setVehicleSeat4() { return this.set(42); }
-
-    @EnumField(43)
-    setVehicleSeat5() { return this.set(43); }
-
-    @EnumField(44)
-    setVehicleSeat6() { return this.set(44); }
-
-    @EnumField(45)
-    setVehicleSeat7() { return this.set(45); }
-
-    @EnumField(46)
-    setVehicleSeat8() { return this.set(46); }
-
-    @EnumField(47)
-    setLeftFoot() { return this.set(47); }
-
-    @EnumField(48)
-    setRightFoot() { return this.set(48); }
-
-    @EnumField(49)
-    setShieldNoGlove() { return this.set(49); }
-
-    @EnumField(50)
-    setSpineLow() { return this.set(50); }
-
-    @EnumField(51)
-    setAlteredShoulderR() { return this.set(51); }
-
-    @EnumField(52)
-    setAlteredShoulderL() { return this.set(52); }
-
-    @EnumField(54)
-    setSheathCrossbow() { return this.set(54); }
+export enum Attachment {
+    SHIELD              = 0,
+    HAND_RIGHT          = 1,
+    HAND_LEFT           = 2,
+    ELBOW_RIGHT         = 3,
+    ELBOW_LEFT          = 4,
+    SHOULDER_RIGHT      = 5,
+    SHOULDER_LEFT       = 6,
+    KNEE_RIGHT          = 7,
+    KNEE_LEFT           = 8,
+    HIP_RIGHT           = 9,
+    HIP_LEFT            = 10,
+    HELM                = 11,
+    BACK                = 12,
+    SHOULDER_FLAP_RIGHT = 13,
+    SHOULDER_FLAP_LEFT  = 14,
+    CHEST_BLOOD_FRONT   = 15,
+    CHEST_BLOOD_BACK    = 16,
+    BREATH              = 17,
+    PLAYER_NAME         = 18,
+    BASE                = 19,
+    HEAD                = 20,
+    SPELL_LEFT_HAND     = 21,
+    SPELL_RIGHT_HAND    = 22,
+    SPECIAL1            = 23,
+    SPECIAL2            = 24,
+    SPECIAL3            = 25,
+    SHEATH_MAIN_HAND    = 26,
+    SHEATH_OFF_HAND     = 27,
+    SHEATH_SHIELD       = 28,
+    PLAYER_NAME_MOUNTED = 29,
+    LARGE_WEAPON_LEFT   = 30,
+    LARGE_WEAPON_RIGHT  = 31,
+    HIP_WEAPON_LEFT     = 32,
+    HIP_WEAPON_RIGHT    = 33,
+    CHEST               = 34,
+    HAND_ARROW          = 35,
+    BULLET              = 36,
+    SPELL_HAND_OMNI     = 37,
+    SPELL_HAND_DIRECTED = 38,
+    VEHICLE_SEAT1       = 39,
+    VEHICLE_SEAT2       = 40,
+    VEHICLE_SEAT3       = 41,
+    VEHICLE_SEAT4       = 42,
+    VEHICLE_SEAT5       = 43,
+    VEHICLE_SEAT6       = 44,
+    VEHICLE_SEAT7       = 45,
+    VEHICLE_SEAT8       = 46,
+    LEFT_FOOT           = 47,
+    RIGHT_FOOT          = 48,
+    SHIELD_NO_GLOVE     = 49,
+    SPINE_LOW           = 50,
+    ALTERED_SHOULDER_R  = 51,
+    ALTERED_SHOULDER_L  = 52,
+    SHEATH_CROSSBOW     = 54,
 }

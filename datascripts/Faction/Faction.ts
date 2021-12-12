@@ -15,91 +15,146 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { FactionQuery, FactionRow } from "wotlkdata/dbc/types/Faction";
-import { Ids } from "../Misc/Ids";
-import { MainEntity } from "../Misc/MainEntity";
-import { FactionRelations } from "./FactionRelations";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { FactionQuery, FactionRow } from "wotlkdata/wotlkdata/dbc/types/Faction";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { MainEntity } from "../Misc/Entity";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { PercentCell } from "../Misc/PercentCell";
+import { ReputationRank } from "../Misc/ReputationRank";
+import { RefNoCreate } from "../Refs/Ref";
+import { RegistryRowBase } from "../Refs/Registry";
 import { FactionReputations } from "./FactionReputation";
+import { FactionReputationIndex } from "./FactionReputationIndex";
+import { FactionTemplates } from "./FactionTemplates";
 
-function emptyTemplate(id: number, factionId: number) {
-    return DBC.FactionTemplate.add(id)
-        .Faction.set(factionId)
-        .Enemies.set([0,0,0,0])
-        .Friend.set([0,0,0,0])
-        .FactionGroup.set(0)
-        .FriendGroup.set(0)
-        .Flags.set(0)
-        .EnemyGroup.set(0)
-}
+export class FactionRepGain extends CellSystem<Faction> {
+    protected index: number;
 
-export class Faction extends MainEntity<FactionRow> {
-    protected relationSets : FactionRelations[];
+    constructor(owner: Faction, index: number) {
+        super(owner);
+        this.index = index;
+    }
 
-    constructor(row: FactionRow) {
-        super(row);
-        this.relationSets = DBC.FactionTemplate
-            .filter({ID:this.row.ID.get()})
-            .map(x=>new FactionRelations(this, x))
-
-        if(this.relationSets.length===0) {
-            this.relationSets = [
-                emptyTemplate(Ids.FactionTemplate.id(),this.row.ID.get())
-            ].map(x=>new FactionRelations(this, x))
-        }
+    get Rate() {
+        return new PercentCell(
+              this.owner
+            , '[0-1]'
+            , false
+            , this.wrapIndex(this.owner.row.ParentFactionMod,this.index)
+        );
     }
 
     /**
-     * This is the ID used for creatures
+     * The maximum rank at which spillover can occur
      */
-    get RelationID() {
-        return this.relation.row.ID.get();
+    get Cap() {
+        return makeEnumCell(
+              ReputationRank
+            , this.owner
+            , this.wrapIndex(
+                  this.owner.row.ParentFactionCap
+                , this.index
+            )
+        )
     }
 
-    get relation() {
-        return this.relationSets[0];
+    set(rate: number, cap: number) {
+        this.Rate.set(rate);
+        this.Cap.set(cap);
+        return this.owner;
+    }
+}
+
+export class Faction extends MainEntity<FactionRow> {
+    get Parent() {
+        return FactionRegistry.ref(this, this.row.ParentFactionID);
     }
 
-    get extraRelations() {
-        return this.relationSets.slice(1);
+    /**
+     * How much of this factions reputation spills over to its children
+     */
+    get RepSpilloverDown() {
+        return new FactionRepGain(this, 0);
     }
 
+    /**
+     * How much of this factions reputation spills over to its parent
+     * @note The "Cap" here is not used by TrinityCore
+     */
+    get RepSpilloverUp() {
+        return new FactionRepGain(this, 1);
+    }
+
+    constructor(row: FactionRow) {
+        super(row);
+    }
+
+    get ID() {
+        return this.row.ID.get();
+    }
+
+    get Templates() {
+        return new FactionTemplates(this);
+    }
+
+    /**
+     * The bit index used to track reputation for this faction
+     */
+    get ReputationIndex() { return new FactionReputationIndex(this); }
+
+    /**
+     * Up to 4 different reputation settings for
+     * different race/classmasks
+     */
     get Reputation() { return new FactionReputations(this); }
-
     get Name() { return this.wrapLoc(this.row.Name); }
     get Description() { return this.wrapLoc(this.row.Description); }
 }
 
-export const Factions = {
-    create(mod: string, id: string) {
-        const facrow = DBC.Faction.add(Ids.Faction.id(mod,id))
-            .ParentFactionCap.set([5,5])
-            .ParentFactionID.set(0)
-            .ParentFactionMod.set([1,1])
-            .ReputationBase.set([0,0,0,0])
-            .ReputationClassMask.set([0,0,0,0])
-            .ReputationFlags.set([0,0,0,0])
-            .ReputationIndex.set(-1)
-            .ReputationRaceMask.set([0,0,0,0])
-        return new Faction(facrow);
-    },
+export class FactionRegistryClass
+    extends RegistryRowBase<Faction,FactionRow,FactionQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new RefNoCreate(owner, cell, this);
+    }
 
-    load(id: number) {
-        return new Faction(DBC.Faction.findById(id));
-    },
+    protected Table(): Table<any, FactionQuery, FactionRow> & { add: (id: number) => FactionRow; } {
+        return DBC.Faction
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.Faction
+    }
 
-    filter(query: FactionQuery) {
-        return DBC.Faction.filter(query).map(x=>new Faction(x));
-    },
+    protected Entity(r: FactionRow): Faction {
+        return new Faction(r);
+    }
+    protected FindByID(id: number): FactionRow {
+        return DBC.Faction.findById(id);
+    }
+    protected EmptyQuery(): FactionQuery {
+        return {}
+    }
 
-    createHorde(mod: string, id: string) {
-        return Factions.create(mod,id)
-            .relation.addFriendGroups(['HORDE'])
-            .relation.addEnemyGroup(['ALLIANCE'])
-    },
+    create(mod: string, id: string, hasReputation: boolean) {
+        let v = new Faction(DBC.Faction.add(Ids.Faction.id(mod,id))
+                .ReputationIndex.set(-1)
+            )
+            .Name.clear()
+            .Description.clear()
+            .RepSpilloverDown.set(0,0)
+            .RepSpilloverUp.set(0,0)
+            .Reputation.clearAll()
+        if(hasReputation) {
+            v.ReputationIndex.assign(mod,`${id}-rep`);
+        }
+        return v;
+    }
 
-    createAlliance(mod: string, id: string) {
-        return Factions.create(mod,id)
-            .relation.addFriendGroups(['ALLIANCE'])
-            .relation.addEnemyGroup(['HORDE'])
+    ID(e: Faction): number {
+        return e.ID;
     }
 }
+export const FactionRegistry = new FactionRegistryClass();

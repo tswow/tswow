@@ -14,15 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { Spell } from "./Spell";
 
-export class InterruptFlags extends MaskCell32<Spell> {
-    constructor(owner: Spell) {
-        super(owner, owner.row.InterruptFlags);
-    }
-
-    get OnMovement() { return this.bit(0); }
-    get OnPushback() { return this.bit(1); }
-    get OnInterruptCast() { return this.bit(2); }
+export enum InterruptFlags {
+    ON_MOVEMENT       = 0x1,
+    ON_PUSHBACK       = 0x2,
+    ON_INTERRUPT_CAST = 0x4,
 }

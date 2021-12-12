@@ -1,8 +1,12 @@
-import * as pureimage from 'pureimage'
+import * as child_process from 'child_process';
 import * as fs from 'fs';
-import * as path from 'path'
-import * as child_process from 'child_process'
-import { PNG } from 'pngjs'
+import * as path from 'path';
+import { PNG } from 'pngjs';
+import * as pureimage from 'pureimage';
+import { ipaths } from 'wotlkdata/wotlkdata/Settings';
+
+// 'PNG+BLP' is more futureproof than "both" if we ever need tga
+export type ExportFormat = 'PNG'|'BLP'|'PNG+BLP'
 
 export class TSImage {
     protected bitmap: any;
@@ -64,7 +68,7 @@ export class TSImage {
         return this;
     }
 
-    write(pathIn: string, keepPng: boolean = false) {
+    write(pathIn: string, format: ExportFormat = 'PNG+BLP') {
         let pathRaw = pathIn;
         if(pathIn.toLowerCase().endsWith('.blp') || pathIn.toLowerCase().endsWith('.png')) {
             pathRaw = pathIn.substring(0,pathIn.length-4);
@@ -78,17 +82,21 @@ export class TSImage {
         if(fs.existsSync(pathBlp)) {
             fs.rmSync(pathBlp);
         }
-        pureimage.encodePNGToStream(this.bitmap,fs.createWriteStream(pathPng))
+        return pureimage.encodePNGToStream(this.bitmap,fs.createWriteStream(pathPng))
             .then(()=>{
-                child_process.execSync(`"bin/BLPConverter/blpconverter.exe" ${pathPng}`)
-                if(!keepPng) {
-                    fs.rmSync(pathPng);
+                if(format !== 'PNG') {
+                    child_process.execSync(
+                        `"${ipaths.bin.BLPConverter.blpconverter.get()}" ${pathPng}`
+                    )
+                    if(format !== 'PNG+BLP') {
+                        fs.rmSync(pathPng);
+                    }
                 }
         });
     }
 
-    writeToAssets(mod: string, localPath: string, keepPng = false) {
-        this.write(path.join('modules',mod,'assets',localPath), keepPng);
+    writeToModule(mod: string, localPath: string, format: ExportFormat = 'PNG+BLP') {
+        return this.write(path.join('modules',mod,localPath), format);
     }
 
     static create(width: number, height: number) {
@@ -98,7 +106,7 @@ export class TSImage {
     static read(str: string) {
         if(str.toLowerCase().endsWith('.blp')) {
             child_process.execSync(
-                `"bin/BLPConverter/blpconverter.exe" ${str}`)
+                `"${ipaths.bin.BLPConverter.blpconverter.get()}" ${str}`)
             str = str.substring(0,str.length-4)+'.png'
         }
 
@@ -118,7 +126,7 @@ export const TSImages = {
 
     /**
      * Loads from any path
-     * @param pathIn 
+     * @param pathIn
      */
     read(pathIn: string) {
         return TSImage.read(pathIn);
@@ -126,10 +134,10 @@ export const TSImages = {
 
     /**
      * Loads from the assets directory of a module
-     * @param mod 
-     * @param localPath 
+     * @param mod
+     * @param localPath
      */
-    readFromAssets(mod: string, localPath: string) {
-        return TSImages.read(path.join('modules',mod,'assets',localPath));
+    readFromModule(mod: string, localPath: string) {
+        return TSImages.read(path.join('modules',mod,localPath));
     },
 }

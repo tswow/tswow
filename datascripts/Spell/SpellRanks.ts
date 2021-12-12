@@ -18,7 +18,7 @@ import { Spell } from "./Spell";
 
 export class SpellRanks {
     protected spells: Spell[];
-    
+
     constructor(spells: Spell[]) {
         this.spells = spells;
     }
@@ -41,7 +41,7 @@ export class SpellRanks {
 
     setSkillLine(skillLine: number) {
         this.spells.forEach((x,i)=>{
-            x.SkillLines.add(skillLine).MinSkillRank.set(1);
+            x.SkillLines.addGet(skillLine,undefined,undefined).MinSkillRank.set(1);
         });
         return this;
     }

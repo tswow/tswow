@@ -14,16 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
-export class CreatureMovementType<T> extends EnumCellWrapper<T> {
-    @EnumField(0) 
-    setIdle() { return this.set(0); }
-
-    @EnumField(1) 
-    setRandomMovement() { return this.set(1); }
-
-    @EnumField(2) 
-    setWaypoint() { return this.set(2); }
+export enum CreatureMovementType {
+    IDLE            = 0,
+    RANDOM_MOVEMENT = 1,
+    WAYPOINT        = 2,
 }

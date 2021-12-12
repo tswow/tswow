@@ -15,12 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { LUAXML } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Edit, EditSystem } from "wotlkdata/luaxml/TextFile";
+import { FunctionalCell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Edit, EditSystem } from "wotlkdata/wotlkdata/luaxml/TextFile";
+import { TSImage } from "../Images/Image";
 import { AnchorRow } from "../UI/Components/AnchorRow";
 import { Class } from "./Class";
-import { FunctionalCell } from "wotlkdata/cell/cells/Cell";
-import { TSImage } from "../Images/Image";
 import { stitchClassIcon } from "./ClassIcon";
 
 function float(rgb : number) {
@@ -40,17 +40,20 @@ function unfloat(str : string) {
 class TCoordSystem extends CellSystem<Class> {
     private _tCoordsCCEdit: Edit;
     private _tCoordsEdit: Edit;
+    private _tCoordsWSEdit: Edit;
 
-    constructor(owner: Class, tcoords: Edit, tcoordsCC: Edit) {
+    constructor(owner: Class, tcoords: Edit, tcoordsCC: Edit, tcoordsWS: Edit) {
         super(owner);
         this._tCoordsCCEdit = tcoordsCC;
         this._tCoordsEdit = tcoords;
+        this._tCoordsWSEdit = tcoordsWS;
     }
-    
+
     set(x1: number, y1: number, x2: number, y2: number) {
         const txt = `["${this.owner.Filename}"] = {${[x1,y1,x2,y2].join(', ')}},`
         this._tCoordsCCEdit.text = txt;
         this._tCoordsEdit.text = txt;
+        this._tCoordsWSEdit.text = txt;
         return this.owner;
     }
 
@@ -128,14 +131,14 @@ class ClassDescription extends CellSystem<Class> {
 
     get Male() {
         return new FunctionalCell(
-              this
+              this.owner
             , ()=>this.descPayload(this.male.text)
             , (value: string)=>this.male.text = `CLASS_${this.owner.Filename} = "${cleanNewline(value)}";`)
     }
 
     get Female() {
         return new FunctionalCell(
-              this
+              this.owner
             , ()=>this.descPayload(this.female.text)
             , (value: string)=>this.female.text = `CLASS_${this.owner.Filename}_FEMALE = "${cleanNewline(value)}";`)
     }
@@ -154,8 +157,21 @@ class ClassDescription extends CellSystem<Class> {
 // TODO: Fix sort order
 export class ClassUISettings extends CellSystem<Class> {
     readonly Color: ClassColor;
-    readonly TCoords: TCoordSystem;
-    readonly ClassButton: AnchorRow<Class>;
+
+    /**
+     * Texture coordinates for this class button
+     * on the character creation screen.
+     *
+     * @deprecated - don't modify this directly, use
+     *               'setIcon' to set an image instead.
+     */
+    readonly ButtonTCoords: TCoordSystem;
+
+    /**
+     * The position of this class button on the
+     * character creation screen.
+     */
+    readonly ButtonPos: AnchorRow<Class>;
     readonly Info: ClassInfoRows;
     readonly Description: ClassDescription;
 
@@ -163,15 +179,15 @@ export class ClassUISettings extends CellSystem<Class> {
         let index = stitchClassIcon(image,oldIndex);
         let x1 = (index%8)/8
         let y1 = Math.floor(index/8)/8;
-        this.TCoords.set(x1,x1+0.125,y1,y1+0.125);
+        this.ButtonTCoords.set(x1,x1+0.125,y1,y1+0.125);
         return this.owner;
     }
 
-    constructor(cls : Class,tCoordsCC : Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
+    constructor(cls : Class,tCoordsCC : Edit, tCoordsWS: Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
         super(cls);
-        this.TCoords = new TCoordSystem(cls, tCoords, tCoordsCC);
+        this.ButtonTCoords = new TCoordSystem(cls, tCoords, tCoordsCC, tCoordsWS);
         this.Color = new ClassColor(cls, classColor);
-        this.ClassButton = new AnchorRow(cls, xmlEdit);
+        this.ButtonPos = new AnchorRow(cls, xmlEdit);
         this.Description = new ClassDescription(cls, maleDescription, femaleDescription )
         this.Info = new ClassInfoRows(cls, infoRows);
     }

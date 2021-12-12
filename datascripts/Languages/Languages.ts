@@ -14,128 +14,216 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { LanguageWordsRow } from "wotlkdata/dbc/types/LanguageWords";
-import { LanguagesQuery, LanguagesRow } from "wotlkdata/dbc/types/Languages";
-import { loc_constructor } from "wotlkdata/primitives";
-import { any } from "wotlkdata/query/Relations";
-import { MainEntity } from "../Misc/MainEntity";
-import { Ids } from "../Misc/Ids";
-import { std } from "../tswow-stdlib-data";
-import { makeRacemask, RaceType } from "../Race/RaceType";
-import { ClassType, makeClassmask } from "../Class/ClassType";
-import { SQL } from "wotlkdata";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
+import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
+import { CellSystem, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultirowSystemCached } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { Language, Languages } from "wotlkdata/wotlkdata/dbc/Localization";
+import { LanguagesQuery, LanguagesRow } from "wotlkdata/wotlkdata/dbc/types/Languages";
+import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { ClassMask } from "../Class/ClassRegistry";
+import { MainEntity } from "../Misc/Entity";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RaceMask } from "../Race/RaceType";
+import { RegistryStaticNoClone } from "../Refs/Registry";
+import { SkillLine } from "../SkillLines/SkillLine";
+import { SkillLineRegistry } from "../SkillLines/SkillLines";
+import { Spell } from "../Spell/Spell";
+import { SpellRegistry } from "../Spell/Spells";
+import { SkillLineAbility, SpellSkillLineAbilites } from "../Spell/SpellSkillLines";
 
-const LANGUAGE_CATEGORY_ID = 10;
-const GUTTERSPEAK_SKILL = 673;
-const GUTTERSPEAK_SPELL = 17737;
+export class LanguageAutoLearn extends CellSystem<WoWLanguage> {
+    add(classes?: MaskCon<keyof typeof ClassMask>, races?: MaskCon<keyof typeof RaceMask>) {
+        this.owner.Skills.forEach(x=>x.enableAutolearn(classes,races,0))
+        return this.owner;
+    }
+}
+
+export class LanguageWords extends CellSystem<WoWLanguage> {
+    add(words: string[]) {
+        // word ids are never used, so their ids can just be incremented.
+        let highest = DBC.LanguageWords.queryAll({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
+        for(const word of words) {
+            DBC.LanguageWords.add(++highest,
+                {LanguageID:this.owner.ID,Word:word});
+        }
+        return this.owner;
+    }
+
+    get() {
+        return DBC.LanguageWords
+            .queryAll({LanguageID:this.owner.ID})
+    }
+
+    getText() {
+        return this.get().map(x=>x.Word.get());
+    }
+}
+
+export class LanguageName extends LocSystem<WoWLanguage> {
+    lang(lang: Language): Cell<string, WoWLanguage> & PendingCell {
+        return new MulticastCell(this.owner,[
+              ...this.owner.Skills.map(x=>x.Name.lang(lang))
+            , ...this.owner.Spells.map(x=>x.Name.lang(lang))
+            , this.owner.row.Name.lang(lang)
+        ]);
+    }
+
+    clear() {
+        Languages.forEach(x=>{
+            let c = this.lang(x);
+            if(c && c.get() && c.get().length>0) {
+                c.set('')
+            }
+        });
+        return this.owner;
+    }
+
+    get mask(): Cell<number, WoWLanguage> {
+        return new MulticastCell(this.owner,[
+            ...this.owner.Skills.map(x=>x.Name.mask),
+            this.owner.row.Name.mask
+        ]);
+    }
+
+    set(con: loc_constructor): WoWLanguage {
+        iterLocConstructor(con,(lang,value)=>{
+            this.lang(lang).set(value);
+        });
+        return this.owner;
+    }
+}
+
+export class LanguageSkills extends MultirowSystemCached<SkillLine,WoWLanguage> {
+    private cachedSkills?: SkillLine[] = undefined;
+
+    protected getAllRows(): SkillLine[] {
+        if(this.cachedSkills) return this.cachedSkills;
+        let skills: SkillLine[] = [];
+        this.owner.Abilities.forEach((value)=>{
+            let sl = value.SkillLine.get();
+            if(!skills.find((x)=>x.ID == sl)) {
+                skills.push(SkillLineRegistry.load(sl));
+            }
+        })
+        this.cachedSkills = skills;
+        return skills;
+    }
+    protected isDeleted(value: SkillLine): boolean {
+        return value.row.isDeleted();
+    }
+}
+
+export class LanguageAbilities extends MultirowSystemCached<SkillLineAbility,WoWLanguage> {
+    protected getAllRows(): SkillLineAbility[] {
+        let rows: SkillLineAbility[] = [];
+        this.owner.Spells.forEach(x=>{
+            rows = rows.concat(SpellSkillLineAbilites.getAllRows(x.SkillLines))
+        });
+        return rows;
+    }
+    protected isDeleted(value: SkillLineAbility): boolean {
+        return value.row.isDeleted();
+    }
+}
+export class LanguageSpells extends MultirowSystemCached<Spell,WoWLanguage>  {
+    protected getAllRows(): Spell[] {
+        return SpellRegistry
+            .filter(x=>x.Effects.find(eff=>
+                   eff.Type.LANGUAGE.is()
+                && eff.MiscValueA.get() === this.owner.ID
+            ))
+    }
+    protected isDeleted(value: Spell): boolean {
+        return value.row.isDeleted()
+    }
+}
 
 /**
  * Creates and handles languages in World of Warcraft,
  * such as Orcish or Common.
  */
-export class Language extends MainEntity<LanguagesRow> {
-    readonly wordRows : LanguageWordsRow[] = [];
-
+export class WoWLanguage extends MainEntity<LanguagesRow> {
     constructor(row : LanguagesRow) {
         super(row);
-        this.wordRows = DBC.LanguageWords.filter({LanguageID:this.ID});
     }
 
     get ID() {
         return this.row.ID.get();
     }
 
-    test() {
-        const skills = DBC.SkillLine.filter({CategoryID:LANGUAGE_CATEGORY_ID});
-        const skillLineAbilities = DBC.SkillLineAbility.filter({SkillLine:any.apply(undefined,skills.map(x=>x.ID.get()))});
-        const spells = DBC.Spell.filter({ID:any.apply(null,skillLineAbilities.map(x=>x.Spell.get()))});
-
-        const spell = spells.find((x)=>x.EffectMiscValue.getIndex(0)==this.ID);
-        if(spell===undefined) {
-            throw new Error('No spell for language '+this.row.Name.enGB.get())
-        }
-
-        const sla = skillLineAbilities.find((x)=>x.Spell.get()===spell.ID.get());
-        if(sla===undefined) {
-            throw new Error('No skill line ability for language '+this.row.Name.enGB.get());
-        }
-
-        const skill = skills.find((x)=>x.ID.get()===sla.SkillLine.get());
-        if(skill===undefined) {
-            throw new Error('No skill for language '+this.row.Name.enGB.get());
-        }
-
-        return spells[0];
-    }
-
-    get Name() { return this.wrapLoc(this.row.Name); }
-
-    addWords(words : string[]) {
-        // word ids are never used, so their ids can just be incremented.
-        let highest = DBC.LanguageWords.filter({}).sort((a,b)=>a.ID.get()>b.ID.get()?-1:1)[0].ID.get();
-        for(const word of words) {
-            const row = DBC.LanguageWords.add(++highest,
-                {LanguageID:this.ID,Word:word});
-            this.wordRows.push(row);
-        }
-        return this;
-    }
+    get Name() {  return new LanguageName(this); }
+    readonly Spells = new LanguageSpells(this);
+    readonly Abilities = new LanguageAbilities(this)
+    readonly Skills = new LanguageSkills(this)
+    readonly AutoLearn = new LanguageAutoLearn(this)
+    readonly Words = new LanguageWords(this)
 }
 
-export const Languages = {
-    create : (mod : string, id : string, name: loc_constructor, autolearnRaces: RaceType[] = [], autolearnClasses: ClassType[] = []) => {
-        const langRow = DBC.Languages.add(Ids.Language.id(mod,id),{Name:name});
+export class LanguageRegistryClass extends RegistryStaticNoClone<WoWLanguage,LanguagesRow,LanguagesQuery> {
+    protected Table(): Table<any, LanguagesQuery, LanguagesRow> & { add: (id: number) => LanguagesRow; } {
+        return DBC.Languages
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.Language
+    }
+    protected Entity(r: LanguagesRow): WoWLanguage {
+        return new WoWLanguage(r);
+    }
+    protected FindByID(id: number): LanguagesRow {
+        return this.Table().query({ID:id})
+    }
+    protected EmptyQuery(): LanguagesQuery {
+        return {}
+    }
+    ID(e: WoWLanguage): number {
+        return e.ID;
+    }
 
-        let gutterSpell = DBC.Spell.findById(GUTTERSPEAK_SPELL)
-        let gutterSkill = DBC.SkillLine.findById(GUTTERSPEAK_SKILL)
-        let gutterSkillRaceClass = DBC.SkillRaceClassInfo.find({SkillID:GUTTERSPEAK_SKILL});
-        let gutterSkillAbility = DBC.SkillLineAbility.find({SkillLine:GUTTERSPEAK_SKILL});
+    Clear(lang: WoWLanguage, mod: string, id: string) {
+        let sl = SkillLineRegistry.create(mod,id+'-skill')
+            .Category.set(10)
+            .CanLink.set(0)
+            .SkillCosts.set(0)
+            .Icon.setPath('Interface\\Icons\\Trade_Engineering')
+            .CanLink.set(0)
+            .RaceClassInfos.addMod(undefined,undefined,
+                x=>x
+                    .Flags.clearAll()
+                    .Flags.IS_CLASS_LINE.set(true)
+                    .SkillTier.set(0)
+            )
 
-        // Spell definition
-        const spell = gutterSpell.clone(Ids.Spell.id(mod,id+'_spell'))
-            .Name.set(name)
-            .EffectMiscValue.set([langRow.ID.get(),0,0])
+        lang.Skills.setCache([sl]);
 
-        // Skill definition
-        const skill = gutterSkill.clone(Ids.SkillLine.id(mod,id+'_skill'))
-            .DisplayName.set(name)
+        const spell = SpellRegistry
+            .create(mod,id+'-spell')
+            .Attributes.IS_PASSIVE.set(true)
+            .Attributes.IS_HIDDEN_IN_SPELLBOOK.set(true)
+            .Proc.Chance.set(100,'[0-100]')
+            .DefenseType.set(1)
+            .PreventionType.set(1)
+            .Effects.addMod(effect=>{
+                effect.Type.LANGUAGE.set()
+                    .Language.set(lang.ID)
+                    .ChainAmplitude.set(1)
+            })
+            .SchoolMask.PHYSICAL.set(true)
+            .SkillLines.addMod(sl.ID,undefined,undefined,sla=>{
+                lang.Abilities.setCache([sla]);
+                sla.RaceMask.set(0xffffffff)
+                    .AcquireMethod.set(2)
+                    .ClassMask.set(0)
+                    .ClassMaskForbidden.set(0)
+            })
+        lang.Spells.setCache([spell])
 
-        // Class/race enabling
-        const src = gutterSkillRaceClass.clone(Ids.SkillRaceClassInfo.id())
-            .SkillID.set(skill.ID.get())
-            .ClassMask.set(0xffff)
-            .RaceMask.set(0xffff)
-
-        const cmask = makeClassmask(autolearnClasses);
-        const rmask = makeRacemask(autolearnRaces);
-        if(cmask!==0 || rmask!==0) {
-            // TODO: Doesn't work currently. Don't know why.
-            gutterSkillAbility.clone(Ids.SkillLineAbility.id())
-                .Spell.set(spell.ID.get())
-                .ClassMask.set(cmask)
-                .RaceMask.set(0)
-                .AcquireMethod.set(1)
-            SQL.playercreateinfo_spell_custom
-                .add(rmask, cmask, spell.ID.get())
-                .Note.set('TSWoW') 
-        }
-
-        // Skill<->Spell Mapping
-        const sla = gutterSkillAbility.clone(Ids.SkillLineAbility.id())
-            .Spell.set(spell.ID.get())
-            .SkillLine.set(skill.ID.get())
-            .ClassMask.set(0)
-            .RaceMask.set(0xffff)
-
-        return new Language(langRow);
-    },
-
-    load : (id : number) => {
-        return new Language(DBC.Languages.find({ID:id}));
-    },
-
-    filter(query: LanguagesQuery) {
-        return DBC.Languages.filter(query).map(x=>new Language(x));
+        // clear name now that caches are all set up
+        lang.Name.clear()
     }
 }
+export const LanguageRegistry = new LanguageRegistryClass();

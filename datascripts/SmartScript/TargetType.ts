@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts"
+import { smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts"
 import { Position } from "../Misc/Position"
 import { SmartScript } from "./SmartScript"
 
@@ -86,11 +86,11 @@ export const TARGET_ARGS: {[key:string]:string[]} = {
     '30': ['goEntry','maxDist','','','','','','']
 }
 
-export class TargetType<T> {
+export class TargetType {
     protected row : smart_scriptsRow
-    protected main: SmartScript<T>
+    protected main: SmartScript
 
-    constructor(main: SmartScript<T>, row: smart_scriptsRow) {
+    constructor(main: SmartScript, row: smart_scriptsRow) {
         this.row = row
         this.main = main
     }
@@ -446,39 +446,6 @@ export class TargetType<T> {
         this.row.target_type.set(30)
         this.row.target_param1.set(GO)
         this.row.target_param2.set(maxDist)
-        return this.main
-    }
-
-    /**
-     * Sets the target to be a random point around the script owner
-     * @param range - How far away creatures can spawn
-     * @param amount - How many random points will be used (for summoning creatures)
-     * @note AzerothCore only
-     */
-    pointAroundOwner(range: number, amount: number = 0)  {
-        this.row.target_type.set(202)
-        this.row.target_param1.set(range)
-        this.row.target_param2.set(amount)
-        this.row.target_param3.set(1)
-        return this.main
-    }
-
-    /**
-     * Sets the target to be a random point around another point
-     * @param x 
-     * @param y 
-     * @param z 
-     * @param range 
-     * @note AzerothCore only
-     */
-    pointAround(x: number, y: number, z: number, range: number, amount: number = 0) {
-        this.row.target_type.set(202)
-        this.row.target_param1.set(range)
-        this.row.target_param2.set(amount)
-        this.row.target_param3.set(0)
-        this.row.target_x.set(x)
-        this.row.target_y.set(y)
-        this.row.target_z.set(z)
         return this.main
     }
 }

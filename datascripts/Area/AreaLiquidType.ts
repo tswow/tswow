@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
-import { Area } from "./Area";
 
-export class AreaLiquidType extends EnumCellWrapper<Area> {
-    setWater() { return this.set(0); }
-    setOcean() { return this.set(1); }
-    setMagma() { return this.set(2); }
-    setSlime() { return this.set(3); }
+export enum AreaLiquidType {
+    Water = 0,
+    Ocean = 1,
+    Magma = 2,
+    Slime = 3,
 }

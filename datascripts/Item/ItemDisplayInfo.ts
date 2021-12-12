@@ -14,54 +14,93 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { std } from "../tswow-stdlib-data";
-import { ItemVisualModels } from "./ItemVisualModels";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "wotlkdata/wotlkdata/dbc/types/ItemDisplayInfo";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC, SQL } from "wotlkdata/wotlkdata/wotlkdata";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { ParticleColorRegistry } from "../Misc/ParticleColor";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamic } from "../Refs/Registry";
+import { SpellVisualRegistry } from "../Spell/SpellVisual";
 import { ItemIcon } from "./ItemIcon";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { ItemDisplayInfoRow } from "wotlkdata/dbc/types/ItemDisplayInfo";
-import { ItemEffects } from "./ItemVisualEffect";
-import { SpellVisual } from "../Spell/SpellVisual";
-import { ParticleColor } from "../Misc/ParticleColor";
+import { ItemVisualsRegistry } from "./ItemVisualEffect";
+import { ItemVisualModels } from "./ItemVisualModels";
 
-export class ItemDisplayInfo<T> extends SharedRef<T, ItemDisplayInfoRow> {
-
-    table(): SharedRefTable<ItemDisplayInfoRow> {
-        return DBC.ItemDisplayInfo
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.ItemDisplayInfo;
-    }
-
-    clear(): this {
-        this
-            .Flags.set(0)
-            .GeosetGroup.set([0,0,0])
-            .HelmGeosetVis.set([0,0])
-            .EffectsID.set(0)
-            .Models.clearAll()
-            .Texture.set(["","","","","","","",""])
-            .Icon.set("")
-            .row.ParticleColorID.set(0)
-                .SpellVisualID.set(0)
-        return this;
-    }
-
+export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
+    get ID() { return this.row.ID.get(); }
     get Flags() { return this.wrap(this.row.Flags); }
     get GeosetGroup() { return this.wrapArray(this.row.GeosetGroup); }
     get HelmGeosetVis() { return this.wrapArray(this.row.HelmetGeosetVis); }
-    get Effects() { return new ItemEffects(this, this.row.ItemVisual); }
-    get EffectsID() { return this.wrap(this.row.ItemVisual); }
-    get Models(): ItemVisualModels<T> { return new ItemVisualModels(this); }
-    get ParticleColor() { return new ParticleColor(this, [this.row.ParticleColorID]); }
-    get SpellVisual() { return new SpellVisual(this, [this.row.SpellVisualID]); }
+    get Visuals() { return ItemVisualsRegistry.ref(this, this.row.ItemVisual); }
+    get Models() { return new ItemVisualModels(this); }
+    get ParticleColor() { return ParticleColorRegistry.ref(this, this.row.ParticleColorID); }
+    get SpellVisual() { return SpellVisualRegistry.ref(this, this.row.SpellVisualID); }
     get Texture() { return this.wrapArray(this.row.Texture); }
-    get Icon(): ItemIcon<T> { return new ItemIcon(this); }
+    get Icon() { return new ItemIcon(this); }
 
-    copyFrom(templateId: number) {
-        std.Items.load(templateId).DisplayInfo.row.copyTo(this.row);
+    copyFromDisplay(displayId: number) {
+        DBC.ItemDisplayInfo
+            .findById(displayId)
+            .clone(Ids.ItemDisplayInfo.id())
+        return this;
+    }
+
+    copyFromTemplate(templateId: number) {
+        this.copyFromDisplay(
+            SQL.item_template.query({entry:templateId}).displayid.get())
+        return this;
+    }
+}
+
+export class ItemDisplayInfoRef<T> extends RefDynamic<T,ItemDisplayInfo> {
+    setSimpleIcon(icon: string) {
+        this.getRefCopy().Icon.set(icon)
         return this.owner;
     }
 }
+
+
+export class ItemDisplayInfoRegistryClass
+    extends RegistryDynamic<
+          ItemDisplayInfo
+        , ItemDisplayInfoRow
+        , ItemDisplayInfoQuery
+        >
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new ItemDisplayInfoRef(owner, cell, this);
+    }
+    protected Table(): Table<any, ItemDisplayInfoQuery, ItemDisplayInfoRow> & { add: (id: number) => ItemDisplayInfoRow; } {
+        return DBC.ItemDisplayInfo
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.ItemDisplayInfo
+    }
+    Clear(entity: ItemDisplayInfo): void {
+        entity.Visuals.set(0)
+              .Flags.set(0)
+              .GeosetGroup.fill(0)
+              .HelmGeosetVis.fill(0)
+              .Icon.set('')
+              .Models.clearAll()
+              .ParticleColor.set(0)
+              .SpellVisual.set(0)
+              .Texture.fill('')
+    }
+    protected FindByID(id: number): ItemDisplayInfoRow {
+        return DBC.ItemDisplayInfo.findById(id);
+    }
+    protected EmptyQuery(): ItemDisplayInfoQuery {
+        return {}
+    }
+    ID(e: ItemDisplayInfo): number {
+        return e.ID
+    }
+    protected Entity(r: ItemDisplayInfoRow): ItemDisplayInfo {
+        return new ItemDisplayInfo(r);
+    }
+}
+
+export const ItemDisplayinfoRegistry = new ItemDisplayInfoRegistryClass();

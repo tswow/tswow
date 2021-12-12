@@ -15,67 +15,59 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { gossip_menu_optionRow } from "wotlkdata/sql/types/gossip_menu_option";
-import { GOCreature } from "../Misc/GOorCreature";
-import { Ids } from "../Misc/Ids";
-import { BroadcastText } from "../BroadcastText/BroadcastText";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { gossip_menu_optionRow } from "wotlkdata/wotlkdata/sql/types/gossip_menu_option";
+import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { Condition } from "../Conditions/Condition";
 import { Gossip } from "./Gossip";
-import { GossipIconCell } from "./GossipIcon";
+import { GossipIcon } from "./GossipIcon";
 import { GossipOptionType as GossipOptionAction } from "./GossipOptionType";
 
-export class GossipOption<S,G,T extends GOCreature<G>> extends CellSystem<Gossip<S,G,T>> {
+export class GossipOption extends CellSystemTop {
     readonly Condition: Condition<this>;
+    @Transient
     readonly row: gossip_menu_optionRow;
-    protected _label: string = "";
-
-    constructor(owner: Gossip<S,G,T>, row: gossip_menu_optionRow) {
-        super(owner);
+    constructor(row: gossip_menu_optionRow) {
+        super();
         this.row = row;
-        this.Condition = new Condition(this, 15, this.end.ID,this.row.OptionID.get(),0);
+        this.Condition = new Condition(this, 15, this.row.MenuID.get(),this.row.OptionID.get(),0);
     }
-
-    get Icon(){return new GossipIconCell<S,G,T>(this, this.row.OptionIcon); }
-    get Action(){return new GossipOptionAction<S,G,T>(this); }
+    get Icon() {
+        return makeEnumCell(GossipIcon, this, this.row.OptionIcon);
+    }
+    get Action(){return new GossipOptionAction(this); }
     get POI() { return this.wrap(this.row.ActionPoiID); }
-    get MenuID() { return this.wrap(this.row.ActionMenuID); }
-
-    get Text(){
-        const id = this.row.OptionBroadcastTextID;
-        if(id.get()>0) {
-            return new BroadcastText(this,
-                SQL.broadcast_text.find({ID:id.get()}));
-        } else {
-            id.set(Ids.BroadcastText.id());
-            return new BroadcastText(this,
-                SQL.broadcast_text.add(id.get()))
-        }
+    get Gossip() { return this.wrap(this.row.ActionMenuID); }
+    get Text() {
+        return BroadcastTextRegistry.ref(this, this.row.OptionBroadcastTextID);
     }
 }
 
-export class GossipOptions<S,G,T extends GOCreature<G>> extends CellSystem<Gossip<S,G,T>> {
-    get length() {
-        return SQL.gossip_menu_option
-            .filter({MenuID:this.owner.ID}).length;
+export class GossipOptions extends MultiRowSystem<GossipOption,Gossip> {
+    protected getAllRows(): GossipOption[] {
+        return SQL.gossip_menu_option.queryAll({MenuID:this.owner.ID})
+            .sort((a,b)=>a.OptionID.get()>b.OptionID.get() ? 1 : -1)
+            .map(x=>new GossipOption(x));
     }
 
-    getIndex(index: number) : GossipOption<S,G,T> {
-        return new GossipOption(this.owner, SQL.gossip_menu_option
-            .find({MenuID: this.owner.ID, OptionID: index}));
+    protected isDeleted(value: GossipOption): boolean {
+        return value.row.isDeleted();
     }
 
-    forEach(callback: (option: GossipOption<S,G,T>)=>any) {
-        SQL.gossip_menu_option.filter({MenuID: this.owner.ID})
-            .forEach(x=>callback(new GossipOption(this.owner, x)));
+    addGet() {
+        return new GossipOption(
+             SQL.gossip_menu_option.add(this.owner.ID, this.length)
+            .OptionType.set(1)
+            .OptionNpcFlag.set(1)
+            .VerifiedBuild.set(17688)
+        )
     }
 
-    add() : GossipOption<S,G,T> {
-        return new GossipOption(this.owner, 
-            SQL.gossip_menu_option.add(this.owner.ID, this.length)
-                .OptionType.set(1)
-                .OptionNpcFlag.set(1)
-                .VerifiedBuild.set(17688)
-            )
+    addMod(callback: (option: GossipOption)=>void) {
+        callback(this.addGet());
+        return this.owner;
     }
 }

@@ -15,14 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { Ids } from "../Misc/Ids";
-import { Vendor } from "./Vendor"
+import { VendorItems } from "./Vendor";
 
 export const Vendors = {
     load<T>(id: number, owner?: T) {
-        return new Vendor(owner, id);
+        return new VendorItems(owner, id);
     },
 
     create<T>(owner?: T) {
-        return new Vendor(owner, Ids.Vendor.id());
+        return new VendorItems(owner, Ids.Vendor.id());
     },
 }

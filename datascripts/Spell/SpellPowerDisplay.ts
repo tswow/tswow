@@ -1,4 +1,3 @@
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
 
 /*
  * This file is part of tswow (https://github.com/tswow)
@@ -16,28 +15,13 @@ import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-export class SpellPowerDisplay<T> extends EnumCellWrapper<T> {
-    @EnumField(0)
-    setNone() { return this.set(0); }
-
-    @EnumField(1)
-    setAmmoSlot() { return this.set(1); }
-
-    @EnumField(41)
-    setPyrite() { return this.set(41); }
-
-    @EnumField(61)
-    setSteam() { return this.set(61); }
-
-    @EnumField(101)
-    setHeat() { return this.set(101); }
-
-    @EnumField(121)
-    setOoze() { return this.set(121); }
-
-    @EnumField(141)
-    setBloodPower() { return this.set(141); }
-
-    @EnumField(142)
-    setWrath() { return this.set(142); }
+export enum SpellPowerDisplay {
+    NONE        = 0,
+    AMMO_SLOT   = 1,
+    PYRITE      = 41,
+    STEAM       = 61,
+    HEAT        = 101,
+    OOZE        = 121,
+    BLOOD_POWER = 141,
+    WRATH       = 142,
 }

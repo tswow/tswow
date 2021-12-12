@@ -14,12 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { DBCFile } from "wotlkdata/dbc/DBCFile";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { SQL } from "wotlkdata/sql/SQLFiles";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { DBCFile } from "wotlkdata/wotlkdata/dbc/DBCFile";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { class_stat_formulasRow } from "wotlkdata/wotlkdata/sql/types/class_stat_formulas";
+import { class_stat_valuesRow } from "wotlkdata/wotlkdata/sql/types/class_stat_values";
+import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";
+import { ClassIDs } from "./ClassIDs";
 
 interface GtDBC {
     Data : Cell<number,any>;
@@ -32,7 +37,7 @@ class StatFile<D extends GtDBC> extends CellSystem<Class>{
     constructor(cls: Class, classId : number,size : number, dbc: DBCFile<any,any,any>) {
         super(cls);
         let start = (classId-1)*size;
-        this.dbc = dbc.filter({} as any)
+        this.dbc = dbc.queryAll({} as any)
             .sort((a,b)=>a.index>b.index?1:-1)
             .slice(start,start+size);
     }
@@ -58,7 +63,7 @@ export class ClassAttribute extends CellSystem<Class>{
     }
 
     set(callback: (old: number, race: number, level: number)=>number) {
-        SQL.player_levelstats.filter({class:this.owner.ID})
+        SQL.player_levelstats.queryAll({class:this.owner.ID})
             .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.race.get(),x.level.get())));
         return this.owner;
     }
@@ -74,39 +79,115 @@ export class BaseHpMana extends CellSystem<Class> {
 
 
     set(callback: (old: number, level: number)=>number) {
-        SQL.player_classlevelstats.filter({class:this.owner.ID})
+        SQL.player_classlevelstats.queryAll({class:this.owner.ID})
             .forEach(x=>x[this.field].set(callback(x[this.field].get(),x.level.get())));
         return this.owner;
     }
 }
 
-export class ClassFormula extends Cell<string,Class> {
-    protected type: number;
+export enum RangedAttackPowerClass {
+      DEFAULT = 0,
+      HUNTER  = ClassIDs.HUNTER,
+      ROGUE   = ClassIDs.ROGUE,
+      WARRIOR = ClassIDs.WARRIOR,
+      DRUID   = ClassIDs.DRUID,
+}
 
-    constructor(owner: Class, type: number) {
+export enum MeleeAttackPowerClass {
+    DEFAULT      = 0,
+    WARRIOR      = ClassIDs.WARRIOR,
+    PALADIN      = ClassIDs.PALADIN,
+    DEATH_KNIGHT = ClassIDs.DEATH_KNIGHT,
+    ROGUE        = ClassIDs.ROGUE,
+    HUNTER       = ClassIDs.HUNTER,
+    SHAMAN       = ClassIDs.SHAMAN,
+    DRUID        = ClassIDs.DRUID,
+    MAGE         = ClassIDs.MAGE,
+    PRIEST       = ClassIDs.PRIEST,
+    WARLOCK      = ClassIDs.WARLOCK
+}
+
+export enum ClassStatFormulaTypes{
+    MELEE =  1,
+    RANGED = 2,
+};
+
+export enum ClassStatValueTypes {
+    DIMINISHING_K = 1,
+    MISS_CAP      = 2,
+    PARRY_CAP     = 3,
+    DODGE_CAP     = 4,
+    DODGE_BASE    = 5,
+    CRIT_TO_DODGE = 6,
+};
+
+export class StatFormula extends MaybeSQLEntity<Class,class_stat_formulasRow> {
+    private stat: ClassStatFormulaTypes;
+
+    constructor(owner: Class, stat: ClassStatFormulaTypes) {
         super(owner);
-        this.type = type;
+        this.stat = stat;
     }
 
-    get(): string {
-        const old = SQL.class_stat_formulas.find({class: this.owner.row.ID.get(), stat_type: this.type});
-        if(old!==undefined) { 
-            return old.formula.get();
-        }
-        return "";
+    protected createSQL(): class_stat_formulasRow {
+        return SQL.class_stat_formulas
+            .add(this.owner.ID,this.stat)
+            .class_out.set(this.owner.ID)
+    }
+    protected findSQL(): class_stat_formulasRow {
+        return SQL.class_stat_formulas.query({class:this.owner.ID,stat_type:this.stat});
+    }
+    protected isValidSQL(sql: class_stat_formulasRow): boolean {
+        return sql.class.get() === this.owner.ID
+            && sql.stat_type.get() === this.stat;
     }
 
-    set(value: string): Class {
-        const old = SQL.class_stat_formulas.find({class: this.owner.row.ID.get(), stat_type: this.type});
-        if(old!==undefined) {
-            old.formula.set(value);
-        }
-        SQL.class_stat_formulas.add(this.owner.ID, this.type, {formula: value});
-        return this.owner;
+    get class_out() {
+        return this.wrapSQL(this.owner.ID,sql=>sql.class_out);
     }
 }
 
+export class ClassStatValueRow extends MaybeSQLEntity<Class,class_stat_valuesRow> {
+    private stat: ClassStatValueTypes;
+
+    constructor(owner: Class,stat: ClassStatValueTypes) {
+        super(owner)
+        this.stat = stat;
+    }
+
+    protected createSQL(): class_stat_valuesRow {
+        return SQL.class_stat_values
+            .add(this.owner.ID,this.stat)
+            .value.set(0)
+    }
+
+    protected findSQL(): class_stat_valuesRow {
+        return SQL.class_stat_values.query({class:this.owner.ID, stat_type:this.stat})
+    }
+    protected isValidSQL(sql: class_stat_valuesRow): boolean {
+        return sql.class.get() === this.owner.ID
+            && sql.stat_type.get() === this.stat;
+    }
+
+    protected value() {
+        return this.wrapSQL(0,(sql)=>sql.value);
+    }
+
+    set(value: number) {
+        return this.value().set(value);
+    }
+
+    get() {
+        return this.value().get();
+    }
+
+    objectify() { return this.get(); }
+}
+
 export class ClassStats extends CellSystem<Class> {
+    protected _apFormula       = new StatFormula(this.owner, 1);
+    protected _rangedApFormula = new StatFormula(this.owner, 2);
+
     constructor(owner: Class) {
         super(owner);
     }
@@ -123,20 +204,57 @@ export class ClassStats extends CellSystem<Class> {
     get BaseHP() { return new BaseHpMana(this.owner, "basehp"); }
     get BaseMana() { return new BaseHpMana(this.owner, "basemana"); }
 
-    get MeleeAttackPower() { return new ClassFormula(this.owner, 1); }
-    get RangedAttackPower() { return new ClassFormula(this.owner, 2); }
-    get MeleeCritBase() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }
-    get SpellCritBase() { return this.f(1,DBC.GtChanceToSpellCritBase); }
+    get MeleePowerType() {
+        return makeEnumCell(
+              MeleeAttackPowerClass
+            , this.owner
+            , this._apFormula.class_out
+        )
+    }
+
+    get RangedPowerType() {
+        return makeEnumCell(
+            RangedAttackPowerClass
+          , this.owner
+          , this._apFormula.class_out
+      )
+    }
+    get BaseMeleeCrit() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }
+    get BaseSpellCrit() { return this.f(1,DBC.GtChanceToSpellCritBase); }
     get MeleeCrit() { return this.f(100,DBC.GtChanceToMeleeCrit); }
     get SpellCrit() { return this.f(100,DBC.GtChanceToSpellCrit); }
     get CombatRatings() { return this.f(100,DBC.GtCombatRatings); }
-    get CombatRatingsScalar() { 
-        return this.f(32, DBC.GtOCTClassCombatRatingScalar); 
+    get CombatRatingsScalar() {
+        return this.f(32, DBC.GtOCTClassCombatRatingScalar);
     }
 
-    get RegenHp() { return this.f(100, DBC.GtOCTRegenHP); }
-    get RegenMp() { return this.f(100, DBC.GtOCTRegenMP); }
+    get RegenHP() { return this.f(100, DBC.GtOCTRegenHP); }
+    get RegenMP() { return this.f(100, DBC.GtOCTRegenMP); }
 
-    get RegenHpPerSpt() { return this.f(100, DBC.GtRegenHPPerSpt); }
-    get RegenMpPerSpt() { return this.f(100, DBC.GtRegenMPPerSpt); }
+    get RegenHPPerSpt() { return this.f(100, DBC.GtRegenHPPerSpt); }
+    get RegenMPPerSpt() { return this.f(100, DBC.GtRegenMPPerSpt); }
+
+    get DiminishingK() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.DIMINISHING_K)
+    }
+
+    get MissCap() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.MISS_CAP)
+    }
+
+    get ParryCap() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.PARRY_CAP)
+    }
+
+    get DodgeCap() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.DODGE_CAP)
+    }
+
+    get DodgeBase() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.DODGE_BASE)
+    }
+
+    get CritToDodge() {
+        return new ClassStatValueRow(this.owner, ClassStatValueTypes.CRIT_TO_DODGE)
+    }
 }

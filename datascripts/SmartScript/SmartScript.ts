@@ -14,45 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQLCellReadOnly } from "wotlkdata/sql/SQLCell";
-import { SQL } from "wotlkdata/sql/SQLFiles";
-import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/sql/types/smart_scripts";
-import { MainEntity } from "../Misc/MainEntity";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { SQLCellReadOnly } from "wotlkdata/wotlkdata/sql/SQLCell";
+import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { smart_scriptsCreator, smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts";
 import { Condition } from "../Conditions/Condition";
+import { PercentCell } from "../Misc/PercentCell";
 import { ActionType } from "./ActionType";
-import { AttachedScript } from "./AttachedScript";
 import { EventType } from "./EventType";
 import { TargetType } from "./TargetType";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 function findId(type: number, entry: number) {
-    let oldest = SQL.smart_scripts.filter(
+    let oldest = SQL.smart_scripts.queryAll(
         {source_type:type,entryorguid:entry}
     ).sort((a,b)=>b.id>a.id ? 1 : -1)[0];
     if(oldest===undefined) return 0;
     return oldest.id.get()+1;
 }
 
-export class SmartScript<T> extends CellSystem<T> {
+export class SmartScript extends CellSystemTop {
     @Transient
-    row: smart_scriptsRow
+    readonly row: smart_scriptsRow
 
-    constructor(owner: T, row: smart_scriptsRow) {
-        super(owner);
+    constructor(row: smart_scriptsRow) {
+        super();
         this.row = row;
     }
 
-    static owner<T>(script: SmartScript<T>) : T {
-        return script.owner;
-    }
-
     get ConditionSelf() {
-        return new Condition(this, 
-            22, 
-            this.row.id.get()+1, 
-            this.row.entryorguid.get(), 
-            this.row.source_type.get(), 
+        return new Condition(this,
+            22,
+            this.row.id.get()+1,
+            this.row.entryorguid.get(),
+            this.row.source_type.get(),
             1
         )
     }
@@ -67,10 +62,12 @@ export class SmartScript<T> extends CellSystem<T> {
         )
     }
 
-    get Chance() { return this.wrap(this.row.event_chance); }
-    get Action() { return new ActionType<T>(this, this.row); }
-    get Target() { return new TargetType<T>(this, this.row); }
-    get Event() { return new EventType<T>(this, this.row); }
+    get Chance() {
+        return new PercentCell(this,'[0-100]', true,this.wrap(this.row.event_chance));
+    }
+    get Action() { return new ActionType(this, this.row); }
+    get Target() { return new TargetType(this, this.row); }
+    get Event() { return new EventType(this, this.row); }
 
     get end() { return this.owner; }
 
@@ -78,37 +75,28 @@ export class SmartScript<T> extends CellSystem<T> {
         // Find the last part of the existing chain and append to it
         let cur = this.row;
         while(cur.link.get()!==0) {
-            cur = SQL.smart_scripts.find({
-                entryorguid: this.row.entryorguid.get(), 
+            cur = SQL.smart_scripts.query({
+                entryorguid: this.row.entryorguid.get(),
                 source_type: this.row.source_type.get(),
                 id: cur.link.get()
             });
 
             if(cur===undefined) {
-                throw new Error(`Broken SmartScript link from (` + 
-                    `entryorguid=${this.row.entryorguid.get()}, ` + 
-                    `source_type=${this.row.source_type.get()}, ` + 
+                throw new Error(`Broken SmartScript link from (` +
+                    `entryorguid=${this.row.entryorguid.get()}, ` +
+                    `source_type=${this.row.source_type.get()}, ` +
                     `id=${this.row.id.get()})`)
             }
         }
 
         let id = findId(cur.source_type.get(),cur.entryorguid.get());
         SQLCellReadOnly.set(cur.link,id);
-        let sc = new SmartScript(this.owner, SQL.smart_scripts
+        let sc = new SmartScript(SQL.smart_scripts
             .add(cur.entryorguid.get(),cur.source_type.get(),id,0,EMPTY_SCRIPT)
             .comment.set('tswow'));
         sc.row.comment.set('tswow');
         sc.row.event_type.set(61);
         return sc;
-    }
-
-    get free() : AttachedScript<T> {
-        return new AttachedScript(()=>{
-            let id = findId(this.row.source_type.get(),this.row.entryorguid.get());
-            let sc = new SmartScript(this.owner, SQL.smart_scripts
-                .add(this.row.entryorguid.get(),this.row.source_type.get(),id,0,EMPTY_SCRIPT).comment.set('tswow'));
-            return sc;
-        })
     }
 
     objectify() {
@@ -150,34 +138,33 @@ const EMPTY_SCRIPT : smart_scriptsCreator = {
 }
 
 export const SmartScripts = {
-    creature<T>(entry: number, owner?: T) {
+    creature(entry: number) {
         let id = findId(0,entry);
-        let sc = new SmartScript(owner, SQL.smart_scripts.add(entry,0,id,0,EMPTY_SCRIPT).comment.set('tswow'));
-        return sc as SmartScript<T>;
+        return new SmartScript(SQL.smart_scripts.add(entry,0,id,0,EMPTY_SCRIPT).comment.set('tswow'));
     },
 
     uniqueCreature(guid: number, isChain: boolean = false) {
         let id = findId(0,-guid);
-        return new SmartScript(undefined, SQL.smart_scripts.add(-guid,0,id,isChain ? id + 1 : 0,EMPTY_SCRIPT).comment.set('tswow'))
+        return new SmartScript(SQL.smart_scripts.add(-guid,0,id,isChain ? id + 1 : 0,EMPTY_SCRIPT).comment.set('tswow'))
     },
 
     gameObject(entry: number, link: number = 0) {
         let id = findId(1,entry);
-        return new SmartScript(undefined, SQL.smart_scripts.add(entry,1,id,link,EMPTY_SCRIPT).comment.set('tswow'));
+        return new SmartScript(SQL.smart_scripts.add(entry,1,id,link,EMPTY_SCRIPT).comment.set('tswow'));
     },
 
     uniqueGameObject(guid: number, link: number = 0) {
         let id = findId(1,-guid);
-        return new SmartScript(undefined, SQL.smart_scripts.add(-guid,1,id,link,EMPTY_SCRIPT).comment.set('tswow'))
+        return new SmartScript(SQL.smart_scripts.add(-guid,1,id,link,EMPTY_SCRIPT).comment.set('tswow'))
     },
 
     area(entry: number, link: number = 0) {
         let id = findId(2,entry);
-        return new SmartScript(undefined, SQL.smart_scripts.add(entry,2,id,link,EMPTY_SCRIPT).comment.set('tswow'));
+        return new SmartScript(SQL.smart_scripts.add(entry,2,id,link,EMPTY_SCRIPT).comment.set('tswow'));
     },
 
     loadCreature(creature: number) {
-        return SQL.smart_scripts.filter({entryorguid:creature,source_type:0}).map(x=>new SmartScript(undefined, x));
+        return SQL.smart_scripts.queryAll({entryorguid:creature,source_type:0}).map(x=>new SmartScript(x));
     },
 
     printCreature(creature: number) {
@@ -196,7 +183,7 @@ export const SmartScripts = {
 
         console.log(`\n == Scripts for ${creature} ==`)
         for(const root of roots) {
-            let cur : SmartScript<any> = root;
+            let cur : SmartScript = root;
             let chain = []
             let isBroken = false;
             while(cur.row.link.get() > 0) {

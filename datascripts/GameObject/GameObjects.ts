@@ -15,98 +15,84 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC, SQL } from "wotlkdata"
-import { GameObjectDisplayInfoQuery } from "wotlkdata/dbc/types/GameObjectDisplayInfo"
-import { gameobjectQuery } from "wotlkdata/sql/types/gameobject"
-import { gameobject_templateQuery } from "wotlkdata/sql/types/gameobject_template"
-import { Ids } from "../Misc/Ids"
-import { BoundingBox } from "../Misc/BoundingBox"
-import { Position } from "../Misc/Position"
-import { GameObjectBase } from "./GameObjectBase"
+import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "wotlkdata/wotlkdata/dbc/types/GameObjectDisplayInfo"
+import { gameobjectQuery, gameobjectRow } from "wotlkdata/wotlkdata/sql/types/gameobject"
+import { Table } from "wotlkdata/wotlkdata/table/Table"
+import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids"
+import { RegistryDynamic, RegistryStatic } from "../Refs/Registry"
 import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
-import { TopSystem, TopCell } from "../Refs/SharedRef"
 
-export const GameObjectTemplates = {
-    create(mod: string, id: string, parent: number = -1) {
-        const entry = Ids.GameObjectTemplate.id(mod,id)
-        const row = parent != -1 ? SQL.gameobject_template
-            .find({entry:parent}).clone(entry)
-            : (SQL.gameobject_template.add(entry)
-                .AIName.set("")
-                .Data0.set(0)
-                .Data1.set(0)
-                .Data10.set(0)
-                .Data11.set(0)
-                .Data12.set(0)
-                .Data13.set(0)
-                .Data14.set(0)
-                .Data15.set(0)
-                .Data16.set(0)
-                .Data17.set(0)
-                .Data18.set(0)
-                .Data19.set(0)
-                .Data2.set(0)
-                .Data20.set(0)
-                .Data21.set(0)
-                .Data22.set(0)
-                .Data23.set(0)
-                .Data3.set(0)
-                .Data4.set(0)
-                .Data5.set(0)
-                .Data6.set(0)
-                .Data7.set(0)
-                .Data8.set(0)
-                .Data9.set(0)
-                .IconName.set("")
-                .ScriptName.set("")
-                .castBarCaption.set("")
-                .displayId.set(0)
-                .name.set("")
-                .size.set(0)
-                .type.set(0)
-                .unk1.set("")
-            )
-        return new GameObjectBase(row);
-    },
-
-    load(id: number) {
-        return new GameObjectBase(SQL.gameobject_template.findAssert(`gameobject_template(${id})`,{entry:id}));
-    },
-
-    filter(query: gameobject_templateQuery) {
-        return SQL.gameobject_template.filter(query).map(x=>new GameObjectBase(x));
-    },
+export class GameObjectInstanceRegistryClass
+    extends RegistryStatic<GameObjectInstance,gameobjectRow,gameobjectQuery>
+{
+    protected Table(): Table<any, gameobjectQuery, gameobjectRow> & { add: (id: number) => gameobjectRow } {
+        return SQL.gameobject
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.gameobject
+    }
+    Clear(r: GameObjectInstance): void {
+        r
+         .Position.setSpread(0,0,0,0,0)
+         .Area.set(0)
+         .Rotation.setSpread(0,0,0,1)
+         .ScriptName.set('')
+         .Zone.set(0)
+         .SpawnTimeSecs.set(120)
+         .PhaseMask.set(1)
+         .SpawnMask.set(1)
+         .State.set(1)
+         .row
+            .id.set(0)
+            .VerifiedBuild.set(17688)
+    }
+    protected Clone(mod: string, id: string, r: GameObjectInstance, parent: GameObjectInstance): void {
+        if(parent.AddonRow.exists()) {
+            parent.AddonRow.get().clone(r.ID);
+        }
+    }
+    protected Entity(r: gameobjectRow): GameObjectInstance {
+        return new GameObjectInstance(r);
+    }
+    protected FindByID(id: number): gameobjectRow {
+        return SQL.gameobject.query({guid:id});
+    }
+    protected EmptyQuery(): gameobjectQuery {
+        return {}
+    }
+    ID(e: GameObjectInstance): number {
+        return e.ID;
+    }
 }
 
-export const GameObjectInstances = {
-    create(mod: string, id: string, pos: Position) {
-        return new GameObjectInstance(
-            SQL.gameobject.add(Ids.GameObjectInstance.id(mod,id))
-                .VerifiedBuild.set(17688)
-        ).Position.set(pos)
-    },
+export const GameObjectInstances = new GameObjectInstanceRegistryClass();
 
-    load(guid: number) {
-        return new GameObjectInstance(SQL.gameobject.find({id: guid}));
-    },
-
-    filter(query: gameobjectQuery) {
-        return SQL.gameobject.filter(query).map(x=>new GameObjectInstance(x));
-    },
+export class GameObejctDisplayRegistryClass
+    extends RegistryDynamic<
+        GameObjectDisplay,GameObjectDisplayInfoRow,GameObjectDisplayInfoQuery
+    >
+{
+    protected Table(): Table<any, GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow> & { add: (id: number) => GameObjectDisplayInfoRow } {
+        return DBC.GameObjectDisplayInfo;
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.GameObjectDisplayInfo
+    }
+    Clear(entity: GameObjectDisplay): void {
+        entity.GeoBox.set({minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0})
+    }
+    protected Entity(r: GameObjectDisplayInfoRow): GameObjectDisplay {
+        return new GameObjectDisplay(r);
+    }
+    protected FindByID(id: number): GameObjectDisplayInfoRow {
+        return DBC.GameObjectDisplayInfo.findById(id);
+    }
+    protected EmptyQuery(): GameObjectDisplayInfoQuery {
+        return {}
+    }
+    ID(e: GameObjectDisplay): number {
+        return e.ID;
+    }
 }
-
-export const GameObjectDisplays = {
-    create(modelPath: string, boundingBox: BoundingBox = new BoundingBox(-1,-1,-1,1,1,1)) {
-        const row = DBC.GameObjectDisplayInfo.add(Ids.GameObjectDisplay.id());
-        row.ModelName.set(modelPath);
-        return new GameObjectDisplay(new TopSystem(),[new TopCell(row.ID.get())]).GeoBox.set(boundingBox);
-    },
-
-    load(id: number) {
-        return new GameObjectDisplay(new TopSystem(),[new TopCell(id)]);
-    },
-
-    filter(query: GameObjectDisplayInfoQuery) {
-        return DBC.GameObjectDisplayInfo.filter(query).map(x=>new GameObjectDisplay(new TopSystem(),[new TopCell(x.ID.get())]));
-    },
-}
+export const GameObjectDisplayRegistry = new GameObejctDisplayRegistryClass();

@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/cell/cells/Cell";
-import { DummyCell } from "wotlkdata/cell/cells/DummyCell";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
 import { Ids } from "../Misc/Ids";
 
 export function pathToIcon(path: string) {
-    let old = DBC.SpellIcon.find({TextureFilename:path})
+    let old = DBC.SpellIcon.query({TextureFilename:path})
     if(old===undefined) {
         return DBC.SpellIcon.add(Ids.SpellIcon.id(),{TextureFilename:path});
     }
@@ -28,18 +28,18 @@ export function pathToIcon(path: string) {
 }
 
 export function iconToPath(index: number): Cell<string,any> {
-    if(index===0) return new DummyCell(undefined, ""); 
+    if(index===0) return new DummyCell(undefined, "");
     return DBC.SpellIcon.findById(index).TextureFilename;
 }
 
-export class SpellIconCell<T> extends Cell<string, T> {
+export class SpellIconCell<T> extends Cell<number, T> {
     protected id: Cell<number,any>;
     constructor(owner: T, id: Cell<number,any>) {
         super(owner);
         this.id = id;
     }
 
-    get(): string {
+    getPath(): string {
         return iconToPath(this.id.get()).get();
     }
 
@@ -57,7 +57,7 @@ export class SpellIconCell<T> extends Cell<string, T> {
      *
      * @param value
      */
-    set(value: string): T {
+    setPath(value: string): T {
         if(value.endsWith('.blp')) {
             value = value.substring(0,value.length-4);
         }
@@ -65,5 +65,14 @@ export class SpellIconCell<T> extends Cell<string, T> {
             value = `Interface\\Icons\\${value}`;
         }
         return this.setFullPath(value);
+    }
+
+    get() {
+        return this.id.get();
+    }
+
+    set(id: number) {
+        this.id.set(id);
+        return this.owner;
     }
 }

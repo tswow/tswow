@@ -1,24 +1,45 @@
-import { Profession } from "./Profession"
-import { SkillLines } from "../SkillLines/SkillLines"
-import { DefaultProfession, resolveProfession, ProfessionTier, resolveProfessionType, ProfessionType } from "./ProfessionType";
+import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { SkillLineQuery, SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { RegistryStaticNoClone } from "../Refs/Registry";
+import { SkillTiersRegistry } from "../SkillTiers/SkillTiers";
+import { Profession, ProfessionRanks } from "./Profession";
 
-export const Professions = {
-    load(id: number | DefaultProfession) {
-        return new Profession(SkillLines.load(resolveProfession(id)));
-    },
-
-    create(mod: string, id: string, hasCrafting: boolean, type: ProfessionType|number, highestRank: ProfessionTier) {
-        return new Profession(SkillLines.create(mod,id)
-            .CanLink.set(1)
-            .Category.set(11)
-            .RaceClassInfos.add()
-                .ClassMask.set(0)
-                .RaceMask.set(0)
-                .Flags.clearAll()
-                .Flags.IsProfession.mark()
-                .Flags.IsClassLine.mark()
-            .end)
-            .addSkillsTo(mod,id,highestRank)
-            .setHasCrafting(hasCrafting)
+export class ProfessionRegistryClass
+    extends RegistryStaticNoClone<Profession,SkillLineRow,SkillLineQuery>
+{
+    protected Table(): Table<any, SkillLineQuery, SkillLineRow> & { add: (id: number) => SkillLineRow; } {
+        return DBC.SkillLine
+    }
+    protected IDs(): StaticIDGenerator {
+        return Ids.SkillLine
+    }
+    Clear(r: Profession): void {
+        r.AsSkillLine.get().CanLink.set(1)
+         .RaceClassInfos.addMod(undefined,undefined,rci=>{
+            rci
+               .Flags.clearAll()
+               .Flags.IS_PROFESSION.set(true)
+               .Flags.IS_CLASS_LINE.set(true)
+               .SkillTier.set(SkillTiersRegistry.create().ID)
+        })
+        ProfessionRanks.setCached(r.Ranks,0);
+        Profession.setCacheLearnSpells(r);
+        Profession.setCacheRanks(r);
+    }
+    protected Entity(r: SkillLineRow): Profession {
+        return new Profession(r);
+    }
+    protected FindByID(id: number): SkillLineRow {
+        return DBC.SkillLine.findById(id);
+    }
+    protected EmptyQuery(): SkillLineQuery {
+        return {}
+    }
+    ID(e: Profession): number {
+        return e.ID;
     }
 }
+
+export const ProfessionRegistry = new ProfessionRegistryClass()

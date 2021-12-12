@@ -1,5 +1,4 @@
 import { std } from "../datascripts/tswow-stdlib-data";
-import { Pos } from "../datascripts/Misc/Position";
 
 /**
  * Snippet: Quest::Kill
@@ -28,21 +27,21 @@ std.Quests.create('my','quest')
         .Name.enGB.set('Questgiver NPC')
         .Models.addIds(29419)
         .FactionTemplate.setNeutralPassive()
-        .NPCFlags.QuestGiver.mark()
-        .spawn(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-walker-spawn',
+        .NPCFlags.QuestGiver.set(true)
+        .spawnMod(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-walker-spawn',
             // Spawn location of walker npc
-            /*@3*/Pos(530,10350.250000,-6383.138184,38.526325,1.679071)/**/,
-        ).end
+            /*@3*/{map:530,x:10350.250000,y:-6383.138184,z:38.526325,o:1.679071}/**/
+        )
 
     let finisher = std.CreatureTemplates.create(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-finisher')
         .Name.enGB.set('Returner NPC')
         .Models.addIds(29419)
         .FactionTemplate.setNeutralPassive()
-        .NPCFlags.QuestGiver.mark()
-        .spawn(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-finisher-spawn',
+        .NPCFlags.QuestGiver.set(true)
+        .spawnMod(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-finisher-spawn',
             // Spawn location of finisher npc (replace with your own)
-            /*@4*/Pos(530,10340.181641,-6371.824707,35.110600,0.795497),/**/
-        ).end
+            /*@4*/{map:530,x:10340.181641,y:-6371.824707,z:35.110600,o:0.795497},/**/
+        )
 
     let quest = std.Quests.create(/*@1*/'mod'/**/,/*@2*/'id'/**/+'-quest')
         .SortID.set(1)
@@ -59,19 +58,22 @@ std.Quests.create('my','quest')
     let path = std.ScriptPaths.create()
         .add([
             // Waypoints (replace with your own!)
-            /*@6*/Pos(530,10348.591797,-6373.072266,36.098927,1.677500),/**/
+            /*@6*/{map:530,x:10348.591797,y:-6373.072266,z:36.098927,o:1.677500},/**/
         ])
 
-    walker.Scripts.onAcceptedQuest(quest.ID)
-        .Action.setQuestWalk(true,path.ID,false,quest.ID,1,"DEFENSIVE")
+    walker.Scripts.onAcceptedQuest(quest.ID,script=>{
+        script.Action.setQuestWalk(quest.ID,path.ID);
+    })
 
-    walker.Scripts.onDeath()
-        .Action.setFailQuestWalk(quest.ID)
-    
-    walker.Scripts.onWaypointReached(path.length,path.ID)
-        .Action.setForceDespawn(5000,5)
-        .Target.setSelf()
-        .then()
-        .Action.setFinishQuestWalk(quest.ID)
+    walker.Scripts.onDeath(script=>{
+        script.Action.setFailQuestWalk(quest.ID);
+    })
+
+    walker.Scripts.onWaypointReached(path.length,path.ID,script=>{
+        script.Action.setForceDespawn(5000,5)
+              .Target.setSelf()
+              .then()
+              .Action.setFinishQuestWalk(quest.ID)
+    })
 }
 /** end-snippet */

@@ -33,6 +33,19 @@ export const BaseClassData = {
         "DEATHKNIGHT" : 62,
     },
 
+    WORLDSTATEFRAME_TCOORDS_ROWS: <map> {
+        "WARRIOR":     34,
+        "MAGE":        35,
+        "ROGUE":       36,
+        "DRUID":       37,
+        "HUNTER":      38,
+        "SHAMAN":      39,
+        "PRIEST":      40,
+        "WARLOCK":     41,
+        "PALADIN":     42,
+        "DEATHKNIGHT": 43,
+    },
+
     CONSTANT_ICON_TCOORDS_ROWS : <map> {
         "WARRIOR" : 92,
         "MAGE" : 93,

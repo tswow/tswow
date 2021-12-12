@@ -14,17 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class DynFlags extends MaskCell32<CreatureTemplate> {
-    get None() { return this.bit(0); }
-    get Lootable() { return this.bit(1); }
-    get TrackUnit() { return this.bit(2); }
-    get Tapped() { return this.bit(3); }
-    get TappedByPlayer() { return this.bit(4); }
-    get SpecialInfo() { return this.bit(5); }
-    get Dead() { return this.bit(6); }
-    get ReferAFriend() { return this.bit(7); }
-    get TappedByAllThreatList() { return this.bit(8); }
+export enum DynFlags {
+    NONE                      = 0x1,
+    LOOTABLE                  = 0x2,
+    TRACK_UNIT                = 0x4,
+    TAPPED                    = 0x8,
+    TAPPED_BY_PLAYER          = 0x10,
+    SPECIAL_INFO              = 0x20,
+    DEAD                      = 0x40,
+    REFER_A_FRIEND            = 0x80,
+    TAPPED_BY_ALL_THREAT_LIST = 0x100,
+
 }

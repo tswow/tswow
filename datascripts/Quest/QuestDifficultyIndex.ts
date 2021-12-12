@@ -1,14 +1,14 @@
-import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 
-export class QuestDifficultyIndex<T> extends EnumCellWrapper<T> {
-    set1() { return this.set(1); }
-    set2() { return this.set(2); }
-    set3() { return this.set(3); }
-    set4() { return this.set(4); }
-    set5() { return this.set(5); }
-    set6() { return this.set(6); }
-    set7() { return this.set(7); }
-    set8() { return this.set(8); }
-    set9() { return this.set(9); }
-    set10() { return this.set(10); }
+export class QuestDifficultyIndex<T> extends EnumCell<T> {
+    get DIFFICULTY_1()  { return this.value(1) }
+    get DIFFICULTY_2()  { return this.value(2) }
+    get DIFFICULTY_3()  { return this.value(3) }
+    get DIFFICULTY_4()  { return this.value(4) }
+    get DIFFICULTY_5()  { return this.value(5) }
+    get DIFFICULTY_6()  { return this.value(6) }
+    get DIFFICULTY_7()  { return this.value(7) }
+    get DIFFICULTY_8()  { return this.value(8) }
+    get DIFFICULTY_9()  { return this.value(9) }
+    get DIFFICULTY_10() { return this.value(10) }
 }

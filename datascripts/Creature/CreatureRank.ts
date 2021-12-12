@@ -14,23 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureRank extends CellSystem<CreatureTemplate> {
-    protected set(value: number) {
-        this.owner.row.rank.set(value);
-        return this.owner;
-    }
-
-    setNormal() { return this.set(0); }
-    setElite() { return this.set(1); }
-    setRareElite() { return this.set(2); }
-
-    /**
-     * Note: To display Skull (??) level, set creature TypeFlags to 4.
-     */
-    setBoss() { return this.set(3); }
-    setRare() { return this.set(4); }
-
+export enum CreatureRank {
+    NORMAL     = 0,
+    ELITE      = 1,
+    RARE_ELITE = 2,
+    BOSS       = 3,
+    RARE       = 4,
 }

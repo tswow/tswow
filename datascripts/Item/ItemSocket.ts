@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { EnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function colors(owner: ItemTemplate) {
@@ -34,38 +34,30 @@ function contents(owner: ItemTemplate) {
     ]
 }
 
+export enum ItemColorMask {
+      NONE   = 0
+    , META   = 1
+    , RED    = 2
+    , YELLOW = 4
+    , BLUE   = 8
+}
 
-export class ItemColor extends EnumCellWrapper<ItemTemplate> {
-    @EnumField(0)
-    setMeta() {return this.set(0)};
-
-    @EnumField(1)
-    setRed() {return this.set(1)};
-
-    @EnumField(2)
-    setBlue() {return this.set(2)};
-
-    @EnumField(3)
-    setPurple() {return this.set(3)};
-
-    @EnumField(4)
-    setOrange() {return this.set(4)};
-
-    @EnumField(5)
-    setGreen() {return this.set(5)};
-
-    @EnumField(6)
-    setYellow() {return this.set(6)};    
+export class ItemColorCell extends EnumCell<ItemSocket> {
+    get NONE()   { return this.value(0,()=>this.owner.content.set(0))}
+    get META()   { return this.value(1,()=>this.owner.content.set(1)) }
+    get RED()    { return this.value(2,()=>this.owner.content.set(1)) }
+    get YELLOW() { return this.value(4,()=>this.owner.content.set(1)) }
+    get BLUE()   { return this.value(8,()=>this.owner.content.set(1)) }
 }
 
 export class ItemSocket extends ArrayEntry<ItemTemplate>{
-    get color() { return new ItemColor(this.owner, colors(this.owner)[this.index]); }
-    get content() { return contents(this.owner)[this.index]; }
+    get color() { return new ItemColorCell(this, colors(this.container)[this.index]); }
+    get content() { return this.wrap(contents(this.container)[this.index]); }
 
     clear() {
         this.color.set(0);
         this.content.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear() {
@@ -87,20 +79,17 @@ export class ItemSockets extends ArraySystem<ItemSocket, ItemTemplate> {
         return new ItemSocket(this.owner, index);
     }
 
-    add(col: number, amt: number) {
-        const free = this.getFree();
+    protected add(col: number) {
+        const free = this.addGet();
         free.color.set(col);
-        free.content.set(amt);
+        free.content.set(1);
         return this.owner;
     }
 
     get Properties() { return this.ownerWrap(this.owner.row.GemProperties); }
 
-    addMeta(amount: number) {return this.add(0,amount)};
-    addRed(amount: number) {return this.add(1,amount)};
-    addBlue(amount: number) {return this.add(2,amount)};
-    addPurple(amount: number) {return this.add(3,amount)};
-    addOrange(amount: number) {return this.add(4,amount)};
-    addGreen(amount: number) {return this.add(5,amount)};
-    addYellow(amount: number) {return this.add(6,amount)};
+    addMeta() {return this.add(1)};
+    addRed() {return this.add(2)};
+    addYellow() {return this.add(4)};
+    addBlue() {return this.add(8)};
 }

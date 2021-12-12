@@ -1,6 +1,6 @@
 import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 
 export class SpellRank<T> extends CellSystem<T>{
     @Transient
@@ -12,19 +12,26 @@ export class SpellRank<T> extends CellSystem<T>{
     }
 
     protected getRow() {
-        return SQL.spell_ranks.find({spell_id: this.spellId});
+        return SQL.spell_ranks.query({spell_id: this.spellId});
     }
 
     exists() {
-        return SQL.spell_ranks.filter({spell_id: this.spellId}).length != 0;
+        return SQL.spell_ranks.queryAll({spell_id: this.spellId}).length != 0;
     }
 
     set(firstSpell: number, rank: number) {
         SQL.spell_ranks.add(firstSpell,rank,{spell_id:this.spellId});
     }
 
-    getFirstSpell() { return this.getRow().first_spell_id; }
-    getRank() { return this.getRow().rank; }
+    getFirstSpell() {
+        return this.getRow() === undefined
+            ? undefined
+            : this.getRow().first_spell_id.get();
+    }
+
+    getRank() {
+        return this.getRow().rank.get();
+    }
 
     objectify() {
         return {

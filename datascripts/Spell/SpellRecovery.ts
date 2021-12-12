@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { Spell } from "./Spell";
-import { Transient } from "wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
 export class SpellRecovery<T> extends CellSystem<T> {
     @Transient
-    protected spell :Spell; 
-    
+    protected spell :Spell;
+
     constructor(owner: T, spell: Spell) {
         super(owner);
         this.spell = spell;
@@ -33,9 +33,9 @@ export class SpellRecovery<T> extends CellSystem<T> {
     get StartTime() { return this.ownerWrap(this.spell.row.StartRecoveryTime); }
     get StartCategory() { return this.ownerWrap(this.spell.row.StartRecoveryCategory); }
 
-    set(time: number, categoryTime: number, startTime: number, startCategory: number) {
+    set(time: number, categoryTime: number = 0, startTime: number = 0, startCategory: number = 0) {
         this.Time.set(time);
-        this.CategoryTime.set(categoryTime); 
+        this.CategoryTime.set(categoryTime);
         this.StartTime.set(startTime);
         this.StartCategory.set(startCategory);
         return this.owner;

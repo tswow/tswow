@@ -1,53 +1,44 @@
-import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/dbc/types/MailTemplate";
-import { DBC } from "wotlkdata";
-import { Loot } from "../Loot/Loot";
-import { Ids } from "../Misc/Ids";
-import { MainEntity } from "../Misc/MainEntity";
-import { Pointer } from "../Refs/Pointer";
+import { DBC, SQL } from "wotlkdata";
+import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/wotlkdata/dbc/types/MailTemplate";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { LootSet } from "../Loot/Loot";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
 
 export class MailTemplate extends MainEntity<MailTemplateRow> {
     get Body() { return this.wrapLoc(this.row.Body); }
     get Subject() { return this.wrapLoc(this.row.Subject); }
     get ID() { return this.row.ID.get(); }
-    get Loot() { return Loot.Mail.load(this.ID)}
+    get Loot() { return new LootSet(this.ID,SQL.mail_loot_template) }
 }
 
-export class MailTemplatePointer<T> extends Pointer<T,MailTemplate> {
-    protected exists(): boolean {
-        return this.cell.get() > 0;
+export class MailTemplateRegistryClass
+    extends RegistryDynamic<MailTemplate,MailTemplateRow,MailTemplateQuery>
+{
+    protected Table(): Table<any, MailTemplateQuery, MailTemplateRow> & { add: (id: number) => MailTemplateRow; } {
+        return DBC.MailTemplate
     }
-
-    protected create(): MailTemplate {
-        return MailTemplateRegistry.create();
+    protected ids(): DynamicIDGenerator {
+        return Ids.MailTemplate
     }
-
-    protected clone(): MailTemplate {
-        return MailTemplateRegistry.create(this.cell.get());
+    Clear(entity: MailTemplate): void {
+        entity
+            .Body.clear()
+            .Subject.clear()
     }
-
-    protected id(v: MailTemplate): number {
-        return v.ID;
+    protected Entity(r: MailTemplateRow): MailTemplate {
+        return new MailTemplate(r);
     }
-
-    protected resolve(): MailTemplate {
-        return MailTemplateRegistry.load(this.cell.get());
+    protected FindByID(id: number): MailTemplateRow {
+        return DBC.MailTemplate.findById(id);
     }
-}
-
-export const MailTemplateRegistry = {
-    create(parent: number = 0) {
-        if(parent > 0) {
-            return new MailTemplate(DBC.MailTemplate.findById(parent).clone(Ids.MailTemplate.id()))
-        } else {
-            return new MailTemplate(DBC.MailTemplate.add(Ids.MailTemplate.id()))
-        }
-    },
-
-    load(entry: number) {
-        return new MailTemplate(DBC.MailTemplate.findById(entry))
-    },
-
-    filter(query: MailTemplateQuery) {
-        return DBC.MailTemplate.filter(query).map(x=>new MailTemplate(x));
+    protected EmptyQuery(): MailTemplateQuery {
+        return {}
+    }
+    ID(e: MailTemplate): number {
+        return e.ID
     }
 }
+
+export const MailTemplateRegistry = new MailTemplateRegistryClass();

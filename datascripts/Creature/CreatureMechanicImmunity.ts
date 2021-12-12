@@ -14,39 +14,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class MechanicImmunity extends MaskCell32<CreatureTemplate> {
-    get Charm() { return this.bit(0); }
-    get Disoriented() { return this.bit(1); }
-    get Disarm() { return this.bit(2); }
-    get Distract() { return this.bit(3); }
-    get Fear() { return this.bit(4); }
-    get Grip() { return this.bit(5); }
-    get Root() { return this.bit(6); }
-    get SlowAttack() { return this.bit(7); }
-    get Silence() { return this.bit(8); }
-    get Sleep() { return this.bit(9); }
-    get Snare() { return this.bit(10); }
-    get Stun() { return this.bit(11); }
-    get Freeze() { return this.bit(12); }
-    get Knockout() { return this.bit(13); }
-    get Bleed() { return this.bit(14); }
-    get Bandage() { return this.bit(15); }
-    get Polymorph() { return this.bit(16); }
-    get Banish() { return this.bit(17); }
-    get Shield() { return this.bit(18); }
-    get Shackle() { return this.bit(19); }
-    get Mount() { return this.bit(20); }
-    get Infected() { return this.bit(21); }
-    get Turn() { return this.bit(22); }
-    get Horror() { return this.bit(23); }
-    get Invulnerability() { return this.bit(24); }
-    get Interrupt() { return this.bit(25); }
-    get Daze() { return this.bit(26); }
-    get Discovery() { return this.bit(27); }
-    get ImmuneShiled() { return this.bit(28); }
-    get Sapped() { return this.bit(29); }
-    get Enraged() { return this.bit(30); }
+export enum MechanicImmunity {
+    CHARM           = 0x1,
+    DISORIENTED     = 0x2,
+    DISARM          = 0x4,
+    DISTRACT        = 0x8,
+    FEAR            = 0x10,
+    GRIP            = 0x20,
+    ROOT            = 0x40,
+    SLOW_ATTACK     = 0x80,
+    SILENCE         = 0x100,
+    SLEEP           = 0x200,
+    SNARE           = 0x400,
+    STUN            = 0x800,
+    FREEZE          = 0x1000,
+    KNOCKOUT        = 0x2000,
+    BLEED           = 0x4000,
+    BANDAGE         = 0x8000,
+    POLYMORPH       = 0x10000,
+    BANISH          = 0x20000,
+    SHIELD          = 0x40000,
+    SHACKLE         = 0x80000,
+    MOUNT           = 0x100000,
+    INFECTED        = 0x200000,
+    TURN            = 0x400000,
+    HORROR          = 0x800000,
+    INVULNERABILITY = 0x1000000,
+    INTERRUPT       = 0x2000000,
+    DAZE            = 0x4000000,
+    DISCOVERY       = 0x8000000,
+    IMMUNE_SHILED   = 0x10000000,
+    SAPPED          = 0x20000000,
+    ENRAGED         = 0x40000000,
 }

@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper } from "wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function schools(owner: ItemTemplate) {
@@ -39,26 +38,25 @@ function dmgMax(owner: ItemTemplate) {
     ]
 }
 
-export class DamageSchool<T> extends EnumCellWrapper<T> {
-    setPhysical() { return this.set(0); }
-    setHoly() { return this.set(1); }
-    fetFire() { return this.set(2); }
-    setNature() { return this.set(3); }
-    setFrost() { return this.set(4); }
-    setShadow() { return this.set(5); }
-    setArcane() { return this.set(6); }
+export enum DamageSchool {
+    PHYSICAL = 0,
+    HOLY     = 1,
+    NATURE   = 3,
+    FROST    = 4,
+    SHADOW   = 5,
+    ARCANE   = 6,
 }
 
 export class ItemDamage extends ArrayEntry<ItemTemplate> {
-    get school() { return schools(this.owner)[this.index]; }
-    get min() { return dmgMin(this.owner)[this.index]; }
-    get max() { return dmgMax(this.owner)[this.index]; }
+    get school() { return schools(this.container)[this.index]; }
+    get min() { return dmgMin(this.container)[this.index]; }
+    get max() { return dmgMax(this.container)[this.index]; }
 
-    clear(): ItemTemplate {
+    clear() {
         this.school.set(0);
         this.min.set(0);
         this.max.set(0);
-        return this.owner;
+        return this;
     }
 
     isClear(): boolean {
@@ -75,7 +73,7 @@ export class ItemDamages extends ArraySystem<ItemDamage, ItemTemplate> {
     }
 
     private add(type: number, min: number, max: number) {
-        const free = this.getFree()
+        const free = this.addGet()
         free.school.set(type);
         free.min.set(min);
         free.max.set(max);

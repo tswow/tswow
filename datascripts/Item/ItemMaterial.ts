@@ -14,41 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { ItemTemplate } from "./ItemTemplate";
 
-export class ItemMaterial extends EnumCellWrapper<ItemTemplate> {
-    constructor(owner: ItemTemplate) {
-        super(owner,owner.row.Material)
-    }
-
-    @EnumField(-1)
-    setConsumables() { return this.set(-1); }
-
-    @EnumField(1)
-    setUndefined() { return this.set(0); }
-
-    @EnumField(2)
-    setMetal() { return this.set(1); }
-
-    @EnumField(3)
-    setWood() { return this.set(2); }
-
-    @EnumField(4)
-    setLiquid() { return this.set(3); }
-
-    @EnumField(5)
-    setJewelry() { return this.set(4); }
-
-    @EnumField(6)
-    setChain() { return this.set(5); }
-
-    @EnumField(7)
-    setPlate() { return this.set(6); }
-
-    @EnumField(8)
-    setCloth() { return this.set(7); }
-
-    @EnumField(9)
-    setLeather() { return this.set(8); }
+export enum ItemMaterial {
+    CONSUMABLES = -1,
+    UNDEFINED   = 0,
+    METAL       = 1,
+    WOOD        = 2,
+    LIQUID      = 3,
+    JEWELRY     = 4,
+    CHAIN       = 5,
+    PLATE       = 6,
+    CLOTH       = 7,
+    LEATHER     = 8,
 }

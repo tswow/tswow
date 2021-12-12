@@ -14,28 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class UnitClass extends EnumCellWrapper<CreatureTemplate> {
-    get(): number {
-        return this.owner.row.unit_class.get();
-    }
-
-    set(value: number): CreatureTemplate {
-        this.owner.row.unit_class.set(value);
-        return this.owner;
-    }
-
-    @EnumField(1)
-    setWarrior() { return this.set(1); }
-
-    @EnumField(2)
-    setPaladin() { return this.set(2); }
-
-    @EnumField(4)
-    setRogue() { return this.set(4); }
-
-    @EnumField(8)
-    setMage() { return this.set(8); }
+export enum UnitClass {
+    WARRIOR = 1,
+    PALADIN = 2,
+    ROGUE   = 4,
+    MAGE    = 8,
 }

@@ -14,17 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell32 } from "wotlkdata/cell/cells/MaskCell";
-import { SmartScript } from "./SmartScript";
 
-export class EventPhase<T> extends MaskCell32<SmartScript<T>> {
-    get Phase1() { return this.bit(0); }
-    get Phase2() { return this.bit(1); }
-    get Phase3() { return this.bit(2); }
-    get Phase4() { return this.bit(3); }
-    get Phase5() { return this.bit(4); }
-    get Phase6() { return this.bit(5); }
-    get Phase7() { return this.bit(6); }
-    get Phase8() { return this.bit(7); }
-    get Phase9() { return this.bit(8); }
+export enum EventPhase {
+    PHASE1 = 0x1,
+    PHASE2 = 0x2,
+    PHASE3 = 0x4,
+    PHASE4 = 0x8,
+    PHASE5 = 0x10,
+    PHASE6 = 0x20,
+    PHASE7 = 0x40,
+    PHASE8 = 0x80,
+    PHASE9 = 0x100,
 }

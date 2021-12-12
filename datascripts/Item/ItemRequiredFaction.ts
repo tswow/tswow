@@ -14,43 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
+import { EnumCon, makeEnum, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { ReputationRank } from "../Misc/ReputationRank";
 import { ItemTemplate } from "./ItemTemplate";
-
-export class ReputationRank extends EnumCellWrapper<ItemTemplate> {
-    @EnumField(0)
-    Hated() {return this.set(0); }
-
-    @EnumField(1)
-    Hostile() {return this.set(1); }
-
-    @EnumField(2)
-    Unfriendly() {return this.set(2); }
-
-    @EnumField(3)
-    Neutral() {return this.set(3); }
-
-    @EnumField(4)
-    Friendly() {return this.set(4); }
-
-    @EnumField(5)
-    Honored() {return this.set(5); }
-
-    @EnumField(6)
-    Revered() {return this.set(6); }
-
-    @EnumField(7)
-    Exalted() {return this.set(7); }
-}
 
 export class ItemRequiredFaction extends CellSystem<ItemTemplate> {
     get Faction() { return this.ownerWrap(this.owner.row.RequiredReputationFaction); }
-    get Rank() { return new ReputationRank(this.owner, this.owner.row.RequiredReputationRank); }
+    get Rank() {
+        return makeEnumCell(ReputationRank,this, this.owner.row.RequiredReputationRank);
+    }
 
-    set(faction: number, rank: number) {
+    set(faction: number, rank: EnumCon<keyof typeof ReputationRank>) {
         this.Faction.set(faction);
-        this.Rank.set(rank);
+        this.Rank.set(makeEnum(ReputationRank,rank));
         return this.owner;
     }
 

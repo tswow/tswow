@@ -14,137 +14,46 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { CreatureTemplate } from "./CreatureTemplate";
 
-export class CreatureFamily extends EnumCellWrapper<CreatureTemplate> {
-    get(): number {
-        return this.owner.row.family.get();
-    }
-
-    set(value: number): CreatureTemplate {
-        this.owner.row.family.set(value);
-        return this.owner;
-    }
-
-
-    @EnumField(1)
-    setWolf() { return this.set(1); }
-
-    @EnumField(2)
-    setCat() { return this.set(2); }
-
-    @EnumField(3)
-    setSpider() { return this.set(3); }
-
-    @EnumField(4)
-    setBear() { return this.set(4); }
-
-    @EnumField(5)
-    setBoar() { return this.set(5); }
-
-    @EnumField(6)
-    setCrocolisk() { return this.set(6); }
-
-    @EnumField(7)
-    setCarrionBird() { return this.set(7); }
-
-    @EnumField(8)
-    setCrab() { return this.set(8); }
-
-    @EnumField(9)
-    setGorilla() { return this.set(9); }
-
-    @EnumField(10)
-    setRaptor() { return this.set(10); }
-
-    @EnumField(11)
-    setTallstrider() { return this.set(11); }
-
-    @EnumField(12)
-    setFelhunter() { return this.set(12); }
-
-    @EnumField(13)
-    setVoidwalker() { return this.set(13); }
-
-    @EnumField(14)
-    setSuccubus() { return this.set(14); }
-
-    @EnumField(15)
-    setDoomguard() { return this.set(15); }
-
-    @EnumField(16)
-    setScorpid() { return this.set(16); }
-
-    @EnumField(17)
-    setTurtle() { return this.set(17); }
-
-    @EnumField(18)
-    setImp() { return this.set(18); }
-
-    @EnumField(19)
-    setBat() { return this.set(19); }
-
-    @EnumField(20)
-    setHyena() { return this.set(20); }
-
-    @EnumField(21)
-    setOwl() { return this.set(21); }
-
-    @EnumField(22)
-    setWindSerpent() { return this.set(22); }
-
-    @EnumField(23)
-    setRemoteControl() { return this.set(23); }
-
-    @EnumField(24)
-    setFelguard() { return this.set(24); }
-
-    @EnumField(25)
-    setDragonHawk() { return this.set(25); }
-
-    @EnumField(26)
-    setRavager() { return this.set(26); }
-
-    @EnumField(27)
-    setWarpStalker() { return this.set(27); }
-
-    @EnumField(28)
-    setSporebat() { return this.set(28); }
-
-    @EnumField(29)
-    setNetherRay() { return this.set(29); }
-
-    @EnumField(30)
-    setSerpent() { return this.set(30); }
-
-    @EnumField(31)
-    setMoth() { return this.set(31); }
-
-    @EnumField(32)
-    setChimaera() { return this.set(32); }
-
-    @EnumField(33)
-    setDevilsaur() { return this.set(33); }
-
-    @EnumField(34)
-    setGhoul() { return this.set(34); }
-
-    @EnumField(35)
-    setSilithid() { return this.set(35); }
-
-    @EnumField(36)
-    setWorm() { return this.set(36); }
-
-    @EnumField(37)
-    setRhino() { return this.set(37); }
-
-    @EnumField(38)
-    setWasp() { return this.set(38); }
-
-    @EnumField(39)
-    setCorehound() { return this.set(39); }
-
-    @EnumField(40)
-    setSpiritBeast() { return this.set(40); }
+export enum CreatureFamily {
+    WOLF           = 1,
+    CAT            = 2,
+    SPIDER         = 3,
+    BEAR           = 4,
+    BOAR           = 5,
+    CROCOLISK      = 6,
+    CARRION_BIRD   = 7,
+    CRAB           = 8,
+    GORILLA        = 9,
+    RAPTOR         = 10,
+    TALLSTRIDER    = 11,
+    FELHUNTER      = 12,
+    VOIDWALKER     = 13,
+    SUCCUBUS       = 14,
+    DOOMGUARD      = 15,
+    SCORPID        = 16,
+    TURTLE         = 17,
+    IMP            = 18,
+    BAT            = 19,
+    HYENA          = 20,
+    OWL            = 21,
+    WIND_SERPENT   = 22,
+    REMOTE_CONTROL = 23,
+    FELGUARD       = 24,
+    DRAGON_HAWK    = 25,
+    RAVAGER        = 26,
+    WARP_STALKER   = 27,
+    SPOREBAT       = 28,
+    NETHER_RAY     = 29,
+    SERPENT        = 30,
+    MOTH           = 31,
+    CHIMAERA       = 32,
+    DEVILSAUR      = 33,
+    GHOUL          = 34,
+    SILITHID       = 35,
+    WORM           = 36,
+    RHINO          = 37,
+    WASP           = 38,
+    COREHOUND      = 39,
+    SPIRIT_BEAST   = 40,
 }

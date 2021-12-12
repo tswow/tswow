@@ -14,428 +14,110 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellIndexWrapper } from "wotlkdata/cell/cells/CellArray";
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { DBCUIntArrayCell } from "wotlkdata/dbc/DBCCell";
 
-export class SpellImplicitTarget<T> extends EnumCellWrapper<T> {
-    constructor(owner: T, cell: DBCUIntArrayCell<any>, index: number) {
-        super(owner, new CellIndexWrapper(undefined, cell, index));
-    }
-
-    /** No Comment (yet!) */
-    @EnumField(1)
-    setUnitCaster() { return this.set(1); }
-
-    /** No Comment (yet!) */
-    @EnumField(2)
-    setUnitNearbyEnemy() { return this.set(2); }
-
-    /** No Comment (yet!) */
-    @EnumField(3)
-    setUnitNearbyAlly() { return this.set(3); }
-
-    /** No Comment (yet!) */
-    @EnumField(4)
-    setUnitNearbyParty() { return this.set(4); }
-
-    /** No Comment (yet!) */
-    @EnumField(5)
-    setUnitPet() { return this.set(5); }
-
-    /** No Comment (yet!) */
-    @EnumField(6)
-    setUnitTargetEnemy() { return this.set(6); }
-
-    /** No Comment (yet!) */
-    @EnumField(7)
-    setUnitSrcAreaEntry() { return this.set(7); }
-
-    /** No Comment (yet!) */
-    @EnumField(8)
-    setUnitDestAreaEntry() { return this.set(8); }
-
-    /** No Comment (yet!) */
-    @EnumField(9)
-    setDestHome() { return this.set(9); }
-
-    /** No Comment (yet!) */
-    @EnumField(11)
-    setUnitSrcAreaUnk11() { return this.set(11); }
-
-    /** No Comment (yet!) */
-    @EnumField(15)
-    setUnitSrcAreaEnemy() { return this.set(15); }
-
-    /** No Comment (yet!) */
-    @EnumField(16)
-    setUnitDestAreaEnemy() { return this.set(16); }
-
-    /** No Comment (yet!) */
-    @EnumField(17)
-    setDestDb() { return this.set(17); }
-
-    /** No Comment (yet!) */
-    @EnumField(18)
-    setDestCaster() { return this.set(18); }
-
-    /** No Comment (yet!) */
-    @EnumField(20)
-    setUnitCasterAreaParty() { return this.set(20); }
-
-    /** No Comment (yet!) */
-    @EnumField(21)
-    setUnitTargetAlly() { return this.set(21); }
-
-    /** No Comment (yet!) */
-    @EnumField(22)
-    setSrcCaster() { return this.set(22); }
-
-    /** No Comment (yet!) */
-    @EnumField(23)
-    setGameobjectTarget() { return this.set(23); }
-
-    /** No Comment (yet!) */
-    @EnumField(24)
-    setUnitConeEnemy24() { return this.set(24); }
-
-    /** No Comment (yet!) */
-    @EnumField(25)
-    setUnitTargetAny() { return this.set(25); }
-
-    /** No Comment (yet!) */
-    @EnumField(26)
-    setGameobjectItemTarget() { return this.set(26); }
-
-    /** No Comment (yet!) */
-    @EnumField(27)
-    setUnitMaster() { return this.set(27); }
-
-    /** No Comment (yet!) */
-    @EnumField(28)
-    setDestDynobjEnemy() { return this.set(28); }
-
-    /** No Comment (yet!) */
-    @EnumField(29)
-    setDestDynobjAlly() { return this.set(29); }
-
-    /** No Comment (yet!) */
-    @EnumField(30)
-    setUnitSrcAreaAlly() { return this.set(30); }
-
-    /** No Comment (yet!) */
-    @EnumField(31)
-    setUnitDestAreaAlly() { return this.set(31); }
-
-    /** No Comment (yet!) */
-    @EnumField(32)
-    setDestCasterSummon() { return this.set(32); }
-
-    /** No Comment (yet!) */
-    @EnumField(33)
-    setUnitSrcAreaParty() { return this.set(33); }
-
-    /** No Comment (yet!) */
-    @EnumField(34)
-    setUnitDestAreaParty() { return this.set(34); }
-
-    /** No Comment (yet!) */
-    @EnumField(35)
-    setUnitTargetParty() { return this.set(35); }
-
-    /** No Comment (yet!) */
-    @EnumField(36)
-    setDestCasterUnk36() { return this.set(36); }
-
-    /** No Comment (yet!) */
-    @EnumField(37)
-    setUnitLasttargetAreaParty() { return this.set(37); }
-
-    /** No Comment (yet!) */
-    @EnumField(38)
-    setUnitNearbyEntry() { return this.set(38); }
-
-    /** No Comment (yet!) */
-    @EnumField(39)
-    setDestCasterFishing() { return this.set(39); }
-
-    /** No Comment (yet!) */
-    @EnumField(40)
-    setGameobjectNearbyEntry() { return this.set(40); }
-
-    /** No Comment (yet!) */
-    @EnumField(41)
-    setDestCasterFrontRight() { return this.set(41); }
-
-    /** No Comment (yet!) */
-    @EnumField(42)
-    setDestCasterBackRight() { return this.set(42); }
-
-    /** No Comment (yet!) */
-    @EnumField(43)
-    setDestCasterBackLeft() { return this.set(43); }
-
-    /** No Comment (yet!) */
-    @EnumField(44)
-    setDestCasterFrontLeft() { return this.set(44); }
-
-    /** No Comment (yet!) */
-    @EnumField(45)
-    setUnitTargetChainhealAlly() { return this.set(45); }
-
-    /** No Comment (yet!) */
-    @EnumField(46)
-    setDestNearbyEntry() { return this.set(46); }
-
-    /** No Comment (yet!) */
-    @EnumField(47)
-    setDestCasterFront() { return this.set(47); }
-
-    /** No Comment (yet!) */
-    @EnumField(48)
-    setDestCasterBack() { return this.set(48); }
-
-    /** No Comment (yet!) */
-    @EnumField(49)
-    setDestCasterRight() { return this.set(49); }
-
-    /** No Comment (yet!) */
-    @EnumField(50)
-    setDestCasterLeft() { return this.set(50); }
-
-    /** No Comment (yet!) */
-    @EnumField(51)
-    setGameobjectSrcArea() { return this.set(51); }
-
-    /** No Comment (yet!) */
-    @EnumField(52)
-    setGameobjectDestArea() { return this.set(52); }
-
-    /** No Comment (yet!) */
-    @EnumField(53)
-    setDestTargetEnemy() { return this.set(53); }
-
-    /** No Comment (yet!) */
-    @EnumField(54)
-    setUnitConeEnemy54() { return this.set(54); }
-
-    /** No Comment (yet!) */
-    @EnumField(55)
-    setDestCasterFrontLeap() { return this.set(55); }
-
-    /** No Comment (yet!) */
-    @EnumField(56)
-    setUnitCasterAreaRaid() { return this.set(56); }
-
-    /** No Comment (yet!) */
-    @EnumField(57)
-    setUnitTargetRaid() { return this.set(57); }
-
-    /** No Comment (yet!) */
-    @EnumField(58)
-    setUnitNearbyRaid() { return this.set(58); }
-
-    /** No Comment (yet!) */
-    @EnumField(59)
-    setUnitConeAlly() { return this.set(59); }
-
-    /** No Comment (yet!) */
-    @EnumField(60)
-    setUnitConeEntry() { return this.set(60); }
-
-    /** No Comment (yet!) */
-    @EnumField(61)
-    setUnitTargetAreaRaidClass() { return this.set(61); }
-
-    /** No Comment (yet!) */
-    @EnumField(62)
-    setUnk62() { return this.set(62); }
-
-    /** No Comment (yet!) */
-    @EnumField(63)
-    setDestTargetAny() { return this.set(63); }
-
-    /** No Comment (yet!) */
-    @EnumField(64)
-    setDestTargetFront() { return this.set(64); }
-
-    /** No Comment (yet!) */
-    @EnumField(65)
-    setDestTargetBack() { return this.set(65); }
-
-    /** No Comment (yet!) */
-    @EnumField(66)
-    setDestTargetRight() { return this.set(66); }
-
-    /** No Comment (yet!) */
-    @EnumField(67)
-    setDestTargetLeft() { return this.set(67); }
-
-    /** No Comment (yet!) */
-    @EnumField(68)
-    setDestTargetFrontRight() { return this.set(68); }
-
-    /** No Comment (yet!) */
-    @EnumField(69)
-    setDestTargetBackRight() { return this.set(69); }
-
-    /** No Comment (yet!) */
-    @EnumField(70)
-    setDestTargetBackLeft() { return this.set(70); }
-
-    /** No Comment (yet!) */
-    @EnumField(71)
-    setDestTargetFrontLeft() { return this.set(71); }
-
-    /** No Comment (yet!) */
-    @EnumField(72)
-    setDestCasterRandom() { return this.set(72); }
-
-    /** No Comment (yet!) */
-    @EnumField(73)
-    setDestCasterRadius() { return this.set(73); }
-
-    /** No Comment (yet!) */
-    @EnumField(74)
-    setDestTargetRandom() { return this.set(74); }
-
-    /** No Comment (yet!) */
-    @EnumField(75)
-    setDestTargetRadius() { return this.set(75); }
-
-    /** No Comment (yet!) */
-    @EnumField(76)
-    setDestChannelTarget() { return this.set(76); }
-
-    /** No Comment (yet!) */
-    @EnumField(77)
-    setUnitChannelTarget() { return this.set(77); }
-
-    /** No Comment (yet!) */
-    @EnumField(78)
-    setDestDestFront() { return this.set(78); }
-
-    /** No Comment (yet!) */
-    @EnumField(79)
-    setDestDestBack() { return this.set(79); }
-
-    /** No Comment (yet!) */
-    @EnumField(80)
-    setDestDestRight() { return this.set(80); }
-
-    /** No Comment (yet!) */
-    @EnumField(81)
-    setDestDestLeft() { return this.set(81); }
-
-    /** No Comment (yet!) */
-    @EnumField(82)
-    setDestDestFrontRight() { return this.set(82); }
-
-    /** No Comment (yet!) */
-    @EnumField(83)
-    setDestDestBackRight() { return this.set(83); }
-
-    /** No Comment (yet!) */
-    @EnumField(84)
-    setDestDestBackLeft() { return this.set(84); }
-
-    /** No Comment (yet!) */
-    @EnumField(85)
-    setDestDestFrontLeft() { return this.set(85); }
-
-    /** No Comment (yet!) */
-    @EnumField(86)
-    setDestDestRandom() { return this.set(86); }
-
-    /** No Comment (yet!) */
-    @EnumField(87)
-    setDestDest() { return this.set(87); }
-
-    /** No Comment (yet!) */
-    @EnumField(88)
-    setDestDynobjNone() { return this.set(88); }
-
-    /** No Comment (yet!) */
-    @EnumField(89)
-    setDestTraj() { return this.set(89); }
-
-    /** No Comment (yet!) */
-    @EnumField(90)
-    setUnitTargetMinipet() { return this.set(90); }
-
-    /** No Comment (yet!) */
-    @EnumField(91)
-    setDestDestRadius() { return this.set(91); }
-
-    /** No Comment (yet!) */
-    @EnumField(92)
-    setUnitSummoner() { return this.set(92); }
-
-    /** No Comment (yet!) */
-    @EnumField(93)
-    setCorpseSrcAreaEnemy() { return this.set(93); }
-
-    /** No Comment (yet!) */
-    @EnumField(94)
-    setUnitVehicle() { return this.set(94); }
-
-    /** No Comment (yet!) */
-    @EnumField(95)
-    setUnitTargetPassenger() { return this.set(95); }
-
-    /** No Comment (yet!) */
-    @EnumField(96)
-    setUnitPassenger0() { return this.set(96); }
-
-    /** No Comment (yet!) */
-    @EnumField(97)
-    setUnitPassenger1() { return this.set(97); }
-
-    /** No Comment (yet!) */
-    @EnumField(98)
-    setUnitPassenger2() { return this.set(98); }
-
-    /** No Comment (yet!) */
-    @EnumField(99)
-    setUnitPassenger3() { return this.set(99); }
-
-    /** No Comment (yet!) */
-    @EnumField(100)
-    setUnitPassenger4() { return this.set(100); }
-
-    /** No Comment (yet!) */
-    @EnumField(101)
-    setUnitPassenger5() { return this.set(101); }
-
-    /** No Comment (yet!) */
-    @EnumField(102)
-    setUnitPassenger6() { return this.set(102); }
-
-    /** No Comment (yet!) */
-    @EnumField(103)
-    setUnitPassenger7() { return this.set(103); }
-
-    /** No Comment (yet!) */
-    @EnumField(104)
-    setUnitConeEnemy104() { return this.set(104); }
-
-    /** No Comment (yet!) */
-    @EnumField(105)
-    setUnitUnk105() { return this.set(105); }
-
-    /** No Comment (yet!) */
-    @EnumField(106)
-    setDestChannelCaster() { return this.set(106); }
-
-    /** No Comment (yet!) */
-    @EnumField(107)
-    setUnkDestAreaUnk107() { return this.set(107); }
-
-    /** No Comment (yet!) */
-    @EnumField(108)
-    setGameobjectCone() { return this.set(108); }
-
-    /** No Comment (yet!) */
-    @EnumField(110)
-    setUnitConeEntry110() { return this.set(110); }
+export enum SpellImplicitTarget {
+    UNIT_CASTER                 = 1,
+    UNIT_NEARBY_ENEMY           = 2,
+    UNIT_NEARBY_ALLY            = 3,
+    UNIT_NEARBY_PARTY           = 4,
+    UNIT_PET                    = 5,
+    UNIT_TARGET_ENEMY           = 6,
+    UNIT_SRC_AREA_ENTRY         = 7,
+    UNIT_DEST_AREA_ENTRY        = 8,
+    DEST_HOME                   = 9,
+    UNIT_SRC_AREA_UNK11         = 11,
+    UNIT_SRC_AREA_ENEMY         = 15,
+    UNIT_DEST_AREA_ENEMY        = 16,
+    DEST_DB                     = 17,
+    DEST_CASTER                 = 18,
+    UNIT_CASTER_AREA_PARTY      = 20,
+    UNIT_TARGET_ALLY            = 21,
+    SRC_CASTER                  = 22,
+    GAMEOBJECT_TARGET           = 23,
+    UNIT_CONE_ENEMY24           = 24,
+    UNIT_TARGET_ANY             = 25,
+    GAMEOBJECT_ITEM_TARGET      = 26,
+    UNIT_MASTER                 = 27,
+    DEST_DYNOBJ_ENEMY           = 28,
+    DEST_DYNOBJ_ALLY            = 29,
+    UNIT_SRC_AREA_ALLY          = 30,
+    UNIT_DEST_AREA_ALLY         = 31,
+    DEST_CASTER_SUMMON          = 32,
+    UNIT_SRC_AREA_PARTY         = 33,
+    UNIT_DEST_AREA_PARTY        = 34,
+    UNIT_TARGET_PARTY           = 35,
+    DEST_CASTER_UNK36           = 36,
+    UNIT_LASTTARGET_AREA_PARTY  = 37,
+    UNIT_NEARBY_ENTRY           = 38,
+    DEST_CASTER_FISHING         = 39,
+    GAMEOBJECT_NEARBY_ENTRY     = 40,
+    DEST_CASTER_FRONT_RIGHT     = 41,
+    DEST_CASTER_BACK_RIGHT      = 42,
+    DEST_CASTER_BACK_LEFT       = 43,
+    DEST_CASTER_FRONT_LEFT      = 44,
+    UNIT_TARGET_CHAINHEAL_ALLY  = 45,
+    DEST_NEARBY_ENTRY           = 46,
+    DEST_CASTER_FRONT           = 47,
+    DEST_CASTER_BACK            = 48,
+    DEST_CASTER_RIGHT           = 49,
+    DEST_CASTER_LEFT            = 50,
+    GAMEOBJECT_SRC_AREA         = 51,
+    GAMEOBJECT_DEST_AREA        = 52,
+    DEST_TARGET_ENEMY           = 53,
+    UNIT_CONE_ENEMY54           = 54,
+    DEST_CASTER_FRONT_LEAP      = 55,
+    UNIT_CASTER_AREA_RAID       = 56,
+    UNIT_TARGET_RAID            = 57,
+    UNIT_NEARBY_RAID            = 58,
+    UNIT_CONE_ALLY              = 59,
+    UNIT_CONE_ENTRY             = 60,
+    UNIT_TARGET_AREA_RAID_CLASS = 61,
+    UNK62                       = 62,
+    DEST_TARGET_ANY             = 63,
+    DEST_TARGET_FRONT           = 64,
+    DEST_TARGET_BACK            = 65,
+    DEST_TARGET_RIGHT           = 66,
+    DEST_TARGET_LEFT            = 67,
+    DEST_TARGET_FRONT_RIGHT     = 68,
+    DEST_TARGET_BACK_RIGHT      = 69,
+    DEST_TARGET_BACK_LEFT       = 70,
+    DEST_TARGET_FRONT_LEFT      = 71,
+    DEST_CASTER_RANDOM          = 72,
+    DEST_CASTER_RADIUS          = 73,
+    DEST_TARGET_RANDOM          = 74,
+    DEST_TARGET_RADIUS          = 75,
+    DEST_CHANNEL_TARGET         = 76,
+    UNIT_CHANNEL_TARGET         = 77,
+    DEST_DEST_FRONT             = 78,
+    DEST_DEST_BACK              = 79,
+    DEST_DEST_RIGHT             = 80,
+    DEST_DEST_LEFT              = 81,
+    DEST_DEST_FRONT_RIGHT       = 82,
+    DEST_DEST_BACK_RIGHT        = 83,
+    DEST_DEST_BACK_LEFT         = 84,
+    DEST_DEST_FRONT_LEFT        = 85,
+    DEST_DEST_RANDOM            = 86,
+    DEST_DEST                   = 87,
+    DEST_DYNOBJ_NONE            = 88,
+    DEST_TRAJ                   = 89,
+    UNIT_TARGET_MINIPET         = 90,
+    DEST_DEST_RADIUS            = 91,
+    UNIT_SUMMONER               = 92,
+    CORPSE_SRC_AREA_ENEMY       = 93,
+    UNIT_VEHICLE                = 94,
+    UNIT_TARGET_PASSENGER       = 95,
+    UNIT_PASSENGER0             = 96,
+    UNIT_PASSENGER1             = 97,
+    UNIT_PASSENGER2             = 98,
+    UNIT_PASSENGER3             = 99,
+    UNIT_PASSENGER4             = 100,
+    UNIT_PASSENGER5             = 101,
+    UNIT_PASSENGER6             = 102,
+    UNIT_PASSENGER7             = 103,
+    UNIT_CONE_ENEMY104          = 104,
+    UNIT_UNK105                 = 105,
+    DEST_CHANNEL_CASTER         = 106,
+    UNK_DEST_AREA_UNK107        = 107,
+    GAMEOBJECT_CONE             = 108,
+    UNIT_CONE_ENTRY110          = 110,
 }

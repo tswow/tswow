@@ -7,15 +7,15 @@ import { Pos } from "tswow-stdlib/Misc/Position";
  */
 std.Classes.create(/*@1*/'mod'/**/,/*@2*/'id'/**/,'MAGE')
     .Name.enGB.set('New Class')
-    
+
     // Modify stats
     .Stats.Stamina.set((old,race,level)=>old)
-    
+
     // Modify starting gear
     .StartGear.Mainhand.set(25)
 
     // Races
-    .addRaces(['HUMAN','ORC'])
+    .Races.add(['HUMAN','ORC'])
 
     .UI.Color.set(0xcc0077)
     .UI.Info.add('- Role: Damage')
@@ -30,15 +30,15 @@ std.Classes.create(/*@1*/'mod'/**/,/*@2*/'id'/**/,'MAGE')
  */
 export const CLASS = std.Classes.create(/*@1*/'mod'/**/,/*@2*/'id'/**/,'MAGE')
     .Name.enGB.set('New Class')
-    
+
     // Modify stats
     .Stats.Stamina.set((old,race,level)=>old)
-    
+
     // Modify starting gear
     .StartGear.Mainhand.set(25)
 
     // Races
-    .addRaces(['HUMAN','ORC'])
+    .Races.add(['HUMAN','ORC'])
 
     .UI.Color.set(0xcc0077)
     .UI.Info.add('- Role: Damage')
@@ -53,12 +53,12 @@ export const CLASS_SKILL = std.SkillLines
 // Autolearn spell
 std.Spells.Presets.CreateBolt(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spell 1')
     .Name.enGB.set('My Class Spell 2')
-    .SkillLines.addAutolearn(CLASS_SKILL.ID).end
+    .SkillLines.addMod(CLASS_SKILL.ID,true)
 
 // Learnt spell
 const spell = std.Spells.Presets.CreateBolt(/*@1*/'mod'/**/,/*@2*/'id'/**/+'spell 2')
     .Name.enGB.set('My Class Spell')
-    .SkillLines.add(CLASS_SKILL.ID).end
+    .SkillLines.addMod(CLASS_SKILL.ID,false)
 
 const trainer = (id: string)=>
     std.CreatureTemplates.Presets

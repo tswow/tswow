@@ -15,29 +15,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { DBC } from "wotlkdata";
-import { Ids, AutoIdGenerator } from "../Misc/Ids";
-import { SpellRadiusRow } from "wotlkdata/dbc/types/SpellRadius";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
+import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { SpellRadiusQuery, SpellRadiusRow } from "wotlkdata/wotlkdata/dbc/types/SpellRadius";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RefDynamic } from "../Refs/Ref";
+import { RegistryDynamic } from "../Refs/Registry";
 
-export class SpellRadius<T> extends SharedRef<T, SpellRadiusRow> {
-    table(): SharedRefTable<SpellRadiusRow> {
-        return DBC.SpellRadius;
-    }
-
-    ids(): AutoIdGenerator {
-        return Ids.SpellRadius;
-    }
-
+export class SpellRadius extends MainEntity<SpellRadiusRow> {
     clear(): this {
         this.set(0,0,0);
         return this;
     }
 
     get ID() { return this.row.ID.get(); }
-
-    get Radius() { return this.ownerWrap(this.row.Radius); }
-    get RadiusPerLevel() { return this.ownerWrap(this.row.RadiusPerLevel); }
-    get RadiusMax() { return this.ownerWrap(this.row.RadiusMax); }
+    get Radius() { return this.wrap(this.row.Radius); }
+    get RadiusPerLevel() { return this.wrap(this.row.RadiusPerLevel); }
+    get RadiusMax() { return this.wrap(this.row.RadiusMax); }
 
     set(radius: number, radiusPerLevel: number, radiusMax: number) {
         const row = this.row;
@@ -47,9 +42,50 @@ export class SpellRadius<T> extends SharedRef<T, SpellRadiusRow> {
         return this.owner;
     }
 
-    copyFrom(radius: SpellRadius<any>) {
+    copyFrom(radius: SpellRadius) {
         this.Radius.set(radius.Radius.get());
         this.RadiusPerLevel.set(radius.RadiusPerLevel.get());
         this.RadiusMax.set(radius.RadiusMax.get());
     }
 }
+
+export class SpellRadiusRef<T> extends RefDynamic<T,SpellRadius>
+{
+    setSimple(base: number, perLevel: number = 0, max: number = base + perLevel*255) {
+        this.getRefCopy()
+            .Radius.set(base)
+            .RadiusPerLevel.set(perLevel)
+            .RadiusMax.set(max)
+        return this.owner;
+    }
+}
+
+export class SpellRadiusRegistryClass
+    extends RegistryDynamic<SpellRadius,SpellRadiusRow,SpellRadiusQuery>
+{
+    ref<T>(owner: T, cell: Cell<number,any>) {
+        return new SpellRadiusRef(owner, cell, this);
+    }
+    protected Table(): Table<any, SpellRadiusQuery, SpellRadiusRow> & { add: (id: number) => SpellRadiusRow; } {
+        return DBC.SpellRadius
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellRadius
+    }
+    Clear(entity: SpellRadius): void {
+        entity.set(0,0,0)
+    }
+    protected FindByID(id: number): SpellRadiusRow {
+        return DBC.SpellRadius.findById(id);
+    }
+    protected EmptyQuery(): SpellRadiusQuery {
+        return {}
+    }
+    ID(e: SpellRadius): number {
+        return e.ID
+    }
+    protected Entity(r: SpellRadiusRow): SpellRadius {
+        return new SpellRadius(r);
+    }
+}
+export const SpellRadiusRegistry = new SpellRadiusRegistryClass();

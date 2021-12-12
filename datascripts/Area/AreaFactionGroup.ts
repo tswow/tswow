@@ -14,19 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCellWrapper, EnumField } from "wotlkdata/cell/cells/EnumCell";
-import { Area } from "./Area";
 
-export class AreaFaction extends EnumCellWrapper<Area> {
-    @EnumField(0)
-    setContested() { return this.set(0); }
+export enum AreaFaction {
+    Contested = 0,
+    Alliance  = 2,
+    Horde     = 4,
+    Neutral   = 6,
 
-    @EnumField(2)
-    setAlliance() { return this.set(2); }
-
-    @EnumField(4)
-    setHorde() { return this.set(4); }
-
-    @EnumField(6)
-    setNeutral() { return this.set(6); }
 }

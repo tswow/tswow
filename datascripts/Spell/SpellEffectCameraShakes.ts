@@ -1,17 +1,12 @@
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { SpellEffectCameraShakesRow } from "wotlkdata/dbc/types/SpellEffectCameraShakes";
-import { AutoIdGenerator, Ids } from "../Misc/Ids";
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { CameraShakes } from "./CameraShakes";
+import { DBC } from "wotlkdata";
+import { SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow } from "wotlkdata/wotlkdata/dbc/types/SpellEffectCameraShakes";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { MainEntity } from "../Misc/Entity";
+import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { RegistryDynamic } from "../Refs/Registry";
+import { CameraShakeRegistry } from "./CameraShakes";
 
-export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraShakesRow> {
-    table(): SharedRefTable<SpellEffectCameraShakesRow> {
-        return DBC.SpellEffectCameraShakes;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.SpellEffectCameraShakes;
-    }
-
+export class SpellEffectCameraShakes extends MainEntity<SpellEffectCameraShakesRow> {
     clear(): this {
         this.row.CameraShake.setIndex(0,0);
         this.row.CameraShake.setIndex(1,0);
@@ -20,11 +15,11 @@ export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraSh
     }
 
     clearIndex(index: number) {
-        this.row.CameraShake.setIndex(0,0);
+        this.row.CameraShake.setIndex(index,0);
     }
 
     get(index: number) {
-        return new CameraShakes(this.owner, this.wrapIndex(this.row.CameraShake,index));
+        return CameraShakeRegistry.ref(this.owner, this.wrapIndex(this.row.CameraShake,index));
     }
 
     add() {
@@ -37,7 +32,6 @@ export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraSh
         }
         throw new Error(`Can't add more entries, array is full`);
     }
-
 
     get length() { return 3; }
 
@@ -52,4 +46,39 @@ export class SpellEffectCameraShakes<T> extends SharedRef<T, SpellEffectCameraSh
         }
         return values;
     }
+
+    get ID() { return this.row.ID.get(); }
 }
+
+export class SpellEffectCameraShakesRegistryClass
+    extends RegistryDynamic<
+          SpellEffectCameraShakes
+        , SpellEffectCameraShakesRow
+        , SpellEffectCameraShakesQuery
+    >
+{
+    protected Table(): Table<any, SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow> & { add: (id: number) => SpellEffectCameraShakesRow; } {
+        return DBC.SpellEffectCameraShakes
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.SpellEffectCameraShakes
+    }
+    Clear(entity: SpellEffectCameraShakes): void {
+        entity.clear();
+    }
+    protected FindByID(id: number): SpellEffectCameraShakesRow {
+        return DBC.SpellEffectCameraShakes.findById(id);
+    }
+    protected EmptyQuery(): SpellEffectCameraShakesQuery {
+        return {}
+    }
+    ID(e: SpellEffectCameraShakes): number {
+        return e.ID
+    }
+    protected Entity(r: SpellEffectCameraShakesRow): SpellEffectCameraShakes {
+        return new SpellEffectCameraShakes(r);
+    }
+}
+
+export const SpellEffectCameraShakeRegistry
+    = new SpellEffectCameraShakesRegistryClass();

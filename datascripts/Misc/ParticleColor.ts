@@ -1,15 +1,11 @@
-import { DBC } from "wotlkdata/dbc/DBCFiles";
-import { Ids, AutoIdGenerator } from "./Ids";
-import { SharedRef, SharedRefTable } from "../Refs/SharedRef";
-import { ParticleColorRow } from "wotlkdata/dbc/types/ParticleColor";
+import { DBC } from "wotlkdata";
+import { ParticleColorQuery, ParticleColorRow } from "wotlkdata/wotlkdata/dbc/types/ParticleColor";
+import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { RegistryDynamic } from "../Refs/Registry";
+import { MainEntity } from "./Entity";
+import { DynamicIDGenerator, Ids } from "./Ids";
 
-export class ParticleColor<T> extends SharedRef<T, ParticleColorRow> {
-    table(): SharedRefTable<ParticleColorRow> {
-        return DBC.ParticleColor;
-    }
-    ids(): AutoIdGenerator {
-        return Ids.ParticleColors;
-    }
+export class ParticleColor extends MainEntity<ParticleColorRow> {
     clear(): this {
         this.set(0,0,0,0,0,0,0,0,0);
         return this;
@@ -47,3 +43,33 @@ export class ParticleColor<T> extends SharedRef<T, ParticleColorRow> {
         return this.owner;
     }
 }
+
+export class ParticleColorRegistryClass
+    extends RegistryDynamic<ParticleColor,ParticleColorRow,ParticleColorQuery>
+{
+    protected Table(): Table<any, ParticleColorQuery, ParticleColorRow> & { add: (id: number) => ParticleColorRow; } {
+        return DBC.ParticleColor
+    }
+    protected ids(): DynamicIDGenerator {
+        return Ids.ParticleColors
+    }
+    Clear(entity: ParticleColor): void {
+        entity
+            .End.fill(0)
+            .Mid.fill(0)
+            .Start.fill(0)
+    }
+    protected FindByID(id: number): ParticleColorRow {
+        return DBC.ParticleColor.findById(id);
+    }
+    protected EmptyQuery(): ParticleColorQuery {
+        return {}
+    }
+    ID(e: ParticleColor): number {
+        return e.row.ID.get()
+    }
+    protected Entity(r: ParticleColorRow): ParticleColor {
+        return new ParticleColor(r);
+    }
+}
+export const ParticleColorRegistry = new ParticleColorRegistryClass();

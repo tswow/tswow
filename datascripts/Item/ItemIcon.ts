@@ -14,10 +14,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
+import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
 import { ItemDisplayInfo } from "./ItemDisplayInfo";
-import { CellSystem } from "wotlkdata/cell/systems/CellSystem";
 
-export class ItemIcon<T> extends CellSystem<ItemDisplayInfo<T>> {
+export class ItemIcon extends CellSystem<ItemDisplayInfo> {
     set(value: string) {
         if(value.includes('\\')) {
             if(!value.startsWith('Interface\\Icons\\')) {
@@ -33,5 +33,9 @@ export class ItemIcon<T> extends CellSystem<ItemDisplayInfo<T>> {
 
     get() {
         return this.owner.row.InventoryIcon.getIndex(0);
+    }
+
+    objectify() {
+        return this.owner.row.InventoryIcon.get();
     }
 }
