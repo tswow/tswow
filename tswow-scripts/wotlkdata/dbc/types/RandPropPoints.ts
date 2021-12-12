@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntArrayCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,27 +34,27 @@ export class RandPropPointsRow extends DBCRow<RandPropPointsCreator,RandPropPoin
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Epic() { return new DBCIntArrayCell(this,5,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Superior() { return new DBCIntArrayCell(this,5,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get Good() { return new DBCIntArrayCell(this,5,this.buffer,this.offset+44)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : RandPropPointsCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -64,9 +64,9 @@ export class RandPropPointsRow extends DBCRow<RandPropPointsCreator,RandPropPoin
  * Used for object creation (Don't comment these)
  */
 export type RandPropPointsCreator = {
-    Epic?: int
-    Superior?: int
-    Good?: int
+    Epic?: int[]
+    Superior?: int[]
+    Good?: int[]
 }
 
 /**

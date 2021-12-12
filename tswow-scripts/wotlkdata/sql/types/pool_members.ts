@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { smallint , int , float , varchar } from '../../primitives'
+import { float, int, smallint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,40 +29,40 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class pool_membersRow extends SqlRow<pool_membersCreator,pool_membersQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get type() {return new SQLCellReadOnly<smallint, this>(this, 'type')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spawnId() {return new SQLCellReadOnly<int, this>(this, 'spawnId')}
-    
+
     /**
      * No comment (yet!)
      */
     get poolSpawnId() {return new SQLCell<int, this>(this, 'poolSpawnId')}
-    
+
     /**
      * No comment (yet!)
      */
     get chance() {return new SQLCell<float, this>(this, 'chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<varchar, this>(this, 'description')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(type : smallint,spawnId : int, c? : pool_membersCreator) : this {
         return this.cloneInternal([type,spawnId],c)
     }

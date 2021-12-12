@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , varchar , text , smallint } from '../../primitives'
+import { int, smallint, text, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class trainer_localeRow extends SqlRow<trainer_localeCreator,trainer_localeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Id() {return new SQLCellReadOnly<int, this>(this, 'Id')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get locale() {return new SQLCellReadOnly<varchar, this>(this, 'locale')}
-    
+
     /**
      * No comment (yet!)
      */
     get Greeting_lang() {return new SQLCell<text, this>(this, 'Greeting_lang')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(Id : int,locale : varchar, c? : trainer_localeCreator) : this {
         return this.cloneInternal([Id,locale],c)
     }

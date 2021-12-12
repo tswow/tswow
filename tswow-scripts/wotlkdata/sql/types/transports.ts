@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , mediumint , text , char } from '../../primitives'
+import { char, int, mediumint, text } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class transportsRow extends SqlRow<transportsCreator,transportsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get entry() {return new SQLCell<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get name() {return new SQLCell<text, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : int, c? : transportsCreator) : this {
         return this.cloneInternal([guid],c)
     }

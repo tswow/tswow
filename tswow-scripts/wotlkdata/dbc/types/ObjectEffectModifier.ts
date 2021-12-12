@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCFloatArrayCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCIntCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,32 +34,32 @@ export class ObjectEffectModifierRow extends DBCRow<ObjectEffectModifierCreator,
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get InputType() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapType() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get OutputType() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Param() { return new DBCFloatArrayCell(this,4,this.buffer,this.offset+16)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ObjectEffectModifierCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -72,7 +72,7 @@ export type ObjectEffectModifierCreator = {
     InputType?: int
     MapType?: int
     OutputType?: int
-    Param?: float
+    Param?: float[]
 }
 
 /**

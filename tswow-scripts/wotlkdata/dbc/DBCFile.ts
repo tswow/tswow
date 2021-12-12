@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBCRow } from './DBCRow';
-import { Settings } from '../Settings';
-import { inMemory } from '../query/Query';
-import { Table } from '../table/Table';
-import * as path from 'path';
 import * as fs from 'fs';
+import * as path from 'path';
+import { inMemory } from '../query/Query';
+import { dataset } from '../Settings';
+import { Table } from '../table/Table';
+import { GetStage } from '../wotlkdata';
 import { DBCBuffer } from './DBCBuffer';
+import { DBCRow } from './DBCRow';
 
 export type AnyFile = DBCFile<any, any, any>;
 
@@ -38,6 +39,88 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         super(name);
         this.rowMaker = rowMaker;
         this.buffer = new DBCBuffer();
+    }
+
+    private checkSort() {
+        if(GetStage() !== 'SORT') {
+            throw new Error(
+                  `Attempting to sort DBC before SORT stage. `
+                + `Please register a callback like this to sort:\n\n`
+                + `import { sort } from "wotlkdata"\n`
+                + `\n`
+                + `sort('my-sort-name',()=>{\n`
+                + `   // do your sort here\n`
+                + `});\n\n`
+            )
+        }
+    }
+
+    binarySort(minVal: number, scorer: (row: R)=>number) {
+        this.checkSort();
+        const binSearch = (low: number, high: number, x: number): number => {
+            if(high<=low) {
+                return x > scorer(this.getRow(low)) ? (low+1) : low;
+            }
+            let mid = Math.floor((low + high) / 2);
+            let midval = scorer(this.getRow(mid));
+            return x === midval ? mid+1
+                : x > midval
+                ? binSearch(mid+1,high,x)
+                : binSearch(low,mid-1,x)
+        }
+
+        let last = minVal;
+        for(let i=0;i<this.rowCount;++i) {
+            let cur = scorer(this.getRow(i));
+            if(cur < last) {
+                let j = binSearch(0,i-1,cur);
+                this.buffer.move(i,j);
+            } else {
+                last = cur;
+            }
+        }
+    }
+
+    quickSort(comparator: (row1: R, row2: R)=>number) {
+        this.checkSort();
+        if(GetStage() !== 'SORT') {
+            throw new Error(
+                  `Trying to sort before SORT stage:`
+                + ` register a callback to the 'sort'`
+                + ` function exported from 'wotlkdata'`
+            )
+        }
+
+        const partition = (left: number, right: number) => {
+            let i = left-1;
+            for(let j=left;j<right;++j) {
+                if(comparator(this.getRow(j),this.getRow(right))<0) {
+                    ++i;
+                    this.buffer.swap(i,j);
+                }
+            }
+            this.buffer.swap(i+1,right)
+            return i+1;
+        }
+
+        const quicksort = (left: number, right: number) => {
+            if(left < right) {
+                let pi = partition(left,right);
+                quicksort(left,pi-1);
+                quicksort(pi+1,right);
+            }
+        }
+        if(this.rowCount > 1) quicksort(0, this.rowCount-1);
+    }
+
+    swap(index1: number, index2: number) {
+        this.checkSort();
+        this.buffer.swap(index1,index2);
+    }
+
+    move(fromIndex: number, toIndex: number) {
+        this.checkSort();
+        this.buffer.move(fromIndex,toIndex);
     }
 
     static getBuffer(file: DBCFile<any, any, any>) {
@@ -65,7 +148,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     private defaultPath() {
-        return path.join(Settings.DBC_SOURCE, this.name + '.dbc');
+        return path.join(dataset.dbc_source.get(), this.name + '.dbc');
     }
 
     first(): R {
@@ -90,12 +173,12 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     }
 
     highest(callback: (row: R) => number) {
-        return this.filter({} as any)
+        return this.queryAll({} as any)
             .sort((a, b) => callback(b) > callback(a) ? 1 : -1)[0];
     }
 
     lowest(callback: (row: R) => number) {
-        return this.filter({} as any)
+        return this.queryAll({} as any)
             .sort((a, b) => callback(a) > callback(b) ? 1 : -1)[0];
     }
 
@@ -148,7 +231,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
         return this.rowMaker(this, this.buffer, index);
     }
 
-    filter(predicate: Q): R[] {
+    queryAll(predicate: Q): R[] {
         this.load();
         const arr: R[] = [];
         const row = this.getRow(0);

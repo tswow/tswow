@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCFloatCell , DBCStringArrayCell , DBCStringCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringArrayCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,77 +34,77 @@ export class CreatureDisplayInfoRow extends DBCRow<CreatureDisplayInfoCreator,Cr
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get ModelID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ExtendedDisplayInfoID() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get CreatureModelScale() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get CreatureModelAlpha() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get TextureVariation() { return new DBCStringArrayCell(this,3,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get PortraitTextureName() { return new DBCStringCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get BloodLevel() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get BloodID() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get NPCSoundID() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParticleColorID() { return new DBCIntCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get CreatureGeosetData() { return new DBCIntCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectEffectPackageID() { return new DBCIntCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : CreatureDisplayInfoCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -119,7 +119,7 @@ export type CreatureDisplayInfoCreator = {
     ExtendedDisplayInfoID?: int
     CreatureModelScale?: float
     CreatureModelAlpha?: int
-    TextureVariation?: string
+    TextureVariation?: string[]
     PortraitTextureName?: string
     BloodLevel?: int
     BloodID?: int

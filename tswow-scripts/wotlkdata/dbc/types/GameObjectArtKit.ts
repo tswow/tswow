@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCStringArrayCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCKeyCell, DBCStringArrayCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,22 +34,22 @@ export class GameObjectArtKitRow extends DBCRow<GameObjectArtKitCreator,GameObje
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get TextureVariation() { return new DBCStringArrayCell(this,3,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get AttachModel() { return new DBCStringArrayCell(this,4,this.buffer,this.offset+16)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : GameObjectArtKitCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -59,8 +59,8 @@ export class GameObjectArtKitRow extends DBCRow<GameObjectArtKitCreator,GameObje
  * Used for object creation (Don't comment these)
  */
 export type GameObjectArtKitCreator = {
-    TextureVariation?: string
-    AttachModel?: string
+    TextureVariation?: string[]
+    AttachModel?: string[]
 }
 
 /**

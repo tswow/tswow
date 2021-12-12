@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , int , tinyint , char , varchar } from '../../primitives'
+import { char, int, mediumint, tinyint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,114 +29,114 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class conditionsRow extends SqlRow<conditionsCreator,conditionsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SourceTypeOrReferenceId() {return new SQLCellReadOnly<mediumint, this>(this, 'SourceTypeOrReferenceId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SourceGroup() {return new SQLCellReadOnly<mediumint, this>(this, 'SourceGroup')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SourceEntry() {return new SQLCellReadOnly<mediumint, this>(this, 'SourceEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SourceId() {return new SQLCellReadOnly<int, this>(this, 'SourceId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ElseGroup() {return new SQLCellReadOnly<mediumint, this>(this, 'ElseGroup')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ConditionTypeOrReference() {return new SQLCellReadOnly<mediumint, this>(this, 'ConditionTypeOrReference')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ConditionTarget() {return new SQLCellReadOnly<tinyint, this>(this, 'ConditionTarget')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ConditionValue1() {return new SQLCellReadOnly<mediumint, this>(this, 'ConditionValue1')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ConditionValue2() {return new SQLCellReadOnly<mediumint, this>(this, 'ConditionValue2')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ConditionValue3() {return new SQLCellReadOnly<mediumint, this>(this, 'ConditionValue3')}
-    
+
     /**
      * No comment (yet!)
      */
     get NegativeCondition() {return new SQLCell<tinyint, this>(this, 'NegativeCondition')}
-    
+
     /**
      * No comment (yet!)
      */
     get ErrorType() {return new SQLCell<mediumint, this>(this, 'ErrorType')}
-    
+
     /**
      * No comment (yet!)
      */
     get ErrorTextId() {return new SQLCell<mediumint, this>(this, 'ErrorTextId')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get Comment() {return new SQLCell<varchar, this>(this, 'Comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(SourceTypeOrReferenceId : mediumint,SourceGroup : mediumint,SourceEntry : mediumint,SourceId : int,ElseGroup : mediumint,ConditionTypeOrReference : mediumint,ConditionTarget : tinyint,ConditionValue1 : mediumint,ConditionValue2 : mediumint,ConditionValue3 : mediumint, c? : conditionsCreator) : this {
         return this.cloneInternal([SourceTypeOrReferenceId,SourceGroup,SourceEntry,SourceId,ElseGroup,ConditionTypeOrReference,ConditionTarget,ConditionValue1,ConditionValue2,ConditionValue3],c)
     }

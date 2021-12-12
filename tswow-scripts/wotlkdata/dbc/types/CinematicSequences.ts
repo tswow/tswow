@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCIntArrayCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCIntCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,22 +34,22 @@ export class CinematicSequencesRow extends DBCRow<CinematicSequencesCreator,Cine
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Camera() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+8)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : CinematicSequencesCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -60,7 +60,7 @@ export class CinematicSequencesRow extends DBCRow<CinematicSequencesCreator,Cine
  */
 export type CinematicSequencesCreator = {
     SoundID?: int
-    Camera?: int
+    Camera?: int[]
 }
 
 /**

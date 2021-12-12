@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellRoot } from './CellRoot';
 import { Cell, CPrim } from './Cell';
+import { CellRoot } from './CellRoot';
 
 export abstract class CellArray<D extends CPrim, T> extends CellRoot<T> {
     get(): D[] {
@@ -26,8 +26,15 @@ export abstract class CellArray<D extends CPrim, T> extends CellRoot<T> {
         return array;
     }
     set(value: D[]): T {
-        for (let i = 0; i < this.length(); ++i) {
+        for (let i = 0; i < Math.min(this.length(),value.length); ++i) {
             this.setIndex(i, value[i]);
+        }
+        return this.owner;
+    }
+
+    fill(value: D) {
+        for(let i=0;i<this.length();++i) {
+            this.setIndex(i, value);
         }
         return this.owner;
     }

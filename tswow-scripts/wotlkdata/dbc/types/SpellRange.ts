@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCFloatArrayCell , DBCIntCell , DBCLocCell} from '../DBCCell'
-import { int , float , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCIntCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,37 +34,37 @@ export class SpellRangeRow extends DBCRow<SpellRangeCreator,SpellRangeQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeMin() { return new DBCFloatArrayCell(this,2,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get RangeMax() { return new DBCFloatArrayCell(this,2,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayName() { return new DBCLocCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayNameShort() { return new DBCLocCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellRangeCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -74,8 +74,8 @@ export class SpellRangeRow extends DBCRow<SpellRangeCreator,SpellRangeQuery> {
  * Used for object creation (Don't comment these)
  */
 export type SpellRangeCreator = {
-    RangeMin?: float
-    RangeMax?: float
+    RangeMin?: float[]
+    RangeMax?: float[]
     Flags?: int
     DisplayName?: loc_constructor
     DisplayNameShort?: loc_constructor

@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCFloatArrayCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCIntCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,32 +34,32 @@ export class SoundFilterElemRow extends DBCRow<SoundFilterElemCreator,SoundFilte
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundFilterID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get OrderIndex() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get FilterType() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Params() { return new DBCFloatArrayCell(this,9,this.buffer,this.offset+16)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SoundFilterElemCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -72,7 +72,7 @@ export type SoundFilterElemCreator = {
     SoundFilterID?: int
     OrderIndex?: int
     FilterType?: int
-    Params?: float
+    Params?: float[]
 }
 
 /**

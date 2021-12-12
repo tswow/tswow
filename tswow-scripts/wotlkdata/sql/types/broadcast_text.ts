@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , longtext , smallint } from '../../primitives'
+import { longtext, mediumint, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,82 +29,82 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class broadcast_textRow extends SqlRow<broadcast_textCreator,broadcast_textQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get LanguageID() {return new SQLCell<mediumint, this>(this, 'LanguageID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text() {return new SQLCell<longtext, this>(this, 'Text')}
-    
+
     /**
      * No comment (yet!)
      */
     get Text1() {return new SQLCell<longtext, this>(this, 'Text1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteID1() {return new SQLCell<mediumint, this>(this, 'EmoteID1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteID2() {return new SQLCell<mediumint, this>(this, 'EmoteID2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteID3() {return new SQLCell<mediumint, this>(this, 'EmoteID3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay1() {return new SQLCell<mediumint, this>(this, 'EmoteDelay1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay2() {return new SQLCell<mediumint, this>(this, 'EmoteDelay2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay3() {return new SQLCell<mediumint, this>(this, 'EmoteDelay3')}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundEntriesID() {return new SQLCell<mediumint, this>(this, 'SoundEntriesID')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmotesID() {return new SQLCell<mediumint, this>(this, 'EmotesID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() {return new SQLCell<mediumint, this>(this, 'Flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : broadcast_textCreator) : this {
         return this.cloneInternal([ID],c)
     }

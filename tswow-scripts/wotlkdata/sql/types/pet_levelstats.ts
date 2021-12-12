@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , tinyint , smallint , int } from '../../primitives'
+import { int, mediumint, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,75 +29,75 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class pet_levelstatsRow extends SqlRow<pet_levelstatsCreator,pet_levelstatsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get creature_entry() {return new SQLCellReadOnly<mediumint, this>(this, 'creature_entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get level() {return new SQLCellReadOnly<tinyint, this>(this, 'level')}
-    
+
     /**
      * No comment (yet!)
      */
     get hp() {return new SQLCell<smallint, this>(this, 'hp')}
-    
+
     /**
      * No comment (yet!)
      */
     get mana() {return new SQLCell<smallint, this>(this, 'mana')}
-    
+
     /**
      * No comment (yet!)
      */
     get armor() {return new SQLCell<int, this>(this, 'armor')}
-    
+
     /**
      * No comment (yet!)
      */
     get str() {return new SQLCell<smallint, this>(this, 'str')}
-    
+
     /**
      * No comment (yet!)
      */
     get agi() {return new SQLCell<smallint, this>(this, 'agi')}
-    
+
     /**
      * No comment (yet!)
      */
     get sta() {return new SQLCell<smallint, this>(this, 'sta')}
-    
+
     /**
      * No comment (yet!)
      */
     get inte() {return new SQLCell<smallint, this>(this, 'inte')}
-    
+
     /**
      * No comment (yet!)
      */
     get spi() {return new SQLCell<smallint, this>(this, 'spi')}
-    
+
     /**
      * No comment (yet!)
      */
     get min_dmg() {return new SQLCell<smallint, this>(this, 'min_dmg')}
-    
+
     /**
      * No comment (yet!)
      */
     get max_dmg() {return new SQLCell<smallint, this>(this, 'max_dmg')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(creature_entry : mediumint,level : tinyint, c? : pet_levelstatsCreator) : this {
         return this.cloneInternal([creature_entry,level],c)
     }

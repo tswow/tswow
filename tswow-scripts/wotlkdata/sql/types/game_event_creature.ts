@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , int } from '../../primitives'
+import { int, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,26 +29,26 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_event_creatureRow extends SqlRow<game_event_creatureCreator,game_event_creatureQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get eventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
-    clone(guid : tinyint,eventEntry : int, c? : game_event_creatureCreator) : this {
+     */
+    clone(eventEntry: int, guid : tinyint, c? : game_event_creatureCreator) : this {
         return this.cloneInternal([guid,eventEntry],c)
     }
 }
@@ -77,7 +77,7 @@ export class game_event_creatureTable extends SqlTable<
     game_event_creatureCreator,
     game_event_creatureQuery,
     game_event_creatureRow> {
-    add(guid : tinyint,eventEntry : int, c? : game_event_creatureCreator) : game_event_creatureRow {
+    add(eventEntry: int, guid : tinyint, c? : game_event_creatureCreator) : game_event_creatureRow {
         const first = this.first();
         if(first) return first.clone(guid,eventEntry,c)
         else return this.rowCreator(this, {}).clone(guid,eventEntry,c)

@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , smallint } from '../../primitives'
+import { int, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,48 +29,48 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_poi_pointsRow extends SqlRow<quest_poi_pointsCreator,quest_poi_pointsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get QuestID() {return new SQLCellReadOnly<int, this>(this, 'QuestID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Idx1() {return new SQLCellReadOnly<int, this>(this, 'Idx1')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Idx2() {return new SQLCellReadOnly<int, this>(this, 'Idx2')}
-    
+
     /**
      * No comment (yet!)
      */
     get X() {return new SQLCell<int, this>(this, 'X')}
-    
+
     /**
      * No comment (yet!)
      */
     get Y() {return new SQLCell<int, this>(this, 'Y')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(QuestID : int,Idx1 : int,Idx2 : int, c? : quest_poi_pointsCreator) : this {
         return this.cloneInternal([QuestID,Idx1,Idx2],c)
     }

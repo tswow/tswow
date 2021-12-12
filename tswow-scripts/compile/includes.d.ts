@@ -1,6 +1,6 @@
 /*
  * This file is part of tswow (https://github.com/tswow)
- * 
+ *
  * Copyright (C) 2020 tswow <https://github.com/tswow/>
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as

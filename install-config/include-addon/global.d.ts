@@ -12504,7 +12504,7 @@ declare namespace WoWAPI {
          */
         IsForbidden(): boolean;
     }
-    
+
     interface AnimationGroup extends UIObject {
         Play(): void;
         Pause(): void;
@@ -12524,7 +12524,7 @@ declare namespace WoWAPI {
         CreateAnimation(frameType: "Scale", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Scale;
         CreateAnimation(frameType: "Translation", frameName?: string, inheritFrom?: WoWAPI.UIObject): WoWAPI.Translation;
     }
-    
+
     interface Animation extends UIObject {
         Play(): void;
         Pause(): void;
@@ -12553,12 +12553,12 @@ declare namespace WoWAPI {
         SetParent(animGroup: AnimationGroup): void;
         GetRegionParent(): Region;
     }
-    
+
     interface Alpha extends UIObject, Animation {
         SetChange(change: number): void;
         GetChange(): number;
     }
-    
+
     interface Path extends UIObject, Animation {
         CreateControlPoint(name?: string, template?: string, order?: number): void;
         GetCurve(): CurveType;
@@ -12575,7 +12575,7 @@ declare namespace WoWAPI {
         /** @tupleReturn */
         GetOrigin(): [Point,number,number]
     }
-    
+
     interface Scale extends UIObject, Animation {
         SetScale(x: number, y: number)
         /** @tupleReturn */
@@ -12584,7 +12584,7 @@ declare namespace WoWAPI {
         /** @tupleReturn */
         GetOrigin(): [Point,number,number]
     }
-    
+
     interface Translation extends UIObject, Animation {
         SetOffset(x: number, y: number)
         /** @tupleReturn */
@@ -12807,14 +12807,14 @@ declare namespace WoWAPI {
          * Get whether the object is visible on screen (logically (IsShown() and GetParent():IsVisible()));
          */
         IsVisible(): boolean;
-        
+
         CreateAnimationGroup(name?: string, inheritsFrom?: string): AnimationGroup;
-        
+
         /**
         *this 1 probably isn't done right...idk how this 1 works.
         */
         GetAnimationGroups(): AnimationGroup;
-        
+
         StopAnimating(): void;
     }
 
@@ -13034,8 +13034,8 @@ declare namespace WoWAPI {
          * @param inheritsFrom The name of a virtual font string, created in XML, to inherit from. if nil, the font string does not inherit any properties.
          */
         CreateFontString(name?: string, layer?: Layer, inheritsFrom?: string): FontString;
-		
-        RegisterForClicks(clickType:ClickType): void;	
+
+        RegisterForClicks(clickType:ClickType): void;
 
         /**
          * Creates a Texture object within the specified widget.
@@ -13296,44 +13296,44 @@ declare namespace WoWAPI {
          * Clears the input text focus out of the EditBox. After this call EditBox will no longer receive input from keyboard.
          */
         ClearFocus(): void;
-    
+
         /**
          * Returns the position of the editbox cursor.
          */
         GetCursorPosition(): number;
-    
+
         /**
          * This function reads text entered into the editBox, tries to convert it into a number, and returns corresponding numerical value,
          * or 0 if text didn't look like a number.
          */
         GetNumber(): number;
-    
+
         /**
          * Returns the String that is currently entered in the EditBox.
          */
         GetText(): string;
-    
+
         /**
          * Inserts text at the current cursor position.
          *
          * @param text text to insert at the current cursor position.
          */
         Insert(text: string): void;
-    
+
         /**
          * Sets the position of the cursor in the edit box.
          *
          * @param position New editing cursor position; the cursor is set after position'th character of the string
          */
         SetCursorPosition(position: number): void;
-    
+
         /**
          * Sets editBox's text to the specified string
          *
          * @param text the string you want to appear in the EditBox
          */
         SetText(text: string): void;
-    
+
         /**
          * Sets whether the cursor should automatically focus on the EditBox when it is shown
          *
@@ -13351,114 +13351,114 @@ declare namespace WoWAPI {
          * Returns value of blinkSpeed attribute
          */
         GetBlinkSpeed(): number;
-    
+
         /**
          * Get the number of history lines for this edit box
          */
         GetHistoryLines(): number;
-    
+
         /**
          * Get the input language (the locale, not the in-game language)
          */
         GetInputLanguage(): string;
-    
+
         /**
          * Returns the value of bytes attribute
          */
         GetMaxBytes(): number;
-    
+
         /**
          * GetsReturns the value of letters attribute
          */
         GetMaxLetters(): number;
-    
+
         /**
          * Gets the number of letters in the box
          */
         GetNumLetters(): number;
-    
+
         /**
          * Returns list of left, right, top, bottom text insets
          * @returns ?
          */
         GetTextInsets(): any[];
-    
+
         /**
          * Returns true if the edit box has the focus
          */
         HasFocus(): boolean;
-    
+
         /**
          * Set the highlight to all or some of the edit box text
-         * @param startPos 
-         * @param endPos 
+         * @param startPos
+         * @param endPos
          */
         HighlightText(startPos: number, endPos: number): void;
-    
+
         /**
          * Returns value of autoFocus attribute, in 1/nil format
          */
         IsAutoFocus(): number;
-    
+
         /**
          * Returns value of multiline attribute, in 1/nil format
          */
         IsMultiLine(): number;
-    
+
         /**
          * Returns value of numeric attribute, in 1/nil format.
          */
         IsNumeric(): number;
-    
+
         /**
          * Returns value of password attribute, in 1/nil format.
          */
         IsPassword(): number;
-    
+
         SetAutoFocus(state: boolean): void;
-    
+
         SetAltArrowKeyMode(): void;
-    
+
         SetBlinkSpeed(speed: number): void;
-    
+
         SetFocus(): void;
-    
+
         /**
          * Sets the number of history lines to remember
-         * @param lines 
+         * @param lines
          */
         SetHistoryLines(lines: number): void;
-    
+
         /**
          * Sets the maximum byte size for entered text
-         * @param bytes 
+         * @param bytes
          */
         SetMaxBytes(bytes: number): void;
-    
+
         /**
          * Sets the maximum number of letters for entered text
-         * @param letters 
+         * @param letters
          */
         SetMaxLetters(letters: number): void;
-    
+
         SetNumber(num: number): void;
-    
+
         SetNumeric(): void;
-    
+
         SetPassword(): void;
-    
+
         /**
          * Sets the spacing between multiple lines
-         * @param spacing 
+         * @param spacing
          */
         SetSpacing(spacing: number): void;
-    
+
         ToggleInputLanguage(): void;
-    
+
         SetMultiLine(state: boolean): void;
-    
+
         SetFontObject(fontObject: string): void;
-    
+
         SetTextInsets(l: any, r: any, t: any, b: any): void;
 
         SetScript(event: "OnCursorChanged", handler: (frame: EditBox, x: number, y: number, w: number, h: number) => void): void;
@@ -13476,7 +13476,7 @@ declare namespace WoWAPI {
         SetScript(event: "OnTextChanged", handler: (frame: EditBox) => void): void;
         SetScript(event: "OnTextSet", handler: (frame: EditBox) => void): void;
     }
-    
+
 
     /**
      * a wow button
@@ -13524,27 +13524,27 @@ declare namespace WoWAPI {
          * @param text The text that will be written on the Button
          */
         SetText(text: string): void;
-		
+
         GetButtonState(): string;
         GetDisabledFontObject(): string;
-        GetDisabledTexture(): string;		
-        GetFontString(): FontString;		
-        GetHighlightFontObject(): FontObject;		
-        GetHighlightTexture(): string;		
-        //GetMotionScriptsWhileDisabled() - Get whether the button is allowed to run its OnEnter and OnLeave scripts even while disabled - New in 3.3.		
-        GetNormalFontObject(): FontObject;		
-        GetNormalTexture(): string;	
-        //GetPushedTextOffset() - Get the text offset when this button is pushed (x, y) - New in 1.11.	
-        GetPushedTexture(): string;	
-        GetText(): string;	
+        GetDisabledTexture(): string;
+        GetFontString(): FontString;
+        GetHighlightFontObject(): FontObject;
+        GetHighlightTexture(): string;
+        //GetMotionScriptsWhileDisabled() - Get whether the button is allowed to run its OnEnter and OnLeave scripts even while disabled - New in 3.3.
+        GetNormalFontObject(): FontObject;
+        GetNormalTexture(): string;
+        //GetPushedTextOffset() - Get the text offset when this button is pushed (x, y) - New in 1.11.
+        GetPushedTexture(): string;
+        GetText(): string;
         GetTextHeight(): number;
         GetTextWidth(): number;
         IsEnabled(): bool;
         LockHighlight(): void;
         RegisterForClicks(clickType: ClickType): void;
-        RegisterForMouse(): void;		
+        RegisterForMouse(): void;
         SetButtonState(state: string): void;
-        SetDisabledAtlas(atlasName: string): void;		
+        SetDisabledAtlas(atlasName: string): void;
         SetDisabledFontObject(fontObject: FontObject): void;
         SetDisabledTexture(texture: string): void;
         SetEnabled(isEnable: bool): void;
@@ -13617,7 +13617,7 @@ declare namespace WoWAPI {
         SetStatusBarTexture(file: string): void;
         SetValue(value: number): void;
     }
-    
+
     interface ScrollFrame extends Frame {
         GetHorizontalScroll(): number;
         GetHorizontalScrollRange(): number;
@@ -13628,7 +13628,7 @@ declare namespace WoWAPI {
         SetScrollChild(Frame:frame): void;
         SetVerticalScroll(offset: number): void;
     }
-    
+
     interface MessageFrame extends FontInstance {
         AddMessage(text: string, r: number, g: number, b: number, id: number, addToStart: boolean)
         Clear(): void;
@@ -13678,7 +13678,7 @@ declare namespace WoWAPI {
         SetCooldown(Start: number, Duration: number)
         SetReverse(bool: boolean)
     }
-    
+
     interface Minimap{
         GetPingPosition(): number;
         GetZoom(): number;
@@ -13691,7 +13691,7 @@ declare namespace WoWAPI {
         SetPlayerModel(file: string): void;
         SetZoom(level): void;
     }
-    
+
     interface ColorSelect {
         /** @tupleReturn */
         GetColorHSV(): [number,number,number]
@@ -13712,7 +13712,7 @@ declare namespace WoWAPI {
         SetColorWheelTexture(ttexture: WoWAPI.Texture)
         SetColorWheelThumbTexture(texture: WoWAPI.Texture)
     }
-    
+
     interface SimpleHTML extends Frame,FontInstance {
         GetContentHeight(): number;
         GetHyperlinkFormat(): string;
@@ -14005,3 +14005,56 @@ declare const TSJSON: {
     parseObject(str: string): TSJsonObject,
     parseArray(str: string): TSJsonArray,
 }
+
+
+
+declare function CreateCustomPacket(opcode: uint32, size: uint32): TSPacketWrite;
+declare function OnCustomPacket(opcode: uint32, callback: (packet: TSPacketRead)=>void)
+declare class TSPacketWrite {
+    WriteUInt8(value: uint8): TSPacketWrite;
+    WriteInt8(value: int8): TSPacketWrite;
+
+    WriteUInt16(value: uint16): TSPacketWrite;
+    WriteInt16(value: int16): TSPacketWrite;
+
+    WriteUInt16(value: uint16): TSPacketWrite;
+    WriteInt16(value: int16): TSPacketWrite;
+
+    WriteUInt32(value: uint32): TSPacketWrite;
+    WriteInt32(value: int32): TSPacketWrite;
+
+    WriteUInt64(value: uint64): TSPacketWrite;
+    WriteInt64(value: int64): TSPacketWrite;
+
+    WriteFloat(value: float): TSPacketWrite;
+    WriteDouble(value: double): TSPacketWrite;
+
+    WriteString(value: string): TSPacketWrite;
+
+    Size(): uint32
+
+    Send(): void
+}
+
+declare class TSPacketRead {
+    ReadUInt8(def?: uint8): uint8;
+    ReadInt8(def?: int8): int8;
+
+    ReadUInt16(def?: uint16): uint16;
+    ReadInt16(def?: int16): int16;
+
+    ReadUInt32(def?: uint32): uint32;
+    ReadInt32(def?: int32): int32;
+
+    ReadUInt64(def?: uint64): uint64;
+    ReadInt64(def?: int64): int64;
+
+    ReadFloat(def?: float): float;
+    ReadDouble(def?: double): double;
+
+    ReadString(def?: string): string;
+
+    Size(): uint32
+}
+
+declare function GetID(table: string, mod: string, name: string): number;

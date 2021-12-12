@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , float , text , smallint } from '../../primitives'
+import { float, mediumint, smallint, text } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,52 +29,52 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class points_of_interestRow extends SqlRow<points_of_interestCreator,points_of_interestQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get PositionX() {return new SQLCell<float, this>(this, 'PositionX')}
-    
+
     /**
      * No comment (yet!)
      */
     get PositionY() {return new SQLCell<float, this>(this, 'PositionY')}
-    
+
     /**
      * No comment (yet!)
      */
     get Icon() {return new SQLCell<mediumint, this>(this, 'Icon')}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() {return new SQLCell<mediumint, this>(this, 'Flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get Importance() {return new SQLCell<mediumint, this>(this, 'Importance')}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() {return new SQLCell<text, this>(this, 'Name')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : points_of_interestCreator) : this {
         return this.cloneInternal([ID],c)
     }

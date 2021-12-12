@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCStringCell , DBCIntCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCKeyCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,42 +34,42 @@ export class EmotesRow extends DBCRow<EmotesCreator,EmotesQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteSlashCommand() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get AnimID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteFlags() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteSpecProc() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteSpecProcParam() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get EventSoundID() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : EmotesCreator) : this {
         return this.cloneInternal([ID],c);
     }

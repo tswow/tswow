@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCStringCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCKeyCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,22 +34,22 @@ export class LanguageWordsRow extends DBCRow<LanguageWordsCreator,LanguageWordsQ
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get LanguageID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Word() { return new DBCStringCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : LanguageWordsCreator) : this {
         return this.cloneInternal([ID],c);
     }

@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , text } from '../../primitives'
+import { mediumint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,7 +29,7 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,class_stat_formulasQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
@@ -37,22 +37,22 @@ export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,cl
 
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get stat_type() {return new SQLCellReadOnly<mediumint, this>(this, 'stat_type')}
-    
+
     /**
      * No comment (yet!)
      */
-    get formula() {return new SQLCell<text, this>(this, 'formula')}
-    
+    get class_out() {return new SQLCell<mediumint, this>(this, 'class_out')}
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(cls: mediumint, stat_type: number, c? : class_stat_formulasCreator) : this {
         return this.cloneInternal([cls, stat_type],c)
     }
@@ -62,7 +62,7 @@ export class class_stat_formulasRow extends SqlRow<class_stat_formulasCreator,cl
  * Used for object creation (Don't comment these)
  */
 export type class_stat_formulasCreator = {
-    formula: text,
+    class_out: mediumint,
 }
 
 /**
@@ -71,7 +71,7 @@ export type class_stat_formulasCreator = {
 export type class_stat_formulasQuery = {
     class?: Relation<mediumint>,
     stat_type?: Relation<mediumint>,
-    formula?: Relation<mediumint>
+    class_out?: Relation<mediumint>
 }
 
 /**

@@ -14,222 +14,297 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as crypto from 'crypto';
+import { sleep } from 'deasync';
+import { Arguments } from '../util/Args';
+import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from '../util/ClientPatches';
+import { wfs } from '../util/FileSystem';
+import { WDirectory, WNode } from '../util/FileTree';
+import { ClientPath, ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { mpath, wfs } from '../util/FileSystem';
 import { Process } from '../util/Process';
-import { ipaths } from '../util/Paths';
-import { Datasets } from './Dataset';
-import { commands } from './Commands';
 import { term } from '../util/Terminal';
-import { util } from '../util/Util';
+import { StartCommand } from './CommandActions';
+import { Dataset } from './Dataset';
+import { Identifier } from './Identifiers';
 import { NodeConfig } from './NodeConfig';
 
-/**
- * Contains functions for managing World of Warcraft clients
- */
-export namespace Client {
-    /**
-     * Manages a single World of Warcraft process
-     */
-    export class Client {
-        wowprocess = new Process();
-        set: Datasets.Dataset;
+export const CLEAN_CLIENT_MD5 = '45892bdedd0ad70aed4ccd22d9fb5984'
 
-        constructor(dataset: Datasets.Dataset) {
-            this.set = dataset;
+const processMap: {[datasetName: string]: Process[]} = {}
+
+export class Client {
+    readonly dataset: Dataset
+
+    constructor(dataset: Dataset) {
+        this.dataset = dataset;
+    }
+
+    get path() {
+        if(!wfs.exists(this.dataset.config.client_path)) {
+            throw new Error(
+                `Invalid client: ${this.dataset.config.client_path} does not exist`
+            )
         }
+        return ClientPath(
+              this.dataset.config.client_path
+            , this.dataset.config.ClientDevPatchLetter
+        )
+    }
 
-        isRunning() {
-            return this.wowprocess.isRunning();
+    patchDir() {
+        return (this.dataset.config.ClientPatchUseLocale
+            ? this.path.Data.locale()
+            : this.path.Data
+            ) as WDirectory
+    }
+
+    locale() {
+        return this.path.Data.locale().basename()
+    }
+
+    async kill() {
+        let processes = processMap[this.dataset.fullName];
+        let count = 0;
+        if(processes !== undefined) {
+            count = processes.length;
+            await Promise.all(processes.map(x=>x.stop()));
         }
+        delete processMap[this.dataset.fullName];
+        return count;
+    }
 
-        get path() {
-            return this.set.config.client_path;
-        }
+    async cleanFrameXML() {
+        await this.kill();
+        this.mpqPatches().forEach(x=>{
+            x.join('Interface','FrameXML','TSAddons')
+        })
+    }
 
-        get addonPath() {
-            return mpath(this.path,'interface','addons');
-        }
-
-        get dataPath() {
-            return mpath(this.path,'Data');
-        }
-
-        get realmlist() {
-            return mpath(this.localePath,'realmlist.wtf');
-        }
-
-        get localePath() {
-            const dirs = wfs.readDir(this.dataPath, false, 'directories')
-                .filter(x => util.getLocales().includes(wfs.basename(x)))
-
-            if (dirs.length === 0) {
-                throw new Error('Error reading client locale path: No locale directory');
-            }
-            if (dirs.length > 1) {
-                throw new Error('Error reading client locale path: Multiple locale directories in Data folder');
-            }
-            return dirs[0];
-        }
-
-        get exePath() {
-            if(wfs.exists(mpath(this.path,'Wow.exe'))) {
-                return mpath(this.path,'Wow.exe');
-            } else {
-                return mpath(this.path,'wow.exe');
-            }
-        }
-
-        freePatchLetter(except: string[]) {
-            let exceptNum = except.map(x=>x.charCodeAt(0));
-            const CHARCODE_A = 'a'.charCodeAt(0);
-            const CHARCODE_Z = 'z'.charCodeAt(0);
-            for(let i = CHARCODE_A; i <= CHARCODE_Z; ++i) {
-                if(exceptNum.includes(i)) continue;
-                let dir = mpath(this.dataPath,`patch-${String.fromCharCode(i)}.MPQ`);
-                if(!wfs.exists(dir)) {
-                    return String.fromCharCode(i);
+    mpqPatches() {
+        const nodes: WNode[] = []
+        const iter = (dir: WDirectory) => {
+            dir.iterate('FLAT','BOTH','FULL',node=>{
+                if (
+                    node.basename()
+                        .toLowerCase()
+                        .match(/patch-[a-zA-Z1-9].mpq/)
+                ) {
+                    nodes.push(node);
                 }
-            }
-            throw new Error(`No free patch path in client ${this.dataPath}`);
+            });
+        }
+        iter(this.path.Data);
+        iter(this.path.Data.locale());
+        return nodes;
+    }
+
+    writeRealmlist() {
+        const realmlist = this.path.Data.locale().realmlist_wtf.readString();
+        if(realmlist !== 'set realmlist localhost') {
+            wfs.makeBackup(this.path.Data.locale().realmlist_wtf.get())
+        }
+        this.path.Data.locale().realmlist_wtf.write('set realmlist localhost');
+    }
+
+    async start(count: number = 1) {
+        if(count === 0) {
+            return;
         }
 
-        get cachePath() {
-            return mpath(this.path,'Cache');
-        }
+        let processes = processMap[this.dataset.fullName]
+            || (processMap[this.dataset.fullName] = []);
 
-        verify() {
-            if(!wfs.exists(this.path)) {
-                throw new Error(`Missing client directory.`);
-            }
-
-            if(!wfs.exists(mpath(this.path,'Data'))) {
-                throw new Error(`Missing data directory`);
-            }
-        }
-
-        installAddons() {
-            for(const addon of wfs.readDir(ipaths.addons, true)) {
-                wfs.copy(mpath(ipaths.addons,addon),mpath(this.addonPath,addon),true);
-            }
-        }
-
-        /**
-         * Writes the following binary edits in the wow.exe:
-         * - 0x415b5f: writes 0xb803000ebedc3 to enable login interface patches.
-         * - 0xe0355: writes 0x78888888 to enable more than 10 classes per race.
-         * @param clientPath 
-         */
-        patchBinary() {
-            const wowbin = wfs.readBin(this.exePath);
-
-            const byteOffsets = [
-                // Combo points fix
-                {offset: 0x210B12, value: 0x90},
-                {offset: 0x210B13, value: 0x90},
-                {offset: 0x210B14, value: 0x90},
-                {offset: 0x210B15, value: 0x90},
-                {offset: 0x210B16, value: 0x90},
-                {offset: 0x210B17, value: 0x90},
-                {offset: 0x210B18, value: 0x90},
-                {offset: 0x210B19, value: 0x90},
-
-                // Custom interface patch
-                {offset: 0x126, value: 0x23},
-                {offset: 0x1f41bf, value: 0xeb},
-                {offset: 0x415a25, value: 0xeb},
-                {offset: 0x415a3f, value: 0x3},
-                {offset: 0x415a95, value: 0x3},
-                {offset: 0x415b46, value: 0xeb},
-                {offset: 0x415b5f, value: 0xb8},
-                {offset: 0x415b60, value: 0x03},
-                {offset: 0x415b61, value: 0},
-                {offset: 0x415b62, value: 0},
-                {offset: 0x415b63, value: 0},
-                {offset: 0x415b64, value: 0xeb},
-                {offset: 0x415b65, value: 0xed},
-
-                // Unlimited race/class pairs patch
-                {offset: 0xe0355, value: 0x78},
-                {offset: 0xe038e, value: 0x88},
-                {offset: 0xe03A3, value: 0x88},
-                {offset: 0xe03C3, value: 0x88},
-
-                // Gamebuild
-                {offset: 0x4c99f0, value: this.set.config.game_build&0xff},
-                {offset: 0x4c99f1, value: (this.set.config.game_build>>8)&0xff},
-            ]
-
-            let found = false;
-            for(const {offset,value} of byteOffsets) {
-                if(wowbin.readUInt8(offset)!==value) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if(!found) {
-                return;
-            }
-            
-            wfs.makeBackup(this.exePath);
-
-            for(const {offset,value} of byteOffsets) {
-                wowbin.writeUInt8(value, offset);
-            }
-
-            wfs.writeBin(this.exePath, wowbin);
-        }
-
-        async start() {
-            term.log(`Starting client for dataset ${this.set.id}`)
-            await this.wowprocess.stop();
-
-            this.patchBinary()
-            this.installAddons();
-
-            this.clearCache();
-
-            if(NodeConfig.write_dev_realmlist) {
-                const realmlist = wfs.read(this.realmlist);
-                if(realmlist !== 'set realmlist localhost') {
-                    wfs.makeBackup(this.realmlist);
-                }
-                wfs.write(this.realmlist, 'set realmlist localhost');
-            }
-
+        for(let i=0;i<count;++i) {
+            term.log('client',`Starting client for dataset ${this.dataset.name}`)
+            let process = new Process('client').showOutput(false);
             if(isWindows()) {
-                this.wowprocess.start(this.exePath);
+                process.start(this.path.wow_exe.get())
             } else {
-                this.wowprocess.start('wine',[this.exePath]);
+                process.start('wine',[this.path.wow_exe.get()])
             }
-        }
-
-        clearCache() {
-            wfs.remove(this.cachePath);
-        }
-
-        kill() {
-            return this.wowprocess.stop();
+            processes.push(process);
+            sleep(200)
         }
     }
 
-    export const command = commands.addCommand('client');
+    async startup(count: number = 1, ip: string = '127.0.0.1') {
+        await this.kill();
+        await this.applyExePatches();
+        this.installAddons();
+        this.clearCache();
+        this.writeRealmlist();
+        this.start(count);
+    }
 
-    export function initialize() {
-        command.addCommand(
-              'start'
-            , 'dataset'
-            , 'Starts the World of Warcraft client for a particular dataset'
-            , async(args) => {
-                await Datasets.get(args[0]||'default').client.start();
-            });
-        command.addCommand(
-              'kill'
-            , 'dataset'
-            , 'Stops the World of Warcraft client for a particular dataset'
-            ,  async(args) => {
-                await Datasets.get(args[0]||'default').client.kill();
-            });
+    async exePatches() {
+        await this.dataset.worldDest.connect();
+        // default roles
+        let values = [
+            { class: 1, tank: 1, healer: 0, damage: 1, leader: 1},
+            { class: 2, tank: 1, healer: 1, damage: 1, leader: 1},
+            { class: 3, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 4, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 5, tank: 0, healer: 1, damage: 1, leader: 1},
+            { class: 6, tank: 1, healer: 0, damage: 1, leader: 1},
+            { class: 7, tank: 0, healer: 1, damage: 1, leader: 1},
+            { class: 8, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 9, tank: 0, healer: 0, damage: 1, leader: 1},
+            { class: 11, tank: 1, healer: 1, damage: 1, leader: 1},
+        ]
+        try {
+            values = await this.dataset.worldDest.query(
+                `SELECT \`class\`,\`tank\`,\`healer\`,\`damage\`,\`leader\``
+                + `FROM \`player_class_roles\``
+            )
+        // table might not exist yet, ignore errors
+        } catch(err) {
+            term.log('client'
+                , `Could not load class roles, using default values.`
+                + ` This usually just means you haven't built your`
+                + ` database yet.`
+            )
+        }
+        return ClientPatches(
+              this.dataset.config.DatasetGameBuild
+            , values
+            )
+    }
+
+    async applyExePatches() {
+        term.log('client',`Applying client patches...`)
+        this.path.wow_exe.copyOnNoTarget(this.path.wow_exe_clean)
+
+        let wowbin = this.path.wow_exe_clean.read()
+        const md5 = (value: Buffer) => crypto
+            .createHash('md5')
+            .update(value)
+            .digest('hex')
+        let hash = md5(wowbin)
+        if(hash !== CLEAN_CLIENT_MD5) {
+            let exebin = this.path.wow_exe.read();
+            if(md5(exebin) === CLEAN_CLIENT_MD5) {
+                // user placed a new exe that's actually clean
+                wowbin = exebin
+                hash = CLEAN_CLIENT_MD5
+                console.log("Write the new buffer");
+                this.path.wow_exe_clean.writeBuffer(wowbin);
+            } else {
+                term.warn('client',
+                    `Unclean wow.exe detected. Consider `
+                + `replacing it with a clean 3.3.5a client`)
+            }
+        }
+
+        if(hash == CLEAN_CLIENT_MD5) {
+            term.success('client',`Source wow client hash is ${hash} (clean!)`);
+        } else {
+            term.success('client',`Source wow client hash is ${hash}`);
+        }
+
+        if(this.dataset.config.client_patches.includes(EXTENSION_DLL_PATCH_NAME)) {
+            if(!ipaths.bin.ClientExtensions_dll.exists()) {
+                throw new Error(
+                      `Dataset ${this.dataset.name}`
+                    + ` has client extensions enabled but this tswow`
+                    + ` installation does not have one. Please put a working`
+                    + ` dll at ${ipaths.bin.ClientExtensions_dll.get()}`
+                )
+            }
+            wowbin = wowbin.slice(0,0x758c00)
+            ipaths.bin.ClientExtensions_dll
+                .copy(this.path.ClientExtensions_dll)
+        }
+
+        const usedPatchNames = this.dataset.config.client_patches
+        const usedPatches = (await this.exePatches())
+            .filter(x=>usedPatchNames.includes(x.name));
+        usedPatches.forEach(cat=>{
+            cat.patches.forEach(patch=>{
+                patch.values.forEach((value,offset)=>{
+                    wowbin.writeUInt8(value,patch.address+offset);
+                })
+            })
+        })
+        this.path.wow_exe.writeBuffer(wowbin);
+    }
+
+    patchPath(letter: string) {
+        return this.dataset.config.ClientPatchUseLocale
+            ? this.path.Data.locale()
+                .join(`patch-${this.locale()}-${letter.toUpperCase()}.MPQ`)
+            : this.path.Data
+                .join(`patch-${letter.toUpperCase()}.MPQ`)
+    }
+
+    verify() {
+        [this.path,this.path.wow_exe,this.path.Data]
+            .forEach(x=>{
+                if(x.exists()) {
+                    throw new Error(`Missing/broken client: ${x.get()} does not exist`)
+                }
+            })
+    }
+
+    installAddons() {
+        ipaths.bin.addons.iterate('FLAT','DIRECTORIES','FULL',node=>{
+            node.copy(this.path.Interface.AddOns.join(node.basename()));
+        })
+    }
+
+    clearCache() {
+        return this.path.Cache.remove();
+    }
+
+    freePatches() {
+        const ids: WNode[] = []
+
+        const order: string[] = []
+        for(let i=4;i<9;++i) order.push(`${i}`)
+        for(let i='A'.charCodeAt(0);i<'Z'.charCodeAt(0);++i) {
+            order.push(`${String.fromCharCode(i)}`)
+        }
+
+        let start = order.indexOf(this.dataset.config.ClientDevPatchLetter.toUpperCase())
+        if(start === -1) {
+            throw new Error(
+                  `Invalid patch letter: ${this.dataset.config.ClientDevPatchLetter}`
+                + ` (in dataset ${this.dataset.fullName})`
+            )
+        }
+
+        for(let i=start;i<order.length;++i) {
+            let path = this.patchPath(order[i]);
+            if( !path.exists()
+                && path.abs().get() !== this.path.Data.devPatch.abs().get()
+            ) {
+                ids.push(path)
+            }
+        }
+
+        return ids;
+    }
+
+    static initialize() {
+        if(!process.argv.includes('noclient') && NodeConfig.AutoStartClient > 0) {
+            Identifier.getDataset(NodeConfig.DefaultDataset)
+                .client.startup(NodeConfig.AutoStartClient)
+        }
+
+        StartCommand.addCommand(
+              'client'
+            , ''
+            , ''
+            , args => {
+                return Promise.all(Identifier.getDatasets(
+                      args
+                    , 'MATCH_ANY'
+                    , NodeConfig.DefaultDataset
+                ).map(x=>{
+                    return x.client
+                        .startup(Arguments.getNumber('--count',1,args));
+                }))
+            }
+        )
     }
 }

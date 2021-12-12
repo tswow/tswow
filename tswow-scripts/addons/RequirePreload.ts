@@ -22,23 +22,23 @@
 
 /*
  * Modified by TSWoW
- * 
+ *
  * This file contains a plugin for typescript-to-lua
  * to enable CommonJS-style calls to "require"
  */
 
 /* eslint-disable @typescript-eslint/no-object-literal-type-assertion */
-import * as ts from "typescript";
 import * as path from "path";
+import * as ts from "typescript";
 import {
-  Block,
-  createBlock,
-  createCallExpression,
-  createExpressionStatement,
-  createFunctionExpression,
-  createIdentifier,
-  createStringLiteral,
-  Plugin
+    Block,
+    createBlock,
+    createCallExpression,
+    createExpressionStatement,
+    createFunctionExpression,
+    createIdentifier,
+    createStringLiteral,
+    Plugin
 } from "typescript-to-lua";
 
 export const RequirePreload: Plugin = {
@@ -57,17 +57,33 @@ export const RequirePreload: Plugin = {
         let moduleName: string = "";
         let fullName = context.sourceFile.fileName.split('\\').join('/');
         let libName = fullName.split('/include-addon/')[1]
+
         if(libName!==undefined) {
           moduleName = libName;
         } else {
+          let modulesRoot = fullName
+          while(true) {
+            if(path.basename(modulesRoot) == 'modules') {
+              break;
+            }
+            if(path.dirname(modulesRoot) === modulesRoot) {
+              throw new Error(`Could not find "modules" part of pathname`)
+            }
+            modulesRoot = path.dirname(modulesRoot);
+          }
+
           let splitAddon = fullName.split('addon');
           if(splitAddon.length>1) {
-            let modName = path.basename(splitAddon[0]);
+            let modName = path.relative(modulesRoot,splitAddon[0]).split('\\').join('/')
             let addonName = splitAddon.slice(1).join('addon');
+
+            // ignore entrypoint
+            if(addonName === '/addon.ts') return fileContent;
+
             moduleName = `TSAddons/${modName}/addon${addonName}`
           } else {
-            let splitShared =fullName.split('shared');
-            let modName = path.basename(splitShared[0]);
+            let splitShared = fullName.split('shared');
+            let modName = path.relative(modulesRoot,splitShared[0]).split('\\').join('/');
             let sharedName = splitShared[1];
             moduleName = `TSAddons/${modName}/shared${sharedName}`
           }
@@ -78,11 +94,6 @@ export const RequirePreload: Plugin = {
         if (moduleName.endsWith(".ts")) moduleName = moduleName.substring(0, moduleName.length - 3);
         moduleName = moduleName.split("/").join(".");
         moduleName = moduleName.replace(".index", "");
-        // Skip init.lua so it can be the entry-point
-        let tswowModuleName = path.basename(path.dirname(process.cwd()))
-        if (moduleName.endsWith(tswowModuleName+'-addon')) {
-          return fileContent;
-        }
 
         // Generates:
         // tstl_register_module("module/name", function() ... end)

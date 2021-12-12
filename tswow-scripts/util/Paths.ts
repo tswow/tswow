@@ -14,828 +14,506 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as fs from 'fs';
+import path from 'path';
 import { mpath, wfs } from './FileSystem';
+import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21051/TDB_full_world_335.21051_2021_05_14.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21091/TDB_full_world_335.21091_2021_09_28.7z"
+
+export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
+export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
 
 export function tdbFilename() {
     let split = TDB_URL.split('/')
     let joined = split[split.length-1];
-    return joined.substring(0,joined.length-3);
+    return joined.substring(0,joined.length-3)+'.sql';
 }
 
-let installBase = './';
-let buildBase = '';
-
-export class InstallPaths {
-    static setInstallBase(ipath: string) {
-        if(ipath.includes(' ')) {
-            throw new Error(
-                  `Your TSWoW installation directory contains spaces somewhere in its path,`
-                + `please move it to a directory without spaces.`)
-        }
-        installBase = ipath;
-    }
-
-    get revisions() {
-        return mpath(this.bin,'revision');
-    }
-
-    get tcRevision() {
-        return mpath(this.revisions,'trinitycore');
-    }
-
-    get tswowRevision() {
-        return mpath(this.revisions,'tswow');
-    }
-
-    get positionsFile() {
-        return mpath(this.coredata,'positions.txt')
-    }
-
-    freeBackupPath(base: string) {
-        let backup_no = 0;
-        const fmt = ()=>`${base}.backup_${backup_no}`;
-        while(wfs.exists(fmt())) {
-            ++backup_no;
-        }
-        return fmt();
-    }
-
-    /**
-     * Returns a path relative to the tswow install root
-     * @param path 
-     */
-    rel(path: string) {
-        return wfs.relative(installBase,path);
-    }
-
-    addonBeforeLibToc(mod: string) {
-        return mpath(this.moduleAddons(mod),'beforelib.toc');
-    }
-
-    addonBeforeToc(mod: string) {
-        return mpath(this.moduleAddons(mod),'before.toc');
-    }
-
-    addonAfterToc(mod: string) {
-        return mpath(this.moduleAddons(mod),'after.toc');
-    }
-
-    addonBuildLib(mod: string) {
-        return mpath(
-            this.addonBuild(mod)
-            , 'addon'
-            , 'lib'
-        )
-    }
-
-    addonLualibGarbage(mod: string) {
-        return mpath(
-            this.addonBuild(mod)
-            , 'lualib_bundle.lua'
-        )
-    }
-
-    /**
-     * Root data paths
-     */
-    get packageJson() {
-        return mpath(installBase,'package.json');
-    }
-
-    get base() {
-        return installBase;
-    }
-
-    /** Publish paths */
-    get package() {
-        return mpath(installBase, 'package');
-    }
-
-    get packageServerZip() {
-        return mpath(this.package, 'server.7z');
-    }
-
-    packageMpq(dataset: string) {
-        return mpath(this.package, `patch-${dataset}.MPQ`);
-    }
-
-    datasetSqlDump(dataset: string) {
-        return mpath(this.datasetRoot(dataset),'world_dump.sql');
-    }
-
-    /** Core data paths */
-
-    moduleFreeGarbage(mod: string) { 
-        return this.freeBackupPath(mpath(this.coredata, 'garbage',mod));
-    }
-
-    get databaseDir() {return mpath(this.coredata, 'database'); }
-
-    get authRoot() { return mpath(this.coredata, 'authserver');}
-    get authConfig() { return mpath(this.authRoot, 'authserver.conf'); }
-    get startjs() {return mpath('start.js'); }
-
-    get commandFile() {
-        return mpath(installBase,'commands.yaml');
-    }
-
-    wsWorkingDir(realm: string) { 
-        return mpath(this.realms,realm);
-    }
-
-    get coredata() {
-        return mpath(installBase,'coredata');
-    }
-
-    datasetDir(dataset: string) { 
-        return mpath(this.datasets, dataset);
-    }
-
-    get defaultDataset() {
-        return mpath(this.datasets, 'default-set');
-    }
-
-    get terminalHistory() {
-        return mpath(this.coredata,'terminal-history.txt');
-    }
-
-    datasetMaps(dataset: string) {
-        return mpath(this.datasetDir(dataset),'maps');
-    }
-
-    datasetBuildings(dataset: string) {
-        return mpath(this.datasetDir(dataset), 'Buildings')
-    }
-
-    datasetVmaps(dataset: string) {
-        return mpath(this.datasetDir(dataset),'vmaps')
-    }
-
-    datasetMmaps(dataset: string) {
-        return mpath(this.datasetDir(dataset),'mmaps');
-    }
-
-    datasetLuaxmlSource(dataset: string) {
-        return mpath(this.datasetDir(dataset),'luaxml_source');
-    }
-
-    datasetLuaxml(dataset: string) {
-        return mpath(this.datasetDir(dataset),'luaxml');
-    }
-
-    datasetLuaxmlToc(dataset: string) {
-        return mpath(
-            this.datasetLuaxml(dataset)
-            ,'Interface'
-            ,'FrameXML'
-            ,'FrameXML.toc');
-    }
-
-    datasetTemp(dataset: string) {
-        return mpath(this.datasetDir(dataset),'tmp');
-    }
-
-    datasetTempDBC(dataset: string) {
-        return mpath(this.datasetTemp(dataset),'dbc');
-    }
-
-    datasetDBCSource(dataset: string) {
-        return mpath(this.datasetDir(dataset),'dbc_source');
-    }
-
-    datasetModuleList(dataset: string) {
-        return mpath(this.datasetDir(dataset),'modules.txt');
-    }
-
-    datasetDBC(dataset: string) {
-        return mpath(this.datasetDir(dataset),'dbc');
-    }
-
-    datasetLuaXML(dataset: string) {
-        return mpath(this.datasetDir(dataset),'luaxml');
-    }
-
-    /** Dataset paths */
-    get datasets() { return mpath(this.coredata, 'datasets'); }
-    datasetRoot(dataset: string) { 
-        return mpath(this.datasets,dataset); 
-    }
-
-    datasetYaml(dataset: string) {
-        return mpath(this.datasetRoot(dataset),`${dataset}.dataset.yaml`);
-    }
-
-    /** Bin paths */
-    get bin() { return mpath(installBase, 'bin'); }
-
-    get binInclude() { return mpath(this.bin, 'include'); }
-
-    get mysqlStartup() { return mpath(this.bin, 'mysql_startup.txt');}
-    binLibraries(type: string) { return mpath(this.bin, 'libraries', type); }
-
-    get changeFile() {
-        return mpath(this.bin,'tmp','file_changes.txt');
-    }
-
-    get binSql() {
-        return mpath(this.bin, 'sql');
-    }
-
-    get addonInclude() {
-        return mpath(this.bin,'include-addon');
-    }
-
-    get addonIncludeGlobal() {
-        return mpath(this.addonInclude,'global.d.ts');
-    }
-
-    get addonIncludeBase64() {
-        return mpath(this.addonInclude,'Base64.lua');
-    }
-
-    get addonIncludeBinReader() {
-        return mpath(this.addonInclude,'BinReader.ts');
-    }
-
-    get addonIncludeEventsTs() {
-        return mpath(this.addonInclude,'Events.ts');
-    }
-
-    get addonIncludeSharedGlobal() {
-        return mpath(this.addonInclude,'shared.global.d.ts');
-    }
-
-    get addonIncludeLualib() {
-        return mpath(this.addonInclude, 'LualibBundle.lua');
-    }
-
-    get addonIncludeRequireStub() {
-        return mpath(this.addonInclude,'RequireStub.lua')
-    }
-
-    tc(type: BuildType) {
-        return mpath(this.bin, 'trinitycore', type);
-    }
-
-    tcScripts(type: BuildType) {
-        return mpath(this.tc(type), 'scripts');
-    }
-
-    tcWorldserver(type: BuildType) {
-        return isWindows()
-            ? mpath(this.tc(type),'worldserver.exe')
-            : mpath(this.tc(type),'worldserver')
-    }
-
-    tcMapExtractor(type: BuildType) {
-        return isWindows()
-            ? mpath(this.tc(type),'mapextractor.exe')
-            : mpath(this.tc(type),'mapextractor')
-    }
-
-    tcMMapsGenerator(type: BuildType) {
-        return isWindows()
-            ? mpath(this.tc(type),'mmaps_generator.exe')
-            : mpath(this.tc(type),'mmaps_generator')
-    }
-
-    tcVmap4Assembler(type: BuildType) {
-        return isWindows()
-            ? mpath(this.tc(type),'vmap4assembler.exe')
-            : mpath(this.tc(type),'vmap4assembler')
-    }
-
-    tcVmap4extractor(type: BuildType) {
-        return isWindows()
-            ? mpath(this.tc(type),'vmap4extractor.exe')
-            : mpath(this.tc(type),'vmap4extractor')
-    }
-
-
-
-    tcAuthServer(type: BuildType) {
-        return isWindows()
-            ? mpath(this.tc(type),'authserver.exe')
-            : mpath(this.tc(type), 'authserver');
-    }
-
-    tcModuleScript(type: BuildType, mod: string) {
-        return isWindows()
-            ? mpath(this.tcScripts(type),`scripts_tswow_${mod}.dll`)
-            : mpath(this.tcScripts(type),`libscripts_tswow_${mod}.so`);
-    }
-
-    tcModulePdb(type: BuildType,mod: string) {
-        return mpath(this.tcScripts(type), `scripts_tswow_${mod}.pdb`);
-    }
-
-    // TODO: remove
-    get tcTypes(): (BuildType)[] {
-        return BUILD_TYPES;
-    }
-
-    tcAuthserverDist(type: BuildType) {
-        return mpath(this.tc(type),'authserver.conf.dist')
-    }
-
-    tcWorldserverDist(type: BuildType) {
-        return mpath(this.tc(type),'worldserver.conf.dist');
-    }
-
-    get sqlUpdates() { return mpath(this.bin, 'sql','updates');}
-    get sqlCustom() { return mpath(this.bin, 'sql', 'custom'); }
-
-    sqlUpdateDir(type: 'world'|'auth'|'characters') {
-        return mpath(this.sqlUpdates, type);
-    }
-
-    sqlCustomUpdateDir(type: 'world'|'auth'|'characters') {
-        return mpath(this.sqlCustom, type);
-    }
-
-    get blpConverter() { return mpath(this.bin, 'BLPConverter', 'blpconverter.exe'); }
-    get tcRoot() {return mpath(this.bin, 'trinitycore'); }
-    get transpilerEntry() { return mpath(this.bin, 'scripts', 'transpiler', 'wowts.js'); }
-    
-    get adtCreatorDir() {
-        return mpath(this.bin,'adt-creator');
-    }
-
-    get adtCreatorExe() {
-        return mpath(this.adtCreatorDir,'adt-creator.exe');
-    }
-
-    get mpqBuilderExe() { 
-        return isWindows() 
-            ? mpath(this.bin, 'mpqbuilder', 'mpqbuilder.exe')
-            : mpath(this.bin, 'mpqbuilder', 'mpqbuilder');
-    }
-    get tdb() { return mpath(this.bin, tdbFilename()+'.sql'); }
-    get cmakeExe() {
-        return isWindows()
-            ? mpath(this.bin, 'cmake', 'bin', 'cmake.exe')
-            : mpath('cmake');
-    }
-    get cmakeShare() { return mpath(this.bin, 'cmake', 'share'); }
-    get tsc() { return mpath(installBase, 'node_modules', 'typescript', 'lib', 'tsc.js'); }
-    get addons() { return mpath(this.bin, 'addons')}
-    get binglobaldts() { return mpath(this.bin, 'include','global.d.ts')}
-    get wotlkdata() { return mpath(this.bin, 'scripts','tswow','wotlkdata')}
-    get wotlkdataPackageJson() { return mpath(this.wotlkdata, 'package.json')}
-
-    get wotlkdataIndex() { return mpath(this.wotlkdata, 'wotlkdata'); }
-
-    /** node_modules paths */
-    get tstlDecorators() { return mpath(`./node_modules/typescript-to-lua/dist/transformation/visitors/class/decorators.js`)}
-    get nodeModulesWotlkdata() { return mpath(this.nodeModules, 'wotlkdata'); }
-
-    // TODO: Linux
-    get luaxmlExe() {
-        return isWindows()
-            ? mpath(this.bin, 'mpqbuilder', 'luaxmlreader.exe')
-            : mpath(this.bin, 'mpqbuilder', 'luaxmlreader')
-    }
-
-    get mysqlBin() {return mpath(this.bin, 'mysql'); }
-    get mysqlExe() {
-        return isWindows()
-            ? mpath(this.bin, 'mysql', 'bin', 'mysql.exe')
-            : 'mysql';
-    }
-
-    get mysqldExe() {return mpath(this.bin, 'mysql', 'bin', 'mysqld.exe'); }
-
-    get mysqlDumpExe() {
-        return isWindows()
-            ? mpath(this.bin, 'mysql', 'bin', 'mysqldump.exe')
-            : 'mysqldump';
-    }
-
-    get sevenZip() { return mpath(this.bin, '7zip'); }
-
-    get sevenZaExe() {
-        return isWindows() ? mpath(this.sevenZip, '7za.exe') : '7z';
-    }
-
-    get startupSql() { return mpath(this.bin, 'sql'); }
-
-
-    startupSqlDir(type: 'world'|'auth'|'characters') { 
-        return mpath(this.startupSql, type)
-    }
-
-    /** Misc paths */
-    get nodeModules() { return mpath(installBase, 'node_modules'); }
-    get vscodeWorkspace() { return mpath(installBase, '.vscode'); }
-    get createCharactersSql() { return mpath(this.bin, 'sql', 'characters_create.sql')}
-    get createAuthSql() { return mpath(this.bin, 'sql', 'auth_create.sql')}
-
-    /** Config paths */
-    get config() { return mpath(installBase, 'config'); }
-    get nodeYaml() { return mpath(installBase, 'node.yaml'); }
-    get messageIds() { return mpath('ids.txt'); }
-
-    /** Realm paths */
-    get realms() {
-        return mpath(this.coredata, 'realms');
-    }
-
-    datasetIds(dataset: string) {
-        return mpath(this.datasetDir(dataset),'ids.txt');
-    }
-
-    realmDir(realm: string) {
-        return mpath(this.realms,realm);
-    }
-
-    realmWorldserverConf(realm: string) {
-        return mpath(this.realmDir(realm),'worldserver.conf');
-    }
-
-    realmYaml(realm: string) {
-        return mpath(this.realmDir(realm),`${realm}.realm.yaml`);
-    }
-
-    realmId(realm: string) {
-        return mpath(this.realmDir(realm),'realmid');
-    }
-
-    tcConfig(profile: string, config: string) {
-        config = config.replace('.conf.dist','.conf');
-        if(!config.endsWith('.conf')) config = config+'.conf';
-        return mpath(this.realmDir(profile),config);
-    }
-
-    /** Client paths */
-
-    luaxmlFrameXML(dataset: string) {
-        return mpath(
-            this.datasetLuaXML(dataset)
-            , 'Interface'
-            , 'FrameXML'
-        )
-    }
-
-    luaxmlAddons(dataset: string){
-        return mpath(
-            this.datasetLuaxml(dataset)
-            ,'Interface'
-            ,'FrameXML'
-            ,'TSAddons');
-    }
-
-    luaxmlAddon(dataset: string, addon:string) {
-        return mpath(this.luaxmlAddons(dataset),addon);
-    }
-
-    private get symlinkedFilename() {
-        return '__symlinked_check';
-    }
-    mpqSymlinkFile(mpqPath: string) {
-        return mpath(mpqPath,this.symlinkedFilename);
-    }
-
-    moduleSymlinkFile(module: string) {
-        return mpath(this.moduleAssets(module),this.symlinkedFilename);
-    }
-
-    /** Module paths */
-    get modules() { return mpath(installBase, 'modules'); }
-    moduleData(mod: string) {
-        return mpath(this.modules, mod, 'datascripts');
-    }
-
-    /**
-     * Name of the main data file for a module.
-     * @param mod 
-     * @example modules/my-module/data/my-module-data.ts
-     */
-    moduleDataMain(mod: string) {
-        return mpath(this.moduleData(mod), `${mod}-data.ts`);
-    }
-
-    moduleRoot(mod: string) {
-        return mpath(this.modules, mod);
-    }
-
-    moduleGit(mod: string) {
-        return mpath(this.modules, mod, '.git');
-    }
-
-    moduleGitignore(mod: string) {
-        return mpath(this.moduleRoot(mod), '.gitignore');
-    }
-
-    moduleDataBuild(mod: string) {
-        return mpath(this.modules, mod, 'datascripts', 'build' );
-    }
-
-    moduleDataTsConfig(mod: string) {
-        return mpath(this.moduleData(mod), 'tsconfig.json');
-    }
-
-    moduleAssets(mod: string) {
-        return mpath(this.modules, mod, 'assets');
-    }
-
-    moduleSnippets(mod: string) {
-        return mpath(this.modules,mod,'snippets')
-    }
-
-    get generatedSnippetsOut() {
-        return mpath('.vscode','tswow-generated.json.code-snippets');
-    }
-
-    get snippetExampleBin() {
-        return mpath(this.bin,'scripts','snippets-example.ts')
-    }
-
-    moduleScripts(mod: string) {
-        return mpath(this.modules, mod, 'livescripts');
-    }
-
-    moduleScriptsGlobaldts(mod: string) {
-        return mpath(this.moduleScripts(mod), 'global.d.ts');
-    }
-
-    moduleScritpsTsConfig(mod: string) {
-        return mpath(this.moduleScripts(mod), 'tsconfig.json');
-    }
-
-    moduleMainScript(mod: string) {
-        return mpath(this.moduleScripts(mod),`${mod}-scripts.ts`);
-    }
-
-    moduleMainScriptName(mod: string) {
-        return `${mod}-scripts.ts`;
-    }
-
-    moduleScriptsBuild(mod: string) {
-        return mpath(this.moduleScripts(mod),'build');
-    }
-
-    moduleScriptsLib(mod: string, type: BuildType) {
-        return isWindows()
-            ? mpath(this.moduleScriptsBuild(mod), 'lib',type)
-            : mpath(this.moduleScriptsBuild(mod), 'lib')
-    }
-
-    /**
-     * The built library path of a module
-     * @param mod 
-     * @param type 
-     */
-    moduleScriptsBuiltLibrary(mod: string, type: BuildType) {
-        return isWindows()
-            ? mpath(this.moduleScriptsLib(mod,type),`${mod}.dll`)
-            : mpath(this.moduleScriptsLib(mod,type),`lib${mod}.so`)
-    }
-
-    /**
-     * @param mod 
-     * @param type 
-     * @note windows only
-     */
-    moduleScriptsBuiltPdb(mod: string, type: BuildType) {
-        return mpath(this.moduleScriptsLib(mod,type), `${mod}.pdb`);
-    }
-
-    moduleNoEdit(mod: string) {
-        return mpath(this.modules, mod, 'noedit');
-    }
-
-    moduleDataLink(mod: string) {
-        return mpath(installBase,'node_modules',mod);
-    }
-
-    moduleDataPackagePath(mod: string) {
-        return mpath(this.moduleDataBuild(mod),'package.json');
-    }
-
-    /**
-     * The symlinked path to this modules data directory in ./node_modules
-     */
-    moduleNodeModule(mod: string) {
-        return mpath(this.nodeModules, mod);
-    }
-
-    moduleShared(mod: string) {
-        return mpath(this.modules, mod, 'shared');
-    }
-
-    sharedGlobal(mod: string) {
-        return mpath(this.moduleShared(mod),'global.d.ts');
-    }
-
-    moduleAddons(mod: string) {
-        return mpath(this.modules,mod,'addon');
-    }
-
-    moduleAddonSourceFile(mod: string, file: string) {
-        return mpath(this.moduleAddons(mod),file);
-    }
-
-    moduleAddonDestFile(mod: string, file: string) {
-        return mpath(this.addonBuild(mod), 'addon', file);
-    }
-
-    /**
-     * 
-     * TODO: What is this file for?
-     */
-    moduleAddonClasses(mod: string) {
-        return mpath(this.moduleAddons(mod), 'classes.json');
-    }
-
-    addonToc(mod: string) {
-        return mpath(this.moduleAddons(mod),`${mod}.toc`);
-    }
-
-    /*
-    addonBuildTS(mod: string) {
-        return mpath(this.addonBuild(mod),'ts');
-    }
-
-    addonBuildTSOut(mod: string) {
-        return mpath(
-            this.addonBuildTS(mod)
-            ,'Interface'
-            ,'FrameXML'
-            ,'TSAddons',mod)
-    }
-    */
-
-    addonBuild(mod: string) {
-        return mpath(this.moduleAddons(mod),'build');
-    }
-
-    addonIndex(mod: string) {
-        return mpath(this.moduleAddons(mod),`${mod}-addon.ts`);
-    }
-
-    addonTsConfig(mod: string) {
-        return mpath(this.moduleAddons(mod),`tsconfig.json`);
-    }
-
-    addonDestGlobal(mod: string) {
-        return mpath(this.moduleAddons(mod),'global.d.ts');
-    }
-
-    addonEventsDest(mod: string) {
-        return mpath(this.moduleAddons(mod),'lib','Events.ts');
-    }
-
-    addonBinReader(mod: string) {
-        return mpath(mpath(this.moduleAddons(mod),'lib','BinReader.ts'));
-    }
-
-    addonLib(mod: string) {
-        return mpath(this.moduleAddons(mod),'lib');
-    }
-    
-    addonDouble(mod: string) {
-        return mpath(this.addonBuild(mod),'Double.lua');
-    }
+export function DatasetDirectory(inPath: string, inName: string) {
+    return generateTree(path.join(inPath,inName),dir({
+        Buildings: dir({}),
+        Cameras: dir({}),
+        Crashes: dir({}),
+        dbc: dir({}),
+        dbc_source: dir({}),
+        dbc_temp: dir({
+            dbc: dir({}),
+        }),
+        luaxml: dir({
+            Interface: dir({
+                FrameXML: dir({
+                    framexml_toc: file('FrameXML.toc'),
+                    TSAddons: dir({
+                        mod: dyndir(()=>({}))
+                    })
+                })
+            })
+        }),
+        luaxml_source: dir({
+            Interface: dir({
+                FrameXML: dir({
+                    framexml_toc: file('FrameXML.toc')
+                })
+            })
+        }),
+        maps: dir({}),
+        mmaps: dir({}),
+        vmaps: dir({}),
+        config: file(`dataset.conf`),
+        ids_txt: file('ids.txt'),
+        modules_txt: file('modules.txt')
+    }))
 }
 
-export const ipaths = new InstallPaths();
+export function RealmDirectory(inPath: string, inName: string) {
+    return generateTree(path.join(inPath,inName),dir({
+        worldserver_conf: file('worldserver.conf'),
+        worldserver_conf_dist: file('worldserver.conf.dist'),
+        config: file(`realm.conf`),
+        realm_id: file(`realm.id`),
+        core_config: dynfile(type=>{
+            type = type.replace('.conf.dist','.conf')
+            if(!type.endsWith('.conf')) type = type+'.conf'
+            return type;
+        }),
+    }))
+}
 
-export class BuildPaths {
-    static setBuildBase(bpath: string) {
-        buildBase = wfs.absPath(bpath);
-        if(buildBase.includes(' ')) {
-            throw new Error(
-                  `Your build directory contains spaces somewhere in its path,`
-                + `please move it to a directory without spaces.`)
-        }
-    }
+export function DatascriptsDirectory(inPath: string) {
+    return generateTree(inPath,dir({
+        global_d_ts: file('global.d.ts'),
+        index: file(`datascripts.ts`),
+        tsconfig_json: file('tsconfig.json'),
+        datascripts_conf: file(`datascripts.conf`),
+        build: dir({
+            package_json: file('package.json')
+        }),
+        swcrc: file('../.swcrc')
+    }))
+}
 
-    get terminalHistory() {
-        return mpath(this.base, 'terminal-history.txt');
-    }
+export function LivescriptsDirectory(inPath: string) {
+    const modname = wfs.basename(wfs.dirname(inPath));
+    let fullModParts = inPath.split('\\').join('/').split('/')
+    let fullModName = fullModParts.slice(
+          fullModParts.indexOf('modules') + 1
+        , fullModParts.indexOf('livescripts')
+    ).join('.')
 
-    get base() {
-        if (buildBase.length === 0) {
-            throw new Error(`Tried to access a build path, but no build path is configured`);
-        }
-        return buildBase;
-    }
+    return generateTree(inPath,dir({
+        global_d_ts: file('global.d.ts'),
+        tsconfig: file('tsconfig.json'),
+        /** @todo: how to handle these names? */
+        entry: file(`livescripts.ts`),
+        built_library: file(``),
+        built_pdb: file(``),
+        build: dir({
+            dataset: dyndir(dataset=>({
+                built_libs: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(type)=>({
+                    // todo: linux
+                    library: custom((value)=>
+                        new WFile(mpath(wfs.dirname(value),'lib',type,fullModName+'.dll'))),
+                    pdb: custom((value)=>
+                        new WFile(mpath(wfs.dirname(value),'lib',type,fullModName+'.pdb'))),
+                })),
+                cpp: dir({
+                    livescripts: dir({}),
+                    cmakelists_txt: file('CMakeLists.txt'),
+                }),
+                lib: dir({})
+            })),
+        })
+    }));
+}
 
-    get cmake() {
-        return mpath(this.base, 'cmake');
-    }
+export function AddonDirectory(inPath: string) {
+    return generateTree(inPath,dir({
+        beforelib_toc: file('beforelib.toc'),
+        before_toc: file('before.toc'),
+        after_toc: file('after.toc'),
+        module_toc: file(`addon.toc`),
+        index_ts: file(`addon.ts`),
+        tsconfig_json: file('tsconfig.json'),
+        global_d_ts: file('global.d.ts'),
+        build: dir({
+            lualib_bundle_lua: file('lualib_bundle.lua'),
+            lib: dir({}),
+        }),
+    }))
+}
 
-    get stormlibInstall() {
-        return mpath(this.base, 'StormLibInstall');
-    }
+export function EndpointDirectory(inPath: string) {
+    return generateTree(inPath,dir({
+        addon: custom(inPath=>AddonDirectory(mpath(inPath,'addon'))),
+        datascripts: custom(inPath=>DatascriptsDirectory(mpath(inPath,'datascripts'))),
+        livescripts: custom(inPath=>LivescriptsDirectory(mpath(inPath,'livescripts'))),
+        shared: dir({
+            global_d_ts: file('global.d.ts')
+        }),
+        snippets: dir({}),
+        datasets: dir({
+            dataset: dynCustom((pathIn,nameIn)=>DatasetDirectory(pathIn,nameIn))
+        }),
+        realms: dir({
+            realm: dynCustom((pathIn,nameIn)=>RealmDirectory(pathIn,nameIn))
+        }),
+        assets: dir({
+            Interface: dir({
+                WorldMap: dir({})
+            }),
 
-    get stormlibBuild() {
-        return mpath(this.base, 'StormLibBuild');
-    }
+            textures: dir({
+                minimap: dir({})
+            })
+        }),
+        livescript_tsconfig_temp: file('tsconfig.json'),
+    }));
+}
 
-    get stormLibBuildRelease() {
-        return mpath(this.stormlibBuild,'Release');
-    }
+export const Languages =
+    [
+        'enGB', 'koKR', 'frFR', 'deDE', 'enCN', 'zhCN',
+        'enTW', 'zhTW', 'esES', 'esMX', 'ruRU',
+        'ptPT', 'ptBR', 'itIT', 'Unk', 'enUS'
+    ];
+export function ClientPath(pathIn: string, devPatch: string) {
+    return generateTree(pathIn,dir({
+        /** The wow.exe used to start the game */
+        wow_exe: file('wow.exe'),
+        /** The wow.exe without any patches applied */
+        wow_exe_clean: file('wow.exe.clean'),
+        Data: dir({
+            devPatch: dirn(`patch-${devPatch}.MPQ`,{
+                Interface: dir({
+                    FrameXML: dir({
+                        TSAddons: dir({})
+                    })
+                }),
+                DBFilesClient: dir({})
+            }),
+            locale: function(){
+                const self = new WDirectory(this.get())
+                if(!self.exists()) {
+                    throw new Error(
+                        `No data directory at ${self.get()}`
+                    )
+                }
+                let dirs = self.filter(x=>Languages.includes(x.basename().get()));
+                if(dirs.length == 0) {
+                    throw new Error(
+                        `No locale directory found in ${self.get()}`
+                    )
+                }
 
-    get stormLibInclude() {
-        return isWindows() 
-            ? mpath(this.stormLibBuildRelease)
-            : mpath(this.stormlibInstall, 'include')
-    }
+                if(dirs.length > 1 ) {
+                    throw new Error(
+                          `Multiple locale directories found in ${self.get()}: `
+                        + `${dirs.join(',')}`
+                    )
+                }
 
-    // windows-only
-    get zlibLibrary() {
-        return mpath(this.base,'zlib','lib','zlib.lib');
-    }
+                return generateTree(dirs[0].get(),dir({
+                    realmlist_wtf: file('realmlist.wtf')
+                }))
+            }
+        }),
+        ClientExtensions_dll: file('ClientExtensions.dll'),
+        Cache: file('Cache'),
+        Interface: dir({
+            AddOns: dir({})
+        })
+    }))
+}
 
-    // windows-only
-    get zlibInclude() {
-        return mpath(this.base,'zlib','include');
-    }
+export function InstallPath(pathIn: string, tdb: string) {
+    return generateTree(pathIn,dir({
+        vscode: dirn('.vscode',{
+            snippets_out: file('tswow-generated.json.code-snippets')
+        }),
+        node_modules: dir({
+            typescript_js: file('typescript/lib/tsc'),
+            tstl_decorators: file('typescript-to-lua/dist/transformation/visitors/class/decorators.js'),
+            tstl_js: file('typescript-to-lua/dist/tstl.js'),
+            wotlkdata: dir({}),
+        }),
 
-    // windows-only
-    get bzip2Library() {
-        return mpath(this.base,'bzip2','lib','bzip2.lib');
-    }
+        node_conf: file('node.conf'),
 
-    // windows-only
-    get bzip2Include() {
-        return mpath(this.base,'bzip2','include');
-    }
+        Crashes: dir({}),
 
-    get stormLibLibraryFile() {
-        return isWindows() 
-            ? mpath(this.stormlibBuild, 'Release','storm.lib') 
-            : mpath(this.stormlibInstall,'lib','libstorm.a');
-    }
+        bin: dir({
+            package: dir({
+                file: dynfile(x=>x)
+            }),
+            changes: dir({
+                changeFile: dynfile(name=>name)
+            }),
+            libraries: dir({
+                build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({})),
+            }),
+            mysql_startup: file('mysql_startup.txt'),
+            addons: dir({}),
+            revisions: dir({
+                trinitycore: file('trinitycore'),
+                tswow: file('tswow'),
+            }),
+            scripts: dir({
+                addons: dir({
+                    addons: dir({
+                        require_preload: file('RequirePreload.js')
+                    })
+                }),
+                tests: dir({}),
+                runtime: dir({
+                    runtime: dir({
+                        TSWoW_js : file('TSWoW.js')
+                    })
+                }),
+                typescript2cxx: dir({
+                    typescript2cxx: dir({
+                        wowts_js: file('wowts.js'),
+                        main_js: file('main.js'),
+                    })
+                }),
+                wotlkdata: dir({
+                    package_json: file('package.json'),
+                    wotlkdata: dir({
+                        index: file('wotlkdata.js')
+                    })
+                }),
+                snippets_example: file('snippets-example.ts'),
+            }),
+            adtcreator: dirn('adt-creator',{
+                adtcreator_exe: file('adtcreator.exe'),
+            }),
+            mpqbuilder: dir({
+                mpqbuilder_exe: file(`mpqbuilder${isWindows()?'.exe':''}`),
+                luaxml_exe: file(`luaxmlreader${isWindows()?'.exe':''}`)
+            }),
+            mysql: dir({
+                mysql_exe: file('mysql.exe'),
+                mysqld_exe: file('mysqld.exe'),
+                mysqldump_exe: file('mysqldump.exe'),
+            }),
+            sZip: dirn('7zip',{
+                sza_exe: file('7za.exe')
+            }),
+            /** imagemagick binaries */
+            im: dir({
+                convert: file('convert.exe'),
+                magick: file('magick.exe'),
+                identify: file('identify.exe'),
+            }),
+            tdb: file(tdb),
+            cmake: dir({
+                bin: dir({
+                    cmake_exe: file(`cmake.exe`)
+                }),
+                share: dir({})
+            }),
+            ClientExtensions_dll: file('ClientExtensions.dll'),
+            include: dir({
+                global_d_ts: file('global.d.ts'),
+            }),
+            BLPConverter: dir({
+                blpconverter: file('blpconverter.exe')
+            }),
+            tmp: dir({
+                file_changes_txt: file('file_changes.txt'),
+            }),
+            sql: dir({
+                characters_create_sql: file('characters_create.sql'),
+                auth_create_sql: file('auth_create.sql'),
+                updates: dir({
+                    type: enumDir({'world':0,'auth':0,'characters':0},(key)=>({
+                        _335: dirn('3.3.5',{})
+                    })),
+                }),
+                custom: dir({
+                    type: enumDir({'world':0,'auth':0,'characters':0},(key)=>({
 
-    get mpqBuilder() {
-        return mpath(this.base, 'mpqbuilder');
-    }
+                    })),
+                }),
+            }),
+            include_addon: dirn('include-addon',{
+                global_d_ts: file('global.d.ts'),
+                Events_ts: file('Events.ts'),
+                Events_lua: file('Events.lua'),
+                shared_global_d_ts: file('shared.global.d.ts'),
+                LualibBundle_lua: file('LualibBundle.lua'),
+                RequireStub_lua: file('RequireStub.lua'),
+                tsconfig_json: file('tsconfig.json')
+            }),
+            core: dyndir(key=>({
+                build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({
+                    scripts: dir({
+                        moduleLib: dynfile((mod)=>isWindows()
+                            ? `${wfs.dirname(mod)}/scripts_tswow_${wfs.basename(mod)}.dll`
+                            : `${wfs.dirname(mod)}/libscripts_tswow_${wfs.basename(mod)}.so`
+                        ),
+                        modulePdb: dynfile(mod=>`${wfs.dirname(mod)}/scripts_tswow_${wfs.basename(mod)}.pdb`)
+                    }),
+                    worldserver: file(`worldserver${isWindows()?'.exe':''}`),
+                    mapextractor: file(`mapextractor${isWindows()?'.exe':''}`),
+                    mmaps_generator: file(`mmaps_generator${isWindows()?'.exe':''}`),
+                    vmap4assembler: file(`vmap4assembler${isWindows()?'.exe':''}`),
+                    vmap4extractor: file(`vmap4extractor${isWindows()?'.exe':''}`),
+                    authserver: file(`authserver${isWindows()?'.exe':''}`),
+                    authserver_conf_dist: file(`authserver.conf.dist`),
+                    worldserver_conf_dist: file(`worldserver.conf.dist`),
+                    libcrypto: file('libcrypto-1_1-x64.dll'),
+                    configs: custom((i)=>generateTree(i,dir({}))),
+                }))
+            })),
+        }),
+        coredata: dir({
+            positions_txt: file('positions.txt'),
+            database: file('database'),
+            authserver: dir({
+                authserver_conf: file('authserver.conf')
+            }),
+            commands_yaml: file('commands.yaml'),
+            terminal_history_txt: file('terminal-history.txt'),
+            last_datascript: file('last_datascript.sql')
+        }),
+        modules: dir({
+            module: dyndir(name=>(({
+                gitignore: file('.gitignore'),
+                endpoints: function() {
+                    const self = new WDirectory(this.get())
+                    const endpoints : string[] = [
+                          'datascripts'
+                        , 'livescripts'
+                        , 'realms'
+                        , 'datasets'
+                        , 'assets'
+                        , 'addon'
+                        , 'shared'
+                    ]
+                    let paths: WDirectory[] = [self]
+                    self.iterate('RECURSE','DIRECTORIES','FULL',node=>{
+                        if(node.endsWith('.git')) return 'ENDPOINT'
+                        if(node.basename().get() === 'build') return 'ENDPOINT'
+                        if(endpoints.includes(node.basename().get())) return 'ENDPOINT'
+                        if(node.toDirectory()
+                               .readDir('ABSOLUTE')
+                               .find(x=>endpoints.find(y=>y==x.basename().get()))
+                        ) {
+                            paths.push(node.toDirectory())
+                        }
+                    })
+                    return paths.map(x=>EndpointDirectory(x.get()))
+                },
+            })))
+        }),
+        package: dir({
+            server_7z: file('server.7z'),
+            file: dynfile(x=>`${x}.MPQ`),
+        }),
+        package_json: file('package.json'),
+    }));
+}
 
-    get adtCreator() {
-        return mpath(this.base, 'adt-creator');
-    }
+export function BuildPaths(pathIn: string, tdb: string) {
+    return generateTree(pathIn, dir({
+        release_7z: file('release.7z'),
+        terminal_history: file('terminal-history.txt'),
+        ClientExtensionsDll: file('ClientExtensions.dll'),
+        scripts_config: dirn('scripts-config',{
+            typescript2cxx: dir({}),
+            wotlkdata: dir({}),
+            runtime: dir({}),
+            addons: dir({})
+        }),
+        lua_events: dir({
+            events_ts: file('Events.ts'),
+            events_d_ts: file('Events.d.ts'),
+            events_lua: file('Events.lua'),
+            global_d_ts: file('global.d.ts'),
+            tsconfig_json: file('tsconfig.json'),
+        }),
+        zlib: dir({
+            include: dir({}),
+            lib: dir({
+                zlib_lib: file('zlib.lib')
+            })
+        }),
+        cmake: dir({
+        }),
 
-    get adtCreatorExe() {
-        return isWindows () 
-            ? mpath(this.adtCreator, 'Release','adt-creator.exe')
-            : mpath(this.adtCreator, 'Release','adt-creator');
-    }
+        mysql: dir({
+            find_subdir: function() {
+                return generateTree(path.join(this.get(),fs.readdirSync(this.get())[0]),dir({
+                    bin: dir({
+                        mysqld_exe: file('mysqld.exe'),
+                        mysql_exe: file('mysql.exe'),
+                        mysqldump_exe: file('mysqldump.exe')
+                    }),
+                    lib: dir({
+                        libmysql_dll: file('libmysql.dll'),
+                        libmysqld_dll: file('libmysqld.dll'),
+                    })
+                }))
+            },
+        }),
 
-    get mpqBuilderBinary() {
-        return isWindows() 
-            ? mpath(this.mpqBuilder,'Release','mpqbuilder.exe')
-            : mpath(this.mpqBuilder,'mpqbuilder')
+        openssl: dir({
+            libcrypto: file('libcrypto-1_1-x64.dll')
+        }),
 
-    }
+        blpconverter: file('BLPConverter.exe'),
+        tdb: file(tdb),
+        sevenZip: dirn('7zip',{
+            sevenZa_exe: file('7za.exe')
+        }),
+        im: dir({
+            convert_exe: file('convert.exe'),
+            magic_exe: file('magick.exe'),
+            identify_exe: file('identify.exe'),
+        }),
 
-    get luaxmlBinary() {
-        return isWindows() 
-            ? mpath(this.mpqBuilder,'Release','luaxmlreader.exe')
-            : mpath(this.mpqBuilder,'luaxmlreader')
+        TrinityCore: dir({
+            // todo: linux
+            bin: custom((k)=>(name: string)=>{
+                return generateTree(mpath(k,'bin',name),dir({
+                    worldserver_exe: file('worldserver.exe'),
+                    authserver_exe: file('authserver.exe'),
+                    scripts: dir({})
+                }))
+            }),
 
-    }
+            configs: custom((k)=>(name: string)=>{
+                return generateTree(mpath(k,'bin',name),dir({}))
+            }),
 
-    get trinitycore() { return mpath(this.base,'trinitycore'); }
+            libraries: custom((pathIn=>(type: string)=>{
+                return (isWindows() ?
+                [
+                    `dep/zlib/${type}/zlib.lib`,
+                    `src/server/shared/${type}/shared.lib`,
+                    `dep/SFMT/${type}/sfmt.lib`,
+                    `dep/g3dlite/${type}/g3dlib.lib`,
+                    `dep/fmt/${type}/fmt.lib`,
+                    `dep/recastnavigation/Detour/${type}/detour.lib`,
+                    `src/server/database/${type}/database.lib`,
+                    `src/server/game/${type}/game.lib`,
+                    `src/common/${type}/common.lib`,
+                    `dep/argon2/${type}/argon2.lib`
+                ]
+                :
+                [
+                    `install/trinitycore/lib/libcommon.so`,
+                    `install/trinitycore/lib/libdatabase.so`,
+                    `install/trinitycore/lib/libgame.so`,
+                    `install/trinitycore/lib/libshared.so`,
+                ]
+                ).map(x=>new WFile(mpath(pathIn,x)))
+            })),
 
-    trinitycoreBin(type: string) {
-        return isWindows() ? mpath(this.trinitycore, 'Bin', type)
-            : mpath(this.trinitycore, 'install', 'trinitycore', 'bin');
-    }
-
-    trinitycoreConf(type: string) {
-        return isWindows() ? bpaths.trinitycoreBin(type)
-            : mpath(this.trinitycore, 'install', 'trinitycore', 'etc');
-    }
-    
-    get mysql() { return mpath(this.base, 'mysql'); }
-
-    get openssl() { return mpath(this.base,'openssl'); }
-
-    get blpConverterBuilt() { return mpath(this.base, 'BLPConverter','Release','BLPConverter.exe'); }
-    get blpConverterDownload() { return mpath(this.base, 'BLPConverter.exe'); }
-
-    get tdb7z() { return mpath(this.base, tdbFilename()+'.7z'); }
-    get tdbSql() { return mpath(this.base, tdbFilename()+'.sql'); }
-
-    get sevenZip() {return mpath(this.base, '7zip')}
-
-    mysqlLibs(mysqlRoot: string) {
-        return ['libmysql.dll','libmysqld.dll']
-            .map(x=>mpath(mysqlRoot,'lib',x))
-    }
-
-    libcrypto(opensslRoot: string) {
-        return mpath(opensslRoot,'libcrypto-1_1-x64.dll');
-    }
-
-    tcStaticLibraries(type: string) {
-        if(isWindows()) {
-            return [
+            libraries2: ((pathIn: string, type: string)=>(isWindows() ?
+            [
                 `dep/zlib/${type}/zlib.lib`,
                 `src/server/shared/${type}/shared.lib`,
                 `dep/SFMT/${type}/sfmt.lib`,
@@ -845,124 +523,117 @@ export class BuildPaths {
                 `src/server/database/${type}/database.lib`,
                 `src/server/game/${type}/game.lib`,
                 `src/common/${type}/common.lib`,
-                `dep/argon2/${type}/argon2.lib`]
-            .map(x=>mpath(this.trinitycore,x))
-        } else {
-            return [
+                `dep/argon2/${type}/argon2.lib`
+            ]
+            :
+            [
                 `install/trinitycore/lib/libcommon.so`,
                 `install/trinitycore/lib/libdatabase.so`,
                 `install/trinitycore/lib/libgame.so`,
                 `install/trinitycore/lib/libshared.so`,
-            ].map(x=>mpath(this.trinitycore,x));
-        }
-    }
+            ]).map(x=>new WFile(pathIn).join(x)))
+        }),
 
-    get stormLibMainHeader() {
-        return mpath(this.stormlibBuild,'Release','StormLib.h')
-    }
+        mpqbuilder: dir({
+            mpqbuilder_exe: file(isWindows() ? 'Release/mpqbuilder.exe' : 'mpqbuilder'),
+            luaxml_exe: file(isWindows() ? 'Release/luaxmlreader.exe' : 'luaxmlreader')
+        }),
 
-    get stormLibPortHeader() {
-        return mpath(this.stormlibBuild,'Release','StormPort.h')
-    }
+        adtcreator: dir({
+            Release: dir({
+                adt_creator_exe: file(`adt-creator${isWindows()?'.exe':''}`)
+            })
+        }),
+
+        bzip2: dir({
+            lib: dir({
+                bzip2_lib: file('bzip2.lib')
+            })
+        }),
+    }))
 }
 
-export const bpaths = new BuildPaths();
+export function SourcePaths(pathIn: string) {
+    return generateTree(pathIn,dir({
+        package_json: file('package.json'),
+        node_modules: dir({
+            typescript_js: file('typescript/lib/tsc'),
+        }),
+        tools: dir({
+            mpqbuilder: dir({})
+        }),
 
-export class SourcePaths {
-    get installConfig() { 
-        return './install-config';
-    }
+        install_config: dirn('install-config',{
+            include_addon: dirn('include-addon',{
+                global_d_ts: file('global.d.ts'),
+                Events_ts: file('Events.ts'),
+                shared_global_d_ts: file('shared.global.d.ts'),
+                LualibBundle_lua: file('LualibBundle.lua'),
+                RequireStub_lua: file('RequireStub.lua'),
+            }),
+            characters_create: file('characters_create.sql'),
+            auth_create: file('auth_create.sql'),
+            package_json: file('package.json'),
+            node_yaml: file('node.yaml'),
+            vscode_install : file('.vscode-install'),
+            addons: dir({}),
+            snippet_example: file('snippet-example.ts')
+        }),
 
-    get trinityCore() {
-        return './TrinityCore';
-    }
+        client_extensions: dirn('client-extensions',{
+            CustomPackets: dir({})
+        }),
 
-    get trinityCoreSources() {
-        return mpath(this.trinityCore,'src');
-    }
+        TrinityCore: dir({
+            src: dir({}),
+            sql: dir({
+                updates: dir({}),
+                custom: dir({})
+            })
+        }),
+        tswow_scripts: dirn('tswow-scripts', {
+            sql: dir({}),
+            wotlkdata: dir({
+                package_json: file('package.json')
+            }),
+            runtime: dir({}),
+            typescript2cxx: dir({}),
+            util: dir({}),
+            addons: dir({}),
+        }),
 
-    get liveScriptHeaders() {
-        return mpath(this.trinityCore,'src','server','game','Tswow','Scripting','Public');
-    }
+        TypeScript2Cxx: dir({}),
 
-    get buildYaml() {
-        return './build.yaml';
-    }
-    
-    get installAddonInclude() {
-        return mpath(this.installConfig, 'include-addon');
-    }
-
-    get installPackageJson() {
-        return mpath(this.installConfig,'package.json');
-    }
-
-    get installNodeYaml() {
-        return mpath(this.installConfig, 'node.yaml');
-    }
-
-    get installVscodeSettings() {
-        return mpath(this.installConfig, '.vscode-install');
-    }
-
-    get installAddons() {
-        return mpath(this.installConfig, 'addons');
-    }
-
-    get installSymlinkMaker() {
-        return mpath(this.installConfig, 'symlinkmaker.js');
-    }
-
-    get sqlUpdates() {
-        return mpath(this.trinityCore,'sql','updates');
-    }
-
-    get sqlCustom() {
-        return mpath(this.trinityCore, 'sql', 'custom');
-    }
-
-    get scripts() {
-        return mpath('./tswow-scripts');
-    }
-
-    get scriptsSql() {
-        return mpath(this.scripts, 'sql');
-    }
-
-    get tcGlobaldts() {
-        return mpath(this.liveScriptHeaders, 'global.d.ts');
-    }
-
-    get wotlkdataPackageJson() {
-        return mpath(this.scripts,'wotlkdata','package.json')
-    }
-
-    get startJs() {
-        return mpath(this.installConfig,'start.js');
-    }
-
-    get stormLib() {
-        return './StormLib';
-    }
-
-    get stormLibMainHeader() {
-        return mpath(this.stormLib,'src','StormLib.h');
-    }
-
-    get stormLibPortHeader() {
-        return mpath(this.stormLib,'src','StormPort.h')
-    }
-
-    get typeScript2Cxx() {
-        return mpath('./TypeScript2Cxx');
-    }
-
-    get snippetExample() {
-        return mpath(this.installConfig, 'snippet-example.ts');
-    }
+        tswow_core: dirn('tswow-core',{
+            /** Contains all public headers for tswow livescripts */
+            Public: dir({
+                /** Contains global.d.ts placed in livescripts */
+                global_d_ts: file('global.d.ts'),
+            }),
+        }),
+        ClientExtensions: dir({
+            CustomPackets: dir({}),
+        }),
+        build_yaml: dir({}),
+    }))
 }
 
-export const spaths = new SourcePaths();
+export const ipaths = function(){
+    let arg = process.argv.find(x=>x.startsWith('--ipaths='));
+    if(arg === undefined) {
+        throw new Error(`No --ipaths argument provided`);
+    }
+    return InstallPath(arg.substring('--ipaths='.length),tdbFilename())
+}();
 
-import { Datasets } from '../runtime/Dataset';
-import { BuildType, BUILD_TYPES } from './BuildType';
+export function collectSubmodules(modulesIn: string[]) {
+    // remove modules contained in other modules
+    modulesIn = modulesIn
+        .map(x=>x.split('.').join(path.sep))
+        .filter(x=>modulesIn.find(y=>!wfs.relative(y,x).startsWith('..')))
+
+    // hack: using submodules as module names
+    return modulesIn
+        .map(x=>ipaths.modules.module.pick(x).endpoints())
+        .reduce((p,c)=>p.concat(c))
+}

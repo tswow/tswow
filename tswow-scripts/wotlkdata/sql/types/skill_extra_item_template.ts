@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , float , tinyint } from '../../primitives'
+import { float, mediumint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class skill_extra_item_templateRow extends SqlRow<skill_extra_item_templateCreator,skill_extra_item_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spellId() {return new SQLCellReadOnly<mediumint, this>(this, 'spellId')}
-    
+
     /**
      * No comment (yet!)
      */
     get requiredSpecialization() {return new SQLCell<mediumint, this>(this, 'requiredSpecialization')}
-    
+
     /**
      * No comment (yet!)
      */
     get additionalCreateChance() {return new SQLCell<float, this>(this, 'additionalCreateChance')}
-    
+
     /**
      * No comment (yet!)
      */
     get additionalMaxNum() {return new SQLCell<tinyint, this>(this, 'additionalMaxNum')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spellId : mediumint, c? : skill_extra_item_templateCreator) : this {
         return this.cloneInternal([spellId],c)
     }

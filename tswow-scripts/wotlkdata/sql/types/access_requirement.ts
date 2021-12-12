@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , tinyint , smallint , text } from '../../primitives'
+import { mediumint, smallint, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,75 +29,75 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class access_requirementRow extends SqlRow<access_requirementCreator,access_requirementQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get mapId() {return new SQLCellReadOnly<mediumint, this>(this, 'mapId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get difficulty() {return new SQLCellReadOnly<tinyint, this>(this, 'difficulty')}
-    
+
     /**
      * No comment (yet!)
      */
     get level_min() {return new SQLCell<tinyint, this>(this, 'level_min')}
-    
+
     /**
      * No comment (yet!)
      */
     get level_max() {return new SQLCell<tinyint, this>(this, 'level_max')}
-    
+
     /**
      * No comment (yet!)
      */
     get item_level() {return new SQLCell<smallint, this>(this, 'item_level')}
-    
+
     /**
      * No comment (yet!)
      */
     get item() {return new SQLCell<mediumint, this>(this, 'item')}
-    
+
     /**
      * No comment (yet!)
      */
     get item2() {return new SQLCell<mediumint, this>(this, 'item2')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest_done_A() {return new SQLCell<mediumint, this>(this, 'quest_done_A')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest_done_H() {return new SQLCell<mediumint, this>(this, 'quest_done_H')}
-    
+
     /**
      * No comment (yet!)
      */
     get completed_achievement() {return new SQLCell<mediumint, this>(this, 'completed_achievement')}
-    
+
     /**
      * No comment (yet!)
      */
     get quest_failed_text() {return new SQLCell<text, this>(this, 'quest_failed_text')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<text, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(mapId : mediumint,difficulty : tinyint, c? : access_requirementCreator) : this {
         return this.cloneInternal([mapId,difficulty],c)
     }

@@ -16,14 +16,13 @@
  */
 import * as assert from 'assert';
 import * as fs from 'fs';
+import { GetId, GetIdRange, GetTempId, IdPrivate, IdRange } from '../../util/ids/Ids';
 import { Random } from './Random';
-import { IdPrivate, GetIdRange, IdRange } from '../../wotlkdata/ids/Ids';
 
 const file = './testids.txt';
 
 class IdPublic extends IdPrivate {
     static flushMemory = IdPrivate.flushMemory;
-    static idAllocator = IdPrivate.idAllocator;
     static getMappings = IdPrivate.getMappings;
     static readFile = () => IdPrivate.readFile(file);
     static writeFile = () => IdPrivate.writeFile(file);
@@ -41,9 +40,17 @@ const seed = 'hello_world';
 
 let random = new Random(seed);
 
+function SimpleID(name: string, startid: number = 10000) {
+    return GetId('item_template','',name,startid)
+}
+
 function SimpleRange(name: string, range: number, startid: number = 10000) {
     // @ts-ignore : Ignore valid table check
     return GetIdRange('item_template', 'a', name, range, startid);
+}
+
+function TempID(startid: number = 10000) {
+    return GetTempId('item_template',startid);
 }
 
 describe('Ids', function() {
@@ -69,6 +76,26 @@ describe('Ids', function() {
             assert.throws(() => new IdRange(false, '', '', '', 2, 5).offset(4));
         });
     });
+
+    describe('GetIdTemp', function() {
+        it('increments', function() {
+            let id1 = TempID(0);
+            let id2 = TempID(1);
+            assert.strictEqual(id1,0);
+            assert.strictEqual(id2,1);
+        })
+
+        it('fills holes from saved data', async function() {
+            TempID(0);
+            let staticId = SimpleID('a',0)
+            assert.strictEqual(staticId,1)
+            await write();
+            await read();
+            assert.strictEqual(SimpleID('a',0),1)
+            assert.strictEqual(TempID(0),0)
+            assert.strictEqual(TempID(0),2)
+        })
+    })
 
     describe('GetRange', function() {
         it('writes ranges to distinct ids', function() {

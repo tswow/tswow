@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , smallint , float , text } from '../../primitives'
+import { float, smallint, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,80 +29,80 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_classlevelstatsRow extends SqlRow<creature_classlevelstatsCreator,creature_classlevelstatsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get level() {return new SQLCellReadOnly<tinyint, this>(this, 'level')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get class() {return new SQLCellReadOnly<tinyint, this>(this, 'class')}
-    
+
     /**
      * No comment (yet!)
      */
     get basehp0() {return new SQLCell<smallint, this>(this, 'basehp0')}
-    
+
     /**
      * No comment (yet!)
      */
     get basehp1() {return new SQLCell<smallint, this>(this, 'basehp1')}
-    
+
     /**
      * No comment (yet!)
      */
     get basehp2() {return new SQLCell<smallint, this>(this, 'basehp2')}
-    
+
     /**
      * No comment (yet!)
      */
     get basemana() {return new SQLCell<smallint, this>(this, 'basemana')}
-    
+
     /**
      * No comment (yet!)
      */
     get basearmor() {return new SQLCell<smallint, this>(this, 'basearmor')}
-    
+
     /**
      * No comment (yet!)
      */
     get attackpower() {return new SQLCell<smallint, this>(this, 'attackpower')}
-    
+
     /**
      * No comment (yet!)
      */
     get rangedattackpower() {return new SQLCell<smallint, this>(this, 'rangedattackpower')}
-    
+
     /**
      * No comment (yet!)
      */
     get damage_base() {return new SQLCell<float, this>(this, 'damage_base')}
-    
+
     /**
      * No comment (yet!)
      */
     get damage_exp1() {return new SQLCell<float, this>(this, 'damage_exp1')}
-    
+
     /**
      * No comment (yet!)
      */
     get damage_exp2() {return new SQLCell<float, this>(this, 'damage_exp2')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<text, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(level : tinyint,cls : tinyint, c? : creature_classlevelstatsCreator) : this {
         return this.cloneInternal([level,cls],c)
     }

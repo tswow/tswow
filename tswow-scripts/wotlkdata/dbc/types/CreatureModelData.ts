@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCStringCell , DBCFloatCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,147 +34,147 @@ export class CreatureModelDataRow extends DBCRow<CreatureModelDataCreator,Creatu
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ModelName() { return new DBCStringCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get SizeClass() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get ModelScale() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get BloodID() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get FootprintTextureID() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get FootprintTextureLength() { return new DBCFloatCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get FootprintTextureWidth() { return new DBCFloatCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get FootprintParticleScale() { return new DBCFloatCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get FoleyMaterialID() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get FootstepShakeSize() { return new DBCIntCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get DeathThudShakeSize() { return new DBCIntCell(this,this.buffer,this.offset+48)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundID() { return new DBCIntCell(this,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get CollisionWidth() { return new DBCFloatCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get CollisionHeight() { return new DBCFloatCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get MountHeight() { return new DBCFloatCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMinX() { return new DBCFloatCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMinY() { return new DBCFloatCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMinZ() { return new DBCFloatCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMaxX() { return new DBCFloatCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMaxY() { return new DBCFloatCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get GeoBoxMaxZ() { return new DBCFloatCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get WorldEffectScale() { return new DBCFloatCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get AttachedEffectScale() { return new DBCFloatCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileCollisionRadius() { return new DBCFloatCell(this,this.buffer,this.offset+100)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileCollisionPush() { return new DBCFloatCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get MissileCollisionRaise() { return new DBCFloatCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : CreatureModelDataCreator) : this {
         return this.cloneInternal([ID],c);
     }

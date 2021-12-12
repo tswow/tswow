@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath, wfs } from '../util/FileSystem';
-import { wsys } from '../util/System';
-import { ipaths, bpaths } from '../util/Paths';
 import { SevenZip } from '../util/7zip';
+import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
+import { wsys } from '../util/System';
+import { bpaths } from './CompilePaths';
 
 export namespace SevenZipInstall {
     /**
@@ -26,7 +26,7 @@ export namespace SevenZipInstall {
      */
     export async function makeArchive(path: string, outPath: string) {
         install();
-        SevenZip.makeArchive(path, [outPath]);
+        SevenZip.makeArchive(ipaths.bin.sZip.sza_exe.get(),path, [outPath]);
     }
 
     /**
@@ -36,17 +36,14 @@ export namespace SevenZipInstall {
         if(!isWindows()) {
             return;
         }
-
-        while(!wfs.exists(bpaths.sevenZip)) {
+        while(!bpaths.sevenZip.exists()) {
             await wsys.userInput(`7zip is not installed:\n\t`
             + `1. Download https://www.7-zip.org/a/7za920.zip\n\t`
-            + `2.Extract it to ${bpaths.sevenZip} `
-            + `(${mpath(bpaths.sevenZip,'7za.exe')} should exist)\n\t`
+            + `2.Extract it to ${bpaths.sevenZip.get()} `
+            + `()`
+            + `(${bpaths.sevenZip.sevenZa_exe} should exist)\n\t`
             + `3.Press enter in this prompt`);
         }
-
-        if(!wfs.exists(ipaths.sevenZaExe)) {
-            wfs.copy(bpaths.sevenZip,ipaths.sevenZip);
-        }
+        bpaths.sevenZip.copy(ipaths.bin.sZip);
     }
 }

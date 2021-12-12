@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellRoot } from './CellRoot';
+import { Transient } from '../serialization/Transient';
+import { CellReadOnly } from './CellReadOnly';
 
 export type CPrim = number | string | boolean | bigint;
 
-export abstract class Cell<D extends CPrim, T> extends CellRoot<T> {
+export abstract class Cell<D extends CPrim, T> extends CellReadOnly<D,T> {
     abstract get(): D;
     abstract set(value: D): T;
     protected objectify(): any {
@@ -28,6 +29,8 @@ export abstract class Cell<D extends CPrim, T> extends CellRoot<T> {
     protected deserialize(value: any) {
         this.set(value);
     }
+
+    protected get isReadOnly() { return false; }
 }
 
 export class CellWrapper<D extends CPrim, T> extends Cell<D, T> {
@@ -60,12 +63,32 @@ export class FunctionalCell<D extends CPrim,T> extends Cell<D,T> {
         this.getter = getter;
         this.setter = setter;
     }
+
     get(): D {
         return this.getter();
     }
 
     set(value: D): T {
         this.setter(value);
+        return this.owner;
+    }
+}
+
+export class CellUnlocker<D extends CPrim,T> extends Cell<D,T> {
+    @Transient
+    protected cell: CellReadOnly<D,any>
+
+    constructor(owner: T, cell: CellReadOnly<D,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    get(): D {
+        return this.cell.get();
+    }
+
+    set(value: D): T {
+        CellReadOnly.set(this.cell, value);
         return this.owner;
     }
 }

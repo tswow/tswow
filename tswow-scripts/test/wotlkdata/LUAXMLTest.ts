@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { LUAXML, _clearLUAXML, _writeLUAXML } from '../../wotlkdata/luaxml/LUAXML';
 import * as assert from 'assert';
 import * as fs from 'fs';
+import { LUAXML, _clearLUAXML, _writeLUAXML } from '../../wotlkdata/luaxml/LUAXML';
 import { TextFile } from '../../wotlkdata/luaxml/TextFile';
 import { Settings } from '../../wotlkdata/Settings';
 

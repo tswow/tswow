@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntArrayCell , DBCIntCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCIntCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,27 +34,27 @@ export class ScalingStatDistributionRow extends DBCRow<ScalingStatDistributionCr
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get StatID() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Bonus() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get Maxlevel() { return new DBCIntCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ScalingStatDistributionCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -64,8 +64,8 @@ export class ScalingStatDistributionRow extends DBCRow<ScalingStatDistributionCr
  * Used for object creation (Don't comment these)
  */
 export type ScalingStatDistributionCreator = {
-    StatID?: int
-    Bonus?: int
+    StatID?: int[]
+    Bonus?: int[]
     Maxlevel?: int
 }
 

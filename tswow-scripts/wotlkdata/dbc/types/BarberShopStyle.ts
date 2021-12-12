@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCLocCell , DBCFloatCell} from '../DBCCell'
-import { int , loc_constructor , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,47 +34,47 @@ export class BarberShopStyleRow extends DBCRow<BarberShopStyleCreator,BarberShop
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Type() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayName() { return new DBCLocCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get Description() { return new DBCLocCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get Cost_Modifier() { return new DBCFloatCell(this,this.buffer,this.offset+144)}
-    
+
     /**
      * No comment (yet!)
      */
     get Race() { return new DBCIntCell(this,this.buffer,this.offset+148)}
-    
+
     /**
      * No comment (yet!)
      */
     get Sex() { return new DBCIntCell(this,this.buffer,this.offset+152)}
-    
+
     /**
      * No comment (yet!)
      */
     get Data() { return new DBCIntCell(this,this.buffer,this.offset+156)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : BarberShopStyleCreator) : this {
         return this.cloneInternal([ID],c);
     }

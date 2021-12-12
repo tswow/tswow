@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , varchar } from '../../primitives'
+import { int, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,27 +29,27 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spawn_group_templateRow extends SqlRow<spawn_group_templateCreator,spawn_group_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get groupId() {return new SQLCellReadOnly<int, this>(this, 'groupId')}
-    
+
     /**
      * No comment (yet!)
      */
     get groupName() {return new SQLCell<varchar, this>(this, 'groupName')}
-    
+
     /**
      * No comment (yet!)
      */
     get groupFlags() {return new SQLCell<int, this>(this, 'groupFlags')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(groupId : int, c? : spawn_group_templateCreator) : this {
         return this.cloneInternal([groupId],c)
     }

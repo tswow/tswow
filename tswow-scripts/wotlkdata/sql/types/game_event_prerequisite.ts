@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , mediumint } from '../../primitives'
+import { mediumint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,25 +29,25 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_event_prerequisiteRow extends SqlRow<game_event_prerequisiteCreator,game_event_prerequisiteQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get eventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get prerequisite_event() {return new SQLCellReadOnly<mediumint, this>(this, 'prerequisite_event')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(eventEntry : tinyint,prerequisite_event : mediumint, c? : game_event_prerequisiteCreator) : this {
         return this.cloneInternal([eventEntry,prerequisite_event],c)
     }

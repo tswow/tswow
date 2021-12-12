@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , varchar , text , smallint } from '../../primitives'
+import { mediumint, smallint, text, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,75 +29,75 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_template_localeRow extends SqlRow<quest_template_localeCreator,quest_template_localeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get locale() {return new SQLCellReadOnly<varchar, this>(this, 'locale')}
-    
+
     /**
      * No comment (yet!)
      */
     get Title() {return new SQLCell<text, this>(this, 'Title')}
-    
+
     /**
      * No comment (yet!)
      */
     get Details() {return new SQLCell<text, this>(this, 'Details')}
-    
+
     /**
      * No comment (yet!)
      */
     get Objectives() {return new SQLCell<text, this>(this, 'Objectives')}
-    
+
     /**
      * No comment (yet!)
      */
     get EndText() {return new SQLCell<text, this>(this, 'EndText')}
-    
+
     /**
      * No comment (yet!)
      */
     get CompletedText() {return new SQLCell<text, this>(this, 'CompletedText')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText1() {return new SQLCell<text, this>(this, 'ObjectiveText1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText2() {return new SQLCell<text, this>(this, 'ObjectiveText2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText3() {return new SQLCell<text, this>(this, 'ObjectiveText3')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText4() {return new SQLCell<text, this>(this, 'ObjectiveText4')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint,locale : varchar, c? : quest_template_localeCreator) : this {
         return this.cloneInternal([ID,locale],c)
     }

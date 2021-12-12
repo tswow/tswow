@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , float , smallint } from '../../primitives'
+import { float, int, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -31,45 +31,45 @@ export class creature_formationsRow extends SqlRow<creature_formationsCreator,cr
      * No comment (yet!)
      */
     get leaderGUID() {return new SQLCell<int, this>(this, 'leaderGUID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get memberGUID() {return new SQLCellReadOnly<int, this>(this, 'memberGUID')}
-    
+
     /**
      * No comment (yet!)
      */
     get dist() {return new SQLCell<float, this>(this, 'dist')}
-    
+
     /**
      * No comment (yet!)
      */
     get angle() {return new SQLCell<float, this>(this, 'angle')}
-    
+
     /**
      * No comment (yet!)
      */
     get groupAI() {return new SQLCell<int, this>(this, 'groupAI')}
-    
+
     /**
      * No comment (yet!)
      */
     get point_1() {return new SQLCell<smallint, this>(this, 'point_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get point_2() {return new SQLCell<smallint, this>(this, 'point_2')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(memberGUID : int, c? : creature_formationsCreator) : this {
         return this.cloneInternal([memberGUID],c)
     }

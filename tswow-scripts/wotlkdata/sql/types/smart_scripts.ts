@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , tinyint , smallint , float , text } from '../../primitives'
+import { float, int, smallint, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,171 +29,171 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class smart_scriptsRow extends SqlRow<smart_scriptsCreator,smart_scriptsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entryorguid() {return new SQLCellReadOnly<int, this>(this, 'entryorguid')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get source_type() {return new SQLCellReadOnly<tinyint, this>(this, 'source_type')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<smallint, this>(this, 'id')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get link() {return new SQLCellReadOnly<smallint, this>(this, 'link')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_type() {return new SQLCell<tinyint, this>(this, 'event_type')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_phase_mask() {return new SQLCell<smallint, this>(this, 'event_phase_mask')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_chance() {return new SQLCell<tinyint, this>(this, 'event_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_flags() {return new SQLCell<smallint, this>(this, 'event_flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_param1() {return new SQLCell<int, this>(this, 'event_param1')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_param2() {return new SQLCell<int, this>(this, 'event_param2')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_param3() {return new SQLCell<int, this>(this, 'event_param3')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_param4() {return new SQLCell<int, this>(this, 'event_param4')}
-    
+
     /**
      * No comment (yet!)
      */
     get event_param5() {return new SQLCell<int, this>(this, 'event_param5')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_type() {return new SQLCell<tinyint, this>(this, 'action_type')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_param1() {return new SQLCell<int, this>(this, 'action_param1')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_param2() {return new SQLCell<int, this>(this, 'action_param2')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_param3() {return new SQLCell<int, this>(this, 'action_param3')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_param4() {return new SQLCell<int, this>(this, 'action_param4')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_param5() {return new SQLCell<int, this>(this, 'action_param5')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_param6() {return new SQLCell<int, this>(this, 'action_param6')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_type() {return new SQLCell<tinyint, this>(this, 'target_type')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_param1() {return new SQLCell<int, this>(this, 'target_param1')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_param2() {return new SQLCell<int, this>(this, 'target_param2')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_param3() {return new SQLCell<int, this>(this, 'target_param3')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_param4() {return new SQLCell<int, this>(this, 'target_param4')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_x() {return new SQLCell<float, this>(this, 'target_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_y() {return new SQLCell<float, this>(this, 'target_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_z() {return new SQLCell<float, this>(this, 'target_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get target_o() {return new SQLCell<float, this>(this, 'target_o')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<text, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entryorguid : int,source_type : tinyint,id : smallint,link : smallint, c? : smart_scriptsCreator) : this {
         return this.cloneInternal([entryorguid,source_type,id,link],c)
     }

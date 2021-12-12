@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from '../../wotlkdata/sql/SQLFiles';
 import * as assert from 'assert';
-import { SqlTable } from '../../wotlkdata/sql/SQLTable';
 import { SqlConnection } from '../../wotlkdata/sql/SQLConnection';
+import { SQL } from '../../wotlkdata/sql/SQLFiles';
+import { SqlTable } from '../../wotlkdata/sql/SQLTable';
 
 describe('Table', function() {
     this.beforeAll(function() {

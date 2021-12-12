@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Allocator } from '../../wotlkdata/ids/Allocator';
 import * as assert from 'assert';
+import { Allocator } from '../../wotlkdata/ids/Allocator';
 import { Random } from './Random';
 
 let p = new Allocator();

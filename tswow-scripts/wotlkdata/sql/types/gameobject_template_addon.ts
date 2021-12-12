@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , smallint , int } from '../../primitives'
+import { int, mediumint, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,57 +29,57 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gameobject_template_addonRow extends SqlRow<gameobject_template_addonCreator,gameobject_template_addonQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction() {return new SQLCell<smallint, this>(this, 'faction')}
-    
+
     /**
      * No comment (yet!)
      */
     get flags() {return new SQLCell<int, this>(this, 'flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get mingold() {return new SQLCell<mediumint, this>(this, 'mingold')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxgold() {return new SQLCell<mediumint, this>(this, 'maxgold')}
-    
+
     /**
      * No comment (yet!)
      */
     get artkit0() {return new SQLCell<int, this>(this, 'artkit0')}
-    
+
     /**
      * No comment (yet!)
      */
     get artkit1() {return new SQLCell<int, this>(this, 'artkit1')}
-    
+
     /**
      * No comment (yet!)
      */
     get artkit2() {return new SQLCell<int, this>(this, 'artkit2')}
-    
+
     /**
      * No comment (yet!)
      */
     get artkit3() {return new SQLCell<int, this>(this, 'artkit3')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : gameobject_template_addonCreator) : this {
         return this.cloneInternal([entry],c)
     }

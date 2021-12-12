@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , mediumint , smallint } from '../../primitives'
+import { mediumint, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -31,48 +31,48 @@ export class game_event_npc_vendorRow extends SqlRow<game_event_npc_vendorCreato
      * No comment (yet!)
      */
     get eventEntry() {return new SQLCell<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<mediumint, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get slot() {return new SQLCell<smallint, this>(this, 'slot')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get item() {return new SQLCellReadOnly<mediumint, this>(this, 'item')}
-    
+
     /**
      * No comment (yet!)
      */
     get maxcount() {return new SQLCell<mediumint, this>(this, 'maxcount')}
-    
+
     /**
      * No comment (yet!)
      */
     get incrtime() {return new SQLCell<mediumint, this>(this, 'incrtime')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExtendedCost() {return new SQLCell<mediumint, this>(this, 'ExtendedCost')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : mediumint,item : mediumint, c? : game_event_npc_vendorCreator) : this {
         return this.cloneInternal([guid,item],c)
     }

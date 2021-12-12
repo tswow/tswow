@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int, loc_constructor, uint } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCPointerCell , DBCIntCell , DBCFlagCell , DBCLocCell , DBCIntArrayCell , DBCFloatCell} from '../DBCCell'
-import { int , uint , loc_constructor , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFlagCell, DBCFloatCell, DBCIntArrayCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCPointerCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,92 +34,92 @@ export class AreaTableRow extends DBCRow<AreaTableCreator,AreaTableQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapID() { return new DBCPointerCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get ParentAreaID() { return new DBCPointerCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Flag bit used to track if this Area has been discovered.
      */
     get ExploreFlag() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCFlagCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundProviderPref() { return new DBCPointerCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundProviderPrefUnderwater() { return new DBCPointerCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get AmbienceID() { return new DBCPointerCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get ZoneMusic() { return new DBCPointerCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get IntroSound() { return new DBCPointerCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * Decides the experience gained from exploring this area.
      */
     get ExplorationLevel() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get AreaName() { return new DBCLocCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * Faction that owns this area.
      */
     get FactionGroupMask() { return new DBCIntCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * No comment (yet!)
      */
     get LiquidTypeID() { return new DBCIntArrayCell(this,4,this.buffer,this.offset+116)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinElevation() { return new DBCFloatCell(this,this.buffer,this.offset+132)}
-    
+
     /**
      * No comment (yet!)
      */
     get Ambient_Multiplier() { return new DBCFloatCell(this,this.buffer,this.offset+136)}
-    
+
     /**
      * No comment (yet!)
      */
     get Lightid() { return new DBCPointerCell(this,this.buffer,this.offset+140)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : AreaTableCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -141,7 +141,7 @@ export type AreaTableCreator = {
     ExplorationLevel?: int
     AreaName?: loc_constructor
     FactionGroupMask?: int
-    LiquidTypeID?: int
+    LiquidTypeID?: int[]
     MinElevation?: float
     Ambient_Multiplier?: float
     Lightid?: uint

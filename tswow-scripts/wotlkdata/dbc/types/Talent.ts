@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCIntArrayCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCIntCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,57 +34,57 @@ export class TalentRow extends DBCRow<TalentCreator,TalentQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get TabID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get TierID() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ColumnIndex() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellRank() { return new DBCIntArrayCell(this,9,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get PrereqTalent() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get PrereqRank() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSpellID() { return new DBCIntCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get CategoryMask() { return new DBCIntArrayCell(this,2,this.buffer,this.offset+84)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : TalentCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -97,12 +97,12 @@ export type TalentCreator = {
     TabID?: int
     TierID?: int
     ColumnIndex?: int
-    SpellRank?: int
-    PrereqTalent?: int
-    PrereqRank?: int
+    SpellRank?: int[]
+    PrereqTalent?: int[]
+    PrereqRank?: int[]
     Flags?: int
     RequiredSpellID?: int
-    CategoryMask?: int
+    CategoryMask?: int[]
 }
 
 /**

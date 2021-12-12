@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , mediumint } from '../../primitives'
+import { mediumint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class mail_level_rewardRow extends SqlRow<mail_level_rewardCreator,mail_level_rewardQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get level() {return new SQLCellReadOnly<tinyint, this>(this, 'level')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get raceMask() {return new SQLCellReadOnly<mediumint, this>(this, 'raceMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get mailTemplateId() {return new SQLCell<mediumint, this>(this, 'mailTemplateId')}
-    
+
     /**
      * No comment (yet!)
      */
     get senderEntry() {return new SQLCell<mediumint, this>(this, 'senderEntry')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(level : tinyint,raceMask : mediumint, c? : mail_level_rewardCreator) : this {
         return this.cloneInternal([level,raceMask],c)
     }

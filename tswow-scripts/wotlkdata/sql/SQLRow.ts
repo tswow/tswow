@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SqlTable } from './SQLTable';
-import { Row } from '../table/Row';
 import { CellSystem } from '../cell/systems/CellSystem';
+import { Row } from '../table/Row';
+import { SqlTable } from './SQLTable';
 
 /**
  * Represents a single row in the SQL table. If this row was loaded directly from the db,
@@ -43,7 +43,7 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
     /**
      * @warning Deleted base SQL rows (from the core) are not automatically restored when
      * building datascripts without the --rebuild flag. For example,
-     * deleting creature_template entry=25 and later removing the deletion statement 
+     * deleting creature_template entry=25 and later removing the deletion statement
      * will keep entry=25 deleted until it is explicitly undeleted
      * (OR MODIFIED IN ANY WAY) by a script,
      * OR datascripts are built with the --rebuild flag
@@ -110,10 +110,10 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
         }
 
         return `INSERT INTO ${this.table.name} ` +
-        `(${Object.keys(obj).join(',')}) ` +
+        `(${Object.keys(obj).map(x=>`\`${x}\``).join(',')}) ` +
         `VALUES (${Object.values(obj).map(x => x === null ? 'null' : typeof(x) === 'string' ? `"${x}"` : x)}) ` +
         `ON DUPLICATE KEY UPDATE ` +
-        `${Object.keys(obj).map(x => `${x} = ${obj[x] === null ? 'null' : typeof(obj[x]) === 'string' ? `"${obj[x]}"` : obj[x]}`).join(', ')}`;
+        `${Object.keys(obj).map(x => `\`${x}\` = ${obj[x] === null ? 'null' : typeof(obj[x]) === 'string' ? `"${obj[x]}"` : obj[x]}`).join(', ')}`;
     }
 
     protected cloneInternal(keys: any[], c?: C) {

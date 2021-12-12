@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
+import { GetStage } from '../wotlkdata';
 
 export class DBCBuffer {
     private rows: Buffer = Buffer.alloc(0);
@@ -98,6 +99,42 @@ export class DBCBuffer {
         this.rows.copy(outBuf, 20, 0, rowEnd);
         this.strings.copy(outBuf, rowEnd + 20, 0, this.strPtr);
         return outBuf;
+    }
+
+    private sliceRows(offset: number, size: number) {
+        let buf = Buffer.alloc(size);
+        this.rows.copy(buf,0,offset);
+        return buf;
+    }
+
+    move(sourceIndex: number, targetIndex: number) {
+        if(GetStage() !== 'SORT') {
+            throw new Error(`Trying to move array indices before SORT stage`)
+        }
+        if(sourceIndex === targetIndex) return;
+        let sourceOffset = sourceIndex*this.rowSize;
+        let targetOffset = targetIndex*this.rowSize;
+        let sourceBuf = this.sliceRows(sourceOffset,this.rowSize);
+        if(sourceIndex > targetIndex) {
+            let betweenBuf = this.sliceRows(targetOffset,sourceOffset-targetOffset);
+            sourceBuf.copy(this.rows,targetOffset)
+            betweenBuf.copy(this.rows,targetOffset+this.rowSize);
+        } else {
+            let betweenBuf = Buffer.from(this.rows,sourceOffset+1,targetOffset-sourceOffset)
+            sourceBuf.copy(this.rows,targetOffset,0)
+            betweenBuf.copy(this.rows,sourceOffset)
+        }
+    }
+
+    swap(index1: number, index2: number) {
+        if(index1 === index2) return;
+        if(index1<0||index1>=this.rowCount) throw new Error(`Invalid index1: ${index1}`)
+        if(index2<0||index2>=this.rowCount) throw new Error(`Invalid index2: ${index2}`)
+        let offset1 = index1*this.rowSize;
+        let offset2 = index2*this.rowSize;
+        let buf1 = this.sliceRows(offset1,this._rowSize);
+        this.rows.copyWithin(offset1,offset2,offset2+this._rowSize);
+        buf1.copy(this.rows,offset2);
     }
 
     read(file: string) {

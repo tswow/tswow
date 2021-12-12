@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCLocCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,7 +34,7 @@ export class ItemClassRow extends DBCRow<ItemClassCreator,ItemClassQuery> {
      */
     @PrimaryKey()
     get ClassID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Primary Key
      *
@@ -42,22 +42,22 @@ export class ItemClassRow extends DBCRow<ItemClassCreator,ItemClassQuery> {
      */
     @PrimaryKey()
     get SubclassMapID() { return new DBCKeyCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get ClassName() { return new DBCLocCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ClassID : int,SubclassMapID : int, c? : ItemClassCreator) : this {
         return this.cloneInternal([ClassID,SubclassMapID],c);
     }

@@ -15,28 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import termkit = require('terminal-kit');
-import { NodeConfig } from '../runtime/NodeConfig';
 import { wfs } from './FileSystem';
-import { bpaths, ipaths } from './Paths';
-import { getContext } from './TSWoWContext';
-
-function historyPath() {
-    return getContext() == 'build' ? bpaths.terminalHistory : ipaths.terminalHistory;
-}
+import { getTerminalCategory, TerminalCategory } from './TerminalCategories';
+import { termc } from './TerminalColors';
 
 const t = termkit.terminal;
-t.on('key', (name: string, data: any) => {
-    if (name === 'CTRL_C') { t.processExit(0); }
-});
-
-// colors from https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
-const FgRed = 'red';
-const FgGreen = 'green';
-const FgYellow = 'yellow';
-const FgMagenta = 'magenta';
-const FgCyan = 'cyan';
-const FgWhite = 'white';
-
 // Overwrite old log
 wfs.write('./log.txt', '');
 const logStream = wfs.writeStream('./log.txt');
@@ -45,6 +28,9 @@ const logStream = wfs.writeStream('./log.txt');
  * Contains functions for handling console output
  */
 export namespace term {
+    let historyPath: string = undefined;
+    let historyCount: number = 100;
+
     let history: string[] = [];
     let historyCounter = -1;
     let inputBuffer = '';
@@ -52,6 +38,8 @@ export namespace term {
     let enabled = false;
     let callback: (args: string) => any;
     let xpos = 0;
+    let showName: boolean = false;
+    let showTimestamp: boolean = false;
 
     export function clearLine() {
         t.eraseLine();
@@ -87,34 +75,62 @@ export namespace term {
         setInput(inputBuffer, true);
     }
 
-    export function pipe(color: string|number = 'white', texts: string[]) {
-        let text = texts.join(' ');
+    export function raw(message: string) {
+        clearLine()
+        if(!message.endsWith('\n')) message += '\n'
+        t.white(message)
+        if(enabled) {
+            `>${inputBuffer}`
+        }
+    }
+
+    export function pipe(
+          nameIn: TerminalCategory
+        , text: string
+    ) {
+        const name = getTerminalCategory(nameIn)
+
         text = text.split('\r').join('');
-        if (!text.endsWith('\n')) { text = text + '\n'; }
+        if (!text.endsWith('\n')) {
+            text = text + '\n';
+        }
+        const d = new Date();
+        let time =
+              `${d.getHours().toString().padStart(2,'0')}`
+            + `:${d.getMinutes().toString().padStart(2,'0')}`
+            + `:${d.getSeconds().toString().padStart(2,'0')}`
 
         text.split('\n').forEach((x) => {
             const filterText = x.toLowerCase();
             let isForbidden = false;
-            ['account create', 'password', '2fa'].forEach(y => {
+            ['account create', 'create account', 'password', '2fa'].forEach(y => {
                 if (filterText.includes(y)) {
                     isForbidden = true;
                 }
             });
 
             if (!isForbidden) {
-                logStream.write(x + '\n');
+                logStream.write(`[${time}][${name}]: ${x}\n`)
             } else {
-                logStream.write('<removed>\n');
+                logStream.write(`[${time}][${name}]: <removed>\n`)
             }
         });
 
-        if (!enabled) {
-            t.color(color, text);
-        } else {
-            if (typeof(text) !== 'string') { text = `${text}`; }
-            clearLine();
-            t.color(color, text);
-            t.color(inputColor, `>${inputBuffer}`);
+        clearLine();
+        if (typeof(text) !== 'string') { text = `${text}`; }
+        let str = "";
+        if(showTimestamp) {
+            str+=`[${termc.magenta(time)}]`
+        }
+        if(showName) {
+            str+=`[${termc.cyan(name)}]`
+        }
+        if(showName || showTimestamp) {
+            str+=' ';
+        }
+        t.white(`${str}${text}`)
+        if (enabled) {
+            t.white(`>${inputBuffer}`);
         }
     }
 
@@ -144,7 +160,8 @@ export namespace term {
                 if (inputBuffer.length === 0) {
                     break;
                 }
-                pipe(inputColor, [inputBuffer]);
+                clearLine()
+                t.white(inputBuffer+'\n')
                 clearLine();
                 history = history.filter(x => x !== inputBuffer);
                 history.push(inputBuffer);
@@ -157,8 +174,10 @@ export namespace term {
                     t.color(inputColor, '>');
                 }
 
-                history.splice(0,Math.max(0,history.length - NodeConfig.terminal_history))
-                wfs.write(historyPath(),history.join('\n'));
+                history.splice(0,Math.max(0,history.length - historyCount))
+                if(historyPath !== undefined) {
+                    wfs.write(historyPath,history.join('\n'));
+                }
                 break;
             case 'BACKSPACE':
                 if (inputBuffer.length === 0 || xpos === 0) {
@@ -234,119 +253,46 @@ export namespace term {
      * Writes logging messages to the console
      * @param messages
      */
-    export function log(...messages: string[]) {
-        pipe(FgWhite, messages);
+    export function log(cat: TerminalCategory, message: string) {
+        pipe(cat,message)
     }
 
-    /**
-     * Writes success messages to the console
-     * @param messages
-     */
-    export function success(...messages: string[]) {
-        pipe(FgGreen, messages);
+    export function error(cat: TerminalCategory, message: string) {
+        pipe(cat,termc.red(message))
     }
 
-    /**
-     * Writes warning messages to the console
-     * @param messages
-     */
-    export function warn(...messages: string[]) {
-        pipe(FgYellow, messages);
+    export function success(cat: TerminalCategory, message: string) {
+        pipe(cat,termc.green(message))
     }
 
-    /**
-     * Writes error messages to the console
-     * @param messages
-     */
-    export function error(...messages: any[]) {
-        pipe(FgRed, messages);
-    }
-
-    /**
-     * Writes log messages to the console without a newline
-     * @param messages
-     */
-    export function lognl(...messages: any[]) {
-        pipe(FgWhite, messages);
-    }
-
-    /**
-     * Writes success messages to the console without a newline
-     * @param messages
-     */
-    export function successnl(...messages: any[]) {
-        pipe(FgGreen, messages);
-    }
-
-    /**
-     * Writes warning messages to the console without a newline
-     * @param messages
-     */
-    export function warnnl(...messages: any[]) {
-        pipe(FgYellow, messages);
-    }
-
-    /**
-     * Writes error messages to the console without a newline
-     * @param messages
-     */
-    export function errornl(...messages: any[]) {
-        pipe(FgRed, messages);
-    }
-
-    /**
-     * Writes cyan messages to the console
-     */
-    export function cyan(...messages: any[]) {
-        pipe(FgCyan, messages);
-    }
-
-    /**
-     * Writes white messages to the console
-     */
-    export function white(...messages: any[]) {
-        pipe(FgWhite, messages);
-    }
-
-    /**
-     * Writes magenta messages to the console
-     */
-    export function magenta(...messages: any[]) {
-        pipe(FgMagenta, messages);
-    }
-
-    /**
-     * Writes cyan messages to the console
-     * @param messages
-     */
-    export function cyannl(...messages: any[]) {
-        pipe(FgCyan, messages);
-    }
-
-    /**
-     * Writes white messages to the console without a newline
-     * @param messages
-     */
-    export function whitenl(...messages: any[]) {
-        pipe(FgWhite, messages);
-    }
-
-    /**
-     * Writes magenta messages to the console without a newline
-     * @param messages
-     */
-    export function magentanl(...messages: any[]) {
-        pipe(FgMagenta, messages);
+    export function warn(cat: TerminalCategory, message: string) {
+        pipe(cat,termc.yellow(message))
     }
 
     export function setInputCallback(callbackIn: (args: string) => any) {
         callback = callbackIn;
     }
 
-    export function Initialize() {
+    export function Initialize(
+          historyPathIn: string
+        , historyCountIn: number
+        , showTimestampIn: boolean
+        , showNameIn: boolean
+    ) {
+        historyPath = historyPathIn
+        historyCount = historyCountIn
+        showTimestamp = showTimestampIn
+        showName = showNameIn
         // load history file
-        history = wfs.readOr(historyPath(),'')
-            .split('\n')
-            .filter(x=>x.length>0)
+        if(historyPath !== undefined) {
+            history = wfs.readOr(historyPath,'')
+                .split('\n')
+                .filter(x=>x.length>0)
+        }
+
+        t.on('key', (name: string, data: any) => {
+            if (name === 'CTRL_C') { t.processExit(0); }
+        });
+
     }
 }

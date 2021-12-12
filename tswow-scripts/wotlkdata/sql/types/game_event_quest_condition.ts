@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , mediumint , float } from '../../primitives'
+import { float, mediumint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -31,30 +31,30 @@ export class game_event_quest_conditionRow extends SqlRow<game_event_quest_condi
      * No comment (yet!)
      */
     get eventEntry() {return new SQLCell<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get quest() {return new SQLCellReadOnly<mediumint, this>(this, 'quest')}
-    
+
     /**
      * No comment (yet!)
      */
     get condition_id() {return new SQLCell<mediumint, this>(this, 'condition_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get num() {return new SQLCell<float, this>(this, 'num')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(quest : mediumint, c? : game_event_quest_conditionCreator) : this {
         return this.cloneInternal([quest],c)
     }

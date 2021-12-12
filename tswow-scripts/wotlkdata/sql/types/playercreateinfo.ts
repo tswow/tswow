@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , smallint , mediumint , float } from '../../primitives'
+import { float, mediumint, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,55 +29,55 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class playercreateinfoRow extends SqlRow<playercreateinfoCreator,playercreateinfoQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get race() {return new SQLCellReadOnly<tinyint, this>(this, 'race')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get class() {return new SQLCellReadOnly<tinyint, this>(this, 'class')}
-    
+
     /**
      * No comment (yet!)
      */
     get map() {return new SQLCell<smallint, this>(this, 'map')}
-    
+
     /**
      * No comment (yet!)
      */
     get zone() {return new SQLCell<mediumint, this>(this, 'zone')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_x() {return new SQLCell<float, this>(this, 'position_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_y() {return new SQLCell<float, this>(this, 'position_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_z() {return new SQLCell<float, this>(this, 'position_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get orientation() {return new SQLCell<float, this>(this, 'orientation')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(race : tinyint,cls : tinyint, c? : playercreateinfoCreator) : this {
         return this.cloneInternal([race,cls],c)
     }

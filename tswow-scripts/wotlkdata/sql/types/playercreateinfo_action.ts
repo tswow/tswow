@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , smallint , int } from '../../primitives'
+import { int, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,43 +29,43 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class playercreateinfo_actionRow extends SqlRow<playercreateinfo_actionCreator,playercreateinfo_actionQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get race() {return new SQLCellReadOnly<tinyint, this>(this, 'race')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get class() {return new SQLCellReadOnly<tinyint, this>(this, 'class')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get button() {return new SQLCellReadOnly<smallint, this>(this, 'button')}
-    
+
     /**
      * No comment (yet!)
      */
     get action() {return new SQLCell<int, this>(this, 'action')}
-    
+
     /**
      * No comment (yet!)
      */
     get type() {return new SQLCell<smallint, this>(this, 'type')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(race : tinyint,cls : tinyint,button : smallint, c? : playercreateinfo_actionCreator) : this {
         return this.cloneInternal([race,cls,button],c)
     }

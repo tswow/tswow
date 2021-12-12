@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , tinyint , smallint } from '../../primitives'
+import { mediumint, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_template_resistanceRow extends SqlRow<creature_template_resistanceCreator,creature_template_resistanceQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get CreatureID() {return new SQLCellReadOnly<mediumint, this>(this, 'CreatureID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get School() {return new SQLCellReadOnly<tinyint, this>(this, 'School')}
-    
+
     /**
      * No comment (yet!)
      */
     get Resistance() {return new SQLCell<smallint, this>(this, 'Resistance')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(CreatureID : mediumint,School : tinyint, c? : creature_template_resistanceCreator) : this {
         return this.cloneInternal([CreatureID,School],c)
     }

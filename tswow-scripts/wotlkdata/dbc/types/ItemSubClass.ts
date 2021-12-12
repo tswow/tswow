@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCLocCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,7 +34,7 @@ export class ItemSubClassRow extends DBCRow<ItemSubClassCreator,ItemSubClassQuer
      */
     @PrimaryKey()
     get ClassID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Primary Key
      *
@@ -42,62 +42,62 @@ export class ItemSubClassRow extends DBCRow<ItemSubClassCreator,ItemSubClassQuer
      */
     @PrimaryKey()
     get SubClassID() { return new DBCKeyCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get PrerequisiteProficiency() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get PostrequisiteProficiency() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayFlags() { return new DBCIntCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get WeaponParrySeq() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get WeaponReadySeq() { return new DBCIntCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * No comment (yet!)
      */
     get WeaponAttackSeq() { return new DBCIntCell(this,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get WeaponSwingSize() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayName() { return new DBCLocCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get VerboseName() { return new DBCLocCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ClassID : int,SubClassID : int, c? : ItemSubClassCreator) : this {
         return this.cloneInternal([ClassID,SubClassID],c);
     }

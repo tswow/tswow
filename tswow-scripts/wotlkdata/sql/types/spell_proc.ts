@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , tinyint , smallint , float } from '../../primitives'
+import { float, int, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,92 +29,92 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class spell_procRow extends SqlRow<spell_procCreator,spell_procQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SpellId() {return new SQLCellReadOnly<int, this>(this, 'SpellId')}
-    
+
     /**
      * No comment (yet!)
      */
     get SchoolMask() {return new SQLCell<tinyint, this>(this, 'SchoolMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyName() {return new SQLCell<smallint, this>(this, 'SpellFamilyName')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyMask0() {return new SQLCell<int, this>(this, 'SpellFamilyMask0')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyMask1() {return new SQLCell<int, this>(this, 'SpellFamilyMask1')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellFamilyMask2() {return new SQLCell<int, this>(this, 'SpellFamilyMask2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProcFlags() {return new SQLCell<int, this>(this, 'ProcFlags')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellTypeMask() {return new SQLCell<int, this>(this, 'SpellTypeMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellPhaseMask() {return new SQLCell<int, this>(this, 'SpellPhaseMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get HitMask() {return new SQLCell<int, this>(this, 'HitMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get AttributesMask() {return new SQLCell<int, this>(this, 'AttributesMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get DisableEffectsMask() {return new SQLCell<int, this>(this, 'DisableEffectsMask')}
-    
+
     /**
      * No comment (yet!)
      */
     get ProcsPerMinute() {return new SQLCell<float, this>(this, 'ProcsPerMinute')}
-    
+
     /**
      * No comment (yet!)
      */
     get Chance() {return new SQLCell<float, this>(this, 'Chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get Cooldown() {return new SQLCell<int, this>(this, 'Cooldown')}
-    
+
     /**
      * No comment (yet!)
      */
     get Charges() {return new SQLCell<tinyint, this>(this, 'Charges')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(SpellId : int, c? : spell_procCreator) : this {
         return this.cloneInternal([SpellId],c)
     }

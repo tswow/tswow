@@ -81,10 +81,25 @@ export class TextFile {
     private _sourceLines: string[];
     readonly filename: string;
     private edits: Edit[] = [];
+    private moddedInPlace: boolean = false;
 
     constructor(filename: string, text: string) {
         this.filename = filename;
         this._sourceLines = text.split('\n');
+    }
+
+    /**
+     * @warn calling this multiple times for the same file leads to a race!
+     */
+    modInPlace(callback: (source: string)=>string) {
+        if(this.moddedInPlace) {
+            throw new Error(
+                    `Multiple scripts are trying to exclusively modify`
+                  + `${this.filename}. This is not permitted`
+            )
+        }
+        this._sourceLines = callback(this._sourceLines.join('\n')).split('\n');
+        this.moddedInPlace = true;
     }
 
     static _sort(file: TextFile) {

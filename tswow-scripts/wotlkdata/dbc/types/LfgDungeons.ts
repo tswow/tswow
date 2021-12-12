@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCLocCell , DBCIntCell , DBCStringCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,92 +34,92 @@ export class LfgDungeonsRow extends DBCRow<LfgDungeonsCreator,LfgDungeonsQuery> 
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinLevel() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxLevel() { return new DBCIntCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get Target_Level() { return new DBCIntCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get Target_Level_Min() { return new DBCIntCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get Target_Level_Max() { return new DBCIntCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapID() { return new DBCIntCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get Difficulty() { return new DBCIntCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+100)}
-    
+
     /**
      * No comment (yet!)
      */
     get TypeID() { return new DBCIntCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get Faction() { return new DBCIntCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * No comment (yet!)
      */
     get TextureFilename() { return new DBCStringCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * No comment (yet!)
      */
     get ExpansionLevel() { return new DBCIntCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * No comment (yet!)
      */
     get Order_Index() { return new DBCIntCell(this,this.buffer,this.offset+120)}
-    
+
     /**
      * No comment (yet!)
      */
     get Group_Id() { return new DBCIntCell(this,this.buffer,this.offset+124)}
-    
+
     /**
      * No comment (yet!)
      */
     get Description() { return new DBCLocCell(this,this.buffer,this.offset+128)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : LfgDungeonsCreator) : this {
         return this.cloneInternal([ID],c);
     }

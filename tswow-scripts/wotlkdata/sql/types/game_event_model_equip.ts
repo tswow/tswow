@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , int , mediumint } from '../../primitives'
+import { int, mediumint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -31,30 +31,30 @@ export class game_event_model_equipRow extends SqlRow<game_event_model_equipCrea
      * No comment (yet!)
      */
     get eventEntry() {return new SQLCell<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get modelid() {return new SQLCell<mediumint, this>(this, 'modelid')}
-    
+
     /**
      * No comment (yet!)
      */
     get equipment_id() {return new SQLCell<tinyint, this>(this, 'equipment_id')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : int, c? : game_event_model_equipCreator) : this {
         return this.cloneInternal([guid],c)
     }

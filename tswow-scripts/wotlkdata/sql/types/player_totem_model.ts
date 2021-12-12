@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , int } from '../../primitives'
+import { int, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,30 +29,30 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class player_totem_modelRow extends SqlRow<player_totem_modelCreator,player_totem_modelQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get TotemSlot() {return new SQLCellReadOnly<tinyint, this>(this, 'TotemSlot')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get RaceId() {return new SQLCellReadOnly<tinyint, this>(this, 'RaceId')}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayId() {return new SQLCell<int, this>(this, 'DisplayId')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(TotemSlot : tinyint,RaceId : tinyint, c? : player_totem_modelCreator) : this {
         return this.cloneInternal([TotemSlot,RaceId],c)
     }

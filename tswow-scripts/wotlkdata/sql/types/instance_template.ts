@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { smallint , varchar , tinyint } from '../../primitives'
+import { smallint, tinyint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class instance_templateRow extends SqlRow<instance_templateCreator,instance_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get map() {return new SQLCellReadOnly<smallint, this>(this, 'map')}
-    
+
     /**
      * No comment (yet!)
      */
     get parent() {return new SQLCell<smallint, this>(this, 'parent')}
-    
+
     /**
      * No comment (yet!)
      */
     get script() {return new SQLCell<varchar, this>(this, 'script')}
-    
+
     /**
      * No comment (yet!)
      */
     get allowMount() {return new SQLCell<tinyint, this>(this, 'allowMount')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(map : smallint, c? : instance_templateCreator) : this {
         return this.cloneInternal([map],c)
     }

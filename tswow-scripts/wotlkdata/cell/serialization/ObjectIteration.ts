@@ -24,6 +24,10 @@ export type EntryType = 'primitive' | 'cell' | 'system' | 'struct' | 'entity'
 export type Entry = CPrim | {ref:'struct'|'entity', name: string};
 export type Schema = {__schema_type: 'entity'|'struct', [key: string]: Schema|Entry}
 
+export interface Objectified {
+    objectify(): any;
+}
+
 let visitStack : any[] = [];
 export let structSchemas : {[key: string]: Schema} = {}
 
@@ -54,7 +58,7 @@ export const Objects = {
         this.getAllPropertyNames(entry).forEach(x=>{
             let val = entry[x]
             if(typeof(val) !== 'object') return;
-    
+
             if(val.storeClassName && typeof(val.storeClassName) === 'string') {
                 objIn[x] = val.storeClassName;
                 return;

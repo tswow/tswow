@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { smallint , mediumint , text , tinyint , int } from '../../primitives'
+import { int, mediumint, smallint, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,85 +29,85 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gossip_menu_optionRow extends SqlRow<gossip_menu_optionCreator,gossip_menu_optionQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get MenuID() {return new SQLCellReadOnly<smallint, this>(this, 'MenuID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get OptionID() {return new SQLCellReadOnly<smallint, this>(this, 'OptionID')}
-    
+
     /**
      * No comment (yet!)
      */
     get OptionIcon() {return new SQLCell<mediumint, this>(this, 'OptionIcon')}
-    
+
     /**
      * No comment (yet!)
      */
     get OptionText() {return new SQLCell<text, this>(this, 'OptionText')}
-    
+
     /**
      * No comment (yet!)
      */
     get OptionBroadcastTextID() {return new SQLCell<mediumint, this>(this, 'OptionBroadcastTextID')}
-    
+
     /**
      * No comment (yet!)
      */
     get OptionType() {return new SQLCell<tinyint, this>(this, 'OptionType')}
-    
+
     /**
      * No comment (yet!)
      */
     get OptionNpcFlag() {return new SQLCell<int, this>(this, 'OptionNpcFlag')}
-    
+
     /**
      * No comment (yet!)
      */
     get ActionMenuID() {return new SQLCell<int, this>(this, 'ActionMenuID')}
-    
+
     /**
      * No comment (yet!)
      */
     get ActionPoiID() {return new SQLCell<mediumint, this>(this, 'ActionPoiID')}
-    
+
     /**
      * No comment (yet!)
      */
     get BoxCoded() {return new SQLCell<tinyint, this>(this, 'BoxCoded')}
-    
+
     /**
      * No comment (yet!)
      */
     get BoxMoney() {return new SQLCell<int, this>(this, 'BoxMoney')}
-    
+
     /**
      * No comment (yet!)
      */
     get BoxText() {return new SQLCell<text, this>(this, 'BoxText')}
-    
+
     /**
      * No comment (yet!)
      */
     get BoxBroadcastTextID() {return new SQLCell<mediumint, this>(this, 'BoxBroadcastTextID')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(MenuID : smallint,OptionID : smallint, c? : gossip_menu_optionCreator) : this {
         return this.cloneInternal([MenuID,OptionID],c)
     }

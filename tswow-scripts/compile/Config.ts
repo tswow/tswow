@@ -14,69 +14,134 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { term } from '../util/Terminal';
-import { wfs } from '../util/FileSystem';
-import { install_path } from './BuildConfig';
+import { NodeConfigClass } from '../util/NodeConfig';
+import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
-import { ipaths, spaths } from '../util/Paths';
-import { datasetYaml, realmYaml } from '../util/ConfigFiles';
+import { term } from '../util/Terminal';
+import { bpaths, spaths } from './CompilePaths';
+import { TrinityCore } from './TrinityCore';
 
 export namespace Config {
+
     export async function create() {
-        term.log('Creating config files');
+        term.log('build','Creating config files');
 
-        // Copy configuration/misc files
-        if (!wfs.exists(ipaths.nodeYaml)) {
-            wfs.copy(spaths.installNodeYaml,ipaths.nodeYaml);
+        // Create node package
+        const package_json = {
+            name: 'tswow',
+            version: '0.13.0',
+            description: '',
+            dependencies: spaths.package_json.readJson({}).dependencies,
+            scripts: {
+                  start:
+                      `node -r source-map-support/register `
+                    + ipaths.bin.scripts.runtime.runtime.TSWoW_js.relativeTo(ipaths)
+            },
+            author:'tswow',
+            license: "GPL-3.0-only",
+        }
+        ipaths.package_json.writeJson(package_json)
+        wsys.execIn(ipaths.get(), 'npm i');
+
+        ipaths.modules.mkdir();
+
+        if(!ipaths.modules.module.pick('tswow-stdlib').exists()) {
+            wsys.execIn(ipaths.modules.get(),`git clone https://github.com/tswow/tswow-stdlib.git`)
         }
 
-        wfs.copy(spaths.installPackageJson,ipaths.packageJson)
+        spaths.tswow_core.Public.global_d_ts
+            .copy(ipaths.bin.include.global_d_ts)
 
-        wsys.execIn(install_path(), 'npm i');
+        spaths.install_config.vscode_install
+            .copy(ipaths.vscode)
 
-        wfs.copy(spaths.scriptsSql, ipaths.binSql, true)
+        new NodeConfigClass(ipaths.node_conf.get()).generateIfNotExists();
 
-        if (!wfs.exists(ipaths.modules)) {
-            wfs.mkDirs(ipaths.modules);
-        }
+        spaths.install_config.addons.copy(ipaths.bin.addons);
+        spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
+        spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
-        if(!wfs.exists(ipaths.moduleRoot('tswow-stdlib'))) {
-            wsys.execIn(ipaths.modules, `git clone https://github.com/tswow/tswow-stdlib.git`);
-        }
-
-        wfs.copy(spaths.tcGlobaldts,ipaths.binglobaldts);
-
-        wfs.copy(spaths.installVscodeSettings, ipaths.vscodeWorkspace);
-        wfs.copy(spaths.installAddons, ipaths.addons);
-        wfs.copy(spaths.sqlUpdates,ipaths.sqlUpdates);
-        wfs.copy(spaths.sqlCustom,ipaths.sqlCustom);
-        wfs.copy(spaths.installAddonInclude, ipaths.addonInclude);
-        wfs.copy(spaths.liveScriptHeaders, ipaths.binInclude);
-        wfs.copy(spaths.snippetExample,ipaths.snippetExampleBin);
-
-        wfs.readDir(ipaths.modules,true,'directories').forEach(x=>{
-            if(wfs.exists(ipaths.moduleScripts(x))) {
-                wfs.copy(ipaths.binglobaldts,ipaths.moduleScriptsGlobaldts(x));
+        // Addon includes
+        spaths.install_config.include_addon.copy(ipaths.bin.include_addon)
+        ipaths.bin.include_addon.join('Events.ts').remove();
+        spaths.install_config.include_addon.Events_ts
+            .copy(bpaths.lua_events.events_ts)
+        spaths.install_config.include_addon.global_d_ts
+            .copy(bpaths.lua_events.global_d_ts)
+        bpaths.lua_events.tsconfig_json.writeJson({
+            "compilerOptions": {
+                "target": "es5",
+                "module": "commonjs",
+                "strict": true,
+                "esModuleInterop": true,
+                "skipLibCheck": true,
+                "forceConsistentCasingInFileNames": true,
+                "declaration": true
+            } , "tstl": {
+                "luaTarget": "5.1",
+                "noImplicitSelf": true,
             }
-            if(wfs.exists(ipaths.moduleAddons(x))) {
-                wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(x));
+        })
+        wsys.execIn(bpaths.lua_events, 'tstl')
+        bpaths.lua_events.events_lua.copy(
+            ipaths.bin.include_addon.Events_lua)
+
+        ipaths.bin.include_addon.global_d_ts.toFile().write(
+            bpaths.lua_events.global_d_ts.readString()
+            + '\n' +
+            bpaths.lua_events.events_d_ts.readString()
+        )
+
+        ipaths.bin.include_addon.tsconfig_json.writeJson({
+            "compilerOptions": {
+              "target": "esnext",
+              "lib": ["esnext", "dom"],
+              "moduleResolution": "node",
+              "typeRoots": [
+                "node_modules/@wartoshika/wow-declarations",
+                "node_modules/lua-types/5.1",
+                "node_modules/@types"
+              ],
+              "experimentalDecorators":true,
+              "skipLibCheck": true,
+              "types": []
+            },
+            "tstl": {
+              "luaTarget": "5.1",
+              "luaPlugins": [
+                {"name":
+                      ipaths.bin.scripts.addons.addons.require_preload.relativeTo(
+                          ipaths.bin.include_addon
+                      )
+                    , "import":"RequirePreload"
+                },
+              ],
+              "noImplicitSelf": true,
             }
-        });
+        })
+        spaths.install_config.characters_create
+            .copy(ipaths.bin.sql.characters_create_sql)
+        spaths.install_config.auth_create
+            .copy(ipaths.bin.sql.auth_create_sql)
+        ipaths.modules.module.all().forEach(x=>{
+            x.endpoints().forEach(x=>{
+                if(x.addon.exists()) {
+                    ipaths.bin.include_addon.global_d_ts
+                        .copy(x.addon.global_d_ts)
+                }
+            })
+        })
+
+        TrinityCore.headers();
+        spaths.install_config.snippet_example.copy(ipaths.vscode.snippets_out)
 
         let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
-
         let h = wsys.exec('git status --porcelain')
             .split(' ').join('')
             .split('\n').join('')
             .split('\r').join('');
-        wfs.write(ipaths.tswowRevision,commit+(h.length>0?'+':''));
 
-        if(!wfs.exists(ipaths.datasetYaml('default'))) {
-            wfs.write(ipaths.datasetYaml('default'),datasetYaml('default'));
-        }
-
-        if(!wfs.exists(ipaths.realmYaml('tswow'))) {
-            wfs.write(ipaths.realmYaml('tswow'),realmYaml('tswow'));
-        }
+        ipaths.bin.revisions.tswow.write(`${commit}${h.length>0?'+':''}`)
+        // todo: realm/dataset configs
     }
 }

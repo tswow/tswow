@@ -3,4 +3,5 @@ node_modules
 config
 install_garbage
 log.txt
-build.yaml
+build.conf
+build/

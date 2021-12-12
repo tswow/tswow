@@ -1,123 +1,268 @@
-import { wfs } from "../util/FileSystem";
-import { ipaths } from "../util/Paths";
-import { BUILD_TYPES } from "../util/BuildType";
+import { BuildType, BUILD_TYPES } from "../util/BuildType";
+import { Dataset } from "./Dataset";
+import { Module, ModuleEndpoint } from "./Modules";
+import { NodeConfig } from "./NodeConfig";
+import { Realm } from "./Realm";
 
-/**
- * Used to track what type an identifier refers to
- * - modules
- * - realms
- * - datasets
- */
-export namespace Identifiers {
-    export type Identifier = 'dataset'|'module'|'realm'|'keyword'|'none'
+export type IdentifierType =
+      'DATASET'
+    | 'MODULE'
+    | 'REALM'
+    | 'KEYWORD'
+    | 'PATCHLETTER'
+    | 'NONE'
+    | 'BUILT_TYPE'
+    | 'UNDEFINED'
+    | 'OPTION'
 
-    const keywords = [
-        'all'
-    ].concat(BUILD_TYPES)
+export type CollectMode =
+      'MATCH_ANY'
+    | 'ALLOW_NONE'
 
-    export function assertUnused(identifier: string) {
-        let prev = getType(identifier);
+export type CollectModeMatchAll = CollectMode | 'MATCH_ALL'
 
-        if(identifier.includes(' ')) {
+export class Identifier {
+    protected payload: any;
+    readonly type: IdentifierType
+
+    constructor(type: IdentifierType, payload: any) {
+        this.type = type;
+        this.payload = payload;
+    }
+
+    asDataset() {
+        return this.payload as Dataset
+    }
+
+    asOption() {
+        return this.payload as string
+    }
+
+    asModule() {
+        return this.payload as ModuleEndpoint
+    }
+
+    asRealm() {
+        return this.payload as Realm
+    }
+
+    asBuildType() {
+        return this.payload as BuildType
+    }
+
+    static assertUnused(identifier: string, name: string) {
+        if(identifier === undefined) {
+            throw new Error(`Missing required parameter: ${name}`);
+        }
+        let v = this.resolve(identifier);
+        if(v.type !== 'NONE') {
             throw new Error(
-                  `The identifier "${identifier}" contains spaces`
-                + `, please use a name without spaces.`
+                  `Identifier ${identifier}`
+                + ` already refers to a ${v.type}`
+            )
+        }
+        return identifier;
+    }
+
+    static resolve(identifier: string, expectedType?: IdentifierType) {
+        if(identifier === undefined) {
+            if(expectedType) {
+                throw new Error(`Expected a ${expectedType}, but got undefined`)
+            }
+            return new Identifier('UNDEFINED',undefined);
+        }
+        if(identifier.startsWith('--')) {
+            if(expectedType && expectedType !== 'KEYWORD') {
+                throw new Error(`Expected a ${expectedType}, but ${identifier} is an ARGUMENT`);
+            }
+            return new Identifier('KEYWORD',identifier);
+        }
+        identifier = identifier.toLowerCase();
+        const keywords = [
+              /all/,/modules/,/datasets/,/livescript/,/realms/
+            , /datascripts/,/livescripts/,/addons/,/bin/
+            , /release/,/relwithdebinfo/,/debug/
+        ]
+        for(const keyword of keywords) {
+            if(identifier.match(keyword) != null) {
+                if(expectedType && expectedType !== 'KEYWORD') {
+                    throw new Error(`Expected a ${expectedType}, but ${identifier} is a KEYWORD`)
+                }
+                return new Identifier('KEYWORD',keyword)
+            }
+        }
+
+        const all: [Identifier,string][] = []
+        const modules = Module.endpoints().find(x=>x.fullName === identifier)
+        // multiple modules are impossible
+        if(modules !== undefined) {
+            all.push([
+                  new Identifier('MODULE',modules)
+                , `Module:${modules.fullName}`
+            ])
+        }
+
+        Realm.all()
+            .filter(x=>x.fullName === identifier)
+            .forEach(x=>all.push(
+                [new Identifier('REALM',x),`Realm:${x.path.get()}`]
+            ));
+
+        Dataset.all()
+            .filter(x=>x.fullName === identifier)
+            .forEach(x=>all.push(
+                [new Identifier('DATASET',x),`Dataset:${x.path.get()}`]
+            ));
+
+        if(all.length > 1) {
+            throw new Error(
+                  `Identifier "${identifier}"`
+                + ` refers to multiple entities:\n\n`
+                + all.map(x=>x[1]).join('\n') + '\n'
             )
         }
 
-        if(identifier.includes('--')) {
+        if(all.length === 0) {
+            if(expectedType && expectedType !== 'NONE') {
+                throw new Error(
+                      `Expected ${identifier} to be a ${expectedType},`
+                    + ` but it's not an existing identifier.`
+                )
+            }
+            return new Identifier('NONE',undefined);
+        }
+
+        if(expectedType && all[0][0].type !== expectedType) {
             throw new Error(
-                `The identifier "${identifier}" contains double dashes (--)`
-              + `, please use a name without double dashes.`
-          )
+                  `Expected ${identifier} to be a ${expectedType}`
+                + ` but it's a ${all[0][0]}`
+            )
         }
-
-        if(prev!='none') {
-            throw new Error(`${identifier} already refers to a ${prev}`);
-        }
+        return all[0][0]
     }
 
-    export function getType(identifier: string): Identifier {
-        let cur: Identifier = 'none';
-        let all: Identifier[] = [];
+    static isModule(identifier: string) {
+        return this.resolve(identifier).type === 'MODULE'
+    }
 
-        if(wfs.exists(ipaths.moduleRoot(identifier))) {
-            cur = 'module';
-            all.push(cur);
-        }
+    static isDataset(identifier: string) {
+        return this.resolve(identifier).type === 'DATASET'
+    }
 
-        if(wfs.exists(ipaths.datasetRoot(identifier))) {
-            cur = 'dataset';
-            all.push(cur);
-        }
+    static isRealm(identifier: string) {
+        return this.resolve(identifier).type === 'REALM'
+    }
 
-        if(wfs.exists(ipaths.realmDir(identifier))) {
-            cur = 'realm';
-            all.push(cur);
-        }
-
-        if(keywords.includes(identifier)) {
-            cur = 'keyword';
-            all.push(cur);
-        }
-
-        if(all.length>1) {
+    private static find(identifiers: string[], expectedType: IdentifierType, mode: CollectModeMatchAll, def?: string) {
+        if(mode === 'MATCH_ALL' && def !== undefined) {
             throw new Error(
-                `Identifier ${identifier} can refer to a `
-                +`${all.join(' or a ')}. Please rename your folders manually.`);
+                  `Internal error: Tried finding ${expectedType} with MATCH_ALL`
+                + ` but supplied default argument ${def}. This does not make sense.`
+            )
+        }
+        let invalids: {[key: string]: IdentifierType} = {}
+        let valids: Identifier[] = []
+        identifiers.forEach(c=>{
+            let v = this.resolve(c);
+            if(v.type === expectedType) {
+                valids.push(v);
+            } else {
+                invalids[c] = v.type;
+            }
+        })
+
+        if(mode === 'MATCH_ALL' && valids.length !== identifiers.length) {
+            throw new Error(
+                  `Expected ${identifiers.join()} to all be ${expectedType},`
+                + ` but the following mappings don't conform:\n`
+                + ` ${Object.entries(invalids).map(([k,v])=>`${k}: ${v}`).join('\n')}\n\n`
+            )
         }
 
-        return cur;
-    }
-
-    /**
-     * Checks that at least one of the provided arguments is a valid instance of type
-     * @param type 
-     * @param identifiers 
-     */
-    export function assertExists(type: Identifier, identifiers: string[]) {
-        let res = getTypes(type, identifiers);
-        if(res.length===0) {
-            throw new Error(`No ${type} in ${identifiers.join(',')}`);
+        if(valids.length === 0 && def !== undefined) {
+            let v = this.resolve(def);
+            if(v.type !== expectedType) {
+                throw new Error(
+                      `Expected default value '${def}' to be ${expectedType},`
+                    + ` but it's ${v.type}`
+                )
+            }
+            valids.push(v);
         }
-        return res;
-    }
 
-    /**
-     * Asserts all arguments are valid instances of type
-     * , and that |identifiers|>0
-     * 
-     * @param type 
-     * @param identifiers 
-     */
-    export function assertTypeNoEmpty(type: Identifier, identifiers: string[]) {
-        if(identifiers.length===0) {
-            throw new Error(`Requires at least one ${type}, but received 0`);
+        if(mode === 'MATCH_ANY' && valids.length === 0) {
+            throw new Error(
+                  `Expected any of ${identifiers.join()} to be ${expectedType},`
+                + ` but none conform:\n`
+                + ` ${Object.entries(invalids).map(([k,v])=>`${k}: ${v}`).join('\n')}\n\n`
+            )
         }
-        return assertType(type,identifiers);
+
+        return valids;
     }
 
-    /**
-     * Asserts all arguments, if any, are valid instances of type, 
-     * then returns the identifiers again
-     * 
-     * @param type 
-     * @param identifiers 
-     */
-    export function assertType(type: Identifier, identifiers: string[]) {
-        let offending = identifiers.filter(x=>getType(x)!=type);
-        if(offending.length!=0) {
-            throw new Error(`${offending.join(',')} are not valid ${type}s`)
+    static getBuildType(identifiers: string[], def?: BuildType): BuildType {
+        let buildTypes = identifiers.filter(x=>BUILD_TYPES.includes(x as any))
+        if(buildTypes.length === 0) {
+            if(def === undefined) {
+                throw new Error(
+                      `No build type provided,`
+                    + ` expected at least one:: ${identifiers}`
+                )
+            } else {
+                return def;
+            }
         }
-        return identifiers;
+
+        if(buildTypes.length > 1) {
+            throw new Error(
+                `Multiple build types specified: ${buildTypes}`
+            )
+        }
+
+        return buildTypes[0] as BuildType
     }
 
-    /**
-     * Returns all names in identifiers that are instances of type
-     * @param type 
-     * @param identifiers 
-     */
-    export function getTypes(type: Identifier, identifiers: string[]) {
-        return identifiers.filter(x=>getType(x)==type);
+    static getModules(identifiers: string[], mode: CollectMode, def?: string): ModuleEndpoint[];
+    static getModules(identifiers: string[], mode: CollectModeMatchAll): ModuleEndpoint[];
+    static getModules(identifiers: string[], mode: CollectModeMatchAll, def?: string): ModuleEndpoint[] {
+        return this.find(identifiers,'MODULE',mode,def)
+            .map(x=>x.asModule())
+    }
+
+    static getModulesOrAll(identifiers: string[]) {
+        let modules = this.getModules(identifiers,'ALLOW_NONE');
+        return modules.length > 0 ? modules : Module.endpoints()
+    }
+
+    static getRealms(identifiers: string[], mode: CollectMode, def?: string): Realm[];
+    static getRealms(identifiers: string[], mode: CollectModeMatchAll): Realm[];
+    static getRealms(identifiers: string[], mode: CollectModeMatchAll, def?: string): Realm[] {
+        return this.find(identifiers,'REALM',mode,def)
+            .map(x=>x.asRealm())
+    }
+
+    static getDatasets(identifiers: string[], mode: CollectMode, def?: string): Dataset[];
+    static getDatasets(identifiers: string[], mode: CollectModeMatchAll): Dataset[];
+    static getDatasets(identifiers: string[], mode: CollectModeMatchAll, def?: string): Dataset[] {
+        return this.find(identifiers,'DATASET',mode,def)
+            .map(x=>x.asDataset())
+    }
+
+    static getDatasetsOrDefault(identifiers: string[], collectMode: CollectModeMatchAll) {
+        if(identifiers.length === 0) return [this.getDataset(NodeConfig.DefaultDataset)]
+        else return this.getDatasets(identifiers,collectMode);
+    }
+
+    static getModule(identifier: string) {
+        return this.resolve(identifier,'MODULE').asModule()
+    }
+
+    static getRealm(identifier: string) {
+        return this.resolve(identifier,'REALM').asRealm()
+    }
+
+    static getDataset(identifier: string) {
+        return this.resolve(identifier,'DATASET').asDataset()
     }
 }

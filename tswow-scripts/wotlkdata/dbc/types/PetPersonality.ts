@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCLocCell , DBCIntArrayCell , DBCFloatArrayCell} from '../DBCCell'
-import { int , loc_constructor , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCIntArrayCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,27 +34,27 @@ export class PetPersonalityRow extends DBCRow<PetPersonalityCreator,PetPersonali
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get HappinessThreshold() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get HappinessDamage() { return new DBCFloatArrayCell(this,3,this.buffer,this.offset+84)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : PetPersonalityCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -65,8 +65,8 @@ export class PetPersonalityRow extends DBCRow<PetPersonalityCreator,PetPersonali
  */
 export type PetPersonalityCreator = {
     Name?: loc_constructor
-    HappinessThreshold?: int
-    HappinessDamage?: float
+    HappinessThreshold?: int[]
+    HappinessDamage?: float[]
 }
 
 /**

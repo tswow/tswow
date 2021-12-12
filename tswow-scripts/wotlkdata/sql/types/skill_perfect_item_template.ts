@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , float } from '../../primitives'
+import { float, mediumint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class skill_perfect_item_templateRow extends SqlRow<skill_perfect_item_templateCreator,skill_perfect_item_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spellId() {return new SQLCellReadOnly<mediumint, this>(this, 'spellId')}
-    
+
     /**
      * No comment (yet!)
      */
     get requiredSpecialization() {return new SQLCell<mediumint, this>(this, 'requiredSpecialization')}
-    
+
     /**
      * No comment (yet!)
      */
     get perfectCreateChance() {return new SQLCell<float, this>(this, 'perfectCreateChance')}
-    
+
     /**
      * No comment (yet!)
      */
     get perfectItemType() {return new SQLCell<mediumint, this>(this, 'perfectItemType')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spellId : mediumint, c? : skill_perfect_item_templateCreator) : this {
         return this.cloneInternal([spellId],c)
     }

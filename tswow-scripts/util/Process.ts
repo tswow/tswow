@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wsys } from './System';
+import * as child_process from "child_process";
 import { ChildProcessWithoutNullStreams } from 'child_process';
-import { term } from './Terminal';
+import { FilePath, resfp } from './FileTree';
 import { isWindows } from './Platform';
+import { term } from './Terminal';
+import { termCustom } from "./TerminalCategories";
 
 const processes : {[key: number]: ChildProcessWithoutNullStreams} = {};
 function cleanup() {
@@ -41,34 +43,60 @@ if(!isWindows())
  * Represents a concurrently running child process.
  */
 export class Process {
-    private process: ChildProcessWithoutNullStreams | undefined;
-    private stopPromise: Promise<void> | undefined;
-    private curString = '';
-    private color = 'white';
-    private outputShown = true;
-    private waiters: {[key: string]: (message: string) => void} = {};
-    private bufferSize = 2048;
-    private listeners: ((message: string) => void)[] = [];
-    private onFail: ((err: Error)=>void)|undefined = undefined;
+    private _name: string;
+    private _process: ChildProcessWithoutNullStreams | undefined;
+    private _stopPromise: Promise<void> | undefined;
+    private _curString = '';
+    private _color = 'white';
+    private _outputShown = true;
+    private _waiters: {[key: string]: (message: string) => void} = {};
+    private _bufferSize = 2048;
+    private _listeners: ((message: string) => void)[] = [];
+    private _onFail: ((err: Error)=>void)|undefined = undefined;
+    private _isStopping: boolean = false;
+
+    private _lineBuffers = {
+        stderr: {value: '', idx: 0},
+        stdout: {value: '', idx: 0},
+    }
 
     /**
-     * Creates a new process instance. Call Process#start or Process#startIn to start it.
+     * Creates a new process instance.
+     * Call Process#start or Process#startIn to start it.
      * @param bufferSize
      */
-    constructor(bufferSize: number =  1024) {
-        this.bufferSize = bufferSize;
+    constructor(name: string, bufferSize: number =  1024) {
+        this._bufferSize = bufferSize;
+        this._name = name;
+    }
+
+    static spawn(name: string, program: string, args: string[], bufferSize: number = 1024) {
+        return new Process(name,bufferSize)
+            .showOutput(true)
+            .start(program,args)
+    }
+
+    static spawnIn(name: string, directory: string, program: string, args: string[], bufferSize: number = 1024) {
+        return new Process(name,bufferSize)
+            .showOutput(true)
+            .startIn(directory,program,args)
     }
 
     isRunning() {
-        return this.process !== undefined;
+        return this._process !== undefined;
     }
 
-    setOnFail(onFail: (message: Error)=>void){
-        this.onFail = onFail;
+    onFail(onFail: (message: Error)=>void){
+        this._onFail = onFail;
+        return this;
     }
 
-    listenSimple(listener: (message: string) => void ) {
-        this.listeners.push(listener);
+    stopPromise() {
+        return this._stopPromise
+    }
+
+    onMessage(listener: (message: string) => void ) {
+        this._listeners.push(listener);
         return this;
     }
 
@@ -77,19 +105,19 @@ export class Process {
      * @param message Message that will be listened for.
      * @param useWildcard Whether to use * for wildcards.
      */
-    waitFor(match: string, useWildcard: boolean = true) {
+    waitForMessage(match: string, useWildcard: boolean = true) {
         const matches = !useWildcard ? [match] : match.split('*');
         let id = 0;
-        while (this.waiters[id]) {
+        while (this._waiters[id]) {
             ++id;
         }
 
         return new Promise<string>((res) => {
-            this.waiters[id] = (message) => {
+            this._waiters[id] = (message) => {
                 for (const matchedString of matches) {
                     if (!message.includes(matchedString)) { return; }
                 }
-                delete this.waiters[id];
+                delete this._waiters[id];
                 res(message);
             };
         });
@@ -101,8 +129,8 @@ export class Process {
      * @param color
      */
     showOutput(show: boolean, color?: string) {
-        this.outputShown = show;
-        this.color = color || this.color;
+        this._outputShown = show;
+        this._color = color || this._color;
         return this;
     }
 
@@ -113,19 +141,20 @@ export class Process {
      * @throws If the process is starting, stopping or stopped.
      */
     send(command: string, useNewline: boolean = true) {
-        if (this.stopPromise) {
-            throw new Error('Attempted to send message to a stopping process');
-        }
-
-        if (!this.process) {
+        if (!this._process) {
             throw new Error('Attempted to send message to a stopped process');
         }
 
-        if (useNewline) {
-            this.process.stdin.write(Buffer.from(command + String.fromCharCode(10), 'ascii'));
-        } else {
-            this.process.stdin.write(Buffer.from(command, 'ascii'));
+        if (this._isStopping) {
+            throw new Error('Attempted to send message to a stopping process');
         }
+
+        this._process.stdin.write(Buffer.from(
+            command + useNewline
+                ? String.fromCharCode(10)
+                : ''
+            , 'ascii'
+        ));
         return this;
     }
 
@@ -134,29 +163,15 @@ export class Process {
      * Does nothing if the process is not started.
      */
     async stop() {
-        this.curString = '';
+        this._curString = '';
 
-        if (this.stopPromise) {
-            return this.stopPromise;
-        }
-
-        if (this.process === undefined) {
+        if (this._process === undefined) {
             return;
         }
 
-        return this.stopPromise = new Promise<void>((res) => {
-            if (this.process !== undefined) {
-                (<ChildProcessWithoutNullStreams>this.process).on('exit', () => {
-                    this.process = undefined;
-                    this.stopPromise = undefined;
-                    res();
-                });
-
-                this.process.kill();
-            } else {
-                res();
-            }
-        });
+        this._process.kill();
+        this._isStopping = true;
+        return this._stopPromise;
     }
 
     /**
@@ -165,64 +180,116 @@ export class Process {
      * @param program Program the process will execute
      * @param args Arguments to the new process
      */
-    async startIn(directory: string, program: string, args: string[] = []) {
+    async startIn(
+          directory: FilePath
+        , program: string
+        , args: string[] = []
+    ) {
         await this.stop();
-        let proc = wsys.spawnIn(directory, program, args);
-        this.process = proc;
-        processes[proc.pid] = proc;
-
-        this.process.stdout.on('data', (data) => {
+        this._isStopping = false;
+        const proc = child_process.spawn(
+              program
+            , args
+            , {stdio:'pipe',cwd:resfp(directory)}
+        )
+        this._process = processes[proc.pid] = proc;
+        this._process.stdout.on('data', (data) => {
             this.handleOutput(data, false);
         });
-        this.process.stderr.on('data', (data) => {
+        this._process.stderr.on('data', (data) => {
             this.handleOutput(data, true);
         });
 
-        this.process.on('close',(code)=>{
-            delete processes[proc.pid];
+        return this._stopPromise = new Promise<void>((res) => {
+            let killed = false;
+            const onDestroyed = () => {
+                if(!killed) {
+                    killed = true;
+                    if(this._process!==undefined
+                        && proc.pid === this._process.pid) {
+                            this._process = undefined;
+                        res();
+                        delete processes[proc.pid]
+                    }
+                }
+            }
+            proc.on('error', (err) => {
+                if(this._onFail) this._onFail(err)
+                onDestroyed();
+            });
+            proc.on('exit', (code) => {
+                if(code !== 0 && code !== null && this._onFail) {
+                    this._onFail(new Error('Process error code '+code))
+                }
+                onDestroyed()
+            });
         });
+    }
 
-        const nullProcess = ()=>{
-            if(this.process!==undefined
-                && proc.pid === this.process.pid) {
-                    this.process = undefined;
+    private receiveLine(line: string, isError: boolean) {
+        if(this._outputShown) {
+            if(isError) {
+                term.error(termCustom(this._name),line)
+            } else {
+                term.log(termCustom(this._name),line)
             }
         }
 
-        this.process.on('error', (message)=>{
-            delete processes[proc.pid];
-            if(this.onFail!==undefined) {
-                this.onFail(message);
-            }
-            nullProcess();
-        });
-        this.process.on('exit', () => {
-            delete processes[proc.pid];
-            nullProcess();
-        });
+        const removedCharacters =
+            (this._curString.length + line.length) - this._bufferSize;
+        if (removedCharacters > 0) {
+            this._curString = this._curString
+                .substring(removedCharacters, this._curString.length);
+        }
+        this._curString = this._curString + line;
+        this._listeners.forEach(x=>x(line))
+        Object.values(this._waiters).forEach(x=>x(this._curString))
     }
 
     /**
      * Handles output from the running process
      */
     private handleOutput(data: any, isError: boolean) {
-        if (this.outputShown) {
-            term.pipe(isError ? 'red' : this.color, [data.toString()]);
+        // Separate newlined and non-newlined chunks
+        let str = (data.toString() as string).split('\r').join('');
+        let chunks = str.split('\n')
+        let newlinedChunks = chunks
+            .slice(0,chunks.length-1)
+            .filter(x=>x.split(/[ \t]/).join('').length>0);
+        // only the last chunk can be non-newlined
+        let lastChunk = chunks[chunks.length-1];
+        let hasLastChunk = lastChunk.split(/[ \t]/).join('').length > 0
+        // if the output contains no data, do not update the buffer counter
+        if(newlinedChunks.length == 0 && !hasLastChunk) {
+            return;
         }
 
-        const strData = data.toString();
-        const removedCharacters = (this.curString.length + strData.length) - this.bufferSize;
-        if (removedCharacters > 0) {
-            this.curString = this.curString.substring(removedCharacters, this.curString.length);
+        const buffer = this._lineBuffers[isError?'stderr':'stdout']
+        // we know we have data now, buffer will change so update idx
+        buffer.idx++;
+        if(newlinedChunks.length > 0) {
+            newlinedChunks[0] = buffer.value+newlinedChunks[0]
+            buffer.value = ''
         }
-        this.curString = this.curString + strData;
+        newlinedChunks.forEach(x=>this.receiveLine(x, isError));
 
-        for (const listener of this.listeners) {
-            listener(strData);
-        }
+        if(hasLastChunk) {
+            buffer.value+=lastChunk;
 
-        for (const listener of Object.values(this.waiters)) {
-            listener(this.curString);
+            // if we don't receive more updates within 100ms,
+            // empty the buffer so the user doesn't miss out on any
+            // information
+
+            // keep idx, we only flush from here if no new updates were
+            // received
+
+            const curIdx = buffer.idx;
+            setTimeout(()=>{
+                if(buffer.idx === curIdx) {
+                    this.receiveLine(buffer.value,isError);
+                    buffer.value = ""
+                }
+            },100)
         }
     }
 

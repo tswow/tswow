@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellRoot } from './CellRoot';
 import { CPrim } from './Cell';
+import { CellRoot } from './CellRoot';
 
 export abstract class CellReadOnly<D extends CPrim, T> extends CellRoot<T> {
     static make<D extends CPrim, T>(owner: T, getter: () => D, setter: (value: D) => T) {
@@ -29,13 +29,17 @@ export abstract class CellReadOnly<D extends CPrim, T> extends CellRoot<T> {
         return this.get();
     }
 
-    get isReadOnly() { return true; }
+    protected get isReadOnly() { return true; }
 
     protected deserialize(value: any) {
         throw new Error(`Attempting to deserialize read-only property`);
     }
 
     protected serialize() {}
+
+    static set<D extends CPrim>(cell: CellReadOnly<D,any>, value: D) {
+        cell.set(value);
+    }
 }
 
 export class CellSimpleReadOnly<D extends CPrim, T> extends CellReadOnly<D, T> {
@@ -45,5 +49,23 @@ export class CellSimpleReadOnly<D extends CPrim, T> extends CellReadOnly<D, T> {
         super(owner);
         this.get = getter;
         this.set = setter;
+    }
+}
+
+export class CellWrapperReadOnly<D extends CPrim,T> extends CellReadOnly<D,T> {
+    protected cell: CellReadOnly<D,any>;
+
+    constructor(owner: T, cell: CellReadOnly<D,any>) {
+        super(owner);
+        this.cell = cell;
+    }
+
+    get(): D {
+        return this.cell.get();
+    }
+
+    protected set(value: D): T {
+        CellReadOnly.set(this.cell, value);
+        return this.owner;
     }
 }

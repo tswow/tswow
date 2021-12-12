@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , longtext , tinyint , float , smallint } from '../../primitives'
+import { float, longtext, mediumint, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,462 +29,462 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class npc_textRow extends SqlRow<npc_textCreator,npc_textQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get text0_0() {return new SQLCell<longtext, this>(this, 'text0_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text0_1() {return new SQLCell<longtext, this>(this, 'text0_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID0() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID0')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang0() {return new SQLCell<tinyint, this>(this, 'lang0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability0() {return new SQLCell<float, this>(this, 'Probability0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay0_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay0_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote0_0() {return new SQLCell<smallint, this>(this, 'Emote0_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay0_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay0_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote0_1() {return new SQLCell<smallint, this>(this, 'Emote0_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay0_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay0_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote0_2() {return new SQLCell<smallint, this>(this, 'Emote0_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text1_0() {return new SQLCell<longtext, this>(this, 'text1_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text1_1() {return new SQLCell<longtext, this>(this, 'text1_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID1() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID1')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang1() {return new SQLCell<tinyint, this>(this, 'lang1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability1() {return new SQLCell<float, this>(this, 'Probability1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay1_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay1_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote1_0() {return new SQLCell<smallint, this>(this, 'Emote1_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay1_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay1_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote1_1() {return new SQLCell<smallint, this>(this, 'Emote1_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay1_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay1_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote1_2() {return new SQLCell<smallint, this>(this, 'Emote1_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text2_0() {return new SQLCell<longtext, this>(this, 'text2_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text2_1() {return new SQLCell<longtext, this>(this, 'text2_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID2() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID2')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang2() {return new SQLCell<tinyint, this>(this, 'lang2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability2() {return new SQLCell<float, this>(this, 'Probability2')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay2_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay2_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote2_0() {return new SQLCell<smallint, this>(this, 'Emote2_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay2_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay2_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote2_1() {return new SQLCell<smallint, this>(this, 'Emote2_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay2_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay2_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote2_2() {return new SQLCell<smallint, this>(this, 'Emote2_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text3_0() {return new SQLCell<longtext, this>(this, 'text3_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text3_1() {return new SQLCell<longtext, this>(this, 'text3_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID3() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID3')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang3() {return new SQLCell<tinyint, this>(this, 'lang3')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability3() {return new SQLCell<float, this>(this, 'Probability3')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay3_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay3_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote3_0() {return new SQLCell<smallint, this>(this, 'Emote3_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay3_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay3_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote3_1() {return new SQLCell<smallint, this>(this, 'Emote3_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay3_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay3_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote3_2() {return new SQLCell<smallint, this>(this, 'Emote3_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text4_0() {return new SQLCell<longtext, this>(this, 'text4_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text4_1() {return new SQLCell<longtext, this>(this, 'text4_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID4() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID4')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang4() {return new SQLCell<tinyint, this>(this, 'lang4')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability4() {return new SQLCell<float, this>(this, 'Probability4')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay4_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay4_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote4_0() {return new SQLCell<smallint, this>(this, 'Emote4_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay4_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay4_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote4_1() {return new SQLCell<smallint, this>(this, 'Emote4_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay4_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay4_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote4_2() {return new SQLCell<smallint, this>(this, 'Emote4_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text5_0() {return new SQLCell<longtext, this>(this, 'text5_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text5_1() {return new SQLCell<longtext, this>(this, 'text5_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID5() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID5')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang5() {return new SQLCell<tinyint, this>(this, 'lang5')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability5() {return new SQLCell<float, this>(this, 'Probability5')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay5_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay5_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote5_0() {return new SQLCell<smallint, this>(this, 'Emote5_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay5_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay5_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote5_1() {return new SQLCell<smallint, this>(this, 'Emote5_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay5_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay5_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote5_2() {return new SQLCell<smallint, this>(this, 'Emote5_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text6_0() {return new SQLCell<longtext, this>(this, 'text6_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text6_1() {return new SQLCell<longtext, this>(this, 'text6_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID6() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID6')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang6() {return new SQLCell<tinyint, this>(this, 'lang6')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability6() {return new SQLCell<float, this>(this, 'Probability6')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay6_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay6_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote6_0() {return new SQLCell<smallint, this>(this, 'Emote6_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay6_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay6_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote6_1() {return new SQLCell<smallint, this>(this, 'Emote6_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay6_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay6_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote6_2() {return new SQLCell<smallint, this>(this, 'Emote6_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get text7_0() {return new SQLCell<longtext, this>(this, 'text7_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get text7_1() {return new SQLCell<longtext, this>(this, 'text7_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get BroadcastTextID7() {return new SQLCell<mediumint, this>(this, 'BroadcastTextID7')}
-    
+
     /**
      * No comment (yet!)
      */
     get lang7() {return new SQLCell<tinyint, this>(this, 'lang7')}
-    
+
     /**
      * No comment (yet!)
      */
     get Probability7() {return new SQLCell<float, this>(this, 'Probability7')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay7_0() {return new SQLCell<smallint, this>(this, 'EmoteDelay7_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote7_0() {return new SQLCell<smallint, this>(this, 'Emote7_0')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay7_1() {return new SQLCell<smallint, this>(this, 'EmoteDelay7_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote7_1() {return new SQLCell<smallint, this>(this, 'Emote7_1')}
-    
+
     /**
      * No comment (yet!)
      */
     get EmoteDelay7_2() {return new SQLCell<smallint, this>(this, 'EmoteDelay7_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Emote7_2() {return new SQLCell<smallint, this>(this, 'Emote7_2')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : npc_textCreator) : this {
         return this.cloneInternal([ID],c)
     }

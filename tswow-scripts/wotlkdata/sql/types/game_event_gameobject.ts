@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , int } from '../../primitives'
+import { int, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,27 +29,27 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_event_gameobjectRow extends SqlRow<game_event_gameobjectCreator,game_event_gameobjectQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get eventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
-    clone(guid : tinyint,eventEntry : int, c? : game_event_gameobjectCreator) : this {
-        return this.cloneInternal([guid,eventEntry],c)
+     */
+    clone(eventEntry: tinyint,guid: int, c? : game_event_gameobjectCreator) : this {
+        return this.cloneInternal([eventEntry,guid],c)
     }
 }
 
@@ -77,10 +77,10 @@ export class game_event_gameobjectTable extends SqlTable<
     game_event_gameobjectCreator,
     game_event_gameobjectQuery,
     game_event_gameobjectRow> {
-    add(guid : tinyint,eventEntry : int, c? : game_event_gameobjectCreator) : game_event_gameobjectRow {
+    add(eventEntry: tinyint,guid : int, c? : game_event_gameobjectCreator) : game_event_gameobjectRow {
         const first = this.first();
-        if(first) return first.clone(guid,eventEntry,c)
-        else return this.rowCreator(this, {}).clone(guid,eventEntry,c)
+        if(first) return first.clone(eventEntry,guid,c)
+        else return this.rowCreator(this, {}).clone(eventEntry,guid,c)
     }
 }
 

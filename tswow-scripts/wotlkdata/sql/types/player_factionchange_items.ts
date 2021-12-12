@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , text } from '../../primitives'
+import { int, text } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -31,43 +31,43 @@ export class player_factionchange_itemsRow extends SqlRow<player_factionchange_i
      * No comment (yet!)
      */
     get race_A() {return new SQLCell<int, this>(this, 'race_A')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get alliance_id() {return new SQLCellReadOnly<int, this>(this, 'alliance_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get commentA() {return new SQLCell<text, this>(this, 'commentA')}
-    
+
     /**
      * No comment (yet!)
      */
     get race_H() {return new SQLCell<int, this>(this, 'race_H')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get horde_id() {return new SQLCellReadOnly<int, this>(this, 'horde_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get commentH() {return new SQLCell<text, this>(this, 'commentH')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(alliance_id : int,horde_id : int, c? : player_factionchange_itemsCreator) : this {
         return this.cloneInternal([alliance_id,horde_id],c)
     }

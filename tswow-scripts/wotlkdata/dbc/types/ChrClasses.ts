@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCLocCell , DBCStringCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,67 +34,67 @@ export class ChrClassesRow extends DBCRow<ChrClassesCreator,ChrClassesQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Field01() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get DisplayPower() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get PetNameToken() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name_Female() { return new DBCLocCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name_Male() { return new DBCLocCell(this,this.buffer,this.offset+152)}
-    
+
     /**
      * No comment (yet!)
      */
     get Filename() { return new DBCStringCell(this,this.buffer,this.offset+220)}
-    
+
     /**
      * No comment (yet!)
      */
     get SpellClassSet() { return new DBCIntCell(this,this.buffer,this.offset+224)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+228)}
-    
+
     /**
      * No comment (yet!)
      */
     get CinematicSequenceID() { return new DBCIntCell(this,this.buffer,this.offset+232)}
-    
+
     /**
      * No comment (yet!)
      */
     get Required_Expansion() { return new DBCIntCell(this,this.buffer,this.offset+236)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ChrClassesCreator) : this {
         return this.cloneInternal([ID],c);
     }

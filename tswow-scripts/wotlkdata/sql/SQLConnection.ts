@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import * as mysql from 'mysql2';
 import * as fs from 'fs';
-import { SqlRow } from './SQLRow';
-import { getDatabase, Settings } from '../Settings';
-import { SqlTable } from './SQLTable';
+import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
+import { BuildArgs, datasetName, NodeConfig } from '../Settings';
 import { SQLTables } from './SQLFiles';
+import { SqlRow } from './SQLRow';
+import { SqlTable } from './SQLTable';
 import deasync = require('deasync');
 
 export class Connection {
@@ -38,7 +38,7 @@ export class Connection {
 
     static connect(connection: Connection) {
         this.end(connection);
-        if(Settings.USE_POOLING) {
+        if(NodeConfig.UsePooling) {
             connection.async = mysql.createPool(connection.settings);
             connection.sync = mysql.createPool(connection.settings);
         } else {
@@ -67,6 +67,7 @@ export class Connection {
 
     constructor(obj: any) {
         this.settings = obj;
+        this.settings.dateStrings = true;
         this.settings.multipleStatements = true;
     }
 
@@ -74,10 +75,15 @@ export class Connection {
     protected normal: string[] = [];
     protected late: string[] = [];
 
+    databaseName() {
+        return this.settings.database;
+    }
+
     read(query: string) {
         if(this.sync===undefined) {
             throw new Error(`Tried to read from a disconnected adapter`);
         }
+        SqlConnection.log(this.settings.database,query);
         return this.syncQuery(query);
     }
 
@@ -100,6 +106,8 @@ export class Connection {
                     return rej(`Tried to apply while async adapter was disconnected`);
                 }
 
+                SqlConnection.log(this.settings.database,x);
+
                 this.async.query(x,(err)=>{
                         if(err){
                             err.message = `(For SQL "${x}")\n`+err.message;
@@ -119,16 +127,6 @@ export class Connection {
     }
 }
 
-    function getDefaultSettings(dbType: string) {
-    return {
-        database: getDatabase(dbType).database,
-        host: getDatabase(dbType).host,
-        user: getDatabase(dbType).user,
-        password: getDatabase(dbType).password,
-        port: getDatabase(dbType).port
-    }
-}
-
 /**
  * Represents the global SQL connection.
  *
@@ -138,11 +136,17 @@ export class Connection {
  */
 export class SqlConnection {
     static additional: Connection[] = [];
+    static logFile: number;
+    static log(db: string, sql: string) {
+        if(BuildArgs.LOG_SQL) {
+            fs.writeSync(this.logFile,`[${db}]: ${sql}\n`);
+        }
+    }
 
-    static auth = new Connection(getDefaultSettings('auth'));
+    static auth = new Connection(NodeConfig.DatabaseSettings('auth'));
     //static characters = new Connection(getDefaultSettings('characters'));
-    static world_dst = new Connection(getDefaultSettings('world'));
-    static world_src = new Connection(getDefaultSettings('world_source'))
+    static world_dst = new Connection(NodeConfig.DatabaseSettings('world',datasetName));
+    static world_src = new Connection(NodeConfig.DatabaseSettings('world_source',datasetName))
 
     protected static endConnection() {
         Connection.end(this.auth);
@@ -183,12 +187,7 @@ export class SqlConnection {
         let sqlfile = ``;
 
         // @TODO fix writeToFile. Disabled for now.
-        if (writeFile && false) {
-            sqlfile = SQLTables
-                // @ts-ignore
-                .reduce((file, table) => table.writeToFile(file), sqlfile);
-            fs.writeFileSync(Settings.SQL_FILE_PATH, sqlfile);
-        }
+        if (writeFile && false) {}
 
         if (writeDb) {
             SQLTables.map(x=>SqlTable.writeSQL(x));

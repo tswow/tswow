@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , float } from '../../primitives'
+import { float, mediumint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,30 +29,30 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class item_enchantment_templateRow extends SqlRow<item_enchantment_templateCreator,item_enchantment_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ench() {return new SQLCellReadOnly<mediumint, this>(this, 'ench')}
-    
+
     /**
      * No comment (yet!)
      */
     get chance() {return new SQLCell<float, this>(this, 'chance')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint,ench : mediumint, c? : item_enchantment_templateCreator) : this {
         return this.cloneInternal([entry,ench],c)
     }

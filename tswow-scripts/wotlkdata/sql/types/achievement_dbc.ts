@@ -15,13 +15,13 @@
 
 /* tslint:disable */
 import { int } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,47 +29,47 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class achievement_dbcRow extends SqlRow<achievement_dbcCreator,achievement_dbcQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<int, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get requiredFaction() {return new SQLCell<int, this>(this, 'requiredFaction')}
-    
+
     /**
      * No comment (yet!)
      */
     get mapID() {return new SQLCell<int, this>(this, 'mapID')}
-    
+
     /**
      * No comment (yet!)
      */
     get points() {return new SQLCell<int, this>(this, 'points')}
-    
+
     /**
      * No comment (yet!)
      */
     get flags() {return new SQLCell<int, this>(this, 'flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get count() {return new SQLCell<int, this>(this, 'count')}
-    
+
     /**
      * No comment (yet!)
      */
     get refAchievement() {return new SQLCell<int, this>(this, 'refAchievement')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : int, c? : achievement_dbcCreator) : this {
         return this.cloneInternal([ID],c)
     }

@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , tinyint , varchar } from '../../primitives'
+import { int, tinyint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,32 +29,32 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_pool_membersRow extends SqlRow<quest_pool_membersCreator,quest_pool_membersQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get questId() {return new SQLCellReadOnly<int, this>(this, 'questId')}
-    
+
     /**
      * No comment (yet!)
      */
     get poolId() {return new SQLCell<int, this>(this, 'poolId')}
-    
+
     /**
      * No comment (yet!)
      */
     get poolIndex() {return new SQLCell<tinyint, this>(this, 'poolIndex')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<varchar, this>(this, 'description')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(questId : int, c? : quest_pool_membersCreator) : this {
         return this.cloneInternal([questId],c)
     }

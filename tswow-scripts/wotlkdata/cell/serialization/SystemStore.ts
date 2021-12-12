@@ -1,5 +1,5 @@
-import { Objects, Schema, structSchemas } from "./ObjectIteration";
 import { CellSystem, CellSystemTop } from "../systems/CellSystem";
+import { Objects, Schema, structSchemas } from "./ObjectIteration";
 
 let stores: {[key: string]: SystemStore<any,any>} = {}
 

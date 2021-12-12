@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , int } from '../../primitives'
+import { int, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,22 +29,22 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class player_xp_for_levelRow extends SqlRow<player_xp_for_levelCreator,player_xp_for_levelQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Level() {return new SQLCellReadOnly<tinyint, this>(this, 'Level')}
-    
+
     /**
      * No comment (yet!)
      */
     get Experience() {return new SQLCell<int, this>(this, 'Experience')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(Level : tinyint, c? : player_xp_for_levelCreator) : this {
         return this.cloneInternal([Level],c)
     }

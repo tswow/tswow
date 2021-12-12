@@ -14,12 +14,11 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCFloatCell} from '../DBCCell'
-import { float} from '../../primitives'
-import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -31,12 +30,12 @@ export class GtChanceToSpellCritRow extends DBCRow<GtChanceToSpellCritCreator,Gt
      * No comment (yet!)
      */
     get Data() { return new DBCFloatCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(c?: GtChanceToSpellCritCreator) : this {
         return this.cloneInternal([],c);
     }

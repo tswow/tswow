@@ -17,7 +17,7 @@
 import * as child_process from 'child_process';
 import * as readline from 'readline';
 import { wfs } from './FileSystem';
-import { term } from './Terminal';
+import { FilePath } from './FileTree';
 
 /**
  * Contains functions for running external programs and managing processes and working directories.
@@ -118,36 +118,14 @@ export namespace wsys {
      *               'pipe' will return output as a string instead)
      * @returns Command output of the child process if `stdio` is 'pipe', undefined otherwise.
      */
-    export function execIn(dirname: string, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
+    export function execIn(dirname: FilePath, program: string, stdio: 'ignore'|'inherit'|'pipe' = 'inherit')  {
         let str = '';
-        const data = child_process.execSync(program, 
+        const data = child_process.execSync(program,
             {stdio: stdio, cwd: wfs.absPath(dirname)});
         if(stdio==='pipe' && data !== null && data !== undefined) {
             str = data.toString();
         }
         return str;
-    }
-
-    /**
-     * Spawns a new child process in a specific working directory.
-     * Use this for long-running processes such as `tsc --w`.
-     * @param dirname Working directory to spawn the child process in
-     * @param program Command the child process should execute
-     * @param args Arguments to the child process
-     * @returns Child process handle
-     */
-    export function spawnIn(dirname: string, program: string, args: string[] = []) {
-        return child_process.spawn(program, args, {stdio: 'pipe', cwd: dirname});
-    }
-
-    /**
-     * Spawns a new child process.
-     * Use this for long-running processes such as `tsc --w`
-     * @param program Command the child process should execute
-     * @param args Arguments to the child process
-     */
-    export function spawn(program: string, args: string[] = []) {
-        return child_process.spawn(program, args, {stdio: 'pipe'});
     }
 
     /**

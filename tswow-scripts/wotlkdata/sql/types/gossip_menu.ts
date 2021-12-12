@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { smallint , mediumint } from '../../primitives'
+import { mediumint, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,30 +29,30 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gossip_menuRow extends SqlRow<gossip_menuCreator,gossip_menuQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get MenuID() {return new SQLCellReadOnly<smallint, this>(this, 'MenuID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get TextID() {return new SQLCellReadOnly<mediumint, this>(this, 'TextID')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(MenuID : smallint,TextID : mediumint, c? : gossip_menuCreator) : this {
         return this.cloneInternal([MenuID,TextID],c)
     }

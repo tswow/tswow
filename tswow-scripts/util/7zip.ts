@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { ipaths } from './Paths';
 import { wsys } from './System';
 
 export namespace SevenZip {
-    export function extract(archive: string, out: string) {
-        wsys.exec(`"${ipaths.sevenZaExe}" e -o${out} ${archive}`);
+    export function extract(sevenZipPath: string, archive: string, out: string) {
+        wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
     }
 
-    export function makeArchive(zipPath: string, directoryIn: string[]) {
-        wsys.exec(`"${ipaths.sevenZaExe}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`,'inherit');
+    export function makeArchive(sevenZipPath: string, zipPath: string, directoryIn: string[]) {
+        wsys.exec(`"${sevenZipPath}" a ${zipPath} ${directoryIn.join(' ')} -mx=9 -mmt=on`,'inherit');
     }
 }

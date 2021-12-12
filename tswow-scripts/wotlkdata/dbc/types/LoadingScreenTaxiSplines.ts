@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCFloatArrayCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCIntCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,32 +34,32 @@ export class LoadingScreenTaxiSplinesRow extends DBCRow<LoadingScreenTaxiSplines
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get PathID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Locx() { return new DBCFloatArrayCell(this,8,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get Locy() { return new DBCFloatArrayCell(this,8,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get LegIndex() { return new DBCIntCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : LoadingScreenTaxiSplinesCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -70,8 +70,8 @@ export class LoadingScreenTaxiSplinesRow extends DBCRow<LoadingScreenTaxiSplines
  */
 export type LoadingScreenTaxiSplinesCreator = {
     PathID?: int
-    Locx?: float
-    Locy?: float
+    Locx?: float[]
+    Locy?: float[]
     LegIndex?: int
 }
 

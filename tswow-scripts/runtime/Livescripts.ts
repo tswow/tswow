@@ -1,67 +1,304 @@
-import { isWindows } from "../util/Platform";
-import { Modules } from "./Modules";
-import { ipaths } from "../util/Paths";
+import { BuildType } from "../util/BuildType";
 import { wfs } from "../util/FileSystem";
-import { Timer } from "../util/Timer";
+import { ipaths } from "../util/Paths";
+import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
-import { Datasets } from "./Dataset";
-import { BuildType } from "../util/BuildType";
-import { commands } from "./Commands";
+import { termCustom } from "../util/TerminalCategories";
+import { Timer } from "../util/Timer";
+import { BuildCommand, CleanCommand, ListCommand } from "./CommandActions";
+import { Datascripts } from "./Datascripts";
+import { Dataset } from "./Dataset";
+import { Identifier } from "./Identifiers";
+import { getLivescriptCMakeLists } from "./LivescriptsCMakeLists";
+import { Module, ModuleEndpoint } from "./Modules";
+import { NodeConfig } from "./NodeConfig";
 
-export namespace Livescripts {
-    /**
-     * Builds and reloads the server code for a specific module.
-     * @param name - Name of the module to rebuild.
-     */
-    export async function build(name: string, type: BuildType, trace?: boolean, allowGlobals?: boolean) {
-        await Modules.refreshModules();
-        const scriptsDir = ipaths.moduleScripts(name);
+const livescript_example =
+`export function Main(events: TSEvents) {
+    // Register your events here!
+}`;
 
-        if(!wfs.exists(scriptsDir)) {
-            return false;
-        }
+/**
+ * This is just used for VSCodium, not compiling.
+ * See "TypeScript2Cxx/src/wowts.ts" for the tsconfig actually used for compiling.
+ */
+const scripts_tsconfig_json =
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "outDir": "./build",
+      "rootDir": "../",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "experimentalDecorators": true,
+      "forceConsistentCasingInFileNames": true
+    },
+    "include":["./","../Ids.ts","../shared"],
+    "exclude":["../data","../addons"]
+};
 
-        const files = wfs.readDir(scriptsDir, true, 'both');
+const temp_config = (dataset: Dataset) => ({
+    'compilerOptions': {
+    'target': 'es5',
+    'module': 'commonjs',
+    'outDir': `./livescripts/build/${dataset.fullName}/cpp`,
+    'rootDir': './livescripts',
+    'strict': true,
+    'esModuleInterop': true,
+    'skipLibCheck': true,
+    'forceConsistentCasingInFileNames': true
+},
+'include': ['./shared','./livescripts']
+});
 
-        // Don't build if the entry point doesn't exist.
-        const mainScript = ipaths.moduleMainScriptName(name);
-        if (!files.includes(mainScript)) { 
-            term.warn(`Module ${name} has a livescripts directory, but no valid entrypoint`);
-            return false; 
-        }
-        term.log(`Building LiveScripts for ${name} (${type} mode)`);
 
-        const timer = Timer.start();
+export class Livescripts {
+    readonly mod: ModuleEndpoint
 
-        try {
-            wsys.exec(
-                `node -r source-map-support/register`
-                + ` ${ipaths.transpilerEntry} ${name} ${type}`
-                + ` ${(trace||commands.trace)?'--trace':''}`
-                + ` ${(allowGlobals)?'--allow-globals':''}`
-                ,'inherit');
-        } catch(err) {
-            throw new Error(`Failed to compile LiveScripts`)
-        }
-
-        wfs.copy(
-              ipaths.moduleScriptsBuiltLibrary(name,type)
-            , ipaths.tcModuleScript(type,name))
-        if(wfs.exists(ipaths.moduleScriptsBuiltPdb(name,type))) {
-            wfs.copy(
-                  ipaths.moduleScriptsBuiltPdb(name,type)
-                , ipaths.tcModulePdb(type,name));
-        }
-
-        // TODO We need to wait for output from trinitycore to continue here
-        term.log(`Rebuilt code for ${name} in ${timer.timeSec()}s`);
-        return true;
+    get path() {
+        return this.mod.path.livescripts
     }
 
-    export function writeModuleText(dataset: Datasets.Dataset) {
-        wfs.write(
-            ipaths.datasetModuleList(dataset.id),
-            dataset.config.modules.join('\n'));
+    constructor(mod: ModuleEndpoint) {
+        this.mod = mod;
+    }
+
+    static create(mod: ModuleEndpoint) {
+        return new Livescripts(mod).initialize()
+    }
+
+    logName() {
+        return termCustom('livescripts',this.mod.fullName)
+    }
+
+    initialize() {
+        if(!this.path.exists()) {
+            this.path.mkdir();
+            this.path.entry.write(livescript_example);
+        }
+        ipaths.bin.include.global_d_ts.copy(this.path.global_d_ts);
+        this.path.tsconfig.writeJson(scripts_tsconfig_json);
+        this.path.entry.write(livescript_example, 'DONT_OVERWRITE')
+        return this;
+    }
+
+    async build(dataset: Dataset, buildType: BuildType, args: string[] = []) {
+        const timer = Timer.start();
+        this.initialize();
+
+        if(this.mod.datascripts.exists() && ! args.includes('--no-inline')) {
+            await Datascripts.build(dataset,['--inline-only'])
+        }
+
+        this.mod.path.livescript_tsconfig_temp.writeJson(temp_config(dataset))
+        try {
+            wsys.execIn(
+                  `${this.mod.path.abs()}`
+                , `node -r source-map-support/register`
+                + ` ${ipaths.bin.scripts.typescript2cxx.typescript2cxx.main_js.abs()} tsconfig.json`
+                + ` ${(args.join(' '))}`
+                + ` --ipaths=${ipaths.abs()}`
+                + ` --datasetName=${dataset.fullName}`
+                + ` --datasetPath=${dataset.path.abs().get()}`
+                , 'inherit'
+            )
+        } catch(err) {
+            // the error has already been printed
+            throw new Error(`Failed to compile LiveScripts`);
+        }
+
+        if(args.includes('--transpile-only')) {
+            return;
+        }
+
+        this.mod.path.livescript_tsconfig_temp.remove();
+
+        const SPECIAL_FILES = ['ModID','PacketCreator','TableCreator','TCLoader']
+        const builddir = this.path.build.dataset.pick(dataset.fullName)
+        builddir.cpp
+            .iterate('RECURSE','FILES','FULL',node=>{
+                let g = node.toFile().withExtension('').relativeTo(builddir.cpp)
+                if(SPECIAL_FILES.includes(g.basename().get())) return;
+                let ts = this.path.dirname().join(g).get()+'.ts'
+                if(!wfs.exists(ts)) {
+                    if(node.endsWith('.cpp')) { // don't double print on header
+                        console.log(ts,"no longer exists, removing generated c++ files");
+                    }
+                    node.remove();
+                }
+            });
+
+        builddir.cpp.cmakelists_txt
+            .write(getLivescriptCMakeLists(buildType,this.mod.fullName))
+
+            const cmake_generate =
+            (isWindows()
+                ? `"bin/cmake/bin/cmake.exe"`
+                : 'cmake')
+            + ` -S ${builddir.cpp.abs()}`
+            + ` -B ${builddir.lib.abs()}`
+        try {
+            term.log(this.logName(),`Generating CMake project...`)
+            wsys.exec(cmake_generate, !process.argv.includes('--silent')?'inherit':'ignore');
+        } catch(err) {
+            term.error(this.logName(),`Failed to generate CMake files, please report this error`);
+        }
+        const cmake_build =
+            (isWindows()
+                ? `"bin/cmake/bin/cmake.exe"`
+                : `cmake`)
+            + ` --build ${builddir.lib.abs()}`
+            + ` --config ${buildType}`;
+
+        try {
+            term.log(this.logName(),`Compiling C++ binary...`)
+            wsys.exec(cmake_build,!process.argv.includes('--silent') ? 'inherit' : 'ignore')
+        } catch (error) {
+            term.error(this.logName(),`Failed to compile library, please report this error`);
+        }
+
+        builddir.built_libs.pick(buildType).library
+            .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore)
+                .build.pick(buildType).scripts.moduleLib(dataset.fullName+'_'+this.mod.fullName))
+
+        if(isWindows()) {
+            builddir.built_libs.pick(buildType).pdb
+                .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(buildType).scripts.modulePdb(dataset.fullName+'_'+this.mod.fullName))
+        }
+
+        term.log(this.logName(),`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)
+    }
+
+    exists() {
+        return this.path.exists()
+    }
+
+    static all() {
+        return Module.endpoints()
+            .filter(x=>x.livescripts.exists())
+            .map(x=>new Livescripts(x))
+    }
+
+    static initialize() {
+        ListCommand.addCommand(
+              'livescripts'
+            , 'module?'
+            , ''
+            , args => {
+                let isModule = Identifier.isModule(args[0])
+                Livescripts.all()
+                    .filter(x=> !isModule || x.mod.mod.id === args[0])
+                    .forEach(x=>term.log('livescripts',x.path.get()))
+            }
+        ).addAlias('livescript')
+         .addAlias('script')
+         .addAlias('scripts')
+
+        BuildCommand.addCommand(
+              'livescripts'
+            , '(module|dataset)[]? --transpile-only'
+            , 'Comiles and hotswaps livescripts for select modules or'
+            + 'modules within a dataset'
+            , args => {
+                const buildType = Identifier
+                    .getBuildType(args,NodeConfig.DefaultBuildType)
+
+                const datasets = Identifier.getDatasets(
+                      args
+                    , 'MATCH_ANY'
+                    , NodeConfig.DefaultDataset
+                )
+
+                return Promise.all(datasets.map(dataset=>{
+                    let modules = Identifier.getModules(args,'ALLOW_NONE')
+                    if(modules.length === 0) {
+                        modules = dataset.modules().filter(x=>x.livescripts.exists())
+                        if(modules.length === 0) {
+                            throw new Error(`Dataset ${dataset.fullName} has no modules with livescripts`)
+                        }
+                    } else {
+                        modules = modules
+                            .filter(x=>x.livescripts.exists())
+                            .filter(
+                                module => dataset.modules()
+                                    .find(x=>x.fullName === module.fullName)
+                            )
+                        if(modules.length === 0) {
+                            throw new Error(
+                                  `Specified modules ${args.filter(x=>Identifier.isModule(x))} `
+                                + ` and dataset ${dataset.fullName} have no overlapping modules with livescripts`
+                            )
+                        }
+
+                    }
+                    return Promise.all(modules.map(x=>{
+                        return x.livescripts.build(dataset,buildType,args);
+                    }))
+                }));
+            }
+        ).addAlias('scripts').addAlias('script').addAlias('livescript')
+
+        CleanCommand.addCommand(
+            'livescripts'
+          , 'modules'
+          , ''
+          , async args => {
+            let mods = args.length === 0
+                ? Module.endpoints().filter(x=>x.livescripts.exists())
+                : Identifier.getModules(args,'MATCH_ALL')
+
+            mods.forEach(mod=>{
+                // First, at least try to remove the cpp builds
+                const builddir = mod.path.livescripts.build;
+
+                builddir.dataset.all().forEach(x=>{
+                    if(x.cpp.exists()) {
+                        term.log('livescripts',`Removing ${x.cpp.get()}`)
+                    }
+                    x.cpp.remove();
+                })
+
+                try {
+                    if(builddir.exists()) {
+                        term.log('livescripts',`Removing ${mod.path.livescripts.build}`)
+                    }
+                    builddir.remove()
+                } catch(err) {
+                    term.error(
+                          'livescripts'
+                        , `Failed to remove lib for ${mod.fullName},`
+                        + ` do you have the project open in visual studio?`
+                        + ` code files were still cleaned, so this might not matter.`
+                    )
+                }
+                ipaths.bin.core.all().filter(x=>x.basename().get() === 'trinitycore').forEach(core=>{
+                    core.build.all().forEach(build=>{
+                        Dataset.all().forEach(dataset=>{
+                            build.scripts
+                                .modulePdb(dataset.fullName+ '_'+ mod.fullName)
+                                .remove()
+                            build.scripts
+                                .moduleLib(dataset.fullName+ '_'+mod.fullName)
+                                .remove()
+                        })
+
+                        // delete all files if we gave no args
+                        // (will include deleted modules)
+                        if(args.length === 0) {
+                            build.scripts.iterate('FLAT','FILES','FULL',node=>{
+                                if(node.basename().includes('scripts_tswow'))
+                                {
+                                    node.remove();
+                                }
+                            })
+                        }
+                    })
+                })
+            })
+          }
+        ).addAlias('scripts').addAlias('script').addAlias('livescript')
     }
 }

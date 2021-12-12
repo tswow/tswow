@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCFloatCell , DBCFloatArrayCell , DBCStringCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCFloatCell, DBCIntCell, DBCKeyCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,37 +34,37 @@ export class WeatherRow extends DBCRow<WeatherCreator,WeatherQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get AmbienceID() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectType() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get TransitionSkyBox() { return new DBCFloatCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectColor() { return new DBCFloatArrayCell(this,3,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectTexture() { return new DBCStringCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : WeatherCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -77,7 +77,7 @@ export type WeatherCreator = {
     AmbienceID?: int
     EffectType?: int
     TransitionSkyBox?: float
-    EffectColor?: float
+    EffectColor?: float[]
     EffectTexture?: string
 }
 

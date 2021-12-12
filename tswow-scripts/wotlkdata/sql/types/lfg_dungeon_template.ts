@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , varchar , float , smallint } from '../../primitives'
+import { float, int, smallint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,47 +29,47 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class lfg_dungeon_templateRow extends SqlRow<lfg_dungeon_templateCreator,lfg_dungeon_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get dungeonId() {return new SQLCellReadOnly<int, this>(this, 'dungeonId')}
-    
+
     /**
      * No comment (yet!)
      */
     get name() {return new SQLCell<varchar, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_x() {return new SQLCell<float, this>(this, 'position_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_y() {return new SQLCell<float, this>(this, 'position_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_z() {return new SQLCell<float, this>(this, 'position_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get orientation() {return new SQLCell<float, this>(this, 'orientation')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(dungeonId : int, c? : lfg_dungeon_templateCreator) : this {
         return this.cloneInternal([dungeonId],c)
     }

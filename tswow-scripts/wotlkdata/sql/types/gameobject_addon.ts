@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , float , tinyint } from '../../primitives'
+import { float, int, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,47 +29,47 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gameobject_addonRow extends SqlRow<gameobject_addonCreator,gameobject_addonQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get parent_rotation0() {return new SQLCell<float, this>(this, 'parent_rotation0')}
-    
+
     /**
      * No comment (yet!)
      */
     get parent_rotation1() {return new SQLCell<float, this>(this, 'parent_rotation1')}
-    
+
     /**
      * No comment (yet!)
      */
     get parent_rotation2() {return new SQLCell<float, this>(this, 'parent_rotation2')}
-    
+
     /**
      * No comment (yet!)
      */
     get parent_rotation3() {return new SQLCell<float, this>(this, 'parent_rotation3')}
-    
+
     /**
      * No comment (yet!)
      */
     get invisibilityType() {return new SQLCell<tinyint, this>(this, 'invisibilityType')}
-    
+
     /**
      * No comment (yet!)
      */
     get invisibilityValue() {return new SQLCell<int, this>(this, 'invisibilityValue')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : int, c? : gameobject_addonCreator) : this {
         return this.cloneInternal([guid],c)
     }

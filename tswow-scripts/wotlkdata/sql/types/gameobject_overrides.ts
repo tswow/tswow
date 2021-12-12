@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , smallint } from '../../primitives'
+import { int, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,27 +29,27 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gameobject_overridesRow extends SqlRow<gameobject_overridesCreator,gameobject_overridesQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get spawnId() {return new SQLCellReadOnly<int, this>(this, 'spawnId')}
-    
+
     /**
      * No comment (yet!)
      */
     get faction() {return new SQLCell<smallint, this>(this, 'faction')}
-    
+
     /**
      * No comment (yet!)
      */
     get flags() {return new SQLCell<int, this>(this, 'flags')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(spawnId : int, c? : gameobject_overridesCreator) : this {
         return this.cloneInternal([spawnId],c)
     }

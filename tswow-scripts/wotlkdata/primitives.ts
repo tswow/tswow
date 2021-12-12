@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Language, Languages } from './dbc/Localization';
 import { DBCBuffer } from './dbc/DBCBuffer';
+import { Language, Languages } from './dbc/Localization';
 
 export type bool = boolean;
 export type byte = number;

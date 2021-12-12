@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , mediumint , float , smallint } from '../../primitives'
+import { float, int, mediumint, smallint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,70 +29,70 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class waypoint_dataRow extends SqlRow<waypoint_dataCreator,waypoint_dataQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get id() {return new SQLCellReadOnly<int, this>(this, 'id')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get point() {return new SQLCellReadOnly<mediumint, this>(this, 'point')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_x() {return new SQLCell<float, this>(this, 'position_x')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_y() {return new SQLCell<float, this>(this, 'position_y')}
-    
+
     /**
      * No comment (yet!)
      */
     get position_z() {return new SQLCell<float, this>(this, 'position_z')}
-    
+
     /**
      * No comment (yet!)
      */
     get orientation() {return new SQLCell<float, this>(this, 'orientation')}
-    
+
     /**
      * No comment (yet!)
      */
     get delay() {return new SQLCell<int, this>(this, 'delay')}
-    
+
     /**
      * No comment (yet!)
      */
     get move_type() {return new SQLCell<int, this>(this, 'move_type')}
-    
+
     /**
      * No comment (yet!)
      */
     get action() {return new SQLCell<int, this>(this, 'action')}
-    
+
     /**
      * No comment (yet!)
      */
     get action_chance() {return new SQLCell<smallint, this>(this, 'action_chance')}
-    
+
     /**
      * No comment (yet!)
      */
     get wpguid() {return new SQLCell<int, this>(this, 'wpguid')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(id : int,point : mediumint, c? : waypoint_dataCreator) : this {
         return this.cloneInternal([id,point],c)
     }

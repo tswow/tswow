@@ -14,12 +14,11 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCStringCell , DBCIntCell} from '../DBCCell'
-import { int} from '../../primitives'
-import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -31,22 +30,22 @@ export class PaperDollItemFrameRow extends DBCRow<PaperDollItemFrameCreator,Pape
      * No comment (yet!)
      */
     get ItemButtonName() { return new DBCStringCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get SlotIcon() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get SlotNumber() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(c?: PaperDollItemFrameCreator) : this {
         return this.cloneInternal([],c);
     }

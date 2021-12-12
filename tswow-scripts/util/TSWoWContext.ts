@@ -1,4 +1,4 @@
-export type TSWoWContext = 'build'|'install';
+export type TSWoWContext = 'build'|'install'|'typescript2cxx';
 
 let context: TSWoWContext = 'install';
 

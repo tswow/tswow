@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , varchar , text } from '../../primitives'
+import { mediumint, text, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,52 +29,52 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class achievement_rewardRow extends SqlRow<achievement_rewardCreator,achievement_rewardQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get TitleA() {return new SQLCell<mediumint, this>(this, 'TitleA')}
-    
+
     /**
      * No comment (yet!)
      */
     get TitleH() {return new SQLCell<mediumint, this>(this, 'TitleH')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemID() {return new SQLCell<mediumint, this>(this, 'ItemID')}
-    
+
     /**
      * No comment (yet!)
      */
     get Sender() {return new SQLCell<mediumint, this>(this, 'Sender')}
-    
+
     /**
      * No comment (yet!)
      */
     get Subject() {return new SQLCell<varchar, this>(this, 'Subject')}
-    
+
     /**
      * No comment (yet!)
      */
     get Body() {return new SQLCell<text, this>(this, 'Body')}
-    
+
     /**
      * No comment (yet!)
      */
     get MailTemplateID() {return new SQLCell<mediumint, this>(this, 'MailTemplateID')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : achievement_rewardCreator) : this {
         return this.cloneInternal([ID],c)
     }

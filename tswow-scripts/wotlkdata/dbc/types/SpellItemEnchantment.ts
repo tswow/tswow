@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCIntArrayCell , DBCLocCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCIntCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,77 +34,77 @@ export class SpellItemEnchantmentRow extends DBCRow<SpellItemEnchantmentCreator,
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Charges() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Effect() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectPointsMin() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectPointsMax() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+32)}
-    
+
     /**
      * No comment (yet!)
      */
     get EffectArg() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemVisual() { return new DBCIntCell(this,this.buffer,this.offset+124)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+128)}
-    
+
     /**
      * No comment (yet!)
      */
     get Src_ItemID() { return new DBCIntCell(this,this.buffer,this.offset+132)}
-    
+
     /**
      * No comment (yet!)
      */
     get Condition_Id() { return new DBCIntCell(this,this.buffer,this.offset+136)}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSkillID() { return new DBCIntCell(this,this.buffer,this.offset+140)}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredSkillRank() { return new DBCIntCell(this,this.buffer,this.offset+144)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinLevel() { return new DBCIntCell(this,this.buffer,this.offset+148)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellItemEnchantmentCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -115,10 +115,10 @@ export class SpellItemEnchantmentRow extends DBCRow<SpellItemEnchantmentCreator,
  */
 export type SpellItemEnchantmentCreator = {
     Charges?: int
-    Effect?: int
-    EffectPointsMin?: int
-    EffectPointsMax?: int
-    EffectArg?: int
+    Effect?: int[]
+    EffectPointsMin?: int[]
+    EffectPointsMax?: int[]
+    EffectArg?: int[]
     Name?: loc_constructor
     ItemVisual?: int
     Flags?: int

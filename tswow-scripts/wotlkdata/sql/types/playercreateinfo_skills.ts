@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , smallint , varchar } from '../../primitives'
+import { int, smallint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,43 +29,43 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class playercreateinfo_skillsRow extends SqlRow<playercreateinfo_skillsCreator,playercreateinfo_skillsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get raceMask() {return new SQLCellReadOnly<int, this>(this, 'raceMask')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get classMask() {return new SQLCellReadOnly<int, this>(this, 'classMask')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get skill() {return new SQLCellReadOnly<smallint, this>(this, 'skill')}
-    
+
     /**
      * No comment (yet!)
      */
     get rank() {return new SQLCell<smallint, this>(this, 'rank')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<varchar, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(raceMask : int,clsMask : int,skill : smallint, c? : playercreateinfo_skillsCreator) : this {
         return this.cloneInternal([raceMask,clsMask,skill],c)
     }

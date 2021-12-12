@@ -14,9 +14,8 @@
   },
   "tstl": {
     "luaTarget": "5.1",
-    "luaPlugins": [ 
-      {"name": "../scripts/tswow/addons/RequirePreload.js","import":"RequirePreload"},
-      {"name": "../scripts/tswow/addons/MessagePlugin.js","import":"MessagePlugin"},
+    "luaPlugins": [
+      {"name": "../scripts/addons/addons/RequirePreload.js","import":"RequirePreload"},
     ],
     "noImplicitSelf": true,
   }

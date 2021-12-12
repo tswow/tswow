@@ -85,7 +85,7 @@ export namespace util {
 
     /**
      * Transform a string to snake case
-     * @param str 
+     * @param str
      */
     export function toDashCase(str: string) {
         return str.split(' ').join('-').split('').map(c=>

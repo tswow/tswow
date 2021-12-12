@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, uint } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCStringCell , DBCFlagCell , DBCIntCell , DBCPointerCell , DBCEnumCell} from '../DBCCell'
-import { int , uint} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCEnumCell, DBCFlagCell, DBCIntCell, DBCKeyCell, DBCPointerCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,47 +34,47 @@ export class AnimationDataRow extends DBCRow<AnimationDataCreator,AnimationDataQ
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * 32 = pull out weapons during animation. 16 and 4 puts weapons away during animation.
      */
     get Weaponflags() { return new DBCFlagCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * Unknown
      */
     get Bodyflags() { return new DBCFlagCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * Unknown
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * ID of animation preceding this one
      */
     get Fallback() { return new DBCPointerCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * Same as ID for normal animations
      */
     get BehaviorID() { return new DBCIntCell(this,this.buffer,this.offset+24)}
-    
+
     /**
      * 0 means normal, 3 means fly
      */
     get BehaviorTier() { return new DBCEnumCell(this,this.buffer,this.offset+28)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : AnimationDataCreator) : this {
         return this.cloneInternal([ID],c);
     }

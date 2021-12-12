@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from '../../wotlkdata/dbc/DBCFiles';
-import fs = require('fs');
-import { describe, it } from 'mocha';
 import * as assert from 'assert';
+import { describe, it } from 'mocha';
+import { DBC } from '../../wotlkdata/dbc/DBCFiles';
 import { lt } from '../../wotlkdata/query/Relations';
+import fs = require('fs');
 
 const TEMP_DBC = './tmp.dbc';
 

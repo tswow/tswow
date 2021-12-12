@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCFloatCell , DBCIntArrayCell , DBCFloatArrayCell , DBCStringCell , DBCStringArrayCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatArrayCell, DBCFloatCell, DBCIntArrayCell, DBCIntCell, DBCKeyCell, DBCStringArrayCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,152 +34,152 @@ export class VehicleRow extends DBCRow<VehicleCreator,VehicleQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get TurnSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get PitchSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get PitchMin() { return new DBCFloatCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get PitchMax() { return new DBCFloatCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get SeatID() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+24)}
-    
+
     /**
      * No comment (yet!)
      */
     get MouseLookOffsetPitch() { return new DBCFloatCell(this,this.buffer,this.offset+56)}
-    
+
     /**
      * No comment (yet!)
      */
     get CameraFadeDistScalarMin() { return new DBCFloatCell(this,this.buffer,this.offset+60)}
-    
+
     /**
      * No comment (yet!)
      */
     get CameraFadeDistScalarMax() { return new DBCFloatCell(this,this.buffer,this.offset+64)}
-    
+
     /**
      * No comment (yet!)
      */
     get CameraPitchOffset() { return new DBCFloatCell(this,this.buffer,this.offset+68)}
-    
+
     /**
      * No comment (yet!)
      */
     get FacingLimitRight() { return new DBCFloatCell(this,this.buffer,this.offset+72)}
-    
+
     /**
      * No comment (yet!)
      */
     get FacingLimitLeft() { return new DBCFloatCell(this,this.buffer,this.offset+76)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtTurnLingering() { return new DBCFloatCell(this,this.buffer,this.offset+80)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtPitchLingering() { return new DBCFloatCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtMouseLingering() { return new DBCFloatCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtEndOpacity() { return new DBCFloatCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtArcSpeed() { return new DBCFloatCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtArcRepeat() { return new DBCFloatCell(this,this.buffer,this.offset+100)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtArcWidth() { return new DBCFloatCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtImpactRadius() { return new DBCFloatArrayCell(this,2,this.buffer,this.offset+108)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtArcTexture() { return new DBCStringCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtImpactTexture() { return new DBCStringCell(this,this.buffer,this.offset+120)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtImpactModel() { return new DBCStringArrayCell(this,2,this.buffer,this.offset+124)}
-    
+
     /**
      * No comment (yet!)
      */
     get CameraYawOffset() { return new DBCFloatCell(this,this.buffer,this.offset+132)}
-    
+
     /**
      * No comment (yet!)
      */
     get UilocomotionType() { return new DBCIntCell(this,this.buffer,this.offset+136)}
-    
+
     /**
      * No comment (yet!)
      */
     get MsslTrgtImpactTexRadius() { return new DBCFloatCell(this,this.buffer,this.offset+140)}
-    
+
     /**
      * No comment (yet!)
      */
     get VehicleUIIndicatorID() { return new DBCIntCell(this,this.buffer,this.offset+144)}
-    
+
     /**
      * No comment (yet!)
      */
     get PowerDisplayID() { return new DBCIntArrayCell(this,3,this.buffer,this.offset+148)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : VehicleCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -194,7 +194,7 @@ export type VehicleCreator = {
     PitchSpeed?: float
     PitchMin?: float
     PitchMax?: float
-    SeatID?: int
+    SeatID?: int[]
     MouseLookOffsetPitch?: float
     CameraFadeDistScalarMin?: float
     CameraFadeDistScalarMax?: float
@@ -208,15 +208,15 @@ export type VehicleCreator = {
     MsslTrgtArcSpeed?: float
     MsslTrgtArcRepeat?: float
     MsslTrgtArcWidth?: float
-    MsslTrgtImpactRadius?: float
+    MsslTrgtImpactRadius?: float[]
     MsslTrgtArcTexture?: string
     MsslTrgtImpactTexture?: string
-    MsslTrgtImpactModel?: string
+    MsslTrgtImpactModel?: string[]
     CameraYawOffset?: float
     UilocomotionType?: int
     MsslTrgtImpactTexRadius?: float
     VehicleUIIndicatorID?: int
-    PowerDisplayID?: int
+    PowerDisplayID?: int[]
 }
 
 /**

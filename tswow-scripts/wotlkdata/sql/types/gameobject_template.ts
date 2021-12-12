@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , tinyint , varchar , float , int , char , smallint } from '../../primitives'
+import { char, float, int, mediumint, smallint, tinyint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,187 +29,187 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class gameobject_templateRow extends SqlRow<gameobject_templateCreator,gameobject_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get entry() {return new SQLCellReadOnly<mediumint, this>(this, 'entry')}
-    
+
     /**
      * No comment (yet!)
      */
     get type() {return new SQLCell<tinyint, this>(this, 'type')}
-    
+
     /**
      * No comment (yet!)
      */
     get displayId() {return new SQLCell<mediumint, this>(this, 'displayId')}
-    
+
     /**
      * No comment (yet!)
      */
     get name() {return new SQLCell<varchar, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get IconName() {return new SQLCell<varchar, this>(this, 'IconName')}
-    
+
     /**
      * No comment (yet!)
      */
     get castBarCaption() {return new SQLCell<varchar, this>(this, 'castBarCaption')}
-    
+
     /**
      * No comment (yet!)
      */
     get unk1() {return new SQLCell<varchar, this>(this, 'unk1')}
-    
+
     /**
      * No comment (yet!)
      */
     get size() {return new SQLCell<float, this>(this, 'size')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data0() {return new SQLCell<int, this>(this, 'Data0')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data1() {return new SQLCell<int, this>(this, 'Data1')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data2() {return new SQLCell<int, this>(this, 'Data2')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data3() {return new SQLCell<int, this>(this, 'Data3')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data4() {return new SQLCell<int, this>(this, 'Data4')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data5() {return new SQLCell<int, this>(this, 'Data5')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data6() {return new SQLCell<int, this>(this, 'Data6')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data7() {return new SQLCell<int, this>(this, 'Data7')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data8() {return new SQLCell<int, this>(this, 'Data8')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data9() {return new SQLCell<int, this>(this, 'Data9')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data10() {return new SQLCell<int, this>(this, 'Data10')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data11() {return new SQLCell<int, this>(this, 'Data11')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data12() {return new SQLCell<int, this>(this, 'Data12')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data13() {return new SQLCell<int, this>(this, 'Data13')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data14() {return new SQLCell<int, this>(this, 'Data14')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data15() {return new SQLCell<int, this>(this, 'Data15')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data16() {return new SQLCell<int, this>(this, 'Data16')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data17() {return new SQLCell<int, this>(this, 'Data17')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data18() {return new SQLCell<int, this>(this, 'Data18')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data19() {return new SQLCell<int, this>(this, 'Data19')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data20() {return new SQLCell<int, this>(this, 'Data20')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data21() {return new SQLCell<int, this>(this, 'Data21')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data22() {return new SQLCell<int, this>(this, 'Data22')}
-    
+
     /**
      * No comment (yet!)
      */
     get Data23() {return new SQLCell<int, this>(this, 'Data23')}
-    
+
     /**
      * No comment (yet!)
      */
     get AIName() {return new SQLCell<char, this>(this, 'AIName')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<varchar, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(entry : mediumint, c? : gameobject_templateCreator) : this {
         return this.cloneInternal([entry],c)
     }

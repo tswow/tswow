@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntCell , DBCStringCell , DBCStringArrayCell , DBCIntArrayCell , DBCFloatCell} from '../DBCCell'
-import { int , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatCell, DBCIntArrayCell, DBCIntCell, DBCKeyCell, DBCStringArrayCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,67 +34,67 @@ export class SoundEntriesRow extends DBCRow<SoundEntriesCreator,SoundEntriesQuer
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundType() { return new DBCIntCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCStringCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get File() { return new DBCStringArrayCell(this,10,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Freq() { return new DBCIntArrayCell(this,10,this.buffer,this.offset+52)}
-    
+
     /**
      * No comment (yet!)
      */
     get DirectoryBase() { return new DBCStringCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get Volumefloat() { return new DBCFloatCell(this,this.buffer,this.offset+96)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+100)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinDistance() { return new DBCFloatCell(this,this.buffer,this.offset+104)}
-    
+
     /**
      * No comment (yet!)
      */
     get DistanceCutoff() { return new DBCFloatCell(this,this.buffer,this.offset+108)}
-    
+
     /**
      * No comment (yet!)
      */
     get EAXDef() { return new DBCIntCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * No comment (yet!)
      */
     get SoundEntriesAdvancedID() { return new DBCIntCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SoundEntriesCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -106,8 +106,8 @@ export class SoundEntriesRow extends DBCRow<SoundEntriesCreator,SoundEntriesQuer
 export type SoundEntriesCreator = {
     SoundType?: int
     Name?: string
-    File?: string
-    Freq?: int
+    File?: string[]
+    Freq?: int[]
     DirectoryBase?: string
     Volumefloat?: float
     Flags?: int

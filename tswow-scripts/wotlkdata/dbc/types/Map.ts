@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { float, int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCStringCell , DBCIntCell , DBCLocCell , DBCFloatCell} from '../DBCCell'
-import { int , loc_constructor , float} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCFloatCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,97 +34,97 @@ export class MapRow extends DBCRow<MapCreator,MapQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Directory() { return new DBCStringCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get InstanceType() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get PVP() { return new DBCIntCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapName() { return new DBCLocCell(this,this.buffer,this.offset+20)}
-    
+
     /**
      * No comment (yet!)
      */
     get AreaTableID() { return new DBCIntCell(this,this.buffer,this.offset+88)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapDescription0() { return new DBCLocCell(this,this.buffer,this.offset+92)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapDescription1() { return new DBCLocCell(this,this.buffer,this.offset+160)}
-    
+
     /**
      * No comment (yet!)
      */
     get LoadingScreenID() { return new DBCIntCell(this,this.buffer,this.offset+228)}
-    
+
     /**
      * No comment (yet!)
      */
     get MinimapIconScale() { return new DBCFloatCell(this,this.buffer,this.offset+232)}
-    
+
     /**
      * No comment (yet!)
      */
     get CorpseMapID() { return new DBCIntCell(this,this.buffer,this.offset+236)}
-    
+
     /**
      * No comment (yet!)
      */
     get CorpseX() { return new DBCFloatCell(this,this.buffer,this.offset+240)}
-    
+
     /**
      * No comment (yet!)
      */
     get CorpseY() { return new DBCFloatCell(this,this.buffer,this.offset+244)}
-    
+
     /**
      * No comment (yet!)
      */
     get TimeOfDayOverride() { return new DBCIntCell(this,this.buffer,this.offset+248)}
-    
+
     /**
      * No comment (yet!)
      */
     get ExpansionID() { return new DBCIntCell(this,this.buffer,this.offset+252)}
-    
+
     /**
      * No comment (yet!)
      */
     get RaidOffset() { return new DBCIntCell(this,this.buffer,this.offset+256)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxPlayers() { return new DBCIntCell(this,this.buffer,this.offset+260)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : MapCreator) : this {
         return this.cloneInternal([ID],c);
     }

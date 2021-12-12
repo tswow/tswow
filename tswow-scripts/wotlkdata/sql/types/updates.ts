@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { varchar , char , text , timestamp , int } from '../../primitives'
+import { char, int, text, timestamp, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,37 +29,37 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class updatesRow extends SqlRow<updatesCreator,updatesQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get name() {return new SQLCellReadOnly<varchar, this>(this, 'name')}
-    
+
     /**
      * No comment (yet!)
      */
     get hash() {return new SQLCell<char, this>(this, 'hash')}
-    
+
     /**
      * No comment (yet!)
      */
     get state() {return new SQLCell<text, this>(this, 'state')}
-    
+
     /**
      * No comment (yet!)
      */
     get timestamp() {return new SQLCell<timestamp, this>(this, 'timestamp')}
-    
+
     /**
      * No comment (yet!)
      */
     get speed() {return new SQLCell<int, this>(this, 'speed')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(name : varchar, c? : updatesCreator) : this {
         return this.cloneInternal([name],c)
     }

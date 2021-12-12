@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , char , text } from '../../primitives'
+import { char, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,27 +29,27 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class outdoorpvp_templateRow extends SqlRow<outdoorpvp_templateCreator,outdoorpvp_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get TypeId() {return new SQLCellReadOnly<tinyint, this>(this, 'TypeId')}
-    
+
     /**
      * No comment (yet!)
      */
     get ScriptName() {return new SQLCell<char, this>(this, 'ScriptName')}
-    
+
     /**
      * No comment (yet!)
      */
     get comment() {return new SQLCell<text, this>(this, 'comment')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(TypeId : tinyint, c? : outdoorpvp_templateCreator) : this {
         return this.cloneInternal([TypeId],c)
     }

@@ -14,33 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
-import { build_path } from './BuildConfig';
-import { wfs } from '../util/FileSystem';
-import { bpaths, spaths, ipaths } from '../util/Paths';
+import { bpaths, spaths } from './CompilePaths';
 
 export namespace MPQBuilder {
     export async function create(cmake: string) {
         if (isWindows()) {
             wsys.exec(`${cmake} `
-                + ` -S "mpqbuilder" `
-                + ` -B "${bpaths.mpqBuilder}"`, 'inherit');
+                + ` -S "${spaths.tools.mpqbuilder.get()}" `
+                + ` -B "${bpaths.mpqbuilder.get()}"`, 'inherit');
             wsys.exec(`${cmake}`
-                + ` --build "${bpaths.mpqBuilder}"`
+                + ` --build "${bpaths.mpqbuilder.get()}"`
                 + ` --config Release`, 'inherit');
         } else {
-            const mpqBuildDir = build_path('mpqbuilder');
-            wfs.mkDirs(mpqBuildDir);
-            const relativeMpqSource = wfs.relative(mpqBuildDir,'./mpqbuilder');
-            await wsys.inDirectory(mpqBuildDir, () => {
-                wsys.exec(
-                    `${cmake} "${relativeMpqSource}"`
-                    ,  'inherit');
-                wsys.exec(`make`,'inherit');
-            });
+            bpaths.mpqbuilder.mkdir()
+            const relativeMpqSource = bpaths.mpqbuilder.relativeFrom('./mpqbuilder');
+            await wsys.inDirectory(bpaths.mpqbuilder.relativeFrom('./mpqbuilder').get()
+                , () => {
+                    wsys.exec(
+                        `${cmake} "${relativeMpqSource}"`
+                        ,  'inherit');
+                    wsys.exec(`make`,'inherit');
+                });
         }
-        wfs.copy(bpaths.mpqBuilderBinary,ipaths.mpqBuilderExe)
-        wfs.copy(bpaths.luaxmlBinary,ipaths.luaxmlExe)
+        bpaths.mpqbuilder.mpqbuilder_exe.copy(ipaths.bin.mpqbuilder.mpqbuilder_exe)
+        bpaths.mpqbuilder.luaxml_exe.copy(ipaths.bin.mpqbuilder.luaxml_exe)
     }
 }

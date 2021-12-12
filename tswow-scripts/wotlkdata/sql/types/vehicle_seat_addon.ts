@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , float , tinyint } from '../../primitives'
+import { float, int, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,47 +29,47 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class vehicle_seat_addonRow extends SqlRow<vehicle_seat_addonCreator,vehicle_seat_addonQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SeatEntry() {return new SQLCellReadOnly<int, this>(this, 'SeatEntry')}
-    
+
     /**
      * No comment (yet!)
      */
     get SeatOrientation() {return new SQLCell<float, this>(this, 'SeatOrientation')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExitParamX() {return new SQLCell<float, this>(this, 'ExitParamX')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExitParamY() {return new SQLCell<float, this>(this, 'ExitParamY')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExitParamZ() {return new SQLCell<float, this>(this, 'ExitParamZ')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExitParamO() {return new SQLCell<float, this>(this, 'ExitParamO')}
-    
+
     /**
      * No comment (yet!)
      */
     get ExitParamValue() {return new SQLCell<tinyint, this>(this, 'ExitParamValue')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(SeatEntry : int, c? : vehicle_seat_addonCreator) : this {
         return this.cloneInternal([SeatEntry],c)
     }

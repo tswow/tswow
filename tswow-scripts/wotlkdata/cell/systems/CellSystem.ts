@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Language, Languages } from '../../dbc/Localization';
+import { loc_constructor } from '../../primitives';
+import { Cell, CellUnlocker, CellWrapper, CPrim } from '../cells/Cell';
 import { CellArray, CellArrayWrapper, CellIndexWrapper } from '../cells/CellArray';
-import { CPrim, Cell, CellWrapper } from '../cells/Cell';
+import { CellReadOnly, CellWrapperReadOnly } from '../cells/CellReadOnly';
+import { MulticastCell } from '../cells/MulticastCell';
 import { CellWrapperExists, PendingCell } from '../cells/PendingCell';
+import { CommonStruct } from '../serialization/CommonStruct';
 import { Objects } from '../serialization/ObjectIteration';
 import { Transient } from '../serialization/Transient';
-import { MulticastCell } from '../cells/MulticastCell';
-import { loc_constructor } from '../../primitives';
-import { Language, Languages } from '../../dbc/Localization';
-import { CommonStruct } from '../serialization/CommonStruct';
 
 export class CellSystem<T> {
     static cloneFrom(tar: any, src: any) {
@@ -64,14 +65,15 @@ export class CellSystem<T> {
     }
 
     @Transient
-    get end() { return this.owner; }
-
-    @Transient
     protected get isSubsystem() { return true; }
 
     static isSystem(candidate: any) {
         if(!candidate ||  typeof(candidate) != 'object') return false;
         return (candidate as CellSystem<any>).isSubsystem || false;
+    }
+
+    protected wrapReadOnly<W extends CPrim>(cell: CellReadOnly<W, any>) {
+        return new CellWrapperReadOnly(this, cell);
     }
 
     protected wrap<W extends CPrim>(cell: Cell<W, any>) {
@@ -116,6 +118,18 @@ export class CellSystem<T> {
 
     protected wrapMulticast<D extends CPrim>(cells: Cell<D,any>[]) {
         return this.wrap(new MulticastCell(this,cells));
+    }
+
+    protected ownerWrapLocMulticast(cells: LocSystem<any>[]): LocSystem<T> {
+        return this.ownerWrapLoc(new MulticastLocCell(this, cells))
+    }
+
+    protected wrapLocMulticast(cells: LocSystem<any>[]): LocSystem<this> {
+        return this.wrapLoc(new MulticastLocCell(this, cells))
+    }
+
+    protected wrapUnlock(cell: CellReadOnly<number,any>) {
+        return new CellUnlocker(this, cell);
     }
 
     protected deserialize(json: any) {
@@ -175,6 +189,7 @@ export abstract class LocSystem<T> extends CellSystem<T> {
                 c.set('')
             }
         });
+        return this.owner;
     }
 }
 
@@ -202,5 +217,27 @@ export class WrappedLoc<T> extends LocSystem<T> {
 
     objectify() {
         return this.wrapped.objectify();
+    }
+}
+
+export class MulticastLocCell<T>  extends LocSystem<T> {
+    protected cells: LocSystem<any>[];
+
+    constructor(owner: T, cells: LocSystem<any>[]) {
+        super(owner);
+        this.cells = cells;
+    }
+
+    lang(lang: Language): Cell<string, T> & PendingCell {
+        return new MulticastCell(this.owner, this.cells.map(x=>x.lang(lang)))
+    }
+    get mask(): Cell<number, T> {
+        return new MulticastCell(this.owner, this.cells.map(x=>x.mask))
+    }
+    set(con: loc_constructor): T {
+        this.cells.forEach(x=>{
+            x.set(con);
+        })
+        return this.owner;
     }
 }

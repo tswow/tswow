@@ -13,11 +13,12 @@
     "@types/mysql": "^2.15.15",
     "@types/node": "^14.14.34",
     "@types/node-sql-parser": "^1.1.0",
+    "@types/pngjs": "^6.0.1",
     "@types/request": "^2.48.5",
     "@types/terminal-kit": "^1.28.2",
     "@types/xml2js": "^0.4.5",
     "adm-zip": "^0.4.16",
-    "chokidar": "^3.4.3",
+    "bigint-conversion": "^2.2.1",
     "clipboardy": "^2.3.0",
     "cross-spawn": "^7.0.3",
     "deasync": "^0.1.21",
@@ -31,6 +32,8 @@
     "ncp": "^2.0.0",
     "node-sql-parser": "^3.1.0",
     "path": "^0.12.7",
+    "pngjs": "^6.0.0",
+    "pureimage": "^0.3.5",
     "request": "^2.88.2",
     "request-progress": "^3.0.0",
     "source-map": "^0.7.3",
@@ -56,5 +59,10 @@
   "bugs": {
     "url": "https://github.com/tswow/tswow/issues"
   },
-  "homepage": "https://github.com/tswow/tswow#readme"
+  "homepage": "https://github.com/tswow/tswow#readme",
+  "devDependencies": {
+    "@swc/cli": "^0.1.51",
+    "@swc/core": "^1.2.107",
+    "chokidar": "^3.5.2"
+  }
 }

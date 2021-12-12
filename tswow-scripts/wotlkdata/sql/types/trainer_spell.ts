@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , tinyint , smallint } from '../../primitives'
+import { int, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,65 +29,75 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class trainer_spellRow extends SqlRow<trainer_spellCreator,trainer_spellQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get TrainerId() {return new SQLCellReadOnly<int, this>(this, 'TrainerId')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get SpellId() {return new SQLCellReadOnly<int, this>(this, 'SpellId')}
-    
+
     /**
      * No comment (yet!)
      */
     get MoneyCost() {return new SQLCell<int, this>(this, 'MoneyCost')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqSkillLine() {return new SQLCell<int, this>(this, 'ReqSkillLine')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqSkillRank() {return new SQLCell<int, this>(this, 'ReqSkillRank')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqAbility1() {return new SQLCell<int, this>(this, 'ReqAbility1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqAbility2() {return new SQLCell<int, this>(this, 'ReqAbility2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqAbility3() {return new SQLCell<int, this>(this, 'ReqAbility3')}
-    
+
     /**
      * No comment (yet!)
      */
     get ReqLevel() {return new SQLCell<tinyint, this>(this, 'ReqLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
+    /**
+     * Custom tswow field
+     */
+    get raceMask() { return new SQLCell<int,this>(this, 'raceMask')}
+
+    /**
+     * Custom tswow field
+     */
+    get classMask() { return new SQLCell<int,this>(this, 'classMask')}
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(TrainerId : int,SpellId : int, c? : trainer_spellCreator) : this {
         return this.cloneInternal([TrainerId,SpellId],c)
     }
@@ -107,6 +117,8 @@ export type trainer_spellCreator = {
     ReqAbility3? : int,
     ReqLevel? : tinyint,
     VerifiedBuild? : smallint,
+    raceMask?: int
+    classMask?: int
 }
 
 /**
@@ -123,6 +135,8 @@ export type trainer_spellQuery = {
     ReqAbility3? : Relation<int>,
     ReqLevel? : Relation<tinyint>,
     VerifiedBuild? : Relation<smallint>,
+    raceMask? : Relation<int>,
+    classMask? : Relation<int>,
 }
 
 /**

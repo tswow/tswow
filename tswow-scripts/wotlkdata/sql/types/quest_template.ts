@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , tinyint , smallint , int , float , text } from '../../primitives'
+import { float, int, mediumint, smallint, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,537 +29,537 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class quest_templateRow extends SqlRow<quest_templateCreator,quest_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestType() {return new SQLCell<tinyint, this>(this, 'QuestType')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestLevel() {return new SQLCell<smallint, this>(this, 'QuestLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get MinLevel() {return new SQLCell<tinyint, this>(this, 'MinLevel')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestSortID() {return new SQLCell<smallint, this>(this, 'QuestSortID')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestInfoID() {return new SQLCell<smallint, this>(this, 'QuestInfoID')}
-    
+
     /**
      * No comment (yet!)
      */
     get SuggestedGroupNum() {return new SQLCell<tinyint, this>(this, 'SuggestedGroupNum')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredFactionId1() {return new SQLCell<smallint, this>(this, 'RequiredFactionId1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredFactionId2() {return new SQLCell<smallint, this>(this, 'RequiredFactionId2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredFactionValue1() {return new SQLCell<mediumint, this>(this, 'RequiredFactionValue1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredFactionValue2() {return new SQLCell<mediumint, this>(this, 'RequiredFactionValue2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardNextQuest() {return new SQLCell<mediumint, this>(this, 'RewardNextQuest')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardXPDifficulty() {return new SQLCell<tinyint, this>(this, 'RewardXPDifficulty')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardMoney() {return new SQLCell<int, this>(this, 'RewardMoney')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardBonusMoney() {return new SQLCell<int, this>(this, 'RewardBonusMoney')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardDisplaySpell() {return new SQLCell<mediumint, this>(this, 'RewardDisplaySpell')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardSpell() {return new SQLCell<int, this>(this, 'RewardSpell')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardHonor() {return new SQLCell<int, this>(this, 'RewardHonor')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardKillHonor() {return new SQLCell<float, this>(this, 'RewardKillHonor')}
-    
+
     /**
      * No comment (yet!)
      */
     get StartItem() {return new SQLCell<mediumint, this>(this, 'StartItem')}
-    
+
     /**
      * No comment (yet!)
      */
     get Flags() {return new SQLCell<int, this>(this, 'Flags')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredPlayerKills() {return new SQLCell<tinyint, this>(this, 'RequiredPlayerKills')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardItem1() {return new SQLCell<mediumint, this>(this, 'RewardItem1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardAmount1() {return new SQLCell<smallint, this>(this, 'RewardAmount1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardItem2() {return new SQLCell<mediumint, this>(this, 'RewardItem2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardAmount2() {return new SQLCell<smallint, this>(this, 'RewardAmount2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardItem3() {return new SQLCell<mediumint, this>(this, 'RewardItem3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardAmount3() {return new SQLCell<smallint, this>(this, 'RewardAmount3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardItem4() {return new SQLCell<mediumint, this>(this, 'RewardItem4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardAmount4() {return new SQLCell<smallint, this>(this, 'RewardAmount4')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDrop1() {return new SQLCell<mediumint, this>(this, 'ItemDrop1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDropQuantity1() {return new SQLCell<smallint, this>(this, 'ItemDropQuantity1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDrop2() {return new SQLCell<mediumint, this>(this, 'ItemDrop2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDropQuantity2() {return new SQLCell<smallint, this>(this, 'ItemDropQuantity2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDrop3() {return new SQLCell<mediumint, this>(this, 'ItemDrop3')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDropQuantity3() {return new SQLCell<smallint, this>(this, 'ItemDropQuantity3')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDrop4() {return new SQLCell<mediumint, this>(this, 'ItemDrop4')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemDropQuantity4() {return new SQLCell<smallint, this>(this, 'ItemDropQuantity4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemID1() {return new SQLCell<mediumint, this>(this, 'RewardChoiceItemID1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemQuantity1() {return new SQLCell<smallint, this>(this, 'RewardChoiceItemQuantity1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemID2() {return new SQLCell<mediumint, this>(this, 'RewardChoiceItemID2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemQuantity2() {return new SQLCell<smallint, this>(this, 'RewardChoiceItemQuantity2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemID3() {return new SQLCell<mediumint, this>(this, 'RewardChoiceItemID3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemQuantity3() {return new SQLCell<smallint, this>(this, 'RewardChoiceItemQuantity3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemID4() {return new SQLCell<mediumint, this>(this, 'RewardChoiceItemID4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemQuantity4() {return new SQLCell<smallint, this>(this, 'RewardChoiceItemQuantity4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemID5() {return new SQLCell<mediumint, this>(this, 'RewardChoiceItemID5')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemQuantity5() {return new SQLCell<smallint, this>(this, 'RewardChoiceItemQuantity5')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemID6() {return new SQLCell<mediumint, this>(this, 'RewardChoiceItemID6')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardChoiceItemQuantity6() {return new SQLCell<smallint, this>(this, 'RewardChoiceItemQuantity6')}
-    
+
     /**
      * No comment (yet!)
      */
     get POIContinent() {return new SQLCell<smallint, this>(this, 'POIContinent')}
-    
+
     /**
      * No comment (yet!)
      */
     get POIx() {return new SQLCell<float, this>(this, 'POIx')}
-    
+
     /**
      * No comment (yet!)
      */
     get POIy() {return new SQLCell<float, this>(this, 'POIy')}
-    
+
     /**
      * No comment (yet!)
      */
     get POIPriority() {return new SQLCell<mediumint, this>(this, 'POIPriority')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardTitle() {return new SQLCell<tinyint, this>(this, 'RewardTitle')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardTalents() {return new SQLCell<tinyint, this>(this, 'RewardTalents')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardArenaPoints() {return new SQLCell<smallint, this>(this, 'RewardArenaPoints')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionID1() {return new SQLCell<smallint, this>(this, 'RewardFactionID1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionValue1() {return new SQLCell<mediumint, this>(this, 'RewardFactionValue1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionOverride1() {return new SQLCell<mediumint, this>(this, 'RewardFactionOverride1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionID2() {return new SQLCell<smallint, this>(this, 'RewardFactionID2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionValue2() {return new SQLCell<mediumint, this>(this, 'RewardFactionValue2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionOverride2() {return new SQLCell<mediumint, this>(this, 'RewardFactionOverride2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionID3() {return new SQLCell<smallint, this>(this, 'RewardFactionID3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionValue3() {return new SQLCell<mediumint, this>(this, 'RewardFactionValue3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionOverride3() {return new SQLCell<mediumint, this>(this, 'RewardFactionOverride3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionID4() {return new SQLCell<smallint, this>(this, 'RewardFactionID4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionValue4() {return new SQLCell<mediumint, this>(this, 'RewardFactionValue4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionOverride4() {return new SQLCell<mediumint, this>(this, 'RewardFactionOverride4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionID5() {return new SQLCell<smallint, this>(this, 'RewardFactionID5')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionValue5() {return new SQLCell<mediumint, this>(this, 'RewardFactionValue5')}
-    
+
     /**
      * No comment (yet!)
      */
     get RewardFactionOverride5() {return new SQLCell<mediumint, this>(this, 'RewardFactionOverride5')}
-    
+
     /**
      * No comment (yet!)
      */
     get TimeAllowed() {return new SQLCell<int, this>(this, 'TimeAllowed')}
-    
+
     /**
      * No comment (yet!)
      */
     get AllowableRaces() {return new SQLCell<smallint, this>(this, 'AllowableRaces')}
-    
+
     /**
      * No comment (yet!)
      */
     get LogTitle() {return new SQLCell<text, this>(this, 'LogTitle')}
-    
+
     /**
      * No comment (yet!)
      */
     get LogDescription() {return new SQLCell<text, this>(this, 'LogDescription')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestDescription() {return new SQLCell<text, this>(this, 'QuestDescription')}
-    
+
     /**
      * No comment (yet!)
      */
     get AreaDescription() {return new SQLCell<text, this>(this, 'AreaDescription')}
-    
+
     /**
      * No comment (yet!)
      */
     get QuestCompletionLog() {return new SQLCell<text, this>(this, 'QuestCompletionLog')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGo1() {return new SQLCell<mediumint, this>(this, 'RequiredNpcOrGo1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGo2() {return new SQLCell<mediumint, this>(this, 'RequiredNpcOrGo2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGo3() {return new SQLCell<mediumint, this>(this, 'RequiredNpcOrGo3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGo4() {return new SQLCell<mediumint, this>(this, 'RequiredNpcOrGo4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGoCount1() {return new SQLCell<smallint, this>(this, 'RequiredNpcOrGoCount1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGoCount2() {return new SQLCell<smallint, this>(this, 'RequiredNpcOrGoCount2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGoCount3() {return new SQLCell<smallint, this>(this, 'RequiredNpcOrGoCount3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredNpcOrGoCount4() {return new SQLCell<smallint, this>(this, 'RequiredNpcOrGoCount4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemId1() {return new SQLCell<mediumint, this>(this, 'RequiredItemId1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemId2() {return new SQLCell<mediumint, this>(this, 'RequiredItemId2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemId3() {return new SQLCell<mediumint, this>(this, 'RequiredItemId3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemId4() {return new SQLCell<mediumint, this>(this, 'RequiredItemId4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemId5() {return new SQLCell<mediumint, this>(this, 'RequiredItemId5')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemId6() {return new SQLCell<mediumint, this>(this, 'RequiredItemId6')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemCount1() {return new SQLCell<smallint, this>(this, 'RequiredItemCount1')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemCount2() {return new SQLCell<smallint, this>(this, 'RequiredItemCount2')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemCount3() {return new SQLCell<smallint, this>(this, 'RequiredItemCount3')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemCount4() {return new SQLCell<smallint, this>(this, 'RequiredItemCount4')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemCount5() {return new SQLCell<smallint, this>(this, 'RequiredItemCount5')}
-    
+
     /**
      * No comment (yet!)
      */
     get RequiredItemCount6() {return new SQLCell<smallint, this>(this, 'RequiredItemCount6')}
-    
+
     /**
      * No comment (yet!)
      */
     get Unknown0() {return new SQLCell<tinyint, this>(this, 'Unknown0')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText1() {return new SQLCell<text, this>(this, 'ObjectiveText1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText2() {return new SQLCell<text, this>(this, 'ObjectiveText2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText3() {return new SQLCell<text, this>(this, 'ObjectiveText3')}
-    
+
     /**
      * No comment (yet!)
      */
     get ObjectiveText4() {return new SQLCell<text, this>(this, 'ObjectiveText4')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint, c? : quest_templateCreator) : this {
         return this.cloneInternal([ID],c)
     }

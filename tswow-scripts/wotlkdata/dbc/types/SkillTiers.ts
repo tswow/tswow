@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntArrayCell} from '../DBCCell'
-import { int} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,22 +34,22 @@ export class SkillTiersRow extends DBCRow<SkillTiersCreator,SkillTiersQuery> {
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Cost() { return new DBCIntArrayCell(this,16,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Value() { return new DBCIntArrayCell(this,16,this.buffer,this.offset+68)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SkillTiersCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -59,8 +59,8 @@ export class SkillTiersRow extends DBCRow<SkillTiersCreator,SkillTiersQuery> {
  * Used for object creation (Don't comment these)
  */
 export type SkillTiersCreator = {
-    Cost?: int
-    Value?: int
+    Cost?: int[]
+    Value?: int[]
 }
 
 /**

@@ -15,15 +15,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { mpath, wfs } from "../util/FileSystem";
+import { FilePath } from "../util/FileTree";
+import { GetExistingId, IdPrivate } from "../util/ids/Ids";
 import { ipaths } from "../util/Paths";
 import { wsys } from "../util/System";
-import { commands } from "./Commands";
 import { term } from "../util/Terminal";
-import { Datasets } from "./Dataset";
-import { Modules } from "./Modules";
+import { termCustom } from "../util/TerminalCategories";
+import { BuildCommand, CleanCommand, CreateCommand, ListCommand } from "./CommandActions";
+import { Dataset } from "./Dataset";
+import { Identifier } from "./Identifiers";
+import { Module, ModuleEndpoint } from "./Modules";
+import { NodeConfig } from "./NodeConfig";
 
-function defaultTsConfig(mod: string) {
-return {
+const defaultTsConfig = (addon: Addon) => ({
     "compilerOptions": {
       "target": "esnext",
       "lib": ["esnext", "dom"],
@@ -43,59 +47,28 @@ return {
     "exclude":['../scripts','../assets','../data'],
     "tstl": {
       "luaTarget": "5.1",
-      "luaPlugins": [ 
-        {"name": "../../../bin/scripts/tswow/addons/RequirePreload.js",'import':'RequirePreload'},
-        {"name": "../../../bin/scripts/tswow/addons/MessagePlugin.js",'import':'MessagePlugin'},
+      "luaPlugins": [
+        {     "name": ipaths.bin.scripts.addons.addons.require_preload
+                        .relativeTo(addon.path).get()
+            , 'import':'RequirePreload'
+        },
       ],
       "noImplicitSelf": true,
     }
-  }
-}
+})
 
-/**
- * Contains functions for managing addon development in TSWoW modules.
- */
-export namespace Addon {
-    export function getAddons(mod: string) {
-        return wfs.readDir(ipaths.moduleAddons(mod),true,'directories');
+const addon_example_ts = (modName: string) => `console.log("Hello from ${modName!} AddOn!")`
+
+export class Addon {
+    mod: ModuleEndpoint
+
+    get path() {
+        return this.mod.path.addon
     }
 
-    export function initializeModule(mod: string) {
-        if(!wfs.exists(ipaths.addonIndex(mod))) {
-            wfs.write(ipaths.addonIndex(mod),'console.log("Hello world!");');
-        }
-
-        wfs.readDir(ipaths.addonInclude,false)
-            .filter(x=>x.endsWith('.ts') && ! x.endsWith('.d.ts'))
-            .forEach(x=>{
-                wfs.copy(x,mpath(ipaths.addonLib(mod),wfs.basename(x)))
-            });
-        wfs.copy(ipaths.addonIncludeGlobal,ipaths.addonDestGlobal(mod));
-        wfs.write(ipaths.addonTsConfig(mod),JSON.stringify(defaultTsConfig(mod),null,4));
-        wfs.mkDirs(ipaths.moduleShared(mod));
-    }
-
-    export function updateAddons(dataset: string) {
-        wsys.execIn(ipaths.addonInclude,'tstl','inherit');
-        wfs.iterate(ipaths.addonInclude,(fpath)=>{
-            if(!fpath.endsWith('.lua')) return;
-            const fname = wfs.basename(fpath);
-            if(fname==='lualib_bundle.lua') return;
-            wfs.copy(fpath,mpath(ipaths.luaxmlFrameXML(dataset),fname));
-        });
-        let tocfile = wfs.readLines(ipaths.datasetLuaxmlToc(dataset));
-        Modules.getModules()
-            .filter(x=>wfs.exists(ipaths.addonBuild(x.id)))
-            .forEach(x=>{
-                addFilelistToToc(x.id,tocfile);
-                wfs.remove(ipaths.luaxmlAddon(dataset,x.id));
-                wfs.copy(ipaths.addonBuild(x.id),ipaths.luaxmlAddon(dataset,x.id));
-            });
-        wfs.writeLines(ipaths.datasetLuaxmlToc(dataset),tocfile);
-    }
-
-    export function addFilelistToToc(mod: string, tocFile: string[]) {
-        if(!wfs.exists(ipaths.addonBuild(mod))) {
+    addFilelistToToc(tocFile: string[]) {
+        if(!this.path.build.exists()) {
+            // we haven't been built yet
             return;
         }
 
@@ -117,11 +90,11 @@ export namespace Addon {
                 + ` No 'AnimationSystem.lua' line`)
         }
 
-        let libModules = wfs.readDir(ipaths.addonInclude)
+        let libModules = ipaths.bin.include_addon.readDir()
             .filter(x=>x.endsWith('.lua'))
-            .map(x=>wfs.basename(x))
-            .filter(x=>x!=='lualib_bundle.lua')
-    
+            .map(x=>x.basename().get())
+            .filter(x=>x !== 'lualib_bundle.lua')
+
         // These must be first for requires to work correctly
         const score = (a: string) => {
             if(a==='LualibBundle.lua') return 2;
@@ -134,16 +107,16 @@ export namespace Addon {
 
         tocFile.splice(newModules+1,0,
             '## tsaddon-begin-lib',
-            ...libModules,
+            ...libModules.map(x=>x),
             '## tsaddon-end-lib')
 
-        let begin = tocFile.indexOf(`## tsaddon-begin: ${mod}`);
+        let begin = tocFile.indexOf(`## tsaddon-begin: ${this.mod.fullName}`);
         if(begin>=0) {
-            let end = tocFile.indexOf(`## tsaddon-end: ${mod}`);
+            let end = tocFile.indexOf(`## tsaddon-end: ${this.mod.fullName}`);
             if(end<0) {
                 throw new Error(
                     `Broken FrameXML.toc:`
-                  + ` No matching tsaddon-end clause for tsaddon-begin: ${mod}`)
+                  + ` No matching tsaddon-end clause for tsaddon-begin: ${this.mod.fullName}`)
             }
             tocFile.splice(begin,end-begin+1)
         } else {
@@ -155,175 +128,284 @@ export namespace Addon {
             }
         }
 
-        const readToc = (tocPath: string) => {
+        const readToc = (tocPath: FilePath) => {
             if(!wfs.exists(tocPath)) return []
             return wfs.read(tocPath).split('/').join('\\').split('\n');
         }
 
-        let beforelib = readToc(ipaths.addonBeforeLibToc(mod));
-        let before = readToc(ipaths.addonBeforeToc(mod));
-        let after = readToc(ipaths.addonAfterToc(mod));
+        let beforelib = readToc(this.path.beforelib_toc);
+        let before = readToc(this.path.before_toc);
+        let after = readToc(this.path.after_toc);
         const all = beforelib.concat(before.concat(after));
 
+        let modPath = this.mod.fullName.split('.').join('\\')
         const fixToc = (toc: string[]) => {
-            return toc.map(x=>`TSAddons\\${mod}\\addon\\${x}`);
+            return toc.map(x=>`TSAddons\\${modPath}\\addon\\${x}`);
         }
 
         beforelib = fixToc(beforelib);
         before = fixToc(before);
         after = fixToc(after);
 
-        let names: string[] = before.concat([`TSAddons\\${mod}\\addon\\${mod}-addon.lua`]);
-        wfs.iterate(ipaths.addonBuild(mod),(name)=>{
-            let relative = wfs.relative(mpath(ipaths.addonBuild(mod),'addon'),name)
+        let names: string[] = before.concat([`TSAddons\\${modPath}\\addon\\addon.lua`]);
+        wfs.iterate(this.path.build,(name)=>{
+            let relative = wfs.relative(this.path.build.join('addon'),name)
             relative = relative.split('/').join('\\');
             if(all.includes(relative)) {
                 return;
             }
 
-            if(wfs.basename(name)!=`${mod}-addon.lua`) {
+            if(
+                   name.endsWith('lualib_bundle.lua')
+                || relative.split('\\').join('/').split('/')[0] === 'lib'
+            ) {
+                return;
+            }
+
+            if(wfs.basename(name)!=`addon.lua`) {
                 names.unshift(
-                      `TSAddons\\${mod}\\`
-                    + `${wfs.relative(ipaths.addonBuild(mod),name)
+                      `TSAddons\\${modPath}\\`
+                    + `${wfs.relative(this.path.build,name)
                             .split('/').join('\\')}`);
             }
         });
 
         names = beforelib.concat(names.concat(after));
-        names.unshift(`## tsaddon-begin: ${mod}`);
-        names.push(`## tsaddon-end: ${mod}`);
+        names.unshift(`## tsaddon-begin: ${this.mod.fullName}`);
+        names.push(`## tsaddon-end: ${this.mod.fullName}`);
         tocFile.splice(begin,0,...names);
     }
 
-    export function buildAll(dataset: Datasets.Dataset) {
-        let str: string[] = [];
-        dataset.config.modules.forEach(x=>{
-            if(wfs.exists(ipaths.moduleAddons(x))) {
-                build(x,dataset.id);
-                str.push(ipaths.addonBuild(x));
-            }
-        });
-        return str;
+    logName() {
+        return termCustom('addon',this.mod.fullName)
     }
 
-    export function build(mod: string, dataset: string) {
-        Datasets.get(dataset).installServerData();
+    async build(dataset: Dataset) {
+        // 1. Verify and set up environment
+        if(!this.path.exists()) {
+            throw new Error(`${this.mod.fullName} does not have an addon directory`)
+        }
+        this.path.build.remove();
+        this.initialize();
+        await dataset.setupClientData();
+        term.log(this.logName(),`Building addon for dataset ${dataset.name}`)
 
-        term.log(`Building addon ${mod} for dataset ${dataset}`);
-        wfs.remove(ipaths.moduleAddonClasses(mod));
-
-        // need to bypass the normal checks for decorators, 
-        // so we inject a patch into tstl instead of maintaining a fork of their repository
-        let decoText = wfs.read(ipaths.tstlDecorators);
+        // 2. Patch tstl to allow any kind of decorators (no longer needed?)
+        let decoText = ipaths.node_modules.tstl_decorators.read('utf-8')
         let diagnosticsIndex = decoText.indexOf('context.diagnostics.push(');
         if(diagnosticsIndex==-1) {
             throw new Error(`Unable to find the "context.diagnostics" part`);
         }
         if(decoText[diagnosticsIndex-1]!='/') {
             decoText = decoText.substring(0,diagnosticsIndex)+'//'+decoText.substring(diagnosticsIndex,decoText.length);
-            wfs.write(ipaths.tstlDecorators,decoText);
+            ipaths.node_modules.tstl_decorators.write(decoText);
         }
 
-        if(!wfs.exists(ipaths.moduleAddons(mod))) {
-            throw new Error(`${mod} does not have an addon directory`);
+        // 3. Run tstl
+        wsys.execIn(
+              this.path.get()
+            , `node ${ipaths.node_modules.tstl_js.abs()}`
+        )
+
+        // 4. Copy all lua files
+        this.path.iterate('RECURSE','BOTH','FULL',(node)=>{
+            if(node.isDirectory() && node.endsWith('build')) {
+                return 'ENDPOINT'
+            }
+            if(!node.endsWith('.lua')) return;
+
+            node.copy(this.path.build.join('addon',node.relativeTo(this.path)))
+            if(node.endsWith(''))
+            node.relativeTo(this.path)
+        })
+
+        // 5. Hack to write correct require paths and GetID calls
+        // (currently requires transpilation to _always_ be done)
+
+        class IdPublic extends IdPrivate {
+            static readFile = () => IdPrivate.readFile(dataset.path.ids_txt.get());
+            static writeFile = () => IdPrivate.writeFile(dataset.path.ids_txt.get());
+            static flushMemory = () => IdPrivate.flushMemory();
         }
-
-        wfs.remove(ipaths.addonBuild(mod));
-        initializeModule(mod);
-
-        wsys.execIn(ipaths.moduleAddons(mod),
-            `node ../../../node_modules/typescript-to-lua/dist/tstl.js`);
-
-        wfs.iterate(ipaths.moduleAddons(mod),(name)=>{
-            if(!name.endsWith('.lua')) return;
-            let relative = wfs.relative(ipaths.moduleAddons(mod),name);
-            let relativeCheck = relative.split('.').join('').split('\\').join('').split('/').join('')
-            if(relativeCheck.startsWith('build') || relativeCheck.startsWith('lib')) {
-                return;
-            }
-            wfs.copy(name,mpath(ipaths.moduleAddons(mod),'build','addon',relative));
-        });
-
-        wfs.iterate(ipaths.addonBuild(mod),(name)=>{
-            let relative = wfs.relative(ipaths.addonBuild(mod),name);
-            if(relative.startsWith('addon') && relative.endsWith('.lua')) {
-                // doesn't matter if it's forward slash
-                relative = relative.substring('addon\\'.length);
-                let sourceLua = mpath(ipaths.moduleAddons(mod),relative);
-                let sourceTs = sourceLua.substring(0,sourceLua.length-3)+'ts'
-
-                if(wfs.exists(sourceLua) && wfs.exists(sourceTs)) {
-                    throw new Error(
-                          `These files collide:\n\n`
-                        + `${sourceTs}\n${sourceLua}\n\n`
-                        + `TSWoW doesn't know which one to use, please remove one of them.`)
+        IdPublic.readFile()
+        this.path.build.iterate('RECURSE','FILES','FULL',node=>{
+            let str = node.toFile().readString()
+            let m: RegExpMatchArray
+            do {
+                m = str.match(
+                    /GetID\( *"(.+?)" *, *"(.+?)" *, *"(.+?)" *\)/)
+                if(m) {
+                    const [_,table,mod,name] = m;
+                    let id = GetExistingId(table,mod,name);
+                    str = str.replace(m[0],`${id}`)
                 }
+            } while(m != null);
 
-                if(wfs.exists(sourceLua)) {
-                    // it's a lua file, do not change that
-                    return;
-                }
-            }
-
-            // HACK: workaround to properly write require paths
-            let rows = wfs.readLines(name);
-            rows = rows.map(x=>{
+            str = str.split('\n').map(x=>{
                 let m = x.match(/local .+? = require\("(.+?)"\)/)
                 if(m) {
                     let p = m[1];
                     if(p.startsWith('addon.lib')) {
                         p = `${p.substring('addon.lib.'.length)}`;
                     } else {
-                        p = `TSAddons.${mod}.${p}`;
+                        p = `TSAddons.${this.mod.fullName}.${p}`;
                     }
                     x = x.replace(m[1],p);
                 }
-                return x; 
-            });
-            wfs.writeLines(name,rows);
-        });
+                return x;
+            }).join('\n')
+            node.toFile().write(str)
+        })
+        IdPublic.flushMemory()
 
-        if(wfs.exists(ipaths.moduleAddonClasses(mod))) {
-            const messages = JSON.parse(wfs.read(ipaths.moduleAddonClasses(mod)));
-            for(let path in messages) {
-                let message= messages[path];
-                let luapath = wfs.relative(ipaths.moduleRoot(mod),path);
-                luapath = luapath.substring(0,luapath.length-2)+'lua'
-                luapath = mpath(ipaths.addonBuild(mod),luapath);
-                let luatext = wfs.read(luapath).split('\n');
-
-                for(let cname in message) {
-                    let cls = message[cname];
-                    let line = luatext.findIndex(
-                        x=>x.includes(`function ${cname}.prototype.____constructor`))
-                    luatext[line] = cls+'\n'+luatext[line];
-                    if(line === -1) {
-                        throw new Error(`Cannot find constructor for message class ${cname}`);
-                    }
-                }
-                wfs.write(luapath,luatext.join('\n'));
-            }
-        }
-
-        wfs.remove(ipaths.moduleAddonClasses(mod));
-        wfs.remove(ipaths.addonLualibGarbage(mod));
-        wfs.remove(ipaths.addonBuildLib(mod));
-        updateAddons(dataset);
+        this.path.build.lib.remove();
+        // todo: copy to dataset directory
+        ipaths.bin.include_addon.iterate('RECURSE','FILES','RELATIVE',file=>{
+            if(!file.endsWith('.lua')) return;
+            if(file.basename().get() == 'lualib_bundle.lua') return;
+        })
     }
 
-    export const command = commands.addCommand('addon');
+    initialize() {
+        let exists = this.path.exists();
+        this.path.tsconfig_json.writeJson(defaultTsConfig(this),4,'OVERWRITE')
+        this.path.index_ts.write(addon_example_ts(this.mod.fullName),'DONT_OVERWRITE')
+        ipaths.bin.include_addon.global_d_ts.copy(this.path.global_d_ts)
+        if(!exists) {
+            term.success(this.logName(),`Created addon component`)
+        }
+        return this;
+    }
 
-    export function initialize() {
-        Addon.command.addCommand(
-             'create'
-            ,'module'
-            ,'Creates addon data in a module'
-            ,((args)=>{
+    constructor(mod: ModuleEndpoint) {
+        this.mod = mod;
+    }
 
-            if(!wfs.exists(ipaths.moduleRoot(args[0]))) {
-                throw new Error(`"${args[0]}" is not an existing module.`);
+    static create(mod: ModuleEndpoint) {
+        return new Addon(mod).initialize();
+    }
+
+    exists() {
+        return this.path.exists()
+    }
+
+    static all() {
+        return Module.endpoints()
+            .filter(x=>x.addon.exists())
+            .map(x=>new Addon(x))
+    }
+
+    static updateAddons(dataset: Dataset) {
+        wfs.iterate(ipaths.bin.include_addon,(fpath)=>{
+            if(!fpath.endsWith('.lua')) return;
+            const fname = wfs.basename(fpath);
+            if(fname==='lualib_bundle.lua') return;
+            wfs.copy(fpath,mpath(dataset.path.luaxml.Interface.FrameXML,fname));
+        });
+        let tocfile = wfs.readLines(dataset.path.luaxml_source.Interface.FrameXML.framexml_toc);
+        Module.endpoints()
+            .filter(mod=>mod.addon.path.build.exists())
+            .forEach(mod=>{
+                mod.addon.addFilelistToToc(tocfile);
+                mod.addon.path.build.copy(
+                    dataset.path.luaxml.Interface.FrameXML.TSAddons.mod
+                        .pick(mod.relativePath.get()
+                    )
+                )
+            })
+        wfs.writeLines(dataset.path.luaxml.Interface.FrameXML.framexml_toc, tocfile);
+        dataset.path.luaxml.copy(dataset.client.path.Data.devPatch)
+    }
+
+    static async build(dataset: Dataset) {
+        const addons = dataset.modules()
+            .map(x=>x.addon)
+            .filter(x=>x.exists());
+        for(const addon of addons) {
+            await addon.build(dataset);
+        }
+        await this.updateAddons(dataset);
+    }
+
+    static clearDevBuild() {
+        Dataset.all().forEach(x=>{
+            const tsaddons = x.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+            x.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+                .iterate('RECURSE','DIRECTORIES','FULL',node=>{
+                    if(node.basename().get() === 'addon' || node.basename().get() === 'shared')
+                    {
+                        return 'ENDPOINT'
+                    }
+                    let rel = node.relativeTo(tsaddons).get()
+                    if(ModuleEndpoint.fromPath(rel) === undefined) {
+                        node.remove();
+                        return 'ENDPOINT'
+                    }
+                })
+        })
+    }
+
+    static initialize() {
+        ListCommand.addCommand(
+            'addon'
+          , 'module?'
+          , ''
+          , args => {
+              let isModule = Identifier.isModule(args[0])
+              Addon.all()
+                  .filter(x=> !isModule || x.mod.mod.id === args[0])
+                  .forEach(x=>term.log('addon',x.path.get()))
+          }
+        ).addAlias('addons')
+
+        CreateCommand.addCommand(
+            'addon'
+          , 'module'
+          , 'Creates a new addon in the specified module'
+          , args => {
+              this.create(Identifier.getModule(args[0]))
+          }
+        ).addAlias('addons')
+
+        BuildCommand.addCommand(
+              'addon'
+            , 'dataset? module?'
+            , 'Creates addon data in the specified module(s)'
+            , args => {
+                this.clearDevBuild();
+                return Promise.all(Identifier.getDatasets(args,'MATCH_ANY',NodeConfig.DefaultDataset)
+                    .map(async dataset=>{
+                        let mods = Identifier.getModules(args,'ALLOW_NONE')
+                        if(mods.length === 0) mods = dataset.modules().filter(x=>x.addon.exists())
+                        for(const mod of mods) {
+                            await mod.addon.build(dataset);
+                        }
+                        await this.updateAddons(dataset);
+                    }))
             }
-            initializeModule(args[0]);
-        }));
+        )
+
+        CleanCommand.addCommand(
+            'addon'
+          , 'modules'
+          , ''
+          , args => {
+                this.clearDevBuild();
+                const modules = Identifier.getModulesOrAll(args);
+                modules.forEach(mod=>{
+                    if(mod.addon.path.build.exists()) {
+                        term.log('addon',`Removing ${mod.addon.path.build.get()}`)
+                    }
+                    mod.addon.path.build.remove();
+                    Dataset.all().forEach(dataset=>{
+                        let p = dataset.client.path.Data.devPatch.Interface.FrameXML.TSAddons
+                            .join(mod.fullName.split('.').join('/'))
+                        if(p.exists()) {
+                            term.log('addon',`Removing ${p.get()}`)
+                        }
+                        p.remove();
+                    })
+                })
+        })
     }
 }

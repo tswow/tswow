@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { byte } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCByteCell, DBCKeyCell} from '../DBCCell'
-import { byte} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCByteCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,7 +34,7 @@ export class CharBaseInfoRow extends DBCRow<CharBaseInfoCreator,CharBaseInfoQuer
      */
     @PrimaryKey()
     get RaceID() { return new DBCByteCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * Primary Key
      *
@@ -42,12 +42,12 @@ export class CharBaseInfoRow extends DBCRow<CharBaseInfoCreator,CharBaseInfoQuer
      */
     @PrimaryKey()
     get ClassID() { return new DBCByteCell(this,this.buffer,this.offset+1)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(RaceID : byte,ClassID : byte, c? : CharBaseInfoCreator) : this {
         return this.cloneInternal([RaceID,ClassID],c);
     }

@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { byte, int } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCByteArrayCell , DBCIntArrayCell} from '../DBCCell'
-import { int , byte} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCByteArrayCell, DBCIntArrayCell, DBCKeyCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,42 +34,42 @@ export class SpellItemEnchantmentConditionRow extends DBCRow<SpellItemEnchantmen
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Lt_OperandType() { return new DBCByteArrayCell(this,5,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Lt_Operand() { return new DBCIntArrayCell(this,5,this.buffer,this.offset+9)}
-    
+
     /**
      * No comment (yet!)
      */
     get Operator() { return new DBCByteArrayCell(this,5,this.buffer,this.offset+29)}
-    
+
     /**
      * No comment (yet!)
      */
     get Rt_OperandType() { return new DBCByteArrayCell(this,5,this.buffer,this.offset+34)}
-    
+
     /**
      * No comment (yet!)
      */
     get Rt_Operand() { return new DBCIntArrayCell(this,5,this.buffer,this.offset+39)}
-    
+
     /**
      * No comment (yet!)
      */
     get Logic() { return new DBCByteArrayCell(this,5,this.buffer,this.offset+59)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : SpellItemEnchantmentConditionCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -79,12 +79,12 @@ export class SpellItemEnchantmentConditionRow extends DBCRow<SpellItemEnchantmen
  * Used for object creation (Don't comment these)
  */
 export type SpellItemEnchantmentConditionCreator = {
-    Lt_OperandType?: byte
-    Lt_Operand?: int
-    Operator?: byte
-    Rt_OperandType?: byte
-    Rt_Operand?: int
-    Logic?: byte
+    Lt_OperandType?: byte[]
+    Lt_Operand?: int[]
+    Operator?: byte[]
+    Rt_OperandType?: byte[]
+    Rt_Operand?: int[]
+    Logic?: byte[]
 }
 
 /**

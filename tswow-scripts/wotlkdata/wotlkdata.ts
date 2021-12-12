@@ -15,16 +15,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
-import * as path from 'path';
-import { SqlConnection } from './sql/SQLConnection';
-import { Settings } from './Settings';
-import { saveDbc } from './dbc/DBCSave';
-import { DBC as _DBC } from './dbc/DBCFiles';
-import { SQL as _SQL } from './sql/SQLFiles';
-import { IdPrivate, GetIdRange as _GetIdRange, GetId as _GetId } from './ids/Ids';
-import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
+import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
+import { ipaths } from '../util/Paths';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
+import { DBC as _DBC } from './dbc/DBCFiles';
+import { saveDbc } from './dbc/DBCSave';
+import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
+import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
+import { SqlConnection } from './sql/SQLConnection';
+import { SQL as _SQL } from './sql/SQLFiles';
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
@@ -33,55 +33,23 @@ const reads: PatchCollection = [];
 const writes: PatchCollection = [];
 const patches: PatchCollection = [];
 const finishes: PatchCollection = [];
+const sorts: PatchCollection = [];
+
+export type Stages = 'SETUP' | 'READ' | 'WRITE' | 'PATCH' | 'FINISH' | 'SORT'
+let cur_stage: Stages = 'SETUP'
+export function GetStage() {
+    return cur_stage;
+}
 
 class IdPublic extends IdPrivate {
-    static readFile = () => IdPrivate.readFile(Settings.ID_FILE_PATH);
-    static writeFile = () => IdPrivate.writeFile(Settings.ID_FILE_PATH);
+    static readFile = () => IdPrivate.readFile(dataset.ids_txt.get());
+    static writeFile = () => IdPrivate.writeFile(dataset.ids_txt.get());
 }
 
-function patchSubdirs(dir: string) {
-    if (!fs.existsSync(dir)) { return; }
-
-    const nodes = fs.readdirSync(dir).map(x => path.join(dir, x));
-
-    nodes.filter(x => {
-            if(!x.endsWith('js') || !fs.statSync(x).isFile()) {
-                return false;
-            }
-
-            // Check that the corresponding .ts file isn't deleted.
-            let p = x.split(path.sep);
-            let dindex = p.indexOf('build');
-            // not in a build directory, or build is somehow the root
-            if(dindex <= 0 || dindex == p.length-1) {
-                return;
-            }
-            let relpath = p.slice(dindex+1);
-            let tspath = p.slice(0,dindex)
-                .concat(relpath)
-                .join(path.sep)
-            tspath = tspath.substring(0,tspath.length-2)+'ts';
-            return fs.existsSync(tspath);
-        })
-        .map(x => path.relative(__dirname, x))
-        .forEach(x => {
-
-            require(x);
-            applyStage(setups);
-        });
-
-    const dirs = nodes
-        .filter(x =>
-            !x.endsWith('.d.ts') &&
-            !x.endsWith('.js') &&
-            !x.endsWith('node_modules') &&
-            !x.endsWith('.map') &&
-            fs.lstatSync(x).isDirectory());
-
-    for (const subdir of dirs) {
-        patchSubdirs(subdir);
-    }
+function profileScripts() {
+    return process.argv.includes('--profile-scripts')
 }
+let profiling: {[key: string]: number} = {}
 
 async function applyStage(collection: PatchCollection) {
     for (const {name, callback} of collection) {
@@ -97,7 +65,7 @@ async function applyStage(collection: PatchCollection) {
 
 let ctime: number = 0;
 function time(msg: string) {
-    if(Settings.USE_TIMER) {
+    if(BuildArgs.USE_TIMER) {
         let diff = Date.now()-ctime;
         console.log(`${msg} in ${(diff/1000).toFixed(2)} seconds.`);
         ctime = Date.now();
@@ -107,70 +75,119 @@ function time(msg: string) {
 async function mainWrap() {
     try {
         await main();
-    } catch(error) {
+    } catch(error: any) {
         console.error(error.message+error.stack);
         process.exit(1);
     }
 }
 
 async function main() {
+    if(process.argv.includes('bin/scripts/tswow/test')) return;
+    ipaths.coredata.last_datascript.remove();
+    if(BuildArgs.LOG_SQL) {
+        SqlConnection.logFile = fs.openSync(ipaths.coredata.last_datascript.get(),'a');
+    }
+
     ctime = Date.now();
     await IdPublic.readFile();
     SqlConnection.connect();
 
-    try{
-        await cleanSQL();
-    } catch(err) {
-        console.error(err.stack);
-        process.exit(2);
+    if(BuildArgs.WRITE_SERVER) {
+        try{
+            await cleanSQL();
+        } catch(err: any) {
+            console.error(err.stack);
+            process.exit(2);
+        }
+        time(`Loaded/Cleaned SQL`);
     }
 
-    time(`Loaded/Cleaned SQL`);
-
     // Find all patch subdirectories
-    for (let dir of Settings.PATCH_DIRECTORY) {
-        dir = path.join('./modules',dir,'datascripts');
-        if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) {
-            continue;
-        }
-
+    for (let dir of DatascriptModules) {
         try {
-            patchSubdirs(dir);
+            dir.datascripts.build.toDirectory()
+                .iterate('RECURSE','FILES','FULL',node=>{
+                    if(!node.endsWith('.js') || !node.isFile()) {
+                        return;
+                    }
+                    let ts = dir.datascripts.join(node.relativeTo(dir.datascripts.build))
+                        .toFile().withExtension('.ts')
+                    if(!ts.exists()) {
+                        return;
+                    }
+                    let v = Date.now();
+                    if((!BuildArgs.INLINE_ONLY) || node.toFile().readString().includes('InlineScripts')) {
+                        require(node.relativeTo(__dirname).get());
+                        if(profileScripts()) {
+                            profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v
+                        }
+                        applyStage(setups);
+                    }
+
+                })
         } catch (error) {
-            console.error(`Error in patch ${dir}:`, error);
+            console.error(`Error in patch ${dir.get()}:`, error);
             process.exit(3);
         }
     }
 
+    cur_stage = 'READ'
     await applyStage(reads);
+    cur_stage = 'WRITE'
     await applyStage(writes);
+    cur_stage = 'PATCH'
     await applyStage(patches);
+    cur_stage = 'FINISH'
     await applyStage(finishes);
-
+    cur_stage = 'SORT'
+    if(!BuildArgs.READ_ONLY) {
+        await applyStage(sorts);
+    }
     time(`Executed scripts`);
 
-    await SqlConnection.finish(Settings.MYSQL_WRITE_TO_DB,
-        Settings.SQL_WRITE_TO_FILE);
-
-    
-    time(`Wrote SQL`);
-    saveDbc();
-    time(`Wrote DBC`);
-
-    await IdPublic.writeFile();
-
-    if (Settings.LUAXML_SOURCE.length === 0 || Settings.LUAXML_CLIENT.length === 0) {
-        console.log('No LUAXML settings, skipping LUAXML');
+    if(BuildArgs.WRITE_SERVER) {
+        await SqlConnection.finish(true, false);
+        time(`Wrote SQL`);
     } else {
+        await SqlConnection.finish(false,false)
+    }
+
+    if(!BuildArgs.READ_ONLY) {
+        saveDbc();
+        time(`Wrote DBC`);
+    }
+
+    if(!BuildArgs.READ_ONLY) {
+        await IdPublic.writeFile();
+        time(`Wrote IDs`)
+    }
+
+    if(BuildArgs.WRITE_CLIENT) {
+        // todo: move to stdlib
         if (_DBC.ChrClasses.isLoaded()) {
             _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
                 .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
         }
 
-        _writeLUAXML(Settings.LUAXML_SOURCE, Settings.LUAXML_CLIENT);
+        _writeLUAXML();
+        time(`Wrote LUAXML`);
     }
 
-    time(`Wrote LUAXML`);
+    if(profileScripts()) {
+        Object.entries(profiling)
+            .sort(([_,a],[__,b])=>
+                a > b ? 1 : -1
+            )
+            .forEach(([file,time])=>{
+                if(time === 0) return;
+                let color =
+                  time < 10   ? '\x1b[36m' // cyan
+                : time < 100  ? '\x1b[32m' // green
+                : time < 1000 ? '\x1b[33m' // yellow
+                : '\x1b[31m'               // red
+                console.log(`${file}: ${color}${time}ms\x1b[0m`)
+            })
+    }
 }
 
 /**
@@ -240,7 +257,7 @@ export function patch(name: string, callback: () => any) {
 }
 
 /**
- * Step 5 of script loading (final step)
+ * Step 5 of script loading (final step that can handle existing data)
  * - Runs AFTER global scope, setup, read, write and patch.
  *
  * This stage should:
@@ -255,6 +272,23 @@ export function finish(name: string, callback: () => any) {
     finishes.push({name, callback});
 }
 
+
+/**
+ * Step 6 of script loading (final step)
+ * - Runs AFTER global scope, setup, read, write, patch and even finish.
+ *
+ * This stage should:
+ * - Sort DBC files in place.
+ *
+ * At this stage, all previous DBC pointers can become invalid, and the only valid
+ * API operation is calling DBCTable#sort and reading the rows it calls back with
+ *
+ * @param name
+ * @param callback
+ */
+export function sort(name: string, callback: () => any) {
+    sorts.push({name,callback});
+}
 
 /**
  * Contains references to all DBC files

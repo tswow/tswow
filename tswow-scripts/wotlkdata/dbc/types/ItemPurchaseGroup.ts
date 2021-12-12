@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntArrayCell , DBCLocCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,22 +34,22 @@ export class ItemPurchaseGroupRow extends DBCRow<ItemPurchaseGroupCreator,ItemPu
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemID() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : ItemPurchaseGroupCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -59,7 +59,7 @@ export class ItemPurchaseGroupRow extends DBCRow<ItemPurchaseGroupCreator,ItemPu
  * Used for object creation (Don't comment these)
  */
 export type ItemPurchaseGroupCreator = {
-    ItemID?: int
+    ItemID?: int[]
     Name?: loc_constructor
 }
 

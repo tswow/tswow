@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , timestamp , mediumint , varchar } from '../../primitives'
+import { mediumint, timestamp, tinyint, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,62 +29,62 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class game_eventRow extends SqlRow<game_eventCreator,game_eventQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get eventEntry() {return new SQLCellReadOnly<tinyint, this>(this, 'eventEntry')}
-    
+
     /**
      * No comment (yet!)
      */
     get start_time() {return new SQLCell<timestamp, this>(this, 'start_time')}
-    
+
     /**
      * No comment (yet!)
      */
     get end_time() {return new SQLCell<timestamp, this>(this, 'end_time')}
-    
+
     /**
      * No comment (yet!)
      */
     get occurence() {return new SQLCell<bigint, this>(this, 'occurence')}
-    
+
     /**
      * No comment (yet!)
      */
     get length() {return new SQLCell<bigint, this>(this, 'length')}
-    
+
     /**
      * No comment (yet!)
      */
     get holiday() {return new SQLCell<mediumint, this>(this, 'holiday')}
-    
+
     /**
      * No comment (yet!)
      */
     get holidayStage() {return new SQLCell<tinyint, this>(this, 'holidayStage')}
-    
+
     /**
      * No comment (yet!)
      */
     get description() {return new SQLCell<varchar, this>(this, 'description')}
-    
+
     /**
      * No comment (yet!)
      */
     get world_event() {return new SQLCell<tinyint, this>(this, 'world_event')}
-    
+
     /**
      * No comment (yet!)
      */
     get announce() {return new SQLCell<tinyint, this>(this, 'announce')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(eventEntry : tinyint, c? : game_eventCreator) : this {
         return this.cloneInternal([eventEntry],c)
     }

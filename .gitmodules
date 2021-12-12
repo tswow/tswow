@@ -1,11 +1,7 @@
-[submodule "TypeScript2Cxx"]
-	path = TypeScript2Cxx
-	url = https://github.com/tswow/TypeScript2Cxx.git
-    branch = tswow
 [submodule "TrinityCore"]
 	path = TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
-[submodule "adt-creator"]
-	path = adt-creator
+[submodule "tools/adt-creator"]
+	path = tools/adt-creator
 	url = https://github.com/tswow/adt-creator.git

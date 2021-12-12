@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , tinyint , smallint } from '../../primitives'
+import { mediumint, smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,45 +29,45 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_equip_templateRow extends SqlRow<creature_equip_templateCreator,creature_equip_templateQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get CreatureID() {return new SQLCellReadOnly<mediumint, this>(this, 'CreatureID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<tinyint, this>(this, 'ID')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemID1() {return new SQLCell<mediumint, this>(this, 'ItemID1')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemID2() {return new SQLCell<mediumint, this>(this, 'ItemID2')}
-    
+
     /**
      * No comment (yet!)
      */
     get ItemID3() {return new SQLCell<mediumint, this>(this, 'ItemID3')}
-    
+
     /**
      * No comment (yet!)
      */
     get VerifiedBuild() {return new SQLCell<smallint, this>(this, 'VerifiedBuild')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(CreatureID : mediumint,ID : tinyint, c? : creature_equip_templateCreator) : this {
         return this.cloneInternal([CreatureID,ID],c)
     }

@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { int , mediumint , tinyint , text } from '../../primitives'
+import { int, mediumint, text, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,52 +29,57 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class creature_addonRow extends SqlRow<creature_addonCreator,creature_addonQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get guid() {return new SQLCellReadOnly<int, this>(this, 'guid')}
-    
+
     /**
      * No comment (yet!)
      */
     get path_id() {return new SQLCell<int, this>(this, 'path_id')}
-    
+
     /**
      * No comment (yet!)
      */
     get mount() {return new SQLCell<mediumint, this>(this, 'mount')}
-    
+
+    /**
+     * No comment (yet!)
+     */
+    get MountCreatureID() { return new SQLCell<int,this>(this,'MountCreatureID')}
+
     /**
      * No comment (yet!)
      */
     get bytes1() {return new SQLCell<int, this>(this, 'bytes1')}
-    
+
     /**
      * No comment (yet!)
      */
     get bytes2() {return new SQLCell<int, this>(this, 'bytes2')}
-    
+
     /**
      * No comment (yet!)
      */
     get emote() {return new SQLCell<int, this>(this, 'emote')}
-    
+
     /**
      * No comment (yet!)
      */
     get visibilityDistanceType() {return new SQLCell<tinyint, this>(this, 'visibilityDistanceType')}
-    
+
     /**
      * No comment (yet!)
      */
     get auras() {return new SQLCell<text, this>(this, 'auras')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(guid : int, c? : creature_addonCreator) : this {
         return this.cloneInternal([guid],c)
     }
@@ -87,6 +92,7 @@ export type creature_addonCreator = {
     guid? : int,
     path_id? : int,
     mount? : mediumint,
+    MountCreatureID? : int,
     bytes1? : int,
     bytes2? : int,
     emote? : int,
@@ -101,6 +107,7 @@ export type creature_addonQuery = {
     guid? : Relation<int>,
     path_id? : Relation<int>,
     mount? : Relation<mediumint>,
+    MountCreatureID? : Relation<mediumint>
     bytes1? : Relation<int>,
     bytes2? : Relation<int>,
     emote? : Relation<int>,

@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { tinyint , smallint } from '../../primitives'
+import { smallint, tinyint } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class player_classlevelstatsRow extends SqlRow<player_classlevelstatsCreator,player_classlevelstatsQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get class() {return new SQLCellReadOnly<tinyint, this>(this, 'class')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get level() {return new SQLCellReadOnly<tinyint, this>(this, 'level')}
-    
+
     /**
      * No comment (yet!)
      */
     get basehp() {return new SQLCell<smallint, this>(this, 'basehp')}
-    
+
     /**
      * No comment (yet!)
      */
     get basemana() {return new SQLCell<smallint, this>(this, 'basemana')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(cls : tinyint,level : tinyint, c? : player_classlevelstatsCreator) : this {
         return this.cloneInternal([cls,level],c)
     }

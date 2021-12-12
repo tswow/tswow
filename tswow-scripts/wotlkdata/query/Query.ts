@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { relationToSql, Relation, inMemoryRelation } from './Relations';
+import { inMemoryRelation, Relation, relationToSql } from './Relations';
 
 interface Query {[key: string]: Relation<any>; }
 
@@ -57,7 +57,7 @@ function queryToSqlRecurse(query: Query|AnyQuery|AllQuery): string {
     } else if (isAllQuery(query)) {
         return `${query.values.map(x => `(${queryToSqlRecurse(x)})`).join(' AND ')}`;
     } else {
-        return `${Object.keys(query).map(x => `${relationToSql(x, query[x])}`).join(' AND ')}`;
+        return `${Object.keys(query).map(x => `${relationToSql(`\`${x}\``, query[x])}`).join(' AND ')}`;
     }
 }
 

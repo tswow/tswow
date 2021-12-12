@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCIntArrayCell , DBCIntCell , DBCLocCell} from '../DBCCell'
-import { int , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCIntArrayCell, DBCIntCell, DBCKeyCell, DBCLocCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,52 +34,52 @@ export class BattlemasterListRow extends DBCRow<BattlemasterListCreator,Battlema
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get MapID() { return new DBCIntArrayCell(this,8,this.buffer,this.offset+4)}
-    
+
     /**
      * No comment (yet!)
      */
     get InstanceType() { return new DBCIntCell(this,this.buffer,this.offset+36)}
-    
+
     /**
      * No comment (yet!)
      */
     get GroupsAllowed() { return new DBCIntCell(this,this.buffer,this.offset+40)}
-    
+
     /**
      * No comment (yet!)
      */
     get Name() { return new DBCLocCell(this,this.buffer,this.offset+44)}
-    
+
     /**
      * No comment (yet!)
      */
     get MaxGroupSize() { return new DBCIntCell(this,this.buffer,this.offset+112)}
-    
+
     /**
      * No comment (yet!)
      */
     get HolidayWorldState() { return new DBCIntCell(this,this.buffer,this.offset+116)}
-    
+
     /**
      * No comment (yet!)
      */
     get Minlevel() { return new DBCIntCell(this,this.buffer,this.offset+120)}
-    
+
     /**
      * No comment (yet!)
      */
     get Maxlevel() { return new DBCIntCell(this,this.buffer,this.offset+124)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : BattlemasterListCreator) : this {
         return this.cloneInternal([ID],c);
     }
@@ -89,7 +89,7 @@ export class BattlemasterListRow extends DBCRow<BattlemasterListCreator,Battlema
  * Used for object creation (Don't comment these)
  */
 export type BattlemasterListCreator = {
-    MapID?: int
+    MapID?: int[]
     InstanceType?: int
     GroupsAllowed?: int
     Name?: loc_constructor

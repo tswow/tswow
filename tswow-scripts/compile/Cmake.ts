@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs, mpath } from '../util/FileSystem';
-import { ipaths, bpaths } from '../util/Paths';
+import { WNode } from '../util/FileTree';
+import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
+import { bpaths } from './CompilePaths';
 
 export namespace CMake {
     function query(reason: string) {
@@ -24,31 +25,28 @@ export namespace CMake {
             `${reason}\n\t`
             +`1. Download the .zip from here: `
             +`https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t`
-            +`2. Extract is to the "${bpaths.cmake}" directory `
-            +`(${bpaths.cmake}/cmake-3.18.3-win64-x64 should exist)\n\t`
+            +`2. Extract is to the "${bpaths.cmake.get()}" directory `
+            +`(${bpaths.cmake.get()}/cmake-3.18.3-win64-x64 should exist)\n\t`
             +`3. Press enter in this command prompt\n`);
     }
 
-    export async function find(): Promise<string> {
-        while(!wfs.exists(bpaths.cmake)) {
+    export async function find(): Promise<WNode> {
+        while(!bpaths.cmake.exists()) {
             await query('CMake not found');
         }
 
-        const subs = wfs.readDir(bpaths.cmake, false);
-        while(subs.length!==1) {
+        while(bpaths.cmake.readDir().length !== 1) {
             await query('CMake is corrupt, please reinstall it');
         }
 
-        const exe = mpath(subs[0], 'bin', 'cmake.exe');
-        const share = mpath(subs[0], 'share');
+        let sub = bpaths.cmake.readDir('ABSOLUTE')[0]
+        const exe = sub.join('bin','cmake.exe')
+        const share = sub.join('share');
 
-        if (!wfs.exists(ipaths.cmakeExe)) {
-            wfs.copy(exe, ipaths.cmakeExe);
-        }
-
-        if (!wfs.exists(ipaths.cmakeShare)) {
-            wfs.copy(share, ipaths.cmakeShare);
-        }
+        // only copy if necessary to not
+        // get stuck if shell is using it
+        exe.copyOnNoTarget(ipaths.bin.cmake.bin.cmake_exe)
+        share.copyOnNoTarget(ipaths.bin.cmake.share);
 
         return exe;
     }

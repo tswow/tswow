@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { DBCRow } from '../DBCRow'
-import { DBCFile } from '../DBCFile'
+import { int, loc_constructor, uint } from '../../primitives'
 import { Relation } from '../../query/Relations'
-import { DBCKeyCell , DBCEnumCell , DBCIntCell , DBCLocCell , DBCPointerCell , DBCFlagCell} from '../DBCCell'
-import { int , uint , loc_constructor} from '../../primitives'
 import { PrimaryKey } from '../../table/PrimaryKey'
+import { DBCEnumCell, DBCFlagCell, DBCIntCell, DBCKeyCell, DBCLocCell, DBCPointerCell } from '../DBCCell'
+import { DBCFile } from '../DBCFile'
+import { DBCRow } from '../DBCRow'
 
  /**
   * Main row definition
@@ -34,77 +34,77 @@ export class AchievementRow extends DBCRow<AchievementCreator,AchievementQuery> 
      */
     @PrimaryKey()
     get ID() { return new DBCKeyCell(this,this.buffer,this.offset+0)}
-    
+
     /**
      * No comment (yet!)
      */
     get Faction() { return new DBCEnumCell(this,this.buffer,this.offset+4)}
-    
+
     /**
      * Only set if achievement is related to a zone, otherwise set to -1
      */
     get Map() { return new DBCIntCell(this,this.buffer,this.offset+8)}
-    
+
     /**
      * If the Achievement belongs to a series, this is the ID of the previous one. 0 otherwise.
      */
     get Previous() { return new DBCIntCell(this,this.buffer,this.offset+12)}
-    
+
     /**
      * No comment (yet!)
      */
     get Title() { return new DBCLocCell(this,this.buffer,this.offset+16)}
-    
+
     /**
      * No comment (yet!)
      */
     get Description() { return new DBCLocCell(this,this.buffer,this.offset+84)}
-    
+
     /**
      * No comment (yet!)
      */
     get Category() { return new DBCPointerCell(this,this.buffer,this.offset+152)}
-    
+
     /**
      * How many Achievement points this achievement is worth.
      */
     get Points() { return new DBCIntCell(this,this.buffer,this.offset+156)}
-    
+
     /**
      * Sort order in achievement pane. Lower means higher up.
      */
     get Ui_Order() { return new DBCIntCell(this,this.buffer,this.offset+160)}
-    
+
     /**
      * 256 means only one person per realm can reach it.
      */
     get Flags() { return new DBCFlagCell(this,this.buffer,this.offset+164)}
-    
+
     /**
      * No comment (yet!)
      */
     get IconID() { return new DBCPointerCell(this,this.buffer,this.offset+168)}
-    
+
     /**
      * No comment (yet!)
      */
     get Reward() { return new DBCLocCell(this,this.buffer,this.offset+172)}
-    
+
     /**
      * Number of things you must get/fulfill for this achievement.
      */
     get Minimum_Criteria() { return new DBCIntCell(this,this.buffer,this.offset+240)}
-    
+
     /**
      * Achievement that this achievement is a subtask of
      */
     get Shares_Criteria() { return new DBCPointerCell(this,this.buffer,this.offset+244)}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added at the end of the DBC file.
-     */ 
+     */
     clone(ID : int, c? : AchievementCreator) : this {
         return this.cloneInternal([ID],c);
     }

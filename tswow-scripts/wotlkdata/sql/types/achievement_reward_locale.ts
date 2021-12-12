@@ -14,14 +14,14 @@
   */
 
 /* tslint:disable */
-import { mediumint , varchar , text } from '../../primitives'
+import { mediumint, text, varchar } from '../../primitives'
+import { Relation } from '../../query/Relations'
+import { PrimaryKey } from '../../table/PrimaryKey'
+import { SQLCell, SQLCellReadOnly } from '../SQLCell'
 import { SqlRow } from '../SQLRow'
 import { SqlTable } from '../SQLTable'
-import { Relation } from '../../query/Relations'
-import { SQLCell, SQLCellReadOnly } from '../SQLCell'
-import { PrimaryKey } from '../../table/PrimaryKey'
 
- /** 
+ /**
   * Main row definition
   * - Add column comments to the commented getters below
   * - Add file comments to DBCFiles.ts
@@ -29,35 +29,35 @@ import { PrimaryKey } from '../../table/PrimaryKey'
 export class achievement_reward_localeRow extends SqlRow<achievement_reward_localeCreator,achievement_reward_localeQuery> {
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get ID() {return new SQLCellReadOnly<mediumint, this>(this, 'ID')}
-    
+
     /**
      * Primary Key
-     * 
+     *
      * No comment (yet!)
      */
     @PrimaryKey()
     get Locale() {return new SQLCellReadOnly<varchar, this>(this, 'Locale')}
-    
+
     /**
      * No comment (yet!)
      */
     get Subject() {return new SQLCell<text, this>(this, 'Subject')}
-    
+
     /**
      * No comment (yet!)
      */
     get Body() {return new SQLCell<text, this>(this, 'Body')}
-    
+
     /**
      * Creates a clone of this row with new primary keys.
-     * 
+     *
      * Cloned rows are automatically added to the SQL table.
-     */ 
+     */
     clone(ID : mediumint,Locale : varchar, c? : achievement_reward_localeCreator) : this {
         return this.cloneInternal([ID,Locale],c)
     }
