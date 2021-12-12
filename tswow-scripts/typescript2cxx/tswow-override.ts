@@ -72,6 +72,7 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
     },
 
     "AddTimer": simpleModid,
+    "AddNamedTimer": simpleModid,
     "AddCollision": simpleModid,
 
     "TSMutable": (emt,node)=>{
