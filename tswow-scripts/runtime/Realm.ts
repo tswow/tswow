@@ -1,13 +1,12 @@
-import * as crypto from "crypto";
 import { BuildType, DEFAULT_BUILD_TYPE } from "../util/BuildType";
 import { commands } from "../util/Commands";
 import { ConfigFile, patchTCConfig, Property, Section } from "../util/ConfigFile";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
+import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
-import { AuthServer } from "./AuthServer";
 import { CreateCommand, ListCommand, StartCommand, StopCommand } from "./CommandActions";
 import { Identifier } from "./Identifiers";
 import { Module, ModuleEndpoint } from "./Modules";
@@ -451,45 +450,35 @@ export class Realm {
 
         CreateCommand.addCommand(
               'account'
-            , 'accountName password gmLevel=0 email=""'
+            , 'accountName password gmLevel=0 (3 is highest)'
             , 'Creates a new account for the specified realm'
             , async args => {
                 if(args.length < 2) {
                     throw new Error(`This command requires at least an account name and password.`)
                 }
-                const srp = require('./SRP6')
-                let gmlevel = parseInt(args[2]||'0')
-                const salt = Buffer.from(crypto.randomBytes(32));
                 const username = args[0].toUpperCase();
                 const password = args[1].toUpperCase();
-                const email = args[3] || ""
-                const verifier = (srp.computeVerifier(
-                      srp.params.trinitycore
-                    , salt
-                    , username
-                    , password
-                ) as Buffer)
+                const gmlevel = parseInt(args[2]||'0')
 
-                let oldId = await AuthServer.connection.queryPrepared(`SELECT id from account where username = ?;`,[username])
-                if(oldId.length > 0) {
-                    throw new Error(`Username "${username}" already exists`)
+                for(const realm of Realm.all()) {
+                    if(realm.worldserver.isRunning()) {
+                        // hackfix: this doesn't work if the
+                        // worldserver is currently starting.
+                        realm.sendWorldserverCommand(
+                            `account create ${username} ${password}`
+                        )
+                        await wsys.sleep(500);
+                        realm.sendWorldserverCommand(
+                            `account set gmlevel ${username} ${gmlevel} -1`
+                        )
+                        return;
+                    }
                 }
-
-                await AuthServer.connection.queryPrepared(
-                      `INSERT INTO account (username,salt,verifier,reg_mail,email,joindate)`
-                    + ` VALUES (?,?,?,?,?,NOW());`
-                    , [username,salt,verifier,email,email]
+                throw new Error(
+                        `No worldserver found.`
+                    + ` The 'create account' command only currently works`
+                    + ` if at least one worldserver is running.`
                 )
-
-                if(gmlevel > 0) {
-                    let id = (await AuthServer.connection.queryPrepared(`SELECT id from account where username = ?;`,[username]))[0].id
-                    await AuthServer.connection.queryPrepared(
-                        `INSERT INTO account_access VALUES (?,?,-1,NULL);`,
-                        [id,gmlevel]
-                    )
-                }
-
-                term.success('misc',`Created account ${username} with gm level ${gmlevel}`)
             }
         )
     }
