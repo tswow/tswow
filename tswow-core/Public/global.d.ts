@@ -8723,6 +8723,7 @@ declare class TSClass {
 // Item functions
 declare function CreateLootItem(id: uint32, reference?: uint32, chance?: float, lootmode?: uint16, needsQuest?: bool, groupId?: uint8, minCount?: uint8, maxCount?: uint8)
 declare function CreateItem(entry: uint32, count: uint32): TSItem;
+declare function CreateTSMutable<T>(ptr: T): TSMutable<T>;
 
 // Database functions
 declare function QueryWorld(query: string): TSDatabaseResult;

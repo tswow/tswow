@@ -75,7 +75,7 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
     "AddNamedTimer": simpleModid,
     "AddCollision": simpleModid,
 
-    "TSMutable": (emt,node)=>{
+    "CreateTSMutable": (emt,node)=>{
         emt.writer.writeString(`TSMutable<${node.typeArguments[0].getText()}>(&`)
         emt.processExpression(node.arguments[0]);
         emt.writer.writeString(')');
