@@ -95,6 +95,12 @@ const TSWOW_OVERRIDE_FUNCTIONS : {[key: string]: (emitter: Emitter, node: ts.Cal
 }
 
 export function handleTSWoWOverride(emitter: Emitter, node: ts.CallExpression|ts.NewExpression) {
+    const text = node.getText()
+    if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined) {
+        TSWOW_OVERRIDE_FUNCTIONS[text](emitter,node);
+        return true;
+    }
+
     if(node.getChildCount()>0) {
         let fsChild = node.getChildAt(0);
 
@@ -105,13 +111,17 @@ export function handleTSWoWOverride(emitter: Emitter, node: ts.CallExpression|ts
                 TSWOW_OVERRIDE_FUNCTIONS[text](emitter, node);
                 return true;
             }
-        }
-
-        if(fsChild.getChildCount()>0) {
+        } else if(fsChild.getChildCount()>0) {
             const lsGrandchild = fsChild.getChildAt(fsChild.getChildCount()-1);
             const text = lsGrandchild.getText();
             if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined && text !== 'toString') {
                 TSWOW_OVERRIDE_FUNCTIONS[text](emitter, node);
+                return true;
+            }
+        } else {
+            const text = fsChild.getText();
+            if(TSWOW_OVERRIDE_FUNCTIONS[text] !== undefined) {
+                TSWOW_OVERRIDE_FUNCTIONS[text](emitter,node);
                 return true;
             }
         }
