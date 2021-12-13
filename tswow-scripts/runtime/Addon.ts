@@ -303,7 +303,7 @@ export class Addon {
             wfs.copy(fpath,mpath(dataset.path.luaxml.Interface.FrameXML,fname));
         });
         let tocfile = wfs.readLines(dataset.path.luaxml_source.Interface.FrameXML.framexml_toc);
-        Module.endpoints()
+        dataset.modules()
             .filter(mod=>mod.addon.path.build.exists())
             .forEach(mod=>{
                 mod.addon.addFilelistToToc(tocfile);
