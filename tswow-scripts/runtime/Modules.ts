@@ -248,7 +248,7 @@ export class Module {
                     types.push('livescripts')
                 }
 
-                if(args.includes('--datascirpts')) {
+                if(args.includes('--datascripts')) {
                     types.push('datascripts')
                 }
 
