@@ -7312,13 +7312,13 @@ declare namespace _hidden {
     }
 
     export class Spells<T> {
-        OnCast(callback : (spell: TSSpell)=>void);
-        OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
-        OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void);
-        OnHit(callback: (spell: TSSpell)=>void);
-        OnTick(callback: (effect: TSAuraEffect)=>void);
-        OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
-        OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+        OnCast(callback : (spell: TSSpell)=>void): T;
+        OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void): T;
+        OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
+        OnHit(callback: (spell: TSSpell)=>void): T;
+        OnTick(callback: (effect: TSAuraEffect)=>void): T;
+        OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
+        OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
 
         OnDamageEarly(callback : (
             damage: TSMutable<int32>
@@ -7326,46 +7326,46 @@ declare namespace _hidden {
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
-        )=>void)
+        )=>void): T
         OnDamageLate(callback : (
             damage: TSMutable<int32>
             , spell: TSSpell
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
-        )=>void)
-        OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        )=>void): T
+        OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void): T
         /** critChance should be between 0 and 1 */
-        OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
+        OnCalcCrit(callback : (spelL: TSSpell, chance: TSMutable<float>)=>void): T
         /** critChance should be between 0 and 1 */
-        OnCalcAuraCrit(callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
+        OnCalcAuraCrit(callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void): T
         /** reflectCHance should be an integer between 0 and 10000 */
         OnCalcReflect(callback : (
                 spell: TSSpellInfo
             , reflectChance: TSMutable<int32>
             , attacker: TSWorldObject
             , victim: TSUnit
-        )=>void)
+        )=>void): T
         /** hitChance should be an integer between 0 and 10000 */
         OnCalcHit(callback : (
                 spell: TSSpellInfo
             , hitChance: TSMutable<int32>
             , attacker: TSWorldObject
             , defender: TSUnit
-        )=>void)
+        )=>void): T
         /** resistChance should be an integer between 0 and 10000 */
         OnCalcResist(callback : (
                 spell: TSSpellInfo
             , resistChance: TSMutable<int32>
             , attacker: TSWorldObject
             , defender: TSUnit
-        )=>void)
+        )=>void): T
         OnCalcSpellPowerLevelPenalty(callback: (
                 spell: TSSpellInfo
             , penalty: TSMutable<float>
             , caster: TSUnit
-        )=>void)
-        OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void)
+        )=>void): T
+        OnTrainerSend(callback: (spell: TSSpellInfo, trainerId: uint32, receiver: TSPlayer, allow: TSMutable<bool>)=>void): T
     }
 
     export class CreatureID<T> {
