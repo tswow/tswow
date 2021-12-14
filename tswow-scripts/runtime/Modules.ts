@@ -24,7 +24,7 @@ import { ipaths } from '../util/Paths';
 import { term } from '../util/Terminal';
 import { Addon } from './Addon';
 import { Assets } from './Assets';
-import { ListCommand } from './CommandActions';
+import { CreateCommand, ListCommand } from './CommandActions';
 import { Datascripts } from './Datascripts';
 import { Dataset, Datasets } from './Dataset';
 import { Identifier } from './Identifiers';
@@ -237,8 +237,8 @@ export class Module {
         })
         .addAlias('modules')
 
-        this.command.addCommand(
-              'create'
+        CreateCommand.addCommand(
+              'module'
             , 'name --livescripts? --datascripts? --addons? --shared?'
             , ''
             , args => {
