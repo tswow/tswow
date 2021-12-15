@@ -119,6 +119,16 @@ bool TSItemTemplate::IsArmorVellum() { return info->IsArmorVellum(); };
 bool TSItemTemplate::IsConjuredConsumable() { return info->IsConjuredConsumable(); };
 bool TSItemTemplate::HasSignature() { return info->HasSignature(); };
 
+uint32 TSItemTemplate::GetStatType(uint32 index)
+{
+    return info->ItemStat[index].ItemStatType;
+}
+
+int32 TSItemTemplate::GetStatValue(uint32 index)
+{
+    return info->ItemStat[index].ItemStatValue;
+}
+
 float TSItemTemplate::GetDamageMinA()
 {
     return info->Damage[0].DamageMin;
@@ -158,3 +168,4 @@ TSItemTemplate GetItemTemplate(uint32 entry)
 {
     return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
 }
+

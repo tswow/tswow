@@ -6740,6 +6740,8 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetStackable(): int32;
     GetContainerSlots(): uint32;
     GetStatsCount(): uint32;
+    GetStatType(index: uint32): uint32
+    GetStatValue(index: uint32): int32
     GetScalingStatDistribution(): uint32;
     GetScalingStatValue(): uint32;
     GetArmor(): uint32;

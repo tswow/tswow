@@ -70,6 +70,8 @@ public:
     int32  GetStackable();
     uint32 GetContainerSlots();
     uint32 GetStatsCount();
+    uint32 GetStatType(uint32 index);
+    int32 GetStatValue(uint32 index);
     uint32 GetScalingStatDistribution();
     uint32 GetScalingStatValue();
     uint32 GetArmor();
