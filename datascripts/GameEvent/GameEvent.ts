@@ -180,15 +180,16 @@ export class GameEventRegistryClass
     protected IDs(): StaticIDGenerator {
         return Ids.game_event
     }
-    Clear(r: GameEvent): void {
-        r.Duration.set(1,'MINUTES')
-         .Occurrence.setDaily(24,0)
-         .Type.NORMAL.set()
-         .row.holiday.set(0)
-             .holidayStage.set(0)
-             .world_event.set(0)
-             .announce.set(2)
-             .description.set('')
+    Clear(event: GameEvent): void {
+        event.row.holiday.set(0)
+        event
+            .Duration.set(1,'MINUTES')
+            .Occurrence.setDaily(24,0)
+            .Type.NORMAL.set()
+            .row.holidayStage.set(0)
+                .world_event.set(0)
+                .announce.set(2)
+                .description.set('')
     }
     protected FindByID(id: number): game_eventRow {
         return SQL.game_event.query({eventEntry:id})
