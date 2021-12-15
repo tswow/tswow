@@ -120,6 +120,8 @@ declare const enum RuneType {} /** Player.h:RuneType */
 
 declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
+declare const enum Stats {} /** SharedDefines.h:Stats */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
