@@ -7328,15 +7328,15 @@ declare namespace _hidden {
         OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
 
         OnDamageEarly(callback : (
-            damage: TSMutable<int32>
-          , spell: TSSpell
+            spell: TSSpell
+          , damage: TSMutable<int32>
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
         )=>void): T
         OnDamageLate(callback : (
-            damage: TSMutable<int32>
-            , spell: TSSpell
+              spell: TSSpell
+            , damage: TSMutable<int32>
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
