@@ -118,6 +118,8 @@ declare const enum WeaponAttackType {} /** SharedDefines.h:WeaponAttackType */
 
 declare const enum RuneType {} /** Player.h:RuneType */
 
+declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -3201,6 +3203,7 @@ declare interface TSAuraApplication {
     GetAppliedEffects(): uint8;
     IsPositive(): bool;
     IsSelfCast(): bool;
+    GetRemoveMode(): AuraRemoveMode;
 }
 
 declare interface TSGuild {

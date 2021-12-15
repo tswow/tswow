@@ -69,6 +69,7 @@ public:
     uint8 GetFlags();
     uint8 GetEffectMask();
     uint8 GetAppliedEffects();
+    uint8 GetRemoveMode();
     bool IsPositive();
     bool IsSelfCast();
 };

@@ -185,6 +185,11 @@ bool TSAuraApplication::IsSelfCast()
     return aura->IsSelfcast();
 }
 
+uint8 TSAuraApplication::GetRemoveMode()
+{
+    return uint8(aura->GetRemoveMode());
+}
+
 // =============
 //   TSAura
 // =============
