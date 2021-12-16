@@ -435,6 +435,7 @@ EVENT_TYPE(SpellOnCalcAuraCrit, TSAuraEffect, TSMutable<float>)
 EVENT_TYPE(SpellOnCalcReflect, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
 EVENT_TYPE(SpellOnCalcHit, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
 EVENT_TYPE(SpellOnCalcResist, TSSpellInfo, TSMutable<int32>, TSWorldObject, TSUnit)
+EVENT_TYPE(SpellOnCalcMeleeMiss, TSSpellInfo, TSMutable<float>, TSUnit, TSUnit, uint8 attackType, int32 skillDiff)
 
 struct TSSpellEvents {
      EVENT(SpellOnCast)
@@ -453,6 +454,7 @@ struct TSSpellEvents {
      EVENT(SpellOnCalcReflect)
      EVENT(SpellOnCalcHit)
      EVENT(SpellOnCalcResist)
+     EVENT(SpellOnCalcMeleeMiss)
      EVENT(SpellOnCalcSpellPowerLevelPenalty)
      EVENT(SpellOnTrainerSend)
 };
@@ -1329,6 +1331,7 @@ struct TSEventStore
     EVENT(SpellOnCalcReflect)
     EVENT(SpellOnCalcHit)
     EVENT(SpellOnCalcResist)
+    EVENT(SpellOnCalcMeleeMiss)
     EVENT(SpellOnCalcSpellPowerLevelPenalty)
     EVENT(SpellOnTrainerSend)
 
@@ -1658,6 +1661,7 @@ public:
           EVENT_HANDLE(Spell,OnCalcReflect)
           EVENT_HANDLE(Spell,OnCalcHit)
           EVENT_HANDLE(Spell,OnCalcResist)
+          EVENT_HANDLE(Spell,OnCalcMeleeMiss)
           EVENT_HANDLE(Spell,OnCalcSpellPowerLevelPenalty)
           EVENT_HANDLE(Spell,OnTrainerSend)
     } Spells;
@@ -1681,6 +1685,7 @@ public:
           MAP_EVENT_HANDLE(Spell, OnCalcReflect)
           MAP_EVENT_HANDLE(Spell, OnCalcHit)
           MAP_EVENT_HANDLE(Spell, OnCalcResist)
+          MAP_EVENT_HANDLE(Spell, OnCalcMeleeMiss)
           MAP_EVENT_HANDLE(Spell, OnCalcSpellPowerLevelPenalty)
           MAP_EVENT_HANDLE(Spell, OnTrainerSend)
     } SpellID;

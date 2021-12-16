@@ -7263,6 +7263,7 @@ declare namespace _hidden {
         OnHit(spell: uint32, callback: (spell: TSSpell)=>void);
         OnTick(spell: uint32, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+        OnCalcMeleeMiss(callback: (spell: TSSpellInfo, miss: TSMutable<float>, attacker: TSUnit, victim: TSUnit, attackType: uint8, skillDiff: WeaponAttackType)=>void): T
 
         OnDamageEarly(spell: uint32, callback : (
               spell: TSSpell
@@ -7326,7 +7327,7 @@ declare namespace _hidden {
         OnTick(callback: (effect: TSAuraEffect)=>void): T;
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
         OnApply(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
-
+        OnCalcMeleeMiss(callback: (spell: TSSpellInfo, miss: TSMutable<float>, attacker: TSUnit, victim: TSUnit, attackType: WeaponAttackType, skillDiff: int32)=>void): T
         OnDamageEarly(callback : (
             spell: TSSpell
           , damage: TSMutable<int32>
