@@ -63,3 +63,4 @@
 #include "TSOutfit.h"
 #include "TSORM.h"
 #include "TSORMGenerator.h"
+#include "TSBitwise.h"
