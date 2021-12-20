@@ -1741,7 +1741,7 @@ export class Emitter {
             let arrMatch = firstInitializer
                 ? firstInitializer.getText().match(/^CreateArray(<.+>) *\(/)
                 : undefined
-            if(declarationList.getText().startsWith('const')) {
+            if(type.isNumberLiteral() && declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
             }
             if(!useAuto && dictMatch) {
