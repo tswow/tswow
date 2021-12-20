@@ -90,12 +90,14 @@ export namespace MapData {
       , type: BuildType = NodeConfig.DefaultBuildType
       , maps: number[] = []
       , tiles: number[] = []
+      , threadCount?: number
     ) {
       wsys.execIn(
           dataset.path.get()
         ,   ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).mmaps_generator.abs().get()
           + (maps.length>0?` --maps=${maps.join(',')}`:'')
           + (tiles.length>0?` --tiles=${tiles.join(',')}`:'')
+          + (threadCount !== undefined ? ` --threads=${threadCount}`:'')
         , 'inherit'
         );
     }
@@ -157,6 +159,8 @@ export namespace MapData {
               , args => {
                 let maps = util.intListArgument('--maps=',args);
                 let tiles = util.intListArgument('--tiles=',args);
+                let threadArgs = util.intListArgument('--threads=',args);
+                let threadCount = threadArgs.length > 0 ? threadArgs[0] : undefined;
                 const bt = Identifier.getBuildType(args, NodeConfig.DefaultBuildType)
                 Identifier.getDatasets(
                       args
@@ -168,6 +172,7 @@ export namespace MapData {
                         , bt
                         , maps
                         , tiles
+                        , threadCount
                     )
                 })
             }
