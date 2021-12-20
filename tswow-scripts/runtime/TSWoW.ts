@@ -44,7 +44,7 @@ export async function main() {
     if(!wfs.exists(NodeConfig.DefaultClient)) {
         term.error(
               'client'
-            , `Invalid client: ${this.dataset.config.client_path} does not exist.\n`
+            , `Invalid client: ${this.dataset.config.client_path} does not exist.\n\n`
             + `TSWoW requires a valid client to be able to function,`
             + ` please enter one out in node.conf`
         )
