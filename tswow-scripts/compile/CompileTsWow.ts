@@ -55,8 +55,6 @@ async function compile(type: string, compileArgs: string[]) {
     if (isWindows()) { await IMInstall.install() }
 
     if (types.includes('full') || types.includes('release')) {
-        await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs.concat(['dynamic']));
-        await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs.concat(['dynamic']));
         await TrinityCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs.concat(['dynamic']));
     } else {
         if (type == 'trinitycore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
