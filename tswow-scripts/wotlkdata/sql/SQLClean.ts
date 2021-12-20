@@ -39,6 +39,7 @@ export function cleanSQL() {
     col('holiday_dates');
     col('spell_custom_attr');
     col('spell_proc')
+    col('spell_group')
     col('spell_autolearn')
     col('creature_queststarter')
     col('creature_questender')
