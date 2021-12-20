@@ -16,12 +16,12 @@
  */
 process.argv.push('--ipaths=./')
 import { commands } from "../util/Commands";
+import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
 import { Timer } from "../util/Timer";
 import { Addon } from "./Addon";
 import { AuthServer } from "./AuthServer";
-import { MiscCommands } from "./MiscCommands";
 import { Client } from "./Client";
 import { CleanCommand } from "./CommandActions";
 import { Crashes } from "./Crashes";
@@ -29,6 +29,7 @@ import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
 import { Livescripts } from "./Livescripts";
 import { MapData } from "./MapData";
+import { MiscCommands } from "./MiscCommands";
 import { Module } from "./Modules";
 import { mysql } from "./MySQL";
 import { NodeConfig } from "./NodeConfig";
@@ -39,6 +40,17 @@ import { Realm } from "./Realm";
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
     const timer = Timer.start();
+
+    if(!wfs.exists(NodeConfig.DefaultClient)) {
+        term.error(
+              'client'
+            , `Invalid client: ${this.dataset.config.client_path} does not exist.\n`
+            + `TSWoW requires a valid client to be able to function,`
+            + ` please enter one out in node.conf`
+        )
+        process.exit(0)
+    }
+
     await mysql.initialize();
     await AuthServer.initialize()
     await Dataset.initialize()
