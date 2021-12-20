@@ -2029,6 +2029,15 @@ export class Emitter {
                 const isTypeAlias = ((typeInfo && this.resolver.checkTypeAlias(typeInfo.aliasSymbol))
                     || this.resolver.isTypeAlias((<any>type).typeName)) && !this.resolver.isThisType(typeInfo);
 
+                // Detect if enum
+                if(this.resolver.isTypeFromSymbol(typeInfo, ts.SyntaxKind.EnumDeclaration))
+                {
+                    let enumType = this.enumTypes[typeReference.getText()]
+                        || "uint32";
+                    this.writer.writeString(enumType)
+                    return;
+                }
+
                 // detect if pointer
                 const isEnum = this.isEnum(typeReference);
                 const isArray = this.resolver.isArrayType(typeInfo);
