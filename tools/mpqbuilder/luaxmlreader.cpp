@@ -24,10 +24,10 @@
 #include <vector>
 
 std::vector<std::string> special_files = {
-	  "Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES.BLP"
-	, "Interface\\TARGETINGFRAME\\UI-Classes-Circles.blp"
-	, "Interface\\WorldStateFrame\\ICONS-CLASSES.BLP"
-	, "textures\\Minimap\\md5translate.trs"
+	  "interface\\glues\\charactercreate\\ui-charactercreate-classes.blp"
+	, "interface\\targetingframe\\ui-classes-circles.blp"
+	, "interface\\worldstateframe\\icons-classes.blp"
+	, "textures\\minimap\\md5translate.trs"
 };
 
 HANDLE handle = NULL;
@@ -48,11 +48,15 @@ fs::path findClientLang(fs::path directory) {
 
 int counter = 0;
 void handleFile(HANDLE hMpq, std::string const& file,std::string const& outputDir) {
+	std::string fileLower = file;
+	std::transform(fileLower.begin(), fileLower.end(), fileLower.begin(),
+		[](unsigned char c){ return std::tolower(c); });
+
 	if(
 		   boost::algorithm::ends_with(file,".xml")
 		|| boost::algorithm::ends_with(file,".lua")
 		|| boost::algorithm::ends_with(file,".toc")
-		|| std::find(special_files.begin(),special_files.end(),file) != special_files.end())
+		|| std::find(special_files.begin(),special_files.end(),fileLower) != special_files.end())
 	{
 		auto f = file;
 		std::replace(f.begin(),f.end(),'\\','/');
