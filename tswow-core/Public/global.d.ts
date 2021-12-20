@@ -8088,8 +8088,9 @@ declare namespace _hidden {
         OnCanChangeEquipState(callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
         OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
         OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnEquipEarly(callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnEquipLate(callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanUse(callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnCanUseType(callback: (item: TSItemTemplate, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnLFGRollEarly(callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
         OnDestroyEarly(callback: (item: TSItem, player: TSPlayer, result: TSMutable<boolean>)=>void);
         OnTakenAsLoot(callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
@@ -8108,8 +8109,9 @@ declare namespace _hidden {
         OnCanChangeEquipState(item: uint32, callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
         OnUnequip(item: uint32, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
         OnBank(item: uint32, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnEquipEarly(item: uint32, callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnEquipLate(item: uint32, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnCanEquip(item: uint32, callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanUse(item: uint32, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnCanUseType(item: uint32, callback: (item: TSItemTemplate, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnLFGRollEarly(item: uint32, callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
         OnDestroyEarly(item: uint32, callback: (item: TSItem, looter: TSPlayer, result: TSMutable<boolean>)=>void);
         OnTakenAsLoot(item: uint32, callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
