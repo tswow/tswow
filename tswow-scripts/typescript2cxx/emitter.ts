@@ -1757,9 +1757,7 @@ export class Emitter {
                     if (useAuto) {
                         this.writer.writeString('auto');
                     } else {
-                        this.writer.writeString('shared<');
                         this.processType(effectiveType, useAuto);
-                        this.writer.writeString('>');
                     }
                 }
                 this.writer.writeString(' ');
