@@ -202,9 +202,11 @@ export class Dataset {
             .reduce<Dataset[]>((p,c)=>p.concat(c.datasets.all()),[])
     }
 
-    static create(mod: ModuleEndpoint, name: string, gamebuild: number = 12340) {
+    static create(mod: ModuleEndpoint, name: string, gamebuild?: number) {
         const dataset = new Dataset(mod,name).initialize();
-        patchTCConfig(dataset.config.filename,GAME_BUILD_FIELD,`${gamebuild}`);
+        if(gamebuild !== undefined) {
+            patchTCConfig(dataset.config.filename,GAME_BUILD_FIELD,`${gamebuild}`);
+        }
         return dataset;
     }
 
@@ -279,7 +281,7 @@ export class Datasets {
             .map(x=>new Dataset(this.mod, x.basename().get()))
     }
 
-    create(name: string, gamebuild: number = 12340) {
+    create(name: string, gamebuild?: number) {
         return Dataset.create(this.mod,name,gamebuild)
     }
 }
