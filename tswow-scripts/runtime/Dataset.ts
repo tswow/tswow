@@ -184,8 +184,12 @@ export class Dataset {
     }
 
     refreshSymlinks() {
-        this.client.patchDir().readDir('ABSOLUTE').forEach(x=>{
-            if(x.isSymlink()) x.remove();
+        [this.client.path.Data,this.client.path.Data.locale()].forEach(x=>{
+            x.readDir('ABSOLUTE').forEach(y=>{
+                if(y.isSymlink()) {
+                    y.remove();
+                }
+            })
         })
         this.modules().filter(x=>x.path.assets.exists()).forEach(x=>{
             let patches = this.client.freePatches()
