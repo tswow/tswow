@@ -605,7 +605,7 @@ export namespace wfs {
  * @param str Paths to combine
  * @returns All arguments joined together as a path.
  */
-export function mpath(...str: FilePath[]) {
+export function mpath(...str: FilePath[]): string {
     return path.join.apply(path, str.map(x=>resfp(x)));
 }
 
