@@ -17,7 +17,7 @@
 import * as fs from 'fs';
 import path from 'path';
 import { mpath, wfs } from './FileSystem';
-import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, generateTree, WDirectory, WFile } from "./FileTree";
+import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
 export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21111/TDB_full_world_335.21111_2021_11_15.7z"
@@ -172,6 +172,32 @@ export function EndpointDirectory(inPath: string) {
     }));
 }
 
+export function findLocaleDir(dirIn: FilePath) {
+    const self = new WDirectory(dirIn)
+    if(!self.exists()) {
+        throw new Error(
+            `No data directory at ${self.get()}`
+        )
+    }
+    let dirs = self.filter(x=>Languages.includes(x.basename().get()));
+    if(dirs.length == 0) {
+        throw new Error(
+            `No locale directory found in ${self.get()}`
+        )
+    }
+
+    if(dirs.length > 1 ) {
+        throw new Error(
+              `Multiple locale directories found in ${self.get()}: `
+            + `${dirs.join(',')}`
+        )
+    }
+
+    return generateTree(dirs[0].get(),dir({
+        realmlist_wtf: file('realmlist.wtf')
+    }))
+}
+
 export const Languages =
     [
         'enGB', 'koKR', 'frFR', 'deDE', 'enCN', 'zhCN',
@@ -185,7 +211,7 @@ export function ClientPath(pathIn: string, devPatch: string) {
         /** The wow.exe without any patches applied */
         wow_exe_clean: file('wow.exe.clean'),
         Data: dir({
-            devPatch: dirn(`patch-${devPatch}.MPQ`,{
+            devPatch: dirn(devPatch,{
                 Interface: dir({
                     FrameXML: dir({
                         TSAddons: dir({})
@@ -194,29 +220,7 @@ export function ClientPath(pathIn: string, devPatch: string) {
                 DBFilesClient: dir({})
             }),
             locale: function(){
-                const self = new WDirectory(this.get())
-                if(!self.exists()) {
-                    throw new Error(
-                        `No data directory at ${self.get()}`
-                    )
-                }
-                let dirs = self.filter(x=>Languages.includes(x.basename().get()));
-                if(dirs.length == 0) {
-                    throw new Error(
-                        `No locale directory found in ${self.get()}`
-                    )
-                }
-
-                if(dirs.length > 1 ) {
-                    throw new Error(
-                          `Multiple locale directories found in ${self.get()}: `
-                        + `${dirs.join(',')}`
-                    )
-                }
-
-                return generateTree(dirs[0].get(),dir({
-                    realmlist_wtf: file('realmlist.wtf')
-                }))
+                return findLocaleDir(this.get());
             }
         }),
         ClientExtensions_dll: file('ClientExtensions.dll'),

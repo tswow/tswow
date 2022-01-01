@@ -18,9 +18,9 @@ import * as crypto from 'crypto';
 import { sleep } from 'deasync';
 import { Arguments } from '../util/Args';
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from '../util/ClientPatches';
-import { wfs } from '../util/FileSystem';
+import { mpath, wfs } from '../util/FileSystem';
 import { WDirectory, WNode } from '../util/FileTree';
-import { ClientPath, ipaths } from '../util/Paths';
+import { ClientPath, findLocaleDir, ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { Process } from '../util/Process';
 import { term } from '../util/Terminal';
@@ -46,9 +46,21 @@ export class Client {
                 `Invalid client: ${this.dataset.config.client_path} does not exist`
             )
         }
+
+        const useLocale = this.dataset.config.ClientPatchUseLocale
+        let patchdir = mpath(this.dataset.config.client_path,'Data')
+        if(useLocale) {
+            patchdir = findLocaleDir(patchdir).get();
+        }
+
+        let patchFile = useLocale
+            ? `patch-${wfs.basename(patchdir)}-${this.dataset.config.ClientDevPatchLetter}.MPQ`
+            : `patch-${this.dataset.config.ClientDevPatchLetter}.MPQ`
+        let patchPath = mpath(patchdir,patchFile);
+
         return ClientPath(
               this.dataset.config.client_path
-            , this.dataset.config.ClientDevPatchLetter
+            , patchPath
         )
     }
 
