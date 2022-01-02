@@ -5,6 +5,10 @@ const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs')
 
+if(!fs.existsSync('./build.conf')) {
+    fs.copyFileSync('./build.default.conf','./build.conf');
+}
+
 const buildConf = fs.readFileSync('./build.conf','utf-8')
 
 const buildDir = buildConf.match(/^BuildDirectory *= *"(.+?)"/m)[1]
