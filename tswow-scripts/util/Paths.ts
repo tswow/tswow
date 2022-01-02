@@ -257,6 +257,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             libraries: dir({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({})),
             }),
+            sourceAdt: file('source.adt'),
             mysql_startup: file('mysql_startup.txt'),
             addons: dir({}),
             revisions: dir({
@@ -449,6 +450,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         cmakeArchive: file('cmake-3.18.3-win64-x64.zip'),
         mysqlArchive: file('mysql-5.7.32-winx64.zip'),
+
+        sourceAdt: file('source.adt'),
 
         mysql: dir({
             find_subdir: function() {

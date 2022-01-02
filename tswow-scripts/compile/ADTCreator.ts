@@ -1,7 +1,9 @@
+import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { bpaths } from "./CompilePaths";
+import { DownloadFile } from "./Downloader";
 
 export namespace ADTCreator {
     export async function create(cmake: string) {
@@ -17,5 +19,11 @@ export namespace ADTCreator {
         } else {
             // TODO: linux
         }
+
+        DownloadFile(
+              'https://github.com/tswow/misc/releases/download/adt-template/source.adt'
+            , bpaths.sourceAdt.get()
+        )
+        wfs.copy(bpaths.sourceAdt,ipaths.bin.sourceAdt);
     }
 }

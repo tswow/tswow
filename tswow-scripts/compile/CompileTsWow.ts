@@ -24,6 +24,7 @@ import { ADTCreator } from './ADTCreator';
 import { BLPConverter } from './BLPConverter';
 import { Boost } from './Boost';
 import { isInteractive } from './BuildConfig';
+import { ClientExtensions } from './ClientExtensions';
 import { CMake } from './Cmake';
 import { bpaths } from './CompilePaths';
 import { Config } from './Config';
@@ -65,6 +66,7 @@ async function compile(type: string, compileArgs: string[]) {
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
     if (isType('adtcreator')) { await ADTCreator.create(cmake); }
+    if (isType('client-extensions')) { await ClientExtensions.find(); }
 
     if (!buildingScripts && isType('scripts')) {
         await Scripts.build();
