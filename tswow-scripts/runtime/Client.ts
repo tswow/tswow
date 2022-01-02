@@ -60,7 +60,7 @@ export class Client {
 
         return ClientPath(
               this.dataset.config.client_path
-            , patchPath
+            , wfs.relative(this.dataset.config.client_path+'/Data',patchPath)
         )
     }
 
