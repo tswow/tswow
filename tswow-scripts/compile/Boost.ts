@@ -26,7 +26,7 @@ const BOOST_VARIABLE = `C:/local/boost_1_72_0`;
 
 export namespace Boost {
     export async function install() {
-        DownloadFile(BOOST_URL,bpaths.boostArchive.get())
+        await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
         if(!wfs.exists(BOOST_PATH)) {
             ExtractZip(bpaths.boostArchive.get(),{dir:BOOST_PATH});
         }
