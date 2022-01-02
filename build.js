@@ -38,6 +38,9 @@ catch(error) {
     }
 }
 
+fs.copyFileSync('package.json',path.join(bootstrapDir,'package.json'))
+child_process.execSync('npm i', {cwd:bootstrapDir,stdio:'inherit'});
+
 child_process.execSync(
       `node -r source-map-support/register`
     + ` ${path.join(bootstrapDir,'compile','CompileTsWow.js')}`
