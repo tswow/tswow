@@ -16,27 +16,22 @@
  */
 import { WNode } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
-import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
 export namespace CMake {
-    function query(reason: string) {
-        return wsys.userInput(
-            `${reason}\n\t`
-            +`1. Download the .zip from here: `
-            +`https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip\n\t`
-            +`2. Extract is to the "${bpaths.cmake.get()}" directory `
-            +`(${bpaths.cmake.get()}/cmake-3.18.3-win64-x64 should exist)\n\t`
-            +`3. Press enter in this command prompt\n`);
-    }
-
     export async function find(): Promise<WNode> {
-        while(!bpaths.cmake.exists()) {
-            await query('CMake not found');
-        }
+        await DownloadFile(
+            'https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip'
+            , bpaths.cmakeArchive
+        )
 
-        while(bpaths.cmake.readDir().length !== 1) {
-            await query('CMake is corrupt, please reinstall it');
+        if(!bpaths.cmake.exists()) {
+            await ExtractZip(
+                bpaths.cmakeArchive.get()
+              , {dir:bpaths.cmake.abs().get()}
+          )
         }
 
         let sub = bpaths.cmake.readDir('ABSOLUTE')[0]

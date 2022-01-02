@@ -14,21 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
-import { wsys } from '../util/System';
-import { term } from '../util/Terminal';
 import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
 
 export namespace BLPConverter {
     export async function install(cmake: string) {
-        while(!bpaths.blpconverter.exists()) {
-            term.error('build',`blpconverter.exe not found`);
-            term.error('build',`Build from source (BLPConverter/BLPConverter.sln)`);
-            term.error('build',`OR download: https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe`);
-            term.error('build',`Then place it here: ${wfs.absPath(bpaths.blpconverter.get())}`);
-            await wsys.userInput(`Press any key to try again:`);
-        }
+        await DownloadFile(
+            'https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe'
+           , bpaths.blpconverter
+        )
         bpaths.blpconverter.copy(ipaths.bin.BLPConverter.blpconverter)
     }
 }

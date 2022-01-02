@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
 export namespace IMInstall {
     export async function install() {
@@ -26,12 +26,16 @@ export namespace IMInstall {
             return;
         }
 
-        while(!bpaths.im.exists()) {
-            await wsys.userInput(`ImageMagick is not installed:\n\t`
-            + `1. Download https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-7.1.0-portable-Q16-x64.zip\n\t`
-            + `2.Extract it to ${bpaths.im.get()} `
-            + `(${mpath(bpaths.im.convert_exe.get())} and ${mpath(bpaths.im.magic_exe.get())} should exist)\n\t`
-            + `3.Press enter in this prompt`);
+        await DownloadFile(
+            'https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-7.1.0-portable-Q16-x64.zip'
+           , bpaths.imArchive
+        )
+
+        if(!bpaths.im.exists()) {
+            await ExtractZip(
+                  bpaths.imArchive.get()
+                , {dir:bpaths.im.abs().get()}
+            )
         }
 
         bpaths.im.convert_exe.copy(ipaths.bin.im.convert)

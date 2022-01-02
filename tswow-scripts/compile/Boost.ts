@@ -16,22 +16,19 @@
  */
 import { wfs } from '../util/FileSystem';
 import { wsys } from '../util/System';
+import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
-const BOOST_URL = 'https://sourceforge.net/projects/boost/files/boost-binaries/1.72.0/boost_1_72_0-msvc-14.2-64.exe/download';
+const BOOST_URL = "https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.zip"
 const BOOST_PATH = `C:\\local\\boost_1_72_0`;
 const BOOST_VARIABLE = `C:/local/boost_1_72_0`;
 
 export namespace Boost {
     export async function install() {
-        while (!wfs.exists(BOOST_PATH)) {
-            const str =
-                `Boost not found. Please install if from the link below.\n`
-                + `You may also have to type the command:`
-                + `"setx BOOST_ROOT ${BOOST_VARIABLE}" /M `
-                + `in an elevated command prompt.\n`
-                + `${BOOST_URL}\n`
-                + `Once done, press enter in this menu.`;
-            await wsys.userInput(str);
+        DownloadFile(BOOST_URL,bpaths.boostArchive.get())
+        if(!wfs.exists(BOOST_PATH)) {
+            ExtractZip(bpaths.boostArchive.get(),{dir:BOOST_PATH});
         }
         wsys.exec(`setx BOOST_ROOT ${BOOST_VARIABLE}`);
         return BOOST_PATH;

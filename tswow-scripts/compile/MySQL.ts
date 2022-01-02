@@ -14,31 +14,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { mpath } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
-import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
 export namespace MySQL {
-    function query(reason: string) {
-        return wsys.userInput(
-            `${reason}`
-            + `\n\t1. Download the .zip from here: `
-            + `https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip\n\t`
-            + `2. Extract it to "${bpaths.mysql.get()}" (${mpath(bpaths.mysql.get(),"mysql-5.7.32-winx64")} should exist)`
-            + `\n\t3. Press enter in this prompt\n`);
-    }
-
     export async function find() {
-        // Find the corrupt MySQL subdirectory
-        let read: string[]
+        await DownloadFile(
+            'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip'
+           , bpaths.mysqlArchive
+        )
 
-        while(!bpaths.mysql.find_subdir().exists()) {
-            await query('MySQL not found');
+        if(!bpaths.sevenZip.exists()) {
+            await ExtractZip(
+                  bpaths.mysqlArchive.get()
+                , {dir:bpaths.mysql.abs().get()}
+            )
         }
 
         // Install the necessary mysql files
-        [
+        ;[
               bpaths.mysql.find_subdir().bin.mysql_exe
             , bpaths.mysql.find_subdir().bin.mysqld_exe
             , bpaths.mysql.find_subdir().bin.mysqldump_exe

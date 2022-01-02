@@ -14,21 +14,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
 export namespace OpenSSL {
     export async function find() {
-        while (!bpaths.openssl.exists()) {
-            await wsys.userInput(`OpenSSL not found. `
-            + `\n\t1. Download the .exe installer from here: `
-            + `https://slproweb.com/products/Win32OpenSSL.html\n\t`
-            + `2. Run and install to the "${bpaths.openssl.get()}" directory\n\t`
-            + `3. Set it to copy OpenSSL binaries to `
-            + `"The OpenSSL binaries (/bin) directory" \n\t`
-            + `4. Wait for installation to complete \n\t`
-            + `5. Press enter in this command prompt\n`);
+        await DownloadFile(
+            'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip'
+           , bpaths.opensslArchive
+        )
+
+        if(!bpaths.sevenZip.exists()) {
+            await ExtractZip(
+                  bpaths.opensslArchive.get()
+                , {dir:bpaths.openssl.abs().get()}
+            )
         }
+
         return bpaths.openssl;
     }
 }

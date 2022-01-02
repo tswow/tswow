@@ -17,8 +17,9 @@
 import { SevenZip } from '../util/7zip';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
+import ExtractZip = require('extract-zip')
 
 export namespace SevenZipInstall {
     /**
@@ -36,14 +37,19 @@ export namespace SevenZipInstall {
         if(!isWindows()) {
             return;
         }
-        while(!bpaths.sevenZip.exists()) {
-            await wsys.userInput(`7zip is not installed:\n\t`
-            + `1. Download https://www.7-zip.org/a/7za920.zip\n\t`
-            + `2.Extract it to ${bpaths.sevenZip.get()} `
-            + `()`
-            + `(${bpaths.sevenZip.sevenZa_exe} should exist)\n\t`
-            + `3.Press enter in this prompt`);
+
+        await DownloadFile(
+             'https://www.7-zip.org/a/7za920.zip'
+            , bpaths.sevenZipArchive
+        )
+
+        if(!bpaths.sevenZip.exists()) {
+            await ExtractZip(
+                  bpaths.sevenZipArchive.get()
+                , {dir:bpaths.sevenZip.abs().get()}
+            )
         }
+
         bpaths.sevenZip.copy(ipaths.bin.sZip);
     }
 }

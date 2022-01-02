@@ -447,6 +447,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
         cmake: dir({
         }),
 
+        cmakeArchive: file('cmake-3.18.3-win64-x64.zip'),
+        mysqlArchive: file('mysql-5.7.32-winx64.zip'),
+
         mysql: dir({
             find_subdir: function() {
                 return generateTree(path.join(this.get(),fs.readdirSync(this.get())[0]),dir({
@@ -463,15 +466,22 @@ export function BuildPaths(pathIn: string, tdb: string) {
             },
         }),
 
+        opensslArchive: file('openssl1_1_1m.zip'),
+
         openssl: dir({
             libcrypto: file('libcrypto-1_1-x64.dll')
         }),
 
+        boostArchive: file('boost_1_72_0.zip'),
         blpconverter: file('BLPConverter.exe'),
         tdb: file(tdb),
+        sevenZipArchive: file('7za920.zip'),
         sevenZip: dirn('7zip',{
             sevenZa_exe: file('7za.exe')
         }),
+
+        imArchive: file('ImageMagick-7.1.0-portable-Q16-x64.zip'),
+
         im: dir({
             convert_exe: file('convert.exe'),
             magic_exe: file('magick.exe'),
