@@ -5,21 +5,21 @@ import { term } from '../util/Terminal';
 
 export async function DownloadFile(url: string, file: FilePath) {
     if(wfs.exists(file)) {
+        term.log('build', `Already downloaded ${url}, skipping`)
         return;
     }
 
     try {
+        term.log('build',`Downloading ${url} (this can take a long time)`)
         await new Downloader.default(
             {
                 url
                 , fileName: resfp(file)
-                , onProgress: (perc)=>{
-                    term.log('build',`Downloading ${url} ${perc}%`)
-                }
                 , cloneFiles: false
                 , maxAttempts: 3
             }
         ).download();
+        term.success('build',`Finished downloading ${url}`)
     } catch(error) {
         throw new Error(`Failed to download ${url}: ${error.message}`)
     }
