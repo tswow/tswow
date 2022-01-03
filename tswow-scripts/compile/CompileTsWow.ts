@@ -94,7 +94,6 @@ async function main() {
         );
     const build = commands.addCommand('build');
     await compile('scripts', []);
-    //process.exit(0)
 
     const installedPrograms =
         ['trinitycore','trinitycore-release', 'trinitycore-relwithdebinfo', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',
@@ -117,7 +116,7 @@ if(isInteractive) {
     main();
 } else {
     (async function(){
-        await compile('full',[]);
+        await compile(process.argv.includes('--release') ? 'release':'full',[]);
         process.exit(0);
     }());
 }

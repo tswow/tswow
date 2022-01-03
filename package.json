@@ -52,6 +52,7 @@
   "scripts": {
     "build": "node build.js",
     "build-interactive": "node build.js --interactive",
+    "build-release":"node build.js --release",
     "test": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test",
     "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep "
   },
