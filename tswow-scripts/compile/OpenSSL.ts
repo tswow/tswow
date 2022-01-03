@@ -25,7 +25,7 @@ export namespace OpenSSL {
            , bpaths.opensslArchive
         )
 
-        if(!bpaths.sevenZip.exists()) {
+        if(!bpaths.openssl.exists()) {
             await ExtractZip(
                   bpaths.opensslArchive.get()
                 , {dir:bpaths.openssl.abs().get()}
