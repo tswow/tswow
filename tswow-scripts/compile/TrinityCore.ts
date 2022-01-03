@@ -163,8 +163,8 @@ export namespace TrinityCore {
                 +` -DSCRIPTS=${scripts}`
                 +` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
-                +` -DOPENSSL_INCLUDE_DIR="${openssl}/include"`
-                +` -DOPENSSL_ROOT_DIR="${openssl}"`
+                +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
+                +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                 +` -DBOOST_ROOT="${bpaths.boost.boost_1_72_0.abs().get()}"`
                 +` -S "${spaths.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
