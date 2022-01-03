@@ -475,6 +475,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
             libcrypto: file('libcrypto-1_1-x64.dll')
         }),
 
+        boost: dir({
+            boost_1_72_0: dir({})
+        }),
         boostArchive: file('boost_1_72_0.zip'),
         blpconverter: file('BLPConverter.exe'),
         tdb: file(tdb),

@@ -24,7 +24,9 @@ export namespace MPQBuilder {
         if (isWindows()) {
             wsys.exec(`${cmake} `
                 + ` -S "${spaths.tools.mpqbuilder.get()}" `
-                + ` -B "${bpaths.mpqbuilder.get()}"`, 'inherit');
+                + ` -B "${bpaths.mpqbuilder.get()}"`
+                + ` -DBOOST_ROOT="${bpaths.boost.boost_1_72_0.abs().get()}"`
+                , 'inherit');
             wsys.exec(`${cmake}`
                 + ` --build "${bpaths.mpqbuilder.get()}"`
                 + ` --config Release`, 'inherit');

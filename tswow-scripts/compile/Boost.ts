@@ -14,23 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { wfs } from '../util/FileSystem';
-import { wsys } from '../util/System';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
 
-const BOOST_URL = "https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.zip"
-const BOOST_PATH = `C:\\local\\boost_1_72_0`;
-const BOOST_VARIABLE = `C:/local/boost_1_72_0`;
+const BOOST_URL = "https://github.com/tswow/misc/releases/download/boost-1.72/boost_1_72_0.zip"
 
 export namespace Boost {
     export async function install() {
         await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
-        if(!wfs.exists(BOOST_PATH)) {
-            ExtractZip(bpaths.boostArchive.get(),{dir:BOOST_PATH});
+        if(!bpaths.boost.exists()) {
+            await ExtractZip(bpaths.boostArchive.get(),{dir:bpaths.boost.boost_1_72_0.abs().get()});
         }
-        wsys.exec(`setx BOOST_ROOT ${BOOST_VARIABLE}`);
-        return BOOST_PATH;
+        return bpaths.boost.boost_1_72_0.abs().get();
     }
 }
