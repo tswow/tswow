@@ -20,7 +20,7 @@ export namespace ADTCreator {
             // TODO: linux
         }
 
-        DownloadFile(
+        await DownloadFile(
               'https://github.com/tswow/misc/releases/download/adt-template/source.adt'
             , bpaths.sourceAdt.get()
         )
