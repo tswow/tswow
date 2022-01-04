@@ -480,7 +480,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
         boostArchive: file('boost_1_72_0.zip'),
         blpconverter: file('BLPConverter.exe'),
-        tdb: file(tdb),
+        tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
+        tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
         sevenZip: dirn('7zip',{
             sevenZa_exe: file('7za.exe')

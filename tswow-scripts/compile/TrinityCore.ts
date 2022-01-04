@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { SevenZip } from '../util/7zip';
 import { BuildType } from '../util/BuildType';
 import { wfs } from '../util/FileSystem';
 import { ipaths, TDB_URL } from '../util/Paths';
@@ -21,6 +22,7 @@ import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
 import { bpaths, spaths } from './CompilePaths';
+import { DownloadFile } from './Downloader';
 
 // https://stackoverflow.com/a/68703218/17188274
 function prefix(words: string[]){
@@ -230,15 +232,17 @@ export namespace TrinityCore {
         spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
         spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
+        await DownloadFile(TDB_URL,bpaths.tdbArchive.get());
+        if(!bpaths.tdbSql.exists()) {
+            SevenZip.extract(
+                  bpaths.sevenZip.sevenZa_exe.abs().get()
+                , bpaths.tdbArchive.abs().get()
+                , bpaths.abs().get()
+            )
+        }
+
         if(!ipaths.bin.tdb.exists()) {
-            while(!bpaths.tdb.exists()) {
-                await wsys.userInput(
-                    `Could not find valid tdb.`
-                    + `Please download it from ${TDB_URL}\n`
-                    + `and place it in ${bpaths.tdb.get()}`
-                )
-            }
-            bpaths.tdb.copy(ipaths.bin.tdb);
+            bpaths.tdbArchive.copy(ipaths.bin.tdb);
         }
     }
 }
