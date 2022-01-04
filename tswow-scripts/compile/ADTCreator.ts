@@ -2,6 +2,7 @@ import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
+import { SOURCE_ADT_URL } from "./BuildConfig";
 import { bpaths } from "./CompilePaths";
 import { DownloadFile } from "./Downloader";
 
@@ -21,7 +22,7 @@ export namespace ADTCreator {
         }
 
         await DownloadFile(
-              'https://github.com/tswow/misc/releases/download/adt-template/source.adt'
+              SOURCE_ADT_URL
             , bpaths.sourceAdt.get()
         )
         wfs.copy(bpaths.sourceAdt,ipaths.bin.sourceAdt);

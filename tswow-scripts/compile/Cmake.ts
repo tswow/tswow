@@ -16,6 +16,7 @@
  */
 import { WNode } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
+import { CMAKE_DOWNLOAD_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -23,7 +24,7 @@ import ExtractZip = require('extract-zip')
 export namespace CMake {
     export async function find(): Promise<WNode> {
         await DownloadFile(
-            'https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip'
+              CMAKE_DOWNLOAD_URL
             , bpaths.cmakeArchive
         )
 

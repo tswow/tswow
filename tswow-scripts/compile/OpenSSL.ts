@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CLEAR_ARCHIVES } from './BuildConfig';
+import { CLEAR_ARCHIVES, OPENSSL_DOWNLOAD_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -22,7 +22,7 @@ import ExtractZip = require('extract-zip')
 export namespace OpenSSL {
     export async function find() {
         await DownloadFile(
-            'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip'
+             OPENSSL_DOWNLOAD_URL
            , bpaths.opensslArchive
         )
 

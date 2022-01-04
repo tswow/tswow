@@ -15,13 +15,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import { TDB_URL } from "../util/Paths";
+
+// Dependency locations
+
 export const CMAKE_DOWNLOAD_URL = 'https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip';
-export const OPENSSL_DOWNLOAD_URL = 'https://slproweb.com/download/Win64OpenSSL-1_1_1h.exe';
-export const BLENDER_DOWNLOAD_URL = 'https://download.blender.org/release/Blender2.79/blender-2.79b-windows64.zip';
+export const SZIP_DOWNLOAD_URL = 'https://www.7-zip.org/a/7za920.zip';
+export const OPENSSL_DOWNLOAD_URL = 'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip';
+export const SOURCE_ADT_URL = 'https://github.com/tswow/misc/releases/download/adt-template/source.adt'
+export const BLPCONVERTER_URL = 'https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe'
+export const BOOST_URL = 'https://github.com/tswow/misc/releases/download/boost-1.72/boost_1_72_0.zip'
+export const MYSQL_URL = 'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip'
+export const OPENSSL_URL = 'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip'
+export const TDB_URL_COMPILE = TDB_URL // change value at reference
+
+// Misc settings
+
 export const CLEAR_ARCHIVES = process.argv.includes('clear-archives')
-
 export const isInteractive = process.argv.includes("--interactive")
-
 if(CLEAR_ARCHIVES && isInteractive) {
     throw new Error(`Cannot clear archives in an interactive build!`)
 }

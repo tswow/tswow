@@ -15,13 +15,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ipaths } from '../util/Paths';
+import { BLPCONVERTER_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 
 export namespace BLPConverter {
     export async function install(cmake: string) {
         await DownloadFile(
-            'https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe'
+             BLPCONVERTER_URL
            , bpaths.blpconverter
         )
         bpaths.blpconverter.copy(ipaths.bin.BLPConverter.blpconverter)

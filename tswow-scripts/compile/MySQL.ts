@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ipaths } from '../util/Paths';
-import { CLEAR_ARCHIVES } from './BuildConfig';
+import { CLEAR_ARCHIVES, MYSQL_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -23,7 +23,7 @@ import ExtractZip = require('extract-zip')
 export namespace MySQL {
     export async function find() {
         await DownloadFile(
-            'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip'
+             MYSQL_URL
            , bpaths.mysqlArchive
         )
 

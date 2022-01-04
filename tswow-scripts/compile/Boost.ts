@@ -14,12 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CLEAR_ARCHIVES } from './BuildConfig';
+import { BOOST_URL, CLEAR_ARCHIVES } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
-
-const BOOST_URL = "https://github.com/tswow/misc/releases/download/boost-1.72/boost_1_72_0.zip"
 
 export namespace Boost {
     export async function install() {
