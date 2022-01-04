@@ -16,7 +16,7 @@ jobs:
       - name: Install submodules
         run: git submodule update --init --recursive
       - name: Setup Build Directory
-        uses: DamianReeves/write-file-action
+        uses: DamianReeves/write-file-action@v1.0
         with:
           path: "./build.conf"
           contents: |
