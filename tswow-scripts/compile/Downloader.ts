@@ -14,7 +14,8 @@ export async function DownloadFile(url: string, file: FilePath) {
         await new Downloader.default(
             {
                 url
-                , fileName: resfp(file)
+                , fileName: wfs.basename(resfp(file))
+                , directory: wfs.dirname(resfp(file))
                 , cloneFiles: false
                 , maxAttempts: 3
             }
