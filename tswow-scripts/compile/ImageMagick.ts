@@ -16,6 +16,7 @@
  */
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
+import { CLEAR_ARCHIVES } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -38,8 +39,27 @@ export namespace IMInstall {
             )
         }
 
+        // Remove unused libraries
+        [
+            , "composite.exe"
+            , "conjure.exe"
+            , "mogrify.exe"
+            , "montage.exe"
+            , "stream.exe"
+            , "ffmpeg.exe"
+            , "IMDisplay.exe"
+            , "compare.exe"
+        ].forEach(x=>{
+            bpaths.im.join(x).remove();
+        })
+
         bpaths.im.convert_exe.copy(ipaths.bin.im.convert)
         bpaths.im.magic_exe.copy(ipaths.bin.im.magick)
         bpaths.im.identify_exe.copy(ipaths.bin.im.identify)
+
+        if(CLEAR_ARCHIVES) {
+            bpaths.imArchive.remove();
+        }
+
     }
 }

@@ -464,6 +464,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     lib: dir({
                         libmysql_dll: file('libmysql.dll'),
                         libmysqld_dll: file('libmysqld.dll'),
+                        mysqlserver_lib: file('mysqlserver.lib'),
                     })
                 }))
             },
@@ -476,7 +477,9 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         boost: dir({
-            boost_1_72_0: dir({})
+            boost_1_72_0: dir({
+                lib64_msvc_14_2: dir({})
+            })
         }),
         boostArchive: file('boost_1_72_0.zip'),
         blpconverter: file('BLPConverter.exe'),

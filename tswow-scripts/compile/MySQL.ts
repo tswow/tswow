@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ipaths } from '../util/Paths';
+import { CLEAR_ARCHIVES } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -33,6 +34,10 @@ export namespace MySQL {
             )
         }
 
+
+        // Delete unused library
+        bpaths.mysql.find_subdir().lib.mysqlserver_lib.remove();
+
         // Install the necessary mysql files
         ;[
               bpaths.mysql.find_subdir().bin.mysql_exe
@@ -41,6 +46,10 @@ export namespace MySQL {
         ].forEach(x=>{
             x.copyOnNoTarget(ipaths.bin.mysql.join(x.basename()))
         })
+
+        if(CLEAR_ARCHIVES) {
+            bpaths.mysqlArchive.remove();
+        }
 
         return bpaths.mysql.find_subdir().get()
     }

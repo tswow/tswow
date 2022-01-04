@@ -18,5 +18,10 @@
 export const CMAKE_DOWNLOAD_URL = 'https://github.com/Kitware/CMake/releases/download/v3.18.3/cmake-3.18.3-win64-x64.zip';
 export const OPENSSL_DOWNLOAD_URL = 'https://slproweb.com/download/Win64OpenSSL-1_1_1h.exe';
 export const BLENDER_DOWNLOAD_URL = 'https://download.blender.org/release/Blender2.79/blender-2.79b-windows64.zip';
+export const CLEAR_ARCHIVES = process.argv.includes('clear-archives')
 
 export const isInteractive = process.argv.includes("--interactive")
+
+if(CLEAR_ARCHIVES && isInteractive) {
+    throw new Error(`Cannot clear archives in an interactive build!`)
+}
