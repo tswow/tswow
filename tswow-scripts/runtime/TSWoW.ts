@@ -52,11 +52,11 @@ export async function main() {
     }
 
     await mysql.initialize();
-    await AuthServer.initialize()
     await Dataset.initialize()
     await Client.initialize();
     await Module.initialize();
     await Realm.initialize()
+    await AuthServer.initialize()
     await Datascripts.initialize();
     await Livescripts.initialize();
     await Addon.initialize();

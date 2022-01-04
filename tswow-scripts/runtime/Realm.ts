@@ -357,6 +357,11 @@ export class Realm {
     }
 
     static async initialize() {
+        // Create default realm if it's selected
+        if(NodeConfig.DefaultRealm === 'default.realm') {
+            ipaths.modules.join('default/realms/realm').mkdir()
+        }
+
         if(
                !process.argv.includes('noac')
             && !process.argv.includes('norealm')

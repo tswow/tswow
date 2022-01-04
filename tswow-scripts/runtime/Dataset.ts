@@ -262,6 +262,11 @@ export class Dataset {
                     .forEach(x=>term.log('dataset',x.fullName +': '+x.path.get()))
             }
         ).addAlias('datasets')
+
+        // Create default dataset if it's selected
+        if(NodeConfig.DefaultDataset === 'default.dataset') {
+            ipaths.modules.join('default/datasets/dataset').mkdir()
+        }
     }
 }
 
