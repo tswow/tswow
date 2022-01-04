@@ -1,0 +1,38 @@
+name: Windows Deploy
+on:
+  push:
+    branches: [ "deploy-test" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - name: Clean up space
+        run: >
+          Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\dotnet";
+          Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\LLVM";
+          Clear-Recyclebin -Force;
+      - uses: actions/checkout@v2
+      - name: Install submodules
+        run: git submodule update --init --recursive
+      - name: Setup Build Directory
+        uses: DamianReeves/write-file-action
+        with:
+          path: "./build.conf"
+          contents: |
+            BuildDirectory = "C:/tswow-build"
+            InstallDirectory = "../tswow-install"
+          write-mode: overwrite
+      - name: Build tswow
+        run: npm run build-release clean-archives
+      - name: Deploy Windows Release
+        uses: WebFreak001/deploy-nightly@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: https://uploads.github.com/repos/tswow/tswow-prereleases/releases/45086229/assets{?name,label}
+          release_id: 45086229
+          asset_path: C:/tswow-build/release.7z
+          asset_name: tswow-prerelease-$$.zip
+          asset_content_type: application/x-7z-compressed
+          max_releases: 15
