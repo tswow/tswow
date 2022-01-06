@@ -3,7 +3,7 @@ import { ipaths } from "../util/Paths";
 import { isWindows } from "../util/Platform";
 import { wsys } from "../util/System";
 import { SOURCE_ADT_URL } from "./BuildConfig";
-import { bpaths } from "./CompilePaths";
+import { bpaths, spaths } from "./CompilePaths";
 import { DownloadFile } from "./Downloader";
 
 export namespace ADTCreator {
@@ -18,7 +18,15 @@ export namespace ADTCreator {
             bpaths.adtcreator.Release.adt_creator_exe
                 .copy(ipaths.bin.adtcreator.adtcreator_exe)
         } else {
-            // TODO: linux
+            bpaths.adtcreator.mkdir();
+            const relativeSource = bpaths.adtcreator.relativeFrom(spaths.tools.adtcreator.get())
+            await wsys.inDirectory(bpaths.adtcreator.get(),
+            ()=>{
+                wsys.exec(
+                    `${cmake} "${relativeSource}"`
+                    ,  'inherit');
+                wsys.exec(`make`,'inherit');
+            })
         }
 
         await DownloadFile(

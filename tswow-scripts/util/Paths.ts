@@ -584,7 +584,8 @@ export function SourcePaths(pathIn: string) {
             typescript_js: file('typescript/lib/tsc'),
         }),
         tools: dir({
-            mpqbuilder: dir({})
+            mpqbuilder: dir({}),
+            adtcreator: dirn('adt-creator',{}),
         }),
 
         install_config: dirn('install-config',{
