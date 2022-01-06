@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "ChatCommand.h"
 #include "TSTests.h"
-#include <filesystem>
+#include <boost/filesystem.hpp>
 
 using namespace Trinity::ChatCommands;
 
@@ -34,21 +34,21 @@ static std::pair<std::string, std::string> parseSessionWArgs(std::string const& 
     }
 }
 
-std::filesystem::path findPositionsFile()
+boost::filesystem::path findPositionsFile()
 {
     constexpr char const* positions_txt = "positions.txt";
-    std::filesystem::path cur_path = std::filesystem::current_path();
+    boost::filesystem::path cur_path = boost::filesystem::current_path();
     while (true)
     {
-        std::filesystem::path coredata = cur_path / "coredata";
-        if (std::filesystem::exists(coredata))
+        boost::filesystem::path coredata = cur_path / "coredata";
+        if (boost::filesystem::exists(coredata))
         {
             return coredata / positions_txt;
         }
 
         if (!cur_path.has_parent_path())
         {
-            return std::filesystem::current_path() / positions_txt;
+            return boost::filesystem::current_path() / positions_txt;
         }
         cur_path = cur_path.parent_path();
     }
@@ -148,7 +148,7 @@ public:
     static bool ClearAt(ChatHandler* handler, char const* args)
     {
         std::ofstream outfile;
-        outfile.open(findPositionsFile().c_str(), std::ofstream::out | std::ofstream::trunc);
+        outfile.open(findPositionsFile().string().c_str(), std::ofstream::out | std::ofstream::trunc);
         Player* player = handler->GetPlayer();
         if (player) {
             ChatHandler(player->GetSession())
@@ -181,7 +181,7 @@ public:
 
         ChatHandler(player->GetSession()).SendSysMessage(("Wrote " + str).c_str());
         std::ofstream outfile;
-        outfile.open(findPositionsFile(), std::ios_base::app);
+        outfile.open(findPositionsFile().string().c_str(), std::ios_base::app);
         outfile << str << "\n";
         return true;
     }

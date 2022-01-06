@@ -140,9 +140,9 @@ void DatabaseSpec::update()
                         TC_LOG_INFO(
                               "tswow.orm"
                             , "New primary key: %s.%s.%s"
-                            , m_dbName
-                            , m_name
-                            , eff.m_name
+                            , m_dbName.c_str()
+                            , m_name.c_str()
+                            , eff.m_name.c_str()
                         );
                         pkChanged = true;
                         break;
@@ -152,11 +152,11 @@ void DatabaseSpec::update()
                         TC_LOG_INFO(
                               "tswow.orm"
                             , "Primary key type changed: %s.%s.%s (%s != %s)"
-                            , m_dbName
-                            , m_name
-                            , eff.m_name
-                            , eff.m_typeName
-                            , itr->m_typeName
+                            , m_dbName.c_str()
+                            , m_name.c_str()
+                            , eff.m_name.c_str()
+                            , eff.m_typeName.c_str()
+                            , itr->m_typeName.c_str()
                         );
                         pkChanged = true;
                         break;
@@ -168,8 +168,8 @@ void DatabaseSpec::update()
                 TC_LOG_INFO(
                       "tswow.orm"
                     , "Primary keys changed: %s.%s (must rebuild entire table)"
-                    , m_dbName
-                    , m_name
+                    , m_dbName.c_str()
+                    , m_name.c_str()
                 );
                 destroy();
                 goto create;
@@ -192,9 +192,9 @@ void DatabaseSpec::update()
                 TC_LOG_INFO(
                       "tswow.orm"
                     , "Column removed: %s.%s.%s"
-                    , m_dbName
-                    , m_name
-                    , old.m_name
+                    , m_dbName.c_str()
+                    , m_name.c_str()
+                    , old.m_name.c_str()
                 );
                 query(
                     "ALTER TABLE `"
@@ -212,11 +212,11 @@ void DatabaseSpec::update()
                 TC_LOG_INFO(
                     "tswow.orm"
                     , "Column type changed: %s.%s.%s (%s -> %s)"
-                    , m_dbName
-                    , m_name
-                    , old.m_name
-                    , old.m_typeName
-                    , itr->m_typeName
+                    , m_dbName.c_str()
+                    , m_name.c_str()
+                    , old.m_name.c_str()
+                    , old.m_typeName.c_str()
+                    , itr->m_typeName.c_str()
                 );
                 query(
                     "ALTER TABLE `"
@@ -247,9 +247,9 @@ void DatabaseSpec::update()
                 TC_LOG_INFO(
                     "tswow.orm"
                     , "Column added: %s.%s.%s"
-                    , m_dbName
-                    , m_name
-                    , eff.m_name
+                    , m_dbName.c_str()
+                    , m_name.c_str()
+                    , eff.m_name.c_str()
                 );
                 query(
                     "ALTER TABLE `"
@@ -340,8 +340,8 @@ void DatabaseSpec::update()
         TC_LOG_INFO(
               "tswow.orm"
             , "Table created: %s.%s"
-            , m_dbName
-            , m_name
+            , m_dbName.c_str()
+            , m_name.c_str()
         );
         query(createQuery);
     }
