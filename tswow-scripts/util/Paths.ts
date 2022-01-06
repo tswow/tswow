@@ -499,7 +499,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         TrinityCore: dir({
-            // todo: linux
+            bin_linux: dirn('install/trinitycore/bin',{}),
             bin: custom((k)=>(name: string)=>{
                 return generateTree(mpath(k,'bin',name),dir({
                     worldserver_exe: file('worldserver.exe'),

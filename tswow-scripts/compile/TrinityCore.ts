@@ -195,14 +195,20 @@ export namespace TrinityCore {
             }
         }
 
-        bpaths.TrinityCore.bin(type).scripts
-            .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).scripts)
+        if(isWindows()) {
+            bpaths.TrinityCore.bin(type).scripts
+                .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).scripts)
 
-        bpaths.TrinityCore.configs(type).iterate('FLAT','FILES','FULL',node=>{
-            if(node.endsWith('.dll') || node.endsWith('.conf.dist') || node.endsWith('.pdb') || node.endsWith('.exe')) {
-                node.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).configs.join(node.basename()))
-            }
-        })
+            bpaths.TrinityCore.configs(type).iterate('FLAT','FILES','FULL',node=>{
+                if(node.endsWith('.dll') || node.endsWith('.conf.dist') || node.endsWith('.pdb') || node.endsWith('.exe')) {
+                    node.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).configs.join(node.basename()))
+                }
+            })
+        } else {
+                bpaths.TrinityCore.bin_linux.copy(
+                    ipaths.bin.core.pick('trinitycore').build.pick(type)
+                )
+        }
 
         bpaths.TrinityCore.libraries(type).forEach(x=>{
             x.copy(ipaths.bin.libraries.build.pick(type).join(x.basename()))

@@ -14,11 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { isWindows } from './Platform';
 import { wsys } from './System';
 
 export namespace SevenZip {
     export function extract(sevenZipPath: string, archive: string, out: string) {
-        wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
+        if(isWindows()) {
+            wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
+        } else {
+            // todo: unused but needs out directory
+            wsys.exec(`p7zip -d -k e "${archive}"`)
+        }
     }
 
     export function makeArchive(sevenZipPath: string, zipPath: string, directoryIn: string[]) {
