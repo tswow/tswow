@@ -26,7 +26,7 @@ const bootstrapDir = path.join(buildDir,'bootstrap')
 const buildScripts = () =>
     child_process.execSync(
           `npx swc tswow-scripts -d ${bootstrapDir}`
-        , {stdio:'inherit'}
+        , {stdio:'ignore'}
     )
 try { buildScripts() }
 catch(error) {
