@@ -65,7 +65,7 @@ async function compile(type: string, compileArgs: string[]) {
 
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
-    if (isType('adtcreator')) { await ADTCreator.create(cmake); }
+    if (isWindows() && isType('adtcreator')) { await ADTCreator.create(cmake); }
     if (isType('client-extensions')) { await ClientExtensions.find(); }
 
     if (!buildingScripts && isType('scripts')) {
