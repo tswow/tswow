@@ -59,7 +59,7 @@ export class Quest extends MainEntity<quest_templateRow> {
     get IncompleteText() { return new RequestItems(this); }
     get CompleteText() { return new Reward(this); }
     get ObjectiveText() { return new ObjectiveDescription(this); }
-    get CompleteLog() { return new QuestCompletionLog(this); }
+    get CompleteLogText() { return new QuestCompletionLog(this); }
 
     get SpecialFlags() { return this.Addon.SpecialFlags; }
 
