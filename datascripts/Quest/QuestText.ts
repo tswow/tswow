@@ -117,6 +117,15 @@ export class LogTitle extends SQLLocSystem<Quest> {
     }
 }
 
+export class QuestCompletionLog extends SQLLocSystem<Quest> {
+    protected getMain(): Cell<string, any> {
+        return this.owner.row.QuestCompletionLog;
+    }
+    protected getLoc(loc: Language): Cell<string, any> {
+        return localeRow(this.owner.ID,loc).CompletedText;
+    }
+}
+
 export class ObjectiveDescription extends SQLLocSystem<Quest> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.LogDescription;

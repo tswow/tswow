@@ -30,7 +30,7 @@ import { QuestNPC } from "./QuestGiver";
 import { QuestObjective } from "./QuestObjective";
 import { QuestPOIs } from "./QuestPOI";
 import { QuestReward } from "./QuestReward";
-import { Description, LogTitle, ObjectiveDescription, QuestText, RequestItems, Reward } from "./QuestText";
+import { Description, LogTitle, ObjectiveDescription, QuestCompletionLog, QuestText, RequestItems, Reward } from "./QuestText";
 
 export class QuestAddonRow extends CellSystem<Quest> {
     protected readonly Addon = new QuestAddon(this.owner);
@@ -59,6 +59,7 @@ export class Quest extends MainEntity<quest_templateRow> {
     get IncompleteText() { return new RequestItems(this); }
     get CompleteText() { return new Reward(this); }
     get ObjectiveText() { return new ObjectiveDescription(this); }
+    get CompleteLog() { return new QuestCompletionLog(this); }
 
     get SpecialFlags() { return this.Addon.SpecialFlags; }
 
