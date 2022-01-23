@@ -1165,6 +1165,16 @@ void TSCreature::SetReactState(uint8 state)
 }
 
 /**
+ * Gets how a [Creature] responds to being attacked.
+ *
+ * @return uint8 0 = Passive, 1, = Defensive, 2 = Aggressive
+ */
+uint8 TSCreature::GetReactState()
+{
+    return static_cast<uint8>(creature->GetReactState());
+}
+
+/**
  * Save the [Creature] in the database.
  */
 void TSCreature::SaveToDB()
