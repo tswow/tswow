@@ -201,7 +201,7 @@ declare interface TSAchievementCriteriaEntry
 }
 
 declare interface TSPlayer extends TSUnit {
-    LearnClassSpells(trainer: boolean, quests: boolean, levelLimited: boolean);
+    LearnClassSpells(trainer: boolean, quests: boolean);
     SendData(data: any)
     SendUpdateWorldState(worldState: uint32, value: uint32);
     SetBankBagSlotCount(count: uint8)
