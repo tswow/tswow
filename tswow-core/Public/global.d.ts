@@ -201,7 +201,7 @@ declare interface TSAchievementCriteriaEntry
 }
 
 declare interface TSPlayer extends TSUnit {
-    LearnClassSpells(trainer: boolean, quests: boolean);
+    LearnClassSpells(trainer: boolean, quests: boolean, levelLimited: boolean);
     SendData(data: any)
     SendUpdateWorldState(worldState: uint32, value: uint32);
     SetBankBagSlotCount(count: uint8)
@@ -3758,6 +3758,15 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     IsBG() : bool
 
     ToBG(): TSBattleground
+
+    /**
+     * Returns `true` if the [Map] is an instance, `false` otherwise.
+     *
+     * @return bool isBattleGround
+     */
+    IsInstance() : bool
+
+    ToInstance(): TSInstance
 
     /**
      * Returns `true` if the [Map] is a dungeon, `false` otherwise.
