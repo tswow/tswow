@@ -2968,6 +2968,13 @@ declare interface TSCreature extends TSUnit {
     AttackStart(target : TSUnit) : void
 
     /**
+     * Sets how a [Creature] responds to being attacked.
+     *
+     * @param uint8 state : the state to set. 0 = Passive, 1, = Defensive, 2 = Aggressive
+     */
+    SetReactState(state: uint8) : void
+
+    /**
      * Save the [Creature] in the database.
      */
     SaveToDB() : void

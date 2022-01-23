@@ -1155,6 +1155,16 @@ void TSCreature::AttackStart(TSUnit _target)
 }
 
 /**
+ * Sets how a [Creature] responds to being attacked.
+ *
+ * @param uint8 state : the state to set. 0 = Passive, 1, = Defensive, 2 = Aggressive
+ */
+void TSCreature::SetReactState(uint8 state)
+{
+    creature->SetReactState(static_cast<ReactStates>(state));
+}
+
+/**
  * Save the [Creature] in the database.
  */
 void TSCreature::SaveToDB()
