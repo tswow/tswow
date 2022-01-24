@@ -3760,6 +3760,15 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     ToBG(): TSBattleground
 
     /**
+     * Returns `true` if the [Map] is an instance, `false` otherwise.
+     *
+     * @return bool isBattleGround
+     */
+    IsInstance() : bool
+
+    ToInstance(): TSInstance
+
+    /**
      * Returns `true` if the [Map] is a dungeon, `false` otherwise.
      *
      * @return bool isDungeon
