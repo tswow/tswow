@@ -261,7 +261,7 @@ public:
 	void ModifyMoney(int32 amt);
 	void LearnSpell(uint32 id);
 	void LearnTalent(uint32 id, uint32 rank);
-	void LearnClassSpells(bool trainer, bool quests, bool levelLimited);
+	void LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLevel = false);
 	void ResurrectPlayer(float percent, bool sickness);
 	void GossipMenuAddItem(uint32 _icon, TSString msg, uint32 _sender = 0, uint32 _intid = 0, bool _code = false, TSString _promptMsg = JSTR(""), uint32 _money = 0);
 	void GossipComplete();

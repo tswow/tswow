@@ -3802,7 +3802,7 @@ void TSPlayer::AddItemToSlotRaw(uint8 bag, uint8 slot, uint32 itemId, uint32 cou
     if (item) player->SendNewItem(item, count, true, false);
 }
 
-void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool levelLimited)
+void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool limitQuestsByLevel)
 {
     ChrClassesEntry const* classEntry = sChrClassesStore.LookupEntry(player->GetClass());
     if (!classEntry)
@@ -3842,7 +3842,7 @@ void TSPlayer::LearnClassSpells(bool trainer, bool quests, bool levelLimited)
         {
             if (quest.GetRequiredClasses() && player->SatisfyQuestClass(&quest, false))
             {
-                if (levelLimited && ! player->SatisfyQuestLevel(&quest, false)) {
+                if (limitQuestsByLevel && ! player->SatisfyQuestLevel(&quest, false)) {
                     continue;
                 }
 
