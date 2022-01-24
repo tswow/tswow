@@ -1154,24 +1154,14 @@ void TSCreature::AttackStart(TSUnit _target)
     creature->AI()->AttackStart(target);
 }
 
-/**
- * Sets how a [Creature] responds to being attacked.
- *
- * @param uint8 state : the state to set. 0 = Passive, 1, = Defensive, 2 = Aggressive
- */
-void TSCreature::SetReactState(uint8 state)
+void TSCreature::SetReactState(ReactStates state)
 {
-    creature->SetReactState(static_cast<ReactStates>(state));
+    creature->SetReactState(state);
 }
 
-/**
- * Gets how a [Creature] responds to being attacked.
- *
- * @return uint8 0 = Passive, 1, = Defensive, 2 = Aggressive
- */
-uint8 TSCreature::GetReactState()
+ReactStates TSCreature::GetReactState()
 {
-    return static_cast<uint8>(creature->GetReactState());
+    return creature->GetReactState();
 }
 
 /**

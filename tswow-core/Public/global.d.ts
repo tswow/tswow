@@ -96,6 +96,7 @@ declare const enum Powers /**@realType:int8 */ {
     RUNIC_POWER                   = 6,
 } /**@realType:int8 */
 declare const enum CreatureType {} /** SharedDefines.h:CreatureType */
+declare const enum ReactStates {} /** UnitDefines.h:ReactStates */
 declare const enum LocaleConstant {} /** Common.h:LocaleConstant */
 declare const enum UnitMoveType {} /** UnitDefines.h:UnitMoveType */
 declare const enum MovementGeneratorType {} /** MovementDefines.h:MovementGeneratorType */
@@ -2970,16 +2971,16 @@ declare interface TSCreature extends TSUnit {
     /**
      * Sets how a [Creature] responds to being attacked.
      *
-     * @param uint8 state : the state to set. 0 = Passive, 1, = Defensive, 2 = Aggressive
+     * @param ReactStates state : the state to set.
      */
-    SetReactState(state: uint8) : void
+    SetReactState(state: ReactStates) : void
 
     /**
      * Gets how a [Creature] responds to being attacked.
      *
-     * @return uint8 0 = Passive, 1, = Defensive, 2 = Aggressive
+     * @return ReactStates. 0 = Passive, 1, = Defensive, 2 = Aggressive
      */
-    GetReactState() : uint8
+    GetReactState() : ReactStates
 
     /**
      * Save the [Creature] in the database.

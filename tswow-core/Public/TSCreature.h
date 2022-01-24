@@ -109,8 +109,8 @@ public:
     void CallForHelp(float radius);
     void FleeToGetAssistance();
     void AttackStart(TSUnit target);
-    void SetReactState(uint8 state);
-    uint8 GetReactState();
+    void SetReactState(ReactStates state);
+    ReactStates GetReactState();
     void SaveToDB();
     TSUnit SelectVictim();
     void UpdateEntry(uint32 entry, uint32 dataGuidLow);
