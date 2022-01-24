@@ -1154,14 +1154,14 @@ void TSCreature::AttackStart(TSUnit _target)
     creature->AI()->AttackStart(target);
 }
 
-void TSCreature::SetReactState(ReactStates state)
+void TSCreature::SetReactState(uint8 state)
 {
-    creature->SetReactState(state);
+    creature->SetReactState(static_cast<ReactStates>(state));
 }
 
-ReactStates TSCreature::GetReactState()
+uint8 TSCreature::GetReactState()
 {
-    return creature->GetReactState();
+     return static_cast<uint8>(creature->GetReactState());
 }
 
 /**
