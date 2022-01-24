@@ -16,14 +16,14 @@
  */
 
 export enum DynFlags {
-    NONE                      = 0x1,
-    LOOTABLE                  = 0x2,
-    TRACK_UNIT                = 0x4,
-    TAPPED                    = 0x8,
-    TAPPED_BY_PLAYER          = 0x10,
-    SPECIAL_INFO              = 0x20,
-    DEAD                      = 0x40,
-    REFER_A_FRIEND            = 0x80,
-    TAPPED_BY_ALL_THREAT_LIST = 0x100,
+    NONE                      = 0x00,
+    LOOTABLE                  = 0x01,
+    TRACK_UNIT                = 0x02,
+    TAPPED                    = 0x04,
+    TAPPED_BY_PLAYER          = 0x08,
+    SPECIAL_INFO              = 0x10,
+    DEAD                      = 0x20,
+    REFER_A_FRIEND            = 0x40,
+    TAPPED_BY_ALL_THREAT_LIST = 0x80,
 
 }
