@@ -111,7 +111,7 @@ export namespace TrinityCore {
                             if(longestPrefix.length>0 && longestPrefix.includes('_')) {
                                 content = content.split(longestPrefix).join('')
                             }
-                            if(longestSuffix.length > 0 && longestPrefix.includes('_')) {
+                            if(longestSuffix.length > 0 && longestSuffix.startsWith('_')) {
                                 content = content.split(longestSuffix).join('')
                             }
                         }
