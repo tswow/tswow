@@ -13728,6 +13728,26 @@ declare namespace WoWAPI {
 declare const _G: { [prop: string]: any };
 declare const InterfaceOptionsFramePanelContainer: WoWAPI.Region;
 declare const UIParent: WoWAPI.Frame;
+declare const PaperDollFrame: WoWAPI.Frame;
+declare const SpellBookFrame: WoWAPI.Frame;
+declare const CharacterFrame: WoWAPI.Frame;
+declare const Minimap: WoWAPI.Frame;
+declare const MainMenuBar: WoWAPI.Frame;
+declare const PlayerTalentFrame: WoWAPI.Frame;
+declare const AchievementFrame: WoWAPI.Frame;
+declare const QuestLogFrame: WoWAPI.Frame;
+declare const FriendsFrame: WoWAPI.Frame;
+declare const PVPFrame: WoWAPI.Frame;
+declare const LFDQueueFrame: WoWAPI.Frame;
+declare const GameMenuFrame: WoWAPI.Frame;
+declare const HelpFrame: WoWAPI.Frame;
+declare const MinimapCluster: WoWAPI.Frame;
+declare const WatchFrame: WoWAPI.Frame;
+declare const PlayerFrame: WoWAPI.Frame;
+declare const TargetFrame: WoWAPI.Frame;
+declare const FocusFrame: WoWAPI.Frame;
+declare const WorldFrame: WoWAPI.Frame;
+declare const ChatFrame1: WoWAPI.Frame;
 
 /**
  * ##################################
