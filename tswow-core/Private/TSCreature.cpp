@@ -1154,6 +1154,16 @@ void TSCreature::AttackStart(TSUnit _target)
     creature->AI()->AttackStart(target);
 }
 
+void TSCreature::SetReactState(uint8 state)
+{
+    creature->SetReactState(static_cast<ReactStates>(state));
+}
+
+uint8 TSCreature::GetReactState()
+{
+     return static_cast<uint8>(creature->GetReactState());
+}
+
 /**
  * Save the [Creature] in the database.
  */
