@@ -500,6 +500,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
 
         TrinityCore: dir({
             bin_linux: dirn('install/trinitycore/bin',{}),
+            etc_linux: dirn('install/trinitycore/etc',{}),
+            lib_linux: dirn('install/trinitycore/lib',{}),
             bin: custom((k)=>(name: string)=>{
                 return generateTree(mpath(k,'bin',name),dir({
                     worldserver_exe: file('worldserver.exe'),

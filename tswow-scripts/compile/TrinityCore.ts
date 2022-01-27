@@ -205,9 +205,11 @@ export namespace TrinityCore {
                 }
             })
         } else {
-                bpaths.TrinityCore.bin_linux.copy(
-                    ipaths.bin.core.pick('trinitycore').build.pick(type)
-                )
+            [
+                  bpaths.TrinityCore.lib_linux
+                , bpaths.TrinityCore.bin_linux
+                , bpaths.TrinityCore.etc_linux
+            ].forEach(x=>x.copy(ipaths.bin.core.pick('trinitycore').build.pick(type)))
         }
 
         bpaths.TrinityCore.libraries(type).forEach(x=>{
