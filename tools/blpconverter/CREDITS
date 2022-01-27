@@ -1,0 +1,4 @@
+note from tswow:
+
+include/blp2png/png2blp borrowed from https://github.com/wowdev/pywowlib/tree/27cd1aa6223bdb989b7746bc7a60616bc788e9a8/blp
+include/thread_pool borrowed from https://github.com/bshoshany/thread-pool/blob/b6cd773f37b1be7718f771ae7403726a28be5f40/thread_pool.hpp

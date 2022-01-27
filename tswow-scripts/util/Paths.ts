@@ -485,7 +485,6 @@ export function BuildPaths(pathIn: string, tdb: string) {
             })
         }),
         boostArchive: file('boost_1_72_0.zip'),
-        blpconverter: file('BLPConverter.exe'),
         tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
@@ -568,6 +567,10 @@ export function BuildPaths(pathIn: string, tdb: string) {
             luaxml_exe: file(isWindows() ? 'Release/luaxmlreader.exe' : 'luaxmlreader')
         }),
 
+        blpconverter: dir({
+            blpconverter_exe: file(isWindows() ? 'Release/blpconverter.exe' : 'blpconverter'),
+        }),
+
         adtcreator: dir({
             Release: dir({
                 adt_creator_exe: file(`adt-creator${isWindows()?'.exe':''}`)
@@ -591,6 +594,7 @@ export function SourcePaths(pathIn: string) {
         tools: dir({
             mpqbuilder: dir({}),
             adtcreator: dirn('adt-creator',{}),
+            blpconverter: dir({}),
         }),
 
         install_config: dirn('install-config',{

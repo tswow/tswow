@@ -15,16 +15,32 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { ipaths } from '../util/Paths';
-import { BLPCONVERTER_URL } from './BuildConfig';
-import { bpaths } from './CompilePaths';
-import { DownloadFile } from './Downloader';
+import { isWindows } from '../util/Platform';
+import { wsys } from '../util/System';
+import { bpaths, spaths } from './CompilePaths';
 
 export namespace BLPConverter {
     export async function install(cmake: string) {
-        await DownloadFile(
-             BLPCONVERTER_URL
-           , bpaths.blpconverter
-        )
-        bpaths.blpconverter.copy(ipaths.bin.BLPConverter.blpconverter)
+        if (isWindows()) {
+            wsys.exec(`${cmake} `
+                + ` -S "${spaths.tools.blpconverter.get()}" `
+                + ` -B "${bpaths.blpconverter.get()}"`
+                , 'inherit');
+            wsys.exec(`${cmake}`
+                + ` --build "${bpaths.blpconverter.get()}"`
+                + ` --config Release`, 'inherit');
+        } else {
+            bpaths.blpconverter.mkdir()
+            const relativeBlpConverterSource = bpaths.blpconverter
+                .relativeFrom(spaths.tools.blpconverter.get());
+            await wsys.inDirectory(bpaths.blpconverter.get()
+                , () => {
+                    wsys.exec(
+                        `${cmake} "${relativeBlpConverterSource}"`
+                        ,  'inherit');
+                    wsys.exec(`make`,'inherit');
+                });
+        }
+        bpaths.blpconverter.blpconverter_exe.copy(ipaths.bin.BLPConverter.blpconverter)
     }
 }
