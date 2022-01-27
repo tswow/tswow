@@ -250,7 +250,7 @@ export namespace TrinityCore {
         }
 
         if(!ipaths.bin.tdb.exists()) {
-            bpaths.tdbArchive.copy(ipaths.bin.tdb);
+            bpaths.tdbSql.copy(ipaths.bin.tdb);
         }
     }
 }
