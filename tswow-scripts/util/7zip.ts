@@ -22,8 +22,7 @@ export namespace SevenZip {
         if(isWindows()) {
             wsys.exec(`"${sevenZipPath}" e -o${out} ${archive}`);
         } else {
-            // todo: unused but needs out directory
-            wsys.exec(`p7zip -d -k e "${archive}"`)
+            wsys.execIn(out,`p7zip -d -k "${archive}"`,'inherit')
         }
     }
 
