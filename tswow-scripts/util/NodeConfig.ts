@@ -44,7 +44,7 @@ export class NodeConfigClass extends ConfigFile {
         name: 'Default.BuildType'
       , description: 'The build type automatically selected in commands if none other is specified'
       , examples: [
-            ['RelWithDebinfo','Has debugging symbols. Rarely slower han release, but needs individual profiling.']
+            ['RelWithDebInfo','Has debugging symbols. Rarely slower han release, but needs individual profiling.']
           , ['Release','No debugging symbols, but worthless error logs.']
           , ['Debug','All debugging symbols, but (very) slow. Only recommended when debugging a specific problem']
     ]
