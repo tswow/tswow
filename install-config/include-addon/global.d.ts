@@ -4539,6 +4539,13 @@ declare function ResetCursor(): void;
 declare function SetCursor(cursor: string | WoWAPI.TexturePath | null): boolean;
 
 /**
+ * Makes a Texture display as grayscale.
+ * @param texture Texture
+ * @param makeGrayscale: boolean
+ */
+declare function SetDesaturation(texture: WoWAPI.Texture, makeGrayscale: boolean): void;
+
+/**
  * unknown
  * @param index unknown
  * @param slot unknown
