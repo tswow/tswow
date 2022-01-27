@@ -7083,7 +7083,7 @@ declare namespace _hidden {
         OnConfigLoad(callback: (reload : bool)=>void);
         OnMotdChange(callback: (newMotd : string)=>void);
         OnShutdownInitiate(callback: (code : uint32,mask : uint32)=>void);
-        OnUpdate(callback: (diff : uint32)=>void);
+        OnUpdate(callback: (diff : uint32, mgr: TSMapManager)=>void);
         OnStartup(callback: ()=>void);
         OnShutdownCancel(callback: ()=>void);
         OnShutdown(callback: ()=>void);
