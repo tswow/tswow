@@ -415,11 +415,11 @@ export class Realm {
               'realm'
             , ''
             , ''
-            , args => {
-                Identifier.getRealms(args,'MATCH_ANY',NodeConfig.DefaultRealm)
-                    .forEach(x=>{
-                        x.start(Identifier.getBuildType(args,NodeConfig.DefaultBuildType))
-                    })
+            , async args => {
+                await Promise.all(Identifier.getRealms(args,'MATCH_ANY',NodeConfig.DefaultRealm)
+                    .map(x=>{
+                        return x.start(Identifier.getBuildType(args,NodeConfig.DefaultBuildType))
+                    }))
             }
         ).addAlias('realms')
 
