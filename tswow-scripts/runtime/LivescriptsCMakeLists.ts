@@ -66,9 +66,11 @@ target_include_directories(${buildModule} PUBLIC ./livescripts)
 target_precompile_headers(${buildModule} PUBLIC \${headers})
 
 # disable dll warnings, users must build livescripts with same compiler as tc
-add_definitions(
-    -wd4251
-    -wd4275
-)
+if (WIN32)
+    add_definitions(
+        -wd4251
+        -wd4275
+    )
+endif()
 include({CMAKE_CURRENT_SOURCE_DIR}/../../../../CMakeLists.txt OPTIONAL)`
 }
