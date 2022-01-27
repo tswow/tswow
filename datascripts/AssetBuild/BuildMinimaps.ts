@@ -103,7 +103,7 @@ finish('minimaps', () => {
     }
 
     // nothing else should touch this file
-    LUAXML.anyfile('textures\\Minimap\\md5translate.trs').modInPlace(source=>{
+    LUAXML.anyfile('textures/Minimap/md5translate.trs').modInPlace(source=>{
         let lines = source.split('\r').join('').split('\n');
         Object.entries(minimaps).forEach(([map,files])=>{
             let index = lines.findIndex(x=>{
