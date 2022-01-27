@@ -325,7 +325,7 @@ export namespace mysql {
             `"${ipaths.bin.mysql.mysql_exe.get()}"` :
                 NodeConfig.MySQLExecutable != '' ?
             `"${NodeConfig.MySQLExecutable}"`:
-                `sudo mysql`;
+                `mysql`;
 
         await wsys.execAsync(
               `${mysqlCommand}`
