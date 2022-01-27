@@ -3759,6 +3759,27 @@ declare interface TSMap extends TSEntityProvider, TSWorldEntityProvider<TSMap> {
     GetGameObjectByDBGUID(dbguid: uint32): TSGameObject;
 
     /**
+     * Returns a creature in this map by its map id
+     *
+     * @important - This is NOT the creatures guid in the database,
+     *              use "GetCreatureBySpawnGUID" for that.
+     */
+    GetCreature(guid: uint32): TSCreature;
+
+    /**
+     * Returns a gameobject in this map by its map id
+     *
+     * @important - This is NOT the gameobject guid in the database,
+     *              use "GetGameObjectBySpawnGUID" for that.
+     */
+    GetGameObject(guid: uint32): TSGameObject;
+
+    /**
+     * Returns a player in this map by its guid
+     */
+    GetPlayer(guid: uint32): TSPlayer;
+
+    /**
      * Returns `true` if the [Map] is an arena [BattleGround], `false` otherwise.
      *
      * @return bool isArena
@@ -4822,6 +4843,12 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     AddCollision(id: string, range: float, minDelay: uint32, maxHits: uint32, cb: TSCollisionCallback)
     GetCollision(id: string): TSCollisionEntry
 
+    IsFriendlyTo(obj: TSWorldObject): bool
+    IsHostileTo(obj: TSWorldObject): bool
+    IsFriendlyToPlayers(): bool
+    IsHostileToPlayers(): bool
+    IsNeutralToAll(): bool
+
     /**
      * Returns the name of the [WorldObject]
      *
@@ -5765,11 +5792,22 @@ declare interface TSUnit extends TSWorldObject {
     GetPetGUID(index?: number) : uint64
 
     /**
+     * Returns the [Unit]'s pet.
+     * @param index
+     */
+    GetPet(index?: number): TSCreature
+
+    /**
      * Returns the GUID of the [Unit]'s charmer or owner.
      *
      * @return uint64 controllerGUID
      */
     GetControllerGUID() : uint64
+
+    /**
+     * Returns the [Unit]'s charmer or owner.
+     */
+    GetController(): TSUnit
 
     /**
      * Returns the GUID of the [Unit]'s charmer or owner or its own GUID.

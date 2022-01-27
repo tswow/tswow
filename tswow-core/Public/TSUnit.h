@@ -77,6 +77,8 @@ public:
     uint64 GetCharmerGUID();
     uint64 GetCharmGUID();
     uint64 GetPetGUID(uint32 slot = 0);
+    TSCreature GetPet(uint32 slot = 0);
+    TSUnit GetController();
     uint64 GetControllerGUID();
     uint64 GetControllerGUIDS();
     float GetStat(uint32 stat);

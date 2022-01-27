@@ -60,6 +60,9 @@ public:
     TSArray<TSUnit> GetUnits();
     TSArray<TSGameObject> GetGameObjects(uint32 entry = 0);
     TSArray<TSCreature> GetCreatures(uint32 entry = 0);
+    TSCreature GetCreature(uint64 guid);
+    TSGameObject GetGameObject(uint64 guid);
+    TSPlayer GetPlayer(uint64 guid);
     TSCreature GetCreatureByDBGUID(uint32 dbguid);
     TSGameObject GetGameObjectByDBGUID(uint32 dbguid);
     TSCreature SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer = 0, uint32 phase = 1);

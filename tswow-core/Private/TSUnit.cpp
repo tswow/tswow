@@ -664,6 +664,11 @@ uint64 TSUnit::GetPetGUID(uint32 summonSlot)
 #endif
 }
 
+TSCreature TSUnit::GetPet(uint32 slot)
+{
+    return GetCreature(GetPetGUID(slot));
+}
+
 /**
  * Returns the GUID of the [Unit]'s charmer or owner.
  *
@@ -676,6 +681,11 @@ uint64 TSUnit::GetControllerGUID()
 #else
     return unit->GetCharmerOrOwnerGuid();
 #endif
+}
+
+TSUnit TSUnit::GetController()
+{
+    return GetMap()->GetWorldObject(GetControllerGUID()).ToUnit();
 }
 
 /**

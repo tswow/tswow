@@ -439,3 +439,18 @@ void TSMap::DoDelayed(std::function<void(TSMap, TSMapManager)> callback)
 {
     map->m_delayCallbacks.push_back(callback);
 }
+
+TSCreature TSMap::GetCreature(uint64 guid)
+{
+    return TSCreature(map->GetCreature(ObjectGuid(guid)));
+}
+
+TSGameObject TSMap::GetGameObject(uint64 guid)
+{
+    return TSGameObject(map->GetGameObject(ObjectGuid(guid)));
+}
+
+TSPlayer TSMap::GetPlayer(uint64 guid)
+{
+    return TSPlayer(map->GetPlayer(ObjectGuid(guid)));
+}

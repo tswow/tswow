@@ -100,6 +100,12 @@ public:
     bool IsInRange2d(float x, float y, float minrange, float maxrange);
     bool IsInRange3d(float x, float y, float z, float minrange, float maxrange);
 
+    bool IsFriendlyTo(TSWorldObject object);
+    bool IsHostileTo(TSWorldObject object);
+    bool IsFriendlyToPlayers();
+    bool IsHostileToPlayers();
+    bool IsNeutralToAll();
+
     TSGameObject GetGameObject(uint64 guid);
     TSCorpse GetCorpse(uint64 guid);
     TSUnit GetUnit(uint64 guid);

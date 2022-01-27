@@ -1007,3 +1007,28 @@ bool TSWorldObject::IsActive()
 {
     return obj->isActiveObject();
 }
+
+bool TSWorldObject::IsFriendlyTo(TSWorldObject object)
+{
+    return obj->IsFriendlyTo(object.obj);
+}
+
+bool TSWorldObject::IsHostileTo(TSWorldObject object)
+{
+    return obj->IsHostileTo(object.obj);
+}
+
+bool TSWorldObject::IsFriendlyToPlayers()
+{
+    return !obj->IsHostileToPlayers();
+}
+
+bool TSWorldObject::IsHostileToPlayers()
+{
+    return obj->IsHostileToPlayers();
+}
+
+bool TSWorldObject::IsNeutralToAll()
+{
+    return obj->IsNeutralToAll();
+}
