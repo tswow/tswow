@@ -114,7 +114,10 @@ export function LivescriptsDirectory(inPath: string) {
                 built_libs: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(type)=>({
                     // todo: linux
                     library: custom((value)=>
-                        new WFile(mpath(wfs.dirname(value),'lib',type,fullModName+'.dll'))),
+                        isWindows()
+                            ? new WFile(mpath(wfs.dirname(value),'lib',type,`${fullModName}.dll`))
+                            : new WFile(mpath(wfs.dirname(value),'lib',`lib${fullModName}.so`))
+                    ),
                     pdb: custom((value)=>
                         new WFile(mpath(wfs.dirname(value),'lib',type,fullModName+'.pdb'))),
                 })),
