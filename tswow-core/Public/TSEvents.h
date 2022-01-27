@@ -1436,12 +1436,12 @@ struct TSEventStore
     TSQuestMap Quests;
 };
 
-TC_GAME_API void ReloadGameObject(GameObjectOnReloadType fn, uint32 id);
-TC_GAME_API void ReloadPlayer(PlayerOnReloadType fn, uint32 id);
-TC_GAME_API void ReloadCreature(CreatureOnReloadType fn, uint32 id);
-TC_GAME_API void ReloadMap(MapOnReloadType fn, uint32 id);
-TC_GAME_API void ReloadInstance(InstanceOnReloadType fn, uint32 id);
-TC_GAME_API void ReloadBattleground(BattlegroundOnReloadType fn, uint32 id);
+TC_GAME_API void ReloadGameObject(GameObjectOnReload__Type fn, uint32 id);
+TC_GAME_API void ReloadPlayer(PlayerOnReload__Type fn, uint32 id);
+TC_GAME_API void ReloadCreature(CreatureOnReload__Type fn, uint32 id);
+TC_GAME_API void ReloadMap(MapOnReload__Type fn, uint32 id);
+TC_GAME_API void ReloadInstance(InstanceOnReload__Type fn, uint32 id);
+TC_GAME_API void ReloadBattleground(BattlegroundOnReload__Type fn, uint32 id);
 
 class TSEvents
 {

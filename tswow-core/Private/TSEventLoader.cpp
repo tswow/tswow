@@ -203,10 +203,10 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
 }
 
 struct ReloadGameObjectWorker {
-    GameObjectOnReloadType _fn;
+    GameObjectOnReload__Type _fn;
     uint32 _gobj_id;
 
-    ReloadGameObjectWorker( GameObjectOnReloadType fn
+    ReloadGameObjectWorker( GameObjectOnReload__Type fn
                           , uint32 gobj_id
                           )
                           : _fn(fn)
@@ -223,7 +223,7 @@ struct ReloadGameObjectWorker {
     template<class T>
     void Visit(std::unordered_map<ObjectGuid, T*>&) { }
 };
-void ReloadGameObject(GameObjectOnReloadType fn, uint32 id)
+void ReloadGameObject(GameObjectOnReload__Type fn, uint32 id)
 {
     sMapMgr->DoForAllMaps([&](auto map){
         ReloadGameObjectWorker worker(fn,id);
@@ -232,7 +232,7 @@ void ReloadGameObject(GameObjectOnReloadType fn, uint32 id)
     });
 }
 
-void ReloadPlayer(PlayerOnReloadType fn, uint32 id)
+void ReloadPlayer(PlayerOnReload__Type fn, uint32 id)
 {
     for(auto &p : ObjectAccessor::GetPlayers())
     {
@@ -241,10 +241,10 @@ void ReloadPlayer(PlayerOnReloadType fn, uint32 id)
 }
 
 struct ReloadCreatureWorker {
-    CreatureOnReloadType _fn;
+    CreatureOnReload__Type _fn;
     uint32 _creature_id;
 
-    ReloadCreatureWorker( CreatureOnReloadType fn
+    ReloadCreatureWorker( CreatureOnReload__Type fn
                           , uint32 creature_id
                           )
                           : _fn(fn)
@@ -261,7 +261,7 @@ struct ReloadCreatureWorker {
     template<class T>
     void Visit(std::unordered_map<ObjectGuid, T*>&) { }
 };
-void ReloadCreature(CreatureOnReloadType fn, uint32 id)
+void ReloadCreature(CreatureOnReload__Type fn, uint32 id)
 {
     sMapMgr->DoForAllMaps([&](auto map){
         ReloadCreatureWorker worker(fn,id);
@@ -270,7 +270,7 @@ void ReloadCreature(CreatureOnReloadType fn, uint32 id)
     });
 }
 
-void ReloadMap(MapOnReloadType fn, uint32 id)
+void ReloadMap(MapOnReload__Type fn, uint32 id)
 {
     sMapMgr->DoForAllMaps([&](auto map){
         if(id==std::numeric_limits<uint32_t>::max() || id == map->GetId())
@@ -280,7 +280,7 @@ void ReloadMap(MapOnReloadType fn, uint32 id)
     });
 }
 
-void ReloadInstance(InstanceOnReloadType fn, uint32 id)
+void ReloadInstance(InstanceOnReload__Type fn, uint32 id)
 {
     sMapMgr->DoForAllMaps([&](Map * map) {
         if (InstanceMap* inst = map->ToInstanceMap())
@@ -297,7 +297,7 @@ void ReloadInstance(InstanceOnReloadType fn, uint32 id)
     });
 }
 
-void ReloadBattleground(BattlegroundOnReloadType fn, uint32 id)
+void ReloadBattleground(BattlegroundOnReload__Type fn, uint32 id)
 {
     sMapMgr->DoForAllMaps([&](Map* map) {
         if (BattlegroundMap* bgmap = map->ToBattlegroundMap())
