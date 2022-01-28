@@ -124,5 +124,18 @@ export const BaseClassData = {
         "SHAMAN":[297,6],
         "WARLOCK":[303,6],
         "WARRIOR":[309,5]
+    },
+
+    CLASS_DISABLED_ROW: <map> {
+        "DEATHKNIGHT": 371,
+        "DRUID": 394,
+        "HUNTER": 478,
+        "MAGE": 550,
+        "PALADIN": 643,
+        "PRIEST": 654,
+        "ROGUE": 737,
+        "SHAMAN": 796,
+        "WARLOCK": 860,
+        "WARRIOR": 861,
     }
 }

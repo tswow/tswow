@@ -154,6 +154,23 @@ class ClassDescription extends CellSystem<Class> {
     }
 }
 
+export class ClassDisabledText extends CellSystem<Class> {
+    private edit: Edit;
+    constructor(owner: Class, edit: Edit) {
+        super(owner);
+        this.edit = edit;
+    }
+
+    set(value: string) {
+        this.edit.text = `${this.owner.Filename}_DISABLED = "${value.split('"').join('\\"')}";`;
+    }
+
+    get() {
+        // note: can break, but $ isn't working here for whatever reason
+        return ((this.edit.text.match(/"(.+?)";/) as any)[1]) as string
+    }
+}
+
 // TODO: Fix sort order
 export class ClassUISettings extends CellSystem<Class> {
     readonly Color: ClassColor;
@@ -174,6 +191,7 @@ export class ClassUISettings extends CellSystem<Class> {
     readonly ButtonPos: AnchorRow<Class>;
     readonly Info: ClassInfoRows;
     readonly Description: ClassDescription;
+    readonly DisabledText: ClassDisabledText;
 
     setIcon(image: TSImage, oldIndex?: number) {
         let index = stitchClassIcon(image,oldIndex);
@@ -183,12 +201,13 @@ export class ClassUISettings extends CellSystem<Class> {
         return this.owner;
     }
 
-    constructor(cls : Class,tCoordsCC : Edit, tCoordsWS: Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[]) {
+    constructor(cls : Class,tCoordsCC : Edit, tCoordsWS: Edit, classColor : Edit, sortOrder : Edit, tCoords : Edit, xmlEdit : Edit, maleDescription : Edit, femaleDescription : Edit,infoRows : Edit[], disabled: Edit) {
         super(cls);
         this.ButtonTCoords = new TCoordSystem(cls, tCoords, tCoordsCC, tCoordsWS);
         this.Color = new ClassColor(cls, classColor);
         this.ButtonPos = new AnchorRow(cls, xmlEdit);
         this.Description = new ClassDescription(cls, maleDescription, femaleDescription )
         this.Info = new ClassInfoRows(cls, infoRows);
+        this.DisabledText = new ClassDisabledText(cls, disabled);
     }
 }

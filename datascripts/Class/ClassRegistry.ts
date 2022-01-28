@@ -70,6 +70,7 @@ export class ClassRegistryClass
         const classColor = co.emptyReplace(BaseClassData.CLASS_COLOR_ROWS[fn]);
         const sortOrder = co.emptyReplace(BaseClassData.CLASS_SORT_ORDER_ROWS[fn]);
         const xmle = xm.emptyReplace(BaseClassData.XML_ROWS[fn]);
+        const disabled = gs.emptyReplace(BaseClassData.CLASS_DISABLED_ROW[fn]);
 
         const maleDesc = gs.emptyReplace(BaseClassData.CLASS_DESCRIPTION_ROW[fn]);
         const femaleDesc = gs.emptyReplace(BaseClassData.CLASS_DESCRIPTION_ROW[fn]+1);
@@ -92,7 +93,8 @@ export class ClassRegistryClass
                 xmle,
                 maleDesc,
                 femaleDesc,
-                infoRows
+                infoRows,
+                disabled
             );
     }
     protected FindByID(id: number): ChrClassesRow {
@@ -215,7 +217,7 @@ export class ClassRegistryClass
         const maleDesc = gs.after(327,`CLASS_${identifier} = "Male Description";`);
         const femaleDesc = gs.after(327,`CLASS_${identifier}_FEMALE = "Female Description";`);
 
-        gs.after(552,`${identifier}_DISABLED = "${identifier}\\nYou must choose a difference race to be this class.";`);
+        const disabled = gs.after(552,`${identifier}_DISABLED = "${identifier}\\nYou must choose a difference race to be this class.";`);
 
         let cls = new Class(
             parent,
@@ -228,7 +230,8 @@ export class ClassRegistryClass
             xmlE,
             maleDesc,
             femaleDesc,
-            []
+            [],
+            disabled
         );
 
         // Set up first classes automatically

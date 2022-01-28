@@ -44,12 +44,14 @@ export class Class extends MainEntity<ChrClassesRow> {
         xmlEdit : Edit,
         maleDescription : Edit,
         femaleDescription : Edit,
-        infoRows : Edit[]) {
+        infoRows : Edit[],
+        disabled: Edit
+    ) {
             super(row);
             this.UI = new ClassUISettings(this,
                 tCoordsCCEdit,tCoordsWSEdit,classColorEdit,sortOrderEdit,
                 tCoordsEdit,xmlEdit,maleDescription,
-                femaleDescription,infoRows);
+                femaleDescription,infoRows, disabled);
             this.BaseClass = baseClass;
     }
 
