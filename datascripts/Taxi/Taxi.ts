@@ -5,6 +5,7 @@ import { TaxiPathQuery, TaxiPathRow } from "wotlkdata/wotlkdata/dbc/types/TaxiPa
 import { Table } from "wotlkdata/wotlkdata/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
+import { MoneyCell } from "../Misc/MoneyCell";
 import { Position } from "../Misc/Position";
 import { RefNoCreate, SelfRef } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";
@@ -23,7 +24,7 @@ export class TaxiPath extends MainEntity<TaxiPathRow> {
         return TaxiEndNodeRegistry.readOnlyRef(this, this.row.ToTaxiNode);
     }
     get Nodes(): TaxiPathNodes { return new TaxiPathNodes(this); }
-    get Cost() {  return this.wrap(this.row.Cost) }
+    get Cost() {  return new MoneyCell(this, 'COPPER', this.row.Cost) }
 
     delete() {
         if(this.isDeleted()) return this;

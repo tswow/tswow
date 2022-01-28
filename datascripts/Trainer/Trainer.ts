@@ -28,6 +28,7 @@ import { ClassMask, ClassRegistry } from "../Class/ClassRegistry";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
 import { MainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
+import { MoneyCell } from "../Misc/MoneyCell";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { RaceIDs, RaceMask } from "../Race/RaceType";
 import { RegistryDynamic } from "../Refs/Registry";
@@ -86,7 +87,7 @@ export class SkillRequirement extends CellSystem<TrainerSpell> {
 export class TrainerSpell extends MainEntity<trainer_spellRow> implements IClassRaceMaskEntry {
     get Spell() { return SpellRegistry.readOnlyRef(this, this.row.SpellId); }
     get Trainer() { return TrainerRegistry.readOnlyRef(this, this.row.TrainerId); }
-    get Cost() { return this.wrap(this.row.MoneyCost); }
+    get Cost() { return new MoneyCell(this, 'COPPER', this.row.MoneyCost); }
     get RequiredLevel() { return this.wrap(this.row.ReqLevel); }
 
     get ClassMask(): MaskCellWrite<this,typeof ClassMask> {

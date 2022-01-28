@@ -7,6 +7,7 @@ import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/
 import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
+import { MoneyCell } from "../Misc/MoneyCell";
 import { RefUnknown } from "../Refs/Ref";
 import { Achievement, AchievementRegistry } from "./Achievement";
 
@@ -337,7 +338,7 @@ export class MoneyFromQuestReward extends CriteriaBase {
 }
 
 export class LootMoney extends CriteriaBase {
-    get CopperAmount() { return this.wrap(this.row.Quantity); }
+    get Amount() { return new MoneyCell(this, 'COPPER', this.row.Quantity); }
 }
 
 export class UseGameObject extends CriteriaBase {

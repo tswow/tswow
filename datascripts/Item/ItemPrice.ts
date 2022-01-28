@@ -15,6 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellBasic } from "../GameObject/ElevatorKeyframes";
+import { convertCoin, CoinType, MoneyCell } from "../Misc/MoneyCell";
 import { ItemTemplate } from "./ItemTemplate";
 
 /**
@@ -22,21 +24,47 @@ import { ItemTemplate } from "./ItemTemplate";
  * what price they're actually setting, so we should always
  */
 export class ItemPrice extends CellSystem<ItemTemplate> {
-    get PlayerBuyPrice() { return Number(this.owner.row.BuyPrice.get()); }
-    get PlayerSellPrice() { return this.owner.row.SellPrice.get(); }
-    get BuyCount() { return this.owner.row.BuyCount.get(); }
+    get BuyCount() { return this.ownerWrap(this.owner.row.BuyCount); }
 
-    set(sellPrice: number, buyPrice: number, buyCount: number = 1) {
+    get PlayerBuyPrice() {
+        return new MoneyCell(this.owner, 'COPPER', new CellBasic(
+              this.owner
+            , ()=>Number(this.owner.row.BuyPrice.get())
+            , (value)=>this.owner.row.BuyPrice.set(BigInt(value)))
+        )
+    }
+
+    get PlayerSellPrice() {
+        return new MoneyCell(this.owner,'COPPER', this.owner.row.SellPrice);
+    }
+
+    set(sellPrice: number, buyPrice: number, buyCount: number = 1, currency: CoinType = 'COPPER') {
         if(sellPrice>buyPrice) {
             throw new Error(`Tried to set an item price where sellPrice > buyPrice, this will lead to exploits. Use setUnsafe if you really must.`)
         }
-
-        return this.setUnsafe(sellPrice, buyPrice, buyCount);
+        return this.setUnsafe(
+              sellPrice
+            , buyPrice
+            , buyCount
+            , currency
+        );
     }
 
-    setUnsafe(sellPrice: number, buyPrice: number, buyCount: number = 1)  {
-        this.owner.row.SellPrice.set(sellPrice);
-        this.owner.row.BuyPrice.set(BigInt(buyPrice));
+    setAsCopper(sellPrice: number, buyPrice: number, buyCount: number = 1) {
+        return this.set(sellPrice,buyPrice,buyCount,'COPPER')
+    }
+
+    setAsSilver(sellPrice: number, buyPrice: number, buyCount: number = 1) {
+        return this.set(sellPrice,buyPrice,buyCount,'SILVER')
+    }
+
+    setAsGold(sellPrice: number, buyPrice: number, buyCount: number = 1) {
+        return this.set(sellPrice,buyPrice,buyCount,'GOLD')
+    }
+
+    setUnsafe(sellPrice: number, buyPrice: number, buyCount: number = 1, currency: CoinType = 'COPPER')  {
+        this.owner.row.SellPrice.set(convertCoin(sellPrice,currency,'COPPER'));
+        this.owner.row.BuyPrice.set(BigInt(convertCoin(buyPrice,currency,'COPPER')));
         this.owner.row.BuyCount.set(buyCount);
         return this.owner;
     }
