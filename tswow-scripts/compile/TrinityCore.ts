@@ -162,6 +162,7 @@ export namespace TrinityCore {
         if(!args1.includes('--no-compile')) {
             if (isWindows()) {
                 setupCommand = `${cmake} -DTOOLS=${tools}`
+                +` -DCMAKE_GENERATOR="Visual Studio 16 2019"`
                 +` -DSCRIPTS=${scripts}`
                 +` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
