@@ -73,7 +73,6 @@ export class Dataset {
 
     initialize() {
         this.config.generateIfNotExists();
-        this.refreshSymlinks();
         this.writeModulesTxt()
         return this;
     }
