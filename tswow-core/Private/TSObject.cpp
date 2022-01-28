@@ -30,6 +30,8 @@
 #include "Creature.h"
 #include "Unit.h"
 #include "Corpse.h"
+#include "Item.h"
+#include "ObjectGuid.h"
 
 TSObject::TSObject(Object *objIn)
     : TSEntityProvider(&objIn->m_tsEntity)
@@ -446,4 +448,14 @@ TSUnit TSObject::GetEffectiveOwner()
         cur = TSUnit(found);
     }
     return cur;
+}
+
+TSItem TSObject::ToItem()
+{
+    return TSItem(IsItem() ? static_cast<Item*>(obj) : nullptr);
+}
+
+bool TSObject::IsItem()
+{
+    return obj->isType(TYPEMASK_ITEM);
 }

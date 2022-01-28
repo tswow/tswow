@@ -86,6 +86,7 @@ public:
     TSWorldObject ToWorldObject();
     TSGameObject ToGameObject();
     TSCorpse ToCorpse();
+    TSItem ToItem();
     TSUnit GetEffectiveOwner();
 
     bool IsPlayer();
@@ -93,6 +94,7 @@ public:
     bool IsCreature();
     bool IsUnit();
     bool IsCorpse();
+    bool IsItem();
 
     bool operator==(TSObject& rhs);
 };

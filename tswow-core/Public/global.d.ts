@@ -5217,6 +5217,7 @@ declare class TSObject extends TSEntityProvider {
     IsGameObject() : bool
     IsPlayer() : bool
     IsCorpse() : bool
+    IsItem() : bool
 
     GetEffectiveOwner(): TSUnit
 
@@ -5452,6 +5453,7 @@ declare class TSObject extends TSEntityProvider {
     ToUnit() : TSUnit
     ToCreature() : TSCreature
     ToPlayer() : TSPlayer
+    ToItem(): TSItem
 }
 
 declare interface TSUnit extends TSWorldObject {
