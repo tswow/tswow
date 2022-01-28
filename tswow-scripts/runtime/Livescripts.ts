@@ -136,7 +136,7 @@ export class Livescripts {
 
             const cmake_generate =
             (isWindows()
-                ? `"bin/cmake/bin/cmake.exe"`
+                ? `"bin/cmake/bin/cmake.exe" -DCMAKE_GENERATOR="Visual Studio 16 2019"`
                 : 'cmake')
             + ` -S ${builddir.cpp.abs()}`
             + ` -B ${builddir.lib.abs()}`
