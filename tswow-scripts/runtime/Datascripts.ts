@@ -356,19 +356,24 @@ export class Datascripts {
             + ` }`
         )
 
-        wsys.exec(
-                `node -r source-map-support/register`
-              + ` ${ipaths.bin.scripts.wotlkdata.wotlkdata.index.get()}`
-              + ` --ipaths=./`
-              + ` --dataset=${dataset.path.get()}`
-              + ` --datasetName=${dataset.fullName}`
-              + ` --clientPatch=${dataset.client.path.Data.devPatch}`
-              + ` ${args.join(' ')}`
-              // Please don't pass these two manually
-              + ` ${writesServer?'--__writes-server':''}`
-              + ` ${writesClient?'--__writes-client':''}`
-            , 'inherit'
-        )
+        try {
+            wsys.exec(
+                    `node -r source-map-support/register`
+                + ` ${ipaths.bin.scripts.wotlkdata.wotlkdata.index.get()}`
+                + ` --ipaths=./`
+                + ` --dataset=${dataset.path.get()}`
+                + ` --datasetName=${dataset.fullName}`
+                + ` --clientPatch=${dataset.client.path.Data.devPatch}`
+                + ` ${args.join(' ')}`
+                // Please don't pass these two manually
+                + ` ${writesServer?'--__writes-server':''}`
+                + ` ${writesClient?'--__writes-client':''}`
+                , 'inherit'
+            )
+        } catch(err) {
+            term.error('datascripts',`Failed to build datascripts, see error message above`);
+            return
+        }
 
         // 6. Present profiling
         if(args.includes('--prof')) {
