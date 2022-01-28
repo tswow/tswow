@@ -18,13 +18,13 @@ import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
 import { makeMaskCell32, MaskCell32, MaskCell64 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
 import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
 import { SpellRow } from "wotlkdata/wotlkdata/dbc/types/Spell";
+import { AreaGroupRegistry } from "../Area/AreaGroup";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
 import { SpellFocusRegistry } from "../SpellFocus/SpellFocus";
-import { WorldMapAreaRegistry } from "../Worldmap/WorldMapArea";
 import { AuraInterruptFlags } from "./AuraInterruptFlags";
 import { CastSpells } from "./CastOnCreate";
 import { InterruptFlags } from "./InterruptFlags";
@@ -154,7 +154,7 @@ export class Spell extends MainEntity<SpellRow> {
     get RequiredAuraVision() { return this.wrap(this.row.RequiredAuraVision); }
 
     /** Points to a WorldMapArea */
-    get RequiredArea() { return WorldMapAreaRegistry.ref(this, this.row.RequiredAreasID); }
+    get RequiredArea() { return AreaGroupRegistry.ref(this, this.row.RequiredAreasID); }
     get SchoolMask() {
         return makeMaskCell32(SchoolMask,this, this.row.SchoolMask);
     }

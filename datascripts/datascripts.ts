@@ -19,6 +19,7 @@ import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { AchievementRegistry } from "./Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
 import { AreaRegistry } from "./Area/Area";
+import { AreaGroupRegistry } from "./Area/AreaGroup";
 import { WMOAreaRegistry } from "./Area/WMOArea";
 import { AreaTriggerRegistry } from "./AreaTrigger/AreaTrigger";
 import { BroadcastTextRegistry } from "./BroadcastText/BroadcastText";
@@ -116,6 +117,7 @@ export const std = {
     Lights: Lights,
     ScriptPaths: ScriptPaths,
     Areas: AreaRegistry,
+    AreaGroups: AreaGroupRegistry,
     Maps: MapRegistry,
     LoadingScreens: LoadingScreens,
     /** Templates used by one or multiple game object instances */
