@@ -47,7 +47,10 @@ export class SkillRaceClassInfos extends ClassRaceMaskSystem<SkillRaceClassInfo,
         return a.row.isDeleted();
     }
 
-    add(classes?: MaskCon<keyof typeof ClassMask>, races?: MaskCon<keyof typeof RaceMask>) {
+    add(
+          classes: MaskCon<keyof typeof ClassMask> = 0xffffffff
+        , races: MaskCon<keyof typeof RaceMask> = 0xffffffff
+    ) {
         this.addGet(classes,races);
         return this.owner;
     }
