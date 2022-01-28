@@ -16,7 +16,7 @@ import { TargetBase } from "./TargetBase";
 // 1
 export class BindSight extends TargetBase {}
 // 2
-export class ModPossess extends ChanceBase {}
+export class ModPossess extends PointsBase {}
 // 3
 export class PeriodicDamage extends DamageBase {
     get DamagePeriod() { return this.wrap(this.owner.AuraPeriod); }
