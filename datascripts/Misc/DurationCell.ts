@@ -79,6 +79,34 @@ export class DurationCell<T> extends CellSystem<T> {
         return this.owner;
     }
 
+    addMilliseconds(ms: number) {
+        return this.set(this.get() + convertTime(ms,'MILLISECONDS',this.unit))
+    }
+
+    addSeconds(ms: number) {
+        return this.set(this.get() + convertTime(ms,'SECONDS',this.unit))
+    }
+
+    addMinutes(ms: number) {
+        return this.set(this.get() + convertTime(ms,'MINUTES',this.unit))
+    }
+
+    addHours(ms: number) {
+        return this.set(this.get() + convertTime(ms,'HOURS',this.unit))
+    }
+
+    addDays(ms: number) {
+        return this.set(this.get() + convertTime(ms,'DAYS',this.unit))
+    }
+
+    addWeeks(ms: number) {
+        return this.set(this.get() + convertTime(ms,'WEEKS',this.unit))
+    }
+
+    addYears(ms: number) {
+        return this.set(this.get() + convertTime(ms,'YEARS',this.unit))
+    }
+
     setAsMilliseconds(ms: number) {
         return this.set(convertTime(ms,'MILLISECONDS',this.unit))
     }
@@ -121,6 +149,10 @@ export class DurationCell<T> extends CellSystem<T> {
 
     getAsHours() {
         return convertTime(this.get(),this.unit,'HOURS');
+    }
+
+    getAsDays() {
+        return convertTime(this.get(),this.unit,'DAYS');
     }
 
     getAsWeeks() {
