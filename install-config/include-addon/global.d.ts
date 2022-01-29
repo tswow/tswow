@@ -12058,7 +12058,7 @@ declare namespace WoWAPI {
         /**
          * Returns the current anchoring type
          */
-        GetAnchorType(): Point;
+        GetAnchorType(): Anchor;
 
         /**
          * Returns the name and link of the item displayed on a GameTooltip
@@ -12256,7 +12256,7 @@ declare namespace WoWAPI {
          * Then GameTooltip:IsOwned(UIParent) will return 1.
          * @see http://wowwiki.wikia.com/wiki/API_GameTooltip_SetOwner
          */
-        SetOwner(owner: UIObject, anchor: Point, offsetX?: number, offsetY?: number): void;
+        SetOwner(owner: UIObject, anchor: Anchor, offsetX?: number, offsetY?: number): void;
 
         /**
          * Sets the amount of padding on the righthand side of the GameTooltip
@@ -12418,6 +12418,7 @@ declare namespace WoWAPI {
     type HorizontalAlign = "LEFT" | "CENTER" | "RIGHT";
     type VerticalAlign = "TOP" | "MIDDLE" | "BUTTOM";
     type Point = "TOP" | "RIGHT" | "BOTTOM" | "LEFT" | "TOPRIGHT" | "TOPLEFT" | "BOTTOMLEFT" | "BOTTOMRIGHT" | "CENTER";
+    type Anchor = "ANCHOR_TOP" | "ANCHOR_RIGHT" | "ANCHOR_BOTTOM" | "ANCHOR_LEFT" | "ANCHOR_TOPRIGHT" | "ANCHOR_BOTTOMRIGHT" | "ANCHOR_TOPLEFT" | "ANCHOR_BOTTOMLEFT" | "ANCHOR_CURSOR" | "ANCHOR_PRESERVE" | "ANCHOR_NONE"
     type Layer = "BACKGROUND" | "ARTWORK" | "OVERLAY";
     type FrameStrata = "WORLD" | "BACKGROUND" | "LOW" | "MEDIUM" | "HIGH" | "DIALOG" | "FULLSCREEN" | "FULLSCREEN_DIALOG" | "TOOLTIP";
     type Wrap = "CLAMP" | "CLAMPTOBLACK" | "CLAMPTOBLACKADDITIVE" | "CLAMPTOSHITE" | "REPEAT" | true | "MIRROR";
