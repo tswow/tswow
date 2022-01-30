@@ -1,7 +1,5 @@
 import * as fs from 'fs';
-import path from 'path';
-import { finish } from "wotlkdata";
-import { wfs } from 'wotlkdata/util/FileSystem';
+import { finish, luaxml } from "wotlkdata";
 import { BuildArgs, dataset, ipaths } from 'wotlkdata/wotlkdata/Settings';
 import { TSImage, TSImages } from "../Images/Image";
 import { ClassRegistry } from './ClassRegistry';
@@ -100,7 +98,19 @@ export function stitchClassIcon(image: TSImage, index: number = -1) {
     return index;
 }
 
-finish('build-class-icons',()=>{
+// clear out old stdlib asset files (where we used to put icons)
+// - we don't just remove it because that breaks current symlinks
+// - this should be removed by 0.15
+finish('finish', ()=> {
+    const oldAssets = ipaths.modules.module.pick('tswow-stdlib').join('assets');
+    if(oldAssets.exists()) {
+        oldAssets.iterate('FLAT','DIRECTORIES','ABSOLUTE',node=>{
+            node.remove();
+        })
+    }
+})
+
+luaxml('build-class-icons',()=>{
     if(!hasStitched || !BuildArgs.WRITE_CLIENT) return;
     if(stitchedSquares===undefined || stitchedCircles === undefined) {
         if(!setupImages()) {
@@ -108,9 +118,7 @@ finish('build-class-icons',()=>{
         }
     }
 
-    // don't know load order, so we'll handle the conversion here
-    wfs.write(ipaths.modules.module.pick('tswow-stdlib').join('assets','Interface','noconvert'),'')
-    stitchedSquares?.writeToModule('tswow-stdlib',path.join('assets',SQUARES_LOCAL),'BLP')
-    stitchedCircles?.writeToModule('tswow-stdlib',path.join('assets',CIRCLES_LOCAL),'BLP')
-    stitchedWorldstates?.writeToModule('tswow-stdlib',path.join('assets',WORLDSTATE_LOCAL),'BLP')
+    stitchedSquares?.write(dataset.luaxml.join(SQUARES_LOCAL).get(),'PNG+BLP')
+    stitchedCircles?.write(dataset.luaxml.join(CIRCLES_LOCAL).get(),'PNG+BLP')
+    stitchedWorldstates?.write(dataset.luaxml.join(WORLDSTATE_LOCAL).get(),'PNG+BLP')
 })
