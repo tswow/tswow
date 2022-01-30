@@ -64,6 +64,17 @@ export async function main() {
         process.exit(0)
     }
 
+    if(NodeConfig.DefaultClient.includes(' ')) {
+        term.error(
+            'client'
+          , `Invalid client path: ${wd}\n`
+          + `You cannot have spaces in the path leading up to your client,`
+          + `please move it and try again.\n`
+        )
+        process.exit(0)
+    }
+
+
     await mysql.initialize();
     await Dataset.initialize()
     await Client.initialize();
