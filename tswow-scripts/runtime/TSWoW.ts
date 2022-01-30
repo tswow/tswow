@@ -39,6 +39,19 @@ import { Realm } from "./Realm";
 
 export async function main() {
     term.log('mysql',`TSWoW Starting Up`)
+
+    let wd = wfs.absPath('./')
+
+    if(wd.includes(' ')) {
+        term.error(
+              'misc'
+            , `Invalid installation path: ${wd}\n`
+            + `You cannot have spaces in the path leading up to your tswow installation,`
+            + `please move it and try again.\n`
+        )
+        process.exit(0)
+    }
+
     const timer = Timer.start();
 
     if(!wfs.exists(NodeConfig.DefaultClient)) {
