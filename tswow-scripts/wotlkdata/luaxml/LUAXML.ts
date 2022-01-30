@@ -86,6 +86,4 @@ export function _writeLUAXML() {
             TextFile._write(file, outdir.join(fname).get());
         }
     }
-
-    outdir.copy(BuildArgs.CLIENT_PATCH_DIR,false);
 }

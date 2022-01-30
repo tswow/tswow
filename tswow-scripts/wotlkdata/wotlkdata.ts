@@ -33,9 +33,10 @@ const reads: PatchCollection = [];
 const writes: PatchCollection = [];
 const patches: PatchCollection = [];
 const finishes: PatchCollection = [];
+const luaxmls: PatchCollection = [];
 const sorts: PatchCollection = [];
 
-export type Stages = 'SETUP' | 'READ' | 'WRITE' | 'PATCH' | 'FINISH' | 'SORT'
+export type Stages = 'SETUP' | 'READ' | 'WRITE' | 'PATCH' | 'FINISH' | 'LUAXML' | 'SORT'
 let cur_stage: Stages = 'SETUP'
 export function GetStage() {
     return cur_stage;
@@ -139,6 +140,22 @@ async function main() {
     await applyStage(patches);
     cur_stage = 'FINISH'
     await applyStage(finishes);
+
+    if(BuildArgs.WRITE_CLIENT) {
+        // todo: move to stdlib
+        if (_DBC.ChrClasses.isLoaded()) {
+            _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
+                .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
+        }
+
+        _writeLUAXML();
+        time(`Wrote LUAXML`);
+    }
+
+    cur_stage = 'LUAXML'
+    await applyStage(luaxmls);
+    dataset.luaxml.copy(BuildArgs.CLIENT_PATCH_DIR,false);
+
     cur_stage = 'SORT'
     if(!BuildArgs.READ_ONLY) {
         await applyStage(sorts);
@@ -160,17 +177,6 @@ async function main() {
     if(!BuildArgs.READ_ONLY) {
         await IdPublic.writeFile();
         time(`Wrote IDs`)
-    }
-
-    if(BuildArgs.WRITE_CLIENT) {
-        // todo: move to stdlib
-        if (_DBC.ChrClasses.isLoaded()) {
-            _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
-                .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
-        }
-
-        _writeLUAXML();
-        time(`Wrote LUAXML`);
     }
 
     if(profileScripts()) {
@@ -272,10 +278,23 @@ export function finish(name: string, callback: () => any) {
     finishes.push({name, callback});
 }
 
-
 /**
  * Step 6 of script loading (final step)
- * - Runs AFTER global scope, setup, read, write, patch and even finish.
+ * - Runs AFTER luaxml data has been written
+ *
+ * This stage should:
+ * - Write any custom luaxml
+ *
+ * @param name
+ * @param callback
+ */
+export function luaxml(name: string, callback: () => any) {
+    luaxmls.push({name,callback});
+}
+
+/**
+ * Step 7 of script loading (final step)
+ * - Runs AFTER global scope, setup, read, write, patch, finish and luaxml.
  *
  * This stage should:
  * - Sort DBC files in place.
