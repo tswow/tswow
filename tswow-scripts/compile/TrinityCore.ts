@@ -159,7 +159,7 @@ export namespace TrinityCore {
         let setupCommand: string;
         let buildCommand: string;
 
-        if(!args1.includes('--no-compile')) {
+        if(!args1.includes('--no-compile') && !process.argv.includes('no-compile-tc')) {
             if (isWindows()) {
                 setupCommand = `${cmake} -DTOOLS=${tools}`
                 +` -DCMAKE_GENERATOR="Visual Studio 16 2019"`
@@ -194,6 +194,8 @@ export namespace TrinityCore {
                     wsys.exec('make install', 'inherit');
                 })
             }
+        } else {
+            term.log('build','Skipped compiling TrinityCore')
         }
 
         if(isWindows()) {
