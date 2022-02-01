@@ -43,7 +43,7 @@ export class ItemDisplayInfo extends MainEntity<ItemDisplayInfoRow> {
     copyFromDisplay(displayId: number) {
         DBC.ItemDisplayInfo
             .findById(displayId)
-            .clone(Ids.ItemDisplayInfo.id())
+            .copyTo(this.row)
         return this;
     }
 
