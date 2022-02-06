@@ -23,6 +23,7 @@ import { generateBLP } from "./BLP";
 import { getEffectiveFile, onDirtyPNG, splitPng } from "./PNG";
 
 finish('minimaps', () => {
+    if(process.argv.includes('--no-blp')) return;
     const minimapChanges = new FileChangeModule('minimaps');
     ipaths.modules.module.all().forEach(basemod=>{
         basemod.endpoints().forEach(mod=>{

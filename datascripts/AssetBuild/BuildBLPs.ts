@@ -22,6 +22,7 @@ import { generateBLP } from "./BLP";
 import { onDirtyPNG } from "./PNG";
 
 finish('blps', () => {
+    if(process.argv.includes('--no-blp')) return;
     const blpChanges = new FileChangeModule('blps');
     let files: {[key: string]: boolean} = {}
     ipaths.modules.module.all().forEach(basemod=>{
