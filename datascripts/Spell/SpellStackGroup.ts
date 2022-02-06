@@ -32,6 +32,13 @@ export class SpellStackGroupSpells extends MultiRowSystem<SpellGroupMapping,Spel
     protected isDeleted(value: SpellGroupMapping): boolean {
         return value.row.isDeleted();
     }
+
+    add(...spells: number[]) {
+        spells.forEach(id=>{
+            SQL.spell_group.add(this.owner.ID,id)
+        })
+        return this.owner;
+    }
 }
 
 export class SpellSpellStackGroups extends MultiRowSystem<SpellGroupMapping,Spell> {
@@ -43,6 +50,13 @@ export class SpellSpellStackGroups extends MultiRowSystem<SpellGroupMapping,Spel
     protected isDeleted(value: SpellGroupMapping): boolean {
         return value.row.isDeleted();
     }
+
+    add(...groups: number[]) {
+        groups.forEach(group=>{
+            SQL.spell_group.add(group,this.owner.ID)
+        })
+        return this.owner;
+    }
 }
 
 // SpellGroups are defined by their stack rules
@@ -51,6 +65,7 @@ export class SpellStackGroup extends MainEntity<spell_group_stack_rulesRow> {
     get StackRule() {
         return makeEnumCell(SpellGroupType,this, this.row.stack_rule);
     }
+    get Spells() { return new SpellStackGroupSpells(this); }
 }
 
 export class SpellGroupRegistryClass

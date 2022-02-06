@@ -71,6 +71,7 @@ export type TaxiNodeConstructor = Position & {
     arrival_event?: number,
     departure_event?: number,
     delay?: number,
+    teleports?: boolean
 }
 
 type TaxiPathType = 'PLAIN'|'FLIGHTPATH'

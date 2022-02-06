@@ -64,7 +64,7 @@ export class TaxiPathNodes extends MultiRowSystem<TaxiPathNode,TaxiPath> {
         }
 
         if(rows.length > 0) {
-            if(rows[index].Position.Map.get() != pos.map) {
+            if(pos.teleports || rows[index].Position.Map.get() != pos.map) {
                 flag = flag | 1;
             }
         }
