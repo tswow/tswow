@@ -94,6 +94,13 @@ export class LockDBCFile extends DBCFile<
     LockCreator,
     LockQuery,
     LockRow> {
+    constructor() {
+        super('Lock',(t,b,o)=>new LockRow(t,b,o))
+    }
+    /** Loads a new Lock.dbc from a file. */
+    static read(path: string): LockDBCFile {
+        return new LockDBCFile().read(path);
+    }
     add(ID : int, c? : LockCreator) : LockRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class LockDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Lock = new LockDBCFile(
-    'Lock',
-    (table,buffer,offset)=>new LockRow(table,buffer,offset))

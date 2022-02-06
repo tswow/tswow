@@ -115,6 +115,13 @@ export class ItemDBCFile extends DBCFile<
     ItemCreator,
     ItemQuery,
     ItemRow> {
+    constructor() {
+        super('Item',(t,b,o)=>new ItemRow(t,b,o))
+    }
+    /** Loads a new Item.dbc from a file. */
+    static read(path: string): ItemDBCFile {
+        return new ItemDBCFile().read(path);
+    }
     add(ID : int, c? : ItemCreator) : ItemRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class ItemDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Item = new ItemDBCFile(
-    'Item',
-    (table,buffer,offset)=>new ItemRow(table,buffer,offset))

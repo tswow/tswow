@@ -94,6 +94,13 @@ export class WeaponImpactSoundsDBCFile extends DBCFile<
     WeaponImpactSoundsCreator,
     WeaponImpactSoundsQuery,
     WeaponImpactSoundsRow> {
+    constructor() {
+        super('WeaponImpactSounds',(t,b,o)=>new WeaponImpactSoundsRow(t,b,o))
+    }
+    /** Loads a new WeaponImpactSounds.dbc from a file. */
+    static read(path: string): WeaponImpactSoundsDBCFile {
+        return new WeaponImpactSoundsDBCFile().read(path);
+    }
     add(ID : int, c? : WeaponImpactSoundsCreator) : WeaponImpactSoundsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class WeaponImpactSoundsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WeaponImpactSounds = new WeaponImpactSoundsDBCFile(
-    'WeaponImpactSounds',
-    (table,buffer,offset)=>new WeaponImpactSoundsRow(table,buffer,offset))

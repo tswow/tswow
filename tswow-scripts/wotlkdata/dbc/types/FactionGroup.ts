@@ -87,6 +87,13 @@ export class FactionGroupDBCFile extends DBCFile<
     FactionGroupCreator,
     FactionGroupQuery,
     FactionGroupRow> {
+    constructor() {
+        super('FactionGroup',(t,b,o)=>new FactionGroupRow(t,b,o))
+    }
+    /** Loads a new FactionGroup.dbc from a file. */
+    static read(path: string): FactionGroupDBCFile {
+        return new FactionGroupDBCFile().read(path);
+    }
     add(ID : int, c? : FactionGroupCreator) : FactionGroupRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class FactionGroupDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_FactionGroup = new FactionGroupDBCFile(
-    'FactionGroup',
-    (table,buffer,offset)=>new FactionGroupRow(table,buffer,offset))

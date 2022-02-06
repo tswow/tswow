@@ -143,6 +143,13 @@ export class HolidaysDBCFile extends DBCFile<
     HolidaysCreator,
     HolidaysQuery,
     HolidaysRow> {
+    constructor() {
+        super('Holidays',(t,b,o)=>new HolidaysRow(t,b,o))
+    }
+    /** Loads a new Holidays.dbc from a file. */
+    static read(path: string): HolidaysDBCFile {
+        return new HolidaysDBCFile().read(path);
+    }
     add(ID : int, c? : HolidaysCreator) : HolidaysRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -150,11 +157,3 @@ export class HolidaysDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Holidays = new HolidaysDBCFile(
-    'Holidays',
-    (table,buffer,offset)=>new HolidaysRow(table,buffer,offset))

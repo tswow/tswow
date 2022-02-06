@@ -164,15 +164,14 @@ export class Achievement_CriteriaDBCFile extends DBCFile<
     Achievement_CriteriaCreator,
     Achievement_CriteriaQuery,
     Achievement_CriteriaRow> {
+    constructor() {
+        super('Achievement_Criteria',(t,b,o)=>new Achievement_CriteriaRow(t,b,o))
+    }
+    /** Loads a new Achievement_Criteria.dbc from a file. */
+    static read(path: string): Achievement_CriteriaDBCFile {
+        return new Achievement_CriteriaDBCFile().read(path);
+    }
     add(ID : int, c? : Achievement_CriteriaCreator) : Achievement_CriteriaRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Achievement_Criteria = new Achievement_CriteriaDBCFile(
-    'Achievement_Criteria',
-    (table,buffer,offset)=>new Achievement_CriteriaRow(table,buffer,offset))

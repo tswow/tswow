@@ -94,6 +94,13 @@ export class AuctionHouseDBCFile extends DBCFile<
     AuctionHouseCreator,
     AuctionHouseQuery,
     AuctionHouseRow> {
+    constructor() {
+        super('AuctionHouse',(t,b,o)=>new AuctionHouseRow(t,b,o))
+    }
+    /** Loads a new AuctionHouse.dbc from a file. */
+    static read(path: string): AuctionHouseDBCFile {
+        return new AuctionHouseDBCFile().read(path);
+    }
     add(ID : int, c? : AuctionHouseCreator) : AuctionHouseRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class AuctionHouseDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AuctionHouse = new AuctionHouseDBCFile(
-    'AuctionHouse',
-    (table,buffer,offset)=>new AuctionHouseRow(table,buffer,offset))

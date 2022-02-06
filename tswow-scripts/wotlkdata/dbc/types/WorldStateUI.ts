@@ -150,15 +150,14 @@ export class WorldStateUIDBCFile extends DBCFile<
     WorldStateUICreator,
     WorldStateUIQuery,
     WorldStateUIRow> {
+    constructor() {
+        super('WorldStateUI',(t,b,o)=>new WorldStateUIRow(t,b,o))
+    }
+    /** Loads a new WorldStateUI.dbc from a file. */
+    static read(path: string): WorldStateUIDBCFile {
+        return new WorldStateUIDBCFile().read(path);
+    }
     add(ID : int, c? : WorldStateUICreator) : WorldStateUIRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldStateUI = new WorldStateUIDBCFile(
-    'WorldStateUI',
-    (table,buffer,offset)=>new WorldStateUIRow(table,buffer,offset))

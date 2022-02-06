@@ -94,6 +94,13 @@ export class VocalUISoundsDBCFile extends DBCFile<
     VocalUISoundsCreator,
     VocalUISoundsQuery,
     VocalUISoundsRow> {
+    constructor() {
+        super('VocalUISounds',(t,b,o)=>new VocalUISoundsRow(t,b,o))
+    }
+    /** Loads a new VocalUISounds.dbc from a file. */
+    static read(path: string): VocalUISoundsDBCFile {
+        return new VocalUISoundsDBCFile().read(path);
+    }
     add(ID : int, c? : VocalUISoundsCreator) : VocalUISoundsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class VocalUISoundsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_VocalUISounds = new VocalUISoundsDBCFile(
-    'VocalUISounds',
-    (table,buffer,offset)=>new VocalUISoundsRow(table,buffer,offset))

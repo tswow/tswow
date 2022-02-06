@@ -73,6 +73,13 @@ export class CreatureMovementInfoDBCFile extends DBCFile<
     CreatureMovementInfoCreator,
     CreatureMovementInfoQuery,
     CreatureMovementInfoRow> {
+    constructor() {
+        super('CreatureMovementInfo',(t,b,o)=>new CreatureMovementInfoRow(t,b,o))
+    }
+    /** Loads a new CreatureMovementInfo.dbc from a file. */
+    static read(path: string): CreatureMovementInfoDBCFile {
+        return new CreatureMovementInfoDBCFile().read(path);
+    }
     add(ID : int, c? : CreatureMovementInfoCreator) : CreatureMovementInfoRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class CreatureMovementInfoDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CreatureMovementInfo = new CreatureMovementInfoDBCFile(
-    'CreatureMovementInfo',
-    (table,buffer,offset)=>new CreatureMovementInfoRow(table,buffer,offset))

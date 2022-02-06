@@ -130,15 +130,14 @@ export class WorldChunkSoundsDBCFile extends DBCFile<
     WorldChunkSoundsCreator,
     WorldChunkSoundsQuery,
     WorldChunkSoundsRow> {
+    constructor() {
+        super('WorldChunkSounds',(t,b,o)=>new WorldChunkSoundsRow(t,b,o))
+    }
+    /** Loads a new WorldChunkSounds.dbc from a file. */
+    static read(path: string): WorldChunkSoundsDBCFile {
+        return new WorldChunkSoundsDBCFile().read(path);
+    }
     add(WorldMapMapID : int,ChunkX : int,ChunkY : int,SubchunkX : int,SubchunkY : int, c? : WorldChunkSoundsCreator) : WorldChunkSoundsRow {
         return this.makeRow(0).clone(WorldMapMapID,ChunkX,ChunkY,SubchunkX,SubchunkY,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldChunkSounds = new WorldChunkSoundsDBCFile(
-    'WorldChunkSounds',
-    (table,buffer,offset)=>new WorldChunkSoundsRow(table,buffer,offset))

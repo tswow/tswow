@@ -73,6 +73,13 @@ export class GMSurveySurveysDBCFile extends DBCFile<
     GMSurveySurveysCreator,
     GMSurveySurveysQuery,
     GMSurveySurveysRow> {
+    constructor() {
+        super('GMSurveySurveys',(t,b,o)=>new GMSurveySurveysRow(t,b,o))
+    }
+    /** Loads a new GMSurveySurveys.dbc from a file. */
+    static read(path: string): GMSurveySurveysDBCFile {
+        return new GMSurveySurveysDBCFile().read(path);
+    }
     add(ID : int, c? : GMSurveySurveysCreator) : GMSurveySurveysRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class GMSurveySurveysDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GMSurveySurveys = new GMSurveySurveysDBCFile(
-    'GMSurveySurveys',
-    (table,buffer,offset)=>new GMSurveySurveysRow(table,buffer,offset))

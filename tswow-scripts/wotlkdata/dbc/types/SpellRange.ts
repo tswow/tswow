@@ -101,6 +101,13 @@ export class SpellRangeDBCFile extends DBCFile<
     SpellRangeCreator,
     SpellRangeQuery,
     SpellRangeRow> {
+    constructor() {
+        super('SpellRange',(t,b,o)=>new SpellRangeRow(t,b,o))
+    }
+    /** Loads a new SpellRange.dbc from a file. */
+    static read(path: string): SpellRangeDBCFile {
+        return new SpellRangeDBCFile().read(path);
+    }
     add(ID : int, c? : SpellRangeCreator) : SpellRangeRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class SpellRangeDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellRange = new SpellRangeDBCFile(
-    'SpellRange',
-    (table,buffer,offset)=>new SpellRangeRow(table,buffer,offset))

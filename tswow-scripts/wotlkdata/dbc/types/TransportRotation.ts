@@ -108,15 +108,14 @@ export class TransportRotationDBCFile extends DBCFile<
     TransportRotationCreator,
     TransportRotationQuery,
     TransportRotationRow> {
+    constructor() {
+        super('TransportRotation',(t,b,o)=>new TransportRotationRow(t,b,o))
+    }
+    /** Loads a new TransportRotation.dbc from a file. */
+    static read(path: string): TransportRotationDBCFile {
+        return new TransportRotationDBCFile().read(path);
+    }
     add(ID : int, c? : TransportRotationCreator) : TransportRotationRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TransportRotation = new TransportRotationDBCFile(
-    'TransportRotation',
-    (table,buffer,offset)=>new TransportRotationRow(table,buffer,offset))

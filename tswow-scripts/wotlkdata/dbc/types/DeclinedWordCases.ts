@@ -87,15 +87,14 @@ export class DeclinedWordCasesDBCFile extends DBCFile<
     DeclinedWordCasesCreator,
     DeclinedWordCasesQuery,
     DeclinedWordCasesRow> {
+    constructor() {
+        super('DeclinedWordCases',(t,b,o)=>new DeclinedWordCasesRow(t,b,o))
+    }
+    /** Loads a new DeclinedWordCases.dbc from a file. */
+    static read(path: string): DeclinedWordCasesDBCFile {
+        return new DeclinedWordCasesDBCFile().read(path);
+    }
     add(ID : int, c? : DeclinedWordCasesCreator) : DeclinedWordCasesRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DeclinedWordCases = new DeclinedWordCasesDBCFile(
-    'DeclinedWordCases',
-    (table,buffer,offset)=>new DeclinedWordCasesRow(table,buffer,offset))

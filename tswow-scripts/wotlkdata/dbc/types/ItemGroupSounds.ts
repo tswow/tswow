@@ -73,6 +73,13 @@ export class ItemGroupSoundsDBCFile extends DBCFile<
     ItemGroupSoundsCreator,
     ItemGroupSoundsQuery,
     ItemGroupSoundsRow> {
+    constructor() {
+        super('ItemGroupSounds',(t,b,o)=>new ItemGroupSoundsRow(t,b,o))
+    }
+    /** Loads a new ItemGroupSounds.dbc from a file. */
+    static read(path: string): ItemGroupSoundsDBCFile {
+        return new ItemGroupSoundsDBCFile().read(path);
+    }
     add(ID : int, c? : ItemGroupSoundsCreator) : ItemGroupSoundsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ItemGroupSoundsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemGroupSounds = new ItemGroupSoundsDBCFile(
-    'ItemGroupSounds',
-    (table,buffer,offset)=>new ItemGroupSoundsRow(table,buffer,offset))

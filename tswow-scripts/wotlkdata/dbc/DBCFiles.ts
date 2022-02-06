@@ -16,1478 +16,1951 @@
  */
 /* tslint:disable */
 import { DBCFile } from "./DBCFile"
-import { DBC_Achievement } from "./types/Achievement"
-import { DBC_Achievement_Category } from "./types/Achievement_Category"
-import { DBC_Achievement_Criteria } from "./types/Achievement_Criteria"
-import { DBC_AnimationData } from "./types/AnimationData"
-import { DBC_AreaGroup } from "./types/AreaGroup"
-import { DBC_AreaPOI } from "./types/AreaPOI"
-import { DBC_AreaTable } from "./types/AreaTable"
-import { DBC_AreaTrigger } from "./types/AreaTrigger"
-import { DBC_AttackAnimKits } from "./types/AttackAnimKits"
-import { DBC_AttackAnimTypes } from "./types/AttackAnimTypes"
-import { DBC_AuctionHouse } from "./types/AuctionHouse"
-import { DBC_BankBagSlotPrices } from "./types/BankBagSlotPrices"
-import { DBC_BannedAddOns } from "./types/BannedAddOns"
-import { DBC_BarberShopStyle } from "./types/BarberShopStyle"
-import { DBC_BattlemasterList } from "./types/BattlemasterList"
-import { DBC_CameraShakes } from "./types/CameraShakes"
-import { DBC_Cfg_Categories } from "./types/Cfg_Categories"
-import { DBC_Cfg_Configs } from "./types/Cfg_Configs"
-import { DBC_CharacterFacialHairStyles } from "./types/CharacterFacialHairStyles"
-import { DBC_CharBaseInfo } from "./types/CharBaseInfo"
-import { DBC_CharHairGeosets } from "./types/CharHairGeosets"
-import { DBC_CharHairTextures } from "./types/CharHairTextures"
-import { DBC_CharSections } from "./types/CharSections"
-import { DBC_CharStartOutfit } from "./types/CharStartOutfit"
-import { DBC_CharTitles } from "./types/CharTitles"
-import { DBC_ChatChannels } from "./types/ChatChannels"
-import { DBC_ChatProfanity } from "./types/ChatProfanity"
-import { DBC_ChrClasses } from "./types/ChrClasses"
-import { DBC_ChrRaces } from "./types/ChrRaces"
-import { DBC_CinematicCamera } from "./types/CinematicCamera"
-import { DBC_CinematicSequences } from "./types/CinematicSequences"
-import { DBC_CreatureDisplayInfo } from "./types/CreatureDisplayInfo"
-import { DBC_CreatureDisplayInfoExtra } from "./types/CreatureDisplayInfoExtra"
-import { DBC_CreatureFamily } from "./types/CreatureFamily"
-import { DBC_CreatureModelData } from "./types/CreatureModelData"
-import { DBC_CreatureMovementInfo } from "./types/CreatureMovementInfo"
-import { DBC_CreatureSoundData } from "./types/CreatureSoundData"
-import { DBC_CreatureSpellData } from "./types/CreatureSpellData"
-import { DBC_CreatureType } from "./types/CreatureType"
-import { DBC_CurrencyCategory } from "./types/CurrencyCategory"
-import { DBC_CurrencyTypes } from "./types/CurrencyTypes"
-import { DBC_DanceMoves } from "./types/DanceMoves"
-import { DBC_DeathThudLookups } from "./types/DeathThudLookups"
-import { DBC_DeclinedWord } from "./types/DeclinedWord"
-import { DBC_DeclinedWordCases } from "./types/DeclinedWordCases"
-import { DBC_DestructibleModelData } from "./types/DestructibleModelData"
-import { DBC_DungeonEncounter } from "./types/DungeonEncounter"
-import { DBC_DungeonMap } from "./types/DungeonMap"
-import { DBC_DungeonMapChunk } from "./types/DungeonMapChunk"
-import { DBC_DurabilityCosts } from "./types/DurabilityCosts"
-import { DBC_DurabilityQuality } from "./types/DurabilityQuality"
-import { DBC_Emotes } from "./types/Emotes"
-import { DBC_EmotesText } from "./types/EmotesText"
-import { DBC_EmotesTextData } from "./types/EmotesTextData"
-import { DBC_EmotesTextSound } from "./types/EmotesTextSound"
-import { DBC_EnvironmentalDamage } from "./types/EnvironmentalDamage"
-import { DBC_Exhaustion } from "./types/Exhaustion"
-import { DBC_Faction } from "./types/Faction"
-import { DBC_FactionGroup } from "./types/FactionGroup"
-import { DBC_FactionTemplate } from "./types/FactionTemplate"
-import { DBC_FileData } from "./types/FileData"
-import { DBC_FootprintTextures } from "./types/FootprintTextures"
-import { DBC_FootstepTerrainLookup } from "./types/FootstepTerrainLookup"
-import { DBC_GameObjectArtKit } from "./types/GameObjectArtKit"
-import { DBC_GameObjectDisplayInfo } from "./types/GameObjectDisplayInfo"
-import { DBC_GameTables } from "./types/GameTables"
-import { DBC_GameTips } from "./types/GameTips"
-import { DBC_GemProperties } from "./types/GemProperties"
-import { DBC_GlyphProperties } from "./types/GlyphProperties"
-import { DBC_GlyphSlot } from "./types/GlyphSlot"
-import { DBC_GMSurveyAnswers } from "./types/GMSurveyAnswers"
-import { DBC_GMSurveyCurrentSurvey } from "./types/GMSurveyCurrentSurvey"
-import { DBC_GMSurveyQuestions } from "./types/GMSurveyQuestions"
-import { DBC_GMSurveySurveys } from "./types/GMSurveySurveys"
-import { DBC_GMTicketCategory } from "./types/GMTicketCategory"
-import { DBC_GroundEffectDoodad } from "./types/GroundEffectDoodad"
-import { DBC_GroundEffectTexture } from "./types/GroundEffectTexture"
-import { DBC_GtBarberShopCostBase } from "./types/GtBarberShopCostBase"
-import { DBC_GtChanceToMeleeCrit } from "./types/GtChanceToMeleeCrit"
-import { DBC_GtChanceToMeleeCritBase } from "./types/GtChanceToMeleeCritBase"
-import { DBC_GtChanceToSpellCrit } from "./types/GtChanceToSpellCrit"
-import { DBC_GtChanceToSpellCritBase } from "./types/GtChanceToSpellCritBase"
-import { DBC_GtCombatRatings } from "./types/GtCombatRatings"
-import { DBC_GtNPCManaCostScaler } from "./types/GtNPCManaCostScaler"
-import { DBC_GtOCTClassCombatRatingScalar } from "./types/GtOCTClassCombatRatingScalar"
-import { DBC_GtOCTRegenHP } from "./types/GtOCTRegenHP"
-import { DBC_GtOCTRegenMP } from "./types/GtOCTRegenMP"
-import { DBC_GtRegenHPPerSpt } from "./types/GtRegenHPPerSpt"
-import { DBC_GtRegenMPPerSpt } from "./types/GtRegenMPPerSpt"
-import { DBC_HelmetGeosetVisData } from "./types/HelmetGeosetVisData"
-import { DBC_HolidayDescriptions } from "./types/HolidayDescriptions"
-import { DBC_HolidayNames } from "./types/HolidayNames"
-import { DBC_Holidays } from "./types/Holidays"
-import { DBC_Item } from "./types/Item"
-import { DBC_ItemBagFamily } from "./types/ItemBagFamily"
-import { DBC_ItemClass } from "./types/ItemClass"
-import { DBC_ItemCondExtCosts } from "./types/ItemCondExtCosts"
-import { DBC_ItemDisplayInfo } from "./types/ItemDisplayInfo"
-import { DBC_ItemExtendedCost } from "./types/ItemExtendedCost"
-import { DBC_ItemGroupSounds } from "./types/ItemGroupSounds"
-import { DBC_ItemLimitCategory } from "./types/ItemLimitCategory"
-import { DBC_ItemPetFood } from "./types/ItemPetFood"
-import { DBC_ItemPurchaseGroup } from "./types/ItemPurchaseGroup"
-import { DBC_ItemRandomProperties } from "./types/ItemRandomProperties"
-import { DBC_ItemRandomSuffix } from "./types/ItemRandomSuffix"
-import { DBC_ItemSet } from "./types/ItemSet"
-import { DBC_ItemSubClass } from "./types/ItemSubClass"
-import { DBC_ItemSubClassMask } from "./types/ItemSubClassMask"
-import { DBC_ItemVisualEffects } from "./types/ItemVisualEffects"
-import { DBC_ItemVisuals } from "./types/ItemVisuals"
-import { DBC_Languages } from "./types/Languages"
-import { DBC_LanguageWords } from "./types/LanguageWords"
-import { DBC_LfgDungeonExpansion } from "./types/LfgDungeonExpansion"
-import { DBC_LfgDungeonGroup } from "./types/LfgDungeonGroup"
-import { DBC_LfgDungeons } from "./types/LfgDungeons"
-import { DBC_Light } from "./types/Light"
-import { DBC_LightfloatBand } from "./types/LightfloatBand"
-import { DBC_LightintBand } from "./types/LightintBand"
-import { DBC_LightParams } from "./types/LightParams"
-import { DBC_LightSkybox } from "./types/LightSkybox"
-import { DBC_LiquidMaterial } from "./types/LiquidMaterial"
-import { DBC_LiquidType } from "./types/LiquidType"
-import { DBC_LoadingScreens } from "./types/LoadingScreens"
-import { DBC_LoadingScreenTaxiSplines } from "./types/LoadingScreenTaxiSplines"
-import { DBC_Lock } from "./types/Lock"
-import { DBC_LockType } from "./types/LockType"
-import { DBC_MailTemplate } from "./types/MailTemplate"
-import { DBC_Map } from "./types/Map"
-import { DBC_MapDifficulty } from "./types/MapDifficulty"
-import { DBC_Material } from "./types/Material"
-import { DBC_Movie } from "./types/Movie"
-import { DBC_MovieFileData } from "./types/MovieFileData"
-import { DBC_MovieVariation } from "./types/MovieVariation"
-import { DBC_NameGen } from "./types/NameGen"
-import { DBC_NamesProfanity } from "./types/NamesProfanity"
-import { DBC_NamesReserved } from "./types/NamesReserved"
-import { DBC_NPCSounds } from "./types/NPCSounds"
-import { DBC_ObjectEffect } from "./types/ObjectEffect"
-import { DBC_ObjectEffectGroup } from "./types/ObjectEffectGroup"
-import { DBC_ObjectEffectModifier } from "./types/ObjectEffectModifier"
-import { DBC_ObjectEffectPackage } from "./types/ObjectEffectPackage"
-import { DBC_ObjectEffectPackageElem } from "./types/ObjectEffectPackageElem"
-import { DBC_OverrideSpellData } from "./types/OverrideSpellData"
-import { DBC_Package } from "./types/Package"
-import { DBC_PageTextMaterial } from "./types/PageTextMaterial"
-import { DBC_PaperDollItemFrame } from "./types/PaperDollItemFrame"
-import { DBC_ParticleColor } from "./types/ParticleColor"
-import { DBC_PetitionType } from "./types/PetitionType"
-import { DBC_PetPersonality } from "./types/PetPersonality"
-import { DBC_PowerDisplay } from "./types/PowerDisplay"
-import { DBC_PvpDifficulty } from "./types/PvpDifficulty"
-import { DBC_QuestFactionReward } from "./types/QuestFactionReward"
-import { DBC_QuestInfo } from "./types/QuestInfo"
-import { DBC_QuestSort } from "./types/QuestSort"
-import { DBC_QuestXP } from "./types/QuestXP"
-import { DBC_RandPropPoints } from "./types/RandPropPoints"
-import { DBC_Resistances } from "./types/Resistances"
-import { DBC_ScalingStatDistribution } from "./types/ScalingStatDistribution"
-import { DBC_ScalingStatValues } from "./types/ScalingStatValues"
-import { DBC_ScreenEffect } from "./types/ScreenEffect"
-import { DBC_ServerMessages } from "./types/ServerMessages"
-import { DBC_SheatheSoundLookups } from "./types/SheatheSoundLookups"
-import { DBC_SkillCostsData } from "./types/SkillCostsData"
-import { DBC_SkillLine } from "./types/SkillLine"
-import { DBC_SkillLineAbility } from "./types/SkillLineAbility"
-import { DBC_SkillLineCategory } from "./types/SkillLineCategory"
-import { DBC_SkillRaceClassInfo } from "./types/SkillRaceClassInfo"
-import { DBC_SkillTiers } from "./types/SkillTiers"
-import { DBC_SoundAmbience } from "./types/SoundAmbience"
-import { DBC_SoundEmitters } from "./types/SoundEmitters"
-import { DBC_SoundEntries } from "./types/SoundEntries"
-import { DBC_SoundEntriesAdvanced } from "./types/SoundEntriesAdvanced"
-import { DBC_SoundFilter } from "./types/SoundFilter"
-import { DBC_SoundFilterElem } from "./types/SoundFilterElem"
-import { DBC_SoundProviderPreferences } from "./types/SoundProviderPreferences"
-import { DBC_SoundSamplePreferences } from "./types/SoundSamplePreferences"
-import { DBC_SoundWaterType } from "./types/SoundWaterType"
-import { DBC_SpamMessages } from "./types/SpamMessages"
-import { DBC_Spell } from "./types/Spell"
-import { DBC_SpellCastTimes } from "./types/SpellCastTimes"
-import { DBC_SpellCategory } from "./types/SpellCategory"
-import { DBC_SpellChainEffects } from "./types/SpellChainEffects"
-import { DBC_SpellDescriptionVariables } from "./types/SpellDescriptionVariables"
-import { DBC_SpellDifficulty } from "./types/SpellDifficulty"
-import { DBC_SpellDispelType } from "./types/SpellDispelType"
-import { DBC_SpellDuration } from "./types/SpellDuration"
-import { DBC_SpellEffectCameraShakes } from "./types/SpellEffectCameraShakes"
-import { DBC_SpellFocusObject } from "./types/SpellFocusObject"
-import { DBC_SpellIcon } from "./types/SpellIcon"
-import { DBC_SpellItemEnchantment } from "./types/SpellItemEnchantment"
-import { DBC_SpellItemEnchantmentCondition } from "./types/SpellItemEnchantmentCondition"
-import { DBC_SpellMechanic } from "./types/SpellMechanic"
-import { DBC_SpellMissile } from "./types/SpellMissile"
-import { DBC_SpellMissileMotion } from "./types/SpellMissileMotion"
-import { DBC_SpellRadius } from "./types/SpellRadius"
-import { DBC_SpellRange } from "./types/SpellRange"
-import { DBC_SpellRuneCost } from "./types/SpellRuneCost"
-import { DBC_SpellShapeshiftForm } from "./types/SpellShapeshiftForm"
-import { DBC_SpellVisual } from "./types/SpellVisual"
-import { DBC_SpellVisualEffectName } from "./types/SpellVisualEffectName"
-import { DBC_SpellVisualKit } from "./types/SpellVisualKit"
-import { DBC_SpellVisualKitAreaModel } from "./types/SpellVisualKitAreaModel"
-import { DBC_SpellVisualKitModelAttach } from "./types/SpellVisualKitModelAttach"
-import { DBC_SpellVisualPrecastTransitions } from "./types/SpellVisualPrecastTransitions"
-import { DBC_StableSlotPrices } from "./types/StableSlotPrices"
-import { DBC_Startup_strings } from "./types/Startup_strings"
-import { DBC_Stationery } from "./types/Stationery"
-import { DBC_StringLookups } from "./types/StringLookups"
-import { DBC_SummonProperties } from "./types/SummonProperties"
-import { DBC_Talent } from "./types/Talent"
-import { DBC_TalentTab } from "./types/TalentTab"
-import { DBC_TaxiNodes } from "./types/TaxiNodes"
-import { DBC_TaxiPath } from "./types/TaxiPath"
-import { DBC_TaxiPathNode } from "./types/TaxiPathNode"
-import { DBC_TeamContributionPoints } from "./types/TeamContributionPoints"
-import { DBC_Terraintype } from "./types/Terraintype"
-import { DBC_TerraintypeSounds } from "./types/TerraintypeSounds"
-import { DBC_TotemCategory } from "./types/TotemCategory"
-import { DBC_TransportAnimation } from "./types/TransportAnimation"
-import { DBC_TransportPhysics } from "./types/TransportPhysics"
-import { DBC_TransportRotation } from "./types/TransportRotation"
-import { DBC_UISoundLookups } from "./types/UISoundLookups"
-import { DBC_UnitBlood } from "./types/UnitBlood"
-import { DBC_UnitBloodLevels } from "./types/UnitBloodLevels"
-import { DBC_Vehicle } from "./types/Vehicle"
-import { DBC_VehicleSeat } from "./types/VehicleSeat"
-import { DBC_VehicleUIIndicator } from "./types/VehicleUIIndicator"
-import { DBC_VehicleUIIndSeat } from "./types/VehicleUIIndSeat"
-import { DBC_VideoHardware } from "./types/VideoHardware"
-import { DBC_VocalUISounds } from "./types/VocalUISounds"
-import { DBC_WeaponImpactSounds } from "./types/WeaponImpactSounds"
-import { DBC_WeaponSwingSounds2 } from "./types/WeaponSwingSounds2"
-import { DBC_Weather } from "./types/Weather"
-import { DBC_WMOAreaTable } from "./types/WMOAreaTable"
-import { DBC_WorldChunkSounds } from "./types/WorldChunkSounds"
-import { DBC_WorldMapArea } from "./types/WorldMapArea"
-import { DBC_WorldMapContinent } from "./types/WorldMapContinent"
-import { DBC_WorldMapOverlay } from "./types/WorldMapOverlay"
-import { DBC_WorldMapTransforms } from "./types/WorldMapTransforms"
-import { DBC_WorldSafelocs } from "./types/WorldSafelocs"
-import { DBC_WorldStateUI } from "./types/WorldStateUI"
-import { DBC_WorldStateZoneSounds } from "./types/WorldStateZoneSounds"
-import { DBC_WowError_Strings } from "./types/WowError_Strings"
-import { DBC_ZoneintroMusicTable } from "./types/ZoneintroMusicTable"
-import { DBC_ZoneMusic } from "./types/ZoneMusic"
+import { AchievementDBCFile } from "./types/Achievement"
+import { Achievement_CategoryDBCFile } from "./types/Achievement_Category"
+import { Achievement_CriteriaDBCFile } from "./types/Achievement_Criteria"
+import { AnimationDataDBCFile } from "./types/AnimationData"
+import { AreaGroupDBCFile } from "./types/AreaGroup"
+import { AreaPOIDBCFile } from "./types/AreaPOI"
+import { AreaTableDBCFile } from "./types/AreaTable"
+import { AreaTriggerDBCFile } from "./types/AreaTrigger"
+import { AttackAnimKitsDBCFile } from "./types/AttackAnimKits"
+import { AttackAnimTypesDBCFile } from "./types/AttackAnimTypes"
+import { AuctionHouseDBCFile } from "./types/AuctionHouse"
+import { BankBagSlotPricesDBCFile } from "./types/BankBagSlotPrices"
+import { BannedAddOnsDBCFile } from "./types/BannedAddOns"
+import { BarberShopStyleDBCFile } from "./types/BarberShopStyle"
+import { BattlemasterListDBCFile } from "./types/BattlemasterList"
+import { CameraShakesDBCFile } from "./types/CameraShakes"
+import { Cfg_CategoriesDBCFile } from "./types/Cfg_Categories"
+import { Cfg_ConfigsDBCFile } from "./types/Cfg_Configs"
+import { CharacterFacialHairStylesDBCFile } from "./types/CharacterFacialHairStyles"
+import { CharBaseInfoDBCFile } from "./types/CharBaseInfo"
+import { CharHairGeosetsDBCFile } from "./types/CharHairGeosets"
+import { CharHairTexturesDBCFile } from "./types/CharHairTextures"
+import { CharSectionsDBCFile } from "./types/CharSections"
+import { CharStartOutfitDBCFile } from "./types/CharStartOutfit"
+import { CharTitlesDBCFile } from "./types/CharTitles"
+import { ChatChannelsDBCFile } from "./types/ChatChannels"
+import { ChatProfanityDBCFile } from "./types/ChatProfanity"
+import { ChrClassesDBCFile } from "./types/ChrClasses"
+import { ChrRacesDBCFile } from "./types/ChrRaces"
+import { CinematicCameraDBCFile } from "./types/CinematicCamera"
+import { CinematicSequencesDBCFile } from "./types/CinematicSequences"
+import { CreatureDisplayInfoDBCFile } from "./types/CreatureDisplayInfo"
+import { CreatureDisplayInfoExtraDBCFile } from "./types/CreatureDisplayInfoExtra"
+import { CreatureFamilyDBCFile } from "./types/CreatureFamily"
+import { CreatureModelDataDBCFile } from "./types/CreatureModelData"
+import { CreatureMovementInfoDBCFile } from "./types/CreatureMovementInfo"
+import { CreatureSoundDataDBCFile } from "./types/CreatureSoundData"
+import { CreatureSpellDataDBCFile } from "./types/CreatureSpellData"
+import { CreatureTypeDBCFile } from "./types/CreatureType"
+import { CurrencyCategoryDBCFile } from "./types/CurrencyCategory"
+import { CurrencyTypesDBCFile } from "./types/CurrencyTypes"
+import { DanceMovesDBCFile } from "./types/DanceMoves"
+import { DeathThudLookupsDBCFile } from "./types/DeathThudLookups"
+import { DeclinedWordDBCFile } from "./types/DeclinedWord"
+import { DeclinedWordCasesDBCFile } from "./types/DeclinedWordCases"
+import { DestructibleModelDataDBCFile } from "./types/DestructibleModelData"
+import { DungeonEncounterDBCFile } from "./types/DungeonEncounter"
+import { DungeonMapDBCFile } from "./types/DungeonMap"
+import { DungeonMapChunkDBCFile } from "./types/DungeonMapChunk"
+import { DurabilityCostsDBCFile } from "./types/DurabilityCosts"
+import { DurabilityQualityDBCFile } from "./types/DurabilityQuality"
+import { EmotesDBCFile } from "./types/Emotes"
+import { EmotesTextDBCFile } from "./types/EmotesText"
+import { EmotesTextDataDBCFile } from "./types/EmotesTextData"
+import { EmotesTextSoundDBCFile } from "./types/EmotesTextSound"
+import { EnvironmentalDamageDBCFile } from "./types/EnvironmentalDamage"
+import { ExhaustionDBCFile } from "./types/Exhaustion"
+import { FactionDBCFile } from "./types/Faction"
+import { FactionGroupDBCFile } from "./types/FactionGroup"
+import { FactionTemplateDBCFile } from "./types/FactionTemplate"
+import { FileDataDBCFile } from "./types/FileData"
+import { FootprintTexturesDBCFile } from "./types/FootprintTextures"
+import { FootstepTerrainLookupDBCFile } from "./types/FootstepTerrainLookup"
+import { GameObjectArtKitDBCFile } from "./types/GameObjectArtKit"
+import { GameObjectDisplayInfoDBCFile } from "./types/GameObjectDisplayInfo"
+import { GameTablesDBCFile } from "./types/GameTables"
+import { GameTipsDBCFile } from "./types/GameTips"
+import { GemPropertiesDBCFile } from "./types/GemProperties"
+import { GlyphPropertiesDBCFile } from "./types/GlyphProperties"
+import { GlyphSlotDBCFile } from "./types/GlyphSlot"
+import { GMSurveyAnswersDBCFile } from "./types/GMSurveyAnswers"
+import { GMSurveyCurrentSurveyDBCFile } from "./types/GMSurveyCurrentSurvey"
+import { GMSurveyQuestionsDBCFile } from "./types/GMSurveyQuestions"
+import { GMSurveySurveysDBCFile } from "./types/GMSurveySurveys"
+import { GMTicketCategoryDBCFile } from "./types/GMTicketCategory"
+import { GroundEffectDoodadDBCFile } from "./types/GroundEffectDoodad"
+import { GroundEffectTextureDBCFile } from "./types/GroundEffectTexture"
+import { GtBarberShopCostBaseDBCFile } from "./types/GtBarberShopCostBase"
+import { GtChanceToMeleeCritDBCFile } from "./types/GtChanceToMeleeCrit"
+import { GtChanceToMeleeCritBaseDBCFile } from "./types/GtChanceToMeleeCritBase"
+import { GtChanceToSpellCritDBCFile } from "./types/GtChanceToSpellCrit"
+import { GtChanceToSpellCritBaseDBCFile } from "./types/GtChanceToSpellCritBase"
+import { GtCombatRatingsDBCFile } from "./types/GtCombatRatings"
+import { GtNPCManaCostScalerDBCFile } from "./types/GtNPCManaCostScaler"
+import { GtOCTClassCombatRatingScalarDBCFile } from "./types/GtOCTClassCombatRatingScalar"
+import { GtOCTRegenHPDBCFile } from "./types/GtOCTRegenHP"
+import { GtOCTRegenMPDBCFile } from "./types/GtOCTRegenMP"
+import { GtRegenHPPerSptDBCFile } from "./types/GtRegenHPPerSpt"
+import { GtRegenMPPerSptDBCFile } from "./types/GtRegenMPPerSpt"
+import { HelmetGeosetVisDataDBCFile } from "./types/HelmetGeosetVisData"
+import { HolidayDescriptionsDBCFile } from "./types/HolidayDescriptions"
+import { HolidayNamesDBCFile } from "./types/HolidayNames"
+import { HolidaysDBCFile } from "./types/Holidays"
+import { ItemDBCFile } from "./types/Item"
+import { ItemBagFamilyDBCFile } from "./types/ItemBagFamily"
+import { ItemClassDBCFile } from "./types/ItemClass"
+import { ItemCondExtCostsDBCFile } from "./types/ItemCondExtCosts"
+import { ItemDisplayInfoDBCFile } from "./types/ItemDisplayInfo"
+import { ItemExtendedCostDBCFile } from "./types/ItemExtendedCost"
+import { ItemGroupSoundsDBCFile } from "./types/ItemGroupSounds"
+import { ItemLimitCategoryDBCFile } from "./types/ItemLimitCategory"
+import { ItemPetFoodDBCFile } from "./types/ItemPetFood"
+import { ItemPurchaseGroupDBCFile } from "./types/ItemPurchaseGroup"
+import { ItemRandomPropertiesDBCFile } from "./types/ItemRandomProperties"
+import { ItemRandomSuffixDBCFile } from "./types/ItemRandomSuffix"
+import { ItemSetDBCFile } from "./types/ItemSet"
+import { ItemSubClassDBCFile } from "./types/ItemSubClass"
+import { ItemSubClassMaskDBCFile } from "./types/ItemSubClassMask"
+import { ItemVisualEffectsDBCFile } from "./types/ItemVisualEffects"
+import { ItemVisualsDBCFile } from "./types/ItemVisuals"
+import { LanguagesDBCFile } from "./types/Languages"
+import { LanguageWordsDBCFile } from "./types/LanguageWords"
+import { LfgDungeonExpansionDBCFile } from "./types/LfgDungeonExpansion"
+import { LfgDungeonGroupDBCFile } from "./types/LfgDungeonGroup"
+import { LfgDungeonsDBCFile } from "./types/LfgDungeons"
+import { LightDBCFile } from "./types/Light"
+import { LightfloatBandDBCFile } from "./types/LightfloatBand"
+import { LightintBandDBCFile } from "./types/LightintBand"
+import { LightParamsDBCFile } from "./types/LightParams"
+import { LightSkyboxDBCFile } from "./types/LightSkybox"
+import { LiquidMaterialDBCFile } from "./types/LiquidMaterial"
+import { LiquidTypeDBCFile } from "./types/LiquidType"
+import { LoadingScreensDBCFile } from "./types/LoadingScreens"
+import { LoadingScreenTaxiSplinesDBCFile } from "./types/LoadingScreenTaxiSplines"
+import { LockDBCFile } from "./types/Lock"
+import { LockTypeDBCFile } from "./types/LockType"
+import { MailTemplateDBCFile } from "./types/MailTemplate"
+import { MapDBCFile } from "./types/Map"
+import { MapDifficultyDBCFile } from "./types/MapDifficulty"
+import { MaterialDBCFile } from "./types/Material"
+import { MovieDBCFile } from "./types/Movie"
+import { MovieFileDataDBCFile } from "./types/MovieFileData"
+import { MovieVariationDBCFile } from "./types/MovieVariation"
+import { NameGenDBCFile } from "./types/NameGen"
+import { NamesProfanityDBCFile } from "./types/NamesProfanity"
+import { NamesReservedDBCFile } from "./types/NamesReserved"
+import { NPCSoundsDBCFile } from "./types/NPCSounds"
+import { ObjectEffectDBCFile } from "./types/ObjectEffect"
+import { ObjectEffectGroupDBCFile } from "./types/ObjectEffectGroup"
+import { ObjectEffectModifierDBCFile } from "./types/ObjectEffectModifier"
+import { ObjectEffectPackageDBCFile } from "./types/ObjectEffectPackage"
+import { ObjectEffectPackageElemDBCFile } from "./types/ObjectEffectPackageElem"
+import { OverrideSpellDataDBCFile } from "./types/OverrideSpellData"
+import { PackageDBCFile } from "./types/Package"
+import { PageTextMaterialDBCFile } from "./types/PageTextMaterial"
+import { PaperDollItemFrameDBCFile } from "./types/PaperDollItemFrame"
+import { ParticleColorDBCFile } from "./types/ParticleColor"
+import { PetitionTypeDBCFile } from "./types/PetitionType"
+import { PetPersonalityDBCFile } from "./types/PetPersonality"
+import { PowerDisplayDBCFile } from "./types/PowerDisplay"
+import { PvpDifficultyDBCFile } from "./types/PvpDifficulty"
+import { QuestFactionRewardDBCFile } from "./types/QuestFactionReward"
+import { QuestInfoDBCFile } from "./types/QuestInfo"
+import { QuestSortDBCFile } from "./types/QuestSort"
+import { QuestXPDBCFile } from "./types/QuestXP"
+import { RandPropPointsDBCFile } from "./types/RandPropPoints"
+import { ResistancesDBCFile } from "./types/Resistances"
+import { ScalingStatDistributionDBCFile } from "./types/ScalingStatDistribution"
+import { ScalingStatValuesDBCFile } from "./types/ScalingStatValues"
+import { ScreenEffectDBCFile } from "./types/ScreenEffect"
+import { ServerMessagesDBCFile } from "./types/ServerMessages"
+import { SheatheSoundLookupsDBCFile } from "./types/SheatheSoundLookups"
+import { SkillCostsDataDBCFile } from "./types/SkillCostsData"
+import { SkillLineDBCFile } from "./types/SkillLine"
+import { SkillLineAbilityDBCFile } from "./types/SkillLineAbility"
+import { SkillLineCategoryDBCFile } from "./types/SkillLineCategory"
+import { SkillRaceClassInfoDBCFile } from "./types/SkillRaceClassInfo"
+import { SkillTiersDBCFile } from "./types/SkillTiers"
+import { SoundAmbienceDBCFile } from "./types/SoundAmbience"
+import { SoundEmittersDBCFile } from "./types/SoundEmitters"
+import { SoundEntriesDBCFile } from "./types/SoundEntries"
+import { SoundEntriesAdvancedDBCFile } from "./types/SoundEntriesAdvanced"
+import { SoundFilterDBCFile } from "./types/SoundFilter"
+import { SoundFilterElemDBCFile } from "./types/SoundFilterElem"
+import { SoundProviderPreferencesDBCFile } from "./types/SoundProviderPreferences"
+import { SoundSamplePreferencesDBCFile } from "./types/SoundSamplePreferences"
+import { SoundWaterTypeDBCFile } from "./types/SoundWaterType"
+import { SpamMessagesDBCFile } from "./types/SpamMessages"
+import { SpellDBCFile } from "./types/Spell"
+import { SpellCastTimesDBCFile } from "./types/SpellCastTimes"
+import { SpellCategoryDBCFile } from "./types/SpellCategory"
+import { SpellChainEffectsDBCFile } from "./types/SpellChainEffects"
+import { SpellDescriptionVariablesDBCFile } from "./types/SpellDescriptionVariables"
+import { SpellDifficultyDBCFile } from "./types/SpellDifficulty"
+import { SpellDispelTypeDBCFile } from "./types/SpellDispelType"
+import { SpellDurationDBCFile } from "./types/SpellDuration"
+import { SpellEffectCameraShakesDBCFile } from "./types/SpellEffectCameraShakes"
+import { SpellFocusObjectDBCFile } from "./types/SpellFocusObject"
+import { SpellIconDBCFile } from "./types/SpellIcon"
+import { SpellItemEnchantmentDBCFile } from "./types/SpellItemEnchantment"
+import { SpellItemEnchantmentConditionDBCFile } from "./types/SpellItemEnchantmentCondition"
+import { SpellMechanicDBCFile } from "./types/SpellMechanic"
+import { SpellMissileDBCFile } from "./types/SpellMissile"
+import { SpellMissileMotionDBCFile } from "./types/SpellMissileMotion"
+import { SpellRadiusDBCFile } from "./types/SpellRadius"
+import { SpellRangeDBCFile } from "./types/SpellRange"
+import { SpellRuneCostDBCFile } from "./types/SpellRuneCost"
+import { SpellShapeshiftFormDBCFile } from "./types/SpellShapeshiftForm"
+import { SpellVisualDBCFile } from "./types/SpellVisual"
+import { SpellVisualEffectNameDBCFile } from "./types/SpellVisualEffectName"
+import { SpellVisualKitDBCFile } from "./types/SpellVisualKit"
+import { SpellVisualKitAreaModelDBCFile } from "./types/SpellVisualKitAreaModel"
+import { SpellVisualKitModelAttachDBCFile } from "./types/SpellVisualKitModelAttach"
+import { SpellVisualPrecastTransitionsDBCFile } from "./types/SpellVisualPrecastTransitions"
+import { StableSlotPricesDBCFile } from "./types/StableSlotPrices"
+import { Startup_stringsDBCFile } from "./types/Startup_strings"
+import { StationeryDBCFile } from "./types/Stationery"
+import { StringLookupsDBCFile } from "./types/StringLookups"
+import { SummonPropertiesDBCFile } from "./types/SummonProperties"
+import { TalentDBCFile } from "./types/Talent"
+import { TalentTabDBCFile } from "./types/TalentTab"
+import { TaxiNodesDBCFile } from "./types/TaxiNodes"
+import { TaxiPathDBCFile } from "./types/TaxiPath"
+import { TaxiPathNodeDBCFile } from "./types/TaxiPathNode"
+import { TeamContributionPointsDBCFile } from "./types/TeamContributionPoints"
+import { TerraintypeDBCFile } from "./types/Terraintype"
+import { TerraintypeSoundsDBCFile } from "./types/TerraintypeSounds"
+import { TotemCategoryDBCFile } from "./types/TotemCategory"
+import { TransportAnimationDBCFile } from "./types/TransportAnimation"
+import { TransportPhysicsDBCFile } from "./types/TransportPhysics"
+import { TransportRotationDBCFile } from "./types/TransportRotation"
+import { UISoundLookupsDBCFile } from "./types/UISoundLookups"
+import { UnitBloodDBCFile } from "./types/UnitBlood"
+import { UnitBloodLevelsDBCFile } from "./types/UnitBloodLevels"
+import { VehicleDBCFile } from "./types/Vehicle"
+import { VehicleSeatDBCFile } from "./types/VehicleSeat"
+import { VehicleUIIndicatorDBCFile } from "./types/VehicleUIIndicator"
+import { VehicleUIIndSeatDBCFile } from "./types/VehicleUIIndSeat"
+import { VideoHardwareDBCFile } from "./types/VideoHardware"
+import { VocalUISoundsDBCFile } from "./types/VocalUISounds"
+import { WeaponImpactSoundsDBCFile } from "./types/WeaponImpactSounds"
+import { WeaponSwingSounds2DBCFile } from "./types/WeaponSwingSounds2"
+import { WeatherDBCFile } from "./types/Weather"
+import { WMOAreaTableDBCFile } from "./types/WMOAreaTable"
+import { WorldChunkSoundsDBCFile } from "./types/WorldChunkSounds"
+import { WorldMapAreaDBCFile } from "./types/WorldMapArea"
+import { WorldMapContinentDBCFile } from "./types/WorldMapContinent"
+import { WorldMapOverlayDBCFile } from "./types/WorldMapOverlay"
+import { WorldMapTransformsDBCFile } from "./types/WorldMapTransforms"
+import { WorldSafelocsDBCFile } from "./types/WorldSafelocs"
+import { WorldStateUIDBCFile } from "./types/WorldStateUI"
+import { WorldStateZoneSoundsDBCFile } from "./types/WorldStateZoneSounds"
+import { WowError_StringsDBCFile } from "./types/WowError_Strings"
+import { ZoneintroMusicTableDBCFile } from "./types/ZoneintroMusicTable"
+import { ZoneMusicDBCFile } from "./types/ZoneMusic"
 
 export const DBC = {
 
     /**
      * Defines an achievement. See Achievement_Criteria for how to actually earn achievements.
      */
-    Achievement : DBC_Achievement,
+    Achievement : new AchievementDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Achievement_Category : DBC_Achievement_Category,
+    Achievement_Category : new Achievement_CategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Achievement_Criteria : DBC_Achievement_Criteria,
+    Achievement_Criteria : new Achievement_CriteriaDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    AnimationData : DBC_AnimationData,
+    AnimationData : new AnimationDataDBCFile(),
 
     /**
      * NEEDS RESEARCH
      */
-    AreaGroup : DBC_AreaGroup,
+    AreaGroup : new AreaGroupDBCFile(),
 
     /**
      * Contains Points of Interests in the overhead map and battleground maps. Includes text, icons, positioning and other miscellaneous things related to POI.
      */
-    AreaPOI : DBC_AreaPOI,
+    AreaPOI : new AreaPOIDBCFile(),
 
     /**
      * Defines zones and sub-zones
      */
-    AreaTable : DBC_AreaTable,
+    AreaTable : new AreaTableDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    AreaTrigger : DBC_AreaTrigger,
+    AreaTrigger : new AreaTriggerDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    AttackAnimKits : DBC_AttackAnimKits,
+    AttackAnimKits : new AttackAnimKitsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    AttackAnimTypes : DBC_AttackAnimTypes,
+    AttackAnimTypes : new AttackAnimTypesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    AuctionHouse : DBC_AuctionHouse,
+    AuctionHouse : new AuctionHouseDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    BankBagSlotPrices : DBC_BankBagSlotPrices,
+    BankBagSlotPrices : new BankBagSlotPricesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    BannedAddOns : DBC_BannedAddOns,
+    BannedAddOns : new BannedAddOnsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    BarberShopStyle : DBC_BarberShopStyle,
+    BarberShopStyle : new BarberShopStyleDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    BattlemasterList : DBC_BattlemasterList,
+    BattlemasterList : new BattlemasterListDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CameraShakes : DBC_CameraShakes,
+    CameraShakes : new CameraShakesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Cfg_Categories : DBC_Cfg_Categories,
+    Cfg_Categories : new Cfg_CategoriesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Cfg_Configs : DBC_Cfg_Configs,
+    Cfg_Configs : new Cfg_ConfigsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CharacterFacialHairStyles : DBC_CharacterFacialHairStyles,
+    CharacterFacialHairStyles : new CharacterFacialHairStylesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CharBaseInfo : DBC_CharBaseInfo,
+    CharBaseInfo : new CharBaseInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CharHairGeosets : DBC_CharHairGeosets,
+    CharHairGeosets : new CharHairGeosetsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CharHairTextures : DBC_CharHairTextures,
+    CharHairTextures : new CharHairTexturesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CharSections : DBC_CharSections,
+    CharSections : new CharSectionsDBCFile(),
 
     /**
      * Decides what outfit newly created characters start with
      */
-    CharStartOutfit : DBC_CharStartOutfit,
+    CharStartOutfit : new CharStartOutfitDBCFile(),
 
     /**
      * Defines displayed titles
      */
-    CharTitles : DBC_CharTitles,
+    CharTitles : new CharTitlesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ChatChannels : DBC_ChatChannels,
+    ChatChannels : new ChatChannelsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ChatProfanity : DBC_ChatProfanity,
+    ChatProfanity : new ChatProfanityDBCFile(),
 
     /**
      * Defines playable classes. Its easiest to clone a row for the class you want to resemble.
      */
-    ChrClasses : DBC_ChrClasses,
+    ChrClasses : new ChrClassesDBCFile(),
 
     /**
      * Defines races
      */
-    ChrRaces : DBC_ChrRaces,
+    ChrRaces : new ChrRacesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CinematicCamera : DBC_CinematicCamera,
+    CinematicCamera : new CinematicCameraDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CinematicSequences : DBC_CinematicSequences,
+    CinematicSequences : new CinematicSequencesDBCFile(),
 
     /**
      * Defines the looks and sound of a creature
      */
-    CreatureDisplayInfo : DBC_CreatureDisplayInfo,
+    CreatureDisplayInfo : new CreatureDisplayInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureDisplayInfoExtra : DBC_CreatureDisplayInfoExtra,
+    CreatureDisplayInfoExtra : new CreatureDisplayInfoExtraDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureFamily : DBC_CreatureFamily,
+    CreatureFamily : new CreatureFamilyDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureModelData : DBC_CreatureModelData,
+    CreatureModelData : new CreatureModelDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureMovementInfo : DBC_CreatureMovementInfo,
+    CreatureMovementInfo : new CreatureMovementInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureSoundData : DBC_CreatureSoundData,
+    CreatureSoundData : new CreatureSoundDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureSpellData : DBC_CreatureSpellData,
+    CreatureSpellData : new CreatureSpellDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CreatureType : DBC_CreatureType,
+    CreatureType : new CreatureTypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CurrencyCategory : DBC_CurrencyCategory,
+    CurrencyCategory : new CurrencyCategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    CurrencyTypes : DBC_CurrencyTypes,
+    CurrencyTypes : new CurrencyTypesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DanceMoves : DBC_DanceMoves,
+    DanceMoves : new DanceMovesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DeathThudLookups : DBC_DeathThudLookups,
+    DeathThudLookups : new DeathThudLookupsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DeclinedWord : DBC_DeclinedWord,
+    DeclinedWord : new DeclinedWordDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DeclinedWordCases : DBC_DeclinedWordCases,
+    DeclinedWordCases : new DeclinedWordCasesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DestructibleModelData : DBC_DestructibleModelData,
+    DestructibleModelData : new DestructibleModelDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DungeonEncounter : DBC_DungeonEncounter,
+    DungeonEncounter : new DungeonEncounterDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DungeonMap : DBC_DungeonMap,
+    DungeonMap : new DungeonMapDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DungeonMapChunk : DBC_DungeonMapChunk,
+    DungeonMapChunk : new DungeonMapChunkDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DurabilityCosts : DBC_DurabilityCosts,
+    DurabilityCosts : new DurabilityCostsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    DurabilityQuality : DBC_DurabilityQuality,
+    DurabilityQuality : new DurabilityQualityDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Emotes : DBC_Emotes,
+    Emotes : new EmotesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    EmotesText : DBC_EmotesText,
+    EmotesText : new EmotesTextDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    EmotesTextData : DBC_EmotesTextData,
+    EmotesTextData : new EmotesTextDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    EmotesTextSound : DBC_EmotesTextSound,
+    EmotesTextSound : new EmotesTextSoundDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    EnvironmentalDamage : DBC_EnvironmentalDamage,
+    EnvironmentalDamage : new EnvironmentalDamageDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Exhaustion : DBC_Exhaustion,
+    Exhaustion : new ExhaustionDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Faction : DBC_Faction,
+    Faction : new FactionDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    FactionGroup : DBC_FactionGroup,
+    FactionGroup : new FactionGroupDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    FactionTemplate : DBC_FactionTemplate,
+    FactionTemplate : new FactionTemplateDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    FileData : DBC_FileData,
+    FileData : new FileDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    FootprintTextures : DBC_FootprintTextures,
+    FootprintTextures : new FootprintTexturesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    FootstepTerrainLookup : DBC_FootstepTerrainLookup,
+    FootstepTerrainLookup : new FootstepTerrainLookupDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GameObjectArtKit : DBC_GameObjectArtKit,
+    GameObjectArtKit : new GameObjectArtKitDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GameObjectDisplayInfo : DBC_GameObjectDisplayInfo,
+    GameObjectDisplayInfo : new GameObjectDisplayInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GameTables : DBC_GameTables,
+    GameTables : new GameTablesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GameTips : DBC_GameTips,
+    GameTips : new GameTipsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GemProperties : DBC_GemProperties,
+    GemProperties : new GemPropertiesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GlyphProperties : DBC_GlyphProperties,
+    GlyphProperties : new GlyphPropertiesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GlyphSlot : DBC_GlyphSlot,
+    GlyphSlot : new GlyphSlotDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GMSurveyAnswers : DBC_GMSurveyAnswers,
+    GMSurveyAnswers : new GMSurveyAnswersDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GMSurveyCurrentSurvey : DBC_GMSurveyCurrentSurvey,
+    GMSurveyCurrentSurvey : new GMSurveyCurrentSurveyDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GMSurveyQuestions : DBC_GMSurveyQuestions,
+    GMSurveyQuestions : new GMSurveyQuestionsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GMSurveySurveys : DBC_GMSurveySurveys,
+    GMSurveySurveys : new GMSurveySurveysDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GMTicketCategory : DBC_GMTicketCategory,
+    GMTicketCategory : new GMTicketCategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GroundEffectDoodad : DBC_GroundEffectDoodad,
+    GroundEffectDoodad : new GroundEffectDoodadDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GroundEffectTexture : DBC_GroundEffectTexture,
+    GroundEffectTexture : new GroundEffectTextureDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtBarberShopCostBase : DBC_GtBarberShopCostBase,
+    GtBarberShopCostBase : new GtBarberShopCostBaseDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtChanceToMeleeCrit : DBC_GtChanceToMeleeCrit,
+    GtChanceToMeleeCrit : new GtChanceToMeleeCritDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtChanceToMeleeCritBase : DBC_GtChanceToMeleeCritBase,
+    GtChanceToMeleeCritBase : new GtChanceToMeleeCritBaseDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtChanceToSpellCrit : DBC_GtChanceToSpellCrit,
+    GtChanceToSpellCrit : new GtChanceToSpellCritDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtChanceToSpellCritBase : DBC_GtChanceToSpellCritBase,
+    GtChanceToSpellCritBase : new GtChanceToSpellCritBaseDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtCombatRatings : DBC_GtCombatRatings,
+    GtCombatRatings : new GtCombatRatingsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtNPCManaCostScaler : DBC_GtNPCManaCostScaler,
+    GtNPCManaCostScaler : new GtNPCManaCostScalerDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtOCTClassCombatRatingScalar : DBC_GtOCTClassCombatRatingScalar,
+    GtOCTClassCombatRatingScalar : new GtOCTClassCombatRatingScalarDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtOCTRegenHP : DBC_GtOCTRegenHP,
+    GtOCTRegenHP : new GtOCTRegenHPDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtOCTRegenMP : DBC_GtOCTRegenMP,
+    GtOCTRegenMP : new GtOCTRegenMPDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtRegenHPPerSpt : DBC_GtRegenHPPerSpt,
+    GtRegenHPPerSpt : new GtRegenHPPerSptDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    GtRegenMPPerSpt : DBC_GtRegenMPPerSpt,
+    GtRegenMPPerSpt : new GtRegenMPPerSptDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    HelmetGeosetVisData : DBC_HelmetGeosetVisData,
+    HelmetGeosetVisData : new HelmetGeosetVisDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    HolidayDescriptions : DBC_HolidayDescriptions,
+    HolidayDescriptions : new HolidayDescriptionsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    HolidayNames : DBC_HolidayNames,
+    HolidayNames : new HolidayNamesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Holidays : DBC_Holidays,
+    Holidays : new HolidaysDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Item : DBC_Item,
+    Item : new ItemDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemBagFamily : DBC_ItemBagFamily,
+    ItemBagFamily : new ItemBagFamilyDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemClass : DBC_ItemClass,
+    ItemClass : new ItemClassDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemCondExtCosts : DBC_ItemCondExtCosts,
+    ItemCondExtCosts : new ItemCondExtCostsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemDisplayInfo : DBC_ItemDisplayInfo,
+    ItemDisplayInfo : new ItemDisplayInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemExtendedCost : DBC_ItemExtendedCost,
+    ItemExtendedCost : new ItemExtendedCostDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemGroupSounds : DBC_ItemGroupSounds,
+    ItemGroupSounds : new ItemGroupSoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemLimitCategory : DBC_ItemLimitCategory,
+    ItemLimitCategory : new ItemLimitCategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemPetFood : DBC_ItemPetFood,
+    ItemPetFood : new ItemPetFoodDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemPurchaseGroup : DBC_ItemPurchaseGroup,
+    ItemPurchaseGroup : new ItemPurchaseGroupDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemRandomProperties : DBC_ItemRandomProperties,
+    ItemRandomProperties : new ItemRandomPropertiesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemRandomSuffix : DBC_ItemRandomSuffix,
+    ItemRandomSuffix : new ItemRandomSuffixDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemSet : DBC_ItemSet,
+    ItemSet : new ItemSetDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemSubClass : DBC_ItemSubClass,
+    ItemSubClass : new ItemSubClassDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemSubClassMask : DBC_ItemSubClassMask,
+    ItemSubClassMask : new ItemSubClassMaskDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemVisualEffects : DBC_ItemVisualEffects,
+    ItemVisualEffects : new ItemVisualEffectsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ItemVisuals : DBC_ItemVisuals,
+    ItemVisuals : new ItemVisualsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Languages : DBC_Languages,
+    Languages : new LanguagesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LanguageWords : DBC_LanguageWords,
+    LanguageWords : new LanguageWordsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LfgDungeonExpansion : DBC_LfgDungeonExpansion,
+    LfgDungeonExpansion : new LfgDungeonExpansionDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LfgDungeonGroup : DBC_LfgDungeonGroup,
+    LfgDungeonGroup : new LfgDungeonGroupDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LfgDungeons : DBC_LfgDungeons,
+    LfgDungeons : new LfgDungeonsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Light : DBC_Light,
+    Light : new LightDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LightfloatBand : DBC_LightfloatBand,
+    LightfloatBand : new LightfloatBandDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LightintBand : DBC_LightintBand,
+    LightintBand : new LightintBandDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LightParams : DBC_LightParams,
+    LightParams : new LightParamsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LightSkybox : DBC_LightSkybox,
+    LightSkybox : new LightSkyboxDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LiquidMaterial : DBC_LiquidMaterial,
+    LiquidMaterial : new LiquidMaterialDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LiquidType : DBC_LiquidType,
+    LiquidType : new LiquidTypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LoadingScreens : DBC_LoadingScreens,
+    LoadingScreens : new LoadingScreensDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LoadingScreenTaxiSplines : DBC_LoadingScreenTaxiSplines,
+    LoadingScreenTaxiSplines : new LoadingScreenTaxiSplinesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Lock : DBC_Lock,
+    Lock : new LockDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    LockType : DBC_LockType,
+    LockType : new LockTypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    MailTemplate : DBC_MailTemplate,
+    MailTemplate : new MailTemplateDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Map : DBC_Map,
+    Map : new MapDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    MapDifficulty : DBC_MapDifficulty,
+    MapDifficulty : new MapDifficultyDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Material : DBC_Material,
+    Material : new MaterialDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Movie : DBC_Movie,
+    Movie : new MovieDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    MovieFileData : DBC_MovieFileData,
+    MovieFileData : new MovieFileDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    MovieVariation : DBC_MovieVariation,
+    MovieVariation : new MovieVariationDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    NameGen : DBC_NameGen,
+    NameGen : new NameGenDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    NamesProfanity : DBC_NamesProfanity,
+    NamesProfanity : new NamesProfanityDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    NamesReserved : DBC_NamesReserved,
+    NamesReserved : new NamesReservedDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    NPCSounds : DBC_NPCSounds,
+    NPCSounds : new NPCSoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ObjectEffect : DBC_ObjectEffect,
+    ObjectEffect : new ObjectEffectDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ObjectEffectGroup : DBC_ObjectEffectGroup,
+    ObjectEffectGroup : new ObjectEffectGroupDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ObjectEffectModifier : DBC_ObjectEffectModifier,
+    ObjectEffectModifier : new ObjectEffectModifierDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ObjectEffectPackage : DBC_ObjectEffectPackage,
+    ObjectEffectPackage : new ObjectEffectPackageDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ObjectEffectPackageElem : DBC_ObjectEffectPackageElem,
+    ObjectEffectPackageElem : new ObjectEffectPackageElemDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    OverrideSpellData : DBC_OverrideSpellData,
+    OverrideSpellData : new OverrideSpellDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Package : DBC_Package,
+    Package : new PackageDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    PageTextMaterial : DBC_PageTextMaterial,
+    PageTextMaterial : new PageTextMaterialDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    PaperDollItemFrame : DBC_PaperDollItemFrame,
+    PaperDollItemFrame : new PaperDollItemFrameDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ParticleColor : DBC_ParticleColor,
+    ParticleColor : new ParticleColorDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    PetitionType : DBC_PetitionType,
+    PetitionType : new PetitionTypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    PetPersonality : DBC_PetPersonality,
+    PetPersonality : new PetPersonalityDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    PowerDisplay : DBC_PowerDisplay,
+    PowerDisplay : new PowerDisplayDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    PvpDifficulty : DBC_PvpDifficulty,
+    PvpDifficulty : new PvpDifficultyDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    QuestFactionReward : DBC_QuestFactionReward,
+    QuestFactionReward : new QuestFactionRewardDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    QuestInfo : DBC_QuestInfo,
+    QuestInfo : new QuestInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    QuestSort : DBC_QuestSort,
+    QuestSort : new QuestSortDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    QuestXP : DBC_QuestXP,
+    QuestXP : new QuestXPDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    RandPropPoints : DBC_RandPropPoints,
+    RandPropPoints : new RandPropPointsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Resistances : DBC_Resistances,
+    Resistances : new ResistancesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ScalingStatDistribution : DBC_ScalingStatDistribution,
+    ScalingStatDistribution : new ScalingStatDistributionDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ScalingStatValues : DBC_ScalingStatValues,
+    ScalingStatValues : new ScalingStatValuesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ScreenEffect : DBC_ScreenEffect,
+    ScreenEffect : new ScreenEffectDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ServerMessages : DBC_ServerMessages,
+    ServerMessages : new ServerMessagesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SheatheSoundLookups : DBC_SheatheSoundLookups,
+    SheatheSoundLookups : new SheatheSoundLookupsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SkillCostsData : DBC_SkillCostsData,
+    SkillCostsData : new SkillCostsDataDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SkillLine : DBC_SkillLine,
+    SkillLine : new SkillLineDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SkillLineAbility : DBC_SkillLineAbility,
+    SkillLineAbility : new SkillLineAbilityDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SkillLineCategory : DBC_SkillLineCategory,
+    SkillLineCategory : new SkillLineCategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SkillRaceClassInfo : DBC_SkillRaceClassInfo,
+    SkillRaceClassInfo : new SkillRaceClassInfoDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SkillTiers : DBC_SkillTiers,
+    SkillTiers : new SkillTiersDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundAmbience : DBC_SoundAmbience,
+    SoundAmbience : new SoundAmbienceDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundEmitters : DBC_SoundEmitters,
+    SoundEmitters : new SoundEmittersDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundEntries : DBC_SoundEntries,
+    SoundEntries : new SoundEntriesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundEntriesAdvanced : DBC_SoundEntriesAdvanced,
+    SoundEntriesAdvanced : new SoundEntriesAdvancedDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundFilter : DBC_SoundFilter,
+    SoundFilter : new SoundFilterDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundFilterElem : DBC_SoundFilterElem,
+    SoundFilterElem : new SoundFilterElemDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundProviderPreferences : DBC_SoundProviderPreferences,
+    SoundProviderPreferences : new SoundProviderPreferencesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundSamplePreferences : DBC_SoundSamplePreferences,
+    SoundSamplePreferences : new SoundSamplePreferencesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SoundWaterType : DBC_SoundWaterType,
+    SoundWaterType : new SoundWaterTypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpamMessages : DBC_SpamMessages,
+    SpamMessages : new SpamMessagesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Spell : DBC_Spell,
+    Spell : new SpellDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellCastTimes : DBC_SpellCastTimes,
+    SpellCastTimes : new SpellCastTimesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellCategory : DBC_SpellCategory,
+    SpellCategory : new SpellCategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellChainEffects : DBC_SpellChainEffects,
+    SpellChainEffects : new SpellChainEffectsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellDescriptionVariables : DBC_SpellDescriptionVariables,
+    SpellDescriptionVariables : new SpellDescriptionVariablesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellDifficulty : DBC_SpellDifficulty,
+    SpellDifficulty : new SpellDifficultyDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellDispelType : DBC_SpellDispelType,
+    SpellDispelType : new SpellDispelTypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellDuration : DBC_SpellDuration,
+    SpellDuration : new SpellDurationDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellEffectCameraShakes : DBC_SpellEffectCameraShakes,
+    SpellEffectCameraShakes : new SpellEffectCameraShakesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellFocusObject : DBC_SpellFocusObject,
+    SpellFocusObject : new SpellFocusObjectDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellIcon : DBC_SpellIcon,
+    SpellIcon : new SpellIconDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellItemEnchantment : DBC_SpellItemEnchantment,
+    SpellItemEnchantment : new SpellItemEnchantmentDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellItemEnchantmentCondition : DBC_SpellItemEnchantmentCondition,
+    SpellItemEnchantmentCondition : new SpellItemEnchantmentConditionDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellMechanic : DBC_SpellMechanic,
+    SpellMechanic : new SpellMechanicDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellMissile : DBC_SpellMissile,
+    SpellMissile : new SpellMissileDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellMissileMotion : DBC_SpellMissileMotion,
+    SpellMissileMotion : new SpellMissileMotionDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellRadius : DBC_SpellRadius,
+    SpellRadius : new SpellRadiusDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellRange : DBC_SpellRange,
+    SpellRange : new SpellRangeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellRuneCost : DBC_SpellRuneCost,
+    SpellRuneCost : new SpellRuneCostDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellShapeshiftForm : DBC_SpellShapeshiftForm,
+    SpellShapeshiftForm : new SpellShapeshiftFormDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellVisual : DBC_SpellVisual,
+    SpellVisual : new SpellVisualDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellVisualEffectName : DBC_SpellVisualEffectName,
+    SpellVisualEffectName : new SpellVisualEffectNameDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellVisualKit : DBC_SpellVisualKit,
+    SpellVisualKit : new SpellVisualKitDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellVisualKitAreaModel : DBC_SpellVisualKitAreaModel,
+    SpellVisualKitAreaModel : new SpellVisualKitAreaModelDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellVisualKitModelAttach : DBC_SpellVisualKitModelAttach,
+    SpellVisualKitModelAttach : new SpellVisualKitModelAttachDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SpellVisualPrecastTransitions : DBC_SpellVisualPrecastTransitions,
+    SpellVisualPrecastTransitions : new SpellVisualPrecastTransitionsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    StableSlotPrices : DBC_StableSlotPrices,
+    StableSlotPrices : new StableSlotPricesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Startup_strings : DBC_Startup_strings,
+    Startup_strings : new Startup_stringsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Stationery : DBC_Stationery,
+    Stationery : new StationeryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    StringLookups : DBC_StringLookups,
+    StringLookups : new StringLookupsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    SummonProperties : DBC_SummonProperties,
+    SummonProperties : new SummonPropertiesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Talent : DBC_Talent,
+    Talent : new TalentDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TalentTab : DBC_TalentTab,
+    TalentTab : new TalentTabDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TaxiNodes : DBC_TaxiNodes,
+    TaxiNodes : new TaxiNodesDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TaxiPath : DBC_TaxiPath,
+    TaxiPath : new TaxiPathDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TaxiPathNode : DBC_TaxiPathNode,
+    TaxiPathNode : new TaxiPathNodeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TeamContributionPoints : DBC_TeamContributionPoints,
+    TeamContributionPoints : new TeamContributionPointsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Terraintype : DBC_Terraintype,
+    Terraintype : new TerraintypeDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TerraintypeSounds : DBC_TerraintypeSounds,
+    TerraintypeSounds : new TerraintypeSoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TotemCategory : DBC_TotemCategory,
+    TotemCategory : new TotemCategoryDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TransportAnimation : DBC_TransportAnimation,
+    TransportAnimation : new TransportAnimationDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TransportPhysics : DBC_TransportPhysics,
+    TransportPhysics : new TransportPhysicsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    TransportRotation : DBC_TransportRotation,
+    TransportRotation : new TransportRotationDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    UISoundLookups : DBC_UISoundLookups,
+    UISoundLookups : new UISoundLookupsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    UnitBlood : DBC_UnitBlood,
+    UnitBlood : new UnitBloodDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    UnitBloodLevels : DBC_UnitBloodLevels,
+    UnitBloodLevels : new UnitBloodLevelsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Vehicle : DBC_Vehicle,
+    Vehicle : new VehicleDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    VehicleSeat : DBC_VehicleSeat,
+    VehicleSeat : new VehicleSeatDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    VehicleUIIndicator : DBC_VehicleUIIndicator,
+    VehicleUIIndicator : new VehicleUIIndicatorDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    VehicleUIIndSeat : DBC_VehicleUIIndSeat,
+    VehicleUIIndSeat : new VehicleUIIndSeatDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    VideoHardware : DBC_VideoHardware,
+    VideoHardware : new VideoHardwareDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    VocalUISounds : DBC_VocalUISounds,
+    VocalUISounds : new VocalUISoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WeaponImpactSounds : DBC_WeaponImpactSounds,
+    WeaponImpactSounds : new WeaponImpactSoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WeaponSwingSounds2 : DBC_WeaponSwingSounds2,
+    WeaponSwingSounds2 : new WeaponSwingSounds2DBCFile(),
 
     /**
      * No comment (yet!)
      */
-    Weather : DBC_Weather,
+    Weather : new WeatherDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WMOAreaTable : DBC_WMOAreaTable,
+    WMOAreaTable : new WMOAreaTableDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldChunkSounds : DBC_WorldChunkSounds,
+    WorldChunkSounds : new WorldChunkSoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldMapArea : DBC_WorldMapArea,
+    WorldMapArea : new WorldMapAreaDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldMapContinent : DBC_WorldMapContinent,
+    WorldMapContinent : new WorldMapContinentDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldMapOverlay : DBC_WorldMapOverlay,
+    WorldMapOverlay : new WorldMapOverlayDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldMapTransforms : DBC_WorldMapTransforms,
+    WorldMapTransforms : new WorldMapTransformsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldSafelocs : DBC_WorldSafelocs,
+    WorldSafelocs : new WorldSafelocsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldStateUI : DBC_WorldStateUI,
+    WorldStateUI : new WorldStateUIDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WorldStateZoneSounds : DBC_WorldStateZoneSounds,
+    WorldStateZoneSounds : new WorldStateZoneSoundsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    WowError_Strings : DBC_WowError_Strings,
+    WowError_Strings : new WowError_StringsDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ZoneintroMusicTable : DBC_ZoneintroMusicTable,
+    ZoneintroMusicTable : new ZoneintroMusicTableDBCFile(),
 
     /**
      * No comment (yet!)
      */
-    ZoneMusic : DBC_ZoneMusic,
+    ZoneMusic : new ZoneMusicDBCFile(),
+}
+
+export const DBCLoader = {
+    Achievement : (path: string) => AchievementDBCFile.read(path),
+
+    Achievement_Category : (path: string) => Achievement_CategoryDBCFile.read(path),
+
+    Achievement_Criteria : (path: string) => Achievement_CriteriaDBCFile.read(path),
+
+    AnimationData : (path: string) => AnimationDataDBCFile.read(path),
+
+    AreaGroup : (path: string) => AreaGroupDBCFile.read(path),
+
+    AreaPOI : (path: string) => AreaPOIDBCFile.read(path),
+
+    AreaTable : (path: string) => AreaTableDBCFile.read(path),
+
+    AreaTrigger : (path: string) => AreaTriggerDBCFile.read(path),
+
+    AttackAnimKits : (path: string) => AttackAnimKitsDBCFile.read(path),
+
+    AttackAnimTypes : (path: string) => AttackAnimTypesDBCFile.read(path),
+
+    AuctionHouse : (path: string) => AuctionHouseDBCFile.read(path),
+
+    BankBagSlotPrices : (path: string) => BankBagSlotPricesDBCFile.read(path),
+    BannedAddOns : (path: string) => BannedAddOnsDBCFile.read(path),
+
+    BarberShopStyle : (path: string) => BarberShopStyleDBCFile.read(path),
+
+    BattlemasterList : (path: string) => BattlemasterListDBCFile.read(path),
+
+    CameraShakes : (path: string) => CameraShakesDBCFile.read(path),
+
+    Cfg_Categories : (path: string) => Cfg_CategoriesDBCFile.read(path),
+
+    Cfg_Configs : (path: string) => Cfg_ConfigsDBCFile.read(path),
+
+    CharacterFacialHairStyles : (path: string) => CharacterFacialHairStylesDBCFile.read(path),
+
+    CharBaseInfo : (path: string) => CharBaseInfoDBCFile.read(path),
+
+    CharHairGeosets : (path: string) => CharHairGeosetsDBCFile.read(path),
+
+    CharHairTextures : (path: string) => CharHairTexturesDBCFile.read(path),
+
+    CharSections : (path: string) => CharSectionsDBCFile.read(path),
+
+    CharStartOutfit : (path: string) => CharStartOutfitDBCFile.read(path),
+
+    CharTitles : (path: string) => CharTitlesDBCFile.read(path),
+
+    ChatChannels : (path: string) => ChatChannelsDBCFile.read(path),
+
+    ChatProfanity : (path: string) => ChatProfanityDBCFile.read(path),
+
+    ChrClasses : (path: string) => ChrClassesDBCFile.read(path),
+
+    ChrRaces : (path: string) => ChrRacesDBCFile.read(path),
+
+    CinematicCamera : (path: string) => CinematicCameraDBCFile.read(path),
+
+    CinematicSequences : (path: string) => CinematicSequencesDBCFile.read(path),
+
+    CreatureDisplayInfo : (path: string) => CreatureDisplayInfoDBCFile.read(path),
+
+    CreatureDisplayInfoExtra : (path: string) => CreatureDisplayInfoExtraDBCFile.read(path),
+
+    CreatureFamily : (path: string) => CreatureFamilyDBCFile.read(path),
+
+    CreatureModelData : (path: string) => CreatureModelDataDBCFile.read(path),
+    CreatureMovementInfo : (path: string) => CreatureMovementInfoDBCFile.read(path),
+
+    CreatureSoundData : (path: string) => CreatureSoundDataDBCFile.read(path),
+    CreatureSpellData : (path: string) => CreatureSpellDataDBCFile.read(path),
+    CreatureType : (path: string) => CreatureTypeDBCFile.read(path),
+
+    CurrencyCategory : (path: string) => CurrencyCategoryDBCFile.read(path),
+
+    CurrencyTypes : (path: string) => CurrencyTypesDBCFile.read(path),
+
+    DanceMoves : (path: string) => DanceMovesDBCFile.read(path),
+
+    DeathThudLookups : (path: string) => DeathThudLookupsDBCFile.read(path),
+
+    DeclinedWord : (path: string) => DeclinedWordDBCFile.read(path),
+
+    DeclinedWordCases : (path: string) => DeclinedWordCasesDBCFile.read(path),
+    DestructibleModelData : (path: string) => DestructibleModelDataDBCFile.read(path),
+
+    DungeonEncounter : (path: string) => DungeonEncounterDBCFile.read(path),
+
+    DungeonMap : (path: string) => DungeonMapDBCFile.read(path),
+
+    DungeonMapChunk : (path: string) => DungeonMapChunkDBCFile.read(path),
+
+    DurabilityCosts : (path: string) => DurabilityCostsDBCFile.read(path),
+
+    DurabilityQuality : (path: string) => DurabilityQualityDBCFile.read(path),
+    Emotes : (path: string) => EmotesDBCFile.read(path),
+
+    EmotesText : (path: string) => EmotesTextDBCFile.read(path),
+
+    EmotesTextData : (path: string) => EmotesTextDataDBCFile.read(path),
+
+    EmotesTextSound : (path: string) => EmotesTextSoundDBCFile.read(path),
+
+    EnvironmentalDamage : (path: string) => EnvironmentalDamageDBCFile.read(path),
+
+    Exhaustion : (path: string) => ExhaustionDBCFile.read(path),
+
+    Faction : (path: string) => FactionDBCFile.read(path),
+
+    FactionGroup : (path: string) => FactionGroupDBCFile.read(path),
+
+    FactionTemplate : (path: string) => FactionTemplateDBCFile.read(path),
+
+    FileData : (path: string) => FileDataDBCFile.read(path),
+
+    FootprintTextures : (path: string) => FootprintTexturesDBCFile.read(path),
+    FootstepTerrainLookup : (path: string) => FootstepTerrainLookupDBCFile.read(path),
+
+    GameObjectArtKit : (path: string) => GameObjectArtKitDBCFile.read(path),
+
+    GameObjectDisplayInfo : (path: string) => GameObjectDisplayInfoDBCFile.read(path),
+
+    GameTables : (path: string) => GameTablesDBCFile.read(path),
+
+    GameTips : (path: string) => GameTipsDBCFile.read(path),
+
+    GemProperties : (path: string) => GemPropertiesDBCFile.read(path),
+
+    GlyphProperties : (path: string) => GlyphPropertiesDBCFile.read(path),
+
+    GlyphSlot : (path: string) => GlyphSlotDBCFile.read(path),
+
+    GMSurveyAnswers : (path: string) => GMSurveyAnswersDBCFile.read(path),
+
+    GMSurveyCurrentSurvey : (path: string) => GMSurveyCurrentSurveyDBCFile.read(path),
+
+    GMSurveyQuestions : (path: string) => GMSurveyQuestionsDBCFile.read(path),
+    GMSurveySurveys : (path: string) => GMSurveySurveysDBCFile.read(path),
+
+    GMTicketCategory : (path: string) => GMTicketCategoryDBCFile.read(path),
+
+    GroundEffectDoodad : (path: string) => GroundEffectDoodadDBCFile.read(path),
+
+    GroundEffectTexture : (path: string) => GroundEffectTextureDBCFile.read(path),
+
+    GtBarberShopCostBase : (path: string) => GtBarberShopCostBaseDBCFile.read(path),
+
+    GtChanceToMeleeCrit : (path: string) => GtChanceToMeleeCritDBCFile.read(path),
+
+    GtChanceToMeleeCritBase : (path: string) => GtChanceToMeleeCritBaseDBCFile.read(path),
+
+    GtChanceToSpellCrit : (path: string) => GtChanceToSpellCritDBCFile.read(path),
+
+    GtChanceToSpellCritBase : (path: string) => GtChanceToSpellCritBaseDBCFile.read(path),
+
+    GtCombatRatings : (path: string) => GtCombatRatingsDBCFile.read(path),
+
+    GtNPCManaCostScaler : (path: string) => GtNPCManaCostScalerDBCFile.read(path),
+
+    GtOCTClassCombatRatingScalar : (path: string) => GtOCTClassCombatRatingScalarDBCFile.read(path),
+
+    GtOCTRegenHP : (path: string) => GtOCTRegenHPDBCFile.read(path),
+
+    GtOCTRegenMP : (path: string) => GtOCTRegenMPDBCFile.read(path),
+
+    GtRegenHPPerSpt : (path: string) => GtRegenHPPerSptDBCFile.read(path),
+
+    GtRegenMPPerSpt : (path: string) => GtRegenMPPerSptDBCFile.read(path),
+
+    HelmetGeosetVisData : (path: string) => HelmetGeosetVisDataDBCFile.read(path),
+
+    HolidayDescriptions : (path: string) => HolidayDescriptionsDBCFile.read(path),
+
+    HolidayNames : (path: string) => HolidayNamesDBCFile.read(path),
+
+    Holidays : (path: string) => HolidaysDBCFile.read(path),
+
+    Item : (path: string) => ItemDBCFile.read(path),
+
+    ItemBagFamily : (path: string) => ItemBagFamilyDBCFile.read(path),
+
+    ItemClass : (path: string) => ItemClassDBCFile.read(path),
+
+    ItemCondExtCosts : (path: string) => ItemCondExtCostsDBCFile.read(path),
+
+    ItemDisplayInfo : (path: string) => ItemDisplayInfoDBCFile.read(path),
+
+    ItemExtendedCost : (path: string) => ItemExtendedCostDBCFile.read(path),
+
+    ItemGroupSounds : (path: string) => ItemGroupSoundsDBCFile.read(path),
+
+    ItemLimitCategory : (path: string) => ItemLimitCategoryDBCFile.read(path),
+    ItemPetFood : (path: string) => ItemPetFoodDBCFile.read(path),
+
+    ItemPurchaseGroup : (path: string) => ItemPurchaseGroupDBCFile.read(path),
+    ItemRandomProperties : (path: string) => ItemRandomPropertiesDBCFile.read(path),
+
+    ItemRandomSuffix : (path: string) => ItemRandomSuffixDBCFile.read(path),
+
+    ItemSet : (path: string) => ItemSetDBCFile.read(path),
+
+    ItemSubClass : (path: string) => ItemSubClassDBCFile.read(path),
+
+    ItemSubClassMask : (path: string) => ItemSubClassMaskDBCFile.read(path),
+
+    ItemVisualEffects : (path: string) => ItemVisualEffectsDBCFile.read(path),
+    ItemVisuals : (path: string) => ItemVisualsDBCFile.read(path),
+
+    Languages : (path: string) => LanguagesDBCFile.read(path),
+
+    LanguageWords : (path: string) => LanguageWordsDBCFile.read(path),
+
+    LfgDungeonExpansion : (path: string) => LfgDungeonExpansionDBCFile.read(path),
+
+    LfgDungeonGroup : (path: string) => LfgDungeonGroupDBCFile.read(path),
+
+    LfgDungeons : (path: string) => LfgDungeonsDBCFile.read(path),
+
+    Light : (path: string) => LightDBCFile.read(path),
+
+    LightfloatBand : (path: string) => LightfloatBandDBCFile.read(path),
+
+    LightintBand : (path: string) => LightintBandDBCFile.read(path),
+
+    LightParams : (path: string) => LightParamsDBCFile.read(path),
+
+    LightSkybox : (path: string) => LightSkyboxDBCFile.read(path),
+
+    LiquidMaterial : (path: string) => LiquidMaterialDBCFile.read(path),
+
+    LiquidType : (path: string) => LiquidTypeDBCFile.read(path),
+
+    LoadingScreens : (path: string) => LoadingScreensDBCFile.read(path),
+
+    LoadingScreenTaxiSplines : (path: string) => LoadingScreenTaxiSplinesDBCFile.read(path),
+
+    Lock : (path: string) => LockDBCFile.read(path),
+
+    LockType : (path: string) => LockTypeDBCFile.read(path),
+
+    MailTemplate : (path: string) => MailTemplateDBCFile.read(path),
+
+    Map : (path: string) => MapDBCFile.read(path),
+
+    MapDifficulty : (path: string) => MapDifficultyDBCFile.read(path),
+
+    Material : (path: string) => MaterialDBCFile.read(path),
+
+    Movie : (path: string) => MovieDBCFile.read(path),
+
+    MovieFileData : (path: string) => MovieFileDataDBCFile.read(path),
+
+    MovieVariation : (path: string) => MovieVariationDBCFile.read(path),
+
+    NameGen : (path: string) => NameGenDBCFile.read(path),
+
+    NamesProfanity : (path: string) => NamesProfanityDBCFile.read(path),
+
+    NamesReserved : (path: string) => NamesReservedDBCFile.read(path),
+
+    NPCSounds : (path: string) => NPCSoundsDBCFile.read(path),
+
+    ObjectEffect : (path: string) => ObjectEffectDBCFile.read(path),
+
+    ObjectEffectGroup : (path: string) => ObjectEffectGroupDBCFile.read(path),
+    ObjectEffectModifier : (path: string) => ObjectEffectModifierDBCFile.read(path),
+
+    ObjectEffectPackage : (path: string) => ObjectEffectPackageDBCFile.read(path),
+
+    ObjectEffectPackageElem : (path: string) => ObjectEffectPackageElemDBCFile.read(path),
+
+    OverrideSpellData : (path: string) => OverrideSpellDataDBCFile.read(path),
+    Package : (path: string) => PackageDBCFile.read(path),
+
+    PageTextMaterial : (path: string) => PageTextMaterialDBCFile.read(path),
+
+    PaperDollItemFrame : (path: string) => PaperDollItemFrameDBCFile.read(path),
+
+    ParticleColor : (path: string) => ParticleColorDBCFile.read(path),
+
+    PetitionType : (path: string) => PetitionTypeDBCFile.read(path),
+
+    PetPersonality : (path: string) => PetPersonalityDBCFile.read(path),
+
+    PowerDisplay : (path: string) => PowerDisplayDBCFile.read(path),
+
+    PvpDifficulty : (path: string) => PvpDifficultyDBCFile.read(path),
+
+    QuestFactionReward : (path: string) => QuestFactionRewardDBCFile.read(path),
+
+    QuestInfo : (path: string) => QuestInfoDBCFile.read(path),
+
+    QuestSort : (path: string) => QuestSortDBCFile.read(path),
+
+    QuestXP : (path: string) => QuestXPDBCFile.read(path),
+
+    RandPropPoints : (path: string) => RandPropPointsDBCFile.read(path),
+
+    Resistances : (path: string) => ResistancesDBCFile.read(path),
+
+    ScalingStatDistribution : (path: string) => ScalingStatDistributionDBCFile.read(path),
+
+    ScalingStatValues : (path: string) => ScalingStatValuesDBCFile.read(path),
+    ScreenEffect : (path: string) => ScreenEffectDBCFile.read(path),
+
+    ServerMessages : (path: string) => ServerMessagesDBCFile.read(path),
+
+    SheatheSoundLookups : (path: string) => SheatheSoundLookupsDBCFile.read(path),
+
+    SkillCostsData : (path: string) => SkillCostsDataDBCFile.read(path),
+
+    SkillLine : (path: string) => SkillLineDBCFile.read(path),
+
+    SkillLineAbility : (path: string) => SkillLineAbilityDBCFile.read(path),
+
+    SkillLineCategory : (path: string) => SkillLineCategoryDBCFile.read(path),
+    SkillRaceClassInfo : (path: string) => SkillRaceClassInfoDBCFile.read(path),
+
+    SkillTiers : (path: string) => SkillTiersDBCFile.read(path),
+
+    SoundAmbience : (path: string) => SoundAmbienceDBCFile.read(path),
+
+    SoundEmitters : (path: string) => SoundEmittersDBCFile.read(path),
+
+    SoundEntries : (path: string) => SoundEntriesDBCFile.read(path),
+
+    SoundEntriesAdvanced : (path: string) => SoundEntriesAdvancedDBCFile.read(path),
+
+    SoundFilter : (path: string) => SoundFilterDBCFile.read(path),
+
+    SoundFilterElem : (path: string) => SoundFilterElemDBCFile.read(path),
+
+    SoundProviderPreferences : (path: string) => SoundProviderPreferencesDBCFile.read(path),
+
+    SoundSamplePreferences : (path: string) => SoundSamplePreferencesDBCFile.read(path),
+
+    SoundWaterType : (path: string) => SoundWaterTypeDBCFile.read(path),
+
+    SpamMessages : (path: string) => SpamMessagesDBCFile.read(path),
+
+    Spell : (path: string) => SpellDBCFile.read(path),
+
+    SpellCastTimes : (path: string) => SpellCastTimesDBCFile.read(path),
+
+    SpellCategory : (path: string) => SpellCategoryDBCFile.read(path),
+
+    SpellChainEffects : (path: string) => SpellChainEffectsDBCFile.read(path),
+    SpellDescriptionVariables : (path: string) => SpellDescriptionVariablesDBCFile.read(path),
+
+    SpellDifficulty : (path: string) => SpellDifficultyDBCFile.read(path),
+
+    SpellDispelType : (path: string) => SpellDispelTypeDBCFile.read(path),
+
+    SpellDuration : (path: string) => SpellDurationDBCFile.read(path),
+
+    SpellEffectCameraShakes : (path: string) => SpellEffectCameraShakesDBCFile.read(path),
+
+    SpellFocusObject : (path: string) => SpellFocusObjectDBCFile.read(path),
+
+    SpellIcon : (path: string) => SpellIconDBCFile.read(path),
+
+    SpellItemEnchantment : (path: string) => SpellItemEnchantmentDBCFile.read(path),
+
+    SpellItemEnchantmentCondition : (path: string) => SpellItemEnchantmentConditionDBCFile.read(path),
+
+    SpellMechanic : (path: string) => SpellMechanicDBCFile.read(path),
+
+    SpellMissile : (path: string) => SpellMissileDBCFile.read(path),
+
+    SpellMissileMotion : (path: string) => SpellMissileMotionDBCFile.read(path),
+
+    SpellRadius : (path: string) => SpellRadiusDBCFile.read(path),
+
+    SpellRange : (path: string) => SpellRangeDBCFile.read(path),
+
+    SpellRuneCost : (path: string) => SpellRuneCostDBCFile.read(path),
+
+    SpellShapeshiftForm : (path: string) => SpellShapeshiftFormDBCFile.read(path),
+
+    SpellVisual : (path: string) => SpellVisualDBCFile.read(path),
+
+    SpellVisualEffectName : (path: string) => SpellVisualEffectNameDBCFile.read(path),
+
+    SpellVisualKit : (path: string) => SpellVisualKitDBCFile.read(path),
+
+    SpellVisualKitAreaModel : (path: string) => SpellVisualKitAreaModelDBCFile.read(path),
+
+    SpellVisualKitModelAttach : (path: string) => SpellVisualKitModelAttachDBCFile.read(path),
+
+    SpellVisualPrecastTransitions : (path: string) => SpellVisualPrecastTransitionsDBCFile.read(path),
+
+    StableSlotPrices : (path: string) => StableSlotPricesDBCFile.read(path),
+
+    Startup_strings : (path: string) => Startup_stringsDBCFile.read(path),
+
+    Stationery : (path: string) => StationeryDBCFile.read(path),
+
+    StringLookups : (path: string) => StringLookupsDBCFile.read(path),
+
+    SummonProperties : (path: string) => SummonPropertiesDBCFile.read(path),
+
+    Talent : (path: string) => TalentDBCFile.read(path),
+
+    TalentTab : (path: string) => TalentTabDBCFile.read(path),
+
+    TaxiNodes : (path: string) => TaxiNodesDBCFile.read(path),
+
+    TaxiPath : (path: string) => TaxiPathDBCFile.read(path),
+
+    TaxiPathNode : (path: string) => TaxiPathNodeDBCFile.read(path),
+
+    TeamContributionPoints : (path: string) => TeamContributionPointsDBCFile.read(path),
+
+    Terraintype : (path: string) => TerraintypeDBCFile.read(path),
+
+    TerraintypeSounds : (path: string) => TerraintypeSoundsDBCFile.read(path),
+    TotemCategory : (path: string) => TotemCategoryDBCFile.read(path),
+
+    TransportAnimation : (path: string) => TransportAnimationDBCFile.read(path),
+
+    TransportPhysics : (path: string) => TransportPhysicsDBCFile.read(path),
+
+    TransportRotation : (path: string) => TransportRotationDBCFile.read(path),
+    UISoundLookups : (path: string) => UISoundLookupsDBCFile.read(path),
+
+    UnitBlood : (path: string) => UnitBloodDBCFile.read(path),
+
+    UnitBloodLevels : (path: string) => UnitBloodLevelsDBCFile.read(path),
+
+    Vehicle : (path: string) => VehicleDBCFile.read(path),
+
+    VehicleSeat : (path: string) => VehicleSeatDBCFile.read(path),
+
+    VehicleUIIndicator : (path: string) => VehicleUIIndicatorDBCFile.read(path),
+
+    VehicleUIIndSeat : (path: string) => VehicleUIIndSeatDBCFile.read(path),
+
+    VideoHardware : (path: string) => VideoHardwareDBCFile.read(path),
+
+    VocalUISounds : (path: string) => VocalUISoundsDBCFile.read(path),
+
+    WeaponImpactSounds : (path: string) => WeaponImpactSoundsDBCFile.read(path),
+
+    WeaponSwingSounds2 : (path: string) => WeaponSwingSounds2DBCFile.read(path),
+
+    Weather : (path: string) => WeatherDBCFile.read(path),
+
+    WMOAreaTable : (path: string) => WMOAreaTableDBCFile.read(path),
+
+    WorldChunkSounds : (path: string) => WorldChunkSoundsDBCFile.read(path),
+
+    WorldMapArea : (path: string) => WorldMapAreaDBCFile.read(path),
+
+    WorldMapContinent : (path: string) => WorldMapContinentDBCFile.read(path),
+    WorldMapOverlay : (path: string) => WorldMapOverlayDBCFile.read(path),
+
+    WorldMapTransforms : (path: string) => WorldMapTransformsDBCFile.read(path),
+
+    WorldSafelocs : (path: string) => WorldSafelocsDBCFile.read(path),
+
+    WorldStateUI : (path: string) => WorldStateUIDBCFile.read(path),
+
+    WorldStateZoneSounds : (path: string) => WorldStateZoneSoundsDBCFile.read(path),
+
+    WowError_Strings : (path: string) => WowError_StringsDBCFile.read(path),
+
+    ZoneintroMusicTable : (path: string) => ZoneintroMusicTableDBCFile.read(path),
+
+    ZoneMusic : (path: string) => ZoneMusicDBCFile.read(path),
 }
 
 export type DBCNames = "Achievement" | "Achievement_Category" | "Achievement_Criteria" | "AnimationData" | "AreaGroup" | "AreaPOI" | "AreaTable" | "AreaTrigger" | "AttackAnimKits" | "AttackAnimTypes" | "AuctionHouse" | "BankBagSlotPrices" | "BannedAddOns" | "BarberShopStyle" | "BattlemasterList" | "CameraShakes" | "Cfg_Categories" | "Cfg_Configs" | "CharacterFacialHairStyles" | "CharBaseInfo" | "CharHairGeosets" | "CharHairTextures" | "CharSections" | "CharStartOutfit" | "CharTitles" | "ChatChannels" | "ChatProfanity" | "ChrClasses" | "ChrRaces" | "CinematicCamera" | "CinematicSequences" | "CreatureDisplayInfo" | "CreatureDisplayInfoExtra" | "CreatureFamily" | "CreatureModelData" | "CreatureMovementInfo" | "CreatureSoundData" | "CreatureSpellData" | "CreatureType" | "CurrencyCategory" | "CurrencyTypes" | "DanceMoves" | "DeathThudLookups" | "DeclinedWord" | "DeclinedWordCases" | "DestructibleModelData" | "DungeonEncounter" | "DungeonMap" | "DungeonMapChunk" | "DurabilityCosts" | "DurabilityQuality" | "Emotes" | "EmotesText" | "EmotesTextData" | "EmotesTextSound" | "EnvironmentalDamage" | "Exhaustion" | "Faction" | "FactionGroup" | "FactionTemplate" | "FileData" | "FootprintTextures" | "FootstepTerrainLookup" | "GameObjectArtKit" | "GameObjectDisplayInfo" | "GameTables" | "GameTips" | "GemProperties" | "GlyphProperties" | "GlyphSlot" | "GMSurveyAnswers" | "GMSurveyCurrentSurvey" | "GMSurveyQuestions" | "GMSurveySurveys" | "GMTicketCategory" | "GroundEffectDoodad" | "GroundEffectTexture" | "GtBarberShopCostBase" | "GtChanceToMeleeCrit" | "GtChanceToMeleeCritBase" | "GtChanceToSpellCrit" | "GtChanceToSpellCritBase" | "GtCombatRatings" | "GtNPCManaCostScaler" | "GtOCTClassCombatRatingScalar" | "GtOCTRegenHP" | "GtOCTRegenMP" | "GtRegenHPPerSpt" | "GtRegenMPPerSpt" | "HelmetGeosetVisData" | "HolidayDescriptions" | "HolidayNames" | "Holidays" | "Item" | "ItemBagFamily" | "ItemClass" | "ItemCondExtCosts" | "ItemDisplayInfo" | "ItemExtendedCost" | "ItemGroupSounds" | "ItemLimitCategory" | "ItemPetFood" | "ItemPurchaseGroup" | "ItemRandomProperties" | "ItemRandomSuffix" | "ItemSet" | "ItemSubClass" | "ItemSubClassMask" | "ItemVisualEffects" | "ItemVisuals" | "Languages" | "LanguageWords" | "LfgDungeonExpansion" | "LfgDungeonGroup" | "LfgDungeons" | "Light" | "LightfloatBand" | "LightintBand" | "LightParams" | "LightSkybox" | "LiquidMaterial" | "LiquidType" | "LoadingScreens" | "LoadingScreenTaxiSplines" | "Lock" | "LockType" | "MailTemplate" | "Map" | "MapDifficulty" | "Material" | "Movie" | "MovieFileData" | "MovieVariation" | "NameGen" | "NamesProfanity" | "NamesReserved" | "NPCSounds" | "ObjectEffect" | "ObjectEffectGroup" | "ObjectEffectModifier" | "ObjectEffectPackage" | "ObjectEffectPackageElem" | "OverrideSpellData" | "Package" | "PageTextMaterial" | "PaperDollItemFrame" | "ParticleColor" | "PetitionType" | "PetPersonality" | "PowerDisplay" | "PvpDifficulty" | "QuestFactionReward" | "QuestInfo" | "QuestSort" | "QuestXP" | "RandPropPoints" | "Resistances" | "ScalingStatDistribution" | "ScalingStatValues" | "ScreenEffect" | "ServerMessages" | "SheatheSoundLookups" | "SkillCostsData" | "SkillLine" | "SkillLineAbility" | "SkillLineCategory" | "SkillRaceClassInfo" | "SkillTiers" | "SoundAmbience" | "SoundEmitters" | "SoundEntries" | "SoundEntriesAdvanced" | "SoundFilter" | "SoundFilterElem" | "SoundProviderPreferences" | "SoundSamplePreferences" | "SoundWaterType" | "SpamMessages" | "Spell" | "SpellCastTimes" | "SpellCategory" | "SpellChainEffects" | "SpellDescriptionVariables" | "SpellDifficulty" | "SpellDispelType" | "SpellDuration" | "SpellEffectCameraShakes" | "SpellFocusObject" | "SpellIcon" | "SpellItemEnchantment" | "SpellItemEnchantmentCondition" | "SpellMechanic" | "SpellMissile" | "SpellMissileMotion" | "SpellRadius" | "SpellRange" | "SpellRuneCost" | "SpellShapeshiftForm" | "SpellVisual" | "SpellVisualEffectName" | "SpellVisualKit" | "SpellVisualKitAreaModel" | "SpellVisualKitModelAttach" | "SpellVisualPrecastTransitions" | "StableSlotPrices" | "Startup_strings" | "Stationery" | "StringLookups" | "SummonProperties" | "Talent" | "TalentTab" | "TaxiNodes" | "TaxiPath" | "TaxiPathNode" | "TeamContributionPoints" | "Terraintype" | "TerraintypeSounds" | "TotemCategory" | "TransportAnimation" | "TransportPhysics" | "TransportRotation" | "UISoundLookups" | "UnitBlood" | "UnitBloodLevels" | "Vehicle" | "VehicleSeat" | "VehicleUIIndicator" | "VehicleUIIndSeat" | "VideoHardware" | "VocalUISounds" | "WeaponImpactSounds" | "WeaponSwingSounds2" | "Weather" | "WMOAreaTable" | "WorldChunkSounds" | "WorldMapArea" | "WorldMapContinent" | "WorldMapOverlay" | "WorldMapTransforms" | "WorldSafelocs" | "WorldStateUI" | "WorldStateZoneSounds" | "WowError_Strings" | "ZoneintroMusicTable" | "ZoneMusic"

@@ -178,6 +178,13 @@ export class SoundSamplePreferencesDBCFile extends DBCFile<
     SoundSamplePreferencesCreator,
     SoundSamplePreferencesQuery,
     SoundSamplePreferencesRow> {
+    constructor() {
+        super('SoundSamplePreferences',(t,b,o)=>new SoundSamplePreferencesRow(t,b,o))
+    }
+    /** Loads a new SoundSamplePreferences.dbc from a file. */
+    static read(path: string): SoundSamplePreferencesDBCFile {
+        return new SoundSamplePreferencesDBCFile().read(path);
+    }
     add(ID : int, c? : SoundSamplePreferencesCreator) : SoundSamplePreferencesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -185,11 +192,3 @@ export class SoundSamplePreferencesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundSamplePreferences = new SoundSamplePreferencesDBCFile(
-    'SoundSamplePreferences',
-    (table,buffer,offset)=>new SoundSamplePreferencesRow(table,buffer,offset))

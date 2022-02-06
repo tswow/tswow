@@ -87,6 +87,13 @@ export class StationeryDBCFile extends DBCFile<
     StationeryCreator,
     StationeryQuery,
     StationeryRow> {
+    constructor() {
+        super('Stationery',(t,b,o)=>new StationeryRow(t,b,o))
+    }
+    /** Loads a new Stationery.dbc from a file. */
+    static read(path: string): StationeryDBCFile {
+        return new StationeryDBCFile().read(path);
+    }
     add(ID : int, c? : StationeryCreator) : StationeryRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class StationeryDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Stationery = new StationeryDBCFile(
-    'Stationery',
-    (table,buffer,offset)=>new StationeryRow(table,buffer,offset))

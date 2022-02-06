@@ -108,6 +108,13 @@ export class SheatheSoundLookupsDBCFile extends DBCFile<
     SheatheSoundLookupsCreator,
     SheatheSoundLookupsQuery,
     SheatheSoundLookupsRow> {
+    constructor() {
+        super('SheatheSoundLookups',(t,b,o)=>new SheatheSoundLookupsRow(t,b,o))
+    }
+    /** Loads a new SheatheSoundLookups.dbc from a file. */
+    static read(path: string): SheatheSoundLookupsDBCFile {
+        return new SheatheSoundLookupsDBCFile().read(path);
+    }
     add(ID : int, c? : SheatheSoundLookupsCreator) : SheatheSoundLookupsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class SheatheSoundLookupsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SheatheSoundLookups = new SheatheSoundLookupsDBCFile(
-    'SheatheSoundLookups',
-    (table,buffer,offset)=>new SheatheSoundLookupsRow(table,buffer,offset))

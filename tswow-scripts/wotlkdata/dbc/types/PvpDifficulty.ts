@@ -101,6 +101,13 @@ export class PvpDifficultyDBCFile extends DBCFile<
     PvpDifficultyCreator,
     PvpDifficultyQuery,
     PvpDifficultyRow> {
+    constructor() {
+        super('PvpDifficulty',(t,b,o)=>new PvpDifficultyRow(t,b,o))
+    }
+    /** Loads a new PvpDifficulty.dbc from a file. */
+    static read(path: string): PvpDifficultyDBCFile {
+        return new PvpDifficultyDBCFile().read(path);
+    }
     add(ID : int, c? : PvpDifficultyCreator) : PvpDifficultyRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class PvpDifficultyDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_PvpDifficulty = new PvpDifficultyDBCFile(
-    'PvpDifficulty',
-    (table,buffer,offset)=>new PvpDifficultyRow(table,buffer,offset))

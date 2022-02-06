@@ -73,6 +73,13 @@ export class NPCSoundsDBCFile extends DBCFile<
     NPCSoundsCreator,
     NPCSoundsQuery,
     NPCSoundsRow> {
+    constructor() {
+        super('NPCSounds',(t,b,o)=>new NPCSoundsRow(t,b,o))
+    }
+    /** Loads a new NPCSounds.dbc from a file. */
+    static read(path: string): NPCSoundsDBCFile {
+        return new NPCSoundsDBCFile().read(path);
+    }
     add(ID : int, c? : NPCSoundsCreator) : NPCSoundsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class NPCSoundsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_NPCSounds = new NPCSoundsDBCFile(
-    'NPCSounds',
-    (table,buffer,offset)=>new NPCSoundsRow(table,buffer,offset))

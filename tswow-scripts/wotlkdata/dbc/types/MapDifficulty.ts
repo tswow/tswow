@@ -108,15 +108,14 @@ export class MapDifficultyDBCFile extends DBCFile<
     MapDifficultyCreator,
     MapDifficultyQuery,
     MapDifficultyRow> {
+    constructor() {
+        super('MapDifficulty',(t,b,o)=>new MapDifficultyRow(t,b,o))
+    }
+    /** Loads a new MapDifficulty.dbc from a file. */
+    static read(path: string): MapDifficultyDBCFile {
+        return new MapDifficultyDBCFile().read(path);
+    }
     add(ID : int, c? : MapDifficultyCreator) : MapDifficultyRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_MapDifficulty = new MapDifficultyDBCFile(
-    'MapDifficulty',
-    (table,buffer,offset)=>new MapDifficultyRow(table,buffer,offset))

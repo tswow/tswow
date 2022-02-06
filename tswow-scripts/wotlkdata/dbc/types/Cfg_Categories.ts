@@ -94,6 +94,13 @@ export class Cfg_CategoriesDBCFile extends DBCFile<
     Cfg_CategoriesCreator,
     Cfg_CategoriesQuery,
     Cfg_CategoriesRow> {
+    constructor() {
+        super('Cfg_Categories',(t,b,o)=>new Cfg_CategoriesRow(t,b,o))
+    }
+    /** Loads a new Cfg_Categories.dbc from a file. */
+    static read(path: string): Cfg_CategoriesDBCFile {
+        return new Cfg_CategoriesDBCFile().read(path);
+    }
     add(ID : int, c? : Cfg_CategoriesCreator) : Cfg_CategoriesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class Cfg_CategoriesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Cfg_Categories = new Cfg_CategoriesDBCFile(
-    'Cfg_Categories',
-    (table,buffer,offset)=>new Cfg_CategoriesRow(table,buffer,offset))

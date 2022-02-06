@@ -94,6 +94,13 @@ export class LockTypeDBCFile extends DBCFile<
     LockTypeCreator,
     LockTypeQuery,
     LockTypeRow> {
+    constructor() {
+        super('LockType',(t,b,o)=>new LockTypeRow(t,b,o))
+    }
+    /** Loads a new LockType.dbc from a file. */
+    static read(path: string): LockTypeDBCFile {
+        return new LockTypeDBCFile().read(path);
+    }
     add(ID : int, c? : LockTypeCreator) : LockTypeRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class LockTypeDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LockType = new LockTypeDBCFile(
-    'LockType',
-    (table,buffer,offset)=>new LockTypeRow(table,buffer,offset))

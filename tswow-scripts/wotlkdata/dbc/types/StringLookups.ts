@@ -73,6 +73,13 @@ export class StringLookupsDBCFile extends DBCFile<
     StringLookupsCreator,
     StringLookupsQuery,
     StringLookupsRow> {
+    constructor() {
+        super('StringLookups',(t,b,o)=>new StringLookupsRow(t,b,o))
+    }
+    /** Loads a new StringLookups.dbc from a file. */
+    static read(path: string): StringLookupsDBCFile {
+        return new StringLookupsDBCFile().read(path);
+    }
     add(ID : int, c? : StringLookupsCreator) : StringLookupsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class StringLookupsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_StringLookups = new StringLookupsDBCFile(
-    'StringLookups',
-    (table,buffer,offset)=>new StringLookupsRow(table,buffer,offset))

@@ -87,6 +87,13 @@ export class ParticleColorDBCFile extends DBCFile<
     ParticleColorCreator,
     ParticleColorQuery,
     ParticleColorRow> {
+    constructor() {
+        super('ParticleColor',(t,b,o)=>new ParticleColorRow(t,b,o))
+    }
+    /** Loads a new ParticleColor.dbc from a file. */
+    static read(path: string): ParticleColorDBCFile {
+        return new ParticleColorDBCFile().read(path);
+    }
     add(ID : int, c? : ParticleColorCreator) : ParticleColorRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ParticleColorDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ParticleColor = new ParticleColorDBCFile(
-    'ParticleColor',
-    (table,buffer,offset)=>new ParticleColorRow(table,buffer,offset))

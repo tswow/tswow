@@ -80,6 +80,13 @@ export class NamesReservedDBCFile extends DBCFile<
     NamesReservedCreator,
     NamesReservedQuery,
     NamesReservedRow> {
+    constructor() {
+        super('NamesReserved',(t,b,o)=>new NamesReservedRow(t,b,o))
+    }
+    /** Loads a new NamesReserved.dbc from a file. */
+    static read(path: string): NamesReservedDBCFile {
+        return new NamesReservedDBCFile().read(path);
+    }
     add(ID : int, c? : NamesReservedCreator) : NamesReservedRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class NamesReservedDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_NamesReserved = new NamesReservedDBCFile(
-    'NamesReserved',
-    (table,buffer,offset)=>new NamesReservedRow(table,buffer,offset))

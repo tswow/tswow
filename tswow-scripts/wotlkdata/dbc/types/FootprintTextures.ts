@@ -73,6 +73,13 @@ export class FootprintTexturesDBCFile extends DBCFile<
     FootprintTexturesCreator,
     FootprintTexturesQuery,
     FootprintTexturesRow> {
+    constructor() {
+        super('FootprintTextures',(t,b,o)=>new FootprintTexturesRow(t,b,o))
+    }
+    /** Loads a new FootprintTextures.dbc from a file. */
+    static read(path: string): FootprintTexturesDBCFile {
+        return new FootprintTexturesDBCFile().read(path);
+    }
     add(ID : int, c? : FootprintTexturesCreator) : FootprintTexturesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class FootprintTexturesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_FootprintTextures = new FootprintTexturesDBCFile(
-    'FootprintTextures',
-    (table,buffer,offset)=>new FootprintTexturesRow(table,buffer,offset))

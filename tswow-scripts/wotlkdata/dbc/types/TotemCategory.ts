@@ -87,6 +87,13 @@ export class TotemCategoryDBCFile extends DBCFile<
     TotemCategoryCreator,
     TotemCategoryQuery,
     TotemCategoryRow> {
+    constructor() {
+        super('TotemCategory',(t,b,o)=>new TotemCategoryRow(t,b,o))
+    }
+    /** Loads a new TotemCategory.dbc from a file. */
+    static read(path: string): TotemCategoryDBCFile {
+        return new TotemCategoryDBCFile().read(path);
+    }
     add(ID : int, c? : TotemCategoryCreator) : TotemCategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class TotemCategoryDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TotemCategory = new TotemCategoryDBCFile(
-    'TotemCategory',
-    (table,buffer,offset)=>new TotemCategoryRow(table,buffer,offset))

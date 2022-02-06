@@ -192,6 +192,13 @@ export class DestructibleModelDataDBCFile extends DBCFile<
     DestructibleModelDataCreator,
     DestructibleModelDataQuery,
     DestructibleModelDataRow> {
+    constructor() {
+        super('DestructibleModelData',(t,b,o)=>new DestructibleModelDataRow(t,b,o))
+    }
+    /** Loads a new DestructibleModelData.dbc from a file. */
+    static read(path: string): DestructibleModelDataDBCFile {
+        return new DestructibleModelDataDBCFile().read(path);
+    }
     add(ID : int, c? : DestructibleModelDataCreator) : DestructibleModelDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -199,11 +206,3 @@ export class DestructibleModelDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DestructibleModelData = new DestructibleModelDataDBCFile(
-    'DestructibleModelData',
-    (table,buffer,offset)=>new DestructibleModelDataRow(table,buffer,offset))

@@ -108,6 +108,13 @@ export class SpellVisualEffectNameDBCFile extends DBCFile<
     SpellVisualEffectNameCreator,
     SpellVisualEffectNameQuery,
     SpellVisualEffectNameRow> {
+    constructor() {
+        super('SpellVisualEffectName',(t,b,o)=>new SpellVisualEffectNameRow(t,b,o))
+    }
+    /** Loads a new SpellVisualEffectName.dbc from a file. */
+    static read(path: string): SpellVisualEffectNameDBCFile {
+        return new SpellVisualEffectNameDBCFile().read(path);
+    }
     add(ID : int, c? : SpellVisualEffectNameCreator) : SpellVisualEffectNameRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class SpellVisualEffectNameDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellVisualEffectName = new SpellVisualEffectNameDBCFile(
-    'SpellVisualEffectName',
-    (table,buffer,offset)=>new SpellVisualEffectNameRow(table,buffer,offset))

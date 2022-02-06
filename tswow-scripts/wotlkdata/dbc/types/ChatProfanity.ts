@@ -80,6 +80,13 @@ export class ChatProfanityDBCFile extends DBCFile<
     ChatProfanityCreator,
     ChatProfanityQuery,
     ChatProfanityRow> {
+    constructor() {
+        super('ChatProfanity',(t,b,o)=>new ChatProfanityRow(t,b,o))
+    }
+    /** Loads a new ChatProfanity.dbc from a file. */
+    static read(path: string): ChatProfanityDBCFile {
+        return new ChatProfanityDBCFile().read(path);
+    }
     add(ID : int, c? : ChatProfanityCreator) : ChatProfanityRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class ChatProfanityDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ChatProfanity = new ChatProfanityDBCFile(
-    'ChatProfanity',
-    (table,buffer,offset)=>new ChatProfanityRow(table,buffer,offset))

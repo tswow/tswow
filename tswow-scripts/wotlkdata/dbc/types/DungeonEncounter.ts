@@ -108,15 +108,14 @@ export class DungeonEncounterDBCFile extends DBCFile<
     DungeonEncounterCreator,
     DungeonEncounterQuery,
     DungeonEncounterRow> {
+    constructor() {
+        super('DungeonEncounter',(t,b,o)=>new DungeonEncounterRow(t,b,o))
+    }
+    /** Loads a new DungeonEncounter.dbc from a file. */
+    static read(path: string): DungeonEncounterDBCFile {
+        return new DungeonEncounterDBCFile().read(path);
+    }
     add(ID : int, c? : DungeonEncounterCreator) : DungeonEncounterRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DungeonEncounter = new DungeonEncounterDBCFile(
-    'DungeonEncounter',
-    (table,buffer,offset)=>new DungeonEncounterRow(table,buffer,offset))

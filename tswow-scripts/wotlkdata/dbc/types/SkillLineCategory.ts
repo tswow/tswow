@@ -80,6 +80,13 @@ export class SkillLineCategoryDBCFile extends DBCFile<
     SkillLineCategoryCreator,
     SkillLineCategoryQuery,
     SkillLineCategoryRow> {
+    constructor() {
+        super('SkillLineCategory',(t,b,o)=>new SkillLineCategoryRow(t,b,o))
+    }
+    /** Loads a new SkillLineCategory.dbc from a file. */
+    static read(path: string): SkillLineCategoryDBCFile {
+        return new SkillLineCategoryDBCFile().read(path);
+    }
     add(ID : int, c? : SkillLineCategoryCreator) : SkillLineCategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class SkillLineCategoryDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SkillLineCategory = new SkillLineCategoryDBCFile(
-    'SkillLineCategory',
-    (table,buffer,offset)=>new SkillLineCategoryRow(table,buffer,offset))

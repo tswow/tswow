@@ -143,6 +143,13 @@ export class ChrClassesDBCFile extends DBCFile<
     ChrClassesCreator,
     ChrClassesQuery,
     ChrClassesRow> {
+    constructor() {
+        super('ChrClasses',(t,b,o)=>new ChrClassesRow(t,b,o))
+    }
+    /** Loads a new ChrClasses.dbc from a file. */
+    static read(path: string): ChrClassesDBCFile {
+        return new ChrClassesDBCFile().read(path);
+    }
     add(ID : int, c? : ChrClassesCreator) : ChrClassesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -150,11 +157,3 @@ export class ChrClassesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ChrClasses = new ChrClassesDBCFile(
-    'ChrClasses',
-    (table,buffer,offset)=>new ChrClassesRow(table,buffer,offset))

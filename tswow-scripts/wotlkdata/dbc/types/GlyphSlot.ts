@@ -80,6 +80,13 @@ export class GlyphSlotDBCFile extends DBCFile<
     GlyphSlotCreator,
     GlyphSlotQuery,
     GlyphSlotRow> {
+    constructor() {
+        super('GlyphSlot',(t,b,o)=>new GlyphSlotRow(t,b,o))
+    }
+    /** Loads a new GlyphSlot.dbc from a file. */
+    static read(path: string): GlyphSlotDBCFile {
+        return new GlyphSlotDBCFile().read(path);
+    }
     add(ID : int, c? : GlyphSlotCreator) : GlyphSlotRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class GlyphSlotDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GlyphSlot = new GlyphSlotDBCFile(
-    'GlyphSlot',
-    (table,buffer,offset)=>new GlyphSlotRow(table,buffer,offset))

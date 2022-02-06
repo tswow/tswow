@@ -87,15 +87,14 @@ export class GMSurveyAnswersDBCFile extends DBCFile<
     GMSurveyAnswersCreator,
     GMSurveyAnswersQuery,
     GMSurveyAnswersRow> {
+    constructor() {
+        super('GMSurveyAnswers',(t,b,o)=>new GMSurveyAnswersRow(t,b,o))
+    }
+    /** Loads a new GMSurveyAnswers.dbc from a file. */
+    static read(path: string): GMSurveyAnswersDBCFile {
+        return new GMSurveyAnswersDBCFile().read(path);
+    }
     add(ID : int, c? : GMSurveyAnswersCreator) : GMSurveyAnswersRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GMSurveyAnswers = new GMSurveyAnswersDBCFile(
-    'GMSurveyAnswers',
-    (table,buffer,offset)=>new GMSurveyAnswersRow(table,buffer,offset))

@@ -73,6 +73,13 @@ export class SoundAmbienceDBCFile extends DBCFile<
     SoundAmbienceCreator,
     SoundAmbienceQuery,
     SoundAmbienceRow> {
+    constructor() {
+        super('SoundAmbience',(t,b,o)=>new SoundAmbienceRow(t,b,o))
+    }
+    /** Loads a new SoundAmbience.dbc from a file. */
+    static read(path: string): SoundAmbienceDBCFile {
+        return new SoundAmbienceDBCFile().read(path);
+    }
     add(ID : int, c? : SoundAmbienceCreator) : SoundAmbienceRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SoundAmbienceDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundAmbience = new SoundAmbienceDBCFile(
-    'SoundAmbience',
-    (table,buffer,offset)=>new SoundAmbienceRow(table,buffer,offset))

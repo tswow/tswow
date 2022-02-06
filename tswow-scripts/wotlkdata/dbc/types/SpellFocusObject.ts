@@ -73,6 +73,13 @@ export class SpellFocusObjectDBCFile extends DBCFile<
     SpellFocusObjectCreator,
     SpellFocusObjectQuery,
     SpellFocusObjectRow> {
+    constructor() {
+        super('SpellFocusObject',(t,b,o)=>new SpellFocusObjectRow(t,b,o))
+    }
+    /** Loads a new SpellFocusObject.dbc from a file. */
+    static read(path: string): SpellFocusObjectDBCFile {
+        return new SpellFocusObjectDBCFile().read(path);
+    }
     add(ID : int, c? : SpellFocusObjectCreator) : SpellFocusObjectRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SpellFocusObjectDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellFocusObject = new SpellFocusObjectDBCFile(
-    'SpellFocusObject',
-    (table,buffer,offset)=>new SpellFocusObjectRow(table,buffer,offset))

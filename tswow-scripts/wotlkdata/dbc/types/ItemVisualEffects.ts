@@ -73,6 +73,13 @@ export class ItemVisualEffectsDBCFile extends DBCFile<
     ItemVisualEffectsCreator,
     ItemVisualEffectsQuery,
     ItemVisualEffectsRow> {
+    constructor() {
+        super('ItemVisualEffects',(t,b,o)=>new ItemVisualEffectsRow(t,b,o))
+    }
+    /** Loads a new ItemVisualEffects.dbc from a file. */
+    static read(path: string): ItemVisualEffectsDBCFile {
+        return new ItemVisualEffectsDBCFile().read(path);
+    }
     add(ID : int, c? : ItemVisualEffectsCreator) : ItemVisualEffectsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ItemVisualEffectsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemVisualEffects = new ItemVisualEffectsDBCFile(
-    'ItemVisualEffects',
-    (table,buffer,offset)=>new ItemVisualEffectsRow(table,buffer,offset))

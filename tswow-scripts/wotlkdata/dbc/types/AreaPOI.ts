@@ -157,15 +157,14 @@ export class AreaPOIDBCFile extends DBCFile<
     AreaPOICreator,
     AreaPOIQuery,
     AreaPOIRow> {
+    constructor() {
+        super('AreaPOI',(t,b,o)=>new AreaPOIRow(t,b,o))
+    }
+    /** Loads a new AreaPOI.dbc from a file. */
+    static read(path: string): AreaPOIDBCFile {
+        return new AreaPOIDBCFile().read(path);
+    }
     add(ID : int, c? : AreaPOICreator) : AreaPOIRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AreaPOI = new AreaPOIDBCFile(
-    'AreaPOI',
-    (table,buffer,offset)=>new AreaPOIRow(table,buffer,offset))

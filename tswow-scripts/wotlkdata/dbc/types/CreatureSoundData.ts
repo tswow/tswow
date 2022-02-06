@@ -276,6 +276,13 @@ export class CreatureSoundDataDBCFile extends DBCFile<
     CreatureSoundDataCreator,
     CreatureSoundDataQuery,
     CreatureSoundDataRow> {
+    constructor() {
+        super('CreatureSoundData',(t,b,o)=>new CreatureSoundDataRow(t,b,o))
+    }
+    /** Loads a new CreatureSoundData.dbc from a file. */
+    static read(path: string): CreatureSoundDataDBCFile {
+        return new CreatureSoundDataDBCFile().read(path);
+    }
     add(ID : int, c? : CreatureSoundDataCreator) : CreatureSoundDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -283,11 +290,3 @@ export class CreatureSoundDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CreatureSoundData = new CreatureSoundDataDBCFile(
-    'CreatureSoundData',
-    (table,buffer,offset)=>new CreatureSoundDataRow(table,buffer,offset))

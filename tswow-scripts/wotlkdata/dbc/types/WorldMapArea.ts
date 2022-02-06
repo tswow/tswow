@@ -136,6 +136,13 @@ export class WorldMapAreaDBCFile extends DBCFile<
     WorldMapAreaCreator,
     WorldMapAreaQuery,
     WorldMapAreaRow> {
+    constructor() {
+        super('WorldMapArea',(t,b,o)=>new WorldMapAreaRow(t,b,o))
+    }
+    /** Loads a new WorldMapArea.dbc from a file. */
+    static read(path: string): WorldMapAreaDBCFile {
+        return new WorldMapAreaDBCFile().read(path);
+    }
     add(ID : int, c? : WorldMapAreaCreator) : WorldMapAreaRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -143,11 +150,3 @@ export class WorldMapAreaDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldMapArea = new WorldMapAreaDBCFile(
-    'WorldMapArea',
-    (table,buffer,offset)=>new WorldMapAreaRow(table,buffer,offset))

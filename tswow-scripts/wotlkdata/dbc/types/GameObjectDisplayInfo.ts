@@ -129,6 +129,13 @@ export class GameObjectDisplayInfoDBCFile extends DBCFile<
     GameObjectDisplayInfoCreator,
     GameObjectDisplayInfoQuery,
     GameObjectDisplayInfoRow> {
+    constructor() {
+        super('GameObjectDisplayInfo',(t,b,o)=>new GameObjectDisplayInfoRow(t,b,o))
+    }
+    /** Loads a new GameObjectDisplayInfo.dbc from a file. */
+    static read(path: string): GameObjectDisplayInfoDBCFile {
+        return new GameObjectDisplayInfoDBCFile().read(path);
+    }
     add(ID : int, c? : GameObjectDisplayInfoCreator) : GameObjectDisplayInfoRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -136,11 +143,3 @@ export class GameObjectDisplayInfoDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GameObjectDisplayInfo = new GameObjectDisplayInfoDBCFile(
-    'GameObjectDisplayInfo',
-    (table,buffer,offset)=>new GameObjectDisplayInfoRow(table,buffer,offset))

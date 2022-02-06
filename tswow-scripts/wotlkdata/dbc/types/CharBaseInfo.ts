@@ -75,15 +75,14 @@ export class CharBaseInfoDBCFile extends DBCFile<
     CharBaseInfoCreator,
     CharBaseInfoQuery,
     CharBaseInfoRow> {
+    constructor() {
+        super('CharBaseInfo',(t,b,o)=>new CharBaseInfoRow(t,b,o))
+    }
+    /** Loads a new CharBaseInfo.dbc from a file. */
+    static read(path: string): CharBaseInfoDBCFile {
+        return new CharBaseInfoDBCFile().read(path);
+    }
     add(RaceID : byte,ClassID : byte, c? : CharBaseInfoCreator) : CharBaseInfoRow {
         return this.makeRow(0).clone(RaceID,ClassID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CharBaseInfo = new CharBaseInfoDBCFile(
-    'CharBaseInfo',
-    (table,buffer,offset)=>new CharBaseInfoRow(table,buffer,offset))

@@ -87,6 +87,13 @@ export class ScalingStatDistributionDBCFile extends DBCFile<
     ScalingStatDistributionCreator,
     ScalingStatDistributionQuery,
     ScalingStatDistributionRow> {
+    constructor() {
+        super('ScalingStatDistribution',(t,b,o)=>new ScalingStatDistributionRow(t,b,o))
+    }
+    /** Loads a new ScalingStatDistribution.dbc from a file. */
+    static read(path: string): ScalingStatDistributionDBCFile {
+        return new ScalingStatDistributionDBCFile().read(path);
+    }
     add(ID : int, c? : ScalingStatDistributionCreator) : ScalingStatDistributionRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ScalingStatDistributionDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ScalingStatDistribution = new ScalingStatDistributionDBCFile(
-    'ScalingStatDistribution',
-    (table,buffer,offset)=>new ScalingStatDistributionRow(table,buffer,offset))

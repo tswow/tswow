@@ -108,6 +108,13 @@ export class SpellItemEnchantmentConditionDBCFile extends DBCFile<
     SpellItemEnchantmentConditionCreator,
     SpellItemEnchantmentConditionQuery,
     SpellItemEnchantmentConditionRow> {
+    constructor() {
+        super('SpellItemEnchantmentCondition',(t,b,o)=>new SpellItemEnchantmentConditionRow(t,b,o))
+    }
+    /** Loads a new SpellItemEnchantmentCondition.dbc from a file. */
+    static read(path: string): SpellItemEnchantmentConditionDBCFile {
+        return new SpellItemEnchantmentConditionDBCFile().read(path);
+    }
     add(ID : int, c? : SpellItemEnchantmentConditionCreator) : SpellItemEnchantmentConditionRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class SpellItemEnchantmentConditionDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellItemEnchantmentCondition = new SpellItemEnchantmentConditionDBCFile(
-    'SpellItemEnchantmentCondition',
-    (table,buffer,offset)=>new SpellItemEnchantmentConditionRow(table,buffer,offset))

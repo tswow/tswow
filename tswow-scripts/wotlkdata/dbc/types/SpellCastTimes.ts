@@ -87,6 +87,13 @@ export class SpellCastTimesDBCFile extends DBCFile<
     SpellCastTimesCreator,
     SpellCastTimesQuery,
     SpellCastTimesRow> {
+    constructor() {
+        super('SpellCastTimes',(t,b,o)=>new SpellCastTimesRow(t,b,o))
+    }
+    /** Loads a new SpellCastTimes.dbc from a file. */
+    static read(path: string): SpellCastTimesDBCFile {
+        return new SpellCastTimesDBCFile().read(path);
+    }
     add(ID : int, c? : SpellCastTimesCreator) : SpellCastTimesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class SpellCastTimesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellCastTimes = new SpellCastTimesDBCFile(
-    'SpellCastTimes',
-    (table,buffer,offset)=>new SpellCastTimesRow(table,buffer,offset))

@@ -227,6 +227,13 @@ export class SoundEntriesAdvancedDBCFile extends DBCFile<
     SoundEntriesAdvancedCreator,
     SoundEntriesAdvancedQuery,
     SoundEntriesAdvancedRow> {
+    constructor() {
+        super('SoundEntriesAdvanced',(t,b,o)=>new SoundEntriesAdvancedRow(t,b,o))
+    }
+    /** Loads a new SoundEntriesAdvanced.dbc from a file. */
+    static read(path: string): SoundEntriesAdvancedDBCFile {
+        return new SoundEntriesAdvancedDBCFile().read(path);
+    }
     add(ID : int, c? : SoundEntriesAdvancedCreator) : SoundEntriesAdvancedRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -234,11 +241,3 @@ export class SoundEntriesAdvancedDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundEntriesAdvanced = new SoundEntriesAdvancedDBCFile(
-    'SoundEntriesAdvanced',
-    (table,buffer,offset)=>new SoundEntriesAdvancedRow(table,buffer,offset))

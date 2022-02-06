@@ -63,15 +63,14 @@ export class GtCombatRatingsDBCFile extends DBCFile<
     GtCombatRatingsCreator,
     GtCombatRatingsQuery,
     GtCombatRatingsRow> {
+    constructor() {
+        super('GtCombatRatings',(t,b,o)=>new GtCombatRatingsRow(t,b,o))
+    }
+    /** Loads a new GtCombatRatings.dbc from a file. */
+    static read(path: string): GtCombatRatingsDBCFile {
+        return new GtCombatRatingsDBCFile().read(path);
+    }
     add(c? : GtCombatRatingsCreator) : GtCombatRatingsRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtCombatRatings = new GtCombatRatingsDBCFile(
-    'gtCombatRatings',
-    (table,buffer,offset)=>new GtCombatRatingsRow(table,buffer,offset))

@@ -94,6 +94,13 @@ export class VehicleUIIndSeatDBCFile extends DBCFile<
     VehicleUIIndSeatCreator,
     VehicleUIIndSeatQuery,
     VehicleUIIndSeatRow> {
+    constructor() {
+        super('VehicleUIIndSeat',(t,b,o)=>new VehicleUIIndSeatRow(t,b,o))
+    }
+    /** Loads a new VehicleUIIndSeat.dbc from a file. */
+    static read(path: string): VehicleUIIndSeatDBCFile {
+        return new VehicleUIIndSeatDBCFile().read(path);
+    }
     add(ID : int, c? : VehicleUIIndSeatCreator) : VehicleUIIndSeatRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class VehicleUIIndSeatDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_VehicleUIIndSeat = new VehicleUIIndSeatDBCFile(
-    'VehicleUIIndSeat',
-    (table,buffer,offset)=>new VehicleUIIndSeatRow(table,buffer,offset))

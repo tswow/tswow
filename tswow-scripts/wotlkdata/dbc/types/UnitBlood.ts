@@ -87,6 +87,13 @@ export class UnitBloodDBCFile extends DBCFile<
     UnitBloodCreator,
     UnitBloodQuery,
     UnitBloodRow> {
+    constructor() {
+        super('UnitBlood',(t,b,o)=>new UnitBloodRow(t,b,o))
+    }
+    /** Loads a new UnitBlood.dbc from a file. */
+    static read(path: string): UnitBloodDBCFile {
+        return new UnitBloodDBCFile().read(path);
+    }
     add(ID : int, c? : UnitBloodCreator) : UnitBloodRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class UnitBloodDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_UnitBlood = new UnitBloodDBCFile(
-    'UnitBlood',
-    (table,buffer,offset)=>new UnitBloodRow(table,buffer,offset))

@@ -185,6 +185,13 @@ export class MapDBCFile extends DBCFile<
     MapCreator,
     MapQuery,
     MapRow> {
+    constructor() {
+        super('Map',(t,b,o)=>new MapRow(t,b,o))
+    }
+    /** Loads a new Map.dbc from a file. */
+    static read(path: string): MapDBCFile {
+        return new MapDBCFile().read(path);
+    }
     add(ID : int, c? : MapCreator) : MapRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -192,11 +199,3 @@ export class MapDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Map = new MapDBCFile(
-    'Map',
-    (table,buffer,offset)=>new MapRow(table,buffer,offset))

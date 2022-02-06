@@ -87,6 +87,13 @@ export class ResistancesDBCFile extends DBCFile<
     ResistancesCreator,
     ResistancesQuery,
     ResistancesRow> {
+    constructor() {
+        super('Resistances',(t,b,o)=>new ResistancesRow(t,b,o))
+    }
+    /** Loads a new Resistances.dbc from a file. */
+    static read(path: string): ResistancesDBCFile {
+        return new ResistancesDBCFile().read(path);
+    }
     add(ID : int, c? : ResistancesCreator) : ResistancesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ResistancesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Resistances = new ResistancesDBCFile(
-    'Resistances',
-    (table,buffer,offset)=>new ResistancesRow(table,buffer,offset))

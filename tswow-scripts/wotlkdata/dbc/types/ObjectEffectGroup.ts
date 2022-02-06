@@ -73,6 +73,13 @@ export class ObjectEffectGroupDBCFile extends DBCFile<
     ObjectEffectGroupCreator,
     ObjectEffectGroupQuery,
     ObjectEffectGroupRow> {
+    constructor() {
+        super('ObjectEffectGroup',(t,b,o)=>new ObjectEffectGroupRow(t,b,o))
+    }
+    /** Loads a new ObjectEffectGroup.dbc from a file. */
+    static read(path: string): ObjectEffectGroupDBCFile {
+        return new ObjectEffectGroupDBCFile().read(path);
+    }
     add(ID : int, c? : ObjectEffectGroupCreator) : ObjectEffectGroupRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ObjectEffectGroupDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ObjectEffectGroup = new ObjectEffectGroupDBCFile(
-    'ObjectEffectGroup',
-    (table,buffer,offset)=>new ObjectEffectGroupRow(table,buffer,offset))

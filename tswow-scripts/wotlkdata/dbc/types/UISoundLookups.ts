@@ -80,6 +80,13 @@ export class UISoundLookupsDBCFile extends DBCFile<
     UISoundLookupsCreator,
     UISoundLookupsQuery,
     UISoundLookupsRow> {
+    constructor() {
+        super('UISoundLookups',(t,b,o)=>new UISoundLookupsRow(t,b,o))
+    }
+    /** Loads a new UISoundLookups.dbc from a file. */
+    static read(path: string): UISoundLookupsDBCFile {
+        return new UISoundLookupsDBCFile().read(path);
+    }
     add(ID : int, c? : UISoundLookupsCreator) : UISoundLookupsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class UISoundLookupsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_UISoundLookups = new UISoundLookupsDBCFile(
-    'UISoundLookups',
-    (table,buffer,offset)=>new UISoundLookupsRow(table,buffer,offset))

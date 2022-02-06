@@ -145,15 +145,14 @@ export class ItemSubClassDBCFile extends DBCFile<
     ItemSubClassCreator,
     ItemSubClassQuery,
     ItemSubClassRow> {
+    constructor() {
+        super('ItemSubClass',(t,b,o)=>new ItemSubClassRow(t,b,o))
+    }
+    /** Loads a new ItemSubClass.dbc from a file. */
+    static read(path: string): ItemSubClassDBCFile {
+        return new ItemSubClassDBCFile().read(path);
+    }
     add(ClassID : int,SubClassID : int, c? : ItemSubClassCreator) : ItemSubClassRow {
         return this.makeRow(0).clone(ClassID,SubClassID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemSubClass = new ItemSubClassDBCFile(
-    'ItemSubClass',
-    (table,buffer,offset)=>new ItemSubClassRow(table,buffer,offset))

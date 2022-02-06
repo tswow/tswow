@@ -66,6 +66,13 @@ export class TerraintypeSoundsDBCFile extends DBCFile<
     TerraintypeSoundsCreator,
     TerraintypeSoundsQuery,
     TerraintypeSoundsRow> {
+    constructor() {
+        super('TerraintypeSounds',(t,b,o)=>new TerraintypeSoundsRow(t,b,o))
+    }
+    /** Loads a new TerraintypeSounds.dbc from a file. */
+    static read(path: string): TerraintypeSoundsDBCFile {
+        return new TerraintypeSoundsDBCFile().read(path);
+    }
     add(ID : int, c? : TerraintypeSoundsCreator) : TerraintypeSoundsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -73,11 +80,3 @@ export class TerraintypeSoundsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TerraintypeSounds = new TerraintypeSoundsDBCFile(
-    'TerrainTypeSounds',
-    (table,buffer,offset)=>new TerraintypeSoundsRow(table,buffer,offset))

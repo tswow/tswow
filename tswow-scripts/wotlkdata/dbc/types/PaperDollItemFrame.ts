@@ -77,15 +77,14 @@ export class PaperDollItemFrameDBCFile extends DBCFile<
     PaperDollItemFrameCreator,
     PaperDollItemFrameQuery,
     PaperDollItemFrameRow> {
+    constructor() {
+        super('PaperDollItemFrame',(t,b,o)=>new PaperDollItemFrameRow(t,b,o))
+    }
+    /** Loads a new PaperDollItemFrame.dbc from a file. */
+    static read(path: string): PaperDollItemFrameDBCFile {
+        return new PaperDollItemFrameDBCFile().read(path);
+    }
     add(c? : PaperDollItemFrameCreator) : PaperDollItemFrameRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_PaperDollItemFrame = new PaperDollItemFrameDBCFile(
-    'PaperDollItemFrame',
-    (table,buffer,offset)=>new PaperDollItemFrameRow(table,buffer,offset))

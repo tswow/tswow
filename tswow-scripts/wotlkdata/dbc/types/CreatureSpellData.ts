@@ -80,6 +80,13 @@ export class CreatureSpellDataDBCFile extends DBCFile<
     CreatureSpellDataCreator,
     CreatureSpellDataQuery,
     CreatureSpellDataRow> {
+    constructor() {
+        super('CreatureSpellData',(t,b,o)=>new CreatureSpellDataRow(t,b,o))
+    }
+    /** Loads a new CreatureSpellData.dbc from a file. */
+    static read(path: string): CreatureSpellDataDBCFile {
+        return new CreatureSpellDataDBCFile().read(path);
+    }
     add(ID : int, c? : CreatureSpellDataCreator) : CreatureSpellDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class CreatureSpellDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CreatureSpellData = new CreatureSpellDataDBCFile(
-    'CreatureSpellData',
-    (table,buffer,offset)=>new CreatureSpellDataRow(table,buffer,offset))

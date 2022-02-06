@@ -80,6 +80,13 @@ export class WowError_StringsDBCFile extends DBCFile<
     WowError_StringsCreator,
     WowError_StringsQuery,
     WowError_StringsRow> {
+    constructor() {
+        super('WowError_Strings',(t,b,o)=>new WowError_StringsRow(t,b,o))
+    }
+    /** Loads a new WowError_Strings.dbc from a file. */
+    static read(path: string): WowError_StringsDBCFile {
+        return new WowError_StringsDBCFile().read(path);
+    }
     add(ID : int, c? : WowError_StringsCreator) : WowError_StringsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class WowError_StringsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WowError_Strings = new WowError_StringsDBCFile(
-    'WowError_Strings',
-    (table,buffer,offset)=>new WowError_StringsRow(table,buffer,offset))

@@ -80,6 +80,13 @@ export class LanguageWordsDBCFile extends DBCFile<
     LanguageWordsCreator,
     LanguageWordsQuery,
     LanguageWordsRow> {
+    constructor() {
+        super('LanguageWords',(t,b,o)=>new LanguageWordsRow(t,b,o))
+    }
+    /** Loads a new LanguageWords.dbc from a file. */
+    static read(path: string): LanguageWordsDBCFile {
+        return new LanguageWordsDBCFile().read(path);
+    }
     add(ID : int, c? : LanguageWordsCreator) : LanguageWordsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class LanguageWordsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LanguageWords = new LanguageWordsDBCFile(
-    'LanguageWords',
-    (table,buffer,offset)=>new LanguageWordsRow(table,buffer,offset))

@@ -87,15 +87,14 @@ export class NameGenDBCFile extends DBCFile<
     NameGenCreator,
     NameGenQuery,
     NameGenRow> {
+    constructor() {
+        super('NameGen',(t,b,o)=>new NameGenRow(t,b,o))
+    }
+    /** Loads a new NameGen.dbc from a file. */
+    static read(path: string): NameGenDBCFile {
+        return new NameGenDBCFile().read(path);
+    }
     add(ID : int, c? : NameGenCreator) : NameGenRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_NameGen = new NameGenDBCFile(
-    'NameGen',
-    (table,buffer,offset)=>new NameGenRow(table,buffer,offset))

@@ -115,6 +115,13 @@ export class CameraShakesDBCFile extends DBCFile<
     CameraShakesCreator,
     CameraShakesQuery,
     CameraShakesRow> {
+    constructor() {
+        super('CameraShakes',(t,b,o)=>new CameraShakesRow(t,b,o))
+    }
+    /** Loads a new CameraShakes.dbc from a file. */
+    static read(path: string): CameraShakesDBCFile {
+        return new CameraShakesDBCFile().read(path);
+    }
     add(ID : int, c? : CameraShakesCreator) : CameraShakesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class CameraShakesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CameraShakes = new CameraShakesDBCFile(
-    'CameraShakes',
-    (table,buffer,offset)=>new CameraShakesRow(table,buffer,offset))

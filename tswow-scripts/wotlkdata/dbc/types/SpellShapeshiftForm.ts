@@ -122,6 +122,13 @@ export class SpellShapeshiftFormDBCFile extends DBCFile<
     SpellShapeshiftFormCreator,
     SpellShapeshiftFormQuery,
     SpellShapeshiftFormRow> {
+    constructor() {
+        super('SpellShapeshiftForm',(t,b,o)=>new SpellShapeshiftFormRow(t,b,o))
+    }
+    /** Loads a new SpellShapeshiftForm.dbc from a file. */
+    static read(path: string): SpellShapeshiftFormDBCFile {
+        return new SpellShapeshiftFormDBCFile().read(path);
+    }
     add(ID : int, c? : SpellShapeshiftFormCreator) : SpellShapeshiftFormRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -129,11 +136,3 @@ export class SpellShapeshiftFormDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellShapeshiftForm = new SpellShapeshiftFormDBCFile(
-    'SpellShapeshiftForm',
-    (table,buffer,offset)=>new SpellShapeshiftFormRow(table,buffer,offset))

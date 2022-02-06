@@ -87,6 +87,13 @@ export class ItemCondExtCostsDBCFile extends DBCFile<
     ItemCondExtCostsCreator,
     ItemCondExtCostsQuery,
     ItemCondExtCostsRow> {
+    constructor() {
+        super('ItemCondExtCosts',(t,b,o)=>new ItemCondExtCostsRow(t,b,o))
+    }
+    /** Loads a new ItemCondExtCosts.dbc from a file. */
+    static read(path: string): ItemCondExtCostsDBCFile {
+        return new ItemCondExtCostsDBCFile().read(path);
+    }
     add(ID : int, c? : ItemCondExtCostsCreator) : ItemCondExtCostsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ItemCondExtCostsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemCondExtCosts = new ItemCondExtCostsDBCFile(
-    'ItemCondExtCosts',
-    (table,buffer,offset)=>new ItemCondExtCostsRow(table,buffer,offset))

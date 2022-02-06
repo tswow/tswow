@@ -80,6 +80,13 @@ export class SpellVisualPrecastTransitionsDBCFile extends DBCFile<
     SpellVisualPrecastTransitionsCreator,
     SpellVisualPrecastTransitionsQuery,
     SpellVisualPrecastTransitionsRow> {
+    constructor() {
+        super('SpellVisualPrecastTransitions',(t,b,o)=>new SpellVisualPrecastTransitionsRow(t,b,o))
+    }
+    /** Loads a new SpellVisualPrecastTransitions.dbc from a file. */
+    static read(path: string): SpellVisualPrecastTransitionsDBCFile {
+        return new SpellVisualPrecastTransitionsDBCFile().read(path);
+    }
     add(ID : int, c? : SpellVisualPrecastTransitionsCreator) : SpellVisualPrecastTransitionsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class SpellVisualPrecastTransitionsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellVisualPrecastTransitions = new SpellVisualPrecastTransitionsDBCFile(
-    'SpellVisualPrecastTransitions',
-    (table,buffer,offset)=>new SpellVisualPrecastTransitionsRow(table,buffer,offset))

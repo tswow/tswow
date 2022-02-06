@@ -73,6 +73,13 @@ export class DeclinedWordDBCFile extends DBCFile<
     DeclinedWordCreator,
     DeclinedWordQuery,
     DeclinedWordRow> {
+    constructor() {
+        super('DeclinedWord',(t,b,o)=>new DeclinedWordRow(t,b,o))
+    }
+    /** Loads a new DeclinedWord.dbc from a file. */
+    static read(path: string): DeclinedWordDBCFile {
+        return new DeclinedWordDBCFile().read(path);
+    }
     add(ID : int, c? : DeclinedWordCreator) : DeclinedWordRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class DeclinedWordDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DeclinedWord = new DeclinedWordDBCFile(
-    'DeclinedWord',
-    (table,buffer,offset)=>new DeclinedWordRow(table,buffer,offset))

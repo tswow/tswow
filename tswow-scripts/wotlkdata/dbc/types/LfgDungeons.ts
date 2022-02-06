@@ -178,15 +178,14 @@ export class LfgDungeonsDBCFile extends DBCFile<
     LfgDungeonsCreator,
     LfgDungeonsQuery,
     LfgDungeonsRow> {
+    constructor() {
+        super('LfgDungeons',(t,b,o)=>new LfgDungeonsRow(t,b,o))
+    }
+    /** Loads a new LfgDungeons.dbc from a file. */
+    static read(path: string): LfgDungeonsDBCFile {
+        return new LfgDungeonsDBCFile().read(path);
+    }
     add(ID : int, c? : LfgDungeonsCreator) : LfgDungeonsRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LfgDungeons = new LfgDungeonsDBCFile(
-    'LFGDungeons',
-    (table,buffer,offset)=>new LfgDungeonsRow(table,buffer,offset))

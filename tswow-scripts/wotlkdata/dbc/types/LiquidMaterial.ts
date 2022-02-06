@@ -80,6 +80,13 @@ export class LiquidMaterialDBCFile extends DBCFile<
     LiquidMaterialCreator,
     LiquidMaterialQuery,
     LiquidMaterialRow> {
+    constructor() {
+        super('LiquidMaterial',(t,b,o)=>new LiquidMaterialRow(t,b,o))
+    }
+    /** Loads a new LiquidMaterial.dbc from a file. */
+    static read(path: string): LiquidMaterialDBCFile {
+        return new LiquidMaterialDBCFile().read(path);
+    }
     add(ID : int, c? : LiquidMaterialCreator) : LiquidMaterialRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class LiquidMaterialDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LiquidMaterial = new LiquidMaterialDBCFile(
-    'LiquidMaterial',
-    (table,buffer,offset)=>new LiquidMaterialRow(table,buffer,offset))

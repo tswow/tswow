@@ -101,6 +101,13 @@ export class WeatherDBCFile extends DBCFile<
     WeatherCreator,
     WeatherQuery,
     WeatherRow> {
+    constructor() {
+        super('Weather',(t,b,o)=>new WeatherRow(t,b,o))
+    }
+    /** Loads a new Weather.dbc from a file. */
+    static read(path: string): WeatherDBCFile {
+        return new WeatherDBCFile().read(path);
+    }
     add(ID : int, c? : WeatherCreator) : WeatherRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class WeatherDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Weather = new WeatherDBCFile(
-    'Weather',
-    (table,buffer,offset)=>new WeatherRow(table,buffer,offset))

@@ -115,15 +115,14 @@ export class CharStartOutfitDBCFile extends DBCFile<
     CharStartOutfitCreator,
     CharStartOutfitQuery,
     CharStartOutfitRow> {
+    constructor() {
+        super('CharStartOutfit',(t,b,o)=>new CharStartOutfitRow(t,b,o))
+    }
+    /** Loads a new CharStartOutfit.dbc from a file. */
+    static read(path: string): CharStartOutfitDBCFile {
+        return new CharStartOutfitDBCFile().read(path);
+    }
     add(ID : int, c? : CharStartOutfitCreator) : CharStartOutfitRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CharStartOutfit = new CharStartOutfitDBCFile(
-    'CharStartOutfit',
-    (table,buffer,offset)=>new CharStartOutfitRow(table,buffer,offset))

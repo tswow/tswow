@@ -94,6 +94,13 @@ export class CharTitlesDBCFile extends DBCFile<
     CharTitlesCreator,
     CharTitlesQuery,
     CharTitlesRow> {
+    constructor() {
+        super('CharTitles',(t,b,o)=>new CharTitlesRow(t,b,o))
+    }
+    /** Loads a new CharTitles.dbc from a file. */
+    static read(path: string): CharTitlesDBCFile {
+        return new CharTitlesDBCFile().read(path);
+    }
     add(ID : int, c? : CharTitlesCreator) : CharTitlesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class CharTitlesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CharTitles = new CharTitlesDBCFile(
-    'CharTitles',
-    (table,buffer,offset)=>new CharTitlesRow(table,buffer,offset))

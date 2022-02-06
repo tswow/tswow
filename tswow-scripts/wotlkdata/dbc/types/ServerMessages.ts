@@ -73,6 +73,13 @@ export class ServerMessagesDBCFile extends DBCFile<
     ServerMessagesCreator,
     ServerMessagesQuery,
     ServerMessagesRow> {
+    constructor() {
+        super('ServerMessages',(t,b,o)=>new ServerMessagesRow(t,b,o))
+    }
+    /** Loads a new ServerMessages.dbc from a file. */
+    static read(path: string): ServerMessagesDBCFile {
+        return new ServerMessagesDBCFile().read(path);
+    }
     add(ID : int, c? : ServerMessagesCreator) : ServerMessagesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ServerMessagesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ServerMessages = new ServerMessagesDBCFile(
-    'ServerMessages',
-    (table,buffer,offset)=>new ServerMessagesRow(table,buffer,offset))

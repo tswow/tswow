@@ -94,6 +94,13 @@ export class ZoneMusicDBCFile extends DBCFile<
     ZoneMusicCreator,
     ZoneMusicQuery,
     ZoneMusicRow> {
+    constructor() {
+        super('ZoneMusic',(t,b,o)=>new ZoneMusicRow(t,b,o))
+    }
+    /** Loads a new ZoneMusic.dbc from a file. */
+    static read(path: string): ZoneMusicDBCFile {
+        return new ZoneMusicDBCFile().read(path);
+    }
     add(ID : int, c? : ZoneMusicCreator) : ZoneMusicRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class ZoneMusicDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ZoneMusic = new ZoneMusicDBCFile(
-    'ZoneMusic',
-    (table,buffer,offset)=>new ZoneMusicRow(table,buffer,offset))

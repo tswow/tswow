@@ -63,15 +63,14 @@ export class GtChanceToSpellCritBaseDBCFile extends DBCFile<
     GtChanceToSpellCritBaseCreator,
     GtChanceToSpellCritBaseQuery,
     GtChanceToSpellCritBaseRow> {
+    constructor() {
+        super('GtChanceToSpellCritBase',(t,b,o)=>new GtChanceToSpellCritBaseRow(t,b,o))
+    }
+    /** Loads a new GtChanceToSpellCritBase.dbc from a file. */
+    static read(path: string): GtChanceToSpellCritBaseDBCFile {
+        return new GtChanceToSpellCritBaseDBCFile().read(path);
+    }
     add(c? : GtChanceToSpellCritBaseCreator) : GtChanceToSpellCritBaseRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtChanceToSpellCritBase = new GtChanceToSpellCritBaseDBCFile(
-    'gtChanceToSpellCritBase',
-    (table,buffer,offset)=>new GtChanceToSpellCritBaseRow(table,buffer,offset))

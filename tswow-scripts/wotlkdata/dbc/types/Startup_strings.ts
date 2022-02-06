@@ -80,6 +80,13 @@ export class Startup_stringsDBCFile extends DBCFile<
     Startup_stringsCreator,
     Startup_stringsQuery,
     Startup_stringsRow> {
+    constructor() {
+        super('Startup_strings',(t,b,o)=>new Startup_stringsRow(t,b,o))
+    }
+    /** Loads a new Startup_strings.dbc from a file. */
+    static read(path: string): Startup_stringsDBCFile {
+        return new Startup_stringsDBCFile().read(path);
+    }
     add(ID : int, c? : Startup_stringsCreator) : Startup_stringsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class Startup_stringsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Startup_strings = new Startup_stringsDBCFile(
-    'Startup_Strings',
-    (table,buffer,offset)=>new Startup_stringsRow(table,buffer,offset))

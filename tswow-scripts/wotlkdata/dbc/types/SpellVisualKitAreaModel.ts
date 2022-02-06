@@ -80,6 +80,13 @@ export class SpellVisualKitAreaModelDBCFile extends DBCFile<
     SpellVisualKitAreaModelCreator,
     SpellVisualKitAreaModelQuery,
     SpellVisualKitAreaModelRow> {
+    constructor() {
+        super('SpellVisualKitAreaModel',(t,b,o)=>new SpellVisualKitAreaModelRow(t,b,o))
+    }
+    /** Loads a new SpellVisualKitAreaModel.dbc from a file. */
+    static read(path: string): SpellVisualKitAreaModelDBCFile {
+        return new SpellVisualKitAreaModelDBCFile().read(path);
+    }
     add(ID : int, c? : SpellVisualKitAreaModelCreator) : SpellVisualKitAreaModelRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class SpellVisualKitAreaModelDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellVisualKitAreaModel = new SpellVisualKitAreaModelDBCFile(
-    'SpellVisualKitAreaModel',
-    (table,buffer,offset)=>new SpellVisualKitAreaModelRow(table,buffer,offset))

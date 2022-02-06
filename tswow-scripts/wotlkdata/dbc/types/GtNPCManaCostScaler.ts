@@ -63,15 +63,14 @@ export class GtNPCManaCostScalerDBCFile extends DBCFile<
     GtNPCManaCostScalerCreator,
     GtNPCManaCostScalerQuery,
     GtNPCManaCostScalerRow> {
+    constructor() {
+        super('GtNPCManaCostScaler',(t,b,o)=>new GtNPCManaCostScalerRow(t,b,o))
+    }
+    /** Loads a new GtNPCManaCostScaler.dbc from a file. */
+    static read(path: string): GtNPCManaCostScalerDBCFile {
+        return new GtNPCManaCostScalerDBCFile().read(path);
+    }
     add(c? : GtNPCManaCostScalerCreator) : GtNPCManaCostScalerRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtNPCManaCostScaler = new GtNPCManaCostScalerDBCFile(
-    'gtNPCManaCostScaler',
-    (table,buffer,offset)=>new GtNPCManaCostScalerRow(table,buffer,offset))

@@ -73,6 +73,13 @@ export class EmotesTextDataDBCFile extends DBCFile<
     EmotesTextDataCreator,
     EmotesTextDataQuery,
     EmotesTextDataRow> {
+    constructor() {
+        super('EmotesTextData',(t,b,o)=>new EmotesTextDataRow(t,b,o))
+    }
+    /** Loads a new EmotesTextData.dbc from a file. */
+    static read(path: string): EmotesTextDataDBCFile {
+        return new EmotesTextDataDBCFile().read(path);
+    }
     add(ID : int, c? : EmotesTextDataCreator) : EmotesTextDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class EmotesTextDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_EmotesTextData = new EmotesTextDataDBCFile(
-    'EmotesTextData',
-    (table,buffer,offset)=>new EmotesTextDataRow(table,buffer,offset))

@@ -262,6 +262,13 @@ export class VehicleDBCFile extends DBCFile<
     VehicleCreator,
     VehicleQuery,
     VehicleRow> {
+    constructor() {
+        super('Vehicle',(t,b,o)=>new VehicleRow(t,b,o))
+    }
+    /** Loads a new Vehicle.dbc from a file. */
+    static read(path: string): VehicleDBCFile {
+        return new VehicleDBCFile().read(path);
+    }
     add(ID : int, c? : VehicleCreator) : VehicleRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -269,11 +276,3 @@ export class VehicleDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Vehicle = new VehicleDBCFile(
-    'Vehicle',
-    (table,buffer,offset)=>new VehicleRow(table,buffer,offset))

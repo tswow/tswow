@@ -87,6 +87,13 @@ export class LightintBandDBCFile extends DBCFile<
     LightintBandCreator,
     LightintBandQuery,
     LightintBandRow> {
+    constructor() {
+        super('LightintBand',(t,b,o)=>new LightintBandRow(t,b,o))
+    }
+    /** Loads a new LightintBand.dbc from a file. */
+    static read(path: string): LightintBandDBCFile {
+        return new LightintBandDBCFile().read(path);
+    }
     add(ID : int, c? : LightintBandCreator) : LightintBandRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class LightintBandDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LightintBand = new LightintBandDBCFile(
-    'LightIntBand',
-    (table,buffer,offset)=>new LightintBandRow(table,buffer,offset))

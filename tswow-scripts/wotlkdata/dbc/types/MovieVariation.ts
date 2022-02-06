@@ -80,6 +80,13 @@ export class MovieVariationDBCFile extends DBCFile<
     MovieVariationCreator,
     MovieVariationQuery,
     MovieVariationRow> {
+    constructor() {
+        super('MovieVariation',(t,b,o)=>new MovieVariationRow(t,b,o))
+    }
+    /** Loads a new MovieVariation.dbc from a file. */
+    static read(path: string): MovieVariationDBCFile {
+        return new MovieVariationDBCFile().read(path);
+    }
     add(ID : int, c? : MovieVariationCreator) : MovieVariationRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class MovieVariationDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_MovieVariation = new MovieVariationDBCFile(
-    'MovieVariation',
-    (table,buffer,offset)=>new MovieVariationRow(table,buffer,offset))

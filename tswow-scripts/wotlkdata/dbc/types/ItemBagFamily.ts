@@ -73,6 +73,13 @@ export class ItemBagFamilyDBCFile extends DBCFile<
     ItemBagFamilyCreator,
     ItemBagFamilyQuery,
     ItemBagFamilyRow> {
+    constructor() {
+        super('ItemBagFamily',(t,b,o)=>new ItemBagFamilyRow(t,b,o))
+    }
+    /** Loads a new ItemBagFamily.dbc from a file. */
+    static read(path: string): ItemBagFamilyDBCFile {
+        return new ItemBagFamilyDBCFile().read(path);
+    }
     add(ID : int, c? : ItemBagFamilyCreator) : ItemBagFamilyRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ItemBagFamilyDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemBagFamily = new ItemBagFamilyDBCFile(
-    'ItemBagFamily',
-    (table,buffer,offset)=>new ItemBagFamilyRow(table,buffer,offset))

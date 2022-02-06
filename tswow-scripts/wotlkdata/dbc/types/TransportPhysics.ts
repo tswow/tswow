@@ -136,6 +136,13 @@ export class TransportPhysicsDBCFile extends DBCFile<
     TransportPhysicsCreator,
     TransportPhysicsQuery,
     TransportPhysicsRow> {
+    constructor() {
+        super('TransportPhysics',(t,b,o)=>new TransportPhysicsRow(t,b,o))
+    }
+    /** Loads a new TransportPhysics.dbc from a file. */
+    static read(path: string): TransportPhysicsDBCFile {
+        return new TransportPhysicsDBCFile().read(path);
+    }
     add(ID : int, c? : TransportPhysicsCreator) : TransportPhysicsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -143,11 +150,3 @@ export class TransportPhysicsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TransportPhysics = new TransportPhysicsDBCFile(
-    'TransportPhysics',
-    (table,buffer,offset)=>new TransportPhysicsRow(table,buffer,offset))

@@ -70,15 +70,14 @@ export class GtOCTClassCombatRatingScalarDBCFile extends DBCFile<
     GtOCTClassCombatRatingScalarCreator,
     GtOCTClassCombatRatingScalarQuery,
     GtOCTClassCombatRatingScalarRow> {
+    constructor() {
+        super('GtOCTClassCombatRatingScalar',(t,b,o)=>new GtOCTClassCombatRatingScalarRow(t,b,o))
+    }
+    /** Loads a new GtOCTClassCombatRatingScalar.dbc from a file. */
+    static read(path: string): GtOCTClassCombatRatingScalarDBCFile {
+        return new GtOCTClassCombatRatingScalarDBCFile().read(path);
+    }
     add(c? : GtOCTClassCombatRatingScalarCreator) : GtOCTClassCombatRatingScalarRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtOCTClassCombatRatingScalar = new GtOCTClassCombatRatingScalarDBCFile(
-    'gtOCTClassCombatRatingScalar',
-    (table,buffer,offset)=>new GtOCTClassCombatRatingScalarRow(table,buffer,offset))

@@ -94,15 +94,14 @@ export class EmotesTextSoundDBCFile extends DBCFile<
     EmotesTextSoundCreator,
     EmotesTextSoundQuery,
     EmotesTextSoundRow> {
+    constructor() {
+        super('EmotesTextSound',(t,b,o)=>new EmotesTextSoundRow(t,b,o))
+    }
+    /** Loads a new EmotesTextSound.dbc from a file. */
+    static read(path: string): EmotesTextSoundDBCFile {
+        return new EmotesTextSoundDBCFile().read(path);
+    }
     add(ID : int, c? : EmotesTextSoundCreator) : EmotesTextSoundRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_EmotesTextSound = new EmotesTextSoundDBCFile(
-    'EmotesTextSound',
-    (table,buffer,offset)=>new EmotesTextSoundRow(table,buffer,offset))

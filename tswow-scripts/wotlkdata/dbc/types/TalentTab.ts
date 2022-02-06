@@ -115,15 +115,14 @@ export class TalentTabDBCFile extends DBCFile<
     TalentTabCreator,
     TalentTabQuery,
     TalentTabRow> {
+    constructor() {
+        super('TalentTab',(t,b,o)=>new TalentTabRow(t,b,o))
+    }
+    /** Loads a new TalentTab.dbc from a file. */
+    static read(path: string): TalentTabDBCFile {
+        return new TalentTabDBCFile().read(path);
+    }
     add(ID : int, c? : TalentTabCreator) : TalentTabRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TalentTab = new TalentTabDBCFile(
-    'TalentTab',
-    (table,buffer,offset)=>new TalentTabRow(table,buffer,offset))

@@ -94,6 +94,13 @@ export class FootstepTerrainLookupDBCFile extends DBCFile<
     FootstepTerrainLookupCreator,
     FootstepTerrainLookupQuery,
     FootstepTerrainLookupRow> {
+    constructor() {
+        super('FootstepTerrainLookup',(t,b,o)=>new FootstepTerrainLookupRow(t,b,o))
+    }
+    /** Loads a new FootstepTerrainLookup.dbc from a file. */
+    static read(path: string): FootstepTerrainLookupDBCFile {
+        return new FootstepTerrainLookupDBCFile().read(path);
+    }
     add(ID : int, c? : FootstepTerrainLookupCreator) : FootstepTerrainLookupRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class FootstepTerrainLookupDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_FootstepTerrainLookup = new FootstepTerrainLookupDBCFile(
-    'FootstepTerrainLookup',
-    (table,buffer,offset)=>new FootstepTerrainLookupRow(table,buffer,offset))

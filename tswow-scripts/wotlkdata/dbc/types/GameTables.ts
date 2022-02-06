@@ -80,15 +80,14 @@ export class GameTablesDBCFile extends DBCFile<
     GameTablesCreator,
     GameTablesQuery,
     GameTablesRow> {
+    constructor() {
+        super('GameTables',(t,b,o)=>new GameTablesRow(t,b,o))
+    }
+    /** Loads a new GameTables.dbc from a file. */
+    static read(path: string): GameTablesDBCFile {
+        return new GameTablesDBCFile().read(path);
+    }
     add(Name : string, c? : GameTablesCreator) : GameTablesRow {
         return this.makeRow(0).clone(Name,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GameTables = new GameTablesDBCFile(
-    'GameTables',
-    (table,buffer,offset)=>new GameTablesRow(table,buffer,offset))

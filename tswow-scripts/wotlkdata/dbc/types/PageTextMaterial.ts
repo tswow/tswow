@@ -73,6 +73,13 @@ export class PageTextMaterialDBCFile extends DBCFile<
     PageTextMaterialCreator,
     PageTextMaterialQuery,
     PageTextMaterialRow> {
+    constructor() {
+        super('PageTextMaterial',(t,b,o)=>new PageTextMaterialRow(t,b,o))
+    }
+    /** Loads a new PageTextMaterial.dbc from a file. */
+    static read(path: string): PageTextMaterialDBCFile {
+        return new PageTextMaterialDBCFile().read(path);
+    }
     add(ID : int, c? : PageTextMaterialCreator) : PageTextMaterialRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class PageTextMaterialDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_PageTextMaterial = new PageTextMaterialDBCFile(
-    'PageTextMaterial',
-    (table,buffer,offset)=>new PageTextMaterialRow(table,buffer,offset))

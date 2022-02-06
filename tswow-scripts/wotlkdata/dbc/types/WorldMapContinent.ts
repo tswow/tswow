@@ -157,6 +157,13 @@ export class WorldMapContinentDBCFile extends DBCFile<
     WorldMapContinentCreator,
     WorldMapContinentQuery,
     WorldMapContinentRow> {
+    constructor() {
+        super('WorldMapContinent',(t,b,o)=>new WorldMapContinentRow(t,b,o))
+    }
+    /** Loads a new WorldMapContinent.dbc from a file. */
+    static read(path: string): WorldMapContinentDBCFile {
+        return new WorldMapContinentDBCFile().read(path);
+    }
     add(ID : int, c? : WorldMapContinentCreator) : WorldMapContinentRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -164,11 +171,3 @@ export class WorldMapContinentDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldMapContinent = new WorldMapContinentDBCFile(
-    'WorldMapContinent',
-    (table,buffer,offset)=>new WorldMapContinentRow(table,buffer,offset))

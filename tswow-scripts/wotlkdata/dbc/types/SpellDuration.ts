@@ -87,6 +87,13 @@ export class SpellDurationDBCFile extends DBCFile<
     SpellDurationCreator,
     SpellDurationQuery,
     SpellDurationRow> {
+    constructor() {
+        super('SpellDuration',(t,b,o)=>new SpellDurationRow(t,b,o))
+    }
+    /** Loads a new SpellDuration.dbc from a file. */
+    static read(path: string): SpellDurationDBCFile {
+        return new SpellDurationDBCFile().read(path);
+    }
     add(ID : int, c? : SpellDurationCreator) : SpellDurationRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class SpellDurationDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellDuration = new SpellDurationDBCFile(
-    'SpellDuration',
-    (table,buffer,offset)=>new SpellDurationRow(table,buffer,offset))

@@ -129,6 +129,13 @@ export class SpellVisualKitModelAttachDBCFile extends DBCFile<
     SpellVisualKitModelAttachCreator,
     SpellVisualKitModelAttachQuery,
     SpellVisualKitModelAttachRow> {
+    constructor() {
+        super('SpellVisualKitModelAttach',(t,b,o)=>new SpellVisualKitModelAttachRow(t,b,o))
+    }
+    /** Loads a new SpellVisualKitModelAttach.dbc from a file. */
+    static read(path: string): SpellVisualKitModelAttachDBCFile {
+        return new SpellVisualKitModelAttachDBCFile().read(path);
+    }
     add(ID : int, c? : SpellVisualKitModelAttachCreator) : SpellVisualKitModelAttachRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -136,11 +143,3 @@ export class SpellVisualKitModelAttachDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellVisualKitModelAttach = new SpellVisualKitModelAttachDBCFile(
-    'SpellVisualKitModelAttach',
-    (table,buffer,offset)=>new SpellVisualKitModelAttachRow(table,buffer,offset))

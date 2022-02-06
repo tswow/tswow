@@ -395,6 +395,13 @@ export class SpellChainEffectsDBCFile extends DBCFile<
     SpellChainEffectsCreator,
     SpellChainEffectsQuery,
     SpellChainEffectsRow> {
+    constructor() {
+        super('SpellChainEffects',(t,b,o)=>new SpellChainEffectsRow(t,b,o))
+    }
+    /** Loads a new SpellChainEffects.dbc from a file. */
+    static read(path: string): SpellChainEffectsDBCFile {
+        return new SpellChainEffectsDBCFile().read(path);
+    }
     add(ID : int, c? : SpellChainEffectsCreator) : SpellChainEffectsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -402,11 +409,3 @@ export class SpellChainEffectsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellChainEffects = new SpellChainEffectsDBCFile(
-    'SpellChainEffects',
-    (table,buffer,offset)=>new SpellChainEffectsRow(table,buffer,offset))

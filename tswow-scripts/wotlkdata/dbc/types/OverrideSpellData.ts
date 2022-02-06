@@ -80,6 +80,13 @@ export class OverrideSpellDataDBCFile extends DBCFile<
     OverrideSpellDataCreator,
     OverrideSpellDataQuery,
     OverrideSpellDataRow> {
+    constructor() {
+        super('OverrideSpellData',(t,b,o)=>new OverrideSpellDataRow(t,b,o))
+    }
+    /** Loads a new OverrideSpellData.dbc from a file. */
+    static read(path: string): OverrideSpellDataDBCFile {
+        return new OverrideSpellDataDBCFile().read(path);
+    }
     add(ID : int, c? : OverrideSpellDataCreator) : OverrideSpellDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class OverrideSpellDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_OverrideSpellData = new OverrideSpellDataDBCFile(
-    'OverrideSpellData',
-    (table,buffer,offset)=>new OverrideSpellDataRow(table,buffer,offset))

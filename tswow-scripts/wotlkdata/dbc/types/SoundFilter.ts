@@ -73,6 +73,13 @@ export class SoundFilterDBCFile extends DBCFile<
     SoundFilterCreator,
     SoundFilterQuery,
     SoundFilterRow> {
+    constructor() {
+        super('SoundFilter',(t,b,o)=>new SoundFilterRow(t,b,o))
+    }
+    /** Loads a new SoundFilter.dbc from a file. */
+    static read(path: string): SoundFilterDBCFile {
+        return new SoundFilterDBCFile().read(path);
+    }
     add(ID : int, c? : SoundFilterCreator) : SoundFilterRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SoundFilterDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundFilter = new SoundFilterDBCFile(
-    'SoundFilter',
-    (table,buffer,offset)=>new SoundFilterRow(table,buffer,offset))

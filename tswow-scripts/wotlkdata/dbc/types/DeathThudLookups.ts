@@ -94,6 +94,13 @@ export class DeathThudLookupsDBCFile extends DBCFile<
     DeathThudLookupsCreator,
     DeathThudLookupsQuery,
     DeathThudLookupsRow> {
+    constructor() {
+        super('DeathThudLookups',(t,b,o)=>new DeathThudLookupsRow(t,b,o))
+    }
+    /** Loads a new DeathThudLookups.dbc from a file. */
+    static read(path: string): DeathThudLookupsDBCFile {
+        return new DeathThudLookupsDBCFile().read(path);
+    }
     add(ID : int, c? : DeathThudLookupsCreator) : DeathThudLookupsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class DeathThudLookupsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DeathThudLookups = new DeathThudLookupsDBCFile(
-    'DeathThudLookups',
-    (table,buffer,offset)=>new DeathThudLookupsRow(table,buffer,offset))

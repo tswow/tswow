@@ -73,15 +73,14 @@ export class GameTipsDBCFile extends DBCFile<
     GameTipsCreator,
     GameTipsQuery,
     GameTipsRow> {
+    constructor() {
+        super('GameTips',(t,b,o)=>new GameTipsRow(t,b,o))
+    }
+    /** Loads a new GameTips.dbc from a file. */
+    static read(path: string): GameTipsDBCFile {
+        return new GameTipsDBCFile().read(path);
+    }
     add(ID : int, c? : GameTipsCreator) : GameTipsRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GameTips = new GameTipsDBCFile(
-    'GameTips',
-    (table,buffer,offset)=>new GameTipsRow(table,buffer,offset))

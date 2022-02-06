@@ -87,6 +87,13 @@ export class SpellRadiusDBCFile extends DBCFile<
     SpellRadiusCreator,
     SpellRadiusQuery,
     SpellRadiusRow> {
+    constructor() {
+        super('SpellRadius',(t,b,o)=>new SpellRadiusRow(t,b,o))
+    }
+    /** Loads a new SpellRadius.dbc from a file. */
+    static read(path: string): SpellRadiusDBCFile {
+        return new SpellRadiusDBCFile().read(path);
+    }
     add(ID : int, c? : SpellRadiusCreator) : SpellRadiusRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class SpellRadiusDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellRadius = new SpellRadiusDBCFile(
-    'SpellRadius',
-    (table,buffer,offset)=>new SpellRadiusRow(table,buffer,offset))

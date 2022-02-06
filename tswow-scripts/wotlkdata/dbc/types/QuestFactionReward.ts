@@ -73,6 +73,13 @@ export class QuestFactionRewardDBCFile extends DBCFile<
     QuestFactionRewardCreator,
     QuestFactionRewardQuery,
     QuestFactionRewardRow> {
+    constructor() {
+        super('QuestFactionReward',(t,b,o)=>new QuestFactionRewardRow(t,b,o))
+    }
+    /** Loads a new QuestFactionReward.dbc from a file. */
+    static read(path: string): QuestFactionRewardDBCFile {
+        return new QuestFactionRewardDBCFile().read(path);
+    }
     add(ID : int, c? : QuestFactionRewardCreator) : QuestFactionRewardRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class QuestFactionRewardDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_QuestFactionReward = new QuestFactionRewardDBCFile(
-    'QuestFactionReward',
-    (table,buffer,offset)=>new QuestFactionRewardRow(table,buffer,offset))

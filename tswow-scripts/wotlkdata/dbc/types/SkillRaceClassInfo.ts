@@ -115,15 +115,14 @@ export class SkillRaceClassInfoDBCFile extends DBCFile<
     SkillRaceClassInfoCreator,
     SkillRaceClassInfoQuery,
     SkillRaceClassInfoRow> {
+    constructor() {
+        super('SkillRaceClassInfo',(t,b,o)=>new SkillRaceClassInfoRow(t,b,o))
+    }
+    /** Loads a new SkillRaceClassInfo.dbc from a file. */
+    static read(path: string): SkillRaceClassInfoDBCFile {
+        return new SkillRaceClassInfoDBCFile().read(path);
+    }
     add(ID : int, c? : SkillRaceClassInfoCreator) : SkillRaceClassInfoRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SkillRaceClassInfo = new SkillRaceClassInfoDBCFile(
-    'SkillRaceClassInfo',
-    (table,buffer,offset)=>new SkillRaceClassInfoRow(table,buffer,offset))

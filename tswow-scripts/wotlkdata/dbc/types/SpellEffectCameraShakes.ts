@@ -73,6 +73,13 @@ export class SpellEffectCameraShakesDBCFile extends DBCFile<
     SpellEffectCameraShakesCreator,
     SpellEffectCameraShakesQuery,
     SpellEffectCameraShakesRow> {
+    constructor() {
+        super('SpellEffectCameraShakes',(t,b,o)=>new SpellEffectCameraShakesRow(t,b,o))
+    }
+    /** Loads a new SpellEffectCameraShakes.dbc from a file. */
+    static read(path: string): SpellEffectCameraShakesDBCFile {
+        return new SpellEffectCameraShakesDBCFile().read(path);
+    }
     add(ID : int, c? : SpellEffectCameraShakesCreator) : SpellEffectCameraShakesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SpellEffectCameraShakesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellEffectCameraShakes = new SpellEffectCameraShakesDBCFile(
-    'SpellEffectCameraShakes',
-    (table,buffer,offset)=>new SpellEffectCameraShakesRow(table,buffer,offset))

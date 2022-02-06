@@ -73,6 +73,13 @@ export class GMTicketCategoryDBCFile extends DBCFile<
     GMTicketCategoryCreator,
     GMTicketCategoryQuery,
     GMTicketCategoryRow> {
+    constructor() {
+        super('GMTicketCategory',(t,b,o)=>new GMTicketCategoryRow(t,b,o))
+    }
+    /** Loads a new GMTicketCategory.dbc from a file. */
+    static read(path: string): GMTicketCategoryDBCFile {
+        return new GMTicketCategoryDBCFile().read(path);
+    }
     add(ID : int, c? : GMTicketCategoryCreator) : GMTicketCategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class GMTicketCategoryDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GMTicketCategory = new GMTicketCategoryDBCFile(
-    'GMTicketCategory',
-    (table,buffer,offset)=>new GMTicketCategoryRow(table,buffer,offset))

@@ -108,15 +108,14 @@ export class TransportAnimationDBCFile extends DBCFile<
     TransportAnimationCreator,
     TransportAnimationQuery,
     TransportAnimationRow> {
+    constructor() {
+        super('TransportAnimation',(t,b,o)=>new TransportAnimationRow(t,b,o))
+    }
+    /** Loads a new TransportAnimation.dbc from a file. */
+    static read(path: string): TransportAnimationDBCFile {
+        return new TransportAnimationDBCFile().read(path);
+    }
     add(ID : int, c? : TransportAnimationCreator) : TransportAnimationRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TransportAnimation = new TransportAnimationDBCFile(
-    'TransportAnimation',
-    (table,buffer,offset)=>new TransportAnimationRow(table,buffer,offset))

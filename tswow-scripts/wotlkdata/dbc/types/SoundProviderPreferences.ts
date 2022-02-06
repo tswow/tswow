@@ -227,6 +227,13 @@ export class SoundProviderPreferencesDBCFile extends DBCFile<
     SoundProviderPreferencesCreator,
     SoundProviderPreferencesQuery,
     SoundProviderPreferencesRow> {
+    constructor() {
+        super('SoundProviderPreferences',(t,b,o)=>new SoundProviderPreferencesRow(t,b,o))
+    }
+    /** Loads a new SoundProviderPreferences.dbc from a file. */
+    static read(path: string): SoundProviderPreferencesDBCFile {
+        return new SoundProviderPreferencesDBCFile().read(path);
+    }
     add(ID : int, c? : SoundProviderPreferencesCreator) : SoundProviderPreferencesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -234,11 +241,3 @@ export class SoundProviderPreferencesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundProviderPreferences = new SoundProviderPreferencesDBCFile(
-    'SoundProviderPreferences',
-    (table,buffer,offset)=>new SoundProviderPreferencesRow(table,buffer,offset))

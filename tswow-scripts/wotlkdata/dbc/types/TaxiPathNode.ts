@@ -136,15 +136,14 @@ export class TaxiPathNodeDBCFile extends DBCFile<
     TaxiPathNodeCreator,
     TaxiPathNodeQuery,
     TaxiPathNodeRow> {
+    constructor() {
+        super('TaxiPathNode',(t,b,o)=>new TaxiPathNodeRow(t,b,o))
+    }
+    /** Loads a new TaxiPathNode.dbc from a file. */
+    static read(path: string): TaxiPathNodeDBCFile {
+        return new TaxiPathNodeDBCFile().read(path);
+    }
     add(ID : int, c? : TaxiPathNodeCreator) : TaxiPathNodeRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TaxiPathNode = new TaxiPathNodeDBCFile(
-    'TaxiPathNode',
-    (table,buffer,offset)=>new TaxiPathNodeRow(table,buffer,offset))

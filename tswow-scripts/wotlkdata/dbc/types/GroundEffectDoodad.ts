@@ -80,6 +80,13 @@ export class GroundEffectDoodadDBCFile extends DBCFile<
     GroundEffectDoodadCreator,
     GroundEffectDoodadQuery,
     GroundEffectDoodadRow> {
+    constructor() {
+        super('GroundEffectDoodad',(t,b,o)=>new GroundEffectDoodadRow(t,b,o))
+    }
+    /** Loads a new GroundEffectDoodad.dbc from a file. */
+    static read(path: string): GroundEffectDoodadDBCFile {
+        return new GroundEffectDoodadDBCFile().read(path);
+    }
     add(ID : int, c? : GroundEffectDoodadCreator) : GroundEffectDoodadRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class GroundEffectDoodadDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GroundEffectDoodad = new GroundEffectDoodadDBCFile(
-    'GroundEffectDoodad',
-    (table,buffer,offset)=>new GroundEffectDoodadRow(table,buffer,offset))

@@ -101,6 +101,13 @@ export class CharHairGeosetsDBCFile extends DBCFile<
     CharHairGeosetsCreator,
     CharHairGeosetsQuery,
     CharHairGeosetsRow> {
+    constructor() {
+        super('CharHairGeosets',(t,b,o)=>new CharHairGeosetsRow(t,b,o))
+    }
+    /** Loads a new CharHairGeosets.dbc from a file. */
+    static read(path: string): CharHairGeosetsDBCFile {
+        return new CharHairGeosetsDBCFile().read(path);
+    }
     add(ID : int, c? : CharHairGeosetsCreator) : CharHairGeosetsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class CharHairGeosetsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CharHairGeosets = new CharHairGeosetsDBCFile(
-    'CharHairGeosets',
-    (table,buffer,offset)=>new CharHairGeosetsRow(table,buffer,offset))

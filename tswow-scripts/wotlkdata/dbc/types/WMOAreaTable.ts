@@ -143,15 +143,14 @@ export class WMOAreaTableDBCFile extends DBCFile<
     WMOAreaTableCreator,
     WMOAreaTableQuery,
     WMOAreaTableRow> {
+    constructor() {
+        super('WMOAreaTable',(t,b,o)=>new WMOAreaTableRow(t,b,o))
+    }
+    /** Loads a new WMOAreaTable.dbc from a file. */
+    static read(path: string): WMOAreaTableDBCFile {
+        return new WMOAreaTableDBCFile().read(path);
+    }
     add(ID : int, c? : WMOAreaTableCreator) : WMOAreaTableRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WMOAreaTable = new WMOAreaTableDBCFile(
-    'WMOAreaTable',
-    (table,buffer,offset)=>new WMOAreaTableRow(table,buffer,offset))

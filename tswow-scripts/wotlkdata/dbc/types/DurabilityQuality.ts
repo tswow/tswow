@@ -73,6 +73,13 @@ export class DurabilityQualityDBCFile extends DBCFile<
     DurabilityQualityCreator,
     DurabilityQualityQuery,
     DurabilityQualityRow> {
+    constructor() {
+        super('DurabilityQuality',(t,b,o)=>new DurabilityQualityRow(t,b,o))
+    }
+    /** Loads a new DurabilityQuality.dbc from a file. */
+    static read(path: string): DurabilityQualityDBCFile {
+        return new DurabilityQualityDBCFile().read(path);
+    }
     add(ID : int, c? : DurabilityQualityCreator) : DurabilityQualityRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class DurabilityQualityDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DurabilityQuality = new DurabilityQualityDBCFile(
-    'DurabilityQuality',
-    (table,buffer,offset)=>new DurabilityQualityRow(table,buffer,offset))

@@ -115,15 +115,14 @@ export class CharSectionsDBCFile extends DBCFile<
     CharSectionsCreator,
     CharSectionsQuery,
     CharSectionsRow> {
+    constructor() {
+        super('CharSections',(t,b,o)=>new CharSectionsRow(t,b,o))
+    }
+    /** Loads a new CharSections.dbc from a file. */
+    static read(path: string): CharSectionsDBCFile {
+        return new CharSectionsDBCFile().read(path);
+    }
     add(ID : int, c? : CharSectionsCreator) : CharSectionsRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CharSections = new CharSectionsDBCFile(
-    'CharSections',
-    (table,buffer,offset)=>new CharSectionsRow(table,buffer,offset))

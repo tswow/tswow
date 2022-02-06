@@ -206,6 +206,13 @@ export class SpellVisualKitDBCFile extends DBCFile<
     SpellVisualKitCreator,
     SpellVisualKitQuery,
     SpellVisualKitRow> {
+    constructor() {
+        super('SpellVisualKit',(t,b,o)=>new SpellVisualKitRow(t,b,o))
+    }
+    /** Loads a new SpellVisualKit.dbc from a file. */
+    static read(path: string): SpellVisualKitDBCFile {
+        return new SpellVisualKitDBCFile().read(path);
+    }
     add(ID : int, c? : SpellVisualKitCreator) : SpellVisualKitRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -213,11 +220,3 @@ export class SpellVisualKitDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellVisualKit = new SpellVisualKitDBCFile(
-    'SpellVisualKit',
-    (table,buffer,offset)=>new SpellVisualKitRow(table,buffer,offset))

@@ -73,6 +73,13 @@ export class BankBagSlotPricesDBCFile extends DBCFile<
     BankBagSlotPricesCreator,
     BankBagSlotPricesQuery,
     BankBagSlotPricesRow> {
+    constructor() {
+        super('BankBagSlotPrices',(t,b,o)=>new BankBagSlotPricesRow(t,b,o))
+    }
+    /** Loads a new BankBagSlotPrices.dbc from a file. */
+    static read(path: string): BankBagSlotPricesDBCFile {
+        return new BankBagSlotPricesDBCFile().read(path);
+    }
     add(ID : int, c? : BankBagSlotPricesCreator) : BankBagSlotPricesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class BankBagSlotPricesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_BankBagSlotPrices = new BankBagSlotPricesDBCFile(
-    'BankBagSlotPrices',
-    (table,buffer,offset)=>new BankBagSlotPricesRow(table,buffer,offset))

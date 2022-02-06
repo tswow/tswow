@@ -94,15 +94,14 @@ export class DungeonMapChunkDBCFile extends DBCFile<
     DungeonMapChunkCreator,
     DungeonMapChunkQuery,
     DungeonMapChunkRow> {
+    constructor() {
+        super('DungeonMapChunk',(t,b,o)=>new DungeonMapChunkRow(t,b,o))
+    }
+    /** Loads a new DungeonMapChunk.dbc from a file. */
+    static read(path: string): DungeonMapChunkDBCFile {
+        return new DungeonMapChunkDBCFile().read(path);
+    }
     add(ID : int, c? : DungeonMapChunkCreator) : DungeonMapChunkRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DungeonMapChunk = new DungeonMapChunkDBCFile(
-    'DungeonMapChunk',
-    (table,buffer,offset)=>new DungeonMapChunkRow(table,buffer,offset))

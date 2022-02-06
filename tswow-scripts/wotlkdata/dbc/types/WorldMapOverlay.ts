@@ -157,6 +157,13 @@ export class WorldMapOverlayDBCFile extends DBCFile<
     WorldMapOverlayCreator,
     WorldMapOverlayQuery,
     WorldMapOverlayRow> {
+    constructor() {
+        super('WorldMapOverlay',(t,b,o)=>new WorldMapOverlayRow(t,b,o))
+    }
+    /** Loads a new WorldMapOverlay.dbc from a file. */
+    static read(path: string): WorldMapOverlayDBCFile {
+        return new WorldMapOverlayDBCFile().read(path);
+    }
     add(ID : int, c? : WorldMapOverlayCreator) : WorldMapOverlayRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -164,11 +171,3 @@ export class WorldMapOverlayDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldMapOverlay = new WorldMapOverlayDBCFile(
-    'WorldMapOverlay',
-    (table,buffer,offset)=>new WorldMapOverlayRow(table,buffer,offset))

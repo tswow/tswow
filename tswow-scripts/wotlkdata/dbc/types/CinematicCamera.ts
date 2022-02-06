@@ -108,6 +108,13 @@ export class CinematicCameraDBCFile extends DBCFile<
     CinematicCameraCreator,
     CinematicCameraQuery,
     CinematicCameraRow> {
+    constructor() {
+        super('CinematicCamera',(t,b,o)=>new CinematicCameraRow(t,b,o))
+    }
+    /** Loads a new CinematicCamera.dbc from a file. */
+    static read(path: string): CinematicCameraDBCFile {
+        return new CinematicCameraDBCFile().read(path);
+    }
     add(ID : int, c? : CinematicCameraCreator) : CinematicCameraRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class CinematicCameraDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CinematicCamera = new CinematicCameraDBCFile(
-    'CinematicCamera',
-    (table,buffer,offset)=>new CinematicCameraRow(table,buffer,offset))

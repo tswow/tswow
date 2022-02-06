@@ -80,6 +80,13 @@ export class GameObjectArtKitDBCFile extends DBCFile<
     GameObjectArtKitCreator,
     GameObjectArtKitQuery,
     GameObjectArtKitRow> {
+    constructor() {
+        super('GameObjectArtKit',(t,b,o)=>new GameObjectArtKitRow(t,b,o))
+    }
+    /** Loads a new GameObjectArtKit.dbc from a file. */
+    static read(path: string): GameObjectArtKitDBCFile {
+        return new GameObjectArtKitDBCFile().read(path);
+    }
     add(ID : int, c? : GameObjectArtKitCreator) : GameObjectArtKitRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class GameObjectArtKitDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GameObjectArtKit = new GameObjectArtKitDBCFile(
-    'GameObjectArtKit',
-    (table,buffer,offset)=>new GameObjectArtKitRow(table,buffer,offset))

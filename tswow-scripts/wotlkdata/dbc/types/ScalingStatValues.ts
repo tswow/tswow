@@ -227,15 +227,14 @@ export class ScalingStatValuesDBCFile extends DBCFile<
     ScalingStatValuesCreator,
     ScalingStatValuesQuery,
     ScalingStatValuesRow> {
+    constructor() {
+        super('ScalingStatValues',(t,b,o)=>new ScalingStatValuesRow(t,b,o))
+    }
+    /** Loads a new ScalingStatValues.dbc from a file. */
+    static read(path: string): ScalingStatValuesDBCFile {
+        return new ScalingStatValuesDBCFile().read(path);
+    }
     add(ID : int, c? : ScalingStatValuesCreator) : ScalingStatValuesRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ScalingStatValues = new ScalingStatValuesDBCFile(
-    'ScalingStatValues',
-    (table,buffer,offset)=>new ScalingStatValuesRow(table,buffer,offset))

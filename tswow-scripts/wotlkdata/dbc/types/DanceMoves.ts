@@ -115,6 +115,13 @@ export class DanceMovesDBCFile extends DBCFile<
     DanceMovesCreator,
     DanceMovesQuery,
     DanceMovesRow> {
+    constructor() {
+        super('DanceMoves',(t,b,o)=>new DanceMovesRow(t,b,o))
+    }
+    /** Loads a new DanceMoves.dbc from a file. */
+    static read(path: string): DanceMovesDBCFile {
+        return new DanceMovesDBCFile().read(path);
+    }
     add(ID : int, c? : DanceMovesCreator) : DanceMovesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class DanceMovesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DanceMoves = new DanceMovesDBCFile(
-    'DanceMoves',
-    (table,buffer,offset)=>new DanceMovesRow(table,buffer,offset))

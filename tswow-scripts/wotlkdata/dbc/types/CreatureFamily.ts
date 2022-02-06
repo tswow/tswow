@@ -136,6 +136,13 @@ export class CreatureFamilyDBCFile extends DBCFile<
     CreatureFamilyCreator,
     CreatureFamilyQuery,
     CreatureFamilyRow> {
+    constructor() {
+        super('CreatureFamily',(t,b,o)=>new CreatureFamilyRow(t,b,o))
+    }
+    /** Loads a new CreatureFamily.dbc from a file. */
+    static read(path: string): CreatureFamilyDBCFile {
+        return new CreatureFamilyDBCFile().read(path);
+    }
     add(ID : int, c? : CreatureFamilyCreator) : CreatureFamilyRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -143,11 +150,3 @@ export class CreatureFamilyDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CreatureFamily = new CreatureFamilyDBCFile(
-    'CreatureFamily',
-    (table,buffer,offset)=>new CreatureFamilyRow(table,buffer,offset))

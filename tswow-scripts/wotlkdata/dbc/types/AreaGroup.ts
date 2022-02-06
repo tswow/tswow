@@ -80,6 +80,13 @@ export class AreaGroupDBCFile extends DBCFile<
     AreaGroupCreator,
     AreaGroupQuery,
     AreaGroupRow> {
+    constructor() {
+        super('AreaGroup',(t,b,o)=>new AreaGroupRow(t,b,o))
+    }
+    /** Loads a new AreaGroup.dbc from a file. */
+    static read(path: string): AreaGroupDBCFile {
+        return new AreaGroupDBCFile().read(path);
+    }
     add(ID : int, c? : AreaGroupCreator) : AreaGroupRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class AreaGroupDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AreaGroup = new AreaGroupDBCFile(
-    'AreaGroup',
-    (table,buffer,offset)=>new AreaGroupRow(table,buffer,offset))

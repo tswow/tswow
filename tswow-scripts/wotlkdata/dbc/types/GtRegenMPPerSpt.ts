@@ -63,15 +63,14 @@ export class GtRegenMPPerSptDBCFile extends DBCFile<
     GtRegenMPPerSptCreator,
     GtRegenMPPerSptQuery,
     GtRegenMPPerSptRow> {
+    constructor() {
+        super('GtRegenMPPerSpt',(t,b,o)=>new GtRegenMPPerSptRow(t,b,o))
+    }
+    /** Loads a new GtRegenMPPerSpt.dbc from a file. */
+    static read(path: string): GtRegenMPPerSptDBCFile {
+        return new GtRegenMPPerSptDBCFile().read(path);
+    }
     add(c? : GtRegenMPPerSptCreator) : GtRegenMPPerSptRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtRegenMPPerSpt = new GtRegenMPPerSptDBCFile(
-    'gtRegenMPPerSpt',
-    (table,buffer,offset)=>new GtRegenMPPerSptRow(table,buffer,offset))

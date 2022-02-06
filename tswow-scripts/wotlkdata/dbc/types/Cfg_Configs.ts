@@ -87,15 +87,14 @@ export class Cfg_ConfigsDBCFile extends DBCFile<
     Cfg_ConfigsCreator,
     Cfg_ConfigsQuery,
     Cfg_ConfigsRow> {
+    constructor() {
+        super('Cfg_Configs',(t,b,o)=>new Cfg_ConfigsRow(t,b,o))
+    }
+    /** Loads a new Cfg_Configs.dbc from a file. */
+    static read(path: string): Cfg_ConfigsDBCFile {
+        return new Cfg_ConfigsDBCFile().read(path);
+    }
     add(Id : int, c? : Cfg_ConfigsCreator) : Cfg_ConfigsRow {
         return this.makeRow(0).clone(Id,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Cfg_Configs = new Cfg_ConfigsDBCFile(
-    'Cfg_Configs',
-    (table,buffer,offset)=>new Cfg_ConfigsRow(table,buffer,offset))

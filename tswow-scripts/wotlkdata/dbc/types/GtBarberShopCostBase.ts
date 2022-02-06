@@ -63,15 +63,14 @@ export class GtBarberShopCostBaseDBCFile extends DBCFile<
     GtBarberShopCostBaseCreator,
     GtBarberShopCostBaseQuery,
     GtBarberShopCostBaseRow> {
+    constructor() {
+        super('GtBarberShopCostBase',(t,b,o)=>new GtBarberShopCostBaseRow(t,b,o))
+    }
+    /** Loads a new GtBarberShopCostBase.dbc from a file. */
+    static read(path: string): GtBarberShopCostBaseDBCFile {
+        return new GtBarberShopCostBaseDBCFile().read(path);
+    }
     add(c? : GtBarberShopCostBaseCreator) : GtBarberShopCostBaseRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtBarberShopCostBase = new GtBarberShopCostBaseDBCFile(
-    'gtBarberShopCostBase',
-    (table,buffer,offset)=>new GtBarberShopCostBaseRow(table,buffer,offset))

@@ -812,6 +812,13 @@ export class SpellDBCFile extends DBCFile<
     SpellCreator,
     SpellQuery,
     SpellRow> {
+    constructor() {
+        super('Spell',(t,b,o)=>new SpellRow(t,b,o))
+    }
+    /** Loads a new Spell.dbc from a file. */
+    static read(path: string): SpellDBCFile {
+        return new SpellDBCFile().read(path);
+    }
     add(ID : int, c? : SpellCreator) : SpellRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -819,11 +826,3 @@ export class SpellDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Spell = new SpellDBCFile(
-    'Spell',
-    (table,buffer,offset)=>new SpellRow(table,buffer,offset))

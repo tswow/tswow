@@ -143,6 +143,13 @@ export class ItemDisplayInfoDBCFile extends DBCFile<
     ItemDisplayInfoCreator,
     ItemDisplayInfoQuery,
     ItemDisplayInfoRow> {
+    constructor() {
+        super('ItemDisplayInfo',(t,b,o)=>new ItemDisplayInfoRow(t,b,o))
+    }
+    /** Loads a new ItemDisplayInfo.dbc from a file. */
+    static read(path: string): ItemDisplayInfoDBCFile {
+        return new ItemDisplayInfoDBCFile().read(path);
+    }
     add(ID : int, c? : ItemDisplayInfoCreator) : ItemDisplayInfoRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -150,11 +157,3 @@ export class ItemDisplayInfoDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemDisplayInfo = new ItemDisplayInfoDBCFile(
-    'ItemDisplayInfo',
-    (table,buffer,offset)=>new ItemDisplayInfoRow(table,buffer,offset))

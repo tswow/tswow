@@ -80,6 +80,13 @@ export class PetitionTypeDBCFile extends DBCFile<
     PetitionTypeCreator,
     PetitionTypeQuery,
     PetitionTypeRow> {
+    constructor() {
+        super('PetitionType',(t,b,o)=>new PetitionTypeRow(t,b,o))
+    }
+    /** Loads a new PetitionType.dbc from a file. */
+    static read(path: string): PetitionTypeDBCFile {
+        return new PetitionTypeDBCFile().read(path);
+    }
     add(ID : int, c? : PetitionTypeCreator) : PetitionTypeRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class PetitionTypeDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_PetitionType = new PetitionTypeDBCFile(
-    'PetitionType',
-    (table,buffer,offset)=>new PetitionTypeRow(table,buffer,offset))

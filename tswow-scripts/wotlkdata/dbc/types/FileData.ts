@@ -80,6 +80,13 @@ export class FileDataDBCFile extends DBCFile<
     FileDataCreator,
     FileDataQuery,
     FileDataRow> {
+    constructor() {
+        super('FileData',(t,b,o)=>new FileDataRow(t,b,o))
+    }
+    /** Loads a new FileData.dbc from a file. */
+    static read(path: string): FileDataDBCFile {
+        return new FileDataDBCFile().read(path);
+    }
     add(ID : int, c? : FileDataCreator) : FileDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class FileDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_FileData = new FileDataDBCFile(
-    'FileData',
-    (table,buffer,offset)=>new FileDataRow(table,buffer,offset))

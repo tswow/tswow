@@ -101,15 +101,14 @@ export class TerraintypeDBCFile extends DBCFile<
     TerraintypeCreator,
     TerraintypeQuery,
     TerraintypeRow> {
+    constructor() {
+        super('Terraintype',(t,b,o)=>new TerraintypeRow(t,b,o))
+    }
+    /** Loads a new Terraintype.dbc from a file. */
+    static read(path: string): TerraintypeDBCFile {
+        return new TerraintypeDBCFile().read(path);
+    }
     add(TerrainID : int, c? : TerraintypeCreator) : TerraintypeRow {
         return this.makeRow(0).clone(TerrainID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Terraintype = new TerraintypeDBCFile(
-    'TerrainType',
-    (table,buffer,offset)=>new TerraintypeRow(table,buffer,offset))

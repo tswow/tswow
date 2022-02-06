@@ -94,6 +94,13 @@ export class LoadingScreenTaxiSplinesDBCFile extends DBCFile<
     LoadingScreenTaxiSplinesCreator,
     LoadingScreenTaxiSplinesQuery,
     LoadingScreenTaxiSplinesRow> {
+    constructor() {
+        super('LoadingScreenTaxiSplines',(t,b,o)=>new LoadingScreenTaxiSplinesRow(t,b,o))
+    }
+    /** Loads a new LoadingScreenTaxiSplines.dbc from a file. */
+    static read(path: string): LoadingScreenTaxiSplinesDBCFile {
+        return new LoadingScreenTaxiSplinesDBCFile().read(path);
+    }
     add(ID : int, c? : LoadingScreenTaxiSplinesCreator) : LoadingScreenTaxiSplinesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class LoadingScreenTaxiSplinesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LoadingScreenTaxiSplines = new LoadingScreenTaxiSplinesDBCFile(
-    'LoadingScreenTaxiSplines',
-    (table,buffer,offset)=>new LoadingScreenTaxiSplinesRow(table,buffer,offset))

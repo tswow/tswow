@@ -63,15 +63,14 @@ export class GtOCTRegenHPDBCFile extends DBCFile<
     GtOCTRegenHPCreator,
     GtOCTRegenHPQuery,
     GtOCTRegenHPRow> {
+    constructor() {
+        super('GtOCTRegenHP',(t,b,o)=>new GtOCTRegenHPRow(t,b,o))
+    }
+    /** Loads a new GtOCTRegenHP.dbc from a file. */
+    static read(path: string): GtOCTRegenHPDBCFile {
+        return new GtOCTRegenHPDBCFile().read(path);
+    }
     add(c? : GtOCTRegenHPCreator) : GtOCTRegenHPRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtOCTRegenHP = new GtOCTRegenHPDBCFile(
-    'gtOCTRegenHP',
-    (table,buffer,offset)=>new GtOCTRegenHPRow(table,buffer,offset))

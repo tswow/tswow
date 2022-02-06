@@ -220,6 +220,13 @@ export class VideoHardwareDBCFile extends DBCFile<
     VideoHardwareCreator,
     VideoHardwareQuery,
     VideoHardwareRow> {
+    constructor() {
+        super('VideoHardware',(t,b,o)=>new VideoHardwareRow(t,b,o))
+    }
+    /** Loads a new VideoHardware.dbc from a file. */
+    static read(path: string): VideoHardwareDBCFile {
+        return new VideoHardwareDBCFile().read(path);
+    }
     add(ID : int, c? : VideoHardwareCreator) : VideoHardwareRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -227,11 +234,3 @@ export class VideoHardwareDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_VideoHardware = new VideoHardwareDBCFile(
-    'VideoHardware',
-    (table,buffer,offset)=>new VideoHardwareRow(table,buffer,offset))

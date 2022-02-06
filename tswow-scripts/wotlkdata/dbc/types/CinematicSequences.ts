@@ -80,6 +80,13 @@ export class CinematicSequencesDBCFile extends DBCFile<
     CinematicSequencesCreator,
     CinematicSequencesQuery,
     CinematicSequencesRow> {
+    constructor() {
+        super('CinematicSequences',(t,b,o)=>new CinematicSequencesRow(t,b,o))
+    }
+    /** Loads a new CinematicSequences.dbc from a file. */
+    static read(path: string): CinematicSequencesDBCFile {
+        return new CinematicSequencesDBCFile().read(path);
+    }
     add(ID : int, c? : CinematicSequencesCreator) : CinematicSequencesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class CinematicSequencesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CinematicSequences = new CinematicSequencesDBCFile(
-    'CinematicSequences',
-    (table,buffer,offset)=>new CinematicSequencesRow(table,buffer,offset))

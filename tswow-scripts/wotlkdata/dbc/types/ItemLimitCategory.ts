@@ -87,6 +87,13 @@ export class ItemLimitCategoryDBCFile extends DBCFile<
     ItemLimitCategoryCreator,
     ItemLimitCategoryQuery,
     ItemLimitCategoryRow> {
+    constructor() {
+        super('ItemLimitCategory',(t,b,o)=>new ItemLimitCategoryRow(t,b,o))
+    }
+    /** Loads a new ItemLimitCategory.dbc from a file. */
+    static read(path: string): ItemLimitCategoryDBCFile {
+        return new ItemLimitCategoryDBCFile().read(path);
+    }
     add(ID : int, c? : ItemLimitCategoryCreator) : ItemLimitCategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ItemLimitCategoryDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemLimitCategory = new ItemLimitCategoryDBCFile(
-    'ItemLimitCategory',
-    (table,buffer,offset)=>new ItemLimitCategoryRow(table,buffer,offset))

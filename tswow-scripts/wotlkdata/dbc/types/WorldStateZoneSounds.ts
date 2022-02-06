@@ -112,15 +112,14 @@ export class WorldStateZoneSoundsDBCFile extends DBCFile<
     WorldStateZoneSoundsCreator,
     WorldStateZoneSoundsQuery,
     WorldStateZoneSoundsRow> {
+    constructor() {
+        super('WorldStateZoneSounds',(t,b,o)=>new WorldStateZoneSoundsRow(t,b,o))
+    }
+    /** Loads a new WorldStateZoneSounds.dbc from a file. */
+    static read(path: string): WorldStateZoneSoundsDBCFile {
+        return new WorldStateZoneSoundsDBCFile().read(path);
+    }
     add(c? : WorldStateZoneSoundsCreator) : WorldStateZoneSoundsRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldStateZoneSounds = new WorldStateZoneSoundsDBCFile(
-    'WorldStateZoneSounds',
-    (table,buffer,offset)=>new WorldStateZoneSoundsRow(table,buffer,offset))

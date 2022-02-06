@@ -94,6 +94,13 @@ export class MaterialDBCFile extends DBCFile<
     MaterialCreator,
     MaterialQuery,
     MaterialRow> {
+    constructor() {
+        super('Material',(t,b,o)=>new MaterialRow(t,b,o))
+    }
+    /** Loads a new Material.dbc from a file. */
+    static read(path: string): MaterialDBCFile {
+        return new MaterialDBCFile().read(path);
+    }
     add(ID : int, c? : MaterialCreator) : MaterialRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class MaterialDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Material = new MaterialDBCFile(
-    'Material',
-    (table,buffer,offset)=>new MaterialRow(table,buffer,offset))

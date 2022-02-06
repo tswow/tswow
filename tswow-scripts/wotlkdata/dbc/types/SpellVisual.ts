@@ -283,6 +283,13 @@ export class SpellVisualDBCFile extends DBCFile<
     SpellVisualCreator,
     SpellVisualQuery,
     SpellVisualRow> {
+    constructor() {
+        super('SpellVisual',(t,b,o)=>new SpellVisualRow(t,b,o))
+    }
+    /** Loads a new SpellVisual.dbc from a file. */
+    static read(path: string): SpellVisualDBCFile {
+        return new SpellVisualDBCFile().read(path);
+    }
     add(ID : int, c? : SpellVisualCreator) : SpellVisualRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -290,11 +297,3 @@ export class SpellVisualDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellVisual = new SpellVisualDBCFile(
-    'SpellVisual',
-    (table,buffer,offset)=>new SpellVisualRow(table,buffer,offset))

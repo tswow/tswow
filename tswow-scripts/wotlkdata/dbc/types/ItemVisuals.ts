@@ -73,6 +73,13 @@ export class ItemVisualsDBCFile extends DBCFile<
     ItemVisualsCreator,
     ItemVisualsQuery,
     ItemVisualsRow> {
+    constructor() {
+        super('ItemVisuals',(t,b,o)=>new ItemVisualsRow(t,b,o))
+    }
+    /** Loads a new ItemVisuals.dbc from a file. */
+    static read(path: string): ItemVisualsDBCFile {
+        return new ItemVisualsDBCFile().read(path);
+    }
     add(ID : int, c? : ItemVisualsCreator) : ItemVisualsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ItemVisualsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemVisuals = new ItemVisualsDBCFile(
-    'ItemVisuals',
-    (table,buffer,offset)=>new ItemVisualsRow(table,buffer,offset))

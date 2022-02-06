@@ -122,6 +122,13 @@ export class BattlemasterListDBCFile extends DBCFile<
     BattlemasterListCreator,
     BattlemasterListQuery,
     BattlemasterListRow> {
+    constructor() {
+        super('BattlemasterList',(t,b,o)=>new BattlemasterListRow(t,b,o))
+    }
+    /** Loads a new BattlemasterList.dbc from a file. */
+    static read(path: string): BattlemasterListDBCFile {
+        return new BattlemasterListDBCFile().read(path);
+    }
     add(ID : int, c? : BattlemasterListCreator) : BattlemasterListRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -129,11 +136,3 @@ export class BattlemasterListDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_BattlemasterList = new BattlemasterListDBCFile(
-    'BattlemasterList',
-    (table,buffer,offset)=>new BattlemasterListRow(table,buffer,offset))

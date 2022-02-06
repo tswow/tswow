@@ -80,6 +80,13 @@ export class SkillTiersDBCFile extends DBCFile<
     SkillTiersCreator,
     SkillTiersQuery,
     SkillTiersRow> {
+    constructor() {
+        super('SkillTiers',(t,b,o)=>new SkillTiersRow(t,b,o))
+    }
+    /** Loads a new SkillTiers.dbc from a file. */
+    static read(path: string): SkillTiersDBCFile {
+        return new SkillTiersDBCFile().read(path);
+    }
     add(ID : int, c? : SkillTiersCreator) : SkillTiersRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class SkillTiersDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SkillTiers = new SkillTiersDBCFile(
-    'SkillTiers',
-    (table,buffer,offset)=>new SkillTiersRow(table,buffer,offset))

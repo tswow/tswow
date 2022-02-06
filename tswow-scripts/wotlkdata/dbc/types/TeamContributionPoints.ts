@@ -73,6 +73,13 @@ export class TeamContributionPointsDBCFile extends DBCFile<
     TeamContributionPointsCreator,
     TeamContributionPointsQuery,
     TeamContributionPointsRow> {
+    constructor() {
+        super('TeamContributionPoints',(t,b,o)=>new TeamContributionPointsRow(t,b,o))
+    }
+    /** Loads a new TeamContributionPoints.dbc from a file. */
+    static read(path: string): TeamContributionPointsDBCFile {
+        return new TeamContributionPointsDBCFile().read(path);
+    }
     add(ID : int, c? : TeamContributionPointsCreator) : TeamContributionPointsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class TeamContributionPointsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TeamContributionPoints = new TeamContributionPointsDBCFile(
-    'TeamContributionPoints',
-    (table,buffer,offset)=>new TeamContributionPointsRow(table,buffer,offset))

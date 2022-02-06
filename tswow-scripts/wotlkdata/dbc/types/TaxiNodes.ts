@@ -108,6 +108,13 @@ export class TaxiNodesDBCFile extends DBCFile<
     TaxiNodesCreator,
     TaxiNodesQuery,
     TaxiNodesRow> {
+    constructor() {
+        super('TaxiNodes',(t,b,o)=>new TaxiNodesRow(t,b,o))
+    }
+    /** Loads a new TaxiNodes.dbc from a file. */
+    static read(path: string): TaxiNodesDBCFile {
+        return new TaxiNodesDBCFile().read(path);
+    }
     add(ID : int, c? : TaxiNodesCreator) : TaxiNodesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class TaxiNodesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TaxiNodes = new TaxiNodesDBCFile(
-    'TaxiNodes',
-    (table,buffer,offset)=>new TaxiNodesRow(table,buffer,offset))

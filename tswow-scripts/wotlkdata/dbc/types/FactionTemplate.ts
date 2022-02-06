@@ -115,6 +115,13 @@ export class FactionTemplateDBCFile extends DBCFile<
     FactionTemplateCreator,
     FactionTemplateQuery,
     FactionTemplateRow> {
+    constructor() {
+        super('FactionTemplate',(t,b,o)=>new FactionTemplateRow(t,b,o))
+    }
+    /** Loads a new FactionTemplate.dbc from a file. */
+    static read(path: string): FactionTemplateDBCFile {
+        return new FactionTemplateDBCFile().read(path);
+    }
     add(ID : int, c? : FactionTemplateCreator) : FactionTemplateRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class FactionTemplateDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_FactionTemplate = new FactionTemplateDBCFile(
-    'FactionTemplate',
-    (table,buffer,offset)=>new FactionTemplateRow(table,buffer,offset))

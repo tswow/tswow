@@ -80,6 +80,13 @@ export class MovieDBCFile extends DBCFile<
     MovieCreator,
     MovieQuery,
     MovieRow> {
+    constructor() {
+        super('Movie',(t,b,o)=>new MovieRow(t,b,o))
+    }
+    /** Loads a new Movie.dbc from a file. */
+    static read(path: string): MovieDBCFile {
+        return new MovieDBCFile().read(path);
+    }
     add(ID : int, c? : MovieCreator) : MovieRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class MovieDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Movie = new MovieDBCFile(
-    'Movie',
-    (table,buffer,offset)=>new MovieRow(table,buffer,offset))

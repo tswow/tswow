@@ -73,6 +73,13 @@ export class HelmetGeosetVisDataDBCFile extends DBCFile<
     HelmetGeosetVisDataCreator,
     HelmetGeosetVisDataQuery,
     HelmetGeosetVisDataRow> {
+    constructor() {
+        super('HelmetGeosetVisData',(t,b,o)=>new HelmetGeosetVisDataRow(t,b,o))
+    }
+    /** Loads a new HelmetGeosetVisData.dbc from a file. */
+    static read(path: string): HelmetGeosetVisDataDBCFile {
+        return new HelmetGeosetVisDataDBCFile().read(path);
+    }
     add(ID : int, c? : HelmetGeosetVisDataCreator) : HelmetGeosetVisDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class HelmetGeosetVisDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_HelmetGeosetVisData = new HelmetGeosetVisDataDBCFile(
-    'HelmetGeosetVisData',
-    (table,buffer,offset)=>new HelmetGeosetVisDataRow(table,buffer,offset))

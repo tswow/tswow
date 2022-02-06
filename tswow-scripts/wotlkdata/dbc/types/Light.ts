@@ -115,6 +115,13 @@ export class LightDBCFile extends DBCFile<
     LightCreator,
     LightQuery,
     LightRow> {
+    constructor() {
+        super('Light',(t,b,o)=>new LightRow(t,b,o))
+    }
+    /** Loads a new Light.dbc from a file. */
+    static read(path: string): LightDBCFile {
+        return new LightDBCFile().read(path);
+    }
     add(ID : int, c? : LightCreator) : LightRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class LightDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Light = new LightDBCFile(
-    'Light',
-    (table,buffer,offset)=>new LightRow(table,buffer,offset))

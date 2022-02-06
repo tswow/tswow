@@ -129,6 +129,13 @@ export class SoundEmittersDBCFile extends DBCFile<
     SoundEmittersCreator,
     SoundEmittersQuery,
     SoundEmittersRow> {
+    constructor() {
+        super('SoundEmitters',(t,b,o)=>new SoundEmittersRow(t,b,o))
+    }
+    /** Loads a new SoundEmitters.dbc from a file. */
+    static read(path: string): SoundEmittersDBCFile {
+        return new SoundEmittersDBCFile().read(path);
+    }
     add(ID : int, c? : SoundEmittersCreator) : SoundEmittersRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -136,11 +143,3 @@ export class SoundEmittersDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundEmitters = new SoundEmittersDBCFile(
-    'SoundEmitters',
-    (table,buffer,offset)=>new SoundEmittersRow(table,buffer,offset))

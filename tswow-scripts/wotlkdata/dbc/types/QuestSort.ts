@@ -73,6 +73,13 @@ export class QuestSortDBCFile extends DBCFile<
     QuestSortCreator,
     QuestSortQuery,
     QuestSortRow> {
+    constructor() {
+        super('QuestSort',(t,b,o)=>new QuestSortRow(t,b,o))
+    }
+    /** Loads a new QuestSort.dbc from a file. */
+    static read(path: string): QuestSortDBCFile {
+        return new QuestSortDBCFile().read(path);
+    }
     add(ID : int, c? : QuestSortCreator) : QuestSortRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class QuestSortDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_QuestSort = new QuestSortDBCFile(
-    'QuestSort',
-    (table,buffer,offset)=>new QuestSortRow(table,buffer,offset))

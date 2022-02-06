@@ -87,15 +87,14 @@ export class CurrencyTypesDBCFile extends DBCFile<
     CurrencyTypesCreator,
     CurrencyTypesQuery,
     CurrencyTypesRow> {
+    constructor() {
+        super('CurrencyTypes',(t,b,o)=>new CurrencyTypesRow(t,b,o))
+    }
+    /** Loads a new CurrencyTypes.dbc from a file. */
+    static read(path: string): CurrencyTypesDBCFile {
+        return new CurrencyTypesDBCFile().read(path);
+    }
     add(ID : int, c? : CurrencyTypesCreator) : CurrencyTypesRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CurrencyTypes = new CurrencyTypesDBCFile(
-    'CurrencyTypes',
-    (table,buffer,offset)=>new CurrencyTypesRow(table,buffer,offset))

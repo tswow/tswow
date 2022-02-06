@@ -87,6 +87,13 @@ export class ObjectEffectPackageElemDBCFile extends DBCFile<
     ObjectEffectPackageElemCreator,
     ObjectEffectPackageElemQuery,
     ObjectEffectPackageElemRow> {
+    constructor() {
+        super('ObjectEffectPackageElem',(t,b,o)=>new ObjectEffectPackageElemRow(t,b,o))
+    }
+    /** Loads a new ObjectEffectPackageElem.dbc from a file. */
+    static read(path: string): ObjectEffectPackageElemDBCFile {
+        return new ObjectEffectPackageElemDBCFile().read(path);
+    }
     add(ID : int, c? : ObjectEffectPackageElemCreator) : ObjectEffectPackageElemRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ObjectEffectPackageElemDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ObjectEffectPackageElem = new ObjectEffectPackageElemDBCFile(
-    'ObjectEffectPackageElem',
-    (table,buffer,offset)=>new ObjectEffectPackageElemRow(table,buffer,offset))

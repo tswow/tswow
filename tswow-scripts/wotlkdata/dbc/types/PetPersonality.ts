@@ -87,6 +87,13 @@ export class PetPersonalityDBCFile extends DBCFile<
     PetPersonalityCreator,
     PetPersonalityQuery,
     PetPersonalityRow> {
+    constructor() {
+        super('PetPersonality',(t,b,o)=>new PetPersonalityRow(t,b,o))
+    }
+    /** Loads a new PetPersonality.dbc from a file. */
+    static read(path: string): PetPersonalityDBCFile {
+        return new PetPersonalityDBCFile().read(path);
+    }
     add(ID : int, c? : PetPersonalityCreator) : PetPersonalityRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class PetPersonalityDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_PetPersonality = new PetPersonalityDBCFile(
-    'PetPersonality',
-    (table,buffer,offset)=>new PetPersonalityRow(table,buffer,offset))

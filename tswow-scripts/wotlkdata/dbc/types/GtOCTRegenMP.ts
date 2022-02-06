@@ -63,15 +63,14 @@ export class GtOCTRegenMPDBCFile extends DBCFile<
     GtOCTRegenMPCreator,
     GtOCTRegenMPQuery,
     GtOCTRegenMPRow> {
+    constructor() {
+        super('GtOCTRegenMP',(t,b,o)=>new GtOCTRegenMPRow(t,b,o))
+    }
+    /** Loads a new GtOCTRegenMP.dbc from a file. */
+    static read(path: string): GtOCTRegenMPDBCFile {
+        return new GtOCTRegenMPDBCFile().read(path);
+    }
     add(c? : GtOCTRegenMPCreator) : GtOCTRegenMPRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtOCTRegenMP = new GtOCTRegenMPDBCFile(
-    'gtOCTRegenMP',
-    (table,buffer,offset)=>new GtOCTRegenMPRow(table,buffer,offset))

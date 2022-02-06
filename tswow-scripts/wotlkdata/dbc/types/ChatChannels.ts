@@ -94,6 +94,13 @@ export class ChatChannelsDBCFile extends DBCFile<
     ChatChannelsCreator,
     ChatChannelsQuery,
     ChatChannelsRow> {
+    constructor() {
+        super('ChatChannels',(t,b,o)=>new ChatChannelsRow(t,b,o))
+    }
+    /** Loads a new ChatChannels.dbc from a file. */
+    static read(path: string): ChatChannelsDBCFile {
+        return new ChatChannelsDBCFile().read(path);
+    }
     add(ID : int, c? : ChatChannelsCreator) : ChatChannelsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class ChatChannelsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ChatChannels = new ChatChannelsDBCFile(
-    'ChatChannels',
-    (table,buffer,offset)=>new ChatChannelsRow(table,buffer,offset))

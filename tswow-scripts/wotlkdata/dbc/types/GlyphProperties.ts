@@ -87,6 +87,13 @@ export class GlyphPropertiesDBCFile extends DBCFile<
     GlyphPropertiesCreator,
     GlyphPropertiesQuery,
     GlyphPropertiesRow> {
+    constructor() {
+        super('GlyphProperties',(t,b,o)=>new GlyphPropertiesRow(t,b,o))
+    }
+    /** Loads a new GlyphProperties.dbc from a file. */
+    static read(path: string): GlyphPropertiesDBCFile {
+        return new GlyphPropertiesDBCFile().read(path);
+    }
     add(ID : int, c? : GlyphPropertiesCreator) : GlyphPropertiesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class GlyphPropertiesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GlyphProperties = new GlyphPropertiesDBCFile(
-    'GlyphProperties',
-    (table,buffer,offset)=>new GlyphPropertiesRow(table,buffer,offset))

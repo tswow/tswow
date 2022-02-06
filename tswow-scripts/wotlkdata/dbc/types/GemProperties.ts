@@ -94,6 +94,13 @@ export class GemPropertiesDBCFile extends DBCFile<
     GemPropertiesCreator,
     GemPropertiesQuery,
     GemPropertiesRow> {
+    constructor() {
+        super('GemProperties',(t,b,o)=>new GemPropertiesRow(t,b,o))
+    }
+    /** Loads a new GemProperties.dbc from a file. */
+    static read(path: string): GemPropertiesDBCFile {
+        return new GemPropertiesDBCFile().read(path);
+    }
     add(ID : int, c? : GemPropertiesCreator) : GemPropertiesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class GemPropertiesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GemProperties = new GemPropertiesDBCFile(
-    'GemProperties',
-    (table,buffer,offset)=>new GemPropertiesRow(table,buffer,offset))

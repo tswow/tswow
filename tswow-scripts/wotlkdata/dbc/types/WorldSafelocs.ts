@@ -101,6 +101,13 @@ export class WorldSafelocsDBCFile extends DBCFile<
     WorldSafelocsCreator,
     WorldSafelocsQuery,
     WorldSafelocsRow> {
+    constructor() {
+        super('WorldSafelocs',(t,b,o)=>new WorldSafelocsRow(t,b,o))
+    }
+    /** Loads a new WorldSafelocs.dbc from a file. */
+    static read(path: string): WorldSafelocsDBCFile {
+        return new WorldSafelocsDBCFile().read(path);
+    }
     add(ID : int, c? : WorldSafelocsCreator) : WorldSafelocsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class WorldSafelocsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldSafelocs = new WorldSafelocsDBCFile(
-    'WorldSafeLocs',
-    (table,buffer,offset)=>new WorldSafelocsRow(table,buffer,offset))

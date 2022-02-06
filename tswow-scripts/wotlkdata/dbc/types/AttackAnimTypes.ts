@@ -73,6 +73,13 @@ export class AttackAnimTypesDBCFile extends DBCFile<
     AttackAnimTypesCreator,
     AttackAnimTypesQuery,
     AttackAnimTypesRow> {
+    constructor() {
+        super('AttackAnimTypes',(t,b,o)=>new AttackAnimTypesRow(t,b,o))
+    }
+    /** Loads a new AttackAnimTypes.dbc from a file. */
+    static read(path: string): AttackAnimTypesDBCFile {
+        return new AttackAnimTypesDBCFile().read(path);
+    }
     add(ID : int, c? : AttackAnimTypesCreator) : AttackAnimTypesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class AttackAnimTypesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AttackAnimTypes = new AttackAnimTypesDBCFile(
-    'AttackAnimTypes',
-    (table,buffer,offset)=>new AttackAnimTypesRow(table,buffer,offset))

@@ -115,15 +115,14 @@ export class DungeonMapDBCFile extends DBCFile<
     DungeonMapCreator,
     DungeonMapQuery,
     DungeonMapRow> {
+    constructor() {
+        super('DungeonMap',(t,b,o)=>new DungeonMapRow(t,b,o))
+    }
+    /** Loads a new DungeonMap.dbc from a file. */
+    static read(path: string): DungeonMapDBCFile {
+        return new DungeonMapDBCFile().read(path);
+    }
     add(ID : int, c? : DungeonMapCreator) : DungeonMapRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DungeonMap = new DungeonMapDBCFile(
-    'DungeonMap',
-    (table,buffer,offset)=>new DungeonMapRow(table,buffer,offset))

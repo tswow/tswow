@@ -80,6 +80,13 @@ export class NamesProfanityDBCFile extends DBCFile<
     NamesProfanityCreator,
     NamesProfanityQuery,
     NamesProfanityRow> {
+    constructor() {
+        super('NamesProfanity',(t,b,o)=>new NamesProfanityRow(t,b,o))
+    }
+    /** Loads a new NamesProfanity.dbc from a file. */
+    static read(path: string): NamesProfanityDBCFile {
+        return new NamesProfanityDBCFile().read(path);
+    }
     add(ID : int, c? : NamesProfanityCreator) : NamesProfanityRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class NamesProfanityDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_NamesProfanity = new NamesProfanityDBCFile(
-    'NamesProfanity',
-    (table,buffer,offset)=>new NamesProfanityRow(table,buffer,offset))

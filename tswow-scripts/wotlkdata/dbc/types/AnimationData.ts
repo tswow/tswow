@@ -115,6 +115,13 @@ export class AnimationDataDBCFile extends DBCFile<
     AnimationDataCreator,
     AnimationDataQuery,
     AnimationDataRow> {
+    constructor() {
+        super('AnimationData',(t,b,o)=>new AnimationDataRow(t,b,o))
+    }
+    /** Loads a new AnimationData.dbc from a file. */
+    static read(path: string): AnimationDataDBCFile {
+        return new AnimationDataDBCFile().read(path);
+    }
     add(ID : int, c? : AnimationDataCreator) : AnimationDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class AnimationDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AnimationData = new AnimationDataDBCFile(
-    'AnimationData',
-    (table,buffer,offset)=>new AnimationDataRow(table,buffer,offset))

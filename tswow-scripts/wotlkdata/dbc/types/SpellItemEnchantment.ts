@@ -157,6 +157,13 @@ export class SpellItemEnchantmentDBCFile extends DBCFile<
     SpellItemEnchantmentCreator,
     SpellItemEnchantmentQuery,
     SpellItemEnchantmentRow> {
+    constructor() {
+        super('SpellItemEnchantment',(t,b,o)=>new SpellItemEnchantmentRow(t,b,o))
+    }
+    /** Loads a new SpellItemEnchantment.dbc from a file. */
+    static read(path: string): SpellItemEnchantmentDBCFile {
+        return new SpellItemEnchantmentDBCFile().read(path);
+    }
     add(ID : int, c? : SpellItemEnchantmentCreator) : SpellItemEnchantmentRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -164,11 +171,3 @@ export class SpellItemEnchantmentDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellItemEnchantment = new SpellItemEnchantmentDBCFile(
-    'SpellItemEnchantment',
-    (table,buffer,offset)=>new SpellItemEnchantmentRow(table,buffer,offset))

@@ -73,6 +73,13 @@ export class QuestXPDBCFile extends DBCFile<
     QuestXPCreator,
     QuestXPQuery,
     QuestXPRow> {
+    constructor() {
+        super('QuestXP',(t,b,o)=>new QuestXPRow(t,b,o))
+    }
+    /** Loads a new QuestXP.dbc from a file. */
+    static read(path: string): QuestXPDBCFile {
+        return new QuestXPDBCFile().read(path);
+    }
     add(ID : int, c? : QuestXPCreator) : QuestXPRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class QuestXPDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_QuestXP = new QuestXPDBCFile(
-    'QuestXP',
-    (table,buffer,offset)=>new QuestXPRow(table,buffer,offset))

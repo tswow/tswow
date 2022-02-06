@@ -94,6 +94,13 @@ export class BannedAddOnsDBCFile extends DBCFile<
     BannedAddOnsCreator,
     BannedAddOnsQuery,
     BannedAddOnsRow> {
+    constructor() {
+        super('BannedAddOns',(t,b,o)=>new BannedAddOnsRow(t,b,o))
+    }
+    /** Loads a new BannedAddOns.dbc from a file. */
+    static read(path: string): BannedAddOnsDBCFile {
+        return new BannedAddOnsDBCFile().read(path);
+    }
     add(ID : int, c? : BannedAddOnsCreator) : BannedAddOnsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class BannedAddOnsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_BannedAddOns = new BannedAddOnsDBCFile(
-    'BannedAddOns',
-    (table,buffer,offset)=>new BannedAddOnsRow(table,buffer,offset))

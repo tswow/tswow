@@ -108,6 +108,13 @@ export class ExhaustionDBCFile extends DBCFile<
     ExhaustionCreator,
     ExhaustionQuery,
     ExhaustionRow> {
+    constructor() {
+        super('Exhaustion',(t,b,o)=>new ExhaustionRow(t,b,o))
+    }
+    /** Loads a new Exhaustion.dbc from a file. */
+    static read(path: string): ExhaustionDBCFile {
+        return new ExhaustionDBCFile().read(path);
+    }
     add(ID : int, c? : ExhaustionCreator) : ExhaustionRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class ExhaustionDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Exhaustion = new ExhaustionDBCFile(
-    'Exhaustion',
-    (table,buffer,offset)=>new ExhaustionRow(table,buffer,offset))

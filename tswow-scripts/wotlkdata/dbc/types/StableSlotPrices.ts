@@ -73,6 +73,13 @@ export class StableSlotPricesDBCFile extends DBCFile<
     StableSlotPricesCreator,
     StableSlotPricesQuery,
     StableSlotPricesRow> {
+    constructor() {
+        super('StableSlotPrices',(t,b,o)=>new StableSlotPricesRow(t,b,o))
+    }
+    /** Loads a new StableSlotPrices.dbc from a file. */
+    static read(path: string): StableSlotPricesDBCFile {
+        return new StableSlotPricesDBCFile().read(path);
+    }
     add(ID : int, c? : StableSlotPricesCreator) : StableSlotPricesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class StableSlotPricesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_StableSlotPrices = new StableSlotPricesDBCFile(
-    'StableSlotPrices',
-    (table,buffer,offset)=>new StableSlotPricesRow(table,buffer,offset))

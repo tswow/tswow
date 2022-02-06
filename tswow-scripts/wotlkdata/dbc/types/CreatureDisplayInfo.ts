@@ -157,6 +157,13 @@ export class CreatureDisplayInfoDBCFile extends DBCFile<
     CreatureDisplayInfoCreator,
     CreatureDisplayInfoQuery,
     CreatureDisplayInfoRow> {
+    constructor() {
+        super('CreatureDisplayInfo',(t,b,o)=>new CreatureDisplayInfoRow(t,b,o))
+    }
+    /** Loads a new CreatureDisplayInfo.dbc from a file. */
+    static read(path: string): CreatureDisplayInfoDBCFile {
+        return new CreatureDisplayInfoDBCFile().read(path);
+    }
     add(ID : int, c? : CreatureDisplayInfoCreator) : CreatureDisplayInfoRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -164,11 +171,3 @@ export class CreatureDisplayInfoDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CreatureDisplayInfo = new CreatureDisplayInfoDBCFile(
-    'CreatureDisplayInfo',
-    (table,buffer,offset)=>new CreatureDisplayInfoRow(table,buffer,offset))

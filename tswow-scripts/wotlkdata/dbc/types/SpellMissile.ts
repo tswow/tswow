@@ -164,6 +164,13 @@ export class SpellMissileDBCFile extends DBCFile<
     SpellMissileCreator,
     SpellMissileQuery,
     SpellMissileRow> {
+    constructor() {
+        super('SpellMissile',(t,b,o)=>new SpellMissileRow(t,b,o))
+    }
+    /** Loads a new SpellMissile.dbc from a file. */
+    static read(path: string): SpellMissileDBCFile {
+        return new SpellMissileDBCFile().read(path);
+    }
     add(ID : int, c? : SpellMissileCreator) : SpellMissileRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -171,11 +178,3 @@ export class SpellMissileDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellMissile = new SpellMissileDBCFile(
-    'SpellMissile',
-    (table,buffer,offset)=>new SpellMissileRow(table,buffer,offset))

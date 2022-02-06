@@ -94,6 +94,13 @@ export class SpellRuneCostDBCFile extends DBCFile<
     SpellRuneCostCreator,
     SpellRuneCostQuery,
     SpellRuneCostRow> {
+    constructor() {
+        super('SpellRuneCost',(t,b,o)=>new SpellRuneCostRow(t,b,o))
+    }
+    /** Loads a new SpellRuneCost.dbc from a file. */
+    static read(path: string): SpellRuneCostDBCFile {
+        return new SpellRuneCostDBCFile().read(path);
+    }
     add(ID : int, c? : SpellRuneCostCreator) : SpellRuneCostRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class SpellRuneCostDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellRuneCost = new SpellRuneCostDBCFile(
-    'SpellRuneCost',
-    (table,buffer,offset)=>new SpellRuneCostRow(table,buffer,offset))

@@ -87,6 +87,13 @@ export class ItemRandomPropertiesDBCFile extends DBCFile<
     ItemRandomPropertiesCreator,
     ItemRandomPropertiesQuery,
     ItemRandomPropertiesRow> {
+    constructor() {
+        super('ItemRandomProperties',(t,b,o)=>new ItemRandomPropertiesRow(t,b,o))
+    }
+    /** Loads a new ItemRandomProperties.dbc from a file. */
+    static read(path: string): ItemRandomPropertiesDBCFile {
+        return new ItemRandomPropertiesDBCFile().read(path);
+    }
     add(ID : int, c? : ItemRandomPropertiesCreator) : ItemRandomPropertiesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class ItemRandomPropertiesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemRandomProperties = new ItemRandomPropertiesDBCFile(
-    'ItemRandomProperties',
-    (table,buffer,offset)=>new ItemRandomPropertiesRow(table,buffer,offset))

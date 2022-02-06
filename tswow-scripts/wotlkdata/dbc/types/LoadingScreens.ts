@@ -87,6 +87,13 @@ export class LoadingScreensDBCFile extends DBCFile<
     LoadingScreensCreator,
     LoadingScreensQuery,
     LoadingScreensRow> {
+    constructor() {
+        super('LoadingScreens',(t,b,o)=>new LoadingScreensRow(t,b,o))
+    }
+    /** Loads a new LoadingScreens.dbc from a file. */
+    static read(path: string): LoadingScreensDBCFile {
+        return new LoadingScreensDBCFile().read(path);
+    }
     add(ID : int, c? : LoadingScreensCreator) : LoadingScreensRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class LoadingScreensDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LoadingScreens = new LoadingScreensDBCFile(
-    'LoadingScreens',
-    (table,buffer,offset)=>new LoadingScreensRow(table,buffer,offset))

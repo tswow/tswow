@@ -94,6 +94,13 @@ export class ObjectEffectModifierDBCFile extends DBCFile<
     ObjectEffectModifierCreator,
     ObjectEffectModifierQuery,
     ObjectEffectModifierRow> {
+    constructor() {
+        super('ObjectEffectModifier',(t,b,o)=>new ObjectEffectModifierRow(t,b,o))
+    }
+    /** Loads a new ObjectEffectModifier.dbc from a file. */
+    static read(path: string): ObjectEffectModifierDBCFile {
+        return new ObjectEffectModifierDBCFile().read(path);
+    }
     add(ID : int, c? : ObjectEffectModifierCreator) : ObjectEffectModifierRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class ObjectEffectModifierDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ObjectEffectModifier = new ObjectEffectModifierDBCFile(
-    'ObjectEffectModifier',
-    (table,buffer,offset)=>new ObjectEffectModifierRow(table,buffer,offset))

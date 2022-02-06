@@ -73,6 +73,13 @@ export class QuestInfoDBCFile extends DBCFile<
     QuestInfoCreator,
     QuestInfoQuery,
     QuestInfoRow> {
+    constructor() {
+        super('QuestInfo',(t,b,o)=>new QuestInfoRow(t,b,o))
+    }
+    /** Loads a new QuestInfo.dbc from a file. */
+    static read(path: string): QuestInfoDBCFile {
+        return new QuestInfoDBCFile().read(path);
+    }
     add(ID : int, c? : QuestInfoCreator) : QuestInfoRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class QuestInfoDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_QuestInfo = new QuestInfoDBCFile(
-    'QuestInfo',
-    (table,buffer,offset)=>new QuestInfoRow(table,buffer,offset))

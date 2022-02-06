@@ -80,15 +80,14 @@ export class ItemSubClassMaskDBCFile extends DBCFile<
     ItemSubClassMaskCreator,
     ItemSubClassMaskQuery,
     ItemSubClassMaskRow> {
+    constructor() {
+        super('ItemSubClassMask',(t,b,o)=>new ItemSubClassMaskRow(t,b,o))
+    }
+    /** Loads a new ItemSubClassMask.dbc from a file. */
+    static read(path: string): ItemSubClassMaskDBCFile {
+        return new ItemSubClassMaskDBCFile().read(path);
+    }
     add(ClassID : int, c? : ItemSubClassMaskCreator) : ItemSubClassMaskRow {
         return this.makeRow(0).clone(ClassID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemSubClassMask = new ItemSubClassMaskDBCFile(
-    'ItemSubClassMask',
-    (table,buffer,offset)=>new ItemSubClassMaskRow(table,buffer,offset))

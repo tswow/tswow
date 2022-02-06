@@ -87,6 +87,13 @@ export class RandPropPointsDBCFile extends DBCFile<
     RandPropPointsCreator,
     RandPropPointsQuery,
     RandPropPointsRow> {
+    constructor() {
+        super('RandPropPoints',(t,b,o)=>new RandPropPointsRow(t,b,o))
+    }
+    /** Loads a new RandPropPoints.dbc from a file. */
+    static read(path: string): RandPropPointsDBCFile {
+        return new RandPropPointsDBCFile().read(path);
+    }
     add(ID : int, c? : RandPropPointsCreator) : RandPropPointsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class RandPropPointsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_RandPropPoints = new RandPropPointsDBCFile(
-    'RandPropPoints',
-    (table,buffer,offset)=>new RandPropPointsRow(table,buffer,offset))

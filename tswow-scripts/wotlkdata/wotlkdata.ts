@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { ipaths } from '../util/Paths';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
-import { DBC as _DBC } from './dbc/DBCFiles';
+import { DBC as _DBC, DBCLoader as _DBCLoader } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
@@ -313,6 +313,11 @@ export function sort(name: string, callback: () => any) {
  * Contains references to all DBC files
  */
 export const DBC = _DBC;
+
+/**
+ * Contains references to dbc classes that can load new dbc files into memory
+ */
+export const DBCLoader = _DBCLoader
 
 /**
  * Contains references to all SQL tables

@@ -94,6 +94,13 @@ export class ItemRandomSuffixDBCFile extends DBCFile<
     ItemRandomSuffixCreator,
     ItemRandomSuffixQuery,
     ItemRandomSuffixRow> {
+    constructor() {
+        super('ItemRandomSuffix',(t,b,o)=>new ItemRandomSuffixRow(t,b,o))
+    }
+    /** Loads a new ItemRandomSuffix.dbc from a file. */
+    static read(path: string): ItemRandomSuffixDBCFile {
+        return new ItemRandomSuffixDBCFile().read(path);
+    }
     add(ID : int, c? : ItemRandomSuffixCreator) : ItemRandomSuffixRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class ItemRandomSuffixDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemRandomSuffix = new ItemRandomSuffixDBCFile(
-    'ItemRandomSuffix',
-    (table,buffer,offset)=>new ItemRandomSuffixRow(table,buffer,offset))

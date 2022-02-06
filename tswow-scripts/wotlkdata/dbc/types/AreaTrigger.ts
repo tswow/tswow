@@ -129,15 +129,14 @@ export class AreaTriggerDBCFile extends DBCFile<
     AreaTriggerCreator,
     AreaTriggerQuery,
     AreaTriggerRow> {
+    constructor() {
+        super('AreaTrigger',(t,b,o)=>new AreaTriggerRow(t,b,o))
+    }
+    /** Loads a new AreaTrigger.dbc from a file. */
+    static read(path: string): AreaTriggerDBCFile {
+        return new AreaTriggerDBCFile().read(path);
+    }
     add(ID : int, c? : AreaTriggerCreator) : AreaTriggerRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AreaTrigger = new AreaTriggerDBCFile(
-    'AreaTrigger',
-    (table,buffer,offset)=>new AreaTriggerRow(table,buffer,offset))

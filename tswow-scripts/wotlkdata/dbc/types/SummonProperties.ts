@@ -101,6 +101,13 @@ export class SummonPropertiesDBCFile extends DBCFile<
     SummonPropertiesCreator,
     SummonPropertiesQuery,
     SummonPropertiesRow> {
+    constructor() {
+        super('SummonProperties',(t,b,o)=>new SummonPropertiesRow(t,b,o))
+    }
+    /** Loads a new SummonProperties.dbc from a file. */
+    static read(path: string): SummonPropertiesDBCFile {
+        return new SummonPropertiesDBCFile().read(path);
+    }
     add(ID : int, c? : SummonPropertiesCreator) : SummonPropertiesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class SummonPropertiesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SummonProperties = new SummonPropertiesDBCFile(
-    'SummonProperties',
-    (table,buffer,offset)=>new SummonPropertiesRow(table,buffer,offset))

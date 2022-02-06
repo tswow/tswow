@@ -73,6 +73,13 @@ export class SpamMessagesDBCFile extends DBCFile<
     SpamMessagesCreator,
     SpamMessagesQuery,
     SpamMessagesRow> {
+    constructor() {
+        super('SpamMessages',(t,b,o)=>new SpamMessagesRow(t,b,o))
+    }
+    /** Loads a new SpamMessages.dbc from a file. */
+    static read(path: string): SpamMessagesDBCFile {
+        return new SpamMessagesDBCFile().read(path);
+    }
     add(ID : int, c? : SpamMessagesCreator) : SpamMessagesRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SpamMessagesDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpamMessages = new SpamMessagesDBCFile(
-    'SpamMessages',
-    (table,buffer,offset)=>new SpamMessagesRow(table,buffer,offset))

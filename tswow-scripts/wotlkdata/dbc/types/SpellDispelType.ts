@@ -94,6 +94,13 @@ export class SpellDispelTypeDBCFile extends DBCFile<
     SpellDispelTypeCreator,
     SpellDispelTypeQuery,
     SpellDispelTypeRow> {
+    constructor() {
+        super('SpellDispelType',(t,b,o)=>new SpellDispelTypeRow(t,b,o))
+    }
+    /** Loads a new SpellDispelType.dbc from a file. */
+    static read(path: string): SpellDispelTypeDBCFile {
+        return new SpellDispelTypeDBCFile().read(path);
+    }
     add(ID : int, c? : SpellDispelTypeCreator) : SpellDispelTypeRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -101,11 +108,3 @@ export class SpellDispelTypeDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellDispelType = new SpellDispelTypeDBCFile(
-    'SpellDispelType',
-    (table,buffer,offset)=>new SpellDispelTypeRow(table,buffer,offset))

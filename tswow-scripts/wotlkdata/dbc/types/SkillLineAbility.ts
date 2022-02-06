@@ -150,15 +150,14 @@ export class SkillLineAbilityDBCFile extends DBCFile<
     SkillLineAbilityCreator,
     SkillLineAbilityQuery,
     SkillLineAbilityRow> {
+    constructor() {
+        super('SkillLineAbility',(t,b,o)=>new SkillLineAbilityRow(t,b,o))
+    }
+    /** Loads a new SkillLineAbility.dbc from a file. */
+    static read(path: string): SkillLineAbilityDBCFile {
+        return new SkillLineAbilityDBCFile().read(path);
+    }
     add(ID : int, c? : SkillLineAbilityCreator) : SkillLineAbilityRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SkillLineAbility = new SkillLineAbilityDBCFile(
-    'SkillLineAbility',
-    (table,buffer,offset)=>new SkillLineAbilityRow(table,buffer,offset))

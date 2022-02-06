@@ -63,15 +63,14 @@ export class GtChanceToMeleeCritBaseDBCFile extends DBCFile<
     GtChanceToMeleeCritBaseCreator,
     GtChanceToMeleeCritBaseQuery,
     GtChanceToMeleeCritBaseRow> {
+    constructor() {
+        super('GtChanceToMeleeCritBase',(t,b,o)=>new GtChanceToMeleeCritBaseRow(t,b,o))
+    }
+    /** Loads a new GtChanceToMeleeCritBase.dbc from a file. */
+    static read(path: string): GtChanceToMeleeCritBaseDBCFile {
+        return new GtChanceToMeleeCritBaseDBCFile().read(path);
+    }
     add(c? : GtChanceToMeleeCritBaseCreator) : GtChanceToMeleeCritBaseRow {
         return this.makeRow(0).clone(c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GtChanceToMeleeCritBase = new GtChanceToMeleeCritBaseDBCFile(
-    'gtChanceToMeleeCritBase',
-    (table,buffer,offset)=>new GtChanceToMeleeCritBaseRow(table,buffer,offset))

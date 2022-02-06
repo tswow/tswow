@@ -80,15 +80,14 @@ export class CurrencyCategoryDBCFile extends DBCFile<
     CurrencyCategoryCreator,
     CurrencyCategoryQuery,
     CurrencyCategoryRow> {
+    constructor() {
+        super('CurrencyCategory',(t,b,o)=>new CurrencyCategoryRow(t,b,o))
+    }
+    /** Loads a new CurrencyCategory.dbc from a file. */
+    static read(path: string): CurrencyCategoryDBCFile {
+        return new CurrencyCategoryDBCFile().read(path);
+    }
     add(ID : int, c? : CurrencyCategoryCreator) : CurrencyCategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CurrencyCategory = new CurrencyCategoryDBCFile(
-    'CurrencyCategory',
-    (table,buffer,offset)=>new CurrencyCategoryRow(table,buffer,offset))

@@ -80,6 +80,13 @@ export class DurabilityCostsDBCFile extends DBCFile<
     DurabilityCostsCreator,
     DurabilityCostsQuery,
     DurabilityCostsRow> {
+    constructor() {
+        super('DurabilityCosts',(t,b,o)=>new DurabilityCostsRow(t,b,o))
+    }
+    /** Loads a new DurabilityCosts.dbc from a file. */
+    static read(path: string): DurabilityCostsDBCFile {
+        return new DurabilityCostsDBCFile().read(path);
+    }
     add(ID : int, c? : DurabilityCostsCreator) : DurabilityCostsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class DurabilityCostsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_DurabilityCosts = new DurabilityCostsDBCFile(
-    'DurabilityCosts',
-    (table,buffer,offset)=>new DurabilityCostsRow(table,buffer,offset))

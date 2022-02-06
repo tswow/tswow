@@ -115,6 +115,13 @@ export class ItemExtendedCostDBCFile extends DBCFile<
     ItemExtendedCostCreator,
     ItemExtendedCostQuery,
     ItemExtendedCostRow> {
+    constructor() {
+        super('ItemExtendedCost',(t,b,o)=>new ItemExtendedCostRow(t,b,o))
+    }
+    /** Loads a new ItemExtendedCost.dbc from a file. */
+    static read(path: string): ItemExtendedCostDBCFile {
+        return new ItemExtendedCostDBCFile().read(path);
+    }
     add(ID : int, c? : ItemExtendedCostCreator) : ItemExtendedCostRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class ItemExtendedCostDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemExtendedCost = new ItemExtendedCostDBCFile(
-    'ItemExtendedCost',
-    (table,buffer,offset)=>new ItemExtendedCostRow(table,buffer,offset))

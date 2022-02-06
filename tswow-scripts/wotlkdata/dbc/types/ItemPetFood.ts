@@ -73,6 +73,13 @@ export class ItemPetFoodDBCFile extends DBCFile<
     ItemPetFoodCreator,
     ItemPetFoodQuery,
     ItemPetFoodRow> {
+    constructor() {
+        super('ItemPetFood',(t,b,o)=>new ItemPetFoodRow(t,b,o))
+    }
+    /** Loads a new ItemPetFood.dbc from a file. */
+    static read(path: string): ItemPetFoodDBCFile {
+        return new ItemPetFoodDBCFile().read(path);
+    }
     add(ID : int, c? : ItemPetFoodCreator) : ItemPetFoodRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class ItemPetFoodDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ItemPetFood = new ItemPetFoodDBCFile(
-    'ItemPetFood',
-    (table,buffer,offset)=>new ItemPetFoodRow(table,buffer,offset))

@@ -91,15 +91,14 @@ export class CharacterFacialHairStylesDBCFile extends DBCFile<
     CharacterFacialHairStylesCreator,
     CharacterFacialHairStylesQuery,
     CharacterFacialHairStylesRow> {
+    constructor() {
+        super('CharacterFacialHairStyles',(t,b,o)=>new CharacterFacialHairStylesRow(t,b,o))
+    }
+    /** Loads a new CharacterFacialHairStyles.dbc from a file. */
+    static read(path: string): CharacterFacialHairStylesDBCFile {
+        return new CharacterFacialHairStylesDBCFile().read(path);
+    }
     add(RaceID : int,SexID : int,VariationID : int, c? : CharacterFacialHairStylesCreator) : CharacterFacialHairStylesRow {
         return this.makeRow(0).clone(RaceID,SexID,VariationID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_CharacterFacialHairStyles = new CharacterFacialHairStylesDBCFile(
-    'CharacterFacialHairStyles',
-    (table,buffer,offset)=>new CharacterFacialHairStylesRow(table,buffer,offset))

@@ -80,6 +80,13 @@ export class MailTemplateDBCFile extends DBCFile<
     MailTemplateCreator,
     MailTemplateQuery,
     MailTemplateRow> {
+    constructor() {
+        super('MailTemplate',(t,b,o)=>new MailTemplateRow(t,b,o))
+    }
+    /** Loads a new MailTemplate.dbc from a file. */
+    static read(path: string): MailTemplateDBCFile {
+        return new MailTemplateDBCFile().read(path);
+    }
     add(ID : int, c? : MailTemplateCreator) : MailTemplateRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class MailTemplateDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_MailTemplate = new MailTemplateDBCFile(
-    'MailTemplate',
-    (table,buffer,offset)=>new MailTemplateRow(table,buffer,offset))

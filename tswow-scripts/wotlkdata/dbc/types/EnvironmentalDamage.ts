@@ -80,6 +80,13 @@ export class EnvironmentalDamageDBCFile extends DBCFile<
     EnvironmentalDamageCreator,
     EnvironmentalDamageQuery,
     EnvironmentalDamageRow> {
+    constructor() {
+        super('EnvironmentalDamage',(t,b,o)=>new EnvironmentalDamageRow(t,b,o))
+    }
+    /** Loads a new EnvironmentalDamage.dbc from a file. */
+    static read(path: string): EnvironmentalDamageDBCFile {
+        return new EnvironmentalDamageDBCFile().read(path);
+    }
     add(ID : int, c? : EnvironmentalDamageCreator) : EnvironmentalDamageRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class EnvironmentalDamageDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_EnvironmentalDamage = new EnvironmentalDamageDBCFile(
-    'EnvironmentalDamage',
-    (table,buffer,offset)=>new EnvironmentalDamageRow(table,buffer,offset))

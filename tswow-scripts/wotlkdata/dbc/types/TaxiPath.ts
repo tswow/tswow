@@ -87,6 +87,13 @@ export class TaxiPathDBCFile extends DBCFile<
     TaxiPathCreator,
     TaxiPathQuery,
     TaxiPathRow> {
+    constructor() {
+        super('TaxiPath',(t,b,o)=>new TaxiPathRow(t,b,o))
+    }
+    /** Loads a new TaxiPath.dbc from a file. */
+    static read(path: string): TaxiPathDBCFile {
+        return new TaxiPathDBCFile().read(path);
+    }
     add(ID : int, c? : TaxiPathCreator) : TaxiPathRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class TaxiPathDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_TaxiPath = new TaxiPathDBCFile(
-    'TaxiPath',
-    (table,buffer,offset)=>new TaxiPathRow(table,buffer,offset))

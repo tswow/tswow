@@ -192,6 +192,13 @@ export class LiquidTypeDBCFile extends DBCFile<
     LiquidTypeCreator,
     LiquidTypeQuery,
     LiquidTypeRow> {
+    constructor() {
+        super('LiquidType',(t,b,o)=>new LiquidTypeRow(t,b,o))
+    }
+    /** Loads a new LiquidType.dbc from a file. */
+    static read(path: string): LiquidTypeDBCFile {
+        return new LiquidTypeDBCFile().read(path);
+    }
     add(ID : int, c? : LiquidTypeCreator) : LiquidTypeRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -199,11 +206,3 @@ export class LiquidTypeDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LiquidType = new LiquidTypeDBCFile(
-    'LiquidType',
-    (table,buffer,offset)=>new LiquidTypeRow(table,buffer,offset))

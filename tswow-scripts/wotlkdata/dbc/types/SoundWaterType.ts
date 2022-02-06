@@ -87,6 +87,13 @@ export class SoundWaterTypeDBCFile extends DBCFile<
     SoundWaterTypeCreator,
     SoundWaterTypeQuery,
     SoundWaterTypeRow> {
+    constructor() {
+        super('SoundWaterType',(t,b,o)=>new SoundWaterTypeRow(t,b,o))
+    }
+    /** Loads a new SoundWaterType.dbc from a file. */
+    static read(path: string): SoundWaterTypeDBCFile {
+        return new SoundWaterTypeDBCFile().read(path);
+    }
     add(ID : int, c? : SoundWaterTypeCreator) : SoundWaterTypeRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class SoundWaterTypeDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SoundWaterType = new SoundWaterTypeDBCFile(
-    'SoundWaterType',
-    (table,buffer,offset)=>new SoundWaterTypeRow(table,buffer,offset))

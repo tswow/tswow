@@ -73,6 +73,13 @@ export class SpellDifficultyDBCFile extends DBCFile<
     SpellDifficultyCreator,
     SpellDifficultyQuery,
     SpellDifficultyRow> {
+    constructor() {
+        super('SpellDifficulty',(t,b,o)=>new SpellDifficultyRow(t,b,o))
+    }
+    /** Loads a new SpellDifficulty.dbc from a file. */
+    static read(path: string): SpellDifficultyDBCFile {
+        return new SpellDifficultyDBCFile().read(path);
+    }
     add(ID : int, c? : SpellDifficultyCreator) : SpellDifficultyRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SpellDifficultyDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellDifficulty = new SpellDifficultyDBCFile(
-    'SpellDifficulty',
-    (table,buffer,offset)=>new SpellDifficultyRow(table,buffer,offset))

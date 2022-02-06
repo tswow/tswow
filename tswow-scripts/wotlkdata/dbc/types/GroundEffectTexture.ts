@@ -94,15 +94,14 @@ export class GroundEffectTextureDBCFile extends DBCFile<
     GroundEffectTextureCreator,
     GroundEffectTextureQuery,
     GroundEffectTextureRow> {
+    constructor() {
+        super('GroundEffectTexture',(t,b,o)=>new GroundEffectTextureRow(t,b,o))
+    }
+    /** Loads a new GroundEffectTexture.dbc from a file. */
+    static read(path: string): GroundEffectTextureDBCFile {
+        return new GroundEffectTextureDBCFile().read(path);
+    }
     add(ID : int, c? : GroundEffectTextureCreator) : GroundEffectTextureRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_GroundEffectTexture = new GroundEffectTextureDBCFile(
-    'GroundEffectTexture',
-    (table,buffer,offset)=>new GroundEffectTextureRow(table,buffer,offset))

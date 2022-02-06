@@ -80,6 +80,13 @@ export class SkillCostsDataDBCFile extends DBCFile<
     SkillCostsDataCreator,
     SkillCostsDataQuery,
     SkillCostsDataRow> {
+    constructor() {
+        super('SkillCostsData',(t,b,o)=>new SkillCostsDataRow(t,b,o))
+    }
+    /** Loads a new SkillCostsData.dbc from a file. */
+    static read(path: string): SkillCostsDataDBCFile {
+        return new SkillCostsDataDBCFile().read(path);
+    }
     add(ID : int, c? : SkillCostsDataCreator) : SkillCostsDataRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class SkillCostsDataDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SkillCostsData = new SkillCostsDataDBCFile(
-    'SkillCostsData',
-    (table,buffer,offset)=>new SkillCostsDataRow(table,buffer,offset))

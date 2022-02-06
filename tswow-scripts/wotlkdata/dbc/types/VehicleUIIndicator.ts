@@ -73,6 +73,13 @@ export class VehicleUIIndicatorDBCFile extends DBCFile<
     VehicleUIIndicatorCreator,
     VehicleUIIndicatorQuery,
     VehicleUIIndicatorRow> {
+    constructor() {
+        super('VehicleUIIndicator',(t,b,o)=>new VehicleUIIndicatorRow(t,b,o))
+    }
+    /** Loads a new VehicleUIIndicator.dbc from a file. */
+    static read(path: string): VehicleUIIndicatorDBCFile {
+        return new VehicleUIIndicatorDBCFile().read(path);
+    }
     add(ID : int, c? : VehicleUIIndicatorCreator) : VehicleUIIndicatorRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class VehicleUIIndicatorDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_VehicleUIIndicator = new VehicleUIIndicatorDBCFile(
-    'VehicleUIIndicator',
-    (table,buffer,offset)=>new VehicleUIIndicatorRow(table,buffer,offset))

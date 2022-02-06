@@ -122,6 +122,13 @@ export class LightParamsDBCFile extends DBCFile<
     LightParamsCreator,
     LightParamsQuery,
     LightParamsRow> {
+    constructor() {
+        super('LightParams',(t,b,o)=>new LightParamsRow(t,b,o))
+    }
+    /** Loads a new LightParams.dbc from a file. */
+    static read(path: string): LightParamsDBCFile {
+        return new LightParamsDBCFile().read(path);
+    }
     add(ID : int, c? : LightParamsCreator) : LightParamsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -129,11 +136,3 @@ export class LightParamsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LightParams = new LightParamsDBCFile(
-    'LightParams',
-    (table,buffer,offset)=>new LightParamsRow(table,buffer,offset))

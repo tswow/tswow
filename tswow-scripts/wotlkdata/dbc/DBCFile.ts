@@ -158,6 +158,7 @@ export class DBCFile<C, Q, R extends DBCRow<C, Q>> extends Table<C, Q, R> {
     read(dbcpath: string = this.defaultPath()) {
         this.loaded = false;
         this.load(dbcpath);
+        return this;
     }
 
     private load(filePath: string = this.defaultPath()) {

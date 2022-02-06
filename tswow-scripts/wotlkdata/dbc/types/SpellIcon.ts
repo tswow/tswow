@@ -73,6 +73,13 @@ export class SpellIconDBCFile extends DBCFile<
     SpellIconCreator,
     SpellIconQuery,
     SpellIconRow> {
+    constructor() {
+        super('SpellIcon',(t,b,o)=>new SpellIconRow(t,b,o))
+    }
+    /** Loads a new SpellIcon.dbc from a file. */
+    static read(path: string): SpellIconDBCFile {
+        return new SpellIconDBCFile().read(path);
+    }
     add(ID : int, c? : SpellIconCreator) : SpellIconRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SpellIconDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellIcon = new SpellIconDBCFile(
-    'SpellIcon',
-    (table,buffer,offset)=>new SpellIconRow(table,buffer,offset))

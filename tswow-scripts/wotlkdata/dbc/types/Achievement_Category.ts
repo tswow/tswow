@@ -87,15 +87,14 @@ export class Achievement_CategoryDBCFile extends DBCFile<
     Achievement_CategoryCreator,
     Achievement_CategoryQuery,
     Achievement_CategoryRow> {
+    constructor() {
+        super('Achievement_Category',(t,b,o)=>new Achievement_CategoryRow(t,b,o))
+    }
+    /** Loads a new Achievement_Category.dbc from a file. */
+    static read(path: string): Achievement_CategoryDBCFile {
+        return new Achievement_CategoryDBCFile().read(path);
+    }
     add(ID : int, c? : Achievement_CategoryCreator) : Achievement_CategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_Achievement_Category = new Achievement_CategoryDBCFile(
-    'Achievement_Category',
-    (table,buffer,offset)=>new Achievement_CategoryRow(table,buffer,offset))

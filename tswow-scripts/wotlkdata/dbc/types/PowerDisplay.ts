@@ -101,6 +101,13 @@ export class PowerDisplayDBCFile extends DBCFile<
     PowerDisplayCreator,
     PowerDisplayQuery,
     PowerDisplayRow> {
+    constructor() {
+        super('PowerDisplay',(t,b,o)=>new PowerDisplayRow(t,b,o))
+    }
+    /** Loads a new PowerDisplay.dbc from a file. */
+    static read(path: string): PowerDisplayDBCFile {
+        return new PowerDisplayDBCFile().read(path);
+    }
     add(ID : int, c? : PowerDisplayCreator) : PowerDisplayRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -108,11 +115,3 @@ export class PowerDisplayDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_PowerDisplay = new PowerDisplayDBCFile(
-    'PowerDisplay',
-    (table,buffer,offset)=>new PowerDisplayRow(table,buffer,offset))

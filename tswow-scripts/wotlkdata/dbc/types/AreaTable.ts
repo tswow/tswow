@@ -178,6 +178,13 @@ export class AreaTableDBCFile extends DBCFile<
     AreaTableCreator,
     AreaTableQuery,
     AreaTableRow> {
+    constructor() {
+        super('AreaTable',(t,b,o)=>new AreaTableRow(t,b,o))
+    }
+    /** Loads a new AreaTable.dbc from a file. */
+    static read(path: string): AreaTableDBCFile {
+        return new AreaTableDBCFile().read(path);
+    }
     add(ID : int, c? : AreaTableCreator) : AreaTableRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -185,11 +192,3 @@ export class AreaTableDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_AreaTable = new AreaTableDBCFile(
-    'AreaTable',
-    (table,buffer,offset)=>new AreaTableRow(table,buffer,offset))

@@ -108,6 +108,13 @@ export class ScreenEffectDBCFile extends DBCFile<
     ScreenEffectCreator,
     ScreenEffectQuery,
     ScreenEffectRow> {
+    constructor() {
+        super('ScreenEffect',(t,b,o)=>new ScreenEffectRow(t,b,o))
+    }
+    /** Loads a new ScreenEffect.dbc from a file. */
+    static read(path: string): ScreenEffectDBCFile {
+        return new ScreenEffectDBCFile().read(path);
+    }
     add(ID : int, c? : ScreenEffectCreator) : ScreenEffectRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -115,11 +122,3 @@ export class ScreenEffectDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_ScreenEffect = new ScreenEffectDBCFile(
-    'ScreenEffect',
-    (table,buffer,offset)=>new ScreenEffectRow(table,buffer,offset))

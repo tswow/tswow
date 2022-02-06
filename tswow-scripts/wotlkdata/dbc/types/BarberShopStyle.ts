@@ -115,6 +115,13 @@ export class BarberShopStyleDBCFile extends DBCFile<
     BarberShopStyleCreator,
     BarberShopStyleQuery,
     BarberShopStyleRow> {
+    constructor() {
+        super('BarberShopStyle',(t,b,o)=>new BarberShopStyleRow(t,b,o))
+    }
+    /** Loads a new BarberShopStyle.dbc from a file. */
+    static read(path: string): BarberShopStyleDBCFile {
+        return new BarberShopStyleDBCFile().read(path);
+    }
     add(ID : int, c? : BarberShopStyleCreator) : BarberShopStyleRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -122,11 +129,3 @@ export class BarberShopStyleDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_BarberShopStyle = new BarberShopStyleDBCFile(
-    'BarberShopStyle',
-    (table,buffer,offset)=>new BarberShopStyleRow(table,buffer,offset))

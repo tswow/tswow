@@ -80,6 +80,13 @@ export class LightSkyboxDBCFile extends DBCFile<
     LightSkyboxCreator,
     LightSkyboxQuery,
     LightSkyboxRow> {
+    constructor() {
+        super('LightSkybox',(t,b,o)=>new LightSkyboxRow(t,b,o))
+    }
+    /** Loads a new LightSkybox.dbc from a file. */
+    static read(path: string): LightSkyboxDBCFile {
+        return new LightSkyboxDBCFile().read(path);
+    }
     add(ID : int, c? : LightSkyboxCreator) : LightSkyboxRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -87,11 +94,3 @@ export class LightSkyboxDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_LightSkybox = new LightSkyboxDBCFile(
-    'LightSkybox',
-    (table,buffer,offset)=>new LightSkyboxRow(table,buffer,offset))

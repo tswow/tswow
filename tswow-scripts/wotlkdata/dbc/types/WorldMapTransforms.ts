@@ -129,6 +129,13 @@ export class WorldMapTransformsDBCFile extends DBCFile<
     WorldMapTransformsCreator,
     WorldMapTransformsQuery,
     WorldMapTransformsRow> {
+    constructor() {
+        super('WorldMapTransforms',(t,b,o)=>new WorldMapTransformsRow(t,b,o))
+    }
+    /** Loads a new WorldMapTransforms.dbc from a file. */
+    static read(path: string): WorldMapTransformsDBCFile {
+        return new WorldMapTransformsDBCFile().read(path);
+    }
     add(ID : int, c? : WorldMapTransformsCreator) : WorldMapTransformsRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -136,11 +143,3 @@ export class WorldMapTransformsDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WorldMapTransforms = new WorldMapTransformsDBCFile(
-    'WorldMapTransforms',
-    (table,buffer,offset)=>new WorldMapTransformsRow(table,buffer,offset))

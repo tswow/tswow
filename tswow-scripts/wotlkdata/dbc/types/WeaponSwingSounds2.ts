@@ -87,6 +87,13 @@ export class WeaponSwingSounds2DBCFile extends DBCFile<
     WeaponSwingSounds2Creator,
     WeaponSwingSounds2Query,
     WeaponSwingSounds2Row> {
+    constructor() {
+        super('WeaponSwingSounds2',(t,b,o)=>new WeaponSwingSounds2Row(t,b,o))
+    }
+    /** Loads a new WeaponSwingSounds2.dbc from a file. */
+    static read(path: string): WeaponSwingSounds2DBCFile {
+        return new WeaponSwingSounds2DBCFile().read(path);
+    }
     add(ID : int, c? : WeaponSwingSounds2Creator) : WeaponSwingSounds2Row {
         return this.makeRow(0).clone(ID,c)
     }
@@ -94,11 +101,3 @@ export class WeaponSwingSounds2DBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_WeaponSwingSounds2 = new WeaponSwingSounds2DBCFile(
-    'WeaponSwingSounds2',
-    (table,buffer,offset)=>new WeaponSwingSounds2Row(table,buffer,offset))

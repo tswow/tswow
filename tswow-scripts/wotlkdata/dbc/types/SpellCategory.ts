@@ -73,6 +73,13 @@ export class SpellCategoryDBCFile extends DBCFile<
     SpellCategoryCreator,
     SpellCategoryQuery,
     SpellCategoryRow> {
+    constructor() {
+        super('SpellCategory',(t,b,o)=>new SpellCategoryRow(t,b,o))
+    }
+    /** Loads a new SpellCategory.dbc from a file. */
+    static read(path: string): SpellCategoryDBCFile {
+        return new SpellCategoryDBCFile().read(path);
+    }
     add(ID : int, c? : SpellCategoryCreator) : SpellCategoryRow {
         return this.makeRow(0).clone(ID,c)
     }
@@ -80,11 +87,3 @@ export class SpellCategoryDBCFile extends DBCFile<
         return this.fastSearch(id);
     }
 }
-
-/**
- * Table singleton (Object used by 'DBC' namespace)
- * - Add file comments to DBCFiles.ts
- */
-export const DBC_SpellCategory = new SpellCategoryDBCFile(
-    'SpellCategory',
-    (table,buffer,offset)=>new SpellCategoryRow(table,buffer,offset))
