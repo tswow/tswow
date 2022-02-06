@@ -155,6 +155,7 @@ export namespace TrinityCore {
                 args1.includes('noscripts') ? 'none' : compileType;
 
         const tools = args1.includes('notools') ? '0' : '1';
+        const generateOnly = args1.includes('--generate-only')
 
         let setupCommand: string;
         let buildCommand: string;
@@ -173,6 +174,7 @@ export namespace TrinityCore {
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
                 wsys.exec(setupCommand, 'inherit');
+                if(generateOnly) return;
                 wsys.exec(buildCommand, 'inherit');
             } else {
                 bpaths.TrinityCore.mkdir();
@@ -190,9 +192,11 @@ export namespace TrinityCore {
                 buildCommand = 'make -j 4';
                 await bpaths.TrinityCore.doIn(() => {
                     wsys.exec(setupCommand, 'inherit');
+                    if(generateOnly) return;
                     wsys.exec(buildCommand, 'inherit');
                     wsys.exec('make install', 'inherit');
                 })
+                if(generateOnly) return;
             }
         } else {
             term.log('build','Skipped compiling TrinityCore')
