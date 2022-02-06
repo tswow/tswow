@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC, LUAXML, SQL } from "wotlkdata";
+import { DBC, DBCLoader, LUAXML, SQL } from "wotlkdata";
 import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
 import { AchievementRegistry } from "./Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./Achievement/AchievementCategory";
@@ -181,6 +181,8 @@ export const std = {
     InlineScripts: InlineScript,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: DBC,
+    /** Used to load external dbc files for conversion purposes. */
+    DBCLoader: DBCLoader,
     SQL: SQL,
     LUAXML: LUAXML
 }
