@@ -36,6 +36,7 @@ function missingBlps(dir: string, mapname: string) {
 }
 
 finish('worldmaps', () => {
+    if(process.argv.includes('--no-blp')) return;
     const mapsChanges = new FileChangeModule('worldmaps');
     ipaths.modules.module.all().forEach(basemod=>{
         basemod.endpoints().forEach(mod=>{
