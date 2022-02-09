@@ -1,0 +1,72 @@
+name: Windows Deploy
+on:
+  push:
+    branches: [ "deploy-test" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      # Build
+      - name: Clean up space
+        run: >
+          Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\dotnet";
+          Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\LLVM";
+          Clear-Recyclebin -Force;
+      - uses: actions/checkout@v2
+      - name: Install submodules
+        run: git submodule update --init --recursive
+      - name: Setup Build Directory
+        uses: DamianReeves/write-file-action@v1.0
+        with:
+          path: "./build.conf"
+          contents: |
+            BuildDirectory = "C:/tswow-build"
+            InstallDirectory = "../tswow-install"
+          write-mode: overwrite
+      - name: Build tswow
+        run: npm run build-release clean-archives
+
+      # Metadata
+      - name: Get Time ID
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 0
+          format: 'YYYY-MM-DD-HH-mm-ss'
+      - name: Get Time Header
+        id: time-header
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 0
+          format: 'YYYY-MM-DD HH:mm:ss'
+      - name: Get SHA
+        id: sha
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      # Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: build-${{ steps.time.outputs.time }}-${{ steps.sha.outputs.sha_short }}
+          release_name: |
+            Build ${{ steps.time-header.outputs.time }} #${{ steps.sha.outputs.sha_short }}
+          body: |
+            **Commits**: https://github.com/tswow/tswow/compare/${{github.event.before}}...${{github.event.after}}
+          draft: false
+          prerelease: true
+          owner: tswow
+          repo: tswow
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: C:/tswow-build/release.7z
+          asset_name: tswow-${{steps.time.outputs.time}}-${{steps.sha.outputs.sha_short}}.conf
+          asset_content_type: application/x-7z-compressed
