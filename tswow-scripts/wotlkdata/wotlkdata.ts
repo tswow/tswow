@@ -18,7 +18,8 @@ import * as fs from 'fs';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { ipaths } from '../util/Paths';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
-import { DBC as _DBC, DBCLoader as _DBCLoader } from './dbc/DBCFiles';
+import { DBCFile } from './dbc/DBCFile';
+import { DBC as _DBC, DBCFiles, DBCLoader as _DBCLoader } from './dbc/DBCFiles';
 import { saveDbc } from './dbc/DBCSave';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
@@ -155,6 +156,10 @@ async function main() {
     cur_stage = 'LUAXML'
     await applyStage(luaxmls);
     dataset.luaxml.copy(BuildArgs.CLIENT_PATCH_DIR,false);
+
+    for(const file of DBCFiles) {
+        DBCFile.getBuffer(file).applyDeletes();
+    }
 
     cur_stage = 'SORT'
     if(!BuildArgs.READ_ONLY) {

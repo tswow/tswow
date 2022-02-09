@@ -74,17 +74,7 @@ export class DBCBuffer {
         this._rowCount = 1;
     }
 
-    write() {
-        const rowCountOut = this.rowCount - this.deletedIndices.length;
-        const totAlloc = 20 + this._rowSize * rowCountOut + this.strPtr;
-        const outBuf = Buffer.allocUnsafe(totAlloc);
-
-        outBuf.writeUInt32LE(1128416343, 0);
-        outBuf.writeUInt32LE(rowCountOut, 4);
-        outBuf.writeUInt32LE(this._fieldCount, 8);
-        outBuf.writeUInt32LE(this._rowSize, 12);
-        outBuf.writeUInt32LE(this.strPtr, 16);
-
+    applyDeletes() {
         for(let i=this.deletedIndices.length-1;i>=0;--i) {
             let end = this.deletedIndices[i];
             let start = end;
@@ -94,8 +84,20 @@ export class DBCBuffer {
             }
             this.rows.copyWithin(start*this.rowSize,(end+1)*this.rowSize);
         }
+        this._rowCount -= this.deletedIndices.length;
+    }
 
-        const rowEnd = this._rowSize * rowCountOut
+    write() {
+        const totAlloc = 20 + this._rowSize * this.rowCount + this.strPtr;
+        const outBuf = Buffer.allocUnsafe(totAlloc);
+
+        outBuf.writeUInt32LE(1128416343, 0);
+        outBuf.writeUInt32LE(this.rowCount, 4);
+        outBuf.writeUInt32LE(this._fieldCount, 8);
+        outBuf.writeUInt32LE(this._rowSize, 12);
+        outBuf.writeUInt32LE(this.strPtr, 16);
+
+        const rowEnd = this._rowSize * this.rowCount
         this.rows.copy(outBuf, 20, 0, rowEnd);
         this.strings.copy(outBuf, rowEnd + 20, 0, this.strPtr);
         return outBuf;
