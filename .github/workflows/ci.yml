@@ -79,5 +79,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: C:/tswow-build/release.7z
-          asset_name: tswow-${{steps.time.outputs.time}}-${{steps.sha.outputs.sha_short}}.7z
+          asset_name: tswow-${{steps.sha.outputs.sha_short}}.7z
           asset_content_type: application/x-7z-compressed
