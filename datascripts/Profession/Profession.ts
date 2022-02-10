@@ -21,7 +21,8 @@ export class Profession extends MainEntity<SkillLineRow> {
         return new SelfRef(this, ()=>new SkillLine(this.row))
     }
     private _cachedApprenticeSpell: Spell|undefined = undefined;
-    private _cachedLearnSpells: Spell[]|undefined = undefined;
+    private _cachedLearnSpells: {[key: number]: Spell[]} = {}
+
     /** contains all except the apprentice spell */
     private _cachedRanks: Spell[]|undefined = undefined;
 
@@ -63,8 +64,10 @@ export class Profession extends MainEntity<SkillLineRow> {
         return thiz._cachedApprenticeSpell = firstSpell;
     }
 
-    static getLearnSpells(profession: Profession, rank: number) {
-        if(profession._cachedLearnSpells) return profession._cachedLearnSpells;
+    static getLearnSpells(profession: Profession, rank: number): Spell[] {
+        if(profession._cachedLearnSpells[rank]) {
+            return profession._cachedLearnSpells[rank];
+        }
         let rankSpell = this.getSkillRank(profession, rank);
         if(!rankSpell) return [];
         // TODO: false positive
@@ -72,7 +75,7 @@ export class Profession extends MainEntity<SkillLineRow> {
         if(spells.length === 0) {
             throw new Error(`Profession ${profession.ID} lacks a learn spell for rank ${rank}!`)
         }
-        return profession._cachedLearnSpells = spells;
+        return (profession._cachedLearnSpells[rank] = spells);
     }
 
     static getSkillRank(profession: Profession, index: number) {
@@ -122,8 +125,11 @@ export class Profession extends MainEntity<SkillLineRow> {
     static setCacheLearnSpells(profession: Profession) {
         profession._cachedLearnSpells = [];
     }
-    static addCachedLearnSpell(profession: Profession, spell: Spell) {
-        if(profession._cachedLearnSpells) profession._cachedLearnSpells.push(spell);
+    static addCachedLearnSpell(profession: Profession, rank: number, spell: Spell) {
+        if(profession._cachedLearnSpells) {
+            (profession._cachedLearnSpells[rank] || (profession._cachedLearnSpells[rank] = []))
+                .push(spell);
+        }
     }
 
     static getTiers(profession: Profession) {
@@ -236,7 +242,13 @@ export class ProfessionRanks extends CellSystem<Profession> {
     }
 
     add(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
+        this.addGet(modid,id,maxSkill,subtext);
+        return this.owner;
+    }
+
+    addGet(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
         let newIndex = this.length;
+        let newRank = newIndex + 1
         if(this.cachedLength!==undefined) this.cachedLength++;
         let spell = SpellRegistry.create(modid,id)
             .Name.set(this.owner.AsSkillLine.get().Name.objectify())
@@ -278,7 +290,7 @@ export class ProfessionRanks extends CellSystem<Profession> {
             Profession.setCacheNonApprenticeSpell(this.owner, spell);
         }
 
-        spell.Rank.set(newIndex == 0 ? spell.ID : this.get(0).ProfessionSpell().ID,newIndex+1)
+        spell.Rank.set(newIndex == 0 ? spell.ID : this.get(0).ProfessionSpell().ID,newRank)
         if(newIndex > 0) {
             this.get(newIndex-1).ProfessionSpell().SkillLines.forEach(x=>{
                 x.SupercededBy.set(spell.ID);
@@ -303,9 +315,10 @@ export class ProfessionRanks extends CellSystem<Profession> {
                         .AsEffect.get()
                         .PointsDieSides.set(1)
             })
-        Profession.addCachedLearnSpell(this.owner, learnSpell);
+
+        Profession.addCachedLearnSpell(this.owner, newRank, learnSpell);
         Profession.getTiers(this.owner).Value.setIndex(newIndex,maxSkill);
-        return this.owner;
+        return new ProfessionRank(this.owner,newRank);
     }
 
     copyTiersAndAdd(modid: string, id: string, maxSkill: number, subtext: loc_constructor) {
