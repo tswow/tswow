@@ -51,11 +51,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: build-${{ steps.time.outputs.time }}-${{ steps.sha.outputs.sha_short }}
+          tag_name: build-${{ steps.sha.outputs.sha_short }}
           release_name: |
-            Build ${{ steps.time-header.outputs.time }} #${{ steps.sha.outputs.sha_short }}
+            Build #${{ steps.sha.outputs.sha_short }}
           body: |
             **Commits**: https://github.com/tswow/tswow/compare/${{github.event.before}}...${{github.event.after}}
+            **Build date**: ${{ steps.time-header.outputs.time }}
           draft: false
           prerelease: true
           owner: tswow
