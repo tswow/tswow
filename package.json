@@ -4,8 +4,8 @@
   "description": "",
   "main": "build.js",
   "dependencies": {
-    "@swc/cli": "^0.1.54",
-    "@swc/core": "^1.2.120",
+    "@swc/cli": "0.1.54",
+    "@swc/core": "1.2.120",
     "@types/chokidar": "^2.1.3",
     "@types/clipboardy": "^2.0.1",
     "@types/deasync": "^0.1.1",
@@ -52,7 +52,7 @@
   "scripts": {
     "build": "node build.js",
     "build-interactive": "node build.js --interactive",
-    "build-release":"node build.js --release",
+    "build-release": "node build.js --release",
     "test": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test",
     "otest": "mocha --recursive --require source-map-support/register bin/scripts/tswow/test --grep "
   },
