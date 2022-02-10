@@ -50,10 +50,16 @@ export class OptionCellBase extends CellSystem<GossipOption> {
 }
 
 export class VendorCell extends OptionCellBase {
-    set(creatureId: number, callback?: (vendor: Vendor)=>void) {
+    set(): GossipOption
+    set(creatureId: number, callback?: (vendor: Vendor)=>void): GossipOption;
+
+    set(creatureId?: number, callback?: (vendor: Vendor)=>void) {
         this._set();
-        this.owner.row.ActionMenuID.set(creatureId)
-        if(callback) callback(new Vendor(creatureId))
+        if(creatureId === undefined) {
+
+        }
+        this.owner.row.ActionMenuID.set(creatureId||0)
+        if(callback && creatureId) callback(new Vendor(creatureId))
         return this.owner;
     }
 
