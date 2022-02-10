@@ -36,7 +36,7 @@ export class GameObjectInstanceRegistryClass
         r
          .Position.setSpread(0,0,0,0,0)
          .Area.set(0)
-         .Rotation.setSpread(0,0,0,1)
+         .Rotation.setSpread(0,0,0,0)
          .ScriptName.set('')
          .Zone.set(0)
          .SpawnTimeSecs.set(120)
