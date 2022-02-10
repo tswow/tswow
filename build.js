@@ -30,7 +30,7 @@ const buildScripts = () =>
     )
 try { buildScripts() }
 catch(error) {
-    child_process.execSync('npm i -D @swc/core @swc/cli')
+    child_process.execSync('npm i')
     try { buildScripts() }
     catch(error) {
         console.log(`Failed to bootstrap tswow: ${error}`);
