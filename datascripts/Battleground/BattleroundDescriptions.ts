@@ -109,6 +109,7 @@ end
 _GetBattlefieldInfo = GetBattlefieldInfo
 function GetBattlefieldInfo()
 	local index = PVPBattlegroundFrame.selectedBG
+    if index == nil then return _GetBattlefieldInfo() end
 	local BGname, canEnter, isHoliday, isRandom, BattleGroundID = GetBattlegroundInfo(index);
 	if BattleGroundID == nil then return _GetBattlefieldInfo() end
 	local custom_data = custom_battlegrounds[BattleGroundID]
