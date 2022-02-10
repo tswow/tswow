@@ -25,8 +25,9 @@ export const OPENSSL_DOWNLOAD_URL = 'https://github.com/tswow/misc/releases/down
 export const SOURCE_ADT_URL = 'https://github.com/tswow/misc/releases/download/adt-template/source.adt'
 export const BLPCONVERTER_URL = 'https://github.com/tswow/BLPConverter/releases/download/1.0/BLPConverter.exe'
 export const BOOST_URL = 'https://github.com/tswow/misc/releases/download/boost-1.72/boost_1_72_0.zip'
-export const MYSQL_URL = 'https://dev.mysql.com/get/Downloads/MySQL-5.7/mysql-5.7.32-winx64.zip'
+export const MYSQL_URL = 'https://github.com/tswow/misc/releases/download/mysql-5.7.32/mysql-5.7.32-winx64.zip'
 export const OPENSSL_URL = 'https://github.com/tswow/misc/releases/download/openssl-test-1/openssl.zip'
+export const IMAGEMAGICK_URL = 'https://github.com/tswow/misc/releases/download/imagemagick-7.1.0/ImageMagick-7.1.0-portable-Q16-x64.zip'
 export const TDB_URL_COMPILE = TDB_URL // change value at reference
 
 // Misc settings

@@ -16,7 +16,7 @@
  */
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
-import { CLEAR_ARCHIVES } from './BuildConfig';
+import { CLEAR_ARCHIVES, IMAGEMAGICK_URL } from './BuildConfig';
 import { bpaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 import ExtractZip = require('extract-zip')
@@ -28,7 +28,7 @@ export namespace IMInstall {
         }
 
         await DownloadFile(
-            'https://download.imagemagick.org/ImageMagick/download/binaries/ImageMagick-7.1.0-portable-Q16-x64.zip'
+             IMAGEMAGICK_URL
            , bpaths.imArchive
         )
 
