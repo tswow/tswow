@@ -73,10 +73,27 @@ export class ClassRaces extends MultiRowSystem<ClassRacePair,Class> {
                     .RaceID.set(raceid))
 
             // By default, the classes should come from here.
-            const defaultClass = getDefaultClass(raceid);
-            SQL.playercreateinfo.query({race: raceid, class: defaultClass})
-                .clone(raceid, this.owner.ID)
-
+            try {
+                const defaultClass = getDefaultClass(raceid);
+                SQL.playercreateinfo.query({race: raceid, class: defaultClass})
+                    .clone(raceid, this.owner.ID)
+            } catch(err) {
+                try {
+                    // pick a random race for this class
+                    SQL.playercreateinfo.query({class: this.owner.ID})
+                        .clone(raceid, this.owner.ID)
+                } catch(err) {
+                    try {
+                        // pick a random race for our parent class
+                        SQL.playercreateinfo.query({class: this.owner.BaseClass})
+                            .clone(raceid, this.owner.ID)
+                    } catch(err) {
+                        // if parent class for some reason has no entries, just use human warrior as a base
+                        SQL.playercreateinfo.query({class: 1, race: 1})
+                            .clone(raceid, this.owner.ID)
+                    }
+                }
+            }
             DBC.CharBaseInfo.add(raceid,this.owner.ID);
         })
 
