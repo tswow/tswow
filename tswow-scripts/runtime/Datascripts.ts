@@ -223,6 +223,10 @@ export class Datascripts {
             wsys.exec(`npm i -S ${ipaths.bin.scripts.wow.get()}`)
         }
 
+        if(!ipaths.node_modules.wow.exists()) {
+            wsys.exec(`npm i`);
+        }
+
         BuildCommand.addCommand(
               'datascripts'
             , 'dataset '

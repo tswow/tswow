@@ -1,12 +1,12 @@
 import fs from "fs";
-import path from "path";
 import ts from "typescript";
+import { ipaths } from "../../../util/Paths";
 import { getTSChild, getTSChildren } from "./InlineTSHelpers";
 
 const eventNames: {[key: string] /*functions*/: string[]} = {}
 
 let hiddens = fs.readFileSync(
-        path.resolve(__dirname,path.join('..','..','global.d.ts'))
+        ipaths.bin.include.global_d_ts.abs().get()
     , 'utf-8'
 );
 hiddens = hiddens.substring(hiddens.indexOf('@hidden-begin'));

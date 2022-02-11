@@ -83,5 +83,8 @@ export namespace Scripts {
 
         spaths.tswow_scripts.data.package_json
             .copy(ipaths.bin.scripts.wow.package_json)
+
+        spaths.tswow_scripts.wotlk.package_json
+            .copy(ipaths.bin.scripts.wow.wotlk.package_json)
     }
 }
