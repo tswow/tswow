@@ -264,6 +264,10 @@ export class WNode {
         return new WDirectory(this.path);
     }
 
+    unlink() {
+        fs.unlinkSync(this.path);
+    }
+
     remove() {
         if(fs.existsSync(this.path)) {
             fs.rmSync(this.path,{recursive:true,force:true,maxRetries:1});
