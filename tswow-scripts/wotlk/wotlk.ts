@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { finish, luaxml, patch, read, setup, sort, write } from "../data";
 import { BuildArgs } from "../data/Settings";
 import { DBC, DBCLoader } from "./DBCFiles";
 import { LUAXML } from "./luaxml/LUAXML";
@@ -186,7 +187,16 @@ export const std = {
     /** Used to load external dbc files for conversion purposes. */
     DBCLoader: DBCLoader,
     SQL: SQL,
-    LUAXML: LUAXML
+    LUAXML: LUAXML,
+    Events: {
+        setup: setup,
+        read: read,
+        write: write,
+        patch: patch,
+        finish: finish,
+        luaxml: luaxml,
+        sort: sort,
+    }
 }
 
 export const wotlk = std;
