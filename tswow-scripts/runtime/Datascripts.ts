@@ -218,9 +218,13 @@ export class Datascripts {
     }
 
     static initialize() {
-        if(!ipaths.node_modules.wotlkdata.exists()) {
-            term.log('datascripts','Linking wotlkdata...');
-            wsys.exec(`npm i -S ${ipaths.bin.scripts.wotlkdata.get()}`)
+        if(!ipaths.node_modules.wow.exists()) {
+            term.log('datascripts','Linking wow data libraries...');
+            wsys.exec(`npm i -S ${ipaths.bin.scripts.wow.get()}`)
+        }
+
+        if(!ipaths.node_modules.wow.exists()) {
+            wsys.exec(`npm i`);
         }
 
         BuildCommand.addCommand(
@@ -359,7 +363,7 @@ export class Datascripts {
         try {
             wsys.exec(
                     `node -r source-map-support/register`
-                + ` ${ipaths.bin.scripts.wotlkdata.wotlkdata.index.get()}`
+                + ` ${ipaths.bin.scripts.wow.data.index.get()}`
                 + ` --ipaths=./`
                 + ` --dataset=${dataset.path.get()}`
                 + ` --datasetName=${dataset.fullName}`
