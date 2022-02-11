@@ -64,9 +64,9 @@ export namespace Scripts {
         )
 
         makeTsConfig(
-            ipaths.bin.scripts.wotlkdata.abs()
-          , bpaths.scripts_config.wotlkdata.abs()
-          , [spaths.tswow_scripts.wotlkdata.abs(), spaths.tswow_scripts.util.abs()]
+            ipaths.bin.scripts.wow.abs()
+          , bpaths.scripts_config.wow.abs()
+          , [spaths.tswow_scripts.data.abs(), spaths.tswow_scripts.util.abs()]
         )
 
         makeTsConfig(
@@ -81,7 +81,7 @@ export namespace Scripts {
           , [spaths.tswow_scripts.addons.abs()]
         )
 
-        spaths.tswow_scripts.wotlkdata.package_json
-            .copy(ipaths.bin.scripts.wotlkdata.package_json)
+        spaths.tswow_scripts.data.package_json
+            .copy(ipaths.bin.scripts.wow.package_json)
     }
 }
