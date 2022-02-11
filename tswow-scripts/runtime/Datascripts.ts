@@ -150,7 +150,7 @@ export class Datascripts {
         if(this.config.TypeGeneration === 'startup') {
             this.compileTypes(true);
         }
-        if(this.config.TypeGeneration === 'watch') {
+        if(this.config.TypeGeneration === 'watch' && ! process.argv.includes('server-mode')) {
             watchTsc(
                   ipaths.node_modules.typescript_js.abs().get()
                 , this.path.abs().get()

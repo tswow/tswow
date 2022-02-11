@@ -54,7 +54,7 @@ export async function main() {
 
     const timer = Timer.start();
 
-    if(!wfs.exists(NodeConfig.DefaultClient)) {
+    if(!wfs.exists(NodeConfig.DefaultClient) && !process.argv.includes('server-mode')) {
         term.error(
               'client'
             , `Invalid client: ${NodeConfig.DefaultClient} does not exist.\n\n`
