@@ -45,10 +45,6 @@ export namespace Config {
 
         ipaths.modules.mkdir();
 
-        if(!ipaths.modules.module.pick('tswow-stdlib').exists()) {
-            wsys.execIn(ipaths.modules.get(),`git clone https://github.com/tswow/tswow-stdlib.git`)
-        }
-
         spaths.tswow_core.Public.global_d_ts
             .copy(ipaths.bin.include.global_d_ts)
 
