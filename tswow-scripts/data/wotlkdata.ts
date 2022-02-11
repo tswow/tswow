@@ -19,13 +19,13 @@ import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/i
 import { ipaths } from '../util/Paths';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
 import { DBCFile } from './dbc/DBCFile';
-import { DBC as _DBC, DBCFiles, DBCLoader as _DBCLoader } from './dbc/DBCFiles';
-import { saveDbc } from './dbc/DBCSave';
+import { DBC as _DBC, DBCFiles, DBCLoader as _DBCLoader } from '../wotlk/DBCFiles';
 import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
-import { SqlConnection } from './sql/SQLConnection';
-import { SQL as _SQL } from './sql/SQLFiles';
+import { Connection, SqlConnection } from './sql/SQLConnection';
+import { SQL as _SQL } from '../wotlk/SQLFiles';
+import { __internal_wotlk_save } from '../wotlk/internal/__wotlkEvents';
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
@@ -167,17 +167,8 @@ async function main() {
     }
     time(`Executed scripts`);
 
-    if(BuildArgs.WRITE_SERVER) {
-        await SqlConnection.finish(true, false);
-        time(`Wrote SQL`);
-    } else {
-        await SqlConnection.finish(false,false)
-    }
-
-    if(!BuildArgs.READ_ONLY) {
-        saveDbc();
-        time(`Wrote DBC`);
-    }
+    await __internal_wotlk_save();
+    SqlConnection.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
 
     if(!BuildArgs.READ_ONLY) {
         await IdPublic.writeFile();

@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
 import { BuildArgs, datasetName, NodeConfig } from '../Settings';
-import { SQLTables } from './SQLFiles';
+import { SQLTables } from '../../wotlk/SQLFiles';
 import { SqlRow } from './SQLRow';
 import { SqlTable } from './SQLTable';
 import deasync = require('deasync');
@@ -181,22 +181,5 @@ export class SqlConnection {
 
     static allDbs() {
         return this.additional.concat([this.world_src,this.world_dst,this.auth]);
-    }
-
-    static async write(writeDb: boolean = true, writeFile: boolean = true): Promise<any> {
-        let sqlfile = ``;
-
-        // @TODO fix writeToFile. Disabled for now.
-        if (writeFile && false) {}
-
-        if (writeDb) {
-            SQLTables.map(x=>SqlTable.writeSQL(x));
-            await Promise.all(this.allDbs().map(x=>x.apply()));
-        }
-    }
-
-    static async finish(writeDb: boolean = true, writeFile: boolean = true): Promise<any> {
-        await this.write(writeDb, writeFile);
-        this.allDbs().filter(x=>x!==undefined).map(x=>Connection.end(x));
     }
 }

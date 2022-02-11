@@ -11,5 +11,5 @@
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
     "experimentalDecorators": true
   },
-  "include":["./","../util", "../shell/RuntimeCommands.ts", "../shell/TSWoW.ts"],
+  "include":["./","../util", "../shell/RuntimeCommands.ts", "../shell/TSWoW.ts","../wotlk"],
 }
