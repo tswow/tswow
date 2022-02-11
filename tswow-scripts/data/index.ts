@@ -15,6 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import * as fs from 'fs';
+import path from 'path';
+import { WDirectory } from '../util/FileTree';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { ipaths } from '../util/Paths';
 import { __internal_wotlk_applyDeletes, __internal_wotlk_save } from '../wotlk/internal/__wotlkEvents';
@@ -100,6 +102,14 @@ async function main() {
         }
         time(`Loaded/Cleaned SQL`);
     }
+
+    // Read in all wotlk subdirectories (needed for all events to fire)
+    new WDirectory(path.join(__dirname,'..','wotlk','std')).abs()
+        .iterate('RECURSE','FILES','FULL',node=>{
+            if(node.endsWith('.js') && ! node.endsWith('.map.js')) {
+                require(node.relativeTo(__dirname).get());
+            }
+        })
 
     // Find all patch subdirectories
     for (let dir of DatascriptModules) {
