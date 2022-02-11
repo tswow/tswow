@@ -1,14 +1,17 @@
 // needed to load custom classes once created,
 
-import { DBC, LUAXML, SQL } from "../../../data/index";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { CellReadOnly } from "../../../data/cell/cells/CellReadOnly";
 import { EnumCon, makeEnum } from "../../../data/cell/cells/EnumCell";
-import { ChrClassesQuery, ChrClassesRow } from "../../dbc/ChrClasses";
+import { finish } from "../../../data/index";
 import { Edit } from "../../../data/luaxml/TextFile";
 import { includes } from "../../../data/query/Relations";
-import { playercreateinfo_skillsRow } from "../../sql/playercreateinfo_skills";
 import { Table } from "../../../data/table/Table";
+import { ChrClassesQuery, ChrClassesRow } from "../../dbc/ChrClasses";
+import { DBC } from "../../DBCFiles";
+import { LUAXML } from "../../luaxml/LUAXML";
+import { playercreateinfo_skillsRow } from "../../sql/playercreateinfo_skills";
+import { SQL } from "../../SQLFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { makeRefNoCreate, makeRefReadOnly } from "../Refs/Ref";
 import { RegistryRowBase } from "../Refs/Registry";
@@ -244,3 +247,10 @@ export class ClassRegistryClass
     }
 }
 export const ClassRegistry = new ClassRegistryClass();
+
+finish('class-charcreate-count', ()=> {
+    if(created) {
+        LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
+            .replace(3, `MAX_CLASSES_PER_RACE = ${DBC.ChrClasses.rowCount};`);
+    }
+})

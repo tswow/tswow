@@ -15,11 +15,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish, LUAXML, sort } from "../../../data/index";
-import { DBC } from "../../DBCFiles";
-import { ChrClassesRow } from "../../dbc/ChrClasses";
+import { finish, sort } from "../../../data/index";
 import { Edit } from "../../../data/luaxml/TextFile";
 import { BuildArgs } from "../../../data/Settings";
+import { ChrClassesRow } from "../../dbc/ChrClasses";
+import { DBC } from "../../DBCFiles";
+import { LUAXML } from "../../luaxml/LUAXML";
 import { findGaps } from "../GapDetection/GapDetection";
 import { MainEntity } from "../Misc/Entity";
 import { ClassRaces } from "./ClassRaceData/ClassRaces";

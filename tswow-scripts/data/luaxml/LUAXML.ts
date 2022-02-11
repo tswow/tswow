@@ -17,34 +17,17 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { wfs } from '../../util/FileSystem';
-import { BuildArgs, dataset } from '../Settings';
-import { LUAXMLFiles } from './LUAXMLFiles';
+import { dataset } from '../Settings';
 import { TextFile } from './TextFile';
 
 let files: {[key: string]: TextFile} = {};
 
-/**
- * Contains functions for manipulating LUA and XML files.
- */
-export class LUAXML {
-    /**
-     * Loads a LUA or XML text file from a file path local to the LUAXML_SOURCE setting.
-     */
-    static anyfile(filepath: string): TextFile {
-        if (files[filepath] !== undefined) { return files[filepath]; }
-        const fullpath = path.join(dataset.luaxml_source.get(), filepath);
-        const tf = new TextFile(filepath, fs.readFileSync(fullpath).toString());
-        files[filepath] = tf;
-        return tf;
-    }
-
-    /**
-     * Like LUAXML:anyfile, but argument has autocomplete for common filenames.
-     * @param filepath
-     */
-    static file(filepath: LUAXMLFiles): TextFile {
-        return this.anyfile(filepath);
-    }
+export function loadLuaxml(filepath: string): TextFile {
+    if (files[filepath] !== undefined) { return files[filepath]; }
+    const fullpath = path.join(dataset.luaxml_source.get(), filepath);
+    const tf = new TextFile(filepath, fs.readFileSync(fullpath).toString());
+    files[filepath] = tf;
+    return tf;
 }
 
 /**

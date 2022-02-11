@@ -17,15 +17,12 @@
 import * as fs from 'fs';
 import { GetId as _GetId, GetIdRange as _GetIdRange, IdPrivate } from '../util/ids/Ids';
 import { ipaths } from '../util/Paths';
+import { __internal_wotlk_applyDeletes, __internal_wotlk_save } from '../wotlk/internal/__wotlkEvents';
 import { Objects as _Objects } from './cell/serialization/ObjectIteration';
-import { DBCFile } from './dbc/DBCFile';
-import { DBC as _DBC, DBCFiles, DBCLoader as _DBCLoader } from '../wotlk/DBCFiles';
-import { LUAXML as _LUAXML, _writeLUAXML } from './luaxml/LUAXML';
+import { _writeLUAXML } from './luaxml/LUAXML';
 import { BuildArgs, DatascriptModules, dataset } from './Settings';
 import { cleanSQL } from './sql/SQLClean';
 import { Connection, SqlConnection } from './sql/SQLConnection';
-import { SQL as _SQL } from '../wotlk/SQLFiles';
-import { __internal_wotlk_save } from '../wotlk/internal/__wotlkEvents';
 
 type PatchCollection = {name: string, callback: () => Promise<void>}[];
 
@@ -143,12 +140,6 @@ async function main() {
     await applyStage(finishes);
 
     if(BuildArgs.WRITE_CLIENT) {
-        // todo: move to stdlib
-        if (_DBC.ChrClasses.isLoaded()) {
-            _LUAXML.anyfile('Interface/GlueXML/CharacterCreate.lua')
-                .replace(3, `MAX_CLASSES_PER_RACE = ${_DBC.ChrClasses.rowCount};`);
-        }
-
         _writeLUAXML();
         time(`Wrote LUAXML`);
     }
@@ -157,9 +148,7 @@ async function main() {
     await applyStage(luaxmls);
     dataset.luaxml.copy(BuildArgs.CLIENT_PATCH_DIR,false);
 
-    for(const file of DBCFiles) {
-        DBCFile.getBuffer(file).applyDeletes();
-    }
+    await __internal_wotlk_applyDeletes();
 
     cur_stage = 'SORT'
     if(!BuildArgs.READ_ONLY) {
@@ -306,21 +295,6 @@ export function sort(name: string, callback: () => any) {
 }
 
 /**
- * Contains references to all DBC files
- */
-export const DBC = _DBC;
-
-/**
- * Contains references to dbc classes that can load new dbc files into memory
- */
-export const DBCLoader = _DBCLoader
-
-/**
- * Contains references to all SQL tables
- */
-export const SQL = _SQL;
-
-/**
  * Finds a unique range of ids that will persist through multiple runs of the program
  */
 export const GetIdRange = _GetIdRange;
@@ -329,11 +303,6 @@ export const GetIdRange = _GetIdRange;
  * Finds a unique id that will persist through multiple runs of the program
  */
 export const GetId = _GetId;
-
-/**
- * Functions for writing LUA/XML patches
- */
-export const LUAXML = _LUAXML;
 
 /**
  * Exports uint32 so id files in tswow can use them.

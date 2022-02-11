@@ -1,13 +1,15 @@
-import { DBC, finish, LUAXML } from "../../../data/index";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { CellReadOnly } from "../../../data/cell/cells/CellReadOnly";
 import { DummyCell } from "../../../data/cell/cells/DummyCell";
 import { PendingCell } from "../../../data/cell/cells/PendingCell";
 import { LocSystem } from "../../../data/cell/systems/CellSystem";
 import { Language, Languages } from "../../../data/dbc/Localization";
+import { finish } from "../../../data/index";
 import { iterLocConstructor, loc_constructor } from "../../../data/primitives";
 import { all, gt, neq } from "../../../data/query/Relations";
 import { BuildArgs } from "../../../data/Settings";
+import { DBC } from "../../DBCFiles";
+import { LUAXML } from "../../luaxml/LUAXML";
 
 export const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 

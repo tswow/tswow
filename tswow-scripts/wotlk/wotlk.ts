@@ -14,11 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "./DBCFiles";
-import { SQL } from "./SQLFiles";
-import { DBCLoader } from "./DBCFiles";
-import { LUAXML } from "../data/luaxml/LUAXML";
 import { BuildArgs } from "../data/Settings";
+import { DBC, DBCLoader } from "./DBCFiles";
+import { LUAXML } from "./luaxml/LUAXML";
+import { SQL } from "./SQLFiles";
 import { AchievementRegistry } from "./std/Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./std/Achievement/AchievementCategory";
 import { AreaRegistry } from "./std/Area/Area";

@@ -1,8 +1,9 @@
-import { DBC, SQL } from "../../../data/index";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCon, makeEnum } from "../../../data/cell/cells/EnumCell";
-import { WorldSafelocsQuery, WorldSafelocsRow } from "../../dbc/WorldSafelocs";
 import { Table } from "../../../data/table/Table";
+import { WorldSafelocsQuery, WorldSafelocsRow } from "../../dbc/WorldSafelocs";
+import { DBC } from "../../DBCFiles";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { PositionMapXYZCell } from "../Misc/PositionCell";

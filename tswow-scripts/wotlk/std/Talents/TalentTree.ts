@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC, finish } from "../../../data/index";
 import { makeMaskCell32, MaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { TalentTabRow } from "../../dbc/TalentTab";
+import { finish } from "../../../data/index";
 import { BuildArgs } from "../../../data/Settings";
+import { TalentTabRow } from "../../dbc/TalentTab";
+import { DBC } from "../../DBCFiles";
 import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";

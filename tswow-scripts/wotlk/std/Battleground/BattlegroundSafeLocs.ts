@@ -1,6 +1,7 @@
-import { DBC, finish } from "../../../data/index";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { finish } from "../../../data/index";
+import { DBC } from "../../DBCFiles";
 import { SQL } from "../../SQLFiles";
 import { WorldSafeLocRef } from "../WorldSafeLocs/WorldSafeLocs";
 

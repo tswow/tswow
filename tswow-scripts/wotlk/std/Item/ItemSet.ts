@@ -1,7 +1,8 @@
-import { DBC, finish } from "../../../data/index";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
-import { ItemSetQuery, ItemSetRow } from "../../dbc/ItemSet";
+import { finish } from "../../../data/index";
 import { Table } from "../../../data/table/Table";
+import { ItemSetQuery, ItemSetRow } from "../../dbc/ItemSet";
+import { DBC } from "../../DBCFiles";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";

@@ -14,17 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { LUAXML } from "../../luaxml/LUAXML";
-import { AnchorRow } from "./Components/AnchorRow";
+import { loadLuaxml } from '../../data/luaxml/LUAXML';
+import { TextFile } from '../../data/luaxml/TextFile';
+import { LUAXMLFiles } from './LUAXMLFiles';
 
-const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');
-
-export class CharacterCreationUI {
-    private anchor(index: number) {
-        return new AnchorRow(this, cc.emptyReplace(index));
+/**
+ * Contains functions for manipulating LUA and XML files.
+ */
+export class LUAXML {
+    /**
+     * Loads a LUA or XML text file from a file path local to the LUAXML_SOURCE setting.
+     */
+    static anyfile(filepath: string): TextFile {
+        return loadLuaxml(filepath);
     }
 
-    get MaleButton() { return this.anchor(497); }
-    get FemaleButton() { return this.anchor(518); }
-    get ClassName() { return this.anchor(438); }
+    /**
+     * Like LUAXML:anyfile, but argument has autocomplete for common filenames.
+     * @param filepath
+     */
+    static file(filepath: LUAXMLFiles): TextFile {
+        return this.anyfile(filepath);
+    }
 }

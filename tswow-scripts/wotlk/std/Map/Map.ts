@@ -14,15 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC, finish, SQL } from "../../../data/index";
 import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
 import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 import { CellSystem, LocSystem, MulticastLocCell } from "../../../data/cell/systems/CellSystem";
+import { finish } from "../../../data/index";
 import { BattlemasterListRow } from "../../dbc/BattlemasterList";
 import { MapRow } from "../../dbc/Map";
+import { DBC } from "../../DBCFiles";
 import { battleground_templateRow } from "../../sql/battleground_template";
 import { instance_addonRow } from "../../sql/instance_addon";
 import { instance_templateRow } from "../../sql/instance_template";
+import { SQL } from "../../SQLFiles";
 import { createBgBase } from "../Battleground/BattlegroundBase";
 import { BattlegroundBrackets } from "../Battleground/BattlegroundBracket";
 import { BattlegroundSafeLoc } from "../Battleground/BattlegroundSafeLocs";

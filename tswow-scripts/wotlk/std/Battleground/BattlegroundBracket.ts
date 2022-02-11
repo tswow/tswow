@@ -1,7 +1,8 @@
-import { DBC, finish } from "../../../data/index";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { finish } from "../../../data/index";
 import { PvpDifficultyRow } from "../../dbc/PvpDifficulty";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";

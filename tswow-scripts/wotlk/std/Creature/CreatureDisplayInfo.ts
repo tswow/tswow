@@ -1,9 +1,10 @@
-import { DBC, SQL } from "../../../data/index";
 import { Transient } from "../../../data/cell/serialization/Transient";
+import { Table } from "../../../data/table/Table";
 import { CreatureDisplayInfoQuery, CreatureDisplayInfoRow } from "../../dbc/CreatureDisplayInfo";
 import { CreatureModelDataQuery, CreatureModelDataRow } from "../../dbc/CreatureModelData";
+import { DBC } from "../../DBCFiles";
 import { creature_model_infoRow } from "../../sql/creature_model_info";
-import { Table } from "../../../data/table/Table";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

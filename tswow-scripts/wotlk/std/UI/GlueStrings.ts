@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { LUAXML } from "../../../data/index";
+import { LUAXML } from "../../luaxml/LUAXML";
 import { LuaStringProperty } from "./Components/LuaProperty";
 
 const GSLua = LUAXML.file('Interface/GlueXML/GlueStrings.lua');

@@ -1,8 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
-import { DBC, finish } from "../../../data/index";
-import { FileChangeModule } from "../../../util/FileChanges";
+import { finish } from "../../../data/index";
 import { AllModules, BuildArgs, dataset } from "../../../data/Settings";
+import { FileChangeModule } from "../../../util/FileChanges";
+import { DBC } from "../../DBCFiles";
 import { registeredAreas } from "../Area/Area";
 import { TSImages } from "../Images/Image";
 import { Colors } from "../Misc/Color";

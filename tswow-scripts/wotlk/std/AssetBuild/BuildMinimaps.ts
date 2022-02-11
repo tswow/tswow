@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { finish, LUAXML } from "../../../data/index";
+import { finish } from "../../../data/index";
+import { ipaths } from "../../../data/Settings";
 import { FileChangeModule } from "../../../util/FileChanges";
 import { wfs } from "../../../util/FileSystem";
 import { wsys } from "../../../util/System";
-import { ipaths } from "../../../data/Settings";
+import { LUAXML } from "../../luaxml/LUAXML";
 import { generateBLP } from "./BLP";
 import { getEffectiveFile, onDirtyPNG, splitPng } from "./PNG";
 

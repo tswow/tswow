@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { WFile } from '../../util/FileTree';
-import { BuildArgs, dataset } from '../../data/Settings';
 import { DBCFile } from '../../data/dbc/DBCFile';
+import { BuildArgs, dataset } from '../../data/Settings';
+import { SqlConnection } from '../../data/sql/SQLConnection';
+import { SqlTable } from '../../data/sql/SQLTable';
+import { WFile } from '../../util/FileTree';
 import { DBCFiles } from '../DBCFiles';
 import { SQLTables } from '../SQLFiles';
-import { SqlTable } from '../../data/sql/SQLTable';
-import { SqlConnection } from '../../data/sql/SQLConnection';
 
 function saveDbc() {
     for (const file of DBCFiles) {
@@ -64,5 +64,11 @@ export async function __internal_wotlk_save() {
 
     if(BuildArgs.WRITE_SERVER) {
         await saveSQL();
+    }
+}
+
+export async function __internal_wotlk_applyDeletes() {
+    for(const file of DBCFiles) {
+        DBCFile.getBuffer(file).applyDeletes();
     }
 }

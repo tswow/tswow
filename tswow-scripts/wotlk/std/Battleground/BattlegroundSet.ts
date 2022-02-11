@@ -1,6 +1,7 @@
-import { DBC, SQL } from "../../../data/index";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBC } from "../../DBCFiles";
 import { battleground_setsRow } from "../../sql/battleground_sets";
+import { SQL } from "../../SQLFiles";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { BattlegroundBase } from "./BattlegroundBase";
 
