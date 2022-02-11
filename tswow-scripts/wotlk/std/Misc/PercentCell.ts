@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 
 export const PercentUnits = [
     /** Probability between 0 and 1 */

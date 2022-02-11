@@ -1,4 +1,4 @@
-import { MaskCell32ReadOnly } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MaskCell32ReadOnly } from "../../../../data/cell/cells/MaskCell";
 
 export enum QuestStates {
       NOT_TAKEN   = 1

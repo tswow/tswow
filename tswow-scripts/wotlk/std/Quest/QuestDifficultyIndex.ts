@@ -1,4 +1,4 @@
-import { EnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { EnumCell } from "../../../data/cell/cells/EnumCell";
 
 export class QuestDifficultyIndex<T> extends EnumCell<T> {
     get DIFFICULTY_1()  { return this.value(1) }

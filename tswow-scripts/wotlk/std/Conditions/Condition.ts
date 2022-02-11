@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata";
-import { EnumCon, makeEnum } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMask, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { conditionsCreator, conditionsQuery } from "wotlkdata/wotlkdata/sql/types/conditions";
+import { SQL } from "../../SQLFiles";
+import { EnumCon, makeEnum } from "../../../data/cell/cells/EnumCell";
+import { makeMask, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { conditionsCreator, conditionsQuery } from "../../sql/conditions";
 import { ClassMask } from "../Class/ClassRegistry";
 import { DrunkState, resolveDrunkState } from "../Misc/DrunkState";
 import { ReputationRank, ReputationRankMask } from "../Misc/ReputationRank";

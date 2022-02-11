@@ -1,9 +1,9 @@
 import child_process from "child_process";
 import fs from "fs";
 import path from "path";
-import { SQL } from "wotlkdata";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { AllModules } from "wotlkdata/wotlkdata/Settings";
+import { SQL } from "../../SQLFiles";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { AllModules } from "../../../data/Settings";
 import { Ids } from "../Misc/Ids";
 import { Map } from "./Map";
 

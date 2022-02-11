@@ -1,5 +1,5 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { spell_threatRow } from "wotlkdata/wotlkdata/sql/types/spell_threat";
+import { SQL } from "../../SQLFiles";
+import { spell_threatRow } from "../../sql/spell_threat";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";
 

@@ -1,4 +1,4 @@
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { SoundEntry } from "./SoundEntry";
 
 export class SoundEntryFile extends ArrayEntry<SoundEntry> {

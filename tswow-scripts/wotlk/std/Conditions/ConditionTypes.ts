@@ -1,6 +1,6 @@
-import { EnumCellReadOnly, EnumCellTransformReadOnly, makeEnumCellReadOnly } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32ReadOnly, MaskCell32ReadOnly } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { conditionsRow } from "wotlkdata/wotlkdata/sql/types/conditions";
+import { EnumCellReadOnly, EnumCellTransformReadOnly, makeEnumCellReadOnly } from "../../../data/cell/cells/EnumCell";
+import { makeMaskCell32ReadOnly, MaskCell32ReadOnly } from "../../../data/cell/cells/MaskCell";
+import { conditionsRow } from "../../sql/conditions";
 import { AchievementRegistry } from "../Achievement/Achievement";
 import { AreaRegistry } from "../Area/Area";
 import { ClassMask } from "../Class/ClassRegistry";

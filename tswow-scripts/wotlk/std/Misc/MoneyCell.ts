@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 
 export type CoinType = 'COPPER'|'SILVER'|'GOLD'
 
@@ -45,7 +45,7 @@ export class MoneyCell<T> extends CellSystem<T> {
         this.stored = stored;
     }
 
-    get(currency: CoinType = 'COPPER') { 
+    get(currency: CoinType = 'COPPER') {
         return convertCoin(this.cell.get(),this.stored,currency);
     }
 

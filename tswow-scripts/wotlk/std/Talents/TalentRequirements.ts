@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { DBC } from "../../DBCFiles";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { Talent } from "./Talent";
 
 export class TalentRankWrap extends Cell<number, Talent> {

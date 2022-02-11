@@ -1,7 +1,7 @@
-import { MaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { spell_custom_attrRow } from "wotlkdata/wotlkdata/sql/types/spell_custom_attr";
+import { MaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { SQL } from "../../SQLFiles";
+import { spell_custom_attrRow } from "../../sql/spell_custom_attr";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";

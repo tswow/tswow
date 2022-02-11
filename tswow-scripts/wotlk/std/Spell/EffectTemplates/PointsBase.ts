@@ -1,4 +1,4 @@
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "../../../../data/cell/cells/EnumCell";
 import { PercentCell } from "../../Misc/PercentCell";
 import { ShiftedNumberCell } from "../../Misc/ShiftedNumberCell";
 import { SpellPowerType } from "../SpellPowerType";

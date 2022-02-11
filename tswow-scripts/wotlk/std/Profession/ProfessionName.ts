@@ -1,9 +1,9 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { MulticastCell } from "wotlkdata/wotlkdata/cell/cells/MulticastCell";
-import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
-import { LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
+import { PendingCell } from "../../../data/cell/cells/PendingCell";
+import { LocSystem } from "../../../data/cell/systems/CellSystem";
+import { Language } from "../../../data/dbc/Localization";
+import { loc_constructor } from "../../../data/primitives";
 import { SkillLine } from "../SkillLines/SkillLine";
 import { Spell } from "../Spell/Spell";
 import { Profession } from "./Profession";

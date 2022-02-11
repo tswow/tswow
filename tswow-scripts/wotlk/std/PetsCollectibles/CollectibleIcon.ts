@@ -1,4 +1,4 @@
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { ItemTemplate } from "../Item/ItemTemplate";
 import { Spell } from "../Spell/Spell";
 

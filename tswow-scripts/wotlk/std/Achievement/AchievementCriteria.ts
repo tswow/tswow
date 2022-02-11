@@ -1,10 +1,10 @@
-import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "wotlkdata/wotlkdata/dbc/types/Achievement_Criteria";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBC } from "../../DBCFiles";
+import { Achievement_CriteriaCreator, Achievement_CriteriaRow } from "../../dbc/Achievement_Criteria";
+import { SQL } from "../../SQLFiles";
 import { TransformedEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MoneyCell } from "../Misc/MoneyCell";

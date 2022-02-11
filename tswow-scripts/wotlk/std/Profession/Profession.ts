@@ -1,8 +1,8 @@
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
-import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
+import { SkillLineRow } from "../../dbc/SkillLine";
+import { loc_constructor } from "../../../data/primitives";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SelfRef } from "../Refs/Ref";

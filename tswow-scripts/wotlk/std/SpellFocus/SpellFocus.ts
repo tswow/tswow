@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata";
-import { SpellFocusObjectQuery, SpellFocusObjectRow } from "wotlkdata/wotlkdata/dbc/types/SpellFocusObject";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { SpellFocusObjectQuery, SpellFocusObjectRow } from "../../dbc/SpellFocusObject";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

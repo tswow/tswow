@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { LightRow } from "wotlkdata/wotlkdata/dbc/types/Light";
+import { DBC } from "../../DBCFiles";
+import { LightRow } from "../../dbc/Light";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
 import { LightFalloff } from "./LightFalloff";

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { AreaGroupQuery, AreaGroupRow } from "wotlkdata/wotlkdata/dbc/types/AreaGroup";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { AreaGroupQuery, AreaGroupRow } from "../../dbc/AreaGroup";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
@@ -49,7 +49,7 @@ export class AreaGroup extends MainEntity<AreaGroupRow> {
     get Areas() { return new AreaGroupAreas(this); }
 }
 
-export class AreaGroupRegistryClass 
+export class AreaGroupRegistryClass
     extends RegistryDynamic<AreaGroup,AreaGroupRow,AreaGroupQuery>
 {
     protected Table(): Table<any, AreaGroupQuery, AreaGroupRow> & { add: (id: number) => AreaGroupRow; } {

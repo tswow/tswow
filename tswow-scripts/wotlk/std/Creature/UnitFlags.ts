@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { MaskCell } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
+import { MaskCell } from "../../../data/cell/cells/MaskCell";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 enum UnitFlags1 {

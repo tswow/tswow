@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCon, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { EnumCon, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function a(owner: ItemTemplate) {

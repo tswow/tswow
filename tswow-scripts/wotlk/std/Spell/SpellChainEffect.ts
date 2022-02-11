@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { SpellChainEffectsQuery, SpellChainEffectsRow } from "wotlkdata/wotlkdata/dbc/types/SpellChainEffects";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { SpellChainEffectsQuery, SpellChainEffectsRow } from "../../dbc/SpellChainEffects";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

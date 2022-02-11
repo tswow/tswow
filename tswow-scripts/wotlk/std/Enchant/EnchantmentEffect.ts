@@ -1,7 +1,7 @@
-import { EnumCellTransform, makeEnumCell, TransformedClass } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { ArraySystemBase } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
-import { SpellItemEnchantmentRow } from "wotlkdata/wotlkdata/dbc/types/SpellItemEnchantment";
+import { EnumCellTransform, makeEnumCell, TransformedClass } from "../../../data/cell/cells/EnumCell";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { ArraySystemBase } from "../../../data/cell/systems/ArraySystem";
+import { SpellItemEnchantmentRow } from "../../dbc/SpellItemEnchantment";
 import { StatType } from "../Misc/StatTypes";
 
 const all_effects : any = {}

@@ -630,6 +630,9 @@ export function SourcePaths(pathIn: string) {
             data: dir({
                 package_json: file('package.json')
             }),
+            wotlk: dir({
+                global_d_ts: file('global.d.ts')
+            }),
             runtime: dir({}),
             typescript2cxx: dir({}),
             util: dir({}),

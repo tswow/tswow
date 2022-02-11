@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCon, makeEnum, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { EnumCon, makeEnum, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { ReputationRank } from "../Misc/ReputationRank";
 import { ItemTemplate } from "./ItemTemplate";
 

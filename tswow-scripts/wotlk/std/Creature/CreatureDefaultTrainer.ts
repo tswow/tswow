@@ -1,5 +1,5 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { creature_default_trainerRow } from "wotlkdata/wotlkdata/sql/types/creature_default_trainer";
+import { SQL } from "../../SQLFiles";
+import { creature_default_trainerRow } from "../../sql/creature_default_trainer";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { TrainerPlain, TrainerRegistry } from "../Trainer/Trainer";
 import { CreatureTemplate } from "./CreatureTemplate";

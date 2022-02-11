@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Spell } from "./Spell";
 
 export class SpellRecovery<T> extends CellSystem<T> {

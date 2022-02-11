@@ -1,5 +1,5 @@
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { spawn_group_templateRow } from "wotlkdata/wotlkdata/sql/types/spawn_group_template";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { spawn_group_templateRow } from "../../sql/spawn_group_template";
 import { MainEntity } from "../Misc/Entity";
 import { SpawnGroupBosses } from "./SpawnGroupBosses";
 

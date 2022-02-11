@@ -1,9 +1,9 @@
-import { DBC, SQL } from "wotlkdata";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CreatureDisplayInfoQuery, CreatureDisplayInfoRow } from "wotlkdata/wotlkdata/dbc/types/CreatureDisplayInfo";
-import { CreatureModelDataQuery, CreatureModelDataRow } from "wotlkdata/wotlkdata/dbc/types/CreatureModelData";
-import { creature_model_infoRow } from "wotlkdata/wotlkdata/sql/types/creature_model_info";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC, SQL } from "../../../data/index";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { CreatureDisplayInfoQuery, CreatureDisplayInfoRow } from "../../dbc/CreatureDisplayInfo";
+import { CreatureModelDataQuery, CreatureModelDataRow } from "../../dbc/CreatureModelData";
+import { creature_model_infoRow } from "../../sql/creature_model_info";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

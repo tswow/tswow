@@ -66,7 +66,7 @@ export namespace Scripts {
         makeTsConfig(
             ipaths.bin.scripts.wow.abs()
           , bpaths.scripts_config.wow.abs()
-          , [spaths.tswow_scripts.data.abs(), spaths.tswow_scripts.util.abs()]
+          , [spaths.tswow_scripts.data.abs(), spaths.tswow_scripts.util.abs(), spaths.tswow_scripts.wotlk.abs()]
         )
 
         makeTsConfig(

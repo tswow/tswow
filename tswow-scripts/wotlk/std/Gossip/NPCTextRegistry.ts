@@ -1,6 +1,6 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { npc_textQuery, npc_textRow } from "wotlkdata/wotlkdata/sql/types/npc_text";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { SQL } from "../../SQLFiles";
+import { npc_textQuery, npc_textRow } from "../../sql/npc_text";
+import { Table } from "../../../data/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { NPCText } from "./GossipText";

@@ -1,9 +1,9 @@
-import { sort } from "wotlkdata";
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { AchievementQuery, AchievementRow } from "wotlkdata/wotlkdata/dbc/types/Achievement";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { sort } from "../../../data/index";
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { DBC } from "../../DBCFiles";
+import { AchievementQuery, AchievementRow } from "../../dbc/Achievement";
+import { Table } from "../../../data/table/Table";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

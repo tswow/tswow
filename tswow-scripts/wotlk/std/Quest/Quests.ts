@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { quest_templateQuery, quest_templateRow } from "wotlkdata/wotlkdata/sql/types/quest_template";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { SQL } from "../../SQLFiles";
+import { quest_templateQuery, quest_templateRow } from "../../sql/quest_template";
+import { Table } from "../../../data/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Quest } from "./Quest";

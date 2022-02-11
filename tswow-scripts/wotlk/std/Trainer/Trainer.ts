@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { EnumCellTransform, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32, MaskCellWrite } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { trainerQuery, trainerRow } from "wotlkdata/wotlkdata/sql/types/trainer";
-import { trainer_spellRow } from "wotlkdata/wotlkdata/sql/types/trainer_spell";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { EnumCellTransform, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { makeMaskCell32, MaskCellWrite } from "../../../data/cell/cells/MaskCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { Language } from "../../../data/dbc/Localization";
+import { SQL } from "../../SQLFiles";
+import { trainerQuery, trainerRow } from "../../sql/trainer";
+import { trainer_spellRow } from "../../sql/trainer_spell";
+import { Table } from "../../../data/table/Table";
 import { ClassRaceMaskSystemBase, IClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask, ClassRegistry } from "../Class/ClassRegistry";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";

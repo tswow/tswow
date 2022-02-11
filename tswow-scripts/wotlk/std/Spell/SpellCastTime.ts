@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { SpellCastTimesQuery, SpellCastTimesRow } from "wotlkdata/wotlkdata/dbc/types/SpellCastTimes";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { SpellCastTimesQuery, SpellCastTimesRow } from "../../dbc/SpellCastTimes";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

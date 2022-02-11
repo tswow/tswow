@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { FactionTemplateQuery, FactionTemplateRow } from "wotlkdata/wotlkdata/dbc/types/FactionTemplate";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { FactionTemplateQuery, FactionTemplateRow } from "../../dbc/FactionTemplate";
+import { Table } from "../../../data/table/Table";
 import { ArrayRefSystemNoCreate } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

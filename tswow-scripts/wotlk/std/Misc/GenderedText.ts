@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { CellSystem, LocSystem } from "../../../data/cell/systems/CellSystem";
+import { loc_constructor } from "../../../data/primitives";
 
 export type GenderedTextMode = 'WRITE_BOTH' | 'WRITE_MALE'
 

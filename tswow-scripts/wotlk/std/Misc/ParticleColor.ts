@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata";
-import { ParticleColorQuery, ParticleColorRow } from "wotlkdata/wotlkdata/dbc/types/ParticleColor";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { ParticleColorQuery, ParticleColorRow } from "../../dbc/ParticleColor";
+import { Table } from "../../../data/table/Table";
 import { RegistryDynamic } from "../Refs/Registry";
 import { MainEntity } from "./Entity";
 import { DynamicIDGenerator, Ids } from "./Ids";

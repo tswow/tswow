@@ -1,8 +1,8 @@
-import { Cell, CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
-import { CellSystem, CellSystemTop, LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
-import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
+import { Cell, CPrim } from "../../../data/cell/cells/Cell";
+import { PendingCell } from "../../../data/cell/cells/PendingCell";
+import { CellSystem, CellSystemTop, LocSystem } from "../../../data/cell/systems/CellSystem";
+import { Language } from "../../../data/dbc/Localization";
+import { loc_constructor } from "../../../data/primitives";
 
 export class SQLDBCChildStatic<DBC,SQL,O extends SQLDBCEntityStatic<DBC,SQL>> extends CellSystem<O> {
     protected ownerWrapDBC<T extends CPrim>(def: T, safegetter: (dbc: DBC)=>Cell<T,any>): MaybeDBCCellStatic<T,DBC,O> {

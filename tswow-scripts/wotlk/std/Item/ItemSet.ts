@@ -1,7 +1,7 @@
-import { DBC, finish } from "wotlkdata";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
-import { ItemSetQuery, ItemSetRow } from "wotlkdata/wotlkdata/dbc/types/ItemSet";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC, finish } from "../../../data/index";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
+import { ItemSetQuery, ItemSetRow } from "../../dbc/ItemSet";
+import { Table } from "../../../data/table/Table";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { ArrayRefSystemStatic } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";

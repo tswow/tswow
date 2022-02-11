@@ -1,6 +1,6 @@
-import { DBC, SQL } from "wotlkdata";
-import { MailTemplateQuery, MailTemplateRow } from "wotlkdata/wotlkdata/dbc/types/MailTemplate";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC, SQL } from "../../../data/index";
+import { MailTemplateQuery, MailTemplateRow } from "../../dbc/MailTemplate";
+import { Table } from "../../../data/table/Table";
 import { LootSet } from "../Loot/Loot";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

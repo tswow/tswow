@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { npc_vendorRow } from "wotlkdata/wotlkdata/sql/types/npc_vendor";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SQL } from "../../SQLFiles";
+import { npc_vendorRow } from "../../sql/npc_vendor";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureVendor extends CellSystem<CreatureTemplate> {

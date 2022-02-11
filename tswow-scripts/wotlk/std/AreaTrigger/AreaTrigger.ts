@@ -1,8 +1,8 @@
-import { sort } from "wotlkdata";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { AreaTriggerQuery, AreaTriggerRow } from "wotlkdata/wotlkdata/dbc/types/AreaTrigger";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { sort } from "../../../data/index";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
+import { AreaTriggerQuery, AreaTriggerRow } from "../../dbc/AreaTrigger";
+import { Table } from "../../../data/table/Table";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

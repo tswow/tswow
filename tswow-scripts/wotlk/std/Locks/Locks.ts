@@ -1,7 +1,7 @@
-import { DBC } from "wotlkdata";
-import { LockQuery, LockRow } from "wotlkdata/wotlkdata/dbc/types/Lock";
-import { LockTypeQuery, LockTypeRow } from "wotlkdata/wotlkdata/dbc/types/LockType";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { LockQuery, LockRow } from "../../dbc/Lock";
+import { LockTypeQuery, LockTypeRow } from "../../dbc/LockType";
+import { Table } from "../../../data/table/Table";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 import { Lock } from "./Lock";

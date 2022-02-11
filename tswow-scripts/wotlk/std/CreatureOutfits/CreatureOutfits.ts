@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { creature_template_outfitsRow } from "wotlkdata/wotlkdata/sql/types/creature_template_outfits";
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { creature_template_outfitsRow } from "../../sql/creature_template_outfits";
 import { ClassIDs } from "../Class/ClassIDs";
 import { Genders } from "../Conditions/Settings/Gender";
 import { MainEntity } from "../Misc/Entity";

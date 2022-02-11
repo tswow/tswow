@@ -1,5 +1,5 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { areatrigger_tavernRow } from "wotlkdata/wotlkdata/sql/types/areatrigger_tavern";
+import { SQL } from "../../SQLFiles";
+import { areatrigger_tavernRow } from "../../sql/areatrigger_tavern";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { AreaTriggerBase } from "./AreaTrigger";
 

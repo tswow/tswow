@@ -1,4 +1,4 @@
-import { Cell, CellWrapper } from "wotlkdata/wotlkdata/cell/cells/Cell";
+import { Cell, CellWrapper } from "../../../data/cell/cells/Cell";
 
 export class OffsetCell<T> extends CellWrapper<number,T> {
     protected offset: number;

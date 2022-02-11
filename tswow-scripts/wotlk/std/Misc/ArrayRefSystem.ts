@@ -1,5 +1,5 @@
-import { Objectified } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Objectified } from "../../../data/cell/serialization/ObjectIteration";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { RefDynamic, RefNoCreate, RefStatic } from "../Refs/Ref";
 import { MainEntity } from "./Entity";
 

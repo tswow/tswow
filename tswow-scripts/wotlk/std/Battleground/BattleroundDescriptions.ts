@@ -1,13 +1,13 @@
-import { DBC, finish, LUAXML } from "wotlkdata";
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellReadOnly } from "wotlkdata/wotlkdata/cell/cells/CellReadOnly";
-import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
-import { PendingCell } from "wotlkdata/wotlkdata/cell/cells/PendingCell";
-import { LocSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { Language, Languages } from "wotlkdata/wotlkdata/dbc/Localization";
-import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives";
-import { all, gt, neq } from "wotlkdata/wotlkdata/query/Relations";
-import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
+import { DBC, finish, LUAXML } from "../../../data/index";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { CellReadOnly } from "../../../data/cell/cells/CellReadOnly";
+import { DummyCell } from "../../../data/cell/cells/DummyCell";
+import { PendingCell } from "../../../data/cell/cells/PendingCell";
+import { LocSystem } from "../../../data/cell/systems/CellSystem";
+import { Language, Languages } from "../../../data/dbc/Localization";
+import { iterLocConstructor, loc_constructor } from "../../../data/primitives";
+import { all, gt, neq } from "../../../data/query/Relations";
+import { BuildArgs } from "../../../data/Settings";
 
 export const descriptions: {[key: number]: /*description:*/ loc_constructor}= {}
 

@@ -1,4 +1,4 @@
-import { EnumCellReadOnly } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { EnumCellReadOnly } from "../../../../data/cell/cells/EnumCell";
 
 export enum PetTypes {
       SUMMON_PET   = 0

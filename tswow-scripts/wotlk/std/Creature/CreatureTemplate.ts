@@ -14,15 +14,15 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { creature_templateRow } from "wotlkdata/wotlkdata/sql/types/creature_template";
-import { creature_template_addonRow } from "wotlkdata/wotlkdata/sql/types/creature_template_addon";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { SQL } from "../../SQLFiles";
+import { creature_templateRow } from "../../sql/creature_template";
+import { creature_template_addonRow } from "../../sql/creature_template_addon";
 import { CreatureTextRegistry } from "../BroadcastText/CreatureText";
 import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";

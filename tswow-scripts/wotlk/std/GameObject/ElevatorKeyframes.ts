@@ -1,9 +1,9 @@
-import { Cell, CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { Transient, TransientOn } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { TransportAnimationRow } from "wotlkdata/wotlkdata/dbc/types/TransportAnimation";
-import { TransportRotationRow } from "wotlkdata/wotlkdata/dbc/types/TransportRotation";
+import { Cell, CPrim } from "../../../data/cell/cells/Cell";
+import { Transient, TransientOn } from "../../../data/cell/serialization/Transient";
+import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
+import { TransportAnimationRow } from "../../dbc/TransportAnimation";
+import { TransportRotationRow } from "../../dbc/TransportRotation";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYZCell } from "../Misc/PositionCell";

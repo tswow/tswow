@@ -1,4 +1,4 @@
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Ids } from "../Misc/Ids";
 import { Faction } from "./Faction";
 

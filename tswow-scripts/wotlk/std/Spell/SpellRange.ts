@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { SpellRangeQuery, SpellRangeRow } from "wotlkdata/wotlkdata/dbc/types/SpellRange";
-import { loc_constructor } from "wotlkdata/wotlkdata/primitives";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { SpellRangeQuery, SpellRangeRow } from "../../dbc/SpellRange";
+import { loc_constructor } from "../../../data/primitives";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

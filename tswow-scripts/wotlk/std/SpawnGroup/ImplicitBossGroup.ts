@@ -1,7 +1,7 @@
-import { finish } from "wotlkdata";
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { finish } from "../../../data/index";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SQL } from "../../SQLFiles";
 import { CreatureInstance } from "../Creature/CreatureInstance";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { GameObjectInstance } from "../GameObject/GameObjectInstance";

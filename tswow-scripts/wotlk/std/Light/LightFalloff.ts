@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Light } from "./Light";
 
 export class LightFalloff extends CellSystem<Light> {

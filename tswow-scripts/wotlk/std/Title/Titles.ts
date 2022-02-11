@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { CharTitlesQuery, CharTitlesRow } from "wotlkdata/wotlkdata/dbc/types/CharTitles";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { CharTitlesQuery, CharTitlesRow } from "../../dbc/CharTitles";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { GenderedText } from "../Misc/GenderedText";
 import { Ids } from "../Misc/Ids";

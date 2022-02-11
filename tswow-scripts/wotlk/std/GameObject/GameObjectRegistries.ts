@@ -1,7 +1,7 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { gameobject_templateQuery, gameobject_templateRow } from "wotlkdata/wotlkdata/sql/types/gameobject_template";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { SQL } from "../../SQLFiles";
+import { gameobject_templateQuery, gameobject_templateRow } from "../../sql/gameobject_template";
+import { Table } from "../../../data/table/Table";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { RefStatic } from "../Refs/Ref";

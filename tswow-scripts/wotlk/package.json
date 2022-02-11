@@ -1,0 +1,15 @@
+{
+  "name": "wotlk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "wotlk.js",
+  "types": "wotlk.d.ts",
+  "devDependencies": {},
+  "scripts": {
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "tswow",
+  "license": "GPL-3.0-only"
+}

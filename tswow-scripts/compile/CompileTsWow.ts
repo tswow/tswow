@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { commands } from '../util/Commands';
+import { wfs } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { term } from '../util/Terminal';
@@ -26,7 +27,7 @@ import { Boost } from './Boost';
 import { isInteractive } from './BuildConfig';
 import { ClientExtensions } from './ClientExtensions';
 import { CMake } from './Cmake';
-import { bpaths } from './CompilePaths';
+import { bpaths, spaths } from './CompilePaths';
 import { Config } from './Config';
 import { IMInstall } from './ImageMagick';
 import { MPQBuilder } from './MPQBuilder';
@@ -112,11 +113,16 @@ async function main() {
     commands.enterLoop();
 }
 
-if(isInteractive) {
-    main();
-} else {
-    (async function(){
+
+(async function(){
+    if(!spaths.tswow_scripts.wotlk.global_d_ts.exists()) {
+        await compile('headers',[]);
+    }
+
+    if(isInteractive) {
+        main();
+    } else {
         await compile(process.argv.includes('--release') ? 'release':'full',[]);
         process.exit(0);
-    }());
-}
+    }
+}())

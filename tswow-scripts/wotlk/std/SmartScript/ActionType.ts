@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell"
-import { iterLocConstructor, loc_constructor } from "wotlkdata/wotlkdata/primitives"
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles"
-import { smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts"
+import { Cell } from "../../../data/cell/cells/Cell"
+import { iterLocConstructor, loc_constructor } from "../../../data/primitives"
+import { SQL } from "../../SQLFiles"
+import { smart_scriptsRow } from "../../sql/smart_scripts"
 import { CreatureTextGroup, CreatureTextRegistry } from "../BroadcastText/CreatureText"
 import { b2i } from "../Misc/BasicConversion"
 import { ReactState, resolveReactState } from "../Misc/ReactState"

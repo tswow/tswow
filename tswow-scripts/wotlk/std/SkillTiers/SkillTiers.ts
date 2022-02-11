@@ -1,7 +1,7 @@
-import { DBC } from "wotlkdata";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
-import { SkillTiersQuery, SkillTiersRow } from "wotlkdata/wotlkdata/dbc/types/SkillTiers";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
+import { SkillTiersQuery, SkillTiersRow } from "../../dbc/SkillTiers";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

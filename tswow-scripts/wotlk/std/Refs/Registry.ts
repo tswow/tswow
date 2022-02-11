@@ -1,7 +1,7 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellReadOnly } from "wotlkdata/wotlkdata/cell/cells/CellReadOnly";
-import { Row } from "wotlkdata/wotlkdata/table/Row";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { CellReadOnly } from "../../../data/cell/cells/CellReadOnly";
+import { Row } from "../../../data/table/Row";
+import { Table } from "../../../data/table/Table";
 import { IMainEntity, TransformedEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, StaticIDGenerator } from "../Misc/Ids";
 import { RefDynamic, RefNoCreate, RefReadOnly, RefStatic } from "./Ref";

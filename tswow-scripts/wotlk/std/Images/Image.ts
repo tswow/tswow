@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PNG } from 'pngjs';
 import * as pureimage from 'pureimage';
-import { ipaths } from 'wotlkdata/wotlkdata/Settings';
+import { ipaths } from '../../../data/Settings';
 
 // 'PNG+BLP' is more futureproof than "both" if we ever need tga
 export type ExportFormat = 'PNG'|'BLP'|'PNG+BLP'

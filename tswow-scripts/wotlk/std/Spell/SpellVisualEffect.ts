@@ -1,10 +1,10 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { SpellVisualEffectNameQuery, SpellVisualEffectNameRow } from "wotlkdata/wotlkdata/dbc/types/SpellVisualEffectName";
-import { SpellVisualKitRow } from "wotlkdata/wotlkdata/dbc/types/SpellVisualKit";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
+import { SpellVisualEffectNameQuery, SpellVisualEffectNameRow } from "../../dbc/SpellVisualEffectName";
+import { SpellVisualKitRow } from "../../dbc/SpellVisualKit";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

@@ -1,8 +1,8 @@
-import { makeMaskCell32, MaskCellWrite } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { SqlRow } from "wotlkdata/wotlkdata/sql/SQLRow";
-import { playercreateinfo_skillsRow } from "wotlkdata/wotlkdata/sql/types/playercreateinfo_skills";
+import { makeMaskCell32, MaskCellWrite } from "../../../data/cell/cells/MaskCell";
+import { BuildArgs } from "../../../data/Settings";
+import { SQL } from "../../SQLFiles";
+import { SqlRow } from "../../../data/sql/SQLRow";
+import { playercreateinfo_skillsRow } from "../../sql/playercreateinfo_skills";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { RaceMask } from "../Race/RaceType";

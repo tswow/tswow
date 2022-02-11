@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { makeMask, makeMaskCell32, MaskCellWrite, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { SkillLineAbilityQuery, SkillLineAbilityRow } from "wotlkdata/wotlkdata/dbc/types/SkillLineAbility";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { makeMask, makeMaskCell32, MaskCellWrite, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { SkillLineAbilityQuery, SkillLineAbilityRow } from "../../dbc/SkillLineAbility";
+import { Table } from "../../../data/table/Table";
 import { ClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

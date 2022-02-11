@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { player_class_rolesRow } from "wotlkdata/wotlkdata/sql/types/player_class_roles";
+import { SQL } from "../../SQLFiles";
+import { player_class_rolesRow } from "../../sql/player_class_roles";
 import { BoolCell } from "../Misc/BoolCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Class } from "./Class";

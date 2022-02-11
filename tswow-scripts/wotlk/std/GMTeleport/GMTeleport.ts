@@ -1,6 +1,6 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { game_teleQuery, game_teleRow } from "wotlkdata/wotlkdata/sql/types/game_tele";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { SQL } from "../../SQLFiles";
+import { game_teleQuery, game_teleRow } from "../../sql/game_tele";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";

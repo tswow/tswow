@@ -1,4 +1,4 @@
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { makeEnumCell } from "../../../../data/cell/cells/EnumCell";
 import { SpellImplicitTarget } from "../SpellImplicitTarget";
 import { SpellRadiusRegistry } from "../SpellRadius";
 import { EffectTemplate } from "./EffectTemplate";

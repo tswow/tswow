@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function schools(owner: ItemTemplate) {

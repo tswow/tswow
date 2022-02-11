@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellArray } from "wotlkdata/wotlkdata/cell/cells/CellArray";
-import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { Objectified, Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { DBC } from "../../DBCFiles";
+import { CPrim } from "../../../data/cell/cells/Cell";
+import { CellArray } from "../../../data/cell/cells/CellArray";
+import { EnumCellTransform, EnumValueTransform, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { Objectified, Objects } from "../../../data/cell/serialization/ObjectIteration";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { Ids } from "../Misc/Ids";
 import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { AuraType } from "./AuraType";

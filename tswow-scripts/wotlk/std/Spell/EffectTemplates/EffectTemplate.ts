@@ -1,9 +1,9 @@
-import { CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellArray, CellIndexWrapper } from "wotlkdata/wotlkdata/cell/cells/CellArray";
-import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { CPrim } from "../../../../data/cell/cells/Cell";
+import { CellArray, CellIndexWrapper } from "../../../../data/cell/cells/CellArray";
+import { EnumCellTransform } from "../../../../data/cell/cells/EnumCell";
+import { Objects } from "../../../../data/cell/serialization/ObjectIteration";
+import { Transient } from "../../../../data/cell/serialization/Transient";
+import { CellSystem } from "../../../../data/cell/systems/CellSystem";
 import { SelfRef } from "../../Refs/Ref";
 import { SpellEffect } from "../SpellEffect";
 import { SpellTargetPosition } from "../SpellTargetPosition";

@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { quest_templateRow } from "wotlkdata/wotlkdata/sql/types/quest_template";
-import { quest_template_addonRow } from "wotlkdata/wotlkdata/sql/types/quest_template_addon";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { quest_templateRow } from "../../sql/quest_template";
+import { quest_template_addonRow } from "../../sql/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { MinMaxTargetCell } from "../Misc/LimitCells";

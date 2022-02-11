@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { EnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { EnumCell } from "../../../data/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 function colors(owner: ItemTemplate) {

@@ -14,8 +14,8 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Objects } from "wotlkdata/wotlkdata/cell/serialization/ObjectIteration";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { Objects } from "../../../data/cell/serialization/ObjectIteration";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { ItemTemplate } from "./ItemTemplate";
 
 export class ItemClassEnumValue {

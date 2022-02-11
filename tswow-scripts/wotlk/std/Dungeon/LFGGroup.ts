@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "wotlkdata/wotlkdata/dbc/types/LfgDungeonGroup";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "../../dbc/LfgDungeonGroup";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

@@ -1,6 +1,6 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell"
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient"
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem"
+import { Cell } from "../../../data/cell/cells/Cell"
+import { Transient } from "../../../data/cell/serialization/Transient"
+import { CellSystem } from "../../../data/cell/systems/CellSystem"
 
 export const DaysOfTheWeek = [
       'SUNDAY'

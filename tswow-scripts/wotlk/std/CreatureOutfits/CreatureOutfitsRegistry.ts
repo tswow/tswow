@@ -1,6 +1,6 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { creature_template_outfitsQuery, creature_template_outfitsRow } from "wotlkdata/wotlkdata/sql/types/creature_template_outfits";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { SQL } from "../../SQLFiles";
+import { creature_template_outfitsQuery, creature_template_outfitsRow } from "../../sql/creature_template_outfits";
+import { Table } from "../../../data/table/Table";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 import { CreatureOutfit } from "./CreatureOutfits";

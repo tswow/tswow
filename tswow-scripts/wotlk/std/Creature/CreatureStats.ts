@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { creature_templateRow } from "wotlkdata/wotlkdata/sql/types/creature_template";
+import { creature_templateRow } from "../../sql/creature_template";
 import { ChildEntity } from "../Misc/Entity";
 import { CreatureTemplate } from "./CreatureTemplate";
 

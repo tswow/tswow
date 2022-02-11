@@ -1,5 +1,5 @@
-import { makeMask, makeMaskCell32, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
+import { makeMask, makeMaskCell32, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { RaceMask } from "../Race/RaceType";
 import { Faction } from "./Faction";

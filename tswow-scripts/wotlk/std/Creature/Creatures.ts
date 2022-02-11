@@ -14,10 +14,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { creatureQuery, creatureRow } from "wotlkdata/wotlkdata/sql/types/creature";
-import { creature_templateQuery, creature_templateRow } from "wotlkdata/wotlkdata/sql/types/creature_template";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { SQL } from "../../SQLFiles";
+import { creatureQuery, creatureRow } from "../../sql/creature";
+import { creature_templateQuery, creature_templateRow } from "../../sql/creature_template";
+import { Table } from "../../../data/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";

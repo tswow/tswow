@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { LUAXML } from "wotlkdata";
+import { LUAXML } from "../../../data/index";
 import { AnchorRow } from "./Components/AnchorRow";
 
 const cc = LUAXML.file('Interface/GlueXML/CharacterCreate.xml');

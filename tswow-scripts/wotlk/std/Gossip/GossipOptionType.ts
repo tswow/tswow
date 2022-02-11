@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { TrainerPlain, TrainerRegistry } from "../Trainer/Trainer";
 import { Vendor } from "../Vendor/Vendor";

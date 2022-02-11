@@ -1,7 +1,7 @@
-import { GetIdRange } from "wotlkdata/util/ids/Ids";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { game_event_conditionRow } from "wotlkdata/wotlkdata/sql/types/game_event_condition";
+import { GetIdRange } from "../../../util/ids/Ids";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { SQL } from "../../SQLFiles";
+import { game_event_conditionRow } from "../../sql/game_event_condition";
 import { MainEntity } from "../Misc/Entity";
 import { WorldStateRegistry } from "../WorldState/WorldState";
 import { GameEventRegistry } from "./GameEvent";

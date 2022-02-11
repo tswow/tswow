@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { DummyCell } from "wotlkdata/wotlkdata/cell/cells/DummyCell";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { DummyCell } from "../../../data/cell/cells/DummyCell";
+import { DBC } from "../../DBCFiles";
 import { Ids } from "../Misc/Ids";
 
 export function pathToIcon(path: string) {

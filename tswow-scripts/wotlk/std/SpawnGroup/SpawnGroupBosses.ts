@@ -1,7 +1,7 @@
-import { SQL } from "wotlkdata";
-import { getBits, makeMaskCell32, makeMaskCell32ReadOnly, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { instance_spawn_groupsRow } from "wotlkdata/wotlkdata/sql/types/instance_spawn_groups";
+import { SQL } from "../../SQLFiles";
+import { getBits, makeMaskCell32, makeMaskCell32ReadOnly, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { instance_spawn_groupsRow } from "../../sql/instance_spawn_groups";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { SpawnGroup } from "./SpawnGroup";

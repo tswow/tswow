@@ -1,10 +1,10 @@
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { DungeonEncounterQuery, DungeonEncounterRow } from "wotlkdata/wotlkdata/dbc/types/DungeonEncounter";
-import { instance_encountersQuery, instance_encountersRow } from "wotlkdata/wotlkdata/sql/types/instance_encounters";
-import { SQL } from "wotlkdata/wotlkdata/wotlkdata";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBC } from "../../DBCFiles";
+import { DungeonEncounterQuery, DungeonEncounterRow } from "../../dbc/DungeonEncounter";
+import { instance_encountersQuery, instance_encountersRow } from "../../sql/instance_encounters";
+import { SQL } from "../../SQLFiles";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { MapRegistry } from "../Map/Maps";
 import { Ids } from "../Misc/Ids";

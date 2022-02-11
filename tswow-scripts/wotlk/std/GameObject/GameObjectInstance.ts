@@ -1,9 +1,9 @@
-import { makeMaskCell32, MaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { Transient } from "wotlkdata/wotlkdata/cell/serialization/Transient";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { gameobjectRow } from "wotlkdata/wotlkdata/sql/types/gameobject";
-import { gameobject_addonRow } from "wotlkdata/wotlkdata/sql/types/gameobject_addon";
+import { makeMaskCell32, MaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { Transient } from "../../../data/cell/serialization/Transient";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SQL } from "../../SQLFiles";
+import { gameobjectRow } from "../../sql/gameobject";
+import { gameobject_addonRow } from "../../sql/gameobject_addon";
 import { AreaRegistry } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";

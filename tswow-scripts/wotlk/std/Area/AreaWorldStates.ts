@@ -1,5 +1,5 @@
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBC } from "../../DBCFiles";
 import { WorldStateSound } from "../WorldState/WorldState";
 import { WorldStateUI, WorldStateUIRegistry } from "../WorldState/WorldStateUI";
 import { Area } from "./Area";

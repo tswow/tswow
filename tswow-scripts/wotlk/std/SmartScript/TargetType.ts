@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { smart_scriptsRow } from "wotlkdata/wotlkdata/sql/types/smart_scripts"
+import { smart_scriptsRow } from "../../sql/smart_scripts"
 import { Position } from "../Misc/Position"
 import { SmartScript } from "./SmartScript"
 

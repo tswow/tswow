@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata";
-import { MapQuery, MapRow } from "wotlkdata/wotlkdata/dbc/types/Map";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { MapQuery, MapRow } from "../../dbc/Map";
+import { Table } from "../../../data/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Map } from "./Map";

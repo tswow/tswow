@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { LUAXML } from "wotlkdata";
-import { FunctionalCell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { Edit, EditSystem } from "wotlkdata/wotlkdata/luaxml/TextFile";
+import { LUAXML } from "../../../data/index";
+import { FunctionalCell } from "../../../data/cell/cells/Cell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { Edit, EditSystem } from "../../../data/luaxml/TextFile";
 import { TSImage } from "../Images/Image";
 import { AnchorRow } from "../UI/Components/AnchorRow";
 import { Class } from "./Class";

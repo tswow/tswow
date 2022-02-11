@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { Language } from "wotlkdata/wotlkdata/dbc/Localization";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { item_set_namesRow } from "wotlkdata/wotlkdata/sql/types/item_set_names";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { Language } from "../../../data/dbc/Localization";
+import { SQL } from "../../SQLFiles";
+import { item_set_namesRow } from "../../sql/item_set_names";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { ItemTemplate } from "./ItemTemplate";

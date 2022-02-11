@@ -1,4 +1,4 @@
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { DBC } from "../../../DBCFiles";
 import { CreatureTemplateRegistry } from "../Creatures";
 
 export const CreaturePresets = {

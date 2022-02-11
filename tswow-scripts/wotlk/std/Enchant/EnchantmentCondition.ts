@@ -1,10 +1,10 @@
-import { DBC } from "wotlkdata";
-import { Cell } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { EnumCell, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { ArrayEntry, ArraySystem } from "wotlkdata/wotlkdata/cell/systems/ArraySystem";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "wotlkdata/wotlkdata/dbc/types/SpellItemEnchantmentCondition";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { Cell } from "../../../data/cell/cells/Cell";
+import { EnumCell, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "../../dbc/SpellItemEnchantmentCondition";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

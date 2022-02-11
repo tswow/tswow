@@ -15,11 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish, LUAXML, sort } from "wotlkdata";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { ChrClassesRow } from "wotlkdata/wotlkdata/dbc/types/ChrClasses";
-import { Edit } from "wotlkdata/wotlkdata/luaxml/TextFile";
-import { BuildArgs } from "wotlkdata/wotlkdata/Settings";
+import { finish, LUAXML, sort } from "../../../data/index";
+import { DBC } from "../../DBCFiles";
+import { ChrClassesRow } from "../../dbc/ChrClasses";
+import { Edit } from "../../../data/luaxml/TextFile";
+import { BuildArgs } from "../../../data/Settings";
 import { findGaps } from "../GapDetection/GapDetection";
 import { MainEntity } from "../Misc/Entity";
 import { ClassRaces } from "./ClassRaceData/ClassRaces";

@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { CellIndexWrapper } from "wotlkdata/wotlkdata/cell/cells/CellArray";
-import { EnumCellTransform } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
+import { CellIndexWrapper } from "../../../data/cell/cells/CellArray";
+import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
 import { ActivateObject, ActivateRune, AddComboPoints, AddFarsight, AddHonor, ApplyGlyph, BindHome, CanTitanGrip, CastButtons, Charge, ChargeDest, ClearQuest, CommandTotemCreature, CompleteQuest, CreateItem, CreateManaGem, CreateRandomItem, DestroyAllTotems, Dispel, DispelMechanic, DurabilityDamage, DurabilityDamagePercent, EnchantHeldItem, EnchantItem, EnchantItemTemp, EnchantPrismaticItem, Energize, EnergizePercent, EnvironmentalDamage, ExtraAttacks, FailQuest, ForceCast, ForceCastWithValue, GameObjectDamage, GameObjectRepair, Heal, HealMaxHealth, HealMechanical, HealPercent, HealthLeech, InterruptCast, Jump, JumpDest, KillCredit, Knockback, KnockbackDest, Language, Leap, LeapBack, LearnPetSpell, LearnSpell, MakeDrunk, ModifyThreatPercent, OpenLock, Pickpocket, PlayMusic, PlaySound, PowerBurn, PowerDrain, PullTowards, PullTowardsDest, RedirectThreat, RemoveAura, Reputation, Resurrect, ResurrectSelf, Sanctuary, SchoolDamage, ScriptEffect, SendEvent, SendTaxi, SetGameObjectDestructibleState, Skill, SkillStep, StartQuest, StealBeneficialBuff, Summon, SummonObjectSlot1, SummonObjectSlot2, SummonObjectSlot3, SummonObjectSlot4, SummonObjectWild, SummonPet, TeleportUnitFaceCaster, TeleportUnits, Threat, TradeSkill, TransDoor, TriggerMissile, TriggerMissileWithValue, TriggerSpell, TriggerSpellWithValue, Weapon, WeaponDamage, WeaponDamageNoSchool, WeaponPercentDamage } from "./EffectTemplates/EffectTemplates";
 import { SpellEffect } from "./SpellEffect";
 

@@ -128,6 +128,7 @@ export namespace TrinityCore {
         }
 
         ipaths.bin.include.global_d_ts.write(gdts);
+        spaths.tswow_scripts.wotlk.global_d_ts.write(gdts);
 
         ipaths.modules.module.all().forEach(mod=>{
             mod.endpoints().forEach(ep=>{

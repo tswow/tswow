@@ -1,6 +1,6 @@
-import { SQL } from "wotlkdata";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { player_levelstatsRow } from "wotlkdata/wotlkdata/sql/types/player_levelstats";
+import { SQL } from "../../../SQLFiles";
+import { MultiRowSystem } from "../../../../data/cell/systems/MultiRowSystem";
+import { player_levelstatsRow } from "../../../sql/player_levelstats";
 import { MainEntity } from "../../Misc/Entity";
 import { ClassRegistry } from "../ClassRegistry";
 import { ClassRacePair } from "./ClassRaces";

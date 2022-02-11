@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { EnumCon, makeEnum } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { TalentTabQuery, TalentTabRow } from "wotlkdata/wotlkdata/dbc/types/TalentTab";
-import { lt } from "wotlkdata/wotlkdata/query/Relations";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { EnumCon, makeEnum } from "../../../data/cell/cells/EnumCell";
+import { TalentTabQuery, TalentTabRow } from "../../dbc/TalentTab";
+import { lt } from "../../../data/query/Relations";
+import { Table } from "../../../data/table/Table";
 import { ClassIDs } from "../Class/ClassIDs";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";

@@ -14,10 +14,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { Cell, CellWrapper } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SQLCell, SQLCellReadOnly } from "wotlkdata/wotlkdata/sql/SQLCell";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
+import { Cell, CellWrapper } from "../../../data/cell/cells/Cell";
+import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { SQLCell, SQLCellReadOnly } from "../../../data/sql/SQLCell";
+import { SQL } from "../../SQLFiles";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { convertPercent, PercentUnit } from "../Misc/PercentCell";
 

@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata";
-import { WorldMapContinentQuery, WorldMapContinentRow } from "wotlkdata/wotlkdata/dbc/types/WorldMapContinent";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { WorldMapContinentQuery, WorldMapContinentRow } from "../../dbc/WorldMapContinent";
+import { Table } from "../../../data/table/Table";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

@@ -1,6 +1,6 @@
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { game_event_prerequisiteRow } from "wotlkdata/wotlkdata/sql/types/game_event_prerequisite";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { SQL } from "../../SQLFiles";
+import { game_event_prerequisiteRow } from "../../sql/game_event_prerequisite";
 import { MainEntity } from "../Misc/Entity";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 

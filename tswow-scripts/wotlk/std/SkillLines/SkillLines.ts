@@ -1,6 +1,6 @@
-import { DBC } from "wotlkdata";
-import { SkillLineQuery, SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { SkillLineQuery, SkillLineRow } from "../../dbc/SkillLine";
+import { Table } from "../../../data/table/Table";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { SkillLine } from "./SkillLine";

@@ -1,4 +1,4 @@
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { GORegistry } from "../GameObject/GameObjectRegistries";
 import { GameObjectChest } from "../GameObject/GameObjectTemplate";
 import { Lock } from "../Locks/Lock";

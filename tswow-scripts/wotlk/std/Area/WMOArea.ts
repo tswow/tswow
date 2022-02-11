@@ -1,7 +1,7 @@
-import { DBC } from "wotlkdata";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { WMOAreaTableQuery, WMOAreaTableRow } from "wotlkdata/wotlkdata/dbc/types/WMOAreaTable";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { DBC } from "../../DBCFiles";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { WMOAreaTableQuery, WMOAreaTableRow } from "../../dbc/WMOAreaTable";
+import { Table } from "../../../data/table/Table";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";

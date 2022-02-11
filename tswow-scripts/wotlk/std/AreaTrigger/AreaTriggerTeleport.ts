@@ -1,5 +1,5 @@
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { areatrigger_teleportRow } from "wotlkdata/wotlkdata/sql/types/areatrigger_teleport";
+import { SQL } from "../../SQLFiles";
+import { areatrigger_teleportRow } from "../../sql/areatrigger_teleport";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { AreaTriggerBase } from "./AreaTrigger";

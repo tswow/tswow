@@ -1,5 +1,5 @@
-import { MaskCell32, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
+import { MaskCell32, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { RaceMask } from "../Race/RaceType";
 import { SelfRef } from "../Refs/Ref";

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-import { finish } from "wotlkdata";
-import { iterateIds } from "wotlkdata/util/ids/Ids";
-import { BuildArgs } from 'wotlkdata/wotlkdata/Settings';
+import { finish } from "../../../data/index";
+import { iterateIds } from "../../../util/ids/Ids";
+import { BuildArgs } from '../../../data/Settings';
 
 // Patch ID files
 finish('build-idfiles',()=>{

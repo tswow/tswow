@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { uint32 } from "wotlkdata";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { uint32 } from "../../../data/index";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { DBC } from "../../DBCFiles";
 import { Light } from "./Light";
 import { getIntBandIndex } from "./LightIndex";
 import { LightWeather, LIGHT_WEATHER } from "./LightWeather";

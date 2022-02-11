@@ -1,5 +1,5 @@
-import { makeMask, MaskCon } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
+import { makeMask, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { RaceMask } from "../Race/RaceType";
 import { TalentTreeRegistry } from "../Talents/Talents";
 import { TalentTree } from "../Talents/TalentTree";

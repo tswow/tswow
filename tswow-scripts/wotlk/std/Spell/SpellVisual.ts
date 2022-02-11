@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { DBCIntCell } from "wotlkdata/wotlkdata/dbc/DBCCell";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
-import { SpellVisualQuery, SpellVisualRow } from "wotlkdata/wotlkdata/dbc/types/SpellVisual";
-import { SpellVisualKitQuery, SpellVisualKitRow } from "wotlkdata/wotlkdata/dbc/types/SpellVisualKit";
-import { SpellVisualKitModelAttachRow } from "wotlkdata/wotlkdata/dbc/types/SpellVisualKitModelAttach";
-import { Table } from "wotlkdata/wotlkdata/table/Table";
+import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBCIntCell } from "../../../data/dbc/DBCCell";
+import { DBC } from "../../DBCFiles";
+import { SpellVisualQuery, SpellVisualRow } from "../../dbc/SpellVisual";
+import { SpellVisualKitQuery, SpellVisualKitRow } from "../../dbc/SpellVisualKit";
+import { SpellVisualKitModelAttachRow } from "../../dbc/SpellVisualKitModelAttach";
+import { Table } from "../../../data/table/Table";
 import { Attachment } from "../Misc/Attachment";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

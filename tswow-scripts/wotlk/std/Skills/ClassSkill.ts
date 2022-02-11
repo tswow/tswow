@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "wotlkdata";
-import { SkillLineRow } from "wotlkdata/wotlkdata/dbc/types/SkillLine";
+import { DBC } from "../../DBCFiles";
+import { SkillLineRow } from "../../dbc/SkillLine";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { SpellIconCell } from "../Spell/SpellIcon";

@@ -1,7 +1,7 @@
-import { SQL } from "wotlkdata";
-import { EnumCon, makeEnumCell } from "wotlkdata/wotlkdata/cell/cells/EnumCell";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { battleground_door_objectRow } from "wotlkdata/wotlkdata/sql/types/battleground_door_object";
+import { SQL } from "../../SQLFiles";
+import { EnumCon, makeEnumCell } from "../../../data/cell/cells/EnumCell";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { battleground_door_objectRow } from "../../sql/battleground_door_object";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { GameObjectDoor } from "./GameObjectTemplate";

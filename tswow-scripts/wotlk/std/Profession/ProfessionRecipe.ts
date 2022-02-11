@@ -1,6 +1,6 @@
-import { CellSystem, CellSystemTop } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { MultiRowSystem } from "wotlkdata/wotlkdata/cell/systems/MultiRowSystem";
-import { DBC } from "wotlkdata/wotlkdata/dbc/DBCFiles";
+import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBC } from "../../DBCFiles";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { ShiftedNumberCell } from "../Misc/ShiftedNumberCell";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";

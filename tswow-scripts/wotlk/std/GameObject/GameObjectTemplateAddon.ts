@@ -1,8 +1,8 @@
-import { Cell, CPrim } from "wotlkdata/wotlkdata/cell/cells/Cell";
-import { makeMaskCell32 } from "wotlkdata/wotlkdata/cell/cells/MaskCell";
-import { CellSystem } from "wotlkdata/wotlkdata/cell/systems/CellSystem";
-import { SQL } from "wotlkdata/wotlkdata/sql/SQLFiles";
-import { gameobject_template_addonRow } from "wotlkdata/wotlkdata/sql/types/gameobject_template_addon";
+import { Cell, CPrim } from "../../../data/cell/cells/Cell";
+import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
+import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SQL } from "../../SQLFiles";
+import { gameobject_template_addonRow } from "../../sql/gameobject_template_addon";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { GameObjectFlags } from "./GameObjectFlags";
