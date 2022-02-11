@@ -116,7 +116,7 @@ async function main() {
 
 (async function(){
     if(!spaths.tswow_scripts.wotlk.global_d_ts.exists()) {
-        await compile('headers',[]);
+        TrinityCore.headers();
     }
 
     if(isInteractive) {
