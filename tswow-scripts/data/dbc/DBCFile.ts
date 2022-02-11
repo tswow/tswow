@@ -19,7 +19,7 @@ import * as path from 'path';
 import { inMemory } from '../query/Query';
 import { dataset } from '../Settings';
 import { Table } from '../table/Table';
-import { GetStage } from '../wotlkdata';
+import { GetStage } from '..';
 import { DBCBuffer } from './DBCBuffer';
 import { DBCRow } from './DBCRow';
 
