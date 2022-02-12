@@ -79,13 +79,6 @@ int main(int argc, char **argv) {
 	std::vector<fs::path> patches;
 
 	// todo: hack for md5translate.trs, do this properly!
-	patches.push_back(fs::path(argv[2]) / "common.MPQ");
-	patches.push_back(fs::path(argv[2]) / "common-2.MPQ");
-	patches.push_back(fs::path(argv[2]) / "expansion.MPQ");
-	patches.push_back(fs::path(argv[2]) / "lichking.MPQ");
-	patches.push_back(fs::path(argv[2]) / "patch.MPQ");
-	patches.push_back(fs::path(argv[2]) / "patch-2.MPQ");
-	patches.push_back(fs::path(argv[2]) / "patch-3.MPQ");
 	fs::directory_iterator end;
 
 	for(fs::directory_iterator itr(langdir); itr != end; ++itr)
@@ -107,6 +100,9 @@ int main(int argc, char **argv) {
 		if (b.string().length() != a.string().length()) return b.string().length() > a.string().length();
 		return b.string() > a.string();
 	});
+
+	// md5translate.trs hack
+	patches.push_back(fs::path(argv[2]) / "patch-3.MPQ");
 
 	HANDLE mpq = NULL;
 	if (!SFileOpenArchive(mainfile.string().c_str(), 0, STREAM_FLAG_READ_ONLY, &mpq)) {
