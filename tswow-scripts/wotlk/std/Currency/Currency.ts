@@ -7,6 +7,7 @@ import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { CurrencyCategoryRegistry } from "./CurrencyCategory";
+import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 
 export class Currency extends MainEntity<CurrencyTypesRow> {
     get BitIndex() { return this.row.BitIndex.get(); }
@@ -16,7 +17,10 @@ export class Currency extends MainEntity<CurrencyTypesRow> {
     get Name() { return this.wrapLoc(this.Item.getRef().Name); }
     get Description() { return this.wrapLoc(this.Item.getRef().Description); }
     get ItemDisplay() {
-        return ItemDisplayinfoRegistry.ref(this, this.Item.getRef().row.displayid);
+        let item = this.Item.getRef();
+        return ItemDisplayinfoRegistry.ref(this
+            , new MulticastCell(undefined,[item.DBCRow.get().DisplayInfoID,item.row.displayid])
+        );
     }
 }
 
