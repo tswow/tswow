@@ -1,4 +1,4 @@
-import { GetExistingId, IdPrivate } from "../util/ids/Ids";
+import { GetExistingId, IdPrivate, MatchID } from "../util/ids/Ids";
 import { dataset } from "./tswow-dataset";
 
 class IdPublic extends IdPrivate {
@@ -21,5 +21,31 @@ export function postprocess(contents: string): string {
             contents = contents.replace(m[0],`${id}`)
         }
     } while(m != null);
+
+    do {
+        m = contents
+            .match(/MatchIDs\((.+),(.+),(.+)\)/)
+        if(m) {
+            let table = m[1].match("\"(.*)\"")[1];
+            let modIsRegexp = m[2].startsWith('(new RegExp')
+            let idIsRegexp = m[3].startsWith('(new RegExp')
+            let mod = m[2].match("\"(.*)\"")[1];
+            let id = m[3].match("\"(.*)\"")[1];
+
+            let ids = MatchID(
+                  table
+                , modIsRegexp? new RegExp(mod) : mod
+                , idIsRegexp ? new RegExp(id) : id
+            );
+
+            if(ids.length === 0) {
+                throw new Error(
+                    `table="${table}" mod="${mod}" id="${id}" does not match any ids, did you build datascripts?`
+                )
+            }
+            contents = contents.replace(m[0],`{${ids.join(',')}}`)
+        }
+    } while(m != null);
+
     return contents;
 }

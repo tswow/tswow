@@ -8616,7 +8616,8 @@ declare function StopGameEvent(event_id: uint16): void
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
-declare function GetID(table: string, mod: string, name: string);
+declare function GetID(table: string, mod: string, name: string): uint32;
+declare function MatchIDs(table: string, mod: string|RegExp, name: string|RegExp): TSArray<uint32>;
 declare function GetIDRange(table: string, mod: string, name: string);
 
 declare class BinReader<L extends number> {
