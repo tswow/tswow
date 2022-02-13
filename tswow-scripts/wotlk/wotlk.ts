@@ -16,9 +16,9 @@
  */
 import { finish, luaxml, patch, read, setup, sort, write } from "../data";
 import { BuildArgs } from "../data/Settings";
-import { DBC, DBCLoader } from "./DBCFiles";
-import { LUAXML } from "./luaxml/LUAXML";
-import { SQL } from "./SQLFiles";
+import { DBC as _DBC, DBCLoader } from "./DBCFiles";
+import { LUAXML as _LUAXML } from "./luaxml/LUAXML";
+import { SQL as _SQL } from "./SQLFiles";
 import { AchievementRegistry } from "./std/Achievement/Achievement";
 import { AchievementCategoryRegistry } from "./std/Achievement/AchievementCategory";
 import { AreaRegistry } from "./std/Area/Area";
@@ -183,11 +183,11 @@ export const std = {
     SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,
     isReadOnly: BuildArgs.READ_ONLY,
-    DBC: DBC,
+    DBC: _DBC,
     /** Used to load external dbc files for conversion purposes. */
     DBCLoader: DBCLoader,
-    SQL: SQL,
-    LUAXML: LUAXML,
+    SQL: _SQL,
+    LUAXML: _LUAXML,
     Events: {
         setup: setup,
         read: read,
@@ -200,3 +200,6 @@ export const std = {
 }
 
 export const wotlk = std;
+export const SQL = _SQL;
+export const DBC = _DBC;
+export const LUAXML = _LUAXML;
