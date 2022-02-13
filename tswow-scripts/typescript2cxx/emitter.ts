@@ -631,10 +631,12 @@ export class Emitter {
         }
 
         // special null/undefined handler, sometimes read as "Identifier"
-        if(node && (node.getText() === 'undefined' || node.getText() == 'null')) {
-            this.writer.writeString('TSNull()')
-            return;
-        }
+        try { // <-- hackfix, i don't know what causes this to fail
+            if((node.getText() === 'undefined' || node.getText() == 'null')) {
+                this.writer.writeString('TSNull()')
+                return;
+            }
+        } catch(error) {}
 
         // we need to process it for statements only
         //// this.functionContext.code.setNodeToTrackDebugInfo(node, this.sourceMapGenerator);
