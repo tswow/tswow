@@ -79,7 +79,6 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	// Please do not change this to some auto-resetting macro abuse,
 	// it would NOT be guaranteed to work in the long term.
 
-	TSPlayer player(player);
 	TSPacketRead read(value);
 	opcode_t opcode = value->Opcode();
 
