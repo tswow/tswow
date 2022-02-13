@@ -631,7 +631,7 @@ export class Emitter {
         }
 
         // special null/undefined handler, sometimes read as "Identifier"
-        if(node.getText() === 'undefined' || node.getText() == 'null') {
+        if(node && (node.getText() === 'undefined' || node.getText() == 'null')) {
             this.writer.writeString('TSNull()')
             return;
         }
