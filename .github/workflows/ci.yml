@@ -53,7 +53,6 @@ jobs:
       - name: Get SHA
         id: sha
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
       # Release
       - name: Create Release
         id: create_release
@@ -61,7 +60,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: build-${{ steps.sha.outputs.sha_short }}
+          tag_name: build-${{ steps.time-header.outputs.time }}-${{ steps.sha.outputs.sha_short }}
           release_name: |
             Build #${{ steps.sha.outputs.sha_short }}
           body: |
