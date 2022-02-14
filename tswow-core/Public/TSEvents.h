@@ -149,6 +149,9 @@ EVENT_TYPE(UnitOnCalcScaleThreat
     , bool
 );
 
+EVENT_TYPE(UnitOnDeathEarly,TSUnit /*victim*/, TSUnit /*killer*/)
+EVENT_TYPE(UnitOnDeath,TSUnit /*victim*/, TSUnit /*killer*/)
+
 // WeatherScript
 //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
 
@@ -469,6 +472,7 @@ class TSSpellMap : public TSEventMap<TSSpellEvents>
 EVENT_TYPE(CreatureOnMoveInLOS,TSCreature,TSUnit)
 EVENT_TYPE(CreatureOnJustEnteredCombat,TSCreature,TSUnit)
 EVENT_TYPE(CreatureOnJustEngagedWith,TSCreature,TSUnit)
+EVENT_TYPE(CreatureOnDeathEarly,TSCreature,TSUnit)
 EVENT_TYPE(CreatureOnDeath,TSCreature,TSUnit)
 EVENT_TYPE(CreatureOnKilledUnit,TSCreature,TSUnit)
 EVENT_TYPE(CreatureOnSummoned,TSCreature,TSCreature)
@@ -599,6 +603,7 @@ struct TSCreatureEvents {
      EVENT(CreatureOnMoveInLOS)
      EVENT(CreatureOnJustEnteredCombat)
      EVENT(CreatureOnJustEngagedWith)
+     EVENT(CreatureOnDeathEarly)
      EVENT(CreatureOnDeath)
      EVENT(CreatureOnKilledUnit)
      EVENT(CreatureOnSummoned)
@@ -1256,11 +1261,14 @@ struct TSEventStore
     EVENT(UnitOnCalcThreatEarly)
     EVENT(UnitOnCalcThreatLate)
     EVENT(UnitOnCalcScaleThreat)
+    EVENT(UnitOnDeathEarly)
+    EVENT(UnitOnDeath)
 
     // CreatureScript
     EVENT(CreatureOnMoveInLOS)
     EVENT(CreatureOnJustEnteredCombat)
     EVENT(CreatureOnJustEngagedWith)
+    EVENT(CreatureOnDeathEarly)
     EVENT(CreatureOnDeath)
     EVENT(CreatureOnKilledUnit)
     EVENT(CreatureOnSummoned)
@@ -1643,6 +1651,8 @@ public:
         EVENT_HANDLE(Unit,OnCalcThreatEarly)
         EVENT_HANDLE(Unit,OnCalcThreatLate)
         EVENT_HANDLE(Unit,OnCalcScaleThreat)
+        EVENT_HANDLE(Unit,OnDeathEarly)
+        EVENT_HANDLE(Unit,OnDeath)
     } Unit;
 
      struct SpellEvents : public EventHandler
@@ -1699,6 +1709,7 @@ public:
           EVENT_HANDLE(Creature,OnMoveInLOS)
           EVENT_HANDLE(Creature,OnJustEnteredCombat)
           EVENT_HANDLE(Creature,OnJustEngagedWith)
+          EVENT_HANDLE(Creature,OnDeathEarly)
           EVENT_HANDLE(Creature,OnDeath)
           EVENT_HANDLE(Creature,OnKilledUnit)
           EVENT_HANDLE(Creature,OnSummoned)
@@ -1760,6 +1771,7 @@ public:
           MAP_EVENT_HANDLE(Creature,OnMoveInLOS)
           MAP_EVENT_HANDLE(Creature,OnJustEnteredCombat)
           MAP_EVENT_HANDLE(Creature,OnJustEngagedWith)
+          MAP_EVENT_HANDLE(Creature,OnDeathEarly)
           MAP_EVENT_HANDLE(Creature,OnDeath)
           MAP_EVENT_HANDLE(Creature,OnKilledUnit)
           MAP_EVENT_HANDLE(Creature,OnSummoned)

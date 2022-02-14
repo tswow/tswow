@@ -7445,6 +7445,7 @@ declare namespace _hidden {
         OnMoveInLOS(creature: uint32, callback: (creature: TSCreature, seen: TSUnit)=>void);
         OnJustEnteredCombat(creature: uint32, callback: (creature: TSCreature, target: TSUnit)=>void);
         OnDeath(creature: uint32, callback: (creature: TSCreature, killer: TSUnit)=>void);
+        OnDeathEarly(creature: uint32, callback: (creature: TSCreature, killer: TSUnit)=>void);
         OnKilledUnit(creature: uint32, callback: (creature: TSCreature, killed: TSUnit)=>void);
         OnSummoned(creature: uint32, callback: (creature: TSCreature, summon: TSCreature)=>void);
         OnIsSummoned(creature: uint32, callback: (creature: TSCreature, summoner: TSWorldObject)=>void);
@@ -7669,6 +7670,7 @@ declare namespace _hidden {
         OnGenerateLoot(callback: (creature: TSCreature, killer: TSPlayer)=>void): T;
         OnMoveInLOS(callback: (creature: TSCreature, seen: TSUnit)=>void): T;
         OnJustEnteredCombat(callback: (creature: TSCreature, target: TSUnit)=>void): T;
+        OnDeathEarly(callback: (creature: TSCreature, killer: TSUnit)=>void): T;
         OnDeath(callback: (creature: TSCreature, killer: TSUnit)=>void): T;
         OnKilledUnit(callback: (creature: TSCreature, killed: TSUnit)=>void): T;
         OnSummoned(callback: (creature: TSCreature, summon: TSCreature)=>void): T;
@@ -7939,6 +7941,16 @@ declare namespace _hidden {
             , value: TSMutable<float>
             , raw: boolean
         )=>void)
+
+        /**
+         *  Fires BEFORE auras are removed and kill procs
+         */
+        OnDeathEarly(callback: (victim: TSUnit, killer: TSUnit)=>void);
+
+        /**
+         * Fires AFTER auras are removed and kill procs
+         */
+        OnDeath(callback: (victim: TSUnit, killer: TSUnit)=>void);
     }
 
     export class Battlegrounds<T> {
