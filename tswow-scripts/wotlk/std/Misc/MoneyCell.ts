@@ -23,10 +23,13 @@ export function convertCoin(value: number, from: CoinType, to: CoinType) {
     switch(from) {
         case 'COPPER':
             value = value;
+            break;
         case 'SILVER':
             value = value * 100;
+            break
         case 'GOLD':
             value = value * 10000;
+            break
     }
     switch(to) {
         case 'COPPER': return value;
