@@ -123,6 +123,14 @@ declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
 declare const enum Stats {} /** SharedDefines.h:Stats */
 
+declare const enum Mechanics { } /** SharedDefines.h:Mechanics */
+
+declare const enum SpellEffects { } /** SharedDefines.h:SpellEffects */
+
+declare const enum AuraType { } /** SpellAuraDefines.h:AuraType */
+
+declare const enum SpellEffIndex { } /** SharedDefines.h:SpellEffIndex */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -6930,6 +6938,29 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetTargetAuraStateNot() : uint32
 	GetTargetCreatureType() : uint32
 	GetTargets() : uint32;
+    GetEffect(index: SpellEffIndex): TSSpellEffectInfo
+}
+
+declare class TSSpellEffectInfo {
+    GetEffectIndex(): SpellEffIndex;
+    GetType(): SpellEffects;
+    GetAura(): AuraType;
+    GetAmplitude(): uint32;
+    GetDieSides(): int32;
+    GetRealPointsPerLevel(): float;
+    GetBasePoints(): int32;
+    GetPointsPerComboPoint(): float;
+    GetValueMultiplier(): float;
+    GetDamageMultiplier(): float;
+    GetBonusMultiplier(): float;
+    GetMiscValue(): int32;
+    GetMiscValueB(): int32;
+    GetMechanic(): Mechanics;
+    GetChainTarget(): uint32;
+    GetItemType(): uint32;
+    GetTriggerSpell(): uint32;
+    IsEffect(): bool;
+    IsAura(): bool;
 }
 
 declare interface TSSpellCastTargets {

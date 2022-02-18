@@ -349,6 +349,11 @@ uint32 TSSpellInfo::GetTargets()
     return info->Targets;
 }
 
+TSSpellEffectInfo TSSpellInfo::GetEffect(uint32 index)
+{
+    return TSSpellEffectInfo(&info->GetEffect(static_cast<SpellEffIndex>(index)));
+}
+
 TSEntity * TSSpellInfo::GetData()
 {
     return const_cast<TSEntity*>(&info->m_tsEntity);
@@ -357,4 +362,99 @@ TSEntity * TSSpellInfo::GetData()
 TSSpellInfo GetSpellInfo(uint32 entry)
 {
     return TSSpellInfo(sSpellMgr->GetSpellInfo(entry));
+}
+
+TSSpellEffectInfo::TSSpellEffectInfo()
+    : m_info(nullptr)
+{}
+
+TSSpellEffectInfo::TSSpellEffectInfo(SpellEffectInfo const* info)
+    : m_info(const_cast<SpellEffectInfo*>(info))
+{}
+
+uint32 TSSpellEffectInfo::GetEffectIndex()
+{
+    return static_cast<uint32>(m_info->EffectIndex);
+}
+
+uint32 TSSpellEffectInfo::GetType()
+{
+    return static_cast<uint32>(m_info->Effect);
+}
+
+uint32 TSSpellEffectInfo::GetAura()
+{
+    return static_cast<uint32>(m_info->ApplyAuraName);
+}
+
+uint32 TSSpellEffectInfo::GetAmplitude()
+{
+    return m_info->Amplitude;
+}
+
+int32 TSSpellEffectInfo::GetDieSides()
+{
+    return m_info->DieSides;
+}
+
+float TSSpellEffectInfo::GetRealPointsPerLevel()
+{
+    return m_info->RealPointsPerLevel;
+}
+
+int32 TSSpellEffectInfo::GetBasePoints()
+{
+    return m_info->BasePoints;
+}
+
+float TSSpellEffectInfo::GetPointsPerComboPoint()
+{
+    return m_info->PointsPerComboPoint;
+}
+
+float TSSpellEffectInfo::GetValueMultiplier()
+{
+    return m_info->ValueMultiplier;
+}
+
+float TSSpellEffectInfo::GetDamageMultiplier()
+{
+    return m_info->DamageMultiplier;
+}
+float TSSpellEffectInfo::GetBonusMultiplier()
+{
+    return m_info->BonusMultiplier;
+}
+int32 TSSpellEffectInfo::GetMiscValue()
+{
+    return m_info->MiscValue;
+}
+int32 TSSpellEffectInfo::GetMiscValueB()
+{
+    return m_info->MiscValueB;
+}
+uint32 TSSpellEffectInfo::GetMechanic()
+{
+    return static_cast<uint32>(m_info->Mechanic);
+}
+uint32 TSSpellEffectInfo::GetChainTarget()
+{
+    return m_info->ChainTarget;
+}
+uint32 TSSpellEffectInfo::GetItemType()
+{
+    return m_info->ItemType;
+}
+uint32 TSSpellEffectInfo::GetTriggerSpell()
+{
+    return m_info->TriggerSpell;
+}
+
+bool TSSpellEffectInfo::IsEffect()
+{
+    return m_info->IsEffect();
+}
+bool TSSpellEffectInfo::IsAura()
+{
+    return m_info->IsAura();
 }

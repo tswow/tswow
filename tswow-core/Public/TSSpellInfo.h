@@ -18,6 +18,40 @@
 #include "TSClasses.h"
 #include "TSEntity.h"
 
+class TC_GAME_API TSSpellEffectInfo
+{
+public:
+    SpellEffectInfo* m_info;
+    TSSpellEffectInfo(SpellEffectInfo const* info);
+    TSSpellEffectInfo();
+    TSSpellEffectInfo* operator->() { return this; }
+    operator bool() const { return m_info != nullptr; }
+    bool operator==(TSSpellEffectInfo const& rhs) { return m_info == rhs.m_info; }
+    bool IsNull() { return m_info == nullptr; }
+
+    uint32 GetEffectIndex();
+    uint32 GetType();
+    uint32 GetAura();
+    uint32 GetAmplitude();
+    int32 GetDieSides();
+    float GetRealPointsPerLevel();
+    int32 GetBasePoints();
+    float GetPointsPerComboPoint();
+    float GetValueMultiplier();
+    float GetDamageMultiplier();
+    float GetBonusMultiplier();
+    int32 GetMiscValue();
+    int32 GetMiscValueB();
+    uint32 GetMechanic();
+    // TODO: GetTargetA/GetTargetB
+    uint32 GetChainTarget();
+    uint32 GetItemType();
+    uint32 GetTriggerSpell();
+
+    bool IsEffect();
+    bool IsAura();
+};
+
 class TC_GAME_API TSSpellInfo: public TSEntityProvider {
 public:
     SpellInfo * info;
@@ -26,8 +60,8 @@ public:
     TSSpellInfo* operator->() { return this;}
     operator bool() const { return info != nullptr; }
     bool operator==(TSSpellInfo const& rhs) { return info == rhs.info; }
-
     bool IsNull() { return info == nullptr; }
+
     uint32 GetEntry();
     uint32 GetSchool();
     uint32 GetBaseLevel();
@@ -92,6 +126,7 @@ public:
     uint32 GetTargetAuraStateNot();
     uint32 GetTargetCreatureType();
     uint32 GetTargets();
+    TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
 };
 
