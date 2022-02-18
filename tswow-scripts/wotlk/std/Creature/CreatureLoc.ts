@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { Language } from "../../../data/dbc/Localization";
+import { SQL } from "../../SQLFiles";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { CreatureTemplate } from "./CreatureTemplate";
 
@@ -28,7 +28,7 @@ function creatureLoc(id: number, lang: Language) {
     return SQL.creature_template_locale.add(id, lang);
 }
 
-export class CreatureName extends SQLLocSystem<CreatureTemplate> {
+export class CreatureName<T extends CreatureTemplate> extends SQLLocSystem<T> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.name;
     }
@@ -38,7 +38,7 @@ export class CreatureName extends SQLLocSystem<CreatureTemplate> {
     }
 }
 
-export class CreatureSubname extends SQLLocSystem<CreatureTemplate> {
+export class CreatureSubname<T extends CreatureTemplate> extends SQLLocSystem<T> {
     protected getMain(): Cell<string, any> {
         return this.owner.row.subname;
     }
