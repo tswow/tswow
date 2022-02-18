@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "../../DBCFiles"
-import { SQL } from "../../SQLFiles"
-import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "../../dbc/GameObjectDisplayInfo"
-import { gameobjectQuery, gameobjectRow } from "../../sql/gameobject"
+import { Cell } from "../../../data/cell/cells/Cell"
 import { Table } from "../../../data/table/Table"
+import { GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow } from "../../dbc/GameObjectDisplayInfo"
+import { DBC } from "../../DBCFiles"
+import { gameobjectQuery, gameobjectRow } from "../../sql/gameobject"
+import { SQL } from "../../SQLFiles"
 import { DynamicIDGenerator, Ids, StaticIDGenerator } from "../Misc/Ids"
+import { RefDynamic } from "../Refs/Ref"
 import { RegistryDynamic, RegistryStatic } from "../Refs/Registry"
 import { GameObjectDisplay } from "./GameObjectDisplay"
 import { GameObjectInstance } from "./GameObjectInstance"
@@ -69,11 +71,29 @@ export class GameObjectInstanceRegistryClass
 
 export const GameObjectInstances = new GameObjectInstanceRegistryClass();
 
+export class GameObjectDisplayRef<T> extends RefDynamic<T,GameObjectDisplay> {
+    setSimple(model: string, geobox: number) {
+        let entry = GameObjectDisplayRegistry
+            .create()
+            .ModelName.set(model)
+            .GeoBox.set(geobox)
+        this.set(entry.ID)
+        return this.owner;
+    }
+}
+
 export class GameObejctDisplayRegistryClass
     extends RegistryDynamic<
-        GameObjectDisplay,GameObjectDisplayInfoRow,GameObjectDisplayInfoQuery
+          GameObjectDisplay
+        , GameObjectDisplayInfoRow
+        , GameObjectDisplayInfoQuery
     >
 {
+
+    ref<T>(owner: T, cell: Cell<number, any>): GameObjectDisplayRef<T> {
+        return new GameObjectDisplayRef(owner, cell, this);
+    }
+
     protected Table(): Table<any, GameObjectDisplayInfoQuery, GameObjectDisplayInfoRow> & { add: (id: number) => GameObjectDisplayInfoRow } {
         return DBC.GameObjectDisplayInfo;
     }
