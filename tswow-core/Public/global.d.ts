@@ -131,6 +131,8 @@ declare const enum AuraType { } /** SpellAuraDefines.h:AuraType */
 
 declare const enum SpellEffIndex { } /** SharedDefines.h:SpellEffIndex */
 
+declare const enum SpellEffectHandleMode { } /** Spell.h:SpellEffectHandleMode */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -7355,6 +7357,7 @@ declare namespace _hidden {
         OnCast(spell: uint32, callback : (spell: TSSpell)=>void);
         OnCheckCast(spell: uint32, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
         OnDispel(spell: uint32, callback: (spell: TSSpell, dispelType: uint32)=>void);
+        OnEffect(spell: uint32, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
         OnHit(spell: uint32, callback: (spell: TSSpell)=>void);
         OnTick(spell: uint32, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
@@ -7418,6 +7421,7 @@ declare namespace _hidden {
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void): T;
         OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
+        OnEffect(callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
         OnHit(callback: (spell: TSSpell)=>void): T;
         OnTick(callback: (effect: TSAuraEffect)=>void): T;
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
