@@ -28,7 +28,7 @@ import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LootSetPointer } from "../Loot/Loot";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { SchoolMask } from "../Misc/School";
@@ -199,7 +199,7 @@ export class CreatureTemplateAddonRow extends CellSystem<CreatureTemplate> {
     }
 }
 
-export class CreatureTemplate extends MainEntity<creature_templateRow> {
+export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
     get Subname() { return new CreatureSubname(this); }

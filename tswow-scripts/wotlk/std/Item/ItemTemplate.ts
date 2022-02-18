@@ -33,7 +33,7 @@ import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { Loot, LootSet } from "../Loot/Loot";
 import { DurationCell } from "../Misc/DurationCell";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
 import { PageTextRegistry } from "../PageText/PageText";
@@ -108,7 +108,7 @@ export class ItemDBCRow extends CellSystem<ItemTemplate> {
     }
 }
 
-export class ItemTemplate extends MainEntity<item_templateRow> {
+export class ItemTemplate extends MainEntityID<item_templateRow> {
     @Transient
     protected get dbc() { return ItemDBCRow.dbc(this); }
     readonly DBCRow = new ItemDBCRow(this);

@@ -29,7 +29,7 @@ import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { LootSetPointer } from "../Loot/Loot";
 import { MapRegistry } from "../Map/Maps";
-import { TransformedEntity } from "../Misc/Entity";
+import { TransformedEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { PageTextRegistry } from "../PageText/PageText";
@@ -107,7 +107,7 @@ export class GameObjectTemplateAddonRow<T extends GameObjectTemplate>
     }
 }
 
-export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
+export class GameObjectTemplate extends TransformedEntityID<gameobject_templateRow, GameObjectPlain> {
     protected transformer() { return this.Type; }
     protected default(): GameObjectPlain {
         return new GameObjectPlain(this.row);

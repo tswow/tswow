@@ -6,7 +6,7 @@ import { game_eventQuery, game_eventRow } from "../../sql/game_event";
 import { SQL } from "../../SQLFiles";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { convertTime, DurationCell, TimeUnit } from "../Misc/DurationCell";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { makeSQLDate, SQLDateCell } from "./Date";
@@ -111,7 +111,7 @@ export class GameEventState extends EnumCell<GameEvent> {
     get INTERNAL() { return this.value(5); }
 }
 
-export class GameEvent extends MainEntity<game_eventRow> {
+export class GameEvent extends MainEntityID<game_eventRow> {
     get ID() { return this.row.eventEntry.get(); }
     get Type() { return new GameEventState(this, this.row.world_event)}
 

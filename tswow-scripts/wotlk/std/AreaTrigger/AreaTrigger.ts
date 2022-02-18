@@ -4,7 +4,7 @@ import { Table } from "../../../data/table/Table";
 import { AreaTriggerQuery, AreaTriggerRow } from "../../dbc/AreaTrigger";
 import { DBC } from "../../DBCFiles";
 import { getInlineID } from "../InlineScript/InlineScript";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { distance3d, Position } from "../Misc/Position";
 import { PositionMapXYZCell } from "../Misc/PositionCell";
@@ -12,7 +12,7 @@ import { RegistryStatic } from "../Refs/Registry";
 import { AreaTriggerTavern } from "./AreaTriggerTavern";
 import { AreaTriggerTeleport } from "./AreaTriggerTeleport";
 
-export class AreaTriggerBase extends MainEntity<AreaTriggerRow> {
+export class AreaTriggerBase extends MainEntityID<AreaTriggerRow> {
     get ID() { return this.row.ID.get(); }
     get Tavern() { return new AreaTriggerTavern(this); }
     get Teleport() { return new AreaTriggerTeleport(this); }
