@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { ParticleColorQuery, ParticleColorRow } from "../../dbc/ParticleColor";
 import { Table } from "../../../data/table/Table";
+import { ParticleColorQuery, ParticleColorRow } from "../../dbc/ParticleColor";
+import { DBC } from "../../DBCFiles";
 import { RegistryDynamic } from "../Refs/Registry";
 import { MainEntity } from "./Entity";
 import { DynamicIDGenerator, Ids } from "./Ids";

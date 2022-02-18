@@ -1,9 +1,9 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCell } from "../../../data/cell/cells/EnumCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { SQL } from "../../SQLFiles";
-import { game_eventQuery, game_eventRow } from "../../sql/game_event";
 import { Table } from "../../../data/table/Table";
+import { game_eventQuery, game_eventRow } from "../../sql/game_event";
+import { SQL } from "../../SQLFiles";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { convertTime, DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";

@@ -1,7 +1,7 @@
 import { makeMaskCell32, MaskCellWrite, MaskCon } from "../../../data/cell/cells/MaskCell";
-import { SQL } from "../../SQLFiles";
 import { SqlRow } from "../../../data/sql/SQLRow";
 import { spell_autolearnRow } from "../../sql/spell_autolearn";
+import { SQL } from "../../SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { RaceMask } from "../Race/RaceType";

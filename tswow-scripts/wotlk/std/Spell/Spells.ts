@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "../../DBCFiles";
-import { SpellQuery, SpellRow } from "../../dbc/Spell";
 import { Table } from "../../../data/table/Table";
+import { SpellQuery, SpellRow } from "../../dbc/Spell";
+import { DBC } from "../../DBCFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { Spell } from "./Spell";

@@ -1,6 +1,6 @@
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { DBC } from "../../DBCFiles";
 import { AreaPOIQuery, AreaPOIRow } from "../../dbc/AreaPOI";
+import { DBC } from "../../DBCFiles";
 import { AreaRegistry } from "../Area/Area";
 import { FactionRegistry } from "../Faction/Faction";
 import { MapRegistry } from "../Map/Maps";

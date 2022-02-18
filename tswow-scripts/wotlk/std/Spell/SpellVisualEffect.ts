@@ -1,10 +1,10 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { DBC } from "../../DBCFiles";
+import { Table } from "../../../data/table/Table";
 import { SpellVisualEffectNameQuery, SpellVisualEffectNameRow } from "../../dbc/SpellVisualEffectName";
 import { SpellVisualKitRow } from "../../dbc/SpellVisualKit";
-import { Table } from "../../../data/table/Table";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

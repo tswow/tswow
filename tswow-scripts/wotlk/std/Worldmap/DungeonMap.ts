@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { DungeonMapQuery, DungeonMapRow } from "../../dbc/DungeonMap";
 import { Table } from "../../../data/table/Table";
+import { DungeonMapQuery, DungeonMapRow } from "../../dbc/DungeonMap";
+import { DBC } from "../../DBCFiles";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { WorldMapAreaQuery, WorldMapAreaRow } from "../../dbc/WorldMapArea";
 import { Table } from "../../../data/table/Table";
+import { WorldMapAreaQuery, WorldMapAreaRow } from "../../dbc/WorldMapArea";
+import { DBC } from "../../DBCFiles";
 import { AreaRegistry } from "../Area/Area";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";

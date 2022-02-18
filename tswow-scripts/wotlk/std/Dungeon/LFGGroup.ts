@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "../../dbc/LfgDungeonGroup";
 import { Table } from "../../../data/table/Table";
+import { LfgDungeonGroupQuery, LfgDungeonGroupRow } from "../../dbc/LfgDungeonGroup";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

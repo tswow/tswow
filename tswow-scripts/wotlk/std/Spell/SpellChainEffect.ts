@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { SpellChainEffectsQuery, SpellChainEffectsRow } from "../../dbc/SpellChainEffects";
 import { Table } from "../../../data/table/Table";
+import { SpellChainEffectsQuery, SpellChainEffectsRow } from "../../dbc/SpellChainEffects";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

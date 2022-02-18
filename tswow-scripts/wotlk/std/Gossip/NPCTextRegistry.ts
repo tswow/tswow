@@ -1,6 +1,6 @@
-import { SQL } from "../../SQLFiles";
-import { npc_textQuery, npc_textRow } from "../../sql/npc_text";
 import { Table } from "../../../data/table/Table";
+import { npc_textQuery, npc_textRow } from "../../sql/npc_text";
+import { SQL } from "../../SQLFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { NPCText } from "./GossipText";

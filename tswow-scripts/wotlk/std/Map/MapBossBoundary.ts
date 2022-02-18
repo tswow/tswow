@@ -16,8 +16,8 @@
  */
 import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../SQLFiles";
 import { instance_boss_boundaryRow } from "../../sql/instance_boss_boundary";
+import { SQL } from "../../SQLFiles";
 import { TransformedEntity } from "../Misc/Entity";
 import { PositionXYCell } from "../Misc/PositionCell";
 

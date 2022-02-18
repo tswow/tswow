@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "../../DBCFiles";
-import { CharTitlesQuery, CharTitlesRow } from "../../dbc/CharTitles";
 import { Table } from "../../../data/table/Table";
+import { CharTitlesQuery, CharTitlesRow } from "../../dbc/CharTitles";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { GenderedText } from "../Misc/GenderedText";
 import { Ids } from "../Misc/Ids";

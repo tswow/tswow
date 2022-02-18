@@ -15,8 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { SQL } from "../../SQLFiles";
 import { npc_vendorRow } from "../../sql/npc_vendor";
+import { SQL } from "../../SQLFiles";
 import { CreatureTemplate } from "./CreatureTemplate";
 
 export class CreatureVendor extends CellSystem<CreatureTemplate> {

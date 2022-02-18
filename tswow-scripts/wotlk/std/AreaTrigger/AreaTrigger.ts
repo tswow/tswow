@@ -1,8 +1,8 @@
-import { sort } from "../../../data/index";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { DBC } from "../../DBCFiles";
-import { AreaTriggerQuery, AreaTriggerRow } from "../../dbc/AreaTrigger";
+import { sort } from "../../../data/index";
 import { Table } from "../../../data/table/Table";
+import { AreaTriggerQuery, AreaTriggerRow } from "../../dbc/AreaTrigger";
+import { DBC } from "../../DBCFiles";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

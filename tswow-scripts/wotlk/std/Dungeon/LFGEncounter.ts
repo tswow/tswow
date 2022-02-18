@@ -1,8 +1,8 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { DBC } from "../../DBCFiles";
 import { DungeonEncounterQuery, DungeonEncounterRow } from "../../dbc/DungeonEncounter";
+import { DBC } from "../../DBCFiles";
 import { instance_encountersQuery, instance_encountersRow } from "../../sql/instance_encounters";
 import { SQL } from "../../SQLFiles";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";

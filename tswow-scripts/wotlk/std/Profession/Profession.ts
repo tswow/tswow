@@ -1,7 +1,7 @@
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { DBC } from "../../DBCFiles";
-import { SkillLineRow } from "../../dbc/SkillLine";
 import { loc_constructor } from "../../../data/primitives";
+import { SkillLineRow } from "../../dbc/SkillLine";
+import { DBC } from "../../DBCFiles";
 import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";

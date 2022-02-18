@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { finish } from "../../../data"
+import { finish } from "../../../data";
 import { BuildArgs } from "../../../data/Settings";
 import { WFile } from "../../../util/FileTree";
 import { ipaths } from "../../../util/Paths";

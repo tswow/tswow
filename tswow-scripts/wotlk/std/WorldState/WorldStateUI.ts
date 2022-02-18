@@ -1,9 +1,9 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { WorldStateUIQuery, WorldStateUIRow } from "../../dbc/WorldStateUI";
 import { Table } from "../../../data/table/Table";
+import { WorldStateUIQuery, WorldStateUIRow } from "../../dbc/WorldStateUI";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";

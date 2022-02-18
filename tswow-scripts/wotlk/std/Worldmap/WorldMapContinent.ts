@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { WorldMapContinentQuery, WorldMapContinentRow } from "../../dbc/WorldMapContinent";
 import { Table } from "../../../data/table/Table";
+import { WorldMapContinentQuery, WorldMapContinentRow } from "../../dbc/WorldMapContinent";
+import { DBC } from "../../DBCFiles";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

@@ -17,8 +17,8 @@
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { SQLCellReadOnly } from "../../../data/sql/SQLCell";
-import { SQL } from "../../SQLFiles";
 import { smart_scriptsCreator, smart_scriptsRow } from "../../sql/smart_scripts";
+import { SQL } from "../../SQLFiles";
 import { Condition } from "../Conditions/Condition";
 import { PercentCell } from "../Misc/PercentCell";
 import { ActionType } from "./ActionType";

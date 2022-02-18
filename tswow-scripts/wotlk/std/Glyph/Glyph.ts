@@ -1,4 +1,3 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
@@ -6,9 +5,10 @@ import { PendingCell } from "../../../data/cell/cells/PendingCell";
 import { CellSystemTop, LocSystem } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { Language } from "../../../data/dbc/Localization";
-import { GlyphPropertiesQuery, GlyphPropertiesRow } from "../../dbc/GlyphProperties";
 import { loc_constructor } from "../../../data/primitives";
 import { Table } from "../../../data/table/Table";
+import { GlyphPropertiesQuery, GlyphPropertiesRow } from "../../dbc/GlyphProperties";
+import { DBC } from "../../DBCFiles";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

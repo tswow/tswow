@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { SoundEntriesAdvancedQuery, SoundEntriesAdvancedRow } from "../../dbc/SoundEntriesAdvanced";
 import { Table } from "../../../data/table/Table";
+import { SoundEntriesAdvancedQuery, SoundEntriesAdvancedRow } from "../../dbc/SoundEntriesAdvanced";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

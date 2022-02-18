@@ -1,9 +1,9 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { PendingCell } from "../../../data/cell/cells/PendingCell";
 import { LocSystem } from "../../../data/cell/systems/CellSystem";
 import { Language } from "../../../data/dbc/Localization";
 import { loc_constructor } from "../../../data/primitives";
+import { DBC } from "../../DBCFiles";
 import { Ids } from "../Misc/Ids";
 import { HolidayBase } from "./Holiday";
 

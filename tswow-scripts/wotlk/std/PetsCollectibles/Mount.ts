@@ -1,11 +1,11 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 import { LocSystem, MulticastLocCell } from "../../../data/cell/systems/CellSystem";
 import { MultirowSystemCached } from "../../../data/cell/systems/MultiRowSystem";
-import { SpellQuery, SpellRow } from "../../dbc/Spell";
 import { Table } from "../../../data/table/Table";
+import { SpellQuery, SpellRow } from "../../dbc/Spell";
+import { DBC } from "../../DBCFiles";
 import { CreatureModels } from "../Creature/CreatureModels";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemBonding } from "../Item/ItemBonding";

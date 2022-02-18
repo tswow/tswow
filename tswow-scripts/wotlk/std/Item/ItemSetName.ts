@@ -16,8 +16,8 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { Language } from "../../../data/dbc/Localization";
-import { SQL } from "../../SQLFiles";
 import { item_set_namesRow } from "../../sql/item_set_names";
+import { SQL } from "../../SQLFiles";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { ItemTemplate } from "./ItemTemplate";

@@ -1,6 +1,6 @@
-import { SQL } from "../../SQLFiles";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { SQL } from "../../SQLFiles";
 
 export class SpellRank<T> extends CellSystem<T>{
     @Transient

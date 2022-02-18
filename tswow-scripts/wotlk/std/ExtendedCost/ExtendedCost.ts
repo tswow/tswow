@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
-import { ItemExtendedCostQuery, ItemExtendedCostRow } from "../../dbc/ItemExtendedCost";
 import { Table } from "../../../data/table/Table";
+import { ItemExtendedCostQuery, ItemExtendedCostRow } from "../../dbc/ItemExtendedCost";
+import { DBC } from "../../DBCFiles";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

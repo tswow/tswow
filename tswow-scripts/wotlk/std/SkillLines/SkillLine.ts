@@ -1,8 +1,8 @@
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { MaskCon } from "../../../data/cell/cells/MaskCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { DBC } from "../../DBCFiles";
 import { SkillLineRow } from "../../dbc/SkillLine";
+import { DBC } from "../../DBCFiles";
 import { ClassMask } from "../Class/ClassRegistry";
 import { MainEntity } from "../Misc/Entity";
 import { RaceMask } from "../Race/RaceType";

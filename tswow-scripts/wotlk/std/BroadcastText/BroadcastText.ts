@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { Language } from "../../../data/dbc/Localization";
 import { loc_constructor } from "../../../data/primitives";
-import { broadcast_textQuery, broadcast_textRow } from "../../sql/broadcast_text";
 import { Table } from "../../../data/table/Table";
+import { broadcast_textQuery, broadcast_textRow } from "../../sql/broadcast_text";
+import { SQL } from "../../SQLFiles";
 import { DurationCell, TimeUnit } from "../Misc/DurationCell";
 import { MainEntity } from "../Misc/Entity";
 import { GenderedText } from "../Misc/GenderedText";

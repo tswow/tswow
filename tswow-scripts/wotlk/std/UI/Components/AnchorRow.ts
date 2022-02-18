@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import * as xml from 'xml2js';
 import { CellSystem } from "../../../../data/cell/systems/CellSystem";
 import { Edit } from "../../../../data/luaxml/TextFile";
-import * as xml from 'xml2js';
 
 let builder = new xml.Builder({headless: true});
 export type Points = 'TOP' | 'LEFT' | 'BOTTOM' | 'RIGHT'
