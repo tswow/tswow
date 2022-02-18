@@ -77,6 +77,7 @@ import { SpawnGroupRegistry } from "./std/SpawnGroup/SpawnGroupRegistry";
 import { SpellRegistry } from "./std/Spell/Spells";
 import { SpellStackGroupRegistry } from "./std/Spell/SpellStackGroup";
 import { SpellFocusRegistry } from "./std/SpellFocus/SpellFocus";
+import { Tags } from "./std/Tags/Tags";
 import { TalentTreeRegistry } from "./std/Talents/Talents";
 import { TaxiPathRegistry } from "./std/Taxi/Taxi";
 import { TaxiEndNodeRegistry } from "./std/Taxi/TaxiEndNode";
@@ -182,6 +183,7 @@ export const std = {
     Keys: KeyRegistry,
     SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,
+    Tags: Tags,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: _DBC,
     /** Used to load external dbc files for conversion purposes. */
