@@ -387,10 +387,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             }),
             commands_yaml: file('commands.yaml'),
             terminal_history_txt: file('terminal-history.txt'),
-            last_datascript: file('last_datascript.sql'),
-            datatables: dir({
-                datafile: dynfile((name)=>`${name}.datafile.json`)
-            })
+            last_datascript: file('last_datascript.sql')
         }),
         modules: dir({
             module: dyndir(name=>(({

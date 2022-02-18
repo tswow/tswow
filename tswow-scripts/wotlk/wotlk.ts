@@ -32,7 +32,6 @@ import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "./std/Creatu
 import { CreatureOutfitsRegistry } from "./std/CreatureOutfits/CreatureOutfitsRegistry";
 import { CurrencyRegistry } from "./std/Currency/Currency";
 import { CurrencyCategoryRegistry } from "./std/Currency/CurrencyCategory";
-import { DataTables } from "./std/DataTables/DataTables";
 import { EnchantmentRegistry } from "./std/Enchant/Enchantment";
 import { EnchantmentConditionRegistry } from "./std/Enchant/EnchantmentCondition";
 import { ExtendedCostRegistry } from "./std/ExtendedCost/ExtendedCost";
@@ -183,7 +182,6 @@ export const std = {
     Keys: KeyRegistry,
     SpawnGroups: SpawnGroupRegistry,
     InlineScripts: InlineScript,
-    DataTables: DataTables,
     isReadOnly: BuildArgs.READ_ONLY,
     DBC: _DBC,
     /** Used to load external dbc files for conversion purposes. */

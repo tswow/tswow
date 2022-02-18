@@ -8666,9 +8666,6 @@ declare function CreateArray<T>(obj: T[]): TSArray<T>
 declare function GetID(table: string, mod: string, name: string);
 declare function GetIDRange(table: string, mod: string, name: string);
 
-declare function DataDictionary<K extends uint32 | int32 | string, T>(mod: string, id: string): TSDictionary<K, T>;
-declare function DataArray<T>(mod: string, id: string): TSArray<T>;
-
 declare class BinReader<L extends number> {
     Read<T extends number>(offset: L) : T;
     Write<T extends number>(offset: L, value: T)
