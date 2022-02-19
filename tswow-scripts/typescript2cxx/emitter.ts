@@ -2069,7 +2069,7 @@ export class Emitter {
                     || getObjectPre == 'GetObject'
                     || onMessageIdPre == 'OnMessageID'
                     || DBContainerPre == 'DBContainer'
-                    || typeText.startsWith('TS')
+                    || (typeText.startsWith('TS') && (typeText !== 'TSDatabaseResult'))
 
                 if(!skipPointerIf) {
                     this.writer.writeString('std::shared_ptr<');
