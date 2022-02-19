@@ -8667,6 +8667,29 @@ declare function GetID(table: string, mod: string, name: string);
 declare function GetIDRange(table: string, mod: string, name: string);
 declare function GetIDTag(mod: string, id: string): TSArray<uint32>
 
+/**
+ * Runs a compile-time check that a given world database table exists.
+ *
+ * **Important**: This function does **nothing** at runtime.
+ *
+ * **Motivation**: It's easy to forget building datascripts after a rebuild
+ *                 or reinstallation before you build your scripts.
+ *                 This helps you catch such errors before you try reading it in the worldserver.
+ *
+ * **Type Codes**: Optionally, the second argument can be used to supply a string list of type characters
+ *                 to check that the table has some expected number of columns with specific types.
+ *                 `i` checks for integer types, `s` for strings, `f` for floats and `*` for any type.
+ *
+ * **Examples**:
+ *
+ *     ASSERT_WORLD_TABLE("my_table","s") // asserts "my_table" column 1 is a string.
+ *
+ *     ASSERT_WORLD_TABLE("my_table","*i") // asserts "my_table" column 2 is an integer.
+ *
+ *     ASSERT_WORLD_TABLE("my_table","si") // asserts "my_table" column 1 is a string and column 2 is an integer.
+ */
+declare function ASSERT_WORLD_TABLE(table: string, columns?: string)
+
 declare class BinReader<L extends number> {
     Read<T extends number>(offset: L) : T;
     Write<T extends number>(offset: L, value: T)
