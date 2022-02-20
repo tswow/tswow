@@ -34,12 +34,17 @@ uint32 TSItemTemplate::GetEntry()  {
     return info->ItemId;
 }
 
+void TSItemTemplate::SetEntry(uint32 value) {
+    info->ItemId = value;
+}
+
 uint32 TSItemTemplate::GetClass() { return info->Class; }
 uint32 TSItemTemplate::GetSubClass() { return info->SubClass; };
 int32  TSItemTemplate::GetSoundOverrideSubclass() { return info->SoundOverrideSubclass; };
 TSString TSItemTemplate::GetName() { return JSTR(info->Name1); };
 uint32 TSItemTemplate::GetDisplayInfoID() { return info->DisplayInfoID; };
 uint32 TSItemTemplate::GetQuality() { return info->Quality; };
+void TSItemTemplate::SetQuality(uint32 value) { info->Quality = value; };
 uint32 TSItemTemplate::GetFlags() { return info->Flags; };
 uint32 TSItemTemplate::GetFlags2() { return info->Flags2; };
 uint32 TSItemTemplate::GetBuyCount() { return info->BuyCount; };
@@ -49,6 +54,7 @@ uint32 TSItemTemplate::GetInventoryType() { return info->InventoryType; };
 uint32 TSItemTemplate::GetAllowableClass() { return info->AllowableClass; };
 uint32 TSItemTemplate::GetAllowableRace() { return info->AllowableRace; };
 uint32 TSItemTemplate::GetItemLevel() { return info->ItemLevel; };
+void TSItemTemplate::SetItemLevel(uint32 value) { info->ItemLevel = value; };
 uint32 TSItemTemplate::GetRequiredLevel() { return info->RequiredLevel; };
 uint32 TSItemTemplate::GetRequiredSkill() { return info->RequiredSkill; };
 uint32 TSItemTemplate::GetRequiredSkillRank() { return info->RequiredSkillRank; };
@@ -64,6 +70,7 @@ uint32 TSItemTemplate::GetStatsCount() { return info->StatsCount; };
 uint32 TSItemTemplate::GetScalingStatDistribution() { return info->ScalingStatDistribution; };
 uint32 TSItemTemplate::GetScalingStatValue() { return info->ScalingStatValue; };
 uint32 TSItemTemplate::GetArmor() { return info->Armor; };
+void TSItemTemplate::SetArmor(int32 value) { info->Armor = value; };
 uint32 TSItemTemplate::GetHolyRes() { return info->HolyRes; };
 uint32 TSItemTemplate::GetFireRes() { return info->FireRes; };
 uint32 TSItemTemplate::GetNatureRes() { return info->NatureRes; };
@@ -341,7 +348,7 @@ void TSItemTemplate::SaveItemTemplate()
     std::ostringstream oss;
     oss << "REPLACE INTO custom_item_template VALUES(" << info->ItemId << "," << info->Class << "," << info->SubClass << "," << info->SoundOverrideSubclass
         << ",'" << info->Name1 << "'," << info->DisplayInfoID << "," << info->Quality << "," << info->Flags << "," << info->Flags2 << "," << info->BuyCount << "," << info->BuyPrice
-        << "," << info->SellPrice << "," << info->InventoryType << "," << info->AllowableClass << "," << info->AllowableRace << "," << info->ItemLevel << "," << info->RequiredLevel
+        << "," << info->SellPrice << "," << info->InventoryType << "," << int32(info->AllowableClass) << "," << int32(info->AllowableRace) << "," << info->ItemLevel << "," << info->RequiredLevel
         << "," << info->RequiredSkill << "," << info->RequiredSkillRank << "," << info->RequiredSpell << "," << info->RequiredHonorRank << "," << info->RequiredCityRank
         << "," << info->RequiredReputationFaction << "," << info->RequiredReputationRank << "," << info->MaxCount << "," << info->Stackable << "," << info->ContainerSlots << "," << info->StatsCount 
         << "," << info->ItemStat[0].ItemStatType << "," << info->ItemStat[0].ItemStatValue << "," << info->ItemStat[1].ItemStatType << "," << info->ItemStat[1].ItemStatValue

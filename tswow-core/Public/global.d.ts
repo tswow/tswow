@@ -6893,6 +6893,10 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetIsConjuredConsumable(): bool
     GetHasSignature(): bool;
 
+    SetItemLevel(value: uint32): void
+    SetArmor(value: int32): void
+    SetQuality(value: int32): void
+    SetEntry(value: uint32): void
     SetStatType(index: uint32, value:uint32): void
     SetStatValue(index: uint32, value: int32): void
     SetDamageMinA(value: int64): void;
@@ -8668,6 +8672,7 @@ declare function StopGameEvent(event_id: uint16): void
 
 declare function ReloadItemTemplate(): void;
 declare function ReloadSingleItemTemplate(itemID: string): void;
+declare function ReloadSingleItemTemplateObject(item: TSItemTemplate): void;
 declare function LoadCustomItems(): void;
 // end of Global.h
 
