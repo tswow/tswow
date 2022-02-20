@@ -131,6 +131,13 @@ public:
     bool HasSignature();
 
     TSEntity * GetData();
+
+    void SetStatType(uint32 index, uint32 value);
+    void SetStatValue(uint32 index, int32 value);
+    void SetStatCount(uint32 value);
+    ItemTemplate* _GetInfo();
+    WorldPacket BuildCustomQueryData(uint8 loc);
+    void SaveItemTemplate();
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);

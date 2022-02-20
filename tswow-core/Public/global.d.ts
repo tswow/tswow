@@ -1066,7 +1066,28 @@ declare interface TSPlayer extends TSUnit {
      *
      * @return [LocaleConstant] locale
      */
-    GetDbcLocale() : uint32
+    GetDbcLocale(): uint32
+
+    /**
+     * refresh item's stats on player
+     *
+     * @param uint32 itemID
+     */
+    ApplyItemMods(itemID: uint32): void
+
+    /**
+     * refresh item's stats from custom template stats
+     *
+     * @param TSItemTemplate newStats
+     */
+    ApplyCustomItemMods(newItem: TSItemTemplate): void
+
+    /**
+     * Applies all custom item cache to player
+     *
+     * 
+     */
+    UpdateCache(): void
 
     /**
      * Locks the player controls and disallows all movement and casting.
@@ -1371,7 +1392,14 @@ declare interface TSPlayer extends TSUnit {
      *
      * @param [Number] entry
      */
-    SendItemQueryPacket(entry : number) : void
+    SendItemQueryPacket(entry: number): void
+
+    /**
+     * Sends a [Item] cache packet to the [Player] from the [ItemTemplate] specified
+     *
+     * @param [TSItemTemplate] template
+     */
+    SendItemQueryPacketWithTemplate(item: TSItemTemplate): void
 
     /**
      * Sends a spirit resurrection request to the [Player]
@@ -4066,6 +4094,8 @@ declare class TSItem extends TSObject {
     //GetItemLink(locale : uint8) : string
 
     GetTemplate(): TSItemTemplate
+    GetTemplateCopy(): TSItemTemplate
+
     GetOwnerGUID() : uint64
 
     /**
@@ -6862,6 +6892,11 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetIsArmorVellum(): bool
     GetIsConjuredConsumable(): bool
     GetHasSignature(): bool;
+
+    SetStatType(index: uint32, value:uint32): void
+    SetStatValue(index: uint32, value: int32): void
+    SetStatCount(value: uint32): void;
+    SaveItemTemplate(): void
 }
 
 declare interface TSSpellInfo extends TSEntityProvider {
@@ -8623,6 +8658,10 @@ declare function IsHolidayActive(holiday: uint16): boolean
 declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
+
+declare function ReloadItemTemplate(): void;
+declare function ReloadSingleItemTemplate(itemID: string): void;
+declare function LoadCustomItems(): void;
 // end of Global.h
 
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>

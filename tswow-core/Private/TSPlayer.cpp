@@ -1469,6 +1469,31 @@ uint32 TSPlayer::GetDbcLocale()
     return ChatHandler(player->GetSession()).GetNearbyGameObject();
 }*/
 
+void TSPlayer::ApplyItemMods(uint32 itemID)
+{
+   player->_RemoveAllItemMods();
+   sObjectMgr->LoadSingleItemTemplate(std::to_string(itemID));
+   player->_ApplyAllItemMods();
+}
+
+void TSPlayer::ApplyCustomItemMods(TSItemTemplate newItem)
+{
+    player->_RemoveAllItemMods();
+    sObjectMgr->LoadSingleItemTemplateObject(newItem->_GetInfo());
+    player->_ApplyAllItemMods();
+}
+
+void TSPlayer::UpdateCache()
+{
+    QueryResult result = CharacterDatabase.PQuery("SELECT * FROM custom_item_stats");
+    do
+    {
+        Field* fields = result->Fetch();
+        const ItemTemplate* itemTemplate = sObjectMgr->GetItemTemplate(fields[0].GetUInt32());
+        SendItemQueryPacketWithTemplate(itemTemplate);
+    } while (result->NextRow());
+}
+
 /**
  * Locks the player controls and disallows all movement and casting.
  *
@@ -2078,6 +2103,12 @@ void TSPlayer::SendItemQueryPacket(uint32 entry)
         WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
         curSes->SendPacket(&response);
     }
+}
+
+void TSPlayer::SendItemQueryPacketWithTemplate(TSItemTemplate curItem)
+{
+    WorldPacket response = curItem->BuildCustomQueryData(0);
+    player->GetSession()->SendPacket(&response);
 }
 /**
  * Sends a spirit resurrection request to the [Player]

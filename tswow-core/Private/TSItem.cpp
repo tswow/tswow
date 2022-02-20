@@ -687,4 +687,22 @@ TSItemTemplate TSItem::GetTemplate()
     return TSItemTemplate(item->GetTemplate());
 }
 
+struct VirtualItemTemplate : ItemTemplate
+{
+    VirtualItemTemplate(ItemTemplate const* base) : ItemTemplate(*base), seed(base->ItemId)
+    {
+    }
+
+    /**
+     * stat seed??
+     */
+    uint32 seed;
+
+};
+
+TSItemTemplate TSItem::GetTemplateCopy()
+{
+    return TSItemTemplate(new VirtualItemTemplate(item->GetTemplate()));
+}
+
 // Inherited functions

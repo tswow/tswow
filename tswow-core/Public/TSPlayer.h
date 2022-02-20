@@ -147,6 +147,9 @@ public:
 	TSCorpse GetCorpse();
 	int GetDbLocaleIndex();
 	uint32 GetDbcLocale();
+	void ApplyItemMods(uint32 itemID);
+	void ApplyCustomItemMods(TSItemTemplate newItem);
+	void UpdateCache();
 	void SetPlayerLock(bool apply);
 	void SetAtLoginFlag(uint32 flag);
 	void SetSheath(uint32 sheathed);
@@ -190,6 +193,7 @@ public:
 	void SendCreatureQueryPacket(uint32 entry);
 	void SendGameObjectQueryPacket(uint32 entry);
 	void SendItemQueryPacket(uint32 entry);
+	void SendItemQueryPacketWithTemplate(TSItemTemplate curItem);
 	void SendSpiritResurrect();
 	void SendTabardVendorActivate(TSWorldObject obj);
 	void SendShowBank(TSWorldObject obj);

@@ -26,6 +26,22 @@
 #include "Timer.h"
 #include "GameEventMgr.h"
 
+void ReloadItemTemplate()
+{
+    sObjectMgr->LoadItemTemplates();
+    sObjectMgr->InitializeQueriesData(QUERY_DATA_ITEMS);
+}
+
+void ReloadSingleItemTemplate(TSString itemID)
+{
+    sObjectMgr->LoadSingleItemTemplate(itemID);
+}
+
+void LoadCustomItems()
+{
+    sObjectMgr->LoadCustomItemTemplates();
+}
+
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
     auto player = ObjectAccessor::FindPlayer(ObjectGuid(to));
