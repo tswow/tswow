@@ -119,9 +119,19 @@ bool TSItemTemplate::IsArmorVellum() { return info->IsArmorVellum(); };
 bool TSItemTemplate::IsConjuredConsumable() { return info->IsConjuredConsumable(); };
 bool TSItemTemplate::HasSignature() { return info->HasSignature(); };
 
+void TSItemTemplate::SetStatCount(uint32 value)
+{
+    info->StatsCount = value;
+}
+
 uint32 TSItemTemplate::GetStatType(uint32 index)
 {
     return info->ItemStat[index].ItemStatType;
+}
+
+void TSItemTemplate::SetStatType(uint32 index, uint32 value)
+{
+    info->ItemStat[index].ItemStatType = value;
 }
 
 int32 TSItemTemplate::GetStatValue(uint32 index)
@@ -129,9 +139,19 @@ int32 TSItemTemplate::GetStatValue(uint32 index)
     return info->ItemStat[index].ItemStatValue;
 }
 
+void TSItemTemplate::SetStatValue(uint32 index, int32 value)
+{
+    info->ItemStat[index].ItemStatValue = value;
+}
+
 float TSItemTemplate::GetDamageMinA()
 {
     return info->Damage[0].DamageMin;
+}
+
+void TSItemTemplate::SetDamageMinA(int64 value)
+{
+    info->Damage[0].DamageMin = value;
 }
 
 float TSItemTemplate::GetDamageMinB()
@@ -139,9 +159,19 @@ float TSItemTemplate::GetDamageMinB()
     return info->Damage[1].DamageMin;
 }
 
+void TSItemTemplate::SetDamageMinB(int64 value)
+{
+    info->Damage[1].DamageMin = value;
+}
+
 float TSItemTemplate::GetDamageMaxA()
 {
     return info->Damage[0].DamageMax;
+}
+
+void TSItemTemplate::SetDamageMaxA(int64 value)
+{
+    info->Damage[0].DamageMax = value;
 }
 
 float TSItemTemplate::GetDamageMaxB()
@@ -149,14 +179,28 @@ float TSItemTemplate::GetDamageMaxB()
     return info->Damage[1].DamageMax;
 }
 
+void TSItemTemplate::SetDamageMaxB(int64 value)
+{
+    info->Damage[1].DamageMax = value;
+}
+
 uint32 TSItemTemplate::GetDamageTypeA()
 {
     return info->Damage[0].DamageType;
 }
 
+void TSItemTemplate::SetDamageTypeA(int64 value)
+{
+    info->Damage[0].DamageType = value;
+}
+
 uint32 TSItemTemplate::GetDamageTypeB()
 {
     return info->Damage[1].DamageType;
+}
+void TSItemTemplate::SetDamageTypeB(int64 value)
+{
+    info->Damage[1].DamageType = value;
 }
 
 TSEntity * TSItemTemplate::GetData()
@@ -167,22 +211,6 @@ TSEntity * TSItemTemplate::GetData()
 TSItemTemplate GetItemTemplate(uint32 entry)
 {
     return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
-}
-
-void TSItemTemplate::SetStatCount(uint32 value)
-{
-    info->StatsCount = value;
-}
-
-
-void TSItemTemplate::SetStatType(uint32 index, uint32 value)
-{
-    info->ItemStat[index].ItemStatType = value;
-}
-
-void TSItemTemplate::SetStatValue(uint32 index, int32 value)
-{
-    info->ItemStat[index].ItemStatValue = value;
 }
 
 ItemTemplate* TSItemTemplate::_GetInfo()

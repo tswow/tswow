@@ -35,13 +35,17 @@ public:
     uint32 GetEntry();
 
     float GetDamageMinA();
+    void SetDamageMinA(int64 value);
     float GetDamageMinB();
-
+    void SetDamageMinB(int64 value);
     float GetDamageMaxA();
+    void SetDamageMaxA(int64 value);
     float GetDamageMaxB();
-
+    void SetDamageMaxB(int64 value);
     uint32 GetDamageTypeA();
+    void SetDamageTypeA(int64 value);
     uint32 GetDamageTypeB();
+    void SetDamageTypeB(int64 value);
 
     uint32 GetClass();
     uint32 GetSubClass();
