@@ -37,6 +37,11 @@ void ReloadSingleItemTemplate(TSString itemID)
     sObjectMgr->LoadSingleItemTemplate(itemID);
 }
 
+void ReloadSingleItemTemplateObject(TSItemTemplate item)
+{
+    sObjectMgr->LoadSingleItemTemplateObject(item->_GetInfo());
+}
+
 void LoadCustomItems()
 {
     sObjectMgr->LoadCustomItemTemplates();
