@@ -1485,7 +1485,7 @@ void TSPlayer::ApplyCustomItemMods(TSItemTemplate newItem)
 
 void TSPlayer::UpdateCache()
 {
-    QueryResult result = CharacterDatabase.PQuery("SELECT * FROM custom_item_stats");
+    QueryResult result = CharacterDatabase.PQuery("SELECT entry FROM custom_item_template");
     do
     {
         Field* fields = result->Fetch();

@@ -311,6 +311,36 @@ WorldPacket TSItemTemplate::BuildCustomQueryData(uint8 loc)
 void TSItemTemplate::SaveItemTemplate()
 {
     std::ostringstream oss;
-    oss << "REPLACE INTO custom_item_stats VALUES(" << info->ItemId << "," << info->StatsCount << "," << info->ItemStat[0].ItemStatType << "," << info->ItemStat[0].ItemStatValue << "," << info->ItemStat[1].ItemStatType << "," << info->ItemStat[1].ItemStatValue << "," << info->ItemStat[2].ItemStatType << "," << info->ItemStat[2].ItemStatValue << "," << info->ItemStat[3].ItemStatType << "," << info->ItemStat[3].ItemStatValue << "," << info->ItemStat[4].ItemStatType << "," << info->ItemStat[4].ItemStatValue << "," << info->ItemStat[5].ItemStatType << "," << info->ItemStat[5].ItemStatValue << "," << info->ItemStat[6].ItemStatType << "," << info->ItemStat[6].ItemStatValue << "," << info->ItemStat[7].ItemStatType << "," << info->ItemStat[7].ItemStatValue << "," << info->ItemStat[8].ItemStatType << "," << info->ItemStat[8].ItemStatValue << "," << info->ItemStat[9].ItemStatType << "," << info->ItemStat[9].ItemStatValue << ")";
+    oss << "REPLACE INTO custom_item_template VALUES(" << info->ItemId << "," << info->Class << "," << info->SubClass << "," << info->SoundOverrideSubclass
+        << ",'" << info->Name1 << "'," << info->DisplayInfoID << "," << info->Quality << "," << info->Flags << "," << info->Flags2 << "," << info->BuyCount << "," << info->BuyPrice
+        << "," << info->SellPrice << "," << info->InventoryType << "," << info->AllowableClass << "," << info->AllowableRace << "," << info->ItemLevel << "," << info->RequiredLevel
+        << "," << info->RequiredSkill << "," << info->RequiredSkillRank << "," << info->RequiredSpell << "," << info->RequiredHonorRank << "," << info->RequiredCityRank
+        << "," << info->RequiredReputationFaction << "," << info->RequiredReputationRank << "," << info->MaxCount << "," << info->Stackable << "," << info->ContainerSlots << "," << info->StatsCount 
+        << "," << info->ItemStat[0].ItemStatType << "," << info->ItemStat[0].ItemStatValue << "," << info->ItemStat[1].ItemStatType << "," << info->ItemStat[1].ItemStatValue
+        << "," << info->ItemStat[2].ItemStatType << "," << info->ItemStat[2].ItemStatValue << "," << info->ItemStat[3].ItemStatType << "," << info->ItemStat[3].ItemStatValue
+        << "," << info->ItemStat[4].ItemStatType << "," << info->ItemStat[4].ItemStatValue << "," << info->ItemStat[5].ItemStatType << "," << info->ItemStat[5].ItemStatValue
+        << "," << info->ItemStat[6].ItemStatType << "," << info->ItemStat[6].ItemStatValue << "," << info->ItemStat[7].ItemStatType << "," << info->ItemStat[7].ItemStatValue
+        << "," << info->ItemStat[8].ItemStatType << "," << info->ItemStat[8].ItemStatValue << "," << info->ItemStat[9].ItemStatType << "," << info->ItemStat[9].ItemStatValue
+        << "," << info->ScalingStatDistribution << "," << info->ScalingStatValue
+        << "," << info->Damage[0].DamageMin << "," << info->Damage[0].DamageMax << "," << info->Damage[0].DamageType << "," << info->Damage[1].DamageMin << "," << info->Damage[1].DamageMax << "," << info->Damage[1].DamageType
+        << "," << info->Armor << "," << info->HolyRes << "," << info->FireRes << "," << info->NatureRes << "," << info->FrostRes << "," << info->ShadowRes<< "," << info->ArcaneRes
+        << "," << info->Delay << "," << info->AmmoType << "," << info->RangedModRange
+        << "," << info->Spells[0].SpellId << "," << info->Spells[0].SpellTrigger << "," << info->Spells[0].SpellCharges << "," << info->Spells[0].SpellPPMRate << "," << info->Spells[0].SpellCooldown << "," << info->Spells[0].SpellCategory << "," << info->Spells[0].SpellCategoryCooldown
+        << "," << info->Spells[1].SpellId << "," << info->Spells[1].SpellTrigger << "," << info->Spells[1].SpellCharges << "," << info->Spells[1].SpellPPMRate << "," << info->Spells[1].SpellCooldown << "," << info->Spells[1].SpellCategory << "," << info->Spells[1].SpellCategoryCooldown
+        << "," << info->Spells[2].SpellId << "," << info->Spells[2].SpellTrigger << "," << info->Spells[2].SpellCharges << "," << info->Spells[2].SpellPPMRate << "," << info->Spells[2].SpellCooldown << "," << info->Spells[2].SpellCategory << "," << info->Spells[2].SpellCategoryCooldown
+        << "," << info->Spells[3].SpellId << "," << info->Spells[3].SpellTrigger << "," << info->Spells[3].SpellCharges << "," << info->Spells[3].SpellPPMRate << "," << info->Spells[3].SpellCooldown << "," << info->Spells[3].SpellCategory << "," << info->Spells[3].SpellCategoryCooldown
+        << "," << info->Spells[4].SpellId << "," << info->Spells[4].SpellTrigger << "," << info->Spells[4].SpellCharges << "," << info->Spells[4].SpellPPMRate << "," << info->Spells[4].SpellCooldown << "," << info->Spells[4].SpellCategory << "," << info->Spells[4].SpellCategoryCooldown
+        << "," << info->Bonding << ",'" << info->Description << "'," << info->PageText << "," << info->LanguageID << "," << info->PageMaterial << "," << info->StartQuest
+        << "," << info->LockID << "," << info->Material << "," << info->Sheath << "," << info->RandomProperty << "," << info->RandomSuffix << "," << info->Block
+        << "," << info->ItemSet << "," << info->MaxDurability << "," << info->Area << "," << info->Map << "," << info->BagFamily << "," << info->TotemCategory
+        << "," << info->Socket[0].Color << "," << info->Socket[0].Content
+        << "," << info->Socket[1].Color << "," << info->Socket[1].Content
+        << "," << info->Socket[2].Color << "," << info->Socket[2].Content
+        << "," << info->socketBonus << "," << info->GemProperties << "," << int32(info->RequiredDisenchantSkill) << "," << info->ArmorDamageModifier << "," << info->Duration
+        << "," << info->ItemLimitCategory << "," << info->HolidayId << "," << info->ScriptId << "," << info->DisenchantID << "," << info->FoodType << "," << info->MinMoneyLoot
+        << "," << info->MaxMoneyLoot << "," << info->FlagsCu << ")";
+
+    //TC_LOG_ERROR("sql.sql", "query: `%s`", oss.str().c_str());
     CharacterDatabase.PExecute("%s", oss.str().c_str());
+    
 }
