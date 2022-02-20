@@ -1486,12 +1486,16 @@ void TSPlayer::ApplyCustomItemMods(TSItemTemplate newItem)
 void TSPlayer::UpdateCache()
 {
     QueryResult result = CharacterDatabase.PQuery("SELECT entry FROM custom_item_template");
-    do
+    if(result)
+    while (result->NextRow())
     {
         Field* fields = result->Fetch();
         const ItemTemplate* itemTemplate = sObjectMgr->GetItemTemplate(fields[0].GetUInt32());
         SendItemQueryPacketWithTemplate(itemTemplate);
-    } while (result->NextRow());
+
+        //may not need to be used with template query
+       // SendItemQueryPacket(fields[0].GetUInt32());
+    };
 }
 
 /**
