@@ -50,10 +50,13 @@ public:
     void SetDamageTypeB(int64 value);
 
     uint32 GetClass();
+    void SetClass(uint32 value);
     uint32 GetSubClass();
+    void SetSubClass(uint32 value);
     int32  GetSoundOverrideSubclass();
     TSString GetName();
     uint32 GetDisplayInfoID();
+    void SetDisplayInfoID(uint32 value);
     uint32 GetQuality();
     void SetQuality(uint32 value);
     uint32 GetFlags();
@@ -62,6 +65,7 @@ public:
     int32  GetBuyPrice();
     uint32 GetSellPrice();
     uint32 GetInventoryType();
+    void SetInventoryType(uint32 value);
     uint32 GetAllowableClass();
     uint32 GetAllowableRace();
     uint32 GetItemLevel();
@@ -91,6 +95,7 @@ public:
     uint32 GetShadowRes();
     uint32 GetArcaneRes();
     uint32 GetDelay();
+    void SetDelay(uint32 value);
     uint32 GetAmmoType();
     float  GetRangedModRange();
     uint32 GetBonding();
@@ -102,9 +107,11 @@ public:
     uint32 GetLockID();
     int32  GetMaterial();
     uint32 GetSheath();
+    void SetSheath(uint32 value);
     int32  GetRandomProperty();
     int32  GetRandomSuffix();
     uint32 GetBlock();
+    void SetBlock(uint32 value);
     uint32 GetItemSet();
     uint32 GetMaxDurability();
     uint32 GetArea();

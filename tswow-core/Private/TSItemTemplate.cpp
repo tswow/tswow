@@ -39,10 +39,13 @@ void TSItemTemplate::SetEntry(uint32 value) {
 }
 
 uint32 TSItemTemplate::GetClass() { return info->Class; }
+void TSItemTemplate::SetClass(uint32 value) { info->Class = value; }
 uint32 TSItemTemplate::GetSubClass() { return info->SubClass; };
+void TSItemTemplate::SetSubClass(uint32 value) { info->SubClass = value; }
 int32  TSItemTemplate::GetSoundOverrideSubclass() { return info->SoundOverrideSubclass; };
 TSString TSItemTemplate::GetName() { return JSTR(info->Name1); };
 uint32 TSItemTemplate::GetDisplayInfoID() { return info->DisplayInfoID; };
+void TSItemTemplate::SetDisplayInfoID(uint32 value) { info->DisplayInfoID = value; };
 uint32 TSItemTemplate::GetQuality() { return info->Quality; };
 void TSItemTemplate::SetQuality(uint32 value) { info->Quality = value; };
 uint32 TSItemTemplate::GetFlags() { return info->Flags; };
@@ -51,6 +54,7 @@ uint32 TSItemTemplate::GetBuyCount() { return info->BuyCount; };
 int32  TSItemTemplate::GetBuyPrice() { return info->BuyPrice; };
 uint32 TSItemTemplate::GetSellPrice() { return info->SellPrice; };
 uint32 TSItemTemplate::GetInventoryType() { return info->InventoryType; };
+void TSItemTemplate::SetInventoryType(uint32 value) { info->InventoryType = value; };
 uint32 TSItemTemplate::GetAllowableClass() { return info->AllowableClass; };
 uint32 TSItemTemplate::GetAllowableRace() { return info->AllowableRace; };
 uint32 TSItemTemplate::GetItemLevel() { return info->ItemLevel; };
@@ -67,6 +71,7 @@ int32  TSItemTemplate::GetMaxCount() { return info->MaxCount; };
 int32  TSItemTemplate::GetStackable() { return info->Stackable; };
 uint32 TSItemTemplate::GetContainerSlots() { return info->ContainerSlots; };
 uint32 TSItemTemplate::GetStatsCount() { return info->StatsCount; };
+void TSItemTemplate::SetStatCount(uint32 value) { info->StatsCount = value; };
 uint32 TSItemTemplate::GetScalingStatDistribution() { return info->ScalingStatDistribution; };
 uint32 TSItemTemplate::GetScalingStatValue() { return info->ScalingStatValue; };
 uint32 TSItemTemplate::GetArmor() { return info->Armor; };
@@ -78,6 +83,7 @@ uint32 TSItemTemplate::GetFrostRes() { return info->FrostRes; };
 uint32 TSItemTemplate::GetShadowRes() { return info->ShadowRes; };
 uint32 TSItemTemplate::GetArcaneRes() { return info->ArcaneRes; };
 uint32 TSItemTemplate::GetDelay() { return info->Delay; };
+void TSItemTemplate::SetDelay(uint32 value) { info->Delay = value; };
 uint32 TSItemTemplate::GetAmmoType() { return info->AmmoType; };
 float  TSItemTemplate::GetRangedModRange() { return info->RangedModRange; };
 uint32 TSItemTemplate::GetBonding() { return info->Bonding; };
@@ -89,9 +95,11 @@ uint32 TSItemTemplate::GetStartQuest() { return info->StartQuest; };
 uint32 TSItemTemplate::GetLockID() { return info->LockID; };
 int32  TSItemTemplate::GetMaterial() { return info->Material; };
 uint32 TSItemTemplate::GetSheath() { return info->Sheath; };
+void TSItemTemplate::SetSheath(uint32 value) { info->Sheath = value; };
 int32  TSItemTemplate::GetRandomProperty() { return info->RandomProperty; };
 int32  TSItemTemplate::GetRandomSuffix() { return info->RandomSuffix; };
 uint32 TSItemTemplate::GetBlock() { return info->Block; };
+void TSItemTemplate::SetBlock(uint32 value) { info->Block = value; };
 uint32 TSItemTemplate::GetItemSet() { return info->ItemSet; };
 uint32 TSItemTemplate::GetMaxDurability() { return info->MaxDurability; };
 uint32 TSItemTemplate::GetArea() { return info->Area; };
@@ -125,11 +133,6 @@ bool TSItemTemplate::IsWeaponVellum() { return info->IsWeaponVellum(); };
 bool TSItemTemplate::IsArmorVellum() { return info->IsArmorVellum(); };
 bool TSItemTemplate::IsConjuredConsumable() { return info->IsConjuredConsumable(); };
 bool TSItemTemplate::HasSignature() { return info->HasSignature(); };
-
-void TSItemTemplate::SetStatCount(uint32 value)
-{
-    info->StatsCount = value;
-}
 
 uint32 TSItemTemplate::GetStatType(uint32 index)
 {
