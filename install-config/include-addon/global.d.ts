@@ -11901,6 +11901,20 @@ declare function GetSpellCooldown(spellId: number, type: WoWAPI.BookType): [numb
  */
 declare function GetSpellTexture(spellId: number, type: WoWAPI.BookType): WoWAPI.TexturePath;
 
+/**
+ * Get information about a spell.
+ * @return MultipleReturnValues:
+ *  name: The Name of the spell.
+ *  rank: The rank line from the tooltip of the spell.
+ *  icon: The interface path to the icon texture.
+ *  castTime: The cast time, in milliseconds.
+ * minRange: The minimum range of the spell.
+ * maxRange: The maximum range of the spell.
+ * 
+ * @see https://wow.gamepedia.com/API_GetSpellInfo
+ * @tupleReturn
+ */
+declare function GetSpellInfo(spell: number | string): [string,string,string,number,number,number];
 
 /**
  * Execute a console command
@@ -11989,7 +12003,7 @@ declare function GetRealmName(): string;
 /// <reference path="../auction.d.ts" />
 
 declare namespace WoWAPI {
-    interface GameTooltip extends UIObject {
+    interface GameTooltip extends UIObject,GameTooltipHookScript, GameTooltipSetScript {
 
         /**
          * Adds Line to tooltip with textLeft on left side of line and textRight on right side
@@ -12990,7 +13004,33 @@ declare namespace WoWAPI {
         SetScript(event: "OnKeyUp", handler: (frame: T, key: string) => void): void;
         SetScript(event: Event.OnAny, handler?: (Frame: T, ...args: any[]) => void): void;
     }
-
+	
+	interface GameTooltipHookScript extends ObjectHookScript {
+		HookScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
+		HookScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetAchievement", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetDefaultAnchor", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetEquipmentSet", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetFramestack", handler: (tooltip: GameTooltip, highlightFrame: Frame) => void): void;
+		HookScript(event: "OnTooltipSetItem", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetQuest", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
+		HookScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
+	}
+	
+	interface GameTooltipSetScript extends ObjectetScript {
+		SetScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
+		SetScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetAchievement", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetDefaultAnchor", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetEquipmentSet", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetFramestack", handler: (tooltip: GameTooltip, highlightFrame: Frame) => void): void;
+		SetScript(event: "OnTooltipSetItem", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetQuest", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
+		SetScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
+	}
+	
     interface Backdrop {
         /**
          * Which texture file to use as frame background (.blp or .tga format)
