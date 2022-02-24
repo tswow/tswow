@@ -6893,26 +6893,37 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetIsConjuredConsumable(): bool
     GetHasSignature(): bool;
 
-    SetSheath(value: uint32): void
-    SetDelay(value: uint32): void
-    SetInventoryType(value: uint32): void
-    SetDisplayInfoID(value: uint32): void
-    SetClass(value: uint32): void
-    SetSubClass(value: uint32): void
-    SetItemLevel(value: uint32): void
-    SetArmor(value: int32): void
-    SetQuality(value: int32): void
-    SetEntry(value: uint32): void
-    SetStatType(index: uint32, value:uint32): void
+    SetDuration(duration: uint32): void
+    SetMaterial(materialID: uint32): void
+    SetDescription(description: TSString): void
+    SetHolyRes(value: int32): void
+    SetFireRes(value: int32): void
+    SetNatureRes(value: int32): void
+    SetFrostRes(value: int32): void
+    SetShadowRes(value: int32): void
+    SetArcaneRes(value: int32): void
+    SetRequiredLevel(level: uint32): void
+    SetName(name: TSString): void
+    SetSheath(sheath: uint32): void
+    SetDelay(delay: uint32): void
+    SetInventoryType(invType: uint32): void
+    SetDisplayInfoID(displayID: uint32): void
+    SetClass(classID: uint32): void
+    SetSubClass(subclass: uint32): void
+    SetItemLevel(ilevel: uint32): void
+    SetArmor(armor: int32): void
+    SetQuality(quality: int32): void
+    SetEntry(entry: uint32): void
+    SetStatType(index: uint32, type:uint32): void
     SetStatValue(index: uint32, value: int32): void
-    SetDamageMinA(value: int64): void;
+    SetDamageMinA(value: int64): void
     SetDamageMinB(value: int64): void
     SetDamageMaxA(value: int64): void
     SetDamageMaxB(value: int64): void
     SetDamageTypeA(value: int64): void
     SetDamageTypeB(value: int64): void
+    SetStatCount(value: uint32): void
 
-    SetStatCount(value: uint32): void;
     SaveItemTemplate(): void
 }
 
