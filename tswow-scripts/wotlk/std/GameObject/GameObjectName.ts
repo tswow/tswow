@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { Language } from "../../../data/dbc/Localization";
+import { SQL } from "../../SQLFiles";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { GameObjectTemplate } from "./GameObjectTemplate";
 

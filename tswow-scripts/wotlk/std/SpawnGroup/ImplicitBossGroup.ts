@@ -1,6 +1,6 @@
-import { finish } from "../../../data/index";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
+import { finish } from "../../../data/index";
 import { SQL } from "../../SQLFiles";
 import { CreatureInstance } from "../Creature/CreatureInstance";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";

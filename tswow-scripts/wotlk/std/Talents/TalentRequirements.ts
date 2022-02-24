@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
+import { DBC } from "../../DBCFiles";
 import { Talent } from "./Talent";
 
 export class TalentRankWrap extends Cell<number, Talent> {

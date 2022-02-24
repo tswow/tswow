@@ -73,7 +73,24 @@ export class DynamicIDGenerator {
     id() { return this.curid++; }
 }
 
+const customTables: {[key: string]: boolean} = {}
+
 export const Ids = {
+    /** Creates a new static ID generator */
+    CreateStatic: (table:string, startid: number) => {
+        if(customTables[table] !== undefined) {
+            throw new Error(`Custom table ${table} has already been registered!`)
+        }
+        return new StaticIDGenerator(table,startid)
+    },
+
+    CreateDynamic: (table: string, startId: number) => {
+        if(customTables[table] !== undefined) {
+            throw new Error(`Custom table ${table} has already been registered!`)
+        }
+        return new DynamicIDGenerator(table,startId);
+    },
+
     /** Starts at 39 , Highest base value is 38 */
     Language: new StaticIDGenerator('Languages',39),
 

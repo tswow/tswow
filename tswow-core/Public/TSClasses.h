@@ -50,6 +50,7 @@ class Object;
 class Quest;
 class Spell;
 class SpellInfo;
+class SpellEffectInfo;
 class Unit;
 class Vehicle;
 class WorldObject;

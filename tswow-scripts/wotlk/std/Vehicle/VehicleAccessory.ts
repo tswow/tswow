@@ -1,8 +1,8 @@
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../SQLFiles";
 import { vehicle_accessoryRow } from "../../sql/vehicle_accessory";
 import { vehicle_template_accessoryRow } from "../../sql/vehicle_template_accessory";
+import { SQL } from "../../SQLFiles";
 import { CreatureInstance } from "../Creature/CreatureInstance";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "../Creature/Creatures";
 import { CreatureTemplate } from "../Creature/CreatureTemplate";

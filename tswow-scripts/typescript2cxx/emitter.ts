@@ -1738,18 +1738,25 @@ export class Emitter {
                 && !!(firstInitializer)
                 && !firstType
             let dictMatch = firstInitializer
-                ? firstInitializer.getText().match(/^CreateDictionary(<.+>) *\(/)
+                ? firstInitializer.getText().match(/^CreateDictionary *< *(.+) *, *(.+) *> *\(/)
                 : undefined
             let arrMatch = firstInitializer
-                ? firstInitializer.getText().match(/^CreateArray(<.+>) *\(/)
+                ? firstInitializer.getText().match(/^CreateArray *< *(.+) *> *\(/)
                 : undefined
             if(type.isNumberLiteral() && declarationList.getText().startsWith('const')) {
                 this.writer.writeString('const ')
             }
+            // todo: this is terrible, make a generic handler!
+             const sharedPtrStr = (name: string) => {
+                 return !['uint8','int8','uint16','int16','uint32','int32','uint64','int64','float','double','string']
+                     .includes(name) && ! name.startsWith('TS')
+                     ? `std::shared_ptr<${name}>`
+                     : name
+             }
             if(!useAuto && dictMatch) {
-                this.writer.writeString(`TSDictionary${dictMatch[1]} `)
+                this.writer.writeString(`TSDictionary<${dictMatch[1] === 'string' ? 'TSString' : dictMatch[1]},${sharedPtrStr(dictMatch[2])}> `)
             } else if(arrMatch) {
-                this.writer.writeString(`TSArray${arrMatch[1]} `)
+                this.writer.writeString(`TSArray<${sharedPtrStr(arrMatch[1])}> `)
             } else {
                 this.processPredefineType(effectiveType);
                 if (!forceCaptureRequired) {
@@ -2069,7 +2076,7 @@ export class Emitter {
                     || getObjectPre == 'GetObject'
                     || onMessageIdPre == 'OnMessageID'
                     || DBContainerPre == 'DBContainer'
-                    || typeText.startsWith('TS')
+                    || (typeText.startsWith('TS') && (typeText !== 'TSDatabaseResult'))
 
                 if(!skipPointerIf) {
                     this.writer.writeString('std::shared_ptr<');
@@ -3327,7 +3334,7 @@ export class Emitter {
 
     processRegularExpressionLiteral(node: ts.RegularExpressionLiteral): void {
         this.writer.writeString('(new RegExp(');
-        this.processStringLiteral(<ts.LiteralLikeNode>{ text: node.text.substring(1, node.text.length - 2) });
+        this.processStringLiteral(<ts.LiteralLikeNode>{ text: node.text.substring(1, node.text.length - 1) });
         this.writer.writeString('))');
     }
 

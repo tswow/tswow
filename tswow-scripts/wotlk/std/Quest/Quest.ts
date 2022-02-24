@@ -20,7 +20,7 @@ import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { quest_templateRow } from "../../sql/quest_template";
 import { quest_template_addonRow } from "../../sql/quest_template_addon";
 import { QuestGameEventsForward } from "../GameEvent/GameEventRelations";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { MinMaxTargetCell } from "../Misc/LimitCells";
 import { RaceMask } from "../Race/RaceType";
 import { QuestAddon } from "./QuestAddon";
@@ -48,7 +48,7 @@ export class QuestAddonRow extends CellSystem<Quest> {
     }
 }
 
-export class Quest extends MainEntity<quest_templateRow> {
+export class Quest extends MainEntityID<quest_templateRow> {
     @Transient
     protected get Addon() { return QuestAddonRow.addon(this); }
     @Transient

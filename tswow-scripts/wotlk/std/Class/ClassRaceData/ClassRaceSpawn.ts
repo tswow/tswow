@@ -1,5 +1,5 @@
-import { SQL } from "../../../SQLFiles";
 import { playercreateinfoRow } from "../../../sql/playercreateinfo";
+import { SQL } from "../../../SQLFiles";
 import { Position } from "../../Misc/Position";
 import { MaybeSQLEntity } from "../../Misc/SQLDBCEntity";
 import { ClassRacePair } from "./ClassRaces";

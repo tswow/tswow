@@ -1,9 +1,9 @@
-import { SQL } from "../../SQLFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { Language } from "../../../data/dbc/Localization";
 import { loc_constructor } from "../../../data/primitives";
-import { page_textQuery, page_textRow } from "../../sql/page_text";
 import { Table } from "../../../data/table/Table";
+import { page_textQuery, page_textRow } from "../../sql/page_text";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";

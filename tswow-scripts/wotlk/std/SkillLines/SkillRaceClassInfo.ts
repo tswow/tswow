@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
 import { makeMaskCell32, MaskCellWrite, MaskCon } from "../../../data/cell/cells/MaskCell";
 import { SkillRaceClassInfoRow } from "../../dbc/SkillRaceClassInfo";
+import { DBC } from "../../DBCFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { Ids } from "../Misc/Ids";

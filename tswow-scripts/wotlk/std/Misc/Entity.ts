@@ -19,6 +19,7 @@ import { TransformedClass, TransformedClassReadOnly } from "../../../data/cell/c
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { ArrayEntry } from "../../../data/cell/systems/ArraySystem";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
+import { EntityTags } from "../Tags/Tags";
 
 export interface IMainEntity<T> {
     readonly row: T
@@ -52,6 +53,12 @@ export class MainEntity<T extends IDeletable> extends CellSystemTop {
         this.row.undelete();
         return this;
     }
+}
+
+export abstract class MainEntityID<T extends IDeletable> extends MainEntity<T> {
+    protected abstract get ID(): number;
+
+    get Tags() { return new EntityTags(this, this.ID)}
 }
 
 export class TwoRowMainEntity<DBC extends IDeletable,SQL extends IDeletable> extends CellSystemTop {
@@ -114,6 +121,11 @@ export abstract class TransformedEntity<R extends IDeletable,C> extends Transfor
     }
 }
 
+export abstract class TransformedEntityID<R extends IDeletable,C> extends TransformedEntity<R,C> {
+    protected abstract get ID(): number;
+    get Tags() { return new EntityTags(this, this.ID); }
+}
+
 export abstract class TransformedEntityReadOnly<R extends IDeletable,C> extends TransformedClassReadOnly<C> {
     @Transient
     readonly row: R;
@@ -135,6 +147,11 @@ export abstract class TransformedEntityReadOnly<R extends IDeletable,C> extends 
         this.row.undelete();
         return this;
     }
+}
+
+export abstract class TransformedEntityReadOnlyID<R extends IDeletable,C> extends TransformedEntityReadOnly<R,C> {
+    abstract get ID(): number;
+    get Tags() { return new EntityTags(this, this.ID); }
 }
 
 export class ChildEntity<R extends IDeletable,T extends MainEntity<R>> extends CellSystem<T> {

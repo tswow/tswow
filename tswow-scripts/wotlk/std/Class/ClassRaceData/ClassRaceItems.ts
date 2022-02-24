@@ -1,6 +1,6 @@
-import { SQL } from "../../../SQLFiles";
 import { MultiRowSystem } from "../../../../data/cell/systems/MultiRowSystem";
 import { playercreateinfo_itemRow } from "../../../sql/playercreateinfo_item";
+import { SQL } from "../../../SQLFiles";
 import { ItemTemplateRegistry } from "../../Item/ItemTemplate";
 import { MainEntity } from "../../Misc/Entity";
 import { ClassRegistry } from "../ClassRegistry";

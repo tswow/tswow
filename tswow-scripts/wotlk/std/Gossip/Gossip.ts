@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { gossip_menuRow } from "../../sql/gossip_menu";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { addGossipLabel } from "./GossipLabels";
 import { GossipOptions } from "./GossipOption";

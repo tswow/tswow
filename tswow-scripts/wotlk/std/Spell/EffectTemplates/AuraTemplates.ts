@@ -1,7 +1,7 @@
-import { DBC } from "../../../DBCFiles";
 import { CellWrapper } from "../../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../../data/cell/cells/EnumCell";
 import { makeMaskCell32, MaskCell32 } from "../../../../data/cell/cells/MaskCell";
+import { DBC } from "../../../DBCFiles";
 import { CreatureType, CreatureTypeMask } from "../../Creature/CreatureType";
 import { FactionRegistry } from "../../Faction/Faction";
 import { Ids } from "../../Misc/Ids";

@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow } from "../../dbc/SpellEffectCameraShakes";
 import { Table } from "../../../data/table/Table";
+import { SpellEffectCameraShakesQuery, SpellEffectCameraShakesRow } from "../../dbc/SpellEffectCameraShakes";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

@@ -15,15 +15,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import { finish } from "../../../data/index";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { SQL } from "../../SQLFiles";
+import { finish } from "../../../data/index";
 import { creatureRow } from "../../sql/creature";
 import { creature_addonRow } from "../../sql/creature_addon";
 import { instance_boss_creatureRow } from "../../sql/instance_boss_creature";
+import { SQL } from "../../SQLFiles";
 import { CreatureGameEventsForward, GameEventModelEquipForward, GameEventNPCFlagForward, GameEventNPCVendorCreature } from "../GameEvent/GameEventRelations";
 import { MainEntity } from "../Misc/Entity";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";

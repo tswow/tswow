@@ -14,16 +14,16 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { DBC } from "../../DBCFiles";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { ItemRow } from "../../dbc/Item";
-import { SQL } from "../../SQLFiles";
-import { item_templateQuery, item_templateRow } from "../../sql/item_template";
 import { Table } from "../../../data/table/Table";
+import { ItemRow } from "../../dbc/Item";
+import { DBC } from "../../DBCFiles";
+import { item_templateQuery, item_templateRow } from "../../sql/item_template";
+import { SQL } from "../../SQLFiles";
 import { ClassMask } from "../Class/ClassRegistry";
 import { EnchantmentRegistry } from "../Enchant/Enchantment";
 import { HolidayRegistry } from "../GameEvent/Holiday";
@@ -33,7 +33,7 @@ import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { Loot, LootSet } from "../Loot/Loot";
 import { DurationCell } from "../Misc/DurationCell";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { MaybeDBCEntity } from "../Misc/SQLDBCEntity";
 import { PageTextRegistry } from "../PageText/PageText";
@@ -108,7 +108,7 @@ export class ItemDBCRow extends CellSystem<ItemTemplate> {
     }
 }
 
-export class ItemTemplate extends MainEntity<item_templateRow> {
+export class ItemTemplate extends MainEntityID<item_templateRow> {
     @Transient
     protected get dbc() { return ItemDBCRow.dbc(this); }
     readonly DBCRow = new ItemDBCRow(this);

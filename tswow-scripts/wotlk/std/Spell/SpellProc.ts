@@ -17,8 +17,8 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { SQL } from "../../SQLFiles";
 import { spell_procRow } from "../../sql/spell_proc";
+import { SQL } from "../../SQLFiles";
 import { PercentCell } from "../Misc/PercentCell";
 import { SchoolMask } from "../Misc/School";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";

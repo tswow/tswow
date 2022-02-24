@@ -1,6 +1,6 @@
-import { finish } from "../../../data/index";
 import { makeMaskCell32, MaskCellWrite } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
+import { finish } from "../../../data/index";
 import { BuildArgs } from "../../../data/Settings";
 import { SQL } from "../../SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";

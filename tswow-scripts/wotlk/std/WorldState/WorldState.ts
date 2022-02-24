@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { WorldStateZoneSoundsRow } from "../../dbc/WorldStateZoneSounds";
+import { DBC } from "../../DBCFiles";
 import { AreaRegistry } from "../Area/Area";
 import { WMOAreaRegistry } from "../Area/WMOArea";
 import { MainEntity } from "../Misc/Entity";

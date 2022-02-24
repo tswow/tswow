@@ -1,8 +1,8 @@
 import { makeMaskCell32, MaskCellWrite } from "../../../data/cell/cells/MaskCell";
 import { BuildArgs } from "../../../data/Settings";
-import { SQL } from "../../SQLFiles";
 import { SqlRow } from "../../../data/sql/SQLRow";
 import { playercreateinfo_skillsRow } from "../../sql/playercreateinfo_skills";
+import { SQL } from "../../SQLFiles";
 import { ClassRaceMaskEntry, ClassRaceMaskSystem } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask } from "../Class/ClassRegistry";
 import { RaceMask } from "../Race/RaceType";

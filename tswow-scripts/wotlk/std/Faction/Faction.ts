@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { FactionQuery, FactionRow } from "../../dbc/Faction";
 import { Table } from "../../../data/table/Table";
+import { FactionQuery, FactionRow } from "../../dbc/Faction";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { PercentCell } from "../Misc/PercentCell";

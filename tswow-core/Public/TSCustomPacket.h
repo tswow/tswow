@@ -94,7 +94,7 @@ class TSServerBuffer : public CustomPacketBuffer
 {
 public:
 	TSServerBuffer(TSPlayer player);
-	TSPlayer player = nullptr;
+	TSPlayer m_player = nullptr;
 	virtual void OnPacket(CustomPacketRead* value) override final;
 	virtual void OnError(CustomPacketResult error) override final;
 };

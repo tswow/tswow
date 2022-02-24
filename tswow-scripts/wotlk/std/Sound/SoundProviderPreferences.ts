@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "../../dbc/SoundProviderPreferences";
 import { Table } from "../../../data/table/Table";
+import { SoundProviderPreferencesQuery, SoundProviderPreferencesRow } from "../../dbc/SoundProviderPreferences";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

@@ -1,12 +1,12 @@
 import { makeMaskCell32, MaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { SQL } from "../../SQLFiles";
 import { gameobjectRow } from "../../sql/gameobject";
 import { gameobject_addonRow } from "../../sql/gameobject_addon";
+import { SQL } from "../../SQLFiles";
 import { AreaRegistry } from "../Area/Area";
 import { GameObjectGameEventsForward } from "../GameEvent/GameEventRelations";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { PositionMapXYZOCell, QuaternionCell } from "../Misc/PositionCell";
 import { SpawnMask } from "../Misc/SpawnMask";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
@@ -71,7 +71,7 @@ export class GameObjectAddonRow extends CellSystem<GameObjectInstance> {
   }
 }
 
-export class GameObjectInstance extends MainEntity<gameobjectRow> {
+export class GameObjectInstance extends MainEntityID<gameobjectRow> {
     get ID() { return this.row.guid.get(); }
     get Position() { return new PositionMapXYZOCell(
           this

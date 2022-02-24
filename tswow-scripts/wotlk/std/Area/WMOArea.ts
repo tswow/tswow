@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { WMOAreaTableQuery, WMOAreaTableRow } from "../../dbc/WMOAreaTable";
 import { Table } from "../../../data/table/Table";
+import { WMOAreaTableQuery, WMOAreaTableRow } from "../../dbc/WMOAreaTable";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";

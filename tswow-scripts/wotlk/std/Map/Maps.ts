@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { MapQuery, MapRow } from "../../dbc/Map";
 import { Table } from "../../../data/table/Table";
+import { MapQuery, MapRow } from "../../dbc/Map";
+import { DBC } from "../../DBCFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { Map } from "./Map";

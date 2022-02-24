@@ -1,5 +1,5 @@
-import { DBC } from "../../DBCFiles";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
+import { DBC } from "../../DBCFiles";
 import { Spell } from "../Spell/Spell";
 import { SpellRegistry } from "../Spell/Spells";
 import { Profession } from "./Profession";

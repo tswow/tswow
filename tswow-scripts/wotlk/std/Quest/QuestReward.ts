@@ -16,9 +16,9 @@
  */
 import { Cell } from "../../../data/cell/cells/Cell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
-import { SQL } from "../../SQLFiles";
-import { quest_templateQuery, quest_templateRow } from "../../sql/quest_template";
 import { Table } from "../../../data/table/Table";
+import { quest_templateQuery, quest_templateRow } from "../../sql/quest_template";
+import { SQL } from "../../SQLFiles";
 import { FactionRegistry } from "../Faction/Faction";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { ChildEntity, MainEntity } from "../Misc/Entity";

@@ -1,6 +1,6 @@
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { TaxiNodesQuery, TaxiNodesRow } from "../../dbc/TaxiNodes";
 import { Table } from "../../../data/table/Table";
+import { TaxiNodesQuery, TaxiNodesRow } from "../../dbc/TaxiNodes";
 import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { DBC } from "../../DBCFiles";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { AreaGroupQuery, AreaGroupRow } from "../../dbc/AreaGroup";
 import { Table } from "../../../data/table/Table";
+import { AreaGroupQuery, AreaGroupRow } from "../../dbc/AreaGroup";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

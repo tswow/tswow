@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { CameraShakesQuery, CameraShakesRow } from "../../dbc/CameraShakes";
 import { Table } from "../../../data/table/Table";
+import { CameraShakesQuery, CameraShakesRow } from "../../dbc/CameraShakes";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

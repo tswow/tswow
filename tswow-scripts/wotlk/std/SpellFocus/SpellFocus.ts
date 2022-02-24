@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { SpellFocusObjectQuery, SpellFocusObjectRow } from "../../dbc/SpellFocusObject";
 import { Table } from "../../../data/table/Table";
+import { SpellFocusObjectQuery, SpellFocusObjectRow } from "../../dbc/SpellFocusObject";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

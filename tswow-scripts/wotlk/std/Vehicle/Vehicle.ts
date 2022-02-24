@@ -1,9 +1,9 @@
-import { DBC } from "../../DBCFiles";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { VehicleQuery, VehicleRow } from "../../dbc/Vehicle";
 import { Table } from "../../../data/table/Table";
+import { VehicleQuery, VehicleRow } from "../../dbc/Vehicle";
+import { DBC } from "../../DBCFiles";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

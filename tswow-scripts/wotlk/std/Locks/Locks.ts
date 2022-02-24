@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
+import { Table } from "../../../data/table/Table";
 import { LockQuery, LockRow } from "../../dbc/Lock";
 import { LockTypeQuery, LockTypeRow } from "../../dbc/LockType";
-import { Table } from "../../../data/table/Table";
+import { DBC } from "../../DBCFiles";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";
 import { Lock } from "./Lock";

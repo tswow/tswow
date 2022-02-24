@@ -1,8 +1,8 @@
-import { SQL } from "../../SQLFiles";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { gt, lt } from "../../../data/query/Relations";
 import { quest_poiRow } from "../../sql/quest_poi";
 import { quest_poi_pointsRow } from "../../sql/quest_poi_points";
+import { SQL } from "../../SQLFiles";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { Position } from "../Misc/Position";

@@ -1,7 +1,7 @@
 import { MaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
-import { SQL } from "../../SQLFiles";
 import { spell_custom_attrRow } from "../../sql/spell_custom_attr";
+import { SQL } from "../../SQLFiles";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { Spell } from "./Spell";

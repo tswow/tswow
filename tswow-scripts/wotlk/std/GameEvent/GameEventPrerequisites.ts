@@ -1,6 +1,6 @@
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../SQLFiles";
 import { game_event_prerequisiteRow } from "../../sql/game_event_prerequisite";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { GameEvent, GameEventRegistry } from "./GameEvent";
 

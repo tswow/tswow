@@ -15,10 +15,10 @@
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 import { Cell } from "../../../data/cell/cells/Cell";
-import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "../../dbc/ItemDisplayInfo";
 import { Table } from "../../../data/table/Table";
-import { DBC } from "../../DBCFiles"
-import { SQL } from "../../SQLFiles"
+import { ItemDisplayInfoQuery, ItemDisplayInfoRow } from "../../dbc/ItemDisplayInfo";
+import { DBC } from "../../DBCFiles";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { ParticleColorRegistry } from "../Misc/ParticleColor";
