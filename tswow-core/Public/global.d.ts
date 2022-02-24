@@ -6926,12 +6926,12 @@ declare interface TSItemTemplate extends TSEntityProvider {
     SetEntry(entry: uint32): void
     SetStatType(index: uint32, type: uint32): void
     SetStatValue(index: uint32, value: int32): void
-    SetDamageMinA(value: int64): void
-    SetDamageMinB(value: int64): void
-    SetDamageMaxA(value: int64): void
-    SetDamageMaxB(value: int64): void
-    SetDamageTypeA(value: int64): void
-    SetDamageTypeB(value: int64): void
+    SetDamageMinA(value: float): void
+    SetDamageMinB(value: float): void
+    SetDamageMaxA(value: float): void
+    SetDamageMaxB(value: float): void
+    SetDamageTypeA(value: uint32): void
+    SetDamageTypeB(value: uint32): void
     SetStatCount(value: uint32): void
 
     SaveItemTemplate(): void

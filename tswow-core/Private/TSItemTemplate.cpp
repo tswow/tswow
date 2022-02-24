@@ -154,9 +154,19 @@ float TSItemTemplate::GetDamageMinA()
     return info->Damage[0].DamageMin;
 }
 
+void TSItemTemplate::SetDamageMinA(float value)
+{
+    info->Damage[0].DamageMin = value;
+}
+
 float TSItemTemplate::GetDamageMinB()
 {
     return info->Damage[1].DamageMin;
+}
+
+void TSItemTemplate::SetDamageMinB(float value)
+{
+    info->Damage[1].DamageMin = value;
 }
 
 float TSItemTemplate::GetDamageMaxA()
@@ -164,9 +174,19 @@ float TSItemTemplate::GetDamageMaxA()
     return info->Damage[0].DamageMax;
 }
 
+void TSItemTemplate::SetDamageMaxA(float value)
+{
+    info->Damage[0].DamageMax = value;
+}
+
 float TSItemTemplate::GetDamageMaxB()
 {
     return info->Damage[1].DamageMax;
+}
+
+void TSItemTemplate::SetDamageMaxB(float value)
+{
+    info->Damage[1].DamageMax = value;
 }
 
 uint32 TSItemTemplate::GetDamageTypeA()
@@ -174,9 +194,19 @@ uint32 TSItemTemplate::GetDamageTypeA()
     return info->Damage[0].DamageType;
 }
 
+void TSItemTemplate::SetDamageTypeA(uint32 value)
+{
+    info->Damage[0].DamageType = value;
+}
+
 uint32 TSItemTemplate::GetDamageTypeB()
 {
     return info->Damage[1].DamageType;
+}
+
+void TSItemTemplate::SetDamageTypeB(uint32 value)
+{
+    info->Damage[1].DamageType = value;
 }
 
 TSEntity * TSItemTemplate::GetData()
