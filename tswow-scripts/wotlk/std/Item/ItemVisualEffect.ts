@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { DummyCell } from "../../../data/cell/cells/DummyCell";
-import { ItemVisualsQuery, ItemVisualsRow } from "../../dbc/ItemVisuals";
 import { Table } from "../../../data/table/Table";
+import { ItemVisualsQuery, ItemVisualsRow } from "../../dbc/ItemVisuals";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

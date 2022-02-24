@@ -16,7 +16,7 @@
  */
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { CellBasic } from "../GameObject/ElevatorKeyframes";
-import { convertCoin, CoinType, MoneyCell } from "../Misc/MoneyCell";
+import { CoinType, convertCoin, MoneyCell } from "../Misc/MoneyCell";
 import { ItemTemplate } from "./ItemTemplate";
 
 /**

@@ -1,8 +1,8 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { MaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { TotemCategoryQuery, TotemCategoryRow } from "../../dbc/TotemCategory";
 import { Table } from "../../../data/table/Table";
+import { TotemCategoryQuery, TotemCategoryRow } from "../../dbc/TotemCategory";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { makeRefDynamic } from "../Refs/Ref";

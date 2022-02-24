@@ -1,7 +1,7 @@
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../SQLFiles";
 import { lfg_dungeon_rewardsRow } from "../../sql/lfg_dungeon_rewards";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { QuestRewardRegistry } from "../Quest/QuestReward";
 import { LFGDungeon, LFGDungeonRegistry } from "./LFGDungeon";

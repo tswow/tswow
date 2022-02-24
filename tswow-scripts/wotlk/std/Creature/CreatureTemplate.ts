@@ -20,15 +20,15 @@ import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../SQLFiles";
 import { creature_templateRow } from "../../sql/creature_template";
 import { creature_template_addonRow } from "../../sql/creature_template_addon";
+import { SQL } from "../../SQLFiles";
 import { CreatureTextRegistry } from "../BroadcastText/CreatureText";
 import { FactionTemplateRegistry } from "../Faction/FactionTemplates";
 import { GossipRegistry } from "../Gossip/Gossips";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { LootSetPointer } from "../Loot/Loot";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { SchoolMask } from "../Misc/School";
@@ -199,7 +199,7 @@ export class CreatureTemplateAddonRow extends CellSystem<CreatureTemplate> {
     }
 }
 
-export class CreatureTemplate extends MainEntity<creature_templateRow> {
+export class CreatureTemplate extends MainEntityID<creature_templateRow> {
     get ID() { return this.row.entry.get(); }
     get Name() { return new CreatureName(this); }
     get Subname() { return new CreatureSubname(this); }

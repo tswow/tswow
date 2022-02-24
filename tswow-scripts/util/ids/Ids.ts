@@ -163,24 +163,6 @@ function GetIdRangeInternal(table: Table, fullname: string) {
     if (table.entries[fullname]) { return table.entries[fullname]; }
 }
 
-function MatchIDRangeInternal(table: Table, modName: string|RegExp, idName: string|RegExp) {
-    let ids: IdRange[] = []
-    function match(str: string, matcher: string|RegExp) {
-        if(typeof(matcher) == 'string') {
-            return str.includes(matcher);
-        } else {
-            return str.match(matcher) != null;
-        }
-    }
-    for(let name in table.entries) {
-        let [left,right] = name.split(':');
-        if(match(left,modName) && match(right,idName)) {
-            ids.push(table.entries[name]);
-        }
-    }
-    return ids;
-}
-
 export function GetIdRange(table: string, mod: string, name: string, size: number, startid: number = 10000) {
     let forward = mappings[table] || (mappings[table] = new Table());
     const fullname = mod + ':' + name;
@@ -220,9 +202,4 @@ export function GetExistingId(table: string, mod: string, name: string) {
 
 export function GetTempId(table: string, startId: number) {
     return getAllocator(table).add(startId,1);
-}
-
-export function MatchID(table: string, mod: string|RegExp, name: string|RegExp) {
-    if(!mappings[table]) return [];
-    return MatchIDRangeInternal(mappings[table],mod,name).map(x=>x.low)
 }

@@ -20,7 +20,7 @@ import { Transient } from "../../../data/cell/serialization/Transient";
 import { SpellRow } from "../../dbc/Spell";
 import { AreaGroupRegistry } from "../Area/AreaGroup";
 import { getInlineID } from "../InlineScript/InlineScript";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { IncludeExclude, IncludeExcludeMask } from "../Misc/IncludeExclude";
 import { SchoolMask } from "../Misc/School";
 import { SingleArraySystem } from "../Misc/SingleArraySystem";
@@ -58,7 +58,7 @@ import { SpellVisualRegistry } from "./SpellVisual";
 import { SpellCreatureTarget } from "./TargetCreatureType";
 import { SpellTargetType } from "./TargetType";
 
-export class Spell extends MainEntity<SpellRow> {
+export class Spell extends MainEntityID<SpellRow> {
     get Attributes() { return new SpellAttributes(this, this); }
 
     @Transient

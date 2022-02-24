@@ -1,7 +1,7 @@
 import { Cell } from "../../../data/cell/cells/Cell";
-import { SQL } from "../../SQLFiles";
-import { gameobject_templateQuery, gameobject_templateRow } from "../../sql/gameobject_template";
 import { Table } from "../../../data/table/Table";
+import { gameobject_templateQuery, gameobject_templateRow } from "../../sql/gameobject_template";
+import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { RefStatic } from "../Refs/Ref";

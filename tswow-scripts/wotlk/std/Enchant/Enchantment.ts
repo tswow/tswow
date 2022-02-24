@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "../../dbc/SpellItemEnchantment";
 import { Table } from "../../../data/table/Table";
+import { SpellItemEnchantmentQuery, SpellItemEnchantmentRow } from "../../dbc/SpellItemEnchantment";
+import { DBC } from "../../DBCFiles";
 import { ItemVisualsRegistry } from "../Item/ItemVisualEffect";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";

@@ -1,11 +1,11 @@
-import { sort } from "../../../data/index";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
-import { DBC } from "../../DBCFiles";
-import { AchievementQuery, AchievementRow } from "../../dbc/Achievement";
+import { sort } from "../../../data/index";
 import { Table } from "../../../data/table/Table";
+import { AchievementQuery, AchievementRow } from "../../dbc/Achievement";
+import { DBC } from "../../DBCFiles";
 import { getInlineID } from "../InlineScript/InlineScript";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SpellIconCell } from "../Spell/SpellIcon";
@@ -52,7 +52,7 @@ export enum AchievementFlags {
     TrackLocalUntilAwarded  = 0x100000,
 }
 
-export class Achievement extends MainEntity<AchievementRow> {
+export class Achievement extends MainEntityID<AchievementRow> {
     readonly Criteria : AchievementCriteria;
 
     constructor(row: AchievementRow) {

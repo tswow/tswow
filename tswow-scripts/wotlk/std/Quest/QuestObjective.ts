@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { DummyCell } from "../../../data/cell/cells/DummyCell";
 import { PendingCell } from "../../../data/cell/cells/PendingCell";
@@ -22,6 +21,7 @@ import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem"
 import { CellSystem, LocSystem } from "../../../data/cell/systems/CellSystem";
 import { Language } from "../../../data/dbc/Localization";
 import { iterLocConstructor, loc_constructor } from "../../../data/primitives";
+import { SQL } from "../../SQLFiles";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { Quest } from "./Quest";
 

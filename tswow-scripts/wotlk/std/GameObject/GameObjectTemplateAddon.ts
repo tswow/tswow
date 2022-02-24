@@ -1,8 +1,8 @@
 import { Cell, CPrim } from "../../../data/cell/cells/Cell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { SQL } from "../../SQLFiles";
 import { gameobject_template_addonRow } from "../../sql/gameobject_template_addon";
+import { SQL } from "../../SQLFiles";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { GameObjectFlags } from "./GameObjectFlags";

@@ -1,7 +1,7 @@
-import { GetIdRange } from "../../../util/ids/Ids";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../SQLFiles";
+import { GetIdRange } from "../../../util/ids/Ids";
 import { game_event_conditionRow } from "../../sql/game_event_condition";
+import { SQL } from "../../SQLFiles";
 import { MainEntity } from "../Misc/Entity";
 import { WorldStateRegistry } from "../WorldState/WorldState";
 import { GameEventRegistry } from "./GameEvent";

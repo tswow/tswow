@@ -1,9 +1,9 @@
-import { DBC } from "../../../DBCFiles";
 import { EnumCon, makeEnum } from "../../../../data/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "../../../../data/cell/systems/ArraySystem";
 import { CellSystem } from "../../../../data/cell/systems/CellSystem";
-import { CharStartOutfitQuery, CharStartOutfitRow } from "../../../dbc/CharStartOutfit";
 import { Table } from "../../../../data/table/Table";
+import { CharStartOutfitQuery, CharStartOutfitRow } from "../../../dbc/CharStartOutfit";
+import { DBC } from "../../../DBCFiles";
 import { ItemInventoryType } from "../../Item/ItemInventoryType";
 import { ItemTemplateRegistry } from "../../Item/ItemTemplate";
 import { MainEntity } from "../../Misc/Entity";

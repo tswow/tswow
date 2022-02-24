@@ -123,6 +123,16 @@ declare const enum AuraRemoveMode {} /** SpellAuraDefines.h:AuraRemoveMode */
 
 declare const enum Stats {} /** SharedDefines.h:Stats */
 
+declare const enum Mechanics { } /** SharedDefines.h:Mechanics */
+
+declare const enum SpellEffects { } /** SharedDefines.h:SpellEffects */
+
+declare const enum AuraType { } /** SpellAuraDefines.h:AuraType */
+
+declare const enum SpellEffIndex { } /** SharedDefines.h:SpellEffIndex */
+
+declare const enum SpellEffectHandleMode { } /** Spell.h:SpellEffectHandleMode */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -6965,6 +6975,29 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetTargetAuraStateNot() : uint32
 	GetTargetCreatureType() : uint32
 	GetTargets() : uint32;
+    GetEffect(index: SpellEffIndex): TSSpellEffectInfo
+}
+
+declare class TSSpellEffectInfo {
+    GetEffectIndex(): SpellEffIndex;
+    GetType(): SpellEffects;
+    GetAura(): AuraType;
+    GetAmplitude(): uint32;
+    GetDieSides(): int32;
+    GetRealPointsPerLevel(): float;
+    GetBasePoints(): int32;
+    GetPointsPerComboPoint(): float;
+    GetValueMultiplier(): float;
+    GetDamageMultiplier(): float;
+    GetBonusMultiplier(): float;
+    GetMiscValue(): int32;
+    GetMiscValueB(): int32;
+    GetMechanic(): Mechanics;
+    GetChainTarget(): uint32;
+    GetItemType(): uint32;
+    GetTriggerSpell(): uint32;
+    IsEffect(): bool;
+    IsAura(): bool;
 }
 
 declare interface TSSpellCastTargets {
@@ -7359,6 +7392,7 @@ declare namespace _hidden {
         OnCast(spell: uint32, callback : (spell: TSSpell)=>void);
         OnCheckCast(spell: uint32, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
         OnDispel(spell: uint32, callback: (spell: TSSpell, dispelType: uint32)=>void);
+        OnEffect(spell: uint32, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
         OnHit(spell: uint32, callback: (spell: TSSpell)=>void);
         OnTick(spell: uint32, callback: (effect: TSAuraEffect)=>void);
         OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
@@ -7422,6 +7456,7 @@ declare namespace _hidden {
         OnCast(callback : (spell: TSSpell)=>void): T;
         OnCheckCast(callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void): T;
         OnDispel(callback: (spell: TSSpell, dispelType: uint32)=>void): T;
+        OnEffect(callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
         OnHit(callback: (spell: TSSpell)=>void): T;
         OnTick(callback: (effect: TSAuraEffect)=>void): T;
         OnRemove(callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void): T;
@@ -8667,9 +8702,32 @@ declare function LoadCustomItems(): void;
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
-declare function GetID(table: string, mod: string, name: string): uint32;
-declare function MatchIDs(table: string, mod: string|RegExp, name: string|RegExp): TSArray<uint32>;
+declare function GetID(table: string, mod: string, name: string);
 declare function GetIDRange(table: string, mod: string, name: string);
+declare function GetIDTag(mod: string, id: string): TSArray<uint32>
+
+/**
+ * Runs a compile-time check that a given world database table exists.
+ *
+ * **Important**: This function does **nothing** at runtime.
+ *
+ * **Motivation**: It's easy to forget building datascripts after a rebuild
+ *                 or reinstallation before you build your scripts.
+ *                 This helps you catch such errors before you try reading it in the worldserver.
+ *
+ * **Type Codes**: Optionally, the second argument can be used to supply a string list of type characters
+ *                 to check that the table has some expected number of columns with specific types.
+ *                 `i` checks for integer types, `s` for strings, `f` for floats and `*` for any type.
+ *
+ * **Examples**:
+ *
+ *     ASSERT_WORLD_TABLE("my_table","s") // asserts "my_table" column 1 is a string.
+ *
+ *     ASSERT_WORLD_TABLE("my_table","*i") // asserts "my_table" column 2 is an integer.
+ *
+ *     ASSERT_WORLD_TABLE("my_table","si") // asserts "my_table" column 1 is a string and column 2 is an integer.
+ */
+declare function ASSERT_WORLD_TABLE(table: string, columns?: string)
 
 declare class BinReader<L extends number> {
     Read<T extends number>(offset: L) : T;

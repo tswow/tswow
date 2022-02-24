@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
-import { SkillTiersQuery, SkillTiersRow } from "../../dbc/SkillTiers";
 import { Table } from "../../../data/table/Table";
+import { SkillTiersQuery, SkillTiersRow } from "../../dbc/SkillTiers";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

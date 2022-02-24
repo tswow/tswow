@@ -114,6 +114,21 @@ export namespace TrinityCore {
                             if(longestSuffix.length > 0 && longestSuffix.startsWith('_')) {
                                 content = content.split(longestSuffix).join('')
                             }
+
+                            let numPrefix = longestPrefix.length > 0 ? longestPrefix : 'ENUM_'
+                            content = content
+                                .split('\n')
+                                .map((x)=>{
+                                    let m = x.match(/^ *([a-zA-Z0-9_]+) *(= *(\d+)|)(?:,|) *(\/\/.+|)/)
+                                    if(!m) return x;
+                                    if(!isNaN(parseInt(m[1]))) {
+                                        x = x.replace(m[1],`${numPrefix}${m[1]}`)
+                                        // attempt to improve columns (doesn't always work)
+                                        x = x.replace(`${numPrefix}${m[1]}${' '.repeat(numPrefix.length)}`,`${numPrefix}${m[1]}`)
+                                    }
+                                    return x;
+                                })
+                                .join('\n')
                         }
                     });
                 if(!found) {

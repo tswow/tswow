@@ -17,9 +17,9 @@
 import { Cell } from "../../../data/cell/cells/Cell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Language } from "../../../data/dbc/Localization";
-import { SQL } from "../../SQLFiles";
 import { quest_offer_rewardRow } from "../../sql/quest_offer_reward";
 import { quest_request_itemsRow } from "../../sql/quest_request_items";
+import { SQL } from "../../SQLFiles";
 import { SQLLocSystem } from "../Misc/SQLLocSystem";
 import { Quest } from "./Quest";
 

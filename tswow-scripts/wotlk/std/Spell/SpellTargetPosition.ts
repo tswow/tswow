@@ -1,5 +1,5 @@
-import { SQL } from "../../SQLFiles";
 import { spell_target_positionRow } from "../../sql/spell_target_position";
+import { SQL } from "../../SQLFiles";
 import { MapRegistry } from "../Map/Maps";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 

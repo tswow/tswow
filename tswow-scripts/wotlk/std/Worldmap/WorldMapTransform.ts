@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { WorldMapTransformsQuery, WorldMapTransformsRow } from "../../dbc/WorldMapTransforms";
 import { Table } from "../../../data/table/Table";
+import { WorldMapTransformsQuery, WorldMapTransformsRow } from "../../dbc/WorldMapTransforms";
+import { DBC } from "../../DBCFiles";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";

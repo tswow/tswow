@@ -1,6 +1,6 @@
-import { DBC } from "../../DBCFiles";
-import { SkillLineQuery, SkillLineRow } from "../../dbc/SkillLine";
 import { Table } from "../../../data/table/Table";
+import { SkillLineQuery, SkillLineRow } from "../../dbc/SkillLine";
+import { DBC } from "../../DBCFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStaticNoClone } from "../Refs/Registry";
 import { SkillTiersRegistry } from "../SkillTiers/SkillTiers";

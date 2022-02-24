@@ -15,10 +15,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { finish } from "../../../data/index";
+import { ipaths } from "../../../data/Settings";
 import { FileChangeModule } from "../../../util/FileChanges";
 import { mpath, wfs } from "../../../util/FileSystem";
 import { wsys } from "../../../util/System";
-import { ipaths } from "../../../data/Settings";
 import { generateBLP } from "./BLP";
 import { getEffectiveFile, onDirtyPNG, splitPng } from "./PNG";
 

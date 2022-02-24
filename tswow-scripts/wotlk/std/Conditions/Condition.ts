@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { EnumCon, makeEnum } from "../../../data/cell/cells/EnumCell";
 import { makeMask, MaskCon } from "../../../data/cell/cells/MaskCell";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { conditionsCreator, conditionsQuery } from "../../sql/conditions";
+import { SQL } from "../../SQLFiles";
 import { ClassMask } from "../Class/ClassRegistry";
 import { DrunkState, resolveDrunkState } from "../Misc/DrunkState";
 import { ReputationRank, ReputationRankMask } from "../Misc/ReputationRank";

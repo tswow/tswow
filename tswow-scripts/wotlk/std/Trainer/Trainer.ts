@@ -19,10 +19,10 @@ import { EnumCellTransform, makeEnumCell } from "../../../data/cell/cells/EnumCe
 import { makeMaskCell32, MaskCellWrite } from "../../../data/cell/cells/MaskCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { Language } from "../../../data/dbc/Localization";
-import { SQL } from "../../SQLFiles";
+import { Table } from "../../../data/table/Table";
 import { trainerQuery, trainerRow } from "../../sql/trainer";
 import { trainer_spellRow } from "../../sql/trainer_spell";
-import { Table } from "../../../data/table/Table";
+import { SQL } from "../../SQLFiles";
 import { ClassRaceMaskSystemBase, IClassRaceMaskEntry } from "../Class/ClassRaceData/ClassRaceMaskSystem";
 import { ClassMask, ClassRegistry } from "../Class/ClassRegistry";
 import { ArrayRefSystem } from "../Misc/ArrayRefSystem";

@@ -1,6 +1,6 @@
-import { SQL } from "../../SQLFiles";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { trainerRow } from "../../sql/trainer";
+import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { TrainerPlain } from "../Trainer/Trainer";
 import { CreatureTemplate } from "./CreatureTemplate";

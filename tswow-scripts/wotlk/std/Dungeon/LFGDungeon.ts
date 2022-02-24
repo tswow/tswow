@@ -1,12 +1,12 @@
-import { DBC } from "../../DBCFiles";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
-import { LfgDungeonsQuery, LfgDungeonsRow } from "../../dbc/LfgDungeons";
-import { SQL } from "../../SQLFiles";
-import { lfg_dungeon_templateRow } from "../../sql/lfg_dungeon_template";
 import { Table } from "../../../data/table/Table";
+import { LfgDungeonsQuery, LfgDungeonsRow } from "../../dbc/LfgDungeons";
+import { DBC } from "../../DBCFiles";
+import { lfg_dungeon_templateRow } from "../../sql/lfg_dungeon_template";
+import { SQL } from "../../SQLFiles";
 import { AccessRequirement, AccessRequirementRegistry } from "../AccessRequirement/AccessRequirement";
 import { MapRegistry } from "../Map/Maps";
 import { MainEntity } from "../Misc/Entity";

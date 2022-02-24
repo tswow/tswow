@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { finish } from "../../../data/index";
-import { iterateIds } from "../../../util/ids/Ids";
 import { BuildArgs } from '../../../data/Settings';
+import { iterateIds } from "../../../util/ids/Ids";
 
 // Patch ID files
 finish('build-idfiles',()=>{

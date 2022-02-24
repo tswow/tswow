@@ -1,7 +1,7 @@
-import { DBC } from "../../DBCFiles";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { WorldMapOverlayQuery, WorldMapOverlayRow } from "../../dbc/WorldMapOverlay";
 import { Table } from "../../../data/table/Table";
+import { WorldMapOverlayQuery, WorldMapOverlayRow } from "../../dbc/WorldMapOverlay";
+import { DBC } from "../../DBCFiles";
 import { AreaRegistry } from "../Area/Area";
 import { ArrayRefSystemNoCreate } from "../Misc/ArrayRefSystem";
 import { MainEntity } from "../Misc/Entity";

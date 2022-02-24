@@ -1,7 +1,7 @@
-import { SQL } from "../../SQLFiles"
 import { makeEnumCellReadOnly } from "../../../data/cell/cells/EnumCell"
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem"
 import { spawn_groupRow } from "../../sql/spawn_group"
+import { SQL } from "../../SQLFiles"
 import { CreatureInstanceRegistry } from "../Creature/Creatures"
 import { GameObjectInstances } from "../GameObject/GameObjects"
 import { MainEntity } from "../Misc/Entity"

@@ -1,9 +1,9 @@
-import { DBC } from "../../DBCFiles";
 import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 import { CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { BattlemasterListQuery, BattlemasterListRow } from "../../dbc/BattlemasterList";
-import { SQL } from "../../SQLFiles";
+import { DBC } from "../../DBCFiles";
 import { battleground_templateRow } from "../../sql/battleground_template";
+import { SQL } from "../../SQLFiles";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { BattlegroundDescription } from "./BattleroundDescriptions";

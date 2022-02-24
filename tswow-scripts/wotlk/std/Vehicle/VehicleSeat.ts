@@ -1,9 +1,9 @@
-import { DBC } from "../../DBCFiles";
 import { makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { VehicleSeatQuery, VehicleSeatRow } from "../../dbc/VehicleSeat";
 import { Table } from "../../../data/table/Table";
+import { VehicleSeatQuery, VehicleSeatRow } from "../../dbc/VehicleSeat";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";

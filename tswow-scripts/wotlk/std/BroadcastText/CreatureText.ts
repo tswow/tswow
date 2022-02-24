@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCon, makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { CellSystem, CellSystemTop } from "../../../data/cell/systems/CellSystem";
 import { Language } from "../../../data/dbc/Localization";
 import { loc_constructor } from "../../../data/primitives";
 import { creature_textRow } from "../../sql/creature_text";
+import { SQL } from "../../SQLFiles";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { CreatureTemplate } from "../Creature/CreatureTemplate";
 import { LanguageRegistry } from "../Languages/Languages";

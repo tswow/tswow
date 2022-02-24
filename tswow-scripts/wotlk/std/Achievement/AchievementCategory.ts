@@ -1,7 +1,7 @@
 import { Cell } from "../../../data/cell/cells/Cell";
-import { DBC } from "../../DBCFiles";
-import { Achievement_CategoryQuery, Achievement_CategoryRow } from "../../dbc/Achievement_Category";
 import { Table } from "../../../data/table/Table";
+import { Achievement_CategoryQuery, Achievement_CategoryRow } from "../../dbc/Achievement_Category";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RefDynamic } from "../Refs/Ref";

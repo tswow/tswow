@@ -1,5 +1,5 @@
-import { SQL } from "../../SQLFiles";
 import { areatrigger_teleportRow } from "../../sql/areatrigger_teleport";
+import { SQL } from "../../SQLFiles";
 import { PositionMapXYZOCell } from "../Misc/PositionCell";
 import { MaybeSQLEntity } from "../Misc/SQLDBCEntity";
 import { AreaTriggerBase } from "./AreaTrigger";

@@ -1,4 +1,3 @@
-import { SQL } from "../../SQLFiles";
 import { CellReadOnly } from "../../../data/cell/cells/CellReadOnly";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
@@ -13,6 +12,7 @@ import { game_event_model_equipRow } from "../../sql/game_event_model_equip";
 import { game_event_npcflagRow } from "../../sql/game_event_npcflag";
 import { game_event_npc_vendorRow } from "../../sql/game_event_npc_vendor";
 import { game_event_seasonal_questrelationRow } from "../../sql/game_event_seasonal_questrelation";
+import { SQL } from "../../SQLFiles";
 import { CreatureInstance } from "../Creature/CreatureInstance";
 import { CreatureInstanceRegistry, CreatureTemplateRegistry } from "../Creature/Creatures";
 import { CreatureTemplate } from "../Creature/CreatureTemplate";

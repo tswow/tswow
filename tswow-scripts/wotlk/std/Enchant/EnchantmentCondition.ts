@@ -1,10 +1,10 @@
-import { DBC } from "../../DBCFiles";
 import { Cell } from "../../../data/cell/cells/Cell";
 import { EnumCell, makeEnumCell } from "../../../data/cell/cells/EnumCell";
 import { ArrayEntry, ArraySystem } from "../../../data/cell/systems/ArraySystem";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
-import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "../../dbc/SpellItemEnchantmentCondition";
 import { Table } from "../../../data/table/Table";
+import { SpellItemEnchantmentConditionQuery, SpellItemEnchantmentConditionRow } from "../../dbc/SpellItemEnchantmentCondition";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { DynamicIDGenerator, Ids } from "../Misc/Ids";
 import { RegistryDynamic } from "../Refs/Registry";

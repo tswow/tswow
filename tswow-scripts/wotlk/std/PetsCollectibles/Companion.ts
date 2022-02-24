@@ -1,8 +1,8 @@
 import { LocSystem, MulticastLocCell } from "../../../data/cell/systems/CellSystem";
 import { MultirowSystemCached } from "../../../data/cell/systems/MultiRowSystem";
-import { DBC } from "../../DBCFiles";
-import { SpellQuery, SpellRow } from "../../dbc/Spell";
 import { Table } from "../../../data/table/Table";
+import { SpellQuery, SpellRow } from "../../dbc/Spell";
+import { DBC } from "../../DBCFiles";
 import { CreatureModels } from "../Creature/CreatureModels";
 import { CreatureTemplateRegistry } from "../Creature/Creatures";
 import { ItemTemplate, ItemTemplateRegistry } from "../Item/ItemTemplate";

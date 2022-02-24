@@ -14,10 +14,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-import { SQL } from "../../SQLFiles";
+import { Table } from "../../../data/table/Table";
 import { creatureQuery, creatureRow } from "../../sql/creature";
 import { creature_templateQuery, creature_templateRow } from "../../sql/creature_template";
-import { Table } from "../../../data/table/Table";
+import { SQL } from "../../SQLFiles";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";

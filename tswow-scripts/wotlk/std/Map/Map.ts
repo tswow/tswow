@@ -33,7 +33,7 @@ import { LFGDungeons } from "../Dungeon/LFGDungeon";
 import { LFGDungeonEncounters } from "../Dungeon/LFGEncounter";
 import { getInlineID } from "../InlineScript/InlineScript";
 import { BoolCell } from "../Misc/BoolCell";
-import { TransformedEntity } from "../Misc/Entity";
+import { TransformedEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { MinMaxCell } from "../Misc/LimitCells";
 import { PositionXYCell } from "../Misc/PositionCell";
@@ -48,7 +48,7 @@ import { MapRegistry } from "./Maps";
 import { MapWorldStateUIs } from "./MapWorldStates";
 import { PVEDifficulties } from "./PVEDifficulty";
 
-export class Map extends TransformedEntity<MapRow,MapPlain> {
+export class Map extends TransformedEntityID<MapRow,MapPlain> {
     protected transformer(): EnumCellTransform<any> {
         return new MapInstanceTypee(this, this.row.InstanceType)
     }

@@ -68,7 +68,7 @@ TSServerBuffer::TSServerBuffer(TSPlayer player)
 		, BUFFER_QUOTA
 		, MAX_FRAGMENT_SIZE
 	)
-	, player(player)
+	, m_player(player)
 {
 }
 
@@ -84,7 +84,7 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 
 	for (size_t i = 0; i < GetTSEvents()->CustomPacketOnReceive.GetSize(); ++i)
 	{
-		GetTSEvents()->CustomPacketOnReceive.Get(i)(opcode, read, player);
+		GetTSEvents()->CustomPacketOnReceive.Get(i)(opcode, read, m_player);
 		value->Reset();
 	}
 
@@ -95,14 +95,14 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	}
 	for (size_t i = 0; i < events->CustomPacketOnReceive.GetSize(); ++i)
 	{
-		events->CustomPacketOnReceive.Get(i)(opcode, read, player);
+		events->CustomPacketOnReceive.Get(i)(opcode, read, m_player);
 		value->Reset();
 	}
 }
 
 void TSServerBuffer::OnError(CustomPacketResult error)
 {
-	player.player->GetSession()->KickPlayer("Custom packet error: "+std::to_string(uint32_t(error)));
+	m_player.player->GetSession()->KickPlayer("Custom packet error: "+std::to_string(uint32_t(error)));
 }
 
 TSPacketWrite CreateCustomPacket(

@@ -1,13 +1,13 @@
-import { DBC } from "../../DBCFiles";
-import { CurrencyTypesQuery, CurrencyTypesRow } from "../../dbc/CurrencyTypes";
+import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 import { Table } from "../../../data/table/Table";
+import { CurrencyTypesQuery, CurrencyTypesRow } from "../../dbc/CurrencyTypes";
+import { DBC } from "../../DBCFiles";
 import { ItemDisplayinfoRegistry } from "../Item/ItemDisplayInfo";
 import { ItemTemplateRegistry } from "../Item/ItemTemplate";
 import { MainEntity } from "../Misc/Entity";
 import { Ids, StaticIDGenerator } from "../Misc/Ids";
 import { RegistryStatic } from "../Refs/Registry";
 import { CurrencyCategoryRegistry } from "./CurrencyCategory";
-import { MulticastCell } from "../../../data/cell/cells/MulticastCell";
 
 export class Currency extends MainEntity<CurrencyTypesRow> {
     get BitIndex() { return this.row.BitIndex.get(); }

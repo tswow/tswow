@@ -1,7 +1,7 @@
 import { EnumCellTransform } from "../../../../data/cell/cells/EnumCell";
 import { MultiRowSystem } from "../../../../data/cell/systems/MultiRowSystem";
-import { SQL } from "../../../SQLFiles";
 import { playercreateinfo_actionRow } from "../../../sql/playercreateinfo_action";
+import { SQL } from "../../../SQLFiles";
 import { ItemTemplateRegistry } from "../../Item/ItemTemplate";
 import { TransformedEntity } from "../../Misc/Entity";
 import { SpellRegistry } from "../../Spell/Spells";

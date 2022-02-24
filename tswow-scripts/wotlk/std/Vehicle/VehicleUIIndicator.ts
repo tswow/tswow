@@ -1,6 +1,6 @@
 import { Cell } from "../../../data/cell/cells/Cell";
-import { DBC } from "../../DBCFiles";
 import { VehicleUIIndSeatRow } from "../../dbc/VehicleUIIndSeat";
+import { DBC } from "../../DBCFiles";
 import { MainEntity } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { PositionXYCell } from "../Misc/PositionCell";

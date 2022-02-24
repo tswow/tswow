@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
-import { SQL } from "../../SQLFiles";
 import { EnumCellTransform } from "../../../data/cell/cells/EnumCell";
 import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
@@ -22,6 +21,7 @@ import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { MultiRowSystem } from "../../../data/cell/systems/MultiRowSystem";
 import { gameobject_templateRow } from "../../sql/gameobject_template";
 import { gameobject_template_addonRow } from "../../sql/gameobject_template_addon";
+import { SQL } from "../../SQLFiles";
 import { AreaRegistry } from "../Area/Area";
 import { BroadcastTextRegistry } from "../BroadcastText/BroadcastText";
 import { GossipRegistry } from "../Gossip/Gossips";
@@ -29,7 +29,7 @@ import { getInlineID } from "../InlineScript/InlineScript";
 import { LockRegistry } from "../Locks/Locks";
 import { LootSetPointer } from "../Loot/Loot";
 import { MapRegistry } from "../Map/Maps";
-import { TransformedEntity } from "../Misc/Entity";
+import { TransformedEntityID } from "../Misc/Entity";
 import { Ids } from "../Misc/Ids";
 import { Position } from "../Misc/Position";
 import { PageTextRegistry } from "../PageText/PageText";
@@ -107,7 +107,7 @@ export class GameObjectTemplateAddonRow<T extends GameObjectTemplate>
     }
 }
 
-export class GameObjectTemplate extends TransformedEntity<gameobject_templateRow, GameObjectPlain> {
+export class GameObjectTemplate extends TransformedEntityID<gameobject_templateRow, GameObjectPlain> {
     protected transformer() { return this.Type; }
     protected default(): GameObjectPlain {
         return new GameObjectPlain(this.row);
