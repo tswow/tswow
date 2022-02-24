@@ -42,6 +42,10 @@ void LoadCustomItems()
     sObjectMgr->LoadCustomItemTemplates();
 }
 
+void ReloadSingleItemTemplateObject(TSItemTemplate item) {
+    sObjectMgr->LoadSingleItemTemplateObject(item->_GetInfo());
+}
+
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
     auto player = ObjectAccessor::FindPlayer(ObjectGuid(to));

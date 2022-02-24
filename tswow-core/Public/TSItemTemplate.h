@@ -23,42 +23,56 @@ struct ItemTemplate;
 
 class TC_GAME_API TSItemTemplate : public TSEntityProvider {
 private:
-    ItemTemplate * info;
+    ItemTemplate* info;
 public:
     bool IsNull() { return info == nullptr; };
     TSItemTemplate(ItemTemplate const* info);
     TSItemTemplate();
-    TSItemTemplate* operator->() { return this;}
+    TSItemTemplate* operator->() { return this; }
     operator bool() const { return info != nullptr; }
     bool operator==(TSItemTemplate const& rhs) { return info == rhs.info; }
 
     uint32 GetEntry();
 
+    void SetEntry(uint32 value);
+
     float GetDamageMinA();
+    void SetDamageMinA(int64 value);
     float GetDamageMinB();
-
+    void SetDamageMinB(int64 value);
     float GetDamageMaxA();
+    void SetDamageMaxA(int64 value);
     float GetDamageMaxB();
-
+    void SetDamageMaxB(int64 value);
     uint32 GetDamageTypeA();
+    void SetDamageTypeA(int64 value);
     uint32 GetDamageTypeB();
+    void SetDamageTypeB(int64 value);
 
     uint32 GetClass();
+    void SetClass(uint32 value);
     uint32 GetSubClass();
+    void SetSubClass(uint32 value);
     int32  GetSoundOverrideSubclass();
     TSString GetName();
+    void SetName(TSString name);
     uint32 GetDisplayInfoID();
+    void SetDisplayInfoID(uint32 value);
     uint32 GetQuality();
+    void SetQuality(uint32 value);
     uint32 GetFlags();
     uint32 GetFlags2();
     uint32 GetBuyCount();
     int32  GetBuyPrice();
     uint32 GetSellPrice();
     uint32 GetInventoryType();
+    void SetInventoryType(uint32 value);
     uint32 GetAllowableClass();
     uint32 GetAllowableRace();
     uint32 GetItemLevel();
+    void SetItemLevel(uint32 value);
     uint32 GetRequiredLevel();
+    void SetRequiredLevel(uint32 value);
     uint32 GetRequiredSkill();
     uint32 GetRequiredSkillRank();
     uint32 GetRequiredSpell();
@@ -70,32 +84,45 @@ public:
     int32  GetStackable();
     uint32 GetContainerSlots();
     uint32 GetStatsCount();
+    void SetStatsCount(uint32 value);
     uint32 GetStatType(uint32 index);
     int32 GetStatValue(uint32 index);
     uint32 GetScalingStatDistribution();
     uint32 GetScalingStatValue();
     uint32 GetArmor();
+    void SetArmor(int32 value);
     uint32 GetHolyRes();
+    void SetHolyRes(int32 value);
     uint32 GetFireRes();
+    void SetFireRes(int32 value);
     uint32 GetNatureRes();
+    void SetNatureRes(int32 value);
     uint32 GetFrostRes();
+    void SetFrostRes(int32 value);
     uint32 GetShadowRes();
+    void SetShadowRes(int32 value);
     uint32 GetArcaneRes();
+    void SetArcaneRes(int32 value);
     uint32 GetDelay();
+    void SetDelay(uint32 value);
     uint32 GetAmmoType();
     float  GetRangedModRange();
     uint32 GetBonding();
     TSString GetDescription();
+    void SetDescription(TSString value);
     uint32 GetPageText();
     uint32 GetLanguageID();
     uint32 GetPageMaterial();
     uint32 GetStartQuest();
     uint32 GetLockID();
     int32  GetMaterial();
+    void SetMaterial(uint32 value);
     uint32 GetSheath();
+    void SetSheath(uint32 value);
     int32  GetRandomProperty();
     int32  GetRandomSuffix();
     uint32 GetBlock();
+    void SetBlock(int32 value);
     uint32 GetItemSet();
     uint32 GetMaxDurability();
     uint32 GetArea();
@@ -107,6 +134,7 @@ public:
     uint32 GetRequiredDisenchantSkill();
     float  GetArmorDamageModifier();
     uint32 GetDuration();
+    void SetDuration(uint32 value);
     uint32 GetItemLimitCategory();
     uint32 GetHolidayID();
     uint32 GetScriptID();
@@ -130,7 +158,7 @@ public:
     bool IsConjuredConsumable();
     bool HasSignature();
 
-    TSEntity * GetData();
+    TSEntity* GetData();
 
     void SetStatType(uint32 index, uint32 value);
     void SetStatValue(uint32 index, int32 value);
