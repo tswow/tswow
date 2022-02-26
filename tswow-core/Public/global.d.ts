@@ -6903,6 +6903,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetIsConjuredConsumable(): bool
     GetHasSignature(): bool;
 
+    SetBlock(block: int32): void
     SetDuration(duration: uint32): void
     SetMaterial(materialID: uint32): void
     SetDescription(description: TSString): void
