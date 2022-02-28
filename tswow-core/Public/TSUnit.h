@@ -68,6 +68,7 @@ public:
     bool HealthBelowPct(int32 pct);
     bool HealthAbovePct(int32 pct);
     bool HasAura(uint32 spell);
+    bool HasAuraType(uint32 auraType);
     bool IsCasting();
     bool HasUnitState(uint32 state);
     TSUnit  GetOwner();

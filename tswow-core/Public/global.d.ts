@@ -5470,6 +5470,8 @@ declare interface TSUnit extends TSWorldObject {
     SetResistance(school: uint32, val: int32): uint32;
     SetArmor(val: int32): uint32;
 
+    HasAuraType(type: AuraType): bool
+
     /**
      * The [Unit] tries to attack a given target
      *

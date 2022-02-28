@@ -24,6 +24,7 @@
 #include "Unit.h"
 #include "SpellMgr.h"
 #include "SpellInfo.h"
+#include "SpellAuraDefines.h"
 #include "MotionMaster.h"
 #include "Unit.h"
 #include "TSPlayer.h"
@@ -2606,6 +2607,11 @@ void TSUnit::SetResistance(uint32 school, int32 val)
 void TSUnit::SetArmor(int32 val)
 {
     unit->SetArmor(val);
+}
+
+bool TSUnit::HasAuraType(uint32 type)
+{
+    return unit->HasAuraType(reinterpret_cast<AuraType>(type));
 }
 
 /*int TSUnit::RestoreDisplayId(lua_State* L, Unit* unit)
