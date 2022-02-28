@@ -2611,7 +2611,7 @@ void TSUnit::SetArmor(int32 val)
 
 bool TSUnit::HasAuraType(uint32 type)
 {
-    return unit->HasAuraType(reinterpret_cast<AuraType>(type));
+    return unit->HasAuraType(static_cast<AuraType>(type));
 }
 
 /*int TSUnit::RestoreDisplayId(lua_State* L, Unit* unit)
