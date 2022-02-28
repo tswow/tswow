@@ -2926,34 +2926,54 @@ void TSPlayer::ToggleAFK()
  * @param uint32 slot : equipment slot to equip the item to The slot can be [EquipmentSlots] or [InventorySlots]
  * @return [Item] equippedItem : item or nil if equipping failed
  */
-TSItem TSPlayer::EquipItem(TSItem _item,uint32 slot,uint32 entry)
+TSItem TSPlayer::EquipItem(TSItem _item,uint32 slot)
 {
     auto item = _item.item;
     uint16 dest = 0;
 
-
-    if (!item)
+    if (slot >= INVENTORY_SLOT_BAG_END)
     {
-        item = Item::CreateItem(entry, 1, player);
+        return TSItem(nullptr);
+    }
 
-        InventoryResult result = player->CanEquipItem(slot, dest, item, false);
-        if (result != EQUIP_ERR_OK)
-        {
-            delete item;
-        }
-        player->ItemAddedQuestCheck(entry, 1);
-#if (!defined(TBC) && !defined(CLASSIC))
-        player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_RECEIVE_EPIC_ITEM, entry, 1);
-#endif
-    }
-    else
+    InventoryResult result = player->CanEquipItem(slot, dest, item, false);
+    if ( result != EQUIP_ERR_OK)
     {
-        InventoryResult result = player->CanEquipItem(slot, dest, item, false);
-        player->RemoveItem(item->GetBagSlot(), item->GetSlot(), true);
+        return TSItem(nullptr);
     }
-     return TSItem(player->EquipItem(dest, item, true));
+    player->RemoveItem(item->GetBagSlot(), item->GetSlot(), true);
+
+    TSItem newItem = TSItem(player->EquipItem(dest,item,true));
     player->AutoUnequipOffhandIfNeed();
+    return newItem;
 }
+
+TSItem TSPlayer::EquipItem(uint32 entry, uint32 slot)
+{
+    uint16 dest = 0;
+
+    if (slot >= INVENTORY_SLOT_BAG_END)
+    {
+        return TSItem(nullptr);
+    }
+
+    Item* item = Item::CreateItem(entry, 1, player);
+    if(!item) return TSItem(nullptr);
+
+    InventoryResult result = player->CanEquipItem(slot, dest, item, false);
+    if (result != EQUIP_ERR_OK)
+    {
+        delete item;
+        return TSItem(nullptr);
+    }
+    player->ItemAddedQuestCheck(entry, 1);
+    player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_RECEIVE_EPIC_ITEM, entry, 1);
+    TSItem tsitem = TSItem(player->EquipItem(dest,item,true));
+    player->AutoUnequipOffhandIfNeed();
+    return tsitem;
+}
+
+
 
 /**
  * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.

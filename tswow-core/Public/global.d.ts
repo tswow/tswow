@@ -1709,14 +1709,11 @@ declare interface TSPlayer extends TSUnit {
      *         INVENTORY_SLOT_BAG_START    = 19,
      *         INVENTORY_SLOT_BAG_END      = 23
      *
-     * @proto equippedItem = (item, slot)
-     * @proto equippedItem = (entry, slot)
-     * @param [Item] item : item to equip
-     * @param uint32 entry : entry of the item to equip
+     * @param [Item] item : item to equip (entry or TSItem)
      * @param uint32 slot : equipment slot to equip the item to The slot can be [EquipmentSlots] or [InventorySlots]
      * @return [Item] equippedItem : item or nil if equipping failed
      */
-    EquipItem(item : TSItem,slot : EquipmentSlots|InventorySlots,entry : uint32) : TSItem
+    EquipItem(item : TSItem | uint32, slot : EquipmentSlots|InventorySlots) : TSItem
 
     /**
      * Returns true if the player can equip the given [Item] or item entry to the given slot, false otherwise.
