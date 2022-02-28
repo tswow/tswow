@@ -1952,6 +1952,12 @@ declare namespace WoWAPI {
 }
 
 /**
+ * https://wow.gamepedia.com/API_GetMouseFocus
+ * @see https://wow.gamepedia.com/API_GetMouseFocus
+ */
+declare function GetMouseFocus(): WoWAPI.Frame;
+
+/**
  * Acccept the area Spirit Healer's resurrection in battlegrounds
  * @see https://wow.gamepedia.com/API_AcceptAreaSpiritHeal
  */
