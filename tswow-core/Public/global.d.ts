@@ -7989,6 +7989,11 @@ declare namespace _hidden {
          * Fires AFTER auras are removed and kill procs
          */
         OnDeath(callback: (victim: TSUnit, killer: TSUnit)=>void);
+
+        OnEnterCombat(callback: (unit: TSUnit)=>void);
+        OnExitCombat(callback: (unit: TSUnit)=>void);
+        OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
+        OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
     }
 
     export class Battlegrounds<T> {
