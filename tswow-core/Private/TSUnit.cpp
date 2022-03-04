@@ -2385,10 +2385,14 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
 #if defined TRINITY || AZEROTHCORE
         Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 1, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_HIT, 0);
+#elif defined CMANGOS
+        Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
+        unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
 #else
         unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, durabilityloss);
         unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, SPELL_SCHOOL_MASK_NORMAL, damage, 0, 0, VICTIMSTATE_NORMAL, 0);
 #endif
+        return;
     }
 
     SpellSchoolMask schoolmask = SpellSchoolMask(1 << school);
@@ -2398,14 +2402,18 @@ void TSUnit::DealDamage(TSUnit _target,uint32 damage,bool durabilityloss,uint32 
         damage = Unit::CalcArmorReducedDamage(unit, target, damage, NULL, BASE_ATTACK);
 #else
     if (schoolmask & SPELL_SCHOOL_MASK_NORMAL)
+#ifndef CMANGOS
         damage = unit->CalcArmorReducedDamage(target, damage);
+#else
+        damage = unit->CalcArmorReducedDamage(unit, target, damage);
+#endif
 #endif
 
 #ifdef TRINITY
     // melee damage by specific school
     if (!spell)
     {
-DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
+        DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
         unit->CalcAbsorbResist(dmgInfo);
 
         if (!dmgInfo.GetDamage())
@@ -2422,12 +2430,17 @@ DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAG
         unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
 #endif
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+        return;
     }
 
+    if (!spell)
+        return;
 
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
+    if (!spellInfo)
+        return;
 
-SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
+    SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
 #ifdef TRINITY
     Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
 #else
@@ -2439,35 +2452,48 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
 
     unit->SendSpellNonMeleeDamageLog(&dmgInfo);
     unit->DealSpellDamage(&dmgInfo, true);
+    return;
 #elif AZEROTHCORE
     if (!spell)
     {
-        uint32 absorb = 0;
-        uint32 resist = 0;
-        unit->CalcAbsorbResist(unit, target, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-        if (damage <= absorb + resist)
+        DamageInfo dmgInfo(unit, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE);
+        unit->CalcAbsorbResist(dmgInfo);
+
+        if (!dmgInfo.GetDamage())
             damage = 0;
         else
-            damage -= absorb + resist;
+            damage = dmgInfo.GetDamage();
 
+        uint32 absorb = dmgInfo.GetAbsorb();
+        uint32 resist = dmgInfo.GetResist();
         unit->DealDamageMods(target, damage, &absorb);
         Unit::DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
         unit->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+        return;
     }
 
+    if (!spell)
+        return;
 
     SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spell);
+    if (!spellInfo)
+        return;
 
-SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
+    SpellNonMeleeDamage dmgInfo(unit, target, spellInfo, spellInfo->GetSchoolMask());
     Unit::DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
     unit->SendSpellNonMeleeDamageLog(&dmgInfo);
     unit->DealSpellDamage(&dmgInfo, true);
+    return;
 #else
     // melee damage by specific school
     if (!spell)
     {
         uint32 absorb = 0;
+#ifndef CMANGOS
         uint32 resist = 0;
+#else
+        int32 resist = 0;
+#endif
         target->CalculateDamageAbsorbAndResist(unit, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
 
         if (damage <= absorb + resist)
@@ -2475,13 +2501,20 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
         else
             damage -= absorb + resist;
 
+#ifndef CMANGOS
         unit->DealDamageMods(target, damage, &absorb);
         unit->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+#else
+        unit->DealDamageMods(unit, target, damage, &absorb, DIRECT_DAMAGE);
+        unit->DealDamage(unit, target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
+#endif
         unit->SendAttackStateUpdate(HITINFO_NORMALSWING2, target, schoolmask, damage, absorb, resist, VICTIMSTATE_NORMAL, 0);
+        return;
     }
 
     // non-melee damage
     unit->SpellNonMeleeDamageLog(target, spell, damage);
+    return;
 #endif
 }
 
@@ -2496,17 +2529,11 @@ SpellNonMeleeDamage dmgInfo(unit, target, spell, spellInfo->GetSchoolMask());
 void TSUnit::DealHeal(TSUnit _target,uint32 spell,uint32 amount,bool critical)
 {
     auto target = _target.unit;
-
-#ifdef TRINITY
+#if defined TRINITY || AZEROTHCORE
     if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
     {
-HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
+        HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
         unit->HealBySpell(healInfo, critical);
-    }
-#elif AZEROTHCORE
-    if (const SpellInfo* info = sSpellMgr->GetSpellInfo(spell))
-    {
-        unit->HealBySpell(target, info, amount, critical);
     }
 #else
 #ifdef CMANGOS
@@ -2517,6 +2544,8 @@ HealInfo healInfo(unit, target, amount, info, info->GetSchoolMask());
     if (spellEntry)
         unit->DealHeal(target, amount, spellEntry, critical);
 #endif
+    return;
+
 }
 
 /**
