@@ -8670,6 +8670,7 @@ declare function CreateArray<T>(obj: T[]): TSArray<T>
 
 declare function GetID(table: string, mod: string, name: string): uint32;
 declare function GetIDTag(mod: string, id: string): TSArray<uint32>
+declare function GetIDTagUnique(mod: string, id: string): uint32
 
 /**
  * Runs a compile-time check that a given world database table exists.
