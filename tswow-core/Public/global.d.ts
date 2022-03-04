@@ -7087,10 +7087,12 @@ declare interface TSManualTestBuilder {
     step(name: string, callback: (builder: TSManualStepBuilder)=>void): TSManualTestBuilder
 }
 
+type EventID = uint32 | TSArray<uint32>
+
 // @hidden-begin (do NOT remove this tag!)
 declare namespace _hidden {
     export class AchievementID<T> {
-        OnUpdate(entry: number, callback: (
+        OnUpdate(entry: EventID, callback: (
               player: TSPlayer
             , achievement: TSAchievementEntry
             , criteria: TSAchievementCriteriaEntry
@@ -7098,7 +7100,7 @@ declare namespace _hidden {
             , timeElapsed: uint32
             , timeCompleted: boolean
             )=>void)
-        OnComplete(entry: number, callback: (player: TSPlayer, entry: TSAchievementEntry)=>void)
+        OnComplete(entry: EventID, callback: (player: TSPlayer, entry: TSAchievementEntry)=>void)
     }
     export class Achievements<T> {
         OnUpdate(callback: (
@@ -7137,7 +7139,7 @@ declare namespace _hidden {
     }
 
     export class AreaTriggerID<T> {
-        OnTrigger(areaTrigger: uint32, callback: (trigge: TSAreaTriggerEntry, player : TSPlayer, cancel: TSMutable<boolean>)=>void);
+        OnTrigger(areaTrigger: EventID, callback: (trigge: TSAreaTriggerEntry, player : TSPlayer, cancel: TSMutable<boolean>)=>void);
     }
 
     export class Vehicle<T> {
@@ -7353,62 +7355,62 @@ declare namespace _hidden {
     }
 
     export class SpellID<T> {
-        OnCast(spell: uint32, callback : (spell: TSSpell)=>void);
-        OnCheckCast(spell: uint32, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
-        OnDispel(spell: uint32, callback: (spell: TSSpell, dispelType: uint32)=>void);
-        OnEffect(spell: uint32, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
-        OnHit(spell: uint32, callback: (spell: TSSpell)=>void);
-        OnTick(spell: uint32, callback: (effect: TSAuraEffect)=>void);
-        OnRemove(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+        OnCast(spell: EventID, callback : (spell: TSSpell)=>void);
+        OnCheckCast(spell: EventID, callback : (spell: TSSpell, result: TSMutable<SpellCastResult>)=>void);
+        OnDispel(spell: EventID, callback: (spell: TSSpell, dispelType: uint32)=>void);
+        OnEffect(spell: EventID, callback: (spell: TSSpell, cancel: TSMutable<bool>, info: TSSpellEffectInfo, mode: SpellEffectHandleMode, unitTarget: TSUnit, item: TSItem, obj: TSGameObject, corpse: TSCorpse)=>void);
+        OnHit(spell: EventID, callback: (spell: TSSpell)=>void);
+        OnTick(spell: EventID, callback: (effect: TSAuraEffect)=>void);
+        OnRemove(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
         OnCalcMeleeMiss(callback: (spell: TSSpellInfo, miss: TSMutable<float>, attacker: TSUnit, victim: TSUnit, attackType: uint8, skillDiff: WeaponAttackType)=>void): T
-        OnApply(spell: uint32, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
-        OnDamageEarly(spell: uint32, callback : (
+        OnApply(spell: EventID, callback: (effect: TSAuraEffect, application: TSAuraApplication, type: uint32)=>void);
+        OnDamageEarly(spell: EventID, callback : (
               spell: TSSpell
             , damage: TSMutable<int32>
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
         )=>void)
-        OnDamageLate(spell: uint32, callback : (
+        OnDamageLate(spell: EventID, callback : (
             spell: TSSpell
           , damage: TSMutable<int32>
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
         )=>void)
-        OnPeriodicDamage(spell: uint32, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
+        OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
         /** critChance should be between 0 and 1 */
-        OnCalcCrit(spell: uint32, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
+        OnCalcCrit(spell: EventID, callback : (spelL: TSSpell, chance: TSMutable<float>)=>void)
         /** critChance should be between 0 and 1 */
-        OnCalcAuraCrit(spell: uint32, callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
+        OnCalcAuraCrit(spell: EventID, callback : (aura: TSAuraEffect, chance: TSMutable<float>)=>void)
         /** reflectCHance should be an integer between 0 and 10000 */
-        OnCalcReflect(spell: uint32, callback : (
+        OnCalcReflect(spell: EventID, callback : (
               spell: TSSpellInfo
             , reflectChance: TSMutable<int32>
             , attacker: TSWorldObject
             , victim: TSUnit
         )=>void)
         /** hitChance should be an integer between 0 and 10000 */
-        OnCalcHit(spell: uint32, callback : (
+        OnCalcHit(spell: EventID, callback : (
               spell: TSSpellInfo
             , hitChance: TSMutable<int32>
             , attacker: TSWorldObject
             , defender: TSUnit
         )=>void)
         /** resistChance should be an integer between 0 and 10000 */
-        OnCalcResist(spell: uint32, callback : (
+        OnCalcResist(spell: EventID, callback : (
               spell: TSSpellInfo
             , resistChance: TSMutable<int32>
             , attacker: TSWorldObject
             , defender: TSUnit
         )=>void)
-        OnCalcSpellPowerLevelPenalty(spell: uint32, callback: (
+        OnCalcSpellPowerLevelPenalty(spell: EventID, callback: (
               spell: TSSpellInfo
             , penalty: TSMutable<float>
             , caster: TSUnit
         )=>void)
 
-        OnTrainerSend(spell: uint32, callback: (
+        OnTrainerSend(spell: EventID, callback: (
               spell: TSSpellInfo
             , trainerId: uint32
             , receiver: TSPlayer
@@ -7475,79 +7477,79 @@ declare namespace _hidden {
     }
 
     export class CreatureID<T> {
-        OnGenerateLoot(creature: uint32, callback: (creature: TSCreature, killer: TSPlayer)=>void);
-        OnMoveInLOS(creature: uint32, callback: (creature: TSCreature, seen: TSUnit)=>void);
-        OnJustEnteredCombat(creature: uint32, callback: (creature: TSCreature, target: TSUnit)=>void);
-        OnDeath(creature: uint32, callback: (creature: TSCreature, killer: TSUnit)=>void);
-        OnDeathEarly(creature: uint32, callback: (creature: TSCreature, killer: TSUnit)=>void);
-        OnKilledUnit(creature: uint32, callback: (creature: TSCreature, killed: TSUnit)=>void);
-        OnSummoned(creature: uint32, callback: (creature: TSCreature, summon: TSCreature)=>void);
-        OnIsSummoned(creature: uint32, callback: (creature: TSCreature, summoner: TSWorldObject)=>void);
-        OnSummonDespawn(creature: uint32, callback: (creature: TSCreature, summon: TSCreature)=>void);
-        OnSummonDies(creature: uint32, callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void);
-        OnHitBySpell(creature: uint32, callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void);
-        OnSpellHitTarget(creature: uint32, callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void);
-        OnSpellCastFinished(creature: uint32, callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: uint32)=>void);
-        OnJustAppeared(creature: uint32, callback: (creature: TSCreature)=>void);
-        OnCharmed(creature: uint32, callback: (creature: TSCreature, isNew: boolean)=>void);
-        OnReachedHome(creature: uint32, callback: (creature: TSCreature)=>void);
-        OnReceiveEmote(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, emote: uint32)=>void);
-        OnOwnerAttacked(creature: uint32, callback: (creature: TSCreature, attacker: TSUnit)=>void);
-        OnOwnerAttacks(creature: uint32, callback: (creature: TSCreature, target: TSUnit)=>void);
-        OnCorpseRemoved(creature: uint32, callback: (creature: TSCreature, delay: uint32)=>void);
+        OnGenerateLoot(creature: EventID, callback: (creature: TSCreature, killer: TSPlayer)=>void);
+        OnMoveInLOS(creature: EventID, callback: (creature: TSCreature, seen: TSUnit)=>void);
+        OnJustEnteredCombat(creature: EventID, callback: (creature: TSCreature, target: TSUnit)=>void);
+        OnDeath(creature: EventID, callback: (creature: TSCreature, killer: TSUnit)=>void);
+        OnDeathEarly(creature: EventID, callback: (creature: TSCreature, killer: TSUnit)=>void);
+        OnKilledUnit(creature: EventID, callback: (creature: TSCreature, killed: TSUnit)=>void);
+        OnSummoned(creature: EventID, callback: (creature: TSCreature, summon: TSCreature)=>void);
+        OnIsSummoned(creature: EventID, callback: (creature: TSCreature, summoner: TSWorldObject)=>void);
+        OnSummonDespawn(creature: EventID, callback: (creature: TSCreature, summon: TSCreature)=>void);
+        OnSummonDies(creature: EventID, callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void);
+        OnHitBySpell(creature: EventID, callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void);
+        OnSpellHitTarget(creature: EventID, callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void);
+        OnSpellCastFinished(creature: EventID, callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: uint32)=>void);
+        OnJustAppeared(creature: EventID, callback: (creature: TSCreature)=>void);
+        OnCharmed(creature: EventID, callback: (creature: TSCreature, isNew: boolean)=>void);
+        OnReachedHome(creature: EventID, callback: (creature: TSCreature)=>void);
+        OnReceiveEmote(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, emote: uint32)=>void);
+        OnOwnerAttacked(creature: EventID, callback: (creature: TSCreature, attacker: TSUnit)=>void);
+        OnOwnerAttacks(creature: EventID, callback: (creature: TSCreature, target: TSUnit)=>void);
+        OnCorpseRemoved(creature: EventID, callback: (creature: TSCreature, delay: uint32)=>void);
 
-        OnCreate(creature: uint32, callback: (creature: TSCreature, cancel: TSMutable<boolean>)=>void)
-        OnReload(creature: uint32, callback: (creature: TSCreature)=>void)
-        OnRemove(creature: uint32, callback: (creature: TSCreature)=>void)
+        OnCreate(creature: EventID, callback: (creature: TSCreature, cancel: TSMutable<boolean>)=>void)
+        OnReload(creature: EventID, callback: (creature: TSCreature)=>void)
+        OnRemove(creature: EventID, callback: (creature: TSCreature)=>void)
 
-        OnWaypointStarted(creature: uint32, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
-        OnWaypointReached(creature: uint32, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
-        OnWaypointPathEnded(creature: uint32, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
-        OnPassengerBoarded(creature: uint32, callback: (creature: TSCreature, passenger: TSUnit, seatId: int8, isFirst: boolean)=>void);
+        OnWaypointStarted(creature: EventID, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
+        OnWaypointReached(creature: EventID, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
+        OnWaypointPathEnded(creature: EventID, callback: (creature: TSCreature, id: uint32, path: uint32)=>void);
+        OnPassengerBoarded(creature: EventID, callback: (creature: TSCreature, passenger: TSUnit, seatId: int8, isFirst: boolean)=>void);
 
-        OnSpellClick(creature: uint32, callback: (creature: TSCreature, clicker: TSUnit, isFirst: boolean)=>void);
-        OnUpdateAI(creature: uint32, callback: (creature: TSCreature, diff: uint32)=>void);
+        OnSpellClick(creature: EventID, callback: (creature: TSCreature, clicker: TSUnit, isFirst: boolean)=>void);
+        OnUpdateAI(creature: EventID, callback: (creature: TSCreature, diff: uint32)=>void);
 
-        OnGossipHello(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, cancel: TSMutable<bool>)=>void)
-        OnGossipSelect(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, cancel: TSMutable<bool>)=>void)
-        OnGossipSelectCode(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, code: string, cancel: TSMutable<bool>)=>void)
-        OnQuestAccept(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest)=>void)
-        OnQuestReward(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest, selection: uint32)=>void)
+        OnGossipHello(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, cancel: TSMutable<bool>)=>void)
+        OnGossipSelect(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, cancel: TSMutable<bool>)=>void)
+        OnGossipSelectCode(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, menuId: number, selectionId: number, code: string, cancel: TSMutable<bool>)=>void)
+        OnQuestAccept(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest)=>void)
+        OnQuestReward(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, quest: TSQuest, selection: uint32)=>void)
         /**
          * NOTE: Only use this event to enable pickpocket loot
          * Use "CreatureOnGeneratePickPocketLoot" to actually generate loot
          */
-        OnCanGeneratePickPocketLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, canGenerate: TSMutable<bool>)=>void)
+        OnCanGeneratePickPocketLoot(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, canGenerate: TSMutable<bool>)=>void)
         /**
          * NOTE: You may need to also call "OnCanGeneratePickPocketLoot" if this doesn't fire for your specific creature
          */
-        OnGeneratePickPocketLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
-        OnGenerateSkinningLoot(creature: uint32, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
-        OnSendVendorItem(creature: uint32, callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
+        OnGeneratePickPocketLoot(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
+        OnGenerateSkinningLoot(creature: EventID, callback: (creature: TSCreature, player: TSPlayer, loot: TSLoot)=>void)
+        OnSendVendorItem(creature: EventID, callback: (creature: TSCreature, item: TSItemTemplate, player: TSPlayer, shouldSend: TSMutable<bool>)=>void)
 
-        OnUpdateResistance(creature: uint32, callback: (
+        OnUpdateResistance(creature: EventID, callback: (
               creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
             , school: SpellSchools
         )=>void)
-        OnUpdateArmor(creature: uint32, callback: (
+        OnUpdateArmor(creature: EventID, callback: (
               creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
         )=>void)
-        OnUpdateMaxHealth(creature: uint32, callback: (
+        OnUpdateMaxHealth(creature: EventID, callback: (
             creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
         )=>void)
-        OnUpdateMaxPower(creature: uint32, callback: (
+        OnUpdateMaxPower(creature: EventID, callback: (
             creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
             , powerType: Powers
         )=>void)
-        OnUpdateAttackPowerDamage(creature: uint32, callback:(
+        OnUpdateAttackPowerDamage(creature: EventID, callback:(
               creature: TSCreature
             , base: TSMutable<float> /*base*/
             , mod: TSMutable<float> /*mod*/
@@ -7555,7 +7557,7 @@ declare namespace _hidden {
             , isGuardian: bool /*isGuardian*/
             , ranged: bool /*ranged*/
         )=>void)
-        OnUpdateDamagePhysical(creature: uint32, callback: (
+        OnUpdateDamagePhysical(creature: EventID, callback: (
               creature: TSCreature
             , min: TSMutable<float>
             , max: TSMutable<float>
@@ -7563,39 +7565,39 @@ declare namespace _hidden {
             , attType: WeaponAttackType
         )=>void)
 
-        OnUpdateLvlDepMaxHealth(creature: uint32, callback: (
+        OnUpdateLvlDepMaxHealth(creature: EventID, callback: (
             creature: TSCreature
           , maxHealth: TSMutable<uint32>
           , rankHealthMod: float
           , baseHp: uint32
         )=>void)
 
-        OnUpdateLvlDepMaxMana(creature: uint32, callback: (
+        OnUpdateLvlDepMaxMana(creature: EventID, callback: (
               creature: TSCreature
             , maxMana: TSMutable<uint32>
             , baseMana: float
         )=>void)
 
-        OnUpdateLvlDepBaseDamage(creature: uint32, callback: (
+        OnUpdateLvlDepBaseDamage(creature: EventID, callback: (
               creature: TSCreature
             , baseMinDamage: TSMutable<uint32>
             , baseMaxDamage: TSMutable<uint32>
             , baseDamageIn: float
         )=>void)
 
-        OnUpdateLvlDepArmor(creature: uint32, callback: (
+        OnUpdateLvlDepArmor(creature: EventID, callback: (
             creature: TSCreature
           , armorOut: TSMutable<uint32>
           , baseArmor: float
         )=>void)
 
-        OnUpdateLvlDepAttackPower(creature: uint32, callback: (
+        OnUpdateLvlDepAttackPower(creature: EventID, callback: (
             creature: TSCreature
           , attackPower: TSMutable<uint32>
           , rangedAttackPower: TSMutable<uint32>
         )=>void)
 
-        OnCalcColorCode(creature: uint32, callback: (
+        OnCalcColorCode(creature: EventID, callback: (
               creature: TSCreature
             , code: TSMutable<uint8>
             , player: TSPlayer
@@ -7603,42 +7605,42 @@ declare namespace _hidden {
             , creatureLevel: uint32
         )=>void)
 
-        OnCalcGain(creature: uint32, callback: (
+        OnCalcGain(creature: EventID, callback: (
             victim: TSCreature
           , gain: TSMutable<uint32>
           , killer: TSPlayer
         )=>void)
 
-        OnCalcBaseGain(creature: uint32, callback: (
+        OnCalcBaseGain(creature: EventID, callback: (
             victim: TSCreature
           , gain: TSMutable<uint32>
           , killer: TSPlayer
         )=>void)
 
-        OnUpdateResistance(creature: uint32, callback: (
+        OnUpdateResistance(creature: EventID, callback: (
             creature: TSCreature
           , value: TSMutable<float>
           , isGuardian: bool
           , school: SpellSchools
         )=>void)
 
-        OnUpdateArmor(creature: uint32, callback: (
+        OnUpdateArmor(creature: EventID, callback: (
               creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
         )=>void)
-        OnUpdateMaxHealth(creature: uint32, callback: (
+        OnUpdateMaxHealth(creature: EventID, callback: (
             creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
         )=>void)
-        OnUpdateMaxPower(creature: uint32, callback: (
+        OnUpdateMaxPower(creature: EventID, callback: (
             creature: TSCreature
             , value: TSMutable<float>
             , isGuardian: bool
             , powerType: Powers
         )=>void)
-        OnUpdateAttackPowerDamage(creature: uint32, callback:(
+        OnUpdateAttackPowerDamage(creature: EventID, callback:(
               creature: TSCreature
             , base: TSMutable<float> /*base*/
             , mod: TSMutable<float> /*mod*/
@@ -7646,7 +7648,7 @@ declare namespace _hidden {
             , isGuardian: bool /*isGuardian*/
             , ranged: bool /*ranged*/
         )=>void)
-        OnUpdateDamagePhysical(creature: uint32, callback: (
+        OnUpdateDamagePhysical(creature: EventID, callback: (
               creature: TSCreature
             , min: TSMutable<float>
             , max: TSMutable<float>
@@ -7654,32 +7656,32 @@ declare namespace _hidden {
             , attType: uint8
         )=>void)
 
-        OnUpdateLvlDepMana(creature: uint32, callback: (
+        OnUpdateLvlDepMana(creature: EventID, callback: (
                 creature: TSCreature
             , maxMana: TSMutable<uint32>
             , baseMana: float
         )=>void)
 
-        OnUpdateLvlDepBaseDamage(creature: uint32, callback: (
+        OnUpdateLvlDepBaseDamage(creature: EventID, callback: (
                 creature: TSCreature
             , baseMinDamage: TSMutable<uint32>
             , baseMaxDamage: TSMutable<uint32>
             , baseDamageIn: float
         )=>void)
 
-        OnUpdateLvlDepArmor(creature: uint32, callback: (
+        OnUpdateLvlDepArmor(creature: EventID, callback: (
             creature: TSCreature
             , armorOut: TSMutable<uint32>
             , baseArmor: float
         )=>void)
 
-        OnUpdateLvlDepAttackPower(creature: uint32, callback: (
+        OnUpdateLvlDepAttackPower(creature: EventID, callback: (
             creature: TSCreature
             , attackPower: TSMutable<uint32>
             , rangedAttackPower: TSMutable<uint32>
         )=>void)
 
-        OnCalcColorCode(creature: uint32, callback: (
+        OnCalcColorCode(creature: EventID, callback: (
                 creature: TSCreature
             , code: TSMutable<uint8>
             , player: TSPlayer
@@ -7687,13 +7689,13 @@ declare namespace _hidden {
             , creatureLevel: uint32
         )=>void)
 
-        OnCalcGain(creature: uint32, callback: (
+        OnCalcGain(creature: EventID, callback: (
             victim: TSCreature
             , gain: TSMutable<uint32>
             , killer: TSPlayer
         )=>void)
 
-        OnCalcBaseGain(creature: uint32, callback: (
+        OnCalcBaseGain(creature: EventID, callback: (
             victim: TSCreature
             , gain: TSMutable<uint32>
             , killer: TSPlayer
@@ -7867,12 +7869,12 @@ declare namespace _hidden {
           , progress: uint16
         )=>void)
 
-        OnStatusChanged(callback: (
+        OnStatusChanged(event: EventID, callback: (
             quest: TSQuest
           , player: TSPlayer
         )=>void)
 
-        OnRewardXP(callback: (
+        OnRewardXP(event: EventID, callback: (
             quest: TSQuest
           , player: TSPlayer
           , reward: TSMutable<uint32>
@@ -7880,38 +7882,38 @@ declare namespace _hidden {
     }
 
     export class QuestID<T> {
-        OnAccept(callback: (
+        OnAccept(event: EventID, callback: (
               quest: TSQuest
             , player: TSPlayer
             , questgiver: TSObject
         )=>void)
 
-        OnReward(callback: (
+        OnReward(event: EventID, callback: (
               quest: TSQuest
             , player: TSPlayer
             , questgiver: TSObject
             , value: uint32
         )=>void)
 
-        OnSpellFinish(callback: (
+        OnSpellFinish(event: EventID, callback: (
             quest: TSQuest
           , player: TSPlayer
           , questgiver: TSSpell
         )=>void)
 
-        OnObjectiveProgress(callback: (
+        OnObjectiveProgress(event: EventID, callback: (
             quest: TSQuest
           , player: TSPlayer
           , index: uint32
           , progress: uint16
         )=>void)
 
-        OnStatusChanged(callback: (
+        OnStatusChanged(event: EventID, callback: (
             quest: TSQuest
           , player: TSPlayer
         )=>void)
 
-        OnRewardXP(callback: (
+        OnRewardXP(event: EventID, callback: (
             quest: TSQuest
           , player: TSPlayer
           , reward: TSMutable<uint32>
@@ -8072,33 +8074,33 @@ declare namespace _hidden {
     }
 
     export class BattlegroundID<T> {
-        OnCreate(id: uint32, callback: (bg: TSBattleground)=>void)
-        OnReload(id: uint32, callback: (bg: TSBattleground)=>void)
-        OnAddPlayer(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnPlayerLogin(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnPlayerLogout(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnUpdateScore(id: uint32, callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
-        OnUpdateEarly(id: uint32, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
-        OnUpdateLate(id: uint32, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
-        OnKillPlayer(id: uint32, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
-        OnEndEarly(id: uint32, callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
+        OnCreate(id: EventID, callback: (bg: TSBattleground)=>void)
+        OnReload(id: EventID, callback: (bg: TSBattleground)=>void)
+        OnAddPlayer(id: EventID, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogin(id: EventID, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnPlayerLogout(id: EventID, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnUpdateScore(id: EventID, callback: (bg: TSBattleground,player:TSPlayer, type: uint32, isAddHonor: bool, value: TSMutable<uint32>)=>void)
+        OnUpdateEarly(id: EventID, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnUpdateLate(id: EventID, callback: (bg: TSBattleground, diff: uint32 /*diff*/)=>void)
+        OnKillPlayer(id: EventID, callback: (bg: TSBattleground,victim: TSPlayer,killer: TSPlayer)=>void)
+        OnEndEarly(id: EventID, callback: (bg: TSBattleground,winner: TSMutable<uint32>)=>void)
         /**
          * Note that "winner" can no longer be changed at this stage,
          * for that, use "OnEndEarly"
          */
-        OnEndLate(id: uint32, callback: (bg: TSBattleground,winner: uint32)=>void)
-        OnKillCreature(id: uint32, callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
-        OnRemovePlayer(id: uint32, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
-        OnPlayerUnderMap(id: uint32, callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
-        OnGenericEvent(id: uint32, callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
-        OnClickFlag(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
-        OnDropFlag(id: uint32, callback: (bg: TSBattleground,player: TSPlayer)=>void)
-        OnDestroyGate(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
-        OnOpenDoors(id: uint32, callback: (bg: TSBattleground)=>void)
-        OnCloseDoors(id: uint32, callback: (bg: TSBattleground)=>void)
-        OnReset(id: uint32, callback: (bg: TSBattleground)=>void)
-        OnCanCreate(id: uint32, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
-        OnAchievementCriteria(id: uint32, callback: (
+        OnEndLate(id: EventID, callback: (bg: TSBattleground,winner: uint32)=>void)
+        OnKillCreature(id: EventID, callback: (bg: TSBattleground,victim: TSCreature, killer, player: TSPlayer)=>void)
+        OnRemovePlayer(id: EventID, callback: (bg: TSBattleground,guid: uint64,player: TSPlayer, teamId: uint32)=>void)
+        OnPlayerUnderMap(id: EventID, callback: (bg: TSBattleground, player: TSPlayer, handled: TSMutable<bool>)=>void)
+        OnGenericEvent(id: EventID, callback: (bg: TSBattleground,obj: TSWorldObject,eventId: uint32,invoker: TSWorldObject)=>void)
+        OnClickFlag(id: EventID, callback: (bg: TSBattleground,player: TSPlayer,flagObj: TSGameObject)=>void)
+        OnDropFlag(id: EventID, callback: (bg: TSBattleground,player: TSPlayer)=>void)
+        OnDestroyGate(id: EventID, callback: (bg: TSBattleground,player: TSPlayer,target: TSGameObject)=>void)
+        OnOpenDoors(id: EventID, callback: (bg: TSBattleground)=>void)
+        OnCloseDoors(id: EventID, callback: (bg: TSBattleground)=>void)
+        OnReset(id: EventID, callback: (bg: TSBattleground)=>void)
+        OnCanCreate(id: EventID, callback: (bg: TSBattleground,success: TSMutable<bool>)=>void)
+        OnAchievementCriteria(id: EventID, callback: (
               bg: TSBattleground
             , criteria: uint32
             , player: TSPlayer
@@ -8106,8 +8108,8 @@ declare namespace _hidden {
             , miscValueA: uint32
             , handled: TSMutable<bool>
         )=>void)
-        OnAreaTrigger(id: uint32, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
-        OnAddGameObject(id: uint32, callback: (
+        OnAreaTrigger(id: EventID, callback: (bg: TSBattleground,player: TSPlayer,trigger: uint32, handled: TSMutable<bool>)=>void)
+        OnAddGameObject(id: EventID, callback: (
             bg: TSBattleground
           , type: uint32
           , entry: TSMutable<uint32>
@@ -8122,7 +8124,7 @@ declare namespace _hidden {
           , rot3: TSMutable<float>
       )=>void);
 
-      OnAddCreature(id: uint32, callback: (
+      OnAddCreature(id: EventID, callback: (
             bg: TSBattleground
           , type: uint32
           , entry: TSMutable<uint32>
@@ -8133,7 +8135,7 @@ declare namespace _hidden {
           , respawnTime: TSMutable<uint32>
       )=>void);
 
-      OnAddSpiritGuide(id: uint32, callback: (
+      OnAddSpiritGuide(id: EventID, callback: (
             bg: TSBattleground
           , type: uint32
           , entry: TSMutable<uint32>
@@ -8155,7 +8157,7 @@ declare namespace _hidden {
     }
 
     export class CustomPacketID {
-        OnReceive(opcode: uint32, callback: (
+        OnReceive(opcode: EventID, callback: (
               opcode: uint32
             , packet: TSPacketRead
             , player: TSPlayer
@@ -8169,8 +8171,8 @@ declare namespace _hidden {
     }
 
     export class WorldPacketID {
-        OnReceive(opcode: uint32, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
-        OnSend(opcode: uint32, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnReceive(opcode: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
+        OnSend(opcode: EventID, callback: (packet: TSWorldPacket, player: TSPlayer)=>void);
     }
 
     export class GameEvents<T> {
@@ -8180,9 +8182,9 @@ declare namespace _hidden {
     }
 
     export class GameEventID<T> {
-        OnStart(id: uint32, callback: (event: uint16)=>void)
-        UpdateState(id: uint32, callback: (event: uint16)=>void)
-        OnEnd(id: uint32, callback: (event: uint16)=>void)
+        OnStart(id: EventID, callback: (event: uint16)=>void)
+        UpdateState(id: EventID, callback: (event: uint16)=>void)
+        OnEnd(id: EventID, callback: (event: uint16)=>void)
     }
 
     export class Items<T> {
@@ -8207,24 +8209,24 @@ declare namespace _hidden {
     }
 
     export class ItemID<T> {
-        OnUse(item: uint32, callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
-        OnExpire(item: uint32, callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnRemove(item: uint32, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnCastSpell(item: uint32, callback: (item: TSItem, player: TSPlayer, unit: TSUnit, spell: TSSpellInfo, cancel: TSMutable<boolean>)=>void)
-        OnQuestAccept(item: uint32, callback: (item: TSItem, player: TSPlayer, quest: TSQuest)=>void)
-        OnGossipHello(item: uint32, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnGossipSelect(item: uint32, callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, cancel: TSMutable<boolean>)=>void)
-        OnGossipSelectCode(item: uint32, callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, text: string, cancel: TSMutable<boolean>)=>void)
+        OnUse(item: EventID, callback: (item: TSItem, player: TSPlayer, reserved: void, cancel: TSMutable<boolean>)=>void)
+        OnExpire(item: EventID, callback: (template: TSItemTemplate, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnRemove(item: EventID, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnCastSpell(item: EventID, callback: (item: TSItem, player: TSPlayer, unit: TSUnit, spell: TSSpellInfo, cancel: TSMutable<boolean>)=>void)
+        OnQuestAccept(item: EventID, callback: (item: TSItem, player: TSPlayer, quest: TSQuest)=>void)
+        OnGossipHello(item: EventID, callback: (item: TSItem, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnGossipSelect(item: EventID, callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, cancel: TSMutable<boolean>)=>void)
+        OnGossipSelectCode(item: EventID, callback: (item: TSItem, player: TSPlayer, menuId: uint32, selectionId: uint32, text: string, cancel: TSMutable<boolean>)=>void)
 
-        OnCanChangeEquipState(item: uint32, callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
-        OnUnequip(item: uint32, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
-        OnBank(item: uint32, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnCanEquip(item: uint32, callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnCanUse(item: uint32, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
-        OnCanUseType(item: uint32, callback: (item: TSItemTemplate, player: TSPlayer, result: TSMutable<uint32>)=>void);
-        OnLFGRollEarly(item: uint32, callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
-        OnDestroyEarly(item: uint32, callback: (item: TSItem, looter: TSPlayer, result: TSMutable<boolean>)=>void);
-        OnTakenAsLoot(item: uint32, callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
+        OnCanChangeEquipState(item: EventID, callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
+        OnUnequip(item: EventID, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
+        OnBank(item: EventID, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanEquip(item: EventID, callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanUse(item: EventID, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnCanUseType(item: EventID, callback: (item: TSItemTemplate, player: TSPlayer, result: TSMutable<uint32>)=>void);
+        OnLFGRollEarly(item: EventID, callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
+        OnDestroyEarly(item: EventID, callback: (item: TSItem, looter: TSPlayer, result: TSMutable<boolean>)=>void);
+        OnTakenAsLoot(item: EventID, callback: (item: TSItem, lootItem: TSLootItem, loot: TSLoot, player: TSPlayer)=>void);
     }
 
     export class GameObjects<T> {
@@ -8247,19 +8249,19 @@ declare namespace _hidden {
     }
 
     export class GameObjectID<T> {
-        OnUpdate(obj: uint32, callback: (obj: TSGameObject, diff: uint32)=>void)
-        OnDialogStatus(obj: uint32, callback: (obj: TSGameObject, player: TSPlayer)=>void)
-        OnDestroyed(obj: uint32, callback: (obj: TSGameObject, destroyer: TSWorldObject)=>void)
-        OnDamaged(obj: uint32, callback: (obj: TSGameObject, damagerOrHealer: TSWorldObject)=>void)
-        OnLootStateChanged(obj: uint32, callback: (obj: TSGameObject, state: uint32, changer: TSUnit)=>void)
-        OnGOStateChanged(obj: uint32, callback: (obj: TSGameObject, state: uint32)=>void)
-        OnGossipHello(obj: uint32, callback: (obj: TSGameObject, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
-        OnGossipSelect(obj: uint32, callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, cancel: TSMutable<boolean>)=>void)
-        OnGossipSelectCode(obj: uint32, callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, text: string, cancel: TSMutable<boolean>)=>void)
-        OnCreate(obj: uint32, callback: (obj: TSGameObject, cancel: TSMutable<boolean>)=>void)
-        OnRemove(obj: uint32, callback: (obj: TSGameObject)=>void)
-        OnUse(obj: uint32, callback: (obj: TSGameObject, user: TSUnit, cancel: TSMutable<boolean>)=>void)
-        OnQuestAccept(obj: uint32, callback: (obj: TSGameObject, player: TSPlayer, quest: TSQuest)=>void)
+        OnUpdate(obj: EventID, callback: (obj: TSGameObject, diff: uint32)=>void)
+        OnDialogStatus(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer)=>void)
+        OnDestroyed(obj: EventID, callback: (obj: TSGameObject, destroyer: TSWorldObject)=>void)
+        OnDamaged(obj: EventID, callback: (obj: TSGameObject, damagerOrHealer: TSWorldObject)=>void)
+        OnLootStateChanged(obj: EventID, callback: (obj: TSGameObject, state: uint32, changer: TSUnit)=>void)
+        OnGOStateChanged(obj: EventID, callback: (obj: TSGameObject, state: uint32)=>void)
+        OnGossipHello(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer, cancel: TSMutable<boolean>)=>void)
+        OnGossipSelect(obj: EventID, callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, cancel: TSMutable<boolean>)=>void)
+        OnGossipSelectCode(obj: EventID, callback: (obj:TSGameObject, player: TSPlayer, menuId: uint32, selection: uint32, text: string, cancel: TSMutable<boolean>)=>void)
+        OnCreate(obj: EventID, callback: (obj: TSGameObject, cancel: TSMutable<boolean>)=>void)
+        OnRemove(obj: EventID, callback: (obj: TSGameObject)=>void)
+        OnUse(obj: EventID, callback: (obj: TSGameObject, user: TSUnit, cancel: TSMutable<boolean>)=>void)
+        OnQuestAccept(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer, quest: TSQuest)=>void)
     }
 
     export class Maps<T> {
@@ -8277,17 +8279,17 @@ declare namespace _hidden {
     }
 
     export class MapID<T> {
-        OnCreate(map: uint32, callback: (map: TSMap)=>void)
-        OnUpdate(map: uint32, callback: (map: TSMap, diff: uint32)=>void)
-        OnUpdateDelayed(map: uint32, callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void)
-        OnPlayerEnter(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
-        OnPlayerLeave(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
-        OnCreatureCreate(map: uint32, callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void)
-        OnCreatureRemove(map: uint32, callback: (map: TSMap, creature: TSCreature)=>void)
+        OnCreate(map: EventID, callback: (map: TSMap)=>void)
+        OnUpdate(map: EventID, callback: (map: TSMap, diff: uint32)=>void)
+        OnUpdateDelayed(map: EventID, callback: (map: TSMap, diff: uint32, mgr: TSMapManager)=>void)
+        OnPlayerEnter(map: EventID, callback: (map: TSMap, player: TSPlayer)=>void)
+        OnPlayerLeave(map: EventID, callback: (map: TSMap, player: TSPlayer)=>void)
+        OnCreatureCreate(map: EventID, callback: (map: TSMap, creature: TSCreature, cancel: TSMutable<bool>)=>void)
+        OnCreatureRemove(map: EventID, callback: (map: TSMap, creature: TSCreature)=>void)
 
-        OnGameObjectCreate(map: uint32, callback: (map: TSMap, obj: TSGameObject, cancel: TSMutable<bool>)=>void)
-        OnGameObjectRemove(map: uint32, callback: (map: TSMap, obj: TSGameObject)=>void)
-        OnCheckEncounter(map: uint32, callback: (map: TSMap, player: TSPlayer)=>void)
+        OnGameObjectCreate(map: EventID, callback: (map: TSMap, obj: TSGameObject, cancel: TSMutable<bool>)=>void)
+        OnGameObjectRemove(map: EventID, callback: (map: TSMap, obj: TSGameObject)=>void)
+        OnCheckEncounter(map: EventID, callback: (map: TSMap, player: TSPlayer)=>void)
     }
 
     export class Instances<T> {
@@ -8308,20 +8310,20 @@ declare namespace _hidden {
     }
 
     export class InstanceID<T> {
-        OnCreate(map: uint32, callback: (instance: TSInstance)=>void)
-        OnReload(map: uint32, callback: (instance: TSInstance)=>void)
-        OnLoad(map: uint32, callback: (instance: TSInstance)=>void)
-        OnSave(map: uint32, callback: (instance: TSInstance)=>void)
-        OnUpdate(map: uint32, callback: (instance: TSInstance, diff: uint32)=>void)
-        OnPlayerEnter(map: uint32, callback: (instance: TSInstance, player: TSPlayer)=>void)
-        OnPlayerLeave(map: uint32, callback: (instance: TSInstance, player: TSPlayer)=>void)
-        OnBossStateChange(map: uint32, callback: (instance: TSInstance, id: uint32, state: uint32)=>void)
-        OnCanKillBoss(map: uint32, callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void)
-        OnFillInitialWorldStates(map: uint32, callback: (instance: TSInstance, packet: TSWorldStatePacket)=>void)
-        OnSetBossNumber(map: uint32, callback: (instance: TSInstance, num: TSMutable<uint32>)=>void)
-        OnLoadMinionData(map: uint32, callback: (instance: TSInstance)=>void)
-        OnLoadDoorData(map: uint32, callback: (instance: TSInstance)=>void)
-        OnLoadObjectData(map: uint32, callback: (instance: TSInstance)=>void)
+        OnCreate(map: EventID, callback: (instance: TSInstance)=>void)
+        OnReload(map: EventID, callback: (instance: TSInstance)=>void)
+        OnLoad(map: EventID, callback: (instance: TSInstance)=>void)
+        OnSave(map: EventID, callback: (instance: TSInstance)=>void)
+        OnUpdate(map: EventID, callback: (instance: TSInstance, diff: uint32)=>void)
+        OnPlayerEnter(map: EventID, callback: (instance: TSInstance, player: TSPlayer)=>void)
+        OnPlayerLeave(map: EventID, callback: (instance: TSInstance, player: TSPlayer)=>void)
+        OnBossStateChange(map: EventID, callback: (instance: TSInstance, id: uint32, state: uint32)=>void)
+        OnCanKillBoss(map: EventID, callback: (instance: TSInstance, bossId: uint32, player: TSPlayer, canKill: TSMutable<bool>)=>void)
+        OnFillInitialWorldStates(map: EventID, callback: (instance: TSInstance, packet: TSWorldStatePacket)=>void)
+        OnSetBossNumber(map: EventID, callback: (instance: TSInstance, num: TSMutable<uint32>)=>void)
+        OnLoadMinionData(map: EventID, callback: (instance: TSInstance)=>void)
+        OnLoadDoorData(map: EventID, callback: (instance: TSInstance)=>void)
+        OnLoadObjectData(map: EventID, callback: (instance: TSInstance)=>void)
     }
 
     export class AuctionHouse<T> {
@@ -8336,7 +8338,7 @@ declare namespace _hidden {
     }
 
     export class ConditionID<T> {
-        OnCheck(type: uint32, callback: (condition: TSCondition, sourceInfo: TSConditionSourceInfo, condMeets: TSMutable<bool>)=>void)
+        OnCheck(type: EventID, callback: (condition: TSCondition, sourceInfo: TSConditionSourceInfo, condMeets: TSMutable<bool>)=>void)
     }
 
     export class SmartActions<T> {
@@ -8345,8 +8347,8 @@ declare namespace _hidden {
     }
 
     export class SmartActionID<T> {
-        OnActivateEarly(actionType: uint32, callback: (script: TSSmartScriptValues, cancelAction: TSMutable<bool>, cancelLink: TSMutable<bool>)=>void)
-        OnActivateLate(actionType: uint32, callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
+        OnActivateEarly(actionType: EventID, callback: (script: TSSmartScriptValues, cancelAction: TSMutable<bool>, cancelLink: TSMutable<bool>)=>void)
+        OnActivateLate(actionType: EventID, callback: (script: TSSmartScriptValues, cancelLink: TSMutable<bool>)=>void)
     }
 
     export class Addon<T> {
@@ -8663,7 +8665,6 @@ declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K
 declare function CreateArray<T>(obj: T[]): TSArray<T>
 
 declare function GetID(table: string, mod: string, name: string): uint32;
-declare function GetIDRange(table: string, mod: string, name: string);
 declare function GetIDTag(mod: string, id: string): TSArray<uint32>
 
 /**
