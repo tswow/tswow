@@ -133,6 +133,8 @@ declare const enum SpellEffIndex { } /** SharedDefines.h:SpellEffIndex */
 
 declare const enum SpellEffectHandleMode { } /** Spell.h:SpellEffectHandleMode */
 
+declare const enum SpellFinishReason { } /** Spell.h:SpellFinishReason */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -7489,7 +7491,7 @@ declare namespace _hidden {
         OnSummonDies(creature: EventID, callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void);
         OnHitBySpell(creature: EventID, callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void);
         OnSpellHitTarget(creature: EventID, callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void);
-        OnSpellCastFinished(creature: EventID, callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: uint32)=>void);
+        OnSpellCastFinished(creature: EventID, callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: SpellFinishReason)=>void);
         OnJustAppeared(creature: EventID, callback: (creature: TSCreature)=>void);
         OnCharmed(creature: EventID, callback: (creature: TSCreature, isNew: boolean)=>void);
         OnReachedHome(creature: EventID, callback: (creature: TSCreature)=>void);
@@ -7715,7 +7717,7 @@ declare namespace _hidden {
         OnSummonDies(callback: (creature: TSCreature, summon: TSCreature, killer: TSUnit)=>void): T;
         OnHitBySpell(callback: (creature: TSCreature, caster: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
         OnSpellHitTarget(callback: (creature: TSCreature, target: TSWorldObject, spellInfo: TSSpellInfo)=>void): T;
-        OnSpellCastFinished(callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: uint32)=>void): T;
+        OnSpellCastFinished(callback: (creature: TSCreature, spellInfo: TSSpellInfo, reason: SpellFinishReason)=>void): T;
         OnJustAppeared(callback: (creature: TSCreature)=>void): T;
         OnCharmed(callback: (creature: TSCreature, isNew: boolean)=>void): T;
         OnReachedHome(callback: (creature: TSCreature)=>void): T;
