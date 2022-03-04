@@ -6731,7 +6731,7 @@ declare interface TSUnit extends TSWorldObject {
      * @param [SpellSchools] school = MAX_SPELL_SCHOOL : school the damage is done in or MAX_SPELL_SCHOOL for direct damage
      * @param uint32 spell = 0 : spell that inflicts the damage
      */
-    DealDamage(target : TSUnit,damage : uint32,durabilityloss : bool,school : SpellSchools,spell : uint32) : void
+    DealDamage(target : TSUnit,damage : uint32,durabilityloss : bool,school : SpellSchools,spell? : uint32) : void
 
     /**
      * Makes the [Unit] heal the target [Unit] with given spell
