@@ -3309,7 +3309,7 @@ export class Emitter {
         if (text === '') {
             this.writer.writeString(`JSTR("")`);
         } else {
-            this.writer.writeString(`JSTR("${text.split('"').join('\\"')}")`);
+            this.writer.writeString(`JSTR("${text.split('"').join('\\"').split('\\').join('\\\\')}")`);
         }
     }
 
