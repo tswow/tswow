@@ -8202,7 +8202,8 @@ declare namespace _hidden {
         OnCanChangeEquipState(callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
         OnUnequip(callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
         OnBank(callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnEquip(callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, isMerge: boolean)=>void)
         OnCanUse(callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnCanUseType(callback: (item: TSItemTemplate, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnLFGRollEarly(callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
@@ -8223,7 +8224,8 @@ declare namespace _hidden {
         OnCanChangeEquipState(item: EventID, callback: (template: TSItemTemplate, res: TSMutable<boolean>)=>void);
         OnUnequip(item: EventID, callback: (item: TSItem, player: TSPlayer, isSwap: boolean, result: TSMutable<uint32>)=>void);
         OnBank(item: EventID, callback: (item: TSItem, player: TSPlayer, bag: uint8, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
-        OnCanEquip(item: EventID, callback: (item: TSItem, player: TSPlayer, slot: uint8, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnCanEquip(item: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, swap: boolean, result: TSMutable<uint32>)=>void);
+        OnEquip(item: EventID, callback: (item: TSItem, player: TSPlayer, slot: EquipmentSlots, isMerge: boolean)=>void);
         OnCanUse(item: EventID, callback: (item: TSItem, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnCanUseType(item: EventID, callback: (item: TSItemTemplate, player: TSPlayer, result: TSMutable<uint32>)=>void);
         OnLFGRollEarly(item: EventID, callback: (item: TSItemTemplate, looted: TSWorldObject, looter: TSPlayer, result: TSMutable<int32>)=>void);
