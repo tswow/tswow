@@ -36,7 +36,7 @@ export class WorldSafeLocsRegistryClass
     }
 
     protected Table(): Table<any, WorldSafelocsQuery, WorldSafelocsRow> & { add: (id: number) => WorldSafelocsRow; } {
-        return DBC.WorldSafelocs
+        return DBC.WorldSafeLocs
     }
 
     protected ids(): DynamicIDGenerator {
@@ -64,7 +64,7 @@ export class WorldSafeLocsRegistryClass
     }
 
     protected FindByID(id: number): WorldSafelocsRow {
-        return DBC.WorldSafelocs.findById(id);
+        return DBC.WorldSafeLocs.findById(id);
     }
 
     protected EmptyQuery(): WorldSafelocsQuery {

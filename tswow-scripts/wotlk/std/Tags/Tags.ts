@@ -5,6 +5,7 @@ import { BuildArgs, ipaths } from "../../../data/Settings";
 
 const reverse: {[key: number]: [string,string][]} = {}
 const tags: {[key: string]: number[]} = {}
+const uniqueTags: {[key: string]: boolean} = {}
 
 function fullTagName(mod: string, name: string) {
     return `${mod}.${name}`
@@ -12,6 +13,9 @@ function fullTagName(mod: string, name: string) {
 
 function AddTag(mod: string, name: string, id: number) {
     let fullTag = fullTagName(mod,name);
+    if(uniqueTags[fullTag]) {
+        throw new Error(`Attempted to add tag ${mod}:${name}, but another entity already claimed it as unique.`)
+    }
     let map = (tags[fullTag]||(tags[fullTag] = []))
     if(map.includes(id)) {
         return;
@@ -30,6 +34,13 @@ function RemoveTag(mod: string, name: string, id: number) {
 
 function TagExists(mod: string, name: string, id: number) {
     return (tags[fullTagName(mod,name)]||[]).includes(id)
+}
+
+function AddUniqueTag(mod: string, name: string, id: number) {
+    if(tags[fullTagName(mod,name)] !== undefined) {
+        throw new Error(`Attempted claim tag ${mod}:${name} as unique, but it's already in use!`);
+    }
+    AddTag(mod,name,id);
 }
 
 export class EntityTag extends CellSystemTop {
@@ -74,6 +85,11 @@ export class EntityTags<T> extends MultiRowSystem<EntityTag,T> {
         return this.owner;
     }
 
+    addUnique(mod: string, id: string) {
+        AddUniqueTag(mod,id,this.id);
+        return this.owner;
+    }
+
     protected getAllRows(): EntityTag[] {
         return (reverse[this.id]||[])
             .map(([mod,name])=>new EntityTag(this.id,mod,name))
@@ -87,6 +103,10 @@ export class EntityTags<T> extends MultiRowSystem<EntityTag,T> {
 export const Tags = {
     add(mod: string, name: string, id: number) {
         AddTag(mod,name,id)
+    },
+
+    addUnique(mod: string, name: string, id: number) {
+        AddUniqueTag(mod, name, id);
     },
 
     remove(mod: string, name: string, id: number) {

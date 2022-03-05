@@ -22,8 +22,10 @@ import ExtractZip = require('extract-zip')
 export namespace Boost {
     export async function install() {
         await DownloadFile(BOOST_URL,bpaths.boostArchive.get())
-        if(!bpaths.boost.exists()) {
-            await ExtractZip(bpaths.boostArchive.get(),{dir:bpaths.boost.boost_1_72_0.abs().get()});
+
+        if(!bpaths.boost.boost_1_74_0.exists())
+        {
+            await ExtractZip(bpaths.boostArchive.get(),{dir:bpaths.boost.boost_1_74_0.abs().get()});
         }
 
         // Delete unused libraries
@@ -56,7 +58,7 @@ export namespace Boost {
             , "libboost_log_setup-vc142-mt-x64-1_72.lib"
             , "libboost_locale-vc142-mt-gd-x64-1_72.lib"
         ].forEach(x=>{
-            bpaths.boost.boost_1_72_0.lib64_msvc_14_2.join(x)
+            bpaths.boost.boost_1_74_0.lib64_msvc_14_2.join(x)
                 .remove()
         })
 
@@ -64,6 +66,6 @@ export namespace Boost {
             bpaths.boostArchive.remove();
         }
 
-        return bpaths.boost.boost_1_72_0.abs().get();
+        return bpaths.boost.boost_1_74_0.abs().get();
     }
 }

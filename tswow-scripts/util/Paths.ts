@@ -486,11 +486,11 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         boost: dir({
-            boost_1_72_0: dir({
+            boost_1_74_0: dir({
                 lib64_msvc_14_2: dir({})
             })
         }),
-        boostArchive: file('boost_1_72_0.zip'),
+        boostArchive: file('boost_1_74_0.zip'),
         tdbArchive: file(tdb.substring(0,tdb.length-3)+'7z'),
         tdbSql: file(tdb),
         sevenZipArchive: file('7za920.zip'),
