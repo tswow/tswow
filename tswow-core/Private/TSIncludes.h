@@ -41,6 +41,7 @@
 #define HIGHGUID_MO_TRANSPORT   HighGuid::Mo_Transport
 #define HIGHGUID_INSTANCE       HighGuid::Instance
 #define HIGHGUID_GROUP          HighGuid::Group
+#define WOTLK                   1
 
 #define MAKE_NEW_GUID(l, e, h)  ObjectGuid(h, e, l)
 #define GUID_ENPART(guid)       ObjectGuid(guid).GetEntry()

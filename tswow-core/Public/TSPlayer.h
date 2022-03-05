@@ -238,7 +238,8 @@ public:
 	void AddXP(uint32 xp);
 	void ToggleDND();
 	void ToggleAFK();
-	TSItem EquipItem(TSItem item, uint32 slot, uint32 entry);
+	TSItem EquipItem(TSItem item, uint32 slot);
+	TSItem EquipItem(uint32 entry, uint32 slot);
 	bool CanEquipItem(TSItem item, uint32 slot, uint32 entry);
 	float GetAverageItemLevel();
 	void UnsetKnownTitle(uint32 id);

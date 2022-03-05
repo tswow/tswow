@@ -65,8 +65,8 @@ finish('bg-worldsafelocs',()=>{
 
             const hordeLocId = sql.HordeStartLoc.get()
             const allyLocId = sql.AllianceStartLoc.get()
-            const hordeLoc = DBC.WorldSafelocs.findById(hordeLocId);
-            const allyLoc = DBC.WorldSafelocs.findById(allyLocId);
+            const hordeLoc = DBC.WorldSafeLocs.findById(hordeLocId);
+            const allyLoc = DBC.WorldSafeLocs.findById(allyLocId);
 
             if(hordeLoc === undefined) {
                 throw new Error(

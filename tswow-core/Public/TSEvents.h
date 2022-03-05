@@ -152,6 +152,11 @@ EVENT_TYPE(UnitOnCalcScaleThreat
 EVENT_TYPE(UnitOnDeathEarly,TSUnit /*victim*/, TSUnit /*killer*/)
 EVENT_TYPE(UnitOnDeath,TSUnit /*victim*/, TSUnit /*killer*/)
 
+EVENT_TYPE(UnitOnEnterCombat,TSUnit /*unit*/)
+EVENT_TYPE(UnitOnExitCombat, TSUnit /*unit*/)
+EVENT_TYPE(UnitOnEnterCombatWith, TSUnit /*me*/, TSUnit /*other*/)
+EVENT_TYPE(UnitOnExitCombatWith, TSUnit /*me*/, TSUnit /*other*/)
+
 // WeatherScript
 //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
 
@@ -684,6 +689,7 @@ EVENT_TYPE(ItemOnCanChangeEquipState,TSItemTemplate,TSMutable<bool>)
 EVENT_TYPE(ItemOnUnequip,TSItem,TSPlayer,bool,TSMutable<uint32> /*result*/)
 EVENT_TYPE(ItemOnBank,TSItem,TSPlayer,uint8/*bag*/,uint8/*slot*/,bool/*swap*/,TSMutable<uint32> /*result*/)
 EVENT_TYPE(ItemOnCanEquip,TSItem,TSPlayer,uint8/*slot*/,bool/*swap*/,TSMutable<uint32> /*result*/)
+EVENT_TYPE(ItemOnEquip,TSItem,TSPlayer,uint8/*slot*/, bool /*isMerge*/)
 EVENT_TYPE(ItemOnCanUse,TSItem,TSPlayer,TSMutable<uint32> /*result*/)
 EVENT_TYPE(ItemOnCanUseType,TSItemTemplate,TSPlayer,TSMutable<uint32> /*result*/)
 EVENT_TYPE(ItemOnLFGRollEarly,TSItemTemplate,TSWorldObject /*looted*/,TSPlayer/*looter*/,TSMutable<int32> /*result*/)
@@ -706,6 +712,7 @@ struct TSItemEvents {
      EVENT(ItemOnUnequip)
      EVENT(ItemOnBank)
      EVENT(ItemOnCanEquip)
+     EVENT(ItemOnEquip)
      EVENT(ItemOnCanUse)
      EVENT(ItemOnCanUseType)
      EVENT(ItemOnLFGRollEarly)
@@ -1124,6 +1131,7 @@ struct TSEventStore
     EVENT(ItemOnUnequip)
     EVENT(ItemOnBank)
     EVENT(ItemOnCanEquip)
+    EVENT(ItemOnEquip)
     EVENT(ItemOnCanUse)
     EVENT(ItemOnCanUseType)
     EVENT(ItemOnLFGRollEarly)
@@ -1265,6 +1273,11 @@ struct TSEventStore
     EVENT(UnitOnCalcScaleThreat)
     EVENT(UnitOnDeathEarly)
     EVENT(UnitOnDeath)
+
+    EVENT(UnitOnEnterCombat)
+    EVENT(UnitOnExitCombat)
+    EVENT(UnitOnEnterCombatWith)
+    EVENT(UnitOnExitCombatWith)
 
     // CreatureScript
     EVENT(CreatureOnMoveInLOS)
@@ -1656,6 +1669,10 @@ public:
         EVENT_HANDLE(Unit,OnCalcScaleThreat)
         EVENT_HANDLE(Unit,OnDeathEarly)
         EVENT_HANDLE(Unit,OnDeath)
+        EVENT_HANDLE(Unit,OnEnterCombat)
+        EVENT_HANDLE(Unit,OnExitCombat)
+        EVENT_HANDLE(Unit,OnEnterCombatWith)
+        EVENT_HANDLE(Unit,OnExitCombatWith)
     } Unit;
 
      struct SpellEvents : public EventHandler
@@ -2034,6 +2051,7 @@ public:
          EVENT_HANDLE(Item,OnUnequip)
          EVENT_HANDLE(Item,OnBank)
          EVENT_HANDLE(Item,OnCanEquip)
+         EVENT_HANDLE(Item,OnEquip)
          EVENT_HANDLE(Item,OnCanUse)
          EVENT_HANDLE(Item,OnCanUseType)
          EVENT_HANDLE(Item,OnLFGRollEarly)
@@ -2058,6 +2076,7 @@ public:
          MAP_EVENT_HANDLE(Item,OnUnequip)
          MAP_EVENT_HANDLE(Item,OnBank)
          MAP_EVENT_HANDLE(Item,OnCanEquip)
+         MAP_EVENT_HANDLE(Item,OnEquip)
          MAP_EVENT_HANDLE(Item,OnCanUse)
          MAP_EVENT_HANDLE(Item,OnCanUseType)
          MAP_EVENT_HANDLE(Item,OnLFGRollEarly)

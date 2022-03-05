@@ -185,7 +185,7 @@ export namespace TrinityCore {
                 +` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
                 +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
-                +` -DBOOST_ROOT="${bpaths.boost.boost_1_72_0.abs().get()}"`
+                +` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
                 +` -S "${spaths.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
