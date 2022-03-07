@@ -94,13 +94,13 @@ static void readArray(TSJsonArray self, nlohmann::json const& source)
         case nlohmann::json::value_t::object: {
             TSJsonObject obj;
             readObject(obj, val);
-            self.PushObject(obj);
+            self.PushJsonObject(obj);
             break;
         }
         case nlohmann::json::value_t::array: {
             TSJsonArray arr;
             readArray(arr, val);
-            self.PushArray(arr);
+            self.PushJsonArray(arr);
             break;
         }
         case nlohmann::json::value_t::null: {
