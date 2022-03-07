@@ -163,13 +163,13 @@ static void readObject(TSJsonObject self, nlohmann::json const& source)
         case nlohmann::json::value_t::object: {
             TSJsonObject obj;
             readObject(obj, pair.value());
-            self.SetObject(TSString(pair.key()), obj);
+            self.SetJsonObject(TSString(pair.key()), obj);
             break;
         }
         case nlohmann::json::value_t::array: {
             TSJsonArray arr;
             readArray(arr, pair.value());
-            self.SetArray(TSString(pair.key()), arr);
+            self.SetJsonArray(TSString(pair.key()), arr);
             break;
         }
         case nlohmann::json::value_t::null: {
@@ -275,32 +275,32 @@ bool TSJsonObject::HasNull(TSString key)
     return contains(key, JsonType::NULL_LITERAL);
 }
 
-TSJsonObject TSJsonObject::SetObject(TSString key, TSJsonObject value)
+TSJsonObject TSJsonObject::SetJsonObject(TSString key, TSJsonObject value)
 {
     return set(key, JsonType::OBJECT, value);
 }
 
-bool TSJsonObject::HasObject(TSString key)
+bool TSJsonObject::HasJsonObject(TSString key)
 {
     return contains(key, JsonType::OBJECT);
 }
 
-TSJsonObject TSJsonObject::GetObject(TSString key, TSJsonObject value)
+TSJsonObject TSJsonObject::GetJsonObject(TSString key, TSJsonObject value)
 {
     return get(key, JsonType::OBJECT, value);
 }
 
-TSJsonObject TSJsonObject::SetArray(TSString key, TSJsonArray value = TSJsonArray())
+TSJsonObject TSJsonObject::SetJsonArray(TSString key, TSJsonArray value = TSJsonArray())
 {
     return set(key, JsonType::LIST, value);
 }
 
-bool TSJsonObject::HasArray(TSString key)
+bool TSJsonObject::HasJsonArray(TSString key)
 {
     return contains(key, JsonType::LIST);
 }
 
-TSJsonArray TSJsonObject::GetArray(TSString key, TSJsonArray value = TSJsonArray())
+TSJsonArray TSJsonObject::GetJsonArray(TSString key, TSJsonArray value = TSJsonArray())
 {
     return get(key, JsonType::LIST, value);
 }
@@ -489,52 +489,52 @@ TSJsonArray TSJsonArray::PushString(TSString value)
     return push(JsonType::STRING, value);
 }
 
-TSJsonArray TSJsonArray::SetObject(unsigned key, TSJsonObject value)
+TSJsonArray TSJsonArray::SetJsonObject(unsigned key, TSJsonObject value)
 {
     return set(key, JsonType::OBJECT, value);
 }
 
-bool TSJsonArray::HasObject(unsigned key)
+bool TSJsonArray::HasJsonObject(unsigned key)
 {
     return contains(key, JsonType::OBJECT);
 }
 
-TSJsonObject TSJsonArray::GetObject(unsigned key, TSJsonObject value)
+TSJsonObject TSJsonArray::GetJsonObject(unsigned key, TSJsonObject value)
 {
     return get(key, JsonType::OBJECT, value);
 }
 
-TSJsonArray TSJsonArray::InsertObject(unsigned key, TSJsonObject value)
+TSJsonArray TSJsonArray::InsertJsonObject(unsigned key, TSJsonObject value)
 {
     return insert(key, JsonType::OBJECT, value);
 }
 
-TSJsonArray TSJsonArray::PushObject(TSJsonObject value)
+TSJsonArray TSJsonArray::PushJsonObject(TSJsonObject value)
 {
     return push(JsonType::OBJECT, value);
 }
 
-TSJsonArray TSJsonArray::SetArray(unsigned key, TSJsonArray arr)
+TSJsonArray TSJsonArray::SetJsonArray(unsigned key, TSJsonArray arr)
 {
     return set(key, JsonType::LIST, arr);
 }
 
-bool TSJsonArray::HasArray(unsigned key)
+bool TSJsonArray::HasJsonArray(unsigned key)
 {
     return contains(key, JsonType::LIST);
 }
 
-TSJsonArray TSJsonArray::GetArray(unsigned key, TSJsonArray value)
+TSJsonArray TSJsonArray::GetJsonArray(unsigned key, TSJsonArray value)
 {
     return get(key, JsonType::LIST, value);
 }
 
-TSJsonArray TSJsonArray::InsertArray(unsigned key, TSJsonArray value)
+TSJsonArray TSJsonArray::InsertJsonArray(unsigned key, TSJsonArray value)
 {
     return insert(key, JsonType::LIST, value);
 }
 
-TSJsonArray TSJsonArray::PushArray(TSJsonArray value)
+TSJsonArray TSJsonArray::PushJsonArray(TSJsonArray value)
 {
     return push(JsonType::LIST, value);
 }

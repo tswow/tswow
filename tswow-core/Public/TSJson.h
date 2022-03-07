@@ -62,13 +62,13 @@ public:
     TSJsonObject SetNull(TSString key);
     bool HasNull(TSString key);
 
-    TSJsonObject SetObject(TSString key, TSJsonObject value = TSJsonObject());
-    bool HasObject(TSString key);
-    TSJsonObject GetObject(TSString key, TSJsonObject value = TSJsonObject());
+    TSJsonObject SetJsonObject(TSString key, TSJsonObject value = TSJsonObject());
+    bool HasJsonObject(TSString key);
+    TSJsonObject GetJsonObject(TSString key, TSJsonObject value = TSJsonObject());
 
-    TSJsonArray GetArray(TSString key, TSJsonArray arr);
-    bool HasArray(TSString key);
-    TSJsonObject SetArray(TSString key, TSJsonArray value);
+    TSJsonArray GetJsonArray(TSString key, TSJsonArray arr);
+    bool HasJsonArray(TSString key);
+    TSJsonObject SetJsonArray(TSString key, TSJsonArray value);
     TSString toString(int indents = -1);
     TSJsonObject Remove(TSString key);
     unsigned get_length();
@@ -108,24 +108,24 @@ public:
     bool HasString(unsigned key);
     TSString GetString(unsigned key, TSString def = JSTR(""));
     TSJsonArray InsertString(unsigned key, TSString value);
-    TSJsonArray PushString(TSString value); 
+    TSJsonArray PushString(TSString value);
 
     TSJsonArray SetNull(unsigned key);
     bool HasNull(unsigned key);
     TSJsonArray InsertNull(unsigned key);
     TSJsonArray PushNull();
 
-    TSJsonArray SetObject(unsigned key, TSJsonObject value = TSJsonObject());
-    bool HasObject(unsigned key);
-    TSJsonObject GetObject(unsigned key, TSJsonObject value = TSJsonObject());
-    TSJsonArray InsertObject(unsigned key, TSJsonObject value = TSJsonObject());
-    TSJsonArray PushObject(TSJsonObject value = TSJsonObject());
+    TSJsonArray SetJsonObject(unsigned key, TSJsonObject value = TSJsonObject());
+    bool HasJsonObject(unsigned key);
+    TSJsonObject GetJsonObject(unsigned key, TSJsonObject value = TSJsonObject());
+    TSJsonArray InsertJsonObject(unsigned key, TSJsonObject value = TSJsonObject());
+    TSJsonArray PushJsonObject(TSJsonObject value = TSJsonObject());
 
-    TSJsonArray SetArray(unsigned key, TSJsonArray arr = TSJsonArray());
-    bool HasArray(unsigned key);
-    TSJsonArray GetArray(unsigned key, TSJsonArray value = TSJsonArray());
-    TSJsonArray InsertArray(unsigned key, TSJsonArray value = TSJsonArray());
-    TSJsonArray PushArray(TSJsonArray value = TSJsonArray());
+    TSJsonArray SetJsonArray(unsigned key, TSJsonArray arr = TSJsonArray());
+    bool HasJsonArray(unsigned key);
+    TSJsonArray GetJsonArray(unsigned key, TSJsonArray value = TSJsonArray());
+    TSJsonArray InsertJsonArray(unsigned key, TSJsonArray value = TSJsonArray());
+    TSJsonArray PushJsonArray(TSJsonArray value = TSJsonArray());
 
     TSJsonArray Remove(unsigned key);
     void Parse(TSString json);

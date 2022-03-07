@@ -210,13 +210,13 @@ public:
     bool HasString(TSString key) { return getData()->m_json.HasString(key); }
     TSString GetString(TSString key, TSString def = JSTR("")) { return getData()->m_json.GetString(key, def); }
 
-    void SetJsonObject(TSString key, TSJsonObject value) { getData()->m_json.SetObject(key, value); }
-    bool HasJsonObject(TSString key) { return getData()->m_json.HasObject(key); }
-    TSJsonObject GetJsonObject(TSString key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.GetObject(key, def); }
+    void SetJsonObject(TSString key, TSJsonObject value) { getData()->m_json.SetJsonObject(key, value); }
+    bool HasJsonObject(TSString key) { return getData()->m_json.HasJsonObject(key); }
+    TSJsonObject GetJsonObject(TSString key, TSJsonObject def = TSJsonObject()) { return getData()->m_json.GetJsonObject(key, def); }
 
-    void SetJsonArray(TSString key, TSJsonArray value) { getData()->m_json.SetArray(key, value); }
-    bool HasJsonArray(TSString key) { return getData()->m_json.HasArray(key); }
-    TSJsonArray GetJsonArray(TSString key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.GetArray(key, def); }
+    void SetJsonArray(TSString key, TSJsonArray value) { getData()->m_json.SetJsonArray(key, value); }
+    bool HasJsonArray(TSString key) { return getData()->m_json.HasJsonArray(key); }
+    TSJsonArray GetJsonArray(TSString key, TSJsonArray def = TSJsonArray()) { return getData()->m_json.GetJsonArray(key, def); }
 
     // backwards compatibility
     void SetUInt(TSString key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
