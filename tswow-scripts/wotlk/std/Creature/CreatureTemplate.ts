@@ -45,6 +45,7 @@ import { CreatureDamageSchool } from "./CreatureDamageSchool";
 import { CreatureDefaultTrainer } from "./CreatureDefaultTrainer";
 import { CREATURE_DEFAULT_SPAWNTIME } from "./CreatureDefines";
 import { CreatureFamily } from "./CreatureFamily";
+import { CreatureFlagsExtra } from "./CreatureFlagsExtra";
 import { CreatureGold } from "./CreatureGold";
 import { CreatureIconNames } from "./CreatureIconNames";
 import { CreatureInstance } from "./CreatureInstance";
@@ -259,7 +260,7 @@ export class CreatureTemplate extends MainEntityID<creature_templateRow> {
         return makeMaskCell32(DynFlags,this, this.row.dynamicflags);
     }
     get UnitFlags() { return new UnitFlags(this); }
-    get FlagsExtra() { return this.wrap(this.row.flags_extra); }
+    get FlagsExtra() { return makeMaskCell32(CreatureFlagsExtra,this, this.row.flags_extra); }
     get UnitClass() {
         return makeEnumCell(UnitClass,this, this.row.unit_class);
     }
