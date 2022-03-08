@@ -1,6 +1,7 @@
 import { BuildType, DEFAULT_BUILD_TYPE } from "../util/BuildType";
 import { commands } from "../util/Commands";
 import { ConfigFile, patchTCConfig, Property, Section } from "../util/ConfigFile";
+import { EmulatorCore } from "../util/EmulatorCore";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
 import { Process } from "../util/Process";
@@ -261,6 +262,8 @@ export class Realm {
         return termCustom('realm',this.fullName)
     }
 
+    get core(): EmulatorCore {  return this.config.Dataset.config.EmulatorCore }
+
     async start(type: BuildType) {
         term.log(this.logName(),`Starting worlserver for ${this.config.RealmName}...`)
         this.lastBuildType = type;
@@ -307,23 +310,35 @@ export class Realm {
                 : '"NodeConfig.MySQLExecutable"'
         )
 
+        if(this.core === 'trinitycore') {
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',1)
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableReCompiler',0)
+        }
+
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.EnableDatabases', 0)
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.AutoSetup', 0)
         patchTCConfig(this.path.worldserver_conf.get(), 'Updates.Redundancy', 0)
         patchTCConfig(this.path.worldserver_conf.get(), 'RealmID',this.getID())
-        patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',1)
-        patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableReCompiler',0)
         patchTCConfig(this.path.worldserver_conf.get(), 'DataDir',this.config.Dataset.path.abs().get())
 
-        this.worldserver.startIn(this.path.get(),
-            wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()),
-                [`-c${wfs.absPath(this.path.worldserver_conf.get())}`]);
+        switch(this.core) {
+            case 'azerothcore':
+                this.path.worldserver_conf.copy(this.path.join('configs/worldserver.conf.dist'))
+                this.worldserver.startIn(this.path.get(),
+                    wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()));
+                break;
+            case 'trinitycore':
+                this.worldserver.startIn(this.path.get(),
+                    wfs.absPath(ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(type).worldserver.get()),
+                        [`-c${wfs.absPath(this.path.worldserver_conf.get())}`]);
+                break;
+        }
     }
 
     async connect() {
         await this.characters.connect()
         await this.config.Dataset.connect();
-        await mysql.installCharacters(this.characters);
+        await mysql.installCharacters(this.characters,this.core);
     }
 
     sendWorldserverCommand(command: string, useNewline: boolean = true) {

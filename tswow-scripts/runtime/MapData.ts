@@ -15,6 +15,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { BuildType } from '../util/BuildType';
+import { mpath, wfs } from '../util/FileSystem';
+import { WNode } from '../util/FileTree';
 import { ipaths } from '../util/Paths';
 import { wsys } from '../util/System';
 import { util } from '../util/Util';
@@ -34,10 +36,11 @@ export namespace MapData {
       , type: BuildType = NodeConfig.DefaultBuildType
     ) {
       dataset.path.dbc_temp.mkdir();
+
       wsys.exec(
         `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).mapextractor.get()}`
           + ` -e 2`
-          + ` -d 0`
+          + (dataset.config.EmulatorCore === 'trinitycore' ? ` -d 0` : '')
           + ` -o ${dataset.path.dbc_temp.abs()}`
           + ` -i ${dataset.client.path.abs()}`
         , 'inherit')
@@ -70,16 +73,34 @@ export namespace MapData {
       //, maps: number[] = []
       //, tiles: number[] = []
     ) {
-      let prog = `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).vmap4extractor.get()}`
-        + ` -o ${dataset.path.Buildings.abs()}`
-        + ` -i ${dataset.client.path.Data.abs()}/`
-      wsys.exec(prog,'inherit')
+      switch(dataset.config.EmulatorCore) {
+        case 'trinitycore':
+          let prog = `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).vmap4extractor.get()}`
+            + ` -o ${dataset.path.Buildings.abs()}`
+            + ` -i ${dataset.client.path.Data.abs()}/`
+          wsys.exec(prog,'inherit')
+          break;
+        case 'azerothcore':
+          wfs.remove(mpath(dataset.config.client_path,'Buildings'))
+          ipaths.bin.core.pick('azerothcore').build.pick(type).vmap4extractor
+            .copy(mpath(dataset.config.client_path,'vmap4extractor.exe'))
+            wsys.execIn(dataset.config.client_path,'vmap4extractor.exe','inherit')
+          new WNode(dataset.config.client_path).join('Buildings').copy(dataset.path.Buildings)
+          break;
+      }
     }
 
     export function vmap_assemble(
         dataset: Dataset
       , type: BuildType = NodeConfig.DefaultBuildType
     ) {
+      switch(dataset.config.EmulatorCore) {
+        case 'trinitycore':
+          break;
+        case 'azerothcore':
+          dataset.path.vmaps.mkdir();
+          break;
+      }
         let prog = `${ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(type).vmap4assembler.get()}`
           + ` ${dataset.path.Buildings.get()} ${dataset.path.vmaps.get()}`
         wsys.exec(prog,'inherit');

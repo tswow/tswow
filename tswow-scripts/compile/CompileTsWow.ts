@@ -15,13 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { commands } from '../util/Commands';
-import { wfs } from '../util/FileSystem';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { term } from '../util/Terminal';
 import { setContext } from '../util/TSWoWContext';
 import { SevenZipInstall } from './7Zip';
 import { ADTCreator } from './ADTCreator';
+import { AzerothCore } from './AzerothCore';
 import { BLPConverter } from './BLPConverter';
 import { Boost } from './Boost';
 import { isInteractive } from './BuildConfig';
@@ -64,6 +64,15 @@ async function compile(type: string, compileArgs: string[]) {
         if (type == 'trinitycore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
     }
 
+    if (types.includes('full') || types.includes('release')) {
+        await AzerothCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs);
+    } else {
+        // note: we purposefully don't build this as part of full package yet, so don't use isType
+        if (type == 'azerothcore-release') { await TrinityCore.install(cmake, openssl, mysql, 'Release', compileArgs); }
+        if (type == 'azerothcore-relwithdebinfo') { await AzerothCore.install(cmake, openssl, mysql, 'RelWithDebInfo', compileArgs); }
+        if (type == 'azerothcore-debug') { await TrinityCore.install(cmake, openssl, mysql, 'Debug', compileArgs); }
+    }
+
     if (isType('mpqbuilder')) { await MPQBuilder.create(cmake); }
     if (isType('blpconverter')) { await BLPConverter.install(cmake); }
     if (isWindows() && isType('adtcreator')) { await ADTCreator.create(cmake); }
@@ -97,8 +106,26 @@ async function main() {
     await compile('scripts', []);
 
     const installedPrograms =
-        ['trinitycore','trinitycore-release', 'trinitycore-relwithdebinfo', 'trinitycore-debug', 'mpqbuilder', 'blpconverter',
-         'config', 'database', 'full', 'scripts', 'clean-install', 'clean-build', 'release', 'adtcreator'];
+        [
+              'trinitycore'
+            , 'trinitycore-release'
+            , 'trinitycore-relwithdebinfo'
+            , 'trinitycore-debug'
+            , 'azerothcore'
+            , 'azerothcore-release'
+            , 'azerothcore-relwithdebinfo'
+            , 'azerothcore-debug'
+            , 'mpqbuilder'
+            , 'blpconverter'
+            , 'config'
+            , 'database'
+            , 'full'
+            , 'scripts'
+            , 'clean-install'
+            , 'clean-build'
+            , 'release'
+            , 'adtcreator'
+        ];
 
     for (const val of installedPrograms) {
         build.addCommand(val, '', `Builds ${val}`, async(args) => await compile(val, args));

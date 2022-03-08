@@ -141,9 +141,25 @@ export class Dataset {
                 await this.realms()
                     .map(x=>x.worldserver.isRunning() ? x.worldserver.stop() : undefined)
             }
-            await mysql.rebuildDatabase(db,ipaths.bin.tdb.get());
+
+            switch(this.config.EmulatorCore) {
+                case 'azerothcore':
+                    await mysql.rebuildDatabase(db,ipaths.bin.sql_ac.db_world.get());
+                    break;
+                case 'trinitycore':
+                    await mysql.rebuildDatabase(db,ipaths.bin.tdb.get());
+                    break;
+            }
         }
-        await mysql.applySQLFiles(db,'world');
+
+        switch(this.config.EmulatorCore) {
+            case 'trinitycore':
+                await mysql.applySQLFiles(db,'world');
+                break;
+            case 'azerothcore':
+                // todo: updates
+                break;
+        }
     }
 
     async setupDatabases(type: 'DEST'|'SOURCE'|'BOTH', force: boolean) {

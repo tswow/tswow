@@ -265,6 +265,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             addons: dir({}),
             revisions: dir({
                 trinitycore: file('trinitycore'),
+                azerothcore: file('azerothcore'),
                 tswow: file('tswow'),
             }),
             scripts: dir({
@@ -334,6 +335,13 @@ export function InstallPath(pathIn: string, tdb: string) {
             tmp: dir({
                 file_changes_txt: file('file_changes.txt'),
             }),
+
+            sql_ac: dir({
+                db_auth: file('db_auth.sql'),
+                db_characters: file('db_characters.sql'),
+                db_world: file('db_world.sql'),
+            }),
+
             sql: dir({
                 characters_create_sql: file('characters_create.sql'),
                 auth_create_sql: file('auth_create.sql'),
@@ -357,7 +365,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                 RequireStub_lua: file('RequireStub.lua'),
                 tsconfig_json: file('tsconfig.json')
             }),
-            core: dyndir(key=>({
+            core: dyndir(core=>({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({
                     scripts: dir({
                         moduleLib: dynfile((mod)=>isWindows()
@@ -372,8 +380,10 @@ export function InstallPath(pathIn: string, tdb: string) {
                     vmap4assembler: file(`vmap4assembler${isWindows()?'.exe':''}`),
                     vmap4extractor: file(`vmap4extractor${isWindows()?'.exe':''}`),
                     authserver: file(`authserver${isWindows()?'.exe':''}`),
-                    authserver_conf_dist: file(`authserver.conf.dist`),
-                    worldserver_conf_dist: file(`worldserver.conf.dist`),
+
+                    authserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}authserver.conf.dist`),
+                    worldserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}worldserver.conf.dist`),
+
                     libcrypto: file('libcrypto-1_1-x64.dll'),
                     configs: custom((i)=>generateTree(i,dir({}))),
                 }))
@@ -506,6 +516,18 @@ export function BuildPaths(pathIn: string, tdb: string) {
             identify_exe: file('identify.exe'),
         }),
 
+        AzerothCore: dir({
+            bin: dir({
+                // TODO: fix
+                libraries: custom(pathIn=>(type: string)=>{
+                    return []
+                }),
+                configs: custom((k)=>(name: string)=>{
+                    return generateTree(mpath(k,'bin',name),dir({}))
+                }),
+            })
+        }),
+
         TrinityCore: dir({
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
@@ -622,6 +644,20 @@ export function SourcePaths(pathIn: string) {
 
         client_extensions: dirn('client-extensions',{
             CustomPackets: dir({})
+        }),
+
+        cores: dir({
+            AzerothCore: dirn('azerothcore-wotlk',{
+                data: dir({
+                    sql: dir({
+                        type: enumDir({base:0,updates:0,custom:0},()=>({
+                            db_auth: dir({}),
+                            db_characters: dir({}),
+                            db_world: dir({}),
+                        }))
+                    })
+                })
+            })
         }),
 
         TrinityCore: dir({

@@ -304,6 +304,11 @@ export class WFile extends WNode {
         return false;
     }
 
+    append(text: string) {
+        wfs.mkDirs(this.dirname());
+        fs.appendFileSync(this.path,text);
+    }
+
     write(text: string, overwrite: Overwrite = 'OVERWRITE') {
         wfs.mkDirs(this.dirname());
         if(overwrite === 'OVERWRITE' || ! this.exists()) {
@@ -389,6 +394,10 @@ export class WDirectory extends WNode {
 
     mkdir() {
         return wfs.mkDirs(this.path,false);
+    }
+
+    iterateDef(callback: (node: WNode)=>'HALT'|'ENDPOINT'|void) {
+        return this.iterate('RECURSE','BOTH','FULL',callback);
     }
 
     iterate(
