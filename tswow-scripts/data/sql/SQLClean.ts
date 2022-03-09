@@ -1,3 +1,4 @@
+import { isTrinityCore } from "../Settings";
 import { SqlConnection } from "./SQLConnection";
 
 export function cleanSQL() {
@@ -40,53 +41,61 @@ export function cleanSQL() {
     col('spell_custom_attr');
     col('spell_proc')
     col('spell_group')
-    col('spell_autolearn')
+    if(isTrinityCore()) {
+        col('spell_autolearn')
+    }
     col('creature_queststarter')
     col('creature_questender')
     col('gameobject_template')
     col('areatrigger_teleport')
-    col('instance_addon')
-    col('instance_boss_boundary')
-    col('instance_boss_creature')
-    col('instance_encounter_achievement')
-    col('instance_door_object')
+    if(isTrinityCore()) {
+        col('instance_addon')
+        col('instance_boss_boundary')
+        col('instance_boss_creature')
+        col('instance_encounter_achievement')
+        col('instance_door_object')
+    }
+    col('graveyard_zone')
+    col('spell_target_position')
+    col('spell_bonus_data')
+    col('smart_scripts')
+    col('gossip_menu_option')
+    col('gossip_menu')
+    if(isTrinityCore()) {
+        col('trainer_spell')
+    }
+    col('waypoints')
+    col('npc_vendor')
+    col('conditions')
+    col('creature')
+    col('gameobject')
+    col('playercreateinfo_skills')
+    col('playercreateinfo_spell_custom')
+    col('mail_loot_template')
+    col('fishing_loot_template')
+    col('disenchant_loot_template')
+    col('gameobject_loot_template')
+    col('item_loot_template')
+    col('milling_loot_template')
+    col('pickpocketing_loot_template')
+    col('prospecting_loot_template')
+    col('reference_loot_template')
+    col('skinning_loot_template')
+    col('spell_loot_template')
+    col('creature_text')
+    if(isTrinityCore()) {
+        col('creature_template_outfits')
+    }
+    col('transports')
+    col('quest_poi_points')
+    col('quest_poi')
+    col('lfg_dungeon_template')
+    if(isTrinityCore()) {
+        col('access_requirement')
+    }
 
-    q('DELETE FROM graveyard_zone WHERE comment = "tswow";');
-    q('DELETE FROM spell_target_position WHERE VerifiedBuild = 17688;');
-    q('DELETE FROM spell_bonus_data WHERE comments = "tswow";');
-    q('DELETE FROM smart_scripts WHERE comment = "tswow";');
-    q('DELETE FROM gossip_menu_option WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM gossip_menu WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM trainer_spell WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM waypoints WHERE point_comment = "tswow";')
-    q('DELETE FROM npc_vendor WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM conditions WHERE Comment = "tswow";')
-    q('DELETE FROM creature WHERE VerifiedBuild = 17688 OR VerifiedBuild = 17689;')
-    q('DELETE FROM gameobject WHERE VerifiedBuild = 17688 OR VerifiedBuild = 17689;')
-    q('DELETE FROM playercreateinfo_cast_spell WHERE note = "tswow";')
-    q('DELETE FROM playercreateinfo_skills WHERE comment = "tswow";')
-    q('DELETE FROM playercreateinfo_spell_custom WHERE Note = "tswow";')
-    q('DELETE FROM mail_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM creature_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM fishing_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM disenchant_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM gameobject_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM item_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM milling_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM pickpocketing_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM prospecting_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM reference_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM skinning_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM spell_loot_template WHERE Comment = "tswow";')
-    q('DELETE FROM creature_text WHERE comment = "tswow";')
-    q('DELETE FROM creature_template_outfits WHERE description = "tswow";')
-    q('DELETE FROM transports WHERE name = "tswow";')
-    q('DELETE FROM quest_poi_points WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM quest_poi WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM lfg_dungeon_template WHERE VerifiedBuild = 17688;')
-    q('DELETE FROM access_requirement WHERE comment = "tswow";')
-    q('DELETE FROM game_event WHERE description = "tswow";')
-    q('DELETE FROM game_event_condition WHERE description = "tswow";')
-
-    q(`SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'tbl_name' AND COLUMN_NAME = 'column_name'`)
+    col('game_event')
+    if(isTrinityCore()) {
+        col('game_event_condition')
+    }
 }

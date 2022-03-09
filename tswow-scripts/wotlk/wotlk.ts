@@ -15,7 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { finish, luaxml, patch, read, setup, sort, write } from "../data";
-import { BuildArgs } from "../data/Settings";
+import { BuildArgs, EmulatorCore } from "../data/Settings";
 import { DBC as _DBC, DBCLoader } from "./DBCFiles";
 import { LUAXML as _LUAXML } from "./luaxml/LUAXML";
 import { SQL as _SQL } from "./SQLFiles";
@@ -198,7 +198,10 @@ export const std = {
         finish: finish,
         luaxml: luaxml,
         sort: sort,
-    }
+    },
+    Core: EmulatorCore,
+    isTrinityCore: EmulatorCore === 'trinitycore',
+    isAzerothCore: EmulatorCore === 'azerothcore'
 }
 
 export const wotlk = std;

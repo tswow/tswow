@@ -18,7 +18,6 @@ import * as fs from 'fs';
 import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
 import { BuildArgs, datasetName, NodeConfig } from '../Settings';
-import { SQLTables } from '../../wotlk/SQLFiles';
 import { SqlRow } from './SQLRow';
 import { SqlTable } from './SQLTable';
 import deasync = require('deasync');
