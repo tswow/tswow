@@ -236,7 +236,12 @@ uint32 TSSpellInfo::GetPreventionType()
 
 uint32 TSSpellInfo::GetPriority()
 {
+#if TRINITY
     return info->Priority;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSSpellInfo::GetPriority not implemented for AzerothCore");
+    return 0;
+#endif
 }
 
 uint32 TSSpellInfo::GetProcChance()
@@ -374,7 +379,11 @@ TSSpellEffectInfo::TSSpellEffectInfo(SpellEffectInfo const* info)
 
 uint32 TSSpellEffectInfo::GetEffectIndex()
 {
+#if TRINITY
     return static_cast<uint32>(m_info->EffectIndex);
+#elif AZEROTHCORE
+    return static_cast<uint32>(m_info->_effIndex);
+#endif
 }
 
 uint32 TSSpellEffectInfo::GetType()

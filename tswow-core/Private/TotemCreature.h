@@ -2,6 +2,7 @@
 #ifndef TSWOW_TOTEMCREATURE_H
 #define TSWOW_TOTEMCREATURE_H
 
+#include "TSMain.h"
 #include "TemporarySummon.h"
 
 class TC_GAME_API TotemCreature : public Minion {

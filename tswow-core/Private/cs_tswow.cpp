@@ -9,6 +9,7 @@
 #include "TSTests.h"
 #include <boost/filesystem.hpp>
 
+#if TRINITY
 using namespace Trinity::ChatCommands;
 
 #if TRINITY_COMPILER == TRINITY_COMPILER_GNU
@@ -191,3 +192,4 @@ void AddSC_tswow_commandscript()
 {
     new wp_tswow();
 }
+#endif

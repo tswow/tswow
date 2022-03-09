@@ -6,6 +6,10 @@
 #include "SpellInfo.h"
 #include "SmartScript.h"
 #include "SmartScriptMgr.h"
+#include "TSUnit.h"
+#include "TSSpellInfo.h"
+#include "TSGameObject.h"
+#include "Object.h"
 
 TSSmartScriptValues::TSSmartScriptValues (
       SmartScriptHolder * holder
@@ -16,7 +20,9 @@ TSSmartScriptValues::TSSmartScriptValues (
     , bool bvar
     , SpellInfo const* spell
     , GameObject* gameObject
-    , ObjectVector* targets
+#if TRINITY
+    , TSObjectVector* targets
+#endif
 )
     : m_holder(holder)
     , m_script(script)
@@ -26,7 +32,9 @@ TSSmartScriptValues::TSSmartScriptValues (
     , m_bvar(bvar)
     , m_spell(spell)
     , m_gameObject(gameObject)
+#if TRINITY
     , m_targets(targets)
+#endif
 {}
 
 int32  TSSmartScriptValues::GetEntryOrGUID()
@@ -151,7 +159,12 @@ uint32 TSSmartScriptValues::GetTimer()
 }
 uint32 TSSmartScriptValues::GetPriority()
 {
+#if TRINITY
     return m_holder->priority;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSSmartScriptValues::GetPriority not implemented for AzerothCore");
+    return 0;
+#endif
 }
 
 TSUnit TSSmartScriptValues::GetLastInvoker()
@@ -161,6 +174,7 @@ TSUnit TSSmartScriptValues::GetLastInvoker()
 
 TSArray<TSWorldObject> TSSmartScriptValues::GetTargets()
 {
+#if TRINITY
     if (!m_targets)
     {
         return TSArray<TSWorldObject>();
@@ -172,31 +186,51 @@ TSArray<TSWorldObject> TSSmartScriptValues::GetTargets()
         out[i] = TSWorldObject((*m_targets)[i]);
     }
     return out;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSSmartScriptValues::GetTargets not implemented for AzerothCore");
+    return TSArray<TSWorldObject>();
+    /*
+    size_t i = 0;
+    for (WorldObject const* obj : *m_targets)
+    {
+        out[i++] = TSWorldObject(const_cast<WorldObject*>(obj));
+    }
+    */
+#endif
 }
 
 void TSSmartScriptValues::StoreTargetList(TSArray<TSWorldObject> objects, uint32 id)
 {
-    ObjectVector objectsOut(objects.get_length());
+    TSObjectVector* objectsOut = new TSObjectVector(objects.get_length());
     for (size_t i = 0; i < objects.get_length(); ++i)
     {
-        objectsOut[i] = objects[i].obj;
+        objectsOut->push_back(objects[i].obj);
     }
     m_script->StoreTargetList(objectsOut, id);
 }
 
 TSArray<TSWorldObject> TSSmartScriptValues::GetTargetList(uint32 id, TSWorldObject ref)
 {
-    ObjectVector const* vec = m_script->GetStoredTargetVector(id, *ref.obj);
+#if TRINITY
+    TSObjectVector const* vec = m_script->GetStoredTargetVector(id, *ref.obj);
     TSArray<TSWorldObject> out(vec->size());
     for (int i = 0; i < vec->size(); ++i) {
         out[i] = TSWorldObject((*vec)[i]);
     }
     return out;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api","TSSmartScriptValues::GetTargetList not implemented for AzerothCore");
+    return TSArray<TSWorldObject>();
+#endif
 }
 
 void TSSmartScriptValues::StoreCounter(uint32 id, uint32 value, uint32 reset)
 {
+#if TRINITY
     m_script->StoreCounter(id, value, reset);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSSmartScriptValues::StoreCounter not implemented for AzerothCore");
+#endif
 }
 
 uint32 TSSmartScriptValues::GetCounterValue(uint32 id)
@@ -236,7 +270,11 @@ TSGameObject TSSmartScriptValues::GetGameObjectArg()
 
 TSWorldObject TSSmartScriptValues::GetSelf()
 {
+#if TRINITY
     return TSWorldObject(m_script->GetBaseObjectOrPlayerTrigger());
+#elif AZEROTHCORE
+    return TSWorldObject(m_script->GetBaseObject());
+#endif
 }
 
 TSCondition::TSCondition(Condition* condition)
@@ -320,7 +358,12 @@ bool TSCondition::IsNegativeCondition()
 
 TSString TSCondition::ToString(bool ext)
 {
+#if TRINITY
     return TSString(m_condition->ToString());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCondition::ToString not implemented for AzerothCore");
+    return JSTR("");
+#endif
 }
 
 bool TSCondition::IsNull()

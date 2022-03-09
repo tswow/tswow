@@ -1,9 +1,12 @@
-#include "TSMapManager.h"
 #include "TSPlayer.h"
 #include "TSString.h"
 #include "TSMap.h"
-
+#include "TSMapManager.h"
+#if TRINITY
 #include "MapManager.h"
+#elif AZEROTHCORE
+#include "MapMgr.h"
+#endif
 #include "Player.h"
 #include "Map.h"
 #include "ObjectAccessor.h"

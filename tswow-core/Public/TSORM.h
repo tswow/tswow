@@ -15,6 +15,7 @@
  */
 #pragma once
 
+#include "TSMain.h"
 #include "TSBase.h"
 #include "TSArray.h"
 #include "TSClass.h"

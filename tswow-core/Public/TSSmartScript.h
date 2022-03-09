@@ -4,15 +4,26 @@
 #include <TSBase.h>
 #include <TSMain.h>
 #include <TSArray.h>
-#include <TSUnit.h>
-#include <TSSpellInfo.h>
-#include <TSGameObject.h>
 
+#include <list>
+#include <vector>
 #include <memory>
 
 #define TSWOW_EVENT_OFFSET 300
 #define TSWOW_ACTION_OFFSET 300
 #define TSWOW_CONDITION_OFFSET 100
+
+class TSUnit;
+class TSSpellInfo;
+class GameObject;
+class TSGameObject;
+class WorldObject;
+
+#if TRINITY
+typedef std::vector<WorldObject*> TSObjectVector;
+#elif AZEROTHCORE
+typedef std::list<WorldObject*> TSObjectVector;
+#endif
 
 struct Condition;
 struct TC_GAME_API TSCondition {
@@ -69,7 +80,9 @@ private:
     bool m_bvar;
     SpellInfo const* m_spell;
     GameObject* m_gameObject;
-    std::vector<WorldObject*>* m_targets;
+#if TRINITY
+    TSObjectVector* m_targets;
+#endif
 public:
     TSSmartScriptValues(
           SmartScriptHolder * holder
@@ -80,7 +93,9 @@ public:
         , bool bvar
         , SpellInfo const* spell
         , GameObject* gameObject
-        , std::vector<WorldObject*>* targets
+#if TRINITY
+        , TSObjectVector* targets
+#endif
     );
     TSSmartScriptValues * operator->() { return this; }
 

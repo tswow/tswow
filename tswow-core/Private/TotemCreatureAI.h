@@ -2,6 +2,7 @@
 #ifndef TSWOW_TOTEMCREATURE_AI_H
 #define TSWOW_TOTEMCREATURE_AI_H
 
+#include "TSMain.h"
 #include "PetAI.h"
 
 class TC_GAME_API TotemCreatureAI: public PetAI {

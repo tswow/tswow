@@ -38,11 +38,7 @@ TSCorpse::TSCorpse() : TSWorldObject()
  */
 uint64 TSCorpse::GetOwnerGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return corpse->GetOwnerGUID();
-#else
-    return corpse->GetOwnerGuid();
-#endif
+    return TS_GUID(corpse->GetOwnerGUID());
 }
 
 /**

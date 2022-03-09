@@ -42,7 +42,7 @@ TSUnit TSAuraEffect::GetCaster()
 
 uint64 TSAuraEffect::GetCasterGUID()
 {
-    return aura->GetCasterGUID();
+    return TS_GUID(aura->GetCasterGUID());
 }
 
 TSAura TSAuraEffect::GetAura()
@@ -112,7 +112,12 @@ uint32 TSAuraEffect::GetTickNumber()
 
 uint32 TSAuraEffect::GetRemainingTicks()
 {
+#if TRINITY
     return aura->GetRemainingTicks();
+#elif AZEROTHCORE
+    LOG_WARN("tswow.api", "TSAuraEffect::GetRemainingTicks might not be correctly implemented for AzerothCore");
+    return aura->GetTotalTicks() - aura->GetTickNumber();
+#endif
 }
 
 uint32 TSAuraEffect::GetTotalTicks()
@@ -182,7 +187,11 @@ bool TSAuraApplication::IsPositive()
 
 bool TSAuraApplication::IsSelfCast()
 {
+#if TRINITY
     return aura->IsSelfcast();
+#elif AZEROTHCORE
+    return aura->IsSelfcasted();
+#endif
 }
 
 uint8 TSAuraApplication::GetRemoveMode()
@@ -206,12 +215,12 @@ TSAura::TSAura()
 
 TSArray<TSAuraApplication> TSAura::GetApplications()
 {
-    TSArray<TSAuraApplication> array;
+    TSArray<TSAuraApplication> arr;
     for(auto & v : aura->GetApplicationMap())
     {
-        array.push(TSAuraApplication(v.second));
+        arr.push(TSAuraApplication(v.second));
     }
-    return array;
+    return arr;
 }
 
 /**
@@ -231,11 +240,7 @@ TSUnit  TSAura::GetCaster()
  */
 uint64 TSAura::GetCasterGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return aura->GetCasterGUID();
-#else
-    return aura->GetCasterGuid();
-#endif
+    return TS_GUID(aura->GetCasterGUID());
 }
 
 /**

@@ -42,7 +42,11 @@ void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSStri
         draft.AddItem(item.item);
     }
 
+#if TRINITY
     draft.SendMailTo(trans,MailReceiver(player,ObjectGuid(to)),sender, MAIL_CHECK_MASK_NONE, delay);
+#elif AZEROTHCORE
+    draft.SendMailTo(trans,MailReceiver(player,uint32(to)),sender, MAIL_CHECK_MASK_NONE, delay);
+#endif
     CharacterDatabase.CommitTransaction(trans);
 }
 

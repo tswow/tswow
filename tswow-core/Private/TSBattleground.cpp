@@ -23,12 +23,23 @@
 #include "TSGameObject.h"
 #include "TSCreature.h"
 #include "TSMap.h"
+#include "TSPlayer.h"
 #include "Map.h"
 #include "TSGroup.h"
 #include "TSWorldPacket.h"
 
+#if TRINITY
+#define TSTeamId(x) x
+#elif AZEROTHCORE
+#define TSTeamId(x) TeamId(x)
+#endif
+
 TSBattlegroundPlayer::TSBattlegroundPlayer(TSBattleground bg, uint64 guid, uint32 team, int64 offlineRemoveTime)
+#if TRINITY
     : TSEntityProvider(&bg.bg->m_playerEntityMap[guid])
+#elif AZEROTHCORE // TODO: fix
+    : TSEntityProvider(nullptr)
+#endif
     , m_guid(guid)
     , m_team(team)
     , m_offlineRemoveTime(offlineRemoveTime)
@@ -270,8 +281,13 @@ TSArray<TSBattlegroundPlayer> TSBattleground::GetBGPlayers()
         players.push(TSBattlegroundPlayer(
               *this
             , player.first.GetRawValue()
+#if TRINITY
             , player.second.Team
             , player.second.OfflineRemoveTime
+#elif AZEROTHCORE
+            , 0
+            , 0
+#endif
         ));
     }
     return players;
@@ -286,8 +302,13 @@ TSBattlegroundPlayer TSBattleground::GetBGPlayer(uint64 guid)
             return TSBattlegroundPlayer(
                   *this
                 , player.first.GetRawValue()
+#if TRINITY
                 , player.second.Team
                 , player.second.OfflineRemoveTime
+#elif AZEROTHCORE
+                , 0
+                , 0
+#endif
             );
         }
     }
@@ -337,7 +358,7 @@ void TSBattleground::SendPacket(TSWorldPacket packet, uint32 team = TS_TEAM_NEUT
     }
     else
     {
-        bg->SendPacketToTeam(team,packet.packet, sender.player, self);
+        bg->SendPacketToTeam(TSTeamId(team),packet.packet, sender.player, self);
     }
 }
 
@@ -349,7 +370,11 @@ void TSBattleground::PlaySound(uint32 sound, uint32 team)
     }
     else
     {
+#if TRINITYCORE
         bg->PlaySoundToTeam(sound, team);
+#elif AZEROTHCORE
+        TS_LOG_ERROR("tswow.api", "TSBattleground::PlaySound not implemented for AzerothCore with non-neutral team.");
+#endif
     }
 }
 
@@ -357,12 +382,12 @@ void TSBattleground::CastSpell(uint32 spell, uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
-        bg->CastSpellOnTeam(spell, TS_TEAM_ALLIANCE);
-        bg->CastSpellOnTeam(spell, TS_TEAM_HORDE);
+        bg->CastSpellOnTeam(spell, TSTeamId(TS_TEAM_ALLIANCE));
+        bg->CastSpellOnTeam(spell, TSTeamId(TS_TEAM_HORDE));
     }
     else
     {
-        bg->CastSpellOnTeam(spell, team);
+        bg->CastSpellOnTeam(spell, TSTeamId(team));
     }
 }
 
@@ -370,36 +395,36 @@ void TSBattleground::RemoveAura(uint32 aura, uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
-        bg->RemoveAuraOnTeam(aura, TS_TEAM_ALLIANCE);
-        bg->RemoveAuraOnTeam(aura, TS_TEAM_HORDE);
+        bg->RemoveAuraOnTeam(aura, TSTeamId(TS_TEAM_ALLIANCE));
+        bg->RemoveAuraOnTeam(aura, TSTeamId(TS_TEAM_HORDE));
     }
     else
     {
-        bg->RemoveAuraOnTeam(aura, team);
+        bg->RemoveAuraOnTeam(aura, TSTeamId(team));
     }
 }
 void TSBattleground::RewardHonor(uint32 honor, uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
-        bg->RewardHonorToTeam(honor, TS_TEAM_HORDE);
-        bg->RewardHonorToTeam(honor, TS_TEAM_ALLIANCE);
+        bg->RewardHonorToTeam(honor, TSTeamId(TS_TEAM_HORDE));
+        bg->RewardHonorToTeam(honor, TSTeamId(TS_TEAM_ALLIANCE));
     }
     else
     {
-        bg->RewardHonorToTeam(honor, team);
+        bg->RewardHonorToTeam(honor, TSTeamId(team));
     }
 }
 void TSBattleground::RewardReputation(uint32 faction, uint32 reputation, uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
-        bg->RewardReputationToTeam(faction, reputation, TS_TEAM_HORDE);
-        bg->RewardReputationToTeam(faction, reputation, TS_TEAM_ALLIANCE);
+        bg->RewardReputationToTeam(faction, reputation, TSTeamId(TS_TEAM_HORDE));
+        bg->RewardReputationToTeam(faction, reputation, TSTeamId(TS_TEAM_ALLIANCE));
     }
     else
     {
-        bg->RewardReputationToTeam(faction, reputation, team);
+        bg->RewardReputationToTeam(faction, reputation, TSTeamId(team));
     }
 }
 
@@ -410,51 +435,70 @@ void TSBattleground::UpdateWorldState(uint32 variable, uint32 value)
 
 void TSBattleground::EndBG(uint32 winnerTeam)
 {
-    bg->EndBattleground(winnerTeam);
+    bg->EndBattleground(TSTeamId(winnerTeam));
 }
 
 TSGroup TSBattleground::GetBGRaid(uint32 faction)
 {
-    return TSGroup(bg->GetBgRaid(faction));
+    return TSGroup(bg->GetBgRaid(TSTeamId(faction)));
 }
 
 uint32 TSBattleground::GetBGPlayerCount(uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
-        return bg->GetPlayersCountByTeam(TS_TEAM_ALLIANCE)
-             + bg->GetPlayersCountByTeam(TS_TEAM_HORDE);
+        return bg->GetPlayersCountByTeam(TSTeamId(TS_TEAM_ALLIANCE))
+             + bg->GetPlayersCountByTeam(TSTeamId(TS_TEAM_HORDE));
     }
     else
     {
-        return bg->GetPlayersCountByTeam(team);
+        return bg->GetPlayersCountByTeam(TSTeamId(team));
     }
 }
 uint32 TSBattleground::GetBGAlivePlayerCount(uint32 team)
 {
     if (team == TS_TEAM_NEUTRAL)
     {
-        return bg->GetAlivePlayersCountByTeam(TS_TEAM_ALLIANCE)
-            + bg->GetAlivePlayersCountByTeam(TS_TEAM_HORDE);
+        return bg->GetAlivePlayersCountByTeam(TSTeamId(TS_TEAM_ALLIANCE))
+            + bg->GetAlivePlayersCountByTeam(TSTeamId(TS_TEAM_HORDE));
     }
     else
     {
-        return bg->GetAlivePlayersCountByTeam(team);
+        return bg->GetAlivePlayersCountByTeam(TSTeamId(team));
     }
 }
 TSCreature TSBattleground::AddCreature(uint32 entry, uint32 type, float x, float y, float z, float o, uint32 respawnTime, uint32 teamId)
 {
+#if TRINITY
     return TSCreature(bg->AddCreature(entry, type, Position(x, y, z, o), TeamId(teamId), respawnTime));
+#elif AZEROTHCORE
+    if (teamId != TS_TEAM_NEUTRAL)
+    {
+        TS_LOG_ERROR("tswow.api", "TSBattleground::AddCreature not implemented for AzerothCore with non-neutral teamId");
+    }
+    else
+    {
+        return TSCreature(bg->AddCreature(entry, type, x, y, z, o,respawnTime));
+    }
+#endif
 }
 
 bool TSBattleground::AddObject(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3, uint32 respawnTime, uint32 goState)
 {
+#if TRINITY
     return bg->AddObject(type, entry, Position(x, y, z, o), rot0, rot1, rot2, rot3, respawnTime, GOState(goState));
+#elif AZEROTHCORE
+    return bg->AddObject(type, entry, x, y, z, o, rot0, rot1, rot2, rot3, respawnTime, GOState(goState));
+#endif
 }
 
 void TSBattleground::AddSpiritGuide(uint32 type, float x, float y, float z, float o, uint32 teamId)
 {
+#if TRINITY
     bg->AddSpiritGuide(type, Position(x, y, z, o), TeamId(teamId));
+#elif AZEROTHCORE
+    bg->AddSpiritGuide(type, x, y, z, o, TeamId(teamId));
+#endif
 }
 
 void TSBattleground::OpenDoor(uint32 type)
@@ -474,7 +518,7 @@ bool TSBattleground::IsPlayerInBG(uint64 guid)
 
 uint32 TSBattleground::GetTeamScore(uint32 team)
 {
-    return bg->GetTeamScore(team);
+    return bg->GetTeamScore(TSTeamId(team));
 }
 
 void TSBattleground::SendMessage(uint32 entry, uint8 type, TSPlayer source = TSPlayer(nullptr))
@@ -516,7 +560,12 @@ bool TSBattleground::RemoveObject(uint32 type)
 }
 bool TSBattleground::RemoveObjectFromWorld(uint32 type)
 {
+#if TRINITY
     return bg->RemoveObjectFromWorld(type);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSBattleground::RemoveObjectFromWorld not implemented for AzerothCore.");
+    return false;
+#endif
 }
 int32 TSBattleground::GetObjectType(uint64 guid)
 {
@@ -528,15 +577,28 @@ void TSBattleground::SetHoliday(bool isHoliday)
 }
 bool TSBattleground::IsHoliday()
 {
+#if TRINITY
     return bg->m_HonorMode == BG_HOLIDAY;
+#elif AZEROTHCORE
+    return bg->m_HonorMode == BG_HOLIDAY;
+#endif
 }
 
 TSGameObject TSBattleground::GetBGGameObject(uint32 type, bool logErrors)
 {
+#if TRINITY
     return TSGameObject(bg->GetBGObject(type, logErrors));
+#elif AZEROTHCORE
+    // ac always logs errors
+    return TSGameObject(bg->GetBGObject(type));
+#endif
 }
 
 TSCreature TSBattleground::GetBGCreature(uint32 type, bool logErrors)
 {
+#if TRINITY
     return TSCreature(bg->GetBGCreature(type, logErrors));
+#elif AZEROTHCORE
+    return TSCreature(bg->GetBGCreature(type));
+#endif
 }

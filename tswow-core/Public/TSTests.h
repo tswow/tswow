@@ -26,6 +26,8 @@
 #include "TSMain.h"
 #include "TSString.h"
 
+#if TRINITY
+
 class TSPlayer;
 class Player;
 
@@ -151,3 +153,5 @@ void TC_GAME_API RegisterAutomaticTest(uint32_t modid, std::string const& modNam
 void TC_GAME_API PrintSessionStatus(Player* player, std::string const& sessionName);
 
 std::shared_ptr<TSManualTestBuilder> TC_GAME_API RegisterManualTest(uint32_t modid, std::string const& modName, std::string const& name);
+
+#endif

@@ -18,6 +18,7 @@
 
 #include "TSMain.h"
 #include "TSClasses.h"
+#include "TSArray.h"
 
 class AuraEffect;
 

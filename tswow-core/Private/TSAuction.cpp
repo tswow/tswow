@@ -34,12 +34,20 @@ uint8 TSAuctionEntry::GetHouseID()
 
 uint64 TSAuctionEntry::GetItemID()
 {
+#if TRINITY
     return entry->itemGUIDLow;
+#elif AZEROTHCORE
+    return entry->item_guid.GetEntry();
+#endif
 }
 
 uint32 TSAuctionEntry::GetItemEntry()
 {
+#if TRINITY
     return entry->itemEntry;
+#elif AZEROTHCORE
+    return entry->item_template;
+#endif
 }
 
 uint32 TSAuctionEntry::GetItemCount()
@@ -49,7 +57,7 @@ uint32 TSAuctionEntry::GetItemCount()
 
 uint64 TSAuctionEntry::GetOwnerID()
 {
-    return entry->owner;
+    return TS_GUID(entry->owner);
 }
 
 uint32 TSAuctionEntry::GetStartBid()
@@ -74,7 +82,7 @@ uint64 TSAuctionEntry::GetExpireTime()
 
 uint64 TSAuctionEntry::GetBidder()
 {
-    return entry->bidder;
+    return TS_GUID(entry->bidder);
 }
 
 uint32 TSAuctionEntry::GetDeposit()
@@ -84,32 +92,54 @@ uint32 TSAuctionEntry::GetDeposit()
 
 uint32 TSAuctionEntry::GetETime()
 {
+#if TRINITY
     return entry->etime;
+#elif AZEROTHCORE
+    return entry->expire_time;
+#endif
 }
 
 TSArray<uint64> TSAuctionEntry::GetBidders()
 {
     TSArray<uint64> arr;
+#if TRINITY
     for(auto& bidder: entry->bidders)
     {
         arr.push(bidder);
     }
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSAuctionEntry::GetBidders not implemented for AzerothCore (bidders aren't stored).");
+    return 0;
+#endif
     return arr;
 }
 
 uint32 TSAuctionEntry::GetFlags()
 {
+#if TRINITY
     return entry->Flags;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSAuctionEntry::GetFlags not implemented for AzerothCore.");
+    return 0;
+#endif
 }
 
 void TSAuctionEntry::SetItemID(uint64 itemId)
 {
+#if TRINITY
     entry->itemGUIDLow = ObjectGuid(itemId);
+#elif AZEROTHCORE
+    entry->item_guid = ObjectGuid(itemId);
+#endif
 }
 
 void TSAuctionEntry::SetItemEntry(uint32 itemEntry)
 {
+#if TRINITY
     entry->itemEntry = itemEntry;
+#elif AZEROTHCORE
+    entry->item_template = itemEntry;
+#endif
 }
 
 void TSAuctionEntry::SetItemCount(uint32 count)
@@ -144,12 +174,20 @@ void TSAuctionEntry::SetDeposit(uint32 deposit)
 
 void TSAuctionEntry::SetETime(uint32 etime)
 {
+#if TRINITY
     entry->etime = etime;
+#elif AZEROTHCORE
+    entry->expire_time = etime;
+#endif
 }
 
 void TSAuctionEntry::SetFlags(uint32 flags)
 {
+#if TRINITY
     entry->Flags = AuctionEntryFlag(flags);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSAuctionEntry::SetFlags not implemented for AzerothCore.");
+#endif
 }
 
 TSArray<uint32> TSAuctionHouseObject::GetKeys()

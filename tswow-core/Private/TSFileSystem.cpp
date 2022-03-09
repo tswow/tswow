@@ -1,5 +1,8 @@
 #include "TSFileSystem.h"
 
+#include "TSString.h"
+#include "TSArray.h"
+
 #include <boost/filesystem.hpp>
 #include <string>
 

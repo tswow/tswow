@@ -81,11 +81,7 @@ TSPlayer  TSGuild::GetLeader()
  */
 uint64 TSGuild::GetLeaderGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return guild->GetLeaderGUID();
-#else
-    return guild->GetLeaderGuid();
-#endif
+    return TS_GUID(guild->GetLeaderGUID());
 }
 
 /**
@@ -254,8 +250,9 @@ void TSGuild::DeleteMember(TSPlayer _player,bool isDisbanding)
 CharacterDatabaseTransaction trans(nullptr);
     guild->DeleteMember(trans, player->TS_GET_GUID(), isDisbanding);
 #elif defined AZEROTHCORE
-SQLTransaction trans(nullptr);
-    guild->DeleteMember(trans, player->TS_GET_GUID(), isDisbanding);
+//SQLTransaction trans(nullptr);
+    //guild->DeleteMember(trans, player->TS_GET_GUID(), isDisbanding);
+    TS_LOG_ERROR("tswow.api", "TSGuild::DeleteMember not implemented for AzerothCore");
 #else
     guild->DelMember(player->TS_GET_GUID(), isDisbanding);
 #endif

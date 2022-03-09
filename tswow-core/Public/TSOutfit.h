@@ -50,6 +50,7 @@ enum Outfit : uint32_t {
 };
 
 class TC_GAME_API TSOutfit {
+#if TRINITY
     std::shared_ptr<CreatureOutfit> m_outfit;
     friend class TSCreature;
 public:
@@ -142,6 +143,9 @@ private:
         , uint32_t value
         , uint8_t slot
     );
+#endif
 };
 
+#if TRINITY
 TSOutfit TC_GAME_API CreateOutfit(uint32_t race, uint32_t gender);
+#endif

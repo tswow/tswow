@@ -43,7 +43,11 @@
 #include "TSChannel.h"
 #include "TSWorldEntity.h"
 #include "DBCStores.h"
+#if TRINITY
 #include "MapManager.h"
+#elif AZEROTHCORE
+#include "MapMgr.h"
+#endif
 #include "Config.h"
 
 #include <fstream>
@@ -361,7 +365,11 @@ bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msgIn)
     if(msgIn.size()<2) return false;
     std::string msg = msgIn.substr(1);
 
+#if TRINITY
     if(player != receiver || !player->CanBeGameMaster()) {
+#elif AZEROTHCORE
+    if(player != receiver || player->GetSession()->GetSecurity() < AccountTypes::SEC_GAMEMASTER) {
+#endif
         return false;
     }
 
@@ -412,5 +420,7 @@ void AddSC_tswow_commandscript();
 void TSInitializeEvents()
 {
     TSLoadEvents();
+#if TRINITY
     AddSC_tswow_commandscript();
+#endif
 };

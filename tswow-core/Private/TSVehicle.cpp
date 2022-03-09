@@ -72,10 +72,10 @@ TSUnit  TSVehicle::GetOwner()
  */
 uint32 TSVehicle::GetEntry()
 {
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     return vehicle->GetVehicleInfo()->ID;
-#else
-    return vehicle->GetVehicleEntry()->m_ID;
+#elif AZEROTHCORE
+    return vehicle->GetVehicleInfo()->m_ID;
 #endif
 }
 

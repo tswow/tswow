@@ -35,6 +35,9 @@
 #include "Corpse.h"
 #include "DynamicObject.h"
 #include "Pet.h"
+#include "WeatherMgr.h"
+#include "MapReference.h"
+#include "Player.h"
 
 #include <memory.h>
 
@@ -93,7 +96,11 @@ bool TSMap::IsDungeon()
  */
 bool TSMap::IsEmpty()
 {
+#if TRINITY
     return map->isEmpty();
+#elif AZEROTHCORE
+    return map->IsEmpty();
+#endif
 }
 
 #ifndef CLASSIC
@@ -203,13 +210,7 @@ uint32 TSMap::GetMapID()
  */
 uint32 TSMap::GetAreaID(float x,float y,float z,float phasemask)
 {
-#if defined TRINITY
     return map->GetAreaId(phasemask, x, y, z);
-#elif defined AZEROTHCORE
-    return map->GetAreaId(x, y, z);
-#else
-    return map->GetTerrain()->GetAreaId(x, y, z);
-#endif
 }
 
 /**
@@ -224,11 +225,7 @@ TSWorldObject  TSMap::GetWorldObject(uint64 guid)
     switch (GUID_HIPART(guid))
     {
         case HIGHGUID_PLAYER:
-#ifndef AZEROTHCORE
-             return TSWorldObject(eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
-#else
-             return TSWorldObject(map->GetPlayer(ObjectGuid(guid)));
-#endif // !AZEROTHCORE
+            return TSWorldObject(eObjectAccessor()GetPlayer(map, ObjectGuid(guid)));
             break;
         case HIGHGUID_TRANSPORT:
         case HIGHGUID_MO_TRANSPORT:
@@ -277,10 +274,10 @@ void TSMap::SetWeather(uint32 zoneId,uint32 weatherType,float grade)
 {
     (void)map; // ensure that the variable is referenced in order to pass compiler checks
 
-#if defined TRINITY
+#if TRINITY
     if (Weather * weather = map->GetOrGenerateZoneDefaultWeather(zoneId))
         weather->SetWeather((WeatherType)weatherType, grade);
-#elif defined AZEROTHCORE
+#elif AZEROTHCORE
     Weather* weather = WeatherMgr::FindWeather(zoneId);
     if (!weather)
         weather = WeatherMgr::AddWeather(zoneId);
@@ -320,6 +317,7 @@ TSArray<TSPlayer> TSMap::GetPlayers(uint32 team)
 #endif
         if (!player)
             continue;
+
         if (player->GetSession() && (team >= TEAM_NEUTRAL || player->GetTeamId() == team))
         {
             tbl.push(TSPlayer(player));
@@ -387,12 +385,24 @@ TSArray<TSCreature> TSMap::GetCreatures(uint32 entry)
 
 TSCreature TSMap::GetCreatureByDBGUID(uint32 dbGuid)
 {
+#if TRINITY
     return TSCreature(map->GetCreatureBySpawnId(dbGuid));
+#elif AZEROTHCORE
+    auto store = map->GetCreatureBySpawnIdStore();
+    auto itr = store.find(dbGuid);
+    return itr != store.end() ? TSCreature(itr->second) : TSCreature(nullptr);
+#endif
 }
 
 TSGameObject TSMap::GetGameObjectByDBGUID(uint32 dbGuid)
 {
+#if TRINITY
     return TSGameObject(map->GetGameObjectBySpawnId(dbGuid));
+#elif AZEROTHCORE
+    auto store = map->GetGameObjectBySpawnIdStore();
+    auto itr = store.find(dbGuid);
+    return itr != store.end() ? TSGameObject(itr->second) : TSGameObject(nullptr);
+#endif
 }
 
 TSCreature TSMap::SpawnCreature(uint32 entry, float x, float y, float z, float o, uint32 despawnTimer, uint32 phase)
@@ -405,8 +415,13 @@ TSGameObject TSMap::SpawnGameObject(uint32 entry, float x, float y, float z, flo
     const GameObjectTemplate* objectInfo = eObjectMgr->GetGameObjectTemplate(entry);
     GameObject* object = new GameObject;
     uint32 guidLow = map->GenerateLowGuid<HighGuid::GameObject>();
+#if TRINITY
     QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
     if (!object->Create(guidLow, objectInfo->entry, map, phase, Position(x, y, z, o), rot, 0, GO_STATE_READY))
+#elif AZEROTHCORE
+    G3D::Quat rot(G3D::Matrix3::fromEulerAnglesZYX(o, 0, 0));
+    if (!object->Create(guidLow, objectInfo->entry, map, phase, x, y, z, o, rot, 0, GO_STATE_READY))
+#endif
     {
         delete object;
         return TSGameObject(nullptr);
@@ -452,5 +467,5 @@ TSGameObject TSMap::GetGameObject(uint64 guid)
 
 TSPlayer TSMap::GetPlayer(uint64 guid)
 {
-    return TSPlayer(map->GetPlayer(ObjectGuid(guid)));
+    return TSPlayer(ObjectAccessor::GetPlayer(map, ObjectGuid(guid)));
 }

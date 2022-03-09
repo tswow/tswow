@@ -3,6 +3,7 @@
 #include "TSEvents.h"
 #include "WorldPacket.h"
 #include "CustomPacketChunk.h"
+#include "Player.h"
 
 #include "TSMap.h"
 #include "Map.h"
@@ -39,7 +40,11 @@ void TSPacketWrite::BroadcastMap(TSMap map, uint32_t teamOnly)
 		for (auto const& ref : map.map->GetPlayers())
 		{
 			Player* player = ref.GetSource();
+#if TRINITY
 			if (teamOnly == 0 || player->GetTeam() == teamOnly)
+#elif AZEROTHCORE
+			if (teamOnly == 0 || player->GetTeamId() == teamOnly)
+#endif
 			{
 				player->SendDirectMessage(&packet);
 			}

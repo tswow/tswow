@@ -37,6 +37,7 @@
 #include "TSBattleground.h"
 #include "TSCustomPacket.h"
 #include "TSMapManager.h"
+#include "TSSpellInfo.h"
 
 #include <cstdint>
 
@@ -409,7 +410,8 @@ EVENT_TYPE(GroupOnChangeLeader,TSGroup,uint64,uint64)
 EVENT_TYPE(GroupOnDisband,TSGroup)
 
 // AreaTrigger
-EVENT_TYPE(AreaTriggerOnTrigger,TSAreaTriggerEntry,TSPlayer,TSMutable<bool>)
+#if TRINITY
+EVENT_TYPE(AreaTriggerOnTrigger, uint8, TSPlayer, TSMutable<bool>)
 struct TSAreaTriggerEvents {
     EVENT(AreaTriggerOnTrigger)
 };
@@ -418,6 +420,7 @@ class TSAreaTriggerMap: public TSEventMap<TSAreaTriggerEvents>
     void OnAdd(uint32_t, TSAreaTriggerEvents*);
     void OnRemove(uint32_t);
 };
+#endif
 
 // SpellScript
 EVENT_TYPE(SpellOnCast,TSSpell)
@@ -1338,7 +1341,9 @@ struct TSEventStore
     EVENT(CreatureOnCalcBaseGain)
 
     // AreaTrigger
+#if TRINITY
     EVENT(AreaTriggerOnTrigger)
+#endif
 
     // SpellScript
     EVENT(SpellOnCast)
@@ -1450,7 +1455,9 @@ struct TSEventStore
     TSMapMap Maps;
     TSInstanceMap Instances;
     TSItemMap Items;
+#if TRINITY
     TSAreaTriggerMap AreaTriggers;
+#endif
     TSBattlegroundMap Battlegrounds;
     TSGameEventMap GameEvents;
     TSSmartActionMap SmartActions;
@@ -1476,7 +1483,9 @@ public:
      TSEvents(uint32_t modid, std::string const& modName)
          : m_modid(modid)
          , m_modName(modName)
+#if TRINITY
          , Tests(modid,modName)
+#endif
      {
      }
 
@@ -2102,6 +2111,7 @@ public:
         MAP_EVENT_HANDLE(Quest,OnSpellFinish)
     } QuestID;
 
+#if TRINITY
     struct AreaTriggerEvents : public EventHandler {
         AreaTriggerEvents* operator->() { return this; }
         EVENT_HANDLE(AreaTrigger,OnTrigger)
@@ -2111,6 +2121,7 @@ public:
         AreaTriggerIDEvents* operator->() { return this; }
         MAP_EVENT_HANDLE(AreaTrigger,OnTrigger)
     } AreaTriggerID;
+#endif
 
     struct GameEventsEvents : public EventHandler {
         GameEventsEvents* operator->() { return this; }
@@ -2172,6 +2183,7 @@ public:
         MAP_EVENT_HANDLE(WorldPacket, OnSend)
     } WorldPacketID;
 
+#if TRINITY
     struct TestEvents {
         uint32_t m_modid;
         std::string m_modName;
@@ -2197,13 +2209,16 @@ public:
             UnloadTestModule(m_modid);
         }
     } Tests;
+#endif
 
     void LoadEvents(TSEventStore* events)
     {
         Server.LoadEvents(events);
         World.LoadEvents(events);
         Unit.LoadEvents(events);
+#if TRINITY
         AreaTriggers.LoadEvents(events);
+#endif
         Weather.LoadEvents(events);
         AuctionHouse.LoadEvents(events);
         Vehicle.LoadEvents(events);
@@ -2223,8 +2238,10 @@ public:
         ItemID.LoadEvents(&events->Items);
         Quests.LoadEvents(events);
         QuestID.LoadEvents(&events->Quests);
+#if TRINITY
         AreaTriggers.LoadEvents(events);
         AreaTriggerID.LoadEvents(&events->AreaTriggers);
+#endif
         Maps.LoadEvents(events);
         MapID.LoadEvents(&events->Maps);
         Instances.LoadEvents(events);
@@ -2248,7 +2265,9 @@ public:
          Server.Unload();
          World.Unload();
          Unit.Unload();
+#if TRINITY
          AreaTriggers.Unload();
+#endif
          Weather.Unload();
          AuctionHouse.Unload();
          Vehicle.Unload();
@@ -2270,13 +2289,17 @@ public:
          ItemID.Unload();
          Quests.Unload();
          QuestID.Unload();
+#if TRINITY
          AreaTriggers.Unload();
          AreaTriggerID.Unload();
+#endif
          Maps.Unload();
          MapID.Unload();
          Instances.Unload();
          InstanceID.Unload();
+#if TRINITY
          Tests.Unload();
+#endif
          GameEvents.Unload();
          GameEventID.Unload();
          SmartActions.Unload();

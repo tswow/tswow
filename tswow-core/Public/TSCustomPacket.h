@@ -1,11 +1,14 @@
 #pragma once
 
+#include "TSMain.h"
 #define CUSTOM_PACKET_API TC_GAME_API
-
 #include "CustomPacketRead.h"
 #include "CustomPacketWrite.h"
 #include "CustomPacketBuffer.h"
 
+#include "TSString.h"
+
+class TSWorldObject;
 class TSPlayer;
 class TSMap;
 class TSBattleground;

@@ -110,8 +110,21 @@ uint32 TSItemTemplate::GetMaxStackSize() {return info->GetMaxStackSize(); };
 float TSItemTemplate::GetDPS() { return info->getDPS(); };
 bool TSItemTemplate::CanChangeEquipStateInCombat() { return info->CanChangeEquipStateInCombat(); };
 int32 TSItemTemplate::GetFeralBonus(int32 extraDPS) { return info->getFeralBonus(extraDPS); }
-int32 TSItemTemplate::GetTotalAPBonus() { return info->GetTotalAPBonus(); }
-float TSItemTemplate::GetItemLevelIncludingQuality() { return info->GetItemLevelIncludingQuality(); };
+int32 TSItemTemplate::GetTotalAPBonus() { 
+#if TRINITY
+    return info->GetTotalAPBonus(); 
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSItemTEmpalte::GetTotalAPBonus not implemented for AzerothCore");
+    return 0;
+#endif
+}
+float TSItemTemplate::GetItemLevelIncludingQuality() { 
+#if TRINITY
+    return info->GetItemLevelIncludingQuality(); 
+#elif AZEROTHCORE
+    return info->GetItemLevelIncludingQuality(1);
+#endif
+};
 uint32 TSItemTemplate::GetSkill() { return info->GetSkill(); };
 bool TSItemTemplate::IsPotion() { return info->IsPotion(); };
 bool TSItemTemplate::IsWeaponVellum() { return info->IsWeaponVellum(); };

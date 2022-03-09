@@ -33,6 +33,8 @@
 #include "TSVehicle.h"
 #include "TSCreature.h"
 #include "TSItem.h"
+#include "Player.h"
+#include "TSMap.h"
 
 TSUnit::TSUnit(Unit *unit) : TSWorldObject(unit)
 {
@@ -590,11 +592,7 @@ TSUnit  TSUnit::GetOwner()
  */
 uint64 TSUnit::GetOwnerGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->GetOwnerGUID();
-#else
-    return unit->GetOwnerGuid();
-#endif
+    return TS_GUID(unit->GetOwnerGUID());
 }
 
 /**
@@ -614,11 +612,7 @@ uint32 TSUnit::GetMountID()
  */
 uint64 TSUnit::GetCreatorGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->GetCreatorGUID();
-#else
-    return unit->GetCreatorGuid();
-#endif
+    return TS_GUID(unit->GetCreatorGUID());
 }
 
 /**
@@ -628,11 +622,7 @@ uint64 TSUnit::GetCreatorGUID()
  */
 uint64 TSUnit::GetCharmerGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->GetCharmerGUID();
-#else
-    return unit->GetCharmerGuid();
-#endif
+    return TS_GUID(unit->GetCharmerGUID());
 }
 
 /**
@@ -642,13 +632,7 @@ uint64 TSUnit::GetCharmerGUID()
  */
 uint64 TSUnit::GetCharmGUID()
 {
-#if defined AZEROTHCORE
-    return unit->GetCharmGUID();
-#elif defined TRINITY
-    return unit->GetCharmedGUID();
-#else
-    return unit->GetCharmGuid();
-#endif
+    return TS_GUID(unit->GetCharmGUID());
 }
 
 /**
@@ -658,11 +642,7 @@ uint64 TSUnit::GetCharmGUID()
  */
 uint64 TSUnit::GetPetGUID(uint32 summonSlot)
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->m_SummonSlot[summonSlot];
-#else
-    return unit->GetPetGuid();
-#endif
+    return TS_GUID(unit->m_SummonSlot[summonSlot]);
 }
 
 TSCreature TSUnit::GetPet(uint32 slot)
@@ -677,11 +657,7 @@ TSCreature TSUnit::GetPet(uint32 slot)
  */
 uint64 TSUnit::GetControllerGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->GetCharmerOrOwnerGUID();
-#else
-    return unit->GetCharmerOrOwnerGuid();
-#endif
+    return TS_GUID(unit->GetCharmerOrOwnerGUID());
 }
 
 TSUnit TSUnit::GetController()
@@ -696,11 +672,7 @@ TSUnit TSUnit::GetController()
  */
 uint64 TSUnit::GetControllerGUIDS()
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->GetCharmerOrOwnerOrOwnGUID();
-#else
-    return unit->GetCharmerOrOwnerOrOwnGuid();
-#endif
+    return TS_GUID(unit->GetCharmerOrOwnerOrOwnGUID());
 }
 
 /**
@@ -1093,10 +1065,11 @@ TSString TSUnit::GetClassAsString(uint8 locale)
 
 #ifdef TRINITY
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->GetClass());
-#else
+    return TSString(entry->Name[locale]);
+#elif AZEROTHCORE
     const ChrClassesEntry* entry = sChrClassesStore.LookupEntry(unit->getClass());
+    return TSString(entry->name[locale]);
 #endif
-     return TSString(entry->Name[locale]);
 }
 
 /**
@@ -1124,10 +1097,11 @@ TSString TSUnit::GetRaceAsString(uint8 locale)
 
 #ifdef TRINITY
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->GetRace());
-#else
+    return TSString(entry->Name[locale]);
+#elif AZEROTHCORE
     const ChrRacesEntry* entry = sChrRacesStore.LookupEntry(unit->getRace());
+    return TSString(entry->name[locale]);
 #endif
-     return TSString(entry->Name[locale]);
 }
 
 /**
@@ -1137,11 +1111,7 @@ TSString TSUnit::GetRaceAsString(uint8 locale)
  */
 uint32 TSUnit::GetFaction()
 {
-#ifdef TRINITY
     return unit->GetFaction();
-#else
-    return unit->getFaction();
-#endif
 }
 
 /**
@@ -1210,11 +1180,7 @@ TSVehicle TSUnit::GetVehicle()
  */
 uint64 TSUnit::GetCritterGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return unit->GetCritterGUID();
-#else
-    return unit->GetCritterGuid();
-#endif
+    return TS_GUID(unit->GetCritterGUID());
 }
 #endif
 
@@ -1377,11 +1343,7 @@ void TSUnit::SetSpeed(uint32 type,float rate,bool forced)
  */
 void TSUnit::SetFaction(uint32 factionId)
 {
-#ifdef TRINITY
     unit->SetFaction(factionId);
-#else
-    unit->setFaction(factionId);
-#endif
 }
 
 /**
@@ -1759,7 +1721,7 @@ void TSUnit::ClearThreatList(bool apply,bool x)
 #ifdef TRINITY
     unit->GetThreatManager().ClearAllThreat();
 #elif AZEROTHCORE
-    unit->getThreatManager().clearReferences();
+    unit->getThreatMgr().clearReferences();
 #else
     unit->GetThreatManager().clearReferences();
 #endif
@@ -1850,16 +1812,13 @@ void TSUnit::SendChatMessageToPlayer(uint8 type,uint32 lang,TSString _msg,TSPlay
 
 
     WorldPacket data;
-#if defined TRINITY || AZEROTHCORE
+#if TRINITY
     ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
-#else
-    ChatHandler::BuildChatPacket(data, ChatMsg(type), msg.c_str(), Language(lang), 0, unit->TS_GET_GUID(), unit->GetName(), target->TS_GET_GUID(), target->GetName());
+    //ChatHandler::BuildChatPacket(data, ChatMsg(type), Language(lang), unit, target, msg);
+#elif AZEROTHCORE
+    //ChatHandler::BuildChatPacket(data, ChatMsg(type), msg.c_str(), Language(lang), 0, unit->TS_GET_GUID(), unit->GetName(), target->TS_GET_GUID(), target->GetName());
 #endif
-#ifdef CMANGOS
-    target->GetSession()->SendPacket(data);
-#else
     target->GetSession()->SendPacket(&data);
-#endif
 }
 
 /**
@@ -2027,11 +1986,7 @@ void TSUnit::SendUnitWhisper(TSString msg,uint32 lang,TSPlayer _receiver,bool bo
 {
     auto receiver = _receiver.player;
     if (msg.get_length() > 0)
-#ifdef TRINITY
         unit->Whisper(msg._value.c_str(), (Language)lang, receiver, bossWhisper);
-#else
-        unit->MonsterWhisper(msg._value.c_str(), receiver, bossWhisper);
-#endif
 }
 
 /**
@@ -2045,11 +2000,7 @@ void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
 {
     auto receiver = _receiver.unit;
     if (msg.length() > 0)
-#ifdef TRINITY
         unit->TextEmote(msg.std_str(), receiver, bossEmote);
-#else
-        unit->MonsterTextEmote(msg.c_str(), receiver, bossEmote);
-#endif
 }
 
 /**
@@ -2061,11 +2012,7 @@ void TSUnit::SendUnitEmote(TSString msg,TSUnit _receiver,bool bossEmote)
 void TSUnit::SendUnitSay(TSString msg,uint32 language)
 {
     if (msg.length() > 0)
-#ifdef TRINITY
         unit->Say(msg.c_str(), (Language)language, unit);
-#else
-        unit->MonsterSay(msg.c_str(), language, unit);
-#endif
 }
 
 /**
@@ -2077,11 +2024,7 @@ void TSUnit::SendUnitSay(TSString msg,uint32 language)
 void TSUnit::SendUnitYell(TSString msg,uint32 language)
 {
     if (msg.length() > 0)
-#ifdef TRINITY
         unit->Yell(msg.std_str(), (Language)language, unit);
-#else
-        unit->MonsterYell(msg.c_str(), language, unit);
-#endif
 }
 
 /**
@@ -2615,7 +2558,11 @@ void TSUnit::AddThreat(TSUnit _victim,float threat,uint32 spell,uint32 schoolMas
 
 void TSUnit::ScaleThreat(TSUnit victim, float scale, bool raw)
 {
+#if TRINITY
     unit->GetThreatManager().ScaleThreat(victim.unit, scale, raw);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSUnit::ScaleThreat not implemented for AzerothCore.");
+#endif
 }
 
 uint32 TSUnit::GetResistance(uint32 school)
