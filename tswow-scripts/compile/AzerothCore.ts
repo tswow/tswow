@@ -22,6 +22,7 @@ import { wsys } from "../util/System";
 import { term } from "../util/Terminal";
 import { copyExtLibs } from "./CommonCore";
 import { bpaths, spaths } from "./CompilePaths";
+import { TrinityCore } from "./TrinityCore";
 
 export namespace AzerothCore {
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
@@ -79,5 +80,8 @@ export namespace AzerothCore {
 
         bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
         bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.join(x.basename())));
+
+        // note: will use tc enums when building, some might be incorrect.
+        TrinityCore.headers();
     }
 }
