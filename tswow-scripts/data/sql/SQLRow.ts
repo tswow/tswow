@@ -17,6 +17,7 @@
 import { CellSystem } from '../cell/systems/CellSystem';
 import { Row } from '../table/Row';
 import { SqlTable } from './SQLTable';
+import { translate } from './SQLTranslate';
 
 /**
  * Represents a single row in the SQL table. If this row was loaded directly from the db,
@@ -94,6 +95,7 @@ export abstract class SqlRow<C, Q> extends Row<C, Q> {
 
     protected generateSql() {
         const obj = this.objectify();
+        translate(this.table.name,obj,'OUT')
         for(let key in obj) {
             if(typeof(obj[key]) == 'string') {
                 obj[key] = obj[key].split('\\').join('\\\\').split('"').join('\\"')

@@ -19,6 +19,7 @@ import { Row } from '../table/Row';
 import { Table } from '../table/Table';
 import { SqlConnection } from './SQLConnection';
 import { SqlRow } from './SQLRow';
+import { translate } from './SQLTranslate';
 
 export type SqlRowCreator<C, Q, R extends SqlRow<C, Q>> = (table: SqlTable<C, Q, R>, obj: {[key: string]: any}) => R;
 
@@ -68,6 +69,7 @@ export class SqlTable<C, Q, R extends SqlRow<C, Q>> extends Table<C, Q, R> {
     }
 
     private filterInt(where: Q, firstOnly = false): R[] {
+        translate(this.name,where,'OUT')
         const cacheMatches = this.cachedValues.filter(x => inMemory(where, x));
         const dbMatches = SqlConnection.getRows(this, where, firstOnly)
             .filter(x => !this.cachedRows[Row.fullKey(x)]);
