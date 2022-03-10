@@ -260,6 +260,9 @@ export function InstallPath(pathIn: string, tdb: string) {
             libraries: dir({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({})),
             }),
+            libraries_ac: dir({
+                build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({})),
+            }),
             sourceAdt: file('source.adt'),
             mysql_startup: file('mysql_startup.txt'),
             addons: dir({}),
@@ -525,7 +528,31 @@ export function BuildPaths(pathIn: string, tdb: string) {
                 configs: custom((k)=>(name: string)=>{
                     return generateTree(mpath(k,'bin',name),dir({}))
                 }),
-            })
+            }),
+
+            libraries: custom((pathIn=>(type: string)=>{
+                return (isWindows() ?
+                [
+                    `deps/zlib/${type}/zlib.lib`,
+                    `deps/SFMT/${type}/sfmt.lib`,
+                    `deps/g3dlite/${type}/g3dlib.lib`,
+                    `deps/fmt/${type}/fmt.lib`,
+                    `deps/recastnavigation/Detour/${type}/detour.lib`,
+                    `deps/argon2/${type}/argon2.lib`,
+                    `src/server/shared/${type}/shared.lib`,
+                    `src/server/database/${type}/database.lib`,
+                    `src/server/game/${type}/game.lib`,
+                    `src/common/${type}/common.lib`,
+                ]
+                :
+                [
+                    `install/trinitycore/lib/libcommon.so`,
+                    `install/trinitycore/lib/libdatabase.so`,
+                    `install/trinitycore/lib/libgame.so`,
+                    `install/trinitycore/lib/libshared.so`,
+                ]
+                ).map(x=>new WFile(mpath(pathIn,x)))
+            })),
         }),
 
         TrinityCore: dir({

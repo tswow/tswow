@@ -78,5 +78,6 @@ export namespace AzerothCore {
         ipaths.bin.revisions.azerothcore.write(rev)
 
         bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
+        bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.join(x.basename())));
     }
 }
