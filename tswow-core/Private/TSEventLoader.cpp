@@ -420,7 +420,5 @@ void AddSC_tswow_commandscript();
 void TSInitializeEvents()
 {
     TSLoadEvents();
-#if TRINITY
     AddSC_tswow_commandscript();
-#endif
 };

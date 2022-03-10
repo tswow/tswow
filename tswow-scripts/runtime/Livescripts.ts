@@ -160,13 +160,28 @@ export class Livescripts {
             term.error(this.logName(),`Failed to compile library, please report this error`);
         }
 
-        builddir.built_libs.pick(buildType).library
-            .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore)
-                .build.pick(buildType).scripts.moduleLib(dataset.fullName+'_'+this.mod.fullName))
+        switch(dataset.config.EmulatorCore) {
+            case 'azerothcore':
+                let lib = builddir.built_libs.pick(buildType).library
+                lib.copy(dataset.path.lib.join(buildType,lib.basename()))
+                if(isWindows()) {
+                    let pdb = builddir.built_libs.pick(buildType).pdb;
+                    pdb.copy(dataset.path.lib.join(buildType).join(pdb.basename()))
+                }
+                dataset.realms()
+                    .filter(x=>x.worldserver.isRunning())
+                    .forEach(x=>x.worldserver.send(`reload livescripts`))
+                break;
+            case 'trinitycore':
+                builddir.built_libs.pick(buildType).library
+                    .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore)
+                        .build.pick(buildType).scripts.moduleLib(dataset.fullName+'_'+this.mod.fullName))
 
-        if(isWindows()) {
-            builddir.built_libs.pick(buildType).pdb
-                .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(buildType).scripts.modulePdb(dataset.fullName+'_'+this.mod.fullName))
+                if(isWindows()) {
+                    builddir.built_libs.pick(buildType).pdb
+                        .copy(ipaths.bin.core.pick(dataset.config.EmulatorCore).build.pick(buildType).scripts.modulePdb(dataset.fullName+'_'+this.mod.fullName))
+                }
+                break;
         }
 
         term.log(this.logName(),`Rebuilt code for ${this.mod.fullName} in ${timer.timeSec()}s`)

@@ -41,6 +41,7 @@ export function DatasetDirectory(inPath: string, inName: string) {
         dbc_temp: dir({
             dbc: dir({}),
         }),
+        lib: dir({}),
         luaxml: dir({
             Interface: dir({
                 FrameXML: dir({
