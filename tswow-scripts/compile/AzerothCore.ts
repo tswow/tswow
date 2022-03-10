@@ -79,7 +79,7 @@ export namespace AzerothCore {
         ipaths.bin.revisions.azerothcore.write(rev)
 
         bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
-        bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.join(x.basename())));
+        bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())));
 
         // note: will use tc enums when building, some might be incorrect.
         TrinityCore.headers();
