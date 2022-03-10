@@ -47,6 +47,7 @@ void SetBinPath(std::string const& path)
 
 void UpdateTSLibraries(bool forceReload)
 {
+#if AZEROTHCORE
     fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / buildType;
     TS_LOG_INFO("tswow.livescripts", "Reloading livescripts");
 
@@ -119,4 +120,5 @@ void UpdateTSLibraries(bool forceReload)
         TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName);
         ptr(events);
     }
+#endif
 }
