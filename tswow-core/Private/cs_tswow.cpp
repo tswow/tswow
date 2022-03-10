@@ -11,6 +11,9 @@
 
 #if TRINITY
 using namespace Trinity::ChatCommands;
+#elif AZEROTHCORE
+using namespace Acore::ChatCommands;
+#endif
 
 #if TRINITY_COMPILER == TRINITY_COMPILER_GNU
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -62,22 +65,34 @@ public:
 
     std::vector<ChatCommand> GetCommands() const override
     {
+#if TRINITY
         static std::vector<ChatCommand> testTable = {
             { "start", HandleTestStartCommand, rbac::RBAC_PERM_TEST, Console::No},
             { "pass", HandleTestPassCommand, rbac::RBAC_PERM_TEST, Console::No},
             { "fail", HandleTestFailCommand, rbac::RBAC_PERM_TEST, Console::No},
             { "info", HandleTestInfoCommand, rbac::RBAC_PERM_TEST, Console::No}
         };
+#endif
 
+#if TRINITY
         static std::vector<ChatCommand> commandTable = {
             { "at", At, rbac::RBAC_PERM_AT, Console::No},
             { "clearat", ClearAt, rbac::RBAC_PERM_CLEAR_AT, Console::No},
             { "id", Id, rbac::RBAC_PERM_ID, Console::No},
             { "test", testTable}
         };
+#elif AZEROTHCORE
+        static std::vector<ChatCommand> commandTable = {
+            { "at", At, SEC_GAMEMASTER, Console::No},
+            { "clearat", ClearAt, SEC_GAMEMASTER, Console::No},
+            { "id", Id, SEC_GAMEMASTER, Console::No},
+        };
+
+#endif
         return commandTable;
     }
 
+#if TRINITY
     static bool HandleTestStartCommand(ChatHandler* handler, char const* args)
     {
         std::pair<std::string, std::string> sessionArgs = parseSessionWArgs(args);
@@ -125,6 +140,7 @@ public:
         PrintSessionStatus(handler->GetPlayer(), session);
         return true;
     }
+#endif
 
     static bool Id(ChatHandler* handler, char const* args)
     {
@@ -192,4 +208,3 @@ void AddSC_tswow_commandscript()
 {
     new wp_tswow();
 }
-#endif
