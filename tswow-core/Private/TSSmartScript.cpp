@@ -206,7 +206,7 @@ void TSSmartScriptValues::StoreTargetList(TSArray<TSWorldObject> objects, uint32
     {
         objectsOut->push_back(objects[i].obj);
     }
-    m_script->StoreTargetList(objectsOut, id);
+    m_script->StoreTargetList(*objectsOut, id);
 }
 
 TSArray<TSWorldObject> TSSmartScriptValues::GetTargetList(uint32 id, TSWorldObject ref)
