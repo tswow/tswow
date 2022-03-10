@@ -370,7 +370,7 @@ void TSBattleground::PlaySound(uint32 sound, uint32 team)
     }
     else
     {
-#if TRINITYCORE
+#if TRINITY
         bg->PlaySoundToTeam(sound, team);
 #elif AZEROTHCORE
         TS_LOG_ERROR("tswow.api", "TSBattleground::PlaySound not implemented for AzerothCore with non-neutral team.");

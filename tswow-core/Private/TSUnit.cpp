@@ -632,7 +632,11 @@ uint64 TSUnit::GetCharmerGUID()
  */
 uint64 TSUnit::GetCharmGUID()
 {
+#if TRINITY
+    return unit->GetCharmedGUID();
+#elif AZEROTHCORE
     return TS_GUID(unit->GetCharmGUID());
+#endif
 }
 
 /**

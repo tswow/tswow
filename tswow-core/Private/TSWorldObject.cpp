@@ -826,7 +826,7 @@ TSArray<TSGameObject> TSWorldObject::GetGameObjectsInRange(float range, uint32 e
 
 TSPlayer TSWorldObject::GetNearestPlayer(float range, uint32 hostile, uint32 dead)
 {
-#if TRINITYCORE
+#if TRINITY
     Unit* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
@@ -840,7 +840,7 @@ TSPlayer TSWorldObject::GetNearestPlayer(float range, uint32 hostile, uint32 dea
 
 TSGameObject TSWorldObject::GetNearestGameObject(float range, uint32 entry, uint32 hostile)
 {
-#if TRINITYCORE
+#if TRINITY
     GameObject* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
     Trinity::GameObjectLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);

@@ -88,7 +88,7 @@ void TSChannel::LeaveChannel(TSPlayer player, bool send)
 
 void TSChannel::SetInvisible(TSPlayer player, bool on)
 {
-#if TRINITYCORE
+#if TRINITY
     channel->SetInvisible(player->player,on);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSChannel::SetInvisible not implemented for AzerothCore.");
