@@ -487,6 +487,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
                         libmysql_dll: file('libmysql.dll'),
                         libmysqld_dll: file('libmysqld.dll'),
                         mysqlserver_lib: file('mysqlserver.lib'),
+                        libmysql_lib: file('libmysql.lib')
                     })
                 }))
             },
@@ -495,12 +496,17 @@ export function BuildPaths(pathIn: string, tdb: string) {
         opensslArchive: file('openssl1_1_1m.zip'),
 
         openssl: dir({
-            libcrypto: file('libcrypto-1_1-x64.dll')
+            libcrypto_dll: file('libcrypto-1_1-x64.dll'),
+            lib: dir({
+                libcrypto_lib: file('libcrypto.lib')
+            })
         }),
 
         boost: dir({
             boost_1_74_0: dir({
-                lib64_msvc_14_2: dir({})
+                lib64_msvc_14_2: dirn('lib64-msvc-14.2',{
+                    fslib: file('libboost_filesystem-vc142-mt-x64-1_74.lib')
+                })
             })
         }),
         boostArchive: file('boost_1_74_0.zip'),

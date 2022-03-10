@@ -80,6 +80,11 @@ export namespace AzerothCore {
 
         bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
         bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())));
+        [
+            bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib,
+            bpaths.mysql.find_subdir().lib.libmysql_lib,
+            bpaths.openssl.lib.libcrypto_lib
+        ].forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())))
 
         // note: will use tc enums when building, some might be incorrect.
         TrinityCore.headers();

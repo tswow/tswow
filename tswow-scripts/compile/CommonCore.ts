@@ -26,7 +26,7 @@ export function copyExtLibs(core: 'trinitycore'|'azerothcore', type: string) {
         ].forEach(x=>{
             x.copy(ipaths.bin.core.pick(core).build.pick(type).join(x.basename()))
         })
-        bpaths.openssl.libcrypto
+        bpaths.openssl.libcrypto_dll
             .copy(ipaths.bin.core.pick(core).build.pick(type).libcrypto)
     }
 }

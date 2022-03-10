@@ -132,7 +132,7 @@ export class Livescripts {
             });
 
         builddir.cpp.cmakelists_txt
-            .write(getLivescriptCMakeLists(buildType,this.mod.fullName))
+            .write(getLivescriptCMakeLists(dataset.config.EmulatorCore,buildType,this.mod.fullName))
 
             const cmake_generate =
             (isWindows()
