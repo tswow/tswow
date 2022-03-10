@@ -206,7 +206,11 @@ void TSSmartScriptValues::StoreTargetList(TSArray<TSWorldObject> objects, uint32
     {
         objectsOut->push_back(objects[i].obj);
     }
+#if TRINITY
     m_script->StoreTargetList(*objectsOut, id);
+#elif AZEROTHCORE
+    m_script->StoreTargetList(objectsOut, id);
+#endif
 }
 
 TSArray<TSWorldObject> TSSmartScriptValues::GetTargetList(uint32 id, TSWorldObject ref)
