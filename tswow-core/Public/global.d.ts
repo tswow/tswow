@@ -8656,13 +8656,13 @@ declare class TSJsonObject {
     GetString(key: string, def?: string): string;
     HasString(key: string): boolean;
 
-    SetObject(key: string, value: TSJsonObject): this;
-    GetObject(key: string, def?: TSJsonObject): TSJsonObject;
-    HasObject(key: string): boolean;
+    SetJsonObject(key: string, value: TSJsonObject): this;
+    GetJsonObject(key: string, def?: TSJsonObject): TSJsonObject;
+    HasJsonObject(key: string): boolean;
 
-    SetArray(key: string, value: TSJsonArray): this;
-    GetArray(key: string, def?: TSJsonArray): TSJsonArray;
-    HasArray(key: string): boolean;
+    SetJsonArray(key: string, value: TSJsonArray): this;
+    GetJsonArray(key: string, def?: TSJsonArray): TSJsonArray;
+    HasJsonArray(key: string): boolean;
 
     SetNull(key: string): this;
     HasNull(key: string): bool
@@ -8692,17 +8692,17 @@ declare class TSJsonArray {
     InsertString(index: uint32, value: string): this;
     PushString(value: string): this;
 
-    SetObject(index: uint32, value: TSJsonObject): this;
-    GetObject(index: uint32, def?: TSJsonObject): TSJsonObject;
-    HasObject(index: uint32): bool;
-    InsertObject(index: uint32, value: TSJsonObject): this;
-    PushObject(value: TSJsonObject): this;
+    SetJsonObject(index: uint32, value: TSJsonObject): this;
+    GetJsonObject(index: uint32, def?: TSJsonObject): TSJsonObject;
+    HasJsonObject(index: uint32): bool;
+    InsertJsonObject(index: uint32, value: TSJsonObject): this;
+    PushJsonObject(value: TSJsonObject): this;
 
-    SetArray(index: uint32, value: TSJsonArray): this;
-    GetArray(index: uint32, def?: TSJsonArray): TSJsonArray;
-    HasArray(index: uint32): bool;
-    InsertArray(index: uint32, value: TSJsonArray): this;
-    PushArray(value: TSJsonArray): this;
+    SetJsonArray(index: uint32, value: TSJsonArray): this;
+    GetJsonArray(index: uint32, def?: TSJsonArray): TSJsonArray;
+    HasJsonArray(index: uint32): bool;
+    InsertJsonArray(index: uint32, value: TSJsonArray): this;
+    PushJsonArray(value: TSJsonArray): this;
 
     SetNull(index: uint32): this;
     HasNull(index: uint32): bool

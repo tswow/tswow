@@ -257,6 +257,7 @@ public:
     }
   }
 
+#if TRINITY
   template <typename... Args>
   void push(Args...args) {
     for (const auto& item : { args... })
@@ -264,6 +265,19 @@ public:
       vec->push_back(item);
     }
   }
+#elif AZEROTHCORE
+  void push(T const& i1) { vec->push_back(i1); }
+  void push(T const& i1, T const& i2) { push(i1); push(i2); }
+  void push(T const& i1, T const& i2, T const& i3) { push(i1, i2); push(i3); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4) { push(i1, i2, i3); push(i4); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5) { push(i1, i2, i3, i4); push(i5); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5, T const& i6) { push(i1, i2, i3, i4, i5); push(i6); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5, T const& i6, T const& i7) { push(i1, i2, i3, i4, i5, i6); push(i7); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5, T const& i6, T const& i7, T const& i8) { push(i1, i2, i3, i4, i5, i6, i7); push(i8); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5, T const& i6, T const& i7, T const& i8, T const& i9) { push(i1, i2, i3, i4, i5, i6, i7, i8); push(i8); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5, T const& i6, T const& i7, T const& i8, T const& i9, T const& i10) { push(i1, i2, i3, i4, i5, i6, i7, i8, i9); push(i10); }
+  void push(T const& i1, T const& i2, T const& i3, T const& i4, T const& i5, T const& i6, T const& i7, T const& i8, T const& i9, T const& i10, T const& i11) { push(i1, i2, i3, i4, i5, i6, i7, i8, i9, i10); push(i11); }
+#endif
 
   T shift()
   {

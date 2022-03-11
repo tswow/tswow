@@ -26,5 +26,44 @@
 #endif
 #endif
 
-#define TRINITY 1
+#ifndef TS_LOG_DEBUG
+#if TRINITY
+#define TS_LOG_DEBUG TC_LOG_DEBUG
+#elif AZEROTHCORE
+#define TS_LOG_DEBUG LOG_DEBUG
+#endif
+#endif
+
+#ifndef TS_LOG_INFO
+#if TRINITY
+#define TS_LOG_INFO TC_LOG_INFO
+#elif AZEROTHCORE
+#define TS_LOG_INFO LOG_INFO
+#endif
+#endif
+
+#ifndef TS_LOG_WARNING
+#if TRINITY
+#define TS_LOG_WARNING TC_LOG_WARNING
+#elif AZEROTHCORE
+#define TS_LOG_WARNING LOG_WARNING
+#endif
+#endif
+
+#ifndef TS_LOG_ERROR
+#if TRINITY
+#define TS_LOG_ERROR TC_LOG_ERROR
+#elif AZEROTHCORE
+#define TS_LOG_ERROR LOG_ERROR
+#endif
+#endif
+
+#ifndef TS_GUID
+#if TRINITY
+#define TS_GUID(val) val
+#elif AZEROTHCORE
+#define TS_GUID(val) val.GetRawValue()
+#endif
+#endif
+
 #define TS_GET_GUID GetGUID

@@ -144,13 +144,21 @@ void TSMail::RemoveAllItems()
 void TSMail::AddItem(uint32 entry, uint8 count, TSPlayer player)
 {
     auto guid = Item::CreateItem(entry,count,player->player)->GetGUID();
+#if TRINITY
     mail->AddItem(guid,entry);
+#elif AZEROTHCORE
+    mail->AddItem(guid.GetEntry(),entry);
+#endif
 }
 
 void TSMail::SetSender(uint8 type, uint64 guid)
 {
     mail->messageType = type;
+#if TRINITY
     mail->sender = ObjectGuid(guid);
+#elif AZEROTHCORE
+    mail->sender = ObjectGuid(guid).GetEntry();
+#endif
 }
 
 void TSMail::SetSubject(TSString subject)
@@ -175,27 +183,47 @@ TSMailDraft::TSMailDraft(MailDraft* draft)
 
 uint16 TSMailDraft::GetTemplateID()
 {
+#ifdef TRINITY
     return draft->m_mailTemplateId;
+#elif AZEROTHCORE
+    return draft->GetMailTemplateId();
+#endif
 }
 
 TSString TSMailDraft::GetSubject()
 {
+#ifdef TRINITY
     return TSString(draft->m_subject);
+#elif AZEROTHCORE
+    return TSString(draft->GetSubject());
+#endif
 }
 
 TSString TSMailDraft::GetBody()
 {
+#ifdef TRINITY
     return TSString(draft->m_body);
+#elif AZEROTHCORE
+    return TSString(draft->GetBody());
+#endif
 }
 
 uint32 TSMailDraft::GetMoney()
 {
+#ifdef TRINITY
     return draft->m_money;
+#elif AZEROTHCORE
+    return draft->GetMoney();
+#endif
 }
 
 uint32 TSMailDraft::GetCOD()
 {
+#ifdef TRINITY
     return draft->m_COD;
+#elif AZEROTHCORE
+    return draft->GetCOD();
+#endif
 }
 
 TSArray<uint64> TSMailDraft::GetItemKeys()
@@ -203,7 +231,7 @@ TSArray<uint64> TSMailDraft::GetItemKeys()
     TSArray<uint64> arr;
     for(auto& itr : draft->m_items)
     {
-        arr.push(itr.first);
+        arr.push(TS_GUID(itr.first));
     }
     return arr;
 }
@@ -215,17 +243,29 @@ TSItem TSMailDraft::GetItem(uint64 item)
 
 void TSMailDraft::SetTemplateID(uint16 id)
 {
+#if TRINITY
     draft->m_mailTemplateId = id;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSMailDraft::SetTemplateID not implemented for AzerothCore");
+#endif
 }
 
 void TSMailDraft::SetSubject(TSString subject)
 {
+#if TRINITY
     draft->m_subject = subject.std_str();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSMailDraft::SetSubject not implemented for AzerothCore");
+#endif
 }
 
 void TSMailDraft::SetBody(TSString body)
 {
+#if TRINITY
     draft->m_body = body.std_str();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSMailDraft::SetBody not implemented for AzerothCore");
+#endif
 }
 
 void TSMailDraft::AddItem(uint32 entry, uint8 count, TSPlayer player)

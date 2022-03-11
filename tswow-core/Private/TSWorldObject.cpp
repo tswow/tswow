@@ -83,7 +83,12 @@ uint32 TSWorldObject::GetPhaseMask()
 
 uint64 TSWorldObject::GetPhaseID()
 {
+#if TRINITY
     return uint32(obj->m_phase_id);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetPhaseID not implemented for AzerothCore");
+    return 0;
+#endif
 }
 
 /**
@@ -94,7 +99,19 @@ uint64 TSWorldObject::GetPhaseID()
 */
 void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
 {
+#if TRINITY
     obj->SetPhaseMask(phaseMask, update, id);
+#elif AZEROTHCORE
+    obj->SetPhaseMask(phaseMask, update);
+    if (id != 0)
+    {
+        TS_LOG_ERROR(
+              "tswow.api"
+            , "TSWorldObject::SetPhaseMask not implemented for AzerothCore with phase id parameter (phase ids not implemented)"
+        );
+    }
+
+#endif
 }
 #endif
 
@@ -307,7 +324,7 @@ TSGameObject  TSWorldObject::SummonGameObject(uint32 entry,float x,float y,float
     QuaternionData rot = QuaternionData::fromEulerAnglesZYX(o, 0.f, 0.f);
     return TSGameObject(obj->SummonGameObject(entry, Position(x, y, z, o), rot, std::chrono::seconds(respawnDelay)));
 #elif AZEROTHCORE
-    return TSGameObject(obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, std::chrono::seconds(respawnDelay)));
+    return TSGameObject(obj->SummonGameObject(entry, x, y, z, o, 0, 0, 0, 0, respawnDelay));
 #else
     return TSGameObject(obj->SummonGameObject(entry, x, y, z, o, std::chrono::seconds(respawnDelay)));
 #endif
@@ -381,7 +398,11 @@ TSCreature  TSWorldObject::SpawnCreature(uint32 entry,float x,float y,float z,fl
             break;
 #endif
     }
+#ifdef TRINITY
     auto c = (Creature*) (obj->SummonCreature(entry, x, y, z, o, type, std::chrono::milliseconds(despawnTimer)));
+#elif AZEROTHCORE
+    auto c = (Creature*) (obj->SummonCreature(entry, Position(x, y, z, o), type, despawnTimer));
+#endif
     return TSCreature(c);
 }
 
@@ -734,6 +755,7 @@ bool WorldObjectInRangeCheck::operator()(WorldObject* u)
 TSArray<TSCreature> TSWorldObject::GetCreaturesInRange(float range, uint32 entry, uint32 hostile, uint32 dead)
 {
     TSArray<TSCreature> arr;
+#if TRINITY
     std::list<Creature*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, entry, hostile, dead);
     Trinity::CreatureListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
@@ -742,12 +764,16 @@ TSArray<TSCreature> TSWorldObject::GetCreaturesInRange(float range, uint32 entry
     {
         arr.push(TSCreature(*it));
     }
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetCreaturesInRange not implemented for AzerothCore.");
+#endif
     return arr;
 }
 
 TSArray<TSUnit> TSWorldObject::GetUnitsInRange(float range, uint32 hostile, uint32 dead)
 {
     TSArray<TSUnit> arr;
+#if TRINITY
     std::list<Unit*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_UNIT, 0, hostile, dead);
     Trinity::UnitListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
@@ -756,12 +782,16 @@ TSArray<TSUnit> TSWorldObject::GetUnitsInRange(float range, uint32 hostile, uint
     {
         arr.push(TSUnit(*it));
     }
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetUnitsInRange not implemented for AzerothCore.");
+#endif
     return arr;
 }
 
 TSArray<TSPlayer> TSWorldObject::GetPlayersInRange(float range, uint32 hostile, uint32 dead)
 {
     TSArray<TSPlayer> arr;
+#if TRINITY
     std::list<Player*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
     Trinity::PlayerListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
@@ -770,12 +800,16 @@ TSArray<TSPlayer> TSWorldObject::GetPlayersInRange(float range, uint32 hostile, 
     {
         arr.push(TSPlayer(*it));
     }
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetPlayersInRange not implemented for AzerothCore");
+#endif
     return arr;
 }
 
 TSArray<TSGameObject> TSWorldObject::GetGameObjectsInRange(float range, uint32 entry, uint32 hostile)
 {
     TSArray<TSGameObject> arr;
+#if TRINITY
     std::list<GameObject*> list;
     WorldObjectInRangeCheck checker(false, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
     Trinity::GameObjectListSearcher<WorldObjectInRangeCheck> searcher(obj, list, checker);
@@ -784,34 +818,52 @@ TSArray<TSGameObject> TSWorldObject::GetGameObjectsInRange(float range, uint32 e
     {
         arr.push(TSGameObject(*it));
     }
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetGameObjectsInRange not implemented for AzerothCore");
+#endif
     return arr;
 }
 
 TSPlayer TSWorldObject::GetNearestPlayer(float range, uint32 hostile, uint32 dead)
 {
+#if TRINITY
     Unit* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_PLAYER, 0, hostile, dead);
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
     Cell::VisitAllObjects(obj, searcher, range);
     return target ? TSPlayer(target->ToPlayer()) : TSPlayer(nullptr);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetNearestPlayer not implemented for AzerothCore");
+    return TSPlayer(nullptr);
+#endif
 }
 
 TSGameObject TSWorldObject::GetNearestGameObject(float range, uint32 entry, uint32 hostile)
 {
+#if TRINITY
     GameObject* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_GAMEOBJECT, entry, hostile);
     Trinity::GameObjectLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
     Cell::VisitAllObjects(obj, searcher, range);
     return target ? TSGameObject(target->ToGameObject()) : TSGameObject(nullptr);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetNearestGameObject not implemented for AzerothCore");
+    return TSGameObject(nullptr);
+#endif
 }
 
 TSCreature TSWorldObject::GetNearestCreature(float range, uint32 entry, uint32 hostile, uint32 dead)
 {
+#if TRINITY
     Unit* target = NULL;
     WorldObjectInRangeCheck checker(true, obj, range, TYPEMASK_UNIT, entry, hostile);
     Trinity::UnitLastSearcher<WorldObjectInRangeCheck> searcher(obj, target, checker);
     Cell::VisitAllObjects(obj, searcher, range);
     return target ? TSCreature(target->ToCreature()) : TSCreature(nullptr);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetNearestCreate not implemented for AzerothCore");
+    return TSCreature(nullptr);
+#endif
 }
 
 TSGameObject TSWorldObject::GetGameObject(uint64 guid)
@@ -1010,25 +1062,51 @@ bool TSWorldObject::IsActive()
 
 bool TSWorldObject::IsFriendlyTo(TSWorldObject object)
 {
+#if TRINITY
     return obj->IsFriendlyTo(object.obj);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsFriendlyTo not implemented for AzerothCore");
+    return true;
+#endif
 }
 
 bool TSWorldObject::IsHostileTo(TSWorldObject object)
 {
+#if TRINITY
     return obj->IsHostileTo(object.obj);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsHostileTo not implemented for AzerothCore");
+    return false;
+#endif
 }
 
 bool TSWorldObject::IsFriendlyToPlayers()
 {
+#if TRINITY
     return !obj->IsHostileToPlayers();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsFriendlyToPlayers not implemented for AzerothCore");
+    return true;
+#endif
+
 }
 
 bool TSWorldObject::IsHostileToPlayers()
 {
+#if TRINITY
     return obj->IsHostileToPlayers();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsHostileToPlayers not implemented for AzerothCore");
+    return false;
+#endif
 }
 
 bool TSWorldObject::IsNeutralToAll()
 {
+#if TRINITY
     return obj->IsNeutralToAll();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::IsNeutralToAll not implemented for AzerothCore");
+    return false;
+#endif
 }

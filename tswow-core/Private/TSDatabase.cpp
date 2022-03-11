@@ -62,20 +62,32 @@ public:
         return v;
     }
 
-    uint8 GetUInt8(int index) final { return field[index].GetUInt8(); }
-    uint16 GetUInt16(int index) final { return field[index].GetUInt16(); }
-    uint32 GetUInt32(int index) final { return field[index].GetUInt32(); }
-    uint64 GetUInt64(int index) final { return field[index].GetUInt64(); }
+#if TRINITY
+#define TSGet(TC,AC) TC()
+#elif AZEROTHCORE
+#define TSGet(TC,AC) Get<AC>()
+#endif
 
-    int8 GetInt8(int index) final { return field[index].GetInt8(); }
-    int16 GetInt16(int index) final { return field[index].GetInt16(); }
-    int32 GetInt32(int index) final { return field[index].GetInt32(); }
-    int64 GetInt64(int index) final { return field[index].GetInt64(); }
+    uint8 GetUInt8(int index) final { return field[index].TSGet(GetUInt8, uint8); }
+    uint16 GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
+    uint32 GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
+    uint64 GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
 
-    float GetFloat(int index) final { return field[index].GetFloat(); }
-    double GetDouble(int index) final { return field[index].GetDouble(); }
+    int8 GetInt8(int index) final { return field[index].TSGet(GetInt8,int8); }
+    int16 GetInt16(int index) final { return field[index].TSGet(GetInt16,int16); }
+    int32 GetInt32(int index) final { return field[index].TSGet(GetInt32,int32); }
+    int64 GetInt64(int index) final { return field[index].TSGet(GetInt64,int64); }
 
-    TSString GetString(int index) final { return TSString(field[index].GetString()); }
+    float GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
+    double GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
+
+    TSString GetString(int index) final { 
+#if TRINITY
+        return TSString(field[index].GetString()); 
+#elif AZEROTHCORE
+        return this->GetString(index);
+#endif
+    }
 };
 
 // todo: don't copypaste
@@ -114,20 +126,26 @@ public:
         return v;
     }
 
-    uint8 GetUInt8(int index) final { return field[index].GetUInt8(); }
-    uint16 GetUInt16(int index) final { return field[index].GetUInt16(); }
-    uint32 GetUInt32(int index) final { return field[index].GetUInt32(); }
-    uint64 GetUInt64(int index) final { return field[index].GetUInt64(); }
+    uint8 GetUInt8(int index) final { return field[index].TSGet(GetUInt8,uint8); }
+    uint16 GetUInt16(int index) final { return field[index].TSGet(GetUInt16,uint16); }
+    uint32 GetUInt32(int index) final { return field[index].TSGet(GetUInt32,uint32); }
+    uint64 GetUInt64(int index) final { return field[index].TSGet(GetUInt64,uint64); }
 
-    int8 GetInt8(int index) final { return field[index].GetInt8(); }
-    int16 GetInt16(int index) final { return field[index].GetInt16(); }
-    int32 GetInt32(int index) final { return field[index].GetInt32(); }
-    int64 GetInt64(int index) final { return field[index].GetInt64(); }
+    int8 GetInt8(int index) final { return field[index].TSGet(GetInt8,uint8); }
+    int16 GetInt16(int index) final { return field[index].TSGet(GetInt16,uint16); }
+    int32 GetInt32(int index) final { return field[index].TSGet(GetInt32,uint32); }
+    int64 GetInt64(int index) final { return field[index].TSGet(GetInt64,uint64); }
 
-    float GetFloat(int index) final { return field[index].GetFloat(); }
-    double GetDouble(int index) final { return field[index].GetDouble(); }
+    float GetFloat(int index) final { return field[index].TSGet(GetFloat,float); }
+    double GetDouble(int index) final { return field[index].TSGet(GetDouble,double); }
 
-    TSString GetString(int index) final { return TSString(field[index].GetString()); }
+    TSString GetString(int index) final { 
+#if TRINITY
+        return TSString(field[index].GetString()); 
+#elif AZEROTHCORE
+        return TSString(GetString(index));
+#endif
+    }
 };
 
 std::shared_ptr<TSDatabaseResult> QueryWorld(TSString query)
@@ -200,73 +218,121 @@ std::shared_ptr<TSDatabaseResult> TSPreparedStatementBase::Send(TSCharactersData
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetNull(const uint8 index)
 {
+#if TRINITY
     m_statement->setNull(index);
+#elif AZEROTHCORE
+    m_statement->SetData(index, nullptr);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetUInt8(const uint8 index, const uint8 value)
 {
+#if TRINITY
     m_statement->setUInt8(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<uint8>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetInt8(const uint8 index, const int8 value)
 {
+#if TRINITY
     m_statement->setInt8(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<int8>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetUInt16(const uint8 index, const uint16 value)
 {
+#if TRINITY
     m_statement->setUInt16(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<uint16>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetInt16(const uint8 index, const int16 value)
 {
+#if TRINITY
     m_statement->setInt16(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<int16>(index, value);
+#endif 
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetUInt32(const uint8 index, const uint32 value)
 {
+#if TRINITY
     m_statement->setUInt32(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<uint32>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetInt32(const uint8 index, const int32 value)
 {
+#if TRINITY
     m_statement->setInt32(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<int32>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetUInt64(const uint8 index, const uint64 value)
 {
+#if TRINITY
     m_statement->setUInt64(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<uint64>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetInt64(const uint8 index, const int64 value)
 {
+#if TRINITY
     m_statement->setInt64(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<int64>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetFloat(const uint8 index, const float value)
 {
+#if TRINITY
     m_statement->setFloat(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<float>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetDouble(const uint8 index, const double value)
 {
+#if TRINITY
     m_statement->setDouble(index, value);
+#elif AZEROTHCORE
+    m_statement->SetData<double>(index, value);
+#endif
     return this;
 }
 
 TSPreparedStatementBase* TSPreparedStatementBase::SetString(const uint8 index, TSString value)
 {
+#if TRINITY
     m_statement->setString(index, value.std_str());
+#elif AZEROTHCORE
+    m_statement->SetData(index, value.std_str());
+#endif
     return this;
 }
 
@@ -277,23 +343,38 @@ TSPreparedStatementBase TSPreparedStatement::Create()
 
 std::shared_ptr<TSDatabaseResult> TSPreparedStatementWorld::Send(TSPreparedStatementBase* stmnt)
 {
+#if TRINITY
     auto ptr = std::make_shared<TSDatabaseResultPrepared>(WorldDatabase.QueryCustomStatement(m_id, stmnt->m_statement));
     delete stmnt->m_statement;
     return ptr;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPreparedStatementWorld::Send not implemented for AzerothCore");
+    return nullptr;
+#endif
 }
 
 std::shared_ptr<TSDatabaseResult> TSPreparedStatementCharacters::Send(TSPreparedStatementBase* stmnt)
 {
+#if TRINITY
     auto ptr = std::make_shared<TSDatabaseResultPrepared>(CharacterDatabase.QueryCustomStatement(m_id, stmnt->m_statement));
     delete stmnt->m_statement;
     return ptr;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPreparedStatementCharacters::Send not implemented for AzerothCore");
+    return nullptr;
+#endif
 }
 
 std::shared_ptr<TSDatabaseResult> TSPreparedStatementAuth::Send(TSPreparedStatementBase* stmnt)
 {
+#if TRINITY
     auto ptr = std::make_shared<TSDatabaseResultPrepared>(LoginDatabase.QueryCustomStatement(m_id, stmnt->m_statement));
     delete stmnt->m_statement;
     return ptr;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPreparedStatementAuth::Send not implemented for AzerothCore");
+    return nullptr;
+#endif
 }
 
 TSPreparedStatement::TSPreparedStatement(std::string const& sql, uint32 id)
@@ -304,15 +385,27 @@ TSPreparedStatement::TSPreparedStatement(std::string const& sql, uint32 id)
 }
 
 TSPreparedStatementWorld::TSPreparedStatementWorld(std::string const& sql)
+#if TRINITY
     : TSPreparedStatement(sql, WorldDatabase.PrepareCustomStatement(sql))
+#elif AZEROTHCORE
+    : TSPreparedStatement(sql, 0)
+#endif
 {}
 
 TSPreparedStatementCharacters::TSPreparedStatementCharacters(std::string const& sql)
+#if TRINITY
     : TSPreparedStatement(sql, CharacterDatabase.PrepareCustomStatement(sql))
+#elif AZEROTHCORE
+    : TSPreparedStatement(sql, 0)
+#endif
 {}
 
 TSPreparedStatementAuth::TSPreparedStatementAuth(std::string const& sql)
+#if TRINITY
     : TSPreparedStatement(sql, LoginDatabase.PrepareCustomStatement(sql))
+#elif AZEROTHCORE
+    : TSPreparedStatement(sql, 0)
+#endif
 {}
 
 TC_GAME_API TSPreparedStatementWorld PrepareWorldQuery(TSString query)
@@ -362,17 +455,26 @@ std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::Query(TSString sql)
 
 std::shared_ptr<TSDatabaseResult> TSWorldDatabaseConnection::Query(TSPreparedStatementBase * stmnt)
 {
+#if TRINITY
     auto res = std::make_shared<TSDatabaseResultPrepared>(
         WorldDatabase.QueryCustomStatement(
             stmnt->m_holder->m_id, stmnt->m_statement, m_connection
         ));
     delete stmnt->m_statement;
     return res;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldDatabaseConnection::Query is not implemented for AzerothCore");
+    return nullptr;
+#endif
 }
 
 void TSWorldDatabaseConnection::Unlock()
 {
+#if TRINITY
     m_connection->Unlock();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldDatabaseConnection::Unlock is not implemented for AzerothCore");
+#endif
 }
 
 
@@ -388,17 +490,26 @@ std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSString sql)
 
 std::shared_ptr<TSDatabaseResult> TSAuthDatabaseConnection::Query(TSPreparedStatementBase* stmnt)
 {
+#if TRINITY
     auto res = std::make_shared<TSDatabaseResultPrepared>(
         LoginDatabase.QueryCustomStatement(
             stmnt->m_holder->m_id, stmnt->m_statement, m_connection
         ));
     delete stmnt->m_statement;
     return res;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSAuthDatabaseConnection::Query is not implemented for AzerothCore");
+    return nullptr;
+#endif
 }
 
 void TSAuthDatabaseConnection::Unlock()
 {
+#if TRINITY
     m_connection->Unlock();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSAuthDatabaseConnection::Unlock is not implemented for AzerothCore");
+#endif
 }
 
 
@@ -414,30 +525,52 @@ std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::Query(TSString
 
 std::shared_ptr<TSDatabaseResult> TSCharactersDatabaseConnection::Query(TSPreparedStatementBase* stmnt)
 {
+#if TRINITY
     auto res = std::make_shared<TSDatabaseResultPrepared>(
         CharacterDatabase.QueryCustomStatement(
             stmnt->m_holder->m_id, stmnt->m_statement, m_connection
         ));
     delete stmnt->m_statement;
     return res;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCharactersDatabaseConnection::Query is not implemented for AzerothCore");
+    return nullptr;
+#endif
 }
 
 void TSCharactersDatabaseConnection::Unlock()
 {
+#if TRINITY
     m_connection->Unlock();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCharactersDatabaseConnection::Unlock is not implemented for AzerothCore");
+#endif
 }
 
 TC_GAME_API TSWorldDatabaseConnection GetWorldDBConnection()
 {
+#if TRINITY
     return TSWorldDatabaseConnection(WorldDatabase.GetFreeConnection());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "GetWorldDBCOnnection is not implemented for AzerothCore");
+    return TSWorldDatabaseConnection(nullptr);
+#endif
 }
 
 TC_GAME_API TSAuthDatabaseConnection GetAuthDBConnection()
 {
+#if TRINITY
     return TSAuthDatabaseConnection(LoginDatabase.GetFreeConnection());
+#elif AZEROTHCORE
+    return TSAuthDatabaseConnection(nullptr);
+#endif
 }
 
 TC_GAME_API TSCharactersDatabaseConnection GetCharactersDBConnection()
 {
+#if TRINITY
     return TSCharactersDatabaseConnection(CharacterDatabase.GetFreeConnection());
+#elif AZEROTHCORE
+    return TSCharactersDatabaseConnection(nullptr);
+#endif
 }

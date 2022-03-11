@@ -21,6 +21,7 @@ import { ipaths, TDB_URL } from '../util/Paths';
 import { isWindows } from '../util/Platform';
 import { wsys } from '../util/System';
 import { term } from '../util/Terminal';
+import { copyExtLibs } from './CommonCore';
 import { bpaths, spaths } from './CompilePaths';
 import { DownloadFile } from './Downloader';
 
@@ -240,17 +241,7 @@ export namespace TrinityCore {
         })
 
         // Copy mysql/ssl/cmake libraries
-        if (isWindows()) {
-            [
-                bpaths.mysql.find_subdir().lib.libmysql_dll,
-                bpaths.mysql.find_subdir().lib.libmysqld_dll
-            ].forEach(x=>{
-                x.copy(ipaths.bin.core.pick('trinitycore').build.pick(type).join(x.basename()))
-            })
-
-            bpaths.openssl.libcrypto
-                .copy(ipaths.bin.core.pick('trinitycore').build.pick(type).libcrypto)
-        }
+        copyExtLibs('trinitycore', type)
 
         // Move ts-module header files
         headers();

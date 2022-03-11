@@ -1,4 +1,5 @@
 import { makeMaskCell32, MaskCellWrite, MaskCon } from "../../../data/cell/cells/MaskCell";
+import { isTrinityCore } from "../../../data/Settings";
 import { SqlRow } from "../../../data/sql/SQLRow";
 import { spell_autolearnRow } from "../../sql/spell_autolearn";
 import { SQL } from "../../SQLFiles";
@@ -8,11 +9,13 @@ import { RaceMask } from "../Race/RaceType";
 import { Spell } from "./Spell";
 import { SpellRegistry } from "./Spells";
 
-SQL.Databases.world_dest.read(`DELETE FROM \`spell_autolearn\`;`);
-SQL.spell_autolearn.queryAll({})
-    .forEach(x=>{
-        SqlRow.markDirty(x);
-    })
+if(isTrinityCore()) {
+    SQL.Databases.world_dest.read(`DELETE FROM \`spell_autolearn\`;`);
+    SQL.spell_autolearn.queryAll({})
+        .forEach(x=>{
+            SqlRow.markDirty(x);
+        })
+}
 
 export class SpellAutoLearn extends ClassRaceMaskEntry<spell_autolearnRow> {
     get Spell() { return SpellRegistry.readOnlyRef(this, this.row.spell); }

@@ -15,7 +15,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "TSLoot.h"
+#if TRINITY
 #include "Loot.h"
+#elif AZEROTHCORE
+#include "LootMgr.h"
+#endif
 #include "LootMgr.h"
 #include "ObjectGuid.h"
 #include "TSMath.h"
@@ -84,7 +88,7 @@ void TSLoot::SetLootOwner(uint64 owner)
 
 uint64 TSLoot::GetLootOwner()
 {
-    return loot->lootOwnerGUID;
+    return TS_GUID(loot->lootOwnerGUID);
 }
 
 TSLootItem::TSLootItem(LootItem* item)
@@ -185,10 +189,19 @@ void TSLoot::Filter(std::function<bool(TSLootItem)> predicate)
 
 bool TSLoot::GetGeneratesNormally()
 {
+#if TRINITY
     return loot->generateNormally;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSLoot::GetGeneratesNormally not implemented for AzerothCore");
+    return true;
+#endif
 }
 
 void TSLoot::SetGeneratesNormally(bool generatesNormally)
 {
+#if TRINITY
     loot->generateNormally = generatesNormally;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSLoot::SetGeneratesNormally not implemented for AzerothCore");
+#endif
 }

@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "TSChannel.h"
+#include "TSPlayer.h"
 #include "Channel.h"
 #include "Player.h"
 
@@ -30,7 +31,15 @@ TSChannel::TSChannel()
 
 TSString TSChannel::GetName(uint32 locale)
 {
+#if TRINITY
     return TSString(channel->GetName(LocaleConstant(locale)));
+#elif AZEROTHCORE
+    if (locale)
+    {
+        TS_LOG_ERROR("tswow.api", "TSChannel::GetName is not implemented for non-default locale for AzerothCore");
+    }
+    return TSString(channel->GetName());
+#endif
 }
 
 uint32 TSChannel::GetID()
@@ -41,10 +50,29 @@ uint32 TSChannel::GetID()
 bool TSChannel::IsConstant() { return channel->IsConstant(); }
 bool TSChannel::IsLFG() { return channel->IsLFG(); }
 bool TSChannel::IsAnnounce(){ return channel->IsAnnounce(); }
-void TSChannel::SetAnnounce(bool announce) { channel->SetAnnounce(announce); }
-void TSChannel::SetDirty() { channel->SetDirty(); }
+void TSChannel::SetAnnounce(bool announce) { 
+#if TRINITY
+    channel->SetAnnounce(announce); 
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSChannel::SetAnnounce not implemented for AzerothCore");
+#endif
+}
+void TSChannel::SetDirty() { 
+#if TRINITY
+    channel->SetDirty();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSChannel::SetDirty not implemented for AzerothCore");
+#endif
+}
 void TSChannel::SetPassword(TSString password) { channel->SetPassword(password.std_str()); }
-bool TSChannel::CheckPassword(TSString password) { return channel->CheckPassword(password.std_str()); }
+bool TSChannel::CheckPassword(TSString password) { 
+#if TRINITY
+    return channel->CheckPassword(password.std_str()); 
+#elif AZEROTHCORE
+    LOG_WARN("tswow.api", "TSChannel::CheckPassword might not be correctly implemented for AzerothCore");
+    return channel->GetPassword() == password.std_str();
+#endif
+}
 uint32 TSChannel::GetNumPlayers() { return channel->GetNumPlayers(); }
 uint8 TSChannel::GetFlags() { return channel->GetFlags(); }
 bool TSChannel::HasFlag(uint8 flag) { return channel->HasFlag(flag); }
@@ -60,7 +88,11 @@ void TSChannel::LeaveChannel(TSPlayer player, bool send)
 
 void TSChannel::SetInvisible(TSPlayer player, bool on)
 {
+#if TRINITY
     channel->SetInvisible(player->player,on);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSChannel::SetInvisible not implemented for AzerothCore.");
+#endif
 }
 
 void TSChannel::SetOwner(uint64 guid, bool exclaim)

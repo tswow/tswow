@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+#if TRINITY
 #include "TSOutfit.h"
 #include "TSPlayer.h"
 #include "TSItem.h"
@@ -352,3 +353,4 @@ TSOutfit CreateOutfit(uint32_t race, uint32_t gender)
 {
     return TSOutfit(race,gender);
 }
+#endif

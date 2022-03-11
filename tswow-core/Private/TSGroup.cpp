@@ -21,6 +21,7 @@
 #include "TSWorldPacket.h"
 #include "TSIncludes.h"
 #include "TSGroup.h"
+#include "Player.h"
 
 TSGroup::TSGroup(Group *group)
 {
@@ -193,11 +194,7 @@ TSArray<TSPlayer> TSGroup::GetMembers()
  */
 uint64 TSGroup::GetLeaderGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return group->GetLeaderGUID();
-#else
-    return group->GetLeaderGuid();
-#endif
+    return TS_GUID(group->GetLeaderGUID());
 }
 
 /**
@@ -207,11 +204,7 @@ uint64 TSGroup::GetLeaderGUID()
  */
 uint64 TSGroup::GetGUID()
 {
-#ifdef CLASSIC
-    return group->GetId();
-#else
-    return group->TS_GET_GUID();
-#endif
+    return TS_GUID(group->TS_GET_GUID());
 }
 
 /**
@@ -222,11 +215,7 @@ uint64 TSGroup::GetGUID()
  */
 uint64 TSGroup::GetMemberGUID(TSString name)
 {
-#if defined TRINITY || AZEROTHCORE
-    return group->GetMemberGUID(name._value);
-#else
-    return group->GetMemberGuid(name._value);
-#endif
+    return TS_GUID(group->GetMemberGUID(name._value));
 }
 
 /**

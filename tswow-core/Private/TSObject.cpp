@@ -170,7 +170,7 @@ uint32 TSObject::GetEntry()
  */
 uint64 TSObject::GetGUID()
 {
-    return obj->TS_GET_GUID();
+    return TS_GUID(obj->GetGUID());
 }
 
 /**
@@ -189,8 +189,8 @@ uint32 TSObject::GetGUIDLow()
 {
 #ifdef TRINITY
     return obj->GetGUID().GetCounter();
-#else
-    return obj->GetGUIDLow();
+#elif AZEROTHCORE
+    return obj->GetGUID().GetCounter();
 #endif
 }
 
@@ -394,22 +394,38 @@ bool TSObject::IsPlayer()
 
 bool TSObject::IsCreature()
 {
+#if TRINITY
     return obj != nullptr && obj->IsCreature();
+#elif AZEROTHCORE
+    return obj && obj->GetTypeId() == TYPEID_UNIT;
+#endif
 }
 
 bool TSObject::IsUnit()
 {
+#if TRINITY
     return obj != nullptr && obj->IsUnit();
+#elif AZEROTHCORE
+    return IsCreature() || IsPlayer();
+#endif
 }
 
 bool TSObject::IsGameObject()
 {
+#if TRINITY
     return obj != nullptr && obj->IsGameObject();
+#elif AZEROTHCORE
+    return obj && obj->isType(TYPEMASK_GAMEOBJECT);
+#endif
 }
 
 bool TSObject::IsCorpse()
 {
+#if TRINITY
     return obj != nullptr && obj->IsCorpse();
+#elif AZEROTHCORE
+    return obj && obj->isType(TYPEMASK_CORPSE);
+#endif
 }
 
 bool TSObject::operator==(TSObject& rhs)

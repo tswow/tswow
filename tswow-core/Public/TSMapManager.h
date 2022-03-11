@@ -3,6 +3,9 @@
 #include "TSMain.h"
 #include <memory>
 
+class TSPlayer;
+class TSMap;
+
 class TC_GAME_API TSMapManager {
     TSPlayer GetPlayer(uint64_t guid);
     TSPlayer GetPlayer(TSString name);

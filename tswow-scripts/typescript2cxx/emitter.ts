@@ -3305,12 +3305,7 @@ export class Emitter {
 
     processStringLiteral(node: ts.StringLiteral | ts.LiteralLikeNode
         | ts.TemplateHead | ts.TemplateMiddle | ts.TemplateTail): void {
-        let text = node.text.replace(/\n/g, '\\\n');
-        if (text === '') {
-            this.writer.writeString(`JSTR("")`);
-        } else {
-            this.writer.writeString(`JSTR("${text.split('"').join('\\"').split('\\').join('\\\\')}")`);
-        }
+        this.writer.writeString(`JSTR("${node.text.split('\\').join('\\\\').split('"').join('\\"').split('\n').join('\\n')}")`);
     }
 
     processNoSubstitutionTemplateLiteral(node: ts.NoSubstitutionTemplateLiteral): void {

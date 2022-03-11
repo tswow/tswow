@@ -24,6 +24,7 @@
 #include "TSWorldObject.h"
 #include "TSIncludes.h"
 #include "TSGameObject.h"
+#include "TSSpellInfo.h"
 #include "SmartAI.h"
 
 
@@ -175,7 +176,8 @@ uint32 TSGameObject::GetDBTableGUIDLow()
 #ifdef TRINITY
     return go->GetSpawnId();
 #elif AZEROTHCORE
-    return go->GetDBTableGUIDLow();
+    TS_LOG_ERROR("tswow.api", "TSGameObject::GetDBTableGUIDLow is not implemented for AzerothCore.");
+    return 0;
 #else
     // on mangos based this is same as lowguid
     return go->GetGUIDLow();
@@ -337,12 +339,16 @@ TSLoot TSGameObject::GetLoot()
 
 void TSGameObject::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj)
 {
+#if TRINITY
     auto ai = go->AI();
     if (!ai) return;
     if (SmartAI* sai = dynamic_cast<SmartAI*>(ai))
     {
         sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
     }
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGameObject::FireSmartEvent not implemented for AzerothCore");
+#endif
 }
 
 bool TSGameObject::IsAIEnabled()

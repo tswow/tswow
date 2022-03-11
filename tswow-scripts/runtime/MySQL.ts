@@ -18,6 +18,7 @@ import * as mysql_lib from 'mysql2';
 import path from 'path';
 import { start } from 'repl';
 import { commands } from '../util/Commands';
+import { EmulatorCore } from '../util/EmulatorCore';
 import { wfs } from '../util/FileSystem';
 import { WDirectory } from '../util/FileTree';
 import { DatabaseSettings, DatabaseType } from '../util/NodeConfig';
@@ -278,7 +279,8 @@ export namespace mysql {
      */
     export async function isWorldInstalled(worldConnections: Connection[]) {
         for(const con of worldConnections) {
-            if(!await con.hasTable('access_requirement')) {
+            // todo: proper check
+            if(!await con.hasTable('item_template')) {
                 return false;
             }
         }
@@ -383,7 +385,7 @@ export namespace mysql {
         }
     }
 
-    export async function installCharacters(connection: Connection) {
+    export async function installCharacters(connection: Connection, core: EmulatorCore) {
         // Special hack to get the characters tables in, because some scripts depend on it
         let charRowCount =
             await connection.query('SHOW TABLES; SELECT FOUND_ROWS()');
@@ -391,9 +393,24 @@ export namespace mysql {
             term.log('mysql',
                  `No character tables found for ${connection.cfg.database},`
                + ` creating them...`);
-            await connection.query(ipaths.bin.sql.characters_create_sql.readString());
+            switch(core) {
+                case 'azerothcore':
+                    await connection.query(ipaths.bin.sql_ac.db_characters.readString());
+                    break;
+                case 'trinitycore':
+                    await connection.query(ipaths.bin.sql.characters_create_sql.readString());
+                    break;
+            }
         }
-        await applySQLFiles(connection,'characters');
+
+        switch(core) {
+            case 'trinitycore':
+                await applySQLFiles(connection,'characters');
+                break;
+            case 'azerothcore':
+                // TODO: currently does not apply updates, this is wrong of course.
+                break;
+        }
     }
 
     export async function installAuth(connection: Connection) {

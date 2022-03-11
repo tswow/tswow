@@ -18,9 +18,9 @@ import * as fs from 'fs';
 import * as mysql from 'mysql2';
 import { queryToSql } from '../query/Query';
 import { BuildArgs, datasetName, NodeConfig } from '../Settings';
-import { SQLTables } from '../../wotlk/SQLFiles';
 import { SqlRow } from './SQLRow';
 import { SqlTable } from './SQLTable';
+import { translate } from './SQLTranslate';
 import deasync = require('deasync');
 
 export class Connection {
@@ -169,6 +169,7 @@ export class SqlConnection {
         const res = SqlConnection.querySource(sqlStr);
         const rowsOut: T[] = [];
         for (const row of res) {
+            translate(table.name,row,'IN');
             const jsrow = SqlTable.createRow(table, row);
             rowsOut.push(jsrow);
         }

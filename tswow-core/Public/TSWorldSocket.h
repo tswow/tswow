@@ -17,6 +17,7 @@
 #pragma once
 
 #include <memory>
+#include "TSMain.h"
 
 class WorldSocket;
 class TC_GAME_API TSWorldSocket {

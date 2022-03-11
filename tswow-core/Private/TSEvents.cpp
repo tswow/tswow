@@ -42,7 +42,11 @@
 #include "SpellInfo.h"
 #include "TSChannel.h"
 #include "DBCStores.h"
+#if TRINITY
 #include "MapManager.h"
+#elif AZEROTHCORE
+#include "MapMgr.h"
+#endif
 #include "Config.h"
 #include "BattlegroundMgr.h"
 
@@ -149,7 +153,9 @@ public:
     void OnMoneyChanged(Player* player,int32& amount) FIRE(PlayerOnMoneyChanged,TSPlayer(player),TSMutable<int32>(&amount))
     void OnMoneyLimit(Player* player,int32 amount) FIRE(PlayerOnMoneyLimit,TSPlayer(player),amount)
     void OnGiveXP(Player* player,uint32& amount,Unit* victim) FIRE(PlayerOnGiveXP,TSPlayer(player),TSMutable<uint32>(&amount),TSUnit(victim))
+#if TRINITY
     void OnReputationChange(Player* player,uint32 factionId,int32& standing,bool incremental) FIRE(PlayerOnReputationChange,TSPlayer(player),factionId,TSMutable<int32>(&standing),incremental)
+#endif
     void OnDuelRequest(Player* target,Player* challenger) FIRE(PlayerOnDuelRequest,TSPlayer(target),TSPlayer(challenger))
     void OnDuelStart(Player* player1,Player* player2) FIRE(PlayerOnDuelStart,TSPlayer(player1),TSPlayer(player2))
     void OnDuelEnd(Player* winner,Player* loser,DuelCompleteType type) FIRE(PlayerOnDuelEnd,TSPlayer(winner),TSPlayer(loser),type)
@@ -159,7 +165,11 @@ public:
         // successful messages do not reach the normal OnWhisper events.
         if(handleTSWoWGMMessage(player,receiver,msg))
         {
+#if TRINITY
             TC_LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW GM Message");
+#elif AZEROTHCORE
+            LOG_DEBUG("tswow","CHAT: Successfully handled TSWoW GM Message");
+#endif
             return;
         }
         FIRE(PlayerOnWhisper, TSPlayer(player), TSPlayer(receiver), TSMutableString(&msg), type, lang);
@@ -167,16 +177,22 @@ public:
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Group* group) FIRE(PlayerOnChatGroup,TSPlayer(player), TSGroup(group), TSMutableString(&msg),type,lang)
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Guild* guild) FIRE(PlayerOnChatGuild,TSPlayer(player), TSGuild(guild), TSMutableString(&msg),type,lang)
     void OnChat(Player* player,uint32 type,uint32 lang,std::string& msg,Channel* channel) FIRE(PlayerOnChat,TSPlayer(player), TSChannel(channel), TSMutableString(&msg),type,lang)
+#if TRINITY
     void OnEmote(Player* player,Emote emote) FIRE(PlayerOnEmote,TSPlayer(player),emote)
+#endif
     void OnTextEmote(Player* player,uint32 textEmote,uint32 emoteNum,ObjectGuid guid) FIRE(PlayerOnTextEmote,TSPlayer(player),textEmote,emoteNum,guid.GetRawValue())
     void OnSpellCast(Player* player,Spell* spell,bool skipCheck) FIRE(PlayerOnSpellCast,TSPlayer(player),TSSpell(spell),skipCheck)
+#if TRINITY
     void OnLogin(Player* player,bool firstLogin) FIRE(PlayerOnLogin,TSPlayer(player),firstLogin)
+#endif
     void OnLogout(Player* player) FIRE(PlayerOnLogout,TSPlayer(player))
     void OnCreate(Player* player) FIRE(PlayerOnCreate,TSPlayer(player))
     void OnDelete(ObjectGuid guid,uint32 accountId) FIRE(PlayerOnDelete,guid.GetRawValue(),accountId)
     void OnFailedDelete(ObjectGuid guid,uint32 accountId) FIRE(PlayerOnFailedDelete,guid.GetRawValue(),accountId)
     void OnSave(Player* player) FIRE(PlayerOnSave,TSPlayer(player))
+#if TRINITY
     void OnBindToInstance(Player* player,Difficulty difficulty,uint32 mapId,bool permanent,uint8 extendState) FIRE(PlayerOnBindToInstance,TSPlayer(player),difficulty,mapId,permanent,extendState)
+#endif
     void OnUpdateZone(Player* player,uint32 newZone,uint32 newArea) FIRE(PlayerOnUpdateZone,TSPlayer(player),newZone,newArea)
     void OnMapChanged(Player* player) FIRE(PlayerOnMapChanged,TSPlayer(player))
     void OnQuestObjectiveProgress(Player* player, Quest const* quest, uint32 objectiveIndex, uint16 progress) {
@@ -468,15 +484,19 @@ void TSAchievementMap::OnRemove(uint32_t key)
 {
 }
 
+#if TRINITY
 void TSAreaTriggerMap::OnAdd(uint32_t key, TSAreaTriggerEvents* events)
 {
+#if TRINITY
     InitializeAreaTriggerEvents(key, events);
+#endif
 }
 
 void TSAreaTriggerMap::OnRemove(uint32_t key)
 {
 
 }
+#endif
 
 static std::vector<TSPacketEvents*> packetData;
 void TSPacketMap::OnAdd(uint32_t key, TSPacketEvents* events)

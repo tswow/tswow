@@ -41,6 +41,7 @@ export function DatasetDirectory(inPath: string, inName: string) {
         dbc_temp: dir({
             dbc: dir({}),
         }),
+        lib: dir({}),
         luaxml: dir({
             Interface: dir({
                 FrameXML: dir({
@@ -260,11 +261,15 @@ export function InstallPath(pathIn: string, tdb: string) {
             libraries: dir({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({})),
             }),
+            libraries_ac: dir({
+                build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({})),
+            }),
             sourceAdt: file('source.adt'),
             mysql_startup: file('mysql_startup.txt'),
             addons: dir({}),
             revisions: dir({
                 trinitycore: file('trinitycore'),
+                azerothcore: file('azerothcore'),
                 tswow: file('tswow'),
             }),
             scripts: dir({
@@ -334,6 +339,13 @@ export function InstallPath(pathIn: string, tdb: string) {
             tmp: dir({
                 file_changes_txt: file('file_changes.txt'),
             }),
+
+            sql_ac: dir({
+                db_auth: file('db_auth.sql'),
+                db_characters: file('db_characters.sql'),
+                db_world: file('db_world.sql'),
+            }),
+
             sql: dir({
                 characters_create_sql: file('characters_create.sql'),
                 auth_create_sql: file('auth_create.sql'),
@@ -357,7 +369,7 @@ export function InstallPath(pathIn: string, tdb: string) {
                 RequireStub_lua: file('RequireStub.lua'),
                 tsconfig_json: file('tsconfig.json')
             }),
-            core: dyndir(key=>({
+            core: dyndir(core=>({
                 build: enumDir({RelWithDebInfo:0,Release:0,Debug:0},(key)=>({
                     scripts: dir({
                         moduleLib: dynfile((mod)=>isWindows()
@@ -372,8 +384,10 @@ export function InstallPath(pathIn: string, tdb: string) {
                     vmap4assembler: file(`vmap4assembler${isWindows()?'.exe':''}`),
                     vmap4extractor: file(`vmap4extractor${isWindows()?'.exe':''}`),
                     authserver: file(`authserver${isWindows()?'.exe':''}`),
-                    authserver_conf_dist: file(`authserver.conf.dist`),
-                    worldserver_conf_dist: file(`worldserver.conf.dist`),
+
+                    authserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}authserver.conf.dist`),
+                    worldserver_conf_dist: file(`${core=='azerothcore'?'configs/':''}worldserver.conf.dist`),
+
                     libcrypto: file('libcrypto-1_1-x64.dll'),
                     configs: custom((i)=>generateTree(i,dir({}))),
                 }))
@@ -474,6 +488,7 @@ export function BuildPaths(pathIn: string, tdb: string) {
                         libmysql_dll: file('libmysql.dll'),
                         libmysqld_dll: file('libmysqld.dll'),
                         mysqlserver_lib: file('mysqlserver.lib'),
+                        libmysql_lib: file('libmysql.lib')
                     })
                 }))
             },
@@ -482,12 +497,17 @@ export function BuildPaths(pathIn: string, tdb: string) {
         opensslArchive: file('openssl1_1_1m.zip'),
 
         openssl: dir({
-            libcrypto: file('libcrypto-1_1-x64.dll')
+            libcrypto_dll: file('libcrypto-1_1-x64.dll'),
+            lib: dir({
+                libcrypto_lib: file('libcrypto.lib')
+            })
         }),
 
         boost: dir({
             boost_1_74_0: dir({
-                lib64_msvc_14_2: dir({})
+                lib64_msvc_14_2: dirn('lib64-msvc-14.2',{
+                    fslib: file('libboost_filesystem-vc142-mt-x64-1_74.lib')
+                })
             })
         }),
         boostArchive: file('boost_1_74_0.zip'),
@@ -504,6 +524,42 @@ export function BuildPaths(pathIn: string, tdb: string) {
             convert_exe: file('convert.exe'),
             magic_exe: file('magick.exe'),
             identify_exe: file('identify.exe'),
+        }),
+
+        AzerothCore: dir({
+            bin: dir({
+                // TODO: fix
+                libraries: custom(pathIn=>(type: string)=>{
+                    return []
+                }),
+                configs: custom((k)=>(name: string)=>{
+                    return generateTree(mpath(k,'bin',name),dir({}))
+                }),
+            }),
+
+            libraries: custom((pathIn=>(type: string)=>{
+                return (isWindows() ?
+                [
+                    `deps/zlib/${type}/zlib.lib`,
+                    `deps/SFMT/${type}/sfmt.lib`,
+                    `deps/g3dlite/${type}/g3dlib.lib`,
+                    `deps/fmt/${type}/fmt.lib`,
+                    `deps/recastnavigation/Detour/${type}/detour.lib`,
+                    `deps/argon2/${type}/argon2.lib`,
+                    `src/server/shared/${type}/shared.lib`,
+                    `src/server/database/${type}/database.lib`,
+                    `src/server/game/${type}/game.lib`,
+                    `src/common/${type}/common.lib`,
+                ]
+                :
+                [
+                    `install/trinitycore/lib/libcommon.so`,
+                    `install/trinitycore/lib/libdatabase.so`,
+                    `install/trinitycore/lib/libgame.so`,
+                    `install/trinitycore/lib/libshared.so`,
+                ]
+                ).map(x=>new WFile(mpath(pathIn,x)))
+            })),
         }),
 
         TrinityCore: dir({
@@ -622,6 +678,20 @@ export function SourcePaths(pathIn: string) {
 
         client_extensions: dirn('client-extensions',{
             CustomPackets: dir({})
+        }),
+
+        cores: dir({
+            AzerothCore: dirn('azerothcore-wotlk',{
+                data: dir({
+                    sql: dir({
+                        type: enumDir({base:0,updates:0,custom:0},()=>({
+                            db_auth: dir({}),
+                            db_characters: dir({}),
+                            db_world: dir({}),
+                        }))
+                    })
+                })
+            })
         }),
 
         TrinityCore: dir({

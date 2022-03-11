@@ -1,6 +1,7 @@
 import { NodeConfig } from "../runtime/NodeConfig";
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from "./ClientPatches";
 import { ConfigFile, Property, Section } from "./ConfigFile";
+import { EmulatorCore } from "./EmulatorCore";
 import { ipaths } from "./Paths";
 
 export const GAME_BUILD_FIELD = 'Dataset.GameBuild';
@@ -100,5 +101,5 @@ export class DatasetConfig extends ConfigFile {
             ['trinitycore','']
         ]
     })
-    EmulatorCore: string = this.undefined()
+    EmulatorCore: EmulatorCore = this.undefined()
 }

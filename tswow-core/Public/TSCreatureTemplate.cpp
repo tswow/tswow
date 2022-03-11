@@ -80,7 +80,12 @@ TSString TSCreatureTemplate::GetName()
 
 TSString TSCreatureTemplate::GetTitle()
 {
+#if TRINITY
     return JSTR(ct->Title);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TScreatureTemplate::GetTitle not implemented for AzerothCore.");
+    return JSTR("");
+#endif
 }
 
 TSString TSCreatureTemplate::GetIconName()
@@ -290,7 +295,11 @@ float TSCreatureTemplate::GetModArmor()
 }
 float TSCreatureTemplate::GetModDamage()
 {
+#if TRINITY
     return ct->ModDamage;
+#elif AZEROTHCORE
+    return  ct->DamageModifier;
+#endif
 }
 float TSCreatureTemplate::GetModExperience()
 {
@@ -334,11 +343,19 @@ uint32 TSCreatureTemplate::GetFirstValidModelID() const
 }
 uint32 TSCreatureTemplate::GetFirstInvisibleModel() const
 {
+#if TRINITY
     return ct->GetFirstInvisibleModel();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCreatureTemplate::GetFirstInvisibleModel not implemented for AzerothCore");
+#endif
 }
 uint32 TSCreatureTemplate::GetFirstVisibleModel() const
 {
+#if TRINITY
     return ct->GetFirstVisibleModel();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCreatureTemplate::GetFirstVisibleModel not implemented for AzerothCore");
+#endif
 }
 TSEntity * TSCreatureTemplate::GetData()
 {

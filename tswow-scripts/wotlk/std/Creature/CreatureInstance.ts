@@ -20,6 +20,7 @@ import { makeMaskCell32 } from "../../../data/cell/cells/MaskCell";
 import { Transient } from "../../../data/cell/serialization/Transient";
 import { CellSystem } from "../../../data/cell/systems/CellSystem";
 import { finish } from "../../../data/index";
+import { isTrinityCore } from "../../../data/Settings";
 import { creatureRow } from "../../sql/creature";
 import { creature_addonRow } from "../../sql/creature_addon";
 import { instance_boss_creatureRow } from "../../sql/instance_boss_creature";
@@ -196,12 +197,14 @@ export class CreatureInstance extends MainEntity<creatureRow> {
 
 // write boss maps once we're done writing, since the map could change before then
 finish('boss_maps',()=>{
-    SQL.instance_boss_creature.queryAll({})
-        .forEach(x=>{
-            // only set maps set to be "unset"
-            if(x.map.get() !== -1) return;
-            const c = SQL.creature.query({guid:x.guid.get()})
-            if(!c) return;
-            x.map.set(c.map.get());
-        })
+    if(isTrinityCore()) {
+        SQL.instance_boss_creature.queryAll({})
+            .forEach(x=>{
+                // only set maps set to be "unset"
+                if(x.map.get() !== -1) return;
+                const c = SQL.creature.query({guid:x.guid.get()})
+                if(!c) return;
+                x.map.set(c.map.get());
+            })
+    }
 });

@@ -24,15 +24,24 @@
 #include "TSGroup.h"
 #include "SpellMgr.h"
 #include "SpellInfo.h"
+#include "TSSpellInfo.h"
+#include "TSGameObject.h"
+#if TRINITY
 #include "SpellHistory.h"
 #include "ThreatManager.h"
+#endif
+#if AZEROTHCORE
+#include "ThreatMgr.h"
+#endif
 #include "ObjectGuid.h"
 #include "CreatureAI.h"
 #include "MotionMaster.h"
 #include "Player.h"
 #include "TSMap.h"
 #include "TSOutfit.h"
+#if TRINITY
 #include "CreatureOutfit.h"
+#endif
 #include "SmartAI.h"
 
 TSCreature::TSCreature(Creature *creature) : TSUnit(creature)
@@ -692,13 +701,22 @@ bool ObjectDistanceOrderPred::operator()(WorldObject const* pLeft, WorldObject c
 */
 TSUnit  TSCreature::GetAITarget(uint32 targetType,bool playerOnly,uint32 position,float dist,int32 aura)
 {
+#if TRINITY
     auto const& threatlist = creature->GetThreatManager().GetSortedThreatList();
+#elif AZEROTHCORE
+    auto const& threatlist = creature->getThreatMgr().getThreatList();
+    LOG_WARN("tswow.api", "TSCreature::GetAITarget might not be correctly implemented for AzerothCore");
+#endif
 
     std::list<Unit*> targetList;
 
-    for (ThreatReference const* itr : threatlist)
+    for (auto const* itr : threatlist)
     {
+#if TRINITY
         Unit* target = itr->GetVictim();
+#elif AZEROTHCORE
+        Unit* target = itr->getTarget();
+#endif
         if (!target)
             continue;
         if (playerOnly && target->GetTypeId() != TYPEID_PLAYER)
@@ -769,7 +787,7 @@ TSArray<TSUnit> TSCreature::GetAITargets()
 #ifdef TRINITY
     auto const& threatlist = creature->GetThreatManager().GetThreatenedByMeList();
 #elif defined AZEROTHCORE
-    auto const& threatlist = creature->getThreatManager().getThreatList();
+    auto const& threatlist = creature->getThreatMgr().getThreatList();
 #else
     ThreatList const& threatlist = creature->GetThreatManager().getThreatList();
 #endif
@@ -798,7 +816,7 @@ int TSCreature::GetAITargetsCount()
 #ifdef TRINITY
     return creature->GetThreatManager().GetThreatenedByMeList().size();
 #elif AZEROTHCORE
-    return creature->getThreatManager().getThreatList().size();
+    return creature->getThreatMgr().getThreatList().size();
 #else
     return creature->GetThreatManager().getThreatList().size();
 #endif
@@ -845,9 +863,9 @@ uint32 TSCreature::GetDBTableGUIDLow()
 {
 #ifdef TRINITY
     return creature->GetSpawnId();
-#else
+#elif AZEROTHCORE
     // on mangos based this is same as lowguid
-    return creature->GetGUIDLow();
+    return creature->GetGUID().GetCounter();
 #endif
 }
 
@@ -1079,11 +1097,10 @@ void TSCreature::SetHover(bool enable)
  */
 void TSCreature::DespawnOrUnsummon(uint32 msTimeToDespawn)
 {
-
-#if defined TRINITY || AZEROTHCORE
+#if defined TRINITY
     creature->DespawnOrUnsummon(Milliseconds(msTimeToDespawn));
-#else
-    creature->ForcedDespawn(msTimeToDespawn);
+#elif AZEROTHCORE
+    creature->DespawnOrUnsummon(msTimeToDespawn);
 #endif
 }
 
@@ -1312,27 +1329,50 @@ TSCreatureTemplate TSCreature::GetTemplate()
 
 void TSCreature::UpdateLevelDependantStats()
 {
+#if TRINITY
     creature->UpdateLevelDependantStats();
+#elif AZEROTHCORE
+    LOG_WARN("tswow.api", "TSCreature::UpdateLevelDependantStats not implemented for AzerothCore");
+#endif
 }
 
 void TSCreature::SetOutfit(TSOutfit const& outfit)
 {
+#if TRINITY
     creature->SetOutfit(outfit.m_outfit);
+#elif AZEROTHCORE
+    LOG_WARN("tswow.api", "TSCreature::SetOutfit not implemented for AzerothCore.");
+#endif
 }
 
 void TSCreature::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj)
 {
+#if AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCreature::FireSmartEvent not implemented for AzerothCore");
+#endif
+#if TRINITY
     if (!creature->IsAIEnabled()) return;
+#elif AZEROTHCORE
+    if (!creature->IsAIEnabled) return;
+#endif
     auto ai = creature->AI();
     if (SmartAI * sai = dynamic_cast<SmartAI*>(ai))
     {
+#if TRINITY
         sai->ProcessEventsFor(SMART_EVENT(e), unit.unit, var0, var1, bvar, spell.info, gobj.go);
+#elif AZEROTHCORE
+        // TODO: azerothcore version
+#endif
     }
 }
 
 bool TSCreature::IsAIEnabled()
 {
+#if TRINITY
     return creature->IsAIEnabled();
+#elif AZEROTHCORE
+    return creature->IsAIEnabled;
+#endif
 }
 
 void TSCreature::SetLootRecipient(TSUnit unit, bool withGroup)
@@ -1372,10 +1412,20 @@ uint32_t TSCreature::GetRangedEquip()
 
 TSOutfit TSCreature::GetOutfit()
 {
+#if TRINITY
     return creature->GetOutfit();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCreature::GetOutfit not implemented for AzerothCore");
+    return TSOutfit();
+#endif
 }
 
 TSOutfit TSCreature::GetOutfitCopy(Outfit settings, int32_t race, int32_t gender)
 {
+#if TRINITY
     return TSOutfit(GetOutfit(), settings, race, gender);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSCreature::GetOutfitCopy not implemented for AzerothCore");
+    return TSOutfit();
+#endif
 }

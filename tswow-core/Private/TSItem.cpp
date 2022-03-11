@@ -18,6 +18,7 @@
 #include "Object.h"
 #include "Item.h"
 #include "Bag.h"
+#include "Player.h"
 
 #include "TSIncludes.h"
 #include "TSItem.h"
@@ -258,7 +259,7 @@ bool TSItem::IsConjuredConsumable()
  */
 TSString TSItem::GetItemLink(uint8 locale)
 {
-
+#if TRINITY
     const ItemTemplate* temp = item->GetTemplate();
     std::string name = temp->Name1;
     if (ItemLocale const* il = eObjectMgr->GetItemLocale(temp->ItemId))
@@ -269,6 +270,7 @@ TSString TSItem::GetItemLink(uint8 locale)
         std::array<char const*, 16> const* suffix = NULL;
         if (itemRandPropId < 0)
         {
+            
             const ItemRandomSuffixEntry* itemRandEntry = sItemRandomSuffixStore.LookupEntry(-item->GetItemRandomPropertyId());
             if (itemRandEntry) suffix = &itemRandEntry->Name;
         }
@@ -296,15 +298,15 @@ TSString TSItem::GetItemLink(uint8 locale)
         item->GetItemRandomPropertyId() << ":" << item->GetItemSuffixFactor() << ":" <<
         (uint32)item->GetOwner()->GetLevel() << "|h[" << name << "]|h|r";
     return TSString(oss.str());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSItem::GetItemLink not implemented for AzerothCore");
+    return JSTR("");
+#endif
 }
 
 uint64 TSItem::GetOwnerGUID()
 {
-#if defined TRINITY || AZEROTHCORE
-    return item->GetOwnerGUID();
-#else
-    return item->GetOwnerGuid();
-#endif
+    return TS_GUID(item->GetOwnerGUID());
 }
 
 /**
@@ -668,8 +670,9 @@ void TSItem::SaveToDB()
     CharacterDatabaseTransaction trans = CharacterDatabaseTransaction(nullptr);
     item->SaveToDB(trans);
 #elif defined AZEROTHCORE
-    SQLTransaction trans = SQLTransaction(NULL);
-    item->SaveToDB(trans);
+    //SQLTransaction trans = SQLTransaction(NULL);
+    //item->SaveToDB(trans);
+    TS_LOG_ERROR("tswow.api", "TSItem::SaveToDB not implemented for AzerothCore");
 #else
     item->SaveToDB();
 #endif

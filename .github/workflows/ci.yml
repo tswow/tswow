@@ -11,7 +11,7 @@ jobs:
       - name: Install submodules
         run: git submodule update --init --recursive
       - name: Install deps
-        run: sudo apt-get install git clang cmake make gcc g++ libmariadbclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mariadb-server p7zip libmariadb-client-lgpl-dev-compat
+        run: sudo apt-get update && sudo apt-get install git clang cmake make gcc g++ libmariadbclient-dev libssl-dev libbz2-dev libreadline-dev libncurses-dev libboost-all-dev mariadb-server p7zip libmariadb-client-lgpl-dev-compat
       - name: Build tswow
         run: npm run build
 

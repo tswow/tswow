@@ -119,10 +119,11 @@ void DatabaseSpec::update()
             bool pkChanged = false;
             if (effPk.size() != oldPk.size())
             {
-                TC_LOG_INFO(
+                TS_LOG_INFO(
                       "tswow.orm"
                     , "Primary key count changed: %s.%s"
                 );
+
                 pkChanged = true;
             }
             else
@@ -137,7 +138,7 @@ void DatabaseSpec::update()
                     });
                     if (itr == oldPk.end())
                     {
-                        TC_LOG_INFO(
+                        TS_LOG_INFO(
                               "tswow.orm"
                             , "New primary key: %s.%s.%s"
                             , m_dbName.c_str()
@@ -149,7 +150,7 @@ void DatabaseSpec::update()
                     }
                     else if (itr->m_typeName != eff.m_typeName || itr->m_autoIncrements != eff.m_autoIncrements)
                     {
-                        TC_LOG_INFO(
+                        TS_LOG_INFO(
                               "tswow.orm"
                             , "Primary key type changed: %s.%s.%s (%s != %s)"
                             , m_dbName.c_str()
@@ -165,7 +166,7 @@ void DatabaseSpec::update()
             }
             if (pkChanged)
             {
-                TC_LOG_INFO(
+                TS_LOG_INFO(
                       "tswow.orm"
                     , "Primary keys changed: %s.%s (must rebuild entire table)"
                     , m_dbName.c_str()
@@ -189,7 +190,7 @@ void DatabaseSpec::update()
             // remove old column
             if (itr == effectiveFields.end())
             {
-                TC_LOG_INFO(
+                TS_LOG_INFO(
                       "tswow.orm"
                     , "Column removed: %s.%s.%s"
                     , m_dbName.c_str()
@@ -209,7 +210,7 @@ void DatabaseSpec::update()
             else if(itr->m_typeName != old.m_typeName)
             {
                 // update column type
-                TC_LOG_INFO(
+                TS_LOG_INFO(
                     "tswow.orm"
                     , "Column type changed: %s.%s.%s (%s -> %s)"
                     , m_dbName.c_str()
@@ -244,7 +245,7 @@ void DatabaseSpec::update()
 
             if (itr == oldFields.end())
             {
-                TC_LOG_INFO(
+                TS_LOG_INFO(
                     "tswow.orm"
                     , "Column added: %s.%s.%s"
                     , m_dbName.c_str()
@@ -337,7 +338,7 @@ void DatabaseSpec::update()
             createQuery += " )";
         }
         createQuery += ");";
-        TC_LOG_INFO(
+        TS_LOG_INFO(
               "tswow.orm"
             , "Table created: %s.%s"
             , m_dbName.c_str()

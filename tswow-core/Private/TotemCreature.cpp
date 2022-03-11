@@ -2,10 +2,18 @@
 #include "TotemCreature.h"
 
 TotemCreature::TotemCreature(SummonPropertiesEntry const* properties, Unit* owner)
+#if TRINITY
     : Minion(properties, owner, false)
+#elif AZEROTHCORE
+    : Minion(properties, owner->GetGUID(), false)
+#endif
 {
+#if TRINITY
     this->m_isTempCreature = true;
-    this->InitCharmInfo();
+#elif AZEROTHCORE
+    m_isTempWorldObject = true;
+#endif
+    InitCharmInfo();
 }
 
 void TotemCreature::InitStats(uint32 lifetime)
@@ -25,8 +33,13 @@ void TotemCreature::SetupTotemStats()
         return;
     }
 
+#if TRINITY
     uint32 petlevel = owner->GetLevel();
-    bool isNewLevel = this->GetLevel() != petlevel;
+    bool isNewLevel = GetLevel() != petlevel;
+#elif AZEROTHCORE
+    uint32 petlevel = owner->getLevel();
+    bool isNewLevel = getLevel() != petlevel;
+#endif
     if (isNewLevel)
     {
         SetLevel(petlevel);

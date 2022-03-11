@@ -43,6 +43,8 @@
 #define STEP_TYPE_FIELD " stepType "
 #define ERROR_MESSAGE_FIELD " errorMessage "
 
+#ifdef TRINITY
+
 static uint32_t stmnt_createSession =
     CharacterDatabase.PrepareCustomStatement(
         "INSERT INTO " TEST_RUN_TABLE " VALUES (?,?,?,?,?,?,?,?);"
@@ -763,3 +765,4 @@ void PrintSessionStatus(Player* player, std::string const& sessionName)
     testMessage(player, "Wrote test results to " + boost::filesystem::absolute(path).string());
     sessionFile.close();
 }
+#endif

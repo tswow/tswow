@@ -21,13 +21,19 @@
 
 #include <vector>
 
+#if TRINITY
+
 TSAreaTriggerEntry::TSAreaTriggerEntry(AreaTriggerEntry* entry)
 : m_entry(entry)
 {}
 
 uint32 TSAreaTriggerEntry::GetEntry()
 {
+#if TRINITY
     return m_entry->ID;
+#elif AZEROTHCORE
+    return m_entry->
+#endif
 }
 
 uint32 TSAreaTriggerEntry::GetContinentID()
@@ -87,3 +93,4 @@ TSAreaTriggerEvents* GetAreaTriggerEvents(uint32 entry)
     }
     return triggerEvents[entry];
 }
+#endif
