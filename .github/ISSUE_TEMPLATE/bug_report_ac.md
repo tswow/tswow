@@ -1,8 +1,8 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Bug report (AzerothCore)
+about: Create a report to help us improve. Select this if you're using AzerothCore.
 title: ''
-labels: bug
+labels: 'bug,azerothcore'
 assignees: ''
 
 ---
