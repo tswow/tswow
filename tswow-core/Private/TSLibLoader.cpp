@@ -21,6 +21,7 @@ typedef void (*LibFuncPtr)(TSEvents*);
     #define DL_CLOSE FreeLibrary
     #define DL_EXT ".dll"
 #else
+    #include <dlfcn.h>
     #define DL_PTR void*
     #define DL_FN dlsym
     // TODO: fix
