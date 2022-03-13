@@ -49,6 +49,9 @@ void UpdateTSLibraries(bool forceReload)
 {
 #if AZEROTHCORE
     fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / buildType;
+#elif TRINITY
+    fs::path libPath = fs::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / buildType;
+#endif
     TS_LOG_INFO("tswow.livescripts", "Reloading livescripts");
 
     // Unload libraries
@@ -60,7 +63,7 @@ void UpdateTSLibraries(bool forceReload)
             DL_CLOSE(itr->second.handle);
 
             fs::current_path() / "lib" / buildType / itr->first;
-            TS_LOG_INFO("tswow.livescripts", "Unloading library "+itr->first.string());
+            TS_LOG_INFO("tswow.livescripts", "Unloading library %s",itr->first.string());
             itr = libraries.erase(itr);
         }
         else
@@ -120,5 +123,4 @@ void UpdateTSLibraries(bool forceReload)
         TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName);
         ptr(events);
     }
-#endif
 }

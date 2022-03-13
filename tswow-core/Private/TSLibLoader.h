@@ -1,4 +1,4 @@
 #pragma once
 
-void UpdateTSLibraries(bool forceReload);
-void SetBinPath(std::string const& path);
+void TC_GAME_API UpdateTSLibraries(bool forceReload);
+void TC_GAME_API SetBinPath(std::string const& path);
