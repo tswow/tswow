@@ -39,6 +39,7 @@ export namespace AzerothCore {
                   + ` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                   + ` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
                   + ` -DTOOLS=ON`
+                  + ` -DSCRIPTS=dynamic`
                   + ` -S "${spaths.cores.AzerothCore.get()}"`
                   + ` -B "${bpaths.AzerothCore.get()}"`
                   , 'inherit');
