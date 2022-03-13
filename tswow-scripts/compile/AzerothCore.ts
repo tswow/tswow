@@ -36,7 +36,6 @@ export namespace AzerothCore {
                   + ` -DCMAKE_GENERATOR="Visual Studio 16 2019"`
                   + ` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
                   + ` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
-                  + ` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                   + ` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                   + ` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
                   + ` -DTOOLS=ON`
@@ -45,16 +44,12 @@ export namespace AzerothCore {
                   , 'inherit');
                 if(generateOnly) return;
 
-                // Doesn't work, you need to open it manually in visual studio and then run this again.
-
-                /*
                 wsys.exec(
                         `${cmake}`
                       + ` --build ${bpaths.AzerothCore.get()}`
                       + ` --config ${type}`
                     , 'inherit'
                 );
-                */
             }
         }
 
