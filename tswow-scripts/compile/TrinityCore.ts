@@ -182,7 +182,7 @@ export namespace TrinityCore {
         let setupCommand: string;
         let buildCommand: string;
 
-        if(Args.hasFlag('no-compile',[process.argv,args1])) {
+        if(!Args.hasFlag('no-compile',[process.argv,args1])) {
             if (isWindows()) {
                 setupCommand = `${cmake} -DTOOLS=${tools}`
                 +` -DCMAKE_GENERATOR="Visual Studio 16 2019"`
