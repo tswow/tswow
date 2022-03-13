@@ -55,7 +55,7 @@ export namespace TrinityCore {
         // write enums
         let gdts = spaths.tswow_core.Public.global_d_ts.read('utf-8')
         let tcFiles: string[] = []
-        spaths.TrinityCore.src.iterate('RECURSE','FILES','FULL',name=>{
+        spaths.cores.TrinityCore.src.iterate('RECURSE','FILES','FULL',name=>{
             tcFiles.push(name.get());
         })
         spaths.tswow_core.iterate('RECURSE','FILES','FULL',name=>{
@@ -187,7 +187,7 @@ export namespace TrinityCore {
                 +` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                 +` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                 +` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
-                +` -S "${spaths.TrinityCore.get()}"`
+                +` -S "${spaths.cores.TrinityCore.get()}"`
                 +` -B "${bpaths.TrinityCore.get()}"`;
                 buildCommand = `${cmake} --build ${bpaths.TrinityCore.get()} --config ${type}`;
                 wsys.exec(setupCommand, 'inherit');
@@ -196,7 +196,7 @@ export namespace TrinityCore {
             } else {
                 bpaths.TrinityCore.mkdir();
                 const relSource = bpaths.TrinityCore
-                    .relativeFrom(spaths.TrinityCore)
+                    .relativeFrom(spaths.cores.TrinityCore)
                 const relInstall = bpaths.TrinityCore
                     .relativeFrom(bpaths.TrinityCore.join('install','trinitycore'))
                 // TODO: Set up optimization flags for o0 as debug and o3 as release
@@ -252,12 +252,12 @@ export namespace TrinityCore {
         headers();
 
         const rev = wsys.execIn(
-              spaths.TrinityCore.get()
+              spaths.cores.TrinityCore.get()
             , 'git rev-parse HEAD','pipe').split('\n').join('');
         ipaths.bin.revisions.trinitycore.write(rev)
 
-        spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
-        spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
+        spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
+        spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
         await DownloadFile(TDB_URL,bpaths.tdbArchive.get());
         if(!bpaths.tdbSql.exists()) {

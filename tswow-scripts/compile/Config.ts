@@ -54,8 +54,8 @@ export namespace Config {
         new NodeConfigClass(ipaths.node_conf.get()).generateIfNotExists();
 
         spaths.install_config.addons.copy(ipaths.bin.addons);
-        spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
-        spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
+        spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
+        spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
         // Addon includes
         spaths.install_config.include_addon.copy(ipaths.bin.include_addon)

@@ -1,5 +1,5 @@
 [submodule "TrinityCore"]
-	path = TrinityCore
+	path = cores/TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
 [submodule "tools/adt-creator"]

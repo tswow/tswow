@@ -696,15 +696,15 @@ export function SourcePaths(pathIn: string) {
                         }))
                     })
                 })
-            })
-        }),
+            }),
 
-        TrinityCore: dir({
-            src: dir({}),
-            sql: dir({
-                updates: dir({}),
-                custom: dir({})
-            })
+            TrinityCore: dir({
+                src: dir({}),
+                sql: dir({
+                    updates: dir({}),
+                    custom: dir({})
+                })
+            }),
         }),
         tswow_scripts: dirn('tswow-scripts', {
             sql: dir({}),
