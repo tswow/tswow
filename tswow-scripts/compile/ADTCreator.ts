@@ -19,7 +19,7 @@ export namespace ADTCreator {
                 .copy(ipaths.bin.adtcreator.adtcreator_exe)
         } else {
             bpaths.adtcreator.mkdir();
-            const relativeSource = bpaths.adtcreator.relativeFrom(spaths.tools.adtcreator.get())
+            const relativeSource = bpaths.adtcreator.relativeFrom(spaths.misc.adtcreator.get())
             await wsys.inDirectory(bpaths.adtcreator.get(),
             ()=>{
                 wsys.exec(
