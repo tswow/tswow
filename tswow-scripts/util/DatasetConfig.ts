@@ -2,7 +2,7 @@ import { NodeConfig } from "../runtime/NodeConfig";
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from "./ClientPatches";
 import { ConfigFile, Property, Section } from "./ConfigFile";
 import { EmulatorCore } from "./EmulatorCore";
-import { ipaths } from "./Paths";
+import { ipaths, modulePathToName } from "./Paths";
 
 export const GAME_BUILD_FIELD = 'Dataset.GameBuild';
 
@@ -19,10 +19,33 @@ export class DatasetConfig extends ConfigFile {
     })
     private _modules: string[] = this.undefined();
     get modules() {
-        return this.getArrayAll(
-              this._modules
-            , ipaths.modules.module.all().map(x=>x.basename().get())
-        )
+        if(this._modules.includes('!all')) {
+            throw new Error(`!all is not a valid module identifier: can't explicitly exclude all modules!`)
+        }
+
+        let hasAll = this._modules.includes('all')
+        let declaredRoots = this._modules.filter(x=>x!=='all')
+        if(hasAll) {
+            declaredRoots = declaredRoots
+                .concat(ipaths.modules.module.all()
+                    .map(x=>modulePathToName(x.abs().get())))
+        }
+
+        let declaredPositives = declaredRoots.filter(x=>!x.startsWith('!'))
+        let declaredNegatives = declaredRoots
+            .filter(x=>x.startsWith('!'))
+            .map(x=>x.substring(1))
+
+        const findChildren = (arr: string[]) => arr
+            .map(x=>ipaths.modules.module.pick(x).endpoints())
+            .reduce((c,p)=>c.concat(p),[])
+            .map(x=>modulePathToName(x.abs().get()))
+            .filter((x,i,a)=>a.indexOf(x) === i)
+
+        let impPosChildren = findChildren(declaredPositives);
+        let impNegChildren = findChildren(declaredNegatives);
+        let final = impPosChildren.filter(x=>!impNegChildren.includes(x))
+        return final;
     }
 
     @Property({

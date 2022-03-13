@@ -422,13 +422,18 @@ export function InstallPath(pathIn: string, tdb: string) {
                     ]
                     let paths: WDirectory[] = [self]
                     self.iterate('RECURSE','DIRECTORIES','FULL',node=>{
-                        if(node.endsWith('.git')) return 'ENDPOINT'
-                        if(node.basename().get() === 'build') return 'ENDPOINT'
-                        if(endpoints.includes(node.basename().get())) return 'ENDPOINT'
-                        if(node.toDirectory()
-                               .readDir('ABSOLUTE')
-                               .find(x=>endpoints.find(y=>y==x.basename().get()))
-                        ) {
+                        if(node.endsWith('.git') || node.endsWith('.swc') || node.endsWith('.vs')) {
+                            return 'ENDPOINT'
+                        }
+                        if(node.basename().get() === 'build') {
+                            return 'ENDPOINT'
+                        }
+                        if(endpoints.includes(node.basename().get())) {
+                            return 'ENDPOINT'
+                        }
+
+                        let hasEndpoints = node.filter(x=>endpoints.includes(x.basename().get()))
+                        if(node.isDirectory() && hasEndpoints) {
                             paths.push(node.toDirectory())
                         }
                     })
@@ -740,14 +745,13 @@ export const ipaths = function(){
     return InstallPath(arg.substring('--ipaths='.length),tdbFilename())
 }();
 
-export function collectSubmodules(modulesIn: string[]) {
-    // remove modules contained in other modules
-    modulesIn = modulesIn
-        .map(x=>x.split('.').join(path.sep))
-        .filter(x=>modulesIn.find(y=>!wfs.relative(y,x).startsWith('..')))
+export function modulePathToName(modulePath: string) {
+    let parts = modulePath.split('\\').join('/').split('/')
+    parts = parts.slice(parts.lastIndexOf('modules') + 1)
+    return parts.join('.')
+}
 
-    // hack: using submodules as module names
-    return modulesIn
-        .map(x=>ipaths.modules.module.pick(x).endpoints())
-        .reduce((p,c)=>p.concat(c))
+export function moduleNameToPath(moduleName: string) {
+    let fullPath = ipaths.modules.join(moduleName.split('.').join(path.sep)).get()
+    return EndpointDirectory(fullPath)
 }

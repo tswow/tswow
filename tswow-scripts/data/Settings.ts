@@ -2,7 +2,7 @@ import { DatasetConfig } from "../util/DatasetConfig";
 import { wfs } from "../util/FileSystem";
 import { WDirectory } from "../util/FileTree";
 import { NodeConfigClass } from "../util/NodeConfig";
-import { collectSubmodules, DatasetDirectory, InstallPath, tdbFilename } from "../util/Paths";
+import { DatasetDirectory, InstallPath, moduleNameToPath, tdbFilename } from "../util/Paths";
 
 export const ipaths = InstallPath('./',tdbFilename())
 export const NodeConfig = new NodeConfigClass(ipaths.node_conf.get())
@@ -29,10 +29,8 @@ export const datasetName = function() {
 
 const config = new DatasetConfig(dataset.config.get());
 
-export const DatascriptModules = collectSubmodules(config.modules)
-    .filter(x=>x.datascripts.exists())
-
-export const AllModules = collectSubmodules(config.modules)
+export const AllModules = config.modules.map(moduleNameToPath)
+export const DatascriptModules = AllModules.filter(x=>x.datascripts.exists())
 
 export const EmulatorCore = config.EmulatorCore;
 
