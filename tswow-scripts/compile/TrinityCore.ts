@@ -15,6 +15,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 import { SevenZip } from '../util/7zip';
+import { Args } from '../util/Args';
 import { BuildType } from '../util/BuildType';
 import { wfs } from '../util/FileSystem';
 import { ipaths, TDB_URL } from '../util/Paths';
@@ -162,6 +163,10 @@ export namespace TrinityCore {
     }
 
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
+        if(Args.hasFlag('notc',[process.argv,args1])) {
+            return;
+        }
+
         term.log('build','Building TrinityCore');
         bpaths.TrinityCore.mkdir()
 
@@ -177,7 +182,7 @@ export namespace TrinityCore {
         let setupCommand: string;
         let buildCommand: string;
 
-        if(!args1.includes('--no-compile') && !process.argv.includes('no-compile-tc')) {
+        if(Args.hasFlag('no-compile',[process.argv,args1])) {
             if (isWindows()) {
                 setupCommand = `${cmake} -DTOOLS=${tools}`
                 +` -DCMAKE_GENERATOR="Visual Studio 16 2019"`

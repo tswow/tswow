@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Args } from "../util/Args";
 import { BuildType } from "../util/BuildType";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
@@ -26,10 +27,14 @@ import { TrinityCore } from "./TrinityCore";
 
 export namespace AzerothCore {
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
+        if(Args.hasFlag('noac',[args1,process.argv])) {
+            return;
+        }
+
         term.log('build','Building AzerothCore');
         bpaths.AzerothCore.mkdir()
         const generateOnly = args1.includes('--generate-only')
-        if(!args1.includes('--no-compile') && !process.argv.includes('no-compile-ac')) {
+        if(!Args.hasFlag('no-compile',[args1,process.argv])) {
             if(isWindows()) {
                 wsys.exec(
                     `${cmake} `
