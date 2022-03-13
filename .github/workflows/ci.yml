@@ -18,6 +18,7 @@ jobs:
   windows-msvc-2019:
     runs-on: windows-2019
     steps:
+      # Build
       - name: Clean up space
         run: >
           Remove-Item -Recurse -Force -ErrorAction Ignore "C:\Program Files\dotnet";
@@ -54,30 +55,15 @@ jobs:
         id: sha
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      # Release
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      # Upload release
+      - name: Upload Artifact
+        uses: WebFreak001/deploy-nightly@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: build-${{ steps.sha.outputs.sha_short }}
-          release_name: |
-            Build #${{ steps.sha.outputs.sha_short }}
-          body: |
-            **Commits**: https://github.com/tswow/tswow/compare/${{github.event.before}}...${{github.event.after}}
-            **Build date**: ${{ steps.time-header.outputs.time }}
-          draft: false
-          prerelease: true
-          owner: tswow
-          repo: tswow
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: "https://uploads.github.com/repos/tswow/tswow/releases/61706427/assets{?name,label}"
+          release_id: "61706427"
           asset_path: C:/tswow-build/release.7z
           asset_name: tswow-${{steps.sha.outputs.sha_short}}.7z
           asset_content_type: application/x-7z-compressed
+          max_releases: 10
