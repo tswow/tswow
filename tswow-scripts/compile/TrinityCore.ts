@@ -47,7 +47,7 @@ export namespace TrinityCore {
         // todo: duplicate from
         spaths.tswow_core.Public.copy(ipaths.bin.include, true)
 
-        spaths.client_extensions.CustomPackets
+        spaths.misc.client_extensions.CustomPackets
             .readDir('ABSOLUTE')
             .filter(x=>x.endsWith('.h'))
             .forEach(x=>x.copy(ipaths.bin.include.join(x.basename())))

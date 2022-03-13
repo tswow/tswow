@@ -658,31 +658,30 @@ export function SourcePaths(pathIn: string) {
         node_modules: dir({
             typescript_js: file('typescript/lib/tsc'),
         }),
-        tools: dir({
+        misc: dir({
             mpqbuilder: dir({}),
             adtcreator: dirn('adt-creator',{}),
             blpconverter: dir({}),
-        }),
-
-        install_config: dirn('install-config',{
-            include_addon: dirn('include-addon',{
-                global_d_ts: file('global.d.ts'),
-                Events_ts: file('Events.ts'),
-                shared_global_d_ts: file('shared.global.d.ts'),
-                LualibBundle_lua: file('LualibBundle.lua'),
-                RequireStub_lua: file('RequireStub.lua'),
+            install_config: dirn('install-config',{
+                include_addon: dirn('include-addon',{
+                    global_d_ts: file('global.d.ts'),
+                    Events_ts: file('Events.ts'),
+                    shared_global_d_ts: file('shared.global.d.ts'),
+                    LualibBundle_lua: file('LualibBundle.lua'),
+                    RequireStub_lua: file('RequireStub.lua'),
+                }),
+                characters_create: file('characters_create.sql'),
+                auth_create: file('auth_create.sql'),
+                package_json: file('package.json'),
+                node_yaml: file('node.yaml'),
+                vscode_install : file('.vscode-install'),
+                addons: dir({}),
+                snippet_example: file('snippet-example.ts')
             }),
-            characters_create: file('characters_create.sql'),
-            auth_create: file('auth_create.sql'),
-            package_json: file('package.json'),
-            node_yaml: file('node.yaml'),
-            vscode_install : file('.vscode-install'),
-            addons: dir({}),
-            snippet_example: file('snippet-example.ts')
-        }),
 
-        client_extensions: dirn('client-extensions',{
-            CustomPackets: dir({})
+            client_extensions: dirn('client-extensions',{
+                CustomPackets: dir({})
+            }),
         }),
 
         cores: dir({
