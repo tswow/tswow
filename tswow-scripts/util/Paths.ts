@@ -168,8 +168,8 @@ export function EndpointDirectory(inPath: string) {
                 WorldMap: dir({})
             }),
 
-            textures: dir({
-                minimap: dir({})
+            Textures: dir({
+                Minimap: dir({})
             })
         }),
         livescript_tsconfig_temp: file('tsconfig.json'),

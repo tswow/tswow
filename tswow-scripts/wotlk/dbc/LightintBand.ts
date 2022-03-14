@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { int } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCIntArrayCell, DBCIntCell, DBCKeyCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { int } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -88,7 +88,7 @@ export class LightintBandDBCFile extends DBCFile<
     LightintBandQuery,
     LightintBandRow> {
     constructor() {
-        super('LightintBand',(t,b,o)=>new LightintBandRow(t,b,o))
+        super('LightIntBand',(t,b,o)=>new LightintBandRow(t,b,o))
     }
     /** Loads a new LightintBand.dbc from a file. */
     static read(path: string): LightintBandDBCFile {

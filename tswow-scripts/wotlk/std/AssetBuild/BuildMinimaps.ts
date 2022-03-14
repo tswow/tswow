@@ -28,8 +28,8 @@ finish('minimaps', () => {
     const minimapChanges = new FileChangeModule('minimaps');
     ipaths.modules.module.all().forEach(basemod=>{
         basemod.endpoints().forEach(mod=>{
-            if(!mod.assets.textures.minimap.exists()) return;
-            mod.assets.textures.minimap
+            if(!mod.assets.Textures.Minimap.exists()) return;
+            mod.assets.Textures.Minimap
                 .iterate('FLAT','BOTH','FULL',node=>{
                     if(node.isDirectory()) {
                         if(node.toDirectory().containsFile('noconvert')) {
@@ -89,8 +89,8 @@ finish('minimaps', () => {
     const minimaps: {[key: string]: string[]} = {}
     ipaths.modules.module.all().forEach(basemod=>{
         basemod.endpoints().forEach(mod=>{
-            if(!mod.assets.textures.minimap.exists()) return;
-            mod.assets.textures.minimap.iterate('FLAT','FILES','FULL',node=>{
+            if(!mod.assets.Textures.Minimap.exists()) return;
+            mod.assets.Textures.Minimap.iterate('FLAT','FILES','FULL',node=>{
                 if(!node.endsWith('.blp')) return;
 
                 const texture = node.basename();
@@ -105,7 +105,7 @@ finish('minimaps', () => {
     }
 
     // nothing else should touch this file
-    LUAXML.anyfile('textures/Minimap/md5translate.trs').modInPlace(source=>{
+    LUAXML.anyfile('Textures/Minimap/md5translate.trs').modInPlace(source=>{
         let lines = source.split('\r').join('').split('\n');
         Object.entries(minimaps).forEach(([map,files])=>{
             let index = lines.findIndex(x=>{

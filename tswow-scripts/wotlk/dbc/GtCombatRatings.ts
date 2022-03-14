@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtCombatRatingsDBCFile extends DBCFile<
     GtCombatRatingsQuery,
     GtCombatRatingsRow> {
     constructor() {
-        super('GtCombatRatings',(t,b,o)=>new GtCombatRatingsRow(t,b,o))
+        super('gtCombatRatings',(t,b,o)=>new GtCombatRatingsRow(t,b,o))
     }
     /** Loads a new GtCombatRatings.dbc from a file. */
     static read(path: string): GtCombatRatingsDBCFile {

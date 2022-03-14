@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtRegenHPPerSptDBCFile extends DBCFile<
     GtRegenHPPerSptQuery,
     GtRegenHPPerSptRow> {
     constructor() {
-        super('GtRegenHPPerSpt',(t,b,o)=>new GtRegenHPPerSptRow(t,b,o))
+        super('gtRegenHPPerSpt',(t,b,o)=>new GtRegenHPPerSptRow(t,b,o))
     }
     /** Loads a new GtRegenHPPerSpt.dbc from a file. */
     static read(path: string): GtRegenHPPerSptDBCFile {

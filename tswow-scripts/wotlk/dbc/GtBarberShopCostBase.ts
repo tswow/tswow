@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtBarberShopCostBaseDBCFile extends DBCFile<
     GtBarberShopCostBaseQuery,
     GtBarberShopCostBaseRow> {
     constructor() {
-        super('GtBarberShopCostBase',(t,b,o)=>new GtBarberShopCostBaseRow(t,b,o))
+        super('gtBarberShopCostBase',(t,b,o)=>new GtBarberShopCostBaseRow(t,b,o))
     }
     /** Loads a new GtBarberShopCostBase.dbc from a file. */
     static read(path: string): GtBarberShopCostBaseDBCFile {
