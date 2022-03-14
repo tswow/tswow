@@ -45,8 +45,6 @@ export function translate(table: string, row: any, direction: TranslateDirection
             break;
         case 'game_event_battleground_holiday':
             rename('eventEntry','EventEntry')
-            break;
-        case 'game_event_battleground_holiday':
             remove_out('BattlegroundID')
             break;
         case 'event_scripts':
