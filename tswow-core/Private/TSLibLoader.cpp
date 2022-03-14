@@ -64,7 +64,7 @@ void UpdateTSLibraries(bool forceReload)
             DL_CLOSE(itr->second.handle);
 
             fs::current_path() / "lib" / buildType / itr->first;
-            TS_LOG_INFO("tswow.livescripts", "Unloading library %s",itr->first.string());
+            TS_LOG_INFO("tswow.livescripts", "Unloading library %s",itr->first.string().c_str());
             itr = libraries.erase(itr);
         }
         else
@@ -118,10 +118,10 @@ void UpdateTSLibraries(bool forceReload)
         libraries[file] = {time,dll,modName};
         if (!ptr)
         {
-            TS_LOG_ERROR("tswow.livescripts", "Could not find main function for library %s",modName);
+            TS_LOG_ERROR("tswow.livescripts", "Could not find main function for library %s",modName.c_str());
             continue;
         }
-        TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName);
+        TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName.c_str());
         ptr(events);
     }
 }
