@@ -10,7 +10,7 @@ export namespace ADTCreator {
     export async function create(cmake: string) {
         if(isWindows()) {
             wsys.exec(`${cmake} `
-                + ` -S "tools/adt-creator" `
+                + ` -S "${spaths.misc.adtcreator}" `
                 + ` -B "${bpaths.adtcreator.get()}"`, 'inherit');
             wsys.exec(`${cmake}`
                 + ` --build "${bpaths.adtcreator.get()}"`
