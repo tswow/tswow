@@ -311,7 +311,7 @@ export class Realm {
         )
 
         if(this.core === 'trinitycore') {
-            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',1)
+            patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.Enabled',0)
             patchTCConfig(this.path.worldserver_conf.get(), 'HotSwap.EnableReCompiler',0)
         }
 
