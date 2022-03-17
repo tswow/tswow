@@ -41,7 +41,9 @@ export function DatasetDirectory(inPath: string, inName: string) {
         dbc_temp: dir({
             dbc: dir({}),
         }),
-        lib: dir({}),
+        lib: dir({
+            lua: dir({})
+        }),
         luaxml: dir({
             Interface: dir({
                 FrameXML: dir({
@@ -153,6 +155,11 @@ export function EndpointDirectory(inPath: string) {
         addon: custom(inPath=>AddonDirectory(mpath(inPath,'addon'))),
         datascripts: custom(inPath=>DatascriptsDirectory(mpath(inPath,'datascripts'))),
         livescripts: custom(inPath=>LivescriptsDirectory(mpath(inPath,'livescripts'))),
+        lua: dir({
+            example: file('main.ts'),
+            global_d_ts: file('global.d.ts'),
+            tsconfig_json: file('tsconfig.json')
+        }),
         shared: dir({
             global_d_ts: file('global.d.ts')
         }),

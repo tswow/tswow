@@ -231,3 +231,14 @@ TSAchievementEvents* GetAchievementEvent(uint32 entry)
     }
     return achievementEvents[entry];
 }
+
+sol::as_table_t<std::vector<std::string>> TSAchievementEntry::LGetTitles()
+{
+    std::vector<std::string> plain;
+    auto titles = GetTitles();
+    for (auto const& title : titles)
+    {
+        plain.push_back(title);
+    }
+    return sol::as_table(plain);
+}

@@ -11910,7 +11910,7 @@ declare function GetSpellTexture(spellId: number, type: WoWAPI.BookType): WoWAPI
  *  castTime: The cast time, in milliseconds.
  * minRange: The minimum range of the spell.
  * maxRange: The maximum range of the spell.
- * 
+ *
  * @see https://wow.gamepedia.com/API_GetSpellInfo
  * @tupleReturn
  */
@@ -12677,6 +12677,13 @@ declare namespace WoWAPI {
         SetShadowOffset(x: number, y: number): void;
     }
 
+    interface CheckButton extends UIObject, Frame, Region, Button {
+        GetChecked(): boolean
+        GetCheckedTexture(): boolean
+        GetDisabledCheckedTexture(): boolean
+        SetChecked()
+    }
+
     /**
      * This is an abstract object type which cannot actually be created.
      * It gathers together a number of common methods which have identical behaviours across all widget types.
@@ -13017,7 +13024,7 @@ declare namespace WoWAPI {
         HookScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         HookScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
-	
+
     interface GameTooltipSetScript extends ObjectetScript {
         SetScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
         SetScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
@@ -13030,7 +13037,7 @@ declare namespace WoWAPI {
         SetScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
-	
+
     interface Backdrop {
         /**
          * Which texture file to use as frame background (.blp or .tga format)

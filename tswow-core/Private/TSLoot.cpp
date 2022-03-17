@@ -205,3 +205,30 @@ void TSLoot::SetGeneratesNormally(bool generatesNormally)
     TS_LOG_ERROR("tswow.api", "TSLoot::SetGeneratesNormally not implemented for AzerothCore");
 #endif
 }
+
+void TSLoot::LAddItem0(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode, bool needsQuest, uint8 groupId)
+{
+    return AddItem(id, minCount, maxCount, lootmode, needsQuest, groupId);
+}
+
+void TSLoot::LAddItem1(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode, bool needsQuest)
+{
+    return AddItem(id, minCount, maxCount, lootmode, needsQuest);
+}
+
+void TSLoot::LAddItem2(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode)
+{
+    return AddItem(id, minCount, maxCount, lootmode);
+}
+
+void TSLoot::LAddItem3(uint32 id, uint8 minCount, uint8 maxCount)
+{
+    return AddItem(id, minCount, maxCount);
+}
+
+void TSLoot::LFilter(sol::protected_function predicate)
+{
+    return Filter([predicate](auto const& v) {
+        return predicate(v);
+    });
+}

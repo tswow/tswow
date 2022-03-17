@@ -393,3 +393,8 @@ void TSAura::Remove()
     aura->GetTarget()->RemoveSpellAuraHolder(aura->GetHolder(), AURA_REMOVE_BY_CANCEL);
 #endif
 }
+
+sol::as_table_t<std::vector<TSAuraApplication>> TSAura::LGetApplications()
+{
+    return sol::as_table(*GetApplications().vec);
+}

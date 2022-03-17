@@ -29,6 +29,7 @@ import { Datascripts } from './Datascripts';
 import { Dataset, Datasets } from './Dataset';
 import { Identifier } from './Identifiers';
 import { Livescripts } from './Livescripts';
+import { Lua } from './Lua';
 import { Realm, Realms } from './Realm';
 import { Shared } from './Shared';
 
@@ -112,6 +113,10 @@ export class ModuleEndpoint {
 
     get livescripts() {
         return new Livescripts(this);
+    }
+
+    get lua() {
+        return new Lua(this);
     }
 
     get addon() {

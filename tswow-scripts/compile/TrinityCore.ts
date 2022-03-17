@@ -158,6 +158,11 @@ export namespace TrinityCore {
                     ipaths.bin.include.global_d_ts
                         .copy(ep.datascripts.global_d_ts)
                 }
+
+                if(ep.lua.exists()) {
+                    ipaths.bin.include.global_d_ts
+                        .copy(ep.lua.global_d_ts)
+                }
             })
         })
     }

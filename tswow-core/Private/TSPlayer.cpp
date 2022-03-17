@@ -4115,3 +4115,258 @@ player->RemovePet(player->GetPet(), (PetSaveMode)mode, returnreagent);
 // Inherited from Unit
 // Inherited from WorldObject
 // Inherited from Object
+
+std::string TSPlayer::LGetGuildName()
+{
+    return GetGuildName().std_str();
+}
+std::string TSPlayer::LGetPlayerIP()
+{
+    return GetPlayerIP().std_str();
+}
+std::string TSPlayer::LGetAccountName()
+{
+    return GetAccountName().std_str();
+}
+void TSPlayer::LWhisper(std::string const& text, uint32 lang, TSPlayer receiver, uint64 guid)
+{
+    Whisper(text, lang, receiver, guid);
+}
+void TSPlayer::LTextEmote(std::string const& text)
+{
+    TextEmote(text);
+}
+void TSPlayer::LYell(std::string const& text, uint32 lang)
+{
+    Yell(text, lang);
+}
+void TSPlayer::LSay(std::string const& text, uint32 lang)
+{
+    Say(text, lang);
+}
+void TSPlayer::LSendBroadcastMessage(std::string const& message)
+{
+    SendBroadcastMessage(message);
+}
+void TSPlayer::LSendAreaTriggerMessage(std::string const& msg)
+{
+    SendAreaTriggerMessage(msg);
+}
+void TSPlayer::LSendNotification(std::string const& msg)
+{
+    SendNotification(msg);
+}
+void TSPlayer::LSendAddonMessage(std::string const& prefix, std::string const& message, uint8 channel, TSPlayer receiver)
+{
+    SendAddonMessage(prefix, message, channel, receiver);
+}
+
+void TSPlayer::LGossipMenuAddItem0(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code, std::string const& _promptMsg, uint32 _money)
+{
+    GossipMenuAddItem(_icon, msg, _sender, _intid, _code, _promptMsg, _money);
+}
+void TSPlayer::LGossipMenuAddItem1(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code, std::string const& _promptMsg)
+{
+    GossipMenuAddItem(_icon, msg, _sender, _intid, _code, _promptMsg);
+}
+void TSPlayer::LGossipMenuAddItem2(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code)
+{
+    GossipMenuAddItem(_icon, msg, _sender, _intid, _code);
+}
+void TSPlayer::LGossipMenuAddItem3(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid)
+{
+    GossipMenuAddItem(_icon, msg, _sender, _intid);
+}
+void TSPlayer::LGossipMenuAddItem4(uint32 _icon, std::string const& msg, uint32 _sender)
+{
+    GossipMenuAddItem(_icon, msg, _sender);
+}
+void TSPlayer::LGossipMenuAddItem5(uint32 _icon, std::string const& msg)
+{
+    GossipMenuAddItem(_icon, msg);
+}
+
+void TSPlayer::LGossipSendTextMenu0(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay, uint32 menu_id)
+{
+    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay, menu_id);
+}
+void TSPlayer::LGossipSendTextMenu1(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay)
+{
+    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay);
+}
+void TSPlayer::LGossipSendTextMenu2(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2)
+{
+    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay, emote2);
+}
+void TSPlayer::LGossipSendTextMenu3(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay)
+{
+    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1, emote1Delay);
+}
+void TSPlayer::LGossipSendTextMenu4(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1)
+{
+    GossipSendTextMenu(sender, str, language, emote0, emote0Delay, emote1);
+}
+void TSPlayer::LGossipSendTextMenu5(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay)
+{
+    GossipSendTextMenu(sender, str, language, emote0, emote0Delay);
+}
+void TSPlayer::LGossipSendTextMenu6(TSObject sender, std::string const& str, uint32 language, uint32 emote0)
+{
+    GossipSendTextMenu(sender, str, language, emote0);
+}
+void TSPlayer::LGossipSendTextMenu7(TSObject sender, std::string const& str, uint32 language)
+{
+    GossipSendTextMenu(sender, str, language);
+}
+void TSPlayer::LGossipSendTextMenu8(TSObject sender, std::string const& str)
+{
+    GossipSendTextMenu(sender, str);
+}
+
+void TSPlayer::LGossipSendTextMenuGendered0(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay, uint32 menu_id)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay, menu_id);
+}
+void TSPlayer::LGossipSendTextMenuGendered1(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay, emote2, emote2Delay);
+}
+void TSPlayer::LGossipSendTextMenuGendered2(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay, emote2);
+}
+void TSPlayer::LGossipSendTextMenuGendered3(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1, emote1Delay);
+}
+void TSPlayer::LGossipSendTextMenuGendered4(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay, emote1);
+}
+void TSPlayer::LGossipSendTextMenuGendered5(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0, emote0Delay);
+}
+void TSPlayer::LGossipSendTextMenuGendered6(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0)
+{
+    GossipSendTextMenuGendered(sender, male, female, language, emote0);
+}
+void TSPlayer::LGossipSendTextMenuGendered7(TSObject sender, std::string const& male, std::string const& female, uint32 language)
+{
+    GossipSendTextMenuGendered(sender, male, female, language);
+}
+void TSPlayer::LGossipSendTextMenuGendered8(TSObject sender, std::string const& male, std::string const& female)
+{
+    GossipSendTextMenuGendered(sender, male, female);
+}
+
+void TSPlayer::LGossipSendPOI(float x, float y, uint32 icon, uint32 flags, uint32 data, std::string const& iconText)
+{
+    GossipSendPOI(x, y, icon, flags, data, iconText);
+}
+
+void TSPlayer::LSendMail0(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, sol::table items)
+{
+    TSArray<TSItem> tsitems;
+    for (auto const& item : items)
+    {
+        tsitems.push(item.second.as<TSItem>());
+    }
+    SendMail(senderType, from, subject, body, money, cod, delay, tsitems);
+}
+void TSPlayer::LSendMail1(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay)
+{
+    SendMail(senderType, from, subject, body, money, cod, delay);
+}
+void TSPlayer::LSendMail2(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod)
+{
+    SendMail(senderType, from, subject, body, money, cod);
+}
+void TSPlayer::LSendMail3(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money)
+{
+    SendMail(senderType, from, subject, body, money);
+}
+void TSPlayer::LSendMail4(uint8 senderType, uint64 from, std::string const& subject, std::string const& body)
+{
+    SendMail(senderType, from, subject, body);
+}
+
+TSOutfit TSPlayer::LGetOutfitCopy0(uint32_t settings, int32_t race, int32_t gender)
+{
+    return GetOutfitCopy(settings, race, gender);
+}
+TSOutfit TSPlayer::LGetOutfitCopy1(uint32_t settings, int32_t race)
+{
+    return GetOutfitCopy(settings, race);
+}
+TSOutfit TSPlayer::LGetOutfitCopy2(uint32_t settings)
+{
+    return GetOutfitCopy(settings);
+}
+TSOutfit TSPlayer::LGetOutfitCopy3()
+{
+    return GetOutfitCopy();
+}
+
+void TSPlayer::LKillPlayer0(bool durability)
+{
+    KillPlayer(durability);
+}
+void TSPlayer::LKillPlayer1()
+{
+    KillPlayer();
+}
+
+TSItem TSPlayer::LAddItem0(uint32 itemId, uint32 itemCount, int32 propertyId)
+{
+    return AddItem(itemId, itemCount, propertyId);
+}
+TSItem TSPlayer::LAddItem1(uint32 itemId, uint32 itemCount)
+{
+    return AddItem(itemId, itemCount);
+}
+
+void TSPlayer::LAddItemToSlotRaw0(uint8 bag, uint8 slot, uint32 itemId, uint32 count, int32 propertyId)
+{
+    AddItemToSlotRaw(bag, slot, itemId, count, propertyId);
+}
+void TSPlayer::LAddItemToSlotRaw1(uint8 bag, uint8 slot, uint32 itemId, uint32 count)
+{
+    AddItemToSlotRaw(bag, slot, itemId, count);
+}
+
+void TSPlayer::LRemoveItem0(TSItem item, uint32 itemCount)
+{
+    RemoveItem(item, itemCount);
+}
+void TSPlayer::LRemoveItem1(TSItem item)
+{
+    RemoveItem(item);
+}
+
+void TSPlayer::LRemoveItemByEntry0(uint32 entry, uint32 itemCount)
+{
+    RemoveItemByEntry(entry, itemCount);
+}
+void TSPlayer::LRemoveItemByEntry1(uint32 entry)
+{
+    RemoveItemByEntry(entry);
+}
+
+void TSPlayer::LLearnClassSpells0(bool trainer, bool quests, bool limitQuestsByLevel)
+{
+    LearnClassSpells(trainer, quests, limitQuestsByLevel);
+}
+void TSPlayer::LLearnClassSpells1(bool trainer, bool quests)
+{
+    LearnClassSpells(trainer, quests);
+}
+
+void TSPlayer::LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id)
+{
+    GossipSendMenu(npc_text, sender, menu_id);
+}
+void TSPlayer::LGossipSendMenu1(uint32 npc_text, TSObject sender)
+{
+    GossipSendMenu(npc_text, sender);
+}

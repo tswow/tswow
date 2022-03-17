@@ -318,6 +318,31 @@ void ReloadBattleground(BattlegroundOnReload__Type fn, uint32 id)
     });
 }
 
+// TODO: fix implementations for these
+
+void ReloadGameObject__lua(sol::protected_function fn, uint32 id)
+{
+}
+
+void ReloadPlayer__lua(sol::protected_function fn, uint32 id)
+{
+}
+void ReloadCreature__lua(sol::protected_function fn, uint32 id)
+{
+}
+void ReloadMap__lua(sol::protected_function fn, uint32 id)
+{
+
+}
+void ReloadInstance__lua(sol::protected_function fn, uint32 id)
+{
+}
+void ReloadBattleground__lua(sol::protected_function fn, uint32 id)
+{
+
+}
+
+
 
 
 static std::map<uint32_t, TSMapDataExtra*> mapData;

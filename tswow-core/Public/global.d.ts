@@ -8414,6 +8414,47 @@ declare class TSEvents {
     Unit: _hidden.Unit;
     Quests: _hidden.Quests<void>;
     QuestID: _hidden.QuestID<void>;
+
+    static World: _hidden.World<void>;
+    static Addon: _hidden.Addon<void>;
+    static AreaTriggers: _hidden.AreaTrigger<void>;
+    static AreaTriggerID: _hidden.AreaTrigger<void>;
+    //Vehicle: _hidden.Vehicle;
+    static Achievements: _hidden.Achievements<void>;
+    static AchievementID: _hidden.AchievementID<void>;
+    static Player: _hidden.Player<void>;
+    static Account: _hidden.Account<void>;
+    static Guild: _hidden.Guild<void>;
+    static Group: _hidden.Group<void>;
+    static Spells: _hidden.Spells<void>;
+    static Creatures: _hidden.Creatures<void>;
+    static CreatureID: _hidden.CreatureID<void>;
+    static SpellID: _hidden.SpellID<void>;
+    static Auction: _hidden.AuctionHouse<void>;
+    static Maps: _hidden.Maps<void>;
+    static MapID: _hidden.MapID<void>;
+    static Items: _hidden.Items<void>;
+    static ItemID: _hidden.ItemID<void>;
+    static GameObjects: _hidden.GameObjects<void>;
+    static GameObjectID: _hidden.GameObjectID<void>;
+    static Tests: _hidden.Tests<void>;
+    static Battlegrounds: _hidden.Battlegrounds<void>;
+    static BattlegroundID: _hidden.BattlegroundID<void>;
+    static GameEvents: _hidden.GameEvents<void>;
+    static GameEventID: _hidden.GameEventID<void>;
+    static SmartActions: _hidden.SmartActions<void>;
+    static SmartActionID: _hidden.SmartActionID<void>;
+    static Conditions: _hidden.Conditions<void>;
+    static ConditionID: _hidden.ConditionID<void>;
+    static Instances: _hidden.Instances<void>;
+    static InstanceID: _hidden.InstanceID<void>;
+    static CustomPackets: _hidden.CustomPackets;
+    static CustomPacketID: _hidden.CustomPacketID;
+    static WorldPackets: _hidden.WorldPackets;
+    static WorldPacketID: _hidden.WorldPacketID;
+    static Unit: _hidden.Unit;
+    static Quests: _hidden.Quests<void>;
+    static QuestID: _hidden.QuestID<void>;
 }
 
 declare class TSDictionary<K,V> {

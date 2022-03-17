@@ -104,3 +104,35 @@ void TSChannel::Say(uint64 guid, TSString what, uint32 lang)
 {
     channel->Say(ObjectGuid(guid),what,LocaleConstant(lang));
 }
+
+std::string TSChannel::LGetName0(uint32 locale)
+{
+    return GetName(locale).std_str();
+}
+std::string TSChannel::LGetName1()
+{
+    return GetName().std_str();
+}
+
+void TSChannel::LSetPassword(std::string const& password)
+{
+    SetPassword(password);
+}
+bool TSChannel::LCheckPassword(std::string const& password)
+{
+    return CheckPassword(password);
+}
+
+void TSChannel::LJoinChannel0(TSPlayer player, std::string const& password)
+{
+    JoinChannel(player, password);
+}
+void TSChannel::LJoinChannel1(TSPlayer player)
+{
+    JoinChannel(player);
+}
+
+void TSChannel::LSay(uint64 guid, std::string const& what, uint32 lang)
+{
+    Say(guid, what, lang);
+}
