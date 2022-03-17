@@ -146,7 +146,7 @@ void LuaState::execute_file(std::filesystem::path const& file)
         std::string what = err.what();
         if (!alredy_errored)
         {
-            TC_LOG_ERROR("tswow.lua", "%s",what);
+            TC_LOG_ERROR("tswow.lua","%s",what.c_str());
         }
         alredy_errored = true;
         return;
