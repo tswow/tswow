@@ -1,3 +1,4 @@
+import { GetExistingId, IdPrivate } from "../util/ids/Ids"
 import { ipaths } from "../util/Paths"
 import { wsys } from "../util/System"
 import { term } from "../util/Terminal"
@@ -90,6 +91,83 @@ export class Lua {
                 node.copy(dataset.path.lib.lua.join(this.mod.fullName,node.relativeTo(this.path)))
             }
         })
+
+        // todo: please fix this singleton hell already.
+        //       this is fine because we're not multithreading.
+        class IdPublic extends IdPrivate {
+            static readFile = () => IdPrivate.readFile(dataset.path.ids_txt.get());
+        }
+        IdPublic.readFile();
+
+        dataset.path.lib.lua.join(this.mod.fullName).iterateDef((node)=>{
+            if(!node.isFile() || !node.endsWith('.lua')) {
+                return;
+            }
+            let lines = node
+                .toFile()
+                .readString()
+                .split('\r').join('')
+                .split('\n')
+                .map(contents=>{
+                    while(true) {
+                        let m = contents.match(/GetID *\( *\"(.+?)\" *, *\"(.+?)\" *, *\"(.+?)\" *\)/)
+                        if(m) {
+                            const [_,table,mod,name] = m;
+                            let id = GetExistingId(table,mod,name);
+                            contents = contents.replace(m[0],`${id}`)
+                        } else {
+                            break;
+                        }
+                    }
+
+                    while(true) {
+                        let m = contents.match(/GetIDTagUnique *\( *\"(.+?)\" *, *\"(.+?)\" *\)/)
+                        if(m) {
+                            let [_,mod,id] = m;
+                            let fullName = `${mod}.${id}`
+                            let file = ipaths.coredata.tags.tagfile(fullName)
+                            if(!file.exists()) {
+                                throw new Error(`No ids are tagged ${fullName}, did you run datascripts?`)
+                            }
+                            let values = file.readJson(undefined);
+                            if(!values) {
+                                throw new Error(`Corrupt json for tag ${fullName}, try rebuilding datascripts`)
+                            }
+
+                            if(values.length == 0) {
+                                throw new Error(`ID tag ${mod}:${id} has 0 values`);
+                            }
+
+                            if(values.length > 1) {
+                                throw new Error(`ID tag ${mod}:${id} is not unique (shared by ${values.length} ids)`);
+                            }
+                            contents = contents.replace(m[0],`${values[0]}`);
+                        } else {
+                            break;
+                        }
+                    }
+
+                    while(true) {
+                        let m = contents.match(/GetIDTag *\( *"(.+?)" *, *"(.+?)" *\)/);
+                        if(!m) break;
+                        let mod = m[1];
+                        let id = m[2];
+                        let fullName = `${mod}.${id}`
+                        let file = ipaths.coredata.tags.tagfile(fullName)
+                        if(!file.exists()) {
+                            throw new Error(`No ids are tagged ${fullName}, did you run datascripts?`)
+                        }
+                        let values = file.readJson(undefined);
+                        if(!values) {
+                            throw new Error(`Corrupt json for tag ${fullName}, try rebuilding datascripts`)
+                        }
+                        contents = contents.replace(m[0],`{${values.join(',')}}`);
+                    }
+                    return contents;
+                })
+                .join('\n');
+            node.toFile().write(lines,'OVERWRITE');
+        });
 
         term.success(this.logName(),`Finished building lua`)
     }
