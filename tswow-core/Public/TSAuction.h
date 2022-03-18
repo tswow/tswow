@@ -63,7 +63,7 @@ struct TC_GAME_API TSAuctionEntry {
     void SetFlags(uint32 flags);
 private:
     sol::as_table_t<std::vector<uint64>> LGetBidders();
-    friend class LuaState;
+    friend class TSLuaState;
 };
 
 class AuctionHouseObject;
@@ -81,5 +81,5 @@ struct TC_GAME_API TSAuctionHouseObject {
     void AddAuction(TSAuctionEntry entry);
 private:
     sol::as_table_t<std::vector<uint32>> LGetKeys();
-    friend class LuaState;
+    friend class TSLuaState;
 };

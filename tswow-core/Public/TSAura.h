@@ -102,5 +102,5 @@ public:
     void Remove();
 private:
     sol::as_table_t<std::vector<TSAuraApplication>> LGetApplications();
-    friend class LuaState;
+    friend class TSLuaState;
 };

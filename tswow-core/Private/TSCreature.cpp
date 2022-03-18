@@ -1459,4 +1459,3 @@ std::string TSCreature::LGetAIName()
 {
     return GetScriptName().std_str();
 }
-

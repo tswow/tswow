@@ -111,7 +111,8 @@ class TC_GAME_API TSTimer {
     uint64_t m_diff; // temp for callback
     bool     m_stopped = false;
     uint32 m_flags;
-    TimerCallback<T> m_callback;
+    TimerCallback<T> m_callback = nullptr;
+    sol::protected_function m_lua_callback;
 public:
     TSTimer(uint32_t modid, TSString name, uint32_t delay, int32_t repeats, uint32 flags, TimerCallback<T> callback)
         : m_modid(modid)
@@ -122,6 +123,17 @@ public:
         , m_flags(flags)
         , m_callback(callback)
     {}
+
+    TSTimer(uint32_t modid, TSString name, uint32_t delay, int32_t repeats, uint32 flags, sol::protected_function callback)
+        : m_modid(modid)
+        , m_name(name)
+        , m_delay(delay)
+        , m_repeats(repeats)
+        , m_lastTick(now())
+        , m_flags(flags)
+        , m_lua_callback(callback)
+    {}
+
 
     void Stop()
     {
@@ -186,7 +198,15 @@ public:
 
         for (uint64_t loop = 0; loop < effLoops; ++loop)
         {
-            m_callback(ctx, this);
+            if (m_callback)
+            {
+                m_callback(ctx, this);
+            }
+            else
+            {
+                m_lua_callback(ctx, this);
+            }
+
             m_lastTick = n;
             m_diff = 0;
             if (m_stopped)
@@ -205,6 +225,9 @@ public:
         }
         return false;
     }
+private:
+    std::string LGetName() { return GetName().std_str(); }
+    friend class TSLuaState;
 };
 
 template <typename T>
@@ -228,6 +251,25 @@ public:
             }
         }
         m_timers.push_back(TSTimer<T>(modid, name, time, repeats, flags, callback));
+    }
+
+    void add(uint32_t mod, uint32_t time, int32_t repeats, uint32_t flags, sol::protected_function callback)
+    {
+        m_timers.push_back(TSTimer<T>(mod, JSTR(""), time, repeats, flags, callback));
+    }
+
+    void add_named(uint32_t mod, std::string const& name, uint32_t time, int32_t repeats, uint32_t flags, sol::protected_function callback)
+    {
+        TSString nname = TSString(name);
+        for (int i = 0; i < m_timers.size(); ++i)
+        {
+            if (m_timers[i].GetName() == nname)
+            {
+                m_timers[i] = TSTimer<T>(mod, name, time, repeats, flags, callback);
+                return;
+            }
+        }
+        m_timers.push_back(TSTimer<T>(mod, name, time, repeats, flags, callback));
     }
 
     void remove_on_death()
@@ -334,7 +376,7 @@ public:
     {
         m_entity->m_timers.add_named(modid, name, time, 1, 0, callback);
     }
-
+    
     void AddTimer(uint32_t modid, uint32_t time, int32_t loops, uint32_t flags, TimerCallback<T> callback)
     {
         m_entity->m_timers.add(modid, time, loops, flags, callback);
@@ -369,4 +411,48 @@ public:
     {
         m_entity->m_groups.ClearGroups();
     }
+private:
+    void LRemoveTimer(std::string const& name) { RemoveTimer(name); }
+
+    TSWorldObjectGroup* LGetEntityGroup(std::string const& key)
+    {
+        return m_entity->m_groups.GetGroup(key);
+    }
+
+    void LRemoveEntityGroup(std::string const& key)
+    {
+        m_entity->m_groups.RemoveGroup(key);
+    }
+
+    void LAddNamedTimer0(uint32_t modid, std::string const& name, uint32_t time, int32_t loops, uint32_t flags, sol::protected_function callback)
+    {
+        m_entity->m_timers.add_named(modid, name, time, loops, flags, callback);
+    }
+
+    void LAddNamedTimer1(uint32_t modid, std::string const& name, uint32_t time, int32_t loops, sol::protected_function callback)
+    {
+        m_entity->m_timers.add_named(modid, name, time, loops, 0, callback);
+    }
+
+    void LAddNamedTimer2(uint32_t modid, std::string const& name, uint32_t time, sol::protected_function callback)
+    {
+        m_entity->m_timers.add_named(modid, name, time, 1, 0, callback);
+    }
+
+    void LAddTimer0(uint32_t modid, uint32_t time, int32_t loops, uint32_t flags, sol::protected_function callback)
+    {
+        m_entity->m_timers.add(modid, time, loops, flags, callback);
+    }
+
+    void LAddTimer1(uint32_t modid, uint32_t time, int32_t loops, sol::protected_function callback)
+    {
+        m_entity->m_timers.add(modid, time, loops, 0, callback);
+    }
+
+    void LAddTimer2(uint32_t modid, uint32_t time, sol::protected_function callback)
+    {
+        m_entity->m_timers.add(modid, time, 1, 0, callback);
+    }
+
+    friend class TSLuaState;
 };

@@ -104,7 +104,7 @@ private:
     std::string LtoString0(int indents);
     std::string LtoString1();
     TSJsonObject LRemove(std::string const& key);
-    friend class LuaState;
+    friend class TSLuaState;
 };
 
 class TC_GAME_API TSJsonArray {
@@ -201,7 +201,7 @@ private:
     TSString LtoString0(int indents);
     TSString LtoString1();
 
-    friend class LuaState;
+    friend class TSLuaState;
 };
 
 struct JsonTag {

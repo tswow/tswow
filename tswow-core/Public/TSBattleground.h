@@ -160,5 +160,5 @@ private:
 
     TSCreature LGetBGCreature0(uint32 type, bool logErrors);
     TSCreature LGetBGCreature1(uint32 type);
-    friend class LuaState;
+    friend class TSLuaState;
 };

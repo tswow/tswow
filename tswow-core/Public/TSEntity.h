@@ -18,6 +18,9 @@
 
 #include "TSString.h"
 #include "TSJson.h"
+
+#include "sol/sol.hpp"
+
 #include <map>
 #include <string>
 #include <memory>
@@ -64,10 +67,17 @@ public:
 };
 
 // The class stored on core entities (Object/Map)
+struct ModTable
+{
+    uint32_t modid;
+    sol::table table;
+};
+
 class TC_GAME_API TSEntity {
 public:
     TSCompiledClasses m_compiledClasses;
     TSJsonObject m_json;
+    std::map<std::string, ModTable> m_lua_tables;
     uint8_t m_raw[128];
     TSEntity * operator->(){return this;}
 };
@@ -234,8 +244,6 @@ public:
     void Remove(TSString key) { getData()->m_json.Remove(key); }
 
 private:
-    bool LHasObject(uint32_t modid, std::string const& key) { return HasObject(modid, key); }
-
     void LSetNumber(std::string const& key, double value) { getData()->m_json.SetNumber(key, value); }
     bool LHasNumber(std::string const& key) { return getData()->m_json.HasNumber(key); }
     double LGetNumber0(std::string const& key, double def) { return getData()->m_json.GetNumber(key, def); }
@@ -279,5 +287,26 @@ private:
 
     void LRemove(std::string const& key) { getData()->m_json.Remove(key); }
 
-    friend class LuaState;
+    void LRemoveObject(std::string const& key) { getData()->m_lua_tables.erase(key); }
+    void LSetObject(uint32_t modid, std::string const& key, sol::table table) { getData()->m_lua_tables[key] = { modid, table }; }
+    bool LHasObject(std::string const& key) {
+        auto const& classes = getData()->m_lua_tables;
+        return classes.find(key) != classes.end();
+    }
+    sol::table LGetObject(uint32_t modid, std::string const& key, sol::table def)
+    {
+        auto & classes = getData()->m_lua_tables;
+        auto const& itr = classes.find(key);
+        if (itr != classes.end())
+        {
+            return itr->second.table;
+        }
+        else
+        {
+            classes[key] = { modid, def };
+            return def;
+        }
+    }
+
+    friend class TSLuaState;
 };

@@ -84,5 +84,5 @@ private:
     void LAddItem2(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode);
     void LAddItem3(uint32 id, uint8 minCount, uint8 maxCount);
     void LFilter(sol::protected_function predicate);
-    friend class LuaState;
+    friend class TSLuaState;
 };

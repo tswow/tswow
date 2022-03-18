@@ -414,5 +414,5 @@ private:
 
 		void LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id);
 		void LGossipSendMenu1(uint32 npc_text, TSObject sender);
-		friend class LuaState;
+		friend class TSLuaState;
 };

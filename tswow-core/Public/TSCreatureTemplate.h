@@ -138,7 +138,7 @@ private:
     std::string LGetTitle();
     std::string LGetIconName();
     std::string LGetAIName();
-    friend class LuaState;
+    friend class TSLuaState;
 };
 
 TC_GAME_API TSCreatureTemplate GetCreatureTemplate(uint32 entry);

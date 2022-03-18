@@ -55,7 +55,7 @@ public:
 	void BroadcastAround(TSWorldObject obj, float range, bool self = true);
 private:
 		TSPacketWrite * LWriteString(std::string const& value);
-		friend class LuaState;
+		friend class TSLuaState;
 };
 
 class TC_GAME_API TSPacketRead
@@ -97,7 +97,7 @@ public:
 private:
 		std::string LReadString0(std::string const& def);
 		std::string LReadString1();
-		friend class LuaState;
+		friend class TSLuaState;
 };
 
 class TSServerBuffer : public CustomPacketBuffer

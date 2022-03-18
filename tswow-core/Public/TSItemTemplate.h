@@ -136,7 +136,7 @@ private:
     std::string LGetDescription();
     int32 LGetFeralBonus0(int32 extraDPS);
     int32 LGetFeralBonus1();
-    friend class LuaState;
+    friend class TSLuaState;
 };
 
 TSItemTemplate TC_GAME_API GetItemTemplate(uint32 id);

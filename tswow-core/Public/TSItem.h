@@ -85,7 +85,7 @@ public:
 private:
     std::string LGetItemLink(uint8 locale);
     std::string LGetName();
-    friend class LuaState;
+    friend class TSLuaState;
 };
 
 TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);

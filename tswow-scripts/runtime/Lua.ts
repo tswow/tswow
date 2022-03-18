@@ -1,6 +1,7 @@
 import { ipaths } from "../util/Paths"
 import { wsys } from "../util/System"
 import { term } from "../util/Terminal"
+import { termCustom } from "../util/TerminalCategories"
 import { BuildCommand } from "./CommandActions"
 import { Dataset } from "./Dataset"
 import { Identifier } from "./Identifiers"
@@ -57,6 +58,10 @@ export class Lua {
         return new Lua(mod).initialize()
     }
 
+    logName() {
+        return termCustom('lua',this.mod.fullName)
+    }
+
     async build(dataset: Dataset, _args: string[]) {
         this.initialize();
         let config = Object.assign({},lua_tsconfig_json)
@@ -72,22 +77,21 @@ export class Lua {
         })
 
         if(foundTs) {
+            term.log(this.logName(),`Compiling ts->lua`)
             wsys.execIn(
                 this.path.get()
             , `node ${ipaths.node_modules.tstl_js.abs()}`
             )
         }
 
+        term.log(this.logName(),`Copying lua sources`)
         this.path.iterateDef(node=>{
             if(node.isFile() && node.endsWith('.lua')) {
                 node.copy(dataset.path.lib.lua.join(this.mod.fullName,node.relativeTo(this.path)))
             }
         })
-        dataset.realms()
-            .filter(x=>x.worldserver.isRunning())
-            .forEach(x=>x.worldserver.send('reload lua'))
 
-        term.success('lua',`Finished building lua for module ${this.mod.fullName}`)
+        term.success(this.logName(),`Finished building lua`)
     }
 
     static initialize() {
@@ -99,16 +103,23 @@ export class Lua {
                 const datasets = Identifier.getDatasets(
                     args,'MATCH_ANY', NodeConfig.DefaultDataset
                 )
-                return Promise.all(datasets.map(dataset=>{
+                return Promise.all(datasets.map(async dataset=>{
                     dataset.path.lib.lua.remove();
                     let modules = dataset.modules().filter(x=>x.lua.exists())
                     if(modules.length === 0) {
                         throw new Error(`No modules with lua enabled in dataset ${dataset.fullName}`)
                     }
-                    return Promise.all(modules.map(x=>{
+                    await Promise.all(modules.map(x=>{
                         return x.lua.build(dataset,args)
                     }));
-                }))
+
+                    dataset.realms()
+                        .filter(x=>x.worldserver.isRunning())
+                        .forEach(x=>{
+                            term.log(termCustom('lua',x.fullName),'Reloading worldserver lua')
+                            x.worldserver.send('reload lua')
+                        })
+                    }))
             }
         )
     }

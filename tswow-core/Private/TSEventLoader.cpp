@@ -138,9 +138,15 @@ TSEvents* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::str
     return handler;
 }
 
+uint32_t TSGetModID(boost::filesystem::path const& path)
+{
+    return modIds[path.string()];
+}
+
 static void RemoveData(WorldObject* obj)
 {
     obj->m_tsEntity.m_compiledClasses.clear();
+    obj->m_tsEntity.m_lua_tables.clear();
     obj->m_tsWorldEntity.clear();
     obj->m_tsCollisions.callbacks.clear();
 }
@@ -194,6 +200,7 @@ void TSUnloadEventHandler(boost::filesystem::path const& name)
     sMapMgr->DoForAllMaps([](auto map){
         map->m_tsWorldEntity.clear();
         map->m_tsEntity.m_compiledClasses.clear();
+        map->m_tsEntity.m_lua_tables.clear();
         RemoveWorker worker;
         TypeContainerVisitor<RemoveWorker, MapStoredObjectTypesContainer> visitor(worker);
         visitor.Visit(map->GetObjectsStore());

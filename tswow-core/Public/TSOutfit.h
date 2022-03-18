@@ -148,7 +148,7 @@ private:
     void LApplyCopy1(TSCreature creature, uint32_t settings, int32_t race);
     void LApplyCopy2(TSCreature creature, uint32_t settings);
     void LApplyCopy3(TSCreature creature);
-    friend class LuaState;
+    friend class TSLuaState;
 #endif
 };
 

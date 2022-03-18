@@ -1,4 +1,3 @@
-#include "TSInstance.h"
 #include "TSMap.h"
 
 #if TRINITY

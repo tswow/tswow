@@ -15,7 +15,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <memory.h>
 #include "TSIncludes.h"
 #include "GameEventMgr.h"
 #include "Object.h"
@@ -61,6 +60,7 @@
 #include "TSMail.h"
 #include "LFG.h"
 
+#include <memory.h>
 
 TSPlayer::TSPlayer(Player *player) : TSUnit(player)
 {

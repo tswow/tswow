@@ -57,5 +57,5 @@ private:
     std::string LGetInfo();
     void LSendPacket(TSWorldPacket data);
     void LSendPacketToRanked(TSWorldPacket data, uint8 ranked);
-    friend class LuaState;
+    friend class TSLuaState;
 };

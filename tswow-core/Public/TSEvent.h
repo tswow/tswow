@@ -292,12 +292,6 @@ TC_GAME_API void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer, std::
 				}\
 		}\
 
-#define LUA_FIELD(category,name) #name,&category::name
-#define LUA_METHOD(target,cls,fn) target.set_function(#fn,&##cls::fn)
-#define LUA_HANDLE(target, category,name) target.set_function(#name,&TSEvents::category::name##__lua)
-#define LUA_MAPPED_HANDLE(category,name) #name,sol::overload(&TSEvents::category::name##__luaNum,&TSEvents::category::name##__luaTable)
-#define LUA_CATEGORY(category) #category,&TSEvents::category
-
 #define FIRE(name,...)\
     {\
         for(size_t __fire_i=0;__fire_i< GetTSEvents()->name.GetSize(); ++__fire_i)\

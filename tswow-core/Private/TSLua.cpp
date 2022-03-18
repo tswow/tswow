@@ -1,53 +1,58 @@
 #include "TSEventLoader.h"
-#include "TSLuaLoader.h"
-#include "TSEvents.h"
-#include "TSObject.h"
-#include "TSWorldObject.h"
-#include "TSUnit.h"
-#include "TSCreature.h"
-#include "TSGameObject.h"
-#include "TSPlayer.h"
-#include "TSItem.h"
-#include "TSMap.h"
-#include "TSBattleground.h"
-#include "TSAchievementTemplate.h"
-#include "TSCreatureTemplate.h"
-#include "TSGameObjectTemplate.h"
-#include "TSSpellInfo.h"
-#include "TSAreaTrigger.h"
-#include "TSAuction.h"
-#include "TSAura.h"
-#include "TSSpell.h"
-#include "TSChannel.h"
-#include "TSCorpse.h"
-#include "TSDamageInfo.h"
-#include "TSFileSystem.h"
-#include "TSGroup.h"
-#include "TSGuild.h"
-#include "TSJson.h"
-#include "TSLoot.h"
-#include "TSMail.h"
-#include "TSMutableString.h"
-#include "TSPosition.h"
-#include "TSQuest.h"
-#include "TSSmartScript.h"
-#include "TSOutfit.h"
-#include "TSCustomPacket.h"
+#include "TSLua.h"
 #include "Config.h"
-
 #include <regex>
 #include "document.hpp"
 #include <fstream>
 
-LuaState::LuaState(std::filesystem::path rootDir)
+static std::map<std::string, TSLuaState> states;
+
+TSLuaState::TSLuaState(std::filesystem::path rootDir)
     : _root_dir(rootDir)
 {
-    open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
-    load_events();
-    load_methods();
 }
 
-std::string LuaState::format_error(std::string what)
+void TSLuaState::load_bindings(uint32_t modid)
+{
+    open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
+    load_worldentity_methods(modid);
+    load_creature_methods(modid);
+    load_gameobject_methods(modid);
+    load_player_methods(modid);
+    load_item_methods(modid);
+    load_instance_methods(modid);
+    load_battleground_methods(modid);
+    load_achievement_methods(modid);
+    load_gameobject_template_methods(modid);
+    load_spell_info_methods(modid);
+    load_areatrigger_methods(modid);
+    load_auction_methods(modid);
+    load_aura_methods(modid);
+    load_spell_methods(modid);
+    load_channel_methods(modid);
+    load_corpse_methods(modid);
+    load_packet_methods(modid);
+    load_damage_metods(modid);
+    load_group_methods(modid);
+    load_guild_methods(modid);
+    load_json_methods(modid);
+    load_loot_methods(modid);
+    load_mail_methods(modid);
+    load_itemtemplate_methods(modid);
+    load_mutablestring_methods(modid);
+    load_mutable_methods(modid);
+    load_position_methods(modid);
+    load_quest_methods(modid);
+    load_smartscript_methods(modid);
+    load_outfit_methods(modid);
+    load_object_methods(modid);
+    load_world_object_methods(modid);
+    load_unit_methods(modid);
+    load_map_methods(modid);
+    load_events(modid);
+}
+
+std::string TSLuaState::format_error(std::string what)
 {
     // Make relative paths
     {
@@ -120,12 +125,12 @@ std::string LuaState::format_error(std::string what)
     return what;
 }
 
-void LuaState::execute_module(std::string const& mod)
+void TSLuaState::execute_module(std::string const& mod)
 {
     execute_file(module_to_file(mod));
 }
 
-void LuaState::execute_file(std::filesystem::path const& file)
+void TSLuaState::execute_file(std::filesystem::path const& file)
 {
     if (alredy_errored)
     {
@@ -158,14 +163,14 @@ void LuaState::execute_file(std::filesystem::path const& file)
     _file_stack.pop_back();
 }
 
-std::filesystem::path LuaState::module_to_file(std::string const& mod)
+std::filesystem::path TSLuaState::module_to_file(std::string const& mod)
 {
     std::string modConv = mod;
     std::replace(modConv.begin(), modConv.end(), '.', '/');
     return std::filesystem::absolute((_root_dir / std::filesystem::path(modConv + ".lua")));
 }
 
-sol::table LuaState::require(std::string const& mod)
+sol::table TSLuaState::require(std::string const& mod)
 {
     std::filesystem::path path = module_to_file(mod);
     std::string err_str;
@@ -183,8 +188,7 @@ sol::table LuaState::require(std::string const& mod)
     return _modules[path];
 }
 
-static std::map<std::string, LuaState> states;
-void LoadLua()
+void TSLuaState::Load()
 {
     for (auto const& [key,value]: states)
     {
@@ -211,12 +215,15 @@ void LoadLua()
 
         std::filesystem::path rootdir = entry.path();
         std::string modname = entry.path().filename().string();
-        LuaState* state = &(states[rootdir.string()] = LuaState(rootdir));
+        TSLuaState* state = &(states[rootdir.string()] = TSLuaState(rootdir));
         state->set_function("require", [=](std::string const& name) {
             return state->require(name);
         });
 
         TSEvents* events = TSLoadEventHandler(rootdir.string(), modname);
+        uint32 modid = TSGetModID(rootdir.string());
+        state->load_bindings(modid);
+
         (*state)["TSEvents"] = events;
 
         for (auto const& file : std::filesystem::recursive_directory_iterator(rootdir))

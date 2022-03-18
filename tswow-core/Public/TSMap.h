@@ -87,5 +87,5 @@ private:
     sol::as_table_t<std::vector<TSCreature>> LGetCreatures0(uint32 entry);
     sol::as_table_t<std::vector<TSCreature>> LGetCreatures1();
 
-    friend class LuaState;
+    friend class TSLuaState;
 };

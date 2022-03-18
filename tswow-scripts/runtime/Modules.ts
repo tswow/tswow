@@ -62,6 +62,7 @@ const initializedEndpoints = [
   , 'livescripts'
   , 'addon'
   , 'shared'
+  , 'lua'
 ] as const
 type EndpointType = typeof initializedEndpoints[number];
 
@@ -306,6 +307,9 @@ export class Module {
                     let endpoint = this.getEndpoint(dir.dirname().get());
                     if(endpoint) {
                         switch(endpointType) {
+                            case 'lua':
+                                Lua.create(endpoint)
+                                break;
                             case 'datascripts':
                                 Datascripts.create(endpoint)
                                 break;
