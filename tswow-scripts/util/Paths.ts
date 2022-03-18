@@ -339,6 +339,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             ClientExtensions_dll: file('ClientExtensions.dll'),
             include: dir({
                 global_d_ts: file('global.d.ts'),
+                lua: dir({})
             }),
             BLPConverter: dir({
                 blpconverter: file('blpconverter.exe')
@@ -575,6 +576,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         TrinityCore: dir({
+            sol_headers: dirn('_deps/sol2-src/scripts/include',{}),
+            lua_headers: dirn('_deps/lua51-src/src',{}),
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
             lib_linux: dirn('install/trinitycore/lib',{}),
@@ -602,7 +605,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     `src/server/database/${type}/database.lib`,
                     `src/server/game/${type}/game.lib`,
                     `src/common/${type}/common.lib`,
-                    `dep/argon2/${type}/argon2.lib`
+                    `dep/argon2/${type}/argon2.lib`,
+                    `${type}/liblua.lib`
                 ]
                 :
                 [

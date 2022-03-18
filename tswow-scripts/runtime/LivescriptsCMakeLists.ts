@@ -65,7 +65,10 @@ source_group("Transpiled" FILES \${transpiler_files})
 source_group("Source" FILES \${source_files})
 
 # core wrapper headers
-target_include_directories(${buildModule} PUBLIC ${ipaths.bin.include.abs('FORWARD')})
+target_include_directories(${buildModule} PUBLIC
+    ${ipaths.bin.include.abs('FORWARD')}
+    ${ipaths.bin.include.lua.abs('FORWARD')}
+)
 file (GLOB headers "${ipaths.bin.include.abs('FORWARD')}/*.h")
 
 # root livescript headers
