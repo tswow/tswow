@@ -37,11 +37,6 @@ export const EmulatorCore = config.EmulatorCore;
 export function isTrinityCore() { return EmulatorCore === 'trinitycore'; }
 export function isAzerothCore() { return EmulatorCore === 'azerothcore'; }
 
-export const EmulatorCore = config.EmulatorCore;
-
-export function isTrinityCore() { return EmulatorCore === 'trinitycore'; }
-export function isAzerothCore() { return EmulatorCore === 'azerothcore'; }
-
 export const BuildArgs = new class BuildArgsClass {
     USE_TIMER = process.argv.includes('--use-timer')
     INLINE_ONLY = process.argv.includes('--inline-only')
