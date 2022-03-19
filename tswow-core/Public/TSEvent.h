@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TSPlayer.h"
+#include "TSLua.h"
 
 #include <vector>
 #include <map>
@@ -303,7 +304,7 @@ TC_GAME_API void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer, std::
 						}\
 						else\
 						{\
-								val.lua_callback(__VA_ARGS__);\
+								TSLuaState::handle_error(val.lua_callback(__VA_ARGS__));\
 						}\
         }\
     }
@@ -319,7 +320,7 @@ TC_GAME_API void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer, std::
 						}\
 						else\
 						{\
-								val.lua_callback##lua;\
+								TSLuaState::handle_error(val.lua_callback##lua);\
 						}\
         }\
     }
@@ -337,7 +338,7 @@ TC_GAME_API void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer, std::
 						}\
 						else\
 						{\
-								val.lua_callback(__VA_ARGS__); \
+								TSLuaState::handle_error(val.lua_callback(__VA_ARGS__)); \
 						}\
         }\
     }\
@@ -355,7 +356,7 @@ TC_GAME_API void AddMessageListener(uint16_t opcode, void(*func)(TSPlayer, std::
 						}\
 						else\
 						{\
-								val.lua_callback(lua); \
+								TSLuaState::handle_error(val.lua_callback(lua)); \
 						}\
         }\
     }\

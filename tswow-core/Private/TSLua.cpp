@@ -14,7 +14,7 @@ TSLuaState::TSLuaState(std::filesystem::path rootDir)
 
 void TSLuaState::load_bindings(uint32_t modid)
 {
-    open_libraries(sol::lib::base, sol::lib::table, sol::lib::string);
+    open_libraries(sol::lib::base, sol::lib::table, sol::lib::string, sol::lib::math);
     load_worldentity_methods(modid);
     load_creature_methods(modid);
     load_gameobject_methods(modid);
@@ -52,16 +52,39 @@ void TSLuaState::load_bindings(uint32_t modid)
     load_events(modid);
 }
 
-std::string TSLuaState::format_error(std::string what)
+void TSLuaState::handle_error(sol::protected_function_result const& res)
 {
+    if (res.valid())
+    {
+        return;
+    }
+#if AZEROTHCORE
+    std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / "lua";
+#elif TRINITY
+    std::filesystem::path lua_path = std::filesystem::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / "lua";
+#endif
+    lua_path = std::filesystem::absolute(lua_path);
+    sol::error err = res;
+    std::string what = err.what();
+
     // Make relative paths
     {
+        while (true)
+        {
+            size_t index = what.find("\\\\", 0);
+            if (index == std::string::npos)
+            {
+                break;
+            }
+            what.replace(index, 2, "\\");
+        }
+
         size_t index = 0;
         while (true)
         {
-            index = what.find(_root_dir.string(), index);
+            index = what.find(lua_path.string(), index);
             if (index == std::string::npos) break;
-            what.replace(index, _root_dir.string().size() + 1, "");
+            what.replace(index, lua_path.string().size() + 1, "");
         }
     }
 
@@ -95,7 +118,7 @@ std::string TSLuaState::format_error(std::string what)
         for (int i = matches.size() - 1; i >= 0; --i)
         {
             Match const& match = matches[i];
-            std::filesystem::path map = this->_root_dir / (match.filename + ".map");
+            std::filesystem::path map = lua_path / (match.filename + ".map");
             if (!std::filesystem::exists(map))
             {
                 continue;
@@ -122,7 +145,7 @@ std::string TSLuaState::format_error(std::string what)
             what.replace(match.start, match.len, replacement);
         }
     }
-    return what;
+    TC_LOG_ERROR("tswow.lua", "%s", what.c_str());
 }
 
 void TSLuaState::execute_module(std::string const& mod)
@@ -147,11 +170,9 @@ void TSLuaState::execute_file(std::filesystem::path const& file)
     res = safe_script_file(file.string(), &sol::script_pass_on_error);
     if (!res.valid())
     {
-        sol::error err = res;
-        std::string what = err.what();
         if (!alredy_errored)
         {
-            TC_LOG_ERROR("tswow.lua","%s",what.c_str());
+            handle_error(res);
         }
         alredy_errored = true;
         return;

@@ -15,7 +15,7 @@ public:
     void load_bindings(uint32_t modid);
     TSLuaState(std::filesystem::path rootDir);
     TSLuaState() = default;
-    std::string format_error(std::string what);
+    static void handle_error(sol::protected_function_result const& what);
     void execute_file(std::filesystem::path const& file);
     void execute_module(std::string const& mod);
     std::filesystem::path module_to_file(std::string const& mod);
