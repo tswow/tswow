@@ -63,7 +63,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(player_events, PlayerEvents, OnTextEmote);
     LUA_HANDLE(player_events, PlayerEvents, OnSpellCast);
     LUA_HANDLE(player_events, PlayerEvents, OnLogin);
-    LUA_HANDLE(player_events, PlayerEvents, OnReload);
+    //LUA_HANDLE(player_events, PlayerEvents, OnReload);
     LUA_HANDLE(player_events, PlayerEvents, OnLogout);
     LUA_HANDLE(player_events, PlayerEvents, OnCreate);
     LUA_HANDLE(player_events, PlayerEvents, OnCreateEarly);
@@ -230,7 +230,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(creature_events, CreatureEvents, OnUpdateAI);
     LUA_HANDLE(creature_events, CreatureEvents, OnGenerateLoot);
     LUA_HANDLE(creature_events, CreatureEvents, OnCreate);
-    LUA_HANDLE(creature_events, CreatureEvents, OnReload);
+    //LUA_HANDLE(creature_events, CreatureEvents, OnReload);
     LUA_HANDLE(creature_events, CreatureEvents, OnRemove);
     LUA_HANDLE(creature_events, CreatureEvents, OnCanGeneratePickPocketLoot);
     LUA_HANDLE(creature_events, CreatureEvents, OnGeneratePickPocketLoot);
@@ -285,7 +285,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(creature_id_events, CreatureIDEvents, OnUpdateAI);
     LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGenerateLoot);
     LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCreate);
-    LUA_HANDLE(creature_id_events, CreatureIDEvents, OnReload);
+    //LUA_HANDLE(creature_id_events, CreatureIDEvents, OnReload);
     LUA_HANDLE(creature_id_events, CreatureIDEvents, OnRemove);
     LUA_HANDLE(creature_id_events, CreatureIDEvents, OnCanGeneratePickPocketLoot);
     LUA_HANDLE(creature_id_events, CreatureIDEvents, OnGeneratePickPocketLoot);
@@ -322,7 +322,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnGossipSelect);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnGossipSelectCode);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnCreate);
-    LUA_HANDLE(gameobject_events, GameObjectEvents, OnReload);
+    //LUA_HANDLE(gameobject_events, GameObjectEvents, OnReload);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnRemove);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnUse);
     LUA_HANDLE(gameobject_events, GameObjectEvents, OnQuestAccept);
@@ -341,7 +341,7 @@ void TSLuaState::load_events(uint32_t modid)
     LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGossipSelect);
     LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnGossipSelectCode);
     LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnCreate);
-    LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnReload);
+    //LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnReload);
     LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnRemove);
     LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnUse);
     LUA_HANDLE(gameobject_id_events, GameObjectIDEvents, OnQuestAccept);
@@ -351,7 +351,7 @@ void TSLuaState::load_events(uint32_t modid)
 
     auto map_events = new_usertype<TSEvents::MapEvents>("MapEvents");
     LUA_HANDLE(map_events, MapEvents, OnCreate);
-    LUA_HANDLE(map_events, MapEvents, OnReload);
+    //LUA_HANDLE(map_events, MapEvents, OnReload);
     LUA_HANDLE(map_events, MapEvents, OnUpdate);
     LUA_HANDLE(map_events, MapEvents, OnPlayerEnter);
     LUA_HANDLE(map_events, MapEvents, OnPlayerLeave);
@@ -364,7 +364,7 @@ void TSLuaState::load_events(uint32_t modid)
 
     auto map_id_events = new_usertype<TSEvents::MapIDEvents>("MapIDEvents");
     LUA_HANDLE(map_id_events, MapIDEvents, OnCreate);
-    LUA_HANDLE(map_id_events, MapIDEvents, OnReload);
+    //LUA_HANDLE(map_id_events, MapIDEvents, OnReload);
     LUA_HANDLE(map_id_events, MapIDEvents, OnUpdate);
     LUA_HANDLE(map_id_events, MapIDEvents, OnPlayerEnter);
     LUA_HANDLE(map_id_events, MapIDEvents, OnPlayerLeave);
@@ -377,7 +377,7 @@ void TSLuaState::load_events(uint32_t modid)
 
     auto battleground_events = new_usertype<TSEvents::BattlegroundEvents>("BattlegroundEvents");
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnCanCreate);
-    LUA_HANDLE(battleground_events, BattlegroundEvents, OnReload);
+    //LUA_HANDLE(battleground_events, BattlegroundEvents, OnReload);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnCreate);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnReset);
     LUA_HANDLE(battleground_events, BattlegroundEvents, OnOpenDoors);
@@ -409,7 +409,7 @@ void TSLuaState::load_events(uint32_t modid)
 
     auto battleground_id_events = new_usertype<TSEvents::BattlegroundIDEvents>("BattlegroundIDEvents");
     LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnCanCreate);
-    LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnReload);
+    //LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnReload);
     LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnCreate);
     LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnReset);
     LUA_HANDLE(battleground_id_events, BattlegroundIDEvents, OnOpenDoors);
@@ -438,7 +438,7 @@ void TSLuaState::load_events(uint32_t modid)
 
     auto instance_events = new_usertype<TSEvents::InstanceEvents>("InstanceEvents");
     LUA_HANDLE(instance_events, InstanceEvents, OnCreate);
-    LUA_HANDLE(instance_events, InstanceEvents, OnReload);
+    //LUA_HANDLE(instance_events, InstanceEvents, OnReload);
     LUA_HANDLE(instance_events, InstanceEvents, OnLoad);
     LUA_HANDLE(instance_events, InstanceEvents, OnSave);
     LUA_HANDLE(instance_events, InstanceEvents, OnUpdate);
@@ -455,7 +455,7 @@ void TSLuaState::load_events(uint32_t modid)
 
     auto instance_id_events = new_usertype<TSEvents::InstanceIDEvents>("InstanceIDEvents");
     LUA_HANDLE(instance_id_events, InstanceIDEvents, OnCreate);
-    LUA_HANDLE(instance_id_events, InstanceIDEvents, OnReload);
+    //LUA_HANDLE(instance_id_events, InstanceIDEvents, OnReload);
     LUA_HANDLE(instance_id_events, InstanceIDEvents, OnLoad);
     LUA_HANDLE(instance_id_events, InstanceIDEvents, OnSave);
     LUA_HANDLE(instance_id_events, InstanceIDEvents, OnUpdate);
