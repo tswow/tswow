@@ -2413,6 +2413,7 @@ declare interface TSOutfit {
     GetGender(): Gender;
     GetRace(): uint8;
     GetDisplayID(): uint32;
+    SetDisplayID(displayID: uint32): void;
 
     SetMainhand(mainhand: uint32): TSOutfit
     SetOffhand(offhand: uint32): TSOutfit

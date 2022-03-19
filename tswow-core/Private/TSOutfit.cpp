@@ -112,6 +112,10 @@ uint32_t TSOutfit::GetDisplayID()
 {
     return m_outfit->GetDisplayId();
 }
+    void TSOutfit::SetDisplayID(uint32 displayID)
+    {
+        m_outfit->SetDisplayId(displayID);
+    }
 
 TSOutfit & TSOutfit::SetItem(uint8_t slot, uint32_t entry)
 {

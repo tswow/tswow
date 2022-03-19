@@ -102,6 +102,8 @@ public:
     uint8_t GetRace();
     uint32_t GetDisplayID();
 
+    void SetDisplayID(uint32 displayID);
+
     TSOutfit& SetItem(uint8_t slot, uint32_t entry);
     TSOutfit& ClearItem(uint8_t slot);
     TSOutfit& SetItemByDisplayID(uint8_t slot, uint32_t displayId);
