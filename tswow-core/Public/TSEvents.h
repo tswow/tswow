@@ -2094,6 +2094,7 @@ public:
     } ItemID;
 
     struct QuestEvents : public EventHandler {
+        QuestEvents* operator->() { return this; }
         EVENT_HANDLE(Quest,OnAccept)
         EVENT_HANDLE(Quest,OnReward)
         EVENT_HANDLE(Quest,OnRewardXP)
@@ -2103,6 +2104,7 @@ public:
     } Quests;
 
     struct QuestIDEvents : public MappedEventHandler<TSQuestMap> {
+        QuestIDEvents* operator->() { return this; }
         MAP_EVENT_HANDLE(Quest,OnAccept)
         MAP_EVENT_HANDLE(Quest,OnReward)
         MAP_EVENT_HANDLE(Quest,OnRewardXP)

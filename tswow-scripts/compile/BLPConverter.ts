@@ -23,7 +23,7 @@ export namespace BLPConverter {
     export async function install(cmake: string) {
         if (isWindows()) {
             wsys.exec(`${cmake} `
-                + ` -S "${spaths.tools.blpconverter.get()}" `
+                + ` -S "${spaths.misc.blpconverter.get()}" `
                 + ` -B "${bpaths.blpconverter.get()}"`
                 , 'inherit');
             wsys.exec(`${cmake}`
@@ -32,7 +32,7 @@ export namespace BLPConverter {
         } else {
             bpaths.blpconverter.mkdir()
             const relativeBlpConverterSource = bpaths.blpconverter
-                .relativeFrom(spaths.tools.blpconverter.get());
+                .relativeFrom(spaths.misc.blpconverter.get());
             await wsys.inDirectory(bpaths.blpconverter.get()
                 , () => {
                     wsys.exec(

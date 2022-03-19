@@ -1,7 +1,7 @@
 import { patchTCConfig } from "../util/ConfigFile";
 import { DatasetConfig, GAME_BUILD_FIELD } from "../util/DatasetConfig";
 import { wfs } from "../util/FileSystem";
-import { collectSubmodules, ipaths } from "../util/Paths";
+import { ipaths } from "../util/Paths";
 import { term } from "../util/Terminal";
 import { termCustom } from "../util/TerminalCategories";
 import { Client } from "./Client";
@@ -181,8 +181,7 @@ export class Dataset {
     }
 
     modules() {
-        return collectSubmodules(this.config.modules)
-            .map(x=>ModuleEndpoint.fromPath(x.get()))
+        return this.config.modules.map(x=>ModuleEndpoint.fromName(x))
     }
 
     async dumpDatabase(outFile: string) {

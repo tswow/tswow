@@ -20,7 +20,7 @@ import { mpath, wfs } from './FileSystem';
 import { custom, dir, dirn, dynCustom, dyndir, dynfile, enumDir, file, FilePath, generateTree, WDirectory, WFile } from "./FileTree";
 import { isWindows } from './Platform';
 
-export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.21111/TDB_full_world_335.21111_2021_11_15.7z"
+export const TDB_URL = "https://github.com/TrinityCore/TrinityCore/releases/download/TDB335.22021/TDB_full_world_335.22021_2022_02_16.7z"
 
 export const DATASET_MODULES_CONFIG = 'Dataset.Modules'
 export const DATASET_CLIENT_PATCH_LETTER = 'Client.Patch.Letter'
@@ -168,8 +168,8 @@ export function EndpointDirectory(inPath: string) {
                 WorldMap: dir({})
             }),
 
-            textures: dir({
-                minimap: dir({})
+            Textures: dir({
+                Minimap: dir({})
             })
         }),
         livescript_tsconfig_temp: file('tsconfig.json'),
@@ -422,13 +422,18 @@ export function InstallPath(pathIn: string, tdb: string) {
                     ]
                     let paths: WDirectory[] = [self]
                     self.iterate('RECURSE','DIRECTORIES','FULL',node=>{
-                        if(node.endsWith('.git')) return 'ENDPOINT'
-                        if(node.basename().get() === 'build') return 'ENDPOINT'
-                        if(endpoints.includes(node.basename().get())) return 'ENDPOINT'
-                        if(node.toDirectory()
-                               .readDir('ABSOLUTE')
-                               .find(x=>endpoints.find(y=>y==x.basename().get()))
-                        ) {
+                        if(node.endsWith('.git') || node.endsWith('.swc') || node.endsWith('.vs')) {
+                            return 'ENDPOINT'
+                        }
+                        if(node.basename().get() === 'build') {
+                            return 'ENDPOINT'
+                        }
+                        if(endpoints.includes(node.basename().get())) {
+                            return 'ENDPOINT'
+                        }
+
+                        let hasEndpoints = node.filter(x=>endpoints.includes(x.basename().get()))
+                        if(node.isDirectory() && hasEndpoints) {
                             paths.push(node.toDirectory())
                         }
                     })
@@ -653,31 +658,30 @@ export function SourcePaths(pathIn: string) {
         node_modules: dir({
             typescript_js: file('typescript/lib/tsc'),
         }),
-        tools: dir({
+        misc: dir({
             mpqbuilder: dir({}),
             adtcreator: dirn('adt-creator',{}),
             blpconverter: dir({}),
-        }),
-
-        install_config: dirn('install-config',{
-            include_addon: dirn('include-addon',{
-                global_d_ts: file('global.d.ts'),
-                Events_ts: file('Events.ts'),
-                shared_global_d_ts: file('shared.global.d.ts'),
-                LualibBundle_lua: file('LualibBundle.lua'),
-                RequireStub_lua: file('RequireStub.lua'),
+            install_config: dirn('install-config',{
+                include_addon: dirn('include-addon',{
+                    global_d_ts: file('global.d.ts'),
+                    Events_ts: file('Events.ts'),
+                    shared_global_d_ts: file('shared.global.d.ts'),
+                    LualibBundle_lua: file('LualibBundle.lua'),
+                    RequireStub_lua: file('RequireStub.lua'),
+                }),
+                characters_create: file('characters_create.sql'),
+                auth_create: file('auth_create.sql'),
+                package_json: file('package.json'),
+                node_yaml: file('node.yaml'),
+                vscode_install : file('.vscode-install'),
+                addons: dir({}),
+                snippet_example: file('snippet-example.ts')
             }),
-            characters_create: file('characters_create.sql'),
-            auth_create: file('auth_create.sql'),
-            package_json: file('package.json'),
-            node_yaml: file('node.yaml'),
-            vscode_install : file('.vscode-install'),
-            addons: dir({}),
-            snippet_example: file('snippet-example.ts')
-        }),
 
-        client_extensions: dirn('client-extensions',{
-            CustomPackets: dir({})
+            client_extensions: dirn('client-extensions',{
+                CustomPackets: dir({})
+            }),
         }),
 
         cores: dir({
@@ -691,15 +695,15 @@ export function SourcePaths(pathIn: string) {
                         }))
                     })
                 })
-            })
-        }),
+            }),
 
-        TrinityCore: dir({
-            src: dir({}),
-            sql: dir({
-                updates: dir({}),
-                custom: dir({})
-            })
+            TrinityCore: dir({
+                src: dir({}),
+                sql: dir({
+                    updates: dir({}),
+                    custom: dir({})
+                })
+            }),
         }),
         tswow_scripts: dirn('tswow-scripts', {
             sql: dir({}),
@@ -740,14 +744,13 @@ export const ipaths = function(){
     return InstallPath(arg.substring('--ipaths='.length),tdbFilename())
 }();
 
-export function collectSubmodules(modulesIn: string[]) {
-    // remove modules contained in other modules
-    modulesIn = modulesIn
-        .map(x=>x.split('.').join(path.sep))
-        .filter(x=>modulesIn.find(y=>!wfs.relative(y,x).startsWith('..')))
+export function modulePathToName(modulePath: string) {
+    let parts = modulePath.split('\\').join('/').split('/')
+    parts = parts.slice(parts.lastIndexOf('modules') + 1)
+    return parts.join('.')
+}
 
-    // hack: using submodules as module names
-    return modulesIn
-        .map(x=>ipaths.modules.module.pick(x).endpoints())
-        .reduce((p,c)=>p.concat(c))
+export function moduleNameToPath(moduleName: string) {
+    let fullPath = ipaths.modules.join(moduleName.split('.').join(path.sep)).get()
+    return EndpointDirectory(fullPath)
 }

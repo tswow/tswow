@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtNPCManaCostScalerDBCFile extends DBCFile<
     GtNPCManaCostScalerQuery,
     GtNPCManaCostScalerRow> {
     constructor() {
-        super('GtNPCManaCostScaler',(t,b,o)=>new GtNPCManaCostScalerRow(t,b,o))
+        super('gtNPCManaCostScaler',(t,b,o)=>new GtNPCManaCostScalerRow(t,b,o))
     }
     /** Loads a new GtNPCManaCostScaler.dbc from a file. */
     static read(path: string): GtNPCManaCostScalerDBCFile {

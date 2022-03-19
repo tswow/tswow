@@ -397,7 +397,7 @@ export class WDirectory extends WNode {
     }
 
     iterateDef(callback: (node: WNode)=>'HALT'|'ENDPOINT'|void) {
-        return this.iterate('RECURSE','BOTH','FULL',callback);
+        return this.iterate('FLAT','BOTH','FULL',callback);
     }
 
     iterate(

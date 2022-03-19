@@ -48,21 +48,21 @@ export namespace Config {
         spaths.tswow_core.Public.global_d_ts
             .copy(ipaths.bin.include.global_d_ts)
 
-        spaths.install_config.vscode_install
+        spaths.misc.install_config.vscode_install
             .copy(ipaths.vscode)
 
         new NodeConfigClass(ipaths.node_conf.get()).generateIfNotExists();
 
-        spaths.install_config.addons.copy(ipaths.bin.addons);
-        spaths.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
-        spaths.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
+        spaths.misc.install_config.addons.copy(ipaths.bin.addons);
+        spaths.cores.TrinityCore.sql.updates.copy(ipaths.bin.sql.updates)
+        spaths.cores.TrinityCore.sql.custom.copy(ipaths.bin.sql.custom)
 
         // Addon includes
-        spaths.install_config.include_addon.copy(ipaths.bin.include_addon)
+        spaths.misc.install_config.include_addon.copy(ipaths.bin.include_addon)
         ipaths.bin.include_addon.join('Events.ts').remove();
-        spaths.install_config.include_addon.Events_ts
+        spaths.misc.install_config.include_addon.Events_ts
             .copy(bpaths.lua_events.events_ts)
-        spaths.install_config.include_addon.global_d_ts
+        spaths.misc.install_config.include_addon.global_d_ts
             .copy(bpaths.lua_events.global_d_ts)
         bpaths.lua_events.tsconfig_json.writeJson({
             "compilerOptions": {
@@ -115,9 +115,9 @@ export namespace Config {
               "noImplicitSelf": true,
             }
         })
-        spaths.install_config.characters_create
+        spaths.misc.install_config.characters_create
             .copy(ipaths.bin.sql.characters_create_sql)
-        spaths.install_config.auth_create
+        spaths.misc.install_config.auth_create
             .copy(ipaths.bin.sql.auth_create_sql)
         ipaths.modules.module.all().forEach(x=>{
             x.endpoints().forEach(x=>{
@@ -129,7 +129,7 @@ export namespace Config {
         })
 
         TrinityCore.headers();
-        spaths.install_config.snippet_example.copy(ipaths.vscode.snippets_out)
+        spaths.misc.install_config.snippet_example.copy(ipaths.vscode.snippets_out)
 
         let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');
         let h = wsys.exec('git status --porcelain')

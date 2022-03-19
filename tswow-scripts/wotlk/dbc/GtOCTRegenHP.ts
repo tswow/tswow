@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtOCTRegenHPDBCFile extends DBCFile<
     GtOCTRegenHPQuery,
     GtOCTRegenHPRow> {
     constructor() {
-        super('GtOCTRegenHP',(t,b,o)=>new GtOCTRegenHPRow(t,b,o))
+        super('gtOCTRegenHP',(t,b,o)=>new GtOCTRegenHPRow(t,b,o))
     }
     /** Loads a new GtOCTRegenHP.dbc from a file. */
     static read(path: string): GtOCTRegenHPDBCFile {

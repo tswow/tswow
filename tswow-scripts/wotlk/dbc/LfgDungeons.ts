@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { int, loc_constructor } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCIntCell, DBCKeyCell, DBCLocCell, DBCStringCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { int, loc_constructor } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -179,7 +179,7 @@ export class LfgDungeonsDBCFile extends DBCFile<
     LfgDungeonsQuery,
     LfgDungeonsRow> {
     constructor() {
-        super('LfgDungeons',(t,b,o)=>new LfgDungeonsRow(t,b,o))
+        super('LFGDungeons',(t,b,o)=>new LfgDungeonsRow(t,b,o))
     }
     /** Loads a new LfgDungeons.dbc from a file. */
     static read(path: string): LfgDungeonsDBCFile {

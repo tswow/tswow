@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { int } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCIntCell, DBCKeyCell, DBCStringCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { int } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -102,7 +102,7 @@ export class TerraintypeDBCFile extends DBCFile<
     TerraintypeQuery,
     TerraintypeRow> {
     constructor() {
-        super('Terraintype',(t,b,o)=>new TerraintypeRow(t,b,o))
+        super('TerrainType',(t,b,o)=>new TerraintypeRow(t,b,o))
     }
     /** Loads a new Terraintype.dbc from a file. */
     static read(path: string): TerraintypeDBCFile {

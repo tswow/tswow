@@ -1,9 +1,9 @@
 [submodule "TrinityCore"]
-	path = TrinityCore
+	path = cores/TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
 [submodule "tools/adt-creator"]
-	path = tools/adt-creator
+	path = misc/adt-creator
 	url = https://github.com/tswow/adt-creator.git
 [submodule "cores/azerothcore-wotlk"]
 	path = cores/azerothcore-wotlk

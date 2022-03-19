@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtChanceToMeleeCritBaseDBCFile extends DBCFile<
     GtChanceToMeleeCritBaseQuery,
     GtChanceToMeleeCritBaseRow> {
     constructor() {
-        super('GtChanceToMeleeCritBase',(t,b,o)=>new GtChanceToMeleeCritBaseRow(t,b,o))
+        super('gtChanceToMeleeCritBase',(t,b,o)=>new GtChanceToMeleeCritBaseRow(t,b,o))
     }
     /** Loads a new GtChanceToMeleeCritBase.dbc from a file. */
     static read(path: string): GtChanceToMeleeCritBaseDBCFile {

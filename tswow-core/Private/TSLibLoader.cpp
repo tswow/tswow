@@ -21,6 +21,7 @@ typedef void (*LibFuncPtr)(TSEvents*);
     #define DL_CLOSE FreeLibrary
     #define DL_EXT ".dll"
 #else
+    #include <dlfcn.h>
     #define DL_PTR void*
     #define DL_FN dlsym
     // TODO: fix
@@ -49,6 +50,9 @@ void UpdateTSLibraries(bool forceReload)
 {
 #if AZEROTHCORE
     fs::path libPath = fs::path(sConfigMgr->GetOption<std::string>("DataDir", "./")) / "lib" / buildType;
+#elif TRINITY
+    fs::path libPath = fs::path(sConfigMgr->GetStringDefault("DataDir", "./")) / "lib" / buildType;
+#endif
     TS_LOG_INFO("tswow.livescripts", "Reloading livescripts");
 
     // Unload libraries
@@ -60,7 +64,7 @@ void UpdateTSLibraries(bool forceReload)
             DL_CLOSE(itr->second.handle);
 
             fs::current_path() / "lib" / buildType / itr->first;
-            TS_LOG_INFO("tswow.livescripts", "Unloading library "+itr->first.string());
+            TS_LOG_INFO("tswow.livescripts", "Unloading library %s",itr->first.string().c_str());
             itr = libraries.erase(itr);
         }
         else
@@ -89,7 +93,7 @@ void UpdateTSLibraries(bool forceReload)
             {
                 continue;
             }
-            TSUnloadEventHandler(itr->second.modName);
+            TSUnloadEventHandler(file);
             DL_CLOSE(itr->second.handle);
             libraries.erase(file);
         }
@@ -114,11 +118,10 @@ void UpdateTSLibraries(bool forceReload)
         libraries[file] = {time,dll,modName};
         if (!ptr)
         {
-            TS_LOG_ERROR("tswow.livescripts", "Could not find main function for library %s",modName);
+            TS_LOG_ERROR("tswow.livescripts", "Could not find main function for library %s",modName.c_str());
             continue;
         }
-        TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName);
+        TS_LOG_INFO("tswow.livescripts", "Loaded livescript %s", modName.c_str());
         ptr(events);
     }
-#endif
 }

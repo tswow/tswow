@@ -59,6 +59,7 @@
 #include "TSWorldPacket.h"
 #include "TSCreature.h"
 #include "TSMail.h"
+#include "LFG.h"
 
 
 TSPlayer::TSPlayer(Player *player) : TSUnit(player)
@@ -2117,9 +2118,14 @@ void TSPlayer::SendItemQueryPacket(uint32 entry)
 
 void TSPlayer::SendItemQueryPacketWithTemplate(TSItemTemplate curItem)
 {
+#if TRINITY
     WorldPacket response = curItem->BuildCustomQueryData(0);
     player->GetSession()->SendPacket(&response);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacketWithTemplate not implemented for AzerothCore");
+#endif
 }
+
 /**
  * Sends a spirit resurrection request to the [Player]
  */

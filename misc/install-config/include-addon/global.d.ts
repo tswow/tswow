@@ -13017,7 +13017,7 @@ declare namespace WoWAPI {
         HookScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         HookScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
-	
+    
     interface GameTooltipSetScript extends ObjectetScript {
         SetScript(event: "OnTooltipAddMoney", handler: (tooltip: GameTooltip,cost: number,maxcost: number) => void): void;
         SetScript(event: "OnTooltipCleared", handler: (tooltip: GameTooltip) => void): void;
@@ -13030,7 +13030,7 @@ declare namespace WoWAPI {
         SetScript(event: "OnTooltipSetSpell", handler: (tooltip: GameTooltip) => void): void;
         SetScript(event: "OnTooltipSetUnit", handler: (tooltip: GameTooltip) => void): void;
     }
-	
+    
     interface Backdrop {
         /**
          * Which texture file to use as frame background (.blp or .tga format)
@@ -13610,6 +13610,19 @@ declare namespace WoWAPI {
         SetPushedTexture(texture: string): void;
         SetText(textLabel:string): void;
         UnlockHighlight(): void;
+    }
+    
+    interface CheckButton extends Button {
+        GetChecked(): bool;
+        GetCheckedTexture(): string;
+        GetDisabledCheckedTexture(): string;
+        SetChecked(state: bool): void;
+        SetCheckedTexture(texture: string): void;
+        SetDisabledCheckedTexture(texture: string): void;
+    }
+	
+	interface LootButton extends Button {
+        SetSlot(index: number): void;
     }
 
     interface Model extends Frame {

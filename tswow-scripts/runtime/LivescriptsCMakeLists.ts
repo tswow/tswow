@@ -76,6 +76,18 @@ file (GLOB headers "../../../*.h")
 target_include_directories(${buildModule} PUBLIC ./livescripts)
 target_precompile_headers(${buildModule} PUBLIC \${headers})
 
+# defines
+${(()=>{
+    switch(emu) {
+        case 'azerothcore':
+            return `target_compile_definitions(${buildModule} PUBLIC AZEROTHCORE=1)`
+        case 'trinitycore':
+            return `target_compile_definitions(${buildModule} PUBLIC TRINITY=1)`
+        default:
+            return ''
+    }
+})()}
+
 # disable dll warnings, users must build livescripts with same compiler as tc
 if (WIN32)
     add_definitions(

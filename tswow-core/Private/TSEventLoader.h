@@ -16,14 +16,14 @@
  */
 #ifndef TSWOW_EVENT_LOADER_H
 #define TSWOW_EVENT_LOADER_H
+#endif
 
 #include <boost/filesystem.hpp>
 #include "TSEvents.h"
 
-void TSInitializeEvents();
+void TC_GAME_API TSInitializeEvents();
 TSEvents* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::string const& moduleName);
 bool TSShouldLoadEventHandler(boost::filesystem::path const& name);
 void TSUnloadEventHandler(boost::filesystem::path const& name);
 TC_GAME_API TSEventStore* GetTSEvents();
 bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msg);
-#endif

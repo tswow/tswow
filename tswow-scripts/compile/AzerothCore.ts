@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Args } from "../util/Args";
 import { BuildType } from "../util/BuildType";
 import { wfs } from "../util/FileSystem";
 import { ipaths } from "../util/Paths";
@@ -26,35 +27,35 @@ import { TrinityCore } from "./TrinityCore";
 
 export namespace AzerothCore {
     export async function install(cmake: string, openssl: string, mysql: string, type: BuildType, args1: string[]) {
+        if(Args.hasFlag('noac',[args1,process.argv])) {
+            return;
+        }
+
         term.log('build','Building AzerothCore');
         bpaths.AzerothCore.mkdir()
         const generateOnly = args1.includes('--generate-only')
-        if(!args1.includes('--no-compile') && !process.argv.includes('no-compile-ac')) {
+        if(!Args.hasFlag('no-compile',[args1,process.argv])) {
             if(isWindows()) {
                 wsys.exec(
                     `${cmake} `
                   + ` -DCMAKE_GENERATOR="Visual Studio 16 2019"`
                   + ` -DMYSQL_INCLUDE_DIR="${mysql}/include"`
                   + ` -DMYSQL_LIBRARY="${mysql}/lib/libmysql.lib"`
-                  + ` -DOPENSSL_INCLUDE_DIR="${wfs.absPath(openssl)}/include"`
                   + ` -DOPENSSL_ROOT_DIR="${wfs.absPath(openssl)}"`
                   + ` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
                   + ` -DTOOLS=ON`
+                  + ` -DSCRIPTS=static`
                   + ` -S "${spaths.cores.AzerothCore.get()}"`
                   + ` -B "${bpaths.AzerothCore.get()}"`
                   , 'inherit');
                 if(generateOnly) return;
 
-                // Doesn't work, you need to open it manually in visual studio and then run this again.
-
-                /*
                 wsys.exec(
                         `${cmake}`
                       + ` --build ${bpaths.AzerothCore.get()}`
                       + ` --config ${type}`
                     , 'inherit'
                 );
-                */
             }
         }
 
@@ -78,13 +79,16 @@ export namespace AzerothCore {
             , 'git rev-parse HEAD','pipe').split('\n').join('');
         ipaths.bin.revisions.azerothcore.write(rev)
 
-        bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
-        bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())));
-        [
-            bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib,
-            bpaths.mysql.find_subdir().lib.libmysql_lib,
-            bpaths.openssl.lib.libcrypto_lib
-        ].forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())))
+        if(isWindows())
+        {
+            bpaths.AzerothCore.bin.join(type).copy(ipaths.bin.core.pick('azerothcore').join(type))
+            bpaths.AzerothCore.libraries(type).forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())));
+            [
+                bpaths.boost.boost_1_74_0.lib64_msvc_14_2.fslib,
+                bpaths.mysql.find_subdir().lib.libmysql_lib,
+                bpaths.openssl.lib.libcrypto_lib
+            ].forEach(x=>x.copy(ipaths.bin.libraries_ac.build.pick(type).join(x.basename())))
+        }
 
         // note: will use tc enums when building, some might be incorrect.
         TrinityCore.headers();

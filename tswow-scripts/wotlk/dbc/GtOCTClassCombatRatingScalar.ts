@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float, uint } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell, DBCUIntCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float, uint } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -71,7 +71,7 @@ export class GtOCTClassCombatRatingScalarDBCFile extends DBCFile<
     GtOCTClassCombatRatingScalarQuery,
     GtOCTClassCombatRatingScalarRow> {
     constructor() {
-        super('GtOCTClassCombatRatingScalar',(t,b,o)=>new GtOCTClassCombatRatingScalarRow(t,b,o))
+        super('gtOCTClassCombatRatingScalar',(t,b,o)=>new GtOCTClassCombatRatingScalarRow(t,b,o))
     }
     /** Loads a new GtOCTClassCombatRatingScalar.dbc from a file. */
     static read(path: string): GtOCTClassCombatRatingScalarDBCFile {

@@ -14,12 +14,12 @@
  */
 
 /* tslint:disable */
-import { int } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
-import { PrimaryKey } from '../../data/table/PrimaryKey'
 import { DBCKeyCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { int } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
+import { PrimaryKey } from '../../data/table/PrimaryKey'
 
  /**
   * Main row definition
@@ -67,7 +67,7 @@ export class TerraintypeSoundsDBCFile extends DBCFile<
     TerraintypeSoundsQuery,
     TerraintypeSoundsRow> {
     constructor() {
-        super('TerraintypeSounds',(t,b,o)=>new TerraintypeSoundsRow(t,b,o))
+        super('TerrainTypeSounds',(t,b,o)=>new TerraintypeSoundsRow(t,b,o))
     }
     /** Loads a new TerraintypeSounds.dbc from a file. */
     static read(path: string): TerraintypeSoundsDBCFile {

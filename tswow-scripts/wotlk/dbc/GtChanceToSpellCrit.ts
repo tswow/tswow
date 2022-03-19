@@ -14,11 +14,11 @@
  */
 
 /* tslint:disable */
-import { float } from '../../data/primitives'
-import { Relation } from '../../data/query/Relations'
 import { DBCFloatCell } from '../../data/dbc/DBCCell'
 import { DBCFile } from '../../data/dbc/DBCFile'
 import { DBCRow } from '../../data/dbc/DBCRow'
+import { float } from '../../data/primitives'
+import { Relation } from '../../data/query/Relations'
 
  /**
   * Main row definition
@@ -64,7 +64,7 @@ export class GtChanceToSpellCritDBCFile extends DBCFile<
     GtChanceToSpellCritQuery,
     GtChanceToSpellCritRow> {
     constructor() {
-        super('GtChanceToSpellCrit',(t,b,o)=>new GtChanceToSpellCritRow(t,b,o))
+        super('gtChanceToSpellCrit',(t,b,o)=>new GtChanceToSpellCritRow(t,b,o))
     }
     /** Loads a new GtChanceToSpellCrit.dbc from a file. */
     static read(path: string): GtChanceToSpellCritDBCFile {

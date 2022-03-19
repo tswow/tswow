@@ -23,7 +23,7 @@ export namespace MPQBuilder {
     export async function create(cmake: string) {
         if (isWindows()) {
             wsys.exec(`${cmake} `
-                + ` -S "${spaths.tools.mpqbuilder.get()}" `
+                + ` -S "${spaths.misc.mpqbuilder.get()}" `
                 + ` -B "${bpaths.mpqbuilder.get()}"`
                 + ` -DBOOST_ROOT="${bpaths.boost.boost_1_74_0.abs().get()}"`
                 , 'inherit');
@@ -32,7 +32,7 @@ export namespace MPQBuilder {
                 + ` --config Release`, 'inherit');
         } else {
             bpaths.mpqbuilder.mkdir()
-            const relativeMpqSource = bpaths.mpqbuilder.relativeFrom(spaths.tools.mpqbuilder.get());
+            const relativeMpqSource = bpaths.mpqbuilder.relativeFrom(spaths.misc.mpqbuilder.get());
             await wsys.inDirectory(bpaths.mpqbuilder.get()
                 , () => {
                     wsys.exec(

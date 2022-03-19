@@ -16,7 +16,7 @@
  */
 import * as crypto from 'crypto';
 import { sleep } from 'deasync';
-import { Arguments } from '../util/Args';
+import { Args } from '../util/Args';
 import { ClientPatches, EXTENSION_DLL_PATCH_NAME } from '../util/ClientPatches';
 import { mpath, wfs } from '../util/FileSystem';
 import { WDirectory, WNode } from '../util/FileTree';
@@ -314,7 +314,7 @@ export class Client {
                     , NodeConfig.DefaultDataset
                 ).map(x=>{
                     return x.client
-                        .startup(Arguments.getNumber('--count',1,args));
+                        .startup(Args.getNumber('--count',1,args));
                 }))
             }
         )

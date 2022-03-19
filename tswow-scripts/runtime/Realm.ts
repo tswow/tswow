@@ -348,11 +348,15 @@ export class Realm {
     }
 
     initialize() {
-        ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(NodeConfig.DefaultBuildType)
-            .worldserver_conf_dist.copy(this.path.worldserver_conf_dist)
-        this.path.worldserver_conf_dist
-            .copyOnNoTarget(this.path.worldserver_conf)
-        this.config.generateIfNotExists()
+        try {
+            ipaths.bin.core.pick(this.config.Dataset.config.EmulatorCore).build.pick(NodeConfig.DefaultBuildType)
+                .worldserver_conf_dist.copy(this.path.worldserver_conf_dist)
+            this.path.worldserver_conf_dist
+                .copyOnNoTarget(this.path.worldserver_conf)
+            this.config.generateIfNotExists()
+        } catch(err) {
+            term.error(this.logName(),`Error during intialization: ${err.message}`)
+        }
         return this;
     }
 

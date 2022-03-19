@@ -18,15 +18,23 @@
 /**
  * Contains functions for parsing command-line arguments.
  */
-export namespace Arguments {
-    export function hasFlag(flagname: string, args: string[] = process.argv) {
-        args.forEach(x=>{
-            if(x.startsWith(flagname)) return true;
-        })
+export namespace Args {
+    export function hasFlag(flags: string|string[], args: (string[])|(string[][])) {
+        if(typeof(flags) === 'string') flags = [flags];
+        let out: string[] = []
+        for(let element of args) {
+            if(typeof(element) === 'string') out.push(element)
+            else out = out.concat(element);
+        }
+        flags = flags.map(x=>x.startsWith('--') ? x.substring(2) : x)
+        return flags.findIndex((flag)=>out.find((arg)=>arg === flag || arg == '--'+flag)) >= 0;
     }
 
     export function getString(flagname: string, defVal: string, args: string[] = process.argv) {
-        let v = args.find(x=>x.startsWith(flagname));
+        if(flagname.startsWith('--')) {
+            flagname = flagname.substring(2);
+        }
+        let v = args.find(x=>x.startsWith(flagname) || x.startsWith(`--${flagname}`));
         if(!v) return defVal
         return v.match(/.+?\= *(.+?)/)[1]
     }
