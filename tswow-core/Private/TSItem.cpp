@@ -709,7 +709,6 @@ TSItemTemplate TSItem::GetTemplateCopy()
 }
 
 // Inherited functions
-// Inherited functions
 
 std::string TSItem::LGetItemLink(uint8 locale)
 {
