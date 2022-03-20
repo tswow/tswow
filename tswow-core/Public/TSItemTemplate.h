@@ -166,7 +166,6 @@ public:
     ItemTemplate* _GetInfo();
     WorldPacket BuildCustomQueryData(uint8 loc);
     void SaveItemTemplate();
-    TSEntity * GetData();
 private:
     std::string LGetName();
     std::string LGetDescription();
