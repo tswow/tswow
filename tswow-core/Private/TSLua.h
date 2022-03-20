@@ -7,7 +7,7 @@
 #include <vector>
 #include <filesystem>
 
-#define LUA_FIELD(target,cls,fn) target.set_function(#fn,&##cls::fn)
+#define LUA_FIELD(target,cls,fn) target.set_function(#fn,&cls::fn)
 
 class TC_GAME_API TSLuaState : public sol::state
 {
