@@ -18,7 +18,9 @@
 #include "TSItemTemplate.h"
 #include "ObjectMgr.h"
 #include <memory.h>
+#if TRINITY
 #include "QueryPackets.h"
+#endif
 
 TSItemTemplate::TSItemTemplate(ItemTemplate const* info)
     : TSEntityProvider(&(const_cast<ItemTemplate*>(info)->m_tsEntity))

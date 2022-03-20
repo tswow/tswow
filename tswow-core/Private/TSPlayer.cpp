@@ -1488,6 +1488,7 @@ void TSPlayer::ApplyCustomItemMods(TSItemTemplate newItem)
 
 void TSPlayer::UpdateCache()
 {
+    #if TRINITY
     QueryResult result = CharacterDatabase.PQuery("SELECT * FROM custom_item_stats");
     do
     {
@@ -1495,6 +1496,9 @@ void TSPlayer::UpdateCache()
         const ItemTemplate* itemTemplate = sObjectMgr->GetItemTemplate(fields[0].GetUInt32());
         SendItemQueryPacketWithTemplate(itemTemplate);
     } while (result->NextRow());
+    #elif AZEROTHCORE
+        TS_LOG_ERROR("tswow.api", "TSPlayer::UpdateCache not implemented for AzerothCore");
+    #endif
 }
 
 /**
