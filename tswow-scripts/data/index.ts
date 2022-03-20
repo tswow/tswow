@@ -125,7 +125,11 @@ async function main() {
                         return;
                     }
                     let v = Date.now();
-                    if((!BuildArgs.INLINE_ONLY) || node.toFile().readString().includes('InlineScripts')) {
+                    if(
+                           (!BuildArgs.INLINE_ONLY)
+                        || node.toFile().readString().includes('InlineScripts')
+                        || node.toFile().readString().includes('InlineTSLua')
+                    ) {
                         require(node.relativeTo(__dirname).get());
                         if(profileScripts()) {
                             profiling[ts.relativeTo(dir.datascripts).get()] = Date.now()-v

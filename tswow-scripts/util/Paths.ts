@@ -158,7 +158,8 @@ export function EndpointDirectory(inPath: string) {
         lua: dir({
             example: file('main.ts'),
             global_d_ts: file('global.d.ts'),
-            tsconfig_json: file('tsconfig.json')
+            tsconfig_json: file('tsconfig.json'),
+            _inline: dir({}),
         }),
         shared: dir({
             global_d_ts: file('global.d.ts')

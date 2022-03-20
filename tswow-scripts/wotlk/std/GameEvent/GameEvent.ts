@@ -141,6 +141,16 @@ export class GameEvent extends MainEntityID<game_eventRow> {
               this
             , this.ID
             , 'GameEventID'
+            , 'livescript'
+        ) as _hidden.GameEvents<this>
+    }
+
+    get InlineLua() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'GameEventID'
+            , 'lua'
         ) as _hidden.GameEvents<this>
     }
 

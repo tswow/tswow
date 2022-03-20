@@ -75,11 +75,22 @@ export class Achievement extends MainEntityID<AchievementRow> {
     get Flags() {
         return makeMaskCell32(AchievementFlags, this, this.row.Flags);
     }
+
     get InlineScripts() {
         return getInlineID(
               this
             , this.ID
             , 'AchievementID'
+            , 'livescript'
+        ) as _hidden.Achievements<this>
+    }
+
+    get InlineLua() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'AchievementID'
+            , 'lua'
         ) as _hidden.Achievements<this>
     }
 }

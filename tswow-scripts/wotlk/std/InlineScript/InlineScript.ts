@@ -8,11 +8,19 @@ import { WDirectory, WNode } from "../../../util/FileTree";
 import { getEventName, getEventNames } from "./InlineEventNames";
 import { getTSChildren } from "./InlineTSHelpers";
 
-const files: {
+const filesLivescript: {
     [module: string]: {
         [filename: string]: string[]
     }
 } = {}
+
+const filesLua: {
+    [module: string]: {
+        [filename: string]: string[]
+    }
+} = {}
+
+export type InlineType = 'livescript'|'lua'
 
 function findModulePath(filename: string) {
     while(filename.length > 0 && path.basename(filename) !== 'datascripts') {
@@ -26,20 +34,20 @@ function findModulePath(filename: string) {
     return path.dirname(filename);
 }
 
-export function getInlineID(owner: any, id: number, type: string) {
-    return getAny(owner,`${id},`,type);
+export function getInlineID(owner: any, id: number, type: string, inlineType: InlineType) {
+    return getAny(owner,`${id},`,type, inlineType);
 }
 
-export function getInline(owner: any, type: string) {
-    return getAny(owner,'',type);
+export function getInline(owner: any, type: string, inlineType: InlineType) {
+    return getAny(owner,'',type, inlineType);
 }
 
 export const InlineScript: TSEvents = {} as any
 Object.keys(getEventNames()).forEach(cls=>{
-    (InlineScript as any)[cls] = getInline(InlineScript,cls)
+    (InlineScript as any)[cls] = getInline(InlineScript,cls,'livescript')
 })
 
-export function getAny(owner: any, prefix: string,type: string) {
+export function getAny(owner: any, prefix: string,type: string, inlineType: InlineType) {
     const map: any = {}
     getEventName(type).forEach(x=>{
         map[x] = ()=>{
@@ -108,44 +116,26 @@ export function getAny(owner: any, prefix: string,type: string) {
                 )
             }
 
-            const fullText = `    events.${type}.${x}(${prefix}${func.getText()})`;
+
 
             const relativeFilename = new WNode(filename).relativeToParent('datascripts')
             const modname = findModulePath(filename);
-            const modobj = (files[modname]||(files[modname] = {}));
-            (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
 
-            // find all GetID declarations
-            // temporarily disabled
-            /*
-            const block = func.getChildAt(func.getChildCount()-1);
-            const ids: ts.Node[] = []
-            block.forEachChild(c1=>{
-                // just best effort
-                try {
-                    if(c1.kind !== ts.SyntaxKind.FirstStatement) return;
-                    const c2 = c1.getChildAt(0);
-                    if(c2.kind !== ts.SyntaxKind.VariableDeclarationList) return;
-                    const c3a = c2.getChildAt(0)
-                    if(c3a.kind !== ts.SyntaxKind.ConstKeyword) return;
-                    const c3b = c2.getChildAt(1);
-                    if(c3b.kind !== ts.SyntaxKind.SyntaxList) return;
-                    const c4 = c3b.getChildAt(0)
-                    if(c4.kind !== ts.SyntaxKind.VariableDeclaration) return;
-                    const c5a = c4.getChildAt(0)
-                    if(c5a.kind !== ts.SyntaxKind.Identifier) return;
-                    const c5b = c4.getChildAt(1);
-                    if(c5b.kind !== ts.SyntaxKind.FirstAssignment) return;
-                    const c5c = c4.getChildAt(2);
-                    if(c5c.kind !== ts.SyntaxKind.CallExpression) return;
-                    const c6 = c5c.getChildAt(0);
-                    if(c6.kind !== ts.SyntaxKind.Identifier) return;
-                    if(c6.getText() === 'GetID') {
-                        ids.unshift(c1);
-                    }
-                } catch(err){}
-            })
-            */
+            switch(inlineType) {
+                case 'livescript': {
+                    const modobj = (filesLivescript[modname]||(filesLivescript[modname] = {}));
+                    const fullText = `    events.${type}.${x}(${prefix}${func.getText()})`;
+                    (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
+                    break;
+                }
+                case 'lua': {
+                    const modobj = (filesLua[modname]||(filesLua[modname] = {}));
+                    const fullText = `TSEvents.${type}.${x}(${prefix}${func.getText()})`;
+                    (modobj[relativeFilename]||(modobj[relativeFilename]=[])).push(fullText);
+                    break;
+                }
+            }
+
             return owner;
         }
     })
@@ -153,7 +143,7 @@ export function getAny(owner: any, prefix: string,type: string) {
 }
 
 finish('inline-scripts',()=>{
-    Object.entries(files).forEach(([mod,files])=>{
+    Object.entries(filesLivescript).forEach(([mod,files])=>{
         let inlinePath = new WDirectory(
             mpath(mod,'livescripts','build',datasetName,'inline')
         );
@@ -178,6 +168,14 @@ finish('inline-scripts',()=>{
                         }(events: TSEvents){\n`
                 + `${funcs.join('\n\n')}\n}`
             inlinePath.join(file).toFile().write(content)
+        })
+    });
+
+    Object.entries(filesLua).forEach(([mod,files])=>{
+        let inlinePath = new WDirectory(mpath(mod,'lua','_inline'));
+        inlinePath.remove();
+        Object.entries(files).forEach(([file,funcs])=>{
+            inlinePath.join(file).toFile().write(funcs.join('\n\n'))
         })
     });
 })
