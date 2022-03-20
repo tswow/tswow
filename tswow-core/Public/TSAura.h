@@ -20,6 +20,9 @@
 #include "TSClasses.h"
 #include "TSArray.h"
 
+#include <sol/sol.hpp>
+#include <vector>
+
 class AuraEffect;
 
 class TC_GAME_API TSAuraEffect {
@@ -97,4 +100,7 @@ public:
     void SetMaxDuration(int32 duration);
     void SetStackAmount(uint8 amount);
     void Remove();
+private:
+    sol::as_table_t<std::vector<TSAuraApplication>> LGetApplications();
+    friend class TSLuaState;
 };

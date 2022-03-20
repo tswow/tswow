@@ -23,6 +23,8 @@
 #include "TSEntity.h"
 #include "TSWorldEntity.h"
 
+#include <sol/sol.hpp>
+
 #include <functional>
 
 class TSBattleground;
@@ -33,7 +35,7 @@ class TC_GAME_API TSMap: public TSEntityProvider, public TSWorldEntityProvider<T
 public:
     Map *map;
     TSMap(Map *map);
-    TSMap();
+    TSMap() = default;
     operator bool() const { return map != nullptr; }
     bool operator==(TSMap const& rhs) { return map == rhs.map; }
 
@@ -72,4 +74,18 @@ public:
     void SetWeather(uint32 zoneId, uint32 weatherType, float grade);
     TSEntity * GetData();
     void DoDelayed(std::function<void(TSMap, TSMapManager)> callback);
+private:
+    std::string LGetName();
+    sol::as_table_t<std::vector<TSPlayer>> LGetPlayers0(uint32 team);
+    sol::as_table_t<std::vector<TSPlayer>> LGetPlayers1();
+
+    sol::as_table_t<std::vector<TSUnit>> LGetUnits();
+
+    sol::as_table_t<std::vector<TSGameObject>> LGetGameObjects0(uint32 entry);
+    sol::as_table_t<std::vector<TSGameObject>> LGetGameObjects1();
+
+    sol::as_table_t<std::vector<TSCreature>> LGetCreatures0(uint32 entry);
+    sol::as_table_t<std::vector<TSCreature>> LGetCreatures1();
+
+    friend class TSLuaState;
 };

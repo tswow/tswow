@@ -20,6 +20,8 @@
 #include "TSArray.h"
 #include "TSClasses.h"
 
+#include <sol/sol.hpp>
+
 class TC_GAME_API TSGroup {
 public:
     Group* group;
@@ -55,4 +57,8 @@ public:
     void SetTargetIcon(uint8 icon, uint64 target, uint64 setter);
     bool IsLFGGroup();
     bool IsBFGroup();
+private:
+    sol::as_table_t<std::vector<TSPlayer>> LGetMembers();
+    void LSendPacket(TSWorldPacket data, bool ignorePlayersInBg, uint64 ignore);
+    friend class TSLuaState;
 };

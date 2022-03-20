@@ -53,6 +53,9 @@ public:
 	void SendToPlayer(TSPlayer player);
 	void BroadcastMap(TSMap map, uint32_t teamOnly = 0);
 	void BroadcastAround(TSWorldObject obj, float range, bool self = true);
+private:
+		TSPacketWrite * LWriteString(std::string const& value);
+		friend class TSLuaState;
 };
 
 class TC_GAME_API TSPacketRead
@@ -91,6 +94,10 @@ public:
 	}
 
 	totalSize_t Size() { return read->Size(); }
+private:
+		std::string LReadString0(std::string const& def);
+		std::string LReadString1();
+		friend class TSLuaState;
 };
 
 class TSServerBuffer : public CustomPacketBuffer

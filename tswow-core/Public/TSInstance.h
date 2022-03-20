@@ -6,6 +6,8 @@
 #include "TSUnit.h"
 #include "TSMap.h"
 
+#include <sol/sol.hpp>
+
 class TSUnit;
 class InstanceScript;
 
@@ -70,5 +72,18 @@ public:
     uint32 GetTeamIDInInstance();
     uint32 GetFactionInInstance();
     TSBossInfo GetBossInfo(uint32 id);
-};
+private:
+    void LDoUseDoorOrButton0(uint64 guid, uint32 withRestoreTime, bool useAlternativeState);
+    void LDoUseDoorOrButton1(uint64 guid, uint32 withRestoreTime);
+    void LDoUseDoorOrButton2(uint64 guid);
 
+    void LDoRemoveAurasDueToSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled);
+    void LDoRemoveAurasDueToSpellOnPlayers1(uint32 spell, bool includePets);
+    void LDoRemoveAurasDueToSpellOnPlayers2(uint32 spell);
+
+    void LDoCastSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled);
+    void LDoCastSpellOnPlayers1(uint32 spell, bool includePets);
+    void LDoCastSpellOnPlayers2(uint32 spell);
+    void LDoSendNotify(std::string const& message);
+    friend class TSLuaState;
+};

@@ -20,6 +20,9 @@
 #include "TSClasses.h"
 #include "TSString.h"
 
+#include <sol/sol.hpp>
+#include <vector>
+
 class TC_GAME_API TSChannel {
 public:
     Channel* channel;
@@ -45,4 +48,16 @@ public:
     void SetInvisible(TSPlayer player, bool on);
     void SetOwner(uint64 guid, bool exclaim = true);
     void Say(uint64 guid, TSString what, uint32 lang);
+private:
+    std::string LGetName0(uint32 locale);
+    std::string LGetName1();
+
+    void LSetPassword(std::string const& password);
+    bool LCheckPassword(std::string const& password);
+
+    void LJoinChannel0(TSPlayer player, std::string const& password);
+    void LJoinChannel1(TSPlayer player);
+
+    void LSay(uint64 guid, std::string const& what, uint32 lang);
+    friend class TSLuaState;
 };

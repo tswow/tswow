@@ -51,3 +51,18 @@ TSGameObjectTemplate GetGameObjectTemplate(uint32 id)
     return TSGameObjectTemplate(const_cast<GameObjectTemplate*>(
         sObjectMgr->GetGameObjectTemplate(id)));
 }
+
+std::string TSGameObjectTemplate::LGetName()
+{
+    return GetName().std_str();
+}
+
+std::string TSGameObjectTemplate::LGetIconName()
+{
+    return GetIconName().std_str();
+}
+
+std::string TSGameObjectTemplate::LGetCastBarCaption()
+{
+    return GetCastBarCaption().std_str();
+}

@@ -23,6 +23,10 @@
 #include "TSString.h"
 #include "TSArray.h"
 
+#include <sol/sol.hpp>
+#include <vector>
+#include <string>
+
 struct AchievementEntry;
 class TC_GAME_API TSAchievementEntry
 {
@@ -41,6 +45,10 @@ public:
     uint32 GetFlags();
     uint32 GetMinimumCriteria();
     uint32 GetSharesCriteria();
+
+private:
+    sol::as_table_t<std::vector<std::string>> LGetTitles();
+    friend class TSLuaState;
 };
 
 struct AchievementCriteriaEntry;

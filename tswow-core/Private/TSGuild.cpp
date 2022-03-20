@@ -275,3 +275,32 @@ CharacterDatabaseTransaction trans(nullptr);
     guild->ChangeMemberRank(player->TS_GET_GUID(), newRank);
 #endif
 }
+
+sol::as_table_t<std::vector<TSPlayer>> TSGuild::LGetMembers()
+{
+    return sol::as_table(*GetMembers().vec);
+}
+
+std::string TSGuild::LGetName()
+{
+    return GetName().std_str();
+}
+std::string TSGuild::LGetMOTD()
+{
+    return GetMOTD().std_str();
+}
+
+std::string TSGuild::LGetInfo()
+{
+    return GetInfo().std_str();
+}
+
+void TSGuild::LSendPacket(TSWorldPacket data)
+{
+    SendPacket(data);
+}
+
+void TSGuild::LSendPacketToRanked(TSWorldPacket data, uint8 ranked)
+{
+    SendPacketToRanked(data, ranked);
+}

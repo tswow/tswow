@@ -20,6 +20,9 @@
 #include "TSString.h"
 #include "TSArray.h"
 
+#include <sol/sol.hpp>
+#include <vector>
+
 struct AuctionEntry;
 
 struct TC_GAME_API TSAuctionEntry {
@@ -58,6 +61,9 @@ struct TC_GAME_API TSAuctionEntry {
     void SetDeposit(uint32 deposit);
     void SetETime(uint32 eTime);
     void SetFlags(uint32 flags);
+private:
+    sol::as_table_t<std::vector<uint64>> LGetBidders();
+    friend class TSLuaState;
 };
 
 class AuctionHouseObject;
@@ -73,4 +79,7 @@ struct TC_GAME_API TSAuctionHouseObject {
     bool RemoveAuction(TSAuctionEntry entry);
     uint32 GetCount();
     void AddAuction(TSAuctionEntry entry);
+private:
+    sol::as_table_t<std::vector<uint32>> LGetKeys();
+    friend class TSLuaState;
 };

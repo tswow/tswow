@@ -28,6 +28,7 @@ import { Crashes } from "./Crashes";
 import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
 import { Livescripts } from "./Livescripts";
+import { Lua } from "./Lua";
 import { MapData } from "./MapData";
 import { MiscCommands } from "./MiscCommands";
 import { Module } from "./Modules";
@@ -89,6 +90,7 @@ export async function main() {
     await Crashes.initialize();
     await PositionsFile.initialize();
     await MiscCommands.initialize();
+    await Lua.initialize();
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,

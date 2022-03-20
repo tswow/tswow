@@ -41,7 +41,9 @@ export function DatasetDirectory(inPath: string, inName: string) {
         dbc_temp: dir({
             dbc: dir({}),
         }),
-        lib: dir({}),
+        lib: dir({
+            lua: dir({})
+        }),
         luaxml: dir({
             Interface: dir({
                 FrameXML: dir({
@@ -153,6 +155,12 @@ export function EndpointDirectory(inPath: string) {
         addon: custom(inPath=>AddonDirectory(mpath(inPath,'addon'))),
         datascripts: custom(inPath=>DatascriptsDirectory(mpath(inPath,'datascripts'))),
         livescripts: custom(inPath=>LivescriptsDirectory(mpath(inPath,'livescripts'))),
+        lua: dir({
+            example: file('main.ts'),
+            global_d_ts: file('global.d.ts'),
+            tsconfig_json: file('tsconfig.json'),
+            _inline: dir({}),
+        }),
         shared: dir({
             global_d_ts: file('global.d.ts')
         }),
@@ -332,6 +340,7 @@ export function InstallPath(pathIn: string, tdb: string) {
             ClientExtensions_dll: file('ClientExtensions.dll'),
             include: dir({
                 global_d_ts: file('global.d.ts'),
+                lua: dir({})
             }),
             BLPConverter: dir({
                 blpconverter: file('blpconverter.exe')
@@ -568,6 +577,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
         }),
 
         TrinityCore: dir({
+            sol_headers: dirn('_deps/sol2-src/include',{}),
+            lua_headers: dirn('_deps/lua51-src/src',{}),
             bin_linux: dirn('install/trinitycore/bin',{}),
             etc_linux: dirn('install/trinitycore/etc',{}),
             lib_linux: dirn('install/trinitycore/lib',{}),
@@ -595,7 +606,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     `src/server/database/${type}/database.lib`,
                     `src/server/game/${type}/game.lib`,
                     `src/common/${type}/common.lib`,
-                    `dep/argon2/${type}/argon2.lib`
+                    `dep/argon2/${type}/argon2.lib`,
+                    `${type}/liblua.lib`
                 ]
                 :
                 [

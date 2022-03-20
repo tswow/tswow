@@ -89,7 +89,15 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 
 	for (size_t i = 0; i < GetTSEvents()->CustomPacketOnReceive.GetSize(); ++i)
 	{
-		GetTSEvents()->CustomPacketOnReceive.Get(i)(opcode, read, m_player);
+		auto val = GetTSEvents()->CustomPacketOnReceive.Get(i);
+		if (val.callback)
+		{
+				val.callback(opcode, read, m_player);
+		}
+		else
+		{
+				val.lua_callback(opcode, read, m_player);
+		}
 		value->Reset();
 	}
 
@@ -100,7 +108,15 @@ void TSServerBuffer::OnPacket(CustomPacketRead* value)
 	}
 	for (size_t i = 0; i < events->CustomPacketOnReceive.GetSize(); ++i)
 	{
-		events->CustomPacketOnReceive.Get(i)(opcode, read, m_player);
+			auto val = events->CustomPacketOnReceive.Get(i);
+			if (val.callback)
+			{
+				  val.callback(opcode, read, m_player);
+			}
+			else
+			{
+				  val.lua_callback(opcode, read, m_player);
+			}
 		value->Reset();
 	}
 }
@@ -122,4 +138,19 @@ TSPacketWrite CreateCustomPacket(
 		, size
 	);
 	return TSPacketWrite(write);
+}
+
+TSPacketWrite* TSPacketWrite::LWriteString(std::string const& value)
+{
+		return WriteString(value);
+}
+
+std::string TSPacketRead::LReadString0(std::string const& def)
+{
+		return ReadString(def);
+}
+
+std::string TSPacketRead::LReadString1()
+{
+		return ReadString();
 }

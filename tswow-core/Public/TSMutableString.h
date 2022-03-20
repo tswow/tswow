@@ -40,4 +40,8 @@ public:
     {
         (*this->str) = value.std_str();
     }
+private:
+    std::string Lget() { return *str; }
+    void Lset(std::string const& value) { (*this->str) = value; };
+    friend class TSLuaState;
 };

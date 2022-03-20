@@ -102,7 +102,7 @@ export class IdPrivate {
         fs.writeFileSync(filename, str);
     }
 
-    protected static async readFile(filename: string) {
+    protected static readFile(filename: string) {
         this.flushMemory();
         if (!fs.existsSync(filename)) { return; }
 

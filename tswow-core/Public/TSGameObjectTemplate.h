@@ -5,6 +5,8 @@
 #include "TSEntity.h"
 #include "TSString.h"
 
+#include <sol/sol.hpp>
+
 struct GameObjectTemplate;
 
 class TC_GAME_API TSGameObjectTemplate : public TSEntityProvider {
@@ -24,6 +26,11 @@ public:
     TSString GetCastBarCaption();
 
     TSEntity * GetData();
+private:
+    std::string LGetName();
+    std::string LGetIconName();
+    std::string LGetCastBarCaption();
+    friend class TSLuaState;
 };
 
 TSGameObjectTemplate TC_GAME_API GetGameObjectTemplate(uint32 id);

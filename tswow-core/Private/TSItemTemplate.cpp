@@ -182,3 +182,20 @@ TSItemTemplate GetItemTemplate(uint32 entry)
     return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
 }
 
+std::string TSItemTemplate::LGetName()
+{
+    return GetName().std_str();
+}
+
+std::string TSItemTemplate::LGetDescription()
+{
+    return GetDescription().std_str();
+}
+int32 TSItemTemplate::LGetFeralBonus0(int32 extraDPS)
+{
+    return GetFeralBonus(extraDPS);
+}
+int32 TSItemTemplate::LGetFeralBonus1()
+{
+    return GetFeralBonus();
+}

@@ -48,6 +48,13 @@ export namespace TrinityCore {
         // todo: duplicate from
         spaths.tswow_core.Public.copy(ipaths.bin.include, true)
 
+        bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include.join('sol'));
+        bpaths.TrinityCore.lua_headers.iterateDef(node=>{
+            if(node.endsWith('.h')) {
+                node.copy(ipaths.bin.include.lua.join(node.basename()));
+            }
+        })
+
         spaths.misc.client_extensions.CustomPackets
             .readDir('ABSOLUTE')
             .filter(x=>x.endsWith('.h'))
@@ -157,6 +164,11 @@ export namespace TrinityCore {
                 if(ep.datascripts.exists()) {
                     ipaths.bin.include.global_d_ts
                         .copy(ep.datascripts.global_d_ts)
+                }
+
+                if(ep.lua.exists()) {
+                    ipaths.bin.include.global_d_ts
+                        .copy(ep.lua.global_d_ts)
                 }
             })
         })
