@@ -257,6 +257,7 @@ ItemTemplate* TSItemTemplate::_GetInfo()
 
 WorldPacket TSItemTemplate::BuildCustomQueryData(uint8 loc)
 {
+#if TRINITY
     WorldPackets::Query::QueryItemSingleResponse response;
 
     std::string locName = info->Name1;
@@ -371,6 +372,9 @@ WorldPacket TSItemTemplate::BuildCustomQueryData(uint8 loc)
     response.Write();
     response.ShrinkToFit();
     return response.Move();
+#elif AZEROTHCORE
+        TS_LOG_ERROR("tswow.api", "TSItemTemplate::BuildCustomQueryData not implemented for AzerothCore");
+#endif
 }
 
 void TSItemTemplate::SaveItemTemplate()

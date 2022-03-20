@@ -1474,16 +1474,24 @@ uint32 TSPlayer::GetDbcLocale()
 
 void TSPlayer::ApplyItemMods(uint32 itemID)
 {
+#if TRINITY
    player->_RemoveAllItemMods();
    sObjectMgr->LoadSingleItemTemplate(std::to_string(itemID));
    player->_ApplyAllItemMods();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyItemMods not implemented for AzerothCore");
+#endif
 }
 
 void TSPlayer::ApplyCustomItemMods(TSItemTemplate newItem)
 {
+#if TRINITY
     player->_RemoveAllItemMods();
     sObjectMgr->LoadSingleItemTemplateObject(newItem->_GetInfo());
     player->_ApplyAllItemMods();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyCustomItemMods not implemented for AzerothCore");
+#endif    
 }
 
 void TSPlayer::UpdateCache()
