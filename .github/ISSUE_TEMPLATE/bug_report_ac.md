@@ -1,6 +1,6 @@
 ---
 name: Bug report (AzerothCore)
-about: Create a report to help us improve. Select this if you're using AzerothCore.
+about: Create a report to help us improve. Select this if you're using AzerothCore. If unsure, the core you're using is TrinityCore by default.
 title: ''
 labels: 'bug,azerothcore'
 assignees: ''

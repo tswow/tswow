@@ -1,6 +1,6 @@
 ---
 name: Bug report (TrinityCore)
-about: Create a report to help us improve. Select this if you're using TrinityCore.
+about: Create a report to help us improve. Select this if you're using TrinityCore. If unsure, the core you're using is TrinityCore by default.
 title: ''
 labels: 'bug,trinitycore'
 assignees: ''
