@@ -28,22 +28,39 @@
 
 void ReloadItemTemplate()
 {
+#if TRINITY
     sObjectMgr->LoadItemTemplates();
     sObjectMgr->InitializeQueriesData(QUERY_DATA_ITEMS);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGlobal::ReloadItemTemplate not implemented for AzerothCore");
+#endif
+    
 }
 
 void ReloadSingleItemTemplate(TSString itemID)
 {
+#if TRINITY
     sObjectMgr->LoadSingleItemTemplate(itemID);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGlobal::ReloadSingleItemTemplate not implemented for AzerothCore");
+#endif
 }
 
 void LoadCustomItems()
 {
+#if TRINITY
     sObjectMgr->LoadCustomItemTemplates();
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGlobal::LoadCustomItemTemplates not implemented for AzerothCore");
+#endif
 }
 
 void ReloadSingleItemTemplateObject(TSItemTemplate item) {
+#if TRINITY
     sObjectMgr->LoadSingleItemTemplateObject(item->_GetInfo());
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGlobal::ReloadSingleItemTemplateObject not implemented for AzerothCore");
+#endif
 }
 
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)

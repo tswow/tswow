@@ -134,7 +134,7 @@ int32 TSItemTemplate::GetTotalAPBonus() {
 #if TRINITY
     return info->GetTotalAPBonus(); 
 #elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSItemTEmpalte::GetTotalAPBonus not implemented for AzerothCore");
+    TS_LOG_ERROR("tswow.api", "TSItemTemplate::GetTotalAPBonus not implemented for AzerothCore");
     return 0;
 #endif
 }
