@@ -114,7 +114,6 @@ uint32 TSBattleground::GetBonusHonorFromKillCount(uint32 kills)
     return bg->GetBonusHonorFromKill(kills);
 }
 
-#ifndef AZEROTHCORE
 /**
  * Returns the bracket ID of the specific [BattleGround].
  *
@@ -122,9 +121,13 @@ uint32 TSBattleground::GetBonusHonorFromKillCount(uint32 kills)
  */
 uint32 TSBattleground::GetBracketID()
 {
+#if TRINITY
     return bg->GetBracketId();
-}
+#else
+    TS_LOG_ERROR("tswow.api","TSBattleground::GetBracketID not implemented for AzerothCore");
+    return 0;
 #endif
+}
 
 /**
  * Returns the end time of the [BattleGround].

@@ -489,7 +489,6 @@ float TSCreature::GetAggroRange(TSUnit _target)
 #endif
 }
 
-#ifndef AZEROTHCORE
 /**
  * Returns the effective aggro range of the [Creature] for `target`.
  *
@@ -501,10 +500,14 @@ float TSCreature::GetAggroRange(TSUnit _target)
  */
 float TSCreature::GetAttackDistance(TSUnit _target)
 {
+#if TRINITY
     auto target = _target.unit;
     return creature->GetAttackDistance(target);
-}
+#else
+    TS_LOG_ERROR("tswow.api","TSCreature::GetAttackDistance not implemented for AzerothCore");
+    return 0;
 #endif
+}
 
 /**
  * Returns the [Group] that can loot this [Creature].
