@@ -404,7 +404,12 @@ void TSItemTemplate::SaveItemTemplate()
         << "," << info->MaxMoneyLoot << "," << info->FlagsCu << ")";
 
     //TC_LOG_ERROR("sql.sql", "query: `%s`", oss.str().c_str());
+    #if TRINITY
     CharacterDatabase.PExecute("%s", oss.str().c_str());
+    #elif AZEROTHCORE
+    //CharacterDatabase.Execute(oss.str().c_str());//maybe? 
+    TS_LOG_ERROR("tswow.api", "TSItemTemplate::SaveItemTemplate not implemented for AzerothCore");
+    #endif
 
 }
 std::string TSItemTemplate::LGetName()
