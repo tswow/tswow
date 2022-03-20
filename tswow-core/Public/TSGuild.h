@@ -21,6 +21,8 @@
 #include "TSClasses.h"
 #include "TSArray.h"
 
+#include <sol/sol.hpp>
+
 class TC_GAME_API TSGuild {
 public:
     Guild *guild;
@@ -48,4 +50,12 @@ public:
     void AddMember(TSPlayer player, uint8 rankId);
     void DeleteMember(TSPlayer player, bool isDisbanding);
     void SetMemberRank(TSPlayer player, uint8 newRank);
+private:
+    sol::as_table_t<std::vector<TSPlayer>> LGetMembers();
+    std::string LGetName();
+    std::string LGetMOTD();
+    std::string LGetInfo();
+    void LSendPacket(TSWorldPacket data);
+    void LSendPacketToRanked(TSWorldPacket data, uint8 ranked);
+    friend class TSLuaState;
 };

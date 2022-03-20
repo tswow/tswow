@@ -128,7 +128,7 @@ export namespace Config {
             })
         })
 
-        TrinityCore.headers();
+        TrinityCore.headers(false);
         spaths.misc.install_config.snippet_example.copy(ipaths.vscode.snippets_out)
 
         let commit = wsys.exec('git rev-parse HEAD','pipe').split('\n').join('');

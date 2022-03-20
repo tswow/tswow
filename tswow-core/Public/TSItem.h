@@ -84,6 +84,13 @@ public:
     bool SetEnchantment(uint32 enchant, uint32 slot);
     bool ClearEnchantment(uint32 slot);
     void SaveToDB();
+private:
+    std::string LGetItemLink(uint8 locale);
+    std::string LGetName();
+    friend class TSLuaState;
 };
 
 TC_GAME_API TSItem CreateItem(uint32 entry = 0, uint32 count = 0);
+TC_GAME_API TSItem LCreateItem0(uint32 entry, uint32 count);
+TC_GAME_API TSItem LCreateItem1(uint32 entry);
+TC_GAME_API TSItem LCreateItem2();

@@ -19,10 +19,10 @@
 #include "Object.h"
 #include "GameObject.h"
 
+#include "TSIncludes.h"
 #include "TSPlayer.h"
 #include "TSGroup.h"
 #include "TSWorldObject.h"
-#include "TSIncludes.h"
 #include "TSGameObject.h"
 #include "TSSpellInfo.h"
 #include "SmartAI.h"

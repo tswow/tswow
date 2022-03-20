@@ -357,4 +357,25 @@ TSOutfit CreateOutfit(uint32_t race, uint32_t gender)
 {
     return TSOutfit(race,gender);
 }
+
+void TSOutfit::LApplyCopy0(TSCreature creature, uint32_t settings, int32_t race, int32_t gender)
+{
+    ApplyCopy(creature, settings, race, gender);
+}
+
+void TSOutfit::LApplyCopy1(TSCreature creature, uint32_t settings, int32_t race)
+{
+    ApplyCopy(creature, settings, race);
+}
+
+void TSOutfit::LApplyCopy2(TSCreature creature, uint32_t settings)
+{
+    ApplyCopy(creature, settings);
+}
+
+void TSOutfit::LApplyCopy3(TSCreature creature)
+{
+    ApplyCopy(creature);
+}
+
 #endif

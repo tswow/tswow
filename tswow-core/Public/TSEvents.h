@@ -23,7 +23,6 @@
 #include "TSPlayer.h"
 #include "TSMutable.h"
 #include "TSMutableString.h"
-#include "TSMacros.h"
 #include "TSChannel.h"
 #include "TSAura.h"
 #include "TSLoot.h"
@@ -1474,6 +1473,13 @@ TC_GAME_API void ReloadMap(MapOnReload__Type fn, uint32 id);
 TC_GAME_API void ReloadInstance(InstanceOnReload__Type fn, uint32 id);
 TC_GAME_API void ReloadBattleground(BattlegroundOnReload__Type fn, uint32 id);
 
+TC_GAME_API void ReloadGameObject__lua(sol::protected_function fn, uint32 id);
+TC_GAME_API void ReloadPlayer__lua(sol::protected_function fn, uint32 id);
+TC_GAME_API void ReloadCreature__lua(sol::protected_function fn, uint32 id);
+TC_GAME_API void ReloadMap__lua(sol::protected_function fn, uint32 id);
+TC_GAME_API void ReloadInstance__lua(sol::protected_function fn, uint32 id);
+TC_GAME_API void ReloadBattleground__lua(sol::protected_function fn, uint32 id);
+
 class TSEvents
 {
 public:
@@ -2218,9 +2224,6 @@ public:
         Server.LoadEvents(events);
         World.LoadEvents(events);
         Unit.LoadEvents(events);
-#if TRINITY
-        AreaTriggers.LoadEvents(events);
-#endif
         Weather.LoadEvents(events);
         AuctionHouse.LoadEvents(events);
         Vehicle.LoadEvents(events);
@@ -2228,10 +2231,10 @@ public:
         Account.LoadEvents(events);
         Guild.LoadEvents(events);
         Group.LoadEvents(events);
-        SpellID.LoadEvents(&events->Spells);
-        CreatureID.LoadEvents(&events->Creatures);
-        Creatures.LoadEvents(events);
         Spells.LoadEvents(events);
+        SpellID.LoadEvents(&events->Spells);
+        Creatures.LoadEvents(events);
+        CreatureID.LoadEvents(&events->Creatures);
         GameObjects.LoadEvents(events);
         GameObjectID.LoadEvents(&events->GameObjects);
         Battlegrounds.LoadEvents(events);

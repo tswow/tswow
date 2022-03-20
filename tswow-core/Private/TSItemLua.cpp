@@ -1,0 +1,67 @@
+#include "TSLua.h"
+#include "TSItem.h"
+
+#include "TSString.h"
+#include "TSPlayer.h"
+
+void TSLuaState::load_item_methods(uint32_t modid)
+{
+    auto ts_item = new_usertype < TSItem>("TSItem");
+    ts_item.set_function("GetItemLink", &TSItem::LGetItemLink);
+    ts_item.set_function("GetName", &TSItem::LGetName);
+    LUA_FIELD(ts_item, TSItem, IsSoulBound);
+    LUA_FIELD(ts_item, TSItem, IsBoundAccountWide);
+    LUA_FIELD(ts_item, TSItem, IsBoundByEnchant);
+    LUA_FIELD(ts_item, TSItem, IsNotBoundToPlayer);
+    LUA_FIELD(ts_item, TSItem, IsLocked);
+    LUA_FIELD(ts_item, TSItem, IsBag);
+    LUA_FIELD(ts_item, TSItem, IsCurrencyToken);
+    LUA_FIELD(ts_item, TSItem, IsNotEmptyBag);
+    LUA_FIELD(ts_item, TSItem, IsBroken);
+    LUA_FIELD(ts_item, TSItem, CanBeTraded);
+    LUA_FIELD(ts_item, TSItem, IsInTrade);
+    LUA_FIELD(ts_item, TSItem, IsInBag);
+    LUA_FIELD(ts_item, TSItem, IsEquipped);
+    LUA_FIELD(ts_item, TSItem, HasQuest);
+    LUA_FIELD(ts_item, TSItem, IsPotion);
+    LUA_FIELD(ts_item, TSItem, IsWeaponVellum);
+    LUA_FIELD(ts_item, TSItem, IsArmorVellum);
+    LUA_FIELD(ts_item, TSItem, IsConjuredConsumable);
+    LUA_FIELD(ts_item, TSItem, GetTemplate);
+    LUA_FIELD(ts_item, TSItem, GetOwnerGUID);
+    LUA_FIELD(ts_item, TSItem, GetCount);
+    LUA_FIELD(ts_item, TSItem, GetMaxStackCount);
+    LUA_FIELD(ts_item, TSItem, GetSlot);
+    LUA_FIELD(ts_item, TSItem, GetBagSlot);
+    LUA_FIELD(ts_item, TSItem, GetEnchantmentID);
+    LUA_FIELD(ts_item, TSItem, GetSpellID);
+    LUA_FIELD(ts_item, TSItem, GetSpellTrigger);
+    LUA_FIELD(ts_item, TSItem, GetClass);
+    LUA_FIELD(ts_item, TSItem, GetSubClass);
+    LUA_FIELD(ts_item, TSItem, GetDisplayID);
+    LUA_FIELD(ts_item, TSItem, GetQuality);
+    LUA_FIELD(ts_item, TSItem, GetBuyCount);
+    LUA_FIELD(ts_item, TSItem, GetBuyPrice);
+    LUA_FIELD(ts_item, TSItem, GetSellPrice);
+    LUA_FIELD(ts_item, TSItem, GetInventoryType);
+    LUA_FIELD(ts_item, TSItem, GetAllowableClass);
+    LUA_FIELD(ts_item, TSItem, GetAllowableRace);
+    LUA_FIELD(ts_item, TSItem, GetItemLevel);
+    LUA_FIELD(ts_item, TSItem, GetRequiredLevel);
+    LUA_FIELD(ts_item, TSItem, GetStatsCount);
+    LUA_FIELD(ts_item, TSItem, GetRandomProperty);
+    LUA_FIELD(ts_item, TSItem, GetRandomSuffix);
+    LUA_FIELD(ts_item, TSItem, GetItemSet);
+    LUA_FIELD(ts_item, TSItem, GetBagSize);
+    LUA_FIELD(ts_item, TSItem, SetOwner);
+    LUA_FIELD(ts_item, TSItem, SetBinding);
+    LUA_FIELD(ts_item, TSItem, SetCount);
+    LUA_FIELD(ts_item, TSItem, SetEnchantment);
+    LUA_FIELD(ts_item, TSItem, ClearEnchantment);
+    LUA_FIELD(ts_item, TSItem, SaveToDB);
+    set_function("CreateItem", sol::overload(
+        &LCreateItem0
+        , &LCreateItem1
+        , &LCreateItem2
+    ));
+}

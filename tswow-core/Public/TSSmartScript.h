@@ -9,6 +9,8 @@
 #include <vector>
 #include <memory>
 
+#include <sol/sol.hpp>
+
 #define TSWOW_EVENT_OFFSET 300
 #define TSWOW_ACTION_OFFSET 300
 #define TSWOW_CONDITION_OFFSET 100
@@ -49,6 +51,10 @@ struct TC_GAME_API TSCondition {
     bool IsNegativeCondition();
     TSString ToString(bool ext = false);
     bool IsNull();
+private:
+    std::string LToString0(bool ext);
+    std::string LToString1();
+    friend class TSLuaState;
 };
 
 struct ConditionSourceInfo;
@@ -145,4 +151,9 @@ public:
     TSSpellInfo GetSpellArg();
     TSGameObject GetGameObjectArg();
     TSWorldObject GetSelf();
+private:
+    sol::as_table_t<std::vector<TSWorldObject>> LGetTargets();
+    void LStoreTargetList(sol::table objects, uint32 id);
+    sol::as_table_t<std::vector<TSWorldObject>> LGetTargetList(uint32 id, TSWorldObject ref);
+    friend class TSLuaState;
 };

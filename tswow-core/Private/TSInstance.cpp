@@ -1,4 +1,3 @@
-#include "TSInstance.h"
 #include "TSMap.h"
 
 #if TRINITY
@@ -286,4 +285,54 @@ bool TSBossInfo::IsWithinBoundary(TSWorldObject obj)
     TS_LOG_ERROR("tswow.api", "TSBossInfo::IsWithinBoundary not implemented for AzerothCore");
 #endif
     return true;
+}
+
+void TSInstance::LDoUseDoorOrButton0(uint64 guid, uint32 withRestoreTime, bool useAlternativeState)
+{
+    DoUseDoorOrButton(guid, withRestoreTime, useAlternativeState);
+}
+
+void TSInstance::LDoUseDoorOrButton1(uint64 guid, uint32 withRestoreTime)
+{
+    DoUseDoorOrButton(guid, withRestoreTime);
+}
+
+void TSInstance::LDoUseDoorOrButton2(uint64 guid)
+{
+    DoUseDoorOrButton(guid);
+}
+
+void TSInstance::LDoRemoveAurasDueToSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled)
+{
+    DoRemoveAurasDueToSpellOnPlayers(spell, includePets, includeControlled);
+}
+
+void TSInstance::LDoRemoveAurasDueToSpellOnPlayers1(uint32 spell, bool includePets)
+{
+    DoRemoveAurasDueToSpellOnPlayers(spell, includePets);
+}
+
+void TSInstance::LDoRemoveAurasDueToSpellOnPlayers2(uint32 spell)
+{
+    DoRemoveAurasDueToSpellOnPlayers(spell);
+}
+
+void TSInstance::LDoCastSpellOnPlayers0(uint32 spell, bool includePets, bool includeControlled)
+{
+    DoCastSpellOnPlayers(spell, includePets, includeControlled);
+}
+
+void TSInstance::LDoCastSpellOnPlayers1(uint32 spell, bool includePets)
+{
+    DoCastSpellOnPlayers(spell, includePets);
+}
+
+void TSInstance::LDoCastSpellOnPlayers2(uint32 spell)
+{
+    DoCastSpellOnPlayers(spell);
+}
+
+void TSInstance::LDoSendNotify(std::string const& message)
+{
+    DoSendNotify(message);
 }

@@ -93,7 +93,7 @@ void UpdateTSLibraries(bool forceReload)
             {
                 continue;
             }
-            TSUnloadEventHandler(file);
+            TSUnloadEventHandler(itr->second.modName);
             DL_CLOSE(itr->second.handle);
             libraries.erase(file);
         }

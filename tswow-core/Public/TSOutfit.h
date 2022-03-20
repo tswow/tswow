@@ -145,6 +145,12 @@ private:
         , uint32_t value
         , uint8_t slot
     );
+
+    void LApplyCopy0(TSCreature creature, uint32_t settings, int32_t race, int32_t gender);
+    void LApplyCopy1(TSCreature creature, uint32_t settings, int32_t race);
+    void LApplyCopy2(TSCreature creature, uint32_t settings);
+    void LApplyCopy3(TSCreature creature);
+    friend class TSLuaState;
 #endif
 };
 

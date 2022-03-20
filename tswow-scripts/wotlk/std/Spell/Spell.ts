@@ -202,6 +202,16 @@ export class Spell extends MainEntityID<SpellRow> {
               this
             , this.ID
             , 'SpellID'
+            , 'livescript'
+        ) as _hidden.Spells<this>
+    }
+
+    get InlineLua() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'SpellID'
+            , 'lua'
         ) as _hidden.Spells<this>
     }
 

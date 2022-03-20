@@ -23,6 +23,8 @@
 #include "TSUnit.h"
 #include "TSOutfit.h"
 
+#include <sol/sol.hpp>
+
 class TSJsonObject;
 class TSJsonArray;
 class TSBattleground;
@@ -342,4 +344,79 @@ public:
 	void RemoveMail(uint32 id);
 
 	TSOutfit GetOutfitCopy(uint32_t settings = Outfit::EVERYTHING, int32_t race = -1, int32_t gender = -1);
+
+private:
+		std::string LGetGuildName();
+		std::string LGetPlayerIP();
+		std::string LGetAccountName();
+		void LWhisper(std::string const& text, uint32 lang, TSPlayer receiver, uint64 guid);
+		void LTextEmote(std::string const& text);
+		void LYell(std::string const& text, uint32 lang);
+		void LSay(std::string const& text, uint32 lang);
+		void LSendBroadcastMessage(std::string const& message);
+		void LSendAreaTriggerMessage(std::string const& msg);
+		void LSendNotification(std::string const& msg);
+		void LSendAddonMessage(std::string const& prefix, std::string const& message, uint8 channel, TSPlayer receiver);
+
+		void LGossipMenuAddItem0(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code, std::string const& _promptMsg, uint32 _money);
+		void LGossipMenuAddItem1(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code, std::string const& _promptMsg);
+		void LGossipMenuAddItem2(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid, bool _code);
+		void LGossipMenuAddItem3(uint32 _icon, std::string const& msg, uint32 _sender, uint32 _intid);
+		void LGossipMenuAddItem4(uint32 _icon, std::string const& msg, uint32 _sender);
+		void LGossipMenuAddItem5(uint32 _icon, std::string const& msg);
+
+		void LGossipSendTextMenu0(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay, uint32 menu_id);
+		void LGossipSendTextMenu1(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay);
+		void LGossipSendTextMenu2(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2);
+		void LGossipSendTextMenu3(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay);
+		void LGossipSendTextMenu4(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1);
+		void LGossipSendTextMenu5(TSObject sender, std::string const& str, uint32 language, uint32 emote0, uint32 emote0Delay);
+		void LGossipSendTextMenu6(TSObject sender, std::string const& str, uint32 language, uint32 emote0);
+		void LGossipSendTextMenu7(TSObject sender, std::string const& str, uint32 language);
+		void LGossipSendTextMenu8(TSObject sender, std::string const& str);
+
+		void LGossipSendTextMenuGendered0(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay, uint32 menu_id);
+		void LGossipSendTextMenuGendered1(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2, uint32 emote2Delay);
+		void LGossipSendTextMenuGendered2(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay, uint32 emote2);
+		void LGossipSendTextMenuGendered3(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1, uint32 emote1Delay);
+		void LGossipSendTextMenuGendered4(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay, uint32 emote1);
+		void LGossipSendTextMenuGendered5(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0, uint32 emote0Delay);
+		void LGossipSendTextMenuGendered6(TSObject sender, std::string const& male, std::string const& female, uint32 language, uint32 emote0);
+		void LGossipSendTextMenuGendered7(TSObject sender, std::string const& male, std::string const& female, uint32 language);
+		void LGossipSendTextMenuGendered8(TSObject sender, std::string const& male, std::string const& female);
+
+		void LGossipSendPOI(float x, float y, uint32 icon, uint32 flags, uint32 data, std::string const& iconText);
+
+		void LSendMail0(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay, sol::table items);
+		void LSendMail1(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod, uint32 delay);
+		void LSendMail2(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money, uint32 cod);
+		void LSendMail3(uint8 senderType, uint64 from, std::string const& subject, std::string const& body, uint32 money);
+		void LSendMail4(uint8 senderType, uint64 from, std::string const& subject, std::string const& body);
+
+		TSOutfit LGetOutfitCopy0(uint32_t settings, int32_t race, int32_t gender);
+		TSOutfit LGetOutfitCopy1(uint32_t settings, int32_t race);
+		TSOutfit LGetOutfitCopy2(uint32_t settings);
+		TSOutfit LGetOutfitCopy3();
+
+		void LKillPlayer0(bool durability);
+		void LKillPlayer1();
+
+		TSItem LAddItem0(uint32 itemId, uint32 itemCount, int32 propertyId);
+		TSItem LAddItem1(uint32 itemId, uint32 itemCount);
+
+		void LAddItemToSlotRaw0(uint8 bag, uint8 slot, uint32 itemId, uint32 count, int32 propertyId);
+		void LAddItemToSlotRaw1(uint8 bag, uint8 slot, uint32 itemId, uint32 count);
+
+		void LRemoveItem0(TSItem item, uint32 itemCount);
+		void LRemoveItem1(TSItem item);
+
+		void LRemoveItemByEntry0(uint32 entry, uint32 itemCount);
+		void LRemoveItemByEntry1(uint32 entry);
+
+		void LLearnClassSpells0(bool trainer, bool quests, bool limitQuestsByLevel);
+		void LLearnClassSpells1(bool trainer, bool quests);
+
+		void LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id);
+		void LGossipSendMenu1(uint32 npc_text, TSObject sender);
+		friend class TSLuaState;
 };

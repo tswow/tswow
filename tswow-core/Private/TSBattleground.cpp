@@ -602,3 +602,136 @@ TSCreature TSBattleground::GetBGCreature(uint32 type, bool logErrors)
     return TSCreature(bg->GetBGCreature(type));
 #endif
 }
+
+std::string TSBattleground::LGetBGName()
+{
+    return GetBGName()->std_str();
+}
+
+void TSBattleground::LPlaySound0(uint32 sound, uint32 team)
+{
+    PlaySound(sound, team);
+}
+void TSBattleground::LPlaySound1(uint32 sound)
+{
+    PlaySound(sound);
+}
+
+void TSBattleground::LCastSpell0(uint32 spell, uint32 team)
+{
+    CastSpell(spell, team);
+}
+void TSBattleground::LCastSpell1(uint32 spell)
+{
+    CastSpell(spell);
+}
+
+void TSBattleground::LRemoveAura0(uint32 aura, uint32 team)
+{
+    RemoveAura(aura, team);
+}
+void TSBattleground::LRemoveAura1(uint32 aura)
+{
+    RemoveAura(aura);
+}
+
+void TSBattleground::LRewardHonor0(uint32 honor, uint32 team)
+{
+    RewardHonor(honor, team);
+}
+void TSBattleground::LRewardHonor1(uint32 honor)
+{
+    RewardHonor(honor);
+}
+
+void TSBattleground::LRewardReputation0(uint32 faction, uint32 reputation, uint32 team)
+{
+    RewardReputation(faction, reputation,team);
+}
+void TSBattleground::LRewardReputation1(uint32 faction, uint32 reputation)
+{
+    RewardReputation(faction, reputation);
+}
+
+void TSBattleground::LEndBG0(uint32 winnerTeam)
+{
+    EndBG(winnerTeam);
+}
+void TSBattleground::LEndBG1()
+{
+    EndBG();
+}
+
+uint32 TSBattleground::LGetBGPlayerCount0(uint32 team)
+{
+    return GetBGPlayerCount(team);
+}
+uint32 TSBattleground::LGetBGPlayerCount1()
+{
+    return GetBGPlayerCount();
+}
+
+uint32 TSBattleground::LGetBGAlivePlayerCount0(uint32 team)
+{
+    return GetBGAlivePlayerCount(team);
+}
+uint32 TSBattleground::LGetBGAlivePlayerCount1()
+{
+    return GetBGAlivePlayerCount();
+}
+
+TSCreature TSBattleground::LAddCreature0(uint32 entry, uint32 type, float x, float y, float z, float o, uint32 respawnTime, uint32 teamId)
+{
+    return AddCreature(entry, type, x, y, z, o, respawnTime, teamId);
+}
+
+TSCreature TSBattleground::LAddCreature1(uint32 entry, uint32 type, float x, float y, float z, float o, uint32 respawnTime)
+{
+    return AddCreature(entry, type, x, y, z, o, respawnTime);
+}
+
+TSCreature TSBattleground::LAddCreature2(uint32 entry, uint32 type, float x, float y, float z, float o)
+{
+    return AddCreature(entry, type, x, y, z, o);
+}
+
+bool TSBattleground::LAddObject0(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3, uint32 respawnTime, uint32 goState)
+{
+    return AddObject(type, entry, x, y, z, o, rot0, rot1, rot2, rot3, respawnTime, goState);
+}
+
+bool TSBattleground::LAddObject1(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3, uint32 respawnTime)
+{
+    return AddObject(type, entry, x, y, z, o, rot0, rot1, rot2, rot3, respawnTime);
+}
+bool TSBattleground::LAddObject2(uint32 type, uint32 entry, float x, float y, float z, float o, float rot0, float rot1, float rot2, float rot3)
+{
+    return AddObject(type, entry, x, y, z, o, rot0, rot1, rot2, rot3);
+}
+
+void TSBattleground::LAddSpiritGuide0(uint32 type, float x, float y, float z, float o, uint32 teamId)
+{
+    return AddSpiritGuide(type, x, y, z, o, teamId);
+}
+void TSBattleground::LAddSpiritGuide1(uint32 type, float x, float y, float z, float o)
+{
+    return AddSpiritGuide(type, x, y, z, o);
+}
+
+TSGameObject TSBattleground::LGetBGGameObject0(uint32 type, bool logErrors)
+{
+    return GetBGGameObject(type, logErrors);
+}
+TSGameObject TSBattleground::LGetBGGameObject1(uint32 type)
+{
+    return GetBGGameObject(type);
+}
+
+TSCreature TSBattleground::LGetBGCreature0(uint32 type, bool logErrors)
+{
+    return GetBGCreature(type, logErrors);
+}
+TSCreature TSBattleground::LGetBGCreature1(uint32 type)
+{
+    return GetBGCreature(type);
+}

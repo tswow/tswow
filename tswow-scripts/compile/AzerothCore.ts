@@ -91,6 +91,6 @@ export namespace AzerothCore {
         }
 
         // note: will use tc enums when building, some might be incorrect.
-        TrinityCore.headers();
+        TrinityCore.headers(false);
     }
 }

@@ -388,3 +388,32 @@ TSCondition TSConditionSourceInfo::GetLastFailedCondition()
 {
     return TSCondition(const_cast<Condition*>(m_info->mLastFailedCondition));
 }
+
+std::string TSCondition::LToString0(bool ext)
+{
+    return ToString(ext).std_str();
+}
+std::string TSCondition::LToString1()
+{
+    return ToString().std_str();
+}
+
+sol::as_table_t<std::vector<TSWorldObject>> TSSmartScriptValues::LGetTargets()
+{
+    return sol::as_table(*GetTargets().vec);
+}
+void TSSmartScriptValues::LStoreTargetList(sol::table objects, uint32 id)
+{
+    TSArray<TSWorldObject> tsobjects;
+    for (auto & value : objects)
+    {
+        tsobjects.push(value.second.as<TSWorldObject>());
+    }
+    StoreTargetList(tsobjects, id);
+}
+
+sol::as_table_t<std::vector<TSWorldObject>> TSSmartScriptValues::LGetTargetList(uint32 id, TSWorldObject ref)
+{
+    return sol::as_table(*GetTargetList(id, ref).vec);
+}
+

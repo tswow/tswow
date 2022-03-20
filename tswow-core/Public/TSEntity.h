@@ -18,6 +18,9 @@
 
 #include "TSString.h"
 #include "TSJson.h"
+
+#include "sol/sol.hpp"
+
 #include <map>
 #include <string>
 #include <memory>
@@ -64,10 +67,17 @@ public:
 };
 
 // The class stored on core entities (Object/Map)
+struct ModTable
+{
+    uint32_t modid;
+    sol::table table;
+};
+
 class TC_GAME_API TSEntity {
 public:
     TSCompiledClasses m_compiledClasses;
     TSJsonObject m_json;
+    std::map<std::string, ModTable> m_lua_tables;
     uint8_t m_raw[128];
     TSEntity * operator->(){return this;}
 };
@@ -230,4 +240,73 @@ public:
     void SetFloat(TSString key, float value) { getData()->m_json.SetNumber(key, value); }
     bool HasFloat(TSString key) { return getData()->m_json.HasNumber(key); }
     float GetFloat(TSString key, float def = 0) { return float(getData()->m_json.GetNumber(key, def)); }
+
+    void Remove(TSString key) { getData()->m_json.Remove(key); }
+
+private:
+    void LSetNumber(std::string const& key, double value) { getData()->m_json.SetNumber(key, value); }
+    bool LHasNumber(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    double LGetNumber0(std::string const& key, double def) { return getData()->m_json.GetNumber(key, def); }
+    double LGetNumber1(std::string const& key) { return getData()->m_json.GetNumber(key); }
+
+    void LSetBool(std::string const& key, bool value) { getData()->m_json.SetBool(key, value); }
+    bool LHasBool(std::string const& key) { return getData()->m_json.HasBool(key); }
+    bool LGetBool0(std::string const& key, bool def) { return getData()->m_json.GetBool(key, def); }
+    bool LGetBool1(std::string const& key) { return getData()->m_json.GetBool(key); }
+
+    void LSetString(std::string const& key, std::string const& value) { getData()->m_json.SetString(key, value); }
+    bool LHasString(std::string const& key) { return getData()->m_json.HasString(key); }
+    std::string LGetString0(std::string const& key, std::string const& def) { return getData()->m_json.GetString(key, def); }
+    std::string LGetString1(std::string const& key) { return getData()->m_json.GetString(key); }
+
+    void LSetJsonObject(std::string const& key, TSJsonObject value) { getData()->m_json.SetJsonObject(key, value); }
+    bool LHasJsonObject(std::string const& key) { return getData()->m_json.HasJsonObject(key); }
+    TSJsonObject LGetJsonObject0(std::string const& key, TSJsonObject def) { return getData()->m_json.GetJsonObject(key, def); }
+    TSJsonObject LGetJsonObject1(std::string const& key) { return getData()->m_json.GetJsonObject(key); }
+
+    void LSetJsonArray(std::string const& key, TSJsonArray value) { getData()->m_json.SetJsonArray(key, value); }
+    bool LHasJsonArray(std::string const& key) { return getData()->m_json.HasJsonArray(key); }
+    TSJsonArray LGetJsonArray0(std::string const& key, TSJsonArray def) { return getData()->m_json.GetJsonArray(key, def); }
+    TSJsonArray LGetJsonArray1(std::string const& key) { return GetJsonArray(key); }
+
+    // backwards compatibility
+    void LSetUInt(std::string const& key, uint32_t value) { getData()->m_json.SetNumber(key, value); }
+    bool LHasUInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    uint32_t LGetUInt0(std::string const& key, uint32_t def) { return uint32_t(getData()->m_json.GetNumber(key, def)); }
+    uint32_t LGetUInt1(std::string const& key) { return uint32_t(getData()->m_json.GetNumber(key)); }
+
+    void LSetInt(std::string const& key, int32_t value) { getData()->m_json.SetNumber(key, value); }
+    bool LHasInt(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    int32_t LGetInt0(std::string const& key, int32_t def) { return int32_t(getData()->m_json.GetNumber(key, def)); }
+    int32_t LGetInt1(std::string const& key) { return int32_t(getData()->m_json.GetNumber(key)); }
+
+    void LSetFloat(std::string const& key, float value) { getData()->m_json.SetNumber(key, value); }
+    bool LHasFloat(std::string const& key) { return getData()->m_json.HasNumber(key); }
+    float LGetFloat0(std::string const& key, float def) { return float(getData()->m_json.GetNumber(key, def)); }
+    float LGetFloat1(std::string const& key) { return float(getData()->m_json.GetNumber(key)); }
+
+    void LRemove(std::string const& key) { getData()->m_json.Remove(key); }
+
+    void LRemoveObject(std::string const& key) { getData()->m_lua_tables.erase(key); }
+    void LSetObject(uint32_t modid, std::string const& key, sol::table table) { getData()->m_lua_tables[key] = { modid, table }; }
+    bool LHasObject(std::string const& key) {
+        auto const& classes = getData()->m_lua_tables;
+        return classes.find(key) != classes.end();
+    }
+    sol::table LGetObject(uint32_t modid, std::string const& key, sol::table def)
+    {
+        auto & classes = getData()->m_lua_tables;
+        auto const& itr = classes.find(key);
+        if (itr != classes.end())
+        {
+            return itr->second.table;
+        }
+        else
+        {
+            classes[key] = { modid, def };
+            return def;
+        }
+    }
+
+    friend class TSLuaState;
 };

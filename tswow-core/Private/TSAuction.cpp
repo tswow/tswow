@@ -124,6 +124,12 @@ uint32 TSAuctionEntry::GetFlags()
 #endif
 }
 
+void TSAuctionEntry::SetOwnerID(uint64 ownerId)
+{
+    entry->owner = ObjectGuid(ownerId);
+}
+
+
 void TSAuctionEntry::SetItemID(uint64 itemId)
 {
 #if TRINITY
@@ -227,4 +233,14 @@ void TSAuctionHouseObject::AddAuction(TSAuctionEntry entry)
 {
     // TODO: Pretty sure this isn't enough
     obj->AddAuction(entry->entry);
+}
+
+sol::as_table_t<std::vector<uint64>> TSAuctionEntry::LGetBidders()
+{
+    return sol::as_table(*GetBidders().vec);
+}
+
+sol::as_table_t<std::vector<uint32>> TSAuctionHouseObject::LGetKeys()
+{
+    return sol::as_table(*GetKeys().vec);
 }

@@ -28,6 +28,7 @@ export type TerminalCategory =
     | 'commands'
     | 'misc'
     | 'client'
+    | 'lua'
     | CustomCategory
 
 export function termCustom(custom: string);

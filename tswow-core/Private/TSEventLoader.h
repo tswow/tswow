@@ -26,4 +26,5 @@ TSEvents* TSLoadEventHandler(boost::filesystem::path const& modulePath, std::str
 bool TSShouldLoadEventHandler(boost::filesystem::path const& name);
 void TSUnloadEventHandler(boost::filesystem::path const& name);
 TC_GAME_API TSEventStore* GetTSEvents();
+uint32_t TSGetModID(boost::filesystem::path const& modulePath);
 bool handleTSWoWGMMessage(Player* player, Player* receiver, std::string & msg);

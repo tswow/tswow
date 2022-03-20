@@ -21,6 +21,9 @@
 #include "TSEntity.h"
 #include "TSString.h"
 
+#include <sol/sol.hpp>
+#include <string>
+
 struct CreatureTemplate;
 
 class TC_GAME_API TSCreatureTemplate : public TSEntityProvider
@@ -130,6 +133,12 @@ public:
     bool      GetIsSwimAllowed();
     bool      GetIsFlightAllowed();
     bool      GetIsRooted();
+private:
+    std::string LGetName();
+    std::string LGetTitle();
+    std::string LGetIconName();
+    std::string LGetAIName();
+    friend class TSLuaState;
 };
 
 TC_GAME_API TSCreatureTemplate GetCreatureTemplate(uint32 entry);

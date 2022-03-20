@@ -292,3 +292,66 @@ void TSMailDraft::FilterItems(std::function<bool(TSItem)> predicate)
         }
     }
 }
+
+std::string TSMail::LGetSubject()
+{
+    return GetSubject().std_str();
+}
+
+std::string TSMail::LGetBody()
+{
+    return GetBody().std_str();
+}
+sol::as_table_t<std::vector<TSMailItemInfo>> TSMail::LGetItems()
+{
+    return sol::as_table(*GetItems().vec);
+}
+void TSMail::LFilterItems(sol::protected_function predicate)
+{
+    return FilterItems([predicate](auto const& item) {
+        return predicate(item);
+    });
+}
+void TSMail::LAddItem0(uint32 entry, uint8 count, TSPlayer player)
+{
+    return AddItem(entry, count, player);
+}
+void TSMail::LAddItem1(uint32 entry, uint8 count)
+{
+    return AddItem(entry, count);
+}
+void TSMail::LSetSubject(std::string const& subject)
+{
+    SetSubject(subject);
+}
+void TSMail::LSetBody(std::string const& body)
+{
+    SetBody(body);
+}
+
+std::string TSMailDraft::LGetSubject()
+{
+    return GetSubject().std_str();
+}
+std::string TSMailDraft::LGetBody()
+{
+    return GetSubject().std_str();
+}
+sol::as_table_t<std::vector<uint64>> TSMailDraft::LGetItemKeys()
+{
+    return sol::as_table(*GetItemKeys().vec);
+}
+void TSMailDraft::LAddItem0(uint32 entry, uint8 count, TSPlayer player)
+{
+    AddItem(entry, count, player);
+}
+void TSMailDraft::LAddItem1(uint32 entry, uint8 count)
+{
+    AddItem(entry, count);
+}
+void TSMailDraft::LFilterItems(sol::protected_function predicate)
+{
+    FilterItems([predicate](auto const& item) {
+        return predicate(item);
+    });
+}

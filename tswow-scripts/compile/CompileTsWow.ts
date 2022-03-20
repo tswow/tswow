@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
+import { Args } from '../util/Args';
 import { commands } from '../util/Commands';
 import { ipaths } from '../util/Paths';
 import { isWindows } from '../util/Platform';
@@ -128,8 +129,8 @@ async function main() {
 
     build.addCommand('base', '', 'Builds only base dependencies', async(args) => await compile('', args));
 
-    commands.addCommand('headers','','',async()=>{
-        TrinityCore.headers();
+    commands.addCommand('headers','','',async(args)=>{
+        TrinityCore.headers(Args.hasFlag('global-only',args));
     });
 
     commands.enterLoop();
@@ -138,7 +139,7 @@ async function main() {
 
 (async function(){
     if(!spaths.tswow_scripts.wotlk.global_d_ts.exists()) {
-        TrinityCore.headers();
+        TrinityCore.headers(true);
     }
 
     if(isInteractive) {

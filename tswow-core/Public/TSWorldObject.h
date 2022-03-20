@@ -21,8 +21,8 @@
 #include "TSClasses.h"
 #include "TSObject.h"
 #include "TSPosition.h"
-#include "TSEntity.h"
 #include "TSDictionary.h"
+#include "TSEntity.h"
 #include "TSWorldEntity.h"
 #include <chrono>
 #include <vector>

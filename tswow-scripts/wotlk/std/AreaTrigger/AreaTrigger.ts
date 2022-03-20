@@ -31,6 +31,16 @@ export class AreaTriggerBase extends MainEntityID<AreaTriggerRow> {
               this
             , this.ID
             , 'AreaTriggerID'
+            , 'livescript'
+        ) as _hidden.AreaTriggerID<this>
+    }
+
+    get InlineLua() {
+        return getInlineID(
+              this
+            , this.ID
+            , 'AreaTriggerID'
+            , 'lua'
         ) as _hidden.AreaTriggerID<this>
     }
 }

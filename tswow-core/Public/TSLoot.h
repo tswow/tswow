@@ -18,6 +18,9 @@
 
 #include "TSMain.h"
 #include "TSArray.h"
+
+#include <sol/sol.hpp>
+
 #include <functional>
 
 struct LootItem;
@@ -75,4 +78,11 @@ class TC_GAME_API TSLoot {
 
         bool GetGeneratesNormally();
         void SetGeneratesNormally(bool normal);
+private:
+    void LAddItem0(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode, bool needsQuest, uint8 groupId);
+    void LAddItem1(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode, bool needsQuest);
+    void LAddItem2(uint32 id, uint8 minCount, uint8 maxCount, uint16 lootmode);
+    void LAddItem3(uint32 id, uint8 minCount, uint8 maxCount);
+    void LFilter(sol::protected_function predicate);
+    friend class TSLuaState;
 };

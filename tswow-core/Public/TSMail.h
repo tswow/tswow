@@ -22,6 +22,8 @@
 #include "TSPlayer.h"
 #include "TSItem.h"
 
+#include <sol/sol.hpp>
+
 struct MailItemInfo;
 struct TC_GAME_API TSMailItemInfo {
     MailItemInfo* info;
@@ -69,6 +71,17 @@ struct TC_GAME_API TSMail {
     void SetSubject(TSString subject);
     void SetBody(TSString body);
     void SetState(uint8 state);
+
+private:
+    std::string LGetSubject();
+    std::string LGetBody();
+    sol::as_table_t<std::vector<TSMailItemInfo>> LGetItems();
+    void LFilterItems(sol::protected_function predicate);
+    void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
+    void LAddItem1(uint32 entry, uint8 count);
+    void LSetSubject(std::string const& subject);
+    void LSetBody(std::string const& body);
+    friend class TSLuaState;
 };
 
 class MailDraft;
@@ -93,4 +106,12 @@ struct TC_GAME_API TSMailDraft {
     void SetBody(TSString body);
     void AddItem(uint32 entry, uint8 count, TSPlayer player = TSPlayer(nullptr));
     void FilterItems(std::function<bool(TSItem)> predicate);
+private:
+    std::string LGetSubject();
+    std::string LGetBody();
+    sol::as_table_t<std::vector<uint64>> LGetItemKeys();
+    void LAddItem0(uint32 entry, uint8 count, TSPlayer player);
+    void LAddItem1(uint32 entry, uint8 count);
+    void LFilterItems(sol::protected_function predicate);
+    friend class TSLuaState;
 };

@@ -426,3 +426,21 @@ TSCreatureTemplate GetCreatureTemplate(uint32 entry)
     return TSCreatureTemplate(
         const_cast<CreatureTemplate*>(sObjectMgr->GetCreatureTemplate(entry)));
 }
+
+std::string TSCreatureTemplate::LGetName()
+{
+    return GetName().std_str();
+}
+std::string TSCreatureTemplate::LGetTitle()
+{
+    return GetTitle().std_str();
+}
+std::string TSCreatureTemplate::LGetIconName()
+{
+    return GetIconName().std_str();
+}
+std::string TSCreatureTemplate::LGetAIName()
+{
+    return GetAIName().std_str();
+}
+

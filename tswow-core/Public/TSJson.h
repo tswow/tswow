@@ -45,9 +45,9 @@ public:
     TSJsonObject();
     TSJsonObject(TSJsonObject const& map);
     bool IsValid();
+    TSJsonObject* operator->() { return this; }
 
     TSJsonObject SetBool(TSString key, bool value);
-    TSJsonObject* operator->() { return this; }
     bool HasBool(TSString key);
     bool GetBool(TSString key, bool def = false);
 
@@ -73,6 +73,38 @@ public:
     TSJsonObject Remove(TSString key);
     unsigned get_length();
     void Parse(TSString json);
+private:
+    TSJsonObject LSetBool(std::string const& key, bool value);
+    bool LHasBool(std::string const& key);
+    bool LGetBool0(std::string const& key, bool def);
+    bool LGetBool1(std::string const& key);
+
+    TSJsonObject LSetNumber(std::string const& key, double number);
+    bool LHasNumber(std::string const& key);
+    double LGetNumber0(std::string const& key, double def);
+    double LGetNumber1(std::string const& key);
+
+    TSJsonObject LSetString(std::string const& key, std::string const& number);
+    bool LHasString(std::string const& key);
+    std::string LGetString0(std::string const& key, std::string const& def);
+    std::string LGetString1(std::string const& key);
+
+    TSJsonObject LSetNull(std::string const& key);
+    bool lHasNull(std::string const& key);
+
+    TSJsonObject LSetJsonObject(std::string const& key, TSJsonObject value);
+    bool LHasJsonObject(std::string const& key);
+    TSJsonObject LGetJsonObject0(std::string const& key, TSJsonObject value);
+    TSJsonObject LGetJsonObject1(std::string const& key);
+
+    TSJsonArray LGetJsonArray0(std::string const& key, TSJsonArray arr);
+    TSJsonArray LGetJsonArray1(std::string const& key);
+    bool LHasJsonArray(std::string const& key);
+    TSJsonObject LSetJsonArray(std::string const& key, TSJsonArray value);
+    std::string LtoString0(int indents);
+    std::string LtoString1();
+    TSJsonObject LRemove(std::string const& key);
+    friend class TSLuaState;
 };
 
 class TC_GAME_API TSJsonArray {
@@ -131,6 +163,45 @@ public:
     void Parse(TSString json);
     TSString toString(int indents = -1);
     unsigned get_length();
+
+private:
+    bool LGetBool0(unsigned key, bool def);
+    bool LGetBool1(unsigned key);
+    double LGetNumber0(unsigned key, double def);
+    double LGetNumber1(unsigned key);
+
+    std::string LGetString0(unsigned key, std::string const& def);
+    std::string LGetString1(unsigned key);
+    TSJsonArray LSetString(unsigned key, std::string const& number);
+    TSJsonArray LInsertString(unsigned key, std::string const& value);
+    TSJsonArray LPushString(std::string const& value);
+
+    TSJsonArray LSetJsonObject0(unsigned key, TSJsonObject value);
+    TSJsonArray LSetJsonObject1(unsigned key);
+    TSJsonObject LGetJsonObject0(unsigned key, TSJsonObject value);
+    TSJsonObject LGetJsonObject1(unsigned key);
+    TSJsonArray LInsertJsonObject0(unsigned key, TSJsonObject value);
+    TSJsonArray LInsertJsonObject1(unsigned key);
+
+    TSJsonArray LPushJsonObject0(TSJsonObject value);
+    TSJsonArray LPushJsonObject1();
+
+    TSJsonArray LSetJsonArray0(unsigned key, TSJsonArray arr);
+    TSJsonArray LSetJsonArray1(unsigned key);
+
+    TSJsonArray LGetJsonArray0(unsigned key, TSJsonArray value);
+    TSJsonArray LGetJsonArray1(unsigned key);
+
+    TSJsonArray LInsertJsonArray0(unsigned key, TSJsonArray value);
+    TSJsonArray LInsertJsonArray1(unsigned key);
+
+    TSJsonArray LPushJsonArray0(TSJsonArray value);
+    TSJsonArray LPushJsonArray1();
+
+    TSString LtoString0(int indents);
+    TSString LtoString1();
+
+    friend class TSLuaState;
 };
 
 struct JsonTag {

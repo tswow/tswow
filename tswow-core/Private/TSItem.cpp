@@ -709,3 +709,28 @@ TSItemTemplate TSItem::GetTemplateCopy()
 }
 
 // Inherited functions
+// Inherited functions
+
+std::string TSItem::LGetItemLink(uint8 locale)
+{
+    return GetItemLink(locale).std_str();
+}
+
+std::string TSItem::LGetName()
+{
+    return GetName().std_str();
+}
+
+TSItem LCreateItem0(uint32 entry, uint32 count)
+{
+    return CreateItem(entry, count);
+}
+
+TSItem LCreateItem1(uint32 entry)
+{
+    return CreateItem(entry);
+}
+TSItem LCreateItem2()
+{
+    return CreateItem();
+}

@@ -27,6 +27,10 @@
 #include "TSCreatureTemplate.h"
 #include "TSOutfit.h"
 
+#include <sol/sol.hpp>
+#include <vector>
+#include <string>
+
 class TSOutfit;
 
 class TC_GAME_API TSCreature : public TSUnit {
@@ -138,4 +142,14 @@ public:
     void EquipMainhand(uint32_t mainhand);
     void EquipOffhand(uint32_t offhand);
     void EquipRanged(uint32_t ranged);
+
+private:
+    TSOutfit LGetOutfitCopy0(Outfit settings, int32_t race, int32_t gender);
+    TSOutfit LGetOutfitCopy1(Outfit settings, int32_t race);
+    TSOutfit LGetOutfitCopy2(Outfit settings);
+    TSOutfit LGetOutfitCopy3();
+    sol::as_table_t<std::vector<TSUnit>> LGetAITargets();
+    std::string LGetScriptName();
+    std::string LGetAIName();
+    friend class TSLuaState;
 };
