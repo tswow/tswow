@@ -53,11 +53,11 @@ export namespace TrinityCore {
 
         if(!globalOnly) {
             bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include);
-            spaths.misc.client_extensions.lua_51.iterateDef(node=>{
-                if(node.endsWith('.h')) {
-                    node.copy(ipaths.bin.include.lua.join(node.basename()));
-                }
-            })
+            spaths.misc.client_extensions.lua_51.src
+            .readDir('ABSOLUTE')
+            .filter(x=>x.endsWith('.h'))
+            .forEach(x=>x.copy(ipaths.bin.include.lua.join(x.basename())))
+
         }
 
         spaths.misc.client_extensions.CustomPackets
