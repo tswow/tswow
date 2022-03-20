@@ -44,16 +44,21 @@ function suffix(words: string[]) {
 }
 
 export namespace TrinityCore {
-    export function headers() {
+    // todo: currently globalOnly only stops sol headers
+    // from building before sol is cloned, but it should
+    // also stop other headers from generating.
+    export function headers(globalOnly: boolean) {
         // todo: duplicate from
         spaths.tswow_core.Public.copy(ipaths.bin.include, true)
 
-        bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include.join('sol'));
-        bpaths.TrinityCore.lua_headers.iterateDef(node=>{
-            if(node.endsWith('.h')) {
-                node.copy(ipaths.bin.include.lua.join(node.basename()));
-            }
-        })
+        if(!globalOnly) {
+            bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include.join('sol'));
+            bpaths.TrinityCore.lua_headers.iterateDef(node=>{
+                if(node.endsWith('.h')) {
+                    node.copy(ipaths.bin.include.lua.join(node.basename()));
+                }
+            })
+        }
 
         spaths.misc.client_extensions.CustomPackets
             .readDir('ABSOLUTE')
@@ -268,7 +273,7 @@ export namespace TrinityCore {
         copyExtLibs('trinitycore', type)
 
         // Move ts-module header files
-        headers();
+        headers(false);
 
         const rev = wsys.execIn(
               spaths.cores.TrinityCore.get()
