@@ -145,7 +145,7 @@ void TSLuaState::handle_error(sol::protected_function_result const& res)
             what.replace(match.start, match.len, replacement);
         }
     }
-    TC_LOG_ERROR("tswow.lua", "%s", what.c_str());
+    TS_LOG_ERROR("tswow.lua", "%s", what.c_str());
 }
 
 void TSLuaState::execute_module(std::string const& mod)
@@ -224,7 +224,7 @@ void TSLuaState::Load()
 #endif
     if (!std::filesystem::exists(lua_path))
     {
-        TC_LOG_ERROR("tswow.lua", "No lua path");
+        TS_LOG_ERROR("tswow.lua", "No lua path");
         return;
     }
     for (auto const& entry : std::filesystem::directory_iterator(lua_path))
