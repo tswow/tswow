@@ -52,8 +52,8 @@ export namespace TrinityCore {
         spaths.tswow_core.Public.copy(ipaths.bin.include, true)
 
         if(!globalOnly) {
-            bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include.join('sol'));
-            bpaths.TrinityCore.lua_headers.iterateDef(node=>{
+            bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include);
+            spaths.misc.client_extensions.lua_51.iterateDef(node=>{
                 if(node.endsWith('.h')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
