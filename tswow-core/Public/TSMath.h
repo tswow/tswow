@@ -36,6 +36,9 @@ static struct MathClass {
         return this;
     }
 
+    float atan2(float y, float x) { return ::atan2(y,x); }
+    double atan2(double y, double x) { return ::atan2(y,x); }
+
     float round(float a1) { return ::round(a1); }
     double round(double a1) { return ::round(a1); }
 
