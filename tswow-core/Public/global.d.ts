@@ -135,7 +135,7 @@ declare const enum SpellEffectHandleMode { } /** Spell.h:SpellEffectHandleMode *
 
 declare const enum SpellFinishReason { } /** Spell.h:SpellFinishReason */
 
-declare const enum TriggeredCastFlags { } /** SpellDefines.h:TriggeredCastFlags */
+declare const enum TriggerCastFlags { } /** SpellDefines.h:TriggerCastFlags */
 
 declare interface TSMutable<T> {
     constructor(field: T);
