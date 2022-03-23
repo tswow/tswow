@@ -263,6 +263,10 @@ export namespace wfs {
         }
     }
 
+    export function stat(file: FilePath) {
+        return fs.statSync(resfp(file))
+    }
+
     /**
      * Finds all files and/or folders in a directory.
      * @param dir The directory to scan

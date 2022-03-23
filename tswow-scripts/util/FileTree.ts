@@ -220,6 +220,10 @@ export class WNode {
         return wsys.inDirectory(this.path,()=>callback(this));
     }
 
+    concat(...strings: string[]) {
+        return new WNode(this.path.concat(...strings));
+    }
+
     join(...paths: (WNode|string)[]) {
         paths = paths.map(x=>typeof(x) === 'object' ? x.get() : x)
         paths.unshift(this.path);
@@ -342,7 +346,7 @@ export class WFile extends WNode {
         }
     }
 
-    readJson(def: any) {
+    readJson(def?: any) {
         if(!this.exists()) {
             return def;
         } else {
