@@ -31,6 +31,7 @@ class TSCollisions;
 class TSCollisionEntry;
 class TSEntity;
 class TSUnit;
+class TSItem;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
 
@@ -110,14 +111,14 @@ public:
     uint32 CastSpell(TSUnit target, uint32 spell, bool triggered);
     uint32 CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
     uint32 CastCustomSpell(
-        TSUnit target
+          TSUnit target
         , uint32 spell
-        , bool triggered = false
-        , int32 bp0 = 0
-        , int32 bp1 = 0
-        , int32 bp2 = 0
-        , TSItem castItem = TSItem()
-        , uint64 originalCaster = 0
+        , bool triggered
+        , int32 bp0
+        , int32 bp1
+        , int32 bp2
+        , TSItem castItem
+        , uint64 originalCaster
     );
 
     TSGameObject GetGameObject(uint64 guid);
