@@ -28,6 +28,7 @@
 #include "TSUnit.h"
 #include "TSWorldObject.h"
 #include "TSSpellInfo.h"
+#include "SpellMgr.h"
 
 TSSpell::TSSpell(Spell *spell)
 {
@@ -200,3 +201,19 @@ void TSSpell::Finish()
 {
     spell->finish();
 }
+
+uint32 TSSpell::GetTriggeredCastFlags()
+{
+    return static_cast<uint32>(spell->_triggeredCastFlags);
+}
+
+bool TSSpell::IsTriggered()
+{
+    return spell->IsTriggered();
+}
+
+bool TSSpell::IsTriggeredByAura(uint32 aura)
+{
+    return spell->IsTriggeredByAura(sSpellMgr->GetSpellInfo(aura));
+}
+

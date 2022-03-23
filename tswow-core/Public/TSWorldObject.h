@@ -30,6 +30,7 @@
 class TSCollisions;
 class TSCollisionEntry;
 class TSEntity;
+class TSUnit;
 
 #define CollisionCallback std::function<void(TSWorldObject,TSWorldObject,TSMutable<uint32_t>,TSCollisionEntry*)>
 
@@ -105,6 +106,19 @@ public:
     bool IsFriendlyToPlayers();
     bool IsHostileToPlayers();
     bool IsNeutralToAll();
+
+    uint32 CastSpell(TSUnit target, uint32 spell, bool triggered);
+    uint32 CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
+    uint32 CastCustomSpell(
+        TSUnit target
+        , uint32 spell
+        , bool triggered = false
+        , int32 bp0 = 0
+        , int32 bp1 = 0
+        , int32 bp2 = 0
+        , TSItem castItem = TSItem()
+        , uint64 originalCaster = 0
+    );
 
     TSGameObject GetGameObject(uint64 guid);
     TSCorpse GetCorpse(uint64 guid);
