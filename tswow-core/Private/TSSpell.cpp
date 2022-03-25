@@ -214,6 +214,11 @@ bool TSSpell::IsTriggered()
 
 bool TSSpell::IsTriggeredByAura(uint32 aura)
 {
+#if TRINITY
     return spell->IsTriggeredByAura(sSpellMgr->GetSpellInfo(aura));
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSSpell::IsTriggeredByAura not implemented for AzerothCore");
+    return false;
+#endif
 }
 
