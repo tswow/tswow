@@ -7,7 +7,7 @@
 
 void TSLuaState::load_outfit_methods(uint32_t modid)
 {
-    #if TRINITY
+#if TRINITY
     auto ts_outfit = new_usertype<TSOutfit>("TSOutfit");
     LUA_FIELD(ts_outfit, TSOutfit, SetClass);
     LUA_FIELD(ts_outfit, TSOutfit, GetClass);
@@ -48,7 +48,5 @@ void TSLuaState::load_outfit_methods(uint32_t modid)
         , &TSOutfit::LApplyCopy3
     ));
     set_function("CreateOutfit", &CreateOutfit);
-    #elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSOutfitLua::load_outfit_methods not implemented for AzerothCore");
-    #endif
+#endif
 }

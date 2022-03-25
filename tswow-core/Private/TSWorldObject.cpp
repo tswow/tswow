@@ -35,6 +35,7 @@
 #include "ObjectGuid.h"
 #include "TSCorpse.h"
 #include "TSEntity.h"
+#include "TSItem.h"
 
 TSWorldObject::TSWorldObject(WorldObject *objIn)
     : TSObject(objIn)
@@ -1108,5 +1109,140 @@ bool TSWorldObject::IsNeutralToAll()
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSWorldObject::IsNeutralToAll not implemented for AzerothCore");
     return false;
+#endif
+}
+
+/**
+ * Makes the [WorldObject] cast the spell on the target.
+ *
+ * @param [Unit] target = nil : can be self or another unit
+ * @param uint32 spell : entry of a spell
+ * @param bool triggered = false : if true the spell is instant and has no cost
+ */
+uint32 TSWorldObject::CastSpell(TSUnit _target, uint32 spell, bool triggered)
+{
+#if TRINITY
+    return obj->CastSpell(_target.unit, spell, triggered);
+#elif AZEROTHCORE
+    if (Unit * unit = obj->ToUnit())
+    {
+        return unit->CastSpell(_target.unit, spell, triggered);
+    }
+
+    if (GameObject* gobj = obj->ToGameObject())
+    {
+        if (triggered)
+        {
+            TS_LOG_ERROR("tswow.api", "TSWorldObject::CastSpell 'triggered' parameter not implemented for AzerothCore.");
+        }
+        gobj->CastSpell(_target.unit, spell);
+        return SPELL_FAILED_SUCCESS;
+    }
+#endif
+}
+
+/**
+ * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
+ *
+ * @param float x
+ * @param float y
+ * @param float z
+ * @param uint32 spell : entry of a spell
+ * @param bool triggered = false : if true the spell is instant and has no cost
+ */
+uint32 TSWorldObject::CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered)
+{
+#if AZEROTHCORE
+    if (Unit* unit = obj->ToUnit())
+    {
+        // SpellCastResult Unit::CastSpell(float x, float y, float z, uint32 spellId, bool triggered, Item* castItem, AuraEffect const* triggeredByAura, ObjectGuid originalCaster)
+        return unit->CastSpell(_x, _y, _z, spell, triggered);
+    }
+
+    if (GameObject* gobj = obj->ToGameObject())
+    {
+        TS_LOG_ERROR("tswow.api", "TSWorldObject::CastSpellAoF not implemented for AzerothCore");
+        return 0;
+    }
+#elif TRINITY
+    CastSpellExtraArgs args;
+    if (triggered)
+        args.TriggerFlags = TRIGGERED_FULL_MASK;
+    return obj->CastSpell(Position(_x, _y, _z), spell, args);
+#endif
+}
+
+/**
+ * Casts the [Spell] at target [Unit] with custom basepoints or casters.
+ * See also [Unit:CastSpell].
+ *
+ * @param [Unit] target = nil
+ * @param uint32 spell
+ * @param bool triggered = false
+ * @param int32 bp0 = nil : custom basepoints for [Spell] effect 1. If nil, no change is made
+ * @param int32 bp1 = nil : custom basepoints for [Spell] effect 2. If nil, no change is made
+ * @param int32 bp2 = nil : custom basepoints for [Spell] effect 3. If nil, no change is made
+ * @param [Item] castItem = nil
+ * @param uint64 originalCaster = 0
+ */
+uint32 TSWorldObject::CastCustomSpell(
+      TSUnit _target
+    , uint32 spell
+    , bool triggered = false
+    , int32 bp0 = 0
+    , int32 bp1 = 0
+    , int32 bp2 = 0
+    , TSItem _castItem = TSItem()
+    , uint64 originalCaster = 0
+) {
+    auto target = _target.unit;
+    auto castItem = _castItem.item;
+    bool has_bp0 = bp0 != 0;
+    bool has_bp1 = bp1 != 0;
+    bool has_bp2 = bp2 != 0;
+
+#ifdef TRINITY
+    CastSpellExtraArgs args;
+    if (has_bp0)
+        args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
+    if (has_bp1)
+        args.AddSpellMod(SPELLVALUE_BASE_POINT1, bp1);
+    if (has_bp2)
+        args.AddSpellMod(SPELLVALUE_BASE_POINT2, bp2);
+    if (triggered)
+        args.TriggerFlags = TRIGGERED_FULL_MASK;
+    if (castItem)
+        args.SetCastItem(castItem);
+    if (originalCaster)
+        args.SetOriginalCaster(ObjectGuid(originalCaster));
+    return obj->CastSpell(target, spell, args);
+#else
+    if (Unit* unit = obj->ToUnit())
+    {
+        CustomSpellValues args;
+        if (has_bp0)
+            args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp0);
+
+        if (has_bp1)
+            args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp1);
+
+        if (has_bp2)
+            args.AddSpellMod(SPELLVALUE_BASE_POINT0, bp2);
+        return unit->CastCustomSpell(
+              spell
+            , args
+            , target
+            , triggered
+                ? TriggerCastFlags::TRIGGERED_FULL_MASK
+                : TriggerCastFlags::TRIGGERED_NONE
+            , castItem
+        );
+    }
+
+    if (GameObject * gobj = obj->ToGameObject())
+    {
+        TS_LOG_ERROR("tswow.api", "TSWorldObject::CastCustomSpell not implemented for GameObjects with AzerothCore.");
+        return SPELL_FAILED_UNKNOWN;
+    }
 #endif
 }

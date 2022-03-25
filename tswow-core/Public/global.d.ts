@@ -135,6 +135,8 @@ declare const enum SpellEffectHandleMode { } /** Spell.h:SpellEffectHandleMode *
 
 declare const enum SpellFinishReason { } /** Spell.h:SpellFinishReason */
 
+declare const enum TriggerCastFlags { } /** SpellDefines.h:TriggerCastFlags */
+
 declare interface TSMutable<T> {
     constructor(field: T);
     get() : T;
@@ -4889,6 +4891,42 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
     IsHostileToPlayers(): bool
     IsNeutralToAll(): bool
 
+
+    /**
+     * Makes the [Unit] cast the spell on the target.
+     *
+     * @param [Unit] target = nil : can be self or another unit
+     * @param uint32 spell : entry of a spell
+     * @param bool triggered = false : if true the spell is instant and has no cost
+     */
+     CastSpell(target : TSUnit,spell : uint32,triggered : bool) : SpellCastResult
+
+     /**
+      * Casts the [Spell] at target [Unit] with custom basepoints or casters.
+      * See also [Unit:CastSpell].
+      *
+      * @param [Unit] target = nil
+      * @param uint32 spell
+      * @param bool triggered = false
+      * @param int32 bp0 = nil : custom basepoints for [Spell] effect 1. If nil, no change is made
+      * @param int32 bp1 = nil : custom basepoints for [Spell] effect 2. If nil, no change is made
+      * @param int32 bp2 = nil : custom basepoints for [Spell] effect 3. If nil, no change is made
+      * @param [Item] castItem = nil
+      * @param uint64 originalCaster = 0
+      */
+     CastCustomSpell(target : TSUnit,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
+
+     /**
+      * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
+      *
+      * @param float x
+      * @param float y
+      * @param float z
+      * @param uint32 spell : entry of a spell
+      * @param bool triggered = false : if true the spell is instant and has no cost
+      */
+    CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered : bool) : SpellCastResult
+
     /**
      * Returns the name of the [WorldObject]
      *
@@ -6639,40 +6677,6 @@ declare interface TSUnit extends TSWorldObject {
      */
     DeMorph() : void
 
-    /**
-     * Makes the [Unit] cast the spell on the target.
-     *
-     * @param [Unit] target = nil : can be self or another unit
-     * @param uint32 spell : entry of a spell
-     * @param bool triggered = false : if true the spell is instant and has no cost
-     */
-    CastSpell(target : TSUnit,spell : uint32,triggered : bool) : void
-
-    /**
-     * Casts the [Spell] at target [Unit] with custom basepoints or casters.
-     * See also [Unit:CastSpell].
-     *
-     * @param [Unit] target = nil
-     * @param uint32 spell
-     * @param bool triggered = false
-     * @param int32 bp0 = nil : custom basepoints for [Spell] effect 1. If nil, no change is made
-     * @param int32 bp1 = nil : custom basepoints for [Spell] effect 2. If nil, no change is made
-     * @param int32 bp2 = nil : custom basepoints for [Spell] effect 3. If nil, no change is made
-     * @param [Item] castItem = nil
-     * @param uint64 originalCaster = 0
-     */
-    CastCustomSpell(target : TSUnit,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : void
-
-    /**
-     * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
-     *
-     * @param float x
-     * @param float y
-     * @param float z
-     * @param uint32 spell : entry of a spell
-     * @param bool triggered = false : if true the spell is instant and has no cost
-     */
-    CastSpellAoF(_x : float,_y : float,_z : float,spell : uint32,triggered : bool) : void
 
     /**
      * Clears the [Unit]'s combat

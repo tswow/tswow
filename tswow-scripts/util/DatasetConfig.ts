@@ -125,4 +125,15 @@ export class DatasetConfig extends ConfigFile {
         ]
     })
     EmulatorCore: EmulatorCore = this.undefined()
+
+    @Property({
+          name: 'Package.Mapping'
+        , description: ''
+        , examples: [
+            [['A.MPQ:*'],'Maps all data into A.MPQ'],
+            [['A.MPQ:module-a,module-b','B.MPQ:*'],'Maps "module-a" and "module-b" into A.MPQ and everything else into B.MPQ'],
+            [['A.MPQ:luaxml,dbc','B.MPQ:*'],'Maps dbc/lua data into A.MPQ and all assets into B.MPQ']
+        ]
+    })
+    PackageMapping!: string[]
 }

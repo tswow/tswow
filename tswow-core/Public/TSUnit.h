@@ -167,18 +167,6 @@ public:
     void SendUnitSay(TSString msg, uint32 language);
     void SendUnitYell(TSString msg, uint32 language);
     void DeMorph();
-    void CastSpell(TSUnit target, uint32 spell, bool triggered);
-    void CastCustomSpell(
-          TSUnit target
-        , uint32 spell
-        , bool triggered = false
-        , int32 bp0 = 0
-        , int32 bp1 = 0
-        , int32 bp2 = 0
-        , TSItem castItem = TSItem()
-        , uint64 originalCaster = 0
-    );
-    void CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
     void ClearInCombat();
     void StopSpellCast(uint32 spellId);
     void InterruptSpell(int spellType, bool delayed);

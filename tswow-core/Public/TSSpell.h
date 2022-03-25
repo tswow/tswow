@@ -39,6 +39,9 @@ public:
     TSPosition GetTargetDest();
     TSObject  GetTarget();
     TSSpellInfo GetSpellInfo();
+    uint32 GetTriggeredCastFlags();
+    bool IsTriggered();
+    bool IsTriggeredByAura(uint32 aura);
     void SetAutoRepeat(bool repeat);
     void Cast(bool skipCheck);
     void Cancel();

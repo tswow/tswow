@@ -185,6 +185,42 @@ export class NodeConfigClass extends ConfigFile {
         }
     }
 
+    @Section("Launcher")
+
+    // todo: launcher stuff not implemented
+    /*
+    @Property({
+        name: 'Launcher.Enabled'
+      , description:'Whether launcher web services should be enabled from this node.'
+      , examples: [
+        [false,'Do not start launcher services'],
+        [true,'Starts the launcher http service on startup']
+      ]
+    })
+    LauncherEnabled!: boolean
+
+    @Property({
+        name: 'Launcher.Datasets'
+      , description: 'What datasets should be hosted by the launcher service'
+      , examples: [['["*"]','List all datasets']]
+    })
+    LauncherDatasets: string[] = this.undefined();
+
+    @Property({
+        name: 'Launcher.Port'
+      , description: 'What port the launcher http service should be hosted through'
+      , examples: [['3726','The port assumed by launchers if none is explicitly specified']]
+    })
+    LauncherPort!: number
+    */
+
+    @Property({
+        name: 'Launcher.PatchChunkSize'
+      , description: 'How large individual download patch chunks should be'
+      , examples: [[33554432,'32mb']]
+    })
+    LauncherPatchChunkSize!: number
+
     @Section("Misc")
 
     @Property({

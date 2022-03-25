@@ -145,7 +145,7 @@ void TSLuaState::handle_error(sol::protected_function_result const& res)
             what.replace(match.start, match.len, replacement);
         }
     }
-    TS_LOG_ERROR("tswow.lua", what.c_str());
+    TS_LOG_ERROR("tswow.lua", "%s", what.c_str());
 }
 
 void TSLuaState::execute_module(std::string const& mod)

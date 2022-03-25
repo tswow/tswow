@@ -19,6 +19,10 @@
   * Contains utility functions that don't fit anywhere else.
   */
 export namespace util {
+    export function isModuleOrParent(mod: string, parent: string) {
+        return mod === parent || mod.startsWith(parent+'.');
+    }
+
     export function intListArgument(prefix: string, args: string[]): number[] {
         let match = args.find((x)=>x.startsWith(prefix));
         if(!match) return [];

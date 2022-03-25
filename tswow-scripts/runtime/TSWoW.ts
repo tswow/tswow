@@ -27,6 +27,7 @@ import { CleanCommand } from "./CommandActions";
 import { Crashes } from "./Crashes";
 import { Datascripts } from "./Datascripts";
 import { Dataset } from "./Dataset";
+import { Launcher } from "./Launcher";
 import { Livescripts } from "./Livescripts";
 import { Lua } from "./Lua";
 import { MapData } from "./MapData";
@@ -91,6 +92,7 @@ export async function main() {
     await PositionsFile.initialize();
     await MiscCommands.initialize();
     await Lua.initialize();
+    await Launcher.initialize();
     await term.Initialize(
         ipaths.coredata.terminal_history_txt.get(),
         NodeConfig.TerminalHistory,
