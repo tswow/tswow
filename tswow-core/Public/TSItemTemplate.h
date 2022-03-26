@@ -165,7 +165,7 @@ public:
     void SetStatCount(uint32 value);
     ItemTemplate* _GetInfo();
     WorldPacket BuildCustomQueryData(uint8 loc);
-    void SaveItemTemplate();
+    void Save();
 private:
     std::string LGetName();
     std::string LGetDescription();

@@ -377,7 +377,7 @@ WorldPacket TSItemTemplate::BuildCustomQueryData(uint8 loc)
 #endif
 }
 
-void TSItemTemplate::SaveItemTemplate()
+void TSItemTemplate::Save()
 {
     std::ostringstream oss;
     oss << "REPLACE INTO custom_item_template VALUES(" << info->ItemId << "," << info->Class << "," << info->SubClass << "," << info->SoundOverrideSubclass

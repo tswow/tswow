@@ -4106,7 +4106,6 @@ declare class TSItem extends TSObject {
     //GetItemLink(locale : uint8) : string
 
     GetTemplate(): TSItemTemplate
-    GetTemplateCopy(): TSItemTemplate
 
     GetOwnerGUID() : uint64
 
@@ -6941,7 +6940,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
     SetDamageTypeB(value: uint32): void
     SetStatCount(value: uint32): void
 
-    SaveItemTemplate(): void
+    Save(): void
 }
 
 declare interface TSSpellInfo extends TSEntityProvider {
@@ -8779,9 +8778,8 @@ declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 
-declare function ReloadItemTemplate(): void;
-declare function ReloadSingleItemTemplate(itemID: string): void;
-declare function ReloadSingleItemTemplateObject(item: TSItemTemplate): void;
+declare function getExistingItemTemplate(itemID: uint32): TSItemTemplate;
+declare function CreateNewItemTemplate(entry:uint32, copyItemID: uint32): TSItemTemplate;
 declare function LoadCustomItems(): void;
 // end of Global.h
 

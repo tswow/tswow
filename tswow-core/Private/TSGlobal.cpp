@@ -26,26 +26,6 @@
 #include "Timer.h"
 #include "GameEventMgr.h"
 
-void ReloadItemTemplate()
-{
-#if TRINITY
-    sObjectMgr->LoadItemTemplates();
-    sObjectMgr->InitializeQueriesData(QUERY_DATA_ITEMS);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGlobal::ReloadItemTemplate not implemented for AzerothCore");
-#endif
-    
-}
-
-void ReloadSingleItemTemplate(TSString itemID)
-{
-#if TRINITY
-    sObjectMgr->LoadSingleItemTemplate(itemID);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGlobal::ReloadSingleItemTemplate not implemented for AzerothCore");
-#endif
-}
-
 void LoadCustomItems()
 {
 #if TRINITY
@@ -55,11 +35,32 @@ void LoadCustomItems()
 #endif
 }
 
-void ReloadSingleItemTemplateObject(TSItemTemplate item) {
+struct VirtualItemTemplate : ItemTemplate
+{
+    VirtualItemTemplate(ItemTemplate const* base) : ItemTemplate(*base)
+    {
+    }
+};
+
+TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
+{
 #if TRINITY
-    sObjectMgr->LoadSingleItemTemplateObject(item->_GetInfo());
+    TSItemTemplate v = new VirtualItemTemplate(sObjectMgr->GetItemTemplate(copyItemID));
+    v->SetEntry(entry);
+    return sObjectMgr->LoadSingleItemTemplateObject(v->_GetInfo());
 #elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGlobal::ReloadSingleItemTemplateObject not implemented for AzerothCore");
+    TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
+    return 0;
+#endif
+}
+
+TSItemTemplate getExistingItemTemplate(uint32 itemID)
+{
+#if TRINITY
+    return sObjectMgr->LoadSingleItemTemplateObject(const_cast<ItemTemplate*>(sObjectMgr->GetItemTemplate(itemID)));
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
+    return 0;
 #endif
 }
 

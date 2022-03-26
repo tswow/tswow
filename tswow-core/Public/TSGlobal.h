@@ -20,10 +20,10 @@
 #include "TSItem.h"
 #include "TSBase.h"
 #include "TSString.h"
-void TC_GAME_API ReloadItemTemplate();
-void TC_GAME_API ReloadSingleItemTemplate(TSString itemID);
-void TC_GAME_API ReloadSingleItemTemplateObject(TSItemTemplate itemID);
 void TC_GAME_API LoadCustomItems();
+TSItemTemplate TC_GAME_API CreateNewItemTemplate(uint32 entry,uint32 copyItemID = 38);
+TSItemTemplate TC_GAME_API getExistingItemTemplate(uint32 itemID);
+
 
 void TC_GAME_API SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items);
 void TC_GAME_API SendWorldMessage(TSString string);
