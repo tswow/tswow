@@ -39,6 +39,7 @@ void TSItemTemplate::SetClass(uint32 value) { info->Class = value; };
 uint32 TSItemTemplate::GetSubClass() { return info->SubClass; };
 void TSItemTemplate::SetSubClass(uint32 value) { info->SubClass = value; };
 int32  TSItemTemplate::GetSoundOverrideSubclass() { return info->SoundOverrideSubclass; };
+void  TSItemTemplate::SetSoundOverrideSubclass(int32 value) { info->SoundOverrideSubclass = value; };
 TSString TSItemTemplate::GetName() { return JSTR(info->Name1); };
 void TSItemTemplate::SetName(TSString name) { info->Name1 = name->_value; };
 uint32 TSItemTemplate::GetDisplayInfoID() { return info->DisplayInfoID; };
@@ -46,32 +47,51 @@ void TSItemTemplate::SetDisplayInfoID(uint32 value) { info->DisplayInfoID = valu
 uint32 TSItemTemplate::GetQuality() { return info->Quality; };
 void TSItemTemplate::SetQuality(uint32 value) { info->Quality = value; };
 uint32 TSItemTemplate::GetFlags() { return info->Flags; };
+void TSItemTemplate::SetFlags(uint32 value) { info->Flags = value; };
 uint32 TSItemTemplate::GetFlags2() { return info->Flags2; };
+void TSItemTemplate::SetFlags2(uint32 value) { info->Flags2 = value; };
 uint32 TSItemTemplate::GetBuyCount() { return info->BuyCount; };
+void TSItemTemplate::SetBuyCount(uint32 value) { info->BuyCount = value; };
 int32  TSItemTemplate::GetBuyPrice() { return info->BuyPrice; };
+void  TSItemTemplate::SetBuyPrice(int32 value) { info->BuyPrice = value; };
 uint32 TSItemTemplate::GetSellPrice() { return info->SellPrice; };
+void TSItemTemplate::SetSellPrice(uint32 value) { info->SellPrice = value; };
 uint32 TSItemTemplate::GetInventoryType() { return info->InventoryType; };
 void TSItemTemplate::SetInventoryType(uint32 value) { info->InventoryType = value; };
 uint32 TSItemTemplate::GetAllowableClass() { return info->AllowableClass; };
+uint32 TSItemTemplate::SetAllowableClass(uint32 value) { info->AllowableClass = value; };
 uint32 TSItemTemplate::GetAllowableRace() { return info->AllowableRace; };
+void TSItemTemplate::SetAllowableRace(uint32 value) { info->AllowableRace = value; };
 uint32 TSItemTemplate::GetItemLevel() { return info->ItemLevel; };
 void TSItemTemplate::SetItemLevel(uint32 value) { info->ItemLevel = value; };
 uint32 TSItemTemplate::GetRequiredLevel() { return info->RequiredLevel; };
 void TSItemTemplate::SetRequiredLevel(uint32 value) { info->RequiredLevel = value; };
 uint32 TSItemTemplate::GetRequiredSkill() { return info->RequiredSkill; };
+void TSItemTemplate::SetRequiredSkill(uint32 value) { info->RequiredSkill = value; };
 uint32 TSItemTemplate::GetRequiredSkillRank() { return info->RequiredSkillRank; };
+void TSItemTemplate::SetRequiredSkillRank(uint32 value) { info->RequiredSkillRank = value; };
 uint32 TSItemTemplate::GetRequiredSpell() { return info->RequiredSpell; };
+void TSItemTemplate::SetRequiredSpell(uint32 value) { info->RequiredSpell = value; };
 uint32 TSItemTemplate::GetRequiredHonorRank() { return info->RequiredHonorRank; };
+void TSItemTemplate::SetRequiredHonorRank(uint32 value) { info->RequiredHonorRank = value; };
 uint32 TSItemTemplate::GetRequiredCityRank() { return info->RequiredCityRank; };
+void TSItemTemplate::SetRequiredCityRank(uint32 value) { info->RequiredCityRank = value; };
 uint32 TSItemTemplate::GetRequiredReputationFaction() { return info->RequiredReputationFaction; };
+void TSItemTemplate::SetRequiredReputationFaction(uint32 value) { info->RequiredReputationFaction = value; };
 uint32 TSItemTemplate::GetRequiredReputationRank() { return info->RequiredReputationRank; };
+void TSItemTemplate::SetRequiredReputationRank(uint32 value) { info->RequiredReputationRank = value; };
 int32  TSItemTemplate::GetMaxCount() { return info->MaxCount; };
+void  TSItemTemplate::SetMaxCount(int32 value) { info->MaxCount = value; };
 int32  TSItemTemplate::GetStackable() { return info->Stackable; };
+void  TSItemTemplate::SetStackable(int32 value) { info->Stackable = value; };
 uint32 TSItemTemplate::GetContainerSlots() { return info->ContainerSlots; };
+void  TSItemTemplate::SetContainerSlots(uint32 value) { info->ContainerSlots = value; };
 uint32 TSItemTemplate::GetStatsCount() { return info->StatsCount; };
 void TSItemTemplate::SetStatsCount(uint32 value) { info->StatsCount = value; };
 uint32 TSItemTemplate::GetScalingStatDistribution() { return info->ScalingStatDistribution; };
+void TSItemTemplate::SetScalingStatDistribution(uint32 value) { info->ScalingStatDistribution = value; };
 uint32 TSItemTemplate::GetScalingStatValue() { return info->ScalingStatValue; };
+void TSItemTemplate::SetScalingStatValue(uint32 value) { info->ScalingStatValue = value; };
 uint32 TSItemTemplate::GetArmor() { return info->Armor; };
 void TSItemTemplate::SetArmor(int32 value) { info->Armor = value; };
 uint32 TSItemTemplate::GetHolyRes() { return info->HolyRes; };
@@ -89,44 +109,103 @@ void TSItemTemplate::SetArcaneRes(int32 value) {  info->ArcaneRes = value; };
 uint32 TSItemTemplate::GetDelay() { return info->Delay; };
 void TSItemTemplate::SetDelay(uint32 value) { info->Delay = value; };
 uint32 TSItemTemplate::GetAmmoType() { return info->AmmoType; };
+void TSItemTemplate::SetAmmoType(uint32 value) { info->AmmoType = value; };
 float  TSItemTemplate::GetRangedModRange() { return info->RangedModRange; };
+void TSItemTemplate::SetRangedModRange(float value) { info->RangedModRange = value; };
 uint32 TSItemTemplate::GetBonding() { return info->Bonding; };
+void TSItemTemplate::SetBonding(uint32 value) { info->Bonding = value; };
 TSString TSItemTemplate::GetDescription() { return JSTR(info->Description); };
 void TSItemTemplate::SetDescription(TSString desc) { info->Description = desc->_value; };
 uint32 TSItemTemplate::GetPageText() { return info->PageText; };
+void TSItemTemplate::SetPageText(uint32 value) { info->PageText = value; };
 uint32 TSItemTemplate::GetLanguageID() { return info->LanguageID; };
+void TSItemTemplate::SetLanguageID(uint32 value) { info->LanguageID = value; };
 uint32 TSItemTemplate::GetPageMaterial() { return info->PageMaterial; };
+void TSItemTemplate::SetPageMaterial(uint32 value) { info->PageMaterial = value; };
 uint32 TSItemTemplate::GetStartQuest() { return info->StartQuest; };
+void TSItemTemplate::SetStartQuest(uint32 value) { info->StartQuest = value; };
 uint32 TSItemTemplate::GetLockID() { return info->LockID; };
+void TSItemTemplate::SetLockID(uint32 value) { info->LockID = value; };
 int32  TSItemTemplate::GetMaterial() { return info->Material; };
-void  TSItemTemplate::SetMaterial(uint32 value) { info->Material = value; };
+void  TSItemTemplate::SetMaterial(int32 value) { info->Material = value; };
 uint32 TSItemTemplate::GetSheath() { return info->Sheath; };
 void TSItemTemplate::SetSheath(uint32 value) { info->Sheath = value; };
 int32  TSItemTemplate::GetRandomProperty() { return info->RandomProperty; };
+void  TSItemTemplate::SetRandomProperty(int32 value) { info->RandomProperty = value; };
 int32  TSItemTemplate::GetRandomSuffix() { return info->RandomSuffix; };
+void  TSItemTemplate::SetRandomSuffix(int32 value) { info->RandomSuffix = value; };
 uint32 TSItemTemplate::GetBlock() { return info->Block; };
-void TSItemTemplate::SetBlock(int32 value) { info->Block = value; };
+void TSItemTemplate::SetBlock(uint32 value) { info->Block = value; };
 uint32 TSItemTemplate::GetItemSet() { return info->ItemSet; };
+void TSItemTemplate::GetItemSet(uint32 value) { info->ItemSet = value; };
 uint32 TSItemTemplate::GetMaxDurability() { return info->MaxDurability; };
+void TSItemTemplate::GetMaxDurability(uint32 value) { info->MaxDurability = value; };
 uint32 TSItemTemplate::GetArea() { return info->Area; };
+void TSItemTemplate::GetArea(uint32 value) { info->Area = value; };
 uint32 TSItemTemplate::GetMap() { return info->Map; };
+void TSItemTemplate::GetMap(uint32 value) { info->Map = value; };
 uint32 TSItemTemplate::GetBagFamily() { return info->BagFamily; };
+void TSItemTemplate::GetBagFamily(uint32 value) { info->BagFamily = value; };
 uint32 TSItemTemplate::GetTotemCategory() { return info->TotemCategory; };
+void TSItemTemplate::GetTotemCategory(uint32 value) { info->TotemCategory = value; };
 uint32 TSItemTemplate::GetSocketBonus() { return info->socketBonus; };
+void TSItemTemplate::SetSocketBonus(uint32 value) { info->socketBonus = value; };
 uint32 TSItemTemplate::GetGemProperties() { return info->GemProperties; };
+void TSItemTemplate::SetGemProperties(uint32 value) { info->GemProperties = value; };
 uint32 TSItemTemplate::GetRequiredDisenchantSkill(){ return info->RequiredDisenchantSkill; };
+void TSItemTemplate::SetRequiredDisenchantSkill(uint32 value) { info->RequiredDisenchantSkill = value; };
 float  TSItemTemplate::GetArmorDamageModifier() { return info->ArmorDamageModifier; };
+void  TSItemTemplate::SetArmorDamageModifier(float value) { info->ArmorDamageModifier = value; };
 uint32 TSItemTemplate::GetDuration() { return info->Duration; };
 void TSItemTemplate::SetDuration(uint32 value) { info->Duration = value; };
 uint32 TSItemTemplate::GetItemLimitCategory() { return info->ItemLimitCategory; };
+void TSItemTemplate::SetItemLimitCategory(uint32 value) { info->ItemLimitCategory = value; };
 uint32 TSItemTemplate::GetHolidayID() { return info->HolidayId; };
+void TSItemTemplate::SetHolidayID(uint32 value) { info->HolidayId = value; };
 uint32 TSItemTemplate::GetScriptID() { return info->ScriptId; };
+void TSItemTemplate::SetScriptID(uint32 value) { info->ScriptId = value; };
 uint32 TSItemTemplate::GetDisenchantID() { return info->DisenchantID; };
+void TSItemTemplate::SetDisenchantID(uint32 value) { info->DisenchantID = value; };
 uint32 TSItemTemplate::GetFoodType() { return info->FoodType; };
+void TSItemTemplate::SetFoodType(uint32 value) { info->FoodType = value; };
 uint32 TSItemTemplate::GetMinMoneyLoot() { return info->MinMoneyLoot; };
+void TSItemTemplate::GetMinMoneyLoot(uint32 value) { info->MinMoneyLoot = value; };
 uint32 TSItemTemplate::GetMaxMoneyLoot() { return info->MaxMoneyLoot; };
+void TSItemTemplate::SetMaxMoneyLoot(uint32 value) { info->MaxMoneyLoot = value; };
 uint32 TSItemTemplate::GetFlagsCu() { return info->FlagsCu; };
+void TSItemTemplate::SetFlagsCu(uint32 value) { info->FlagsCu = value; };
+uint32 TSItemTemplate::GetStatType(uint32 index) { return info->ItemStat[index].ItemStatType; }
+void TSItemTemplate::SetStatType(uint32 index, uint32 value) { info->ItemStat[index].ItemStatType = value; }
+int32 TSItemTemplate::GetStatValue(uint32 index) { return info->ItemStat[index].ItemStatValue; }
+void TSItemTemplate::SetStatValue(uint32 index, int32 value) { info->ItemStat[index].ItemStatValue = value; }
+float TSItemTemplate::GetDamageMinA() { return info->Damage[0].DamageMin; }
+void TSItemTemplate::SetDamageMinA(float value) { info->Damage[0].DamageMin = value; }
+float TSItemTemplate::GetDamageMinB() { return info->Damage[1].DamageMin; }
+void TSItemTemplate::SetDamageMinB(float value) { info->Damage[1].DamageMin = value; }
+float TSItemTemplate::GetDamageMaxA() { return info->Damage[0].DamageMax; }
+void TSItemTemplate::SetDamageMaxA(float value) { info->Damage[0].DamageMax = value; }
+float TSItemTemplate::GetDamageMaxB() { return info->Damage[1].DamageMax; }
+void TSItemTemplate::SetDamageMaxB(float value) { info->Damage[1].DamageMax = value; }
+uint32 TSItemTemplate::GetDamageTypeA() { return info->Damage[0].DamageType; }
+void TSItemTemplate::SetDamageTypeA(uint32 value) { info->Damage[0].DamageType = value; }
+uint32 TSItemTemplate::GetDamageTypeB() { return info->Damage[1].DamageType; }
+void TSItemTemplate::SetDamageTypeB(uint32 value) { info->Damage[1].DamageType = value; }
+uint32 TSItemTemplate::GetSpellCategory(uint32 index) { return info->Spells[index].SpellCategory; }
+void TSItemTemplate::SetSpellCategory(uint32 index, uint32 value) { info->Spells[index].SpellCategory = value; }
+uint32 TSItemTemplate::GetSpellCategoryCooldown(uint32 index) { return info->Spells[index].SpellCategoryCooldown; }
+void TSItemTemplate::SetSpellCategoryCooldown(uint32 index, uint32 value) { info->Spells[index].SpellCategoryCooldown = value; }
+uint32 TSItemTemplate::GetSpellCharges(uint32 index) { return info->Spells[index].SpellCharges; }
+void TSItemTemplate::SetSpellCharges(uint32 index, uint32 value) { info->Spells[index].SpellCharges = value; }
+uint32 TSItemTemplate::GetSpellCooldown(uint32 index) { return info->Spells[index].SpellCooldown; }
+void TSItemTemplate::SetSpellCooldown(uint32 index, uint32 value) { info->Spells[index].SpellCooldown = value; }
+uint32 TSItemTemplate::GetSpellID(uint32 index) { return info->Spells[index].SpellId; }
+void TSItemTemplate::SetSpellID(uint32 index, uint32 value) { info->Spells[index].SpellId = value; }
+uint32 TSItemTemplate::GetSpellPPMRate(uint32 index) { return info->Spells[index].SpellPPMRate; }
+void TSItemTemplate::SetSpellPPMRate(uint32 index, uint32 value) { info->Spells[index].SpellPPMRate = value; }
+uint32 TSItemTemplate::GetSpellTrigger(uint32 index) { return info->Spells[index].SpellTrigger; }
+void TSItemTemplate::SetSpellTrigger(uint32 index, uint32 value) { info->Spells[index].SpellTrigger = value; }
 
+//extras
 bool TSItemTemplate::IsCurrencyToken() { return info->IsCurrencyToken(); }
 uint32 TSItemTemplate::GetMaxStackSize() {return info->GetMaxStackSize(); };
 float TSItemTemplate::GetDPS() { return info->getDPS(); };
@@ -153,76 +232,7 @@ bool TSItemTemplate::IsWeaponVellum() { return info->IsWeaponVellum(); };
 bool TSItemTemplate::IsArmorVellum() { return info->IsArmorVellum(); };
 bool TSItemTemplate::IsConjuredConsumable() { return info->IsConjuredConsumable(); };
 bool TSItemTemplate::HasSignature() { return info->HasSignature(); };
-
-uint32 TSItemTemplate::GetStatType(uint32 index)
-{
-    return info->ItemStat[index].ItemStatType;
-}
-
-int32 TSItemTemplate::GetStatValue(uint32 index)
-{
-    return info->ItemStat[index].ItemStatValue;
-}
-
-float TSItemTemplate::GetDamageMinA()
-{
-    return info->Damage[0].DamageMin;
-}
-
-void TSItemTemplate::SetDamageMinA(float value)
-{
-    info->Damage[0].DamageMin = value;
-}
-
-float TSItemTemplate::GetDamageMinB()
-{
-    return info->Damage[1].DamageMin;
-}
-
-void TSItemTemplate::SetDamageMinB(float value)
-{
-    info->Damage[1].DamageMin = value;
-}
-
-float TSItemTemplate::GetDamageMaxA()
-{
-    return info->Damage[0].DamageMax;
-}
-
-void TSItemTemplate::SetDamageMaxA(float value)
-{
-    info->Damage[0].DamageMax = value;
-}
-
-float TSItemTemplate::GetDamageMaxB()
-{
-    return info->Damage[1].DamageMax;
-}
-
-void TSItemTemplate::SetDamageMaxB(float value)
-{
-    info->Damage[1].DamageMax = value;
-}
-
-uint32 TSItemTemplate::GetDamageTypeA()
-{
-    return info->Damage[0].DamageType;
-}
-
-void TSItemTemplate::SetDamageTypeA(uint32 value)
-{
-    info->Damage[0].DamageType = value;
-}
-
-uint32 TSItemTemplate::GetDamageTypeB()
-{
-    return info->Damage[1].DamageType;
-}
-
-void TSItemTemplate::SetDamageTypeB(uint32 value)
-{
-    info->Damage[1].DamageType = value;
-}
+//
 
 TSEntity * TSItemTemplate::GetData()
 {
@@ -232,22 +242,6 @@ TSEntity * TSItemTemplate::GetData()
 TSItemTemplate GetItemTemplate(uint32 entry)
 {
     return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
-}
-
-void TSItemTemplate::SetStatCount(uint32 value)
-{
-    info->StatsCount = value;
-}
-
-
-void TSItemTemplate::SetStatType(uint32 index, uint32 value)
-{
-    info->ItemStat[index].ItemStatType = value;
-}
-
-void TSItemTemplate::SetStatValue(uint32 index, int32 value)
-{
-    info->ItemStat[index].ItemStatValue = value;
 }
 
 ItemTemplate* TSItemTemplate::_GetInfo()
@@ -418,6 +412,8 @@ void TSItemTemplate::Save()
     #endif
 
 }
+
+//Lua functions
 std::string TSItemTemplate::LGetName()
 {
     return GetName().std_str();
