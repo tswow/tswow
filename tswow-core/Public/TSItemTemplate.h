@@ -59,7 +59,7 @@ public:
     uint32 GetInventoryType();
     void SetInventoryType(uint32 value);
     uint32 GetAllowableClass();
-    uint32 SetAllowableClass(uint32 value);
+    void SetAllowableClass(uint32 value);
     uint32 GetAllowableRace();
     void SetAllowableRace(uint32 value);
     uint32 GetItemLevel();

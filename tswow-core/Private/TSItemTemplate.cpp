@@ -59,7 +59,7 @@ void TSItemTemplate::SetSellPrice(uint32 value) { info->SellPrice = value; };
 uint32 TSItemTemplate::GetInventoryType() { return info->InventoryType; };
 void TSItemTemplate::SetInventoryType(uint32 value) { info->InventoryType = value; };
 uint32 TSItemTemplate::GetAllowableClass() { return info->AllowableClass; };
-uint32 TSItemTemplate::SetAllowableClass(uint32 value) { info->AllowableClass = value; };
+void TSItemTemplate::SetAllowableClass(uint32 value) { info->AllowableClass = value; };
 uint32 TSItemTemplate::GetAllowableRace() { return info->AllowableRace; };
 void TSItemTemplate::SetAllowableRace(uint32 value) { info->AllowableRace = value; };
 uint32 TSItemTemplate::GetItemLevel() { return info->ItemLevel; };
