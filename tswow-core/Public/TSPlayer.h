@@ -149,8 +149,10 @@ public:
 	TSCorpse GetCorpse();
 	int GetDbLocaleIndex();
 	uint32 GetDbcLocale();
-	void ApplyItemMods(uint32 itemID);
-	void ApplyCustomItemMods(TSItemTemplate newItem);
+	void RemoveAllItemMods();
+	void RemoveItemMods(TSItem item, uint8 slot);
+	void ApplyAllItemMods();
+	void ApplyItemMods(TSItem item, uint8 slot, bool apply, bool updateAuras);
 	void UpdateCache();
 	void SetPlayerLock(bool apply);
 	void SetAtLoginFlag(uint32 flag);

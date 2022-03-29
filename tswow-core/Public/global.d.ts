@@ -1083,18 +1083,32 @@ declare interface TSPlayer extends TSUnit {
     GetDbcLocale(): uint32
 
     /**
-     * refresh item's stats on player
+     * remove all item's stats on player
      *
-     * @param uint32 itemID
+     * 
      */
-    ApplyItemMods(itemID: uint32): void
+    RemoveAllItemMods(): void
 
     /**
-     * refresh item's stats from custom template stats
+     * remove single item's stats on player
      *
-     * @param TSItemTemplate newStats
+     * 
      */
-    ApplyCustomItemMods(newItem: TSItemTemplate): void
+    RemoveItemMods(item: TSItem, slot: uint8): void
+
+    /**
+     * apply all item's stats on player
+     *
+     * 
+     */
+    ApplyAllItemMods(): void
+
+    /**
+     * apply single item's stats on player
+     *
+     * 
+     */
+    ApplyItemMods(item: TSItem, slot: uint8, apply: bool, updateAuras:bool): void
 
     /**
      * Applies all custom item cache to player

@@ -1472,26 +1472,58 @@ uint32 TSPlayer::GetDbcLocale()
     return ChatHandler(player->GetSession()).GetNearbyGameObject();
 }*/
 
-void TSPlayer::ApplyItemMods(uint32 itemID)
+void TSPlayer::RemoveAllItemMods()
 {
 #if TRINITY
    player->_RemoveAllItemMods();
-   sObjectMgr->LoadSingleItemTemplate(std::to_string(itemID));
-   player->_ApplyAllItemMods();
 #elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyItemMods not implemented for AzerothCore");
+    TS_LOG_ERROR("tswow.api", "TSPlayer::RemoveAllItemMods not implemented for AzerothCore");
 #endif
 }
 
-void TSPlayer::ApplyCustomItemMods(TSItemTemplate newItem)
+void TSPlayer::RemoveItemMods(TSItem item, uint8 slot)
 {
 #if TRINITY
-    player->_RemoveAllItemMods();
-    sObjectMgr->LoadSingleItemTemplateObject(newItem->_GetInfo());
+    if (item)
+    {
+        TSItemTemplate proto = item->GetTemplate();
+        if (!proto)
+            return;
+        if (proto->_GetInfo()->ItemSet)
+            RemoveItemsSetItem(player, proto->_GetInfo());
+
+        if (item->IsBroken() || !player->CanUseAttackType(player->GetAttackBySlot(slot)))
+            return;
+
+        player->ApplyItemEquipSpell(item.item, false);
+        player->ApplyEnchantment(item.item, false);
+        player->ApplyItemDependentAuras(item.item, false);
+        player->_ApplyItemBonuses(proto->_GetInfo(), slot, false);
+    
+        if (slot == EQUIPMENT_SLOT_RANGED)
+            player->_ApplyAmmoBonuses();
+    }
+#elif AZEROTHCORE
+TS_LOG_ERROR("tswow.api", "TSPlayer::RemoveItemMods not implemented for AzerothCore");
+#endif 
+}
+
+void TSPlayer::ApplyAllItemMods()
+{
+#if TRINITY
     player->_ApplyAllItemMods();
 #elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyCustomItemMods not implemented for AzerothCore");
+    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyAllItemMods not implemented for AzerothCore");
 #endif    
+}
+
+void TSPlayer::ApplyItemMods(TSItem item, uint8 slot, bool apply, bool updateAuras)
+{
+#if TRINITY
+    player->_ApplyItemMods(item.item, slot, apply, updateAuras);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::ApplyItemMods not implemented for AzerothCore");
+#endif  
 }
 
 void TSPlayer::UpdateCache()
