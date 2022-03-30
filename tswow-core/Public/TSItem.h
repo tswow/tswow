@@ -47,7 +47,7 @@ public:
     bool IsWeaponVellum();
     bool IsArmorVellum();
     bool IsConjuredConsumable();
-    ItemTemplate* GenerateVirtualTemplate(ItemTemplate const* base);
+    TSItemTemplate GetTemplate();
     TSString GetItemLink(uint8 locale);
     uint64 GetOwnerGUID();
     TSPlayer  GetOwner();
