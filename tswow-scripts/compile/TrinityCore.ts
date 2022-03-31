@@ -53,7 +53,7 @@ export namespace TrinityCore {
 
         if(!globalOnly) {
             bpaths.TrinityCore.sol_headers.copy(ipaths.bin.include);
-            spaths.misc.client_extensions.lua_51.iterateDef(node=>{
+            spaths.misc.client_extensions.lua_51.src.iterateDef(node=>{
                 if(node.endsWith('.h')) {
                     node.copy(ipaths.bin.include.lua.join(node.basename()));
                 }
