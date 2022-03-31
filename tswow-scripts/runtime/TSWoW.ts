@@ -81,8 +81,9 @@ export async function main() {
     await Dataset.initialize()
     await Client.initialize();
     await Module.initialize();
+    await AuthServer.initializeDatabase()
     await Realm.initialize()
-    await AuthServer.initialize()
+    await AuthServer.initializeServer()
     await Datascripts.initialize();
     await Livescripts.initialize();
     await Addon.initialize();

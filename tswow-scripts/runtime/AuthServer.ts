@@ -63,14 +63,18 @@ export namespace AuthServer {
 
     export const command = commands.addCommand('authserver');
 
-    export async function initialize() {
+    export async function initializeDatabase() {
         if(NodeConfig.AutoStartAuthServer) {
             connection = new Connection(NodeConfig.DatabaseSettings('auth'),'auth');
             await connection.connect();
             await mysql.installAuth(connection);
+        }
+    }
+
+    export async function initializeServer() {
+        if(NodeConfig.AutoStartAuthServer) {
             await start(NodeConfig.DefaultBuildType);
         }
-
         StopCommand.addCommand(
              'authserver'
             , ''
