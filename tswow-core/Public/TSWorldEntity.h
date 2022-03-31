@@ -99,6 +99,9 @@ template <typename T>
 class TSTimer;
 
 template <typename T>
+class TSTimers;
+
+template <typename T>
 using TimerCallback = std::function<void(T,TSTimer<T>*)>;
 
 template <typename T>
@@ -110,6 +113,7 @@ class TC_GAME_API TSTimer {
     uint64_t m_lastTick;
     uint64_t m_diff; // temp for callback
     bool     m_stopped = false;
+    bool     m_deleted = false; // used internally
     uint32 m_flags;
     TimerCallback<T> m_callback = nullptr;
     sol::protected_function m_lua_callback;
@@ -228,11 +232,13 @@ public:
 private:
     std::string LGetName() { return GetName().std_str(); }
     friend class TSLuaState;
+    friend class TSTimers<T>;
 };
 
 template <typename T>
 class TSTimers {
     std::vector<TSTimer<T>> m_timers;
+    bool m_ticking = false;
 public:
 
     void add(uint32_t modid, uint32_t time, int32_t repeats, uint32_t flags, TimerCallback<T> callback)
@@ -246,8 +252,15 @@ public:
         {
             if (m_timers[i].GetName() == name)
             {
-                m_timers[i] = TSTimer<T>(modid, name, time, repeats, flags, callback);
-                return;
+                if (m_ticking)
+                {
+                    m_timers[i].m_deleted = true;
+                }
+                else
+                {
+                    m_timers[i] = TSTimer<T>(modid, name, time, repeats, flags, callback);
+                    return;
+                }
             }
         }
         m_timers.push_back(TSTimer<T>(modid, name, time, repeats, flags, callback));
@@ -265,8 +278,15 @@ public:
         {
             if (m_timers[i].GetName() == nname)
             {
-                m_timers[i] = TSTimer<T>(mod, name, time, repeats, flags, callback);
-                return;
+                if (m_ticking)
+                {
+                    m_timers[i].m_deleted = true;
+                }
+                else
+                {
+                    m_timers[i] = TSTimer<T>(mod, name, time, repeats, flags, callback);
+                    return;
+                }
             }
         }
         m_timers.push_back(TSTimer<T>(mod, name, time, repeats, flags, callback));
@@ -278,7 +298,15 @@ public:
         {
             if (itr->GetFlags() & uint32(TimerFlags::CLEARS_ON_DEATH))
             {
-                m_timers.erase(itr);
+                if (m_ticking)
+                {
+                    itr->m_deleted = true;
+                    itr++;
+                }
+                else
+                {
+                    m_timers.erase(itr);
+                }
             }
             else
             {
@@ -293,7 +321,15 @@ public:
         {
             if (itr->GetFlags() & uint32(TimerFlags::CLEARS_ON_MAP_CHANGED))
             {
-                m_timers.erase(itr);
+                if (m_ticking)
+                {
+                    itr->m_deleted = true;
+                    itr++;
+                }
+                else
+                {
+                    m_timers.erase(itr);
+                }
             }
             else
             {
@@ -308,14 +344,22 @@ public:
         {
             if (iter->GetName() == name)
             {
-                m_timers.erase(iter);
-                return;
+                if (m_ticking)
+                {
+                    iter->m_deleted = true;
+                }
+                else
+                {
+                    m_timers.erase(iter);
+                    return;
+                }
             }
         }
     }
 
     void tick(T context)
     {
+        m_ticking = true;
         auto it = m_timers.begin();
         while (it != m_timers.end())
         {
@@ -328,11 +372,35 @@ public:
                 ++it;
             }
         }
+
+        for (it = m_timers.begin(); it != m_timers.end();)
+        {
+            if (it->m_deleted)
+            {
+                it = m_timers.erase(it);
+            }
+            else
+            {
+                it++;
+            }
+        }
+
+        m_ticking = false;
     }
 
     void clear()
     {
-        m_timers.clear();
+        if (m_ticking)
+        {
+            for (TSTimer<T>& timer : m_timers)
+            {
+                timer.m_deleted = true;
+            }
+        }
+        else
+        {
+            m_timers.clear();
+        }
     }
 };
 
