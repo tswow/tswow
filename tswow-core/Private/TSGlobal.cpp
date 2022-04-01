@@ -35,19 +35,10 @@ void LoadCustomItems()
 #endif
 }
 
-struct VirtualItemTemplate : ItemTemplate
-{
-    VirtualItemTemplate(ItemTemplate const* base) : ItemTemplate(*base)
-    {
-    }
-};
-
 TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
 {
 #if TRINITY
-    TSItemTemplate v = new VirtualItemTemplate(sObjectMgr->GetItemTemplate(copyItemID));
-    v->SetEntry(entry);
-    return sObjectMgr->LoadSingleItemTemplateObject(v->_GetInfo());
+    return sObjectMgr->LoadSingleItemTemplateObject(entry,copyItemID);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
     return 0;
@@ -57,7 +48,7 @@ TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
 TSItemTemplate getExistingItemTemplate(uint32 itemID)
 {
 #if TRINITY
-    return sObjectMgr->LoadSingleItemTemplateObject(const_cast<ItemTemplate*>(sObjectMgr->GetItemTemplate(itemID)));
+    return sObjectMgr->LoadSingleItemTemplateObject(itemID);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
     return 0;
