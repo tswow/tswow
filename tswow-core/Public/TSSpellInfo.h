@@ -127,6 +127,7 @@ public:
     uint32 GetTargetAuraStateNot();
     uint32 GetTargetCreatureType();
     uint32 GetTargets();
+    uint32 GetTotem(uint32 index);
     TSSpellEffectInfo GetEffect(uint32 index);
     TSEntity * GetData();
 };

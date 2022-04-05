@@ -6956,6 +6956,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetTargetCreatureType() : uint32
 	GetTargets() : uint32;
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
+    GetTotem(index: uint32): uint32;
 }
 
 declare class TSSpellEffectInfo {

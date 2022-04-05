@@ -483,3 +483,9 @@ int32 TSSpellEffectInfo::CalcValue(TSWorldObject caster)
     }
 #endif
 }
+
+uint32 TSSpellInfo::GetTotem(uint32 index)
+{
+    return info->Totem[index];
+}
+
