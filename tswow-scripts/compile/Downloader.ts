@@ -5,7 +5,6 @@ import { term } from '../util/Terminal';
 
 export async function DownloadFile(url: string, file: FilePath) {
     if(wfs.exists(file)) {
-        term.log('build', `Already downloaded ${url}, skipping`)
         return;
     }
 
