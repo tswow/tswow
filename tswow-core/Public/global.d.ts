@@ -4668,8 +4668,12 @@ declare interface TSGameObject extends TSWorldObject {
      * Despawns a [GameObject]
      *
      * The gameobject may be automatically respawned by the core
+     *
+     * @param forced = false: Whether to directly call the despawn function.
+     * @param delayMs = 0: How long (in milliseconds) to wait before despawning. Ignored if forced = false.
+     * @param respawnSecs = 0: How long (in seconds) to stay despawned. Ignored if forced = false.
      */
-    Despawn() : void
+    Despawn(forced?: boolean, delayMs?: uint32, respawnSecs?: uint32) : void
 
     /**
      * Respawns a [GameObject]

@@ -45,7 +45,7 @@ public:
     void SaveToDB();
     void RemoveFromWorld(bool deldb);
     void UseDoorOrButton(uint32 delay);
-    void Despawn();
+    void Despawn(bool forced = false, uint32 delayMs = 0, uint32 respawnSec = 0);
     void Respawn();
     void SetRespawnTime(int32 respawn);
     TSLoot GetLoot();

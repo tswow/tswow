@@ -307,9 +307,16 @@ void TSGameObject::UseDoorOrButton(uint32 delay)
  *
  * The gameobject may be automatically respawned by the core
  */
-void TSGameObject::Despawn()
+void TSGameObject::Despawn(bool forced, uint32 delayMs, uint32 respawnSec)
 {
-    go->SetLootState(GO_JUST_DEACTIVATED);
+    if (forced)
+    {
+        go->DespawnOrUnsummon(std::chrono::milliseconds(delayMs), std::chrono::seconds(respawnSec));
+    }
+    else
+    {
+        go->SetLootState(GO_JUST_DEACTIVATED);
+    }
 }
 
 /**
