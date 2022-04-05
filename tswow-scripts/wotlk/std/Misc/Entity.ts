@@ -53,6 +53,10 @@ export class MainEntity<T extends IDeletable> extends CellSystemTop {
         this.row.undelete();
         return this;
     }
+
+    transform<T>(fn: (self: this) => T) {
+        return fn(this);
+    }
 }
 
 export abstract class MainEntityID<T extends IDeletable> extends MainEntity<T> {
