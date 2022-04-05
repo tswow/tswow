@@ -7376,6 +7376,7 @@ declare namespace _hidden {
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
+            , effectMask: uint32
         )=>void)
         OnDamageLate(spell: EventID, callback : (
             spell: TSSpell
@@ -7383,6 +7384,7 @@ declare namespace _hidden {
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
+          , effectMask: uint32
         )=>void)
         OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
         /** critChance should be between 0 and 1 */

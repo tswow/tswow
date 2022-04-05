@@ -431,8 +431,8 @@ EVENT_TYPE(SpellOnTick,TSAuraEffect)
 EVENT_TYPE(SpellOnRemove,TSAuraEffect,TSAuraApplication, uint32)
 EVENT_TYPE(SpellOnApply,TSAuraEffect,TSAuraApplication, uint32)
 
-EVENT_TYPE(SpellOnDamageEarly, TSSpell, TSMutable<int32>, TSSpellDamageInfo, uint32, bool)
-EVENT_TYPE(SpellOnDamageLate, TSSpell, TSMutable<uint32>, TSSpellDamageInfo, uint32, bool)
+EVENT_TYPE(SpellOnDamageEarly, TSSpell, TSMutable<int32>, TSSpellDamageInfo, uint32, bool, uint32 /*effectMask*/)
+EVENT_TYPE(SpellOnDamageLate, TSSpell, TSMutable<uint32>, TSSpellDamageInfo, uint32, bool, uint32 /*effectMask*/)
 EVENT_TYPE(SpellOnPeriodicDamage, TSAuraEffect, TSMutable<uint32>)
 EVENT_TYPE(SpellOnCalcSpellPowerLevelPenalty
     , TSSpellInfo /*spell*/
