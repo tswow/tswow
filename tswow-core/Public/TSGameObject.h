@@ -21,6 +21,8 @@
 #include "TSClasses.h"
 #include "TSWorldObject.h"
 
+class TSGameObjectTemplate;
+
 class TC_GAME_API TSGameObject : public TSWorldObject {
 public:
     GameObject *go;
@@ -49,4 +51,5 @@ public:
     TSLoot GetLoot();
     void FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var1, bool bvar, TSSpellInfo spell, TSGameObject gobj);
     bool IsAIEnabled();
+    TSGameObjectTemplate GetTemplate();
 };

@@ -25,6 +25,8 @@ public:
     TSString GetIconName();
     TSString GetCastBarCaption();
 
+    uint32 GetGOData(uint32 index);
+
     TSEntity * GetData();
 private:
     std::string LGetName();

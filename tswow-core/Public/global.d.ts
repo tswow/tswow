@@ -2261,6 +2261,7 @@ declare interface TSGameObjectTemplate extends TSEntityProvider {
     GetName(): string;
     GetIconName(): string;
     GetCastBarCaption(): string;
+    GetGOData(index: uint32): uint32;
 }
 
 declare interface TSCreatureTemplate extends TSEntityProvider {
@@ -4511,6 +4512,11 @@ declare interface TSGameObject extends TSWorldObject {
     IsNull() : bool
 
     GetLoot(): TSLoot;
+
+    /**
+     * Returns the [GameObjectTemplate] data for this gameobject.
+     */
+    GetTemplate(): TSGameObjectTemplate;
 
     FireSmartEvent(id: uint32, unit: TSUnit, var0: uint32, var1: uint32, bvar: bool, spell: TSSpellInfo, obj: TSGameObject);
 
