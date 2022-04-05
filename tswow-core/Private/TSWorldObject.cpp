@@ -1110,7 +1110,7 @@ uint32 TSWorldObject::CastSpell(TSWorldObject _target, uint32 spell, bool trigge
     if (!_target.IsNull() && !_target.IsUnit())
     {
         TS_LOG_ERROR("tswow.api", "TSWorldObject::CastSpell not implemented for GameObject targets on AzerothCore.");
-        return;
+        return SPELL_FAILED_UNKNOWN;
     }
     Unit* target = _target.obj->ToUnit();
 
