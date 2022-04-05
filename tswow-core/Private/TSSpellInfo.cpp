@@ -469,5 +469,17 @@ bool TSSpellEffectInfo::IsAura()
 
 int32 TSSpellEffectInfo::CalcValue(TSWorldObject caster)
 {
+#if TRINITY
     return m_info->CalcValue(caster.obj);
+#elif AZEROTHCORE
+    if (Unit* unit = caster.obj->ToUnit())
+    {
+        return m_info->CalcValue(unit);
+    }
+    else
+    {
+        TS_LOG_ERROR("tswow.api", "TSSpellEffectInfo::CalcValue not implemented for GameObjects on AzerothCore.");
+        return 0;
+    }
+#endif
 }
