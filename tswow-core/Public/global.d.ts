@@ -2239,9 +2239,9 @@ declare interface TSWorldEntityProvider<T> {
     AddTimer(delay: uint32, callback: (owner: T, timer: TSTimer)=>void);
 
     RemoveTimer(name: string);
-    GetGroup(name: string);
-    RemoveGroup(name: string);
-    ClearGroups(name: string);
+    GetEntityGroup(name: string): TSObjectGroup;
+    RemoveEntityGroup(name: string);
+    ClearEntityGroups(name: string);
     QueueMessage(channel: uint8, json: TSJsonObject, callback: JsonMessageCallback<T>)
 }
 
