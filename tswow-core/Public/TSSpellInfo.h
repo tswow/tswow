@@ -29,6 +29,7 @@ public:
     bool operator==(TSSpellEffectInfo const& rhs) { return m_info == rhs.m_info; }
     bool IsNull() { return m_info == nullptr; }
 
+    int32 CalcValue(TSWorldObject caster);
     uint32 GetEffectIndex();
     uint32 GetType();
     uint32 GetAura();

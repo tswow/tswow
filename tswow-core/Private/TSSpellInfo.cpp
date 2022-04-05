@@ -466,3 +466,8 @@ bool TSSpellEffectInfo::IsAura()
 {
     return m_info->IsAura();
 }
+
+int32 TSSpellEffectInfo::CalcValue(TSWorldObject caster)
+{
+    return m_info->CalcValue(caster.obj);
+}

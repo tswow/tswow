@@ -6968,6 +6968,7 @@ declare class TSSpellEffectInfo {
     GetTriggerSpell(): uint32;
     IsEffect(): bool;
     IsAura(): bool;
+    CalcValue(caster: TSWorldObject);
 }
 
 declare interface TSSpellCastTargets {
