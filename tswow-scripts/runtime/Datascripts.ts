@@ -217,12 +217,15 @@ export class Datascripts {
         return new Datascripts(mod).initialize();
     }
 
-    static initialize() {
+    static installWowLib() {
         if(!ipaths.node_modules.wow.exists()) {
             term.log('datascripts','Linking wow data libraries...');
             wsys.exec(`npm i -S ${ipaths.bin.scripts.wow.get()}`)
         }
+    }
 
+    static initialize() {
+        this.installWowLib();
         if(!ipaths.node_modules.wow.exists()) {
             wsys.exec(`npm i`);
         }
@@ -288,7 +291,10 @@ export class Datascripts {
           dataset: Dataset
         , args: string[] = []
     ) {
-        // 1. Parse exclusion arguments
+        // 1. Install core libraries
+        this.installWowLib();
+
+        // 2. Parse exclusion arguments
         const isInlineOnly = args.includes('--inline-only');
         const isReadonlyArg = args.includes('--readonly')
         const isReadOnly = isInlineOnly || isReadonlyArg
@@ -316,7 +322,7 @@ export class Datascripts {
         const restartsServer = shutdownsServer && !noRestartServerArg
         const restartsClient = shutdownsClient && !noRestartsClientArg
 
-        // 2. Detect invalid arguments
+        // 3. Detect invalid arguments
         if(isRebuild && !shutdownsServer) {
             throw new Error(
                   `Incompatible arguments:`
@@ -327,13 +333,13 @@ export class Datascripts {
             );
         }
 
-        // 3. Shutdown clients and servers
+        // 4. Shutdown clients and servers
         let runningClients = shutdownsClient ? [dataset.client] : []
         let runningWorldservers = shutdownsServer ? dataset.realms() : []
         await Promise.all(runningWorldservers.map(x=>x.worldserver.stop()))
         await Promise.all(runningClients.map(x=>x.kill()));
 
-        // 4. Prepare dataset
+        // 5. Prepare dataset
         await dataset.setupClientData();
         if(args.includes('--rebuild')) {
             await dataset.setupDatabases('SOURCE',false);
@@ -351,7 +357,7 @@ export class Datascripts {
             }
         });
 
-        // 5. Run datascripts
+        // 6. Run datascripts
         term.log('datascripts',
             `Building datascripts`
             + ` {`
@@ -379,7 +385,7 @@ export class Datascripts {
             return
         }
 
-        // 6. Present profiling
+        // 7. Present profiling
         if(args.includes('--prof')) {
             wfs.readDir('./',true,'files')
             .filter(x=>x.startsWith('isolate-')
@@ -393,7 +399,7 @@ export class Datascripts {
             })
         }
 
-        // 7. Restore servers/clients
+        // 8. Restore servers/clients
 
         if(restartsClient) {
             await Promise.all(runningClients.map(x=>x.startup(NodeConfig.AutoStartClient)))
