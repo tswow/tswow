@@ -22,7 +22,7 @@ import { ChrClassesRow } from "../../dbc/ChrClasses";
 import { DBC } from "../../DBCFiles";
 import { LUAXML } from "../../luaxml/LUAXML";
 import { findGaps } from "../GapDetection/GapDetection";
-import { MainEntity } from "../Misc/Entity";
+import { MainEntityID } from "../Misc/Entity";
 import { ClassRaces } from "./ClassRaceData/ClassRaces";
 import { ClassRoles } from "./ClassRoles";
 import { ClassStartInventory } from "./ClassStartInventory";
@@ -32,7 +32,7 @@ import { ClassUISettings } from "./ClassUISettings";
 
 export type LevelStats = { str: number, agi: number, sta: number, inte: number, spi: number};
 
-export class Class extends MainEntity<ChrClassesRow> {
+export class Class extends MainEntityID<ChrClassesRow> {
     readonly UI : ClassUISettings;
     readonly BaseClass: number;
 
