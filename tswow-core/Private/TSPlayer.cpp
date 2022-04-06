@@ -4370,3 +4370,8 @@ void TSPlayer::LGossipSendMenu1(uint32 npc_text, TSObject sender)
 {
     GossipSendMenu(npc_text, sender);
 }
+
+uint32 TSPlayer::GetFreeInventorySpace()
+{
+    return player->GetFreeInventorySpace();
+}
