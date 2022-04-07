@@ -71,6 +71,9 @@ export class CreatureTemplateRegistryClass
             .Gold.set(0)
             .HealthExpansion.set(0)
             .HoverHeight.set(0)
+            .NormalLoot.set(0)
+            .SkinningLoot.set(0)
+            .PickpocketLoot.set(0)
     }
     protected Clone(mod: string, id: string, child: CreatureTemplate, parent: CreatureTemplate): void {
         if(parent.AddonRow.exists()) {
