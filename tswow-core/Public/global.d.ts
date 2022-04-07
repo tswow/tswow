@@ -8293,6 +8293,8 @@ declare namespace _hidden {
         OnRemove(obj: EventID, callback: (obj: TSGameObject)=>void)
         OnUse(obj: EventID, callback: (obj: TSGameObject, user: TSUnit, cancel: TSMutable<boolean>)=>void)
         OnQuestAccept(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer, quest: TSQuest)=>void)
+        OnGenerateLoot(callback: (obj: TSGameObject, player: TSPlayer)=>void)
+        OnGenerateFishLoot(callback: (obj: TSGameObject, player: TSPlayer, loot: TSLoot, isJunk: bool)=>void)
     }
 
     export class Maps<T> {
