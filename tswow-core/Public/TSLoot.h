@@ -40,6 +40,11 @@ struct TC_GAME_API TSLootItem {
     void SetRandomSuffix(uint32 randomSuffix);
     void SetRandomPropertyID(int32 propertyId);
     void SetCount(uint8 count);
+
+    uint32 GetFakeRandomSuffix();
+    uint32 GetFakeRandomPropertyID();
+    void SetFakeRandomSuffix(uint32 fakeRandomSuffix);
+    void SetFakeRandomPropertyID(uint32 fakePropertyId);
 };
 
 struct Loot;

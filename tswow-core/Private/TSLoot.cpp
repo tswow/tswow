@@ -232,3 +232,24 @@ void TSLoot::LFilter(sol::protected_function predicate)
         return predicate(v);
     });
 }
+
+uint32 TSLootItem::GetFakeRandomSuffix()
+{
+    return item->fakeRandomSuffix;
+}
+
+uint32 TSLootItem::GetFakeRandomPropertyID()
+{
+    return item->fakeRandomPropertyId;
+}
+
+void TSLootItem::SetFakeRandomSuffix(uint32 fakeRandomSuffix)
+{
+    item->fakeRandomSuffix = fakeRandomSuffix;
+}
+
+void TSLootItem::SetFakeRandomPropertyID(uint32 fakePropertyId)
+{
+    item->fakeRandomPropertyId = fakePropertyId;
+}
+

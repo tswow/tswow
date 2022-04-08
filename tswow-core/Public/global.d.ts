@@ -8516,6 +8516,12 @@ declare interface TSLootItem {
     SetItemID(itemId: uint32);
     SetRandomPropertyID(propertyId: int32);
     SetCount(count: uint8);
+
+    SetFakeRandomSuffix(value: uint32);
+    SetFakeRandomPropertyID(value: uint32);
+
+    GetFakeRandomSuffix(): uint32;
+    GetFakeRandomPropertyID(): uint32;
 }
 
 declare interface TSLoot {
