@@ -157,6 +157,9 @@ EVENT_TYPE(UnitOnExitCombat, TSUnit /*unit*/)
 EVENT_TYPE(UnitOnEnterCombatWith, TSUnit /*me*/, TSUnit /*other*/)
 EVENT_TYPE(UnitOnExitCombatWith, TSUnit /*me*/, TSUnit /*other*/)
 
+EVENT_TYPE(UnitOnSetTarget, TSUnit, uint64 /*new*/, uint64 /*old*/)
+
+
 // WeatherScript
 //EVENT_TYPE(WeatherOnChange,Weather*,WeatherState,float)
 
@@ -1281,6 +1284,8 @@ struct TSEventStore
     EVENT(UnitOnEnterCombatWith)
     EVENT(UnitOnExitCombatWith)
 
+    EVENT(UnitOnSetTarget)
+
     // CreatureScript
     EVENT(CreatureOnMoveInLOS)
     EVENT(CreatureOnJustEnteredCombat)
@@ -1688,6 +1693,7 @@ public:
         EVENT_HANDLE(Unit,OnExitCombat)
         EVENT_HANDLE(Unit,OnEnterCombatWith)
         EVENT_HANDLE(Unit,OnExitCombatWith)
+        EVENT_HANDLE(Unit,OnSetTarget)
     } Unit;
 
      struct SpellEvents : public EventHandler

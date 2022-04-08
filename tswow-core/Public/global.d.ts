@@ -8016,6 +8016,7 @@ declare namespace _hidden {
         OnExitCombat(callback: (unit: TSUnit)=>void);
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
+        OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
     }
 
     export class Battlegrounds<T> {
