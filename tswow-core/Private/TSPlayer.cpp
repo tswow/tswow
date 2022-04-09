@@ -4036,27 +4036,51 @@ TSOutfit TSPlayer::GetOutfitCopy(uint32_t settings, int32_t race, int32_t gender
 
 bool TSPlayer::CanBeTank()
 {
+#if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_TANK;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeTank not implemented for AzerothCore");
+    return false;
+#endif
 }
+
 
 bool TSPlayer::CanBeHealer()
 {
+#if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_HEALER;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeHealer not implemented for AzerothCore");
+    return false;
+#endif
 }
+
 
 bool TSPlayer::CanBeDPS()
 {
+#if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_DAMAGE;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeDPS not implemented for AzerothCore");
+    return false;
+#endif
 }
+
 
 bool TSPlayer::CanBeLeader()
 {
+#if TRINITY
     return sObjectMgr->GetPlayerClassRoleMask(GetClass())
         & lfg::LfgRoles::PLAYER_ROLE_LEADER;
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSPlayer::CanBeLeader not implemented for AzerothCore");
+    return false;
+#endif
 }
+
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {

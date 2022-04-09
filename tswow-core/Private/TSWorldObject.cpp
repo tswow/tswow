@@ -84,7 +84,12 @@ uint32 TSWorldObject::GetPhaseMask()
 
 uint64 TSWorldObject::GetPhaseID()
 {
+#if TRINITY
     return uint32(obj->m_phase_id);
+#elif AZEROTHCORE
+    TS_LOG_ERROR("tswow.api", "TSWorldObject::GetPhaseID not implemented for AzerothCore");
+    return 0;
+#endif
 }
 
 /**
@@ -95,7 +100,19 @@ uint64 TSWorldObject::GetPhaseID()
 */
 void TSWorldObject::SetPhaseMask(uint32 phaseMask,bool update, uint64 id)
 {
+#if TRINITY
     obj->SetPhaseMask(phaseMask, update, id);
+#elif AZEROTHCORE
+    obj->SetPhaseMask(phaseMask, update);
+    if (id != 0)
+    {
+        TS_LOG_ERROR(
+              "tswow.api"
+            , "TSWorldObject::SetPhaseMask not implemented for AzerothCore with phase id parameter (phase ids not implemented)"
+        );
+    }
+
+#endif
 }
 #endif
 
