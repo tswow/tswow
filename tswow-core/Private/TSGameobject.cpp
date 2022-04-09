@@ -25,6 +25,7 @@
 #include "TSWorldObject.h"
 #include "TSGameObject.h"
 #include "TSSpellInfo.h"
+#include "TSGameObjectTemplate.h"
 #include "SmartAI.h"
 
 
@@ -306,9 +307,16 @@ void TSGameObject::UseDoorOrButton(uint32 delay)
  *
  * The gameobject may be automatically respawned by the core
  */
-void TSGameObject::Despawn()
+void TSGameObject::Despawn(bool forced, uint32 delayMs, uint32 respawnSec)
 {
-    go->SetLootState(GO_JUST_DEACTIVATED);
+    if (forced)
+    {
+        go->DespawnOrUnsummon(std::chrono::milliseconds(delayMs), std::chrono::seconds(respawnSec));
+    }
+    else
+    {
+        go->SetLootState(GO_JUST_DEACTIVATED);
+    }
 }
 
 /**
@@ -354,4 +362,9 @@ void TSGameObject::FireSmartEvent(uint32 e, TSUnit unit, uint32 var0, uint32 var
 bool TSGameObject::IsAIEnabled()
 {
     return go->AI();
+}
+
+TSGameObjectTemplate TSGameObject::GetTemplate()
+{
+    return TSGameObjectTemplate(const_cast<GameObjectTemplate*>(go->GetGOInfo()));
 }

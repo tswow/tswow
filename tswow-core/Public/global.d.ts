@@ -222,6 +222,8 @@ declare interface TSPlayer extends TSUnit {
     SetBankBagSlotCount(count: uint8)
     AddItemToSlotRaw(bag: uint8, slot: uint8, itemId: uint32, count: uint32, propertyId?: int32)
 
+    GetFreeInventorySpace(): uint32;
+
     CanBeTank(): bool
     CanBeHealer(): bool
     CanBeDPS(): bool
@@ -2281,9 +2283,9 @@ declare interface TSWorldEntityProvider<T> {
     AddTimer(delay: uint32, callback: (owner: T, timer: TSTimer)=>void);
 
     RemoveTimer(name: string);
-    GetGroup(name: string);
-    RemoveGroup(name: string);
-    ClearGroups(name: string);
+    GetEntityGroup(name: string): TSObjectGroup;
+    RemoveEntityGroup(name: string);
+    ClearEntityGroups(name: string);
     QueueMessage(channel: uint8, json: TSJsonObject, callback: JsonMessageCallback<T>)
 }
 
@@ -2303,6 +2305,7 @@ declare interface TSGameObjectTemplate extends TSEntityProvider {
     GetName(): string;
     GetIconName(): string;
     GetCastBarCaption(): string;
+    GetGOData(index: uint32): uint32;
 }
 
 declare interface TSCreatureTemplate extends TSEntityProvider {
@@ -4556,6 +4559,11 @@ declare interface TSGameObject extends TSWorldObject {
 
     GetLoot(): TSLoot;
 
+    /**
+     * Returns the [GameObjectTemplate] data for this gameobject.
+     */
+    GetTemplate(): TSGameObjectTemplate;
+
     FireSmartEvent(id: uint32, unit: TSUnit, var0: uint32, var1: uint32, bvar: bool, spell: TSSpellInfo, obj: TSGameObject);
 
     /**
@@ -4706,8 +4714,12 @@ declare interface TSGameObject extends TSWorldObject {
      * Despawns a [GameObject]
      *
      * The gameobject may be automatically respawned by the core
+     *
+     * @param forced = false: Whether to directly call the despawn function.
+     * @param delayMs = 0: How long (in milliseconds) to wait before despawning. Ignored if forced = false.
+     * @param respawnSecs = 0: How long (in seconds) to stay despawned. Ignored if forced = false.
      */
-    Despawn() : void
+    Despawn(forced?: boolean, delayMs?: uint32, respawnSecs?: uint32) : void
 
     /**
      * Respawns a [GameObject]
@@ -4912,7 +4924,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
      * @param uint32 spell : entry of a spell
      * @param bool triggered = false : if true the spell is instant and has no cost
      */
-     CastSpell(target : TSUnit,spell : uint32,triggered : bool) : SpellCastResult
+     CastSpell(target : TSWorldObject,spell : uint32,triggered : bool) : SpellCastResult
 
      /**
       * Casts the [Spell] at target [Unit] with custom basepoints or casters.
@@ -4927,7 +4939,7 @@ declare interface TSWorldObject extends TSObject, TSWorldEntityProvider<TSWorldO
       * @param [Item] castItem = nil
       * @param uint64 originalCaster = 0
       */
-     CastCustomSpell(target : TSUnit,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
+     CastCustomSpell(target : TSWorldObject,spell : uint32,triggered? : bool,bp0? : int32,bp1? : int32,bp2? : int32,castItem? : TSItem,originalCaster? : uint64) : SpellCastResult
 
      /**
       * Makes the [Unit] cast the spell to the given coordinates, used for area effect spells.
@@ -7087,6 +7099,7 @@ declare interface TSSpellInfo extends TSEntityProvider {
 	GetTargetCreatureType() : uint32
 	GetTargets() : uint32;
     GetEffect(index: SpellEffIndex): TSSpellEffectInfo
+    GetTotem(index: uint32): uint32;
 }
 
 declare class TSSpellEffectInfo {
@@ -7109,6 +7122,7 @@ declare class TSSpellEffectInfo {
     GetTriggerSpell(): uint32;
     IsEffect(): bool;
     IsAura(): bool;
+    CalcValue(caster: TSWorldObject);
 }
 
 declare interface TSSpellCastTargets {
@@ -7517,6 +7531,7 @@ declare namespace _hidden {
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
+            , effectMask: uint32
         )=>void)
         OnDamageLate(spell: EventID, callback : (
             spell: TSSpell
@@ -7524,6 +7539,7 @@ declare namespace _hidden {
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
+          , effectMask: uint32
         )=>void)
         OnPeriodicDamage(spell: EventID, callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void)
         /** critChance should be between 0 and 1 */
@@ -7581,6 +7597,7 @@ declare namespace _hidden {
           , info: TSSpellDamageInfo
           , type: uint32
           , isCrit: bool
+          , effectMask: uint32
         )=>void): T
         OnDamageLate(callback : (
               spell: TSSpell
@@ -7588,6 +7605,7 @@ declare namespace _hidden {
             , info: TSSpellDamageInfo
             , type: uint32
             , isCrit: bool
+            , effectMask: uint32
         )=>void): T
         OnPeriodicDamage(callback : (aura: TSAuraEffect, damage: TSMutable<uint32>)=>void): T
         /** critChance should be between 0 and 1 */
@@ -8139,6 +8157,7 @@ declare namespace _hidden {
         OnExitCombat(callback: (unit: TSUnit)=>void);
         OnEnterCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
         OnExitCombatWith(callback: (me: TSUnit, other: TSUnit)=>void);
+        OnSetTarget(callback: (me: TSUnit, selection: uint64, oldSelection: uint64)=>void)
     }
 
     export class Battlegrounds<T> {
@@ -8416,6 +8435,8 @@ declare namespace _hidden {
         OnRemove(obj: EventID, callback: (obj: TSGameObject)=>void)
         OnUse(obj: EventID, callback: (obj: TSGameObject, user: TSUnit, cancel: TSMutable<boolean>)=>void)
         OnQuestAccept(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer, quest: TSQuest)=>void)
+        OnGenerateLoot(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer)=>void)
+        OnGenerateFishLoot(obj: EventID, callback: (obj: TSGameObject, player: TSPlayer, loot: TSLoot, isJunk: bool)=>void)
     }
 
     export class Maps<T> {
@@ -8636,6 +8657,12 @@ declare interface TSLootItem {
     SetItemID(itemId: uint32);
     SetRandomPropertyID(propertyId: int32);
     SetCount(count: uint8);
+
+    SetFakeRandomSuffix(value: uint32);
+    SetFakeRandomPropertyID(value: uint32);
+
+    GetFakeRandomSuffix(): uint32;
+    GetFakeRandomPropertyID(): uint32;
 }
 
 declare interface TSLoot {

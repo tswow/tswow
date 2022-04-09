@@ -4125,6 +4125,7 @@ bool TSPlayer::CanBeTank()
 #endif
 }
 
+
 bool TSPlayer::CanBeHealer()
 {
 #if TRINITY
@@ -4135,6 +4136,7 @@ bool TSPlayer::CanBeHealer()
     return false;
 #endif
 }
+
 
 bool TSPlayer::CanBeDPS()
 {
@@ -4147,6 +4149,7 @@ bool TSPlayer::CanBeDPS()
 #endif
 }
 
+
 bool TSPlayer::CanBeLeader()
 {
 #if TRINITY
@@ -4157,6 +4160,7 @@ bool TSPlayer::CanBeLeader()
     return false;
 #endif
 }
+
 
 /*int TSPlayer::BindToInstance(lua_State* L, Player* player)
 {
@@ -4469,4 +4473,9 @@ void TSPlayer::LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id
 void TSPlayer::LGossipSendMenu1(uint32 npc_text, TSObject sender)
 {
     GossipSendMenu(npc_text, sender);
+}
+
+uint32 TSPlayer::GetFreeInventorySpace()
+{
+    return player->GetFreeInventorySpace();
 }

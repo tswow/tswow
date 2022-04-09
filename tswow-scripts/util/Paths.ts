@@ -607,7 +607,8 @@ export function BuildPaths(pathIn: string, tdb: string) {
                     `src/server/game/${type}/game.lib`,
                     `src/common/${type}/common.lib`,
                     `dep/argon2/${type}/argon2.lib`,
-                    `${type}/liblua.lib`
+                    `${type}/liblua.lib`,
+                    `${type}/liblua.pdb`,
                 ]
                 :
                 [

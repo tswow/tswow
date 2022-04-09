@@ -216,7 +216,7 @@ export class ClassStats extends CellSystem<Class> {
         return makeEnumCell(
             RangedAttackPowerClass
           , this.owner
-          , this._apFormula.class_out
+          , this._rangedApFormula.class_out
       )
     }
     get BaseMeleeCrit() {  return this.f(1,DBC.GtChanceToMeleeCritBase); }

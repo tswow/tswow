@@ -66,3 +66,8 @@ std::string TSGameObjectTemplate::LGetCastBarCaption()
 {
     return GetCastBarCaption().std_str();
 }
+
+uint32 TSGameObjectTemplate::GetGOData(uint32 index)
+{
+    return gt->raw.data[index];
+}

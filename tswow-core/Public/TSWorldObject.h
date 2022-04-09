@@ -108,10 +108,10 @@ public:
     bool IsHostileToPlayers();
     bool IsNeutralToAll();
 
-    uint32 CastSpell(TSUnit target, uint32 spell, bool triggered);
+    uint32 CastSpell(TSWorldObject target, uint32 spell, bool triggered);
     uint32 CastSpellAoF(float _x, float _y, float _z, uint32 spell, bool triggered);
     uint32 CastCustomSpell(
-          TSUnit target
+          TSWorldObject target
         , uint32 spell
         , bool triggered
         , int32 bp0
