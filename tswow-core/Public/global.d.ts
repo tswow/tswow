@@ -1087,35 +1087,35 @@ declare interface TSPlayer extends TSUnit {
     /**
      * remove all item's stats on player
      *
-     * 
+     *
      */
     RemoveAllItemMods(): void
 
     /**
      * remove single item's stats on player
      *
-     * 
+     *
      */
     RemoveItemMods(item: TSItem, slot: uint8): void
 
     /**
      * apply all item's stats on player
      *
-     * 
+     *
      */
     ApplyAllItemMods(): void
 
     /**
      * apply single item's stats on player
      *
-     * 
+     *
      */
     ApplyItemMods(item: TSItem, slot: uint8, apply: bool, updateAuras:bool): void
 
     /**
      * Applies all custom item cache to player
      *
-     * 
+     *
      */
     UpdateCache(): void
 
@@ -8882,7 +8882,7 @@ declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 
-declare function getExistingItemTemplate(itemID: uint32): TSItemTemplate;
+declare function GetExistingItemTemplate(itemID: uint32): TSItemTemplate;
 //defaults to 38
 declare function CreateNewItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
 declare function LoadCustomItems(): void;

@@ -45,7 +45,7 @@ TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
 #endif
 }
 
-TSItemTemplate getExistingItemTemplate(uint32 itemID)
+TSItemTemplate GetExistingItemTemplate(uint32 itemID)
 {
 #if TRINITY
     return sObjectMgr->LoadSingleItemTemplateObject(itemID);
