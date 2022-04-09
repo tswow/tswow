@@ -373,43 +373,162 @@ WorldPacket TSItemTemplate::BuildCustomQueryData(uint8 loc)
 
 void TSItemTemplate::Save()
 {
-    std::ostringstream oss;
-    oss << "REPLACE INTO custom_item_template VALUES(" << info->ItemId << "," << info->Class << "," << info->SubClass << "," << info->SoundOverrideSubclass
-        << ",'" << info->Name1 << "'," << info->DisplayInfoID << "," << info->Quality << "," << info->Flags << "," << info->Flags2 << "," << info->BuyCount << "," << info->BuyPrice
-        << "," << info->SellPrice << "," << info->InventoryType << "," << int32(info->AllowableClass) << "," << int32(info->AllowableRace) << "," << info->ItemLevel << "," << info->RequiredLevel
-        << "," << info->RequiredSkill << "," << info->RequiredSkillRank << "," << info->RequiredSpell << "," << info->RequiredHonorRank << "," << info->RequiredCityRank
-        << "," << info->RequiredReputationFaction << "," << info->RequiredReputationRank << "," << info->MaxCount << "," << info->Stackable << "," << info->ContainerSlots << "," << info->StatsCount
-        << "," << info->ItemStat[0].ItemStatType << "," << info->ItemStat[0].ItemStatValue << "," << info->ItemStat[1].ItemStatType << "," << info->ItemStat[1].ItemStatValue
-        << "," << info->ItemStat[2].ItemStatType << "," << info->ItemStat[2].ItemStatValue << "," << info->ItemStat[3].ItemStatType << "," << info->ItemStat[3].ItemStatValue
-        << "," << info->ItemStat[4].ItemStatType << "," << info->ItemStat[4].ItemStatValue << "," << info->ItemStat[5].ItemStatType << "," << info->ItemStat[5].ItemStatValue
-        << "," << info->ItemStat[6].ItemStatType << "," << info->ItemStat[6].ItemStatValue << "," << info->ItemStat[7].ItemStatType << "," << info->ItemStat[7].ItemStatValue
-        << "," << info->ItemStat[8].ItemStatType << "," << info->ItemStat[8].ItemStatValue << "," << info->ItemStat[9].ItemStatType << "," << info->ItemStat[9].ItemStatValue
-        << "," << info->ScalingStatDistribution << "," << info->ScalingStatValue
-        << "," << info->Damage[0].DamageMin << "," << info->Damage[0].DamageMax << "," << info->Damage[0].DamageType << "," << info->Damage[1].DamageMin << "," << info->Damage[1].DamageMax << "," << info->Damage[1].DamageType
-        << "," << info->Armor << "," << info->HolyRes << "," << info->FireRes << "," << info->NatureRes << "," << info->FrostRes << "," << info->ShadowRes << "," << info->ArcaneRes
-        << "," << info->Delay << "," << info->AmmoType << "," << info->RangedModRange
-        << "," << info->Spells[0].SpellId << "," << info->Spells[0].SpellTrigger << "," << info->Spells[0].SpellCharges << "," << info->Spells[0].SpellPPMRate << "," << info->Spells[0].SpellCooldown << "," << info->Spells[0].SpellCategory << "," << info->Spells[0].SpellCategoryCooldown
-        << "," << info->Spells[1].SpellId << "," << info->Spells[1].SpellTrigger << "," << info->Spells[1].SpellCharges << "," << info->Spells[1].SpellPPMRate << "," << info->Spells[1].SpellCooldown << "," << info->Spells[1].SpellCategory << "," << info->Spells[1].SpellCategoryCooldown
-        << "," << info->Spells[2].SpellId << "," << info->Spells[2].SpellTrigger << "," << info->Spells[2].SpellCharges << "," << info->Spells[2].SpellPPMRate << "," << info->Spells[2].SpellCooldown << "," << info->Spells[2].SpellCategory << "," << info->Spells[2].SpellCategoryCooldown
-        << "," << info->Spells[3].SpellId << "," << info->Spells[3].SpellTrigger << "," << info->Spells[3].SpellCharges << "," << info->Spells[3].SpellPPMRate << "," << info->Spells[3].SpellCooldown << "," << info->Spells[3].SpellCategory << "," << info->Spells[3].SpellCategoryCooldown
-        << "," << info->Spells[4].SpellId << "," << info->Spells[4].SpellTrigger << "," << info->Spells[4].SpellCharges << "," << info->Spells[4].SpellPPMRate << "," << info->Spells[4].SpellCooldown << "," << info->Spells[4].SpellCategory << "," << info->Spells[4].SpellCategoryCooldown
-        << "," << info->Bonding << ",'" << info->Description << "'," << info->PageText << "," << info->LanguageID << "," << info->PageMaterial << "," << info->StartQuest
-        << "," << info->LockID << "," << info->Material << "," << info->Sheath << "," << info->RandomProperty << "," << info->RandomSuffix << "," << info->Block
-        << "," << info->ItemSet << "," << info->MaxDurability << "," << info->Area << "," << info->Map << "," << info->BagFamily << "," << info->TotemCategory
-        << "," << info->Socket[0].Color << "," << info->Socket[0].Content
-        << "," << info->Socket[1].Color << "," << info->Socket[1].Content
-        << "," << info->Socket[2].Color << "," << info->Socket[2].Content
-        << "," << info->socketBonus << "," << info->GemProperties << "," << int32(info->RequiredDisenchantSkill) << "," << info->ArmorDamageModifier << "," << info->Duration
-        << "," << info->ItemLimitCategory << "," << info->HolidayId << "," << info->ScriptId << "," << info->DisenchantID << "," << info->FoodType << "," << info->MinMoneyLoot
-        << "," << info->MaxMoneyLoot << "," << info->FlagsCu << ")";
+#if TRINITY
+    CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
 
-    //TC_LOG_ERROR("sql.sql", "query: `%s`", oss.str().c_str());
-    #if TRINITY
-    CharacterDatabase.PExecute("%s", oss.str().c_str());
-    #elif AZEROTHCORE
-    //CharacterDatabase.Execute(oss.str().c_str());//maybe? 
+    CharacterDatabasePreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CUSTOM_ITEM);
+    stmt->setUInt32(0, info->ItemId);
+    stmt->setUInt32(1, info->Class);
+    stmt->setUInt32(2, info->SubClass);
+    stmt->setUInt32(3, info->SoundOverrideSubclass);
+    stmt->setString(4, info->Name1);
+    stmt->setUInt32(5, info->DisplayInfoID);
+    stmt->setUInt32(6, info->Quality);
+    stmt->setUInt32(7, info->Flags);
+    stmt->setUInt32(8, info->Flags2);
+    stmt->setUInt32(9, info->BuyCount);
+    stmt->setUInt32(10, info->BuyPrice);
+    stmt->setUInt32(11, info->SellPrice);
+    stmt->setUInt32(12, info->InventoryType);
+    stmt->setInt32(13, info->AllowableClass);
+    stmt->setInt32(14, info->AllowableRace);
+    stmt->setUInt32(15, info->ItemLevel);
+    stmt->setUInt32(16, info->RequiredLevel);
+    stmt->setUInt32(17, info->RequiredSkill);
+    stmt->setUInt32(18, info->RequiredSkillRank);
+    stmt->setUInt32(19, info->RequiredSpell);
+    stmt->setUInt32(20, info->RequiredHonorRank);
+    stmt->setUInt32(21, info->RequiredCityRank);
+    stmt->setUInt32(22, info->RequiredReputationFaction);
+    stmt->setUInt32(23, info->RequiredReputationRank);
+    stmt->setUInt32(24, info->MaxCount);
+    stmt->setUInt32(25, info->Stackable);
+    stmt->setUInt32(26, info->ContainerSlots);
+    stmt->setUInt32(27, info->StatsCount);
+    stmt->setUInt32(28,info->ItemStat[0].ItemStatType);
+    stmt->setUInt32(29,info->ItemStat[0].ItemStatValue);
+    stmt->setUInt32(30,info->ItemStat[1].ItemStatType);
+    stmt->setUInt32(31,info->ItemStat[1].ItemStatValue);
+    stmt->setUInt32(32,info->ItemStat[2].ItemStatType);
+    stmt->setUInt32(33,info->ItemStat[2].ItemStatValue);
+    stmt->setUInt32(34,info->ItemStat[3].ItemStatType);
+    stmt->setUInt32(35,info->ItemStat[3].ItemStatValue);
+    stmt->setUInt32(36,info->ItemStat[4].ItemStatType);
+    stmt->setUInt32(37,info->ItemStat[4].ItemStatValue);
+    stmt->setUInt32(38,info->ItemStat[5].ItemStatType);
+    stmt->setUInt32(39,info->ItemStat[5].ItemStatValue);
+    stmt->setUInt32(40,info->ItemStat[6].ItemStatType);
+    stmt->setUInt32(41,info->ItemStat[6].ItemStatValue);
+    stmt->setUInt32(42,info->ItemStat[7].ItemStatType);
+    stmt->setUInt32(43,info->ItemStat[7].ItemStatValue);
+    stmt->setUInt32(44,info->ItemStat[8].ItemStatType);
+    stmt->setUInt32(45,info->ItemStat[8].ItemStatValue);
+    stmt->setUInt32(46,info->ItemStat[9].ItemStatType);
+    stmt->setUInt32(47,info->ItemStat[9].ItemStatValue);
+    stmt->setUInt32(48, info->ScalingStatDistribution);
+    stmt->setUInt32(49, info->ScalingStatValue);
+    stmt->setUInt32(50, info->Damage[0].DamageMin);
+    stmt->setUInt32(51, info->Damage[0].DamageMax);
+    stmt->setUInt32(52, info->Damage[0].DamageType);
+    stmt->setUInt32(53, info->Damage[1].DamageMin);
+    stmt->setUInt32(54, info->Damage[1].DamageMax);
+    stmt->setUInt32(55, info->Damage[1].DamageType);
+    stmt->setUInt32(56, info->Armor);
+    stmt->setUInt32(57, info->HolyRes);
+    stmt->setUInt32(58, info->FireRes);
+    stmt->setUInt32(59, info->NatureRes);
+    stmt->setUInt32(60, info->FrostRes);
+    stmt->setUInt32(61, info->ShadowRes);
+    stmt->setUInt32(62, info->ArcaneRes);
+    stmt->setUInt32(63, info->Delay);
+    stmt->setUInt32(64, info->AmmoType);
+    stmt->setUInt32(65, info->RangedModRange);
+    stmt->setUInt32(66, info->Spells[0].SpellId);
+    stmt->setUInt32(67, info->Spells[0].SpellTrigger);
+    stmt->setUInt32(68, info->Spells[0].SpellCharges);
+    stmt->setUInt32(69, info->Spells[0].SpellPPMRate);
+    stmt->setUInt32(70, info->Spells[0].SpellCooldown);
+    stmt->setUInt32(71, info->Spells[0].SpellCategory);
+    stmt->setUInt32(72, info->Spells[0].SpellCategoryCooldown);
+    stmt->setUInt32(73, info->Spells[1].SpellId);
+    stmt->setUInt32(74, info->Spells[1].SpellTrigger);
+    stmt->setUInt32(75, info->Spells[1].SpellCharges);
+    stmt->setUInt32(76, info->Spells[1].SpellPPMRate);
+    stmt->setUInt32(77, info->Spells[1].SpellCooldown);
+    stmt->setUInt32(78, info->Spells[1].SpellCategory);
+    stmt->setUInt32(79, info->Spells[1].SpellCategoryCooldown);
+    stmt->setUInt32(80, info->Spells[2].SpellId);
+    stmt->setUInt32(81, info->Spells[2].SpellTrigger);
+    stmt->setUInt32(82, info->Spells[2].SpellCharges);
+    stmt->setUInt32(83, info->Spells[2].SpellPPMRate);
+    stmt->setUInt32(84, info->Spells[2].SpellCooldown);
+    stmt->setUInt32(85, info->Spells[2].SpellCategory);
+    stmt->setUInt32(86, info->Spells[2].SpellCategoryCooldown);
+    stmt->setUInt32(87, info->Spells[3].SpellId);
+    stmt->setUInt32(88, info->Spells[3].SpellTrigger);
+    stmt->setUInt32(89, info->Spells[3].SpellCharges);
+    stmt->setUInt32(90, info->Spells[3].SpellPPMRate);
+    stmt->setUInt32(91, info->Spells[3].SpellCooldown);
+    stmt->setUInt32(92, info->Spells[3].SpellCategory);
+    stmt->setUInt32(93, info->Spells[3].SpellCategoryCooldown);
+    stmt->setUInt32(94, info->Spells[4].SpellId);
+    stmt->setUInt32(95, info->Spells[4].SpellTrigger);
+    stmt->setUInt32(96, info->Spells[4].SpellCharges);
+    stmt->setUInt32(97, info->Spells[4].SpellPPMRate);
+    stmt->setUInt32(98, info->Spells[4].SpellCooldown);
+    stmt->setUInt32(99, info->Spells[4].SpellCategory);
+    stmt->setUInt32(100, info->Spells[4].SpellCategoryCooldown);
+    stmt->setUInt32(101, info->Spells[5].SpellId);
+    stmt->setUInt32(102, info->Spells[5].SpellTrigger);
+    stmt->setUInt32(103, info->Spells[5].SpellCharges);
+    stmt->setUInt32(104, info->Spells[5].SpellPPMRate);
+    stmt->setUInt32(105, info->Spells[5].SpellCooldown);
+    stmt->setUInt32(106, info->Spells[5].SpellCategory);
+    stmt->setUInt32(107, info->Spells[5].SpellCategoryCooldown);
+    stmt->setUInt32(108, info->Bonding);
+    stmt->setString(109, info->Description);
+    stmt->setUInt32(110, info->PageText);
+    stmt->setUInt32(111, info->LanguageID);
+    stmt->setUInt32(112, info->PageMaterial);
+    stmt->setUInt32(113, info->StartQuest);
+    stmt->setUInt32(114, info->LockID);
+    stmt->setUInt32(115, info->Material);
+    stmt->setUInt32(116, info->Sheath);
+    stmt->setUInt32(117, info->RandomProperty);
+    stmt->setUInt32(118, info->RandomSuffix);
+    stmt->setUInt32(119, info->Block);
+    stmt->setUInt32(120, info->ItemSet);
+    stmt->setUInt32(121, info->MaxDurability);
+    stmt->setUInt32(122, info->Area);
+    stmt->setUInt32(123, info->Map);
+    stmt->setUInt32(124, info->BagFamily);
+    stmt->setUInt32(125, info->TotemCategory);
+    stmt->setUInt32(126, info->Socket[0].Color);
+    stmt->setUInt32(127, info->Socket[0].Content);
+    stmt->setUInt32(128, info->Socket[1].Color);
+    stmt->setUInt32(129, info->Socket[1].Content);
+    stmt->setUInt32(130, info->Socket[2].Color);
+    stmt->setUInt32(131, info->Socket[2].Content);
+    stmt->setUInt32(132, info->socketBonus);
+    stmt->setUInt32(133, info->GemProperties);
+    stmt->setInt32(134, info->RequiredDisenchantSkill);
+    stmt->setUInt32(135, info->ArmorDamageModifier);
+    stmt->setUInt32(136, info->Duration);
+    stmt->setUInt32(137, info->ItemLimitCategory);
+    stmt->setUInt32(138, info->HolidayId);
+    stmt->setUInt32(139, info->ScriptId);
+    stmt->setUInt32(140, info->DisenchantID);
+    stmt->setUInt32(141, info->FoodType);
+    stmt->setUInt32(142, info->MinMoneyLoot);
+    stmt->setUInt32(143, info->MaxMoneyLoot);
+    stmt->setUInt32(144, info->FlagsCu);
+
+    trans->Append(stmt);
+
+    CharacterDatabase.CommitTransaction(trans);
+#elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSItemTemplate::SaveItemTemplate not implemented for AzerothCore");
-    #endif
+#endif
 
 }
 
