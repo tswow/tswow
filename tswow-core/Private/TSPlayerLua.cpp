@@ -172,7 +172,10 @@ void TSLuaState::load_player_methods(uint32_t modid)
     LUA_FIELD(ts_player, TSPlayer, SendTaxiMenu);
     LUA_FIELD(ts_player, TSPlayer, SendCreatureQueryPacket);
     LUA_FIELD(ts_player, TSPlayer, SendGameObjectQueryPacket);
-    LUA_FIELD(ts_player, TSPlayer, SendItemQueryPacket);
+    ts_player.set_function("SendItemQueryPacket", sol::overload(
+          &TSPlayer::LSendItemQueryPacket0
+        , &TSPlayer::LSendItemQueryPacket1
+    ));
     LUA_FIELD(ts_player, TSPlayer, SendSpiritResurrect);
     LUA_FIELD(ts_player, TSPlayer, SendTabardVendorActivate);
     LUA_FIELD(ts_player, TSPlayer, SendShowBank);

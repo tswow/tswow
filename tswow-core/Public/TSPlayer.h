@@ -421,5 +421,9 @@ private:
 
 		void LGossipSendMenu0(uint32 npc_text, TSObject sender, uint32 menu_id);
 		void LGossipSendMenu1(uint32 npc_text, TSObject sender);
+
+		void LSendItemQueryPacket0(uint32 entry);
+		void LSendItemQueryPacket1(TSItemTemplate item);
+
 		friend class TSLuaState;
 };

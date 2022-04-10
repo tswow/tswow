@@ -4479,3 +4479,14 @@ uint32 TSPlayer::GetFreeInventorySpace()
 {
     return player->GetFreeInventorySpace();
 }
+
+void TSPlayer::LSendItemQueryPacket0(uint32 entry)
+{
+    SendItemQueryPacket(entry);
+}
+
+void TSPlayer::LSendItemQueryPacket1(TSItemTemplate item)
+{
+    SendItemQueryPacket(item);
+}
+
