@@ -259,128 +259,6 @@ ItemTemplate* TSItemTemplate::_GetInfo()
     return info;
 }
 
-WorldPacket TSItemTemplate::BuildCustomQueryData(uint8 loc)
-{
-#if TRINITY
-    WorldPackets::Query::QueryItemSingleResponse response;
-
-    std::string locName = info->Name1;
-    std::string locDescription = info->Description;
-
-    if (ItemLocale const* il = sObjectMgr->GetItemLocale(info->ItemId))
-    {
-        ObjectMgr::GetLocaleString(il->Name, static_cast<LocaleConstant>(loc), locName);
-        ObjectMgr::GetLocaleString(il->Description, static_cast<LocaleConstant>(loc), locDescription);
-    }
-
-    response.ItemID = info->ItemId;
-    response.Allow = true;
-
-    response.Stats.Class = info->Class;
-    response.Stats.SubClass = info->SubClass;
-    response.Stats.SoundOverrideSubclass = info->SoundOverrideSubclass;
-    response.Stats.Name = locName;
-    response.Stats.DisplayInfoID = info->DisplayInfoID;
-    response.Stats.Quality = info->Quality;
-    response.Stats.Flags = info->Flags;
-    response.Stats.Flags2 = info->Flags2;
-    response.Stats.BuyPrice = info->BuyPrice;
-    response.Stats.SellPrice = info->SellPrice;
-    response.Stats.InventoryType = info->InventoryType;
-    response.Stats.AllowableClass = info->AllowableClass;
-    response.Stats.AllowableRace = info->AllowableRace;
-    response.Stats.ItemLevel = info->ItemLevel;
-    response.Stats.RequiredLevel = info->RequiredLevel;
-    response.Stats.RequiredSkill = info->RequiredSkill;
-    response.Stats.RequiredSkillRank = info->RequiredSkillRank;
-    response.Stats.RequiredSpell = info->RequiredSpell;
-    response.Stats.RequiredHonorRank = info->RequiredHonorRank;
-    response.Stats.RequiredCityRank = info->RequiredCityRank;
-    response.Stats.RequiredReputationFaction = info->RequiredReputationFaction;
-    response.Stats.RequiredReputationRank = info->RequiredReputationRank;
-    response.Stats.MaxCount = info->MaxCount;
-    response.Stats.Stackable = info->Stackable;
-    response.Stats.ContainerSlots = info->ContainerSlots;
-    response.Stats.StatsCount = info->StatsCount;
-    for (uint32 i = 0; i < info->StatsCount; ++i)
-    {
-        response.Stats.ItemStat[i].ItemStatType = info->ItemStat[i].ItemStatType;
-        response.Stats.ItemStat[i].ItemStatValue = info->ItemStat[i].ItemStatValue;
-    }
-
-    response.Stats.ScalingStatDistribution = info->ScalingStatDistribution;
-    response.Stats.ScalingStatValue = info->ScalingStatValue;
-
-    for (uint8 i = 0; i < MAX_ITEM_PROTO_DAMAGES; ++i)
-    {
-        response.Stats.Damage[i].DamageMin = info->Damage[i].DamageMin;
-        response.Stats.Damage[i].DamageMax = info->Damage[i].DamageMax;
-        response.Stats.Damage[i].DamageType = info->Damage[i].DamageType;
-    }
-
-    response.Stats.Resistance[SPELL_SCHOOL_NORMAL] = info->Armor;
-    response.Stats.Resistance[SPELL_SCHOOL_HOLY] = info->HolyRes;
-    response.Stats.Resistance[SPELL_SCHOOL_FIRE] = info->FireRes;
-    response.Stats.Resistance[SPELL_SCHOOL_NATURE] = info->NatureRes;
-    response.Stats.Resistance[SPELL_SCHOOL_FROST] = info->FrostRes;
-    response.Stats.Resistance[SPELL_SCHOOL_SHADOW] = info->ShadowRes;
-    response.Stats.Resistance[SPELL_SCHOOL_ARCANE] = info->ArcaneRes;
-
-    response.Stats.Delay = info->Delay;
-    response.Stats.AmmoType = info->AmmoType;
-    response.Stats.RangedModRange = info->RangedModRange;
-
-    for (uint8 s = 0; s < MAX_ITEM_PROTO_SPELLS; ++s)
-    {
-        response.Stats.Spells[s].SpellId = info->Spells[s].SpellId;
-        response.Stats.Spells[s].SpellTrigger = info->Spells[s].SpellTrigger;
-        response.Stats.Spells[s].SpellCharges = info->Spells[s].SpellCharges;
-        response.Stats.Spells[s].SpellCooldown = info->Spells[s].SpellCooldown;
-        response.Stats.Spells[s].SpellCategory = info->Spells[s].SpellCategory;
-        response.Stats.Spells[s].SpellCategoryCooldown = info->Spells[s].SpellCategoryCooldown;
-    }
-
-    response.Stats.Bonding = info->Bonding;
-    response.Stats.Description = locDescription;
-    response.Stats.PageText = info->PageText;
-    response.Stats.LanguageID = info->LanguageID;
-    response.Stats.PageMaterial = info->PageMaterial;
-    response.Stats.StartQuest = info->StartQuest;
-    response.Stats.LockID = info->LockID;
-    response.Stats.Material = info->Material;
-    response.Stats.Sheath = info->Sheath;
-    response.Stats.RandomProperty = info->RandomProperty;
-    response.Stats.RandomSuffix = info->RandomSuffix;
-    response.Stats.Block = info->Block;
-    response.Stats.ItemSet = info->ItemSet;
-    response.Stats.MaxDurability = info->MaxDurability;
-    response.Stats.Area = info->Area;
-    response.Stats.Map = info->Map;
-    response.Stats.BagFamily = info->BagFamily;
-    response.Stats.TotemCategory = info->TotemCategory;
-
-    for (uint8 s = 0; s < MAX_ITEM_PROTO_SOCKETS; ++s)
-    {
-        response.Stats.Socket[s].Color = info->Socket[s].Color;
-        response.Stats.Socket[s].Content = info->Socket[s].Content;
-    }
-
-    response.Stats.SocketBonus = info->socketBonus;
-    response.Stats.GemProperties = info->GemProperties;
-    response.Stats.RequiredDisenchantSkill = info->RequiredDisenchantSkill;
-    response.Stats.ArmorDamageModifier = info->ArmorDamageModifier;
-    response.Stats.Duration = info->Duration;
-    response.Stats.ItemLimitCategory = info->ItemLimitCategory;
-    response.Stats.HolidayId = info->HolidayId;
-
-    response.Write();
-    response.ShrinkToFit();
-    return response.Move();
-#elif AZEROTHCORE
-        TS_LOG_ERROR("tswow.api", "TSItemTemplate::BuildCustomQueryData not implemented for AzerothCore");
-#endif
-}
-
 void TSItemTemplate::Save()
 {
 #if TRINITY
@@ -559,4 +437,12 @@ int32 TSItemTemplate::LGetFeralBonus0(int32 extraDPS)
 int32 TSItemTemplate::LGetFeralBonus1()
 {
     return GetFeralBonus();
+}
+
+void TSItemTemplate::InitializeQueryData()
+{
+    if(sWorld->getBoolConfig(CONFIG_CACHE_DATA_QUERIES))
+    {
+        info->InitializeQueryData();
+    }
 }

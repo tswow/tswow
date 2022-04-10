@@ -2148,23 +2148,24 @@ void TSPlayer::SendGameObjectQueryPacket(uint32 entry)
 
 void TSPlayer::SendItemQueryPacket(uint32 entry)
 {
-#if TRINITY
-    if (ItemTemplate const* ci = sObjectMgr->GetItemTemplate(entry))
-    {
-        WorldSession* curSes = player->GetSession();
-        WorldPacket response = ci->BuildQueryData(curSes->GetSessionDbLocaleIndex());
-        curSes->SendPacket(&response);
-    }
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacket not implemented for AzerothCore");
-#endif
+    SendItemQueryPacket(TSItemTemplate(sObjectMgr->GetItemTemplate(entry)));
 }
 
 void TSPlayer::SendItemQueryPacket(TSItemTemplate curItem)
 {
 #if TRINITY
-    WorldPacket response = curItem->BuildCustomQueryData(0);
-    player->GetSession()->SendPacket(&response);
+    if (!curItem.IsNull())
+    {
+        if (sWorld->getBoolConfig(CONFIG_CACHE_DATA_QUERIES))
+        {
+            player->GetSession()->SendPacket(&curItem->_GetInfo()->QueryData[player->GetSession()->GetSessionDbLocaleIndex()]);
+        }
+        else
+        {
+            WorldPacket response = curItem->_GetInfo()->BuildQueryData(player->GetSession()->GetSessionDbcLocale());
+            player->GetSession()->SendPacket(&response);
+        }
+}
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacket not implemented for AzerothCore");
 #endif

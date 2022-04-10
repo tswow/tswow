@@ -222,7 +222,7 @@ public:
 
     TSEntity* GetData();
     ItemTemplate* _GetInfo();
-    WorldPacket BuildCustomQueryData(uint8 loc);
+    void InitializeQueryData();
     void Save();
 private:
     std::string LGetName();

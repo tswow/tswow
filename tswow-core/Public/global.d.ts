@@ -7021,7 +7021,7 @@ declare interface TSItemTemplate extends TSEntityProvider {
     GetHasSignature(): bool;
     //
 
-
+    InitializeQueryData(): void;
     Save(): void
 }
 
