@@ -8877,7 +8877,6 @@ declare function StopGameEvent(event_id: uint16): void
 
 //defaults to 38
 declare function CreateNewItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
-declare function LoadCustomItems(): void;
 // end of Global.h
 
 declare function CreateDictionary<K,V>(obj: {[key: string]: V}) : TSDictionary<K,V>

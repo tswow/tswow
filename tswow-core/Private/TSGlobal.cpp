@@ -26,15 +26,6 @@
 #include "Timer.h"
 #include "GameEventMgr.h"
 
-void LoadCustomItems()
-{
-#if TRINITY
-    sObjectMgr->LoadCustomItemTemplates();
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGlobal::LoadCustomItemTemplates not implemented for AzerothCore");
-#endif
-}
-
 TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
 {
 #if TRINITY

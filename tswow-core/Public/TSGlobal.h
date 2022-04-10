@@ -20,7 +20,6 @@
 #include "TSItem.h"
 #include "TSBase.h"
 #include "TSString.h"
-void TC_GAME_API LoadCustomItems();
 TSItemTemplate TC_GAME_API CreateNewItemTemplate(uint32 entry,uint32 copyItemID = 38);
 
 
