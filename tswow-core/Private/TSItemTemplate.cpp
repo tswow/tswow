@@ -277,7 +277,7 @@ void TSItemTemplate::Save()
     stmt->setUInt32(9, info->BuyCount);
     stmt->setInt32(10, info->BuyPrice);
     stmt->setUInt32(11, info->SellPrice);
-    stmt->setInt32(12, info->InventoryType);
+    stmt->setUInt32(12, info->InventoryType);
     stmt->setInt32(13, int32(info->AllowableClass));
     stmt->setInt32(14, int32(info->AllowableRace));
     stmt->setUInt32(15, info->ItemLevel);
