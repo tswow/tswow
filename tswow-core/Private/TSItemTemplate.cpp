@@ -22,10 +22,16 @@
 #include "QueryPackets.h"
 #endif
 
-TSItemTemplate::TSItemTemplate(ItemTemplate const* info)
-    : TSEntityProvider(&(const_cast<ItemTemplate*>(info)->m_tsEntity))
-    , info(const_cast<ItemTemplate*>(info))
+TSItemTemplate::TSItemTemplate(ItemTemplate const* _info)
+    : TSEntityProvider(&(const_cast<ItemTemplate*>(_info)->m_tsEntity))
+    , info(const_cast<ItemTemplate*>(_info))
 {}
+
+TSItemTemplate::TSItemTemplate(ItemTemplate * _info)
+    : TSEntityProvider(&_info->m_tsEntity)
+    , info(_info)
+{}
+
 
 TSItemTemplate::TSItemTemplate()
     : TSEntityProvider(nullptr)
@@ -241,7 +247,11 @@ TSEntity * TSItemTemplate::GetData()
 
 TSItemTemplate GetItemTemplate(uint32 entry)
 {
+#if TRINITY
+    return TSItemTemplate(sObjectMgr->GetItemTemplateMutable(entry));
+#elif AZEROTHCORE
     return TSItemTemplate(sObjectMgr->GetItemTemplate(entry));
+#endif
 }
 
 ItemTemplate* TSItemTemplate::_GetInfo()

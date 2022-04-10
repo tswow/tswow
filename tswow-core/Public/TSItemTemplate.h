@@ -26,6 +26,7 @@ private:
     ItemTemplate* info;
 public:
     bool IsNull() { return info == nullptr; };
+    TSItemTemplate(ItemTemplate* info);
     TSItemTemplate(ItemTemplate const* info);
     TSItemTemplate();
     TSItemTemplate* operator->() { return this; }
