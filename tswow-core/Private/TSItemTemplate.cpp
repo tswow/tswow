@@ -49,6 +49,10 @@ void TSItemTemplate::SetClass(uint32 value) {
     info->m_isDirty = true;
 };
 uint32 TSItemTemplate::GetSubClass() { return info->SubClass; };
+void  TSItemTemplate::SetSubClass(uint32 value) {
+    info->SubClass = value;
+    info->m_isDirty = true;
+};
 int32  TSItemTemplate::GetSoundOverrideSubclass() { return info->SoundOverrideSubclass; };
 void  TSItemTemplate::SetSoundOverrideSubclass(int32 value) {
     info->SoundOverrideSubclass = value;
