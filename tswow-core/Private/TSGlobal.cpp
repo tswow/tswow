@@ -26,7 +26,7 @@
 #include "Timer.h"
 #include "GameEventMgr.h"
 
-TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
+TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 {
 #if TRINITY
     return sObjectMgr->CreateItemTemplate(entry,copyItemID);
