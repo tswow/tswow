@@ -663,8 +663,10 @@ int32 TSItemTemplate::LGetFeralBonus1()
 
 void TSItemTemplate::InitializeQueryData()
 {
+#if TRINITY
     if(sWorld->getBoolConfig(CONFIG_CACHE_DATA_QUERIES))
     {
         info->InitializeQueryData();
     }
+#endif
 }
