@@ -1420,16 +1420,9 @@ declare interface TSPlayer extends TSUnit {
     /**
      * Sends a [Item] cache packet to the [Player] from the [Item] entry specified
      *
-     * @param [Number] entry
+     * @param [Number|TSItemTemplate] entry
      */
-    SendItemQueryPacket(entry: number): void
-
-    /**
-     * Sends a [Item] cache packet to the [Player] from the [ItemTemplate] specified
-     *
-     * @param [TSItemTemplate] template
-     */
-    SendItemQueryPacketWithTemplate(item: TSItemTemplate): void
+    SendItemQueryPacket(entry: number | TSItemTemplate): void
 
     /**
      * Sends a spirit resurrection request to the [Player]

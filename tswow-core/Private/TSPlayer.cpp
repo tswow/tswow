@@ -1534,7 +1534,7 @@ void TSPlayer::UpdateCache()
     {
         Field* fields = result->Fetch();
         const ItemTemplate* itemTemplate = sObjectMgr->GetItemTemplate(fields[0].GetUInt32());
-        SendItemQueryPacketWithTemplate(itemTemplate);
+        SendItemQueryPacket(itemTemplate);
     } while (result->NextRow());
     #elif AZEROTHCORE
         TS_LOG_ERROR("tswow.api", "TSPlayer::UpdateCache not implemented for AzerothCore");
@@ -2160,13 +2160,13 @@ void TSPlayer::SendItemQueryPacket(uint32 entry)
 #endif
 }
 
-void TSPlayer::SendItemQueryPacketWithTemplate(TSItemTemplate curItem)
+void TSPlayer::SendItemQueryPacket(TSItemTemplate curItem)
 {
 #if TRINITY
     WorldPacket response = curItem->BuildCustomQueryData(0);
     player->GetSession()->SendPacket(&response);
 #elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacketWithTemplate not implemented for AzerothCore");
+    TS_LOG_ERROR("tswow.api", "TSPlayer::SendItemQueryPacket not implemented for AzerothCore");
 #endif
 }
 

@@ -198,7 +198,7 @@ public:
 	void SendCreatureQueryPacket(uint32 entry);
 	void SendGameObjectQueryPacket(uint32 entry);
 	void SendItemQueryPacket(uint32 entry);
-	void SendItemQueryPacketWithTemplate(TSItemTemplate curItem);
+	void SendItemQueryPacket(TSItemTemplate curItem);
 	void SendSpiritResurrect();
 	void SendTabardVendorActivate(TSWorldObject obj);
 	void SendShowBank(TSWorldObject obj);
