@@ -32,7 +32,7 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
     return sObjectMgr->CreateItemTemplate(entry,copyItemID);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
-    return 0;
+    return TSItemTemplate(nullptr);
 #endif
 }
 
