@@ -2158,7 +2158,7 @@ void TSPlayer::SendItemQueryPacket(TSItemTemplate curItem)
     {
         if (sWorld->getBoolConfig(CONFIG_CACHE_DATA_QUERIES))
         {
-            player->GetSession()->SendPacket(&curItem->_GetInfo()->QueryData[player->GetSession()->GetSessionDbLocaleIndex()]);
+            player->GetSession()->SendPacket(curItem->_GetInfo()->GetQueryData(player->GetSession()->GetSessionDbLocaleIndex()));
         }
         else
         {
