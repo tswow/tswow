@@ -45,16 +45,6 @@ TSItemTemplate CreateNewItemTemplate(uint32 entry,uint32 copyItemID)
 #endif
 }
 
-TSItemTemplate GetExistingItemTemplate(uint32 itemID)
-{
-#if TRINITY
-    return sObjectMgr->LoadItemTemplateMutable(itemID);
-#elif AZEROTHCORE
-    TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
-    return 0;
-#endif
-}
-
 void SendMail(uint8 senderType, uint64 from, uint64 to, TSString subject, TSString body, uint32 money, uint32 cod, uint32 delay, TSArray<TSItem> items)
 {
     auto player = ObjectAccessor::FindPlayer(ObjectGuid(to));

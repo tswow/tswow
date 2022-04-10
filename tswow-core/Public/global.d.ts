@@ -8882,7 +8882,6 @@ declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 
-declare function GetExistingItemTemplate(itemID: uint32): TSItemTemplate;
 //defaults to 38
 declare function CreateNewItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
 declare function LoadCustomItems(): void;
