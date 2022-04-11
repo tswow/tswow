@@ -8876,7 +8876,9 @@ declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 
 /**
- * Defaults to 38, Recruits Shirt
+ * @param entry - The id to be used for the new item template.
+ * @param copyItemID? - the old template to be used as a base.
+ *                      defaults to 38 (Recruits Shirt, chest slot equip)
  */
 declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
 // end of Global.h
