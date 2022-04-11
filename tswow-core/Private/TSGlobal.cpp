@@ -25,6 +25,7 @@
 #include "World.h"
 #include "Timer.h"
 #include "GameEventMgr.h"
+#include "TSItemTemplate.h"
 
 TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
 {
@@ -32,7 +33,7 @@ TSItemTemplate CreateItemTemplate(uint32 entry,uint32 copyItemID)
     return sObjectMgr->CreateItemTemplate(entry,copyItemID);
 #elif AZEROTHCORE
     TS_LOG_ERROR("tswow.api", "TSGlobal::getNewItemTemplate not implemented for AzerothCore");
-    return TSItemTemplate(nullptr);
+    return TSItemTemplate();
 #endif
 }
 
