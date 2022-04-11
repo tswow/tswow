@@ -193,6 +193,11 @@ export class CreatureInstance extends MainEntity<creatureRow> {
      * The boss id of this creature in the instance it belongs to
      */
     get Boss() { return new CreatureInstanceBoss(this); }
+
+    /**
+     * The Equipment from `creature_equip_template` the instance should use.
+     */
+    get EquipmentID() { return this.wrap(this.row.equipment_id); }
 }
 
 // write boss maps once we're done writing, since the map could change before then
