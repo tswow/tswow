@@ -2,7 +2,7 @@
 	path = cores/TrinityCore
 	url = https://github.com/tswow/TrinityCore.git
 	branch = tswow
-[submodule "tools/adt-creator"]
+[submodule "misc/adt-creator"]
 	path = misc/adt-creator
 	url = https://github.com/tswow/adt-creator.git
 [submodule "cores/azerothcore-wotlk"]
