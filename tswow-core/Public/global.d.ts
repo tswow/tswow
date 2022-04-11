@@ -8875,7 +8875,9 @@ declare function GetActiveGameEvents(): TSArray<uint16>
 declare function StartGameEvent(event_id: uint16): void
 declare function StopGameEvent(event_id: uint16): void
 
-//defaults to 38
+/**
+ * Defaults to 38, Recruits Shirt
+ */
 declare function CreateItemTemplate(entry:uint32, copyItemID?: uint32): TSItemTemplate;
 // end of Global.h
 
